@@ -1,0 +1,442 @@
+[
+  {
+    "configuration": {
+      "dapr": null,
+      "eventTriggerConfig": null,
+      "identitySettings": [],
+      "manualTriggerConfig": {
+        "parallelism": 1,
+        "replicaCompletionCount": 1
+      },
+      "registries": [
+        {
+          "identity": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-init",
+          "passwordSecretRef": "",
+          "server": "crcutovertestrzsrg.azurecr.io",
+          "username": ""
+        }
+      ],
+      "replicaRetryLimit": 1,
+      "replicaTimeout": 600,
+      "scheduleTriggerConfig": null,
+      "secrets": null,
+      "triggerType": "Manual"
+    },
+    "identity": {
+      "type": "UserAssigned",
+      "userAssignedIdentities": {
+        "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-init": {
+          "clientId": "8fd2cb23-cc1c-4ee5-ab8d-4b6fdff4564e",
+          "principalId": "3830883a-f4af-44f8-bff8-8859b78fc2f8"
+        }
+      }
+    },
+    "name": "job-cutover-test-init",
+    "template": [
+      {
+        "args": [
+          "initialize"
+        ],
+        "command": null,
+        "envNames": [
+          "ZF_SQL_SERVER",
+          "ZF_SQL_DATABASE",
+          "ZF_SQL_CLIENT_ID",
+          "AZURE_CLIENT_ID",
+          "PROOF_API_CLIENT_ID",
+          "PROOF_IMPORT_CLIENT_ID"
+        ],
+        "image": "crcutovertestrzsrg.azurecr.io/zava-forward-cutover-proof@sha256:ef0058f8f380cc610d4b7113509293b3ed624d22afac95e807b4c69a4266dc72",
+        "name": "proof",
+        "resources": {
+          "cpu": 0.5,
+          "memory": "1Gi"
+        }
+      }
+    ]
+  },
+  {
+    "configuration": {
+      "dapr": null,
+      "eventTriggerConfig": null,
+      "identitySettings": [],
+      "manualTriggerConfig": {
+        "parallelism": 1,
+        "replicaCompletionCount": 1
+      },
+      "registries": [
+        {
+          "identity": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-api",
+          "passwordSecretRef": "",
+          "server": "crcutovertestrzsrg.azurecr.io",
+          "username": ""
+        }
+      ],
+      "replicaRetryLimit": 1,
+      "replicaTimeout": 300,
+      "scheduleTriggerConfig": null,
+      "secrets": null,
+      "triggerType": "Manual"
+    },
+    "identity": {
+      "type": "UserAssigned",
+      "userAssignedIdentities": {
+        "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-api": {
+          "clientId": "1b1fe44e-f4cf-4aae-98d0-b30c7927a5e3",
+          "principalId": "6ac4c6b9-c516-4e24-81a6-f32663a93aab"
+        }
+      }
+    },
+    "name": "job-cutover-test-verify",
+    "template": [
+      {
+        "args": [
+          "verify"
+        ],
+        "command": [
+          "python",
+          "-c",
+          "#!/usr/bin/env python3\n\"\"\"Run bounded synthetic cut-over probes inside the AMA Container Apps VNet.\"\"\"\n\nimport argparse\nimport base64\nimport ipaddress\nimport json\nimport os\nimport re\nimport socket\nimport sys\nimport tempfile\nimport uuid\nfrom pathlib import Path\nfrom typing import TYPE_CHECKING\nfrom urllib.error import HTTPError\nfrom urllib.parse import urlsplit\nfrom urllib.request import Request, urlopen\n\nif TYPE_CHECKING:\n    from zava_forward.core.mssqlstore import _Conn\n\nPROOF = \"ama-src-private-proof-2026-10-16\"\nCASE_ID = \"CUTOVER-SYNTHETIC-ONLY\"\nSENTINEL = \"cutover_proof\"\n\n\ndef emit(check: str, **result: object) -> None:\n    print(json.dumps({\"check\": check, **result}), flush=True)\n\n\ndef private_dns(host: str) -> list[str]:\n    addresses = sorted(\n        {row[4][0] for row in socket.getaddrinfo(host, 443, type=socket.SOCK_STREAM)}\n    )\n    network = ipaddress.ip_network(\"10.40.0.0/16\")\n    if not addresses or any(ipaddress.ip_address(address) not in network for address in addresses):\n        raise ValueError(\"Endpoint is not in the approved AMA VNet\")\n    return addresses\n\n\ndef fixture() -> dict:\n    return {\n        \"as_of\": \"2026-10-16\",\n        \"staff\": [],\n        \"cases\": [\n            {\n                \"id\": CASE_ID,\n                \"wave\": \"Infrastructure proof only\",\n                \"closed\": False,\n                \"stage\": \"Contacting resident\",\n                \"stage_since\": \"2026-10-16\",\n                \"days_in_stage\": 0,\n                \"waiting_on\": \"Unassigned\",\n                \"reason\": PROOF,\n                \"owner_code\": \"\",\n                \"owner\": \"\",\n                \"owner_role\": \"\",\n                \"resident\": {\"name\": \"Synthetic Example\", \"priority_support\": False},\n                \"home\": {\n                    \"address\": \"1 Fictional Test Road\",\n                    \"postcode\": \"TE1 1ST\",\n                    \"area\": \"Synthetic\",\n                    \"lat\": 0,\n                    \"lon\": 0,\n                },\n                \"measures\": \"Infrastructure test, not works\",\n                \"contractor\": {\"name\": \"\"},\n                \"decision\": {\"status\": \"Waiting\", \"by\": None, \"at\": None},\n                \"funding_ok\": False,\n                \"contacts\": [],\n                \"appointments\": [],\n                \"hazards\": [],\n                \"history\": [],\n                \"documents\": [],\n            }\n        ],\n    }\n\n\ndef allowed_tables() -> set[str]:\n    from zava_forward.core.assistants import MSSQL_DDL\n    from zava_forward.core.mssqlstore import TABLES\n\n    names = set(TABLES)\n    for ddl in MSSQL_DDL:\n        match = re.match(r\"CREATE TABLE (\\w+) \", ddl)\n        if match is None:\n            raise ValueError(\"Unexpected runtime assistant DDL\")\n        names.add(match.group(1))\n    return names\n\n\ndef preflight(db: \"_Conn\", allowed: set[str]) -> bool:\n    tables = {\n        row[0]\n        for row in db.execute(\n            \"SELECT name FROM sys.tables WHERE is_ms_shipped=0 \"\n            \"AND ledger_type<>1 AND is_dropped_ledger_table=0\"\n        ).fetchall()\n    }\n    if not tables:\n        return False\n    if SENTINEL not in tables or not tables.issubset(allowed | {SENTINEL}):\n        raise RuntimeError(\"Unrecognized database; no application data read or changed\")\n    row = db.execute(\"SELECT proof FROM cutover_proof WHERE id=1\").fetchone()\n    if row is None or row[0] != PROOF:\n        raise RuntimeError(\"Unrecognized proof ownership\")\n    return True\n\n\ndef grant(db: \"_Conn\", name: str, client_id: str, roles: tuple[str, ...]) -> None:\n    if not re.fullmatch(r\"id-cutover-test-(api|import)\", name):\n        raise ValueError(\"Unexpected contained user\")\n    sid = \"0x\" + uuid.UUID(client_id).bytes_le.hex()\n    db.execute(\n        f\"IF NOT EXISTS (SELECT 1 FROM sys.database_principals WHERE name=N'{name}') \"\n        f\"CREATE USER [{name}] WITH SID={sid}, TYPE=E\"\n    )\n    actual = db.execute(\n        \"SELECT CONVERT(varchar(256), sid, 1) FROM sys.database_principals WHERE name=?\",\n        (name,),\n    ).fetchone()\n    if actual is None or actual[0].lower() != sid.lower():\n        raise RuntimeError(\"Existing contained user SID mismatch\")\n    for role in roles:\n        if role not in {\"db_datareader\", \"db_datawriter\", \"db_ddladmin\"}:\n            raise ValueError(\"Unexpected SQL role\")\n        db.execute(f\"ALTER ROLE [{role}] ADD MEMBER [{name}]\")\n\n\ndef sql_probe(initialize: bool) -> None:\n    from zava_forward.core.mssqlstore import MssqlStore, _Conn, connection_string\n\n    server = os.environ[\"ZF_SQL_SERVER\"]\n    emit(\"sql_private_dns\", addresses=private_dns(server), status=\"Passed\")\n    env = dict(os.environ, ZF_SQL_AUTH=\"msi\")\n    if not env.get(\"ZF_SQL_CLIENT_ID\"):\n        raise ValueError(\"Explicit user-assigned identity is required\")\n    db = _Conn(connection_string(env))\n    try:\n        recognized = preflight(db, allowed_tables())\n        emit(\"database_preflight\", recognized_proof=recognized, status=\"Passed\")\n        if not initialize and not recognized:\n            raise RuntimeError(\"Verification cannot initialize an empty database\")\n        if initialize:\n            if not recognized:\n                db.execute(\n                    \"CREATE TABLE cutover_proof (id INT PRIMARY KEY, proof NVARCHAR(100) NOT NULL)\"\n                )\n                db.execute(\"INSERT INTO cutover_proof (id,proof) VALUES (1,?)\", (PROOF,))\n            grant(\n                db,\n                \"id-cutover-test-api\",\n                os.environ[\"PROOF_API_CLIENT_ID\"],\n                (\"db_datareader\", \"db_datawriter\", \"db_ddladmin\"),\n            )\n            grant(\n                db,\n                \"id-cutover-test-import\",\n                os.environ[\"PROOF_IMPORT_CLIENT_ID\"],\n                (\"db_datareader\", \"db_datawriter\"),\n            )\n            emit(\"contained_users\", count=2, status=\"Passed\")\n    finally:\n        db.close()\n    with tempfile.TemporaryDirectory() as directory:\n        seed = Path(directory) / \"synthetic-proof.json\"\n        if initialize:\n            seed.write_text(json.dumps(fixture()), encoding=\"utf-8\")\n        store = MssqlStore(str(seed), env=env, state_dir=directory)\n        try:\n            if set(store.cases) != {CASE_ID} or store.cases[CASE_ID][\"reason\"] != PROOF:\n                raise RuntimeError(\"Synthetic application state differs\")\n            if store.staff:\n                raise RuntimeError(\"Proof must not contain staff bindings\")\n            emit(\n                \"application_sql_state\",\n                status=\"Passed\",\n                cases=1,\n                staff=0,\n                marker=PROOF,\n                seed_available=seed.exists(),\n                identity=\"initializer\" if initialize else \"api\",\n            )\n        finally:\n            store.db.close()\n\n\ndef http_status(url: str, headers: dict[str, str] | None = None) -> int:\n    try:\n        with urlopen(Request(url, headers=headers or {}), timeout=60) as response:\n            return response.status\n    except HTTPError as error:\n        return error.code\n\n\ndef smoke(base: str) -> None:\n    parts = urlsplit(base)\n    if (\n        parts.scheme != \"https\"\n        or not parts.hostname\n        or not parts.hostname.endswith(\".azurecontainerapps.io\")\n        or parts.path not in (\"\", \"/\")\n        or parts.query\n        or parts.fragment\n        or parts.username\n        or parts.port not in (None, 443)\n    ):\n        raise ValueError(\"Expected the private Container Apps HTTPS origin\")\n    emit(\"api_private_dns\", addresses=private_dns(parts.hostname), status=\"Passed\")\n    principal = base64.b64encode(\n        json.dumps(\n            {\n                \"auth_typ\": \"aad\",\n                \"claims\": [{\"typ\": \"roles\", \"val\": \"ProgrammeManager\"}],\n            }\n        ).encode()\n    ).decode()\n    checks = (\n        (\"health\", \"/healthz\", {}, 200),\n        (\"anonymous_api_denial\", \"/api/me\", {}, 401),\n        (\"malformed_bearer_denial\", \"/api/me\", {\"Authorization\": \"Bearer not-a-jwt\"}, 401),\n        (\"forged_principal_denial\", \"/api/me\", {\"X-MS-CLIENT-PRINCIPAL\": principal}, 401),\n    )\n    failed = False\n    for name, path, headers, expected in checks:\n        status = http_status(base.rstrip(\"/\") + path, headers)\n        emit(\n            name,\n            http_status=status,\n            expected=expected,\n            status=\"Passed\" if status == expected else \"Failed\",\n        )\n        failed |= status != expected\n    if failed:\n        raise RuntimeError(\"One or more private ingress probes failed\")\n\n\ndef main() -> int:\n    parser = argparse.ArgumentParser(description=__doc__)\n    parser.add_argument(\"mode\", choices=(\"initialize\", \"verify\", \"smoke\"))\n    parser.add_argument(\"--base-url\")\n    args = parser.parse_args()\n    try:\n        if args.mode == \"smoke\":\n            if not args.base_url:\n                parser.error(\"smoke requires --base-url\")\n            smoke(args.base_url)\n        else:\n            sql_probe(args.mode == \"initialize\")\n    except (Exception, SystemExit) as error:\n        emit(\n            args.mode,\n            status=\"Failed\",\n            error_type=type(error).__name__,\n            message=\"Probe stopped; inspect private diagnostics without publishing credentials.\",\n        )\n        return 1\n    return 0\n\n\nif __name__ == \"__main__\":\n    sys.exit(main())\n"
+        ],
+        "envNames": [
+          "ZF_SQL_SERVER",
+          "ZF_SQL_DATABASE",
+          "ZF_SQL_CLIENT_ID",
+          "AZURE_CLIENT_ID"
+        ],
+        "image": "crcutovertestrzsrg.azurecr.io/zava-forward-cutover-proof@sha256:ef0058f8f380cc610d4b7113509293b3ed624d22afac95e807b4c69a4266dc72",
+        "name": "proof",
+        "resources": {
+          "cpu": 0.5,
+          "memory": "1Gi"
+        }
+      }
+    ]
+  },
+  {
+    "configuration": {
+      "dapr": null,
+      "eventTriggerConfig": null,
+      "identitySettings": [],
+      "manualTriggerConfig": {
+        "parallelism": 1,
+        "replicaCompletionCount": 1
+      },
+      "registries": [
+        {
+          "identity": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-api",
+          "server": "crcutovertestrzsrg.azurecr.io"
+        }
+      ],
+      "replicaRetryLimit": 0,
+      "replicaTimeout": 900,
+      "scheduleTriggerConfig": null,
+      "secrets": null,
+      "triggerType": "Manual"
+    },
+    "identity": {
+      "type": "UserAssigned",
+      "userAssignedIdentities": {
+        "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-api": {
+          "clientId": "1b1fe44e-f4cf-4aae-98d0-b30c7927a5e3",
+          "principalId": "6ac4c6b9-c516-4e24-81a6-f32663a93aab"
+        }
+      }
+    },
+    "name": "job-cutover-test-ledger-verify",
+    "template": [
+      {
+        "args": null,
+        "command": [
+          "python",
+          "-m",
+          "zava_forward.orchestrator.digest_blob",
+          "--publish"
+        ],
+        "envNames": [
+          "APPLICATIONINSIGHTS_CONNECTION_STRING",
+          "OTEL_SERVICE_NAMESPACE",
+          "AZURE_CLIENT_ID",
+          "ZF_STORE",
+          "ZF_SQL_SERVER",
+          "ZF_SQL_DATABASE",
+          "ZF_SQL_AUTH",
+          "ZF_SQL_CLIENT_ID",
+          "ZF_DIGEST_ACCOUNT_URL",
+          "ZF_DIGEST_CONTAINER",
+          "ZF_DIGEST_CLIENT_ID",
+          "ZF_DIGEST_DIR"
+        ],
+        "image": "crcutovertestrzsrg.azurecr.io/zava-forward-orchestrator@sha256:e3b290bfa2af70918ae667feab4212f2d4d4ff8c6f4bd4b01fc629ced4a099d7",
+        "name": "ledger-verify",
+        "resources": {
+          "cpu": 0.5,
+          "memory": "1Gi"
+        }
+      }
+    ]
+  },
+  {
+    "configuration": {
+      "dapr": null,
+      "eventTriggerConfig": null,
+      "identitySettings": [],
+      "manualTriggerConfig": {
+        "parallelism": 1,
+        "replicaCompletionCount": 1
+      },
+      "registries": [
+        {
+          "identity": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-import",
+          "server": "crcutovertestrzsrg.azurecr.io"
+        }
+      ],
+      "replicaRetryLimit": 1,
+      "replicaTimeout": 900,
+      "scheduleTriggerConfig": null,
+      "secrets": null,
+      "triggerType": "Manual"
+    },
+    "identity": {
+      "type": "UserAssigned",
+      "userAssignedIdentities": {
+        "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-import": {
+          "clientId": "d52b061f-472b-49c4-bf47-4186f745d37c",
+          "principalId": "5495f79e-7144-4339-b722-550dc5ce48f4"
+        }
+      }
+    },
+    "name": "job-cutover-test-import",
+    "template": [
+      {
+        "args": null,
+        "command": null,
+        "envNames": [
+          "APPLICATIONINSIGHTS_CONNECTION_STRING",
+          "OTEL_SERVICE_NAMESPACE",
+          "AZURE_CLIENT_ID",
+          "SQL_SERVER",
+          "SQL_DATABASE",
+          "BLOB_ENDPOINT",
+          "QUEUE_ENDPOINT",
+          "IMPORT_QUEUE"
+        ],
+        "image": "crcutovertestrzsrg.azurecr.io/zava-forward-importer@sha256:51b6a480bd7e89506341cb8d2fa667c0c24d86a4793f22358fa930a86f093f6f",
+        "name": "import",
+        "resources": {
+          "cpu": 0.5,
+          "memory": "1Gi"
+        }
+      }
+    ]
+  },
+  {
+    "configuration": {
+      "dapr": null,
+      "eventTriggerConfig": null,
+      "identitySettings": [],
+      "manualTriggerConfig": {
+        "parallelism": 1,
+        "replicaCompletionCount": 1
+      },
+      "registries": [
+        {
+          "identity": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-orchestrator",
+          "server": "crcutovertestrzsrg.azurecr.io"
+        }
+      ],
+      "replicaRetryLimit": 1,
+      "replicaTimeout": 300,
+      "scheduleTriggerConfig": null,
+      "secrets": null,
+      "triggerType": "Manual"
+    },
+    "identity": {
+      "type": "UserAssigned",
+      "userAssignedIdentities": {
+        "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-orchestrator": {
+          "clientId": "ef9c34c1-22c8-44de-85ed-0ab0dc87270c",
+          "principalId": "d78410c1-5c36-490f-8440-47e53d940c47"
+        }
+      }
+    },
+    "name": "job-cutover-test-orchestrator",
+    "template": [
+      {
+        "args": null,
+        "command": null,
+        "envNames": [
+          "APPLICATIONINSIGHTS_CONNECTION_STRING",
+          "OTEL_SERVICE_NAMESPACE",
+          "AZURE_CLIENT_ID",
+          "QUEUE_ENDPOINT",
+          "TASK_QUEUE",
+          "API_BASE_URL",
+          "API_AUDIENCE"
+        ],
+        "image": "crcutovertestrzsrg.azurecr.io/zava-forward-orchestrator@sha256:e3b290bfa2af70918ae667feab4212f2d4d4ff8c6f4bd4b01fc629ced4a099d7",
+        "name": "orchestrator",
+        "resources": {
+          "cpu": 0.25,
+          "memory": "0.5Gi"
+        }
+      }
+    ]
+  },
+  {
+    "configuration": {
+      "dapr": null,
+      "eventTriggerConfig": null,
+      "identitySettings": [],
+      "manualTriggerConfig": {
+        "parallelism": 1,
+        "replicaCompletionCount": 1
+      },
+      "registries": [
+        {
+          "identity": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-api",
+          "passwordSecretRef": "",
+          "server": "crcutovertestrzsrg.azurecr.io",
+          "username": ""
+        }
+      ],
+      "replicaRetryLimit": 1,
+      "replicaTimeout": 300,
+      "scheduleTriggerConfig": null,
+      "secrets": null,
+      "triggerType": "Manual"
+    },
+    "identity": {
+      "type": "UserAssigned",
+      "userAssignedIdentities": {
+        "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-api": {
+          "clientId": "1b1fe44e-f4cf-4aae-98d0-b30c7927a5e3",
+          "principalId": "6ac4c6b9-c516-4e24-81a6-f32663a93aab"
+        }
+      }
+    },
+    "name": "job-cutover-test-smoke",
+    "template": [
+      {
+        "args": [
+          "smoke",
+          "--base-url",
+          "https://ca-cutover-test-api.jollytree-20e6e99e.uksouth.azurecontainerapps.io"
+        ],
+        "command": null,
+        "envNames": null,
+        "image": "crcutovertestrzsrg.azurecr.io/zava-forward-cutover-proof@sha256:ef0058f8f380cc610d4b7113509293b3ed624d22afac95e807b4c69a4266dc72",
+        "name": "proof",
+        "resources": {
+          "cpu": 0.5,
+          "ephemeralStorage": "",
+          "memory": "1Gi"
+        }
+      }
+    ]
+  },
+  {
+    "configuration": {
+      "dapr": null,
+      "eventTriggerConfig": null,
+      "identitySettings": [],
+      "manualTriggerConfig": {
+        "parallelism": 1,
+        "replicaCompletionCount": 1
+      },
+      "registries": [
+        {
+          "identity": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-api",
+          "passwordSecretRef": "",
+          "server": "crcutovertestrzsrg.azurecr.io",
+          "username": ""
+        }
+      ],
+      "replicaRetryLimit": 1,
+      "replicaTimeout": 300,
+      "scheduleTriggerConfig": null,
+      "secrets": null,
+      "triggerType": "Manual"
+    },
+    "identity": {
+      "type": "UserAssigned",
+      "userAssignedIdentities": {
+        "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-api": {
+          "clientId": "1b1fe44e-f4cf-4aae-98d0-b30c7927a5e3",
+          "principalId": "6ac4c6b9-c516-4e24-81a6-f32663a93aab"
+        }
+      }
+    },
+    "name": "job-cutover-test-mi-http",
+    "template": [
+      {
+        "args": null,
+        "command": [
+          "python",
+          "-c",
+          "import json,os,re,runpy\nfrom urllib.request import Request,urlopen\nfrom urllib.parse import urlencode,urlsplit\nfrom urllib.error import HTTPError\np=runpy.run_path('/app/private-cutover-proof.py')\np['private_dns'](urlsplit(os.environ['PROOF_BASE_URL']).hostname)\nurl=os.environ['IDENTITY_ENDPOINT']+'?'+urlencode({'api-version':'2019-08-01','resource':os.environ['PROOF_AUDIENCE']})\ntry:\n    with urlopen(Request(url,headers={'X-IDENTITY-HEADER':os.environ['IDENTITY_HEADER']}),timeout=60) as response:\n        token=json.load(response)['access_token']\nexcept HTTPError as error:\n    body=error.read().decode(errors='replace')\n    codes=sorted(set(re.findall(r'AADSTS[0-9]+',body)))\n    print(json.dumps({'check':'managed_identity_http','status':'Blocked','phase':'token_acquisition','http_status':error.code,'entra_error_codes':codes}),flush=True)\nelse:\n    status=p['http_status'](os.environ['PROOF_BASE_URL']+'/api/me',{'Authorization':'Bearer '+token})\n    print(json.dumps({'check':'managed_identity_http','status':'Passed' if status==200 else 'Blocked','http_status':status,'boundary':'No human staff binding or application role was granted to this identity'}),flush=True)\n"
+        ],
+        "envNames": [
+          "PROOF_AUDIENCE",
+          "PROOF_BASE_URL"
+        ],
+        "image": "crcutovertestrzsrg.azurecr.io/zava-forward-cutover-proof@sha256:ef0058f8f380cc610d4b7113509293b3ed624d22afac95e807b4c69a4266dc72",
+        "name": "proof",
+        "resources": {
+          "cpu": 0.5,
+          "ephemeralStorage": "",
+          "memory": "1Gi"
+        }
+      }
+    ]
+  },
+  {
+    "configuration": {
+      "dapr": null,
+      "eventTriggerConfig": null,
+      "identitySettings": [],
+      "manualTriggerConfig": {
+        "parallelism": 1,
+        "replicaCompletionCount": 1
+      },
+      "registries": [
+        {
+          "identity": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-api",
+          "server": "crcutovertestrzsrg.azurecr.io"
+        }
+      ],
+      "replicaRetryLimit": 0,
+      "replicaTimeout": 180,
+      "scheduleTriggerConfig": null,
+      "secrets": null,
+      "triggerType": "Manual"
+    },
+    "identity": {
+      "type": "UserAssigned",
+      "userAssignedIdentities": {
+        "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-api": {
+          "clientId": "1b1fe44e-f4cf-4aae-98d0-b30c7927a5e3",
+          "principalId": "6ac4c6b9-c516-4e24-81a6-f32663a93aab"
+        }
+      }
+    },
+    "name": "job-cutover-test-public-audit",
+    "template": [
+      {
+        "args": null,
+        "command": [
+          "python",
+          "-c",
+          "import json,urllib.request,urllib.error,urllib.parse\nclass NoRedirect(urllib.request.HTTPRedirectHandler):\n def redirect_request(self,*args,**kwargs): return None\nopener=urllib.request.build_opener(NoRedirect())\nbase=\"https://ca-cutover-test-api.jollytree-20e6e99e.uksouth.azurecontainerapps.io\"\nfor path in [\"/healthz\",\"/api/me\",\"/app\",\"/.auth/login/aad\"]:\n try:\n  r=opener.open(base+path,timeout=30)\n except urllib.error.HTTPError as error:\n  r=error\n target=urllib.parse.urlsplit(r.headers.get(\"Location\",\"\"))\n print(\"PRIVATE_BROWSER_PROBE \"+json.dumps({\"path\":path,\"status\":r.code,\"redirect_host\":target.hostname,\"is_entra_redirect\":target.hostname==\"login.microsoftonline.com\"}),flush=True)\n r.close()\n"
+        ],
+        "envNames": null,
+        "image": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:111b26226cad06e229bcf1c3174877510c4c68c5a5fefc885167a2b4c821657d",
+        "name": "audit",
+        "resources": {
+          "cpu": 0.25,
+          "memory": "0.5Gi"
+        }
+      }
+    ]
+  }
+]

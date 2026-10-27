@@ -1,0 +1,5 @@
+{
+  "failure": null,
+  "acr_exactly_restored": true,
+  "temporary_route": "VM IPv4 /32 only; no new roles/private endpoints"
+}

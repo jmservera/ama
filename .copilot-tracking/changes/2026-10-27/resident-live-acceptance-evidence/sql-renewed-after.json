@@ -1,0 +1,12 @@
+{
+  "maxSizeBytes": 32212254720,
+  "name": "retrofit",
+  "sku": {
+    "capacity": 10,
+    "family": null,
+    "name": "Standard",
+    "size": null,
+    "tier": "Standard"
+  },
+  "status": "Online"
+}

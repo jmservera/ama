@@ -4,7 +4,7 @@
 Dry run by default: it validates your inputs locally and reads only vault metadata; no secret value
 leaves this process. `--apply` writes exactly two fixed secrets, resident-demo-password-verifier
 and resident-demo-session-key, in ONE secure ARM deployment to kv-cutovertest-rzsrg after a
-what-if proves two new secrets there, both expiring no later than 2026-11-01T00:00:00Z.
+what-if proves two new secrets there, both expiring no later than the packaged resident policy cap.
 
 The verifier comes from a hidden prompt or an owner-only (mode 0600) file outside the repository;
 make it with resident_demo_verifier.py. The session key is generated here at apply time and is
@@ -42,9 +42,13 @@ setup = importlib.util.module_from_spec(_spec)
 sys.modules.setdefault("setup_entra", setup)
 _spec.loader.exec_module(setup)
 
-from zava_forward.core.resident_showcase import PasswordVerifier, ShowcaseConfigError  # noqa: E402
+from zava_forward.core.resident_showcase import (  # noqa: E402
+    AUTHORITY_END,
+    PasswordVerifier,
+    ShowcaseConfigError,
+)
 
-MAX_EXPIRY = datetime(2026, 11, 1, 0, 0, tzinfo=UTC)
+MAX_EXPIRY = AUTHORITY_END
 MAX_FILE_BYTES = 1024
 GUID = re.compile(r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
 
@@ -73,8 +77,10 @@ def parse_expiry(value: str, now: datetime, require_future: bool = True) -> str:
     if require_future and moment <= now:
         raise HelperError("Expiry is not in the future.")
     if moment > MAX_EXPIRY:
-        raise HelperError("Expiry is later than the authority limit 2026-11-01T00:00:00Z.")
-    return value
+        raise HelperError("Expiry is later than the resident demo authority limit.")
+    if moment.utcoffset() != UTC.utcoffset(moment):
+        raise HelperError("Expiry must be an explicit UTC time.")
+    return moment.isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
 def read_private_file(path: Path) -> str:
