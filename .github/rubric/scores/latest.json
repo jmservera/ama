@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-27T16:26:01+00:00",
-  "commit": "380c107fc889793d1fa58df15fe7bcd240255a41",
+  "scored_at": "2026-10-27T17:18:42+00:00",
+  "commit": "89c52cba84ce9f75e58ab7f97ae7d91aa2d1d5f3",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40539628168",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40548249080",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "810a1dec8098e8b39fb8143601a21d314b5151923f4b021dee703821dbd9cc88",
     "adr": "7063994ca762718ec9e367f55fa3af37566f4754009f839a2b9f12fcbc59e2a1",
-    "solution-code": "ac691cf5dcd5e47eb0d83004743b6ddd9196f7c8db496129e6ea5bd4777849e4",
+    "solution-code": "d86b580707e59385f63dcb33c82b034de97e6afdfe052c1971ab17c7d969337f",
     "infrastructure": "af65ce38ca8fa4dd19005ee7104cb20f8c9a9bd4e7a506fd731d725889404185",
     "capstone-deck": "acb30e4f302663cedec4884bc7c561fcb5a14fb647ab1c4f93ffc377567c8896",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
@@ -34,7 +34,7 @@
         "src/core/src/zava_forward/core/synthetic/retrofit_effects.py:1-100",
         "src/core/src/zava_forward/core/synthetic/sensor_identity.py:1-23"
       ],
-      "rationale": "This diff extracts indoor projection, retrofit effects, household conditions, climate history and sensor identity into separately versioned, pure modules reused by sensor_backfill without reversing the dependency direction. Reinforces modularity; ceiling retained."
+      "rationale": "This PR only adds a client-side registerRoleScreen plugin host (src/api) reusing existing read-only endpoints; it does not touch the core synthetic modularity evidence this score rests on. Ceiling retained."
     },
     "A2": {
       "score": 5,
@@ -49,7 +49,7 @@
         "src/core/src/zava_forward/core/sensor_consumer.py:511-527",
         "src/core/src/zava_forward/core/synthetic/sensor_identity.py:9-23"
       ],
-      "rationale": "Adds strict UTF-16 length/column-type schema checks before SQL Server acceptance and a collision-checked compact sensor key, tightening identity validation. Already near ceiling; no new vulnerability surfaced. Unchanged."
+      "rationale": "This PR adds a UI plugin host with no new authorization surface (tests assert no POST/innerHTML, server still enforces role filtering), consistent with but not adding to existing security evidence. Unchanged."
     },
     "A4": {
       "score": 5,
@@ -58,7 +58,7 @@
         "src/core/tests/test_climate_history.py:1-40",
         "src/core/tests/test_sensor_stock.py:1-40"
       ],
-      "rationale": "Full composed climate/household/retrofit feature shipped with new unit, determinism, compression, manifest-binding and consumer-replay tests across multiple files. Already at ceiling; reinforced."
+      "rationale": "Role-screens host ships with unit tests covering navigation, rendering and routing, but this is a small additive UI feature, not the composed capability this ceiling score already rests on. Unchanged."
     },
     "A5": {
       "score": 5,
@@ -66,19 +66,19 @@
         "src/core/src/zava_forward/core/synthetic/sensor_backfill.py:1256-1320",
         "src/core/src/zava_forward/core/synthetic/sensor_backfill.py:594-650"
       ],
-      "rationale": "load_with_consumer adds symlink/size/budget guards before replay and gzip compression reduces shard storage; reinforces operational bounds without new monitoring. Unchanged."
+      "rationale": "No observability, reliability, performance or cost evidence changed by this UI-only diff. Unchanged."
     },
     "A6": {
       "score": 5,
       "evidence": [
         "src/api/src/zava_forward/api/resident_demo/aoai.py:109-224"
       ],
-      "rationale": "This diff only touches synthetic sensor-data generation (src/core); no AI model, prompt, evaluation or guardrail code changed. Unchanged baseline."
+      "rationale": "This diff only adds a client-side specialist-screens registry and reuses existing case endpoints; no AI model, prompt, evaluation or guardrail code changed. Unchanged baseline."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "No agentic orchestration changed; this diff only adds deterministic synthetic sensor/climate data generation and compression. Unchanged baseline."
+      "rationale": "No agentic orchestration changed; this diff adds a UI plugin host over existing deterministic read endpoints, not agent behaviour. Unchanged baseline."
     },
     "B1": {
       "score": 3,
@@ -117,7 +117,7 @@
     "B6": {
       "score": 5,
       "evidence": [],
-      "rationale": "This diff only changes src/core synthetic generator code and tests; no deck or capstone documentation files changed. Unchanged baseline."
+      "rationale": "This diff changes src/api component code, tests and its README; no capstone deck or capstone documentation files changed. Unchanged baseline."
     },
     "B7": {
       "score": 5,
