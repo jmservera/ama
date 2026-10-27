@@ -12,7 +12,13 @@ from checks.design_system_browser_check import check, main
 from checks.role_screens_fixtures import synthetic_data
 
 # Independent child branches extend only their own installed-screen expectation.
-SCENARIOS: dict[str, tuple[str, str, tuple[str, ...]]] = {}
+SCENARIOS: dict[str, tuple[str, str, tuple[str, ...]]] = {
+    "232": ("sam@example.test", "Housing and resident engagement", (
+        "SYN-LOFT; revision 1", "Paused", "v1: Paused", "SYN-CHOICE-232",
+        "SYN-REQUEST-232 accessible update", "SYN-SAFE-232", "Large print",
+        "An update commitment is not a sent message", "Unknown",
+    )),
+}
 
 
 def run_browser(base: str) -> None:

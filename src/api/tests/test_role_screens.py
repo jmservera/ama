@@ -37,3 +37,12 @@ class RoleScreens(unittest.TestCase):
         self.assertIn("signal.throwIfAborted()", source)
         self.assertIn('"aria-current"', source)
         self.assertIn("Reset screen view", source)
+
+    def test_engagement_retains_measure_version_and_separate_contact_boundary(self) -> None:
+        source = (WEB / "screen-engagement.js").read_text()
+        for field in ("m.context?.design_version", "answer.context_revision",
+                      "update.safe_contact_ref", "request.remedy?.status"):
+            self.assertIn(field, source)
+        self.assertIn("Paused and Withdrawn", source)
+        self.assertNotIn("caseApi(", source)
+        self.assertNotIn('href: `tel:', source)
