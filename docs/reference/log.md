@@ -8186,3 +8186,23 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * No company figures, financial approvals, Azure changes, private datasets or
   new AI authority are introduced. All three issues remain Refs; engineering
   evidence is not whole-issue or operational acceptance.
+
+## [2026-10-27] query | Rubric src counting and migration score reconciliation
+
+* Refs #198. Added the
+  [dated rubric reconciliation](../architecture/cutover-evidence-pack.md#rubric-src-counting-reconciliation-2026-10-27)
+  and updated the index and rubric guide. Preserved original sign-off outcomes
+  and every earlier log entry.
+* Verified src package/tests/manifest/Dockerfile coverage and excluded
+  vendor/private/build paths. #295/#300/#302 already removed legacy includes;
+  no production registry, rubric_version, score or workflow/check name changed.
+* Recorded 47/100 original baseline and carried migration snapshots separately
+  from #499's actual 77/100 vs 77/100 retirement comparison. No attributable
+  migration gain, fresh per-migration assessment or retroactive ordering is
+  claimed. Re-evidence routes identify seven criteria and their source PRs.
+* Re-assessed historical 19 failures: current baseline 18 failed/355 passed/
+  seven skipped; after migration-related test repairs, one unrelated
+  deck-selection failure/374 passed/seven missing-runtime skips remain.
+  Thirty-one migration-targeted checks pass. No full gate, cloud, private data
+  or scorer dispatch. Missing historic comparisons and prescribed sequence
+  remain explicit acceptance gaps; this delivery references rather than closes.

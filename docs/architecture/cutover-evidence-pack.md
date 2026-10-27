@@ -2106,3 +2106,121 @@ repository records only. The threshold is unwaived. The original Review
 (Partial, Residual work) is unchanged. No Conformant outcome, live AI, Entra,
 Azure or resident-UX acceptance is claimed; Azure authority has expired. The
 final full gate on the merged exact head is recorded after it runs.
+
+## Rubric src counting reconciliation (2026-10-27)
+
+Refs #198. This additive reconciliation preserves the original UNMET rubric
+row, historical retirement boundary and earlier failed/unchecked evidence.
+It supplies subsequently retrieved evidence, not retrospective sign-off or
+whole-issue closure. Inspected base: `09099ecd1a66ee9d37ad993707d1f2eda07cdfd4`.
+No model scoring was dispatched, no private dataset read and no score edited.
+
+### Baseline and score provenance
+
+The pre-migration snapshot at `9261c5cb1dcca013d9bc93c79d3fafebc70b8f71`
+records 47/100, rubric_version 2, scored commit
+`80660e95014c5abf5327d5e5e235c0612b991aa1`, 2026-10-14 15:47:56 UTC,
+[run 38590975162](https://github.com/jmservera/ama/actions/runs/38590975162).
+Its solution-code criteria are A1=4, A3=5, A4=5, A5=3, A6=3, A7=4, B6=4;
+the score file preserves original rationale and evidence, including then-live
+`mvp/` paths. Those are historical citations, not current live links.
+
+| Boundary / PR | Repository snapshot | Recorded total vs 47 | Evidence qualification |
+| --- | --- | --- | --- |
+| Registry exclusions #292 | `ef4656a1` | 47, delta 0 | Existing assessment of `fa730d63`, not a fresh score of this merge |
+| Prototype retirement #295 | `a7e30046` | 47, delta 0 | Same carried assessment |
+| M1 #296 | `5c717d9e` | 47, delta 0 | Same carried assessment |
+| M2 #297 | `14b776c0` | 47, delta 0 | Same carried assessment |
+| M3 #298 | `55462829` | 47, delta 0 | Same carried assessment |
+| M4 #299 | `74a84dcf` | 47, delta 0 | Same carried assessment |
+| M5 #300 | `e0192934` | 47, delta 0 | Same carried assessment |
+| R1 #301 | `a99e38e9` | 47, delta 0 | Same carried assessment |
+| M6 #302 | `a381532d` | 47, delta 0 | Same carried assessment |
+| Last pre-pointer-deletion main | `65a514ed` | 77, delta +30 | Score of `89c52cba`, not of this snapshot |
+| Pointer deletion #499 | `4a02baf6` | 77, delta +30 | Hosted PR score 77 vs then-baseline 77; scored `1ed59d75`, not merge SHA |
+| Inspected current main | `09099ecd` | 77, delta +30 | Score of `f1be9b1d`, not a new #198 assessment |
+
+All migration snapshots above contain the same assessment of
+`fa730d63190c200e36b9a09c890445f17e8cb164`, dated 2026-10-15 15:58:33 UTC,
+[run 38763347056](https://github.com/jmservera/ama/actions/runs/38763347056),
+with the same seven criterion values as the pre-migration baseline.
+No sticky rubric scorecards were available on #292/#295/#296-#302 when queried
+on 2026-10-27. The snapshots prove carried state only; they do not prove
+each PR was freshly scored or recorded its comparison during the dual window.
+
+The pre-deletion assessment is
+[run 40548249080](https://github.com/jmservera/ama/actions/runs/40548249080),
+2026-10-27 17:18:42 UTC. The actual #499
+[sticky comparison](https://github.com/jmservera/ama/pull/499#issuecomment-6450533583)
+and [run 40560161654](https://github.com/jmservera/ama/actions/runs/40560161654),
+2026-10-27 18:38:28 UTC, record **77/100 against 77/100**, delta 0.
+The current assessment is
+[run 40569657958](https://github.com/jmservera/ama/actions/runs/40569657958),
+2026-10-27 19:50:57 UTC. Each has A1=5, A3=5, A4=5, A5=5, A6=5, A7=4,
+B6=5 and rubric_version 2. Intervening features, deck and other portfolio
+changes prevent attributing the +30 from the old baseline to migration.
+
+### Registry sequence and recovery expectation
+
+PR #292 added src vendor/data/egg-info/build exclusions before the first
+module move. `src/**/*` already covers package code, external project tests,
+`pyproject.toml`, Dockerfiles, READMEs and web assets. No extra include is
+needed. Actual legacy removals were distributed across merged PRs:
+#295 removed `prototype/deploy/**/*.bicep`; #300 removed executable/web/test/
+Dockerfile mvp globs in the same PR as the moves; #302 removed `mvp/README.md`
+when its content moved to source guides. #499 later removed the unscored pointer.
+They were not one dedicated final registry PR. Production prepare reads the
+base registry; local temporary-Git regressions prove old-registry deletion
+detection and merged-registry exclusion, not that every historic run succeeded.
+
+No dip is visible in the available snapshots or actual #499 comparison.
+There is therefore no evidenced moved-out-of-glob/deleted-evidence loss to
+assign as its cause. The owner accepts a temporary dip if one is observed:
+record the removed path and affected criterion, distinguish deleted evidence
+from an out-of-glob move, and recover by relevant changed src evidence, never
+by inflating grades, changing version or treating an unchanged file as new.
+
+| Criterion | Re-evidence route and delivery PR | Recovery expectation / limit |
+| --- | --- | --- |
+| A1 | `src/core/src/zava_forward/core/`, #296/#297; project manifests and Dockerfiles, #290/#300 | Assess actual modularity/dependency boundaries, not rename volume |
+| A3 | `src/core/src/zava_forward/core/ai.py`, #296; `assistants.py`, #297; API auth, #300 | Re-evidence scope/consent/approval controls; no live approval inferred |
+| A4 | Core modules, #297; `src/api/src/zava_forward/api/server.py`, #300; worker `src/agents/src/zava_forward/agents/dispatch.py`, #301 | Completeness requires actual composed evidence, not file presence |
+| A5 | `src/core/src/zava_forward/core/ledger.py`, #297; orchestrator jobs and image, #300 | Measured operational evidence remains separate from moved implementation |
+| A6 | Core AI client, #296; `src/agents/evals/` and AI eval, #298/#299 | Evaluation artifacts and results, not a model-quality claim from tests alone |
+| A7 | Proposal service, #297; database-free worker dispatch, #301 | Worker slice does not establish deployed queue orchestration |
+| B6 | Five project READMEs, #302; `.github/rubric/README.md`, current #198 branch | Navigable current documentation; no deck/live-session acceptance inferred |
+
+These are already-delivered src evidence routes, not fresh scores or a promise
+of grade recovery. If a new dip needs changed evidence, a later scoped PR must
+name that criterion and the actual evidence; an unchanged historical file
+cannot justify an incremental increase. This #198 branch repairs tests and
+documentation only and makes no claim to recover application grades.
+
+### Local test reassessment and acceptance
+
+PR #292 reported 124 passed / 19 failed / seven skipped. PR #295 removed eight
+stale prototype cases, leaving 11 pre-existing failures then. Current baseline
+`09099ecd`: 355 passed / 18 failed / seven skipped. Re-assessed causes: seven
+mutable-score assertions; ten obsolete workflow event/path assumptions; one
+unrelated deck-selection mismatch. After scoped repairs, the complete rubric
+suite reports **374 passed / one failed / seven skipped**. The unchanged
+failure is the executive-deck exclusion expectation versus the current
+`docs/capstone/deck/*.pptx` wildcard. Seven real MCP runtime tests skip because
+the pinned runtime is unavailable; generated-schema tests do not replace them.
+Migration-targeted regressions: 31 passed. No full/heavy gate or cloud checks
+ran; workflow Markdown/lock, production registry, rubric and scores are unchanged.
+
+| #198 acceptance | Evidence and remaining boundary |
+| --- | --- |
+| Pre-migration baseline and seven criteria | Historical 47 snapshot and original evidence retained above |
+| src tests/Dockerfile counting and exclusions | #292 plus existing/new real prepare fixtures; no extra layout glob needed |
+| Each dual-window PR records fresh comparison/cause/recovery | Not proven; merge snapshots are carried scores, not contemporaneous per-PR assessments |
+| Dedicated cut-over registry PR / preceding old-registry deletion | Actual #295/#300/#302 sequencing recorded; cannot retroactively meet original ordering |
+| README update and 19 failures re-assessed | Current/historical sections reconciled; exact before/after failures and skips disclosed |
+| Workflow Markdown change requires compiled lock | Not applicable: neither file changes |
+| Comparison and recovery in sign-off | Later additive 47/77/77 evidence and criterion routes supplied; not a pre-sign-off fresh migration assessment or post-merge assessment of this branch |
+
+Keep Refs #198. Recovering any missing historic scorecards or accepting a
+historical sequencing/scoring deviation belongs to the owner; no such
+decision is guessed here. This does not block the independent test/doc repair
+or authorize issue closure, merge, release or live use.

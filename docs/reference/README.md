@@ -78,6 +78,16 @@ operator registry data permission and the unapproved custom receive adapter
 block live-to-SQL and resident-gauge acceptance; actual local SQL evidence is
 not live transport. The following source-only production model remains separate.
 
+For #198, the [rubric src counting reconciliation](../architecture/cutover-evidence-pack.md#rubric-src-counting-reconciliation-2026-10-27)
+records the 47/100 pre-migration baseline, carried migration snapshots and
+actual #499 retirement score of 77/100 against 77/100. Registry removals
+already merged in #295/#300/#302; source/tests/manifests/Dockerfiles are counted
+without extra globs. Local test reassessment repairs seed/trigger assumptions
+but retains one unrelated deck-selection failure and seven missing-runtime
+skips. Missing fresh historical comparisons and the original registry sequencing
+remain acceptance gaps; no migration-attributed gain or whole-issue closure
+is inferred.
+
 For #140, the [IoT infrastructure decision and budget](../../infra/README.md#iot-hub-issue-140-adr-0003-decision-6)
 and [ADR 0003 dated authorization](../adrs/0003-journey-derived-capabilities-runtime-fit.md#source-only-infrastructure-authorization-2026-10-27-refs-140)
 record B1/one unit in `ama`/`uksouth`, private keyless Event Hub routing,
