@@ -7385,3 +7385,14 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   Concurrent shared-branch activity included the source changes in commits;
   this editing session did not commit, merge or push. The final build record
   and inspected PDF remain local, without a completed publication gate.
+
+## [2026-10-27] design | Resident advisory assistant prototype (Refs #469)
+
+* Added the [owner-decision design](../architecture/resident-assistant-prototype.md)
+  and index pointer: local fixed-topic rules, fresh own-case authorization,
+  explicit unknown document requests and no submission/consent authority.
+* Compared candidate small Azure models without claiming verified availability
+  or tariffs. Documented the USD 5 additional ceiling through 2026-10-31,
+  preferred managed identity and disabled adapter requiring future reviewed
+  tariff and durable shared reservation controls. No model calls, Azure changes,
+  real-provider activation or live resident acceptance is established.

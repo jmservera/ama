@@ -64,3 +64,5 @@ button.secondary:hover{background:var(--soft)}
 .inline-error:focus{outline:var(--focus-w) solid var(--focus-ink);outline-offset:var(--focus-off)}
 button,input,label{touch-action:manipulation}
 h1,h2{text-wrap:balance}
+.assistant select{font:inherit;width:100%;min-height:2.75rem;padding:var(--spacingHorizontalS);border:1px solid #5c6670;border-radius:var(--borderRadiusMedium);background:var(--surface);color:var(--ink);touch-action:manipulation}
+.assistant h3{font-size:var(--fontSizeBase400);margin-bottom:var(--spacingHorizontalS)}

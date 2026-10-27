@@ -1,0 +1,32 @@
+{
+  "task_id": "469",
+  "task_slug": "resident-assistant-469",
+  "parent_task": {"task_id": "466", "task_slug": "resident-interactive"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-27/resident-assistant-469-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-27/resident-assistant-469-plan.md",
+    "details": ".copilot-tracking/details/2026-10-27/resident-assistant-469-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-10-27/resident-assistant-469-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-27/resident-assistant-469-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-27/resident-assistant-469-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Full ordered RPI loop explicitly requested; stacked PR targets feat/resident-interactive; no merge or force push.", "status": "confirmed", "evidence": "Owner request 2026-10-27"},
+    {"decision": "No Azure, private data, credentials or paid/model calls; real provider disabled by default; targeted local checks replace long gate.", "status": "confirmed", "evidence": "Owner request 2026-10-27"},
+    {"decision": "Research executed, Planning Readiness Ready; C1-C5 and W1-W3 support bounded own-view rules design.", "status": "complete", "evidence": ".copilot-tracking/research/2026-10-27/resident-assistant-469-research.md"},
+    {"decision": "Single critique executed, verdict Revise. PC-001 rejected as conflicting with explicit owner no-long-gate/publication direction; PC-002 applied with fixed token envelope and no refunds.", "status": "disposed; plan Ready", "evidence": ".copilot-tracking/plans/2026-10-27/resident-assistant-469-critique.md"},
+    {"decision": "Independent post-implementation Review executed once: Complete; outcome Defects found. Boundary is current local candidate against parent 55c239d9, not exact committed-head or hosted/human approval. Two Low defects RV-001/RV-002 routed to later implementation; RV-003/RV-004 are residual activation/acceptance.", "status": "executed; findings open", "evidence": ".copilot-tracking/reviews/logs/2026-10-27/resident-assistant-469-review.md"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Parent publishes explicitly requested stacked PR with open Low findings disclosed, then awaits owner selection; no child implementation or repeated Review."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Preserve keyboard focus after advice requests", "rationale": "Small change with direct keyboard-user value; current success/error paths lose focus. Add focused regression without stealing focus after logout.", "evidence": "RV-001 in .copilot-tracking/reviews/logs/2026-10-27/resident-assistant-469-review.md"},
+    {"rank": 2, "task": "Normalize optional reservation callback failures", "rationale": "Small reliability fix to the disabled adapter; expected callback I/O errors currently disconnect instead of returning generic unavailable. No default-provider or spend impact.", "evidence": "RV-002 in .copilot-tracking/reviews/logs/2026-10-27/resident-assistant-469-review.md"},
+    {"rank": 3, "task": "Run resident accessibility and content acceptance", "rationale": "High acceptance value but needs named human/assistive-technology testing beyond local Chromium.", "evidence": "RV-004 in .copilot-tracking/reviews/logs/2026-10-27/resident-assistant-469-review.md"},
+    {"rank": 4, "task": "Decide whether a real selector is worth activating", "rationale": "Local rules already answer the bounded questions at zero model cost; model/tariff/identity/privacy/durable-budget work only if owner sees additional value.", "evidence": "RV-003 and docs/architecture/resident-assistant-prototype.md"}
+  ]
+}
