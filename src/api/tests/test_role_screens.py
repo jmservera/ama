@@ -37,3 +37,12 @@ class RoleScreens(unittest.TestCase):
         self.assertIn("signal.throwIfAborted()", source)
         self.assertIn('"aria-current"', source)
         self.assertIn("Reset screen view", source)
+
+    def test_safety_keeps_all_items_and_separate_human_response_evidence(self) -> None:
+        source = (WEB / "screen-safety.js").read_text()
+        for field in ("item.sent_at", "item.received_at", "item.accepted_at",
+                      "item.follow_up", "decision?.evidence"):
+            self.assertIn(field, source)
+        self.assertNotIn(".filter(", source)
+        self.assertNotIn(".slice(", source)
+        self.assertNotIn("post(", source)
