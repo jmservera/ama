@@ -2,23 +2,23 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-27T11:51:53+00:00",
-  "commit": "43881c338bf59b4e3181a888655e73eb1f4cf678",
+  "scored_at": "2026-10-27T13:03:33+00:00",
+  "commit": "ea3b51beeae70f7611471ba2ba3bb620017f902e",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40498547689",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40506833573",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "5aded7d2780c7921b41d7418c423fc2b6da7e8892f1b230f7d9de6a58497d6ad",
     "adr": "7063994ca762718ec9e367f55fa3af37566f4754009f839a2b9f12fcbc59e2a1",
-    "solution-code": "279c1a852fe2023cd9a64dc3799412376e6e17d0cfc0338492742a89421574e7",
-    "infrastructure": "2f7ff2f7a2e149e32ed5eb81d8fae8b279b28b2b00d47849b4e11b94462585c3",
+    "solution-code": "5ebdfe77156ea4e818171d57b5542500fb4c60a656837d2bbed14c79345ad311",
+    "infrastructure": "d116e38148f8b2aa79b3a04346976fb066d79a3611634cde41e01900e49db7d2",
     "capstone-deck": "acb30e4f302663cedec4884bc7c561fcb5a14fb647ab1c4f93ffc377567c8896",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
     "thought-leadership": "9288cfeb1cc1f3b499d22eafcb5f7585bbda1a335114446ad93a40cb1ed5a1f3"
   },
-  "total": 75,
+  "total": 77,
   "sections": {
-    "A": 32,
+    "A": 34,
     "B": 23,
     "C": 11,
     "D": 9
@@ -60,20 +60,25 @@
       "rationale": "Full feature shipped with unit tests, HTTP API tests, SQL integration tests and an end-to-end browser check. Already at ceiling."
     },
     "A5": {
-      "score": 4,
+      "score": 5,
       "evidence": [
-        "src/api/README.md:2837-2910"
+        "src/api/src/zava_forward/api/resident_demo/aoai.py:33-36",
+        "src/api/src/zava_forward/api/resident_demo/aoai.py:109-125",
+        "src/api/src/zava_forward/api/resident_demo/aoai.py:201",
+        "infra/sql/resident-assistant.sql:8",
+        "infra/sql/resident-assistant.sql:36"
       ],
-      "rationale": "Documents a per-source and overall login rate limiter and residual-risk disclosure, but still no metrics/alerting/cost instrumentation added. Unchanged baseline."
+      "rationale": "New AzureAdvisor models cost per request (MAX_COST_USD), logs prompt/completion token counts only, and falls back to rules on any transport/accounting/model failure. SQL enforces a hard USD20 cap and 5/hour per-resident limit, concurrency-tested. Cost and resilience now evidenced together."
     },
     "A6": {
-      "score": 4,
+      "score": 5,
       "evidence": [
-        "docs/architecture/resident-assistant-prototype.md:14-23",
-        "src/api/src/zava_forward/api/resident_demo/assistant.py:1-70",
-        "src/api/tests/test_resident_assistant_provider.py:40-100"
+        "src/api/src/zava_forward/api/resident_demo/aoai.py:109-224",
+        "src/api/tests/test_resident_aoai.py:44-120",
+        "src/api/tests/test_resident_aoai.py:120-180",
+        "src/api/src/zava_forward/api/resident_demo/__main__.py:16-22"
       ],
-      "rationale": "Design note compares local-rules, GPT-4.1 nano/mini and free-text on cost/quality/availability with unverified-tariff caveats, defaulting to zero-cost local rules. Disabled adapter has contract tests for budget, timeout and invalid-reply failure modes, but no live evaluation since never activated."
+      "rationale": "AzureAdvisor is now activated via configured_advisor, selecting gpt-4.1-mini with an output schema restricted to a closed guidance allowlist. Tests cover budget denial, timeouts, injected/invalid outputs, expiry and per-topic consistency: a real evaluation harness on an activated model path."
     },
     "A7": {
       "score": 4,
