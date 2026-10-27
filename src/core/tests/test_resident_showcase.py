@@ -93,9 +93,9 @@ class AdmissionTests(unittest.TestCase):
         self.assertEqual(ident.cases, {"a.demo@example.com": "C-1"})
         self.assertEqual(ident.excluded["email_duplicate"], 1)
 
-    def test_twenty_five_ok_twenty_six_fails_whole_map(self) -> None:
-        rows = [row(f"C-{i}", f"u{i}@example.com") for i in range(26)]
-        self.assertEqual(len(rs.build_identity_map(rows[:25], NOW).cases), 25)
+    def test_cap_ok_one_over_fails_whole_map(self) -> None:
+        rows = [row(f"C-{i}", f"u{i}@example.com") for i in range(rs.MAX_MAPPINGS + 1)]
+        self.assertEqual(len(rs.build_identity_map(rows[:-1], NOW).cases), rs.MAX_MAPPINGS)
         with self.assertRaises(rs.ShowcaseConfigError):
             rs.build_identity_map(rows, NOW)
 
@@ -333,6 +333,7 @@ class ViewTests(unittest.TestCase):
                 "read_only",
                 "home",
                 "measures",
+                "sensors",
                 "progress",
                 "next_step",
                 "unavailable",

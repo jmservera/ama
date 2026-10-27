@@ -329,9 +329,9 @@ class SqlBoundaryTests(unittest.TestCase):
         reasons = {r.case_id: rs.exclusion(r, now) for r in self.reader.list_rows()}
         self.assertEqual(reasons, {"C-1": "revoked", "C-2": "window"})
 
-    def test_more_than_25_fails_closed(self) -> None:
-        for i in range(26):
-            self.add_case(f"C-{i:02d}", _body(f"u{i}@example.com"))
+    def test_more_than_cap_fails_closed(self) -> None:
+        for i in range(rs.MAX_MAPPINGS + 1):
+            self.add_case(f"C-{i:04d}", _body(f"u{i}@example.com"))
         with self.assertRaises(rs.ShowcaseConfigError):
             self.reader.list_rows()
 

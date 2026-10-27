@@ -11,7 +11,13 @@ from collections.abc import Callable, Mapping
 from datetime import UTC, datetime
 from typing import Any
 
-from .resident_showcase import MAX_MAPPINGS, ShowcaseConfigError, ShowcaseDenied, ShowcaseRow
+from .resident_showcase import (
+    MAX_MAPPINGS,
+    ShowcaseConfigError,
+    ShowcaseDenied,
+    ShowcaseRow,
+    parse_sensors,
+)
 from .resident_showcase import parse_row as _parse_row
 
 COLUMNS = (
@@ -29,6 +35,8 @@ COLUMNS = (
     "closed",
     "measures_json",
     "measures_text",
+    "sensor_home_id",
+    "sensors_json",
 )
 _SELECT = "SELECT " + ", ".join(COLUMNS) + " FROM [resident_showcase].[v_resident_case]"
 LIST_SQL = _SELECT
@@ -91,6 +99,11 @@ def _shape(names: list[str], values: Any) -> ShowcaseRow:
     for key in ("revoked", "closed"):
         data[key] = bool(data[key]) if data.get(key) in (0, 1, True, False) else None
     data["measures"] = measures
+    try:
+        sensors = json.loads(data.pop("sensors_json"))
+    except (ValueError, TypeError):
+        raise ShowcaseDenied("sensor_json") from None
+    data["sensors"] = parse_sensors(sensors, data.get("sensor_home_id"))
     return _parse_row(data)
 
 
@@ -115,7 +128,7 @@ class ShowcaseReader:
     def list_rows(self) -> list[ShowcaseRow]:
         rows = self._run(LIST_SQL, ())
         if len(rows) > MAX_MAPPINGS:
-            raise ShowcaseConfigError("The allowlist supplies more than 25 showcase mappings.")
+            raise ShowcaseConfigError("The allowlist supplies more than 1000 showcase mappings.")
         return rows
 
     def fetch_case(self, case_id: str) -> ShowcaseRow | None:

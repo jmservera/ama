@@ -132,9 +132,11 @@ class TemplateTests(unittest.TestCase):
         self.assertIn("2026-11-01T00:00:00Z", text)
         self.assertEqual(self.template["parameters"]["externalIngress"]["defaultValue"], True)
 
-    def test_main_stack_defaults_are_untouched(self):
+    def test_main_stack_remains_separate_from_resident_demo(self):
         main = (INFRA / "modules" / "containerapps.bicep").read_text()
-        self.assertIn("minReplicas: 2", main)
+        self.assertIn("param apiMinReplicas int = 0", main)
+        self.assertIn("minReplicas: apiMinReplicas", main)
+        self.assertIn("maxReplicas: 4", main)
         self.assertNotIn("resident", (INFRA / "main.bicep").read_text().lower())
         self.assertNotIn("resident", (INFRA / "scripts" / "deploy.py").read_text().lower())
 

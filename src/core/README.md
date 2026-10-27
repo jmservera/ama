@@ -2,9 +2,23 @@
 title: Zava Forward core library
 description: Domain, store, ledger, law store, chat storage and synthetic-data documentation for the core project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-24
+ms.date: 2026-10-27
 ms.topic: reference
 ---
+
+## Resident advisory assistant (#469)
+
+`resident_assistant.advise(topic, CaseProgress(...), provider)` builds bounded
+advisory text from the current authenticated resident projection. `Provider`
+accepts and returns only a `Topic` enum; `FakeProvider` is deterministic and
+network-free. A provider cannot supply answer text or select a different task.
+Status reuses the page's plain-language facts; document requests remain unknown,
+and form help is generic. All answers include sources, an advisory notice and a
+person-help route. No submission, consent or decision authority is added.
+
+The API owns authentication and the disabled real adapter. See the
+[design awaiting owner decision](../../docs/architecture/resident-assistant-prototype.md)
+for model, credential, USD 5 budget and activation boundaries.
 
 ## Constructed offline sensor consumer (#110)
 
@@ -3177,7 +3191,7 @@ unchanged. Only its read-only plain-language constants are reused.
 * `canonical_email`: trim spaces, lower-case, ASCII only, `example.com` only, at most 64 local chars.
 * `exclusion` and `build_identity_map` admit a row only with non-blank provenance, not revoked, in
   its window, a canonical `example.com` email and exactly one case with that email across all cases.
-  At most 25 mappings; more fails the whole map closed. Excluded rows are counted, never listed.
+  At most 1000 mappings (raised from 25 for the owner-approved 2026-10-26 allowlist); more fails the whole map closed. Excluded rows are counted, never listed.
 * `authorise` re-checks one freshly read row for the case in the session and requires its email to
   equal the email admitted in the map.
 * `client_key` picks the limiter source: the peer, or under `ingress-rightmost` only the last

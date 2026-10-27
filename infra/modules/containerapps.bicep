@@ -32,6 +32,10 @@ param zoneRedundant bool = false
 param evidenceStore string = 'blob'
 param sharePointSiteId string = ''
 param apiImage string
+@description('Minimum API replicas. Default 0 permits scale-to-zero for cost-safe demos and cold starts; set 2 explicitly for always-on production replicas.')
+@minValue(0)
+@maxValue(4)
+param apiMinReplicas int = 0
 param enableApiAi bool = false
 param agentImage string
 param orchestratorImage string
@@ -176,7 +180,7 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads) {
         }
       ]
       scale: {
-        minReplicas: 2
+        minReplicas: apiMinReplicas
         maxReplicas: 4
         rules: [
           { name: 'http', http: { metadata: { concurrentRequests: '50' } } }

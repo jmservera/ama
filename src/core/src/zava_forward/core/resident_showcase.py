@@ -13,6 +13,7 @@ import binascii
 import hashlib
 import hmac
 import ipaddress
+import math
 import os
 import re
 import secrets
@@ -28,7 +29,7 @@ from . import resident_preview as _preview
 from .insights import STAGE_ORDER
 
 AUTHORITY_END = datetime(2026, 11, 1, 0, 0, tzinfo=UTC)  # exclusive: through 31 Oct UTC
-MAX_MAPPINGS = 25
+MAX_MAPPINGS = 1000
 SESSION_SECONDS = 1800
 BANNER = (
     "Synthetic demo - not a real resident service. This sign-in uses a shared demo password "
@@ -50,6 +51,8 @@ ROW_KEYS = frozenset(
         "stage",
         "closed",
         "measures",
+        "sensor_home_id",
+        "sensors",
     }
 )
 FORBIDDEN_ENV_PREFIXES = (
@@ -91,6 +94,76 @@ def canonical_email(value: Any) -> str | None:
 
 
 @dataclass(frozen=True)
+class SensorReading:
+    observed_at: datetime
+    temperature_c: float | None
+    humidity_pct: float | None
+    temperature_status: str
+    humidity_status: str
+
+
+def _sensor_channel(value: Any, fault: Any, low: float, high: float) -> tuple[float | None, str]:
+    if value is not None and type(value) not in (int, float):
+        raise ShowcaseDenied("sensor_number")
+    if fault:
+        return None, "Demo fault: " + ("outlier" if fault == "OUTLIER" else "stuck reading")
+    if value is None:
+        return None, "Not recorded"
+    if not low <= value <= high or not math.isfinite(value):
+        return None, "Outside demo range"
+    return float(value), "Recorded"
+
+
+def parse_sensors(raw: Any, home_id: Any) -> tuple[SensorReading, ...]:
+    """Validate the view's bounded own-home envelope; missing measurements remain explicit."""
+    if not isinstance(raw, list) or len(raw) > 48:
+        raise ShowcaseDenied("sensor_shape")
+    if raw and (not isinstance(home_id, str) or not home_id.strip() or len(home_id) > 128):
+        raise ShowcaseDenied("sensor_home")
+    readings = []
+    keys = {
+        "home_id",
+        "observed_at",
+        "temperature_c",
+        "humidity_pct",
+        "source_type",
+        "injected_fault",
+    }
+    for item in raw:
+        if (
+            not isinstance(item, dict)
+            or set(item) != keys
+            or item["home_id"] != home_id
+            or item["source_type"] != "SYNTHETIC"
+            or item["injected_fault"] not in (None, "", "OUTLIER", "STUCK")
+        ):
+            raise ShowcaseDenied("sensor_shape")
+        stamp = item["observed_at"]
+        if not isinstance(stamp, str) or not re.fullmatch(
+            r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ", stamp
+        ):
+            raise ShowcaseDenied("sensor_time")
+        try:
+            observed = datetime.fromisoformat(stamp.replace("Z", "+00:00"))
+        except ValueError:
+            raise ShowcaseDenied("sensor_time") from None
+
+        temperature, temperature_status = _sensor_channel(
+            item["temperature_c"], item["injected_fault"], -10, 45
+        )
+        humidity, humidity_status = _sensor_channel(
+            item["humidity_pct"], item["injected_fault"], 0, 100
+        )
+        readings.append(
+            SensorReading(observed, temperature, humidity, temperature_status, humidity_status)
+        )
+    readings.sort(key=lambda r: r.observed_at)
+    if len({r.observed_at for r in readings}) != len(readings):
+        raise ShowcaseDenied("sensor_duplicate_time")
+    return tuple(readings)
+
+
+@dataclass(frozen=True)
 class ShowcaseRow:
     case_id: str
     email: str
@@ -105,6 +178,8 @@ class ShowcaseRow:
     stage: str
     closed: bool
     measures: tuple[str, ...]
+    sensor_home_id: str | None = None
+    sensors: tuple[SensorReading, ...] = ()
 
 
 def _aware(value: Any) -> datetime:
@@ -130,6 +205,11 @@ def parse_row(raw: Any) -> ShowcaseRow:
         measures = raw["measures"]
         if not isinstance(measures, tuple) or not all(isinstance(m, str) for m in measures):
             raise ValueError("measures")
+        if raw["sensor_home_id"] is not None and not isinstance(raw["sensor_home_id"], str):
+            raise ValueError("sensor_home")
+        sensors = raw["sensors"]
+        if not isinstance(sensors, tuple) or not all(isinstance(s, SensorReading) for s in sensors):
+            raise ValueError("sensors")
         return ShowcaseRow(
             case_id=raw["case_id"],
             email=raw["email"],
@@ -144,6 +224,8 @@ def parse_row(raw: Any) -> ShowcaseRow:
             stage=raw["stage"],
             closed=raw["closed"],
             measures=measures,
+            sensor_home_id=raw["sensor_home_id"],
+            sensors=sensors,
         )
     except (ValueError, TypeError, KeyError):
         raise ShowcaseDenied("row_shape") from None
@@ -181,9 +263,9 @@ class IdentityMap:
 
 
 def build_identity_map(rows: list[ShowcaseRow], now: datetime) -> IdentityMap:
-    """Admit at most 25 rows. Too many rows or a duplicated email fails the whole map closed."""
+    """Admit at most 1000 rows. Too many rows or a duplicated email fails the whole map closed."""
     if len(rows) > MAX_MAPPINGS:
-        raise ShowcaseConfigError("The allowlist supplies more than 25 showcase mappings.")
+        raise ShowcaseConfigError("The allowlist supplies more than 1000 showcase mappings.")
     cases: dict[str, str] = {}
     excluded = dict.fromkeys(EXCLUSION_REASONS, 0)
     for row in rows:
@@ -436,6 +518,23 @@ def showcase_view(row: ShowcaseRow) -> dict[str, Any]:
             "postcode": _bounded(row.postcode),
         },
         measures=[m for m in names if m][:20],
+        sensors={
+            "synthetic": True,
+            "note": (
+                "Synthetic sensor history for your home. These are stored demo readings, "
+                "not live measurements or safety advice."
+            ),
+            "history": [
+                {
+                    "observed_at": r.observed_at.astimezone(UTC).isoformat().replace("+00:00", "Z"),
+                    "temperature_c": r.temperature_c,
+                    "humidity_pct": r.humidity_pct,
+                    "temperature_status": r.temperature_status,
+                    "humidity_status": r.humidity_status,
+                }
+                for r in row.sensors
+            ],
+        },
         progress=progress,
         next_step=next_step,
         unavailable=[dict(feature=f, reason=r) for f, r in _preview.UNAVAILABLE],
