@@ -3129,6 +3129,53 @@ workbench sign-in are separate concerns: updating the registration does not
 automatically consent another client to call the API, and an API token cannot
 be substituted with a Graph token or forged proxy claims.
 
+## Rebuild authoring and local rehearsal (Refs #148)
+
+The installed module below authors the ordered rebuild/check contracts and runs
+a **synthetic local SQLite control-plane simulation only**. It is not an Azure
+deployment/teardown script, does not invoke the infrastructure helpers, and
+cannot complete issue #148. There is deliberately no cloud adapter or `--apply`
+option. The historical observed rebuild below remains unchanged.
+
+After installing the [source packages](../src/README.md#commands):
+
+```bash
+python3 -m zava_forward.orchestrator.rebuild --dry-run
+python3 -m zava_forward.orchestrator.rebuild --synthetic-local
+```
+
+Dry-run prints the fixed stage, integration and verification contracts without
+backend reads, workspace creation, credentials or Azure access. The local mode
+creates an exclusively owned temporary SQLite file, generates an invented case,
+audit witness and `example.test` staff row, checks them through reopened
+connections, removes modeled resources in dependency order and separately checks
+budget inventory. It cleans only that owned temporary workspace. It never reads
+`ZF_DATA`, a roster, an Azure profile, `.env` or private programme data.
+`local-sql-verified` means a SQLite fixture check, not Azure SQL, workload identity
+or application-store acceptance; `simulated-not-live` means no corresponding
+image, auth, HTTP or model operation was executed. A failing checkpoint exits
+nonzero with `REBUILD_FAILED`, never an automatically reported successful rebuild.
+
+The sequencing library rejects foreign subscription/group IDs, unknown types,
+duplicate IDs, locks, retained resources and missing boolean safety evidence.
+It admits at most 1,000 combined resource/budget records per authoring inventory.
+It validates both inventories before the first deletion and compares their
+exact remaining records before and after each deletion, stopping on drift,
+unconfirmed deletion or unexplained disappearance. Its bounded allowlist/order
+covers the modeled resource types, not every possible Azure child or extension;
+unsupported inventory must stop, not be skipped. It never removes locks,
+purges soft-deleted services or weakens retention to obtain an empty result.
+Budgets are separate and last. These checks do not eliminate cloud races.
+
+Actual #148 acceptance still needs integration with the existing #138
+deployment/release helpers and SQL/auth/staff setup, authorized preservation of
+the continuing synthetic stock/programme lineage, private credential/tenant
+operations and a separately authorized disposable Azure rebuild/teardown.
+An owner must approve the exact deletion/preservation inventory; Legal/Compliance
+must resolve any applicable retained-data/hold disposal decision before a later
+live adapter may act. No such decision, authority, deployment or cloud test is
+inferred from this rehearsal. All four issue criteria remain partial.
+
 ## From-empty rebuild observed on 2026-10-12
 
 The owner-authorised `ama` reset retained the group, its policy-exception tag,
