@@ -110,6 +110,12 @@ child's original Review/evidence, preserve both index/log additions, and
 rerun full-covering changed gate on the merged clean committed head. This
 is requested publication maintenance, not another critique/Review.
 
+Ordinary merge had only an append/append conflict in `docs/reference/log.md`.
+Resolved by preserving the complete incoming main entry byte-for-byte, then
+appending the complete resident-assistant entry byte-for-byte. The reference
+index merged cleanly and retains both topics. No runtime, check or security
+input changed during this merge; the final gate base is the full d455d67d SHA.
+
 The committed state records completion of the RPI assessment and the still
 pending publication action. Final receipt, independent exact-head assessment
 and actual remote PR metadata will be external; no post-gate metadata commit.
