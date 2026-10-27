@@ -7538,3 +7538,38 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   Gate/hosted publication evidence remains external and distinct from this
   source checkpoint. No private data, physical/production acceptance, human
   approval, issue closure or main merge is asserted.
+
+## [2026-10-27] restructure | Owner-authorized source cut-over (Refs #199-#203)
+
+* Owner explicitly SIGNED OFF cut-over #201 on 2026-10-27 in the retirement
+  task direction. Added the dated record to the
+  [existing evidence pack](../architecture/cutover-evidence-pack.md#owner-authorized-directory-retirement-2026-10-27)
+  and ADR 0006, preserving original failures and unchecked historical gates.
+* Verified fetched main `65a514ed20e97816dbf47e9fb981ab4cfe40597d`:
+  executable code/tests/images/CI/Bicep/scripts already use `src/`;
+  only the pointer remained, and the earlier prototype was already absent.
+  Removed the pointer; no private data or backups were inspected.
+* Created locally absent annotated archive `v0.21.0`, matching current BRD
+  version `0.21.0`, at that last pre-deletion commit. The owner, not the
+  agent, publishes it with
+  `git push origin refs/tags/v0.21.0:refs/tags/v0.21.0`.
+  No tag push or GitHub release is claimed.
+* Updated repository/source/architecture guidance, capstone registry table,
+  active PRD location clarification, rubric summary, parity navigation,
+  regulatory UX source path, coordinator source-layout note and KB index.
+  Workflow/check names, memory,
+  original case study, historical reports/audits and earlier log bytes remain
+  unchanged. Historical/defensive old-path strings are classified in the
+  evidence pack, not globally rewritten.
+* Additive repair map for earlier log links into the removed guide:
+  the two Entra/CSP entries now resolve through
+  [current account behavior](../../src/api/README.md#entra-id-on-container-apps);
+  the honest-limits entry through
+  [current limits](../../src/api/README.md#honest-limits);
+  the five-assistant configuration entry through the
+  [migrated assistant guide](../../src/agents/README.md#five-retrofit-assistants-2026-10-13-implementation).
+  Earlier link text and targets are intentionally untouched.
+* Scoped existing tests and reference/link checks support this maintenance
+  change, not full-suite parity, hosted CI/deployed health, private backup
+  verification, post-merge rubric comparison or whole-issue closure.
+  All five issues remain Refs; owner merge and remaining acceptance are separate.

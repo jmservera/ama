@@ -1,7 +1,7 @@
 ---
 title: Regulatory literacy for journey users and agents
 description: What each journey role should know about current law and regulation, and how agents can surface it so people make safe decisions when in doubt
-ms.date: 2026-10-15
+ms.date: 2026-10-27
 ms.topic: reference
 status: Research synthesis and design proposal; not legal advice, validated user need or approved requirement
 ---
@@ -50,7 +50,8 @@ Dated status is from the local snapshots (retrieved 2026-09-19; register
 
 The MVP already restricts the five assistants to proposal-only output with
 captured source IDs and mandatory citations
-(`mvp/zavaforward_mvp/assistants.py`). A regulatory layer fits the same
+(`src/core/src/zava_forward/core/assistants.py`, migrated under ADR 0006).
+A regulatory layer fits the same
 pattern.
 
 1. A regulatory source register as data: ID, authority type, status

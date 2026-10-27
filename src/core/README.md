@@ -2106,7 +2106,7 @@ generation still uses the existing tools and `ZF_DATA`, not this metadata CLI.
 
 * Evaluation dataset registry (`src/agents/evals/registry.json`) lists every golden and
   evaluation dataset with version, owner and purpose; a test fails for an
-  unregistered file in `mvp/evals/` or any `src/<project>/evals/` folder. The stock-scale fixture (60,000 homes, 600,000
+  unregistered file in any `src/<project>/evals/` folder. The stock-scale fixture (60,000 homes, 600,000
   events, wholly fictional, seeded) is rebuilt with
   `python3 -m zava_forward.core.synthetic.scale_fixture` (moved in M3), writes to
   `scale-fixture/` under the per-user `ZF_DATA` folder (default
