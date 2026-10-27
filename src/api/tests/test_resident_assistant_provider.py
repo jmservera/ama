@@ -100,6 +100,15 @@ class AzureTopicProviderTests(unittest.TestCase):
         self.token.assert_not_called()
         self.transport.assert_not_called()
 
+    def test_reservation_io_error_is_normalized_before_credentials_or_transport(self) -> None:
+        self.reserve.side_effect = OSError("SYNTHETIC-ACCOUNTING-DETAIL")
+        with self.assertRaisesRegex(AssistantUnavailable, "^provider_failed$") as caught:
+            self.provider(True).select(Topic.STATUS)
+        self.assertIsNone(caught.exception.__cause__)
+        self.reserve.assert_called_once()
+        self.token.assert_not_called()
+        self.transport.assert_not_called()
+
     def test_timeout_keeps_reservation_and_does_not_retry(self) -> None:
         self.transport.side_effect = TimeoutError("SYNTHETIC-SECRET")
         with self.assertRaisesRegex(AssistantUnavailable, "^provider_failed$"):

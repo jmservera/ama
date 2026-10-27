@@ -119,3 +119,44 @@ Changes: `.copilot-tracking/changes/2026-10-27/resident-assistant-469-changes.md
 Implementation and local checks complete. Parent now owns one independent
 Review, followed by commit/push/stacked PR under the explicit owner direction.
 Publication and hosted checks are not claimed complete by implementation.
+
+## PR 474 correction plan addendum (2026-10-27, Refs #466)
+
+Owner-selected continuation; original plan and outcomes remain historical.
+Goal: address exactly the three unresolved Copilot threads on the combined
+parent branch. Preserve own-case boundaries, native controls, reduced motion
+and disabled-provider defaults. No redesign, dependencies, Azure, secrets,
+full gate, force push or issue-closing keywords.
+
+<!-- P04 -->
+### P04 - Review-thread corrections
+
+* [x] P04-T01 Open `#account > summary` before Sign out; assert closed/hidden
+  then open/visible disclosure states in the existing browser scenario.
+* [x] P04-T02 Move reservation inside the existing provider try; add unit
+  coverage for OSError normalization before token/transport and generic HTTP 503.
+* [x] P04-T03 Keep submit focusable with guarded `aria-disabled` busy state.
+  Assert focus after keyboard success, HTTP/network failures, duplicate-submit
+  suppression and no focus stealing after another interaction or logout.
+* [x] P04-T04 Run requested full API discovery and available local Chromium
+  checks; prepare the independent Review/publication handoff. The RPI parent
+  then owns one Review addendum, pull with `--no-rebase`, commit with trailer,
+  push to the existing branch, replies and resolution of the three threads.
+
+Test ownership: no removals or new files; at most one new test method in each
+existing provider/API test file and focused assertions in the existing assistant
+browser check. Canonical targets are the three named source/check files;
+no generated targets. Full API discovery is regression coverage; mocked provider,
+HTTP error and Chromium assertions are semantic coverage. Browser checks that
+require SQL are not silently represented as executed without prerequisites.
+Readiness: final candidate ready for one independent critique before edits.
+Historical RV-001/RV-002 are selected for correction here, not retroactively
+closed in their original Review. Other activation/human-acceptance work is deferred.
+
+P04 critique disposition: executed once, Pass, no findings; appended independent
+critique preserves the original verdict. Planning Readiness: Ready.
+
+P04 implementation handoff complete: full API discovery 1089 run, OK
+(308 existing skips), 19 focused tests and assistant/Account/sensors Chromium
+scripts pass; lint/types/format/JS/diff checks pass. No material divergence.
+P04-T04 records validated implementation handoff, not later remote actions.

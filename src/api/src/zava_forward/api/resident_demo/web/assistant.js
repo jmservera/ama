@@ -56,10 +56,12 @@
     panel.appendChild(node("p", "A person can help instead. Speak to your housing officer, or write to or visit your local office."));
     content.appendChild(panel);
 
+    var busy = false;
     form.addEventListener("submit", function (event) {
       event.preventDefault();
-      if (button.disabled) return;
-      button.disabled = true;
+      if (busy) return;
+      busy = true;
+      button.setAttribute("aria-disabled", "true");
       select.disabled = true;
       result.textContent = "";
       status.textContent = "Getting your advice\u2026";
@@ -85,7 +87,8 @@
           }
         })
         .then(function () {
-          button.disabled = false;
+          busy = false;
+          button.removeAttribute("aria-disabled");
           select.disabled = false;
         });
     });

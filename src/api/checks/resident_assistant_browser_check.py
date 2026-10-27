@@ -34,6 +34,7 @@ def run(browser: Browser, base: str) -> None:
     expect(panel).to_contain_text("Advisory only")
     expect(panel).to_contain_text("No AI model is connected")
     select = page.get_by_label("Your question", exact=True)
+    button = page.get_by_role("button", name="Get advice")
     select.focus()
     page.keyboard.press("Home")
     page.keyboard.press("Tab")
@@ -43,6 +44,7 @@ def run(browser: Browser, base: str) -> None:
     expect(page.locator("#assistant-result")).not_to_contain_text("Design work")
     expect(page.locator("#assistant-result")).to_contain_text("Your case: Where things are")
     expect(select).to_be_enabled()
+    expect(button).to_be_focused()
     print("PASS keyboard question, own-case status, sources and advisory notice")
 
     for topic, text in (("documents", "cannot tell you what to send"), ("forms", "Do not guess")):
@@ -56,10 +58,23 @@ def run(browser: Browser, base: str) -> None:
     expect(page.locator("#assistant-status")).to_contain_text("could not reach")
     expect(page.locator("#assistant-result")).to_be_empty()
     expect(select).to_be_enabled()
+    expect(button).to_be_focused()
+    page.unroute("**/demo/assistant")
+    page.route(
+        "**/demo/assistant",
+        lambda route: route.fulfill(
+            status=503, content_type="application/json", body='{"error":"Try again later."}'
+        ),
+    )
+    button.press("Enter")
+    expect(page.locator("#assistant-status")).to_have_text("Try again later.")
+    expect(select).to_be_enabled()
+    expect(button).to_be_focused()
     page.unroute("**/demo/assistant")
     page.get_by_role("button", name="Get advice").click()
     expect(page.locator("#assistant-result")).to_contain_text("Do not guess")
-    print("PASS network failure, cleared result and retry")
+    expect(button).to_be_focused()
+    print("PASS success, network/HTTP failure focus, cleared result and retry")
 
     pending: dict[str, Any] = {}
 
@@ -69,14 +84,37 @@ def run(browser: Browser, base: str) -> None:
 
     page.route("**/demo/assistant", hold)
     select.select_option("status")
-    page.get_by_role("button", name="Get advice").click()
+    before = requests.count(base + "/demo/assistant")
+    button.focus()
+    button.press("Enter")
     expect(page.locator("#assistant-status")).to_have_text("Getting your advice\u2026")
-    expect(page.get_by_role("button", name="Get advice")).to_be_disabled()
+    expect(button).to_have_attribute("aria-disabled", "true")
+    expect(button).to_be_focused()
+    button.press("Enter")
+    summary = page.locator("#account > summary")
+    summary.focus()
+    pending["route"].fulfill(response=pending["response"])
+    expect(page.locator("#assistant-result")).to_contain_text("arranging a survey")
+    expect(select).to_be_enabled()
+    expect(summary).to_be_focused()
+    assert requests.count(base + "/demo/assistant") == before + 1
+    print("PASS focusable busy submit, duplicate suppression and no focus stealing")
+
+    button.click()
+    expect(page.locator("#assistant-status")).to_have_text("Getting your advice\u2026")
+    expect(button).to_have_attribute("aria-disabled", "true")
+    expect(page.locator("#account")).not_to_have_attribute("open", "")
+    expect(page.get_by_role("button", name="Sign out", exact=True)).to_be_hidden()
+    summary.click()
+    expect(page.get_by_role("button", name="Sign out", exact=True)).to_be_visible()
     page.get_by_role("button", name="Sign out", exact=True).click()
     expect(page.get_by_role("button", name="Sign in", exact=True)).to_be_visible()
+    expect(page.locator("#signin-title")).to_be_focused()
     sign_in(page, "two@example.com")
+    select.focus()
     pending["route"].fulfill(response=pending["response"])
     expect(page.locator("#assistant-result")).to_be_empty()
+    expect(select).to_be_focused()
     page.unroute("**/demo/assistant")
     page.get_by_role("button", name="Get advice").click()
     expect(page.locator("#assistant-result")).to_contain_text("Design work is under way")

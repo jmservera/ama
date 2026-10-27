@@ -98,9 +98,9 @@ class AzureTopicProvider:
         )
         if len(envelope.prompt.encode("ascii")) > MAX_PROMPT_BYTES:
             raise AssistantUnavailable("prompt_limit")
-        if not self.reserve(envelope):
-            raise AssistantUnavailable("budget_unavailable")
         try:
+            if not self.reserve(envelope):
+                raise AssistantUnavailable("budget_unavailable")
             token = self.token()
             if not token or "\r" in token or "\n" in token:
                 raise AssistantUnavailable("credential_unavailable")

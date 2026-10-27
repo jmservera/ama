@@ -77,3 +77,27 @@ create PR against feat/resident-interactive with Refs #469 and parent dependency
 Implementation completion is the validated candidate and reconciled handoff.
 The RPI parent owns the subsequent one-pass Review and publication actions;
 those actions are not implementation-phase completion claims.
+
+## PR 474 P04 details addendum (2026-10-27, Refs #466)
+
+P04-T01 uses the real native Account disclosure in the constructed local browser
+fixture. P04-T02 raises a synthetic OSError from reserve; assert
+`AssistantUnavailable("provider_failed")`, one reservation and zero token/HTTP
+calls, then use the real adapter with mocked callbacks through the HTTP handler
+to assert generic 503 without exception details or dropped connection.
+P04-T03 retains native submit type, adds an explicit busy guard and
+`aria-disabled`, never moves focus programmatically, and re-enables topic
+selection on completion. Assert actual focus after success and both failure
+types, suppressed pending resubmission, another focused control unaffected,
+and delayed old response isolated after logout/new resident. Existing reflow/
+reduced-motion checks stay.
+P04-T04 runs the exact owner API discovery command and available browser scripts.
+Leave unrelated untracked gate evidence untouched. Preserve original critique/
+Review findings and append only this continuation's evidence. Pull before
+commit, use authenticated privacy-safe email and required trailer, push without
+force, then resolve only the three supplied threads with commit/test evidence.
+
+P04 completion evidence: all four implementation markers satisfied; full API
+discovery and the three offline browser scripts passed. No source removals or
+new files. The SQL-backed browser runner was not run under the no-secrets scope.
+Review and publication remain parent-owned, distinct from implementation.

@@ -32,6 +32,12 @@ PYTHONPATH=tests:../core/tests:../agents/tests python -m checks.resident_assista
 Full unit discovery remains the normal API command. Browser evidence does not
 establish screen-reader, user or live-service acceptance.
 
+The focused check covers Account disclosure before sign-out and submit focus
+after success or failure, including duplicate suppression and delayed logout
+isolation. Busy advice keeps the native submit button focusable with
+`aria-disabled`. Optional reservation I/O failures return the generic assistant
+503 without acquiring a token or calling the model transport.
+
 ## Finite offline sensor ingestion (#110)
 
 `sensor_ingestion.SensorIngestion(store).consume(observations, received_at=...)`

@@ -10,6 +10,7 @@ from unittest.mock import Mock
 from zava_forward.core.resident_assistant import AssistantUnavailable, Topic
 
 from test_resident_demo_api import DemoTestCase
+from zava_forward.api.resident_demo.assistant import EXPIRES, AzureTopicProvider
 
 
 class AssistantApiTests(DemoTestCase):
@@ -125,6 +126,33 @@ class AssistantApiTests(DemoTestCase):
         self.assertIn("do not have a plain-language update", body["answer"])
         self.assertIn("recorded as closed", body["answer"])
         self.assertNotIn("SECRET", body["answer"])
+
+    def test_reservation_io_error_returns_generic_503_before_token_or_transport(self) -> None:
+        reserve = Mock(side_effect=OSError("SYNTHETIC-ACCOUNTING-DETAIL"))
+        token, transport = Mock(), Mock()
+        self.app.assistant_provider = AzureTopicProvider(
+            "https://synthetic-test.openai.azure.com",
+            "review-required",
+            enabled=True,
+            token=token,
+            reserve=reserve,
+            transport=transport,
+            clock=lambda: EXPIRES - 10,
+        )
+        client = self.client()
+        self.assertEqual(client.login("one@example.com"), 200)
+        capture = io.StringIO()
+        with contextlib.redirect_stderr(capture):
+            status, body, _ = client.call("POST", "/demo/assistant", {"topic": "status"})
+        self.assertEqual(status, 503)
+        self.assertEqual(
+            body,
+            {"error": "The assistant is unavailable. Try again or ask your housing officer."},
+        )
+        self.assertEqual(capture.getvalue(), "resident assistant unavailable\n")
+        reserve.assert_called_once()
+        token.assert_not_called()
+        transport.assert_not_called()
 
     def test_document_and_form_guidance_and_method_boundary(self) -> None:
         client = self.client()

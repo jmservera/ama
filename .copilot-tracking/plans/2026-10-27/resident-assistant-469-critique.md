@@ -107,3 +107,33 @@ ms.date: 2026-10-27
 ## Next Steps
 
 The active planning parent should resolve PC-001 and PC-002 directly, preserve this critique unchanged and finalize the plan without another critique pass. No user action is required. This critic stops here; it does not implement, run the long gate or publish.
+
+
+## PR 474 P04 final-candidate critique addendum (2026-10-27, Refs #466)
+
+* Execution: Complete. Verdict: Pass. Findings: none (Critical/High/Medium/Low: 0).
+* Inputs/boundary: only the PR474 P04 addenda in
+  .copilot-tracking/plans/2026-10-27/resident-assistant-469-plan.md,
+  .copilot-tracking/details/2026-10-27/resident-assistant-469-phase-details.md,
+  and .copilot-tracking/research/2026-10-27/resident-assistant-469-research.md,
+  assessed once against the supplied owner requirements. This assesses planning
+  credibility, not implementation or test results.
+* Coverage: P04-T01 covers native Account closed/open visibility before Sign out;
+  P04-T02 covers reserve OSError normalization inside the existing try, before
+  token/transport, with callback isolation and generic HTTP 503; P04-T03 covers
+  native focused submit through success and both failure types, duplicate busy
+  guards, and no focus stealing after interaction/logout. Existing tests retain
+  their assertions, with no new files and at most one added provider/API method.
+* P04-T04 covers full API discovery, available Chromium checks with honest
+  prerequisite reporting, independent Review, pull --no-rebase before commit/push,
+  and existing-branch publication. Owner exclusions (full gate, Azure, secrets,
+  force push) and Refs #466-only scope remain settled, not reopened. Original
+  evidence and unrelated gate records remain untouched.
+* Limitations/residual risk: no source review or tests performed; runtime focus,
+  error normalization and browser availability remain implementation/Review
+  evidence obligations. No actionable planning gaps or user decisions identified.
+
+## Next Steps
+
+Planning parent may proceed with the bounded correction and independent Review.
+Highest-impact finding: none; disposition needs: none; user response: not required.

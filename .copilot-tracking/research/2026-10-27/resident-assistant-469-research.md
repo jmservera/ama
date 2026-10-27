@@ -122,3 +122,21 @@ sources and unresolved pricing recorded; no source changes during Research.
 ## Design note for owner decision
 
 No model or credential route is approved or activated.
+
+## PR 474 review-thread addendum (2026-10-27, Refs #466)
+
+Focused continuation requested by the owner; original findings remain unchanged.
+Wider: the three supplied unresolved threads map to the existing assistant
+browser check, optional provider and native submit handler (C6-C8).
+Deeper: C6 `src/api/checks/resident_assistant_browser_check.py:75` locates Sign out
+without opening Account; C7 `src/api/src/zava_forward/api/resident_demo/assistant.py:103`
+reserves outside exception normalization; C8
+`src/api/src/zava_forward/api/resident_demo/web/assistant.js:63` disables the
+focused button. Contrarian: retain a native submit button with guarded
+`aria-disabled` busy state rather than restoring focus and risking stealing it
+after another interaction or logout. Refresh W1 before implementation and Review.
+Disposition: executed; Planning Readiness: Ready. No broader discovery needed.
+Only these defects and focused regressions are in scope. Owner explicitly
+excludes full gate, Azure, secrets and force push; pull the rubric bot commits
+before committing/pushing to the existing open PR. Seven pre-existing untracked
+`pr474-exact-head-gate` records are unrelated and must remain untouched.

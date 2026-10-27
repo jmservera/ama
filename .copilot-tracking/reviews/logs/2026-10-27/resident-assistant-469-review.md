@@ -294,3 +294,79 @@ Return this one assessment to the active parent. The parent owns disposition
 and continuation, including later rpi-implement for RV-001/RV-002 and any
 separately authorized publication against feat/resident-interactive. Preserve
 the original critique and this finding set. Do not launch another Review.
+
+## PR 474 P04 Review addendum (2026-10-27, Refs #466)
+
+### Opening Review State
+
+* Goal/basis: one independent assessment of the three owner-selected corrections,
+  P04-T01-T04 and current research/plan/details/critique/changes/state addenda.
+* Boundary: complete tracked diff against HEAD
+  9c0d71960b954ea607912840e8d804dfe888987e on feat/resident-interactive;
+  original Review and historical findings remain unchanged.
+* Evidence readiness: supplied canonical addenda and implementation/test/doc
+  diff available; validation reports require attribution and source comparison.
+* First comparison: reconcile P04 markers, then Account visibility, reserve
+  normalization and native submit focus, tests, styles and documentation.
+* Authority: append this record only; no source/state changes, agents, commits,
+  remote mutations, private data, Azure or full gate. Unrelated gate files
+  excluded. Initial blockers: none.
+
+### Execution and outcome
+
+* Execution: Complete. Outcome: Conformant for this P04 boundary.
+* Complete finding set: no new substantive findings (0 Critical/High/Medium/Low);
+  no implementation, planning or research route required. No repeat Review.
+* Compared all twelve changed implementation/test/doc/evidence files. P04
+  markers, details, changes, state and handoff reconcile; research Ready and
+  the P04 critique Pass support the same three corrections. Original critique
+  dispositions remain historical. Clarifying T04 as implementation handoff,
+  not completed publication, preserves owner intent; no material divergence.
+  Five original Markdown evidence prefixes independently verified unchanged.
+* P04-T01: existing browser script checks Account closed/Sign out hidden,
+  opens the native summary, then checks Sign out visible before clicking.
+* P04-T02 / historical RV-002: reserve now runs inside existing normalization;
+  OSError becomes AssistantUnavailable before token/transport. Both direct
+  provider and actual HTTP-handler regression tests assert one reservation,
+  zero token/transport, generic 503 and no callback detail exposure.
+* P04-T03 / historical RV-001: native submit retains focus via guarded
+  aria-disabled; busy submissions return before another request. No
+  programmatic focus restoration can steal focus. Browser assertions cover
+  keyboard success, network/HTTP failure, pending duplicates, another focused
+  control and logout/new-resident delayed-response isolation. Reduced-motion
+  coverage remains. These corrections do not rewrite historical RV outcomes.
+* Exactly two added unit methods, one per existing provider/API file; no
+  removed methods/files or added files in the implementation diff. Existing
+  browser assertions are retained/enhanced. README describes actual behavior.
+
+### Validation and narrow web assessment
+
+* Independently inspected the supplied external session files/pr474-api-tests.log:
+  1089 tests in 407.206s, OK (skipped=308). Full suite not rerun. The reported
+  unchanged production source during discovery, subsequent formatting-only
+  corrections and 19 final focused passes are attributed to the implementer.
+* Attributed supplied evidence: both new regressions failed before correction
+  (raw OSError/HTTP RemoteDisconnected); assistant/Account/sensors actual local
+  Chromium scripts passed; ruff, format and mypy on four Python files passed.
+  Independently reran node --check assistant.js and git diff --check: passed.
+* Fresh complete web guidelines fetched successfully from the specified source;
+  full assistant.js and relevant inherited demo.css reviewed against them.
+  Fluent 2 foundations, plain ASCII/plain-language and reduced motion take
+  precedence over generic style preferences. No broader conformance claim.
+* src/api/src/zava_forward/api/resident_demo/web/assistant.js: pass.
+* src/api/src/zava_forward/api/resident_demo/web/demo.css: pass for relevant
+  inherited focus, control, reflow and reduced-motion rules; unchanged.
+* SQL-backed resident_demo_browser_check not run under the settled no-secrets
+  scope. Full gate, Azure, private data and live-provider checks excluded,
+  not failed prerequisites or claimed passes.
+
+### Routing and next owner
+
+* Review blockers/remaining active implementation: none identified.
+* Original RV-003 activation and RV-004 human accessibility/content acceptance
+  remain distinct owner-gated follow-ups, outside P04; no new active defects.
+* Return to the RPI parent for state reconciliation and authorized publication:
+  repeat pull --no-rebase immediately before commit if needed, privacy-safe
+  authenticated email/trailer, push without force and reply/resolve only the
+  three supplied threads with Refs #466. No publication or thread mutation
+  performed here; this is not exact-committed-head, hosted or human acceptance.

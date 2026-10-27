@@ -81,3 +81,36 @@ No implementation blockers or unchecked implementation tasks. One independent
 Review and parent-owned commit/push/PR remain. Real-provider
 activation, durable accounting and human/accessibility acceptance are future
 owner-gated work.
+
+## PR 474 P04 implementation addendum (2026-10-27, Refs #466)
+
+Scope: only the three supplied review threads and focused regressions.
+Research Ready; independent P04 critique Pass. Implementation starting with
+provider/HTTP regressions, Account disclosure assertions and native focusable
+busy submit. Existing unrelated untracked gate records remain untouched.
+Original outcomes and findings above are preserved. No full gate or Azure.
+
+P04-T01/T02/T03 complete: Account closed/hidden then open/visible assertions;
+reserve moved inside existing normalization; guarded native `aria-disabled`
+submit never moves focus. Added exactly two unit methods and existing browser
+assertions, no files/removals. Before the fix both new regressions failed:
+raw OSError and actual HTTP RemoteDisconnected. Afterward all 19 focused
+provider/API tests and all three offline Chromium scripts (assistant, Account,
+sensors) pass. Assistant checks include success/network/HTTP failure focus,
+pending duplicate suppression, no focus stealing, logout/new-resident isolation,
+320px/reduced motion and expired-session recovery. Full API discovery is running.
+Initial lint found import spacing and one long test name; corrected without
+behavior changes. SQL-backed browser runner is outside the no-secrets scope.
+
+P04-T04 final validation: from src/api, the owner's exact PYTHONPATH with
+`python3 -m unittest discover -s tests -q` in the existing installed
+`/tmp/ama-469-venv` ran 1089 tests in 407.206s, OK (308 existing skips).
+Log: external session `files/pr474-api-tests.log`. After import/test-name
+formatting corrections, all 19 focused tests reran successfully; production
+source did not change during full discovery. All three offline Chromium scripts
+passed; ruff, format, mypy (four Python files), node syntax and diff checks pass.
+Original five Markdown evidence prefixes verified byte-preserved. No material
+divergence; P04-T04 completion clarified as implementation handoff rather than
+unperformed publication. `git pull --no-rebase origin feat/resident-interactive`
+reported already up to date at 9c0d71960b954ea607912840e8d804dfe888987e.
+Ready for one independent P04 Review; no implementation blockers.
