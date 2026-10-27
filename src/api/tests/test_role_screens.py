@@ -37,3 +37,11 @@ class RoleScreens(unittest.TestCase):
         self.assertIn("signal.throwIfAborted()", source)
         self.assertIn('"aria-current"', source)
         self.assertIn("Reset screen view", source)
+
+    def test_supplier_uses_restricted_reads_and_separate_capacity_evidence(self) -> None:
+        source = (WEB / "screen-supplier.js").read_text()
+        self.assertIn('me.user.role === "Contractor" ? null', source)
+        self.assertIn("capacity.usable_committed", source)
+        self.assertIn("item.case_id === c.id", source)
+        self.assertNotIn("c.resident.", source)
+        self.assertNotIn("post(", source)

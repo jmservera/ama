@@ -66,4 +66,13 @@ def synthetic_data() -> dict[str, Any]:
     )]
     c["stock_reconciliation_events"] = []
     c["quality"] = []
+    c["resident"].update(priority_support=True, adjustment="SYN-PRIVATE-228")
+    data["procurement"] = dict(packages=[dict(
+        id="SYN-PKG-228", name="Synthetic package", period_from="2026-10-01",
+        period_to="2026-12-01", contract_ref="SYN-CALL-OFF-228", contract_version="2",
+        scope="SYN Loft scope", scope_version=3, scope_history=[],
+        capacity={"Test Ltd": dict(offered=4, committed=2, evidence="SYN-CAPACITY-228",
+                                   by=owner["name"], at="2026-10-27T09:00:00Z",
+                                   version=1, scope_version=3, details=None)}
+    )], work_orders=[])
     return data

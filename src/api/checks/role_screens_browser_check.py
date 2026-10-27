@@ -12,7 +12,13 @@ from checks.design_system_browser_check import check, main
 from checks.role_screens_fixtures import synthetic_data
 
 # Independent child branches extend only their own installed-screen expectation.
-SCENARIOS: dict[str, tuple[str, str, tuple[str, ...]]] = {}
+SCENARIOS: dict[str, tuple[str, str, tuple[str, ...]]] = {
+    "228": ("pam@example.test", "Supplier capacity and job evidence", (
+        "SYN-PKG-228", "SYN-CALL-OFF-228; v2", "SYN Loft scope; v3",
+        "Offered versus committed capacity", "Unknown - not confirmed",
+        "Contract manager", "Draft readiness only",
+    )),
+}
 
 
 def run_browser(base: str) -> None:
@@ -129,6 +135,23 @@ def run_browser(base: str) -> None:
                           forbidden.get_by_role("region", name="Evidence for ZF-1").count() == 0)
                 finally:
                     forbidden_context.close()
+                if selected == "228":
+                    contractor = browser.new_context()
+                    try:
+                        job = contractor.new_page()
+                        job.goto(base + "/app#/screens?screen=supplier&case=ZF-1")
+                        job.locator("#email").fill("contractor@example.test")
+                        job.locator("#pw").fill("synthetic-check")
+                        job.locator("button[type=submit]").click()
+                        job.get_by_role("region", name="Evidence for ZF-1").wait_for()
+                        job_text = job.locator("main").inner_text()
+                        check("contractor job pack omits vulnerability reason and staff package",
+                              "SYN-PRIVATE-228" not in job_text and "SYN-PKG-228" not in job_text
+                              and "Needs notice" in job_text and "Submission is not acceptance" in job_text)
+                        check("contractor cannot read another provider's case",
+                              job.request.get(base + "/api/cases/ZF-5").status in (403, 404))
+                    finally:
+                        contractor.close()
             page.goto(base + "/app#/screens?screen=unavailable")
             page.get_by_role("heading", name="Screen unavailable", exact=True).wait_for()
             check("unknown or uninstalled screen not exposed",
