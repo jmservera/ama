@@ -724,6 +724,7 @@ class GateTests(unittest.TestCase):
                 "project-api",
                 "image-api",
                 "logo-0600",
+                "mssql",
             },
             "src/orchestrator/Dockerfile": {
                 "preflight",
@@ -926,6 +927,7 @@ class GateTests(unittest.TestCase):
             patch.object(Path, "read_text", read),
             patch.object(Path, "exists", lambda p: str(p) in values or real_exists(p)),
             patch.object(gate.os, "sched_getaffinity", return_value=set(range(8))),
+            patch.object(gate, "cgroup_directories", return_value=[Path("/sys/fs/cgroup")]),
         ):
             self.assertEqual(gate.worker_limit(8), 2)
             values["/sys/fs/cgroup/cpu.max"] = "150000 100000"
@@ -940,6 +942,98 @@ class GateTests(unittest.TestCase):
             for jobs in (0, -1):
                 with self.assertRaises(gate.GateError):
                     gate.worker_limit(jobs)
+
+    def test_sql_dependency_manifests_select_the_real_consumer(self) -> None:
+        for path in (
+            "src/api/requirements.txt",
+            "src/api/requirements.in",
+            "src/api/pyproject.toml",
+            "src/core/pyproject.toml",
+        ):
+            with self.subTest(path=path):
+                selected = gate.changed_groups([path], [])
+                self.assertIn("mssql", selected)
+                self.assertIn("project-api", selected)
+
+    def test_api_extra_suites_wait_for_shared_environment_writers(self) -> None:
+        for completed in (["namespace", "project-api"], ["namespace", "project-api", "setup-api"]):
+            output = self.out / str(len(completed))
+            output.mkdir()
+            runner = gate.Runner(self.root, output, self.base, [])
+            runner.groups = completed
+            runner.jobs = 3
+            seen: list[str] = []
+            active = 0
+            peak = 0
+            mutex = threading.Lock()
+
+            def work(
+                group: str, *, mutex: Any = mutex, seen: list[str] = seen, runner: Any = runner
+            ) -> None:
+                nonlocal active, peak
+                with mutex:
+                    active += 1
+                    peak = max(peak, active)
+                    seen.append(group)
+                threading.Event().wait(0.01)
+                with mutex:
+                    active -= 1
+                runner.groups.append(group)
+
+            groups = [
+                "browser",
+                "mssql",
+                "extra-api:test_a.Case.test_a",
+                "extra-api:test_b.Case.test_b",
+            ]
+            with patch.object(runner, "dispatch", side_effect=work):
+                runner.schedule(groups)
+            self.assertEqual(seen, groups)
+            self.assertEqual(peak, 1)
+
+    def test_worker_limit_intersects_nested_cgroups_and_ancestors(self) -> None:
+        mount = self.out / "cgroups"
+        nested = mount / "user/session"
+        nested.mkdir(parents=True)
+        for directory in (mount, nested.parent, nested):
+            (directory / "cpu.max").write_text("max 100000")
+            (directory / "memory.max").write_text("max")
+            (directory / "memory.current").write_text(str(1024**3))
+        (nested / "cpu.max").write_text("200000 100000")
+        (nested / "memory.max").write_text(str(5 * 1024**3))
+        real_read = Path.read_text
+        values = {
+            "/proc/self/cgroup": "0::/user/session\n",
+            "/proc/self/mountinfo": f"29 23 0:26 / {mount} rw - cgroup2 cgroup rw\n",
+            "/proc/meminfo": "MemAvailable: 64000000 kB\n",
+        }
+
+        def read(path: Path, *args: Any, **kwargs: Any) -> str:
+            return values[str(path)] if str(path) in values else real_read(path, *args, **kwargs)
+
+        with (
+            patch.object(Path, "read_text", read),
+            patch.object(gate.os, "sched_getaffinity", return_value=set(range(16))),
+        ):
+            self.assertEqual(gate.cgroup_directories(), [nested, nested.parent, mount])
+            with self.assertRaises(gate.GateError):
+                gate.worker_limit(8)
+            (nested / "memory.max").write_text(str(6 * 1024**3))
+            self.assertEqual(gate.worker_limit(8), 1)
+            (nested.parent / "cpu.max").write_text("150000 100000")
+            with self.assertRaises(gate.GateError):
+                gate.worker_limit(8)
+            (nested.parent / "cpu.max").write_text("max 100000")
+            (nested.parent / "memory.max").write_text(str(5 * 1024**3))
+            with self.assertRaises(gate.GateError):
+                gate.worker_limit(8)
+            values["/proc/self/cgroup"] = "0::/../../hidden\n"
+            with self.assertRaisesRegex(gate.GateError, "membership"):
+                gate.worker_limit(8)
+            values["/proc/self/cgroup"] = "0::/user/session\n"
+            values["/proc/self/mountinfo"] = ""
+            with self.assertRaisesRegex(gate.GateError, "mount"):
+                gate.worker_limit(8)
 
     def test_real_partial_fixture_requires_matching_selection_and_evidence(self) -> None:
         receipt = self.scoped_receipt(["preflight", "namespace", "static"], passed=True)

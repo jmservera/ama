@@ -68,6 +68,10 @@ back to the full matrix; inspect the selection before execution when full work
 is not authorized. Documentation selects static checks plus their namespace
 bootstrap; runner/tests also select focused tooling lint/types. Runtime/build
 inputs select consumer images, and store/schema/SQL inputs select real SQL.
+Core/API dependency manifests also select their real SQL consumer. API extra
+suites run after selected browser/SQL environment mutations. Worker capacity
+intersects effective cgroup-v2 membership and all visible limiting ancestors;
+unresolvable membership fails closed.
 All selected checks retain their original contracts.
 
 ```bash

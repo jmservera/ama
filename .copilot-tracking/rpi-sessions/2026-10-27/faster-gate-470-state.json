@@ -3,8 +3,8 @@
   "task_slug": "faster-gate-470",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-27/faster-gate-470-research.md",
@@ -12,7 +12,7 @@
     "details": ".copilot-tracking/details/2026-10-27/faster-gate-470-phase-details.md",
     "critique": ".copilot-tracking/plans/2026-10-27/faster-gate-470-critique.md",
     "changes": ".copilot-tracking/changes/2026-10-27/faster-gate-470-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/logs/2026-10-27/faster-gate-470-review.md"
   },
   "confirmed_decisions": [
     {
@@ -29,12 +29,34 @@
       "decision": "Single critique executed: Revise; PC-001 through PC-006 directly applied; plan Ready",
       "status": "resolved",
       "evidence": ".copilot-tracking/plans/2026-10-27/faster-gate-470-plan.md"
+    },
+    {
+      "decision": "One original Review executed Complete / Not accepted against da2969b8. RV-001 through RV-003 routed to later implementation; RV-004 residual.",
+      "status": "original-outcome-preserved",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/faster-gate-470-review.md"
+    },
+    {
+      "decision": "Later rpi-implement P03 applied RV-001 through RV-003; 126 tools unittest cases and strict typing pass. No second Review.",
+      "status": "implemented-awaiting-exact-head-publication-assessment",
+      "evidence": ".copilot-tracking/changes/2026-10-27/faster-gate-470-changes.md"
+    },
+    {
+      "decision": "Agent policy static and mechanical Pass; seven proxy simulation scenarios independently graded Pass. Native/intended-profile behavior not established; human checkbox unchecked.",
+      "status": "qualified-simulation-evidence",
+      "evidence": ".copilot-tracking/reviews/2026-10-27/faster-gate-470-agent-behavior.md"
     }
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Implement",
-    "action": "Activate rpi-implement and execute P01/P02 without a full gate"
+    "phase": "Follow-up",
+    "action": "Commit corrected source and original evidence; refresh final partial gate, independently assess exact head, push topic branch and open Refs #470 PR. Final publication receipt/status remain external to avoid self-invalidation."
   },
-  "prioritized_follow_ups": []
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Owner-authorized full parallel before/after benchmark",
+      "rationale": "Only outstanding performance acceptance evidence; explicitly prohibited in this tooling task",
+      "evidence": "Original Review RV-004 and supplied historical 23-26 minute baseline"
+    }
+  ]
 }

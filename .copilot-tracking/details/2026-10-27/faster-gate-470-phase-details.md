@@ -88,3 +88,14 @@ to host limits; malformed available limits fail rather than assume capacity.
 Before any real measurement, inspect the committed diff selection using the
 trusted selector. Abort rather than execute if it selects full. Expected
 branch selection: preflight, namespace, static, tooling.
+
+## P03 routed implementation
+
+RV-001: Core/API requirements and project manifests include the SQL consumer.
+RV-002: API extra suites join the selected project/browser/SQL shared-environment
+chain, including resumed setup. RV-003: resolve cgroup-v2 process membership and
+mount metadata, then intersect CPU quota and remaining memory at every visible
+ancestor, alongside host affinity/memory. Unsupported membership/mounts block.
+Three added regression methods bring new-method count to 16, within budget.
+The original Review remains Complete / Not accepted; later implementation
+evidence and publication assessment do not relabel or repeat that Review.

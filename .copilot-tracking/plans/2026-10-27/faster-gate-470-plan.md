@@ -72,7 +72,7 @@ timings from the measured fast tier and unmeasured parallel full projection.
 <!-- P02 -->
 ### P02: Validation and publication
 
-* [ ] P02-T01: Run tools unit tests, focused Ruff/mypy and measured fast tier.
+* [x] P02-T01: Run tools unit tests, focused Ruff/mypy and measured fast tier.
 * [ ] P02-T02: Preserve independent Review, commit, verify final exact HEAD,
   push and open a PR to main.
 
@@ -85,6 +85,21 @@ resume identity checks. Regression coverage: existing command/evidence mutation
 suite remains mandatory. Generated targets: external logs/receipts only.
 Validation: `python3 -m unittest discover -s tools -p test_rpi_checks.py`;
 focused pinned Ruff/mypy; one `--changed` run. No full gate.
+
+<!-- P03 -->
+### P03: Routed implementation continuation
+
+The original one-pass Review is Complete / Not accepted and remains unchanged.
+Under the owner's standing instruction to complete and publish working code,
+a later `rpi-implement` invocation owns these already-in-scope defects, not a
+second Review or critique:
+
+* [x] P03-T01: RV-001 SQL manifest consumer closure.
+* [x] P03-T02: RV-002 shared-API extra-suite exclusion.
+* [x] P03-T03: RV-003 effective nested/ancestor cgroup capacity and regressions.
+
+Publication still needs an independent exact-head assessment after the final
+receipt, distinct from the original RPI Review.
 
 ## Critique Disposition
 

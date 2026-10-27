@@ -363,6 +363,10 @@ def changed_groups(paths: list[str], extras: list[str]) -> list[str]:
                     selected.add("logo-0600")
             if project == "api" and ("/web/" in path or parts[2] == "checks"):
                 selected.add("browser")
+            if project in ("core", "api") and (
+                "requirements" in path.lower() or parts[2] == "pyproject.toml"
+            ):
+                selected.add("mssql")
             if any(word in path.lower() for word in ("store", "schema", "sql", "assistants")):
                 selected.add("mssql")
         else:
@@ -419,17 +423,43 @@ def selected_environments(groups: list[str]) -> list[str]:
     return sorted(names)
 
 
+def cgroup_directories() -> list[Path]:
+    membership = next(
+        (
+            line[3:]
+            for line in Path("/proc/self/cgroup").read_text().splitlines()
+            if line.startswith("0::")
+        ),
+        None,
+    )
+    if membership is None or not membership.startswith("/") or ".." in Path(membership).parts:
+        raise GateError("Cannot resolve effective cgroup-v2 membership")
+    current = Path(membership)
+    mounts = []
+
+    def unescape(value: str) -> str:
+        return re.sub(r"\\([0-7]{3})", lambda match: chr(int(match[1], 8)), value)
+
+    for line in Path("/proc/self/mountinfo").read_text().splitlines():
+        before, separator, after = line.partition(" - ")
+        if not separator or after.split()[0] != "cgroup2":
+            continue
+        fields = before.split()
+        root, mount = Path(unescape(fields[3])), Path(unescape(fields[4]))
+        if current.is_relative_to(root):
+            mounts.append((len(root.parts), mount, mount / current.relative_to(root)))
+    if not mounts:
+        raise GateError("Cannot resolve effective cgroup-v2 mount")
+    _, mount, directory = max(mounts, key=lambda value: value[0])
+    if not directory.is_dir():
+        raise GateError("Effective cgroup directory is unavailable")
+    return [directory, *[parent for parent in directory.parents if parent.is_relative_to(mount)]]
+
+
 def worker_limit(requested: int) -> int:
     if requested < 1:
         raise GateError("--jobs must be positive")
     cpus = float(len(os.sched_getaffinity(0)))
-    quota = Path("/sys/fs/cgroup/cpu.max")
-    if quota.exists():
-        amount, period = quota.read_text().split()
-        if amount != "max":
-            if int(period) <= 0 or int(amount) <= 0:
-                raise GateError("Invalid cgroup CPU capacity")
-            cpus = min(cpus, int(amount) / int(period))
     memory = re.search(
         r"^MemAvailable:\s+(\d+)\s+kB$",
         Path("/proc/meminfo").read_text(),
@@ -438,12 +468,20 @@ def worker_limit(requested: int) -> int:
     if memory is None:
         raise GateError("Host available-memory capacity is unavailable")
     available = int(memory[1]) * 1024
-    maximum = Path("/sys/fs/cgroup/memory.max")
-    if maximum.exists() and maximum.read_text().strip() != "max":
-        available = min(
-            available,
-            int(maximum.read_text()) - int(Path("/sys/fs/cgroup/memory.current").read_text()),
-        )
+    for directory in cgroup_directories():
+        quota = directory / "cpu.max"
+        if quota.exists():
+            amount, period = quota.read_text().split()
+            if amount != "max":
+                if int(period) <= 0 or int(amount) <= 0:
+                    raise GateError("Invalid cgroup CPU capacity")
+                cpus = min(cpus, int(amount) / int(period))
+        maximum = directory / "memory.max"
+        if maximum.exists() and maximum.read_text().strip() != "max":
+            available = min(
+                available,
+                int(maximum.read_text()) - int((directory / "memory.current").read_text()),
+            )
     limit = min(requested, int(cpus // 2), (available - 1024**3) // (4 * 1024**3))
     if limit < 1:
         raise GateError(
@@ -1789,7 +1827,16 @@ class Runner:
         running: dict[Future[None], str] = {}
         prerequisites = {group: dependencies(group) & (pending | completed) for group in pending}
         shared_namespace = [g for g in ("static", "infra", "migration", "tooling") if g in pending]
-        shared_api = [g for g in ("project-api", "browser", "mssql") if g in pending]
+        shared_api = [
+            g
+            for g in (
+                "project-api",
+                "browser",
+                "mssql",
+                *[name for name in groups if name.startswith("extra-api:")],
+            )
+            if g in pending
+        ]
         for chain in (shared_namespace, shared_api):
             for before, after in zip(chain, chain[1:], strict=False):
                 prerequisites[after].add(before)
