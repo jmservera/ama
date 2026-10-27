@@ -807,7 +807,9 @@ async function closedView() {
   const d = await api("/api/cases?view=closed&limit=100");
   show(h("h1", {}, "Closed cases"), h("p", { class: "muted" }, `${d.total} closed. Open one to reopen it with a reason.`),
     h("ul", { class: "list" }, d.items.length ? d.items.map((r) => h("li", {}, h("a", { class: "item", href: `#/case/${encodeURIComponent(r.id)}` },
-      h("div", {}, h("span", { class: "name" }, r.resident), h("div", {}, `${r.address}, ${r.town} ${r.postcode}`)), h("div", { class: "meta" }, r.stage)))) : h("li", { class: "card" }, "No closed cases.")));
+      h("div", {}, h("span", { class: "name" }, r.resident),
+        r.hazard && h("span", { class: "flag danger" }, "Safety issue open"),
+        h("div", {}, `${r.address}, ${r.town} ${r.postcode}`)), h("div", { class: "meta" }, r.stage)))) : h("li", { class: "card" }, "No closed cases.")));
 }
 
 async function contractorListView() {

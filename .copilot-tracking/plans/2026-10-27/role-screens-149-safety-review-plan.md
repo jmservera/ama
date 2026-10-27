@@ -89,17 +89,17 @@ strings. No new dependency or test skips.
   inventory and unchanged privacy boundaries.
 
 <!-- phase: P02 -->
-### P02: Validate and reconcile
+### P02: Validate and reconcile (complete)
 
-* [ ] P02-T01 Run full requested API discovery and core suite using this worktree.
+* [x] P02-T01 Run full requested API discovery and core suite using this worktree.
   Repair only demonstrated stale scenario hash; rerun affected tests.
-* [ ] P02-T02 Run parent browser/focused static/lint checks and reconcile evidence.
+* [x] P02-T02 Run parent browser/focused static/lint checks and reconcile evidence.
 
 <!-- phase: P03 -->
 ### P03: Review, gate and draft publication
 
-* [ ] P03-T01 Complete one independent original Review, route findings without
-  repeating Review, and commit candidate with dated RPI artifacts.
+* [x] P03-T01 Complete one independent original Review and route findings without
+  repeating Review. Retain dated original evidence in the candidate commit.
 * [ ] P03-T02 Run one foreground --changed parent gate, verify current-base
   partial receipt and retain exact-head read-only assessment exclusively
   externally until publication is finished (no post-gate candidate writes).
@@ -155,8 +155,19 @@ until preserved outside the candidate again; no further push is allowed here.
 * Human/screen-reader testing and actual Fluent adoption remain separate.
 * Archive/coordinator do not project work today; enriching those backend schemas
   is separate from restoring fields already supplied to open task queues.
+* Original correction Review RV-001 separately identified the archive's
+  available hazard marker. It was implemented/tested by the bounded later
+  role-screens-149-archive-marker follow-up, not regraded in the original Review.
 
 ## Handoff
 
 Planning readiness: Ready after direct critique dispositions. No unresolved user decision.
 Changes record: .copilot-tracking/changes/2026-10-27/role-screens-149-safety-review-changes.md.
+Implementation P01/P02 complete and reconciled; original correction Review ready.
+P03 intentionally remains pending until Review, committed-candidate gate and
+publication evidence exist. Gate/publication are not source implementation.
+Original correction Review executed Complete / Not accepted, with one Medium
+audit finding. Its exact record is immutable. The bounded later archive-marker
+implementation supplies the missing marker-specific disposition; final-head
+assessment remains required and must cover both deltas. No acceptance or
+publication waiver is inferred from draft status.

@@ -4,6 +4,10 @@ ms.date: 2026-10-27
 ---
 
 Task ID: 496-r4391306128. Status: Ready after one critique, direct PC-001-PC-003 dispositions.
+Execution reconciliation: P01/P02 complete. Exact production delta, executable
+regression, actual-browser checks, full initial API/core results and final-base
+focused reruns are recorded in the changes artifact. P03 remains pending;
+source implementation is review-ready, not yet publication-ready.
 
 ## P01: Restore context and prove regression
 
@@ -52,7 +56,8 @@ for edited Python. Preserve lack of human/AT acceptance.
 
 Before Review/commit/gate, compare docs/reference/log.md at old parent
 4140ebbf34174f2bdc9f6e980533797e92410ca9 and reviewed main
-0ee2ac2fe8c28dce67e7b14eb9f211e611c41ff6 against the final candidate.
+ad34164a8ab01fdca96776a62c536a3bfc4ec88d against the final candidate
+(superseding initial 0ee2ac2f after the authorized second rebase).
 Every pre-existing line/entry must survive verbatim in relative order, counting
 shared history once. Record both SHAs and skipped bot commits 17b60576/4140ebbf.
 Any discrepancy blocks Review/publication until reconciled without rewriting

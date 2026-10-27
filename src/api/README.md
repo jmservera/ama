@@ -19,6 +19,9 @@ context, including hazard awareness, response and resident-update due times,
 named follow-up owners and the external service's timing authority (SA-007).
 Missing times stay Unknown. Contractor responses intentionally omit staff task
 context; the shared queue does not invent it or request broader access.
+The manager's closed-case archive also retains its projected safety marker:
+retrofit completion does not mean that a later safety concern is resolved.
+Archive summaries do not supply staff task clocks; no clock is invented there.
 
 Views reuse server-projected case reads, native controls and Fluent-derived
 tokens. Missing or withheld evidence is not readiness. They never send resident

@@ -11,6 +11,63 @@ WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
 
 
 class RoleScreens(unittest.TestCase):
+    def test_closed_queue_retains_projected_safety_without_work(self) -> None:
+        result = subprocess.run(
+            [
+                "node",
+                "-e",
+                r"""
+const fs = require("node:fs");
+const vm = require("node:vm");
+const app = fs.readFileSync(process.argv[1] + "/app.js", "utf8");
+let rendered;
+const context = vm.createContext({
+  isManager: () => true,
+  api: async () => ({total: 2, items: [
+    {id: "CLOSED-SAFETY", resident: "Safety resident", address: "1 Test Street",
+      town: "Test", postcode: "TE1 1ST", stage: "Completed", hazard: true},
+    {id: "CLOSED-ORDINARY", resident: "Ordinary resident", address: "2 Test Street",
+      town: "Test", postcode: "TE1 1ST", stage: "Completed", hazard: false}
+  ]}),
+  h: (tag, attrs, ...kids) => ({tag, attrs, kids: kids.flat().filter(
+    kid => kid !== false && kid !== null && kid !== undefined)}),
+  show: (...nodes) => {rendered = nodes;}
+});
+vm.runInContext(app.slice(app.indexOf("async function closedView("),
+  app.indexOf("async function contractorListView(")), context);
+vm.runInContext("closedView()", context).then(() => {
+  const links = [];
+  function visit(node) {
+    if (!node || typeof node !== "object") return;
+    if (node.tag === "a" && node.attrs.class === "item") links.push(node);
+    for (const child of node.kids || []) visit(child);
+  }
+  rendered.forEach(visit);
+  console.log(JSON.stringify(links));
+}).catch(error => {console.error(error); process.exitCode = 1;});
+""",
+                str(WEB),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        safety, ordinary = json.loads(result.stdout)
+        self.assertIn("Safety issue open", json.dumps(safety))
+        self.assertIn("flag danger", json.dumps(safety))
+        self.assertNotIn("Safety issue open", json.dumps(ordinary))
+        for node, case_id, name in (
+            (safety, "CLOSED-SAFETY", "Safety resident"),
+            (ordinary, "CLOSED-ORDINARY", "Ordinary resident"),
+        ):
+            with self.subTest(case_id=case_id):
+                self.assertEqual(node["attrs"]["href"], f"#/case/{case_id}")
+                self.assertIn(name, json.dumps(node))
+                self.assertIn("Completed", json.dumps(node))
+                self.assertNotIn("work-context", json.dumps(node))
+                self.assertNotIn("safety-clock", json.dumps(node))
+
     def test_queue_renders_projected_safety_and_optional_work(self) -> None:
         result = subprocess.run(
             [
