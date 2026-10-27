@@ -206,10 +206,12 @@ Record actual commands/exits/skips and source/environment identities in the
 checkpoint evidence; distinguish local/Azure observations from
 implemented-unverified, deferred, blocked and unknown outcomes. Missing
 relevant prerequisites or failed local checks stay unmet, not cloud fallbacks.
-Once corrections and the original RPI Review are stable, the complete
-[local RPI gate](#local-rpi-gate) remains mandatory for the committed final
-candidate before publication. Focused checkpoint results do not replace its
-current-main, exact-head receipt or human/hosted approval gates.
+Once corrections and the original RPI Review are stable, require the selected
+tier's evidence under the [local RPI gate](#local-rpi-gate) policy for the
+committed final candidate before publication. Full-tier candidates require the
+complete gate and its current-main, exact-head receipt; focused-tier candidates
+require relevant unit and focused checks, not a full receipt. Neither tier
+replaces human/hosted approval gates.
 
 ## Images
 

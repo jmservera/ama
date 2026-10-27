@@ -152,9 +152,12 @@ linked from the checkpoint issue and blocker ledger, containing:
 * Source commit/tree and freshly resolved `origin/main` SHA, covered merged
   PRs and issues, exclusions, and BRD/PRD/ADR paths, versions or dated
   revisions, blob identities and approval/status. Draft/candidate/proposed
-  documents do not become approved through a checkpoint. Assess merged main,
-  not unmerged sibling functionality; identify candidate-policy evidence
-  separately.
+  documents do not become approved through a checkpoint. Assess merged main
+  or, for stacked children merged into their declared parent topic, the pinned
+  parent-topic integration head before dependent work starts. Record current-main
+  provenance and keep parent-topic observations separate from merged-main
+  acceptance. Exclude unmerged sibling functionality; identify candidate-policy
+  evidence separately.
 * Traceability rows joining document-qualified requirement IDs (for example,
   BRD FR-003 versus PRD FR-003), approved planned features/decisions,
   architecture and contracts, code/tests, observed journeys and remaining

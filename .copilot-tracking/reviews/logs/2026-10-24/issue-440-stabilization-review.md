@@ -184,3 +184,23 @@ Later implementation of a routed finding does not require another Review.
 * Outcome: Residual work
 * Validation coverage: diff and static conformance verified here; earlier local runs and native gate relied on committed summaries; final gate pending.
 * Blockers: PERF-440, HOST-440, origin/main reconciliation.
+
+## PR #461 correction cycle (2026-10-27)
+
+* Targeted closure of five Copilot threads, not a new RPI loop or Review.
+  Original execution, outcome and findings above remain historical and unchanged.
+* Coordinator checkpoint wording now includes the pinned declared parent-topic
+  integration head for merged stacked children before dependent work, with
+  current-main provenance and observations separate from merged-main acceptance.
+* The source README ladder now requires selected-tier evidence: a complete
+  exact-head receipt only for full-tier candidates, relevant unit/focused checks
+  without a full receipt for focused candidates. Human/hosted approvals remain.
+* Prior local commit 862ab64b repairs the five document-relative critique links
+  and removes duplicate ms.date keys from the evidence pack and KB index,
+  retaining 2026-10-27. No original review finding or human approval is closed
+  by these corrections.
+* Focused documentation validation: git diff --check exited 0; Python
+  assertions passed for unique frontmatter keys/current dates in both repaired
+  files, all five critique evidence-link targets and ASCII-only added text.
+  No standalone repository documentation lint/build is configured. No full
+  receipt or fresh product/native-behavior acceptance is claimed.
