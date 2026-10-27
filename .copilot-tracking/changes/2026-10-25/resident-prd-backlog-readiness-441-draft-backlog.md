@@ -102,7 +102,7 @@ Governance and approval items (not engineering slices):
 | Key | Item | Owner and state |
 | --- | --- | --- |
 | G0 | Owner accepts, amends or rejects this backlog, its sizing assumptions and the M1 composition, only after RB-G1 assessment and explicit findings disposition | Owner; PENDING. RB-G1 is a prerequisite, not a later follow-up. Unresolved quality blockers prevent acceptance-readiness; nothing starts before G0 |
-| RB-G1 | Fresh independent full-PRD requirements-quality assessment of the exact corrected candidate, retained with its hash and explicit disposition of inherited and new findings before presentation for owner acceptance | Requirements owner; assessment pending. Original FAIL and unresolved findings remain; assessment execution is not quality approval, owner acceptance or a passed upstream gate |
+| RB-G1 | Fresh independent full-PRD requirements-quality assessment of the exact corrected candidate, retained with its hash and explicit disposition of inherited and new findings before presentation for owner acceptance | Assessment EXECUTED 2026-10-27: FAIL / Validate BLOCKED / Finalize NOT_EVALUATED; see the report below. All seven inherited findings remain open, 041 partially addressed; three new cautions remain open. Requirements owner must resolve or explicitly govern remaining dispositions; no quality approval, owner acceptance or passed upstream gate |
 | RB-G2 | OD-52 to OD-55 and OQ-028 to OQ-031 named owners and evidence | Programme and delegated owners; OPEN |
 | RB-G3 | Native architecture registration of the unregistered proposal | Owner deferred; id null, registration UNMET; no ID guessed and no workaround |
 | RB-G4 | Later accepted application build needs real Azure, real SQL and registered real AI evidence | PRD::CON-009, PRD::AC-057; synthetic slices do not satisfy it |
@@ -160,10 +160,30 @@ tooling; shared SQL schema change effort; reviewer availability.
 | pr442-qual-040 High, unsigned BRD and absent governed handoff | Unresolved |
 | pr442-qual-006 Medium, feasibility | Unresolved; sizing is the next evidence |
 | pr442-qual-024 Medium, GOAL-005 SMART | Unresolved; no date set |
-| pr442-qual-041 Medium, latency and file-size precedence | Authored text corrected using owner answers; needs fresh independent review; not closed |
+| pr442-qual-041 Medium, latency and file-size precedence | Fresh independent full-PRD review 2026-10-27: audience precedence corrected, PARTIALLY ADDRESSED / OPEN; sample-floor inheritance, error/request-mix freeze, unclassified resident routes and aggregate file accounting remain |
 | pr442-qual-009 Low, table shape | Unresolved |
 | pr442-qual-039 Low, FR-059 trace | Unresolved |
 
 BRD, original case study, legal snapshots, owner memory and numbered ADRs are
 unchanged. OD-52 to OD-55, registration UNMET and the assisted-channel and
 no-detriment commitments remain.
+
+## Fresh independent assessment before G0 (2026-10-27)
+
+The [full-current-PRD assessment](../../reviews/requirements/2026-10-27/resident-readiness-review-454/report.md),
+[standard findings](../../reviews/requirements/2026-10-27/resident-readiness-review-454/standard-findings.json)
+and [quality report](../../reviews/requirements/2026-10-27/resident-readiness-review-454/quality-report.json)
+assess PRD v0.21.0 SHA-256
+`3094a602a5763ae6e25838639e1f7315735d065888c9d5b6caa3dd7ac456645b`
+after conflict resolution. All 3082 PRD lines were independently reviewed;
+the upstream BRD was inspected as context, not independently reassessed in full.
+Outcome is FAIL / Validate BLOCKED / Finalize NOT_EVALUATED, singular 1 below
+minimum 2; 10 CAUTION, 30 COVERED, 0 RISK. Original failed reports are unchanged.
+
+Disposition: retain all seven inherited findings OPEN, with 041 partially
+addressed. The new pr454-qual-001 (merged trace drift), pr454-qual-002 (staff
+identity test oracles) and pr454-qual-003 (current/historical state pointers)
+also remain OPEN for separately authorised requirements work. This records the
+assessment and its adverse findings before G0; it does not resolve them, pass
+RB-G1, present the backlog as acceptance-ready or authorise implementation.
+G0 remains PENDING and blocked by unresolved requirements-quality work.

@@ -134,10 +134,10 @@ artifacts were left unchanged.
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/plans/2026-10-27/resident-readiness-review-454-plan.md](.copilot-tracking/plans/2026-10-27/resident-readiness-review-454-plan.md) | Assessed final-candidate plan |
-| [.copilot-tracking/details/2026-10-27/resident-readiness-review-454-phase-details.md](.copilot-tracking/details/2026-10-27/resident-readiness-review-454-phase-details.md) | Assessed phase details |
-| [.copilot-tracking/research/2026-10-27/resident-readiness-review-454-research.md](.copilot-tracking/research/2026-10-27/resident-readiness-review-454-research.md) | Supplied evidence synthesis |
-| [.copilot-tracking/reviews/plans/2026-10-27/resident-readiness-review-454-critique.md](.copilot-tracking/reviews/plans/2026-10-27/resident-readiness-review-454-critique.md) | This single independent critique |
+| [.copilot-tracking/plans/2026-10-27/resident-readiness-review-454-plan.md](../../../plans/2026-10-27/resident-readiness-review-454-plan.md) | Assessed final-candidate plan |
+| [.copilot-tracking/details/2026-10-27/resident-readiness-review-454-phase-details.md](../../../details/2026-10-27/resident-readiness-review-454-phase-details.md) | Assessed phase details |
+| [.copilot-tracking/research/2026-10-27/resident-readiness-review-454-research.md](../../../research/2026-10-27/resident-readiness-review-454-research.md) | Supplied evidence synthesis |
+| [.copilot-tracking/reviews/plans/2026-10-27/resident-readiness-review-454-critique.md](./resident-readiness-review-454-critique.md) | This single independent critique |
 
 ## Next Steps
 

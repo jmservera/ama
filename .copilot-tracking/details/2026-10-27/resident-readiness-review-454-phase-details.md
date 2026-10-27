@@ -44,6 +44,13 @@ markers. No uv, application suites or full gate. Independent final RPI Review
 uses plan and changes evidence, writes one report; material findings block
 publication and route to later work, without repeating Review.
 
+Completion evidence: author checked 826 local links across final branch files,
+no new unresolved link/anchor, no new evidence/backlog table-shape errors,
+no conflict markers; 12 unchanged main link defects explicitly retained.
+PRD/BRD hashes and historical Review/main-log prefixes preserved.
+Source implementation and validation complete; Review is the parent-owned
+next phase, publication/readback remains P02-T03 after that phase.
+
 ### P02-T03
 
 Commit with authenticated noreply email and exact required trailer. If rebased,

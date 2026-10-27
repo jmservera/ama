@@ -33,8 +33,15 @@ The original Review and correction cycles above are historical evidence, not
 fresh full-PRD requirements-quality assessment. RV-001/RV-002 must not be
 deferred beyond owner acceptance: RB-G1 assessment and explicit findings
 disposition are now prerequisites of G0 in both governance and dependency
-tables. Fresh independent full-candidate assessment is being obtained before
-presentation for acceptance. No inherited finding, historical FAIL, unsigned
+tables. The [fresh independent full-candidate assessment](../../requirements/2026-10-27/resident-readiness-review-454/report.md)
+has now executed on the corrected integrated PRD, with independently verified
+SHA-256 `3094a602a5763ae6e25838639e1f7315735d065888c9d5b6caa3dd7ac456645b`.
+Outcome: FAIL / Validate BLOCKED / Finalize NOT_EVALUATED; all seven inherited
+findings remain open (041 partially addressed), with three new cautions retained
+in the report. RV-001's missing-assessment execution is supplied, not a quality
+pass; RV-002's substantive unresolved findings still block acceptance-readiness.
+The old routing to a later follow-up is superseded by this prerequisite.
+No inherited finding, historical FAIL, unsigned
 BRD/PRD, unregistered architecture or live gate is closed by this correction.
 RB-20 now explicitly depends on RB-19, matching PR442-S18 -> S17, without
 requiring OD-53 for negative suspension/next-dispatch tests.

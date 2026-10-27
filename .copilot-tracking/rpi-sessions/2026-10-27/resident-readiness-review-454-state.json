@@ -27,6 +27,10 @@
     }
   ],
   "blockers": [],
-  "next_action": {"phase": "Implement", "action": "P01-T01: fix dependency and assessment gate; then commit and integrate main."},
-  "prioritized_follow_ups": null
+  "next_action": {"phase": "Review", "action": "Implementation and docs validation complete. Commit retained independent FAIL assessment; execute one independent RPI Review, then publish only addressed thread corrections."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Reconcile current PRD trace, table shape and historical-state pointers", "rationale": "Bounded editorial fidelity work, no activation or invented dates.", "evidence": "pr454-qual-001/003; pr442-qual-009/039 in independent 2026-10-27 report"},
+    {"rank": 2, "task": "Complete RB-03 measurement contract", "rationale": "Required for reliable resident timing/file evaluation, preserves selected targets.", "evidence": "pr442-qual-041 remains partial/open in independent report"},
+    {"rank": 3, "task": "Govern atomic requirement/test decomposition and sizing", "rationale": "Highest quality leverage but requires broader requirements ownership and capacity evidence.", "evidence": "pr442-qual-005/006/024/040 and pr454-qual-002 in independent report"}
+  ]
 }
