@@ -123,6 +123,9 @@ Original independent verdict: Revise. No second critique.
 
 ## Follow-Up Items
 
+* RV-001 was implemented in a subsequent bounded P01 invocation with source/
+  parser regressions. Independent hosted assessment of the final head remains;
+  original complete/Not accepted Review is unchanged. No second local Review.
 * Authorised operator may later apply reviewed view and verify populated sensor
   tables; no deployment or data population is part of this task.
 * Human screen-reader acceptance remains distinct from engineering checks.
@@ -130,6 +133,9 @@ Original independent verdict: Revise. No second critique.
 ## Handoff
 
 Changes path: .copilot-tracking/changes/2026-10-27/resident-sensors-changes.md.
-P01-P03 complete. Source documentation and validation evidence reconciled.
-One independent Review is next; no critique repeat. Source SQL compilation and
-populated SQL integration remain intentionally unrun, not concealed by unit passes.
+P01-P03 complete; original Review complete/Not accepted and preserved. Subsequent
+P01 invocation implemented RV-001 and passed 114 focused tests (19 skips), changed
+Python Ruff/mypy and 23 browser assertions. P02/P03 original suite evidence
+retained; no full-suite rerun after SQL-source/test/docs-only correction.
+Publish draft stacked PR for hosted independent assessment. T-SQL compile,
+populated SQL integration and human acceptance remain explicitly unrun.

@@ -7,7 +7,7 @@ Evidence: .copilot-tracking/research/2026-10-27/resident-sensors-research.md.
 
 | Phase | Name | Status |
 | --- | --- | --- |
-| P01 | Boundary | Complete: focused tests pass |
+| P01 | Boundary | Complete; subsequent RV-001 source guards and 114 focused tests pass |
 | P02 | Presentation | Complete: real HTTP/Chromium checks pass |
 | P03 | Validation | Complete: core/API suites, Ruff/mypy and browser pass |
 
@@ -36,6 +36,11 @@ PC-001: sensor_id, register.home_id, reading.home_id and case home.stock_id use
 Latin1_General_100_BIN2 comparisons. Both source_type fields must equal SYNTHETIC.
 The reading's own home_id is retained internally and compared exactly by Python.
 Test mismatched/case-distinct homes and non-synthetic sources.
+
+Subsequent RV-001 implementation adds DATALENGTH guards after converting
+VARCHAR/NVARCHAR identity/provenance operands to NVARCHAR(MAX), avoiding SQL
+comparison padding without truncation or trimming. Add source-query regression
+assertions for every guard and parser padded-identity/provenance negative cases.
 
 PC-002 outcome contract (JSON uses INCLUDE_NULL_VALUES):
 

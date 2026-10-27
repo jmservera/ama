@@ -45,7 +45,13 @@ class SensorProjectionTests(unittest.TestCase):
         )
 
     def test_foreign_case_distinct_and_non_synthetic_rows_are_denied(self) -> None:
-        for item in (reading("HOME-B"), reading("home-a"), reading(source_type="LIVE")):
+        for item in (
+            reading("HOME-B"),
+            reading("home-a"),
+            reading("HOME-A "),
+            reading(source_type="LIVE"),
+            reading(source_type="SYNTHETIC "),
+        ):
             with self.subTest(item=item), self.assertRaises(rs.ShowcaseDenied):
                 rs.parse_sensors([item], "HOME-A")
         with self.assertRaises(rs.ShowcaseDenied):
@@ -151,3 +157,18 @@ class SensorProjectionTests(unittest.TestCase):
             self.assertIn(fragment, text)
         self.assertEqual(text.count("GRANT "), 1)
         self.assertNotIn("GRANT SELECT ON OBJECT::dbo.sensor", text)
+
+    def test_sql_identity_guards_are_length_sensitive_after_common_conversion(self) -> None:
+        text = (Path(__file__).resolve().parents[3] / "infra/sql/resident-showcase.sql").read_text()
+        compact = " ".join(text.split())
+        stock_length = "DATALENGTH(JSON_VALUE(k.body, ''$.home.stock_id''))"
+        for left, right in (
+            ("s.sensor_id", "DATALENGTH(CONVERT(NVARCHAR(MAX), r.sensor_id))"),
+            ("s.home_id", stock_length),
+            ("r.home_id", stock_length),
+            ("s.source_type", "DATALENGTH(N''SYNTHETIC'')"),
+            ("r.source_type", "DATALENGTH(N''SYNTHETIC'')"),
+        ):
+            self.assertIn(f"DATALENGTH(CONVERT(NVARCHAR(MAX), {left})) = {right}", compact)
+        history = text.split("SET @history =", 1)[1].split("DECLARE @view", 1)[0]
+        self.assertNotIn("TRIM", history)

@@ -108,3 +108,38 @@ No implementation markers remain. Independent Review/publication remain.
 
 Later separately authorised source-view apply and populated SQL verification;
 human screen-reader acceptance.
+
+## Subsequent Implementation Invocation: RV-001
+
+The original ordered loop and independent Review completed on 61c9e98b.
+Its outcome is Not accepted: SQL BIN2 equality does not prevent trailing-space
+padding on register identity/provenance. Original report is preserved unchanged.
+This subsequent implementation invocation is bounded to P01/RV-001, a necessary
+correction to the existing accepted requirement under the autonomous complete-task
+request, not a new feature or repeated Review. P01 is reopened; P02/P03 retain
+their original evidence. No SQL execution or additional critique/Review.
+
+Plan/detail update: add length-sensitive binary identity/provenance comparisons
+with explicit common NVARCHAR conversion, plus padded-field negative/source
+regressions. No new user-owned design decision. Original adverse verdict and
+remaining operational/human gates will be disclosed in the draft stacked PR.
+
+Subsequent P01 invocation completed. Five exact-length guards now cover the
+sensor-ID join, both home matches and both source labels. Explicit NVARCHAR(MAX)
+conversion avoids mixed VARCHAR/NVARCHAR byte counts and truncation; no trimming.
+Tests assert every guard and reject padded reading home/source. This is source
+and parser evidence, not execution of T-SQL semantics.
+
+After the source/test/docs-only change, controlled focused boundary suite:
+114 tests OK, 19 skips, 28.044s. All six changed Python files passed Ruff/mypy;
+test formatting unchanged. The actual loopback/Chromium exercise reran all 23
+assertions successfully. Git diff --check passed. Original full-suite results
+remain attributed to 61c9e98b, not falsely rerun. No Python runtime/UI change
+after those full-suite results.
+
+Original Review is Complete / Not accepted, with RV-001 implementation evidence
+now supplied in this later invocation; it is not rewritten or repeated.
+Research header/question statuses were reconciled to their already-recorded
+completed findings, correcting the stale metadata noted by Review.
+No remaining implementation markers. Draft stacked publication is next;
+hosted independent acceptance, SQL integration and human AT remain pending.

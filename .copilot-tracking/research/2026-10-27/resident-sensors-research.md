@@ -5,7 +5,7 @@
 | --- | --- |
 | Date | 2026-10-27 |
 | Researcher / agent | Native RPI Agent / rpi-research |
-| Status | In progress |
+| Status | Complete |
 | Artifact path | .copilot-tracking/research/2026-10-27/resident-sensors-research.md |
 
 ## Research Brief
@@ -72,9 +72,9 @@ Find existing synthetic stock values rather than invent a live stream or read pr
 
 | ID | Question | Type | Priority | Status |
 | --- | --- | --- | --- | --- |
-| Q1 | What sensor fields and history exist in generated stock? | depth | High | Open |
-| Q2 | What principal projection prevents cross-home access? | depth | High | Open |
-| Q3 | What native patterns support accessible readings? | straightforward | High | Open |
+| Q1 | What sensor fields and history exist in generated stock? | depth | High | Answered C1-C3 |
+| Q2 | What principal projection prevents cross-home access? | depth | High | Answered C4-C5/C7 |
+| Q3 | What native patterns support accessible readings? | straightforward | High | Answered C6/W1 |
 
 ## Prior Knowledge Gate
 

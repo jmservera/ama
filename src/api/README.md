@@ -2921,7 +2921,9 @@ The source view definition optionally reads the existing generated
 `dbo.sensor_register` and `dbo.sensor_reading` tables from
 [`sensor_backfill`](../core/src/zava_forward/core/synthetic/sensor_backfill.py).
 Both register and reading home IDs must exactly match the case's `home.stock_id`,
-and both source labels must be `SYNTHETIC`, using binary comparisons. The
+and both source labels must be `SYNTHETIC`, using binary comparisons plus
+length checks after common Unicode conversion (no trimming or SQL space-padding
+equivalence). The
 principal still has SELECT on only the resident view. No request generates data,
 opens an exported snapshot or reads a private stock file.
 
