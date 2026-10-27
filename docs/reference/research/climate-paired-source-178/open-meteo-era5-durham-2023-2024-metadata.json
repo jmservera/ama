@@ -1,0 +1,106 @@
+{
+  "schema_version": "climate-history-v1",
+  "classification": "MODELLED outdoor reanalysis; not station observations or indoor sensor readings",
+  "input": {
+    "filename": "open-meteo-era5-durham-2023-2024-raw.json",
+    "bytes": 542897,
+    "sha256": "af76a90414d9ad8f19dacc95a38f06d4c4321a91bdf030ba231558c42506051e"
+  },
+  "source": {
+    "provider": "Open-Meteo",
+    "model": "ERA5",
+    "dataset_version": "ERA5; exact provider dataset revision not exposed in response; raw hash pins this retrieval",
+    "api_version": "/v1/archive; software build version not exposed in response",
+    "request_url": "https://archive-api.open-meteo.com/v1/archive?latitude=54.775&longitude=-1.585&start_date=2023-01-01&end_date=2024-12-31&hourly=temperature_2m,relative_humidity_2m,dew_point_2m&models=era5&timezone=UTC&temperature_unit=celsius&timeformat=iso8601",
+    "retrieved_on": "2026-10-27",
+    "requested_location": {
+      "label": "Durham, North East England",
+      "latitude": 54.775,
+      "longitude": -1.585
+    },
+    "returned_grid": {
+      "latitude": 54.75,
+      "longitude": -1.5,
+      "elevation": 65.0
+    },
+    "resolution": {
+      "temporal_seconds": 3600,
+      "grid_degrees": 0.25
+    },
+    "resolution_reference": "https://open-meteo.com/en/docs/historical-weather-api",
+    "resolution_reference_checked_on": "2026-10-27",
+    "resolution_reference_excerpt": "Gap-free and consistent historical weather data using weather reanalysis from ERA5 (0.25 degrees, from 1940)",
+    "dataset_reference": "Hersbach et al. (2023), ERA5 hourly data on single levels from 1940 to present, ECMWF, https://doi.org/10.24381/cds.adbb2d47"
+  },
+  "coverage": {
+    "start": "2023-01-01T00:00Z",
+    "end_exclusive": "2025-01-01T00:00Z",
+    "records": 17544,
+    "step_seconds": 3600,
+    "timezone": "UTC"
+  },
+  "units": {
+    "temperature_2m": "°C",
+    "relative_humidity_2m": "%",
+    "dew_point_2m": "°C"
+  },
+  "bounds": {
+    "temperature_c": {
+      "minimum": -5.3,
+      "maximum": 26.9
+    },
+    "relative_humidity_pct": {
+      "minimum": 36.0,
+      "maximum": 100.0
+    },
+    "dew_point_c": {
+      "minimum": -7.1,
+      "maximum": 19.6
+    }
+  },
+  "validation": {
+    "magnus_constants": [
+      17.625,
+      243.04
+    ],
+    "rh_tolerance_points": 1.0,
+    "max_rh_residual_points": 0.845228,
+    "nothing_filled_or_inferred": true
+  },
+  "terms_from_candidate_2026_10_22": {
+    "nasa_power": {
+      "attribution": "The data was obtained from the POWER Project's POWER Hourly API v2.10.3, retrieved on 2026-10-22; API identity and version are from the retained source metadata.",
+      "licence_verified": false,
+      "published_terms": "Referencing guide asks for the POWER data reference with service, version and access date (https://power.larc.nasa.gov/docs/referencing/, read 2026-10-22). No licence text was retrieved: the NASA data information policy page returned HTTP 403."
+    },
+    "open_meteo": {
+      "attribution": "Weather data by Open-Meteo.com, CC BY 4.0, link to https://open-meteo.com/, indicate that values were summarised; underlying ERA5 reanalysis is Copernicus Climate Change Service (C3S) material.",
+      "published_terms": "Open-Meteo API data are offered under CC BY 4.0; the free API is for non-commercial use under 10,000 calls per day (https://open-meteo.com/en/terms and https://open-meteo.com/en/licence, read 2026-10-22).",
+      "underlying_c3s_reuse_verified": false
+    },
+    "historical_candidate_approval_statement_2026_10_22": "No approval of demonstrator, downstream or production reuse is asserted; owner and legal confirmation remain pending."
+  },
+  "owner_approval": {
+    "key": "owner-approvals-2026-10-27-b",
+    "approved_on": "2026-10-27",
+    "scope": "Existing candidate climate reuse terms for synthetic demonstrator and child integration; supplied owner instruction",
+    "underlying_legal_or_production_terms_verified": false
+  },
+  "attribution": "Weather data by Open-Meteo.com (https://open-meteo.com/), CC BY 4.0; underlying ERA5 is Copernicus Climate Change Service (C3S) material. Raw bytes retained unchanged; bounds summarised and exact timestamps subsampled for synthetic indoor projections. Open-Meteo software: Zippenfenig (2023), https://doi.org/10.5281/ZENODO.7970649.",
+  "candidate_reuse": {
+    "commit": "72f5235889fcf42632e30d4003436f02849c0f12",
+    "code": "tools/climate_paired_bounds.py (strict hash, units, hourly pairing and Magnus validation approach, adapted into typed core adapter)",
+    "candidate_report_sha256": "87418bef03cc53ef6ee5705fec011f05fd1ecc92fb0740f82fff5fe28e133536",
+    "history_imported": false
+  },
+  "sensitivity_evidence": "nasa-power-merra2-durham-2023-sensitivity.json",
+  "limits": [
+    "Single returned grid cell; not a North East regional or station-grade series.",
+    "Hourly outdoor reanalysis, not instantaneous design extremes or indoor observations.",
+    "No year repeated, no gap filled, no climate values clipped; downstream indoor projections remain synthetic.",
+    "NASA sensitivity is only 2023 and is not used to fill the primary 2023-2024 series.",
+    "Historical terms snapshot retained; underlying C3S reuse and NASA licence text remain legally unverified; owner approval is synthetic-demo-only.",
+    "Source API does not expose an exact ERA5 revision or server build; repeat requests may differ, so use committed byte hashes.",
+    "The default Open-Meteo elevation/cell selection was retained; returned elevation is 65 m, unlike the prior candidate request (98 m)."
+  ]
+}
