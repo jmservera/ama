@@ -1,0 +1,22 @@
+{
+  "url": "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io",
+  "events": [
+    {
+      "watchdog_armed": 2804686,
+      "deadline": 1793094460.647158,
+      "at": "2026-10-27T09:17:40.747841+00:00"
+    },
+    {
+      "check": "Final external URL no longer serves resident site",
+      "result": "PASS",
+      "at": "2026-10-27T09:24:09.491209+00:00"
+    }
+  ],
+  "failure": "RuntimeError: Resident did not become healthy on HTTPS",
+  "blocked": [
+    "Registered positive login: owner-held password unavailable/no secret reads",
+    "Own-case authenticated account/gauges/history/assistant/logout render: needs registered login",
+    "Genuine 1800-second session expiry: no authenticated session; forged denial is not proof",
+    "Azure OpenAI activation: no merged runtime MI/ledger wiring; deterministic fallback retained"
+  ]
+}

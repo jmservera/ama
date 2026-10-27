@@ -1,0 +1,59 @@
+{
+  "task_id": "deploy-resident-474",
+  "task_slug": "deploy-resident-474",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-27/deploy-resident-474-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-27/deploy-resident-474-plan.md",
+    "details": ".copilot-tracking/details/2026-10-27/deploy-resident-474-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-27/deploy-resident-474-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-27/deploy-resident-474-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-27/deploy-resident-474-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute all four RPI phases in order; deploy within supplied owner approval.",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-27, owner approval 08:59Z: USD30 total additional, USD20 model subcap, ama only, expiry 2026-10-31T23:59Z."
+    },
+    {
+      "decision": "Reuse pre-created clean requested worktree and branch at latest origin/main.",
+      "status": "verified",
+      "evidence": "Git status clean; chore/deploy-resident-474 HEAD=origin/main=885ee05fc45122cf7a1ea4f7f003dc88bfda08ee."
+    },
+    {
+      "decision": "Research executed, Ready for independently authorized merged-code deployment subset; full acceptance remains blocked.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/research/2026-10-27/deploy-resident-474-research.md"
+    },
+    {
+      "decision": "Single final-candidate critique executed; original Revise verdict retained; PC-001 through PC-008 applied directly.",
+      "status": "disposed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-27/deploy-resident-474-plan-critique.md and plan Critique Disposition"
+    },
+    {
+      "decision": "One original independent Review executed Complete; deployment execution Partial; full requested service outcome Not accepted.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/deploy-resident-474-review.md; RV-001/RV-002 remain open, RV-003 original narration finding retained with publication correction separately recorded."
+    },
+    {
+      "decision": "Final resident boundary is ingress disabled and tested revision inactive/zero replicas; all four app minima0, eight jobs Manual and SQL sizing preserved.",
+      "status": "verified",
+      "evidence": ".copilot-tracking/changes/2026-10-27/deploy-resident-474-evidence/revision-final.json and preservation.json"
+    }
+  ],
+  "blockers": [
+    {"id": "B1", "summary": "Authenticated live proof needs owner-held password; no secret read permitted.", "resolution": "Owner-run registered login, own-case UI/logout and natural expiry."},
+    {"id": "B2", "summary": "Merged assistant has no Azure MI host wiring or durable cost ledger.", "resolution": "Separate reviewed implementation before model activation; keep deterministic provider."}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Commit evidence, run scoped external receipt, independent exact-head publication assessment and PR; no child implementation begins without owner selection. Hosted/human approval and service acceptance remain unmet."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Owner-run authenticated resident acceptance and natural session expiry", "rationale": "Highest acceptance value with least engineering; requires offline owner credential, not agent secret retrieval.", "evidence": "Original Review RV-001; live-result.json blocked categories."},
+    {"rank": 2, "task": "Plan and implement MI Azure OpenAI host, durable budget reservations and fallback", "rationale": "Required requested capability; larger engineering scope requiring separate source/infrastructure gates.", "evidence": "Original Review RV-002; deterministic startup and absent durable ledger."},
+    {"rank": 3, "task": "Reconcile delayed release billing against the fresh allocation", "rationale": "Small operational follow-up once billing arrives; preserves truthful budget control rather than treating estimates as actual spend.", "evidence": "Original Review Residual Work and committed cost-ledger.json."}
+  ]
+}

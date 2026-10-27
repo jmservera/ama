@@ -7624,3 +7624,21 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   change, not full-suite parity, hosted CI/deployed health, private backup
   verification, post-merge rubric comparison or whole-issue closure.
   All five issues remain Refs; owner merge and remaining acceptance are separate.
+## [2026-10-27] deployment | Merged resident features from PR #474
+
+* Updated the [resident guide](../../src/api/README.md#synthetic-resident-showcase-462),
+  [assistant design](../architecture/resident-assistant-prototype.md) and index
+  with the supplied 08:59Z USD30 authorization, including USD20 AI subcap,
+  MI-only boundary and expiry 2026-10-31T23:59Z.
+* Deployed merged source 885ee05f and its required resident projection view.
+  Retained the original failed startup caused by missing sensor columns;
+  transactional exact-merged view deployment changed no table/row/grant.
+  Twenty-seven actual unauthenticated HTTPS/Playwright checks passed.
+* Registered-login, authenticated own-case account/gauges/history/assistant/
+  sign-out and natural session expiry remain unproved because the owner-held
+  password was not read. No model was provisioned: runtime MI/ledger wiring
+  is absent, so deterministic rules remain. No production/human acceptance.
+* Restored exact ACR policy. Final resident ingress disabled, tested revision
+  inactive/zero replicas; all four app minima 0, eight Manual jobs and SQL
+  Standard/10 DTU preserved. Publication gates and independent Review are
+  recorded separately; this entry is not hosted or human approval.
