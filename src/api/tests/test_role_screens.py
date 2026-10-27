@@ -40,8 +40,13 @@ class RoleScreens(unittest.TestCase):
 
     def test_data_preserves_both_sources_and_refuses_audit_or_replay_claim(self) -> None:
         source = (WEB / "screen-data.js").read_text()
-        for field in ("item.left", "item.right", "item.eligibility",
-                      "c.stock_reconciliation_events", "item.source_version"):
+        for field in (
+            "item.left",
+            "item.right",
+            "item.eligibility",
+            "c.stock_reconciliation_events",
+            "item.source_version",
+        ):
             self.assertIn(field, source)
         self.assertIn("not an operational audit trail", source)
         self.assertNotIn("post(", source)

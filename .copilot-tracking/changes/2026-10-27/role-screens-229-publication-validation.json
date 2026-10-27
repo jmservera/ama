@@ -1,0 +1,17 @@
+{
+  "story": "229",
+  "scope": "Formatting-only child unit correction; no production/harness changes or parent gate mutation",
+  "parent": "aee0e9d5af29ccabb9251e1f05cdb82cc88387c4",
+  "prior_child_head": "07b96b176d438506047475f7b3bd67bdc7586a29",
+  "original_review": "Preserved unchanged; not repeated; no independent approval inferred",
+  "checks": {
+    "229-final-static.log": {
+      "sha256": "acba9da73790a4c364ba526cb0c3476f832633eafb7662a61ef28820da41ce0b",
+      "output": "All checks passed!\nunformatted: File would be reformatted\n  --> tests/test_role_screens.py:43:23\n   |\n42 |         source = (WEB / \"screen-data.js\").read_text()\n   -         for field in (\"item.left\", \"item.right\", \"item.eligibility\",\n   -                       \"c.stock_reconciliation_events\", \"item.source_version\"):\n43 +         for field in (\n44 +             \"item.left\",\n45 +             \"item.right\",\n46 +             \"item.eligibility\",\n47 +             \"c.stock_reconciliation_events\",\n48 +             \"item.source_version\",\n49 +         ):\n50 |             self.assertIn(field, source)\n   |\n\n1 file would be reformatted, 45 files already formatted\n"
+    },
+    "229-final-static-corrected.log": {
+      "sha256": "2c3dff1e2d4d9e2c1f21079d3eda2889396a19e12bc055c919b0382dc6513880",
+      "output": "1 file reformatted\nAll checks passed!\n46 files already formatted\nSuccess: no issues found in 88 source files\n----------------------------------------------------------------------\nRan 8 tests in 0.001s\n\nOK\n"
+    }
+  }
+}
