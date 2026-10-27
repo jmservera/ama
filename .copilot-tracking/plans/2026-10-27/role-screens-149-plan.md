@@ -9,8 +9,9 @@ ms.date: 2026-10-27
 Task ID: 149. Slug: role-screens-149. Mode: automatic.
 Readiness: binding/local units pass. Independent final-identity assessment is
 Complete / Residual work for parent 4140ebbf and exact source-identical role
-heads. Exact-head Source CI and rubric pass; parent-only ready transition is
-pending execution. All children remain draft.
+heads. Exact-head Source CI and rubric passed before the authorized parent-
+only ready transition, which was executed and read back at 4140ebbf.
+All children remain draft. No merge or broader acceptance.
 This current evidence snapshot is trace-child-only.
 Original critique and Review verdicts preserved.
 
@@ -271,13 +272,13 @@ Promote only that dependency correction to the shared parent, then rebase all
 independent children without integrating role modules.
 
 <!-- rpi:phase id=P04 -->
-### [ ] P04: Restore source binding and assess final published heads
+### [x] P04: Restore source binding and assess final published heads
 <!-- rpi:task id=P04-T01 -->
 #### [x] P04-T01: Regenerate the dependent digest and propagate independent children
 <!-- rpi:task id=P04-T02 -->
 #### [x] P04-T02: Rerun local units and obtain independent exact-head review
 <!-- rpi:task id=P04-T03 -->
-#### [ ] P04-T03: Publish evidence and mark only the parent ready after all hosted checks pass
+#### [x] P04-T03: Publish evidence and mark only the parent ready after all hosted checks pass
 
 No material application/test/tool source change is planned. For metadata-only
 regeneration, run local units and hosted checks without another heavy gate;

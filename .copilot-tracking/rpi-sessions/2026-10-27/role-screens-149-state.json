@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "automatic",
   "active_phase": "Follow-up",
-  "status": "active",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-27/role-screens-149-research.md",
@@ -15,6 +15,11 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-27/role-screens-149-final-head-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "P04-T03 executed: final PR evidence updated, exact parent 4140ebbf and all nine Source CI check runs plus rubric/score success reverified immediately before gh pr ready 496. Readback confirms OPEN, isDraft false and unchanged parent head. Children remain draft; no merge, issue acceptance or human approval. Ordinary ready-event hosted reevaluation is not predicted to pass.",
+      "status": "parent-ready-verified",
+      "evidence": "gh pr ready 496 succeeded and gh pr view readback; .copilot-tracking/changes/2026-10-27/role-screens-149-ready-evidence.json retains pre-transition proof and terminal observation"
+    },
     {
       "decision": "Final publication identity reconciliation independently completed: Complete / Residual work for parent 4140ebbf and exact source-identical final role heads; no new substantive blocker. Exact final-parent Source CI 40538254240 completed success with all nine commit check runs success; rubric/score success and rubric bot approval bind 4140ebbf. PR rollup exposes only the status context, so check-runs were verified directly at the exact commit.",
       "status": "final-readiness-conditions-verified",
@@ -104,26 +109,26 @@
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Independent final-head result is Complete / Residual work and every hosted check at parent 4140ebbf passes. Update final PR evidence, then mark only #496 ready under standing owner authorization; children remain draft. Verify actual ready status before recording P04-T03 complete. No merge or current-main/integrated acceptance."
+    "action": "P04 complete and #496 ready verified at 4140ebbf. Persist terminal trace evidence, then await owner selection among integration, human/AT/Fluent and domain-input follow-ups. No automatic child work or merge. Ordinary ready-event reevaluation/future head movement remains separate from the retained successful pre-transition evidence."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Complete current-head hosted publication checks before parent readiness",
-      "rationale": "Binding and independent engineering assessment are corrected; the only active readiness condition is actual hosted completion at the assessed parent head.",
-      "evidence": "P04-T03; source CI run 40535557178, rubric run 40535556827; canonical final-head Review Complete / Residual work"
-    },
-    {
-      "rank": 2,
       "task": "Owner-controlled child integration and integrated-head validation",
-      "rationale": "High service value after publication blockers; independent branch checks cannot prove a connected same-home journey or combined browser behavior.",
+      "rationale": "Highest next service value after the concrete binding/readiness blockers are resolved; independent branches cannot prove a connected same-home journey. Requires an explicit owner-selected integration boundary.",
       "evidence": "Plan Follow-Up Items; #233 trace at 7519ca10; Review Plan Follow-Up Assessment"
     },
     {
-      "rank": 3,
+      "rank": 2,
       "task": "Human/assistive-technology validation and actual Fluent adoption",
       "rationale": "Required acceptance evidence remains unavailable; engineering checks are not resident/staff comprehension or WCAG acceptance.",
-      "evidence": "#155; plan Follow-Up Items; Review validation limits"
+      "evidence": "#155/#150; plan Follow-Up Items; final Review distinct human/accessibility/Fluent residuals"
+    },
+    {
+      "rank": 3,
+      "task": "Resolve approved identity, Finance, technical and service/recovery inputs",
+      "rationale": "Preserves engineering quality and source authority by supplying real approved inputs instead of fallback identities, templates, appointments or invented recovery evidence. Owner selection is required before widening implementation.",
+      "evidence": "Plan Follow-Up Items and final Review domain-input residuals; all absent inputs remain Unknown"
     }
   ]
 }

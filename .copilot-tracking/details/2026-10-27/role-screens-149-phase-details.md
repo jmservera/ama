@@ -194,3 +194,11 @@ Exact-parent Source CI 40538254240 completed success; all nine check runs at
 Parent-only readiness conditions are met; actual ready transition remains
 pending at this snapshot. Main advanced independently with documentation/
 license merges to 0ee2ac2f; no merge/current-main gate or integration claim.
+
+P04-T03 is complete. Final evidence was published on all ten PR bodies.
+Immediately before the transition, exact-head commit check-runs/status were
+read again and all nine Source CI checks plus rubric/score passed at 4140ebbf.
+gh pr ready 496 succeeded; readback confirmed OPEN, isDraft false and unchanged
+4140ebbf. Children remain draft; no merge/issue acceptance. The readiness event
+may automatically schedule ordinary hosted reevaluation; pre-transition
+success does not claim future jobs passed or authorize future head drift.

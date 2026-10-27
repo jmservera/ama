@@ -9,8 +9,9 @@ ms.date: 2026-10-27
 Task 149 / role-screens-149. Automatic, Implement, full plan in scope.
 P01-T01, P02 and P03 execution complete. P04 binding correction/local units
 pass and independent final-head Review is Complete / Residual work.
-Final-head independent identity assessment and hosted checks now pass.
-The parent-only ready transition remains pending execution at this snapshot.
+Final-head independent identity assessment and hosted checks passed.
+Parent-only ready transition executed/read back at 4140ebbf; all children
+remain draft. Current P04 scope complete; no merge or broader acceptance.
 Current post-publication evidence is trace-child-only.
 Research resumed after explicit owner B1 resolution.
 One critique executed (Revise); PC-001-PC-004 corrected directly in plan.
@@ -432,3 +433,23 @@ rebase again. Owner still controls integration and merge.
 
 P04-T03 may now update final PR evidence and mark only #496 ready. Actual
 ready status will be recorded only after the transition and readback.
+
+## P04-T03 actual readiness and publication result
+
+All ten PR bodies were updated with final-parent/role identities, independent
+Review and exact-head hosted evidence, distinguishing historical receipts/
+browser observations from current checks. Immediately before readiness,
+the exact parent was re-read as 4140ebbf and all nine Source CI checks plus
+rubric/score were reverified successful. gh pr ready 496 succeeded.
+Readback: #496 OPEN, isDraft false, head unchanged at
+4140ebbf34174f2bdc9f6e980533797e92410ca9. No child was marked ready, merged
+or integrated. No issue criterion or human approval was ticked.
+
+Current owner-selected P04 work is complete. Automatic session remains
+running at Follow-up, awaiting owner-selected later integration/human/domain
+work; no child loop is automatically started. The ordinary ready_for_review
+event can schedule hosted reevaluation. Pre-transition successful evidence
+is retained as a dated observation, not a prediction that future jobs pass
+or future heads inherit this assessment. Any later head must be assessed
+on its own identity. No rubric/manual workflow was dispatched by readiness
+code; the existing repository event policy remains unchanged.

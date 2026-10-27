@@ -91,10 +91,118 @@
     "path": ".copilot-tracking/reviews/logs/2026-10-27/role-screens-149-final-head-review.md",
     "parent_head": "4140ebbf34174f2bdc9f6e980533797e92410ca9"
   },
-  "ready_transition": "not yet executed",
+  "ready_transition": {
+    "observed_at": "2026-10-27T16:20:54.042226+00:00",
+    "command": "gh pr ready 496",
+    "result": "success",
+    "readback": {
+      "headRefOid": "4140ebbf34174f2bdc9f6e980533797e92410ca9",
+      "isDraft": false,
+      "number": 496,
+      "state": "OPEN",
+      "url": "https://github.com/jmservera/ama/pull/496"
+    },
+    "children": [
+      {
+        "baseRefName": "feat/role-screens-149",
+        "headRefOid": "f2c067d685934fa0b0bbe7c21af4f55dec73dcad",
+        "isDraft": true,
+        "number": 487,
+        "state": "OPEN"
+      },
+      {
+        "baseRefName": "feat/role-screens-149",
+        "headRefOid": "74abd87c14f9e4c2e19a6cb396bff1e9cf1dd297",
+        "isDraft": true,
+        "number": 488,
+        "state": "OPEN"
+      },
+      {
+        "baseRefName": "feat/role-screens-149",
+        "headRefOid": "16420553b3bdc046855d5aa0e8b87affd247a16e",
+        "isDraft": true,
+        "number": 489,
+        "state": "OPEN"
+      },
+      {
+        "baseRefName": "feat/role-screens-149",
+        "headRefOid": "1e78afca65d1059716992f8de45aa2e5be11d589",
+        "isDraft": true,
+        "number": 490,
+        "state": "OPEN"
+      },
+      {
+        "baseRefName": "feat/role-screens-149",
+        "headRefOid": "915393924d557b14cec94d803426f3cf32efcf4a",
+        "isDraft": true,
+        "number": 491,
+        "state": "OPEN"
+      },
+      {
+        "baseRefName": "feat/role-screens-149",
+        "headRefOid": "4194070a923184155652163ee3687dfef6843271",
+        "isDraft": true,
+        "number": 492,
+        "state": "OPEN"
+      },
+      {
+        "baseRefName": "feat/role-screens-149",
+        "headRefOid": "4788d972023011ae2fe794e090cff5ce9a397009",
+        "isDraft": true,
+        "number": 493,
+        "state": "OPEN"
+      },
+      {
+        "baseRefName": "feat/role-screens-149",
+        "headRefOid": "3197c113849b1436c6b0053fb6049c00d0013e83",
+        "isDraft": true,
+        "number": 494,
+        "state": "OPEN"
+      },
+      {
+        "baseRefName": "feat/role-screens-149",
+        "headRefOid": "ef4d422fb8d452a9cbd9ed5597f15b2644fe6855",
+        "isDraft": true,
+        "number": 495,
+        "state": "OPEN"
+      }
+    ],
+    "all_pre_transition_checks_passed": true,
+    "future_workflow_or_head_claim": "None. Ready event can trigger ordinary automatic reevaluation; pre-transition results do not prove future jobs or new heads."
+  },
   "new_heavy_gates": 0,
   "receipt": "historical only; no material source change",
   "fetched_main": "0ee2ac2fe8c28dce67e7b14eb9f211e611c41ff6",
   "reviewed_base": "2e031c89a18ce1ceb3de4fda014fddcb90231fda",
-  "merge": "not authorized or performed"
+  "merge": "not authorized or performed",
+  "post_ready_workflow_observation": [
+    {
+      "conclusion": "",
+      "databaseId": 40539864471,
+      "headSha": "4140ebbf34174f2bdc9f6e980533797e92410ca9",
+      "name": "Running Copilot Code Review",
+      "status": "in_progress"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 40538254240,
+      "headSha": "4140ebbf34174f2bdc9f6e980533797e92410ca9",
+      "name": "Source projects CI",
+      "status": "completed"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 40535557178,
+      "headSha": "6a4eae033776c81131119245dd0e99505be44823",
+      "name": "Source projects CI",
+      "status": "completed"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 40535556827,
+      "headSha": "6a4eae033776c81131119245dd0e99505be44823",
+      "name": "Capstone Rubric Scorer",
+      "status": "completed"
+    }
+  ]
 }
