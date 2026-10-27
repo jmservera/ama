@@ -7444,3 +7444,38 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   current design section. Funding renewal does not extend resident access.
 * Resource provisioning and reachable old-revision health are not SQL/runtime,
   authenticated managed-identity inference, privacy or production acceptance.
+
+## [2026-10-25] update | Resident PRD target applicability and draft backlog (#441)
+
+* Recorded the owner's 2026-10-24 PRD decisions in PRD v0.21.0: resident-route
+  ordinary API p95 <=2s (five synthetic sessions, 30 minutes) and 10 MiB
+  resident uploads, with audience-based applicability that leaves NFR-002
+  staff/core targets unchanged; provider-neutral synthetic identity fixtures
+  with no provider selected; the first milestone composition (R0 plus
+  PR442-S01 to S06). No new identifier, BRD change or approval was made.
+* Aligned the unregistered proposal (id null, still unregistered), the dated
+  addendum and the resident journeys note, and added an index row for the draft
+  backlog under .copilot-tracking/changes/2026-10-25/. The backlog awaits owner
+  acceptance; no implementation issue is created and no delivery date is
+  estimable before engineering sizing.
+* Finding pr442-qual-041 has corrected authored text awaiting fresh independent
+  review; the other six findings, OD-52 to OD-55 and registration UNMET remain.
+  Earlier log entries are unchanged.
+
+## [2026-10-25] update | Resident target applicability correction cycle 1 (#441)
+
+* Corrected PRD v0.21.0 target-applicability text: staff rules apply to every
+  staff-audience request, including one sharing implementation with a resident
+  route, and never to resident-audience requests; shared implementation does
+  not decide applicability. Added promotion-to-staff-evidence, unlisted
+  resident class, unit and open sample-definition notes. A scoped independent
+  quality review found no residual contradiction; it is not a full-PRD pass.
+  The PRD stays unsigned and the prior entry above is unchanged.
+
+## [2026-10-25] update | Resident backlog paired-protocol freeze correction (#441)
+
+* Moved the paired effort and adverse-outcome protocol freeze into draft backlog item RB-01 (R0) and made all comparison runs depend on it; RB-21 now only collects and reviews results in R5. Documentation and draft backlog only; the PRD stays unsigned, the proposal unregistered and owner acceptance pending. Earlier entries are unchanged.
+
+## [2026-10-25] update | Resident R4 gating split and promotion wording (#441)
+
+* Owner-authorised bounded follow-up: the draft backlog and unregistered proposal now separate the R4 task-release gate (RB-17/18) from the OD-53 routine-dispatch gate (RB-19/20), and the proposal's staff-promotion wording matches the PRD guardrail. Documentation only; PRD unsigned, proposal unregistered, owner acceptance still pending. Earlier entries are unchanged.

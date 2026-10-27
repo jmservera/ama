@@ -5,7 +5,7 @@ perspective: "Resident Engagement and Insight"
 status: "Research hypotheses; not resident validation or operational approval"
 scope: "Rented households; shared owners/leaseholders; representatives; support workers"
 evidence_boundary: "Local sources only; no new legal claims"
-ms.date: 2026-10-23
+ms.date: 2026-10-25
 ms.topic: reference
 ---
 
@@ -122,7 +122,8 @@ The [completed unsigned PRD refinement](../../../../prds/zava-forward-retrofit-p
 adds twenty local stories and R0-R5 planning stages, not executed screens or
 new criterion IDs. Its linked current independent quality result remains
 FAIL / Validate BLOCKED / Finalize NOT_EVALUATED with seven cautions,
-including OPEN generic/resident latency/file-size precedence. All 30 resident
+including generic/resident latency/file-size precedence, whose authored text
+was corrected 2026-10-25 and awaits fresh review. All 30 resident
 criteria remain Not run; these six journey hypotheses do not waive the result.
 
 | Synthetic journey | Resident job and proposed sequence | Negative/exception and safe route | Proposed ownership |
