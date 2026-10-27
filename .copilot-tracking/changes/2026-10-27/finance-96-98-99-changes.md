@@ -118,3 +118,20 @@ results/skips and missing human decisions. No issue checkbox changes, reviewed
 export, approval, activation or merge. Stop dependent work under the caller's
 human-decision condition. Ranked follow-ups are the two bounded software fixes,
 actual Finance/template authority, then actual Board OD-12/15 inputs.
+
+### Draft Publication and Stop
+
+Created https://github.com/jmservera/ama/pull/510, verified OPEN / draft,
+base main and head docs/finance-96. Implementation and original RPI evidence
+were committed as e114bc45c23a465b328dfd7cbb9af5ecec468df1 and pushed without
+force. Both author/committer use the authenticated account's verified
+id+login noreply address; the Conventional Commit carries the requested
+Copilot trailer. All three issue references are Refs, with both software
+findings and actual human decision requests in the PR body.
+
+The final metadata-only closeout records this publication and stops the
+automatic session under the caller's explicit human-decision condition.
+The bounded one-pass task is complete; Review remains Not accepted and whole
+issue delivery remains partial/blocked. No source was changed after Review,
+no finding was silently resolved, no second Review or heavy gate ran, and
+no acceptance, merge, live approval or activation occurred.
