@@ -191,3 +191,19 @@ Commit tooling note: the installed git-commit skill's get_changed_files tool
 is unavailable in this CLI. Use the already inspected branch/status/diff and
 independently frozen source boundary rather than inventing a tool result.
 Its instruction file moved from instructions/ to rules/ and was located/read.
+
+Draft publication: https://github.com/jmservera/ama/pull/503, branch
+feat/agent-chat-157 targeting main. Implementation/original RPI evidence commit:
+17d2d5bb77c8079064ca674921c1978223a4214d. No force push, issue closure or merge.
+The subsequent commit records this URL and Follow-up state only; it changes no
+source, tests or original Review. The PR body explicitly records the departure
+from the self-imposed draft-publication restriction and the unresolved Medium
+RV-001 reporting defect. Original Review remains Complete / Not accepted.
+Automatic task loop is complete, session running at Follow-up with no child
+work selected or started.
+
+PR-body tooling reused the original independent Review rather than spawning
+another review pipeline or silently updating/rebasing the supplied branch.
+An external merge-base PR reference was generated (218107 bytes) for delivery;
+it is not a review receipt or accepted-head claim. Hosted checks remain
+separate and were not replaced by local or cloud invocations.
