@@ -44,6 +44,13 @@ standards are the requirement sources.
   /tmp/ama-rpi-heavy.lock, timeout 0, foreground, new external output.
 * Owner's 2026-10-27 authorization supersedes --all for this delivery.
 * Preserve original adverse evidence and unproven acceptance criteria.
+* Owner follow-up authorization (2026-10-27): rebase the run-owned parent and
+  all nine unpublished children onto current origin/main (2e031c89 or newer),
+  preserving independent child diffs. Correct RV-001 in #231, including an
+  executable selective-design-change regression; rerun worktree-local units
+  and real Playwright before the one scoped gate and draft publication.
+  Run git clean -fdxq first after preserving any selected non-regenerable data.
+  Drafts become ready only after hosted checks and review pass. Do not merge.
 
 ## Goals
 
@@ -214,16 +221,16 @@ passed after an initial existing checkbox wait timeout; both logs retained.
 Shared link-colour, focus-modality and route-interception corrections belong
 to parent 950bf2e6. These are compatible engineering refinements, not altered
 scope or new authority; one original critique remains the only critique.
-The one Review subsequently completed with outcome Not accepted: RV-001
-blocks #231's false stale-review display. No fix or repeated Review is
-performed in this task. Gate and publication remain pending.
+The one Review completed with outcome Not accepted. Its immutable RV-001 is
+the input to the current owner-selected implementation follow-up, not a second
+Review. The source-owned selective invalidation decision must be displayed
+without treating unaffected older-version sign-offs as stale.
 
-After Review, fetched origin/main is 2e031c89a18ce1ceb3de4fda014fddcb90231fda,
-but parent merge-base is 864a502126ee0dfedf13eaf54f08a10f2339279c.
-The gate requires current main to be an ancestor (tools/rpi-checks.py,
-clean_identity). This new B2 owner decision stops publication; no lineage
-change, cleanup or gate attempt is authorized by the prior scoped-only policy.
-That policy remains resolved, not reopened. No draft PR or push occurred.
+Current fetched main is 2e031c89a18ce1ceb3de4fda014fddcb90231fda. Owner
+authorization resolves the B2 decision; the parent and nine independent child
+branches will be rebased before revalidation. P03-T02 remains active until
+the single scoped gate, receipt verification and draft publication are evidenced.
+No issue, human/accessibility or integrated acceptance is inferred.
 
 ## Handoff
 

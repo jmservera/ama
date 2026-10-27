@@ -7,7 +7,8 @@ ms.date: 2026-10-27
 ## Execution
 
 Task 149 / role-screens-149. Automatic, Implement, full plan in scope.
-P01-T01 and P02 complete; P03-T01 Review complete, P03-T02 blocked.
+P01-T01 and P02 complete; P03-T01 Review complete, P03-T02 active in the
+owner-selected lineage/RV-001/publication follow-up.
 Research resumed after explicit owner B1 resolution.
 One critique executed (Revise); PC-001-PC-004 corrected directly in plan.
 No issue acceptance criteria changed.
@@ -149,3 +150,21 @@ human/AT/Fluent acceptance remain later distinct work, not fallback passes.
 One new blocker comment posted:
 https://github.com/jmservera/ama/issues/149#issuecomment-6445655965.
 The prior B1 resolution comment remains intact; it was not reposted as a blocker.
+
+## Owner-selected implementation follow-up
+
+The 2026-10-27 owner request resolves B2 by authorizing rebases of run-owned
+parent and nine unpublished children onto current origin/main, fetched as
+2e031c89a18ce1ceb3de4fda014fddcb90231fda. No matching remote branches or parent
+PR exist. The worktree has no tracked/untracked changes at intake; ignored
+regenerable bytecode/egg-info and empty .venv are inventoried separately.
+
+Active scope: P03-T02, with the directly required #231 RV-001 source correction.
+Write boundary: run-owned refs, #231 technical module/shared test harness and
+dated tracking artifacts. Preserve original critique/Review unchanged. No
+second Review, integration, domain-model change or authority expansion.
+First execution boundary: commit approved state, rebase parent, then correct
+and rebase independent children. Validation uses external existing pip tools
+with explicit current-worktree source imports, real Chromium selectors, then
+one foreground --changed gate, timeout 0 and a fresh external output. Cleanup
+must preserve original evidence; no tracking deletion selected.
