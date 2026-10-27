@@ -247,3 +247,28 @@ changes occur after Review; only closeout evidence is being updated.
 P07 commit/push and PR evidence update are the remaining authorized actions.
 No exact-future-commit, live, hosted or human acceptance is claimed by this
 precommit source assessment. Refs only; no issue closure, merge or force push.
+
+### Correction P07: Verified same-branch publication
+
+Source and complete original correction evidence committed as
+d553b1a51bcac5bcac884772581fa554cd5f8d68
+(fix(src): enforce IoT send safety and replay provenance), with authenticated
+account's repository-local noreply email for author/committer and the required
+Copilot Co-authored-by trailer. All four frozen source/test SHA-256 values
+match the independent Review's fingerprints; no source changed after Review.
+
+Non-force push to origin feat/iot-consumer-110 succeeded. The existing draft
+PR https://github.com/jmservera/ama/pull/508 was updated, not replaced; gh pr view
+verified OPEN/draft and exact remote head d553b1a51bcac5bcac884772581fa554cd5f8d68.
+The PR includes local command/count evidence, finding-by-finding dispositions,
+all dated artifacts and explicit unproven criteria, using Refs only. The
+worktree was clean after this first push. No new PR, issue closure, force push,
+merge, Azure operation or heavy/full gate occurred.
+
+P04-P07 and the ordered correction RPI task are complete. This evidence-only
+closeout records the verified publication above and is committed/pushed on the
+same branch; it changes no assessed source. Original adverse Review and parent
+state remain unchanged. Current child state retains the separately running
+automatic session awaiting owner selection; no follow-up task is started.
+Hosted/human/actual Hub/SQL/credential/budget/OD-43 acceptance remains separate,
+not inferred from successful local correction delivery.

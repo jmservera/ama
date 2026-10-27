@@ -235,9 +235,9 @@ format and strict mypy. Preserve all original adverse evidence and live gates.
 #### [x] P06-T01: Bind descriptor and frames to canonical selected snapshots
 
 <!-- rpi:phase id=P07 -->
-### [ ] P07: Validation, one Review and existing-PR publication
+### [x] P07: Validation, one Review and existing-PR publication
 <!-- rpi:task id=P07-T01 -->
-#### [ ] P07-T01: Reconcile evidence, review addendum, commit and push
+#### [x] P07-T01: Reconcile evidence, review addendum, commit and push
 
 Dependencies: P05 follows P04 and P06 follows P05 by owner priority; P07 depends
 on all three. Test ownership: core/tests/test_sensor_stream.py (pacing and
@@ -263,5 +263,9 @@ core 99 sensor tests (one skip) and 9 backfill tests; API 1142 tests (314 skips)
 both projects' configured Ruff/format/mypy pass. One independent correction
 Review is Complete / Conformant at
 .copilot-tracking/reviews/2026-10-27/iot-consumer-110-review-addendum.md.
-Current P07 action: commit/push and update existing draft PR #508. Publication
-and hosted/human acceptance are not yet complete.
+P07 is complete: correction and evidence committed as d553b1a5 and non-force
+pushed to the same branch; existing draft PR #508's evidence body is updated
+and its remote head was verified. No frozen source/test changed after Review.
+Hosted/human/live acceptance and owner merge remain separate and unproven.
+All correction P04-P07 markers are complete; original parent P03 is historical.
+No new work starts without an owner-selected follow-up.

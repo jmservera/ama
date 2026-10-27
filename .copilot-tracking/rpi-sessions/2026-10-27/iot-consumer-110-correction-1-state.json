@@ -34,10 +34,15 @@
       "decision": "Exactly one independent post-implementation correction Review executed against frozen source at HEAD 39f0a433 plus working correction",
       "status": "Complete / Conformant; RV-001, RV-003, RV-002 corrected for the bounded source boundary; zero new findings",
       "evidence": ".copilot-tracking/reviews/2026-10-27/iot-consumer-110-review-addendum.md"
+    },
+    {
+      "decision": "Publish correction and RPI evidence on the existing branch and draft PR",
+      "status": "Verified: d553b1a51bcac5bcac884772581fa554cd5f8d68 pushed without force; PR #508 OPEN/draft at that exact head; body updated with Refs and local/deferred evidence",
+      "evidence": "https://github.com/jmservera/ama/pull/508; git push and gh pr view on 2026-10-27; P07 changes evidence"
     }
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Finish authorized P07 publication to draft PR #508, then await owner selection of a recorded follow-up, Stop or manual mode; do not start a child task automatically"},
+  "next_action": {"phase": "Follow-up", "action": "Correction task and P07 publication complete on draft PR #508; await owner selection of a recorded follow-up, Stop automatic session or Switch to manual mode; do not start a child task automatically"},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Verify live cost, quota/headroom and active alerts before any send", "rationale": "Lowest-effort prerequisite with direct spending-safety value; references alone are not verified alerts", "evidence": "#189; review addendum Plan Follow-Up Assessment"},
     {"rank": 2, "task": "Approve and witness synthetic credential lifecycle and exact-owned teardown", "rationale": "Distinct owner-controlled prerequisite before live transport, not an engineering defect", "evidence": "#185; review addendum Plan Follow-Up Assessment"},
