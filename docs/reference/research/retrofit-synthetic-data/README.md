@@ -126,7 +126,18 @@ under accepted ADR 0006. New executable work belongs in `src/`, not `mvp/`.
 | Stock fabric (`zava_forward.core.synthetic.stock_fabric`, seed 4820260930) and EPC (`zf_stock_epc.py`, seed 4820261015) | `--seed` and register CSV; fabric CLI also takes optional `--cases` and strict `--as-of` label (unknown when omitted); neither uses the clock | `seed`, `version`, `generator_revision` in each summary JSON; core CLI adds payload hashes, nullable `as_of` and exact consumed `input_sha256` for register/optional cases; full source SHA-256, support retains 16-hex revisions covering moved dependencies | `test_stock_fabric.py` and `test_stock_fabric_and_epc_generators_are_byte_deterministic_with_revision` |
 | Stock register (seed 4820260930, 60000 homes) | Seed recorded in `private-stock-manifest.json` | Seed, version, generated date only | None: the register generator is not in the repository (it samples real OpenStreetMap anchors) |
 | Wholly fictional stock-scale fixture (not the private stock register) | `--seed`, `--as-of` snapshot label, `--homes`, `--events-per-home`; events remain calendar-year 2026 | `seed`, `version` 1.2.0, `as_of`, dependency-aware `generator_revision`, per-file `file_sha256` | `src/core/tests/test_synthetic_determinism.py`: all files, changed seed, historical payload hashes |
-| Sensor backfill (labelled synthetic climate, not device evidence) | `--seed`, `--as-of` exclusive UTC end, `--days`, `--cadence`, `--homes`; fixed recorded stock seed | `seed`, `version` sensor-backfill-v2, `as_of`, UTC start/end, dependency-aware `generator_revision`, per-file `file_sha256` including estimate and register | Same src test file: all files/multiple shards, changed seed/date, exact window, estimate propagation, historical payload hashes |
+| Sensor backfill (labelled synthetic climate, not device evidence) | `--seed`, `--as-of` exclusive UTC end, `--days`, `--cadence`, `--homes`; fixed recorded stock seed | `seed`, `version` sensor-backfill-v3, `as_of`, UTC start/end, dependency-aware `generator_revision`, per-file `file_sha256` including estimate and register | Same src test file: all files/multiple shards, changed seed/date, exact window, estimate propagation, versioned payload goldens |
+
+On 2026-10-27, #179's intentional indoor projection v2 correction advances
+new default sensor snapshots to v3, stock snapshots to v2, integrated snapshots
+to v2 and non-composed fault snapshots to `sensor-backfill-faults-v2`.
+Fault-packet algorithm/truth remain v1 and reading schemas do not change.
+The [core versioning evidence](../../../../src/core/README.md#register-backed-sensor-history-177)
+records old/new default golden hashes; literal snapshot/model versions bind
+the new golden. Existing scale and sensor-register hashes are unchanged.
+Historical published files are immutable and need their original generator
+revision/runtime for replay; a current loader rejects old snapshot versions.
+This is not approval for live seeding or a published-data refresh.
 
 `generator_revision` is a SHA-256 prefix over the generator source files, so
 a changed generator is visible in the manifest without relying on Git

@@ -142,3 +142,236 @@ No source or test edits followed the independent assessment. SHA-256:
   `14a5164bacb7a6c6d9fdb581c92aeee55d1387e75b2c6b7efe7eb6cf280df3c8`
 
 Final publication bookkeeping must preserve these exact assessed source bytes.
+
+## Correction Cycle 1 Independent Review - 2026-10-27
+
+### Opening Review State
+
+* Goal: assess the complete user-authorized PR #502 / #179 correction once,
+  independently of implementation, preserving the original Review above.
+* Scope: current working-tree diff against a06c2063, containing-pack version
+  correction, version-bound golden and compatibility tests, and reconciliation
+  with the original synthetic-model acceptance evidence.
+* Evidence readiness: canonical research, plan, details, critique, changes and
+  durable state supplied; final core validation reported complete, awaiting
+  independent inspection. PR #502 is open on feat/indoor-derived-bounds-179
+  targeting main.
+* Acceptance basis: all three #179 criteria at the synthetic exercise boundary,
+  published snapshot version convention, PC-C1-001 and preserved original
+  adverse validation evidence.
+* First comparison boundary: implementation/test diff and historical/current
+  replay distinction, then plan markers, critique dispositions and evidence.
+* Read-only boundary: only this appended record may change. Existing dirty
+  implementation/planning files belong to the correction and are not moved,
+  committed or modified by this Review. No subagents.
+* Initial blockers: none identified; publication gates are outside this review.
+
+### Independent Validation Checkpoint
+
+The independent 22-test selector ran in 3.622 seconds: 13 methods passed,
+nine methods errored. All ten canonical projection tests, the versioned golden,
+multi-shard determinism and default current admission passed. The nine errors
+are destination-policy refusals, not assertions about changed behaviour:
+project-local scratch conflicts with the existing stock/fault writer's
+requirement that its output be outside a checkout. The stale default subcase
+passed; the stock subcase failed at fixture creation. The reviewer did not
+disable that guard, redirect writes outside the permitted project boundary,
+or count the nine errors as passes. Scratch was removed.
+
+The supplied external final core log was read directly: it explicitly records
+all nine affected methods as `ok`, including both new stale-version tests,
+and ends with 1,437 tests in 433.719 seconds, OK (skipped=186).
+This is implementation-run evidence, not an independent full-suite rerun.
+
+Independent configured core static checks passed: `python -m ruff check .`,
+`python -m ruff format --check .` (100 files) and
+`python -m mypy --no-incremental` (153 files). An earlier explicit-path format
+probe failed because it overrode the existing format exclusions for migrated
+sensor_backfill.py and test_synthetic_provenance.py. The project configuration
+explicitly excludes those files; the exact CI-format command passes. Neither
+probe justifies source changes or a new format-conformance claim for excluded
+files. `git diff --check` passed.
+
+### Execution Status and Assessed Boundary
+
+* Review execution: Complete. This is the single independent Review of the
+  complete current correction boundary, not a second assessment of the
+  original delivery. No subagents were used.
+* Source base: a06c2063; all 18 pre-existing modified files were inspected
+  against HEAD, including source, tests, documentation and dated evidence.
+  The original model and canonical tests were also read. Their SHA-256 values
+  still match the original assessed fingerprints above.
+* The earlier original Conformant outcome is preserved, alongside its limited
+  targeted coverage and the subsequently discovered hosted failure. Neither
+  that failure nor either independent probe failure is retrospectively green.
+* No source, test, plan, details, research, critique, changes or durable-state
+  edit was made by this reviewer. Only this record is appended.
+
+### Plan-to-Change and Completion Reconciliation
+
+| Scope | Implementation and evidence | Assessment |
+| --- | --- | --- |
+| P03-T01 | sensor_backfill.py declares default v3, stock v2, fault snapshot v2 and integrated v2; writers and current loaders use the same constants. | Complete and reconciled. Model equations/RNG and reading schemas do not change in this correction. |
+| P03-T01 | Fault snapshots separately record sensor-fault-packets-v1; evaluator truth remains v1. Composed output takes integrated v2, including fault-enabled composed output. | Snapshot identity is distinct from unchanged packet mechanics and schemas. No new loader path is implied. |
+| P03-T01 | privacy.py recognizes historical stock-v1 and current STOCK_VERSION in both fabric-file selection and the empty-register exception. | Historical audit compatibility is retained without granting historical loader admission. |
+| P03-T01 | Literal-version default golden, strengthened stock/integrated/fault manifest assertions, both stock privacy layouts, two isolated stale-version methods. | Existing tests remain; one method is renamed, two added, within the four-addition budget. Current positive loader/consumer controls remain. |
+| P03-T02 | Core README, existing synthetic-data synthesis, reference index and append-only log explain the deliberate baseline change and immutable historical bytes. | Complete; old SHA and original adverse outcomes remain in dated evidence. No published dataset is modified in the diff. |
+| P03-T02 | Final exact core discovery log and configured static checks. | Complete for the stated local core boundary; optional skips and independent environment limitations remain explicit below. |
+| P04-T01 | Independent correction Review followed by commit/same-PR publication. | This Review is complete. Publication and parent-owned evidence/state reconciliation remain pending; the combined P04 marker must not imply publication is complete. |
+
+Original P01/P02 completion statements describe the earlier delivery; the
+appended correction sections explicitly identify current P03 completion and
+P04 pending. Plan, details, changes and durable state agree on that active
+handoff. No stale historical header is used as current publication evidence.
+The branch includes the rubric-bot a06c2063 commit without rewriting it.
+
+### Implementation-Time Decisions and Critique Disposition
+
+The containing-version change is supported by C8/C9, the existing pack-version
+convention and the user-authorized correction, not an unexplained golden
+replacement. The refresh-policy defaults are described as proposed in the
+synthesis; this code correction follows the selected version convention
+without treating it as owner approval to refresh any published or live data.
+Model v2 remains intentional; restoring v1 clips would contradict #179.
+
+PC-C1-001 is resolved. The two new tests construct current fixtures, mutate
+only manifest version and preserve current revision/hashes/parameters. They
+assert the early specific private provenance/composed-version refusal rather
+than accepting a later manifest mismatch, and patch the replay writer and
+downstream schema/SQL/consumer effects. Default and stock admission refuse;
+composed admission also proves no temporary context allocation. Existing
+successful current default, stock and authoritative-consumer tests are the
+positive controls. The final implementation-run log contains all these passes.
+
+The legacy-scratch clarification is accurate and compatible: load_into()
+already opens an empty temporary context before _verify_snapshot(), so the
+legacy tests promise no replay writer/output/schema/SQL, not zero context
+allocation. load_with_consumer() checks version before its temporary context,
+as directly asserted by the composed test. Details and changes preserve this
+distinction; no unrelated loader-control-flow refactor or unaccepted material
+decision is concealed. Original critique verdicts remain Complete / Revise
+with their later direct dispositions, not rewritten as original approvals.
+
+### Independent Golden Legitimacy and Acceptance Audit
+
+A separate reviewer-executed measurement independently reconstructed the
+original v1 baseline, schedule, loss, fixed floor/RH clips and two Gaussian
+draws using the old source as the reference. Only an in-memory patch of
+project() was used for this measurement; no legacy implementation was added
+to production. Fresh project-local synthetic outputs were discarded afterward.
+
+For seed 183, 12 homes, three days and the default window, it reproduced:
+
+* v1 SHA: `657ff373107807b34bd4bb6720dec534fcef13134292c5d753ef24bdbd723549`.
+* Current v2 SHA: `25bb5259d89554560e179ae5412f3148595c47a87def9ee2fca61518e18ded5b`.
+* Exactly 861 rows in each; one temperature and four RH field changes;
+  every other row field and sensors.csv bytes identical.
+
+This independently confirms the recorded causal evidence. The new golden
+asserts literal snapshot v3, literal model v2 and manifest model v2; unchanged
+scale/register goldens remain pinned. It supplements independent semantic
+tests rather than using deterministic repetition as proof of model correctness.
+Historical snapshots require their original revision/runtime, are not
+relabelled for admission and are not overwritten by this correction.
+
+| #179 criterion | Review assessment and evidence |
+| --- | --- |
+| 1. Documented/versioned inputs, equations and parameters | Supported: unchanged model-v2 declarations, README equations, manifest/fingerprint binding and now coherent containing versions. Canonical fingerprint and literal-version golden passed independently. |
+| 2. Every parameter sourced or labelled exercise | Supported: explicit exercise classification for coefficients, domains, noise scales and tail cap; RH 0..100 is physical saturation, not an empirically validated indoor threshold. No new calibration claim. |
+| 3. Outdoor-record-derived plausible indoor bounds | Supported only at the authorized synthetic-model boundary: B/V depend on each paired outdoor record and dwelling/household/dated inputs; capped residuals produce derived envelopes. Independent tests cover supported endpoints, both exact equations/RNG states, two-call tails/saturation, sensitivity and all 70,176 nominal paired-history rows with replay. |
+
+Nonnegative vapour and increasing saturation pressure make the RH interval's
+endpoint order valid; the supported indoor temperature interval remains inside
+the helper's guarded domain. Fault-corrupted packets are intentionally outside
+nominal bounds. Rounded CSV comparisons retain the explicit 0.005 tolerance.
+Closes #179 remains supportable at this narrow exercise boundary, not parent
+#177, live PRD AC-066--068, empirical building physics or operational acceptance.
+
+### Validation Evidence and Limits
+
+All commands below use the supplied existing core-venv Python; no dependency
+install was performed. Independent unit selection ran from src/core with
+PYTHONPATH=tests, PYTHONDONTWRITEBYTECODE=1 and project-local TMPDIR.
+
+| Validation | Status and attribution |
+| --- | --- |
+| Supplied final `python -m unittest discover -s tests -v` | Implementation-run evidence inspected directly: 1,437 run, 1,251 passes, 186 optional skips, zero failures/errors, 433.719 seconds. Not rerun by reviewer. External file: core-unit-correction1-final.log under the supplied session files directory. |
+| Independent `python -m unittest -v` selection | 22 methods, 13 passed and nine destination-policy errors in 3.622 seconds. Full explanation preserved in Independent Validation Checkpoint. No failed method is counted as a pass. |
+| Independent causal reference measurement | Passed: both exact hashes, 861 rows, permitted 1+4 field changes only and identical sensor register. |
+| Independent `python -m ruff check .` | Passed under configured full-core CI rules. Explicit changed-path lint also passed. |
+| Independent `python -m ruff format --check .` | Passed: 100 files. Earlier explicit-path probe failed on existing excluded migrated files; not silently discarded. |
+| Independent `python -m mypy --no-incremental` | Passed: 153 source files, under existing exclusions, not a claim that migrated ignored modules are fully typed. |
+| Independent `git diff --check` | Passed. |
+| Heavy gate, API rerun, hosted rerun, live SQL Server/blob/browser/cloud, calibration and human approval | Not performed; outside this authorized bounded Review. Existing optional core skips are not live/platform acceptance. |
+
+The exact independent unit selector comprised:
+
+* All ten methods in test_indoor_projection.ProjectionTests.
+* SyntheticDeterminismTests.test_versioned_payload_goldens and
+  test_sensor_all_shards_reproduce_and_date_and_seed_change_readings.
+* SensorPrivacyTests.test_stale_snapshot_versions_refuse_before_replay_or_sql,
+  test_valid_synthetic_receipt_is_counts_only_and_idempotent and
+  test_stock_requires_explicit_matching_selection.
+* HistoricalBackfillTests.test_stale_composed_version_refuses_before_scratch_replay_or_consumer,
+  test_verified_writer_load_uses_real_consumer_and_replay and
+  test_compressed_bytes_repeat_and_manifest_binds_all_models.
+* PrivacyMutationTests.test_register_backed_sensor_snapshot_is_checked.
+* SensorFaultTests.test_writer_truth_positions_cross_sensors_shards_and_hashes
+  and test_loader_refuses_new_schema_before_database_changes.
+* SensorStockTests.test_all_excluded_is_explicit_empty_output.
+
+The supplied final log is located at
+/home/azureuser/.copilot/session-state/9b4f81eb-34a4-420a-bd8a-6c799d50f583/files/core-unit-correction1-final.log.
+Its exact affected-method `ok` entries and terminal summary were inspected,
+not inferred from the handoff. No external receipt, complete local gate,
+exact published-head assessment or hosted success is established here.
+
+### Findings, Follow-Ups and Outcome
+
+* Findings: none. RV-C1 severity counts: Critical 0, High 0, Medium 0, Low 0.
+  No substantive implementation defect, unaccepted decision or material
+  in-scope research gap was found; no RV-C1 identifier is fabricated.
+* Review execution: Complete.
+* Outcome: Conformant within the explicitly synthetic exercise boundary.
+* Independent integration rerun limitation: nine methods could not reach
+  their assertions because of the reviewer-local output restriction. This is
+  disclosed validation coverage, not an observed model/admission defect.
+  Direct source inspection and inspected final full-suite evidence support
+  the verdict without bypassing the destination guard or claiming a fresh
+  independent 22-test pass.
+* Blockers to this Review: none. No approval or permission to publish is
+  granted by this verdict. P04 publication, owner review/merge, hosted checks
+  and all applicable exact-head/publication prerequisites remain parent-owned.
+
+| Finding class | Destination and smallest next action |
+| --- | --- |
+| Implementation defect | None; no rpi-implement correction routed. |
+| Decision gap or invalid assumption | None; no rpi-plan revision routed. |
+| Material in-scope evidence gap | None; no rpi-research restart routed. |
+| Non-blocking follow-up: building-physics calibration | Distinct future live-use research; Assets/Building Safety commission competent calibration before making empirical claims. Not an active P03/P04 requirement or a closed acceptance item. |
+| Non-blocking follow-up: OD-43 activation | Assets/Building Safety/DPO/data owners resolve real monitoring and activation approvals separately. No resident consent, safety authority or operational approval follows from synthetic tests. |
+
+The unchanged plan Follow-Up Items and durable-state priority retain those
+owners/next actions and exclusions; they are not defects or newly active plan
+tasks. This single correction Review stops here. A later routed implementation
+would not require another Review by this record.
+
+| Artifact | Description |
+| --- | --- |
+| [.copilot-tracking/reviews/logs/2026-10-27/indoor-derived-bounds-179-review.md](.copilot-tracking/reviews/logs/2026-10-27/indoor-derived-bounds-179-review.md) | Original Review preserved; this dated correction record appended |
+| [.copilot-tracking/research/2026-10-27/indoor-derived-bounds-179-research.md](.copilot-tracking/research/2026-10-27/indoor-derived-bounds-179-research.md) | C1--C9 and correction causal/versioning research |
+| [.copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-plan.md](.copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-plan.md) | P03 complete, P04 publication pending |
+| [.copilot-tracking/details/2026-10-27/indoor-derived-bounds-179-phase-details.md](.copilot-tracking/details/2026-10-27/indoor-derived-bounds-179-phase-details.md) | Correction contract and legacy-scratch clarification |
+| [.copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-critique.md](.copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-critique.md) | Original critique and PC-C1-001 preserved |
+| [.copilot-tracking/changes/2026-10-27/indoor-derived-bounds-179-changes.md](.copilot-tracking/changes/2026-10-27/indoor-derived-bounds-179-changes.md) | Final implementation/test evidence and prior failures |
+| [.copilot-tracking/rpi-sessions/2026-10-27/indoor-derived-bounds-179-state.json](.copilot-tracking/rpi-sessions/2026-10-27/indoor-derived-bounds-179-state.json) | Parent-owned current handoff and distinct follow-ups |
+| [docs/reference/research/retrofit-synthetic-data/README.md](docs/reference/research/retrofit-synthetic-data/README.md) | Version/refresh convention and historical immutability |
+| [src/core/README.md](src/core/README.md) | Model equations, containing versions and literal hashes |
+
+## Next Steps
+
+Return this Complete / Conformant, zero-finding result to the active parent.
+The parent should reconcile P04/state with this record, then perform only its
+authorized same-branch PR #502 publication steps when independently eligible.
+No source correction, second Review, merge, live activation or user decision
+is requested by this Review.

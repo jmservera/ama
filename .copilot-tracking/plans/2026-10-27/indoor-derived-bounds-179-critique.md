@@ -171,3 +171,148 @@ ms.date: 2026-10-27
 The active planning parent should directly resolve PC-001, preserve this
 Complete / Revise outcome and finalize without another critique. It may then
 continue the authorized ordered RPI loop. No user action is required.
+
+## Correction cycle 1 final-candidate critique (2026-10-27)
+
+### Metadata and inputs
+
+* Task: issue #179 / PR #502, correction cycle 1, P03/P04.
+* Critique execution status: Complete.
+* Verdict: Revise.
+* Severity counts: Critical 0; High 0; Medium 1; Low 0.
+* This is one bounded correction-cycle critique. The original Complete /
+  Revise outcome and PC-001 above are historical and remain unchanged.
+* Candidate inputs: only the correction sections of
+  .copilot-tracking/research/2026-10-27/indoor-derived-bounds-179-research.md
+  (C8/C9 and correction synthesis),
+  .copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-plan.md
+  (P03/P04), and
+  .copilot-tracking/details/2026-10-27/indoor-derived-bounds-179-phase-details.md.
+* Direct evidence: snapshot construction and admission in
+  src/core/src/zava_forward/core/synthetic/sensor_backfill.py:326-380,
+  :443-550; privacy dispatch in
+  src/core/src/zava_forward/core/synthetic/privacy.py:212-263; packet version
+  in src/core/src/zava_forward/core/synthetic/sensor_faults.py:9-10;
+  projection version/parameter declarations in
+  src/core/src/zava_forward/core/synthetic/indoor_projection.py:10-88;
+  src/core/tests/test_synthetic_determinism.py:94-130;
+  directly relevant admission, stock, fault, historical-backfill and
+  synthetic-provenance tests; .github/workflows/src-ci.yml; and
+  docs/reference/research/retrofit-synthetic-data/README.md:157-183.
+* Confirmed decisions: intentional new v2 model rows, containing pack-version
+  bumps, no restored fixed clips, no legacy algorithm implementation, pip
+  only, same branch/PR, append-only historical evidence, exact core CI
+  commands, no heavy-gate execution. Test ownership and maximum four added
+  methods with no removals are locked and are not reopened.
+* Boundary: assess candidate credibility and planned proof, not implementation
+  completion, empirical building physics, published-data refresh approval or
+  hosted acceptance. Existing dirty candidate inputs were inspected without
+  moving, staging or changing them.
+
+### Coverage assessment
+
+| Requirement, research, phase or task | Coverage | Evidence or concern |
+| --- | --- | --- |
+| C8; P03-T01; versioned golden | Covered as planned | Independent old-equation reconstruction with identical draws precedes replacement; old/new full hashes are retained in dated evidence. Literal default v3 and projection v2 assertions bind the new payload hash. Scale/register goldens remain unchanged. |
+| C9; P03-T01; containing versions | Covered as planned | Default v3, stock v2, integrated v2 and a separate fault snapshot v2 are required. Keeping packet algorithm v1, reading schemas and stock/fabric identity versions unchanged avoids an unrelated algorithm or identity migration. |
+| Writer/reader alignment; P03-T01 | Partial | Shared current writer constants and old-version rejection are specified. The negative-test contract does not isolate version checks from revision/hash rejection; PC-C1-001. |
+| Privacy consistency; P03-T01 | Covered as planned | Both stock versions remain auditable, while only current snapshots are loader-admissible. Both privacy version branches must change: fabric-file inclusion and the zero-granted empty-register exception. Existing src/core/tests/test_synthetic_provenance.py:test_register_backed_sensor_snapshot_is_checked already exercises nonempty and all-excluded current stock outputs; extend its owned coverage for legacy/current versions rather than creating another suite. |
+| Fault/composed boundaries; P03-T01 | Covered as planned | All manifest modes are owned, with packet/schema versions retained. Fault-schema inputs remain inadmissible to the legacy SQL loader; composed replay remains through the authoritative consumer. Neither bump authorizes a new loader path or mixing evaluator truth into analysis. |
+| Golden strength; P03-T01 | Covered as planned | The exact default reading digest supplements, rather than replaces, semantic v2 envelope tests. Causal comparison must distinguish permitted temperature/RH changes from unchanged identities, timestamps and other fields. Deterministic replay alone is not offered as causal proof. |
+| P03-T02; exact core CI | Covered as planned | Python 3.12, installed core/dev tools, full unittest discovery, Ruff check/format and mypy match the project workflow. Counts, skips, failures and retries remain evidence obligations, not claimed results. |
+| P04-T01; ordered review/publication | Covered as planned | One independent correction Review follows implementation/checks; reconcile dated artifacts and state, preserve original outcomes, retain the known upstream bot commit by fast-forward, commit with privacy-safe identity and push the same PR without force. No merge or hosted-pass inference is authorized. |
+
+### Findings
+
+<!-- rpi:critique id=PC-C1-001 -->
+#### PC-C1-001 [Medium]: Isolate the stale-version admission guard in regression tests
+
+* Related IDs: C9, P03-T01, correction acceptance for stale-version refusal;
+  writer/reader compatibility.
+* Evidence: The candidate requires stale-version refusal but does not state
+  how the rejection is isolated. In
+  src/core/src/zava_forward/core/synthetic/sensor_backfill.py:518-550,
+  version, revision, stock selection, replayed manifest and payload comparisons
+  can each independently refuse a legacy input. In the composed path,
+  :464 and :479-482 similarly separate the version gate from exact replay.
+  Existing replay/tamper tests establish other rejection causes, not this
+  correction's version boundary.
+* Concern: Feeding a genuinely old snapshot, or changing version together
+  with revision/hash metadata, can pass a generic rejection assertion even
+  if the intended current-only version gate is missing. Even a version-only
+  mutation can fail later at complete-manifest comparison, so exception-only
+  coverage does not demonstrate the explicit admission gate.
+* Impact: Green negative tests could leave the documented admission boundary
+  unproven, including refusal before potentially expensive replay and before
+  SQL or consumer effects.
+* Smallest useful change: In the existing owned admission/history tests, or
+  the already reserved maximum-four additions, generate valid current
+  default, stock and integrated fixtures. For each, change only its manifest
+  version to the respective previous literal, preserving current revision,
+  hashes, parameters, stock and climate. Assert refusal before replay writer
+  invocation and before schema/SQL or consumer.process calls. Pair these
+  cases with successful current-version admission using the same fixture
+  parameters. Keep fault-schema legacy-loader refusal separately owned;
+  do not invent a fault-only loader or require historical replay support.
+  Use subTest cases or extend existing methods; no extra budget is requested.
+* Action owner: Planning parent for the P03-T01 contract; implementer for
+  the tests; independent correction Review for final evidence confirmation.
+* Exact resolving evidence: A planner-owned P03-T01 disposition explicitly
+  requires version-only mutations and no-replay/no-side-effect assertions.
+  Implementation evidence identifies the owning methods and their
+  default/stock/integrated cases; current admission succeeds, previous-version
+  admission fails without invoking the patched replay writer, and downstream
+  schema/SQL/consumer mocks remain untouched. Record their passing execution
+  in the exact full core CI run, within four added methods and no removals.
+* Decision route: Direct planner correction. The user already selected
+  current-only admission and the version-bump policy; no user decision,
+  research restart or model change is needed.
+* Planner-owned disposition: Open for the active planning parent. This
+  critique does not claim that the candidate or implementation has already
+  resolved the finding.
+
+### Strengths, limitations and residual risks
+
+* The refresh convention supports deliberate new row values with bumped
+  containing versions; restoring fixed clips would contradict the selected
+  correction. Snapshot version is not a reason to bump unchanged packet,
+  fabric or schema algorithms.
+* Keeping legacy stock privacy recognition is compatible with rejecting
+  legacy loader replay. Privacy auditing is not provenance admission, and
+  neither is operational approval.
+* A default literal-version payload golden, independent old-equation cause
+  proof and retained scale/register hashes make the golden replacement
+  credible. Literal expected versions in the all-mode assertions should not
+  be replaced solely by comparisons to production constants.
+* No other actionable gap is withheld for another critique. Existing
+  semantic tests remain required through the full core run; calibration and
+  operational approval remain outside this correction.
+* No tests, installs, cloud operations, private-data reads, secrets access,
+  Git writes or heavy gates were performed. The hosted failure/hash
+  reproduction and upstream bot ancestry are supplied correction-research
+  evidence, not independently rerun or fetched by this critique.
+* Only this critique artifact was edited. Research, plan, phase details,
+  source/tests, changes and prior Review records were not modified.
+
+### Recommended next action and disposition
+
+* Highest-impact finding: PC-C1-001, Medium.
+* Action owner: Active planning parent.
+* Smallest next action: Add the isolated stale-version test contract to
+  P03-T01, record its disposition and finalize the correction plan without
+  another critique. Then continue the authorized Implement and single
+  independent correction Review stages.
+* User response required: No.
+
+| Artifact | Description |
+| --- | --- |
+| [.copilot-tracking/research/2026-10-27/indoor-derived-bounds-179-research.md](.copilot-tracking/research/2026-10-27/indoor-derived-bounds-179-research.md) | Correction C8/C9 and selected version decision |
+| [.copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-plan.md](.copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-plan.md) | Assessed correction P03/P04 candidate |
+| [.copilot-tracking/details/2026-10-27/indoor-derived-bounds-179-phase-details.md](.copilot-tracking/details/2026-10-27/indoor-derived-bounds-179-phase-details.md) | Assessed correction task contracts |
+| [.copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-critique.md](.copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-critique.md) | Original outcome and appended correction-cycle critique |
+
+## Next Steps
+
+The active planning parent should directly dispose PC-C1-001 and finalize
+without another critique, then continue the ordered correction loop. This
+bounded critique stops here; no user action is required.

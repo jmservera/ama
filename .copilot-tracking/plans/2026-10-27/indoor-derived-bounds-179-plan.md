@@ -142,3 +142,92 @@ retry are both retained. Source edits and PC-001 test evidence are complete;
 no new critique, source work or Review is planned. Final evidence-only
 bookkeeping preserves the assessed source fingerprints. Owner merge/hosted
 checks remain separate from this completed manual full-loop task.
+
+## Correction cycle 1 plan (2026-10-27)
+
+Task identity remains 179 / indoor-derived-bounds-179. This user-requested
+correction is a new ordered cycle, not a rewrite of the original critique or
+Review. Research C8/C9: executed / Ready. Candidate readiness: ready for one
+correction-cycle critique. No owner decision is unresolved.
+
+Executive summary: the v2 projection intentionally changes new snapshot rows.
+Advance containing snapshot versions and bind the replacement golden to
+literal model/snapshot versions; never alter published datasets. Retain the
+unchanged scale/sensor-register goldens and the historical sensor digest in
+dated evidence. Gate new readers on their current versions, update stock
+privacy recognition, and run exact full core CI commands.
+
+User requirements: fix hosted src-core, run research/plan/implement/review in
+order, append existing artifacts, use pip only, preserve branch/PR and
+Closes #179 only while all criteria remain evidenced. No heavy gate.
+Goals: version-honest snapshot output, strong byte determinism and green full
+core CI. Scope: sensor snapshot writer/readers, privacy version recognition,
+canonical determinism/integration tests and related documentation. Non-goals:
+legacy algorithm support, schema/fault-algorithm changes, source datasets,
+live seeding or operational authority.
+
+Functional requirements: bump default v2 to v3, stock v1 to v2, integrated v1
+to v2; distinguish fault snapshot v2 from unchanged packet algorithm v1.
+Use shared writer constants for readers/privacy; preserve old stock recognition
+for historical privacy auditing without permitting old-version loader replay.
+Pin current sensor digest with literal default and model versions. Reject
+old snapshot versions at admission. Non-functional requirements: unchanged
+RNG, equations, schemas, identifiers and monitoring/approval boundaries;
+Python 3.12 and existing dev pins, no new dependencies.
+
+Acceptance: reproduce the exact hosted mismatch, prove its cause with the
+independent v1 equations; pass default/stock/fault/composed version and stale
+admission checks; pass all CI core tests, lint, formatting and mypy. Preserve
+the original #179 criterion proof via existing full-record projection tests.
+
+Test ownership: src/core/tests/test_synthetic_determinism.py owns versioned
+goldens; existing stock/history/privacy tests own integration. No file or test
+removals; rename the misleading historical-equality method. Maximum four
+additional methods, no generated tests. Separate semantic v2 envelope evidence
+from byte-level regression goldens. No API/cloud/full-gate rerun is necessary
+for this scoped synthetic snapshot correction.
+
+<!-- rpi:phase id=P03 -->
+### [x] P03: Correction cycle 1 implementation
+
+<!-- rpi:task id=P03-T01 -->
+#### [x] P03-T01: Version snapshots, wire readers/privacy and regression goldens
+
+<!-- rpi:task id=P03-T02 -->
+#### [x] P03-T02: Document intentional change and run exact core CI checks
+
+<!-- rpi:phase id=P04 -->
+### [ ] P04: Correction cycle 1 review and publication
+
+<!-- rpi:task id=P04-T01 -->
+#### [ ] P04-T01: Independent Review, append evidence, commit and same-PR push
+
+Follow-ups remain future building-physics calibration/OD-43, not part of this
+correction. Details: existing phase-details artifact, correction-cycle section.
+
+### Correction cycle 1 critique disposition
+
+Execution Complete; original verdict Revise, one Medium PC-C1-001. Directly
+applied: stale-version tests mutate only `version` on valid current snapshots
+with current revision/payload hashes. Parameterize default/stock/composed;
+assert version-specific refusal before replay/write/consumer/schema/SQL calls.
+Positive current-version load tests remain the controls. No extra methods
+beyond the locked maximum four, no divergent decision, no repeat critique.
+Final planning readiness Ready.
+
+### Correction cycle 1 implementation handoff
+
+P03 complete. Final exact CI core discovery: 1,437 run, 1,251 passes,
+186 existing optional skips, no failures/errors, 433.719 seconds on Python
+3.12.3. Full core ruff check/format and mypy pass (100 formatted files,
+153 typed files). New snapshot versions/golden, isolated stale-admission
+regressions and both historical/current stock privacy classification pass.
+All #179 criteria remain supported by the unchanged ten canonical projection
+tests, including pinned full-record traversal. No source edits remain.
+P04-T01 Review/publication remains; no human/hosted/live approval is inferred.
+
+Correction-cycle independent Review now Complete / Conformant, no findings.
+Its independent 13-pass/nine destination-guard-error selector and causal/
+static evidence are recorded honestly; supplied final full discovery confirms
+the affected methods. P04-T01 remains unchecked until actual publication.
+No source changes follow Review.

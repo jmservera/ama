@@ -125,3 +125,67 @@ per-record shared envelope and v2 parameters, preserve validation/RNG order,
 prove nominal outputs on the pinned public history, and document limitations.
 Self-check: all questions mapped to C1--C7, all three waves completed inline,
 alternatives and residual uncertainty explicit; no source files edited.
+
+## Correction cycle 1 intake (2026-10-27, PR #502)
+
+Focused, parent-authorized ordered Research/Plan/Implement/Review continuation.
+Investigate the hosted historical sensor SHA-256 regression before choosing
+compatibility gating or an intentional versioned golden update. Append evidence
+to the existing dated artifacts; preserve their original outcomes. Starting
+sources: issue #179 and PR #502, determinism tests, projection/writer versions,
+snapshot documentation and the exact `src-core` CI commands. No external
+research, private data, cloud, heavy gate, secret reads or workflow changes.
+Repository instructions and RPI phase skills apply; UI skills are inapplicable.
+Inline investigation is appropriate for this single tightly coupled trace.
+No new acceptance checkbox or historical golden changes without proof.
+
+### Correction cycle 1: Wider
+
+C8: `src/core/tests/test_synthetic_determinism.py:94` pins the old sensor
+reading digest independently of the model version. Hosted run 40577511316
+ran 1,435 tests, one failure and 186 skips; its exact mismatch is reproduced
+locally on Python 3.12.3 after installing missing core/dev dependencies with
+pip. Old digest: `657ff373107807b34bd4bb6720dec534fcef13134292c5d753ef24bdbd723549`;
+current: `25bb5259d89554560e179ae5412f3148595c47a87def9ee2fca61518e18ded5b`.
+Reflection: the first delivery omitted this canonical regression from its
+selected tests; the original green targeted result did not prove full core CI.
+
+### Correction cycle 1: Deeper
+
+C9: `docs/reference/research/retrofit-synthetic-data/README.md:157` documents
+row-changing refreshes bumping the pack version, exact replay requiring the
+same revision/runtime/parameters, and writing a new destination rather than
+overwriting published records. `src/core/README.md:2197` and the existing PR
+already explicitly intend changed v2 values. Model versions are v2, but
+`sensor_backfill.py:33`, `:344`, `:355`, `:364` still use the old snapshot
+versions in default, stock, fault and composed modes. Read/replay and privacy
+classification use those version identifiers (`sensor_backfill.py:464`,
+`:518`; `privacy.py:228`, `:256`). Reflection: an unqualified hash replacement
+is insufficient; pack version bumps must reach writers, readers and privacy.
+
+### Correction cycle 1: Contrarian
+
+Considered gating the old default at v1. This would preserve its SHA, but
+would intentionally retain fixed 8 C / 15..98% clips for one supported path,
+contradicting #179's requested correction and the already documented v2
+decision (C1, C7, C9). No source requires a changed generator revision to emit
+old values. Rejected changing RNG order, weakening bounds tests, overwriting
+published outputs, or bumping unchanged fault/schema/stock-fabric algorithms.
+Snapshot versions and model versions are distinct; fault packet mechanics
+can stay v1 while their containing generated snapshot advances.
+
+### Correction cycle 1 synthesis and readiness
+
+Research disposition executed; Planning Readiness Ready. Intentional v2 model
+change is legitimate for new snapshots; historical published bytes remain
+immutable and require their original revision for replay. Follow the documented
+version convention: default snapshot v3, stock snapshot v2, integrated snapshot
+v2, and a distinct fault-snapshot v2 with fault-packet algorithm still v1.
+Pin the new default golden with literal snapshot/model version assertions,
+preserve unchanged scale/register digests and record the old digest here and
+in the changes artifact. Prove the cause using the independent old equations
+and exact seeded reference, then run all three core CI commands unchanged.
+No new operational approval or dataset refresh is requested. One inline
+three-wave cycle suffices; no unresolved owner/Legal/DPO decision.
+Upstream contains only rubric-bot commit a06c2063 beyond local HEAD; retain it
+by fast-forwarding before publication, without rewriting history.

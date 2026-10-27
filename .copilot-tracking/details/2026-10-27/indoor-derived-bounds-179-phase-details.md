@@ -97,3 +97,65 @@ and original evidence committed as 3d24537a, topic branch pushed and one main
 PR opened at https://github.com/jmservera/ama/pull/502. Final evidence-only
 bookkeeping does not change the reviewed model/test bytes or imply merge/
 hosted/operational approval.
+
+## Correction cycle 1 details (2026-10-27)
+
+P03-T01: introduce explicit containing snapshot versions in sensor_backfill;
+use them in default/stock/fault/integrated manifests and loader admission.
+Keep reading schemas, fault-packet algorithm and stock identity/fabric versions
+unchanged. Privacy must recognize current stock snapshots and still audit old
+stock snapshots, not misclassify either as scale fixtures.
+Rename historical equality test to versioned payload golden; assert literal
+default v3 / projection v2 and new reading SHA while retaining unchanged
+scale/register hashes. Add at most four methods covering all manifest modes,
+stale version refusal and legacy/current privacy treatment. No test removal.
+Before updating the golden, independently reconstruct the old equation/clips
+using identical draws to demonstrate the old SHA and isolate changed row fields.
+
+P03-T02: update core README, determinism/versioning synthesis, reference index
+and append-only log. Record prior/new full hashes, causal comparison, unchanged
+boundaries and old-revision replay requirement. Use installed core with its
+declared dev extra, exactly Python 3.12 as CI:
+
+```bash
+cd src/core
+python -m unittest discover -s tests -v
+ruff check . && ruff format --check .
+mypy
+```
+
+Keep complete output external to the repository; append counts, durations,
+skips, failures and successful retries honestly. No --changed/--all gate.
+
+P04-T01: one bounded independent correction-cycle Review, preserving original
+outcomes and recording execution separately from acceptance. Reconcile plan,
+details, changes and state. Fast-forward the known rubric-bot upstream commit
+without moving existing modifications; configure privacy-safe local identity
+from gh api user, commit all correction evidence with Conventional Commit and
+Copilot trailer, push the same branch without force and update PR #502.
+No new PR, merge, live seeding or hosted acceptance inference.
+
+PC-C1-001 direct disposition: stale-version refusal must change only the
+version of an otherwise valid current default/stock/composed snapshot, retain
+current generator_revision and payload hashes, assert the specific version
+refusal reason and zero scratch/write/consumer/schema/SQL calls. Retain the
+existing successful current-version loads as positive controls.
+
+Implementation clarification: legacy load_into already opens an empty temporary
+context before verification; P03-T01 requires no replay writer/output/schema/
+SQL for that path. Composed stale admission additionally precedes temporary
+scratch allocation. Preserve this distinction rather than refactor unrelated
+legacy loader control flow.
+
+Correction-cycle execution: P03-T01/P03-T02 complete; P04-T01 pending.
+Final source/test candidate ran the exact full CI core suite successfully:
+1,437 run, 1,251 passed, 186 skipped, zero failures/errors, 433.719 seconds.
+Full-project lint/format (100 files) and mypy (153 files) pass. Earlier initial
+static failures and full-suite run are retained in changes; final full-suite
+rerun follows all source/test edits. No unresolved decision or implementation
+task. Independent correction Review and same-branch publication remain.
+
+Correction-cycle independent Review Complete / Conformant, no findings;
+its original append-only record includes independent-probe limitations.
+P04-T01 still awaits actual commit/push/PR update. No source/test edits
+follow the assessment; owner and hosted acceptance remain separate.

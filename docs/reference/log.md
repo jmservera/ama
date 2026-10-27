@@ -7658,3 +7658,17 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Preserved original historical stack, aggregate hashes, adverse Review and
   legal/operational blockers. Model-consistent synthetic bounds do not close
   parent #177 or establish PRD AC-066--068, OD-43 or real-dwelling physics.
+
+## [2026-10-27] query | Indoor snapshot versioning correction (#179, PR #502)
+
+* Filed the deliberate projection-v2 row-change decision in the existing
+  synthetic-data determinism/versioning synthesis, core README and index.
+  New default/stock/composed/fault snapshot versions distinguish new bytes
+  without changing fault algorithms, reading schemas or published datasets.
+* Preserved the original sensor golden hash as historical evidence; current
+  golden binds literal snapshot/model versions. Scale/register goldens remain
+  unchanged. Current loaders reject stale snapshot versions, while privacy
+  auditing still recognizes historical and current stock snapshot layouts.
+* Original targeted validation and adverse hosted failure remain in dated RPI
+  evidence. The correction requires exact full core CI tests, lint and mypy;
+  no cloud, private dataset, heavy gate or real-use approval is introduced.

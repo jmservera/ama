@@ -2189,6 +2189,25 @@ values where v1 clipped or an uncapped tail escaped. Source fingerprints bind
 the helper. Old snapshots remain unchanged and require their original generator
 revision for replay; they are not silently migrated.
 
+Snapshot versions also advance for these intentional row changes: default
+`sensor-backfill-v3`, register `sensor-backfill-stock-v2`, paired-climate
+`sensor-backfill-integrated-v2`, and non-composed fault output
+`sensor-backfill-faults-v2`. The fault snapshot records
+`fault_model_version=sensor-fault-packets-v1`; its packet algorithm, truth
+version and reading schemas are unchanged. Fault-enabled composed output uses
+the integrated v2 snapshot version. Loaders admit only current versions and
+exact current-revision replays; historical snapshots require their original
+generator revision/runtime, not relabelling or automatic migration.
+
+The versioned golden in `tests/test_synthetic_determinism.py` pins default v3
+with projection v2. For its seed183, 12-home, three-day fixture, the reading
+SHA-256 changes from
+`657ff373107807b34bd4bb6720dec534fcef13134292c5d753ef24bdbd723549` to
+`25bb5259d89554560e179ae5412f3148595c47a87def9ee2fca61518e18ded5b`.
+Scale payload and sensor-register goldens remain unchanged. This is a new
+generator baseline, not approval to refresh or overwrite published datasets;
+follow the [snapshot version and refresh policy](../../docs/reference/research/retrofit-synthetic-data/README.md#determinism-manifests-and-refresh-policy-2026-10-15).
+
 The #180 stacked `synthetic.retrofit_effects` component is deliberately not yet
 wired into the writer. It accepts explicit synthetic `Measure` records with
 stock home ID, unique measure ID, supported kind and recorded whole-second
@@ -2219,7 +2238,7 @@ No demographic inputs, resident assessment or attribution are used.
 The writer still uses its legacy schedules until #179/#183 integration;
 no full household-model history or resident choice approval is claimed.
 
-The explicit `--register` mode (`sensor-backfill-stock-v1`) reuses merged
+The explicit `--register` mode (`sensor-backfill-stock-v2`) reuses merged
 `stock-fabric-v1`, seed 4820260930, rather than drawing unrelated dwelling
 attributes or treating the scale fixture as the private stock. Supply a wholly
 synthetic CSV with `synthetic_home_id`, `is_synthetic=true`,

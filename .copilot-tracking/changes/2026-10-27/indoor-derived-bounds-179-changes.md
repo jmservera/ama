@@ -180,3 +180,137 @@ Review stay unchanged. No second critique/Review, merge, deployment, full gate,
 private-data read or unearned approval. Owner review/merge and hosted checks
 are the next action. Future real-use calibration/OD-43 stays a distinct
 owner-selected follow-up.
+
+## Correction cycle 1 (2026-10-27, PR #502)
+
+Scope P03/P04, new user-authorized ordered loop. Original critique/Review and
+validation claims above are historical, not overwritten. Research executed /
+Ready, correction plan Ready; one critique Complete / Revise, PC-C1-001
+directly applied (isolated stale-version refusal with no downstream effects).
+
+### Versioning decision and causal evidence
+
+The indoor-envelope change deliberately alters new rows. Repository convention
+in docs/reference/research/retrofit-synthetic-data/README.md, refresh policy,
+requires a containing pack version bump for row changes and exact reproduction
+only with the same revision, inputs, runtime and parameters. Old published
+bytes must not be overwritten. Restore neither old fixed clips nor unbounded
+tails merely to satisfy an obsolete golden.
+
+Hosted run 40577511316: 1,435 run / one failure / 186 skipped. The earlier
+selected local suite omitted test_synthetic_determinism, so its original
+Conformant review did not prove full core CI. Initial local attempt failed
+because core was uninstalled; pip-restored core with its declared dev extra
+in an external session venv on Python 3.12.3. Focused reproduction: seven
+tests, six pass / exact historical hash failure.
+
+Independent v1 baseline/floor/RH equations, applied only in an ephemeral
+measurement with identical inputs and Gaussian draws, reproduced the old
+SHA exactly. No old code added to production. Default seed183, stock seed
+unchanged, 12 homes, three days, default hourly cadence/start:
+
+| Projection | readings-0000.csv SHA-256 |
+| --- | --- |
+| Original v1 | `657ff373107807b34bd4bb6720dec534fcef13134292c5d753ef24bdbd723549` |
+| Derived-envelope v2 | `25bb5259d89554560e179ae5412f3148595c47a87def9ee2fca61518e18ded5b` |
+
+Both have 861 rows. Exactly one temperature and four humidity fields differ;
+all other reading fields and sensors.csv bytes are identical. These differences
+are the intended bounds/tail change, not seed, ID, schema, timestamp, fault,
+ordering or random-stream drift. No existing dataset is read or refreshed.
+
+Implementation starting: advance default/stock/composed/fault snapshot
+versions, preserve component/schema versions, bind new golden to literal
+versions and test stale snapshot admission plus current/historical privacy.
+All #179 criteria remain to be revalidated before retaining Closes #179.
+
+### P03-T01 implementation
+
+Default/stock/fault/integrated snapshot versions are now v3/v2/v2/v2.
+Writers/readers share explicit constants; fault snapshot metadata separately
+records the unchanged v1 packet model. Projection equations, RNG, schemas,
+truth version and fabric/identity versions are unchanged by this correction.
+Privacy auditing recognizes both historical stock-v1 and current stock-v2,
+including empty selections; loader admission recognizes only current versions.
+The new default golden asserts literal snapshot v3 / model v2. Scale and
+sensor-register golden digests remain exactly unchanged.
+
+Two new test methods cover isolated default/stock/composed stale versions
+with current revision/payload hashes. Existing manifest tests now assert
+literal stock/integrated/fault snapshot versions and unchanged fault schema/
+algorithm. Existing privacy regression checks populated/empty stock layouts
+under both versions. Existing positive loader/consumer tests remain.
+PC-C1-001 is implemented: private verification asserts the specific unsupported
+version/provenance error, public admission refuses, and no replay writer,
+schema or SQL calls occur. Composed refusal additionally precedes scratch
+allocation and consumer processing. The existing legacy loader still allocates
+an empty temporary context before validation; this is not replay/output/SQL.
+This clarifies the plan's shorthand "no scratch" for the composed path without
+an unrelated legacy-loader refactor.
+
+### P03-T02 static validation checkpoint
+
+Exact full-project CI commands from src/core, isolated pip-installed dev extra:
+`ruff check . && ruff format --check .` and `mypy`. Final result: all lint checks
+passed, 100 files formatted, mypy no issues in 153 source files. Initial mypy
+found that a test accessed a non-exported tempfile module through sb; changed
+to the existing string-path mock pattern, then formatting and all static
+checks passed. This changes no tested behavior. Initial full unit discovery
+was already running; its final outcome and final affected-module verification
+will be recorded below. State unique-key JSON and Git whitespace checks pass.
+No heavy gate, cloud, private dataset or hosted acceptance inference.
+
+### P03 final validation and criterion reconciliation
+
+Final source/test edits are complete. From src/core, Python 3.12.3, isolated
+external session venv, pip-installed `-e ./src/core[dev]` with declared pins:
+
+```bash
+python -m unittest discover -s tests -v
+ruff check . && ruff format --check .
+mypy
+```
+
+Final exact discovery: **1,437 run, 1,251 passes, 186 existing optional skips,
+zero failures/errors**, 433.719 seconds. Final exact lint/format: all checks
+passed, 100 files already formatted. Final exact mypy: success, 153 source
+files. First full discovery also passed (1,437 / 186 skipped, 421.479 seconds)
+but overlapped the test-only typed mock-target edit; the complete final rerun
+above removes any candidate ambiguity. No reduced selector is substituted
+for the requested CI suite. Full logs remain in the external session files
+as core-unit-correction1.log and core-unit-correction1-final.log.
+
+All ten canonical indoor tests pass unchanged, including 70,176 nominal
+paired-record rows and exact RNG/envelope tests. Criterion 1 retains
+versioned model/parameter/manifest proof and now honest containing snapshot
+versions; criterion 2's explicit exercise labels are unchanged; criterion 3's
+derived per-row envelopes remain proven at the synthetic-model boundary.
+Closes #179 remains justified; no parent/live PRD/OD-43 acceptance is claimed.
+The 186 skips are existing opt-in/optional boundaries, not completed live
+SQL Server, blob or operational checks. Pre-existing unclosed-file warnings
+remain in the output, not failures.
+
+Reconciliation: P03-T01/P03-T02 complete; P04-T01 independent Review and
+publication remain. No implementation blocker, extra dependency, schema/
+workflow/check-name change, heavy gate or dataset refresh. Upstream rubric-bot
+commit a06c2063 was retained by clean fast-forward, not rewritten.
+
+### P04 independent Review and publication handoff
+
+Single independent correction Review execution Complete; outcome Conformant
+at the synthetic-model boundary, no RV-C1 findings. Original Review remains
+byte-preserved. Reviewer independently reproduced both causal hashes and the
+861-row / 1 temperature + 4 RH differences, and passed configured lint/format
+and nonincremental mypy. Independent selected tests: 22 methods, 13 passed,
+nine errored because the reviewer's checkout-local scratch was refused by the
+existing external-output guard. These errors are not passes; all affected
+methods were explicitly verified `ok` in the supplied final external full-suite
+log. An explicit-path formatting probe also failed on existing excluded files;
+the exact configured full-core CI-format command independently passed.
+Full details and limitations are appended to the canonical review artifact.
+
+No source or test change follows Review. No material finding remains open.
+P04-T01 Review is complete; commit/push/PR evidence update remain. Owner
+review/merge, hosted checks, future calibration and OD-43 remain separate.
+Task-specific publication direction explicitly forbids --all; no complete
+local-gate receipt or independent published-head gate is claimed.

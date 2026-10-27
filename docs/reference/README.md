@@ -36,6 +36,10 @@ paths, replacing the fixed 8 C and 15..98% exercise clips. Model inputs,
 coefficients and bounded-noise parameters remain exercise values. The pinned
 public 17,544-hour ERA5 record supplies regression evidence, not calibrated
 indoor physics, a safety threshold, OD-43 or whole-parent/live PRD acceptance.
+The [snapshot versioning correction](./research/retrofit-synthetic-data/README.md#determinism-manifests-and-refresh-policy-2026-10-15)
+distinguishes the intentionally changed v2 indoor model from new containing
+snapshot versions and their version-bound golden; published historical bytes
+and unchanged scale/register goldens are preserved.
 
 For #199-#203, the
 [owner-authorized 2026-10-27 directory retirement](../architecture/cutover-evidence-pack.md#owner-authorized-directory-retirement-2026-10-27)
