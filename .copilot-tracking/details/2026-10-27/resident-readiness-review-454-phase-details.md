@@ -58,3 +58,10 @@ push existing topic branch with an explicit old-remote-SHA force-with-lease;
 otherwise normal push. Replies cite committed report and exact dependency
 rows. Resolve each target thread only after verifying its evidence. Read back
 remote head and both thread states; do not resolve already-resolved threads.
+
+Completed after the single Review: published 9de8532a using explicit lease on
+old remote ececfb46 after conflict-required rebase; immutable evidence replies
+4390203338 and 4390203647; only the two target thread IDs resolved. GraphQL
+readback confirmed both true, remote head 9de8532a, PR OPEN and MERGEABLE.
+This completion metadata is committed/published afterward with a normal push;
+the independently assessed source bytes do not change.

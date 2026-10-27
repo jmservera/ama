@@ -34,10 +34,15 @@
       "decision": "One independent post-implementation RPI Review executed Complete; outcome Conformant with justified divergence.",
       "status": "executed",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-27/resident-readiness-review-454-review.md; candidate 3c23f693267351b11908dbbcea8f8608e78b5393; no blocking thread-addressing defect; RV-001/002/003 retained as distinct quality follow-ups"
+    },
+    {
+      "decision": "P02-T03 published reviewed corrections, replied to and resolved only both genuinely addressed PR 454 threads.",
+      "status": "verified",
+      "evidence": "Remote 9de8532a1d66583e5e041a4a2b417e854d43af5f; replies discussion_r4390203338 and discussion_r4390203647; GraphQL both isResolved true, PR OPEN and MERGEABLE. Explicit old-SHA lease used only after confirmed-conflict rebase; final administrative record uses normal push."
     }
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Source/RPI task complete; parent finishing authorised P02-T03 publication/readback before offering supported follow-ups. No new source task selected."},
+  "next_action": {"phase": "Follow-up", "action": "Requested corrections and publication complete. Await explicit selection of ranked follow-up, Stop automatic session, or Switch to manual mode; no new work selected or authorised."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Reconcile current PRD trace, table shape and historical-state pointers", "rationale": "Bounded editorial fidelity work, no activation or invented dates.", "evidence": "pr454-qual-001/003; pr442-qual-009/039 in independent 2026-10-27 report"},
     {"rank": 2, "task": "Complete RB-03 measurement contract", "rationale": "Required for reliable resident timing/file evaluation, preserves selected targets.", "evidence": "pr442-qual-041 remains partial/open in independent report"},
