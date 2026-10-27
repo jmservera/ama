@@ -3,8 +3,8 @@
   "task_slug": "sensor-backfill-177-approved-integration",
   "parent_task": {"task_id": "177", "task_slug": "sensor-backfill-177"},
   "mode": "automatic",
-  "active_phase": "Follow-up",
-  "status": "completed",
+  "active_phase": "Implement",
+  "status": "active",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-27/sensor-backfill-177-approved-integration-research.md",
@@ -15,6 +15,8 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-27/sensor-backfill-177-approved-integration-review.md"
   },
   "confirmed_decisions": [
+    {"decision": "Later P04-T03 complete: main2e031c89 merged at56db2184 without rewriting children; RV-001 fixed by actual granted-count matching and pre-scratch nominal/metadata budget; 91 focused tests pass with1 existing skip, complete core Ruff/format and mypy153 pass; original critique/Review unchanged", "status": "validated", "evidence": "/mnt/ama-rpi-gates/177-rv001-20261027/focused-tests.log and static-types.log"},
+    {"decision": "Owner selects later RV-001 implementation with regression, current-origin/main integration preserving intent, one new foreground changed gate with lock timeout0 (wait/retry on contention), clean-fdxq first, parent publication and ready only after hosted checks pass; force-with-lease authorized only for this parent if needed; no merge", "status": "confirmed", "evidence": "Standing owner authorization supplied 2026-10-27 in this continuation"},
     {"decision": "Full RPI loop and child integration authorized", "status": "confirmed", "evidence": "User request 2026-10-27"},
     {"decision": "Candidate climate reuse approved for synthetic demo; stock home IDs canonical", "status": "confirmed", "evidence": "User supplied owner-approvals-2026-10-27-b"},
     {"decision": "One foreground --changed parent gate, lock timeout 0, fresh external out, clean -fdxq first", "status": "confirmed", "evidence": "User scoped policy supersedes --all"},
@@ -27,14 +29,9 @@
     {"decision": "Exactly one authorized scoped gate invocation at 1b3f623f against freshly fetched main2e031c89 exited1 before checks: Candidate does not descend from the reviewed main base; no receipt/output directory created, no retry or push", "status": "blocked", "evidence": "/mnt/ama-rpi-gates/177-approved-integration-parent-gate-20261027-final.log"},
     {"decision": "Archive readback and selected restore hashes verified before git clean-fdxq; all tracked RPI bytes preserved", "status": "complete", "evidence": "/mnt/ama-rpi-gates/177-approved-integration-cleanup-20261027/receipt.json"}
   ],
-  "blockers": [
-    {"id": "RV-001", "summary": "Composed loader trusts unverified manifest home count before replay-budget check; one Medium implementation defect prevents ready status", "resolution": "Later rpi-implement must validate actual selected sensor count and pre-write budget; preserve original Review"},
-    {"id": "GATE-BASE", "summary": "Fresh main2e031c89 is not ancestor of integrated parent; sole authorized gate invocation blocked before checks and produced no receipt", "resolution": "Coordinator must authorize normal main integration and a new scoped gate on corrected candidate; no retry, stale-base gate, force push or branch publication performed"}
-  ],
-  "next_action": {"phase": "Follow-up", "action": "Coordinator to select RV-001 later implementation and authorize current-main integration plus a new scoped gate; keep all new commits local and PR486 draft, no second Review. Metadata-only PR/issue publication proof is external under /mnt/ama-rpi-gates/177-approved-integration-20261027/github-status/"},
+  "blockers": [],
+  "next_action": {"phase": "Implement", "action": "P04-T02: commit this pre-gate checkpoint, archive/restore-verify finite task caches and tracking, clean-fdxq, then one new foreground changed gate timeout0 against freshly fetched main (wait/retry contention only); independently assess exact-head receipt, verify immediately before authorized publication, update PR486 and await hosted checks. Final state stays external under /mnt/ama-rpi-gates/177-rv001-20261027/ to preserve candidate identity."},
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Correct RV-001 actual-stock replay budget before regeneration", "rationale": "Small bounded implementation fix with regression; blocks parent readiness and protects CPU/storage limits", "evidence": ".copilot-tracking/reviews/logs/2026-10-27/sensor-backfill-177-approved-integration-review.md#rv-001-medium-composed-replay-budget-trusts-manifest-home-count-before-regenerating-the-supplied-stock"},
-    {"rank": 2, "task": "Authorize normal current-main integration and a fresh scoped gate after correction", "rationale": "Required ancestry and exact-head receipt before any branch push; sole allowed attempt is already blocked", "evidence": "/mnt/ama-rpi-gates/177-approved-integration-parent-gate-20261027-final.log"},
-    {"rank": 3, "task": "Scope production physical/source/regional qualification and real monitoring approvals", "rationale": "Higher effort and excluded from synthetic demo; required only before consequential production use", "evidence": ".copilot-tracking/plans/2026-10-27/sensor-backfill-177-approved-integration-plan.md#follow-up-items"}
+    {"rank": 1, "task": "Scope production physical/source/regional qualification and real monitoring approvals", "rationale": "Excluded from synthetic demo; required only before consequential production use", "evidence": ".copilot-tracking/plans/2026-10-27/sensor-backfill-177-approved-integration-plan.md#follow-up-items"}
   ]
 }

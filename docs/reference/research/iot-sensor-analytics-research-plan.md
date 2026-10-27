@@ -355,14 +355,23 @@ inferred from private history. Actual owned-loopback SQL sensor/API tests also
 passed all 45 cases, including canonical keys and independent controls.
 No exact unread-private-register equality or full-hourly/diurnal-scale
 validation is asserted. The original independent Review executed Complete /
-Not accepted: Medium RV-001 identifies a composed-loader pre-replay budget
-check that trusts unverified manifest counts. Later implementation must enforce
-the actual-stock budget before reconstruction. The original Review is preserved,
-the parent remains draft. The sole scoped gate invocation subsequently blocked
-before checks: fresh main2e031c89 is not an ancestor of candidate1b3f623f.
-No receipt exists, no branch push occurred and no retry was authorized.
-The coordinator must authorize normal main integration and a new scoped gate
-after correction. Runtime success does not establish source acceptance.
+Not accepted at its original boundary: Medium RV-001 identified a
+composed-loader pre-replay budget check trusting unverified manifest counts.
+The original Review and the subsequent ancestry-blocked gate at1b3f623f are
+preserved, not reclassified or repeated.
+
+The later 2026-10-27 standing owner authorization selects implementation of
+RV-001, current-main integration and one new scoped gate before publication.
+Current main2e031c89 is integrated by a normal merge retaining child ancestry.
+The loader now requires manifest homes to equal the supplied stock's actual
+granted count, then budgets actual nominal rows and stock metadata before
+temporary scratch or output. Tests assert pre-write refusal for under/over-
+reported counts and accurate oversized replay, metadata-budget refusal even
+with zero granted homes, valid zero-row replay and exact-budget normal loading.
+Existing fault, byte-comparison and independent consumer safeguards remain.
+The new gate, independent exact-head publication assessment and hosted checks
+are separate prerequisites; no second full Review, full-stock rerun, private-
+register equality, production or human approval is inferred.
 
 ## Sensor privacy engineering boundary (2026-10-17, Refs #112)
 

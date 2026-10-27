@@ -7523,3 +7523,18 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   No receipt, retry, push or ready transition. Preserve external failure log;
   coordinator must authorize normal main integration and a new scoped gate
   after RV-001 correction. Archive/restore-verified finite cleanup succeeded.
+
+## [2026-10-27] query | Later authorized backfill replay-budget implementation (Refs #177)
+
+* Standing owner authorization selects RV-001 correction, current-main
+  integration and one fresh scoped foreground publication gate. Normal merge
+  retains every child ancestry; original critique, Not accepted Review and
+  failed ancestry gate remain unchanged, with no repeated Review.
+* Composed replay now compares manifest home count with actual granted stock
+  and budgets actual nominal rows and stock metadata before scratch/output.
+  Bounded regressions cover forged counts, accurate oversized requests,
+  zero-granted metadata limits, valid zero-row and exact-budget replay.
+* Updated core loading documentation, existing IoT synthesis and KB index.
+  Gate/hosted publication evidence remains external and distinct from this
+  source checkpoint. No private data, physical/production acceptance, human
+  approval, issue closure or main merge is asserted.

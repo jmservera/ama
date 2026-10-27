@@ -216,7 +216,12 @@ class HistoricalBackfillTests(unittest.TestCase):
                 POLICY, [replace(CONTROL, sensor_id=str(stock.sensors(183)[0]["sensor_id"]))]
             )
             result = sb.load_with_consumer(
-                consumer, root / "history", stock=stock, climate=climate, received_at=RECEIVED
+                consumer,
+                root / "history",
+                stock=stock,
+                climate=climate,
+                received_at=RECEIVED,
+                max_rows=2,
             )
             self.assertEqual(result, {"rows": 2, "outcomes": {"ACCEPTED": 1, "CLOCK_SKEW": 1}})
             self.assertEqual(
@@ -240,6 +245,90 @@ class HistoricalBackfillTests(unittest.TestCase):
                         received_at=RECEIVED,
                     )
                 process.assert_not_called()
+
+    def test_replay_count_and_actual_budget_refused_before_scratch_or_write(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            stock, climate = selection(), ConstructedClimate()
+            sb.write(root / "history", stock=stock, climate=climate, days=1, cadence=60)
+            manifest_path = root / "history/manifest.json"
+            original = json.loads(manifest_path.read_text())
+            store = store_at(str(root))
+            self.addCleanup(store.db.close)
+            consumer = SensorConsumer(store)
+            for overrides, budget, reason in (
+                ({"homes_covered": 1}, 24, "Stock selection differs"),
+                ({"homes_covered": 0}, 24, "Stock selection differs"),
+                ({"homes_covered": 3}, 72, "Stock selection differs"),
+                ({}, 47, "Replay budget exceeded"),
+                ({"days": 730}, 2_000, "Replay budget exceeded"),
+                ({"cadence_minutes": 1440}, 3, "Replay budget exceeded"),
+            ):
+                with self.subTest(overrides=overrides, budget=budget):
+                    manifest_path.write_text(json.dumps({**original, **overrides}))
+                    with (
+                        patch(
+                            "zava_forward.core.synthetic.sensor_backfill.tempfile.TemporaryDirectory"
+                        ) as scratch,
+                        patch.object(sb, "write") as write,
+                        patch.object(climate, "series") as series,
+                        patch.object(consumer, "process") as process,
+                    ):
+                        with self.assertRaisesRegex(ValueError, reason):
+                            sb.load_with_consumer(
+                                consumer,
+                                root / "history",
+                                stock=stock,
+                                climate=climate,
+                                received_at=RECEIVED,
+                                max_rows=budget,
+                            )
+                        scratch.assert_not_called()
+                        write.assert_not_called()
+                        series.assert_not_called()
+                        process.assert_not_called()
+
+    def test_zero_granted_replay_preserves_metadata_budget(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            stock = ss.select(
+                [{**row, "monitoring_consent": "declined"} for row in selection().rows], 4
+            )
+            climate = ConstructedClimate()
+            sb.write(root / "history", stock=stock, climate=climate, days=1, cadence=60)
+            store = store_at(str(root))
+            self.addCleanup(store.db.close)
+            consumer = SensorConsumer(store)
+            with (
+                patch(
+                    "zava_forward.core.synthetic.sensor_backfill.tempfile.TemporaryDirectory"
+                ) as scratch,
+                patch.object(sb, "write") as write,
+                patch.object(consumer, "process") as process,
+            ):
+                with self.assertRaisesRegex(ValueError, "Replay budget exceeded"):
+                    sb.load_with_consumer(
+                        consumer,
+                        root / "history",
+                        stock=stock,
+                        climate=climate,
+                        received_at=RECEIVED,
+                        max_rows=3,
+                    )
+                scratch.assert_not_called()
+                write.assert_not_called()
+                process.assert_not_called()
+            self.assertEqual(
+                sb.load_with_consumer(
+                    consumer,
+                    root / "history",
+                    stock=stock,
+                    climate=climate,
+                    received_at=RECEIVED,
+                    max_rows=4,
+                ),
+                {"rows": 0, "outcomes": {}},
+            )
 
     def test_model_failure_precedes_output_and_hourly_estimate_is_measured(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

@@ -467,7 +467,10 @@ def load_with_consumer(consumer, out, *, stock, climate, received_at,
     if any(type(value) is not int for value in (seed, homes, days, cadence, max_rows)):
         raise ValueError("Invalid replay parameters")
     resolve_window(days, cadence, metadata["as_of"])
-    if max_rows <= 0 or homes < 0 or max(homes * days * 1440 // cadence, len(stock.rows)) > max_rows:
+    granted = sum(row["monitoring_consent"] == "granted" for row in stock.rows)
+    if homes != granted:
+        raise ValueError("Stock selection differs")
+    if max_rows <= 0 or max(granted * days * 1440 // cadence, len(stock.rows)) > max_rows:
         raise ValueError("Replay budget exceeded")
     if abs(seed) > 2**63 - 1 or type(metadata.get("compressed")) is not bool:
         raise ValueError("Invalid replay parameters")

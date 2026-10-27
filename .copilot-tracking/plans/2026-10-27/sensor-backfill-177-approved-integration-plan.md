@@ -28,8 +28,9 @@ are reanalysis, not station observations or calibrated building physics.
 
 ### Unresolved Decisions or Blockers
 
-None at planning; failed retrieval, consumer parity, shared lock or gate
-prerequisites will be recorded as implementation/publication blockers.
+Later owner-selected implementation is active: correct RV-001, integrate current
+main and run the newly authorized scoped gate. Original Review remains
+Complete / Not accepted at its original boundary; it will not be repeated.
 
 ## User Decisions and Requirements
 
@@ -39,6 +40,11 @@ prerequisites will be recorded as implementation/publication blockers.
 * One foreground tools/rpi-checks.py --changed parent gate, lock timeout 0, fresh external output, git clean -fdxq first; supersedes --all.
 * Run package unit tests and generator against generated 60,000-home stock; no private data, uv, secrets or main push.
 * Use Refs only; tick proven criteria; resolve #178/#183 blocker comments; #486 ready only on passing checks and review; no parent merge.
+* Standing owner authorization, 2026-10-27: integrate/rebase this parent onto
+  current origin/main, correct RV-001 with tests, then one new foreground
+  changed gate after clean-fdxq. Wait and retry only lock contention. Publish
+  this run-owned parent (force-with-lease permitted only if needed), update
+  #486 evidence and mark ready only when hosted checks pass. Never merge.
 
 ## Goals
 
@@ -149,6 +155,22 @@ fresh external out; runner owns /tmp/ama-rpi-heavy.lock. Verify receipt with
 assessment. No later source commit. Update child/parent PR bodies and issue
 comments. Mark parent ready only after all applicable checks and review pass.
 
+<!-- rpi:task id=P04-T03 -->
+#### [x] P04-T03: Later owner-selected RV-001 implementation and main integration
+
+Execute before remaining P04-T02. Merge current main normally to preserve all
+five child ancestries; no rewrite is necessary. Validate manifest homes against
+actual granted selection and budget actual nominal rows plus stock metadata
+before any temporary replay/write. Test under/over-reported counts, accurate
+over-budget inputs, zero-granted metadata budget and exact-boundary normal
+replay. Preserve fault and consumer safeguards. This later invocation implements
+the routed finding, not a second Review.
+
+Completion evidence: main2e031c89 merged normally at56db2184. Actual count
+validation and pre-replay budget regressions pass: 91 focused tests, one existing
+opt-in SQL skip; full core Ruff/format and mypy153 pass. External logs:
+/mnt/ama-rpi-gates/177-rv001-20261027/.
+
 ## Dependencies
 
 P01 and P02 are independent whole phases in separate worktrees and may execute
@@ -187,16 +209,18 @@ does not establish full private-stock admission.
 
 ## Follow-Up Items
 
-* RV-001 Medium: later rpi-implement must validate composed replay's manifest count against actual granted sensors and enforce the row budget before write. Original Review execution Complete, outcome Not accepted; keep parent draft. This routed defect is not fixed or re-reviewed in this completed loop.
-* GATE-BASE: sole authorized scoped gate attempt blocked before checks because fresh main2e031c89 is not an ancestor of candidate1b3f623f. Coordinator to authorize normal main integration and another scoped gate after correction; no push, stale-base retry or successful receipt.
+* RV-001 and GATE-BASE are selected for the later authorized P04-T03/P04-T02
+  continuation. Preserve their original adverse outcomes; do not repeat Review.
 * Production physical/source/regional qualification and real monitoring approval remain outside this synthetic exercise.
 
 ## Handoff
 
-P01-P03 complete; P04-T01 original Review Complete / Not accepted at
-263e1dbf, with one Medium RV-001 routed to later implementation. Original
-critique and Review remain unchanged. P04-T02 publication is blocked: the sole gate
-invocation rejected current-base ancestry before any checks or receipt.
-Status-only closeout records the failed attempt, without claiming a passing
-gate. All new child/parent commits remain local; PR evidence must say so.
-Do not mark the parent ready.
+P01-P03 and P04-T01 remain complete at their historical boundaries. Later
+owner-selected P04-T03 is complete before remaining P04-T02. Preserve original
+critique, Not accepted Review and failed ancestry gate. Readiness is contingent
+on the regression-backed fix, new exact-head partial receipt/assessment and
+passing hosted checks, not a reclassification of the original Review.
+The committed state is a pre-gate checkpoint; final receipt/assessment and
+publication status will be recorded externally and in PR486 without a later
+source commit invalidating the receipt. P04-T02 remains unchecked here until
+that external evidence exists.

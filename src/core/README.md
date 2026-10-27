@@ -2302,7 +2302,12 @@ under `truth/`, separate from `analysis/`, including compressed truth when selec
 `load_with_consumer(consumer, output, stock=..., climate=...,
 received_at=..., measures=..., fault_rates=...)` first reconstructs and verifies
 the exact current synthetic snapshot within its explicit row budget, then calls
-the real `SensorConsumer`. Existing independent policy, available cases, mapping,
+the real `SensorConsumer`. Before creating replay scratch or writing output, it
+requires the manifest home count to match the supplied stock's actual granted
+count and budgets nominal rows from that count and the requested time slots.
+The stock metadata count must also fit the budget, even with zero granted homes.
+Fault-expanded rows remain bounded by the post-reconstruction and delivery guards.
+Existing independent policy, available cases, mapping,
 consent, calibration, units, clock, range, ordering and replay checks still apply.
 The loader never creates cases or grants controls. Export accepts 128-unit home
 keys, but consumer availability remains bounded to the shared SQL case model's

@@ -4,7 +4,63 @@ ms.date: 2026-10-27
 ---
 
 Task: 177-approved-integration-2026-10-27.
-Declared scope: full plan. Implementation execution: in progress.
+Declared scope: later owner-selected P04-T03 and remaining P04-T02.
+Implementation execution: in progress. Original completed loop evidence below
+is historical and preserved.
+
+## P04-T03 Completion and P04-T02 Pre-Gate Checkpoint
+
+Current-main merge56db2184c716d38fedde5022fd0204115e2bce46 includes
+2e031c89a18ce1ceb3de4fda014fddcb90231fda and preserves all five original
+child heads. No conflict resolution, rewrite or force push was needed.
+
+Composed load_with_consumer now compares homes_covered against the actual
+granted count, then budgets actual nominal observations and stock metadata
+before TemporaryDirectory/write. Under/over-reported counts and accurate
+oversized requests refuse without scratch, write, climate.series or consumer
+processing. Zero-granted stock retains metadata limits and valid zero-row replay;
+normal consumer loading succeeds exactly at its row limit. Existing fault
+post-reconstruction/delivery guards and byte verification are unchanged.
+Only two regression methods were added to the existing test module.
+
+Focused validation command, from src/core with the existing installed external
+environment and PYTHONDONTWRITEBYTECODE=1/PYTHONPATH=tests:
+`python -m unittest test_historical_backfill test_sensor_backfill test_sensor_stock
+test_sensor_faults test_sensor_privacy test_sensor_consumer -q`.
+91 tests in13.385s PASS, one existing opt-in SQL skip; legacy test ResourceWarnings
+are pre-existing. Nine composed methods pass. Complete core `ruff check
+--no-cache .`, `ruff format --check --no-cache .` (100 files) and `mypy
+--cache-dir=/tmp/ama-177-rv001-mypy-20261027` (153 files) PASS.
+Logs: /mnt/ama-rpi-gates/177-rv001-20261027/focused-tests.log and static-types.log.
+Initial explicit-file format inspection bypassed the existing migrated source's
+format exclusion and failed; repository-configured format passes without
+reformatting unrelated code. Initial mypy flagged test access to the unexported
+tempfile import; string-based patch targets corrected that test-only issue.
+
+P04-T03 checked; P04-T02 remains pending at this source checkpoint.
+Original Review/critique bytes compare unchanged against31f5d2be.
+Current plan/details, core README, KB synthesis/index and append-only log agree.
+No new full Review, full-stock rerun, private input, production/human approval
+or issue acceptance is claimed. Final exact-head gate, independent publication
+assessment, child/parent publication and hosted outcomes will be recorded under
+/mnt/ama-rpi-gates/177-rv001-20261027/ and in PR486, not in a post-gate commit.
+
+## Later Owner-Selected Implementation, 2026-10-27
+
+Standing authorization selects RV-001 implementation with a regression,
+current-origin/main integration, one fresh scoped foreground gate and parent
+publication. Preserve original critique/Not accepted Review and failed gate.
+Use a normal merge of fetched main2e031c89 to retain all child ancestry instead
+of an unnecessary rebase. No force push is anticipated; permission is restricted
+to the run-owned parent if needed. No main merge or issue closure.
+
+Active write boundary: composed loader, its existing historical tests, directly
+related README/KB index/synthesis/log and canonical RPI plan/details/changes/
+state. First execution boundary is current-main integration, then actual-stock
+count and row-budget checks before temporary replay. Planned validation is the
+focused historical/legacy/stock/fault/consumer suites, relevant core static/types
+and the one newly authorized scoped gate. Lock contention waits rather than
+ending the run. P04-T02 is not proven until external exact-head evidence exists.
 
 ## Plan and Critique
 

@@ -15,7 +15,7 @@
 | P01 | Climate child implementation | Complete, 09ea9e23; 12 core adapter methods pass | P01-T01 |
 | P02 | Identity child implementation | Complete, 6fc8d0fe; 51 tests pass | P02-T01 |
 | P03 | Integrated generator and validation | Complete; all 43,800,000 rows and 60,000 IDs reconciled | P03-T01, P03-T02 |
-| P04 | Review and publication | Original Review Complete / Not accepted, RV-001 Medium; sole gate blocked on current-main ancestry before checks, no push | P04-T01, P04-T02 |
+| P04 | Review and publication | Later RV-001/main integration complete; scoped gate/publication pending; original Review and blocked gate preserved | P04-T01, P04-T03, P04-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Climate child implementation
@@ -110,6 +110,31 @@ Record actual results only; all such source edits precede Review/commit/gate.
 
 <!-- rpi:phase id=P04 -->
 ## P04: Review and publication
+
+<!-- rpi:task id=P04-T03 -->
+### P04-T03: Later owner-selected RV-001 implementation
+
+The 2026-10-27 standing authorization supersedes the earlier prohibition on
+current-main integration/new gate for this continuation only. Use a normal
+current-main merge to retain child ancestry. Require manifest homes_covered to
+equal the actual granted selection, then enforce nominal replay and metadata
+budgets before TemporaryDirectory/write. Add bounded refusal tests for forged
+counts, accurate over-budget replay and zero-granted metadata, plus normal
+exact-budget/zero-granted behavior. Existing byte comparison, fault row guard
+and authoritative consumer checks remain. Run focused core replay/stock/
+consumer tests and relevant static/types. No new critique or Review.
+
+P04-T02 then runs one newly authorized foreground --changed gate, timeout0;
+wait/retry on contention only, without an outer held lock. Fresh external output,
+cleanup preservation, official partial receipt verification, independent
+exact-head publication assessment and hosted checks remain mandatory.
+This continuation does not claim another full-stock run or physical acceptance.
+Completion: normal main merge56db2184 retains all children. Focused replay/
+stock/fault/privacy/consumer suites: 91 tests PASS, one inherited opt-in SQL
+skip. Nine composed tests include the two new regression methods. Complete core
+Ruff and repository-configured format pass; mypy153 source files pass.
+External logs: /mnt/ama-rpi-gates/177-rv001-20261027/. All source corrections
+precede the new sole scoped gate; final publication state stays external.
 
 <!-- rpi:task id=P04-T01 -->
 ### P04-T01: Independent Review
