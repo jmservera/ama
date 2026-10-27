@@ -77,21 +77,21 @@ coverage. All heavy output and final receipts stay external.
 <!-- P01 -->
 ### P01: Preserve and prepare
 
-* [ ] P01-T01: Finish critique; preserve finite clean selection; commit
+* [x] P01-T01: Finish critique; preserve finite clean selection; commit
   publication evidence with owner privacy-safe identity.
 
 <!-- P02 -->
 ### P02: Validate
 
-* [ ] P02-T01: Archive/restore-check caches and tracking; run authorized
+* [x] P02-T01: Archive/restore-check caches and tracking; run authorized
   clean; hand off lock to foreground scoped gate at timeout zero.
-* [ ] P02-T02: Run component unit suites, retain full required gate coverage,
+* [x] P02-T02: Run component unit suites, retain full required gate coverage,
   record exact results, amendments and failures externally and in changes.
 
 <!-- P03 -->
 ### P03: Review and publish
 
-* [ ] P03-T01: Execute one independent publication Review and reconcile
+* [x] P03-T01: Execute one independent publication Review and reconcile
   dated plan/details/changes/state without regrading parent acceptance.
 * [ ] P03-T02: Commit final evidence; rerun gate if head changed; fetch main,
   verify final receipt, obtain independent exact-head assessment, push
@@ -121,10 +121,21 @@ or second critique. Plan and phase details are Ready for Implement.
 Private SQL migration and authenticated managed-identity resident smoke are
 explicitly outside this task. Human accessibility/privacy/live acceptance
 and hosted checks remain separate. Do not start follow-up work automatically.
+Child Review RV-001 (Medium) routes live integration; RV-002 (Low) routes
+hosted/human acceptance, with no established implementation defects.
 
 ## Handoff
 
-Research and Plan are Ready; continue automatically to Implement.
+Research, Plan, P01/P02 and the one independent child Review are complete.
+Review execution Complete, outcome Residual work, no blocking source defect.
+P03-T02 deliberately
+remains unchecked until final evidence commit, fresh gate/verification,
+exact-head assessment, push and PR are observed. This is post-Review
+publication maintenance, not additional source implementation or a Review
+loop. Private migration/MI and hosted/human approval stay separate.
+Fresh fetch after Review found main advanced to d455d67d (documentation,
+tracking and rubric score only); integrate by ordinary merge, preserving
+unmerged local commits and both knowledge-log additions, then rerun the gate.
 Changes target:
 `.copilot-tracking/changes/2026-10-27/resident-assistant-aoai-publication-changes.md`.
 Research:

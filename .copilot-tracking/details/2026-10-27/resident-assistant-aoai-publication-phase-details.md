@@ -55,6 +55,12 @@ Preserve pre-existing opt-in skips separately from required SQL execution.
 
 ## P03-T01: Independent publication Review
 
+Current handoff: P01/P02 complete. First changed-path run on committed
+7f1a9f3c passed with full scope/all 17 groups and real accounting SQL
+execution. Counts, log identities, cleanup proof and scope are recorded in
+the child's changes artifact. Original parent Review stays unchanged.
+Only Review and final exact-head publication maintenance remain.
+
 One fresh reviewer activates rpi-review for this child task. Allowed write:
 the child's canonical Review artifact only. Assess publication evidence,
 original acceptance limitations, plan/change reconciliation and boundaries;
@@ -72,3 +78,8 @@ does not invalidate the candidate. PR must be non-draft, base main, no closing
 keywords, with `Refs #469`, precise test/gate evidence, USD20 within USD30,
 and explicit private-migration/authenticated-MI unmet items. Never deploy or
 merge. Hosted and human approvals remain pending.
+
+The final candidate will name the pending publication action in committed
+state; actual push/PR metadata and the authoritative final receipt stay
+external to avoid a self-referential evidence commit and invalidated gate.
+Do not mark unobserved remote actions complete in committed evidence.
