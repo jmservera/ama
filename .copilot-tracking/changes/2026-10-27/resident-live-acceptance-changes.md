@@ -138,3 +138,22 @@ generated files. No historical tracking evidence is removed. Archive and restore
 manifest remain external under this session's resident-live directory.
 Implementation snapshot and non-overlapping main merge precede the one original
 independent Review; final evidence commit then exact-current-main scoped gate.
+
+## Original Review and Publication Snapshot
+
+The one independent Review executed Complete, outcome Not accepted:
+RV001 High retains November dependency readiness, RV002 High retains six
+authenticated live evidence groups, RV003 Medium retains stale cost/handoff
+phase-detail prose. Route these to distinct later work; no fixes or repeated
+Review in this task. The original critique and Review are preserved unchanged.
+Lifecycle Review is finished, not service acceptance.
+
+Implementation5cdbc9cb and current-main integration0820d95d preserve all image
+source hashes. The subsequent original Review/state commit is the publication
+candidate. This committed snapshot precedes the requested --changed receipt,
+verification and independent exact-head publication assessment. Those remain
+external to avoid receipt self-reference; actual outcomes belong in the PR.
+P03 stays unchecked in this pre-publication snapshot. A draft partial-delivery
+PR may be published only after those controls pass; hosted/human/full resident
+acceptance remains separate. Only issue462 criterion8 may be ticked from the
+recorded identity/URL/evidence/limits/expiry proof; the issue remains open.
