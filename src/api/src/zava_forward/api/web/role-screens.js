@@ -72,7 +72,7 @@ async function roleScreensView() {
   const extra = c && screen.load ? await screen.load(c) : null;
   signal.throwIfAborted();
   const label = (row) => `${row.id}: ${row.address || "Address unknown"}. ${row.status || row.stage || "State unknown"}`;
-  const queue = h("section", { class: "card", "aria-labelledby": "screen-queue-heading" },
+  const queue = h("section", { "aria-labelledby": "screen-queue-heading" },
     h("h2", { id: "screen-queue-heading" }, "Choose a home"),
     h("p", {}, "All cases permitted to your signed-in role, including safety concerns. This is a bounded page, not a portfolio total."),
     h("p", { role: "status" }, `${data.items.length} records on page ${page + 1}; ${data.total} permitted cases.`),
