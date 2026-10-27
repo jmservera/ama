@@ -3,8 +3,8 @@
   "task_slug": "resident-readiness-review-454",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-27/resident-readiness-review-454-research.md",
@@ -12,7 +12,7 @@
     "details": ".copilot-tracking/details/2026-10-27/resident-readiness-review-454-phase-details.md",
     "critique": ".copilot-tracking/reviews/plans/2026-10-27/resident-readiness-review-454-critique.md",
     "changes": ".copilot-tracking/changes/2026-10-27/resident-readiness-review-454-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/logs/2026-10-27/resident-readiness-review-454-review.md"
   },
   "confirmed_decisions": [
     {
@@ -24,10 +24,20 @@
       "decision": "Research executed, Ready; one final-candidate plan critique executed, Pass, zero findings.",
       "status": "complete",
       "evidence": ".copilot-tracking/research/2026-10-27/resident-readiness-review-454-research.md; .copilot-tracking/reviews/plans/2026-10-27/resident-readiness-review-454-critique.md"
+    },
+    {
+      "decision": "Fresh independent full-PRD requirements-quality assessment executed; FAIL, Validate BLOCKED, Finalize NOT_EVALUATED.",
+      "status": "executed-not-approved",
+      "evidence": ".copilot-tracking/reviews/requirements/2026-10-27/resident-readiness-review-454/report.md; seven inherited findings open, 041 partial; three new cautions"
+    },
+    {
+      "decision": "One independent post-implementation RPI Review executed Complete; outcome Conformant with justified divergence.",
+      "status": "executed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/resident-readiness-review-454-review.md; candidate 3c23f693267351b11908dbbcea8f8608e78b5393; no blocking thread-addressing defect; RV-001/002/003 retained as distinct quality follow-ups"
     }
   ],
   "blockers": [],
-  "next_action": {"phase": "Review", "action": "Implementation and docs validation complete. Commit retained independent FAIL assessment; execute one independent RPI Review, then publish only addressed thread corrections."},
+  "next_action": {"phase": "Follow-up", "action": "Source/RPI task complete; parent finishing authorised P02-T03 publication/readback before offering supported follow-ups. No new source task selected."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Reconcile current PRD trace, table shape and historical-state pointers", "rationale": "Bounded editorial fidelity work, no activation or invented dates.", "evidence": "pr454-qual-001/003; pr442-qual-009/039 in independent 2026-10-27 report"},
     {"rank": 2, "task": "Complete RB-03 measurement contract", "rationale": "Required for reliable resident timing/file evaluation, preserves selected targets.", "evidence": "pr442-qual-041 remains partial/open in independent report"},
