@@ -2141,6 +2141,19 @@ generation still uses the existing tools and `ZF_DATA`, not this metadata CLI.
   decision.
 ### Register-backed sensor history (#177)
 
+The #179 stacked exercise component extracts the unchanged indoor equation
+to `synthetic.indoor_projection`, version `indoor-projection-exercise-v1`.
+Every factor, schedule, noise scale and coefficient is an exercise assumption;
+`PARAMETERS` records equations and UTC schedule boundaries in each manifest.
+Its supported input domain (-80..60 C, 0..100% RH, known fabric factors) is
+an API guard, not measured climate bounds or a healthy-home threshold.
+Invalid inputs raise `ValueError`. Legacy reading values and RNG order are
+preserved for supported inputs; source fingerprints intentionally change and
+include the extracted helper. Existing snapshots are not migrated.
+No paired historical record or physics calibration is supplied, so #179's
+record-derived physical-bounds criterion remains unmet. This child does not
+integrate the separately reviewed dated-retrofit/household components.
+
 The explicit `--register` mode (`sensor-backfill-stock-v1`) reuses merged
 `stock-fabric-v1`, seed 4820260930, rather than drawing unrelated dwelling
 attributes or treating the scale fixture as the private stock. Supply a wholly

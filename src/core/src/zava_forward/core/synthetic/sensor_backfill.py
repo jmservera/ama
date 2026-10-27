@@ -26,6 +26,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from zava_forward.core.synthetic import output_dir, provenance, scale_fixture, sensor_stock, stock_fabric, sensor_faults
+from zava_forward.core.synthetic import indoor_projection
 
 VERSION = "sensor-backfill-v2"
 SCHEMA_VERSION = "reading-v1"
@@ -37,8 +38,8 @@ START = datetime(2024, 10, 1, tzinfo=timezone.utc)
 DAYS = 730
 CADENCE_MIN = 60
 SHARD_HOMES = 1000
-DWELLINGS = {"apartments": 0.7, "terrace": 1.0, "semidetached_house": 1.15, "detached": 1.3, "bungalow": 1.2}
-AGE_BANDS = {"pre-1919": 1.3, "1919-1944": 1.2, "1945-1979": 1.1, "1980-2002": 0.95, "2003+": 0.8}
+DWELLINGS = indoor_projection.DWELLINGS
+AGE_BANDS = indoor_projection.AGE_BANDS
 BOUNDS = {"temperature_c": (-10.0, 45.0), "humidity_pct": (0.0, 100.0)}
 READING_FIELDS = ["sensor_id", "reading_id", "home_id", "observed_at", "temperature_c", "humidity_pct",
                   "source_type", "scenario", "seed", "schema_version", "injected_fault"]
@@ -71,7 +72,7 @@ def sensor_for(home, seed=SEED):
 
 
 def _magnus_sat(t):
-    return 6.112 * math.exp(17.62 * t / (243.12 + t))
+    return indoor_projection.saturation_pressure(t)
 
 
 def outdoor_series(seed=SEED, days=DAYS, cadence=CADENCE_MIN, start=START):
@@ -91,16 +92,7 @@ def outdoor_series(seed=SEED, days=DAYS, cadence=CADENCE_MIN, start=START):
 
 
 def _indoor(sensor, rnd, ts, t_out, rh_out):
-    loss = DWELLINGS[sensor["dwelling_type"]] * AGE_BANDS[sensor["age_band"]] * (0.75 if sensor["retrofitted"] else 1.0)
-    loss *= sensor.get("construction_loss", 1.0)
-    hour = ts.hour
-    heated = {"all_day": 7 <= hour < 23, "morning_evening": 6 <= hour < 9 or 17 <= hour < 22, "low": 17 <= hour < 21}[sensor["heating_pattern"]]
-    setpoint = 20.5 if heated and t_out < 15 else 17.0
-    base = setpoint + min(0.0, (t_out - 5) * 0.08 * loss) + max(0.0, (t_out - 16) * 0.35)
-    t_in = max(8.0, base + rnd.gauss(0, 0.3))
-    vapour = _magnus_sat(t_out) * rh_out / 100 + (1.6 * loss if heated else 1.2 * loss)
-    rh_in = max(15.0, min(98.0, 100 * vapour / _magnus_sat(t_in) + rnd.gauss(0, 1.5)))
-    return t_in, rh_in
+    return indoor_projection.project(sensor, rnd, ts, t_out, rh_out)
 
 
 def readings(sensor, seed=SEED, days=DAYS, cadence=CADENCE_MIN, outdoor=None, start=START):
@@ -189,7 +181,8 @@ def estimate(homes=None, days=DAYS, cadence=CADENCE_MIN, seed=SEED, sample_homes
 
 def revision_sources(*, faults: bool = False) -> tuple[Path, ...]:
     return (*scale_fixture.revision_sources(), Path(__file__), Path(sensor_stock.__file__),
-            Path(stock_fabric.__file__), *((Path(sensor_faults.__file__),) if faults else ()))
+            Path(stock_fabric.__file__), Path(indoor_projection.__file__),
+            *((Path(sensor_faults.__file__),) if faults else ()))
 
 
 def write(out: str | Path, homes: int | None = None, seed: int = SEED, days: int = DAYS,
@@ -277,7 +270,8 @@ def write(out: str | Path, homes: int | None = None, seed: int = SEED, days: int
                     synthetic_label="Synthetic demonstration data under ADR 0005; not real device or resident data.",
                     climate_source=CLIMATE_SOURCE, stock_fixture_version=scale_fixture.VERSION, stock_seed=scale_fixture.SEED,
                     stock_homes_declared=scale_fixture.HOMES, homes_covered=homes, start=start.isoformat(), end_exclusive=end.isoformat(), days=days,
-                    cadence_minutes=cadence, parameters=dict(dwellings=DWELLINGS, age_bands=AGE_BANDS, bounds=BOUNDS),
+                    cadence_minutes=cadence, parameters=dict(dwellings=DWELLINGS, age_bands=AGE_BANDS, bounds=BOUNDS,
+                                                            indoor_projection=indoor_projection.PARAMETERS),
                     estimate=est, rows=total, shards=shards, readings_sha256=digest.hexdigest(),
                     storage="UTF-8 CSV shards; DDL in SQL_DDL for Azure SQL; load with load_into()")
     extra_files = []
