@@ -125,3 +125,16 @@ Publication/status bookkeeping after the original Review is not another
 source correction or Review. Original Review execution/outcome and assessed
 hashes are retained unchanged; assessed source identities remain mandatory
 before the closeout push as well. Hosted/human approval is not inferred.
+
+## Artifact Link Correction (2026-10-27)
+
+Addressed PR 454 discussion_r4390864946 without a new RPI loop. Changed the
+critique's four repository-relative destinations to file-relative paths,
+including a local self-link; labels and original findings/outcomes are unchanged.
+Swept all 37 `.copilot-tracking/` Markdown files added or changed by this PR:
+the scripted check resolves each local destination from its containing file
+and verifies that the target exists. All 52 local file links pass after this
+single correction batch; no other broken destination was found. Alternate
+reference, HTML and multiline link syntax was also checked; none was present.
+`git diff --check` passed. This is target-existence validation, not anchor,
+external-link, runtime, full-gate or requirements-acceptance evidence.

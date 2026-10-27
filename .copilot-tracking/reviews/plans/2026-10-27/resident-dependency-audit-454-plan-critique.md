@@ -180,10 +180,10 @@ comparison; C5 supplies the active proposal reconciliation.
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/plans/2026-10-27/resident-dependency-audit-454-plan.md](.copilot-tracking/plans/2026-10-27/resident-dependency-audit-454-plan.md) | Assessed final-candidate plan |
-| [.copilot-tracking/details/2026-10-27/resident-dependency-audit-454-phase-details.md](.copilot-tracking/details/2026-10-27/resident-dependency-audit-454-phase-details.md) | Assessed phase details |
-| [.copilot-tracking/research/2026-10-27/resident-dependency-audit-454-research.md](.copilot-tracking/research/2026-10-27/resident-dependency-audit-454-research.md) | Supplied dependency derivation |
-| [.copilot-tracking/reviews/plans/2026-10-27/resident-dependency-audit-454-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-27/resident-dependency-audit-454-plan-critique.md) | This single complete critique |
+| [.copilot-tracking/plans/2026-10-27/resident-dependency-audit-454-plan.md](../../../plans/2026-10-27/resident-dependency-audit-454-plan.md) | Assessed final-candidate plan |
+| [.copilot-tracking/details/2026-10-27/resident-dependency-audit-454-phase-details.md](../../../details/2026-10-27/resident-dependency-audit-454-phase-details.md) | Assessed phase details |
+| [.copilot-tracking/research/2026-10-27/resident-dependency-audit-454-research.md](../../../research/2026-10-27/resident-dependency-audit-454-research.md) | Supplied dependency derivation |
+| [.copilot-tracking/reviews/plans/2026-10-27/resident-dependency-audit-454-plan-critique.md](./resident-dependency-audit-454-plan-critique.md) | This single complete critique |
 
 ## Next Steps
 
