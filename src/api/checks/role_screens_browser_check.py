@@ -40,6 +40,10 @@ def run_browser(base: str) -> None:
                 _, screen, expected = SCENARIOS[selected]
                 page.get_by_role("link", name=screen, exact=True).click()
                 page.get_by_text("No home selected. Choose a home from this queue.", exact=True).wait_for()
+                check("specialist navigation does not inherit white header text",
+                      page.locator(".screen-links a").first.evaluate(
+                          "el => getComputedStyle(el).color !== 'rgb(255, 255, 255)'"
+                      ))
                 check("no automatic selection or detail fetch", "case=" not in page.url)
                 page.locator('a.item[href*="case=ZF-1"]').click()
                 evidence = page.get_by_role("region", name="Evidence for ZF-1", exact=True)
@@ -57,6 +61,7 @@ def run_browser(base: str) -> None:
                 check("existing reduced motion retained",
                       page.evaluate("() => getComputedStyle(document.documentElement).getPropertyValue('--motion').trim()") == "0s")
                 reset = page.get_by_role("link", name="Reset screen view", exact=True)
+                page.keyboard.press("Tab")
                 reset.focus()
                 check("native keyboard focus visible",
                       reset.evaluate("el => getComputedStyle(el).outlineStyle === 'solid'"))
@@ -73,6 +78,8 @@ def run_browser(base: str) -> None:
                     "() => new URLSearchParams(location.hash.split('?')[1]).get('screen')"
                 )
                 target = f"{base}/app#/screens?screen={screen_id}&case=ZF-1"
+                page.goto(base + "/app#/screens")
+                page.get_by_role("heading", name="Specialist screens", exact=True).wait_for()
                 page.route("**/api/cases?view=all&limit=20&offset=0",
                            lambda route: route.fulfill(status=503, json={"error": "Synthetic list unavailable. Try again."}),
                            times=1)
@@ -81,6 +88,8 @@ def run_browser(base: str) -> None:
                 check("failed list is not an empty success", "Synthetic list unavailable" in page.locator("main").inner_text())
                 page.get_by_role("button", name="Try again", exact=True).click()
                 evidence.wait_for()
+                page.goto(base + "/app#/screens")
+                page.get_by_role("heading", name="Specialist screens", exact=True).wait_for()
                 page.route("**/api/cases/ZF-1",
                            lambda route: route.fulfill(status=403, json={"error": "Synthetic access denied. Ask your manager."}),
                            times=1)
@@ -91,6 +100,8 @@ def run_browser(base: str) -> None:
                       and page.get_by_role("region", name="Evidence for ZF-1").count() == 0)
                 held: list[Route] = []
                 detail = page.request.get(base + "/api/cases/ZF-1").json()
+                page.goto(base + "/app#/screens")
+                page.get_by_role("heading", name="Specialist screens", exact=True).wait_for()
                 page.route("**/api/cases/ZF-1", lambda route: held.append(route), times=1)
                 page.goto(target)
                 page.wait_for_timeout(200)

@@ -42,7 +42,22 @@ integration; no combined-feature coverage is claimed.
 
 ## Amendments and divergences
 
-None beyond critique corrections recorded in the plan.
+First child's rendered exercise exposed inherited white nav-link text and
+double queue padding. Corrected shared host styles and copied the tested
+keyboard-modality/same-URL interception fixes back to the parent before
+remaining children branch. #232 retains identical fixes in its own diff
+against the initial parent; later parent comparison removes those duplicates.
+This is a relevant local correction, not an authority or scope change.
+
+## P02 progress
+
+#232 implemented at d66942be on feat/role-screen-232. 21 focused API tests
+passed (one existing opt-in skip); eight final host/child units passed.
+Chromium selector 232 and existing workbench regression passed. Exact sourced
+paused measure choice, large-print issue and safe-route commitment; no new
+writes/contact, negative/denied/expired/late/empty states, keyboard/reflow/
+reduced-motion checks passed. Original failed harness attempts retained
+externally. Source issue acceptance remains open.
 
 ## Follow-up and human boundaries
 
