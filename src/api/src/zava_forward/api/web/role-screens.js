@@ -78,7 +78,10 @@ async function roleScreensView() {
     h("p", { role: "status" }, `${data.items.length} records on page ${page + 1}; ${data.total} permitted cases.`),
     data.items.length ? h("ul", { class: "list" }, data.items.map((row) => h("li", {},
       h("a", { class: "item", href: screenHref(id, row.id, page),
-        "aria-current": row.id === caseId ? "true" : null }, label(row)))))
+        "aria-current": row.id === caseId ? "true" : null },
+        h("div", {}, label(row),
+          row.hazard && h("span", { class: "flag danger" }, "Safety issue open"),
+          row.work && workSummary(row.work))))))
       : h("p", { class: "empty" }, "No cases on this page. Reset the view or return to your work list."),
     h("div", { class: "row" },
       page > 0 && h("a", { class: "btn alt", href: screenHref(id, caseId, page - 1) }, "Previous page"),

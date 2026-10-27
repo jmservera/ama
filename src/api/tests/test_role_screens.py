@@ -1,5 +1,7 @@
 """Specialist hosts describe navigation, never extend server authority."""
 
+import json
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -9,6 +11,123 @@ WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
 
 
 class RoleScreens(unittest.TestCase):
+    def test_queue_renders_projected_safety_and_optional_work(self) -> None:
+        result = subprocess.run(
+            [
+                "node",
+                "-e",
+                r"""
+const fs = require("node:fs");
+const vm = require("node:vm");
+const app = fs.readFileSync(process.argv[1] + "/app.js", "utf8");
+const host = fs.readFileSync(process.argv[1] + "/role-screens.js", "utf8");
+const work = {
+  owner: "Task owner", reason: "Recorded reason", next_action: "Chase the response",
+  source: "Recorded source", evidence: "SYN-EVIDENCE", version: 3,
+  recorded_at: "2026-10-26T08:00:00Z", as_of: "2026-10-27",
+  handoff: {destination: "Repairs", proposed_receiver: "Proposed receiver",
+    confirmed_receiver: "Unknown", chase_owner: "Chase owner",
+    resident_update_owner: "Update owner"},
+  hazard_clocks: [
+    {owner: "Safety follow-up owner", elapsed_hours: 24,
+      aware_at: "2026-10-26T09:00:00Z", response_due_at: "2026-10-27T09:00:00Z",
+      resident_update_due_at: "2026-10-27T10:00:00Z", authority: "External service"},
+    {owner: "Second follow-up owner", elapsed_hours: null, aware_at: "Unknown",
+      response_due_at: "Unknown", resident_update_due_at: "Unknown",
+      authority: "External service"}
+  ]
+};
+const rows = [
+  {id: "SAFETY", address: "Safety home", status: "Generic status owner", hazard: true, work},
+  {id: "ORDINARY", address: "Ordinary home", hazard: false,
+    work: {...work, hazard_clocks: []}},
+  {id: "CONTRACTOR", address: "Contractor home", stage: "Survey booked"},
+  {id: "NULL-WORK", address: "No work supplied", hazard: true, work: null}
+];
+let rendered;
+const context = vm.createContext({
+  URLSearchParams, Intl, AbortController,
+  location: {hash: "#/screens?screen=synthetic&page=2"},
+  me: {user: {role: "Synthetic role"}},
+  routeController: new AbortController(), workspaceStatus: {},
+  api: async () => ({items: rows, total: 60}),
+  h: (tag, attrs, ...kids) => ({tag, attrs, kids: kids.flat().filter(
+    kid => kid !== false && kid !== null && kid !== undefined)}),
+  show: (...nodes) => {rendered = nodes;}
+});
+vm.runInContext(app.slice(app.indexOf("function workSummary("),
+  app.indexOf("function workSteps(")) + "\n" + host, context);
+vm.runInContext(`registerRoleScreen({id: "synthetic", title: "Synthetic queue",
+  roles: ["Synthetic role"]}); roleScreensView()`, context).then(() => {
+  const links = [];
+  function visit(node) {
+    if (!node || typeof node !== "object") return;
+    if (node.tag === "a" && node.attrs.class === "item") links.push(node);
+    for (const child of node.kids || []) visit(child);
+  }
+  rendered.forEach(visit);
+  console.log(JSON.stringify(links));
+}).catch(error => {console.error(error); process.exitCode = 1;});
+""",
+                str(WEB),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        links = json.loads(result.stdout)
+        self.assertEqual(len(links), 4)
+
+        def text(node: object) -> str:
+            if isinstance(node, dict):
+                return " ".join(text(child) for child in node["kids"])
+            return str(node)
+
+        safety, ordinary, contractor, no_work = map(text, links)
+        for phrase in (
+            "Safety issue open",
+            "Current owner: Task owner",
+            "Reason: Recorded reason",
+            "Next action: Chase the response",
+            "Source: Recorded source",
+            "evidence: SYN-EVIDENCE; version: 3",
+            "recorded: 2026-10-26T08:00:00Z; recorded as of: 2026-10-27",
+            "Destination: Repairs",
+            "chase owner: Chase owner",
+            "resident-update owner: Update owner",
+            "24 elapsed hours",
+            "awareness: 2026-10-26T09:00:00Z",
+            "named follow-up owner: Safety follow-up owner",
+            "service response due: 2026-10-27T09:00:00Z",
+            "resident update due: 2026-10-27T10:00:00Z",
+            "Safety clock in this recorded view: Unknown",
+            "awareness: Unknown",
+            "named follow-up owner: Second follow-up owner",
+            "service response due: Unknown",
+            "resident update due: Unknown",
+            "External service owns timing.",
+        ):
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, safety)
+        self.assertEqual(safety.count("Safety clock in this recorded view:"), 2)
+        self.assertEqual(links[0]["attrs"]["href"], "#/screens?screen=synthetic&case=SAFETY&page=2")
+        self.assertIn("Current owner: Task owner", ordinary)
+        self.assertNotIn("Safety issue open", ordinary)
+        self.assertNotIn("Safety clock", ordinary)
+        self.assertIn("Contractor home", contractor)
+        self.assertNotIn("Current owner:", contractor)
+        self.assertNotIn("Safety issue open", contractor)
+        self.assertIn("Safety issue open", no_work)
+        self.assertNotIn("Current owner:", no_work)
+        self.assertNotIn("Safety clock", no_work)
+        marker = next(
+            kid
+            for kid in links[0]["kids"][0]["kids"]
+            if isinstance(kid, dict) and kid["attrs"].get("class") == "flag danger"
+        )
+        self.assertEqual(text(marker), "Safety issue open")
+
     def test_staff_and_contractor_navigation_retains_scoped_screen_link(self) -> None:
         for role in ("Resident Liaison Officer", "Retrofit Programme Manager", "Contractor"):
             links = navigation({"role": role})

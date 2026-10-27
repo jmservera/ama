@@ -6,13 +6,83 @@ import os
 import sys
 from pathlib import Path
 
-from playwright.sync_api import Route, sync_playwright
+from playwright.sync_api import Browser, Route, sync_playwright
 
 from checks.design_system_browser_check import check, main
 from checks.role_screens_fixtures import synthetic_data
 
 # Independent child branches extend only their own installed-screen expectation.
 SCENARIOS: dict[str, tuple[str, str, tuple[str, ...]]] = {}
+
+
+def check_projected_queue(browser: Browser, base: str) -> None:
+    for email in ("sam@example.test", "contractor@example.test"):
+        context = browser.new_context(viewport={"width": 1280, "height": 900})
+        try:
+            page = context.new_page()
+            errors: list[str] = []
+            writes: list[str] = []
+            page.on("pageerror", lambda error: errors.append(str(error)))
+            page.goto(base + "/app")
+            page.locator("#email").fill(email)
+            page.locator("#pw").fill("synthetic-check")
+            page.locator("button[type=submit]").click()
+            page.get_by_role(
+                "heading", name="Your jobs" if email.startswith("contractor") else "My cases today",
+                exact=True,
+            ).wait_for()
+            page.on("request", lambda request: writes.append(request.url) if request.method == "POST" else None)
+            projected = page.request.get(base + "/api/cases?view=all&limit=20&offset=0").json()
+            page.evaluate("""() => {
+              registerRoleScreen({id: "synthetic-queue-check", title: "Synthetic queue check",
+                roles: [me.user.role], render: () => h("p", {}, "Synthetic recorded evidence")});
+              location.hash = "#/screens?screen=synthetic-queue-check";
+            }""")
+            page.get_by_text("No home selected. Choose a home from this queue.", exact=True).wait_for()
+            queue = page.locator('section[aria-labelledby="screen-queue-heading"]')
+            check(f"{email} queue retains all projected rows",
+                  queue.locator("a.item").count() == len(projected["items"]) > 0)
+            for row in projected["items"]:
+                link = queue.locator(f'a.item[href*="case={row["id"]}"]')
+                check(f"{email} {row['id']} marker matches projected safety",
+                      link.locator(".flag.danger").count() == int(bool(row.get("hazard"))))
+                work = row.get("work")
+                if work is None:
+                    check(f"{email} {row['id']} no work is invented",
+                          link.locator(".work-context, .safety-clock").count() == 0)
+                    continue
+                text = link.inner_text()
+                check(f"{email} {row['id']} retains recorded owner and next action",
+                      f"Current owner: {work['owner']}" in text
+                      and f"Next action: {work['next_action']}" in text)
+                check(f"{email} {row['id']} retains every clock",
+                      link.locator(".safety-clock").count() == len(work["hazard_clocks"]))
+                for clock in work["hazard_clocks"]:
+                    for field in ("aware_at", "owner", "response_due_at", "resident_update_due_at"):
+                        check(f"{email} {row['id']} clock {field} remains visible", clock[field] in text)
+                    check(f"{email} {row['id']} external timing authority remains visible",
+                          f"{clock['authority']} owns timing." in text)
+            if email.startswith("contractor"):
+                check("actual contractor projection withholds staff safety context",
+                      all("work" not in row and "hazard" not in row for row in projected["items"]))
+            else:
+                check("staff fixture exercises an actual open safety clock",
+                      any(row["hazard"] and row["work"]["hazard_clocks"] for row in projected["items"]))
+                check("projected safety marker has non-colour text",
+                      queue.locator(".flag.danger").first.inner_text() == "Safety issue open")
+            for width in (320, 390, 1280):
+                page.set_viewport_size({"width": width, "height": 900})
+                check(f"{email} queue context reflow {width}px",
+                      page.evaluate("() => document.documentElement.scrollWidth <= innerWidth"))
+            link = queue.locator("a.item").first
+            page.keyboard.press("Tab")
+            link.focus()
+            check(f"{email} queue native focus visible",
+                  link.evaluate("el => getComputedStyle(el).outlineStyle === 'solid'"))
+            check(f"{email} queue made no writes: {writes}", not writes)
+            check(f"{email} queue has no JavaScript errors: {errors}", not errors)
+        finally:
+            context.close()
 
 
 def run_browser(base: str) -> None:
@@ -36,6 +106,7 @@ def run_browser(base: str) -> None:
             if not selected:
                 check("parent empty registry is explicit, not delivered screens",
                       "No specialist screens are installed" in page.locator("main").inner_text())
+                check_projected_queue(browser, base)
             else:
                 _, screen, expected = SCENARIOS[selected]
                 page.get_by_role("link", name=screen, exact=True).click()

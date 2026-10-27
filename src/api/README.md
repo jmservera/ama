@@ -14,6 +14,11 @@ role simulator or new authorization. The shared parent alone has no installed
 modules. Child PRs add independent read-only evidence views before owner review
 and integration. Select a home explicitly; selection and queue page are in the
 URL. Reset changes only the view. Existing case workspaces remain available.
+The queue retains the projected "Safety issue open" marker and recorded task
+context, including hazard awareness, response and resident-update due times,
+named follow-up owners and the external service's timing authority (SA-007).
+Missing times stay Unknown. Contractor responses intentionally omit staff task
+context; the shared queue does not invent it or request broader access.
 
 Views reuse server-projected case reads, native controls and Fluent-derived
 tokens. Missing or withheld evidence is not readiness. They never send resident
@@ -33,6 +38,9 @@ An installed child's check adds its story number, for example
 loopback server and do not read the normal working dataset or call Azure.
 The parent's scoped receipt covers its exact foundation head, not unmerged
 child implementations or subsequent integration.
+Its browser check also installs a test-only queue to exercise actual staff
+safety projections and contractor responses without task context; this does
+not install a production role screen.
 
 ## Resident advisory assistant prototype (#469)
 
