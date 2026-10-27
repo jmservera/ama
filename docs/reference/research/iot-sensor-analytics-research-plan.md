@@ -358,8 +358,11 @@ validation is asserted. The original independent Review executed Complete /
 Not accepted: Medium RV-001 identifies a composed-loader pre-replay budget
 check that trusts unverified manifest counts. Later implementation must enforce
 the actual-stock budget before reconstruction. The original Review is preserved,
-the parent remains draft, and the sole scoped gate is pending at this source
-checkpoint. Runtime success does not establish source acceptance.
+the parent remains draft. The sole scoped gate invocation subsequently blocked
+before checks: fresh main2e031c89 is not an ancestor of candidate1b3f623f.
+No receipt exists, no branch push occurred and no retry was authorized.
+The coordinator must authorize normal main integration and a new scoped gate
+after correction. Runtime success does not establish source acceptance.
 
 ## Sensor privacy engineering boundary (2026-10-17, Refs #112)
 

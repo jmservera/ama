@@ -28,6 +28,8 @@ establish private-stock equality, physical calibration or whole-issue acceptance
 The continuation's original Review is Complete / Not accepted: one Medium
 loader replay-budget defect RV-001 is routed to later implementation; parent
 readiness remains blocked despite successful aggregate runtime evidence.
+The sole scoped gate also blocked before checks on fresh-main ancestry; new
+implementation commits remain local, with no passing receipt or branch push.
 
 The [resident advisory assistant design](../architecture/resident-assistant-prototype.md)
 records #469's bounded own-case Azure OpenAI integration, deterministic

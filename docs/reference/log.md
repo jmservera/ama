@@ -7518,3 +7518,8 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   implementation without rewriting or repeating Review. Preserve successful
   aggregate evidence but keep parent draft. Single scoped gate is pending at
   this committed source checkpoint; receipt and publication facts remain external.
+* The sole scoped parent gate attempt at1b3f623f against fresh main2e031c89
+  exited1 before checks: candidate does not descend from reviewed main base.
+  No receipt, retry, push or ready transition. Preserve external failure log;
+  coordinator must authorize normal main integration and a new scoped gate
+  after RV-001 correction. Archive/restore-verified finite cleanup succeeded.

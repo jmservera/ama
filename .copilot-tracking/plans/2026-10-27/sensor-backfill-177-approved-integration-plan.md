@@ -188,12 +188,15 @@ does not establish full private-stock admission.
 ## Follow-Up Items
 
 * RV-001 Medium: later rpi-implement must validate composed replay's manifest count against actual granted sensors and enforce the row budget before write. Original Review execution Complete, outcome Not accepted; keep parent draft. This routed defect is not fixed or re-reviewed in this completed loop.
+* GATE-BASE: sole authorized scoped gate attempt blocked before checks because fresh main2e031c89 is not an ancestor of candidate1b3f623f. Coordinator to authorize normal main integration and another scoped gate after correction; no push, stale-base retry or successful receipt.
 * Production physical/source/regional qualification and real monitoring approval remain outside this synthetic exercise.
 
 ## Handoff
 
 P01-P03 complete; P04-T01 original Review Complete / Not accepted at
 263e1dbf, with one Medium RV-001 routed to later implementation. Original
-critique and Review remain unchanged. P04-T02 publication administration is
-pending at the final pre-gate source checkpoint; its receipt/PR evidence is
-external to avoid invalidating the sole gate. Do not mark the parent ready.
+critique and Review remain unchanged. P04-T02 publication is blocked: the sole gate
+invocation rejected current-base ancestry before any checks or receipt.
+Status-only closeout records the failed attempt, without claiming a passing
+gate. All new child/parent commits remain local; PR evidence must say so.
+Do not mark the parent ready.

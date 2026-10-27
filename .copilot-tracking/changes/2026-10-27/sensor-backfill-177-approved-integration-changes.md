@@ -175,3 +175,32 @@ become a passing exact-head/source acceptance assessment by this operation.
 Publish new child heads before parent; update decision-blocker comments and
 all five child/parent bodies truthfully. No ready transition while RV-001 open,
 regardless of gate/hosted success; no main merge.
+
+## Sole Gate Attempt and Blocked Publication
+
+The sole authorized foreground invocation ran at
+1b3f623f62a332b0e327ab270964d1bcb1800946 against freshly fetched
+2e031c89a18ce1ceb3de4fda014fddcb90231fda, with --changed,
+--lock-timeout 0 and the fresh external --out above. Exit1:
+"BLOCKED: Candidate does not descend from the reviewed main base".
+Main had added #479 after the topic fork. No check group, image, SQL suite or
+receipt generation ran. The output directory/receipt do not exist; preserve
+the external .log, not a fabricated failure receipt.
+
+Finite cleanup succeeded beforehand. Tracking/cache archive SHA-256:
+0a0fb7549425bffd13364422087539e650f267f6024db2df6b78f47c0d375437.
+Full archive readback, selected restore hashes and protected tracking hashes
+verified; authorized git clean -fdxq left no candidates.
+
+No retry, old-base substitution, rebase, main merge, gate-policy relaxation,
+branch push or readiness transition. Independent exact-head receipt assessment,
+official verification and hosted new-head checks are unavailable, not passed.
+Post-attempt changes are status/evidence only and claim no successful gate.
+All implementation commits remain local; remote child/parent heads retain their
+previous candidates. PR bodies and decision-blocker comments will explicitly
+distinguish local evidence from hosted delivery.
+
+The coordinator must select later implementation of RV-001 and authorize normal
+current-main integration plus a new scoped gate before branch publication.
+This completed Research/Plan/Implement/Review loop retains the original
+Not accepted outcome and does not start a child or repeat Review automatically.
