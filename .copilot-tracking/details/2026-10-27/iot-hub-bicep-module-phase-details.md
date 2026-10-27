@@ -16,6 +16,36 @@
 | P01 | Infrastructure contract | Complete: module/main build and lint passed | P01-T01 |
 | P02 | Tests and decisions | Complete: compiled/mutation tests, matrix, ADR/runbook/index/log reconciled | P02-T01, P02-T02 |
 | P03 | Local validation | Complete: 459 tests, changed Bicep build/lint and scoped ruff passed | P03-T01 |
+| P04 | Later RV-001 implementation | Complete: evaluated normalization regression, 461 tests, build/lint and Ruff passed | P04-T01 |
+
+<!-- rpi:phase id=P04 -->
+## P04: Resolve RV-001 in later implementation
+
+<!-- rpi:task id=P04-T01 -->
+### P04-T01: Normalize namespace hostname and evaluate regression fixtures
+
+Owner direction on 2026-10-27 selects only the normalization defect on PR #498.
+Write boundary: iothub.bicep, its existing compiled tests, these plan/details,
+the changes record, parent follow-up state and a separate review addendum.
+Derive a DNS hostname without HTTPS scheme, port or trailing slash, reuse it
+for the SDK output and sb routing URI. Evaluate actual compiled values for
+port-bearing/portless endpoints, main forwarding and false/true routing.
+First execution boundary: extend regression assertions and reproduce RV-001.
+Then fix the shared hostname derivation and run the complete infra discovery
+with REQUIRE_AZ_BICEP=1 in a fresh external pip venv (no uv), plus Bicep
+build/lint and scoped Ruff. Original Review remains Complete / Not accepted;
+this is later implementation evidence, not a second Review or live approval.
+
+Completion: four HTTPS endpoint forms (port 443 present/absent, trailing slash
+present/absent) all evaluate to `eh-fixture.servicebus.windows.net` and active
+`sb://eh-fixture.servicebus.windows.net/`. Module output values feed actual
+compiled main forwarding expressions, checked against expected values for both
+routing states. Port-bearing hostname, routing-port and wrong-forwarding
+mutations fail the same semantic assertions. Bootstrap omission is unchanged.
+The first new regressions reproduced RV-001 before the source fix. After
+correcting a mutation fixture for Bicep's inlined reference expression and
+binding Python loop variables, all 461 infra tests pass (109.451s, zero skips).
+Module/main build/lint, scoped Ruff lint/format and diff checks pass.
 
 <!-- rpi:phase id=P01 -->
 ## P01: Correct the infrastructure contract

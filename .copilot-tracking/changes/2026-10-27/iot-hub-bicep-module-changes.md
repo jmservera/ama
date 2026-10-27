@@ -12,9 +12,18 @@
 
 ## Execution Status
 
-* Status: Complete (full scoped implementation plan), ready for independent Review.
-* Declared scope: Full plan P01-P03.
-* Completed: P01, P01-T01, P02, P02-T01, P02-T02, P03, P03-T01.
+* Current later invocation: P04 / P04-T01, RV-001 correction, Complete.
+* Owner-selected boundary: shared namespace normalization, compiled evaluated
+  fixtures, current planning/state evidence and a separate review addendum.
+* Required validation: external isolated pip venv, REQUIRE_AZ_BICEP=1 full infra
+  discovery, changed Bicep build/lint, scoped Ruff and diff checks.
+* Original P01-P03 implementation and Review below remain historical; original
+  Review Complete / Not accepted is not rewritten or repeated.
+
+* Original status: Complete (full scoped implementation plan); subsequent
+  original Review Complete / Not accepted, preserved unchanged.
+* Original declared scope: Full plan P01-P03; later invocation only P04.
+* Completed: P01, P01-T01, P02, P02-T01, P02-T02, P03, P03-T01, P04, P04-T01.
 * Remaining active-plan markers: None.
 * Boundary: source/tests/docs and dated evidence only. No deployment, what-if, secrets, uv or full gate.
 
@@ -114,3 +123,59 @@ Implementation complete, full plan. Automatic parent continues to one independen
 Review, then records original outcome before authorized commit/push/PR.
 No source deployment is authorized. Review findings route to later work, not
 another implementation/Review loop in this task.
+
+## Later Implementation: RV-001 (2026-10-27, PR #498)
+
+* Related task: P04-T01, correcting P01-T01/P02-T01 under explicit owner direction.
+* Classification: immediately relevant implementation/test correction; no new
+  architecture, paid resource, deployment or human-approval decision.
+* First boundary: add evaluated port-bearing/portless regression coverage, then
+  normalize the provider endpoint once for SDK output and active routing.
+* Initial validation in a newly created external pip venv failed (346 discovered
+  tests, 10 errors) because zava_forward/PyYAML were absent. Dependencies will
+  be restored using the documented pip prerequisites; no production manifest
+  changes, uv or service/secret calls.
+* Original critique and Review artifacts stay unchanged. Publication remains
+  subject to applicable local/hosted/human gates; a source fix is not acceptance.
+
+### Completed normalization and evaluated regression
+
+* Files: infra/modules/iothub.bicep, infra/tests/test_iothub_module.py and the
+  directly related namespace-output contract in infra/README.md.
+* Extract the hostname from the provider's HTTPS authority, dropping any port
+  and trailing slash, once. Export that hostname and construct the separate
+  `sb://<hostname>/` routing URI from it instead of copying the HTTPS port.
+* Four synthetic provider forms cover port 443 and trailing slash independently.
+  Evaluate actual compiled module outputs and main forwarding expressions in
+  both routing states, not output-name presence. Reuse the existing shared
+  evaluator. Existing routing assertions now evaluate all four fixtures and
+  still require empty bootstrap endpoints/routes.
+* Two added test methods (14 IoT methods total, within the original budget):
+  evaluated outputs and mutation rejection for hostname-port leakage,
+  routing-port leakage and forwarding the wrong output. No unrelated tests,
+  production dependencies or hosted workflow names changed.
+* Before the fix, the two selected regressions failed with four failures,
+  reproducing both the `:443` SDK hostname and active URI defects.
+* First corrected full run: 461 tests, one failure because Bicep inlines the
+  reference-bearing variable and the routing mutation was a no-op. Targeted
+  the compiled URI format instead and assert the mutation actually changes it.
+  Ruff also required explicit loop-variable binding; both fixture issues fixed.
+* Restored the documented editable distributions, hash-pinned API requirements,
+  PyYAML 6.0.3 and Ruff 0.17.1 with pip in the external session venv.
+
+### Correction validation and residual gates
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| REQUIRE_AZ_BICEP=1 external-venv/bin/python -m unittest discover -s infra/tests -q | Passed | 461 tests in 109.451s, zero skips |
+| az bicep build --file <source> --stdout; az bicep lint --file <source> | Passed | iothub module and main, no diagnostics, Bicep 0.48.1 |
+| Ruff 0.17.1 check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 | Passed | Changed test file |
+| Ruff format --isolated --line-length 100 --check; git diff --check | Passed | Changed test already formatted; no whitespace errors |
+| Original Review / fresh Review | Preserved / not repeated | Original Complete / Not accepted remains immutable; separate addendum records local RV-001 resolution |
+| Full local publication gate | Pending exact-commit execution | Must not infer success from the scoped tests |
+| Azure deployment, what-if, secrets, live transport and operational acceptance | Not performed | No authority implied by source-only correction |
+
+Mocked pipeline messages in the suite are not Azure deployment evidence.
+Current implementation has no remaining P04 work. Parent state removes the
+resolved source defect from active blockers/follow-ups while preserving the
+original Review decision; live acceptance and publication approvals stay open.

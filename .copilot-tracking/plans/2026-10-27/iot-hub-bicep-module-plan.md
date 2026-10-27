@@ -80,6 +80,14 @@ No local authoring blocker. Actual quota, pricing/headroom, what-if, role propag
 
 ## Phase Checklist
 
+### Current bounded implementation: RV-001
+
+The owner selected RV-001 for later implementation on PR #498 on 2026-10-27.
+Only P04 is active in this invocation; P01-P03 and the original critique/Review
+outcomes remain historical. Normalize the provider URI once for both the SDK
+hostname and active sb URI; evaluate port-bearing and portless fixtures through
+module outputs and main forwarding. No Azure operations or second Review.
+
 <!-- rpi:phase id=P01 -->
 ### [x] P01: Correct the infrastructure contract
 
@@ -114,6 +122,19 @@ No local authoring blocker. Actual quota, pricing/headroom, what-if, role propag
 
 * No full gate or Azure what-if. Record commands/counts/outcomes and residuals.
 * Handoff exactly once to independent rpi-review after all markers/evidence reconcile.
+
+<!-- rpi:phase id=P04 -->
+### [x] P04: Resolve RV-001 in later implementation
+
+<!-- rpi:task id=P04-T01 -->
+#### [x] P04-T01: Normalize namespace hostname and evaluate regression fixtures
+
+* Targets: infra/modules/iothub.bicep and infra/tests/test_iothub_module.py.
+* Cover HTTPS endpoints with/without port 443 and trailing slash; retain
+  bootstrap omission and assert module output, main forwarding and active URI.
+* Validate with REQUIRE_AZ_BICEP=1 in an external isolated pip venv, build/lint,
+  scoped Ruff and diff checks. Record evidence in changes and a review addendum.
+* Preserve original Review verdict, PR draft status and `Refs #140`.
 
 ## Test Ownership and Change Budget
 
@@ -154,3 +175,14 @@ Scoped ruff check/format and diff whitespace checks pass. Twelve IoT tests
 include both critique obligations and mutations. Ready for one independent
 Review; preserve the original critique verdict. No deployment, live what-if,
 full gate, budget headroom or OD-43 acceptance is inferred.
+
+### Later RV-001 implementation handoff (2026-10-27)
+
+P04 alone is complete: one normalized hostname feeds both the SDK output and
+sb routing URI. Four HTTPS fixture forms evaluate module outputs, main
+forwarding and false/true routing; mutations reject port leakage and wrong
+forwarding. All 461 infra tests pass with REQUIRE_AZ_BICEP=1 and zero skips in
+the external pip venv; module/main build/lint, scoped Ruff and diff checks pass.
+The separate review addendum records RV-001 resolved locally without rewriting
+the original Complete / Not accepted Review or executing a second Review.
+No live acceptance, hosted/human approval or full-gate success is implied.

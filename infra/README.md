@@ -3124,6 +3124,9 @@ key. The custom Event Hub is an Entra consumption adapter; it does not replace
 IoT Hub's per-device boundary or implement the #110 consumer. Nonsecret main
 outputs `iotHubEventHubNamespaceFqdn`, `iotHubEventHubName`,
 `iotHubConsumerGroup` and `iotHubRoutingEnabled` describe its future contract.
+The namespace output is a hostname without scheme, port or trailing slash,
+including when Azure returns `https://<host>:443/`. The routing endpoint is
+constructed separately as `sb://<host>/` from that same normalized hostname.
 
 `iotHubRoutingReady=false` (default; module `routingReady`) is **bootstrap
 only**: system identity, namespace, entity, group, roles and endpoints are

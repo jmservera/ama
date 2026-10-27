@@ -37,6 +37,7 @@ var eventHubsDataSender = '2b629674-e913-4c01-ae53-ef4638d8f975'
 var consumerGroupName = 'api-consumer'
 var telemetryName = 'sensor-readings'
 var routeEndpointName = 'api-telemetry'
+var telemetryNamespaceFqdn = split(split(replace(telemetryNamespace.properties.serviceBusEndpoint, 'https://', ''), '/')[0], ':')[0]
 
 module scopeGuard 'iothub-scope-guard.bicep' = {
   name: 'iot-scope-guard'
@@ -116,7 +117,7 @@ resource hub 'Microsoft.Devices/IotHubs@2023-06-30' = {
           {
             name: routeEndpointName
             authenticationType: 'identityBased'
-            endpointUri: replace(telemetryNamespace.properties.serviceBusEndpoint, 'https://', 'sb://')
+            endpointUri: 'sb://${telemetryNamespaceFqdn}/'
             entityPath: telemetry.name
             resourceGroup: resourceGroup().name
             subscriptionId: subscription().subscriptionId
@@ -253,5 +254,5 @@ output id string = hub.id
 output name string = hub.name
 output consumerGroup string = consumerGroupName
 output eventHubCompatibleName string = telemetryName
-output eventHubNamespaceFqdn string = replace(replace(telemetryNamespace.properties.serviceBusEndpoint, 'https://', ''), '/', '')
+output eventHubNamespaceFqdn string = telemetryNamespaceFqdn
 output routingEnabled bool = routingReady

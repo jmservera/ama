@@ -20,6 +20,12 @@ NAMESPACE = "Microsoft.EventHub/namespaces"
 EVENT_HUB = f"{NAMESPACE}/eventhubs"
 RECEIVER = "a638d3c7-ab3a-418d-83e6-5f17a39d4fde"
 SENDER = "2b629674-e913-4c01-ae53-ef4638d8f975"
+SERVICE_BUS_ENDPOINTS = (
+    "https://eh-fixture.servicebus.windows.net/",
+    "https://eh-fixture.servicebus.windows.net:443/",
+    "https://eh-fixture.servicebus.windows.net",
+    "https://eh-fixture.servicebus.windows.net:443",
+)
 
 
 @unittest.skipUnless(
@@ -41,7 +47,7 @@ class IotHubModuleTests(unittest.TestCase):
         }
         return {**defaults, "name": "fixture", "location": "uksouth", **overrides}
 
-    def assert_routing(self, template) -> None:
+    def assert_routing(self, template, service_bus_endpoint=SERVICE_BUS_ENDPOINTS[0]) -> None:
         hub = resource(template, HUB)
         self.assertEqual(hub["identity"], {"type": "SystemAssigned"})
         self.assertFalse(template["parameters"]["routingReady"]["defaultValue"])
@@ -51,9 +57,7 @@ class IotHubModuleTests(unittest.TestCase):
             )
         )
         context = {
-            "reference": lambda *args: SimpleNamespace(
-                serviceBusEndpoint="https://eh-fixture.servicebus.windows.net/"
-            ),
+            "reference": lambda *args: SimpleNamespace(serviceBusEndpoint=service_bus_endpoint),
             "subscription": lambda: SimpleNamespace(subscriptionId="synthetic-subscription"),
         }
         for ready in (False, True):
@@ -100,7 +104,92 @@ class IotHubModuleTests(unittest.TestCase):
         self.assertTrue(all("condition" not in item for item in roles))
 
     def test_bootstrap_and_activation_have_distinct_endpoint_registration(self) -> None:
-        self.assert_routing(self.template)
+        for endpoint in SERVICE_BUS_ENDPOINTS:
+            with self.subTest(endpoint=endpoint):
+                self.assert_routing(self.template, endpoint)
+
+    def assert_consumer_outputs(self, template, main) -> None:
+        for endpoint in SERVICE_BUS_ENDPOINTS:
+            for ready in (False, True):
+                context = {
+                    "reference": lambda *args, endpoint=endpoint: SimpleNamespace(
+                        serviceBusEndpoint=endpoint
+                    )
+                }
+                expected = {
+                    "eventHubNamespaceFqdn": "eh-fixture.servicebus.windows.net",
+                    "eventHubCompatibleName": "sensor-readings",
+                    "consumerGroup": "api-consumer",
+                    "routingEnabled": ready,
+                }
+                actual = {
+                    name: evaluate(
+                        template["outputs"][name]["value"],
+                        self.values(template, routingReady=ready),
+                        template["variables"],
+                        context,
+                    )
+                    for name in expected
+                }
+                self.assertEqual(actual, expected, (endpoint, ready))
+
+                def reference(identifier, api_version, actual=actual):
+                    self.assertEqual(identifier, "/fixture/Microsoft.Resources/deployments/iothub")
+                    return SimpleNamespace(
+                        outputs=SimpleNamespace(
+                            **{name: SimpleNamespace(value=value) for name, value in actual.items()}
+                        )
+                    )
+
+                for forwarded, original in (
+                    ("iotHubEventHubNamespaceFqdn", "eventHubNamespaceFqdn"),
+                    ("iotHubEventHubName", "eventHubCompatibleName"),
+                    ("iotHubConsumerGroup", "consumerGroup"),
+                    ("iotHubRoutingEnabled", "routingEnabled"),
+                ):
+                    self.assertEqual(
+                        evaluate(
+                            main["outputs"][forwarded]["value"],
+                            self.values(main),
+                            main["variables"],
+                            {"reference": reference},
+                        ),
+                        expected[original],
+                        (endpoint, ready, forwarded),
+                    )
+
+    def test_namespace_and_forwarded_outputs_are_evaluated_without_scheme_or_port(self) -> None:
+        self.assert_consumer_outputs(self.template, self.main)
+
+    def test_mutations_reject_management_ports_and_wrong_forwarded_outputs(self) -> None:
+        for change in ("hostname", "routing-port", "forwarding"):
+            with self.subTest(change=change):
+                template, main = deepcopy(self.template), deepcopy(self.main)
+                if change == "routing-port":
+                    routing = resource(template, HUB)["properties"]["routing"]
+                    original = routing["endpoints"]["eventHubs"]
+                    routing["endpoints"]["eventHubs"] = original.replace(
+                        "'sb://{0}/'", "'sb://{0}:443/'"
+                    )
+                    self.assertNotEqual(routing["endpoints"]["eventHubs"], original)
+                    with self.assertRaises(AssertionError):
+                        self.assert_routing(template, SERVICE_BUS_ENDPOINTS[1])
+                else:
+                    if change == "hostname":
+                        template["outputs"]["eventHubNamespaceFqdn"]["value"] = (
+                            "[replace(replace(reference(resourceId("
+                            "'Microsoft.EventHub/namespaces', "
+                            "'eh-fixture'), '2024-01-01').serviceBusEndpoint, "
+                            "'https://', ''), '/', '')]"
+                        )
+                    else:
+                        main["outputs"]["iotHubEventHubNamespaceFqdn"]["value"] = main["outputs"][
+                            "iotHubEventHubNamespaceFqdn"
+                        ]["value"].replace(
+                            ".outputs.eventHubNamespaceFqdn", ".outputs.eventHubCompatibleName"
+                        )
+                    with self.assertRaises(AssertionError):
+                        self.assert_consumer_outputs(template, main)
 
     def test_mutations_reject_bootstrap_registration_fallback_and_wrong_auth(self) -> None:
         for change in ("bootstrap-endpoint", "fallback", "route-disabled", "auth", "sender-cycle"):
