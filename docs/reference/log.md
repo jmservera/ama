@@ -8122,3 +8122,20 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   transfer position, break-glass policy, threshold or role budget is invented.
   #157/#162/#159/#164/#163 remain Refs; #440 stabilization and human decisions
   prevent whole-parent acceptance.
+
+## [2026-10-27] query | Resident content audit and assisted task designs (#153/#154)
+
+* Extended [content standard](./research/ux/content-standard.md) with a dated
+  core/supporting-surface inventory, dynamic-message and visible stored-value
+  residuals, accountable follow-up roles and an honest acceptance matrix.
+* Corrected stale reviewer-appointment wording using the #153 owner comment:
+  Juan Manuel Servera is appointed; actual exact-text review is not evidenced.
+* Extended [resident journeys](./research/ux/customer-journeys/residents.md)
+  with six task flows/text wireframes, individual non-digital alternatives,
+  language/literacy/adjustment and safe-contact rules, scoped representative
+  briefing/actions, expiry/revocation exceptions and Not run #155 scripts.
+* Indexed the evidence and made bounded existing-web draft/proposal,
+  representative-date and time-capture copy clarifications with regressions.
+  Fluent 2, native semantics, non-colour signals and reduced motion remain.
+  No live contact, portal implementation, operational Legal/DPO decision,
+  human usability/AT acceptance or whole-issue closure is claimed.

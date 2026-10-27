@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[3]
 WEB = ROOT / "src" / "api" / "src" / "zava_forward" / "api" / "web"
 DOC = (ROOT / "docs" / "reference" / "research" / "ux" / "content-standard.md").read_text()
 BANNED = re.compile(r"\b(gates?|holds?|provenance|traces?|snapshots?|envelopes?)\b", re.I)
-AUDITED_FILES = ("app.js", "assistants.js", "panels.js", "ops.js", "chat.js", "index.html", "welcome.html")
+AUDITED_FILES = ("app.js", "assistants.js", "panels.js", "ops.js", "chat.js", "timecapture.js", "index.html", "welcome.html")
 # Exact identifiers, raw technical JSON key and legacy stored finance value only.
 ALLOWED = ("c.gate", "p.provenance", "earlier.provenance", "i.hold", "x.hold", "Keep on hold", 'category("holds",', "envelope: p.envelope", "p.snapshot")
 
@@ -87,6 +87,32 @@ class CopyAudit(unittest.TestCase):
     def test_standard_documents_glossary_and_review(self):
         for text in ("## Glossary", "## Copy audit of the core flow", "AI suggestion, not approved", "named human", "Reason", "Owner", "Next action"):
             self.assertIn(text, DOC)
+
+    def test_resident_draft_and_representative_copy_boundaries(self):
+        js = (WEB / "app.js").read_text()
+        self.assertIn("Draft a message for review", js)
+        self.assertNotIn('"Write to the resident"', js)
+        self.assertIn("Draft only. Nothing is sent here. A named human must review the exact wording before any resident use.", js)
+        self.assertIn("Reviewing a draft is not approval of works, resident consent or a safety decision.", js)
+        panels = (WEB / "panels.js").read_text()
+        self.assertIn("Review due date (authority unavailable from this date)", panels)
+        self.assertNotIn("authority held from this date", panels)
+
+    def test_proposal_review_copy_is_not_decision_approval(self):
+        js = (WEB / "assistants.js").read_text()
+        self.assertIn("AI suggestion, not approved", js)
+        self.assertIn("Accepting or editing this proposal records a draft review. This is not an approval, consent or safety decision.", js)
+        self.assertIn("Requested using:", js)
+        self.assertNotIn("Invocation:", js)
+        self.assertIn("Accept proposal only", js)
+        self.assertIn("Edit and accept proposal only", js)
+
+    def test_time_capture_copy_is_guarded(self):
+        self.assertIn("timecapture.js", AUDITED_FILES)
+        js = (WEB / "timecapture.js").read_text()
+        corrected = "have the same role as the requester"
+        self.assertIn(corrected, js)
+        self.assertTrue(list(copy_violations(js.replace(corrected, "hold the same role as the requester"))))
 
 
 if __name__ == "__main__":

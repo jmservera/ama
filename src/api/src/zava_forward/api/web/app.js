@@ -898,7 +898,8 @@ async function caseView(id) {
   const finalChecks = c.can_advance && h("section", { class: "card" }, h("h2", {}, "Final checks"),
       c.gate.length ? [h("p", {}, "This case cannot move on yet:"), h("ul", {}, c.gate.map((x) => h("li", {}, x)))] : h("p", {}, "Everything is in place."),
       h("button", { onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/advance`, {})) }, "Ready to book the installation"));
-  const write = h("section", { class: "card" }, h("h2", {}, "Write to the resident"),
+  const write = h("section", { class: "card" }, h("h2", {}, "Draft a message for review"),
+      h("p", { class: "muted" }, "Draft only. Nothing is sent here. A named human must review the exact wording before any resident use. Reviewing a draft is not approval of works, resident consent or a safety decision."),
       h("div", { class: "row" }, h("button", { onclick: () => aiRun("message") }, "Draft with AI"),
         h("button", { class: "alt", onclick: () => aiRun("summary") }, "Catch me up on this case"),
         h("button", { class: "alt", onclick: () => kind("visit") }, "Plain visit template"),

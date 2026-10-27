@@ -259,6 +259,15 @@ wording and recorded-time labels. Safety restart authority, exact AI labelling
 and verbatim sources remain distinct. This is partial synthetic engineering
 coverage, not universal error coverage, comprehension or named resident review.
 
+For #153/#154, the [2026-10-27 content inventory and residual messages](./research/ux/content-standard.md#dated-surface-and-message-audit-2026-10-27-153154)
+and [six resident task designs with representative briefing rules](./research/ux/customer-journeys/residents.md#resident-and-representative-task-designs-2026-10-27-154)
+add text wireframes, accessible non-digital alternatives, safe-contact and
+task/date-limited authority, offer/confirmation and separate remedy states.
+The lexical guard now includes staff time capture. Juan Manuel Servera was
+appointed wording reviewer on 2026-10-15; completed exact-text review and actual
+resident/representative usability/AT acceptance remain Not run. No portal,
+live contact, operational authority or whole-issue closure is delivered.
+
 For issue #172, the [chat fixture isolation boundary](./research/retrofit-synthetic-data/data-dictionary.md#resource-specific-isolation-coverage-2026-10-18-172)
 distinguishes 22 personas/eleven perspectives from current eligible thread owners
 (14 users/seven perspectives). Explicit both-contractor read/list/search denial

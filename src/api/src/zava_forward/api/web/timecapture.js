@@ -21,7 +21,7 @@ async function timeView() {
     }
     if (isManager() && ready && st.requested && !st.activated) {
       body.push(h("button", { onclick: () => save("/api/time/enable", {}) }, "Enable time capture (audited)"),
-        h("p", { class: "muted" }, "Refused if you made the request or hold the same role as the requester."));
+        h("p", { class: "muted" }, "Refused if you made the request or have the same role as the requester."));
     }
     if (st.enabled) {
       body.push(h("h2", {}, "Staff notice"), h("p", {}, st.notice));
