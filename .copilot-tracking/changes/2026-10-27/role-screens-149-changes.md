@@ -7,7 +7,8 @@ ms.date: 2026-10-27
 ## Execution
 
 Task 149 / role-screens-149. Automatic, Implement, full plan in scope.
-P01-T01 and P02 complete; P03 pending. Research resumed after explicit owner B1 resolution.
+P01-T01 and P02 complete; P03-T01 Review complete, P03-T02 blocked.
+Research resumed after explicit owner B1 resolution.
 One critique executed (Revise); PC-001-PC-004 corrected directly in plan.
 No issue acceptance criteria changed.
 
@@ -36,8 +37,8 @@ only, not child role screens. No model, SQL or Azure operations.
 
 ## Remaining work
 
-P03 original Review, one authorized
-scoped gate and draft publication. Parent remains groundwork until owner
+P03-T02 one authorized scoped gate and draft publication remain unperformed.
+Original Review is Complete / Not accepted, with RV-001 routed. Parent remains groundwork until owner
 integration; no combined-feature coverage is claimed.
 
 ## Amendments and divergences
@@ -115,3 +116,36 @@ integrated-head validation; product/accessibility owners perform #155 and
 establish Fluent adoption; identity/Finance/technical/service owners provide
 missing approved identities, templates, appointments and recovery evidence.
 These remain outside active implementation and acceptance claims.
+
+## Original Review and publication stop
+
+The one independent Review at
+.copilot-tracking/reviews/logs/2026-10-27/role-screens-149-review.md
+executed Complete; outcome Not accepted for the supplied full boundary.
+RV-001 Medium blocks #231 at 5638e879: blanket equality to latest design
+version marks source-contract unaffected sign-offs stale. Later rpi-implement
+owns that correction/scenario. No source fix, closure verification or repeated
+Review in this task. Unaffected parent/seven role heads/#233 were conditionally
+draft-eligible only; no overall acceptance or publication is implied.
+
+Before any cleanup or gate, git fetch origin main established current main
+2e031c89a18ce1ceb3de4fda014fddcb90231fda and candidate merge-base
+864a502126ee0dfedf13eaf54f08a10f2339279c. The new main commit is #479.
+tools/rpi-checks.py clean_identity requires current main ancestry, so B2
+is a concrete owner-decision blocker, not the resolved B1 policy conflict.
+No merge, rebase, force push or old-base bypass is performed. Stop boundary
+applies before spending the single scoped-gate budget: zero gate invocations,
+zero receipt, zero cleanup, zero pushes or PRs. Ignored generated caches/
+egg-info and empty harness .venv are retained; dry-run inspection removed
+nothing. No archive or restore claim is made.
+
+Task's Research/Plan/Implement/one-Review loop is complete with an adverse
+outcome; requested stacked publication is incomplete and blocked. Automatic
+session remains running at Follow-up with no child automatically started.
+First follow-up requires owner authorization for current-main/stack lineage
+reconciliation; second is later #231 RV-001 implementation. Integration and
+human/AT/Fluent acceptance remain later distinct work, not fallback passes.
+
+One new blocker comment posted:
+https://github.com/jmservera/ama/issues/149#issuecomment-6445655965.
+The prior B1 resolution comment remains intact; it was not reposted as a blocker.
