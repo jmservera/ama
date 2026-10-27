@@ -1,0 +1,51 @@
+{
+  "task_id": "149",
+  "task_slug": "role-screens-149",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Research",
+  "status": "blocked",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-27/role-screens-149-research.md",
+    "plan": null,
+    "details": null,
+    "critique": null,
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run the full ordered RPI loop with stacked draft delivery and local-first scoped-only validation",
+      "status": "owner-directed",
+      "evidence": "2026-10-27 user request"
+    },
+    {
+      "decision": "Start from clean feat/role-screens-149 at fetched origin/main 864a502126ee0dfedf13eaf54f08a10f2339279c",
+      "status": "verified",
+      "evidence": "git status, branch, fetch, rev-parse and PR lifecycle inspection"
+    },
+    {
+      "decision": "Research executed partially; stop at publication-policy decision before Plan",
+      "status": "blocked",
+      "evidence": ".copilot-tracking/research/2026-10-27/role-screens-149-research.md; https://github.com/jmservera/ama/issues/149#issuecomment-6444242587"
+    },
+    {
+      "decision": "Critique and post-implementation Review",
+      "status": "not-executed",
+      "evidence": "Stopped in Research at B1; no Plan or implementation exists"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "B1",
+      "summary": "Requested scoped-only gate conflicts with applicable complete-gate publication requirement.",
+      "resolution": "Authorized instruction reconciliation or authorization for the required full gate; blocker posted once at https://github.com/jmservera/ama/issues/149#issuecomment-6444242587."
+    }
+  ],
+  "next_action": {
+    "phase": "Research",
+    "action": "Await authorized resolution of B1, then resume screen-contract Research before Plan; session remains running but blocked."
+  },
+  "prioritized_follow_ups": null
+}
