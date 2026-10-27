@@ -1,0 +1,100 @@
+{
+  "observed_at": "2026-10-27T16:18:52.212078+00:00",
+  "parent": {
+    "headRefOid": "4140ebbf34174f2bdc9f6e980533797e92410ca9",
+    "isDraft": true,
+    "url": "https://github.com/jmservera/ama/pull/496"
+  },
+  "exact_parent_head": "4140ebbf34174f2bdc9f6e980533797e92410ca9",
+  "source_ci": {
+    "conclusion": "success",
+    "headSha": "4140ebbf34174f2bdc9f6e980533797e92410ca9",
+    "status": "completed",
+    "url": "https://github.com/jmservera/ama/actions/runs/40538254240"
+  },
+  "checks": [
+    {
+      "name": "src-agents",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "4140ebbf34174f2bdc9f6e980533797e92410ca9",
+      "url": "https://github.com/jmservera/ama/actions/runs/40538254240/job/122309428070"
+    },
+    {
+      "name": "src-core",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "4140ebbf34174f2bdc9f6e980533797e92410ca9",
+      "url": "https://github.com/jmservera/ama/actions/runs/40538254240/job/122309427791"
+    },
+    {
+      "name": "src-importer",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "4140ebbf34174f2bdc9f6e980533797e92410ca9",
+      "url": "https://github.com/jmservera/ama/actions/runs/40538254240/job/122309427773"
+    },
+    {
+      "name": "src-api",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "4140ebbf34174f2bdc9f6e980533797e92410ca9",
+      "url": "https://github.com/jmservera/ama/actions/runs/40538254240/job/122309427767"
+    },
+    {
+      "name": "src-orchestrator",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "4140ebbf34174f2bdc9f6e980533797e92410ca9",
+      "url": "https://github.com/jmservera/ama/actions/runs/40538254240/job/122309427738"
+    },
+    {
+      "name": "src-no-working-data",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "4140ebbf34174f2bdc9f6e980533797e92410ca9",
+      "url": "https://github.com/jmservera/ama/actions/runs/40538254240/job/122309298910"
+    },
+    {
+      "name": "image-paths",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "4140ebbf34174f2bdc9f6e980533797e92410ca9",
+      "url": "https://github.com/jmservera/ama/actions/runs/40538254240/job/122309298736"
+    },
+    {
+      "name": "src-namespace",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "4140ebbf34174f2bdc9f6e980533797e92410ca9",
+      "url": "https://github.com/jmservera/ama/actions/runs/40538254240/job/122309298690"
+    },
+    {
+      "name": "mssql",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "4140ebbf34174f2bdc9f6e980533797e92410ca9",
+      "url": "https://github.com/jmservera/ama/actions/runs/40538254240/job/122309298087"
+    }
+  ],
+  "combined_status": "success",
+  "statuses": [
+    {
+      "context": "rubric/score",
+      "state": "success",
+      "url": "https://github.com/jmservera/ama/actions/runs/40535556827"
+    }
+  ],
+  "independent_review": {
+    "execution": "Complete",
+    "outcome": "Residual work",
+    "path": ".copilot-tracking/reviews/logs/2026-10-27/role-screens-149-final-head-review.md",
+    "parent_head": "4140ebbf34174f2bdc9f6e980533797e92410ca9"
+  },
+  "ready_transition": "not yet executed",
+  "new_heavy_gates": 0,
+  "receipt": "historical only; no material source change",
+  "fetched_main": "0ee2ac2fe8c28dce67e7b14eb9f211e611c41ff6",
+  "reviewed_base": "2e031c89a18ce1ceb3de4fda014fddcb90231fda",
+  "merge": "not authorized or performed"
+}

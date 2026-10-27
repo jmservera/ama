@@ -9,7 +9,8 @@ ms.date: 2026-10-27
 Task 149 / role-screens-149. Automatic, Implement, full plan in scope.
 P01-T01, P02 and P03 execution complete. P04 binding correction/local units
 pass and independent final-head Review is Complete / Residual work.
-Ready remains pending hosted checks.
+Final-head independent identity assessment and hosted checks now pass.
+The parent-only ready transition remains pending execution at this snapshot.
 Current post-publication evidence is trace-child-only.
 Research resumed after explicit owner B1 resolution.
 One critique executed (Revise); PC-001-PC-004 corrected directly in plan.
@@ -405,3 +406,29 @@ The same independent reviewer will finalize the existing canonical assessment
 at the final identities using the bounded metadata/source-identity delta.
 Original assessed boundaries/outcomes and original adverse evidence remain
 preserved. Parent stays draft until final exact-head conditions actually pass.
+
+## Final publication conditions verified
+
+The original synchronous review agent could not receive a same-task message;
+the tool refused it. A distinct independent reviewer therefore assessed only
+the subsequent rubric/identity delta, appending to the same canonical record
+without repeating the full source Review. Complete / Residual work remains
+supported at exact parent 4140ebbf and source-identical final role heads.
+Original assessed boundaries and the original adverse artifacts are intact.
+
+Exact-parent Source CI 40538254240 completed success. All nine commit check
+runs at 4140ebbf were independently read through the commit check-runs API
+and are completed/success; combined commit status is success with rubric/score
+77/100 versus baseline 77/100. gh pr checks exposes only rubric/score for the
+manual-dispatch head, so it alone was not used as a proxy for full source CI.
+No skip, old-head status transfer or fabricated hosted approval. Rubric bot
+approval binds 4140ebbf; no human approval is inferred.
+
+Fresh main is 0ee2ac2f after independent documentation/PRD and license merges,
+not the fixed reviewed base 2e031c89. The delta reviewer expressly observed
+main movement. No current-main gate, integrated merge or authority adoption
+is claimed; this bounded task changes no runtime source and does not silently
+rebase again. Owner still controls integration and merge.
+
+P04-T03 may now update final PR evidence and mark only #496 ready. Actual
+ready status will be recorded only after the transition and readback.

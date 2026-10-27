@@ -3,7 +3,7 @@
   "task_slug": "role-screens-149",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Review",
+  "active_phase": "Follow-up",
   "status": "active",
   "session_status": "running",
   "artifact_paths": {
@@ -15,6 +15,11 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-27/role-screens-149-final-head-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "Final publication identity reconciliation independently completed: Complete / Residual work for parent 4140ebbf and exact source-identical final role heads; no new substantive blocker. Exact final-parent Source CI 40538254240 completed success with all nine commit check runs success; rubric/score success and rubric bot approval bind 4140ebbf. PR rollup exposes only the status context, so check-runs were verified directly at the exact commit.",
+      "status": "final-readiness-conditions-verified",
+      "evidence": "Canonical final-head Review Final Publication Identity Reconciliation; gh API commits/4140ebbf/check-runs and status; run 40538254240 completed/success at exact head. Fresh origin/main is 0ee2ac2f after independent documentation/license merges; no current-main integration/gate claim or rebase is inferred."
+    },
     {
       "decision": "Source CI and rubric passed for corrected source parent 6a4eae03; rubric legitimately appended final parent 4140ebbf with timestamp/commit/run-URL-only changes. Parent fast-forwarded and independent children rebased; source/scenario bytes identical. Parent/trace 26 and each role 27 focused tests pass. Dispatch existing Source CI once for exact final parent; no material source change, heavy gate or rubric rerun.",
       "status": "final-identity-reconciliation-active",
@@ -96,16 +101,10 @@
       "evidence": "Read-only git fetch/rev-parse/merge-base and tools/rpi-checks.py clean_identity ancestry requirement; zero gate invocations; https://github.com/jmservera/ama/issues/149#issuecomment-6445655965"
     }
   ],
-  "blockers": [
-    {
-      "id": "HOSTED-001",
-      "summary": "Corrected source checks and rubric passed, but rubric appended final score-only head 4140ebbf; its exact-head Source CI and same-reviewer identity reconciliation remain pending.",
-      "resolution": "Wait for Source CI 40538254240 and independent final-identity reconciliation on 4140ebbf before readiness. Preserve original failures and assessed boundaries; do not transfer the old receipt or fabricate statuses."
-    }
-  ],
+  "blockers": [],
   "next_action": {
-    "phase": "Review",
-    "action": "Finalize the same independent assessment for rubric-only final parent 4140ebbf and source-identical rebased child identities, preserving all prior outcomes. Wait for exact-head Source CI 40538254240, then update PR evidence and mark only #496 ready if every hosted check passes and final engineering result remains acceptable. No merge."
+    "phase": "Follow-up",
+    "action": "Independent final-head result is Complete / Residual work and every hosted check at parent 4140ebbf passes. Update final PR evidence, then mark only #496 ready under standing owner authorization; children remain draft. Verify actual ready status before recording P04-T03 complete. No merge or current-main/integrated acceptance."
   },
   "prioritized_follow_ups": [
     {

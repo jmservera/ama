@@ -402,3 +402,95 @@ mark only #496 ready only after actual required hosted success. No further RPI
 command is required for a newly found defect, decision gap or research gap.
 Leave integration and human/domain follow-ups with their distinct owners.
 Do not merge, alter original adverse evidence or transfer the historical receipt.
+
+## Final Publication Identity Reconciliation
+
+Independent bounded delta assessment, 2026-10-27, observed at approximately
+16:13 UTC. This append assesses only the subsequently arrived rubric provenance
+tail and rebased identities. It does not repeat or replace the completed full
+Review above. The previous synchronous reviewer could not receive follow-ups;
+this is a distinct independent delta assessment, not a claim that the earlier
+reviewer resumed. Prior observations and adverse assessments remain historical.
+
+### Final exact assessed identities
+
+| PR / issue | Ref | Full assessed SHA |
+| --- | --- | --- |
+| Reviewed base | fixed original main boundary | 2e031c89a18ce1ceb3de4fda014fddcb90231fda |
+| #496 / #149 | feat/role-screens-149 | 4140ebbf34174f2bdc9f6e980533797e92410ca9 |
+| #487 / #232 | feat/role-screen-232 | f2c067d685934fa0b0bbe7c21af4f55dec73dcad |
+| #488 / #227 | feat/role-screen-227 | 74abd87c14f9e4c2e19a6cb396bff1e9cf1dd297 |
+| #489 / #230 | feat/role-screen-230 | 16420553b3bdc046855d5aa0e8b87affd247a16e |
+| #490 / #225 | feat/role-screen-225 | 1e78afca65d1059716992f8de45aa2e5be11d589 |
+| #491 / #226 | feat/role-screen-226 | 915393924d557b14cec94d803426f3cf32efcf4a |
+| #492 / #228 | feat/role-screen-228 | 4194070a923184155652163ee3687dfef6843271 |
+| #493 / #229 | feat/role-screen-229 | 4788d972023011ae2fe794e090cff5ce9a397009 |
+| #494 / #231 | feat/role-screen-231 | 3197c113849b1436c6b0053fb6049c00d0013e83 |
+| #495 / #233 | feat/role-screen-233, trace only | 9ca5b3db55a442b6abe5dcad452cce2c3117dbbe |
+
+Read-only git object and remote observations establish:
+
+* The final parent is the direct child of previously assessed
+  6a4eae033776c81131119245dd0e99505be44823. The reviewed base remains
+  its ancestor. All nine final children descend from the final parent.
+  Local parent, origin-tracking parent, live remote parent and PR #496
+  head agree. Live remote refs match all nine child identities above.
+* Parent old-to-new diff contains exactly
+  .github/rubric/scores/latest.json. Parsed JSON differs only in scored_at,
+  commit and run_url. All other JSON values, including score, criteria and
+  fingerprints, are identical. Total remains 77, outcome Pass, floors met.
+  The new provenance names scored source 6a4eae03 and successful rubric run
+  40535556827; it does not pretend the score commit scored itself.
+* For the parent and each of the nine children, git tree object identities
+  for src/ and docs/reference/research/retrofit-synthetic-data match their
+  respective OLD assessed heads in the original table above. This establishes
+  identical tracked bytes, paths and modes, not merely matching test counts.
+  Every eight-role old-to-new whole-tree diff contains only the same rubric
+  file. No role source, module, test or runtime tool changed.
+* Trace #233's remaining delta is confined to the existing plan, phase
+  details, changes, readiness JSON, state and this canonical review record.
+  Bounded trace reads reconcile recorded prior Review completion, focused
+  reruns and pending final-head publication conditions. No runtime module
+  was added. Earlier root JSON pending fields and pre-evidence trace hashes
+  are historical snapshots, not the final identities in this append.
+* The original adverse Review and critique remain byte-identical to their
+  prior assessed versions, retaining SHA-256 ed2193e865633e4fd9e97efd1d6a4125a603d5c6ce5aa11e262fb16db8e79cf4
+  and a651127d9763950caa46214b34ef1a309b7c44131057a95dc39cf011e9f4a7e0,
+  respectively. Their original outcomes are not changed.
+* Live origin/main and its local tracking ref now resolve to
+  ffde36315d23c885b3d2f0cfb2957c5bc69f1aa9, not the fixed reviewed base.
+  This append does not assess that newer main, change the reviewed base,
+  or certify an integrated/current-main gate.
+
+### Hosted conditions and bounded disposition
+
+* Execution: Complete. Outcome: Residual work. The prior residual-only
+  engineering assessment remains supported for final parent 4140ebbf and
+  the eight exact source-identical role heads above. No newly established
+  substantive engineering blocker arises from this delta.
+* Source CI 40535557178 and rubric 40535556827 independently observed
+  completed/success at 6a4eae03. PR #496 exposes rubric/score SUCCESS on
+  4140ebbf, with github-actions APPROVED review attached to that exact
+  head and body reporting 77/100 versus baseline 77/100. This is bot
+  approval, not GitHub human approval or integrated acceptance.
+* Final-parent Source CI 40538254240 independently observed in_progress
+  with empty conclusion at exact 4140ebbf. mssql, src-namespace and src-api
+  remain in progress; the other six observed jobs succeeded. Earlier source
+  CI success is not transferred to this final-head run. All-checks-passed
+  and parent readiness are NOT established. PR #496 remains draft.
+* Delivery parent must observe every required current-head hosted check
+  actually passing before any parent-only ready transition. This residual-only
+  independent engineering result supplies the bounded identity assessment,
+  not authorization to bypass hosted or applicable human approval conditions.
+  Existing integration, accessibility/Fluent and domain residuals remain.
+  No merge or child integration is authorized.
+* Zero new heavy gates, suites, rubric dispatches or workflow dispatches were
+  performed for this metadata-only assessment. Focused test counts in the
+  trace are recorded delivery evidence, not newly executed tests here.
+  The aee0e9d5 receipt remains historical and invalid for this new head;
+  neither that receipt nor this append certifies a fresh local gate.
+* Only this existing canonical record is appended. A subsequent trace commit
+  RECORDING THIS RESULT is evidence-only, cannot self-reference its own hash,
+  and does not change the assessed parent/eight role source heads. Such a
+  future trace commit is not falsely represented as the assessed trace SHA
+  above. No source, plan, state, GitHub state or earlier assessment was edited.
