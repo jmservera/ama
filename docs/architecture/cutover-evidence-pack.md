@@ -2,7 +2,6 @@
 title: Source cut-over evidence pack
 description: Dated parity, private SQL and public edge proof with remaining owner gates
 ms.date: 2026-10-27
-ms.date: 2026-10-23
 ms.topic: reference
 ---
 

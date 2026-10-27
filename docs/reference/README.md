@@ -2,7 +2,6 @@
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
 ms.date: 2026-10-27
-ms.date: 2026-10-23
 ---
 
 ## Purpose

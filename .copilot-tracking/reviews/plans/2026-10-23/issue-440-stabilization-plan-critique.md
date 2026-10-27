@@ -100,11 +100,11 @@
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/plans/2026-10-23/issue-440-stabilization-plan.md](.copilot-tracking/plans/2026-10-23/issue-440-stabilization-plan.md) | Assessed final-candidate plan. |
-| [.copilot-tracking/details/2026-10-23/issue-440-stabilization-phase-details.md](.copilot-tracking/details/2026-10-23/issue-440-stabilization-phase-details.md) | Assessed execution details and seven semantic scenarios. |
-| [.copilot-tracking/research/2026-10-23/issue-440-stabilization-research.md](.copilot-tracking/research/2026-10-23/issue-440-stabilization-research.md) | Supplied evidence synthesis and pinned identities. |
-| [.copilot-tracking/research/2026-10-23/issue-440-current-issue.json](.copilot-tracking/research/2026-10-23/issue-440-current-issue.json) | Complete supplied issue requirements. |
-| [.copilot-tracking/reviews/plans/2026-10-23/issue-440-stabilization-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-23/issue-440-stabilization-plan-critique.md) | This original independent critique. |
+| [.copilot-tracking/plans/2026-10-23/issue-440-stabilization-plan.md](../../../plans/2026-10-23/issue-440-stabilization-plan.md) | Assessed final-candidate plan. |
+| [.copilot-tracking/details/2026-10-23/issue-440-stabilization-phase-details.md](../../../details/2026-10-23/issue-440-stabilization-phase-details.md) | Assessed execution details and seven semantic scenarios. |
+| [.copilot-tracking/research/2026-10-23/issue-440-stabilization-research.md](../../../research/2026-10-23/issue-440-stabilization-research.md) | Supplied evidence synthesis and pinned identities. |
+| [.copilot-tracking/research/2026-10-23/issue-440-current-issue.json](../../../research/2026-10-23/issue-440-current-issue.json) | Complete supplied issue requirements. |
+| [.copilot-tracking/reviews/plans/2026-10-23/issue-440-stabilization-plan-critique.md](issue-440-stabilization-plan-critique.md) | This original independent critique. |
 
 ## Next Steps
 
