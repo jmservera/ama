@@ -1,0 +1,75 @@
+{
+  "retrieved": "2026-10-27",
+  "repository_history": {
+    "citation_key": "pan2026swemaintain",
+    "source": "https://arxiv.org/html/2610.14768v1",
+    "locator": "Sections 2.5, 3.1-3.2 and 4.2, Table 3",
+    "outcome": "Event Resolve Rate: current and all earlier non-superseded hidden tests pass",
+    "contrast": "Agent-History minus Developer-History",
+    "unit": "percentage points",
+    "interval": "Published 95% repository-clustered bootstrap confidence interval",
+    "design": "100 three-event episodes from 50 Python repositories; fresh session per event; five systems and two models",
+    "notes": [
+      "Cohorts overlap and are not independent studies.",
+      "Cohort membership depends on the Agent-History starting state.",
+      "The filtered clean cohort excludes pre-solved tasks and unevaluable starting tests.",
+      "Differences and intervals are transcribed as published, not recomputed from rounded rates."
+    ],
+    "rows": [
+      {
+        "label": "All later events",
+        "paired_events": 1996,
+        "developer_rate_percent": 33.6,
+        "agent_rate_percent": 19.6,
+        "difference_pp": -14.0,
+        "ci95_pp": [-16.1, -11.9]
+      },
+      {
+        "label": "Earlier tests fail at start",
+        "paired_events": 1349,
+        "developer_rate_percent": 23.7,
+        "agent_rate_percent": 1.9,
+        "difference_pp": -21.9,
+        "ci95_pp": [-24.5, -19.3]
+      },
+      {
+        "label": "Earlier tests pass at start",
+        "paired_events": 647,
+        "developer_rate_percent": 54.3,
+        "agent_rate_percent": 56.6,
+        "difference_pp": 2.3,
+        "ci95_pp": [-0.9, 5.5]
+      },
+      {
+        "label": "Passing start; next task not pre-solved",
+        "paired_events": 619,
+        "developer_rate_percent": 54.3,
+        "agent_rate_percent": 57.0,
+        "difference_pp": 2.7,
+        "ci95_pp": [-0.5, 6.1]
+      }
+    ]
+  },
+  "instruction_maintenance": {
+    "citation_key": "chatlatanagulchai2026readmes",
+    "source": "https://arxiv.org/html/2511.12884v2",
+    "locator": "Sections 4.2.2-4.2.3, qualitative post-adoption commit analysis",
+    "sample_commits": 100,
+    "total_label_assignments": 139,
+    "unit": "label assignments",
+    "design": "Random sample of commits modifying agent context files, excluding each file's creation; independent coding and adjudication",
+    "notes": [
+      "Labels can overlap within a commit; counts do not represent disjoint sets of commits.",
+      "Addition labels combine 48 line-level and 30 section-level assignments; 66 distinct commits contain an addition.",
+      "Deletion labels combine 15 line-level and four section-level assignments.",
+      "The maintenance count is 139 minus the 129 published add, fix and delete assignments; only eight commits are maintenance-only.",
+      "These counts measure edit types, not added tokens, net growth, failure-triggered corrections or agent performance."
+    ],
+    "rows": [
+      {"label": "Add instructions", "label_assignments": 78},
+      {"label": "Modify existing directives", "label_assignments": 32},
+      {"label": "Delete instructions", "label_assignments": 19},
+      {"label": "Non-directive maintenance", "label_assignments": 10}
+    ]
+  }
+}

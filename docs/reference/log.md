@@ -7386,6 +7386,34 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   this editing session did not commit, merge or push. The final build record
   and inspected PDF remain local, without a completed publication gate.
 
+## [2026-10-27] research | Industry-led paper framing and inherited state
+
+* A read-only critique and source-research agents preceded changes to the
+  [paper](../capstone/thought-leadership/everything-but-the-software/main.tex).
+  The [revision record](../capstone/thought-leadership/everything-but-the-software/README.md#industry-led-revision-27-october)
+  preserves source versions, locators, access limits and the final scoped
+  critique. Knight Capital, WyCash and PhotoCraft now introduce the wider
+  maintenance problem before AMA's triggering experience.
+* Distinguished conversational self-conditioning from repository-carried
+  faults and instruction maintenance. Added six matching references covering
+  the SEC account, instruction-file histories, context-file evaluation,
+  GitHub practitioner guidance and Anthropic context engineering. Context
+  debt is attributed to prior work; entropy remains an engineering analogy.
+* Added [published chart data](../capstone/thought-leadership/everything-but-the-software/anc/published-evidence.json)
+  and two reproducible figures: paired-history event-resolution differences
+  with published intervals, and overlapping instruction-edit labels. Retained
+  clean-history and useful-context counterevidence; no net-token growth,
+  reproduced external defect or new study result is inferred from them.
+* The protocol is unchanged after line-ending normalisation. Structural
+  checks pass with 114 matching references; chart-data, denominator and image
+  checks pass. Tectonic produces an external 49-page PDF with resolved
+  references, four minor overflows below six points, one underfull line and
+  a fontconfig warning. The existing package PDF and case figures are
+  unchanged. Python plotting dependencies were installed with pip at the
+  owner's direction; the cancelled PDF-renderer install was not retried.
+* Updated the reference index and package record without rewriting earlier
+  log entries or the owner's memory. No private study edit, experiment,
+  commit, push, complete publication gate or submission occurred.
 ## [2026-10-27] design | Resident advisory assistant prototype (Refs #469)
 
 * Added the [owner-decision design](../architecture/resident-assistant-prototype.md)
