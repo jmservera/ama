@@ -109,10 +109,10 @@
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/plans/2026-10-23/issue126-cost-refresh-base-maintenance-plan.md](.copilot-tracking/plans/2026-10-23/issue126-cost-refresh-base-maintenance-plan.md) | Assessed final-candidate plan; unchanged by critic |
-| [.copilot-tracking/details/2026-10-23/issue126-cost-refresh-base-maintenance-phase-details.md](.copilot-tracking/details/2026-10-23/issue126-cost-refresh-base-maintenance-phase-details.md) | Assessed phase details; unchanged by critic |
-| [.copilot-tracking/research/2026-10-23/issue126-cost-refresh-base-maintenance-research.md](.copilot-tracking/research/2026-10-23/issue126-cost-refresh-base-maintenance-research.md) | Supplied bounded research and ten byte pins |
-| [.copilot-tracking/reviews/plans/2026-10-23/issue126-cost-refresh-base-maintenance-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-23/issue126-cost-refresh-base-maintenance-plan-critique.md) | Complete single critique and actionable finding set |
+| [.copilot-tracking/plans/2026-10-23/issue126-cost-refresh-base-maintenance-plan.md](../../../plans/2026-10-23/issue126-cost-refresh-base-maintenance-plan.md) | Assessed final-candidate plan; unchanged by critic |
+| [.copilot-tracking/details/2026-10-23/issue126-cost-refresh-base-maintenance-phase-details.md](../../../details/2026-10-23/issue126-cost-refresh-base-maintenance-phase-details.md) | Assessed phase details; unchanged by critic |
+| [.copilot-tracking/research/2026-10-23/issue126-cost-refresh-base-maintenance-research.md](../../../research/2026-10-23/issue126-cost-refresh-base-maintenance-research.md) | Supplied bounded research and ten byte pins |
+| [.copilot-tracking/reviews/plans/2026-10-23/issue126-cost-refresh-base-maintenance-plan-critique.md](./issue126-cost-refresh-base-maintenance-plan-critique.md) | Complete single critique and actionable finding set |
 
 ## Next Steps
 

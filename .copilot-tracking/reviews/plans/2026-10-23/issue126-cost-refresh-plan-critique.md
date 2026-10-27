@@ -221,10 +221,10 @@
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/plans/2026-10-23/issue126-cost-refresh-plan.md](.copilot-tracking/plans/2026-10-23/issue126-cost-refresh-plan.md) | Assessed final-candidate plan. |
-| [.copilot-tracking/details/2026-10-23/issue126-cost-refresh-phase-details.md](.copilot-tracking/details/2026-10-23/issue126-cost-refresh-phase-details.md) | Assessed implementation and publication details. |
-| [.copilot-tracking/research/2026-10-23/issue126-cost-refresh-research.md](.copilot-tracking/research/2026-10-23/issue126-cost-refresh-research.md) | Supplied research and sanitized evidence. |
-| [.copilot-tracking/reviews/plans/2026-10-23/issue126-cost-refresh-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-23/issue126-cost-refresh-plan-critique.md) | Original complete critique and finding set. |
+| [.copilot-tracking/plans/2026-10-23/issue126-cost-refresh-plan.md](../../../plans/2026-10-23/issue126-cost-refresh-plan.md) | Assessed final-candidate plan. |
+| [.copilot-tracking/details/2026-10-23/issue126-cost-refresh-phase-details.md](../../../details/2026-10-23/issue126-cost-refresh-phase-details.md) | Assessed implementation and publication details. |
+| [.copilot-tracking/research/2026-10-23/issue126-cost-refresh-research.md](../../../research/2026-10-23/issue126-cost-refresh-research.md) | Supplied research and sanitized evidence. |
+| [.copilot-tracking/reviews/plans/2026-10-23/issue126-cost-refresh-plan-critique.md](./issue126-cost-refresh-plan-critique.md) | Original complete critique and finding set. |
 
 ## Next Steps
 
