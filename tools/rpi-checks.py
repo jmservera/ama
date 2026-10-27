@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the complete local pre-push gate, or verify its external exact-commit receipt."""
+"""Run full or changed-path local checks and verify scoped exact-commit receipts."""
 
 from __future__ import annotations
 
@@ -16,8 +16,10 @@ import signal
 import stat
 import subprocess
 import sys
+import threading
 import time
 from collections.abc import Iterator
+from concurrent.futures import FIRST_COMPLETED, Future, ThreadPoolExecutor, wait
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -173,7 +175,7 @@ def clean_identity(root: Path, base: str) -> dict[str, str]:
 
 
 def tool_identity() -> dict[str, dict[str, str]]:
-    result = {}
+    result: dict[str, dict[str, str]] = {}
     for name in TOOLS:
         path = shutil.which(name)
         if not path:
@@ -187,13 +189,15 @@ def tool_identity() -> dict[str, dict[str, str]]:
     return result
 
 
-def environment_identity(out: Path) -> dict[str, str]:
+def environment_identity(out: Path, names: list[str] | None = None) -> dict[str, str]:
     """Hash bounded environment data without executing Python or loading startup code."""
-    result = {}
+    result: dict[str, str] = {}
+    if names == []:
+        return result
     venvs = out / "venvs"
     if venvs.is_symlink() or not venvs.is_dir():
         raise GateError("Missing or symlinked environment directory")
-    for name in (*PROJECTS, "namespace"):
+    for name in names if names is not None else (*PROJECTS, "namespace"):
         environment = venvs / name
         site = environment / "lib/python3.12/site-packages"
         entries = 0
@@ -316,6 +320,176 @@ def required_groups(extras: list[str]) -> list[str]:
     ]
 
 
+def dependencies(group: str) -> set[str]:
+    if group in ("static", "tooling", "infra", "migration", "logo-0600") or group.startswith(
+        "image-"
+    ):
+        return {"namespace"}
+    if group in ("browser", "mssql"):
+        return {"project-api"}
+    if group.startswith("extra-"):
+        return {f"project-{extra_selector(group.removeprefix('extra-'))[0]}"}
+    return set()
+
+
+def changed_groups(paths: list[str], extras: list[str]) -> list[str]:
+    selected = {"preflight", "static"}
+    for value in extras:
+        selected.add(f"extra-{value}")
+    for path in paths:
+        parts = Path(path).parts
+        if path.endswith(".md") or path.startswith(("docs/", ".copilot-tracking/", "support/")):
+            continue
+        if path in ("tools/rpi-checks.py", "tools/test_rpi_checks.py"):
+            selected.add("tooling")
+        elif path.startswith("infra/"):
+            selected.add("infra")
+        elif len(parts) > 2 and parts[0] == "src" and parts[1] in PROJECTS:
+            project = parts[1]
+            consumers = (
+                PROJECTS
+                if project == "core"
+                else ("agents", "api")
+                if project == "agents"
+                else (project,)
+            )
+            selected.update(f"project-{name}" for name in consumers)
+            runtime = parts[2] == "src" or any(
+                item in path.lower() for item in ("dockerfile", "requirements", "pyproject.toml")
+            )
+            if runtime:
+                selected.update(f"image-{name}" for name in consumers if name in IMAGES)
+                if "api" in consumers:
+                    selected.add("logo-0600")
+            if project == "api" and ("/web/" in path or parts[2] == "checks"):
+                selected.add("browser")
+            if project in ("core", "api") and (
+                "requirements" in path.lower() or parts[2] == "pyproject.toml"
+            ):
+                selected.add("mssql")
+            if any(word in path.lower() for word in ("store", "schema", "sql", "assistants")):
+                selected.add("mssql")
+        else:
+            return required_groups(extras)
+    while True:
+        closed = selected | set().union(*(dependencies(group) for group in selected))
+        if closed == selected:
+            break
+        selected = closed
+    order = [*required_groups(extras), "tooling"]
+    return [group for group in order if group in selected]
+
+
+def selection(root: Path, base: str, mode: str, extras: list[str]) -> dict[str, Any]:
+    if mode not in ("all", "changed"):
+        raise GateError("Invalid selection mode")
+    paths = []
+    if mode == "changed":
+        paths = (
+            subprocess.check_output(
+                [
+                    "git",
+                    "-C",
+                    str(root),
+                    "diff",
+                    "--no-renames",
+                    "--name-only",
+                    "-z",
+                    f"{base}...HEAD",
+                ]
+            )
+            .decode()
+            .rstrip("\0")
+            .split("\0")
+        )
+        paths = [path for path in paths if path]
+    groups = required_groups(extras) if mode == "all" else changed_groups(paths, extras)
+    return {"mode": mode, "paths": paths, "groups": groups}
+
+
+def selected_environments(groups: list[str]) -> list[str]:
+    names = set()
+    for group in groups:
+        if group == "namespace":
+            names.add("namespace")
+        elif group.startswith(("project-", "setup-")):
+            names.add(group.split("-", 1)[1])
+        elif group in ("browser", "mssql"):
+            names.add("api")
+        elif group.startswith("extra-"):
+            names.add(extra_selector(group.removeprefix("extra-"))[0])
+        elif dependencies(group) == {"namespace"}:
+            names.add("namespace")
+    return sorted(names)
+
+
+def cgroup_directories() -> list[Path]:
+    membership = next(
+        (
+            line[3:]
+            for line in Path("/proc/self/cgroup").read_text().splitlines()
+            if line.startswith("0::")
+        ),
+        None,
+    )
+    if membership is None or not membership.startswith("/") or ".." in Path(membership).parts:
+        raise GateError("Cannot resolve effective cgroup-v2 membership")
+    current = Path(membership)
+    mounts = []
+
+    def unescape(value: str) -> str:
+        return re.sub(r"\\([0-7]{3})", lambda match: chr(int(match[1], 8)), value)
+
+    for line in Path("/proc/self/mountinfo").read_text().splitlines():
+        before, separator, after = line.partition(" - ")
+        if not separator or after.split()[0] != "cgroup2":
+            continue
+        fields = before.split()
+        root, mount = Path(unescape(fields[3])), Path(unescape(fields[4]))
+        if current.is_relative_to(root):
+            mounts.append((len(root.parts), mount, mount / current.relative_to(root)))
+    if not mounts:
+        raise GateError("Cannot resolve effective cgroup-v2 mount")
+    _, mount, directory = max(mounts, key=lambda value: value[0])
+    if not directory.is_dir():
+        raise GateError("Effective cgroup directory is unavailable")
+    return [directory, *[parent for parent in directory.parents if parent.is_relative_to(mount)]]
+
+
+def worker_limit(requested: int) -> int:
+    if requested < 1:
+        raise GateError("--jobs must be positive")
+    cpus = float(len(os.sched_getaffinity(0)))
+    memory = re.search(
+        r"^MemAvailable:\s+(\d+)\s+kB$",
+        Path("/proc/meminfo").read_text(),
+        re.MULTILINE,
+    )
+    if memory is None:
+        raise GateError("Host available-memory capacity is unavailable")
+    available = int(memory[1]) * 1024
+    for directory in cgroup_directories():
+        quota = directory / "cpu.max"
+        if quota.exists():
+            amount, period = quota.read_text().split()
+            if amount != "max":
+                if int(period) <= 0 or int(amount) <= 0:
+                    raise GateError("Invalid cgroup CPU capacity")
+                cpus = min(cpus, int(amount) / int(period))
+        maximum = directory / "memory.max"
+        if maximum.exists() and maximum.read_text().strip() != "max":
+            available = min(
+                available,
+                int(maximum.read_text()) - int((directory / "memory.current").read_text()),
+            )
+    limit = min(requested, int(cpus // 2), (available - 1024**3) // (4 * 1024**3))
+    if limit < 1:
+        raise GateError(
+            "Insufficient capacity: each worker needs 2 CPUs and 4 GiB plus 1 GiB headroom"
+        )
+    return limit
+
+
 def test_paths(project: str, own_tests: bool = False) -> str:
     paths = []
     if own_tests:
@@ -330,13 +504,19 @@ def test_paths(project: str, own_tests: bool = False) -> str:
 def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]:
     """Trusted ordered command contracts, never commands loaded for execution."""
     token, sql = receipt["owner"], receipt["sql"]
+    groups = receipt.get("executed_groups", required_groups(receipt["extras"]))
     if (
         not isinstance(token, str)
         or re.fullmatch("[0-9a-f]{24}", token) is None
-        or re.fullmatch("[0-9a-f]{64}", sql["container"]) is None
-        or not sql["port"].isdigit()
-        or not 0 < int(sql["port"]) <= 65535
-        or re.fullmatch("sha256:[0-9a-f]{64}", receipt["images"]["mssql"]) is None
+        or (
+            "mssql" in groups
+            and (
+                re.fullmatch("[0-9a-f]{64}", sql["container"]) is None
+                or not sql["port"].isdigit()
+                or not 0 < int(sql["port"]) <= 65535
+                or re.fullmatch("sha256:[0-9a-f]{64}", receipt["images"]["mssql"]) is None
+            )
+        )
     ):
         raise GateError("Receipt owned resource identity is invalid")
     result: list[dict[str, Any]] = []
@@ -524,6 +704,7 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
     )
     add([python, "-c", REGULATORY_ASSERT, "<output>/regulatory-ux-results.json"])
     group = "mssql"
+    sql = sql if "mssql" in groups else {"container": "", "port": ""}
     add([python, "-m", "pip", "install", "--require-hashes", "-r", "src/api/requirements.txt"])
     add([python, "-c", SQL_DRIVER])
     add(["docker", "pull", "mcr.microsoft.com/mssql/server:2022-latest"])
@@ -559,7 +740,7 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
     }
     add([python, "-c", SQL_QUERY], env=sqlenv, timeout=15, attempts=60)
     add(["docker", "inspect", sql["container"]])
-    add(["docker", "image", "inspect", receipt["images"]["mssql"]])
+    add(["docker", "image", "inspect", receipt["images"].get("mssql", "")])
     add(
         [python, "-m", "unittest", "-v", *SQL_SELECTORS],
         "src/api",
@@ -570,6 +751,8 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
     )
     add(["docker", "rm", "-f", sql["container"]])
     for name in (*[f"image-{p}" for p in IMAGES], "logo-0600"):
+        if name not in groups:
+            continue
         group = name
         project = "api" if name == "logo-0600" else name.removeprefix("image-")
         context = "<output>/logo-snapshot/src" if name == "logo-0600" else "<checkout>/src"
@@ -648,13 +831,34 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
             suite=True,
             integration=True,
         )
-    return result
+    group = "tooling"
+    python = py("namespace")
+    add([python, "-m", "pip", "install", "ruff==0.17.1", "mypy==2.4.0"])
+    lint(python, RUFF_GROUPS[-1])
+    add([python, "-m", "mypy", *TYPE_GROUPS[2]])
+    for name in (*PROJECTS, "namespace"):
+        group = f"setup-{name}"
+        if name == "namespace":
+            install(name, list(PROJECTS), dev=False)
+        else:
+            packages = [] if name == "core" else ["core"]
+            if name == "api":
+                packages.append("agents")
+            install(name, [*packages, name])
+    return [check for check in result if check["group"] in groups]
 
 
 def verify_commands(root: Path, out: Path, receipt: dict[str, Any]) -> None:
-    commands = iter(receipt["commands"])
+    checks = required_checks(root, receipt)
+    order = list(dict.fromkeys(check["group"] for check in checks))
+    commands = iter(
+        sorted(
+            receipt["commands"],
+            key=lambda row: order.index(row["group"]) if row["group"] in order else len(order),
+        )
+    )
     logs: set[str] = set()
-    for check in required_checks(root, receipt):
+    for check in checks:
         for _attempt in range(check["attempts"]):
             row = next(commands, None)
             if row is None or any(
@@ -706,22 +910,26 @@ def verify_commands(root: Path, out: Path, receipt: dict[str, Any]) -> None:
 
 
 def verify_results(out: Path, receipt: dict[str, Any]) -> None:
+    groups = receipt.get("executed_groups", required_groups(receipt["extras"]))
     if (out / "snapshot-inputs.log").read_text().strip():
         raise GateError("Snapshot input evidence is not clean")
-    if digest(out / "axe-4.10.3.min.js") != AXE_SHA256:
-        raise GateError("Pinned axe evidence identity mismatch")
-    browser = json.loads((out / "regulatory-ux-results.json").read_text())
-    if (
-        browser["outcome"] != "passed"
-        or browser["axe_status"] != "executed"
-        or browser["axe_version"] != "4.10.3"
-        or browser["axe_sha256"] != AXE_SHA256
-        or not browser["scans"]
-        or "skipped" in json.dumps(browser)
-        or any(scan["violations"] for scan in browser["scans"])
-    ):
-        raise GateError("Required browser result evidence is incomplete/failed")
+    if "browser" in groups:
+        if digest(out / "axe-4.10.3.min.js") != AXE_SHA256:
+            raise GateError("Pinned axe evidence identity mismatch")
+        browser = json.loads((out / "regulatory-ux-results.json").read_text())
+        if (
+            browser["outcome"] != "passed"
+            or browser["axe_status"] != "executed"
+            or browser["axe_version"] != "4.10.3"
+            or browser["axe_sha256"] != AXE_SHA256
+            or not browser["scans"]
+            or "skipped" in json.dumps(browser)
+            or any(scan["violations"] for scan in browser["scans"])
+        ):
+            raise GateError("Required browser result evidence is incomplete/failed")
     for project in IMAGES:
+        if f"image-{project}" not in groups:
+            continue
         image_id = receipt["images"][f"image-{project}"]["id"]
         for suffix in ("gate", "all"):
             report = json.loads((out / f"{project}-{suffix}.json").read_text())
@@ -740,13 +948,14 @@ def verify_results(out: Path, receipt: dict[str, Any]) -> None:
             or "Tool: trivy-0.76.0" not in spdx["creationInfo"]["creators"]
         ):
             raise GateError("Required SPDX evidence is incomplete/mismatched")
-    inventory = next(
-        row for row in receipt["commands"] if row["argv"][1:3] == ["-c", WORKFLOW_INVENTORY]
-    )
-    jobs = json.loads((out / inventory["log"]).read_text())
-    coverage = json.loads((out / "workflow-coverage.json").read_text())
-    if coverage["steps"] != Runner.coverage_rows(jobs):
-        raise GateError("Workflow coverage evidence does not match the command inventory")
+    if "infra" in groups:
+        inventory = next(
+            row for row in receipt["commands"] if row["argv"][1:3] == ["-c", WORKFLOW_INVENTORY]
+        )
+        jobs = json.loads((out / inventory["log"]).read_text())
+        coverage = json.loads((out / "workflow-coverage.json").read_text())
+        if coverage["steps"] != Runner.coverage_rows(jobs):
+            raise GateError("Workflow coverage evidence does not match the command inventory")
 
 
 def extra_selector(value: str) -> tuple[str, str]:
@@ -823,8 +1032,27 @@ def atomic_json(path: Path, value: dict[str, Any]) -> None:
 
 
 class Runner:
-    def __init__(self, root: Path, out: Path, base: str, extras: list[str]) -> None:
+    def __init__(
+        self,
+        root: Path,
+        out: Path,
+        base: str,
+        extras: list[str],
+        *,
+        selected: dict[str, Any] | None = None,
+        jobs: int = 1,
+        resume: Path | None = None,
+    ) -> None:
         self.root, self.out, self.base, self.extras = root, out, base, extras
+        self.selection = selected or selection(root, base, "all", extras)
+        self.jobs, self.resume = jobs, resume
+        self.reused: list[str] = []
+        self.local = threading.local()
+        self.row_lock = threading.Lock()
+        self.install_lock = threading.Lock()
+        self.docker_lock = threading.Lock()
+        self.cancelled = threading.Event()
+        self.active: dict[int, subprocess.Popen[str]] = {}
         self.token = secrets.token_hex(12)
         self.snapshot = out / "checkout"
         self.envs = out / "venvs"
@@ -873,6 +1101,27 @@ class Runner:
         self.safety = safety
         self.group = "preflight"
 
+    @property
+    def group(self) -> str:
+        return str(getattr(self.local, "group", "preflight"))
+
+    @group.setter
+    def group(self, value: str) -> None:
+        self.local.group = value
+
+    @property
+    def process(self) -> subprocess.Popen[str] | None:
+        return getattr(self.local, "process", None)
+
+    @process.setter
+    def process(self, value: subprocess.Popen[str] | None) -> None:
+        self.local.process = value
+        with self.row_lock:
+            if value is None:
+                self.active.pop(threading.get_ident(), None)
+            else:
+                self.active[threading.get_ident()] = value
+
     def scrub(self, text: str) -> str:
         for value in self.secrets:
             text = text.replace(value, "<redacted>")
@@ -896,6 +1145,8 @@ class Runner:
         integration: bool = False,
         retry: bool = False,
     ) -> str:
+        if self.cancelled.is_set():
+            raise GateError("Execution cancelled before command start")
         started = datetime.now(UTC).isoformat()
         entry: dict[str, Any] = {
             "group": self.group,
@@ -907,9 +1158,17 @@ class Runner:
             "suite": suite,
             "integration": integration,
         }
-        logfile = f"{len(self.rows):04d}-{self.group}.log"
+        with self.row_lock:
+            logfile = f"{len(self.rows):04d}-{self.group}.log"
+            self.rows.append(entry)
+        self.local.last_entry = entry
         entry["log"] = logfile
-        child_env = {**self.env, **(env or {})}
+        child_env = {
+            **self.env,
+            "RUFF_CACHE_DIR": str(self.out / "cache/ruff" / self.group),
+            "MYPY_CACHE_DIR": str(self.out / "cache/mypy" / self.group),
+            **(env or {}),
+        }
         if suite or (len(argv) > 2 and argv[1] == "-m" and argv[2].startswith("checks.")):
             child_env["PYTHONPATH"] = str(self.safety) + ":" + child_env.get("PYTHONPATH", "")
         print(f"{self.group}: {self.scrub(' '.join(argv))}", flush=True)
@@ -924,6 +1183,9 @@ class Runner:
                 text=True,
                 start_new_session=True,
             )
+            if self.cancelled.is_set():
+                with contextlib.suppress(ProcessLookupError):
+                    os.killpg(self.process.pid, signal.SIGTERM)
             try:
                 output, _ = self.process.communicate(timeout=timeout)
                 code = self.process.returncode
@@ -950,7 +1212,6 @@ class Runner:
             finished=datetime.now(UTC).isoformat(),
             sha256=digest(self.out / logfile),
         )
-        self.rows.append(entry)
         if cancellation is not None:
             raise cancellation
         if code:
@@ -986,6 +1247,10 @@ class Runner:
                 shutil.rmtree(path)
 
     def install(self, name: str, packages: list[str], dev: bool = True) -> None:
+        with self.install_lock:
+            self._install(name, packages, dev)
+
+    def _install(self, name: str, packages: list[str], dev: bool = True) -> None:
         self.command(["python3", "-m", "venv", str(self.envs / name)])
         pip = [self.python(name), "-m", "pip"]
         self.command([*pip, "check"])
@@ -1001,10 +1266,10 @@ class Runner:
     @contextlib.contextmanager
     def gate(self, name: str) -> Iterator[None]:
         self.group = name
-        start = len(self.rows)
+        start = sum(row["group"] == name for row in self.rows)
         try:
             yield
-            if len(self.rows) == start:
+            if sum(row["group"] == name for row in self.rows) == start:
                 raise GateError(f"Required group {name} has no execution evidence")
         except GateError as error:
             self.failures.append(f"{name}: {error}")
@@ -1074,13 +1339,14 @@ class Runner:
                 if WORKFLOW_HASHES.get(name) != digest(self.snapshot / ".github/workflows" / name):
                     raise GateError(f"Workflow matrix drift: {name}")
 
-    def projects(self) -> None:
-        for project in PROJECTS:
+    def projects(self, projects: tuple[str, ...] = PROJECTS, *, install: bool = True) -> None:
+        for project in projects:
             with self.gate(f"project-{project}"):
                 packages = [] if project == "core" else ["core"]
                 if project == "api":
                     packages.append("agents")
-                self.install(project, [*packages, project])
+                if install:
+                    self.install(project, [*packages, project])
                 py, cwd = self.python(project), f"src/{project}"
                 self.command(
                     [py, "-m", "unittest", "discover", "-s", "tests", "-v"],
@@ -1093,7 +1359,23 @@ class Runner:
                 self.command([py, "-m", "ruff", "format", "--check", "."], cwd)
                 self.command([py, "-m", "mypy"], cwd)
 
-    def namespace_static_infra(self) -> None:
+    def namespace_static_infra(self, only: str | None = None) -> None:
+        py = self.python("namespace")
+        if only in (None, "namespace"):
+            self.namespace()
+        if only in (None, "static"):
+            self.static()
+        if only in (None, "infra"):
+            self.infra()
+        if only in (None, "migration"):
+            self.migration()
+        if only == "tooling":
+            with self.gate("tooling"):
+                self.command([py, "-m", "pip", "install", "ruff==0.17.1", "mypy==2.4.0"])
+                self.lint(py, RUFF_GROUPS[-1])
+                self.command([py, "-m", "mypy", *TYPE_GROUPS[2]])
+
+    def namespace(self) -> None:
         with self.gate("namespace"):
             self.install("namespace", list(PROJECTS), dev=False)
             py = self.python("namespace")
@@ -1110,6 +1392,9 @@ class Runner:
                     "assert len(list(zava_forward.__path__)) == 5",
                 ]
             )
+
+    def static(self) -> None:
+        py = self.python("namespace")
         with self.gate("static"):
             self.command(
                 [
@@ -1146,6 +1431,9 @@ class Runner:
                 [py, "-m", "unittest", "discover", "-s", "tools", "-p", "test_rpi_checks.py", "-v"],
                 suite=True,
             )
+
+    def infra(self) -> None:
+        py = self.python("namespace")
         with self.gate("infra"):
             self.command([py, "-c", "import yaml, mssql_python"], retry=True)
             self.command(
@@ -1172,6 +1460,9 @@ class Runner:
                 self.lint(py, files)
             for type_files in TYPE_GROUPS:
                 self.command([py, "-m", "mypy", *type_files])
+
+    def migration(self) -> None:
+        py = self.python("namespace")
         with self.gate("migration"):
             self.command([py, "-c", "import pptx"], retry=True)
             self.command([py, "-m", "pip", "install", "-r", "tools/rename-zava-requirements.txt"])
@@ -1347,7 +1638,7 @@ class Runner:
             }
             for _attempt in range(60):
                 self.command([py, "-c", SQL_QUERY], env=sqlenv, timeout=15, retry=True)
-                if self.rows[-1]["exit_code"] == 0:
+                if self.local.last_entry["exit_code"] == 0:
                     break
                 time.sleep(2)
             else:
@@ -1419,7 +1710,7 @@ class Runner:
                 timeout=900,
                 retry=True,
             )
-            gate_row = self.rows[-1]
+            gate_row = self.local.last_entry
             gate_row.pop("expected_probe_failure", None)
             self.command(
                 [
@@ -1496,9 +1787,119 @@ class Runner:
                 capture_output=True,
             )
 
+    def dispatch(self, group: str) -> None:
+        if group.startswith("project-"):
+            self.projects((group.removeprefix("project-"),), install=False)
+        elif group in ("static", "infra", "migration", "tooling"):
+            self.namespace_static_infra(group)
+        elif group == "browser":
+            self.browser()
+        elif group == "mssql" or group.startswith("image-") or group == "logo-0600":
+            with self.docker_lock:
+                if group == "mssql":
+                    self.sql()
+                else:
+                    self.image(
+                        "api" if group == "logo-0600" else group.removeprefix("image-"),
+                        stress=group == "logo-0600",
+                    )
+        elif group.startswith("extra-"):
+            value = group.removeprefix("extra-")
+            project, selector = extra_selector(value)
+            with self.gate(group):
+                module = f"src/{project}/tests/{selector.split('.')[0]}.py"
+                if not git(self.snapshot, "ls-files", "--", module):
+                    raise GateError("Extra selector is not a tracked test module")
+                self.command(
+                    [self.python(project), "-m", "unittest", "-v", selector],
+                    f"src/{project}",
+                    env=self.tests_env(project, True),
+                    suite=True,
+                    integration=True,
+                )
+        else:
+            raise GateError(f"Unknown execution group: {group}")
+
+    def schedule(self, groups: list[str]) -> None:
+        pending = set(groups)
+        completed = set(self.groups) | set(self.reused)
+        failed: set[str] = set()
+        running: dict[Future[None], str] = {}
+        prerequisites = {group: dependencies(group) & (pending | completed) for group in pending}
+        shared_namespace = [g for g in ("static", "infra", "migration", "tooling") if g in pending]
+        shared_api = [
+            g
+            for g in (
+                "project-api",
+                "browser",
+                "mssql",
+                *[name for name in groups if name.startswith("extra-api:")],
+            )
+            if g in pending
+        ]
+        for chain in (shared_namespace, shared_api):
+            for before, after in zip(chain, chain[1:], strict=False):
+                prerequisites[after].add(before)
+        # Infra/migration install into namespace; builds must see no generated metadata.
+        writers = set(shared_namespace) & {"infra", "migration", "tooling"}
+        for group in pending:
+            if group.startswith("image-") or group == "logo-0600":
+                prerequisites[group].update(writers)
+        with ThreadPoolExecutor(max_workers=self.jobs) as pool:
+            try:
+                while pending or running:
+                    for group in groups:
+                        if group not in pending:
+                            continue
+                        if prerequisites[group] & failed:
+                            pending.remove(group)
+                            failed.add(group)
+                            self.failures.append(f"{group}: blocked by failed prerequisite")
+                        elif prerequisites[group] <= completed and len(running) < self.jobs:
+                            pending.remove(group)
+                            running[pool.submit(self.dispatch, group)] = group
+                    if not running:
+                        if pending:
+                            raise GateError("Group dependency graph cannot make progress")
+                        break
+                    done, _ = wait(running, return_when=FIRST_COMPLETED)
+                    for future in done:
+                        group = running.pop(future)
+                        future.result()
+                        if group in self.groups:
+                            completed.add(group)
+                        else:
+                            failed.add(group)
+            except BaseException:
+                self.cancelled.set()
+                for future in running:
+                    future.cancel()
+                with self.row_lock:
+                    processes = list(self.active.values())
+                for process in processes:
+                    if process.poll() is None:
+                        with contextlib.suppress(ProcessLookupError):
+                            os.killpg(process.pid, signal.SIGTERM)
+                for process in processes:
+                    try:
+                        process.wait(timeout=30)
+                    except subprocess.TimeoutExpired:
+                        with contextlib.suppress(ProcessLookupError):
+                            os.killpg(process.pid, signal.SIGKILL)
+                        process.wait(timeout=30)
+                raise
+
     def run(self) -> Path:
         identity = clean_identity(self.root, self.base)
         tools = tool_identity()
+        parent = None
+        if self.resume:
+            parent = validate_receipt(self.root, self.resume, self.base, passing=False)
+            if parent["status"] != "failed" or parent["selection"] != self.selection:
+                raise GateError("Resume requires a failed receipt with the same selection")
+            self.reused = parent["groups"]
+        selected = self.selection["groups"]
+        remaining = [group for group in selected if group not in self.reused]
         failure = None
         try:
             subprocess.run(
@@ -1517,32 +1918,35 @@ class Runner:
             )
             if clean_identity(self.snapshot, self.base) != identity:
                 raise GateError("Snapshot differs from exact candidate")
-            self.preflight()
+            if "preflight" in remaining:
+                self.preflight()
             if self.failures:
                 raise GateError("; ".join(self.failures))
-            self.projects()
-            self.namespace_static_infra()
-            self.browser()
-            self.sql()
-            for project in IMAGES:
-                self.image(project)
-            self.image("api", stress=True)
-            for value in self.extras:
-                project, selector = extra_selector(value)
-                with self.gate(f"extra-{value}"):
-                    module = f"src/{project}/tests/{selector.split('.')[0]}.py"
-                    if not git(self.snapshot, "ls-files", "--", module):
-                        raise GateError("Extra selector is not a tracked test module")
-                    self.command(
-                        [self.python(project), "-m", "unittest", "-v", selector],
-                        f"src/{project}",
-                        env=self.tests_env(project, True),
-                        suite=True,
-                        integration=True,
-                    )
+            needed = set(selected_environments(remaining))
+            for name in (*PROJECTS, "namespace"):
+                if name not in needed:
+                    continue
+                group = "namespace" if name == "namespace" else f"project-{name}"
+                if group == "namespace" and group in remaining:
+                    self.namespace()
+                    continue
+                self.group = group if group in remaining else f"setup-{name}"
+                packages = [] if name == "core" else ["core"]
+                if name == "api":
+                    packages.append("agents")
+                self.install(
+                    name,
+                    list(PROJECTS) if name == "namespace" else [*packages, name],
+                    dev=name != "namespace",
+                )
+                if group not in remaining:
+                    self.groups.append(f"setup-{name}")
             if self.failures:
                 raise GateError("; ".join(self.failures))
-            if self.groups != required_groups(self.extras):
+            self.schedule([g for g in remaining if g not in ("preflight", "namespace")])
+            if self.failures:
+                raise GateError("; ".join(self.failures))
+            if not set(selected) <= set(self.groups) | set(self.reused):
                 raise GateError("Required matrix group coverage is incomplete")
             (self.out / "snapshot-inputs.log").write_text(
                 git(self.snapshot, "status", "--porcelain", "--untracked-files=all")
@@ -1565,18 +1969,49 @@ class Runner:
         ) as error:
             failure = self.scrub(str(error)) or type(error).__name__
         finally:
+            if self.snapshot.exists():
+                (self.out / "snapshot-inputs.log").write_text(
+                    git(self.snapshot, "status", "--porcelain", "--untracked-files=all")
+                    + git(self.snapshot, "ls-files", "--others", "--ignored", "--exclude-standard")
+                )
             try:
                 self.cleanup()
             except (GateError, OSError, subprocess.SubprocessError) as error:
                 cleanup_failure = self.scrub(str(error))
                 failure = f"{failure or ''}; cleanup failed: {cleanup_failure}"
-        receipt = {
-            "schema": 3,
+        receipt: dict[str, Any] = {
+            "schema": 4,
+            "scope": "full" if selected == required_groups(self.extras) else "partial",
+            "selection": self.selection,
             "status": "failed" if failure else "passed",
             "failure": failure,
+            "resume_eligible": bool(failure)
+            and not any(
+                marker in (failure or "")
+                for marker in (
+                    "cleanup failed",
+                    "Source changed",
+                    "Tool identity changed",
+                    "Snapshot differs",
+                    "snapshot retained",
+                )
+            ),
             "identity": identity,
             "tools": tools,
-            "groups": self.groups,
+            "groups": [g for g in selected if g in self.groups or g in self.reused],
+            "executed_groups": [
+                g
+                for g in [
+                    *required_groups(self.extras),
+                    "tooling",
+                    *[f"setup-{name}" for name in (*PROJECTS, "namespace")],
+                ]
+                if g in self.groups
+            ],
+            "resume": (
+                {"path": str(self.resume), "sha256": digest(self.resume)} if self.resume else None
+            ),
+            "jobs": self.jobs,
             "extras": self.extras,
             "commands": self.rows,
             "images": self.images,
@@ -1590,13 +2025,15 @@ class Runner:
                 "real AI acceptance",
             ],
         }
-        if not failure:
-            try:
+        try:
+            receipt["environments"] = environment_identity(
+                self.out, selected_environments(receipt["executed_groups"])
+            )
+            if any(g.startswith("image-") for g in receipt["executed_groups"]):
                 receipt["trivy_database"] = scan_database(self.out / "cache/trivy/db/metadata.json")
-                receipt["environments"] = environment_identity(self.out)
-            except (GateError, OSError, subprocess.SubprocessError, ValueError) as error:
-                failure = self.scrub(str(error))
-                receipt.update(status="failed", failure=failure)
+        except (GateError, OSError, subprocess.SubprocessError, ValueError) as error:
+            failure = self.scrub(str(error))
+            receipt.update(status="failed", failure=failure)
         receipt["files"] = {
             path.name: digest(path)
             for path in self.out.iterdir()
@@ -1617,46 +2054,94 @@ class Runner:
         return path
 
 
-def verify(root: Path, path: Path, base: str) -> None:
+def validate_receipt(
+    root: Path, path: Path, base: str, *, passing: bool = True, depth: int = 0
+) -> dict[str, Any]:
+    if depth > 16:
+        raise GateError("Resume provenance depth exceeded")
+    path = path.resolve()
     if path.is_relative_to(root):
         raise GateError("Authoritative receipt must be outside the repository")
     if digest(path) != path.with_name("receipt.sha256").read_text().strip():
         raise GateError("Receipt integrity mismatch")
-    receipt = json.loads(path.read_text())
-    if receipt["schema"] != 3 or receipt["status"] != "passed":
-        raise GateError("Receipt does not establish a complete passing run")
+    receipt: dict[str, Any] = json.loads(path.read_text())
+    if receipt["schema"] != 4 or receipt["status"] not in (
+        ("passed",) if passing else ("passed", "failed")
+    ):
+        raise GateError("Receipt does not establish an eligible run")
+    if not passing and receipt["status"] == "failed" and not receipt["resume_eligible"]:
+        raise GateError("Failed receipt lacks a safe resume checkpoint")
+    selected = selection(root, base, receipt["selection"]["mode"], receipt["extras"])
+    scope = "full" if selected["groups"] == required_groups(receipt["extras"]) else "partial"
+    if receipt["scope"] != scope or receipt["selection"] != selected:
+        raise GateError("Receipt scope/selection mismatch")
     if receipt["identity"] != clean_identity(root, base):
         raise GateError("Receipt source/base/matrix/helper identity mismatch")
     if receipt["tools"] != tool_identity():
         raise GateError("Receipt tool identity mismatch")
-    if receipt["environments"] != environment_identity(path.parent):
+    executed = receipt["executed_groups"]
+    allowed = {*selected["groups"], *[f"setup-{name}" for name in (*PROJECTS, "namespace")]}
+    if len(executed) != len(set(executed)) or not set(executed) <= allowed:
+        raise GateError("Receipt executed group selection mismatch")
+    if receipt["environments"] != environment_identity(
+        path.parent, selected_environments(executed)
+    ):
         raise GateError("Receipt package/environment identity mismatch")
     extras = receipt["extras"]
     for value in extras:
         extra_selector(value)
-    if receipt["groups"] != required_groups(extras):
+    inherited: list[str] = []
+    if receipt["resume"]:
+        prior = Path(receipt["resume"]["path"])
+        if digest(prior) != receipt["resume"]["sha256"]:
+            raise GateError("Resume parent receipt identity mismatch")
+        parent = validate_receipt(root, prior, base, passing=False, depth=depth + 1)
+        if parent["status"] != "failed" or parent["selection"] != selected:
+            raise GateError("Resume parent is not a failed matching selection")
+        inherited = parent["groups"]
+        if set(inherited) & set(executed):
+            raise GateError("Resume reran a successful group")
+    covered = [g for g in selected["groups"] if g in executed or g in inherited]
+    if receipt["groups"] != covered or (passing and covered != selected["groups"]):
         raise GateError("Receipt omits required matrix coverage")
     for name, expected in receipt["files"].items():
         if Path(name).name != name or digest(path.parent / name) != expected:
             raise GateError("Receipt evidence file hash mismatch")
-    verify_commands(root, path.parent, receipt)
-    if receipt["trivy_database"] != scan_database(path.parent / "cache/trivy/db/metadata.json"):
+    evidence = dict(
+        receipt, commands=[row for row in receipt["commands"] if row["group"] in executed]
+    )
+    if passing and len(evidence["commands"]) != len(receipt["commands"]):
+        raise GateError("Passing receipt contains failed or unselected commands")
+    verify_commands(root, path.parent, evidence)
+    if any(g.startswith("image-") for g in executed) and receipt["trivy_database"] != scan_database(
+        path.parent / "cache/trivy/db/metadata.json"
+    ):
         raise GateError("Trivy database changed since receipt")
-    if set(receipt["images"]) != {"mssql", "logo-0600", *[f"image-{p}" for p in IMAGES]}:
+    expected_images = {g for g in executed if g in ("mssql", "logo-0600") or g.startswith("image-")}
+    if not expected_images <= set(receipt["images"]) or (
+        passing and set(receipt["images"]) != expected_images
+    ):
         raise GateError("Receipt image coverage is incomplete")
     required_files = {
-        "axe-4.10.3.min.js",
-        "regulatory-ux-results.json",
-        "workflow-coverage.json",
-        "browser-bytecode-policy.pth",
         "snapshot-inputs.log",
-        *[f"{p}-{suffix}.json" for p in IMAGES for suffix in ("gate", "all")],
-        *[f"{p}.spdx.json" for p in IMAGES],
     }
+    if "browser" in executed:
+        required_files.update(
+            ("axe-4.10.3.min.js", "regulatory-ux-results.json", "browser-bytecode-policy.pth")
+        )
+    if "infra" in executed:
+        required_files.add("workflow-coverage.json")
+    for project in IMAGES:
+        if f"image-{project}" in executed:
+            required_files.update(
+                (f"{project}-gate.json", f"{project}-all.json", f"{project}.spdx.json")
+            )
     if not required_files <= set(receipt["files"]):
         raise GateError("Required scan/browser/SBOM evidence is incomplete")
-    verify_results(path.parent, receipt)
+    verify_results(path.parent, evidence)
     for name, image in receipt["images"].items():
+        if name not in expected_images:
+            continue
         image_id = image if name == "mssql" else image["id"]
         reference = (
             "mcr.microsoft.com/mssql/server:2022-latest" if name == "mssql" else image["tag"]
@@ -1666,8 +2151,21 @@ def verify(root: Path, path: Path, base: str) -> None:
         ).strip()
         if current != image_id:
             raise GateError("Receipt image identity mismatch")
+    return receipt
+
+
+def verify(root: Path, path: Path, base: str, *, required_scope: str = "full") -> None:
+    if required_scope not in ("full", "partial"):
+        raise GateError("Invalid required receipt scope")
+    # Reject partial evidence before invoking any live resource/environment probes.
+    receipt = json.loads(path.read_text())
+    if receipt.get("scope") not in ("full", "partial") or (
+        required_scope == "full" and receipt["scope"] != "full"
+    ):
+        raise GateError("Receipt scope does not satisfy required full coverage")
+    receipt = validate_receipt(root, path, base)
     print(
-        f"VERIFIED complete local gate: {receipt['identity']['head']} "
+        f"VERIFIED {receipt['scope']} local gate: {receipt['identity']['head']} "
         f"base {receipt['identity']['base']}"
     )
 
@@ -1693,16 +2191,25 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--all", action="store_true")
+    mode.add_argument("--changed", action="store_true")
+    mode.add_argument("--resume", type=Path, metavar="FAILED_RECEIPT")
     mode.add_argument("--verify-receipt", type=Path)
     parser.add_argument("--base", required=True)
     parser.add_argument("--out", type=Path)
     parser.add_argument("--extra-test", action="append", default=[])
     parser.add_argument("--lock-timeout", type=int, default=600)
+    parser.add_argument("--jobs", type=int, default=1)
+    parser.add_argument("--required-scope", choices=("full", "partial"), default="full")
     args = parser.parse_args()
     root = Path(git(Path.cwd(), "rev-parse", "--show-toplevel")).resolve()
     try:
         if args.verify_receipt:
-            verify(root, args.verify_receipt.resolve(), args.base)
+            verify(
+                root,
+                args.verify_receipt.resolve(),
+                args.base,
+                required_scope=args.required_scope,
+            )
         else:
             for value in args.extra_test:
                 extra_selector(value)
@@ -1715,6 +2222,18 @@ def main() -> int:
                 )
             clean_identity(root, args.base)
             tool_identity()
+            if args.jobs < 1:
+                raise GateError("--jobs must be positive")
+            resume = args.resume.resolve() if args.resume else None
+            if resume:
+                parent = validate_receipt(root, resume, args.base, passing=False)
+                if parent["status"] != "failed" or args.extra_test:
+                    raise GateError("--resume needs a failed receipt and no --extra-test override")
+                extras = parent["extras"]
+                selected = parent["selection"]
+            else:
+                extras = args.extra_test
+                selected = selection(root, args.base, "changed" if args.changed else "all", extras)
             out.mkdir(mode=0o700, parents=True)
 
             def interrupted(signum: int, frame: Any) -> None:
@@ -1722,9 +2241,25 @@ def main() -> int:
 
             signal.signal(signal.SIGTERM, interrupted)
             signal.signal(signal.SIGINT, interrupted)
+            queued = datetime.now(UTC).isoformat()
             with heavy_lock(args.lock_timeout):
-                receipt = Runner(root, out, args.base, args.extra_test).run()
-                verify(root, receipt, args.base)
+                jobs = worker_limit(args.jobs)
+                print(
+                    f"Lock queued {queued}; acquired {datetime.now(UTC).isoformat()}; "
+                    f"jobs={jobs}; groups={','.join(selected['groups'])}",
+                    flush=True,
+                )
+                receipt = Runner(
+                    root, out, args.base, extras, selected=selected, jobs=jobs, resume=resume
+                ).run()
+                verify(
+                    root,
+                    receipt,
+                    args.base,
+                    required_scope=(
+                        "full" if selected["groups"] == required_groups(extras) else "partial"
+                    ),
+                )
             print(f"Receipt: {receipt}")
         return 0
     except (GateError, OSError, ValueError, KeyError, subprocess.SubprocessError) as error:

@@ -9,6 +9,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import threading
 import unittest
 import venv
 from datetime import UTC, datetime, timedelta
@@ -63,6 +64,58 @@ class GateTests(unittest.TestCase):
 
     def runner(self) -> Any:
         return gate.Runner(self.root, self.out, self.base, [])
+
+    def scoped_receipt(self, groups: list[str], *, passed: bool = False) -> dict[str, Any]:
+        selected = gate.selection(self.root, self.base, "changed", [])
+        receipt: dict[str, Any] = {
+            "schema": 4,
+            "scope": "partial",
+            "status": "passed" if passed else "failed",
+            "resume_eligible": not passed,
+            "resume": None,
+            "selection": selected,
+            "groups": groups,
+            "executed_groups": groups,
+            "identity": gate.clean_identity(self.root, self.base),
+            "tools": {},
+            "owner": "a" * 24,
+            "sql": {},
+            "images": {},
+            "extras": [],
+            "commands": [],
+            "files": {},
+        }
+        for name in gate.selected_environments(groups):
+            environment = self.out / "venvs" / name
+            venv.EnvBuilder(with_pip=False, symlinks=True).create(environment)
+            metadata = environment / "lib/python3.12/site-packages/fixture.dist-info"
+            metadata.mkdir()
+            (metadata / "METADATA").write_text("Name: fixture\nVersion: 1.0\n")
+        for index, check in enumerate(gate.required_checks(self.root, receipt)):
+            row = {k: v for k, v in check.items() if k not in ("probe", "attempts")}
+            name = f"{index:04d}-{check['group']}.log"
+            text = ""
+            if check["suite"]:
+                text = "test_x ... ok\nRan 1 test in 0.1s\n\nOK\n"
+                row.update(gate.check_skips(text))
+            (self.out / name).write_text(text)
+            row.update(exit_code=0, log=name, sha256=gate.digest(self.out / name))
+            receipt["commands"].append(row)
+        (self.out / "snapshot-inputs.log").write_text("")
+        receipt["environments"] = gate.environment_identity(
+            self.out, gate.selected_environments(groups)
+        )
+        receipt["files"] = {
+            path.name: gate.digest(path) for path in self.out.iterdir() if path.is_file()
+        }
+        self.seal(receipt)
+        return receipt
+
+    def seal(self, receipt: dict[str, Any]) -> Path:
+        path = self.out / "receipt.json"
+        gate.atomic_json(path, receipt)
+        (self.out / "receipt.sha256").write_text(gate.digest(path))
+        return path
 
     def test_nonzero_command_blocks(self) -> None:
         runner = self.runner()
@@ -335,7 +388,11 @@ class GateTests(unittest.TestCase):
             (distribution / "direct_url.json").write_text('{"url":"file:///fixture"}\n')
             (site / "fixture.pth").write_text("# inert fixture\n")
         receipt = {
-            "schema": 3,
+            "schema": 4,
+            "scope": "full",
+            "selection": {"mode": "all", "paths": [], "groups": gate.required_groups([])},
+            "executed_groups": gate.required_groups([]),
+            "resume": None,
             "status": "passed",
             "identity": gate.clean_identity(self.root, self.base),
             "tools": {"shellcheck": {"sha256": "e" * 64}},
@@ -627,6 +684,510 @@ class GateTests(unittest.TestCase):
         self.assertEqual(len(builds), 5)
         for group, argv in builds.items():
             self.assertEqual("--no-cache" in argv, group != "logo-0600", group)
+
+    def test_changed_selection_mapping_and_closure(self) -> None:
+        cases = {
+            "docs/example.md": {"preflight", "namespace", "static"},
+            ".github/agents/ama-backlog-delivery-coordinator.agent.md": {
+                "preflight",
+                "namespace",
+                "static",
+            },
+            ".copilot-tracking/rpi-sessions/state.json": {"preflight", "namespace", "static"},
+            "tools/rpi-checks.py": {"preflight", "namespace", "static", "tooling"},
+            "tools/test_rpi_checks.py": {"preflight", "namespace", "static", "tooling"},
+            "infra/tests/test_deploy.py": {"preflight", "namespace", "static", "infra"},
+            "src/agents/tests/test_example.py": {
+                "preflight",
+                "namespace",
+                "static",
+                "project-agents",
+                "project-api",
+            },
+            "src/api/checks/example.py": {
+                "preflight",
+                "namespace",
+                "static",
+                "project-api",
+                "browser",
+            },
+            "src/core/tests/test_example.py": {
+                "preflight",
+                "namespace",
+                "static",
+                *[f"project-{p}" for p in gate.PROJECTS],
+            },
+            "src/api/requirements.txt": {
+                "preflight",
+                "namespace",
+                "static",
+                "project-api",
+                "image-api",
+                "logo-0600",
+                "mssql",
+            },
+            "src/orchestrator/Dockerfile": {
+                "preflight",
+                "namespace",
+                "static",
+                "project-orchestrator",
+                "image-orchestrator",
+            },
+            "src/core/src/zava_forward/core/mssqlstore.py": set(gate.required_groups([]))
+            - {"infra", "migration", "browser"},
+        }
+        for path, expected in cases.items():
+            with self.subTest(path=path):
+                self.assertEqual(set(gate.changed_groups([path], [])), expected)
+        for path in (
+            "unknown",
+            "tools/another.py",
+            ".github/workflows/src-ci.yml",
+            "src/trivy.yaml",
+            "src/check-container.py",
+            "src/.dockerignore",
+        ):
+            with self.subTest(path=path):
+                self.assertEqual(
+                    gate.changed_groups(["docs/example.md", path], []), gate.required_groups([])
+                )
+        self.assertEqual(gate.changed_groups([], []), ["preflight", "namespace", "static"])
+        extras = gate.changed_groups([], ["api:test_fixture.Case.test_method"])
+        self.assertIn("project-api", extras)
+        self.assertIn("extra-api:test_fixture.Case.test_method", extras)
+
+    def test_changed_selection_tracks_deleted_renamed_and_unusual_paths(self) -> None:
+        source = self.root / "tools/rpi-checks.py"
+        renamed = self.root / "docs/name\nwith\ttabs.md"
+        renamed.parent.mkdir()
+        source.rename(renamed)
+        self.git("add", "-A")
+        self.git(
+            "-c",
+            "user.name=Fixture",
+            "-c",
+            "user.email=fixture@example.test",
+            "commit",
+            "-qm",
+            "rename",
+        )
+        selected = gate.selection(self.root, self.base, "changed", [])
+        self.assertEqual(
+            set(selected["paths"]), {"tools/rpi-checks.py", "docs/name\nwith\ttabs.md"}
+        )
+        self.assertIn("tooling", selected["groups"])
+
+    def test_partial_scope_is_rejected_by_default_before_live_probes(self) -> None:
+        path = self.out / "receipt.json"
+        for scope in (None, "partial", "invalid"):
+            gate.atomic_json(path, {"schema": 4, "status": "passed", "scope": scope})
+            with patch.object(gate, "tool_identity") as tools, self.assertRaises(gate.GateError):
+                gate.verify(self.root, path, self.base)
+            tools.assert_not_called()
+        gate.atomic_json(path, {"scope": "partial"})
+        with patch.object(
+            gate,
+            "validate_receipt",
+            return_value={"scope": "partial", "identity": {"head": "h", "base": "b"}},
+        ) as validate:
+            gate.verify(self.root, path, self.base, required_scope="partial")
+        validate.assert_called_once()
+
+    def test_partial_contract_has_no_unselected_resources(self) -> None:
+        receipt = {
+            "owner": "a" * 24,
+            "sql": {},
+            "images": {},
+            "extras": [],
+            "executed_groups": ["preflight", "namespace", "static", "tooling"],
+        }
+        checks = gate.required_checks(self.root, receipt)
+        self.assertEqual({c["group"] for c in checks}, set(receipt["executed_groups"]))
+        self.assertFalse(any(c["argv"][:2] == ["docker", "build"] for c in checks))
+        with patch.object(gate, "digest", return_value="not-axe"):
+            (self.out / "snapshot-inputs.log").write_text("")
+            gate.verify_results(self.out, receipt)
+
+    def test_commands_accept_cross_group_interleaving_not_in_group_reordering(self) -> None:
+        receipt: dict[str, Any] = {
+            "owner": "a" * 24,
+            "sql": {},
+            "images": {},
+            "extras": [],
+            "executed_groups": ["preflight", "static"],
+            "commands": [],
+            "files": {},
+        }
+        for index, check in enumerate(gate.required_checks(self.root, receipt)):
+            row = {k: v for k, v in check.items() if k not in ("probe", "attempts")}
+            name = f"{index:04d}-{check['group']}.log"
+            text = "fixture"
+            if check["suite"]:
+                text = "test_x ... ok\nRan 1 test in 0.1s\n\nOK\n"
+                row.update(gate.check_skips(text))
+            if check["argv"][0] == "git":
+                text = ""
+            (self.out / name).write_text(text)
+            row.update(exit_code=0, log=name, sha256=gate.digest(self.out / name))
+            receipt["commands"].append(row)
+            receipt["files"][name] = row["sha256"]
+        rows = receipt["commands"]
+        receipt["commands"] = rows[7:8] + rows[:7] + rows[8:]
+        gate.verify_commands(self.root, self.out, receipt)
+        receipt["commands"][1:3] = reversed(receipt["commands"][1:3])
+        with self.assertRaises(gate.GateError):
+            gate.verify_commands(self.root, self.out, receipt)
+
+    def test_parallel_scheduler_overlaps_independent_groups_and_blocks_dependents(self) -> None:
+        runner = self.runner()
+        runner.jobs = 2
+        runner.groups = ["namespace"]
+        barrier = threading.Barrier(2)
+        seen = []
+
+        def dispatch(group: str) -> None:
+            barrier.wait(timeout=5)
+            seen.append(group)
+            runner.groups.append(group)
+
+        with patch.object(runner, "dispatch", side_effect=dispatch):
+            runner.schedule(["project-core", "project-agents"])
+        self.assertEqual(set(seen), {"project-core", "project-agents"})
+        runner.groups = ["namespace"]
+        seen.clear()
+
+        def fail(group: str) -> None:
+            seen.append(group)
+            runner.failures.append(f"{group}: fixture failure")
+
+        with patch.object(runner, "dispatch", side_effect=fail):
+            runner.schedule(["project-api", "browser", "mssql"])
+        self.assertEqual(seen, ["project-api"])
+        self.assertTrue(any("browser: blocked" in failure for failure in runner.failures))
+
+    def test_parallel_commands_have_unique_logs_and_thread_local_groups(self) -> None:
+        runner = self.runner()
+        runner.snapshot = self.root
+        runner.jobs = 2
+        barrier = threading.Barrier(2)
+
+        def dispatch(group: str) -> None:
+            with runner.gate(group):
+                barrier.wait(timeout=5)
+                runner.command([sys.executable, "-c", "print('parallel')"])
+
+        with patch.object(runner, "dispatch", side_effect=dispatch):
+            runner.schedule(["project-core", "project-agents"])
+        self.assertEqual(len({row["log"] for row in runner.rows}), 2)
+        self.assertEqual({row["group"] for row in runner.rows}, {"project-core", "project-agents"})
+        self.assertFalse(runner.active)
+
+    def test_sql_and_image_resources_are_serial(self) -> None:
+        runner = self.runner()
+        runner.jobs = 3
+        runner.groups = ["namespace", "project-api"]
+        active = 0
+        peak = 0
+        mutex = threading.Lock()
+
+        def work(*args: Any, **kwargs: Any) -> None:
+            nonlocal active, peak
+            with mutex:
+                active += 1
+                peak = max(active, peak)
+            threading.Event().wait(0.02)
+            with mutex:
+                active -= 1
+            group = (
+                "mssql" if not args else "logo-0600" if kwargs.get("stress") else f"image-{args[0]}"
+            )
+            runner.groups.append(group)
+
+        with (
+            patch.object(runner, "sql", side_effect=work),
+            patch.object(runner, "image", side_effect=work),
+        ):
+            runner.schedule(["mssql", "image-api", "image-agents", "logo-0600"])
+        self.assertEqual(peak, 1)
+
+    def test_worker_limit_respects_cpu_memory_and_invalid_jobs(self) -> None:
+        real_read = Path.read_text
+        real_exists = Path.exists
+        values = {
+            "/sys/fs/cgroup/cpu.max": "400000 100000",
+            "/proc/meminfo": "MemAvailable: 16000000 kB\n",
+            "/sys/fs/cgroup/memory.max": str(16 * 1024**3),
+            "/sys/fs/cgroup/memory.current": str(1024**3),
+        }
+
+        def read(path: Path, *args: Any, **kwargs: Any) -> str:
+            return values[str(path)] if str(path) in values else real_read(path, *args, **kwargs)
+
+        with (
+            patch.object(Path, "read_text", read),
+            patch.object(Path, "exists", lambda p: str(p) in values or real_exists(p)),
+            patch.object(gate.os, "sched_getaffinity", return_value=set(range(8))),
+            patch.object(gate, "cgroup_directories", return_value=[Path("/sys/fs/cgroup")]),
+        ):
+            self.assertEqual(gate.worker_limit(8), 2)
+            values["/sys/fs/cgroup/cpu.max"] = "150000 100000"
+            with self.assertRaises(gate.GateError):
+                gate.worker_limit(2)
+            values["/sys/fs/cgroup/cpu.max"] = "max 100000"
+            values["/sys/fs/cgroup/memory.max"] = str(4 * 1024**3)
+            with self.assertRaises(gate.GateError):
+                gate.worker_limit(1)
+            values["/sys/fs/cgroup/memory.max"] = "max"
+            self.assertEqual(gate.worker_limit(8), 3)
+            for jobs in (0, -1):
+                with self.assertRaises(gate.GateError):
+                    gate.worker_limit(jobs)
+
+    def test_sql_dependency_manifests_select_the_real_consumer(self) -> None:
+        for path in (
+            "src/api/requirements.txt",
+            "src/api/requirements.in",
+            "src/api/pyproject.toml",
+            "src/core/pyproject.toml",
+        ):
+            with self.subTest(path=path):
+                selected = gate.changed_groups([path], [])
+                self.assertIn("mssql", selected)
+                self.assertIn("project-api", selected)
+
+    def test_api_extra_suites_wait_for_shared_environment_writers(self) -> None:
+        for completed in (["namespace", "project-api"], ["namespace", "project-api", "setup-api"]):
+            output = self.out / str(len(completed))
+            output.mkdir()
+            runner = gate.Runner(self.root, output, self.base, [])
+            runner.groups = completed
+            runner.jobs = 3
+            seen: list[str] = []
+            active = 0
+            peak = 0
+            mutex = threading.Lock()
+
+            def work(
+                group: str, *, mutex: Any = mutex, seen: list[str] = seen, runner: Any = runner
+            ) -> None:
+                nonlocal active, peak
+                with mutex:
+                    active += 1
+                    peak = max(peak, active)
+                    seen.append(group)
+                threading.Event().wait(0.01)
+                with mutex:
+                    active -= 1
+                runner.groups.append(group)
+
+            groups = [
+                "browser",
+                "mssql",
+                "extra-api:test_a.Case.test_a",
+                "extra-api:test_b.Case.test_b",
+            ]
+            with patch.object(runner, "dispatch", side_effect=work):
+                runner.schedule(groups)
+            self.assertEqual(seen, groups)
+            self.assertEqual(peak, 1)
+
+    def test_worker_limit_intersects_nested_cgroups_and_ancestors(self) -> None:
+        mount = self.out / "cgroups"
+        nested = mount / "user/session"
+        nested.mkdir(parents=True)
+        for directory in (mount, nested.parent, nested):
+            (directory / "cpu.max").write_text("max 100000")
+            (directory / "memory.max").write_text("max")
+            (directory / "memory.current").write_text(str(1024**3))
+        (nested / "cpu.max").write_text("200000 100000")
+        (nested / "memory.max").write_text(str(5 * 1024**3))
+        real_read = Path.read_text
+        values = {
+            "/proc/self/cgroup": "0::/user/session\n",
+            "/proc/self/mountinfo": f"29 23 0:26 / {mount} rw - cgroup2 cgroup rw\n",
+            "/proc/meminfo": "MemAvailable: 64000000 kB\n",
+        }
+
+        def read(path: Path, *args: Any, **kwargs: Any) -> str:
+            return values[str(path)] if str(path) in values else real_read(path, *args, **kwargs)
+
+        with (
+            patch.object(Path, "read_text", read),
+            patch.object(gate.os, "sched_getaffinity", return_value=set(range(16))),
+        ):
+            self.assertEqual(gate.cgroup_directories(), [nested, nested.parent, mount])
+            with self.assertRaises(gate.GateError):
+                gate.worker_limit(8)
+            (nested / "memory.max").write_text(str(6 * 1024**3))
+            self.assertEqual(gate.worker_limit(8), 1)
+            (nested.parent / "cpu.max").write_text("150000 100000")
+            with self.assertRaises(gate.GateError):
+                gate.worker_limit(8)
+            (nested.parent / "cpu.max").write_text("max 100000")
+            (nested.parent / "memory.max").write_text(str(5 * 1024**3))
+            with self.assertRaises(gate.GateError):
+                gate.worker_limit(8)
+            values["/proc/self/cgroup"] = "0::/../../hidden\n"
+            with self.assertRaisesRegex(gate.GateError, "membership"):
+                gate.worker_limit(8)
+            values["/proc/self/cgroup"] = "0::/user/session\n"
+            values["/proc/self/mountinfo"] = ""
+            with self.assertRaisesRegex(gate.GateError, "mount"):
+                gate.worker_limit(8)
+
+    def test_real_partial_fixture_requires_matching_selection_and_evidence(self) -> None:
+        receipt = self.scoped_receipt(["preflight", "namespace", "static"], passed=True)
+        path = self.out / "receipt.json"
+        with patch.object(gate, "tool_identity", return_value={}):
+            gate.verify(self.root, path, self.base, required_scope="partial")
+            for key, value in (
+                ("scope", "full"),
+                ("groups", ["preflight"]),
+                ("executed_groups", []),
+                ("selection", {"mode": "changed", "paths": ["fake"], "groups": []}),
+            ):
+                mutated = dict(receipt, **{key: value})
+                self.seal(mutated)
+                with self.subTest(key=key), self.assertRaises(gate.GateError):
+                    gate.verify(self.root, path, self.base, required_scope="partial")
+            self.seal(receipt)
+            (self.out / receipt["commands"][0]["log"]).write_text("tampered")
+            with self.assertRaises(gate.GateError):
+                gate.verify(self.root, path, self.base, required_scope="partial")
+
+    def test_resume_reuses_successes_without_replaying_commands(self) -> None:
+        parent = self.scoped_receipt(["preflight", "namespace"])
+        parent_path = self.out / "receipt.json"
+        before = {name: (self.out / name).read_bytes() for name in parent["files"]}
+        new_out = Path(self.temp.name) / "resume"
+        new_out.mkdir()
+        runner = gate.Runner(
+            self.root, new_out, self.base, [], selected=parent["selection"], resume=parent_path
+        )
+        observed = []
+
+        def fake_setup(name: str, packages: list[str], dev: bool = True) -> None:
+            observed.append((runner.group, name))
+            # Setup identity is independently bound; parent environments stay untouched.
+            environment = runner.envs / name
+            venv.EnvBuilder(with_pip=False, symlinks=True).create(environment)
+            metadata = environment / "lib/python3.12/site-packages/fixture.dist-info"
+            metadata.mkdir()
+            (metadata / "METADATA").write_text("Name: fixture\nVersion: 1.0\n")
+            template = {
+                "owner": runner.token,
+                "sql": {},
+                "images": {},
+                "extras": [],
+                "executed_groups": [runner.group],
+            }
+            for check in gate.required_checks(self.root, template):
+                fake_command(check)
+
+        def fake_command(check: dict[str, Any]) -> None:
+            row = {k: v for k, v in check.items() if k not in ("probe", "attempts")}
+            name = f"{len(runner.rows):04d}-{check['group']}.log"
+            text = ""
+            if check["suite"]:
+                text = "test_x ... ok\nRan 1 test in 0.1s\n\nOK\n"
+                row.update(gate.check_skips(text))
+            (new_out / name).write_text(text)
+            row.update(exit_code=0, log=name, sha256=gate.digest(new_out / name))
+            runner.rows.append(row)
+
+        def fake_static(group: str) -> None:
+            self.assertEqual(group, "static")
+            observed.append(("executed", group))
+            template = {
+                "owner": runner.token,
+                "sql": {},
+                "images": {},
+                "extras": [],
+                "executed_groups": [group],
+            }
+            for check in gate.required_checks(self.root, template):
+                fake_command(check)
+            runner.groups.append(group)
+
+        with (
+            patch.object(gate, "tool_identity", return_value={}),
+            patch.object(runner, "install", side_effect=fake_setup),
+            patch.object(runner, "dispatch", side_effect=fake_static),
+            patch.object(runner, "preflight") as preflight,
+        ):
+            path = runner.run()
+            gate.verify(self.root, path, self.base, required_scope="partial")
+            preflight.assert_not_called()
+            final = json.loads(path.read_text())
+            self.assertEqual(final["groups"], parent["selection"]["groups"])
+            self.assertEqual(final["executed_groups"], ["static", "setup-namespace"])
+            self.assertEqual(observed, [("setup-namespace", "namespace"), ("executed", "static")])
+            self.assertEqual(final["resume"]["sha256"], gate.digest(parent_path))
+            for name, content in before.items():
+                self.assertEqual((self.out / name).read_bytes(), content)
+            (self.out / parent["commands"][0]["log"]).write_text("parent tamper")
+            with self.assertRaises(gate.GateError):
+                gate.verify(self.root, path, self.base, required_scope="partial")
+
+    def test_resume_rejects_identity_checkpoint_tool_and_environment_drift(self) -> None:
+        parent = self.scoped_receipt(["preflight", "namespace"])
+        path = self.out / "receipt.json"
+        with patch.object(gate, "tool_identity", return_value={}):
+            gate.validate_receipt(self.root, path, self.base, passing=False)
+            self.seal(dict(parent, resume_eligible=False))
+            with self.assertRaisesRegex(gate.GateError, "checkpoint"):
+                gate.validate_receipt(self.root, path, self.base, passing=False)
+            self.seal(parent)
+            with (
+                patch.object(gate, "tool_identity", return_value={"changed": {}}),
+                self.assertRaises(gate.GateError),
+            ):
+                gate.validate_receipt(self.root, path, self.base, passing=False)
+            metadata = (
+                self.out / "venvs/namespace/lib/python3.12/site-packages/fixture.dist-info/METADATA"
+            )
+            original = metadata.read_text()
+            metadata.write_text("changed")
+            with self.assertRaises(gate.GateError):
+                gate.validate_receipt(self.root, path, self.base, passing=False)
+            metadata.write_text(original)
+            self.git(
+                "-c",
+                "user.name=Fixture",
+                "-c",
+                "user.email=fixture@example.test",
+                "commit",
+                "--allow-empty",
+                "-qm",
+                "changed head",
+            )
+            with self.assertRaises(gate.GateError):
+                gate.validate_receipt(self.root, path, self.base, passing=False)
+
+    def test_scheduler_orders_shared_environments_and_cancels_before_cleanup(self) -> None:
+        runner = self.runner()
+        runner.jobs = 3
+        runner.groups = ["namespace", "project-api"]
+        observed = []
+
+        def record(group: str) -> None:
+            observed.append(group)
+            runner.groups.append(group)
+
+        with patch.object(runner, "dispatch", side_effect=record):
+            runner.schedule(["static", "infra", "migration", "tooling", "browser", "mssql"])
+        self.assertLess(observed.index("static"), observed.index("infra"))
+        self.assertLess(observed.index("infra"), observed.index("migration"))
+        self.assertLess(observed.index("migration"), observed.index("tooling"))
+        self.assertLess(observed.index("browser"), observed.index("mssql"))
+        with (
+            patch.object(runner, "dispatch", side_effect=KeyboardInterrupt),
+            self.assertRaises(KeyboardInterrupt),
+        ):
+            runner.schedule(["project-core"])
+        self.assertTrue(runner.cancelled.is_set())
+        with self.assertRaises(gate.GateError):
+            runner.command(["must-not-execute"])
 
     def test_runner_image_build_uses_shared_argv(self) -> None:
         runner = self.runner()
