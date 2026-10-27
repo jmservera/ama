@@ -2168,6 +2168,22 @@ unsupported kinds, invalid timestamps or non-synthetic claims raise
 No completion dates or private #173 records are invented. Actual source
 mapping, #179/#183 integration and before/after history acceptance remain open.
 
+The #181 stacked `synthetic.household_conditions` component models fictional
+variation, not inferred resident behaviour. `profile(home_id, seed, choice,
+is_synthetic=True)` draws independent equal-choice heating and occupancy
+patterns; Uniform[18,22] C setpoint, [0.8,1.2] ventilation multiplier,
+[0.8,1.6] hPa occupied moisture, [0.2,0.8] hPa drying increment and a uniform
+UTC drying hour. All are exercise distributions, not company facts.
+`conditions(..., timestamps, is_synthetic=True)` returns canonical UTC
+conditions; absent-time moisture is 0.4 hPa and off-schedule setpoint is 16 C.
+The versioned `DISTRIBUTIONS` records schedule boundaries. Variable occupancy
+uses seeded Bernoulli(0.5) per UTC hour; subset runs agree with full windows.
+Declined/unknown monitoring produces no profile, conditions or RNG draws;
+these fictional choices are not real consent or activation authority.
+No demographic inputs, resident assessment or attribution are used.
+The writer still uses its legacy schedules until #179/#183 integration;
+no full household-model history or resident choice approval is claimed.
+
 The explicit `--register` mode (`sensor-backfill-stock-v1`) reuses merged
 `stock-fabric-v1`, seed 4820260930, rather than drawing unrelated dwelling
 attributes or treating the scale fixture as the private stock. Supply a wholly
