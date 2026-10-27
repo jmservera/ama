@@ -1,0 +1,152 @@
+{
+  "url": "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io",
+  "events": [
+    {
+      "watchdog_armed": 2822053,
+      "deadline": 1793095033.5003755,
+      "at": "2026-10-27T09:27:13.602301+00:00"
+    },
+    {
+      "check": "Real HTTPS resident URL responds 200",
+      "result": "PASS",
+      "at": "2026-10-27T09:27:54.328981+00:00"
+    },
+    {
+      "check": "Synthetic banner and sign-in limitations render",
+      "result": "PASS",
+      "at": "2026-10-27T09:27:54.398041+00:00"
+    },
+    {
+      "check": "Email and password have native labels",
+      "result": "PASS",
+      "at": "2026-10-27T09:27:54.404262+00:00"
+    },
+    {
+      "check": "No resident content or account shown before sign-in",
+      "result": "PASS",
+      "at": "2026-10-27T09:27:54.409579+00:00"
+    },
+    {
+      "check": "Protected view denies unauthenticated request",
+      "result": "PASS",
+      "at": "2026-10-27T09:27:54.533337+00:00"
+    },
+    {
+      "check": "Live session endpoint is signed out",
+      "result": "PASS",
+      "at": "2026-10-27T09:27:54.572123+00:00"
+    },
+    {
+      "check": "Invalid synthetic credentials deny generically",
+      "result": "PASS",
+      "at": "2026-10-27T09:27:54.897997+00:00"
+    },
+    {
+      "check": "Unknown email has identical generic denial",
+      "result": "PASS",
+      "at": "2026-10-27T09:27:55.298438+00:00"
+    },
+    {
+      "check": "Missing CSRF denies",
+      "result": "PASS",
+      "at": "2026-10-27T09:27:55.334629+00:00"
+    },
+    {
+      "check": "Cross-origin denies",
+      "result": "PASS",
+      "at": "2026-10-27T09:27:55.383758+00:00"
+    },
+    {
+      "check": "Protected assistant denies unauthenticated request",
+      "result": "PASS",
+      "at": "2026-10-27T09:27:55.421761+00:00"
+    },
+    {
+      "check": "Case selector cannot grant unauthenticated access",
+      "result": "PASS",
+      "at": "2026-10-27T09:27:55.459940+00:00"
+    },
+    {
+      "check": "Employee route absent /api/cases",
+      "result": "PASS",
+      "at": "2026-10-27T09:27:55.495653+00:00"
+    },
+    {
+      "check": "Employee route absent /api/me",
+      "result": "PASS",
+      "at": "2026-10-27T09:27:55.537837+00:00"
+    },
+    {
+      "check": "Employee route absent /auth/login/aad",
+      "result": "PASS",
+      "at": "2026-10-27T09:27:55.581091+00:00"
+    },
+    {
+      "check": "Employee route absent /.auth/login/aad",
+      "result": "PASS",
+      "at": "2026-10-27T09:27:55.617754+00:00"
+    },
+    {
+      "check": "Forged expired-looking cookie denied (not genuine expiry proof)",
+      "result": "PASS",
+      "at": "2026-10-27T09:27:55.733298+00:00"
+    },
+    {
+      "check": "Live security headers present",
+      "result": "PASS",
+      "at": "2026-10-27T09:27:55.738889+00:00"
+    },
+    {
+      "check": "Merged asset byte identity index.html",
+      "result": "PASS",
+      "at": "2026-10-27T09:27:55.775021+00:00"
+    },
+    {
+      "check": "Merged asset byte identity demo.css",
+      "result": "PASS",
+      "at": "2026-10-27T09:27:55.812804+00:00"
+    },
+    {
+      "check": "Merged asset byte identity demo.js",
+      "result": "PASS",
+      "at": "2026-10-27T09:27:55.850848+00:00"
+    },
+    {
+      "check": "Merged asset byte identity assistant.js",
+      "result": "PASS",
+      "at": "2026-10-27T09:27:55.887134+00:00"
+    },
+    {
+      "check": "Account/sign-out present in top header asset, not authenticated-render proof",
+      "result": "PASS",
+      "at": "2026-10-27T09:27:55.890215+00:00"
+    },
+    {
+      "check": "Unauthenticated 320px layout has no horizontal overflow",
+      "result": "PASS",
+      "at": "2026-10-27T09:27:55.976721+00:00"
+    },
+    {
+      "check": "Actual UI invalid-login error renders",
+      "result": "PASS",
+      "at": "2026-10-27T09:27:56.903084+00:00"
+    },
+    {
+      "check": "No page script exceptions",
+      "result": "PASS",
+      "at": "2026-10-27T09:27:56.903112+00:00"
+    },
+    {
+      "check": "Final external URL no longer serves resident site",
+      "result": "PASS",
+      "at": "2026-10-27T09:28:13.204890+00:00"
+    }
+  ],
+  "failure": null,
+  "blocked": [
+    "Registered positive login: owner-held password unavailable/no secret reads",
+    "Own-case authenticated account/gauges/history/assistant/logout render: needs registered login",
+    "Genuine 1800-second session expiry: no authenticated session; forged denial is not proof",
+    "Azure OpenAI activation: no merged runtime MI/ledger wiring; deterministic fallback retained"
+  ]
+}

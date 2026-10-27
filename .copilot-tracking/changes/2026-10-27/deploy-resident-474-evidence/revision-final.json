@@ -1,0 +1,8 @@
+{
+  "active": false,
+  "health": "Healthy",
+  "image": "crcutovertestrzsrg.azurecr.io/zava-resident-demo@sha256:0568deb725e7258c3b09d425b6c0a28a736a2e23434fc22c350bac6333888043",
+  "name": "ca-resident-demo--0000002",
+  "replicas": 0,
+  "running": "Stopped"
+}

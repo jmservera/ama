@@ -1,0 +1,42 @@
+{
+  "check": "resident_474_view",
+  "status": "Passed",
+  "before_columns": [
+    "case_id",
+    "email",
+    "email_count",
+    "provenance",
+    "valid_from",
+    "valid_to",
+    "revoked",
+    "address",
+    "town",
+    "postcode",
+    "stage",
+    "closed",
+    "measures_json",
+    "measures_text"
+  ],
+  "after_columns": [
+    "case_id",
+    "email",
+    "email_count",
+    "provenance",
+    "valid_from",
+    "valid_to",
+    "revoked",
+    "address",
+    "town",
+    "postcode",
+    "stage",
+    "closed",
+    "measures_json",
+    "measures_text",
+    "sensor_home_id",
+    "sensors_json"
+  ],
+  "permissions_unchanged": true,
+  "ddl_sha256": "d55376da6fe3b6131c261d342a4aa10b55d3b406b172818e2d6b6eeba02dcdc3",
+  "case_data_read": false,
+  "tables_rows_grants_changed": false
+}

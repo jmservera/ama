@@ -1,0 +1,8 @@
+{
+  "ddl_sha256": "d55376da6fe3b6131c261d342a4aa10b55d3b406b172818e2d6b6eeba02dcdc3",
+  "source": "885ee05fc45122cf7a1ea4f7f003dc88bfda08ee",
+  "only_batch": 3,
+  "image": "crcutovertestrzsrg.azurecr.io/zava-forward-cutover-proof@sha256:ef0058f8f380cc610d4b7113509293b3ed624d22afac95e807b4c69a4266dc72",
+  "new_roles": false,
+  "business_row_writes": false
+}

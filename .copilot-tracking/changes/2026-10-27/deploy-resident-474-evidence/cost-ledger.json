@@ -1,0 +1,63 @@
+{
+  "at": "2026-10-27T09:31:46.918254+00:00",
+  "authority": "Owner 2026-10-27 08:59Z; supplied task approval, not independent SQL retrieval",
+  "group": "ama",
+  "expires": "2026-10-31T23:59:00Z",
+  "additional_cap_usd": 30,
+  "ai_subcap_usd": 20,
+  "allocation": {
+    "release_test_reservation_usd": 1,
+    "model_retained_usd": 20,
+    "contingency_retained_usd": 9
+  },
+  "rate_source": "https://prices.azure.com/api/retail/prices (uksouth), retrieved 2026-10-27",
+  "rates_usd": {
+    "acr_vcpu_second": 0.0001,
+    "aca_vcpu_second": 3.4e-05,
+    "aca_gib_second": 4e-06,
+    "aca_million_requests": 0.4
+  },
+  "entries": [
+    {
+      "operation": "ACR dbf terminal Failed registry403",
+      "duration_seconds": 12,
+      "vcpu": 2,
+      "estimate_usd": 0.0024
+    },
+    {
+      "operation": "Local image build/scan/push",
+      "azure_remote_build_runs": 0,
+      "note": "No new Azure build compute; ACR storage/egress ancillary charges not zero-assumed"
+    },
+    {
+      "operation": "Resident startup and two test windows; admission upper estimate, not measured billing",
+      "max_overlapping_revisions": 2,
+      "seconds_bound": 2400,
+      "cpu_per_revision": 0.25,
+      "gib_per_revision": 0.5,
+      "estimate_usd": 0.0504
+    },
+    {
+      "operation": "Existing initializer view-only execution",
+      "execution": "job-cutover-test-init-4ws8vuw",
+      "duration_seconds": 37,
+      "cpu": 0.5,
+      "gib": 1,
+      "estimate_usd": 0.000777
+    },
+    {
+      "operation": "At most1000 live test requests",
+      "estimate_usd": 0.0004
+    },
+    {
+      "operation": "Model",
+      "deployments_created": 0,
+      "calls": 0,
+      "roles_created": 0,
+      "note": "No paid model operation initiated; deterministic provider only"
+    }
+  ],
+  "delayed_actual_billing": "Unknown; estimates and reservation are not an invoice or hard cap",
+  "stop": "Ingress disabled; resident revision inactive, zero replicas; no automated jobs added",
+  "baseline_ama_month_to_date_usd": 309.49076053371493
+}

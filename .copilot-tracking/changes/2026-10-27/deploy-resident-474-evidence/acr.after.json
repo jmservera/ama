@@ -1,0 +1,12 @@
+{
+  "bypass": "None",
+  "exports": {
+    "status": "disabled"
+  },
+  "network": {
+    "defaultAction": "Allow",
+    "ipRules": [],
+    "virtualNetworkRules": []
+  },
+  "public": "Disabled"
+}

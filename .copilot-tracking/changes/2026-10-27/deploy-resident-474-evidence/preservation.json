@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-27T09:28:44.479588+00:00",
+  "all_four_apps_min_zero": true,
+  "three_non_resident_app_safe_metadata_unchanged": true,
+  "resident_only_image_changed_in_safe_projection": true,
+  "eight_jobs_manual_unchanged": true,
+  "sql_standard_10_dtu_unchanged": true,
+  "resident_sql_view_change": "Only merged projection adds two columns; principal permissions unchanged, no business row writes",
+  "acr_policy_exact_restoration": true,
+  "final_resident_ingress": null,
+  "employee_interactive_login": "Not run; hidden settings not read",
+  "source": "885ee05fc45122cf7a1ea4f7f003dc88bfda08ee",
+  "digest": "sha256:0568deb725e7258c3b09d425b6c0a28a736a2e23434fc22c350bac6333888043"
+}
