@@ -264,3 +264,33 @@ Details: .copilot-tracking/details/2026-10-27/role-screens-149-phase-details.md.
 Critique: .copilot-tracking/reviews/plans/2026-10-27/role-screens-149-plan-critique.md.
 Changes (Implement-owned):
 .copilot-tracking/changes/2026-10-27/role-screens-149-changes.md.
+
+## Owner-selected readiness continuation (2026-10-27)
+
+The current owner request supersedes only the exhausted-gate and no-further-
+review restrictions for this explicitly selected later work. Preserve all
+original adverse evidence. The shared P01 navigation-manifest change altered
+only navigation entries, not the scenario fixture/defaults or journey authority.
+Regenerate its dependent digest on cross-role trace child #233 / PR #495,
+using the existing fixed SOURCES allowlist and validate_manifest test contract.
+Promote only that dependency correction to the shared parent, then rebase all
+independent children without integrating role modules.
+
+<!-- rpi:phase id=P04 -->
+### [ ] P04: Restore source binding and assess final published heads
+<!-- rpi:task id=P04-T01 -->
+#### [ ] P04-T01: Regenerate the dependent digest and propagate independent children
+<!-- rpi:task id=P04-T02 -->
+#### [ ] P04-T02: Rerun local units and obtain independent exact-head review
+<!-- rpi:task id=P04-T03 -->
+#### [ ] P04-T03: Publish evidence and mark only the parent ready after all hosted checks pass
+
+No material application/test/tool source change is planned. For metadata-only
+regeneration, run local units and hosted checks without another heavy gate;
+the original receipt remains historical, not valid for the new head. If source
+must change materially, exactly one new foreground --changed gate is authorized,
+with timeout zero, the shared heavy lock and fresh external output, after
+preservation-complete git clean -fdxq. Wait and retry only if the lock is busy.
+The expressly authorized final-head Review is distinct from the immutable
+original adverse Review and cannot establish integration, human or live
+acceptance. Keep all children draft. No merge or issue-criterion changes.

@@ -306,3 +306,29 @@ critique Revise, and their bytes remain identical to the preserved originals.
 Ranked remaining work: first the concrete source-binding/readiness blocker;
 second owner-controlled integration and integrated validation; third human/
 AT/WCAG and complete Fluent adoption. No child follow-up starts automatically.
+
+## P04 authorized readiness continuation
+
+The current 2026-10-27 owner request selects the binding/readiness work and
+expressly authorizes an independent assessment of the final rebased heads.
+Scope: P04-T01 through P04-T03 in the current plan; automatic session running.
+Original Review/critique stay immutable. Shared manifest belongs to P01; the
+cross-role scenario dependency correction is prepared on trace child #233,
+then only that correction is promoted to the parent for all independent
+children. No role integration, fixture changes, source authority or approval.
+
+Failed hosted job 122286925178 was retrieved directly and retained externally.
+Current-worktree focused core command reproduced exactly two errors in 19
+tests: stale workbench-manifest SHA-256, with no other failures. Existing
+SOURCES/validate_manifest is the fixed public binding contract; there is no
+dedicated scenario-manifest regeneration CLI. Regenerate computed digest
+values from that allowlist, validate the entire manifest before writing, and
+preserve all unrelated JSON bytes and the original metadata/authority contract.
+
+Materiality: only a computed metadata digest is expected to change. No new
+heavy gate for metadata-only work under the current owner condition; original
+partial receipt remains historical and is not transferred to a new head.
+If material source changes become necessary, the newly authorized one scoped
+foreground gate applies, with shared lock/timeout zero and fresh external
+output after preserved exact cleanup. Current git clean -ndx is empty.
+All PRs remain draft pending local units, independent review and hosted checks.

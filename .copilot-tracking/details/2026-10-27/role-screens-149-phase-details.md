@@ -150,3 +150,17 @@ local/browser selectors are allocated in the plan's Delivery and Validation
 Allocation section. #233 is a trace-only child, not a ninth script. All shared
 host/navigation/manifest ownership is P01. Parent-empty and child-installed
 checks are separate; no aggregate coverage is inferred.
+
+## P04 owner-selected readiness continuation
+
+The current 2026-10-27 owner request selects HOSTED-001 and expressly requests
+the missing independent final-head assessment after RV-001's correction.
+P04-T01 regenerates the source digest on trace child #233, promotes only the
+shared dependency correction to parent and rebases independent children.
+Existing SOURCES/validate_manifest and the two failing integrity tests define
+the correction; no new generator, fixture, approval, version or journey claim.
+P04-T02 reruns local units and assesses exact committed parent/child heads.
+P04-T03 pushes authorized refs, updates PR evidence and marks only #496 ready
+when every current-head hosted check passes and independent review is acceptable.
+No material source change means no additional heavy gate; old receipt remains
+historical. Original critique/Review remain byte-preserved. No integration.

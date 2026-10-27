@@ -3,8 +3,8 @@
   "task_slug": "role-screens-149",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Follow-up",
-  "status": "completed",
+  "active_phase": "Implement",
+  "status": "active",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-27/role-screens-149-research.md",
@@ -15,6 +15,11 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-27/role-screens-149-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "Owner expressly authorizes stale-binding correction in the owning child, propagation through the independent stack, normal pushes (explicit leases only for rebased run-owned refs), local units and an independent final-head review. Mark #496 ready only when all hosted checks pass and the review is accepted or residual-only; no merge.",
+      "status": "owner-directed-readiness-continuation",
+      "evidence": "2026-10-27 current user request. Existing shared-manifest ownership is P01; #233 owns cross-role scenario trace. Original Review and critique remain immutable. Metadata-only regeneration does not authorize another heavy gate; material source changes require exactly one --changed gate, timeout zero, retry only on busy lock."
+    },
     {
       "decision": "One scoped foreground gate passed for parent aee0e9d5 on main 2e031c89 and partial receipt verified after fresh fetch immediately before push. Nine child drafts #487-#495 and parent draft #496 published; no merge or readiness claimed.",
       "status": "draft-publication-complete",
@@ -89,8 +94,8 @@
     }
   ],
   "next_action": {
-    "phase": "Follow-up",
-    "action": "Draft publication complete. Retain HOSTED-001 and review blockers, preserve parent aee0e9d5 and the one passing partial receipt. A later owner-selected source-binding follow-up needs a newly authorized gate before changing parent. No automatic child work, ready transition, second gate or merge."
+    "phase": "Implement",
+    "action": "Owner-selected 2026-10-27 readiness continuation: regenerate the stale public source binding on trace child #495 with the existing SOURCES/validate_manifest contract; promote only that fix to the shared parent and rebase independent children. Rerun local units. A new scoped gate is authorized only for material source change; a metadata-only binding correction does not reuse or upgrade the historical receipt. Obtain the expressly authorized independent final-head assessment, update PR evidence, and mark only #496 ready after every hosted check passes and the review is acceptable. No merge."
   },
   "prioritized_follow_ups": [
     {
