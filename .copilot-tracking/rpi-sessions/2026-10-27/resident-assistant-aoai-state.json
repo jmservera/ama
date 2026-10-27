@@ -19,13 +19,14 @@
     {"decision": "Azure OpenAI RG ama, managed identity, USD20 model ceiling", "status": "confirmed", "evidence": "Owner supplied coordination_state owner-approvals-2026-10-27"},
     {"decision": "Research executed, Planning Readiness Ready", "status": "complete", "evidence": ".copilot-tracking/research/2026-10-27/resident-assistant-aoai-research.md"},
     {"decision": "One critique executed; Revise; PC-001 through PC-009 direct corrections applied", "status": "disposed", "evidence": ".copilot-tracking/plans/2026-10-27/resident-assistant-aoai-plan.md"},
-    {"decision": "One independent original Review executed Complete; outcome Not accepted for whole-task/live acceptance; no established source defect, RV-001 and RV-002 remain evidence gaps", "status": "complete", "evidence": ".copilot-tracking/reviews/logs/2026-10-27/resident-assistant-aoai-review.md"}
+    {"decision": "One independent original Review executed Complete; outcome Not accepted for whole-task/live acceptance; no established source defect, RV-001 and RV-002 remain evidence gaps", "status": "complete", "evidence": ".copilot-tracking/reviews/logs/2026-10-27/resident-assistant-aoai-review.md"},
+    {"decision": "Commit original evidence as 7d854c84; archive and restore-check 95 generated scratch files; integrate advanced documentation-only main without rewriting history before fresh gate", "status": "publication-maintenance", "evidence": ".copilot-tracking/changes/2026-10-27/resident-assistant-aoai-changes.md"}
   ],
   "blockers": [
     {"id": "sql-validation", "summary": "New real-SQL accounting tests could not acquire shared heavy lock with timeout zero", "resolution": "Run the scoped committed-head gate when the existing lock holder releases it; never take over its resources"},
     {"id": "live-activation", "summary": "Private SQL migration and new resident image/configuration not deployed; no authorised resident session was read", "resolution": "After local gates, apply the narrow migration on the existing authorised private host and roll out without ingress changes, then perform metered MI/resident smoke"}
   ],
-  "next_action": {"phase": "Follow-up", "action": "Commit reviewed implementation; run tools/rpi-checks.py --changed --lock-timeout 0 against current origin/main with external receipt; no publication without a passing applicable gate"},
+  "next_action": {"phase": "Follow-up", "action": "Run tools/rpi-checks.py --changed --lock-timeout 0 on the committed main-integrated candidate with an external receipt; no publication without a passing applicable gate"},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "RV-001: obtain actual SQL cap/rate execution evidence", "rationale": "Highest safety and engineering leverage: unlock the already-written isolated accounting tests without new source work or shared-system changes", "evidence": ".copilot-tracking/reviews/logs/2026-10-27/resident-assistant-aoai-review.md#rv-001-high-the-durable-hard-cap-and-rate-limit-acceptance-oracle-has-not-executed"},
     {"rank": 2, "task": "RV-002: private migration and gated new-runtime MI/resident smoke", "rationale": "Delivers the remaining live resident value after SQL and publication prerequisites; preserve ingress and human boundaries", "evidence": ".copilot-tracking/reviews/logs/2026-10-27/resident-assistant-aoai-review.md"}

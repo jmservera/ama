@@ -401,8 +401,9 @@ This is a set of proposals for separate owner approval. It executes, approves
 and accepts nothing: no deployment, inference, permission, tenant action,
 manifest approval, issue acceptance or operational release follows. It extends
 the EXA-012 budget row. The current budget decision is the owner's revision of
-2026-10-22 in the next subsection; the 2026-10-20 text after it is dated
-history on a USD 500 basis and does not govern where it conflicts.
+2026-10-22 below; the [2026-10-23 refresh](#current-scoped-cost-refresh-and-minimum-demo-proposal-2026-10-23)
+records the latest verified scope and blocked minimum proposal. Earlier
+2026-10-20/22 figures remain dated evidence, not current all-in headroom.
 
 #### Revised owner budget decision (2026-10-22)
 
@@ -512,6 +513,175 @@ Blob data role exists (no role change is authorized here), private-link data and
 retention meters, agreement prices, model quota, held-out manifest, human, legal
 and privacy gates, and owner approval of any option. Nothing in this revision
 is verified as passed, deployed or accepted.
+
+#### Current scoped cost refresh and minimum demo proposal (2026-10-23)
+
+Status: documentation-only continuation of #126, not whole-issue acceptance.
+The owner-confirmed USD 700 replacement **all-in October forecast ceiling**
+and expiry 2026-10-25T16:02Z are unchanged. This brief authorizes read-only
+cost/resource inventory only, not any paid execution, deployment, start, stop,
+deletion, configuration, role assignment or tenant mutation. No data-plane,
+private dataset, SQL file, personal roster or secret values were read.
+No activation is proposed while the blockers below remain.
+
+Current evidence (UTC, USD). Official
+[Cost Management Query](https://learn.microsoft.com/en-us/rest/api/cost-management/query/usage?view=rest-cost-management-2025-03-01)
+and [Forecast](https://learn.microsoft.com/en-us/rest/api/cost-management/forecast/usage?view=rest-cost-management-2025-03-01)
+APIs were invoked through `az rest` using API version `2025-03-01`.
+These POST operations query costs; they do not deploy resources. Query used
+`ActualCost`, `Custom`, daily `Sum(PreTaxCost)`, 2026-10-01T00:00:00Z through
+2026-10-23T23:59:59Z. Forecast used the same type/aggregation, 23-31 October
+inclusive, `includeActualCost=true` and `includeFreshPartialCost=true`.
+The scope was the current subscription or its resource group `ama`, as
+distinguished below; identifiers are intentionally omitted.
+
+| Read / retrieval time on 2026-10-23 | Result | Scope and completeness |
+| --- | --- | --- |
+| CLI account list/show, about 10:55Z | One visible subscription, Enabled and default | Current active CLI scope only; does not enumerate an owner's inaccessible subscriptions or establish billing coverage |
+| Subscription actual, 10:55:44Z | Blocked; no total returned | One failed call, not retried; current error subtype/HTTP code was not retained in sanitized diagnostics and is Unknown. Earlier authorization denial is historical, not a newly verified error code |
+| RG actual, 10:55:49Z | 261.81680274594840, rounded USD 261.82 | Thirteen daily rows, 11-23 October; no rows for 1-10 October; no `nextLink`. Complete response for the requested RG query, not a complete or invoiced all-in month |
+| Subscription forecast, 10:55:50Z | Blocked; no total returned | One failed call, not retried; no verified subscription or all-in forecast |
+| Subscription resource inventory, 10:55:52Z | 91 visible resources, all in `ama`; zero visible outside it | Management visibility only. No Front Door/WAF types returned; eight private endpoints, two environments, three apps and eight jobs remain, alongside SQL, storage, registry and AI resources |
+| RG service forecast, 10:56:24Z | Future rows total 195.527921874693124, plus partial actual 2.10738162262133 | 23-31 October, no `nextLink`; not a measured complete-post-change-day run rate or an upper bound |
+
+Reported actual arithmetic, before cent rounding: 259.70942112332707 through
+22 October plus 2.10738162262133 for partial 23 October equals
+261.81680274594840. The 22 October row alone is 26.7714931255944; even a
+calendar-complete day can still be rerated. The nine future forecast rows are:
+
+| Usage date | Forecast USD (unrounded API value) |
+| --- | --- |
+| 2026-10-23 | 12.986943442991462 |
+| 2026-10-24 | 15.480923652648926 |
+| 2026-10-25 | 15.41798210144043 |
+| 2026-10-26 | 15.461097717285156 |
+| 2026-10-27 | 27.461933135986328 |
+| 2026-10-28 | 27.166893005371094 |
+| 2026-10-29 | 27.188447952270508 |
+| 2026-10-30 | 27.19179916381836 |
+| 2026-10-31 | 27.17190170288086 |
+
+The conditional RG-only service-derived month-end total is
+261.81680274594840 actual + 195.527921874693124 future =
+457.344724620641524, rounded **USD 457.34**. The partial actual is counted
+once, not added again from the forecast response. This is a newly retrieved
+service-model projection, not a claim that deletion caused a saving or that
+the existing refresh gate has passed. The first complete post-change day,
+23 October, has not elapsed at retrieval. Its measured run rate and reporting
+completeness remain unverified. Do not extrapolate its partial 2.11 as a
+whole-day rate. No Front Door/WAF charge is subtracted from accrued costs;
+the historical 535.33 remains a pre-change scenario only.
+
+[Official cost-data guidance](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/understand-cost-mgt-data),
+retrieved 2026-10-23, says EA/MCA data is typically available in 8-24 hours
+and pay-as-you-go may take up to 72 hours. The applicable agreement type
+and exact ingestion watermark were not established; actual lag is Unknown.
+Current-month costs remain estimates until invoiced and may be rerated.
+Cost Management does not include support and other costs or factor in credits;
+`PreTaxCost` is not a tax-inclusive bill. Deleted/stopped resources may still
+appear in cost records. Thus 91 currently visible resources all in `ama`
+does not prove zero historical outside-group cost, purchases, commitments,
+late charges, other subscriptions or external inference liabilities.
+
+All-in October actual: **Unknown**. All-in month-end forecast: **Unknown**.
+Comparable headroom against USD 700: **Unknown / Blocked**, not 700 minus
+261.82 or 457.34. USD currency matches the ceiling for the returned RG rows
+only; no missing amount or currency conversion is invented. U remains the
+bounded outside-`ama` October actual-plus-future liability term, not zero.
+Use the existing E/L/reserve thresholds only after coverage is established,
+without double-counting costs already included by a subscription-wide total.
+The USD 30 reserve is an allowance, not evidence that unknown costs fit.
+
+Smallest cost blocker for the coordinator/owner: obtain one sanitized
+October actual and bounded month-end forecast export covering the active
+subscription, including non-`ama` accrued **and future** charges/liabilities,
+and confirm whether any other attributable subscription, external AI,
+commitment, support or tax terms apply to this all-in ceiling. Include scope,
+source, retrieval time, currency, lag/late-billing treatment and explicit
+exclusions; an accrued-only statement is insufficient. The owner can supply
+that export without granting new access. Alternatively an authorized
+administrator can resolve the existing principal's necessary cost-read access;
+this document assigns no role. If amounts need conversion, an approved dated
+rate/source is required. Complete post-change-day evidence is still required
+separately. No repeated permission retry or activation is justified meanwhile.
+
+Minimum development demo, proposed only. Reuse existing SQL, API, private
+storage, managed identity and an available configured model first, with no
+new VM, Front Door, environment, database, registry or photo-token-store
+estate merely to show a welcome page. Management scale readback confirms
+the retained API minimum is two replicas and the demo API minimum is zero;
+this is configuration, not a running/healthy replica or browser result.
+Exact source/image/config readiness and the private-connected operator route
+remain to be verified. Preserve existing identities, histories and private
+backing-service access; never delete `ama`.
+
+| Proposed stage | Smallest finite scope | Evidence required before claiming a result |
+| --- | --- | --- |
+| Local rehearsal | Existing `src/` application/tests with constructed public fixtures, no cloud/model call | Local engineering only, not Azure/SQL/model application acceptance |
+| Public welcome | One existing demo API, at most 30 minutes within the shared two-hour window; one welcome/health/static check set | Welcome and health 200, anonymous API denial and sign-in navigation assessed separately. Existing public `/` route needs no full workbench parity, SQL/tenant bootstrap or optional photo feature merely to render; current image/ingress still need verification |
+| Signed-in owner inspection | One authorized exercise identity with one permitted role, one fictional coordination case, at most 60 minutes inside the same window | Actual authenticated `/app` and `/api/me` 200 with expected role, wrong-role/unknown-staff denial, logout/account choice; redirect alone is not sign-in. Owner inspection notes are development feedback, not a participant study or accepted pilot outcome |
+| Minimal SQL/private Blob bootstrap | Existing SQL remains authority; one owned synthetic case/proposal reference, one API restart/readback; one private result object, at most 10 MiB retained, 10 writes and 30 reads including verification, no public/shared-key access | Separately authorized tenant registration/consent/role plus staff binding only if missing; existing private executor and managed-identity Blob permission must be verified, not inferred from a private endpoint. No reseed/private data read or broader tenant/photo work |
+| One real AI task | Existing `works-resident-coordination` draft path for the fictional pending-handoff case; one attempt, no retry, proactive dispatch off, at most 2,000 total input tokens including system/evidence overhead and 256 output tokens | Separately approved task-scoped authority and enforceable reservation limits; actual provider/model/version/usage, draft visible in protected Assistant proposals, same run/proposal reference in SQL across restart and associated private result object. No sending, scheduling, consent, ranking, review acceptance or autonomous action |
+
+The existing invocation route is
+`POST /api/assistants/works-resident-coordination/invoke`; supported roles,
+finite authority and token reservations are described in the
+[assistant guide](../src/agents/README.md#five-retrofit-assistants-2026-10-13-implementation).
+The [API authentication contract](../src/api/README.md#entra-id-on-container-apps)
+and [operator setup runbook](../infra/README.md#post-deployment-api-authentication-initialization)
+govern real sign-in/staff binding. A future operator must verify that the
+current image and task/provider reservation can enforce the proposed bounds;
+otherwise this exact task-readiness gate is Blocked, not permission to raise
+limits or substitute replay. A missing usable model/quota is a blocker for a
+separately priced model decision, not approval to create a deployment. Broad
+workbench parity and 400-call T2 evaluation are not dependencies of this
+one-task development proposal. Public welcome readiness and signed-in
+feedback remain distinct and **neither has been observed by this refresh**.
+
+Incremental cost: **Unknown / not approval-ready**. The rate-source requirement
+is current effective account/region/currency meters, or explicitly dated
+official [Azure retail rates](https://prices.azure.com/api/retail/prices)
+and the selected model's [Azure OpenAI pricing](https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/),
+with agreement/retail differences stated. Price API vCPU/GiB/request seconds,
+SQL compute/resume/storage, Blob byte-time and operations, private-link
+data, network egress, logs/retention and exact model input/output usage.
+Continuing baseline meters and post-window retained/soft-deleted versions
+must be included, without charging existing forecast amounts twice.
+No current incremental quote was obtained here; prior B1/T1/T2 ceilings and
+illustrative hosting rates are not quotations or available headroom.
+Unknown price, unbounded usage/cleanup liability or unavailable operator
+blocks activation. Once comparable costs exist, the separately approved
+increment must fit the existing USD 655 E envelope including reserve and
+the USD 560/630/665 review/pause/stop lines, all inside USD 700.
+
+Finite timing and stop conditions, for later separate approval only:
+one attended window of at most two hours **including closeout**, not two
+hours per row. Completion must precede 2026-10-25T16:02Z; preserving the
+existing six-hour margin gives latest start 2026-10-25T08:02Z. The margin
+is not extra execution time and owner/operator availability is not assumed.
+Stop before any dependent step on unknown costs, expired/missing approval,
+scope/identity mismatch, first quota/capacity/model failure, token/call
+exhaustion, missing usage, auth/privacy/network/persistence failure or the
+applicable projection threshold. No automatic retry, network relaxation,
+role widening or unpriced recovery path.
+
+The separately authorized operator would own terminal closeout: prevent
+further attempts/jobs, restore only explicitly approved temporary configuration,
+disposition only the owned result object under approved retention, and record
+timestamped terminal status plus priced retained-byte/version/soft-delete
+liabilities through their actual expiry. Preserve SQL proposal/audit history,
+identities and retained resources. A two-hour window ending does not stop
+all billing. No cleanup, stop, deletion or configuration action is authorized
+by this proposal; a future approval must name exact changes, rollback,
+operator, cost envelope and evidence, not just a cash ceiling.
+
+No legal/DPO approval, lawful pilot capture, manifest/quality-floor approval,
+phase/tranche release or production readiness is inferred. OD-51 remains
+open: no accepted-outcome denominator, quality floor or production economics
+is invented. All original #126 protocol/DPIA/lawful-basis, phase decisions,
+breach/restart, BG-011 event/MDE, RAI qualified-assessment and Tokenomics
+criteria remain open where unproved. Independent coordinator assessment
+is still required; this refresh does not claim the site is usable.
 
 #### History: 2026-10-20 proposal on a USD 500 basis (superseded)
 

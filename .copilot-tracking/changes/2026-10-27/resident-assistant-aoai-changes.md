@@ -94,6 +94,17 @@ fallback, force-push, protective-rule change or unreviewed rollout is allowed.
 Current fetched main is 49c942b33b89100c084d48a91215989e22de5887; its sole new
 commit is documentation #439, with no executable overlap. No history rewrite.
 
+Implementation and original RPI evidence committed as 7d854c84. Initial scoped
+gate preflights blocked on ignored generated caches, then the candidate not
+descending from advanced main. All 95 selected cache/bytecode/egg-info files
+were archived with the entire tracking snapshot, restored and hash-checked
+outside the checkout, then individually removed; source and original evidence
+bytes were verified unchanged. Preservation receipt and prune journal are in
+the external session files. A normal merge integrates documentation-only #439
+without rebasing; the append-only knowledge log retains both additions. This
+publication maintenance is not another critique or Review and does not close
+RV-001 or RV-002. Run a fresh scoped gate on the resulting committed head.
+
 ## Amendments and Divergences
 
 Critique corrections adopted in the plan. No authority extension: the renewed
