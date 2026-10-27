@@ -28,6 +28,95 @@ Related decisions: [ADR 0003](../../adrs/0003-journey-derived-capabilities-runti
 (capture and review-signal design), BRD FR-048/AC-090 and RULE-014, and PRD
 FR-050 with AC-066 to AC-068.
 
+## Bounded streaming engineering (2026-10-27, Refs #110, #184)
+
+The [API transport adapters](../../../src/api/README.md#opt-in-iot-consumer-and-synthetic-publisher-110-184)
+and [core replay model](../../../src/core/README.md#finite-synthetic-stream-replay-184)
+add explicitly called, finite SDK paths on the merged #140 transport definition.
+They do not deploy, register devices, retrieve credentials, discover installed
+devices, run inference or change resident/human approval boundaries.
+All telemetry is labelled SYNTHETIC. No whole live acceptance is inferred.
+
+The [ADR 0003 source authorization](../../adrs/0003-journey-derived-capabilities-runtime-fit.md#source-only-infrastructure-authorization-2026-10-27-refs-140)
+and [infrastructure decision](../../../infra/README.md#iot-hub-issue-140-adr-0003-decision-6)
+remain the authority for B1/one unit, ama/uksouth, the custom private Event Hub,
+individual provisioning and Juan Manuel Servera as exercise credential owner.
+This implementation selects the allowed per-device X.509 path; DPS, service
+keys, automatic credential issue and device-management operations are excluded.
+Approved Key Vault issuance, mount access, expiry/rotation, revocation and
+teardown of exact run-owned identities remain owner work. A nonempty approval,
+cost or alert reference in code is a declaration, not verified evidence.
+
+Each explicit SYN device binding resolves to exactly one compact stock sensor
+key and one canonical stock home ID. The current consumer uses `home_key`
+(up to 128 UTF-16 units); the earlier 2026-10-18 example/table below described
+its original legacy fixture, not a requirement to truncate stock IDs.
+Only independently granted synthetic selections produce readings. No synthetic
+choice constitutes real resident consent or calibration.
+
+The custom Event Hub's Hub-only Data Sender grant is an essential origin
+boundary. Routed byte-keyed AMQP device/authentication properties are decoded
+through pinned EventData accessors; arbitrary application claims on an endpoint
+with other senders are not authenticated Hub identity. Actual Azure metadata,
+role propagation, private resolution and routing remain unverified. Missing,
+ambiguous or mismatched bindings stop before SQL. A deliberately unmapped exact
+binding can produce SQL UNMAPPED DQ without weakening normal-device fencing.
+
+Fresh receivers always replay the retained beginning and use SQL outcomes as
+their durable state. They install no checkpoint store and call no misleading
+no-store checkpoint no-op. Retention expiry is a recovery limit, and multiple
+receivers are not coordinated by this finite demonstration. Database commit
+uncertainty remains explicit: cancellation cannot prove rollback. A poisoned
+transport envelope stops for investigation rather than silently advancing.
+
+Seeded replay selects nominal slots from the complete original seasonal
+generator sequence, with canonical observation conversion and unchanged stable
+reading IDs. Local overlap tolerance is exactly zero for both numeric values,
+IDs, units and timestamps. This is a deterministic model-continuity witness,
+not a statistical validation of real sensors or an actual live handover.
+Climate-backed composed backfill continuity remains deferred.
+
+### Cost and scale before any live run
+
+The existing dated transport model allocates USD60/month within, not additional
+to, the overall USD700 cap. No Azure run occurred here; actual incremental
+Azure spend from this task is zero. Actual subscription currency, aggregate
+headroom, quota already consumed and active alerts must be verified by the
+named owner before a live run. Budget alerts are not hard spending stops.
+
+At three paired observations/home/day, N=1 gives 3 and N=60,000 gives 180,000
+observations/day. The sender chooses one observation/message. It accounts each
+attempt in 4-KiB units including a conservative 1-KiB properties reserve and
+requires >=40,000 unused units from B1's 400,000/day allowance. A 366-byte
+sample plus reserve uses one unit: 180,000 leaves 220,000 before other traffic.
+Worst allowed 4096-byte body plus reserve uses two units: 360,000 leaves 40,000,
+with no allowance for additional traffic/retries. These are arithmetic
+scenarios, not throughput, actual billing or approval to run 60,000 devices.
+The implemented local run is limited to 100 granted homes, 100,000 original
+model home-slots/messages, <=100 messages/second and <=3600 seconds. A declared
+owner/cost/alert reference and preflight quota check are mandatory. Speed/burst
+cannot bypass the rate cap; pause consumes the deadline; stop/cancel closes
+owned clients. SDK retries and auto-connect are disabled.
+
+### Issue criterion evidence and remaining gates
+
+No issue checkbox or status is changed by this source-only work.
+
+| Issue | Locally evidenced scope | Explicit remaining / deferred criteria |
+| --- | --- | --- |
+| #110 | Existing SQL append/replay/DQ reused; SDK/identity fencing; no public ingestion route or source credential; constructed actual SQLite receipts and property non-mutation | Actual distinct Hub identities, authenticated routed input classes, Azure SQL/restart, actual source/telemetry secret assurance and whole AC-066 registered-AI/build acceptance |
+| #184 | Synthetic-only selection/no discovery; per-device send path; all five child dispositions recorded here | Owner acceptance of outstanding child deferrals; actual credential/log/telemetry and live exercise evidence |
+| #185 | Individual X.509 approach and existing named owner; one device/sensor/home mapping in code | Actual approved issue/storage/access/expiry/rotation/revocation and teardown of all simulated identities; no teardown success claimed because none were created |
+| #186 | Previously closed by #412; unchanged imported schema and stable identities; three/day default | No reopening or new whole-live claim; explicit cadence overrides remain run declarations |
+| #187 | Exact legacy-backfill seeded replay, odd/nonzero suffixes, speed/pause/stop, labelled separate truth, duplicate/order/unit/skew/calibration and transport disconnect/burst tests | Live Hub replay; composed-climate replay; injected normal-device UNMAPPED is a transport refusal, separately configured unmapped binding supplies local SQL DQ only |
+| #188 | Temporary constructed SQLite union per home, zero-difference seeded overlap and exact-window idempotency | Actual Azure SQL query/restart, live/backfill statistical handover and composed-model continuity |
+| #189 | Dated cost model, B1 arithmetic, finite owner/time/rate/message bounds, quota preflight and required alert reference | Actual pre-run aggregate headroom/quota/currency and active alert verification; references alone do not prove an alert exists |
+
+No operational OD-43, DPO/Legal/Compliance, real inventory, lawful-basis,
+retention, threshold or human-review decision is made here. Synthetic tests
+cannot close those gates. Required hosted checks, independent exact-head
+assessment, owner merge and applicable publication gates remain separate.
+
 ## Shared observation contract and volume (2026-10-18, Refs #186)
 
 This documents the unchanged finite consumer merged in

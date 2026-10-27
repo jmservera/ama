@@ -8048,3 +8048,16 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   acceptance, wider assistant/form challenge coverage, #224 legal screening
   and #440 stabilization remain open. No acceptance criterion is ticked and
   no operational, fairness, Azure or whole-epic approval is inferred.
+## [2026-10-27] engineering | Bounded IoT streaming (Refs #110, #184)
+
+* Extended the [existing IoT synthesis](./research/iot-sensor-analytics-research-plan.md#bounded-streaming-engineering-2026-10-27-refs-110-184)
+  with SDK origin/identity, SQL retained-history replay, seeded seasonal
+  continuity, finite-run and B1 cost/quota boundaries.
+* Added API/core component usage and explicit #185-#189 criterion dispositions;
+  #186 remains previously delivered. No issue status or criterion was ticked.
+* Recorded the inherited individual-identity/credential owner and selected
+  allowed X.509 path without credential issuance, access, rotation or teardown.
+  No Azure deployment, real device discovery, private data, inference or
+  operational OD-43/Legal/DPO approval was performed or inferred.
+* Updated the knowledge-base index. Local constructed engineering evidence is
+  separate from actual Hub/Azure SQL, hosted checks, publication and owner merge.

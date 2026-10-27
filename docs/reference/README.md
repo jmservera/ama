@@ -43,6 +43,13 @@ review and reversible local dismissal. These native Fluent-derived patterns
 do not establish full Fluent adoption, staff usability, screen-reader/voice
 acceptance or live employee-site cold-start verification.
 
+For #110/#184, the [bounded streaming engineering and child dispositions](./research/iot-sensor-analytics-research-plan.md#bounded-streaming-engineering-2026-10-27-refs-110-184)
+describe opt-in API SDK adapters, synthetic-only seeded replay, exact device
+bindings, retained-history/SQL recovery and finite cost/rate/time controls.
+Local fake-network/actual-constructed-SQLite evidence is not actual Hub,
+credential lifecycle, Azure SQL handover, active budget alerts or whole AC-066.
+Outstanding #185/#187/#188/#189 live criteria and OD-43 remain explicit.
+
 For #140, the [IoT infrastructure decision and budget](../../infra/README.md#iot-hub-issue-140-adr-0003-decision-6)
 and [ADR 0003 dated authorization](../adrs/0003-journey-derived-capabilities-runtime-fit.md#source-only-infrastructure-authorization-2026-10-27-refs-140)
 record B1/one unit in `ama`/`uksouth`, private keyless Event Hub routing,

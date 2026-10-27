@@ -63,6 +63,57 @@ The API owns authentication and the disabled real adapter. See the
 [design awaiting owner decision](../../docs/architecture/resident-assistant-prototype.md)
 for model, credential, USD 5 budget and activation boundaries.
 
+## Finite synthetic stream replay (#184)
+
+`synthetic.sensor_stream.replay(selection, Replay(...))` reuses the existing
+seasonal `sensor_backfill.readings` model, forcing its legacy random fault
+profile off, then converts to the shared 13-string `sensor-fault-input-v1`
+contract. It accepts only explicitly selected synthetic stock records;
+declined/unknown monitoring choices produce no device or reading. No installed
+device discovery or real dataset is used. Sensor keys are the existing compact,
+collision-checked stock keys; one `SYN-<sensor_id>` device maps to one home.
+
+Default cadence is 480 minutes: three paired observations/home/day.
+`Replay(seed=183, origin=<UTC whole-second datetime>, days=2,
+first_slot=0, end_slot=None)` describes a finite original model window.
+The complete original random sequence is generated before selecting the
+half-open nominal slot interval, so nonzero and odd suffixes reproduce the
+same values/IDs as the existing clean backfill. Do not restart the seed at
+handover. This slice supports the labelled synthetic seasonal model only;
+climate-backed composed histories and measures are not silently substituted.
+`descriptor(selection, spec)` records stock digest, seed, origin, window,
+cadence, schema/model context and explicit fault mode for restricted evidence.
+
+The generator limits actual granted homes to 1..100 and original
+homes-times-slots to 100,000 before model generation, independently of summary
+metadata. This aligns with the existing finite consumer control batch; it is
+not 60,000-device throughput evidence. `wire(frame.row)` uses the shared
+consumer's sorted ASCII JSON representation and caps each body at 4096 bytes.
+
+Explicit modes are `valid`, `duplicate`, `out_of_order`, `unmapped`, `wrong_unit`,
+`clock_skewed`, `uncalibrated`, `gap`, `disconnect` and `burst`. Frames keep truth
+outside the observation. Duplicate emits identical IDs/content; out-of-order
+swaps nominal adjacent slots with an odd final singleton unchanged. Selection
+always uses nominal slots, not shifted timestamps. Wrong-unit conversion,
+one-day clock skew and calibration flags are labelled synthetic exercises,
+not science or policy. Gap emits no frames; an empty send run is refused.
+The replay descriptor records the omitted window and mode. Disconnect/burst
+are runner actions, not extra telemetry fields. A normal device claiming a
+mutated unmapped sensor is refused by the API binding before SQL.
+
+`RunBudget` performs finite message/byte/B1 headroom checks before sending.
+`Pacer` exposes `paused` and `stopped`, finite speed in (0,1000], a monotonic
+deadline and a separate maximum send rate. Speed-up never bypasses the rate
+cap. Pause continues consuming the run time allowance, not a way to leave a
+simulator running unattended. See the [API runner](../api/README.md#opt-in-iot-consumer-and-synthetic-publisher-110-184)
+for actual SDK operation bounds, credential handling and activation gates.
+
+From `src/core`, with the package installed:
+
+```bash
+python -m unittest discover -s tests -p test_sensor_stream.py -q
+```
+
 ## Constructed offline sensor consumer (#110)
 
 `sensor_consumer.SensorConsumer` is a finite SQL-only processor, distinct from
