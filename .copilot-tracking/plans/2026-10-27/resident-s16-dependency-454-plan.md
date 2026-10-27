@@ -15,7 +15,7 @@ The canonical PRD already states it correctly and remains unchanged. Preserve
 independent urgent help, separate task-release authority and routine OFF.
 Independent critique passed with no findings; documentary implementation and
 validation are complete. Independent Review: Complete / Conformant, no findings.
-Only the authorized publication sequence remains.
+Correction and evidence published normally; named thread replied to and resolved.
 No runtime work is planned or claimed.
 
 ## User Decisions and Requirements
@@ -93,7 +93,7 @@ approvals remain separate, not passed by these checks.
 ### P02: Independent Review and publication
 
 * [x] P02-T01: Obtain one independent post-implementation Review and retain outcome.
-* [ ] P02-T02: Commit evidence/correction, push normally, reply/resolve named thread.
+* [x] P02-T02: Commit evidence/correction, push normally, reply/resolve named thread.
 
 ## Critique Disposition
 
@@ -110,5 +110,9 @@ registration and live gates remain outside this correction; none is closed here.
 
 P01 and P02-T01 complete with no blockers or source divergence. Independent
 Review retained at `.copilot-tracking/reviews/logs/2026-10-27/resident-s16-dependency-454-review.md`;
-no findings or second Review. P02-T02 publication remains pending. Changes evidence:
+no findings or second Review. P02-T02 complete: implementation/evidence commit
+`da024e9a0d28144420013fa8bed1ee6a5c1b9155`, normal push, reply
+`discussion_r4390481573`, exact thread resolved and PR remains OPEN/unmerged.
+Only the final administrative completion record is being persisted; no source
+change or additional Review. Changes evidence:
 `.copilot-tracking/changes/2026-10-27/resident-s16-dependency-454-changes.md`.

@@ -43,7 +43,9 @@ active table shapes passed, 39 relative link targets verified across seven
 Markdown files, `git diff --check` passed. No source blocker/divergence.
 PRD, historical assessments and RB-19/RB-20/governance/protocol rows unchanged.
 P02-T01 now complete: independent Review Complete / Conformant, no substantive
-findings. P02-T02 remains pending; publication, not runtime acceptance.
+findings. P02-T02 now complete: commit da024e9a published without force,
+evidence reply discussion_r4390481573 retained, thread PRRT_kwDOUU8JX86wvdLp
+read back resolved. PR OPEN/unmerged. This is publication, not runtime acceptance.
 
 ### P02-T01
 
