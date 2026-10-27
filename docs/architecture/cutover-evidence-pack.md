@@ -1,11 +1,16 @@
 ---
 title: Source cut-over evidence pack
 description: Dated parity, private SQL and public edge proof with remaining owner gates
-ms.date: 2026-10-19
+ms.date: 2026-10-27
 ms.topic: reference
 ---
 
 ## Decision and Scope
+
+This section records the original 2026-10-16 decision boundary. For the later
+owner sign-off and directory retirement, see the
+[2026-10-27 record](#owner-authorized-directory-retirement-2026-10-27).
+Original failures, outcomes and unchecked historical gates below are preserved.
 
 Refs #200. Refs #201. Evidence prepared on 2026-10-16 against base
 `aedd616ffff8abfcf0379a538b895e4427147c8f`, then refreshed after integrating
@@ -1694,7 +1699,111 @@ contexts or dashboard links. The ruleset API returned **403** ("Upgrade to
 GitHub Pro or make this repository public"); no independent live enforcement
 verification is claimed and no protection mutation was attempted.
 
+## Soak and Cut-Over Evidence Preparation (2026-10-21)
+
+Refs #201. Preparation only, at base
+`993a7b88c03f5240f1e7a4c7c7afa7c064281622`, following the owner direction of
+2026-10-20 in [#126](https://github.com/jmservera/ama/issues/126#issuecomment-6290697705)
+to propose a soak duration and cut-over evidence checklist for review. This is
+not a soak, not acceptance and not sign-off. No Azure, paid, tenant, private
+data, backup, tag, release or deletion action occurred, and no budget headroom
+is inferred: the USD500 total cap (expiring 2026-10-25T16:02Z) is already
+forecast to be exceeded, so any soak needing running resources requires a
+separate, affordable, finite plan approval. Evidence for this section is read
+only: repository files and read-only GitHub queries on 2026-10-21. Method and
+sources are in the dated RPI research record for this task.
+
+### Original 11 Acceptance Criteria Map
+
+Closed status vocabulary: every criterion is `UNMET` overall. The evidenced
+component records only what the cited source proves; the unmet component keeps
+every missing, stale or unverified part visible. No box in #201 is ticked here.
+
+| # | Criterion | Source, date, revision | Evidenced component | Unmet component | Status | Human owner |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | Layout ADR accepted | [ADR 0006](../adrs/0006-src-layout-and-cutover.md), 2026-10-15; #201 comment 6196711316 | Acceptance recorded | A1-A5 placement exceptions and the partial assistant rebuild are not ratified | UNMET | @jmservera |
+| 2 | `prototype/` retired | Commit `a7e30046` (#295), 2026-10-15; `mvp/` tracks only `README.md` | Directory absent; content mapped in the matrix | Agreement on each retire row and the service-role denial gap are not recorded | UNMET | @jmservera |
+| 3 | Parity matrix complete | [Current Parity Audit](#current-parity-audit), [audit TSV](./cutover-parity-audit.tsv), pack revision of 2026-10-16 | 130 rows each migrated, mapped or retired; 578 historical paths mapped; no missing destination | Matrix is a migration record, not acceptance; owner agreement on retire rows not recorded; audit not rerun at this base | UNMET | @jmservera |
+| 4 | Tests migrated and passing in CI, coverage equal or greater | [Local Validation Ledger](#local-validation-ledger); `src-ci.yml` | Test count 1,164 (104 skips) on named runs against baseline 719 (92 skips) | Measured coverage equivalence not established; no CI result on a candidate commit; CI runs on pull requests only | UNMET | Coordinator, @jmservera |
+| 5 | CI, Docker, Bicep, scripts repointed; src build deployed and healthy | [Public Browser Restoration](#public-browser-restoration-2026-10-16), [Bounded RG Publication Continuation](#bounded-rg-publication-continuation-2026-10-19) | Repointing evidenced; private health 200 and native API 401 on 2026-10-16 for one fictional case | Health proof is historical; later publication failed; initializer and API on old proof digests; no real staff sign-in (#349); feature acceptance blocked (#350) | UNMET | Tenant operator, @jmservera |
+| 6 | Rubric tracks `src/`; before and after comparison recorded; dip cause and recovery recorded | `.github/rubric/artifacts.json` registry; `.github/rubric/scores/latest.json`; history in git | Registry includes `src/**/*`; snapshot 47 at `fa730d63` (2026-10-15), 48 from `b1fd9042` (2026-10-16) to `332101ed` (2026-10-20), rubric_version 2; no dip observed | No score on a candidate commit; baseline comparability unverified; floors not met ("Incomplete (thought leadership artifact not submitted)"); cause and recovery statement not recorded for sign-off | UNMET | @jmservera |
+| 7 | Dependent epics #113, #136, #165, #157, #149 have no open work on old paths | Read-only GitHub, 2026-10-21 | Open PRs 420 to 426: none changes `mvp/` or `prototype/` paths; all five epics are open | Epic open state is not completion evidence; refresh at sign-off | UNMET | @jmservera |
+| 8 | Docs, ADRs, index, log and live instructions updated; links checked | [Reference inventory](./cutover-reference-inventory.tsv); this section, ADR note, index row and log entry | Inventory exists; reconciliation added with a focused local link check | Live workflow names retained until the single rename PR; full link and gate checks are external | UNMET | Coordinator |
+| 9 | Archive tag `v<BRD version>` confirmed | BRD `0.18.0` (2026-10-15); no `v*` tag locally or on origin on 2026-10-21 | Prospective name `v0.18.0` only | Not confirmed at cut-over; tag and release not created | UNMET | @jmservera |
+| 10 | Private `mvp/data/` relocated and backed up outside git | Owner checklist below | Nothing an agent may verify | Owner-only non-sensitive attestation; no agent read the dataset or backup | UNMET | @jmservera |
+| 11 | Owner signs off in the issue | #201 comments (four, last 2026-10-16) | None | No sign-off exists or is inferred | UNMET | @jmservera |
+
+### Dated Corrections and Contradictions
+
+* Soak: the owner decided on 2026-10-15 that there is no minimum soak
+  ([comment](https://github.com/jmservera/ama/issues/201#issuecomment-6196800819),
+  ADR 0006, matrix), but the #201 body still lists "Minimum soak period" as an
+  open decision and the owner asked on 2026-10-20 for a proposal. This is an
+  unresolved contradiction, not resolved here. Minimum duration stays OPEN.
+* Rubric: the statement below that no post-migration numeric comparison is
+  available predates later snapshots. A snapshot pair now exists (47 then 48)
+  but no candidate-commit score does, so the comparison remains unmet.
+* Open pull requests: the initial inspection below is superseded for 2026-10-21
+  by the read-only check above; epics remain open.
+* CI: `src-ci.yml` triggers on pull requests and manual dispatch only; the last
+  `main` push run was 2026-10-18 at `612cbed7`. Candidate CI evidence must come
+  from pull request checks and the external gate receipt for the exact commit.
+* Health: private health 200 (2026-10-16) is historical and is not staff
+  sign-in, feature acceptance or current health.
+
+### Proposed Soak Evidence Specification (for owner review, not started)
+
+Every row is a proposal, not an owner rule. `OPEN (owner)` means no value is
+proposed and none may be assumed.
+
+| Element | Proposed content |
+| --- | --- |
+| Candidate revision | Full 40-character git SHA on `main`, the four workload image digests, the infra commit and the BRD version, all frozen for the window |
+| Environment | Named non-production synthetic environment inside `ama`; identifiers in an external mode 0600 receipt with a sanitized summary committed beside [cutover-azure-evidence.json](./cutover-azure-evidence.json); no private, resident or staff data |
+| Entry and start | Start only when AC 4 and 5 are evidenced for the exact SHA (pull request checks, external gate receipt, deployment of those digests), an authorized tenant operator has completed real staff sign-in (#349) and a finite costed plan is separately approved; the collector records the UTC start |
+| Window | Kind (none, event count, calendar), length, consecutive or cumulative: OPEN (owner) |
+| Health signal | Deployed `/healthz` on each path under test plus the protected API 401 canary; cadence and miss tolerance OPEN (owner) |
+| Parity signal | `python -m zava_forward.core.synthetic.cutover_audit` without drift; authenticated positive-role smoke; one SQL restart-persistence check on the fictional case |
+| CI signal | Proposed set: `src-ci.yml`, `mvp-ci.yml`, `mvp-validation.yml`, `infra-plan.yml` green for the SHA; required set OPEN (owner), as rulesets are warn-only per #323 |
+| Rubric signal | Scorer run on the SHA compared with the committed snapshot 48 (A30 B13 C5 D0, `332101ed`, 2026-10-20); comparator basis and dip cause and recovery expectation OPEN (owner) |
+| Old-path signal | Refresh of the open pull request and file scan for #113, #136, #165, #157 and #149 at start and end |
+| Failure and reset | Proposed reset-class: any `src/`, infra or image change to the candidate, auth bypass, SQL public access enabled, data loss, or health failure beyond the OPEN tolerance. A new SHA restarts the window. A single transient miss within tolerance is logged only. Thresholds OPEN (owner) |
+| Rollback | Keep `ama`, delete nothing, follow the recovery baseline in the [Issue 344 Acceptance Audit](#issue-344-acceptance-audit) (`Return401 / NoProxy` and the seven exact public exclusions) |
+| Escalation | Coordinator notifies the owner in #201 immediately on a reset-class failure; a cost overrun stops collection under the approved plan |
+| Collector and reviewer | Collector: OPEN (owner). Reviewer: independent of the collector, OPEN (owner). Approver: @jmservera, confirmation pending (checklist item 1) |
+| Retention | Sanitized JSON committed; raw receipts external and uncommitted |
+
+### Pending Owner Decisions
+
+All are Pending. None is decided or inferred. The evidence needed is an owner
+comment in #201 (or the named human action). They supplement, and do not
+replace, the sign-off checklist below.
+
+| ID | Decision | Owner |
+| --- | --- | --- |
+| D1 | Whether any soak is required, reconciling the 2026-10-15 "no minimum" with the open item and the 2026-10-20 proposal request: A none, B event-count window, C calendar window | @jmservera |
+| D2 | Window length and unit if B or C | @jmservera |
+| D3 | Consecutive or cumulative, and whether the reset follows any `src/` change or only a deployed-artifact change | @jmservera |
+| D4 | Probe cadence, miss tolerance and path scope (private, public edge, both) | @jmservera |
+| D5 | Entry conditions and who authorizes the start | @jmservera |
+| D6 | Collector and independent reviewer assignment | @jmservera |
+| D7 | Finite costed plan and funding beyond the USD500 cap and its 2026-10-25T16:02Z expiry; tenant operator for staff sign-in | @jmservera, tenant operator |
+| D8 | Rubric comparison basis, and recorded dip cause and recovery expectation | @jmservera |
+| D9 | Service-role denial gap disposition | @jmservera |
+| D10 | Confirm the cut-over approver in #201 | @jmservera |
+| D11 | Archive tag and release at the BRD version current at cut-over | @jmservera |
+| D12 | Private data relocation and encrypted backup: owner-only non-sensitive attestation | @jmservera |
+| D13 | Agreement on each `prototype/` retire row and the A1-A5 placements | @jmservera |
+| D14 | Retained `ama` resources and charges: remediation, retention or ID-scoped cleanup, never deleting `ama` | @jmservera |
+| D15 | Approve the separate single-pull-request post-cut-over workflow and check rename plan | @jmservera |
+| D16 | Tenant registration, real staff sign-in and feature acceptance (#349, #350), then the final go/no-go in #201 | @jmservera, tenant operator |
+
 ## Other Cut-Over Gates
+
+> Superseded in part by
+> [Soak and Cut-Over Evidence Preparation (2026-10-21)](#soak-and-cut-over-evidence-preparation-2026-10-21)
+> for the open pull request check and the rubric comparison status. The
+> historical text below is unchanged.
 
 At initial inspection before publishing #341,
 `gh pr list --state open --limit 100` returned `[]`; thus no
@@ -1745,5 +1854,65 @@ All boxes are deliberately unchecked. Technical evidence is not owner approval.
   release at cut-over, without creating either prematurely.
 * [ ] Review updated README/index/log and scoped reference inventory; approve
   the separate single-PR post-cut-over workflow/check rename plan.
+* [ ] Review the [proposed soak evidence specification](#proposed-soak-evidence-specification-for-owner-review-not-started)
+  and decide D1 to D16 in [Pending Owner Decisions](#pending-owner-decisions);
+  no soak has started and no duration is chosen.
 * [ ] Explicitly record go/no-go and sign-off in #201. Only a later authorized
   #202/#203 change may remove legacy paths; this PR never performs deletion.
+
+## Owner-authorized directory retirement (2026-10-27)
+
+Refs #199. Refs #200. Refs #201. Refs #202. Refs #203.
+The owner explicitly **SIGNED OFF cut-over (#201) on 2026-10-27** in the
+retirement task direction. This later authority permits directory retirement;
+it supersedes the earlier unsigned deletion status, not the original technical
+results, unresolved human/operational gates or historical unchecked checklist.
+No new soak, deployment, private-data inspection or backup verification ran.
+
+Fetched `origin/main` at `65a514ed20e97816dbf47e9fb981ab4cfe40597d`
+already contained all executable migration: the five installed source projects,
+source-context Dockerfiles, source CI and new Bicep job module paths.
+Only `mvp/README.md` remained tracked; `prototype/` was already retired by
+`a7e3004` / #295. This retirement removes that pointer, not application code.
+Working data remains external through `ZF_DATA`; no agent read a private dataset.
+
+The current BRD frontmatter is `0.21.0`. Local annotated tag `v0.21.0`
+was absent and was created at the main SHA above, the last pre-deletion commit
+containing the pointer. It archives the pointer-era tree; earlier code remains
+in its Git history. Neither tag publication nor a GitHub release was performed.
+The owner publishes the tag with exactly:
+
+```bash
+git push origin refs/tags/v0.21.0:refs/tags/v0.21.0
+```
+
+### Remaining-reference policy
+
+Current build/test/deploy commands use `src/` and installed `zava_forward`
+packages. Workflow/check names remain unchanged, including dispatch-only legacy
+workflow files. Do not remove required contexts or rename them during cleanup.
+The rubric registry already includes source projects, not legacy directories;
+deleting the unscored pointer adds no loss of scored source coverage. A measured
+post-merge score comparison is still required; no score or recovery is invented.
+
+Intentional old-path occurrences remain in dated ADRs, parity/audit TSVs,
+reports, pinned GitHub URLs and original RPI evidence. The append-only log
+retains old links with an additive repair map in its 2026-10-27 entry.
+Historical `zavaforward_mvp`/`properwarm_mvp` strings in migration fixtures and
+the cut-over audit parser test historical inputs, not live imports. Defensive
+`mvp/data` ignores/refusal checks and obsolete registry excludes remain to
+prevent accidental private-data reintroduction. Archive `v0.21.0` supplies the
+cut-over boundary for these intentional exceptions; earlier pinned commits
+remain the authoritative source for their original executable content.
+
+### Acceptance boundary
+
+This maintenance change supplies source-reference reconciliation, local
+archive creation, pointer deletion and current navigation. Existing API,
+rename and narrow parity/registry tests are the scoped validation; no full
+gate is authorized for this task. Hosted CI and owner merge remain required.
+It does not prove all-suite baseline parity, fresh deployed health, release
+publication, every dependent-epic disposition or post-merge rubric comparison.
+Accordingly all five issues are referenced, not closed. The literal zero-token
+repository-wide criterion in #203 is not claimed complete: preserved history
+and defensive fixtures are explicit exceptions.

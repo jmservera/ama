@@ -131,4 +131,4 @@ jobs:
           PYTHONPATH=tests:../core/tests:../agents/tests python3 -m unittest test_mssqlstore test_lawstore.MssqlStoreTests \
             test_assistants.MssqlContractTests test_assistants.MssqlReviewTests \
             test_assistants.MssqlDurabilityTests test_assistants.MssqlApiTests \
-            test_assistants.MssqlLedgerTests
+            test_assistants.MssqlLedgerTests test_resident_aoai_sql.AccountingSqlTests

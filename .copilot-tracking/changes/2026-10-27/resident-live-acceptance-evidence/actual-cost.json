@@ -1,0 +1,18 @@
+{
+  "columns": [
+    {
+      "name": "CostUSD",
+      "type": "Number"
+    },
+    {
+      "name": "Currency",
+      "type": "String"
+    }
+  ],
+  "rows": [
+    [
+      315.535491423131,
+      "USD"
+    ]
+  ]
+}

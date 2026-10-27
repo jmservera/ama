@@ -1,0 +1,90 @@
+{
+  "task_id": "jmservera/ama#441",
+  "task_slug": "resident-prd-backlog-readiness-441",
+  "parent_task": {
+    "task_id": "jmservera/ama#441",
+    "task_slug": "resident-portal-requirements-441"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-25/resident-prd-backlog-readiness-441-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-25/resident-prd-backlog-readiness-441-plan.md",
+    "details": ".copilot-tracking/details/2026-10-25/resident-prd-backlog-readiness-441-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-25/resident-prd-backlog-readiness-441-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-25/resident-prd-backlog-readiness-441-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-25/resident-prd-backlog-readiness-441-review.md",
+    "plan_correction2": ".copilot-tracking/plans/2026-10-25/resident-prd-backlog-readiness-441-correction2-plan.md",
+    "critique_correction2": ".copilot-tracking/reviews/plans/2026-10-25/resident-prd-backlog-readiness-441-correction2-critique.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready",
+      "status": "recorded",
+      "evidence": "research file"
+    },
+    {
+      "decision": "Critique executed once, verdict not-ready-until-fixed, four findings applied",
+      "status": "recorded",
+      "evidence": "critique file"
+    },
+    {
+      "decision": "Review executed once, outcome conformant with residual owner-acceptance and quality gates",
+      "status": "recorded",
+      "evidence": "review file"
+    },
+    {
+      "decision": "Draft backlog only; owner acceptance G0 pending; no implementation issues",
+      "status": "confirmed",
+      "evidence": "owner comment 6389938010, follow-up 6391945752"
+    },
+    {
+      "decision": "Correction cycle 1: applicability contradiction fixed; independent scoped review run; no full-PRD pass; no coordinator approval claimed",
+      "status": "recorded",
+      "evidence": "critique file, correction section"
+    },
+    {
+      "decision": "Correction cycle 2: paired protocol freeze moved to RB-01; graph reviewed independently (not full-PRD); earlier owner-ready claims superseded",
+      "status": "recorded",
+      "evidence": "correction2 critique"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "G0",
+      "summary": "Owner acceptance of draft backlog pending",
+      "resolution": "Owner accepts or amends before any implementation"
+    },
+    {
+      "id": "RB-G3",
+      "summary": "ADR registration deferred, id null",
+      "resolution": "Supported native registry bootstrap, owner-authorised"
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Coordinator re-assessment before renewed owner review; PR stays draft"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Fresh independent requirements-quality review of PRD v0.21.0",
+      "rationale": "Only route to close pr442-qual-041 and re-check others",
+      "evidence": "review file RV-001"
+    },
+    {
+      "rank": 2,
+      "task": "Engineering sizing of RB-01 to RB-10 to enable a date proposal",
+      "rationale": "Date not estimable without sizing",
+      "evidence": "draft backlog Sizing section"
+    },
+    {
+      "rank": 3,
+      "task": "Reconcile with issue 444 when it publishes",
+      "rationale": "RB-05/06/08 reuse its modules",
+      "evidence": "research overlap"
+    }
+  ]
+}

@@ -16,7 +16,7 @@
     var notice = node("p", "Advisory only. This assistant cannot submit forms, give consent, book works or make decisions.");
     notice.id = "assistant-notice";
     panel.appendChild(notice);
-    panel.appendChild(node("p", "Summary by rules. No AI model is connected. Choose a question below. This panel does not store or send messages to staff."));
+    panel.appendChild(node("p", "AI may help explain your case. Each answer says whether AI or rules were used. AI cannot decide eligibility or give legal, safety or financial advice. Choose a question below. This panel does not send messages to staff."));
     var form = node("form");
     var label = node("label", "Your question");
     label.htmlFor = "assistant-topic";

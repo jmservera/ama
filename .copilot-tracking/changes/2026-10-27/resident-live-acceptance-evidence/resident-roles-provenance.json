@@ -1,0 +1,26 @@
+[
+  {
+    "createdOn": "2026-10-26T23:16:02.753095+00:00",
+    "roleDefinitionId": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/providers/Microsoft.Authorization/roleDefinitions/7f951dda-4ed3-4680-a7ca-43fe172d538d",
+    "scope": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.ContainerRegistry/registries/crcutovertestrzsrg",
+    "updatedOn": "2026-10-27T10:53:52.791887+00:00"
+  },
+  {
+    "createdOn": "2026-10-26T23:16:03.333800+00:00",
+    "roleDefinitionId": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/providers/Microsoft.Authorization/roleDefinitions/4633458b-17de-408a-b874-0445c86b69e6",
+    "scope": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.KeyVault/vaults/kv-cutovertest-rzsrg/secrets/resident-demo-password-verifier",
+    "updatedOn": "2026-10-27T10:53:52.536283+00:00"
+  },
+  {
+    "createdOn": "2026-10-26T23:16:03.418869+00:00",
+    "roleDefinitionId": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/providers/Microsoft.Authorization/roleDefinitions/4633458b-17de-408a-b874-0445c86b69e6",
+    "scope": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.KeyVault/vaults/kv-cutovertest-rzsrg/secrets/resident-demo-session-key",
+    "updatedOn": "2026-10-27T10:53:52.629399+00:00"
+  },
+  {
+    "createdOn": "2026-10-27T10:42:13.286403+00:00",
+    "roleDefinitionId": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/providers/Microsoft.Authorization/roleDefinitions/5e0bd9bd-7b93-4f28-af87-19fc36ad61bd",
+    "scope": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.CognitiveServices/accounts/aoai-resident-469",
+    "updatedOn": "2026-10-27T10:42:13.286403+00:00"
+  }
+]

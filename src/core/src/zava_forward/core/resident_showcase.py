@@ -13,6 +13,7 @@ import binascii
 import hashlib
 import hmac
 import ipaddress
+import json
 import math
 import os
 import re
@@ -23,12 +24,17 @@ from collections import deque
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from importlib.resources import files
 from typing import Any
 
 from . import resident_preview as _preview
 from .insights import STAGE_ORDER
 
-AUTHORITY_END = datetime(2026, 11, 1, 0, 0, tzinfo=UTC)  # exclusive: through 31 Oct UTC
+AUTHORITY_END = datetime.fromisoformat(
+    json.loads(files(__package__).joinpath("resident-demo.json").read_text())[
+        "maximum_expiry_utc"
+    ].replace("Z", "+00:00")
+)
 MAX_MAPPINGS = 1000
 SESSION_SECONDS = 1800
 BANNER = (

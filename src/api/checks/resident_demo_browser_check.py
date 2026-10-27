@@ -5,6 +5,7 @@ loopback SQL Server whose sa password is in ZF_SQL_PASSWORD (port in ZF_SQL_PORT
 ZF_SQL_PORT=... ZF_SQL_PASSWORD=... python -m checks.resident_demo_browser_check
 
 It creates and drops its own database, uses a fake test password only and never reaches Azure.
+The SQL fixture authorization ends on November 1 independently of the application ceiling.
 The server runs with the real SQL view, the real HTTP app and the real __Host- cookies on the
 loopback origin, so a browser that refused those cookies would fail this check.
 """
@@ -23,14 +24,17 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from playwright.sync_api import Page, sync_playwright
 from zava_forward.core import resident_showcase as rs
 from zava_forward.core import resident_showcase_sql as rsql
 from zava_forward.core.mssqlstore import TABLES
 
+if TYPE_CHECKING:
+    from playwright.sync_api import Page
+
 FAKE_PASSWORD = "FAKE-TEST-FIXTURE-ONLY-not-a-real-demo-password"
+SQL_AUTHORIZATION_END = datetime(2026, 11, 1, tzinfo=UTC)
 RESIDENTS = {
     "alice.demo@example.com": ("1 Alder Close", "Loft insulation"),
     "bob.demo@example.com": ("2 Birch Close", "Cavity wall insulation"),
@@ -106,7 +110,7 @@ def database() -> Iterator[str]:
                 " valid_to, revoked) VALUES (?, 'browser-check synthetic fixture', ?, ?, 0)",
                 f"SYN-{n}",
                 (datetime.now(UTC) - timedelta(days=1)).replace(tzinfo=None),
-                rs.AUTHORITY_END.replace(tzinfo=None),
+                SQL_AUTHORIZATION_END.replace(tzinfo=None),
             )
         yield name
     finally:
@@ -186,6 +190,8 @@ def sign_in_by_keyboard(page: Page, email: str, password: str) -> None:
 
 
 def main() -> None:
+    from playwright.sync_api import sync_playwright
+
     with database() as db, showcase(db) as base, sync_playwright() as pw:
         browser = pw.chromium.launch()
         check_unauthenticated(browser, base)

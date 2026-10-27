@@ -34,6 +34,9 @@ STORAGE_SCOPES = {"blob": "Storage account, blob service", "queue": "Storage acc
 MODULE_FILES = {"modules/keyvault.bicep": "keyvault", "modules/registry.bicep": "registry",
                 "modules/foundry.bicep": "foundry", "modules/iothub.bicep": "iotHub"}
 STANDALONE = {
+    "resident-assistant.bicep": ("resident-demo", {
+        "account": "Resident assistant OpenAI account",
+    }),
     "resident-demo.bicep": ("resident-demo", {
         "verifier": "Secret resident-demo-password-verifier only",
         "sessionKey": "Secret resident-demo-session-key only",

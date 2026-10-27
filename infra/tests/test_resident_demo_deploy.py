@@ -19,7 +19,7 @@ import resident_demo_deploy as DEPLOY  # noqa: E402
 SUB = "11111111-2222-3333-4444-555555555555"
 ROOT = f"/subscriptions/{SUB}/resourceGroups/ama/providers/"
 NOW = datetime(2026, 10, 27, 9, 0, tzinfo=UTC)
-EXPIRES = "2026-10-31T23:00:00Z"
+EXPIRES = "2026-12-31T23:59:00Z"
 IMAGE = "crcutovertestrzsrg.azurecr.io/zava-resident-demo@sha256:" + "a" * 64
 SQL = "sql-fake.database.windows.net"
 VAULT = ROOT + "Microsoft.KeyVault/vaults/kv-cutovertest-rzsrg/secrets/"
@@ -129,7 +129,16 @@ class TemplateTests(unittest.TestCase):
         )
         self.assertTrue(scopes)
         self.assertIn("@sha256:", text)
-        self.assertIn("2026-11-01T00:00:00Z", text)
+        self.assertIn(
+            {
+                "maximum_expiry_utc": DEPLOY.secrets_helper.MAX_EXPIRY.isoformat().replace(
+                    "+00:00", "Z"
+                )
+            },
+            self.template["variables"].values(),
+        )
+        self.assertIn("dateTimeToEpoch(variables('maximumExpiry'))", text)
+        self.assertEqual(self.template["parameters"]["expiresAt"]["maxLength"], 20)
         self.assertEqual(self.template["parameters"]["externalIngress"]["defaultValue"], True)
 
     def test_main_stack_remains_separate_from_resident_demo(self):
@@ -292,7 +301,9 @@ class CommandTests(unittest.TestCase):
 
     def test_expiry_image_and_terminal_fail_closed(self):
         for expires in (
-            "2026-11-01T00:00:01Z",
+            "2027-01-01T00:00:00Z",
+            "2026-12-31T23:59:59.001Z",
+            "2026-12-31T23:59:59+01:00Z",
             "2026-10-27T08:00:00Z",
             "2026-10-31",
             "",
@@ -329,8 +340,14 @@ class CommandTests(unittest.TestCase):
         self.assertEqual(self.run_cmd(cli, apply=True, expires="2026-10-27T08:00:00Z"), 1)
         self.assertEqual(cli.calls, [])
         cli = FakeCli(create(OWNED))
-        self.assertEqual(self.run_cmd(cli, "--no-ingress", expires="2026-11-01T00:00:01Z"), 1)
+        self.assertEqual(self.run_cmd(cli, "--no-ingress", expires="2027-01-01T00:00:00Z"), 1)
         self.assertEqual(cli.calls, [])
+
+    def test_inclusive_maximum_and_november_deployment(self):
+        for expires in ("2026-11-15T12:00:00Z", "2026-12-31T23:59:59Z"):
+            cli = FakeCli(create(OWNED))
+            self.assertEqual(self.run_cmd(cli, apply=True, expires=expires), 0)
+            self.assertIn(f"expiresAt={expires}", cli.calls[0])
 
 
 if __name__ == "__main__":

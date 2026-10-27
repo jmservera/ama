@@ -2,7 +2,7 @@
 id: null
 title: Optional resident service over shared case authority — UNREGISTERED PROPOSAL
 description: Unsigned issue 441 architecture working proposal, not an allocated ADR
-ms.date: 2026-10-23
+ms.date: 2026-10-25
 registration_status: unregistered
 status: proposed
 proposed_date: 2026-10-23
@@ -204,7 +204,7 @@ The seven findings remain:
 | pr442-qual-040 HIGH — unsigned BRD / no governed handoff | No signed upstream authority inferred; completed PRD is an unsigned review input only. |
 | pr442-qual-006 MEDIUM — feasibility | Provider/identity fit, staffing, recovery, budget and delivery capacity remain unknown. Shared-authority design is a proposal, not proven fit. |
 | pr442-qual-024 MEDIUM — GOAL-005 SMART | Six scripts and a future review-window description do not establish achievability or a committed deadline. No date or capacity promise is invented. |
-| pr442-qual-041 MEDIUM — generic/resident NFR precedence | Explicitly unresolved; do not silently select a response/file-size rule for overlapping operations. See fixture/precedence boundary below. |
+| pr442-qual-041 MEDIUM — generic/resident NFR precedence | Authored correction 2026-10-25 using owner decisions: audience-based applicability preserves NFR-002; awaiting fresh independent review, not closed. See precedence correction below. |
 | pr442-qual-009 LOW — AC-104–106 table shape | Inherited two-cell rows in a five-column PRD table remain; no whole-PRD conformance claim. |
 | pr442-qual-039 LOW — PRD FR-059 goal trace | Definition GOAL-004 versus retained matrix also GOAL-002 remains exposed; resident trace comparison does not fix reciprocal fidelity. |
 
@@ -662,26 +662,24 @@ retention and live service approvals remain open. C1/C4/C6/C8 statements that
 limits need approval mean that approval is absent, **not** that the completed
 PRD contains no proposed numerical configuration.
 
-**Open contradiction/precedence debt, not resolved by this ADR:** inherited
-PRD NFR-002 core acceptance specifies warm list/detail p95 ≤1s, controlled
-write ≤2s, dashboard ≤3s, import preview ≤10s; 5 MB/file and 100 MB total
-evidence (with separate import constraints). Resident NFR-021 proposes
-ordinary permitted case/status/receipt API p95 ≤2s, five fictional concurrent
-sessions for 30 minutes, excluding sign-in/scan/model waits. The resident file
-fixture is 10 MiB/file. MB and MiB are not silently treated as equal. Scope
-and precedence for an operation shared by core and resident paths remain
-unapproved under pr442-qual-041. No architecture preference, stricter-number
-heuristic or author assertion establishes the missing requirements rule.
-
-Record operation class, audience, request mix, file units, applicable source
-rules and each metric separately in later planning. If a shared endpoint/file
-cannot be assigned unambiguously to an agreed rule, mark its applicability
-**unresolved** and obtain scoped requirements-owner/engineering clarification
-before asserting a passing acceptance result or selecting execution limits.
-Report both source expectations and any discrepancy; do not filter errors or
-hide timeouts to obtain a percentile. Authoring can finish unsigned without
-claiming this debt is settled. No inherited target is weakened, replaced or
-newly approved here. Actual NFR release/acceptance remains blocked as applicable.
+**Precedence correction (2026-10-25, owner decisions of 2026-10-24):** inherited
+PRD NFR-002 core acceptance (warm list/detail p95 <=1s, controlled write <=2s,
+dashboard <=3s, import preview <=10s; 5 MB/file and 100 MB total evidence) is
+preserved unchanged for staff/core operations. The owner selected resident-specific
+targets: ordinary permitted case/status/receipt API p95 <=2s with five synthetic
+concurrent sessions for 30 minutes, and resident uploads <=10 MiB/file. The
+PRD v0.21.0 [target applicability table](../../../../docs/prds/zava-forward-retrofit-programme-demonstrator.md#target-applicability-and-precedence-owner-decisions-2026-10-24)
+assigns each request by authenticated audience and route class, never by shared
+implementation. Architecture consequence: resident routes use resident-audience
+authorisation, so a shared function or store cannot be used to relax a staff
+target or to serve a resident through a staff route. A request that cannot be
+assigned to exactly one rule is `unresolved` and cannot pass. MB and MiB are not
+silently equated. Whether resident files count toward the 100 MB per-home evidence
+total stays an open engineering/owner question. Promotion or linking of a resident
+file into staff evidence is a separate staff action subject to the NFR-002 limits
+(an over-limit file is refused or handled as a recorded exception), as in the PRD
+guardrail. This corrects the authored precedence text for
+pr442-qual-041; it needs fresh independent review and is not an approval.
 
 The completed PRD calls for freezing request mix/sample method and a 30-minute
 window after separately recorded warm-up; report successful-completion p50/p95
@@ -702,8 +700,8 @@ no dates, estimates, new tracker issues or implementation are commissioned.
 | R0 / fixture-boundary freeze | C1–C9; old S0 and protocol-freeze portion of S4 | Exact unsigned bytes, grants/events/file states and expected negatives first; resolve overlapping NFR scope for any claimed acceptance. No execution on absent authority. |
 | R1 / PR442-S01–S04 | C1/C2/C5/C8; old S1 plus assisted recovery in S3 | Managed synthetic identity and current grant/revocation/shared-device negatives; essential privacy/accessibility not postponed. |
 | R2 / PR442-S05–S08 | C2/C3/C4; portal/document portion of old S2 | Own published case/document and safe requested upload; receipt/scan/review/acceptance/publication distinct. |
-| R3 / PR442-S09–S14 | C3/C5/C8/C9; workflow part of old S2, S3 and portal-only comparator in S4 | Appointment intent, shared timeline/manual capture, accepted handoff and no-detriment service; freeze portal-only comparator before AI attribution. |
-| R4 / PR442-S15–S18 | C2/C6/C7/C8/C9; old S5/S6 | Separate task registry/evaluation/release and finite limits; named review default, routine OFF; retain R3/human question route if task fails. |
+| R3 / PR442-S09–S14 | C3/C5/C8/C9; workflow part of old S2, S3 and portal-only comparator in S4 | After completed R2 evidence (which requires R1), verify appointment intent before postponement; shared events follow case/upload/appointment producers, manual intake follows shared events, accepted handoffs follow both, and help/no-detriment follows intake and handoffs. Complete the portal-only baseline under the frozen protocol before R4, not merely its later R5 review. |
+| R4 / PR442-S15–S18 | C2/C6/C7/C8/C9; old S5/S6 | S15 requires completed R3 evidence, including S09-S14 and the portal/workflow-only baseline, AND separate task registry/evaluation/release and finite limits; named review default. S16 task-failure verification follows S13/S15. Retain the R3/human question route if the task fails; urgent help remains independent of S15, the model and task release. OD-53 is not required for S15/S16. S17/S18: deny-by-default dispatch and suspension after S15/S16; OD-53 evidence only before any positive routine activation or simulated-outbox positive test; routine OFF. |
 | R5 / PR442-S19–S20 | C1–C9; result-review part of old S4/S7 | Collect all six journeys and 30 criteria, paired effort/adverse/load results only when authorised; no unrun privacy/accessibility check disguised as accepted. |
 
 **Protocol timing clarification:** PR442-S19 is placed in R5 as a story, but
@@ -732,7 +730,7 @@ requested upload, appointment response, grounded question/human handoff and
 assisted continuity. PRD NFR-021 proposes **five concurrent fictional sessions
 (three residents on separate scopes and two staff), 30 minutes**, using the
 continuing generated stock lineage. Ordinary permitted case/status/receipt API
-p95 ≤2 seconds is a proposed exercise target. Managed sign-in, scanning and
+p95 ≤2 seconds on resident routes is an owner-selected exercise target. Managed sign-in, scanning and
 model durations are reported separately with all failures/timeouts and pending
 states. No achieved test, approved SLO or production capacity follows.
 

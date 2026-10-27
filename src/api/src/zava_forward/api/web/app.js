@@ -155,7 +155,7 @@ async function route() {
   const signal = routeController.signal;
   const hash = location.hash || "#/";
   const m = location.hash.match(/^#\/case\/([^?]+)(?:\?.*)?$/);
-  const active = m ? (coordinatorOrigin ? "#/overview" : queueOrigin === "all" ? "#/all" : "#/") : hash.startsWith("#/coordinator") ? "#/overview" : hash;
+  const active = m ? (coordinatorOrigin ? "#/overview" : queueOrigin === "all" ? "#/all" : "#/") : hash.startsWith("#/coordinator") ? "#/overview" : hash.split("?")[0];
   document.querySelectorAll("#nav a").forEach((link) => {
     if (link.getAttribute("href") === active) link.setAttribute("aria-current", "page");
     else link.removeAttribute("aria-current");
@@ -163,6 +163,7 @@ async function route() {
   const destination = me.navigation.find((item) => item.href === active);
   workspaceStatus.textContent = `${me.user.role}. ${destination?.scope || "Case workspace"}.`;
   try {
+  if (hash.split("?")[0] === "#/screens") return await roleScreensView();
   if (me.user.role === "Contractor") return await (m ? contractorCaseView(decodeURIComponent(m[1])) : contractorListView());
   if (m) return await caseView(decodeURIComponent(m[1]));
   const building = location.hash.match(/^#\/building\/(.+)$/);
@@ -806,7 +807,9 @@ async function closedView() {
   const d = await api("/api/cases?view=closed&limit=100");
   show(h("h1", {}, "Closed cases"), h("p", { class: "muted" }, `${d.total} closed. Open one to reopen it with a reason.`),
     h("ul", { class: "list" }, d.items.length ? d.items.map((r) => h("li", {}, h("a", { class: "item", href: `#/case/${encodeURIComponent(r.id)}` },
-      h("div", {}, h("span", { class: "name" }, r.resident), h("div", {}, `${r.address}, ${r.town} ${r.postcode}`)), h("div", { class: "meta" }, r.stage)))) : h("li", { class: "card" }, "No closed cases.")));
+      h("div", {}, h("span", { class: "name" }, r.resident),
+        r.hazard && h("span", { class: "flag danger" }, "Safety issue open"),
+        h("div", {}, `${r.address}, ${r.town} ${r.postcode}`)), h("div", { class: "meta" }, r.stage)))) : h("li", { class: "card" }, "No closed cases.")));
 }
 
 async function contractorListView() {

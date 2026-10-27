@@ -6,6 +6,45 @@ ms.date: 2026-10-27
 ms.topic: reference
 ---
 
+## Specialist screen delivery (#149)
+
+The existing workbench includes a **Specialist screens** destination. Installed
+role-specific modules appear only for the signed-in existing role; this is not a
+role simulator or new authorization. The shared parent alone has no installed
+modules. Child PRs add independent read-only evidence views before owner review
+and integration. Select a home explicitly; selection and queue page are in the
+URL. Reset changes only the view. Existing case workspaces remain available.
+The queue retains the projected "Safety issue open" marker and recorded task
+context, including hazard awareness, response and resident-update due times,
+named follow-up owners and the external service's timing authority (SA-007).
+Missing times stay Unknown. Contractor responses intentionally omit staff task
+context; the shared queue does not invent it or request broader access.
+The manager's closed-case archive also retains its projected safety marker:
+retrofit completion does not mean that a later safety concern is resolved.
+Archive summaries do not supply staff task clocks; no clock is invented there.
+
+Views reuse server-projected case reads, native controls and Fluent-derived
+tokens. Missing or withheld evidence is not readiness. They never send resident
+contact, change a record or approve work. Direct user, screen-reader and WCAG
+acceptance, distinct professional identities and integrated-feature validation
+remain separate from local engineering checks.
+
+From `src/api`, with project dev distributions installed:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tests:../core/tests:../agents/tests python -m unittest test_workbench test_role_screens -q
+PYTHONDONTWRITEBYTECODE=1 python -m checks.role_screens_browser_check
+```
+
+An installed child's check adds its story number, for example
+`python -m checks.role_screens_browser_check 232`. Checks own a synthetic
+loopback server and do not read the normal working dataset or call Azure.
+The parent's scoped receipt covers its exact foundation head, not unmerged
+child implementations or subsequent integration.
+Its browser check also installs a test-only queue to exercise actual staff
+safety projections and contractor responses without task context; this does
+not install a production role screen.
+
 ## Resident advisory assistant prototype (#469)
 
 The separate resident showcase panel offers three fixed questions through
@@ -15,13 +54,34 @@ checks and fetches/re-authorizes the resident's own case for every request.
 It never accepts a case selector, writes a case, submits a form or records consent.
 Document requests are explicitly unknown in the current projection.
 
-The [owner-decision design note](../../docs/architecture/resident-assistant-prototype.md)
-compares model options, the USD 5 ceiling through 2026-10-31 and managed identity.
+The [design note](../../docs/architecture/resident-assistant-prototype.md)
+records the 2026-10-27 owner decision: managed identity and USD20 model ceiling.
 Default `FakeProvider` is deterministic local rules: no model connection or cost.
-`AzureTopicProvider` is an optional Python-configured adapter, disabled by default,
-not wired into the runtime environment. It requires explicit enablement, token
-and durable reservation callbacks and cannot receive resident data or generate
-resident-facing text. No real-provider activation is delivered or authorized.
+The legacy `AzureTopicProvider` remains available for compatibility.
+The new startup-wired `AzureAdvisor` calls regional Standard `gpt-4.1-mini`
+2025-04-14, selecting approved own-case explanatory sentences, not arbitrary
+prose. All mandatory facts and caveats remain host-owned. A fresh authorization
+check after inference/fallback prevents stale replies after revocation/expiry.
+
+Enable only after the [SQL/infra prerequisites](../../infra/README.md#resident-azure-openai-469):
+`ZF_DEMO_ASSISTANT_ENABLED=true`,
+`ZF_DEMO_ASSISTANT_ENDPOINT=https://aoai-resident-469.openai.azure.com`,
+`ZF_SQL_AUTH=msi` and the existing `ZF_SQL_CLIENT_ID`. No other assistant
+settings or credentials are accepted. Default is off. Calls use only
+`ManagedIdentityCredential`, never a developer credential chain or keys.
+Accounting reserves one cent permanently, before credentials or HTTP, up to
+2000 cents lifetime; five attempts per resident per rolling hour. SQL failure,
+rate/cap denial and model failure return labelled deterministic advice, not
+unlabelled AI success. Token usage logs contain counts only. There are no
+automatic retries/refunds. The complete request is <=4096 bytes with <=256
+output tokens. Reviewed inference tariff expires 2026-11-01T00:00:00Z; the
+December funding horizon does not extend resident access.
+
+Focused units: `PYTHONPATH=tests:../core/tests:../agents/tests python -m unittest
+test_resident_aoai test_resident_assistant_api test_resident_assistant_provider`.
+`test_resident_aoai_sql.AccountingSqlTests` exercises actual procedures only
+on the opt-in task-owned loopback SQL Server and is included in local/hosted
+SQL selectors. Never point those tests at Azure SQL or an existing dataset.
 
 Focused local browser check, using only existing constructed fixtures and no SQL:
 
@@ -36,7 +96,8 @@ The focused check covers Account disclosure before sign-out and submit focus
 after success or failure, including duplicate suppression and delayed logout
 isolation. Busy advice keeps the native submit button focusable with
 `aria-disabled`. Optional reservation I/O failures return the generic assistant
-503 without acquiring a token or calling the model transport.
+503 without acquiring a token or calling the model transport in the legacy
+adapter; the new advisor returns explicit rules fallback instead.
 
 ## Finite offline sensor ingestion (#110)
 
@@ -2883,7 +2944,9 @@ identity and not production authentication. It is a different composition from t
   volume, no staff, Entra or AI settings, no secret in the image).
 * Configuration (environment only; the server refuses to start on any missing, expired, mixed or
   unsafe value, and never echoes a value):
-  `ZF_DEMO_EXPIRES_AT` (explicit UTC, in the future, not after 2026-11-01T00:00Z (exclusive, through 31 October UTC)),
+  `ZF_DEMO_EXPIRES_AT` (explicit UTC, in the future, no later than the packaged
+  `resident-demo.json` cap, currently2026-12-31T23:59:59Z inclusive;
+  startup and requests refuse at/after the configured expiry),
   `ZF_DEMO_ALLOWED_HOSTS` (exact host names), `ZF_DEMO_PASSWORD_VERIFIER` (a scrypt verifier, never
   the password), `ZF_DEMO_SESSION_KEY` (base64url, 32 bytes or more), `ZF_SQL_SERVER`,
   `ZF_SQL_DATABASE`, optional `ZF_SQL_CLIENT_ID` for managed-identity sign-in, `PORT`, `ZF_DEMO_BIND`.

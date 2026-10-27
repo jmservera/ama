@@ -1,0 +1,152 @@
+{
+  "url": "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io",
+  "recorded_at": "2026-10-27T10:54:41.927258+00:00",
+  "results": [
+    {
+      "check": "Real HTTPS sign-in responds200",
+      "status": "Passed"
+    },
+    {
+      "check": "Synthetic banner and shared demonstration limits visible",
+      "status": "Passed"
+    },
+    {
+      "check": "Native labelled fake-email and password controls",
+      "status": "Passed"
+    },
+    {
+      "check": "Resident content and account hidden before login",
+      "status": "Passed"
+    },
+    {
+      "check": "Session endpoint confirms signed out",
+      "status": "Passed"
+    },
+    {
+      "check": "Fake email with invalid fixture credential denies generically",
+      "status": "Passed"
+    },
+    {
+      "check": "Unknown fake email gives identical error",
+      "status": "Passed"
+    },
+    {
+      "check": "Missing CSRF denies403",
+      "status": "Passed"
+    },
+    {
+      "check": "Cross-origin denies403",
+      "status": "Passed"
+    },
+    {
+      "check": "Anonymous own-view denies401",
+      "status": "Passed"
+    },
+    {
+      "check": "Anonymous assistant denies401",
+      "status": "Passed"
+    },
+    {
+      "check": "Client case selector cannot grant anonymous authority",
+      "status": "Passed"
+    },
+    {
+      "check": "Employee route absent /api/cases",
+      "status": "Passed"
+    },
+    {
+      "check": "Employee route absent /api/me",
+      "status": "Passed"
+    },
+    {
+      "check": "Employee route absent /auth/login/aad",
+      "status": "Passed"
+    },
+    {
+      "check": "Employee route absent /.auth/login/aad",
+      "status": "Passed"
+    },
+    {
+      "check": "Forged session denies401, not genuine expiry proof",
+      "status": "Passed"
+    },
+    {
+      "check": "No-store, nosniff, framing and CSP response headers",
+      "status": "Passed"
+    },
+    {
+      "check": "Source asset byte parity index.html",
+      "status": "Passed"
+    },
+    {
+      "check": "Source asset byte parity demo.css",
+      "status": "Passed"
+    },
+    {
+      "check": "Source asset byte parity demo.js",
+      "status": "Passed"
+    },
+    {
+      "check": "Source asset byte parity assistant.js",
+      "status": "Passed"
+    },
+    {
+      "check": "Account/sign-out are in top header markup, not positive render proof",
+      "status": "Passed"
+    },
+    {
+      "check": "Skip link receives keyboard focus",
+      "status": "Passed"
+    },
+    {
+      "check": "Skip link moves focus to main",
+      "status": "Passed"
+    },
+    {
+      "check": "Anonymous320px layout has no horizontal page overflow",
+      "status": "Passed"
+    },
+    {
+      "check": "Mobile login targets at least44px",
+      "status": "Passed"
+    },
+    {
+      "check": "Real UI invalid-login feedback renders and is focused",
+      "status": "Passed"
+    },
+    {
+      "check": "No page script exceptions",
+      "status": "Passed"
+    }
+  ],
+  "failure": null,
+  "owner_run": [
+    {
+      "check": "Registered positive fake-email login: owner-held password unavailable",
+      "status": "Blocked"
+    },
+    {
+      "check": "Authenticated own home/cases and cross-resident isolation",
+      "status": "Blocked"
+    },
+    {
+      "check": "Authenticated synthetic gauges/history, desktop and320px",
+      "status": "Blocked"
+    },
+    {
+      "check": "Authenticated advisory assistant answers and cross-resident denial",
+      "status": "Blocked"
+    },
+    {
+      "check": "Actual top-right account sign-out and revoked-session replay",
+      "status": "Blocked"
+    },
+    {
+      "check": "Genuine1800-second live session expiry",
+      "status": "Blocked"
+    }
+  ],
+  "ingress_mutations": 0,
+  "credential_reads": 0,
+  "limitations": "Anonymous browser proof only; fixture expiry tests are separate."
+}

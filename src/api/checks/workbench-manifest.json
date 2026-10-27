@@ -6,14 +6,14 @@
   "default_selection": null,
   "selection_reason": "Full-screen case links, no implicit selected case; return reloads first page",
   "roles": [
-    {"role": "Resident Liaison Officer", "code": "RLO-01", "email": "sam@example.test", "ids": ["ZF-4", "ZF-1"], "navigation": ["#/", "#/all", "#/overview", "#/visits", "#/funding", "#/assistants", "#/time"]},
-    {"role": "Retrofit Programme Manager", "code": "PM-01", "email": "pam@example.test", "ids": ["ZF-5"], "navigation": ["#/", "#/all", "#/overview", "#/visits", "#/funding", "#/finance", "#/capacity", "#/closed", "#/assistants", "#/time"]},
-    {"role": "Retrofit Coordinator", "code": "RC-01", "email": "coordinator@example.test", "ids": [], "navigation": ["#/", "#/all", "#/overview", "#/visits", "#/funding", "#/assistants", "#/time"]},
-    {"role": "Building Safety Liaison", "code": "BS-01", "email": "safety@example.test", "ids": [], "navigation": ["#/", "#/all", "#/overview", "#/visits", "#/funding", "#/assistants", "#/time"]},
-    {"role": "Grants and Evidence Officer", "code": "GE-01", "email": "grants@example.test", "ids": [], "navigation": ["#/", "#/all", "#/overview", "#/visits", "#/funding", "#/finance", "#/assistants", "#/time"]},
-    {"role": "Quality Inspector", "code": "QI-01", "email": "quality@example.test", "ids": [], "navigation": ["#/", "#/all", "#/overview", "#/visits", "#/funding", "#/assistants", "#/time"]},
-    {"role": "Programme Support Officer", "code": "PS-01", "email": "support@example.test", "ids": [], "navigation": ["#/", "#/all", "#/overview", "#/visits", "#/funding", "#/finance", "#/capacity", "#/closed", "#/assistants", "#/time"]},
-    {"role": "Contractor", "code": "CON-01", "email": "contractor@example.test", "ids": ["ZF-4", "ZF-1"], "navigation": ["#/"]}
+    {"role": "Resident Liaison Officer", "code": "RLO-01", "email": "sam@example.test", "ids": ["ZF-4", "ZF-1"], "navigation": ["#/", "#/all", "#/overview", "#/visits", "#/funding", "#/assistants", "#/time", "#/screens"]},
+    {"role": "Retrofit Programme Manager", "code": "PM-01", "email": "pam@example.test", "ids": ["ZF-5"], "navigation": ["#/", "#/all", "#/overview", "#/visits", "#/funding", "#/finance", "#/capacity", "#/closed", "#/assistants", "#/time", "#/screens"]},
+    {"role": "Retrofit Coordinator", "code": "RC-01", "email": "coordinator@example.test", "ids": [], "navigation": ["#/", "#/all", "#/overview", "#/visits", "#/funding", "#/assistants", "#/time", "#/screens"]},
+    {"role": "Building Safety Liaison", "code": "BS-01", "email": "safety@example.test", "ids": [], "navigation": ["#/", "#/all", "#/overview", "#/visits", "#/funding", "#/assistants", "#/time", "#/screens"]},
+    {"role": "Grants and Evidence Officer", "code": "GE-01", "email": "grants@example.test", "ids": [], "navigation": ["#/", "#/all", "#/overview", "#/visits", "#/funding", "#/finance", "#/assistants", "#/time", "#/screens"]},
+    {"role": "Quality Inspector", "code": "QI-01", "email": "quality@example.test", "ids": [], "navigation": ["#/", "#/all", "#/overview", "#/visits", "#/funding", "#/assistants", "#/time", "#/screens"]},
+    {"role": "Programme Support Officer", "code": "PS-01", "email": "support@example.test", "ids": [], "navigation": ["#/", "#/all", "#/overview", "#/visits", "#/funding", "#/finance", "#/capacity", "#/closed", "#/assistants", "#/time", "#/screens"]},
+    {"role": "Contractor", "code": "CON-01", "email": "contractor@example.test", "ids": ["ZF-4", "ZF-1"], "navigation": ["#/", "#/screens"]}
   ],
   "all_case_ids": ["ZF-4", "ZF-1", "ZF-5"],
   "profiles": [

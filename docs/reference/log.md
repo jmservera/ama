@@ -7424,3 +7424,180 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   preferred managed identity and disabled adapter requiring future reviewed
   tariff and durable shared reservation controls. No model calls, Azure changes,
   real-provider activation or live resident acceptance is established.
+
+## [2026-10-23] query | Current scoped cost and minimum development demo refresh (#126)
+
+* Updated the existing Case Study 48 addendum cost proposal and index row with
+  sanitized read-only evidence retrieved about 10:55-10:56Z: USD 261.82 reported
+  RG `ama` actual and USD 457.34 conditional RG service-derived month-end total.
+  Subscription actual/forecast reads failed; no retry or all-in completeness
+  inference from the 91 visible resources, all currently in `ama`.
+* All-in actual/forecast and comparable USD 700 headroom remain Unknown. Exact
+  ingestion lag and complete post-change-day evidence remain unverified; no
+  Front Door/WAF accrued charge was subtracted, and historical evidence stays.
+* Proposed one shared two-hour existing-resource development window, public
+  welcome distinct from signed-in feedback, minimal SQL/private Blob/bootstrap
+  and one bounded real AI coordination draft. Exact incremental prices,
+  cost-complete owner export, operator/technical readiness and separate finite
+  approval block activation; expiry remains 2026-10-25T16:02Z.
+* No Azure mutation, paid/data-plane call, private data/roster/secret read,
+  site-usability claim, legal/DPO/pilot/production approval or #126 acceptance.
+  OD-51 remains open without an invented denominator, quality floor or
+  production economics. Earlier log entries are unchanged.
+
+## [2026-10-21] query | Cut-over soak evidence preparation (Refs #201)
+
+* Added to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#soak-and-cut-over-evidence-preparation-2026-10-21)
+  a dated map of all 11 #201 acceptance criteria (all remain UNMET), dated
+  corrections, a proposed soak evidence specification and pending owner
+  decisions D1 to D16, plus one unchecked checklist item.
+* Files touched: `docs/architecture/cutover-evidence-pack.md`,
+  `docs/adrs/0006-src-layout-and-cutover.md` (dated note only), `docs/reference/README.md`
+  (one row) and this log.
+* Contradictions raised: the 2026-10-15 owner decision of no minimum soak
+  versus the open soak item in the #201 body and the 2026-10-20 proposal
+  request (not resolved, decision D1); the pack statement of no available rubric
+  comparison versus later snapshots 47 then 48 (no candidate-commit score).
+* Preparation only, per the owner direction of 2026-10-20. No soak, duration,
+  sign-off, tag, deletion, Azure or budget action; minimum duration stays open.
+
+## [2026-10-27] query | Resident managed-identity assistant implementation (Refs #469, #466)
+
+* Updated the existing assistant design and index for the owner's USD20
+  model ceiling, resident USD30 within renewed USD700 funding, managed
+  identity, bounded own-case inference and permanent atomic SQL accounting.
+* Recorded real regional Standard mini provisioning and tariff, explicit
+  deterministic fallback, per-resident admission and no specialist/decision
+  authority. Historical USD5 prototype evidence remains unchanged below the
+  current design section. Funding renewal does not extend resident access.
+* Resource provisioning and reachable old-revision health are not SQL/runtime,
+  authenticated managed-identity inference, privacy or production acceptance.
+
+## [2026-10-25] update | Resident PRD target applicability and draft backlog (#441)
+
+* Recorded the owner's 2026-10-24 PRD decisions in PRD v0.21.0: resident-route
+  ordinary API p95 <=2s (five synthetic sessions, 30 minutes) and 10 MiB
+  resident uploads, with audience-based applicability that leaves NFR-002
+  staff/core targets unchanged; provider-neutral synthetic identity fixtures
+  with no provider selected; the first milestone composition (R0 plus
+  PR442-S01 to S06). No new identifier, BRD change or approval was made.
+* Aligned the unregistered proposal (id null, still unregistered), the dated
+  addendum and the resident journeys note, and added an index row for the draft
+  backlog under .copilot-tracking/changes/2026-10-25/. The backlog awaits owner
+  acceptance; no implementation issue is created and no delivery date is
+  estimable before engineering sizing.
+* Finding pr442-qual-041 has corrected authored text awaiting fresh independent
+  review; the other six findings, OD-52 to OD-55 and registration UNMET remain.
+  Earlier log entries are unchanged.
+
+## [2026-10-25] update | Resident target applicability correction cycle 1 (#441)
+
+* Corrected PRD v0.21.0 target-applicability text: staff rules apply to every
+  staff-audience request, including one sharing implementation with a resident
+  route, and never to resident-audience requests; shared implementation does
+  not decide applicability. Added promotion-to-staff-evidence, unlisted
+  resident class, unit and open sample-definition notes. A scoped independent
+  quality review found no residual contradiction; it is not a full-PRD pass.
+  The PRD stays unsigned and the prior entry above is unchanged.
+
+## [2026-10-25] update | Resident backlog paired-protocol freeze correction (#441)
+
+* Moved the paired effort and adverse-outcome protocol freeze into draft backlog item RB-01 (R0) and made all comparison runs depend on it; RB-21 now only collects and reviews results in R5. Documentation and draft backlog only; the PRD stays unsigned, the proposal unregistered and owner acceptance pending. Earlier entries are unchanged.
+
+## [2026-10-25] update | Resident R4 gating split and promotion wording (#441)
+
+* Owner-authorised bounded follow-up: the draft backlog and unregistered proposal now separate the R4 task-release gate (RB-17/18) from the OD-53 routine-dispatch gate (RB-19/20), and the proposal's staff-promotion wording matches the PRD guardrail. Documentation only; PRD unsigned, proposal unregistered, owner acceptance still pending. Earlier entries are unchanged.
+
+## [2026-10-27] query | Historical backfill stack and explicit blockers (Refs #177)
+
+* Updated the existing IoT research plan and index with five unmerged child
+  PRs, bounded exercise projection/retrofit/household components, pending
+  source reuse and consumer identity decisions, and conditional three-daily
+  capacity accounting. No private register or household records were read.
+* Reproduced actual consumer `IDENTITY` refusal for a public synthetic
+  stock observation while its valid control passed. This confirms the
+  previously documented compatibility gap, not a new admission contract.
+* Files: `docs/reference/research/iot-sensor-analytics-research-plan.md`,
+  `docs/reference/README.md` and this append-only log. Parent is draft
+  coordination only; no child integration, acceptance tick, owner deferral,
+  merge, climate reuse approval, Azure action or real monitoring authority.
+
+## [2026-10-27] query | Approved historical backfill integration continuation (Refs #177)
+
+* Recorded owner-approvals-2026-10-27-b prospectively: candidate climate
+  synthetic-demo reuse, canonical stock IDs and authorized child integration.
+  Original blocked stack findings and Residual work Review remain unchanged.
+* Added hash-pinned genuine 2023-2024 paired ERA5 reanalysis and separate NASA
+  2023 sensitivity evidence; source attribution and unverified production/legal
+  terms remain explicit, not converted into unrestricted reuse approval.
+* Updated the existing IoT synthesis and index for canonical IDs, independent
+  consumer controls, opt-in composed models and the actual aggregate evidence
+  boundary. Generated public stock does not prove unread private-register equality.
+* Files: existing IoT research plan, index, climate evidence directory and this
+  append-only log. No memory/regulatory snapshot edit, private data, real device
+  activation, physical calibration, main merge or operational acceptance.
+* Aggregate run reconciled every ID and all 43,800,000 daily readings for the
+  public 60,000-home fixture over 730 days; 703,111,263 compressed reading bytes.
+  Full core 1,427 tests (186 expected skips), static/types and actual owned SQL
+  sensor/API 45 tests passed. Original Review and one scoped parent publication
+  gate remain separate, not implied by this runtime evidence.
+* Original approved-integration Review executed Complete / Not accepted at
+  263e1dbf: one Medium composed-loader budget defect RV-001, routed to later
+  implementation without rewriting or repeating Review. Preserve successful
+  aggregate evidence but keep parent draft. Single scoped gate is pending at
+  this committed source checkpoint; receipt and publication facts remain external.
+* The sole scoped parent gate attempt at1b3f623f against fresh main2e031c89
+  exited1 before checks: candidate does not descend from reviewed main base.
+  No receipt, retry, push or ready transition. Preserve external failure log;
+  coordinator must authorize normal main integration and a new scoped gate
+  after RV-001 correction. Archive/restore-verified finite cleanup succeeded.
+
+## [2026-10-27] query | Later authorized backfill replay-budget implementation (Refs #177)
+
+* Standing owner authorization selects RV-001 correction, current-main
+  integration and one fresh scoped foreground publication gate. Normal merge
+  retains every child ancestry; original critique, Not accepted Review and
+  failed ancestry gate remain unchanged, with no repeated Review.
+* Composed replay now compares manifest home count with actual granted stock
+  and budgets actual nominal rows and stock metadata before scratch/output.
+  Bounded regressions cover forged counts, accurate oversized requests,
+  zero-granted metadata limits, valid zero-row and exact-budget replay.
+* Updated core loading documentation, existing IoT synthesis and KB index.
+  Gate/hosted publication evidence remains external and distinct from this
+  source checkpoint. No private data, physical/production acceptance, human
+  approval, issue closure or main merge is asserted.
+
+## [2026-10-27] restructure | Owner-authorized source cut-over (Refs #199-#203)
+
+* Owner explicitly SIGNED OFF cut-over #201 on 2026-10-27 in the retirement
+  task direction. Added the dated record to the
+  [existing evidence pack](../architecture/cutover-evidence-pack.md#owner-authorized-directory-retirement-2026-10-27)
+  and ADR 0006, preserving original failures and unchecked historical gates.
+* Verified fetched main `65a514ed20e97816dbf47e9fb981ab4cfe40597d`:
+  executable code/tests/images/CI/Bicep/scripts already use `src/`;
+  only the pointer remained, and the earlier prototype was already absent.
+  Removed the pointer; no private data or backups were inspected.
+* Created locally absent annotated archive `v0.21.0`, matching current BRD
+  version `0.21.0`, at that last pre-deletion commit. The owner, not the
+  agent, publishes it with
+  `git push origin refs/tags/v0.21.0:refs/tags/v0.21.0`.
+  No tag push or GitHub release is claimed.
+* Updated repository/source/architecture guidance, capstone registry table,
+  active PRD location clarification, rubric summary, parity navigation,
+  regulatory UX source path, coordinator source-layout note and KB index.
+  Workflow/check names, memory,
+  original case study, historical reports/audits and earlier log bytes remain
+  unchanged. Historical/defensive old-path strings are classified in the
+  evidence pack, not globally rewritten.
+* Additive repair map for earlier log links into the removed guide:
+  the two Entra/CSP entries now resolve through
+  [current account behavior](../../src/api/README.md#entra-id-on-container-apps);
+  the honest-limits entry through
+  [current limits](../../src/api/README.md#honest-limits);
+  the five-assistant configuration entry through the
+  [migrated assistant guide](../../src/agents/README.md#five-retrofit-assistants-2026-10-13-implementation).
+  Earlier link text and targets are intentionally untouched.
+* Scoped existing tests and reference/link checks support this maintenance
+  change, not full-suite parity, hosted CI/deployed health, private backup
+  verification, post-merge rubric comparison or whole-issue closure.
+  All five issues remain Refs; owner merge and remaining acceptance are separate.

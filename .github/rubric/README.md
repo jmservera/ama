@@ -371,7 +371,11 @@ it is not scored.
 
 ### Solution code and infrastructure
 
-The `solution-code` entry covers `src/**/*` and the transitional `mvp/` globs.
+The `solution-code` entry covers `src/**/*` and the registered synthetic-data
+generator scripts. There are no legacy-directory include globs. Archive
+`v0.21.0` marks the owner-approved 2026-10-27 pointer retirement; the dated
+migration notes above remain historical. Legacy data/vendor exclusions remain
+defensive and do not add scored inputs.
 It informs A1, A3, A4, A5, A6 and A7, plus B6: the README is capstone
 documentation, whose completeness and navigability are explicitly assessed by
 B6 in the [assessment guide](../../docs/reference/method/ama-capstone-assessment-guide.md).

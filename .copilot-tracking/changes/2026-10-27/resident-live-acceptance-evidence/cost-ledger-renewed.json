@@ -1,0 +1,51 @@
+{
+  "date": "2026-10-27",
+  "authority": "Owner 10:37Z update in task; supersedes October-only ingress/expiry",
+  "resource_group": "ama",
+  "resident_additional_allowance_usd": 30,
+  "renewed_ama_cap_usd": 700,
+  "cap_end": "2026-12-31",
+  "cap_interpretation": "Continued monthly ama ceiling as recorded in prior admission; not 700 of new spend. Existing official monthly forecast comparisons remain below700. No cumulative October-December forecast below700 is asserted.",
+  "actual_month_to_date_usd": 315.535491423131,
+  "actuals_source": "actual-cost.json; delayed Azure ActualCost",
+  "remaining_monthly_forecast_usd": {
+    "2026-10": 118.33709617465566,
+    "2026-11": 605.7771015167236,
+    "2026-12": 616.7678909301758
+  },
+  "headroom_after_conservative_single_30_reservation_usd": {
+    "2026-10": 236.12741240221334,
+    "2026-11": 64.2228984832764,
+    "2026-12": 53.23210906982422
+  },
+  "single_allocation_not_new_authority": {
+    "prior_release_usd": 1,
+    "retained_unspent_model_hold_usd": 20,
+    "feedback_release_and_compute_usd": 5,
+    "contingency_usd": 4
+  },
+  "configured_expiry": "2026-12-31T23:59:00Z",
+  "maximum_expiry_inclusive": "2026-12-31T23:59:59Z",
+  "desired_final_state": "External HTTPS ingress on; revision active; min0/max1; no closure watchdog",
+  "compute_estimate": {
+    "cpu": 0.25,
+    "gib": 0.5,
+    "cpu_second_usd": 0.000034,
+    "gib_second_usd": 0.000004,
+    "active_hour_usd": 0.0378,
+    "illustrative_66_days_at_1_active_hour_daily_usd": 2.4948,
+    "continuous_66_days_usd": 59.8752,
+    "admission": "Light owner feedback with scale-to-zero only, not continuous operation. Reserve at most4 of feedback allocation for active compute, remainder for release/ancillary costs. At these rates4 covers about105.8 active hours. No free grant assumed."
+  },
+  "cost_control": "Owner monitors daily ama/resident actuals and active usage; stop before feedback allowance5 or total30 is exhausted, or renewed700 headroom is threatened. Do not spend retained model hold on compute without a separate decision.",
+  "stop": "Use the resident-only Bicep helper with --no-ingress and deactivate the then-current resident revision if allowance/expiry is reached. Never delete ama or change SQL sizing.",
+  "uncertainty": "Billing lag, public requests, logging, vault, registry/storage, egress and post-expiry requests are not hard-bounded by these estimates. Scale-to-zero is not a hard budget control. Existing alerts are not hard enforcement.",
+  "new_roles": 0,
+  "new_private_endpoints": 0,
+  "new_jobs": 0,
+  "model_calls": 0,
+  "sql_mutations": 0,
+  "secret_value_reads": 0,
+  "cold_start": "Expected after scale-to-zero; initial request may wait or need retry.",
+  "owner_run_dependency": "Existing SQL allowlist windows and secret metadata retain October authority. December app expiry does not renew them; November authenticated demonstration remains unaccepted."
+}

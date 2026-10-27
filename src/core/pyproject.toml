@@ -73,7 +73,7 @@ module = ["mssql_python"]
 ignore_missing_imports = true
 
 [tool.setuptools.package-data]
-"zava_forward.core" = ["policies/*.json", "law/*.json"]
+"zava_forward.core" = ["policies/*.json", "law/*.json", "resident-demo.json"]
 
 # Typed test harness calling the migrated, not-yet-typed Store interface.
 [[tool.mypy.overrides]]
@@ -124,5 +124,6 @@ disallow_untyped_calls = false
 # Narrow typed sensor boundary calls the existing migrated SQL and generator APIs.
 [[tool.mypy.overrides]]
 module = ["zava_forward.core.sensor_consumer", "sensor_consumer_fixture",
-          "test_sensor_consumer", "tests.sensor_consumer_fixture", "tests.test_sensor_consumer"]
+          "test_sensor_consumer", "tests.sensor_consumer_fixture", "tests.test_sensor_consumer",
+          "test_historical_backfill", "tests.test_historical_backfill"]
 disallow_untyped_calls = false

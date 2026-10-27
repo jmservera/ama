@@ -2,7 +2,7 @@
 title: ADR 0006 Source Layout and Cut-Over Policy
 description: Accepted standard Python src layout with one isolated package per deployable workload plus a shared core, the zava_forward naming scheme, the move-not-copy migration rule, phases, cut-over gate, rubric counting and relocation of private working data
 author: AMA programme
-ms.date: 2026-10-15
+ms.date: 2026-10-27
 ms.topic: reference
 ---
 
@@ -367,6 +367,27 @@ Deployment is on Azure only; non-Azure services exist solely in local tests.
 * Old workflow and check names stay until after the cut-over, then are renamed in
   one pull request (#200), so required checks keep matching.
 * The archive tag `v<BRD version>` is accompanied by a GitHub release (#202).
+
+### Soak reconciliation note (2026-10-21)
+
+The 2026-10-15 answer above is unchanged and not superseded. The #201 body
+still lists the minimum soak period as an open decision and the owner asked on
+2026-10-20 for a soak proposal for review, so the conflict is pending owner
+decision D1 in the
+[cut-over evidence pack](../architecture/cutover-evidence-pack.md#pending-owner-decisions).
+This note does not change the Status or the cut-over gate and records no soak,
+sign-off or deletion.
+
+## Cut-over execution note (2026-10-27)
+
+The owner SIGNED OFF #201 on 2026-10-27 and authorized retirement of the
+remaining pointer directory. Archive `v0.21.0` follows the current BRD version
+and records the last pre-deletion main commit. `prototype/` was already absent;
+all executable work is in `src/`. See the
+[dated retirement evidence and owner tag command](../architecture/cutover-evidence-pack.md#owner-authorized-directory-retirement-2026-10-27).
+Workflow/check names remain unchanged. The earlier soak reconciliation and
+unchecked technical/human evidence remain historical; this note establishes
+no new deployed health, rubric score, release or operational approval.
 
 ## Related
 

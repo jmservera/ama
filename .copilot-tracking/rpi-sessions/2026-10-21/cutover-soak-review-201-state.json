@@ -1,0 +1,74 @@
+{
+  "task_id": "201-soak-review",
+  "task_slug": "cutover-soak-review-201",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-21/cutover-soak-review-201-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-21/cutover-soak-review-201-plan.md",
+    "details": ".copilot-tracking/details/2026-10-21/cutover-soak-review-201-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-21/cutover-soak-review-201-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-21/cutover-soak-review-201-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-21/cutover-soak-review-201-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Automatic full RPI loop (Research, Plan with one critique, Implement, one Review) was explicitly requested by the owner/coordinator task prompt for #201 preparation only.",
+      "status": "confirmed",
+      "evidence": "Task prompt 2026-10-21; owner comment https://github.com/jmservera/ama/issues/126#issuecomment-6290697705 authorizes preparation only (propose soak duration and cut-over evidence checklist for review; no sign-off, tag or legacy deletion)"
+    },
+    {
+      "decision": "Research executed (focused, one cycle, three waves inline); Planning Readiness Ready; output mode audit; minimum soak duration remains OPEN.",
+      "status": "research-complete",
+      "evidence": ".copilot-tracking/research/2026-10-21/cutover-soak-review-201-research.md"
+    },
+    {
+      "decision": "Plan critique executed once by a fresh worker via rpi-plan-critique; verdict Revise; PC-001..PC-009 (1 High, 6 Medium, 2 Low) all planner-applicable and applied directly; no second critique; no user decision needed.",
+      "status": "critique-resolved",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-21/cutover-soak-review-201-plan-critique.md"
+    },
+    {
+      "decision": "Implementation complete for preparation scope: pack section (11 AC all UNMET, soak spec proposal, D1-D16), ADR note, index row, log; focused checks passed; full gate not performed (coordinator).",
+      "status": "implemented",
+      "evidence": ".copilot-tracking/changes/2026-10-21/cutover-soak-review-201-changes.md"
+    },
+    {
+      "decision": "Review executed once: execution Complete, outcome Residual work; RV-001..004 (no defects), all routed as follow-ups",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-21/cutover-soak-review-201-review.md"
+    },
+    {
+      "decision": "Integration continuation: rebased onto origin/main ca4baf75837de57c99718f7423716d5dc0b0e244 (PR #420), no conflicts, not pushed",
+      "status": "completed",
+      "evidence": "changes artifact, Integration Continuation section; old-base gate receipts historical; no current gate claimed"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Coordinator runs full gate and independent assessment, then DRAFT PR Refs #201; owner answers D1-D16"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Owner decisions D1-D16 in #201 (soak need and duration OPEN)",
+      "rationale": "Unblocks every deployed-evidence step",
+      "evidence": "pack section Pending Owner Decisions"
+    },
+    {
+      "rank": 2,
+      "task": "Coordinator external gate, independent assessment, draft PR Refs #201",
+      "rationale": "Existing gate not waived for docs-only",
+      "evidence": "repo instructions"
+    },
+    {
+      "rank": 3,
+      "task": "Refresh pack ms.date after PR 423 merges",
+      "rationale": "RV-002",
+      "evidence": "review RV-002"
+    }
+  ]
+}

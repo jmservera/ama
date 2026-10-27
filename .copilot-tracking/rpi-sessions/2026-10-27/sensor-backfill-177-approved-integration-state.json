@@ -1,0 +1,37 @@
+{
+  "task_id": "177-approved-integration-2026-10-27",
+  "task_slug": "sensor-backfill-177-approved-integration",
+  "parent_task": {"task_id": "177", "task_slug": "sensor-backfill-177"},
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-27/sensor-backfill-177-approved-integration-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-27/sensor-backfill-177-approved-integration-plan.md",
+    "details": ".copilot-tracking/details/2026-10-27/sensor-backfill-177-approved-integration-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-27/sensor-backfill-177-approved-integration-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-27/sensor-backfill-177-approved-integration-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-27/sensor-backfill-177-approved-integration-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Later P04-T03 complete: main2e031c89 merged at56db2184 without rewriting children; RV-001 fixed by actual granted-count matching and pre-scratch nominal/metadata budget; 91 focused tests pass with1 existing skip, complete core Ruff/format and mypy153 pass; original critique/Review unchanged", "status": "validated", "evidence": "/mnt/ama-rpi-gates/177-rv001-20261027/focused-tests.log and static-types.log"},
+    {"decision": "Owner selects later RV-001 implementation with regression, current-origin/main integration preserving intent, one new foreground changed gate with lock timeout0 (wait/retry on contention), clean-fdxq first, parent publication and ready only after hosted checks pass; force-with-lease authorized only for this parent if needed; no merge", "status": "confirmed", "evidence": "Standing owner authorization supplied 2026-10-27 in this continuation"},
+    {"decision": "Full RPI loop and child integration authorized", "status": "confirmed", "evidence": "User request 2026-10-27"},
+    {"decision": "Candidate climate reuse approved for synthetic demo; stock home IDs canonical", "status": "confirmed", "evidence": "User supplied owner-approvals-2026-10-27-b"},
+    {"decision": "One foreground --changed parent gate, lock timeout 0, fresh external out, clean -fdxq first", "status": "confirmed", "evidence": "User scoped policy supersedes --all"},
+    {"decision": "Research executed, Planning Readiness Ready", "status": "complete", "evidence": ".copilot-tracking/research/2026-10-27/sensor-backfill-177-approved-integration-research.md"},
+    {"decision": "One final-candidate critique executed Complete, verdict Revise; PC-001 through PC-004 directly resolved, no repeat", "status": "dispositioned", "evidence": ".copilot-tracking/plans/2026-10-27/sensor-backfill-177-approved-integration-plan.md#critique-disposition"},
+    {"decision": "P01 climate and P02 canonical identity complete; all five child heads merged normally into parent", "status": "complete", "evidence": "Climate 09ea9e23, identity 6fc8d0fe; integration merge d3973924"},
+    {"decision": "Core 1427 tests pass (186 expected skips); full Ruff/format/mypy pass; actual owned SQL sensor suite 45 tests pass", "status": "validated", "evidence": "/mnt/ama-rpi-gates/177-approved-integration-20261027/core-unit.log and sensor-sql.log"},
+    {"decision": "Full generated 60000-home 730-day daily run passes every-row/every-ID verification: 43800000 rows, 703111263 compressed reading bytes; exact private-register equality and full-hourly scale not claimed", "status": "validated", "evidence": "/mnt/ama-rpi-gates/177-approved-integration-20261027/scale-summary.json"},
+    {"decision": "Original independent Review execution Complete; outcome Not accepted; assessed implementation 263e1dbf at base864a5021; one Medium RV-001, routed later rpi-implement without another Review", "status": "not-accepted", "evidence": ".copilot-tracking/reviews/logs/2026-10-27/sensor-backfill-177-approved-integration-review.md"},
+    {"decision": "Exactly one authorized scoped gate invocation at 1b3f623f against freshly fetched main2e031c89 exited1 before checks: Candidate does not descend from the reviewed main base; no receipt/output directory created, no retry or push", "status": "blocked", "evidence": "/mnt/ama-rpi-gates/177-approved-integration-parent-gate-20261027-final.log"},
+    {"decision": "Archive readback and selected restore hashes verified before git clean-fdxq; all tracked RPI bytes preserved", "status": "complete", "evidence": "/mnt/ama-rpi-gates/177-approved-integration-cleanup-20261027/receipt.json"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Implement", "action": "P04-T02: commit this pre-gate checkpoint, archive/restore-verify finite task caches and tracking, clean-fdxq, then one new foreground changed gate timeout0 against freshly fetched main (wait/retry contention only); independently assess exact-head receipt, verify immediately before authorized publication, update PR486 and await hosted checks. Final state stays external under /mnt/ama-rpi-gates/177-rv001-20261027/ to preserve candidate identity."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Scope production physical/source/regional qualification and real monitoring approvals", "rationale": "Excluded from synthetic demo; required only before consequential production use", "evidence": ".copilot-tracking/plans/2026-10-27/sensor-backfill-177-approved-integration-plan.md#follow-up-items"}
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "task_id": "149",
+  "task_slug": "role-screens-149",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-27/role-screens-149-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-27/role-screens-149-plan.md",
+    "details": ".copilot-tracking/details/2026-10-27/role-screens-149-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-27/role-screens-149-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-27/role-screens-149-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-27/role-screens-149-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "B2 resolved: parent and nine independent children rebased onto main 2e031c89. All eight scoped role/workbench browser reruns and focused units passed with this worktree's source roots.",
+      "status": "executed",
+      "evidence": "Rebased validation matrix in changes; external /tmp/ama-role-screens-149-followup-20261027 logs; no integration"
+    },
+    {
+      "decision": "RV-001 implemented in #231 at 76a4fb95. Executable selective-change regression failed before correction, then 27 tests and actual painted browser row assertions passed. Original Review remains Complete / Not accepted; no second Review or independent acceptance.",
+      "status": "implemented-and-locally-validated",
+      "evidence": "Child role-screens-231-changes.md and 231-regression-before.log/231-unit-verified.log/231-rebased-browser.log"
+    },
+    {
+      "decision": "Owner authorizes rebasing all run-owned parent/child branches onto current main, RV-001 correction with executable units and local Playwright, one clean foreground scoped gate and stacked draft PR publication. No merge or issue closure.",
+      "status": "owner-directed-follow-up",
+      "evidence": "2026-10-27 current user request; current origin/main 2e031c89a18ce1ceb3de4fda014fddcb90231fda; no matching remote branches or parent PR"
+    },
+    {
+      "decision": "Run the full ordered RPI loop with stacked draft delivery and local-first scoped-only validation",
+      "status": "owner-directed",
+      "evidence": "2026-10-27 user request"
+    },
+    {
+      "decision": "Start from clean feat/role-screens-149 at fetched origin/main 864a502126ee0dfedf13eaf54f08a10f2339279c",
+      "status": "verified",
+      "evidence": "git status, branch, fetch, rev-parse and PR lifecycle inspection"
+    },
+    {
+      "decision": "Research resumed and completed; B1 resolved by explicit scoped-gate owner authorization",
+      "status": "ready",
+      "evidence": "Resumed cycle 2; https://github.com/jmservera/ama/issues/149#issuecomment-6444333817"
+    },
+    {
+      "decision": "One critique executed, verdict Revise; PC-001 through PC-004 corrected directly. Post-implementation Review not yet executed.",
+      "status": "plan-ready",
+      "evidence": "Plan Critique Disposition and original role-screens-149-plan-critique.md"
+    },
+    {
+      "decision": "One independent postimplementation Review executed Complete; outcome Not accepted for the full boundary. RV-001 Medium blocks #231 only; unaffected candidates remain conditionally draft-eligible.",
+      "status": "executed-not-accepted",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/role-screens-149-review.md; exact parent f901682b and nine child heads"
+    },
+    {
+      "decision": "Fetched main moved to 2e031c89a18ce1ceb3de4fda014fddcb90231fda; parent merge-base remains 864a502126ee0dfedf13eaf54f08a10f2339279c. Stop at this new owner decision; do not reopen resolved gate policy.",
+      "status": "publication-blocked",
+      "evidence": "Read-only git fetch/rev-parse/merge-base and tools/rpi-checks.py clean_identity ancestry requirement; zero gate invocations; https://github.com/jmservera/ama/issues/149#issuecomment-6445655965"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Implement",
+    "action": "Commit final parent evidence/formatting, propagate that ancestry to all children, preserve and clean exact generated paths, execute the one foreground scoped gate and verify current-main partial receipt immediately before push. Publish nine child drafts and one parent draft only on pass. Record post-gate publication status in trace-only #233 without altering the gated parent."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Owner-controlled child integration and integrated-head validation",
+      "rationale": "High service value after publication blockers; independent branch checks cannot prove a connected same-home journey or combined browser behavior.",
+      "evidence": "Plan Follow-Up Items; #233 trace at 7519ca10; Review Plan Follow-Up Assessment"
+    },
+    {
+      "rank": 2,
+      "task": "Human/assistive-technology validation and actual Fluent adoption",
+      "rationale": "Required acceptance evidence remains unavailable; engineering checks are not resident/staff comprehension or WCAG acceptance.",
+      "evidence": "#155; plan Follow-Up Items; Review validation limits"
+    }
+  ]
+}
