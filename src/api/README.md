@@ -2,9 +2,35 @@
 title: Zava Forward API and web workbench
 description: Staff features, configuration, local run, honest limits and container checks for the api project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-24
+ms.date: 2026-10-27
 ms.topic: reference
 ---
+
+## Resident advisory assistant prototype (#469)
+
+The separate resident showcase panel offers three fixed questions through
+`POST /demo/assistant` with exactly `{"topic":"status"}`, `"documents"` or
+`"forms"`. The endpoint requires the existing session, same-origin and CSRF
+checks and fetches/re-authorizes the resident's own case for every request.
+It never accepts a case selector, writes a case, submits a form or records consent.
+Document requests are explicitly unknown in the current projection.
+
+The [owner-decision design note](../../docs/architecture/resident-assistant-prototype.md)
+compares model options, the USD 5 ceiling through 2026-10-31 and managed identity.
+Default `FakeProvider` is deterministic local rules: no model connection or cost.
+`AzureTopicProvider` is an optional Python-configured adapter, disabled by default,
+not wired into the runtime environment. It requires explicit enablement, token
+and durable reservation callbacks and cannot receive resident data or generate
+resident-facing text. No real-provider activation is delivered or authorized.
+
+Focused local browser check, using only existing constructed fixtures and no SQL:
+
+```bash
+PYTHONPATH=tests:../core/tests:../agents/tests python -m checks.resident_assistant_browser_check
+```
+
+Full unit discovery remains the normal API command. Browser evidence does not
+establish screen-reader, user or live-service acceptance.
 
 ## Finite offline sensor ingestion (#110)
 

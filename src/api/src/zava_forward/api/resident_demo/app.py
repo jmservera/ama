@@ -19,6 +19,14 @@ from typing import Any, Protocol
 from urllib.parse import urlsplit
 
 from zava_forward.core import resident_showcase as rs
+from zava_forward.core.resident_assistant import (
+    AssistantUnavailable,
+    CaseProgress,
+    FakeProvider,
+    Provider,
+    Topic,
+    advise,
+)
 
 WEB = Path(__file__).parent / "web"
 ASSETS = {
@@ -26,6 +34,7 @@ ASSETS = {
     "/index.html": ("index.html", "text/html; charset=utf-8"),
     "/demo.css": ("demo.css", "text/css; charset=utf-8"),
     "/demo.js": ("demo.js", "text/javascript; charset=utf-8"),
+    "/assistant.js": ("assistant.js", "text/javascript; charset=utf-8"),
 }
 SESSION_COOKIE = "__Host-zfdemo"
 CSRF_COOKIE = "__Host-zfdemo-csrf"
@@ -80,6 +89,7 @@ class ResidentDemo:
         port: int = 8089,
         clock: Callable[[], float] = time.time,
         client_address: str = "peer",
+        assistant_provider: Provider | None = None,
     ):
         self.client_address = client_address
         self.reader, self.identity, self.verifier = reader, identity, verifier
@@ -88,6 +98,9 @@ class ResidentDemo:
         self.host, self.port, self.clock = host, port, clock
         self.slots = threading.BoundedSemaphore(MAX_CONCURRENT)
         self.by_handle = {codec.handle(case): case for case in identity.cases.values()}
+        self.assistant_provider = (
+            assistant_provider if assistant_provider is not None else FakeProvider()
+        )
 
     @property
     def ready(self) -> bool:
@@ -256,9 +269,11 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                 self._login()
             elif self.command == "POST" and path == "/demo/logout":
                 self._logout()
+            elif self.command == "POST" and path == "/demo/assistant":
+                self._assistant()
             elif path in ASSETS or path in ("/demo/session", "/demo/view", "/demo/login"):
                 self._json(405, dict(error="That is not allowed here."))
-            elif path == "/demo/logout":
+            elif path in ("/demo/logout", "/demo/assistant"):
                 self._json(405, dict(error="That is not allowed here."))
             else:
                 self._json(404, dict(error="Not found."))
@@ -291,6 +306,49 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
             csrf, csrf_cookie = self._csrf_cookie()
             session = _set_cookie(SESSION_COOKIE, token, rs.SESSION_SECONDS, True)
             self._json(200, dict(signed_in=True, csrf=csrf), (session, csrf_cookie))
+
+        def _assistant(self) -> None:
+            if not (self._same_origin() and self._csrf_ok()):
+                self._json(403, dict(error="Please reload the page and try again."))
+                return
+            view = app.view_for(_cookies(self.headers.get("Cookie")).get(SESSION_COOKIE))
+            if view is None:
+                self._json(401, dict(error="Please sign in again."))
+                return
+            body = self._body()
+            if body is None or set(body) != {"topic"} or not isinstance(body["topic"], str):
+                self._json(400, dict(error="Choose one of the listed questions."))
+                return
+            try:
+                topic = Topic(body["topic"])
+            except ValueError:
+                self._json(400, dict(error="Choose one of the listed questions."))
+                return
+            try:
+                advice = advise(
+                    topic,
+                    CaseProgress(view["progress"], view["next_step"], view.get("closed", "")),
+                    app.assistant_provider,
+                )
+            except AssistantUnavailable:
+                print("resident assistant unavailable", file=sys.stderr)
+                self._json(
+                    503,
+                    dict(
+                        error="The assistant is unavailable. Try again or ask your housing officer."
+                    ),
+                )
+                return
+            self._json(
+                200,
+                dict(
+                    answer=advice.answer,
+                    sources=advice.sources,
+                    label=advice.label,
+                    notice=advice.notice,
+                    help=advice.help,
+                ),
+            )
 
         def _logout(self) -> None:
             if not (self._same_origin() and self._csrf_ok()):

@@ -2,9 +2,23 @@
 title: Zava Forward core library
 description: Domain, store, ledger, law store, chat storage and synthetic-data documentation for the core project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-24
+ms.date: 2026-10-27
 ms.topic: reference
 ---
+
+## Resident advisory assistant (#469)
+
+`resident_assistant.advise(topic, CaseProgress(...), provider)` builds bounded
+advisory text from the current authenticated resident projection. `Provider`
+accepts and returns only a `Topic` enum; `FakeProvider` is deterministic and
+network-free. A provider cannot supply answer text or select a different task.
+Status reuses the page's plain-language facts; document requests remain unknown,
+and form help is generic. All answers include sources, an advisory notice and a
+person-help route. No submission, consent or decision authority is added.
+
+The API owns authentication and the disabled real adapter. See the
+[design awaiting owner decision](../../docs/architecture/resident-assistant-prototype.md)
+for model, credential, USD 5 budget and activation boundaries.
 
 ## Constructed offline sensor consumer (#110)
 

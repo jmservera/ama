@@ -207,6 +207,7 @@
     help.appendChild(hl);
     help.appendChild(el("p", view.help.note));
     content.appendChild(help);
+    window.mountResidentAssistant(content, api, showSignin);
 
     var unavailable = card("Not available in this showcase");
     var ul = el("ul", null, "unavail");
