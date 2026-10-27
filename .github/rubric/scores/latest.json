@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-27T15:28:34+00:00",
-  "commit": "2f9b758b7b22bda6db8788057cbd9ba323f6cfd5",
+  "scored_at": "2026-10-27T16:05:34+00:00",
+  "commit": "1833f9dd3eb367c843a2f29f90afed3efc7f1757",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40529738664",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40535321374",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "810a1dec8098e8b39fb8143601a21d314b5151923f4b021dee703821dbd9cc88",
@@ -125,7 +125,7 @@
         "docs/capstone/pitch/cowork-main-presentation/README.md:1-45",
         "docs/capstone/pitch/cowork-main-presentation/evidence/README.md:1-20"
       ],
-      "rationale": "This diff only changes PRD requirements wording (resident/staff NFR applicability, identity, milestone sequencing); no deck or capstone documentation files changed. B6 scope evidence unaffected. Unchanged baseline."
+      "rationale": "This diff only changes NFR scoping wording in a PRD; no deck or capstone documentation files changed. B6 scope evidence unaffected. Unchanged baseline."
     },
     "B7": {
       "score": 5,
@@ -138,7 +138,7 @@
     "C1": {
       "score": 5,
       "evidence": [],
-      "rationale": "No new BRD/PRD stakeholder-framing change beyond existing FR naming; this PR only clarifies NFR applicability wording and identity/sequencing, not stakeholder/value framing already at ceiling. Unchanged."
+      "rationale": "No new BRD stakeholder-framing change; PRD edit only clarifies NFR-002 vs NFR-021 applicability boundaries and identity wording, not stakeholder/value framing already at ceiling. Unchanged."
     },
     "C2": {
       "score": 2,
