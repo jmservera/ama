@@ -29,9 +29,9 @@ Verify shared navigation, malformed/unknown view, unauthorized module and baseli
 workbench behavior before child implementation.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Independent role children
+### [x] P02: Independent role children
 <!-- rpi:task id=P02-T01 -->
-#### [ ] P02-T01: Deliver priority children in value order
+#### [x] P02-T01: Deliver priority children in value order
 
 Each child branches from the same shared parent. Its only production additions
 are its module and script inclusion; common foundation changes belong to parent.
@@ -49,7 +49,7 @@ Readiness is not reviewed export; absent route/template/price/billing evidence
 is explicit Unknown with Finance resolution. Do not fabricate a reviewed pack.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Deliver remaining role children, then cross-role trace last
+#### [x] P02-T02: Deliver remaining role children, then cross-role trace last
 
 Existing manager access can inspect permitted case evidence for asset/data/
 procurement research perspectives without claiming new provisioned identities.
@@ -62,6 +62,14 @@ competence remains a named professional review, not generic approval.
 #233 records current eleven-perspective and five-theme coverage, cross-child
 same-home fixture IDs and deferrals. No claim of an integrated app before owner
 integration, no production acceptance from desk hypotheses.
+
+Completed role source heads: #232 d66942be, #227 1fd4d766, #230 a3ac29df,
+#225 d2bc16f0, #226 fc94cdf3, #228 77d1ba96, #229 8252cd44, #231 5638e879.
+#233 trace-only head 7519ca10 was created last. Every role has passed focused
+units and its explicit real Chromium selector plus existing workbench browser.
+Parent changes matrix records counts, original failures and limits. #231 uses
+actual case-sensitive field paint after scroll for lazy sections; no hidden
+DOM proxy. No child is merged into the parent.
 
 <!-- rpi:phase id=P03 -->
 ### [ ] P03: Review, scoped gate and publication

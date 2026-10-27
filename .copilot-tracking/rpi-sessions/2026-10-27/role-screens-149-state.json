@@ -38,8 +38,8 @@
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Implement",
-    "action": "P01-T01 active: implement shared host and local harness, then independent priority children."
+    "phase": "Review",
+    "action": "P01/P02 reconciled; commit evidence and transition to the one independent exact-parent/child Review, then eligible scoped gate/publication."
   },
   "prioritized_follow_ups": null
 }

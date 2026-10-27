@@ -84,10 +84,10 @@ Repository ASCII/content conventions override conflicting generic typography rul
 ## Acceptance Criteria
 
 * [ ] Each delivered child contains its screen, local evidence and draft PR.
-* [ ] Relevant unit and real local Chromium checks pass for exact child source.
+* [x] Relevant unit and real local Chromium checks pass for exact child source.
 * [ ] Parent has one exact-head scoped gate receipt, or explicit retained failure.
 * [ ] Original critique and Review are retained with all findings disposed/routed.
-* [ ] All eleven perspectives and five themes have screen pointers or deferrals.
+* [x] All eleven perspectives and five themes have screen pointers or deferrals.
 
 Issue acceptance boxes are not modified; this list is engineering delivery only.
 
@@ -99,11 +99,11 @@ Issue acceptance boxes are not modified; this list is engineering delivery only.
 #### [x] P01-T01: Add the specialist host and bounded local harness
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Independent role children
+### [x] P02: Independent role children
 <!-- rpi:task id=P02-T01 -->
-#### [ ] P02-T01: Deliver priority children in value order
+#### [x] P02-T01: Deliver priority children in value order
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Deliver remaining role children, then cross-role trace last
+#### [x] P02-T02: Deliver remaining role children, then cross-role trace last
 
 <!-- rpi:phase id=P03 -->
 ### [ ] P03: Review, scoped gate and publication
@@ -193,8 +193,28 @@ artifact; logs/screenshots external. Never count fixture existence as execution.
 ## Follow-Up Items
 
 * Owner-controlled child integration and exact integrated-head validation.
+  Outside this run because independent child PRs must retain reviewable diffs;
+  owner integrates only after review, then authorizes integrated validation.
 * Existing #155 human comprehension/accessibility validation and #150 actual
   Fluent implementation adoption are not established by these native screens.
+  Product/accessibility owners select participants, assistive technology and
+  adoption evidence; synthetic engineering checks cannot substitute for them.
+* Distinct asset/procurement/data/provider identities, approved funding templates,
+  professional appointments and operational recovery receipts remain with
+  identity, Finance, technical and service owners. No missing input is invented.
+
+## Implementation Reconciliation
+
+P02 completed in priority order, then #226/#228/#229/#231 and trace-only #233.
+Exact commits, scoped unit results and browser outcomes are recorded in the
+parent changes matrix and each independent child changes artifact. #231's
+selector scrolls and waits for case-sensitive field paint in lazy sections;
+earlier failed assertions remain external. #229's unchanged workbench retry
+passed after an initial existing checkbox wait timeout; both logs retained.
+Shared link-colour, focus-modality and route-interception corrections belong
+to parent 950bf2e6. These are compatible engineering refinements, not altered
+scope or new authority; one original critique remains the only critique.
+P03 Review, gate and draft publication remain pending, not retroactively done.
 
 ## Handoff
 
