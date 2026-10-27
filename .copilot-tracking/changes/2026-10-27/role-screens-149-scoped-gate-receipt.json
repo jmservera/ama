@@ -1,0 +1,2507 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "python3",
+        "--version"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:22:58.479699+00:00",
+      "group": "preflight",
+      "integration": false,
+      "log": "0000-preflight.log",
+      "sha256": "5b3e43dc38ca01e3f5a7854ba50d4330864b0c1e0f646650b2c78cf072acc366",
+      "started": "2026-10-27T15:22:58.477077+00:00",
+      "suite": false,
+      "timeout_seconds": 60
+    },
+    {
+      "argv": [
+        "node",
+        "--version"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:22:58.484826+00:00",
+      "group": "preflight",
+      "integration": false,
+      "log": "0001-preflight.log",
+      "sha256": "f2ec568164f99546161909b0189b57bb5be3e80f8e2ccd8a51a4aed8c4055a04",
+      "started": "2026-10-27T15:22:58.479798+00:00",
+      "suite": false,
+      "timeout_seconds": 60
+    },
+    {
+      "argv": [
+        "docker",
+        "version"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:22:58.512114+00:00",
+      "group": "preflight",
+      "integration": false,
+      "log": "0002-preflight.log",
+      "sha256": "0a3ccddb8c7b76d2ca7460bb8081aff503843134e0fb98f1cb6992c2f0af72ce",
+      "started": "2026-10-27T15:22:58.484898+00:00",
+      "suite": false,
+      "timeout_seconds": 60
+    },
+    {
+      "argv": [
+        "az",
+        "bicep",
+        "version"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:23:02.450784+00:00",
+      "group": "preflight",
+      "integration": false,
+      "log": "0003-preflight.log",
+      "sha256": "780712eadbdc0150c9864a928728bb540a2acfe31d965827f78393e1c55deb35",
+      "started": "2026-10-27T15:22:58.512208+00:00",
+      "suite": false,
+      "timeout_seconds": 60
+    },
+    {
+      "argv": [
+        "actionlint",
+        "-version"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:23:02.454953+00:00",
+      "group": "preflight",
+      "integration": false,
+      "log": "0004-preflight.log",
+      "sha256": "9d34cdaec053c6005199c08f2bac628bd8c087303faa26fd8ab58c3e22216ff5",
+      "started": "2026-10-27T15:23:02.450853+00:00",
+      "suite": false,
+      "timeout_seconds": 60
+    },
+    {
+      "argv": [
+        "shellcheck",
+        "--version"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:23:02.457293+00:00",
+      "group": "preflight",
+      "integration": false,
+      "log": "0005-preflight.log",
+      "sha256": "fc9eec16b4191d058a295813ca9afbe9d2b37b59975da860170726be162a3924",
+      "started": "2026-10-27T15:23:02.455027+00:00",
+      "suite": false,
+      "timeout_seconds": 60
+    },
+    {
+      "argv": [
+        "trivy",
+        "--version"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:23:02.529511+00:00",
+      "group": "preflight",
+      "integration": false,
+      "log": "0006-preflight.log",
+      "sha256": "caeca6a0f6641907faa757b0975d2edcf05fe6ca9b724a7f86e36fe0626f4441",
+      "started": "2026-10-27T15:23:02.457347+00:00",
+      "suite": false,
+      "timeout_seconds": 60
+    },
+    {
+      "argv": [
+        "python3",
+        "-m",
+        "venv",
+        "<output>/venvs/api"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:23:06.221251+00:00",
+      "group": "project-api",
+      "integration": false,
+      "log": "0007-project-api.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started": "2026-10-27T15:23:02.530006+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "<output>/venvs/api/bin/python",
+        "-m",
+        "pip",
+        "check"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:23:07.017102+00:00",
+      "group": "project-api",
+      "integration": false,
+      "log": "0008-project-api.log",
+      "sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09",
+      "started": "2026-10-27T15:23:06.221342+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "<output>/venvs/api/bin/python",
+        "-c",
+        "import zava_forward"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 1,
+      "expected_probe_failure": true,
+      "finished": "2026-10-27T15:23:07.033098+00:00",
+      "group": "project-api",
+      "integration": false,
+      "log": "0009-project-api.log",
+      "sha256": "79ba3661f0dd3f8fade833d351908fe0de6d897afbd40a8503bb3502d69ada54",
+      "started": "2026-10-27T15:23:07.017223+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "<output>/venvs/api/bin/python",
+        "-m",
+        "pip",
+        "install",
+        "-e",
+        "src/core",
+        "-e",
+        "src/agents",
+        "-e",
+        "src/api[dev]"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:23:32.002457+00:00",
+      "group": "project-api",
+      "integration": false,
+      "log": "0010-project-api.log",
+      "sha256": "404cf9c7aa45a27c20fef9e2e0317e2d1552c2375c077e6521dbd526da190fc9",
+      "started": "2026-10-27T15:23:07.033166+00:00",
+      "suite": false,
+      "timeout_seconds": 1200
+    },
+    {
+      "argv": [
+        "<output>/venvs/api/bin/python",
+        "-m",
+        "pip",
+        "check"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:23:32.899960+00:00",
+      "group": "project-api",
+      "integration": false,
+      "log": "0011-project-api.log",
+      "sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09",
+      "started": "2026-10-27T15:23:32.013646+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "python3",
+        "-m",
+        "venv",
+        "<output>/venvs/namespace"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:23:36.485791+00:00",
+      "group": "namespace",
+      "integration": false,
+      "log": "0012-namespace.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started": "2026-10-27T15:23:32.900093+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "<output>/venvs/namespace/bin/python",
+        "-m",
+        "pip",
+        "check"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:23:37.293420+00:00",
+      "group": "namespace",
+      "integration": false,
+      "log": "0013-namespace.log",
+      "sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09",
+      "started": "2026-10-27T15:23:36.485909+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "<output>/venvs/namespace/bin/python",
+        "-c",
+        "import zava_forward"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 1,
+      "expected_probe_failure": true,
+      "finished": "2026-10-27T15:23:37.309496+00:00",
+      "group": "namespace",
+      "integration": false,
+      "log": "0014-namespace.log",
+      "sha256": "79ba3661f0dd3f8fade833d351908fe0de6d897afbd40a8503bb3502d69ada54",
+      "started": "2026-10-27T15:23:37.293558+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "<output>/venvs/namespace/bin/python",
+        "-m",
+        "pip",
+        "install",
+        "-e",
+        "src/core",
+        "-e",
+        "src/agents",
+        "-e",
+        "src/api",
+        "-e",
+        "src/orchestrator",
+        "-e",
+        "src/importer"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:24:01.179205+00:00",
+      "group": "namespace",
+      "integration": false,
+      "log": "0015-namespace.log",
+      "sha256": "1592322970d3fb2fa949f081452bcfe82453760be43b0e6f1f8d7e1115178ae0",
+      "started": "2026-10-27T15:23:37.309610+00:00",
+      "suite": false,
+      "timeout_seconds": 1200
+    },
+    {
+      "argv": [
+        "<output>/venvs/namespace/bin/python",
+        "-m",
+        "pip",
+        "check"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:24:02.092890+00:00",
+      "group": "namespace",
+      "integration": false,
+      "log": "0016-namespace.log",
+      "sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09",
+      "started": "2026-10-27T15:24:01.196729+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "<output>/venvs/namespace/bin/python",
+        "-m",
+        "zava_forward.core"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:24:02.146067+00:00",
+      "group": "namespace",
+      "integration": false,
+      "log": "0017-namespace.log",
+      "sha256": "dc1c4658ebccb896187c6eb58cc209aa294e660b36b50b60838b3077cb5c60a4",
+      "started": "2026-10-27T15:24:02.092994+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "<output>/venvs/namespace/bin/python",
+        "-m",
+        "zava_forward.agents"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:24:02.199383+00:00",
+      "group": "namespace",
+      "integration": false,
+      "log": "0018-namespace.log",
+      "sha256": "db26ee0183dc1a4dedbdf9f4850f9278a07b91e678ea2b43df258ac89e5fbd1c",
+      "started": "2026-10-27T15:24:02.146161+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "<output>/venvs/namespace/bin/python",
+        "-m",
+        "zava_forward.orchestrator"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:24:02.251912+00:00",
+      "group": "namespace",
+      "integration": false,
+      "log": "0019-namespace.log",
+      "sha256": "77884e6b36747b7d663937ce5c52e7f71992f6965370dba4cf26fc9b3c99292c",
+      "started": "2026-10-27T15:24:02.199466+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "<output>/venvs/namespace/bin/python",
+        "-m",
+        "zava_forward.importer"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:24:02.610317+00:00",
+      "group": "namespace",
+      "integration": false,
+      "log": "0020-namespace.log",
+      "sha256": "c2b38949800c79cf332e4f8fdc778bea20bbf19dd17cf815741ed272bf0316e4",
+      "started": "2026-10-27T15:24:02.251991+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "<output>/venvs/namespace/bin/python",
+        "-c",
+        "from zava_forward.api.version import __version__; print(__version__)"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:24:02.627295+00:00",
+      "group": "namespace",
+      "integration": false,
+      "log": "0021-namespace.log",
+      "sha256": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67",
+      "started": "2026-10-27T15:24:02.610404+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "<output>/venvs/namespace/bin/python",
+        "-c",
+        "import zava_forward; assert zava_forward.__file__ is None; assert len(list(zava_forward.__path__)) == 5"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:24:02.643730+00:00",
+      "group": "namespace",
+      "integration": false,
+      "log": "0022-namespace.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started": "2026-10-27T15:24:02.627378+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "<output>/venvs/api/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "cwd": "src/api",
+      "env": {
+        "PYTHONPATH": "<checkout>/src/core/tests:<checkout>/src/agents/tests"
+      },
+      "executed": 800,
+      "exit_code": 0,
+      "finished": "2026-10-27T15:29:30.393094+00:00",
+      "group": "project-api",
+      "integration": false,
+      "log": "0023-project-api.log",
+      "sha256": "016db1c8d84a5efa98963dd1c5ed0559bc895074c64e5f9248dff0be7814a99d",
+      "skips": [
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_invalid_payload_and_store_failure_leave_manual_api_available (test_assistants.MssqlApiTests.test_invalid_payload_and_store_failure_leave_manual_api_available)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_registry_invoke_list_detail_separate_review_and_denials (test_assistants.MssqlApiTests.test_registry_invoke_list_detail_separate_review_and_denials)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_release_record_local_http (test_assistants.MssqlApiTests.test_release_record_local_http)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_actual_source_over_input_limit_is_visible_failure_without_call (test_assistants.MssqlContractTests.test_actual_source_over_input_limit_is_visible_failure_without_call)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_every_capability_failure_disabled_and_malformed (test_assistants.MssqlContractTests.test_every_capability_failure_disabled_and_malformed)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_every_capability_reactive_verified_edit_reject_domain_unchanged (test_assistants.MssqlContractTests.test_every_capability_reactive_verified_edit_reject_domain_unchanged)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_every_proactive_capability_malformed_fails_without_domain_mutation (test_assistants.MssqlContractTests.test_every_proactive_capability_malformed_fails_without_domain_mutation)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_every_proactive_predicate_ineligible_then_real_missing_conflicting_changed (test_assistants.MssqlContractTests.test_every_proactive_predicate_ineligible_then_real_missing_conflicting_changed)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_exact_source_role_matrix_and_no_cross_audience_leaks (test_assistants.MssqlContractTests.test_exact_source_role_matrix_and_no_cross_audience_leaks)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_five_exact_versioned_ids (test_assistants.MssqlContractTests.test_five_exact_versioned_ids)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_invalid_negative_configuration_remains_disabled_not_app_failure (test_assistants.MssqlContractTests.test_invalid_negative_configuration_remains_disabled_not_app_failure)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_malformed_nested_fields_do_not_escape_scalar_allowlists (test_assistants.MssqlContractTests.test_malformed_nested_fields_do_not_escape_scalar_allowlists)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_no_old_funding_draft_or_domain_actions_called (test_assistants.MssqlContractTests.test_no_old_funding_draft_or_domain_actions_called)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_only_committed_capacity_not_offered_metadata_is_material (test_assistants.MssqlContractTests.test_only_committed_capacity_not_offered_metadata_is_material)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_proactive_all_five_and_reactive_collision_share_key (test_assistants.MssqlContractTests.test_proactive_all_five_and_reactive_collision_share_key)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_quality_current_discrepancies_do_not_rely_on_retired_acceptance (test_assistants.MssqlContractTests.test_quality_current_discrepancies_do_not_rely_on_retired_acceptance)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_quality_replacement_uses_only_current_evidence_and_version (test_assistants.MssqlContractTests.test_quality_replacement_uses_only_current_evidence_and_version)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_rule_registry_schema_hashes_and_capability_only_invalidation (test_assistants.MssqlContractTests.test_rule_registry_schema_hashes_and_capability_only_invalidation)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_scan_valid_cases_does_not_enqueue_and_changes_enqueue_material_versions (test_assistants.MssqlContractTests.test_scan_valid_cases_does_not_enqueue_and_changes_enqueue_material_versions)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_unknown_hash_usage_are_null_not_zero_and_exercise_rule_recorded (test_assistants.MssqlContractTests.test_unknown_hash_usage_are_null_not_zero_and_exercise_rule_recorded)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_additive_migration_idempotent_old_store_ignores_new_tables (test_assistants.MssqlDurabilityTests.test_additive_migration_idempotent_old_store_ignores_new_tables)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_allowance_no_restart_daily_reset_or_expiry_extension (test_assistants.MssqlDurabilityTests.test_allowance_no_restart_daily_reset_or_expiry_extension)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_atomic_claim_two_connections_and_global_active_bound (test_assistants.MssqlDurabilityTests.test_atomic_claim_two_connections_and_global_active_bound)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_blocked_provider_does_not_hold_domain_or_sql_lock (test_assistants.MssqlDurabilityTests.test_blocked_provider_does_not_hold_domain_or_sql_lock)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_changed_registered_intent_gets_distinct_proposal_with_same_dependencies (test_assistants.MssqlDurabilityTests.test_changed_registered_intent_gets_distinct_proposal_with_same_dependencies)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_claim_race_same_task_only_one_owner (test_assistants.MssqlDurabilityTests.test_claim_race_same_task_only_one_owner)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_concurrent_assistant_startup_on_retained_domain (test_assistants.MssqlDurabilityTests.test_concurrent_assistant_startup_on_retained_domain)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_database_lease_renewal_takeover_late_completion_restart (test_assistants.MssqlDurabilityTests.test_database_lease_renewal_takeover_late_completion_restart)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_exhausted_attempts_no_third_call_and_retained_liability (test_assistants.MssqlDurabilityTests.test_exhausted_attempts_no_third_call_and_retained_liability)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_expired_authority_scan_reactive_disabled_and_no_dispatch (test_assistants.MssqlDurabilityTests.test_expired_authority_scan_reactive_disabled_and_no_dispatch)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_history_and_list_pagination_current_authorization (test_assistants.MssqlDurabilityTests.test_history_and_list_pagination_current_authorization)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_last_budget_reservation_race (test_assistants.MssqlDurabilityTests.test_last_budget_reservation_race)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_operator_incident_drill (test_assistants.MssqlDurabilityTests.test_operator_incident_drill)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_parallel_enqueue_unique_and_distinct_provenance (test_assistants.MssqlDurabilityTests.test_parallel_enqueue_unique_and_distinct_provenance)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_retry_aggregate_reservation_usage_unknown_not_zero (test_assistants.MssqlDurabilityTests.test_retry_aggregate_reservation_usage_unknown_not_zero)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_scan_no_overlap_and_interruptible_worker_shutdown (test_assistants.MssqlDurabilityTests.test_scan_no_overlap_and_interruptible_worker_shutdown)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_schema_failure_disables_assistance_not_manual_reads (test_assistants.MssqlDurabilityTests.test_schema_failure_disables_assistance_not_manual_reads)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_stop_before_execute_does_not_claim_or_dispatch (test_assistants.MssqlDurabilityTests.test_stop_before_execute_does_not_claim_or_dispatch)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_stop_while_claim_blocked_closes_dispatch_and_retains_reservation (test_assistants.MssqlDurabilityTests.test_stop_while_claim_blocked_closes_dispatch_and_retains_reservation)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_uncertain_claim_and_completion_ack_lookup_not_reinference (test_assistants.MssqlDurabilityTests.test_uncertain_claim_and_completion_ack_lookup_not_reinference)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_wall_clock_timeout_retains_physical_slot_and_liability (test_assistants.MssqlDurabilityTests.test_wall_clock_timeout_retains_physical_slot_and_liability)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_existing_updatable_ledger_event_table_fails_closed_without_dropping (test_assistants.MssqlLedgerTests.test_existing_updatable_ledger_event_table_fails_closed_without_dropping)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_five_paths_append_only_and_restart_on_ledger_database (test_assistants.MssqlLedgerTests.test_five_paths_append_only_and_restart_on_ledger_database)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_current_role_revocation_scope_on_invoke_list_detail_review (test_assistants.MssqlReviewTests.test_current_role_revocation_scope_on_invoke_list_detail_review)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_independent_qa_reviewer_and_separate_human_verification (test_assistants.MssqlReviewTests.test_independent_qa_reviewer_and_separate_human_verification)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_material_only_staleness_accept_reject (test_assistants.MssqlReviewTests.test_material_only_staleness_accept_reject)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_qa_independence_uses_current_identity_not_stale_request_copy (test_assistants.MssqlReviewTests.test_qa_independence_uses_current_identity_not_stale_request_copy)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_review_cas_between_independent_connections (test_assistants.MssqlReviewTests.test_review_cas_between_independent_connections)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_source_change_before_claim_does_not_dispatch (test_assistants.MssqlReviewTests.test_source_change_before_claim_does_not_dispatch)"
+        },
+        {
+          "reason": "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_verification_requires_explicit_true_and_same_reviewer (test_assistants.MssqlReviewTests.test_verification_requires_explicit_true_and_same_reviewer)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_inflight_completion_overlaps_suspend_restart_and_keeps_unknown_liability (test_continuity_epoch_export.MssqlEpochTests.test_inflight_completion_overlaps_suspend_restart_and_keeps_unknown_liability)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_missing_historical_epoch_and_export_collection_race_fail_closed (test_continuity_epoch_export.MssqlEpochTests.test_missing_historical_epoch_and_export_collection_race_fail_closed)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_old_process_epoch_reads_persisted_restart (test_continuity_epoch_export.MssqlEpochTests.test_old_process_epoch_reads_persisted_restart)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_old_queued_leased_and_missing_epoch_cannot_be_claimed (test_continuity_epoch_export.MssqlEpochTests.test_old_queued_leased_and_missing_epoch_cannot_be_claimed)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_overlapping_review_suspend_restart_retains_noncurrent_disposition (test_continuity_epoch_export.MssqlEpochTests.test_overlapping_review_suspend_restart_retains_noncurrent_disposition)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_proactive_scan_creates_epoch_distinct_work (test_continuity_epoch_export.MssqlEpochTests.test_proactive_scan_creates_epoch_distinct_work)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_ready_and_accepted_history_never_revives (test_continuity_epoch_export.MssqlEpochTests.test_ready_and_accepted_history_never_revives)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_restart_between_claim_and_dispatch_prevents_provider_call (test_continuity_epoch_export.MssqlEpochTests.test_restart_between_claim_and_dispatch_prevents_provider_call)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_continuity_http_audiences_and_offline_export (test_continuity_epoch_export.MssqlHttpTests.test_continuity_http_audiences_and_offline_export)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_export_preserves_programme_support_reason_redaction (test_continuity_epoch_export.MssqlHttpTests.test_export_preserves_programme_support_reason_redaction)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_http_epoch_read_review_export_and_manual_actions (test_continuity_epoch_export.MssqlHttpTests.test_http_epoch_read_review_export_and_manual_actions)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_http_migration_failure_reports_incomplete_without_driver_details (test_continuity_epoch_export.MssqlHttpTests.test_http_migration_failure_reports_incomplete_without_driver_details)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_invalid_payload_and_store_failure_leave_manual_api_available (test_continuity_epoch_export.MssqlHttpTests.test_invalid_payload_and_store_failure_leave_manual_api_available)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_limited_mutation_responses_preserve_human_controls_without_text (test_continuity_epoch_export.MssqlHttpTests.test_limited_mutation_responses_preserve_human_controls_without_text)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_nested_evidence_projection_and_full_manager_proof (test_continuity_epoch_export.MssqlHttpTests.test_nested_evidence_projection_and_full_manager_proof)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_register_recorded_need_canaries_and_canonical_nonmutation (test_continuity_epoch_export.MssqlHttpTests.test_register_recorded_need_canaries_and_canonical_nonmutation)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_registry_invoke_list_detail_separate_review_and_denials (test_continuity_epoch_export.MssqlHttpTests.test_registry_invoke_list_detail_separate_review_and_denials)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_release_record_local_http (test_continuity_epoch_export.MssqlHttpTests.test_release_record_local_http)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_legacy_priority_ready_accepted_missing_epoch_and_cache (test_continuity_epoch_export.MssqlLegacyTests.test_legacy_priority_ready_accepted_missing_epoch_and_cache)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_legacy_review_and_priority_reliance_do_not_revive (test_continuity_epoch_export.MssqlLegacyTests.test_legacy_review_and_priority_reliance_do_not_revive)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_legacy_text_document_priority_publication_race (test_continuity_epoch_export.MssqlLegacyTests.test_legacy_text_document_priority_publication_race)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_actual_invalid_ledger_migration_retains_unavailable_evidence (test_continuity_epoch_export.MssqlOfflineTests.test_actual_invalid_ledger_migration_retains_unavailable_evidence)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_actual_json_unsupported_and_available_sql_full_empty_sources (test_continuity_epoch_export.MssqlOfflineTests.test_actual_json_unsupported_and_available_sql_full_empty_sources)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_constructor_migration_failure_cannot_omit_retained_sql_evidence (test_continuity_epoch_export.MssqlOfflineTests.test_constructor_migration_failure_cannot_omit_retained_sql_evidence)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_empty_legacy_and_explicit_unsupported_sources_are_distinct (test_continuity_epoch_export.MssqlOfflineTests.test_empty_legacy_and_explicit_unsupported_sources_are_distinct)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_json_numeric_timestamps_fail_closed_without_conversion_errors (test_continuity_epoch_export.MssqlOfflineTests.test_json_numeric_timestamps_fail_closed_without_conversion_errors)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_legacy_top_level_release_and_collection_restart_are_retained (test_continuity_epoch_export.MssqlOfflineTests.test_legacy_top_level_release_and_collection_restart_are_retained)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_malformed_release_sources_fail_producer_and_verifier_without_exceptions (test_continuity_epoch_export.MssqlOfflineTests.test_malformed_release_sources_fail_producer_and_verifier_without_exceptions)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_original_review_missing_and_truncated_proposals_with_unchanged_head (test_continuity_epoch_export.MssqlOfflineTests.test_original_review_missing_and_truncated_proposals_with_unchanged_head)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_producer_marks_missing_and_bounded_release_evidence_incomplete (test_continuity_epoch_export.MssqlOfflineTests.test_producer_marks_missing_and_bounded_release_evidence_incomplete)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_proposal_metadata_shapes_counts_and_source_status_fail_closed (test_continuity_epoch_export.MssqlOfflineTests.test_proposal_metadata_shapes_counts_and_source_status_fail_closed)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_recomputed_digest_cannot_mask_missing_mismatched_or_truncated_releases (test_continuity_epoch_export.MssqlOfflineTests.test_recomputed_digest_cannot_mask_missing_mismatched_or_truncated_releases)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_release_snapshot_and_lifecycle_verify_offline_after_revocation (test_continuity_epoch_export.MssqlOfflineTests.test_release_snapshot_and_lifecycle_verify_offline_after_revocation)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_release_source_absence_and_unsupported_are_not_full_evidence (test_continuity_epoch_export.MssqlOfflineTests.test_release_source_absence_and_unsupported_are_not_full_evidence)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_unreferenced_lifecycle_transitions_and_timestamp_ties (test_continuity_epoch_export.MssqlOfflineTests.test_unreferenced_lifecycle_transitions_and_timestamp_ties)"
+        },
+        {
+          "reason": "owned local MSSQL opt-in",
+          "test": "test_unreferenced_retained_release_lifecycle_is_required (test_continuity_epoch_export.MssqlOfflineTests.test_unreferenced_retained_release_lifecycle_is_required)"
+        },
+        {
+          "reason": "opt-in Chromium journey",
+          "test": "test_actual_browser_keyboard_filters_drill_map_unknowns_and_denials (test_coordinator_api.CoordinatorApi.test_actual_browser_keyboard_filters_drill_map_unknowns_and_denials)"
+        },
+        {
+          "reason": "opt-in Chromium journey",
+          "test": "test_actual_browser_keyboard_filters_drill_map_unknowns_and_denials (test_coordinator_api.JsonCoordinatorApi.test_actual_browser_keyboard_filters_drill_map_unknowns_and_denials)"
+        },
+        {
+          "reason": "opt-in loopback MSSQL",
+          "test": "test_actual_browser_keyboard_filters_drill_map_unknowns_and_denials (test_coordinator_api.MssqlCoordinatorApi.test_actual_browser_keyboard_filters_drill_map_unknowns_and_denials)"
+        },
+        {
+          "reason": "opt-in loopback MSSQL",
+          "test": "test_exit_drillthrough_unknowns_and_cluster_population (test_coordinator_api.MssqlCoordinatorApi.test_exit_drillthrough_unknowns_and_cluster_population)"
+        },
+        {
+          "reason": "opt-in loopback MSSQL",
+          "test": "test_invalid_queries_refuse_instead_of_silently_widening (test_coordinator_api.MssqlCoordinatorApi.test_invalid_queries_refuse_instead_of_silently_widening)"
+        },
+        {
+          "reason": "opt-in loopback MSSQL",
+          "test": "test_mixed_case_registered_email_authenticates_without_widening_access (test_coordinator_api.MssqlCoordinatorApi.test_mixed_case_registered_email_authenticates_without_widening_access)"
+        },
+        {
+          "reason": "opt-in loopback MSSQL",
+          "test": "test_population_count_pagination_and_legacy_routes (test_coordinator_api.MssqlCoordinatorApi.test_population_count_pagination_and_legacy_routes)"
+        },
+        {
+          "reason": "opt-in loopback MSSQL",
+          "test": "test_reload_external_writer_and_no_aggregate_writes (test_coordinator_api.MssqlCoordinatorApi.test_reload_external_writer_and_no_aggregate_writes)"
+        },
+        {
+          "reason": "opt-in loopback MSSQL",
+          "test": "test_roles_scope_field_contract_and_authentication (test_coordinator_api.MssqlCoordinatorApi.test_roles_scope_field_contract_and_authentication)"
+        },
+        {
+          "reason": "opt-in local Playwright",
+          "test": "test_browser_application_confirmation_is_not_an_award (test_grant_lifecycle_api.GrantLifecycleApi.test_browser_application_confirmation_is_not_an_award)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_derived_index_failure_is_repaired_on_unchanged_retry (test_lawstore.MssqlStoreTests.test_derived_index_failure_is_repaired_on_unchanged_retry)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_every_snapshot_is_loaded_with_full_records (test_lawstore.MssqlStoreTests.test_every_snapshot_is_loaded_with_full_records)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_existing_rows_cannot_be_changed_or_deleted (test_lawstore.MssqlStoreTests.test_existing_rows_cannot_be_changed_or_deleted)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_failed_provision_insert_preserves_source_and_rules (test_lawstore.MssqlStoreTests.test_failed_provision_insert_preserves_source_and_rules)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_failed_source_review_rolls_back_source_and_recovers (test_lawstore.MssqlStoreTests.test_failed_source_review_rolls_back_source_and_recovers)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_index_rebuilds_from_sql_alone (test_lawstore.MssqlStoreTests.test_index_rebuilds_from_sql_alone)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_ingestion_records_reviews_without_modifying_cards (test_lawstore.MssqlStoreTests.test_ingestion_records_reviews_without_modifying_cards)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_missing_sources_are_gaps_returned_as_no_source_held (test_lawstore.MssqlStoreTests.test_missing_sources_are_gaps_returned_as_no_source_held)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_partial_sources_say_so (test_lawstore.MssqlStoreTests.test_partial_sources_say_so)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_reseed_is_idempotent_and_newer_retrieval_is_a_new_version (test_lawstore.MssqlStoreTests.test_reseed_is_idempotent_and_newer_retrieval_is_a_new_version)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_snapshot_files_are_never_overwritten (test_lawstore.MssqlStoreTests.test_snapshot_files_are_never_overwritten)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_snapshot_tampering_is_detected (test_lawstore.MssqlStoreTests.test_snapshot_tampering_is_detected)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_split_provisions_keeps_heading_path (test_lawstore.MssqlStoreTests.test_split_provisions_keeps_heading_path)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_unreviewed_and_historical_are_labelled (test_lawstore.MssqlStoreTests.test_unreviewed_and_historical_are_labelled)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_api_role_projection_has_no_sibling_evidence_or_unauthorized_amounts (test_mssqlstore.MssqlBuildingHttp.test_api_role_projection_has_no_sibling_evidence_or_unauthorized_amounts)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_local_app_and_bidirectional_navigation (test_mssqlstore.MssqlBuildingHttp.test_local_app_and_bidirectional_navigation)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_shared_hold_blocks_advance_and_retains_ai_and_safety_intake (test_mssqlstore.MssqlBuildingHttp.test_shared_hold_blocks_advance_and_retains_ai_and_safety_intake)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_clear_building_does_not_supply_independent_home_approvals (test_mssqlstore.MssqlBuildings.test_clear_building_does_not_supply_independent_home_approvals)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_clear_building_does_not_supply_sibling_qa_or_handover (test_mssqlstore.MssqlBuildings.test_clear_building_does_not_supply_sibling_qa_or_handover)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_hold_scopes_refuse_matching_work_but_keep_orthogonal_controls_usable (test_mssqlstore.MssqlBuildings.test_hold_scopes_refuse_matching_work_but_keep_orthogonal_controls_usable)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_independent_hold_visibility_and_stale_document_conflict (test_mssqlstore.MssqlBuildings.test_independent_hold_visibility_and_stale_document_conflict)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_record_and_home_allocations_reopen_without_seed (test_mssqlstore.MssqlBuildings.test_record_and_home_allocations_reopen_without_seed)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_concurrent_appends_get_distinct_sequences (test_mssqlstore.MssqlChatThreads.test_concurrent_appends_get_distinct_sequences)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_ledger_records_metadata_only_and_survives_deletion (test_mssqlstore.MssqlChatThreads.test_ledger_records_metadata_only_and_survives_deletion)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_list_archive_and_delete_own_threads (test_mssqlstore.MssqlChatThreads.test_list_archive_and_delete_own_threads)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_messages_keep_order_evidence_and_model_identity (test_mssqlstore.MssqlChatThreads.test_messages_keep_order_evidence_and_model_identity)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_other_users_cannot_see_or_change_a_thread (test_mssqlstore.MssqlChatThreads.test_other_users_cannot_see_or_change_a_thread)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_row_version_refuses_stale_writes (test_mssqlstore.MssqlChatThreads.test_row_version_refuses_stale_writes)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_thread_records_owner_case_task_version_and_model (test_mssqlstore.MssqlChatThreads.test_thread_records_owner_case_task_version_and_model)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_validation (test_mssqlstore.MssqlChatThreads.test_validation)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_budget_and_commitment_need_a_different_approver (test_mssqlstore.MssqlFinanceSignoffs.test_budget_and_commitment_need_a_different_approver)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_chain_intact_and_audited (test_mssqlstore.MssqlFinanceSignoffs.test_chain_intact_and_audited)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_clean_invoice_matches_but_payment_is_never_executed (test_mssqlstore.MssqlFinanceSignoffs.test_clean_invoice_matches_but_payment_is_never_executed)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_complaint_route_has_distinct_owners_and_closure (test_mssqlstore.MssqlFinanceSignoffs.test_complaint_route_has_distinct_owners_and_closure)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_contractor_and_other_roles_cannot_see_finance (test_mssqlstore.MssqlFinanceSignoffs.test_contractor_and_other_roles_cannot_see_finance)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_decisions_are_never_inferred_and_are_per_measure (test_mssqlstore.MssqlFinanceSignoffs.test_decisions_are_never_inferred_and_are_per_measure)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_design_change_invalidates_only_affected_signoffs (test_mssqlstore.MssqlFinanceSignoffs.test_design_change_invalidates_only_affected_signoffs)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_duplicate_reference_and_holds (test_mssqlstore.MssqlFinanceSignoffs.test_duplicate_reference_and_holds)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_grant_states_are_distinct_and_need_a_second_person (test_mssqlstore.MssqlFinanceSignoffs.test_grant_states_are_distinct_and_need_a_second_person)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_grants_never_touch_invoices_and_show_in_funding_list (test_mssqlstore.MssqlFinanceSignoffs.test_grants_never_touch_invoices_and_show_in_funding_list)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_inputs_and_bulk_are_refused (test_mssqlstore.MssqlFinanceSignoffs.test_inputs_and_bulk_are_refused)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_line_exceptions_and_unknowns_block_a_match (test_mssqlstore.MssqlFinanceSignoffs.test_line_exceptions_and_unknowns_block_a_match)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_return_and_reapproval (test_mssqlstore.MssqlFinanceSignoffs.test_return_and_reapproval)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_survives_a_restart (test_mssqlstore.MssqlFinanceSignoffs.test_survives_a_restart)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_technical_stage_lists_missing_items_for_competent_roles (test_mssqlstore.MssqlFinanceSignoffs.test_technical_stage_lists_missing_items_for_competent_roles)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_explicit_change_sources_are_required_and_reopen_from_http (test_mssqlstore.MssqlHandoffApi.test_explicit_change_sources_are_required_and_reopen_from_http)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_new_actions_are_denied_to_contractors_and_wrong_staff (test_mssqlstore.MssqlHandoffApi.test_new_actions_are_denied_to_contractors_and_wrong_staff)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_queue_and_detail_hold_notes_for_roles_without_need (test_mssqlstore.MssqlHandoffApi.test_queue_and_detail_hold_notes_for_roles_without_need)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_rejection_withdrawal_and_escalation_permissions_over_http (test_mssqlstore.MssqlHandoffApi.test_rejection_withdrawal_and_escalation_permissions_over_http)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_return_reopen_require_provenance_and_use_authenticated_authority (test_mssqlstore.MssqlHandoffApi.test_return_reopen_require_provenance_and_use_authenticated_authority)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_synthetic_app_states_sender_receiver_manager_views (test_mssqlstore.MssqlHandoffApi.test_synthetic_app_states_sender_receiver_manager_views)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_authority_changes_rechecked_at_transaction_for_caller_and_destination (test_mssqlstore.MssqlHazardReferral.test_authority_changes_rechecked_at_transaction_for_caller_and_destination)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_closed_record_and_ai_outage_do_not_block_intake_or_reopen_retrofit (test_mssqlstore.MssqlHazardReferral.test_closed_record_and_ai_outage_do_not_block_intake_or_reopen_retrofit)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_current_registered_actors_and_destinations_are_required (test_mssqlstore.MssqlHazardReferral.test_current_registered_actors_and_destinations_are_required)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_distinct_events_times_hold_and_restart_without_case_transfer (test_mssqlstore.MssqlHazardReferral.test_distinct_events_times_hold_and_restart_without_case_transfer)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_external_updates_remain_recordable_after_retrofit_restart (test_mssqlstore.MssqlHazardReferral.test_external_updates_remain_recordable_after_retrofit_restart)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_failed_save_has_no_success_audit_or_ghost_hazard (test_mssqlstore.MssqlHazardReferral.test_failed_save_has_no_success_audit_or_ghost_hazard)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_failed_writes_preserve_prior_pending_audit_and_original_error (test_mssqlstore.MssqlHazardReferral.test_failed_writes_preserve_prior_pending_audit_and_original_error)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_home_hold_blocks_all_controlled_progression_but_not_sibling_or_referral (test_mssqlstore.MssqlHazardReferral.test_home_hold_blocks_all_controlled_progression_but_not_sibling_or_referral)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_invalid_provenance_actor_index_timing_and_replays_are_atomic (test_mssqlstore.MssqlHazardReferral.test_invalid_provenance_actor_index_timing_and_replays_are_atomic)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_json_postsave_audit_failure_reports_persisted_uncertainty (test_mssqlstore.MssqlHazardReferral.test_json_postsave_audit_failure_reports_persisted_uncertainty)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_legacy_states_have_prospective_path_without_inventing_history (test_mssqlstore.MssqlHazardReferral.test_legacy_states_have_prospective_path_without_inventing_history)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_receiver_binding_rejects_recycled_code (test_mssqlstore.MssqlHazardReferral.test_receiver_binding_rejects_recycled_code)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_recovery_read_failure_quarantines_hazard_and_keeps_prior_audit (test_mssqlstore.MssqlHazardReferral.test_recovery_read_failure_quarantines_hazard_and_keeps_prior_audit)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_release_independence_uses_recorded_email_code_and_oid (test_mssqlstore.MssqlHazardReferral.test_release_independence_uses_recorded_email_code_and_oid)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_sensitive_evidence_is_withheld_and_never_added_to_model_sources (test_mssqlstore.MssqlHazardReferral.test_sensitive_evidence_is_withheld_and_never_added_to_model_sources)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_stale_actor_is_refused_for_every_hazard_event (test_mssqlstore.MssqlHazardReferral.test_stale_actor_is_refused_for_every_hazard_event)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_ai_falls_back_to_template_and_is_audited (test_mssqlstore.MssqlImproveTests.test_ai_falls_back_to_template_and_is_audited)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_ai_output_claiming_sent_is_rejected (test_mssqlstore.MssqlImproveTests.test_ai_output_claiming_sent_is_rejected)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_briefing_cached_until_data_changes (test_mssqlstore.MssqlImproveTests.test_briefing_cached_until_data_changes)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_filter_and_sort (test_mssqlstore.MssqlImproveTests.test_filter_and_sort)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_funding_in_progress_filter (test_mssqlstore.MssqlImproveTests.test_funding_in_progress_filter)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_funding_needs_evidence_and_role (test_mssqlstore.MssqlImproveTests.test_funding_needs_evidence_and_role)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_handover_suggestions_have_reasons (test_mssqlstore.MssqlImproveTests.test_handover_suggestions_have_reasons)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_stats_and_map (test_mssqlstore.MssqlImproveTests.test_stats_and_map)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_upload_rejects_bad_type_and_lists_document (test_mssqlstore.MssqlImproveTests.test_upload_rejects_bad_type_and_lists_document)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_failure_after_backfill_leaves_no_partial_schema_and_can_be_retried (test_mssqlstore.MssqlLedgerMigration.test_failure_after_backfill_leaves_no_partial_schema_and_can_be_retried)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_fresh_ledger_database_initialises (test_mssqlstore.MssqlLedgerMigration.test_fresh_ledger_database_initialises)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_populated_chat_memory_failure_rolls_back_and_retries (test_mssqlstore.MssqlLedgerMigration.test_populated_chat_memory_failure_rolls_back_and_retries)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_previous_schema_migrates_in_a_ledger_database (test_mssqlstore.MssqlLedgerMigration.test_previous_schema_migrates_in_a_ledger_database)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_previous_schema_still_migrates_in_an_ordinary_database (test_mssqlstore.MssqlLedgerMigration.test_previous_schema_still_migrates_in_an_ordinary_database)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_seed_merge_on_ledger_database (test_mssqlstore.MssqlLedgerMigration.test_seed_merge_on_ledger_database)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_seed_merge_on_plain_database (test_mssqlstore.MssqlLedgerMigration.test_seed_merge_on_plain_database)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_closed_list_and_full_export_still_work (test_mssqlstore.MssqlParity.test_closed_list_and_full_export_still_work)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_contractor_rows_have_no_reason_or_rank_ordering_leak (test_mssqlstore.MssqlParity.test_contractor_rows_have_no_reason_or_rank_ordering_leak)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_contractor_search_still_cannot_use_the_resident_name (test_mssqlstore.MssqlParity.test_contractor_search_still_cannot_use_the_resident_name)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_counts_match (test_mssqlstore.MssqlParity.test_counts_match)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_default_order_matches_ranking_exactly (test_mssqlstore.MssqlParity.test_default_order_matches_ranking_exactly)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_every_view_filter_sort_and_search_matches_the_in_memory_store (test_mssqlstore.MssqlParity.test_every_view_filter_sort_and_search_matches_the_in_memory_store)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_keyset_is_stable_when_a_case_changes_between_pages (test_mssqlstore.MssqlParity.test_keyset_is_stable_when_a_case_changes_between_pages)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_keyset_walk_equals_offset_walk_and_never_repeats (test_mssqlstore.MssqlParity.test_keyset_walk_equals_offset_walk_and_never_repeats)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_ranks_are_global_not_page_local (test_mssqlstore.MssqlParity.test_ranks_are_global_not_page_local)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_advance_dependency_races_restore_case_and_never_confirm (test_mssqlstore.MssqlProcurement.test_advance_dependency_races_restore_case_and_never_confirm)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_advance_without_evidenced_booked_order_is_refused (test_mssqlstore.MssqlProcurement.test_advance_without_evidenced_booked_order_is_refused)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_appointment_commit_time_source_scope_authority_invalidation (test_mssqlstore.MssqlProcurement.test_appointment_commit_time_source_scope_authority_invalidation)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_appointment_concurrent_confirmations_and_outcomes_are_not_lost (test_mssqlstore.MssqlProcurement.test_appointment_concurrent_confirmations_and_outcomes_are_not_lost)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_appointment_configuration_and_inactive_case_never_reset_or_replay (test_mssqlstore.MssqlProcurement.test_appointment_configuration_and_inactive_case_never_reset_or_replay)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_appointment_exclusions_and_independent_cause_owner_fact_counts (test_mssqlstore.MssqlProcurement.test_appointment_exclusions_and_independent_cause_owner_fact_counts)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_appointment_inactive_case_race_and_reopen_consumed_ref_fail_closed (test_mssqlstore.MssqlProcurement.test_appointment_inactive_case_race_and_reopen_consumed_ref_fail_closed)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_appointment_pending_audit_rollback_and_postcommit_truthful_retry (test_mssqlstore.MssqlProcurement.test_appointment_pending_audit_rollback_and_postcommit_truthful_retry)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_appointment_reads_apply_existing_resident_evidence_roles (test_mssqlstore.MssqlProcurement.test_appointment_reads_apply_existing_resident_evidence_roles)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_appointment_representative_is_explicit_bounded_and_revocable (test_mssqlstore.MssqlProcurement.test_appointment_representative_is_explicit_bounded_and_revocable)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_appointment_scope_capacity_invalidation_and_household_history (test_mssqlstore.MssqlProcurement.test_appointment_scope_capacity_invalidation_and_household_history)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_appointment_separate_confirmations_legacy_and_server_status (test_mssqlstore.MssqlProcurement.test_appointment_separate_confirmations_legacy_and_server_status)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_appointment_sixth_event_human_only_dedup_and_task_disposition_no_reset (test_mssqlstore.MssqlProcurement.test_appointment_sixth_event_human_only_dedup_and_task_disposition_no_reset)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_booking_outside_package_period_is_refused (test_mssqlstore.MssqlProcurement.test_booking_outside_package_period_is_refused)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_bundle_needs_explicit_agreement_and_scoped_competence (test_mssqlstore.MssqlProcurement.test_bundle_needs_explicit_agreement_and_scoped_competence)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_cannot_skip_states (test_mssqlstore.MssqlProcurement.test_cannot_skip_states)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_capacity_dates_scope_source_and_deficit_invalidate_progression (test_mssqlstore.MssqlProcurement.test_capacity_dates_scope_source_and_deficit_invalidate_progression)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_commit_authority_revocation_is_rechecked (test_mssqlstore.MssqlProcurement.test_commit_authority_revocation_is_rechecked)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_committed_capacity_needs_evidence_and_limits_work_orders (test_mssqlstore.MssqlProcurement.test_committed_capacity_needs_evidence_and_limits_work_orders)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_concurrent_last_slot_keeps_only_winning_order_and_audit (test_mssqlstore.MssqlProcurement.test_concurrent_last_slot_keeps_only_winning_order_and_audit)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_configuration_evaluates_existing_active_counts_once (test_mssqlstore.MssqlProcurement.test_configuration_evaluates_existing_active_counts_once)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_configuration_rechecks_other_eligible_home_lifecycle (test_mssqlstore.MssqlProcurement.test_configuration_rechecks_other_eligible_home_lifecycle)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_configuration_wins_human_closure_race (test_mssqlstore.MssqlProcurement.test_configuration_wins_human_closure_race)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_configuration_wins_outcome_race (test_mssqlstore.MssqlProcurement.test_configuration_wins_outcome_race)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_contractor_sees_only_own_work_orders_without_reason (test_mssqlstore.MssqlProcurement.test_contractor_sees_only_own_work_orders_without_reason)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_drafts_and_draft_review_never_issue_instructions (test_mssqlstore.MssqlProcurement.test_drafts_and_draft_review_never_issue_instructions)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_event_wins_against_stale_human_closure_then_fresh_closure_preserves_event (test_mssqlstore.MssqlProcurement.test_event_wins_against_stale_human_closure_then_fresh_closure_preserves_event)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_every_order_change_has_a_version (test_mssqlstore.MssqlProcurement.test_every_order_change_has_a_version)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_evidence_matrix_fails_closed_without_success_events (test_mssqlstore.MssqlProcurement.test_evidence_matrix_fails_closed_without_success_events)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_failed_save_restores_order_versions_and_no_success_audit (test_mssqlstore.MssqlProcurement.test_failed_save_restores_order_versions_and_no_success_audit)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_full_quota_progression_snapshots_and_detached_reads (test_mssqlstore.MssqlProcurement.test_full_quota_progression_snapshots_and_detached_reads)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_higher_configuration_wins_version_race (test_mssqlstore.MssqlProcurement.test_higher_configuration_wins_version_race)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_human_closure_failed_save_rolls_back_case_boundary_and_history (test_mssqlstore.MssqlProcurement.test_human_closure_failed_save_rolls_back_case_boundary_and_history)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_human_closure_pending_audit_rollback_and_postcommit_truthful_retry (test_mssqlstore.MssqlProcurement.test_human_closure_pending_audit_rollback_and_postcommit_truthful_retry)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_human_closure_resets_only_active_count_preserves_history_and_reopen_replay (test_mssqlstore.MssqlProcurement.test_human_closure_resets_only_active_count_preserves_history_and_reopen_replay)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_human_closure_wins_against_stale_event_without_count_or_history_loss (test_mssqlstore.MssqlProcurement.test_human_closure_wins_against_stale_event_without_count_or_history_loss)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_human_closure_wins_configuration_race (test_mssqlstore.MssqlProcurement.test_human_closure_wins_configuration_race)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_human_home_case_closure_requires_current_actor_evidence_and_version (test_mssqlstore.MssqlProcurement.test_human_home_case_closure_requires_current_actor_evidence_and_version)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_imported_numeric_capacity_is_not_evidenced (test_mssqlstore.MssqlProcurement.test_imported_numeric_capacity_is_not_evidenced)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_inclusive_review_and_delivery_boundaries (test_mssqlstore.MssqlProcurement.test_inclusive_review_and_delivery_boundaries)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_installer_name_blocks_acceptance (test_mssqlstore.MssqlProcurement.test_installer_name_blocks_acceptance)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_lower_configuration_wins_version_race (test_mssqlstore.MssqlProcurement.test_lower_configuration_wins_version_race)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_named_authority_is_not_a_role_or_caller_claim (test_mssqlstore.MssqlProcurement.test_named_authority_is_not_a_role_or_caller_claim)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_never_auto_accepts_and_accepter_must_be_independent (test_mssqlstore.MssqlProcurement.test_never_auto_accepts_and_accepter_must_be_independent)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_outcome_wins_configuration_race (test_mssqlstore.MssqlProcurement.test_outcome_wins_configuration_race)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_package_requires_contract_version_before_creation (test_mssqlstore.MssqlProcurement.test_package_requires_contract_version_before_creation)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_package_validation_and_roles (test_mssqlstore.MssqlProcurement.test_package_validation_and_roles)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_quality_current_actor_all_writes (test_mssqlstore.MssqlProcurement.test_quality_current_actor_all_writes)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_quality_identity_history (test_mssqlstore.MssqlProcurement.test_quality_identity_history)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_quality_indices (test_mssqlstore.MssqlProcurement.test_quality_indices)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_quality_legacy_repeated_recorders (test_mssqlstore.MssqlProcurement.test_quality_legacy_repeated_recorders)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_quality_remediation_and_reinspection (test_mssqlstore.MssqlProcurement.test_quality_remediation_and_reinspection)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_quality_replacement_dependencies (test_mssqlstore.MssqlProcurement.test_quality_replacement_dependencies)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_quality_resident_and_safety (test_mssqlstore.MssqlProcurement.test_quality_resident_and_safety)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_quality_sql_actor_and_stale (test_mssqlstore.MssqlProcurement.test_quality_sql_actor_and_stale)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_quality_sql_failures (test_mssqlstore.MssqlProcurement.test_quality_sql_failures)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_quality_sql_postcommit_refresh (test_mssqlstore.MssqlProcurement.test_quality_sql_postcommit_refresh)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_recovery_read_failure_keeps_original_error_and_disarms_failed_work (test_mssqlstore.MssqlProcurement.test_recovery_read_failure_keeps_original_error_and_disarms_failed_work)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_return_fix_reinspect_handover_aftercare (test_mssqlstore.MssqlProcurement.test_return_fix_reinspect_handover_aftercare)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_source_change_at_commit_and_audit_failure_roll_back (test_mssqlstore.MssqlProcurement.test_source_change_at_commit_and_audit_failure_roll_back)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_state_survives_reload (test_mssqlstore.MssqlProcurement.test_state_survives_reload)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_submit_needs_positive_evidence_for_every_check (test_mssqlstore.MssqlProcurement.test_submit_needs_positive_evidence_for_every_check)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_two_processes_see_procurement_changes (test_mssqlstore.MssqlProcurement.test_two_processes_see_procurement_changes)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_withdrawn_appointment_is_ended_and_history_retained (test_mssqlstore.MssqlProcurement.test_withdrawn_appointment_is_ended_and_history_retained)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_work_order_lifecycle_versions_and_audit (test_mssqlstore.MssqlProcurement.test_work_order_lifecycle_versions_and_audit)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_appointment_controls_http_provenance_denials_and_committed_response (test_mssqlstore.MssqlProcurementApi.test_appointment_controls_http_provenance_denials_and_committed_response)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_appointment_http_serialized_canaries_follow_existing_roles (test_mssqlstore.MssqlProcurementApi.test_appointment_http_serialized_canaries_follow_existing_roles)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_bundle_competence_http_requires_bounded_text_and_exact_scope (test_mssqlstore.MssqlProcurementApi.test_bundle_competence_http_requires_bounded_text_and_exact_scope)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_capacity_http_exact_threshold_and_source_inputs (test_mssqlstore.MssqlProcurementApi.test_capacity_http_exact_threshold_and_source_inputs)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_contractors_own_orders_only_and_all_writes_denied (test_mssqlstore.MssqlProcurementApi.test_contractors_own_orders_only_and_all_writes_denied)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_human_home_case_closure_http_evidence_denials_reset_and_committed_retry (test_mssqlstore.MssqlProcurementApi.test_human_home_case_closure_http_evidence_denials_reset_and_committed_retry)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_lifecycle_http_has_issuer_for_every_change (test_mssqlstore.MssqlProcurementApi.test_lifecycle_http_has_issuer_for_every_change)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_package_creation_requires_contract_version (test_mssqlstore.MssqlProcurementApi.test_package_creation_requires_contract_version)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_response_only_encoder_failure_is_truthful_for_confirmation_and_closure (test_mssqlstore.MssqlProcurementApi.test_response_only_encoder_failure_is_truthful_for_confirmation_and_closure)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_withdrawal_http_ends_current_appointment_for_staff_and_provider (test_mssqlstore.MssqlProcurementApi.test_withdrawal_http_ends_current_appointment_for_staff_and_provider)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_cold_and_hot_lookup_never_evaluate_nonreturned_cases (test_mssqlstore.MssqlQueueMembership.test_cold_and_hot_lookup_never_evaluate_nonreturned_cases)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_failed_case_evaluation_rolls_back_body_flags_generation_and_sequence (test_mssqlstore.MssqlQueueMembership.test_failed_case_evaluation_rolls_back_body_flags_generation_and_sequence)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_old_certified_memberships_refresh_without_case_or_audit_writes (test_mssqlstore.MssqlQueueMembership.test_old_certified_memberships_refresh_without_case_or_audit_writes)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_prerequisite_clearing_refreshes_other_process_and_restart (test_mssqlstore.MssqlQueueMembership.test_prerequisite_clearing_refreshes_other_process_and_restart)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_refresh_failure_does_not_certify_partial_backfill (test_mssqlstore.MssqlQueueMembership.test_refresh_failure_does_not_certify_partial_backfill)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_refresh_only_generations_invalidate_other_process_hot_ids (test_mssqlstore.MssqlQueueMembership.test_refresh_only_generations_invalidate_other_process_hot_ids)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_seed_and_every_case_write_maintain_physical_flags (test_mssqlstore.MssqlQueueMembership.test_seed_and_every_case_write_maintain_physical_flags)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_shared_write_uses_authoritative_state_not_stale_process_documents (test_mssqlstore.MssqlQueueMembership.test_shared_write_uses_authoritative_state_not_stale_process_documents)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_write_between_initial_sync_and_lookup_keeps_ranks_and_context_consistent (test_mssqlstore.MssqlQueueMembership.test_write_between_initial_sync_and_lookup_keeps_ranks_and_context_consistent)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_four_human_signoffs_and_only_affected_reassessment (test_mssqlstore.MssqlStockDecisions.test_four_human_signoffs_and_only_affected_reassessment)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_sql_authority_rechecked_inside_writer_transaction (test_mssqlstore.MssqlStockDecisions.test_sql_authority_rechecked_inside_writer_transaction)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_sql_case_write_failure_restores_decision (test_mssqlstore.MssqlStockDecisions.test_sql_case_write_failure_restores_decision)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_sql_current_actor_denial_for_all_decisions (test_mssqlstore.MssqlStockDecisions.test_sql_current_actor_denial_for_all_decisions)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_sql_decision_scope_restored_on_every_exit (test_mssqlstore.MssqlStockDecisions.test_sql_decision_scope_restored_on_every_exit)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_sql_early_and_persistent_recovery_reads_cannot_flush_failed_work (test_mssqlstore.MssqlStockDecisions.test_sql_early_and_persistent_recovery_reads_cannot_flush_failed_work)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_sql_failed_decisions_do_not_commit_or_flush_success_audit (test_mssqlstore.MssqlStockDecisions.test_sql_failed_decisions_do_not_commit_or_flush_success_audit)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_sql_transaction_refusal_keeps_original_error_when_reload_fails (test_mssqlstore.MssqlStockDecisions.test_sql_transaction_refusal_keeps_original_error_when_reload_fails)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_sql_transactional_audit_failure_restores_decision (test_mssqlstore.MssqlStockDecisions.test_sql_transactional_audit_failure_restores_decision)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_withdraw_unblocks_all_signoffs_without_editing_history (test_mssqlstore.MssqlStockDecisions.test_withdraw_unblocks_all_signoffs_without_editing_history)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_gate_error_leaves_no_partial_change (test_mssqlstore.MssqlStoreTests.test_gate_error_leaves_no_partial_change)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_health_checks_database (test_mssqlstore.MssqlStoreTests.test_health_checks_database)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_initial_seed_retains_procurement_and_date_without_reseeding_restart (test_mssqlstore.MssqlStoreTests.test_initial_seed_retains_procurement_and_date_without_reseeding_restart)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_ledger_is_append_only_and_detects_tampering (test_mssqlstore.MssqlStoreTests.test_ledger_is_append_only_and_detects_tampering)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_recommendation_persists_across_instances (test_mssqlstore.MssqlStoreTests.test_recommendation_persists_across_instances)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_second_process_sees_changes_without_restart (test_mssqlstore.MssqlStoreTests.test_second_process_sees_changes_without_restart)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_stale_write_is_refused_not_overwritten (test_mssqlstore.MssqlStoreTests.test_stale_write_is_refused_not_overwritten)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_state_survives_restart (test_mssqlstore.MssqlStoreTests.test_state_survives_restart)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_enabling_entries_and_acknowledgements_use_the_shared_store (test_mssqlstore.MssqlTimeCapture.test_enabling_entries_and_acknowledgements_use_the_shared_store)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_invalid_dpia_flags_cannot_write_to_shared_store (test_mssqlstore.MssqlTimeCapture.test_invalid_dpia_flags_cannot_write_to_shared_store)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_invalid_historical_dpia_controls_cannot_enable_after_restart (test_mssqlstore.MssqlTimeCapture.test_invalid_historical_dpia_controls_cannot_enable_after_restart)"
+        },
+        {
+          "reason": "needs a SQL Server (ZF_TEST_MSSQL=1)",
+          "test": "test_a_write_moves_the_case_in_the_sql_order_and_another_process_sees_it (test_mssqlstore.MssqlWrites.test_a_write_moves_the_case_in_the_sql_order_and_another_process_sees_it)"
+        },
+        {
+          "reason": "JSON does not have a SQL COMMIT acknowledgement boundary.",
+          "test": "test_committed_handoff_failure_returns_existing_explicit_outcome_contract (test_progress_report_api.JsonProgressApi.test_committed_handoff_failure_returns_existing_explicit_outcome_contract)"
+        },
+        {
+          "reason": "opt-in loopback SQL Server",
+          "test": "test_actual_legacy_mixed_precision_writer_reopen_as_of_and_export (test_progress_report_api.MssqlProgressApi.test_actual_legacy_mixed_precision_writer_reopen_as_of_and_export)"
+        },
+        {
+          "reason": "opt-in loopback SQL Server",
+          "test": "test_blank_report_fields_and_duplicates_are_refused_not_dropped (test_progress_report_api.MssqlProgressApi.test_blank_report_fields_and_duplicates_are_refused_not_dropped)"
+        },
+        {
+          "reason": "opt-in loopback SQL Server",
+          "test": "test_committed_handoff_failure_returns_existing_explicit_outcome_contract (test_progress_report_api.MssqlProgressApi.test_committed_handoff_failure_returns_existing_explicit_outcome_contract)"
+        },
+        {
+          "reason": "opt-in loopback SQL Server",
+          "test": "test_invalid_inputs_do_not_expand_scope_or_default_to_success (test_progress_report_api.MssqlProgressApi.test_invalid_inputs_do_not_expand_scope_or_default_to_success)"
+        },
+        {
+          "reason": "opt-in loopback SQL Server",
+          "test": "test_json_csv_complete_semantic_equality_and_no_mutation (test_progress_report_api.MssqlProgressApi.test_json_csv_complete_semantic_equality_and_no_mutation)"
+        },
+        {
+          "reason": "opt-in loopback SQL Server",
+          "test": "test_legacy_stats_and_case_csv_unchanged (test_progress_report_api.MssqlProgressApi.test_legacy_stats_and_case_csv_unchanged)"
+        },
+        {
+          "reason": "opt-in loopback SQL Server",
+          "test": "test_prospective_handoff_writers_retain_microseconds (test_progress_report_api.MssqlProgressApi.test_prospective_handoff_writers_retain_microseconds)"
+        },
+        {
+          "reason": "opt-in loopback SQL Server",
+          "test": "test_reopen_external_writer_refresh_and_ledger_invariance (test_progress_report_api.MssqlProgressApi.test_reopen_external_writer_refresh_and_ledger_invariance)"
+        },
+        {
+          "reason": "opt-in loopback SQL Server",
+          "test": "test_role_filters_empty_denominators_and_direct_default_deny (test_progress_report_api.MssqlProgressApi.test_role_filters_empty_denominators_and_direct_default_deny)"
+        },
+        {
+          "reason": "opt-in loopback SQL Server",
+          "test": "test_unavailable_audit_is_explicit_and_never_a_trusted_clock (test_progress_report_api.MssqlProgressApi.test_unavailable_audit_is_explicit_and_never_a_trusted_clock)"
+        },
+        {
+          "reason": "opt-in loopback SQL Server",
+          "test": "test_unrepresentable_utc_boundaries_are_explicit_400 (test_progress_report_api.MssqlProgressApi.test_unrepresentable_utc_boundaries_are_explicit_400)"
+        },
+        {
+          "reason": "opt-in isolated local SQL Server",
+          "test": "test_exact_cap_and_concurrent_last_cent (test_resident_aoai_sql.AccountingSqlTests.test_exact_cap_and_concurrent_last_cent)"
+        },
+        {
+          "reason": "opt-in isolated local SQL Server",
+          "test": "test_five_per_resident_concurrency_and_independent_resident (test_resident_aoai_sql.AccountingSqlTests.test_five_per_resident_concurrency_and_independent_resident)"
+        },
+        {
+          "reason": "opt-in isolated local SQL Server",
+          "test": "test_lost_response_or_completion_does_not_reuse_or_refund (test_resident_aoai_sql.AccountingSqlTests.test_lost_response_or_completion_does_not_reuse_or_refund)"
+        },
+        {
+          "reason": "opt-in isolated local SQL Server",
+          "test": "test_missing_budget_row_reapply_cannot_reset_accounting (test_resident_aoai_sql.AccountingSqlTests.test_missing_budget_row_reapply_cannot_reset_accounting)"
+        },
+        {
+          "reason": "opt-in isolated local SQL Server",
+          "test": "test_principal_can_execute_but_not_read_or_write_accounting (test_resident_aoai_sql.AccountingSqlTests.test_principal_can_execute_but_not_read_or_write_accounting)"
+        },
+        {
+          "reason": "opt-in isolated local SQL Server",
+          "test": "test_restart_migration_and_completion_never_refund (test_resident_aoai_sql.AccountingSqlTests.test_restart_migration_and_completion_never_refund)"
+        },
+        {
+          "reason": "opt-in local browser",
+          "test": "test_browser_commitment_reassignment_response_closure_and_remedy_reopen (test_resident_api.ResidentApi.test_browser_commitment_reassignment_response_closure_and_remedy_reopen)"
+        },
+        {
+          "reason": "Opt-in rendered check requires local Playwright browser.",
+          "test": "test_rendered_comparison_and_case_switch (test_stock_reconciliation_api.StockApi.test_rendered_comparison_and_case_switch)"
+        }
+      ],
+      "started": "2026-10-27T15:24:02.644298+00:00",
+      "suite": true,
+      "tests": 1114,
+      "timeout_seconds": 1800
+    },
+    {
+      "argv": [
+        "<output>/venvs/namespace/bin/python",
+        "-m",
+        "compileall",
+        "-q",
+        "src/core/src",
+        "src/agents/src",
+        "src/api/src",
+        "src/orchestrator/src"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:24:03.115455+00:00",
+      "group": "static",
+      "integration": false,
+      "log": "0024-static.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started": "2026-10-27T15:24:02.645238+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "node",
+        "--check",
+        "src/api/src/zava_forward/api/web/app.js"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:24:03.146944+00:00",
+      "group": "static",
+      "integration": false,
+      "log": "0025-static.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started": "2026-10-27T15:24:03.115576+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "node",
+        "--check",
+        "src/api/src/zava_forward/api/web/assistants.js"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:24:03.176742+00:00",
+      "group": "static",
+      "integration": false,
+      "log": "0026-static.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started": "2026-10-27T15:24:03.147041+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "git",
+        "ls-files",
+        "--",
+        "*/.assistant-test-*",
+        "mvp/data",
+        ":(glob)src/**/data/**"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:24:03.181084+00:00",
+      "group": "static",
+      "integration": false,
+      "log": "0027-static.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started": "2026-10-27T15:24:03.176828+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "actionlint",
+        "-config-file",
+        "infra/tests/actionlint.yaml",
+        ".github/workflows/src-ci.yml",
+        ".github/workflows/mvp-ci.yml",
+        ".github/workflows/mvp-validation.yml",
+        ".github/workflows/src-deploy.yml",
+        ".github/workflows/infra-plan.yml"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:24:03.408017+00:00",
+      "group": "static",
+      "integration": false,
+      "log": "0028-static.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started": "2026-10-27T15:24:03.181157+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "<output>/venvs/namespace/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_rpi_checks.py",
+        "-v"
+      ],
+      "cwd": ".",
+      "env": {},
+      "executed": 30,
+      "exit_code": 0,
+      "finished": "2026-10-27T15:24:14.257092+00:00",
+      "group": "static",
+      "integration": false,
+      "log": "0029-static.log",
+      "sha256": "b0a2c232b4212d7aecbd96f127e53d0a1c19fb8db8ce43e348dcb27348a393d3",
+      "skips": [],
+      "started": "2026-10-27T15:24:03.408109+00:00",
+      "suite": true,
+      "tests": 30,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "docker",
+        "build",
+        "--no-cache",
+        "--memory=3g",
+        "--cpu-quota=200000",
+        "-f",
+        "<checkout>/src/api/Dockerfile",
+        "-t",
+        "zava-forward-api:rpi-cf2d1c88fa15d92476024dea",
+        "<checkout>/src"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:24:56.029767+00:00",
+      "group": "image-api",
+      "integration": false,
+      "log": "0030-image-api.log",
+      "sha256": "a408f4d0b9c07ec396379c14a976754b2b987cefd76691d77b7871d17d32eef0",
+      "started": "2026-10-27T15:24:14.258155+00:00",
+      "suite": false,
+      "timeout_seconds": 1800
+    },
+    {
+      "argv": [
+        "docker",
+        "image",
+        "inspect",
+        "zava-forward-api:rpi-cf2d1c88fa15d92476024dea"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:24:56.108363+00:00",
+      "group": "image-api",
+      "integration": false,
+      "log": "0031-image-api.log",
+      "sha256": "26ded7f1ff9d5ab37fae5dd1378c68812d08abce79bf5c18d293d5f6bde9b928",
+      "started": "2026-10-27T15:24:56.029887+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "<output>/venvs/namespace/bin/python",
+        "src/check-container.py",
+        "api",
+        "sha256:50a6b6555ae9359f479f8537d2afdd2bacc4ccd04b803a0dbf8e349a10002abb"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:25:10.509872+00:00",
+      "group": "image-api",
+      "integration": false,
+      "log": "0032-image-api.log",
+      "sha256": "b053f0a2a11d9538e132746da5e5b29c2a81c94cf0e5dfc1997b73813ee634f6",
+      "started": "2026-10-27T15:24:56.108536+00:00",
+      "suite": false,
+      "timeout_seconds": 300
+    },
+    {
+      "argv": [
+        "trivy",
+        "image",
+        "--cache-dir",
+        "<output>/cache/trivy",
+        "--config",
+        "src/trivy.yaml",
+        "--scanners",
+        "vuln",
+        "--severity",
+        "HIGH,CRITICAL",
+        "--ignore-unfixed",
+        "--exit-code",
+        "1",
+        "--format",
+        "json",
+        "--output",
+        "<output>/api-gate.json",
+        "sha256:50a6b6555ae9359f479f8537d2afdd2bacc4ccd04b803a0dbf8e349a10002abb"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:25:18.608607+00:00",
+      "group": "image-api",
+      "integration": false,
+      "log": "0033-image-api.log",
+      "sha256": "78e570e41d802036bccaf15c6a6b699c401919b29a0becececf2a9c93beece6e",
+      "started": "2026-10-27T15:25:10.510005+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "trivy",
+        "image",
+        "--cache-dir",
+        "<output>/cache/trivy",
+        "--config",
+        "src/trivy.yaml",
+        "--scanners",
+        "vuln",
+        "--severity",
+        "HIGH,CRITICAL",
+        "--ignore-unfixed=false",
+        "--exit-code",
+        "0",
+        "--format",
+        "json",
+        "--output",
+        "<output>/api-all.json",
+        "sha256:50a6b6555ae9359f479f8537d2afdd2bacc4ccd04b803a0dbf8e349a10002abb"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:25:18.804777+00:00",
+      "group": "image-api",
+      "integration": false,
+      "log": "0034-image-api.log",
+      "sha256": "85113610f228ce209f4bb58997e4dec0c75c5cd6d355d591829bd7e0a5864e9a",
+      "started": "2026-10-27T15:25:18.608739+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "trivy",
+        "image",
+        "--cache-dir",
+        "<output>/cache/trivy",
+        "--config",
+        "src/trivy.yaml",
+        "--scanners",
+        "vuln",
+        "--severity",
+        "HIGH,CRITICAL",
+        "--format",
+        "spdx-json",
+        "--output",
+        "<output>/api.spdx.json",
+        "sha256:50a6b6555ae9359f479f8537d2afdd2bacc4ccd04b803a0dbf8e349a10002abb"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:25:19.010680+00:00",
+      "group": "image-api",
+      "integration": false,
+      "log": "0035-image-api.log",
+      "sha256": "85113610f228ce209f4bb58997e4dec0c75c5cd6d355d591829bd7e0a5864e9a",
+      "started": "2026-10-27T15:25:18.804887+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "docker",
+        "build",
+        "--memory=3g",
+        "--cpu-quota=200000",
+        "-f",
+        "<output>/logo-snapshot/src/api/Dockerfile",
+        "-t",
+        "zava-forward-api:rpi-cf2d1c88fa15d92476024dea-logo0600",
+        "<output>/logo-snapshot/src"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:25:38.319250+00:00",
+      "group": "logo-0600",
+      "integration": false,
+      "log": "0036-logo-0600.log",
+      "sha256": "e63f927cf5e0ed2915b91cafe6591f9942c6ac954a0c0c14397868f92d8d298c",
+      "started": "2026-10-27T15:25:19.103350+00:00",
+      "suite": false,
+      "timeout_seconds": 1800
+    },
+    {
+      "argv": [
+        "docker",
+        "image",
+        "inspect",
+        "zava-forward-api:rpi-cf2d1c88fa15d92476024dea-logo0600"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:25:38.410838+00:00",
+      "group": "logo-0600",
+      "integration": false,
+      "log": "0037-logo-0600.log",
+      "sha256": "13df00f70c7d61c70da6f2f1c541c1b4d4acbccd8ffc70a6c83fc88c5f628bee",
+      "started": "2026-10-27T15:25:38.319359+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "<output>/venvs/namespace/bin/python",
+        "src/check-container.py",
+        "api",
+        "sha256:4eebf5d5c1e87daa1d95ec37e34424097dc9823c587d4d1295a45213225c8094"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:25:52.416566+00:00",
+      "group": "logo-0600",
+      "integration": false,
+      "log": "0038-logo-0600.log",
+      "sha256": "b053f0a2a11d9538e132746da5e5b29c2a81c94cf0e5dfc1997b73813ee634f6",
+      "started": "2026-10-27T15:25:38.410999+00:00",
+      "suite": false,
+      "timeout_seconds": 300
+    },
+    {
+      "argv": [
+        "<output>/venvs/api/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "."
+      ],
+      "cwd": "src/api",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:29:30.545548+00:00",
+      "group": "project-api",
+      "integration": false,
+      "log": "0039-project-api.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "started": "2026-10-27T15:29:30.402687+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "<output>/venvs/api/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "."
+      ],
+      "cwd": "src/api",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:29:30.659364+00:00",
+      "group": "project-api",
+      "integration": false,
+      "log": "0040-project-api.log",
+      "sha256": "0a58e773ebd237a787c4825d5193d68d291903617ffaed15dca58bff86fd78a5",
+      "started": "2026-10-27T15:29:30.545641+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "<output>/venvs/api/bin/python",
+        "-m",
+        "mypy"
+      ],
+      "cwd": "src/api",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:29:34.761710+00:00",
+      "group": "project-api",
+      "integration": false,
+      "log": "0041-project-api.log",
+      "sha256": "7aebc3c9c840c3e075d7701a826136c2571eab60a0ce5c94514098ba0869deaa",
+      "started": "2026-10-27T15:29:30.659442+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "<output>/venvs/api/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "--isolated",
+        "--select",
+        "E,F,I,B,UP",
+        "--target-version",
+        "py312",
+        "--line-length",
+        "100",
+        "checks/design_system_browser_check.py"
+      ],
+      "cwd": "src/api",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:29:34.857481+00:00",
+      "group": "browser",
+      "integration": false,
+      "log": "0042-browser.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "started": "2026-10-27T15:29:34.762013+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "<output>/venvs/api/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--isolated",
+        "--line-length",
+        "100",
+        "--check",
+        "checks/design_system_browser_check.py"
+      ],
+      "cwd": "src/api",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:29:34.953198+00:00",
+      "group": "browser",
+      "integration": false,
+      "log": "0043-browser.log",
+      "sha256": "fd2299c9f1c6dc869070883e281051bfe93aacf66c1a3b0069f45b4aa410ca50",
+      "started": "2026-10-27T15:29:34.857597+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "<output>/venvs/api/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "--isolated",
+        "--select",
+        "E,F,I,B,UP",
+        "--target-version",
+        "py312",
+        "--line-length",
+        "100",
+        "checks/regulatory_ux_check.py"
+      ],
+      "cwd": "src/api",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:29:35.050059+00:00",
+      "group": "browser",
+      "integration": false,
+      "log": "0044-browser.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "started": "2026-10-27T15:29:34.953292+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "<output>/venvs/api/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--isolated",
+        "--line-length",
+        "100",
+        "--check",
+        "checks/regulatory_ux_check.py"
+      ],
+      "cwd": "src/api",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:29:35.146176+00:00",
+      "group": "browser",
+      "integration": false,
+      "log": "0045-browser.log",
+      "sha256": "fd2299c9f1c6dc869070883e281051bfe93aacf66c1a3b0069f45b4aa410ca50",
+      "started": "2026-10-27T15:29:35.050133+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "<output>/venvs/api/bin/python",
+        "-m",
+        "playwright",
+        "install",
+        "chromium"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:29:53.636298+00:00",
+      "group": "browser",
+      "integration": false,
+      "log": "0046-browser.log",
+      "sha256": "a685a8d6a186affb0262be2efd3e3135ac18e2feb0de3d584b6fdf5cb4a25073",
+      "started": "2026-10-27T15:29:35.146269+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "<output>/venvs/api/bin/python",
+        "-c",
+        "import runpy,tempfile,os\nfrom unittest.mock import patch\noriginal=tempfile.TemporaryDirectory\ndef external_scratch(*args,**kwargs):\n    kwargs['dir']=os.environ['TMPDIR']\n    return original(*args,**kwargs)\nwith patch('tempfile.TemporaryDirectory',external_scratch):\n    runpy.run_module('checks.design_system_browser_check',run_name='__main__')\n"
+      ],
+      "cwd": "src/api",
+      "env": {
+        "PYTHONPATH": "<output>/safety"
+      },
+      "exit_code": 0,
+      "finished": "2026-10-27T15:30:06.631374+00:00",
+      "group": "browser",
+      "integration": false,
+      "log": "0047-browser.log",
+      "sha256": "200fb4017934256f05e27323152e1011dc49683c7e3eb84de0b434fd618cd34b",
+      "started": "2026-10-27T15:29:53.704882+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "<output>/venvs/api/bin/python",
+        "-m",
+        "checks.regulatory_ux_check",
+        "--axe",
+        "<output>/axe-4.10.3.min.js",
+        "--out",
+        "<output>/regulatory-ux-results.json"
+      ],
+      "cwd": "src/api",
+      "env": {
+        "PYTHONPATH": "<checkout>/src/api/tests:<checkout>/src/core/tests:<checkout>/src/agents/tests"
+      },
+      "exit_code": 0,
+      "finished": "2026-10-27T15:30:17.812127+00:00",
+      "group": "browser",
+      "integration": false,
+      "log": "0048-browser.log",
+      "sha256": "a366b54c7aeb4edaab147542d8a88eeb72e706d722e3a6ca5f8d5c04ca8f84d2",
+      "started": "2026-10-27T15:30:06.631593+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "<output>/venvs/api/bin/python",
+        "-c",
+        "from pathlib import Path; import json,sys; r=json.loads(Path(sys.argv[1]).read_text()); assert 'skipped' not in json.dumps(r)",
+        "<output>/regulatory-ux-results.json"
+      ],
+      "cwd": ".",
+      "env": {},
+      "exit_code": 0,
+      "finished": "2026-10-27T15:30:17.926822+00:00",
+      "group": "browser",
+      "integration": false,
+      "log": "0049-browser.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started": "2026-10-27T15:30:17.812243+00:00",
+      "suite": false,
+      "timeout_seconds": 900
+    }
+  ],
+  "environments": {
+    "api": "8b5dcf8c7e26390634d4881b7c8f1b0ca1eb058b54101177329f44bbf4db84f0",
+    "api-startup": "cc2c1ada9771ab47e2ba1d61a5d23e3e1bb41d90cdd0f8978ceae5c7bf7b67b4",
+    "namespace": "746c960d7fa9236fdd862f417735df17a229918a68e854f0513e97acc45062d6",
+    "namespace-startup": "6c976876a594231e0bb71da8b9acb0e7a1f9e79678942fdc6bf333405ddceae6"
+  },
+  "executed_groups": [
+    "preflight",
+    "project-api",
+    "namespace",
+    "static",
+    "browser",
+    "image-api",
+    "logo-0600"
+  ],
+  "extras": [],
+  "failure": null,
+  "files": {
+    "0000-preflight.log": "5b3e43dc38ca01e3f5a7854ba50d4330864b0c1e0f646650b2c78cf072acc366",
+    "0001-preflight.log": "f2ec568164f99546161909b0189b57bb5be3e80f8e2ccd8a51a4aed8c4055a04",
+    "0002-preflight.log": "0a3ccddb8c7b76d2ca7460bb8081aff503843134e0fb98f1cb6992c2f0af72ce",
+    "0003-preflight.log": "780712eadbdc0150c9864a928728bb540a2acfe31d965827f78393e1c55deb35",
+    "0004-preflight.log": "9d34cdaec053c6005199c08f2bac628bd8c087303faa26fd8ab58c3e22216ff5",
+    "0005-preflight.log": "fc9eec16b4191d058a295813ca9afbe9d2b37b59975da860170726be162a3924",
+    "0006-preflight.log": "caeca6a0f6641907faa757b0975d2edcf05fe6ca9b724a7f86e36fe0626f4441",
+    "0007-project-api.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "0008-project-api.log": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09",
+    "0009-project-api.log": "79ba3661f0dd3f8fade833d351908fe0de6d897afbd40a8503bb3502d69ada54",
+    "0010-project-api.log": "404cf9c7aa45a27c20fef9e2e0317e2d1552c2375c077e6521dbd526da190fc9",
+    "0011-project-api.log": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09",
+    "0012-namespace.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "0013-namespace.log": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09",
+    "0014-namespace.log": "79ba3661f0dd3f8fade833d351908fe0de6d897afbd40a8503bb3502d69ada54",
+    "0015-namespace.log": "1592322970d3fb2fa949f081452bcfe82453760be43b0e6f1f8d7e1115178ae0",
+    "0016-namespace.log": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09",
+    "0017-namespace.log": "dc1c4658ebccb896187c6eb58cc209aa294e660b36b50b60838b3077cb5c60a4",
+    "0018-namespace.log": "db26ee0183dc1a4dedbdf9f4850f9278a07b91e678ea2b43df258ac89e5fbd1c",
+    "0019-namespace.log": "77884e6b36747b7d663937ce5c52e7f71992f6965370dba4cf26fc9b3c99292c",
+    "0020-namespace.log": "c2b38949800c79cf332e4f8fdc778bea20bbf19dd17cf815741ed272bf0316e4",
+    "0021-namespace.log": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67",
+    "0022-namespace.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "0023-project-api.log": "016db1c8d84a5efa98963dd1c5ed0559bc895074c64e5f9248dff0be7814a99d",
+    "0024-static.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "0025-static.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "0026-static.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "0027-static.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "0028-static.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "0029-static.log": "b0a2c232b4212d7aecbd96f127e53d0a1c19fb8db8ce43e348dcb27348a393d3",
+    "0030-image-api.log": "a408f4d0b9c07ec396379c14a976754b2b987cefd76691d77b7871d17d32eef0",
+    "0031-image-api.log": "26ded7f1ff9d5ab37fae5dd1378c68812d08abce79bf5c18d293d5f6bde9b928",
+    "0032-image-api.log": "b053f0a2a11d9538e132746da5e5b29c2a81c94cf0e5dfc1997b73813ee634f6",
+    "0033-image-api.log": "78e570e41d802036bccaf15c6a6b699c401919b29a0becececf2a9c93beece6e",
+    "0034-image-api.log": "85113610f228ce209f4bb58997e4dec0c75c5cd6d355d591829bd7e0a5864e9a",
+    "0035-image-api.log": "85113610f228ce209f4bb58997e4dec0c75c5cd6d355d591829bd7e0a5864e9a",
+    "0036-logo-0600.log": "e63f927cf5e0ed2915b91cafe6591f9942c6ac954a0c0c14397868f92d8d298c",
+    "0037-logo-0600.log": "13df00f70c7d61c70da6f2f1c541c1b4d4acbccd8ffc70a6c83fc88c5f628bee",
+    "0038-logo-0600.log": "b053f0a2a11d9538e132746da5e5b29c2a81c94cf0e5dfc1997b73813ee634f6",
+    "0039-project-api.log": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    "0040-project-api.log": "0a58e773ebd237a787c4825d5193d68d291903617ffaed15dca58bff86fd78a5",
+    "0041-project-api.log": "7aebc3c9c840c3e075d7701a826136c2571eab60a0ce5c94514098ba0869deaa",
+    "0042-browser.log": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    "0043-browser.log": "fd2299c9f1c6dc869070883e281051bfe93aacf66c1a3b0069f45b4aa410ca50",
+    "0044-browser.log": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    "0045-browser.log": "fd2299c9f1c6dc869070883e281051bfe93aacf66c1a3b0069f45b4aa410ca50",
+    "0046-browser.log": "a685a8d6a186affb0262be2efd3e3135ac18e2feb0de3d584b6fdf5cb4a25073",
+    "0047-browser.log": "200fb4017934256f05e27323152e1011dc49683c7e3eb84de0b434fd618cd34b",
+    "0048-browser.log": "a366b54c7aeb4edaab147542d8a88eeb72e706d722e3a6ca5f8d5c04ca8f84d2",
+    "0049-browser.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "api-all.json": "56e60e1d5d970386f57ddcda99453de637d618865de7eb030559199369ef9a69",
+    "api-gate.json": "28b82099b4187c34d1914e9c13fa504da91613012f94b75e84f323e630e8708a",
+    "api.spdx.json": "3edec63c881605b9aaecfeb0dfea9f05a4f188fa7f03e72161bfb05b3dce5cda",
+    "axe-4.10.3.min.js": "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb",
+    "browser-bytecode-policy.pth": "d975cade6e94b6039f6ce18b9c796318a748a74a8fde288df3caad09fdfca7b3",
+    "regulatory-ux-results.json": "129634394561b72fede58d038813dc7acc98b06eef669ce0ecdec2d698fb4f73",
+    "snapshot-inputs.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "groups": [
+    "preflight",
+    "project-api",
+    "namespace",
+    "static",
+    "browser",
+    "image-api",
+    "logo-0600"
+  ],
+  "hosted_only": [
+    "GitHub approvals/protection/checks",
+    "OIDC/Azure what-if",
+    "manual release/deployment",
+    "real AI acceptance"
+  ],
+  "identity": {
+    "base": "2e031c89a18ce1ceb3de4fda014fddcb90231fda",
+    "head": "aee0e9d5af29ccabb9251e1f05cdb82cc88387c4",
+    "helper": "47543ddfb6a767e8a9b16496ad5a291aa2b13e258b8127cf9cae2d5fc2653c5b",
+    "matrix": "6256b8959e14be21189048f4530706e4657f95d34686280d646e73fefaa9e02f",
+    "merge_base": "2e031c89a18ce1ceb3de4fda014fddcb90231fda",
+    "tree": "a41e87aa4380f2cf7b9f9a5605eaaf9d17b75347"
+  },
+  "images": {
+    "image-api": {
+      "digests": [
+        "zava-forward-api@sha256:50a6b6555ae9359f479f8537d2afdd2bacc4ccd04b803a0dbf8e349a10002abb"
+      ],
+      "id": "sha256:50a6b6555ae9359f479f8537d2afdd2bacc4ccd04b803a0dbf8e349a10002abb",
+      "tag": "zava-forward-api:rpi-cf2d1c88fa15d92476024dea"
+    },
+    "logo-0600": {
+      "digests": [
+        "zava-forward-api@sha256:4eebf5d5c1e87daa1d95ec37e34424097dc9823c587d4d1295a45213225c8094"
+      ],
+      "id": "sha256:4eebf5d5c1e87daa1d95ec37e34424097dc9823c587d4d1295a45213225c8094",
+      "tag": "zava-forward-api:rpi-cf2d1c88fa15d92476024dea-logo0600"
+    }
+  },
+  "jobs": 2,
+  "owner": "cf2d1c88fa15d92476024dea",
+  "resume": null,
+  "resume_eligible": false,
+  "schema": 4,
+  "scope": "partial",
+  "sealed": "2026-10-27T15:30:21.450733+00:00",
+  "selection": {
+    "groups": [
+      "preflight",
+      "project-api",
+      "namespace",
+      "static",
+      "browser",
+      "image-api",
+      "logo-0600"
+    ],
+    "mode": "changed",
+    "paths": [
+      ".copilot-tracking/changes/2026-10-27/role-screens-149-changes.md",
+      ".copilot-tracking/changes/2026-10-27/role-screens-149-followup-validation.json",
+      ".copilot-tracking/details/2026-10-27/role-screens-149-phase-details.md",
+      ".copilot-tracking/plans/2026-10-27/role-screens-149-plan.md",
+      ".copilot-tracking/research/2026-10-27/role-screens-149-research.md",
+      ".copilot-tracking/reviews/logs/2026-10-27/role-screens-149-review.md",
+      ".copilot-tracking/reviews/plans/2026-10-27/role-screens-149-plan-critique.md",
+      ".copilot-tracking/rpi-sessions/2026-10-27/role-screens-149-state.json",
+      "src/api/README.md",
+      "src/api/checks/role_screens_browser_check.py",
+      "src/api/checks/role_screens_fixtures.py",
+      "src/api/checks/workbench-manifest.json",
+      "src/api/src/zava_forward/api/web/app.js",
+      "src/api/src/zava_forward/api/web/index.html",
+      "src/api/src/zava_forward/api/web/role-screens.js",
+      "src/api/src/zava_forward/api/web/style.css",
+      "src/api/src/zava_forward/api/workbench.py",
+      "src/api/tests/test_role_screens.py"
+    ]
+  },
+  "sql": {},
+  "status": "passed",
+  "tools": {
+    "actionlint": {
+      "sha256": "c872d6db8c6bf83a8eaa704fc93999f027d55dffbc63b8a6abdccb47df5f4cd4"
+    },
+    "az": {
+      "sha256": "732d82c05ee1b264d3f30221fd51bb234cb7a95d863c0b69526b0c95b60df021"
+    },
+    "bicep": {
+      "sha256": "b09ec25a9d376c1f8e33ede6ed22b587f915ad68488d5db77a6f9541748c7f6e"
+    },
+    "docker": {
+      "sha256": "adbc67ecdc2cd2d350c01a5964a205bd81470b485aba1fb90c2f559de9e4584f"
+    },
+    "docker-server": {
+      "version": "29.9.0"
+    },
+    "node": {
+      "sha256": "7fde7b8afa198da66257f42ee2001d874c7355631e6d1579a5fb5ef1f246df4c"
+    },
+    "python3": {
+      "sha256": "e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f"
+    },
+    "shellcheck": {
+      "sha256": "4da528ddb3a4d1b7b24a59d4e16eb2f5fd960f4bd9a3708a15baddbdf1d5a55b"
+    },
+    "trivy": {
+      "sha256": "1f889576636db0623539cb339df7d06c40ebf39e7919489eafa1160e29808f19"
+    }
+  },
+  "trivy_database": {
+    "next_update": "2026-10-28T13:12:49.474279763Z",
+    "sha256": "27926ce4cac7beeada5d8f475559b61f43c452098da07d538cc7bbc0072b4005",
+    "updated_at": "2026-10-27T13:12:49.474279883Z"
+  }
+}

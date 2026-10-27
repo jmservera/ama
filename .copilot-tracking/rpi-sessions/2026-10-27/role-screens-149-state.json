@@ -3,8 +3,8 @@
   "task_slug": "role-screens-149",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-27/role-screens-149-research.md",
@@ -15,6 +15,21 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-27/role-screens-149-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "One scoped foreground gate passed for parent aee0e9d5 on main 2e031c89 and partial receipt verified after fresh fetch immediately before push. Nine child drafts #487-#495 and parent draft #496 published; no merge or readiness claimed.",
+      "status": "draft-publication-complete",
+      "evidence": "External /mnt/ama-rpi-gates/role-screens-149-20261027-aee0e9d5/receipt.json; SHA256 c4dd8a35af775330d7c92e67474c3eb1f11c35ef080e8a5218a4ff12bab79552; trace-only child historical receipt copy and publication artifact"
+    },
+    {
+      "decision": "Five child-only unit-formatting defects corrected with additive commits after hosted-equivalent checks. Full API lint/format/types and eight focused units passed for each affected child; runtime/harness bytes unchanged and parent receipt unaffected.",
+      "status": "executed",
+      "evidence": "role-screens-{232,227,230,225,229}-publication-validation.json on the corresponding child branches"
+    },
+    {
+      "decision": "Hosted src-core failed: scenario manifest retains an obsolete SHA256 for the changed workbench manifest. No approved reviews exist. All PRs remain draft; correcting parent would invalidate the already-spent sole gate.",
+      "status": "ready-blocked",
+      "evidence": "https://github.com/jmservera/ama/actions/runs/40531944516/job/122286925178; two source-integrity test errors; not covered by the partial gate's selected API-only project group"
+    },
     {
       "decision": "B2 resolved: parent and nine independent children rebased onto main 2e031c89. All eight scoped role/workbench browser reruns and focused units passed with this worktree's source roots.",
       "status": "executed",
@@ -61,20 +76,37 @@
       "evidence": "Read-only git fetch/rev-parse/merge-base and tools/rpi-checks.py clean_identity ancestry requirement; zero gate invocations; https://github.com/jmservera/ama/issues/149#issuecomment-6445655965"
     }
   ],
-  "blockers": [],
+  "blockers": [
+    {
+      "id": "HOSTED-001",
+      "summary": "Ready transition blocked by stale workbench-manifest source hash in docs/reference/research/retrofit-synthetic-data/scenario-manifest.json. Hosted core source-integrity tests fail. The sole authorized parent gate has been spent.",
+      "resolution": "A later owner-selected follow-up must reconcile the versioned scenario/inventory evidence binding, run targeted core tests and obtain authorization for new exact-head selected validation before updating the gated parent. Do not waive checks or reuse the old receipt for changed bytes."
+    },
+    {
+      "id": "REVIEW-001",
+      "summary": "No approved hosted review; checks still incomplete. Draft publication is complete, but ready is not permitted.",
+      "resolution": "Keep all ten PRs draft until current-head hosted checks and actual review pass. Original adverse independent Review remains unchanged; do not infer acceptance from the local gate."
+    }
+  ],
   "next_action": {
-    "phase": "Implement",
-    "action": "Commit final parent evidence/formatting, propagate that ancestry to all children, preserve and clean exact generated paths, execute the one foreground scoped gate and verify current-main partial receipt immediately before push. Publish nine child drafts and one parent draft only on pass. Record post-gate publication status in trace-only #233 without altering the gated parent."
+    "phase": "Follow-up",
+    "action": "Draft publication complete. Retain HOSTED-001 and review blockers, preserve parent aee0e9d5 and the one passing partial receipt. A later owner-selected source-binding follow-up needs a newly authorized gate before changing parent. No automatic child work, ready transition, second gate or merge."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
+      "task": "Reconcile the versioned scenario/inventory source binding and authorize a fresh exact-head gate",
+      "rationale": "Smallest concrete blocker to hosted correctness/readiness: the parent workbench manifest changed but its dependent public evidence hash did not. The one authorized gate is exhausted, so parent correction cannot reuse its receipt.",
+      "evidence": "HOSTED-001; src-core job 122286925178; scenario-manifest.json workbench source hash mismatch"
+    },
+    {
+      "rank": 2,
       "task": "Owner-controlled child integration and integrated-head validation",
       "rationale": "High service value after publication blockers; independent branch checks cannot prove a connected same-home journey or combined browser behavior.",
       "evidence": "Plan Follow-Up Items; #233 trace at 7519ca10; Review Plan Follow-Up Assessment"
     },
     {
-      "rank": 2,
+      "rank": 3,
       "task": "Human/assistive-technology validation and actual Fluent adoption",
       "rationale": "Required acceptance evidence remains unavailable; engineering checks are not resident/staff comprehension or WCAG acceptance.",
       "evidence": "#155; plan Follow-Up Items; Review validation limits"

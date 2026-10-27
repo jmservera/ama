@@ -7,8 +7,10 @@ ms.date: 2026-10-27
 ## Task Metadata
 
 Task ID: 149. Slug: role-screens-149. Mode: automatic.
-Readiness: Local follow-up revalidation passed; exact-head scoped gate and
-draft publication pending. Original critique and Review verdicts preserved.
+Readiness: Scoped parent gate passed and all ten drafts published. Ready is
+blocked by hosted source-binding failure and missing approved review.
+This terminal snapshot is trace-child-only; gated parent remains unchanged.
+Original critique and Review verdicts preserved.
 
 ## Executive Summary
 
@@ -114,11 +116,11 @@ Issue acceptance boxes are not modified; this list is engineering delivery only.
 #### [x] P02-T02: Deliver remaining role children, then cross-role trace last
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Review, scoped gate and publication
+### [x] P03: Review, scoped gate and publication
 <!-- rpi:task id=P03-T01 -->
 #### [x] P03-T01: Run one independent Review and retain findings
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: Clean exact-owned generated inputs, gate parent once and publish drafts
+#### [x] P03-T02: Clean exact-owned generated inputs, gate parent once and publish drafts
 
 ## Validation and Test Ownership
 
@@ -200,6 +202,14 @@ artifact; logs/screenshots external. Never count fixture existence as execution.
 
 ## Follow-Up Items
 
+* HOSTED-001: reconcile the versioned scenario/inventory evidence binding for
+  changed workbench-manifest.json. Hosted src-core job 122286925178 failed
+  two source-integrity tests. Outside this completed single-gate publication
+  scope because changing parent invalidates its sole receipt; owner must
+  select the correction and authorize new exact-head validation. Do not
+  simply replace a hash without preserving the evidence/review contract.
+  Keep all PRs draft until current-head checks and actual review pass.
+
 * Owner-controlled child integration and exact integrated-head validation.
   Outside this run because independent child PRs must retain reviewable diffs;
   owner integrates only after review, then authorizes integrated validation.
@@ -238,12 +248,15 @@ Parent new test formatting was normalized before the gate; full API static
 checks passed. Final evidence/format-only parent ancestry is propagated to
 children without merging them.
 
-P03-T02 remains active until the single scoped gate, receipt verification and
-draft publication are evidenced. The final external receipt/PR evidence is
-authoritative for post-commit execution; this snapshot cannot contain a receipt
-for itself. No further parent commit after the gate. Post-publication status
-may be committed only to trace-only #233. No issue, human/accessibility,
-independent approval or integrated acceptance is inferred.
+P03-T02 execution is complete in this trace-only terminal update. The one gate
+passed for parent aee0e9d5 on main 2e031c89 and verified partial before push.
+Child drafts #487-#495 target the parent; parent draft #496 targets main.
+The historical receipt copy and publication JSON live only on trace #233,
+preserving the gated parent. Ready remains blocked by HOSTED-001 and review;
+no parent mutation, second gate, readiness or acceptance is claimed. The
+external receipt/PR evidence is authoritative; the committed copy is historical,
+not a receipt for this trace child. No issue, human/accessibility, independent
+approval or integrated acceptance is inferred.
 
 ## Handoff
 

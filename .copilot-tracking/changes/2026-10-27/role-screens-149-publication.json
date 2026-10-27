@@ -1,0 +1,685 @@
+{
+  "observed_at": "2026-10-27T15:37:42.463646+00:00",
+  "delivery": "Ten drafts published; ready blocked; no merge",
+  "mode": "automatic",
+  "session_status": "running",
+  "phase": "Follow-up",
+  "task_status": "completed",
+  "parent_head": "aee0e9d5af29ccabb9251e1f05cdb82cc88387c4",
+  "base": "2e031c89a18ce1ceb3de4fda014fddcb90231fda",
+  "gate_invocations": 1,
+  "gate_status": "passed",
+  "gate_scope": "partial",
+  "gate_receipt_sha256": "c4dd8a35af775330d7c92e67474c3eb1f11c35ef080e8a5218a4ff12bab79552",
+  "receipt_copy_semantics": "Historical byte-identical copy for parent only; not a receipt for this trace child or later commits",
+  "prs": {
+    "232": {
+      "url": "https://github.com/jmservera/ama/pull/487",
+      "number": 487,
+      "branch": "feat/role-screen-232",
+      "base": "feat/role-screens-149",
+      "published_head": "d98c49dbb92a87dda4c6bfe552cff605f792c36c",
+      "draft": true,
+      "final_local_head_before_trace_evidence": "f27161eead4b547107e7ea2b64eb7380c76b73d7"
+    },
+    "227": {
+      "url": "https://github.com/jmservera/ama/pull/488",
+      "number": 488,
+      "branch": "feat/role-screen-227",
+      "base": "feat/role-screens-149",
+      "published_head": "26cab7e21f4b04e50ba62553857da5eccccf041f",
+      "draft": true,
+      "final_local_head_before_trace_evidence": "4771810c601ff042b749daca9c0aa8e36d32229a"
+    },
+    "230": {
+      "url": "https://github.com/jmservera/ama/pull/489",
+      "number": 489,
+      "branch": "feat/role-screen-230",
+      "base": "feat/role-screens-149",
+      "published_head": "3c70902da7c49f6d29fa111d0fa4ad0e65fa78b8",
+      "draft": true,
+      "final_local_head_before_trace_evidence": "eca7e3ef2eb08ca6ad0dc8f8de48e5d86e185be1"
+    },
+    "225": {
+      "url": "https://github.com/jmservera/ama/pull/490",
+      "number": 490,
+      "branch": "feat/role-screen-225",
+      "base": "feat/role-screens-149",
+      "published_head": "00fcb8c9da897533841f14fb537f335d6b5943fd",
+      "draft": true,
+      "final_local_head_before_trace_evidence": "94e0369f9bcb9f8da35af7a296137b2e53087f1b"
+    },
+    "226": {
+      "url": "https://github.com/jmservera/ama/pull/491",
+      "number": 491,
+      "branch": "feat/role-screen-226",
+      "base": "feat/role-screens-149",
+      "published_head": "33c18a96f8256b384621d2ceea97b51f425e0569",
+      "draft": true,
+      "final_local_head_before_trace_evidence": "33c18a96f8256b384621d2ceea97b51f425e0569"
+    },
+    "228": {
+      "url": "https://github.com/jmservera/ama/pull/492",
+      "number": 492,
+      "branch": "feat/role-screen-228",
+      "base": "feat/role-screens-149",
+      "published_head": "bfd7d41535667bfd64d8b8c273e09e2f149af61d",
+      "draft": true,
+      "final_local_head_before_trace_evidence": "bfd7d41535667bfd64d8b8c273e09e2f149af61d"
+    },
+    "229": {
+      "url": "https://github.com/jmservera/ama/pull/493",
+      "number": 493,
+      "branch": "feat/role-screen-229",
+      "base": "feat/role-screens-149",
+      "published_head": "07b96b176d438506047475f7b3bd67bdc7586a29",
+      "draft": true,
+      "final_local_head_before_trace_evidence": "3469812c992151bc5b6d42f12a527b41455b132d"
+    },
+    "231": {
+      "url": "https://github.com/jmservera/ama/pull/494",
+      "number": 494,
+      "branch": "feat/role-screen-231",
+      "base": "feat/role-screens-149",
+      "published_head": "f6cc95633e371e1ea4547c8da598601d7f7aa6e4",
+      "draft": true,
+      "final_local_head_before_trace_evidence": "f6cc95633e371e1ea4547c8da598601d7f7aa6e4"
+    },
+    "233": {
+      "url": "https://github.com/jmservera/ama/pull/495",
+      "number": 495,
+      "branch": "feat/role-screen-233",
+      "base": "feat/role-screens-149",
+      "published_head": "246fdf3b17076f13a6a81d8672059f8d4ef3eea7",
+      "draft": true,
+      "final_local_head_before_trace_evidence": "246fdf3b17076f13a6a81d8672059f8d4ef3eea7"
+    },
+    "149": {
+      "url": "https://github.com/jmservera/ama/pull/496",
+      "number": 496,
+      "branch": "feat/role-screens-149",
+      "base": "main",
+      "published_head": "aee0e9d5af29ccabb9251e1f05cdb82cc88387c4",
+      "draft": true,
+      "final_local_head_before_trace_evidence": "aee0e9d5af29ccabb9251e1f05cdb82cc88387c4"
+    }
+  },
+  "hosted_observation": {
+    "232": {
+      "baseRefName": "feat/role-screens-149",
+      "headRefName": "feat/role-screen-232",
+      "headRefOid": "f27161eead4b547107e7ea2b64eb7380c76b73d7",
+      "isDraft": true,
+      "latestReviews": [],
+      "number": 487,
+      "reviewDecision": "",
+      "state": "OPEN",
+      "statusCheckRollup": [],
+      "url": "https://github.com/jmservera/ama/pull/487"
+    },
+    "227": {
+      "baseRefName": "feat/role-screens-149",
+      "headRefName": "feat/role-screen-227",
+      "headRefOid": "4771810c601ff042b749daca9c0aa8e36d32229a",
+      "isDraft": true,
+      "latestReviews": [],
+      "number": 488,
+      "reviewDecision": "",
+      "state": "OPEN",
+      "statusCheckRollup": [],
+      "url": "https://github.com/jmservera/ama/pull/488"
+    },
+    "230": {
+      "baseRefName": "feat/role-screens-149",
+      "headRefName": "feat/role-screen-230",
+      "headRefOid": "eca7e3ef2eb08ca6ad0dc8f8de48e5d86e185be1",
+      "isDraft": true,
+      "latestReviews": [],
+      "number": 489,
+      "reviewDecision": "",
+      "state": "OPEN",
+      "statusCheckRollup": [],
+      "url": "https://github.com/jmservera/ama/pull/489"
+    },
+    "225": {
+      "baseRefName": "feat/role-screens-149",
+      "headRefName": "feat/role-screen-225",
+      "headRefOid": "94e0369f9bcb9f8da35af7a296137b2e53087f1b",
+      "isDraft": true,
+      "latestReviews": [],
+      "number": 490,
+      "reviewDecision": "",
+      "state": "OPEN",
+      "statusCheckRollup": [],
+      "url": "https://github.com/jmservera/ama/pull/490"
+    },
+    "226": {
+      "baseRefName": "feat/role-screens-149",
+      "headRefName": "feat/role-screen-226",
+      "headRefOid": "33c18a96f8256b384621d2ceea97b51f425e0569",
+      "isDraft": true,
+      "latestReviews": [],
+      "number": 491,
+      "reviewDecision": "",
+      "state": "OPEN",
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-27T15:32:23Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531944516/job/122286826383",
+          "name": "image-paths",
+          "startedAt": "2026-10-27T15:32:15Z",
+          "status": "COMPLETED",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531944516/job/122286826652",
+          "name": "src-namespace",
+          "startedAt": "2026-10-27T15:32:15Z",
+          "status": "IN_PROGRESS",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-27T15:32:22Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531944516/job/122286826164",
+          "name": "src-no-working-data",
+          "startedAt": "2026-10-27T15:32:15Z",
+          "status": "COMPLETED",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531944516/job/122286826643",
+          "name": "mssql",
+          "startedAt": "2026-10-27T15:32:15Z",
+          "status": "IN_PROGRESS",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-27T15:34:51Z",
+          "conclusion": "FAILURE",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531944516/job/122286925178",
+          "name": "src-core",
+          "startedAt": "2026-10-27T15:32:43Z",
+          "status": "COMPLETED",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531944516/job/122286925273",
+          "name": "src-api",
+          "startedAt": "2026-10-27T15:32:23Z",
+          "status": "QUEUED",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531944516/job/122286925111",
+          "name": "src-agents",
+          "startedAt": "2026-10-27T15:32:23Z",
+          "status": "QUEUED",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-27T15:34:04Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531944516/job/122286925156",
+          "name": "src-orchestrator",
+          "startedAt": "2026-10-27T15:33:33Z",
+          "status": "COMPLETED",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-27T15:32:45Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531944516/job/122286925197",
+          "name": "src-importer",
+          "startedAt": "2026-10-27T15:32:26Z",
+          "status": "COMPLETED",
+          "workflowName": "Source projects CI"
+        }
+      ],
+      "url": "https://github.com/jmservera/ama/pull/491"
+    },
+    "228": {
+      "baseRefName": "feat/role-screens-149",
+      "headRefName": "feat/role-screen-228",
+      "headRefOid": "bfd7d41535667bfd64d8b8c273e09e2f149af61d",
+      "isDraft": true,
+      "latestReviews": [],
+      "number": 492,
+      "reviewDecision": "",
+      "state": "OPEN",
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-27T15:32:36Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531953764/job/122286861059",
+          "name": "image-paths",
+          "startedAt": "2026-10-27T15:32:27Z",
+          "status": "COMPLETED",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531953764/job/122286861561",
+          "name": "src-namespace",
+          "startedAt": "2026-10-27T15:33:29Z",
+          "status": "IN_PROGRESS",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-27T15:34:30Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531953764/job/122286862005",
+          "name": "src-no-working-data",
+          "startedAt": "2026-10-27T15:34:21Z",
+          "status": "COMPLETED",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531953764/job/122286861393",
+          "name": "mssql",
+          "startedAt": "2026-10-27T15:32:59Z",
+          "status": "IN_PROGRESS",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531953764/job/122287057710",
+          "name": "src-core",
+          "startedAt": "2026-10-27T15:32:37Z",
+          "status": "QUEUED",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531953764/job/122287057686",
+          "name": "src-api",
+          "startedAt": "2026-10-27T15:32:37Z",
+          "status": "QUEUED",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531953764/job/122287057961",
+          "name": "src-agents",
+          "startedAt": "2026-10-27T15:32:37Z",
+          "status": "QUEUED",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531953764/job/122287057770",
+          "name": "src-orchestrator",
+          "startedAt": "2026-10-27T15:32:37Z",
+          "status": "QUEUED",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531953764/job/122287058184",
+          "name": "src-importer",
+          "startedAt": "2026-10-27T15:32:37Z",
+          "status": "QUEUED",
+          "workflowName": "Source projects CI"
+        }
+      ],
+      "url": "https://github.com/jmservera/ama/pull/492"
+    },
+    "229": {
+      "baseRefName": "feat/role-screens-149",
+      "headRefName": "feat/role-screen-229",
+      "headRefOid": "3469812c992151bc5b6d42f12a527b41455b132d",
+      "isDraft": true,
+      "latestReviews": [],
+      "number": 493,
+      "reviewDecision": "",
+      "state": "OPEN",
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40532343898/job/122288267188",
+          "name": "image-paths",
+          "startedAt": "2026-10-27T15:34:39Z",
+          "status": "QUEUED",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40532343898/job/122288266592",
+          "name": "src-namespace",
+          "startedAt": "2026-10-27T15:34:39Z",
+          "status": "QUEUED",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40532343898/job/122288267129",
+          "name": "src-no-working-data",
+          "startedAt": "2026-10-27T15:34:39Z",
+          "status": "QUEUED",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40532343898/job/122288267042",
+          "name": "mssql",
+          "startedAt": "2026-10-27T15:34:39Z",
+          "status": "QUEUED",
+          "workflowName": "Source projects CI"
+        }
+      ],
+      "url": "https://github.com/jmservera/ama/pull/493"
+    },
+    "231": {
+      "baseRefName": "feat/role-screens-149",
+      "headRefName": "feat/role-screen-231",
+      "headRefOid": "f6cc95633e371e1ea4547c8da598601d7f7aa6e4",
+      "isDraft": true,
+      "latestReviews": [],
+      "number": 494,
+      "reviewDecision": "",
+      "state": "OPEN",
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-27T15:33:31Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531974602/job/122286935375",
+          "name": "image-paths",
+          "startedAt": "2026-10-27T15:33:22Z",
+          "status": "COMPLETED",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531974602/job/122286935559",
+          "name": "src-namespace",
+          "startedAt": "2026-10-27T15:32:24Z",
+          "status": "QUEUED",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531974602/job/122286935819",
+          "name": "src-no-working-data",
+          "startedAt": "2026-10-27T15:32:24Z",
+          "status": "QUEUED",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531974602/job/122286935624",
+          "name": "mssql",
+          "startedAt": "2026-10-27T15:32:47Z",
+          "status": "IN_PROGRESS",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531974602/job/122287598518",
+          "name": "src-core",
+          "startedAt": "2026-10-27T15:33:31Z",
+          "status": "QUEUED",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531974602/job/122287598706",
+          "name": "src-api",
+          "startedAt": "2026-10-27T15:33:31Z",
+          "status": "QUEUED",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531974602/job/122287598605",
+          "name": "src-agents",
+          "startedAt": "2026-10-27T15:33:31Z",
+          "status": "QUEUED",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531974602/job/122287599030",
+          "name": "src-orchestrator",
+          "startedAt": "2026-10-27T15:33:31Z",
+          "status": "QUEUED",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531974602/job/122287598788",
+          "name": "src-importer",
+          "startedAt": "2026-10-27T15:33:31Z",
+          "status": "QUEUED",
+          "workflowName": "Source projects CI"
+        }
+      ],
+      "url": "https://github.com/jmservera/ama/pull/494"
+    },
+    "233": {
+      "baseRefName": "feat/role-screens-149",
+      "headRefName": "feat/role-screen-233",
+      "headRefOid": "246fdf3b17076f13a6a81d8672059f8d4ef3eea7",
+      "isDraft": true,
+      "latestReviews": [],
+      "number": 495,
+      "reviewDecision": "",
+      "state": "OPEN",
+      "statusCheckRollup": [],
+      "url": "https://github.com/jmservera/ama/pull/495"
+    },
+    "149": {
+      "baseRefName": "main",
+      "headRefName": "feat/role-screens-149",
+      "headRefOid": "aee0e9d5af29ccabb9251e1f05cdb82cc88387c4",
+      "isDraft": true,
+      "latestReviews": [],
+      "number": 496,
+      "reviewDecision": "",
+      "state": "OPEN",
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531995892/job/122287013933",
+          "name": "image-paths",
+          "startedAt": "2026-10-27T15:32:32Z",
+          "status": "QUEUED",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-27T15:32:45Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531995756/job/122287013059",
+          "name": "pre_activation",
+          "startedAt": "2026-10-27T15:32:38Z",
+          "status": "COMPLETED",
+          "workflowName": "Capstone Rubric Scorer"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531995892/job/122287013767",
+          "name": "src-namespace",
+          "startedAt": "2026-10-27T15:34:52Z",
+          "status": "IN_PROGRESS",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-27T15:33:27Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531995756/job/122287143136",
+          "name": "activation",
+          "startedAt": "2026-10-27T15:32:50Z",
+          "status": "COMPLETED",
+          "workflowName": "Capstone Rubric Scorer"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531995892/job/122287014069",
+          "name": "src-no-working-data",
+          "startedAt": "2026-10-27T15:32:32Z",
+          "status": "QUEUED",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-27T15:34:19Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531995756/job/122287560295",
+          "name": "rubric_prepare",
+          "startedAt": "2026-10-27T15:34:06Z",
+          "status": "COMPLETED",
+          "workflowName": "Capstone Rubric Scorer"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531995756/job/122288077679",
+          "name": "agent",
+          "startedAt": "2026-10-27T15:34:19Z",
+          "status": "QUEUED",
+          "workflowName": "Capstone Rubric Scorer"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/jmservera/ama/actions/runs/40531995892/job/122287013465",
+          "name": "mssql",
+          "startedAt": "2026-10-27T15:33:13Z",
+          "status": "IN_PROGRESS",
+          "workflowName": "Source projects CI"
+        },
+        {
+          "__typename": "StatusContext",
+          "context": "rubric/score",
+          "startedAt": "2026-10-27T15:34:16Z",
+          "state": "PENDING",
+          "targetUrl": "https://github.com/jmservera/ama/actions/runs/40531995756"
+        }
+      ],
+      "url": "https://github.com/jmservera/ama/pull/496"
+    }
+  },
+  "hosted_blocker": {
+    "id": "HOSTED-001",
+    "job_url": "https://github.com/jmservera/ama/actions/runs/40531944516/job/122286925178",
+    "source_mismatches": [
+      {
+        "path": "src/api/checks/workbench-manifest.json",
+        "bound": "0d46cee7b0cc758bf183eacc91680148a55fb5f2cc83665a4ddcf94dc8ad47eb",
+        "actual": "521ecbfa50024d5a99a993115aa1d6fd272e4b6a6b78aefc6eecb5127709c326"
+      }
+    ],
+    "scope": "Same inherited parent source on all branches; local partial gate did not select project-core",
+    "local_reproduction": {
+      "sha256": "019990583bc7a4098e72bddadfcfb9dacf0b90482b2475b5e547ae2b739bd87f",
+      "output": "======================================================================\nERROR: test_current_iteration_is_complete_and_honest (test_scenario_manifest.ScenarioManifestTests.test_current_iteration_is_complete_and_honest)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/azureuser/source/ama-wt/issue-screens-149/src/core/tests/test_scenario_manifest.py\", line 23, in test_current_iteration_is_complete_and_honest\n    validate_manifest(self.manifest, ROOT)\n  File \"/home/azureuser/source/ama-wt/issue-screens-149/src/core/src/zava_forward/core/synthetic/scenario_manifest.py\", line 101, in validate_manifest\n    _require(source.get(\"sha256\") == digest, f\"stale source hash: {source['path']}\")\n  File \"/home/azureuser/source/ama-wt/issue-screens-149/src/core/src/zava_forward/core/synthetic/scenario_manifest.py\", line 45, in _require\n    raise ValueError(f\"Scenario manifest: {message}\")\nValueError: Scenario manifest: stale source hash: src/api/checks/workbench-manifest.json\n\n======================================================================\nERROR: test_scenario_scope_keeps_full_application_evidence_unavailable (test_needs_inventory.NeedsInventoryTests.test_scenario_scope_keeps_full_application_evidence_unavailable)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/azureuser/source/ama-wt/issue-screens-149/src/core/tests/test_needs_inventory.py\", line 132, in test_scenario_scope_keeps_full_application_evidence_unavailable\n    validate_manifest(MANIFEST, ROOT)\n  File \"/home/azureuser/source/ama-wt/issue-screens-149/src/core/src/zava_forward/core/synthetic/scenario_manifest.py\", line 101, in validate_manifest\n    _require(source.get(\"sha256\") == digest, f\"stale source hash: {source['path']}\")\n  File \"/home/azureuser/source/ama-wt/issue-screens-149/src/core/src/zava_forward/core/synthetic/scenario_manifest.py\", line 45, in _require\n    raise ValueError(f\"Scenario manifest: {message}\")\nValueError: Scenario manifest: stale source hash: src/api/checks/workbench-manifest.json\n\n----------------------------------------------------------------------\nRan 2 tests in 0.002s\n\nFAILED (errors=2)\n",
+      "result": "Failed, 2 errors; no source correction or extra gate"
+    }
+  },
+  "ready": "Blocked; no approved reviews, hosted failure and pending checks",
+  "original_review": "Complete / Not accepted, unchanged bytes; no repeated Review",
+  "child_followup_static": {
+    "232": {
+      "sha256": "2c3dff1e2d4d9e2c1f21079d3eda2889396a19e12bc055c919b0382dc6513880",
+      "output": "1 file reformatted\nAll checks passed!\n46 files already formatted\nSuccess: no issues found in 88 source files\n----------------------------------------------------------------------\nRan 8 tests in 0.001s\n\nOK\n"
+    },
+    "227": {
+      "sha256": "2bc5ae51c496c2d32e8791ab479ed01199d7a27341d3f53e93db4ba21694caa4",
+      "output": "1 file reformatted\nAll checks passed!\n46 files already formatted\nSuccess: no issues found in 88 source files\n----------------------------------------------------------------------\nRan 8 tests in 0.002s\n\nOK\n"
+    },
+    "230": {
+      "sha256": "2c3dff1e2d4d9e2c1f21079d3eda2889396a19e12bc055c919b0382dc6513880",
+      "output": "1 file reformatted\nAll checks passed!\n46 files already formatted\nSuccess: no issues found in 88 source files\n----------------------------------------------------------------------\nRan 8 tests in 0.001s\n\nOK\n"
+    },
+    "225": {
+      "sha256": "2c3dff1e2d4d9e2c1f21079d3eda2889396a19e12bc055c919b0382dc6513880",
+      "output": "1 file reformatted\nAll checks passed!\n46 files already formatted\nSuccess: no issues found in 88 source files\n----------------------------------------------------------------------\nRan 8 tests in 0.001s\n\nOK\n"
+    },
+    "226": {
+      "sha256": "af9f1fcd29474a412bd394d8b0ffd9968a5b222bac2c187c068df05358c3914b",
+      "output": "All checks passed!\n46 files already formatted\nSuccess: no issues found in 88 source files\n"
+    },
+    "228": {
+      "sha256": "af9f1fcd29474a412bd394d8b0ffd9968a5b222bac2c187c068df05358c3914b",
+      "output": "All checks passed!\n46 files already formatted\nSuccess: no issues found in 88 source files\n"
+    },
+    "229": {
+      "sha256": "2c3dff1e2d4d9e2c1f21079d3eda2889396a19e12bc055c919b0382dc6513880",
+      "output": "1 file reformatted\nAll checks passed!\n46 files already formatted\nSuccess: no issues found in 88 source files\n----------------------------------------------------------------------\nRan 8 tests in 0.001s\n\nOK\n"
+    },
+    "231": {
+      "sha256": "af9f1fcd29474a412bd394d8b0ffd9968a5b222bac2c187c068df05358c3914b",
+      "output": "All checks passed!\n46 files already formatted\nSuccess: no issues found in 88 source files\n"
+    }
+  },
+  "tracking_state_location": "This terminal snapshot is on trace-only feat/role-screen-233; the gated parent intentionally retains its pre-gate state."
+}

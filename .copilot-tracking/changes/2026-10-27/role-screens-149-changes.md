@@ -7,8 +7,9 @@ ms.date: 2026-10-27
 ## Execution
 
 Task 149 / role-screens-149. Automatic, Implement, full plan in scope.
-P01-T01 and P02 complete; P03-T01 Review complete, P03-T02 active in the
-owner-selected lineage/RV-001/publication follow-up.
+P01-T01, P02 and P03 execution complete. Owner-selected lineage/RV-001
+implementation and draft publication complete; ready blocked by HOSTED-001
+and missing approved review. Terminal post-gate evidence is trace-child-only.
 Research resumed after explicit owner B1 resolution.
 One critique executed (Revise); PC-001-PC-004 corrected directly in plan.
 No issue acceptance criteria changed.
@@ -235,3 +236,73 @@ Run the one foreground --changed --lock-timeout 0 gate using its built-in
 /tmp/ama-rpi-heavy.lock and a fresh /mnt/ama-rpi-gates/ directory. A failed
 gate, verification failure or current-base drift blocks publication without
 a second attempt. No cloud fallback, uv, credentials or main force-push.
+
+## Published draft result (trace-only post-gate evidence)
+
+This section and terminal state are committed only to trace child #233 / PR
+#495, not to the gated parent. Parent aee0e9d5af29ccabb9251e1f05cdb82cc88387c4
+is unchanged. The one scoped foreground gate passed with partial scope:
+preflight, project-api, namespace, static, browser, image-api and logo-0600.
+API discovery ran 1,114 tests (800 executed, 314 existing explicit opt-in skips);
+30 gate-tooling tests passed. No full-tier or SQL acceptance claimed.
+The receipt was verified with --required-scope partial after fetching main
+2e031c89 immediately before atomic push, and verified again afterward.
+Authoritative external receipt:
+/mnt/ama-rpi-gates/role-screens-149-20261027-aee0e9d5/receipt.json.
+SHA256 c4dd8a35af775330d7c92e67474c3eb1f11c35ef080e8a5218a4ff12bab79552.
+The byte-identical committed receipt copy is historical, not a receipt for
+this trace child or any later parent.
+
+Full tracking and selected generated inputs were archived externally,
+read back, selected members restored/hash-checked and protected bytes checked
+before and after owner-required git clean -fdxq. No tracking removed. Receipt:
+/tmp/ama-role-screens-149-cleanup-20261027/receipt.json, with historical copy
+in the trace publication evidence. Final gate candidate had no dirty,
+untracked or ignored inputs.
+
+| Story | Draft PR | Target |
+| --- | --- | --- |
+| #232 | #487 | feat/role-screens-149 |
+| #227 | #488 | feat/role-screens-149 |
+| #230 | #489 | feat/role-screens-149 |
+| #225 | #490 | feat/role-screens-149 |
+| #226 | #491 | feat/role-screens-149 |
+| #228 | #492 | feat/role-screens-149 |
+| #229 | #493 | feat/role-screens-149 |
+| #231 | #494 | feat/role-screens-149 |
+| #233 | #495 | feat/role-screens-149 |
+| Parent #149 | #496 | main |
+
+Five child-only unit files (#232/#227/#230/#225/#229) required Ruff formatting
+in subsequent hosted-equivalent checks. Additive child commits correct only
+test formatting and record original/passing outputs in per-child JSON.
+Full API Ruff/format/mypy and eight focused units pass for each; other three
+child full API static checks also pass. No role runtime/harness bytes changed
+after the successful browser runs; parent/gate unchanged. Original failures
+are retained, not counted as passes.
+
+## Hosted readiness blocker and routed next work
+
+Draft publication is complete; ready is blocked. Hosted src-core job
+122286925178 in run 40531944516 failed at #491 head 33c18a96 with two errors:
+test_scenario_manifest.ScenarioManifestTests.test_current_iteration_is_complete_and_honest
+and test_needs_inventory.NeedsInventoryTests.test_scenario_scope_keeps_full_application_evidence_unavailable.
+Both report stale source hash for src/api/checks/workbench-manifest.json.
+docs/reference/research/retrofit-synthetic-data/scenario-manifest.json
+still binds 0d46cee7b0cc758bf183eacc91680148a55fb5f2cc83665a4ddcf94dc8ad47eb;
+the changed parent source is
+521ecbfa50024d5a99a993115aa1d6fd272e4b6a6b78aefc6eecb5127709c326.
+The partial gate did not select project-core; its pass does not cover this.
+This is a concrete dependent-evidence defect, not an infrastructure flake.
+
+No parent change or second gate is performed. Later work must reconcile the
+versioned scenario/inventory evidence honestly (not blindly replace a hash or
+manufacture review), run targeted core integrity tests and obtain fresh
+exact-head gate authorization. Hosted checks/review must pass before ready.
+All PRs remain draft with zero approved reviews at observation. No merge or
+issue checkbox changed. Original Review remains Complete / Not accepted,
+critique Revise, and their bytes remain identical to the preserved originals.
+
+Ranked remaining work: first the concrete source-binding/readiness blocker;
+second owner-controlled integration and integrated validation; third human/
+AT/WCAG and complete Fluent adoption. No child follow-up starts automatically.

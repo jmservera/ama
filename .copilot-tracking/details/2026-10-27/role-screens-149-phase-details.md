@@ -74,7 +74,7 @@ actual case-sensitive field paint after scroll for lazy sections; no hidden
 DOM proxy. No child is merged into the parent.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Review, scoped gate and publication
+### [x] P03: Review, scoped gate and publication
 <!-- rpi:task id=P03-T01 -->
 #### [x] P03-T01: Run one independent Review and retain findings
 
@@ -89,7 +89,7 @@ selective-change evidence. Other heads were conditionally draft-eligible,
 not accepted as a combined feature.
 
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: Clean exact-owned generated inputs, gate parent once and publish drafts
+#### [x] P03-T02: Clean exact-owned generated inputs, gate parent once and publish drafts
 
 Use external tooling and PYTHONDONTWRITEBYTECODE=1. Commit all tracking evidence.
 Select no tracking deletion. Inspect git clean -ndx immediately before cleanup;
@@ -132,6 +132,18 @@ and selected restore proof before the owner-required git clean -fdxq.
 The parent evidence snapshot precedes its own gate. Preserve the final
 external partial receipt and PR evidence without changing the gated parent.
 Post-publication state evidence may be committed to trace-only #233 only.
+
+Trace-only terminal update: cleanup preservation/readback/restore/protected
+checks passed, then exact generated paths were cleaned. The single foreground
+partial gate passed at parent aee0e9d5 and receipt verified against freshly
+fetched 2e031c89 before push. Nine child drafts #487-#495 and parent #496
+are published with correct targets. Five additive child-only test-formatting
+commits pass full API static checks and focused units; no runtime change.
+P03-T02 execution complete, not ready/accepted. HOSTED-001 blocks ready:
+scenario-manifest.json retains the old workbench-manifest source hash and
+two hosted core integrity tests fail. No approved reviews. Route source-binding
+reconciliation and newly authorized exact-head validation to later owner-
+selected work; no second gate or mutation of gated parent in this run.
 
 Per-story outputs, source contracts, role restrictions, unit budgets and exact
 local/browser selectors are allocated in the plan's Delivery and Validation

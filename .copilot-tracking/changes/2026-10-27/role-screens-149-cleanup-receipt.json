@@ -1,0 +1,21 @@
+{
+  "head": "aee0e9d5af29ccabb9251e1f05cdb82cc88387c4",
+  "selected": [
+    ".ruff_cache/",
+    ".venv/",
+    "src/agents/src/zava_forward/agents/__pycache__/",
+    "src/agents/src/zava_forward_agents.egg-info/",
+    "src/api/.ruff_cache/",
+    "src/api/src/zava_forward/api/__pycache__/",
+    "src/api/src/zava_forward_api.egg-info/",
+    "src/core/src/zava_forward/core/__pycache__/",
+    "src/core/src/zava_forward_core.egg-info/"
+  ],
+  "archive_sha256": "8637f2fe5542cf7c8d25b84d87b172272e3a321e19357d06e23bc1223713b2a2",
+  "tracking_members_protected": 3465,
+  "generated_members_restored_and_verified": 87,
+  "archive_readback": "passed",
+  "selected_restore": "passed",
+  "protected_after_cleanup": "passed",
+  "final_dry_run": []
+}

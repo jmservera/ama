@@ -92,3 +92,28 @@ are not complete Fluent adoption or accessibility acceptance. Existing
 bounded assistant/manual workspace links remain available; no paid inference
 or new AI action is asserted. Human safety, consent, professional, finance,
 legal and operational approvals remain separate.
+
+## Published stack and subsequent evidence
+
+Refs #149, #231, #233. The owner-authorized follow-up rebased all nine
+independent children onto parent aee0e9d5, descending from main 2e031c89.
+RV-001 is corrected in technical child #494: source-owned coordination-only
+invalidation, executable failing-before/passing-after unit regression and
+painted browser rows preserve unaffected sign-offs and withhold the affected
+historical signed-off state. The original Review remains Complete / Not
+accepted at its original heads; no second independent Review ran.
+
+Drafts #487-#495 target feat/role-screens-149; parent draft #496 targets main.
+All eight independent screen/workbench browser reruns passed. Parent's one
+foreground --changed gate passed and partial receipt verified immediately
+before push; it does not cover integration or all core integrity tests.
+Publication JSON, historical receipt/cleanup copies and terminal RPI state
+are on this trace-only child so the gated parent remains byte-identical.
+Five child-only formatting follow-ups are additive; no role runtime changed.
+
+Ready remains blocked: hosted src-core found the unchanged scenario manifest's
+stale binding to the changed parent workbench manifest (two test errors,
+job 122286925178). No approved reviews exist at observation. Reconcile
+versioned source evidence and authorize fresh exact-head validation in later
+owner-selected work; do not waive checks, spend another gate, mutate parent,
+mark ready or merge here. No integrated/human/AT/Fluent acceptance inferred.
