@@ -40,8 +40,13 @@ class RoleScreens(unittest.TestCase):
 
     def test_finance_keeps_unknown_cost_and_source_bound_readiness(self) -> None:
         source = (WEB / "screen-finance.js").read_text()
-        for field in ("line.quantity", "line.milestone_ref", "invoice.commitment",
-                      "item.left?.source_id", "item.right?.source_id"):
+        for field in (
+            "line.quantity",
+            "line.milestone_ref",
+            "invoice.commitment",
+            "item.left?.source_id",
+            "item.right?.source_id",
+        ):
             self.assertIn(field, source)
         self.assertIn("Usage reconciled to billing", source)
         self.assertIn("not a reviewed export or external submission", source)
