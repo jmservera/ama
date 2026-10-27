@@ -3,7 +3,7 @@ title: IoT consumer and synthetic live streaming changes
 ms.date: 2026-10-27
 ---
 
-## Scope and Status
+## Original Scope and Status (before correction cycle 1)
 
 Task 110 / iot-consumer-110, full P01-P03 implementation scope.
 Plan/details dated 2026-10-27. Research complete, one critique Revise preserved;
@@ -128,3 +128,122 @@ Fresh receivers replay retained history from -1; no new checkpoint store.
 
 Actual #185 credential lifecycle, #188 live acceptance and #189 active budget
 verification remain deferred under the issue criteria. No issue closure claimed.
+
+## Correction Cycle 1: Opening Implementation State
+
+Date: 2026-10-27. Task 110-correction-1, parent 110. Scope: correction P04-P07
+only; original findings and original P01-P03 outcomes above remain historical.
+Research Complete/Ready; correction critique executed once, Complete/Pass,
+zero findings. P04 actual send admission is first, followed by P05 construction
+cleanup and P06 canonical selected-input provenance. P07 validation/Review/
+same-branch publication remains pending. No source edits yet; no new authority
+or owner decision. User explicitly requests push to existing draft PR #508,
+local units/lint/mypy, no full gate, Azure, secrets, private data or uv.
+
+### Correction P04: Actual send admission
+
+Separated nominal model wait from Pacer.admit_send; admission and SDK await
+now execute adjacently in one coroutine after setup and truth preparation.
+One limiter spans all clients. Core deterministic controls: 7 stream tests
+pass. API publisher: 8 tests pass, including actual SDK-entry timestamps after
+80ms connect/truth delays at a 50ms minimum interval for one/two homes.
+Post-preparation stop/pause/deadline/cancel prevents SDK calls.
+Initial targeted lint found loop-captured callbacks; bound callback inputs and
+moved the send helper outside the loop. Targeted API lint then passed.
+Declared packages/dev tools installed with pip in the external correction venv
+after system missing-package evidence. No manifest or generated target changed.
+P04/P04-T01 complete; proceed to P05.
+
+### Correction P05: Receiver resource ownership
+
+Credential/client construction and task startup now share the sanitized
+try/except/finally. Cleanup closes only returned resources and cancels/observes
+created tasks in one bounded call. Unexpected setup errors use
+IOT_RECEIVE_FAILED; close failures use IOT_CLEANUP_FAILED; cancellation remains
+cancellation. Receiver tests: 11 pass, including constructor/startup failure,
+cleanup failure, setup cancellation and existing SQL uncertainty/restart.
+API targeted lint and strict mypy (90 files) pass. P05/P05-T01 complete.
+
+### Correction P06: Selected-input provenance
+
+Shared _selected validates/canonicalizes a copied subset, derives sensors and
+checks finite scale for both descriptor and replay. synthetic-stream-v2 retains
+the original register stock_sha256 and adds selected_stock_sha256, selected
+IDs/count and monitored count. Frames carry the selected digest separately from
+unchanged observations; publisher copies it into restricted truth evidence.
+Subset/fabric/consent mutation, normalization/order, invalid-input and mutation
+after snapshot tests pass. Old frames keep original provenance after mutation.
+No historical model, reading identity or wire schema changed.
+P06/P06-T01 complete. Seven methods added across the two existing test modules;
+zero test removals or new test modules, within the <=12-method lock.
+
+### Correction P07: Local validation in progress
+
+External venv: /tmp/ama-iot110-correction-1-c40e904e. Declared core[dev], agents
+and api[dev] installed editable with pip after missing-dependency probe.
+No dependency/lock/ignore/workflow changes. Commands use installed namespace
+distributions; PYTHONPATH supplies tests only, never retired source.
+
+* Core: python -m unittest discover -s tests -p 'test_sensor*.py' -q:
+  99 tests pass, one existing opt-in SQL Server skip; existing unclosed-file
+  ResourceWarnings in test_sensor_backfill remain.
+* Core: python -m unittest discover -s tests -p test_historical_backfill.py -q:
+  9 tests pass.
+* Core: ruff check ., ruff format --check ., mypy: all pass,
+  102 formatted files and 155 type-checked source files.
+* API focused IoT/ingestion: 66 tests pass; configured lint and mypy pass
+  (90 files). Full API discovery and final format/lint/mypy passed below.
+* Initial core targeted lint found a 101-character test statement; split the
+  context managers and reran the complete core checks above successfully.
+
+Updated API/core guides and the existing IoT synthesis, index and append-only
+knowledge-base log. No issue criterion or human-review checkbox ticked.
+P07 Review, final evidence reconciliation, commit/push and PR update pending.
+No scoped/full heavy gate, Azure, secrets, private data or uv used.
+
+Pre-Review supplementary checks: pip check and git diff --check pass. AST
+inventory confirms exactly 3 core and 4 API test methods added with no removals.
+Added local documentation link/heading resolves. Fetched origin/main is
+f183ba391de10fb7bcfc6157cbcbb2290b9cf4fc; correction base remains branch HEAD
+39f0a433c67b74b7a74985f0c5c5a9af3e53cada. No upstream change touches the four
+stream source/test files. No merge/rebase/history rewrite is authorized or
+performed; hosted integration remains separate from this branch-local proof.
+
+### Correction P07: Final validation and pre-Review reconciliation
+
+* From src/api: PYTHONPATH=../core/tests:../agents/tests python -m unittest
+  discover -s tests -q: 1142 tests in 458.785 seconds, OK, 314 existing opt-in/
+  integration skips. Skips are not counted as actual Hub/SQL/live success.
+* API configured ruff check ., ruff format --check . and mypy all pass:
+  48 formatted files, 90 source files checked. These checks cover final source.
+* Full API output is retained externally in the session files directory as
+  iot110-api-units.log. Expected negative-path server tracebacks did not produce
+  unittest failures; runner exit status is zero.
+* Core final tests/lint/format/mypy and pip/diff/link/test-inventory checks are
+  recorded above. Exactly seven focused methods were added, none removed.
+
+Correction source scope P04-P06 is complete and review-ready. Plan markers,
+details and current handoff agree; P07 publication remains unchecked until
+the independent Review, commit and same-branch push are evidenced. Original
+parent P03 and original Not accepted Review remain historical, not reapproved.
+The source/test tree is frozen for the one correction Review. Only review/
+state/plan/details/changes closeout evidence may be updated afterward.
+Separate credential, actual Hub/SQL/model seam, budget and OD-43 gates remain.
+
+### Correction Review and publication handoff
+
+Exactly one independent correction Review executed and is preserved at
+.copilot-tracking/reviews/2026-10-27/iot-consumer-110-review-addendum.md.
+Execution: Complete. Outcome: Conformant for this bounded correction.
+Original RV-001, RV-003, RV-002 are corrected with evidence; no new findings.
+Independent checks include 9 core stream tests, 10 publisher/metadata tests,
+adapted disk-free new receiver regression bodies, all 20 full/suffix/fault
+wire-compatibility scenarios, targeted lint/format and exact source fingerprints.
+The reviewer explicitly distinguishes these from parent-reported full suites.
+
+The original Complete / Not accepted Review and parent state remain byte-
+identical. No second critique or Review ran for the correction. No source/test
+changes occur after Review; only closeout evidence is being updated.
+P07 commit/push and PR evidence update are the remaining authorized actions.
+No exact-future-commit, live, hosted or human acceptance is claimed by this
+precommit source assessment. Refs only; no issue closure, merge or force push.

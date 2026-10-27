@@ -1,0 +1,46 @@
+{
+  "task_id": "110-correction-1",
+  "task_slug": "iot-consumer-110-correction-1",
+  "parent_task": {"task_id": "110", "task_slug": "iot-consumer-110"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-27/iot-consumer-110-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-27/iot-consumer-110-plan.md",
+    "details": ".copilot-tracking/details/2026-10-27/iot-consumer-110-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-27/iot-consumer-110-correction-1-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-27/iot-consumer-110-changes.md",
+    "review": ".copilot-tracking/reviews/2026-10-27/iot-consumer-110-review-addendum.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the ordered correction loop RV-001, RV-003, RV-002 on the existing branch and draft PR #508",
+      "status": "explicit user authorization",
+      "evidence": "2026-10-27 correction-cycle request; clean feat/iot-consumer-110, open PR #508 to main"
+    },
+    {
+      "decision": "Local unit, lint and mypy validation; no full gate, Azure, secrets, private data, force push or uv",
+      "status": "confirmed",
+      "evidence": "Current user request; bounded correction does not require the optional large-change scoped gate"
+    },
+    {
+      "decision": "Research executed Complete/Ready; correction plan final-candidate critique executed exactly once",
+      "status": "Pass; no PC findings; implementation-ready",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-27/iot-consumer-110-correction-1-plan-critique.md"
+    },
+    {
+      "decision": "Exactly one independent post-implementation correction Review executed against frozen source at HEAD 39f0a433 plus working correction",
+      "status": "Complete / Conformant; RV-001, RV-003, RV-002 corrected for the bounded source boundary; zero new findings",
+      "evidence": ".copilot-tracking/reviews/2026-10-27/iot-consumer-110-review-addendum.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Finish authorized P07 publication to draft PR #508, then await owner selection of a recorded follow-up, Stop or manual mode; do not start a child task automatically"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Verify live cost, quota/headroom and active alerts before any send", "rationale": "Lowest-effort prerequisite with direct spending-safety value; references alone are not verified alerts", "evidence": "#189; review addendum Plan Follow-Up Assessment"},
+    {"rank": 2, "task": "Approve and witness synthetic credential lifecycle and exact-owned teardown", "rationale": "Distinct owner-controlled prerequisite before live transport, not an engineering defect", "evidence": "#185; review addendum Plan Follow-Up Assessment"},
+    {"rank": 3, "task": "Witness actual Hub/Azure SQL restart, replay and approved-model seam", "rationale": "Completes high-value live acceptance only after authority and prerequisites; no Azure authorization in this task", "evidence": "#187/#188, whole AC-066 and OD-43; review addendum Residual Work"}
+  ]
+}

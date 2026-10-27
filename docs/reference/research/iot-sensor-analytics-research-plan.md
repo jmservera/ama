@@ -76,6 +76,14 @@ IDs, units and timestamps. This is a deterministic model-continuity witness,
 not a statistical validation of real sensors or an actual live handover.
 Climate-backed composed backfill continuity remains deferred.
 
+The 2026-10-27 correction binds `synthetic-stream-v2` descriptors and Frames to
+the same validated canonical selected-input digest, separately from the original
+register digest. Selected subset, fabric or monitoring-choice mutations change
+new provenance; retained frames keep their original snapshot digest. This is
+restricted synthetic evidence, not an added telemetry field or real consent.
+Receiver constructor/startup errors now share bounded owned cleanup and fixed
+error codes; partial setup does not leave a returned credential unclosed.
+
 ### Cost and scale before any live run
 
 The existing dated transport model allocates USD60/month within, not additional
@@ -95,7 +103,11 @@ scenarios, not throughput, actual billing or approval to run 60,000 devices.
 The implemented local run is limited to 100 granted homes, 100,000 original
 model home-slots/messages, <=100 messages/second and <=3600 seconds. A declared
 owner/cost/alert reference and preflight quota check are mandatory. Speed/burst
-cannot bypass the rate cap; pause consumes the deadline; stop/cancel closes
+cannot bypass global actual send-attempt admission, which occurs after
+connection/message/truth setup immediately adjacent to the SDK send await.
+Local delayed-connect/preparation and multiple-device timestamp regressions
+cover that boundary, not just Pacer return times. Pause consumes the deadline;
+stop/cancel closes
 owned clients. SDK retries and auto-connect are disabled.
 
 ### Issue criterion evidence and remaining gates

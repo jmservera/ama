@@ -49,6 +49,9 @@ bindings, retained-history/SQL recovery and finite cost/rate/time controls.
 Local fake-network/actual-constructed-SQLite evidence is not actual Hub,
 credential lifecycle, Azure SQL handover, active budget alerts or whole AC-066.
 Outstanding #185/#187/#188/#189 live criteria and OD-43 remain explicit.
+The same synthesis records the bounded correction: actual global send-attempt
+admission after setup, partial-construction cleanup and selected-snapshot
+descriptor/frame provenance. Local regressions do not close live criteria.
 
 For #140, the [IoT infrastructure decision and budget](../../infra/README.md#iot-hub-issue-140-adr-0003-decision-6)
 and [ADR 0003 dated authorization](../adrs/0003-journey-derived-capabilities-runtime-fit.md#source-only-infrastructure-authorization-2026-10-27-refs-140)

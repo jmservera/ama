@@ -4,6 +4,7 @@ import asyncio
 import json
 import tempfile
 import threading
+import time
 import unittest
 from collections.abc import Awaitable, Callable, Mapping
 from dataclasses import replace
@@ -78,6 +79,69 @@ class ReceiverTests(unittest.IsolatedAsyncioTestCase):
 
     def count(self, table: str) -> int:
         return int(self.store.db.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0])
+
+    async def test_partial_setup_failure_sanitizes_and_cleans_owned_resources(self) -> None:
+        for phase in ("credential", "client", "receive"):
+            for close_fails in (False, True):
+                with self.subTest(phase=phase, close_fails=close_fails):
+                    credential = Mock(close=AsyncMock())
+                    client = Mock(close=AsyncMock())
+                    if close_fails:
+                        credential.close.side_effect = RuntimeError("constructed private detail")
+                    client.receive = Mock(side_effect=RuntimeError("constructed private detail"))
+                    code = (
+                        "IOT_CLEANUP_FAILED"
+                        if close_fails and phase != "credential"
+                        else "IOT_RECEIVE_FAILED"
+                    )
+                    with (
+                        patch(
+                            "zava_forward.api.iot_stream.ManagedIdentityCredential",
+                            side_effect=(
+                                RuntimeError("constructed private detail")
+                                if phase == "credential"
+                                else None
+                            ),
+                            return_value=credential,
+                        ),
+                        patch(
+                            "zava_forward.api.iot_stream.EventHubConsumerClient",
+                            side_effect=(
+                                RuntimeError("constructed private detail")
+                                if phase == "client"
+                                else None
+                            ),
+                            return_value=client,
+                        ) as factory,
+                    ):
+                        with self.assertRaisesRegex(StreamError, f"^{code}$"):
+                            await self.receiver.run(max_seconds=2, max_events=1)
+                    if phase == "credential":
+                        factory.assert_not_called()
+                        credential.close.assert_not_called()
+                    else:
+                        credential.close.assert_awaited_once()
+                    if phase == "receive":
+                        client.close.assert_awaited_once()
+                    else:
+                        client.close.assert_not_called()
+                    self.assertEqual(self.count("sensor_delivery"), 0)
+
+    async def test_cancelled_setup_cleans_credential_and_preserves_cancellation(self) -> None:
+        with (
+            patch(
+                "zava_forward.api.iot_stream.ManagedIdentityCredential",
+                return_value=self.credentials,
+            ),
+            patch(
+                "zava_forward.api.iot_stream.EventHubConsumerClient",
+                side_effect=asyncio.CancelledError,
+            ),
+        ):
+            with self.assertRaises(asyncio.CancelledError):
+                await self.receiver.run(max_seconds=2, max_events=1)
+        self.credentials.close.assert_awaited_once()
+        self.client.close.assert_not_called()
 
     async def receive(
         self,
@@ -355,6 +419,119 @@ class PublisherTests(unittest.IsolatedAsyncioTestCase):
         self.client = Mock(connect=AsyncMock(), send_message=AsyncMock(), shutdown=AsyncMock())
         self.truth: list[dict[str, object]] = []
 
+    async def test_actual_send_rate_after_connect_and_preparation_across_devices(self) -> None:
+        selected = sensor_stock.select(
+            [
+                {
+                    "synthetic_home_id": home,
+                    "is_synthetic": "true",
+                    "monitoring_consent": "granted",
+                }
+                for home in ("ZF-1", "ZF-2")
+            ],
+            2,
+        )
+        for delay in ("connect", "truth"):
+            for homes in (1, 2):
+                with self.subTest(delay=delay, homes=homes):
+                    frames = replay(
+                        sensor_stock.select(selected.rows, homes),
+                        Replay(fault="burst", end_slot=2),
+                    )
+                    bindings = tuple(
+                        Binding(frame.device_id, frame.row["sensor_id"], frame.row["home_id"])
+                        for frame in frames[:homes]
+                    )
+                    publisher = HubPublisher(
+                        ACTIVE,
+                        bindings,
+                        {b.device_id: X509("not-read.pem", "not-read-key.pem") for b in bindings},
+                    )
+                    sent: list[float] = []
+
+                    async def connect(delay: str = delay) -> None:
+                        if delay == "connect":
+                            await asyncio.sleep(0.08)
+
+                    async def send(message: object, sent: list[float] = sent) -> None:
+                        sent.append(time.monotonic())
+
+                    def truth(
+                        row: dict[str, object], delay: str = delay, sent: list[float] = sent
+                    ) -> None:
+                        if delay == "truth" and not sent:
+                            time.sleep(0.08)
+
+                    clients = [
+                        Mock(
+                            connect=AsyncMock(side_effect=connect),
+                            send_message=AsyncMock(side_effect=send),
+                            shutdown=AsyncMock(),
+                        )
+                        for _ in bindings
+                    ]
+                    budget = replace(self.budget, max_seconds=4, max_per_second=20)
+                    with patch(
+                        "zava_forward.api.iot_stream.IoTHubDeviceClient."
+                        "create_from_x509_certificate",
+                        side_effect=clients,
+                    ):
+                        self.assertEqual(
+                            await publisher.run(frames, budget, truth=truth), len(frames)
+                        )
+                    self.assertEqual(len(sent), len(frames))
+                    for first, second in zip(sent, sent[1:], strict=False):
+                        self.assertGreaterEqual(second - first, 1 / budget.max_per_second)
+                    for client in clients:
+                        client.shutdown.assert_awaited_once()
+
+    async def test_post_preparation_controls_prevent_actual_send(self) -> None:
+        for state in ("stop", "pause-stop", "deadline", "cancel"):
+            with self.subTest(state=state):
+                control = Pacer(self.budget)
+                prepared = asyncio.Event()
+                self.client = Mock(
+                    connect=AsyncMock(), send_message=AsyncMock(), shutdown=AsyncMock()
+                )
+
+                def truth(
+                    row: dict[str, object],
+                    state: str = state,
+                    control: Pacer = control,
+                    prepared: asyncio.Event = prepared,
+                ) -> None:
+                    if row["status"] == "attempt":
+                        prepared.set()
+                        if state == "stop":
+                            control.stopped = True
+                        elif state == "deadline":
+                            control.deadline = time.monotonic()
+                        else:
+                            control.paused = True
+
+                with patch(
+                    "zava_forward.api.iot_stream.IoTHubDeviceClient.create_from_x509_certificate",
+                    return_value=self.client,
+                ):
+                    task = asyncio.create_task(
+                        self.publisher.run(self.frames, self.budget, pacer=control, truth=truth)
+                    )
+                    await prepared.wait()
+                    if state == "cancel":
+                        await asyncio.sleep(0)
+                        task.cancel()
+                        with self.assertRaises(asyncio.CancelledError):
+                            await task
+                    else:
+                        if state == "pause-stop":
+                            await asyncio.sleep(0.02)
+                            self.client.send_message.assert_not_called()
+                            control.stopped = True
+                        with self.assertRaisesRegex(StreamError, "RUN_STOPPED|RUN_DEADLINE"):
+                            await task
+                self.client.send_message.assert_not_called()
+                self.client.shutdown.assert_awaited_once()
+
     async def test_per_device_x509_message_schema_truth_and_cleanup(self) -> None:
         with patch(
             "zava_forward.api.iot_stream.IoTHubDeviceClient.create_from_x509_certificate",
@@ -372,6 +549,10 @@ class PublisherTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(message.content_encoding, "utf-8")
         self.assertEqual([row["status"] for row in self.truth], ["attempt", "sent"] * 2)
         self.assertTrue(all("home_id" not in row for row in self.truth))
+        self.assertEqual(
+            {row["selected_stock_sha256"] for row in self.truth},
+            {frame.selected_stock_sha256 for frame in self.frames},
+        )
 
     async def test_connect_send_timeout_stop_failure_and_cancellation(self) -> None:
         async def blocked(*args: object) -> None:

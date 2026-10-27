@@ -205,17 +205,9 @@ class HubReceiver:
             raise StreamError("INVALID_RECEIVE_LIMIT")
         self.activation.validate()
         deadline = time.monotonic() + max_seconds - 0.5
-        credential = ManagedIdentityCredential(client_id=self.activation.managed_identity_client_id)
-        client = EventHubConsumerClient(
-            fully_qualified_namespace=self.activation.eventhub_namespace,
-            consumer_group=self.activation.consumer_group,
-            credential=credential,
-            eventhub_name=self.activation.eventhub_name,
-            logging_enable=False,
-            retry_total=0,
-            auth_timeout=1,
-            prefetch=1,
-        )
+        credential: ManagedIdentityCredential | None = None
+        client: EventHubConsumerClient | None = None
+        tasks: list[asyncio.Task[None] | asyncio.Task[bool]] = []
         finished = asyncio.Event()
         failure: StreamError | None = None
         receipts: list[Receipt] = []
@@ -263,20 +255,36 @@ class HubReceiver:
             failure = StreamError("IOT_RECEIVE_FAILED")
             finished.set()
 
-        receive = asyncio.create_task(
-            client.receive(
-                on_event,
-                on_error=on_error,
-                starting_position="-1",
-                starting_position_inclusive=False,
-                max_wait_time=0.1,
+        try:
+            credential = ManagedIdentityCredential(
+                client_id=self.activation.managed_identity_client_id
+            )
+            client = EventHubConsumerClient(
+                fully_qualified_namespace=self.activation.eventhub_namespace,
+                consumer_group=self.activation.consumer_group,
+                credential=credential,
+                eventhub_name=self.activation.eventhub_name,
+                logging_enable=False,
+                retry_total=0,
+                auth_timeout=1,
                 prefetch=1,
             )
-        )
-        waiting = asyncio.create_task(finished.wait())
-        stopping = asyncio.create_task(stop.wait()) if stop is not None else None
-        try:
-            tasks = [receive, waiting] + ([stopping] if stopping is not None else [])
+            receive = asyncio.create_task(
+                client.receive(
+                    on_event,
+                    on_error=on_error,
+                    starting_position="-1",
+                    starting_position_inclusive=False,
+                    max_wait_time=0.1,
+                    prefetch=1,
+                )
+            )
+            tasks.append(receive)
+            waiting = asyncio.create_task(finished.wait())
+            tasks.append(waiting)
+            stopping = asyncio.create_task(stop.wait()) if stop is not None else None
+            if stopping is not None:
+                tasks.append(stopping)
             done, _ = await asyncio.wait(
                 tasks,
                 timeout=max(0.0, deadline - time.monotonic()),
@@ -289,20 +297,22 @@ class HubReceiver:
             if waiting not in done:
                 raise StreamError("IOT_RECEIVE_STOPPED" if receive in done else "RUN_DEADLINE")
             return tuple(receipts)
+        except (StreamError, asyncio.CancelledError):
+            raise
+        except Exception:
+            raise StreamError("IOT_RECEIVE_FAILED") from None
         finally:
             finished.set()
-            for task in (receive, waiting, stopping):
-                if task is not None:
-                    task.cancel()
-            await _cleanup(
-                [
-                    asyncio.gather(
-                        receive, waiting, *([stopping] if stopping else []), return_exceptions=True
-                    ),
-                    client.close(),
-                    credential.close(),
-                ]
-            )
+            for task in tasks:
+                task.cancel()
+            operations: list[Awaitable[object]] = []
+            if tasks:
+                operations.append(asyncio.gather(*tasks, return_exceptions=True))
+            if client is not None:
+                operations.append(client.close())
+            if credential is not None:
+                operations.append(credential.close())
+            await _cleanup(operations)
 
 
 class HubPublisher:
@@ -330,7 +340,14 @@ class HubPublisher:
     ) -> int:
         self.activation.validate()
         frames = tuple(
-            Frame(frame.device_id, frame.slot, dict(frame.row), frame.truth) for frame in frames
+            Frame(
+                frame.device_id,
+                frame.slot,
+                dict(frame.row),
+                frame.truth,
+                frame.selected_stock_sha256,
+            )
+            for frame in frames
         )
         budget.validate(frames)
         control = pacer or Pacer(budget, speed=speed)
@@ -351,6 +368,11 @@ class HubPublisher:
         clients: dict[str, IoTHubDeviceClient] = {}
         sent = 0
         previous: datetime | None = None
+
+        async def send(client: IoTHubDeviceClient, message: Message) -> None:
+            await control.admit_send()
+            await client.send_message(message)
+
         try:
             for frame in frames:
                 stamp = datetime.fromisoformat(frame.row["observed_at"])
@@ -362,6 +384,7 @@ class HubPublisher:
                         {
                             "source_type": "SYNTHETIC",
                             "reference": frame.reference,
+                            "selected_stock_sha256": frame.selected_stock_sha256,
                             "fault": frame.truth,
                             "status": "injected-stop",
                         }
@@ -387,17 +410,19 @@ class HubPublisher:
                     {
                         "source_type": "SYNTHETIC",
                         "reference": frame.reference,
+                        "selected_stock_sha256": frame.selected_stock_sha256,
                         "slot": frame.slot,
                         "fault": frame.truth,
                         "status": "attempt",
                     }
                 )
-                await _bounded(client.send_message(message), deadline, lambda: control.stopped)
+                await _bounded(send(client, message), deadline, lambda: control.stopped)
                 sent += 1
                 truth(
                     {
                         "source_type": "SYNTHETIC",
                         "reference": frame.reference,
+                        "selected_stock_sha256": frame.selected_stock_sha256,
                         "slot": frame.slot,
                         "fault": frame.truth,
                         "status": "sent",

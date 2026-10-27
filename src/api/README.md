@@ -808,7 +808,10 @@ Do not install them from telemetry or infer them from a synthetic label.
 `await receiver.run(max_seconds=60, max_events=100, stop=stop_event)` returns
 the existing opaque SQL receipts. Accepted and owned DQ outcomes are durable
 before return. SQL/identity/envelope failure stops further admission, with a
-fixed sanitized error rather than raw SDK exception text. Each partition is
+fixed sanitized error rather than raw SDK exception text.
+Constructor/startup failures use the same fixed-error boundary; any credential
+or client successfully returned before failure is closed by bounded cleanup.
+Each partition is
 serialized; two partitions do not share an offset or imply global event order.
 There is deliberately **no checkpoint store or checkpoint update**. Every
 fresh finite receiver uses `starting_position="-1"` and reconciles retained
@@ -830,10 +833,16 @@ Prepare frames with the [core replay API](../core/README.md#finite-synthetic-str
 Then call `await publisher.run(frames, budget, speed=1000, truth=restricted_truth.append)`.
 `truth` is a required evaluator-owned sink, separate from telemetry and ordinary
 diagnostic logs. It receives synthetic/opaque-reference/slot/fault/status
-records, never values, home/device IDs or credentials. `attempt` without `sent`
+records including the selected-input digest copied from each Frame, never
+values, home/device IDs or credentials. `attempt` without `sent`
 is uncertain, not proof of no delivery; rerun identical frames to reconcile.
 `disconnect` is an explicit terminal synthetic stop, not an automatic reconnect.
 `burst` skips model-time spacing but still obeys the configured rate cap.
+Actual send-attempt admission occurs after connection, message construction
+and attempt-truth preparation, immediately before the SDK await in the same
+coroutine. One limiter spans all device clients, so slow setup cannot spend an
+interval and compress subsequent sends. Pause, stop and deadline are rechecked
+at admission; an attempt truth record may precede a refused admission.
 Normal-device altered sensor IDs are transport refusals. To exercise SQL
 UNMAPPED, independently install an exact synthetic binding with that deliberately
 unmapped sensor absent from SQL controls; payload truth never grants a bypass.

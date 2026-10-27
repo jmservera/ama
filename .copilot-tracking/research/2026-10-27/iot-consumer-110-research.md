@@ -111,3 +111,73 @@ Ready for independent local engineering. Research disposition: executed, complet
 Live acceptance and credential operations remain explicitly deferred, not passed.
 Self-check: three waves complete; source pointers and constraints recorded;
 no source changes during Research. Parent action: advance to Plan.
+
+## Correction Cycle 1: Research Brief and Opening State
+
+Date: 2026-10-27. Task: 110-correction-1; parent: 110.
+Status: In progress. Output: convergence; posture: focused, selected for the
+owner's three named defects. Evidence root remains `.copilot-tracking/`.
+Audience: implementer, independent reviewer and draft PR #508 owner.
+
+Research questions: where must actual send admission occur (RV-001), which
+partially constructed receiver resources need ownership (RV-003), and how can
+descriptor and frames bind identical validated selected inputs (RV-002)?
+Criteria: precise regressions at these boundaries, no model/consent/SDK retry
+authority changes, preservation of original adverse Review.
+Starting areas: the two stream modules, their existing test modules, stock
+selection and the original review log. External research is unnecessary.
+
+Selected extensions: repository instructions and ordered RPI phase skills.
+Research specialists skipped because this is a single coupled source trace;
+web/AI/legal extensions do not apply. Explicit full-loop/correction direction
+permits automatic phase progression; no intake question is needed or available.
+Scope excludes deployments, private data, secrets, new models and operational
+approval. The owner explicitly authorizes same-branch commit/push to existing
+PR #508 with local validation; no full gate is authorized. The optional
+large-change scoped gate is not planned for this bounded correction.
+
+Prior knowledge: original Review is Complete / Not accepted, with all three
+findings open. Original loop state is retained unchanged as historical evidence.
+Current branch is clean and PR #508 is open to main. Issue #110, #109, #184
+and #185-#189 and their linked PRD/BRD/ADRs were retrieved/read before source work.
+
+### Correction Research Cycle 1
+
+* Wider (inline): traced original RV-001/003/002, current Pacer/publisher,
+  receiver resource ownership and stock selection. Reflection: all three
+  reproduced source relationships remain present; no external SDK upgrade or
+  new model is necessary.
+* Deeper (inline): model wait reserves rate before connect/truth; receiver
+  constructors precede its cleanup try; select hashes the entire canonical
+  register before slicing. Reflection: separate model pacing from send
+  admission, own partial setup, and reuse select's canonical selected-row copy.
+* Contrarian (inline): a second pre-send reservation outside the send coroutine
+  still permits scheduling latency to consume the interval; hashing only home
+  IDs misses fabric/consent mutations; independently recomputed descriptors
+  cannot identify old frames after mutation. Reflection: admit immediately
+  adjacent to the SDK send in the same coroutine, and attach the canonical
+  selected-input digest to frames as well as descriptors. Keep the original
+  full-register digest separately. Constructor and cleanup errors must both
+  remain fixed codes, with cancellation propagated.
+
+### Correction Evidence Log and Findings
+
+| ID | Evidence | Finding |
+| --- | --- | --- |
+| C7 | src/core/src/zava_forward/core/synthetic/sensor_stream.py:223; src/api/src/zava_forward/api/iot_stream.py:355 | RV-001: reserved time precedes connect and preparation |
+| C8 | src/api/src/zava_forward/api/iot_stream.py:208 | RV-003: credential/client construction lacks owned error/cleanup scope |
+| C9 | src/core/src/zava_forward/core/synthetic/sensor_stock.py:135; src/core/src/zava_forward/core/synthetic/sensor_stream.py:184 | RV-002: full-register digest precedes subset and mutable selected-row replay |
+| C10 | src/core/tests/test_sensor_stream.py:24; src/api/tests/test_iot_stream.py:330 | Existing owned tests can host all focused regressions without a new test module |
+| W6 | https://github.com/jmservera/ama/pull/508 (retrieved 2026-10-27) | Existing draft PR on the requested branch; reuse, never create a second PR |
+
+Accepted: minimal split send admission, outer lifecycle ownership and canonical
+selected snapshot digest on descriptor/frames (C7-C10). Rejected: pre-reserving
+another rate slot, home-ID-only digest, and relying on a frozen wrapper around
+mutable dicts. Deferred: actual Hub/SQL, credential lifecycle and OD-43; unchanged
+from the parent. Questions are answered; another cycle would be redundant.
+
+### Correction Planning Readiness
+
+Research disposition: executed; status: Complete; Planning Readiness: Ready.
+Self-check: ordered three waves, questions/evidence/alternatives/limits present;
+no source changed. Parent action: transition to Plan for this correction only.

@@ -81,8 +81,15 @@ half-open nominal slot interval, so nonzero and odd suffixes reproduce the
 same values/IDs as the existing clean backfill. Do not restart the seed at
 handover. This slice supports the labelled synthetic seasonal model only;
 climate-backed composed histories and measures are not silently substituted.
-`descriptor(selection, spec)` records stock digest, seed, origin, window,
-cadence, schema/model context and explicit fault mode for restricted evidence.
+`descriptor(selection, spec)` records the original register `stock_sha256`
+separately from `selected_stock_sha256`, the digest of the validated canonical
+selected model inputs, plus selected home IDs/count, granted count, seed, origin,
+window, cadence, schema/model context and explicit fault mode. Each Frame carries
+the selected digest outside its observation, binding that frame to the snapshot
+actually used for generation. A later selection mutation changes newly computed
+provenance, not old frames; match the descriptor's selected digest to the frames.
+The descriptor version is `synthetic-stream-v2`; reading IDs/bytes are unchanged.
+Keep descriptors and selected-home evidence restricted, not ordinary telemetry.
 
 The generator limits actual granted homes to 1..100 and original
 homes-times-slots to 100,000 before model generation, independently of summary
@@ -103,8 +110,11 @@ mutated unmapped sensor is refused by the API binding before SQL.
 
 `RunBudget` performs finite message/byte/B1 headroom checks before sending.
 `Pacer` exposes `paused` and `stopped`, finite speed in (0,1000], a monotonic
-deadline and a separate maximum send rate. Speed-up never bypasses the rate
-cap. Pause continues consuming the run time allowance, not a way to leave a
+deadline and a separate maximum send rate. `wait` applies model-time spacing;
+`admit_send` enforces global send-attempt spacing and must be awaited immediately
+before the SDK send, after connection/setup and truth preparation. Speed-up and
+burst never bypass this admission. Pause continues consuming the run time
+allowance, not a way to leave a
 simulator running unattended. See the [API runner](../api/README.md#opt-in-iot-consumer-and-synthetic-publisher-110-184)
 for actual SDK operation bounds, credential handling and activation gates.
 

@@ -8061,3 +8061,17 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   operational OD-43/Legal/DPO approval was performed or inferred.
 * Updated the knowledge-base index. Local constructed engineering evidence is
   separate from actual Hub/Azure SQL, hosted checks, publication and owner merge.
+
+## [2026-10-27] query | IoT correction cycle 1 (Refs #110, #184)
+
+* Updated the [bounded IoT synthesis](./research/iot-sensor-analytics-research-plan.md#bounded-streaming-engineering-2026-10-27-refs-110-184)
+  and index with actual global send-attempt admission after setup/truth,
+  receiver partial-construction cleanup and selected-input descriptor/frame
+  provenance. Component guides explain the split pacing/admission contract
+  and `synthetic-stream-v2` evidence format; observation bytes/IDs are unchanged.
+* Focused synthetic regressions use fake SDK calls and constructed temporary
+  SQLite, not actual Hub or Azure SQL. No deployment, private dataset, device
+  credential, real resident consent or owner/Legal/DPO approval is inferred.
+* Original adverse Review is retained. The owner-selected correction has its
+  own critique and Review addendum; issue criteria and existing live/deferred
+  gates remain unchanged, with Refs rather than Closes.

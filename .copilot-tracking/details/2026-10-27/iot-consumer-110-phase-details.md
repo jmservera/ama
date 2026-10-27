@@ -96,3 +96,79 @@ and open one PR to main, default Refs for all incompletely proven issues.
 Publication is conditional on applicable repository gates. Busy lock means
 skip the sole changed attempt and disclose, never fabricate a receipt. A failed
 or unavailable gate blocks publication; no second attempt or --all fallback.
+
+## Correction Cycle 1 (110-correction-1)
+
+Date: 2026-10-27. Scope and phase IDs are the correction section of the existing
+plan; original P01-P03 evidence remains historical. Current state is the
+separate iot-consumer-110-correction-1-state.json. No unresolved owner decision.
+
+<!-- rpi:phase id=P04 -->
+### P04 / P04-T01: RV-001
+
+Keep model interval/speed waiting separate from actual send admission.
+Move rate reservation to the send coroutine immediately before the SDK await,
+after client connect, message construction and the required attempt truth sink.
+No await or truth callback may occur between reservation and SDK invocation.
+Retain one global limiter across device clients and the cleanup-reserved
+absolute deadline. Tests record actual fake SDK timestamps after delayed connect
+and delayed truth preparation; include multi-device and paused/stopped/timed-out
+admission. Core tests cover deterministic admission/cancellation controls.
+
+<!-- rpi:phase id=P05 -->
+### P05 / P05-T01: RV-003
+
+Initialize optional resource/task ownership before setup. Keep callback
+definitions outside setup if useful, but construct credentials, client and
+receive/wait tasks inside the same try/except/finally. Close only resources
+successfully returned; cancel/observe only created tasks. Use one bounded
+cleanup call for tasks/client/credential. Preserve StreamError and cancellation;
+sanitize unexpected setup/receive errors as IOT_RECEIVE_FAILED. Cleanup failures
+remain explicit IOT_CLEANUP_FAILED. Tests cover credential failure, client
+failure after credential, synchronous receive startup failure, and close failure.
+
+<!-- rpi:phase id=P06 -->
+### P06 / P06-T01: RV-002
+
+Use the same canonical-validation helper for descriptor and replay. Hash the
+validated selected copy with select's canonical digest; retain original
+stock_sha256 separately. Include selected count/IDs and granted count in the
+descriptor and selected digest on each Frame outside row telemetry. Copy this
+field when the publisher snapshots frames. Tests distinguish one/two-home
+subsets from the same register, fabric/consent mutation and old/new frame
+provenance, invalid selected input and canonical ordering/normalization.
+Do not redesign Selection globally or change historical model/reading IDs.
+
+<!-- rpi:phase id=P07 -->
+### P07 / P07-T01: Validation and publication
+
+Use the two existing test modules only (<=12 additional methods, no removals).
+Commands: core sensor selectors plus historical backfill; full API discovery
+with PYTHONPATH=../core/tests:../agents/tests; both configured Ruff, format check
+and mypy. Install declared distributions/dev tools with pip into an external
+venv after the confirmed system missing-dependency probe. No manifests change.
+Update guides, synthesis/index/append-only log and existing RPI artifacts.
+Reconcile all correction markers before the one independent Review; write
+reviews/2026-10-27/iot-consumer-110-review-addendum.md without modifying the
+original log. Review findings route to later work, not a second Review.
+No heavy/full gate planned for this bounded correction. Commit required
+evidence and trailer, push same branch, update draft PR #508 with Refs and
+explicit local-only/deferred criteria. Hosted/human approval and merge remain
+separate; no issue closure.
+
+### Correction Execution Status
+
+P04/P04-T01, P05/P05-T01 and P06/P06-T01 are complete with focused passing
+regressions. Model-time wait and actual send admission are distinct; constructor
+ownership extends through receive task startup; shared canonical selected
+snapshots bind descriptor, Frame and restricted truth provenance. Seven added
+methods in two existing tests, no removals. Observation bytes/IDs are unchanged.
+P07/P07-T01 local validation is complete: core 99 sensor tests (one existing
+opt-in SQL skip), 9 historical backfill tests and configured lint/format/mypy
+pass; API focused 66 tests pass. Full API discovery passes 1142 tests in
+458.785 seconds with 314 existing integration/opt-in skips. Configured API
+lint/format/mypy pass (48 formatted/90 checked files); core 102/155.
+Pre-Review reconciliation is complete; source/tests frozen for the one
+correction Review, now Complete / Conformant in the requested addendum.
+P07 authorized commit/push and PR evidence update are still pending;
+source/tests remain unchanged after Review.

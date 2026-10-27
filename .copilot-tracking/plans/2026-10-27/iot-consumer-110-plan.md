@@ -5,7 +5,9 @@ ms.date: 2026-10-27
 
 ## Task Metadata
 
-Task ID: 110. Slug: iot-consumer-110. Planning completed after direct critique
+Historical parent task ID: 110. Slug: iot-consumer-110.
+Current owner-selected task: 110-correction-1, correction P04-P07 below.
+Original planning completed after direct critique
 dispositions. Post-implementation Review: Complete / Not accepted, three
 Medium defects; final delivery and publication remain blocked.
 Details: .copilot-tracking/details/2026-10-27/iot-consumer-110-phase-details.md.
@@ -144,12 +146,10 @@ controls, never infer them from simulator output.
 
 ## Follow-Up Items
 
-* RV-001: later rpi-implement must enforce actual send spacing after connection;
-  original Review's delayed-connect reproduction overrides passing pacing tests.
-* RV-003: later rpi-implement must cover receiver partial-construction cleanup
-  and fixed-error handling.
-* RV-002: later rpi-implement must bind descriptor and replay to the same
-  validated selected-input snapshot.
+* RV-001, RV-003 and RV-002 are the selected correction scope P04-P06 below,
+  implemented with focused regressions; independent correction Review
+  Complete / Conformant with no new findings.
+  The original adverse Review remains preserved, not reclassified.
 * #185: owner-approved credential issue, Key Vault storage, rotation and teardown.
 * #188: live private Hub-to-Azure SQL acceptance and actual restart/seam evidence.
 * #189: actual aggregate budget/quota headroom and active alert verification.
@@ -162,3 +162,106 @@ The ordered RPI loop reached its one Review. Preserve the Not accepted outcome
 and route the three defects to later owner-selected implementation. P03 remains
 unchecked because publication is blocked; no second Review or live acceptance
 is inferred. No push/PR is permitted while applicable final gates are missing.
+
+## Correction Cycle 1: Task Metadata and Executive Summary
+
+Task 110-correction-1, slug iot-consumer-110-correction-1, parent 110.
+Date: 2026-10-27. Existing draft PR #508, branch feat/iot-consumer-110.
+The preceding plan/Review remains the original historical outcome. This
+owner-selected correction is a new ordered RPI loop with one new critique and
+one new post-implementation Review, not a rewrite or retry of the original.
+
+Fix actual global send-attempt spacing first, then receiver setup ownership,
+then replay provenance. No SDK/model/authority changes are intended. Local
+tests are not live Hub/SQL or operational approval. The owner now explicitly
+requests same-branch publication; use local focused/full component validation,
+not the unauthorized --all gate. No optional heavy gate for this small fix.
+
+### Correction User Decisions and Requirements
+
+* Resolve RV-001, RV-003, RV-002 in that order; add focused regressions.
+* Run relevant src unit suites, configured Ruff/format and mypy locally.
+* Update existing dated artifacts and add a correction review addendum.
+* Commit with Conventional Commits and required Copilot trailer; push without
+  force to the same branch and update existing draft PR #508. Use Refs only.
+* No Azure, secrets, private data, uv, new models or operational decisions.
+
+### Correction Goals, Scope and Requirements
+
+Scope: two stream modules, their two existing tests, component guides and
+directly related knowledge-base/RPI evidence. No test removals or new test
+modules; at most 12 focused test methods. Canonical source/test/docs only;
+no dependency/lock/generated-output changes.
+
+Functional: separate model pacing from global actual-send admission after
+connect/preparation/truth. Perform admission and SDK await adjacently in the
+same send coroutine. Preserve burst, speed, pause, stop and absolute deadline.
+Receiver owns successful resources from their construction through every
+failure/cancellation; setup failures become fixed StreamError codes.
+Descriptor and frames share the digest of independently validated canonical
+selected inputs; retain the distinct original register digest. Changes to
+selected subset, fabric or consent must change selected provenance; invalid
+inputs must fail consistently before model execution.
+
+Non-functional: no network test, no retry/approval widening, no raw SDK errors,
+no mutable selection aliases. Reuse sensor_stock.select normalization. Source
+of frame provenance is the exact local copy used for generation. Provenance is
+restricted truth/evidence, never an added observation/telemetry field.
+
+Acceptance: assert timestamps recorded inside fake SDK send calls, not Pacer
+return times, after slow connect and slow truth preparation across one/multiple
+devices. Assert stop/pause/deadline/cancel prevent admission as appropriate.
+Assert credential/client constructor, synchronous receive startup and cleanup
+failure handling, ownership and fixed codes. Assert distinct subset/mutation
+digests, canonical-order equivalence and frame/descriptor consistency.
+Run core sensor/backfill suites and full API discovery plus both project lint,
+format and strict mypy. Preserve all original adverse evidence and live gates.
+
+## Correction Phase Checklist
+
+<!-- rpi:phase id=P04 -->
+### [x] P04: Actual send-rate safety (RV-001)
+<!-- rpi:task id=P04-T01 -->
+#### [x] P04-T01: Split model wait and send-attempt admission with regressions
+
+<!-- rpi:phase id=P05 -->
+### [x] P05: Construction ownership (RV-003)
+<!-- rpi:task id=P05-T01 -->
+#### [x] P05-T01: Enclose receiver setup in sanitized owned cleanup
+
+<!-- rpi:phase id=P06 -->
+### [x] P06: Selected-input provenance (RV-002)
+<!-- rpi:task id=P06-T01 -->
+#### [x] P06-T01: Bind descriptor and frames to canonical selected snapshots
+
+<!-- rpi:phase id=P07 -->
+### [ ] P07: Validation, one Review and existing-PR publication
+<!-- rpi:task id=P07-T01 -->
+#### [ ] P07-T01: Reconcile evidence, review addendum, commit and push
+
+Dependencies: P05 follows P04 and P06 follows P05 by owner priority; P07 depends
+on all three. Test ownership: core/tests/test_sensor_stream.py (pacing and
+canonical snapshot semantics), api/tests/test_iot_stream.py (actual send
+boundary and resource lifecycle); existing sensor/backfill/ingestion suites
+provide regression coverage. No removals; maximum 12 additional methods.
+
+## Correction Critique Disposition
+
+One independent final-candidate critique: Complete / Pass, no PC findings,
+at .copilot-tracking/reviews/plans/2026-10-27/iot-consumer-110-correction-1-plan-critique.md.
+Research C7-C10/W6 establishes readiness; details define all four phases.
+No unresolved owner decision. Planning is implementation-ready.
+
+## Correction Follow-Up Items and Handoff
+
+Unchanged: #185 credential lifecycle, #187/#188 actual/model seam, #189 active
+cost/headroom verification and OD-43. Do not tick live issue criteria. Original
+parent P03 stays historically incomplete. Correction P07 tracks only authorized
+same-branch source delivery, not merge or whole acceptance.
+P04/P05/P06 are complete in the required order. Local validation is complete:
+core 99 sensor tests (one skip) and 9 backfill tests; API 1142 tests (314 skips);
+both projects' configured Ruff/format/mypy pass. One independent correction
+Review is Complete / Conformant at
+.copilot-tracking/reviews/2026-10-27/iot-consumer-110-review-addendum.md.
+Current P07 action: commit/push and update existing draft PR #508. Publication
+and hosted/human acceptance are not yet complete.

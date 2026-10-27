@@ -33,6 +33,98 @@ def selection() -> sensor_stock.Selection:
 
 
 class ReplayTests(unittest.TestCase):
+    def test_selected_subset_and_fabric_consent_mutations_bind_frame_provenance(self) -> None:
+        selected, spec = selection(), Replay()
+        subset = sensor_stock.select(selected.rows, 1)
+        self.assertEqual(subset.input_sha256, selected.input_sha256)
+        original = descriptor(selected, spec)
+        self.assertNotEqual(original, descriptor(subset, spec))
+        self.assertEqual(original["selected_homes"], 3)
+        self.assertEqual(original["monitored_homes"], 1)
+        self.assertEqual(original["selected_home_ids"], ["ZF-1", "ZF-2", "ZF-3"])
+        frames = replay(selected, spec)
+        self.assertEqual(
+            {frame.selected_stock_sha256 for frame in frames},
+            {original["selected_stock_sha256"]},
+        )
+        for field, value in (
+            ("building_form_osm", "detached"),
+            ("locality_theme", "urban"),
+            ("monitoring_consent", "granted"),
+        ):
+            with self.subTest(field=field):
+                mutated = replace(selected, rows=tuple(dict(row) for row in selected.rows))
+                target = 1 if field == "monitoring_consent" else 0
+                mutated.rows[target][field] = value
+                changed = descriptor(mutated, spec)
+                changed_frames = replay(mutated, spec)
+                self.assertNotEqual(
+                    changed["selected_stock_sha256"], original["selected_stock_sha256"]
+                )
+                self.assertEqual(changed["stock_sha256"], original["stock_sha256"])
+                self.assertEqual(
+                    {frame.selected_stock_sha256 for frame in changed_frames},
+                    {changed["selected_stock_sha256"]},
+                )
+                self.assertNotEqual(changed_frames, frames)
+        selected.rows[0]["building_form_osm"] = "detached"
+        self.assertNotEqual(descriptor(selected, spec), original)
+        self.assertEqual(
+            {frame.selected_stock_sha256 for frame in frames},
+            {original["selected_stock_sha256"]},
+        )
+
+    def test_selected_provenance_is_canonical_and_validation_matches_replay(self) -> None:
+        selected, spec = selection(), Replay()
+        reordered = replace(
+            selected,
+            rows=tuple(
+                {**row, "is_synthetic": "TRUE", "ignored": "not a model input"}
+                for row in reversed(selected.rows)
+            ),
+        )
+        self.assertEqual(descriptor(selected, spec), descriptor(reordered, spec))
+        self.assertEqual(replay(selected, spec), replay(reordered, spec))
+        for field, value in (
+            ("is_synthetic", "false"),
+            ("monitoring_consent", "invalid"),
+            ("synthetic_home_id", " "),
+        ):
+            bad = replace(selected, rows=({**selected.rows[0], field: value},))
+            with (
+                self.subTest(field=field),
+                patch.object(sensor_backfill, "outdoor_series") as model,
+            ):
+                for operation in (descriptor, replay):
+                    with self.assertRaises(ValueError):
+                        operation(bad, spec)
+                model.assert_not_called()
+        excluded = replace(
+            selected,
+            rows=({**selected.rows[0], "monitoring_consent": "declined"},),
+        )
+        for operation in (descriptor, replay):
+            with self.assertRaisesRegex(StreamError, "REPLAY_SCALE_LIMIT"):
+                operation(excluded, spec)
+        expected = replay(selected, spec)
+        original_descriptor = descriptor(selected, spec)
+        outdoor_series = sensor_backfill.outdoor_series
+
+        def mutate_after_snapshot(
+            seed: int, days: int, cadence_minutes: int, origin: object
+        ) -> object:
+            selected.rows[0]["is_synthetic"] = "false"
+            selected.rows[0]["building_form_osm"] = "detached"
+            return outdoor_series(seed, days, cadence_minutes, origin)
+
+        with patch.object(sensor_backfill, "outdoor_series", side_effect=mutate_after_snapshot):
+            actual = replay(selected, spec)
+        self.assertEqual(actual, expected)
+        self.assertEqual(
+            {frame.selected_stock_sha256 for frame in actual},
+            {original_descriptor["selected_stock_sha256"]},
+        )
+
     def test_exact_existing_generator_suffix_and_three_per_day(self) -> None:
         selected, spec = selection(), Replay()
         sensor = selected.sensors(spec.seed)[0]
@@ -123,6 +215,44 @@ class ReplayTests(unittest.TestCase):
 
 
 class PacingTests(unittest.IsolatedAsyncioTestCase):
+    async def test_send_admission_rate_pause_stop_deadline_and_cancel(self) -> None:
+        now = [0.0]
+        pacer = Pacer(
+            RunBudget("owner", "cost", "alert", max_seconds=10, max_per_second=5),
+            clock=lambda: now[0],
+        )
+
+        async def advance(seconds: float) -> None:
+            now[0] += seconds
+            if now[0] >= 1:
+                pacer.paused = False
+
+        with patch("zava_forward.core.synthetic.sensor_stream.asyncio.sleep", advance):
+            await pacer.wait(0)
+            now[0] = 0.25
+            await pacer.admit_send()
+            first = now[0]
+            await pacer.wait(0)
+            await pacer.admit_send()
+            self.assertGreaterEqual(now[0] - first, 0.2)
+            pacer.paused = True
+            await pacer.admit_send()
+            self.assertGreaterEqual(now[0], 1)
+            pacer.stopped = True
+            with self.assertRaisesRegex(StreamError, "^RUN_STOPPED$"):
+                await pacer.admit_send()
+            pacer.stopped = False
+            pacer.deadline = now[0] + 0.1
+            with self.assertRaisesRegex(StreamError, "^RUN_DEADLINE$"):
+                await pacer.admit_send()
+        pacer.deadline = now[0] + 10
+        pacer.paused = True
+        task = asyncio.create_task(pacer.admit_send())
+        await asyncio.sleep(0)
+        task.cancel()
+        with self.assertRaises(asyncio.CancelledError):
+            await task
+
     async def test_speed_pause_stop_and_deadline(self) -> None:
         now = [0.0]
         pacer = Pacer(

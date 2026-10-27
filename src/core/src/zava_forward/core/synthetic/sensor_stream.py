@@ -11,7 +11,7 @@ from datetime import UTC, datetime, timedelta
 
 from . import sensor_backfill, sensor_faults, sensor_stock
 
-VERSION = "synthetic-stream-v1"
+VERSION = "synthetic-stream-v2"
 FAULTS = frozenset(
     {
         "valid",
@@ -82,6 +82,7 @@ class Frame:
     slot: int
     row: dict[str, str]
     truth: str
+    selected_stock_sha256: str
 
     @property
     def reference(self) -> str:
@@ -132,13 +133,21 @@ class RunBudget:
         return units
 
 
-def replay(selection: sensor_stock.Selection, spec: Replay) -> tuple[Frame, ...]:
-    slots, first, end = spec.bounds()
+def _selected(
+    selection: sensor_stock.Selection, spec: Replay
+) -> tuple[sensor_stock.Selection, list[dict[str, object]]]:
+    slots, _, _ = spec.bounds()
     # Validate actual selected records, not just caller-provided summary counts.
     checked = sensor_stock.select(selection.rows, len(selection.rows))
     sensors = checked.sensors(spec.seed)
     if not 1 <= len(sensors) <= 100 or slots * len(sensors) > 100000:
         raise StreamError("REPLAY_SCALE_LIMIT")
+    return checked, sensors
+
+
+def replay(selection: sensor_stock.Selection, spec: Replay) -> tuple[Frame, ...]:
+    checked, sensors = _selected(selection, spec)
+    slots, first, end = spec.bounds()
     outdoor = sensor_backfill.outdoor_series(
         spec.seed, spec.days, spec.cadence_minutes, spec.origin
     )
@@ -173,16 +182,20 @@ def replay(selection: sensor_stock.Selection, spec: Replay) -> tuple[Frame, ...]
                 row["calibrated"] = "false"
             if spec.fault == "gap":
                 continue
-            frame = Frame("SYN-" + str(sensor["sensor_id"]), slot, row, spec.fault)
+            frame = Frame(
+                "SYN-" + str(sensor["sensor_id"]), slot, row, spec.fault, checked.input_sha256
+            )
             wire(frame.row)
             frames.append(frame)
             if spec.fault == "duplicate":
-                frames.append(Frame(frame.device_id, slot, dict(row), spec.fault))
+                frames.append(
+                    Frame(frame.device_id, slot, dict(row), spec.fault, checked.input_sha256)
+                )
     return tuple(sorted(frames, key=lambda frame: frame.slot))
 
 
 def descriptor(selection: sensor_stock.Selection, spec: Replay) -> dict[str, object]:
-    spec.bounds()
+    checked, sensors = _selected(selection, spec)
     return {
         "source_type": "SYNTHETIC",
         "version": VERSION,
@@ -191,6 +204,10 @@ def descriptor(selection: sensor_stock.Selection, spec: Replay) -> dict[str, obj
         "stock_version": sensor_stock.VERSION,
         "climate": sensor_backfill.CLIMATE_SOURCE,
         "stock_sha256": selection.input_sha256,
+        "selected_stock_sha256": checked.input_sha256,
+        "selected_home_ids": [row["synthetic_home_id"] for row in checked.rows],
+        "selected_homes": len(checked.rows),
+        "monitored_homes": len(sensors),
         "seed": spec.seed,
         "origin": spec.origin.isoformat(),
         "days": spec.days,
@@ -221,7 +238,13 @@ class Pacer:
         self.next_send = clock()
 
     async def wait(self, nominal_seconds: float) -> None:
-        target = max(self.next_send, self.clock() + nominal_seconds / self.speed)
+        await self._wait_until(self.clock() + nominal_seconds / self.speed)
+
+    async def admit_send(self) -> None:
+        await self._wait_until(self.next_send)
+        self.next_send = self.clock() + 1 / self.max_per_second
+
+    async def _wait_until(self, target: float) -> None:
         while True:
             now = self.clock()
             if self.stopped:
@@ -229,6 +252,5 @@ class Pacer:
             if now >= self.deadline:
                 raise StreamError("RUN_DEADLINE")
             if not self.paused and now >= target:
-                self.next_send = now + 1 / self.max_per_second
                 return
             await asyncio.sleep(min(0.05, self.deadline - now))
