@@ -32,7 +32,7 @@ def run(browser: Browser, base: str) -> None:
     sign_in(page, "one@example.com")
     panel = page.locator(".assistant")
     expect(panel).to_contain_text("Advisory only")
-    expect(panel).to_contain_text("No AI model is connected")
+    expect(panel).to_contain_text("Each answer says whether AI or rules were used")
     select = page.get_by_label("Your question", exact=True)
     button = page.get_by_role("button", name="Get advice")
     select.focus()

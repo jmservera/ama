@@ -82,6 +82,24 @@ class PrincipalVerificationTests(unittest.TestCase):
     def test_exact_identity_and_view_only_rights_pass(self) -> None:
         self.verify(principal=GOOD_USER, permissions=OK_PERMS)
 
+    def test_only_exact_accounting_procedure_grants_are_allowed(self) -> None:
+        self.verify(
+            principal=GOOD_USER,
+            permissions=OK_PERMS
+            + (
+                ("G", "EXECUTE", 1, "resident_ai.reserve"),
+                ("G", "EXECUTE", 1, "resident_ai.complete"),
+            ),
+        )
+        for grant in (
+            ("G", "EXECUTE", 1, "resident_ai.other"),
+            ("W", "EXECUTE", 1, "resident_ai.reserve"),
+            ("G", "EXECUTE", 3, "resident_ai"),
+            ("G", "SELECT", 1, "resident_ai.attempt"),
+        ):
+            with self.assertRaises(script.PrincipalError):
+                self.verify(principal=GOOD_USER, permissions=OK_PERMS + (grant,))
+
     def test_name_only_reuse_is_refused(self) -> None:
         bad = (
             dict(principal=None),

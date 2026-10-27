@@ -8,6 +8,7 @@ dynamic = ["version"]
 description = "Zava Forward HTTP API and web workbench"
 requires-python = ">=3.12"
 dependencies = [
+    "azure-identity==1.26.0",
     "zava-forward-core[sql,blob]>=0.1.0,<0.2",
     "zava-forward-agents>=0.1.0,<0.2",
 ]

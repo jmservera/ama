@@ -7396,3 +7396,15 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   preferred managed identity and disabled adapter requiring future reviewed
   tariff and durable shared reservation controls. No model calls, Azure changes,
   real-provider activation or live resident acceptance is established.
+
+## [2026-10-27] query | Resident managed-identity assistant implementation (Refs #469, #466)
+
+* Updated the existing assistant design and index for the owner's USD20
+  model ceiling, resident USD30 within renewed USD700 funding, managed
+  identity, bounded own-case inference and permanent atomic SQL accounting.
+* Recorded real regional Standard mini provisioning and tariff, explicit
+  deterministic fallback, per-resident admission and no specialist/decision
+  authority. Historical USD5 prototype evidence remains unchanged below the
+  current design section. Funding renewal does not extend resident access.
+* Resource provisioning and reachable old-revision health are not SQL/runtime,
+  authenticated managed-identity inference, privacy or production acceptance.

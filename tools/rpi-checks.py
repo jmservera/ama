@@ -35,6 +35,7 @@ SQL_SELECTORS = (
     "test_assistants.MssqlDurabilityTests",
     "test_assistants.MssqlApiTests",
     "test_assistants.MssqlLedgerTests",
+    "test_resident_aoai_sql.AccountingSqlTests",
 )
 RUFF_GROUPS = (
     ("infra/tests/test_bicep_policy.py", "infra/tests/test_deploy.py", "infra/scripts/deploy.py"),
@@ -51,8 +52,8 @@ RUFF_GROUPS = (
 WORKFLOWS = ("src-ci.yml", "mvp-ci.yml", "mvp-validation.yml", "src-deploy.yml", "infra-plan.yml")
 # Explicitly updated with the matrix whenever native workflow commands change.
 WORKFLOW_HASHES = {
-    "src-ci.yml": "9e031a1804570391c27eeeb2e1f09fca7026151b73bd1268012c0329b21a2b91",
-    "mvp-ci.yml": "63ee7334071d4854d3c7f99045a894a88f6f1338b9bfca7e749f04c325cade7a",
+    "src-ci.yml": "843077a5d5ffc5fe0c9b6ce2933b6fb46393016e6ca7ece248235cf3229d3d7c",
+    "mvp-ci.yml": "92178fff316a4cd8b4e619c47e96c0238106c311cad928263b6e795797a3a54e",
     "mvp-validation.yml": "94feeb7e0c6807a94dc2624eaf7c5e76c807a234e1777b593b169fd801e511cc",
     "src-deploy.yml": "1dd9d684220adc38f665ed6f15bfa521824f5bcea7cdc22602c928ae31df7f0c",
     "infra-plan.yml": "232e84f01559055bc2121379a44c6ac3121e66f9e398e92e6a571a26c8c00a88",

@@ -1,10 +1,77 @@
 ---
 title: Resident advisory assistant prototype
-description: Owner-decision design, zero-spend prototype and deferred model activation
+description: Managed-identity bounded model assistance, permanent spend controls and activation limits
 ms.date: 2026-10-27
 ---
 
-## Decision requested
+## Current owner decision and implementation (2026-10-27)
+
+Refs #469 and #466. Owner approval selects Azure OpenAI in existing RG `ama`,
+managed identity only and a **USD20 inference ceiling**, within resident USD30
+and renewed overall USD700 through 2026-12-31. This supersedes the older USD5
+proposal below, not the resident-access, privacy or human-approval boundaries.
+
+The optional `AzureAdvisor` performs actual Azure OpenAI inference to select
+relevant explanatory sentences for the three existing questions. It is not
+free-text chat or unrestricted generated advice. Mandatory own-case status,
+closed/unknown facts, next step and document/form limitations are rendered
+unchanged. The model sees only the safe mapped answer and approved optional
+guidance, never email, address, raw stage, case ID, other cases, sensors,
+uploads, credentials or conversation history. It can return only known
+sentence IDs. Invalid, inconsistent, truncated or unavailable output returns
+the deterministic answer labelled "Summary by rules - AI unavailable or usage
+limit reached". Successful output says "AI suggestion, not approved".
+Unknown requests are rejected before inference, with the human route retained.
+No eligibility, legal, safety, financial, submission or consent authority exists.
+
+Current model: `gpt-4.1-mini`, version `2025-04-14`, deployment `resident-mini`,
+regional **Standard**, capacity 1, Sweden Central. UK South lacked an ordinary
+small-model Standard option. ARM rejected nano Standard; its advertised SKU
+was fine-tuned-model only, while ordinary 4o-mini Standard was retired.
+Mini is the smallest current non-reasoning regional candidate verified here.
+No silent GlobalStandard substitution or automatic model upgrade is enabled.
+
+The [Azure retail prices API](https://prices.azure.com/api/retail/prices),
+retrieved 2026-10-27 with service `Foundry Models`, region `swedencentral`,
+returned regional mini input USD0.000484/1K and output USD0.001936/1K tokens.
+The entire serialized request, including instructions and response schema, is
+limited to 4096 ASCII bytes, conservatively bounded by 8192 input tokens
+including protocol overhead, plus 256 output tokens, n=1, no retries, tools or
+streaming. Worst-case estimated charge is USD0.004460544 per attempt.
+Reserve **USD0.01 permanently before credentials/HTTP**, substantially above
+that bound; the atomic lifetime limit is 2000 cents. No timeout, process death,
+completion error or deployment refunds/reset the ledger. This is intentionally
+conservative admission, not a claim that actual billing reaches USD20.
+The cap controls this application's calls, not unrelated subscription callers.
+Tariff approval and inference expire at 2026-11-01T00:00:00Z; funding renewal
+does not extend the earlier configured showcase/session/SQL admission window.
+
+The separate `resident_ai` SQL schema stores cumulative reserved cents and
+attempt UUID, stable SHA256 of the authorised case ID, DB UTC time and nullable
+actual input/output token counts. It stores no prompts or answers. Global
+row locking serializes reservation and five-attempt rolling-hour admission
+per synthetic resident mapping across instances, sign-ins, signing-key rotation
+and restarts. The app gets only EXECUTE on `reserve` and `complete`; existing
+case data stays SELECT-only through the resident view. Missing/corrupt/unreachable
+accounting fails closed to rules without acquiring an inference token.
+Counts-only usage logs omit resident identifiers, prompts, answers and tokens.
+
+`ManagedIdentityCredential(client_id=<existing resident identity>)` is the
+only credential route, scoped to `https://cognitiveservices.azure.com/.default`.
+No keys or developer credential chain are supported. Explicit runtime settings
+are `ZF_DEMO_ASSISTANT_ENABLED=true` and `ZF_DEMO_ASSISTANT_ENDPOINT`; the
+existing `ZF_SQL_AUTH=msi` and `ZF_SQL_CLIENT_ID` bind the same identity.
+Default is disabled. See the [API guide](../../src/api/README.md#resident-advisory-assistant-prototype-469)
+and [infra runbook](../../infra/README.md#resident-azure-openai-469).
+
+Actual ARM provisioning succeeded for `aoai-resident-469`, its `resident-mini`
+deployment and the existing `id-resident-demo` identity's account-scoped
+Cognitive Services OpenAI User assignment. No other resources, ingress,
+groups or role assignments were changed. Provisioning is not live activation:
+SQL migration, running-image/configuration readiness and authenticated
+managed-identity inference must be evidenced separately.
+
+## Historical prototype decision requested
 
 Refs #469, part of #466. **For owner decision, not activation approval.**
 Recommend a local rules-based assistant now. The separate resident panel offers

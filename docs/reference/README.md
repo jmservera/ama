@@ -21,10 +21,11 @@ management: short pages that point to clusters of related material.
 ## How to Use This Knowledge Base
 
 The [resident advisory assistant design](../architecture/resident-assistant-prototype.md)
-records the #469 local fixed-topic prototype, own-case boundary, model options,
-USD 5 additional ceiling through 2026-10-31 and managed-identity proposal.
-Real-provider activation remains an owner decision; the shipped provider is
-local rules and makes no model calls.
+records #469's bounded own-case Azure OpenAI integration, deterministic
+fallback, managed identity and permanent SQL-backed USD20 reservation ceiling.
+The 2026-10-27 owner approval supersedes the historical USD5 proposal.
+Dedicated Standard mini resources were provisioned in ama; SQL/runtime/live
+activation evidence remains distinct from resource creation.
 
 For tracking cleanup and native deck reproduction, use the
 [retention policy](./method/tracking-retention-policy.md),

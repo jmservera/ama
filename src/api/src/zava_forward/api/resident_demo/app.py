@@ -20,6 +20,7 @@ from urllib.parse import urlsplit
 
 from zava_forward.core import resident_showcase as rs
 from zava_forward.core.resident_assistant import (
+    Advisor,
     AssistantUnavailable,
     CaseProgress,
     FakeProvider,
@@ -27,6 +28,8 @@ from zava_forward.core.resident_assistant import (
     Topic,
     advise,
 )
+
+from .aoai import resident_key
 
 WEB = Path(__file__).parent / "web"
 ASSETS = {
@@ -90,6 +93,7 @@ class ResidentDemo:
         clock: Callable[[], float] = time.time,
         client_address: str = "peer",
         assistant_provider: Provider | None = None,
+        assistant_advisor: Advisor | None = None,
     ):
         self.client_address = client_address
         self.reader, self.identity, self.verifier = reader, identity, verifier
@@ -101,6 +105,7 @@ class ResidentDemo:
         self.assistant_provider = (
             assistant_provider if assistant_provider is not None else FakeProvider()
         )
+        self.assistant_advisor = assistant_advisor
 
     @property
     def ready(self) -> bool:
@@ -311,7 +316,8 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
             if not (self._same_origin() and self._csrf_ok()):
                 self._json(403, dict(error="Please reload the page and try again."))
                 return
-            view = app.view_for(_cookies(self.headers.get("Cookie")).get(SESSION_COOKIE))
+            session = _cookies(self.headers.get("Cookie")).get(SESSION_COOKIE)
+            view = app.view_for(session)
             if view is None:
                 self._json(401, dict(error="Please sign in again."))
                 return
@@ -325,10 +331,16 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                 self._json(400, dict(error="Choose one of the listed questions."))
                 return
             try:
-                advice = advise(
-                    topic,
-                    CaseProgress(view["progress"], view["next_step"], view.get("closed", "")),
-                    app.assistant_provider,
+                case = CaseProgress(view["progress"], view["next_step"], view.get("closed", ""))
+                signed = app.codec.verify(session)
+                case_id = app.by_handle.get(signed[0]) if signed else None
+                if case_id is None:
+                    self._json(401, dict(error="Please sign in again."))
+                    return
+                advice = (
+                    app.assistant_advisor.answer(topic, case, resident_key(case_id))
+                    if app.assistant_advisor is not None
+                    else advise(topic, case, app.assistant_provider)
                 )
             except AssistantUnavailable:
                 print("resident assistant unavailable", file=sys.stderr)
@@ -338,6 +350,9 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                         error="The assistant is unavailable. Try again or ask your housing officer."
                     ),
                 )
+                return
+            if app.view_for(session) is None:
+                self._json(401, dict(error="Please sign in again."))
                 return
             self._json(
                 200,

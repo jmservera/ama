@@ -15,13 +15,34 @@ checks and fetches/re-authorizes the resident's own case for every request.
 It never accepts a case selector, writes a case, submits a form or records consent.
 Document requests are explicitly unknown in the current projection.
 
-The [owner-decision design note](../../docs/architecture/resident-assistant-prototype.md)
-compares model options, the USD 5 ceiling through 2026-10-31 and managed identity.
+The [design note](../../docs/architecture/resident-assistant-prototype.md)
+records the 2026-10-27 owner decision: managed identity and USD20 model ceiling.
 Default `FakeProvider` is deterministic local rules: no model connection or cost.
-`AzureTopicProvider` is an optional Python-configured adapter, disabled by default,
-not wired into the runtime environment. It requires explicit enablement, token
-and durable reservation callbacks and cannot receive resident data or generate
-resident-facing text. No real-provider activation is delivered or authorized.
+The legacy `AzureTopicProvider` remains available for compatibility.
+The new startup-wired `AzureAdvisor` calls regional Standard `gpt-4.1-mini`
+2025-04-14, selecting approved own-case explanatory sentences, not arbitrary
+prose. All mandatory facts and caveats remain host-owned. A fresh authorization
+check after inference/fallback prevents stale replies after revocation/expiry.
+
+Enable only after the [SQL/infra prerequisites](../../infra/README.md#resident-azure-openai-469):
+`ZF_DEMO_ASSISTANT_ENABLED=true`,
+`ZF_DEMO_ASSISTANT_ENDPOINT=https://aoai-resident-469.openai.azure.com`,
+`ZF_SQL_AUTH=msi` and the existing `ZF_SQL_CLIENT_ID`. No other assistant
+settings or credentials are accepted. Default is off. Calls use only
+`ManagedIdentityCredential`, never a developer credential chain or keys.
+Accounting reserves one cent permanently, before credentials or HTTP, up to
+2000 cents lifetime; five attempts per resident per rolling hour. SQL failure,
+rate/cap denial and model failure return labelled deterministic advice, not
+unlabelled AI success. Token usage logs contain counts only. There are no
+automatic retries/refunds. The complete request is <=4096 bytes with <=256
+output tokens. Reviewed inference tariff expires 2026-11-01T00:00:00Z; the
+December funding horizon does not extend resident access.
+
+Focused units: `PYTHONPATH=tests:../core/tests:../agents/tests python -m unittest
+test_resident_aoai test_resident_assistant_api test_resident_assistant_provider`.
+`test_resident_aoai_sql.AccountingSqlTests` exercises actual procedures only
+on the opt-in task-owned loopback SQL Server and is included in local/hosted
+SQL selectors. Never point those tests at Azure SQL or an existing dataset.
 
 Focused local browser check, using only existing constructed fixtures and no SQL:
 
@@ -36,7 +57,8 @@ The focused check covers Account disclosure before sign-out and submit focus
 after success or failure, including duplicate suppression and delayed logout
 isolation. Busy advice keeps the native submit button focusable with
 `aria-disabled`. Optional reservation I/O failures return the generic assistant
-503 without acquiring a token or calling the model transport.
+503 without acquiring a token or calling the model transport in the legacy
+adapter; the new advisor returns explicit rules fallback instead.
 
 ## Finite offline sensor ingestion (#110)
 

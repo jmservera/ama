@@ -51,6 +51,31 @@ class Advice:
     help: str = HUMAN_HELP
 
 
+class Advisor(Protocol):
+    def answer(self, topic: Topic, case: CaseProgress, resident: str) -> Advice: ...
+
+
+def guidance(topic: Topic, case: CaseProgress) -> dict[str, str]:
+    """Optional explanations contain no inferred case facts or specialist advice."""
+    if topic is Topic.STATUS:
+        return {
+            "contact": "Ask your housing officer if you need more detail about this update.",
+            "closed": "Ask your housing officer what a closed record means for your question.",
+            "unknown": "Your housing officer can check information that is missing from this view.",
+        }
+    if topic is Topic.DOCUMENTS:
+        return {
+            "confirm": "Before sending anything, ask which document and which pages are needed.",
+            "privacy": "Ask your housing officer how to send a document securely.",
+        }
+    return {
+        "explain": (
+            "Ask your housing officer to explain any words on the form you do not understand."
+        ),
+        "check": "Read your answers again before you choose whether to send the form.",
+    }
+
+
 def advise(topic: Topic, case: CaseProgress, provider: Provider) -> Advice:
     """Only locally owned text renders; a provider cannot add facts or change the task."""
     if not isinstance(topic, Topic):
