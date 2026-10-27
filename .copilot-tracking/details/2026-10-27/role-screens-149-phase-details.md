@@ -172,5 +172,7 @@ with explicit old-head leases. Exact current sources passed core 1,388/API
 27 integrity/role/workbench tests; trace passed 26. The recorded #231 selector
 passed 27 tests including source-owned selective invalidation. All src/ bytes
 match prior source-tested heads, so no additional heavy gate is applicable.
-P04-T02 awaits independent review; P04-T03 awaits hosted checks and evidence
+P04-T02 is complete: independent Review Complete / Residual work at parent
+6a4eae03 and exact independent role heads, with no new blocking findings.
+P04-T03 awaits hosted checks and evidence
 publication. No readiness, integrated, human or live acceptance is inferred.

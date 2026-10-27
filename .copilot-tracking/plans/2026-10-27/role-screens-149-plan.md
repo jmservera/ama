@@ -7,8 +7,9 @@ ms.date: 2026-10-27
 ## Task Metadata
 
 Task ID: 149. Slug: role-screens-149. Mode: automatic.
-Readiness: P04 source-binding correction and local units pass; independent
-final-head review and hosted checks are pending. All ten PRs remain draft.
+Readiness: P04 source-binding correction and local units pass. Independent
+final-head Review is Complete / Residual work; hosted checks remain pending.
+All ten PRs remain draft.
 This current evidence snapshot is trace-child-only.
 Original critique and Review verdicts preserved.
 
@@ -273,7 +274,7 @@ independent children without integrating role modules.
 <!-- rpi:task id=P04-T01 -->
 #### [x] P04-T01: Regenerate the dependent digest and propagate independent children
 <!-- rpi:task id=P04-T02 -->
-#### [ ] P04-T02: Rerun local units and obtain independent exact-head review
+#### [x] P04-T02: Rerun local units and obtain independent exact-head review
 <!-- rpi:task id=P04-T03 -->
 #### [ ] P04-T03: Publish evidence and mark only the parent ready after all hosted checks pass
 

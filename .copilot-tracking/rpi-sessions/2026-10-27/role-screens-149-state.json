@@ -3,7 +3,7 @@
   "task_slug": "role-screens-149",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Review",
+  "active_phase": "Follow-up",
   "status": "active",
   "session_status": "running",
   "artifact_paths": {
@@ -15,6 +15,11 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-27/role-screens-149-final-head-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "Owner-requested independent final-head Review executed Complete; outcome Residual work, zero new blocking findings. Parent 6a4eae03 and exact independent role heads assessed; historical RV-001 corrected at #231's current head. Original Review/critique retain their adverse outcomes unchanged. Engineering assessment is not hosted/human approval.",
+      "status": "executed-residual-work",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/role-screens-149-final-head-review.md; P04-T02 complete; current-head hosted source/core passes, API/rubric pending at observation"
+    },
     {
       "decision": "P04-T01 complete: existing SOURCES/validate_manifest regenerated only the stale workbench digest on trace child, promoted alone to parent 6a4eae03, preserved hosted rubric commit 17b60576 and rebased eight independent role children. Full core/API and all child-focused units pass. All src bytes are unchanged, so zero additional heavy gates under the owner's material-source-only condition; historical receipt is not transferred.",
       "status": "implemented-and-locally-validated",
@@ -91,23 +96,18 @@
       "id": "HOSTED-001",
       "summary": "Stale binding corrected and local full units pass; current-head hosted checks remain pending.",
       "resolution": "Wait for every hosted check on the final parent head. Preserve original failed logs; do not reuse the old partial receipt or fabricate statuses."
-    },
-    {
-      "id": "REVIEW-001",
-      "summary": "The expressly authorized independent final-head assessment is pending; original adverse Review is unchanged.",
-      "resolution": "Assess current parent and exact independent child source heads. Record execution separately from outcome. Mark only #496 ready after an acceptable result and every hosted check passes; human/hosted approval is separate."
     }
   ],
   "next_action": {
-    "phase": "Review",
-    "action": "Execute the owner-requested independent exact-head assessment once in the new canonical record. Parent 6a4eae03 and exact independent child source heads are the assessed boundary. Preserve original adverse evidence. Hosted checks remain separate pending publication conditions; keep every PR draft."
+    "phase": "Follow-up",
+    "action": "Independent assessment Complete / Residual work is recorded. Publish the evidence-only trace update and PR bodies, then wait for every actual current-parent hosted check to pass before marking only #496 ready. Any parent head drift requires exact-head reconciliation; retain all human/integration residuals and no merge."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Reconcile the versioned scenario/inventory source binding and authorize a fresh exact-head gate",
-      "rationale": "Smallest concrete blocker to hosted correctness/readiness: the parent workbench manifest changed but its dependent public evidence hash did not. The one authorized gate is exhausted, so parent correction cannot reuse its receipt.",
-      "evidence": "HOSTED-001; src-core job 122286925178; scenario-manifest.json workbench source hash mismatch"
+      "task": "Complete current-head hosted publication checks before parent readiness",
+      "rationale": "Binding and independent engineering assessment are corrected; the only active readiness condition is actual hosted completion at the assessed parent head.",
+      "evidence": "P04-T03; source CI run 40535557178, rubric run 40535556827; canonical final-head Review Complete / Residual work"
     },
     {
       "rank": 2,
