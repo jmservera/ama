@@ -34,6 +34,7 @@
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 \urlstyle{same}
+\setlength{\emergencystretch}{2em}
 \renewcommand{\arraystretch}{1.15}
 \newif\ifresults
 \resultsfalse
@@ -120,9 +121,10 @@ limit dependencies; tests and continuous integration expose regressions;
 small releases shorten feedback; refactoring preserves room for later
 change~\cite{parnas1994aging,beck2002tdd,beck2004xp,fowler2007stamina}.
 My more than twenty-five years in the industry, and recent reading and
-listening to Beck, Martin and Fowler, made these concerns familiar. Beck's
+listening to Beck, Martin and Fowler, made these concerns
+familiar~\cite{martin2026productengineers,fowler2025thoughts}. Beck's
 distinction between producing code and learning through working software
-gave the immediate experience a sharper question~\cite{beck2026prodacity,orosz2025beck,martin2026outcodes,fowler2025thoughts}:
+gave the immediate experience a sharper question~\cite{beck2026prodacity,orosz2025beck}:
 what does a feature leave behind for the next one?
 
 My AMA capstone made that question urgent. After developing and intermittently
@@ -494,9 +496,11 @@ costs~\cite{delimarsky2025speckit,boeckeler2025sdd,agarwal2026sdd}.
 Naur distinguishes a programmer's theory of the system from its documentary
 record; Brooks locates essential difficulty in the conceptual construct,
 not its representation~\cite{naur1985theory,brooks1987silver}. Royce and Gall
-motivate early experience of working behaviour; XP, walking skeletons, tracer
-bullets and Agile practice make short feedback loops
-concrete~\cite{royce1970,gall1975,beck2004xp,beck2002tdd,cockburn2004crystal,hunt1999pragmatic,agile2001manifesto}.
+motivate early experience of working behaviour~\cite{royce1970,gall1975}.
+XP's short releases and tests~\cite{beck2004xp,beck2002tdd}, Crystal Clear's
+incremental team practice~\cite{cockburn2004crystal}, tracer
+bullets~\cite{hunt1999pragmatic} and Agile's preference for working
+software~\cite{agile2001manifesto} make that feedback concrete.
 Small reversible structural changes supply a consolidation
 practice~\cite{beck2023tidy}.
 
@@ -1079,7 +1083,7 @@ exception for a two-line fix; 18 merges a day delegated & Bainbridge;
 ironies of generative AI; Murphy; Goldratt & Gate time per change; review
 minutes per merge \\
 Feedback starvation & Working MVP frozen; replacement unusable after ten
-days; request for a demo turned into more issues & XP; walking skeleton;
+days; request for a demo turned into more issues & XP; incremental delivery;
 tracer bullets; Agile Manifesto; DORA & Time to first human use; age of last
 usable increment \\
 \bottomrule
@@ -1191,10 +1195,10 @@ capabilities working end to end'', citing a README and a check script, at a
 time when I could not sign in to the replacement. The score's release and
 capability scope have not yet been linked to that deployment and journey
 (Section~\ref{sec:audittrail}); this is chronological coexistence, not a
-verified same-release contradiction. Gamma's remark about tests
-applies to judges too: put a model in the evaluation and the evaluation
-becomes stochastic~\cite{gamma2025syntax}, and a judge that reads the
-repository is scoring the text that agents are best at producing.
+verified same-release contradiction. The judge read repository text rather
+than executing the intended journey. Neither its repeatability nor its
+agreement with observed product behaviour was measured; its score cannot
+substitute for that behavioural check.
 
 \emph{Honesty.} I had instructed the agents never to fabricate approvals or
 overstate evidence. They complied: hedged statements of unmet acceptance more
@@ -1294,15 +1298,17 @@ study~\cite{lee2025critical}, not established as its cause. Murphy's
 diagnosis is a plausible interpretation: throughput increased while the path
 to a usable outcome remained blocked~\cite{murphy2026speed,goldratt1984goal}.
 The bottleneck itself was not instrumented. Martin's argument for executable
-discipline~\cite{martin2026outcodes} suggests gates that check product
-behaviour rather than infer it from paperwork. The early-warning signals are gate time per change,
+feedback from tests and code-analysis tools~\cite{martin2026productengineers}
+motivates a proposed gate that checks product behaviour rather than inferring
+it from paperwork; the interview does not establish that such a gate would
+have prevented this failure. The early-warning signals are gate time per change,
 human review minutes per merged pull request, work in progress, and cost per
 merged pull request compared with cost per accepted outcome.
 
 \subsection{Feedback starvation}\label{sec:m5}
 
 \emph{Candidate mechanism: insufficient independent, outcome-level feedback
-despite abundant artefact-level validation.} This differs from merely having
+even though artefact-level validation is abundant.} This differs from merely having
 few tests, a long feedback delay or missing context: many checks can pass
 while none disconfirms the claim that the intended user journey works.
 Independence here means evidence obtained by exercising the outcome rather
@@ -1320,10 +1326,10 @@ finally asked for something that runs, the request was absorbed by the same
 machinery: a label, new issues, thirteen acceptance criteria and the full set
 of gates.
 
-Every older practice I cited in Section~\ref{sec:theory} exists to prevent
-exactly this: short releases and test-first development~\cite{beck2004xp,beck2002tdd},
-the walking skeleton and tracer
-bullets~\cite{cockburn2004crystal,hunt1999pragmatic}, and working software
+Several older practices in Section~\ref{sec:theory} make feedback and working
+behaviour explicit: short releases and test-first development~\cite{beck2004xp,beck2002tdd},
+incremental delivery in Crystal Clear~\cite{cockburn2004crystal},
+tracer bullets~\cite{hunt1999pragmatic}, and working software
 over comprehensive documentation~\cite{agile2001manifesto}. Beck's warning
 that fully agentic work without feedback goes off the
 rails~\cite{beck2026prodacity}, DORA's emphasis on small batches and user
@@ -1372,8 +1378,10 @@ changes and deployment conditions also differ between periods. These are
 direct rivals to an autonomy-only account. Tables~\ref{tab:rivals}
 and~\ref{tab:rivalsadditional} in Appendix~\ref{app:rivals} retain the full
 register, separating recorded circumstances from plausible but untested
-alternatives. External-environment research motivates considering configuration
-effects, not diagnosing this case from another setting~\cite{bird2014extrinsic}.
+alternatives. Bird et~al.'s study of co-installed applications on Windows
+machines supplies a methodological analogy for checking environmental
+influences on reliability~\cite{bird2014extrinsic}. It neither tests
+AI-agent configuration nor diagnoses this case's sign-in failure.
 
 Construct validity is limited by whitespace counts, lexical indicators and
 selectively reviewed records. Appropriate caution can raise hedge density;
@@ -1439,8 +1447,12 @@ The hypothesis draws on Beck's alternation of features and
 futures~\cite{beck2026prodacity,beck2025devslow} and \emph{Tidy
 First?}~\cite{beck2023tidy}. It is not free, and may not work. Agent
 refactorings can be incorrect or superficial~\cite{gautam2025refactorbench};
-even human refactoring benefits can be difficult to
-attribute~\cite{kim2014refactoring,bavota2015quality}. Test-commit-or-revert
+human studies also caution against equating a refactoring label with a
+quality gain. Kim et~al. report developers' refactoring challenges and
+benefits~\cite{kim2014refactoring}; Bavota et~al. find that observed
+refactorings do not consistently target or remove code
+smells~\cite{bavota2015quality}. These findings motivate checking outcomes
+rather than assuming improvement. Test-commit-or-revert
 protects only behaviour represented by its tests, not every intended
 contract~\cite{ma2026building}. Section~\ref{sec:experiment} specifies how
 the package will be evaluated.
@@ -1747,11 +1759,14 @@ regression eligibility, measurement points and reporting denominators for
 prospective reconciliation with the private kit.
 % TODO(author): obtain the two prospective reviewers' agreement, freeze the blinded questions, scoring and timing rules, and report actual participation without implying acceptance or endorsement.
 
-\emph{Intervention measures in prior work.} HG-DAgger distinguishes human
-takeover and return of control; ThriftyDAgger separates intervention counts,
-human actions and supervisor switching costs~\cite{kelly2019hgdagger,hoque2022thriftydagger}.
-They motivate separating incidence and effort, not coding-harness
-effectiveness. Here HIR is cycle-level incidence, not events per hour or a
+\emph{Intervention measures in prior work.} These are cross-domain
+measurement precedents from robotic imitation learning, not studies of
+coding agents. HG-DAgger distinguishes human takeover and return of
+control~\cite{kelly2019hgdagger}; ThriftyDAgger separates intervention
+counts, human actions and supervisor switching
+costs~\cite{hoque2022thriftydagger}. They motivate separating incidence and
+effort, not a software-decay claim or coding-harness effectiveness.
+Here HIR is cycle-level incidence, not events per hour or a
 human-control time share. Failed cycles remain included, and event counts and
 active human minutes are separate measures; fewer events need not mean less
 human work or monitoring burden.
@@ -2182,7 +2197,7 @@ than reinforcing the original mistake. In this case, producing more work did
 not substitute for feedback. Designing, protecting and interpreting that
 feedback remained my responsibility, but that observation is a starting
 point for testing delegation, not a boundary I assume agents cannot cross.
-The old practices, testing, small steps, tidying and walking skeletons, offer
+The old practices, testing, small steps, tidying and end-to-end increments, offer
 ways to make such delegation observable and falsifiable. Beck's 2023
 recalibration was about which ten per cent of
 his skills gained leverage~\cite{beck2023ninety}; in this case, the skills
@@ -2240,7 +2255,9 @@ GitHub Copilot in VS Code assisted log analysis, mechanism naming and
 organisation, manuscript drafting and revision, bibliographic checks, public
 repository inspection, figure preparation and local validation. Scientific
 Agent Skills supplied developmental writing, evaluation and hypothesis
-guidance~\cite{kassis2026skills}. AI assistance supplied neither an independent
+guidance~\cite{kassis2026skills}. This citation records assistance tooling,
+not evidence for the case findings or consolidation hypothesis.
+AI assistance supplied neither an independent
 empirical coder nor replicated application or study results. The package
 README retains the revision-by-revision account and source-access limits.
 
@@ -2489,12 +2506,6 @@ DORA.
 \newblock Google Cloud, 2025.
 \newblock \url{https://dora.dev/dora-report-2025}.
 
-\bibitem{dora2025blog}
-{Google Cloud}.
-\newblock Announcing the 2025 {DORA} report.
-\newblock Google Cloud Blog, 23 September 2025.
-\newblock \url{https://cloud.google.com/blog/products/ai-machine-learning/announcing-the-2025-dora-report}.
-
 \bibitem{eick2001decay}
 S.~G. Eick, T.~L. Graves, A.~F. Karr, J.~S. Marron, and A.~Mockus.
 \newblock Does code decay? {A}ssessing the evidence from change management data.
@@ -2564,12 +2575,6 @@ C.~A.~E. Goodhart.
 \newblock Problems of monetary management: The {U.K.} experience.
 \newblock In \emph{Papers in Monetary Economics}. Reserve Bank of Australia,
 Sydney, 1975.
-
-\bibitem{harvey2024dora}
-N.~Harvey and D.~DeBellis.
-\newblock Announcing the 2024 {DORA} report.
-\newblock Google Cloud Blog, 22 October 2024.
-\newblock \url{https://cloud.google.com/blog/products/devops-sre/announcing-the-2024-dora-report}.
 
 \bibitem{he2025cursor}
 H.~He, C.~Miller, S.~Agarwal, C.~K\"astner, and B.~Vasilescu.
@@ -2731,17 +2736,6 @@ Y.~Ma, B.~Kereopa-Yorke, and B.~Schultz.
 you requested.
 \newblock arXiv preprint arXiv:2606.28430v1, 26 June 2026.
 \newblock \url{https://arxiv.org/abs/2606.28430v1}.
-
-\bibitem{martin2024weprogrammers}
-R.~C. Martin.
-\newblock \emph{We, Programmers: A Chronicle of Coders from Ada to AI}.
-\newblock Addison-Wesley Professional, 2024.
-
-\bibitem{martin2026outcodes}
-R.~C. Martin.
-\newblock {AI} out-codes you; deal with it.
-\newblock Video post on {X} (@unclebobmartin), 20 April 2026.
-\newblock \url{https://x.com/unclebobmartin/status/2046206145597972849}.
 
 \bibitem{martin2026productengineers}
 R.~C. Martin.
@@ -2960,7 +2954,7 @@ L.~Tankelevitch, V.~Kewenig, A.~Simkute, A.~E. Scott, A.~Sarkar, A.~Sellen,
 and S.~Rintel.
 \newblock The metacognitive demands and opportunities of generative {AI}.
 \newblock In \emph{Proceedings of the 2024 CHI Conference on Human Factors in
-Computing Systems}, pages 1--24. ACM, 2024.
+Computing Systems}, pp.~1--24. ACM, 2024.
 \newblock doi:10.1145/3613904.3642902.
 
 \bibitem{thoughtworks2025complacency}
@@ -3053,13 +3047,16 @@ the benefit of the proposed harness.
 
 Observational studies of AI-tool adoption and repository changes report
 increased complexity, warnings or duplication~\cite{he2025cursor,gitclear2025}.
-DORA's 2024 and 2025 reports discuss adoption alongside delivery stability,
-documentation and existing organisational strengths and
-weaknesses~\cite{dora2024,harvey2024dora,dora2025,dora2025blog}. These sources
-have different sampling and commercial contexts, not a common controlled
-estimate of agent-caused decay. Heander et~al. associate CodeHealth with
-review-token cost, while their batch fixes did not change median
-CodeHealth~\cite{heander2026codehealth}.
+DORA's primary 2024 and 2025 reports provide industry background on adoption,
+delivery stability, documentation and organisational conditions, not
+mechanism-level evidence for this case~\cite{dora2024,dora2025}. These
+sources have different sampling and commercial contexts, not a common
+controlled estimate of agent-caused decay. Heander et~al. associate baseline
+CodeHealth with token cost in an agentic review-and-fix pipeline; batch
+fixing left median CodeHealth unchanged~\cite{heander2026codehealth}.
+That observational review-cost result motivates measuring cost alongside
+quality. It does not test scheduled consolidation between features or
+establish that agents cause code decay.
 
 The METR authors' later account qualifies generalisation from their
 early-2025 productivity experiment to newer tools~\cite{metr2026uplift}.
@@ -3071,10 +3068,15 @@ volume as productivity.
 
 \subsection{Craft, constraints and reported practice}
 
-Karpathy's throwaway-project framing, Willison's accountable vibe engineering,
+Karpathy's ``vibe coding'' post illustrates accepting generated code without
+close review for throwaway projects~\cite{karpathy2025vibe}. Willison's
+``vibe engineering'' instead retains professional accountability and
+emphasises testing, planning, documentation, version control and
+review~\cite{willison2025vibeeng}. These are contrasting practitioner
+framings, not comparative evidence about decay or the harness.
 Osmani's unfinished final stretch and Fowler's non-deterministic engineering
-analogy describe different practitioner positions, not experimental
-comparisons~\cite{karpathy2025vibe,willison2025vibeeng,osmani2024seventy,fowler2025thoughts}.
+analogy are further practitioner positions, not experimental
+comparisons~\cite{osmani2024seventy,fowler2025thoughts}.
 Thoughtworks warns against complacency with generated
 code~\cite{thoughtworks2025complacency}; Sarkar proposes AI that challenges
 rather than only obeys~\cite{sarkar2024challenge}.
@@ -3088,12 +3090,15 @@ his mathematicians essay distinguishes visible output from understanding and
 abstraction~\cite{beck2026prodacity,beck2025devslow,beck2026mathematicians}.
 These arguments motivate the hypothesis, not a measured treatment effect.
 
-Martin's 2024 treatment of language models as tools and his later call for
-executable standards emphasise coverage, mutation testing, complexity limits
-and knowing the customer~\cite{martin2024weprogrammers,martin2026outcodes,martin2026productengineers}.
-Gamma's discussion of stochastic simulation testing concerns evaluation
-containing a model, not a reason to treat all deterministic tests as
-unreliable~\cite{gamma2025syntax}. Murphy applies the Theory of Constraints
+In the Product Engineers interview, Martin describes executable feedback
+through static analysis, coverage and mutation testing, and stresses
+understanding the customer~\cite{martin2026productengineers}. This is
+practitioner guidance, not evidence that these checks would have prevented
+the case's sign-in failure. The Syntax episode's show notes list segments
+on simulation tests and testing LLMs~\cite{gamma2025syntax}. This is
+practitioner context on LLM testing, not evidence that deterministic tests
+are unreliable or that this case's scorer failed.
+Murphy applies the Theory of Constraints
 to review queues and work in progress, while also describing the loss of
 craft~\cite{goldratt1984goal,murphy2026speed,murphy2026fivestages}.
 
@@ -3191,6 +3196,11 @@ One-to-two-week horizons, three parallel sessions and five acceptance criteria
 are starting heuristics, not estimated optima or new rules for this repository.
 They do not override required engineering or human approval gates.
 
+Fakhoury et~al.'s test-driven interactive code-generation study motivates
+making intended behaviour checkable through tests~\cite{fakhoury2024ticoder}.
+It does not evaluate these seven practices as a package, scheduled
+consolidation or retained behaviour across successive repository changes.
+
 \begin{table}[!htbp]
 \centering\footnotesize
 \caption{Proposed practices, candidate mechanisms and suggested observations.}\label{tab:practices}
@@ -3223,7 +3233,7 @@ is only a prompt to inspect records. & Score--demo disagreement; cost per
 accepted outcome \\
 P7 Preserve theory building & Pair on the first slice, own acceptance
 examples, read the domain code and invite challenge rather than compliance
-alone~\cite{fakhoury2024ticoder,sarkar2024challenge}. & What the owner can
+alone~\cite{sarkar2024challenge}. & What the owner can
 predict and explain without the agent \\
 \bottomrule
 \end{tabularx}

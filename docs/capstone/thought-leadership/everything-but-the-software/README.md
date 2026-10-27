@@ -8,18 +8,78 @@ Working title: *Everything but the Software: Feature-Driven Decay in an Agentic 
 
 ## Current Status
 
-The industry-led revision of 27 October is the latest source record. The
-paper now starts with maintenance before and with coding agents, then brings
+The citation-relevance follow-up of 27 October is the latest source record.
+It preserves the industry-led argument and experimental design. The paper
+starts with maintenance before and with coding agents, then brings
 in AMA as the triggering experience. It distinguishes conversational errors,
 repository-carried faults and instruction maintenance, with two figures
 replotted from published data. The title and subtitle are retained.
 
-The current external validation PDF has 49 pages. Structural checks pass
-with 114 matching references; the complete experiment-protocol section is
-unchanged from this revision's starting commit after line-ending
-normalisation. No experiment was run or private study material amended.
+The current source passes structural checks with 110 matching references,
+and its fresh external validation PDF has 49 pages. This follow-up removes
+four entries and clarifies the roles of twelve retained references, as
+recorded below. No experiment was run or private study material amended.
 The existing package PDF and two case figures are unchanged. The arXiv
 bundle has not been refreshed.
+
+## Citation Relevance Follow-up 27 October
+
+The bibliography audit's sixteen relevance warnings are addressed by
+removing redundant or unsupported citations and making retained sources'
+roles explicit. A methodological precedent, historical framing or tooling
+disclosure need not study agentic decay to serve its stated purpose.
+These changes do not raise the original audit scores, establish new source
+verification or constitute an exhaustive re-audit or independent peer review.
+
+| Audit key | Applied disposition | Evidence boundary |
+| --- | --- | --- |
+| `bavota2015quality` | Replace the broad benefit-attribution claim with the study's finding that observed refactorings do not consistently target or remove code smells; separate the Kim citation | A refactoring label does not guarantee improvement; no causal benefit estimate is inferred |
+| `bird2014extrinsic` | Identify the Windows/co-installed-application setting and retain it only as a methodological analogy for environmental influences | It neither tests AI-agent configuration nor diagnoses the case's sign-in failure |
+| `cockburn2004crystal` | Retain Crystal Clear for incremental team practice, separate it from Hunt and Thomas's tracer bullets, and remove the unverified walking-skeleton attribution | No uninspected page or pinpoint passage is asserted |
+| `dora2024` | Retain the primary report alongside the 2025 report as industry background | No mechanism-level or causal finding about this case is attributed to DORA |
+| `dora2025blog` | Remove the redundant announcement from the text and both bibliography forms; retain the primary 2025 report | The report, not its announcement, carries the background citation |
+| `fakhoury2024ticoder` | Move the citation from the bundled P7 recommendation to a separate test-driven interactive-generation rationale | It motivates making intended behaviour checkable, not the seven-practice package, consolidation or cross-feature retention |
+| `gamma2025syntax` | Remove the unverified stochastic-evaluation remark from the mechanism argument; retain the episode's documented testing topics in practitioner context | Show notes are not a transcript or evidence that deterministic tests are unreliable or the case's scorer failed |
+| `harvey2024dora` | Remove the redundant announcement from the text and both bibliography forms; retain the primary 2024 report | No separate evidentiary weight is assigned to the announcement |
+| `heander2026codehealth` | State the observational review-cost/batch-fix result and its measurement role | It does not test scheduled consolidation or establish agent-caused decay |
+| `hoque2022thriftydagger` | Identify robotic imitation learning as a cross-domain measurement precedent and attach the citation to incidence, action and switching-cost distinctions | Coding-harness effectiveness and software-decay findings are not borrowed from it |
+| `karpathy2025vibe` | Give the throwaway-project framing its own sentence and citation | An illustrative practitioner position, not empirical support for decay or the harness |
+| `kassis2026skills` | Retain the actual assistance-tool citation in the generative-AI disclosure and state its provenance-only role | It does not substantiate case findings or the consolidation hypothesis |
+| `kelly2019hgdagger` | Identify robotic imitation learning as a cross-domain measurement precedent and attach the citation to takeover/return of control | The proposed HIR definition and study design remain the paper's own |
+| `martin2024weprogrammers` | Remove the book from both bibliography forms and rely on the already-cited Product Engineers interview for executable feedback and customer understanding | No unverified chapter or page is supplied |
+| `martin2026outcodes` | Remove the inaccessible video and its attributions from the text and both bibliography forms; use the existing Product Engineers interview for the supported practitioner argument | The video's spoken content is not retrospectively declared verified |
+| `willison2025vibeeng` | Describe the post's concrete testing, planning, documentation, version-control and review practices with a separate citation | Practitioner accountability, not an experimental comparison or harness-effectiveness result |
+
+The original audit remains a historical assessment. Retaining a source for
+an explicitly bounded role is a disposition of its recommendation, not a
+claim that its intrinsic topic or original numerical relevance score changed.
+Other audit findings, including unverified source-specific numerical
+passages and unrelated access or attribution notes, are not closed by this
+relevance-only follow-up. Publication and human approval gates remain open.
+
+### Validation
+
+* The existing paper checker passes with 110 cited, embedded and reusable
+   bibliography keys, results disabled, 1,604 abstract source characters
+   and approximately 17,380 main-body words under its documented counting
+   method. Its historical Git-baseline comparison remains unavailable.
+* A separate pre-edit comparison confirms that the abstract is unchanged
+   and the experiment protocol is identical after line-ending normalisation,
+   except for its source-context paragraph about robotic intervention
+   measures. Hypotheses, outcomes, HIR definition, budgets, thresholds and
+   study status are unchanged.
+* All sixteen original warning keys have a disposition above. The four
+   removed keys are absent from manuscript and BibTeX; all twelve retained
+   sources remain cited with explicit roles. The original audit is not
+   overwritten or re-scored.
+* Tectonic 0.17.0 produces a fresh 49-page external PDF with no unresolved
+   citations, references or rerun requests. Four small overfull boxes
+   remain, maximum 5.295 points, plus one underfull bibliography line and
+   the environment's fontconfig configuration warning. This is not a
+   pdfLaTeX build or a fresh page-by-page visual review.
+* The package PDF, figures, arXiv bundle and private study materials remain
+   unchanged. No complete RPI publication gate, commit, push, submission
+   or human approval is claimed.
 
 ## Industry-Led Revision 27 October
 
@@ -659,7 +719,7 @@ verification of research statistics.
 | `main.tex` | Paper source. The bibliography is embedded, so it compiles on arXiv without BibTeX. |
 | `fig-log-growth.png` | Figure 1: words and hedging phrases appended to the project log per day (400 dpi). |
 | `fig-causal-loop.png` | Figure 2: the reinforcing loop and the feedback-first intervention (400 dpi). |
-| `references.bib` | The same 104 references as BibTeX, for reuse or a later switch to `\bibliography{}`; both bibliographies are ordered by key. |
+| `references.bib` | The same 110 references as BibTeX, for reuse or a later switch to `\bibliography{}`; both bibliographies are ordered by key. |
 | `anc/log_metrics.py` | Recomputes the log measures in Appendix A from `docs/reference/log.md` at commit `29c6b51`; `--json` writes the per-day data. |
 | `anc/log_daily.json` | Per-day entries, words and hedging phrases (output of `log_metrics.py --json`). |
 | `anc/make_figures.py` | Redraws both figures from `anc/log_daily.json`. |
