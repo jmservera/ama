@@ -2,7 +2,7 @@
 title: In-Use Monitoring Analytics Research Plan (Dew Point and Trend Risks)
 description: Research phase plan for analysing humidity and temperature sensor data received through Azure IoT Hub, including dew point and surface condensation risk, with leads, unknowns, evidence rules and exit criteria
 author: AMA programme
-ms.date: 2026-10-18
+ms.date: 2026-10-27
 ms.topic: reference
 ---
 
@@ -265,6 +265,44 @@ Live Hub identities/transport, cost/network/provisioning/credential authority,
 actual Azure SQL/registered real AI acceptance, OD-43, privacy/legal and human
 gates remain separate. No issue criteria, priorities, review tasks, resident
 communications, data approvals or operational rules change.
+
+## Historical backfill stack boundary (2026-10-27, Refs #177)
+
+The five draft child PRs target `feat/sensor-backfill-177`, not main.
+They remain unmerged; the parent is coordination/evidence, not an integrated
+historical generator. Existing synthetic stock and its opaque home IDs are
+preserved. No private stock extract, household records or device data were
+read. No original issue acceptance checkbox or deferral is asserted.
+
+| Child | Draft PR and bounded delivery | Still unproved |
+| --- | --- | --- |
+| #178 | [#481](https://github.com/jmservera/ama/pull/481): existing source/terms decision and owner blocker | Exact paired source reuse and approved two-year records; [#425](https://github.com/jmservera/ama/pull/425) remains separate and open |
+| #179 | [#482](https://github.com/jmservera/ama/pull/482): typed/versioned legacy indoor equation, explicit exercise domain and provenance | Historical record-derived physical bounds and integrated new models |
+| #180 | [#483](https://github.com/jmservera/ama/pull/483): explicit per-home dated exercise fabric-loss effects | Actual source completion-date mapping and writer integration |
+| #181 | [#484](https://github.com/jmservera/ama/pull/484): seeded neutral household condition fixtures and monitoring exclusions | Full indoor/writer integration and any real monitoring authority |
+| #183 | [#485](https://github.com/jmservera/ama/pull/485): exact consumer incompatibility and conditional size estimate | Owner-selected identity compatibility path and reuse of actual #110 admission |
+
+A public synthetic stock observation was passed to the actual consumer's
+`_shape` verifier on 2026-10-27. It returned `IDENTITY` while the public valid
+control passed. Sensor/reading/home lengths were 73/84/23 against 20/40/12,
+also subject to the uppercase alphabet. This reproduces the existing
+compatibility gap above; no IDs were shortened, source controls invented or
+validation bypassed. The legacy loader is not the #110 consumer.
+
+Conditional capacity arithmetic at three paired observations/day for 730
+days and 60,000 fictional homes is 131,400,000 nominal records. Existing
+`sensor_backfill.estimate(homes=60000, days=730, cadence=480)` sampled 20
+legacy scale-fixture homes: estimated 131,025,000 rows after dropout,
+121.0 bytes/CSV row and 14.77 GiB. This was an estimate only, before any
+generation; it is not the private stock's measured storage, a size bound,
+SQL/index/transport cost or evidence of consumer compatibility.
+
+The source/reuse and identity decisions block final historical acceptance.
+The owner's synthetic fallback permits exercise components, not invented
+outdoor records, completion dates, calibrated physics or resident judgements.
+Focused child tests and the parent's documentation-scoped gate have different
+boundaries; neither proves an unmerged aggregate. Owner integration and a
+subsequent aggregate candidate assessment remain necessary.
 
 ## Sensor privacy engineering boundary (2026-10-17, Refs #112)
 

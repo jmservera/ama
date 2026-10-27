@@ -74,17 +74,17 @@ wall clock. Each child remains reviewable until owner integration.
 <!-- P01 -->
 ### P01: Preserve source decisions and delivery boundaries
 
-* [ ] P01-T01: Commit parent foundation before branching any child.
-* [ ] P01-T02: Create evidence-only #178 child and one blocker comment.
+* [x] P01-T01: Commit parent foundation before branching any child.
+* [x] P01-T02: Create evidence-only #178 child and one blocker comment.
 
 <!-- P02 -->
 ### P02: Implement isolated exercise components
 
-* [ ] P02-T01: #179 extract typed projection and exercise contract/tests.
-* [ ] P02-T02: #180 add dated per-home measure factor/tests.
-* [ ] P02-T03: #181 add neutral household profiles and consent-aware series/tests.
-* [ ] P02-T04: #183 record ingestion incompatibility and one blocker comment.
-* [ ] P02-T05: Focused checks, commits, pushes and child draft PRs to parent.
+* [x] P02-T01: #179 extract typed projection and exercise contract/tests.
+* [x] P02-T02: #180 add dated per-home measure factor/tests.
+* [x] P02-T03: #181 add neutral household profiles and consent-aware series/tests.
+* [x] P02-T04: #183 record ingestion incompatibility and one blocker comment.
+* [x] P02-T05: Focused checks, commits, pushes and child draft PRs to parent.
 
 <!-- P03 -->
 ### P03: Review and parent publication

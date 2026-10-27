@@ -20,6 +20,11 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+For #177, the [historical backfill stack boundary](./research/iot-sensor-analytics-research-plan.md#historical-backfill-stack-boundary-2026-10-27-refs-177)
+links five unmerged child PRs, bounded exercise components, source/identity
+owner blockers and a conditional volume estimate. It is not integrated
+historical delivery or whole-issue acceptance.
+
 The [resident advisory assistant design](../architecture/resident-assistant-prototype.md)
 records #469's bounded own-case Azure OpenAI integration, deterministic
 fallback, managed identity and permanent SQL-backed USD20 reservation ceiling.

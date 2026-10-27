@@ -7479,3 +7479,17 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-10-25] update | Resident R4 gating split and promotion wording (#441)
 
 * Owner-authorised bounded follow-up: the draft backlog and unregistered proposal now separate the R4 task-release gate (RB-17/18) from the OD-53 routine-dispatch gate (RB-19/20), and the proposal's staff-promotion wording matches the PRD guardrail. Documentation only; PRD unsigned, proposal unregistered, owner acceptance still pending. Earlier entries are unchanged.
+
+## [2026-10-27] query | Historical backfill stack and explicit blockers (Refs #177)
+
+* Updated the existing IoT research plan and index with five unmerged child
+  PRs, bounded exercise projection/retrofit/household components, pending
+  source reuse and consumer identity decisions, and conditional three-daily
+  capacity accounting. No private register or household records were read.
+* Reproduced actual consumer `IDENTITY` refusal for a public synthetic
+  stock observation while its valid control passed. This confirms the
+  previously documented compatibility gap, not a new admission contract.
+* Files: `docs/reference/research/iot-sensor-analytics-research-plan.md`,
+  `docs/reference/README.md` and this append-only log. Parent is draft
+  coordination only; no child integration, acceptance tick, owner deferral,
+  merge, climate reuse approval, Azure action or real monitoring authority.
