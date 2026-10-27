@@ -16,7 +16,7 @@ Research: .copilot-tracking/research/2026-10-27/resident-content-153-154-researc
 | --- | --- | --- |
 | P01 | Audit/design documentation | Complete, P01-T01/T02 evidenced in changes |
 | P02 | Literal copy and local regression | Complete, P02-T01/T02 evidenced in changes |
-| P03 | One independent Review and PR | Ready for Review; publication conditional |
+| P03 | One independent Review and PR | Complete as draft PR #501; owner/integration acceptance pending |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Documentation
@@ -107,5 +107,15 @@ unchanged source boundary. Adverse/Blocked Review or missing/failed required
 check stops publication; preserve evidence and route later work, without
 silently correcting/re-reviewing this task. Planned human acceptance remains
 Not run and is not inferred from engineering acceptance.
+
+Execution: Review Complete / Conformant for the original unchanged source
+boundary; seven residuals routed, no introduced defects. Committed as
+9cef40e5d8b788785fd6cf888968ac748a1e197e, pushed without force and opened one
+draft PR to main: https://github.com/jmservera/ama/pull/501.
+The target advanced after Review to 09099ecd1a66ee9d37ad993707d1f2eda07cdfd4
+via #498, including shared index/log edits. No merge/rebase/source rewrite;
+draft status discloses the need for integration and owner acceptance.
+The original Review is not re-labelled as exact-head/latest-main acceptance.
+Final tracking-only closeout is separate from the frozen source boundary.
 Publication evidence must distinguish actual engineering checks from named
 human wording review, usability/AT, external/service approval and hosted gates.

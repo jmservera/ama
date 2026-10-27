@@ -126,16 +126,21 @@ Run API targeted content/design/accessibility units, existing relevant browser
 checks and JS syntax. Reconcile plan/details/changes and preserve failures.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Independent Review and publication
+### [x] P03: Independent Review and publication
 
 Dependencies: implementation and validation complete.
 
 <!-- rpi:task id=P03-T01 -->
-#### [ ] P03-T01: Run one independent Review and publish honest evidence
+#### [x] P03-T01: Run one independent Review and publish honest evidence
 
 Refresh guidelines, independently review exact candidate once; retain outcome
 and route findings, not another implementation/review loop. Commit/push one PR
 using Refs for both issues, no full gate. Human approval remains incomplete.
+
+Completed as draft PR [#501](https://github.com/jmservera/ama/pull/501).
+Original bounded Review is Complete / Conformant; no source changes followed.
+Draft preserves pending latest-main integration/owner acceptance, not merge
+readiness or whole-issue closure. See changes closeout for upstream movement.
 
 ## Test Ownership and Locked Boundary
 

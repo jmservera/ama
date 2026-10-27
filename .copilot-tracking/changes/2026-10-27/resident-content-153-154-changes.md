@@ -125,3 +125,29 @@ Review/state. No residual was silently repaired inside the completed task.
 RPI task completed through Review; automatic state moves to Follow-up.
 P03-T01 publication remains active until commit/push/PR evidence is available.
 Named human acceptance and hosted/owner approval remain incomplete.
+
+## Publication closeout
+
+Implementation and original RPI evidence committed as
+9cef40e5d8b788785fd6cf888968ac748a1e197e with Conventional Commit and required
+Copilot trailer, using the gh-resolved repository-local noreply identity for
+author and committer. Branch docs/resident-ux-153 pushed without force.
+One draft PR targets main: https://github.com/jmservera/ama/pull/501.
+Verified open/draft status, base main and the expected head branch/commit.
+The PR uses Refs #153 and Refs #154, includes evidence, exclusions and human
+boundaries, and does not close either issue.
+
+Pre-push fetch found main advanced from the assessed base to
+09099ecd1a66ee9d37ad993707d1f2eda07cdfd4 via #498. That infrastructure
+change also updates the shared index/log. The branch and reviewed source
+remain unchanged; the original nine-file binary diff hash still matches.
+No merge, rebase or history rewrite was attempted. Draft status and PR body
+explicitly distinguish bounded Review from latest-main integration acceptance.
+GitHub initially reported mergeable, but this is not integration testing,
+hosted approval or permission to merge.
+
+P03-T01 is complete as draft publication. This tracking-only closeout records
+the actual PR and does not change source or expand the original Review.
+No full/scoped heavy gate or receipt is asserted. Human wording/usability/AT,
+OD-41/42 and final owner/hosted acceptance remain open. No child follow-up
+was started or owner decision invented.
