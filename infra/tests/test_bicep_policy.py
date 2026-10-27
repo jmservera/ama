@@ -45,7 +45,10 @@ SERVICES = {
     ),
     "iothub": (
         "Microsoft.Devices/IotHubs",
-        {"iotHub": ["zoneIds.iotHub", "zoneIds.iotHubEndpoint"]},
+        {
+            "iotHub": ["zoneIds.iotHub", "zoneIds.iotHubEndpoint"],
+            "namespace": ["zoneIds.iotHubEndpoint"],
+        },
     ),
     "monitoring": (
         "microsoft.insights/privateLinkScopes",
@@ -109,12 +112,15 @@ def resources(template: dict):
             yield item
 
 
-def evaluate(expression, parameters: dict, variables: dict):
+def evaluate(expression, parameters: dict, variables: dict, context: dict | None = None):
     """Evaluate the small ARM expression subset used by the guard conditions."""
     if isinstance(expression, dict):
-        return {key: evaluate(value, parameters, variables) for key, value in expression.items()}
+        return {
+            key: evaluate(value, parameters, variables, context)
+            for key, value in expression.items()
+        }
     if isinstance(expression, list):
-        return [evaluate(value, parameters, variables) for value in expression]
+        return [evaluate(value, parameters, variables, context) for value in expression]
     if not (
         isinstance(expression, str) and expression.startswith("[") and expression.endswith("]")
     ):
@@ -140,7 +146,8 @@ def evaluate(expression, parameters: dict, variables: dict):
         "skip": lambda value, count: value[count:],
         "reduce": lambda values, initial, function: reduce(function, values, initial),
         "parameters": lambda n: parameters[n],
-        "variables": lambda n: evaluate(variables[n], parameters, variables),
+        "variables": lambda n: evaluate(variables[n], parameters, variables, context),
+        "resourceGroup": lambda: SimpleNamespace(name="ama", location="uksouth"),
         "createObject": lambda *a: dict(zip(a[::2], a[1::2], strict=True)),
         "union": lambda *objects: {key: value for obj in objects for key, value in obj.items()},
         "true": lambda: True,
@@ -149,9 +156,43 @@ def evaluate(expression, parameters: dict, variables: dict):
         "replace": lambda value, old, new: value.replace(old, new),
         "createArray": lambda *values: list(values),
         "concat": lambda *values: reduce(lambda left, right: left + right, values),
+        "mul": lambda left, right: left * right,
         "resourceId": lambda kind, *names: "/fixture/" + kind + "/" + "/".join(names),
     }
+    scope.update(context or {})
     return eval(source, {"__builtins__": {}}, scope)  # noqa: S307 - compiled repository template only
+
+
+def unguarded_resources(template: dict, guard_name: str) -> set[str]:
+    """Resolve compiled dependency IDs, including child-resource name segments."""
+    values = {
+        key: spec["defaultValue"]
+        for key, spec in template["parameters"].items()
+        if "defaultValue" in spec
+    } | {"name": "fixture", "location": "uksouth", "consumerPrincipalId": "synthetic-api"}
+    variables = template.get("variables", {})
+    context = {"guid": lambda *parts: "|".join(parts)}
+    by_id = {
+        f"/fixture/{item['type']}/{evaluate(item['name'], values, variables, context)}": item
+        for item in template["resources"]
+    }
+    guard_id = f"/fixture/Microsoft.Resources/deployments/{guard_name}"
+
+    def waits(identifier: str, seen: frozenset) -> bool:
+        if identifier == guard_id:
+            return True
+        if identifier in seen or identifier not in by_id:
+            return False
+        return any(
+            waits(evaluate(dep, values, variables, context), seen | {identifier})
+            for dep in by_id[identifier].get("dependsOn", [])
+        )
+
+    return {
+        item["name"]
+        for identifier, item in by_id.items()
+        if identifier != guard_id and not waits(identifier, frozenset())
+    }
 
 
 @unittest.skipUnless(
@@ -265,31 +306,8 @@ class BicepPolicyTests(unittest.TestCase):
         self.assert_mutation_rejected(self.assert_staff_initializer_relay_selection, mutated)
 
     def test_every_deployed_resource_waits_for_the_guard(self) -> None:
-        guard_id = "[resourceId('Microsoft.Resources/deployments', 'parameter-guard')]"
-        items = self.main["resources"]
-        items = list(items.values()) if isinstance(items, dict) else items
-        depends = {r["name"]: set(r.get("dependsOn", [])) for r in items}
-
-        def waits(name: str, seen: frozenset = frozenset()) -> bool:
-            if guard_id in depends[name]:
-                return True
-            by_id = {
-                f"[resourceId('{r['type']}', '{r['name']}')]": r["name"]
-                for r in items
-                if "/" not in r["name"] and r["type"] == "Microsoft.Resources/deployments"
-            }
-            return any(
-                d in by_id and by_id[d] not in seen and waits(by_id[d], seen | {name})
-                for d in depends[name]
-            )
-
-        for item in items:
-            if item["name"] == "parameter-guard":
-                continue
-            self.assertTrue(
-                waits(item["name"]), f"{item['name']} can deploy before the parameter guard"
-            )
-        self.assertEqual(depends["parameter-guard"], set())
+        self.assertEqual(unguarded_resources(self.main, "parameter-guard"), set())
+        self.assertEqual(module(self.main, "parameter-guard").get("dependsOn", []), [])
 
     def test_lint_rules_are_errors(self) -> None:
         self.assertIs(CONFIG["analyzers"]["core"]["enabled"], True)
@@ -540,6 +558,7 @@ class BicepPolicyTests(unittest.TestCase):
                     self.assertEqual(values["location"], "")
                     self.assertEqual(values["sqlLocation"], "")
                     expected.add("deploymentLocationsMustBeSelected")
+                    expected.add("primaryLocationMustBeUKSouth")
                 else:
                     self.assertEqual(values["location"], "uksouth")
                     self.assertEqual(values["sqlLocation"], "uksouth")
@@ -801,7 +820,7 @@ class BicepPolicyTests(unittest.TestCase):
                 "entraBearerOnly": bearer,
                 "regionCheckReference": "synthetic-region-check",
                 "quotaCheckReference": "synthetic-quota-check",
-                "location": "offline-region",
+                "location": "uksouth",
                 "sqlLocation": "offline-region",
             }
             expected = set()
@@ -1562,7 +1581,6 @@ class BicepPolicyTests(unittest.TestCase):
     def assert_endpoint_controls(self, template: dict) -> None:
         for name, (kind, groups) in SERVICES.items():
             nested = module_template(template, name)
-            target = resource(nested, kind)
             endpoints = [
                 r
                 for r in nested["resources"]
@@ -1587,9 +1605,15 @@ class BicepPolicyTests(unittest.TestCase):
                 self.assertNotIn("condition", endpoint, name)
                 params = endpoint["properties"]["parameters"]
                 group = params["groupId"]["value"]
+                target_kind = (
+                    "Microsoft.EventHub/namespaces"
+                    if name == "iothub" and group == "namespace"
+                    else kind
+                )
+                target = resource(nested, target_kind)
                 self.assertEqual(
                     params.get("targetResourceId"),
-                    {"value": f"[resourceId('{kind}', {target['name'][1:-1]})]"},
+                    {"value": f"[resourceId('{target_kind}', {target['name'][1:-1]})]"},
                     name,
                 )
                 self.assertEqual(
@@ -1668,7 +1692,7 @@ class BicepPolicyTests(unittest.TestCase):
         def failures(**overrides) -> set[str]:
             values = {
                 **defaults,
-                "location": "offline-region",
+                "location": "uksouth",
                 "sqlLocation": "offline-sql-region",
                 "regionCheckReference": "synthetic-region-check",
                 "quotaCheckReference": "synthetic-quota-check",
@@ -1709,7 +1733,10 @@ class BicepPolicyTests(unittest.TestCase):
             {"regionCheckMustBeRecorded", "quotaCheckMustBeRecorded"},
         )
         for name in ("location", "sqlLocation"):
-            self.assertEqual(failures(**{name: ""}), {"deploymentLocationsMustBeSelected"})
+            expected = {"deploymentLocationsMustBeSelected"}
+            if name == "location":
+                expected.add("primaryLocationMustBeUKSouth")
+            self.assertEqual(failures(**{name: ""}), expected)
         self.assertEqual(
             failures(registryQuarantineEnabled=False),
             {"productionProfileRequiresRegistryQuarantine"},

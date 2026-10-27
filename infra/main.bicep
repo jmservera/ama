@@ -25,15 +25,20 @@ param sharePointSiteId string = ''
 param monthlyBudget int = 300
 param budgetStartDate string = utcNow('yyyy-MM-01')
 @description('IoT Hub tier for simulated in-use monitoring (ADR 0003 decision 6, issue 140).')
-@allowed(['B1', 'S1'])
+@allowed(['B1'])
 param iotHubSku string = 'B1'
 @minValue(1)
+@maxValue(1)
 param iotHubUnits int = 1
 @minValue(1)
 @maxValue(7)
 param iotHubRetentionDays int = 1
-@description('Estimated monthly IoT Hub cost in the billing currency; sets the hub-scoped budget. An estimate to confirm against the Azure pricing page before provisioning.')
-param iotHubMonthlyCost int = 25
+@description('Monthly IoT transport allocation in the billing currency, including the keyless Event Hub adapter and endpoints. Alerts only; verify total USD700 headroom before any provisioning.')
+@minValue(1)
+@maxValue(700)
+param iotHubMonthlyCost int = 60
+@description('Bootstrap false registers no custom endpoint or route. Set and preserve true only after separately approved IoT sender-role propagation verification.')
+param iotHubRoutingReady bool = false
 @description('Entra security group that administers the SQL server (no SQL logins exist).')
 param sqlAdminGroupName string
 param sqlAdminGroupObjectId string
@@ -147,6 +152,8 @@ var storageQueueDataSender = 'c6a89b2d-59bc-44d0-9896-0f6e12d7b80a'
 module guard 'modules/guard.bicep' = {
   name: 'parameter-guard'
   params: {
+    resourceGroupMustBeAma: resourceGroup().name == 'ama' ? 'ok' : ''
+    primaryLocationMustBeUKSouth: location == 'uksouth' ? 'ok' : ''
     productionProfileForbidsPublicNetworkAccess: isDev || !allowPublicNetworkAccess ? 'ok' : ''
     productionProfileRequiresKeyVaultPurgeProtection: isDev || keyVaultPurgeProtection ? 'ok' : ''
     productionProfileRequiresRegistryQuarantine: isDev || registryQuarantineEnabled ? 'ok' : ''
@@ -301,6 +308,7 @@ module foundry 'modules/foundry.bicep' = {
 
 module iotHub 'modules/iothub.bicep' = {
   name: 'iothub'
+  dependsOn: [guard]
   params: {
     allowPublicNetworkAccess: publicAccess
     name: 'iot-${prefix}-${unique}'
@@ -309,11 +317,12 @@ module iotHub 'modules/iothub.bicep' = {
     workspaceId: monitoring.outputs.workspaceId
     peSubnetId: network.outputs.peSubnetId
     zoneIds: network.outputs.zoneIds
-    consumerPrincipalIds: [identity.outputs.principalIds.api]
+    consumerPrincipalId: identity.outputs.principalIds.api
     skuName: iotHubSku
     unitCount: iotHubUnits
     retentionDays: iotHubRetentionDays
     monthlyCostEstimate: iotHubMonthlyCost
+    routingReady: iotHubRoutingReady
     alertEmail: alertEmail
     budgetStartDate: budgetStartDate
   }
@@ -599,6 +608,9 @@ output sqlServer string = sql.outputs.fqdn
 output keyVaultName string = keyvault.outputs.name
 output iotHubName string = iotHub.outputs.name
 output iotHubConsumerGroup string = iotHub.outputs.consumerGroup
+output iotHubEventHubNamespaceFqdn string = iotHub.outputs.eventHubNamespaceFqdn
+output iotHubEventHubName string = iotHub.outputs.eventHubCompatibleName
+output iotHubRoutingEnabled bool = iotHub.outputs.routingEnabled
 output foundryEndpoint string = foundry.outputs.endpoint
 output identityPrincipalIds object = identity.outputs.principalIds
 output logAnalyticsWorkspace string = monitoring.outputs.workspaceName

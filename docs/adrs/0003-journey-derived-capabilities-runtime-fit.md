@@ -2,7 +2,7 @@
 title: ADR 0003 Journey-Derived Capabilities and IoT Hub Sensor Ingestion
 description: Owner-accepted decisions with an exercise Basic IoT Hub amendment, retaining proposal history and separate live implementation gates
 author: AMA programme
-ms.date: 2026-10-18
+ms.date: 2026-10-27
 ms.topic: reference
 ---
 
@@ -31,6 +31,33 @@ customer role. It applies the runtime of [ADR 0001](./0001-azure-architecture.md
 Decision 6 amends the ingestion choice in ADR 0002's sensor section on the
 AMA project owner's direction (2026-10-14) that Azure IoT Hub is the product
 for IoT; the owner has not approved any other part of this ADR.
+
+### Source-only infrastructure authorization (2026-10-27, Refs #140)
+
+The owner supplied approval of ADR 0003 for this task on 2026-10-27, within
+Free/B1, existing resource group `ama` only and the overall USD700 cost cap.
+The authorized action is Bicep authoring and local compilation/tests only:
+do not deploy, run Azure what-if, read secrets or delete `ama`. This adds no
+operational, DPO/legal or real-device approval and does not erase the narrower
+2026-10-15/18 history above.
+
+The [infrastructure decision and budget entry](../../infra/README.md#iot-hub-issue-140-adr-0003-decision-6)
+selects B1/one unit, `uksouth`, two partitions, one-day transport retention,
+individual device identities and Juan Manuel Servera as exercise credential
+issue/rotation/revocation owner. SQL record retention and BRD OD-43 remain
+separate. Free is not the selected profile, and S1/scale-out need a new decision.
+
+The old built-in-endpoint receiver assignment is corrected: Microsoft's
+[Entra guidance](https://learn.microsoft.com/en-us/azure/iot-hub/authenticate-authorize-azure-ad)
+(retrieved 2026-10-27) requires a custom Event Hub for keyless consumption.
+Decision 6 therefore permits an authored dedicated Standard/one-TU Event Hub
+adapter, with API Data Receiver on the entity and IoT system-identity Data
+Sender on its dedicated namespace. IoT Hub remains the device boundary.
+Public namespace access is disabled, with private endpoint and the documented
+trusted-services exception for IoT routing. Metrics-only diagnostics exclude
+device-bearing resource logs. Bootstrap registers no custom endpoint or route;
+future activation requires separately approved actual sender-role propagation.
+No Azure provisioning, role activation or consumer SDK implementation follows.
 
 ## Context
 
@@ -76,8 +103,9 @@ build).
      and stable reading ID. The simulator is one labelled source (source
      type, scenario, seed) and is never exposed as a resident or device
      system.
-   * A server-side consumer in the existing API reads the hub (built-in
-     endpoint or message routing), validates schema, device-to-property
+   * A server-side consumer in the existing API reads IoT telemetry through
+     managed-identity message routing to the dedicated Event Hub (2026-10-27
+     source-only correction above), validates schema, device-to-property
      mapping and effective dates, units, UTC time, duplicates, order and
      calibration status, and appends accepted readings to Azure SQL
      (`sensor_reading`) idempotently on sensor ID plus reading ID. Rejected or
@@ -114,9 +142,10 @@ build).
 ## Consequences
 
 * The journey capabilities add no infrastructure: they are schema, API and
-  screen work inside the current runtime. Decision 6 adds one Azure IoT Hub
-  resource, a consumer in the existing API and its cost, which is not yet
-  estimated or approved.
+  screen work inside the current runtime. Decision 6 adds Azure IoT Hub, the
+  2026-10-27 keyless Event Hub adapter and a consumer in the existing API.
+  The linked budget scenario estimates transport only; actual aggregate
+  headroom, paid provisioning and consumer acceptance are not established.
 * Representative-authority data adds personal data about third parties. It
   needs DPO review before any real data (ADR 0002 open items DH-002, DH-006).
 * The atlas stays hypothesis evidence until real resident, staff and
@@ -142,10 +171,12 @@ build).
   challenge refinement.
 * DPO decision on representative data retention and minimisation.
 * Atlas-owner confirmation of the bundle to opportunity mapping in the PRD.
-* IoT Hub infrastructure proposals (B1, one unit, uksouth, 1 day retention, private endpoint in production, individual device identities, credential owner Juan Manuel Servera) are recorded in `infra/README.md` for issue 140. Basic is owner-selected for the exercise; the remaining infrastructure choices, a verified cost and a live what-if remain unapproved/unexecuted.
-* IoT Hub sizing, cost estimate, device provisioning approach, network
-  exposure and Entra role design and device credential ownership; BRD OD-43 inventory, lawful basis, DPIA,
-  retention and thresholds.
+* The 2026-10-27 source-only choices and public price scenario are recorded in
+  `infra/README.md` for issue 140. Actual subscription quota, billing currency,
+  aggregate cost headroom, live what-if, sender-role propagation and private
+  transport remain unverified/unexecuted; no provisioning is authorized.
+* BRD OD-43 inventory, lawful basis, DPIA, record retention, thresholds and
+  operational ownership; actual device credential provisioning remains #185.
 * Completion of research phases R1 to R5 in the analytics research plan before
   any derived rule other than a clearly labelled exercise rule is used.
 

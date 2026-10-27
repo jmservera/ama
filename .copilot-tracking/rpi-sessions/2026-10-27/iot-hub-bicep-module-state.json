@@ -1,0 +1,85 @@
+{
+  "task_id": "issue-140",
+  "task_slug": "iot-hub-bicep-module",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-27/iot-hub-bicep-module-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-27/iot-hub-bicep-module-plan.md",
+    "details": ".copilot-tracking/details/2026-10-27/iot-hub-bicep-module-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-27/iot-hub-bicep-module-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-27/iot-hub-bicep-module-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-27/iot-hub-bicep-module-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run the full ordered RPI loop, commit, push feat/iot-hub-bicep-module and open a PR; no deployment, secrets, uv or full gate.",
+      "status": "Owner authorized",
+      "evidence": "User request 2026-10-27"
+    },
+    {
+      "decision": "Free/B1, RG ama only, USD700 cap, never delete ama; author and validate locally.",
+      "status": "Owner authorized",
+      "evidence": "User request 2026-10-27; ADR 0003 and BRD OD-43 read"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready. W1 requires custom Event Hub for keyless API; staged activation avoids system-identity role ordering cycle.",
+      "status": "Evidence-backed scoped authoring decision",
+      "evidence": ".copilot-tracking/research/2026-10-27/iot-hub-bicep-module-research.md"
+    },
+    {
+      "decision": "Single independent critique Complete / Revise. PC-001 and PC-002 directly corrected in plan/details: whole-main scope guard and no endpoint registration during bootstrap. No second critique.",
+      "status": "Ready for Implement; original verdict preserved",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-27/iot-hub-bicep-module-plan-critique.md; plan Critique Disposition"
+    },
+    {
+      "decision": "Single independent Review executed on the complete authored source boundary. Outcome Not accepted: RV-001 Medium, documented :443 leaks into namespace hostname/routing URI; portless fixtures miss it.",
+      "status": "Review Complete / Not accepted; original outcome preserved",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/iot-hub-bicep-module-review.md"
+    },
+    {
+      "decision": "No return to Implement and no repeated Review in this task. Route RV-001 to later implementation; publish only a draft PR with Refs #140 and explicit defect/live-gate disclosure under the owner's requested publication authority.",
+      "status": "Source acceptance remains blocked; no closure/merge/deployment authority",
+      "evidence": "RPI one-pass Review contract; user request authorizes commit/push/PR but not Azure actions"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "RV-001",
+      "summary": "Source acceptance: namespace URI normalization retains the provider's possible HTTPS :443 port in the consumer FQDN and sb URI.",
+      "resolution": "Later rpi-implement must normalize the hostname and add port-bearing/portless compiled regression coverage; preserve this Review outcome."
+    },
+    {
+      "id": "live-acceptance",
+      "summary": "Live what-if, quota/price/currency/aggregate USD700 headroom, sender propagation, real transport and OD-43 human operational approvals are unavailable/not authorized.",
+      "resolution": "Keep all live actions blocked; obtain separate owner authorization and required human evidence before any provisioning or real monitoring."
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await selection of a ranked follow-up, Stop automatic session or Switch to manual mode. RV-001 correction is recommended; do not auto-start child work. Separately owner-authorized draft publication must preserve Not accepted and Refs #140."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Correct RV-001 namespace hostname and routing URI normalization with compiled port-bearing/portless fixtures.",
+      "rationale": "Small deterministic source correction removes the concrete acceptance blocker and strengthens the SDK connection contract.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/iot-hub-bicep-module-review.md, RV-001"
+    },
+    {
+      "rank": 2,
+      "task": "Prepare separately authorized infrastructure capability, cost-headroom and live what-if evidence before any bootstrap/activation.",
+      "rationale": "Required for eventual provisioning but depends on new live authorization, actual subscription evidence and protected human approval; no Azure action authorized now.",
+      "evidence": "infra/README.md, IoT acceptance/budget boundary; Review Plan Follow-Up Assessment"
+    },
+    {
+      "rank": 3,
+      "task": "Obtain named human OD-43 monitoring inventory, DPIA, retention, calibration and operational review decisions.",
+      "rationale": "Essential for real monitoring but outside this simulator/source-only task and not an engineering decision agents can approve.",
+      "evidence": "docs/brds/agentic-retrofit-programme-brd.md, OD-43; Review Plan Follow-Up Assessment"
+    }
+  ]
+}
