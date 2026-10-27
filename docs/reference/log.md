@@ -7479,3 +7479,62 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-10-25] update | Resident R4 gating split and promotion wording (#441)
 
 * Owner-authorised bounded follow-up: the draft backlog and unregistered proposal now separate the R4 task-release gate (RB-17/18) from the OD-53 routine-dispatch gate (RB-19/20), and the proposal's staff-promotion wording matches the PRD guardrail. Documentation only; PRD unsigned, proposal unregistered, owner acceptance still pending. Earlier entries are unchanged.
+
+## [2026-10-27] query | Historical backfill stack and explicit blockers (Refs #177)
+
+* Updated the existing IoT research plan and index with five unmerged child
+  PRs, bounded exercise projection/retrofit/household components, pending
+  source reuse and consumer identity decisions, and conditional three-daily
+  capacity accounting. No private register or household records were read.
+* Reproduced actual consumer `IDENTITY` refusal for a public synthetic
+  stock observation while its valid control passed. This confirms the
+  previously documented compatibility gap, not a new admission contract.
+* Files: `docs/reference/research/iot-sensor-analytics-research-plan.md`,
+  `docs/reference/README.md` and this append-only log. Parent is draft
+  coordination only; no child integration, acceptance tick, owner deferral,
+  merge, climate reuse approval, Azure action or real monitoring authority.
+
+## [2026-10-27] query | Approved historical backfill integration continuation (Refs #177)
+
+* Recorded owner-approvals-2026-10-27-b prospectively: candidate climate
+  synthetic-demo reuse, canonical stock IDs and authorized child integration.
+  Original blocked stack findings and Residual work Review remain unchanged.
+* Added hash-pinned genuine 2023-2024 paired ERA5 reanalysis and separate NASA
+  2023 sensitivity evidence; source attribution and unverified production/legal
+  terms remain explicit, not converted into unrestricted reuse approval.
+* Updated the existing IoT synthesis and index for canonical IDs, independent
+  consumer controls, opt-in composed models and the actual aggregate evidence
+  boundary. Generated public stock does not prove unread private-register equality.
+* Files: existing IoT research plan, index, climate evidence directory and this
+  append-only log. No memory/regulatory snapshot edit, private data, real device
+  activation, physical calibration, main merge or operational acceptance.
+* Aggregate run reconciled every ID and all 43,800,000 daily readings for the
+  public 60,000-home fixture over 730 days; 703,111,263 compressed reading bytes.
+  Full core 1,427 tests (186 expected skips), static/types and actual owned SQL
+  sensor/API 45 tests passed. Original Review and one scoped parent publication
+  gate remain separate, not implied by this runtime evidence.
+* Original approved-integration Review executed Complete / Not accepted at
+  263e1dbf: one Medium composed-loader budget defect RV-001, routed to later
+  implementation without rewriting or repeating Review. Preserve successful
+  aggregate evidence but keep parent draft. Single scoped gate is pending at
+  this committed source checkpoint; receipt and publication facts remain external.
+* The sole scoped parent gate attempt at1b3f623f against fresh main2e031c89
+  exited1 before checks: candidate does not descend from reviewed main base.
+  No receipt, retry, push or ready transition. Preserve external failure log;
+  coordinator must authorize normal main integration and a new scoped gate
+  after RV-001 correction. Archive/restore-verified finite cleanup succeeded.
+
+## [2026-10-27] query | Later authorized backfill replay-budget implementation (Refs #177)
+
+* Standing owner authorization selects RV-001 correction, current-main
+  integration and one fresh scoped foreground publication gate. Normal merge
+  retains every child ancestry; original critique, Not accepted Review and
+  failed ancestry gate remain unchanged, with no repeated Review.
+* Composed replay now compares manifest home count with actual granted stock
+  and budgets actual nominal rows and stock metadata before scratch/output.
+  Bounded regressions cover forged counts, accurate oversized requests,
+  zero-granted metadata limits, valid zero-row and exact-budget replay.
+* Updated core loading documentation, existing IoT synthesis and KB index.
+  Gate/hosted publication evidence remains external and distinct from this
+  source checkpoint. No private data, physical/production acceptance, human
+  approval, issue closure or main merge is asserted.

@@ -2,7 +2,7 @@
 title: In-Use Monitoring Analytics Research Plan (Dew Point and Trend Risks)
 description: Research phase plan for analysing humidity and temperature sensor data received through Azure IoT Hub, including dew point and surface condensation risk, with leads, unknowns, evidence rules and exit criteria
 author: AMA programme
-ms.date: 2026-10-18
+ms.date: 2026-10-27
 ms.topic: reference
 ---
 
@@ -265,6 +265,113 @@ Live Hub identities/transport, cost/network/provisioning/credential authority,
 actual Azure SQL/registered real AI acceptance, OD-43, privacy/legal and human
 gates remain separate. No issue criteria, priorities, review tasks, resident
 communications, data approvals or operational rules change.
+
+## Historical backfill stack boundary (2026-10-27, Refs #177)
+
+### Original blocked stack
+
+The five draft child PRs target `feat/sensor-backfill-177`, not main.
+They remain unmerged; the parent is coordination/evidence, not an integrated
+historical generator. Existing synthetic stock and its opaque home IDs are
+preserved. No private stock extract, household records or device data were
+read. No original issue acceptance checkbox or deferral is asserted.
+
+| Child | Draft PR and bounded delivery | Still unproved |
+| --- | --- | --- |
+| #178 | [#481](https://github.com/jmservera/ama/pull/481): existing source/terms decision and owner blocker | Exact paired source reuse and approved two-year records; [#425](https://github.com/jmservera/ama/pull/425) remains separate and open |
+| #179 | [#482](https://github.com/jmservera/ama/pull/482): typed/versioned legacy indoor equation, explicit exercise domain and provenance | Historical record-derived physical bounds and integrated new models |
+| #180 | [#483](https://github.com/jmservera/ama/pull/483): explicit per-home dated exercise fabric-loss effects | Actual source completion-date mapping and writer integration |
+| #181 | [#484](https://github.com/jmservera/ama/pull/484): seeded neutral household condition fixtures and monitoring exclusions | Full indoor/writer integration and any real monitoring authority |
+| #183 | [#485](https://github.com/jmservera/ama/pull/485): exact consumer incompatibility and conditional size estimate | Owner-selected identity compatibility path and reuse of actual #110 admission |
+
+A public synthetic stock observation was passed to the actual consumer's
+`_shape` verifier on 2026-10-27. It returned `IDENTITY` while the public valid
+control passed. Sensor/reading/home lengths were 73/84/23 against 20/40/12,
+also subject to the uppercase alphabet. This reproduces the existing
+compatibility gap above; no IDs were shortened, source controls invented or
+validation bypassed. The legacy loader is not the #110 consumer.
+
+Conditional capacity arithmetic at three paired observations/day for 730
+days and 60,000 fictional homes is 131,400,000 nominal records. Existing
+`sensor_backfill.estimate(homes=60000, days=730, cadence=480)` sampled 20
+legacy scale-fixture homes: estimated 131,025,000 rows after dropout,
+121.0 bytes/CSV row and 14.77 GiB. This was an estimate only, before any
+generation; it is not the private stock's measured storage, a size bound,
+SQL/index/transport cost or evidence of consumer compatibility.
+
+The source/reuse and identity decisions block final historical acceptance.
+The owner's synthetic fallback permits exercise components, not invented
+outdoor records, completion dates, calibrated physics or resident judgements.
+Focused child tests and the parent's documentation-scoped gate have different
+boundaries; neither proves an unmerged aggregate. Owner integration and a
+subsequent aggregate candidate assessment remain necessary.
+
+### Owner-approved integration continuation (2026-10-27)
+
+The later explicit owner decisions under `owner-approvals-2026-10-27-b`
+approve existing candidate climate reuse for synthetic demonstration, adopt
+existing stock home IDs as canonical keys, and authorize child integration and
+aggregate validation. This prospectively supersedes the source/identity owner
+blockers above, not their original findings or Residual work Review.
+
+The integrated code now includes all five child branches. The
+[pinned paired source metadata](./climate-paired-source-178/open-meteo-era5-durham-2023-2024-metadata.json)
+records a genuine 2023-2024 Open-Meteo ERA5 Durham-grid acquisition on
+2026-10-27: 17,544 UTC hourly pairs; input SHA-256
+`af76a90414d9ad8f19dacc95a38f06d4c4321a91bdf030ba231558c42506051e`;
+record-derived temperature -5.3 to 26.9 C and RH 36 to 100%.
+The NASA 2023 [sensitivity evidence](./climate-paired-source-178/nasa-power-merra2-durham-2023-sensitivity.json)
+is retained separately, not used to invent a second year. Attribution and
+historical terms remain explicit; owner approval is not underlying legal or
+production terms verification. Source #425 is not silently merged or rewritten.
+
+Canonical home keys are preserved exactly, including case/Unicode. Compact
+11-character, collision-checked sensor keys preserve the existing 20-character
+consumer limit including `UNMAPPED-`; malformed, absent or unsupported identities
+still fail. Export supports the stock 128-UTF-16-unit domain, while actual
+consumer availability remains limited to existing exact cases and 64 units on
+both stores. No shared case identity migration, alias, truncation or created
+availability is implied. Actual consumer tests retain consent, calibration,
+mapping, unit, clock, ordering and replay failures.
+
+The [core composition and loading contract](../../../src/core/README.md#approved-paired-climate-composition-2026-10-27-refs-177)
+wires versioned indoor projection, explicit dated synthetic measures and neutral
+household conditions. Legacy default reading bytes remain unchanged. Output is
+synthetic, with optional evaluator-only fault truth separate from analysis.
+The verified replay loader calls actual #110 admission; the old legacy loader
+is not promoted into an equivalent contract.
+
+Aggregate evidence is recorded in the dated continuation changes/Review and
+PR #486. Core discovery passed 1,427 tests (186 existing skips); targeted
+static/type checks passed. The full-stock exercise uses an explicitly generated
+public 60,000-home fixture, a complete 730-day window and a declared daily cadence,
+with hourly capacity estimated before generation. The run passed every-row and
+every-ID reconciliation: 43,800,000 rows, 730 per home, UTC 2023-01-02 through
+2025-01-01 exclusive; 703,111,263 compressed reading bytes. The uncompressed
+reading SHA-256 is
+`d07715c8b55fc4e0b6d771472f6f823110fe7b39ed47eab370ef7daf4d98bc41`.
+Six thousand explicitly generated synthetic dated measures were supplied, not
+inferred from private history. Actual owned-loopback SQL sensor/API tests also
+passed all 45 cases, including canonical keys and independent controls.
+No exact unread-private-register equality or full-hourly/diurnal-scale
+validation is asserted. The original independent Review executed Complete /
+Not accepted at its original boundary: Medium RV-001 identified a
+composed-loader pre-replay budget check trusting unverified manifest counts.
+The original Review and the subsequent ancestry-blocked gate at1b3f623f are
+preserved, not reclassified or repeated.
+
+The later 2026-10-27 standing owner authorization selects implementation of
+RV-001, current-main integration and one new scoped gate before publication.
+Current main2e031c89 is integrated by a normal merge retaining child ancestry.
+The loader now requires manifest homes to equal the supplied stock's actual
+granted count, then budgets actual nominal rows and stock metadata before
+temporary scratch or output. Tests assert pre-write refusal for under/over-
+reported counts and accurate oversized replay, metadata-budget refusal even
+with zero granted homes, valid zero-row replay and exact-budget normal loading.
+Existing fault, byte-comparison and independent consumer safeguards remain.
+The new gate, independent exact-head publication assessment and hosted checks
+are separate prerequisites; no second full Review, full-stock rerun, private-
+register equality, production or human approval is inferred.
 
 ## Sensor privacy engineering boundary (2026-10-17, Refs #112)
 

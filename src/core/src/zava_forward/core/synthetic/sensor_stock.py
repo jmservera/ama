@@ -9,9 +9,9 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
-from zava_forward.core.synthetic import stock_fabric
+from zava_forward.core.synthetic import sensor_identity, stock_fabric
 
-VERSION = "stock-sensor-v1"
+VERSION = "stock-sensor-v2"
 INPUT_FIELDS = (
     "synthetic_home_id",
     "building_form_osm",
@@ -64,11 +64,16 @@ class Selection:
 
     def sensors(self, seed: int) -> list[dict[str, object]]:
         sensors: list[dict[str, object]] = []
+        identities: set[str] = set()
         for row in self.rows:
             if row["monitoring_consent"] != "granted":
                 continue
             fabric = stock_fabric.fabric(row)
             home_id = row["synthetic_home_id"]
+            sensor_id = sensor_identity.sensor_key(home_id)
+            if sensor_id in identities:
+                raise ValueError("Synthetic sensor ID collision; canonical home IDs unchanged")
+            identities.add(sensor_id)
             rng = random.Random(f"{seed}-sensor-{home_id}")
             year = fabric["build_year"]
             age = (
@@ -84,7 +89,7 @@ class Selection:
             )
             sensors.append(
                 dict(
-                    sensor_id="SENS-SYN-" + hashlib.sha256(home_id.encode()).hexdigest(),
+                    sensor_id=sensor_id,
                     home_id=home_id,
                     dwelling_type=DWELLING[fabric["dwelling_type"]],
                     age_band=age,
@@ -109,13 +114,7 @@ def select(register: Sequence[Mapping[str, str]], homes: int | None) -> Selectio
     ids: set[str] = set()
     for row in register:
         home_id = row.get("synthetic_home_id", "")
-        if (
-            not home_id
-            or home_id != home_id.strip()
-            or len(home_id.encode("utf-16-le")) // 2 > 128
-            or any(ord(char) < 32 or ord(char) == 127 for char in home_id)
-            or home_id in ids
-        ):
+        if not sensor_identity.home_key(home_id) or home_id in ids:
             raise ValueError(
                 "Stock home IDs must be unique, nonblank, unpadded and <=128 UTF-16 units"
             )

@@ -1,0 +1,90 @@
+{
+  "task_id": "177",
+  "task_slug": "sensor-backfill-177",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-27/sensor-backfill-177-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-27/sensor-backfill-177-plan.md",
+    "details": ".copilot-tracking/details/2026-10-27/sensor-backfill-177-phase-details.md",
+    "critique": ".copilot-tracking/reviews/2026-10-27/sensor-backfill-177-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-27/sensor-backfill-177-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-27/sensor-backfill-177-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Full ordered RPI loop and stacked child PRs targeting feat/sensor-backfill-177",
+      "status": "confirmed",
+      "evidence": "Explicit caller request 2026-10-27"
+    },
+    {
+      "decision": "Research executed; bounded planning Ready; historical acceptance blocked",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/research/2026-10-27/sensor-backfill-177-research.md"
+    },
+    {
+      "decision": "One critique executed: Revise. PC-001/002/004/005/006/007 applied; PC-003 rejected because /tmp prohibition was not a parent constraint.",
+      "status": "disposed; bounded plan Ready",
+      "evidence": ".copilot-tracking/plans/2026-10-27/sensor-backfill-177-plan.md#critique-disposition"
+    },
+    {
+      "decision": "Review execution Complete; outcome Residual work; zero new substantive findings. Boundary: five unchanged exact child heads and parent evidence 6a6e5d0d; no independent test rerun.",
+      "status": "executed once; original outcome preserved",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/sensor-backfill-177-review.md"
+    },
+    {
+      "decision": "Five draft child PRs #481-#485 target parent; parent draft #486 targets main. No source integrated, merge or original acceptance tick.",
+      "status": "published as draft coordination, not final-ready",
+      "evidence": ".copilot-tracking/changes/2026-10-27/sensor-backfill-177-changes.md"
+    },
+    {
+      "decision": "Exactly one parent-only scoped gate after this source checkpoint; authoritative result external and on PR #486, never inferred from this pre-gate commit.",
+      "status": "external evidence required; no passing result claimed here",
+      "evidence": "/tmp/ama-rpi-177-parent-20261027-final/receipt.json"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "climate-reuse",
+      "summary": "#178 exact paired source reuse and approved two-year record unavailable; active #425 remains unmerged",
+      "resolution": "Owner/data-licence custodian confirms source, terms, attribution and authorized records; one issue comment posted"
+    },
+    {
+      "id": "consumer-identity",
+      "summary": "#183 stock observations fail actual #110 IDENTITY validation",
+      "resolution": "Owner selects separately reviewed schema/control migration or reversible mapping; one issue comment posted"
+    },
+    {
+      "id": "unmerged-aggregate",
+      "summary": "Five sibling PRs remain unmerged by caller instruction; parent has coordination evidence only",
+      "resolution": "Owner review and integration before aggregate candidate validation and readiness"
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Preserve Review and finish one scoped parent gate externally, then await owner source, identity and integration decisions; do not start a child follow-up"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Owner source/reuse decision for #178/#425",
+      "rationale": "Highest unblock leverage; reuse authorized records without duplicating source work",
+      "evidence": "PR #481 and original Review F01"
+    },
+    {
+      "rank": 2,
+      "task": "Owner identity compatibility decision for #183/#110/#188",
+      "rationale": "Actual consumer rejects stock observations; preserve lineage rather than bypass validation",
+      "evidence": "PR #485 and original Review F02"
+    },
+    {
+      "rank": 3,
+      "task": "Review and authorize child integration, then aggregate validation",
+      "rationale": "Three tested components remain unmerged; parent-only gate cannot establish integrated delivery",
+      "evidence": "PR #482/#483/#484 and original Review F03"
+    }
+  ]
+}

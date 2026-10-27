@@ -216,10 +216,19 @@ class SyntheticDeterminismTests(unittest.TestCase):
 
     def test_revision_tracks_each_dependency_without_path_or_order_dependence(self) -> None:
         original = Path.read_bytes
-        for sources in (sf.revision_sources(), sb.revision_sources()):
+        for generator in (sf, sb):
+            sources = generator.revision_sources()
             expected = {"scale_fixture.py", "provenance.py", "__init__.py", "insights.py"}
-            if len(sources) == 7:
-                expected.update({"sensor_backfill.py", "sensor_stock.py", "stock_fabric.py"})
+            if generator is sb:
+                expected.update(
+                    {
+                        "sensor_backfill.py",
+                        "sensor_stock.py",
+                        "stock_fabric.py",
+                        "indoor_projection.py",
+                        "sensor_identity.py",
+                    }
+                )
             self.assertEqual({p.name for p in sources}, expected)
             base = provenance.source_revision(sources)
             for source in sources:

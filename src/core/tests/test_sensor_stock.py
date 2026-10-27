@@ -15,7 +15,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from unittest.mock import Mock, patch
 
-from zava_forward.core.synthetic import provenance, stock_fabric
+from zava_forward.core.synthetic import provenance, sensor_identity, stock_fabric
 from zava_forward.core.synthetic import sensor_backfill as sb
 from zava_forward.core.synthetic import sensor_stock as ss
 
@@ -53,6 +53,26 @@ def write_register(path: Path, rows: list[dict[str, str]]) -> None:
 
 
 class SensorStockTests(unittest.TestCase):
+    def test_compact_sensor_collisions_fail_without_reassigning_home_keys(self) -> None:
+        selection = ss.select(register(), 5)
+        with patch.object(sensor_identity, "sensor_key", return_value="SAAAAAAAAAA"):
+            with self.assertRaisesRegex(ValueError, "collision"):
+                selection.sensors(7)
+        self.assertEqual(
+            [row["synthetic_home_id"] for row in selection.rows],
+            [row["synthetic_home_id"] for row in register()],
+        )
+
+    def test_canonical_export_preserves_full_stock_key_domain(self) -> None:
+        for home_id in ("hôme-α-Case", "hôme-α-case", "H" * 64, "H" * 65, "H" * 128):
+            with self.subTest(home_id=home_id):
+                rows = register()[:1]
+                rows[0]["synthetic_home_id"] = home_id
+                selection = ss.select(rows, 1)
+                sensor = selection.sensors(7)[0]
+                self.assertEqual(sensor["home_id"], home_id)
+                self.assertEqual(len(str(sensor["sensor_id"])), 11)
+
     def test_fabric_parity_and_full_opaque_sensor_ids(self) -> None:
         rows = register()
         rows[0]["synthetic_home_id"] = "one-same-tail"
@@ -67,7 +87,7 @@ class SensorStockTests(unittest.TestCase):
             self.assertEqual(
                 sensor["construction_loss"], ss.CONSTRUCTION_LOSS[fabric["construction"]]
             )
-            self.assertEqual(len(str(sensor["sensor_id"])), 73)
+            self.assertEqual(len(str(sensor["sensor_id"])), 11)
             self.assertFalse(sensor["retrofitted"])
         self.assertEqual(
             [r["build_year"] for r in selection.fabric_rows()],

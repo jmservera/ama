@@ -1,0 +1,81 @@
+{
+  "classification": "Retained NASA POWER MERRA-2 2023 sensitivity evidence; not the primary replay and not 2024 coverage",
+  "candidate_commit": "72f5235889fcf42632e30d4003436f02849c0f12",
+  "candidate_report_sha256": "87418bef03cc53ef6ee5705fec011f05fd1ecc92fb0740f82fff5fe28e133536",
+  "source": {
+    "api": {
+      "name": "POWER Hourly API",
+      "version": "v2.10.3"
+    },
+    "bytes": 327067,
+    "period": {
+      "end": "2023-12-31T23:00Z",
+      "records": 8760,
+      "start": "2023-01-01T00:00Z",
+      "timezone": "UTC"
+    },
+    "request_url": "https://power.larc.nasa.gov/api/temporal/hourly/point?parameters=T2M,RH2M&community=RE&longitude=-1.585&latitude=54.768&start=20230101&end=20231231&format=JSON&time-standard=UTC",
+    "requested_location": {
+      "label": "Durham, North East England",
+      "latitude": 54.768,
+      "longitude": -1.585
+    },
+    "retrieved_on": "2026-10-22",
+    "returned_grid": {
+      "elevation_m": 144.05,
+      "latitude": 54.768,
+      "longitude": -1.585
+    },
+    "sha256": "cba9cf308878e9a4b2f2847cbbc4e66f06d14a1b734d4da48be0133fef9c6db1",
+    "filename": "nasa-power-merra2-durham-2023-raw.json"
+  },
+  "attribution_and_terms": {
+    "attribution": "The data was obtained from the POWER Project's POWER Hourly API v2.10.3, retrieved on 2026-10-22; API identity and version are from the retained source metadata.",
+    "licence_verified": false,
+    "published_terms": "Referencing guide asks for the POWER data reference with service, version and access date (https://power.larc.nasa.gov/docs/referencing/, read 2026-10-22). No licence text was retrieved: the NASA data information policy page returned HTTP 403."
+  },
+  "bounds": {
+    "temperature_c": {
+      "minimum": -3.35,
+      "maximum": 24.61
+    },
+    "relative_humidity_pct": {
+      "minimum": 43.43,
+      "maximum": 100.0
+    }
+  },
+  "original_candidate_2023_comparison": {
+    "basis": "UTC, matched by timestamp; first source minus second source",
+    "common_hour_count": 8760,
+    "end": "2023-12-31T23:00Z",
+    "first": "open_meteo_era5",
+    "relative_humidity_percent": {
+      "mean_absolute_difference": 8.342,
+      "mean_difference": -7.081
+    },
+    "second": "nasa_power_merra2",
+    "start": "2023-01-01T00:00Z",
+    "temperature_degC": {
+      "mean_absolute_difference": 1.241,
+      "mean_difference": 0.959
+    }
+  },
+  "new_primary_2023_comparison": {
+    "basis": "UTC, matched by timestamp; first source minus second source",
+    "first": "open_meteo_era5",
+    "second": "nasa_power_merra2",
+    "common_hour_count": 8760,
+    "start": "2023-01-01T00:00Z",
+    "end": "2023-12-31T23:00Z",
+    "temperature_degC": {
+      "mean_difference": 1.159,
+      "mean_absolute_difference": 1.38
+    },
+    "relative_humidity_percent": {
+      "mean_difference": -7.053,
+      "mean_absolute_difference": 8.322
+    }
+  },
+  "new_primary_input_sha256": "af76a90414d9ad8f19dacc95a38f06d4c4321a91bdf030ba231558c42506051e",
+  "caution": "2023 only; model/grid and requested latitude differ. Candidate requested latitude 54.768; new primary 54.775. Original owner UNMET status is historical, superseded only for synthetic demo by owner-approvals-2026-10-27-b, not legal or production approval."
+}

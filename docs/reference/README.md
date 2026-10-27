@@ -20,6 +20,20 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+For #177, the [historical backfill stack boundary](./research/iot-sensor-analytics-research-plan.md#historical-backfill-stack-boundary-2026-10-27-refs-177)
+preserves the original five-child blocked outcome and records the approved
+continuation: paired ERA5 source, canonical stock-ID adaptation, opt-in composed
+generator and aggregate evidence boundary. Synthetic-demo approval does not
+establish private-stock equality, physical calibration or whole-issue acceptance.
+The continuation's original Review remains Complete / Not accepted at its
+original boundary. The owner-selected later implementation corrects RV-001:
+actual granted-home counts and nominal row/stock metadata budgets are checked
+before replay scratch or output. Bounded regression coverage includes forged
+counts, accurate over-budget inputs and zero-granted selections. Current main
+is integrated without rewriting child ancestry. The earlier failed ancestry
+gate is preserved; a newly authorized scoped gate and exact-head publication/
+hosted checks remain separate evidence, not implied by the fix.
+
 The [resident advisory assistant design](../architecture/resident-assistant-prototype.md)
 records #469's bounded own-case Azure OpenAI integration, deterministic
 fallback, managed identity and permanent SQL-backed USD20 reservation ceiling.

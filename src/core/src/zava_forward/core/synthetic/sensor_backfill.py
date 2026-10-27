@@ -14,7 +14,9 @@ the manifest records climate_source accordingly.
 import argparse
 from collections.abc import Mapping
 from contextlib import nullcontext
+from contextlib import contextmanager
 import csv
+import gzip
 import hashlib
 import io
 import json
@@ -25,7 +27,8 @@ import tempfile
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from zava_forward.core.synthetic import output_dir, provenance, scale_fixture, sensor_stock, stock_fabric, sensor_faults
+from zava_forward.core.synthetic import output_dir, provenance, scale_fixture, sensor_stock, stock_fabric, sensor_faults, sensor_identity
+from zava_forward.core.synthetic import indoor_projection, household_conditions, retrofit_effects
 
 VERSION = "sensor-backfill-v2"
 SCHEMA_VERSION = "reading-v1"
@@ -37,8 +40,8 @@ START = datetime(2024, 10, 1, tzinfo=timezone.utc)
 DAYS = 730
 CADENCE_MIN = 60
 SHARD_HOMES = 1000
-DWELLINGS = {"apartments": 0.7, "terrace": 1.0, "semidetached_house": 1.15, "detached": 1.3, "bungalow": 1.2}
-AGE_BANDS = {"pre-1919": 1.3, "1919-1944": 1.2, "1945-1979": 1.1, "1980-2002": 0.95, "2003+": 0.8}
+DWELLINGS = indoor_projection.DWELLINGS
+AGE_BANDS = indoor_projection.AGE_BANDS
 BOUNDS = {"temperature_c": (-10.0, 45.0), "humidity_pct": (0.0, 100.0)}
 READING_FIELDS = ["sensor_id", "reading_id", "home_id", "observed_at", "temperature_c", "humidity_pct",
                   "source_type", "scenario", "seed", "schema_version", "injected_fault"]
@@ -71,7 +74,7 @@ def sensor_for(home, seed=SEED):
 
 
 def _magnus_sat(t):
-    return 6.112 * math.exp(17.62 * t / (243.12 + t))
+    return indoor_projection.saturation_pressure(t)
 
 
 def outdoor_series(seed=SEED, days=DAYS, cadence=CADENCE_MIN, start=START):
@@ -91,25 +94,27 @@ def outdoor_series(seed=SEED, days=DAYS, cadence=CADENCE_MIN, start=START):
 
 
 def _indoor(sensor, rnd, ts, t_out, rh_out):
-    loss = DWELLINGS[sensor["dwelling_type"]] * AGE_BANDS[sensor["age_band"]] * (0.75 if sensor["retrofitted"] else 1.0)
-    loss *= sensor.get("construction_loss", 1.0)
-    hour = ts.hour
-    heated = {"all_day": 7 <= hour < 23, "morning_evening": 6 <= hour < 9 or 17 <= hour < 22, "low": 17 <= hour < 21}[sensor["heating_pattern"]]
-    setpoint = 20.5 if heated and t_out < 15 else 17.0
-    base = setpoint + min(0.0, (t_out - 5) * 0.08 * loss) + max(0.0, (t_out - 16) * 0.35)
-    t_in = max(8.0, base + rnd.gauss(0, 0.3))
-    vapour = _magnus_sat(t_out) * rh_out / 100 + (1.6 * loss if heated else 1.2 * loss)
-    rh_in = max(15.0, min(98.0, 100 * vapour / _magnus_sat(t_in) + rnd.gauss(0, 1.5)))
-    return t_in, rh_in
+    return indoor_projection.project(sensor, rnd, ts, t_out, rh_out)
 
 
-def readings(sensor, seed=SEED, days=DAYS, cadence=CADENCE_MIN, outdoor=None, start=START):
+def readings(sensor, seed=SEED, days=DAYS, cadence=CADENCE_MIN, outdoor=None, start=START,
+             *, composed=False, measures=()):
     outdoor = outdoor if outdoor is not None else outdoor_series(seed, days, cadence, start)
     rnd = random.Random(f"{seed}-series-{sensor['home_id']}")
     stuck_at, stuck = None, None
+    timestamps = [start + timedelta(minutes=k * cadence) for k in range(len(outdoor))]
+    conditions = household_conditions.conditions(
+        sensor["home_id"], seed, "granted", timestamps, is_synthetic=True
+    ) if composed else None
+    home_measures = tuple(measure for measure in measures if measure.home_id == sensor["home_id"])
     for k, (t_out, rh_out) in enumerate(outdoor):
-        ts = start + timedelta(minutes=k * cadence)
-        t_in, rh_in = _indoor(sensor, rnd, ts, t_out, rh_out)
+        ts = timestamps[k]
+        if composed:
+            multiplier = retrofit_effects.effect(sensor["home_id"], ts, home_measures).loss_multiplier if home_measures else 1.0
+            t_in, rh_in = indoor_projection.project_composed(
+                sensor, rnd, ts, t_out, rh_out, conditions[k], multiplier)
+        else:
+            t_in, rh_in = _indoor(sensor, rnd, ts, t_out, rh_out)
         fault, profile = "", sensor["fault_profile"]
         if profile == "dropout" and rnd.random() < 0.02:
             continue
@@ -133,6 +138,44 @@ def _csv_line(row, fields=READING_FIELDS):
     return buf.getvalue()
 
 
+@contextmanager
+def _text_output(path, compressed=False):
+    with path.open("wb") as raw:
+        if compressed:
+            with gzip.GzipFile(filename="", mode="wb", fileobj=raw, mtime=0, compresslevel=1) as packed:
+                with io.TextIOWrapper(packed, encoding="utf-8", newline="") as stream:
+                    yield stream
+        else:
+            with io.TextIOWrapper(raw, encoding="utf-8", newline="") as stream:
+                yield stream
+
+
+def _validate_model(stock, climate, measures):
+    if climate is None:
+        if measures:
+            raise ValueError("Dated measures require explicit climate-backed composed mode")
+        return
+    if stock is None:
+        raise ValueError("Climate-backed composition requires an explicit synthetic stock register")
+    ids = {row["synthetic_home_id"] for row in stock.rows}
+    seen = set()
+    for measure in measures:
+        if not isinstance(measure, retrofit_effects.Measure) or measure.home_id not in ids:
+            raise ValueError("Dated measures must resolve to the selected synthetic register")
+        if measure.measure_id in seen:
+            raise ValueError("Duplicate measure IDs are ambiguous")
+        seen.add(measure.measure_id)
+
+
+def _series(sensor, seed, days, cadence, outdoor, start, faults, climate, measures):
+    series = readings(
+        {**sensor, "fault_profile": "none"} if faults is not None or climate is not None else sensor,
+        seed, days, cadence, outdoor, start, composed=climate is not None, measures=measures)
+    if climate is not None and faults is None:
+        return (sensor_faults.observation(row) for row in series)
+    return series
+
+
 def resolve_window(days: int, cadence: int, as_of: str | None = None) -> tuple[datetime, datetime]:
     """Resolve the complete UTC half-open window before writing any output."""
     if days <= 0 or cadence <= 0 or 1440 % cadence:
@@ -148,10 +191,11 @@ def resolve_window(days: int, cadence: int, as_of: str | None = None) -> tuple[d
 
 def estimate(homes=None, days=DAYS, cadence=CADENCE_MIN, seed=SEED, sample_homes=20,
              start=START, *, stock: sensor_stock.Selection | None = None,
-             fault_rates: Mapping[str, float] | None = None):
+             fault_rates: Mapping[str, float] | None = None, climate=None, measures=()):
     """Volume and size estimate from a measured sample, computed before any full generation."""
     if stock is not None and homes is not None:
         raise ValueError("Pass homes to stock selection, not alongside a prepared selection")
+    _validate_model(stock, climate, measures)
     sensors = stock.sensors(seed) if stock is not None else None
     homes = len(sensors) if sensors is not None else (scale_fixture.HOMES if homes is None else homes)
     if (homes <= 0 and stock is None) or sample_homes <= 0:
@@ -160,19 +204,18 @@ def estimate(homes=None, days=DAYS, cadence=CADENCE_MIN, seed=SEED, sample_homes
     faults = sensor_faults.configure(fault_rates) if fault_rates is not None else None
     if faults is not None:
         sensor_faults.validate_window(faults, days * 1440 // cadence, end)
-    outdoor = outdoor_series(seed, days, cadence, start)
+    outdoor = climate.series(start, days, cadence) if climate is not None else outdoor_series(seed, days, cadence, start)
     rows = nbytes = 0
     sample = (sensors[:sample_homes] if sensors is not None else
               [sensor_for(h, seed) for h in scale_fixture.homes(sample_homes, scale_fixture.SEED)])
     for sensor in sample:
-        series = readings({**sensor, "fault_profile": "none"} if faults is not None else sensor,
-                          seed, days, cadence, outdoor, start)
+        series = _series(sensor, seed, days, cadence, outdoor, start, faults, climate, measures)
         if faults is not None:
             series = (row for packet in sensor_faults.packets(series, faults, seed, sensor["sensor_id"])
                       for row in packet.rows)
         for r in series:
             rows += 1
-            nbytes += len(_csv_line(r, sensor_faults.READING_FIELDS if faults is not None else READING_FIELDS).encode())
+            nbytes += len(_csv_line(r, sensor_faults.READING_FIELDS if faults is not None or climate is not None else READING_FIELDS).encode())
     per_row = nbytes / rows if rows else 0.0
     steps = days * 24 * 60 // cadence
     total = round(homes * rows / len(sample)) if sample else 0
@@ -187,16 +230,24 @@ def estimate(homes=None, days=DAYS, cadence=CADENCE_MIN, seed=SEED, sample_homes
     return result
 
 
-def revision_sources(*, faults: bool = False) -> tuple[Path, ...]:
+def revision_sources(*, faults: bool = False, composed: bool = False) -> tuple[Path, ...]:
+    model_sources = ()
+    if composed:
+        from zava_forward.core.synthetic import climate_history
+        model_sources = (Path(climate_history.__file__), Path(household_conditions.__file__),
+                         Path(retrofit_effects.__file__))
     return (*scale_fixture.revision_sources(), Path(__file__), Path(sensor_stock.__file__),
-            Path(stock_fabric.__file__), *((Path(sensor_faults.__file__),) if faults else ()))
+            Path(stock_fabric.__file__), Path(indoor_projection.__file__), Path(sensor_identity.__file__),
+            *((Path(sensor_faults.__file__),) if faults or composed else ()), *model_sources)
 
 
 def write(out: str | Path, homes: int | None = None, seed: int = SEED, days: int = DAYS,
           cadence: int = CADENCE_MIN, *, as_of: str | None = None,
           stock: sensor_stock.Selection | None = None,
-          fault_rates: Mapping[str, float] | None = None) -> dict[str, object]:
+          fault_rates: Mapping[str, float] | None = None, climate=None, measures=(),
+          compress=False) -> dict[str, object]:
     start, end = resolve_window(days, cadence, as_of)
+    _validate_model(stock, climate, measures)
     faults = sensor_faults.configure(fault_rates) if fault_rates is not None else None
     if faults is not None:
         sensor_faults.validate_window(faults, days * 1440 // cadence, end)
@@ -206,11 +257,12 @@ def write(out: str | Path, homes: int | None = None, seed: int = SEED, days: int
     homes = len(sensors) if sensors is not None else (SHARD_HOMES if homes is None else homes)
     if homes <= 0 and stock is None:
         raise ValueError("homes must be positive")
-    revision = provenance.source_revision(revision_sources(faults=faults is not None))
+    revision = provenance.source_revision(revision_sources(faults=faults is not None, composed=climate is not None))
     out = stock_fabric._destination(out) if stock is not None or faults is not None else Path(out)
     est = estimate(None if stock is not None else homes, days, cadence, seed,
                    sample_homes=max(1, min(20, homes)), start=start, stock=stock,
-                   **({"fault_rates": fault_rates} if faults is not None else {}))
+                   **({"fault_rates": fault_rates} if faults is not None else {}),
+                   **({"climate": climate, "measures": measures} if climate is not None else {}))
     out = provenance.prepare_output(out)
     truth_dir = None
     if faults is not None:
@@ -218,24 +270,23 @@ def write(out: str | Path, homes: int | None = None, seed: int = SEED, days: int
         truth_dir.mkdir()
         out = out / "analysis"
         out.mkdir()
-    reading_fields = sensor_faults.READING_FIELDS if faults is not None else READING_FIELDS
-    sensor_fields = [key for key in SENSOR_FIELDS if faults is None or key != "fault_profile"]
+    reading_fields = sensor_faults.READING_FIELDS if faults is not None or climate is not None else READING_FIELDS
+    sensor_fields = [key for key in SENSOR_FIELDS if (faults is None and climate is None) or key != "fault_profile"]
     (out / "estimate.json").write_text(json.dumps(est, indent=2) + "\n", encoding="utf-8", newline="\n")
-    outdoor = outdoor_series(seed, days, cadence, start)
+    outdoor = climate.series(start, days, cadence) if climate is not None else outdoor_series(seed, days, cadence, start)
     digest, shards, total, sensors_rows = hashlib.sha256(), [], 0, []
     batch, shard_no = [], 0
 
     def flush():
         nonlocal batch, shard_no, total
-        name = f"readings-{shard_no:04d}.csv"
+        name = f"readings-{shard_no:04d}.csv" + (".gz" if compress else "")
         count = 0
-        truth_stream = ((truth_dir / f"truth-{shard_no:04d}.jsonl").open(
-            "w", encoding="utf-8", newline="\n") if truth_dir is not None else nullcontext())
-        with open(out / name, "w", encoding="utf-8", newline="") as f, truth_stream as truth_file:
+        truth_stream = (_text_output(truth_dir / (f"truth-{shard_no:04d}.jsonl" + (".gz" if compress else "")),
+                                    compress) if truth_dir is not None else nullcontext())
+        with _text_output(out / name, compress) as f, truth_stream as truth_file:
             f.write(",".join(reading_fields) + "\n")
             for sensor in batch:
-                series = readings({**sensor, "fault_profile": "none"} if faults is not None else sensor,
-                                  seed, days, cadence, outdoor, start)
+                series = _series(sensor, seed, days, cadence, outdoor, start, faults, climate, measures)
                 if faults is not None:
                     for packet in sensor_faults.packets(series, faults, seed, sensor["sensor_id"]):
                         truth_file.write(json.dumps(dict(
@@ -250,7 +301,7 @@ def write(out: str | Path, homes: int | None = None, seed: int = SEED, days: int
                             count += 1
                 else:
                     for r in series:
-                        line = _csv_line(r)
+                        line = _csv_line(r, reading_fields)
                         digest.update(line.encode())
                         f.write(line)
                         count += 1
@@ -277,7 +328,8 @@ def write(out: str | Path, homes: int | None = None, seed: int = SEED, days: int
                     synthetic_label="Synthetic demonstration data under ADR 0005; not real device or resident data.",
                     climate_source=CLIMATE_SOURCE, stock_fixture_version=scale_fixture.VERSION, stock_seed=scale_fixture.SEED,
                     stock_homes_declared=scale_fixture.HOMES, homes_covered=homes, start=start.isoformat(), end_exclusive=end.isoformat(), days=days,
-                    cadence_minutes=cadence, parameters=dict(dwellings=DWELLINGS, age_bands=AGE_BANDS, bounds=BOUNDS),
+                    cadence_minutes=cadence, parameters=dict(dwellings=DWELLINGS, age_bands=AGE_BANDS, bounds=BOUNDS,
+                                                            indoor_projection=indoor_projection.PARAMETERS),
                     estimate=est, rows=total, shards=shards, readings_sha256=digest.hexdigest(),
                     storage="UTF-8 CSV shards; DDL in SQL_DDL for Azure SQL; load with load_into()")
     extra_files = []
@@ -305,6 +357,22 @@ def write(out: str | Path, homes: int | None = None, seed: int = SEED, days: int
         manifest.pop("ddl_contract", None)
         if stock is not None:
             manifest["parameters"]["classification"] = "Projection parameters are exercise values, not calibrated physics or resident judgements."
+    if climate is not None:
+        histories = [dict(measure_id=m.measure_id, home_id=m.home_id, kind=m.kind,
+                          completed_at=m.completed_at.isoformat(), is_synthetic=m.is_synthetic)
+                     for m in sorted(measures, key=lambda m: (m.home_id, m.completed_at, m.measure_id))]
+        manifest.update(version="sensor-backfill-integrated-v1", schema_version=sensor_faults.SCHEMA_VERSION,
+                        climate_source=climate.manifest(), composed_model=indoor_projection.COMPOSED_PARAMETERS,
+                        household_model=dict(version=household_conditions.VERSION,
+                                             distributions=household_conditions.DISTRIBUTIONS),
+                        retrofit_model=retrofit_effects.PARAMETERS, retrofit_history=histories,
+                        retrofit_history_sha256=hashlib.sha256(json.dumps(histories, sort_keys=True).encode()).hexdigest(),
+                        storage="Synthetic consumer-schema CSV; explicit SensorConsumer policy/controls and available cases required",
+                        compressed=compress)
+        manifest.pop("ddl_contract", None)
+    elif compress:
+        manifest["compressed"] = True
+        manifest["storage"] = "Deterministic gzip CSV; legacy load_into does not accept compressed snapshots"
     manifest["file_sha256"] = provenance.file_hashes(
         [out / "estimate.json", out / "sensors.csv", *extra_files, *(out / shard["file"] for shard in shards)])
     (out / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n")
@@ -315,7 +383,7 @@ def write(out: str | Path, homes: int | None = None, seed: int = SEED, days: int
                               clean="Nominal observations before injected corruption; evaluator-only",
                               emitted_rows="Zero-based CSV data row positions within the named analysis shard, excluding header",
                               analysis_manifest_sha256=hashlib.sha256((out / "manifest.json").read_bytes()).hexdigest(),
-                              file_sha256=provenance.file_hashes(truth_dir.glob("truth-*.jsonl")))
+                              file_sha256=provenance.file_hashes(truth_dir.glob("truth-*.jsonl*")))
         (truth_dir / "manifest.json").write_text(json.dumps(truth_manifest, indent=2) + "\n",
                                                encoding="utf-8", newline="\n")
     return manifest
@@ -372,6 +440,64 @@ def load_into(conn, out, create_schema=_create_sqlite_schema, *, stock=None, max
         return _load_verified(conn, replay, create_schema)
 
 
+def load_with_consumer(consumer, out, *, stock, climate, received_at,
+                       measures=(), fault_rates=None, max_rows=2_000_000):
+    """Replay exact composed synthetic bytes before using the authoritative consumer.
+
+    Policy, controls and available cases must already exist. received_at is an
+    explicit caller-supplied delivery instant, never fabricated from observations.
+    """
+    from zava_forward.core.sensor_consumer import SensorConsumer
+    if not isinstance(consumer, SensorConsumer):
+        raise ValueError("The authoritative SensorConsumer is required")
+    _validate_model(stock, climate, measures)
+    if climate is None:
+        raise ValueError("Verified climate-backed snapshot required")
+    root = Path(out)
+    analysis = root / "analysis" if fault_rates is not None else root
+    if root.is_symlink() or analysis.is_symlink():
+        raise ValueError("Unsupported sensor location")
+    manifest_path = analysis / "manifest.json"
+    if manifest_path.is_symlink() or manifest_path.stat().st_size > 16_000_000:
+        raise ValueError("Unsupported sensor manifest")
+    metadata = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if not isinstance(metadata, dict) or metadata.get("version") != "sensor-backfill-integrated-v1":
+        raise ValueError("Current composed synthetic snapshot required")
+    seed, homes, days, cadence = (metadata[k] for k in ("seed", "homes_covered", "days", "cadence_minutes"))
+    if any(type(value) is not int for value in (seed, homes, days, cadence, max_rows)):
+        raise ValueError("Invalid replay parameters")
+    resolve_window(days, cadence, metadata["as_of"])
+    granted = sum(row["monitoring_consent"] == "granted" for row in stock.rows)
+    if homes != granted:
+        raise ValueError("Stock selection differs")
+    if max_rows <= 0 or max(granted * days * 1440 // cadence, len(stock.rows)) > max_rows:
+        raise ValueError("Replay budget exceeded")
+    if abs(seed) > 2**63 - 1 or type(metadata.get("compressed")) is not bool:
+        raise ValueError("Invalid replay parameters")
+    with tempfile.TemporaryDirectory(prefix="zf-composed-replay-") as scratch:
+        replay = Path(scratch) / "snapshot"
+        expected = write(replay, stock=stock, climate=climate, seed=seed, days=days,
+                         cadence=cadence, as_of=metadata["as_of"], measures=measures,
+                         fault_rates=fault_rates, compress=metadata["compressed"])
+        expected_dir = replay / "analysis" if fault_rates is not None else replay
+        _compare_snapshot(analysis, expected_dir, metadata, expected)
+        if expected["rows"] > max_rows:
+            raise ValueError("Replay budget exceeded")
+        outcomes = {}
+        rows = 0
+        for shard in expected["shards"]:
+            path = expected_dir / shard["file"]
+            opener = gzip.open if metadata["compressed"] else open
+            with opener(path, "rt", encoding="utf-8", newline="") as stream:
+                for row in csv.DictReader(stream):
+                    if rows >= max_rows:
+                        raise ValueError("Replay budget exceeded")
+                    receipt = consumer.process(row, received_at)
+                    outcomes[receipt.reason] = outcomes.get(receipt.reason, 0) + 1
+                    rows += 1
+        return dict(rows=rows, outcomes=outcomes)
+
+
 class _FaultInput(ValueError):
     pass
 
@@ -415,6 +541,10 @@ def _verify_snapshot(out, replay, stock, max_rows):
         raise ValueError("Stock selection differs")
     expected = write(replay, None if stock_mode else homes, seed, days, cadence,
                      as_of=metadata["as_of"], stock=stock)
+    _compare_snapshot(out, replay, metadata, expected)
+
+
+def _compare_snapshot(out, replay, metadata, expected):
     if metadata != json.loads(json.dumps(expected)):
         raise ValueError("Synthetic manifest differs")
     files = expected["file_sha256"]
@@ -464,20 +594,43 @@ def main(argv=None):
     ap.add_argument("--estimate-only", action="store_true")
     ap.add_argument("--fault-rate", action="append", metavar="NAME=RATE",
                     help="Opt in to exclusive two-observation fault packets; repeat for each rate, remainder valid")
+    ap.add_argument("--climate", type=Path, help="Pinned paired climate input; opts in to composed synthetic model")
+    ap.add_argument("--climate-metadata", type=Path, help="Metadata/hash contract for --climate")
+    ap.add_argument("--measures", type=Path, help="Explicit synthetic dated measures JSON list")
+    ap.add_argument("--compress", action="store_true", help="Deterministic gzip shards, not accepted by legacy load_into")
     a = ap.parse_args(argv)
     try:
         fault_rates = sensor_faults.parse_rates(a.fault_rate) if a.fault_rate is not None else None
+        if bool(a.climate) != bool(a.climate_metadata):
+            raise ValueError("--climate and --climate-metadata must be supplied together")
+        climate = None
+        if a.climate:
+            from zava_forward.core.synthetic import climate_history
+            climate = climate_history.ClimateHistory.read(a.climate, a.climate_metadata)
+        measures = ()
+        if a.measures:
+            records = json.loads(a.measures.read_text(encoding="utf-8"))
+            if not isinstance(records, list):
+                raise ValueError("Measures file must contain a JSON list")
+            fields = {"measure_id", "home_id", "kind", "completed_at", "is_synthetic"}
+            if any(not isinstance(row, dict) or set(row) != fields
+                   or not isinstance(row["completed_at"], str) for row in records):
+                raise ValueError("Each measure needs the explicit synthetic dated-measure fields")
+            measures = tuple(retrofit_effects.Measure(**{
+                **row, "completed_at": datetime.fromisoformat(row["completed_at"].replace("Z", "+00:00"))
+            }) for row in records)
         stock = sensor_stock.read_register(a.register, a.homes) if a.register else None
         homes = None if stock is not None else a.homes
         start, _ = resolve_window(a.days, a.cadence, a.as_of)
         if a.estimate_only:
             result = estimate(homes=homes, days=a.days, cadence=a.cadence, seed=a.seed,
                               sample_homes=min(20, homes) if homes else 20, start=start, stock=stock,
-                              fault_rates=fault_rates)
+                              fault_rates=fault_rates, climate=climate, measures=measures)
         else:
             result = {k: v for k, v in write(a.out, homes, a.seed, days=a.days, cadence=a.cadence,
-                                             as_of=a.as_of, stock=stock, fault_rates=fault_rates).items() if k != "parameters"}
-    except (OSError, ValueError) as exc:
+                                             as_of=a.as_of, stock=stock, fault_rates=fault_rates,
+                                             climate=climate, measures=measures, compress=a.compress).items() if k != "parameters"}
+    except (OSError, ValueError, TypeError, KeyError) as exc:
         ap.error(str(exc))
     print(json.dumps(result, indent=2))
 

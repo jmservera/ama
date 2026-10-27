@@ -101,7 +101,7 @@ class Packet:
     rows: tuple[dict[str, str], ...]
 
 
-def _input(row: Mapping[str, object]) -> dict[str, str]:
+def observation(row: Mapping[str, object]) -> dict[str, str]:
     result = {key: str(row[key]) for key in READING_FIELDS[:9]}
     result.update(
         schema_version=SCHEMA_VERSION,
@@ -123,7 +123,7 @@ def packets(
         second = next(iterator, None)
         if second is None:
             raise ValueError("Fault packets require an even clean observation count")
-        clean = (_input(first), _input(second))
+        clean = (observation(first), observation(second))
         label = config.choose(rng)
         emitted = [dict(row) for row in clean]
         for offset, row in enumerate(emitted):
