@@ -2877,12 +2877,21 @@ identity and not production authentication. It is a different composition from t
 * Session: `__Host-zfdemo` (HttpOnly) and `__Host-zfdemo-csrf`, both Secure and SameSite=Strict,
   30 minutes absolute and never past the showcase end. A restart ends every session and logout
   revokes the session. The session holds an opaque handle, never a case id, email or URL.
+* Account control (#467): the top-right Account disclosure shows the signed-in synthetic email
+  and Sign out, matching the employee site's native account panel. Escape closes it and returns
+  focus to Account. Successful sign-out returns focus to the sign-in heading. The authorised
+  `/demo/view` includes only that account's canonical `account.email`; anonymous/session responses
+  do not include it. Hidden/error/signed-out account controls clear their displayed email.
+  The focused no-SQL browser check runs from `src/api` with
+  `PYTHONPATH=tests python -m checks.resident_account_check`, using only constructed test rows and the actual
+  loopback HTTP app. It checks keyboard/focus, restored identity, narrow widths and logout recovery;
+  it does not establish human screen-reader or accessibility acceptance.
 * Reads: every protected request re-reads the case through the allowlist view and re-checks
   admission, so a revoked, expired, duplicated or unprovenanced row is denied on the next request.
   The email in the start-up map is bound to the case: a row whose email no longer equals it is denied
   on login and on every request, including live sessions, until restart. There is no row cache.
   Adding a resident or changing an email needs a restart. The page shows only the positive-allowlist fields
-  (home address, planned measures, plain-language progress and next step, help, and what is
+  (own account email, home address, planned measures, plain-language progress and next step, help, and what is
   unavailable). Anything else is hidden until it is mapped.
 * SQL boundary: [`infra/sql/resident-showcase.sql`](../../infra/sql/resident-showcase.sql) creates
   the schema, an EMPTY allowlist table (rows need named human approval, provenance and a window ending
@@ -2907,4 +2916,3 @@ identity and not production authentication. It is a different composition from t
 Live criteria still blocked (not proven here): remaining budget headroom, live email-to-case
 equality in the homes database, the private job that creates the view and principal, the Key Vault
 secret retrieval role and client, and any deployment. The page is not WCAG conformance evidence.
-

@@ -22,8 +22,15 @@ body{margin:0;font:var(--fontSizeBase400)/1.5 var(--fontFamilyBase);color:var(--
 .skip:focus{top:.5rem}
 :focus-visible{outline:var(--focus-w) solid var(--focus-ink);outline-offset:var(--focus-off);box-shadow:0 0 0 var(--focus-off) var(--focus)}
 .synthetic{background:var(--caution-bg);border-bottom:3px solid var(--caution);padding:.6rem var(--spacingHorizontalL);color:var(--ink)}
-.top{display:flex;gap:.75rem;align-items:center;background:var(--brand);color:#fff;padding:.6rem var(--spacingHorizontalL)}
-.brand{margin:0;font-weight:600;font-size:1.15rem}
+.top{display:flex;flex-wrap:wrap;gap:var(--spacingHorizontalM);align-items:center;background:var(--brand);color:#fff;padding:.6rem var(--spacingHorizontalL)}
+.brand{margin:0;min-width:0;flex:1;font-weight:600;font-size:1.15rem}
+.account{position:relative;margin-left:auto;flex:none}
+.account summary{display:flex;align-items:center;min-height:2.75rem;padding:var(--spacingHorizontalS) var(--spacingHorizontalM);border:1px solid currentColor;border-radius:var(--borderRadiusMedium);cursor:pointer;list-style:none;touch-action:manipulation}
+.account summary::-webkit-details-marker{display:none}
+.account summary:hover,.account[open] summary{background:var(--colorBrandBackgroundHover)}
+.account-panel{position:absolute;right:0;top:calc(100% + var(--spacingHorizontalS));z-index:2;width:20rem;max-width:calc(100vw - 2 * var(--spacingHorizontalL));padding:var(--spacingHorizontalL);border:1px solid var(--line);border-radius:var(--borderRadiusXLarge);background:var(--surface);color:var(--ink);overflow-wrap:anywhere}
+.account-panel p{margin:var(--spacingHorizontalS) 0}
+.account-panel button{width:100%;margin-top:var(--spacingHorizontalS)}
 .brand small{display:block;font-weight:400;font-size:.85rem}
 .logo{display:grid;place-items:center;width:2.4rem;height:2.4rem;border-radius:.6rem;background:var(--surface);color:var(--brand);font-weight:700;flex:none}
 main{max-width:46rem;margin:0 auto;padding:var(--spacingHorizontalL)}

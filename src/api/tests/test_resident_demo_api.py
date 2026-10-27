@@ -174,6 +174,7 @@ class SignInTests(DemoTestCase):
             {
                 "banner",
                 "viewer",
+                "account",
                 "read_only",
                 "home",
                 "measures",
@@ -184,8 +185,33 @@ class SignInTests(DemoTestCase):
             },
         )
         text = json.dumps(view)
-        for hidden in ("one@example.com", "two@example.com", "case_id", "C-2", "provenance"):
+        self.assertEqual(view["account"], {"email": "one@example.com"})
+        for hidden in ("two@example.com", "case_id", "C-2", "provenance"):
             self.assertNotIn(hidden, text)
+
+    def test_account_identity_is_own_canonical_email_after_reload(self) -> None:
+        one, two = self.client(), self.client()
+        self.assertEqual(one.login("  ONE@Example.COM "), 200)
+        self.assertEqual(two.login("two@example.com"), 200)
+        for _ in range(2):
+            self.assertEqual(
+                one.call("GET", "/demo/view?email=two@example.com")[1]["account"],
+                {"email": "one@example.com"},
+            )
+            self.assertEqual(
+                two.call("GET", "/demo/view")[1]["account"], {"email": "two@example.com"}
+            )
+        for client in (self.client(), one, two):
+            self.assertNotIn("@example.com", json.dumps(client.call("GET", "/demo/session")[1]))
+
+    def test_account_identity_is_not_disclosed_after_authority_loss(self) -> None:
+        c = self.client()
+        self.assertEqual(c.login("one@example.com"), 200)
+        self.reader.rows["C-1"] = replace(self.reader.rows["C-1"], revoked=True)
+        status, body, _ = c.call("GET", "/demo/view")
+        self.assertEqual(status, 401)
+        self.assertNotIn("account", body)
+        self.assertNotIn("one@example.com", json.dumps(body))
 
     def test_email_is_canonicalised_at_login(self) -> None:
         self.assertEqual(self.client().login("  ONE@Example.COM "), 200)
