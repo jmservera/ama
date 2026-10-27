@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -12,7 +13,14 @@ from checks.design_system_browser_check import check, main
 from checks.role_screens_fixtures import synthetic_data
 
 # Independent child branches extend only their own installed-screen expectation.
-SCENARIOS: dict[str, tuple[str, str, tuple[str, ...]]] = {}
+SCENARIOS: dict[str, tuple[str, str, tuple[str, ...]]] = {
+    "231": ("quality@example.test", "Technical and independent quality evidence", (
+        "Needs reassessment", "SYN-MISSING-DESIGN-231", "SYN-PHOTO-231",
+        "SYN missing edge photo", "SYN Contractor", "Loft insulation: Returned",
+        "Missing or stale version; cannot establish readiness",
+        "Incomplete, returned, replaced or stale evidence blocks handover",
+    )),
+}
 
 
 def run_browser(base: str) -> None:
@@ -48,10 +56,17 @@ def run_browser(base: str) -> None:
                 page.locator('a.item[href*="case=ZF-1"]').click()
                 evidence = page.get_by_role("region", name="Evidence for ZF-1", exact=True)
                 evidence.wait_for()
-                text = evidence.inner_text()
                 for phrase in expected:
-                    check(f"story {selected} exact evidence: {phrase}", phrase in text)
-                check("same home remains ZF-1", "Selected home ZF-1" in text)
+                    field = evidence.get_by_text(re.compile(re.escape(phrase))).last
+                    field.scroll_into_view_if_needed()
+                    page.wait_for_function(
+                        "([element, text]) => element.innerText.includes(text)",
+                        arg=[field.element_handle(), phrase],
+                    )
+                    check(f"story {selected} exact visible evidence: {phrase}",
+                          phrase in field.inner_text() and field.is_visible())
+                check("same home remains ZF-1",
+                      evidence.get_by_role("heading", name="Selected home ZF-1", exact=True).count() == 1)
                 check("no contact actions", evidence.locator('a[href^="tel:"], a[href^="mailto:"]').count() == 0)
                 for width in (320, 390, 1280):
                     page.set_viewport_size({"width": width, "height": 900})

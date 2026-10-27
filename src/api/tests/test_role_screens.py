@@ -37,3 +37,11 @@ class RoleScreens(unittest.TestCase):
         self.assertIn("signal.throwIfAborted()", source)
         self.assertIn('"aria-current"', source)
         self.assertIn("Reset screen view", source)
+
+    def test_technical_requires_current_reviews_and_separate_quality_evidence(self) -> None:
+        source = (WEB / "screen-technical.js").read_text()
+        for field in ("review.version === technical?.design_version",
+                      "record.defect?.owner", "record.items", "record.handover?.note"):
+            self.assertIn(field, source)
+        self.assertIn("Missing or stale evidence cannot establish readiness", source)
+        self.assertNotIn("post(", source)

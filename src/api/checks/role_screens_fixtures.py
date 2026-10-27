@@ -65,5 +65,18 @@ def synthetic_data() -> dict[str, Any]:
         authority="Unknown", resolution="Unknown", eligibility="Unknown"
     )]
     c["stock_reconciliation_events"] = []
-    c["quality"] = []
+    c["technical"]["signoffs"]["design"] = dict(
+        status="Needs reassessment", version=0, reason="SYN-MISSING-DESIGN-231"
+    )
+    c["documents"].append(dict(
+        id="SYN-MISSING-DESIGN-231", kind="Survey", name="SYN survey",
+        version=2, at="2026-10-27", scan=dict(status="clean")
+    ))
+    c["quality"] = [dict(
+        measure="Loft insulation", state="Returned", evidence_version=1,
+        checklist_version="SYN-QA-231-v1", source="Provider submission",
+        submitted_by="SYN Provider", items=[dict(label="SYN depth", evidence="SYN-PHOTO-231")],
+        defect=dict(description="SYN missing edge photo", reason="SYN incomplete evidence",
+                    owner="SYN Contractor"), defects=[], handover=None, aftercare=[]
+    )]
     return data
