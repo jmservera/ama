@@ -177,10 +177,10 @@ ms.date: 2026-10-27
 * Smallest next action: Revise the ACR restoration procedure and the other seven findings in the existing plan/details, preserve this original Revise verdict, and finalize without another critique.
 * User response required: No for these planner-owned corrections. Do not manufacture credential/model acceptance; record the remaining requested outcomes as UNMET.
 
-| [.copilot-tracking/plans/2026-10-27/deploy-resident-474-plan.md](.copilot-tracking/plans/2026-10-27/deploy-resident-474-plan.md) | Assessed final-candidate plan |
-| [.copilot-tracking/details/2026-10-27/deploy-resident-474-phase-details.md](.copilot-tracking/details/2026-10-27/deploy-resident-474-phase-details.md) | Assessed operational phase details |
-| [.copilot-tracking/research/2026-10-27/deploy-resident-474-research.md](.copilot-tracking/research/2026-10-27/deploy-resident-474-research.md) | Supplied deployment research and evidence pointers |
-| [.copilot-tracking/reviews/plans/2026-10-27/deploy-resident-474-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-27/deploy-resident-474-plan-critique.md) | Original independent critique and complete PC-001 through PC-008 set |
+| [.copilot-tracking/plans/2026-10-27/deploy-resident-474-plan.md](../../../plans/2026-10-27/deploy-resident-474-plan.md) | Assessed final-candidate plan |
+| [.copilot-tracking/details/2026-10-27/deploy-resident-474-phase-details.md](../../../details/2026-10-27/deploy-resident-474-phase-details.md) | Assessed operational phase details |
+| [.copilot-tracking/research/2026-10-27/deploy-resident-474-research.md](../../../research/2026-10-27/deploy-resident-474-research.md) | Supplied deployment research and evidence pointers |
+| [.copilot-tracking/reviews/plans/2026-10-27/deploy-resident-474-plan-critique.md](deploy-resident-474-plan-critique.md) | Original independent critique and complete PC-001 through PC-008 set |
 
 ## Next Steps
 

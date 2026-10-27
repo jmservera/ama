@@ -284,13 +284,13 @@ records DB timestamps; this Review did not restore or independently rescan that 
 | Residual required engineering | Distinct follow-up beginning at rpi-plan | RV-002, MI host/ledger and actual activation/fallback |
 | Remaining active plan work | P03-T01 | Commit, fresh scoped receipt/verification, independent exact-head assessment, conditional push/PR |
 
-| [.copilot-tracking/research/2026-10-27/deploy-resident-474-research.md](.copilot-tracking/research/2026-10-27/deploy-resident-474-research.md) | Deployment research |
-| [.copilot-tracking/plans/2026-10-27/deploy-resident-474-plan.md](.copilot-tracking/plans/2026-10-27/deploy-resident-474-plan.md) | Active plan and distinct follow-ups |
-| [.copilot-tracking/details/2026-10-27/deploy-resident-474-phase-details.md](.copilot-tracking/details/2026-10-27/deploy-resident-474-phase-details.md) | Operational details and publication sequence |
-| [.copilot-tracking/reviews/plans/2026-10-27/deploy-resident-474-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-27/deploy-resident-474-plan-critique.md) | Original Revise critique |
-| [.copilot-tracking/changes/2026-10-27/deploy-resident-474-changes.md](.copilot-tracking/changes/2026-10-27/deploy-resident-474-changes.md) | Partial execution and RV-003 correction target |
-| [.copilot-tracking/changes/2026-10-27/deploy-resident-474-evidence/live-result.json](.copilot-tracking/changes/2026-10-27/deploy-resident-474-evidence/live-result.json) | Actual checks and explicit blocked outcomes |
-| [.copilot-tracking/reviews/logs/2026-10-27/deploy-resident-474-review.md](.copilot-tracking/reviews/logs/2026-10-27/deploy-resident-474-review.md) | One original independent Review |
+| [.copilot-tracking/research/2026-10-27/deploy-resident-474-research.md](../../../research/2026-10-27/deploy-resident-474-research.md) | Deployment research |
+| [.copilot-tracking/plans/2026-10-27/deploy-resident-474-plan.md](../../../plans/2026-10-27/deploy-resident-474-plan.md) | Active plan and distinct follow-ups |
+| [.copilot-tracking/details/2026-10-27/deploy-resident-474-phase-details.md](../../../details/2026-10-27/deploy-resident-474-phase-details.md) | Operational details and publication sequence |
+| [.copilot-tracking/reviews/plans/2026-10-27/deploy-resident-474-plan-critique.md](../../plans/2026-10-27/deploy-resident-474-plan-critique.md) | Original Revise critique |
+| [.copilot-tracking/changes/2026-10-27/deploy-resident-474-changes.md](../../../changes/2026-10-27/deploy-resident-474-changes.md) | Partial execution and RV-003 correction target |
+| [.copilot-tracking/changes/2026-10-27/deploy-resident-474-evidence/live-result.json](../../../changes/2026-10-27/deploy-resident-474-evidence/live-result.json) | Actual checks and explicit blocked outcomes |
+| [.copilot-tracking/reviews/logs/2026-10-27/deploy-resident-474-review.md](deploy-resident-474-review.md) | One original independent Review |
 
 ## Next Steps
 
