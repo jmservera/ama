@@ -161,10 +161,10 @@ ms.date: 2026-10-27
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-plan.md](.copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-plan.md) | Assessed final-candidate plan |
-| [.copilot-tracking/details/2026-10-27/indoor-derived-bounds-179-phase-details.md](.copilot-tracking/details/2026-10-27/indoor-derived-bounds-179-phase-details.md) | Assessed phase details |
-| [.copilot-tracking/research/2026-10-27/indoor-derived-bounds-179-research.md](.copilot-tracking/research/2026-10-27/indoor-derived-bounds-179-research.md) | Primary supplied research |
-| [.copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-critique.md](.copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-critique.md) | Complete single critique and finding set |
+| [.copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-plan.md](indoor-derived-bounds-179-plan.md) | Assessed final-candidate plan |
+| [.copilot-tracking/details/2026-10-27/indoor-derived-bounds-179-phase-details.md](../../details/2026-10-27/indoor-derived-bounds-179-phase-details.md) | Assessed phase details |
+| [.copilot-tracking/research/2026-10-27/indoor-derived-bounds-179-research.md](../../research/2026-10-27/indoor-derived-bounds-179-research.md) | Primary supplied research |
+| [.copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-critique.md](indoor-derived-bounds-179-critique.md) | Complete single critique and finding set |
 
 ## Next Steps
 
@@ -306,10 +306,10 @@ continue the authorized ordered RPI loop. No user action is required.
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/research/2026-10-27/indoor-derived-bounds-179-research.md](.copilot-tracking/research/2026-10-27/indoor-derived-bounds-179-research.md) | Correction C8/C9 and selected version decision |
-| [.copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-plan.md](.copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-plan.md) | Assessed correction P03/P04 candidate |
-| [.copilot-tracking/details/2026-10-27/indoor-derived-bounds-179-phase-details.md](.copilot-tracking/details/2026-10-27/indoor-derived-bounds-179-phase-details.md) | Assessed correction task contracts |
-| [.copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-critique.md](.copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-critique.md) | Original outcome and appended correction-cycle critique |
+| [.copilot-tracking/research/2026-10-27/indoor-derived-bounds-179-research.md](../../research/2026-10-27/indoor-derived-bounds-179-research.md) | Correction C8/C9 and selected version decision |
+| [.copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-plan.md](indoor-derived-bounds-179-plan.md) | Assessed correction P03/P04 candidate |
+| [.copilot-tracking/details/2026-10-27/indoor-derived-bounds-179-phase-details.md](../../details/2026-10-27/indoor-derived-bounds-179-phase-details.md) | Assessed correction task contracts |
+| [.copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-critique.md](indoor-derived-bounds-179-critique.md) | Original outcome and appended correction-cycle critique |
 
 ## Next Steps
 

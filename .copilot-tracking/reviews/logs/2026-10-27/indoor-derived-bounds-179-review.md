@@ -358,15 +358,25 @@ would not require another Review by this record.
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/reviews/logs/2026-10-27/indoor-derived-bounds-179-review.md](.copilot-tracking/reviews/logs/2026-10-27/indoor-derived-bounds-179-review.md) | Original Review preserved; this dated correction record appended |
-| [.copilot-tracking/research/2026-10-27/indoor-derived-bounds-179-research.md](.copilot-tracking/research/2026-10-27/indoor-derived-bounds-179-research.md) | C1--C9 and correction causal/versioning research |
-| [.copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-plan.md](.copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-plan.md) | P03 complete, P04 publication pending |
-| [.copilot-tracking/details/2026-10-27/indoor-derived-bounds-179-phase-details.md](.copilot-tracking/details/2026-10-27/indoor-derived-bounds-179-phase-details.md) | Correction contract and legacy-scratch clarification |
-| [.copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-critique.md](.copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-critique.md) | Original critique and PC-C1-001 preserved |
-| [.copilot-tracking/changes/2026-10-27/indoor-derived-bounds-179-changes.md](.copilot-tracking/changes/2026-10-27/indoor-derived-bounds-179-changes.md) | Final implementation/test evidence and prior failures |
-| [.copilot-tracking/rpi-sessions/2026-10-27/indoor-derived-bounds-179-state.json](.copilot-tracking/rpi-sessions/2026-10-27/indoor-derived-bounds-179-state.json) | Parent-owned current handoff and distinct follow-ups |
-| [docs/reference/research/retrofit-synthetic-data/README.md](docs/reference/research/retrofit-synthetic-data/README.md) | Version/refresh convention and historical immutability |
-| [src/core/README.md](src/core/README.md) | Model equations, containing versions and literal hashes |
+| [.copilot-tracking/reviews/logs/2026-10-27/indoor-derived-bounds-179-review.md](indoor-derived-bounds-179-review.md) | Original Review preserved; this dated correction record appended |
+| [.copilot-tracking/research/2026-10-27/indoor-derived-bounds-179-research.md](../../../research/2026-10-27/indoor-derived-bounds-179-research.md) | C1--C9 and correction causal/versioning research |
+| [.copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-plan.md](../../../plans/2026-10-27/indoor-derived-bounds-179-plan.md) | P03 complete, P04 publication pending |
+| [.copilot-tracking/details/2026-10-27/indoor-derived-bounds-179-phase-details.md](../../../details/2026-10-27/indoor-derived-bounds-179-phase-details.md) | Correction contract and legacy-scratch clarification |
+| [.copilot-tracking/plans/2026-10-27/indoor-derived-bounds-179-critique.md](../../../plans/2026-10-27/indoor-derived-bounds-179-critique.md) | Original critique and PC-C1-001 preserved |
+| [.copilot-tracking/changes/2026-10-27/indoor-derived-bounds-179-changes.md](../../../changes/2026-10-27/indoor-derived-bounds-179-changes.md) | Final implementation/test evidence and prior failures |
+| [.copilot-tracking/rpi-sessions/2026-10-27/indoor-derived-bounds-179-state.json](../../../rpi-sessions/2026-10-27/indoor-derived-bounds-179-state.json) | Parent-owned current handoff and distinct follow-ups |
+| [docs/reference/research/retrofit-synthetic-data/README.md](../../../../docs/reference/research/retrofit-synthetic-data/README.md) | Version/refresh convention and historical immutability |
+| [src/core/README.md](../../../../src/core/README.md) | Model equations, containing versions and literal hashes |
+
+### Copilot Thread Link Correction (2026-10-27)
+
+Corrected the evidence targets above and in the existing critique to resolve
+relative to their containing documents. A quick path-resolution script checked
+all 17 Markdown links across both artifacts; all targets exist.
+`src/core/tests/test_synthetic_determinism.py:test_versioned_payload_goldens`
+already pins the intentional indoor payload hash to `sensor-backfill-v3` and
+`indoor-projection-exercise-v2`, including the manifest model version. No code
+change or additional RPI loop/Review was needed; prior outcomes are preserved.
 
 ## Next Steps
 
