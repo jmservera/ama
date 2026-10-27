@@ -136,6 +136,7 @@ class ResidentDemo:
         except rs.ShowcaseDenied:
             return None
         view: dict[str, Any] = rs.showcase_view(row)
+        view["account"] = {"email": self.identity.email_for(case_id)}
         return view
 
 

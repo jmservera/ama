@@ -16,6 +16,14 @@
 <header class="top">
   <span class="logo" aria-hidden="true">Z</span>
   <p class="brand">Zava North Homes <small>Home improvement progress</small></p>
+  <details id="account" class="account" hidden>
+    <summary aria-label="Your account">Account</summary>
+    <div class="account-panel">
+      <strong>Signed in to the showcase</strong>
+      <p id="account-email" translate="no"></p>
+      <button type="button" id="signout">Sign out</button>
+    </div>
+  </details>
 </header>
 <main id="main" tabindex="-1">
   <h1>Your home improvement progress</h1>
@@ -41,7 +49,6 @@
     <button type="button" id="retry">Try again</button>
   </div>
   <div id="content" hidden></div>
-  <div id="signout-row" class="actions" hidden><button type="button" id="signout" class="secondary">Sign out</button></div>
   <noscript><p>This page needs JavaScript to sign in and show your progress. A person can help: speak to your housing officer or visit your local office.</p></noscript>
 </main>
 <footer class="foot">

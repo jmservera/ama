@@ -9,7 +9,8 @@
   var form = document.getElementById("signin-form");
   var signinError = document.getElementById("signin-error");
   var signinButton = document.getElementById("signin-button");
-  var signoutRow = document.getElementById("signout-row");
+  var account = document.getElementById("account");
+  var accountEmail = document.getElementById("account-email");
   var csrf = "";
 
   function el(tag, text, cls) {
@@ -225,7 +226,8 @@
     errorEl.hidden = true;
     signin.hidden = true;
     content.hidden = false;
-    signoutRow.hidden = false;
+    accountEmail.textContent = view.account.email;
+    account.hidden = false;
     statusEl.textContent = announce || "";
     if (announce) {
       var first = content.querySelector("h2");
@@ -236,9 +238,15 @@
     }
   }
 
+  function hideAccount() {
+    account.hidden = true;
+    account.open = false;
+    accountEmail.textContent = "";
+  }
+
   function showSignin(message) {
     content.hidden = true;
-    signoutRow.hidden = true;
+    hideAccount();
     errorEl.hidden = true;
     statusEl.textContent = "";
     signin.hidden = false;
@@ -254,7 +262,7 @@
   function fail(message) {
     content.hidden = true;
     signin.hidden = true;
-    signoutRow.hidden = true;
+    hideAccount();
     statusEl.textContent = "";
     errorText.textContent = message;
     errorEl.hidden = false;
@@ -340,10 +348,21 @@
       .then(function (r) {
         if (!r.ok) { notConfirmed(); return; }
         content.textContent = "";
+        hideAccount();
         csrf = "";
         signedOut = true;
         start();
       }).catch(notConfirmed);
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && account.open) {
+      account.open = false;
+      account.querySelector("summary").focus();
+    }
+  });
+  document.addEventListener("click", function (event) {
+    if (!account.contains(event.target)) account.open = false;
   });
 
   document.getElementById("retry").addEventListener("click", start);
