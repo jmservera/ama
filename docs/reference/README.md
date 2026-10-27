@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-10-25
+ms.date: 2026-10-27
 ---
 
 ## Purpose
@@ -379,6 +379,7 @@ or infra acceptance claimed.
 | Complete exact-head validation after a rubric score append | [Rubric publication lifecycle](../../.github/rubric/README.md#post-push-visibility-and-exact-head-completion) | Bounded visibility wait, exact resulting SHA, failed-push/concurrent-movement denial; final-head receipt and independent/hosted checks without recursive scoring |
 | Design a looped agent goal | [Capstone Deliverables and Storage Map](../capstone/README.md) | Where each capstone asset (deck, pitch transcripts, thought leadership artifact, code) must be stored for the rubric gate, and which criteria score 0 until it exists |
 | Compare feedback-first agent delivery with AI software factories | [Thought-leadership source review](../capstone/thought-leadership/everything-but-the-software/README.md#related-work-review-of-25-october) | Pavlenko et al. v1: bounded optimisation, evidence-scoped memory, qualified efficiency estimates and distinction from the unchanged post-feature consolidation experiment |
+| Trace the industry-led paper revision and its empirical charts | [Industry-led revision](../capstone/thought-leadership/everything-but-the-software/README.md#industry-led-revision-27-october) | Knight Capital, WyCash and PhotoCraft precede AMA; paired repository inheritance, instruction maintenance and context-file costs are distinguished. Published-data charts, source locators, retained counterevidence and unchanged protocol |
 | Trace the critique-revised agentic-delivery paper | [Draft v4 revision and boundaries](../capstone/thought-leadership/everything-but-the-software/README.md#critique-revision-25-october) | Observed usability/completion divergence, candidate-mechanism audits, expanded rivals, verified citation corrections and preserved protocol with explicit identification/precision limits; no results, independent empirical review or publication approval |
 | Trace the paper's table-flow and exploratory first-pass revision | [Table flow and developmental revision](../capstone/thought-leadership/everything-but-the-software/README.md#table-flow-and-developmental-revision-25-october) | Unchanged title/subtitle; nearby table placement, operational-failure bridge, unresolved H4/H7 definitions and owner-selected exploratory framing; no private-tag amendment or new empirical evidence |
 | Trace the broader motivation for the paper's steering hypothesis | [Repository-context revision](../capstone/thought-leadership/everything-but-the-software/README.md#repository-context-and-hypothesis-revision-25-october) | Pinned Aithena, Squad and PhotoCraft observations, dated tracker counts, menu-versus-behaviour distinction and retained counter-evidence; purposive context, not comparative framework results, measured decay or proof of human necessity |

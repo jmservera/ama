@@ -1,24 +1,152 @@
 ---
-title: Everything but the Software - source package (draft v5)
-description: Developmentally revised case, bounded candidate explanations and prospective exploratory consolidation protocol
-ms.date: 2026-10-26
+title: Everything but the Software - source package (draft v6)
+description: Industry-led maintenance argument, inherited-error and instruction-debt evidence, and prospective consolidation protocol
+ms.date: 2026-10-27
 ---
 
 Working title: *Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop. An Exploratory Case Study and an Experiment Protocol.*
 
 ## Current Status
 
-The compounding-error evidence integration below is the latest source record.
-The owner's preferred subtitle and prospective decay-measurement proposal
-remain in place: decay is the hypothesis motivated by a small observational
-base, not an established case result. No experiment results are added. The
-private tagged study kit was not inspected, amended or executed.
+The industry-led revision of 27 October is the latest source record. The
+paper now starts with maintenance before and with coding agents, then brings
+in AMA as the triggering experience. It distinguishes conversational errors,
+repository-carried faults and instruction maintenance, with two figures
+replotted from published data. The title and subtitle are retained.
 
-The latest external validation build is 45 pages, under
-`/tmp/ama-paper-compounding-P8QOXK/`. Earlier builds below are historical.
-The workspace PDF regenerated during source editing; preservation of its
-initial bytes cannot be claimed. It was not restored over the modified copy.
-The arXiv bundle is not refreshed.
+The current external validation PDF has 49 pages. Structural checks pass
+with 114 matching references; the complete experiment-protocol section is
+unchanged from this revision's starting commit after line-ending
+normalisation. No experiment was run or private study material amended.
+The existing package PDF and two case figures are unchanged. The arXiv
+bundle has not been refreshed.
+
+## Industry-Led Revision 27 October
+
+A read-only developmental critique preceded all edits. Three research-agent
+lanes investigated historical maintenance, inherited coding errors and chart
+data, and instruction context with PhotoCraft. A follow-up checked
+longitudinal instruction-file studies. A fresh scoped critique found no
+material remaining framing issues. These were assisted editorial and
+research passes, not independent human peer review.
+
+The revision changes the argument's order:
+
+* Knight Capital's dormant fault and deployment failure, followed by
+   Cunningham's WyCash consolidation account, establish the pre-AI problem.
+* PhotoCraft's command coverage and project-authored readiness estimates
+   introduce the distinction between completed features and usable workflows.
+* Paired repository-history evidence makes errors inherited by later feature
+   work distinct from errors carried within a conversation.
+* Instruction-file histories and context-file experiments extend maintenance
+   to the prompts, skills and notes governing development.
+* AMA follows as the traceable trigger for the consolidation experiment.
+   The mechanism summary now separates accumulation, transmission, selection
+   and correction, instead of treating every process problem as propagation.
+
+The abstract, research questions and conclusion follow that structure.
+Repeated validity disclaimers are reduced in the narrative; specific
+sampling, measurement and identification limits remain beside their methods
+and in the limitations sections. Software entropy is a maintenance analogy,
+not an asserted physical law. Context debt is attributed to prior work.
+
+### Source Checks
+
+All retrievals below are dated 2026-10-27. Locators identify the inspected
+source material, not experiments reproduced here. This is a focused source
+synthesis rather than an exhaustive or systematic review.
+
+| Source | Inspected support and use | Coverage and interpretation |
+| --- | --- | --- |
+| [SEC release 2013-222](https://www.sec.gov/newsroom/press-releases/2013-222), 16 October 2013 | Paragraph beginning "According to the SEC's order": 2005 router defect, 2012 incorrect deployment, more than four million orders for 212 customer orders and loss above USD 460 million | Full-text support in the official release. The linked order PDF was not meaningfully extracted. This is a latent-fault, deployment and control example, not a feature-churn rate |
+| [Cunningham's original WyCash report](http://c2.com/doc/oopsla92.html), 1992 | Paragraphs on adapting the financial product, revising mature code and consolidating an initially expedient implementation | Original industrial experience account; no controlled cost estimate or longitudinal numerical dataset is attributed to it |
+| [Pan et al. v1](https://arxiv.org/html/2610.14768v1), 10 October 2026 | Sections 2.5, 3.1-3.2 and 4.1-4.2, Tables 2-3, and Section 5.1, Figures 4-5: fresh sessions, paired history, inherited-test failures, clean histories and two fault-reuse examples | Full-text support for the scoped claims and chart transcription. ER includes current and prior tests; TR concerns the current task alone. Selected cohorts overlap and are not randomised repairs |
+| [Chatlatanagulchai et al. v2](https://arxiv.org/html/2511.12884v2), 9 August 2026 | Sections 4.2.2-4.2.3: sampled post-adoption commits, overlapping edit labels, additions and deletions; Section 5.1: context-debt proposal | Full-text support. The paper associates day-scale updates with project maintenance, not immediate corrective prompt tuning. Edit labels do not measure loaded context or downstream performance |
+| [Mohsenimofidi et al. v4](https://arxiv.org/html/2510.21413v4), 5 February 2026 | Section 4.3 and Table 2: 155 files, 77 unchanged after creation; detailed coding of 169 commits in ten high-change files | Full-text support. Add/modify/remove categories overlap; the selected files do not establish an ecosystem-wide rate. Intent was not coded |
+| [Gloaguen et al. v3](https://arxiv.org/html/2602.11988v3), 29 September 2026 | Sections 4.1-4.4, Tables 2-3 and Appendix B: context inclusion, cost, task resolution, instruction-following, length analysis and documentation-removal ablation | Full-text support. Reported 20%/23% average cost increases concern generated files on SWE-bench Lite/CTXbench; resolution differences are non-significant. Length alone did not explain results; useful-context counterevidence is retained |
+| [Nigh's GitHub article](https://github.blog/ai-and-ml/github-copilot/how-to-write-a-great-agents-md-lessons-from-over-2500-repositories/), 19 November 2025, updated 25 November | "What works in practice" and "Key takeaways": explicit commands, examples, boundaries and iterative additions | Full-text practitioner account, not a controlled evaluation or numerical effect of corrective instructions. Its custom-agent definitions are distinguished from repository-wide context files |
+| [Rajasekaran et al., Anthropic](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents), 29 September 2025 | "The anatomy of effective context" and long-horizon context sections: brittle prompt logic, exception lists, curation, retrieval and note maintenance | Full-text first-party engineering account; the paper uses its design reasoning rather than a quantified intervention effect |
+| [PhotoCraft pinned source](https://github.com/storytold/photocraft/tree/5bb853654196eca807212ff8955ba2eb293071ea) | Scorecard, target-app parity assessment and dispatch-count implementation, checked against the existing dated observation record | Source-level and project-authored support, not fresh application execution. The original source pin and 25 October tracker boundary remain unchanged |
+
+Sinha and Laban were rechecked by the research lane with their previously
+inspected versions. Their conversation-history results remain separate from
+repository inheritance. No points were estimated from their curves. The
+Laban version's 39% main-text versus 35% teaser discrepancy remains recorded
+in the historical source note below. SlopCodeBench's full-text extraction
+was still incomplete; SWE-CI remains supporting context rather than a new
+plotted dataset. Existing author-verification tasks are not marked complete.
+
+### Published-Data Figures
+
+[published-evidence.json](./anc/published-evidence.json) retains source
+versions, locators, units, cohorts and transcription notes. The existing
+[figure generator](./anc/make_figures.py) now supports all figures, only the
+case figures, or only the published-data figures.
+
+* [Inherited-history figure](./fig-inherited-history.png) plots Pan's Table 3
+   event-resolution differences and published 95% repository-clustered
+   bootstrap intervals. The aggregate, inherited-failure and clean-history
+   rows remain visible. Values are transcribed, not recomputed from rounded
+   percentage columns; no across-study pooling or curve digitisation occurs.
+* [Instruction-maintenance figure](./fig-instruction-maintenance.png) plots
+   78 addition, 32 modification, 19 deletion and ten maintenance labels in
+   100 sampled commits. Labels overlap. Add/delete totals combine line-level
+   and section-level labels; maintenance is the remainder of 139 assignments.
+   These are neither distinct-commit percentages nor a context-degradation curve.
+
+Both captions identify the source, denominator, definition and relevant
+conditioning. New chart images were visually inspected and checked for
+nonblank output. The generator's complete default path was also run in
+external scratch, leaving the two existing case figures untouched.
+
+### Validation and Reproduction
+
+Tectonic 0.17.0 was installed from its official Windows release into the user
+profile. The archive SHA-256 was checked against the release metadata:
+
+```text
+f61ce51f0b0ade1015b7de7ef368541c5424e9756ecbd0d7af97d6d48030845f
+```
+
+The author requested pip rather than uv. Plot dependencies were installed
+with the existing virtual environment's pip, using matplotlib 3.10.7 and
+Pillow 12.0.0. Earlier uv download attempts failed; the editor's generic
+installer also invoked uv and was not used for the successful installation.
+No project dependency manifest was changed. A separate PyMuPDF installation
+was cancelled and not retried. The browser's PDF viewer was used instead.
+Context7 tools were unavailable; official Tectonic documentation and release
+metadata supplied the installation information.
+
+The successful commands, from the repository root, are:
+
+```powershell
+& .\.venv\Scripts\python.exe docs/capstone/thought-leadership/everything-but-the-software/anc/check_paper.py
+& .\.venv\Scripts\python.exe docs/capstone/thought-leadership/everything-but-the-software/anc/make_figures.py --only published
+& "$env:LOCALAPPDATA\Programs\Tectonic\0.17.0\tectonic.exe" --untrusted --keep-logs --keep-intermediates --outdir "$env:TEMP\ama-paper-industry-20261027-23e0fd2e" docs/capstone/thought-leadership/everything-but-the-software/main.tex
+```
+
+The external PDF has 49 pages. Its title page and the two standalone new
+figure images were visually inspected. The browser did not follow PDF page
+fragments or expose page controls, so page-by-page PDF layout review was not
+performed. The final TeX log has no unresolved references or rerun requests and no
+overflow above ten points. Four smaller overfull boxes remain (maximum
+5.295 points), plus one underfull bibliography line. Tectonic also emits
+a fontconfig configuration warning; the PDF opens with rendered text.
+This is a Tectonic/XeTeX build, not a new pdfLaTeX validation.
+
+The structural checker passes with 114 matching cited, embedded and reusable
+bibliography keys and results disabled. The protocol section is identical
+to the starting commit after normalising line endings. Transcription,
+denominator, image-dimension and nonblank checks pass. Editor diagnostics
+report no errors in the changed manuscript, bibliography or plotting script.
+Historical-baseline word comparison is unavailable because its configured
+Git object is missing; the current approximate body count is 17,277.
+
+Output is under `%TEMP%/ama-paper-industry-20261027-23e0fd2e/`. The package
+PDF and case figures remain unchanged against the starting commit. No
+experiment, private-kit modification, commit, push, submission or complete
+RPI publication gate was performed. Remaining venue and external-publication
+decisions are unchanged.
 
 ## Compounding-Error Evidence 26 October
 

@@ -1,8 +1,8 @@
 % !TEX program = pdflatex
 % ---------------------------------------------------------------------------
-% Everything but the Software -- LaTeX source (draft v5)
-% Figures are PNG files (fig-log-growth.png, fig-causal-loop.png) in the same
-% folder; pdflatex reads them directly. anc/make_figures.py regenerates them.
+% Everything but the Software -- LaTeX source (draft v6)
+% Figures are PNG files in the same folder; pdflatex reads them directly.
+% anc/make_figures.py regenerates the case and published-evidence figures.
 % Compile with pdflatex, twice. No BibTeX run is needed: the bibliography is
 % embedded below, so arXiv's automatic TeX processing works without a .bbl.
 % references.bib in the same folder holds the same entries for reuse.
@@ -48,38 +48,35 @@ author's own and do not necessarily reflect those of Microsoft. The case
 organisation, Zava North Homes, is fictional.}\\[4pt]
 \small Senior Partner Solution Architect, Microsoft Schweiz, Zurich}
 
-\date{Draft of 26 October 2026}
+\date{Draft of 27 October 2026}
 % TODO(author): replace with the submission date.
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-When does apparent agentic delivery progress cease to represent software
-progress? I examine a traceable exploratory case in which artefact-level
-completion diverged from usable behaviour, then present a prospective
-consolidation experiment. Over six weeks I used agents, centred on Microsoft's
-HyperVelocity Engineering (HVE Core) framework, to research a fictional housing
-retrofit programme, write requirements and deploy an MVP. A coordinator then
-ran parallel research--plan--implement--review loops over a backlog that grew
-to 192 issues. In ten days it merged 183 pull requests and the log grew by
-about 37,000 words, yet I could not sign in to the replacement system; an
-automated rubric separately rated implementation completeness five out of
-five. Its assessed release and capability scope have not yet been matched to
-that failed journey. Five
-candidate mechanisms organise the evidence: specification inflation, proxy
-capture, learning evaporation, process-gate inflation and feedback starvation.
-The confounded participant-observer case establishes neither accelerated code
-decay nor the effectiveness of a remedy. Feature-driven decay is the hypothesis,
-not an observed case result. It motivates a test of scheduled,
-behaviour-preserving consolidation after each feature. The unregistered, exploratory first-pass protocol compares feature-only,
-consolidation and review-only
-arms on retained behaviour, an unforeseen change request, internal quality,
-intervention demand and cost. Its contrasts estimate a consolidation package,
-including extra resources and different notes, not refactoring alone. No study
-results are reported. The contribution is the chain from observed divergence,
-through candidate explanations, to a falsifiable test of retained behaviour
-and future changeability, not evidence that more agents restore either.
+Each feature changes the starting point for the next. In agentic software
+development, that starting point includes code, tests and the prompts, skills
+and notes directing subsequent work. I examine how faults and corrective
+instructions can accumulate across this process. Industrial maintenance
+accounts, recent agent benchmarks and public project records motivate a
+distinction between errors within a conversation and errors inherited through
+a repository. A paired-history benchmark supplies evidence of the latter,
+while its clean-history results qualify an explanation based on structural
+complexity alone. My six-week AMA capstone provides the triggering case:
+a coordinator merged 183 pull requests in ten days, but I could not sign in
+to the replacement system. Five mechanisms connect its delivery record to
+the broader problem: specification inflation, proxy capture, learning
+evaporation, process-gate inflation and feedback starvation. The case centres
+on a migration with missing deployment dependencies; it exposes a break in
+usable behaviour rather than measuring a decay rate. I then specify an
+exploratory, registration-pending comparison of feature-only delivery,
+scheduled consolidation and read-only review. Outcomes include retained
+behaviour, an unforeseen change request, internal quality, intervention
+demand and cost. The consolidation arm includes additional resources, tests
+and a different handover note. No study results are reported. The aim is to
+determine whether consolidation improves the state left for later work,
+rather than merely the output recorded at each step.
 \end{abstract}
 
 \noindent\textbf{Keywords:} agentic software engineering; coding agents;
@@ -89,106 +86,104 @@ feedback loops; human--AI interaction; exploratory case study; experiment protoc
 % ===========================================================================
 \section{Introduction}\label{sec:intro}
 
-On 15~October 2026 I started an agent coordinator against a backlog of more
-than 180 GitHub issues and let it run. Each issue went into its own git
-worktree, where an agent session ran a full research, plan, implement and
-review loop, passed a local validation gate and published a pull request. The
-coordinator assessed each candidate, merged it when every gate was green,
-rebased the remaining branches and started the next wave of work. Ten days
-later, 183 pull requests had been merged. I could not sign in to a running
-version of the system I was building.
+On 1~August 2012, Knight Capital's automated router sent more than four
+million orders while attempting to fill 212 customer orders. The firm lost
+more than USD~460 million. The SEC traced the incident to a defective
+function left in the router after a 2005 change, an incorrect deployment for
+a new trading programme, and inadequate controls. The new deployment
+activated old code that was no longer meant to run~\cite{sec2013knight}.
+The failure crossed a feature boundary and a seven-year interval: the
+relevant starting point was the accumulated system, not just the latest patch.
 
-That gap, between an extraordinary volume of activity and the absence of
-usable replacement behaviour, is the subject of this report. Beck's distinction
-between plausible code and working software, and his emphasis on learning
-through product use, motivate the question~\cite{orosz2025beck,beck2026prodacity}.
-The case concerns a configuration I designed, not a general evaluation of
-coding agents or a finding that its recorded activity had no value.
+Less spectacular versions of the same maintenance problem are familiar.
+Cunningham's 1992 account of WyCash described a financial product continually
+adapted to market demands. Its mature code was repeatedly revised and
+rewritten; the technical-debt metaphor explained why taking an initial
+shortcut required later consolidation~\cite{cunningham1992wycash}.
+Some debt is visible as duplication or awkward dependencies. Some remains
+hidden in assumptions about inputs, deployment and earlier behaviour until
+another change depends on it. Counting completed changes reveals neither.
 
-The hypothesis predates this repository. My earlier experience with Aithena
-and later selected observations of public repositories provide motivation,
-not a framework comparison or additional sampled cases
-(Appendix~\ref{sec:repositoryobservations}). AMA is the focal, traceable case.
+Agentic development makes this distinction newly pressing. PhotoCraft, an
+early-alpha reimplementation of Photoshop, reports 631 of 631 menu items
+live, but explicitly defines that count as dispatch rather than behaviour.
+Its own dated assessment estimates about 76\% feature breadth and 45\%
+readiness for real work~\cite{photocraft2026}. A command can be reachable
+without the surrounding workflow being dependable. At the repository level,
+SWE-Maintain finds that agents solve fewer later tasks when starting from
+their own earlier changes than from the developers' changes, even though
+each task starts in a fresh session~\cite{pan2026swemaintain}.
+The next session can forget the conversation and still inherit its mistakes.
 
-The central question is how feature-centric agentic delivery can produce
-strong completion signals while failing to preserve a usable and adaptable
-system. The argument follows one chain: observed divergence, candidate
-mechanisms, a consolidation hypothesis and a prospective controlled test.
-The case documents loss of access to a usable replacement; it does not measure
-a rate of structural code decay or identify an agent-caused acceleration.
-The subtitle names the hypothesis motivated by this small observational base,
-not an established causal finding. Section~\ref{sec:decaymeasurement} proposes
-how the experiment can measure deterioration rather than infer it from output
-volume or incomplete implementation.
+The engineering response has a long history: isolation and explicit contracts
+limit dependencies; tests and continuous integration expose regressions;
+small releases shorten feedback; refactoring preserves room for later
+change~\cite{parnas1994aging,beck2002tdd,beck2004xp,fowler2007stamina}.
+My more than twenty-five years in the industry, and recent reading and
+listening to Beck, Martin and Fowler, made these concerns familiar. Beck's
+distinction between producing code and learning through working software
+gave the immediate experience a sharper question~\cite{beck2026prodacity,orosz2025beck,martin2026outcodes,fowler2025thoughts}:
+what does a feature leave behind for the next one?
 
-My working theory draws on software evolution: feature accumulation can
-increase complexity and the cost of later changes unless counter-work is
-done~\cite{lehman1980laws,parnas1994aging,eick2001decay,cunningham1992wycash}.
-Two possible amplifiers are compounding errors and output exceeding review
-capacity. Earlier misreadings can become the context for later steps, as in
-Beck's literal-minded genie~\cite{orosz2025beck}; high volume can obscure the
-gap between recorded completion and observed behaviour. These are propositions,
-not effects estimated by this case. Scheduled review and consolidation are a
-plausible intervention~\cite{beck2026prodacity,beck2025devslow,beck2023tidy},
-not an established remedy.
+My AMA capstone made that question urgent. After developing and intermittently
+using an MVP, I started a coordinator on 15~October 2026 to deliver a backlog
+of more than 180 issues. Ten days and 183 merged pull requests later, I
+could not sign in to its replacement. The public repository, pull requests,
+append-only log and versioned coordinator instructions provide a trace of
+that transition~\cite{servera2026ama}. AMA is the focal case; the industrial
+examples frame the problem. My earlier Aithena experience and the PhotoCraft
+inspection selected after the AMA analysis have separate provenance in
+Appendix~\ref{sec:repositoryobservations}.
 
-The prospective question is whether an additional agent can preserve working
-behaviour and options for later change through that bounded intervention.
-I use reflection to mean checking assumptions and a working model against
-observed behaviour, not generating another approval record. The experiment
-tests a scheduled consolidation package, not autonomous product steering or
-the replacement of human judgement.
+The working hypothesis is that feature-driven delivery can carry unresolved
+errors and avoidable change burden forward unless it includes cumulative
+verification and consolidation. Two kinds of state matter: the software
+being changed, and the instructions used to change it. Adding a corrective
+rule after every failure can leave prompts, skills and handover notes with
+their own maintenance burden. A fresh agent inherits both kinds of state.
+Section~\ref{sec:background} distinguishes these pathways; the case then
+examines how they interact with completion proxies, review capacity and
+product-use feedback.
 
-The case is unusually well documented. The repository is public, every change
-went through a pull request, an append-only log recorded what the agents did
-and why, and the coordinator's own instructions are versioned with the
-code~\cite{servera2026ama}. I approach the central question through three
-more specific questions:
+Three questions guide the investigation:
 
 \begin{itemize}[leftmargin=*]
-\item \textbf{RQ1.} What did a long-running, autonomous, spec-driven delivery
-loop produce, and what did it fail to produce?
-\item \textbf{RQ2.} Which candidate mechanisms are consistent with the gap,
-and what counter-evidence and rival explanations limit each interpretation?
-\item \textbf{RQ3.} Can an additional agent preserve correctness and future
-changeability through a consolidation step after every feature, and at what
-cost? The experiment tests this bounded form of correction, not general
-autonomous steering.
+\item \textbf{RQ1.} Through which retained state can errors and change
+burden carry from one feature to the next, and what does existing evidence
+show about those pathways?
+\item \textbf{RQ2.} How does the AMA delivery record illuminate that problem,
+and which mechanisms and competing explanations account for the gap between
+completion signals and usable replacement behaviour?
+\item \textbf{RQ3.} Does scheduled agent-led consolidation after each feature
+improve retained behaviour and future changeability, and at what cost?
 \end{itemize}
 
 \noindent The report makes three linked contributions:
 
 \begin{enumerate}[leftmargin=*]
-\item A documented case of one architect working with agents for six weeks,
-from desk research to a deployed MVP and then a ten-day autonomous delivery
-loop, with descriptive measures, bounded within-case contrasts and an
-observation--interpretation--proposition audit trail
-(Sections~\ref{sec:method} and~\ref{sec:what}).
-\item An integrated model of five candidate mechanisms, with operational
-boundaries, case indicators, counter-evidence and rival explanations. The
-individual phenomena are not claimed as new
-(Section~\ref{sec:mechanisms}).
+\item A focused synthesis distinguishing conversational self-conditioning,
+repository-carried faults and instruction maintenance, with a replot of
+published paired-history data (Section~\ref{sec:background}).
+\item A documented six-week case, including a ten-day autonomous delivery
+loop, and an integrated account of five mechanisms. Descriptive measures,
+within-case contrasts and an evidence audit connect the observed interruption
+of usability to competing explanations
+(Sections~\ref{sec:method}--\ref{sec:mechanisms}).
 \item A consolidation harness and a prospective controlled protocol to test
-an intervention whose effect between feature steps is not isolated in the
-related work reviewed here~\cite{openai2026harness,anthropic2025harness,pavlenko2026factory}. The protocol follows
-the registered-report example of Lulla et~al.~\cite{lulla2026protocol}
-and HVE Core's Minimum Viable Experiment method. It retains the tagged design
-and makes its identification and precision limits explicit; prospective
-documentation and fresh exploratory runs remain pending (Sections~\ref{sec:harness}
-and~\ref{sec:experiment}).
+retained behaviour and an unforeseen change request. It follows the
+registered-report example of Lulla et~al.~\cite{lulla2026protocol} and HVE
+Core's Minimum Viable Experiment method, while retaining the existing
+exploratory design (Sections~\ref{sec:harness} and~\ref{sec:experiment}).
 \end{enumerate}
 
-Practice implications are proposals, not a separately validated operating
-model (Section~\ref{sec:feedbackfirst}). The broader question of reflective
-delegation and human accountability is discussed, not answered, in
-Section~\ref{sec:discussion}.
-
-This is not an evaluation of the tools I used. The framework at the centre of
-the case keeps a human between its phases by default; the failures described
-here occurred in a configuration I designed that delegated delivery and merge
-decisions (Section~\ref{sec:hve}). I still handled approvals and technical
-blockers, but no longer learned from using the replacement product. I cannot
-isolate that change from the others.
+The AMA case concerns a migration and a configuration I designed, including
+delegated delivery and merge decisions. Its deployment failure motivates the
+study but does not measure structural decay. The experiment compares a
+consolidation package, including extra resources and different notes; fresh
+runs and registration remain pending. Case limitations and experimental
+identification are addressed in Sections~\ref{sec:threats}
+and~\ref{sec:protocollimits}; Section~\ref{sec:discussion} considers the
+implications for reflective delegation and human accountability.
 
 % ===========================================================================
 \section{Background}\label{sec:background}
@@ -220,29 +215,50 @@ The evidence is not universal. Increasing complexity and declining quality
 are among the less strongly supported of Lehman's laws, and some systems have
 grown without the predicted decay~\cite{herraiz2013laws}. Several findings
 above are observational, and their estimates belong to the studied settings,
-not every code base. They motivate measuring decay in this experiment; they
-do not establish that it occurred in the case or that consolidation will
-prevent it.
+not every code base.
 
-\subsection{Why agents might accelerate the decay}\label{sec:empirical}
+The engineering intuition often called \emph{software entropy} is that keeping
+a changing system coherent requires counter-work: removing obsolete paths,
+restoring boundaries and revisiting assumptions. Software does not deteriorate
+simply because time passes, and thermodynamic entropy supplies no measure of
+its quality. Here the measurable quantities are losses of required behaviour,
+excess structural burden and the effort needed for a later change.
 
-Two properties of agentic development could amplify decay. The first is
-\emph{compounding error}. An earlier mistake can become part of the context
-from which the next decision is made: a misunderstood rule becomes code,
-the code becomes a test expectation, and later features are built around the
-same assumption. That chain is a proposed mechanism, not a trace established
-in this case. Compounding is stronger than merely accumulating defects: the
-earlier error must make later work more failure-prone or costly. A declining
-whole-task success rate alone does not establish that dependence.
+\subsection{What carries from one feature to the next?}\label{sec:inheritance}
+
+Feature accumulation is the addition of capabilities and interactions; churn
+is the editing activity that implements, replaces or removes them. Neither
+is itself deterioration. A \emph{regression} loses previously working
+behaviour that is still required. A never-implemented feature is instead an
+acquisition failure. Persistence means that the same fault remains unresolved;
+propagation means that a later, distinct fault or failure can be traced to
+reuse of the earlier one. \emph{Compounding} is the stronger claim that the
+earlier error increases subsequent error risk or change burden.
+
+These distinctions matter because an agent inherits more than a code diff.
+The repository supplies implementations, tests, interfaces and deployment
+assumptions. Instructions, skills and notes supply an account of how to work
+on them. A mistaken rule can become code, then a test expectation or an
+instruction, and finally the precedent used for another feature. The stored
+record need not be correct to become authoritative in the next session.
+Conversely, an inherited implementation can be sound even when it differs
+from a human reference. The question is what subsequent work can achieve
+from that state.
+
+\subsection{Compounding within and between features}\label{sec:empirical}
+
+\paragraph{Errors carried in conversation.}
+An earlier answer changes the context from which a model produces the next
+one. Experiments on this pathway distinguish dependence on an erroneous
+history from the difficulty of a long task.
 
 Zhang et~al.'s earlier \emph{How Language Model Hallucinations Can Snowball}
 shows why consistency is not enough. On three question-answering datasets,
 ChatGPT and GPT-4 produce false justifications after wrong answers, yet often
 reject the individual false claims when questioned in a separate session.
 Their explanation is over-commitment to the earlier answer rather than only
-a lack of knowledge. This is evidence of within-answer snowballing in two
-2023 models, not a code-generation experiment or an estimate of downstream
-repository failures~\cite[Secs.~3.1--3.4]{zhang2023snowball}.
+a lack of knowledge. The experiments concern question answering in two
+2023 models~\cite[Secs.~3.1--3.4]{zhang2023snowball}.
 
 Sinha et~al. test the distinction directly in a controlled execution task.
 Models receive both the lookup dictionary and the plan, then maintain a
@@ -253,8 +269,8 @@ later accuracy beyond the effect of context length. This is counterfactual
 evidence of \emph{self-conditioning}: earlier mistakes can increase the chance
 of new mistakes. Scaling non-thinking models does not remove the effect, but
 Qwen3 models with thinking enabled avoid it in this setup. The result identifies
-a conditional failure mode, not an inevitable property of all agents or a
-measured rate of repository decay~\cite[Sec.~3.2, Figs.~5--6]{sinha2025illusion}.
+a dependence on model configuration as well as erroneous history
+\cite[Sec.~3.2, Figs.~5--6]{sinha2025illusion}.
 
 Laban et~al. supply complementary conversational evidence. Across six
 generation tasks, including Python and SQL, they report a 39\% average relative
@@ -268,8 +284,10 @@ controlled estimate of the cost of a particular inherited coding defect; the
 39\% is not a percentage-point loss or a repository defect
 rate~\cite[Secs.~3.3 and~6.1, App.~F.1--F.2]{laban2025lost}.
 
-The closest repository-level evidence is Pan et~al.'s \emph{SWE-Maintain}
-preprint. It reconstructs 100 three-event maintenance episodes from 50 Python
+\paragraph{Errors carried in the repository.}
+Pan et~al.'s \emph{SWE-Maintain} preprint tests the pathway most directly
+relevant to successive feature work. It reconstructs 100 three-event
+maintenance episodes from 50 Python
 repositories and runs each later task from two starting points: the developers'
 preceding patches and the agent's own preceding changes. Task, agent and tests
 are held fixed, and every event uses a fresh session: only the repository
@@ -285,8 +303,12 @@ Their \texttt{python\_unidiff} example makes the proposed propagation concrete:
 an agent first splits an input string into lines, losing line terminators;
 on the next task it reuses that defective logic in the constructor rather
 than repairing it. The same later task succeeds from developer history.
-This is the authors' reported example, not an application run reproduced here.
-The aggregate result also has an important boundary: among the 619 later events
+Their \texttt{parse\_crontab} example exposes a less visible dependency:
+an agent's local Python~3 fix passes the current and next tests, but later
+code relies on module-wide compatibility aliases that it never supplied.
+The authors report eight of ten later tests failing with undefined names
+under agent history~\cite[Sec.~5.1, Figs.~4--5]{pan2026swemaintain}.
+Among the 619 later events
 whose inherited code passes earlier tests and whose next task is not already
 solved, the event-resolution difference is $+2.7$ points (95\% interval
 $[-0.5,+6.1]$), with no detected disadvantage. This is a selected clean-history
@@ -295,22 +317,108 @@ maintainability under all changes. It points more directly to inherited
 behavioural failures than to structural complexity as the main observed
 channel~\cite[Sec.~4.2, Table~3; Sec.~5.1, Fig.~5]{pan2026swemaintain}.
 
-These findings should not be flattened into one claim. SlopCodeBench and
-SWE-CI examine iterative structural erosion and behavioural regressions;
-neither outcome alone identifies self-conditioning or error
-propagation~\cite{orlanski2026slopcodebench,chen2026sweci}. A randomised
-maintainability study also found no significant downstream difference between
-AI-assisted and unassisted source code~\cite{borg2025echoes}. The evidence
-supports testing inherited failures, their recovery and their consequences,
-not assuming that every agent-written system deteriorates or that consolidation
-will necessarily help.
+Figure~\ref{fig:inheritedhistory} shows the published event-resolution
+contrasts, including the clean-history cohorts. Event resolution requires
+the new task and all earlier non-superseded tests to pass. Its larger gap
+therefore includes retained failures as well as difficulty solving the new
+task. The current-task-only difference of $-5.6$ points is important for the
+cross-feature hypothesis precisely because it does not count earlier failing
+tests against success on the new task.
 
-The second possible amplifier is output exceeding review capacity. Understanding changes
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\linewidth]{fig-inherited-history.png}
+\caption{Later maintenance from two repository histories. Points and 95\%
+repository-clustered bootstrap intervals are transcribed from Pan et~al.,
+Table~3~\cite{pan2026swemaintain}. The outcome is event resolution: current
+and all earlier non-superseded hidden tests pass. Negative differences favour
+developer history. The 1,996 paired events come from 100 three-event episodes
+in 50 Python repositories, evaluated with five systems and two models.
+Subgroups overlap and are selected by the agent-history starting state;
+the last excludes pre-solved and unevaluable tasks. They are not randomised
+repair conditions.}\label{fig:inheritedhistory}
+\end{figure}
+
+The conversation and repository studies therefore locate two different
+transmission pathways. Resetting context addresses the first, but not faulty
+code retained for the next feature. SlopCodeBench and SWE-CI extend the
+evaluation horizon to iterative structural erosion and behavioural
+regressions~\cite{orlanski2026slopcodebench,chen2026sweci}. A randomised
+maintainability study found no significant downstream difference between
+AI-assisted and unassisted source code~\cite{borg2025echoes}. The emerging
+question is which inherited failures survive, how they affect later work,
+and which interventions prevent or repair them.
+
+\paragraph{Output and review capacity.}
+Understanding changes
 is a major challenge of code review; habituation, fragmented context and
 uneven retrieval from long contexts may limit scrutiny as output
 grows~\cite{bacchelli2013review,yu2026habituation,cemri2025multiagent,liu2024lost,hong2025contextrot}.
-These are plausible amplifiers, not effects measured in this case. Further
+Faster feature delivery also shortens the time available to discover that an
+earlier assumption has become the foundation of another change. Further
 empirical and practitioner context is retained in Appendix~\ref{app:practitioners}.
+
+\subsection{Corrective instructions as maintenance debt}\label{sec:instructiondebt}
+
+A failed agent action often invites a new instruction: run this check, never
+edit that file, remember this exception. GitHub's account of more than
+2,500 agent-definition files recommends starting small, testing and adding
+detail when an agent makes mistakes~\cite{nigh2025agentsmd}. The resulting
+guidance can preserve useful lessons, but it also becomes another maintained
+system. Chatlatanagulchai et~al. identify \emph{context debt} as a maintenance
+problem for this material~\cite[Sec.~5.1]{chatlatanagulchai2026readmes}.
+Here \emph{instruction debt} denotes the avoidable burden of obsolete,
+duplicated, conflicting or poorly routed directives in prompts, skills and
+handover notes. This extends the maintenance question from the product to
+the machinery that changes it.
+
+Repository histories show that this material evolves. Mohsenimofidi et~al.
+found no post-creation change in 77 of 155 instruction files. In the ten most
+frequently changed files, however, they classified 169 commits: 78 added
+instructions, 59 modified them and 23 removed them; change categories could
+overlap~\cite[Sec.~4.3, Table~2]{mohsenimofidi2026context}.
+Chatlatanagulchai et~al.'s manual analysis of 100 post-adoption commits
+produced 78 addition, 32 modification and 19 deletion labels; addition labels
+occurred across 66 distinct commits. Figure~\ref{fig:instructionmaintenance}
+replots the label counts~\cite[Secs.~4.2.2--4.2.3]{chatlatanagulchai2026readmes}.
+These histories contain accumulation and pruning, rather than a uniform
+march towards longer files. The authors associate their day-scale edit
+intervals with ongoing project maintenance rather than immediate prompt
+debugging.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.94\linewidth]{fig-instruction-maintenance.png}
+\caption{Instruction-file maintenance in 100 randomly sampled post-adoption
+commits, from Chatlatanagulchai et~al., Sections~4.2.2--4.2.3
+\cite{chatlatanagulchai2026readmes}. Commits can receive several labels;
+line-level and section-level add/delete labels are combined. The ten
+non-directive maintenance labels are the remainder of 139 total assignments.
+The chart counts edit types, not net token growth or effects on agent
+performance.}\label{fig:instructionmaintenance}
+\end{figure}
+
+Gloaguen et~al. test the effect of supplying such context. Across four
+agent--model pairings on 300 SWE-bench Lite tasks and 138 CTXbench tasks,
+LLM-generated context files increased average inference cost by 20\% and
+23\%, respectively, without a statistically significant improvement in
+task resolution. Agents followed the instructions, performed more testing
+and exploration, and spent more reasoning tokens. Yet file length did not
+explain success, and generated context helped when other documentation was
+removed~\cite[Secs.~4.2--4.4, App.~B]{gloaguen2026agentsmd}.
+Instruction count and loaded tokens are therefore different exposures from
+the obligations and behaviours those instructions induce.
+
+Anthropic's context-engineering account describes the practical tension:
+provide enough information to guide action, but avoid brittle prompt logic
+and an expanding catalogue of exceptions~\cite{rajasekaran2025context}.
+The maintenance task is not simply to shorten every prompt. It is to preserve
+necessary constraints while replacing local patches with coherent rules,
+executable checks and task-specific retrieval. To test the corrective-rule
+spiral directly would require versioned instructions, actual session inputs
+and outcomes across successive revisions. The AMA record supplies document
+growth and rule changes; the consolidation protocol tests a bounded form of
+handover maintenance by replacing, rather than appending to, its design note.
 
 \subsection{Refactoring, review and evaluation boundaries}\label{sec:evaluationwork}
 
@@ -579,6 +687,19 @@ not pooled with AMA's measurements. The ancillary repository-observation
 record states the retrieval boundary, locators and exclusions. No external
 application, original Photoshop installation or reference-parity suite was
 executed.
+
+The literature-led framing was developed on 27~October. Source selection
+followed three questions: how earlier defects affect later changes, how
+agent instructions evolve, and how completion measures relate to usable
+behaviour. Sources comprise the SEC's Knight Capital account, the original
+WyCash report, the dated public repository records and the cited empirical
+studies. Knight Capital provides a documented inherited-fault example;
+PhotoCraft provides a project-authored distinction between command coverage
+and readiness. Their outcomes are not pooled with AMA. The two new figures
+replot published values rather than digitising curves or running the original
+systems. Versioned claims, locators and transcription details are retained
+in the source package README and \nolinkurl{anc/published-evidence.json}.
+This is a focused narrative synthesis, not a systematic literature review.
 
 \subsection{Constructs and evidential boundaries}\label{sec:constructs}
 
@@ -926,12 +1047,12 @@ here.
 \FloatBarrier
 \section{Five candidate mechanisms}\label{sec:mechanisms}
 
-I propose five candidate mechanisms consistent with how a loop that merged a pull
-request every eighty minutes or so left its owner without a usable replacement.
+Five mechanisms organise the gap between a pull request merged roughly every
+eighty minutes and the absence of a usable replacement.
 Table~\ref{tab:mechanisms} summarises them; Appendix~\ref{app:mechanismaudit}
 sets out a definition, indicators, counter-evidence, rivals and testable
-implication for each. These are an integrated explanatory synthesis, not five
-newly discovered phenomena or independently established causal mechanisms.
+implication for each. Together they connect the inherited-state problem to
+the way this delivery loop selected work, carried lessons and checked outcomes.
 
 \begin{table}[!htbp]
 \centering\footnotesize
@@ -965,37 +1086,38 @@ usable increment \\
 \end{tabularx}
 \end{table}
 
-Read against the working theory of Section~\ref{sec:intro}, they fall into
-groups (Table~\ref{tab:theory}). The underlying risk is feature accumulation
-without consolidation: until 24~October the loop had no scheduled cumulative
-consolidation step, and its one large
-restructuring, the migration to a new source layout, was planned up front as
-backlog items rather than done continuously. This does not rule out local
-refactoring within individual issues. Specification inflation, proxy
-capture and learning evaporation are forms of the first accelerant,
-compounding error, in the proposed model: a misreading, or literal reading,
-of intent can become context or criteria for the next step. Process-gate
-inflation and feedback starvation may reflect output exceeding review
-capacity: gates and caveats coexisted with the absence of a person using the
-replacement. The case does not estimate either amplification effect.
+They occupy different points in the delivery process (Table~\ref{tab:theory}).
+Specification growth increases the obligations and interactions that later
+work must preserve. Learning evaporation concerns the path by which a
+relevant lesson reaches the next session. Proxy capture concerns what selects
+and approves work; process-gate inflation and feedback starvation concern
+the capacity to detect and correct cumulative problems. None needs to be
+called error propagation to explain how an inherited fault can survive.
+
+Until 24~October the loop had no scheduled cumulative consolidation step.
+Its large restructuring, the source-layout migration, was planned as backlog
+items; local refactoring could still occur within individual issues.
+The experiment therefore separates retained regression burden (H2),
+structural trajectories (H3) and later changeability (H6). The fault-lineage
+proposal in Section~\ref{sec:decaymeasurement} addresses the stronger question
+of whether an earlier fault generates distinct later failures.
 
 \begin{table}[!htbp]
 \centering\footnotesize
-\caption{A working theory: an underlying risk and two possible amplifiers,
-with candidate mechanisms consistent with this case. No rate is estimated.}\label{tab:theory}
+\caption{Accumulation, transmission and correction in the working model.}\label{tab:theory}
 \begin{tabularx}{\textwidth}{@{}L{3.4cm}YL{4.6cm}@{}}
 \toprule
-Driver & What it predicts & In this case \\
+Process & Question & In this case \\
 \midrule
-Underlying risk: features accumulate without consolidation & Complexity can grow and
-quality can decline without counter-work~\cite{lehman1980laws,lehman1997metrics} &
+Accumulation & What obligations and change burden does each feature leave
+behind?~\cite{lehman1980laws,lehman1997metrics} &
 No scheduled cumulative consolidation until 24 Oct; restructuring planned as backlog items \\
-Accelerant 1: compounding error & Each step builds on earlier misreadings and
-unneeded complexity~\cite{sinha2025illusion,laban2025lost,orlanski2026slopcodebench} &
-Specification inflation; proxy capture; learning evaporation \\
-Accelerant 2: unreviewable volume & Output exceeds what people can review and
-test, so decay goes unseen~\cite{cohen2006review,yu2026habituation} &
-Process-gate inflation; feedback starvation \\
+Transmission & Which implementations, rules and lessons shape the next
+change?~\cite{sinha2025illusion,pan2026swemaintain} &
+Growing specifications and read path; previously working identity setup not preserved \\
+Selection and correction & Do review and tests expose the cumulative
+consequences before more work depends on them?~\cite{cohen2006review,yu2026habituation} &
+Proxy capture; process-gate inflation; feedback starvation \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -1020,12 +1142,12 @@ pushed for explicit demonstrator assumptions and imperfect increments that
 could produce feedback. Smaller, iterative requirements documents are a
 plausible alternative, not an intervention tested in this case.
 
-This is B\"ockeler's small bug that became sixteen acceptance
-criteria~\cite{boeckeler2025sdd}, at the scale of a programme. It is also consistent with what
-Royce and Gall warned about: a large system specified up front and tested at
-the end~\cite{royce1970,gall1975}. Brooks explains why more text does not
-help: the essential difficulty lies in the conceptual construct, and writing
-it down in more places does not reduce it~\cite{brooks1987silver}. The
+The pattern resembles B\"ockeler's small bug that became sixteen acceptance
+criteria~\cite{boeckeler2025sdd}, at the scale of a programme, and the risks
+of late integration described by Royce and Gall~\cite{royce1970,gall1975}.
+Brooks locates essential difficulty in the conceptual construct rather than
+its representation~\cite{brooks1987silver}; repeating a requirement in more
+places need not resolve its ambiguity. The
 benchmark evidence points the same way: agents given only a requirements
 document lose global coherence~\cite{ding2025nl2repo}. Beck's metaphor fits:
 every feature, and every acceptance criterion, burns
@@ -1059,7 +1181,7 @@ into the deliverable.
 
 In the first-parent integration view, tracking-artefact additions were
 10.27 times product-source additions during the loop, compared with 29.28
-before it (\texttt{anc/repo\_history\_metrics.out.txt}). This supports concern
+before it (\nolinkurl{anc/repo_history_metrics.out.txt}). This supports concern
 about artefact volume, not a claim that the ratio rose when autonomy began.
 Churn alone does not establish code decay.
 
@@ -1115,6 +1237,11 @@ words, or roughly 180,000 tokens at a typical ratio of 1.3 tokens per word.
 Long contexts can reduce reliable retrieval even when the material fits in
 the context window~\cite{liu2024lost,hong2025contextrot}; the case does not
 measure any session's effective attention capacity.
+
+Instruction debt and learning evaporation can therefore coexist. A correction
+may remain in an expanding agent definition while the evidence explaining
+when it applies falls off the next session's read path. The result can be
+a larger instruction set with weaker access to the relevant lesson.
 
 Naur explains why recording was not enough. A program's theory lives in the
 people who build it, and a second team with full documentation can still
@@ -2016,8 +2143,8 @@ oracle coverage could investigate it; the current protocol does not.
 \subsection{Implications for practice}\label{sec:feedbackfirst}
 
 The case motivates protecting a usable increment, bounding the delivery horizon
-and keeping lessons retrievable or executable. These are proposals, not a
-tested operating model. Appendix~\ref{app:practices} supplies a practical
+and keeping lessons retrievable or executable. Appendix~\ref{app:practices}
+supplies a practical
 checklist; its numerical limits are starting heuristics, not estimated optima.
 Proportionality never overrides mandatory safety, privacy, approval or
 publication gates, and compact context views must retain their source evidence.
@@ -2069,38 +2196,34 @@ the same direction.
 \FloatBarrier
 \section{Conclusion}\label{sec:conclusion}
 
-This case records a divergence: 183 merged pull requests and a full
-implementation score coexisted with the owner's inability to sign in to the
-replacement system. Production volume and validation activity did not
-establish usable behaviour. Five candidate mechanisms organise that evidence,
-but migration, environment, scope, test coverage and owner decisions remain
-plausible rivals. The case does not establish a rate of code decay, an
-agent-caused acceleration or the effectiveness of consolidation.
+The unit of progress in cumulative development is the system left for the
+next change. Knight Capital shows how a new deployment can activate an old
+fault. WyCash makes consolidation part of continued growth. Agent research
+adds a direct cross-feature test: in SWE-Maintain, earlier changes affect
+later tasks even when conversation history is discarded. Its clean-history
+results make preserving behaviour a more precise target than treating all
+agent-written code as structurally deficient.
 
-The contribution is the chain from that observed divergence, through bounded
-candidate explanations, to a prospective test of retained behaviour and
-adaptation. Practice implications are proposals, not validated controls.
-Objective-guided optimisation provides a
-bounded precedent for agent-led correction~\cite{pavlenko2026factory}; the
-further question is whether such correction preserves changeability as
-features accumulate. Accountability for goals and
-consequential decisions remains distinct from delegating bounded corrective
-work; the case does not establish that only humans can perform that work.
+The instructions governing development need maintenance too. Repository
+studies show repeated additions and revisions, alongside pruning; controlled
+context-file comparisons show that more guidance can increase work without
+improving task resolution. Code, tests and instructions are all inherited
+state, but they require different measures of correctness and burden.
 
-The exploratory first pass operationalises a bounded version of that question: can an
-agent that consolidates after every feature keep agent-built software
-working, understandable and changeable at an acceptable cost? It tests
-the package-level question defined in Section~\ref{sec:experiment}.
-H6 is its direct, task-specific probe of future options; other quality
-measures cannot substitute for it. The experiment does
-not test choosing the right product or autonomously recovering every delivery failure.
-Section~\ref{sec:experiment} sets out how to find out. The larger question of
-agent-led steering remains open; the first requirement is evidence that the
-additional agent improves outcomes rather than adds another layer of work.
-Even then, what people should do, when they should intervene and how they
-will continue to learn remain open questions. The proposals in
-Section~\ref{sec:humanquestions} are starting points, not conclusions of this
-study.
+AMA supplies a traceable delivery failure within this wider problem:
+183 merged pull requests did not restore the owner's usable replacement.
+The case's five mechanisms connect accumulated obligations, lost lessons
+and completion proxies to insufficient product-use feedback. Migration and
+deployment dependencies remain central to explaining that particular failure.
+
+The prospective experiment asks whether scheduled consolidation improves
+what each feature leaves behind. It compares retained behaviour, structural
+quality, intervention demand and cost, with an unforeseen change request as
+the direct probe of later changeability. Fresh runs and registration remain
+pending. The practical question is not how many agents take part, but whether
+their combined work preserves the behaviour and options on which subsequent
+features depend. Human accountability, intervention and learning remain
+separate questions in Section~\ref{sec:humanquestions}.
 
 \section*{Acknowledgements}
 % TODO(author): thank reviewers once they have commented.
@@ -2303,6 +2426,14 @@ I.~Stoica.
 (NeurIPS 2025), Datasets and Benchmarks Track}, 2025.
 \newblock arXiv:2503.13657.
 
+\bibitem{chatlatanagulchai2026readmes}
+W.~Chatlatanagulchai, H.~Li, Y.~Kashiwa, B.~Reid, K.~Thonglek,
+P.~Leelaprute, A.~Rungsawang, B.~Manaskasemsak, B.~Adams, A.~E. Hassan,
+and H.~Iida.
+\newblock Agent {READMEs}: An empirical study of context files for agentic coding.
+\newblock arXiv:2511.12884v2, 9 August 2026 (first posted 2025).
+\newblock \url{https://arxiv.org/abs/2511.12884v2}.
+
 \bibitem{chen2026sweci}
 J.~Chen, X.~Xu, H.~Wei, C.~Chen, and B.~Zhao.
 \newblock {SWE-CI}: Evaluating agent capabilities in maintaining codebases via
@@ -2415,6 +2546,13 @@ through code.
 \newblock {AI} copilot code quality: 2025 data suggests 4x growth in code
 clones.
 \newblock Research report, GitClear, 2025.
+
+\bibitem{gloaguen2026agentsmd}
+T.~Gloaguen, N.~M\"undler-Sasahara, M.~N. M\"uller, V.~Raychev, and M.~Vechev.
+\newblock Evaluating {AGENTS.md}: Are repository-level context files helpful
+for coding agents?
+\newblock arXiv:2602.11988v3, 29 September 2026.
+\newblock \url{https://arxiv.org/abs/2602.11988v3}.
 
 \bibitem{goldratt1984goal}
 E.~M. Goldratt and J.~Cox.
@@ -2624,6 +2762,12 @@ engineering tasks.
 \newblock In \emph{International Conference on AI-powered Software (AIware)},
 2025. Accessed arXiv:2511.02352v2, 5 November 2025.
 
+\bibitem{mohsenimofidi2026context}
+S.~Mohsenimofidi, M.~Galster, C.~Treude, and S.~Baltes.
+\newblock Context engineering for {AI} agents in open-source software.
+\newblock arXiv:2510.21413v4, 5 February 2026 (first posted 2025).
+\newblock \url{https://arxiv.org/abs/2510.21413v4}.
+
 \bibitem{murphy2026fivestages}
 A.~Murphy.
 \newblock The five stages of losing our craft.
@@ -2648,6 +2792,12 @@ P.~Naur.
 \newblock Programming as theory building.
 \newblock \emph{Microprocessing and Microprogramming}, 15(5):253--261, 1985.
 \newblock doi:10.1016/0165-6074(85)90032-8.
+
+\bibitem{nigh2025agentsmd}
+M.~Nigh.
+\newblock How to write a great {agents.md}: Lessons from over 2,500 repositories.
+\newblock The GitHub Blog, 19 November 2025, updated 25 November 2025.
+\newblock \url{https://github.blog/ai-and-ml/github-copilot/how-to-write-a-great-agents-md-lessons-from-over-2500-repositories/}.
 
 \bibitem{openai2026harness}
 R.~Lopopolo.
@@ -2718,6 +2868,12 @@ H.~Mukai, N.~Yoshida, K.~Kusama, H.~Tanaka, and Y.~Fan.
 \newblock \url{https://github.com/storytold/photocraft/tree/5bb853654196eca807212ff8955ba2eb293071ea}.
 \newblock Dated counts and claim locators in the ancillary repository-observation record.
 
+\bibitem{rajasekaran2025context}
+P.~Rajasekaran, E.~Dixon, C.~Ryan, and J.~Hadfield.
+\newblock Effective context engineering for {AI} agents.
+\newblock Anthropic, 29 September 2025.
+\newblock \url{https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents}.
+
 \bibitem{royce1970}
 W.~W. Royce.
 \newblock Managing the development of large software systems.
@@ -2743,6 +2899,12 @@ A.~Sarkar.
 \newblock {AI} should challenge, not obey.
 \newblock \emph{Communications of the ACM}, 67(10):18--21, 2024.
 \newblock doi:10.1145/3649404.
+
+\bibitem{sec2013knight}
+{U.S. Securities and Exchange Commission}.
+\newblock {SEC} charges {Knight Capital} with violations of market access rule.
+\newblock Press release 2013-222, 16 October 2013.
+\newblock \url{https://www.sec.gov/newsroom/press-releases/2013-222}.
 
 \bibitem{servera2026aithena}
 J.~M. Servera~Bondroit.

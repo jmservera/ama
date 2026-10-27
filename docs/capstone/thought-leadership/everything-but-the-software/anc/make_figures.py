@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-"""Regenerate the two figures of "Everything but the Software" as PNG files.
+"""Regenerate the case and published-evidence figures as PNG files.
 
-Usage: python3 anc/make_figures.py [--dpi 400] [--out .]
+Usage: python3 anc/make_figures.py [--dpi 400] [--out .] [--only published]
 Reads anc/log_daily.json (daily entries, words, hedging phrases), produced from
 docs/reference/log.md with `log_metrics.py ... --json log_daily.json`, and writes
-fig-log-growth.png and fig-causal-loop.png to --out (default: the folder that
-contains main.tex, one level above this script).
+case figures and replots anc/published-evidence.json. The --only option can
+regenerate either group without changing the other. Output defaults to the
+folder containing main.tex, one level above this script.
 """
 import argparse, datetime as dt, json, math, os
+from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -100,17 +102,97 @@ def causal_loop(dpi):
     plt.close(fig)
 
 
+def inherited_history(dpi: int) -> None:
+    """Replot published event-resolution differences and confidence intervals."""
+    evidence = json.loads((Path(HERE) / "published-evidence.json").read_text(encoding="utf-8"))
+    rows = evidence["repository_history"]["rows"]
+    positions = list(reversed(range(len(rows))))
+    labels = [f"{row['label']}\n(n = {row['paired_events']:,} paired events)" for row in rows]
+    rcParams.update({"font.size": 8})
+    figure, axis = plt.subplots(figsize=(7.0, 3.5))
+    for position, row, marker in zip(positions, rows, ("s", "o", "^", "D")):
+        difference = row["difference_pp"]
+        lower, upper = row["ci95_pp"]
+        if not lower <= difference <= upper:
+            raise ValueError(f"Invalid confidence interval: {row['label']}")
+        axis.errorbar(
+            difference, position,
+            xerr=[[difference - lower], [upper - difference]],
+            fmt=marker, markersize=5, capsize=3, linewidth=1.2,
+            color="#1f4e79" if difference < 0 else "#2e6a51",
+        )
+        axis.text(9.8, position, f"{difference:+.1f}", ha="right", va="center")
+    axis.set_yticks(positions, labels)
+    axis.set_xlim(-28, 11)
+    axis.set_ylim(-0.65, len(rows) - 0.35)
+    axis.set_xticks((-25, -20, -15, -10, -5, 0, 5, 10))
+    axis.axvline(0, color="0.35", linewidth=0.8, linestyle="--")
+    axis.axhline(2.5, color="0.8", linewidth=0.6)
+    axis.grid(axis="x", color="0.9", linewidth=0.5)
+    axis.set_axisbelow(True)
+    axis.tick_params(axis="y", length=0, pad=8)
+    axis.set_xlabel("Agent-history minus developer-history success (percentage points)")
+    axis.set_title("Inherited repository history and later maintenance", fontsize=10, pad=12)
+    for side in ("top", "right", "left"):
+        axis.spines[side].set_visible(False)
+    figure.subplots_adjust(left=0.43, right=0.98, bottom=0.20, top=0.86)
+    figure.savefig(Path(OUT) / "fig-inherited-history.png", dpi=dpi, bbox_inches="tight", facecolor="white")
+    plt.close(figure)
+
+
+def instruction_maintenance(dpi: int) -> None:
+    """Replot overlapping instruction-edit labels, not net instruction growth."""
+    evidence = json.loads((Path(HERE) / "published-evidence.json").read_text(encoding="utf-8"))
+    data = evidence["instruction_maintenance"]
+    rows = data["rows"]
+    counts = [row["label_assignments"] for row in rows]
+    if sum(counts) != data["total_label_assignments"]:
+        raise ValueError("Instruction label counts do not match the published total")
+    positions = list(reversed(range(len(rows))))
+    rcParams.update({"font.size": 8})
+    figure, axis = plt.subplots(figsize=(6.6, 2.8))
+    axis.barh(positions, counts, height=0.55, color=("#1f4e79", "#727c87", "#2e6a51", "#b3b8bd"))
+    for position, count in zip(positions, counts):
+        axis.text(count + 1.5, position, str(count), va="center")
+    axis.set_yticks(positions, [row["label"] for row in rows])
+    axis.set_xlim(0, 100)
+    axis.set_xticks((0, 20, 40, 60, 80, 100))
+    axis.set_xlabel("Label assignments in 100 post-adoption commits")
+    axis.set_title("Agent instructions are maintained, not written once", fontsize=10, pad=12)
+    axis.tick_params(axis="y", length=0, pad=8)
+    axis.grid(axis="x", color="0.9", linewidth=0.5)
+    axis.set_axisbelow(True)
+    for side in ("top", "right", "left"):
+        axis.spines[side].set_visible(False)
+    figure.subplots_adjust(left=0.34, right=0.96, bottom=0.24, top=0.83)
+    figure.savefig(Path(OUT) / "fig-instruction-maintenance.png", dpi=dpi, bbox_inches="tight", facecolor="white")
+    plt.close(figure)
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--dpi", type=int, default=400)
     ap.add_argument("--out", default=None, help="output folder (default: parent of anc/)")
+    ap.add_argument("--only", choices=("all", "case", "published"), default="all")
     a = ap.parse_args()
     if a.out:
         OUT = os.path.abspath(a.out)
-    log_growth(a.dpi)
-    causal_loop(a.dpi)
+    figures = {
+        "fig-log-growth.png": log_growth,
+        "fig-causal-loop.png": causal_loop,
+        "fig-inherited-history.png": inherited_history,
+        "fig-instruction-maintenance.png": instruction_maintenance,
+    }
+    selected = list(figures)
+    if a.only == "case":
+        selected = selected[:2]
+    elif a.only == "published":
+        selected = selected[2:]
+    Path(OUT).mkdir(parents=True, exist_ok=True)
+    for name in selected:
+        figures[name](a.dpi)
     from PIL import Image
-    for name in ("fig-log-growth.png", "fig-causal-loop.png"):
+    for name in selected:
         path = os.path.join(OUT, name)
         Image.open(path).convert("RGB").save(path, dpi=(a.dpi, a.dpi), optimize=True)
-    print("wrote fig-log-growth.png and fig-causal-loop.png")
+    print("wrote " + ", ".join(selected))
