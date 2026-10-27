@@ -1,0 +1,58 @@
+{
+  "task_id": "pr-429-main-refresh-2026-10-27",
+  "task_slug": "pr-429-main-refresh",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-27/pr-429-main-refresh-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-27/pr-429-main-refresh-plan.md",
+    "details": ".copilot-tracking/details/2026-10-27/pr-429-main-refresh-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-27/pr-429-main-refresh-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-27/pr-429-main-refresh-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-27/pr-429-main-refresh-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Caller explicitly requests Research, Plan, Implement and Review and authorizes rebase and branch-only force-with-lease push.",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-27; no merge, main write, secrets, Azure or uv."
+    },
+    {
+      "decision": "Isolate using requested worktree and fresh local carrier branch; leave existing topic checkout and unrelated untracked files untouched.",
+      "status": "confirmed",
+      "evidence": "../ama-wt/pr-429 on docs/pr-429-refresh-20261027 from remote ad79455a3ec2c47d935fbc3cd055555ff188bc35."
+    },
+    {
+      "decision": "Research executed Ready; critique Complete Revise with PC-001/003/004 directly applied and PC-002 rejected for unsupported /tmp prohibition. Require full offline local gate without cloud use.",
+      "status": "disposed",
+      "evidence": ".copilot-tracking/plans/2026-10-27/pr-429-main-refresh-plan.md#critique-disposition"
+    },
+    {
+      "decision": "Original post-implementation Review execution Complete; outcome Residual work. No new implementation defects. Publication remains an already-authorized distinct follow-up, not a repeat Review.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/pr-429-main-refresh-review.md; RV-001 PUB-429 and RV-002 baseline links."
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "P01/P02 assembled in this candidate commit. Run full exact-head local gate, verify fresh base and independent admission, then explicit-lease topic push. Retain later observations externally under session files/pr429-publication."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "PUB-429",
+      "rationale": "Finish already-authorized publication after mandatory exact-head evidence.",
+      "evidence": "Original Review RV-001; plan P03."
+    },
+    {
+      "rank": 2,
+      "task": "BASELINE-LINKS-429",
+      "rationale": "Separately scoped maintenance only; not a new regression and no historical log rewrite.",
+      "evidence": "Original Review RV-002; seven unchanged distinct main link defects."
+    }
+  ]
+}
