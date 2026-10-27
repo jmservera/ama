@@ -290,3 +290,25 @@ Authenticated GitHub id/login resolves to the already configured repository-loca
 privacy-safe address `8036360+jmservera@users.noreply.github.com`; use it for
 author and committer. The git-commit skill's `get_changed_files` tool is not
 available; inspected Git diff/status substitutes rather than inventing output.
+
+### Correction delivery
+
+Committed correction/evidence, then rebased the one local commit over remote
+rubric-only `0d535bb0` without conflicts or autostash, as explicitly requested.
+The rebased correction is `2901886c235ea004da30c50f729515ba98790ea6`.
+The executable diff hash is unchanged; the upstream-only difference is the
+rubric score JSON. Pushed normally to `feat/agent-chat-157`; `git ls-remote`
+and PR #503 head independently returned that commit. The first PR query
+immediately after push briefly returned the previous bot head; a later query
+confirmed the new head, not an inferred eventual result.
+Same PR https://github.com/jmservera/ama/pull/503 remains draft, original
+Not accepted unchanged. Append correction evidence/validation without replacing
+its existing body. A subsequent delivery/state-only commit records publication
+facts; no executable change or exact-head approval is implied.
+
+Existing PR body now includes the correction appendix and local validation;
+readback confirmed its heading. Fetch before the delivery-evidence commit
+found local/remote equal at `2901886c`. Correction loop complete; automatic
+session remains running at Follow-up with original ranked RV-001..005 only.
+No new work is selected or started. Final metadata commit/push is the remaining
+mechanical delivery operation, not a second implementation or Review.
