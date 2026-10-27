@@ -50,7 +50,7 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Commit source and original RPI evidence locally; no push/PR while Review and publication gates block"
+    "action": "Local candidate committed as 7cd2400f; await later owner-selected implementation of ranked Review defects. No push/PR; scoped gate not run and full gate unauthorized."
   },
   "prioritized_follow_ups": [
     {

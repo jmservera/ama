@@ -104,6 +104,20 @@ The RPI loop is complete, but implementation acceptance and publication are
 blocked. No issue criterion or human-review checkbox has been ticked.
 Existing local tests do not overrule the independent adverse evidence.
 
+### Local persistence and publication decision
+
+Source and original RPI evidence were committed locally as 7cd2400f on
+feat/iot-consumer-110, with authenticated-account noreply author/committer
+and the required Copilot trailer. No source was changed after Review.
+The allowed scoped heavy gate was not run: the independent Review already
+blocks this candidate, and the complete final-publication gate is explicitly
+not authorized. No lock contention or passing receipt is claimed.
+No push, PR, issue closure or Azure operation occurred. This is a persistent
+local handoff, not successful delivery of the requested published PR.
+P03 publication remains incomplete. The three ranked concrete defect
+follow-ups are recorded in state; existing credential/live/budget and OD-43
+owner gates remain distinct.
+
 ## Amendments and Divergences
 
 Legacy seasonal model selected explicitly; composed climate handover deferred.
