@@ -202,3 +202,14 @@ gh pr ready 496 succeeded; readback confirmed OPEN, isDraft false and unchanged
 4140ebbf. Children remain draft; no merge/issue acceptance. The readiness event
 may automatically schedule ordinary hosted reevaluation; pre-transition
 success does not claim future jobs passed or authorize future head drift.
+
+Subsequent automatic hosted review 5670660989 completed with a High finding:
+specialist queue rows omit projected safety marker and hazard-clock/owner
+context. Direct source inspection confirms the omission at role-screens.js:81.
+The source is unchanged in this continuation, but the new review prevents
+retained readiness. gh pr ready 496 --undo succeeded; readback confirms all
+ten PRs draft at the same final source heads. P04-T03 is therefore reopened,
+P04 remains blocked, and the new source correction is routed to a distinct
+later rpi-implement scope. No material source change or heavy gate occurred
+in this continuation. Original adverse and later residual-only independent
+assessments retain their original boundaries; no review result is rewritten.

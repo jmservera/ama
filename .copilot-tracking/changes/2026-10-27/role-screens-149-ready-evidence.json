@@ -204,5 +204,90 @@
       "name": "Capstone Rubric Scorer",
       "status": "completed"
     }
-  ]
+  ],
+  "subsequent_hosted_review": {
+    "observed_at": "2026-10-27T16:28:18.937134+00:00",
+    "run": "https://github.com/jmservera/ama/actions/runs/40539864471",
+    "review": {
+      "id": 5670660989,
+      "state": "COMMENTED",
+      "commit_id": "4140ebbf34174f2bdc9f6e980533797e92410ca9",
+      "url": "https://github.com/jmservera/ama/pull/496#pullrequestreview-5670660989"
+    },
+    "finding": {
+      "severity": "High",
+      "id": 4391306128,
+      "path": "src/api/src/zava_forward/api/web/role-screens.js",
+      "line": 81,
+      "body": "For cases with open safety issues, the specialist queue omits the projected safety marker and `work.hazard_clocks`, hiding recorded awareness times, deadlines and follow-up owners required by SA-007. The generic status sentence does not preserve this context and can name a different owner. Render the safety marker and existing `workSummary` for these rows, guarding against contractor responses that omit `work`.",
+      "url": "https://github.com/jmservera/ama/pull/496#discussion_r4391306128"
+    },
+    "draft_restore": {
+      "command": "gh pr ready 496 --undo",
+      "result": "success",
+      "readback": {
+        "headRefOid": "4140ebbf34174f2bdc9f6e980533797e92410ca9",
+        "isDraft": true,
+        "state": "OPEN",
+        "url": "https://github.com/jmservera/ama/pull/496"
+      }
+    },
+    "children": [
+      {
+        "headRefOid": "f2c067d685934fa0b0bbe7c21af4f55dec73dcad",
+        "isDraft": true,
+        "number": 487,
+        "state": "OPEN"
+      },
+      {
+        "headRefOid": "74abd87c14f9e4c2e19a6cb396bff1e9cf1dd297",
+        "isDraft": true,
+        "number": 488,
+        "state": "OPEN"
+      },
+      {
+        "headRefOid": "16420553b3bdc046855d5aa0e8b87affd247a16e",
+        "isDraft": true,
+        "number": 489,
+        "state": "OPEN"
+      },
+      {
+        "headRefOid": "1e78afca65d1059716992f8de45aa2e5be11d589",
+        "isDraft": true,
+        "number": 490,
+        "state": "OPEN"
+      },
+      {
+        "headRefOid": "915393924d557b14cec94d803426f3cf32efcf4a",
+        "isDraft": true,
+        "number": 491,
+        "state": "OPEN"
+      },
+      {
+        "headRefOid": "4194070a923184155652163ee3687dfef6843271",
+        "isDraft": true,
+        "number": 492,
+        "state": "OPEN"
+      },
+      {
+        "headRefOid": "4788d972023011ae2fe794e090cff5ce9a397009",
+        "isDraft": true,
+        "number": 493,
+        "state": "OPEN"
+      },
+      {
+        "headRefOid": "3197c113849b1436c6b0053fb6049c00d0013e83",
+        "isDraft": true,
+        "number": 494,
+        "state": "OPEN"
+      },
+      {
+        "headRefOid": "7449d243a541d4da259b6126b4127cc1d5d9ec44",
+        "isDraft": true,
+        "number": 495,
+        "state": "OPEN"
+      }
+    ],
+    "final_disposition": "Blocked / all ten PRs draft. Distinct later rpi-implement owns shared safety-context source correction. Original independent assessment and earlier ready transition remain historical, not current acceptance."
+  }
 }

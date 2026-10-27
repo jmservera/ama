@@ -10,8 +10,10 @@ Task 149 / role-screens-149. Automatic, Implement, full plan in scope.
 P01-T01, P02 and P03 execution complete. P04 binding correction/local units
 pass and independent final-head Review is Complete / Residual work.
 Final-head independent identity assessment and hosted checks passed.
-Parent-only ready transition executed/read back at 4140ebbf; all children
-remain draft. Current P04 scope complete; no merge or broader acceptance.
+Parent-only ready transition executed/read back, then was reversed after the
+automatic hosted review raised a new High safety-context omission.
+All ten PRs are draft at unchanged source heads. P04 readiness remains blocked;
+hash correction and scoped independent review are complete. No merge.
 Current post-publication evidence is trace-child-only.
 Research resumed after explicit owner B1 resolution.
 One critique executed (Revise); PC-001-PC-004 corrected directly in plan.
@@ -453,3 +455,31 @@ is retained as a dated observation, not a prediction that future jobs pass
 or future heads inherit this assessment. Any later head must be assessed
 on its own identity. No rubric/manual workflow was dispatched by readiness
 code; the existing repository event policy remains unchanged.
+
+## Subsequent hosted High finding and restored draft boundary
+
+The automatic ready-event review run 40539864471 completed successfully as
+workflow execution, but its COMMENTED review 5670660989 reports one High
+source defect. Review execution success is not acceptance. Discussion:
+https://github.com/jmservera/ama/pull/496#discussion_r4391306128.
+Shared specialist queue rows at role-screens.js:81 render ID/address/status
+only, omitting projected safety marker and work.hazard_clocks awareness/
+deadline/follow-up owner context. The existing generic status sentence is
+not equivalent. The hosted suggestion also requires guarding contractor
+responses that omit work. Direct bounded source inspection confirms the
+omitted rendering; no new fix or unsupported severity dismissal is performed.
+
+This is a new adverse observation after the independent residual-only result
+and actual ready transition. Preserve both earlier histories, but do not
+retain readiness while the source finding is open. gh pr ready 496 --undo
+succeeded and readback confirms OPEN / isDraft true at unchanged 4140ebbf.
+No child was made ready or merged. No source was changed, so zero additional
+heavy gates remain the actual count for this metadata-only continuation.
+
+P04-T03 is reopened and publication/readiness is blocked. Route the source
+correction to a distinct later rpi-implement scope: reuse existing safety/
+work-summary rendering with contractor-omission safety, meaningful populated/
+absent-state tests and painted browser assertions; propagate independent
+children, apply the standing one material-source scoped gate, and obtain
+acceptable exact-head review/hosted results. Do not silently widen this
+completed hash-fix scope or relabel the new High finding as residual-only.

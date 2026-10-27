@@ -9,9 +9,10 @@ ms.date: 2026-10-27
 Task ID: 149. Slug: role-screens-149. Mode: automatic.
 Readiness: binding/local units pass. Independent final-identity assessment is
 Complete / Residual work for parent 4140ebbf and exact source-identical role
-heads. Exact-head Source CI and rubric passed before the authorized parent-
-only ready transition, which was executed and read back at 4140ebbf.
-All children remain draft. No merge or broader acceptance.
+heads. Exact-head Source CI and rubric passed. The later automatic hosted
+review raised a High safety-context omission; the parent was returned to
+draft at unchanged 4140ebbf. Readiness is blocked pending a separately scoped
+source correction. All children remain draft. No merge or broader acceptance.
 This current evidence snapshot is trace-child-only.
 Original critique and Review verdicts preserved.
 
@@ -272,13 +273,13 @@ Promote only that dependency correction to the shared parent, then rebase all
 independent children without integrating role modules.
 
 <!-- rpi:phase id=P04 -->
-### [x] P04: Restore source binding and assess final published heads
+### [ ] P04: Restore source binding and assess final published heads
 <!-- rpi:task id=P04-T01 -->
 #### [x] P04-T01: Regenerate the dependent digest and propagate independent children
 <!-- rpi:task id=P04-T02 -->
 #### [x] P04-T02: Rerun local units and obtain independent exact-head review
 <!-- rpi:task id=P04-T03 -->
-#### [x] P04-T03: Publish evidence and mark only the parent ready after all hosted checks pass
+#### [ ] P04-T03: Publish evidence and mark only the parent ready after all hosted checks pass
 
 No material application/test/tool source change is planned. For metadata-only
 regeneration, run local units and hosted checks without another heavy gate;
@@ -289,3 +290,13 @@ preservation-complete git clean -fdxq. Wait and retry only if the lock is busy.
 The expressly authorized final-head Review is distinct from the immutable
 original adverse Review and cannot establish integration, human or live
 acceptance. Keep all children draft. No merge or issue-criterion changes.
+
+The temporary ready transition is preserved as actual execution history, not
+retained readiness. Hosted review 5670660989 subsequently reported High
+shared-queue safety-context omission at role-screens.js:81. Source inspection
+confirms rows render only ID/address/status, omitting projected safety marker
+and work.hazard_clocks context. No source correction is silently added to P04.
+Keep all ten PRs draft. Route this new finding to a distinct later rpi-implement
+scope with contractor-omission safety, executable/browser coverage, stack
+propagation and the standing material-source conditional gate. Review and
+hosted acceptance must support that new exact source head before readiness.

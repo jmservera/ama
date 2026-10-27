@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "automatic",
   "active_phase": "Follow-up",
-  "status": "completed",
+  "status": "blocked",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-27/role-screens-149-research.md",
@@ -15,6 +15,11 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-27/role-screens-149-final-head-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "Subsequent automatic hosted Review 5670660989 raised High shared-queue safety-context omission at role-screens.js:81 after the actual ready transition. Direct source inspection confirms omitted projected safety marker/work hazard-clock context. gh pr ready 496 --undo succeeded; parent is draft again at unchanged 4140ebbf. Preserve all prior review/transition history; new adverse review blocks retained readiness and routes a distinct later source correction.",
+      "status": "hosted-review-not-accepted-draft-restored",
+      "evidence": "https://github.com/jmservera/ama/pull/496#discussion_r4391306128; hosted run 40539864471 execution success does not mean acceptance; gh pr view readback isDraft true; changes Subsequent hosted High finding"
+    },
     {
       "decision": "P04-T03 executed: final PR evidence updated, exact parent 4140ebbf and all nine Source CI check runs plus rubric/score success reverified immediately before gh pr ready 496. Readback confirms OPEN, isDraft false and unchanged parent head. Children remain draft; no merge, issue acceptance or human approval. Ordinary ready-event hosted reevaluation is not predicted to pass.",
       "status": "parent-ready-verified",
@@ -106,26 +111,38 @@
       "evidence": "Read-only git fetch/rev-parse/merge-base and tools/rpi-checks.py clean_identity ancestry requirement; zero gate invocations; https://github.com/jmservera/ama/issues/149#issuecomment-6445655965"
     }
   ],
-  "blockers": [],
+  "blockers": [
+    {
+      "id": "HOSTED-REVIEW-001",
+      "summary": "New High hosted review finding: specialist queue omits projected safety marker and work.hazard_clocks awareness/deadline/follow-up owner context. Parent returned to draft; original source hashes and independent assessment remain preserved.",
+      "resolution": "A distinct later rpi-implement scope must correct shared queue rendering safely when contractor work is absent, prove populated/absent states with units/browser, propagate children and apply standing material-source gate/independent exact-head and hosted review requirements before parent readiness."
+    }
+  ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "P04 complete and #496 ready verified at 4140ebbf. Persist terminal trace evidence, then await owner selection among integration, human/AT/Fluent and domain-input follow-ups. No automatic child work or merge. Ordinary ready-event reevaluation/future head movement remains separate from the retained successful pre-transition evidence."
+    "action": "P04 readiness is blocked by newly returned High hosted finding. Parent and all children are draft again at unchanged source heads. Persist terminal blocker evidence and route a distinct later rpi-implement for shared-queue safety context; no automatic new source work, merge or repeated full Review in this hash-fix scope."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
+      "task": "Correct the shared-queue safety-context omission",
+      "rationale": "First concrete readiness blocker: High hosted finding hides projected safety marker and hazard awareness/deadline/follow-up owner context. Small shared-host correction requires contractor-safe rendering and source-level unit/browser evidence before publication.",
+      "evidence": "HOSTED-REVIEW-001; https://github.com/jmservera/ama/pull/496#discussion_r4391306128; role-screens.js:81"
+    },
+    {
+      "rank": 2,
       "task": "Owner-controlled child integration and integrated-head validation",
       "rationale": "Highest next service value after the concrete binding/readiness blockers are resolved; independent branches cannot prove a connected same-home journey. Requires an explicit owner-selected integration boundary.",
       "evidence": "Plan Follow-Up Items; #233 trace at 7519ca10; Review Plan Follow-Up Assessment"
     },
     {
-      "rank": 2,
+      "rank": 3,
       "task": "Human/assistive-technology validation and actual Fluent adoption",
       "rationale": "Required acceptance evidence remains unavailable; engineering checks are not resident/staff comprehension or WCAG acceptance.",
       "evidence": "#155/#150; plan Follow-Up Items; final Review distinct human/accessibility/Fluent residuals"
     },
     {
-      "rank": 3,
+      "rank": 4,
       "task": "Resolve approved identity, Finance, technical and service/recovery inputs",
       "rationale": "Preserves engineering quality and source authority by supplying real approved inputs instead of fallback identities, templates, appointments or invented recovery evidence. Owner selection is required before widening implementation.",
       "evidence": "Plan Follow-Up Items and final Review domain-input residuals; all absent inputs remain Unknown"
