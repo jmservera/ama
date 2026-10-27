@@ -8,19 +8,106 @@ Working title: *Everything but the Software: Feature-Driven Decay in an Agentic 
 
 ## Current Status
 
-The citation-relevance follow-up of 27 October is the latest source record.
-It preserves the industry-led argument and experimental design. The paper
-starts with maintenance before and with coding agents, then brings
-in AMA as the triggering experience. It distinguishes conversational errors,
-repository-carried faults and instruction maintenance, with two figures
-replotted from published data. The title and subtitle are retained.
+The executive-feedback revision of 27 October is the latest source record.
+The owner selected the existing twelve trajectories as pilot/estimation work,
+not seven stable hypothesis tests. The pilot has not started, no experimental
+results are reported, and launch remains blocked by the documented runner,
+suite/access, analysis and registration requirements.
 
-The current source passes structural checks with 110 matching references,
-and its fresh external validation PDF has 49 pages. This follow-up removes
-four entries and clarifies the roles of twelve retained references, as
-recorded below. No experiment was run or private study material amended.
-The existing package PDF and two case figures are unchanged. The arXiv
-bundle has not been refreshed.
+The industry-led argument, title, case observations, three arms, four runs
+per arm, suite and resource ceilings are retained. The draft endpoint hierarchy
+and interpretation are prospectively amended; the private kit or tag is not.
+Practitioner material and deferred extensions now accompany the source
+outside the main PDF. The main and reusable bibliographies contain the same
+93 references. No experiment was run or private study material amended.
+The fresh external validation PDF has 43 pages; compilation and preservation
+checks are recorded below.
+This task does not overwrite the package PDF or regenerate its figures.
+The arXiv bundle has not been refreshed.
+
+## Executive Feedback and Pilot Amendment 27 October
+
+The supplied executive review is editorial input, not independent
+corroboration of the case or approval to launch an experiment. Its paragraph
+identifiers below refer to the local extraction, not Word page numbers.
+The original review and earlier seven-hypothesis proposal remain unchanged;
+the latter is recoverable from the pre-revision source at commit `701dcea`.
+
+### Applied Changes and Open Evidence
+
+| Review point | Applied manuscript disposition | Remaining evidence or action |
+| --- | --- | --- |
+| Title/construct boundary, P0107 | Retain the title and explicitly define feature-driven decay as a prospectively investigated phenomenon, not an AMA effect | The case does not measure a decay rate |
+| Three central questions, P0070-P0074 | Concentrate on retained behaviour, future changeability and resource cost; use H1/H2/H6 only as historical traceability labels | No pilot hypothesis verdicts or powered effect claims |
+| Endpoint hierarchy, P0158/P0215 | Name final coverage as the primary practical outcome, retained-contract loss as the primary decay outcome and CR1 as the changeability probe | Reconcile extraction/checkpoint definitions with the actual runner before launch |
+| H4/H7, P0074/P0211 | Remove the joint comprehension and half-gap claims from the formal first-pass set; make H3/H5 metrics descriptive too | Do not invent non-inferiority margins or dependent-contrast thresholds |
+| Twelve-cluster precision, P0160-P0165/P0214 | Owner chose to keep four runs per arm as pilot/estimation work for feasibility, variation, endpoint behaviour and failure modes | No power/coverage simulation was performed; method boundary checks remain pre-run work, and a later confirmatory study needs a separate precision/replication plan |
+| CR1 estimands, P0166-P0168/P0212 | Specify allocated-run success, conservative binary risk-difference intervals, actual failed-session consumption and explicitly conditional successful-run cost | Interval implementation, missingness/event rules and boundary cases require versioned checks before launch |
+| Access/evaluator boundaries, P0171-P0178/P0209 | Separate independent suite/oracle/access review from evaluator-feedback policy and require both before exposure | Not performed or frozen by this edit; launch remains blocked |
+| Failure/reset/prerequisite/outage policies, P0210 | Keep each unresolved runner branch explicit and distinguish agent failure from missing infrastructure observations | Freeze and verify B/C-after-failure, dependent continuation, retries, outages and missing-data disposition before launch |
+| Measurement/runner agreement, P0213 | Keep the retained-contract panel, feature/post-feature checkpoints and reference-gap description; require actual runner/analysis reconciliation | The private kit was not opened, amended or declared in agreement |
+| Independent suite/access review, P0216 | Retain as a launch prerequisite, not a completed safeguard | Requires actual independent review and retained access/oracle evidence |
+| O1-O5 evidence chain, P0135/P0222 | Add the machine-readable case-evidence index and link it from the audit trail and data-availability statement | Known/reported locators are separated from null release, configuration and execution identifiers; missing corroboration is not fabricated |
+| Scorer/sign-in correspondence, P0136 | Preserve chronological coexistence rather than promote it to a same-release contradiction | Dated score, assessed release/scope, deployment and journey records still need linking |
+| Mechanism-assignment independence, P0137 | Retain the sole-participant/AI-assistance boundary and explicitly record the unperformed independent assignment audit | Editorial revision is not independent empirical coding |
+| Mechanisms versus experiment, P0223/P0243 | State prominently that no pilot contrast manipulates or validates the five candidate mechanisms separately | The pilot estimates complete package differences only |
+| Positioning, P0201-P0204/P0218 | Add AutoSaddler, SkillOpt and AgentRx with scoped first-party citations; narrow novelty to interleaved repository consolidation and retention/changeability measurement | Publication abstracts/engineering accounts were inspected, not independently replicated experiments |
+| Editorial economy, P0087-P0094/P0220-P0221 | Shorten HVE exposition and the discussion; move practitioner context, Aithena/PhotoCraft detail, seven proposed practices and human-role agenda to the ancillary companion | Specific validity/identification boundaries remain near the methods they qualify |
+| Optional extensions, P0224-P0230 | Defer formal fault lineage, early/late change probes, additional suites/models/CRs and matched human/agent steering | No extra sessions or extensions are added to the 212-session pilot |
+| Research readiness, P0233-P0251 | Preserve one-suite/model/CR and weak-access limits without turning them into repeated global caveats | No venue compliance, acceptance, registration or human approval is claimed |
+
+### New Positioning Sources
+
+Retrieval date: 2026-10-27. The citations identify the inspected first-party
+pages, rather than inventing author lists or publication venues for linked
+papers.
+
+| Source | Inspected support | Boundary |
+| --- | --- | --- |
+| [AutoSaddler publication page](https://www.microsoft.com/en-us/research/publication/autosaddler-automatic-harness-optimization-with-durable-updates-from-agent-execution-traces-2/) | Abstract: offline harness optimisation using failure diagnosis, structured patches and validation-based update selection; page metadata published 2026-08-24 | Agent-led reflection/harness improvement is prior work, not the novelty claimed for repository consolidation |
+| [SkillOpt engineering account](https://www.microsoft.com/en-us/research/blog/skillopt-agent-skills-as-trainable-parameters/) and [publication abstract](https://www.microsoft.com/en-us/research/publication/skillopt-executive-strategy-for-self-evolving-agent-skills/) | Bounded skill edits, held-out validation, retained successful versions and reported transfer; blog metadata published 2026-06-30 | Counterevidence to treating instruction change as inherently harmful; no independent replication or peer-review status is inferred |
+| [AgentRx engineering release](https://www.microsoft.com/en-us/research/blog/systematic-debugging-for-ai-agents-introducing-the-agentrx-framework/) | Guarded executable constraints and evidence-backed first-critical-failure localisation; blog metadata published 2026-03-12 | Supports traceable diagnosis, not an independent diagnosis of AMA; the review's immediately-before-manuscript timing is not adopted |
+
+### Preserved Scope
+
+The twelve-trajectory pilot remains S1, arms A/B/C, four runs per arm,
+ten features and CR1. Its ceiling is 212 sessions and 89 agent-hours;
+the separately planned calibration stage adds 50 sessions and 20 hours.
+The combined ceilings, exposed runtime/model choices, 2,500-credit ceiling
+and separate USD 500 statement are unchanged. Affordability and actual
+calibrated caps remain unverified. No calibration or experiment was executed
+as part of this manuscript task.
+
+The earlier formal right/wrong thresholds are historical proposal material,
+not active seven-test criteria for the pilot. This is a declared prospective
+amendment, not a claim that the private tag, runner or registration has
+already changed. Source-level revisions and formatting checks do not satisfy
+launch, publication or independent-review gates.
+
+### Validation and Unperformed Work
+
+* The existing paper checker passes with 93 matching cited, embedded and
+   BibTeX references, results disabled and 1,658 abstract source characters.
+* Using the checker's documented main-body counting method, the source
+   decreases from approximately 17,382 words at `701dcea` to 16,064:
+   1,318 fewer words, excluding the additional material moved out of the PDF.
+   The checker's unrelated configured historical Git baseline remains
+   unavailable; this comparison explicitly uses the available revision base.
+* Targeted checks confirm the unchanged suite, runtime/resource numbers and
+   original O1-O5 case table; the core table contains H1/H2/H6 only.
+   The evidence index retains null release/execution identifiers rather than
+   supplying fabricated links.
+* Tectonic produces a fresh 43-page external PDF with no unresolved
+   references, rerun requests, overfull boxes or underfull boxes in its final
+   TeX log. The process still reports the separate Windows Fontconfig
+   configuration warning. No fresh page-by-page visual review or pdfLaTeX
+   validation is claimed.
+* No experiment, calibration, power simulation, private-runner check,
+   independent suite/access review, preregistration or publication gate was
+   performed. The pilot remains not started and launch-blocked.
+* This task did not replace the package PDF, regenerate figures, modify the
+   private kit, commit, push or submit externally. A separate change to the
+   package PDF appeared during final validation and was left untouched.
 
 ## Citation Relevance Follow-up 27 October
 
@@ -719,7 +806,9 @@ verification of research statistics.
 | `main.tex` | Paper source. The bibliography is embedded, so it compiles on arXiv without BibTeX. |
 | `fig-log-growth.png` | Figure 1: words and hedging phrases appended to the project log per day (400 dpi). |
 | `fig-causal-loop.png` | Figure 2: the reinforcing loop and the feedback-first intervention (400 dpi). |
-| `references.bib` | The same 110 references as BibTeX, for reuse or a later switch to `\bibliography{}`; both bibliographies are ordered by key. |
+| `references.bib` | The same 93 main-paper references as BibTeX, for reuse or a later switch to `\bibliography{}`; both bibliographies are ordered by key. |
+| `anc/case-evidence-matrix.json` | Machine-readable O1-O5 index distinguishing reported source locators, author accounts and missing release/execution evidence; not new independent corroboration. |
+| `anc/supplementary-context.md` | Practitioner/framework context, external repository observations, proposed practices and deferred extensions moved outside the main PDF. |
 | `anc/log_metrics.py` | Recomputes the log measures in Appendix A from `docs/reference/log.md` at commit `29c6b51`; `--json` writes the per-day data. |
 | `anc/log_daily.json` | Per-day entries, words and hedging phrases (output of `log_metrics.py --json`). |
 | `anc/make_figures.py` | Redraws both figures from `anc/log_daily.json`. |
