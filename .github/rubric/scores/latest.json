@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-27T22:44:19+00:00",
-  "commit": "09d77859d5c9acaca5f055fd0c6198ba126fc039",
+  "scored_at": "2026-10-27T22:57:42+00:00",
+  "commit": "86479fab306f47fb887721a696cb053b05fc4049",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40595966287",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40597727255",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
@@ -29,10 +29,12 @@
     "A1": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/synthetic/indoor_projection.py:93-118",
-        "src/core/README.md:2144"
+        "src/core/src/zava_forward/core/synthetic/climate_history.py:207-298",
+        "src/core/src/zava_forward/core/synthetic/indoor_projection.py:112-152",
+        "src/core/src/zava_forward/core/synthetic/retrofit_effects.py:1-100",
+        "src/core/src/zava_forward/core/synthetic/sensor_identity.py:1-23"
       ],
-      "rationale": "Diff refactors duplicate temperature/humidity equations into one shared _project/_bounded_noise helper reused by project() and project_composed(), reinforcing existing modular boundaries. Already at ceiling; unchanged."
+      "rationale": "Diff is scoped to synthetic indoor_projection/sensor_backfill/privacy modules and their tests (v2 envelope derivation, snapshot version bumps). Baseline modularity evidence is untouched. Ceiling retained."
     },
     "A2": {
       "score": 5,
@@ -44,39 +46,36 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/synthetic/sensor_backfill.py:468",
-        "src/core/src/zava_forward/core/synthetic/sensor_backfill.py:522",
-        "src/core/tests/test_sensor_privacy.py:46-71"
+        "src/core/tests/test_historical_backfill.py:1-150",
+        "src/core/tests/test_climate_history.py:1-40",
+        "src/core/tests/test_sensor_stock.py:1-40"
       ],
-      "rationale": "Diff adds explicit version-gated rejection of stale/tampered snapshot manifests before replay or SQL load, consistent with the existing integrity-control ceiling; no new AI-specific risk. Already at ceiling; unchanged."
+      "rationale": "Change adds stale-snapshot-version rejection tests in synthetic privacy/backfill, consistent with existing baseline evidence; does not shift this criterion's ceiling. Unchanged."
     },
     "A4": {
-      "score": 5,
-      "evidence": [
-        "src/core/src/zava_forward/core/synthetic/indoor_projection.py:98-158",
-        "src/core/tests/test_indoor_projection.py:216-252"
-      ],
-      "rationale": "Diff replaces a fixed 8C/15-98%RH clip with dwelling-derived envelopes, validated against the full 17,544-hour pinned ERA5 record across both generator paths, closing a previously disclosed gap. Already at ceiling (5); unchanged numerically."
-    },
-    "A5": {
       "score": 5,
       "evidence": [
         "infra/README.md:263-283",
         "infra/main.bicep:99-105"
       ],
-      "rationale": "This diff does not touch observability, reliability or cost instrumentation; it is a synthetic-data core-module change. Baseline operations evidence retained unchanged."
+      "rationale": "Diff is solution-code only (synthetic data generator envelopes/versioning); it does not change the infra/operations completeness evidence this score rests on. Unchanged."
     },
-    "A6": {
+    "A5": {
       "score": 5,
       "evidence": [
         "src/api/src/zava_forward/api/resident_demo/aoai.py:109-224"
       ],
-      "rationale": "No AI model, prompt or evaluation code changed in this synthetic-data diff. Unchanged baseline."
+      "rationale": "No AI model, prompt, evaluation or guardrail code changed in this synthetic-data diff. Unchanged baseline."
+    },
+    "A6": {
+      "score": 5,
+      "evidence": [],
+      "rationale": "No agentic orchestration changed in this diff; it only touches synthetic sensor data generation. Unchanged baseline."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "No agentic orchestration code changed in this diff (synthetic indoor projection, privacy, and backfill modules only). Unchanged baseline."
+      "rationale": "Diff changes only src/core synthetic generator code/tests; no capstone deck or documentation files changed. Unchanged baseline ceiling."
     },
     "B1": {
       "score": 3,
@@ -115,7 +114,7 @@
     "B6": {
       "score": 5,
       "evidence": [],
-      "rationale": "Changed files are src/core technical module README and tests, not the capstone deck or docs/capstone documentation this criterion scores. Unchanged baseline."
+      "rationale": "Diff changes only src/core synthetic generator code and tests, not the capstone deck or documentation. Baseline unchanged."
     },
     "B7": {
       "score": 5,
