@@ -2141,6 +2141,20 @@ generation still uses the existing tools and `ZF_DATA`, not this metadata CLI.
   decision.
 ### Register-backed sensor history (#177)
 
+The #180 stacked `synthetic.retrofit_effects` component is deliberately not yet
+wired into the writer. It accepts explicit synthetic `Measure` records with
+stock home ID, unique measure ID, supported kind and recorded whole-second
+UTC completion time. `apply_loss(baseline, home_id, at, measures)` multiplies
+fabric loss only for that home from `at >= completed_at`, inclusively.
+Version `retrofit-effects-exercise-v1` assumes Loft insulation 0.90,
+Cavity wall 0.85, Solid wall insulation 0.80 and Glazing 0.95. All are
+exercise values, not measured savings or promised humidity improvements.
+Multiple records multiply in canonical time/ID order; duplicate IDs,
+unsupported kinds, invalid timestamps or non-synthetic claims raise
+`ValueError`. Missing history has multiplier 1.0, not proof of no works.
+No completion dates or private #173 records are invented. Actual source
+mapping, #179/#183 integration and before/after history acceptance remain open.
+
 The explicit `--register` mode (`sensor-backfill-stock-v1`) reuses merged
 `stock-fabric-v1`, seed 4820260930, rather than drawing unrelated dwelling
 attributes or treating the scale fixture as the private stock. Supply a wholly
