@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-27T00:04:54+00:00",
-  "commit": "9aed05e0abc8ce6ff458e4810bb546920558cf16",
+  "scored_at": "2026-10-27T01:32:33+00:00",
+  "commit": "01853ef0d20565481f442cacb039c76a567dac57",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40423176709",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40432117316",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "5aded7d2780c7921b41d7418c423fc2b6da7e8892f1b230f7d9de6a58497d6ad",
     "adr": "c7c2a19b4ca79e6a05b488c5cb00edfc63aaf994ba95493d9dec6dbc187cd6a7",
-    "solution-code": "99940a6c53eae6db8c50a6b51cbcb29639f538751cd9787b7b841863830f84db",
-    "infrastructure": "373822cf914b8c16420542b1b5bb7bb30e453491e28f2a4bf4eb2d83bc77d820",
+    "solution-code": "5b9adbd184ccde72e5e0e373b44d2aba6f47045f4b6aab1e3fde6feb9018757e",
+    "infrastructure": "8ae7dc9355ea77fe41d09f904f5ab91c5456ac7daee827e0642d4943f99b4fea",
     "capstone-deck": "acb30e4f302663cedec4884bc7c561fcb5a14fb647ab1c4f93ffc377567c8896",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
     "thought-leadership": "9288cfeb1cc1f3b499d22eafcb5f7585bbda1a335114446ad93a40cb1ed5a1f3"
@@ -29,10 +29,10 @@
     "A1": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/resident_showcase.py:1-20",
-        "src/api/src/zava_forward/api/resident_demo/app.py:1-20"
+        "src/core/src/zava_forward/core/resident_assistant.py:1-20",
+        "src/api/src/zava_forward/api/resident_demo/assistant.py:1-30"
       ],
-      "rationale": "New resident_showcase domain module stays pure/dependency-free, reused only read-only constants from #\u200b444 preview, with HTTP/SQL adapters depending on it, not vice versa. Reinforces ceiling."
+      "rationale": "New resident_assistant module stays pure/Protocol-driven; AzureTopicProvider adapter lives in API layer depending on core, not vice versa. Reinforces existing ceiling."
     },
     "A2": {
       "score": 5,
@@ -44,37 +44,40 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/resident_demo/app.py:1-40",
-        "src/core/src/zava_forward/core/resident_showcase.py:160-230",
-        "infra/sql/resident-showcase.sql:1-60"
+        "src/api/src/zava_forward/api/resident_demo/app.py:310-330",
+        "src/core/src/zava_forward/core/resident_showcase.py:93-165",
+        "src/api/src/zava_forward/api/resident_demo/assistant.py:60-100"
       ],
-      "rationale": "Adds CSRF double-submit, same-origin checks, per-request re-authorisation against a deny-by-default DB view, scrypt verifier with constant-time compare, and SQL least-privilege DENY grants. Strong layered defense; already at ceiling."
+      "rationale": "Assistant endpoint re-checks CSRF/same-origin/session every call; sensor rows strictly type/shape validated; Azure adapter disabled by default with bounded prompt/reply and no credential leakage. Consistent with ceiling."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/api/tests/test_resident_demo_api.py:1-40",
-        "src/core/tests/test_resident_showcase.py:1-40",
-        "src/api/checks/resident_demo_browser_check.py:1-40"
+        "src/api/tests/test_resident_assistant_api.py:1-40",
+        "src/api/tests/test_resident_assistant_provider.py:1-60",
+        "src/core/tests/test_resident_assistant.py:1-30",
+        "src/core/tests/test_resident_sensors.py:1-30"
       ],
-      "rationale": "Full feature shipped with unit tests, HTTP API tests, SQL integration tests and an end-to-end browser check. Already at ceiling."
+      "rationale": "New assistant and sensor-history features ship with layered unit/API/provider tests plus dedicated browser checks. Consistent with ceiling."
     },
     "A5": {
       "score": 4,
       "evidence": [
-        "src/api/README.md:2837-2910"
+        "docs/architecture/resident-assistant-prototype.md:28-40"
       ],
-      "rationale": "Documents a per-source and overall login rate limiter and residual-risk disclosure, but still no metrics/alerting/cost instrumentation added. Unchanged baseline."
+      "rationale": "Adds a budget-reservation design (USD 5 ceiling, reservation callback) but it is unimplemented/disabled; no metrics, alerting or measured cost added. Unchanged baseline."
     },
     "A6": {
       "score": 3,
-      "evidence": [],
-      "rationale": "No AI model-choice or evaluation-harness change in this diff; resident showcase is a non-AI, read-only authenticated view over SQL. Unchanged baseline."
+      "evidence": [
+        "docs/architecture/resident-assistant-prototype.md:13-20"
+      ],
+      "rationale": "Model-choice table compares candidate Azure models on cost/latency/quality but no model is wired, enabled or evaluated; still no evaluation harness. Unchanged baseline."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "No new agentic orchestration; resident showcase is a static authenticated HTTP view with no agent involvement. Unchanged baseline."
+      "rationale": "Assistant is a fixed three-topic rules dispatcher with a disabled single-call adapter; no autonomous agentic behaviour, handoff or state-graph pattern added. Unchanged baseline."
     },
     "B1": {
       "score": 3,
@@ -113,10 +116,10 @@
     "B6": {
       "score": 5,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/README.md:1-45",
-        "docs/capstone/pitch/cowork-main-presentation/evidence/README.md:1-20"
+        "src/api/README.md:5-30",
+        "docs/architecture/resident-assistant-prototype.md:1-15"
       ],
-      "rationale": "This diff only changes a numeric cap (25->1000) in infra/core/tests plus one README line; no deck or capstone documentation files changed. B6 scope evidence unaffected. Unchanged baseline."
+      "rationale": "New README section and design note are clear and well scoped, but no capstone deck/documentation files changed in this diff; incremental, not materially different from ceiling baseline."
     },
     "B7": {
       "score": 5,
