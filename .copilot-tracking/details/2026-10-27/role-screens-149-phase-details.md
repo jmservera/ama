@@ -164,3 +164,13 @@ P04-T03 pushes authorized refs, updates PR evidence and marks only #496 ready
 when every current-head hosted check passes and independent review is acceptable.
 No material source change means no additional heavy gate; old receipt remains
 historical. Original critique/Review remain byte-preserved. No integration.
+
+P04-T01 is complete: parent 6a4eae03 retains the hosted rubric append and only
+regenerates one dependent digest. Eight role children are rebased and pushed
+with explicit old-head leases. Exact current sources passed core 1,388/API
+1,114 discovery, with 186/314 explicit existing skips. Each role child passed
+27 integrity/role/workbench tests; trace passed 26. The recorded #231 selector
+passed 27 tests including source-owned selective invalidation. All src/ bytes
+match prior source-tested heads, so no additional heavy gate is applicable.
+P04-T02 awaits independent review; P04-T03 awaits hosted checks and evidence
+publication. No readiness, integrated, human or live acceptance is inferred.

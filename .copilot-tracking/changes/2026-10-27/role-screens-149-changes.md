@@ -7,9 +7,9 @@ ms.date: 2026-10-27
 ## Execution
 
 Task 149 / role-screens-149. Automatic, Implement, full plan in scope.
-P01-T01, P02 and P03 execution complete. Owner-selected lineage/RV-001
-implementation and draft publication complete; ready blocked by HOSTED-001
-and missing approved review. Terminal post-gate evidence is trace-child-only.
+P01-T01, P02 and P03 execution complete. P04 binding correction and local units
+pass; ready remains pending independent final-head review and hosted checks.
+Current post-publication evidence is trace-child-only.
 Research resumed after explicit owner B1 resolution.
 One critique executed (Revise); PC-001-PC-004 corrected directly in plan.
 No issue acceptance criteria changed.
@@ -332,3 +332,35 @@ If material source changes become necessary, the newly authorized one scoped
 foreground gate applies, with shared lock/timeout zero and fresh external
 output after preserved exact cleanup. Current git clean -ndx is empty.
 All PRs remain draft pending local units, independent review and hosted checks.
+
+## P04-T01 regeneration and propagation result
+
+The existing SOURCES allowlist computed the one stale digest and the complete
+validate_manifest contract passed before writing. Only the 64-hex digest
+changed; all other JSON bytes, four source paths, fixture/default metadata,
+twenty unavailable journeys and proposal/approval fields stayed identical.
+Correction originated on #233 as 562adaf3 and was promoted alone to parent.
+The hosted rubric append 17b60576 arrived during execution; it was preserved
+by rebasing the correction onto the remote parent. Parent normal push is
+6a4eae033776c81131119245dd0e99505be44823. Eight role children were lease-pushed
+only after authorized rebases; trace evidence is still being prepared.
+No branch integration, main rewrite or unrelated fixture changes.
+
+Full current-worktree units passed on the final parent: core 1,388 discovered,
+1,202 executed and 186 existing opt-in skips; API 1,114 discovered, 800
+executed and 314 existing opt-in skips. The exact final role heads each passed
+27 scenario/inventory/role/workbench tests; trace passed 26. The #231 recorded
+test_workbench/test_role_screens/test_workflows selector passed 27 tests,
+including executable selective invalidation. An earlier guessed selector
+named two nonexistent test modules; it failed as an invocation error and is
+not counted as a pass. No code change was made to hide it.
+
+All src/ bytes on every child are identical to its corresponding prior
+published head; parent src/ bytes are also unchanged. Previous rebased
+Chromium evidence remains historical source-identical browser evidence,
+not a new browser run. No material source change occurred, so the current
+owner condition means zero additional heavy-gate invocations. The old partial
+receipt remains historical and is not asserted valid for the new head.
+git clean -ndx was empty, then the authorized git clean -fdxq removed nothing.
+Original Review/critique bytes are preserved. No new dependencies, uv, private
+dataset access, Azure operations or secrets.

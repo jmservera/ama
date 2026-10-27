@@ -1,0 +1,86 @@
+{
+  "parent_head": "6a4eae033776c81131119245dd0e99505be44823",
+  "base": "2e031c89a18ce1ceb3de4fda014fddcb90231fda",
+  "independent_heads_before_trace_evidence_commit": {
+    "149": "6a4eae033776c81131119245dd0e99505be44823",
+    "232": "f06a28ad3706161baddb1b47ba5178dcccad1872",
+    "227": "5de77219a8caa07329622d0c02a434a0cdae3a6b",
+    "230": "03955fbf1224c3ecaa393eba0f704fbc5f4a2dd4",
+    "225": "6d5ebb351837d0119aaf7e84e2ee2d8cb4b22a1f",
+    "226": "de1afac7278d9e97c68693813f4c546a41c96112",
+    "228": "6958d088d61378c5ce0e2e9815a5ab8eeec238ba",
+    "229": "95e39a2cee4ed910764a930047f80443c2cce092",
+    "231": "6d72b3d29b18cee77e895e3c67d6d2b07a79e107",
+    "233": "586ff7a8bbe6a507aea9947e8ef37f07016bc768"
+  },
+  "all_src_bytes_identical_to_prior_heads": {
+    "149": "aee0e9d5",
+    "232": "f27161ee",
+    "227": "4771810c",
+    "230": "eca7e3ef",
+    "225": "94e0369f",
+    "226": "33c18a96",
+    "228": "bfd7d415",
+    "229": "3469812c",
+    "231": "f6cc9563",
+    "233": "abe3848a"
+  },
+  "preserved_original_sha256": {
+    ".copilot-tracking/reviews/logs/2026-10-27/role-screens-149-review.md": "ed2193e865633e4fd9e97efd1d6a4125a603d5c6ce5aa11e262fb16db8e79cf4",
+    ".copilot-tracking/reviews/plans/2026-10-27/role-screens-149-plan-critique.md": "a651127d9763950caa46214b34ef1a309b7c44131057a95dc39cf011e9f4a7e0"
+  },
+  "local_units": {
+    "core": {
+      "discovered": 1388,
+      "executed": 1202,
+      "existing_opt_in_skips": 186,
+      "status": "passed"
+    },
+    "api": {
+      "discovered": 1114,
+      "executed": 800,
+      "existing_opt_in_skips": 314,
+      "status": "passed"
+    },
+    "each_role_child_focused": {
+      "count": 27,
+      "status": "passed"
+    },
+    "trace_focused": {
+      "count": 26,
+      "status": "passed"
+    },
+    "rv001_recorded_selector": {
+      "count": 27,
+      "status": "passed"
+    }
+  },
+  "logs": {
+    "original-core-failure.log": {
+      "path": "/home/azureuser/.copilot/session-state/0a0379bb-f027-470f-b3d1-31fcd311efac/files/original-core-failure.log",
+      "sha256": "a9f9350e67948e00c575cab3948ac10f6bcecc82449b0e7ffd36a3b10167b195"
+    },
+    "binding-before.log": {
+      "path": "/home/azureuser/.copilot/session-state/0a0379bb-f027-470f-b3d1-31fcd311efac/files/binding-before.log",
+      "sha256": "bf08236e76899a5802351ee75f424df377136e7f769675cdce1b1626b72e1438"
+    },
+    "core-unit-final.log": {
+      "path": "/home/azureuser/.copilot/session-state/0a0379bb-f027-470f-b3d1-31fcd311efac/files/core-unit-final.log",
+      "sha256": "f79630ba6a687dcb289c9cc0cbe12ae9031d3826ede1c5ba296eb748b5fa33af"
+    },
+    "api-unit-final.log": {
+      "path": "/home/azureuser/.copilot/session-state/0a0379bb-f027-470f-b3d1-31fcd311efac/files/api-unit-final.log",
+      "sha256": "8fcf0879affe13bb5cc0fef4e3a49d1d369690c700f1e325eabda6358a29908c"
+    },
+    "rv001-final.log": {
+      "path": "/home/azureuser/.copilot/session-state/0a0379bb-f027-470f-b3d1-31fcd311efac/files/rv001-final.log",
+      "sha256": "461a641e73b0ff8a0bc234aafdc703e6dfd04bcefed4d1aa5766b229a321c3e7"
+    }
+  },
+  "new_heavy_gate_invocations": 0,
+  "gate_reason": "No material source change; owner explicitly conditions an additional gate on material source changes. Historical receipt is not a receipt for the new head.",
+  "hosted_status": "pending",
+  "review_status": "pending",
+  "clean_selection": [],
+  "clean_command": "git clean -fdxq; empty dry-run; removed nothing"
+}

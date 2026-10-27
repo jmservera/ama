@@ -7,9 +7,9 @@ ms.date: 2026-10-27
 ## Task Metadata
 
 Task ID: 149. Slug: role-screens-149. Mode: automatic.
-Readiness: Scoped parent gate passed and all ten drafts published. Ready is
-blocked by hosted source-binding failure and missing approved review.
-This terminal snapshot is trace-child-only; gated parent remains unchanged.
+Readiness: P04 source-binding correction and local units pass; independent
+final-head review and hosted checks are pending. All ten PRs remain draft.
+This current evidence snapshot is trace-child-only.
 Original critique and Review verdicts preserved.
 
 ## Executive Summary
@@ -202,14 +202,6 @@ artifact; logs/screenshots external. Never count fixture existence as execution.
 
 ## Follow-Up Items
 
-* HOSTED-001: reconcile the versioned scenario/inventory evidence binding for
-  changed workbench-manifest.json. Hosted src-core job 122286925178 failed
-  two source-integrity tests. Outside this completed single-gate publication
-  scope because changing parent invalidates its sole receipt; owner must
-  select the correction and authorize new exact-head validation. Do not
-  simply replace a hash without preserving the evidence/review contract.
-  Keep all PRs draft until current-head checks and actual review pass.
-
 * Owner-controlled child integration and exact integrated-head validation.
   Outside this run because independent child PRs must retain reviewable diffs;
   owner integrates only after review, then authorizes integrated validation.
@@ -279,7 +271,7 @@ independent children without integrating role modules.
 <!-- rpi:phase id=P04 -->
 ### [ ] P04: Restore source binding and assess final published heads
 <!-- rpi:task id=P04-T01 -->
-#### [ ] P04-T01: Regenerate the dependent digest and propagate independent children
+#### [x] P04-T01: Regenerate the dependent digest and propagate independent children
 <!-- rpi:task id=P04-T02 -->
 #### [ ] P04-T02: Rerun local units and obtain independent exact-head review
 <!-- rpi:task id=P04-T03 -->
