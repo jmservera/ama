@@ -365,12 +365,14 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             if not c or (user is not None and projection.is_contractor(user) and not projection.own_case(user, c)):
                 return None
             d = json.loads(json.dumps(c))
-            from .resident_decisions import followup_view, challenge_references_visible
+            from .resident_decisions import INTAKE_FIELDS, followup_view, challenge_references_visible
             followup_view(d)
             if user is not None and challenge_references_visible(self, user):
                 from .resident_decisions import challenge_catalog
                 d["challenge_targets"] = challenge_catalog(self, case_id)
             elif user is not None:
+                for field in INTAKE_FIELDS:
+                    d.pop(field, None)
                 d.pop("affected_challenges", None)
                 d.pop("challenge_targets", None)
             d.pop("form_staging", None)

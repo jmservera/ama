@@ -49,6 +49,64 @@ their separate approval and coverage limits. No child or epic closure,
 human-witnessed drill, broader assistant/form challenge coverage, legal
 screening or #440 stabilization is inferred.
 
+## Unverified nomination and tenure intake (#130, #131)
+
+The existing `resident_action` ledger accepts `nomination_record`,
+`nomination_correct` and `tenure_intake`. These are constructed staff-recorded
+intake, not nomination eligibility, verified identity, consent, Legal approval
+or an offer. Current registered staff need both resident-workflow and
+recorded-reason rights. Owners are named follow-up staff, not appointed Legal
+or Home Ownership decision makers. Each successful command is audited with
+non-sensitive record identifiers and persisted using the existing transaction.
+SQL writers recheck the actor, owner and current case revision before commit.
+
+Nomination keeps the exact supplied original account, source, reported subject
+and channel, a staff-recorded acknowledgement reference, named owner,
+next-update date and staffed non-digital route. Acknowledgement evidence is
+not verified delivery. Digital, phone, letter, in-person and trusted-intermediary
+channels are supported as staff capture, not direct resident authentication.
+Accounts longer than 4000 characters are refused, never truncated.
+Identity, support needs and risk flags remain `Unknown`. Corrections retain
+the original and competing accounts/subject references with actor/time and
+require re-review; a same-case generic challenge may be linked without
+resolving it. No resident identity, authority, ranking, consent or hazard
+record changes. Hazard-marked reports are refused with the independent
+hazard-intake route; no automatic triage, classification, dispatch or clock
+change occurs.
+
+Tenure reports retain each supplied household reference, reported tenure and
+lease interest, source, unresolved identity state, follow-up owner and update
+date. A report is not verified household membership. Verification, decision
+route, Legal responsibility and Finance cost remain `Unknown`. Every report
+sets a case-wide hold on resident work gates and new measure-scope recording,
+including ambiguous/unknown households and otherwise accepted measures.
+Revisions and other households' agreements cannot release it. There is no
+release or verification action. A static responsibility-question checklist
+identifies missing evidence; it is not a pack derived from reviewed leases.
+Prior homes without intake are unchanged: this does not prove complete tenure
+coverage or an all-offer gate across the programme.
+
+Raw intake is excluded from unrelated-role detail, contractor output,
+assistant source allow-lists and case CSV. Sensitive histories follow existing
+resident-record deletion handling for constructed tests; the separate
+non-sensitive `tenure_review_required` marker survives evidence deletion so
+deletion is not approval. No new actual retention duration, applicability,
+lawful basis or privacy approval is established.
+
+Operational extensions remain blocked on OD-41/42, real participant and
+representative evidence, a named Legal/Home Ownership decision owner,
+verified household/lease identity, approved responsibility/cost and applicable
+DPO/Compliance retention/release decisions. Nothing is sent, booked or
+approved. No issue-wide acceptance or user/accessibility conformance is claimed.
+The existing generic RAI challenge remains separate from nomination-specific
+eligibility and review decisions.
+
+Focused local constructed tests:
+
+```bash
+python3 -m unittest discover -s tests -p test_resident_decisions.py -q
+```
+
 ## Resident advisory assistant (#469)
 
 `resident_assistant.advise(topic, CaseProgress(...), provider)` builds bounded
