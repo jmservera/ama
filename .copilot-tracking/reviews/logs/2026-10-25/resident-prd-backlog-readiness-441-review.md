@@ -26,3 +26,15 @@ Prior review content is unchanged. RV-001 now has a fresh independent scoped rev
 ## Correction cycle 2 (appended 2026-10-25)
 
 Coordinator blocking finding on RB-21 dependency sequencing: corrected in the draft backlog (see correction2 critique). The earlier statement that the slice was ready for owner review is superseded; the coordinator must re-assess. RV-001 to RV-004 are unchanged.
+
+## PR 454 correction (appended 2026-10-27)
+
+The original Review and correction cycles above are historical evidence, not
+fresh full-PRD requirements-quality assessment. RV-001/RV-002 must not be
+deferred beyond owner acceptance: RB-G1 assessment and explicit findings
+disposition are now prerequisites of G0 in both governance and dependency
+tables. Fresh independent full-candidate assessment is being obtained before
+presentation for acceptance. No inherited finding, historical FAIL, unsigned
+BRD/PRD, unregistered architecture or live gate is closed by this correction.
+RB-20 now explicitly depends on RB-19, matching PR442-S18 -> S17, without
+requiring OD-53 for negative suspension/next-dispatch tests.

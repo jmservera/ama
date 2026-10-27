@@ -1,7 +1,7 @@
 ---
 title: Draft resident backlog for owner acceptance (issue 441)
 description: Proposed bounded delivery slices for the unsigned resident PRD increment, not an approved implementation baseline
-ms.date: 2026-10-25
+ms.date: 2026-10-27
 ---
 
 ## Status and boundary
@@ -91,7 +91,7 @@ PRD criteria; all stay Not run.
 | RB-17 | R4 sourced status/process proposal, disclosed as AI | PRD::FR-067; PRD::AC-121/122; PR442-S15; BRD::FR-058, BRD::AC-113/114 | Each material assertion has source, version and as-of; held for named review | BLOCKED until a separate task registry entry (FR-036), evaluation and release; this is the task-release gate and OD-53 is not required for this item; per-message human review default; no paid call or send | Not sized |
 | RB-18 | R4 abstention and owned human route | PRD::FR-067/068; PRD::AC-122/123/125; PR442-S16; BRD::FR-058/059 | Missing evidence, injection, timeout, distress and controlled-domain requests produce no unsupported assertion and a traceable owned route; urgent help independent of the model | BLOCKED by the same task-release gate as RB-17 (no OD-53 needed) | Not sized |
 | RB-19 | R4 deny-by-default dispatch policy decision | PRD::FR-070; PRD::AC-129/130; PR442-S17; BRD::FR-061, BRD::AC-118/119 | Any absent, expired or mismatched condition prevents dispatch; a future positive test uses a labelled simulated outbox only | BLOCKED on RB-17/RB-18 release. Deny-by-default and mandatory named per-message review tests need no OD-53; OD-53 evidence and reconciled BRD FR-044/AC-084 are needed only before any positive routine activation or simulated-outbox positive test; routine automation OFF | Not sized |
-| RB-20 | R4 suspension and actual-disposition audit | PRD::FR-070; PRD::AC-131/138; PR442-S18; BRD::FR-061, BRD::AC-118/119 | Next dispatch denied after suspend; disposition auditable without an invented reviewer; restart needs distinct authorisation | BLOCKED as RB-19: needs RB-17/RB-18 release; OD-53 only for positive activation or restart | Not sized |
+| RB-20 | R4 suspension and actual-disposition audit | PRD::FR-070; PRD::AC-131/138; PR442-S18; BRD::FR-061, BRD::AC-118/119 | Next dispatch denied after suspend; disposition auditable without an invented reviewer; restart needs distinct authorisation | Depends on RB-19 dispatch policy and RB-17/RB-18 release. Negative suspension/next-dispatch tests need no OD-53; positive activation or restart requires OD-53 evidence | Not sized |
 | RB-21 | R5 collection and review of paired effort and adverse-outcome results under the protocol frozen in RB-01 (no protocol authoring here) | PRD::FR-071; PRD::AC-132/133; PR442-S19; BRD::FR-062 | Results are collected only with the RB-01 frozen packs and definitions; any run not conforming is reported as non-evidence; unknowns stay unknown | No savings, uptake, cash or headcount claim | M |
 | RB-22 | R5 six-journey milestone evidence manifest | PRD::GOAL-005; PRD::AC-134 to AC-140; PR442-S20 | All six journeys and 30 criteria reported individually; criteria whose slices are blocked (RB-17 to RB-20) or unbuilt are reported Not run or blocked, so the manifest cannot satisfy R5 or AC-140 until they have evidence | Not acceptance; owner decides | S |
 | RB-23 | Accessibility and plain-language checks at 320, 390 and 1280 CSS pixels and 200% zoom, keyboard and screen reader, against the WCAG 2.2 AA engineering target | PRD::NFR-018; PRD::AC-134 | Each script reported; lost focus or blocked action fails the script | No conformance or participant validation claim; reuse 154 and 128 work | M |
@@ -101,8 +101,8 @@ Governance and approval items (not engineering slices):
 
 | Key | Item | Owner and state |
 | --- | --- | --- |
-| G0 | Owner accepts, amends or rejects this backlog, its sizing assumptions and the M1 composition | Owner; PENDING. Nothing starts before this |
-| RB-G1 | Fresh independent requirements-quality review of PRD v0.21.0 | Requirements owner; PENDING. Inherited findings below stay open |
+| G0 | Owner accepts, amends or rejects this backlog, its sizing assumptions and the M1 composition, only after RB-G1 assessment and explicit findings disposition | Owner; PENDING. RB-G1 is a prerequisite, not a later follow-up. Unresolved quality blockers prevent acceptance-readiness; nothing starts before G0 |
+| RB-G1 | Fresh independent full-PRD requirements-quality assessment of the exact corrected candidate, retained with its hash and explicit disposition of inherited and new findings before presentation for owner acceptance | Requirements owner; assessment pending. Original FAIL and unresolved findings remain; assessment execution is not quality approval, owner acceptance or a passed upstream gate |
 | RB-G2 | OD-52 to OD-55 and OQ-028 to OQ-031 named owners and evidence | Programme and delegated owners; OPEN |
 | RB-G3 | Native architecture registration of the unregistered proposal | Owner deferred; id null, registration UNMET; no ID guessed and no workaround |
 | RB-G4 | Later accepted application build needs real Azure, real SQL and registered real AI evidence | PRD::CON-009, PRD::AC-057; synthetic slices do not satisfy it |
@@ -111,6 +111,7 @@ Governance and approval items (not engineering slices):
 
 | Item | Depends on | Reason |
 | --- | --- | --- |
+| G0 | RB-G1 assessment and explicit findings disposition | The corrected candidate must receive independent full requirements-quality assessment before presentation for owner acceptance; unresolved blockers remain visible |
 | RB-02, RB-03 | RB-01 | Fixtures and measurement design need the frozen protocol |
 | RB-04 | RB-02 | Synthetic identities come from the fixture pack |
 | RB-05 | RB-02, RB-04, 444 modules | Grants need subjects and the 444 projection |
@@ -120,7 +121,8 @@ Governance and approval items (not engineering slices):
 | RB-11, RB-12 | RB-05, RB-09 | Own-scope and publication boundary |
 | RB-13 to RB-16 | RB-05, RB-08, RB-14 for RB-15/16; RB-01 (frozen paired protocol) for any portal/workflow-only effort baseline data | Shared event contract; no baseline effort data before the freeze |
 | RB-17, RB-18 | RB-15, RB-01 (frozen paired protocol) for any agent-assisted comparison data, plus external task registry, evaluation and release gate | Independently gated; OD-53 is not a dependency; no comparison data before the freeze |
-| RB-19, RB-20 | RB-17, RB-18, RB-01 for any comparison data; external OD-53 and reconciled BRD FR-044/AC-084 only for positive activation or simulated-outbox positive test | Dispatch policy follows the answer task (PR442-S17 depends on S15/S16); negative paths are testable without OD-53 |
+| RB-19 | RB-17, RB-18, RB-01 for any comparison data; external OD-53 and reconciled BRD FR-044/AC-084 only for positive activation or simulated-outbox positive test | Dispatch policy follows the answer task (PR442-S17 depends on S15/S16); negative paths are testable without OD-53 |
+| RB-20 | RB-19, RB-17, RB-18; RB-01 for any comparison data; external OD-53 evidence only for positive activation or restart | Suspension/next-dispatch verification needs the RB-19 dispatch policy (PR442-S18 depends on S17); negative suspension tests need no OD-53 |
 | RB-21 | RB-01 (frozen protocol), RB-03, RB-10 to RB-16, RB-17 to RB-20 evidence or recorded blocked status | Collection and review only, after the freeze and the runs it covers |
 | RB-24 | RB-03, RB-10 to RB-16, RB-11/RB-12 (scan wait drills), RB-01 if effort is recorded; R4 components reported Not run when unavailable | Measurement after the slices exist |
 | RB-22 | RB-01, RB-10 to RB-16, RB-21, RB-23, RB-24 and RB-17 to RB-20 evidence or recorded blocked status | R5 needs all 30 criteria reported |
