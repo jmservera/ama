@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-27T22:57:42+00:00",
-  "commit": "86479fab306f47fb887721a696cb053b05fc4049",
+  "scored_at": "2026-10-27T23:05:29+00:00",
+  "commit": "66c1a19d856010f5cf42356bd40153d0afd5c1f4",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40597727255",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40599040446",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "3bcdf19475e01fd6796a69fbde86ee268b907d3bca5011e2cc363680fcc81a48",
-    "solution-code": "1bcb28f93e3e83dd288c735f0a2eff1acb978d206786900c2f97490741ef02e5",
+    "solution-code": "f4b8d01b4bb8c74548ccb37781439a4176237b737fa5d38ea539004f583c18a5",
     "infrastructure": "847149d8a5008158615c0dd2d286c5b3872ef9180e18ffb8b1c420552018a661",
     "capstone-deck": "acb30e4f302663cedec4884bc7c561fcb5a14fb647ab1c4f93ffc377567c8896",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
@@ -75,7 +75,7 @@
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "Diff changes only src/core synthetic generator code/tests; no capstone deck or documentation files changed. Unchanged baseline ceiling."
+      "rationale": "Diff changes only src/README.md stabilization-process guidance; no capstone deck, documentation or orchestration code changed. Unchanged baseline ceiling."
     },
     "B1": {
       "score": 3,
@@ -114,7 +114,7 @@
     "B6": {
       "score": 5,
       "evidence": [],
-      "rationale": "Diff changes only src/core synthetic generator code and tests, not the capstone deck or documentation. Baseline unchanged."
+      "rationale": "Diff changes only src/README.md stabilization-process guidance, not the capstone deck or documentation. Baseline unchanged."
     },
     "B7": {
       "score": 5,
