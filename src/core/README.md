@@ -2126,20 +2126,23 @@ generation still uses the existing tools and `ZF_DATA`, not this metadata CLI.
   sharded CSV, `sensors.csv`, `estimate.json` and `manifest.json` (seed,
   versions, climate source, parameters, hash) to `sensor-backfill/` under
   the `ZF_DATA` folder. Same seed gives identical bytes. Every row is
-  `SYNTHETIC` with a stock home ID and `SENS-SYN-` sensor ID; `load_into()`
+  `SYNTHETIC` with a stock home ID and a deterministic sensor ID; `load_into()`
   validates and appends idempotently on sensor ID plus reading ID, and
   `SQL_DDL` is the Azure SQL schema. Climate remains a labelled synthetic
-  model. The [online source comparison and criterion audit](../../docs/reference/research/iot-sensor-analytics-research-plan.md#historical-climate-evidence-2026-10-17-refs-178)
+  model unless the explicit paired-climate mode below is supplied.
+  The [online source comparison and criterion audit](../../docs/reference/research/iot-sensor-analytics-research-plan.md#historical-climate-evidence-2026-10-17-refs-178)
   now records official metadata/terms, a conditional regional HadUK-Grid
   context recommendation and retrieved Durham monthly temperature statistics.
-  CEDA humidity access is login-blocked; no paired replay bounds or generator
-  changes follow. Juan Manuel Servera's dataset-specific exercise licence/reuse
-  approval remains **UNMET**; synthetic plausibility is not historical
-  validation. Also open:
-  #110 consumer validation is mirrored by `validate_reading()` and must be
-  reconciled when #110 lands, and a full-stock run needs a storage and cost
-  decision.
+  CEDA humidity access remains login-blocked. The 2026-10-27 owner decision
+  approves the alternative ERA5 candidate for synthetic demonstration only,
+  not production/legal qualification or physical calibration.
+  The legacy `load_into()` is not the authoritative #110 admission path;
+  use `load_with_consumer()` for verified composed snapshots and independently
+  supplied policy/controls and available cases.
 ### Register-backed sensor history (#177)
+
+The following three component descriptions preserve their original independent
+delivery boundaries. Their approved opt-in integration is described below.
 
 The #179 stacked exercise component extracts the unchanged indoor equation
 to `synthetic.indoor_projection`, version `indoor-projection-exercise-v1`.
@@ -2234,8 +2237,11 @@ construction factors and exact fabric mappings are in `sensor_stock.py`.
 No dated measure history is supplied: `retrofitted=False` is a modelling
 assumption, not evidence that no works occurred, and no before/after claim follows.
 
-Stock sensor IDs are `SENS-SYN-` plus full SHA-256 of the home ID; reading IDs
-append epoch seconds. Home IDs must fit 128 UTF-16 code units. For a fresh
+Stock sensor IDs now use `stock-sensor-v2`: `S` plus ten uppercase Base32
+SHA-256 characters from the entire canonical home key. A collision stops
+generation; it never reassigns a home ID. Eleven-character keys leave room
+for the existing `UNMAPPED-` fault namespace. Reading IDs append epoch seconds.
+Home IDs preserve case and Unicode and must fit 128 UTF-16 code units. For a fresh
 SQL Server database apply `STOCK_SQL_DDL` (`stock-reading-v1`, sensor
 VARCHAR(73), reading VARCHAR(96), home NVARCHAR(128)), then call
 `load_into(conn, output, create_schema=None)`. Legacy `SQL_DDL` and CSV payloads
@@ -2243,15 +2249,66 @@ are unchanged; do not use the narrow legacy DDL for stock mode. The loader
 does not migrate databases. SQLite tests and portable conditional-insert checks
 do not prove live SQL Server execution.
 
-This is partial #177 delivery: child issues are not owner-deferred.
-Historical Met Office/Environment Agency records and licence confirmation,
-dated retrofit measures, full behaviour,
-and #110's future consumer validation are still missing. Owner #178 permits
-clearly labelled synthetic climate as fallback; no CO2/energy is generated.
+This remains bounded synthetic #177 delivery: child issues are not automatically
+closed or owner-deferred. Actual private-stock equality, measured physical
+calibration, real monitoring authority and production acceptance are unproved.
+No CO2/energy is generated.
 The opt-in fault/truth feature for #182 is described below; it does not close
 the parent's other child or live-platform acceptance.
 No AI review, hazard diagnosis, ranking change, resident action or approval
 occurs in the generator. Existing AI release/human gates are unchanged.
+
+### Approved paired-climate composition (2026-10-27, Refs #177)
+
+The owner approved candidate climate reuse for synthetic demonstration under
+`owner-approvals-2026-10-27-b`. The pinned
+[2023-2024 ERA5 input and metadata](../../docs/reference/research/climate-paired-source-178/open-meteo-era5-durham-2023-2024-metadata.json)
+contain 17,544 genuine hourly pairs for a Durham grid cell. Temperature
+[-5.3, 26.9] C and RH [36, 100]% are calculated sample extrema, not safety or
+regional design thresholds. Open-Meteo/C3S attribution, retrieval/hash, source
+resolution, historical terms and the limited owner approval are retained.
+The NASA 2023 sensitivity sample is separate, never used to fill the second year.
+The strict adapter rejects gaps, mismatches and invalid units/values; exact UTC
+subsampling does not fill or repeat weather records.
+
+```bash
+python -m zava_forward.core.synthetic.sensor_backfill \
+  --register /external/generated-stock.csv --homes 60000 \
+  --climate docs/reference/research/climate-paired-source-178/open-meteo-era5-durham-2023-2024-raw.json \
+  --climate-metadata docs/reference/research/climate-paired-source-178/open-meteo-era5-durham-2023-2024-metadata.json \
+  --days 730 --as-of 2025-01-01 --cadence 1440 --estimate-only
+```
+
+Use the same arguments with `--compress --out /external/new-history` to write
+deterministic gzip shards. Cadence 1440 is a declared daily exercise, not hourly
+or diurnal-scale validation. Default hourly capacity is estimated independently.
+`--measures /external/measures.json` accepts a JSON list of explicit
+`measure_id`, canonical `home_id`, supported `kind`, UTC `completed_at` and
+`is_synthetic=true`. Empty history is neutral, not evidence that no works occurred.
+No dates, consent or calibration are inferred from the stock.
+
+Composed projection is separately versioned: baseline dwelling/age/construction
+loss is multiplied by active dated measures; household setpoint affects indoor
+temperature, and household moisture divided by ventilation affects vapour.
+The legacy `project()` equation and default seeded values remain unchanged.
+All model coefficients/distributions are exercise assumptions. Manifest hashes
+bind climate/metadata, stock, explicit measure history, source revisions, seed,
+window, cadence, payloads and model versions. No operational approval claim
+follows from generated readings.
+
+Composed output uses the existing 13-field consumer schema. Clean mode has no
+fault labels; optional `--fault-rate NAME=RATE` keeps evaluator-only packet truth
+under `truth/`, separate from `analysis/`, including compressed truth when selected.
+`load_with_consumer(consumer, output, stock=..., climate=...,
+received_at=..., measures=..., fault_rates=...)` first reconstructs and verifies
+the exact current synthetic snapshot within its explicit row budget, then calls
+the real `SensorConsumer`. Existing independent policy, available cases, mapping,
+consent, calibration, units, clock, range, ordering and replay checks still apply.
+The loader never creates cases or grants controls. Export accepts 128-unit home
+keys, but consumer availability remains bounded to the shared SQL case model's
+64 UTF-16 units on both stores. Longer or absent keys produce `HOME_UNAVAILABLE`;
+undersized/non-Unicode legacy SQL reading columns fail explicitly instead of
+truncating. This is not a shared case-schema migration or real monitoring activation.
 `tests/test_sensor_stock.py` covers bounded 730-day histories, fabric/ID/choice
 reconciliation, byte reproducibility, bounds, estimates, hashes and local loads.
 

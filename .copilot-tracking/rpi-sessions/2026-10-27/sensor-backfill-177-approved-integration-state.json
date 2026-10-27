@@ -19,9 +19,12 @@
     {"decision": "Candidate climate reuse approved for synthetic demo; stock home IDs canonical", "status": "confirmed", "evidence": "User supplied owner-approvals-2026-10-27-b"},
     {"decision": "One foreground --changed parent gate, lock timeout 0, fresh external out, clean -fdxq first", "status": "confirmed", "evidence": "User scoped policy supersedes --all"},
     {"decision": "Research executed, Planning Readiness Ready", "status": "complete", "evidence": ".copilot-tracking/research/2026-10-27/sensor-backfill-177-approved-integration-research.md"},
-    {"decision": "One final-candidate critique executed Complete, verdict Revise; PC-001 through PC-004 directly resolved, no repeat", "status": "dispositioned", "evidence": ".copilot-tracking/plans/2026-10-27/sensor-backfill-177-approved-integration-plan.md#critique-disposition"}
+    {"decision": "One final-candidate critique executed Complete, verdict Revise; PC-001 through PC-004 directly resolved, no repeat", "status": "dispositioned", "evidence": ".copilot-tracking/plans/2026-10-27/sensor-backfill-177-approved-integration-plan.md#critique-disposition"},
+    {"decision": "P01 climate and P02 canonical identity complete; all five child heads merged normally into parent", "status": "complete", "evidence": "Climate 09ea9e23, identity 6fc8d0fe; integration merge d3973924"},
+    {"decision": "Core 1427 tests pass (186 expected skips); full Ruff/format/mypy pass; actual owned SQL sensor suite 45 tests pass", "status": "validated", "evidence": "/mnt/ama-rpi-gates/177-approved-integration-20261027/core-unit.log and sensor-sql.log"},
+    {"decision": "Full generated 60000-home 730-day daily run passes every-row/every-ID verification: 43800000 rows, 703111263 compressed reading bytes; exact private-register equality and full-hourly scale not claimed", "status": "validated", "evidence": "/mnt/ama-rpi-gates/177-approved-integration-20261027/scale-summary.json"}
   ],
   "blockers": [],
-  "next_action": {"phase": "Implement", "action": "Planning ready; implement child climate and canonical identity in isolated existing child branches"},
+  "next_action": {"phase": "Review", "action": "P01-P03 complete and reconciled; commit implementation then activate rpi-review for one original independent Review"},
   "prioritized_follow_ups": null
 }

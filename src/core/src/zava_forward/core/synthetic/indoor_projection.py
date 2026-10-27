@@ -5,7 +5,20 @@ import random
 from collections.abc import Mapping
 from datetime import datetime
 
+from .household_conditions import Condition
+
 VERSION = "indoor-projection-exercise-v1"
+COMPOSED_VERSION = "indoor-projection-composed-exercise-v1"
+COMPOSED_PARAMETERS = {
+    "version": COMPOSED_VERSION,
+    "classification": "Uncalibrated synthetic exercise composition, not measured performance.",
+    "loss": "dwelling * age * construction * active dated measure multiplier",
+    "temperature": "max(8, household setpoint + min(0,(outdoor-5)*0.08*loss)"
+    " + max(0,(outdoor-16)*0.35) + Normal(0,0.3))",
+    "vapour": "sat(outdoor)*RH/100 + household moisture*loss/ventilation",
+    "humidity": "clip(100*vapour/sat(indoor) + Normal(0,1.5), 15, 98)",
+    "legacy_retrofit_flag": "Not used; explicit dated history only",
+}
 DWELLINGS = {
     "apartments": 0.7,
     "terrace": 1.0,
@@ -94,3 +107,46 @@ def project(
     vapour = saturation_pressure(t_out) * rh_out / 100 + (1.6 * loss if heated else 1.2 * loss)
     rh_in = max(15.0, min(98.0, 100 * vapour / saturation_pressure(t_in) + rng.gauss(0, 1.5)))
     return t_in, rh_in
+
+
+def project_composed(
+    sensor: Mapping[str, object],
+    rng: random.Random,
+    at: datetime,
+    outdoor_temperature: float,
+    outdoor_humidity: float,
+    household: Condition,
+    loss_multiplier: float,
+) -> tuple[float, float]:
+    """Apply explicit household conditions and dated effects without legacy enum coercion."""
+    offset = at.utcoffset()
+    if offset is None or offset.total_seconds() != 0:
+        raise ValueError("Projection time must be UTC-aware")
+    if household.home_id != sensor.get("home_id") or household.observed_at != at:
+        raise ValueError("Household condition must match the canonical home and observation")
+    if household.source_type != "SYNTHETIC":
+        raise ValueError("Only synthetic household conditions are supported")
+    t_out = _number(outdoor_temperature, -80.0, 60.0, "outdoor temperature")
+    rh_out = _number(outdoor_humidity, 0.0, 100.0, "outdoor humidity")
+    dwelling, age = sensor.get("dwelling_type"), sensor.get("age_band")
+    if not isinstance(dwelling, str) or dwelling not in DWELLINGS:
+        raise ValueError("Unsupported exercise dwelling type")
+    if not isinstance(age, str) or age not in AGE_BANDS:
+        raise ValueError("Unsupported exercise age band")
+    construction = _number(sensor.get("construction_loss", 1.0), 0.75, 1.2, "construction")
+    if construction not in CONSTRUCTION_FACTORS:
+        raise ValueError("Unsupported exercise construction factor")
+    multiplier = _number(loss_multiplier, 0.0, 1.0, "dated loss multiplier")
+    if multiplier <= 0:
+        raise ValueError("Dated loss multiplier must be positive")
+    setpoint = _number(household.setpoint_c, 16.0, 22.0, "household setpoint")
+    ventilation = _number(household.ventilation_multiplier, 0.8, 1.2, "ventilation")
+    moisture = _number(household.moisture_increment_hpa, 0.0, 2.4, "moisture")
+    loss = DWELLINGS[dwelling] * AGE_BANDS[age] * construction * multiplier
+    base = setpoint + min(0.0, (t_out - 5) * 0.08 * loss) + max(0.0, (t_out - 16) * 0.35)
+    temperature = max(8.0, base + rng.gauss(0, 0.3))
+    vapour = saturation_pressure(t_out) * rh_out / 100 + moisture * loss / ventilation
+    humidity = max(
+        15.0, min(98.0, 100 * vapour / saturation_pressure(temperature) + rng.gauss(0, 1.5))
+    )
+    return temperature, humidity

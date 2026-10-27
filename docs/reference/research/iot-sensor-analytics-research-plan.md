@@ -268,6 +268,8 @@ communications, data approvals or operational rules change.
 
 ## Historical backfill stack boundary (2026-10-27, Refs #177)
 
+### Original blocked stack
+
 The five draft child PRs target `feat/sensor-backfill-177`, not main.
 They remain unmerged; the parent is coordination/evidence, not an integrated
 historical generator. Existing synthetic stock and its opaque home IDs are
@@ -303,6 +305,57 @@ outdoor records, completion dates, calibrated physics or resident judgements.
 Focused child tests and the parent's documentation-scoped gate have different
 boundaries; neither proves an unmerged aggregate. Owner integration and a
 subsequent aggregate candidate assessment remain necessary.
+
+### Owner-approved integration continuation (2026-10-27)
+
+The later explicit owner decisions under `owner-approvals-2026-10-27-b`
+approve existing candidate climate reuse for synthetic demonstration, adopt
+existing stock home IDs as canonical keys, and authorize child integration and
+aggregate validation. This prospectively supersedes the source/identity owner
+blockers above, not their original findings or Residual work Review.
+
+The integrated code now includes all five child branches. The
+[pinned paired source metadata](./climate-paired-source-178/open-meteo-era5-durham-2023-2024-metadata.json)
+records a genuine 2023-2024 Open-Meteo ERA5 Durham-grid acquisition on
+2026-10-27: 17,544 UTC hourly pairs; input SHA-256
+`af76a90414d9ad8f19dacc95a38f06d4c4321a91bdf030ba231558c42506051e`;
+record-derived temperature -5.3 to 26.9 C and RH 36 to 100%.
+The NASA 2023 [sensitivity evidence](./climate-paired-source-178/nasa-power-merra2-durham-2023-sensitivity.json)
+is retained separately, not used to invent a second year. Attribution and
+historical terms remain explicit; owner approval is not underlying legal or
+production terms verification. Source #425 is not silently merged or rewritten.
+
+Canonical home keys are preserved exactly, including case/Unicode. Compact
+11-character, collision-checked sensor keys preserve the existing 20-character
+consumer limit including `UNMAPPED-`; malformed, absent or unsupported identities
+still fail. Export supports the stock 128-UTF-16-unit domain, while actual
+consumer availability remains limited to existing exact cases and 64 units on
+both stores. No shared case identity migration, alias, truncation or created
+availability is implied. Actual consumer tests retain consent, calibration,
+mapping, unit, clock, ordering and replay failures.
+
+The [core composition and loading contract](../../../src/core/README.md#approved-paired-climate-composition-2026-10-27-refs-177)
+wires versioned indoor projection, explicit dated synthetic measures and neutral
+household conditions. Legacy default reading bytes remain unchanged. Output is
+synthetic, with optional evaluator-only fault truth separate from analysis.
+The verified replay loader calls actual #110 admission; the old legacy loader
+is not promoted into an equivalent contract.
+
+Aggregate evidence is recorded in the dated continuation changes/Review and
+PR #486. Core discovery passed 1,427 tests (186 existing skips); targeted
+static/type checks passed. The full-stock exercise uses an explicitly generated
+public 60,000-home fixture, a complete 730-day window and a declared daily cadence,
+with hourly capacity estimated before generation. The run passed every-row and
+every-ID reconciliation: 43,800,000 rows, 730 per home, UTC 2023-01-02 through
+2025-01-01 exclusive; 703,111,263 compressed reading bytes. The uncompressed
+reading SHA-256 is
+`d07715c8b55fc4e0b6d771472f6f823110fe7b39ed47eab370ef7daf4d98bc41`.
+Six thousand explicitly generated synthetic dated measures were supplied, not
+inferred from private history. Actual owned-loopback SQL sensor/API tests also
+passed all 45 cases, including canonical keys and independent controls.
+No exact unread-private-register equality or full-hourly/diurnal-scale
+validation is asserted. The single scoped parent gate and independent Review
+remain separate publication requirements.
 
 ## Sensor privacy engineering boundary (2026-10-17, Refs #112)
 

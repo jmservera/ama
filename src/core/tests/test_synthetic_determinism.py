@@ -226,6 +226,7 @@ class SyntheticDeterminismTests(unittest.TestCase):
                         "sensor_stock.py",
                         "stock_fabric.py",
                         "indoor_projection.py",
+                        "sensor_identity.py",
                     }
                 )
             self.assertEqual({p.name for p in sources}, expected)

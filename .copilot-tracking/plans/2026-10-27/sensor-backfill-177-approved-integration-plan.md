@@ -92,10 +92,10 @@ Automatic parent-owned continuation after critique disposition.
 ## Phase Checklist
 
 <!-- rpi:phase id=P01 -->
-### [ ] P01: Approved climate child implementation
+### [x] P01: Approved climate child implementation
 
 <!-- rpi:task id=P01-T01 -->
-#### [ ] P01-T01: Integrate approved paired climate on #481
+#### [x] P01-T01: Integrate approved paired climate on #481
 
 Reuse candidate provenance/adapter where appropriate; retrieve genuine second
 year; implement a core-owned validated climate input and tests. Do not copy
@@ -112,17 +112,17 @@ consumer independent controls and SQL parity, and prove real consumer admission
 using explicitly generated synthetic case/home fixtures, not availability bypass.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Parent integration and aggregate behavior
+### [x] P03: Parent integration and aggregate behavior
 
 <!-- rpi:task id=P03-T01 -->
-#### [ ] P03-T01: Merge children and wire integrated generator
+#### [x] P03-T01: Merge children and wire integrated generator
 
 Merge exact children without squash/rebase/force push. Preserve all README
 sections. Add opt-in climate/projection/household/dated-effect wiring and manifest
 binding. Produce generated public 60,000-home fixture, no private reads.
 
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: Validate package and full-stock generator
+#### [x] P03-T02: Validate package and full-stock generator
 
 Focused tests first, then all relevant src package unit suites. Generate complete
 two-year full-stock history with declared cadence, measured pre-generation

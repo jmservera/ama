@@ -12,10 +12,10 @@
 
 | Phase | Name | Status | Tasks |
 | --- | --- | --- | --- |
-| P01 | Climate child implementation | Active | P01-T01 |
+| P01 | Climate child implementation | Complete, 09ea9e23; 12 core adapter methods pass | P01-T01 |
 | P02 | Identity child implementation | Complete, 6fc8d0fe; 51 tests pass | P02-T01 |
-| P03 | Integrated generator and validation | Composition active; final climate merge awaits P01 | P03-T01, P03-T02 |
-| P04 | Review and publication | Pending P03 | P04-T01, P04-T02 |
+| P03 | Integrated generator and validation | Complete; all 43,800,000 rows and 60,000 IDs reconciled | P03-T01, P03-T02 |
+| P04 | Review and publication | Ready for original independent Review, gate not run | P04-T01, P04-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Climate child implementation

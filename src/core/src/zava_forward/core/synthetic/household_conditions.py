@@ -110,14 +110,15 @@ def conditions(
             "extended_day": 7 <= hour < 23,
             "evening": 17 <= hour < 22,
         }[household.heating_schedule]
-        occupied = {
-            "daytime": 8 <= hour < 20,
-            "morning_evening": 6 <= hour < 9 or 17 <= hour < 23,
-            "variable": random.Random(
-                f"{seed}-{VERSION}-{home_id}-occupancy-{at:%Y-%m-%dT%H}"
-            ).random()
-            < 0.5,
-        }[household.occupancy_pattern]
+        if household.occupancy_pattern == "variable":
+            occupied = (
+                random.Random(f"{seed}-{VERSION}-{home_id}-occupancy-{at:%Y-%m-%dT%H}").random()
+                < 0.5
+            )
+        elif household.occupancy_pattern == "daytime":
+            occupied = 8 <= hour < 20
+        else:
+            occupied = 6 <= hour < 9 or 17 <= hour < 23
         moisture = household.occupied_moisture_hpa if occupied else 0.4
         if hour == household.drying_hour_utc:
             moisture += household.drying_increment_hpa

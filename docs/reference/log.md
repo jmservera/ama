@@ -7493,3 +7493,23 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   `docs/reference/README.md` and this append-only log. Parent is draft
   coordination only; no child integration, acceptance tick, owner deferral,
   merge, climate reuse approval, Azure action or real monitoring authority.
+
+## [2026-10-27] query | Approved historical backfill integration continuation (Refs #177)
+
+* Recorded owner-approvals-2026-10-27-b prospectively: candidate climate
+  synthetic-demo reuse, canonical stock IDs and authorized child integration.
+  Original blocked stack findings and Residual work Review remain unchanged.
+* Added hash-pinned genuine 2023-2024 paired ERA5 reanalysis and separate NASA
+  2023 sensitivity evidence; source attribution and unverified production/legal
+  terms remain explicit, not converted into unrestricted reuse approval.
+* Updated the existing IoT synthesis and index for canonical IDs, independent
+  consumer controls, opt-in composed models and the actual aggregate evidence
+  boundary. Generated public stock does not prove unread private-register equality.
+* Files: existing IoT research plan, index, climate evidence directory and this
+  append-only log. No memory/regulatory snapshot edit, private data, real device
+  activation, physical calibration, main merge or operational acceptance.
+* Aggregate run reconciled every ID and all 43,800,000 daily readings for the
+  public 60,000-home fixture over 730 days; 703,111,263 compressed reading bytes.
+  Full core 1,427 tests (186 expected skips), static/types and actual owned SQL
+  sensor/API 45 tests passed. Original Review and one scoped parent publication
+  gate remain separate, not implied by this runtime evidence.
