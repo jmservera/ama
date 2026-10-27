@@ -89,10 +89,15 @@ wall clock. Each child remains reviewable until owner integration.
 <!-- P03 -->
 ### P03: Review and parent publication
 
-* [ ] P03-T01: One independent post-implementation Review across all child diffs.
-* [ ] P03-T02: Reconcile evidence; commit parent candidate and original Review.
+* [x] P03-T01: One independent post-implementation Review across all child diffs.
+* [x] P03-T02: Reconcile evidence; commit parent candidate and original Review.
 * [ ] P03-T03: Exact cleanup dry-run, then authorized clean; one scoped gate,
   receipt verification where possible, parent draft PR; report hosted checks.
+
+P03-T03 execution evidence is sealed outside the committed candidate to avoid
+self-invalidating the exact-head receipt. Parent draft PR #486 records the
+actual invocation outcome after execution; this source checklist is its
+pre-gate checkpoint, not a claim that the gate already ran.
 
 ## Test Ownership and Locked Boundary
 
