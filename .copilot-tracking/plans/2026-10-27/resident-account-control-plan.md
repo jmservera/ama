@@ -3,7 +3,7 @@ title: Resident account control implementation plan
 ms.date: 2026-10-27
 ---
 
-Task: #467. Parent: #466. Status: Review Complete / Conformant; publication next.
+Task: #467. Parent: #466. Status: complete; PR #471 open, approvals pending.
 
 ## Executive Summary
 
@@ -71,7 +71,7 @@ sessions never disclose another account. Reflow checked at 320/390/1280px.
 ### P02: Independent review and publication
 
 * [x] P02-T01: One independent post-implementation Review; route findings.
-* [ ] P02-T02: Commit and open stacked PR; no merge.
+* [x] P02-T02: Commit and open stacked PR; no merge.
 
 ## Locked Test Ownership and Validation
 
@@ -117,6 +117,8 @@ P01 complete: two added API methods, authorised email, native header account,
 browser coverage and compatibility adaptation, documentation, static checks
 and full API unit evidence recorded. No implementation blocker or open finding.
 One independent Review executed: Complete / Conformant, no substantive findings.
-P02-T02 remains approved publication, not falsely marked complete.
-Parent continues to normal topic push and stacked PR creation.
+P02-T02 complete: implementation/evidence commit fab2d93d, normal push and
+PR #471 opened against feat/resident-interactive with explicit stacking
+dependency and Refs #467 / Refs #466 only. No merge or force push.
+Hosted CI/rubric/owner review remain pending; no new child work selected.
 Changes: `.copilot-tracking/changes/2026-10-27/resident-account-control-changes.md`.

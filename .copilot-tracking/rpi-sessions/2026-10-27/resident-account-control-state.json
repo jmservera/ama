@@ -18,9 +18,10 @@
     {"decision": "Execute the complete RPI loop in order", "status": "confirmed", "evidence": "Explicit owner request, 2026-10-27"},
     {"decision": "Stack on feat/resident-interactive; focused local validation replaces full gate; no Azure; do not change MAX_MAPPINGS", "status": "confirmed", "evidence": "Explicit owner request, 2026-10-27"},
     {"decision": "Research executed Ready; critique executed Revise with PC-001 directly resolved", "status": "recorded", "evidence": "Dated research, original critique and plan target map"},
-    {"decision": "One independent Review executed Complete; outcome Conformant; no substantive findings", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-27/resident-account-control-review.md"}
+    {"decision": "One independent Review executed Complete; outcome Conformant; no substantive findings", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-27/resident-account-control-review.md"},
+    {"decision": "Published PR #471 stacked on feat/resident-interactive via normal push; no merge", "status": "completed", "evidence": "https://github.com/jmservera/ama/pull/471; implementation/evidence commit fab2d93d"}
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Commit reviewed implementation and evidence; normal push and PR base feat/resident-interactive; hosted/human approval pending"},
+  "next_action": {"phase": "Follow-up", "action": "Await hosted CI/rubric and owner review on PR #471; no follow-up work selected or started"},
   "prioritized_follow_ups": []
 }

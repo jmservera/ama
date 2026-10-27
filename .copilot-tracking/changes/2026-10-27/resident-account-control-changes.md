@@ -101,3 +101,17 @@ Reviewer independently reran 39 API and 39 core tests, static checks and JS
 syntax; full API/Playwright results are explicitly attributed to parent evidence.
 No repeat Review, source correction, deployment or merge. P02-T02 publication
 is the remaining approved action; hosted CI/rubric and human review are pending.
+
+## Publication
+
+Implementation and original dated RPI evidence committed as fab2d93d with the
+Conventional Commit style and required Copilot trailer. Author/committer email
+resolved from gh api user into the account's noreply address and configured only
+locally. Normal non-force topic push succeeded.
+
+PR #471: https://github.com/jmservera/ama/pull/471, base
+`feat/resident-interactive`, head `feat/resident-account-control`; body explicitly
+declares stacking dependency and uses Refs #467 / Refs #466 only. No merge.
+This publication-receipt update changes only tracking evidence, not reviewed
+source. Hosted CI/rubric and owner approval remain pending, not local passes.
+No task-specific follow-up established and no child task started.

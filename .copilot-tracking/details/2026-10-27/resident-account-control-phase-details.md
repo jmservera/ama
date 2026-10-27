@@ -4,8 +4,9 @@ ms.date: 2026-10-27
 ---
 
 Task #467. Read with the matching plan and research artifacts.
-Current state: P01 complete with passing focused/full API checks. P02 Review
-and publication remain. No material divergence or implementation blocker.
+Current state: P01 and P02 complete. Independent Review Complete / Conformant;
+PR #471 open against feat/resident-interactive. Hosted/human approval pending.
+No material divergence or implementation blocker.
 
 <!-- P01 -->
 ## P01: Implementation and verification
