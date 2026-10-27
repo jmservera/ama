@@ -2,13 +2,13 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-27T15:02:36+00:00",
-  "commit": "3773397477d11a8dd91e209cf4f9c0bda4a1d416",
+  "scored_at": "2026-10-27T15:28:34+00:00",
+  "commit": "2f9b758b7b22bda6db8788057cbd9ba323f6cfd5",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40525319276",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40529738664",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
-    "prd": "5aded7d2780c7921b41d7418c423fc2b6da7e8892f1b230f7d9de6a58497d6ad",
+    "prd": "810a1dec8098e8b39fb8143601a21d314b5151923f4b021dee703821dbd9cc88",
     "adr": "7063994ca762718ec9e367f55fa3af37566f4754009f839a2b9f12fcbc59e2a1",
     "solution-code": "3b4bf9a6607c59da0b6fc4e7cf06256c6177d25e1779766b5494f6b887b4520d",
     "infrastructure": "af65ce38ca8fa4dd19005ee7104cb20f8c9a9bd4e7a506fd731d725889404185",
@@ -125,7 +125,7 @@
         "docs/capstone/pitch/cowork-main-presentation/README.md:1-45",
         "docs/capstone/pitch/cowork-main-presentation/evidence/README.md:1-20"
       ],
-      "rationale": "This diff only changes expiry-cap wording/config in infra/core/tests plus README docstrings; no deck or capstone documentation files changed. B6 scope evidence unaffected. Unchanged baseline."
+      "rationale": "This diff only changes PRD requirements wording (resident/staff NFR applicability, identity, milestone sequencing); no deck or capstone documentation files changed. B6 scope evidence unaffected. Unchanged baseline."
     },
     "B7": {
       "score": 5,
@@ -138,7 +138,7 @@
     "C1": {
       "score": 5,
       "evidence": [],
-      "rationale": "No new BRD stakeholder-framing change beyond existing FR-051 naming; Tokenomics addition quantifies a cost gap but does not change stakeholder/value framing already at ceiling. Unchanged."
+      "rationale": "No new BRD/PRD stakeholder-framing change beyond existing FR naming; this PR only clarifies NFR applicability wording and identity/sequencing, not stakeholder/value framing already at ceiling. Unchanged."
     },
     "C2": {
       "score": 2,
