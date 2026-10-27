@@ -93,6 +93,35 @@ All three source hashes independently matched; Review assessed the working
 tree before publication. Later checklist/status bookkeeping does not rewrite
 that original Review or its assessed task-artifact hashes.
 
-P02-T02 publication and
-four thread replies/resolutions. Any late source change stops publication
-under PC-001; later findings are reported, not another correction cycle.
+No remaining active plan marker. Later findings are reported, not another
+correction cycle. Existing quality, sizing, registration and live acceptance
+follow-ups remain outside this correction.
+
+## P02-T02: Publication and Thread Evidence
+
+Implementation plus original RPI evidence committed as
+f4b1fd94f80bf6b57b1d10a970404bc968cf6d63, then `git pull --rebase`
+reported up to date. All three source hashes in the assessed-source table
+were checked after synchronization and immediately before normal push:
+all OK. Clean worktree checked before push. Remote branch API confirmed
+that exact commit after push. No force push or merge.
+
+All four named thread replies and resolution mutations succeeded:
+
+| Thread | Evidence reply | Verified resolution |
+| --- | --- | --- |
+| PRRT_kwDOUU8JX86wwINw | PR 454 discussion_r4390792450 | true |
+| PRRT_kwDOUU8JX86wwIOl | PR 454 discussion_r4390793023 | true |
+| PRRT_kwDOUU8JX86wwIPV | PR 454 discussion_r4390793433 | true |
+| PRRT_kwDOUU8JX86wwXRl | PR 454 discussion_r4390793860 | true |
+
+Each reply cites immutable implementation and independent Review evidence,
+the complete audit boundary, documentary validation limits and preserved
+approval blockers. Initial post-push PR metadata briefly exposed the previous
+head; the branch-reference API confirmed f4b1fd94. The final closeout check
+separately verifies current PR state and unresolved threads.
+
+Publication/status bookkeeping after the original Review is not another
+source correction or Review. Original Review execution/outcome and assessed
+hashes are retained unchanged; assessed source identities remain mandatory
+before the closeout push as well. Hosted/human approval is not inferred.
