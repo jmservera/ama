@@ -18,7 +18,36 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  source-ci:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - name: Require successful complete source CI for this exact main revision
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          if ! gh api --method GET \
+            "repos/$GITHUB_REPOSITORY/actions/workflows/src-ci.yml/runs" \
+            -f head_sha="$RELEASE_SHA" -f branch=main \
+            -f event=workflow_dispatch -f status=success -f per_page=1 |
+            jq --exit-status --arg sha "$RELEASE_SHA" '
+              .workflow_runs | type == "array" and any(
+                .head_sha == $sha and .head_branch == "main" and
+                .event == "workflow_dispatch" and .status == "completed" and
+                .conclusion == "success"
+              )' > /dev/null; then
+            echo "::error::A successful manual Source projects CI run on main is required for this exact release SHA."
+            exit 1
+          fi
+
   build:
+    needs: source-ci
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -72,6 +101,22 @@ jobs:
         with:
           name: release-scans-${{ matrix.project }}
           path: trivy-${{ matrix.project }}*.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Generate release image SBOM (SPDX)
+        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
+        with:
+          image-ref: zava-forward-${{ matrix.project }}:release
+          trivy-config: src/trivy.yaml
+          format: spdx-json
+          output: zava-forward-${{ matrix.project }}-release.spdx.json
+          scan-type: image
+          skip-setup-trivy: true
+      - name: Retain exact release image SPDX evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: release-sbom-${{ matrix.project }}
+          path: zava-forward-${{ matrix.project }}-release.spdx.json
           if-no-files-found: error
           retention-days: 7
       - name: Export only the image which passed both gates

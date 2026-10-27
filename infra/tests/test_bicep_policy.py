@@ -1821,7 +1821,17 @@ class BicepPolicyTests(unittest.TestCase):
             pilot_expected = expected | (
                 {"pilotRequiresProductionProfile"} if profile != "production" or public else set()
             )
-            self.assertEqual(failures(**overrides, environmentName="pilot"), pilot_expected)
+            for environment, locks in product(("dev", "test", "pilot"), (False, True)):
+                environment_expected = expected
+                if environment == "pilot":
+                    environment_expected = pilot_expected | (
+                        set() if locks else {"pilotRequiresLocks"}
+                    )
+                self.assertEqual(
+                    failures(**overrides, environmentName=environment, enableLocks=locks),
+                    environment_expected,
+                    str({**overrides, "environmentName": environment, "enableLocks": locks}),
+                )
         self.assertEqual(
             failures(enablePublicEdge=True, deployApplications=False),
             {"publicEdgeRequiresApplications"},
@@ -2004,6 +2014,7 @@ class BicepPolicyTests(unittest.TestCase):
             "regionCheckMustBeRecorded",
             "quotaCheckMustBeRecorded",
             "deploymentLocationsMustBeSelected",
+            "pilotRequiresLocks",
         ):
             with self.subTest(guard=name):
                 mutated = deepcopy(self.main)
