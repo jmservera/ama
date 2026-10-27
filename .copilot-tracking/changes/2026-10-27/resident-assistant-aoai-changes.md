@@ -105,6 +105,27 @@ without rebasing; the append-only knowledge log retains both additions. This
 publication maintenance is not another critique or Review and does not close
 RV-001 or RV-002. Run a fresh scoped gate on the resulting committed head.
 
+Main integration committed as d726b3e2, with no executable difference from
+7d854c84. The requested command on that clean candidate was:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 tools/rpi-checks.py --changed --jobs 3 \
+  --base 49c942b33b89100c084d48a91215989e22de5887 \
+  --out /tmp/ama-469-aoai-final-integrated --lock-timeout 0
+```
+
+Result: exit 1, `BLOCKED: Global heavy-resource lock timeout`. No gate
+receipt or output directory was created, and no lock takeover, Docker
+execution, push or PR creation followed. The diagnostic is retained outside
+the checkout as `issue469-publication-blocked.json` in the session files;
+it is not a gate receipt. This final evidence commit requires a fresh
+committed-head run after the lock is released. The repository's complete
+`--all` publication gate, external receipt verification, independent
+exact-head assessment, hosted checks and human acceptance also remain
+required; the scoped command does not waive them. SQL and authenticated
+new-runtime evidence remain unavailable. Intended Azure model resources
+remain in `ama`; there are no owned transient Azure/SQL test leftovers.
+
 ## Amendments and Divergences
 
 Critique corrections adopted in the plan. No authority extension: the renewed
