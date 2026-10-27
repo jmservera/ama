@@ -7,8 +7,9 @@ ms.date: 2026-10-27
 Task ID: 149. Slug: role-screens-149.
 Research Ready; initial direction: extend existing routes without new authority.
 Scope and owner authorization are recorded in the matching plan. B1 remains
-resolved. A later current-main ancestry decision B2 blocks publication;
-the original completed Review separately blocks #231 for RV-001.
+resolved. Owner follow-up authorization resolves the B2 lineage decision.
+The active implementation follows RV-001 with selective-change regression
+evidence before publication; the original adverse Review remains immutable.
 
 <!-- rpi:phase id=P01 -->
 ### [x] P01: Shared foundation
@@ -83,7 +84,7 @@ re-run Review to hide an adverse original. Required human acceptance remains ope
 
 Executed Complete, outcome Not accepted, canonical original Review retained.
 RV-001 Medium: #231's blanket latest-design-version equality mislabels
-unaffected signed-off reviews stale. Later rpi-implement owns correction and
+unaffected signed-off reviews stale. The current owner-selected rpi-implement invocation owns correction and
 selective-change evidence. Other heads were conditionally draft-eligible,
 not accepted as a combined feature.
 
@@ -106,14 +107,18 @@ coverage. Push each story branch and open draft to parent; parent draft to main.
 Use Refs and privacy-safe resolved identity/trailer. Never tick issue criteria.
 The plan's Publication Result Actions table controls adverse exits: blocking
 Review findings or failed/invalid/exhausted single-gate evidence stop publication;
-never resume/rerun/switch tier. No source fixes or repeated Review after the one
-Review; route later work. Retained failure is not publishing permission.
+never resume/rerun/switch tier. No repeated Review; this explicitly selected later implementation owns RV-001.
+Retained gate failure is not publishing permission.
 
-Stopped before cleanup/gate/publication: fetched origin/main 2e031c89 is not
-an ancestor of candidate f901682b (merge-base 864a5021). The current gate
-clean_identity requires ancestry. B2 needs an owner-authorized separate
-base/lineage reconciliation; no merge/rebase/rewrite or gate attempt performed.
-All candidates and original evidence retained locally; no tracking deletion.
+Owner now authorizes rebase onto fetched current main 2e031c89 or newer.
+Rebase the parent first and each independent child onto the resulting parent,
+retaining one role diff each and trace-only #233. No child integration.
+Before the scoped gate, rerun local units with this worktree's src/*/src
+before installed packages, plus parent/child real browser selectors. Correct
+#231 using source-owned selective invalidation, preserving supplied versions,
+genuine reassessment/returned/missing states and professional authority.
+The one gate remains unspent. Original critique/Review and earlier failures
+are preserved; no tracking deletion is selected.
 
 Per-story outputs, source contracts, role restrictions, unit budgets and exact
 local/browser selectors are allocated in the plan's Delivery and Validation
