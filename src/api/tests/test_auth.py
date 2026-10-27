@@ -393,6 +393,28 @@ class ProxyHttpTests(Base):
         self.assertEqual(self.call("/api/login", {}, {"email": "sam@example.test", "password": "x"})[0], 404)
         self.assertEqual(self.call("/api/cases", {"Cookie": "zf_session=anything"})[0], 401)
 
+    def test_employee_scripts_remain_protected_and_load_for_valid_principal(self):
+        class NoRedirect(urllib.request.HTTPRedirectHandler):
+            def redirect_request(self, *args, **kwargs):
+                return None
+
+        opener = urllib.request.build_opener(NoRedirect())
+        for path in ("/app", "/app?synthetic=case", "/index.html", "/ops.js", "/app.js"):
+            with self.subTest(path=path):
+                for headers, status in (
+                    ({}, 302),
+                    ({"X-MS-CLIENT-PRINCIPAL": "invalid"}, 403),
+                ):
+                    with self.assertRaises(urllib.error.HTTPError) as error:
+                        opener.open(urllib.request.Request(self.base + path, headers=headers))
+                    self.assertEqual(error.exception.code, status)
+                req = urllib.request.Request(self.base + path, headers={"X-MS-CLIENT-PRINCIPAL": principal()})
+                with opener.open(req) as response:
+                    self.assertEqual(response.status, 200)
+                    self.assertEqual(response.headers["Cache-Control"], "no-store")
+                    self.assertIn("text/javascript" if path.endswith(".js") else "text/html",
+                                  response.headers["Content-Type"])
+
     def test_principal_gives_role_and_projection(self):
         code, me = self.call("/api/me", {"X-MS-CLIENT-PRINCIPAL": principal()})
         self.assertEqual((code, me["user"]["role"]), (200, "Resident Liaison Officer"))

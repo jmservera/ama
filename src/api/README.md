@@ -2354,6 +2354,96 @@ the model is down.
 | `ZF_DOC_STORE`, `ZF_DOC_DIR`, `ZF_BLOB_ACCOUNT_URL`, `ZF_BLOB_CONTAINER`, `ZF_BLOB_SAS`, `ZF_BLOB_CLIENT_ID` | document store |
 | `ZF_SCANNER` | `local` (default) or `defender` content scanner |
 
+### Employee briefing and Azure OpenAI settings
+
+The employee `/api/briefing` summarizes only open cases whose `owner_code`
+exactly equals the authenticated user's business `code`, even while viewing
+all permitted cases. It is not a programme-wide workload count. A business
+role or permission to open a case does not assign that case to the user.
+Entra uses the verified tenant and object ID; only one enabled matching roster
+row restores its existing workload code. Email/display-name matching does not.
+The 2026-10-25 synthetic baseline merge deliberately omitted staff rows.
+An unbound Entra user can therefore have an empty personal briefing while
+permitted programme cases exist. Check the authorized `/api/me` identity and
+own/all queue totals before asking the programme owner to assign or hand off
+work through the existing controls; do not infer assignments from a role/email.
+The current signed-in owner's mapping was not inspected on 2026-10-27.
+
+Employee AI uses `zava_forward.core.ai.Ai`, not the separate resident
+`ZF_DEMO_ASSISTANT_*` settings. Configure the employee API container as follows
+only after the existing approval/activation prerequisites:
+
+| Setting or prerequisite | Employee purpose |
+| --- | --- |
+| `AI_ENDPOINT` | Azure OpenAI HTTPS resource base URL, without `/openai/deployments/...`; required to configure employee AI |
+| `AI_DEPLOYMENT` | Actual standard/fast deployment name; defaults to `standard` |
+| `AI_DEPLOYMENT_STRONG` | Actual capable deployment name for stronger/document tasks; defaults to `capable` |
+| `AI_MODEL_VERSION` | Released standard model identity as returned in the provider's `model` field; default `unattested` is not release attestation |
+| `AI_MODEL_VERSION_STRONG` | Released capable model identity; defaults to `AI_MODEL_VERSION` |
+| `AZURE_CLIENT_ID` | Attached user-assigned managed identity client ID used for token selection; not `ZF_SQL_CLIENT_ID` |
+| Platform identity transport | Container Apps supplies `IDENTITY_ENDPOINT` and `IDENTITY_HEADER`; do not copy, print or manually provision their values |
+| Identity and network | Selected identity needs Cognitive Services OpenAI User on the intended resource, and permitted DNS/network access to it |
+| Per-task activation | Current matching human-approved release, evaluated configuration/model binding, budget/usage limits and no incident suspension; endpoint presence does not authorize dispatch |
+| `ZF_AI` | `off`, `workflow` or `workflow-only` deliberately bypasses AI; the UI's workflow-only choice also bypasses it |
+
+No API key or `AZURE_OPENAI_ENDPOINT` setting is read by this employee adapter.
+The API version is currently `2024-10-21`. Missing `AI_ENDPOINT` returns the
+labelled rules/template path with `AI is not configured`; model, network,
+identity or release failures have separate fallback reasons. A template is
+not proof that real AI ran. The source infrastructure's `enableApiAi` option
+wires endpoint/deployments and API model access when deliberately enabled;
+do not enable it or borrow the resident model's budget/release implicitly.
+
+### Employee workspace asset recovery and redeploy
+
+The selected route checks its required shared-script exports before rendering.
+A missing file such as `/ops.js` shows its path and **Reload workspace**,
+which refetches the document/scripts while keeping the case URL and session.
+Ordinary API errors retain **Try again**, which retries without a page reload.
+Unrelated map/specialist modules do not become prerequisites for ordinary cases.
+No quality controls are silently omitted.
+
+Read-only inspection on 2026-10-27 found
+`ca-cutover-test-demo-api` in `ama`, revision `0000006` created
+2026-10-25T12:18:25Z, using
+`sha256:0769b52dddc5d6b350c74d6711ae53eda45d3e903ee27fac6b5a6c1d6b8b6e7e`.
+Its installed index already loads `/ops.js` before `/app.js`; deployed ops.js
+SHA-256 `d28b705ffa88f386cb1b23ca4db9be93dd09d2bcbc6ea2fee3a4f12d0e466cd3`
+matches source. It does not predate that wiring. Current source serves exact
+files with JavaScript MIME, same-origin CSP, `no-store` and `nosniff`; no named
+ops allowlist exists. A local constructed case named ZF-2026-0597 renders in
+Chromium. This is not a read of the owner's case or proof of its live behavior.
+Anonymous deployed `/app` is denied by platform authentication. The exact
+original authenticated script HTTP/execution failure remains unproven: retain
+the owner's browser Network/Console evidence for `/ops.js`, redirects/status,
+MIME and CSP rather than calling this a confirmed missing-wire fix.
+Safe deployed environment-name inspection found none of `AI_ENDPOINT`,
+`AI_DEPLOYMENT` or `AI_DEPLOYMENT_STRONG`; no secret values were read.
+The existing employee Foundry account `aif-cutover-test-rzsrg` advertises
+`https://aif-cutover-test-rzsrg.openai.azure.com/` for the OpenAI API, but its
+management-plane deployment list was empty on 2026-10-27. Setting that endpoint
+alone is therefore insufficient: an operator needs separately authorized model
+deployments and release evidence, or an explicitly approved replacement
+resource, before configuring the two deployment names. The resident
+`aoai-resident-469` resource and its budget are not an employee fallback.
+
+An owner-authorized redeploy needs a newly reviewed immutable employee API
+image built with `docker build -f src/api/Dockerfile src`, containing the
+updated API web assets and core package. Preserve existing SQL/Blob/Entra
+configuration, identities, probes and data. Configure the employee AI settings
+above separately under its release/budget authorization if AI is wanted.
+Then verify the exact serving digest, authenticated script responses/order,
+case quality panel, own/all assignment counts, template reasons and (only when
+approved) a registered real-model task. These source/local checks neither
+deploy nor satisfy Azure, human or whole-issue acceptance.
+
+Focused synthetic regression from `src/api`, with installed dev distributions:
+
+```bash
+PYTHONPATH=tests:../core/tests:../agents/tests python3 -m unittest test_ui_support test_auth test_ai_tasks -q
+python3 -m checks.employee_workspace_browser_check
+```
+
 ### Entra ID on Container Apps
 
 Code: `auth.py`. The current demonstrator uses this provider in Azure;

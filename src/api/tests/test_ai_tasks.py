@@ -12,7 +12,8 @@ from unittest import mock
 import release_support
 
 import test_mvp
-from zava_forward.core import ai_tasks
+from zava_forward.core import ai_tasks, identity
+from zava_forward.core.ai import Ai
 from zava_forward.agents import ai_eval
 from zava_forward.api.server import App, make_handler
 from zava_forward.core.sqlstore import SqlStore
@@ -39,6 +40,51 @@ class TasksMixin:
 
     def records(self):
         return [r for r in self.store.data["recommendations"] if r.get("kind") == "ai_task"]
+
+    def test_unbound_entra_briefing_is_empty_assignment_not_empty_programme(self):
+        user = identity.principal(
+            "11111111-2222-3333-4444-555555555555",
+            "aaaaaaaa-0000-0000-0000-000000000001",
+            self.sam["role"], email=self.sam["email"],
+        )
+        user = identity.bind(self.store, user)
+        self.assertNotEqual(user["code"], self.sam["code"])
+        self.assertEqual(self.store.page_cases(user)["total"], 0)
+        self.assertGreater(self.store.page_cases(user, "all")["total"], 0)
+        briefing = self.store.briefing(user, mode="workflow")
+        self.assertEqual(briefing["text"],
+                         "No open cases are assigned to you. This does not mean the programme has no work.")
+        record = next(r for r in self.records() if r["id"] == briefing["record_id"])
+        self.assertEqual(record["case_ids"], [])
+
+    def test_bound_entra_briefing_uses_seeded_workload_code_and_excludes_closed(self):
+        tenant = "11111111-2222-3333-4444-555555555555"
+        oid = "aaaaaaaa-0000-0000-0000-000000000001"
+        row = dict(self.sam, tid=tenant, oid=oid)
+        if hasattr(self.store, "db"):
+            self.store.db.execute("UPDATE staff SET body=? WHERE email=?", (json.dumps(row), self.sam["email"]))
+        else:
+            self.store.staff[self.sam["email"]] = row
+        owned = [c for c in self.store.cases.values() if c["owner_code"] == self.sam["code"]]
+        owned[0]["closed"] = True
+        self.store.save()
+        user = identity.bind(self.store, identity.principal(tenant, oid, self.sam["role"]))
+        self.assertEqual(user["code"], self.sam["code"])
+        expected = {c["id"] for c in owned if not c["closed"]}
+        self.assertTrue(expected)
+        self.assertEqual({c["id"] for c in self.store.list_cases(user)}, expected)
+        briefing = self.store.briefing(user, mode="workflow")
+        record = next(r for r in self.records() if r["id"] == briefing["record_id"])
+        self.assertEqual(set(record["case_ids"]), expected)
+        self.assertNotIn(owned[0]["id"], record["case_ids"])
+
+    def test_missing_employee_endpoint_uses_explicit_template_without_model_call(self):
+        self.store.ai.endpoint = ""
+        with mock.patch.object(self.store.ai, "_chat", side_effect=AssertionError("No model call")) as chat:
+            result = self.store.briefing(self.sam)
+        chat.assert_not_called()
+        self.assertEqual((result["source"], result["model"], result["reason"]),
+                         ("template", None, "AI is not configured"))
 
     def test_cited_summary_is_verified_but_not_approved(self):
         self.out["text"] = "- Contacting resident [[Stage: Contacting resident]]\n- Waiting [[Days in stage: 10]]"
@@ -183,6 +229,26 @@ class SqlTasks(TasksMixin, unittest.TestCase):
 
 
 class NegativeControls(unittest.TestCase):
+    def test_employee_ai_reads_its_settings_not_resident_or_endpoint_aliases(self):
+        with mock.patch.dict(os.environ, {
+            "AI_ENDPOINT": "https://employee.invalid/",
+            "AI_DEPLOYMENT": "employee-standard",
+            "AI_DEPLOYMENT_STRONG": "employee-capable",
+            "AI_MODEL_VERSION": "standard-version",
+            "AI_MODEL_VERSION_STRONG": "capable-version",
+            "ZF_DEMO_ASSISTANT_ENDPOINT": "https://resident.invalid",
+            "AZURE_OPENAI_ENDPOINT": "https://alias.invalid",
+        }, clear=True):
+            ai = Ai()
+        self.assertEqual((ai.endpoint, ai.fast, ai.strong, ai.model_version, ai.model_version_strong),
+                         ("https://employee.invalid", "employee-standard", "employee-capable",
+                          "standard-version", "capable-version"))
+        with mock.patch.dict(os.environ, {
+            "ZF_DEMO_ASSISTANT_ENDPOINT": "https://resident.invalid",
+            "AZURE_OPENAI_ENDPOINT": "https://alias.invalid",
+        }, clear=True):
+            self.assertFalse(Ai().configured)
+
     def test_harness_fails_when_citations_are_not_checked(self):
         with mock.patch.object(ai_tasks, "resolve", lambda *a, **k: True):
             rep = ai_eval.run_eval()
