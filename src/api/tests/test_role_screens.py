@@ -37,3 +37,11 @@ class RoleScreens(unittest.TestCase):
         self.assertIn("signal.throwIfAborted()", source)
         self.assertIn('"aria-current"', source)
         self.assertIn("Reset screen view", source)
+
+    def test_asset_keeps_source_age_scope_and_investment_unknown(self) -> None:
+        source = (WEB / "screen-asset.js").read_text()
+        for field in ("item.left", "item.right", "item.query_owner", "item.eligibility"):
+            self.assertIn(field, source)
+        self.assertIn("one selected home is not an investment cohort", source)
+        self.assertIn("Cost per accepted outcome", source)
+        self.assertNotIn("post(", source)
