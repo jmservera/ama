@@ -6,6 +6,8 @@ import copy
 import runpy
 from typing import Any
 
+from zava_forward.core.signoffs import SignoffMixin
+
 from checks.design_system_browser_check import ROOT
 from checks.workbench_browser_check import synthetic_data as workbench_data
 
@@ -65,8 +67,15 @@ def synthetic_data() -> dict[str, Any]:
         authority="Unknown", resolution="Unknown", eligibility="Unknown"
     )]
     c["stock_reconciliation_events"] = []
-    c["technical"]["signoffs"]["design"] = dict(
-        status="Needs reassessment", version=0, reason="SYN-MISSING-DESIGN-231"
+    c["technical"]["design_version"] = 1
+    c["technical"]["versions"] = []
+    c["technical"]["signoffs"] = {
+        key: dict(status="Signed off", version=1, by=f"SYN {key}", history=[])
+        for key in ("assessment", "design", "building", "coordination")
+    }
+    SignoffMixin()._tech_design_change(
+        {"role": "Retrofit Programme Manager", "email": "sam@example.test", "name": "SYN Sam"},
+        c, {"affects": ["coordination"], "note": "SYN coordination change"},
     )
     c["documents"].append(dict(
         id="SYN-MISSING-DESIGN-231", kind="Survey", name="SYN survey",

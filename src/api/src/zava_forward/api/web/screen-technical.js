@@ -17,13 +17,15 @@ registerRoleScreen({
           (c.documents || []).map((item) => [item.id, item.kind, item.version, item.at, item.scan?.status]))),
       screenPanel("Separate professional sign-offs",
         h("p", {}, "A recorded sign-off is not a generic approval. Confirm the exact design version, professional competence and appointment. Missing or stale evidence cannot establish readiness."),
-        screenTable("Independent technical reviews", ["Review", "State", "Design version", "Reviewer", "Current-version evidence"],
+        screenTable("Independent technical reviews", ["Review", "State", "Recorded design version", "Reviewer", "Reason or review note", "Source review evidence"],
           reviews.map(([key, title]) => {
             const review = technical?.signoffs?.[key];
-            return [title, review?.status, review?.version, review?.by,
-              review?.status === "Signed off" && review.version === technical?.design_version
-                ? "Version matches; verify professional evidence"
-                : "Missing or stale version; cannot establish readiness"];
+            return [title, review?.status, review?.version, review?.by, review?.reason || review?.note,
+              !review || review.version == null
+                ? "Missing sign-off or version; cannot establish readiness"
+                : review.status === "Signed off"
+                  ? "Recorded sign-off; verify professional evidence"
+                  : "Not signed off; follow the source review decision"];
           })),
         screenTable("Missing references and named review routing", ["Missing item", "Required competent reviewer role", "Proposed named reviewer, not appointed"],
           (c.technical_missing || []).map((item) => [

@@ -17,7 +17,7 @@ SCENARIOS: dict[str, tuple[str, str, tuple[str, ...]]] = {
     "231": ("quality@example.test", "Technical and independent quality evidence", (
         "Needs reassessment", "SYN-MISSING-DESIGN-231", "SYN-PHOTO-231",
         "SYN missing edge photo", "SYN Contractor", "Loft insulation: Returned",
-        "Missing or stale version; cannot establish readiness",
+        "Not signed off; follow the source review decision",
         "Incomplete, returned, replaced or stale evidence blocks handover",
     )),
 }
@@ -67,6 +67,29 @@ def run_browser(base: str) -> None:
                           phrase in field.inner_text() and field.is_visible())
                 check("same home remains ZF-1",
                       evidence.get_by_role("heading", name="Selected home ZF-1", exact=True).count() == 1)
+                if selected == "231":
+                    reviews = evidence.get_by_role("table", name="Independent technical reviews", exact=True)
+                    for title in ("Assessment", "Design", "Building and safety dependency"):
+                        row = reviews.get_by_role("row").filter(
+                            has=page.get_by_role("cell", name=title, exact=True)
+                        )
+                        row.scroll_into_view_if_needed()
+                        page.wait_for_function(
+                            "element => element.innerText.includes('Recorded sign-off; verify professional evidence')",
+                            arg=row.element_handle(),
+                        )
+                        check(f"unaffected {title} retains supplied older-version sign-off",
+                              row.get_by_role("cell", name="Signed off", exact=True).is_visible()
+                              and row.get_by_role("cell", name="1", exact=True).is_visible()
+                              and "stale" not in row.inner_text().lower())
+                    changed = reviews.get_by_role("row").filter(
+                        has=page.get_by_role("cell", name="Coordination", exact=True)
+                    )
+                    changed.scroll_into_view_if_needed()
+                    check("affected coordination does not display its stale signed-off state",
+                          changed.get_by_role("cell", name="Needs reassessment", exact=True).is_visible()
+                          and changed.get_by_role("cell", name="Signed off", exact=True).count() == 0
+                          and "Design changed to version 2" in changed.inner_text())
                 check("no contact actions", evidence.locator('a[href^="tel:"], a[href^="mailto:"]').count() == 0)
                 for width in (320, 390, 1280):
                     page.set_viewport_size({"width": width, "height": 900})

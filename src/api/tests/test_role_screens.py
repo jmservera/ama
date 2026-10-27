@@ -1,7 +1,12 @@
 """Specialist hosts describe navigation, never extend server authority."""
 
+import json
+import subprocess
 import unittest
 from pathlib import Path
+from typing import Any
+
+from zava_forward.core.signoffs import SignoffMixin
 
 from zava_forward.api.workbench import navigation
 
@@ -38,10 +43,80 @@ class RoleScreens(unittest.TestCase):
         self.assertIn('"aria-current"', source)
         self.assertIn("Reset screen view", source)
 
-    def test_technical_requires_current_reviews_and_separate_quality_evidence(self) -> None:
+    def test_technical_preserves_selective_review_invalidation_and_quality_evidence(self) -> None:
         source = (WEB / "screen-technical.js").read_text()
-        for field in ("review.version === technical?.design_version",
-                      "record.defect?.owner", "record.items", "record.handover?.note"):
+        for field in ("record.defect?.owner", "record.items", "record.handover?.note"):
             self.assertIn(field, source)
         self.assertIn("Missing or stale evidence cannot establish readiness", source)
         self.assertNotIn("post(", source)
+
+        def render_reviews(case: dict[str, Any]) -> list[list[Any]]:
+            result = subprocess.run(
+                [
+                    "node",
+                    "-e",
+                    """
+const fs = require("node:fs");
+const vm = require("node:vm");
+const tables = {};
+let screen;
+const context = {
+  registerRoleScreen: value => { screen = value; }, screenManagers: [],
+  h: () => null, screenFields: () => null, screenUnknown: () => null,
+  screenPanel: () => null,
+  screenTable: (caption, columns, rows) => { tables[caption] = rows; }
+};
+vm.runInNewContext(fs.readFileSync(process.argv[1], "utf8"), context);
+screen.render(JSON.parse(fs.readFileSync(0, "utf8")));
+console.log(JSON.stringify(tables["Independent technical reviews"]));
+""",
+                    str(WEB / "screen-technical.js"),
+                ],
+                input=json.dumps(case),
+                text=True,
+                capture_output=True,
+                check=True,
+                timeout=10,
+            )
+            rows: list[list[Any]] = json.loads(result.stdout)
+            return rows
+
+        case: dict[str, Any] = {
+            "technical": {
+                "design_version": 1,
+                "versions": [],
+                "signoffs": {
+                    key: {"status": "Signed off", "version": 1, "by": f"SYN {key}", "history": []}
+                    for key in ("assessment", "design", "building", "coordination")
+                },
+            }
+        }
+        SignoffMixin()._tech_design_change(
+            {"role": "Retrofit Programme Manager", "email": "sam@example.test", "name": "SYN Sam"},
+            case,
+            {"affects": ["coordination"], "note": "SYN coordination change"},
+        )
+        rows = render_reviews(case)
+        for row in rows[:3]:
+            with self.subTest(unaffected=row[0]):
+                self.assertEqual(row[1:3], ["Signed off", 1])
+                self.assertEqual(row[-1], "Recorded sign-off; verify professional evidence")
+                self.assertNotIn("stale", row[-1].lower())
+        self.assertEqual(rows[3][1:3], ["Needs reassessment", 1])
+        self.assertIn("Design changed to version 2", rows[3][-2])
+        self.assertEqual(rows[3][-1], "Not signed off; follow the source review decision")
+        self.assertNotIn("Signed off", rows[3])
+
+        signoffs = case["technical"]["signoffs"]
+        signoffs["assessment"]["version"] = None
+        signoffs["design"].update(status="Returned", version=2, reason="SYN return")
+        del signoffs["building"]
+        signoffs["coordination"].update(status="Signed off", version=2)
+        rows = render_reviews(case)
+        self.assertEqual(rows[0][-1], "Missing sign-off or version; cannot establish readiness")
+        self.assertEqual(rows[1][1], "Returned")
+        self.assertEqual(
+            rows[1][-2:], ["SYN return", "Not signed off; follow the source review decision"]
+        )
+        self.assertEqual(rows[2][-1], "Missing sign-off or version; cannot establish readiness")
+        self.assertEqual(rows[3][-1], "Recorded sign-off; verify professional evidence")
