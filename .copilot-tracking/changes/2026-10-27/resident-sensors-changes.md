@@ -143,3 +143,16 @@ Research header/question statuses were reconciled to their already-recorded
 completed findings, correcting the stale metadata noted by Review.
 No remaining implementation markers. Draft stacked publication is next;
 hosted independent acceptance, SQL integration and human AT remain pending.
+
+## Publication
+
+Implementation/evidence commit: 61c9e98b68c869cc8197271679e5b37ff36b2512.
+Subsequent RV-001 implementation/original-Review commit:
+a0b0d84a98315468f94c2ebcfa142d22249a5868.
+Pushed feat/resident-sensors without force and opened draft PR
+https://github.com/jmservera/ama/pull/472 with base feat/resident-interactive,
+explicit stacking dependency and Refs #468 / Refs #466 only.
+No merge, Azure or SQL Server operation. Final publication metadata is committed
+separately; it does not change application code or the original Review verdict.
+Hosted CI/rubric, independent final-head assessment and human acceptance are
+pending, not claimed passed.

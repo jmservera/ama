@@ -21,12 +21,13 @@
     {"decision": "Research executed, Planning Readiness Ready", "status": "complete", "evidence": ".copilot-tracking/research/2026-10-27/resident-sensors-research.md"},
     {"decision": "One critique executed; original Revise; PC-001-PC-003 resolved directly in plan/details", "status": "ready", "evidence": ".copilot-tracking/reviews/plans/2026-10-27/resident-sensors-plan-critique.md"},
     {"decision": "One independent Review executed on 61c9e98b; outcome Not accepted; RV-001 Medium routed to later implementation; RV-002/RV-003 residual", "status": "complete", "evidence": ".copilot-tracking/reviews/logs/2026-10-27/resident-sensors-review.md"},
-    {"decision": "Subsequent bounded P01 implementation addressed RV-001; 114 focused tests/19 skips, Ruff/mypy and 23 browser assertions pass; no second Review or acceptance claim", "status": "implemented-awaiting-independent-acceptance", "evidence": ".copilot-tracking/changes/2026-10-27/resident-sensors-changes.md#subsequent-implementation-invocation-rv-001"}
+    {"decision": "Subsequent bounded P01 implementation addressed RV-001; 114 focused tests/19 skips, Ruff/mypy and 23 browser assertions pass; no second Review or acceptance claim", "status": "implemented-awaiting-independent-acceptance", "evidence": ".copilot-tracking/changes/2026-10-27/resident-sensors-changes.md#subsequent-implementation-invocation-rv-001"},
+    {"decision": "Draft PR #472 opened with base feat/resident-interactive, Refs #468/Refs #466, pushed without force; no merge", "status": "published-as-draft-not-accepted", "evidence": "https://github.com/jmservera/ama/pull/472"}
   ],
   "blockers": [
     {"id": "acceptance", "summary": "Original independent Review Not accepted; later RV-001 implementation has local evidence but no new independent acceptance", "resolution": "Hosted exact-head PR assessment; SQL/human gates before deployment or conformance claims"}
   ],
-  "next_action": {"phase": "Follow-up", "action": "Commit subsequent implementation and original Review, push without force and open draft PR on feat/resident-interactive; no merge or unrelated work"},
+  "next_action": {"phase": "Follow-up", "action": "Await hosted CI/rubric and independent final-head assessment on draft PR #472; no automatic merge, SQL/Azure action or unrelated follow-up"},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Hosted exact-head assessment of RV-001 implementation", "rationale": "Source correction is implemented and locally checked; independent acceptance is the highest-value remaining gate", "evidence": ".copilot-tracking/changes/2026-10-27/resident-sensors-changes.md#subsequent-implementation-invocation-rv-001"},
     {"rank": 2, "task": "RV-002 authorised SQL validation/apply", "rationale": "Required for later integration; prohibited in current task", "evidence": ".copilot-tracking/reviews/logs/2026-10-27/resident-sensors-review.md"},
