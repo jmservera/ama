@@ -60,7 +60,7 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "P04-T01 complete; RV-001 resolved locally, original Review preserved. Commit bounded correction and evidence, execute required exact-commit publication gate, then push topic HEAD only if applicable gates pass; retain PR draft and Refs #140."
+    "action": "P04-T01 complete at fecf73f9. Gate preflight blocked on concurrent origin/main advancement to 4a02baf6. Preserve ancestry with a normal topic merge, record evidence, then rerun exact-commit publication gate from clean external validation worktree. Push topic HEAD only if applicable gates pass; retain draft and Refs #140."
   },
   "prioritized_follow_ups": [
     {

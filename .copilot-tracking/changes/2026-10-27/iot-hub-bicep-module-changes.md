@@ -179,3 +179,22 @@ Mocked pipeline messages in the suite are not Azure deployment evidence.
 Current implementation has no remaining P04 work. Parent state removes the
 resolved source defect from active blockers/follow-ups while preserving the
 original Review decision; live acceptance and publication approvals stay open.
+
+### Publication-base reconciliation
+
+The correction was committed as fecf73f9. The first full-gate preflight
+correctly blocked before executing checks because origin/main advanced from
+65a514ed to 4a02baf6 (#499) between fetch and execution. No receipt or passing
+status was produced. The new main commit retires the legacy MVP pointer and
+updates documentation; it does not change this correction's Bicep/test files.
+Integrate main with a normal topic-branch merge, preserving all ancestry and
+original evidence, then rerun the gate on the resulting exact commit. No
+rebase, force-push, merge to main or Azure action is authorized/performed.
+Use a clean external validation worktree to preserve existing ignored caches
+in the owner's working directory rather than deleting or moving them.
+
+The normal merge required additive conflict resolution in the KB index/log:
+retain both IoT and cut-over entries verbatim. Keep the newer origin/main
+rubric snapshot byte-for-byte, not a fabricated composite score; the earlier
+IoT rubric remains in branch ancestry. These are integration-only resolutions,
+not new research, re-scoring or changes to the immutable original Review.

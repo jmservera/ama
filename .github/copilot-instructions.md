@@ -50,7 +50,8 @@ Zava Forward demonstrator, infrastructure and supporting tools.
   `docs/reference/research/company/company-profile-research.md`.
 * `.github/agents/ama-*` are AMA helper agents with knowledge extracted from the AMA trainings.
 * `src/` holds the migrated Zava Forward projects (`core`, `agents`, `api`, `orchestrator`, `importer`), each with its
-  README; `mvp/` keeps only a pointer README until deleted at cut-over; `infra/` contains
+  README; the legacy directories were retired at owner-approved cut-over on
+  2026-10-27 (archive `v0.21.0`, see `README.md`); `infra/` contains
   Bicep and initialization helpers; `tools/` contains migration and authoring
   tools. Their READMEs define current commands and evidence boundaries.
 

@@ -36,3 +36,21 @@ the Zava Forward retrofit programme at Zava North Homes.
 * [Housing Association Primer](./docs/reference/research/sector/housing-association-primer.md)
 * [Company Profile Research](./docs/reference/research/company/company-profile-research.md)
 * [UK Social Housing Baseline Research](./docs/reference/research/sector/uk-social-housing-baseline-research.md)
+
+## Source cut-over archive
+
+The owner signed off cut-over (#201) on 2026-10-27. The remaining `mvp/`
+pointer is retired; `prototype/` was already retired. Current code, tests,
+images and run instructions are under [src](./src/README.md).
+The local annotated archive tag `v0.21.0` follows the BRD version at cut-over
+and targets `65a514ed20e97816dbf47e9fb981ab4cfe40597d`, the last commit before
+pointer deletion. Earlier executable content remains in that commit's history.
+The tag is not pushed by this change; the owner publishes it explicitly:
+
+```bash
+git push origin refs/tags/v0.21.0:refs/tags/v0.21.0
+```
+
+See the [dated cut-over record](./docs/architecture/cutover-evidence-pack.md#owner-authorized-directory-retirement-2026-10-27)
+for reference exceptions and remaining acceptance boundaries. Workflow/check
+names are unchanged.

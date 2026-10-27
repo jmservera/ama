@@ -2,11 +2,24 @@
 title: Zava Forward source projects
 description: Index of the isolated src projects, the dependency rule, local commands and image properties defined by ADR 0006
 author: AMA programme
-ms.date: 2026-10-18
+ms.date: 2026-10-27
 ms.topic: reference
 ---
 
-Skeleton projects created for issue #290 (ADR 0006 phase 1). They contain a version module, a `python -m` entry point that prints the version, and tests. Move-not-copy migration happens in #199: M1 moved `profile`, `rulecards` and `ai` into `core` (tests in `core/tests`, plus `agents/tests/test_ai_identity.py`). M2 moved the core hub (`store`, `sqlstore`, `mssqlstore`, `factory`, `ledger`, `continuity`, `chatthreads`, the document, finance, grants, governance, sign-off, workflow, quality, procurement, insights, projection and ranking modules, `ai_tasks`, `ai_registry`, `assistants`, `assistant_release` and `policies/ranking-v1.json`) into `core`, with the shared test fixtures in `core/tests/dataset.py` and `test_content_standard` in `api/tests`. M3 moved the synthetic tools (`scale_fixture`, `sensor_backfill`, `loadcheck`) into `core/synthetic`, `chat_fixture` into `agents/tests`, and the eval fixtures into the owning project's `evals/` folder (`core`, `agents` registry, `importer`), with their tests. M4 moved `chat_privacy`, `chat_isolation` and `recovery` into `core` (tests `test_chat_privacy`, `test_chat_memory`, `test_recovery` in `core/tests`), and `ai_eval` with `evals/ai_priority_golden.json` and `test_ai_eval` into `agents`; M5 moved `server`, `auth`, `timecapture` and `web/` into `api` (the web assets are package data under `zava_forward/api/web/`), `lawstore` and the law source register into `core`, `digest_blob` and `token_store` into `orchestrator`, the image build and hashed requirements into `api`, the browser checks into `api/checks`, and the remaining tests into `api/tests` (job tests in `orchestrator/tests`). Those suites import shared fixtures from `core/tests` and `agents/tests`, so run them with `PYTHONPATH=../core/tests:../agents/tests` (api) or `PYTHONPATH=../core/tests` (orchestrator). M6 split `mvp/README.md` into the per-project READMEs ([api](./api/README.md), [core](./core/README.md), [agents](./agents/README.md), [orchestrator](./orchestrator/README.md), [importer](./importer/README.md)), keeping the dated evidence sections unchanged, and left only a pointer README in `mvp/`; `mvp/` is deleted at cut-over (ADR 0006 phase 5). The decision record is [ADR 0006](../docs/adrs/0006-src-layout-and-cutover.md).
+The projects began as skeletons in issue #290 (ADR 0006 phase 1). The
+move-not-copy migration in #199 completed M1-M6: core/domain/storage modules
+and synthetic tools moved to `core`, assistant evaluation to `agents`, HTTP,
+auth and web assets to `api`, jobs to `orchestrator`, and import fixtures to
+`importer`. Tests and evals belong to their owning project outside the package.
+M6 split the former README into the per-project guides
+([api](./api/README.md), [core](./core/README.md), [agents](./agents/README.md),
+[orchestrator](./orchestrator/README.md), [importer](./importer/README.md)),
+preserving their dated evidence sections.
+
+The owner signed off #201 on 2026-10-27. The remaining `mvp/` pointer is now
+retired; `prototype/` was already absent. Archive `v0.21.0` and the owner-only
+tag push command are recorded in the [repository README](../README.md#source-cut-over-archive).
+The decision record is [ADR 0006](../docs/adrs/0006-src-layout-and-cutover.md).
 
 ## Projects
 
@@ -239,9 +252,10 @@ Ruff/mypy migration exemptions remain; general cleanup is separate work.
 
 Workflow/check naming remains unchanged for branch-protection continuity, following
 the issue #200 owner decision of 2026-10-15. The post-cut-over naming question must
-be resolved in one deliberate PR. `mvp/README.md` is retained pending #201/#202
-owner sign-off; this path update does not complete the Azure deployment or private
-data copy/encrypted-backup gates.
+be resolved in one deliberate PR. The owner-authorized directory retirement is
+recorded in the [2026-10-27 cut-over note](../docs/architecture/cutover-evidence-pack.md#owner-authorized-directory-retirement-2026-10-27);
+it does not assert new Azure deployment, private backup, full-suite parity or
+rubric acceptance evidence.
 
 ### Hardened image CI (#118)
 

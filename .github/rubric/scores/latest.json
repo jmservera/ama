@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-27T18:34:07+00:00",
-  "commit": "00390121811d0770a2351b1d11728bd241fe6cda",
+  "scored_at": "2026-10-27T18:38:28+00:00",
+  "commit": "1ed59d7578da2cdd395453ac5a5ef6784de1c460",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40559649243",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40560161654",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
-    "prd": "810a1dec8098e8b39fb8143601a21d314b5151923f4b021dee703821dbd9cc88",
-    "adr": "8c591cdb1938227d99e92d2759f0c721683cff79a639b10a87657db772b7c64e",
-    "solution-code": "d86b580707e59385f63dcb33c82b034de97e6afdfe052c1971ab17c7d969337f",
-    "infrastructure": "7d4767885b4729303320b16589e1a9fa2497ff0cd3f5608180bdcf6ffad7e554",
+    "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
+    "adr": "c8f2acbb99abf16e65a7119d7f848b2e0bbfa254572c3da881a11f8422c36a7f",
+    "solution-code": "adeccfe3b6ec28ed21a6a42d67ff088dae1a917a6671f2f9294a0c3090643b0e",
+    "infrastructure": "af65ce38ca8fa4dd19005ee7104cb20f8c9a9bd4e7a506fd731d725889404185",
     "capstone-deck": "acb30e4f302663cedec4884bc7c561fcb5a14fb647ab1c4f93ffc377567c8896",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
     "thought-leadership": "9288cfeb1cc1f3b499d22eafcb5f7585bbda1a335114446ad93a40cb1ed5a1f3"
@@ -34,14 +34,14 @@
         "src/core/src/zava_forward/core/synthetic/retrofit_effects.py:1-100",
         "src/core/src/zava_forward/core/synthetic/sensor_identity.py:1-23"
       ],
-      "rationale": "Baseline ceiling retained. This PR adds a decoupled Event Hub namespace module and scope guards (infra/modules/iothub.bicep, infra/modules/iothub-scope-guard.bicep) consistent with but not exceeding existing modularity evidence."
+      "rationale": "This PR only adds a client-side registerRoleScreen plugin host (src/api) reusing existing read-only endpoints; it does not touch the core synthetic modularity evidence this score rests on. Ceiling retained."
     },
     "A2": {
       "score": 5,
       "evidence": [
         "docs/adrs/0005-regulatory-compliance-assistant.md:227-233"
       ],
-      "rationale": "Baseline ceiling retained. ADR 0003 documents deliberate trade-off reasoning (built-in endpoint vs custom keyless Event Hub, bootstrap vs activation ordering to avoid a dependency cycle) consistent with the existing ceiling evidence."
+      "rationale": "No new trade-off reasoning text in this diff; already at ceiling. Unchanged."
     },
     "A3": {
       "score": 5,
@@ -49,7 +49,7 @@
         "src/core/src/zava_forward/core/sensor_consumer.py:511-527",
         "src/core/src/zava_forward/core/synthetic/sensor_identity.py:9-23"
       ],
-      "rationale": "Baseline ceiling retained. Infra diff adds identity-based least-privilege roles, private endpoints and resource-group/region scope guards (infra/modules/guard.bicep), reinforcing without exceeding existing security evidence."
+      "rationale": "This PR adds a UI plugin host with no new authorization surface (tests assert no POST/innerHTML, server still enforces role filtering), consistent with but not adding to existing security evidence. Unchanged."
     },
     "A4": {
       "score": 5,
@@ -66,7 +66,7 @@
         "src/core/src/zava_forward/core/synthetic/sensor_backfill.py:1256-1320",
         "src/core/src/zava_forward/core/synthetic/sensor_backfill.py:594-650"
       ],
-      "rationale": "Baseline ceiling retained. infra/README.md adds a priced transport budget table and diagnostics covering metrics/logs for both hub and namespace (infra/modules/iothub.bicep), consistent with existing operations evidence."
+      "rationale": "No observability, reliability, performance or cost evidence changed by this UI-only diff. Unchanged."
     },
     "A6": {
       "score": 5,
@@ -117,7 +117,7 @@
     "B6": {
       "score": 5,
       "evidence": [],
-      "rationale": "Baseline ceiling retained. This PR changes infra and an ADR, not the capstone deck or capstone documentation artifacts this score is based on."
+      "rationale": "This diff changes src/api component code, tests and its README; no capstone deck or capstone documentation files changed. Unchanged baseline."
     },
     "B7": {
       "score": 5,
