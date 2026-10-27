@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-27T23:05:29+00:00",
-  "commit": "66c1a19d856010f5cf42356bd40153d0afd5c1f4",
+  "scored_at": "2026-10-27T23:12:40+00:00",
+  "commit": "27c55c340e3923f6a84be82485e4d085404f095b",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40599040446",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40599933936",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "3bcdf19475e01fd6796a69fbde86ee268b907d3bca5011e2cc363680fcc81a48",
-    "solution-code": "f4b8d01b4bb8c74548ccb37781439a4176237b737fa5d38ea539004f583c18a5",
+    "solution-code": "369a50131ffdf54183bf8c132daca5fa7bd48c4b8d77f52225861f07257eeaba",
     "infrastructure": "847149d8a5008158615c0dd2d286c5b3872ef9180e18ffb8b1c420552018a661",
     "capstone-deck": "acb30e4f302663cedec4884bc7c561fcb5a14fb647ab1c4f93ffc377567c8896",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
@@ -34,7 +34,7 @@
         "src/core/src/zava_forward/core/synthetic/retrofit_effects.py:1-100",
         "src/core/src/zava_forward/core/synthetic/sensor_identity.py:1-23"
       ],
-      "rationale": "Diff is scoped to synthetic indoor_projection/sensor_backfill/privacy modules and their tests (v2 envelope derivation, snapshot version bumps). Baseline modularity evidence is untouched. Ceiling retained."
+      "rationale": "Diff is scoped to src/README.md stabilization validation ladder guidance; no synthetic data/code change. Baseline modularity evidence untouched. Ceiling retained."
     },
     "A2": {
       "score": 5,
@@ -50,7 +50,7 @@
         "src/core/tests/test_climate_history.py:1-40",
         "src/core/tests/test_sensor_stock.py:1-40"
       ],
-      "rationale": "Change adds stale-snapshot-version rejection tests in synthetic privacy/backfill, consistent with existing baseline evidence; does not shift this criterion's ceiling. Unchanged."
+      "rationale": "Diff adds only README validation-ladder guidance text, no test or code changes. Unchanged."
     },
     "A4": {
       "score": 5,
@@ -58,24 +58,24 @@
         "infra/README.md:263-283",
         "infra/main.bicep:99-105"
       ],
-      "rationale": "Diff is solution-code only (synthetic data generator envelopes/versioning); it does not change the infra/operations completeness evidence this score rests on. Unchanged."
+      "rationale": "Diff is README-only guidance on checkpoint validation selection; does not change infra/operations completeness evidence this score rests on. Unchanged."
     },
     "A5": {
       "score": 5,
       "evidence": [
         "src/api/src/zava_forward/api/resident_demo/aoai.py:109-224"
       ],
-      "rationale": "No AI model, prompt, evaluation or guardrail code changed in this synthetic-data diff. Unchanged baseline."
+      "rationale": "No AI model, prompt, evaluation or guardrail code changed; diff only adds README process guidance. Unchanged baseline."
     },
     "A6": {
       "score": 5,
       "evidence": [],
-      "rationale": "No agentic orchestration changed in this diff; it only touches synthetic sensor data generation. Unchanged baseline."
+      "rationale": "No agentic orchestration changed in this diff; it only adds a README validation-ladder section. Unchanged baseline."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "Diff changes only src/README.md stabilization-process guidance; no capstone deck, documentation or orchestration code changed. Unchanged baseline ceiling."
+      "rationale": "Diff adds only src/README.md process/validation guidance; no capstone deck, orchestration or documentation content changed. Unchanged baseline ceiling."
     },
     "B1": {
       "score": 3,
@@ -114,7 +114,7 @@
     "B6": {
       "score": 5,
       "evidence": [],
-      "rationale": "Diff changes only src/README.md stabilization-process guidance, not the capstone deck or documentation. Baseline unchanged."
+      "rationale": "Diff changes only src/README.md process guidance, not the capstone deck or documentation. Baseline unchanged."
     },
     "B7": {
       "score": 5,
