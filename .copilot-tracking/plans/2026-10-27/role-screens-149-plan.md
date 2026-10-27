@@ -7,7 +7,8 @@ ms.date: 2026-10-27
 ## Task Metadata
 
 Task ID: 149. Slug: role-screens-149. Mode: automatic.
-Readiness: Ready after direct critique corrections; original verdict preserved.
+Readiness: Local follow-up revalidation passed; exact-head scoped gate and
+draft publication pending. Original critique and Review verdicts preserved.
 
 ## Executive Summary
 
@@ -226,11 +227,23 @@ the input to the current owner-selected implementation follow-up, not a second
 Review. The source-owned selective invalidation decision must be displayed
 without treating unaffected older-version sign-offs as stale.
 
-Current fetched main is 2e031c89a18ce1ceb3de4fda014fddcb90231fda. Owner
-authorization resolves the B2 decision; the parent and nine independent child
-branches will be rebased before revalidation. P03-T02 remains active until
-the single scoped gate, receipt verification and draft publication are evidenced.
-No issue, human/accessibility or integrated acceptance is inferred.
+Current fetched main is 2e031c89a18ce1ceb3de4fda014fddcb90231fda. Parent and
+nine independent children were rebased onto it; B2 is resolved by executed
+owner authorization. All eight role selectors and workbench regressions passed
+again with explicit worktree-local imports. Parent seven and child eight
+focused units each passed; #231 additionally passed 27 tests with executable
+selective-change regression and matching browser rows. RV-001 implementation
+is corrected, not independently re-reviewed; original Review stays adverse.
+Parent new test formatting was normalized before the gate; full API static
+checks passed. Final evidence/format-only parent ancestry is propagated to
+children without merging them.
+
+P03-T02 remains active until the single scoped gate, receipt verification and
+draft publication are evidenced. The final external receipt/PR evidence is
+authoritative for post-commit execution; this snapshot cannot contain a receipt
+for itself. No further parent commit after the gate. Post-publication status
+may be committed only to trace-only #233. No issue, human/accessibility,
+independent approval or integrated acceptance is inferred.
 
 ## Handoff
 

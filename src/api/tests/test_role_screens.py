@@ -25,8 +25,10 @@ class RoleScreens(unittest.TestCase):
 
     def test_route_supports_contractor_screens_before_contractor_case_dispatch(self) -> None:
         source = (WEB / "app.js").read_text()
-        self.assertLess(source.index("return await roleScreensView()"),
-                        source.index('return await (m ? contractorCaseView'))
+        self.assertLess(
+            source.index("return await roleScreensView()"),
+            source.index("return await (m ? contractorCaseView"),
+        )
         self.assertIn('src="/role-screens.js"', (WEB / "index.html").read_text())
 
     def test_host_requires_explicit_selection_and_retains_abort_boundary(self) -> None:

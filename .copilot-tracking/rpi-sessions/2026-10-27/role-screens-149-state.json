@@ -16,6 +16,16 @@
   },
   "confirmed_decisions": [
     {
+      "decision": "B2 resolved: parent and nine independent children rebased onto main 2e031c89. All eight scoped role/workbench browser reruns and focused units passed with this worktree's source roots.",
+      "status": "executed",
+      "evidence": "Rebased validation matrix in changes; external /tmp/ama-role-screens-149-followup-20261027 logs; no integration"
+    },
+    {
+      "decision": "RV-001 implemented in #231 at 76a4fb95. Executable selective-change regression failed before correction, then 27 tests and actual painted browser row assertions passed. Original Review remains Complete / Not accepted; no second Review or independent acceptance.",
+      "status": "implemented-and-locally-validated",
+      "evidence": "Child role-screens-231-changes.md and 231-regression-before.log/231-unit-verified.log/231-rebased-browser.log"
+    },
+    {
       "decision": "Owner authorizes rebasing all run-owned parent/child branches onto current main, RV-001 correction with executable units and local Playwright, one clean foreground scoped gate and stacked draft PR publication. No merge or issue closure.",
       "status": "owner-directed-follow-up",
       "evidence": "2026-10-27 current user request; current origin/main 2e031c89a18ce1ceb3de4fda014fddcb90231fda; no matching remote branches or parent PR"
@@ -51,43 +61,20 @@
       "evidence": "Read-only git fetch/rev-parse/merge-base and tools/rpi-checks.py clean_identity ancestry requirement; zero gate invocations; https://github.com/jmservera/ama/issues/149#issuecomment-6445655965"
     }
   ],
-  "blockers": [
-    {
-      "id": "B2",
-      "summary": "Historical lineage blocker; owner authorization is now supplied.",
-      "resolution": "Rebase parent and nine unpublished children onto fetched current main before validation; authorization resolved, execution in progress."
-    },
-    {
-      "id": "RV-001",
-      "summary": "#231 at 5638e879 falsely labels unaffected signed-off reviews stale. Its publication is blocked independently.",
-      "resolution": "Current owner-selected rpi-implement invocation corrects #231 and adds selective-design-change execution evidence; preserve original adverse Review without repeating it."
-    }
-  ],
+  "blockers": [],
   "next_action": {
     "phase": "Implement",
-    "action": "Commit current approved follow-up state, rebase parent onto origin/main 2e031c89, correct #231, and rebase all nine independent children onto the publication parent. Preserve original critique and Review; one gate remains unspent."
+    "action": "Commit final parent evidence/formatting, propagate that ancestry to all children, preserve and clean exact generated paths, execute the one foreground scoped gate and verify current-main partial receipt immediately before push. Publish nine child drafts and one parent draft only on pass. Record post-gate publication status in trace-only #233 without altering the gated parent."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Owner-authorized current-main and stacked-lineage reconciliation",
-      "rationale": "Unblocks every publication candidate without silently rewriting history; actual gate ancestry requirement is known, so a narrow planning decision is needed first.",
-      "evidence": "B2; origin/main 2e031c89 versus merge-base 864a5021; tools/rpi-checks.py clean_identity"
-    },
-    {
-      "rank": 2,
-      "task": "Correct RV-001 in a later #231 rpi-implement follow-up",
-      "rationale": "Small source-fidelity correction restores independent professional-review meaning; current source contract is sufficient and no architectural research is needed.",
-      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/role-screens-149-review.md RV-001"
-    },
-    {
-      "rank": 3,
       "task": "Owner-controlled child integration and integrated-head validation",
       "rationale": "High service value after publication blockers; independent branch checks cannot prove a connected same-home journey or combined browser behavior.",
       "evidence": "Plan Follow-Up Items; #233 trace at 7519ca10; Review Plan Follow-Up Assessment"
     },
     {
-      "rank": 4,
+      "rank": 2,
       "task": "Human/assistive-technology validation and actual Fluent adoption",
       "rationale": "Required acceptance evidence remains unavailable; engineering checks are not resident/staff comprehension or WCAG acceptance.",
       "evidence": "#155; plan Follow-Up Items; Review validation limits"
