@@ -44,6 +44,11 @@
       "decision": "Publish only a draft PR under the explicit caller push/PR request, all issues Refs; draft publication is not execution-policy, human, hosted or merge acceptance",
       "status": "bounded handoff",
       "evidence": "User request to record unresolved decisions in the PR and stop; original Review remains Not accepted"
+    },
+    {
+      "decision": "Implementation and original RPI evidence committed and pushed on feat/sensor-scenarios-190; one draft PR to main opened with Refs #190/#192/#193/#194",
+      "status": "published as draft only",
+      "evidence": "https://github.com/jmservera/ama/pull/505"
     }
   ],
   "blockers": [
@@ -60,7 +65,7 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Full RPI execution complete, outcome Not accepted; commit and publish a draft PR only, then leave ranked work awaiting owner selection"
+    "action": "Draft PR #505 published; await owner/planning resolution of RV-001 and child dispositions before acceptance. No child follow-up selected, no merge or second Review authorized"
   },
   "prioritized_follow_ups": [
     {
