@@ -86,7 +86,7 @@ Repository ASCII/content conventions override conflicting generic typography rul
 * [ ] Each delivered child contains its screen, local evidence and draft PR.
 * [x] Relevant unit and real local Chromium checks pass for exact child source.
 * [ ] Parent has one exact-head scoped gate receipt, or explicit retained failure.
-* [ ] Original critique and Review are retained with all findings disposed/routed.
+* [x] Original critique and Review are retained with all findings disposed/routed.
 * [x] All eleven perspectives and five themes have screen pointers or deferrals.
 
 Issue acceptance boxes are not modified; this list is engineering delivery only.
@@ -108,7 +108,7 @@ Issue acceptance boxes are not modified; this list is engineering delivery only.
 <!-- rpi:phase id=P03 -->
 ### [ ] P03: Review, scoped gate and publication
 <!-- rpi:task id=P03-T01 -->
-#### [ ] P03-T01: Run one independent Review and retain findings
+#### [x] P03-T01: Run one independent Review and retain findings
 <!-- rpi:task id=P03-T02 -->
 #### [ ] P03-T02: Clean exact-owned generated inputs, gate parent once and publish drafts
 
@@ -214,7 +214,16 @@ passed after an initial existing checkbox wait timeout; both logs retained.
 Shared link-colour, focus-modality and route-interception corrections belong
 to parent 950bf2e6. These are compatible engineering refinements, not altered
 scope or new authority; one original critique remains the only critique.
-P03 Review, gate and draft publication remain pending, not retroactively done.
+The one Review subsequently completed with outcome Not accepted: RV-001
+blocks #231's false stale-review display. No fix or repeated Review is
+performed in this task. Gate and publication remain pending.
+
+After Review, fetched origin/main is 2e031c89a18ce1ceb3de4fda014fddcb90231fda,
+but parent merge-base is 864a502126ee0dfedf13eaf54f08a10f2339279c.
+The gate requires current main to be an ancestor (tools/rpi-checks.py,
+clean_identity). This new B2 owner decision stops publication; no lineage
+change, cleanup or gate attempt is authorized by the prior scoped-only policy.
+That policy remains resolved, not reopened. No draft PR or push occurred.
 
 ## Handoff
 

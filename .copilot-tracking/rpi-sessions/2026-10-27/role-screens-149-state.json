@@ -3,8 +3,8 @@
   "task_slug": "role-screens-149",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-27/role-screens-149-research.md",
@@ -12,7 +12,7 @@
     "details": ".copilot-tracking/details/2026-10-27/role-screens-149-phase-details.md",
     "critique": ".copilot-tracking/reviews/plans/2026-10-27/role-screens-149-plan-critique.md",
     "changes": ".copilot-tracking/changes/2026-10-27/role-screens-149-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/logs/2026-10-27/role-screens-149-review.md"
   },
   "confirmed_decisions": [
     {
@@ -34,12 +34,58 @@
       "decision": "One critique executed, verdict Revise; PC-001 through PC-004 corrected directly. Post-implementation Review not yet executed.",
       "status": "plan-ready",
       "evidence": "Plan Critique Disposition and original role-screens-149-plan-critique.md"
+    },
+    {
+      "decision": "One independent postimplementation Review executed Complete; outcome Not accepted for the full boundary. RV-001 Medium blocks #231 only; unaffected candidates remain conditionally draft-eligible.",
+      "status": "executed-not-accepted",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/role-screens-149-review.md; exact parent f901682b and nine child heads"
+    },
+    {
+      "decision": "Fetched main moved to 2e031c89a18ce1ceb3de4fda014fddcb90231fda; parent merge-base remains 864a502126ee0dfedf13eaf54f08a10f2339279c. Stop at this new owner decision; do not reopen resolved gate policy.",
+      "status": "publication-blocked",
+      "evidence": "Read-only git fetch/rev-parse/merge-base and tools/rpi-checks.py clean_identity ancestry requirement; zero gate invocations; https://github.com/jmservera/ama/issues/149#issuecomment-6445655965"
     }
   ],
-  "blockers": [],
+  "blockers": [
+    {
+      "id": "B2",
+      "summary": "Current origin/main is not an ancestor of the reviewed parent. Gate precondition is unsatisfied; all publication paused at the requested owner-decision boundary.",
+      "resolution": "Owner authorizes a separate base/lineage reconciliation follow-up and resulting exact-head validation, or retains unpublished candidates. No merge, rebase, force push, cleanup or gate attempt performed."
+    },
+    {
+      "id": "RV-001",
+      "summary": "#231 at 5638e879 falsely labels unaffected signed-off reviews stale. Its publication is blocked independently.",
+      "resolution": "Route once to a later rpi-implement invocation with selective-design-change evidence; preserve the original adverse Review without repeating it."
+    }
+  ],
   "next_action": {
-    "phase": "Review",
-    "action": "P01/P02 reconciled; commit evidence and transition to the one independent exact-parent/child Review, then eligible scoped gate/publication."
+    "phase": "Follow-up",
+    "action": "Review loop complete with Not accepted outcome; delivery/publication blocked by B2 and RV-001. New blocker comment posted once at issuecomment-6445655965; candidates retained locally. Await owner-authorized ranked follow-up, Stop or manual mode. No gate attempt or lineage/source correction."
   },
-  "prioritized_follow_ups": null
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Owner-authorized current-main and stacked-lineage reconciliation",
+      "rationale": "Unblocks every publication candidate without silently rewriting history; actual gate ancestry requirement is known, so a narrow planning decision is needed first.",
+      "evidence": "B2; origin/main 2e031c89 versus merge-base 864a5021; tools/rpi-checks.py clean_identity"
+    },
+    {
+      "rank": 2,
+      "task": "Correct RV-001 in a later #231 rpi-implement follow-up",
+      "rationale": "Small source-fidelity correction restores independent professional-review meaning; current source contract is sufficient and no architectural research is needed.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/role-screens-149-review.md RV-001"
+    },
+    {
+      "rank": 3,
+      "task": "Owner-controlled child integration and integrated-head validation",
+      "rationale": "High service value after publication blockers; independent branch checks cannot prove a connected same-home journey or combined browser behavior.",
+      "evidence": "Plan Follow-Up Items; #233 trace at 7519ca10; Review Plan Follow-Up Assessment"
+    },
+    {
+      "rank": 4,
+      "task": "Human/assistive-technology validation and actual Fluent adoption",
+      "rationale": "Required acceptance evidence remains unavailable; engineering checks are not resident/staff comprehension or WCAG acceptance.",
+      "evidence": "#155; plan Follow-Up Items; Review validation limits"
+    }
+  ]
 }
