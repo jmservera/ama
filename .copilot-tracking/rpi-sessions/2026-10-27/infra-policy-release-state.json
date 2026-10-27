@@ -1,0 +1,66 @@
+{
+  "task_id": "147-138",
+  "task_slug": "infra-policy-release",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-27/infra-policy-release-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-27/infra-policy-release-plan.md",
+    "details": ".copilot-tracking/details/2026-10-27/infra-policy-release-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-27/infra-policy-release-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-27/infra-policy-release-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-27/infra-policy-release-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run the full ordered RPI loop, authoring only, using existing topic branch",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-27; clean feat/infra-policy-147; no existing PR"
+    },
+    {
+      "decision": "No deployment, protection changes or full --all gate",
+      "status": "confirmed",
+      "evidence": "Explicit task constraints"
+    },
+    {
+      "decision": "Research executed, Ready for independent authoring; one critique executed, original Revise, PC-001/002/003 corrected directly",
+      "status": "resolved",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-27/infra-policy-release-plan-critique.md; plan Critique Disposition"
+    },
+    {
+      "decision": "One independent Review executed; Complete / Conformant for authoring only; zero findings",
+      "status": "completed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/infra-policy-release-review.md; reviewed tracked-source diff SHA256 7fb29edf8b10d55f699b782d1d5017c8b22eea1f63209ec9bb5d9a9a0c119b79 against 0ded682bab690d24eb59b78e704be82d337bf6cd"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "owner-defender",
+      "summary": "Whole-issue #147 acceptance needs selected coverage/subplans, subscription-specific cost and activation decision",
+      "resolution": "Subscription owner @jmservera records the decision; no paid plan enabled here"
+    },
+    {
+      "id": "owner-live-pipeline",
+      "summary": "Whole-issue #138 acceptance needs owner-provisioned environments/OIDC/RBAC/private runners and observed pipeline execution",
+      "resolution": "Separately authorized owner setup and actual what-if/approval/push/deployment/health evidence; no live operations here"
+    }
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Commit/push reviewed authoring and open one Refs-only PR; then stop per user instruction at owner decisions"},
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "#147 Defender coverage/cost/activation decision",
+      "rationale": "Smallest owner decision prerequisite; prevents unsupported shared-subscription spending",
+      "evidence": "#147 owner comments and infra/README.md Governance controls"
+    },
+    {
+      "rank": 2,
+      "task": "#138 owner environment/OIDC setup and live acceptance",
+      "rationale": "Higher operational impact but requires separate authority, private runners and actual cloud observations",
+      "evidence": "#138 owner comments and infra/README.md GitHub deployment pipeline"
+    }
+  ]
+}

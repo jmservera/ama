@@ -61,6 +61,10 @@ param publicEdgeRequiresApplications string
 param pilotRequiresProductionProfile string
 
 @minLength(1)
+@description('Must not be empty. Empty means environmentName=pilot with enableLocks=false; pilot stateful resources require CanNotDelete locks.')
+param pilotRequiresLocks string
+
+@minLength(1)
 @description('Must not be empty. Empty means demoDirectIngress=true without deploymentProfile=development; direct demo ingress is never a production override.')
 param demoRequiresDevelopmentProfile string
 
@@ -88,6 +92,7 @@ output checked array = [
   resourceGroupMustBeAma
   primaryLocationMustBeUKSouth
   pilotRequiresProductionProfile
+  pilotRequiresLocks
   publicEdgeRequiresProductionProfile
   publicEdgeRequiresApplications
   productionProfileForbidsPublicNetworkAccess

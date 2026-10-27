@@ -99,7 +99,7 @@ param allowPublicNetworkAccess bool = false
 param keyVaultPurgeProtection bool = true
 @description('Development only. Explicit false permits immediate image pulls without quarantine. Production requires true.')
 param registryQuarantineEnabled bool = true
-@description('CanNotDelete locks on stateful resources.')
+@description('CanNotDelete locks on stateful resources. Required for pilot deployments.')
 param enableLocks bool = false
 @description('Model deployments. The standard tier is the default; the capable tier is used only where the PRD model evaluation shows the standard tier misses a task threshold.')
 param modelDeployments array = [
@@ -162,6 +162,7 @@ module guard 'modules/guard.bicep' = {
     deploymentLocationsMustBeSelected: !empty(location) && !empty(sqlLocation) ? 'ok' : ''
     publicEdgeRequiresProductionProfile: !enablePublicEdge || (!isDev && !allowPublicNetworkAccess) ? 'ok' : ''
     pilotRequiresProductionProfile: environmentName != 'pilot' || (!isDev && !allowPublicNetworkAccess) ? 'ok' : ''
+    pilotRequiresLocks: environmentName != 'pilot' || enableLocks ? 'ok' : ''
     publicEdgeRequiresApplications: !enablePublicEdge || deployApplications ? 'ok' : ''
     sharePointEvidenceStoreRequiresSiteId: evidenceStore != 'sharepoint' || !empty(sharePointSiteId) ? 'ok' : ''
     tokenStoreReadyRequiresTokenStore: !entraTokenStoreReady || enableEntraTokenStore ? 'ok' : ''

@@ -216,13 +216,17 @@ class WorkflowTests(unittest.TestCase):
             document["concurrency"], {"group": "ama-release", "cancel-in-progress": "false"}
         )
         self.assertEqual(document["jobs"]["build"]["if"], "github.ref == 'refs/heads/main'")
+        self.assertEqual(document["jobs"]["build"]["needs"], "source-ci")
         self.assertNotIn("id-token", document["jobs"]["build"].get("permissions", {}))
         self.assertEqual(document["jobs"]["publish"]["needs"], "build")
         self.assertEqual(document["jobs"]["deploy"]["needs"], "publish")
         build = document["jobs"]["build"]
         self.assertEqual(build["strategy"]["matrix"]["project"], list(pipeline.PROJECTS))
         scans = [
-            step for step in build["steps"] if step.get("uses", "").startswith("aquasecurity/")
+            step
+            for step in build["steps"]
+            if step.get("uses", "").startswith("aquasecurity/")
+            and step["with"].get("format") != "spdx-json"
         ]
         self.assertEqual(len(scans), 2)
         self.assertEqual(scans[0]["with"]["trivy-config"], "src/trivy.yaml")
@@ -234,6 +238,110 @@ class WorkflowTests(unittest.TestCase):
         self.assertIn('"src/$PROJECT/Dockerfile"', commands)
         self.assertIn("src/check-container.py", commands)
         self.assertIn("docker save", commands)
+        sboms = [
+            step
+            for step in build["steps"]
+            if step.get("uses", "").startswith("aquasecurity/")
+            and step["with"].get("format") == "spdx-json"
+        ]
+        self.assertEqual(len(sboms), 1)
+        sbom = sboms[0]
+        self.assertEqual(sbom["with"]["scan-type"], "image")
+        self.assertEqual(sbom["with"]["trivy-config"], "src/trivy.yaml")
+        self.assertEqual(sbom["with"]["image-ref"], scans[0]["with"]["image-ref"])
+        self.assertEqual(
+            sbom["with"]["output"], "zava-forward-${{ matrix.project }}-release.spdx.json"
+        )
+        artifacts = [
+            step
+            for step in build["steps"]
+            if step.get("with", {}).get("name") == "release-sbom-${{ matrix.project }}"
+        ]
+        self.assertEqual(len(artifacts), 1)
+        artifact = artifacts[0]
+        self.assertTrue(artifact["uses"].startswith("actions/upload-artifact@"))
+        self.assertEqual(artifact["with"]["path"], sbom["with"]["output"])
+        self.assertEqual(artifact["with"]["if-no-files-found"], "error")
+        export = next(step for step in build["steps"] if "docker save" in step.get("run", ""))
+        self.assertLess(build["steps"].index(sbom), build["steps"].index(artifact))
+        self.assertLess(build["steps"].index(artifact), build["steps"].index(export))
+        for step in (sbom, artifact, export):
+            self.assertNotIn("if", step)
+            self.assertNotIn("continue-on-error", step)
+
+    def test_release_requires_exact_successful_main_ci_and_fails_closed(self):
+        document = workflow("src-deploy.yml")
+        gate = document["jobs"]["source-ci"]
+        self.assertEqual(gate["if"], "github.ref == 'refs/heads/main'")
+        self.assertEqual(gate["permissions"], {"contents": "read", "actions": "read"})
+        self.assertEqual(gate["runs-on"], "ubuntu-latest")
+        self.assertEqual(len(gate["steps"]), 1)
+        step = gate["steps"][0]
+        self.assertEqual(step["shell"], "bash")
+        self.assertEqual(step["env"]["RELEASE_SHA"], "${{ github.sha }}")
+        self.assertEqual(step["env"]["GH_TOKEN"], "${{ github.token }}")
+        script = step["run"]
+        good = {
+            "head_sha": SHA,
+            "head_branch": "main",
+            "event": "workflow_dispatch",
+            "status": "completed",
+            "conclusion": "success",
+        }
+        cases = [
+            (json.dumps({"workflow_runs": [good]}), 0, True),
+            (json.dumps({"workflow_runs": []}), 0, False),
+            ("null", 0, False),
+            ("{}", 0, False),
+            ("not-json", 0, False),
+            (json.dumps({"workflow_runs": {"unexpected": good}}), 0, False),
+            (json.dumps({"workflow_runs": [good]}), 1, False),
+        ]
+        for key, value in (
+            ("head_sha", "b" * 40),
+            ("head_branch", "feature"),
+            ("event", "pull_request"),
+            ("status", "in_progress"),
+            ("conclusion", "failure"),
+            ("conclusion", "cancelled"),
+            ("conclusion", None),
+        ):
+            cases.append((json.dumps({"workflow_runs": [{**good, key: value}]}), 0, False))
+        with TemporaryDirectory() as temporary:
+            fake = Path(temporary) / "gh"
+            fake.write_text(
+                f"#!{sys.executable}\n"
+                "import os, sys\n"
+                "expected = ['api', '--method', 'GET', "
+                "'repos/example/example/actions/workflows/src-ci.yml/runs', "
+                "'-f', 'head_sha=' + os.environ['RELEASE_SHA'], '-f', 'branch=main', "
+                "'-f', 'event=workflow_dispatch', '-f', 'status=success', '-f', 'per_page=1']\n"
+                "if sys.argv[1:] != expected:\n"
+                "    raise SystemExit(2)\n"
+                "sys.stdout.write(os.environ['FAKE_GH_RESPONSE'])\n"
+                "raise SystemExit(int(os.environ['FAKE_GH_EXIT']))\n"
+            )
+            fake.chmod(0o700)
+            for response, code, accepted in cases:
+                with self.subTest(response=response, api_exit=code):
+                    result = subprocess.run(
+                        ["bash", "--noprofile", "--norc", "-e", "-o", "pipefail", "-c", script],
+                        env={
+                            **os.environ,
+                            "PATH": f"{temporary}:{os.environ['PATH']}",
+                            "GITHUB_REPOSITORY": "example/example",
+                            "RELEASE_SHA": SHA,
+                            "GH_TOKEN": "synthetic-unused",
+                            "FAKE_GH_RESPONSE": response,
+                            "FAKE_GH_EXIT": str(code),
+                        },
+                        capture_output=True,
+                        text=True,
+                        check=False,
+                    )
+                    self.assertEqual(result.returncode == 0, accepted, result.stderr)
+                    if not accepted:
+                        self.assertIn("::error::", result.stdout)
 
     def test_tests_and_filters_are_wired_into_source_ci(self):
         document = workflow("src-ci.yml")

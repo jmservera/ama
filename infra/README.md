@@ -263,11 +263,22 @@ Failed plans attach a failed-status summary when the helper has started.
 The workflow must first merge to the default branch before this trigger exists.
 
 Release is manual, **main-only**, and serialized across all environments in
-`ama`. It builds all four source images from the same immutable workflow SHA.
+`ama`. Before dispatching release, manually run `Source projects CI`
+(`src-ci.yml`) on `main` and wait for success on the exact commit being released.
+Source CI does not run on main pushes. The release's read-only prerequisite
+checks the workflow-specific API for a completed, successful manual main run
+matching its immutable SHA; missing, failed, malformed or inaccessible evidence
+stops before image builds or Azure login. A green PR run or earlier main commit
+is not sufficient. No workflow/check name or branch protection is changed.
+It builds all four source images from that same immutable workflow SHA.
 Every image passes the existing non-root/hardened/plain startup contract and
 the same `src/trivy.yaml` fixable HIGH/CRITICAL gate as source CI; full reports
 including unfixed findings are retained even on gate failure. Only passing
-images leave the unprivileged hosted build job. Private publish jobs load
+images leave the unprivileged hosted build job. Each rebuilt release image
+also gets an SPDX JSON SBOM, retained for seven days as
+`release-sbom-<project>`; generation and upload must succeed before image export.
+Source-CI SBOMs do not substitute for this inventory of the rebuilt images.
+Private publish jobs load
 (never execute) those same-run image artifacts, push tags
 `sha-<commit>-r<run>-a<attempt>` to separate `zava-forward-<project>` repositories
 and capture registry digests. Importer maps to Bicep `importImage`; agents to
@@ -1212,9 +1223,9 @@ owners and sources still a gap before operational reliance.
 | --- | --- | --- | --- | --- |
 | Azure Policy assignments (SQL and storage public access, Key Vault deletion protection, required tags) | [`governance.bicep`](./governance.bicep), subscription scope, deployed separately by the subscription owner | Built-in definitions, audit only (`enforcementMode=DoNotEnforce`): policy reports non-compliance but blocks nothing; a Deny stance is an open owner decision | Juan Manuel Servera | No charge for Azure Policy |
 | Defender for Cloud plans (Storage, SQL servers, Key Vaults, Containers) | [`governance.bicep`](./governance.bicep) | No pricing resource is submitted until the owner accepts a cost and sets `enableDefenderPlans=true`; then the four plans request Standard. Existing paid or Free subscription plans are preserved when disabled | Juan Manuel Servera | Per-resource pricing, not yet estimated: open item, confirm in the Azure pricing calculator before enabling |
-| Resource locks | `enableLocks` in `main.bicep` (Key Vault, SQL, storage) | [`main.pilot.example.bicepparam`](./main.pilot.example.bicepparam) (a non-deployable example with placeholders; copy it to a private file and fill every value) sets `true`; the development file keeps `false` so the stack can be reset | Juan Manuel Servera | None |
+| Resource locks | `enableLocks` in `main.bicep` (Key Vault, SQL, storage) | [`main.pilot.example.bicepparam`](./main.pilot.example.bicepparam) (a non-deployable example with placeholders; copy it to a private file and fill every value) sets `true`; `pilotRequiresLocks` rejects a pilot override to `false` before dependent resources; dev/test retain their explicit lock choice | Juan Manuel Servera | None |
 | Tagging standard | `allTags` in `main.bicep` | Required tags on taggable resources, component refinements and untaggable-child exceptions documented in Environments; group tags remain separate | Juan Manuel Servera (exercise resource contact) | None |
-| Known exceptions | [`policy-exceptions.json`](./policy-exceptions.json) | EX-001: `SecurityControl=Ignore` on the development resource group (MCAPS SQL public-access policy); expires 2026-12-31 | Juan Manuel Servera | None |
+| Known exceptions | [`policy-exceptions.json`](./policy-exceptions.json) | Historical EX-001: `SecurityControl=Ignore` on the development resource group (MCAPS SQL public-access policy); expires 2026-12-31. It does not authorize public SQL in current templates or helpers | Juan Manuel Servera | None |
 
 ```bash
 az deployment sub what-if -l uksouth -f infra/governance.bicep
@@ -1234,6 +1245,17 @@ pricing resources rather than changing any plan. This is a code decision, not
 evidence of deployed policy compliance, protection, or financial approval.
 The subscription-scoped governance template is outside a resource-group-only
 `ama` execution boundary and was compiled/tested only in this task.
+
+Authoring review, 2026-10-27 (Refs #147/#138): policy/Defender definitions,
+pilot locks, tags and the dated exception register are present; no policy
+deployment/compliance, Defender cost acceptance or protection is established.
+The subscription owner @jmservera must record selected plan/subplan coverage,
+current subscription-specific quantities and cost, and an explicit activation
+decision before enabling paid plans. Cost remains **not estimated / not approved**,
+not zero. No new exception, renewal or public SQL bypass is approved.
+Offline pipeline contracts are not observed federation, environment approval,
+registry publication, deployment or health acceptance. Both issues remain open
+at those owner/live gates; no Azure deployment was performed for this authoring.
 
 ## Hardened source image rollout (#118)
 
