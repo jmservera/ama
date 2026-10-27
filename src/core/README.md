@@ -6,6 +6,49 @@ ms.date: 2026-10-27
 ms.topic: reference
 ---
 
+## Dependent-policy RAI release binding (#218, #219)
+
+The stock assistant and retained priority task bind the actual current
+deterministic ranking policy content, not just their prompt/output-filter
+versions. The quality assistant also binds checklist definitions and ordered
+keyword-to-checklist selection. Changing these policies denies new dispatch,
+queued claims and proposal reliance under the previous release; in-flight
+results are quarantined. Stock evidence explicitly reads the current policy.
+Unrelated assistant/task bindings remain unchanged. No ranking or checklist
+rule is changed by this control.
+
+Existing dependent releases need renewed evaluation and a fresh authorized
+release record; rollback cannot revive a superseded record. No actual release
+is renewed automatically. Constructed matching records prove proposal-only
+mechanics, not approved evaluation evidence or live OQ-017 authority.
+
+From `src/api`, with editable projects installed, local synthetic regressions:
+
+```bash
+PYTHONPATH=tests:../core/tests:../agents/tests python -m unittest \
+  test_assistant_release.DependentPolicyRelease \
+  test_assistants.HumanReviewMechanics -q
+```
+
+The review checks seed plausible wrong, unsupported, incomplete and stale
+proposals, retain scripted rejection/correction provenance and preserve case
+data. Their automation-bias negative control deliberately demonstrates that a
+false source-verification attestation can accept wrong text. Valid citations
+and an acceptance click are not semantic truth, reviewer competence or a
+controlled domain approval. Actual reviewer detection, corrections and total
+preparation/review effort against paired workflow-only scenarios remain
+unmeasured; #223 is not satisfied by these tests.
+
+The #222 cohort manifest in open PR #421 still needs owner approval before
+evaluator implementation. Cohorts, lawful fields, sample sufficiency and
+thresholds remain unapproved, and synthetic results cannot prove fairness.
+Actual release/residual-risk/review/restart holders remain unknown under
+OQ-017. The [incident](#operator-incidents-and-constructed-restart-221) and
+[challenge](#version-bound-affected-person-challenges-220) contracts retain
+their separate approval and coverage limits. No child or epic closure,
+human-witnessed drill, broader assistant/form challenge coverage, legal
+screening or #440 stabilization is inferred.
+
 ## Resident advisory assistant (#469)
 
 `resident_assistant.advise(topic, CaseProgress(...), provider)` builds bounded

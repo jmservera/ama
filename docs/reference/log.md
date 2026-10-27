@@ -8030,3 +8030,21 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Actual #111/#133 integration and a runnable #184 publisher remain unmet.
   R2 competent review, agreed R3 error limits, real consent, operational use
   and parent closure are not inferred from standalone synthetic tests.
+
+## 2026-10-27: Dependent-policy RAI release binding (#218)
+
+* The [core contract](../../src/core/README.md#dependent-policy-rai-release-binding-218-219)
+  documents ranking-content binding for stock/retained priority, ordered
+  checklist-policy binding for quality, and explicit current-policy capture.
+  Rules, permissions, workflow/check names and actual release records are unchanged.
+* Five failing-first assertions exposed the dependency/default-policy gaps.
+  Local synthetic lifecycle and scripted review regressions distinguish
+  release denial, source staleness and retained proposal-only decisions.
+* The automation-bias negative control demonstrates the limit of citation
+  syntax and false attestation, not effective human oversight. Actual paired
+  human preparation/review effort is unmeasured.
+* #222's corrected manifest in open PR #421 remains unapproved; no evaluator
+  or participant study is implemented. OQ-017 holders, actual restart/drill
+  acceptance, wider assistant/form challenge coverage, #224 legal screening
+  and #440 stabilization remain open. No acceptance criterion is ticked and
+  no operational, fairness, Azure or whole-epic approval is inferred.

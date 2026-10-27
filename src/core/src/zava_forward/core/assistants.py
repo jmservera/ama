@@ -95,7 +95,7 @@ def capture(capability, c, procurement=None):
         source["survey"] = pick(c.get("survey"), ("epc", "type", "built", "version", "status", "evidence_hash"))
     if capability == "stock-prioritisation":
         # Only the public portion of the deterministic reasons crosses this audience.
-        policy = ranking.describe()
+        policy = ranking.describe(ranking.CURRENT)
         policy.pop("versions", None)
         public = pick(dict(stage=c.get("stage"), waiting_days=c.get("days_in_stage")), ("stage", "waiting_days"))
         reasons = []
@@ -297,10 +297,15 @@ def runtime_binding(capability, ai):
     """What this build would dispatch with; a release must match it exactly, so any material change needs renewed evidence."""
     from . import ai_registry
     spec = REGISTRY[capability]
+    policy = [RULES[capability], OUTPUT_SCHEMA]
+    if capability == "stock-prioritisation":
+        policy.append(ranking.policy_hash(ranking.CURRENT))
+    elif capability == "quality-evidence":
+        policy.append(quality.policy_fingerprint())
     return dict(registry_version=VERSION, schema_version=SCHEMA_VERSION, provider=getattr(ai, "provider", "azure-openai"),
                 endpoint=getattr(ai, "endpoint", "") or "", deployment=getattr(ai, "fast", "") or "",
                 prompt_version=digest([SYSTEM, spec["purpose"]])[:16],
-                policy_version=f"{RULE_VERSION}:{digest([RULES[capability], OUTPUT_SCHEMA])[:12]}",
+                policy_version=f"{RULE_VERSION}:{digest(policy)[:12]}",
                 data_version=digest([SCHEMA_VERSION, spec["categories"]])[:16], provenance_version=PROVENANCE,
                 permission_version=digest([spec["roles"], PURPOSE])[:16],
                 model_version=getattr(ai, "model_version", "unattested"),

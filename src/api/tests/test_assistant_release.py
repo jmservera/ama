@@ -1,4 +1,5 @@
 """Release admission for the five assistants and retained legacy dispatch (issue #107). Constructed fixtures only."""
+import copy
 import json
 import time
 import unittest
@@ -7,10 +8,211 @@ from unittest.mock import patch
 import release_support
 from test_assistants import Base, config
 from zava_forward.core import assistant_release as rel
-from zava_forward.core import assistants
+from zava_forward.core import ai_registry, assistants, quality, ranking
 from zava_forward.core.ai import Ai
 
 CAP = "stock-prioritisation"
+
+
+def dependent_policy(kind):
+    """Construct policy-content changes without changing production rules or labels."""
+    if kind == "ranking":
+        value = copy.deepcopy(ranking.CURRENT)
+        value["stage_order"].reverse()
+        value["content_hash"] = ranking.policy_hash(value)
+        return patch.object(ranking, "CURRENT", value)
+    value = copy.deepcopy(quality.CHECKLISTS)
+    value["General"]["items"].append("Constructed additional evidence check")
+    return patch.object(quality, "CHECKLISTS", value)
+
+
+class DependentPolicyRelease(Base):
+    def test_policy_content_invalidates_only_dependent_task_bindings(self):
+        ai = Ai()
+        before = {cap: assistants.runtime_binding(cap, self.provider) for cap in assistants.REGISTRY}
+        legacy = {task: ai_registry.legacy_binding(task, ai, ai_registry.legacy_deployment(task, ai))
+                  for task in ai_registry.LEGACY}
+        for kind, affected in (("ranking", CAP), ("quality", "quality-evidence")):
+            with self.subTest(kind=kind), dependent_policy(kind):
+                for cap, binding in before.items():
+                    current = assistants.runtime_binding(cap, self.provider)
+                    self.assertEqual(current == binding, cap != affected, cap)
+                    if cap == affected:
+                        self.assertNotEqual(current["policy_version"], binding["policy_version"])
+                for task, binding in legacy.items():
+                    current = ai_registry.legacy_binding(task, ai, ai_registry.legacy_deployment(task, ai))
+                    self.assertEqual(current == binding, not (kind == "ranking" and task == "priority"), task)
+                with self.service.transaction() as db:
+                    denied = self.service.admission(db, affected)
+                    self.assertIsNotNone(denied)
+                    self.assertIn("policy_version", denied["missing"])
+
+    def test_quality_mapping_and_first_match_order_require_release_without_source_change(self):
+        case = copy.deepcopy(self.store.cases["ZF-1"])
+        case["measures"] = ["Constructed generic measure"]
+        for mode in ("mapping-only", "order-only"):
+            initial = quality._KEYWORDS + (("loft", "Heat pump"),)
+            changed = (("unmatched", "Loft insulation"),) + initial if mode == "mapping-only" else (
+                initial[-1], *initial[:-1])
+            with self.subTest(mode=mode), patch.object(quality, "_KEYWORDS", initial):
+                release_support.install(self.store)
+                before = {cap: assistants.runtime_binding(cap, self.provider) for cap in assistants.REGISTRY}
+                ai = Ai()
+                legacy = {t: ai_registry.legacy_binding(t, ai, ai_registry.legacy_deployment(t, ai))
+                          for t in ai_registry.LEGACY}
+                # This case still selects General; source staleness cannot hide an admission gap.
+                snapshot = assistants.capture("quality-evidence", case)
+                with patch.object(quality, "_KEYWORDS", changed):
+                    self.assertEqual(assistants.capture("quality-evidence", case), snapshot)
+                    for cap, binding in before.items():
+                        self.assertEqual(assistants.runtime_binding(cap, self.provider) == binding,
+                                         cap != "quality-evidence", cap)
+                    for t, binding in legacy.items():
+                        self.assertEqual(ai_registry.legacy_binding(t, ai, ai_registry.legacy_deployment(t, ai)), binding)
+                    with self.service.transaction() as db:
+                        denied = self.service.admission(db, "quality-evidence")
+                        self.assertIsNotNone(denied)
+                        self.assertIn("policy_version", denied["missing"])
+
+    def test_stock_capture_uses_current_policy_object(self):
+        with dependent_policy("ranking"):
+            snapshot = assistants.capture(CAP, self.store.cases["ZF-1"])
+            self.assertEqual(snapshot["sources"]["ranking"]["policy"]["content_hash"],
+                             ranking.CURRENT["content_hash"])
+
+    def test_ranking_binding_hashes_content_not_only_declared_version_or_hash(self):
+        ai = Ai()
+        stock = assistants.runtime_binding(CAP, self.provider)
+        priority = ai_registry.legacy_binding("priority", ai, ai.strong)
+        changed = copy.deepcopy(ranking.CURRENT)
+        changed["stage_order"].reverse()
+        with patch.object(ranking, "CURRENT", changed):
+            self.assertNotEqual(assistants.runtime_binding(CAP, self.provider)["policy_version"],
+                                stock["policy_version"])
+            self.assertNotEqual(ai_registry.legacy_binding("priority", ai, ai.strong)["policy_version"],
+                                priority["policy_version"])
+
+    def test_changed_policy_denies_fresh_proactive_and_queued_dispatch(self):
+        self.case(lambda c: c["home"].update(epc="Unknown"))
+        for kind, cap in (("ranking", CAP), ("quality", "quality-evidence")):
+            queued = self.service.invoke(self.pm, cap, "ZF-1")
+            with self.subTest(kind=kind), dependent_policy(kind):
+                fresh = self.service.invoke(self.pm, cap, "ZF-1")
+                self.assertEqual(fresh["state"], "disabled")
+                self.assertIn("policy_version", fresh["release_denial"]["missing"])
+                self.assertFalse(self.other().execute(queued["id"]))
+                scanned = self.service.scan()["enqueued"]
+                affected = [self.service.detail(self.pm, tid) for tid in scanned
+                            if self.service.detail(self.pm, tid)["capability"] == cap]
+                self.assertTrue(affected)
+                self.assertTrue(all(p["state"] == "disabled" for p in affected))
+                self.assertIn("policy_version", self.service.detail(self.pm, queued["id"])["release_denial"]["missing"])
+        self.assertEqual(self.provider.calls, 0)
+
+    def test_policy_change_quarantines_inflight_and_denies_ready_verified_accepted_reliance(self):
+        for kind, cap in (("ranking", CAP), ("quality", "quality-evidence")):
+            for state in ("leased", "ready", "verified", "accepted"):
+                with self.subTest(kind=kind, state=state):
+                    self.case(lambda c: c["home"].update(built=c["home"]["built"] + 1))
+                    if state == "leased":
+                        queued = self.service.invoke(self.pm, cap, "ZF-1")
+                        p = self.service.claim(queued["id"], "constructed-worker")
+                        output = assistants_proposal(p)
+                    else:
+                        p = self.run_ready(cap)
+                        if state in ("verified", "accepted"):
+                            p = self.verify(p)
+                        if state == "accepted":
+                            p = self.service.review(self.pm, p["id"], "accept", p["revision"], "Synthetic source comparison")
+                        output = p["output"]
+                    before = self.domain()
+                    with dependent_policy(kind):
+                        if state == "leased":
+                            self.assertTrue(self.service.complete(
+                                p, dict(outcome="returned", source="ai", model="test-model", usage=None), output))
+                        other = self.other()
+                        view = other.detail(self.pm, p["id"])
+                        self.assertFalse(view["actionable"])
+                        self.assertFalse(view["relied_on"])
+                        self.assertIn("policy_version", view["release_denial"]["missing"])
+                        if state == "leased":
+                            self.assertEqual(view["state"], "quarantined")
+                            self.assertIsNone(view["output"])
+                        else:
+                            self.assertEqual(view["output"], output)
+                        for action in ("verify", "accept", "edit-accept"):
+                            with self.assertRaises(PermissionError):
+                                other.review(self.pm, p["id"], action, view["revision"],
+                                             "Synthetic comparison", output=output, source_verified=True)
+                    self.assertEqual(self.domain(), before)
+
+    def test_matching_constructed_renewal_is_proposal_only_and_does_not_revive_history(self):
+        self.service.approvers = {self.pm["email"].lower()}
+        for kind, cap in (("ranking", CAP), ("quality", "quality-evidence")):
+            old = self.run_ready(cap)
+            before = self.domain()
+            with self.subTest(kind=kind), dependent_policy(kind):
+                record = release_support.fixture(cap, assistants.runtime_binding(cap, self.provider),
+                                                 expires="2099-01-01T00:00:00Z")
+                rid = self.service.record_release(self.pm, record)["id"]
+                fresh = self.run_ready(cap)
+                self.assertEqual(fresh["release"]["id"], rid)
+                self.assertNotEqual(fresh["id"], old["id"])
+                fresh = self.verify(fresh)
+                accepted = self.service.review(self.pm, fresh["id"], "accept", fresh["revision"],
+                                               "Synthetic review, not actual approval")
+                self.assertEqual(accepted["state"], "accepted")
+                self.assertFalse(self.service.detail(self.pm, old["id"])["actionable"])
+                self.assertEqual(self.domain(), before)
+            # Returning to the old policy cannot revive the superseded release.
+            with self.service.transaction() as db:
+                self.assertIsNotNone(self.service.admission(db, cap))
+
+    def test_retained_priority_policy_change_denies_dispatch_and_quarantines_completion(self):
+        ai = Ai()
+        ai.endpoint = "http://scripted-model.invalid"
+        self.store.ai = ai
+        ai.gate = lambda task, dep=None: self.store.continuity_block(task) or self.store.release_block(task, dep)
+        release_support.install(self.store, ai, tasks=[])
+        calls = []
+        ai._chat = lambda *a, **k: calls.append(1) or "Synthetic result"
+        with dependent_policy("ranking"):
+            result = ai.run("priority", "s", "u", "manual", strong=True)
+            self.assertEqual(result["source"], "template")
+            self.assertIn("policy_version", result["reason"])
+            self.assertEqual(calls, [])
+            self.assertEqual(ai.run("summary", "s", "u", "manual")["source"], "ai")
+        with dependent_policy("ranking") as changed:
+            changed_policy = copy.deepcopy(changed)
+        def chat(*a, **k):
+            ranking.CURRENT = changed_policy
+            return "Synthetic superseded result"
+        ai._chat = chat
+        with patch.object(ranking, "CURRENT", ranking.CURRENT):
+            result = ai.run("priority", "s", "u", "manual", strong=True)
+            self.assertEqual(result["source"], "template")
+            self.assertTrue(result["quarantined"])
+
+    def test_retained_priority_policy_change_blocks_historical_accept_and_edit(self):
+        ai = Ai()
+        ai.endpoint = "http://scripted-model.invalid"
+        self.store.ai = ai
+        ai.gate = lambda task, dep=None: self.store.continuity_block(task) or self.store.release_block(task, dep)
+        release_support.install(self.store, ai, tasks=[])
+        user = TaskReleaseRecord.priority_user(self, self.store)
+        ai._chat = lambda *a, **k: json.dumps([
+            dict(case_id="ZF-4", reason="Safety", cites=["Open safety issues: 1"])])
+        proposal = self.store.ai_priority(user, 1)
+        self.assertEqual(proposal["source"], "ai")
+        before = copy.deepcopy(self.store.data["recommendations"])
+        with dependent_policy("ranking"):
+            self.assertFalse(self.store.latest_priority(user)["actionable"])
+            self.assertFalse(self.store.latest_priority(user)["relied_on"])
+            for action in ("accept", "edit"):
+                with self.assertRaises(PermissionError):
+                    self.store.resolve_priority(user, proposal["id"], action,
+                                                "SYN scripted review", proposal["items"])
+            self.assertEqual(self.store.data["recommendations"], before)
 
 
 def body(service, **over):
