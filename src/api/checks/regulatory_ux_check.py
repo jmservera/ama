@@ -348,6 +348,10 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             expect(chat.locator("blockquote")).to_have_text(
                 f"[synthetic@v2#0001] {COPY_SOURCE_CANARY}"
             )
+            expect(chat).to_contain_text("Model calls for this question: 0")
+            expect(page.locator("#regulatory-usage")).to_contain_text("1 turns")
+            expect(page.locator("#regulatory-usage")).to_contain_text("Service cost: Unknown")
+            expect(alerts).to_contain_text("Model calls per check and alert: 0")
             expect(chat).to_contain_text("Effective: 2026-01-01")
             expect(chat.locator("a").first).to_have_attribute(
                 "href", "/api/law/provisions/synthetic%40v2%230001"
@@ -423,6 +427,29 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             expect(alerts).to_contain_text("Not active or source uncertain")
             expect(alerts).to_contain_text("Status: breach risk")
             scan(page, axe, reports, "source-changed-retained-risk")
+            question.fill("What do the hazard sources say for this home?")
+            question.press("Tab")
+            page.keyboard.press("Enter")
+            expect(chat.locator(".regulatory-turn")).to_have_count(3)
+            conflict = chat.locator(".regulatory-turn").last
+            expect(conflict).to_contain_text("Lookup status: conflict")
+            expect(conflict.locator("blockquote")).to_have_count(2)
+            expect(conflict).to_contain_text("Turn sent to Juan Manuel Servera's exercise inbox")
+            expect(conflict.locator("button")).to_have_attribute("aria-disabled", "true")
+            expect(page.locator("#regulatory-usage")).to_contain_text("1 conflicts")
+            inbox = fixture.call("/api/chat/regulatory/inbox", email="exercise-owner@example.test")[
+                1
+            ]
+            assert len(inbox["threads"]) == 2
+            scan(page, axe, reports, "conflict-auto-referral")
+            page.reload()
+            page.locator("#chat-panel > summary").click()
+            page.locator("#regulatory-chat > summary").click()
+            expect(chat.locator(".regulatory-turn")).to_have_count(3)
+            expect(chat.locator(".regulatory-turn").last).to_contain_text(
+                "Turn sent to Juan Manuel Servera's exercise inbox"
+            )
+            scan(page, axe, reports, "conflict-referral-restored")
 
             # Actual service outage and disabled capability, not fake successful responses.
             law = fixture.app.law

@@ -3427,17 +3427,30 @@ the existing 8,000-character message limit fails before writing; it is never
 silently truncated.
 
 Answer pairs and explicit selected-turn doubt copies use single chat-repository
-transactions. JSON restores a pre-image on failure; SQLite uses rollback.
+transactions. Supported conflicts automatically copy both cited versions and
+the question to the named exercise owner's inbox in the same transaction as
+the answer and sender receipt. Missing, ambiguous or unauthorized owner scope
+prevents that conflict turn from being stored. Ordinary answers and refusals
+retain the manual doubt action. JSON restores a pre-image on pre-save failure;
+SQLite uses rollback.
 A copied pair lives in the uniquely provisioned Juan Manuel Servera exercise
-owner's own isolated thread, with a sender receipt and idempotent retries.
+owner's own isolated thread, with a sender receipt and idempotent referrals per
+stored source-thread/assistant-turn. A repeated ask, even with equal text, is
+a new turn and may create a new referral; reload history after uncertain
+responses instead of blindly resubmitting.
 The sender's other messages and memory are not shared. Both current roles/case
-rights are checked; SQL provisioning is read freshly, not from the legacy
+rights are checked again inside the locked transaction before mutation; SQL
+provisioning is read freshly, not from the legacy
 staff cache. Trusted-proxy roles remain claim-derived instead of being replaced
 by a wider staff-register role. Historical reads deny changed roles instead of
 replaying wider content. SQL turn/referral metadata audit now commits in the
 same transaction as the messages and receipt; an audit failure rolls back both.
-The JSON file store alone retains the post-commit separate-ledger error boundary;
-it is not evidence of SQL audit atomicity. Audit holds metadata only.
+The JSON file store alone retains the post-commit separate-ledger error boundary:
+an audit failure after save reports that the turn/referral was saved and
+requires history reload. It is not evidence of SQL audit atomicity. Audit holds
+metadata only. Tests distinguish a real SQL COMMIT-before-effect failure from
+the repository's no-op commit hook; neither establishes lost-acknowledgement
+idempotency.
 Copies have independent thread ownership/deletion; deleting the sender's
 thread does not delete the explicit owner's copy. No email or live delivery
 is implied. No rule-engine alert, consent, safety hold or case fact is changed.
@@ -3460,7 +3473,9 @@ be valid, the reference must start `SYNTH-` and days must be 1..36500 (technical
 input bound, not a legal period). Review due is creation time plus days,
 inclusive at the exact due instant, and includes archived regulatory threads.
 No content is loaded, no records are deleted and no DPO approval is inferred.
-Other source/card/check/alert/audit periods stay explicitly unknown. This is
+Other source/card/check/alert/audit/usage periods stay explicitly unknown. Usage
+inherits its parent records' access and unresolved DPO retention/hold review;
+it has no separate indefinite-retention permission. This is
 not a complete retention or rights implementation; the
 [draft DPIA](../../docs/reference/research/chat-memory-dpia.md#regulatory-assistant-dpia-draft-for-dpo-review-2026-10-16-refs-217)
 requires DPO review and remains unapproved.
@@ -3471,6 +3486,29 @@ model, citation IDs and answer hash, never question/answer/excerpt/health conten
 Referrals retain receipt and decision-owner linkage, once per selected pair.
 Rollback-after-audit-insert and reopen tests cover the chain head and data.
 Metadata and linkable hashes are not anonymous; DPO retention review is still needed.
+
+### Offline regulatory consumption (2026-10-27, #208)
+
+`regulatory_usage` records task/schema version, UTC day, outcome and zero model
+calls/input/output/cached tokens/retries, without case/chat/source content.
+Chat SQL audit writes this metadata with its turn; checks and alerts retain
+the corresponding model-free metadata in their existing append-only records.
+Every role's inference allowance is zero per UTC day. This is disabled
+inference, not a spending approval, request quota or limit on urgent intake.
+
+The authenticated user's current-role/day summary reads at most the latest
+1,000 audit positions. SQL uses a primary-key sequence window and projects
+other actors/actions' detail as NULL; it never loads chat messages or performs
+an all-ledger detail query. JSON additionally tails at most 256 KiB and drops
+a partial line. Truncation returns `bounded_partial`; otherwise
+`recorded_audit_only`. Counts describe recorded events, never exact daily turn
+totals: legacy unmetered records and post-save JSON audit failures cannot be
+reconstructed. Unmetered events in the selected role/window are explicit.
+
+Service cost and AI cost per accepted check remain Unknown, not zero. Missing
+inputs are owner-agreed acceptance/counts, dated prices, attributable billing/
+shared-service allocation and human review effort. No model evaluation or
+paid budget/expiry authority is created.
 
 Engine contract version 2 requires nonempty `reasons` as well as named human,
 source, evidence and decision timestamp before a significant-decision check is

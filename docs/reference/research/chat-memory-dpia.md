@@ -2,7 +2,7 @@
 title: Chat and Memory Data Protection Analysis Record
 description: Draft DPIA for DPO review covering chat, memory and the synthetic regulatory assistant, with unresolved lawful basis, retention, rights and provider terms
 author: AMA programme
-ms.date: 2026-10-16
+ms.date: 2026-10-27
 ms.topic: reference
 ---
 
@@ -143,6 +143,7 @@ even with synthetic homes, would still be actual personal-data processing.
 | Regulatory turns (`reg_chat_turn` equivalent) | Existing `chat_thread` and paired `chat_message` rows; own role/home scope; masked question, complete answer/citations and model marker | Reuses CHAT_RETENTION_REF/DAYS for a simulated review-due report, not deletion. Sender and explicitly referred owner copies have independent ownership; archived threads are included |
 | Retrieval and composer | At most four provisions and enumerated category/priority for two hazards, only for permitted roles/purpose; no resident name, address, contact, diagnosis, adjustment, narrative, memory or other home | No provider processing in this path; provision text remains untrusted quoted data, never instructions |
 | Chat metadata audit | Actor, role, case/thread/turn IDs, model marker, citation IDs, answer hash, receipt linkage and timestamps; no question/answer/source excerpt or health text | Staff identifiers, linkable hashes and metadata are still potentially personal data. Ledger policy, holds, historical erasure and backup expiry require DPO review |
+| Offline usage metadata (engineering delta, 2026-10-27) | Task/schema version, UTC day, outcome and zero model call/token/retry counters in existing chat audit/check/alert records; authenticated own-user/current-role/day summary reads at most 1,000 audit positions, and JSON at most 256 KiB, without messages | Inherits parent records' access and unresolved periods/holds/rights; no separate retention authority. Audit-only coverage can be partial and cannot reconstruct missing events. Staff performance profiling or disciplinary use is not authorized |
 
 `GET /api/chat/regulatory/status` reports the current user's regulatory-thread
 review metadata only, with no messages or other owners' records. Missing periods
@@ -150,6 +151,16 @@ are `unknown`. A valid `SYNTH-` retention reference remains `simulated`, with
 `dpo_reviewed=false` and deletion disabled. The technical 1..36500-day input bound
 is not a proposed legal retention period. No numeric default is selected.
 Age alone does not authorize erasure, override a hold or satisfy storage limitation.
+
+The 2026-10-27 synthetic engineering delta automatically copies supported
+conflict questions and both cited versions to the registered exercise owner's
+isolated inbox, with a sender receipt. It reuses the explicit doubt data map,
+independent copied-thread ownership and content-free audit. SQL makes the
+turn/referral/audit atomic; JSON retains an explicit saved-but-audit-failed
+boundary requiring history reload. Automatic referral increases the disclosure
+frequency and must be included in DPO necessity, notice, recipient and rights
+review before actual processing. It is not consent, a company appointment,
+legal interpretation or activation of a rule. No DPO checkbox below changes.
 
 ### Risk assessment and proposed controls
 
