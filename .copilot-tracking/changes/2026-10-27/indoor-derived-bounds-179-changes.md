@@ -314,3 +314,26 @@ P04-T01 Review is complete; commit/push/PR evidence update remain. Owner
 review/merge, hosted checks, future calibration and OD-43 remain separate.
 Task-specific publication direction explicitly forbids --all; no complete
 local-gate receipt or independent published-head gate is claimed.
+
+### Correction cycle 1 publication complete
+
+Committed correction and all appended dated RPI evidence as
+13042a9b86505aa02946cb9cbad0eac45033f1d8,
+`fix(synthetic): version intentional indoor payload changes`, with the required
+Copilot co-author trailer. Both author/committer use the privacy-safe local
+email resolved from authenticated gh account id/login. Existing rubric-bot
+ancestry retained; push was fast-forward to feat/indoor-derived-bounds-179,
+not main and never force.
+
+Updated the existing PR502 body with the versioning decision, old/new hashes,
+causal differences, exact final core results, original failure and independent
+Review limitations. Verified PR remains open on the same branch and references
+the correction commit. Existing Closes #179 preserved with all three criteria
+re-proven at the synthetic-model boundary; no other issue closure added.
+URL: https://github.com/jmservera/ama/pull/502.
+
+P03/P04 complete. Manual task completed at Review; session stopped.
+Final bookkeeping records publication only, with no source/test edit,
+repeat critique/Review, dataset refresh, deployment or new gate claim.
+Owner merge, hosted approval and future real-use calibration/OD-43 remain
+outside this completion. No automatic child work starts.

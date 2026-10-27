@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Review",
-  "status": "active",
+  "status": "completed",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-27/indoor-derived-bounds-179-research.md",
@@ -69,12 +69,17 @@
       "decision": "Correction cycle 1 independent Review execution Complete, outcome Conformant at synthetic-model boundary, no findings. Independent integration probe limitations retained, full supplied CI log inspected.",
       "status": "completed",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-27/indoor-derived-bounds-179-review.md#correction-cycle-1-independent-review---2026-10-27"
+    },
+    {
+      "decision": "Correction cycle 1 published as 13042a9b on the existing branch without force; existing PR502 body updated with causal/version evidence and exact core CI results. Closes issue179 retained based on all three criterion proofs.",
+      "status": "completed",
+      "evidence": "https://github.com/jmservera/ama/pull/502"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Review",
-    "action": "Correction cycle 1 Review Complete/Conformant. Commit correction and appended RPI evidence, push feat/indoor-derived-bounds-179 without force, update existing PR502 evidence, then persist publication completion."
+    "action": "Owner reviews PR502 and hosted checks, then decides whether to merge. Correction cycle1 completed in manual mode; no automatic follow-up session."
   },
   "prioritized_follow_ups": [
     {

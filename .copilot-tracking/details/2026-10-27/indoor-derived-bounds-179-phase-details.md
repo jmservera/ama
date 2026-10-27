@@ -159,3 +159,8 @@ Correction-cycle independent Review Complete / Conformant, no findings;
 its original append-only record includes independent-probe limitations.
 P04-T01 still awaits actual commit/push/PR update. No source/test edits
 follow the assessment; owner and hosted acceptance remain separate.
+
+P04-T01 complete: 13042a9b pushed to feat/indoor-derived-bounds-179, PR502
+description updated with hashes, exact CI results and independent-probe
+limitations; published head verified. All correction tasks complete.
+No force/main push, new PR, source change after Review or hosted approval.

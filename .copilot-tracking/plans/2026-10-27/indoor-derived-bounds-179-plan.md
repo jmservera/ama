@@ -197,10 +197,10 @@ for this scoped synthetic snapshot correction.
 #### [x] P03-T02: Document intentional change and run exact core CI checks
 
 <!-- rpi:phase id=P04 -->
-### [ ] P04: Correction cycle 1 review and publication
+### [x] P04: Correction cycle 1 review and publication
 
 <!-- rpi:task id=P04-T01 -->
-#### [ ] P04-T01: Independent Review, append evidence, commit and same-PR push
+#### [x] P04-T01: Independent Review, append evidence, commit and same-PR push
 
 Follow-ups remain future building-physics calibration/OD-43, not part of this
 correction. Details: existing phase-details artifact, correction-cycle section.
@@ -231,3 +231,8 @@ Its independent 13-pass/nine destination-guard-error selector and causal/
 static evidence are recorded honestly; supplied final full discovery confirms
 the affected methods. P04-T01 remains unchecked until actual publication.
 No source changes follow Review.
+
+Correction-cycle publication complete: commit 13042a9b pushed to the existing
+branch without force; PR #502 description updated and its head verified.
+All P03/P04 markers complete. Final evidence-only bookkeeping changes no
+assessed source/test bytes. Owner review/merge and hosted checks remain.
