@@ -607,6 +607,6 @@ Recorded from the owner; they close the open questions of the earlier draft.
 * [ADR 0001 Azure architecture](../adrs/0001-azure-architecture.md)
 * [ADR 0006 Source layout and cut-over policy](../adrs/0006-src-layout-and-cutover.md)
 * [ADR 0002 Pilot readiness architecture](../adrs/0002-pilot-readiness-architecture.md)
-* [Zava Forward MVP README](../../mvp/README.md)
+* [Current source projects and migrated guides](../../src/README.md)
 * [Rubric registry notes](../../.github/rubric/README.md)
 * [Knowledge Base Log](../reference/log.md)

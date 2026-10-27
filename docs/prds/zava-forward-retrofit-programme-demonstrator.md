@@ -473,8 +473,10 @@ Retention and data-handling baseline (proposed, 2026-10-08): the [addendum basel
 ### Owner direction for pilot readiness (2026-10-08)
 
 Owner direction, not DPO, Legal or Board approval. Each item records the
-decision and the requirement it creates. The MVP in `mvp/` is the build baseline
-and replaces `prototype/`.
+decision and the requirement it creates. At that date the MVP in `mvp/`
+replaced `prototype/`. The current build baseline is [src](../../src/README.md);
+the owner-approved 2026-10-27 cut-over is archived as `v0.21.0`. This path
+clarification changes no requirement or historical approval.
 
 | ID | Requirement | Release | Trace |
 | --- | --- | --- | --- |

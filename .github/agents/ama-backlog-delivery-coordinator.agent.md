@@ -191,8 +191,9 @@ remains subject to the tracking retention policy.
    possible but undeclared, add an edge or flag it rather than assume
    independence. A dependency cycle is a human blocker for its members and their
    dependants only; ledger it and continue every other node.
-   Source layout rule (owner, 2026-10-15): `mvp/` is being retired
-   (epic #195; `prototype/` was retired in #202 step 1). No new feature code goes into `mvp/`. New features are
+   Source layout rule (owner, 2026-10-15; cut-over signed off 2026-10-27):
+   `mvp/` and `prototype/` are retired (archive `v0.21.0`, see `README.md`).
+   No new feature code goes into either legacy directory. New features are
    built in `src/` under the packages fixed by the layout ADR (#196), and tests
    outside the package. Treat #195 to #203 as the first priority: any feature
    issue that needs code the ADR has not yet placed, or that touches a module

@@ -1,11 +1,16 @@
 ---
 title: Source cut-over evidence pack
 description: Dated parity, private SQL and public edge proof with remaining owner gates
-ms.date: 2026-10-19
+ms.date: 2026-10-27
 ms.topic: reference
 ---
 
 ## Decision and Scope
+
+This section records the original 2026-10-16 decision boundary. For the later
+owner sign-off and directory retirement, see the
+[2026-10-27 record](#owner-authorized-directory-retirement-2026-10-27).
+Original failures, outcomes and unchecked historical gates below are preserved.
 
 Refs #200. Refs #201. Evidence prepared on 2026-10-16 against base
 `aedd616ffff8abfcf0379a538b895e4427147c8f`, then refreshed after integrating
@@ -1854,3 +1859,60 @@ All boxes are deliberately unchecked. Technical evidence is not owner approval.
   no soak has started and no duration is chosen.
 * [ ] Explicitly record go/no-go and sign-off in #201. Only a later authorized
   #202/#203 change may remove legacy paths; this PR never performs deletion.
+
+## Owner-authorized directory retirement (2026-10-27)
+
+Refs #199. Refs #200. Refs #201. Refs #202. Refs #203.
+The owner explicitly **SIGNED OFF cut-over (#201) on 2026-10-27** in the
+retirement task direction. This later authority permits directory retirement;
+it supersedes the earlier unsigned deletion status, not the original technical
+results, unresolved human/operational gates or historical unchecked checklist.
+No new soak, deployment, private-data inspection or backup verification ran.
+
+Fetched `origin/main` at `65a514ed20e97816dbf47e9fb981ab4cfe40597d`
+already contained all executable migration: the five installed source projects,
+source-context Dockerfiles, source CI and new Bicep job module paths.
+Only `mvp/README.md` remained tracked; `prototype/` was already retired by
+`a7e3004` / #295. This retirement removes that pointer, not application code.
+Working data remains external through `ZF_DATA`; no agent read a private dataset.
+
+The current BRD frontmatter is `0.21.0`. Local annotated tag `v0.21.0`
+was absent and was created at the main SHA above, the last pre-deletion commit
+containing the pointer. It archives the pointer-era tree; earlier code remains
+in its Git history. Neither tag publication nor a GitHub release was performed.
+The owner publishes the tag with exactly:
+
+```bash
+git push origin refs/tags/v0.21.0:refs/tags/v0.21.0
+```
+
+### Remaining-reference policy
+
+Current build/test/deploy commands use `src/` and installed `zava_forward`
+packages. Workflow/check names remain unchanged, including dispatch-only legacy
+workflow files. Do not remove required contexts or rename them during cleanup.
+The rubric registry already includes source projects, not legacy directories;
+deleting the unscored pointer adds no loss of scored source coverage. A measured
+post-merge score comparison is still required; no score or recovery is invented.
+
+Intentional old-path occurrences remain in dated ADRs, parity/audit TSVs,
+reports, pinned GitHub URLs and original RPI evidence. The append-only log
+retains old links with an additive repair map in its 2026-10-27 entry.
+Historical `zavaforward_mvp`/`properwarm_mvp` strings in migration fixtures and
+the cut-over audit parser test historical inputs, not live imports. Defensive
+`mvp/data` ignores/refusal checks and obsolete registry excludes remain to
+prevent accidental private-data reintroduction. Archive `v0.21.0` supplies the
+cut-over boundary for these intentional exceptions; earlier pinned commits
+remain the authoritative source for their original executable content.
+
+### Acceptance boundary
+
+This maintenance change supplies source-reference reconciliation, local
+archive creation, pointer deletion and current navigation. Existing API,
+rename and narrow parity/registry tests are the scoped validation; no full
+gate is authorized for this task. Hosted CI and owner merge remain required.
+It does not prove all-suite baseline parity, fresh deployed health, release
+publication, every dependent-epic disposition or post-merge rubric comparison.
+Accordingly all five issues are referenced, not closed. The literal zero-token
+repository-wide criterion in #203 is not claimed complete: preserved history
+and defensive fixtures are explicit exceptions.
