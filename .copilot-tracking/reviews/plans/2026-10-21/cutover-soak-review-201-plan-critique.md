@@ -161,9 +161,9 @@
 
 | Artifact | Description |
 |---|---|
-| [.copilot-tracking/plans/2026-10-21/cutover-soak-review-201-plan.md](.copilot-tracking/plans/2026-10-21/cutover-soak-review-201-plan.md) | Plan critiqued |
-| [.copilot-tracking/details/2026-10-21/cutover-soak-review-201-phase-details.md](.copilot-tracking/details/2026-10-21/cutover-soak-review-201-phase-details.md) | Phase details critiqued |
-| [.copilot-tracking/research/2026-10-21/cutover-soak-review-201-research.md](.copilot-tracking/research/2026-10-21/cutover-soak-review-201-research.md) | Research evidence |
+| [.copilot-tracking/plans/2026-10-21/cutover-soak-review-201-plan.md](../../../plans/2026-10-21/cutover-soak-review-201-plan.md) | Plan critiqued |
+| [.copilot-tracking/details/2026-10-21/cutover-soak-review-201-phase-details.md](../../../details/2026-10-21/cutover-soak-review-201-phase-details.md) | Phase details critiqued |
+| [.copilot-tracking/research/2026-10-21/cutover-soak-review-201-research.md](../../../research/2026-10-21/cutover-soak-review-201-research.md) | Research evidence |
 
 ## Recommended Next Action
 
