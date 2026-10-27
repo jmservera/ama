@@ -3126,6 +3126,54 @@ the model is down.
 * Not evidenced here: a screen-reader test (needs a manual run with a named reader), a live model run (no Azure
   endpoint locally) and real chat data (DPIA, lawful basis and notice references are unset, so storage stays refused).
 
+### Staff chat hardening (2026-10-27, #157)
+
+`GET /api/chat/status` returns the canonical special-category warning,
+unapproved retention status and engineering caps for permitted staff only.
+The question field remains disabled until its warning loads and uses
+`aria-describedby`. A failed fetch has an explicit ordinary-workflow route.
+Refusals announce the human route, not a misleading model-outage message.
+
+Both `/ask` and legacy `/messages` use the cited panel; `/messages` retains
+`reply`, `label`, `model` and `withheld` and adds the panel fields. Legacy
+uncited answers and memory prompting are intentionally removed from that HTTP
+route. Direct memory lifecycle/assembly remains separately testable and off by
+default; neither HTTP route activates it. Sources are complete JSON, bounded
+to 16,000 combined system/prompt characters, with at most 12 user questions /
+4,000 history characters and a 1,000-character new question. Oversize returns
+workflow-only. There is one provider attempt, no retries, default 600 output
+tokens. These caps do not approve role budgets, token prices, spend or expiry.
+
+`ChatModel` requires admission before and after dispatch. The server requires
+registered live authority and the existing continuity/release gate. No approved
+conversational task/release exists, so general staff model calls remain denied;
+synthetic privacy references cannot enable them. The regulatory offline
+extractive path and independent proposal-review path are unchanged.
+
+Each turn returns `consumption` and records one content-free `chat.turn` audit
+event with calls, validated tokens or null/Unknown, outcome and bounds. A
+post-call permission/case/thread rejection still records incurred consumption
+but releases no answer. Changed projected sources withhold the completion.
+Decoded answer text is checked for tool syntax as well as the raw JSON.
+Consumption accounting is not a transactional exactly-once billing system:
+process/storage failure remains an operational reconciliation requirement.
+
+Local Chromium covers warning fetch failure, keyboard disclosure/submission,
+focus return, refusal status, live-log attributes and 390px visibility:
+
+```bash
+# From src/api, after pip editable installs:
+ZF_BROWSER_TESTS=1 PYTHONPATH=tests:../core/tests:../agents/tests \
+  python3 -m unittest test_chat_panel.PanelTests.test_browser_warning_failure_keyboard_refusal_and_live_log -q
+```
+
+Default unit discovery skips this optional browser method; explicit execution
+requires installed Chromium. This is not a named human screen-reader test or
+complete WCAG acceptance. DPO/Legal/provider/retention/access decisions,
+independent held-out/serving-model/human evaluation, approved thresholds and
+finite role budgets remain blockers. All five issues remain Refs, including
+parent stabilization #440.
+
 ## Configuration
 
 | Variable | Purpose |

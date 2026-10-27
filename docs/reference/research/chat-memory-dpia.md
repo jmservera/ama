@@ -20,7 +20,7 @@ tests completes this DPIA or authorizes actual staff/resident processing.
 Limits of this change, stated plainly:
 
 * The model provider data handling position is not recorded. The Azure OpenAI terms were not retrieved, so nothing here says what the provider retains or monitors.
-* The regulatory panel now displays `WARNING` beside its question field and
+* The regulatory and general staff panels display `WARNING` beside their question fields and
   reports unknown or simulated retention. This does not establish comprehension
   or consent, and masking remains best effort.
 * Lawful basis, staff notice and the DPIA decision are unrecorded and stay with the DPO (Juan Manuel Servera).
@@ -77,7 +77,9 @@ not verified here.
 ## Free text warning and redaction
 
 The UI must show `chat_privacy.WARNING` beside every free-text field. The regulatory
-question field does so; other surfaces require separate verification. Messages
+question field does so. The general staff question field now obtains it from
+`GET /api/chat/status`, associates it through `aria-describedby`, and blocks
+entry while loading or on failure. Other surfaces require separate verification. Messages
 are masked for emails, phone numbers, National Insurance numbers, postcodes and
 special-category cue words before storage. Memory containing a cue word is
 refused, not masked. Masking is best effort and cannot prove absence.
@@ -103,10 +105,50 @@ references. An administrator can switch memory off globally or per task (`chat_m
 * Retrieve and record current Microsoft Azure OpenAI data handling, abuse-monitoring and region terms.
 * Rights request intake process and deadlines.
 * Model provider data handling is not recorded; retrieval of the terms stays open.
-* Verify warnings, redaction and comprehension across all other chat/memory
-  surfaces; the regulatory panel alone is covered by this update.
+* Verify warning comprehension and other chat/memory surfaces. General staff
+  panel warning/failure/keyboard DOM behavior is covered locally, not through
+  a human screen-reader or comprehension exercise.
 * Confirm audit ledger metadata retention.
 * Dependencies #120 and #121 were not assessed here.
+
+## Staff Chat Engineering Boundary (2026-10-27, Refs #157/#162/#159/#164/#163)
+
+This is an implementation update to a draft, not a DPO/Legal decision or a
+current-law review. Logical Azure SQL/uksouth locations in the data map remain
+architecture targets, not deployment or provider-processing evidence from this
+local-only work.
+
+Both general staff HTTP turn routes now use the same cited panel. They send
+only bounded own-user question history and currently projected case facts;
+neither sends retained memory or prior assistant claims. The existing direct
+memory assembly/lifecycle is separately tested, not activated by these routes.
+The agents adapter requires server-owned admission before and after a call.
+The conversational task has no approved registry/release entry, so the API
+denies model dispatch even if synthetic privacy references exist.
+
+One metadata-only `chat.turn` audit event records calls, validated token counts
+or Unknown, provider/turn outcome and engineering bounds. It contains no question,
+answer, source excerpt, memory or raw provider error. It survives a rejected
+completion, including revoked access or deleted thread/case. Linkable user/thread
+IDs are still potentially personal data; this is not permission for monitoring,
+aggregate performance use, indefinite retention or a new erasure exception.
+User deletion continues to leave the existing ledger intact; DPO reconciliation
+of ledger, backup and content retention remains necessary.
+
+Engineering caps are one call, zero retries, default 600 output tokens,
+16,000 combined system/prompt characters, 4,000 history characters from at most
+12 user messages and 1,000 characters for a new question. Oversize uses the
+ordinary workflow. These are not approved per-role token/budget/expiry limits,
+and character counts do not claim tokenizer equivalence. Prices, full review
+effort, provider terms, lawful basis, actual notice approval and retention
+remain Unknown. No live model call, personal-data processing approval or new
+retention period is delivered.
+
+The local scripted development evaluation still exposes unsupported claims
+with valid citation IDs. Poisoning/injection regressions do not establish
+serving-model or human effectiveness. Activation remains fail/disabled.
+See the [API engineering contract](../../../src/api/README.md#staff-chat-hardening-2026-10-27-157)
+and [evaluation reporting](../../../src/agents/README.md#chat-consumption-evidence-2026-10-27-164).
 
 ## Regulatory Assistant DPIA Draft for DPO Review (2026-10-16, Refs #217)
 

@@ -1,15 +1,18 @@
 """Model adapter for the conversation panel: the agents side of issue #159.
 
-The panel (core `chat_panel`) calls an injected `(system, prompt) -> text`
+The panel (core `chat_panel`) calls an injected `(system, prompt) -> ModelReply`
 function. This adapter turns the bounded `AgentWorker.provider_call` envelope
-into that function. It has no database, blob or Key Vault access (ADR 0001),
+into that function without dropping per-call usage. Admission is server owned
+and denied by default. It has no database, blob or Key Vault access (ADR 0001),
 never raises provider text, and signals every failure with `ModelUnavailable`
 so the panel can fall back to workflow-only handling.
 """
 
 from __future__ import annotations
 
-from zava_forward.core.chat_panel import ModelUnavailable
+from collections.abc import Callable
+
+from zava_forward.core.chat_panel import ModelReply, ModelUnavailable, valid_usage
 
 from zava_forward.agents.dispatch import AgentWorker
 
@@ -25,17 +28,27 @@ class ChatModel:
         worker: AgentWorker,
         max_tokens: int = CHAT_MAX_TOKENS,
         timeout: int = CHAT_TIMEOUT,
+        admission: Callable[[], str | None] | None = None,
     ) -> None:
         self.worker = worker
         self.max_tokens = max_tokens
         self.timeout = timeout
+        self.admission = admission
 
-    def __call__(self, system: str, prompt: str) -> str:
+    def __call__(self, system: str, prompt: str) -> ModelReply:
+        if self.admission is None or self.admission():
+            raise ModelUnavailable("activation-not-approved")
         envelope = self.worker.provider_call(system, prompt, self.max_tokens, self.timeout)
+        usage = valid_usage(envelope.get("usage"))
+        calls = 0 if envelope.get("outcome") == "disabled" else 1
+        if self.admission():
+            raise ModelUnavailable("activation-revoked", calls=calls, usage=usage)
         text = envelope.get("text")
         if envelope.get("outcome") != "returned" or not isinstance(text, str) or not text.strip():
-            raise ModelUnavailable(str(envelope.get("outcome") or "unavailable"))
-        return text
+            outcome = envelope.get("outcome")
+            safe = outcome if outcome in ("timeout", "disabled") else "provider-unavailable"
+            raise ModelUnavailable(safe, calls=calls, usage=usage)
+        return ModelReply(text, usage, calls)
 
 
 __all__ = ["ChatModel"]

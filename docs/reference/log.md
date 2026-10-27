@@ -8104,3 +8104,21 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   #440 remain unmet. Publication is separately blocked by the mandatory
   full-gate requirement versus the caller's explicit no-full-gate limit.
   No cloud deployment, model call, private dataset access or approval occurred.
+## [2026-10-27] query | Bounded staff chat and draft privacy evidence
+
+* Updated [DPIA draft](./research/chat-memory-dpia.md) and its index entry:
+  general staff warning is now server-sourced and described at the question,
+  both HTTP turn routes share cited/refusal/admission handling, and neither
+  prompts retained memory before its human decision.
+* Added bounded context and content-free per-turn usage evidence to the
+  [API contract](../../src/api/README.md#staff-chat-hardening-2026-10-27-157)
+  and [shared evaluator](../../src/agents/README.md#chat-consumption-evidence-2026-10-27-164).
+  Reconciled ADR 0004's stale no-implementation statement without changing its
+  accepted direction or granting activation.
+* Local scripted poisoning/injection coverage and Chromium DOM/keyboard checks
+  are engineering evidence, not independent human, serving-model or legal
+  acceptance. The known unsupported-claim/valid-citation failure stays visible.
+* No retention number, lawful basis, staff-notice/DPIA approval, provider
+  transfer position, break-glass policy, threshold or role budget is invented.
+  #157/#162/#159/#164/#163 remain Refs; #440 stabilization and human decisions
+  prevent whole-parent acceptance.

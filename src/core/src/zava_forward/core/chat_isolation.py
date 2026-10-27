@@ -45,8 +45,8 @@ def neutralise(text, limit=2000):
     return text.replace(OPEN, "< <UNTRUSTED").replace(CLOSE, "UNTRUSTED > >")
 
 
-def block(label, text):
-    return f"{OPEN} {label}\n{neutralise(text)}\n{CLOSE}"
+def block(label, text, limit=2000):
+    return f"{OPEN} {label}\n{neutralise(text, limit)}\n{CLOSE}"
 
 
 class ChatIsolation:
