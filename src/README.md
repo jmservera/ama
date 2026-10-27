@@ -47,8 +47,10 @@ Regenerate hashed requirements with `pip-compile --generate-hashes --no-emit-ind
 
 ### Local RPI gate
 
-Targeted commands above support development; they do not replace the complete
-pre-push gate, including for documentation-only issues. Finish implementation
+Owner policy (2026-10-27): small issues, tooling and documentation use planned
+unit and focused tests, with hosted CI still required. Big features, releases,
+infrastructure, deployment, SQL and security changes require the complete gate.
+Do not treat a partial receipt as full-tier evidence. Finish implementation
 and the original RPI Review, commit the candidate and dated evidence, then run
 from the repository root with Python 3.12, Node, Docker, Azure CLI/offline Bicep,
 actionlint, ShellCheck and Trivy 0.76.0 available on PATH:
@@ -56,9 +58,36 @@ actionlint, ShellCheck and Trivy 0.76.0 available on PATH:
 ```bash
 git fetch origin main
 BASE_SHA=$(git rev-parse origin/main)
-python3 tools/rpi-checks.py --all --base "$BASE_SHA" --out /tmp/rpi-ISSUE-final
+python3 tools/rpi-checks.py --all --jobs 3 --base "$BASE_SHA" --out /tmp/rpi-ISSUE-final
 python3 tools/rpi-checks.py --verify-receipt /tmp/rpi-ISSUE-final/receipt.json --base "$BASE_SHA"
 ```
+
+For small issues, the conservative changed-path tier maps the committed
+`base...HEAD` diff to checks and transitive prerequisites. Unknown paths fall
+back to the full matrix; inspect the selection before execution when full work
+is not authorized. Documentation selects static checks plus their namespace
+bootstrap; runner/tests also select focused tooling lint/types. Runtime/build
+inputs select consumer images, and store/schema/SQL inputs select real SQL.
+All selected checks retain their original contracts.
+
+```bash
+python3 tools/rpi-checks.py --changed --jobs 3 --base "$BASE_SHA" --out /tmp/rpi-ISSUE-fast
+python3 tools/rpi-checks.py --verify-receipt /tmp/rpi-ISSUE-fast/receipt.json \
+  --required-scope partial --base "$BASE_SHA"
+python3 tools/rpi-checks.py --resume /tmp/rpi-ISSUE-fast/receipt.json \
+  --jobs 3 --base "$BASE_SHA" --out /tmp/rpi-ISSUE-retry
+```
+
+Resume is only for a failed receipt at the exact same clean commit/base and
+tool identity, not for a fix committed afterward. It verifies successful
+parent groups in their original external directories and reruns failed/unrun
+groups through trusted dispatch, with fresh prerequisite setup where needed.
+Keep all parent directories, logs, environments and images unchanged. A new
+attempt records the parent receipt hash; prior adverse evidence is immutable.
+Missing checkpoints, changed evidence or failed cleanup block resume.
+Schema-4 receipts bind their full/partial scope and recomputed path selection.
+Verification defaults to requiring full coverage; `--required-scope partial`
+explicitly accepts partial coverage and never upgrades it to a full claim.
 
 Use a new external output directory for every run; never overwrite a failed
 receipt. The runner tests a fresh detached exact-HEAD checkout, installs each
@@ -70,8 +99,12 @@ real SQL Server selectors, four Docker contracts and a separate logo-mode
 stress build, fixable HIGH/CRITICAL Trivy gates, full reports and SPDX.
 No app data or credential environment is inherited. SQL tests drop tables:
 the runner accepts only its own labelled local container and random loopback
-port, never a configured database. It serializes heavy work with the shared
-`/tmp/ama-rpi-heavy.lock` and cleans only its owned resources.
+port, never a configured database. It serializes gates with the shared `/tmp/ama-rpi-heavy.lock`, bounds independent
+workers by CPU affinity/quota and host/cgroup memory (two CPUs/four GiB per
+worker plus one GiB headroom), and serializes SQL/image work and shared-venv
+mutations. Editable setup precedes snapshot readers. It cleans only its owned
+containers and checkout; retain verification images until receipt verification
+has succeeded.
 
 Install missing prerequisites from trusted pinned sources after an actual
 missing-tool/dependency result; preserve project pins. No uv, remote model or
@@ -100,7 +133,7 @@ verification; a matching receipt sidecar does not establish executable trust.
 Keep the authoritative receipt outside git to avoid self-reference. It binds
 HEAD/tree/base, matrix/helper/tool/package identities, command logs, images and
 fresh scan DB metadata. A committed evidence copy is historical. Every later
-commit, correction or rebase requires a full new run, as does a changed base or
+commit, correction or rebase requires a new selected-tier run, as does a changed base or
 relevant tool/image identity. Dirty, untracked and ignored candidate inputs are
 refused. Fetch main again and verify immediately before independent exact-head
 review and push; if it moved, reconcile under the issue's approved RPI scope

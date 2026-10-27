@@ -1,0 +1,40 @@
+{
+  "task_id": "470",
+  "task_slug": "faster-gate-470",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-27/faster-gate-470-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-27/faster-gate-470-plan.md",
+    "details": ".copilot-tracking/details/2026-10-27/faster-gate-470-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-10-27/faster-gate-470-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-27/faster-gate-470-changes.md",
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run research, plan, implement, review in order; publish tooling PR with focused tests and one measured fast tier, never run full gate",
+      "status": "owner-confirmed",
+      "evidence": "User request 2026-10-27"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready",
+      "status": "complete",
+      "evidence": ".copilot-tracking/research/2026-10-27/faster-gate-470-research.md"
+    },
+    {
+      "decision": "Single critique executed: Revise; PC-001 through PC-006 directly applied; plan Ready",
+      "status": "resolved",
+      "evidence": ".copilot-tracking/plans/2026-10-27/faster-gate-470-plan.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Implement",
+    "action": "Activate rpi-implement and execute P01/P02 without a full gate"
+  },
+  "prioritized_follow_ups": []
+}

@@ -23,8 +23,10 @@ Invoking this agent is the owner's explicit permission for the actions below,
 limited to pull requests that this run opened or adopted. It is the only
 exception to the repository rule that the owner decides merges.
 
-* Merge a pull request into `main` through the merge gate in step 7.
-* Rebase a run-owned branch onto `main` and push it with `--force-with-lease`.
+* Merge a pull request into its declared target (`main`, or the parent topic
+  for a stacked child) through the merge gate in step 7.
+* Rebase a run-owned branch onto its target base (`main`, or the declared
+  parent topic for a stacked child) and push it with `--force-with-lease`.
 * Remove the worktrees and local branches the run created.
 * Set the Status field of run-owned issues on the owner's project board (see
   Project board status).
@@ -126,6 +128,48 @@ treated as delivery failure.
 
 ## Workflow
 
+### Local validation tiers
+
+Select and record the tier and rationale in the issue brief, RPI plan and
+candidate handoff. This owner-selected policy replaces the former blanket
+full-local-gate requirement for this coordinator's work.
+
+* Full: big features, releases, infrastructure, deployment, SQL or
+  security-sensitive changes require the complete local gate and a verified
+  external full receipt. Size alone cannot downgrade a change in these areas.
+* Focused: small issues, tooling and documentation changes outside the full
+  categories require relevant unit and focused tests only. Record commands,
+  results and justified non-applicability; do not require heavy full-gate
+  services or a full receipt for this tier.
+
+Reassess the tier when scope changes; mixed work takes the full tier if any
+part requires it. Both tiers retain the complete RPI loop, independent
+exact-head review, required hosted CI, failure handling and human approvals.
+No failing or missing check within the selected tier can be waived by using
+the other tier or by a green result elsewhere.
+
+For the full tier, commit implementation and original dated RPI evidence,
+then run `python3 tools/rpi-checks.py --all --base <current-origin-main-sha>
+--out <new-external-directory>`. The runner's reviewed base remains current
+`origin/main`, including for a stacked child: its receipt covers the whole
+candidate stack from main. Independently review the child's diff against its
+declared parent topic as well. Keep the authoritative receipt external; committed copies are
+historical. Verify it with `python3 tools/rpi-checks.py --verify-receipt
+<external-receipt.json> --base <current-origin-main-sha>` immediately before
+publication and independent exact-head assessment. Verification defaults to
+full scope; never use partial evidence to satisfy the full tier.
+
+Focused runs may use `--changed --jobs N` for affected-project checks with
+bounded parallelism; select N for available resources. When a focused run
+produces a partial receipt, verify it with `--required-scope partial` and
+check the recorded scope against the planned unit and focused tests. That
+option does not downgrade a full-tier requirement or replace omitted tests.
+To resume a failed run, use `--resume FAILED_RECEIPT` with a new `--out`
+directory; preserve the immutable parent receipt and adverse evidence.
+Retain verification images until `--verify-receipt` succeeds; do not remove
+them during candidate preparation or before verification. Later cleanup
+remains subject to the tracking retention policy.
+
 1. **Review the backlog.** Dispatch `hve-core-all:github-backlog-manager` in
    review mode over the issue set. Require each issue to have a clear scope,
    testable acceptance criteria and explicit dependencies or parent and
@@ -137,7 +181,13 @@ treated as delivery failure.
 2. **Build the dependency graph.** Record nodes and edges in the session SQL
    `todos` and `todo_deps` tables. Treat only explicit "blocked by" or dependency
    links and confirmed implementation or file overlap as ordering edges. Record
-   parent and sub-issue links as hierarchy metadata, not ordering. Where scope overlap is
+   parent and sub-issue links as hierarchy metadata, not sibling ordering.
+   For a parent with sub-issues, plan a deliberate stack: create the parent
+   topic as the integration branch, base child branches on it, target child
+   PRs at the parent topic and declare that dependency in each PR. The
+   integration parent PR targets `main`. Parent integration waits for its
+   required children and acceptance evidence; hierarchy alone does not
+   serialize otherwise independent children. Where scope overlap is
    possible but undeclared, add an edge or flag it rather than assume
    independence. A dependency cycle is a human blocker for its members and their
    dependants only; ledger it and continue every other node.
@@ -151,15 +201,20 @@ treated as delivery failure.
    matrix (#197) as migrate or rebuild. A merged feature that cannot be moved
    cleanly is reopened with a comment and rebuilt in `src/`, with the issue's
    acceptance criteria unchanged.
-3. **Select waves.** Wave 1 holds issues with no unmerged dependencies. Each
-   later wave holds issues whose dependencies are merged. Run a wave in
-   parallel up to the parallel limit; sequence the rest.
+3. **Select waves.** Wave 1 holds issues with no unmerged implementation
+   dependencies. Each later wave holds issues whose dependencies are merged
+   into their intended target. A stacked child may start once its parent
+   topic exists and its implementation dependencies are satisfied; the
+   declared parent dependency does not require the parent to merge to `main`
+   first. Run a wave in parallel up to the parallel limit; sequence the rest.
 4. **Isolate each issue.** Run `git fetch origin main` before each wave and
    record the resolved base SHA. For each issue in the wave:
    `git worktree add ../ama-wt/issue-{number} -b {type}/{short-description} {base-sha}`
-   with `{type}` the Conventional Commit type. For a dependent issue, base the
-   branch on the merged `main`, never on an unmerged sibling, unless the owner
-   approves deliberate stacking and the PR declares the parent.
+   with `{type}` the Conventional Commit type. For a stacked child, fetch
+   and record the parent topic SHA and use it as `{base-sha}` instead;
+   preserve the child PR target and declared dependency. Other dependent
+   issues base on merged `main`, not an unmerged sibling, unless the owner
+   separately approves a declared stack.
 5. **Run one RPI loop per issue.** Start one Copilot CLI session per
    worktree inside its own named tmux session, with the agent and the issue
    brief passed as parameters. Write the brief to
@@ -182,44 +237,50 @@ treated as delivery failure.
    Session names are unique per issue and a retry reuses the name only after
    the old session is gone.
    The brief carries the issue text, acceptance criteria, branch, worktree path,
-   repository conventions and the instruction to validate with the complete
-   local gate, commit with the Conventional Commit trailer rules and return a
-   clean frozen local candidate with its external receipt. The coordinator
+   repository conventions, selected validation tier and rationale, test plan,
+   target branch and dependency, and the instruction to commit with the
+   Conventional Commit trailer rules and return a clean frozen local
+   candidate with its tier-specific evidence (including an external full
+   receipt when full tier applies). The coordinator
    independently assesses that exact head before authorizing publication in
    step 6. The eventual PR links the issue (`Closes #{number}` only when all
-   acceptance criteria are met) and states evidence and validation. The brief
+   acceptance criteria are met; otherwise use `Refs #{number}`) and states
+   evidence and validation. Stacked child PRs use `Refs #{number}` for issues
+   kept open pending integration or unmet criteria. The brief
    must open with the instruction to run the
    full RPI loop, in order: research, plan, implement, review, each writing its
    dated artifacts under `.copilot-tracking/` (research, plans and details,
    changes, reviews) for that issue. Passing `--agent` only preloads the agent;
    a session can still skip the loop and edit files directly, so the brief
    states the loop and the required artifacts explicitly.
-   The brief requires the complete [local gate](../../src/README.md#local-rpi-gate)
-   before every push, including documentation-only work. After implementation
-   and the original RPI Review, commit the dated artifacts and candidate, then
-   run `python3 tools/rpi-checks.py --all --base <reviewed-main-sha>
-   --out <new-external-directory>`. It covers all five isolated source projects,
-   infrastructure, actual disposable SQL, Chromium/axe, migration, four images,
-   logo stress, scans and SPDX. Issue-specific checks use reviewed
+   The brief applies Local validation tiers before every push. For the full
+   tier, the complete [local gate](../../src/README.md#local-rpi-gate) covers
+   all five isolated source projects, infrastructure, actual disposable SQL,
+   Chromium/axe, migration, four images, logo stress, scans and SPDX.
+   Focused-tier work runs its planned unit and focused checks without this
+   heavy-service requirement. Issue-specific checks use reviewed
    `--extra-test PROJECT:test_module.Class.method` selectors or separately
    recorded planned checks, never commands imported from receipt content.
    Use the shared heavy-resource lock; do not run additional heavy gates
-   outside it. Missing tools, unexpected skips, failed scanners/databases or
-   local resource failures block publication, not trigger a cloud fallback.
+   outside it. Missing prerequisites, unexpected skips, failed checks or
+   local resource failures within the selected tier block publication, not
+   trigger a cloud fallback. For full tier this includes scanners/databases.
    Real AI, Azure/OIDC, protected what-if and deployment acceptance remain
    separate owner-authorized gates; this local gate grants no cloud authority.
-   Keep the authoritative receipt external. Any committed evidence copy is
-   historical: every subsequent commit, correction, rebase or changed base
-   requires a new full run on the final exact HEAD. Never overwrite adverse
-   receipts or fabricate check contexts. Each loop keeps its
+   Every subsequent commit, correction, rebase or changed base requires
+   refreshed selected-tier validation on the final exact HEAD; full tier
+   requires a new full receipt. Changed source/tool/image inputs invalidate
+   receipt evidence as well. Never overwrite adverse receipts or fabricate
+   check contexts. Each loop keeps its
    own `.copilot-tracking/` per worktree; do not share tracking state between
    worktrees. The RPI artifacts are part of the delivery: commit them on the
    issue branch and publish them in the eventual same PR (the repository already tracks
    `.copilot-tracking/`). Never commit secrets or unrelated tracking files from
    other work. Set the issue to In progress on the
    board when the loop starts and to In review when its PR opens. Track each session's tmux name, log
-   and required outputs: a frozen clean commit, complete local receipt,
-   original RPI artifacts and validation evidence.
+   and required outputs: a frozen clean commit, original RPI artifacts and
+   selected-tier validation evidence, plus a verified external full receipt
+   when full tier applies.
    A session that fails to start, exits without them or hangs is retried once
    in the same worktree, then becomes a human blocker with its log path. Do not hold a long
    blocking loop or sleep while sessions run. After launching a wave, register
@@ -249,11 +310,15 @@ treated as delivery failure.
    artifacts after the fact to satisfy the check.
 6. **Review each candidate independently before publishing.** Preserve the
    issue loop's original RPI Review, including adverse findings. Fetch main
-   and verify the clean final candidate with
-   `python3 tools/rpi-checks.py --verify-receipt <external-receipt.json>
-   --base <current-origin-main-sha>` before independent exact-head assessment.
-   A dirty/untracked/ignored input, changed source/base/tool/image or invalid
-   receipt blocks review/push handoff. Independently assess the actual diff
+   and the target parent topic when stacked. For full tier, verify the clean
+   final candidate's full receipt as specified in Local validation tiers
+   before independent exact-head assessment. A dirty/untracked/ignored
+   input, changed source/base/tool/image or invalid receipt blocks that
+   full-tier review/push handoff. For focused tier, require a clean frozen
+   candidate and current planned unit/focused results against the actual head
+   and target base; verify any partial receipt under the focused-scope rule.
+   Missing or failing selected-tier evidence blocks publication.
+   Independently assess the actual diff
    and complete execution evidence, not only the loop's summary. Push/open or
    update the PR only after this gate and the owner's publication boundary
    permit it. An explicit local-only handoff ends with a frozen clean candidate,
@@ -264,10 +329,13 @@ treated as delivery failure.
    issue's loop as commits on the same branch, up to two correction cycles.
    Do not mark review checkboxes.
 7. **Automerge through the gate.** Merge a PR only when all of these hold,
-   verified by commands run now: every dependency is merged, the PR is
+   verified by commands run now: every implementation dependency is merged
+   into its intended target (the declared parent-topic dependency of a child
+   is satisfied by the stack conditions in step 3), the PR is
    `MERGEABLE`, no required or reported check has failed or is pending
    (`gh pr checks`; only explained, policy-allowed skips are acceptable),
-   the local receipt still verifies for the exact PR head and current main,
+   the selected-tier validation is current for the exact PR head and target
+   base (including a verifying full receipt when full tier applies),
    the independent assessment is current, the latest review verdict is
    Pass with no open blocking finding, the PR links its issue, it touches no
    human blocker, and the RPI evidence check below passes. RPI evidence check:
@@ -279,28 +347,38 @@ treated as delivery failure.
    green. When `allow_auto_merge` is true, run
    `gh pr merge {n} --auto --squash`; otherwise wait for green checks and run
    `gh pr merge {n} --squash --delete-branch`. Merge in dependency order, one at a time, and
-   run `git fetch origin main` and re-run the gate after each merge because
-   `main` moved. After a merge,
+   fetch the affected target and re-run the selected-tier gate after each
+   merge because its base moved. Keep a parent topic while child PRs still
+   depend on it. Recheck the integrated parent candidate and its own tier
+   before merging it to `main`; child validation does not substitute for
+   parent integration validation. After a merge,
    confirm the issue state and keep an issue open when the PR records unmet
    criteria. GitHub auto-closes an issue when the PR body contains any close,
    fix or resolve keyword followed by `#{number}`, even negated ("does not close
    #86" closed #86). Before merging, check `gh pr view {n} --json
-   closingIssuesReferences` and remove the keyword when acceptance is unmet; after
+   closingIssuesReferences` and replace closing references with
+   `Refs #{number}` for kept-open or unmet issues; after
    merging, reopen any issue that closed with unmet criteria and comment why. Set the board status to Done for a closed issue; for a reopened or
    kept-open issue, set it per the reopened row and comment why.
 8. **Rebase overlapping PRs.** After each merge, check every remaining open
    run-owned PR for conflicts or a stale base. Rebase the branch onto the new
-   `origin/main` in its own worktree, resolve conflicts preserving both
+   target base (`origin/main`, or the declared parent topic for a stacked
+   child) in its own worktree, resolve conflicts preserving both
    changes' intent (append-only files such as the knowledge-base log keep both
    entries), rerun the validation, and push with `--force-with-lease`. If
    intent cannot be reconciled, treat it as a human blocker for that PR.
-   A correction or rebase invalidates the local receipt and independent
-   assessment: rerun the full gate and assess the resulting exact HEAD before
-   any further push. Unknown protection/ruleset mapping and missing retained
+   A correction or rebase invalidates validation evidence and independent
+   assessment: rerun selected-tier checks and assess the resulting exact
+   HEAD before any further push. Full tier requires a new full receipt and
+   successful verification; focused tier requires refreshed unit/focused
+   evidence, not an unconditional full receipt. Reassess tier if scope
+   changes. Do not silently retarget a stacked child to `main`; after parent
+   integration, re-evaluate and declare any target/dependency update.
+   Unknown protection/ruleset mapping and missing retained
    hosted checks remain owner gates; disabled legacy workflows are not test
    coverage or green required contexts.
-9. **Loop.** Return to step 3 with the new `main`. Start every newly
-   unblocked issue in parallel while blocked ones wait, and refresh the
+9. **Loop.** Return to step 3 with the updated `main` or parent topic. Start
+   every newly unblocked issue in parallel while blocked ones wait, and refresh the
    blocker ledger. End the loop when all issues are merged or blocked, or a
    limit is reached.
 10. **Clean up.** After a PR merges, remove its worktree with
