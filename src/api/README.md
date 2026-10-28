@@ -44,6 +44,9 @@ Legacy generated packages without a contract version remain readable, with
 the version Unknown. This does not grant contract authority or confirm an
 appointment. Capacity load failures name the unavailable data and offer
 Try again; no failed read is treated as an empty result.
+After a save, retry reloads data only, never repeats the saved action. Repeated
+read failures keep the editable screen and unsaved appointment drafts; successful
+recovery restores other unsaved forms, including their original event/context.
 
 The focused generated-demo browser check uses fictional geography rows and a
 temporary store, never the default dataset. From the repository root, with the
@@ -60,6 +63,12 @@ container, with fresh connection settings. Do not point inherited destructive
 MSSQL suites at an existing database. The check covers seeded and empty
 capacity, each failed read/retry, transport/structured errors, expired sessions,
 navigation cancellation and the manager's actual navigation inventory.
+It checks each destination's exact heading/content and successful browser reads,
+compares rendered package/order IDs and counts to the browser responses, and
+rejects unexpected API HTTP or transport failures. A separately constructed
+fictional delegation fixture exercises real saved-form versus unsaved-form
+recovery, repeated failed retries, navigation away and session expiry after a
+save; it does not backfill authority into the legacy read-acceptance fixture.
 It is a separate required check, not automatically run by the full RPI gate.
 Local SQL Server/browser execution and post-deployment verification must be
 recorded separately; source coverage alone does not establish live acceptance.

@@ -146,17 +146,19 @@ async function capacityView() {
   if (!isManager()) return show(h("p", {}, "Only a manager sees capacity and work orders."));
   const signal = routeController.signal;
   const msg = h("div", { role: "status", "aria-live": "polite", tabindex: -1 });
-  const go = async (fn, savedForm) => {
+  const go = async (fn = async () => {}, savedForm) => {
     const button = document.activeElement;
     if (button instanceof HTMLButtonElement) { button.disabled = true; button.setAttribute("aria-busy", "true"); }
     try {
       await fn();
       if (savedForm) delete savedForm.dataset.unsaved;
+      signal.throwIfAborted();
       await capacityView();
     }
     catch (e) {
+      if (signal.aborted || !me) return;
       msg.replaceChildren(h("p", { class: "err" }, e.message));
-      if (e.capacityLoadFailure) msg.append(h("button", { type: "button", onclick: route }, "Try again"));
+      if (e.capacityLoadFailure) msg.append(h("button", { type: "button", onclick: () => go() }, "Try again"));
       msg.focus();
     }
     finally { if (button instanceof HTMLButtonElement) { button.disabled = false; button.removeAttribute("aria-busy"); } }

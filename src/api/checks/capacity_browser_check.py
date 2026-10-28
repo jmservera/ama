@@ -15,12 +15,36 @@ from http.server import ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
 from unittest.mock import patch
+from urllib.parse import parse_qs, urlsplit
 
-from playwright.sync_api import expect, sync_playwright
+from playwright.sync_api import Request, Response, Route, expect, sync_playwright
 from zava_forward.api import server
 from zava_forward.core.sqlstore import SqlStore
 
 generated = importlib.import_module("test_generated_dataset")
+fixtures = importlib.import_module("dataset")
+
+MANAGER_ROUTES = {
+    "#/": ("My cases today", ("/api/facets", "/api/cases?view=mine"), "#app .layout"),
+    "#/all": ("All open cases", ("/api/facets", "/api/cases?view=all"), "#app .layout"),
+    "#/overview": ("Overview", ("/api/stats", "/api/map"), "#mapArea"),
+    "#/visits": ("Visits coming up", ("/api/visits?view=all",), "#app .list, #app p"),
+    "#/funding": ("Funding applications", ("/api/funding",), "#app table"),
+    "#/finance": ("Finance queue", ("/api/finance",), "#app table, #app p"),
+    "#/capacity": (
+        "Capacity and work orders",
+        ("/api/packages", "/api/workorders"),
+        "#app section[aria-label^='Appointment controls for']",
+    ),
+    "#/closed": ("Closed cases", ("/api/cases?view=closed",), "#app .list, #app p"),
+    "#/assistants": (
+        "Role-owned assistant proposals",
+        ("/api/assistants/proposals",),
+        "#app button",
+    ),
+    "#/time": ("Staff time capture", ("/api/time/status",), "#app ul"),
+    "#/screens": ("Specialist screens", (), "#app > a[href='#/']"),
+}
 
 
 @contextmanager
@@ -137,15 +161,85 @@ def check(store: Any) -> None:
                     ),
                 )
                 page = context.new_page()
+                page.goto(base + "/app")
+                expect(page.locator("#email")).to_be_visible()
                 errors: list[str] = []
                 failures: list[str] = []
                 console_errors: list[str] = []
+                reads: list[Response] = []
+                posts: list[Response] = []
+                expected_failures: set[Request] = set()
+                cancelled_requests: set[Request] = set()
+                origins: dict[Request, str] = {}
+                held: list[Route] = []
+                scenario = "sign-in"
+
+                def inject(route: Route, *, status: int | None = 503) -> None:
+                    expected_failures.add(route.request)
+                    if status is None:
+                        held.append(route)
+                    elif status == 0:
+                        route.abort("failed")
+                    elif status == 503:
+                        route.fulfill(status=503, body="Unavailable")
+                    else:
+                        route.fulfill(
+                            status=status,
+                            json={
+                                "error": (
+                                    "Ask the contract manager to review access."
+                                    if status == 403
+                                    else "Session expired"
+                                )
+                            },
+                        )
+
+                page.on("request", lambda request: origins.update({request: scenario}))
                 page.on("pageerror", lambda error: errors.append(str(error)))
                 page.on(
                     "response",
                     lambda response: (
-                        failures.append(f"{response.status} {response.url.removeprefix(base)}")
-                        if response.status >= 400 and response.url.startswith(base + "/api/")
+                        reads.append(response)
+                        if response.url.startswith(base + "/api/")
+                        and response.request.method == "GET"
+                        and response.status == 200
+                        else None
+                    ),
+                )
+                page.on(
+                    "response",
+                    lambda response: (
+                        posts.append(response)
+                        if response.url.startswith(base + "/api/")
+                        and response.request.method == "POST"
+                        else None
+                    ),
+                )
+                page.on(
+                    "response",
+                    lambda response: (
+                        failures.append(
+                            f"{origins[response.request]}: "
+                            f"{response.status} {response.url.removeprefix(base)}"
+                        )
+                        if response.url.startswith(base + "/api/")
+                        and response.status >= 400
+                        and response.request not in expected_failures
+                        else None
+                    ),
+                )
+                page.on(
+                    "requestfailed",
+                    lambda request: (
+                        failures.append(
+                            f"{origins[request]}: {request.failure} "
+                            f"{request.url.removeprefix(base)}"
+                        )
+                        if request.url.startswith(base + "/api/")
+                        and request not in expected_failures
+                        and not (
+                            request in cancelled_requests and request.failure == "net::ERR_ABORTED"
+                        )
                         else None
                     ),
                 )
@@ -155,27 +249,148 @@ def check(store: Any) -> None:
                         console_errors.append(message.text)
                         if message.type == "error"
                         and message.location.get("url", "").startswith(base)
+                        and not any(
+                            request.url == message.location.get("url")
+                            for request in expected_failures
+                        )
                         else None
                     ),
                 )
-                page.goto(base + "/app")
                 page.locator("#email").fill(manager["email"])
                 page.locator("#pw").fill("synthetic-password")
                 page.locator("button[type=submit]").click()
                 expect(page.locator("#nav")).to_be_visible()
                 me = context.request.get(base + "/api/me").json()
-                for endpoint in ("packages", "workorders"):
-                    response = context.request.get(base + "/api/" + endpoint)
-                    assert response.status == 200, (endpoint, response.status)
-                    rows = response.json()
-                    assert rows, endpoint
-                    print(f"/api/{endpoint}: 200, {len(rows)} rows", flush=True)
+                page.wait_for_load_state("networkidle")
+                assert not errors, errors
+                assert not failures, failures
+                assert not console_errors, console_errors
+
+                def verify_route(href: str) -> None:
+                    heading, endpoints, content = MANAGER_ROUTES[href]
+                    expect(page.locator("#app h1")).to_have_text(heading)
+                    page.wait_for_load_state("networkidle")
+                    expect(page.locator(content).first).to_be_visible()
+                    expect(page.locator("#app [role=alert]")).to_have_count(0)
+                    expect(page.locator(f'#nav a[href="{href}"]')).to_have_attribute(
+                        "aria-current", "page"
+                    )
+                    payloads: dict[str, Any] = {}
+                    for endpoint in endpoints:
+                        target = urlsplit(endpoint)
+                        matching = [
+                            response
+                            for response in reads
+                            if urlsplit(response.url).path == target.path
+                            and all(
+                                parse_qs(urlsplit(response.url).query).get(key) == value
+                                for key, value in parse_qs(target.query).items()
+                            )
+                        ]
+                        assert matching, (
+                            href,
+                            "Missing successful browser GET",
+                            endpoint,
+                            [response.url.removeprefix(base) for response in reads],
+                        )
+                        payloads[target.path] = matching[-1].json()
+                    if href in ("#/", "#/all", "#/closed"):
+                        rows = payloads["/api/cases"]["items"]
+                        links = page.locator("#app .list > li > a.item")
+                        expect(links).to_have_count(len(rows))
+                        if rows:
+                            expect(links.first).to_contain_text(rows[0]["resident"])
+                        else:
+                            expect(
+                                page.get_by_text("No closed cases.", exact=True)
+                                if href == "#/closed"
+                                else page.locator("#app .empty")
+                            ).to_be_visible()
+                    elif href == "#/visits":
+                        rows = payloads["/api/visits"]
+                        expect(page.locator("#app .list > li")).to_have_count(len(rows))
+                        if not rows:
+                            expect(
+                                page.get_by_text("No booked visits.", exact=True)
+                            ).to_be_visible()
+                    elif href in ("#/funding", "#/finance"):
+                        rows = payloads["/api/funding" if href == "#/funding" else "/api/finance"]
+                        expect(page.locator("#app tbody > tr")).to_have_count(
+                            min(150, len(rows)) if href == "#/funding" else len(rows)
+                        )
+                        if href == "#/finance" and not rows:
+                            expect(
+                                page.get_by_text("Nothing is waiting.", exact=True)
+                            ).to_be_visible()
+                    elif href == "#/overview":
+                        expect(
+                            page.get_by_role("heading", name="Team workload", exact=True)
+                        ).to_be_visible()
+                    elif href == "#/assistants":
+                        if not payloads["/api/assistants/proposals"]["proposals"]:
+                            expect(
+                                page.get_by_text(
+                                    "No proposals in your current role and case scope. "
+                                    "Use the ordinary case controls.",
+                                    exact=True,
+                                )
+                            ).to_be_visible()
+                    elif href == "#/time":
+                        status = payloads["/api/time/status"]
+                        expect(page.locator("#app [role=status]").first).to_have_text(
+                            "Time capture is on." if status["enabled"] else status["reason"]
+                        )
+                    elif href == "#/screens":
+                        expect(
+                            page.get_by_role("link", name="Back to my work", exact=True)
+                        ).to_be_visible()
+                        if not page.locator("#app nav[aria-label='Specialist screens'] a").count():
+                            expect(
+                                page.get_by_text(
+                                    "No specialist screens are installed for your role "
+                                    "on this branch. Use your existing work list.",
+                                    exact=True,
+                                )
+                            ).to_be_visible()
+                    assert not errors, (href, errors)
+                    assert not failures, (href, failures)
+                    assert not console_errors, (href, console_errors)
 
                 def capacity() -> None:
-                    page.goto(base + "/app#/capacity")
-                    expect(
-                        page.get_by_role("heading", name="Capacity and work orders", exact=True)
-                    ).to_be_visible()
+                    nonlocal scenario
+                    scenario = "#/capacity"
+                    reads.clear()
+                    page.goto(base + f"/app?check={uuid.uuid4().hex}#/capacity")
+                    verify_route("#/capacity")
+                    packages = next(
+                        response.json()
+                        for response in reads
+                        if urlsplit(response.url).path == "/api/packages"
+                    )
+                    orders = next(
+                        response.json()
+                        for response in reads
+                        if urlsplit(response.url).path == "/api/workorders"
+                    )
+                    for package in packages:
+                        expect(
+                            page.get_by_role(
+                                "heading", name=f"{package['name']} ({package['id']})", exact=True
+                            )
+                        ).to_be_visible()
+                    rendered = (
+                        page.locator("#app section")
+                        .filter(has=page.get_by_role("heading", name="Work orders", exact=True))
+                        .locator(":scope > ul > li > strong")
+                    )
+                    assert rendered.all_text_contents() == [
+                        f"{order['id']}, version {order['version']}" for order in orders
+                    ]
+                    print(
+                        f"Capacity browser GET/render: {len(packages)} packages, "
+                        f"{len(orders)} work orders",
+                        flush=True,
+                    )
 
                 capacity()
                 expect(
@@ -188,80 +403,242 @@ def check(store: Any) -> None:
                 assert not failures, failures
 
                 for destination in me["navigation"]:
-                    errors.clear()
-                    failures.clear()
-                    console_errors.clear()
-                    page.goto(base + "/app" + destination["href"])
-                    expect(page.locator("#app h1").first).to_be_visible()
-                    page.wait_for_load_state("networkidle")
-                    assert page.locator("#app h1").first.inner_text() != "Workspace unavailable"
-                    assert not errors, (destination, errors)
-                    assert not failures, (destination, failures)
-                    assert not console_errors, (destination, console_errors)
-                    print(f"Manager route {destination['href']}: PASS", flush=True)
+                    href = destination["href"]
+                    assert href in MANAGER_ROUTES, ("Unchecked manager route", href)
+                    scenario = href
+                    reads.clear()
+                    page.goto(base + f"/app?check={uuid.uuid4().hex}" + href)
+                    verify_route(href)
+                    print(
+                        f"Manager route {href}: PASS; heading={MANAGER_ROUTES[href][0]}; "
+                        f"reads={MANAGER_ROUTES[href][1]}",
+                        flush=True,
+                    )
 
                 for endpoint, label in (("packages", "packages"), ("workorders", "work orders")):
+                    scenario = f"initial {endpoint} 503/retry"
                     pattern = base + "/api/" + endpoint
-                    page.route(pattern, lambda route: route.fulfill(status=503, body="Unavailable"))
-                    page.goto(base + "/app#/capacity")
+                    page.route(pattern, inject)
+                    page.goto(base + f"/app?check={uuid.uuid4().hex}#/capacity")
                     expect(page.get_by_role("alert")).to_contain_text(
                         f"We could not load {label}. Try again."
                     )
                     expect(page.get_by_role("alert")).not_to_contain_text("Something went wrong")
+                    page.wait_for_load_state("networkidle")
                     page.unroute(pattern)
+                    reads.clear()
                     page.get_by_role("button", name="Try again", exact=True).click()
                     expect(
                         page.get_by_role("heading", name="Capacity and work orders", exact=True)
                     ).to_be_visible()
+                    verify_route("#/capacity")
 
+                scenario = "initial transport/403"
                 pattern = base + "/api/workorders"
-                page.route(pattern, lambda route: route.abort("failed"))
-                page.goto(base + "/app#/capacity")
+                page.route(pattern, lambda route: inject(route, status=0))
+                page.goto(base + f"/app?check={uuid.uuid4().hex}#/capacity")
                 expect(page.get_by_role("alert")).to_contain_text(
                     "We could not load work orders. Try again."
                 )
                 expect(page.get_by_role("alert")).not_to_contain_text("Failed to fetch")
                 page.unroute(pattern)
-                page.route(
-                    pattern,
-                    lambda route: route.fulfill(
-                        status=403, json={"error": "Ask the contract manager to review access."}
-                    ),
-                )
+                page.route(pattern, lambda route: inject(route, status=403))
                 page.reload()
                 expect(page.get_by_role("alert")).to_contain_text(
                     "Ask the contract manager to review access."
                 )
                 page.unroute(pattern)
 
-                held: list[Any] = []
+                scenario = "initial cancellation"
+                reads.clear()
                 package_pattern = base + "/api/packages"
-                page.route(package_pattern, lambda route: held.append(route))
-                with page.expect_request(package_pattern):
-                    page.goto(base + "/app#/capacity", wait_until="domcontentloaded")
+                page.route(package_pattern, lambda route: inject(route, status=None))
+                with (
+                    page.expect_request(package_pattern),
+                    page.expect_request(base + "/api/workorders"),
+                ):
+                    page.goto(
+                        base + f"/app?check={uuid.uuid4().hex}#/capacity",
+                        wait_until="domcontentloaded",
+                    )
+                cancelled_requests.update(
+                    request
+                    for request, origin in origins.items()
+                    if origin == scenario
+                    and urlsplit(request.url).path in ("/api/packages", "/api/workorders")
+                )
                 page.evaluate("location.hash = '#/time'")
-                expect(page.locator("#app h1").first).to_be_visible()
+                expect(page.locator("#app h1")).to_have_text("Staff time capture")
                 page.wait_for_load_state("networkidle")
                 for route in held:
                     route.abort()
                 page.unroute(package_pattern)
+                verify_route("#/time")
                 expect(page.locator("#app")).not_to_contain_text("We could not load packages")
-                expect(page.locator("#app h1").first).not_to_have_text("Workspace unavailable")
+
+                order = context.request.get(base + "/api/workorders").json()[0]
+                fixtures.supplied_contract_fixture(
+                    store, order["package"], manager, order["contractor"]
+                )
+                for endpoint, label in (("packages", "packages"), ("workorders", "work orders")):
+                    capacity()
+                    scenario = f"draft-safe {endpoint} refresh/retry"
+                    saved = page.locator(f'form[data-appointment-form="{order["id"]}-configure"]')
+                    draft = page.locator(f'form[data-appointment-form="{order["id"]}-offer"]')
+                    saved.locator("..").locator("summary").click()
+                    saved.get_by_label(f"Threshold configuration evidence ({order['id']})").fill(
+                        f"SYNTHETIC {endpoint} recovery regression"
+                    )
+                    draft.locator("..").locator("summary").click()
+                    period = draft.get_by_label(f"Visit period ({order['id']})", exact=True)
+                    period.fill("Unsaved morning visit")
+                    paused = draft.get_by_label(f"Household paused ({order['id']})", exact=True)
+                    paused.check()
+                    before = draft.evaluate(
+                        "(form) => ({context: form.appointmentContext, "
+                        "event: form.elements[0].value})"
+                    )
+                    post_count = len(posts)
+                    configurations = len(
+                        store.data["procurement"].get("appointment_configurations", [])
+                    )
+                    pattern = base + "/api/" + endpoint
+                    page.route(pattern, inject)
+                    saved.get_by_role(
+                        "button", name="Record provisional threshold", exact=True
+                    ).click()
+                    status = page.locator("#app > [role=status]")
+                    expect(status).to_contain_text(f"We could not load {label}")
+                    expect(saved).not_to_have_attribute("data-unsaved", "true")
+                    expect(draft).to_have_attribute("data-unsaved", "true")
+                    period.fill("Edited while refresh unavailable")
+                    with page.expect_response(pattern) as retried:
+                        status.get_by_role("button", name="Try again", exact=True).click()
+                    assert retried.value.status == 503
+                    expect(status.get_by_role("button", name="Try again")).to_be_enabled()
+                    expect(period).to_have_value("Edited while refresh unavailable")
+                    expect(paused).to_be_checked()
+                    expect(draft.locator("..")).to_have_attribute("open", "")
+                    page.unroute(pattern)
+                    reads.clear()
+                    old_form = draft.element_handle()
+                    with (
+                        page.expect_response(base + "/api/packages") as recovered_packages,
+                        page.expect_response(base + "/api/workorders") as recovered_orders,
+                    ):
+                        status.get_by_role("button", name="Try again", exact=True).click()
+                    assert recovered_packages.value.status == 200
+                    assert recovered_orders.value.status == 200
+                    expect(status).to_be_empty()
+                    page.wait_for_function("(form) => !form.isConnected", arg=old_form)
+                    verify_route("#/capacity")
+                    expect(period).to_have_value("Edited while refresh unavailable")
+                    expect(paused).to_be_checked()
+                    expect(draft).to_have_attribute("data-unsaved", "true")
+                    expect(draft.locator("..")).to_have_attribute("open", "")
+                    assert (
+                        draft.evaluate(
+                            "(form) => ({context: form.appointmentContext, "
+                            "event: form.elements[0].value})"
+                        )
+                        == before
+                    )
+                    expect(saved).not_to_have_attribute("data-unsaved", "true")
+                    assert len(posts) == post_count + 1, posts[post_count:]
+                    assert posts[-1].status == 200
+                    assert (
+                        len(store.data["procurement"]["appointment_configurations"])
+                        == configurations + 1
+                    )
+                    print(f"{scenario}: PASS; one real POST, saved clean, other draft retained")
+                    page.once("dialog", lambda dialog: dialog.accept())
+                    page.locator('#nav a[href="#/time"]').click()
+                    expect(page.locator("#app h1")).to_have_text("Staff time capture")
+
+                for recovery in ("cancel", "401"):
+                    capacity()
+                    scenario = f"mutation-refresh {recovery}"
+                    saved = page.locator(f'form[data-appointment-form="{order["id"]}-configure"]')
+                    saved.locator("..").locator("summary").click()
+                    saved.get_by_label(f"Threshold configuration evidence ({order['id']})").fill(
+                        f"SYNTHETIC recovery {recovery}"
+                    )
+                    post_count = len(posts)
+                    held.clear()
+                    page.route(package_pattern, lambda route: inject(route, status=None))
+                    with (
+                        page.expect_request(package_pattern),
+                        page.expect_request(base + "/api/workorders"),
+                    ):
+                        saved.get_by_role(
+                            "button", name="Record provisional threshold", exact=True
+                        ).click()
+                    assert len(posts) == post_count + 1
+                    if recovery == "cancel":
+                        reads.clear()
+                        departing_requests = set(origins)
+                        cancelled_requests.update(
+                            request
+                            for request, origin in origins.items()
+                            if origin == scenario
+                            and urlsplit(request.url).path in ("/api/packages", "/api/workorders")
+                        )
+                        page.locator('#nav a[href="#/time"]').click()
+                        expect(page.locator("#app h1")).to_have_text("Staff time capture")
+                        for route in held:
+                            route.abort()
+                        page.unroute(package_pattern)
+                        verify_route("#/time")
+                        expect(page.locator("#workspace-status")).not_to_contain_text(
+                            "could not load"
+                        )
+                        assert page.locator("#app").evaluate(
+                            "(app) => app.contains(document.activeElement)"
+                        )
+                        assert not any(
+                            urlsplit(request.url).path in ("/api/packages", "/api/workorders")
+                            for request in set(origins) - departing_requests
+                        )
+                    else:
+                        for route in held:
+                            route.fulfill(status=401, json={"error": "Session expired"})
+                        page.unroute(package_pattern)
+                        expect(page.locator("#email")).to_be_visible()
+                        expect(page.locator("#app h1")).to_have_text("Sign in")
+                        expect(page.get_by_role("alert")).to_have_text(
+                            "Your session has ended. Sign in again."
+                        )
+                        expect(page.get_by_role("button", name="Try again")).to_have_count(0)
+                        expect(page.locator("#app")).to_be_focused()
+                        page.wait_for_load_state("networkidle")
+                    assert len(posts) == post_count + 1
+                    assert not errors, errors
+                    assert not failures, failures
+                    assert not console_errors, console_errors
+                    print(f"{scenario}: PASS; no stale render or mutation replay", flush=True)
+
+                page.locator("#email").fill(manager["email"])
+                page.locator("#pw").fill("synthetic-password")
+                page.locator("button[type=submit]").click()
+                expect(page.locator("#nav")).to_be_visible()
+                page.wait_for_load_state("networkidle")
 
                 with store.lock:
                     store.data["procurement"] = dict(packages=[], work_orders=[])
                     store.save()
-                capacity()
+                scenario = "empty capacity"
+                page.goto(base + f"/app?check={uuid.uuid4().hex}#/capacity")
+                expect(page.locator("#app h1")).to_have_text("Capacity and work orders")
+                page.wait_for_load_state("networkidle")
                 expect(page.get_by_text("No packages yet.", exact=True)).to_be_visible()
                 expect(page.get_by_text("No work orders yet.", exact=True)).to_be_visible()
-                page.route(
-                    pattern,
-                    lambda route: route.fulfill(status=401, json={"error": "Session expired"}),
-                )
+                page.route(pattern, lambda route: inject(route, status=401))
                 page.reload()
                 expect(page.locator("#email")).to_be_visible()
                 expect(page.locator("#app")).not_to_contain_text("We could not load work orders")
                 assert not errors, errors
+                assert not failures, failures
+                assert not console_errors, console_errors
                 print("Capacity seeded/empty, failures/retry, transport, 403, abort, 401: PASS")
             finally:
                 browser.close()
