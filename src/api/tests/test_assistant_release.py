@@ -529,7 +529,9 @@ class TaskReleaseRecord(Base):
             with store.lock:
                 old = dict(store.briefing(user), source="ai", model=store.ai.fast)
                 old.pop("release", None)
-                store._briefings[(user["code"], False)] = (store.version, old)
+                key = next(key for key, (_, cached) in store._briefings.items()
+                           if cached["record_id"] == old["record_id"])
+                store._briefings[key] = (store.version, old)
             self.assertEqual(store.briefing(user)["source"], "template")
 
     def test_current_fast_and_strong_routes_invalidate_review_and_exact_reference(self):
@@ -603,7 +605,7 @@ class TaskReleaseRecord(Base):
             db.execute("DELETE FROM assistant_releases WHERE capability='legacy:briefing'")
         denied = self.store.briefing(user)
         self.assertEqual(denied["source"], "template")
-        self.assertEqual(self.store._briefings[(user["code"], False)], (self.store.version, denied))
+        self.assertIn((self.store.version, denied), self.store._briefings.values())
         self.assertEqual(self.store.briefing(user)["source"], "template")
         self.assertEqual(calls, [])
         version = self.store.version

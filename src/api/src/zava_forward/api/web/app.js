@@ -256,14 +256,16 @@ function aiNotes(d, onDone, getText) {
 const REVIEWED = { accept: "Accepted", edit: "Edited", reject: "Rejected" };
 
 function aiBox() {
-  const box = h("section", { class: "card ai" }, h("h2", {}, "Today's briefing"), h("p", { class: "muted" }, "Reading your cases..."));
+  const number = new Intl.NumberFormat("en-GB");
+  const box = h("section", { class: "card ai", "aria-live": "polite" }, h("h2", {}, "Today's briefing"), h("p", { class: "muted" }, "Reading case summaries..."));
   const toggle = h("input", { type: "checkbox", id: "wf-mode", checked: aiMode.workflow, onchange: () => { aiMode.workflow = toggle.checked; load(); } });
   const load = () => {
     const signal = routeController.signal;
     const cancel = () => { if (briefingBox === box) briefingBox = null; };
     signal.addEventListener("abort", cancel, { once: true });
-    return api(`/api/briefing${aiMode.workflow ? "?mode=workflow" : ""}`, undefined, signal).then((b) => box.replaceChildren(h("h2", {}, "Today's briefing"), h("p", {}, b.text),
-      h("p", { class: "muted" }, `${b.label}. Suggestions only. Refreshed when your cases change.`), aiNotes(b),
+    return api(`/api/briefing${aiMode.workflow ? "?mode=workflow" : ""}`, undefined, signal).then((b) => box.replaceChildren(h("h2", {}, "Today's briefing"), h("h3", {}, b.scope_label),
+      h("p", { class: "muted" }, `${number.format(b.case_count)} permitted open ${b.case_count === 1 ? "case" : "cases"}. ${number.format(b.summary_count)} included in this summary (up to 8).`), h("p", {}, b.text),
+      h("p", { class: "muted" }, `${b.label}. Suggestions only. Refreshed when case data changes.`), aiNotes(b),
       h("p", {}, toggle, h("label", { for: "wf-mode" }, " Workflow only (no AI) for my AI requests"))))
       .catch((error) => {
         if (signal.aborted) { box.remove(); return; }

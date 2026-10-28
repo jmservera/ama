@@ -1,0 +1,86 @@
+{
+  "task_id": "employee-briefing-manager-visibility",
+  "task_slug": "employee-briefing-manager-visibility",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-28/employee-briefing-manager-visibility-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-28/employee-briefing-manager-visibility-plan.md",
+    "details": ".copilot-tracking/details/2026-10-28/employee-briefing-manager-visibility-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-28/employee-briefing-manager-visibility-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-28/employee-briefing-manager-visibility-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-28/employee-briefing-manager-visibility-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "PR #516 P04 correction committed/pushed; all three named Copilot threads replied to and resolved",
+      "status": "Observed",
+      "evidence": "7388ac91ddbe5497da0d83c5aed0e581842d7034; explicit old-head force-with-lease after rebase; reply IDs 4398998314/4398998319/4398998312, all three resolve mutations true"
+    },
+    {
+      "decision": "PR #516 P04 independent Review executed Complete; outcome Conformant, no substantive findings or blockers",
+      "status": "Complete",
+      "evidence": "Existing Review P04 appended assessment; four source hashes independently matched; core 1437/API 1148/focused 92 tests and delayed-queue browser passed"
+    },
+    {
+      "decision": "Owner explicitly authorizes finite PR #516 correction phases, commit/push with force-with-lease only after rebase, and replies/resolution of three Copilot threads",
+      "status": "Confirmed 2026-10-28",
+      "evidence": "Current user request; C11-C15 establish Research executed/complete and Planning Readiness Ready. No ongoing automatic session requested."
+    },
+    {
+      "decision": "Show all programme cases to manager roles on the briefing",
+      "status": "Owner confirmed 2026-10-28",
+      "evidence": "User request; full finite RPI loop and push/Refs PR explicitly authorized"
+    },
+    {
+      "decision": "No full --all gate; local focused checks for bounded work",
+      "status": "Owner constraint",
+      "evidence": "/tmp/brief-common.md"
+    },
+    {
+      "decision": "Research executed, Complete; Planning Readiness Ready",
+      "status": "Recorded",
+      "evidence": ".copilot-tracking/research/2026-10-28/employee-briefing-manager-visibility-research.md C1-C10"
+    },
+    {
+      "decision": "Single critique Complete; original verdict Revise. PC-001/002 applied directly, plan Ready",
+      "status": "Complete",
+      "evidence": ".copilot-tracking/plans/2026-10-28/employee-briefing-manager-visibility-plan.md Critique Disposition"
+    },
+    {
+      "decision": "Single independent Review executed Complete; outcome Conformant; no substantive findings or blockers",
+      "status": "Complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-28/employee-briefing-manager-visibility-review.md; six source hashes matched"
+    },
+    {
+      "decision": "Published implementation and original RPI evidence on topic branch; PR #516 opened against main with Refs wording",
+      "status": "Observed",
+      "evidence": "https://github.com/jmservera/ama/pull/516; implementation commit 041a13c5d49b2eb92ba0a09c7015a03d6ffbd5f7; all six reviewed source hashes match"
+    }
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Three owner-named corrections complete; later rpi-implement should address additional hosted cache-eviction thread discussion_r4398826404 before whole-PR acceptance; no automatic child work, merge or deployment"},
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Evict obsolete-version briefing cache entries",
+      "rationale": "Additional hosted finding after the requested three-thread correction: obsolete full-programme ID tuples remain resident. Bounded follow-up can release them without weakening current permission identity.",
+      "evidence": "https://github.com/jmservera/ama/pull/516#discussion_r4398826404; final remote verification at 38246dd3"
+    },
+    {
+      "rank": 2,
+      "task": "Separately authorized employee deployment and live acceptance",
+      "rationale": "Local source behavior is verified; serving revision and actual authenticated behavior remain distinct",
+      "evidence": "PR #514 residuals; original Review Plan Follow-Up Assessment"
+    },
+    {
+      "rank": 3,
+      "task": "Named user and assistive-technology validation",
+      "rationale": "Browser engineering labels and reflow do not establish human or screen-reader acceptance",
+      "evidence": "Original Review Web Guidelines Review and Plan Follow-Up Assessment"
+    }
+  ]
+}
