@@ -5,7 +5,8 @@ ms.date: 2026-10-28
 ---
 
 Task ID: employee-briefing-manager-visibility
-Status: Complete; PR https://github.com/jmservera/ama/pull/516 open.
+Status: Original delivery complete; PR #516 P04 source and validation complete,
+independent Review Complete / Conformant; publication pending.
 
 ## Executive Summary
 
@@ -14,6 +15,10 @@ programme cases. Personal assignments remain unchanged. Reuse existing roles,
 case reads, ranking, draft/release controls and role-projected status; isolate
 the cache by actor and current permission/scope context. Prove the result on
 JSON and SQLite plus a synthetic loopback browser, not Azure.
+
+The explicit review continuation corrects queue readiness, defers briefing
+projection until cache miss, and reports only the three included template
+cases. AI retains its eight-case input cap; permissions and ranking are unchanged.
 
 ## Sources
 
@@ -24,6 +29,10 @@ no whole-issue acceptance or closure.
 
 ## User Decisions and Requirements
 
+* Current owner request: rebase onto origin/main, resolve the three named Copilot
+  findings, run the four phases briefly in existing artifacts, run core/API
+  README commands, commit with Copilot trailer, push with lease after rebase,
+  reply to and resolve the three threads. Never read `.env`; no Closes wording.
 * Owner decision 2026-10-28: "Show all programme cases to manager roles on the briefing".
 * Use only existing manager role constants and existing permitted-case checks.
 * Label manager scope "All programme cases", not "your cases".
@@ -48,7 +57,9 @@ priority changes, SQL schema, deployment and whole-epic acceptance.
 
 ## Functional Requirements
 
-* FR1: existing MANAGER_ROLES select list_cases(user, "all"); others select mine.
+* FR1: existing MANAGER_ROLES select the existing permitted "all" candidates;
+  others select "mine". Use `_filtered` and existing deterministic ranking,
+  without projecting list cards before cache admission.
 * FR2: only existing briefing-permitted roles can invoke the store briefing.
 * FR3: exclude closed/unpermitted cases before ranking and the top-eight cap.
 * FR4: return scope, scope_label, case_count and summary_count; render that label
@@ -59,7 +70,7 @@ priority changes, SQL schema, deployment and whole-epic acceptance.
 
 ## Non-Functional Requirements
 
-Reuse Store.list_cases and shared inherited briefing for JSON/SQL parity.
+Reuse Store._filtered and shared inherited briefing for JSON/SQL parity.
 Keep existing Fluent semantics, native controls, human review and safe manual
 paths. No prompt template/version, dependency manifest or schema change.
 No new network/resource calls beyond the existing local test harness.
@@ -76,7 +87,9 @@ No new network/resource calls beyond the existing local test harness.
 * AC5: Programme Support Officer facts omit held private waiting text; controlled
   case data remains unchanged by briefing generation.
 * AC6: >8 open programme cases report the full eligible total but summarize only
-  ranked top eight, preserving hazard-first order.
+  ranked top eight for AI, or top three for templates, preserving hazard-first
+  order. Cache hits perform no summary/work-context projection; misses summarize
+  no more than eight regardless of candidate count.
 * AC7: actual browser sees All programme cases for both managers and My assigned
   cases for other staff; My cases queue remains personal, including empty manager.
 * AC8: required API discovery, focused core/release/role checks and browser run
@@ -129,6 +142,31 @@ Execution Complete, original verdict Revise (one High, one Medium). Original:
 
 No new user choice, test-budget increase or repeat critique. Executive summary
 remains accurate.
+
+The current three-thread correction is owner-selected routed follow-up, not a
+repeat of the original critique/Review. The one original critique remains
+unaltered; PC-001 complete-ID identity and PC-002 publication-stop requirements
+remain applicable. P04 preserves both without a new scope/architecture decision.
+
+<!-- phase:P04 -->
+## P04: Copilot review corrections
+
+* [x] P04-T01: reuse `wait_cases` before comparing rendered personal queue IDs;
+  deliberately delay `/api/cases` in the check to exercise independent loading.
+* [x] P04-T02: select/rank all permitted cases cheaply, retain full ordered IDs,
+  check cache, then project only eight summaries with current reason redaction.
+* [x] P04-T03: count `min(3, len(top))` for final template source and `len(top)`
+  for AI; update paired-store and browser assertions plus API documentation.
+* [ ] P04-T04: run focused regression then core/API discovery and browser;
+  independent correction Review, commit and publish only without open blockers.
+
+Canonical semantic owner remains TasksMixin on JSON/SQLite; no test removals,
+at most one added test method, extend existing cases for cache projection cost,
+permitted-set changes, AI and failure-template counts. Browser owner remains
+employee_briefing_browser_check; no generated assets or new tooling.
+Use planned focused-tier checks for this bounded correction per current
+src/README.md local RPI policy and the recorded owner no-full-gate constraint.
+No new full receipt, SQL Server, human or hosted acceptance is claimed.
 
 ## Follow-Up Items
 

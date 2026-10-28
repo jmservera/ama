@@ -173,3 +173,51 @@ retain their outstanding criteria; no issue closure or checklist change.
 Ready. Research disposition: executed, complete. All three waves complete,
 questions and selected approach mapped to C1-C10. No unresolved implementation
 decision. Parent proceeds to Plan under explicit full-loop user direction.
+
+## PR #516 Review Correction Intake (2026-10-28)
+
+Focused, finite Research/Plan/Implement/Review continuation explicitly requested
+by the owner; retain this task identity and all original evidence above.
+Scope: three open Copilot threads (queue readiness, briefing projection cost,
+template count). No web assets, authorization, AI activation, private data,
+`.env`, deployment or issue closure. Existing artifacts are updated in place.
+Research root remains `.copilot-tracking/research/`.
+Repository instructions and rpi-research selected; no independent research lane
+or visual/UI skill needed for Python-only changes. No interaction required:
+the owner supplied exact defects, intended behavior and publication authority.
+
+Questions: how to wait for the queue; how to retain complete permission-aware
+cache identity without projecting every case; how to distinguish AI/template
+summary counts. Planning readiness pending the focused source trace.
+
+### Correction Cycle: Wider, Deeper, Contrarian
+
+1. Wider: traced browser queue readiness, both stores' list implementations,
+   briefing/release caching and task result finalization. All three reported
+   findings are supported. The branch already contains origin/main
+   `5abc6c6b32c536ad933cd926850eb8a3d8220a77`; fresh fetch/rebase was a no-op.
+   The existing reflog records the earlier rebase. No new conflict occurred.
+2. Deeper: `_filtered` is the canonical permission-aware in-memory selection;
+   unlimited SQL reads already delegate there. Sort its complete candidates by
+   `_ranking`, retain all ordered IDs in the cache key, then summarize at most
+   eight only after cache admission fails. Briefing needs status, not expensive
+   queue/building work context. Reuse summary and the existing reason redaction.
+3. Contrarian: do not short-circuit authorization or key solely on version/top
+   eight: removing a ninth permitted case without a version change must refresh
+   the count. Keep complete source/citation provenance for all eight model input
+   cases even when a template mentions three. `finish` returns source=template
+   for late quarantine too, so count by final source, never requested mode.
+
+| ID | Evidence-backed finding | Source |
+| --- | --- | --- |
+| C11 | Queue helper waits for count and rendered status, including zero | src/api/checks/workbench_browser_check.py:69 |
+| C12 | Unlimited list projects work context for every row; building record scans all cases | src/core/src/zava_forward/core/store.py:246-319; src/core/src/zava_forward/core/sqlstore.py:927-931; src/core/src/zava_forward/core/buildings.py:36-51 |
+| C13 | Briefing checks cache after projection, selects eight, template mentions three | src/core/src/zava_forward/core/store.py:726-767 |
+| C14 | Final task source reflects provider fallback and late quarantine | src/core/src/zava_forward/core/ai_tasks.py:214-259 |
+| C15 | Existing paired-store tests cover full ordered permission identity and reason changes | src/api/tests/test_ai_tasks.py:143-225 |
+
+Selected bounded projection plus current permission selection over moving cache
+ahead of authorization. Reject global building caching or SQL schema changes:
+unnecessary to eliminate this briefing's quadratic projection. No further cycle
+needed; all three questions are answered by local source and reproducible tests.
+Research disposition: executed, complete. Planning Readiness: Ready.

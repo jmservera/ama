@@ -729,9 +729,11 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         off = ai_tasks.workflow_only(mode)
         programme = user["role"] in MANAGER_ROLES
         with self.lock:
-            rows = self.list_cases(user, "all" if programme else "mine")
+            candidates = self._filtered(user, "all" if programme else "mine", "", {})
+            ranks = self._ranking()
+            candidates.sort(key=lambda c: ranks[c["id"]]["rank"])
             key = (user["code"], user["email"], user["role"], user.get("tid"), user.get("oid"),
-                   projection.can_see_reason(user), tuple(row["id"] for row in rows), off)
+                   projection.can_see_reason(user), tuple(c["id"] for c in candidates), off)
             hit = self._briefings.get(key)
             if hit and hit[0] == self.version and (hit[1]["source"] != "ai" or
                     self.ai_epoch_current(hit[1])) and not self.continuity_suspension("briefing") and (
@@ -739,11 +741,16 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                         "briefing", hit[1].get("release"), hit[1].get("model"))):
                 return hit[1]
             ver = self.version
-            top = [self._case(row["id"]) for row in rows[:8]]
+            top = [self._case(c["id"]) for c in candidates[:8]]
             for c in top:
                 export_fields.prompt_case(c)
+            rows = [self.summary(c) for c in top]
+            if not projection.can_see_reason(user):
+                for row in rows:
+                    if row["status"].startswith("Waiting on "):
+                        row["status"] = "Waiting for the recorded next step"
             facts = "\n".join(f"{c['id']} {c['resident']['name']}: {c['stage']}, {c['days_in_stage']} days. {row['status']}"
-                              for c, row in zip(top, rows[:8]))
+                              for c, row in zip(top, rows))
             empty = "No permitted open programme cases are available." if programme else \
                 "No open cases are assigned to you. This does not mean the programme has no work."
             tmpl = "Start with: " + "; ".join(f"{c['resident']['name']} ({c['stage'].lower()}, {c['days_in_stage']} days)" for c in top[:3]) if top else empty
@@ -754,7 +761,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         self.audit(user["email"], "ai_run", "-", f"briefing source={r['source']} model={r['model']} verified={r['verified']}")
         out = dict(r, scope="programme" if programme else "assigned",
                    scope_label="All programme cases" if programme else "My assigned cases",
-                   case_count=len(rows), summary_count=len(top),
+                   case_count=len(candidates), summary_count=len(top) if r["source"] == "ai" else len(top[:3]),
                    label=("AI suggestion, not approved" if r["source"] == "ai" else "Summary by rules")
                    + ("" if r["verified"] else ". Unverified: its sources do not match the case record"))
         with self.lock:

@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from typing import Any
 
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import Route, sync_playwright
 
 from checks.design_system_browser_check import check, main
-from checks.workbench_browser_check import MANIFEST, ids, synthetic_data
+from checks.workbench_browser_check import MANIFEST, ids, synthetic_data, wait_cases
 from zava_forward.core.workflows import MANAGER_ROLES
 
 
@@ -30,6 +30,8 @@ def run_browser(base: str) -> None:
                 context.route("**/*", lambda route: route.continue_()
                               if route.request.url.startswith(base + "/") else route.abort())
                 page = context.new_page()
+                held: list[Route] = []
+                page.route("**/api/cases?**", lambda route: held.append(route))
                 errors: list[str] = []
                 page.on("pageerror", lambda error: errors.append(str(error)))
                 try:
@@ -44,6 +46,10 @@ def run_browser(base: str) -> None:
                         has=page.get_by_role("heading", name="Today's briefing", exact=True)
                     )
                     section.get_by_role("heading", name=label, exact=True).wait_for()
+                    check(f"{role['role']} briefing loads independently of queue", len(held) == 1)
+                    held[0].continue_()
+                    page.unroute("**/api/cases?**")
+                    wait_cases(page, len(role["ids"]))
                     response = page.request.get(base + "/api/briefing?mode=workflow")
                     check(f"{role['role']} briefing request authorized", response.status == 200)
                     briefing = response.json()
@@ -52,7 +58,7 @@ def run_browser(base: str) -> None:
                           briefing["scope_label"] == label and briefing["case_count"] == expected)
                     check(f"{role['role']} renders programme/personal scope",
                           f"{expected} permitted open" in section.inner_text()
-                          and f"{expected} included in this summary" in section.inner_text())
+                          and f"{min(expected, 3)} included in this summary" in section.inner_text())
                     check(f"{role['role']} retains exact personal queue", ids(page) == role["ids"])
                     if manager:
                         check(f"{role['role']} briefing does not claim personal cases",

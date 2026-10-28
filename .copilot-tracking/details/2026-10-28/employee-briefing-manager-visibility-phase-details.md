@@ -5,6 +5,9 @@ ms.date: 2026-10-28
 ---
 
 Task ID: employee-briefing-manager-visibility
+Current continuation: P04-T01/T02/T03 complete; T04 validation complete,
+independent Review Complete / Conformant, publication pending. No blockers.
+Original P01-P03 evidence below is historical.
 Status: P01-P03 complete; original Review Complete / Conformant; PR #516 open.
 Readiness: research C1-C10 resolves role, permission, projection and fixture questions.
 No new owner decision needed. Owner authorizes all four finite phases.
@@ -114,3 +117,47 @@ Commits and required Copilot trailer; resolve privacy-safe identity with gh.
 Fetch main before publication; do not rebase/rewrite or push main. Inspect exact
 head/diff and report hosted/human checks as pending. Open one Refs PR with
 test/browser evidence and explicit no-deployment/no-full-gate boundary.
+
+<!-- phase:P04 -->
+## P04: Copilot review corrections
+
+<!-- task:P04-T01 -->
+### P04-T01
+
+Import existing `wait_cases` and call with the expected personal queue length
+before exact IDs/empty text checks. Delay only the initial `/api/cases` response
+in the synthetic browser harness so the test actually covers separate loads.
+
+<!-- task:P04-T02 -->
+### P04-T02
+
+Use `_filtered(user, all/mine, "", {})`, sorted by `_ranking` rank. Unlimited
+SQL lists already use this path; preserve full ordered candidate IDs in the
+key and every release/epoch/continuity check. After a miss, rehydrate at most
+eight and call `summary` only for those cases; briefing does not need
+work-context/queue projection. Redact waiting status with the existing role
+policy before producing facts. Cache-hit regression must observe zero new
+summary calls, and no work_context call; removing a non-top-eight permitted
+candidate without a version bump must still refresh case_count.
+
+<!-- task:P04-T03 -->
+### P04-T03
+
+Keep all eight source inputs and comparison-record provenance. Only display
+summary_count changes: final source template means at most three; AI means at
+most eight. Cover workflow, absent endpoint, failed model, AI success and empty/
+one-case inputs. Browser compares min(expected, 3) in workflow-only fixtures.
+Clarify the cap in API README, not in unrelated knowledge-base documents.
+
+<!-- task:P04-T04 -->
+### P04-T04
+
+No test removals; at most one new TasksMixin method, executed on both stores.
+Run focused task/release regressions before full core and API discovery using
+their documented commands and existing installed distributions. Run the synthetic
+browser, changed-file Ruff/mypy and diff checks. Independent Review assesses
+this correction boundary once and appends its original result to the existing
+Review file. Preserve the earlier Review and failure evidence. Resolve GitHub
+identity, commit source and evidence with trailer, fetch main, push only this
+topic with --force-with-lease after the existing rebase, then reply/resolve each
+named thread. No merge, Closes, `.env`, private data or cloud activity.

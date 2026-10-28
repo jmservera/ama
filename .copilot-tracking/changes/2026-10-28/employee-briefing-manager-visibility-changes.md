@@ -152,3 +152,95 @@ No merge or hosted/human approval is claimed.
 
 No active implementation remains. Historical #514 live diagnosis/deployment/model residuals
 remain out of scope. Hosted and human approvals remain independent.
+
+## P04: Owner-Requested PR #516 Review Corrections
+
+Current declared invocation scope: P04, the three Copilot findings. Original
+P01-P03 outcomes above are retained, not upgraded to cover later corrections.
+Research C11-C15 and existing plan/details support implementation; current
+owner direction authorizes all four finite phases and existing-PR publication.
+No new automatic session or repeated critique. P04 implementation starting;
+checks, independent correction Review and publication remain pending.
+Rebase check: fresh origin/main is 5abc6c6b32c536ad933cd926850eb8a3d8220a77;
+`git rebase origin/main` reports already up to date. Reflog shows the earlier
+completed rebase; no new conflicts or conflict-file edits were needed.
+
+### P04-T01/T02/T03 Implementation and Focused Evidence
+
+Browser reuses `wait_cases` before exact personal IDs, and holds the initial
+case-list route until the briefing heading renders. This reproduces the
+independent loading race for all seven staff roles, including empty assignment.
+Final synthetic Chromium 156.0.8078.4 run PASS; queue IDs, three-case template
+counts, labels, keyboard toggle, 320/390/1280px reflow and no pageerrors.
+
+Briefing selects/ranks canonical `_filtered` candidates, retaining all ordered
+permitted IDs before cache lookup, without list-card work context. Only cache
+misses summarize the top eight. All existing release/epoch/continuity checks
+and role-projected waiting status remain. Final source determines summary_count:
+AI top eight; workflow/provider/unconfigured/quarantined templates top three.
+Comparison records retain all selected input IDs and source provenance.
+API README documents the distinction and projection boundary.
+
+Paired JSON/SQLite test extends the existing expanded fixture with unique
+synthetic resident names and one shared building. It asserts eight summary
+calls on a miss, none on a hit, no work_context call, refreshed full count
+when a non-selected candidate disappears, exact template membership, AI count
+eight, provider-failure count three, restricted one-case/empty behavior and
+missing-endpoint count three. No test method added or removed.
+
+Initial focused run: 92 tests, two failures because the existing seed reuses
+"Pat Test" across residents, invalidating a name-based exclusion assertion.
+Corrected only the synthetic test fixture to unique names; no production
+fallback or weakened assertions. Final task/release run: 92 tests PASS in
+29.464s. Changed Python Ruff PASS; API changed-file mypy PASS (two files).
+Core/API full discovery is running using documented commands.
+
+Current logs are external:
+`/home/azureuser/.copilot/session-state/eabc6987-5f15-4862-8138-74c3ef4f3f22/files/`:
+briefing-focused.log (original failure), briefing-focused-final.log (pass),
+briefing-browser.log (pass), core-discovery.log and api-discovery.log.
+Existing isolated pip-installed project/dev environment was reused after
+system Python failed with missing zava_forward. No dependency install or
+manifest change was necessary.
+
+### P04-T04 Validation and Review Handoff
+
+| Check | Result |
+| --- | --- |
+| From src/core: python -m unittest discover -s tests -q | PASS, 1,437 tests, 540.872s, 186 existing skips |
+| From src/api: PYTHONPATH=../core/tests:../agents/tests python -m unittest discover -s tests -q | PASS, 1,148 tests, 652.191s, 314 existing skips |
+| API test_ai_tasks test_assistant_release with shared test paths | PASS, 92 tests, 29.464s |
+| checks.employee_briefing_browser_check | PASS, delayed initial queue, all seven staff roles |
+| Changed Python Ruff; mypy (core store, API test/check); git diff --check | PASS |
+
+Both discovery logs include expected negative-path errors/warnings and conclude
+OK, not suppressed failures. Required opt-in SQL Server/live/model checks
+remain unexecuted. Validation follows the focused-tier current src/README.md
+policy for small issues and the preserved no-full-gate owner boundary; this is
+not a full gate receipt. No new dependencies, cloud actions or private data.
+Source is stable for the one independent P04 Review; no correction source
+changes are planned after assessment. The original Review stays historical.
+
+Reviewed correction base: 18b72f4b (pre-correction local HEAD).
+Current origin/main: 5abc6c6b32c536ad933cd926850eb8a3d8220a77.
+
+| File | SHA-256 |
+| --- | --- |
+| src/core/src/zava_forward/core/store.py | 6c423abb58bb846446aacf8fad60038f1dfe08932d102071015b354056a4da57 |
+| src/api/tests/test_ai_tasks.py | ec810e5747fc02ef79abf3311c4446e25c90cc09ed65747e241c72e16bb433f7 |
+| src/api/checks/employee_briefing_browser_check.py | c1bb1721d084d944a29ef44e8326e01510516287cb66da33196b4d9d627f6505 |
+| src/api/README.md | 84e6a9839b9523b9866d4feefbbaa2a99bc026df90c2ee8afd185e39c798a5bb |
+
+Current remaining work: independent P04 Review, then commit/push and reply/
+resolve three owner-named threads if no publication blocker. Existing live
+deployment/user/accessibility follow-ups remain outside P04 and unchanged.
+
+### P04 Independent Review Result
+
+One independent P04 assessment completed: execution Complete, outcome Conformant,
+no substantive findings or blockers. Assessor appended to the existing Review,
+retaining original outcomes, independently matched all four hashes and inspected
+the current evidence. No implementation source changed during/after Review.
+PC-001 full permitted-ID identity and PC-002 publication stop remain satisfied.
+Only commit/push, existing PR description reconciliation and the three thread
+replies/resolutions remain; hosted and owner approval remain independent.

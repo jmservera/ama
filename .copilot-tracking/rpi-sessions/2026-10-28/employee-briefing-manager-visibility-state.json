@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Follow-up",
-  "status": "completed",
+  "status": "active",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-28/employee-briefing-manager-visibility-research.md",
@@ -15,6 +15,16 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-28/employee-briefing-manager-visibility-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "PR #516 P04 independent Review executed Complete; outcome Conformant, no substantive findings or blockers",
+      "status": "Complete",
+      "evidence": "Existing Review P04 appended assessment; four source hashes independently matched; core 1437/API 1148/focused 92 tests and delayed-queue browser passed"
+    },
+    {
+      "decision": "Owner explicitly authorizes finite PR #516 correction phases, commit/push with force-with-lease only after rebase, and replies/resolution of three Copilot threads",
+      "status": "Confirmed 2026-10-28",
+      "evidence": "Current user request; C11-C15 establish Research executed/complete and Planning Readiness Ready. No ongoing automatic session requested."
+    },
     {
       "decision": "Show all programme cases to manager roles on the briefing",
       "status": "Owner confirmed 2026-10-28",
@@ -47,7 +57,7 @@
     }
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Await hosted checks and owner review for PR #516; no automatic follow-up session, merge or deployment"},
+  "next_action": {"phase": "Follow-up", "action": "Publish reviewed P04 correction with required trailer and lease-protected rebased push; update existing PR, reply to and resolve three threads"},
   "prioritized_follow_ups": [
     {
       "rank": 1,

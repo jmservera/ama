@@ -98,7 +98,7 @@ class TasksMixin:
                 self.assertEqual(record["case_ids"], expected)
                 self.assertEqual(record["case_ids"][0], "ZF-4")
                 self.assertEqual((result["scope"], result["scope_label"]), ("programme", "All programme cases"))
-                self.assertEqual((result["case_count"], result["summary_count"]), (4, 4))
+                self.assertEqual((result["case_count"], result["summary_count"]), (4, 3))
                 self.assertEqual(self.store.counts(user)["mine"], assignments)
                 self.assertEqual({r["id"] for r in self.store.list_cases(user)}, {"ZF-5"})
                 self.assertEqual(result["approval"], "Not reviewed")
@@ -142,11 +142,18 @@ class TasksMixin:
 
     def test_permitted_read_controls_full_count_top_eight_facts_and_cache(self):
         data = copy.deepcopy(test_mvp.DATA)
+        for c in data["cases"]:
+            c["resident"]["name"] = f"SYN Resident {c['id']}"
         for number in range(6, 12):
             c = copy.deepcopy(data["cases"][0])
             c["id"] = f"ZF-{number}"
             c["resident"]["name"] = f"SYN Resident {number}"
             data["cases"].append(c)
+        for c in data["cases"]:
+            c["building_id"] = "SYN-BRIEFING"
+        data["buildings"] = [dict(id="SYN-BRIEFING", name="Synthetic briefing block",
+                                 version=1, source="SYN-REGISTER", systems=[],
+                                 dependencies=[], holds=[], works=[], costs=[])]
         expanded = Path(self.tmp.name) / "expanded"
         expanded.mkdir()
         if hasattr(self.store, "db"):
@@ -154,22 +161,41 @@ class TasksMixin:
         self.store = self.make(str(expanded), data)
         self.store.ai.endpoint = "http://scripted-model.invalid"
         release_support.install(self.store)
-        permitted = self.store.list_cases(self.pam, "all")
-        with mock.patch.object(self.store, "list_cases", return_value=permitted) as read:
+        permitted = sorted(self.store._filtered(self.pam, "all", "", {}),
+                           key=lambda c: self.store._ranking()[c["id"]]["rank"])
+        with mock.patch.object(self.store, "_filtered", return_value=permitted) as read, \
+                mock.patch.object(self.store, "summary", wraps=self.store.summary) as project, \
+                mock.patch.object(self.store, "work_context", side_effect=AssertionError("No queue projection")):
             first = self.store.briefing(self.pam, mode="workflow")
-            read.assert_called_once_with(self.pam, "all")
+            read.assert_called_once_with(self.pam, "all", "", {})
+            self.assertEqual(project.call_count, 8)
             version = self.store.version
             self.assertIs(self.store.briefing(self.pam, mode="workflow"), first)
             self.assertEqual(self.store.version, version)
+            self.assertEqual(project.call_count, 8)
             read.return_value = permitted[:-1]
             fewer = self.store.briefing(self.pam, mode="workflow")
             self.assertNotEqual(fewer["record_id"], first["record_id"])
             self.assertEqual((first["case_count"], fewer["case_count"]), (11, 10))
-            self.assertEqual((first["summary_count"], fewer["summary_count"]), (8, 8))
+            self.assertEqual((first["summary_count"], fewer["summary_count"]), (3, 3))
+            self.assertEqual(project.call_count, 16)
             for result in (first, fewer):
                 record = next(r for r in self.records() if r["id"] == result["record_id"])
                 self.assertEqual(record["case_ids"], [r["id"] for r in permitted[:8]])
                 self.assertEqual(record["case_ids"][0], "ZF-4")
+                for c in permitted[:3]:
+                    self.assertIn(c["resident"]["name"], result["text"])
+                for c in permitted[3:8]:
+                    self.assertNotIn(c["resident"]["name"], result["text"])
+            read.return_value = permitted
+            citation = f"SYN [[{permitted[0]['id']}: Days in stage: {permitted[0]['days_in_stage']}]]"
+            with mock.patch.object(self.store.ai, "_chat", return_value=citation):
+                enabled = self.store.briefing(self.pam)
+            self.assertEqual((enabled["source"], enabled["summary_count"]), ("ai", 8))
+            with mock.patch.object(self.store.ai, "_chat", side_effect=TimeoutError), \
+                    mock.patch.object(self.store, "ai_epoch_current", return_value=False):
+                fallback = self.store.briefing(self.pam)
+            self.assertEqual((fallback["source"], fallback["summary_count"]), ("template", 3))
             read.return_value = [next(r for r in permitted if r["id"] == "ZF-5")]
             with mock.patch.object(self.store.ai, "_chat", return_value="SYN [[Stage: Contacting resident]]") as chat:
                 restricted = self.store.briefing(self.pam)
@@ -218,7 +244,7 @@ class TasksMixin:
         self.assertEqual(self.store.cases["ZF-1"]["reason"], private)
 
     def test_empty_programme_is_not_reported_as_empty_assignments(self):
-        with mock.patch.object(self.store, "list_cases", return_value=[]):
+        with mock.patch.object(self.store, "_filtered", return_value=[]):
             result = self.store.briefing(self.pam, mode="workflow")
         self.assertEqual(result["text"], "No permitted open programme cases are available.")
         self.assertEqual((result["case_count"], result["summary_count"]), (0, 0))
@@ -261,6 +287,7 @@ class TasksMixin:
         chat.assert_not_called()
         self.assertEqual((result["source"], result["model"], result["reason"]),
                          ("template", None, "AI is not configured"))
+        self.assertEqual((result["case_count"], result["summary_count"]), (4, 3))
 
     def test_cited_summary_is_verified_but_not_approved(self):
         self.out["text"] = "- Contacting resident [[Stage: Contacting resident]]\n- Waiting [[Days in stage: 10]]"

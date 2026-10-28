@@ -4,6 +4,19 @@ description: Original independent post-implementation review
 ms.date: 2026-10-28
 ---
 
+## P04 Review Opening (2026-10-28)
+
+Owner-requested finite continuation, three Copilot findings on PR #516.
+Assess the uncommitted correction against local pre-correction HEAD 18b72f4b;
+research C11-C15, plan/details P04 and Changes validation are reconciled.
+Core/API discovery, focused task/release, delayed-queue browser and changed-file
+static checks passed. Acceptance: current permissions/full-ID cache retained,
+zero hit projections, at most eight miss summaries, correct template count,
+queue readiness. No initial blocker. Independent assessor may append only this
+review file, without source changes, repeat review, cloud/private data or `.env`.
+The original review below remains historical; its verdict does not cover P04.
+P04 assessment and outcome will be appended separately after comparison.
+
 ## Scope and Evidence
 
 * Task ID: employee-briefing-manager-visibility.
@@ -207,3 +220,85 @@ Later work, if separately authorized, must preserve this original Review rather 
 * Validation coverage: required local outcomes recorded; four final logs independently inspected; fresh web source review and file-free focused checks completed.
 * Acceptance-blocking Review findings: none.
 * Next owner: parent for original-evidence preservation and administrative P03 continuation, without source changes, prohibited gates, repeat Review or inferred publication/live approval.
+
+## P04 Independent Assessment (2026-10-28)
+
+* Execution status: Complete.
+* Outcome: Conformant.
+* Scope: one independent assessment of the owner-requested three-thread correction on PR #516, relative to 18b72f4bf3413d84b123e5d8b31ceb806c5c4688. This does not repeat or replace the original implementation Review above.
+* Candidate: uncommitted correction on fix/employee-briefing-manager-visibility; HEAD remains the supplied base. Local origin/main resolves to 5abc6c6b32c536ad933cd926850eb8a3d8220a77. No fetch, rebase or remote inspection was performed by this assessor.
+* Authority: append only this record. No source changes, nested agents, full-suite reruns, commits, publication, GitHub writes, cloud/model/deployment activity, private data or `.env` access.
+
+### P04 Evidence and Candidate Identity
+
+Read the complete correction diff, current plan/details/state, correction research C11-C15, correction Changes and validation handoff, original PC-001/PC-002 and original Review. Compared the changed code with existing filtering/ranking, list projection, SQL unlimited-list delegation, role/reason policies, task finalization, queue readiness and directly coupled tests/documentation.
+
+All four independently computed SHA-256 values match the supplied and Changes identities:
+
+| File | Verified SHA-256 |
+| --- | --- |
+| src/core/src/zava_forward/core/store.py | 6c423abb58bb846446aacf8fad60038f1dfe08932d102071015b354056a4da57 |
+| src/api/tests/test_ai_tasks.py | ec810e5747fc02ef79abf3311c4446e25c90cc09ed65747e241c72e16bb433f7 |
+| src/api/checks/employee_briefing_browser_check.py | c1bb1721d084d944a29ef44e8326e01510516287cb66da33196b4d9d627f6505 |
+| src/api/README.md | 84e6a9839b9523b9866d4feefbbaa2a99bc026df90c2ee8afd185e39c798a5bb |
+
+No source drift from the supplied validated candidate was found. File-free checks also confirmed unchanged TasksMixin test-method membership (23 methods, zero additions/removals), Python syntax for all three changed Python files, the byte-preserved original Review body and unchanged original critique.
+
+### P04 Requirement and Plan Reconciliation
+
+| Boundary | Assessment |
+| --- | --- |
+| P04-T01 queue readiness | The browser holds the initial cases route until the briefing scope heading renders, releases it, then calls existing wait_cases before comparing exact personal IDs or empty text. The helper requires both rendered count and workspace-status text, including zero. The browser log records independent loading and exact personal queues for all seven staff roles. |
+| P04-T02 cache cost and authorization | The existing briefing role guard remains before selection/cache. Canonical _filtered selects the complete permitted all/mine set; existing rank order and the full ordered ID tuple remain in the actor/reason/mode-aware key. Version, epoch, continuity and release checks are unchanged. Cache admission precedes selected rehydration, export validation and summary projection. |
+| P04-T02 bounded projections | Misses project at most eight summaries and do not request work_context. Hits project none. Selection/ranking still costs work proportional to the candidate set; no constant-time claim is made. Any building-blocker scan through summary is bounded to the selected eight, removing the former all-candidate quadratic projection rather than introducing global caching. |
+| P04-T02 field safety | Selected facts retain the existing waiting-status redaction for roles without reason visibility; source/citation checks still use the existing role policy. JSON/SQLite inherit the same briefing path, consistent with the former unlimited SQL list path. No role, assignment, consent, home-scope or approval boundary changes. |
+| P04-T03 final-response count | summary_count uses the final task source: top three for templates and top eight for AI, bounded by available cases. This also follows late quarantine returning source=template. All eight selected input IDs/provenance remain available to the task record; template text/citations use only the first three. |
+| P04-T03 coupled evidence | Paired-store tests assert exact template membership, unchanged ranked record IDs, full count refresh outside the top eight, eight miss projections/no added hit projections, no work_context, AI success, failed-model fallback, absent endpoint and one/zero-case behavior. Browser workflow counts and README agree. |
+| P04-T04 readiness | T01-T03 are checked. T04 is legitimately pending because it includes this assessment and later parent publication, although its validation portion is complete. Current plan/details/state and the latest Changes handoff agree; earlier implementation-started/running prose remains chronological evidence, not the current handoff. |
+| PC-001 and PC-002 | Complete-ID identity is preserved, including the 11-to-10 non-selected-candidate regression without a preceding version change. Publication remains conditional on no unresolved blockers. Original critique stays Complete / Revise and original Review stays Complete / Conformant at their original boundaries. |
+
+The implementation-time move from projected lists to canonical selection, source-dependent count correction, delayed-route test and unique synthetic resident names are documented in research, plan/details and Changes. They directly implement owner intent; no significant divergence, unaccepted architecture decision, test-budget expansion or material research gap was established.
+
+### P04 Validation Coverage
+
+External logs were inspected read-only under the caller-supplied session files directory; none was overwritten.
+
+| Evidence | Status and boundary |
+| --- | --- |
+| core-discovery.log | Observed PASS: 1,437 tests, 540.872s, 186 skips. |
+| api-discovery.log | Observed PASS: 1,148 tests, 652.191s, 314 skips. |
+| briefing-focused-final.log | Observed PASS: 92 task/release tests, 29.464s. |
+| briefing-focused.log | Observed original FAIL: 92 tests, two duplicate-resident-name exclusion failures. Unique synthetic names correct the fixture; failure evidence remains preserved. |
+| briefing-browser.log | Observed PASS coverage and terminal: Chromium 156.0.8078.4, held initial queue, all seven staff roles, including the unassigned manager. No browser rerun by this assessor. |
+| Changed-file Ruff and mypy | PASS supplied by parent and recorded in Changes for the three Python files; not independently rerun. |
+| Reviewer lightweight checks | PASS: Python AST, unchanged test-method set, historical-evidence preservation, four source/docs hashes and git diff --check. No generated files or application execution. |
+| Full gate, live SQL Server, real model/cloud, human/accessibility acceptance | Not performed or inferred. Focused-tier acceptance follows current src/README.md small-issue policy and the recorded owner no-full-gate boundary; no receipt is claimed. |
+
+### P04 Findings, Routing and Follow-Up Boundaries
+
+No substantive finding was established in this correction boundary. Severity counts: Critical 0; High 0; Medium 0; Low 0. No RV entry is manufactured, and no rpi-implement, rpi-plan or rpi-research handoff is required.
+
+Existing PR #514 live diagnosis/deployment/model follow-ups remain with the separately authorized operational/identity/release workstream; named-user and assistive-technology validation remain with the product/accessibility owner. Their exclusion is explicit and justified, not a defect or new active P04 scope. Hosted checks and owner approval remain independent. This assessment supplies no real-world, whole-issue, accessibility or publication acceptance.
+
+No acceptance-blocking finding remains within the assessed correction. The parent owns T04 administrative reconciliation and any separately authorized exact-candidate publication/thread actions, preserving both original outcomes and this P04 result. Later source changes are outside the verified hash boundary and must not be presented as these assessed bytes.
+
+### P04 Compared Artifacts
+
+| Artifact | Description |
+| --- | --- |
+| [.copilot-tracking/research/2026-10-28/employee-briefing-manager-visibility-research.md](.copilot-tracking/research/2026-10-28/employee-briefing-manager-visibility-research.md) | Correction evidence C11-C15 |
+| [.copilot-tracking/plans/2026-10-28/employee-briefing-manager-visibility-plan.md](.copilot-tracking/plans/2026-10-28/employee-briefing-manager-visibility-plan.md) | Requirements, P04 and follow-ups |
+| [.copilot-tracking/details/2026-10-28/employee-briefing-manager-visibility-phase-details.md](.copilot-tracking/details/2026-10-28/employee-briefing-manager-visibility-phase-details.md) | Task detail and publication stop |
+| [.copilot-tracking/changes/2026-10-28/employee-briefing-manager-visibility-changes.md](.copilot-tracking/changes/2026-10-28/employee-briefing-manager-visibility-changes.md) | Candidate and validation evidence |
+| [.copilot-tracking/rpi-sessions/2026-10-28/employee-briefing-manager-visibility-state.json](.copilot-tracking/rpi-sessions/2026-10-28/employee-briefing-manager-visibility-state.json) | Current continuation state |
+| [.copilot-tracking/reviews/plans/2026-10-28/employee-briefing-manager-visibility-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-28/employee-briefing-manager-visibility-plan-critique.md) | Preserved PC-001/PC-002 |
+| [.copilot-tracking/reviews/logs/2026-10-28/employee-briefing-manager-visibility-review.md](.copilot-tracking/reviews/logs/2026-10-28/employee-briefing-manager-visibility-review.md) | Preserved original Review and this assessment |
+| [src/core/src/zava_forward/core/store.py](src/core/src/zava_forward/core/store.py) | Selection, cache, projections and counts |
+| [src/api/tests/test_ai_tasks.py](src/api/tests/test_ai_tasks.py) | Paired-store correction assertions |
+| [src/api/checks/employee_briefing_browser_check.py](src/api/checks/employee_briefing_browser_check.py) | Delayed-queue browser evidence owner |
+| [src/api/README.md](src/api/README.md) | Corrected response/projection contract |
+| [src/README.md](src/README.md) | Current focused-tier policy |
+
+## Next Steps
+
+Parent may reconcile T04 and continue only its separately authorized publication actions, retaining exact source identity, original outcomes and independent hosted/owner gates. No further assessment or user action is required by this one P04 Review.

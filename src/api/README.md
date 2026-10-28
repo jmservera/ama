@@ -2361,8 +2361,11 @@ existing manager roles, Retrofit Programme Manager and Programme Support
 Officer (owner decision 2026-10-28). Today's briefing labels this scope
 "All programme cases". Other staff receive "My assigned cases", selecting
 only open cases whose `owner_code` exactly equals their business `code`.
-Both scopes retain deterministic ranking and summarize at most 8 cases,
-showing the full permitted candidate count and the number summarized.
+Both scopes retain deterministic ranking and provide at most 8 cases to AI.
+Workflow-only and fallback templates include at most the first 3 cases.
+The panel shows the full permitted candidate count and the number included
+for the final AI or template response. Cache hits recheck permitted IDs without
+projecting list cards; misses summarize only the selected eight cases.
 Existing case/role and field permissions still apply, including to model facts.
 This does not grant consent, authorize work or approve an AI suggestion.
 
