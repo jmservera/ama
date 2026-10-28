@@ -18,8 +18,9 @@ from unittest.mock import patch
 from urllib.parse import parse_qs, urlsplit
 
 from playwright.sync_api import Request, Response, Route, expect, sync_playwright
-from zava_forward.api import server
 from zava_forward.core.sqlstore import SqlStore
+
+from zava_forward.api import server
 
 generated = importlib.import_module("test_generated_dataset")
 fixtures = importlib.import_module("dataset")
@@ -554,6 +555,106 @@ def check(store: Any) -> None:
                     page.once("dialog", lambda dialog: dialog.accept())
                     page.locator('#nav a[href="#/time"]').click()
                     expect(page.locator("#app h1")).to_have_text("Staff time capture")
+
+                for endpoint in ("packages", "workorders"):
+                    capacity()
+                    scenario = f"delayed sibling 401 after {endpoint} refresh failure"
+                    payloads = {
+                        response.url: response.json()
+                        for response in reads
+                        if urlsplit(response.url).path in ("/api/packages", "/api/workorders")
+                    }
+                    saved = page.locator(f'form[data-appointment-form="{order["id"]}-configure"]')
+                    saved.locator("..").locator("summary").click()
+                    saved.get_by_label(f"Threshold configuration evidence ({order['id']})").fill(
+                        f"SYNTHETIC delayed sibling 401 after {endpoint}"
+                    )
+                    post_count = len(posts)
+                    configurations = len(store.data["procurement"]["appointment_configurations"])
+                    held.clear()
+                    page.evaluate("window.capacityHeldReads = 0")
+
+                    def hold_capacity_read(route: Route) -> None:
+                        inject(route, status=None)
+                        page.evaluate("window.capacityHeldReads += 1")
+
+                    order_pattern = base + "/api/workorders"
+                    page.route(package_pattern, hold_capacity_read)
+                    page.route(order_pattern, hold_capacity_read)
+                    with (
+                        page.expect_request(package_pattern),
+                        page.expect_request(order_pattern),
+                    ):
+                        saved.get_by_role(
+                            "button", name="Record provisional threshold", exact=True
+                        ).click()
+                    page.wait_for_function("() => window.capacityHeldReads === 2")
+                    assert len(held) == 2, held
+                    failed = next(
+                        route for route in held if route.request.url == base + "/api/" + endpoint
+                    )
+                    sibling = next(route for route in held if route is not failed)
+                    failed.fulfill(status=503, body="Unavailable")
+                    status = page.locator("#app > [role=status]")
+                    expect(status).to_contain_text(
+                        "We could not load "
+                        + ("work orders" if endpoint == "workorders" else endpoint)
+                    )
+                    retry = status.get_by_role("button", name="Try again", exact=True)
+                    retry_button = retry.element_handle()
+                    assert retry_button is not None
+                    held.clear()
+                    page.evaluate("window.capacityHeldReads = 0")
+                    with (
+                        page.expect_request(package_pattern),
+                        page.expect_request(order_pattern),
+                    ):
+                        retry.click()
+                    page.wait_for_function("() => window.capacityHeldReads === 2")
+                    assert len(held) == 2, held
+                    assert retry_button.evaluate(
+                        "(button) => button.disabled && button.getAttribute('aria-busy') === 'true'"
+                    )
+                    sibling.fulfill(status=401, json={"error": "Session expired"})
+                    expect(page.locator("#app h1")).to_have_text("Sign in")
+                    expect(page.get_by_role("alert")).to_have_text(
+                        "Your session has ended. Sign in again."
+                    )
+                    expect(page.locator("#app")).to_be_focused()
+                    for route in held:
+                        route.fulfill(status=200, json=payloads[route.request.url])
+                    page.wait_for_function(
+                        "(button) => !button.disabled && !button.hasAttribute('aria-busy')",
+                        arg=retry_button,
+                    )
+                    print(f"{scenario}: retry continuation settled", flush=True)
+                    expect(page.locator("#app h1")).to_have_text("Sign in")
+                    expect(page.locator("#email")).to_be_visible()
+                    expect(page.get_by_role("alert")).to_have_text(
+                        "Your session has ended. Sign in again."
+                    )
+                    expect(
+                        page.get_by_role("heading", name="Capacity and work orders", exact=True)
+                    ).to_have_count(0)
+                    expect(page.get_by_role("button", name="Try again")).to_have_count(0)
+                    expect(page.locator("#app")).to_be_focused()
+                    assert len(posts) == post_count + 1
+                    assert posts[-1].status == 200
+                    assert (
+                        len(store.data["procurement"]["appointment_configurations"])
+                        == configurations + 1
+                    )
+                    assert not errors, errors
+                    assert not failures, failures
+                    assert not console_errors, console_errors
+                    page.unroute(package_pattern)
+                    page.unroute(order_pattern)
+                    print(f"{scenario}: PASS; sign-in retained, one persisted POST", flush=True)
+                    page.locator("#email").fill(manager["email"])
+                    page.locator("#pw").fill("synthetic-password")
+                    page.locator("button[type=submit]").click()
+                    expect(page.locator("#nav")).to_be_visible()
+                    page.wait_for_load_state("networkidle")
 
                 for recovery in ("cancel", "401"):
                     capacity()

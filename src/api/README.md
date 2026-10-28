@@ -47,6 +47,8 @@ Try again; no failed read is treated as an empty result.
 After a save, retry reloads data only, never repeats the saved action. Repeated
 read failures keep the editable screen and unsaved appointment drafts; successful
 recovery restores other unsaved forms, including their original event/context.
+Successful reads recheck route cancellation and the session before rendering,
+so an older failed-refresh sibling's delayed 401 cannot be overwritten by a retry.
 
 The focused generated-demo browser check uses fictional geography rows and a
 temporary store, never the default dataset. From the repository root, with the
@@ -69,6 +71,9 @@ rejects unexpected API HTTP or transport failures. A separately constructed
 fictional delegation fixture exercises real saved-form versus unsaved-form
 recovery, repeated failed retries, navigation away and session expiry after a
 save; it does not backfill authority into the legacy read-acceptance fixture.
+For each failed-read endpoint, it also holds the older sibling and both retry
+responses, expires the session through that sibling, then releases successful
+retry reads and verifies sign-in remains after the retry continuation finishes.
 It is a separate required check, not automatically run by the full RPI gate.
 Local SQL Server/browser execution and post-deployment verification must be
 recorded separately; source coverage alone does not establish live acceptance.

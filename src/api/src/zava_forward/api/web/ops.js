@@ -174,6 +174,8 @@ async function capacityView() {
     }
   };
   const [pkgs, orders] = await Promise.all([load("/api/packages", "packages"), load("/api/workorders", "work orders")]);
+  signal.throwIfAborted();
+  if (!me) return;
   let field = 0;
   const inp = (label, attrs) => {
     const id = `capacity-field-${++field}`;
