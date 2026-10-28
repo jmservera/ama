@@ -155,3 +155,21 @@ All required local checks pass; no known in-scope source or regression defect
 remains from the supplied threads or the one routed finding. This is not a
 promise that automated review can find nothing else or human acceptance.
 Local source/evidence commit is next. Publication is deferred to coordinator.
+
+## Local Commit and Final Handoff
+
+Source and all dated original evidence committed as
+6f836a68459dbafee5a6c3382b1d62366c8fcd67. Authenticated account privacy-safe
+author/committer address and required Copilot trailer verified; commit uses
+Refs #526. Worktree clean immediately after source commit. The containing
+documentation-only handoff commit reconciles final plan markers/details/state;
+no later source, test, tool or evidence-result changes.
+
+Automatic task completed, session running at Follow-up with publication blocked.
+Coordinator owns current-base/final-HEAD complete gate, receipt verification,
+independent exact-head assessment, permitted push and three thread replies/
+resolutions. Latest fetched main 9bfed51863b05a25e9939d82504c576524688e14.
+No prior receipt is reusable. No az/Azure/private-data access, push, PR-body
+change, remote thread mutation or source-history rewrite performed. Human
+screen-reader/staff acceptance and hosted approval remain separate outstanding
+boundaries, not replaced by zero automated violations.

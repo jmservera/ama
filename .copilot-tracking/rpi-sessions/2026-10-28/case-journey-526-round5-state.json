@@ -19,6 +19,11 @@
   },
   "confirmed_decisions": [
     {
+      "decision": "Source and all original RPI evidence committed locally with privacy-safe identity and required trailer",
+      "status": "complete; not pushed",
+      "evidence": "6f836a68459dbafee5a6c3382b1d62366c8fcd67; author/committer verified, Refs #526 and Copilot trailer preserved, worktree clean after source commit. Containing documentation-only handoff commit reconciles markers and state."
+    },
+    {
       "decision": "Later bounded RV-001 implementation completed and validated; original Review outcome unchanged",
       "status": "local-checks-passed",
       "evidence": "Separate rv001 changes record; final journey 207 assertions/38 zero-violation scans; assistants unchanged 58/10; 17 units and static checks pass; final source diff bb3f69ae883e67ff2acdc045f19ce34d74739be90dffc53526f2569ffd4c97d9"
@@ -58,7 +63,7 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Commit validated local source and all original dated artifacts with authenticated privacy-safe identity and required trailer; coordinator owns full exact-head gate, push and three thread replies/resolutions."
+    "action": "Coordinator must complete the permitted full gate on final committed HEAD/current main, verify fresh receipt and independent exact-head assessment, then push and reply/resolve the three original threads. No az or remote publication performed here; original Review outcome preserved. Human acceptance remains separate."
   },
   "prioritized_follow_ups": [
     {

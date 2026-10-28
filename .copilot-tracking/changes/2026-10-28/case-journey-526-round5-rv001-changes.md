@@ -50,3 +50,9 @@ topic remote remains intake HEAD and PR is OPEN with Refs #526. No merge,
 rewrite, push, reply, resolution or az command performed. Local publication
 remains blocked only by the required full gate; coordinator must use a fresh
 current base and final exact commit, not an earlier receipt or Review boundary.
+
+Source plus original evidence committed locally as
+6f836a68459dbafee5a6c3382b1d62366c8fcd67, verified safe author/committer and
+required trailer. Original Review remains unchanged; final handoff bookkeeping
+is documentation-only. No known in-scope regression remains from RV-001, but
+this implementation evidence is not a second independent Review or acceptance.

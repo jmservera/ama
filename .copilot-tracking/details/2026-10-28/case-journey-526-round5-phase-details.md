@@ -65,7 +65,7 @@ scans; zero browser violations/page errors; real zoom passed. Static checks pass
 Original nonpassing harness attempts retained in changes record.
 
 <!-- rpi:task id=P02-T02 -->
-### [ ] P02-T02: Single Review and local commit
+### [x] P02-T02: Single Review and local commit
 
 Refresh guidelines, reconcile plan/details/changes/state and exact source diff.
 Fresh independent worker activates rpi-review, writes only the canonical review,
@@ -76,5 +76,9 @@ privacy-safe identity and required trailer. Record gate blocker; coordinator
 owns exact-head publication and remote thread replies/resolution.
 Sole Review executed Complete / Defects found with Low RV-001, preserved
 unchanged. Later bounded test-only implementation and final journey rerun are
-recorded separately; original Review is not repeated or upgraded. Local commit
-is the remaining bookkeeping action.
+recorded separately; original Review is not repeated or upgraded. Source and
+original dated evidence committed locally as
+6f836a68459dbafee5a6c3382b1d62366c8fcd67; author and committer use authenticated
+privacy-safe identity, required trailer verified and worktree was clean.
+Final handoff reconciliation is documentation-only; coordinator must assess
+the containing final HEAD, not treat the source commit as a publication receipt.
