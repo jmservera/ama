@@ -111,6 +111,23 @@ this one-redeploy request. Backup/recovery evidence retained externally.
 Original independent Review remains Complete / Not accepted, not re-executed
 or upgraded; this later implementation reports actual recovery evidence only.
 
+### P03-T02: committed candidate and current-main integration
+
+Evidence committed as a05bae82608572045861b06be9bba27027ce01bd with
+authenticated account-derived noreply author/committer and requested trailer.
+The required fetch advanced main from bb6df04c to197e5e3c (#513).
+Complete-gate invocation with current main was BLOCKED before groups/receipt:
+"Candidate does not descend from the reviewed main base". No passing or failed
+group receipt exists for that rejected admission.
+
+Read-only comparison proves main added exactly one line to
+`.github/workflows/infra-plan.yml`, no app/source change. Both src trees:
+`00d32ea390508692cb0fd308e45aac0d8288da94`.
+Reconcile this current-main CI-only change by a normal non-rewriting merge
+into the requested topic, preserving original evidence/ancestry and exact
+built source. No rebase, force-push, main write or additional cloud operation.
+Then run the required complete gate in a fresh external directory.
+
 ## Original attempt (historical, retained unchanged below)
 
 The following sections retain the earlier blocked attempt. Current results

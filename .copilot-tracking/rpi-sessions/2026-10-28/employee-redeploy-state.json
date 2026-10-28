@@ -60,7 +60,7 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "P01/P02 execution finished, desired outcome rolled back. Preserve original Review Not accepted; reconcile and commit current evidence, then attempt complete local publication gate. No further forward app update."
+    "action": "Full gate blocked admission after main advanced by one CI-only line (#513); exact src tree unchanged. Commit evidence, normally merge current main into topic without rewriting, then run full gate externally. No cloud retry."
   },
   "prioritized_follow_ups": [
     {
