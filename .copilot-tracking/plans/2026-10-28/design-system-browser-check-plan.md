@@ -67,12 +67,12 @@ Independent one-pass critique and post-implementation Review are preserved.
 * [x] P01-T02: Document root cause; repeat browser entry point and run API/core suites.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Review and publish
+### [x] P02: Review and publish
 
 <!-- rpi:task id=P02-T01 -->
-* [ ] P02-T01: Independent Review; commit dated evidence, focused final-head checks.
+* [x] P02-T01: Independent Review; commit dated evidence, focused final-head checks.
 <!-- rpi:task id=P02-T02 -->
-* [ ] P02-T02: Push requested branch and open Refs-only PR; leave merge to owner.
+* [x] P02-T02: Push requested branch and open Refs-only PR; leave merge to owner.
 
 ## Test Ownership and Change Budget
 
@@ -105,3 +105,7 @@ No significant/divergent decision or second critique is required.
 
 Details: .copilot-tracking/details/2026-10-28/design-system-browser-check-phase-details.md.
 Changes: .copilot-tracking/changes/2026-10-28/design-system-browser-check-changes.md.
+Published PR: #519. Original Review is Complete / Conformant; no RV findings.
+Focused committed checks and independent exact-head source-boundary attestation
+passed before first push. Any later documentation commit is freshly checked
+externally before its push; hosted/human approval remains pending.

@@ -5,8 +5,8 @@ ms.date: 2026-10-28
 
 ## Scope and status
 
-Task: design-system-browser-check. Declared implementation scope: P01, followed
-by independent Review and P02 publication. Plan and phase details use the same
+Task: design-system-browser-check. P01 and P02 completed: implementation,
+independent Review and requested publication. Plan and phase details use the same
 dated task slug. One critique completed Pass without findings.
 
 ## P01-T01: Harness correction
@@ -79,7 +79,29 @@ Optional later harness lint cleanup: pre-existing I001/B023 diagnostics under
 isolated strict lint. No correctness failure demonstrated for the queue callback
 (its expectation is consumed synchronously); do not broaden this fix.
 
-## Remaining work
+## P02: Publication
 
-Independent Review, final committed-candidate focused checks and P02 publication.
-Hosted/human approval and merge are not local acceptance.
+Implementation plus original dated evidence committed as
+fbbbb88828650e7defe1f2849e97499641300fae, with the requested Copilot trailer
+and GitHub-derived local noreply identity for author/committer.
+Committed-candidate gate passed: browser entry point, 13 API workspace/UI tests,
+19 core manifest/inventory tests, both packages' configured Ruff/format/mypy.
+Evidence: /tmp/ama-browser-check-fix-committed-fbbbb888.log and
+/tmp/ama-browser-check-fix-focused-fbbbb888.json.
+Fresh origin/main remained 197e5e3c6d4f7cfb135c9a985af3f13e0f688ac4;
+clean head and all five reviewed source hashes verified. The independent
+reviewer separately attested the exact committed boundary and original Review
+preservation without a second Review.
+
+Pushed fix/design-system-browser-check without force and opened
+https://github.com/jmservera/ama/pull/519 targeting main with Refs #517, #516,
+#514 only. This closeout changes RPI evidence only; its final committed head
+must receive fresh external focused checks/source-boundary verification before
+the update push. Final evidence destination:
+/tmp/ama-browser-check-fix-publication-final.json (not a full-matrix receipt).
+
+## Remaining boundary
+
+No implementation or requested first-publication task remains. Hosted checks,
+human approval and merge remain separate; no merge was performed. The automatic
+session waits in Follow-up without starting the optional baseline lint cleanup.
