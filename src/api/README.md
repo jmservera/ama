@@ -117,11 +117,132 @@ Its browser check also installs a test-only queue to exercise actual staff
 safety projections and contractor responses without task context; this does
 not install a production role screen.
 
-## Resident advisory assistant prototype (#469)
+## Resident chat and synthetic callback agenda (#520, building on #469)
 
-The separate resident showcase panel offers three fixed questions through
-`POST /demo/assistant` with exactly `{"topic":"status"}`, `"documents"` or
-`"forms"`. The endpoint requires the existing session, same-origin and CSRF
+The resident showcase has one bottom-right Chat launcher on its sign-in,
+progress and error states. It opens a nonmodal window: Escape or Close chat
+returns focus; moving keyboard focus outside closes it without trapping focus.
+The existing Fluent-derived tokens and native controls are retained. The chat
+keeps at most 10 answers in page memory, not browser storage or model memory,
+and clears record-use permission and replies on sign-out/session loss.
+
+All personal assistant requests now require the exact boolean
+`"use_record": true`, including the existing topic requests. This intentionally
+tightens #469's request schema. No record lookup or model call occurs without
+that permission. Sign-in is not consent to assistant use or works.
+`POST /demo/assistant` accepts exactly either `{"topic":"status","use_record":true}`
+or `{"question":"Where is my case?","use_record":true}`. Supported topics:
+status, documents, forms, home, consents, appointments, regulations and safety.
+Typed questions are bounded to 500 characters and routed by host-owned rules;
+they never enter model prompts or durable conversation memory. Unsupported
+questions abstain. No client case/home/email selector is accepted.
+
+Status/documents/forms retain the bounded Azure route below; other answers are
+labelled workflow-only rules. Home answers use only the signed-in projection.
+Operational appointment history and works-consent records are not projected:
+answers state Unknown, never infer consent. Safety questions give direct
+human/emergency routes and explicitly state that no report was sent.
+
+The regulations answer cites the local Safety and Quality Standard, sections
+2.3.1..2.3.3, source date 2024-04-01 and retrieval 2026-09-19. Those provisions
+were compared with the [official publication](https://www.gov.uk/government/publications/safety-and-quality-standard)
+on 2026-10-28. This is a bounded explanation, not a complete/current legal
+corpus, legal advice, applicability decision, compliance decision or activation
+of an operational rule. Other rules/currentness need qualified review.
+
+### Local synthetic callbacks
+
+The showcase's SQL identity/home view remains read-only. An optional, separate
+local SQLite agenda demonstrates real inventory search and atomic reservations
+for **synthetic callbacks only**. Nobody will call; these are not operational
+officer appointments, works commitments, staff/capacity confirmations or works
+consent. No operational calendar connector or new staff HTTP authority exists.
+The unconfigured agenda fails explicitly with a manual contact route, rather
+than returning fake free times.
+
+An operator explicitly creates a task-owned local inventory; it is never
+seeded automatically on HTTP startup. Use a fresh absolute path outside git
+and a suitable exercise date:
+
+```bash
+python -m zava_forward.api.resident_demo.agenda /tmp/my-synthetic-callbacks.sqlite \
+  --seed-from 2026-10-28
+# Add this setting to an otherwise correctly configured local synthetic showcase:
+export ZF_DEMO_AGENDA_PATH=/tmp/my-synthetic-callbacks.sqlite
+python -m zava_forward.api.resident_demo
+```
+
+The seed creates seven days of weekday 30-minute slots at 09:00, 11:00 and
+14:00 UK time. Stored instants are UTC; filters and displayed dates use
+Europe/London, independent of browser timezone. Searches order by start then
+slot ID, return the first 0..3 free future matches, and accept an earliest date
+today through 90 days ahead plus any/morning/afternoon. These preferences do
+not establish access needs, professional suitability or staff availability.
+Ask a person about adjustments.
+
+Asking chat about appointments automatically runs this search using the
+server's UK date (and morning/afternoon when requested), then shows the shared
+manual form. The explicit chat record-use permission covers that requested
+search, not booking. The independent manual form works without chat/AI.
+Proposals are own-case-bound and expire in 10 minutes; they do not hold slots.
+The resident must check a separate confirmation for one specific time and
+select Book this callback. Availability/future time and admission are checked
+again. Transactions prevent double booking; retries reconcile the same booking.
+One active callback per case is permitted until cancelled.
+
+`POST /demo/agenda` requires session, same-origin/CSRF and `use_record:true`.
+Exact additional fields:
+
+| Action | Fields |
+| --- | --- |
+| list | `action:"list"` |
+| find | `action:"find"`, `earliest:"YYYY-MM-DD"`, `period:"any"` (or morning/afternoon) |
+| book | `action:"book"`, `proposal:"returned-token"`, `confirmed:true` |
+| cancel | `action:"cancel"`, `reference:"own-booking-reference"`, `confirmed:true` |
+
+Neither a typed "book" request nor AI can confirm a booking. An active callback
+can be cancelled through the resident form with separate confirmation. A local
+operator who already has file access can assist after verifying the synthetic
+resident's cancellation request and callback reference:
+
+```bash
+python -m zava_forward.api.resident_demo.agenda /tmp/my-synthetic-callbacks.sqlite \
+  --cancel RETURNED_REFERENCE --verified-synthetic-request
+```
+
+This is an operator procedure, not real identity verification or a public
+unauthenticated cancellation endpoint. Residents can instead phone their
+housing officer using their usual number, write or visit; the demo invents no
+contact number, response time or report receipt. If a mutation response is
+uncertain, check callbacks before retrying. Record-use withdrawal does not
+silently cancel a reservation already made.
+
+Focused local units and actual loopback Chromium/axe (pinned 4.10.3, existing
+digest checked by the harness):
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tests:../core/tests:../agents/tests \
+  python -m unittest test_resident_chat_agenda test_resident_chat_api test_resident_assistant_api -q
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tests:../core/tests:../agents/tests \
+  python -m checks.resident_assistant_browser_check \
+  --axe /absolute/path/to/axe-4.10.3.min.js --out /tmp/my-resident-chat-evidence
+```
+
+Hold `/tmp/ama-rpi-heavy.lock` nonblocking for heavy runs. These checks use
+constructed rows, a disposable local agenda and no real SQL, credentials,
+private datasets or model transport. The browser check covers mouse/touch/
+keyboard, consent, old-session responses, actual search/confirm/cancel,
+320/390/1280px, reduced motion, 200% root text resizing and 320px
+400%-equivalent reflow from 1280px. The latter is not native browser zoom.
+Human resident/content, screen-reader/assistive-technology, real-model #164 and
+live-service acceptance remain pending. Automated checks are not WCAG
+conformance or whole-issue acceptance.
+
+### Preserved bounded Azure advisor (#469)
+
+The resident showcase retains three fixed model-assisted questions through
+`POST /demo/assistant` with topic status, documents or forms and the explicit
+record-use boolean above. The endpoint requires the existing session, same-origin and CSRF
 checks and fetches/re-authorizes the resident's own case for every request.
 It never accepts a case selector, writes a case, submits a form or records consent.
 Document requests are explicitly unknown in the current projection.

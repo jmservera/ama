@@ -12,6 +12,15 @@
   var account = document.getElementById("account");
   var accountEmail = document.getElementById("account-email");
   var csrf = "";
+  var callbackController = null;
+  var assistant = window.mountResidentAssistant(document.body, api, showSignin, function (search) {
+    if (callbackController) callbackController.searchFromChat(search);
+  });
+  assistant.setSession(false);
+  function removeAppointments() {
+    if (callbackController) callbackController.dispose();
+    callbackController = null;
+  }
 
   function el(tag, text, cls) {
     var node = document.createElement(tag);
@@ -170,6 +179,8 @@
   }
 
   function render(view, announce) {
+    removeAppointments();
+    assistant.setSession(true);
     content.textContent = "";
     if (view.banner) {
       var note = card("About this showcase");
@@ -207,18 +218,22 @@
     help.appendChild(hl);
     help.appendChild(el("p", view.help.note));
     content.appendChild(help);
-    window.mountResidentAssistant(content, api, showSignin);
+    var callbacks = el("section", null, "card callbacks");
+    callbacks.setAttribute("aria-labelledby", "callback-title");
+    content.appendChild(callbacks);
+    callbackController = window.mountResidentAppointments(callbacks, api, showSignin);
 
     var unavailable = card("Not available in this showcase");
     var ul = el("ul", null, "unavail");
-    view.unavailable.forEach(function (u) {
+    view.unavailable.filter(function (u) { return u.feature !== "Automated answers"; }).forEach(function (u) {
       var li = el("li");
-      var b = el("button", u.feature);
+      var appointment = u.feature === "Replying to an appointment";
+      var b = el("button", appointment ? "Operational appointments" : u.feature);
       b.type = "button";
       b.disabled = true;
       b.setAttribute("aria-disabled", "true");
       li.appendChild(b);
-      li.appendChild(el("span", u.reason, "why"));
+      li.appendChild(el("span", appointment ? "You cannot change live works appointments here. Use the form above for local synthetic callbacks only." : u.reason, "why"));
       ul.appendChild(li);
     });
     unavailable.appendChild(ul);
@@ -246,6 +261,9 @@
   }
 
   function showSignin(message) {
+    removeAppointments();
+    assistant.setSession(false);
+    content.textContent = "";
     content.hidden = true;
     hideAccount();
     errorEl.hidden = true;
@@ -261,6 +279,9 @@
   }
 
   function fail(message) {
+    removeAppointments();
+    assistant.setSession(false);
+    content.textContent = "";
     content.hidden = true;
     signin.hidden = true;
     hideAccount();
@@ -342,6 +363,8 @@
   });
 
   document.getElementById("signout").addEventListener("click", function () {
+    removeAppointments();
+    assistant.setSession(false);
     function notConfirmed() {
       fail("We could not confirm that you were signed out. Your session may still be active on this device and ends by itself within 30 minutes. Select Try again to check, then sign out again.");
     }
