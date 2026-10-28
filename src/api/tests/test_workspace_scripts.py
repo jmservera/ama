@@ -35,6 +35,9 @@ function harness(outcomes = []) {
       queueMicrotask(() => {
         if (outcome === "ready") {
           if (script.src === "/vendor/leaflet.js") context.L = {};
+          else if (script.src === "/role-screens.js") {
+            context.roleScreensView = async () => views.push("screens");
+          }
           else context.qualityPanel = () => {};
         }
         const handler = outcome === "error" ? script.onerror : script.onload;
@@ -148,12 +151,29 @@ function harness(outcomes = []) {
   await failure;
   assert.deepEqual(h.views, ["list"], "obsolete error must not render");
 
-  h = harness(["ready"]);
-  const signedOut = h.run("route()");
+  for (const hash of ["#/overview", "#/screens"]) {
+    for (const outcome of ["ready", "error", "timeout", "load"]) {
+      for (const replacement of [null, {user: {role: "Contractor"}, navigation: []}]) {
+        h = harness([outcome, outcome]);
+        h.context.location.hash = hash;
+        delete h.context.roleScreensView;
+        const staleSession = h.run("route()");
+        h.context.me = replacement;
+        h.context.workspaceStatus.textContent = replacement ? "New session" : "";
+        assert.equal(h.context.routeController.signal.aborted, false);
+        await staleSession;
+        assert.deepEqual(h.views, [], "ended or replaced session must not dispatch");
+        assert.equal(h.context.workspaceStatus.textContent, replacement ? "New session" : "",
+          "stale session must not restore status or render an error");
+        assert.equal(h.context.routeController.signal.aborted, false,
+          "session isolation must not depend on an artificial route abort");
+      }
+    }
+  }
+  h = harness();
   h.context.me = null;
-  h.context.routeController.abort();
-  await signedOut;
-  assert.deepEqual(h.views, [], "signed-out route must not render");
+  await h.run("route()");
+  assert.deepEqual(h.views, [], "no-session route entry must be harmless");
   console.log("PASS recovery, bounds, timeout, readiness, route predicates and isolation");
 })().catch(error => {console.error(error); process.exitCode = 1;});
 """,

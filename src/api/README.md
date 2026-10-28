@@ -14,7 +14,9 @@ attempt waits at most five seconds. The two-attempt budget is shared across
 navigation for that page; already-present scripts are not reloaded.
 Timeouts and scripts that finish loading without the expected workspace function
 stop recovery instead of risking duplicate script execution. A late response
-cannot render an obsolete screen. Persistent failure retains the existing
+cannot render an obsolete screen or restore its role/scope status after the
+session ends or changes, even when the session transition does not abort the
+route. Persistent failure retains the existing
 plain-language error, status/alert and native **Reload workspace** button.
 
 With the existing dev distributions and Chromium installed, from `src/api`:
@@ -26,8 +28,12 @@ python3 -m checks.workspace_scripts_browser_check
 
 The browser check owns a synthetic loopback server and intercepts script failures;
 it never reads the working dataset or calls Azure. It covers actual-script
-recovery, retry exhaustion, missing globals, delayed responses, navigation and
-sign-out. These local checks do not identify the historical live transport cause
+recovery after an observed failed initial request, retry exhaustion, missing
+globals, delayed responses, navigation, sign-out and same-document 401/login.
+Late-script checks wait for actual load/error settlement, measure real companion
+evaluation without replacing its source, and compare the current route/status
+before revisiting the recovered screen. These local checks do not identify the
+historical live transport cause
 or establish post-deployment acceptance. Authenticated live response status,
 size, headers and cold-start/auth correlation, plus verification after an
 owner-approved deployment, remain pending the owner.

@@ -1,0 +1,62 @@
+{
+  "task_id": "524-correction1",
+  "task_slug": "workspace-script-retry-524-correction1",
+  "parent_task": {
+    "task_id": "524",
+    "task_slug": "workspace-script-retry-524"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-28/workspace-script-retry-524-correction1-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-28/workspace-script-retry-524-correction1-plan.md",
+    "details": ".copilot-tracking/details/2026-10-28/workspace-script-retry-524-correction1-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-28/workspace-script-retry-524-correction1-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-28/workspace-script-retry-524-correction1-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-28/workspace-script-retry-524-correction1-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute a new bounded correction RPI loop and publish after validation on the existing branch",
+      "status": "confirmed",
+      "evidence": "Owner request 2026-10-28; RV-001 and RV-002; nonblocking lock retry every 60 seconds up to 40 minutes"
+    },
+    {
+      "decision": "Research executed Ready; one independent plan critique executed",
+      "status": "Ready after direct PC-001 and PC-002 dispositions; original Revise preserved",
+      "evidence": ".copilot-tracking/plans/2026-10-28/workspace-script-retry-524-correction1-plan.md#critique-disposition"
+    },
+    {
+      "decision": "One independent correction Review executed; source session guard conforms, browser invocation observer needs routed correction",
+      "status": "Complete / Not accepted",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-28/workspace-script-retry-524-correction1-review.md; correction-local RV-001"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Routed browser-observability implementation completed under task 524-view-coverage; its state/changes own final exact-head publication continuation; do not repeat or rewrite this Review"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Measure original view entry using already enabled precise coverage",
+      "rationale": "Directly fixes the Review's sole material regression-check defect within the owner's requested browser-proof scope",
+      "evidence": "correction1 Review RV-001"
+    },
+    {
+      "rank": 2,
+      "task": "Complete committed exact-head publication gates",
+      "rationale": "Required before the authorized topic push and PR",
+      "evidence": "correction1 Review RV-002"
+    },
+    {
+      "rank": 3,
+      "task": "Owner live diagnosis and post-deploy verification",
+      "rationale": "Separate live authorization; remains pending",
+      "evidence": "correction1 Review RV-003"
+    }
+  ]
+}

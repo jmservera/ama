@@ -201,6 +201,8 @@ async function requireWorkspaceScripts(hash, caseRoute) {
 }
 
 async function route() {
+  const session = me;
+  if (!session) return;
   const nextHash = location.hash || "#/";
   if (nextHash !== displayedHash && document.querySelector('form[data-unsaved="true"]')) {
     if (!window.confirm("Leave this screen and discard unsaved changes?")) {
@@ -226,6 +228,7 @@ async function route() {
   try {
   await requireWorkspaceScripts(hash, Boolean(m));
   signal.throwIfAborted();
+  if (me !== session) return;
   workspaceStatus.textContent = routeStatus;
   if (hash.split("?")[0] === "#/screens") return await roleScreensView();
   if (me.user.role === "Contractor") return await (m ? contractorCaseView(decodeURIComponent(m[1])) : contractorListView());
@@ -244,7 +247,7 @@ async function route() {
   if (hash === "#/finance") return await financeQueueView();
   return await listView(hash === "#/all" ? "all" : "mine");
   } catch (error) {
-    if (signal.aborted || !me) return;
+    if (signal.aborted || me !== session) return;
     workspaceStatus.textContent = `Workspace unavailable: ${error.message}`;
     show(h("h1", {}, "Workspace unavailable"), h("p", { class: "err", role: "alert" }, error.message),
       error.reloadWorkspace

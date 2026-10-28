@@ -4,7 +4,9 @@ from __future__ import annotations
 
 from urllib.parse import urlsplit
 
-from playwright.sync_api import Browser, BrowserContext, Page, Route, expect, sync_playwright
+from playwright.sync_api import (
+    Browser, BrowserContext, CDPSession, Page, Route, expect, sync_playwright,
+)
 
 from checks.design_system_browser_check import main
 from checks.workbench_browser_check import synthetic_data
@@ -27,6 +29,10 @@ def local_context(browser: Browser, base: str) -> BrowserContext:
 
 def sign_in(page: Page, base: str, hash_: str) -> None:
     page.goto(base + "/app" + hash_)
+    submit_sign_in(page)
+
+
+def submit_sign_in(page: Page) -> None:
     page.get_by_label("Work email", exact=True).fill("sam@example.test")
     page.get_by_label("Password", exact=True).fill("synthetic-check")
     page.get_by_role("button", name="Sign in", exact=True).click()
@@ -57,7 +63,14 @@ def recovery(browser: Browser, base: str, path: str, failures: int, hash_: str) 
         errors: list[str] = []
         requests: list[str] = []
         documents: list[str] = []
+        failed: list[str] = []
+        pending: list[Route] = []
         page.on("pageerror", lambda error: errors.append(str(error)))
+        page.on(
+            "requestfailed",
+            lambda request: failed.append(request.failure or "")
+            if urlsplit(request.url).path == path else None,
+        )
         page.on(
             "request",
             lambda request: documents.append(request.url)
@@ -72,10 +85,28 @@ def recovery(browser: Browser, base: str, path: str, failures: int, hash_: str) 
                 else:
                     route.fulfill(status=503, content_type="text/plain", body="Synthetic failure")
             else:
-                route.continue_()
+                pending.append(route)
+                page.evaluate("() => { window.workspaceRetryPending = true; }")
 
         page.route("**" + path, intercept)
-        sign_in(page, base, hash_)
+        page.goto(base + "/app" + hash_)
+        assert len(requests) == 1, "The initial HTML load must fail before recovery"
+        assert len(failed) == 1 and failed[0], failed
+        readiness = "typeof L === 'object'" if path == LEAFLET else (
+            "typeof roleScreensView === 'function'"
+        )
+        assert page.evaluate("() => !(" + readiness + ")"), "Initial failure must omit readiness"
+        submit_sign_in(page)
+        expect(page.locator("#workspace-status")).to_have_text(
+            "Loading workspace files. Please wait."
+        )
+        page.wait_for_function("() => window.workspaceRetryPending === true")
+        assert len(requests) == failures + 1 and len(pending) == 1, requests
+        assert page.evaluate("() => !(" + readiness + ")"), "Retry must still be pending"
+        with page.expect_response(base + path) as response:
+            pending[0].continue_()
+        assert response.value.status == 200
+        page.wait_for_function("() => " + readiness)
         if path == LEAFLET:
             expect(page.locator(".leaflet-container")).to_be_visible()
         else:
@@ -119,7 +150,8 @@ def exhaustion(browser: Browser, base: str, missing_global: bool = False) -> Non
         page.wait_for_timeout(800)
         assert len(requests) == count, "Route revisit must not reset the retry budget"
         reload_button = page.get_by_role("button", name="Reload workspace", exact=True)
-        reload_button.focus()
+        page.locator("#app").focus()
+        page.keyboard.press("Tab")
         expect(reload_button).to_be_focused()
         assert reload_button.evaluate("el => getComputedStyle(el).outlineStyle === 'solid'")
         page.unroute("**" + LEAFLET)
@@ -132,8 +164,44 @@ def exhaustion(browser: Browser, base: str, missing_global: bool = False) -> Non
         context.close()
 
 
+def observe_companion(page: Page) -> CDPSession:
+    session = page.context.new_cdp_session(page)
+    session.send("Profiler.enable")
+    session.send("Profiler.startPreciseCoverage", {"callCount": True, "detailed": True})
+    page.add_init_script("""
+      window.workspaceScriptEvents = [];
+      new MutationObserver(records => {
+        for (const record of records) for (const script of record.addedNodes) {
+          if (script.tagName !== 'SCRIPT'
+              || new URL(script.src, location.href).pathname !== '/role-screens.js') continue;
+          script.addEventListener('load', () => {
+            const ready = typeof roleScreensView === 'function';
+            window.workspaceScriptEvents.push({outcome: 'load', ready});
+          }, {once: true});
+          script.addEventListener('error', () => {
+            window.workspaceScriptEvents.push({outcome: 'error', ready: false});
+          }, {once: true});
+        }
+      }).observe(document, {childList: true, subtree: true});
+    """)
+    return session
+
+
+def companion_coverage(session: CDPSession, base: str) -> tuple[int, int]:
+    coverage = session.send("Profiler.takePreciseCoverage")["result"]
+    scripts = [script for script in coverage if script["url"] == base + "/role-screens.js"]
+    assert len(scripts) <= 1, "The actual lexical companion must not be evaluated twice"
+    if not scripts:
+        return 0, 0
+    functions = scripts[0]["functions"]
+    views = [function for function in functions if function["functionName"] == "roleScreensView"]
+    assert len(views) == 1, "Measure the original view entry, not a later-installed wrapper"
+    return functions[0]["ranges"][0]["count"], views[0]["ranges"][0]["count"]
+
+
 def delayed_companion(
-    browser: Browser, base: str, *, sign_out: bool = False, timed_out: bool = False
+    browser: Browser, base: str, *, sign_out: bool = False, timed_out: bool = False,
+    session_ended: bool = False,
 ) -> None:
     context = local_context(browser, base)
     try:
@@ -141,7 +209,14 @@ def delayed_companion(
         errors: list[str] = []
         pending: list[Route] = []
         requests: list[str] = []
+        documents: list[str] = []
+        session = observe_companion(page)
         page.on("pageerror", lambda error: errors.append(str(error)))
+        page.on(
+            "request",
+            lambda request: documents.append(request.url)
+            if request.resource_type == "document" else None,
+        )
 
         def intercept(route: Route) -> None:
             requests.append(route.request.url)
@@ -166,27 +241,81 @@ def delayed_companion(
             pending[0].abort()
             expect(page.get_by_role("heading", name="Workspace unavailable")).to_have_count(0)
         else:
+            if session_ended:
+                page.route(
+                    "**/api/correction-session",
+                    lambda route: route.fulfill(
+                        status=401, content_type="application/json", body="{}"
+                    ),
+                )
+                ended = page.evaluate("""async () => {
+                  try { await api('/api/correction-session'); }
+                  catch (error) { return error.message; }
+                  throw new Error('Constructed session expiry must reject');
+                }""")
+                assert ended == "Your session has ended. Sign in again."
+                expect(page.get_by_role("heading", name="Sign in", exact=True)).to_be_visible()
+                expect(page.get_by_role("alert")).to_have_text(ended)
+                assert page.evaluate("() => me === null && !routeController.signal.aborted")
             if timed_out:
                 expect(page.get_by_role("heading", name="Workspace unavailable")).to_be_visible(
                     timeout=7000
                 )
                 expect_failure(page, "/role-screens.js")
                 assert len(requests) == 2, "Timeout must not overlap lexical script executions"
-            page.get_by_role("link", name="My cases", exact=True).click()
-            expect(page.get_by_role("heading", name="My cases today", exact=True)).to_be_visible()
+            if not session_ended:
+                page.get_by_role("link", name="My cases", exact=True).click()
+                expect(
+                    page.get_by_role("heading", name="My cases today", exact=True)
+                ).to_be_visible()
+                expect(page.locator("#workspace-status")).to_contain_text(
+                    "Perspective: Resident Liaison Officer. My assigned cases. 2 cases."
+                )
+            else:
+                expect(page.locator("#workspace-status")).to_have_text("")
+            status = page.locator("#workspace-status").inner_text()
+            hash_ = page.evaluate("() => location.hash")
+            before = page.evaluate("() => window.workspaceScriptEvents.length")
             pending[0].continue_()
-            page.wait_for_timeout(300)
-            expect(page.get_by_role("heading", name="My cases today", exact=True)).to_be_visible()
-            expect(page.locator("#workspace-status")).not_to_contain_text("unavailable")
-            page.get_by_role("link", name="Specialist screens", exact=True).click()
-            expect(
-                page.get_by_role("heading", name="Specialist screens", exact=True)
-            ).to_be_visible()
+            page.wait_for_function(
+                "before => window.workspaceScriptEvents.length > before", arg=before,
+                timeout=10000,
+            )
+            settled = page.evaluate("() => window.workspaceScriptEvents.at(-1)")
+            evaluations, view_calls = companion_coverage(session, base)
+            assert evaluations == (1 if settled["ready"] else 0), (settled, evaluations)
+            assert settled["outcome"] == ("load" if evaluations else "error"), settled
+            assert view_calls == 0, "No original view invocation may escape session/route guards"
+            assert page.evaluate("() => location.hash") == hash_
+            expect(page.locator("#workspace-status")).to_have_text(status)
+            expect(page.get_by_role("heading", name="Workspace unavailable")).to_have_count(0)
+            if session_ended:
+                expect(page.get_by_role("heading", name="Sign in", exact=True)).to_be_visible()
+                expect(page.get_by_role("alert")).to_have_text(ended)
+                assert page.evaluate("() => me === null && !routeController.signal.aborted")
+            else:
+                expect(
+                    page.get_by_role("heading", name="My cases today", exact=True)
+                ).to_be_visible()
+                page.get_by_role("link", name="Specialist screens", exact=True).click()
+                if evaluations:
+                    expect(
+                        page.get_by_role("heading", name="Specialist screens", exact=True)
+                    ).to_be_visible()
+                    _, view_calls = companion_coverage(session, base)
+                    assert view_calls == 1, "A legitimate revisit must invoke the original view"
+                else:
+                    expect_failure(page, "/role-screens.js")
+                    assert page.evaluate("() => typeof roleScreensView === 'undefined'")
             assert len(requests) == 2
+            assert len(documents) == 1, "Recovery must not refresh the document"
+            print(f"PASS real companion settlement: {settled}, evaluations={evaluations}")
         assert not errors, errors
         scenario = "timeout and late load" if timed_out else "navigation"
         if sign_out:
             scenario = "sign-out"
+        if session_ended:
+            scenario = "same-document 401/login"
         print(f"PASS delayed lexical companion: {scenario}")
     finally:
         context.close()
@@ -207,6 +336,7 @@ def run_browser(base: str) -> None:
             delayed_companion(browser, base)
             delayed_companion(browser, base, timed_out=True)
             delayed_companion(browser, base, sign_out=True)
+            delayed_companion(browser, base, session_ended=True)
             context = local_context(browser, base)
             try:
                 response = context.request.get(base + LEAFLET)
