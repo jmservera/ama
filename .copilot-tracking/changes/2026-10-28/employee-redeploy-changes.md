@@ -87,7 +87,7 @@ revision/container flags:3 records, one positive "Zava Forward is running",
 zero startup-error matches. Raw logs withheld. Bounded pattern observations
 do not establish exhaustive absence of errors or authenticated user acceptance.
 Anonymous health200; app/ops.js/app.js401 as expected. No auth bypass or model
-call. Prior exact-image synthetic HTTP/script-order proof is reused, not rerun
+call. Prior synthetic HTTP/script-order proof (not bound to the deployed image by config digest, see the correction at the push record) is reused, not rerun
 or misrepresented as authenticated live acceptance.
 
 Final complete ACR policy equality passed: public Disabled, default Allow,
@@ -153,7 +153,8 @@ full revisions hash c4154bc34aaedac5a6dd47764c2cc53ff948f0ef62055a8e0ccd81a66c40
 
 One `docker build -f src/api/Dockerfile -t <unique-tag> src`, exit0,
 with `/tmp/ama-rpi-heavy.lock` acquired nonblocking and held through build.
-Built image ID:
+Value recorded as the built image ID (it equals the pushed manifest digest, so it
+is more likely the manifest digest than the Docker config ID; unverified):
 `sha256:e6b6e7440c2b64577e96b6322c852bf630f1c5113608267132ebffc07d39fa19`.
 Constructed empty cases/staff fixture, loopback-only random port and no
 cloud credentials; actual HTTP `/healthz`, `/app`, `/ops.js`, `/app.js` all200.
@@ -373,3 +374,10 @@ Full gate NOT RUN / Blocked, no verified receipt; no push or PR. This is not a
 local-gate failure receipt, deployment success or authorized gate exception.
 No new revision/digest, hosted checks, authenticated assets or runtime logs
 exist for this attempt; original employee and ACR configurations are unchanged.
+
+## Evidence durability note (2026-10-28)
+
+The `/tmp` receipts and backups cited above are host-local and not durable. The
+original failed receipt is not retained in an approved artifact store; the
+summaries in this record are the only durable account. Preserving the originals
+needs an owner-approved access-controlled location and is not done here.
