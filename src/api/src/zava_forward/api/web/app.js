@@ -140,12 +140,41 @@ async function loadPhoto(account) {
   }
 }
 
-function requireWorkspaceScripts(hash, caseRoute) {
+const workspaceScriptLoads = new Map();
+
+function retryWorkspaceScript(path) {
+  if (!workspaceScriptLoads.has(path)) {
+    workspaceScriptLoads.set(path, (async () => {
+      for (let attempt = 1; attempt <= 2; attempt++) {
+        await new Promise((resolve) => setTimeout(resolve, 250 * attempt));
+        const outcome = await new Promise((resolve) => {
+          const script = document.createElement("script");
+          const finish = (result) => {
+            clearTimeout(timer);
+            script.onload = script.onerror = null;
+            script.remove();
+            resolve(result);
+          };
+          const timer = setTimeout(() => finish("timeout"), 5000);
+          script.onload = () => finish("load");
+          script.onerror = () => finish("error");
+          script.src = path;
+          document.head.append(script);
+        });
+        // A timed-out or evaluated script may still install lexical declarations.
+        if (outcome !== "error") break;
+      }
+    })());
+  }
+  return workspaceScriptLoads.get(path);
+}
+
+function missingWorkspaceScripts(hash, caseRoute) {
   const destination = hash.split("?")[0];
   const contractor = me.user.role === "Contractor";
   const staffCase = caseRoute && !contractor;
   const staffDestination = !contractor && !caseRoute;
-  const missing = [
+  return [
     ["/ops.js", staffCase || (staffDestination && hash === "#/capacity") || (contractor && !caseRoute && destination !== "#/screens"), typeof qualityPanel === "function"],
     ["/panels.js", staffCase || (staffDestination && hash === "#/finance"), typeof financePanel === "function"],
     ["/assistants.js", staffCase || (staffDestination && hash === "#/assistants"), typeof assistantCasePanel === "function"],
@@ -154,6 +183,16 @@ function requireWorkspaceScripts(hash, caseRoute) {
     ["/role-screens.js", destination === "#/screens", typeof roleScreensView === "function"],
     ["/vendor/leaflet.js", staffDestination && (hash === "#/overview" || destination === "#/coordinator"), typeof L === "object"],
   ].filter(([, needed, loaded]) => needed && !loaded).map(([path]) => path);
+}
+
+async function requireWorkspaceScripts(hash, caseRoute) {
+  let missing = missingWorkspaceScripts(hash, caseRoute);
+  if (missing.length) {
+    workspaceStatus.textContent = "Loading workspace files. Please wait.";
+    await Promise.all(missing.map(retryWorkspaceScript));
+    if (!me) return;
+    missing = missingWorkspaceScripts(hash, caseRoute);
+  }
   if (missing.length) {
     const error = new Error(`Required workspace files did not load: ${missing.join(", ")}. Reload this page to try again. If this continues, ask application support to check these files.`);
     error.reloadWorkspace = true;
@@ -162,6 +201,8 @@ function requireWorkspaceScripts(hash, caseRoute) {
 }
 
 async function route() {
+  const session = me;
+  if (!session) return;
   const nextHash = location.hash || "#/";
   if (nextHash !== displayedHash && document.querySelector('form[data-unsaved="true"]')) {
     if (!window.confirm("Leave this screen and discard unsaved changes?")) {
@@ -182,9 +223,13 @@ async function route() {
     else link.removeAttribute("aria-current");
   });
   const destination = me.navigation.find((item) => item.href === active);
-  workspaceStatus.textContent = `${me.user.role}. ${destination?.scope || "Case workspace"}.`;
+  const routeStatus = `${me.user.role}. ${destination?.scope || "Case workspace"}.`;
+  workspaceStatus.textContent = routeStatus;
   try {
-  requireWorkspaceScripts(hash, Boolean(m));
+  await requireWorkspaceScripts(hash, Boolean(m));
+  signal.throwIfAborted();
+  if (me !== session) return;
+  workspaceStatus.textContent = routeStatus;
   if (hash.split("?")[0] === "#/screens") return await roleScreensView();
   if (me.user.role === "Contractor") return await (m ? contractorCaseView(decodeURIComponent(m[1])) : contractorListView());
   if (m) return await caseView(decodeURIComponent(m[1]));
@@ -202,7 +247,7 @@ async function route() {
   if (hash === "#/finance") return await financeQueueView();
   return await listView(hash === "#/all" ? "all" : "mine");
   } catch (error) {
-    if (signal.aborted || !me) return;
+    if (signal.aborted || me !== session) return;
     workspaceStatus.textContent = `Workspace unavailable: ${error.message}`;
     show(h("h1", {}, "Workspace unavailable"), h("p", { class: "err", role: "alert" }, error.message),
       error.reloadWorkspace
