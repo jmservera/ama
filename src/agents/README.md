@@ -334,9 +334,11 @@ existing review record and harness evidence; it adds no service or harness.
 
 Dependencies, unchanged by this text:
 
-* #108 is OPEN. PR #405 delivered offline scripted accounting only; no #108
-  criterion is ticked, so the held-out split, thresholds and actual-model
-  evidence this exercise needs remain open. #106 is closed but delivered
+* #108 is OPEN. Its offline engineering criteria (critical-miss accounting and
+  model, prompt, latency and reviewer reporting) are checked from PR #405's
+  scripted accounting, but its held-out split, thresholds, actual-model
+  evidence and human-effectiveness requirements remain open and are the
+  prerequisites this exercise needs. #106 is closed but delivered
   accept/edit/reject with reason only in part.
 * #222 cohort and expected-outcome manifest: an unapproved external
   prerequisite. This protocol sets no label, cohort or threshold for it and
@@ -417,7 +419,9 @@ seeds exist beyond the approved consent wording.
 Retention fields. The existing proposal review record already holds the
 reviewer action, reviewer reason, override text, source hashes, model and
 prompt version. A later approved exercise must additionally retain, with gaps
-reported as gaps rather than filled: case and seed ID, source version viewed,
+reported as gaps rather than filled: case and seed ID, presentation-arm
+assignment (wording, action-order, citation indicator) and within-session
+order for the automation-bias and late-session fatigue comparisons, source version viewed,
 whether the source was opened, source-grounded reason text, decision time,
 effort components below, and scorer result. Whether a reviewer is retained by
 identity or anonymous study code is UNFILLED (owner and privacy decision); the
