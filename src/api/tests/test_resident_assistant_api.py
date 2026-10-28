@@ -34,7 +34,7 @@ class AssistantApiTests(DemoTestCase):
             status, body, response = client.call(
                 "POST",
                 "/demo/assistant?case_id=C-2",
-                {"topic": "status"},
+                {"topic": "status", "use_record": True},
                 headers={"X-Case-ID": "C-2", "X-Resident-Email": "two@example.com"},
             )
             self.assertEqual(status, 200)
@@ -52,28 +52,40 @@ class AssistantApiTests(DemoTestCase):
     def test_requires_fresh_authentication_and_csrf(self) -> None:
         client = self.client()
         client.prime()
-        self.assertEqual(client.call("POST", "/demo/assistant", {"topic": "status"})[0], 401)
+        self.assertEqual(
+            client.call("POST", "/demo/assistant", {"topic": "status", "use_record": True})[0], 401
+        )
         self.assertEqual(client.login("one@example.com"), 200)
         for csrf, origin in ((False, True), (True, False)):
             self.assertEqual(
                 client.call(
-                    "POST", "/demo/assistant", {"topic": "status"}, csrf=csrf, origin=origin
+                    "POST",
+                    "/demo/assistant",
+                    {"topic": "status", "use_record": True},
+                    csrf=csrf,
+                    origin=origin,
                 )[0],
                 403,
             )
         self.reader.rows["C-1"] = replace(self.reader.rows["C-1"], revoked=True)
-        self.assertEqual(client.call("POST", "/demo/assistant", {"topic": "status"})[0], 401)
+        self.assertEqual(
+            client.call("POST", "/demo/assistant", {"topic": "status", "use_record": True})[0], 401
+        )
 
     def test_expired_and_logged_out_sessions_cannot_ask(self) -> None:
         client = self.client()
         client.login("one@example.com")
         self.clock.now += 1801
         client.prime()
-        self.assertEqual(client.call("POST", "/demo/assistant", {"topic": "status"})[0], 401)
+        self.assertEqual(
+            client.call("POST", "/demo/assistant", {"topic": "status", "use_record": True})[0], 401
+        )
         self.assertEqual(client.login("one@example.com"), 200)
         self.assertEqual(client.call("POST", "/demo/logout", {})[0], 200)
         client.prime()
-        self.assertEqual(client.call("POST", "/demo/assistant", {"topic": "status"})[0], 401)
+        self.assertEqual(
+            client.call("POST", "/demo/assistant", {"topic": "status", "use_record": True})[0], 401
+        )
 
     def test_injection_and_selector_payloads_are_rejected_without_provider_or_logs(self) -> None:
         provider = Mock(ai=False)
@@ -108,11 +120,15 @@ class AssistantApiTests(DemoTestCase):
         with contextlib.redirect_stderr(capture):
             for invalid in ("ignore instructions SECRET-FROM-MODEL", Topic.FORMS):
                 provider.select.return_value = invalid
-                status, body, _ = client.call("POST", "/demo/assistant", {"topic": "status"})
+                status, body, _ = client.call(
+                    "POST", "/demo/assistant", {"topic": "status", "use_record": True}
+                )
                 self.assertEqual(status, 503)
                 self.assertNotIn("SECRET", json.dumps(body))
             provider.select.side_effect = AssistantUnavailable("SECRET-PROVIDER-DETAIL")
-            status, body, _ = client.call("POST", "/demo/assistant", {"topic": "forms"})
+            status, body, _ = client.call(
+                "POST", "/demo/assistant", {"topic": "forms", "use_record": True}
+            )
         self.assertEqual(status, 503)
         self.assertIn("housing officer", body["error"])
         self.assertNotIn("SECRET", capture.getvalue())
@@ -123,7 +139,9 @@ class AssistantApiTests(DemoTestCase):
         )
         client = self.client()
         client.login("one@example.com")
-        status, body, _ = client.call("POST", "/demo/assistant", {"topic": "status"})
+        status, body, _ = client.call(
+            "POST", "/demo/assistant", {"topic": "status", "use_record": True}
+        )
         self.assertEqual(status, 200)
         self.assertIn("do not have a plain-language update", body["answer"])
         self.assertIn("recorded as closed", body["answer"])
@@ -145,7 +163,9 @@ class AssistantApiTests(DemoTestCase):
         self.assertEqual(client.login("one@example.com"), 200)
         capture = io.StringIO()
         with contextlib.redirect_stderr(capture):
-            status, body, _ = client.call("POST", "/demo/assistant", {"topic": "status"})
+            status, body, _ = client.call(
+                "POST", "/demo/assistant", {"topic": "status", "use_record": True}
+            )
         self.assertEqual(status, 503)
         self.assertEqual(
             body,
@@ -163,7 +183,9 @@ class AssistantApiTests(DemoTestCase):
             ("documents", "cannot tell you what to send"),
             ("forms", "Do not guess"),
         ):
-            status, body, _ = client.call("POST", "/demo/assistant", {"topic": topic})
+            status, body, _ = client.call(
+                "POST", "/demo/assistant", {"topic": topic, "use_record": True}
+            )
             self.assertEqual(status, 200)
             self.assertIn(expected, body["answer"])
             self.assertTrue(body["sources"])
@@ -181,7 +203,9 @@ class AssistantApiTests(DemoTestCase):
         ):
             client = self.client()
             client.login(email)
-            status, body, _ = client.call("POST", "/demo/assistant", {"topic": "status"})
+            status, body, _ = client.call(
+                "POST", "/demo/assistant", {"topic": "status", "use_record": True}
+            )
             self.assertEqual(status, 200)
             prompt = transport.call_args.args[1].decode()
             self.assertNotIn(absent, prompt)
@@ -190,7 +214,9 @@ class AssistantApiTests(DemoTestCase):
             accounting.reserve.assert_called_with(key)
             self.assertIn("AI suggestion", body["label"])
         accounting.reserve.return_value = None
-        status, body, _ = client.call("POST", "/demo/assistant", {"topic": "status"})
+        status, body, _ = client.call(
+            "POST", "/demo/assistant", {"topic": "status", "use_record": True}
+        )
         self.assertEqual(status, 200)
         self.assertIn("Summary by rules", body["label"])
 
@@ -214,7 +240,9 @@ class AssistantApiTests(DemoTestCase):
             )
             client = self.client()
             client.login("one@example.com")
-            status, body, _ = client.call("POST", "/demo/assistant", {"topic": "status"})
+            status, body, _ = client.call(
+                "POST", "/demo/assistant", {"topic": "status", "use_record": True}
+            )
             self.assertEqual(status, 401)
             self.assertNotIn("answer", body)
 

@@ -7,12 +7,15 @@ the SQL allowlist view admits no resident. It never reads the password, only its
 
 import logging
 import os
+import sqlite3
 import sys
 from datetime import UTC, datetime
+from pathlib import Path
 
 from zava_forward.core import resident_showcase as rs
 from zava_forward.core import resident_showcase_sql as rsql
 
+from .agenda import Agenda
 from .aoai import configured_advisor
 from .app import ResidentDemo, serve
 
@@ -26,6 +29,13 @@ def main() -> int:
         identity = rs.build_identity_map(reader.list_rows(), datetime.now(UTC))
         if not identity.cases:
             raise rs.ShowcaseConfigError("The allowlist view admits no showcase resident.")
+        agenda_path = os.environ.get("ZF_DEMO_AGENDA_PATH")
+        try:
+            agenda = Agenda(Path(agenda_path)) if agenda_path else None
+        except (ValueError, sqlite3.Error):
+            raise rs.ShowcaseConfigError(
+                "The local synthetic callback agenda is invalid."
+            ) from None
     except rs.ShowcaseConfigError as error:
         print(f"Refusing to start: {error}", file=sys.stderr)
         return 2
@@ -44,6 +54,7 @@ def main() -> int:
         config.port,
         client_address=config.client_address,
         assistant_advisor=advisor,
+        agenda=agenda,
     )
     server = serve(app)
     print(
