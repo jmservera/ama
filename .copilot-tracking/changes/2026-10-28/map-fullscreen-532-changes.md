@@ -6,8 +6,9 @@ ms.date: 2026-10-28
 
 ## Scope and Status
 
-Full approved plan for task 532, `map-fullscreen-532`. P01/P02 implementation
-and validation complete; P03 original Review and local commits remain.
+Full approved plan for task 532, `map-fullscreen-532`. All RPI phases executed;
+original Review Complete / Not accepted. RV-001 remains an open implementation
+defect; no acceptance or publication is claimed.
 Plan and phase details:
 `.copilot-tracking/plans/2026-10-28/map-fullscreen-532-plan.md` and
 `.copilot-tracking/details/2026-10-28/map-fullscreen-532-phase-details.md`.
@@ -131,7 +132,7 @@ PC-002 through PC-004 were incorporated before source implementation.
 
 ## Review and Publication Boundary
 
-Review not yet executed. Full gate invokes az, prohibited by this task.
+Original Review executed once: Complete / Not accepted. Full gate invokes az, prohibited by this task.
 Check prerequisites and preserve local candidate; no bypass or remote mutation.
 Coordinator must complete exact-head/current-main receipt and independent
 publication assessment before push/stacked PR. The executable is installed at
@@ -181,3 +182,41 @@ in the dated tracking artifacts. Automated results are not human AT acceptance.
 Only the coordinator should publish after stack reconciliation, final gate,
 receipt verification and independent exact-head assessment. Add the actual
 verified publication evidence to this body; no unrun gate is a success.
+
+## Original Review and Ranked Follow-Up Routing
+
+Independent Review:
+`.copilot-tracking/reviews/logs/2026-10-28/map-fullscreen-532-review.md`.
+Assessed implementation commit `9b9e467ab5b3d08621173e1cceff6e35c786b2d5`.
+Execution Complete; outcome **Not accepted**. Exactly one original Review ran;
+its original findings and outcome remain unchanged.
+
+1. RV-001 [Medium], implementation defect: new map keyboard handling consumes
+   Ctrl/Meta +/- browser zoom and Alt+Arrow navigation. The reviewer established
+   consumption in a bounded Node probe of the exact handler. Passing focused
+   browser checks did not cover modifier commands. Route to later `rpi-implement`
+   for modifier guards and assertions that those keys neither move/zoom the map
+   nor prevent default. Preserve Shift-generated plus and motion checks.
+   Ranked first because the change is small and directly restores browser
+   accessibility behavior. No correction/closure verification ran in this task.
+2. RV-002 [Medium], residual publication: coordinator reconciles the diverged
+   stack under appropriate authority, commits the resulting candidate, and runs
+   the complete permitted local gate with a fresh external receipt. Fetch main,
+   verify immediately before independent exact-head publication assessment and
+   push, then open the PR against `feat/case-journey-ux-526`, declaring dependency
+   #529 and `Refs #532`. Ranked next because it gates all external delivery.
+3. RV-003 [Low], residual human evidence: accessibility/staff owners assess
+   contrast incompletes and both map modes with the baseline's AT/browser,
+   resize/zoom and staff tasks. Ranked third because it needs human participation;
+   automation and native token styling cannot supply that acceptance.
+
+The reviewer could not access /tmp under its own filesystem policy and attributed
+the raw check results to the supplied canonical evidence. The implementing parent
+did inspect the external axe report and actual final screenshots. That reviewer
+limitation neither fabricates independent visual inspection nor invalidates the
+parent's explicitly required shared lock.
+
+Implementation was committed locally with runtime GitHub-derived noreply identity
+and the requested Conventional Commit/trailer. Final evidence is a separate local
+closeout commit. No source was changed after the original Review, no second Review
+ran, no az/Azure command ran, and no push or PR creation was attempted.

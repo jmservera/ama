@@ -4,7 +4,7 @@ description: Issue 532 implementation-ready candidate
 ms.date: 2026-10-28
 ---
 
-Task ID: 532. Slug: map-fullscreen-532. Status: implemented and locally validated; Review pending.
+Task ID: 532. Slug: map-fullscreen-532. Status: original Review Complete / Not accepted.
 
 ## Executive Summary
 
@@ -13,6 +13,10 @@ A narrow left panel holds home summaries and map information. Embedded summaries
 sit over the map with a named top-right close icon. Use only permitted map
 payload fields, retain manual list links, and manage Escape/focus and route
 cleanup explicitly. No framework swap, briefing edits or async-helper dependency.
+Implementation and focused validation executed, but original Review identified
+RV-001: custom map keys consume modified browser zoom/navigation shortcuts.
+That defect is routed to a later bounded implementation, not accepted or fixed
+within this completed one-pass task. Publication and human evidence remain open.
 
 ## Sources
 
@@ -111,8 +115,8 @@ substitute for behavior. Canonical and generated targets are distinguished above
 <!-- phase: P03 -->
 ### P03: Review and local delivery
 
-* [ ] P03-T01: Refresh web guidelines; execute one independent Review.
-* [ ] P03-T02: Reconcile artifacts, privacy-safe identity and Conventional Commits.
+* [x] P03-T01: Refresh web guidelines; execute one independent Review.
+* [x] P03-T02: Reconcile artifacts, privacy-safe identity and Conventional Commits.
 * [x] P03-T03: Assess full-gate prerequisites without Azure; publish only if permitted.
 
 ## Critique Disposition
@@ -136,6 +140,11 @@ All findings have a disposition; no unresolved product choice or second critique
 
 ## Follow-Up Items
 
+RV-001 is the highest-ranked bounded implementation follow-up: ignore Ctrl,
+Meta and Alt modifiers in the map keyboard handler without preventing browser
+defaults; retain Shift-generated plus and unmodified map commands, and add
+regressions. The original Review is not repeated or overwritten by that work.
+
 Human assistive-technology and real-staff acceptance remain outside automated
 coverage. Full exact-head publication gate and hosted checks remain mandatory;
 no bypass, cloud fallback or protection change. The full runner invokes prohibited
@@ -148,7 +157,8 @@ history rewriting, then rerun the gate at the actual publication candidate.
 
 Phase details: `.copilot-tracking/details/2026-10-28/map-fullscreen-532-phase-details.md`.
 Changes: `.copilot-tracking/changes/2026-10-28/map-fullscreen-532-changes.md`.
-Implementation and final validation complete after the tooltip ARIA correction.
-Original one-time Review is next. P03-T01/T02 are remaining lifecycle work for
-Review and local evidence commits, not unfinished source implementation.
-Publication remains blocked independently.
+Original one-time Review executed Complete / Not accepted, assessed implementation
+commit `9b9e467ab5b3d08621173e1cceff6e35c786b2d5`. P01-P03 checkmarks record
+execution, not acceptance. Local closeout commits preserve the original critique
+and Review; RV-001 remains open. Route it to later `rpi-implement`. Coordinator
+owns RV-002 stack/publication; accessibility/staff owners retain RV-003.
