@@ -1217,6 +1217,13 @@ class GateTests(unittest.TestCase):
     def test_matrix_drift_and_unreviewed_extra_commands_refuse(self) -> None:
         self.assertEqual(len(gate.required_groups([])), 17)
         self.assertEqual(gate.SQL_SELECTORS[0], "test_mssqlstore")
+        self.assertEqual(set(gate.WORKFLOW_HASHES), set(gate.WORKFLOWS))
+        root = Path(__file__).resolve().parents[1]
+        for name in gate.WORKFLOWS:
+            with self.subTest(workflow=name):
+                self.assertEqual(
+                    gate.WORKFLOW_HASHES[name], gate.digest(root / ".github/workflows" / name)
+                )
         for value in (
             "api:test_module;curl external",
             "api:../../private",
@@ -1232,15 +1239,32 @@ class GateTests(unittest.TestCase):
         runner.snapshot = self.root
 
         def version(argv: list[str], **kwargs: Any) -> str:
+            runner.rows.append({"group": runner.group})
             return "Python 3.12.3" if argv[0] == "python3" else "Version: 0.76.0"
 
         with (
             patch.object(runner, "command", side_effect=version) as command,
             patch.object(gate, "tool_identity", return_value={}),
+            patch.dict(
+                gate.WORKFLOW_HASHES,
+                {
+                    name: gate.digest(self.root / ".github/workflows" / name)
+                    for name in gate.WORKFLOWS
+                },
+            ),
         ):
             runner.preflight()
+            self.assertEqual(runner.failures, [])
+            for name in gate.WORKFLOWS:
+                with self.subTest(drift=name):
+                    path = self.root / ".github/workflows" / name
+                    original = path.read_bytes()
+                    path.write_bytes(original + b"# changed\n")
+                    runner.preflight()
+                    self.assertEqual(runner.failures, [f"preflight: Workflow matrix drift: {name}"])
+                    path.write_bytes(original)
+                    runner.failures.clear()
         command.assert_any_call(["shellcheck", "--version"], timeout=60)
-        self.assertTrue(runner.failures)
 
     def test_axe_and_scan_database_cannot_silently_skip(self) -> None:
         with self.assertRaises(gate.GateError):
