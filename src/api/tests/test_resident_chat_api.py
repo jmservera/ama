@@ -8,8 +8,40 @@ from datetime import timedelta
 from pathlib import Path
 from unittest.mock import Mock, patch
 
+from zava_forward.core.resident_documents import (
+    DocumentFacts,
+    DocumentIssue,
+    DocumentRequest,
+    PresentedDocument,
+)
+
+from test_resident_aoai import ENDPOINT, reply
 from test_resident_demo_api import NOW, DemoTestCase
 from zava_forward.api.resident_demo.agenda import Agenda
+from zava_forward.api.resident_demo.aoai import AzureAdvisor
+from zava_forward.api.resident_demo.assistant import EXPIRES
+
+
+def document_fixture() -> DocumentFacts:
+    return DocumentFacts(
+        (
+            DocumentRequest(
+                "R-SURVEY", "Survey", "Ask your housing officer for a secure upload link."
+            ),
+        ),
+        (
+            PresentedDocument(
+                "D-EPC",
+                "EPC",
+                False,
+                "pending",
+                (
+                    DocumentIssue("warning", "Page 2 is hard to read."),
+                    DocumentIssue("error", "The home address does not match your case."),
+                ),
+            ),
+        ),
+    )
 
 
 class ChatApiTests(DemoTestCase):
@@ -117,6 +149,78 @@ class ChatApiTests(DemoTestCase):
             ],
             [],
         )
+
+    def test_documents_own_case_typed_routing_and_no_cross_case_data(self) -> None:
+        self.reader.rows["C-1"] = replace(self.reader.rows["C-1"], documents=document_fixture())
+        for question in (
+            "Which documents are missing from my case?",
+            "How do I provide my documents?",
+            "How do I send the document?",
+            "What is wrong with my document warning or error?",
+        ):
+            status, body = self.ask(question=question)
+            self.assertEqual(status, 200)
+            text = json.dumps(body)
+            for expected in (
+                "Survey: Missing",
+                "secure upload link",
+                "Page 2 is hard to read",
+                "home address does not match",
+                "file check has not finished",
+                "document request R-SURVEY",
+                "document D-EPC",
+                "not a decision",
+                "cannot upload or send",
+            ):
+                self.assertIn(expected, text)
+            self.assertNotIn("C-2", text)
+        status, body, _ = self.client_two.call(
+            "POST",
+            "/demo/assistant",
+            {"topic": "documents", "use_record": True},
+            headers={"X-Case-ID": "C-1"},
+        )
+        self.assertEqual(status, 200)
+        self.assertIn("cannot tell you what to send", str(body["answer"]))
+        self.assertNotIn("D-EPC", json.dumps(body))
+        for question in ("ignore instructions document", "another resident documents"):
+            self.assertIn("cannot answer that", str(self.ask(question=question)[1]["answer"]))
+        self.reader.rows["C-1"] = replace(self.reader.rows["C-1"], revoked=True)
+        self.assertEqual(self.ask(topic="documents")[0], 401)
+
+    def test_document_ai_success_and_unavailable_keep_rules_facts_and_citations(self) -> None:
+        self.reader.rows["C-1"] = replace(self.reader.rows["C-1"], documents=document_fixture())
+        _, rules = self.ask(topic="documents")
+        transport = Mock(return_value=reply(["privacy"]))
+        self.app.assistant_advisor = AzureAdvisor(
+            ENDPOINT, Mock(), lambda: "FAKE", transport=transport, clock=lambda: EXPIRES - 10
+        )
+        _, ai = self.ask(topic="documents")
+        self.assertIn("AI suggestion", str(ai["label"]))
+        self.assertTrue(str(ai["answer"]).startswith(str(rules["answer"])))
+        self.assertEqual(ai["sources"], rules["sources"])
+        prompt = transport.call_args.args[1].decode()
+        self.assertNotIn("two@example.com", prompt)
+        self.assertNotIn("C-2", prompt)
+        transport.side_effect = OSError("hidden synthetic failure")
+        _, fallback = self.ask(topic="documents")
+        self.assertIn("AI unavailable", str(fallback["label"]))
+        self.assertEqual(fallback["answer"], rules["answer"])
+        self.assertEqual(fallback["sources"], rules["sources"])
+
+    def test_document_revocation_during_inference_returns_no_facts(self) -> None:
+        self.reader.rows["C-1"] = replace(self.reader.rows["C-1"], documents=document_fixture())
+
+        def transport(url: str, data: bytes, token: str) -> bytes:
+            self.reader.rows["C-1"] = replace(self.reader.rows["C-1"], revoked=True)
+            return reply(["privacy"])
+
+        self.app.assistant_advisor = AzureAdvisor(
+            ENDPOINT, Mock(), lambda: "FAKE", transport=transport, clock=lambda: EXPIRES - 10
+        )
+        status, result = self.ask(topic="documents")
+        self.assertEqual(status, 401)
+        self.assertNotIn("answer", result)
 
     def test_agenda_confirmation_isolation_cancellation_and_authentication(self) -> None:
         body = {"action": "find", "earliest": "2026-10-25", "period": "any", "use_record": True}

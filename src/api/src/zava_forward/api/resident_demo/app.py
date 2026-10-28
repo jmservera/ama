@@ -148,6 +148,14 @@ class ResidentDemo:
         return token
 
     def view_for(self, token: str | None) -> dict[str, Any] | None:
+        row = self.row_for(token)
+        if row is None:
+            return None
+        view: dict[str, Any] = rs.showcase_view(row)
+        view["account"] = {"email": self.identity.email_for(row.case_id)}
+        return view
+
+    def row_for(self, token: str | None) -> rs.ShowcaseRow | None:
         found = self.codec.verify(token)
         case_id = self.by_handle.get(found[0]) if found else None
         if case_id is None:
@@ -159,9 +167,7 @@ class ResidentDemo:
             rs.authorise(row, self.now(), case_id, self.identity.email_for(case_id))
         except rs.ShowcaseDenied:
             return None
-        view: dict[str, Any] = rs.showcase_view(row)
-        view["account"] = {"email": self.identity.email_for(case_id)}
-        return view
+        return row
 
 
 def _cookies(header: str | None) -> dict[str, str]:
@@ -333,10 +339,11 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
             ):
                 self._json(400, dict(error="Agree to use your own record for this question."))
                 return
-            view = app.view_for(session)
-            if view is None:
+            row = app.row_for(session)
+            if row is None:
                 self._json(401, dict(error="Please sign in again."))
                 return
+            view = rs.showcase_view(row)
             value = body.get("topic", body.get("question"))
             if not isinstance(value, str) or not 1 <= len(value.strip()) <= 500:
                 self._json(400, dict(error="Choose one of the listed questions."))
@@ -352,7 +359,9 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                         return
                     topic = value
             try:
-                case = CaseProgress(view["progress"], view["next_step"], view.get("closed", ""))
+                case = CaseProgress(
+                    view["progress"], view["next_step"], view.get("closed", ""), row.documents
+                )
                 signed = app.codec.verify(session)
                 case_id = app.by_handle.get(signed[0]) if signed else None
                 if case_id is None:

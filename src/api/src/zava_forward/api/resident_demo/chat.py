@@ -50,10 +50,13 @@ def route(question: str) -> Topic | str:
         "diagnose",
         "decide",
         "submit",
-        "send",
         "book",
         "cancel",
     }:
+        return "unknown"
+    if words & {"documents", "document", "paperwork"}:
+        return Topic.DOCUMENTS
+    if "send" in words:
         return "unknown"
     if words & {"law", "laws", "legal", "regulation", "regulations", "rules", "compliant", "duty"}:
         return "regulations"
@@ -65,8 +68,6 @@ def route(question: str) -> Topic | str:
         return "home"
     if words & {"status", "case", "progress"}:
         return Topic.STATUS
-    if words & {"documents", "document"}:
-        return Topic.DOCUMENTS
     if words & {"form", "forms"}:
         return Topic.FORMS
     return "unknown"

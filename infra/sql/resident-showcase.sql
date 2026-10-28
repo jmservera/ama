@@ -77,7 +77,102 @@ SELECT
   CAST(k.closed AS BIT) AS closed,
   JSON_QUERY(k.body, ''$.measures'') AS measures_json,
   LEFT(JSON_VALUE(k.body, ''$.measures''), 1000) AS measures_text,
-  ' + @history + N'
+  ' + @history + N',
+  (SELECT
+     JSON_QUERY(CASE
+       WHEN rq.[type] IS NULL OR rq.[type] = 0 THEN NULL
+       WHEN rq.[type] <> 4 OR EXISTS (
+         SELECT 1 FROM OPENJSON(rq.[value]) AS r
+         CROSS APPLY (SELECT CASE WHEN r.[type] = 5 THEN r.[value] ELSE N''{}'' END AS body) AS rb
+         WHERE r.[type] <> 5
+            OR (SELECT COUNT(*) FROM OPENJSON(rb.body)
+                WHERE [key] IN (''id'', ''kind'', ''how_to_provide'') AND [type] = 1) <> 3
+            OR (SELECT COUNT(*) FROM OPENJSON(rb.body)
+                WHERE [key] IN (''id'', ''kind'', ''how_to_provide'')) <> 3
+            OR EXISTS (SELECT 1 FROM OPENJSON(rb.body)
+                       WHERE [key] IN (''id'', ''kind'', ''how_to_provide'')
+                         AND LEN([value] + N''x'') - 1 >
+                           CASE [key] WHEN ''id'' THEN 64 WHEN ''kind'' THEN 80 ELSE 500 END)
+       ) THEN N''{"invalid":true}''
+       ELSE COALESCE((
+         SELECT JSON_VALUE(r.[value], ''$.id'') AS id,
+                JSON_VALUE(r.[value], ''$.kind'') AS kind,
+                JSON_VALUE(r.[value], ''$.how_to_provide'') AS how_to_provide
+         FROM OPENJSON(rq.[value]) AS r
+         ORDER BY CAST(r.[key] AS INT)
+         FOR JSON PATH, INCLUDE_NULL_VALUES
+       ), N''[]'') END) AS requests,
+     JSON_QUERY(CASE
+       WHEN ds.[type] IS NULL OR ds.[type] = 0 THEN NULL
+       WHEN ds.[type] <> 4 THEN N''{"invalid":true}''
+       ELSE COALESCE((
+         SELECT JSON_VALUE(j.body, ''$.id'') AS id,
+                JSON_VALUE(j.body, ''$.kind'') AS kind,
+                CAST(CASE JSON_VALUE(j.body, ''$.generated'')
+                     WHEN ''true'' THEN 1 ELSE 0 END AS BIT) AS generated,
+                JSON_VALUE(j.body, ''$.scan.status'') AS scan_status,
+                JSON_QUERY(CASE
+                  WHEN iss.[type] IS NULL OR iss.[type] = 0 THEN NULL
+                  WHEN iss.[type] <> 4 OR EXISTS (
+                    SELECT 1 FROM OPENJSON(iss.[value]) AS i
+                    CROSS APPLY (
+                      SELECT CASE WHEN i.[type] = 5 THEN i.[value] ELSE N''{}'' END AS body
+                    ) AS ib
+                    WHERE i.[type] <> 5
+                       OR (SELECT COUNT(*) FROM OPENJSON(ib.body)
+                           WHERE [key] IN (''severity'', ''message'') AND [type] = 1) <> 2
+                       OR (SELECT COUNT(*) FROM OPENJSON(ib.body)
+                           WHERE [key] IN (''severity'', ''message'')) <> 2
+                       OR EXISTS (SELECT 1 FROM OPENJSON(ib.body)
+                                  WHERE [key] IN (''severity'', ''message'')
+                                    AND LEN([value] + N''x'') - 1 > 500)
+                  ) THEN N''{"invalid":true}''
+                  ELSE COALESCE((
+                    SELECT JSON_VALUE(i.[value], ''$.severity'') AS severity,
+                           JSON_VALUE(i.[value], ''$.message'') AS message
+                    FROM OPENJSON(iss.[value]) AS i
+                    ORDER BY CAST(i.[key] AS INT)
+                    FOR JSON PATH, INCLUDE_NULL_VALUES
+                  ), N''[]'') END) AS issues,
+                CASE WHEN d.[type] = 5
+                  AND (SELECT COUNT(*) FROM OPENJSON(j.body)
+                       WHERE ([key] IN (''id'', ''kind'') AND [type] = 1)
+                          OR ([key] = ''generated'' AND [type] = 3)) = 3
+                  AND (SELECT COUNT(*) FROM OPENJSON(j.body)
+                       WHERE [key] IN (''id'', ''kind'', ''generated'')) = 3
+                  AND NOT EXISTS (SELECT 1 FROM OPENJSON(j.body)
+                                  WHERE [key] = ''scan'' AND [type] NOT IN (0, 5))
+                  AND NOT EXISTS (
+                    SELECT 1 FROM OPENJSON(
+                      CASE WHEN ISJSON(JSON_QUERY(j.body, ''$.scan'')) = 1
+                           THEN JSON_QUERY(j.body, ''$.scan'') ELSE N''{}'' END)
+                    WHERE [key] = ''status'' AND [type] NOT IN (0, 1))
+                  AND NOT EXISTS (
+                    SELECT 1 FROM OPENJSON(j.body)
+                    WHERE [key] IN (''id'', ''kind'')
+                      AND LEN([value] + N''x'') - 1 > CASE [key] WHEN ''id'' THEN 64 ELSE 80 END)
+                  AND NOT EXISTS (
+                    SELECT 1 FROM OPENJSON(
+                      CASE WHEN ISJSON(JSON_QUERY(j.body, ''$.scan'')) = 1
+                           THEN JSON_QUERY(j.body, ''$.scan'') ELSE N''{}'' END)
+                    WHERE [key] = ''status'' AND LEN([value] + N''x'') - 1 > 80)
+                THEN 1 ELSE 0 END AS source_valid
+         FROM OPENJSON(ds.[value]) AS d
+         CROSS APPLY (SELECT CASE WHEN d.[type] = 5 THEN d.[value] ELSE N''{}'' END AS body) AS j
+         OUTER APPLY (
+           SELECT [value], [type] FROM OPENJSON(j.body) WHERE [key] = ''resident_issues''
+         ) AS iss
+         ORDER BY CAST(d.[key] AS INT)
+         FOR JSON PATH, INCLUDE_NULL_VALUES
+       ), N''[]'') END) AS documents
+   FROM (SELECT 1 AS one) AS singleton
+   OUTER APPLY (
+     SELECT [value], [type] FROM OPENJSON(k.body) WHERE [key] = ''resident_document_requests''
+   ) AS rq
+   OUTER APPLY (
+     SELECT [value], [type] FROM OPENJSON(k.body) WHERE [key] = ''documents''
+   ) AS ds
+   FOR JSON PATH, INCLUDE_NULL_VALUES, WITHOUT_ARRAY_WRAPPER) AS documents_json
 FROM counted AS k
 JOIN resident_showcase.allowed_case AS a ON a.case_id = k.id
 WHERE k.email IS NOT NULL;';

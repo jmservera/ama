@@ -143,6 +143,33 @@ Operational appointment history and works-consent records are not projected:
 answers state Unknown, never infer consent. Safety questions give direct
 human/emergency routes and explicitly state that no report was sent.
 
+Document answers use only the authorized case's resident-facing requests and
+document metadata. The case JSON contract adds `resident_document_requests`,
+an array of `{id, kind, how_to_provide}`; absent/null is unknown, while `[]`
+means no requests recorded. Canonical `documents` contribute only `id`, `kind`,
+`generated`, `scan.status` and `resident_issues`, an explicitly resident-facing
+array of `{severity: "warning"|"error", message}`. Staff notes, names, filenames,
+scanner detail, hashes and document bytes are not projected. Do not copy private
+staff issue text into resident-facing fields without the appropriate review.
+
+The answer matches requested kinds to nongenerated presented documents, explains
+every recorded resident issue and pending/infected/mismatch scan code, and cites
+the request/document references. Receipt or a clean scan never means acceptance
+or compliance. Missing data stays unknown; malformed/oversized metadata fails
+explicitly rather than becoming an empty checklist. Limits: 20 requests, 40
+documents, 10 issues per document, 64-character IDs, 80-character kinds/statuses
+and 500-character instructions/messages. Instructions are quoted own-case data;
+the housing officer confirms requirements and a secure route. Chat cannot
+upload/send files. The same mandatory facts/citations remain under AI selection,
+AI-off and unavailable fallback. Larger valid answers may use rules because the
+existing AI payload cap is unchanged.
+
+`infra/sql/resident-showcase.sql` adds the `documents_json` view column. A
+separately authorized view application is required before deployment with this
+reader; no cloud application or live data migration is implied by these sources.
+Historical infected/mismatch fixtures do not imply normal upload persistence:
+normal uploads reject them and rescans normally remove them.
+
 The regulations answer cites the local Safety and Quality Standard, sections
 2.3.1..2.3.3, source date 2024-04-01 and retrieval 2026-09-19. Those provisions
 were compared with the [official publication](https://www.gov.uk/government/publications/safety-and-quality-standard)

@@ -29,6 +29,7 @@ from typing import Any
 
 from . import resident_preview as _preview
 from .insights import STAGE_ORDER
+from .resident_documents import DocumentFacts
 
 AUTHORITY_END = datetime.fromisoformat(
     json.loads(files(__package__).joinpath("resident-demo.json").read_text())[
@@ -59,6 +60,7 @@ ROW_KEYS = frozenset(
         "measures",
         "sensor_home_id",
         "sensors",
+        "documents",
     }
 )
 FORBIDDEN_ENV_PREFIXES = (
@@ -186,6 +188,7 @@ class ShowcaseRow:
     measures: tuple[str, ...]
     sensor_home_id: str | None = None
     sensors: tuple[SensorReading, ...] = ()
+    documents: DocumentFacts = DocumentFacts()
 
 
 def _aware(value: Any) -> datetime:
@@ -216,6 +219,8 @@ def parse_row(raw: Any) -> ShowcaseRow:
         sensors = raw["sensors"]
         if not isinstance(sensors, tuple) or not all(isinstance(s, SensorReading) for s in sensors):
             raise ValueError("sensors")
+        if not isinstance(raw["documents"], DocumentFacts):
+            raise ValueError("documents")
         return ShowcaseRow(
             case_id=raw["case_id"],
             email=raw["email"],
@@ -232,6 +237,7 @@ def parse_row(raw: Any) -> ShowcaseRow:
             measures=measures,
             sensor_home_id=raw["sensor_home_id"],
             sensors=sensors,
+            documents=raw["documents"],
         )
     except (ValueError, TypeError, KeyError):
         raise ShowcaseDenied("row_shape") from None

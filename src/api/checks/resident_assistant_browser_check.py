@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from playwright.sync_api import Browser, Page, Route, expect, sync_playwright
+from test_resident_chat_api import document_fixture
 from test_resident_demo_api import FAKE_PASSWORD, NOW, DemoTestCase
 from checks.regulatory_ux_check import AXE_SHA256, scan
 from zava_forward.api.resident_demo.agenda import Agenda
@@ -73,13 +74,40 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
     expect(button).to_be_focused()
     expect(page.locator("#assistant-result")).to_contain_text("Summary by rules")
     for topic, text in (
-        ("documents", "cannot tell you what to send"), ("forms", "Do not guess"),
+        ("documents", "Survey: Missing"), ("forms", "Do not guess"),
         ("consents", "cannot say whether"), ("regulations", "retrieved 2026-09-19"),
         ("safety", "has not sent a report"),
     ):
         select.select_option(topic)
         button.click()
         expect(page.locator("#assistant-result")).to_contain_text(text)
+    for question in (
+        "Which documents are missing from my case?",
+        "How do I send the document?",
+        "What does my document warning or error mean?",
+    ):
+        page.locator("#assistant-question").fill(question)
+        button.click()
+        for text in (
+            "Survey: Missing", "secure upload link", "Page 2 is hard to read",
+            "home address does not match your case", "file check has not finished",
+            "document request R-SURVEY", "document D-EPC", "not a decision",
+            "cannot upload or send", "Summary by rules",
+        ):
+            expect(page.locator("#assistant-result")).to_contain_text(text)
+        expect(page.locator("#assistant-result")).not_to_contain_text("C-2 Test Street")
+    scan(page, axe, reports, "document-facts", "#resident-chat, #chat-launcher")
+    page.set_viewport_size({"width": 320, "height": 900})
+    page.evaluate("document.documentElement.style.fontSize = '200%'")
+    assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
+    document_source = page.locator("#assistant-result li").filter(has_text="document D-EPC").last
+    document_source.scroll_into_view_if_needed()
+    expect(document_source).to_be_in_viewport()
+    assert panel.evaluate("element => element.scrollWidth <= element.clientWidth")
+    scan(page, axe, reports, "document-facts-320-text-200", "#resident-chat, #chat-launcher")
+    page.screenshot(path=str(out / "document-facts-320-200.png"))
+    page.evaluate("document.documentElement.style.fontSize = ''")
+    page.set_viewport_size({"width": 1280, "height": 900})
     page.locator("#assistant-question").fill("my home")
     button.click()
     expect(page.locator("#assistant-result")).to_contain_text("C-1 Test Street")
@@ -142,6 +170,11 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
     button.click()
     expect(page.locator("#assistant-result")).to_contain_text("Design work is under way")
     expect(page.locator("#assistant-result")).not_to_contain_text("arranging a survey")
+    select.select_option("documents")
+    button.click()
+    expect(page.locator("#assistant-result")).to_contain_text("cannot tell you what to send")
+    expect(page.locator("#assistant-result")).not_to_contain_text("R-SURVEY")
+    expect(page.locator("#assistant-result")).not_to_contain_text("D-EPC")
     select.select_option("appointments")
     button.click()
     expect(panel).to_be_hidden()
@@ -269,7 +302,7 @@ def main() -> None:
     try:
         fixture.app.allowed_hosts = ("127.0.0.1",)
         fixture.reader.rows["C-1"] = replace(
-            fixture.reader.rows["C-1"], stage="Survey being booked"
+            fixture.reader.rows["C-1"], stage="Survey being booked", documents=document_fixture()
         )
         fixture.reader.rows["C-2"] = replace(
             fixture.reader.rows["C-2"], stage="Design in progress"
