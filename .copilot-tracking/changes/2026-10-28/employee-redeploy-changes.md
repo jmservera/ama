@@ -1,6 +1,6 @@
 ---
 title: Employee redeploy execution evidence
-description: Read-only preservation and blocked one-redeploy attempt
+description: Original blocked attempt, owner-admitted rollout failure and exact recovery evidence
 ms.date: 2026-10-28
 ---
 
@@ -14,7 +14,108 @@ ms.date: 2026-10-28
 * Details: .copilot-tracking/details/2026-10-28/employee-redeploy-phase-details.md
 * Research: .copilot-tracking/research/2026-10-28/employee-redeploy-research.md
 * Original critique: .copilot-tracking/reviews/plans/2026-10-28/employee-redeploy-plan-critique.md
-* Status: Blocked before build, push or cloud mutation. No redeploy claimed.
+* Original status: Blocked before build, push or cloud mutation.
+* Current status: one forward rollout failed verification, exact old-image/env
+  recovery verified Healthy; publication gate pending.
+
+## Owner-selected continuation (2026-10-28)
+
+The preceding blocked attempt and original independent Review are retained.
+Owner explicitly selected implementation now, clearing the prior cost
+dependency ("Proceed without cost query"), coordinating heavy-lock release,
+and permitting failure-only Single-mode recovery using exact backed-up image
+and env. No cost request will be retried. Actual headroom is still unknown.
+Full plan is active from P01-T01; write boundary remains only named employee
+app, existing ACR temporary exception, external backups and tracking files.
+Validate local served script order, exact preservation, revision health,
+bounded startup logs and policy equality. Full publication gate remains
+mandatory. This is later implementation of routed findings, not a rewrite or
+second critique/Review.
+
+### P01-T01 completed: one build and served-image proof
+
+Fresh protected backup:
+`/tmp/ama-employee-redeploy-20261028-resumed.kbxpikmg`.
+Previous revision/image unchanged from original attempt; safe app projection
+hash still3193c65c51640a465e792ea4bc546f7d7f105dff1acaa1292c7934e330c6d8f6.
+Fresh ACR hash aa91336c2b8222db6f6f5fa3c86ab5106a947a2bfb3e7a3e8e861d0aa2bf43cf;
+full revisions hash c4154bc34aaedac5a6dd47764c2cc53ff948f0ef62055a8e0ccd81a66c40f865.
+
+One `docker build -f src/api/Dockerfile -t <unique-tag> src`, exit0,
+with `/tmp/ama-rpi-heavy.lock` acquired nonblocking and held through build.
+Built image ID:
+`sha256:e6b6e7440c2b64577e96b6322c852bf630f1c5113608267132ebffc07d39fa19`.
+Constructed empty cases/staff fixture, loopback-only random port and no
+cloud credentials; actual HTTP `/healthz`, `/app`, `/ops.js`, `/app.js` all200.
+Parsed served script tags: ops.js index2 before app.js index7.
+Asset hashes d28b705ffa88f386cb1b23ca4db9be93dd09d2bcbc6ea2fee3a4f12d0e466cd3
+and37aa87d572ffa6aa14cbf9e53dd9819425f38803d5c1318077566fe5f07460ee.
+Exact owned proof container removed; backup restored to0700. Fixture remains
+external for evidence. No cost query, push or cloud mutation in this step.
+
+### P01-T02 completed: pushed digest and exact ACR restoration
+
+Tag `emp-20261028-102834`, image
+`crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:e6b6e7440c2b64577e96b6322c852bf630f1c5113608267132ebffc07d39fa19`.
+Push digest, remote repository digest, local RepoDigest and tested image ID
+all agree. Exact previous digest was independently found still in ACR; no
+purge/delete/tag overwrite. Expose-token stayed in process memory/stdin;
+temporary Docker config was removed, no token or secret value printed.
+
+Exception began10:29:32Z and exact restoration confirmed10:30:17Z (45.8s).
+First equality assertion failed: Azure stored the owned `/32` as bare
+`4.225.218.160`, so remove with CIDR did not remove the returned rule.
+Public access was already Disabled. Removed only the exact returned bare-IP
+rule, then full ACR equality passed. No push/build retry or app mutation.
+This immediately relevant CLI normalization correction preserves owner intent.
+Restored policy: public Disabled, default Allow, IP/VNet arrays empty, bypass
+None, exports disabled, admin false; all other returned policy fields equal.
+Employee baseline equality also passed after cleanup. P02 now dependency-ready.
+
+### P02 executed once: verification failure and successful rollback
+
+One forward update created `ca-cutover-test-demo-api--emp-20261028-102834`
+using pushed digest e6b6e7440c2b64577e96b6322c852bf630f1c5113608267132ebffc07d39fa19.
+Positive platform health Healthy/Provisioned, latest/ready equality, exactly
+one added forward revision and exact expected full configuration/template/
+identity comparison all passed. Three requested AI entries were present.
+Anonymous health200, app/ops.js/app.js401. No protected-asset bypass attempted.
+
+Verification failed because `az containerapp logs show --type system` rejects
+`--revision` (and replica/container selectors). Raw logs/credential/config
+content were withheld. This is an operator invocation error, not demonstrated
+startup failure. Per owner "if anything fails", no forward retry; rollback.
+
+Initial failure-only REST recovery and diagnostic retries were rejected400:
+GET template includes read-only `imageType` unsupported in that API request.
+Those rejected patches created no revision. The supported CLI update then
+restored the exact backed-up image and all original env with
+`--replace-env-vars`, same container/min0, preserving other fields.
+One recovery revision: `ca-cutover-test-demo-api--rollback-20261028-103137`.
+Verified10:32:57Z Healthy/Provisioned/Running, latest=ready; full configuration,
+identity and template equal original except required revision suffix.
+Exact old digest:
+`sha256:0769b52dddc5d6b350c74d6711ae53eda45d3e903ee27fac6b5a6c1d6b8b6e7e`.
+Twenty-seven original env entries restored; AI entries absent. Registry,
+Key Vault references, identity, min0/max4 and Single mode preserved.
+
+Corrected bounded read-only logs: system command without revision selector,
+31entries/no startup-error matches (app-scoped, not falsely revision-scoped);
+rollback-specific console3entries, positive "Zava Forward is running",
+zero startup-error matches. Rollback health200, protected app/JS401.
+Final complete ACR equality passed. No other workload/role/network/resource
+change, cost query, secret-value read or paid inference.
+
+Desired AI-enabled outcome NOT achieved. No further rollout is authorized by
+this one-redeploy request. Backup/recovery evidence retained externally.
+Original independent Review remains Complete / Not accepted, not re-executed
+or upgraded; this later implementation reports actual recovery evidence only.
+
+## Original attempt (historical, retained unchanged below)
+
+The following sections retain the earlier blocked attempt. Current results
+and owner dispositions are recorded above; do not treat historical no-write
+statements as the terminal state of the continuation.
 
 ## P01-T01: Safe preservation
 

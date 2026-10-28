@@ -145,6 +145,12 @@ quality, release binding or human acceptance.
 
 ## Planning Readiness
 
+Owner-selected continuation: existing research reused, not restarted. On
+2026-10-28 owner explicitly waived cost-query evidence for this bounded
+operation, confirmed lock coordination and approved exact previous-image/env
+Single-mode recovery. These supersede the historical execution blockers below,
+not the original critique/Review outcomes. No cost query retry authorized.
+
 Ready (C1-C4/W1-W4). Research disposition: executed, complete.
 Parent next action: Plan, with independent one-pass critique.
 

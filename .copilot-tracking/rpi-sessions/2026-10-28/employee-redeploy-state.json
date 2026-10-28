@@ -3,8 +3,8 @@
   "task_slug": "employee-redeploy",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Follow-up",
-  "status": "completed",
+  "active_phase": "Implement",
+  "status": "active",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-28/employee-redeploy-research.md",
@@ -15,6 +15,16 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-28/employee-redeploy-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "Owner re-admitted existing task: proceed without denied cost query, take lock nonblocking, exact old-image/env Single-mode recovery on failure.",
+      "status": "confirmed",
+      "evidence": "2026-10-28 owner update in current request; no repeated cost queries, no new resources."
+    },
+    {
+      "decision": "One forward revision executed; system-log CLI verification failed, so exact old digest/env restored in one recovery revision. No forward retry.",
+      "status": "rolled-back",
+      "evidence": "Changes P02; external rollback-result.json at /tmp/ama-employee-redeploy-20261028-resumed.kbxpikmg; Healthy/Provisioned/Running, full preservation and ACR equality."
+    },
     {
       "decision": "Execute the explicitly requested full RPI loop and exactly one employee revision update; no resident/resource/role changes or paid inference.",
       "status": "confirmed",
@@ -33,56 +43,40 @@
     {
       "decision": "Single independent Review executed Complete; outcome Not accepted at full-request/blocked-execution boundary. No deployment or publication acceptance.",
       "status": "complete",
-      "evidence": ".copilot-tracking/reviews/logs/2026-10-28/employee-redeploy-review.md; RV-001..005 remain routed, not fixed or re-reviewed."
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-28/employee-redeploy-review.md; original verdict unchanged. Later implementation/evidence is distinct, no repeated Review."
     }
   ],
   "blockers": [
     {
-      "id": "heavy-lock",
-      "summary": "Foreign PID3869238 python3 holds /tmp/ama-rpi-heavy.lock; build and full gate cannot queue.",
-      "resolution": "Later explicit coordination event after lock is free; do not poll or interrupt owner."
-    },
-    {
-      "id": "cost-readiness",
-      "summary": "Current all-in headroom unavailable: CostManagement query429; alternate API request RBACAccessDenied.",
-      "resolution": "Authorized sanitized current cost/headroom/reserve evidence; no new roles or shared login changes."
-    },
-    {
-      "id": "single-mode-recovery",
-      "summary": "Supported exact Single-mode/traffic rollback without another revision not established.",
-      "resolution": "Establish compliant recovery before the one app mutation; no improvised multiple-mode divergence."
+      "id": "deployment-outcome",
+      "summary": "Desired AI-enabled rollout not achieved: system-log command failure triggered required recovery; old image/env now Healthy.",
+      "resolution": "Separate owner authorization for another forward rollout; use app-scoped system logs and revision-specific console logs."
     },
     {
       "id": "publication-gate",
-      "summary": "Full exact-head local gate not admitted because of foreign lock; no verified receipt, push or PR.",
-      "resolution": "Later explicit gate admission on clean committed candidate/current main, full gate, receipt verification and independent exact-head assessment."
+      "summary": "Full exact-head local gate remains required after implementation evidence commit.",
+      "resolution": "Run complete gate nonblocking; verify receipt and independent exact-head assessment before push/PR."
     }
   ],
   "next_action": {
-    "phase": "Follow-up",
-    "action": "Local evidence commit only; deployment remains blocked / Review Not accepted. Await blocker-clearing coordination and selected routed follow-up; no automatic child work or publication."
+    "phase": "Implement",
+    "action": "P01/P02 execution finished, desired outcome rolled back. Preserve original Review Not accepted; reconcile and commit current evidence, then attempt complete local publication gate. No further forward app update."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Establish compliant Single-mode rollback",
-      "rationale": "Bounded planning evidence unlocks safe one-revision execution without unrelated configuration drift.",
-      "evidence": "Review RV-001; plan PC-001 disposition; route rpi-plan."
+      "task": "Separately authorize a later employee rollout with corrected verification",
+      "rationale": "Highest delivery value: current one-forward-update authority consumed and old configuration safely recovered; no unapproved retry.",
+      "evidence": "Changes P02: system logs reject revision selectors, successful exact CLI recovery; desired AI-enabled outcome unmet."
     },
     {
       "rank": 2,
-      "task": "Supply current sanitized all-in financial readiness",
-      "rationale": "Owner/coordinator evidence can clear the denied cost-access dependency without roles or resource changes.",
-      "evidence": "Review RV-002; ActualCost429 and RBACAccessDenied; route rpi-research."
+      "task": "Clear exact-head publication gate if it fails",
+      "rationale": "Enables requested evidence publication without weakening required gates; no cloud mutation needed.",
+      "evidence": "P03-T02; full gate and external receipt pending."
     },
     {
       "rank": 3,
-      "task": "Re-admit the existing redeploy and publication work",
-      "rationale": "Highest delivery impact, but depends on recovery, cost evidence and explicit coordination after foreign lock ownership is free.",
-      "evidence": "Review RV-003/RV-004; remaining P01/P02/P03-T02; later rpi-implement."
-    },
-    {
-      "rank": 4,
       "task": "Separately authorize authenticated employee/task acceptance",
       "rationale": "Protected assets, UX and task/model binding cannot be inferred from deployment checks; outside no-inference redeploy.",
       "evidence": "Review RV-005 / FU-EMP-ACCEPT; owner-operated distinct follow-up."

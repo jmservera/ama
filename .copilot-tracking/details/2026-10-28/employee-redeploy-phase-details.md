@@ -10,15 +10,19 @@ ms.date: 2026-10-28
 * Plan: .copilot-tracking/plans/2026-10-28/employee-redeploy-plan.md
 * Research: .copilot-tracking/research/2026-10-28/employee-redeploy-research.md
 * Status: critique Complete / Revise, compatible corrections applied.
-* Current execution: read-only backup/evidence permitted; build/cloud blocked.
+* Current execution: one forward update failed verification; rollback complete,
+  desired AI-enabled outcome unmet. No cost queries.
 * Backup result: `/tmp/ama-employee-redeploy-20261028.nbVE6l`, directory0700/
   JSON0600. Complete safe app/config/template, revision and ACR GETs captured.
   Final app/ACR semantic equality passed;27 original env entries, one Key Vault
   reference, min0/max4 and old revision/digest unchanged; AI entries absent.
-* Completion markers: P01-T01 partial, P01-T02/P02 blocked; P03-T01 complete
-  with independent Review Complete / Not accepted. No build/push/update/rollback.
-* Full publication gate not admitted because foreign heavy-lock ownership
-  blocks without queueing or polling. No verified receipt, no push/PR.
+* Current completion: P01/P02 execution complete; outcome rolled back.
+  Original Review Complete / Not accepted retained; owner-selected later
+  implementation is not a second Review.
+* Fresh backup: `/tmp/ama-employee-redeploy-20261028-resumed.kbxpikmg`,
+  JSON0600/directory0700, previous revision/digest preserved.
+* One build and isolated synthetic HTTP proof passed; script indices2<7.
+  Full publication gate pending, no verified receipt/push/PR.
 
 <!-- rpi:phase id=P01 -->
 ## P01: Preserve and publish image
@@ -46,10 +50,18 @@ Parse served HTML script elements: `/ops.js` index strictly less than `/app.js`;
 record indices/statuses/SHA256s, not response bodies. Bind built image ID to
 subsequently pushed manifest. Finally remove only this exact owned container
 and known constructed local fixture files. This is a runtime command recipe,
-not a new tracked test. Currently NOT RUN: foreign heavy lock blocks build.
+not a new tracked test. Current result: one build under nonblocking lock,
+four HTTP200 responses and script indices2<7. Owned container removed.
 
 <!-- rpi:task id=P01-T02 -->
 ### P01-T02: Push digest and restore ACR
+
+Completed: pushed/tested digest
+`sha256:e6b6e7440c2b64577e96b6322c852bf630f1c5113608267132ebffc07d39fa19`;
+old digest remains in registry. Exact baseline equality confirmed10:30:17Z.
+Azure canonicalizes `/32` to bare IPv4: remove the exact returned owned rule.
+Initial CIDR removal left that rule; private-first cleanup kept public Disabled,
+the exact-IP correction succeeded before any app write.
 
 Initial ACR: public Disabled, default Allow, IP/VNet arrays empty, bypass None,
 export disabled, admin false. Save exact policy JSON externally. VM egress
@@ -62,10 +74,11 @@ read manifest digest, compare local pushed RepoDigest and remote manifest.
 Finally disable public first, remove only owned rule, restore other original
 policy fields and assert exact JSON equality. Clean exact owned Docker auth
 file and empty config directory. Any exception prevents app update.
-PC-003: all cloud writes additionally blocked pending current sanitized all-in
+Historical PC-003: cloud writes were blocked pending current sanitized all-in
 headroom (accrued, remaining liabilities, reserve, currency/lag/exclusions and
 bounded redeploy exposure). One cost query429 and one stable-API alternative
-RBAC denial cannot satisfy it. Do not grant roles or alter shared login.
+RBAC denial cannot satisfy it. Owner now permits this bounded operation
+without cost query; do not retry. No headroom amount is inferred.
 PC-005 bounds if re-admitted:600seconds total exception,60seconds each policy/
 rule/token/login/digest operation,420seconds push, private-first restoration
 on handled error/timeout/interruption in finally,120seconds restoration readback.
@@ -76,6 +89,12 @@ Unconfirmed cleanup is an explicit recovery blocker, never a success.
 
 <!-- rpi:task id=P02-T01 -->
 ### P02-T01: One additive revision update and bounded checks
+
+Actual result: one forward revision `ca-cutover-test-demo-api--emp-20261028-102834`
+was Healthy/Provisioned and exact template/config/identity checks passed.
+Live health200; app/JS401. System logs reject --revision/--replica/--container,
+so verification command failed. Fail-closed recovery started immediately.
+This command failure is not evidence of an application startup defect.
 
 Compare current safe projection to baseline immediately before write. Single
 command `az containerapp update -g ama -n ca-cutover-test-demo-api
@@ -99,16 +118,28 @@ counts and safe event reasons, never raw request/customer or credential text.
 <!-- rpi:task id=P02-T02 -->
 ### P02-T02: Rollback or final success readback
 
+Recovery complete10:32:57Z: `ca-cutover-test-demo-api--rollback-20261028-103137`,
+Healthy/Provisioned/Running. Exact old digest and27 original env entries,
+identity/registries/secretrefs/scale/full configuration preserved, min0/max4,
+Single mode, AI entries absent. Positive console startup, no error matches;
+health200, app/JS401. Desired deployment not accepted, no forward retry.
+Initial REST recovery requests failed schema validation on read-only
+imageType in GET template; no revision created by those rejected requests.
+Supported CLI update with exact old digest and --replace-env-vars from
+backup succeeded once. Original revision name differs, exact image/env restored.
+
 Previous revision `ca-cutover-test-demo-api--0000006`, digest
 `sha256:0769b52dddc5d6b350c74d6711ae53eda45d3e903ee27fac6b5a6c1d6b8b6e7e`.
 Official docs https://learn.microsoft.com/en-us/azure/container-apps/revisions
 and /revisions-manage retrieved2026-10-28 describe failed-rollout old-traffic
 retention, activation and multiple-mode routing, but do not establish exact
 Single-mode rollback after successful cutover without a new revision. Therefore
-PC-001 is resolved by fail-closed planning: block mutation until a compliant
-route is established. No automatic mode/traffic divergence is authorized.
-With zero app writes, confirm previous revision/config remain unchanged;
-rollback is not needed or executed. Never copy/update image a second time.
+PC-001 was resolved by fail-closed planning in the original attempt.
+Owner now explicitly permits failure-only Single-mode recovery via exact old
+image and complete backed-up env/template. Do not change revision mode.
+Retain previous image manifest and tags; verify the old manifest before
+restoring ACR policy. Recovery may create a rollback revision, never a forward
+retry. If rollout succeeds, no rollback mutation is permitted.
 
 <!-- rpi:phase id=P03 -->
 ## P03: Review and publication

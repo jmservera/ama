@@ -8,18 +8,20 @@ ms.date: 2026-10-28
 
 * Task ID: employee-redeploy-20261028
 * Task slug: employee-redeploy
-* Planning status: Complete / Blocked for build, cloud mutation and publication
+* Planning status: Complete / implementation attempted and rolled back
 * Details: .copilot-tracking/details/2026-10-28/employee-redeploy-phase-details.md
 * Critique: .copilot-tracking/reviews/plans/2026-10-28/employee-redeploy-plan-critique.md
 
 ## Executive Summary
 
 Intended outcome remains one merged-main image and one employee revision.
-Execution is blocked before mutation: the shared heavy lock has a foreign
-holder, current cost evidence is inaccessible, and a fully supported
-Single-mode/no-second-revision rollback is not established. Complete only safe
-read-only backup/evidence and independently review this blocked outcome.
-No source changes, cloud mutations, inference or resource creation.
+Owner update re-admits the existing implementation: take the heavy lock
+nonblocking, do not retry denied cost queries, and permit failure-only
+Single-mode rollback by updating to the exact previous digest and env.
+One forward rollout was attempted. Verification command failed, triggering the
+authorized rollback. Exact old image/env are now restored and Healthy.
+Desired AI-enabled deployment is NOT accepted; no further forward retry.
+No source changes, inference or resource creation.
 
 ### What You May Not Know
 
@@ -29,16 +31,13 @@ policy. Anonymous sign-in challenges are expected and do not prove a broken
 rollout. An authenticated asset/UX check and task-release/model acceptance
 cannot be claimed from anonymous probes. Publication requires the complete
 local gate; historical exceptions on other PRs do not apply here. Its own
-nonblocking admission is also subject to the foreign heavy-lock holder.
+nonblocking admission must succeed without queueing.
 
 ### Current Blockers
 
-* Actual lock holder observed: PID3869238, `python3`, `/tmp/ama-rpi-heavy.lock`.
-  No queued build, foreign-process interruption or release polling.
-* Cost query failed HTTP429; one alternative stable-API explicit-period query
-  failed `RBACAccessDenied`/Unauthorized. No role/auth/session change attempted.
-* Supported Single-mode/no-new-revision recovery cannot be established from
-  official revision documentation; do not improvise mode/traffic exceptions.
+* Forward update consumed. Failed system-log verification required rollback;
+  another rollout requires separate owner authorization.
+* Publication remains conditional on the complete exact-head local gate.
 
 ## User Decisions and Requirements
 
@@ -53,6 +52,10 @@ nonblocking admission is also subject to the foreign heavy-lock holder.
 * Commit tracking with requested coauthor, push `ops/employee-redeploy-20261028`
   and open Refs-only PR if required publication gates permit.
 * Nonblocking `/tmp/ama-rpi-heavy.lock` while Docker builds.
+* Owner update: proceed without cost query; one build and revision accepted
+  within budget. No cost retries or claim of known all-in headroom.
+* Failure-only rollback uses exact backed-up image and env in Single mode;
+  retain old manifest/tags, do not purge or alter revision mode.
 
 ## Goals
 
@@ -84,9 +87,8 @@ nonblocking admission is also subject to the foreign heavy-lock holder.
 * Only ephemeral local image checks with no real database/cloud credentials.
 * Keep external backup and sanitized operation results; do not commit config
   values, credentials, Docker config or raw logs.
-* Cloud writes require current sanitized all-in headroom/reserve/remaining
-  liabilities and bounded exposure. Fresh operation authority is not evidence
-  of an amount; unknown cost blocks cloud actions.
+* Explicit owner financial exception permits only this bounded build/revision;
+  all-in headroom remains unknown, no new resources or paid inference.
 
 ## Acceptance Criteria
 
@@ -100,8 +102,8 @@ nonblocking admission is also subject to the foreign heavy-lock holder.
   live assets checked if anonymously accessible, otherwise disclose protected
   route boundary without changing auth or inventing a staff session.
 * ACR policy matches exact baseline after push and at final readback.
-* On actual rollout/config/startup/asset failure: activate previous revision and
-  verify old digest/readiness/traffic; no second image revision.
+* On actual rollout/config/startup/asset failure: update exact backed-up image
+  and env, verify old digest/readiness/traffic in Single mode.
 * Original critique and independent Review retained; complete exact-head local
   gate/receipt verified immediately before push or publication remains blocked.
 
@@ -115,38 +117,48 @@ nonblocking admission is also subject to the foreign heavy-lock holder.
 ## Phase Checklist
 
 <!-- rpi:phase id=P01 -->
-### [ ] P01: Preserve and publish image
+### [x] P01: Preserve and publish image
 
 <!-- rpi:task id=P01-T01 -->
-#### [ ] P01-T01: Capture baseline and build once
+#### [x] P01-T01: Capture baseline and build once
 
 Use safe projections, external mode0700 directory, verify context has no local
 untracked/ignored files, build with nonblocking heavy lock and immutable source SHA.
-Current result: backup and unchanged-state verification complete under
-`/tmp/ama-employee-redeploy-20261028.nbVE6l`; build blocked, task remains partial.
+Fresh reference-only backup: `/tmp/ama-employee-redeploy-20261028-resumed.kbxpikmg`.
+One build completed with nonblocking heavy-lock admission. Exact built image
+served health/app/ops.js/app.js HTTP200; script indices2<7. Old backup retained.
 
 <!-- rpi:task id=P01-T02 -->
-#### [ ] P01-T02: Push digest and restore ACR
+#### [x] P01-T02: Push digest and restore ACR
 
 Depends on P01-T01. Temporary one-IP deny-by-default route, expose token,
 docker login/push, digest readback, finally restore exact original policy.
+Complete: pushed digest equals exact local image ID; old manifest retained.
+ACR baseline equality verified after correcting removal to Azure's canonical
+bare IPv4 rule representation. Public access was already disabled throughout
+that cleanup correction; employee baseline stayed unchanged.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Update and verify once
+### [x] P02: Update and verify once
 
 <!-- rpi:task id=P02-T01 -->
-#### [ ] P02-T01: One additive revision update and bounded checks
+#### [x] P02-T01: One additive revision update and bounded checks
 
 Depends on P01-T02. Verify no baseline drift immediately before write. Update
 image/three env entries/min zero once; verify health, config, logs and assets.
+Executed once, forward revision Healthy/Provisioned and exact config passed;
+HTTP health200, protected assets401. System log command rejected --revision;
+verification failed, not an accepted deployment. No forward retry.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Failure rollback or success readback
+#### [x] P02-T02: Failure rollback or success readback
 
-Depends on P02-T01. No failure retries that create revisions. On failure,
-use a supported original-mode/traffic recovery route proven before mutation.
-That prerequisite is currently unmet: cloud mutation is blocked. Do not leave
-multiple mode or create another revision as an improvised workaround.
+Depends on P02-T01. No forward-update retry. On failure only, update the exact
+backed-up image and complete original env; verify original configuration and
+health. Owner explicitly permits this recovery revision in Single mode.
+Complete: rollback revision `ca-cutover-test-demo-api--rollback-20261028-103137`,
+Healthy/Provisioned/Running, exact old digest/env/config except revision suffix.
+Console startup positive, no startup error matches; health200/assets401.
 
 <!-- rpi:phase id=P03 -->
 ### [ ] P03: Review and publication
@@ -154,7 +166,7 @@ multiple mode or create another revision as an improvised workaround.
 <!-- rpi:task id=P03-T01 -->
 #### [x] P03-T01: Record evidence and independent Review
 
-Reconcile plan/details/changes and run one fresh independent Review.
+Reconcile plan/details/changes and retain the one original independent Review.
 Complete: original independent Review execution Complete, outcome Not accepted.
 RV-001..005 routed; no deployment acceptance or repeated Review.
 
@@ -178,7 +190,10 @@ historical outcome if needed and do not push/open PR.
 
 ## Critique Disposition
 
-Original critique execution Complete, verdict Revise; no repeat.
+Original critique execution Complete, verdict Revise; no repeat. The following
+records the original conservative dispositions, not current runtime state.
+Owner continuation supersedes PC-001/003 prerequisites with explicit recovery/
+cost decisions; PC-004 proof executed and PC-005 exception restored exactly.
 
 | Finding | Disposition | Resolving evidence/action |
 |---|---|---|
@@ -192,14 +207,14 @@ Original critique execution Complete, verdict Revise; no repeat.
 
 * Authenticated employee acceptance and task-release/model binding verification
   remain owner-operated work outside this no-inference redeploy.
-* Coordinator must establish cost/recovery prerequisites and explicitly
-  re-admit build after foreign lock ownership is free; no automatic polling.
+* Publication is blocked if the full exact-head gate fails.
+* Separate later owner authorization is required for another forward rollout.
 
 ## Handoff
 
 Changes path: .copilot-tracking/changes/2026-10-28/employee-redeploy-changes.md.
-Permitted independent work: reference-only backup and blocked-execution evidence.
-P01-T01 build, P01-T02 and P02 remain blocked; never mark runtime work complete.
-Changes evidence and details reconciled for a Review of the blocked execution,
-not successful implementation. Full gate not admitted because of foreign lock;
-local evidence commit only, no push/PR without cleared publication gate.
+Owner selected later implementation of routed findings; original critique and
+Not accepted Review remain immutable evidence, with no repeated critique/Review.
+P01/P02 execution complete with failed verification and successful rollback,
+not the desired AI-enabled outcome. P03 publication still conditional.
+No push/PR without cleared publication gate.
