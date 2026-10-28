@@ -107,7 +107,7 @@ class AppointmentMixin:
                 order_scope_version=cur["scope_version"],
                 resident_bindings=cur.get("resident_bindings"),
                 contract_ref=p["contract_ref"],
-                contract_version=p["contract_version"],
+                contract_version=p.get("contract_version"),
                 period_from=p["period_from"],
                 period_to=p["period_to"],
             )

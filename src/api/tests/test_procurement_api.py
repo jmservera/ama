@@ -124,6 +124,44 @@ class ProcurementApiFixture(unittest.TestCase):
 
 
 class ProcurementApi(ProcurementApiFixture):
+    def test_legacy_package_without_contract_version_remains_readable(self) -> None:
+        self.store.set_capacity(self.manager, self.pid, **self.capacity())
+        wid = self.store.issue_work_order(
+            self.manager, self.pid, "ZF-1", resident_bindings=RESIDENT_BINDINGS
+        )
+        with self.store.lock:
+            package = self.store.data["procurement"]["packages"][0]
+            del package["contract_version"]
+            order = self.store.data["procurement"]["work_orders"][0]
+            del order["versions"][0]["resident_bindings"]
+            self.store.save()
+
+        code, packages = self.call("/api/packages")
+        self.assertEqual(code, 200)
+        self.assertIsNone(packages[0]["contract_version"])
+        code, orders = self.call("/api/workorders")
+        self.assertEqual(code, 200)
+        self.assertEqual(orders[0]["id"], wid)
+        self.assertIsNone(orders[0]["appointment_control"]["current_binding"]["contract_version"])
+        self.assertEqual(orders[0]["appointment_control"]["status"], "Unknown")
+        self.assertIn("Unknown", orders[0]["measures"])
+
+        before = copy.deepcopy(self.store.data["procurement"])
+        code, error = self.call(
+            f"/api/workorders/{wid}/appointment-control",
+            dict(action="offer", event_ref="SYN-LEGACY"),
+        )
+        self.assertEqual(code, 403)
+        self.assertIn("current authority", error["error"])
+        self.assertEqual(self.store.data["procurement"], before)
+
+    def test_empty_procurement_reads_are_known_empty(self) -> None:
+        with self.store.lock:
+            self.store.data["procurement"] = dict(packages=[], work_orders=[])
+            self.store.save()
+        self.assertEqual(self.call("/api/packages"), (200, []))
+        self.assertEqual(self.call("/api/workorders"), (200, []))
+
     def test_package_creation_requires_contract_version(self) -> None:
         body = dict(
             name="SYN new package",

@@ -38,6 +38,32 @@ or establish post-deployment acceptance. Authenticated live response status,
 size, headers and cold-start/auth correlation, plus verification after an
 owner-approved deployment, remain pending the owner.
 
+## Capacity page compatibility (#523)
+
+Legacy generated packages without a contract version remain readable, with
+the version Unknown. This does not grant contract authority or confirm an
+appointment. Capacity load failures name the unavailable data and offer
+Try again; no failed read is treated as an empty result.
+
+The focused generated-demo browser check uses fictional geography rows and a
+temporary store, never the default dataset. From the repository root, with the
+source distributions and API dev dependencies installed:
+
+```bash
+PYTHONPATH=src/api/tests:src/core/tests:src/agents/tests python3 src/api/checks/capacity_browser_check.py
+PYTHONPATH=src/api/tests:src/core/tests:src/agents/tests python3 src/api/checks/capacity_browser_check.py --mssql
+```
+
+Both modes acquire `/tmp/ama-rpi-heavy.lock` nonblocking. Default is SQLite;
+`--mssql` creates and removes only its own uniquely named local SQL Server
+container, with fresh connection settings. Do not point inherited destructive
+MSSQL suites at an existing database. The check covers seeded and empty
+capacity, each failed read/retry, transport/structured errors, expired sessions,
+navigation cancellation and the manager's actual navigation inventory.
+It is a separate required check, not automatically run by the full RPI gate.
+Local SQL Server/browser execution and post-deployment verification must be
+recorded separately; source coverage alone does not establish live acceptance.
+
 ## Specialist screen delivery (#149)
 
 The existing workbench includes a **Specialist screens** destination. Installed

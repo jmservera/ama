@@ -144,6 +144,7 @@ function appointmentDrafts() {
 
 async function capacityView() {
   if (!isManager()) return show(h("p", {}, "Only a manager sees capacity and work orders."));
+  const signal = routeController.signal;
   const msg = h("div", { role: "status", "aria-live": "polite", tabindex: -1 });
   const go = async (fn, savedForm) => {
     const button = document.activeElement;
@@ -153,10 +154,24 @@ async function capacityView() {
       if (savedForm) delete savedForm.dataset.unsaved;
       await capacityView();
     }
-    catch (e) { msg.replaceChildren(h("p", { class: "err" }, e.message)); msg.focus(); }
+    catch (e) {
+      msg.replaceChildren(h("p", { class: "err" }, e.message));
+      if (e.capacityLoadFailure) msg.append(h("button", { type: "button", onclick: route }, "Try again"));
+      msg.focus();
+    }
     finally { if (button instanceof HTMLButtonElement) { button.disabled = false; button.removeAttribute("aria-busy"); } }
   };
-  const [pkgs, orders] = await Promise.all([api("/api/packages"), api("/api/workorders")]);
+  const load = async (path, label) => {
+    try { return await api(path, undefined, signal); }
+    catch (error) {
+      if (signal.aborted || !me) throw error;
+      const detail = error instanceof TypeError || error.message === "Something went wrong." ? "" : ` ${error.message}`;
+      error.message = `We could not load ${label}. Try again. If this continues, contact application support.${detail}`;
+      error.capacityLoadFailure = true;
+      throw error;
+    }
+  };
+  const [pkgs, orders] = await Promise.all([load("/api/packages", "packages"), load("/api/workorders", "work orders")]);
   let field = 0;
   const inp = (label, attrs) => {
     const id = `capacity-field-${++field}`;
@@ -232,7 +247,8 @@ async function capacityView() {
   const drafts = appointmentDrafts();
   show(h("h1", {}, "Capacity and work orders"),
     h("p", { class: "muted" }, "Work orders are controlled: every change is a new version with who issued it, and nothing is issued beyond a contractor's evidenced commitment."),
-    msg, create, ...cards, h("section", { class: "card" }, h("h2", {}, "Work orders"), orders.length ? h("ul", { class: "list" }, actions) : h("p", {}, "No work orders yet.")));
+    msg, create, ...(cards.length ? cards : [h("p", {}, "No packages yet.")]),
+    h("section", { class: "card" }, h("h2", {}, "Work orders"), orders.length ? h("ul", { class: "list" }, actions) : h("p", {}, "No work orders yet.")));
   for (const draft of drafts) {
     const form = [...document.querySelectorAll("form[data-appointment-form]")].find((el) => el.dataset.appointmentForm === draft.key);
     if (!form) continue;
