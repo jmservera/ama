@@ -11,7 +11,7 @@ from checks.design_system_browser_check import check, main
 from checks.workbench_browser_check import synthetic_data
 
 CASE = "ZF-2026-0597"
-CASE_PATH = f"/app?synthetic=employee-recovery#/case/{CASE}"
+CASE_PATH = f"/app?synthetic=employee-recovery#/case/{CASE}?tab=quality"
 QUALITY = "Quality checks and defects"
 
 
@@ -29,6 +29,7 @@ def sign_in(page: Page, base: str) -> None:
 
 
 def case_ready(page: Page) -> None:
+    page.get_by_role("tab", name="Quality and handover", exact=True).click()
     page.get_by_role("heading", name=QUALITY, exact=True).wait_for()
     check("case renders without partial-workspace error", page.get_by_role(
         "heading", name="Workspace unavailable", exact=True

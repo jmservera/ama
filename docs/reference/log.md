@@ -7920,3 +7920,19 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Evidence: mandatory complete publication gate includes `az bicep` commands
   forbidden by the task; no passing complete receipt or publication waiver is
   claimed. The dated assessment records validation/publication limitations.
+## [2026-10-28] ingest | Employee case journey workspace specification (#526)
+
+* Filed the owner-supplied [employee case workspace design](./research/ux/employee-case-workspace-redesign.md)
+  and registered it in the knowledge-base index. Preserve slide order, with
+  Funding and Resident agreement done only when the recorded evidence supports it.
+* Implemented native journey/summary/tab composition in the current `src/api`
+  web assets without changing the Fluent foundation or server decision rights.
+  Journey and missing confidence stay client presentation, not invented API fields.
+* Flagged the chat API limitation: informational turns have no recorded-review
+  identifier; existing separately requested proposals retain source verification
+  and human review. Live verification, screen-reader and real-staff acceptance
+  remain pending the owner. Automated results are engineering evidence only.
+* Final heavy-validation admission exhausted 40 one-minute nonblocking retries.
+  Targeted tests and static checks passed, but complete API/browser/axe/zoom
+  validation, independent Review and publication remain blocked/pending.
+  No push, pull request or complete RPI success is claimed.

@@ -63,7 +63,7 @@ def main():
             page.fill("#pw", "browser-test-only")
             page.click("button[type=submit]")
             page.wait_for_selector("nav:not([hidden])")
-            page.goto(base + "/app#/case/ZF-1")
+            page.goto(base + "/app#/case/ZF-1?tab=ai")
             expect(page.get_by_role("button", name="Request Stock facts and prioritisation", exact=True)).to_be_visible()
             check("five distinct case-card controls", page.locator("button:has-text('Request ')").count() == 5)
             names = ("Stock facts and prioritisation", "Assessment preparation", "Funding evidence",
@@ -82,16 +82,18 @@ def main():
             check("all five rendered ready", page.locator("article").count() == 5)
             check("shared role-owned queue link", page.get_by_role("link", name="Shared role-owned review queue").count() == 1)
             card = page.locator("article").filter(has=page.locator("h3", has_text="Stock facts and prioritisation"))
-            card.get_by_label("Source verification or review note").fill("Checked each cited source and retained unknowns.")
+            card.get_by_label("Reason", exact=True).fill(
+                "Checked each cited source and retained unknowns."
+            )
             card.get_by_label("I checked the cited sources", exact=False).check()
             card.get_by_role("button", name="Record human source verification").click()
             try:
-                page.wait_for_selector("button:has-text('Accept proposal only')", timeout=5000)
+                page.get_by_role("button", name="Accept", exact=True).first.wait_for(timeout=5000)
             except Exception as e:
                 raise AssertionError(card.inner_text()) from e
-            card.get_by_label("Source verification or review note").fill("Accept this proposal, not the case.")
-            card.get_by_role("button", name="Accept proposal only", exact=True).click()
-            page.wait_for_selector("article >> text=accepted.")
+            card.get_by_label("Reason", exact=True).fill("Accept this proposal, not the case.")
+            card.get_by_role("button", name="Accept", exact=True).click()
+            page.wait_for_selector("article >> text=accepted.", state="attached")
             check("explicit separate human verification and accept", True)
             db = store.assistant_connection()
             check("assistant actions preserve every case", domain == db.execute("SELECT id,body FROM cases ORDER BY id").fetchall())
@@ -101,8 +103,12 @@ def main():
                 c["home"]["epc"] = "F"
                 db.execute("UPDATE cases SET body=? WHERE id='ZF-1'", (canonical(c),))
             page.get_by_role("button", name="Refresh proposals", exact=True).click()
+            page.get_by_text("Reviewed or stale suggestions", exact=True).click()
             page.wait_for_selector("article >> text=stale.")
-            check("material change visibly stale with no accept", page.locator("button:has-text('Accept proposal only')").count() == 0)
+            check("material change visibly stale with disabled accept", all(
+                button.is_disabled()
+                for button in page.get_by_role("button", name="Accept", exact=True).all()
+            ))
             store.ai.bad = "citation"
             page.get_by_role("button", name="Request Stock facts and prioritisation", exact=True).click()
             page.wait_for_timeout(100)
@@ -124,7 +130,7 @@ def main():
                 held.append(route)
 
             page.route("**/api/assistants", hold)
-            page.goto(base + "/app#/case/ZF-1")
+            page.goto(base + "/app#/case/ZF-1?tab=resident")
             expect(page.get_by_role("heading", name="Log a call", exact=True)).to_be_visible(timeout=2000)
             expect(page.get_by_role("button", name="Save answer", exact=True)).to_be_enabled()
             check("pending assistance does not block manual controls", bool(held))
@@ -132,13 +138,14 @@ def main():
             page.get_by_role("button", name="Save", exact=True).click()
             expect(page.locator(".tl")).to_contain_text("Manual call while assistance is pending")
             check("manual write succeeds while assistance stays pending", True)
+            page.get_by_role("tab", name="AI assistance", exact=False).click()
             expect(page.get_by_role("status").filter(
                 has_text="Assistance unavailable: Assistance request timed out")).to_be_visible(timeout=12000)
             check("assistance deadline exposes manual fallback", True)
             for route in held:
                 route.abort()
             page.unroute("**/api/assistants", hold)
-            page.goto(base + "/app#/case/ZF-2")
+            page.goto(base + "/app#/case/ZF-2?tab=ai")
             expect(page.get_by_role("button", name="Refresh proposals", exact=True)).to_be_visible()
 
             stale = []
@@ -149,10 +156,10 @@ def main():
                     route.continue_()
 
             page.route("**/api/assistants", hold_first)
-            page.goto(base + "/app#/case/ZF-1")
+            page.goto(base + "/app#/case/ZF-1?tab=ai")
             expect(page.locator("#app")).to_contain_text("Reference ZF-1")
             expect(page.get_by_role("status").filter(has_text="Loading assistance.")).to_be_visible()
-            page.goto(base + "/app#/case/ZF-2")
+            page.goto(base + "/app#/case/ZF-2?tab=ai")
             expect(page.locator("#app")).to_contain_text("Reference ZF-2")
             expect(page.get_by_role("button", name="Refresh proposals", exact=True)).to_be_visible()
             late = app.assistants.registry(pm)

@@ -10,20 +10,35 @@ const assistantNames = {
 
 function assistantProposal(p, reload) {
   const status = h("p", { role: "status" }, `${p.display_state}. ${p.release_denial ? p.release_denial.reason : (p.reason || "")} ${p.manual}`);
-  const note = h("textarea", { "aria-label": "Source verification or review note", maxlength: "1000" });
+  const note = h("textarea", { id: `proposal-reason-${p.id}`, name: "review-reason", autocomplete: "off", "aria-label": "Reason", maxlength: "1000" });
+  const error = h("p", { id: `proposal-error-${p.id}`, class: "field-error", role: "status" });
   const verified = h("input", { type: "checkbox", id: `verified-${p.id}` });
-  const editing = h("textarea", { "aria-label": "Edited evidence proposal JSON", maxlength: "16000" },
+  const editing = h("textarea", { name: "edited-proposal", autocomplete: "off", "aria-label": "Edited evidence proposal JSON", maxlength: "16000" },
     JSON.stringify(p.output, null, 2));
   const act = async (action) => {
+    if (["edit-accept", "reject"].includes(action) && !note.value.trim()) {
+      note.setAttribute("aria-invalid", "true");
+      note.setAttribute("aria-describedby", error.id);
+      error.textContent = "Enter a reason to edit or reject this proposal.";
+      note.focus();
+      return;
+    }
     try {
       const body = { action, revision: p.revision, note: note.value };
       if (action === "verify") body.source_verified = verified.checked;
       if (action === "edit-accept") body.output = JSON.parse(editing.value);
       await api(`/api/assistants/proposals/${p.id}/review`, body);
+      note.removeAttribute("data-case-dirty");
+      editing.removeAttribute("data-case-dirty");
+      verified.removeAttribute("data-case-dirty");
       await reload();
-    } catch (e) { status.textContent = e.message; }
+    } catch (e) {
+      error.textContent = e.message; note.setAttribute("aria-invalid", "true");
+      note.setAttribute("aria-describedby", error.id); note.focus();
+    }
   };
-  const ready = p.state === "ready" && !p.stale;
+  const ready = p.state === "ready" && !p.stale && p.actionable !== false
+    && !p.release_denial && p.epoch_current !== false;
   const ownVerification = p.verification && p.verification.by === me.user.email;
   const history = h("pre", {}, JSON.stringify({ envelope: p.envelope, history: p.provenance }, null, 2));
   let offset = p.history_next_offset;
@@ -35,37 +50,44 @@ function assistantProposal(p, reload) {
       moreHistory.hidden = offset == null;
     } catch (e) { status.textContent = e.message; }
   } }, "Earlier changes to this suggestion");
-  return h("article", { class: "card" },
+  const editBox = h("div", { hidden: true, "data-proposal-edit": "" }, h("label", {}, "Edited evidence proposal JSON", editing),
+    h("button", { onclick: () => act("edit-accept") }, "Save edited proposal"));
+  return h("article", { class: "card ai-suggestion" },
     h("h3", {}, `${assistantNames[p.capability]} v${p.version}`),
     h("a", { href: `#/case/${encodeURIComponent(p.case_id)}` }, p.case_id), status,
-    h("p", { class: "muted" }, "AI suggestion, not approved. Nothing is sent, booked, paid, ranked, signed off or released. Sources show where a statement came from, not that it is true."),
+    h("p", { class: "ai-label" }, p.review
+      ? `${p.display_state} as a draft by a person. This is not an approval, consent or safety decision. Reason: ${p.review.note || "Not supplied"}.`
+      : "AI suggestion, not approved. Not an instruction."),
+    h("p", { class: "muted" }, "Nothing is sent, booked, paid, ranked, signed off or released. Sources show where a statement came from, not that it is true."),
+    h("p", { class: "muted" }, "Confidence: not provided. Confidence is not accuracy."),
     h("p", {}, `Invocation: ${p.provenance.filter((e) => e.kind === "invocation").map((e) => e.mode).join(", ")}. Attempts: ${p.attempts}.`),
     p.output && h("div", {}, h("p", {}, p.output.summary),
-      h("ul", {}, p.output.findings.map((f) => h("li", {}, `${f.text} [${f.citations.join(", ")}]`))),
+      h("ul", {}, p.output.findings.map((f) => h("li", {}, `${f.text}. Sources: ${f.citations.join(", ") || "Not provided"}`))),
       h("h4", {}, "Unknowns"), h("ul", {}, p.output.unknowns.map((u) => h("li", {}, u)))),
     h("details", {}, h("summary", {}, "Permitted sources, versions and hashes"),
       h("pre", {}, JSON.stringify(p.snapshot, null, 2))),
     h("details", {}, h("summary", {}, "AI usage and changes to this suggestion"),
       history, moreHistory),
-    h("label", {}, "Source verification/review note", note),
+    h("fieldset", {}, h("legend", {}, "Your review"), h("label", { for: note.id }, "Reason"), note, error,
     ready && h("div", {}, h("label", { for: `verified-${p.id}` }, verified,
       " I checked the cited sources, including unknowns and discrepancies."),
     h("button", { onclick: () => act("verify") }, "Record human source verification")),
     p.verification && h("p", {}, `Sources checked by ${p.verification.by}. ${p.verification.note}`),
-    ready && ownVerification && h("div", {},
-      h("button", { onclick: () => act("accept") }, "Accept proposal only"),
-      h("details", {}, h("summary", {}, "Edit and accept proposal only"), editing,
-        h("button", { onclick: () => act("edit-accept") }, "Save edited proposal"))),
-    h("button", { class: "alt", onclick: () => act("reject") }, "Reject proposal"));
+    (!ready || !ownVerification) && h("p", {}, "Accept unavailable: request fresh evidence and record your own source verification first."),
+    h("p", {}, "Accept proposal only. This reviews a suggestion, not the case."),
+    h("div", { class: "row" },
+      h("button", { disabled: !ready || !ownVerification, onclick: () => act("accept") }, "Accept"),
+      h("button", { class: "alt", disabled: !ready || !ownVerification, onclick: () => { editBox.hidden = false; editing.focus(); } }, "Edit"),
+      h("button", { class: "alt", onclick: () => act("reject") }, "Reject")), editBox));
 }
 
 function assistantCasePanel(id) {
   const status = h("p", { role: "status" }, "Loading assistance. Ordinary case controls remain available.");
   const panel = h("section", { class: "card" }, h("h2", {}, "Retrofit assistants"), status);
-  const routeHash = location.hash;
+  const routeHash = location.hash.split("?")[0];
   const controller = new AbortController();
   const deadline = setTimeout(() => controller.abort(), 10000);
-  const current = () => panel.isConnected && location.hash === routeHash;
+  const current = () => panel.isConnected && location.hash.split("?")[0] === routeHash;
   const load = async () => {
     try {
       const [registry, queue] = await Promise.all([
@@ -73,8 +95,20 @@ function assistantCasePanel(id) {
         api(`/api/assistants/proposals?case_id=${encodeURIComponent(id)}`, undefined, controller.signal),
       ]);
       if (!current()) return;
+      const proposals = [...queue.proposals];
+      let after = queue.next_after;
+      while (after) {
+        const more = await api(`/api/assistants/proposals?case_id=${encodeURIComponent(id)}&after=${encodeURIComponent(after)}`, undefined, controller.signal);
+        proposals.push(...more.proposals);
+        after = more.next_after;
+        if (!current()) return;
+      }
       status.textContent = registry.disabled ||
         `Assistance available. Proactive checks ${registry.proactive ? "enabled" : "off"}.`;
+      panel.dataset.assistance = registry.disabled
+        ? "AI assistance unavailable. Work continues manually."
+        : "Assistance available.";
+      panel.dataset.waiting = String(proposals.filter(p => p.state === "ready" && p.output && !p.stale).length);
       panel.append(h("p", {}, "These are synthetic exercise rules. Continue ordinary case work manually when assistance is disabled, failed or stale."));
       for (const a of registry.assistants) {
         panel.append(h("button", { class: "alt", onclick: async () => {
@@ -86,11 +120,20 @@ function assistantCasePanel(id) {
       }
       panel.append(h("button", { class: "alt", onclick: () => caseView(id) }, "Refresh proposals"),
         h("a", { href: "#/assistants" }, "Shared role-owned review queue"));
-      for (const p of queue.proposals) panel.append(assistantProposal(p, () => caseView(id)));
+      const reviewed = h("details", {}, h("summary", {}, "Reviewed or stale suggestions"));
+      for (const p of proposals) {
+        const card = assistantProposal(p, () => caseView(id));
+        if (p.stale || p.review) reviewed.append(card);
+        else panel.append(card);
+      }
+      if (reviewed.childElementCount > 1) panel.append(reviewed);
+      if (!proposals.length) panel.append(h("p", {}, "No AI suggestions yet. Ordinary case work is not affected."));
     } catch (e) {
       if (current()) {
         const reason = controller.signal.aborted ? "Assistance request timed out" : e.message;
         status.textContent = `Assistance unavailable: ${reason}. Continue ordinary case work manually.`;
+        panel.dataset.assistance = "AI assistance unavailable. Work continues manually.";
+        panel.dataset.waiting = "0";
       }
     } finally {
       clearTimeout(deadline);

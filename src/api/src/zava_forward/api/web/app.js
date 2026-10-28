@@ -10,6 +10,7 @@ let coordinatorOrigin = null;
 let resetFocus = false;
 const workspaceStatus = document.getElementById("workspace-status");
 let displayedHash = location.hash || "#/";
+let caseSession = null;
 
 function h(tag, attrs, ...kids) {
   const el = document.createElement(tag);
@@ -50,6 +51,9 @@ const ago = (s) => {
 const show = (...nodes) => { app.replaceChildren(...nodes.flat().filter((n) => n && n.nodeType)); app.focus(); };
 
 function login(msg) {
+  caseSession?.controller?.dispose();
+  caseSession = null;
+  for (const id of Object.keys(fundingAi)) delete fundingAi[id];
   workspaceStatus.textContent = "";
   document.getElementById("nav").hidden = true;
   document.getElementById("account").hidden = true;
@@ -77,6 +81,8 @@ function login(msg) {
 }
 
 async function start() {
+  caseSession?.controller?.dispose();
+  caseSession = null;
   me = await api("/api/me");
   Object.assign(listState, defaultListState());
   queueOrigin = "mine";
@@ -204,13 +210,30 @@ async function route() {
   const session = me;
   if (!session) return;
   const nextHash = location.hash || "#/";
-  if (nextHash !== displayedHash && document.querySelector('form[data-unsaved="true"]')) {
+  if (nextHash !== displayedHash && caseSession?.controller
+      && nextHash.split("?")[0] === displayedHash.split("?")[0]
+      && nextHash.split("?")[0] === `#/case/${encodeURIComponent(caseSession.id)}`) {
+    const before = new URLSearchParams(displayedHash.split("?")[1] || "");
+    const after = new URLSearchParams(nextHash.split("?")[1] || "");
+    before.delete("tab"); after.delete("tab");
+    if (before.toString() === after.toString()) {
+      caseSession.controller.select(new URLSearchParams(nextHash.split("?")[1] || "").get("tab"));
+      displayedHash = nextHash;
+      return;
+    }
+  }
+  if (nextHash !== displayedHash && document.querySelector('form[data-unsaved="true"], [data-case-dirty="true"]')) {
     if (!window.confirm("Leave this screen and discard unsaved changes?")) {
       history.replaceState(null, "", displayedHash);
       return;
     }
   }
   displayedHash = nextHash;
+  if (caseSession && nextHash.split("?")[0] !== `#/case/${encodeURIComponent(caseSession.id)}`) {
+    caseSession.controller?.dispose();
+    delete fundingAi[caseSession.id];
+    caseSession = null;
+  }
   routeController.abort();
   routeController = new AbortController();
   clearTimeout(searchTimer);
@@ -252,7 +275,8 @@ async function route() {
     show(h("h1", {}, "Workspace unavailable"), h("p", { class: "err", role: "alert" }, error.message),
       error.reloadWorkspace
         ? h("button", { type: "button", onclick: () => location.reload() }, "Reload workspace")
-        : h("button", { type: "button", onclick: route }, "Try again"));
+        : h("button", { type: "button", onclick: route }, "Try again"),
+      m && h("a", { href: queueHref() }, "Back to the list"));
   }
 }
 
@@ -283,20 +307,45 @@ function aiNotes(d, onDone, getText) {
   if (d.reason) kids.push(h("p", { class: "muted", role: "status" }, d.reason));
   if (d.verified === false || d.validated === false) kids.push(h("p", { class: "flag danger", role: "status" }, "Unverified: its sources do not match the case record. Check it before use."));
   const cites = d.citations || [];
-  if (cites.length) kids.push(h("p", { class: "muted" }, "Sources: " + cites.join("; ")));
+  kids.push(h("p", { class: "muted" }, "Sources: " + (cites.join("; ") || "Not provided. Check the record before use.")));
+  kids.push(h("p", { class: "muted" }, "Confidence: not provided. Confidence is not accuracy."));
   if (d.dropped_uncited) kids.push(h("p", { class: "muted" }, `${d.dropped_uncited} uncited statement(s) removed.`));
   kids.push(h("p", { class: "muted" }, d.approval === "Not reviewed" ? "AI suggestion, not approved. Not an instruction. Not reviewed by a person yet." : `${d.approval} as a draft by a person. Not an instruction. This is not an approval, consent or safety decision.`));
   if (d.record_id && d.approval === "Not reviewed") {
-    const why = h("input", { type: "text", maxlength: 300, placeholder: "Reason (needed to edit or reject)", "aria-label": "Reason for your review" });
-    const go = (action) => async () => {
-      try { await api(`/api/ai/review/${d.record_id}/${action}`, { reason: why.value, text: action === "edit" ? getText && getText() : undefined }); d.approval = REVIEWED[action]; onDone ? onDone() : box.replaceChildren(h("p", { class: "muted" }, `${d.approval} as a draft. This is not an approval, consent or safety decision. Recorded in the audit log.`)); }
-      catch (e) { why.setCustomValidity(e.message); why.reportValidity(); }
+    const why = h("input", { id: `ai-reason-${d.record_id}`, name: "review-reason", autocomplete: "off", type: "text", maxlength: 300 });
+    const editing = !getText && typeof d.text === "string" ? h("textarea", { id: `ai-edit-${d.record_id}`, name: "edited-draft", autocomplete: "off" }, d.text) : null;
+    const error = h("p", { id: `ai-error-${d.record_id}`, class: "field-error", role: "status" });
+    const result = h("p", { role: "status" });
+    const invalid = text => {
+      error.textContent = text; why.setAttribute("aria-invalid", "true");
+      why.setAttribute("aria-describedby", error.id); why.focus();
     };
-    const box = h("div", { class: "row" }, why, h("button", { class: "alt", onclick: go("accept") }, "Accept as is"),
-      h("button", { class: "alt", onclick: go("edit") }, "I changed it"), h("button", { class: "alt", onclick: go("reject") }, "Reject"));
-    kids.push(box);
+    const go = (action) => async () => {
+      if (action !== "accept" && !why.value.trim()) { invalid("Enter a reason to edit or reject this draft."); return; }
+      try {
+        await api(`/api/ai/review/${d.record_id}/${action}`, { reason: why.value, text: action === "edit" ? getText ? getText() : editing?.value : undefined });
+        d.approval = REVIEWED[action];
+        meta.dataset.reviewState = d.approval;
+        result.textContent = `${d.approval} as a draft by a person. This is not an approval, consent or safety decision. Reason: ${why.value || "Not supplied"}. Recorded in the audit log.`;
+        why.removeAttribute("data-case-dirty");
+        box.hidden = true;
+        app.dispatchEvent(new Event("ai-review-change"));
+        if (onDone) onDone();
+      } catch (e) { invalid(e.message); }
+    };
+    const unavailable = d.stale || d.verified === false || d.validated === false;
+    const box = h("fieldset", {}, h("legend", {}, "Your review"),
+      editing && h("label", { for: editing.id }, "Edited draft"), editing,
+      h("label", { for: why.id }, "Reason"), why, error,
+      unavailable && h("p", {}, "Accept unavailable: check the stale or unverified sources and request a fresh draft."),
+      h("div", { class: "row" }, h("button", { class: "alt", disabled: unavailable, onclick: go("accept") }, "Accept"),
+        h("button", { class: "alt", disabled: unavailable || (!getText && !editing), onclick: go("edit") }, "Edit"),
+        h("button", { class: "alt", onclick: go("reject") }, "Reject")));
+    why.addEventListener("input", () => { error.textContent = ""; why.removeAttribute("aria-invalid"); });
+    kids.push(box, result);
   }
-  return h("div", { class: "aimeta" }, kids);
+  const meta = h("div", { class: "aimeta ai-suggestion", "data-record-id": d.record_id, "data-review-state": d.approval }, kids);
+  return meta;
 }
 const REVIEWED = { accept: "Accepted", edit: "Edited", reject: "Rejected" };
 
@@ -510,32 +559,47 @@ async function listView(view) {
 }
 
 async function caseView(id) {
+  if (!caseSession || caseSession.id !== id) caseSession = { id, draftBox: h("div", { id: "resident-draft-output" }) };
+  const session = caseSession;
+  const sameCase = app.querySelector("[data-case-workspace]")?.dataset.caseWorkspace === id;
+  const firstLoad = !sameCase;
+  if (firstLoad) show(h("a", { href: queueHref() }, "Back to the list"),
+    h("section", { "aria-label": "Case summary", "aria-busy": "true", class: "card" }, "Loading case (loading)"));
   const c = await api(`/api/cases/${encodeURIComponent(id)}`);
+  if (caseSession !== session) return;
+  const savedFields = sameCase ? captureCaseFields() : [];
+  session.controller?.dispose();
   const assistantPanel = assistantCasePanel(id);
   const r = c.resident, hm = c.home;
   const openHaz = c.hazards.filter((x) => !x.released);
   const msg = h("div", { role: "status" });
   const refresh = async (fn) => {
-    try { await fn(); briefingBox = null; await caseView(id); } catch (e) {
+    const completed = document.activeElement?.closest("section.card, form");
+    try {
+      await fn();
+      completed?.querySelectorAll("[data-case-dirty]").forEach(field => delete field.dataset.caseDirty);
+      briefingBox = null; await caseView(id);
+    } catch (e) {
       msg.replaceChildren(h("p", { class: "err" }, e.message), ...(e.reasons || []).map((x) => h("p", {}, x)));
     }
   };
   const outcome = h("input", { id: "outcome", placeholder: "For example: spoke to resident, visit agreed" });
   const note = h("textarea", { id: "note", "aria-label": "Notes" });
   const channel = h("select", { "aria-label": "How you spoke" }, ["Phone", "Text message", "Email", "Visit"].map((x) => h("option", {}, x)));
-  const draftBox = h("div", {});
+  const draftBox = session.draftBox;
   const kind = async (k) => {
     const d = await api(`/api/cases/${encodeURIComponent(id)}/draft`, { kind: k });
-    draftBox.replaceChildren(h("p", { class: "muted" }, d.note), h("textarea", { "aria-label": "Draft message" }, d.text));
+    draftBox.replaceChildren(h("p", { class: "muted" }, d.note), h("textarea", { "aria-label": "Draft message", name: "resident-template", autocomplete: "off" }, d.text));
     draftBox.querySelector("textarea").value = d.text;
   };
   const aiRun = async (task) => {
     draftBox.replaceChildren(h("p", { class: "muted" }, "Working on it..."));
     try {
       const d = await api(`/api/cases/${encodeURIComponent(id)}/ai`, modeBody({ task }));
-      const ta = h("textarea", { "aria-label": "Draft", rows: 9 });
+      const ta = h("textarea", { "aria-label": "Draft", name: "resident-ai-draft", autocomplete: "off", rows: 9 });
       ta.value = d.text;
       draftBox.replaceChildren(h("p", { class: "muted" }, `${d.label}. Nothing is sent. Change it as you like.`), ta, aiNotes(d, null, () => ta.value));
+      app.dispatchEvent(new Event("ai-review-change"));
     } catch (e) { draftBox.replaceChildren(h("p", { class: "err" }, e.message)); }
   };
   const canOffer = !c.closed && (c.owner_code === me.user.code || isManager()) &&
@@ -549,22 +613,10 @@ async function caseView(id) {
       h("strong", {}, `${x.name}, ${x.role}`), h("div", { class: "muted" }, x.reasons.join(". ")),
       canOffer && h("button", { class: "alt", onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/handover`, { to: x.email })) }, `Offer to ${x.name.split(" ")[0]}`)))));
   const challengeDrafts = captureChallengeDrafts(id);
-  show(
-    h("a", { class: "back", href: queueHref() }, "Back to the list"),
-    c.building_id ? h("a", { class: "back", href: `#/building/${encodeURIComponent(c.building_id)}` }, `Shared building context: ${c.building_id}`) :
-      h("p", { class: "muted" }, "Building link not recorded; shared context is unknown."),
-    c.cost_allocation && h("section", { class: "card" }, h("h2", {}, "This home's cost allocation"),
+  const cost = c.cost_allocation && h("section", { class: "card" }, h("h2", {}, "This home's cost allocation"),
       h("p", {}, "Recorded allocations only, not additional building costs or payment approval."),
-      h("ul", {}, c.cost_allocation.map((x) => h("li", {}, `${x.shared_cost_id}: GBP ${x.amount_gbp}. Source: ${x.source}`)))),
-    h("div", { class: "row between" },
-      h("h1", {}, r.name, c.hazards.some((x) => !x.released) && h("span", { class: "flag danger" }, "Safety issue open")),
-      h("span", { class: "muted" }, `Reference ${c.id}`)),
-    h("div", { class: `status-line${openHaz.length ? " danger" : ""}`, role: "status" }, c.status),
-    workSteps(c.work),
-    safetyPanel(c, id, refresh),
-    regulatoryAlertsPanel(id),
-    h("div", { class: "grid" },
-      h("section", { class: "card" }, h("h2", {}, "Contact"),
+      h("ul", {}, c.cost_allocation.map((x) => h("li", {}, `${x.shared_cost_id}: GBP ${x.amount_gbp}. Source: ${x.source}`))));
+  const contact = h("section", { class: "card" }, h("h2", {}, "Contact"),
         h("div", { class: "big" }, h("a", { href: `tel:${r.phone.replace(/\s/g, "")}` }, r.phone)),
         r.email && h("div", {}, r.email),
         h("dl", {},
@@ -575,49 +627,125 @@ async function caseView(id) {
           h("dt", {}, "Support flag coverage"), h("dd", {}, c.support_coverage),
           r.priority_support === true && [h("dt", {}, "Flag"), h("dd", {}, "Needs extra support")],
           r.representative && [h("dt", {}, "Acts for them"), h("dd", {}, `${r.representative.name} (${r.representative.relationship}), ${r.representative.phone}`)],
-          h("dt", {}, "Last contact"), h("dd", {}, ago(c.contacts[0] && c.contacts[0].at)),
-          h("dt", {}, "Next visit"), h("dd", {}, fmtDate((c.appointments.find((a) => a.outcome === "Booked") || {}).date)))),
-      h("section", { class: "card" }, h("h2", {}, "Where it is up to"),
+          h("dt", {}, "Last contact"), h("dd", {}, ago(c.contacts[0] && c.contacts[0].at))));
+  const progress = h("section", { class: "card" }, h("h2", {}, "Where it is up to"),
         h("dl", {},
           h("dt", {}, "Stage"), h("dd", {}, c.stage),
           h("dt", {}, "In this stage"), h("dd", {}, `${c.days_in_stage} days`),
           h("dt", {}, "Case owner"), h("dd", {}, `${c.owner}, ${c.owner_role}`),
           h("dt", {}, "Works"), h("dd", {}, c.measures),
-          h("dt", {}, "Contractor"), h("dd", {}, `${c.contractor.name}, ${c.contractor.contact}, ${c.contractor.phone}`),
           h("dt", {}, "Home"), h("dd", {}, `${hm.type}, built ${hm.built}, EPC ${hm.epc}, ${hm.tenure}`),
-          h("dt", {}, "Historical case-wide answer (not scope consent)"), h("dd", {}, `${c.decision.status}${c.decision.by ? ` (recorded by ${c.decision.by})` : ""}`)))),
-    returnPanel(c, id, refresh),
-    handoffPanel(c, id, refresh),
-    qualityPanel(c, id, refresh),
-    stockPanel(c),
-    h("section", { class: "card" }, h("h2", {}, "Log a call"),
+          h("dt", {}, "Historical case-wide answer (not scope consent)"), h("dd", {}, `${c.decision.status}${c.decision.by ? ` (recorded by ${c.decision.by})` : ""}`)));
+  const call = h("section", { class: "card" }, h("h2", {}, "Log a call"),
       h("label", { for: "outcome" }, "What happened"), outcome,
-      h("label", {}, "How you spoke"), channel,
+      h("label", {}, "How you spoke", channel),
       h("label", { for: "note" }, "Notes"), note,
-      h("p", {}, h("button", { onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/call`, { outcome: outcome.value, note: note.value, channel: channel.value })) }, "Save"))),
-    sugg,
-    c.can_advance && h("section", { class: "card" }, h("h2", {}, "Final checks"),
+      h("p", {}, h("button", { onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/call`, { outcome: outcome.value, note: note.value, channel: channel.value })) }, "Save")));
+  const finalChecks = c.can_advance && h("section", { class: "card" }, h("h2", {}, "Final checks"),
       c.gate.length ? [h("p", {}, "This case cannot move on yet:"), h("ul", {}, c.gate.map((x) => h("li", {}, x)))] : h("p", {}, "Everything is in place."),
-      h("button", { onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/advance`, {})) }, "Ready to book the installation")),
-    h("section", { class: "card" }, h("h2", {}, "Write to the resident"),
+      h("button", { onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/advance`, {})) }, "Ready to book the installation"));
+  const write = h("section", { class: "card" }, h("h2", {}, "Write to the resident"),
       h("div", { class: "row" }, h("button", { onclick: () => aiRun("message") }, "Draft with AI"),
         h("button", { class: "alt", onclick: () => aiRun("summary") }, "Catch me up on this case"),
         h("button", { class: "alt", onclick: () => kind("visit") }, "Plain visit template"),
-        h("button", { class: "alt", onclick: () => kind("update") }, "Plain update template")), draftBox),
-    documentsPanel(c, id, refresh),
-    fundingPanel(c, id, refresh),
-    assistantPanel,
-    chatCasePanel(id),
-    financePanel(c, id, refresh), grantPanel(c, id, refresh), technicalPanel(c, id, refresh), residentPanel(c, id, refresh),
-    affectedChallengePanel(c, id, refresh),
-    msg,
-    h("section", { class: "card" }, h("h2", {}, "History"),
+        h("button", { class: "alt", onclick: () => kind("update") }, "Plain update template")), draftBox);
+  const historyPanel = h("section", { class: "card" }, h("h2", {}, "History"),
       h("p", {}, "Current task context below; event-time owners and reasons in the history remain unchanged."),
       workSummary(c.work),
       c.contacts.length ? h("ul", { class: "tl" }, c.contacts.slice(0, 15).map((k) => h("li", {},
-        h("strong", {}, `${fmtDate(k.at)} ${k.channel}: ${k.outcome}`), h("div", { class: "muted" }, `${k.by}${k.note ? `. ${k.note}` : ""}`)))) : h("p", {}, "No contact recorded yet.")));
+        h("strong", {}, `${fmtDate(k.at)} ${k.channel}: ${k.outcome}`), h("div", { class: "muted" }, `${k.by}${k.note ? `. ${k.note}` : ""}`)))) : h("p", {}, "No contact recorded yet."));
+  const safety = safetyPanel(c, id, refresh);
+  safety.id = "case-safety";
+  if (openHaz.length) safety.classList.add("blocked");
+  const returned = returnPanel(c, id, refresh);
+  const signals = [
+    [c.work.evidence_freshness.some(item => item.status === "Stale"), "Stale evidence"],
+    [c.work.owner === "Unknown" || c.work.blockers.some(item => item.owner === "Unknown")
+      || (c.work.handoff && ["Offered", "Received", "Escalated"].includes(c.work.handoff.state)), "Unclear owner"],
+    [c.funding.status !== "Confirmed", "Funding not confirmed"],
+    [!["Accepted", "Declined"].includes(c.decision.status), "No resident decision yet"],
+    [Boolean(c.returns?.length) || c.stage === "Design being corrected", "Rework recorded"],
+  ].filter(([present]) => present).map(([, label]) => label);
+  const definitions = [
+    ["overview", "Overview", [c.closed && returned, workSummary(c.work), progress, contact, cost, finalChecks]],
+    ["blockers", `Blockers and safety (${c.work.blockers.length})`, [
+      h("section", { class: "card" }, h("h2", {}, "Review signals"),
+        h("p", {}, "These signals do not stop unrelated work or make an approval."),
+        signals.length ? h("ul", { class: "row list" }, signals.map(label => h("li", { class: "flag" }, label))) : h("p", {}, "No recorded review signals.")),
+      workSteps(c.work), openHaz.length ? h("p", {}, h("a", { href: "#case-safety", onclick: event => { event.preventDefault(); safety.querySelector("h2").tabIndex = -1; safety.querySelector("h2").focus(); } }, "Review the safety actions above the journey")) : safety,
+      regulatoryAlertsPanel(id), !c.closed && returned, stockPanel(c)]],
+    ["survey", "Survey and assessment", [technicalPanel(c, id, refresh), documentsPanel(c, id, refresh)]],
+    ["funding", "Funding", [fundingPanel(c, id, refresh), financePanel(c, id, refresh), grantPanel(c, id, refresh)]],
+    ["resident", "Resident", [residentPanel(c, id, refresh), call, write, affectedChallengePanel(c, id, refresh)]],
+    ["contractor", "Contractor and works", [h("section", { class: "card" }, h("h2", {}, "Contractor and appointments"),
+      h("p", {}, `${c.contractor.name}, ${c.contractor.contact}, ${c.contractor.phone}`),
+      h("p", {}, `Next visit: ${fmtDate((c.appointments.find(a => a.outcome === "Booked") || {}).date)}`),
+      c.appointments.length ? h("ul", {}, c.appointments.map(a => h("li", {}, `${fmtDate(a.date)}: ${a.type}, ${a.slot}, ${a.who}. ${a.outcome}`))) : h("p", {}, "No appointments recorded. Ask the case owner to record the next visit."))]],
+    ["quality", "Quality and handover", [qualityPanel(c, id, refresh), handoffPanel(c, id, refresh), sugg]],
+    ["ai", "AI assistance", [assistantPanel, chatCasePanel(id),
+      h("p", {}, "Resident message and summary drafts stay with the resident record.",
+        h("button", { class: "alt", onclick: () => session.controller ? session.controller.select("resident", true, true) : document.getElementById("case-panel-resident").scrollIntoView() }, "Review resident drafts")),
+      h("p", {}, "Funding drafts stay with the funding record.",
+        h("button", { class: "alt", onclick: () => session.controller ? session.controller.select("funding", true, true) : document.getElementById("case-panel-funding").scrollIntoView() }, "Review funding drafts"))]],
+    ["history", "History", [historyPanel]],
+  ].map(([tab, label, nodes]) => ({ id: tab, label,
+    panel: h("section", { id: `case-panel-${tab}`, class: "case-tab-panel" }, h("h2", { class: "case-section-title" }, label), nodes) }));
+  const workspace = h("div", { "data-case-workspace": id }, definitions.map(tab => tab.panel), msg);
+  let top = openHaz.length ? [safety] : [];
+  if (typeof CaseWorkspace !== "undefined") {
+    try {
+      session.controller = CaseWorkspace.enhance(c, definitions, openHaz.length ? safety : null, assistantPanel, draftBox);
+      top = session.controller.top;
+    } catch (error) {
+      session.controller = null;
+      definitions.forEach(tab => {
+        tab.panel.hidden = false;
+        ["role", "aria-labelledby", "tabindex"].forEach(name => tab.panel.removeAttribute(name));
+      });
+      top.push(h("p", { class: "err", role: "alert" }, `Tab navigation unavailable: ${error.message}. Case sections are listed below; ordinary work continues.`));
+    }
+  } else top.push(h("p", { role: "status" }, "Tab navigation unavailable. Case sections are listed below; ordinary work continues."));
+  show(h("a", { class: "back", href: queueHref() }, "Back to the list"),
+    c.building_id ? h("a", { class: "back", href: `#/building/${encodeURIComponent(c.building_id)}` }, `Shared building context: ${c.building_id}`) : h("p", { class: "muted" }, "Building link not recorded; shared context is unknown."),
+    h("div", { class: "row between" }, h("h1", {}, r.name,
+      openHaz.length && h("span", { class: "flag danger" }, "Safety issue open")),
+    h("span", { class: "muted" }, `Reference ${c.id}`)), top, workspace);
   restoreChallengeDrafts(challengeDrafts);
+  restoreCaseFields(savedFields);
+  session.controller?.counts();
 }
+
+function caseFieldEntries() {
+  const seen = new Map();
+  return [...app.querySelectorAll("input, textarea, select")].filter(field =>
+    !field.closest("[data-challenge-case], #resident-draft-output") && field.type !== "file").map(field => {
+    const label = field.id || `${field.closest("[id]")?.id}:${field.name || field.getAttribute("aria-label") || field.type}`;
+    const index = seen.get(label) || 0;
+    seen.set(label, index + 1);
+    return { field, key: `${label}:${index}` };
+  });
+}
+function captureCaseFields() {
+  return caseFieldEntries().filter(({ field }) => field.dataset.caseDirty)
+    .map(({ field, key }) => ({ key, value: field.value, checked: field.checked }));
+}
+function restoreCaseFields(saved) {
+  const fields = new Map(caseFieldEntries().map(({ key, field }) => [key, field]));
+  saved.forEach(({ key, value, checked }) => {
+    const field = fields.get(key);
+    if (field) {
+      field.value = value; field.checked = checked; field.dataset.caseDirty = "true";
+      for (let parent = field.parentElement; parent && parent.getAttribute("role") !== "tabpanel"; parent = parent.parentElement) {
+        if (parent.tagName === "DETAILS") parent.open = true;
+        if (parent.hasAttribute("data-proposal-edit")) parent.hidden = false;
+      }
+    }
+  });
+}
+app.addEventListener("input", event => {
+  if (caseSession && event.target.matches("input, textarea, select")
+      && !event.target.closest("[data-challenge-case]")) event.target.dataset.caseDirty = "true";
+});
 
 async function buildingView(id) {
   try {
@@ -734,7 +862,7 @@ function recordedChangeForm(prefix, label, fields, submit) {
 }
 
 window.addEventListener("beforeunload", (event) => {
-  if (document.querySelector('form[data-unsaved="true"]')) { event.preventDefault(); event.returnValue = ""; }
+  if (document.querySelector('form[data-unsaved="true"], [data-case-dirty="true"]')) { event.preventDefault(); event.returnValue = ""; }
 });
 
 function handoffPanel(c, id, refresh) {
@@ -965,7 +1093,7 @@ function fundingPanel(c, id, refresh) {
   const canAct = ["Grants and Evidence Officer", "Retrofit Programme Manager", "Programme Support Officer"].includes(me.user.role);
   const ta = h("textarea", { "aria-label": "Funding application draft", rows: 10 });
   ta.value = f.draft || "";
-  const fundNote = h("div", {}, fundingAi[id] ? [h("p", { class: "muted" }, fundingAi[id].label), aiNotes(fundingAi[id])] : null);
+  const fundNote = h("div", {}, fundingAi[id] ? [h("p", { class: "muted" }, fundingAi[id].label), aiNotes(fundingAi[id], null, () => ta.value)] : null);
   const ref = h("input", { "aria-label": "Application event evidence reference", name: "application-evidence", autocomplete: "off", spellcheck: "false" });
   const step = (action, text) => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/funding`, { action, text }));
   if (f.status === "Confirmed") {

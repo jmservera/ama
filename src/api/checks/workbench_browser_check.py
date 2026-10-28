@@ -449,10 +449,11 @@ def run_browser(base: str) -> None:
                 )
                 queue_context = page.locator(".item .work-context").inner_text()
                 page.locator(".item").click()
+                page.get_by_role("tab", name="Blockers and safety", exact=False).click()
                 page.get_by_role("heading", name="Recorded task context", exact=True).wait_for()
                 check(
                     "queue case history and suggestion current context agree",
-                    page.locator(".work-context").count() == 3
+                    page.locator(".work-context").count() == 4
                     and all(
                         text == queue_context
                         for text in page.locator(".work-context").all_inner_texts()
@@ -477,6 +478,7 @@ def run_browser(base: str) -> None:
                 page.locator("#reset-queue").click()
                 wait_cases(page, 2)
                 page.locator('.item[href="#/case/ZF-1"]').click()
+                page.get_by_role("tab", name="Blockers and safety", exact=False).click()
                 page.get_by_role("heading", name="Recorded task context", exact=True).wait_for()
                 check(
                     "case switching refreshes reason source and clock without carryover",
