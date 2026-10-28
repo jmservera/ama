@@ -6,7 +6,7 @@ ms.date: 2026-10-28
 
 Task ID: employee-briefing-manager-visibility
 Declared scope: full plan P01-P03.
-Implementation execution: P01/P02/P03-T01 complete; source Review Conformant.
+Implementation execution: P01-P03 complete; source Review Conformant; PR #516 open.
 
 ## Plan and Decisions
 
@@ -134,7 +134,21 @@ Commit-helper get_changed_files is unavailable in this CLI host; the repository
 workflow uses explicitly scoped Git staging and staged diff inspection instead.
 No add-all of ignored/generated inputs or source history rewrite is needed.
 
+### Publication Observed
+
+Implementation and original evidence committed as
+041a13c5d49b2eb92ba0a09c7015a03d6ffbd5f7 with privacy-safe author/committer
+and required co-author trailer. Before push, all six committed source blobs
+were checked against independently reviewed SHA-256 values and matched.
+The clean topic branch fix/employee-briefing-manager-visibility was pushed
+without force; main was not pushed or rewritten.
+PR https://github.com/jmservera/ama/pull/516 opened against main with Refs #514,
+#73, #104 and #360, test/browser evidence and explicit local-only limitations.
+This final administrative tracking closeout changes no assessed implementation
+source, tests or README and does not repeat the Review.
+No merge or hosted/human approval is claimed.
+
 ## Remaining Work and Follow-Ups
 
-Only P03-T02 remains active. Historical #514 live diagnosis/deployment/model residuals
+No active implementation remains. Historical #514 live diagnosis/deployment/model residuals
 remain out of scope. Hosted and human approvals remain independent.

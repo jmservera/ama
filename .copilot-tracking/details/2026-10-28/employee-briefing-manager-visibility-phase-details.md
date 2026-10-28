@@ -5,13 +5,16 @@ ms.date: 2026-10-28
 ---
 
 Task ID: employee-briefing-manager-visibility
-Status: P01/P02/P03-T01 complete; original Review Complete / Conformant.
+Status: P01-P03 complete; original Review Complete / Conformant; PR #516 open.
 Readiness: research C1-C10 resolves role, permission, projection and fixture questions.
 No new owner decision needed. Owner authorizes all four finite phases.
 
 Original Review: .copilot-tracking/reviews/logs/2026-10-28/employee-briefing-manager-visibility-review.md.
-No findings or acceptance blockers. P03-T02 remains pending actual publication;
-there are no implementation changes after the assessed six-file source hash set.
+No findings or acceptance blockers. P03-T02 publication observed: implementation
+commit 041a13c5d49b2eb92ba0a09c7015a03d6ffbd5f7 pushed on the topic branch and
+https://github.com/jmservera/ama/pull/516 opened against main with Refs wording.
+All six committed source blobs matched the independently reviewed hashes.
+Only administrative tracking closeout follows; hosted/human approval is pending.
 
 <!-- phase:P01 -->
 ## P01: Scoped briefing
