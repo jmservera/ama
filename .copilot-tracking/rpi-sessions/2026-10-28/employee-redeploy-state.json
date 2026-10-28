@@ -1,0 +1,83 @@
+{
+  "task_id": "employee-redeploy-20261028",
+  "task_slug": "employee-redeploy",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-28/employee-redeploy-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-28/employee-redeploy-plan.md",
+    "details": ".copilot-tracking/details/2026-10-28/employee-redeploy-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-28/employee-redeploy-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-28/employee-redeploy-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-28/employee-redeploy-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Evidence commit87bd00bd pushed only to requested topic; Refs-only PR #518 opened against main under explicit owner publication exception. No successful full gate, independent exact-head or human/hosted approval claimed.",
+      "status": "complete",
+      "evidence": "https://github.com/jmservera/ama/pull/518; changes P03 publication boundary. Original failed receipt and original Not accepted Review unchanged."
+    },
+    {
+      "decision": "One approved re-apply succeeded: active ca-cutover-test-demo-api--emp-reapply-20261028-110058, Healthy/Provisioned/Running,100% traffic, min0/max4, exact preservation and ACR equality. No rollback.",
+      "status": "complete",
+      "evidence": "Changes P02 completed; protected result.json in /tmp/ama-employee-reapply-20261028-1j8gt8xy. Supported logs show positive startup and zero matched startup errors."
+    },
+    {
+      "decision": "Owner approved exactly one re-apply using existing ACR digest; rollback only for unhealthy revision or startup errors, never tooling failure alone. Publish evidence without waiting for full gate, disclose drift and pending #517.",
+      "status": "confirmed",
+      "evidence": "2026-10-28 current owner request; changes One-time re-apply approval. No rebuild, other apps, roles, networking, costs, secrets or .env."
+    },
+    {
+      "decision": "Owner re-admitted existing task: proceed without denied cost query, take lock nonblocking, exact old-image/env Single-mode recovery on failure.",
+      "status": "confirmed",
+      "evidence": "2026-10-28 owner update in current request; no repeated cost queries, no new resources."
+    },
+    {
+      "decision": "One forward revision executed; system-log CLI verification failed, so exact old digest/env restored in one recovery revision. No forward retry.",
+      "status": "rolled-back",
+      "evidence": "Changes P02; external rollback-result.json at /tmp/ama-employee-redeploy-20261028-resumed.kbxpikmg; Healthy/Provisioned/Running, full preservation and ACR equality."
+    },
+    {
+      "decision": "Execute the explicitly requested full RPI loop and exactly one employee revision update; no resident/resource/role changes or paid inference.",
+      "status": "confirmed",
+      "evidence": "2026-10-28 caller direction; #514, #515 and #516 merged; clean requested topic branch at origin/main bb6df04cef68cc3694a97238d002c732c3406d81."
+    },
+    {
+      "decision": "Research executed, Planning Readiness Ready; exact three AI variables accepted from verified #515/Bicep/live metadata.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/research/2026-10-28/employee-redeploy-research.md"
+    },
+    {
+      "decision": "Exactly one final-candidate critique executed; original Revise verdict preserved. PC-001..005 applied conservatively; no repeated critique.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-28/employee-redeploy-plan-critique.md; plan Critique Disposition"
+    },
+    {
+      "decision": "Single independent Review executed Complete; outcome Not accepted at full-request/blocked-execution boundary. No deployment or publication acceptance.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-28/employee-redeploy-review.md; original verdict unchanged. Later implementation/evidence is distinct, no repeated Review."
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await owner PR review and a ranked follow-up selection, Stop automatic session or Switch to manual mode. No child work or cloud mutation without selection and required authority; original Review unchanged."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Complete authenticated employee/task acceptance under separate owner authority",
+      "rationale": "Operational rollout is healthy; protected UX and task/model binding still require owner-operated acceptance outside this no-inference redeploy.",
+      "evidence": "Current P02 health200/protected assets401; original Review RV-005 / FU-EMP-ACCEPT."
+    },
+    {
+      "rank": 2,
+      "task": "Integrate #517 matrix correction and obtain fresh full-gate and independent exact-head evidence",
+      "rationale": "Explicit evidence-publication exception does not repair failed historical receipt or establish release/human approval.",
+      "evidence": "#517 OPEN; historical failed full receipt /tmp/ama-employee-redeploy-full-gate-20261028-1038/receipt.json, no groups passed."
+    }
+  ]
+}
