@@ -47,7 +47,7 @@ P02-T01 completed with static/types, API units and locked Chromium/axe.
 Original independent Review is Complete / Not accepted, with RV-001/RV-002
 routed to the distinct checklist-findings later implementation. Its local
 repairs/tests are recorded separately and do not change that verdict.
-P02-T02 local commit remains; P02-T03 is blocked.
+P02-T02 local commit completed in b314ed00; P02-T03 remains blocked.
 Shared snapshot/cache helpers also retain changed file inputs and copyable later
 edits when a successful handoff removes its form. This is tightly coupled
 completion of P01-T03, not a new feature or scope expansion.

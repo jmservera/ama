@@ -58,7 +58,7 @@ These are later implementation tests, not independent closure or acceptance.
 
 * [x] P01-T01: Fix live/recovery precedence and quality payload cleanup.
 * [x] P01-T02: Add exact regression transitions and run admitted checks.
-* [ ] P01-T03: Reconcile evidence and commit all local work safely.
+* [x] P01-T03: Reconcile evidence and commit all local work safely.
 
 ## Critique Disposition
 
@@ -71,6 +71,7 @@ Original Not accepted Review, complete gate/no-az conflict, independent exact-he
 assessment and normal publication/thread resolution remain outstanding.
 Human/live acceptance remains distinct.
 
-P01-T01/T02 later implementation is complete and locally verified. P01-T03 is
-the remaining local action. The original Review's adverse outcome is unchanged;
+P01 complete: later implementation and regressions are locally verified and
+committed in b314ed0061a7f8447ab39b159cb78b457324c4ba.
+The original Review's adverse outcome is unchanged;
 these passing tests are not independent acceptance or a repeat Review.

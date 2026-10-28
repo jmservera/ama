@@ -113,6 +113,20 @@ One independent original Review executed: Complete / Not accepted, two High
 checklist ownership defects RV-001/RV-002. It remains immutable. Later scoped
 implementation and exact regressions are recorded in the checklist-findings
 changes artifact; no repeated critique or original Review.
-P02-T02 local commit remains pending; P02-T03 remains blocked. Human
+P02-T02 local commit completed in b314ed00; P02-T03 remains blocked. Human
 screen-reader, staff usability, live deployment and hosted acceptance remain
 pending. Later fixes/tests do not establish independent closure.
+
+## Local Commit and Remote Handoff
+
+Source, regressions and all dated original/later RPI evidence committed in
+`b314ed0061a7f8447ab39b159cb78b457324c4ba` with Conventional Commit message,
+authenticated privacy-safe author/committer and required Copilot trailer.
+Final handoff is documentation-only; source/test/guide diff identity remains
+`20b79ed6e234cfc904e040ab5505dbe87068dc23cb8049cade63a20420cd0ea3`.
+
+Read-only GitHub recheck after commit confirms PR #529 remains OPEN at remote
+d3fbba58 on the requested topic, with all seven named threads unresolved.
+No push, PR-text update, reply or resolution was attempted. Required full gate
+cannot run without prohibited az, and later source lacks independent exact-head
+acceptance. Preserve `Refs #526` when eventual gated publication becomes possible.

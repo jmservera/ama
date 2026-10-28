@@ -80,11 +80,13 @@ Review is independent, executed once and records actual outcome separately.
 
 * [x] P02-T01: Extend two existing browser checks and API guide; run static,
   unit and locked Chromium/axe checks.
-* [ ] P02-T02: One independent Review; reconcile artifacts; safe commit.
+* [x] P02-T02: One independent Review; reconcile artifacts; safe commit.
 * [ ] P02-T03: Required local publication gate where permitted, normal push;
   reply/resolve seven addressed threads, verify remote head and thread state.
 
-P01 complete. P02-T02 ready for the single independent Review and commit.
+P01 local implementation complete, including later routed checklist repairs.
+P02-T02 completed with original Not accepted Review retained and local source/
+evidence commit b314ed0061a7f8447ab39b159cb78b457324c4ba.
 P02-T03 blocked by PC-002: full gate requires prohibited az. No remote write or
 thread resolution may be represented as completed.
 
@@ -131,7 +133,7 @@ outside the correction and are not represented by automated checks.
 ## Handoff
 
 Original independent Review complete, Not accepted. Later checklist implementation
-is locally verified in its distinct artifact set; local commit remains next.
+is locally verified and committed in its distinct artifact set.
 Publication remains blocked by PC-002 and independent acceptance, not by lock
 admission. Details:
 `.copilot-tracking/details/2026-10-28/case-journey-ux-526-correction-phase-details.md`.

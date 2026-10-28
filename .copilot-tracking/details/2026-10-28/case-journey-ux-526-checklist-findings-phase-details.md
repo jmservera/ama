@@ -35,4 +35,5 @@ complete gate/current-base/exact-head independent evidence.
 P01-T01/P01-T02 complete: final 41 focused tests, static/types, 147 journey
 assertions, 38 zero-violation axe scans and 30 assistant checks pass.
 The cleanup success fixture is client-only, not domain approval. Original
-Not accepted Review and publication blocker remain; P01-T03 local commit next.
+Not accepted Review and publication blocker remain; P01-T03 completed in
+b314ed0061a7f8447ab39b159cb78b457324c4ba.
