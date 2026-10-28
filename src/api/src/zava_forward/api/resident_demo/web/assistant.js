@@ -295,9 +295,10 @@
     });
     callbacks.addEventListener("click", function () {
       hide(false);
-      var heading = document.getElementById("callback-title");
-      if (signedIn && heading) heading.focus();
-      else { document.getElementById("email").focus(); }
+      var target = ["callback-title", "email", "retry"].map(function (id) {
+        return document.getElementById(id);
+      }).find(function (item) { return item && item.getClientRects().length; });
+      (target || launcher).focus();
     });
     form.addEventListener("submit", function (event) {
       event.preventDefault();
@@ -313,7 +314,8 @@
       button.setAttribute("aria-disabled", "true");
       select.disabled = true;
       status.textContent = "Getting your advice\u2026";
-      var text = question.value.trim();
+      var draft = question.value;
+      var text = draft.trim();
       var body = text ? { question: text, use_record: true } : { topic: select.value, use_record: true };
       api("/demo/assistant", { method: "POST", body: JSON.stringify(body) })
         .then(function (response) {
@@ -334,8 +336,8 @@
           entry.appendChild(sources);
           result.appendChild(entry);
           while (result.childElementCount > 10) result.firstElementChild.remove();
-          question.value = "";
-          if (response.body.action === "appointments") {
+          if (question.value === draft) question.value = "";
+          if (response.body.action === "appointments" && !panel.hidden) {
             hide(false);
             searchCallbacks(response.body.callback_search);
           }

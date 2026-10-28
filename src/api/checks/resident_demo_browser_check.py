@@ -264,7 +264,15 @@ def check_sign_in_and_cookies(browser: Any, base: str) -> None:
     )
     check(
         "cookies are returned on the next request",
-        context.request.get(base + "/demo/view").status == 200,
+        context.request.get(
+            base + "/demo/view",
+            headers={
+                "X-Resident-Session": context.request.get(base + "/demo/session").json()[
+                    "session_id"
+                ]
+            },
+        ).status
+        == 200,
     )
     check("unavailable actions are disabled buttons", page.locator("button[disabled]").count() >= 1)
     page.locator("#account > summary").click()
@@ -351,7 +359,14 @@ def check_cross_case_and_logout(browser: Any, base: str) -> None:
         == 401,
     )
     check(
-        "other resident session is unaffected", ctx_b.request.get(base + "/demo/view").status == 200
+        "other resident session is unaffected",
+        ctx_b.request.get(
+            base + "/demo/view",
+            headers={
+                "X-Resident-Session": ctx_b.request.get(base + "/demo/session").json()["session_id"]
+            },
+        ).status
+        == 200,
     )
     replay.close()
     ctx_a.close()

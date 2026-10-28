@@ -33,11 +33,15 @@ SAFETY = (
 )
 
 
+def words(question: str) -> set[str]:
+    return set(re.findall(r"[a-z]+", question.lower()))
+
+
 def route(question: str) -> Topic | str:
-    words = set(re.findall(r"[a-z]+", question.lower()))
-    if words & {"danger", "unsafe", "hazard", "safety", "mould", "mold", "damp", "fire", "gas"}:
+    tokens = words(question)
+    if tokens & {"danger", "unsafe", "hazard", "safety", "mould", "mold", "damp", "fire", "gas"}:
         return "safety"
-    if words & {
+    if tokens & {
         "ignore",
         "instructions",
         "system",
@@ -54,21 +58,21 @@ def route(question: str) -> Topic | str:
         "cancel",
     }:
         return "unknown"
-    if words & {"documents", "document", "paperwork"}:
+    if tokens & {"documents", "document", "paperwork"}:
         return Topic.DOCUMENTS
-    if "send" in words:
+    if "send" in tokens:
         return "unknown"
-    if words & {"law", "laws", "legal", "regulation", "regulations", "rules", "compliant", "duty"}:
+    if tokens & {"law", "laws", "legal", "regulation", "regulations", "rules", "compliant", "duty"}:
         return "regulations"
-    if words & {"appointment", "appointments", "callback", "agenda", "slots"}:
+    if tokens & {"appointment", "appointments", "callback", "agenda", "slots"}:
         return "appointments"
-    if words & {"consent", "consents", "permission"}:
+    if tokens & {"consent", "consents", "permission"}:
         return "consents"
-    if words & {"home", "address", "improvements"}:
+    if tokens & {"home", "address", "improvements"}:
         return "home"
-    if words & {"status", "case", "progress"}:
+    if tokens & {"status", "case", "progress"}:
         return Topic.STATUS
-    if words & {"form", "forms"}:
+    if tokens & {"form", "forms"}:
         return Topic.FORMS
     return "unknown"
 

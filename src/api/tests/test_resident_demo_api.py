@@ -71,6 +71,7 @@ class Client:
 
     def __init__(self, port: int, host: str = HOST):
         self.port, self.host, self.cookies = port, host, {}  # type: int, str, dict[str, str]
+        self.session_id: str | None = None
 
     def call(
         self,
@@ -81,11 +82,19 @@ class Client:
         csrf: bool = True,
         origin: bool = True,
         raw: bytes | None = None,
+        extra_headers: tuple[tuple[str, str], ...] = (),
     ) -> tuple[int, dict[str, Any], http.client.HTTPResponse]:
         conn = http.client.HTTPConnection("127.0.0.1", self.port, timeout=10)
         sent = {"Host": self.host}
         if self.cookies:
             sent["Cookie"] = "; ".join(f"{k}={v}" for k, v in self.cookies.items())
+        if self.session_id is not None and path.split("?")[0] in (
+            "/demo/view",
+            "/demo/assistant",
+            "/demo/agenda",
+            "/demo/logout",
+        ):
+            sent[demo.SESSION_HEADER] = self.session_id
         if method == "POST":
             sent["Content-Type"] = "application/json"
             if origin:
@@ -94,7 +103,17 @@ class Client:
                 sent[demo.CSRF_HEADER] = self.cookies[demo.CSRF_COOKIE]
         sent.update(headers or {})
         data = raw if raw is not None else (json.dumps(body).encode() if body is not None else None)
-        conn.request(method, path, body=data, headers=sent)
+        if extra_headers:
+            conn.putrequest(method, path, skip_host=True)
+            for name, value in sent.items():
+                conn.putheader(name, value)
+            for name, value in extra_headers:
+                conn.putheader(name, value)
+            if data is not None:
+                conn.putheader("Content-Length", str(len(data)))
+            conn.endheaders(data)
+        else:
+            conn.request(method, path, body=data, headers=sent)
         response = conn.getresponse()
         text = response.read()
         for line in response.headers.get_all("Set-Cookie") or []:
@@ -109,6 +128,8 @@ class Client:
             payload = json.loads(text)
         except ValueError:
             payload = {}
+        if path in ("/demo/session", "/demo/login") and response.status == 200:
+            self.session_id = payload.get("session_id")
         return response.status, payload, response
 
     def prime(self) -> None:

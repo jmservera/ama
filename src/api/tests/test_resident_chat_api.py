@@ -4,7 +4,7 @@ import json
 import sqlite3
 import tempfile
 from dataclasses import replace
-from datetime import timedelta
+from datetime import datetime, timedelta
 from pathlib import Path
 from unittest.mock import Mock, patch
 
@@ -17,8 +17,9 @@ from zava_forward.core.resident_documents import (
 
 from test_resident_aoai import ENDPOINT, reply
 from test_resident_demo_api import NOW, DemoTestCase
-from zava_forward.api.resident_demo.agenda import Agenda
+from zava_forward.api.resident_demo.agenda import ZONE, Agenda
 from zava_forward.api.resident_demo.aoai import AzureAdvisor
+from zava_forward.api.resident_demo.app import SESSION_HEADER
 from zava_forward.api.resident_demo.assistant import EXPIRES
 
 
@@ -149,6 +150,118 @@ class ChatApiTests(DemoTestCase):
             ],
             [],
         )
+
+    def test_punctuated_time_preferences_offer_only_requested_period(self) -> None:
+        self.app.agenda = Agenda.create(
+            self.path.parent / "periods.sqlite",
+            [
+                (NOW + timedelta(days=1, hours=h), NOW + timedelta(days=1, hours=h, minutes=30))
+                for h in (-4, -2, 1, 3)
+            ],
+        )
+        for period in ("morning", "afternoon"):
+            for punctuation in ("?", "!", ", please."):
+                with self.subTest(period=period, punctuation=punctuation):
+                    status, answer = self.ask(question=f"appointments in the {period}{punctuation}")
+                    self.assertEqual(status, 200)
+                    search = answer["callback_search"]
+                    assert isinstance(search, dict)
+                    self.assertEqual(search["period"], period)
+                    status, result, _ = self.client_one.call(
+                        "POST",
+                        "/demo/agenda",
+                        dict(action="find", use_record=True, **search),
+                    )
+                    self.assertEqual(status, 200)
+                    self.assertEqual(len(result["proposals"]), 2)
+                    for slot in result["proposals"]:
+                        hour = datetime.fromisoformat(slot["start"]).astimezone(ZONE).hour
+                        self.assertEqual(hour < 12, period == "morning")
+                    self.assertEqual(result["bookings"], [])
+
+    def test_shared_cookie_replacement_requires_new_login_permission_binding(self) -> None:
+        old_sid = self.client_one.session_id
+        self.client_one.cookies = self.client_two.cookies
+        for path, body in (
+            ("/demo/view", None),
+            ("/demo/assistant", {"question": "my home", "use_record": True}),
+            ("/demo/agenda", {"action": "list", "use_record": True}),
+            (
+                "/demo/agenda",
+                {"action": "book", "proposal": "stale", "confirmed": True, "use_record": True},
+            ),
+            (
+                "/demo/agenda",
+                {"action": "cancel", "reference": "stale", "confirmed": True, "use_record": True},
+            ),
+            ("/demo/logout", {}),
+        ):
+            with self.subTest(path=path), patch.object(self.reader, "fetch_case") as read:
+                status, result, _ = self.client_one.call(
+                    "GET" if body is None else "POST", path, body
+                )
+                self.assertEqual(status, 409)
+                self.assertTrue(result["session_changed"])
+                read.assert_not_called()
+        self.assertEqual(self.client_two.call("GET", "/demo/view")[0], 200)
+        # A fresh login to the same resident still requires a new permission binding.
+        same_resident_sid = self.client_two.session_id
+        assert isinstance(same_resident_sid, str)
+        self.client_two.login("two@example.com")
+        self.assertNotEqual(self.client_two.session_id, same_resident_sid)
+        self.assertNotEqual(self.client_two.session_id, old_sid)
+        self.assertEqual(
+            self.client_two.call(
+                "POST",
+                "/demo/assistant",
+                {"question": "my home", "use_record": True},
+                headers={SESSION_HEADER: same_resident_sid},
+            )[0],
+            409,
+        )
+        status, result, _ = self.client_two.call(
+            "POST", "/demo/assistant", {"question": "my home", "use_record": True}
+        )
+        self.assertEqual(status, 200)
+        self.assertIn("C-2 Test Street", result["answer"])
+        self.assertNotIn("C-1 Test Street", result["answer"])
+
+    def test_session_binding_rejects_malformed_and_duplicate_headers_before_reads(self) -> None:
+        sid = self.client_one.session_id
+        assert isinstance(sid, str)
+        self.client_one.session_id = None
+        for values in (
+            (),
+            ("",),
+            ("0",),
+            ("0" * 17,),
+            ("g" * 16,),
+            ("\u00e9" * 16,),
+            (sid + "," + sid,),
+            (sid, sid),
+            (sid, "0" * 16),
+            ("0" * 16, sid),
+        ):
+            for path, body in (
+                ("/demo/view", None),
+                ("/demo/assistant", {"topic": "home", "use_record": True}),
+                ("/demo/agenda", {"action": "list", "use_record": True}),
+                ("/demo/logout", {}),
+            ):
+                with self.subTest(values=values, path=path):
+                    with patch.object(self.reader, "fetch_case") as read:
+                        status, result, _ = self.client_one.call(
+                            "GET" if body is None else "POST",
+                            path,
+                            body,
+                            extra_headers=tuple((SESSION_HEADER, value) for value in values),
+                        )
+                        self.assertEqual(status, 409)
+                        self.assertNotIn("answer", result)
+                        read.assert_not_called()
+        self.client_one.session_id = sid
+        self.client_one.cookies.clear()
+        self.assertEqual(self.client_one.call("GET", "/demo/view")[0], 401)
 
     def test_documents_own_case_typed_routing_and_no_cross_case_data(self) -> None:
         self.reader.rows["C-1"] = replace(self.reader.rows["C-1"], documents=document_fixture())

@@ -218,6 +218,23 @@ again. Transactions prevent double booking; retries reconcile the same booking.
 One active callback per case is permitted until cancelled.
 
 `POST /demo/agenda` requires session, same-origin/CSRF and `use_record:true`.
+Protected view, chat, callback and sign-out requests also require exactly one
+`X-Resident-Session` header containing the opaque `session_id` returned by
+`GET /demo/session` or a successful login. This is a per-login binding, not a
+resident selector or authentication credential; the signed HttpOnly cookie is
+still required. A missing, malformed or replaced binding returns 409 with
+`session_changed:true` before personal reads or callback changes. Invalid or
+expired authentication returns 401. Record-use permission must be renewed after
+every login, even to the same resident.
+
+Open tabs recheck change notifications against the current server session and
+clear stale records, transcripts and permissions without adopting another tab's
+identity. Server-side binding also rejects stale tabs before a notification is
+delivered. Delayed responses cannot restore a previous session. Typed-ahead
+questions survive earlier answers; dismissed chat does not move focus or start
+a delayed callback search. The manual route remains available, including visible
+retry focus on page errors and launcher focus while loading. Punctuated morning
+and afternoon questions use the same word tokens as topic routing.
 Exact additional fields:
 
 | Action | Fields |
@@ -258,7 +275,10 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tests:../core/tests:../agents/tests \
 Hold `/tmp/ama-rpi-heavy.lock` nonblocking for heavy runs. These checks use
 constructed rows, a disposable local agenda and no real SQL, credentials,
 private datasets or model transport. The browser check covers mouse/touch/
-keyboard, consent, old-session responses, actual search/confirm/cancel,
+keyboard, consent, two pre-opened sign-in tabs in a shared browser context,
+per-login permission resets, late notifications and obsolete session/view replies,
+punctuated time filtering, typed-ahead drafts, error/loading manual-route focus,
+dismissed delayed appointment replies, actual search/confirm/cancel,
 320/390/1280px, reduced motion, 200% root text resizing and 320px
 400%-equivalent reflow from 1280px. The latter is not native browser zoom.
 Human resident/content, screen-reader/assistive-technology, real-model #164 and

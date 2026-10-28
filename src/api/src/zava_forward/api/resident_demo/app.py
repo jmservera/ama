@@ -7,6 +7,8 @@ row through the allowlist view and re-checks admission, so revocation and expiry
 """
 
 import json
+import re
+import secrets
 import socket
 import sqlite3
 import sys
@@ -46,6 +48,7 @@ ASSETS = {
 SESSION_COOKIE = "__Host-zfdemo"
 CSRF_COOKIE = "__Host-zfdemo-csrf"
 CSRF_HEADER = "X-CSRF-Token"
+SESSION_HEADER = "X-Resident-Session"
 MAX_BODY = 2048
 MAX_CONCURRENT = 8
 SOCKET_TIMEOUT = 10
@@ -222,6 +225,27 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
             sent = _cookies(self.headers.get("Cookie")).get(CSRF_COOKIE)
             return bool(app.codec.csrf_ok(sent, self.headers.get(CSRF_HEADER)))
 
+        def _session_bound(self) -> bool:
+            signed = app.codec.verify(_cookies(self.headers.get("Cookie")).get(SESSION_COOKIE))
+            if signed is None:
+                self._json(401, dict(error="Please sign in again."))
+                return False
+            values = self.headers.get_all(SESSION_HEADER) or []
+            if (
+                len(values) != 1
+                or re.fullmatch(r"[0-9a-f]{16}", values[0]) is None
+                or not secrets.compare_digest(values[0], signed[1])
+            ):
+                self._json(
+                    409,
+                    dict(
+                        error="Your sign-in changed. Please sign in again.",
+                        session_changed=True,
+                    ),
+                )
+                return False
+            return True
+
         def _body(self) -> dict[str, Any] | None:
             ctype = (self.headers.get("Content-Type") or "").split(";")[0].strip().lower()
             length = self.headers.get("Content-Length", "")
@@ -275,8 +299,19 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                 token, cookie = self._csrf_cookie()
                 signed = app.codec.verify(_cookies(self.headers.get("Cookie")).get(SESSION_COOKIE))
                 signed_in = signed is not None and signed[0] in app.by_handle
-                self._json(200, dict(csrf=token, signed_in=signed_in, banner=rs.BANNER), (cookie,))
+                self._json(
+                    200,
+                    dict(
+                        csrf=token,
+                        signed_in=signed_in,
+                        session_id=signed[1] if signed_in and signed else None,
+                        banner=rs.BANNER,
+                    ),
+                    (cookie,),
+                )
             elif self.command in ("GET", "HEAD") and path == "/demo/view":
+                if not self._session_bound():
+                    return
                 view = app.view_for(_cookies(self.headers.get("Cookie")).get(SESSION_COOKIE))
                 if view is None:
                     self._json(401, dict(error="Please sign in again."))
@@ -324,7 +359,15 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                 return
             csrf, csrf_cookie = self._csrf_cookie()
             session = _set_cookie(SESSION_COOKIE, token, rs.SESSION_SECONDS, True)
-            self._json(200, dict(signed_in=True, csrf=csrf), (session, csrf_cookie))
+            signed = app.codec.verify(token)
+            if signed is None:
+                self._json(401, dict(error=GENERIC_DENIAL))
+                return
+            self._json(
+                200,
+                dict(signed_in=True, csrf=csrf, session_id=signed[1]),
+                (session, csrf_cookie),
+            )
 
         def _assistant(self) -> None:
             if not (self._same_origin() and self._csrf_ok()):
@@ -338,6 +381,8 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                 or body.get("use_record") is not True
             ):
                 self._json(400, dict(error="Agree to use your own record for this question."))
+                return
+            if not self._session_bound():
                 return
             row = app.row_for(session)
             if row is None:
@@ -402,9 +447,9 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                             "earliest": app.now().astimezone(ZONE).date().isoformat(),
                             "period": (
                                 "morning"
-                                if "morning" in value.lower().split()
+                                if "morning" in chat.words(value)
                                 else "afternoon"
-                                if "afternoon" in value.lower().split()
+                                if "afternoon" in chat.words(value)
                                 else "any"
                             ),
                         }
@@ -441,6 +486,8 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                 ):
                     self._json(400, dict(error="Confirm the specific callback action first."))
                     return
+            if not self._session_bound():
+                return
             session = _cookies(self.headers.get("Cookie")).get(SESSION_COOKIE)
             if app.view_for(session) is None:
                 self._json(401, dict(error="Please sign in again."))
@@ -505,6 +552,8 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
         def _logout(self) -> None:
             if not (self._same_origin() and self._csrf_ok()):
                 self._json(403, dict(error="Please reload the page and try again."))
+                return
+            if not self._session_bound():
                 return
             app.codec.revoke(_cookies(self.headers.get("Cookie")).get(SESSION_COOKIE))
             self._json(

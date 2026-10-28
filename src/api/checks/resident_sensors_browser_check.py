@@ -137,7 +137,10 @@ def exercise(browser: Any, base: str, reader: FixtureReader) -> None:
         == latest.observed_at.isoformat().replace("+00:00", "Z"),
     )
     forged = page.evaluate("""async () => {
-      const r = await fetch('/demo/view?case_id=CASE-B&home_id=ZF-00001', {headers: {'X-Home-Id':'ZF-00001'}});
+      const session = await (await fetch('/demo/session')).json();
+      const r = await fetch('/demo/view?case_id=CASE-B&home_id=ZF-00001', {
+        headers: {'X-Home-Id':'ZF-00001', 'X-Resident-Session':session.session_id}
+      });
       return await r.json();
     }""")
     check(
