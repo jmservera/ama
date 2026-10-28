@@ -408,7 +408,11 @@ class SessionTests(DemoTestCase):
         token = c.cookies[demo.SESSION_COOKIE]
         status, _, response = c.call("POST", "/demo/logout", {})
         self.assertEqual(status, 200)
-        self.assertNotIn(demo.SESSION_COOKIE, c.cookies)
+        self.assertEqual(response.headers.get_all("Set-Cookie"), None)
+        self.assertEqual(c.cookies[demo.SESSION_COOKIE], token)
+        self.assertIsNone(self.codec.verify(token))
+        self.assertEqual(c.call("GET", "/demo/view")[0], 401)
+        self.assertFalse(c.call("GET", "/demo/session")[1]["signed_in"])
         replay = self.client()
         replay.cookies[demo.SESSION_COOKIE] = token
         self.assertEqual(replay.call("GET", "/demo/view")[0], 401)

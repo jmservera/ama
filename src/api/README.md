@@ -227,6 +227,12 @@ still required. A missing, malformed or replaced binding returns 409 with
 expired authentication returns 401. Record-use permission must be renewed after
 every login, even to the same resident.
 
+Sign-out revokes only the bound server token and deliberately sends no
+`Set-Cookie` headers. The revoked HttpOnly cookie remains unusable until its
+original expiry or replacement by another login. This prevents a delayed
+sign-out response from deleting a newer login's authentication or CSRF cookies.
+The page rechecks the actual current session before confirming sign-out.
+
 Open tabs recheck change notifications against the current server session and
 clear stale records, transcripts and permissions without adopting another tab's
 identity. Server-side binding also rejects stale tabs before a notification is

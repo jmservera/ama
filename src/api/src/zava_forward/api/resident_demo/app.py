@@ -556,11 +556,8 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
             if not self._session_bound():
                 return
             app.codec.revoke(_cookies(self.headers.get("Cookie")).get(SESSION_COOKIE))
-            self._json(
-                200,
-                dict(signed_in=False),
-                (_set_cookie(SESSION_COOKIE, "", 0, True), _set_cookie(CSRF_COOKIE, "", 0, False)),
-            )
+            # A delayed response must not delete another tab's replacement login cookies.
+            self._json(200, dict(signed_in=False))
 
         do_GET = do_HEAD = do_POST = do_PUT = do_PATCH = do_DELETE = do_OPTIONS = _route
 

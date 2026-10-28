@@ -8,6 +8,7 @@ from dataclasses import replace
 from datetime import timedelta
 from pathlib import Path
 from typing import Any
+from urllib.request import Request, urlopen
 
 from playwright.sync_api import Browser, Page, Route, expect, sync_playwright
 from test_resident_chat_api import document_fixture
@@ -43,7 +44,25 @@ def shared_session_checks(
     pending: dict[str, Any] = {}
 
     def hold(route: Route) -> None:
-        pending["response"] = route.fetch()
+        if route.request.url == base + "/demo/logout":
+            # No cookie jar: accepted upstream headers cannot reach Chromium until fulfill.
+            with urlopen(
+                Request(
+                    route.request.url,
+                    data=route.request.post_data_buffer,
+                    headers=route.request.all_headers(),
+                    method="POST",
+                ),
+                timeout=10,
+            ) as response:
+                pending["logout"] = {
+                    "status": response.status,
+                    "headers": dict(response.headers.items()),
+                    "body": response.read(),
+                }
+                assert response.headers.get_all("Set-Cookie") is None
+        else:
+            pending["response"] = route.fetch()
         pending["route"] = route
 
     try:
@@ -161,6 +180,93 @@ def shared_session_checks(
         expect(first.locator("#assistant-consent")).not_to_be_checked()
         open_chat(first)
         scan(first, axe, reports, "unnotified-cookie-switch-rejected", "#main, #resident-chat")
+
+        for email, address in (
+            ("two@example.com", "C-2 Test Street"),
+            ("one@example.com", "C-1 Test Street"),
+        ):
+            first.goto(base)
+            expect(first.locator("#content")).to_contain_text("C-1 Test Street")
+            second.goto(base)
+            expect(second.locator("#content")).to_contain_text("C-1 Test Street")
+            old_sid = first.request.get(base + "/demo/session").json()["session_id"]
+            old_cookies = context.cookies()
+            old_token = next(c["value"] for c in old_cookies if c["name"] == "__Host-zfdemo")
+            pending.pop("logout", None)
+            first.route("**/demo/logout", hold, times=1)
+            first.locator("#account > summary").click()
+            first.get_by_role("button", name="Sign out", exact=True).click()
+            expect(first.locator("#content")).to_be_empty()
+            for _ in range(100):
+                if "logout" in pending:
+                    break
+                first.wait_for_timeout(100)
+            assert "logout" in pending, "Logout did not reach upstream acceptance"
+            assert pending["logout"]["status"] == 200
+            assert context.cookies() == old_cookies
+            assert (
+                first.request.get(
+                    base + "/demo/view",
+                    headers={"Cookie": "__Host-zfdemo=" + old_token, "X-Resident-Session": old_sid},
+                ).status
+                == 401
+            )
+            second.reload()
+            expect(second.locator("#signin")).to_be_visible()
+            with second.expect_response("**/demo/login") as login:
+                sign_in(second, email)
+            new_login = login.value.json()
+            assert new_login["session_id"] != old_sid
+            open_chat(second)
+            second.locator("#assistant-consent").check()
+            second.locator("#assistant-question").fill("my home")
+            second.get_by_role("button", name="Get advice").click()
+            expect(second.locator("#assistant-result")).to_contain_text(address)
+            second.keyboard.press("Escape")
+            second.locator("#callback-consent").check()
+            replacement = {c["name"]: c for c in context.cookies()}
+            assert "__Host-logout-probe" not in replacement
+            held = pending["logout"]
+            held["headers"]["Set-Cookie"] = (
+                "__Host-logout-probe=released; Path=/; Secure; SameSite=Strict; HttpOnly"
+            )
+            with first.expect_response("**/demo/logout"):
+                pending["route"].fulfill(**held)
+            expect(first.locator("#content")).to_contain_text(address)
+            with second.expect_response("**/demo/session"):
+                first.evaluate(
+                    "() => { const c = new BroadcastChannel('resident-demo-session');"
+                    " c.postMessage('changed'); c.close(); }"
+                )
+            actual = {c["name"]: c for c in context.cookies()}
+            assert actual["__Host-logout-probe"]["value"] == "released"
+            assert actual["__Host-zfdemo"] == replacement["__Host-zfdemo"]
+            assert {
+                key: value
+                for key, value in actual["__Host-zfdemo-csrf"].items()
+                if key != "expires"
+            } == {
+                key: value
+                for key, value in replacement["__Host-zfdemo-csrf"].items()
+                if key != "expires"
+            }
+            expect(second.locator("#content")).to_contain_text(address)
+            expect(second.locator("#assistant-result")).to_contain_text(address)
+            expect(second.locator("#assistant-consent")).to_be_checked()
+            expect(second.locator("#callback-consent")).to_be_checked()
+            view = second.request.get(
+                base + "/demo/view", headers={"X-Resident-Session": new_login["session_id"]}
+            )
+            assert view.ok and view.json()["home"]["address"] == address
+            open_chat(second)
+            scan(second, axe, reports, f"delayed-logout-preserves-{email}", "#main, #resident-chat")
+            context.clear_cookies(name="__Host-logout-probe")
+            if email == "two@example.com":
+                first.reload()
+                first.locator("#account > summary").click()
+                first.get_by_role("button", name="Sign out", exact=True).click()
+                expect(first.locator("#signin")).to_be_visible()
+                sign_in(first, "one@example.com")
         assert not errors, errors
         assert all(url.startswith(base) for url in requests), requests
     finally:
@@ -488,7 +594,7 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
     open_chat(page)
     page.get_by_role("button", name="Use the manual callback form").click()
     expect(page.locator("#chat-launcher")).to_be_focused()
-    scan(page, axe, reports, "loading-manual-launcher-focus", "#main, #chat-launcher")
+    scan(page, axe, reports, "loading-manual-launcher-focus", "body")
     pending["route"].fulfill(response=pending["response"])
     expect(page.locator("#error-title")).to_be_focused()
     assert not errors, errors
