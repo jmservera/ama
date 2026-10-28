@@ -60,3 +60,21 @@ log entries remained byte-for-byte prefixes of the corrected files. A wider
 index-link probe found a pre-existing locally absent presentation delivery
 file; it is unrelated and unchanged. Final committed-candidate publication
 checks and thread dispositions are not implied by these documentation checks.
+
+### Publication blocker (2026-10-28)
+
+Correction commit `535eab92489c199b4326d160cc3f318a4bef6d57` passed the
+documentation checks above. The required complete gate,
+`python3 tools/rpi-checks.py --all --base 98b0bb98f2424dd23c00e386378f44892a7a79e0 --out /tmp/ama-pr459-ledger-correction-20261028-final`,
+failed at preflight with `Workflow matrix drift: src-deploy.yml`. Failed
+receipt: `/tmp/ama-pr459-ledger-correction-20261028-final/receipt.json`
+(external, historical for that correction commit). The runner and deployment
+workflow are identical to the fetched main for this candidate; neither was
+changed by this correction. No later suite was run and no gate pass is claimed.
+
+Publication remains blocked: no push, exact-head publication approval or thread
+resolution is inferred from the local correction. The workflow-matrix mismatch
+needs separate reconciliation, followed by a fresh gate and receipt verification
+on the final committed candidate against current main. Do not waive the gate,
+change protections or resolve the review threads before publishing their fixes.
+No `.env` file was read.
