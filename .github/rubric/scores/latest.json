@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-28T22:10:40+00:00",
-  "commit": "914e0542000126bae594428bb8f9875c64a89289",
+  "scored_at": "2026-10-28T22:52:13+00:00",
+  "commit": "704014ef1b21aa8fac3e7d028348cd1daaf0e7c4",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40776826252",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40782392793",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "0b96cfbbedeb2a9b7485a862b37470831ccdc2082bb44e338178089012ce06c1",
-    "solution-code": "523b943bd576f8ca4ff520a7ab707c459a3452376f7c318d261b703d8c0105f4",
+    "solution-code": "f75eca15113e3ac15f06cee990032bb8ea79d3968790db64626f6412d4337607",
     "infrastructure": "b6366d357bc22aadb23fdb2e0847cbbda6689e072f25c6a68738113fd875b271",
     "capstone-deck": "acb30e4f302663cedec4884bc7c561fcb5a14fb647ab1c4f93ffc377567c8896",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
@@ -29,9 +29,10 @@
     "A1": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/web/ops.js:146-183"
+        "src/api/src/zava_forward/api/resident_demo/agenda.py:1-60",
+        "src/api/src/zava_forward/api/resident_demo/app.py:32-40"
       ],
-      "rationale": "Diff adds retry/abort UX and legacy contract_version fallback in capacity view; no new module boundary, service split or scaling pattern. Already-ceiling architecture unaffected."
+      "rationale": "Adds cleanly separated local SQLite agenda module and chat router module with explicit boundaries, consistent with existing modular pattern. No new scaling pattern; already at ceiling."
     },
     "A2": {
       "score": 5,
@@ -43,34 +44,39 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/appointments.py:110",
-        "src/api/tests/test_procurement_api.py:127-165"
+        "src/api/src/zava_forward/api/resident_demo/app.py:228-247",
+        "src/core/src/zava_forward/core/resident_documents.py:60-110",
+        "src/api/src/zava_forward/api/resident_demo/agenda.py:1-35"
       ],
-      "rationale": "contract_version now optional (appointments.py:110) but authorization to act on Unknown authority still rejected with 403 (test_procurement_api.py). Compatibility fix, not a new control; ceiling retained."
+      "rationale": "Adds per-login session-binding header with constant-time compare and 409 on mismatch, strict use_record consent gate, bounded/allowlisted document parsing rejecting malformed input, and parameterized SQLite agenda transactions. Strengthens already-ceiling security."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/api/checks/capacity_browser_check.py:1-100",
-        "src/api/tests/test_procurement_api.py:127-165",
-        "src/api/src/zava_forward/api/web/ops.js:146-183"
+        "src/api/src/zava_forward/api/resident_demo/chat.py:1-225",
+        "src/core/src/zava_forward/core/resident_documents.py:1-178",
+        "src/api/tests/test_resident_chat_agenda.py:1-50",
+        "src/api/checks/resident_assistant_browser_check.py:1-100"
       ],
-      "rationale": "Adds legacy-package compatibility, abort-safe retries, missing-dependency guard UX, and a new 784-line browser check plus new API tests covering empty/legacy reads. Strong completeness hardening, but criterion was already at ceiling (5); no higher level exists."
+      "rationale": "Adds complete resident chat routing, document facts parsing, synthetic callback agenda with booking/cancellation transactions, plus matching unit and browser checks. Strong completeness; already at ceiling."
     },
     "A5": {
       "score": 5,
       "evidence": [],
-      "rationale": "No logging, metrics, tracing, or cost instrumentation changed in this diff. Unchanged baseline."
+      "rationale": "No logging, metrics, tracing or cost instrumentation changed; diff adds feature code and stderr error prints consistent with existing pattern. Unchanged baseline."
     },
     "A6": {
       "score": 5,
-      "evidence": [],
-      "rationale": "No model choice, prompt or evaluation-harness change in this diff; changes are UI retry/error handling and procurement data compatibility only. Unchanged baseline."
+      "evidence": [
+        "src/api/src/zava_forward/api/resident_demo/chat.py:120-225",
+        "src/api/README.md:117-140"
+      ],
+      "rationale": "New rule-based router explicitly keeps typed questions out of model prompts/memory and preserves the existing bounded AI advisor unchanged; no model/prompt/eval-harness change. Baseline unchanged."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "No agentic orchestration, handoff or state-graph pattern touched; changes are UI abort-signal/retry plumbing and backend optional-field handling. Unchanged baseline (Good, not Excellent)."
+      "rationale": "Chat routing and agenda actions are deterministic rule dispatch and transactional CRUD, not agentic orchestration, planning or handoff. Unchanged baseline (Good, not Excellent)."
     },
     "B1": {
       "score": 3,
@@ -109,9 +115,9 @@
     "B6": {
       "score": 5,
       "evidence": [
-        "src/api/README.md:41-80"
+        "src/api/README.md:117-230"
       ],
-      "rationale": "README documents the new capacity_browser_check.py clearly with run commands and scope, consistent with existing ceiling; not deck/capstone documentation itself. Unchanged."
+      "rationale": "README adds a thorough, clearly structured section describing the new chat/agenda contract, security model, limits and test commands. Strong engineering documentation; not capstone deck itself. Ceiling unchanged."
     },
     "B7": {
       "score": 5,
