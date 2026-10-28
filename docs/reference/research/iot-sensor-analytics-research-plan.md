@@ -717,6 +717,120 @@ live-platform, legal or operational acceptance follows. The next human actions
 are dataset-specific reuse/access review and, if authorized, provision of the
 exact paired source/station/QC packet; not invention of missing bounds.
 
+## Paired historical climate access check (2026-10-21, Refs #178)
+
+A bounded continuation tested whether official paired North-East temperature
+and humidity records can be retrieved without an account. Retrievals occurred
+on 2026-10-21 UTC (not a publication or approval date). Evidence:
+[access-blocker record](./climate-paired-source-blocker-178.json).
+
+* MIDAS Open (OGL stated on its CEDA catalogue page) exposes anonymous
+  directory listings, including North-East stations, but every file fetched
+  (data licence README, station metadata, station capability) required a CEDA
+  login. Account creation or credential use is outside this task, so no
+  hourly temperature or relative humidity records were obtained.
+* Environment Agency Hydrology (OGL 3) carries no humidity or dew-point
+  property; its temperature measures are not atmospheric paired data.
+* No bounds, thresholds or replay limits are derived. The Durham monthly
+  temperature statistics remain temperature-only, and no synthetic value
+  stands in for observed records. Synthetic data stays permitted only when
+  clearly labelled synthetic and cannot fulfil record-derived bounds.
+* Owner action: an authorised human with their own CEDA account supplies
+  selected MIDAS qc-version-1 files and licence text and records reuse and
+  station approval, or the owner approves another public no-login source.
+  Source selection and licence/reuse remain UNMET. #179 stays sequenced behind
+  grounded paired input.
+
+## Alternative modelled paired climate source (2026-10-22, Refs #178)
+
+The owner decided on 2026-10-22 to investigate another source, accepting
+demonstrator accuracy provided the production gaps stay documented. This
+section adds a usable modelled source. It does not replace or edit the
+[2026-10-21 access blocker](./climate-paired-source-blocker-178.json) or the
+[Durham monthly temperature report](./climate-source-evidence-178.json), which
+stay as separate temperature-only and negative evidence.
+
+Retrieved 2026-10-22 UTC, anonymously, with no key, account or payment, for
+Durham (54.768 N, -1.585 E) over 2023-01-01 to 2023-12-31, hourly, UTC. The raw
+responses are pinned by SHA-256 in
+[climate-paired-sample-178/](./climate-paired-sample-178/).
+
+The NASA response identifies `header.api.name` as `POWER Hourly API` and
+`header.api.version` as `v2.10.3`. The adapter carries these retained metadata
+fields into the report's source provenance and attribution with retrieval date
+2026-10-22; it marks attribution `UNVERIFIED` if identity or a precise version
+cannot be carried through. This records source metadata, not independent API
+verification, licence/reuse approval or the human owner/legal decision.
+
+| Source | Read on 2026-10-22 | Result |
+| --- | --- | --- |
+| [Open-Meteo Historical Weather API](https://open-meteo.com/en/docs/historical-weather-api) (ERA5, 0.25 degrees) | [Terms](https://open-meteo.com/en/terms): free API for non-commercial use; [licence](https://open-meteo.com/en/licence): CC BY 4.0 with attribution; underlying Copernicus C3S material has its own licence | **Selected demonstrator source (modelled).** 8,760 paired hours, no gaps; grid cell 54.75 N, -1.5 E, 98 m |
+| [NASA POWER hourly API](https://power.larc.nasa.gov/docs/services/api/) (MERRA-2) | [Referencing guide](https://power.larc.nasa.gov/docs/referencing/) only; licence text not retrieved (data policy page returned HTTP 403) | Cross-check only. 8,760 paired hours, no fill values; model elevation 144 m |
+| MIDAS Open, HadUK-Grid | Login required (2026-10-21) | Not retrievable anonymously; retained as the production route |
+| Durham station file | Temperature only, monthly | Unchanged, no humidity |
+| EA Hydrology | No humidity or dew point | Not applicable |
+| CIBSE weather files, ERA5 via CDS | Licensed or account/key required | Not retrieved |
+| Meteostat | Not examined | Not retrieved, no finding made |
+
+Derived by the [validating adapter](../../../tools/climate_paired_bounds.py)
+into the [bounds report](./climate-paired-bounds-178.json). These are sample
+statistics of a modelled grid cell for one year, not station observations,
+design extremes or safety thresholds:
+
+| Variable (Open-Meteo ERA5, 2023) | Minimum | 1st percentile | Mean | 99th percentile | Maximum |
+| --- | --- | --- | --- | --- | --- |
+| Temperature (degC) | -5.5 (2023-12-02 04:00Z, RH 95) | -1.4 | 10.3 | 22.5 | 26.7 (2023-09-09 14:00Z, RH 63) |
+| Relative humidity (%) | 36 (2023-06-14 13:00Z, 22.4 degC) | 50 | 81.0 | 97 | 100 |
+
+The report also lists, for each calendar month, the minimum and maximum of each
+variable with every UTC timestamp at which that value occurs (ties are all
+listed in chronological order) and the paired value of the other variable at
+that hour. These are taken from the retained Open-Meteo records, never filled.
+
+The adapter rejects hash mismatch, unit or timezone mismatch, nulls, fill
+values, gaps, duplicate or reordered hours, unequal series, humidity outside
+0..100, dew point above temperature, and humidity that disagrees with the
+Magnus value from temperature and dew point by more than 1.0 point (the
+retrieved maximum residual is 0.85). Nothing is filled or inferred. Reproduce:
+
+```bash
+python3 tools/climate_paired_bounds.py \
+  --open-meteo docs/reference/research/climate-paired-sample-178/open-meteo-era5-durham-2023-raw.json \
+  --open-meteo-url 'https://archive-api.open-meteo.com/v1/archive?latitude=54.768&longitude=-1.585&start_date=2023-01-01&end_date=2023-12-31&hourly=temperature_2m,relative_humidity_2m,dew_point_2m&models=era5&timezone=UTC&temperature_unit=celsius' \
+  --open-meteo-sha256 96e707ea5f7bd35af3ebdf896c7f9a41a055d220a0a0e832aa5ad008b7484a26 \
+  --power docs/reference/research/climate-paired-sample-178/nasa-power-merra2-durham-2023-raw.json \
+  --power-url 'https://power.larc.nasa.gov/api/temporal/hourly/point?parameters=T2M,RH2M&community=RE&longitude=-1.585&latitude=54.768&start=20230101&end=20231231&format=JSON&time-standard=UTC' \
+  --power-sha256 cba9cf308878e9a4b2f2847cbbc4e66f06d14a1b734d4da48be0133fef9c6db1 \
+  --retrieved-on 2026-10-22 --latitude 54.768 --longitude -1.585
+python3 -m unittest discover -s tools -p 'test_climate_paired_bounds.py' -v
+```
+
+The two modelled sources disagree: on the same 8,760 UTC hours ERA5 minus POWER
+averages +0.96 degC (mean absolute 1.24) for temperature and -7.1 points (mean
+absolute 8.3) for humidity, and NASA POWER's range is narrower (-3.35 to
+24.61 degC, 43.4 to 100 percent). This is the demonstrator accuracy limit and
+a reason the figures are labelled modelled and must not be presented as
+observed. Attribution if used: "Weather data by Open-Meteo.com", CC BY 4.0,
+indicating the values were summarised.
+
+### Pending for production (owner decision 2026-10-22)
+
+| Pending point | Status |
+| --- | --- |
+| Licence and reuse confirmation, including whether the demonstrator is non-commercial and the underlying C3S terms | Unmet; no approval is asserted. Open-Meteo's free tier excludes commercial use |
+| Precision against station observations for the North East | Pending; requires an authorised MIDAS or other station source |
+| Regional representativeness (one grid cell, one year, coast to Pennine terrain) | Pending |
+| ERA5 versus ERA5-Land, multi-year window | Pending |
+| NASA POWER licence text | Not retrieved |
+
+Status at the 2026-10-22 evidence boundary (superseded: #178 was later completed
+after owner-approved integration, see the integration continuation earlier in this
+document). Issue #178 criteria stayed unticked at that point: the comparison and a recorded source are
+done for a bounded demonstrator, bounds are record-derived from the modelled
+sample, and the licence criterion remains open until the owner confirms reuse.
+No indoor model, importer, 60,000-home dataset, #179, #180 or #193 work was
+done.
+
 ## Historical outdoor climate source decision (2026-10-16, Refs #178)
 
 Historical offline audit, retained for provenance. For the current evidence
