@@ -39,3 +39,22 @@ Exact match 0; total minus 1; all 980 seed ids present; digest of the other rows
 ## Evidence gaps
 * The app cache behaviour is from code reading; the post-reload map exclusion is verified live after the change.
 * Owner browser view of the map after removal remains the owner's check.
+
+## Schema correction (2026-10-28, PR 459 review)
+
+The original research above is preserved as written, including its incorrect
+schema description. The [ledger-safe migration research, Evidence E3-E6](../2026-10-24/ledger-safe-migration-360-research.md#evidence)
+records that the live database is ledger-enabled and `cases` is an updatable
+ledger table, not a normal non-ledger table. Deleting its current row retains
+the prior body in system-managed ledger history. The append-only `audit` ledger
+records the removal separately; the `INSTEAD OF UPDATE, DELETE` audit trigger
+is used only for non-ledger databases, not alongside the live ledger protection.
+
+The removal and zero-match/count checks above concern current rows and active
+case projections, not data erasure. The non-history reference scan did not
+inspect or remove ledger history. "0 history entries" in the identity section
+means entries in the case JSON body, not ledger history. Option 1's statement
+that history stays in the audit ledger does not account for the retained case
+body in system-managed history. This corrects the interpretation only; no new
+live schema/history read, deletion, restart or other runtime verification was
+performed.

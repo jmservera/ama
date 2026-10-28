@@ -16,3 +16,13 @@ Date: 2026-10-25. Phase order actually followed: research (12:30Z), plan and det
 ## Limits
 Audit evidence: proven are count 17 to 18 and chain verification with head equal to `audit_head`; not proven are per-row preservation of the earlier 17 rows and an explicit prior-head check. See the review correction.
 Owner browser view of the map is not verified. No eviction helper exists, so each external delete needs a restart; possible follow-up. The earlier 12:33Z script and its first dry run are recorded above, not hidden.
+
+## Retention clarification (2026-10-28, documentation only)
+
+The result counts and exact-match checks above describe current rows and
+active-case projections only. The live `cases` table is an updatable ledger
+table: deleting the current row retains its old body in system-managed ledger
+history, separately from the appended `case_removed` audit entry. The
+non-history reference scan did not prove data erasure. See the
+[dated research correction](../../research/2026-10-25/remove-synthetic-example-360-research.md#schema-correction-2026-10-28-pr-459-review).
+No live operation or validation was repeated.

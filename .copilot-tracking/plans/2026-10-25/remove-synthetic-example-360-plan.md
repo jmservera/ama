@@ -40,3 +40,12 @@ One independent rubber-duck critique ran on the three files above. Verdict: FAIL
 Amendment 5 status (correction, documentation only): partly applied. The executed script asserted the chain verifies, count plus 1 and head equals the verified chain head. It did not compare the earlier 17 audit rows byte by byte or by hash, and did not assert an explicit `prev` equality or a single new `case_removed` row beyond count plus 1. Preservation of the earlier rows is inferred from chain integrity and the append-only ledger, not proven by comparison. The "prior 17 rows hash-equal" wording in row 5 above was the plan, not the result. No runtime check was added afterwards.
 
 Critique execution: once, about 12:32Z (earlier text in this file stated 12:44Z/12:45Z in error; file modification times are authoritative). No repeat critique for this task.
+
+## Retention clarification (2026-10-28, documentation only)
+
+The original decision and critique above remain historical. The single-row
+`DELETE` is active-case removal, not data erasure: the live updatable ledger
+`cases` table retains the prior body in system-managed history. Critique
+amendment 3's non-history scan cannot establish absence from ledger history.
+See the [dated research correction](../../research/2026-10-25/remove-synthetic-example-360-research.md#schema-correction-2026-10-28-pr-459-review).
+No new plan, critique, runtime action or full RPI loop was started.
