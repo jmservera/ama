@@ -268,30 +268,47 @@ def run_browser(base: str) -> None:
                     continue
 
                 wait_cases(page, 2)
-                page.wait_for_function(
-                    "() => document.querySelector('.ai')?.textContent"
-                    ".includes('Reading your cases...')"
+                briefing = page.locator("section.ai").filter(
+                    has=page.get_by_role("heading", name="Today's briefing", exact=True)
                 )
+                loading = briefing.get_by_text("Reading case summaries...", exact=True)
+                loading.wait_for(state="visible")
                 check("initial briefing held before queue navigation", len(briefings) == 1)
+                briefing_payload = {
+                    "label": "Synthetic check",
+                    "scope_label": "My assigned cases",
+                    "case_count": 2,
+                    "summary_count": 2,
+                }
                 page.get_by_role("link", name="All cases", exact=True).click()
                 wait_cases(page, 3)
                 page.get_by_role("link", name="My cases", exact=True).click()
                 wait_cases(page, 2)
                 check("cancelled briefing retried on each queue return", len(briefings) == 3)
                 briefings[-1].fulfill(
-                    json={"text": "Current synthetic briefing", "label": "Synthetic check"}
+                    json={**briefing_payload, "text": "Current synthetic briefing"}
                 )
                 page.get_by_text("Current synthetic briefing", exact=True).wait_for()
+                check(
+                    "recovered briefing renders scope and counts",
+                    briefing.get_by_role(
+                        "heading", name="My assigned cases", exact=True
+                    ).is_visible()
+                    and briefing.get_by_text(
+                        "2 permitted open cases. 2 included in this summary (up to 8).",
+                        exact=True,
+                    ).is_visible(),
+                )
                 for obsolete in briefings[:-1]:
                     obsolete.fulfill(
-                        json={"text": "Obsolete synthetic briefing", "label": "Synthetic check"}
+                        json={**briefing_payload, "text": "Obsolete synthetic briefing"}
                     )
                 page.wait_for_timeout(100)
                 check(
                     "late cancelled briefings cannot replace the recovered briefing",
                     page.get_by_role("heading", name="Today's briefing", exact=True).count() == 1
                     and page.get_by_text("Current synthetic briefing", exact=True).is_visible()
-                    and page.get_by_text("Reading your cases...", exact=True).count() == 0
+                    and loading.count() == 0
                     and page.get_by_text("Obsolete synthetic briefing", exact=True).count() == 0,
                 )
                 page.get_by_role("link", name="All cases", exact=True).click()
@@ -315,8 +332,8 @@ def run_browser(base: str) -> None:
                 page.get_by_role("alert").filter(has_text="Synthetic briefing failure").wait_for()
                 page.route(
                     "**/api/briefing?mode=workflow",
-                    lambda route: route.fulfill(
-                        json={"text": "Retried synthetic briefing", "label": "Synthetic check"}
+                    lambda route, _request, payload=briefing_payload: route.fulfill(
+                        json={**payload, "text": "Retried synthetic briefing"}
                     ),
                     times=1,
                 )
