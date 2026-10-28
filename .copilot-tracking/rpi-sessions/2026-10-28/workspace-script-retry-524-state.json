@@ -1,0 +1,53 @@
+{
+  "task_id": "524",
+  "task_slug": "workspace-script-retry-524",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-28/workspace-script-retry-524-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-28/workspace-script-retry-524-plan.md",
+    "details": ".copilot-tracking/details/2026-10-28/workspace-script-retry-524-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-28/workspace-script-retry-524-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-28/workspace-script-retry-524-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-28/workspace-script-retry-524-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Full ordered automatic RPI loop on requested branch and worktree",
+      "status": "confirmed",
+      "evidence": "User request on 2026-10-28; clean requested branch verified"
+    },
+    {
+      "decision": "Research executed, Ready; one critique executed with original Revise verdict",
+      "status": "dispositioned",
+      "evidence": "Plan Critique Disposition: PC-001 applied; PC-002 safely terminal on load without global; PC-003 rejected as inapplicable parent restriction"
+    },
+    {
+      "decision": "Exactly one independent post-implementation Review executed",
+      "status": "Complete / Not accepted",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-28/workspace-script-retry-524-review.md; stable source diff plus original artifacts, 32 lightweight tests, package Ruff/mypy; mandatory API/Chromium evidence unavailable"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "heavy-lock",
+      "summary": "Required API/browser checks did not start because /tmp/ama-rpi-heavy.lock is occupied",
+      "resolution": "Acquire the mandated lock nonblocking in a later validation attempt; do not bypass or replace it"
+    },
+    {
+      "id": "review-not-accepted",
+      "summary": "Original independent Review found RV-001 session-ended dispatch defect and RV-002 late-delivery regression-check defect",
+      "resolution": "Later scoped implementation owns corrections; preserve original Review and require all publication gates"
+    }
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Publication blocked: commit local assessed candidate/evidence, then later selected RV-001/RV-002 corrections and required locked validation; automatic session remains running with no child selected"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Correct session-ended post-await guarding", "rationale": "Confirmed medium defect; small, high-value preservation of session/status boundaries", "evidence": "Review RV-001"},
+    {"rank": 2, "task": "Make delayed-script browser proof deterministic", "rationale": "Confirmed medium regression-check defect; establishes reliable lexical execution and stale-status evidence", "evidence": "Review RV-002"},
+    {"rank": 3, "task": "Collect required API/browser and exact-head publication evidence", "rationale": "High evidence gap; requires unavailable shared heavy lock and source-correction coverage", "evidence": "Review RV-003; P02-T01 remains incomplete"},
+    {"rank": 4, "task": "Owner live diagnosis and post-deployment verification", "rationale": "Separate authenticated/live authorization; not inferable from local checks", "evidence": "Review RV-004; issue AC1/AC5"}
+  ]
+}

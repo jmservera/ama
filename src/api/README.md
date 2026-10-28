@@ -6,6 +6,32 @@ ms.date: 2026-10-28
 ms.topic: reference
 ---
 
+## Workspace script recovery (#524)
+
+When a required employee-workspace script is missing, the current screen retries
+that file automatically after 250ms and, after a load error, another 500ms. Each
+attempt waits at most five seconds. The two-attempt budget is shared across
+navigation for that page; already-present scripts are not reloaded.
+Timeouts and scripts that finish loading without the expected workspace function
+stop recovery instead of risking duplicate script execution. A late response
+cannot render an obsolete screen. Persistent failure retains the existing
+plain-language error, status/alert and native **Reload workspace** button.
+
+With the existing dev distributions and Chromium installed, from `src/api`:
+
+```bash
+PYTHONPATH=tests:../core/tests:../agents/tests python3 -m unittest test_workspace_scripts -q
+python3 -m checks.workspace_scripts_browser_check
+```
+
+The browser check owns a synthetic loopback server and intercepts script failures;
+it never reads the working dataset or calls Azure. It covers actual-script
+recovery, retry exhaustion, missing globals, delayed responses, navigation and
+sign-out. These local checks do not identify the historical live transport cause
+or establish post-deployment acceptance. Authenticated live response status,
+size, headers and cold-start/auth correlation, plus verification after an
+owner-approved deployment, remain pending the owner.
+
 ## Specialist screen delivery (#149)
 
 The existing workbench includes a **Specialist screens** destination. Installed
