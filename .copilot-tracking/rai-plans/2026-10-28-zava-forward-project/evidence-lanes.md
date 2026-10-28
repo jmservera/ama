@@ -1,0 +1,83 @@
+---
+title: Bounded source evidence lanes for the project RAI review
+description: Read-only specialist source observations, with implemented controls separated from acceptance
+ms.date: 2026-10-28
+ms.topic: reference
+---
+
+## Evidence contract
+
+Evidence: two bounded read-only source lanes reviewed the recorded baseline
+`9bfed51863b05a25e9939d82504c576524688e14`. They did not edit source, run tests,
+inspect private datasets/secrets or access Azure/external sources. Their
+source observations are incorporated below; not a new exploit assessment,
+runtime observation or operational approval.
+
+Evidence: table rows inherit `Evidence` for described source controls.
+`Hypothesis` marks proposed harm/treatment and `Unknown` marks unverified
+acceptance. Test paths mean test source inspected, not test results obtained.
+Paths are repository-relative.
+
+## Resident and employee channels
+
+| Surface | Evidence and citations | Gap, uncertainty or treatment |
+| --- | --- | --- |
+| Resident own-case boundary | `src/api/src/zava_forward/api/resident_demo/app.py:138-173`; `src/core/src/zava_forward/core/resident_showcase.py:294-308,515-556` recheck admission/binding/expiry/revocation and construct an allowlist. Tests: `src/api/tests/test_resident_demo_api.py:185-212,450-475` | Evidence: shared-credential synthetic identity, not verified enrolment. Unknown: accepted production identity/recovery |
+| Representatives | `src/api/src/zava_forward/api/resident_preview/app.py:53-74`; `src/core/src/zava_forward/core/resident_preview.py:402-457` intersect grant/task/measure authority. Tests: `src/api/tests/test_resident_preview_api.py:195-235` | Evidence: separate startup-selected preview, not showcase representative sign-in. Unknown: end-to-end delegated enrolment/revocation/recovery |
+| Record use vs works consent | `src/api/src/zava_forward/api/resident_demo/app.py:375-405`; `resident_demo/web/assistant.js:217-221` in the same API package; `resident_demo/chat.py:200-205`. Tests: `src/api/tests/test_resident_chat_api.py:157-183` | Evidence: explicit `use_record=True`, not operational works consent. Unknown: approved processing basis/notice and resident comprehension |
+| Resident hazards | `src/api/src/zava_forward/api/resident_demo/chat.py:28-38,40-185` puts lexical hazard routing before ordinary topics; `resident_demo/web/assistant.js:200-204,273-276` provides urgent guidance inside the initially hidden chat panel. Tests: `src/api/tests/test_resident_chat_api.py:27-108,227-263` | Evidence: inspected English patterns do not cover every hazard expression; the lane identifies "My ceiling is collapsing in my home" as reaching ordinary home-topic handling. Hypothesis: irrelevant answers could reassure or delay help. Unknown: always-visible urgent route, multilingual/indirect-language safety recall and staffed receipt. No exploit or observed injury asserted |
+| Resident model and references | `src/api/src/zava_forward/api/resident_demo/aoai.py:109-177` accepts guidance IDs against bounded case answers; `resident_demo/web/assistant.js:329-338` labels answers/sources. Tests: `src/api/tests/test_resident_aoai.py:69-95,109-145` | Evidence: active advisor's case-answer boundary differs from the older topic-only adapter (`src/core/src/zava_forward/core/resident_assistant.py:82-104`). Ordinary case source labels do not establish dated/versioned evidence. Unknown: understood freshness |
+| Employee cited chat | `src/core/src/zava_forward/core/chat_panel.py:136-180,223-240,260-304`; tests `src/api/tests/test_chat_panel.py:79-129,169-194` | Evidence: parser validates citation membership, not entailment. Hypothesis: plausible unsupported safety claims can retain valid source IDs. Unknown: actual-model semantic assurance |
+| Alternate employee route | `src/api/src/zava_forward/api/server.py:674-677`; `src/core/src/zava_forward/core/chat_isolation.py:114-137`; tests `src/api/tests/test_chat_isolation.py:113-179` | Evidence: generic `/messages` uses `ChatIsolation.turn`, not the `/ask` panel's citation/action-refusal parser. Hypothesis: unify or explicitly restrict assurance contracts before exposure; do not assume one route's tests cover another |
+| Workflow-only scope | `src/api/src/zava_forward/api/web/app.js:275-277,303-324`; `web/chat.js:43-54`; `server.py:469-470` in the same package; tests `src/api/tests/test_ai_tasks.py:46-104` | Evidence: broad workflow-only request wording accompanies briefing mode, while `/ask` does not carry that choice. Hypothesis: narrow wording or propagate a consistent no-AI boundary. Unknown: actual billable dispatch; no such dispatch was attempted |
+| Proposal/regulatory review | `src/api/src/zava_forward/api/web/assistants.js:41-58`; `web/chat.js:184-215,252-270`; `src/api/README.md:1405-1420`. Tests: `src/api/tests/test_chat_panel.py:196-218`, `test_regulatory_chat_api.py:214-233` | Evidence: accepts proposal, not operational approval; regulatory doubt referral retains a separately owned copy not removed by sender deletion. Unknown: accepted referral-copy retention/owned human disposition |
+| Chat privacy/lifecycle | `src/core/src/zava_forward/core/chat_privacy.py:36-79,122-157,329-346`; `src/api/src/zava_forward/api/server.py:183-184,686-712`. Tests: `src/api/tests/test_chat_isolation.py:113-129,143-179` | Evidence: best-effort redaction, owner-scoped content, opt-in memory; HTTP request logging suppressed. Memory expiry is not a complete message-retention policy; permitted adjustment text can remain personal. Unknown: provider/log/backup policy and full rights coverage |
+| Accessibility/manual paths | `src/api/src/zava_forward/api/web/index.html:11-32`; `resident_demo/web/assistant.js:38-42,262-274`; `docs/reference/research/ux/wcag-conformance-baseline.md:120-132,192-207`. Tests: `src/api/tests/test_accessibility_baseline.py:40-82`; `src/api/checks/resident_assistant_browser_check.py:620-626` | Evidence: native controls/live regions, chart/map alternatives and manual callback interface; local records preserve unrun AT tasks and incomplete alternative-format contact. Unknown: task-based AT, comprehension and effective assisted service |
+| HAX | Open issue #531 requests capabilities/limits, AI vs rules/data labels, references, clear action effects, refresh/feedback and safe correction | Evidence: tracker request, not external HAX verification. Unknown: toolkit guideline-ID mapping and human comprehension acceptance; no complete HAX assessment claimed |
+| Synthetic callback mutations | `src/api/src/zava_forward/api/resident_demo/agenda.py:14-20,37-49,70-79,158-227,250-254`; `resident_demo/app.py:462-529`; `resident_demo/web/assistant.js:118-139,170-175`. Tests: `src/api/tests/test_resident_chat_api.py:461-502` | Evidence: local SQLite writes commit/rollback; server-derived owner, same-origin/CSRF/session checks and explicit confirmation. Nobody will call. Cancellation marks a booking cancelled, not erased; withdrawing record-use permission does not cancel it. Assisted cancellation requires a verified synthetic request and local operator authority. Unknown: accepted retention and operational agenda integration |
+| Independent manual access | `src/api/src/zava_forward/api/resident_demo/web/index.html:48-52`; `resident_demo/web/demo.js:241-250` | Evidence: page/no-JavaScript manual help and signed-in standalone callback form exist outside chat. Unknown: site-wide always-visible emergency route and actual human service receipt |
+
+## Data, IoT and infrastructure
+
+| Surface | Evidence and citations | Gap, uncertainty or treatment |
+| --- | --- | --- |
+| Synthetic stock selection | `src/core/src/zava_forward/core/synthetic/sensor_stock.py:15-21,65-105,108-155`; tests `src/core/tests/test_sensor_stock.py:132-150,192-230` | Evidence: five CSV columns allowlisted; unknown/declined selections emit no readings and extra private-note columns do not affect selection. Unknown: private input contents, not read |
+| Climate/indoor model | `src/core/src/zava_forward/core/synthetic/climate_history.py:215-267`; `indoor_projection.py:10-42,59-75`, `household_conditions.py:11-24`, `retrofit_effects.py:9-23` in the same synthetic package | Evidence: payload hashes, units/time coverage and optional independent pins; indoor coefficients/tail caps/household effects remain uncalibrated assumptions. Unknown: scientific/field validity |
+| Bounded replay | `src/core/src/zava_forward/core/synthetic/sensor_backfill.py:270-299,383-390,447-502,551-562` | Evidence: explicit stock/climate, selected-home budgets and manifest comparison; fault truth separate from analysis. Unknown: operational performance and whole-parent acceptance |
+| Sensor admission/consent | `src/core/src/zava_forward/core/sensor_consumer.py:145-159,246-265,496-594`; tests `src/core/tests/test_sensor_consumer.py:290-304,351-361,498-517` | Evidence: mapping/consent/calibration are independent trusted configuration, not supplied packet authority. New readings denied after changed permission; historical accepted replay can remain a reconciliation receipt without rewriting. Unknown: authenticated versioned withdrawal, device credential/downstream propagation and historical erasure |
+| Sensor minimisation | `src/core/src/zava_forward/core/sensor_consumer.py:162-167,595-672`; tests `src/core/tests/test_sensor_consumer.py:363-376`, `test_sensor_privacy.py:87-117` | Evidence: opaque bounded receipt/restricted DQ metadata; valid-shaped rejected bodies remain in delivery storage. Adjacent test excludes nested diagnostics from model requests. Unknown: complete provider-egress and retention approval |
+| Review signals vs safety | `docs/case_study_48_addendum.md:1422-1423,1450-1469`; `docs/reference/research/iot-sensor-analytics-research-plan.md:492-523`; tests `src/core/tests/test_sensor_consumer.py:49-53,82-99` | Evidence: consumer writes readings/delivery/DQ, not diagnosis or safety decisions; deterministic trend method remains proposed. Unknown: calibrated false/missed signals, competent thresholds and non-participant outcome evidence |
+| Synthetic-source boundary | `src/core/src/zava_forward/core/synthetic/scale_fixture.py:1-6,25-43,84-108`; `stock_fabric.py:1-4,33-91`; `loadcheck.py:24-38,107-134` in that package; `docs/reference/research/retrofit-synthetic-data/README.md:37-45` | Evidence: fixed fictional fixture differs from private outputs with real map anchors and invented residents. Load harness cloning then labelling is not proof every inherited field is fictional. Hypothesis: enforce trusted input provenance before synthetic relabelling or evaluation reuse |
+| Privacy/provenance checks | `src/core/src/zava_forward/core/synthetic/privacy.py:1,13-20,139-159,214-285`; `docs/reference/research/retrofit-synthetic-data/provenance-register.json:24-51`; tests `src/core/tests/test_synthetic_provenance.py:72-93` | Evidence: pattern/label/hash checker, not semantic DLP; three historical sources retain missing retrieval/licence evidence and tests expect failures. Unknown: complete source rights and PII absence |
+| Import review/export | `src/importer/src/zava_forward/importer/mapping.py:38-49,176-207`; `quarantine.py:77-85,168-203`; `export.py:17-21,36-42,64-75`; `src/importer/README.md:13-16`; tests `src/importer/tests/test_document_form_fixtures.py:61-109` | Evidence: source lineage and preparer/reviewer separation, explicit workbook CLI and synthetic labels; export library itself accepts caller rows without approval. Unknown: authenticated integration, semantic classification, independently adjudicated labels and real form validity |
+| IoT private transport | `infra/modules/iothub.bicep:95-165,168-213`; `infra/README.md:3285-3296` | Evidence: separate Hub sender/Event Hub receiver, private routing defaults off, metrics-only diagnostics; device SAS remains enabled. Unknown: actual SDK/token transport, device issue/rotate/revoke, sender propagation and effective route denial |
+| Identity/grant scope | `infra/modules/identity.bicep:6-32`; `infra/main.bicep:242-247`; `infra/modules/storage.bicep:96-103`; `infra/scripts/create-sql-users.py:21-24`; `infra/modules/containerapps.bicep:377-415` | Evidence: separate identities but Blob/Queue grants apply at account scope; API has database reader/writer/DDL administration and daily digest job uses API identity. Hypothesis: reassess minimum table/container rights. Unknown: effective deployed permissions |
+| Data retention/diagnostics | `infra/modules/sql.bicep:19-35,49-76`; `storage.bicep:8-13,20-55,66-81`; `monitoring.bicep:4,14-27`; `keyvault.bicep:19-30` in that modules directory | Evidence: authored private/Entra SQL, 14-day backup, 30-day Blob versions/soft-delete, 90-day diagnostic default, 365-day audit default with unlocked policy. Unknown: approved legal periods, lock decision, effective deletion/restore and actual deployment |
+| Provider/network posture | `infra/modules/foundry.bicep:23-31,48-64,97-108`; `infra/governance.bicep:6-19,68-72` | Evidence: private endpoint/local-auth disable, pinned deployment versions/content policy; governance defaults DoNotEnforce, Defender change opt-in. Unknown: whole-workload egress, provider transfer terms and deployed controls |
+| Digest anchoring | `src/orchestrator/src/zava_forward/orchestrator/digest_blob.py:3-4,62-72,113-160`; `src/orchestrator/README.md:234-251`; tests `src/orchestrator/tests/test_digest_blob.py:15-39,61-110` | Evidence: create-only digest verifies anchors; first anchor trusts current chain, needs independent review. Module's locked-policy wording conflicts with authored unlocked creation. Unknown: accepted first anchor/lock, live alert delivery |
+| Orchestrator autonomy | `src/orchestrator/src/zava_forward/orchestrator/__main__.py:1-3`; `src/orchestrator/Dockerfile:29`; `infra/modules/containerapps.bicep:336-374`; `src/importer/Dockerfile:27`; `src/importer/src/zava_forward/importer/__main__.py:10-23`; `infra/modules/containerapps.bicep:424-478` | Evidence: generic entrypoints print version/preview; authored schedules/queue triggers do not prove working programme supervisor or queue consumer. Unknown: actual activated end-to-end job behavior |
+| Explicit bounded jobs | `src/orchestrator/src/zava_forward/orchestrator/source_monitor.py:14-70`; `document_rescan.py:16-67`; `token_store.py:33-58`; `infra/modules/authTokenStore.bicep:58-87`; test `src/orchestrator/tests/test_source_monitor.py:96-108` | Evidence: source monitor accepts local observations, not retrieval/approval; rescan is explicitly selected/bounded; separate maintenance identity rotates delegated token-store capability. Unknown: effective deployed execution; no token/secret contents inspected |
+| Acceptance tooling | `tools/backlog-sync.py:72-80`; `tools/tracking_retention.py:1-6,444-455,529-555` | Evidence: backlog apply can tick unchecked criteria based on closed issue state, not acceptance receipts. Tracking archive/restore tool is not resident/sensor erasure. Hypothesis: require evidence-linked human acceptance, not issue state or repository cleanup |
+
+### Contradictions retained for owner review
+
+* Evidence: addendum `docs/case_study_48_addendum.md:1435-1438` still describes
+  73-character sensor IDs, while `src/core/src/zava_forward/core/synthetic/sensor_identity.py:19-23`
+  uses 11-character keys; the later research continuation at
+  `docs/reference/research/iot-sensor-analytics-research-plan.md:328-335`
+  records the correction. No source was silently rewritten by this review.
+* Evidence: the research contract at that plan's line 62 uses uppercase
+  ASCII home IDs of length 1-12, while current identity code at
+  `src/core/src/zava_forward/core/synthetic/sensor_identity.py:9-16`
+  permits canonical Unicode keys up to 128 UTF-16 units; consumer availability
+  also requires an existing case and at most 64 units at
+  `src/core/src/zava_forward/core/sensor_consumer.py:512-517`.
+* Evidence: `docs/reference/research/retrofit-synthetic-data/data-dictionary.md:414-433`
+  retains old sensor versions/undelivered dated-effects wording;
+  `src/core/src/zava_forward/core/synthetic/sensor_backfill.py:33-36,364-375`
+  and `retrofit_effects.py:45-60` in the same package contain later versions
+  and dated effects. Unknown: current full-stock scientific acceptance.
+* Evidence: `docs/case_study_48_addendum.md:1258-1278` retains an audit
+  content-removal proposal and later full-content retention direction
+  requiring DPO confirmation. Unknown: approved resolution, exceptions and
+  history/backup behavior. No operational retention policy is chosen here.

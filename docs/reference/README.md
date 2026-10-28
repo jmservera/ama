@@ -21,6 +21,14 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+Evidence: the [whole-project Responsible AI review](./research/rai/project-rai-review.md)
+assesses the 2026-10-28 source baseline across both sites, five bounded agents,
+chat, briefing, IoT, data and infrastructure against NIST AI RMF 1.0. It links
+the dated six-phase planner artifacts, labels evidence/hypotheses/unknowns and
+proposes a backlog without creating issues. Operational approval, legal
+currentness, fairness, meaningful human oversight and direct accessibility
+acceptance remain unestablished; earlier RAI findings are not silently closed.
+
 For #140, the [IoT infrastructure decision and budget](../../infra/README.md#iot-hub-issue-140-adr-0003-decision-6)
 and [ADR 0003 dated authorization](../adrs/0003-journey-derived-capabilities-runtime-fit.md#source-only-infrastructure-authorization-2026-10-27-refs-140)
 record B1/one unit in `ama`/`uksouth`, private keyless Event Hub routing,
@@ -481,6 +489,7 @@ or infra acceptance claimed.
 | [Original Case Study 48](../case_study_48_original.md) | Initial problem specification. Preserved unchanged | 2026-09-10 |
 | [Case Study 48 Addendum](../case_study_48_addendum.md) | Preserved baseline and mandatory real-platform builds; dated rebuild/identity/session/CI learning and experiment-retirement boundary. Adds proposed RAI release/oversight gates and a provisional humidity/temperature simulator design, map signal and human condition-review path; no sensor inventory, thresholds or production authority is assumed. #19/#24/#27 may retire as learning; #58 needs explicit capability disposition | 2026-10-14 |
 | [Recovered RAI baseline audit](./research/reports/2026-10-14/rai-report-ama-20261014.md) | Six-framework bounded audit of original v0.14.0/source baseline: 29 checks, 7 PASS/11 PARTIAL/11 NOT_ASSESSED; 8 MEDIUM/3 LOW residuals. Inline recovery and report contracts validated; baseline report owner-accepted on 2026-10-15 for remediation planning only; controls proposed/Not run, qualified approval pending, live use BLOCKED | 2026-10-14 |
+| [Whole-project RAI review](./research/rai/project-rai-review.md) | Evidence: repository-only review of resident/employee sites, five bounded assistants, chat, briefing, IoT, data and infrastructure; dated six-phase NIST AI RMF plan, threat/impact/control catalog and proposed backlog. Unknown: operational acceptance, legal currentness, representative fairness and human/AT effectiveness; no issue creation or source changes | 2026-10-28 |
 | [RAI remediation implementation plan](../../.copilot-tracking/plans/2026-10-15/rai-remediation-plan.md) | Six phases/thirteen tasks covering eleven residuals and eleven unassessed evidence gates; current PRD v0.16.0 IDs, test ownership and default-deny authority. Independent standard critique Complete/Pass; offline engineering ready, real-service/legal/human/live gates remain | 2026-10-15 |
 | [RAI remediation backlog coverage review](../../.copilot-tracking/github-issues/prds/rai-remediation/artifact-analysis.md) | Post-merge Functional Planner review: all thirteen tasks and 22 open checks map to twelve existing issues; owner review added chat issue 164; all thirteen body updates are now applied and verified, without enabling chat or implementing remediation. No issues were created. [Executed handoff](../../.copilot-tracking/github-issues/prds/rai-remediation/handoff.md) records completed owner review and verified issue updates; operational evidence gates remain. | 2026-10-15 |
 | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) | v0.21.0 merged unsigned draft: resident FR-053 to FR-062/AC-104 to AC-126 and Entra staff access FR-063/064/AC-127 to AC-132; NFR-013/014, CON-008, RULE-027/028 and OD-52-55. Counts: 64 FR, 132 AC, 14 NFR, 8 constraints, 28 rules, 13 goals, 55 OD. Routine policy remains OFF; identity, role ownership and assisted parity are proposed. Conditional workload/benefit scenarios are author judgement, no observed/cash/headcount claim. Original FAIL/Define BLOCKED, Govern NOT_EVALUATED, unsigned status and live gates remain | 2026-10-24 |
