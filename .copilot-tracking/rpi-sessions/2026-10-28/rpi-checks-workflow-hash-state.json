@@ -4,8 +4,8 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Follow-up",
-  "status": "active",
-  "session_status": "running",
+  "status": "blocked",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-28/rpi-checks-workflow-hash-research.md",
     "plan": ".copilot-tracking/plans/2026-10-28/rpi-checks-workflow-hash-plan.md",
@@ -44,12 +44,28 @@
       "decision": "Topic fast-forwarded before first commit to current main b6755bb5; unrelated documentation #459 leaves tooling and workflow bytes unchanged",
       "status": "verified",
       "evidence": ".copilot-tracking/changes/2026-10-28/rpi-checks-workflow-hash-changes.md"
+    },
+    {
+      "decision": "First complete gate passed all 17 groups but receipt FAILED on main movement to 5abc6c6b; preserve original receipt and integrate main without rewriting topic history",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/changes/2026-10-28/rpi-checks-workflow-hash-changes.md"
+    },
+    {
+      "decision": "Second complete gate passed all 17 groups but receipt FAILED on main movement to bb6df04c; stop publication rather than bypass exact-current-base verification or loop indefinitely",
+      "status": "blocked",
+      "evidence": ".copilot-tracking/changes/2026-10-28/rpi-checks-workflow-hash-changes.md"
     }
   ],
-  "blockers": [],
+  "blockers": [
+    {
+      "id": "publication-base-moved",
+      "summary": "Two full gates passed all 17 groups but failed final identity verification as other PRs advanced main; current main bb6df04c is not the reviewed base",
+      "resolution": "Obtain a stable validation window, reconcile current main without rewriting history, commit and run fresh full gate plus independent exact-head assessment; fetch and verify immediately before push/PR"
+    }
+  ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Persist pre-publication snapshot, commit source and original evidence; run external complete gate, verify current-base receipt and independent exact-head assessment before topic push and Refs #500 PR"
+    "action": "Persist blocked publication handoff: correction/tests/preflight/review complete, no push/PR; reconcile current main and rerun exact-current-base publication gates during a stable validation window"
   },
   "prioritized_follow_ups": []
 }

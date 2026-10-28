@@ -105,3 +105,12 @@ Before first commit, topic fast-forwarded to b6755bb5 (unrelated merged
 documentation #459); tooling and workflow bytes are unchanged by that update.
 The committed state is a pre-publication snapshot; external exact-commit
 gate/assessment and the PR record the subsequent publication outcome.
+First complete gate: all 17 groups passed, receipt FAILED because main moved
+to 5abc6c6b during execution. Integrated that main via ordinary merge before
+a fresh complete gate; original receipt/Review preserved. No source correction,
+new critique or repeated Review is required; exact-head publication assessment
+must bind the new merged candidate.
+Second complete gate: all 17 groups passed, receipt FAILED because main
+moved again to bb6df04c (#516). P02-T02 remains BLOCKED, no push/PR.
+Stop repeated gates until a stable current-base validation window is
+available; preserve both failed receipts and original Review outcomes.

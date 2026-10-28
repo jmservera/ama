@@ -63,3 +63,50 @@ Keep that receipt authoritative and external; no later source commit merely
 to copy a receipt. The PR will report final outcome and exact-head assessment.
 No blockers or out-of-scope follow-up work currently known. No deployment,
 workflow dispatch, .env access, private-data access or main push authorized.
+
+## P02 publication: original full-gate base movement
+
+The first --all run executed and passed all 17 required groups, including
+real SQL, browser/axe, all four images/scans/SPDX and logo stress. Its final
+identity check failed: main advanced to 5abc6c6b32c536ad933cd926850eb8a3d8220a77
+(merged #515) during execution. This is a FAILED receipt, not publication
+evidence, and cannot be resumed after a base/commit change.
+
+Original receipt remains immutable at the external directory above,
+receipt.json, for head 74fd1f48917c5f3ed32b694c990e522c33401036 and base b6755bb5.
+Original independent exact-head assessment also remains external and conditional.
+No push or PR occurred on that failed gate.
+
+The new main changes infrastructure and documentation, not runner/test source
+or workflows. Integrated it through an ordinary merge, preserving topic
+history and original Review; the reviewed source diff is unchanged.
+Fresh complete gate destination:
+/home/azureuser/.copilot/session-state/8062dee7-4253-4b34-9a7e-d09331b44436/files/workflow-pin-final-gate-2.
+This committed snapshot precedes that new gate; its outcome belongs to the
+external receipt and publication record.
+
+## P02 publication: blocked after the second full gate
+
+The fresh --all run at head 1c65a7a5 again passed all 17 required groups
+(192 command records). Final verification again rejected the receipt solely
+because main advanced during execution, now to
+bb6df04cef68cc3694a97238d002c732c3406d81 (merged #516).
+The second FAILED receipt remains immutable in workflow-pin-final-gate-2.
+Neither failed receipt establishes publication permission.
+
+The latest main delta changes application code and documentation, not the
+runner, its test or any workflow; all five workflow findings remain valid.
+No pin/source correction is needed. A second independent committed-head
+assessment found no findings at 1c65a7a5, conditional on a passing receipt;
+it remains external at workflow-pin-exact-head-assessment-2.json.
+
+Stop publication rather than bypass the exact-current-base contract or
+repeat unbounded full gates while other PRs are merging. This is an external
+coordination blocker, not a local test failure. No push or PR has occurred.
+P02-T02 remains unchecked. Next action: reconcile current main in a stable
+validation window, commit the candidate, rerun the complete gate, obtain
+exact-head assessment, fetch/verify immediately before topic push and the
+Refs #500 PR. Any later candidate invalidates previous assessments/receipts.
+This final documentation-only commit records the blocked handoff, not a
+passing final-head gate. Original Review remains Complete / Conformant at
+its original bounded source assessment.
