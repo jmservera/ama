@@ -263,3 +263,15 @@ queue readiness (4398998314), projection cost (4398998319), template count
 Only administrative evidence/state closeout follows, with no source changes or
 repeat Review. P04 is complete. Hosted checks and owner merge approval remain
 independent; no merge or deployment was performed. `.env` was never read.
+
+### Subsequent Hosted Finding
+
+Final remote verification at administrative head 38246dd3 confirms all three
+owner-named threads resolved and a clean worktree, but reveals a fourth open
+thread, PRRT_kwDOUU8JX86xDb3P / discussion_r4398826404: obsolete-version
+briefing cache entries retain complete programme-sized ID tuples.
+This additional finding is not dismissed or resolved by P04. Route it to later
+`rpi-implement` to evict obsolete-version entries while preserving full scope
+identity. No source correction or repeat Review was started after the current
+Review. The three requested fixes are complete; the whole PR still has this
+additional hosted finding and pending owner/hosted approval.

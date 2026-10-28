@@ -171,6 +171,14 @@ No new full receipt, SQL Server, human or hosted acceptance is claimed.
 
 ## Follow-Up Items
 
+After P04 publication, final GitHub verification found a fourth, separate
+Copilot thread: obsolete-version briefing cache entries retain full programme
+ID tuples. Route to a later `rpi-implement`: evict obsolete-version entries
+without weakening complete scope identity. This is not one of the owner's
+three named threads, and remains open; P04's independent outcome is preserved,
+not repeated or extended to dismiss this later hosted finding.
+Evidence: https://github.com/jmservera/ama/pull/516#discussion_r4398826404.
+
 Existing PR #514 live diagnosis/deployment/model activation residuals remain
 outside this task. Human/user/accessibility acceptance is not established by
 constructed browser checks.
