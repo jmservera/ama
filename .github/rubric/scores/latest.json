@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-28T11:38:48+00:00",
-  "commit": "1dbde252439f7bf16ca0bad2022d534fef048d27",
+  "scored_at": "2026-10-28T12:19:23+00:00",
+  "commit": "42026b68047798d9c1fb06ca7fb6246cc8bf0d6a",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40680920354",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40686123293",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "3bcdf19475e01fd6796a69fbde86ee268b907d3bca5011e2cc363680fcc81a48",
-    "solution-code": "8f34a76daeb795d01e008959d95d5ea3c753e7969fdf7b05f6be78c6f7a3c6d8",
+    "solution-code": "85e7957e1fe5557a6f2698de25c59085ace0b569748c0b73493871d4ef21b6e6",
     "infrastructure": "921570137e8273400f9b1478087873927c5339c7fd17f63660ab7822f18a062e",
     "capstone-deck": "acb30e4f302663cedec4884bc7c561fcb5a14fb647ab1c4f93ffc377567c8896",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
@@ -28,12 +28,7 @@
   "criteria": {
     "A1": {
       "score": 5,
-      "evidence": [
-        "src/core/src/zava_forward/core/synthetic/climate_history.py:207-298",
-        "src/core/src/zava_forward/core/synthetic/indoor_projection.py:112-152",
-        "src/core/src/zava_forward/core/synthetic/retrofit_effects.py:1-100",
-        "src/core/src/zava_forward/core/synthetic/sensor_identity.py:1-23"
-      ],
+      "evidence": [],
       "rationale": "Diff only corrects wording on an already-documented ledger-table removal; no new architecture/modularity change. Ceiling retained, unchanged."
     },
     "A2": {
@@ -45,37 +40,28 @@
     },
     "A3": {
       "score": 5,
-      "evidence": [
-        "infra/README.md:1451"
-      ],
+      "evidence": [],
       "rationale": "Diff corrects documentation accuracy on an existing ledger DELETE (clarifies history retention, non-history scan scope), not a new security control; baseline retained."
     },
     "A4": {
       "score": 5,
-      "evidence": [
-        "src/api/src/zava_forward/api/web/app.js:143-163",
-        "src/api/checks/employee_workspace_browser_check.py:1-155"
-      ],
+      "evidence": [],
       "rationale": "Adds a missing-dependency guard with distinct recovery UX and a new browser check covering it; incremental completeness hardening within an already-complete baseline. Unchanged ceiling."
     },
     "A5": {
       "score": 5,
-      "evidence": [
-        "infra/README.md:1451"
-      ],
+      "evidence": [],
       "rationale": "Diff is a documentation wording fix about ledger retention semantics, not new observability/cost/performance instrumentation. Unchanged baseline."
     },
     "A6": {
       "score": 5,
-      "evidence": [
-        "src/api/tests/test_ai_tasks.py:44-90"
-      ],
-      "rationale": "New tests isolate employee Ai config from resident aliases and confirm missing-endpoint falls back to template without a model call; this is config/test hardening, not new model-choice justification or evaluation harness breadth. Unchanged baseline."
+      "evidence": [],
+      "rationale": "New tests isolate employee Ai config from resident aliases and confirm missing-endpoint falls back to template without a model call; config/test hardening, not new model-choice justification or evaluation harness breadth. Unchanged baseline."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "No agentic orchestration, handoff or state-graph pattern changed in this diff; changes are identity scoping and script-load guarding only. Unchanged baseline."
+      "rationale": "src/agents/README.md addition is a PROPOSED, explicitly NOT-RUN human-review protocol draft for #\u200b223 with no code, evaluator, fixture or execution; it is planning prose, not demonstrated agentic orchestration or handoff behavior. Baseline unchanged."
     },
     "B1": {
       "score": 3,
@@ -114,9 +100,9 @@
     "B6": {
       "score": 5,
       "evidence": [
-        "src/api/README.md:2357-2449"
+        "src/agents/README.md:324"
       ],
-      "rationale": "README additions are clear and navigable developer documentation, consistent with the existing ceiling; not the capstone deck, so no basis to move the score. Unchanged."
+      "rationale": "README addition is a clear, navigable developer-documentation entry but is a PROPOSED/NOT-RUN protocol draft, not capstone deck or documentation completeness change; no basis to move the score. Unchanged."
     },
     "B7": {
       "score": 5,
