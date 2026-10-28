@@ -766,6 +766,8 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                    + ("" if r["verified"] else ". Unverified: its sources do not match the case record"))
         with self.lock:
             if self.version - ver <= 1:  # only our own comparison record was saved meanwhile
+                for old in [k for k, v in self._briefings.items() if v[0] != self.version]:
+                    del self._briefings[old]
                 self._briefings[key] = (self.version, out)
         return out
 
