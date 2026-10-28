@@ -4,7 +4,7 @@
   "parent_task": {"task_id": "520-documents-correction", "task_slug": "resident-chat-documents-520"},
   "mode": "automatic",
   "active_phase": "Follow-up",
-  "status": "completed",
+  "status": "blocked",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-28/resident-chat-documents-520-research.md",
@@ -17,8 +17,10 @@
   "confirmed_decisions": [
     {"decision": "Implement the tightly coupled RV-001 defect as distinct continuation; preserve original adverse Review and do not repeat it.", "status": "implemented", "evidence": "Original Review RV-001; follow-up changes record, 33 real SQL tests including raw nested-private-field exclusion; core/API/browser/lint/types pass."}
   ],
-  "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Existing sensor-reader fixture aligned; expanded 92-test core run, lint/format/types pass. Preserve failed receipt, commit and rerun complete gate in final-20261028-2 before publication."},
+  "blockers": [
+    {"id": "heavy-lock-admission", "summary": "Fresh full gate exited 1: Global heavy-resource lock timeout with --lock-timeout 0; holder identity unavailable on subsequent inspection. No passing exact-head receipt; push blocked.", "resolution": "Later explicit coordination event confirming ownership free, then fetch main, run fresh complete gate on current clean committed head, verify receipt, independently assess exact head and normal push. No polling/queued retry."}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Record blocked publication; await explicit heavy-resource coordination before a fresh full gate. Original failed receipt retained; no push or PR-body update."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "RV-002 human/AT/real-model acceptance", "rationale": "Outside synthetic correction scope; no whole-issue approval.", "evidence": "Original independent Review RV-002"}
   ]

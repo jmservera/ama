@@ -104,3 +104,31 @@ that exact-head gate, current-main verification and independent assessment pass.
 Expanded focused rerun including sensors: 92 tests, OK with 23 opt-in SQL skips.
 Fixture Ruff/check-format and core mypy (156 files) pass; diff check passes and
 the candidate has no ignored scratch. No additional unit method was added.
+
+## Nonqueued publication blocker
+
+Fixture/evidence commit `b01d0215c3d0ed14be4814809fb5e6d86faf202e`
+was committed with the resolved noreply author/committer and required trailer.
+The requested `git rebase origin/feat/resident-chat-520` reported up to date;
+remote bot `ca1f11a6` remains in ancestry.
+
+The fresh complete command with `--all --jobs 3 --lock-timeout 0`, reviewed main
+`413ccaf253fce4566e855bae9d0a924b2a82b506` and external output
+`/tmp/ama-520-documents-rpi-final-20261028-2` exited 1:
+`BLOCKED: Global heavy-resource lock timeout`.
+No gate was queued, lock owner interrupted, prior receipt upgraded or protection
+changed. A subsequent read-only `lslocks` inspection returned no matching holder;
+the holder's identity at failed admission is unavailable. This is not permission
+to poll or retry after contention.
+
+Per the repository's nonqueued admission rule, publication is blocked. No normal
+push or PR-body publication of this correction was performed. The existing
+PR #525 body remains Refs-only and retains pending document/human acceptance.
+The first failed full receipt remains immutable; the second admission failure
+does not establish any exact-head full-gate success.
+
+Resume condition: a later explicit coordination event confirming heavy ownership
+is free, followed by a fresh full gate for the then-current committed head and
+freshly fetched reviewed main, current receipt verification, independent exact-head
+assessment and a normal push. Do not reuse the pre-blocker candidate identity
+after committing this evidence. Human/AT/real-model acceptance stays pending.
