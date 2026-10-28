@@ -378,7 +378,11 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             for width in (320, 390, 1280):
                 page.set_viewport_size({"width": width, "height": 900})
                 for selector in ("#regulatory-alerts", "#regulatory-chat"):
-                    name = "Blockers and safety" if selector == "#regulatory-alerts" else "AI assistance"
+                    name = (
+                        "Blockers and safety"
+                        if selector == "#regulatory-alerts"
+                        else "AI assistance"
+                    )
                     page.get_by_role("tab", name=name, exact=False).press("Enter")
                     assert page.locator(selector).evaluate(
                         "el => el.scrollWidth <= el.clientWidth + 1"
@@ -389,7 +393,9 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             )
             page.set_viewport_size({"width": 320, "height": 900})
             for selector in ("#regulatory-alerts", "#regulatory-chat"):
-                name = "Blockers and safety" if selector == "#regulatory-alerts" else "AI assistance"
+                name = (
+                    "Blockers and safety" if selector == "#regulatory-alerts" else "AI assistance"
+                )
                 page.get_by_role("tab", name=name, exact=False).press("Enter")
                 assert page.locator(selector).evaluate(
                     "el => el.scrollWidth <= el.clientWidth + 1"

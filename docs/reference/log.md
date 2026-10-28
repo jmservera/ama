@@ -7964,3 +7964,12 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   assistant totals. New journey 37-state axe/keyboard/actual-zoom checks and
   27 assistant scenarios pass. Full committed publication gate is still a
   separate pending requirement. Human and deployed acceptance remain unchanged.
+
+## [2026-10-28] maintain | Journey gate public recipe binding (#526)
+
+* The first complete gate correctly rejected a stale workbench recipe SHA-256
+  and two over-100-column regulatory harness expressions. Preserve its failure.
+* Refresh only the [scenario manifest](./research/retrofit-synthetic-data/scenario-manifest.json)
+  source hash for retained-tab selectors and wrap the two expressions.
+  Public fixture payloads, versions, inventory review and unavailable full
+  journeys do not change; no private record or owner approval is inferred.
