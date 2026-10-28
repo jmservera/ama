@@ -226,12 +226,12 @@ Later implementation of routed findings does not require another RPI Review. Thi
 
 | Artifact | Description |
 |---|---|
-| [.copilot-tracking/research/2026-10-28/employee-redeploy-research.md](.copilot-tracking/research/2026-10-28/employee-redeploy-research.md) | Research and qualified historical readiness. |
-| [.copilot-tracking/plans/2026-10-28/employee-redeploy-plan.md](.copilot-tracking/plans/2026-10-28/employee-redeploy-plan.md) | Current blocked plan and requirements. |
-| [.copilot-tracking/details/2026-10-28/employee-redeploy-phase-details.md](.copilot-tracking/details/2026-10-28/employee-redeploy-phase-details.md) | Preservation and unexecuted operational contracts. |
-| [.copilot-tracking/reviews/plans/2026-10-28/employee-redeploy-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-28/employee-redeploy-plan-critique.md) | Original Complete / Revise critique. |
-| [.copilot-tracking/changes/2026-10-28/employee-redeploy-changes.md](.copilot-tracking/changes/2026-10-28/employee-redeploy-changes.md) | Recorded backup, failures and no-write terminal state. |
-| [.copilot-tracking/rpi-sessions/2026-10-28/employee-redeploy-state.json](.copilot-tracking/rpi-sessions/2026-10-28/employee-redeploy-state.json) | Pre-review automatic-parent state; unchanged. |
+| [.copilot-tracking/research/2026-10-28/employee-redeploy-research.md](../../../research/2026-10-28/employee-redeploy-research.md) | Research and qualified historical readiness. |
+| [.copilot-tracking/plans/2026-10-28/employee-redeploy-plan.md](../../../plans/2026-10-28/employee-redeploy-plan.md) | Current blocked plan and requirements. |
+| [.copilot-tracking/details/2026-10-28/employee-redeploy-phase-details.md](../../../details/2026-10-28/employee-redeploy-phase-details.md) | Preservation and unexecuted operational contracts. |
+| [.copilot-tracking/reviews/plans/2026-10-28/employee-redeploy-plan-critique.md](../../plans/2026-10-28/employee-redeploy-plan-critique.md) | Original Complete / Revise critique. |
+| [.copilot-tracking/changes/2026-10-28/employee-redeploy-changes.md](../../../changes/2026-10-28/employee-redeploy-changes.md) | Recorded backup, failures and no-write terminal state. |
+| [.copilot-tracking/rpi-sessions/2026-10-28/employee-redeploy-state.json](../../../rpi-sessions/2026-10-28/employee-redeploy-state.json) | Pre-review automatic-parent state; unchanged. |
 | [src/README.md](src/README.md) | Full local gate, financial and nonqueued admission rules. |
 | [infra/README.md](infra/README.md) | Employee model prerequisite and configuration contract. |
 | [docs/case_study_48_original.md](docs/case_study_48_original.md) | Original project context. |
@@ -239,7 +239,7 @@ Later implementation of routed findings does not require another RPI Review. Thi
 | [docs/reference/README.md](docs/reference/README.md) | Knowledge-base index. |
 | [docs/reference/memory.md](docs/reference/memory.md) | Owner context, not evidence. |
 | [docs/reference/research/sector/housing-association-primer.md](docs/reference/research/sector/housing-association-primer.md) | Sector context, not company acceptance evidence. |
-| [.copilot-tracking/reviews/logs/2026-10-28/employee-redeploy-review.md](.copilot-tracking/reviews/logs/2026-10-28/employee-redeploy-review.md) | This one complete original Review. |
+| [.copilot-tracking/reviews/logs/2026-10-28/employee-redeploy-review.md](employee-redeploy-review.md) | This one complete original Review. |
 
 ## Next Steps
 

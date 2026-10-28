@@ -274,10 +274,10 @@ ms.date: 2026-10-28
 
 | Artifact | Description |
 |---|---|
-| [.copilot-tracking/plans/2026-10-28/employee-redeploy-plan.md](.copilot-tracking/plans/2026-10-28/employee-redeploy-plan.md) | Assessed final-candidate plan; unchanged. |
-| [.copilot-tracking/details/2026-10-28/employee-redeploy-phase-details.md](.copilot-tracking/details/2026-10-28/employee-redeploy-phase-details.md) | Assessed task details; unchanged. |
-| [.copilot-tracking/research/2026-10-28/employee-redeploy-research.md](.copilot-tracking/research/2026-10-28/employee-redeploy-research.md) | Supplied evidence and decisions; unchanged. |
-| [.copilot-tracking/reviews/plans/2026-10-28/employee-redeploy-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-28/employee-redeploy-plan-critique.md) | Original Complete / Revise critique. |
+| [.copilot-tracking/plans/2026-10-28/employee-redeploy-plan.md](../../../plans/2026-10-28/employee-redeploy-plan.md) | Assessed final-candidate plan; unchanged. |
+| [.copilot-tracking/details/2026-10-28/employee-redeploy-phase-details.md](../../../details/2026-10-28/employee-redeploy-phase-details.md) | Assessed task details; unchanged. |
+| [.copilot-tracking/research/2026-10-28/employee-redeploy-research.md](../../../research/2026-10-28/employee-redeploy-research.md) | Supplied evidence and decisions; unchanged. |
+| [.copilot-tracking/reviews/plans/2026-10-28/employee-redeploy-plan-critique.md](employee-redeploy-plan-critique.md) | Original Complete / Revise critique. |
 
 ## Next Steps
 
