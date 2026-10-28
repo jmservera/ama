@@ -167,8 +167,11 @@ external for evidence. No cost query, push or cloud mutation in this step.
 
 Tag `emp-20261028-102834`, image
 `crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:e6b6e7440c2b64577e96b6322c852bf630f1c5113608267132ebffc07d39fa19`.
-Push digest, remote repository digest, local RepoDigest and tested image ID
-all agree. Exact previous digest was independently found still in ACR; no
+Push digest, remote repository digest and local RepoDigest agree. The Docker
+image ID identifies the image configuration, not the registry manifest, so the
+tested image ID was not shown equal to the manifest digest; binding the
+synthetic HTTP proof to the deployed image by config.digest is not recorded
+(correction after review). Exact previous digest was independently found still in ACR; no
 purge/delete/tag overwrite. Expose-token stayed in process memory/stdin;
 temporary Docker config was removed, no token or secret value printed.
 

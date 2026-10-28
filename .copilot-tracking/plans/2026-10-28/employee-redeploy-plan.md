@@ -137,7 +137,7 @@ served health/app/ops.js/app.js HTTP200; script indices2<7. Old backup retained.
 
 Depends on P01-T01. Temporary one-IP deny-by-default route, expose token,
 docker login/push, digest readback, finally restore exact original policy.
-Complete: pushed digest equals exact local image ID; old manifest retained.
+Complete: pushed digest equals the local RepoDigest (not the image ID); old manifest retained.
 ACR baseline equality verified after correcting removal to Azure's canonical
 bare IPv4 rule representation. Public access was already disabled throughout
 that cleanup correction; employee baseline stayed unchanged.
