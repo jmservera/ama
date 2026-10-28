@@ -1,0 +1,51 @@
+{
+ "task_id": "issue-223-human-review-protocol",
+ "task_slug": "issue-223-human-review-protocol",
+ "parent_task": null,
+ "mode": "manual",
+ "active_phase": "Implement",
+ "status": "completed",
+ "session_status": null,
+ "artifact_paths": {
+  "research": ".copilot-tracking/research/2026-10-21/issue-223-human-review-protocol-research.md",
+  "plan": ".copilot-tracking/plans/2026-10-21/issue-223-human-review-protocol-plan.md",
+  "details": ".copilot-tracking/details/2026-10-21/issue-223-human-review-protocol-phase-details.md",
+  "critique": ".copilot-tracking/reviews/2026-10-21/issue-223-human-review-protocol-plan-critique.md",
+  "changes": ".copilot-tracking/changes/2026-10-21/issue-223-human-review-protocol-changes.md",
+  "review": ".copilot-tracking/reviews/logs/2026-10-21/issue-223-human-review-protocol-review.md"
+ },
+ "confirmed_decisions": [
+  {
+   "decision": "Original Review executed once; not repeated",
+   "status": "preserved",
+   "evidence": "review log"
+  },
+  {
+   "decision": "Corrective C01 reuse of a3257c71 four lockfiles",
+   "status": "applied, provisional",
+   "evidence": "changes record C01"
+  },
+  {
+   "decision": "C02 Pass preconditions for competence/authority/approvals",
+   "status": "applied, pending independent re-assessment and gate",
+   "evidence": "changes record C02"
+  },
+  {
+   "decision": "Integration I01 rebase onto origin/main ca4baf75; certifi from PR420 preserved",
+   "status": "applied; prior gate evidence historical",
+   "evidence": "changes record I01"
+  }
+ ],
+ "blockers": [
+  {
+   "id": "gate",
+   "summary": "Own complete gate and independent assessment pending",
+   "resolution": "coordinator serial gate"
+  }
+ ],
+ "next_action": {
+  "phase": "Implement",
+  "action": "Coordinator reruns complete gate and independent assessment on the new head after I01"
+ },
+ "prioritized_follow_ups": null
+}

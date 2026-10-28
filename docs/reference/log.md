@@ -7715,3 +7715,24 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Refreshed only the public recipe SHA-256 in the [scenario manifest](./research/retrofit-synthetic-data/scenario-manifest.json) after correcting the [shared-IA browser check](../../src/api/checks/workbench_browser_check.py) to match #516's programme-neutral loading copy and scope/count response fields. The stale text wait reproduced PR #517's 30-second failure locally, including correct loading with external requests blocked; no CDN flake was identified.
 * Fixture IDs/defaults, inventory and manifest versions, unavailable full-journey status, pending owner review and all authority boundaries are unchanged. This source-binding maintenance is not a new scenario iteration, private-data read, full journey acceptance or operational approval.
+## [2026-10-21] query | Meaningful human-review protocol preparation (#223)
+
+* Added a proposed, Not run protocol section to the existing agents README
+  evaluation area and indexed it: seeded wrong/stale/unsupported/incomplete/
+  valid-citation-error case classes, baseline and automation-bias controls,
+  retention fields, OQ-017 authority evidence, denominators and full-effort
+  comparators.
+* Prepared under the owner's 2026-10-20 preparation direction. All thresholds,
+  samples, roles and approvals are PROPOSED or UNFILLED; no participants,
+  model calls or execution. #108 remains open and the #222 manifest is an
+  unapproved external prerequisite. No #223 criterion is met.
+
+## [2026-10-21] update | Human-review protocol Pass preconditions (#223)
+
+* Corrected the proposed, Not run protocol after an independent publication
+  assessment: documented per-class and per-task reviewer competence and
+  authority, resolved OQ-017 decisions and the required approvals are now
+  explicit preconditions for execution and for any Pass. Missing evidence means
+  Insufficient or NOT RUN, never Pass.
+* No exercise, evaluator, outcome or approval was added. OQ-017 stays open and
+  all five #223 criteria stay unmet. The earlier entry is unchanged.
