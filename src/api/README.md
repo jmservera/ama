@@ -96,6 +96,44 @@ Coordinate heavy runs through `/tmp/ama-rpi-heavy.lock`; use nonblocking
 then release immediately after heavy checks. Screen-reader, staff usability and
 post-deployment verification remain pending the owner.
 
+## Expanded map and home summaries (#532)
+
+From Overview or Coordinator flow, choose **Expand map** for a near-full-screen
+map with a narrow left information panel. Select a home with a click, Enter or
+Space to read its summary, then choose **Open home** to navigate. The summary
+uses the map's permitted name, address, case ID, current stage and status;
+Coordinator cards retain withheld names/addresses rather than fetching them.
+Unknown or unavailable values are labelled. Status words and shapes remain
+visible independently of colour.
+
+In the embedded view the summary sits over the map, with a top-right close
+icon. Click the map background, choose **Close home summary**, or press Escape
+to dismiss it and return focus to the home marker. In the expanded view the
+summary sits in the left panel. Escape closes the summary first; another Escape
+or **Exit expanded map** returns to the embedded view and its toggle. Filtering,
+failed refreshes and route changes remove obsolete cards. Map animations are
+disabled, including for reduced motion.
+
+The map area list and **Show these as a list** retain direct manual access
+without map gestures. The expanded Coordinator list shortcut exits the map and
+focuses Selected records. No resident consent, approval, safety or data-access
+authority changes.
+
+Run the focused constructed-data browser check from `src/api`:
+
+```bash
+PYTHONPATH=tests:../core/tests:../agents/tests python3 -m checks.map_fullscreen_browser_check \
+  --axe /path/to/axe-4.10.3.min.js --out /new/external/map-results
+```
+
+The check requires integrity-pinned axe 4.10.3, uses a real loopback API, aborts
+external application requests, and retains scan details and screenshots. It
+covers summary-first keyboard/pointer behavior, Escape/focus, modal containment,
+redraw/failure/filter cleanup, manual paths, coordinator omissions, reduced
+motion and 320/390/1280px expanded layouts. Acquire the shared heavy-check lock
+nonblocking before execution. Automated results are not human
+assistive-technology, staff usability or full WCAG acceptance.
+
 ## Workspace script recovery (#524)
 
 When a required employee-workspace script is missing, the current screen retries
