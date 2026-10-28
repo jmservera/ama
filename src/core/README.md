@@ -970,7 +970,8 @@ The separate server verifier is `form-source-locator-1`:
 * CSV: strict UTF-8 and the standard strict CSV reader; one-based `row` and
   `column`, including the header. Quoted/multiline cells retain their decoded
   cell text as raw value.
-* OCR import: asserted one-based page and region, supplied route evidence and
+* OCR import: asserted one-based page and a nonblank region string (at most 300
+  characters), supplied route evidence and
   error record required. Pixel content and route authority are **unverified**;
   no OCR/model is called or approved.
 

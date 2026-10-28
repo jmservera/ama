@@ -125,9 +125,14 @@ class FictionalFormReviewPack(unittest.TestCase):
                 document_id=doc["id"],
                 processing=processing,
             )
+            other = store.add_document(
+                actor, "ZF-1", "other.txt", "Other", b"x\n",
+                metadata=dataset.change_metadata(store, "ZF-1"),
+            )  # fmt: skip
+            human_base = dict(base, document_id=other["id"])
             for human in ("applicant_declaration", "authorised_signature", "finance_approval"):
                 refused = dict(
-                    base,
+                    human_base,
                     candidates=[dict(field_id=human, raw_value="x", locator=dict(start=0, end=1))],
                 )
                 with self.assertRaises(PermissionError):

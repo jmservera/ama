@@ -310,16 +310,16 @@
     }
   ],
   "field_review": [
-    {"field_id": "home_ref", "freshness": {"max_source_age_days": 365, "stale_on": "Survey supersession", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-SURVEY-SUPERSESSION", "ST-SOURCE-AGE-EXPIRY"]}},
+    {"field_id": "home_ref", "freshness": {"max_source_age_days": 365, "stale_on": "Survey supersession", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-SURVEY-SUPERSESSION", "ST-SOURCE-AGE-EXPIRY", "ST-EPC-SUPERSESSION"]}},
     {"field_id": "survey_date", "freshness": {"max_source_age_days": 365, "stale_on": "Survey supersession", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-SURVEY-SUPERSESSION", "ST-SOURCE-AGE-EXPIRY"]}},
     {"field_id": "epc_band", "freshness": {"max_source_age_days": 3650, "stale_on": "EPC supersession", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-EPC-SUPERSESSION", "ST-SOURCE-AGE-EXPIRY"]}},
     {"field_id": "floor_area", "freshness": {"max_source_age_days": 365, "stale_on": "Survey or EPC supersession", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-RULE-VERSION", "ST-EPC-SUPERSESSION", "ST-SURVEY-SUPERSESSION", "ST-SOURCE-AGE-EXPIRY"]}},
     {"field_id": "storey_count", "freshness": {"max_source_age_days": 365, "stale_on": "Survey supersession", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-SURVEY-SUPERSESSION", "ST-SOURCE-AGE-EXPIRY"]}},
     {"field_id": "measure_type", "freshness": {"max_source_age_days": 180, "stale_on": "Design supersession", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-RULE-VERSION", "ST-DESIGN-SUPERSESSION", "ST-SOURCE-AGE-EXPIRY"]}},
-    {"field_id": "estimated_energy_saving", "freshness": {"max_source_age_days": 180, "stale_on": "Design supersession or rule version change", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-RULE-VERSION", "ST-EPC-SUPERSESSION", "ST-DESIGN-SUPERSESSION", "ST-SOURCE-AGE-EXPIRY"]}},
-    {"field_id": "works_cost_net", "freshness": {"max_source_age_days": 90, "stale_on": "Cost document supersession", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-RULE-VERSION", "ST-COST-DOCUMENT-CHANGE", "ST-SOURCE-AGE-EXPIRY"]}},
-    {"field_id": "vat_amount", "freshness": {"max_source_age_days": 90, "stale_on": "Cost document supersession", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-RULE-VERSION", "ST-COST-DOCUMENT-CHANGE", "ST-SOURCE-AGE-EXPIRY"]}},
-    {"field_id": "total_cost_gross", "freshness": {"max_source_age_days": 90, "stale_on": "Cost document supersession or rule version change", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-RULE-VERSION", "ST-COST-DOCUMENT-CHANGE", "ST-SOURCE-AGE-EXPIRY"]}},
+    {"field_id": "estimated_energy_saving", "freshness": {"max_source_age_days": 180, "stale_on": "Design supersession or rule version change", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-RULE-VERSION", "ST-EPC-SUPERSESSION", "ST-DESIGN-SUPERSESSION", "ST-SOURCE-AGE-EXPIRY", "ST-SURVEY-SUPERSESSION"]}},
+    {"field_id": "works_cost_net", "freshness": {"max_source_age_days": 90, "stale_on": "Cost document supersession", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-RULE-VERSION", "ST-COST-DOCUMENT-CHANGE", "ST-SOURCE-AGE-EXPIRY", "ST-FUNDING-EVIDENCE-CHANGE"]}},
+    {"field_id": "vat_amount", "freshness": {"max_source_age_days": 90, "stale_on": "Cost document supersession", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-RULE-VERSION", "ST-COST-DOCUMENT-CHANGE", "ST-SOURCE-AGE-EXPIRY", "ST-FUNDING-EVIDENCE-CHANGE"]}},
+    {"field_id": "total_cost_gross", "freshness": {"max_source_age_days": 90, "stale_on": "Cost document supersession or rule version change", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-RULE-VERSION", "ST-COST-DOCUMENT-CHANGE", "ST-SOURCE-AGE-EXPIRY", "ST-FUNDING-EVIDENCE-CHANGE"]}},
     {"field_id": "funding_mix", "freshness": {"max_source_age_days": 90, "stale_on": "Funding evidence supersession", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-FUNDING-EVIDENCE-CHANGE", "ST-SOURCE-AGE-EXPIRY"]}},
     {"field_id": "match_funding_amount", "freshness": {"max_source_age_days": 90, "stale_on": "Funding evidence supersession", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-COST-DOCUMENT-CHANGE", "ST-FUNDING-EVIDENCE-CHANGE", "ST-SOURCE-AGE-EXPIRY"]}},
     {"field_id": "resident_consent_recorded", "freshness": {"max_source_age_days": 365, "stale_on": "Consent change or withdrawal", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-CONSENT-CHANGE", "ST-SOURCE-AGE-EXPIRY"]}},
@@ -332,7 +332,7 @@
     "staging_contract": "Existing form-source-locator-1 staging in src/core README section 'Form schema registry and candidate staging (#97)'.",
     "text": "Strict UTF-8, zero-based half-open code-point offsets, exact raw-span equality.",
     "csv": "Strict UTF-8, one-based row and column including the header, exact cell equality.",
-    "ocr": "Supplied import: one-based page and region, route evidence and error record required; pixel content and route authority remain Unverified.",
+    "ocr": "Supplied import: one-based page and a nonblank region string of at most 300 characters, route evidence and error record required; pixel content and route authority remain Unverified.",
     "recorded": ["parser", "parser_version", "model_version or null", "route_evidence", "error_record", "source id", "content_sha256", "source version", "source date"],
     "assertion_status": "Supplied, unverified",
     "human_only_fields": "Declaration, signature and approval fields cannot receive candidates."
@@ -378,9 +378,9 @@
       {
         "id": "ST-EPC-SUPERSESSION",
         "description": "An EPC document is superseded",
-        "affected_fields": ["epc_band", "floor_area", "estimated_energy_saving"],
+        "affected_fields": ["epc_band", "floor_area", "estimated_energy_saving", "home_ref"],
         "affected_calculations": ["FICT-CALC-SAVING"],
-        "unaffected_fields": ["home_ref", "survey_date", "storey_count", "measure_type", "works_cost_net", "vat_amount", "total_cost_gross", "funding_mix", "match_funding_amount", "resident_consent_recorded", "applicant_declaration", "authorised_signature", "finance_approval"]
+        "unaffected_fields": ["survey_date", "storey_count", "measure_type", "works_cost_net", "vat_amount", "total_cost_gross", "funding_mix", "match_funding_amount", "resident_consent_recorded", "applicant_declaration", "authorised_signature", "finance_approval"]
       },
       {
         "id": "ST-COST-DOCUMENT-CHANGE",
@@ -392,9 +392,9 @@
       {
         "id": "ST-SURVEY-SUPERSESSION",
         "description": "A survey document is superseded",
-        "affected_fields": ["home_ref", "survey_date", "floor_area", "storey_count"],
+        "affected_fields": ["home_ref", "survey_date", "floor_area", "storey_count", "estimated_energy_saving"],
         "affected_calculations": ["FICT-CALC-SAVING"],
-        "unaffected_fields": ["epc_band", "measure_type", "estimated_energy_saving", "works_cost_net", "vat_amount", "total_cost_gross", "funding_mix", "match_funding_amount", "resident_consent_recorded", "applicant_declaration", "authorised_signature", "finance_approval"]
+        "unaffected_fields": ["epc_band", "measure_type", "works_cost_net", "vat_amount", "total_cost_gross", "funding_mix", "match_funding_amount", "resident_consent_recorded", "applicant_declaration", "authorised_signature", "finance_approval"]
       },
       {
         "id": "ST-DESIGN-SUPERSESSION",
@@ -406,9 +406,9 @@
       {
         "id": "ST-FUNDING-EVIDENCE-CHANGE",
         "description": "Funding evidence is superseded or withdrawn",
-        "affected_fields": ["funding_mix", "match_funding_amount"],
-        "affected_calculations": [],
-        "unaffected_fields": ["home_ref", "survey_date", "epc_band", "floor_area", "storey_count", "measure_type", "estimated_energy_saving", "works_cost_net", "vat_amount", "total_cost_gross", "resident_consent_recorded", "applicant_declaration", "authorised_signature", "finance_approval"]
+        "affected_fields": ["funding_mix", "match_funding_amount", "works_cost_net", "vat_amount", "total_cost_gross"],
+        "affected_calculations": ["FICT-CALC-TOTAL"],
+        "unaffected_fields": ["home_ref", "survey_date", "epc_band", "floor_area", "storey_count", "measure_type", "estimated_energy_saving", "resident_consent_recorded", "applicant_declaration", "authorised_signature", "finance_approval"]
       },
       {
         "id": "ST-CONSENT-CHANGE",
@@ -419,7 +419,7 @@
       },
       {
         "id": "ST-SOURCE-AGE-EXPIRY",
-        "description": "A field's source is older than its fictional max_source_age_days",
+        "description": "Applies per field: when one field's source is older than its fictional max_source_age_days, only that field and the calculations or fields that depend on it are marked stale. The lists below are the maximum set of age-limited fields, not a simultaneous marking",
         "affected_fields": ["home_ref", "survey_date", "epc_band", "floor_area", "storey_count", "measure_type", "estimated_energy_saving", "works_cost_net", "vat_amount", "total_cost_gross", "funding_mix", "match_funding_amount", "resident_consent_recorded"],
         "affected_calculations": ["FICT-CALC-TOTAL", "FICT-CALC-SAVING"],
         "unaffected_fields": ["applicant_declaration", "authorised_signature", "finance_approval"]
