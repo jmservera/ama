@@ -705,6 +705,7 @@ async function caseView(id) {
     [!["Accepted", "Declined"].includes(c.decision.status), "No resident decision yet"],
     [Boolean(c.returns?.length) || c.stage === "Design being corrected", "Rework recorded"],
   ].filter(([present]) => present).map(([, label]) => label);
+  const chatPanel = session.chatPanel ||= chatCasePanel(id);
   const definitions = [
     ["overview", "Overview", [c.closed && returned, workSummary(c.work), progress, contact, cost, finalChecks]],
     ["blockers", `Blockers and safety (${c.work.blockers.length})`, [
@@ -721,7 +722,7 @@ async function caseView(id) {
       h("p", {}, `Next visit: ${fmtDate((c.appointments.find(a => a.outcome === "Booked") || {}).date)}`),
       c.appointments.length ? h("ul", {}, c.appointments.map(a => h("li", {}, `${fmtDate(a.date)}: ${a.type}, ${a.slot}, ${a.who}. ${a.outcome}`))) : h("p", {}, "No appointments recorded. Ask the case owner to record the next visit."))]],
     ["quality", "Quality and handover", [qualityPanel(c, id, refresh, savedFields, session), handoffPanel(c, id, refresh), sugg]],
-    ["ai", "AI assistance", [assistantPanel, chatCasePanel(id),
+    ["ai", "AI assistance", [assistantPanel, chatPanel,
       h("p", {}, "Resident message and summary drafts stay with the resident record.",
         h("button", { class: "alt", onclick: () => session.controller ? session.controller.select("resident", true, true) : document.getElementById("case-panel-resident").scrollIntoView() }, "Review resident drafts")),
       h("p", {}, "Funding drafts stay with the funding record.",

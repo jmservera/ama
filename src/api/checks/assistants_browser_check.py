@@ -2,6 +2,8 @@
 
 Run: PYTHONPATH=src/api/tests:src/core/tests python3 src/api/checks/assistants_browser_check.py.
 """
+import argparse
+import hashlib
 import json
 import os
 import re
@@ -14,6 +16,7 @@ from pathlib import Path
 from playwright.sync_api import expect, sync_playwright
 
 import release_support
+from checks.regulatory_ux_check import AXE_SHA256
 from test_assistants import Provider, config
 from test_mvp import DATA
 from zava_forward.core.assistants import Assistants, REGISTRY, canonical
@@ -21,7 +24,16 @@ from zava_forward.api.server import App, make_handler
 from zava_forward.core.sqlstore import SqlStore
 
 
-def main():
+def main(axe_path: Path | None = None, out: Path | None = None):
+    axe = None
+    scans = []
+    if axe_path:
+        raw = axe_path.read_bytes()
+        if hashlib.sha256(raw).hexdigest() != AXE_SHA256:
+            raise ValueError("Unexpected axe 4.10.3 bytes")
+        axe = raw.decode()
+    if out:
+        out.mkdir(parents=True, exist_ok=False)
     root = Path.cwd() / f".b{uuid.uuid4().hex[:6]}"
     root.mkdir()
     # Playwright/Chromium scratch state is confined to the project as well.
@@ -49,6 +61,19 @@ def main():
         assert condition, name
         passed.append(name)
         print(f"PASS {name}")
+
+    def scan(page, state):
+        if axe is None:
+            return
+        page.evaluate(axe)
+        result = page.evaluate("""async () => await axe.run(document.querySelector('main'), {
+          runOnly: {type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a',
+            'wcag21aa', 'wcag22aa']}})""")
+        scans.append({"state": state, "violations": result["violations"],
+                      "incomplete": result["incomplete"]})
+        check(f"axe no serious/critical: {state}", not any(
+            item["impact"] in ("serious", "critical") for item in result["violations"]
+        ))
 
     try:
         with sync_playwright() as pw:
@@ -99,7 +124,9 @@ def main():
             editing.fill(json.dumps(pending_output))
             card.get_by_label("Reason", exact=True).fill("Pending source review reason")
             card.get_by_label("I checked the cited sources", exact=False).check()
+            previous = editing.element_handle()
             page.get_by_role("button", name="Refresh proposals", exact=True).click()
+            page.wait_for_function("old => !old.isConnected", arg=previous)
             expect(editing).to_have_value(json.dumps(pending_output))
             expect(card.get_by_label("Reason", exact=True)).to_have_value(
                 "Pending source review reason"
@@ -108,6 +135,62 @@ def main():
                 "I checked the cited sources", exact=False
             )).to_be_checked()
             check("async proposal reload preserves current-revision edits", True)
+            overrides = [
+                {"stale": True},
+                {"state": "queued"},
+                {"state": "accepted"},
+                {"state": "failed"},
+                {"actionable": False},
+                {"release_denial": {"reason": "Synthetic release denial"}},
+                {"epoch_current": False},
+                {"verification": None},
+                {"verification": {"by": "other@example.test", "note": "Other reviewer"}},
+            ]
+            review_requests = []
+
+            def reviews(request):
+                if request.method == "POST" and request.url.endswith("/review"):
+                    review_requests.append(request.url)
+
+            page.on("request", reviews)
+            for override in overrides:
+                def unavailable(route, _request, changes=override):
+                    response = route.fetch()
+                    body = response.json()
+                    for item in body["proposals"]:
+                        if item["capability"] == "stock-prioritisation":
+                            item.update(changes)
+                    route.fulfill(response=response, json=body)
+
+                page.route("**/api/assistants/proposals?**", unavailable)
+                previous = editing.element_handle()
+                page.get_by_role("button", name="Refresh proposals", exact=True).click()
+                page.wait_for_function("old => !old.isConnected", arg=previous)
+                expect(editing).to_have_value(json.dumps(pending_output))
+                expect(editing).to_be_visible()
+                for label in ("Accept", "Edit", "Save edited proposal"):
+                    expect(card.get_by_role("button", name=label, exact=True)).to_be_disabled()
+                before = len(review_requests)
+                card.get_by_role("button", name="Save edited proposal", exact=True).evaluate(
+                    "el => el.click()"
+                )
+                page.evaluate("() => new Promise(resolve => setTimeout(resolve, 0))")
+                check(f"restored unavailable editor cannot submit/{override}",
+                      len(review_requests) == before)
+                check(f"restored unavailable text remains selectable/{override}",
+                      editing.evaluate("""el => {
+                        el.focus(); el.select();
+                        return !el.disabled && el.selectionEnd === el.value.length;
+                      }"""))
+                scan(page, f"restored-editor/{override}")
+                page.unroute("**/api/assistants/proposals?**", unavailable)
+            page.remove_listener("request", reviews)
+            previous = editing.element_handle()
+            page.get_by_role("button", name="Refresh proposals", exact=True).click()
+            page.wait_for_function("old => !old.isConnected", arg=previous)
+            expect(editing).to_have_value(json.dumps(pending_output))
+            expect(card.get_by_role("button", name="Save edited proposal")).to_be_enabled()
+            scan(page, "restored-editor/ready-own-verification")
             page.get_by_role("tab", name="Resident", exact=True).click()
             page.locator("#outcome").fill("Unrelated call with pending proposal review")
             page.get_by_role("button", name="Save", exact=True).click()
@@ -289,6 +372,12 @@ def main():
             expect(page.locator("#app")).to_contain_text("Reference ZF-1")
             check("rendered visit opens its case", True)
             check("no page errors", not errors)
+            if out:
+                (out / "results.json").write_text(json.dumps({
+                    "browser": browser.version, "axe_version": "4.10.3" if axe else None,
+                    "axe_sha256": AXE_SHA256 if axe else None,
+                    "scans": scans, "checks": passed, "page_errors": errors,
+                }, indent=2) + "\n")
             browser.close()
         print(f"{len(passed)} browser checks passed; no billable provider or retained dataset access.")
     finally:
@@ -301,4 +390,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--axe", type=Path)
+    parser.add_argument("--out", type=Path)
+    args = parser.parse_args()
+    main(args.axe, args.out)

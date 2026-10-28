@@ -64,7 +64,9 @@ const CaseWorkspace = (() => {
   function enhance(c, definitions, safety, assistant, drafts) {
     const values = summary(c);
     const section = h("section", { class: "case-summary", "aria-label": "Case summary" });
-    const aiValue = h("dd", { "data-case-ai-summary": "" }, "Loading assistance. Ordinary case work continues.");
+    const aiCount = h("span", { role: "status", "aria-live": "polite", "aria-atomic": "true", "data-case-ai-count": "" });
+    const aiState = h("span", {});
+    const aiValue = h("dd", { "data-case-ai-summary": "" }, aiCount, " ", aiState);
     const aiTab = definitions.find(tab => tab.id === "ai");
     const counts = () => {
       const records = new Map([...app.querySelectorAll(".aimeta[data-record-id]")].map(node => [node.dataset.recordId, node]));
@@ -73,8 +75,11 @@ const CaseWorkspace = (() => {
       const unknown = assistant.dataset.assistance?.startsWith("AI assistance unavailable");
       const loading = !assistant.hasAttribute("data-waiting");
       const state = aiMode.workflow ? "Workflow-only mode." : assistant.dataset.assistance || "Loading assistance. Ordinary case work continues.";
-      aiValue.replaceChildren(`${unknown ? `AI review count unavailable.${draftCount ? ` ${draftCount} local drafts to review.` : ""}` : loading ? "AI review count loading." : count ? `${count} AI suggestions waiting for review.` : "No AI suggestions waiting."} ${state}`, aiJump);
-      if (aiTab.button) aiTab.button.textContent = `AI assistance (${unknown ? `review count unavailable${draftCount ? `; ${draftCount} local drafts to review` : ""}` : loading ? "loading" : `${count} to review`})`;
+      const text = unknown ? `AI review count unavailable.${draftCount ? ` ${draftCount} local drafts to review.` : ""}` : loading ? "AI review count loading." : count ? `${count} AI suggestions waiting for review.` : "No AI suggestions waiting.";
+      if (aiCount.textContent !== text) aiCount.textContent = text;
+      if (aiState.textContent !== state) aiState.textContent = state;
+      const label = `AI assistance (${unknown ? `review count unavailable${draftCount ? `; ${draftCount} local drafts to review` : ""}` : loading ? "loading" : `${count} to review`})`;
+      if (aiTab.button && aiTab.button.textContent !== label) aiTab.button.textContent = label;
     };
     const item = (name, value, button) => h("div", {}, h("dt", {}, name), h("dd", {}, value, button));
     const jump = (tab, text) => h("button", { class: "alt", type: "button", onclick: () => select(tab, true, true) }, text);

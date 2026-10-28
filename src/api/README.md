@@ -46,6 +46,20 @@ replacement and retains later text or reason as read-only, unsaved recovery tied
 to that record; its review actions stay disabled. Replacing an edited document or
 resident draft requires explicit discard. Journey links retain challenge-history
 pagination and switch mounted sections without discarding drafts.
+Both chat question forms clear only unchanged dispatch-time text after a
+successful answer; failures and text typed during the request remain unsaved.
+The complete chat panel survives same-case refreshes, including pending buttons,
+thread identity and conversation. Restored proposal editors retain copyable text
+but cannot submit without current readiness and the viewer's own verification.
+AI review counts announce changes politely from the visible summary without
+re-announcing identical counts or the navigation button.
+
+The assistants check can also use pinned axe and retain an external report:
+
+```bash
+PYTHONPATH=tests:../core/tests:../agents/tests python3 -m checks.assistants_browser_check \
+  --axe /path/to/axe-4.10.3.min.js --out /new/external/assistants-results
+```
 
 Coordinate heavy runs through `/tmp/ama-rpi-heavy.lock`; use nonblocking
 `flock -n` admission with short retries bounded to 40 minutes for this correction,

@@ -52,7 +52,7 @@ function assistantProposal(p, reload) {
     } catch (e) { status.textContent = e.message; }
   } }, "Earlier changes to this suggestion");
   const editBox = h("div", { hidden: true, "data-proposal-edit": "" }, h("label", {}, "Edited evidence proposal JSON", editing),
-    h("button", { onclick: () => act("edit-accept") }, "Save edited proposal"));
+    h("button", { disabled: !ready || !ownVerification, onclick: () => act("edit-accept") }, "Save edited proposal"));
   return h("article", { class: "card ai-suggestion", "data-proposal-id": p.id, "data-proposal-revision": p.revision },
     h("h3", {}, `${assistantNames[p.capability]} v${p.version}`),
     h("a", { href: `#/case/${encodeURIComponent(p.case_id)}` }, p.case_id), status,

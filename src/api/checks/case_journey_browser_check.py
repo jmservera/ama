@@ -66,6 +66,118 @@ def sign_in(page: Page, base: str, email: str = "sam@example.test") -> None:
     page.get_by_role("tab", name="Overview", exact=True).wait_for()
 
 
+def chat_cleanup(page: Page, base: str) -> None:
+    def admission(route: Route) -> None:
+        route.fulfill(
+            json={
+                "privacy": {"chat": {"status": "simulated", "days": 1}},
+                "warning": "Constructed chat lifecycle fixture, not legal approval.",
+            }
+        )
+
+    page.route("**/api/chat/regulatory/status", admission)
+    for regulatory in (False, True):
+        prefix = "/api/chat/regulatory" if regulatory else "/api/chat"
+        question_id = "#regulatory-question" if regulatory else "#chat-question"
+        for change in ("none", "text", "space", "answer-failure", "thread-failure"):
+            held: list[Route] = []
+            thread_path = f"**{prefix}/threads"
+            ask_path = f"**{prefix}/threads/SYN-ROUND5/ask"
+
+            def threads(route: Route) -> None:
+                if route.request.method == "GET":
+                    route.fulfill(json=[])
+                elif change == "thread-failure":
+                    held.append(route)
+                else:
+                    route.fulfill(json={"id": "SYN-ROUND5"})
+
+            def hold(route: Route) -> None:
+                held.append(route)
+
+            page.route(thread_path, threads)
+            page.route(ask_path, hold)
+            page.goto(
+                base + f"/app?chat-check={int(regulatory)}-{change}#/case/ZF-1?tab=ai"
+            )
+            page.locator("#chat-panel > summary").click()
+            if regulatory:
+                page.locator("#regulatory-chat > summary").click()
+            field = page.locator(question_id)
+            button = page.get_by_role(
+                "button", name="Look up cited sources" if regulatory else "Ask", exact=True
+            )
+            expect(button).to_be_enabled()
+            field.fill("  Synthetic submitted question  ")
+            node = field.element_handle()
+            with page.expect_request(thread_path if change == "thread-failure" else ask_path):
+                button.click()
+            expect(button).to_be_disabled()
+            if change == "text":
+                field.fill("Later question")
+            elif change == "space":
+                field.fill("  Synthetic submitted question   ")
+            tab(page, "Resident")
+            page.locator("#outcome").fill("Save during pending chat")
+            old = page.locator("[data-case-workspace]").element_handle()
+            page.get_by_role("button", name="Save", exact=True).click()
+            page.wait_for_function("old => !old.isConnected", arg=old)
+            page.locator("#note").fill("Unrelated unsaved note")
+            tab(page, "AI assistance")
+            expect(field).to_be_visible()
+            check(
+                f"chat retained pending controls/{regulatory}/{change}",
+                field.evaluate("(el, old) => el === old", node) and button.is_disabled(),
+            )
+            before = len(held)
+            field.evaluate("el => el.form.requestSubmit()")
+            expect(button).to_be_disabled()
+            check(f"pending chat excludes resubmit/{regulatory}/{change}", len(held) == before)
+            if change.endswith("failure"):
+                held[0].fulfill(status=503, json={"error": "Synthetic question failure"})
+            else:
+                held[0].fulfill(
+                    json={"reply": "Synthetic answer", "kind": "answer", "citations": []}
+                )
+            expect(button).to_be_enabled()
+            expected = (
+                ""
+                if change == "none"
+                else "Later question"
+                if change == "text"
+                else "  Synthetic submitted question   "
+                if change == "space"
+                else "  Synthetic submitted question  "
+            )
+            expect(field).to_have_value(expected)
+            check(
+                f"chat success/failure raw cleanup/{regulatory}/{change}",
+                (field.get_attribute("data-case-dirty") == "true") == (change != "none"),
+            )
+            tab(page, "Resident")
+            expect(page.locator("#note")).to_have_value("Unrelated unsaved note")
+            page.locator("#note").fill("")
+            page.locator("#note").evaluate("el => el.removeAttribute('data-case-dirty')")
+            dirty = page.evaluate("hasUnsavedChanges()")
+            check(f"chat cached dirty guard/{regulatory}/{change}", dirty == (change != "none"))
+            check(
+                f"chat unload guard/{regulatory}/{change}",
+                page.evaluate(
+                    """() => {
+                      const event = new Event('beforeunload', {cancelable: true});
+                      window.dispatchEvent(event);
+                      return event.defaultPrevented;
+                    }"""
+                )
+                == (change != "none"),
+            )
+            page.unroute(thread_path, threads)
+            page.unroute(ask_path, hold)
+    page.unroute("**/api/chat/regulatory/status", admission)
+    page.goto(base + "/app#/case/ZF-1?tab=overview")
+    page.get_by_role("tab", name="Overview", exact=True).wait_for()
+
+
 def scan(page: Page, axe: str, reports: list[dict[str, Any]], state: str) -> None:
     page.evaluate(axe)
     result: dict[str, Any] = page.evaluate(
@@ -125,6 +237,7 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             check(f"all summary values fit 1280x800 ({summary_bottom})", summary_bottom <= 800)
             check("all six summary values", page.locator(".case-summary dt").count() == 6)
             page.screenshot(path=str(out / "desktop-1280.png"))
+            chat_cleanup(page, base)
             check(
                 "nine tabs, one selected and one tab stop",
                 page.get_by_role("tab").count() == 9
@@ -824,14 +937,17 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             )
             page.route("**/api/assistants/proposals?**", pages)
             page.reload()
+            count_live = page.locator("[data-case-ai-count]")
+            expect(count_live).to_have_attribute("role", "status")
+            expect(count_live).to_have_attribute("aria-live", "polite")
+            expect(count_live).to_have_attribute("aria-atomic", "true")
+            expect(count_live).to_contain_text("loading")
+            expect(count_live.locator("button")).to_have_count(0)
             tab(page, "Resident")
             page.locator("#outcome").fill("Retain while assistance is loading")
             call_node = page.locator("#outcome").element_handle()
-            tab(page, "AI assistance")
-            page.wait_for_function(
-                "() => document.querySelector('#case-tab-ai').getAttribute('aria-selected')"
-                " === 'true'"
-            )
+            tab(page, "Overview")
+            expect(page.locator("#case-panel-ai")).to_be_hidden()
             held_queue[0].fulfill(
                 json={
                     "proposals": [proposal(index) for index in range(50)],
@@ -846,6 +962,27 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                 page.locator("article.ai-suggestion").count() == 51
                 and "1 AI suggestions waiting"
                 in page.locator("[data-case-ai-summary]").inner_text(),
+            )
+            check(
+                "hidden AI tab count is announced by the visible summary",
+                count_live.is_visible() and "1 AI suggestions waiting" in count_live.inner_text(),
+            )
+            check(
+                "unchanged count events do not repeat live mutations",
+                page.evaluate(
+                    """async () => {
+                      const count = document.querySelector('[data-case-ai-count]');
+                      let updates = 0;
+                      const observer = new MutationObserver(rows => updates += rows.length);
+                      observer.observe(count, {
+                        childList: true, subtree: true, characterData: true});
+                      caseSession.controller.counts();
+                      app.dispatchEvent(new Event('ai-review-change'));
+                      await new Promise(resolve => setTimeout(resolve, 0));
+                      observer.disconnect();
+                      return updates === 0;
+                    }"""
+                ),
             )
             tab(page, "Resident")
             check(
@@ -880,9 +1017,23 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                         ),
                     )
                 page.goto(base + "/app#/case/ZF-1?tab=overview")
-                with page.expect_response("**/api/cases/ZF-1"):
+                with (
+                    page.expect_response("**/api/cases/ZF-1"),
+                    page.expect_response("**/api/assistants") as assistance,
+                ):
                     page.reload()
                 page.get_by_role("tab", name="Overview", exact=True).wait_for()
+                if state == "ai-unavailable":
+                    check("injected assistance outage observed", assistance.value.status == 503)
+                    expect(page.locator("[data-case-ai-count]")).to_contain_text("unavailable")
+                    expect(page.locator("#case-tab-overview")).to_have_attribute(
+                        "aria-selected", "true"
+                    )
+                    check(
+                        "unavailable count stays live on Overview while AI is hidden",
+                        page.locator("[data-case-ai-count]").is_visible()
+                        and page.locator("#case-panel-ai").is_hidden(),
+                    )
                 if state == "closed":
                     check(
                         "closed all done, no current",
