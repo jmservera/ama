@@ -111,7 +111,8 @@ def check_binding(
         assert var["rank"] < base["rank"], scenario["id"]
     elif binding == "ties_with_no_adds_support_unknown_reason":
         assert base["rank"] == var["rank"], scenario["id"]
-        assert set(var["reason_codes"]) == set(base["reason_codes"]) | {"support_unknown"}, scenario["id"]
+        expected = set(base["reason_codes"]) | {"support_unknown"}
+        assert set(var["reason_codes"]) == expected, scenario["id"]
     else:
         raise AssertionError(f"unknown binding {binding}")
 
