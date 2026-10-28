@@ -18,7 +18,7 @@ function residentBindings(text) {
   });
 }
 
-function qualityPanel(c, id, refresh) {
+function qualityPanel(c, id, refresh, savedFields = [], session = caseSession) {
   const box = h("section", { class: "card", id: "quality" }, h("h2", {}, "Quality checks and defects"));
   const canCheck = QUALITY_ROLES.includes(me.user.role);
   const measures = (Array.isArray(c.measures) ? c.measures : String(c.measures).split(",")).map((x) => x.trim()).filter(Boolean);
@@ -87,14 +87,24 @@ function qualityPanel(c, id, refresh) {
     const checks = h("div", {});
     let lists = null;
     const paint = () => {
+      if (box.isConnected) savedFields = rememberCaseFields(session);
       const m = measures.find((x) => x === measure.value) || "";
       const key = [["loft", "Loft insulation"], ["wall", "Wall insulation"], ["heat pump", "Heat pump"], ["solar", "Solar panels"]].find(([w]) => m.toLowerCase().includes(w));
       const list = lists[key ? key[1] : "General"];
       checks.replaceChildren(h("p", { class: "muted" }, `Checklist ${list.version}. Say what was seen for every check.`),
-        ...list.items.map((lab, n) => h("div", {}, h("label", { for: `q-i${n}` }, lab), h("input", { id: `q-i${n}`, type: "text", maxlength: 200, "data-label": lab }))));
+        ...list.items.map((lab, n) => {
+          const input = h("input", { id: `q-i${n}`, name: "checklist-evidence", autocomplete: "off", type: "text", maxlength: 200, "data-label": lab,
+            "data-case-field-key": JSON.stringify(["checklist", m, list.version, lab]) });
+          input.caseBinding = { kind: "checklist", id: `${m}, checklist ${list.version}` };
+          return h("div", {}, h("label", { for: input.id }, lab), input);
+        }));
+      restoreBoundFields(savedFields, form, "checklist", session);
     };
     measure.addEventListener("change", () => lists && paint());
-    api("/api/checklists").then((l) => { lists = l; if (measures.length) paint(); });
+    api("/api/checklists").then((l) => {
+      lists = l;
+      if (measures.length) paint();
+    }).catch(error => checks.replaceChildren(h("p", { class: "err", role: "alert" }, `Could not load checklists: ${error.message}. Refresh this case to try again.`)));
     const revision = h("input", { id: "q-revision", type: "number", min: 1 });
     form.append(h("label", { for: "q-measure" }, "Which measure"), measure,
       h("label", { for: "q-revision" }, "Scope revision the evidence covers (see the resident decision panel)"), revision,
@@ -104,7 +114,7 @@ function qualityPanel(c, id, refresh) {
         const replaces = (c.quality || []).some((r) => r.measure === measure.value && ["Accepted", "Handed over"].includes(r.state));
         if (replaces && !window.confirm("Replace this measure's evidence? Its previous acceptance and resident handover will no longer apply. The history will be kept.")) return;
         refresh(() => post(id, "quality-submit", { measure: measure.value, context_revision: Number(revision.value), submitted_by: by.value, source: src.value,
-          items: Object.fromEntries([...checks.querySelectorAll("input")].map((i) => [i.dataset.label, i.value])) }), [...form.querySelectorAll("input, textarea, select")]);
+          items: Object.fromEntries([...checks.querySelectorAll("input")].map((i) => [i.dataset.label, i.value])) }), [measure, revision, by, src, ...checks.querySelectorAll("input")]);
       } }, "Save evidence")));
     box.append(form);
   }

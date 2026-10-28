@@ -322,15 +322,18 @@ function aiNotes(d, onDone, getText) {
     };
     const go = (action) => async () => {
       if (action !== "accept" && !why.value.trim()) { invalid("Enter a reason to edit or reject this draft."); return; }
+      const reason = why.value;
+      const text = action === "edit" ? getText ? getText() : editing?.value : undefined;
       try {
-        await api(`/api/ai/review/${d.record_id}/${action}`, { reason: why.value, text: action === "edit" ? getText ? getText() : editing?.value : undefined });
+        await api(`/api/ai/review/${d.record_id}/${action}`, { reason, text });
         d.approval = REVIEWED[action];
         meta.dataset.reviewState = d.approval;
-        result.textContent = `${d.approval} as a draft by a person. This is not an approval, consent or safety decision. Reason: ${why.value || "Not supplied"}. Recorded in the audit log.`;
+        result.textContent = `${d.approval} as a draft by a person. This is not an approval, consent or safety decision. Reason: ${reason || "Not supplied"}. Recorded in the audit log.`;
         why.removeAttribute("data-case-dirty");
+        editing?.removeAttribute("data-case-dirty");
         box.hidden = true;
         app.dispatchEvent(new Event("ai-review-change"));
-        if (onDone) onDone();
+        if (onDone) onDone(action, text);
       } catch (e) { invalid(e.message); }
     };
     const unavailable = d.stale || d.verified === false || d.validated === false;
@@ -559,7 +562,10 @@ async function listView(view) {
 }
 
 async function caseView(id) {
-  if (!caseSession || caseSession.id !== id) caseSession = { id, draftBox: h("div", { id: "resident-draft-output" }) };
+  if (!caseSession || caseSession.id !== id) caseSession = {
+    id, draftBox: h("div", { id: "resident-draft-output" }),
+    documentBox: h("div", { role: "status" }), pendingFields: new Map(),
+  };
   const session = caseSession;
   const sameCase = app.querySelector("[data-case-workspace]")?.dataset.caseWorkspace === id;
   const firstLoad = !sameCase;
@@ -567,19 +573,19 @@ async function caseView(id) {
     h("section", { "aria-label": "Case summary", "aria-busy": "true", class: "card" }, "Loading case (loading)"));
   const c = await api(`/api/cases/${encodeURIComponent(id)}`);
   if (caseSession !== session) return;
-  const savedFields = sameCase ? captureCaseFields() : [];
+  const savedFields = sameCase ? rememberCaseFields(session) : [];
   session.controller?.dispose();
-  const assistantPanel = assistantCasePanel(id, savedFields);
+  const assistantPanel = assistantCasePanel(id, session);
   const r = c.resident, hm = c.home;
   const openHaz = c.hazards.filter((x) => !x.released);
   const msg = h("div", { role: "status" });
   const refresh = async (fn, submitted = []) => {
-    const sent = submitted.map(field => ({ field, value: field.value, checked: field.checked }));
+    const sent = snapshotCaseFields(submitted);
     try {
       await fn();
       if (caseSession !== session) return;
-      sent.forEach(({ field, value, checked }) => {
-        if (field.value === value && field.checked === checked) delete field.dataset.caseDirty;
+      sent.forEach(item => {
+        if (caseFieldUnchanged(item)) delete item.field.dataset.caseDirty;
       });
       briefingBox = null; await caseView(id);
     } catch (e) {
@@ -678,13 +684,13 @@ async function caseView(id) {
       workSteps(c.work), openHaz.length ? h("p", {}, h("a", { href: "#case-safety", onclick: event => { event.preventDefault(); safety.querySelector("h2").tabIndex = -1; safety.querySelector("h2").focus(); } }, "Review the safety actions above the journey")) : safety,
       regulatoryAlertsPanel(id), !c.closed && returned, stockPanel(c)]],
     ["survey", "Survey and assessment", [technicalPanel(c, id, refresh), documentsPanel(c, id, refresh)]],
-    ["funding", "Funding", [fundingPanel(c, id, refresh), financePanel(c, id, refresh), grantPanel(c, id, refresh)]],
+    ["funding", "Funding", [fundingPanel(c, id, refresh, savedFields, session), financePanel(c, id, refresh), grantPanel(c, id, refresh)]],
     ["resident", "Resident", [residentPanel(c, id, refresh), call, write, affectedChallengePanel(c, id, refresh)]],
     ["contractor", "Contractor and works", [h("section", { class: "card" }, h("h2", {}, "Contractor and appointments"),
       h("p", {}, `${c.contractor.name}, ${c.contractor.contact}, ${c.contractor.phone}`),
       h("p", {}, `Next visit: ${fmtDate((c.appointments.find(a => a.outcome === "Booked") || {}).date)}`),
       c.appointments.length ? h("ul", {}, c.appointments.map(a => h("li", {}, `${fmtDate(a.date)}: ${a.type}, ${a.slot}, ${a.who}. ${a.outcome}`))) : h("p", {}, "No appointments recorded. Ask the case owner to record the next visit."))]],
-    ["quality", "Quality and handover", [qualityPanel(c, id, refresh), handoffPanel(c, id, refresh), sugg]],
+    ["quality", "Quality and handover", [qualityPanel(c, id, refresh, savedFields, session), handoffPanel(c, id, refresh), sugg]],
     ["ai", "AI assistance", [assistantPanel, chatCasePanel(id),
       h("p", {}, "Resident message and summary drafts stay with the resident record.",
         h("button", { class: "alt", onclick: () => session.controller ? session.controller.select("resident", true, true) : document.getElementById("case-panel-resident").scrollIntoView() }, "Review resident drafts")),
@@ -715,32 +721,62 @@ async function caseView(id) {
     h("span", { class: "muted" }, `Reference ${c.id}`)), top, workspace);
   restoreChallengeDrafts(challengeDrafts);
   restoreCaseFields(savedFields);
+  restoreBoundFields(savedFields, app, "form", session);
   session.controller?.counts();
 }
 
 function caseFieldEntries(root = app) {
   const seen = new Map();
-  return [...root.querySelectorAll("input, textarea, select")].filter(field =>
-    !field.closest("[data-challenge-case], #resident-draft-output") && field.type !== "file").map(field => {
+  const entries = [...root.querySelectorAll("input, textarea, select")].filter(field =>
+    !field.closest("[data-challenge-case], #resident-draft-output")).map(field => {
+    if (field.preservedCaseField) return { ...field.preservedCaseField, field };
     const proposal = field.closest("[data-proposal-id]");
     const prefix = proposal ? `${proposal.dataset.proposalId}:${proposal.dataset.proposalRevision}:` : "";
     const label = prefix + (field.id || `${field.closest("[id]")?.id}:${field.name || field.getAttribute("aria-label") || field.type}`);
     const index = seen.get(label) || 0;
     seen.set(label, index + 1);
-    return { field, key: field.dataset.preservedReviewKey || `${label}:${index}`,
+    return { field, key: field.dataset.caseFieldKey || `${label}:${index}`, binding: field.caseBinding,
       proposal: proposal && { id: proposal.dataset.proposalId, revision: proposal.dataset.proposalRevision } };
   });
+  const byKey = new Map();
+  entries.forEach(entry => {
+    if (!byKey.has(entry.key) || !entry.field.preservedCaseField) byKey.set(entry.key, entry);
+  });
+  return [...byKey.values()];
+}
+function snapshotCaseFields(fields) {
+  return fields.map(item => item.field ? item : { field: item, value: item.value,
+    checked: item.checked, files: item.files && [...item.files] });
+}
+function caseFieldUnchanged({ field, value, checked, files }) {
+  return field.value === value && field.checked === checked
+    && (!files || (files.length === field.files.length && files.every((file, i) => field.files[i] === file)));
 }
 function captureCaseFields() {
   return caseFieldEntries().filter(({ field }) => field.dataset.caseDirty)
-    .map(({ field, key, proposal }) => ({ key, value: field.value, checked: field.checked, proposal,
-      label: field.getAttribute("aria-label") || field.name || field.id, type: field.type }));
+    .map(({ field, key, proposal, binding }) => ({ key, value: field.value,
+      checked: field.preservedCaseField?.checked ?? field.checked, proposal, binding,
+      label: field.preservedCaseField?.label || field.getAttribute("aria-label") || field.name || field.id,
+      type: field.preservedCaseField?.type || field.type,
+      fileNode: field.type === "file" ? field : undefined }));
+}
+function rememberCaseFields(session) {
+  caseFieldEntries().forEach(({ key, field }) => {
+    if (!field.dataset.caseDirty) session.pendingFields.delete(key);
+  });
+  const saved = captureCaseFields();
+  saved.forEach(item => session.pendingFields.set(item.key, item));
+  return [...session.pendingFields.values()];
 }
 function restoreCaseFields(saved, root = app) {
   const fields = new Map(caseFieldEntries(root).map(({ key, field }) => [key, field]));
-  saved.forEach(({ key, value, checked }) => {
+  saved.forEach(({ key, value, checked, fileNode }) => {
     const field = fields.get(key);
     if (field) {
+      if (fileNode) {
+        if (field !== fileNode) field.replaceWith(fileNode);
+        return;
+      }
       field.value = value; field.checked = checked; field.dataset.caseDirty = "true";
       for (let parent = field.parentElement; parent && parent.getAttribute("role") !== "tabpanel"; parent = parent.parentElement) {
         if (parent.tagName === "DETAILS") parent.open = true;
@@ -749,22 +785,27 @@ function restoreCaseFields(saved, root = app) {
     }
   });
 }
-function restoreProposalFields(saved, panel) {
+function restoreBoundFields(saved, panel, kind, session) {
+  panel.querySelectorAll(`[data-case-recovery="${kind}"]`).forEach(node => node.remove());
   restoreCaseFields(saved, panel);
   const keys = new Set(caseFieldEntries(panel).map(({ key }) => key));
-  const missing = saved.filter(item => item.proposal && !keys.has(item.key));
+  const missing = saved.filter(item => (kind === "proposal" ? item.proposal
+    : kind === "form" ? !item.proposal && !item.binding : item.binding?.kind === kind) && !keys.has(item.key));
   if (!missing.length) return;
-  const recovery = h("details", {}, h("summary", {}, "Unsubmitted review edits from earlier evidence"),
-    h("p", { role: "status" }, "The proposal revision changed or is no longer available. These edits were not applied to different evidence. Copy what you need and check the current sources again."));
+  const recovery = h("details", { "data-case-recovery": kind }, h("summary", {}, "Unsubmitted review edits from earlier evidence"),
+    h("p", { role: "status" }, "The evidence identity or version changed or is no longer available. These edits were not applied to different evidence. Copy what you need and check the current sources again."));
   missing.forEach(item => {
-    const copy = h("textarea", { readonly: true, "aria-label": `Earlier ${item.label}`,
-      "data-case-dirty": "true", "data-preserved-review-key": item.key });
+    const copy = h("textarea", { readonly: true, name: "earlier-draft", autocomplete: "off", "aria-label": `Earlier ${item.label}`,
+      "data-case-dirty": "true" });
+    copy.preservedCaseField = item;
     copy.value = item.type === "checkbox" ? String(item.checked) : item.value;
-    recovery.append(h("div", { "data-proposal-id": item.proposal.id,
-      "data-proposal-revision": item.proposal.revision },
-      h("p", {}, `${item.proposal.id}, revision ${item.proposal.revision}: ${item.label}`), copy));
+    const identity = item.proposal ? `${item.proposal.id}, revision ${item.proposal.revision}` : item.binding?.id || "Earlier form";
+    recovery.append(h("div", {}, h("p", {}, `${identity}: ${item.label}`), copy));
   });
-  recovery.append(h("button", { type: "button", class: "alt", onclick: () => recovery.remove() }, "Discard earlier review edits"));
+  recovery.append(h("button", { type: "button", class: "alt", onclick: () => {
+    missing.forEach(item => session.pendingFields.delete(item.key));
+    recovery.remove();
+  } }, "Discard earlier review edits"));
   panel.append(recovery);
 }
 app.addEventListener("input", event => {
@@ -868,9 +909,9 @@ function recordedChangeForm(prefix, label, fields, submit) {
       button.textContent = "Saving...";
       status.textContent = "Saving the recorded change...";
       try {
-        await submit(Object.fromEntries(inputs.map(({ name, input }) => [name, input.value.trim()])),
-          [...form.querySelectorAll("input, textarea, select")]);
-        delete form.dataset.unsaved;
+        const sent = snapshotCaseFields([...form.querySelectorAll("input, textarea, select")]);
+        await submit(Object.fromEntries(inputs.map(({ name, input }) => [name, input.value.trim()])), sent);
+        if (sent.every(caseFieldUnchanged)) delete form.dataset.unsaved;
       } catch (error) {
         status.replaceChildren(h("p", { class: "err" }, error.message));
         status.setAttribute("tabindex", "-1");
@@ -907,8 +948,7 @@ function handoffPanel(c, id, refresh) {
     if (hd.to_code === me.user.code) {
       if (hd.state === "Offered") kids.push(h("button", { class: "alt", onclick: () => refresh(() => post(id, "receive-handoff", {})) }, "Record receipt (not acceptance)"));
       kids.push(recordedChangeForm("ho-accept", "Accept this case", [], async (metadata, submitted) => {
-        await post(id, "accept-handoff", { ...metadata, handoff_version: (c.handoff_history || []).length });
-        await refresh(async () => {}, submitted);
+        await refresh(() => post(id, "accept-handoff", { ...metadata, handoff_version: (c.handoff_history || []).length }), submitted);
       }),
         h("div", { class: "row" }, h("label", { for: "ho-why" }, "Reason if you cannot take it"), why,
           h("button", { class: "alt", onclick: () => refresh(() => post(id, "decline-handoff", { reason: why.value }), [why]) }, "Decline")));
@@ -944,11 +984,10 @@ function handoffPanel(c, id, refresh) {
         h("label", { for: "ho-due" }, "Human-selected due date (not an approved SLA)"), due,
         h("p", {}, c.resident_update ? "The existing resident-update commitment is preserved." : "Record a complete resident-update commitment in the resident panel. A handoff never creates or clears it.")
         ], async (metadata, submitted) => {
-          await post(id, "offer-handoff", {
+          await refresh(() => post(id, "offer-handoff", {
           ...metadata, handoff_version: (c.handoff_history || []).length,
           to: to.value, note: note.value, next_action: next.value, urgency: urgency.value, due_at: iso(due.value)
-          });
-          await refresh(async () => {}, submitted);
+          }), submitted);
         }));
     }
   }
@@ -1084,9 +1123,10 @@ function documentsPanel(c, id, refresh) {
   const kinds = ["EPC", "Survey", "Design", "Consent", "Funding evidence", "Photo", "Other"];
   const kind = h("select", { name: "kind", "aria-label": "Type of document" }, kinds.map((k) => h("option", {}, k)));
   const file = h("input", { name: "document", type: "file", required: true, "aria-label": "Choose a file", accept: ".pdf,.png,.jpg,.jpeg,.docx,.xlsx,.csv,.txt" });
-  const out = h("div", { role: "status" });
+  const out = caseSession?.id === id ? caseSession.documentBox : h("div", { role: "status" });
   const upload = async (metadata, submitted) => {
-    const f = file.files[0];
+    const f = submitted.find(({ field }) => field.type === "file")?.field.files[0];
+    const documentKind = kind.value;
     if (!f) throw new Error("Choose a file first.");
     const data = await new Promise((resolve, reject) => {
       const rd = new FileReader();
@@ -1094,7 +1134,7 @@ function documentsPanel(c, id, refresh) {
       rd.onerror = () => reject(new Error("The file could not be read. Choose the file again."));
       rd.readAsDataURL(f);
     });
-    await api(`/api/cases/${encodeURIComponent(id)}/upload`, { ...metadata, name: f.name, kind: kind.value, data });
+    await api(`/api/cases/${encodeURIComponent(id)}/upload`, { ...metadata, name: f.name, kind: documentKind, data });
     await refresh(async () => {}, submitted);
   };
   const read = async (d) => {
@@ -1102,7 +1142,14 @@ function documentsPanel(c, id, refresh) {
     app.dispatchEvent(new Event("ai-review-change"));
     try {
       const r = await api(`/api/cases/${encodeURIComponent(id)}/read-doc`, modeBody({ id: d.id }));
-      out.replaceChildren(h("p", { class: "muted" }, r.source === "ai" ? "AI-read, please check:" : "Note:"), h("p", { class: "pre" }, r.text), aiNotes(r));
+      const text = h("p", { class: "pre", "data-document-text": "" }, r.text);
+      out.replaceChildren(h("p", { class: "muted" }, r.source === "ai" ? "AI-read, please check:" : "Note:"), text,
+        aiNotes(r, (action, replacement) => {
+          if (action === "edit") {
+            text.textContent = replacement;
+            text.setAttribute("aria-label", "Reviewed replacement document text");
+          }
+        }));
       app.dispatchEvent(new Event("ai-review-change"));
     } catch (e) { out.replaceChildren(h("p", { class: "err" }, e.message)); }
   };
@@ -1116,20 +1163,25 @@ function documentsPanel(c, id, refresh) {
 }
 
 const fundingAi = {};
-function fundingPanel(c, id, refresh) {
+function fundingPanel(c, id, refresh, savedFields = [], session = caseSession) {
   const f = c.funding;
   const canAct = ["Grants and Evidence Officer", "Retrofit Programme Manager", "Programme Support Officer"].includes(me.user.role);
-  const ta = h("textarea", { "aria-label": "Funding application draft", rows: 10 });
+  const ta = h("textarea", { name: "funding-draft", autocomplete: "off", "aria-label": "Funding application draft", rows: 10 });
+  const identity = fundingAi[id]?.record_id || "manual";
+  ta.dataset.caseFieldKey = JSON.stringify(["funding", identity]);
+  ta.caseBinding = { kind: "funding", id: identity };
   ta.value = f.draft || "";
   const fundNote = h("div", {}, fundingAi[id] ? [h("p", { class: "muted" }, fundingAi[id].label), aiNotes(fundingAi[id], null, () => ta.value)] : null);
   const ref = h("input", { "aria-label": "Application event evidence reference", name: "application-evidence", autocomplete: "off", spellcheck: "false" });
   const step = (action, text) => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/funding`, { action, text }), [action === "save_draft" ? ta : ref]);
   if (f.status === "Confirmed") {
-    return h("section", { class: "card" }, h("h2", {}, "Funding application"), h("p", {}, `Application confirmation recorded. Route: ${f.route}${f.reference ? `, reference ${f.reference}` : ""}.`),
+    const panel = h("section", { class: "card" }, h("h2", {}, "Funding application"), h("p", {}, `Application confirmation recorded. Route: ${f.route}${f.reference ? `, reference ${f.reference}` : ""}.`),
       h("p", { class: "muted" }, "Application status is not a grant award or cash receipt. See the separate grant evidence."));
+    restoreBoundFields(savedFields, panel, "funding", session);
+    return panel;
   }
   const need = c.checklist.filter((x) => !x.present).map((x) => x.kind);
-  return h("section", { class: "card" }, h("h2", {}, "Funding application"),
+  const panel = h("section", { class: "card" }, h("h2", {}, "Funding application"),
     h("p", {}, `Route: ${f.route}. Status: ${f.status}.${need.length ? ` Still needed: ${need.join(", ")}.` : " All evidence is in."}`),
     h("p", { class: "muted" }, "AI drafts the wording. A person approves it and submits it to the funder. The system never submits."),
     h("div", { class: "row" }, h("button", { onclick: () => refresh(async () => { fundingAi[id] = (await api(`/api/cases/${encodeURIComponent(id)}/funding-draft`, modeBody({}))).ai; }) }, "Draft application with AI")),
@@ -1143,6 +1195,8 @@ function fundingPanel(c, id, refresh) {
       f.status === "Submitted" && h("button", { onclick: () => step("confirm", ref.value) }, "Record application confirmation"))
       : h("p", { class: "muted" }, "Only a designated human financial authority can approve or record submission and confirmation."),
     f.approved_by && h("p", { class: "muted" }, `Approved by ${f.approved_by}.`));
+  restoreBoundFields(savedFields, panel, "funding", session);
+  return panel;
 }
 
 function importView() {

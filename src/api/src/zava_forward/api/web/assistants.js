@@ -25,12 +25,13 @@ function assistantProposal(p, reload) {
     }
     try {
       const body = { action, revision: p.revision, note: note.value };
+      const sent = snapshotCaseFields([note, ...(action === "verify" ? [verified] : action === "edit-accept" ? [editing] : [])]);
       if (action === "verify") body.source_verified = verified.checked;
       if (action === "edit-accept") body.output = JSON.parse(editing.value);
       await api(`/api/assistants/proposals/${p.id}/review`, body);
-      note.removeAttribute("data-case-dirty");
-      editing.removeAttribute("data-case-dirty");
-      verified.removeAttribute("data-case-dirty");
+      sent.forEach(item => {
+        if (caseFieldUnchanged(item)) item.field.removeAttribute("data-case-dirty");
+      });
       await reload();
     } catch (e) {
       error.textContent = e.message; note.setAttribute("aria-invalid", "true");
@@ -81,7 +82,7 @@ function assistantProposal(p, reload) {
       h("button", { class: "alt", onclick: () => act("reject") }, "Reject")), editBox));
 }
 
-function assistantCasePanel(id, savedFields = []) {
+function assistantCasePanel(id, session) {
   const status = h("p", { role: "status" }, "Loading assistance. Ordinary case controls remain available.");
   const panel = h("section", { class: "card" }, h("h2", {}, "Retrofit assistants"), status);
   const routeHash = location.hash.split("?")[0];
@@ -128,14 +129,14 @@ function assistantCasePanel(id, savedFields = []) {
       }
       if (reviewed.childElementCount > 1) panel.append(reviewed);
       if (!proposals.length) panel.append(h("p", {}, "No AI suggestions yet. Ordinary case work is not affected."));
-      restoreProposalFields(savedFields, panel);
+      restoreBoundFields([...session.pendingFields.values()], panel, "proposal", session);
     } catch (e) {
       if (current()) {
         const reason = controller.signal.aborted ? "Assistance request timed out" : e.message;
         status.textContent = `Assistance unavailable: ${reason}. Continue ordinary case work manually.`;
         panel.dataset.assistance = "AI assistance unavailable. Work continues manually.";
         panel.dataset.waiting = "0";
-        restoreProposalFields(savedFields, panel);
+        restoreBoundFields([...session.pendingFields.values()], panel, "proposal", session);
       }
     } finally {
       clearTimeout(deadline);

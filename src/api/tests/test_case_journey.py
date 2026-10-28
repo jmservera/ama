@@ -174,6 +174,12 @@ class CaseJourney(unittest.TestCase):
         app = (WEB / "app.js").read_text()
         case = app.split("async function caseView(id) {", 1)[1]
         refresh = case.split("  const refresh = ", 1)[1].split("  const outcome = ", 1)[0]
+        snapshot = (
+            "function snapshotCaseFields"
+            + app.split("function snapshotCaseFields", 1)[1].split("function captureCaseFields", 1)[
+                0
+            ]
+        )
         script = (
             """
 let briefingBox = {}, renders = 0, errors = 0;
@@ -186,6 +192,7 @@ const submitted = {dataset: {caseDirty: "true"}};
 const unrelated = {dataset: {caseDirty: "true"}};
 const refresh = """
             + refresh
+            + snapshot
             + """
 (async () => {
   await refresh(async () => { throw new Error("Synthetic refusal"); }, [submitted]);
@@ -193,9 +200,20 @@ const refresh = """
     && unrelated.dataset.caseDirty === "true" && errors === 1 && renders === 0;
   await refresh(async () => {}, [submitted]);
   const cleared = !submitted.dataset.caseDirty;
+  submitted.dataset.caseDirty = "true"; submitted.value = "Dispatched";
+  const sent = snapshotCaseFields([submitted]);
+  submitted.value = "Later edit before refresh";
+  await refresh(async () => {}, sent);
+  const delayed = submitted.dataset.caseDirty === "true";
+  const file = {dataset: {caseDirty: "true"}, value: "same-name.txt", files: [{}]};
+  const fileSent = snapshotCaseFields([file]);
+  file.files = [{}];
+  await refresh(async () => {}, fileSent);
+  const replacedFile = file.dataset.caseDirty === "true";
   submitted.dataset.caseDirty = "true"; submitted.value = "Sent";
   await refresh(async () => { submitted.value = "Typed while saving"; }, [submitted]);
-  console.log(JSON.stringify({failed, cleared, pending: submitted.dataset.caseDirty,
+  console.log(JSON.stringify({failed, cleared, delayed, replacedFile,
+    pending: submitted.dataset.caseDirty,
     unrelated: unrelated.dataset.caseDirty, renders}));
 })();
 """
@@ -203,8 +221,44 @@ const refresh = """
         result = subprocess.run(["node", "-e", script], text=True, capture_output=True, check=True)
         self.assertEqual(
             json.loads(result.stdout),
-            {"failed": True, "cleared": True, "pending": "true", "unrelated": "true", "renders": 2},
+            {
+                "failed": True,
+                "cleared": True,
+                "delayed": True,
+                "replacedFile": True,
+                "pending": "true",
+                "unrelated": "true",
+                "renders": 4,
+            },
         )
+
+    def test_live_field_identity_wins_over_stale_recovery_in_either_dom_order(self) -> None:
+        app = (WEB / "app.js").read_text()
+        entries = (
+            "function caseFieldEntries"
+            + app.split("function caseFieldEntries", 1)[1].split("function snapshotCaseFields", 1)[
+                0
+            ]
+        )
+        script = (
+            """
+const live = {id: "q-i0", dataset: {caseFieldKey: "measure:version:item"},
+  closest: () => null};
+const recovery = {preservedCaseField: {key: "measure:version:item"},
+  closest: () => null};
+const app = {querySelectorAll: () => [live, recovery]};
+"""
+            + entries
+            + """
+const first = caseFieldEntries();
+app.querySelectorAll = () => [recovery, live];
+const second = caseFieldEntries();
+console.log(JSON.stringify([first.length, first[0].field === live,
+  second.length, second[0].field === live]));
+"""
+        )
+        result = subprocess.run(["node", "-e", script], text=True, capture_output=True, check=True)
+        self.assertEqual(json.loads(result.stdout), [1, True, 1, True])
 
 
 if __name__ == "__main__":

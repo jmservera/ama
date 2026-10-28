@@ -147,6 +147,7 @@ function residentPanel(c, id, refresh) {
       status.textContent = "Recording";
       let dispatched = false;
       try {
+        const submitted = snapshotCaseFields(inputs.map(({ input }) => input));
         const body = Object.fromEntries(inputs.map(({ name, input }) => [name, input.value]));
         const payload = JSON.stringify({ action, ...build(body) });
         dispatched = true;
@@ -161,8 +162,8 @@ function residentPanel(c, id, refresh) {
           if (result.outcome !== "committed") button.disabled = false;
           return;
         }
-        delete form.dataset.unsaved;
-        await refresh(async () => {}, inputs.map(({ input }) => input));
+        if (submitted.every(caseFieldUnchanged)) delete form.dataset.unsaved;
+        await refresh(async () => {}, submitted);
       } catch (error) {
         status.textContent = dispatched
           ? "Confirmation is unavailable. Reload and check the history before another action."

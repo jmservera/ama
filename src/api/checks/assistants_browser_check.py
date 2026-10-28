@@ -118,6 +118,29 @@ def main():
                 "Pending source review reason"
             )
             check("unrelated successful action preserves async review edits", True)
+            pending_loads = []
+            page.route("**/api/assistants/proposals?**", lambda route: pending_loads.append(route))
+            page.get_by_role("button", name="Refresh proposals", exact=True).click()
+            expect(page.get_by_text(
+                "Loading assistance. Ordinary case controls remain available.", exact=True
+            )).to_have_count(1)
+            page.get_by_role("tab", name="Resident", exact=True).click()
+            page.locator("#outcome").fill("Second refresh while proposal loader is pending")
+            page.get_by_role("button", name="Save", exact=True).click()
+            expect(page.locator("#outcome")).to_have_value("")
+            page.get_by_role("tab", name="AI assistance", exact=False).click()
+            expect(page.get_by_text(
+                "Loading assistance. Ordinary case controls remain available.", exact=True
+            )).to_be_visible()
+            check("two independent proposal loads are pending", len(pending_loads) == 2)
+            for pending in pending_loads:
+                pending.fulfill(response=pending.fetch())
+            page.unroute("**/api/assistants/proposals?**")
+            expect(editing).to_have_value(json.dumps(pending_output))
+            expect(card.get_by_label("Reason", exact=True)).to_have_value(
+                "Pending source review reason"
+            )
+            check("overlapping refreshes preserve unresolved proposal snapshots", True)
             db = store.assistant_connection()
             domain = db.execute("SELECT id,body FROM cases ORDER BY id").fetchall()
             db.close()
@@ -152,6 +175,27 @@ def main():
                 "Pending source review reason"
             )
             check("old-revision edits remain available to copy across refresh", True)
+            recovery.locator("summary").click()
+            recovery.get_by_role("button", name="Discard earlier review edits").click()
+            card.get_by_role("button", name="Edit", exact=True).click()
+            own_pending = json.loads(editing.input_value())
+            own_pending["summary"] = "Unsent JSON during own source verification"
+            editing.fill(json.dumps(own_pending))
+            card.get_by_label("Reason", exact=True).fill("Rechecked the supplied sources")
+            card.get_by_label("I checked the cited sources", exact=False).check()
+            card.get_by_role("button", name="Record human source verification").click()
+            expect(recovery.get_by_label(
+                "Earlier Edited evidence proposal JSON", exact=True
+            )).to_have_value(json.dumps(own_pending))
+            check(
+                "source verification retains unsent JSON against its earlier revision",
+                json.loads(editing.input_value())["summary"]
+                != "Unsent JSON during own source verification",
+            )
+            page.get_by_role("button", name="Refresh proposals", exact=True).click()
+            expect(recovery.get_by_label(
+                "Earlier Edited evidence proposal JSON", exact=True
+            )).to_have_value(json.dumps(own_pending))
             recovery.locator("summary").click()
             recovery.get_by_role("button", name="Discard earlier review edits").click()
             card.get_by_label("Reason", exact=True).fill("Accept this proposal, not the case.")

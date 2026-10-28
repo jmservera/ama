@@ -11,7 +11,7 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
-from playwright.sync_api import Page, Route, sync_playwright
+from playwright.sync_api import Page, Route, expect, sync_playwright
 
 from checks.design_system_browser_check import check, main
 from checks.regulatory_ux_check import AXE_SHA256
@@ -20,6 +20,7 @@ from checks.workbench_browser_check import synthetic_data
 
 def journey_data() -> dict[str, Any]:
     data = synthetic_data()
+    data["cases"][0]["measures"] = "Loft insulation, Solar panels"
     final = copy.deepcopy(data["cases"][0])
     final.update(id="SYN-526-FINAL", stage="Final checks before ordering")
     data["cases"].append(final)
@@ -32,6 +33,29 @@ def journey_data() -> dict[str, Any]:
 
 def tab(page: Page, name: str) -> None:
     page.get_by_role("tab", name=name, exact=False).click()
+
+
+def refresh_proposals(page: Page) -> None:
+    workspace = page.locator("[data-case-workspace]").element_handle()
+    page.get_by_role("button", name="Refresh proposals", exact=True).click()
+    page.wait_for_function("old => !old.isConnected", arg=workspace)
+
+
+def save_quality(page: Page) -> dict[str, Any]:
+    for field in page.locator("#quality [data-label]").all():
+        field.fill("Submitted current measure evidence")
+    page.locator("#q-by").fill("Synthetic installer")
+    page.locator("#q-revision").fill("1")
+    previous = page.locator("#q-i0").element_handle()
+    with page.expect_request("**/api/cases/ZF-1/quality-submit") as request:
+        page.get_by_role("button", name="Save evidence", exact=True).click()
+    page.wait_for_function("old => !old.isConnected", arg=previous)
+    body = request.value.post_data_json
+    if not isinstance(body, dict):
+        raise AssertionError("Quality request must contain a JSON object")
+    page.locator("#q-measure").select_option(body["measure"])
+    expect(page.locator("#q-i0")).to_have_value("")
+    return body
 
 
 def sign_in(page: Page, base: str, email: str = "sam@example.test") -> None:
@@ -205,6 +229,134 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                 "client success clears only explicitly submitted same-card fields",
                 budget.get_by_label("Amount in pounds", exact=True).input_value() == "321",
             )
+            # Keep mutations pending while a person continues editing their forms.
+            tab(finance, "Resident")
+            finance.get_by_text("Open a request or complaint", exact=True).click()
+            finance.locator("#request-open-summary").fill("Dispatched complaint")
+            pending_resident: list[Route] = []
+            finance.route(
+                "**/api/cases/ZF-1/resident", lambda route: pending_resident.append(route)
+            )
+            finance.get_by_role("button", name="Open", exact=True).click()
+            finance.wait_for_function(
+                "() => document.querySelector('#request-open-feedback').textContent === 'Recording'"
+            )
+            finance.locator("#request-open-summary").fill("Later complaint edit")
+            resident_body = pending_resident[0].request.post_data_json
+            check(
+                "resident request uses dispatch-time text",
+                isinstance(resident_body, dict)
+                and resident_body["summary"] == "Dispatched complaint",
+            )
+            pending_resident[0].fulfill(json={"ok": True})
+            finance.unroute("**/api/cases/ZF-1/resident")
+            expect(finance.locator("#request-open-summary")).to_have_value("Later complaint edit")
+            finance.wait_for_function(
+                "() => document.querySelector('#request-open-summary')"
+                ".dataset.caseDirty === 'true'"
+                " && !document.querySelector('#request-open-feedback').textContent"
+            )
+            check("resident mutation preserves later dirty edits", True)
+
+            tab(finance, "Quality and handover")
+            finance.locator("#ho-to").select_option("coordinator@example.test")
+            finance.locator("#ho-note").fill("Dispatched handoff")
+            finance.locator("#ho-next").fill("Review synthetic evidence")
+            finance.locator("#ho-offer-source").fill("Synthetic handoff source")
+            finance.locator("#ho-offer-source_version").fill("1")
+            finance.locator("#ho-offer-reason").fill("Synthetic dispatch regression")
+            pending_handoff: list[Route] = []
+            finance.route(
+                "**/api/cases/ZF-1/offer-handoff", lambda route: pending_handoff.append(route)
+            )
+            finance.get_by_role("button", name="Offer the case", exact=True).click()
+            finance.locator("#ho-note").fill("Later handoff edit")
+            finance.locator("#ho-offer-reason").fill("Later handoff reason")
+            handoff_body = pending_handoff[0].request.post_data_json
+            check(
+                "handoff request uses dispatch-time text",
+                isinstance(handoff_body, dict) and handoff_body["note"] == "Dispatched handoff",
+            )
+            handoff_response = pending_handoff[0].fetch()
+            if handoff_response.status != 200:
+                raise AssertionError(f"Actual handoff failed: {handoff_response.text()}")
+            check("actual synthetic handoff mutation succeeds", True)
+            pending_handoff[0].fulfill(response=handoff_response)
+            finance.unroute("**/api/cases/ZF-1/offer-handoff")
+            expect(finance.get_by_label("Earlier note", exact=True)).to_have_value(
+                "Later handoff edit"
+            )
+            check(
+                "removed handoff form preserves later dirty edits copyably",
+                finance.get_by_label("Earlier reason", exact=True).input_value()
+                == "Later handoff reason"
+                and finance.get_by_label("Earlier note", exact=True).get_attribute(
+                    "data-case-dirty"
+                )
+                == "true",
+            )
+
+            tab(finance, "Funding")
+            draft = finance.get_by_label("Funding application draft", exact=True)
+            before_funding = draft.element_handle()
+            with finance.expect_response("**/api/cases/ZF-1/funding-draft") as first_funding:
+                finance.get_by_role("button", name="Draft application with AI", exact=True).click()
+            if first_funding.value.status != 200:
+                raise AssertionError(f"Funding fixture failed: {first_funding.value.text()}")
+            finance.wait_for_function("old => !old.isConnected", arg=before_funding)
+            first_record = finance.locator("#case-panel-funding [data-record-id]").get_attribute(
+                "data-record-id"
+            )
+            check("first funding draft has an AI record identity", bool(first_record))
+            draft.fill("Earlier unsent funding wording")
+            finance.route(
+                "**/api/cases/ZF-1/funding-draft",
+                lambda route: route.fulfill(
+                    json={
+                        "ai": {
+                            "record_id": "SYN-FUNDING-NEW",
+                            "approval": "Not reviewed",
+                            "label": "Synthetic AI draft",
+                            "text": "Fresh synthetic AI wording",
+                        }
+                    }
+                ),
+            )
+
+            def fresh_funding(route: Route) -> None:
+                response = route.fetch()
+                case = response.json()
+                case["funding"]["draft"] = "Fresh synthetic AI wording"
+                route.fulfill(response=response, json=case)
+
+            finance.route("**/api/cases/ZF-1", fresh_funding)
+            finance.get_by_role("button", name="Draft application with AI", exact=True).click()
+            expect(draft).to_have_value("Fresh synthetic AI wording")
+            earlier = finance.get_by_label("Earlier Funding application draft", exact=True)
+            expect(earlier).to_have_value("Earlier unsent funding wording")
+            check(
+                "new funding record never inherits earlier text",
+                draft.get_attribute("data-case-dirty") is None
+                and finance.locator("#case-panel-funding [data-record-id]").get_attribute(
+                    "data-record-id"
+                )
+                == "SYN-FUNDING-NEW",
+            )
+            tab(finance, "AI assistance")
+            refresh_proposals(finance)
+            tab(finance, "Funding")
+            expect(earlier).to_have_value("Earlier unsent funding wording")
+            expect(draft).to_have_value("Fresh synthetic AI wording")
+            check("earlier funding edits survive subsequent refresh separately", True)
+            expect(finance.get_by_label("Earlier note", exact=True)).to_have_value(
+                "Later handoff edit"
+            )
+            check("removed form drafts also survive subsequent refresh", True)
+            finance.locator("#case-panel-funding").get_by_role(
+                "button", name="Discard earlier review edits", exact=True
+            ).click()
+            finance.unroute("**/api/cases/ZF-1", fresh_funding)
+            finance.unroute("**/api/cases/ZF-1/funding-draft")
             finance_context.close()
             tab(page, "Survey and assessment")
             page.get_by_label("Choose a file", exact=True).set_input_files(
@@ -217,11 +369,40 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             page.locator("#doc-upload-source").fill("Constructed browser fixture")
             page.locator("#doc-upload-source_version").fill("1")
             page.locator("#doc-upload-reason").fill("Verify document review counts")
-            with page.expect_response("**/api/cases/ZF-1/upload") as upload:
+            pending_upload: list[Route] = []
+            page.route("**/api/cases/ZF-1/upload", lambda route: pending_upload.append(route))
+            with page.expect_request("**/api/cases/ZF-1/upload"):
                 page.get_by_role("button", name="Add document", exact=True).click()
-            if upload.value.status != 200:
-                raise AssertionError(f"Constructed upload failed: {upload.value.text()}")
+            page.locator("#doc-upload-reason").fill("Later upload edit")
+            page.get_by_label("Type of document", exact=True).select_option("Survey")
+            page.get_by_label("Choose a file", exact=True).set_input_files(
+                {"name": "later-selection.txt", "mimeType": "text/plain", "buffer": b"Later file"}
+            )
+            upload_body = pending_upload[0].request.post_data_json
+            check(
+                "upload captures immutable metadata and document kind",
+                isinstance(upload_body, dict)
+                and upload_body["reason"] == "Verify document review counts"
+                and upload_body["kind"] == "EPC",
+            )
+            response = pending_upload[0].fetch()
+            if response.status != 200:
+                raise AssertionError(f"Constructed upload failed: {response.text()}")
+            pending_upload[0].fulfill(response=response)
+            page.unroute("**/api/cases/ZF-1/upload")
             page.get_by_role("link", name="constructed-review.txt", exact=True).wait_for()
+            check(
+                "upload preserves edits typed during mutation",
+                page.locator("#doc-upload-reason").input_value() == "Later upload edit"
+                and page.locator("#doc-upload-reason").get_attribute("data-case-dirty") == "true"
+                and page.get_by_label("Type of document", exact=True).input_value() == "Survey",
+            )
+            check(
+                "upload retains a file selected after dispatch",
+                page.get_by_label("Choose a file", exact=True).evaluate(
+                    "el => el.files[0]?.name === 'later-selection.txt'"
+                ),
+            )
             with page.expect_response("**/api/cases/ZF-1/read-doc") as document_response:
                 page.get_by_role("button", name="Read with AI", exact=True).last.click()
             if document_response.value.status != 200:
@@ -238,10 +419,49 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                 and ("1 to review" in tab_count or "1 local drafts to review" in tab_count),
             )
             document_review = page.locator("#case-panel-survey .aimeta")
-            document_review.get_by_role("button", name="Accept", exact=True).click()
+            document_review.get_by_label("Edited draft", exact=True).fill(
+                "Reviewed replacement synthetic document text"
+            )
+            document_review.get_by_label("Reason", exact=True).fill("Checked document wording")
+            original_document = document_review.element_handle()
+            tab(page, "Resident")
+            page.locator("#outcome").fill("Call with pending document review")
+            page.get_by_role("button", name="Save", exact=True).click()
+            expect(page.locator("#outcome")).to_have_value("")
+            tab(page, "AI assistance")
+            page.get_by_role("button", name="Refresh proposals", exact=True).click()
+            tab(page, "Survey and assessment")
+            expect(document_review.get_by_label("Edited draft", exact=True)).to_have_value(
+                "Reviewed replacement synthetic document text"
+            )
+            expect(document_review.get_by_label("Reason", exact=True)).to_have_value(
+                "Checked document wording"
+            )
+            check(
+                "document review retains record, handlers and edits across call and refresh",
+                document_review.evaluate("(el, old) => el === old", original_document),
+            )
+            # The call changes source hashes. A new review must use fresh evidence.
+            with page.expect_response("**/api/cases/ZF-1/read-doc"):
+                page.get_by_role("button", name="Read with AI", exact=True).last.click()
+            document_review.get_by_label("Edited draft", exact=True).fill(
+                "Reviewed replacement synthetic document text"
+            )
+            document_review.get_by_label("Reason", exact=True).fill("Checked document wording")
+            with page.expect_response("**/api/ai/review/*/edit") as edited_document:
+                document_review.get_by_role("button", name="Edit", exact=True).click()
+            if edited_document.value.status != 200:
+                raise AssertionError(f"Document edit failed: {edited_document.value.text()}")
             page.wait_for_function(
                 "() => document.querySelector('#case-panel-survey .aimeta')"
-                ".dataset.reviewState === 'Accepted'"
+                ".dataset.reviewState === 'Edited'"
+            )
+            check(
+                "edited document displays submitted replacement read-only",
+                page.locator("[data-document-text]").inner_text()
+                == "Reviewed replacement synthetic document text"
+                and page.locator("[data-document-text]").get_attribute("aria-label")
+                == "Reviewed replacement document text",
             )
             check(
                 "document review removes count without approving the case",
@@ -251,6 +471,110 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                 and "1 local drafts to review"
                 not in page.get_by_role("tab", name="AI assistance").inner_text(),
             )
+            tab(page, "Quality and handover")
+            page.locator("#q-i0").wait_for()
+            page.locator("#q-i0").fill("Unsubmitted checklist evidence")
+            original_measure = page.locator("#q-measure").input_value()
+            pending_checklists: list[Route] = []
+            page.route("**/api/checklists", lambda route: pending_checklists.append(route))
+            tab(page, "Resident")
+            page.locator("#outcome").fill("Call with pending checklist evidence")
+            page.get_by_role("button", name="Save", exact=True).click()
+            expect(page.locator("#outcome")).to_have_value("")
+            tab(page, "Quality and handover")
+            check(
+                "checklist restoration waits for construction", page.locator("#q-i0").count() == 0
+            )
+            pending_checklists[0].fulfill(response=pending_checklists[0].fetch())
+            page.unroute("**/api/checklists")
+            expect(page.locator("#q-i0")).to_have_value("Unsubmitted checklist evidence")
+            check(
+                "async checklist restores matching measure and version",
+                page.locator("#q-measure").input_value() == original_measure
+                and page.locator("#q-i0").get_attribute("data-case-dirty") == "true",
+            )
+            scan(page, axe, reports, "restored-quality-evidence")
+            choices = page.locator("#q-measure option").all_text_contents()
+            other = next(name for name in choices if name != original_measure)
+            page.locator("#q-measure").select_option(other)
+            expect(page.locator("#q-i0")).to_have_value("")
+            page.locator("#q-i0").fill("Other measure evidence")
+            tab(page, "AI assistance")
+            refresh_proposals(page)
+            tab(page, "Quality and handover")
+            expect(page.locator("#q-i0")).to_have_value("Other measure evidence")
+            earlier_a = (
+                page.locator("#quality details > div")
+                .filter(has_text=original_measure)
+                .get_by_label("Earlier checklist-evidence", exact=True)
+            )
+            expect(earlier_a).to_have_value("Unsubmitted checklist evidence")
+            page.locator("#q-measure").select_option(original_measure)
+            expect(page.locator("#q-i0")).to_have_value("Unsubmitted checklist evidence")
+            expect(earlier_a).to_have_count(0)
+            page.locator("#q-i0").fill("Newer evidence after returning to recovered measure")
+            tab(page, "AI assistance")
+            refresh_proposals(page)
+            tab(page, "Quality and handover")
+            expect(page.locator("#q-i0")).to_have_value(
+                "Newer evidence after returning to recovered measure"
+            )
+            check("recovered measure never overwrites newer live evidence", True)
+            check("checklist evidence stays bound to its measure", True)
+            page.locator("#q-measure").select_option(other)
+            page.route(
+                "**/api/cases/ZF-1/quality-submit",
+                lambda route: route.fulfill(json={"ok": True}),
+            )
+            quality_body = save_quality(page)
+            check(
+                "quality cleanup covers only evidence present in the request",
+                quality_body["measure"] == other
+                and all(
+                    text == "Submitted current measure evidence"
+                    for text in quality_body["items"].values()
+                ),
+            )
+            expect(earlier_a).to_have_value("Newer evidence after returning to recovered measure")
+            check(
+                "successful other-measure save leaves recovery dirty",
+                earlier_a.get_attribute("data-case-dirty") == "true",
+            )
+            tab(page, "AI assistance")
+            refresh_proposals(page)
+            tab(page, "Quality and handover")
+            expect(earlier_a).to_have_value("Newer evidence after returning to recovered measure")
+            check("other-measure recovery survives save and further refresh", True)
+
+            page.locator("#q-i0").fill("Unsent prior-version evidence")
+            changed_lists = page.request.get(base + "/api/checklists").json()
+            for checklist in changed_lists.values():
+                checklist["version"] += "-synthetic-replacement"
+            page.route("**/api/checklists", lambda route: route.fulfill(json=changed_lists))
+            tab(page, "AI assistance")
+            page.get_by_role("button", name="Refresh proposals", exact=True).click()
+            tab(page, "Quality and handover")
+            expect(page.locator("#q-i0")).to_have_value("")
+            earlier_b = (
+                page.locator("#quality details > div")
+                .filter(has_text=other)
+                .get_by_label("Earlier checklist-evidence", exact=True)
+            )
+            expect(earlier_b).to_have_value("Unsent prior-version evidence")
+            check("changed checklist version keeps old evidence separately", True)
+            save_quality(page)
+            expect(earlier_b).to_have_value("Unsent prior-version evidence")
+            check(
+                "successful current-version save leaves prior-version recovery dirty",
+                earlier_b.get_attribute("data-case-dirty") == "true",
+            )
+            tab(page, "AI assistance")
+            refresh_proposals(page)
+            tab(page, "Quality and handover")
+            expect(earlier_b).to_have_value("Unsent prior-version evidence")
+            check("prior-version recovery survives save and further refresh", True)
+            page.unroute("**/api/cases/ZF-1/quality-submit")
+            page.unroute("**/api/checklists")
             tab(page, "Resident")
             with page.expect_response("**/api/cases/ZF-1/ai") as draft_response:
                 page.get_by_role("button", name="Draft with AI", exact=True).click()
