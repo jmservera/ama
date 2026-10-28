@@ -2,7 +2,7 @@
 title: Azure Infrastructure (Bicep)
 description: Bicep deployment of the proposed Zava Forward demonstrator Azure architecture
 author: AMA programme
-ms.date: 2026-10-27
+ms.date: 2026-10-28
 ms.topic: how-to
 ---
 
@@ -449,11 +449,19 @@ python3 infra/scripts/deploy.py \
   --parameter sqlAdminPrincipalType=Application \
   --parameter entraClientId=<existing-application-client-id> \
   --parameter entraBearerOnly=true \
-  --parameter alertEmail=<approved-mailbox> --parameter 'modelDeployments=[]' \
+  --parameter alertEmail=<approved-mailbox> \
   --parameter regionCheckReference=<reviewed-region-record> \
   --parameter quotaCheckReference=<reviewed-quota-record>
 # Repeat with --apply only after reviewing the what-if.
 ```
+
+The historical `modelDeployments=[]` bootstrap override is no longer valid.
+The model array must be nonempty: even an environment-only operation includes
+the default small model. This changes provisioning and potential inference
+cost, not just application startup. For an existing evaluated stack, pass its
+explicit reviewed `modelDeployments` array to preserve its model set, names,
+versions, SKU and capacity. These full-stack commands are not the bounded
+model-only operation described below.
 
 `deployEnvironmentOnly=true` creates the environment and internal DNS without
 starting workloads. It is additive to `deployApplications`; neither flag deletes
@@ -1460,6 +1468,68 @@ Notes:
   URLs and is not proof of a completed identity rename. An authorised
   registration owner must update those separately; remove the transitional
   mapping when the new default `ZavaForward.*` values are issued.
+
+### Small employee model prerequisite (2026-10-28, Refs #514)
+
+`main.bicep` now defaults to one `standard` deployment using
+`gpt-4.1-nano` / `2025-04-14` / `GlobalStandard`, capacity `1`.
+`chatModelName`, `chatModelVersion`, `chatModelSku` (`GlobalStandard` or
+`Standard`) and positive `chatModelCapacity` parameterize that default.
+`modelDeployments` remains the explicit nonempty array override for existing
+or separately evaluated model sets. The first entry backs the standard route;
+the second backs the capable route, or a single entry backs both. Sharing a
+small model does not prove a stronger-task quality threshold. Keep explicit
+arrays on existing stacks rather than unintentionally changing evaluated tiers.
+`NoAutoUpgrade` and `Microsoft.DefaultV2` filtering are retained.
+
+With `enableApiAi=true`, the API receives the account-advertised Azure OpenAI
+endpoint, deployment names and `AI_MODEL_VERSION`/`AI_MODEL_VERSION_STRONG`
+derived from the model name plus dated version. The latter must match the
+provider response `model`, for example `gpt-4.1-nano-2025-04-14`, not just
+`2025-04-14`. The generic Foundry endpoint used by other workloads is retained.
+API AI remains disabled in Bicep by default. No keys are needed: preserve
+the attached API identity selected by `AZURE_CLIENT_ID`, account-scoped
+Cognitive Services OpenAI User access and private networking. See the
+[API configuration contract](../src/api/README.md#configuration).
+
+For the existing employee account `aif-cutover-test-rzsrg` in `ama`, the
+coordinator's intended settings after #514 merges are:
+
+| Setting | Value |
+| --- | --- |
+| `AI_ENDPOINT` | `https://aif-cutover-test-rzsrg.openai.azure.com/` |
+| `AI_DEPLOYMENT` | `standard` |
+| `AI_DEPLOYMENT_STRONG` | `standard` |
+| `AI_MODEL_VERSION` | `gpt-4.1-nano-2025-04-14` |
+| `AI_MODEL_VERSION_STRONG` | `gpt-4.1-nano-2025-04-14` |
+| `AZURE_CLIENT_ID` (retain) | `1b1fe44e-f4cf-4aae-98d0-b30c7927a5e3` |
+
+Azure readback on 2026-10-28 confirms exactly one `standard` deployment,
+Succeeded, with the configuration above, `NoAutoUpgrade` and
+`Microsoft.DefaultV2`. The missing API account-scoped Cognitive Services
+OpenAI User assignment was added for principal
+`6ac4c6b9-c516-4e24-81a6-f32663a93aab`; no other role was added.
+The live app remains revision `ca-cutover-test-demo-api--0000006`,
+with AI_* settings absent and the same selected identity. No app update or
+inference occurred.
+
+This task authorizes only the one small model and that missing OpenAI
+User assignment, not a live container-app update, full-stack Bicep deployment,
+other assignments or inference. Coordinator redeployment must preserve
+SQL/Blob/auth/identity settings and separately check registered task releases,
+evaluation/model bindings, budget/incident controls, private reachability and
+a bounded `source=ai` result. Manual/workflow-only routes and human/resident
+approval boundaries remain unchanged. The initial gpt-4o-mini request was
+rejected with `ServiceModelDeprecating`; catalogue visibility alone did not
+permit new deployment. The accepted gpt-4.1-nano version is listed as Legacy,
+with inference retirement on 2027-04-14 in the account model metadata checked
+on 2026-10-28; reevaluate availability before a later deployment.
+
+Cost authority is **USD30 additional employee AI through 2026-10-31**,
+separate from resident resources/budget. Capacity one is throughput, not a
+hard dollar cap or an automatic expiry. No inference is performed by this
+change; no exact token price, forecast or actual charge is asserted. Do not
+silently continue billable use after that authorization window.
 
 ### Current exercise handover (2026-10-13)
 

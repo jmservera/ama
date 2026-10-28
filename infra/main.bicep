@@ -101,21 +101,24 @@ param keyVaultPurgeProtection bool = true
 param registryQuarantineEnabled bool = true
 @description('CanNotDelete locks on stateful resources. Required for pilot deployments.')
 param enableLocks bool = false
-@description('Model deployments. The standard tier is the default; the capable tier is used only where the PRD model evaluation shows the standard tier misses a task threshold.')
+@description('Small employee chat model. Model availability and task evaluation must be checked before activation.')
+param chatModelName string = 'gpt-4.1-nano'
+@description('Pinned ARM model version, not the combined provider response-model identity.')
+param chatModelVersion string = '2025-04-14'
+@allowed(['GlobalStandard', 'Standard'])
+param chatModelSku string = 'GlobalStandard'
+@description('Chat model throughput capacity, not a monetary spending cap. One is the smallest requested allocation.')
+@minValue(1)
+param chatModelCapacity int = 1
+@description('Explicit model override for existing/evaluated stacks. First entry serves standard; second serves capable, or the first serves both when only one is configured. A shared model does not establish capable-tier quality.')
+@minLength(1)
 param modelDeployments array = [
   {
     name: 'standard'
-    model: 'gpt-4.1-mini'
-    version: '2025-04-14'
-    skuName: 'GlobalStandard'
-    capacity: 30
-  }
-  {
-    name: 'capable'
-    model: 'gpt-4.1'
-    version: '2025-04-14'
-    skuName: 'GlobalStandard'
-    capacity: 30
+    model: chatModelName
+    version: chatModelVersion
+    skuName: chatModelSku
+    capacity: chatModelCapacity
   }
 ]
 @description('Region for the Azure SQL server when the primary region is not accepting new SQL servers. The private endpoint stays in the primary VNet.')
@@ -350,8 +353,10 @@ module apps 'modules/containerapps.bicep' = if (deployApplications || deployEnvi
     sqlDatabaseName: sql.outputs.databaseName
     storageAccountName: storage.outputs.name
     foundryEndpoint: foundry.outputs.endpoint
+    openAiEndpoint: foundry.outputs.openAiEndpoint
     foundryProjectName: foundry.outputs.projectName
-    modelDeploymentNames: { standard: 'standard', capable: 'capable' }
+    modelDeploymentNames: foundry.outputs.modelDeploymentNames
+    modelVersions: foundry.outputs.modelVersions
     keyVaultUri: 'https://${keyvault.outputs.name}${environment().suffixes.keyvaultDns}'
     entraClientId: entraClientId
     entraClientSecretName: entraClientSecretName

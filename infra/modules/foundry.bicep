@@ -7,7 +7,8 @@ param peSubnetId string
 param zoneIds object
 @description('Principals that may invoke models and agents. Agent runner by default; the MVP API is included only when enableApiAi is explicitly set.')
 param userPrincipalIds array
-@description('Model deployments. Two tiers support the PRD rule to select the smallest model that meets task thresholds.')
+@description('Nonempty model deployments. One model can back both logical tiers; two or more use the first two in order. Task quality and activation remain separately gated.')
+@minLength(1)
 param deployments array
 @description('Development only. Allows connectivity from external networks in addition to the private endpoints.')
 param allowPublicNetworkAccess bool = false
@@ -109,4 +110,13 @@ module endpoint 'privateEndpoint.bicep' = {
 
 output id string = account.id
 output endpoint string = account.properties.endpoint
+output openAiEndpoint string = account.properties.endpoints['OpenAI Language Model Instance API']
+output modelDeploymentNames object = {
+  standard: deployments[0].name
+  capable: deployments[length(deployments) > 1 ? 1 : 0].name
+}
+output modelVersions object = {
+  standard: '${deployments[0].model}-${deployments[0].version}'
+  capable: '${deployments[length(deployments) > 1 ? 1 : 0].model}-${deployments[length(deployments) > 1 ? 1 : 0].version}'
+}
 output projectName string = project.name
