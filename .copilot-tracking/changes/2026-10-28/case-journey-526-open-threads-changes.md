@@ -161,3 +161,24 @@ User-authorized local commit follows with authenticated
 required Copilot trailer. Remote replies/resolution remain deferred until the
 coordinator publishes the actual corrected code. No claim that remote threads
 are fixed before their source is present on the PR.
+
+## Verified Local Commit and Final Routing
+
+Source, regressions and all seven dated RPI artifacts committed in
+2af0c7f6b4d6155b63004d01e83dee9a60c14840,
+`fix(web): preserve pending case edits and journey navigation`.
+Author/committer privacy-safe identities, `Refs #526` and exact Copilot trailer
+verified from the resulting commit. Worktree clean immediately afterward.
+P01/P02 and all local tasks complete. This later documentation-only handoff
+persists final plan/details/state; it changes no assessed source or test byte.
+
+Task execution: full RPI loop complete, sole Review Complete / Conformant for
+local code. Automatic session remains running at Follow-up with publication
+blocked. No second critique, Review, Azure, push, remote reply or thread
+resolution occurred. No fresh full-gate or hosted/human approval is implied.
+
+Ranked current follow-up: coordinator runs the complete permitted exact-head gate
+against freshly fetched main, verifies the external receipt immediately before
+publication, obtains the required independent exact-head assessment, pushes this
+topic normally, then replies to and resolves the five verified review thread IDs
+from the research artifact. Keep `Refs #526`. No unrelated code work is invented.

@@ -93,7 +93,7 @@ Synchronize hrefs at selection/render and in-place pagination. Correct exact cou
 and add negative receipt coverage. Keep all step names, states and routing targets.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Validate and deliver evidence
+### [x] P02: Validate and deliver evidence
 
 Depends on P01.
 
@@ -104,13 +104,16 @@ API discovery, focused Node-backed tests, gate tooling, Ruff and JS parse; locke
 journey/axe, with immutable external logs. No full gate if it invokes prohibited az.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Independent Review and commit
+#### [x] P02-T02: Independent Review and commit
 
 One independent post-implementation Review, commit source and original dated
 evidence. Publish/reply/resolve only if required full gate permits; otherwise
 explicit coordinator local-only handoff.
-Implementation and mandatory local validation are ready for Review; this marker
-remains open only for Review execution and local commit/handoff bookkeeping.
+Sole independent Review Complete / Conformant for local code, no findings.
+Source, regressions and original dated RPI evidence committed locally in
+2af0c7f6b4d6155b63004d01e83dee9a60c14840. Full publication remains blocked;
+coordinator push and thread replies/resolution are a distinct follow-up, not a
+claimed remote success. All local plan tasks complete.
 
 ## Locked Test Ownership and Targets
 

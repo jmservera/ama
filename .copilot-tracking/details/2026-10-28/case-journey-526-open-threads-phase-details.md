@@ -86,5 +86,7 @@ PC-001's worker-only filesystem restriction is not a parent constraint; retain t
 user-specified actual shared /tmp lock, never an uncoordinated substitute.
 P02-T01 complete: API 1168 tests/316 opt-in skips, focused 14, tooling 31,
 journey 153 assertions/38 zero-violation scans/real 200% zoom, assistants 30.
-P02-T02 remains for one Review and authorized local commit; remote publication
-is blocked independently by the prohibited full-gate az prerequisite.
+P02-T02 complete: sole Review Complete / Conformant for local code, no substantive
+findings; authorized source/evidence commit
+2af0c7f6b4d6155b63004d01e83dee9a60c14840 verified. Remote publication remains
+blocked independently by the prohibited full-gate az prerequisite.
