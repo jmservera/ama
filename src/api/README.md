@@ -1862,6 +1862,10 @@ Cancelling a pending briefing invalidates its cached panel so the next queue
 requests it again; a completed briefing remains cached. Briefing failures show
 an explicit retry. The browser check holds responses across My cases -> All
 cases -> My cases and verifies recovery without stale-response replacement.
+It waits for the visible "Reading case summaries..." state within Today's
+briefing and verifies complete scope/count response fixtures. PR #517's
+deterministic 30-second timeout followed #516's loading-copy change: the
+check still expected "Reading your cases...", not a CDN or app-readiness failure.
 Safety reports and stopped-work details remain expanded ahead of routine case
 forms, with existing named owners, external timings and explicit unknowns.
 Contractors retain their minimum-necessary projection, not staff safety data.

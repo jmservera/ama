@@ -1,0 +1,57 @@
+{
+  "task_id": "design-system-browser-check",
+  "task_slug": "design-system-browser-check",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-28/design-system-browser-check-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-28/design-system-browser-check-plan.md",
+    "details": ".copilot-tracking/details/2026-10-28/design-system-browser-check-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-28/design-system-browser-check-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-28/design-system-browser-check-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-28/design-system-browser-check-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Full automatic RPI loop, brief artifacts, commit/push requested topic and open Refs-only PR",
+      "status": "confirmed",
+      "evidence": "Explicit owner request 2026-10-28"
+    },
+    {
+      "decision": "Research executed; planning ready; stale loading copy from #516 is the deterministic cause",
+      "status": "verified",
+      "evidence": ".copilot-tracking/research/2026-10-28/design-system-browser-check-research.md C1-C5"
+    },
+    {
+      "decision": "One independent final-candidate critique executed; Pass with no findings",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-28/design-system-browser-check-plan-critique.md"
+    },
+    {
+      "decision": "P01 complete; browser repeats, API/core discovery and configured lint/types pass; dependent recipe binding refreshed",
+      "status": "verified",
+      "evidence": ".copilot-tracking/changes/2026-10-28/design-system-browser-check-changes.md"
+    },
+    {
+      "decision": "One independent post-implementation Review executed; Conformant for P01 and P02 continuation, no RV findings",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-28/design-system-browser-check-review.md; publication and hosted/human approval remain separate"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Finish owner-requested P02 publication: commit original evidence, validate final head, push branch and open Refs-only PR"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Optional baseline strict harness lint cleanup",
+      "rationale": "Small maintenance improvement; existing I001/B023 diagnostics are unrelated to the fixed regression and configured lint already passes",
+      "evidence": ".copilot-tracking/changes/2026-10-28/design-system-browser-check-changes.md; original Review follow-up assessment"
+    }
+  ]
+}
