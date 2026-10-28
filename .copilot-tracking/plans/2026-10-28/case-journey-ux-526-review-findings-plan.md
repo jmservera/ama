@@ -27,7 +27,7 @@ preserves requirements and needs no new planning decision or research.
 ### [ ] P02: Commit and publish
 
 <!-- rpi:task id=P02-T01 -->
-#### [ ] P02-T01: Commit original evidence and corrections with safe identity
+#### [x] P02-T01: Commit original evidence and corrections with safe identity
 
 <!-- rpi:task id=P02-T02 -->
 #### [ ] P02-T02: Full clean candidate gate, current-main receipt verification and independent exact-head assessment
@@ -50,3 +50,10 @@ upload/read/review counts. assistants passes 27 scenarios including delayed
 same-revision restoration and changed-revision recovery. Focused API 24 tests
 and runner 31 tests pass, with existing Ruff/format/mypy. Full candidate gate
 and exact-head publication assessment remain mandatory P02 work.
+
+Implementation/evidence commit: 7bfaaf87c2efbffeab514fff0a1edb2744d7955c.
+Both author and committer use the authenticated GitHub noreply identity.
+This plan reconciliation is committed before the final gate. Post-commit
+gate/publication progress stays in the external authoritative state:
+/home/azureuser/.copilot/session-state/6bcc4a04-4f23-4381-a2b9-4c4dd0f4bb2e/files/publication-526-state.json.
+No tracked receipt or retrospective success commit can invalidate the final gate.

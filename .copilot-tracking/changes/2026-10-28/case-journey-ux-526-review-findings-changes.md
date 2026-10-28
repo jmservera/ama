@@ -70,3 +70,9 @@ environments/caches remain untouched. Use an external clean exact-commit
 worktree for the gate, so clean-input enforcement remains enabled without
 destroying this worktree's existing inputs. Final receipt and publication state
 stay external; any later tracked correction requires a new committed gate.
+
+P02-T01 completed in 7bfaaf87c2efbffeab514fff0a1edb2744d7955c, safe
+authenticated author/committer identity and required Conventional Commit/trailer.
+This final pre-gate reconciliation follows as evidence, not a gate success.
+P02-T02/T03 remain pending; external publication-526-state.json is authoritative
+for post-commit execution without self-invalidating receipt evidence.
