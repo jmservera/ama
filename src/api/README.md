@@ -2,7 +2,7 @@
 title: Zava Forward API and web workbench
 description: Staff features, configuration, local run, honest limits and container checks for the api project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-27
+ms.date: 2026-10-28
 ms.topic: reference
 ---
 
@@ -2356,18 +2356,38 @@ the model is down.
 
 ### Employee briefing and Azure OpenAI settings
 
-The employee `/api/briefing` summarizes only open cases whose `owner_code`
-exactly equals the authenticated user's business `code`, even while viewing
-all permitted cases. It is not a programme-wide workload count. A business
-role or permission to open a case does not assign that case to the user.
+The employee `/api/briefing` uses all permitted open programme cases for the
+existing manager roles, Retrofit Programme Manager and Programme Support
+Officer (owner decision 2026-10-28). Today's briefing labels this scope
+"All programme cases". Other staff receive "My assigned cases", selecting
+only open cases whose `owner_code` exactly equals their business `code`.
+Both scopes retain deterministic ranking and summarize at most 8 cases,
+showing the full permitted candidate count and the number summarized.
+Existing case/role and field permissions still apply, including to model facts.
+This does not grant consent, authorize work or approve an AI suggestion.
+
+My cases and its assignment counts remain personal for every role. A business
+role or permission to open a case never assigns that case to the user.
 Entra uses the verified tenant and object ID; only one enabled matching roster
 row restores its existing workload code. Email/display-name matching does not.
 The 2026-10-25 synthetic baseline merge deliberately omitted staff rows.
-An unbound Entra user can therefore have an empty personal briefing while
-permitted programme cases exist. Check the authorized `/api/me` identity and
+An unbound Entra manager can therefore receive a programme briefing while
+having zero personal assignments. An unbound non-manager retains an empty
+assignment-only briefing. Check the authorized `/api/me` identity and
 own/all queue totals before asking the programme owner to assign or hand off
 work through the existing controls; do not infer assignments from a role/email.
 The current signed-in owner's mapping was not inspected on 2026-10-27.
+
+Focused synthetic JSON/SQLite regression and real-server browser label check,
+from `src/api` with the project distributions installed:
+
+```bash
+PYTHONPATH=tests:../core/tests:../agents/tests python3 -m unittest test_ai_tasks test_assistant_release -q
+python3 -m checks.employee_briefing_browser_check
+```
+
+These are local engineering checks, not live Entra, SQL Server, real-model,
+screen-reader or user acceptance.
 
 Employee AI uses `zava_forward.core.ai.Ai`, not the separate resident
 `ZF_DEMO_ASSISTANT_*` settings. Configure the employee API container as follows
