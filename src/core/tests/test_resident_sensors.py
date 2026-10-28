@@ -116,11 +116,13 @@ class SensorProjectionTests(unittest.TestCase):
         data = {k: getattr(row(), k) for k in rs.ROW_KEYS}
         data.pop("measures")
         data.pop("sensors")
+        data.pop("documents")
         data.update(
             measures_json='["Loft insulation"]',
             measures_text=None,
             sensor_home_id="HOME-A",
             sensors_json=json.dumps([reading()]),
+            documents_json='{"requests":null,"documents":null}',
         )
         cursor = Mock()
         cursor.description = [(key,) for key in sql.COLUMNS]

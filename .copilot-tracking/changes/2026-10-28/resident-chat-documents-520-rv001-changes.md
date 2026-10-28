@@ -72,3 +72,35 @@ This commit-time handoff does not preclaim its future gate or push.
 RV-002 remains separate: human/resident/content, AT/native zoom and real-model
 acceptance are Not run, not proven by these synthetic checks. Operational view
 application is not performed. Keep PR body Refs-only with no closing keywords.
+
+## First committed-candidate gate failure and fixture alignment
+
+Candidate `ba76cc38ce17ca66631db6b3641d772118c59184` includes the implementation
+commit rebased onto remote bot `ca1f11a6`; author and committer use the resolved
+noreply address and requested trailer. The full gate acquired the heavy lock
+immediately with `--lock-timeout 0`, and completed all other required groups.
+Its original failed receipt is preserved at
+`/tmp/ama-520-documents-rpi-final-20261028-1/receipt.json`.
+
+The full core discovery failed one existing sensor-reader mock fixture:
+`test_resident_sensors.SensorProjectionTests.
+test_reader_shapes_only_fixed_view_columns_and_parameterises_case`,
+KeyError `documents_json`. Core ran 1454 tests, one error and 190 opt-in skips.
+This fixture enumerates the fixed SQL columns but lacked the new additive
+column; the focused set had not included its module. No runtime source defect
+or broad fallback is inferred from this fixture failure.
+
+Ordinary tightly coupled validation correction: align that existing fixture with
+the explicit unknown-document JSON envelope and remove its now-replaced typed
+documents value. Preserve the parameterization and invalid-sensor assertions.
+No tests are removed, no behavior/gate is weakened and no original Review is
+rewritten. Include `test_resident_sensors` in the focused rerun.
+
+A new commit and fresh complete gate are required; the failed receipt cannot be
+resumed across the fixture/evidence commit. Planned next external directory:
+`/tmp/ama-520-documents-rpi-final-20261028-2`. Publication remains blocked until
+that exact-head gate, current-main verification and independent assessment pass.
+
+Expanded focused rerun including sensors: 92 tests, OK with 23 opt-in SQL skips.
+Fixture Ruff/check-format and core mypy (156 files) pass; diff check passes and
+the candidate has no ignored scratch. No additional unit method was added.

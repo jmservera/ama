@@ -18,7 +18,7 @@
     {"decision": "Implement the tightly coupled RV-001 defect as distinct continuation; preserve original adverse Review and do not repeat it.", "status": "implemented", "evidence": "Original Review RV-001; follow-up changes record, 33 real SQL tests including raw nested-private-field exclusion; core/API/browser/lint/types pass."}
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Commit original and follow-up evidence, rebase remote bot commit, run full nonblocking locked gate and exact-head assessment before normal push; final receipt external."},
+  "next_action": {"phase": "Follow-up", "action": "Existing sensor-reader fixture aligned; expanded 92-test core run, lint/format/types pass. Preserve failed receipt, commit and rerun complete gate in final-20261028-2 before publication."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "RV-002 human/AT/real-model acceptance", "rationale": "Outside synthetic correction scope; no whole-issue approval.", "evidence": "Original independent Review RV-002"}
   ]
