@@ -12,8 +12,10 @@ param sqlServerFqdn string
 param sqlDatabaseName string
 param storageAccountName string
 param foundryEndpoint string
+param openAiEndpoint string
 param foundryProjectName string
 param modelDeploymentNames object
+param modelVersions object
 param keyVaultUri string
 param entraClientId string
 param entraClientSecretName string = 'entra-client-secret'
@@ -162,9 +164,11 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads) {
             // A versionless secret reference triggers the supported revision refresh on SAS rotation.
             { name: 'AUTH_TOKEN_STORE_ROTATION', secretRef: 'entra-token-store-sas' }
           ] : [], enableApiAi ? [
-            { name: 'AI_ENDPOINT', value: foundryEndpoint }
+            { name: 'AI_ENDPOINT', value: openAiEndpoint }
             { name: 'AI_DEPLOYMENT', value: modelDeploymentNames.standard }
             { name: 'AI_DEPLOYMENT_STRONG', value: modelDeploymentNames.capable }
+            { name: 'AI_MODEL_VERSION', value: modelVersions.standard }
+            { name: 'AI_MODEL_VERSION_STRONG', value: modelVersions.capable }
           ] : [], authEnabled ? [
             { name: 'ZF_AUTH', value: 'trusted-proxy' }
             { name: 'ZF_TRUSTED_PROXY', value: '1' }
