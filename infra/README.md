@@ -3503,7 +3503,8 @@ Open items (not verified here):
 
 [`sql/resident-showcase.sql`](sql/resident-showcase.sql) is the database side of the synthetic
 resident showcase: schema `resident_showcase` (owned by `dbo`), an empty `allowed_case` table whose
-window cannot end after 2026-11-01T00:00Z (exclusive, through 31 October UTC), the view `v_resident_case` and the grants for one dedicated
+window cannot end after the shared 2027-02-01T00:00:00Z cutoff (exclusive
+serving end, through January 31 UTC), the view `v_resident_case` and the grants for one dedicated
 read-only principal. The principal gets SELECT on the view only, no role membership, and explicit
 DENY on `dbo.cases` and on writes, DDL and execute in the schema. SELECT is deliberately not denied at
 schema scope because that would override the view grant.
@@ -3533,7 +3534,8 @@ validation plus vault metadata only, no value sent); a dry run is not what-if pr
 what-if runs only under `--apply`. `--apply` writes exactly
 `resident-demo-password-verifier` and `resident-demo-session-key` to `kv-cutovertest-rzsrg` in one
 secure ARM deployment, only after a what-if proves two new secrets there, with an expiry no later
-than the resident policy cap (2026-12-31T23:59:59Z inclusive). The verifier comes from a hidden prompt or an owner-only 0600 file outside
+than the resident policy cap (2027-02-01T00:00:00Z; equality permitted for
+configuration, serving ends exclusively then). The verifier comes from a hidden prompt or an owner-only 0600 file outside
 the repository; the session key is generated at apply time and never printed. It is not an
 authority: it needs a separate exact write approval, cleared budget and a proven private write
 path, and Azure roles remain the enforcing control. A part-failed write is not cleaned up
@@ -3608,7 +3610,8 @@ substitute or run an unmetered diagnostic request.
 See the [design/cost envelope](../docs/architecture/resident-assistant-prototype.md).
 The USD20 ceiling is application-controlled inference admission, not an Azure
 budget alert or subscription-wide spending guarantee. Funding through December
-does not extend the existing November 1 exclusive resident-access boundary.
+does not itself extend resident access or the independent inference cutoff.
+The later #521 source renewal below does not renew paid-inference authority.
 
 ### Renewed resident feedback window (2026-10-27, Refs #462, #466)
 
@@ -3616,7 +3619,7 @@ The owner superseded the October-only test window: public feedback access is
 authorized through `2026-12-31T23:59:00Z`, within USD30 additional resident spend
 inside the renewed USD700 `ama` cap through December31. This supersedes the
 historical staging/closure language above, not production identity acceptance.
-The single source of the maximum expiry is
+At that dated baseline the single source of the maximum expiry was
 [`resident-demo.json`](../src/core/src/zava_forward/core/resident-demo.json):
 `2026-12-31T23:59:59Z` inclusive. Bicep loads it at compilation; the packaged
 runtime and secret/deploy helpers use the same value. Configured expiry is still
@@ -3651,8 +3654,119 @@ to the operator; anonymous denials and local fixtures are not substitutes.
 
 Important independent expiry boundaries: the existing SQL allowlist constraint
 and row windows retain their original November1 limit. Existing vault-secret
-validity is not changed by an app deployment. December ingress therefore does
+validity is not changed by an app deployment. This records the historical
+pre-#521 source/live mismatch. December ingress therefore does
 not prove December resident-data access. Renewing SQL authorizations or secret
 metadata requires a separately approved owner/private operation; this change
 does not mutate SQL rows, permissions or secrets. Preserve these limits in any
 demonstration-readiness claim. Never delete resource group `ama`.
+
+### January authority source renewal (2026-10-28, Refs #521)
+
+The owner requested resident demo access through January 31, 2027 UTC.
+The shared [`resident-demo.json`](../src/core/src/zava_forward/core/resident-demo.json)
+now sets `maximum_expiry_utc` to `2027-02-01T00:00:00Z`.
+`resident_showcase.AUTHORITY_END`, the secret/deploy helpers and Bicep use
+that policy. A configured expiry may equal it; startup, requests, sessions
+and row admission refuse at or after the instant. Earlier configured expiries,
+revoked rows and shorter row windows still deny access.
+
+The SQL file is a template: render it with `resident_showcase_sql.py`, not
+direct SQL-file execution. The renderer substitutes the same UTC policy cap.
+Reapply transactionally replaces `ck_allowed_case_window` using `WITH CHECK`,
+retaining `valid_to > valid_from` and checking existing data. Failure rolls
+back the replacement and rethrows. It does not extend any row window, insert
+residents or change the original principal/grant/deny design. The allowlist
+remains synthetic, approved, provenance-bearing and capped at 1000 in the app.
+The independent model tariff and SQL inference admission cutoff are unchanged.
+
+#### Credential and SQL access rotation plan
+
+Status: source plan only; independent technical review and owner operational
+approval remain required. Live credential rotation and SQL renewal are **Pending**.
+Juan Manuel Servera remains the exercise credential issue/rotate/revoke owner.
+No secret or private dataset was read, generated, printed or stored for #521.
+
+1. Before an owner-approved session, check only app/vault/SQL identity and
+   expiry metadata through the existing private path. Record exact resource
+   scopes, current SID, view-only SELECT, existing denies, no role membership,
+   app image/configuration and approved synthetic row count/window. Verify
+   expiry alerts and private access without opening a network path or adding
+   RBAC. Unknown or incompatible metadata stops the operation.
+2. Obtain separate exact approval for any credential write. Use an owner-held
+   password-manager random password, hidden local verifier generation and a
+   fresh signing key; never put values in command arguments, chat, logs, git
+   or environment dumps. Set both expiries no later than the new cap and
+   alert seven days before expiry. Rotate before demonstration, on suspected
+   disclosure, and at least every 30 days during the extended window.
+   The existing helper deliberately accepts only two new-secret Create
+   changes and refuses Modify; it is **not an existing-secret rotation tool**.
+   A separately reviewed, explicitly approved exact-version write operation
+   is required for existing names. Do not weaken that helper or add writer
+   roles to make rotation work.
+3. Keep the prior credential versions available only for a bounded, approved
+   rollback interval. Refresh the existing versionless references/revision
+   using the approved resident rollout path; account for up to 30 minutes
+   reference refresh. Signing-key rotation/restart invalidates all sessions.
+   Verify owner sign-in, cross-case denial, logout and 1800-second expiry
+   without operator password access. Disable superseded secret versions only
+   after successful verification, and record metadata/operator/time, not values.
+   On failure disable ingress under separate rollback approval and stop;
+   never silently restore credentials that were rotated for compromise.
+4. SQL managed identity needs no password rotation. Revalidate its existing
+   SID and narrow rights before and after the approved private SQL migration.
+   Renew **only individually approved existing synthetic allowlist rows**,
+   retaining provenance/revocation and `valid_from < valid_to <=` the shared
+   cap. Never mass-extend all rows, clear revocations, create users/roles,
+   broaden SELECT, or infer works consent from demo admission. Identity
+   replacement, if ever necessary, is a separate approval, not this renewal.
+5. At or before the configured end, verify requests and sessions deny access,
+   approved row windows and secrets expire, and no active revision serves
+   resident traffic. Any network/permission change, min replica above zero,
+   scope mismatch, unknown cost or failed isolation check stops the operation.
+
+#### Added-cost estimate and USD700 cap
+
+Source-only #521 actions add **USD0** Azure spend and zero resources/roles.
+That is not a claim that existing idle resources are free: SQL, registry,
+private endpoints, retained logs/storage and delayed billing can accrue charges.
+No live billing, rates or headroom was queried.
+
+For planning only, use the historical USD30 additional resident envelope for
+November-December as a two-month proxy: USD15 per 30-day month, or USD0.50/day.
+Relative to the issue's original November 1 cutoff, the extra 92 days
+(November 30 + December 31 + January 31) model **USD46**; relative to the
+already-renewed December source baseline, January's extra 31 days model
+**USD15.50**. These overlap and must not be added together. Add a planning
+reserve of USD10: **USD56** versus original October-only access, or **USD25.50**
+for January only. This is an assumption-labelled envelope, not a quoted tariff,
+measured forecast, new allowance or funding approval. It assumes the same
+min0/max1 0.25 vCPU/0.5 GiB synthetic resident workload and no extra resources,
+network paths, paid model calls or build/egress/logging increase. Re-estimate
+those items explicitly if the approved operation needs them; do not hide them
+inside zero-replica assumptions.
+
+The overall **USD700 all-in `ama` cap is unchanged** and the historical USD30
+resident allocation is inside it, not additional. Prior funding through
+December does not establish January funding or available headroom.
+Before **any paid action**, the owner must record actual accrued and delayed/
+unbilled charges, outside-group liabilities, existing commitments, remaining
+resource costs through the proposed end, new operation/build/egress/logging
+cost and reserve in USD. Require their non-overlapping sum <= USD700 and
+the proposed increment within an explicitly approved resident allocation.
+If January-only incremental cost plus reserve is USD25.50, the other all-in
+liabilities must be <= USD674.50; neither amount is known to be available.
+Unknown/insufficient headroom, stale estimates or unapproved funding blocks
+the operation. Monitor charges during the window and stop before either
+the resident allocation or group cap is exhausted.
+
+#### Separate live apply
+
+**Pending owner confirmation; not performed.** Present the exact reviewed
+image digest/configuration expiry, SQL constraint/row set, credential-version
+operations, bounded refresh/verification/rollback interval and cost evidence
+for a separate owner decision. Preserve min0/max1, synthetic resident-only
+scope, private SQL/vault paths, narrow identity rights and all existing
+approvals. No resource/role/network addition or Azure command is part of this
+source-only change. Record the eventual approved apply and live verification
+as separate evidence; do not close #521 based on source tests alone.

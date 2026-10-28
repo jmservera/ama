@@ -161,6 +161,26 @@ class RenderTests(unittest.TestCase):
         self.assertEqual(text.count("GRANT "), 1)
         self.assertIn("GRANT SELECT ON OBJECT::RESIDENT_SHOWCASE.V_RESIDENT_CASE", text)
 
+    def test_authority_comes_from_shared_policy_in_one_atomic_migration_batch(self) -> None:
+        batches = script.render(USER)
+        text = "\n".join(batches)
+        end = rs.AUTHORITY_END.strftime("%Y-%m-%dT%H:%M:%S")
+        self.assertEqual(end, "2027-02-01T00:00:00")
+        self.assertEqual(text.count(f"valid_to <= '{end}'"), 2)
+        self.assertNotIn("{{", text)
+        self.assertNotIn("2026-11-01", text)
+        [migration] = [batch for batch in batches if "DROP CONSTRAINT" in batch]
+        for clause in (
+            "SET XACT_ABORT ON",
+            "BEGIN TRANSACTION",
+            "WITH CHECK",
+            "valid_to > valid_from",
+            "COMMIT TRANSACTION",
+            "ROLLBACK TRANSACTION",
+            "THROW;",
+        ):
+            self.assertIn(clause, migration)
+
     def test_principal_statement_uses_client_id_sid(self) -> None:
         cid = str(uuid.UUID(int=1))
         statement = script.principal_statement(USER, cid)
@@ -267,7 +287,7 @@ class SqlBoundaryTests(unittest.TestCase):
         provenance: str = "owner-approved local fixture",
         revoked: int = 0,
         start: str = "2026-10-01T00:00:00",
-        end: str = "2026-11-01T00:00:00",
+        end: str = rs.AUTHORITY_END.strftime("%Y-%m-%dT%H:%M:%S"),
     ) -> None:
         self.q(
             "INSERT INTO resident_showcase.allowed_case (case_id, provenance, valid_from, valid_to,"
@@ -580,7 +600,74 @@ class SqlBoundaryTests(unittest.TestCase):
         with self.assertRaises(mssql_python.Error):
             self.allow("C-1", provenance="   ")
         with self.assertRaises(mssql_python.Error):
-            self.allow("C-1", end="2026-11-01T00:00:01")
+            self.allow("C-1", end="2027-02-01T00:00:01")
+        with self.assertRaises(mssql_python.Error):
+            self.allow("C-1", end="2026-10-01T00:00:00")
+        self.allow("C-1", end="2027-02-01T00:00:00")
+
+    def test_existing_november_constraint_migrates_and_reapply_preserves_rows_and_rights(
+        self,
+    ) -> None:
+        self.add_case("C-1", _body("a@example.com"), allow=False)
+        self.allow("C-1", revoked=1, end="2026-11-01T00:00:00")
+        original = self.q("SELECT * FROM resident_showcase.allowed_case")
+        self.q("ALTER TABLE resident_showcase.allowed_case DROP CONSTRAINT ck_allowed_case_window")
+        self.q(
+            "ALTER TABLE resident_showcase.allowed_case WITH CHECK ADD CONSTRAINT "
+            "ck_allowed_case_window CHECK "
+            "(valid_to > valid_from AND valid_to <= '2026-11-01T00:00:00')"
+        )
+        for _ in range(2):
+            for batch in script.render(USER):
+                self.q(batch)
+            self.assertEqual(self.q("SELECT * FROM resident_showcase.allowed_case"), original)
+            [definition, disabled, untrusted] = self.q(
+                "SELECT definition, is_disabled, is_not_trusted FROM sys.check_constraints "
+                "WHERE parent_object_id = OBJECT_ID(N'resident_showcase.allowed_case') "
+                "AND name = N'ck_allowed_case_window'"
+            )[0]
+            self.assertIn("2027-02-01T00:00:00", definition)
+            self.assertEqual((disabled, untrusted), (False, False))
+            self.assertEqual(len(self.as_user(rsql.LIST_SQL)), 1)
+            with self.assertRaises(mssql_python.Error):
+                self.as_user("SELECT * FROM dbo.cases")
+            conn = self.connect()
+            try:
+                script.verify_rights(conn.cursor(), USER)
+            finally:
+                conn.close()
+        self.add_case("C-2", _body("b@example.com"))
+        [admitted] = [r for r in self.reader.list_rows() if r.case_id == "C-2"]
+        self.assertIsNone(rs.exclusion(admitted, datetime(2026, 11, 1, tzinfo=UTC)))
+        self.assertIsNone(rs.exclusion(admitted, datetime(2027, 1, 31, 23, 59, 59, tzinfo=UTC)))
+        self.assertEqual(rs.exclusion(admitted, rs.AUTHORITY_END), "window")
+
+    def test_failed_migration_rolls_back_original_check_and_leaves_no_transaction(self) -> None:
+        self.q(
+            "ALTER TABLE resident_showcase.allowed_case NOCHECK CONSTRAINT ck_allowed_case_window"
+        )
+        self.allow("C-1", end="2028-01-01T00:00:00")
+        query = (
+            "SELECT definition, is_disabled, is_not_trusted FROM sys.check_constraints "
+            "WHERE parent_object_id = OBJECT_ID(N'resident_showcase.allowed_case') "
+            "AND name = N'ck_allowed_case_window'"
+        )
+        original_check = self.q(query)
+        original_rows = self.q("SELECT * FROM resident_showcase.allowed_case")
+        [migration] = [batch for batch in script.render(USER) if "DROP CONSTRAINT" in batch]
+        conn = self.connect()
+        try:
+            cur = conn.cursor()
+            with self.assertRaises(mssql_python.Error):
+                cur.execute(migration)
+            cur.execute("SELECT @@TRANCOUNT")
+            self.assertEqual(cur.fetchall()[0][0], 0)
+            self.assertEqual(self.q(query), original_check)
+            self.assertEqual(self.q("SELECT * FROM resident_showcase.allowed_case"), original_rows)
+        finally:
+            conn.close()
+            self.q("DELETE FROM resident_showcase.allowed_case")
+            self.q(migration)
 
     def test_principal_reads_only_the_view(self) -> None:
         self.add_case("C-1", _body("a@example.com"))
