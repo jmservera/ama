@@ -740,7 +740,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             for c in top:
                 export_fields.prompt_case(c)
             facts = "\n".join(f"{c['id']} {c['resident']['name']}: {c['stage']}, {c['days_in_stage']} days. {self.status_line(c)}" for c in top)
-            tmpl = "Start with: " + "; ".join(f"{c['resident']['name']} ({c['stage'].lower()}, {c['days_in_stage']} days)" for c in top[:3]) if top else "No open cases."
+            tmpl = "Start with: " + "; ".join(f"{c['resident']['name']} ({c['stage'].lower()}, {c['days_in_stage']} days)" for c in top[:3]) if top else "No open cases are assigned to you. This does not mean the programme has no work."
         sysmsg, prompt = ai_prompts.render("briefing", facts=facts)
         r = ai_tasks.run_text_task(self, user, "briefing", top, sysmsg, prompt, tmpl,
                                    [x for c in top[:3] for x in [f"{c['id']}: Stage: {c['stage']}", f"{c['id']}: Days in stage: {c['days_in_stage']}"]],
