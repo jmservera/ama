@@ -137,13 +137,13 @@ Execution: Complete. Outcome: Conformant. No new RPI stage or repeated Review is
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/research/2026-10-28/design-system-browser-check-research.md](.copilot-tracking/research/2026-10-28/design-system-browser-check-research.md) | Reproduction and cause evidence |
-| [.copilot-tracking/plans/2026-10-28/design-system-browser-check-plan.md](.copilot-tracking/plans/2026-10-28/design-system-browser-check-plan.md) | Reconciled plan |
-| [.copilot-tracking/details/2026-10-28/design-system-browser-check-phase-details.md](.copilot-tracking/details/2026-10-28/design-system-browser-check-phase-details.md) | Task detail and publication boundary |
-| [.copilot-tracking/reviews/plans/2026-10-28/design-system-browser-check-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-28/design-system-browser-check-plan-critique.md) | Preserved original critique |
-| [.copilot-tracking/changes/2026-10-28/design-system-browser-check-changes.md](.copilot-tracking/changes/2026-10-28/design-system-browser-check-changes.md) | Implementation and supplied validation |
-| [.copilot-tracking/rpi-sessions/2026-10-28/design-system-browser-check-state.json](.copilot-tracking/rpi-sessions/2026-10-28/design-system-browser-check-state.json) | Opening Review-active state |
-| [.copilot-tracking/reviews/logs/2026-10-28/design-system-browser-check-review.md](.copilot-tracking/reviews/logs/2026-10-28/design-system-browser-check-review.md) | This one independent Review |
+| [.copilot-tracking/research/2026-10-28/design-system-browser-check-research.md](../../../research/2026-10-28/design-system-browser-check-research.md) | Reproduction and cause evidence |
+| [.copilot-tracking/plans/2026-10-28/design-system-browser-check-plan.md](../../../plans/2026-10-28/design-system-browser-check-plan.md) | Reconciled plan |
+| [.copilot-tracking/details/2026-10-28/design-system-browser-check-phase-details.md](../../../details/2026-10-28/design-system-browser-check-phase-details.md) | Task detail and publication boundary |
+| [.copilot-tracking/reviews/plans/2026-10-28/design-system-browser-check-plan-critique.md](../../plans/2026-10-28/design-system-browser-check-plan-critique.md) | Preserved original critique |
+| [.copilot-tracking/changes/2026-10-28/design-system-browser-check-changes.md](../../../changes/2026-10-28/design-system-browser-check-changes.md) | Implementation and supplied validation |
+| [.copilot-tracking/rpi-sessions/2026-10-28/design-system-browser-check-state.json](../../../rpi-sessions/2026-10-28/design-system-browser-check-state.json) | Opening Review-active state |
+| [.copilot-tracking/reviews/logs/2026-10-28/design-system-browser-check-review.md](design-system-browser-check-review.md) | This one independent Review |
 
 ## Next Steps
 

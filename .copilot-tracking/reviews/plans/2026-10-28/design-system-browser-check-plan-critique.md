@@ -90,10 +90,10 @@ Docker build, app audit or source modification was performed.
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/plans/2026-10-28/design-system-browser-check-plan.md](.copilot-tracking/plans/2026-10-28/design-system-browser-check-plan.md) | Assessed plan |
-| [.copilot-tracking/details/2026-10-28/design-system-browser-check-phase-details.md](.copilot-tracking/details/2026-10-28/design-system-browser-check-phase-details.md) | Assessed phase details |
-| [.copilot-tracking/research/2026-10-28/design-system-browser-check-research.md](.copilot-tracking/research/2026-10-28/design-system-browser-check-research.md) | Supplied cause and reproduction evidence |
-| [.copilot-tracking/reviews/plans/2026-10-28/design-system-browser-check-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-28/design-system-browser-check-plan-critique.md) | This independent critique |
+| [.copilot-tracking/plans/2026-10-28/design-system-browser-check-plan.md](../../../plans/2026-10-28/design-system-browser-check-plan.md) | Assessed plan |
+| [.copilot-tracking/details/2026-10-28/design-system-browser-check-phase-details.md](../../../details/2026-10-28/design-system-browser-check-phase-details.md) | Assessed phase details |
+| [.copilot-tracking/research/2026-10-28/design-system-browser-check-research.md](../../../research/2026-10-28/design-system-browser-check-research.md) | Supplied cause and reproduction evidence |
+| [.copilot-tracking/reviews/plans/2026-10-28/design-system-browser-check-plan-critique.md](design-system-browser-check-plan-critique.md) | This independent critique |
 
 ## Next Steps
 
