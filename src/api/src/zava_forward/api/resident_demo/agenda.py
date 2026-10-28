@@ -176,7 +176,7 @@ class Agenda:
                     raise AgendaConflict("This callback was cancelled. Find a new time.")
                 return dict(self._slot(previous), reference=previous["reference"])
             row = db.execute(
-                "SELECT s.* FROM offers o JOIN slots s ON s.id=o.slot "
+                "SELECT s.*,o.expires FROM offers o JOIN slots s ON s.id=o.slot "
                 "WHERE o.token=? AND o.owner=? AND o.expires>? AND s.starts>?",
                 (proposal, owner, instant.timestamp(), instant.timestamp()),
             ).fetchone()
@@ -195,7 +195,8 @@ class Agenda:
                 ) from None
             if not authorised():
                 raise PermissionError("Please sign in again.")
-            if row["starts"] <= (now() if callable(now) else now).timestamp():
+            instant = now() if callable(now) else now
+            if row["expires"] <= instant.timestamp() or row["starts"] <= instant.timestamp():
                 raise AgendaConflict("This proposed time has ended. Find a new time.")
             return dict(self._slot(row), reference=reference)
 

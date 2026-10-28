@@ -5,6 +5,7 @@ import unittest
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from unittest.mock import Mock
 
 from zava_forward.api.resident_demo.agenda import ZONE, Agenda, AgendaConflict
 
@@ -110,6 +111,36 @@ class AgendaTests(unittest.TestCase):
         with self.assertRaises(AgendaConflict):
             self.agenda.book("one", offers[0]["proposal"], lambda: next(times), lambda: True)
         self.assertEqual(self.agenda.own("one"), [])
+
+    def test_proposal_expiring_during_authorisation_rolls_back(self) -> None:
+        expiry = NOW + timedelta(minutes=10)
+        for offset in (-1, 0, 1):
+            with self.subTest(microseconds_from_expiry=offset):
+                path = Path(self.temp.name) / f"expiry-{offset}.sqlite"
+                agenda = Agenda.create(path, [(s, s + timedelta(minutes=30)) for s in self.starts])
+                proposal = agenda.find("one", NOW, "2026-10-25", "any", lambda: True)[0]["proposal"]
+                clock = Mock(return_value=expiry - timedelta(seconds=1))
+                confirmed_at = expiry + timedelta(microseconds=offset)
+
+                def authorised(clock: Mock = clock, confirmed_at: datetime = confirmed_at) -> bool:
+                    clock.return_value = confirmed_at
+                    return True
+
+                if offset < 0:
+                    booked = agenda.book("one", proposal, clock, authorised)
+                    self.assertEqual(Agenda(path).own("one"), [booked])
+                    self.assertEqual(agenda.book("one", proposal, expiry, lambda: True), booked)
+                else:
+                    with self.assertRaisesRegex(AgendaConflict, "proposed time has ended"):
+                        agenda.book("one", proposal, clock, authorised)
+                    self.assertEqual(Agenda(path).own("one"), [])
+                    other = agenda.find("two", confirmed_at, "2026-10-25", "any", lambda: True)[0]
+                    self.assertEqual(
+                        other["start"], sorted(self.starts)[0].astimezone(UTC).isoformat()
+                    )
+                    agenda.book("two", other["proposal"], confirmed_at, lambda: True)
+                self.assertEqual(clock.return_value, confirmed_at)
+                self.assertEqual(clock.call_count, 2)
 
     def test_invalid_filters_and_timezone_boundaries(self) -> None:
         for earliest, period in (

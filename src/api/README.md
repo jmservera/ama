@@ -214,7 +214,9 @@ search, not booking. The independent manual form works without chat/AI.
 Proposals are own-case-bound and expire in 10 minutes; they do not hold slots.
 The resident must check a separate confirmation for one specific time and
 select Book this callback. Availability/future time and admission are checked
-again. Transactions prevent double booking; retries reconcile the same booking.
+again. After authorization, proposal expiry and slot start are rechecked against
+one fresh instant before committing; either deadline rolls back a new booking.
+Transactions prevent double booking; retries reconcile the same booking.
 One active callback per case is permitted until cancelled.
 
 `POST /demo/agenda` requires session, same-origin/CSRF and `use_record:true`.
