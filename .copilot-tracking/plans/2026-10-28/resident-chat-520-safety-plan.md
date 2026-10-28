@@ -4,7 +4,7 @@ description: Bounded correction for PR 525 thread PRRT_kwDOUU8JX86xVvlj
 ms.date: 2026-10-28
 ---
 
-Task ID: 520-safety. Status: Original Review complete; local commit pending; publication blocked.
+Task ID: 520-safety. Status: Original Review and local commit complete; publication blocked.
 
 ## Executive Summary
 
@@ -114,7 +114,7 @@ Depends on P01.
 
 * [x] P02-T01: Acquire bounded nonblocking heavy lock and run relevant units/API/static/browser checks.
 * [x] P02-T02: Reconcile changes/details and execute one independent original Review.
-* [ ] P02-T03: Commit source and dated evidence with privacy-safe identity; verify clean exact head.
+* [x] P02-T03: Commit source and dated evidence with privacy-safe identity; verify clean exact head.
 * [ ] P02-T04: Publish/reply/resolve only with mandatory full-gate evidence; otherwise retain local handoff.
 
 P02-T01 evidence: 33 focused tests; API discovery 1182 tests, OK with 316 skips;
@@ -127,6 +127,11 @@ P02-T02: exactly one independent original Review, execution Complete / outcome
 Residual work. Bounded source correction conformant; no implementation defects.
 RV-001 Medium: full-receipt/publication gap. RV-002 Low: retained contrast/human
 acceptance. Findings routed to distinct later work, not a second Review or fix loop.
+P02-T03 complete in local fixing commit
+8e57253a8dbe30ada2ec747552ef12533e476955; original evidence included, correct
+privacy-safe author/committer and required trailer verified, tracked/untracked
+worktree clean before this evidence-only handoff update. Reviewed source hashes
+unchanged. P02-T04 remains unchecked: no full receipt, push or thread mutation.
 
 ## Critique Disposition
 
@@ -151,6 +156,7 @@ including the new hazard-response state; no conformance claim is made.
 ## Handoff
 
 Implementation/local validation and original independent Review complete.
-Only local commit and publication handoff remain; no source
-implementation work is outstanding. Changes path:
+Local commit verified; publication handed to coordinator under RV-001. No source
+implementation work is outstanding. Manual session stopped at the publication
+blocker, with RV-002 retained separately. Changes path:
 .copilot-tracking/changes/2026-10-28/resident-chat-520-safety-changes.md.

@@ -6,7 +6,8 @@ ms.date: 2026-10-28
 
 ## Status and Scope
 
-Task 520-safety, full plan requested. P01, P02-T01 and P02-T02 complete; local commit pending.
+Task 520-safety, full plan requested. P01 and P02-T01/T02/T03 complete;
+publication P02-T04 blocked. All four requested RPI phases executed once.
 Plan: .copilot-tracking/plans/2026-10-28/resident-chat-520-safety-plan.md.
 Details: .copilot-tracking/details/2026-10-28/resident-chat-520-safety-phase-details.md.
 Research: .copilot-tracking/research/2026-10-28/resident-chat-520-safety-research.md.
@@ -119,7 +120,7 @@ replacement of the caller's explicit shared lock; original critique unchanged.
 
 ## Blockers and Remaining Work
 
-Only local commit remains in the permitted scope; Review complete.
+Implementation, local validation, original Review and local commit complete.
 Mandatory complete publication gate preflight executes az bicep version
 (tools/rpi-checks.py preflight). Explicit no-az means no full gate run, push,
 thread resolution or publication approval claim in this task.
@@ -131,6 +132,32 @@ Final pre-Review fetch: topic HEAD and origin topic both
 Post-Review/precommit fetch confirms the same three identities. Authenticated
 GitHub account resolved to login jmservera, numeric ID 8036360; commit email is
 constructed from that API response, not a private email or global Git change.
+
+## Local Commit and Final Handoff
+
+Fixing commit: 8e57253a8dbe30ada2ec747552ef12533e476955,
+`fix(api): route resident hazard reports to the existing safety response`.
+Contains all four source/test/documentation changes and seven original dated
+RPI artifacts. Commit body uses Refs #520 and ends with the exact required
+Copilot co-author trailer. Author and committer use the constructed GitHub
+noreply email; no global identity setting changed.
+
+Postcommit verification: git status --short empty, git diff HEAD --exit-code 0;
+all four source SHA256 values still match the original independent Review.
+The subsequent handoff update changes only four evidence/status artifacts and
+will be a separate Conventional Commit, not an amend or source change.
+No full gate or receipt verification claimed for either local commit.
+
+Remote verification after fixing commit: named thread still unresolved with
+one original comment; PR text still contains Refs #520. No push, thread reply,
+resolution, PR mutation, merge, force push, az or Azure operation performed.
+
+Coordinator next action (RV-001): obtain separately authorized mandatory full
+gate for the clean committed final head/current main, verify receipt immediately
+before independent exact-head assessment and normal push, then reply with fixing
+commit and resolve PRRT_kwDOUU8JX86xVvlj. Preserve original critique and Review;
+do not treat this local-only handoff as publication approval. Existing acceptance
+owner separately handles RV-002's contrast/human/AT residual. No child task begun.
 
 ## Acceptance Boundaries
 
