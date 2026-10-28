@@ -8,20 +8,20 @@ ms.date: 2026-10-28
 
 * Task ID: employee-redeploy-20261028
 * Task slug: employee-redeploy
-* Planning status: Complete / rollout rolled back, publication blocked
+* Planning status: Complete / re-apply verified, evidence publication active
 * Details: .copilot-tracking/details/2026-10-28/employee-redeploy-phase-details.md
 * Critique: .copilot-tracking/reviews/plans/2026-10-28/employee-redeploy-plan-critique.md
 
 ## Executive Summary
 
-Intended outcome remains one merged-main image and one employee revision.
-Owner update re-admits the existing implementation: take the heavy lock
-nonblocking, do not retry denied cost queries, and permit failure-only
-Single-mode rollback by updating to the exact previous digest and env.
-One forward rollout was attempted. Verification command failed, triggering the
-authorized rollback. Exact old image/env are now restored and Healthy.
-Desired AI-enabled deployment is NOT accepted; no further forward retry.
-No source changes, inference or resource creation.
+Reuse completed P01 image proof and the existing pushed digest. Owner approved
+one additional forward revision on2026-10-28, with the same three AI settings
+and min0, preserving everything else. Verify manifest read-only; use the approved
+temporary ACR route only if needed and restore exact policy before rollout.
+Roll back only for unhealthy revision or app startup errors, not tooling failure.
+Publish evidence under the explicit owner exception without waiting for the full
+gate; disclose original matrix drift and pending #517 fix. No rebuild, source
+change, inference, cost query or resource creation.
 
 ### What You May Not Know
 
@@ -30,15 +30,14 @@ original policy must be restored literally, not replaced with a preferred
 policy. Anonymous sign-in challenges are expected and do not prove a broken
 rollout. An authenticated asset/UX check and task-release/model acceptance
 cannot be claimed from anonymous probes. Publication requires the complete
-local gate; historical exceptions on other PRs do not apply here. Its own
-nonblocking admission must succeed without queueing.
+local gate normally; this evidence PR has an explicit dated owner exception.
+No gate success or independent approval may be inferred from that exception.
 
 ### Current Blockers
 
-* Forward update consumed. Failed system-log verification required rollback;
-  another rollout requires separate owner authorization.
-* Complete publication gate failed required preflight:
-  `Workflow matrix drift: src-deploy.yml`. No push/PR.
+* No active operational blocker: exactly one approved re-apply is verified.
+* Historical complete gate failed `Workflow matrix drift: src-deploy.yml`;
+  #517 proposes its correction. Publication authorized with explicit disclosure.
 
 ## User Decisions and Requirements
 
@@ -49,9 +48,11 @@ nonblocking admission must succeed without queueing.
 * Keep min replicas zero, identities, registry, secrets/references and other env.
 * No other apps/jobs/RG/roles/network changes beyond authorized ACR exception;
   never read/print secrets or `.env`; no extra resources.
-* Roll back to previous revision on rollout/verification failure.
+* Latest owner decision: roll back only on unhealthy revision or app startup
+  errors; verification-tool failure alone must not trigger rollback.
 * Commit tracking with requested coauthor, push `ops/employee-redeploy-20261028`
-  and open Refs-only PR if required publication gates permit.
+  and open Refs-only PR without waiting for full gate, disclosing #517 and
+  validation actually performed under the explicit2026-10-28 exception.
 * Nonblocking `/tmp/ama-rpi-heavy.lock` while Docker builds.
 * Owner update: proceed without cost query; one build and revision accepted
   within budget. No cost retries or claim of known all-in headroom.
@@ -103,10 +104,12 @@ nonblocking admission must succeed without queueing.
   live assets checked if anonymously accessible, otherwise disclose protected
   route boundary without changing auth or inventing a staff session.
 * ACR policy matches exact baseline after push and at final readback.
-* On actual rollout/config/startup/asset failure: update exact backed-up image
-  and env, verify old digest/readiness/traffic in Single mode.
-* Original critique and independent Review retained; complete exact-head local
-  gate/receipt verified immediately before push or publication remains blocked.
+* On unhealthy revision or app startup errors only: update exact backed-up image
+  and env, verify old digest/readiness/traffic in Single mode. Verification-tool
+  failure alone is disclosed, never a rollback trigger.
+* Original critique, failed gate and independent Review retained unchanged.
+  Owner-authorized evidence PR discloses missing successful full gate and
+  independent exact-head assessment; no acceptance or gate pass claimed.
 
 ## Sources
 
@@ -140,26 +143,27 @@ bare IPv4 rule representation. Public access was already disabled throughout
 that cleanup correction; employee baseline stayed unchanged.
 
 <!-- rpi:phase id=P02 -->
-### [x] P02: Update and verify once
+### [x] P02: Owner-approved one-time re-apply and verification
 
 <!-- rpi:task id=P02-T01 -->
-#### [x] P02-T01: One additive revision update and bounded checks
+#### [x] P02-T01: One additive re-apply and bounded checks
 
 Depends on P01-T02. Verify no baseline drift immediately before write. Update
 image/three env entries/min zero once; verify health, config, logs and assets.
-Executed once, forward revision Healthy/Provisioned and exact config passed;
-HTTP health200, protected assets401. System log command rejected --revision;
-verification failed, not an accepted deployment. No forward retry.
+Complete: one additional revision using existing digest, update exit0, exactly
+one added revision. Full unrelated config/template/identity preserved.
+Supported system/console logs checked, positive console startup, no matched
+startup errors; health200/protected assets401. Historical attempt retained.
 
 <!-- rpi:task id=P02-T02 -->
 #### [x] P02-T02: Failure rollback or success readback
 
-Depends on P02-T01. No forward-update retry. On failure only, update the exact
+Depends on P02-T01. No forward-update retry. On unhealthy/startup failure only, update the exact
 backed-up image and complete original env; verify original configuration and
 health. Owner explicitly permits this recovery revision in Single mode.
-Complete: rollback revision `ca-cutover-test-demo-api--rollback-20261028-103137`,
-Healthy/Provisioned/Running, exact old digest/env/config except revision suffix.
-Console startup positive, no startup error matches; health200/assets401.
+Complete: final active revision
+`ca-cutover-test-demo-api--emp-reapply-20261028-110058`, Healthy/Provisioned/Running,
+latest=ready,100% traffic, min0/max4 and exact ACR policy equality. No rollback.
 
 <!-- rpi:phase id=P03 -->
 ### [ ] P03: Review and publication
@@ -172,20 +176,13 @@ Complete: original independent Review execution Complete, outcome Not accepted.
 RV-001..005 routed; no deployment acceptance or repeated Review.
 
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: Commit, complete gate and conditional publication
+#### [ ] P03-T02: Commit and owner-authorized evidence publication
 
-Resolve privacy-safe authenticated git identity. Commit evidence with trailer.
-Fetch main, run full gate externally with `--lock-timeout 0`, verify receipt
-at current main immediately before independent exact-head assessment and push.
-If gate fails, retain original failure externally, record blocker, commit
-historical outcome if needed and do not push/open PR.
-Execution: a05bae82 evidence commit, b2be797b admission evidence, normal
-current-main merge323b3adf (only upstream CI line; src identical).
-Full gate failed preflight against197e5e3c; receipt:
-`/tmp/ama-employee-redeploy-full-gate-20261028-1038/receipt.json`.
-No group passed, no successful receipt verification or exact-head independent
-publication assessment. Final adverse-evidence commit cannot upgrade this
-failed historical receipt. Publication remains incomplete and blocked.
+Resolve privacy-safe authenticated git identity. Commit evidence with trailer,
+push only the requested topic and open Refs-only PR. Do not wait for full gate:
+owner explicitly directs publication with drift/#517 disclosure. Retain original
+failed receipt and original Review; list only validation actually performed.
+No force-push, main write, rewrite or merge. Hosted/human approval stays separate.
 
 ## Dependencies and Test Ownership
 
@@ -215,15 +212,15 @@ cost decisions; PC-004 proof executed and PC-005 exception restored exactly.
 
 * Authenticated employee acceptance and task-release/model binding verification
   remain owner-operated work outside this no-inference redeploy.
-* Existing src-deploy.yml workflow matrix drift blocks publication; route to
-  separately scoped tooling/CI work, not an unrelated fix in this operation.
-* Separate later owner authorization is required for another forward rollout.
+* Existing src-deploy.yml workflow matrix drift is addressed by pending #517;
+  no unrelated workflow edit or successful gate claim in this operation.
+* No further forward rollout after the one newly approved re-apply.
 
 ## Handoff
 
 Changes path: .copilot-tracking/changes/2026-10-28/employee-redeploy-changes.md.
 Owner selected later implementation of routed findings; original critique and
 Not accepted Review remain immutable evidence, with no repeated critique/Review.
-P01/P02 execution complete with failed verification and successful rollback,
-not the desired AI-enabled outcome. P03 publication blocked by failed preflight.
-No push/PR without cleared publication gate.
+P01 reused. P02 one-time re-apply verified successfully. P03 publishes
+evidence under the dated owner exception; historical failed gate/Review remain
+unchanged. Current execution evidence belongs in the existing changes record.

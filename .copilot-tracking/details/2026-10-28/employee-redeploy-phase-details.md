@@ -10,20 +10,60 @@ ms.date: 2026-10-28
 * Plan: .copilot-tracking/plans/2026-10-28/employee-redeploy-plan.md
 * Research: .copilot-tracking/research/2026-10-28/employee-redeploy-research.md
 * Status: critique Complete / Revise, compatible corrections applied.
-* Current execution: one forward update failed verification; rollback complete,
-  desired AI-enabled outcome unmet. No cost queries.
+* Current execution: one owner-approved re-apply verified Healthy/Provisioned/
+  Running, active100%, min0/max4; full preservation and ACR equality passed.
+  Historical rollback and failed gate evidence below remain original history.
+  No rebuild, inference or cost queries.
 * Backup result: `/tmp/ama-employee-redeploy-20261028.nbVE6l`, directory0700/
   JSON0600. Complete safe app/config/template, revision and ACR GETs captured.
   Final app/ACR semantic equality passed;27 original env entries, one Key Vault
   reference, min0/max4 and old revision/digest unchanged; AI entries absent.
-* Current completion: P01/P02 execution complete; outcome rolled back.
+* Historical completion: P01/P02 executed with rollback in the prior attempt.
   Original Review Complete / Not accepted retained; owner-selected later
   implementation is not a second Review.
 * Fresh backup: `/tmp/ama-employee-redeploy-20261028-resumed.kbxpikmg`,
   JSON0600/directory0700, previous revision/digest preserved.
 * One build and isolated synthetic HTTP proof passed; script indices2<7.
   Full publication gate failed preflight matrix drift; no verified receipt,
-  push or PR. Task blocked in Implement, automatic session remains running.
+  push or PR in the earlier attempt. Current P02 re-apply complete; P03 evidence
+  publication active under explicit owner authority.
+
+## Active owner-approved continuation (2026-10-28)
+
+P01 is reused without rebuild/push. Re-open P02 for exactly one additional
+revision using digest e6b6e7440c2b64577e96b6322c852bf630f1c5113608267132ebffc07d39fa19,
+AI_ENDPOINT=https://aif-cutover-test-rzsrg.openai.azure.com/,
+AI_DEPLOYMENT=standard and AI_DEPLOYMENT_STRONG=standard; min0, all else exact.
+Fresh reference-only app/registry/revision backup precedes mutation.
+Read-only manifest verification first; use temporary owner-approved ACR route
+only if CLI cannot reach registry; exact restoration required before rollout.
+Check help before logs: system app-scoped without selectors, console may use
+revision/container selectors. Tool failure alone does not authorize rollback;
+unhealthy revision or app startup errors do. Preserve metadata/readbacks outside
+git; publish only sanitized counts/equality/status.
+
+P03-T02: owner explicitly authorizes commit/push/Refs-only PR without waiting
+for full gate. Disclose historical drift, pending #517 fix and actual validation;
+do not upgrade failed receipt or original independent Review. This active
+continuation supersedes historical no-further-write/publication instructions
+below for this bounded request only. No repeated critique or Review.
+
+### Current P02 result
+
+Final active revision `ca-cutover-test-demo-api--emp-reapply-20261028-110058`;
+image digest and all three AI values equal the active continuation above.
+One update exit0, exactly one added revision, no rollback. Verified11:01:59Z:
+Healthy/Provisioned/Running, latest=ready,100% traffic, min0/max4, full unrelated
+configuration/template/identity preservation and final exact ACR equality.
+System logs21 app-scoped records/12 target records, console3 target records/
+one positive startup, zero matched startup errors. Health200; protected app/JS401.
+External evidence `/tmp/ama-employee-reapply-20261028-1j8gt8xy`.
+No authenticated live acceptance, inference or fresh full gate claimed.
+
+## Historical attempt details (preserved)
+
+The remaining task details document the earlier attempt and failed gate.
+They do not override the active owner-approved continuation and current result.
 
 <!-- rpi:phase id=P01 -->
 ## P01: Preserve and publish image

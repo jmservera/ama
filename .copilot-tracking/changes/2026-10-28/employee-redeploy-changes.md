@@ -15,8 +15,100 @@ ms.date: 2026-10-28
 * Research: .copilot-tracking/research/2026-10-28/employee-redeploy-research.md
 * Original critique: .copilot-tracking/reviews/plans/2026-10-28/employee-redeploy-plan-critique.md
 * Original status: Blocked before build, push or cloud mutation.
-* Current status: one forward rollout failed verification, exact old-image/env
-  recovery verified Healthy; full publication gate failed, push/PR blocked.
+* Current status: one approved re-apply succeeded, Healthy/Provisioned/Running,
+  active with100% traffic; evidence publication in progress. Original failed
+  verification, rollback, gate receipt and independent Review retained below.
+
+## One-time re-apply approval (2026-10-28)
+
+Owner explicitly approved "Yes, re-apply once using the image already in ACR".
+Scope is P02 re-apply and P03 evidence publication, reusing completed P01 image
+proof without rebuild or push. Verify the recorded manifest read-only; only if
+necessary use the previously approved temporary ACR route, restoring exact
+policy before the app update. Preserve all unrelated app settings, min0.
+Roll back only for unhealthy revision or app startup errors, never solely a
+verification-tool failure. CLI help checked: system logs are app-scoped with
+no revision selector; console logs support revision/container selectors.
+Initial read-only app GET returned503; no cloud mutation has occurred.
+
+Owner explicitly directs publication without waiting for the full gate:
+commit evidence, push this topic, open Refs-only PR disclosing matrix drift
+and #517. Read-only PR check confirms #517 is OPEN, not yet merged; it proposes
+the drift fix. No successful full gate, independent exact-head approval, hosted
+approval or human acceptance will be claimed. Original Review is not repeated.
+This explicit publication exception supersedes the earlier blocked handoff
+only for this requested evidence PR, not the failed historical receipt.
+
+### P01 reuse: read-only registry admission
+
+Direct manifest CLI returned network-access denial. Fresh baseline matched the
+historical recovery exactly. First approved temporary route was restored with
+full policy equality after32.3seconds; manifest CLI still failed, so no employee
+mutation occurred. External evidence:
+`/tmp/ama-employee-reapply-20261028-43wi5y9g`.
+Continue using the previously approved expose-token route with pull-only
+manifest HEAD, credentials in process memory only, and the same exact-restoration
+finally contract. No rebuild, image push, token printing or other resource change.
+
+Read-only manifest HEAD succeeded HTTP200 via the approved in-memory token
+route with pull-only scope. Docker-Content-Digest exactly matches the recorded
+e6b6e7440c2b64577e96b6322c852bf630f1c5113608267132ebffc07d39fa19 digest.
+Second exception restored exact full policy in17.7seconds; employee baseline
+still exactly equals the historical rollback configuration/template/identity.
+Fresh protected backup: `/tmp/ama-employee-reapply-20261028-1j8gt8xy`.
+No image build/push or credential file was created. P02 now dependency-ready.
+
+### P02 completed: one re-apply, positive startup and exact preservation
+
+Exactly one `az containerapp update` executed, exit0, no retry or rollback.
+Final readback at2026-10-28T11:01:59.974987Z:
+
+| Setting | Final value |
+|---|---|
+| Active revision | `ca-cutover-test-demo-api--emp-reapply-20261028-110058` |
+| Image | `crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:e6b6e7440c2b64577e96b6322c852bf630f1c5113608267132ebffc07d39fa19` |
+| AI_ENDPOINT | `https://aif-cutover-test-rzsrg.openai.azure.com/` |
+| AI_DEPLOYMENT | `standard` |
+| AI_DEPLOYMENT_STRONG | `standard` |
+| Health / provisioning / running | Healthy / Provisioned / Running |
+| Active / traffic | true /100% |
+| Replicas min / max |0 /4 |
+
+Revision list/show and app latest/ready all agree. Full revision-set comparison
+found exactly one added revision, the named re-apply. Entire configuration,
+identity and normalized template equal fresh baseline except image, suffix and
+the three authorized AI entries. All27 original env entries, secret references,
+registries, auth, Single mode and scale preserved exactly.
+
+Help checked before log queries. Supported system query omitted revision/
+replica/container flags:21 app-scoped records,12 identify the new revision,
+zero matched startup errors for that revision. Console query used supported
+revision/container flags:3 records, one positive "Zava Forward is running",
+zero startup-error matches. Raw logs withheld. Bounded pattern observations
+do not establish exhaustive absence of errors or authenticated user acceptance.
+Anonymous health200; app/ops.js/app.js401 as expected. No auth bypass or model
+call. Prior exact-image synthetic HTTP/script-order proof is reused, not rerun
+or misrepresented as authenticated live acceptance.
+
+Final complete ACR policy equality passed: public Disabled, default Allow,
+IP/VNet arrays empty, bypass None, exports disabled, admin false; all returned
+policy fields unchanged. No other workload, roles, networking, costs, private
+dataset, `.env`, secret-value or inference operation. No rollback trigger was
+observed and no rollback was performed. Protected external evidence remains at
+`/tmp/ama-employee-reapply-20261028-1j8gt8xy`, including fresh baselines,
+manifest HEAD result, restoration equality, revision/app final readbacks,
+preservation, probe/log summaries and result.json.
+
+### P03 publication boundary for this continuation
+
+Owner directs evidence commit/push/Refs-only PR without waiting for full gate.
+The historical preflight failure `Workflow matrix drift: src-deploy.yml` and
+original failed receipt are unchanged. #517 is OPEN and proposes the fix; no
+claim that it has merged or that the current candidate passed the gate.
+No new full gate, successful receipt verification, independent exact-head
+assessment or hosted/human approval performed. Original independent Review
+remains Complete / Not accepted at its original blocked-attempt boundary;
+this later successful operational evidence does not rewrite that assessment.
 
 ## Owner-selected continuation (2026-10-28)
 
