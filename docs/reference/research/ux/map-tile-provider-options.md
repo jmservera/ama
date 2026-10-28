@@ -125,7 +125,8 @@ owner after the verification items below close.
 ## Cost estimate method (illustrative)
 
 Draft, unverified: Azure Maps transactions per month are the number of base-map
-tile requests divided by 15, rounded up per request, with the first 5,000 free
+tile requests divided by 15 (aggregation and rounding scope unknown, not
+verified), with the first 5,000 free
 (Learn page, not re-read; only the free allowance on the pricing page was
 re-read). The OS Premium plan reportedly bills per 15-tile view, but that rests
 on the unverified secondary summary above and is not an established rule. Real

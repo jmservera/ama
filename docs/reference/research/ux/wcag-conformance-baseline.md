@@ -169,8 +169,11 @@ versions, and result in the table above or an attached record):
 * At high zoom, check each home link announces name and the non-colour signal
   label and opens the case.
 * Check the polite status line announces results after a filter or pan, and
-  the alert is announced when the map is unavailable, including with tiles
-  blocked.
+  the alert is announced when the map-data request fails (for example, block
+  the map-data endpoint). Blocking tile images separately is a different
+  scenario: `mapPanel()` has no tile-error handler, so no alert is expected;
+  record whether the list stays usable and treat any missing announcement as a
+  finding.
 * Record anything unclear, such as focus loss after the list refreshes, as a
   finding, and do not treat a pass as WCAG conformance.
 
