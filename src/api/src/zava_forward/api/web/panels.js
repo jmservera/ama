@@ -278,6 +278,7 @@ function affectedChallengePanel(c, id, refresh) {
       query.set(key, String(page));
       history.replaceState(null, "", `#/case/${encodeURIComponent(id)}?${query}`);
       displayedHash = location.hash;
+      caseSession?.controller?.syncLinks();
       draw();
       status.focus();
     };

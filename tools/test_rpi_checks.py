@@ -493,7 +493,7 @@ class GateTests(unittest.TestCase):
                     "axe_version": "4.10.3",
                     "page_errors": [],
                     "zoom": "chrome.tabs.setZoom=2; innerWidth<=640",
-                    "scans": [{"violations": []} for _ in range(37)],
+                    "scans": [{"violations": []} for _ in range(38)],
                 }
             elif name == "workflow-coverage.json":
                 content = {"steps": []}
@@ -591,6 +591,13 @@ class GateTests(unittest.TestCase):
                 ("regulatory-ux-results.json", "outcome", "failed"),
                 ("case-journey-results.json", "zoom", "device scale only"),
                 ("case-journey-results.json", "scans", []),
+                ("case-journey-results.json", "scans", [{"violations": []}] * 37),
+                ("case-journey-results.json", "scans", [{"violations": []}] * 39),
+                (
+                    "case-journey-results.json",
+                    "scans",
+                    [{"violations": [{"impact": "serious"}]}] * 38,
+                ),
                 ("case-journey-results.json", "page_errors", ["Uncaught failure"]),
                 ("api-gate.json", "Results", [{"Vulnerabilities": [{"Severity": "HIGH"}]}]),
                 ("api.spdx.json", "packages", []),

@@ -40,6 +40,12 @@ measure/checklist version; earlier edits remain copyable rather than being
 applied to replacement evidence. Successful mutations clear only unchanged
 dispatch-time values, not edits made while saving. Source verification does not
 submit or discard edited proposal JSON.
+Navigation and page-close warnings also cover unresolved cached drafts while
+proposal controls are loading. A completed document review displays the submitted
+replacement and retains later text or reason as read-only, unsaved recovery tied
+to that record; its review actions stay disabled. Replacing an edited document or
+resident draft requires explicit discard. Journey links retain challenge-history
+pagination and switch mounted sections without discarding drafts.
 
 Coordinate heavy runs through `/tmp/ama-rpi-heavy.lock`; use nonblocking
 `flock -n` admission with short retries bounded to 40 minutes for this correction,
@@ -145,8 +151,8 @@ The focused check owns a real loopback app with public constructed fixtures,
 pinned axe, keyboard/reflow states and actual Chromium 200% tab zoom through a
 test-only extension. No Azure, private dataset or live model is used.
 Coordinate heavy runs through `/tmp/ama-rpi-heavy.lock`; nonblocking retries
-every 60 seconds for up to 60 minutes for the owner-authorized #526 continuation;
-release immediately after heavy checks. Screen-reader, staff usability and
+are bounded to 40 minutes for this correction; release immediately after heavy
+checks. Screen-reader, staff usability and
 post-deployment verification remain pending the owner.
 
 ## Specialist screen delivery (#149)

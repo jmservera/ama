@@ -90,12 +90,19 @@ const CaseWorkspace = (() => {
     const nav = h("nav", { class: "case-journey", "aria-label": "Retrofit journey" },
       h("ol", { class: "stepper" }, journey(c).map(step => h("li", {
         class: `step ${step.state}`, "aria-current": step.current ? "step" : null,
-      }, h("a", { href: `#/case/${encodeURIComponent(c.id)}?tab=${step.tab}` },
+      }, h("a", { href: `#/case/${encodeURIComponent(c.id)}?tab=${step.tab}`, "data-case-tab": step.tab },
         h("span", { class: "step-glyph", "aria-hidden": "true" }, { done: "\u2713", current: "\u25cf", blocked: "\u26d4", upcoming: "\u25cb" }[step.state]),
         h("span", { class: "step-name" }, step.name), h("span", { class: "step-state" }, step.text))))));
     const tabs = h("div", { role: "tablist", "aria-label": "Case sections" });
     const tabRegion = h("div", { class: "case-tabs-scroll", role: "region", "aria-label": "Case section tabs", tabindex: 0 }, tabs);
     let active;
+    function syncLinks() {
+      nav.querySelectorAll("a[data-case-tab]").forEach(link => {
+        const query = new URLSearchParams(location.hash.split("?")[1] || "");
+        query.set("tab", link.dataset.caseTab);
+        link.setAttribute("href", `#/case/${encodeURIComponent(c.id)}?${query}`);
+      });
+    }
     function select(id, updateUrl = false, focusHeading = false) {
       const selected = definitions.find(tab => tab.id === id) || definitions.find(tab => tab.id === defaultTab(c));
       active = selected.id;
@@ -111,6 +118,7 @@ const CaseWorkspace = (() => {
         history.pushState(null, "", `#/case/${encodeURIComponent(c.id)}?${query}`);
         displayedHash = location.hash;
       }
+      syncLinks();
       if (focusHeading) selected.panel.querySelector("h2").focus();
     }
     definitions.forEach((tab, index) => {
@@ -137,7 +145,7 @@ const CaseWorkspace = (() => {
     app.addEventListener("ai-review-change", counts);
     select(new URLSearchParams(location.hash.split("?")[1] || "").get("tab"));
     counts();
-    return { top: [section, safety, nav, tabRegion].filter(Boolean), select, counts,
+    return { top: [section, safety, nav, tabRegion].filter(Boolean), select, counts, syncLinks,
       dispose: () => { observer.disconnect(); app.removeEventListener("ai-review-change", counts); } };
   }
   return { steps, stageStep, journey, summary, defaultTab, nextTab, waiting, enhance };

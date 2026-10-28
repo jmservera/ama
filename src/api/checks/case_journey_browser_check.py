@@ -11,7 +11,7 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
-from playwright.sync_api import Page, Route, expect, sync_playwright
+from playwright.sync_api import Dialog, Page, Route, expect, sync_playwright
 
 from checks.design_system_browser_check import check, main
 from checks.regulatory_ux_check import AXE_SHA256
@@ -99,7 +99,11 @@ def run_browser(base: str, axe: str, out: Path) -> None:
         page = context.new_page()
         errors: list[str] = []
         page.on("pageerror", lambda error: errors.append(str(error)))
-        page.on("dialog", lambda dialog: dialog.accept())
+
+        def accept_dialog(dialog: Dialog) -> None:
+            dialog.accept()
+
+        page.on("dialog", accept_dialog)
         try:
             sign_in(page, base)
             page.wait_for_function(
@@ -152,6 +156,58 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                     "el => el.tagName === 'H2' && !el.closest('[hidden]')"
                 ),
             )
+            paged_case = page.request.get(base + "/api/cases/ZF-1").json()
+            paged_case["challenge_targets"] = [
+                {"proposal_id": f"SYN-JOURNEY-{index}", "source": "workflow"}
+                for index in range(101)
+            ]
+
+            def paged_history(route: Route) -> None:
+                route.fulfill(json=paged_case)
+
+            page.route("**/api/cases/ZF-1", paged_history)
+            tab(page, "AI assistance")
+            refresh_proposals(page)
+            tab(page, "Resident")
+            page.locator("#outcome").fill("Retained pagination draft")
+            workspace = page.locator("[data-case-workspace]").element_handle()
+            page.get_by_role("button", name="Older suggestions", exact=True).click()
+            check(
+                "in-place pagination synchronizes every native journey destination",
+                page.locator(".stepper a").evaluate_all(
+                    """links => links.every(link => new URLSearchParams(
+                      link.hash.split('?')[1]).get('challenge-target-history') === '1')"""
+                ),
+            )
+            dialogs: list[str] = []
+
+            def cancel_leave(dialog: Dialog) -> None:
+                dialogs.append(dialog.message)
+                dialog.dismiss()
+
+            page.remove_listener("dialog", accept_dialog)
+            page.on("dialog", cancel_leave)
+            page.locator(".stepper a[data-case-tab=funding]").click()
+            page.wait_for_function(
+                "() => document.querySelector('#case-tab-funding')"
+                ".getAttribute('aria-selected') === 'true'"
+            )
+            check(
+                "journey changes retained sections after pagination without discarding",
+                not dialogs
+                and "challenge-target-history=1" in page.url
+                and page.locator("[data-case-workspace]").evaluate(
+                    "(el, old) => el === old", workspace
+                )
+                and page.locator("#outcome").input_value() == "Retained pagination draft",
+            )
+            page.remove_listener("dialog", cancel_leave)
+            page.on("dialog", accept_dialog)
+            page.go_back()
+            expect(page.locator("#case-tab-resident")).to_have_attribute("aria-selected", "true")
+            page.go_forward()
+            expect(page.locator("#case-tab-funding")).to_have_attribute("aria-selected", "true")
+            page.unroute("**/api/cases/ZF-1", paged_history)
             tab(page, "Resident")
             page.locator("#outcome").fill("Unsaved synthetic call")
             page.get_by_role("button", name="Plain visit template", exact=True).click()
@@ -448,10 +504,26 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                 "Reviewed replacement synthetic document text"
             )
             document_review.get_by_label("Reason", exact=True).fill("Checked document wording")
-            with page.expect_response("**/api/ai/review/*/edit") as edited_document:
+            pending_review: list[Route] = []
+            page.route("**/api/ai/review/*/edit", lambda route: pending_review.append(route))
+            with page.expect_request("**/api/ai/review/*/edit"):
                 document_review.get_by_role("button", name="Edit", exact=True).click()
-            if edited_document.value.status != 200:
-                raise AssertionError(f"Document edit failed: {edited_document.value.text()}")
+            document_review.get_by_label("Edited draft", exact=True).fill(
+                "Later unsubmitted document text"
+            )
+            document_review.get_by_label("Reason", exact=True).fill("Later unsubmitted reason")
+            review_body = pending_review[0].request.post_data_json
+            check(
+                "document review dispatch retains immutable text and reason",
+                isinstance(review_body, dict)
+                and review_body["text"] == "Reviewed replacement synthetic document text"
+                and review_body["reason"] == "Checked document wording",
+            )
+            response = pending_review[0].fetch()
+            if response.status != 200:
+                raise AssertionError(f"Document edit failed: {response.text()}")
+            pending_review[0].fulfill(response=response)
+            page.unroute("**/api/ai/review/*/edit")
             page.wait_for_function(
                 "() => document.querySelector('#case-panel-survey .aimeta')"
                 ".dataset.reviewState === 'Edited'"
@@ -463,6 +535,43 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                 and page.locator("[data-document-text]").get_attribute("aria-label")
                 == "Reviewed replacement document text",
             )
+            record_id = document_review.get_attribute("data-record-id")
+            expect(document_review.locator("legend")).to_have_text(
+                f"Unsubmitted edits for reviewed record {record_id}"
+            )
+            check(
+                "later document values stay copyable, dirty and cannot review again",
+                document_review.get_by_label("Edited draft", exact=True).input_value()
+                == "Later unsubmitted document text"
+                and document_review.get_by_label("Reason", exact=True).input_value()
+                == "Later unsubmitted reason"
+                and document_review.locator('[data-case-dirty="true"][readonly]').count() == 2
+                and document_review.locator("button:not([disabled])").count() == 0,
+            )
+            tab(page, "Resident")
+            page.locator("#outcome").fill("Refresh reviewed document recovery")
+            page.get_by_role("button", name="Save", exact=True).click()
+            expect(page.locator("#outcome")).to_have_value("")
+            tab(page, "Survey and assessment")
+            expect(document_review.get_by_label("Edited draft", exact=True)).to_have_value(
+                "Later unsubmitted document text"
+            )
+            expect(document_review.get_by_label("Reason", exact=True)).to_have_value(
+                "Later unsubmitted reason"
+            )
+            check("reviewed document recovery survives case refresh with record identity", True)
+            page.remove_listener("dialog", accept_dialog)
+            page.on("dialog", cancel_leave)
+            page.get_by_role("button", name="Read with AI", exact=True).last.click()
+            check(
+                "replacing recovered document edits requires explicit discard",
+                len(dialogs) == 1
+                and "Replace this draft" in dialogs[0]
+                and document_review.get_by_label("Edited draft", exact=True).input_value()
+                == "Later unsubmitted document text",
+            )
+            page.remove_listener("dialog", cancel_leave)
+            page.on("dialog", accept_dialog)
             check(
                 "document review removes count without approving the case",
                 "local drafts to review" not in page.locator("[data-case-ai-summary]").inner_text()

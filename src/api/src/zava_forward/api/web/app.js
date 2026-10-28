@@ -206,6 +206,12 @@ async function requireWorkspaceScripts(hash, caseRoute) {
   }
 }
 
+function hasUnsavedChanges() {
+  if (caseSession) rememberCaseFields(caseSession);
+  return Boolean(document.querySelector('form[data-unsaved="true"], [data-case-dirty="true"]')
+    || caseSession?.pendingFields.size);
+}
+
 async function route() {
   const session = me;
   if (!session) return;
@@ -222,7 +228,7 @@ async function route() {
       return;
     }
   }
-  if (nextHash !== displayedHash && document.querySelector('form[data-unsaved="true"], [data-case-dirty="true"]')) {
+  if (nextHash !== displayedHash && hasUnsavedChanges()) {
     if (!window.confirm("Leave this screen and discard unsaved changes?")) {
       history.replaceState(null, "", displayedHash);
       return;
@@ -320,21 +326,38 @@ function aiNotes(d, onDone, getText) {
       error.textContent = text; why.setAttribute("aria-invalid", "true");
       why.setAttribute("aria-describedby", error.id); why.focus();
     };
+    let pending = false;
     const go = (action) => async () => {
+      if (pending || d.approval !== "Not reviewed") return;
       if (action !== "accept" && !why.value.trim()) { invalid("Enter a reason to edit or reject this draft."); return; }
       const reason = why.value;
       const text = action === "edit" ? getText ? getText() : editing?.value : undefined;
+      const sent = snapshotCaseFields([why, ...(action === "edit" && editing ? [editing] : [])]);
+      const buttons = [...box.querySelectorAll("button")].map(button => ({ button, disabled: button.disabled }));
+      pending = true;
+      buttons.forEach(({ button }) => { button.disabled = true; });
+      result.textContent = "Recording your review...";
       try {
         await api(`/api/ai/review/${d.record_id}/${action}`, { reason, text });
         d.approval = REVIEWED[action];
         meta.dataset.reviewState = d.approval;
         result.textContent = `${d.approval} as a draft by a person. This is not an approval, consent or safety decision. Reason: ${reason || "Not supplied"}. Recorded in the audit log.`;
-        why.removeAttribute("data-case-dirty");
-        editing?.removeAttribute("data-case-dirty");
-        box.hidden = true;
+        sent.forEach(item => {
+          if (caseFieldUnchanged(item)) item.field.removeAttribute("data-case-dirty");
+        });
+        const later = [why, editing].filter(field => field?.dataset.caseDirty);
+        box.hidden = !later.length;
+        if (later.length) {
+          box.querySelector("legend").textContent = `Unsubmitted edits for reviewed record ${d.record_id}`;
+          box.prepend(h("p", { role: "status" }, "These later edits were not submitted. Copy what you need before discarding them. This review is complete; request fresh evidence for another review."));
+          [why, editing].filter(Boolean).forEach(field => { field.readOnly = true; });
+        }
         app.dispatchEvent(new Event("ai-review-change"));
         if (onDone) onDone(action, text);
-      } catch (e) { invalid(e.message); }
+      } catch (e) {
+        buttons.forEach(({ button, disabled }) => { button.disabled = disabled; });
+        invalid(e.message);
+      } finally { pending = false; }
     };
     const unavailable = d.stale || d.verified === false || d.validated === false;
     const box = h("fieldset", {}, h("legend", {}, "Your review"),
@@ -598,18 +621,25 @@ async function caseView(id) {
   const draftBox = session.draftBox;
   const kind = async (k) => {
     const d = await api(`/api/cases/${encodeURIComponent(id)}/draft`, { kind: k });
+    if (!confirmCaseDraftReplacement(draftBox)) return;
     draftBox.replaceChildren(h("p", { class: "muted" }, d.note), h("textarea", { "aria-label": "Draft message", name: "resident-template", autocomplete: "off" }, d.text));
     draftBox.querySelector("textarea").value = d.text;
   };
   const aiRun = async (task) => {
+    if (!confirmCaseDraftReplacement(draftBox)) return;
     draftBox.replaceChildren(h("p", { class: "muted" }, "Working on it..."));
     try {
       const d = await api(`/api/cases/${encodeURIComponent(id)}/ai`, modeBody({ task }));
       const ta = h("textarea", { "aria-label": "Draft", name: "resident-ai-draft", autocomplete: "off", rows: 9 });
       ta.value = d.text;
+      if (!confirmCaseDraftReplacement(draftBox)) return;
       draftBox.replaceChildren(h("p", { class: "muted" }, `${d.label}. Nothing is sent. Change it as you like.`), ta, aiNotes(d, null, () => ta.value));
       app.dispatchEvent(new Event("ai-review-change"));
-    } catch (e) { draftBox.replaceChildren(h("p", { class: "err" }, e.message)); }
+    } catch (e) {
+      const error = h("p", { class: "err", role: "alert" }, e.message);
+      if (draftBox.querySelector('[data-case-dirty="true"]')) draftBox.append(error);
+      else draftBox.replaceChildren(error);
+    }
   };
   const canOffer = !c.closed && (c.owner_code === me.user.code || isManager()) &&
     (!c.handoff || !["Offered", "Received", "Escalated", "Accepted"].includes(c.handoff.state));
@@ -754,11 +784,15 @@ function caseFieldUnchanged({ field, value, checked, files }) {
 }
 function captureCaseFields() {
   return caseFieldEntries().filter(({ field }) => field.dataset.caseDirty)
-    .map(({ field, key, proposal, binding }) => ({ key, value: field.value,
-      checked: field.preservedCaseField?.checked ?? field.checked, proposal, binding,
-      label: field.preservedCaseField?.label || field.getAttribute("aria-label") || field.name || field.id,
-      type: field.preservedCaseField?.type || field.type,
-      fileNode: field.type === "file" ? field : undefined }));
+    .map(({ field, key, proposal, binding }) => {
+      const record = field.closest("[data-record-id]");
+      const label = field.getAttribute("aria-label") || field.name || field.id;
+      return { key, value: field.value,
+        checked: field.preservedCaseField?.checked ?? field.checked, proposal, binding,
+        label: field.preservedCaseField?.label || `${label}${record ? ` for record ${record.dataset.recordId}` : ""}`,
+        type: field.preservedCaseField?.type || field.type,
+        fileNode: field.type === "file" ? field : undefined };
+    });
 }
 function rememberCaseFields(session) {
   caseFieldEntries().forEach(({ key, field }) => {
@@ -767,6 +801,12 @@ function rememberCaseFields(session) {
   const saved = captureCaseFields();
   saved.forEach(item => session.pendingFields.set(item.key, item));
   return [...session.pendingFields.values()];
+}
+function confirmCaseDraftReplacement(root) {
+  if (root.querySelector('[data-case-dirty="true"]')
+      && !window.confirm("Replace this draft and discard its unsubmitted edits? Copy anything you need first.")) return false;
+  caseFieldEntries(root).forEach(({ key }) => caseSession?.pendingFields.delete(key));
+  return true;
 }
 function restoreCaseFields(saved, root = app) {
   const fields = new Map(caseFieldEntries(root).map(({ key, field }) => [key, field]));
@@ -929,7 +969,7 @@ function recordedChangeForm(prefix, label, fields, submit) {
 }
 
 window.addEventListener("beforeunload", (event) => {
-  if (document.querySelector('form[data-unsaved="true"], [data-case-dirty="true"]')) { event.preventDefault(); event.returnValue = ""; }
+  if (hasUnsavedChanges()) { event.preventDefault(); event.returnValue = ""; }
 });
 
 function handoffPanel(c, id, refresh) {
@@ -1138,11 +1178,13 @@ function documentsPanel(c, id, refresh) {
     await refresh(async () => {}, submitted);
   };
   const read = async (d) => {
+    if (!confirmCaseDraftReplacement(out)) return;
     out.replaceChildren(h("p", { class: "muted" }, "Reading..."));
     app.dispatchEvent(new Event("ai-review-change"));
     try {
       const r = await api(`/api/cases/${encodeURIComponent(id)}/read-doc`, modeBody({ id: d.id }));
       const text = h("p", { class: "pre", "data-document-text": "" }, r.text);
+      if (!confirmCaseDraftReplacement(out)) return;
       out.replaceChildren(h("p", { class: "muted" }, r.source === "ai" ? "AI-read, please check:" : "Note:"), text,
         aiNotes(r, (action, replacement) => {
           if (action === "edit") {
@@ -1151,7 +1193,11 @@ function documentsPanel(c, id, refresh) {
           }
         }));
       app.dispatchEvent(new Event("ai-review-change"));
-    } catch (e) { out.replaceChildren(h("p", { class: "err" }, e.message)); }
+    } catch (e) {
+      const error = h("p", { class: "err", role: "alert" }, e.message);
+      if (out.querySelector('[data-case-dirty="true"]')) out.append(error);
+      else out.replaceChildren(error);
+    }
   };
   return h("section", { class: "card" }, h("h2", {}, "Documents"),
     h("p", {}, c.checklist.map((x) => h("span", { class: `flag${x.present ? "" : " danger"}` }, `${x.present ? "Have" : "Need"}: ${x.kind}`))),

@@ -260,6 +260,189 @@ console.log(JSON.stringify([first.length, first[0].field === live,
         result = subprocess.run(["node", "-e", script], text=True, capture_output=True, check=True)
         self.assertEqual(json.loads(result.stdout), [1, True, 1, True])
 
+    def test_shared_dirty_guard_reconciles_pending_and_unload(self) -> None:
+        source = (WEB / "app.js").read_text()
+        guard = source.split("function hasUnsavedChanges()", 1)[1].split(
+            "async function route()", 1
+        )[0]
+        remember = source.split("function rememberCaseFields(session)", 1)[1].split(
+            "function restoreCaseFields", 1
+        )[0]
+        unload = (
+            source.split('window.addEventListener("beforeunload",', 1)[1].split("\n});", 1)[0]
+            + "\n};\n"
+        )
+        script = (
+            """
+const assert = require("node:assert/strict");
+let live = [], captured = [], domDirty = false;
+let caseSession = {pendingFields: new Map([["pending", {key: "pending", value: "Only cache"}]])};
+const document = {querySelector: () => domDirty};
+const caseFieldEntries = () => live;
+const captureCaseFields = () => captured;
+function rememberCaseFields(session)"""
+            + remember
+            + "function hasUnsavedChanges()"
+            + guard
+            + "const unload = "
+            + unload
+            + """
+assert.equal(hasUnsavedChanges(), true);
+const event = {preventDefault() {this.prevented = true;}};
+unload(event);
+assert.equal(event.prevented, true);
+assert.equal(event.returnValue, "");
+live = [{key: "pending", field: {dataset: {}}}];
+assert.equal(hasUnsavedChanges(), false, "clean live counterpart retires cached snapshot");
+live = []; captured = [{key: "new", value: "Latest"}];
+assert.equal(hasUnsavedChanges(), true);
+assert.equal(caseSession.pendingFields.get("new").value, "Latest");
+caseSession = null; domDirty = true;
+assert.equal(hasUnsavedChanges(), true, "ordinary form dirtiness still warns");
+domDirty = false;
+assert.equal(hasUnsavedChanges(), false);
+console.log("PASS");
+"""
+        )
+        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("PASS", result.stdout)
+
+    def test_review_dispatch_preserves_newer_values_and_completes_only_once(self) -> None:
+        source = (WEB / "app.js").read_text()
+        notes = (
+            "function aiNotes"
+            + source.split("function aiNotes", 1)[1].split("function aiBox", 1)[0]
+        )
+        snapshots = (
+            "function snapshotCaseFields"
+            + source.split("function snapshotCaseFields", 1)[1].split(
+                "function captureCaseFields", 1
+            )[0]
+        )
+        script = (
+            r"""
+const assert = require("node:assert/strict");
+class Node {
+  constructor(tag, attrs, kids) {
+    this.tag = tag; this.attrs = attrs || {}; this.kids = kids.flat().filter(Boolean);
+    this.dataset = {}; this.value = ""; this.hidden = false;
+    this.disabled = Boolean(this.attrs.disabled);
+    if (tag === "textarea") this.value = kids.join("");
+  }
+  all() { return this.kids.filter(k => k instanceof Node)
+    .flatMap(k => [k, ...k.all()]); }
+  querySelectorAll(tag) { return this.all().filter(k => k.tag === tag); }
+  querySelector(tag) { return this.querySelectorAll(tag)[0]; }
+  setAttribute(name, value) { this.attrs[name] = value; }
+  removeAttribute(name) {
+    delete this.attrs[name];
+    if (name === "data-case-dirty") delete this.dataset.caseDirty;
+  }
+  addEventListener() {}
+  focus() {}
+  prepend(node) { this.kids.unshift(node); }
+}
+const h = (tag, attrs, ...kids) => new Node(tag, attrs, kids);
+const app = {dispatchEvent() {}};
+let finish, fail, requests = [], done = [];
+const api = async (path, body) => {
+  requests.push({path, body});
+  await new Promise((resolve, reject) => { finish = resolve; fail = reject; });
+};
+"""
+            + snapshots
+            + notes
+            + r"""
+(async () => {
+  for (const change of ["none", "text", "reason", "both", "failure"]) {
+    requests = []; done = [];
+    const record = {record_id: "SYN-REVIEW", approval: "Not reviewed", text: "Original"};
+    const meta = aiNotes(record, (action, text) => done.push({action, text}));
+    const editing = meta.querySelector("textarea"), reason = meta.querySelector("input");
+    const box = meta.querySelector("fieldset"), buttons = box.querySelectorAll("button");
+    editing.value = "Submitted replacement"; reason.value = "Submitted reason";
+    editing.dataset.caseDirty = reason.dataset.caseDirty = "true";
+    const pending = buttons[1].attrs.onclick();
+    assert.equal(buttons.every(button => button.disabled), true);
+    await buttons[1].attrs.onclick();
+    assert.equal(requests.length, 1, "duplicate dispatch must not issue another review");
+    if (["text", "both", "failure"].includes(change)) editing.value = "Newer replacement";
+    if (["reason", "both", "failure"].includes(change)) reason.value = "Newer reason";
+    if (change === "failure") fail(new Error("Synthetic refusal")); else finish();
+    await pending;
+    assert.equal(requests[0].body.text, "Submitted replacement");
+    assert.equal(requests[0].body.reason, "Submitted reason");
+    if (change === "failure") {
+      assert.equal(record.approval, "Not reviewed");
+      assert.equal(editing.dataset.caseDirty, "true");
+      assert.equal(reason.dataset.caseDirty, "true");
+      assert.equal(buttons.some(button => button.disabled), false);
+      assert.equal(done.length, 0);
+      continue;
+    }
+    assert.equal(record.approval, "Edited");
+    assert.deepEqual(done, [{action: "edit", text: "Submitted replacement"}]);
+    assert.equal(box.hidden, change === "none");
+    assert.equal(Boolean(editing.dataset.caseDirty), ["text", "both"].includes(change));
+    assert.equal(Boolean(reason.dataset.caseDirty), ["reason", "both"].includes(change));
+    if (change !== "none") {
+      assert.equal(editing.readOnly, true);
+      assert.equal(reason.readOnly, true);
+      assert.match(box.querySelector("legend").textContent, /reviewed record SYN-REVIEW/);
+    }
+    await buttons[2].attrs.onclick();
+    assert.equal(requests.length, 1, "completed review cannot submit again");
+    assert.equal(buttons.every(button => button.disabled), true);
+  }
+  console.log("PASS");
+})().catch(error => {console.error(error); process.exitCode = 1;});
+"""
+        )
+        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("PASS", result.stdout)
+
+    def test_journey_links_keep_non_tab_query_values_when_resynchronized(self) -> None:
+        source = (WEB / "case-workspace.js").read_text()
+        sync = (
+            "function syncLinks()"
+            + source.split("function syncLinks()", 1)[1].split("function select(", 1)[0]
+        )
+        script = (
+            """
+const assert = require("node:assert/strict");
+const c = {id: "ZF /1"};
+const location = {hash: "#/case/ZF%20%2F1?tab=resident&challenge-target-history=2"
+  + "&challenge-record-history=3&filter=a%26b&filter=second"};
+const links = ["survey", "funding", "resident", "contractor", "quality"].map(tab => ({
+  dataset: {caseTab: tab}, setAttribute(name, value) {this[name] = value;}
+}));
+const nav = {querySelectorAll: () => links};
+"""
+            + sync
+            + """
+for (const page of [2, 4]) {
+  location.hash = location.hash.replace("challenge-target-history=2",
+    "challenge-target-history=" + page);
+  syncLinks();
+  for (const link of links) {
+    const [path, query] = link.href.split("?");
+    const params = new URLSearchParams(query);
+    assert.equal(path, "#/case/ZF%20%2F1");
+    assert.equal(params.get("tab"), link.dataset.caseTab);
+    assert.equal(params.get("challenge-target-history"), String(page));
+    assert.equal(params.get("challenge-record-history"), "3");
+    assert.deepEqual(params.getAll("filter"), ["a&b", "second"]);
+  }
+}
+console.log("PASS");
+"""
+        )
+        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("PASS", result.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()
