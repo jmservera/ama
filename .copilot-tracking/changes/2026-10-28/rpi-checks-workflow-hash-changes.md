@@ -110,3 +110,14 @@ Refs #500 PR. Any later candidate invalidates previous assessments/receipts.
 This final documentation-only commit records the blocked handoff, not a
 passing final-head gate. Original Review remains Complete / Conformant at
 its original bounded source assessment.
+
+## Addendum 2026-10-28: second pin refresh (infra-plan.yml)
+
+Merged #513 (commit after the original review) added the `INFRA_PLAN_ENABLED`
+condition to `.github/workflows/infra-plan.yml`, so its pin drifted after the
+original single-pin boundary (`src-deploy.yml` only). The pin was refreshed to the
+raw-byte SHA256 `4240d803e33e68e63e03d201f241fa21101e2e260848c276b32817624cca6056`,
+computed with `sha256sum` on the merged file. Validation: `python3 -m unittest
+tools.test_rpi_checks` (30 tests) passes, including the per-workflow drift assertion.
+The original review remains bounded to the `src-deploy.yml` pin; this addendum is
+not a new full-gate pass.
