@@ -52,7 +52,7 @@ RUFF_GROUPS = (
 WORKFLOWS = ("src-ci.yml", "mvp-ci.yml", "mvp-validation.yml", "src-deploy.yml", "infra-plan.yml")
 # Explicitly updated with the matrix whenever native workflow commands change.
 WORKFLOW_HASHES = {
-    "src-ci.yml": "843077a5d5ffc5fe0c9b6ce2933b6fb46393016e6ca7ece248235cf3229d3d7c",
+    "src-ci.yml": "94730d9a7c926613827fcbda312185720e80c51f304815f00d8f9ef17c89f076",
     "mvp-ci.yml": "92178fff316a4cd8b4e619c47e96c0238106c311cad928263b6e795797a3a54e",
     "mvp-validation.yml": "94feeb7e0c6807a94dc2624eaf7c5e76c807a234e1777b593b169fd801e511cc",
     "src-deploy.yml": "3c2f1ed59b1486fc1316a48207cc4ef7d6a830bbba1dcad4152acab4bd2f1bbc",
@@ -110,14 +110,14 @@ WORKFLOW_INVENTORY = (
     "Loader=yaml.BaseLoader)['jobs'] for name in sys.argv[1:]}))"
 )
 BROWSER_ENTRY = (
-    "import runpy,tempfile,os\n"
+    "import runpy,tempfile,os,sys\n"
     "from unittest.mock import patch\n"
     "original=tempfile.TemporaryDirectory\n"
     "def external_scratch(*args,**kwargs):\n"
     "    kwargs['dir']=os.environ['TMPDIR']\n"
     "    return original(*args,**kwargs)\n"
     "with patch('tempfile.TemporaryDirectory',external_scratch):\n"
-    "    runpy.run_module('checks.design_system_browser_check',run_name='__main__')\n"
+    "    runpy.run_module(sys.argv.pop(1),run_name='__main__')\n"
 )
 REGULATORY_ASSERT = (
     "from pathlib import Path; import json,sys; "
@@ -686,10 +686,32 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
     add([python, "tools/rename-zava-tests.py"])
     group = "browser"
     python = py("api")
-    for name in ("design_system_browser_check", "regulatory_ux_check"):
+    for name in (
+        "design_system_browser_check",
+        "regulatory_ux_check",
+        "case_journey_browser_check",
+    ):
         lint(python, (f"checks/{name}.py",), "src/api")
     add([python, "-m", "playwright", "install", "chromium"])
-    add([python, "-c", BROWSER_ENTRY], "src/api", env={"PYTHONPATH": "<output>/safety"})
+    add(
+        [python, "-c", BROWSER_ENTRY, "checks.design_system_browser_check"],
+        "src/api",
+        env={"PYTHONPATH": "<output>/safety"},
+    )
+    add(
+        [
+            python,
+            "-c",
+            BROWSER_ENTRY,
+            "checks.case_journey_browser_check",
+            "--axe",
+            "<output>/axe-4.10.3.min.js",
+            "--out",
+            "<output>/case-journey",
+        ],
+        "src/api",
+        env={"PYTHONPATH": "<output>/safety:" + test_paths("api", True)},
+    )
     add(
         [
             python,
@@ -928,6 +950,20 @@ def verify_results(out: Path, receipt: dict[str, Any]) -> None:
             or any(scan["violations"] for scan in browser["scans"])
         ):
             raise GateError("Required browser result evidence is incomplete/failed")
+        journey = json.loads((out / "case-journey-results.json").read_text())
+        if (
+            not journey["browser"]
+            or journey["axe_version"] != "4.10.3"
+            or journey["page_errors"]
+            or journey["zoom"] != "chrome.tabs.setZoom=2; innerWidth<=640"
+            or len(journey["scans"]) != 37
+            or any(
+                item["impact"] in ("serious", "critical")
+                for scan in journey["scans"]
+                for item in scan["violations"]
+            )
+        ):
+            raise GateError("Required case journey evidence is incomplete/failed")
     for project in IMAGES:
         if f"image-{project}" not in groups:
             continue
@@ -1534,7 +1570,11 @@ class Runner:
     def browser(self) -> None:
         with self.gate("browser"):
             py = self.python("api")
-            for name in ("design_system_browser_check", "regulatory_ux_check"):
+            for name in (
+                "design_system_browser_check",
+                "regulatory_ux_check",
+                "case_journey_browser_check",
+            ):
                 self.lint(py, (f"checks/{name}.py",), "src/api")
             self.command([py, "-m", "playwright", "install", "chromium"], timeout=900)
             axe = self.out / "axe-4.10.3.min.js"
@@ -1552,10 +1592,33 @@ class Runner:
             )
             try:
                 self.command(
-                    [py, "-c", BROWSER_ENTRY],
+                    [py, "-c", BROWSER_ENTRY, "checks.design_system_browser_check"],
                     "src/api",
                     timeout=900,
                     env={"PYTHONPATH": str(self.safety)},
+                )
+                self.command(
+                    [
+                        py,
+                        "-c",
+                        BROWSER_ENTRY,
+                        "checks.case_journey_browser_check",
+                        "--axe",
+                        str(axe),
+                        "--out",
+                        str(self.out / "case-journey"),
+                    ],
+                    "src/api",
+                    timeout=900,
+                    env={
+                        "PYTHONPATH": str(self.safety)
+                        + ":"
+                        + self.tests_env("api", True)["PYTHONPATH"]
+                    },
+                )
+                shutil.copyfile(
+                    self.out / "case-journey/results.json",
+                    self.out / "case-journey-results.json",
                 )
             finally:
                 marker = self.snapshot / ".venv"
@@ -2128,7 +2191,12 @@ def validate_receipt(
     }
     if "browser" in executed:
         required_files.update(
-            ("axe-4.10.3.min.js", "regulatory-ux-results.json", "browser-bytecode-policy.pth")
+            (
+                "axe-4.10.3.min.js",
+                "regulatory-ux-results.json",
+                "case-journey-results.json",
+                "browser-bytecode-policy.pth",
+            )
         )
     if "infra" in executed:
         required_files.add("workflow-coverage.json")

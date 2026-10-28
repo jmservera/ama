@@ -43,7 +43,9 @@ function qualityPanel(c, id, refresh) {
             else message.focus();
             throw error;
           }
-        });
+        }, name === "quality-return" ? [note, defect, owner]
+          : name === "quality-fix" ? [note, fixer]
+          : name === "quality-handover" ? [note, told] : [note]);
       } finally {
         if (button instanceof HTMLButtonElement) { button.disabled = false; button.removeAttribute("aria-busy"); }
       }
@@ -102,7 +104,7 @@ function qualityPanel(c, id, refresh) {
         const replaces = (c.quality || []).some((r) => r.measure === measure.value && ["Accepted", "Handed over"].includes(r.state));
         if (replaces && !window.confirm("Replace this measure's evidence? Its previous acceptance and resident handover will no longer apply. The history will be kept.")) return;
         refresh(() => post(id, "quality-submit", { measure: measure.value, context_revision: Number(revision.value), submitted_by: by.value, source: src.value,
-          items: Object.fromEntries([...checks.querySelectorAll("input")].map((i) => [i.dataset.label, i.value])) }));
+          items: Object.fromEntries([...checks.querySelectorAll("input")].map((i) => [i.dataset.label, i.value])) }), [...form.querySelectorAll("input, textarea, select")]);
       } }, "Save evidence")));
     box.append(form);
   }

@@ -294,7 +294,7 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             expect(alerts.locator("a").first).to_be_focused()
             page.keyboard.press("Shift+Tab")
             expect(page.locator("#alerts-plain-mode")).to_be_focused()
-            page.get_by_role("tab", name="AI assistance", exact=False).click()
+            page.get_by_role("tab", name="AI assistance", exact=False).press("Enter")
             keyboard_activate(page, "#chat-panel > summary")
             expect(page.locator("#chat-panel > .muted")).to_contain_text(
                 "AI suggestion, not approved"
@@ -360,9 +360,9 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             expect(chat.locator("[role=status]")).to_contain_text("exercise inbox")
             expect(doubt).to_be_focused()
             expect(doubt).to_have_attribute("aria-disabled", "true")
-            page.get_by_role("tab", name="Blockers and safety", exact=False).click()
+            page.get_by_role("tab", name="Blockers and safety", exact=False).press("Enter")
             keyboard_walk(page, "#regulatory-alerts")
-            page.get_by_role("tab", name="AI assistance", exact=False).click()
+            page.get_by_role("tab", name="AI assistance", exact=False).press("Enter")
             keyboard_walk(page, "#regulatory-chat")
             inbox = fixture.call("/api/chat/regulatory/inbox", email="exercise-owner@example.test")[
                 1
@@ -379,7 +379,7 @@ def run(axe_path: Path | None) -> dict[str, Any]:
                 page.set_viewport_size({"width": width, "height": 900})
                 for selector in ("#regulatory-alerts", "#regulatory-chat"):
                     name = "Blockers and safety" if selector == "#regulatory-alerts" else "AI assistance"
-                    page.get_by_role("tab", name=name, exact=False).click()
+                    page.get_by_role("tab", name=name, exact=False).press("Enter")
                     assert page.locator(selector).evaluate(
                         "el => el.scrollWidth <= el.clientWidth + 1"
                     ), f"Horizontal overflow at {width}px: {selector}"
@@ -390,16 +390,16 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             page.set_viewport_size({"width": 320, "height": 900})
             for selector in ("#regulatory-alerts", "#regulatory-chat"):
                 name = "Blockers and safety" if selector == "#regulatory-alerts" else "AI assistance"
-                page.get_by_role("tab", name=name, exact=False).click()
+                page.get_by_role("tab", name=name, exact=False).press("Enter")
                 assert page.locator(selector).evaluate(
                     "el => el.scrollWidth <= el.clientWidth + 1"
                 ), f"200% text overflow: {selector}"
             scan(page, axe, reports, "200-percent-text-320px")
             page.set_viewport_size({"width": 1280, "height": 900})
             page.reload()
-            page.get_by_role("tab", name="Blockers and safety", exact=False).click()
+            page.get_by_role("tab", name="Blockers and safety", exact=False).press("Enter")
             expect(page.locator("#regulatory-alerts")).to_be_visible()
-            page.get_by_role("tab", name="AI assistance", exact=False).click()
+            page.get_by_role("tab", name="AI assistance", exact=False).press("Enter")
             page.locator("#chat-panel > summary").click()
             page.locator("#regulatory-chat > summary").click()
             expect(chat.locator(".regulatory-turn")).to_have_count(2)
@@ -412,7 +412,7 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             )
 
             fixture.f.source(version=3)
-            page.get_by_role("tab", name="Blockers and safety", exact=False).click()
+            page.get_by_role("tab", name="Blockers and safety", exact=False).press("Enter")
             page.get_by_role("button", name="Refresh alerts", exact=True).click()
             expect(alerts).to_contain_text("Not active or source uncertain")
             expect(alerts).to_contain_text("Status: breach risk")
@@ -426,7 +426,7 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             expect(alerts.locator(".regulatory-alert")).to_have_count(0)
             fixture.app.law = law
             fixture.app.regulatory.env = {}
-            page.get_by_role("tab", name="AI assistance", exact=False).click()
+            page.get_by_role("tab", name="AI assistance", exact=False).press("Enter")
             page.reload()
             page.locator("#chat-panel > summary").click()
             page.locator("#regulatory-chat > summary").click()

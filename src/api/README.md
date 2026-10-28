@@ -105,7 +105,8 @@ The focused check owns a real loopback app with public constructed fixtures,
 pinned axe, keyboard/reflow states and actual Chromium 200% tab zoom through a
 test-only extension. No Azure, private dataset or live model is used.
 Coordinate heavy runs through `/tmp/ama-rpi-heavy.lock`; nonblocking retries
-every 60 seconds for up to 40 minutes. Screen-reader, staff usability and
+every 60 seconds for up to 60 minutes for the owner-authorized #526 continuation;
+release immediately after heavy checks. Screen-reader, staff usability and
 post-deployment verification remain pending the owner.
 
 ## Specialist screen delivery (#149)

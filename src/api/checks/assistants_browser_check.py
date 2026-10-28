@@ -13,6 +13,7 @@ from pathlib import Path
 
 from playwright.sync_api import expect, sync_playwright
 
+import release_support
 from test_assistants import Provider, config
 from test_mvp import DATA
 from zava_forward.core.assistants import Assistants, REGISTRY, canonical
@@ -37,6 +38,7 @@ def main():
     store.ai = Provider()
     app = App(store, "browser-test-only")
     app.assistants = Assistants(store, config())
+    release_support.install(store, legacy=False)
     server = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(app))
     thread = threading.Thread(target=server.serve_forever)
     thread.start()
@@ -65,7 +67,9 @@ def main():
             page.wait_for_selector("nav:not([hidden])")
             page.goto(base + "/app#/case/ZF-1?tab=ai")
             expect(page.get_by_role("button", name="Request Stock facts and prioritisation", exact=True)).to_be_visible()
-            check("five distinct case-card controls", page.locator("button:has-text('Request ')").count() == 5)
+            check("five distinct case-card controls", page.locator(
+                "#case-panel-ai > section.card button:has-text('Request ')"
+            ).count() == 5)
             names = ("Stock facts and prioritisation", "Assessment preparation", "Funding evidence",
                      "Works and resident coordination", "Quality evidence")
             pm = DATA["staff"][1]
@@ -87,12 +91,75 @@ def main():
             )
             card.get_by_label("I checked the cited sources", exact=False).check()
             card.get_by_role("button", name="Record human source verification").click()
-            try:
-                page.get_by_role("button", name="Accept", exact=True).first.wait_for(timeout=5000)
-            except Exception as e:
-                raise AssertionError(card.inner_text()) from e
+            expect(card.get_by_role("button", name="Accept", exact=True)).to_be_enabled()
+            card.get_by_role("button", name="Edit", exact=True).click()
+            editing = card.get_by_label("Edited evidence proposal JSON", exact=True)
+            pending_output = json.loads(editing.input_value())
+            pending_output["summary"] = "Unsubmitted synthetic review wording"
+            editing.fill(json.dumps(pending_output))
+            card.get_by_label("Reason", exact=True).fill("Pending source review reason")
+            card.get_by_label("I checked the cited sources", exact=False).check()
+            page.get_by_role("button", name="Refresh proposals", exact=True).click()
+            expect(editing).to_have_value(json.dumps(pending_output))
+            expect(card.get_by_label("Reason", exact=True)).to_have_value(
+                "Pending source review reason"
+            )
+            expect(card.get_by_label(
+                "I checked the cited sources", exact=False
+            )).to_be_checked()
+            check("async proposal reload preserves current-revision edits", True)
+            page.get_by_role("tab", name="Resident", exact=True).click()
+            page.locator("#outcome").fill("Unrelated call with pending proposal review")
+            page.get_by_role("button", name="Save", exact=True).click()
+            expect(page.locator("#outcome")).to_have_value("")
+            page.get_by_role("tab", name="AI assistance", exact=False).click()
+            expect(editing).to_have_value(json.dumps(pending_output))
+            expect(card.get_by_label("Reason", exact=True)).to_have_value(
+                "Pending source review reason"
+            )
+            check("unrelated successful action preserves async review edits", True)
+            db = store.assistant_connection()
+            domain = db.execute("SELECT id,body FROM cases ORDER BY id").fetchall()
+            db.close()
+            current_proposal = next(
+                item for item in app.assistants.listing(pm)["proposals"]
+                if item["capability"] == "stock-prioritisation"
+            )
+            revised = page.request.post(
+                base + f"/api/assistants/proposals/{current_proposal['id']}/review",
+                headers={"X-ZF-CSRF": "1"},
+                data={"action": "verify", "revision": current_proposal["revision"],
+                      "source_verified": True, "note": "Concurrent synthetic source review"},
+            )
+            check("concurrent revision fixture records source review", revised.status == 200)
+            page.get_by_role("button", name="Refresh proposals", exact=True).click()
+            expect(card.get_by_role("button", name="Accept", exact=True)).to_be_enabled()
+            expect(card.get_by_label("Reason", exact=True)).to_have_value("")
+            check(
+                "different revision never inherits pending review edits",
+                json.loads(editing.input_value())["summary"]
+                != "Unsubmitted synthetic review wording",
+            )
+            recovery = page.locator("details").filter(has=page.get_by_text(
+                "Unsubmitted review edits from earlier evidence", exact=True
+            ))
+            recovery.locator("summary").click()
+            expect(recovery.get_by_label("Earlier Reason", exact=True)).to_have_value(
+                "Pending source review reason"
+            )
+            page.get_by_role("button", name="Refresh proposals", exact=True).click()
+            expect(recovery.get_by_label("Earlier Reason", exact=True)).to_have_value(
+                "Pending source review reason"
+            )
+            check("old-revision edits remain available to copy across refresh", True)
+            recovery.locator("summary").click()
+            recovery.get_by_role("button", name="Discard earlier review edits").click()
             card.get_by_label("Reason", exact=True).fill("Accept this proposal, not the case.")
-            card.get_by_role("button", name="Accept", exact=True).click()
+            with page.expect_response("**/api/assistants/proposals/*/review") as accepted:
+                card.get_by_role("button", name="Accept", exact=True).click()
+            if accepted.value.status != 200:
+                raise AssertionError(f"Accept failed: {accepted.value.text()}")
+            check("accept records current revision", True)
             page.wait_for_selector("article >> text=accepted.", state="attached")
             check("explicit separate human verification and accept", True)
             db = store.assistant_connection()
@@ -132,7 +199,8 @@ def main():
             page.route("**/api/assistants", hold)
             page.goto(base + "/app#/case/ZF-1?tab=resident")
             expect(page.get_by_role("heading", name="Log a call", exact=True)).to_be_visible(timeout=2000)
-            expect(page.get_by_role("button", name="Save answer", exact=True)).to_be_enabled()
+            expect(page.get_by_text("Read-only resident decisions.", exact=False)).to_be_visible()
+            expect(page.get_by_role("button", name="Save", exact=True)).to_be_enabled()
             check("pending assistance does not block manual controls", bool(held))
             page.fill("#outcome", "Manual call while assistance is pending")
             page.get_by_role("button", name="Save", exact=True).click()

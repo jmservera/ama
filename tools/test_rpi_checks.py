@@ -26,6 +26,24 @@ SPEC.loader.exec_module(gate)
 
 
 class GateTests(unittest.TestCase):
+    def test_journey_import_paths_keep_safety_and_shared_fixtures(self) -> None:
+        checks = gate.required_checks(
+            Path("."),
+            {
+                "owner": "a" * 24,
+                "sql": {},
+                "images": {},
+                "extras": [],
+                "executed_groups": ["browser"],
+            },
+        )
+        journey = next(row for row in checks if "checks.case_journey_browser_check" in row["argv"])
+        self.assertEqual(
+            journey["env"]["PYTHONPATH"],
+            "<output>/safety:<checkout>/src/api/tests:<checkout>/src/core/tests:"
+            "<checkout>/src/agents/tests",
+        )
+
     def setUp(self) -> None:
         self.temp = tempfile.TemporaryDirectory(prefix="rpi-contract-")
         self.addCleanup(self.temp.cleanup)
@@ -405,6 +423,7 @@ class GateTests(unittest.TestCase):
             "files": {
                 "axe-4.10.3.min.js": "fixture",
                 "regulatory-ux-results.json": "fixture",
+                "case-journey-results.json": "fixture",
                 "workflow-coverage.json": "fixture",
                 "browser-bytecode-policy.pth": "fixture",
                 "snapshot-inputs.log": "fixture",
@@ -467,6 +486,14 @@ class GateTests(unittest.TestCase):
                     "axe_version": "4.10.3",
                     "axe_sha256": gate.AXE_SHA256,
                     "scans": [{"violations": []}],
+                }
+            elif name == "case-journey-results.json":
+                content = {
+                    "browser": "fixture Chromium",
+                    "axe_version": "4.10.3",
+                    "page_errors": [],
+                    "zoom": "chrome.tabs.setZoom=2; innerWidth<=640",
+                    "scans": [{"violations": []} for _ in range(37)],
                 }
             elif name == "workflow-coverage.json":
                 content = {"steps": []}
@@ -562,6 +589,9 @@ class GateTests(unittest.TestCase):
                         )
             for name, key, value in (
                 ("regulatory-ux-results.json", "outcome", "failed"),
+                ("case-journey-results.json", "zoom", "device scale only"),
+                ("case-journey-results.json", "scans", []),
+                ("case-journey-results.json", "page_errors", ["Uncaught failure"]),
                 ("api-gate.json", "Results", [{"Vulnerabilities": [{"Severity": "HIGH"}]}]),
                 ("api.spdx.json", "packages", []),
                 ("workflow-coverage.json", "steps", [{"coverage": "fabricated"}]),

@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import json
 import tempfile
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -18,6 +20,9 @@ from checks.workbench_browser_check import synthetic_data
 
 def journey_data() -> dict[str, Any]:
     data = synthetic_data()
+    final = copy.deepcopy(data["cases"][0])
+    final.update(id="SYN-526-FINAL", stage="Final checks before ordering")
+    data["cases"].append(final)
     for case in data["cases"]:
         for document in case.get("documents", []):
             document.setdefault("name", f"{document['id']}.txt")
@@ -29,9 +34,9 @@ def tab(page: Page, name: str) -> None:
     page.get_by_role("tab", name=name, exact=False).click()
 
 
-def sign_in(page: Page, base: str) -> None:
+def sign_in(page: Page, base: str, email: str = "sam@example.test") -> None:
     page.goto(base + "/app#/case/ZF-1?tab=overview")
-    page.locator("#email").fill("sam@example.test")
+    page.locator("#email").fill(email)
     page.locator("#pw").fill("synthetic-check")
     page.get_by_role("button", name="Sign in", exact=True).click()
     page.get_by_role("tab", name="Overview", exact=True).wait_for()
@@ -115,7 +120,8 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             check("End and Space activate History", "tab=history" in page.url)
             page.keyboard.press("Home")
             page.keyboard.press("Enter")
-            page.get_by_role("button", name="Open next action", exact=True).click()
+            page.get_by_role("button", name="Open next action", exact=True).focus()
+            page.keyboard.press("Enter")
             check(
                 "summary jump focuses panel heading",
                 page.locator(":focus").evaluate(
@@ -152,6 +158,99 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                 "saved call reaches actual history",
                 "Unsaved synthetic call" in page.locator("#case-panel-history").inner_text(),
             )
+            finance_context = browser.new_context(viewport={"width": 1280, "height": 800})
+            finance_context.route(
+                "**/*",
+                lambda route: (
+                    route.continue_() if route.request.url.startswith(base + "/") else route.abort()
+                ),
+            )
+            finance = finance_context.new_page()
+            finance.on("pageerror", lambda error: errors.append(str(error)))
+            sign_in(finance, base, "pam@example.test")
+            tab(finance, "Funding")
+            budget = finance.locator("details").filter(
+                has=finance.get_by_text("Propose a budget", exact=True)
+            )
+            commitment = finance.locator("details").filter(
+                has=finance.get_by_text("Raise a commitment", exact=True)
+            )
+            budget.locator("summary").click()
+            budget.get_by_label("Amount in pounds", exact=True).fill("321")
+            commitment.locator("summary").click()
+            commitment.get_by_label("Supplier", exact=True).fill("Synthetic supplier")
+            finance.route(
+                "**/api/cases/ZF-1/finance",
+                lambda route: route.fulfill(status=409, json={"error": "Synthetic conflict"}),
+            )
+            commitment.get_by_role("button", name="Raise commitment", exact=True).click()
+            finance.get_by_text("Synthetic conflict", exact=True).wait_for()
+            check(
+                "failed action preserves submitted and adjacent drafts",
+                budget.get_by_label("Amount in pounds", exact=True).input_value() == "321"
+                and commitment.get_by_label("Supplier", exact=True).input_value()
+                == "Synthetic supplier",
+            )
+            finance.unroute("**/api/cases/ZF-1/finance")
+            finance.route(
+                "**/api/cases/ZF-1/finance",
+                lambda route: route.fulfill(status=200, json={"ok": True}),
+            )
+            commitment.get_by_role("button", name="Raise commitment", exact=True).click()
+            finance.wait_for_function(
+                "() => document.querySelector('[id=\"f-Raise a commitment-supplier\"]').value"
+                " === ''"
+            )
+            check(
+                "client success clears only explicitly submitted same-card fields",
+                budget.get_by_label("Amount in pounds", exact=True).input_value() == "321",
+            )
+            finance_context.close()
+            tab(page, "Survey and assessment")
+            page.get_by_label("Choose a file", exact=True).set_input_files(
+                {
+                    "name": "constructed-review.txt",
+                    "mimeType": "text/plain",
+                    "buffer": b"Constructed journey review fixture. No resident data.",
+                }
+            )
+            page.locator("#doc-upload-source").fill("Constructed browser fixture")
+            page.locator("#doc-upload-source_version").fill("1")
+            page.locator("#doc-upload-reason").fill("Verify document review counts")
+            with page.expect_response("**/api/cases/ZF-1/upload") as upload:
+                page.get_by_role("button", name="Add document", exact=True).click()
+            if upload.value.status != 200:
+                raise AssertionError(f"Constructed upload failed: {upload.value.text()}")
+            page.get_by_role("link", name="constructed-review.txt", exact=True).wait_for()
+            with page.expect_response("**/api/cases/ZF-1/read-doc") as document_response:
+                page.get_by_role("button", name="Read with AI", exact=True).last.click()
+            if document_response.value.status != 200:
+                raise AssertionError(f"Document read failed: {document_response.value.text()}")
+            page.locator("#case-panel-survey .aimeta").wait_for()
+            local_count = page.locator("[data-case-ai-summary]").inner_text()
+            tab_count = page.get_by_role("tab", name="AI assistance").inner_text()
+            check(
+                f"document review updates summary and tab ({local_count}; {tab_count})",
+                (
+                    "1 AI suggestions waiting" in local_count
+                    or "1 local drafts to review" in local_count
+                )
+                and ("1 to review" in tab_count or "1 local drafts to review" in tab_count),
+            )
+            document_review = page.locator("#case-panel-survey .aimeta")
+            document_review.get_by_role("button", name="Accept", exact=True).click()
+            page.wait_for_function(
+                "() => document.querySelector('#case-panel-survey .aimeta')"
+                ".dataset.reviewState === 'Accepted'"
+            )
+            check(
+                "document review removes count without approving the case",
+                "local drafts to review" not in page.locator("[data-case-ai-summary]").inner_text()
+                and "1 AI suggestions waiting"
+                not in page.locator("[data-case-ai-summary]").inner_text()
+                and "1 local drafts to review"
+                not in page.get_by_role("tab", name="AI assistance").inner_text(),
+            )
             tab(page, "Resident")
             with page.expect_response("**/api/cases/ZF-1/ai") as draft_response:
                 page.get_by_role("button", name="Draft with AI", exact=True).click()
@@ -172,7 +271,8 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             )
             record = card.get_attribute("data-record-id")
             page.get_by_role("textbox", name="Draft", exact=True).fill("Edited synthetic wording")
-            card.get_by_role("button", name="Edit", exact=True).click()
+            card.get_by_role("button", name="Edit", exact=True).focus()
+            page.keyboard.press("Enter")
             check(
                 "edit requires linked reason",
                 card.get_by_label("Reason", exact=True).get_attribute("aria-invalid") == "true",
@@ -189,7 +289,8 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                 and page.get_by_role("textbox", name="Draft", exact=True).input_value()
                 == "Edited synthetic wording",
             )
-            card.get_by_role("button", name="Edit", exact=True).click()
+            card.get_by_role("button", name="Edit", exact=True).focus()
+            page.keyboard.press("Enter")
             page.wait_for_function(
                 "() => document.querySelector('#resident-draft-output .aimeta')"
                 ".dataset.reviewState === 'Edited'"
@@ -198,6 +299,34 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                 "recorded edit keeps approval boundary",
                 "not an approval, consent or safety" in card.inner_text(),
             )
+            for action, reviewed in (("Accept", "Accepted"), ("Reject", "Rejected")):
+                page.get_by_role("button", name="Draft with AI", exact=True).focus()
+                with page.expect_response("**/api/cases/ZF-1/ai"):
+                    page.keyboard.press("Enter")
+                card = page.locator("#resident-draft-output .ai-suggestion")
+                card.get_by_role("button", name=action, exact=True).wait_for()
+                if action == "Reject":
+                    card.get_by_role("button", name=action, exact=True).focus()
+                    page.keyboard.press("Enter")
+                    check(
+                        "keyboard reject focuses required reason",
+                        card.get_by_label("Reason", exact=True).evaluate(
+                            "el => el === document.activeElement"
+                            " && el.getAttribute('aria-invalid') === 'true'"
+                        ),
+                    )
+                    page.keyboard.type("Checked synthetic rejection")
+                card.get_by_role("button", name=action, exact=True).focus()
+                page.keyboard.press("Enter")
+                page.wait_for_function(
+                    "state => document.querySelector('#resident-draft-output .aimeta')"
+                    ".dataset.reviewState === state",
+                    arg=reviewed,
+                )
+                check(
+                    f"keyboard {action.lower()} records draft-only review",
+                    "not an approval, consent or safety" in card.inner_text(),
+                )
             tab(page, "Overview")
             page.reload()
             page.get_by_role("tab", name="Overview", exact=True).wait_for()
@@ -295,9 +424,8 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             page.unroute("**/api/assistants")
             page.reload()
 
-            for state in ("blocked", "empty", "closed", "ai-unavailable"):
-
-                def variant(route: Route) -> None:
+            def case_variant(state: str) -> Callable[[Route], None]:
+                def handle(route: Route) -> None:
                     response = route.fetch()
                     case = response.json()
                     if state == "empty":
@@ -306,6 +434,10 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                         case["closed"] = True
                     route.fulfill(response=response, json=case)
 
+                return handle
+
+            for state in ("blocked", "empty", "closed", "ai-unavailable"):
+                variant = case_variant(state)
                 page.route("**/api/cases/ZF-1", variant)
                 if state == "ai-unavailable":
                     page.route(
@@ -337,6 +469,19 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                 if state == "ai-unavailable":
                     page.unroute("**/api/assistants")
 
+            page.goto(base + "/app#/case/SYN-526-FINAL?tab=overview")
+            advance = page.get_by_role("button", name="Ready to book the installation", exact=True)
+            advance.wait_for()
+            advance.focus()
+            with page.expect_response("**/api/cases/SYN-526-FINAL/advance") as refused:
+                page.keyboard.press("Enter")
+            check("keyboard final checks preserve blocked approval", refused.value.status == 409)
+            page.get_by_role("status").filter(has_text="Funding").last.wait_for()
+            check(
+                "blocked keyboard action does not advance case",
+                page.request.get(base + "/api/cases/SYN-526-FINAL").json()["stage"]
+                == "Final checks before ordering",
+            )
             page.goto(base + "/app#/case/ZF-4?tab=resident")
             page.get_by_role("tab", name="Resident", exact=True).wait_for()
             check(
@@ -459,13 +604,37 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                     zoom_page.wait_for_function("innerWidth <= 640")
                     check("actual Chromium tab zoom is 200%", actual == 2)
                     for name in zoom_page.get_by_role("tab").all_text_contents():
-                        zoom_page.get_by_role("tab", name=name, exact=True).click()
+                        button = zoom_page.get_by_role("tab", name=name, exact=True)
+                        button.focus()
+                        zoom_page.keyboard.press("Enter")
                         check(
                             f"200% browser zoom reflows/{name}",
                             zoom_page.evaluate(
                                 "document.documentElement.scrollWidth <= innerWidth"
                             ),
                         )
+                        focus = button.evaluate(
+                            """el => {
+                              const r = el.getBoundingClientRect();
+                              return {active: el === document.activeElement,
+                                outline: getComputedStyle(el).outlineStyle,
+                                top: r.top, bottom: r.bottom, left: r.left, right: r.right,
+                                width: innerWidth, height: innerHeight};
+                            }"""
+                        )
+                        visible = (
+                            focus["active"]
+                            and focus["outline"] != "none"
+                            and focus["top"] >= 0
+                            and focus["bottom"] <= focus["height"]
+                            and focus["left"] >= 0
+                            and focus["right"] <= focus["width"]
+                        )
+                        if not visible:
+                            zoom_page.screenshot(
+                                path=str(out / "zoom-focus-failure.png"), full_page=True
+                            )
+                        check(f"200% keyboard focus visible/{name}: {focus}", visible)
                     zoom_page.screenshot(path=str(out / "browser-zoom-200.png"), full_page=True)
                 finally:
                     zoom.close()

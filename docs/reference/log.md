@@ -7936,3 +7936,31 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   Targeted tests and static checks passed, but complete API/browser/axe/zoom
   validation, independent Review and publication remain blocked/pending.
   No push, pull request or complete RPI success is claimed.
+
+## [2026-10-28] validate | Employee case journey continuation (#526)
+
+* Preserve the earlier blocked run and original RPI evidence. The owner
+  authorized another bounded lock window, independent review and topic PR.
+* Actual local API discovery passed 1156 tests (314 opt-in skips). Constructed
+  journey checks pass 37 pinned axe states, retained drafts, keyboard reviews,
+  blocked final-check refusal and real 200% browser zoom. Existing workbench,
+  employee recovery, assistant, provenance, regulatory and challenge checks pass.
+* Corrected mobile summary spacing without shrinking text or hiding values;
+  measured bottom 1581.96875 at 320x800 is below the unchanged 1600 bound.
+  Keyboard-focused tabs now scroll fully into view, including at 200%.
+  Local gate parity includes the hosted journey check and bound result evidence.
+* Updated the [design boundary](./research/ux/employee-case-workspace-redesign.md)
+  and index. These are engineering observations, not screen-reader, staff,
+  legal or deployed acceptance. Independent Review and final publication gates
+  remain separately recorded steps; no cloud action is authorized or performed.
+
+## [2026-10-28] refine | Independent journey review and routed repairs (#526)
+
+* Preserve the original Complete / Defects found Review. Its four findings
+  route to a later implementation: local harness import parity, same-card
+  draft clearing, async proposal review edits and document review counts.
+* Repaired these boundaries with explicit submitted controls, ID/revision-safe
+  restoration and copy recovery, and known-local counts alongside unknown
+  assistant totals. New journey 37-state axe/keyboard/actual-zoom checks and
+  27 assistant scenarios pass. Full committed publication gate is still a
+  separate pending requirement. Human and deployed acceptance remain unchanged.

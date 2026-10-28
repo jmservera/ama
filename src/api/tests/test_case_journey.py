@@ -170,6 +170,42 @@ class CaseJourney(unittest.TestCase):
         self.assertIn('draftBox: h("div", { id: "resident-draft-output" })', app)
         self.assertIn('data-case-dirty="true"', app)
 
+    def test_refresh_clears_only_explicit_submission_after_success(self) -> None:
+        app = (WEB / "app.js").read_text()
+        case = app.split("async function caseView(id) {", 1)[1]
+        refresh = case.split("  const refresh = ", 1)[1].split("  const outcome = ", 1)[0]
+        script = (
+            """
+let briefingBox = {}, renders = 0, errors = 0;
+const id = "SYN-526";
+const session = {}, caseSession = session;
+const msg = {replaceChildren() { errors++; }};
+const h = () => ({});
+const caseView = async () => { renders++; };
+const submitted = {dataset: {caseDirty: "true"}};
+const unrelated = {dataset: {caseDirty: "true"}};
+const refresh = """
+            + refresh
+            + """
+(async () => {
+  await refresh(async () => { throw new Error("Synthetic refusal"); }, [submitted]);
+  const failed = submitted.dataset.caseDirty === "true"
+    && unrelated.dataset.caseDirty === "true" && errors === 1 && renders === 0;
+  await refresh(async () => {}, [submitted]);
+  const cleared = !submitted.dataset.caseDirty;
+  submitted.dataset.caseDirty = "true"; submitted.value = "Sent";
+  await refresh(async () => { submitted.value = "Typed while saving"; }, [submitted]);
+  console.log(JSON.stringify({failed, cleared, pending: submitted.dataset.caseDirty,
+    unrelated: unrelated.dataset.caseDirty, renders}));
+})();
+"""
+        )
+        result = subprocess.run(["node", "-e", script], text=True, capture_output=True, check=True)
+        self.assertEqual(
+            json.loads(result.stdout),
+            {"failed": True, "cleared": True, "pending": "true", "unrelated": "true", "renders": 2},
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

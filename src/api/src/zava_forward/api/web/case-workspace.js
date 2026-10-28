@@ -74,7 +74,7 @@ const CaseWorkspace = (() => {
       const loading = !assistant.hasAttribute("data-waiting");
       const state = aiMode.workflow ? "Workflow-only mode." : assistant.dataset.assistance || "Loading assistance. Ordinary case work continues.";
       aiValue.replaceChildren(`${unknown ? `AI review count unavailable.${draftCount ? ` ${draftCount} local drafts to review.` : ""}` : loading ? "AI review count loading." : count ? `${count} AI suggestions waiting for review.` : "No AI suggestions waiting."} ${state}`, aiJump);
-      if (aiTab.button) aiTab.button.textContent = `AI assistance (${unknown ? "review count unavailable" : loading ? "loading" : `${count} to review`})`;
+      if (aiTab.button) aiTab.button.textContent = `AI assistance (${unknown ? `review count unavailable${draftCount ? `; ${draftCount} local drafts to review` : ""}` : loading ? "loading" : `${count} to review`})`;
     };
     const item = (name, value, button) => h("div", {}, h("dt", {}, name), h("dd", {}, value, button));
     const jump = (tab, text) => h("button", { class: "alt", type: "button", onclick: () => select(tab, true, true) }, text);
@@ -121,6 +121,7 @@ const CaseWorkspace = (() => {
       tab.panel.tabIndex = 0;
       tab.button = h("button", { type: "button", role: "tab", id: `case-tab-${tab.id}`,
         "aria-controls": tab.panel.id, onclick: () => select(tab.id, true),
+        onfocus: event => event.currentTarget.scrollIntoView({ block: "nearest", inline: "nearest" }),
         onkeydown: event => {
           const positions = { ArrowRight: (index + 1) % definitions.length, ArrowLeft: (index + definitions.length - 1) % definitions.length, Home: 0, End: definitions.length - 1 };
           if (event.key in positions) {

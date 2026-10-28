@@ -569,15 +569,18 @@ async function caseView(id) {
   if (caseSession !== session) return;
   const savedFields = sameCase ? captureCaseFields() : [];
   session.controller?.dispose();
-  const assistantPanel = assistantCasePanel(id);
+  const assistantPanel = assistantCasePanel(id, savedFields);
   const r = c.resident, hm = c.home;
   const openHaz = c.hazards.filter((x) => !x.released);
   const msg = h("div", { role: "status" });
-  const refresh = async (fn) => {
-    const completed = document.activeElement?.closest("section.card, form");
+  const refresh = async (fn, submitted = []) => {
+    const sent = submitted.map(field => ({ field, value: field.value, checked: field.checked }));
     try {
       await fn();
-      completed?.querySelectorAll("[data-case-dirty]").forEach(field => delete field.dataset.caseDirty);
+      if (caseSession !== session) return;
+      sent.forEach(({ field, value, checked }) => {
+        if (field.value === value && field.checked === checked) delete field.dataset.caseDirty;
+      });
       briefingBox = null; await caseView(id);
     } catch (e) {
       msg.replaceChildren(h("p", { class: "err" }, e.message), ...(e.reasons || []).map((x) => h("p", {}, x)));
@@ -640,7 +643,7 @@ async function caseView(id) {
       h("label", { for: "outcome" }, "What happened"), outcome,
       h("label", {}, "How you spoke", channel),
       h("label", { for: "note" }, "Notes"), note,
-      h("p", {}, h("button", { onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/call`, { outcome: outcome.value, note: note.value, channel: channel.value })) }, "Save")));
+      h("p", {}, h("button", { onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/call`, { outcome: outcome.value, note: note.value, channel: channel.value }), [outcome, note, channel]) }, "Save")));
   const finalChecks = c.can_advance && h("section", { class: "card" }, h("h2", {}, "Final checks"),
       c.gate.length ? [h("p", {}, "This case cannot move on yet:"), h("ul", {}, c.gate.map((x) => h("li", {}, x)))] : h("p", {}, "Everything is in place."),
       h("button", { onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/advance`, {})) }, "Ready to book the installation"));
@@ -715,22 +718,26 @@ async function caseView(id) {
   session.controller?.counts();
 }
 
-function caseFieldEntries() {
+function caseFieldEntries(root = app) {
   const seen = new Map();
-  return [...app.querySelectorAll("input, textarea, select")].filter(field =>
+  return [...root.querySelectorAll("input, textarea, select")].filter(field =>
     !field.closest("[data-challenge-case], #resident-draft-output") && field.type !== "file").map(field => {
-    const label = field.id || `${field.closest("[id]")?.id}:${field.name || field.getAttribute("aria-label") || field.type}`;
+    const proposal = field.closest("[data-proposal-id]");
+    const prefix = proposal ? `${proposal.dataset.proposalId}:${proposal.dataset.proposalRevision}:` : "";
+    const label = prefix + (field.id || `${field.closest("[id]")?.id}:${field.name || field.getAttribute("aria-label") || field.type}`);
     const index = seen.get(label) || 0;
     seen.set(label, index + 1);
-    return { field, key: `${label}:${index}` };
+    return { field, key: field.dataset.preservedReviewKey || `${label}:${index}`,
+      proposal: proposal && { id: proposal.dataset.proposalId, revision: proposal.dataset.proposalRevision } };
   });
 }
 function captureCaseFields() {
   return caseFieldEntries().filter(({ field }) => field.dataset.caseDirty)
-    .map(({ field, key }) => ({ key, value: field.value, checked: field.checked }));
+    .map(({ field, key, proposal }) => ({ key, value: field.value, checked: field.checked, proposal,
+      label: field.getAttribute("aria-label") || field.name || field.id, type: field.type }));
 }
-function restoreCaseFields(saved) {
-  const fields = new Map(caseFieldEntries().map(({ key, field }) => [key, field]));
+function restoreCaseFields(saved, root = app) {
+  const fields = new Map(caseFieldEntries(root).map(({ key, field }) => [key, field]));
   saved.forEach(({ key, value, checked }) => {
     const field = fields.get(key);
     if (field) {
@@ -741,6 +748,24 @@ function restoreCaseFields(saved) {
       }
     }
   });
+}
+function restoreProposalFields(saved, panel) {
+  restoreCaseFields(saved, panel);
+  const keys = new Set(caseFieldEntries(panel).map(({ key }) => key));
+  const missing = saved.filter(item => item.proposal && !keys.has(item.key));
+  if (!missing.length) return;
+  const recovery = h("details", {}, h("summary", {}, "Unsubmitted review edits from earlier evidence"),
+    h("p", { role: "status" }, "The proposal revision changed or is no longer available. These edits were not applied to different evidence. Copy what you need and check the current sources again."));
+  missing.forEach(item => {
+    const copy = h("textarea", { readonly: true, "aria-label": `Earlier ${item.label}`,
+      "data-case-dirty": "true", "data-preserved-review-key": item.key });
+    copy.value = item.type === "checkbox" ? String(item.checked) : item.value;
+    recovery.append(h("div", { "data-proposal-id": item.proposal.id,
+      "data-proposal-revision": item.proposal.revision },
+      h("p", {}, `${item.proposal.id}, revision ${item.proposal.revision}: ${item.label}`), copy));
+  });
+  recovery.append(h("button", { type: "button", class: "alt", onclick: () => recovery.remove() }, "Discard earlier review edits"));
+  panel.append(recovery);
 }
 app.addEventListener("input", event => {
   if (caseSession && event.target.matches("input, textarea, select")
@@ -807,7 +832,7 @@ function returnPanel(c, id, refresh) {
       h("p", { class: "muted" }, "Only a manager can reopen a closed case. Your reason is kept in the audit log."),
       h("label", { for: "ret-why" }, "Why it is being reopened"), why,
       ...fields(),
-      h("p", {}, h("button", { onclick: () => refresh(() => post(id, "reopen", metadata())) }, "Reopen case")), history);
+      h("p", {}, h("button", { onclick: () => refresh(() => post(id, "reopen", metadata()), [why, source, next]) }, "Reopen case")), history);
   }
   const earlier = STAGES_ORDER.slice(0, Math.max(0, STAGES_ORDER.indexOf(c.stage)));
   if (!earlier.length) return history ? h("section", { class: "card" }, h("h2", {}, "Return and reopen history"), history) : null;
@@ -817,7 +842,7 @@ function returnPanel(c, id, refresh) {
     h("label", { for: "ret-to" }, "Back to which stage"), to,
     h("label", { for: "ret-why" }, "Why it is going back"), why,
     ...fields(),
-    h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "return", { ...metadata(), to_stage: to.value })) }, "Send back")), history);
+    h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "return", { ...metadata(), to_stage: to.value }), [why, source, next, to]) }, "Send back")), history);
 }
 
 function recordedChangeForm(prefix, label, fields, submit) {
@@ -843,7 +868,8 @@ function recordedChangeForm(prefix, label, fields, submit) {
       button.textContent = "Saving...";
       status.textContent = "Saving the recorded change...";
       try {
-        await submit(Object.fromEntries(inputs.map(({ name, input }) => [name, input.value.trim()])));
+        await submit(Object.fromEntries(inputs.map(({ name, input }) => [name, input.value.trim()])),
+          [...form.querySelectorAll("input, textarea, select")]);
         delete form.dataset.unsaved;
       } catch (error) {
         status.replaceChildren(h("p", { class: "err" }, error.message));
@@ -880,12 +906,12 @@ function handoffPanel(c, id, refresh) {
     const why = h("input", { id: "ho-why", type: "text", maxlength: 300 });
     if (hd.to_code === me.user.code) {
       if (hd.state === "Offered") kids.push(h("button", { class: "alt", onclick: () => refresh(() => post(id, "receive-handoff", {})) }, "Record receipt (not acceptance)"));
-      kids.push(recordedChangeForm("ho-accept", "Accept this case", [], async (metadata) => {
+      kids.push(recordedChangeForm("ho-accept", "Accept this case", [], async (metadata, submitted) => {
         await post(id, "accept-handoff", { ...metadata, handoff_version: (c.handoff_history || []).length });
-        await refresh(async () => {});
+        await refresh(async () => {}, submitted);
       }),
         h("div", { class: "row" }, h("label", { for: "ho-why" }, "Reason if you cannot take it"), why,
-          h("button", { class: "alt", onclick: () => refresh(() => post(id, "decline-handoff", { reason: why.value })) }, "Decline")));
+          h("button", { class: "alt", onclick: () => refresh(() => post(id, "decline-handoff", { reason: why.value }), [why]) }, "Decline")));
     }
     if (hd.from_code === me.user.code || isManager()) {
       kids.push(h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "withdraw-handoff", {})) }, "Withdraw the offer")));
@@ -894,7 +920,7 @@ function handoffPanel(c, id, refresh) {
         const reason = h("input", { id: "ho-escalate-why", maxlength: 300 });
         kids.push(h("label", { for: "ho-escalate-to" }, "Escalate to manager"), manager,
           h("label", { for: "ho-escalate-why" }, "Escalation reason"), reason,
-          h("button", { class: "alt", onclick: () => refresh(() => post(id, "escalate-handoff", { to: manager.value, reason: reason.value })) }, "Record manual escalation"));
+          h("button", { class: "alt", onclick: () => refresh(() => post(id, "escalate-handoff", { to: manager.value, reason: reason.value }), [manager, reason]) }, "Record manual escalation"));
       }
     }
   } else {
@@ -902,7 +928,7 @@ function handoffPanel(c, id, refresh) {
     if (hd && hd.state === "Accepted" && hd.to_code === me.user.code && c.owner_code === me.user.code) {
       const done = h("input", { id: "ho-done", maxlength: 300 });
       kids.push(h("label", { for: "ho-done" }, "Completed action"), done,
-        h("button", { onclick: () => refresh(() => post(id, "complete-handoff", { note: done.value })) }, "Complete handoff"));
+        h("button", { onclick: () => refresh(() => post(id, "complete-handoff", { note: done.value }), [done]) }, "Complete handoff"));
     }
     if (!c.closed && (!hd || hd.state !== "Accepted") && (c.owner_code === me.user.code || isManager())) {
       const to = h("select", { id: "ho-to", name: "to", autocomplete: "off" }, me.staff.filter((s) => s.code !== c.owner_code && s.role !== "Contractor").map((s) => h("option", { value: s.email }, `${s.name} (${s.role})`)));
@@ -917,12 +943,12 @@ function handoffPanel(c, id, refresh) {
         h("label", { for: "ho-next" }, "Next action"), next, h("label", { for: "ho-urgency" }, "Urgency"), urgency,
         h("label", { for: "ho-due" }, "Human-selected due date (not an approved SLA)"), due,
         h("p", {}, c.resident_update ? "The existing resident-update commitment is preserved." : "Record a complete resident-update commitment in the resident panel. A handoff never creates or clears it.")
-        ], async (metadata) => {
+        ], async (metadata, submitted) => {
           await post(id, "offer-handoff", {
           ...metadata, handoff_version: (c.handoff_history || []).length,
           to: to.value, note: note.value, next_action: next.value, urgency: urgency.value, due_at: iso(due.value)
           });
-          await refresh(async () => {});
+          await refresh(async () => {}, submitted);
         }));
     }
   }
@@ -956,7 +982,7 @@ function safetyPanel(c, id, refresh) {
     const evidence = h("input", { type: "text", maxlength: 300, "aria-label": `External evidence reference for ${x.category}` });
     const note = h("input", { type: "text", maxlength: 300, "aria-label": `Reason to restart retrofit work for ${x.category}` });
     const receiver = x.destination && x.destination.code === me.user.code && canRelease;
-    const action = (name) => refresh(() => post(id, name, { index: i, evidence: evidence.value, note: note.value }));
+    const action = (name) => refresh(() => post(id, name, { index: i, evidence: evidence.value, note: note.value }), name === "hazard-release" ? [evidence, note] : [evidence]);
     const times = Object.entries(timingLabels).filter(([key]) => !x[key]).map(([key, label]) => [
       key, h("input", { type: "datetime-local", "aria-label": `${label} for ${x.category}` })
     ]);
@@ -970,14 +996,14 @@ function safetyPanel(c, id, refresh) {
       h("p", {}, `Repair evidence: ${x.repair_evidence || "Unknown"}. Restart decision: ${x.hold.decision ? `${x.hold.decision.actor.name} (${x.hold.decision.actor.role}): ${x.hold.decision.reason}; ${x.hold.decision.evidence}` : "Not recorded"}.`),
       h("ul", {}, Object.entries(timingLabels).map(([key, label]) => h("li", {}, `${label}: ${x[key] || "Unknown (external service owns timing)"}`))),
       (!x.released || (receiver && x.accepted_at && times.length > 0)) && h("div", {}, h("label", {}, "External evidence reference", evidence)),
-      !x.released && !x.referral_version && h("div", { class: "row" }, to, job, h("button", { class: "alt", onclick: () => refresh(() => post(id, "hazard-refer", { index: i, to: to.value, job: job.value, evidence: evidence.value })) }, x.referred ? "Bind legacy referral prospectively" : "Record referral sent")),
+      !x.released && !x.referral_version && h("div", { class: "row" }, to, job, h("button", { class: "alt", onclick: () => refresh(() => post(id, "hazard-refer", { index: i, to: to.value, job: job.value, evidence: evidence.value }), [to, job, evidence]) }, x.referred ? "Bind legacy referral prospectively" : "Record referral sent")),
       receiver && !x.received_at && h("button", { class: "alt", onclick: () => action("hazard-receive") }, "Record separate receipt evidence"),
       receiver && x.received_at && !x.accepted_at && h("button", { class: "alt", onclick: () => action("hazard-accept") }, "Record separate acceptance evidence"),
       receiver && x.accepted_at && h("div", {},
         times.map(([key, input]) => h("label", {}, timingLabels[key], input)),
         times.length > 0 && h("button", { class: "alt", onclick: () => refresh(() => post(id, "hazard-times", {
           index: i, evidence: evidence.value, ...Object.fromEntries(times.map(([key, input]) => [key, iso(input.value)]))
-        })) }, "Record externally supplied times"),
+        }), [evidence, ...times.map(([, input]) => input)]) }, "Record externally supplied times"),
         !x.repaired && !x.released && h("button", { class: "alt", onclick: () => action("hazard-repaired") }, "Record external repair evidence")),
       x.repaired && !x.released && canRelease && h("div", { class: "row" }, note,
         h("button", { onclick: () => action("hazard-release") }, "Allow home retrofit work to restart (independent reviewer)")));
@@ -998,7 +1024,7 @@ function safetyPanel(c, id, refresh) {
       h("label", { for: "hz-aware" }, "When the landlord first became aware (local time)"), aware,
       h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "hazard-raise", {
         category: cat.value, priority: pri.value, note: note.value, source: source.value, aware_at: iso(aware.value)
-      })) }, "Raise safety issue"))));
+      }), [cat, pri, note, source, aware]) }, "Raise safety issue"))));
 }
 
 async function closedView() {
@@ -1059,7 +1085,7 @@ function documentsPanel(c, id, refresh) {
   const kind = h("select", { name: "kind", "aria-label": "Type of document" }, kinds.map((k) => h("option", {}, k)));
   const file = h("input", { name: "document", type: "file", required: true, "aria-label": "Choose a file", accept: ".pdf,.png,.jpg,.jpeg,.docx,.xlsx,.csv,.txt" });
   const out = h("div", { role: "status" });
-  const upload = async (metadata) => {
+  const upload = async (metadata, submitted) => {
     const f = file.files[0];
     if (!f) throw new Error("Choose a file first.");
     const data = await new Promise((resolve, reject) => {
@@ -1069,13 +1095,15 @@ function documentsPanel(c, id, refresh) {
       rd.readAsDataURL(f);
     });
     await api(`/api/cases/${encodeURIComponent(id)}/upload`, { ...metadata, name: f.name, kind: kind.value, data });
-    await refresh(async () => {});
+    await refresh(async () => {}, submitted);
   };
   const read = async (d) => {
     out.replaceChildren(h("p", { class: "muted" }, "Reading..."));
+    app.dispatchEvent(new Event("ai-review-change"));
     try {
       const r = await api(`/api/cases/${encodeURIComponent(id)}/read-doc`, modeBody({ id: d.id }));
       out.replaceChildren(h("p", { class: "muted" }, r.source === "ai" ? "AI-read, please check:" : "Note:"), h("p", { class: "pre" }, r.text), aiNotes(r));
+      app.dispatchEvent(new Event("ai-review-change"));
     } catch (e) { out.replaceChildren(h("p", { class: "err" }, e.message)); }
   };
   return h("section", { class: "card" }, h("h2", {}, "Documents"),
@@ -1095,7 +1123,7 @@ function fundingPanel(c, id, refresh) {
   ta.value = f.draft || "";
   const fundNote = h("div", {}, fundingAi[id] ? [h("p", { class: "muted" }, fundingAi[id].label), aiNotes(fundingAi[id], null, () => ta.value)] : null);
   const ref = h("input", { "aria-label": "Application event evidence reference", name: "application-evidence", autocomplete: "off", spellcheck: "false" });
-  const step = (action, text) => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/funding`, { action, text }));
+  const step = (action, text) => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/funding`, { action, text }), [action === "save_draft" ? ta : ref]);
   if (f.status === "Confirmed") {
     return h("section", { class: "card" }, h("h2", {}, "Funding application"), h("p", {}, `Application confirmation recorded. Route: ${f.route}${f.reference ? `, reference ${f.reference}` : ""}.`),
       h("p", { class: "muted" }, "Application status is not a grant award or cash receipt. See the separate grant evidence."));

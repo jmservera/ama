@@ -322,7 +322,17 @@ Screen-reader, real case-officer usability and post-deployment verification
 remain Not run, pending the owner. No accessibility conformance or live
 acceptance is inferred.
 
-Engineering status: implemented with targeted unit/static evidence, but final
-API/browser/axe/actual-zoom validation is blocked by exhausted shared-lock
-admission. Independent Review and publication are pending; the design's
-acceptance criteria are not signed off by this implementation note.
+Engineering continuation: API unit discovery and focused browser checks now
+pass on constructed data with Chromium 156.0.8078.4 and pinned axe 4.10.3.
+The journey check covers 37 axe states, retained drafts, keyboard draft reviews,
+blocked final checks and actual 200% tab zoom. Compact mobile summary spacing
+keeps full 16px values within the unchanged one-scroll bound (1581.96875 <=1600
+at 320x800); keyboard-focused tabs scroll fully into view at 200%.
+Existing workbench, recovery, assistant, provenance, regulatory and challenge
+checks also pass. This does not sign off the design's human acceptance criteria.
+Independent Review executed with four defects, retained in its original record.
+Later repairs preserve same-card and asynchronous proposal drafts by ID/revision,
+retain copyable edits when evidence changes, update document review counts and
+correct local runner import parity. New regression checks pass, including
+27 assistant scenarios. The clean committed-candidate publication gate and
+exact-head assessment remain separate pending steps.

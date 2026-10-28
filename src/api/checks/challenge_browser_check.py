@@ -91,7 +91,9 @@ def run(axe_path: Path) -> dict[str, Any]:
                     page.locator("#outcome").fill("SYN unrelated call")
                     page.locator("#note").fill("SYN manual work continues")
                     page.get_by_role("button", name="Save", exact=True).click()
+                    page.get_by_role("tab", name="History", exact=True).click()
                     page.get_by_text("SYN unrelated call", exact=False).first.wait_for()
+                    page.get_by_role("tab", name="Resident", exact=True).click()
                     expect(page.locator("#challenge-open-request")).to_have_value(
                         payload["request"]
                     )

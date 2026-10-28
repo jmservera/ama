@@ -14,13 +14,13 @@ function actForm(title, fields, run, label) {
   const body = () => Object.fromEntries(inputs.map(([name, , el]) => [name, el.value]));
   return h("details", {}, h("summary", {}, title),
     inputs.flatMap(([name, text, el]) => [h("label", { for: el.id }, text), el]),
-    h("p", {}, h("button", { onclick: () => run(body()) }, label || title)));
+    h("p", {}, h("button", { onclick: () => run(body(), inputs.map(([, , input]) => input)) }, label || title)));
 }
 
 function financePanel(c, id, refresh) {
   const f = c.finance;
   if (!FIN_ROLES.includes(me.user.role)) return null;
-  const go = (action, extra) => refresh(() => caseApi(id, "finance", Object.assign({ action }, extra)));
+  const go = (action, extra, submitted) => refresh(() => caseApi(id, "finance", Object.assign({ action }, extra)), submitted);
   const fx = f || { budget: null, commitments: [], invoices: [] };
   const invoiceIds = fx.invoices.map((i) => i.id);
   const pick = (o) => Object.assign({ options: invoiceIds.length ? invoiceIds : [""] }, o);
@@ -32,36 +32,36 @@ function financePanel(c, id, refresh) {
       h("strong", {}, `${i.id}: ${i.kind.toLowerCase()} ${i.ref} from ${i.supplier}. ${i.status}.`),
       h("div", { class: "muted" }, `Payment: ${i.payment_status}. ${i.disposition ? `Finance decision: ${i.disposition} (${i.disposition_by}).` : "No Finance decision yet."}${i.hold ? ` Payment paused: ${i.hold.reason}.` : ""}`),
       i.exceptions.length ? h("ul", {}, i.exceptions.map((e) => h("li", {}, `${e.line == null ? "Whole invoice" : `Line ${e.line + 1}`}: ${e.message}`))) : null)) : null,
-    actForm("Propose a budget", [["amount", "Amount in pounds"], ["note", "Note"]], (b) => go("budget_propose", b), "Save proposed budget"),
+    actForm("Propose a budget", [["amount", "Amount in pounds"], ["note", "Note"]], (b, submitted) => go("budget_propose", b, submitted), "Save proposed budget"),
     fx.budget && fx.budget.status === "Proposed" ? h("p", {}, h("button", { onclick: () => go("budget_approve") }, `Approve the budget as ${me.user.name}`)) : null,
-    actForm("Raise a commitment", [["supplier", "Supplier"], ["contract", "Contract reference"], ["work_order", "Work order"], ["measure", "Measure"], ["amount", "Amount in pounds"], ["quantity", "Quantity"]], (b) => go("commit_raise", b), "Raise commitment"),
-    actForm("Approve a commitment", [["id", "Commitment", { options: fx.commitments.filter((m) => m.status === "Raised").map((m) => m.id).concat([""]) }]], (b) => go("commit_approve", b), "Approve"),
+    actForm("Raise a commitment", [["supplier", "Supplier"], ["contract", "Contract reference"], ["work_order", "Work order"], ["measure", "Measure"], ["amount", "Amount in pounds"], ["quantity", "Quantity"]], (b, submitted) => go("commit_raise", b, submitted), "Raise commitment"),
+    actForm("Approve a commitment", [["id", "Commitment", { options: fx.commitments.filter((m) => m.status === "Raised").map((m) => m.id).concat([""]) }]], (b, submitted) => go("commit_approve", b, submitted), "Approve"),
     actForm("Record an invoice or valuation", [["kind", "Kind", { options: ["Invoice", "Valuation"] }], ["supplier", "Supplier"], ["work_order", "Work order"], ["ref", "Provider's reference"], ["measure", "Measure on the line"], ["quantity", "Quantity"], ["amount", "Line amount in pounds"], ["milestone_ref", "Accepted milestone evidence reference (leave blank if unknown)"]],
-      (b) => go("invoice_receive", { kind: b.kind, supplier: b.supplier, work_order: b.work_order, ref: b.ref, lines: [{ measure: b.measure, quantity: b.quantity, amount: b.amount, milestone_ref: b.milestone_ref }] }), "Record invoice"),
+      (b, submitted) => go("invoice_receive", { kind: b.kind, supplier: b.supplier, work_order: b.work_order, ref: b.ref, lines: [{ measure: b.measure, quantity: b.quantity, amount: b.amount, milestone_ref: b.milestone_ref }] }, submitted), "Record invoice"),
     invoiceIds.length ? [
-      actForm("Check an invoice against the commitment", [["id", "Invoice", pick()]], (b) => go("invoice_match", b), "Check now"),
-      actForm("Pause payment on an invoice", [["id", "Invoice", pick()], ["reason", "Why"]], (b) => go("hold_place", b), "Pause payment"),
-      actForm("Restart payment on an invoice", [["id", "Invoice", pick()], ["note", "Why it is restarted"]], (b) => go("hold_release", b), "Restart payment"),
-      actForm("Finance decision", [["id", "Invoice", pick()], ["decision", "Decision", { options: ["Accept for payment", "Reject and return to provider", "Keep on hold"] }], ["note", "Note"]], (b) => go("disposition", b), "Record decision"),
-      actForm("Note the payment status", [["id", "Invoice", pick()], ["status", "Status", { options: ["Not payable yet", "Awaiting payment run", "Paid outside this system"] }]], (b) => go("payment_status", b), "Save note"),
+      actForm("Check an invoice against the commitment", [["id", "Invoice", pick()]], (b, submitted) => go("invoice_match", b, submitted), "Check now"),
+      actForm("Pause payment on an invoice", [["id", "Invoice", pick()], ["reason", "Why"]], (b, submitted) => go("hold_place", b, submitted), "Pause payment"),
+      actForm("Restart payment on an invoice", [["id", "Invoice", pick()], ["note", "Why it is restarted"]], (b, submitted) => go("hold_release", b, submitted), "Restart payment"),
+      actForm("Finance decision", [["id", "Invoice", pick()], ["decision", "Decision", { options: ["Accept for payment", "Reject and return to provider", "Keep on hold"] }], ["note", "Note"]], (b, submitted) => go("disposition", b, submitted), "Record decision"),
+      actForm("Note the payment status", [["id", "Invoice", pick()], ["status", "Status", { options: ["Not payable yet", "Awaiting payment run", "Paid outside this system"] }]], (b, submitted) => go("payment_status", b, submitted), "Save note"),
     ] : null);
 }
 
 function grantPanel(c, id, refresh) {
   if (!FIN_ROLES.includes(me.user.role)) return null;
   const grants = c.grants || [];
-  const go = (action, extra) => refresh(() => caseApi(id, "grant", Object.assign({ action }, extra)));
+  const go = (action, extra, submitted) => refresh(() => caseApi(id, "grant", Object.assign({ action }, extra)), submitted);
   const ids = grants.map((g) => g.id);
   return h("section", { class: "card" }, h("h2", {}, "Grant stages"),
     h("p", { class: "muted" }, "Each stage is kept on its own with its evidence and who approved it. Grants are separate from invoices and payments."),
     grants.length ? grants.map((g) => h("div", {}, h("strong", {}, `${g.id}: ${g.scheme}. Now: ${g.state}.`),
       g.pending ? h("div", { class: "muted" }, `Waiting for approval: ${g.pending.to}, proposed by ${g.pending.name}. Evidence: ${g.pending.source}.`) : null,
       h("ul", {}, g.history.map((x) => h("li", {}, `${x.state}: ${x.source}. Proposed by ${x.proposed_by}, approved by ${x.approved_by}.${x.amount ? ` ${money(x.amount)}.` : ""}`))))) : h("p", { class: "muted" }, "No grant recorded."),
-    actForm("Add a grant", [["scheme", "Scheme or funder"], ["source", "Evidence for the opportunity"]], (b) => go("grant_open", b), "Add grant"),
+    actForm("Add a grant", [["scheme", "Scheme or funder"], ["source", "Evidence for the opportunity"]], (b, submitted) => go("grant_open", b, submitted), "Add grant"),
     ids.length ? [
-      actForm("Propose the next stage", [["id", "Grant", { options: ids }], ["to", "Next stage", { options: ["Award", "Claimable", "Submitted", "Accepted", "Rejected", "Cash received"] }], ["source", "Evidence"], ["amount", "Amount in pounds (needed for cash received)"]], (b) => go("grant_propose", b), "Propose"),
-      actForm("Approve a proposed stage", [["id", "Grant", { options: ids }]], (b) => go("grant_approve", b), "Approve"),
-      actForm("Withdraw a proposal", [["id", "Grant", { options: ids }]], (b) => go("grant_withdraw", b), "Withdraw"),
+      actForm("Propose the next stage", [["id", "Grant", { options: ids }], ["to", "Next stage", { options: ["Award", "Claimable", "Submitted", "Accepted", "Rejected", "Cash received"] }], ["source", "Evidence"], ["amount", "Amount in pounds (needed for cash received)"]], (b, submitted) => go("grant_propose", b, submitted), "Propose"),
+      actForm("Approve a proposed stage", [["id", "Grant", { options: ids }]], (b, submitted) => go("grant_approve", b, submitted), "Approve"),
+      actForm("Withdraw a proposal", [["id", "Grant", { options: ids }]], (b, submitted) => go("grant_withdraw", b, submitted), "Withdraw"),
     ] : null);
 }
 
@@ -86,7 +86,7 @@ function stockPanel(c) {
 
 function technicalPanel(c, id, refresh) {
   const t = c.technical;
-  const go = (action, extra) => refresh(() => caseApi(id, "technical", Object.assign({ action }, extra)));
+  const go = (action, extra, submitted) => refresh(() => caseApi(id, "technical", Object.assign({ action }, extra)), submitted);
   const TYPES = [["assessment", "Retrofit assessment"], ["design", "Design"], ["building", "Building and safety dependency"], ["coordination", "Coordination"]];
   return h("section", { class: "card" }, h("h2", {}, "Assessment and technical sign-offs"),
     !t ? h("p", { class: "muted" }, "No design recorded yet.") : [
@@ -96,12 +96,12 @@ function technicalPanel(c, id, refresh) {
         h("tbody", {}, TYPES.map(([k, label]) => { const s = t.signoffs[k]; return h("tr", {}, h("td", {}, label), h("td", {}, s ? s.status : "Not given"), h("td", {}, s && s.version ? String(s.version) : "Not given"), h("td", {}, s && s.by ? s.by : ""), h("td", {}, s ? (s.reason || s.note || "") : "")); }))),
       c.technical_missing.length ? [h("p", {}, "Still needed before this stage can pass:"), h("ul", {}, c.technical_missing.map((m) => h("li", {}, `${m.item}. For the ${m.assigned_to}.`)))] : h("p", {}, "Every sign-off and piece of evidence is in place."),
     ],
-    !t ? actForm("Record the design", [["note", "What the design covers"]], (b) => go("design_submit", b), "Record design")
+    !t ? actForm("Record the design", [["note", "What the design covers"]], (b, submitted) => go("design_submit", b, submitted), "Record design")
       : actForm("The design has changed", [["note", "What changed"], ["affects", "Which sign-offs this affects", { options: ["All that depend on the design", "design", "building", "coordination"] }]],
-        (b) => go("design_change", { note: b.note, affects: b.affects.startsWith("All") ? undefined : [b.affects] }), "Record change"),
+        (b, submitted) => go("design_change", { note: b.note, affects: b.affects.startsWith("All") ? undefined : [b.affects] }, submitted), "Record change"),
     t ? [
-      actForm("Give a sign-off", [["type", "Which one", { options: TYPES.map((x) => x[0]) }], ["note", "Note"]], (b) => go("signoff_give", b), `Sign off as ${me.user.name}`),
-      actForm("Send a sign-off back", [["type", "Which one", { options: TYPES.map((x) => x[0]) }], ["reason", "Why"]], (b) => go("signoff_return", b), "Send back"),
+      actForm("Give a sign-off", [["type", "Which one", { options: TYPES.map((x) => x[0]) }], ["note", "Note"]], (b, submitted) => go("signoff_give", b, submitted), `Sign off as ${me.user.name}`),
+      actForm("Send a sign-off back", [["type", "Which one", { options: TYPES.map((x) => x[0]) }], ["reason", "Why"]], (b, submitted) => go("signoff_return", b, submitted), "Send back"),
     ] : null);
 }
 
@@ -111,13 +111,13 @@ function residentPanel(c, id, refresh) {
       c.resident_readiness.map((m) => h("p", {}, `${m.measure}: ${m.flag}`)));
   }
   const recordForm = (...args) => c.can_record_resident ? actForm(...args) : null;
-  const go = (action, extra) => refresh(() => {
+  const go = (action, extra, submitted) => refresh(() => {
     const body = Object.assign({ action }, extra);
     for (const key of ["context_revision", "design_version", "review_decision_version"]) {
       if (body[key] !== undefined) body[key] = Number(body[key]);
     }
     return caseApi(id, "resident", body);
-  });
+  }, submitted);
   const measures = (c.measure_decisions || []);
   const reqs = c.service_requests || [];
   const residentRoles = ["Resident Liaison Officer", "Retrofit Coordinator", "Retrofit Programme Manager", "Programme Support Officer"];
@@ -162,7 +162,7 @@ function residentPanel(c, id, refresh) {
           return;
         }
         delete form.dataset.unsaved;
-        await refresh(async () => {});
+        await refresh(async () => {}, inputs.map(({ input }) => input));
       } catch (error) {
         status.textContent = dispatched
           ? "Confirmation is unavailable. Reload and check the history before another action."
@@ -181,14 +181,14 @@ function residentPanel(c, id, refresh) {
     h("table", {}, h("thead", {}, h("tr", {}, ["Measure", "Their answer", "Versions"].map((x) => h("th", {}, x)))),
       h("tbody", {}, measures.map((m) => h("tr", {}, h("td", {}, `${m.measure}: ${m.context ? `scope ${m.context.scope}, revision ${m.context.revision}, design ${m.context.design_version}` : "Current scope not recorded"}`), h("td", {}, `${m.status}. ${m.readiness}`),
         h("td", {}, m.versions.map((v) => `v${v.version} ${v.status} (${v.answered_by}, recorded by ${v.recorded_by}${v.note ? `: ${v.note}` : ""})`).join("; ") || "None"))))),
-    recordForm("Record the measure scope", [["measure", "Measure", { options: ["", ...measures.map((m) => m.measure)] }], ["scope", "Exact scope reference"], ["design_version", "Current technical design version", { type: "number" }], ["source", "Supplied scope source reference"]], (b) => go("scope_record", b), "Record scope"),
-    recordForm("Record what the resident said", [["measure", "Measure", { options: ["", ...measures.map((m) => m.measure)] }], ["context_revision", "Current scope revision", { type: "number" }], ["status", "Their supplied answer", { options: ["", "Waiting", "Accepted", "Declined", "Paused", "Withdrawn"] }], ["answered_by", "Who said it", { options: ["", "The resident", "Their representative"] }], ["source", "Supplied answer source reference"], ["representative_ref", "Reference for the representative, if any"], ["review_ref", "Human review evidence if restarting after a pause or withdrawal"], ["note", "In their words (needed for declined, paused or withdrawn)"]], (b) => go("decision_record", b), "Save supplied answer"),
+    recordForm("Record the measure scope", [["measure", "Measure", { options: ["", ...measures.map((m) => m.measure)] }], ["scope", "Exact scope reference"], ["design_version", "Current technical design version", { type: "number" }], ["source", "Supplied scope source reference"]], (b, submitted) => go("scope_record", b, submitted), "Record scope"),
+    recordForm("Record what the resident said", [["measure", "Measure", { options: ["", ...measures.map((m) => m.measure)] }], ["context_revision", "Current scope revision", { type: "number" }], ["status", "Their supplied answer", { options: ["", "Waiting", "Accepted", "Declined", "Paused", "Withdrawn"] }], ["answered_by", "Who said it", { options: ["", "The resident", "Their representative"] }], ["source", "Supplied answer source reference"], ["representative_ref", "Reference for the representative, if any"], ["review_ref", "Human review evidence if restarting after a pause or withdrawal"], ["note", "In their words (needed for declined, paused or withdrawn)"]], (b, submitted) => go("decision_record", b, submitted), "Save supplied answer"),
     h("h3", {}, "Representative authority"),
     h("p", { class: "muted" }, "A person confirms authority with the resident. Scheduling or interpreting is not authority for works consent. A changed safe contact, expired, disputed or unclear authority stops representative steps. Nothing is sent here. Retention is five years from first recorded resident contact, including withdrawn or expired records."),
-    recordForm("Confirm the safe contact reference", [["safe_contact_ref", "Resident-confirmed safe contact reference"], ["source", "Supplied confirmation source"]], (b) => go("safe_contact_record", b), "Record confirmation"),
+    recordForm("Confirm the safe contact reference", [["safe_contact_ref", "Resident-confirmed safe contact reference"], ["source", "Supplied confirmation source"]], (b, submitted) => go("safe_contact_record", b, submitted), "Record confirmation"),
     recordForm("Record representative authority", [["measure", "Measure", { options: ["", ...measures.map((m) => m.measure)] }], ["context_revision", "Current scope revision", { type: "number" }], ["representative_ref", "Representative reference"], ["status", "Authority status", { options: ["", "Confirmed", "Unclear", "Disputed", "Revoked"] }], ["task", "Evidenced task", { options: ["", "Receive information", "Communicate", "Attend", "Works decision"] }], ["authority_date", "Authority evidence date", { type: "date" }], ["review_date", "Review due date (authority held from this date)", { type: "date" }], ["safe_contact_ref", "Current safe contact reference"], ["source", "Authority evidence reference"], ["resident_wishes", "Resident's own stated wishes"]],
-      (b) => go("representative_record", Object.assign({}, b, { tasks: [b.task] })), "Record authority version"),
-    recordForm("Check a representative task", [["measure", "Measure", { options: ["", ...measures.map((m) => m.measure)] }], ["context_revision", "Current scope revision", { type: "number" }], ["representative_ref", "Representative reference"], ["task", "Task", { options: ["", "Receive information", "Communicate", "Attend", "Works decision"] }]], (b) => go("disclosure_check", b), "Check only; nothing sent"),
+      (b, submitted) => go("representative_record", Object.assign({}, b, { tasks: [b.task] }), submitted), "Record authority version"),
+    recordForm("Check a representative task", [["measure", "Measure", { options: ["", ...measures.map((m) => m.measure)] }], ["context_revision", "Current scope revision", { type: "number" }], ["representative_ref", "Representative reference"], ["task", "Task", { options: ["", "Receive information", "Communicate", "Attend", "Works decision"] }]], (b, submitted) => go("disclosure_check", b, submitted), "Check only; nothing sent"),
     h("h2", {}, "Resident-update commitment"),
     h("p", {}, "A commitment is not a message. Nothing is sent or marked received here. Handoffs do not clear or reassign it."),
     update ? h("p", {}, `${update.status || "Unknown"}: ${update.purpose || "Unknown purpose"}. Owner: ${named(update.owner_identity)}. Due: ${stamp(update.due_at)}. Basis: ${update.basis || "Unknown"}. Safe route reference: ${update.safe_contact_ref || "Unknown"}. Status date: ${stamp(update.at)}. Original date: ${stamp(update.opened_at)}. Version ${update.version || 0}.`) : h("p", {}, "No commitment recorded."),

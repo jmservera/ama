@@ -52,7 +52,7 @@ function assistantProposal(p, reload) {
   } }, "Earlier changes to this suggestion");
   const editBox = h("div", { hidden: true, "data-proposal-edit": "" }, h("label", {}, "Edited evidence proposal JSON", editing),
     h("button", { onclick: () => act("edit-accept") }, "Save edited proposal"));
-  return h("article", { class: "card ai-suggestion" },
+  return h("article", { class: "card ai-suggestion", "data-proposal-id": p.id, "data-proposal-revision": p.revision },
     h("h3", {}, `${assistantNames[p.capability]} v${p.version}`),
     h("a", { href: `#/case/${encodeURIComponent(p.case_id)}` }, p.case_id), status,
     h("p", { class: "ai-label" }, p.review
@@ -81,7 +81,7 @@ function assistantProposal(p, reload) {
       h("button", { class: "alt", onclick: () => act("reject") }, "Reject")), editBox));
 }
 
-function assistantCasePanel(id) {
+function assistantCasePanel(id, savedFields = []) {
   const status = h("p", { role: "status" }, "Loading assistance. Ordinary case controls remain available.");
   const panel = h("section", { class: "card" }, h("h2", {}, "Retrofit assistants"), status);
   const routeHash = location.hash.split("?")[0];
@@ -128,12 +128,14 @@ function assistantCasePanel(id) {
       }
       if (reviewed.childElementCount > 1) panel.append(reviewed);
       if (!proposals.length) panel.append(h("p", {}, "No AI suggestions yet. Ordinary case work is not affected."));
+      restoreProposalFields(savedFields, panel);
     } catch (e) {
       if (current()) {
         const reason = controller.signal.aborted ? "Assistance request timed out" : e.message;
         status.textContent = `Assistance unavailable: ${reason}. Continue ordinary case work manually.`;
         panel.dataset.assistance = "AI assistance unavailable. Work continues manually.";
         panel.dataset.waiting = "0";
+        restoreProposalFields(savedFields, panel);
       }
     } finally {
       clearTimeout(deadline);
