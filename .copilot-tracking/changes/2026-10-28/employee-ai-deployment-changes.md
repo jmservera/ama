@@ -278,3 +278,40 @@ A separate exact-HEAD external worktree will isolate the one gate attempt from
 test-generated ignored caches/editable metadata in this working copy; do not
 delete historical inputs or claim that ignored inputs pass the runner.
 Use runner-native --changed/--lock-timeout0, never --all or an outer lock.
+
+### One Authorized Scoped Gate Attempt: Failed Preflight
+
+Committed implementation/original RPI evidence at
+`02b9d0aa5c3daea943fe287f6d176b55f82db6d4`, tree
+`eaa3ff7570e479db7e2705bf105353963d81d163`, base
+`98b0bb98f2424dd23c00e386378f44892a7a79e0`. Exact command:
+
+```bash
+git worktree add --detach /tmp/ama-employee-ai-gate-candidate-20261028 HEAD
+cd /tmp/ama-employee-ai-gate-candidate-20261028
+python3 tools/rpi-checks.py --changed --jobs 1 --lock-timeout 0 \
+  --base 98b0bb98f2424dd23c00e386378f44892a7a79e0 \
+  --out /tmp/ama-employee-ai-scoped-gate-20261028
+```
+
+Nonblocking native heavy lock acquired at 2026-10-28T08:47:29Z. Selected
+only preflight, namespace, static, infra (partial scope). Python3.12.3,
+Node24.21.0, Docker29.9.0, Bicep0.48.1, actionlint1.7.12,
+ShellCheck0.11.0 and Trivy0.76.0 preflight commands succeeded, then failed:
+`preflight: Workflow matrix drift: src-deploy.yml`. This PR does not change
+that workflow or runner. No selected groups completed; executed_groups and
+groups are empty. This is not a scoped or full-tier success.
+
+Original failed receipt retained externally at
+`/tmp/ama-employee-ai-scoped-gate-20261028/receipt.json`; console log at
+`/tmp/ama-employee-ai-scoped-gate-20261028.log`. No retry/resume/--all or
+cloud fallback. Removed only the task-owned external candidate worktree
+with `git worktree remove /tmp/ama-employee-ai-gate-candidate-20261028`;
+retained original failed output/evidence. Fresh fetch still resolves main to
+98b0bb98; reviewed infra fingerprint unchanged.
+
+Later publication-only evidence/state commits cannot make this failed receipt
+valid for a later head. No passing receipt exists, so passing-receipt
+verification is inapplicable and no gate acceptance is claimed. The explicitly
+requested PR is published with this gate exception and retained hosted/human
+approval requirements, not as a merge/release-ready candidate.

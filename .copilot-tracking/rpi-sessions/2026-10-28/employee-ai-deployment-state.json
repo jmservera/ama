@@ -46,10 +46,16 @@
       "evidence": ".copilot-tracking/reviews/logs/2026-10-28/employee-ai-deployment-review.md"
     }
   ],
-  "blockers": [],
+  "blockers": [
+    {
+      "id": "scoped-gate-preflight",
+      "summary": "Only permitted scoped gate failed preflight: Workflow matrix drift: src-deploy.yml. No passing receipt; no gate groups completed.",
+      "resolution": "Disclose in requested PR; retain hosted/human approval gates. Separate owner-selected workflow/runner reconciliation is needed for future gate acceptance; no retry in this task."
+    }
+  ],
   "next_action": {
     "phase": "Review",
-    "action": "Review complete; finish requested P03 evidence commit, one scoped gate attempt and Refs-only PR; no source changes or repeat Review."
+    "action": "Review complete; one scoped gate failed preflight and original receipt retained. Commit gate evidence and publish explicitly requested Refs-only PR with failure disclosed; no repeat gate or Review."
   },
   "prioritized_follow_ups": [
     {
