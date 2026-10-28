@@ -1,0 +1,33 @@
+observed_utc=2026-10-23T12:29:30Z
+
+$ git status --short
+?? .copilot-tracking/research/2026-10-23/
+?? .copilot-tracking/rpi-sessions/2026-10-23/
+
+$ git branch --show-current
+test/stabilization-checkpoints-440
+
+$ git rev-parse HEAD origin/main
+140d8f494482c78e84d15f3d46b9223d3c487af0
+140d8f494482c78e84d15f3d46b9223d3c487af0
+
+$ ps -p 3256519 -o pid,ppid,etime,stat,args
+    PID    PPID     ELAPSED STAT COMMAND
+3256519 3256516       28:38 S    python3 tools/rpi-checks.py --all --base 140d8f494482c78e84d15f3d46b9223d3c487af0 --out /tmp/ama-349-current-main-20261023-b2b081a5c929
+
+$ lslocks --noheadings --output PID,COMMAND,TYPE,MODE,PATH (filtered heavy lock)
+3256519 python3         FLOCK WRITE /tmp/ama-rpi-heavy.lock
+
+$ git log -12 --format=%H\ %s origin/main
+140d8f494482c78e84d15f3d46b9223d3c487af0 docs(requirements): add AI Tokenomics requirements and pitch brief (#433)
+b4d467cad84535ed106cffa1ae9aa303db7bfed2 docs: propose finite costed Azure demo execution options (#422)
+3deb179d57b6520e114a27862f79ca95399f833e docs(continuity): prepare custody and recovery proposal (#122) (#431)
+9e55a392b95c90730c6410b9a4db4ad3a5ae70ce fix(web): prevent transient cited-source button contrast failure (#427)
+ca4baf75837de57c99718f7423716d5dc0b0e244 docs(agents): pin launched RPI sessions to Sonnet 5.5 (#420)
+993a7b88c03f5240f1e7a4c7c7afa7c064281622 feat(core): add bounded operator incident and restart controls (#419)
+7e95f0224bfb7a8a62990a1de162fbcfa68db539 feat(resident): add retained-priority challenge and correction route (#418)
+eeb6c3aba5d07244ae3cc0e53d839617fd928e3b test(infra): record real synthetic Key Vault preservation roundtrip (#417)
+7f96d9957b28cb174aa759c842376f24087d71a3 chore(infra): bound private publisher egress and record blocked activation (#416)
+634a024d97d2da7168b8a7d5f343ab26e6108cf3 docs(infra): record bounded pilot capability and quota evidence (#415)
+fa659cfd021100f7c64f8ec73bbff76c03adf234 ci(validation): add canonical local RPI gate and consolidate CI (#414)
+612cbed78a35a4ab426571aa7d2aeb0ae6d691dd docs: shared sensor observation contract and volume (#412)

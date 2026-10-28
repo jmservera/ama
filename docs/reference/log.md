@@ -7672,3 +7672,28 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Original targeted validation and adverse hosted failure remain in dated RPI
   evidence. The correction requires exact full core CI tests, lint and mypy;
   no cloud, private dataset, heavy gate or real-use approval is introduced.
+## [2026-10-23] update | First bounded local stabilization checkpoint (#440)
+
+* Added the executed current-main checkpoint to the existing cutover evidence
+  pack and indexed it, pinning source140d8f49, preliminary candidate d8a65061,
+  BRD0.19.0/PRD0.18.0 and ADR blobs/statuses. Runtime inputs were byte-identical
+  to merged main; policy candidate evidence is separate.
+* Recorded174 focused passes and five final standalone suites2392 discovered/
+  468 skipped, with original archive-harness failures and corrections retained.
+  Actual native Chromium/axe, disposable SQL Server244 tests (one JSON-only
+  skip), four Docker/non-root/scanner/SPDX groups and logo0600 check ran.
+* Preserved the failed full receipt: core SQL filtered read17383ms exceeded
+  the unchanged1500ms bound. Three focused retests passed106-108ms but do not
+  repair it or establish cause. Native host discovery remains Deferred despite
+  static and independently graded simulation passes.
+* No confirmed stable code defect/refactor, new bug issue, source feature,
+  private/cloud/paid inference operation, acceptance tick, final release pass
+  or publication is claimed. #349/#350/#360/#432 and human gates remain;
+  independent lanes continue while affected validation/publication is blocked.
+  Earlier log entries, original case study and memory are unchanged.
+
+## 2026-10-25 stabilization checkpoint main reconciliation (#440)
+
+* Merged main `ea5577b2` into the #440 branch without rewriting history and appended a dated reconciliation note to the [cutover evidence pack](../architecture/cutover-evidence-pack.md#reconciliation-with-later-main-2026-10-25-440).
+* The first checkpoint is kept as historical evidence for main `140d8f49`; native discovery is recorded as attested only, the failed 17383 ms receipt remains a repository record with unknown root cause and an unwaived threshold, and no acceptance, Conformant outcome, publication or cloud approval is claimed.
+* Earlier log entries, the original case study and memory are unchanged.

@@ -158,6 +158,61 @@ and rerun. Preserve original adverse findings. Local verification is not a
 replacement for independent review, owner publication permission or retained
 hosted checks, and it does not authorize changing required contexts.
 
+### Stabilization validation ladder
+
+For the coordinator's recurring checkpoints (#440), select checks by the
+affected requirements, contracts and journeys; this is not an unconditional
+full suite after every edit. Use the owning project READMEs and existing
+Source CI selectors rather than inventing another command matrix:
+
+1. Run the smallest failing reproduction and focused regression/unit/static
+   checks first. After each correction, repeat that reproduction before
+   widening validation; preserve the original failure evidence.
+2. Run affected-package suites, dependency boundaries, lint and type checks
+   using the installed `src/` distributions and documented shared test
+   fixtures, never a `PYTHONPATH=mvp` workaround.
+3. Exercise relevant local cross-package HTTP/browser journeys, actual
+   disposable SQL Server persistence and Docker/non-root contracts. Use
+   constructed synthetic data, not default/private `ZF_DATA`, a configured
+   real database or paid model calls. Preserve auth/role isolation, resident
+   consent and human-approval controls, explicit model failure/unavailable
+   states and usable manual paths. Mocks, SQLite and worker skeletons do not
+   establish SQL Server, real AI, deployed workloads or live approval.
+4. List any Azure-only residuals explicitly. Admit them only when all relevant
+   local checks pass, action-specific authority is valid, complete all-in
+   cost headroom is evidenced (including accrued charges, outside-group
+   liabilities, remaining resources, tranches and reserve), and the approved
+   plan has finite commands/scope, budget, time window, stop conditions and
+   exact owned-resource cleanup boundaries. All conditions are required.
+   Unknown or partial evidence blocks Azure-dependent work only; independent
+   local work continues. A budget ceiling is not spending permission or
+   incremental headroom. Use the current
+   [owner budget decision](../docs/case_study_48_addendum.md#revised-owner-budget-decision-2026-10-22),
+   not historical forecasts: USD 700 is replacement all-in, authority expires
+   2026-10-25T16:02Z, and complete headroom remains Unknown until its refresh
+   gate is met. This guidance grants no Azure or real-model authority.
+
+Before heavy validation, check the actual shared-lock holder/process, not
+just whether the lock file exists. Use the existing runner with
+`--lock-timeout 0` for nonqueued admission; do not launch duplicate or waiting
+gates, interrupt a foreign owner, inspect/reuse its output, or poll for its
+release. If busy, record the affected validation as blocked with its exact
+source, remaining checks and resume condition, then continue independent
+lightweight work. Resume only on a later explicit coordination event after
+ownership is free. Each admitted run owns its evidence and cleanup; remove
+only its exact owned resources, not foreign sessions, containers or data.
+
+Record actual commands/exits/skips and source/environment identities in the
+checkpoint evidence; distinguish local/Azure observations from
+implemented-unverified, deferred, blocked and unknown outcomes. Missing
+relevant prerequisites or failed local checks stay unmet, not cloud fallbacks.
+Once corrections and the original RPI Review are stable, require the selected
+tier's evidence under the [local RPI gate](#local-rpi-gate) policy for the
+committed final candidate before publication. Full-tier candidates require the
+complete gate and its current-main, exact-head receipt; focused-tier candidates
+require relevant unit and focused checks, not a full receipt. Neither tier
+replaces human/hosted approval gates.
+
 ## Images
 
 The [cut-over evidence pack](../docs/architecture/cutover-evidence-pack.md)

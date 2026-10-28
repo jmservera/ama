@@ -1,0 +1,137 @@
+{
+  "task_id": "440",
+  "task_slug": "issue-440-stabilization",
+  "parent_task": {
+    "task_id": "123",
+    "task_slug": null
+  },
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "blocked",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-23/issue-440-stabilization-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-23/issue-440-stabilization-plan.md",
+    "details": ".copilot-tracking/details/2026-10-23/issue-440-stabilization-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-23/issue-440-stabilization-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-23/issue-440-stabilization-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-24/issue-440-stabilization-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run full ordered RPI loop",
+      "status": "owner-directed",
+      "evidence": "2026-10-23 user request"
+    },
+    {
+      "decision": "HVE Major improve; preserve frontmatter and capability surfaces",
+      "status": "required",
+      "evidence": "2026-10-23 user request and activated hve-builder workflow contract"
+    },
+    {
+      "decision": "When #349 lock is busy, finish research/plan and stop before execution/push",
+      "status": "required",
+      "evidence": "PID 3256519 WRITE FLOCK /tmp/ama-rpi-heavy.lock observed 2026-10-23"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready",
+      "status": "complete",
+      "evidence": ".copilot-tracking/research/2026-10-23/issue-440-stabilization-research.md; ordered Wider/Deeper/Contrarian"
+    },
+    {
+      "decision": "One independent plan critique executed, original verdict Revise",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-23/issue-440-stabilization-plan-critique.md; PC-001 High, PC-002 Medium"
+    },
+    {
+      "decision": "PC-001/002 resolved by compatible direct plan corrections; no second critique",
+      "status": "resolved-directly",
+      "evidence": "Plan Critique Disposition; details P01-T01/P02-T01/P03-T01/P04-T01/P05-T01"
+    },
+    {
+      "decision": "Initial implementation stop before all runtime/candidate gates",
+      "status": "historical",
+      "evidence": "Original explicit busy-lock stop; later owner-directed resume cleared actual lock"
+    },
+    {
+      "decision": "P01/P02 complete; focused and five installed pinned-main suites executed",
+      "status": "complete-with-skips",
+      "evidence": "Changes record; /tmp/ama-440-focused-20261023; 174 focused passed, 2392 suite tests discovered/468 skipped; initial archive-harness failures preserved and four focused checks/full core rerun passed"
+    },
+    {
+      "decision": "HVE independent static Pass and seven-scenario behavior Complete/Pass",
+      "status": "complete",
+      "evidence": "issue-440-static-1.md; issue-440-behavior-report-1.md; simulation/proxy only, actual profile unknown"
+    },
+    {
+      "decision": "Host mechanical metadata passes but native candidate discovery unmet",
+      "status": "deferred",
+      "evidence": "issue-440-host-1.md and issue-440-host-native-2.md; actual contained chooser reports no custom agents; no publication eligibility"
+    },
+    {
+      "decision": "P03 first current-main integration checkpoint executed and persisted, not accepted",
+      "status": "complete-with-failed-validation",
+      "evidence": "docs/architecture/cutover-evidence-pack.md dated440 section; KB index/append-only log; preliminary head d8a6506100c56c9454a85bcc31bac11d56b4a3bc, main140d8f494482c78e84d15f3d46b9223d3c487af0 runtime bytes equal;16 groups passed/core benchmark failed"
+    },
+    {
+      "decision": "Failed preliminary receipt retained, official verifier rejected status",
+      "status": "failed",
+      "evidence": "/tmp/ama-440-preliminary-20261023-d8a65061/receipt.json sha256ce6ff80079f2086b49159dd33a9d208fb1f328998de1d4cc85dd14de8b2990a9; verifier exit1; no final receipt"
+    },
+    {
+      "decision": "Three focused benchmark retests pass unchanged1500ms assertion, no confirmed source cause/defect or refactor",
+      "status": "observed-not-closure",
+      "evidence": "/tmp/ama-440-focused-20261023/sqlreads-focused-repeat-3.log;106-108ms; original native17383ms preserved; no new bug issue"
+    },
+    {
+      "decision": "Original independent RPI Review not executed because required evidence blocks eligible handoff",
+      "status": "not-run",
+      "evidence": "P04-T01 host Deferred and failed native receipt; no fabricated Review artifact, no final gate/push/PR"
+    },
+    {
+      "decision": "Original independent Review executed once: execution Partial, outcome Residual work",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-24/issue-440-stabilization-review.md"
+    },
+    {
+      "decision": "2026-10-25 integration cycle: prospective research/plan/details/critique (Revise, applied) before merge; non-rewriting merge of origin/main ea5577b2",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/plans/2026-10-25/issue-440-current-main-integration-plan.md"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "HOST-440",
+      "summary": "P04-T01 native discovery of exact candidate unmet; HVE Deferred, publication blocked; 2026-10-24 owner-approved discovery-only check reported entry listed (issue 440 comment 6385349053); not behavioral acceptance; local transcript lacks entry 8 (RV-003)",
+      "resolution": "Supported safely contained native host actually lists exact policy candidate without coordinator activation/model/private/cloud effects; preserve original empty-list evidence"
+    },
+    {
+      "id": "PERF-440",
+      "summary": "Native complete run failed filtered SQL benchmark17383ms against1500ms; three focused passes cannot repair failed receipt; external failed-receipt dirs absent 2026-10-24",
+      "resolution": "Diagnose repeatability/environment attribution without unrelated source fix or threshold waiver; retain failure, restore complete stable-candidate passing evidence under existing final-gate policy"
+    },
+    {
+      "id": "GATE-440",
+      "summary": "Heavy lock held by #350 (PID 43028), #444 queued; origin/main moved to f1e2d830 and was merged",
+      "resolution": "Run one fresh full gate when lock/queue permit"
+    }
+  ],
+  "next_action": {
+    "phase": "Implement",
+    "action": "Run P05 final gate on frozen clean head with fresh origin/main base (integration plan 2026-10-25); no push before verified receipt"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Restore trustworthy complete local validation after intermittent benchmark breach",
+      "rationale": "High delivery blocker; existing exact regression and three focused passes give bounded starting evidence, no source cause or refactor justified",
+      "evidence": "PERF-440; native0012-project-core.log; sqlreads-focused-repeat-3.log; PRD NFR-002/PR-005"
+    },
+    {
+      "rank": 2,
+      "task": "Resolve exact-candidate safely contained native host discovery",
+      "rationale": "Required Major HVE stage prevents eligible original Review/publication; source static and seven-scenario simulation already complete",
+      "evidence": "HOST-440; issue-440-host-1.md and issue-440-host-native-2.md"
+    }
+  ]
+}
