@@ -183,13 +183,13 @@ Later implementation of a routed finding does not require another Review of this
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/plans/2026-10-28/employee-ai-deployment-plan.md](.copilot-tracking/plans/2026-10-28/employee-ai-deployment-plan.md) | Canonical scope, markers and follow-ups. |
-| [.copilot-tracking/details/2026-10-28/employee-ai-deployment-phase-details.md](.copilot-tracking/details/2026-10-28/employee-ai-deployment-phase-details.md) | Reconciled phase details. |
-| [.copilot-tracking/research/2026-10-28/employee-ai-deployment-research.md](.copilot-tracking/research/2026-10-28/employee-ai-deployment-research.md) | Historical candidate and bounded evidence. |
-| [.copilot-tracking/reviews/plans/2026-10-28/employee-ai-deployment-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-28/employee-ai-deployment-plan-critique.md) | Original Complete / Revise critique. |
-| [.copilot-tracking/changes/2026-10-28/employee-ai-deployment-changes.md](.copilot-tracking/changes/2026-10-28/employee-ai-deployment-changes.md) | Original operations, failures, validation and handover. |
-| [.copilot-tracking/rpi-sessions/2026-10-28/employee-ai-deployment-state.json](.copilot-tracking/rpi-sessions/2026-10-28/employee-ai-deployment-state.json) | Pre-Review parent state. |
-| [.copilot-tracking/reviews/logs/2026-10-28/employee-ai-deployment-review.md](.copilot-tracking/reviews/logs/2026-10-28/employee-ai-deployment-review.md) | This single independent Review. |
+| [.copilot-tracking/plans/2026-10-28/employee-ai-deployment-plan.md](../../../plans/2026-10-28/employee-ai-deployment-plan.md) | Canonical scope, markers and follow-ups. |
+| [.copilot-tracking/details/2026-10-28/employee-ai-deployment-phase-details.md](../../../details/2026-10-28/employee-ai-deployment-phase-details.md) | Reconciled phase details. |
+| [.copilot-tracking/research/2026-10-28/employee-ai-deployment-research.md](../../../research/2026-10-28/employee-ai-deployment-research.md) | Historical candidate and bounded evidence. |
+| [.copilot-tracking/reviews/plans/2026-10-28/employee-ai-deployment-plan-critique.md](../../plans/2026-10-28/employee-ai-deployment-plan-critique.md) | Original Complete / Revise critique. |
+| [.copilot-tracking/changes/2026-10-28/employee-ai-deployment-changes.md](../../../changes/2026-10-28/employee-ai-deployment-changes.md) | Original operations, failures, validation and handover. |
+| [.copilot-tracking/rpi-sessions/2026-10-28/employee-ai-deployment-state.json](../../../rpi-sessions/2026-10-28/employee-ai-deployment-state.json) | Pre-Review parent state. |
+| [.copilot-tracking/reviews/logs/2026-10-28/employee-ai-deployment-review.md](employee-ai-deployment-review.md) | This single independent Review. |
 
 ## Next Steps
 

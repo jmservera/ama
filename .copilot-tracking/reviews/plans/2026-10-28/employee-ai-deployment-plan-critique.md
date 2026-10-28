@@ -283,10 +283,10 @@ ms.date: 2026-10-28
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/plans/2026-10-28/employee-ai-deployment-plan.md](.copilot-tracking/plans/2026-10-28/employee-ai-deployment-plan.md) | Canonical final-candidate plan assessed. |
-| [.copilot-tracking/details/2026-10-28/employee-ai-deployment-phase-details.md](.copilot-tracking/details/2026-10-28/employee-ai-deployment-phase-details.md) | Canonical task details assessed. |
-| [.copilot-tracking/research/2026-10-28/employee-ai-deployment-research.md](.copilot-tracking/research/2026-10-28/employee-ai-deployment-research.md) | Supplied bounded research evidence. |
-| [.copilot-tracking/reviews/plans/2026-10-28/employee-ai-deployment-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-28/employee-ai-deployment-plan-critique.md) | This original independent critique. |
+| [.copilot-tracking/plans/2026-10-28/employee-ai-deployment-plan.md](../../../plans/2026-10-28/employee-ai-deployment-plan.md) | Canonical final-candidate plan assessed. |
+| [.copilot-tracking/details/2026-10-28/employee-ai-deployment-phase-details.md](../../../details/2026-10-28/employee-ai-deployment-phase-details.md) | Canonical task details assessed. |
+| [.copilot-tracking/research/2026-10-28/employee-ai-deployment-research.md](../../../research/2026-10-28/employee-ai-deployment-research.md) | Supplied bounded research evidence. |
+| [.copilot-tracking/reviews/plans/2026-10-28/employee-ai-deployment-plan-critique.md](employee-ai-deployment-plan-critique.md) | This original independent critique. |
 
 ## Next Steps
 
