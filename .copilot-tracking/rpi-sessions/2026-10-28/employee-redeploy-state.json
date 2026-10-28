@@ -3,8 +3,8 @@
   "task_slug": "employee-redeploy",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-28/employee-redeploy-research.md",
@@ -15,6 +15,11 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-28/employee-redeploy-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "Evidence commit87bd00bd pushed only to requested topic; Refs-only PR #518 opened against main under explicit owner publication exception. No successful full gate, independent exact-head or human/hosted approval claimed.",
+      "status": "complete",
+      "evidence": "https://github.com/jmservera/ama/pull/518; changes P03 publication boundary. Original failed receipt and original Not accepted Review unchanged."
+    },
     {
       "decision": "One approved re-apply succeeded: active ca-cutover-test-demo-api--emp-reapply-20261028-110058, Healthy/Provisioned/Running,100% traffic, min0/max4, exact preservation and ACR equality. No rollback.",
       "status": "complete",
@@ -58,8 +63,8 @@
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Implement",
-    "action": "P02 verified complete. Commit evidence with privacy-safe identity and requested trailer, push only topic and open Refs-only PR disclosing historical gate drift, pending #517 and actual checks under explicit owner exception. No repeated Review."
+    "phase": "Follow-up",
+    "action": "Await owner PR review and a ranked follow-up selection, Stop automatic session or Switch to manual mode. No child work or cloud mutation without selection and required authority; original Review unchanged."
   },
   "prioritized_follow_ups": [
     {

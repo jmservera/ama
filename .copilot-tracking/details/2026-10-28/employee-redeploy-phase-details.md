@@ -26,7 +26,7 @@ ms.date: 2026-10-28
 * One build and isolated synthetic HTTP proof passed; script indices2<7.
   Full publication gate failed preflight matrix drift; no verified receipt,
   push or PR in the earlier attempt. Current P02 re-apply complete; P03 evidence
-  publication active under explicit owner authority.
+  published in Refs-only PR #518 under explicit owner authority.
 
 ## Active owner-approved continuation (2026-10-28)
 
@@ -59,6 +59,18 @@ System logs21 app-scoped records/12 target records, console3 target records/
 one positive startup, zero matched startup errors. Health200; protected app/JS401.
 External evidence `/tmp/ama-employee-reapply-20261028-1j8gt8xy`.
 No authenticated live acceptance, inference or fresh full gate claimed.
+
+### Current P03 result
+
+Evidence commit87bd00bd pushed on `ops/employee-redeploy-20261028`;
+Refs-only PR https://github.com/jmservera/ama/pull/518 targets main.
+Requested trailer and privacy-safe author/committer confirmed.
+State/pointer/result consistency, evidence-only scope and whitespace checks
+passed. No fresh full gate/receipt/independent exact-head assessment; explicit
+owner exception and pending #517 disclosed. Original Review unchanged.
+P03 completed at evidence-publication boundary only; merge/hosted/human approval
+and authenticated acceptance remain separate. Final state/evidence reconciliation
+will be committed and pushed without rewriting history.
 
 ## Historical attempt details (preserved)
 

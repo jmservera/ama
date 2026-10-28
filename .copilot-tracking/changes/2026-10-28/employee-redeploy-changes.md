@@ -16,7 +16,7 @@ ms.date: 2026-10-28
 * Original critique: .copilot-tracking/reviews/plans/2026-10-28/employee-redeploy-plan-critique.md
 * Original status: Blocked before build, push or cloud mutation.
 * Current status: one approved re-apply succeeded, Healthy/Provisioned/Running,
-  active with100% traffic; evidence publication in progress. Original failed
+  active with100% traffic; evidence published in PR #518. Original failed
   verification, rollback, gate receipt and independent Review retained below.
 
 ## One-time re-apply approval (2026-10-28)
@@ -109,6 +109,24 @@ No new full gate, successful receipt verification, independent exact-head
 assessment or hosted/human approval performed. Original independent Review
 remains Complete / Not accepted at its original blocked-attempt boundary;
 this later successful operational evidence does not rewrite that assessment.
+
+Evidence commit87bd00bd used authenticated account-derived noreply identity
+for author/committer and the requested Copilot trailer. Pushed only
+`ops/employee-redeploy-20261028`; opened Refs-only PR #518 targeting main:
+https://github.com/jmservera/ama/pull/518.
+PR discloses actual validation, original failed gate, owner publication exception,
+pending #517 and unperformed full-gate/independent/authenticated acceptance.
+Local state/pointer/result consistency and evidence-only scope checks passed;
+`git diff --check` passed. No runtime source changed; no new application tests
+or full gate were run for this evidence-only continuation.
+
+P01 reused, P02 verified successful, P03 evidence publication performed under
+the explicit exception. Task implementation is complete; automatic session
+remains running at Follow-up with no additional cloud operation authorized.
+Original Review remains Not accepted; remaining separately scoped work is
+authenticated acceptance and fresh full-gate/exact-head evidence after #517.
+No merge or human/hosted approval performed. This final evidence update will be
+committed and pushed on the same topic without rewriting existing history.
 
 ## Owner-selected continuation (2026-10-28)
 

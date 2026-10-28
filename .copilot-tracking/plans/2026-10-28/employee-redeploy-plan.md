@@ -8,7 +8,7 @@ ms.date: 2026-10-28
 
 * Task ID: employee-redeploy-20261028
 * Task slug: employee-redeploy
-* Planning status: Complete / re-apply verified, evidence publication active
+* Planning status: Complete / re-apply verified, evidence published in #518
 * Details: .copilot-tracking/details/2026-10-28/employee-redeploy-phase-details.md
 * Critique: .copilot-tracking/reviews/plans/2026-10-28/employee-redeploy-plan-critique.md
 
@@ -166,7 +166,7 @@ Complete: final active revision
 latest=ready,100% traffic, min0/max4 and exact ACR policy equality. No rollback.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Review and publication
+### [x] P03: Review and owner-authorized evidence publication
 
 <!-- rpi:task id=P03-T01 -->
 #### [x] P03-T01: Record evidence and independent Review
@@ -176,13 +176,17 @@ Complete: original independent Review execution Complete, outcome Not accepted.
 RV-001..005 routed; no deployment acceptance or repeated Review.
 
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: Commit and owner-authorized evidence publication
+#### [x] P03-T02: Commit and owner-authorized evidence publication
 
 Resolve privacy-safe authenticated git identity. Commit evidence with trailer,
 push only the requested topic and open Refs-only PR. Do not wait for full gate:
 owner explicitly directs publication with drift/#517 disclosure. Retain original
 failed receipt and original Review; list only validation actually performed.
 No force-push, main write, rewrite or merge. Hosted/human approval stays separate.
+Complete: evidence commit87bd00bd pushed to the requested topic; Refs-only
+PR #518 opened against main. Full gate not rerun under explicit exception.
+Original failed receipt and original Not accepted Review remain unchanged;
+completion means evidence publication, not gate/release/human acceptance.
 
 ## Dependencies and Test Ownership
 
@@ -224,3 +228,5 @@ Not accepted Review remain immutable evidence, with no repeated critique/Review.
 P01 reused. P02 one-time re-apply verified successfully. P03 publishes
 evidence under the dated owner exception; historical failed gate/Review remain
 unchanged. Current execution evidence belongs in the existing changes record.
+PR #518 is open; automatic session remains running at Follow-up. No further
+implementation begins without a selected follow-up and required authority.
