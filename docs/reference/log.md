@@ -7839,3 +7839,23 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Report statistics, raw fixtures and source selection are unchanged. Licence,
   reuse, human owner/legal decisions, production precision and regional coverage
   remain unresolved; no issue acceptance criterion is ticked.
+## [2026-10-20] query | Fictional form template and Finance decision review pack (#97)
+
+* Added a registered fictional versioned form/template pack and reviewer guide
+  over the existing form schema contract, with field type, unit, requirement,
+  authority, evidence, freshness and lineage, proposed preparer/reviewer
+  separation and stale propagation, and fourteen unresolved Finance
+  authority/binding decision fields. Indexed it, the dictionary subsection and
+  the core guide pointer. No runtime, API or schema engine changed.
+* The pack is not an approved template, with no submission, payment, grant term
+  or Finance signature. Issue #97 criterion 1 (actual authority and binding)
+  stays unmet pending a named human authority; criterion 2 was delivered earlier.
+* Process note: an earlier uncommitted draft was hand-authored before the RPI
+  skills were activated. It is preserved with a dated disclosure and was
+  re-verified through the executed research, plan, implement and review skills.
+
+## [2026-10-23] lint | Corrected form review pack registration claims (#97)
+
+* Files touched: the fictional form review guide, the core guide paragraph on the review pack, and this log (`ms.date`).
+* Contradiction found by independent full-diff review (FIN-001): both documents said the public fictional schema registers unchanged, but `register_schema` refuses its placeholder reviewer, and the focused test expects that refusal before registering a derived copy with a registered reviewer substituted.
+* Corrected both statements: the public file is refused as published; only a copy differing in `reviewer`, set to an existing registered person, registers, as `Unapproved`, recording no approval. No runtime, test, fixture, index, dictionary or provenance change; Finance FD-01..FD-14, template authority and OQ-015 stay unresolved and criterion 1 unmet. Earlier entries retained.

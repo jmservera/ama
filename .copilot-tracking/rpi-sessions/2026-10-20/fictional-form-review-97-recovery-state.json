@@ -1,0 +1,74 @@
+{
+  "task_id": "97-recovery",
+  "task_slug": "fictional-form-review-97-recovery",
+  "parent_task": {
+    "task_id": "97",
+    "task_slug": "fictional-form-review-97"
+  },
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-20/fictional-form-review-97-recovery-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-20/fictional-form-review-97-recovery-plan.md",
+    "details": ".copilot-tracking/details/2026-10-20/fictional-form-review-97-recovery-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-20/fictional-form-review-97-recovery-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-20/fictional-form-review-97-recovery-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-20/fictional-form-review-97-recovery-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Process defect disclosed: the earlier pass hand-authored research, plan, details, a subagent read-only critique, the pack fixture, test and register entry without invoking rpi-* skills. Those files are preserved unchanged as UNVERIFIED pre-RPI draft; nothing renamed, deleted or backdated.",
+      "status": "confirmed",
+      "evidence": "Coordinator intervention 2026-10-20; skill invocations in this session: rpi-research (loaded), rpi-plan (loaded)"
+    },
+    {
+      "decision": "Research executed (recovery slug), Planning Readiness Ready, C1-C14.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/research/2026-10-20/fictional-form-review-97-recovery-research.md"
+    },
+    {
+      "decision": "Plan complete and ready. Critique executed once by a worker activating rpi-plan-critique: Revise; PC-001..PC-007 applied directly by the planner; no second critique.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-20/fictional-form-review-97-recovery-plan-critique.md"
+    },
+    {
+      "decision": "Criterion 1 stays unmet; no approval, signature, submission, payment or runtime change; no push or PR.",
+      "status": "confirmed",
+      "evidence": "Owner comment jmservera/ama#126 6290697705; issue 97 brief; /tmp/ama-wave-20261020-2113-common.md"
+    },
+    {
+      "decision": "Review executed once via rpi-review: execution Complete, outcome Residual work, no defects (RV-001 Low, RV-002 Medium routed to follow-up).",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-20/fictional-form-review-97-recovery-review.md"
+    },
+    {
+      "decision": "Full local gate FAILED at 106fbc96 (agents test_eval_registry: pack unregistered). Corrected at 295df5a0 by registry entry and pack version key; focused registry 8 and form/provenance 20 tests OK. Failed receipt retained; NEW gate pending, not passed. Original Review preserved, no second Review.",
+      "status": "recorded",
+      "evidence": "/tmp/ama-serial-2150-97/receipt.json; .copilot-tracking/changes/2026-10-20/fictional-form-review-97-recovery-changes.md"
+    },
+    {
+      "decision": "Hosted Source CI 39529698651 failed fixable CRITICAL GHSA-6q48-6c7w-9gw2 (certifi). Applied the exact four lockfile blobs of existing #119 correction a3257c71; no other change. Prior be31 gate Pass is historical. Rubric exactly-20-criterion-IDs failure recorded as separate unresolved hosted blocker; not edited.",
+      "status": "recorded",
+      "evidence": "/tmp/ama-pr424-trivy-0157; /tmp/ama-pr424-trivy-api-0159; /tmp/ama-map-fixed-followon-0223-119/receipt.json"
+    },
+    {
+      "decision": "Rebased onto origin/main ca4baf75837de57c99718f7423716d5dc0b0e244 without conflicts; certifi 2026.10.19 from PR 420 preserved and the redundant lockfile commit dropped. Earlier gate receipts are historical; fresh serialized gate pending. Original Review unchanged, no push.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/changes/2026-10-20/fictional-form-review-97-recovery-changes.md"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "hosted-rubric-score",
+      "summary": "External rubric/score fails: details must contain exactly 20 criterion IDs",
+      "resolution": "Coordinator requests fresh hosted scoring after verified publication; no manual scores or rubric changes"
+    }
+  ],
+  "next_action": {
+    "phase": "Review",
+    "action": "Coordinator serial fresh full gate and hosted rerun on the frozen head; Finance FD-01..FD-14 authority remains a human gate"
+  },
+  "prioritized_follow_ups": null
+}

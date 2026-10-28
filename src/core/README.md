@@ -942,6 +942,16 @@ approved form/template or delegated authority was supplied for this slice.
 It cannot prepare an approved form; real recorded version-specific authority
 and binding remain unmet. Synthetic fixtures demonstrate mechanics only.
 
+A separate fictional review pack, `src/core/evals/fictional_form_review_pack.json`
+(registered `DS-FICT-FORM-REVIEW-PACK`; [reviewer guide](../../docs/reference/research/retrofit-synthetic-data/form-review-pack-97.md)),
+supplies a concrete versioned template, per-field authority, evidence, freshness
+and lineage, proposed role separation and stale propagation, and fourteen null
+Finance decision fields for human review. Its schema uses this path, but the
+public file carries a placeholder reviewer (public payloads may not hold email
+addresses) and is refused as published; only a copy differing in `reviewer`,
+set to an existing registered person, registers, as `Unapproved`. The pack is
+not an approved template, and criterion 1 stays unmet.
+
 Candidate collection copies the existing case-owned document ID,
 `content_sha256`, version and upload date. Original bytes must match the stored
 hash; generated placeholders, foreign documents and unclean sources are not
@@ -960,7 +970,8 @@ The separate server verifier is `form-source-locator-1`:
 * CSV: strict UTF-8 and the standard strict CSV reader; one-based `row` and
   `column`, including the header. Quoted/multiline cells retain their decoded
   cell text as raw value.
-* OCR import: asserted one-based page and region, supplied route evidence and
+* OCR import: asserted one-based page and a nonblank region string (at most 300
+  characters), supplied route evidence and
   error record required. Pixel content and route authority are **unverified**;
   no OCR/model is called or approved.
 

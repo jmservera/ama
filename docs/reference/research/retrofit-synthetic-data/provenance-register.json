@@ -210,6 +210,16 @@
       "personal_data": "Synthetic stock attributes/conflict diagnostics on private source anchors; not lodged certificates or company evidence. Private outputs not inspected."
     },
     {
+      "id": "DS-FICT-FORM-REVIEW-PACK",
+      "name": "Fictional form template and Finance authority/binding review pack (#97; not approved)",
+      "visibility": "public",
+      "location": "src/core/evals/fictional_form_review_pack.json",
+      "validation": {"root_label": true},
+      "sources": [],
+      "data_dictionary": "data-dictionary.md#document-and-form-data",
+      "personal_data": "none; invented template, field policies and unresolved Finance decision fields, no approval, signature or real scheme term"
+    },
+    {
       "id": "DS-DOC-CONTROL-FIXTURES",
       "name": "Constructed document control and retention cases",
       "visibility": "public",
