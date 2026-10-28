@@ -228,8 +228,9 @@ acceptance are not implied.
 
 ## Remaining Work and Handover
 
-P01/P02 and independent Review complete. Evidence commit, scoped gate attempt,
-push and Refs-only PR remain. Coordinator owns app configuration/redeploy
+P01/P02 and independent Review complete. Evidence committed, sole scoped gate
+attempt failed preflight, branch pushed and Refs-only PR #515 opened.
+Coordinator owns app configuration/redeploy
 after #514, registered release/evaluation, private reachability and bounded
 source=ai verification. USD30 additional employee AI authorization through
 2026-10-31 is a spending authorization, not a configured hard cap.
@@ -315,3 +316,36 @@ valid for a later head. No passing receipt exists, so passing-receipt
 verification is inapplicable and no gate acceptance is claimed. The explicitly
 requested PR is published with this gate exception and retained hosted/human
 approval requirements, not as a merge/release-ready candidate.
+
+### Requested Publication Completed
+
+Evidence-only commit `3bf2ba4a` preserved the failed gate. Fresh main fetch
+remained 98b0bb98 and infra fingerprint still matched independent Review.
+Commands:
+
+```bash
+git push -u origin feat/employee-ai-deployment-bicep
+gh pr create --base main --head feat/employee-ai-deployment-bicep \
+  --title "feat(infra): add minimal employee AI deployment and derived app settings" \
+  --body-file <session-files>/employee-ai-pr-body.md
+```
+
+Push succeeded, no force/direct-main push. PR opened:
+https://github.com/jmservera/ama/pull/515. Body uses Refs only, documents
+exact AI_* values, successful deployment/one missing role, no app update,
+USD30 additional employee AI through 2026-10-31, all local evidence and
+the failed scoped-gate exception. #514 is merged but live redeploy remains
+coordinator-owned. No merge or protection change.
+
+Final parent-owned status metadata completes P03 and records Follow-up;
+these evidence-only updates do not alter the independently reviewed infra
+patch and do not produce or upgrade a passing gate receipt. No new Review or
+gate is run. Current pushed head is discoverable from PR #515 rather than a
+self-referential committed SHA. No private data/secrets were read.
+
+Execution complete, automatic session remains running at the normal
+Follow-up checkpoint without starting any child. Ranked follow-ups: coordinator
+activation (Review RV-001, immediate service value); owner budget/model
+lifecycle (RV-002, short authorization window); separate workflow-matrix
+reconciliation (observed gate blocker, engineering leverage).
+Human approval remains unchecked and hosted checks are not claimed complete.

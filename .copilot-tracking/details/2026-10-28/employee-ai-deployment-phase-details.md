@@ -16,7 +16,7 @@ Research: .copilot-tracking/research/2026-10-28/employee-ai-deployment-research.
 | --- | --- | --- |
 | P01 | Complete: builds, 466 tests, lint/types | P01-T01, P01-T02 |
 | P02 | Complete: one Succeeded model and exact missing role | P02-T01 |
-| P03 | Review Complete/Conformant with justified divergence; publication active | P03-T01 |
+| P03 | Complete: Review and PR #515; partial gate failed preflight, disclosed | P03-T01 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Reproducible small-model infrastructure
@@ -120,3 +120,10 @@ no closure or merge. Include exact endpoint, both standard names, both
 gpt-4.1-nano-2025-04-14 model identities, retained AZURE_CLIENT_ID, one
 missing role added, USD30 additional AI authorization through 2026-10-31
 (not a configured hard cap), no calls/no app change, actual gate status.
+
+Completion evidence: PR https://github.com/jmservera/ama/pull/515 open to main;
+one independent Review Complete/Conformant with justified divergence; source
+fingerprint unchanged. Sole scoped gate selected preflight/namespace/static/
+infra and failed Workflow matrix drift: src-deploy.yml; no retry or --all.
+This publication does not establish passing gate, hosted approval or human
+activation acceptance. Coordinator and owner follow-ups remain separate.

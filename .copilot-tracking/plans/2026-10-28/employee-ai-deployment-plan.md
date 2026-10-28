@@ -8,7 +8,8 @@ ms.date: 2026-10-28
 
 * Task ID: employee-ai-deployment-2026-10-28
 * Task slug: employee-ai-deployment
-* Status: Ready after one independent critique and direct dispositions.
+* Status: Complete through one Review and requested PR publication; scoped
+  gate failed preflight and is explicitly not accepted as a passing gate.
 * Details: .copilot-tracking/details/2026-10-28/employee-ai-deployment-phase-details.md
 * Critique: .copilot-tracking/reviews/plans/2026-10-28/employee-ai-deployment-plan-critique.md
 
@@ -163,10 +164,10 @@ or retained explicit overrides, compiled tests, response-version bindings and
 handover before Review. Never create a second child or increase capacity.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Independent Review and publication
+### [x] P03: Independent Review and publication
 
 <!-- rpi:task id=P03-T01 -->
-#### [ ] P03-T01: Reconcile evidence, execute one Review, commit and PR
+#### [x] P03-T01: Reconcile evidence, execute one Review, commit and PR
 
 Reconcile P01/P02 markers first. Run one rpi-review independent assessment;
 route findings, never repeat Review in this task. Commit original evidence
@@ -218,8 +219,14 @@ Original research and critique preserve the earlier candidate, not rewritten.
   preserve auth/data/identity and verify private access plus registered
   source=ai result under current task release/evaluation and budget controls.
 * Owner: future model-retirement/quality/cost review outside this short exercise.
+* Separate engineering task: reconcile observed src-deploy.yml workflow-matrix
+  drift before a later gate attempt; no runner/workflow change here.
 
 ## Handoff
 
 Changes path: .copilot-tracking/changes/2026-10-28/employee-ai-deployment-changes.md.
-No unresolved user decision; parent continues to Implement.
+Execution complete; PR https://github.com/jmservera/ama/pull/515.
+Review Complete / Conformant with justified divergence; zero implementation
+defects. Sole partial gate failed preflight, disclosed in PR under explicit
+owner scope exception. Hosted/human approval and operator activation remain
+unmet; no merge or full-tier gate acceptance. No automatic child task.
