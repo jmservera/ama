@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-10-27
+ms.date: 2026-10-28
 ---
 
 ## Purpose
@@ -122,6 +122,14 @@ No populated baseline exists, so the literal round-trip remains Blocked /
 Not run, with zero writes/listSecrets and no new mock-only delivery. The
 demo's real profile guard separately refuses unknown/malformed deployment
 evidence; labels alone do not pass it. Prior offline evidence remains unchanged.
+
+For issue #360 / PR #459, the
+[dated schema correction](../../.copilot-tracking/research/2026-10-25/remove-synthetic-example-360-research.md#schema-correction-2026-10-28-pr-459-review)
+and [runbook](../../infra/README.md#historical-deployment-recipe) distinguish
+active-case removal from erasure: the live updatable ledger `cases` table
+retains the old body in system-managed history after current-row deletion.
+The non-history reference scan does not prove erasure; the audit trigger is a
+non-ledger alternative, not extra live-ledger protection.
 
 For issue #360 / PR #416 rubric recovery, the
 [post-push visibility and exact-head sequence](../../.github/rubric/README.md#post-push-visibility-and-exact-head-completion)

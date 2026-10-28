@@ -1,0 +1,8 @@
+# Plan: third main integration for PR 459 (issue 360), evidence only
+
+Date: 2026-10-26 (about 14:20Z), committed before the merge. Documentation only; earlier RPI artifacts and reviews are unchanged.
+
+Evidence (read-only): topic HEAD e6482513 (clean, unpushed; remote still f3658ced, an ancestor). origin/main fcf7e127 (shared runner fix merged). `git merge-tree` reports a clean merge. Main adds 76 paths since the last base; outside `.copilot-tracking` they are `.github/rubric/scores/latest.json`, `infra/scripts/tenant-readiness-preflight.py`, `infra/tests/test_tenant_readiness_preflight.py`, `tools/rpi-checks.py` and `tools/test_rpi_checks.py`. None is touched by the topic; `docs/reference/log.md` and `infra/README.md` are not changed on main, so no append-only conflict arises. The topic has no source intent: these arrive only through the merge and are not edited or copied. Other gates (issue 444 running, 462 next) own the heavy lock; none is started here.
+
+Steps: commit this plan; `git merge origin/main` (normal merge, trailer from the start); confirm the diff against main is still the 14 evidence paths plus integration-2 and -3 records, additions only, and that the rubric file equals main; run only `git diff --check` and a link check; record changes. No review rerun of old reviews; one bounded integration check recorded as such. Prepare external future-gate plan and frozen candidate; no push, PR edit, full gate, Docker or browser; no live, SQL or deletion action.
+Cleanup note: owner says the VM is disposable and lasting findings belong in issues or docs, not archives; no cleanup is performed here and handoff expects 0 containers or images from this task.
