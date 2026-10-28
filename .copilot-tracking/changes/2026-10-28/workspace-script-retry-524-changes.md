@@ -92,6 +92,26 @@ External selection, protected hashes, archive, restored files and prune journal:
 /tmp/ama-524-generated-archive-20261028. No historical tracking records were
 removed. This keeps gate inputs clean without discarding original RPI evidence.
 
+## Committed-candidate publication attempt
+
+Candidate 464558bb was committed with the authenticated account's privacy-safe
+noreply email for both author and committer and the required Copilot trailer.
+After fetching origin/main, the complete gate was attempted against the reviewed
+base 413ccaf253fce4566e855bae9d0a924b2a82b506:
+
+```bash
+python3 tools/rpi-checks.py --all \
+  --base 413ccaf253fce4566e855bae9d0a924b2a82b506 \
+  --out /tmp/ama-524-final-464558bb --lock-timeout 0 --jobs 1
+```
+
+Result: exit 1, `BLOCKED: Global heavy-resource lock timeout`. No gate group
+started, no passing receipt exists, and receipt verification was therefore
+unavailable. External output/log remain preserved. This adverse attempt does not
+supersede the missing API/Chromium evidence or original Not accepted Review.
+The branch was not pushed and no PR was opened: required publication gates are
+unmet. No force push, main write, Azure action or issue-closure claim occurred.
+
 ## Follow-Up Items
 
 RV-001/RV-002 route to a later rpi-implement invocation: session-ended

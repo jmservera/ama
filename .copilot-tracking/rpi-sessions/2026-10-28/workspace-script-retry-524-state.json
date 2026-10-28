@@ -29,12 +29,17 @@
       "decision": "Exactly one independent post-implementation Review executed",
       "status": "Complete / Not accepted",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-28/workspace-script-retry-524-review.md; stable source diff plus original artifacts, 32 lightweight tests, package Ruff/mypy; mandatory API/Chromium evidence unavailable"
+    },
+    {
+      "decision": "Local candidate committed; publication not performed",
+      "status": "blocked",
+      "evidence": "Candidate 464558bb; full gate --lock-timeout 0 returned BLOCKED: Global heavy-resource lock timeout; no passing receipt, push or PR"
     }
   ],
   "blockers": [
     {
       "id": "heavy-lock",
-      "summary": "Required API/browser checks did not start because /tmp/ama-rpi-heavy.lock is occupied",
+      "summary": "Required API/browser checks and committed-candidate complete gate did not start because /tmp/ama-rpi-heavy.lock is occupied",
       "resolution": "Acquire the mandated lock nonblocking in a later validation attempt; do not bypass or replace it"
     },
     {
@@ -43,7 +48,7 @@
       "resolution": "Later scoped implementation owns corrections; preserve original Review and require all publication gates"
     }
   ],
-  "next_action": {"phase": "Follow-up", "action": "Publication blocked: commit local assessed candidate/evidence, then later selected RV-001/RV-002 corrections and required locked validation; automatic session remains running with no child selected"},
+  "next_action": {"phase": "Follow-up", "action": "Publication blocked: later selected RV-001/RV-002 corrections, required locked API/Chromium evidence and current exact-head gate before push/PR; automatic session remains running with no child selected"},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Correct session-ended post-await guarding", "rationale": "Confirmed medium defect; small, high-value preservation of session/status boundaries", "evidence": "Review RV-001"},
     {"rank": 2, "task": "Make delayed-script browser proof deterministic", "rationale": "Confirmed medium regression-check defect; establishes reliable lexical execution and stale-status evidence", "evidence": "Review RV-002"},
