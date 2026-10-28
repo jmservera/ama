@@ -3374,7 +3374,11 @@ identity and not production authentication. It is a different composition from t
   `src/core/tests/test_resident_showcase_sql.py` for the view and principal. The browser check is
   `ZF_SQL_PORT=... ZF_SQL_PASSWORD=... python -m checks.resident_demo_browser_check`: it drives the
   real server in Chromium over real SQL with the real `__Host-` cookies, a keyboard-only sign-in, a
-  forged-cookie 401, cross-case denial and logout replay.
+  forged-cookie 401, cross-case denial and logout replay. Logout deliberately sends no
+  `Set-Cookie`, so a delayed response cannot overwrite a newer login. The normal and
+  failed-logout retry checks verify that the retained token receives 401 with its original
+  session fence and `/demo/session` returns 200 with `signed_in: false` and `session_id: null`;
+  cookie deletion is not the logout contract.
 
 Live criteria still blocked (not proven here): remaining budget headroom, live email-to-case
 equality in the homes database, the private job that creates the view and principal, the Key Vault
