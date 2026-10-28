@@ -14,7 +14,7 @@ Details: .copilot-tracking/details/2026-10-28/resident-chat-520-expiry-followup-
 
 ## Execution Status
 
-Partial, full-plan invocation. P01/P01-T01/P01-T02 complete; P02 Review/publication remains.
+Complete, full-plan invocation. P01/P01-T01/P01-T02/P02 complete; no active plan marker remains.
 Original critique Complete / Pass, no findings.
 
 ## Execution Summary
@@ -114,7 +114,7 @@ approval remain unclaimed.
 
 ## Remaining Work
 
-P02 authorized publication/thread resolution; original independent Review is complete.
+None in the active plan. Broader assurance and acceptance remain distinct follow-ups.
 
 ## Original Review and Publication Handoff
 
@@ -136,6 +136,32 @@ privacy-safe identity, explicit task-only staging and final coauthor trailer rul
 govern the commit. No git operation prohibition from a generic skill overrides the
 owner's explicit fetch/normal-push publication request.
 
+### P02 verified publication and exact-thread resolution
+
+Source implementation and all dated original RPI evidence were committed as
+7c9e59db8065f0af3664a56f26921aa1e787ea61:
+fix(api): reject callback proposals expiring during confirmation.
+Authenticated GitHub identity was freshly resolved and its derived noreply address
+configured repository-locally and used for both author and committer. The Conventional
+Commit includes the required final Copilot coauthor trailer.
+
+git fetch origin immediately before push again showed no remote-only commit;
+origin/feat/resident-chat-520 remained an ancestor, so no bot rebase was necessary.
+Normal push succeeded from 72a78101 to 7c9e59db. Immediate REST PR head was briefly stale;
+subsequent git ls-remote and PR GraphQL both independently reported the exact new
+7c9e59db8065f0af3664a56f26921aa1e787ea61 head before any thread mutation.
+
+Only after that verified tested push, posted reply:
+https://github.com/jmservera/ama/pull/525#discussion_r4406256965.
+Then resolveReviewThread(threadId: PRRT_kwDOUU8JX86xTMcu) returned isResolved true;
+a separate query verified the resolved state and new reply. No other thread mutated.
+PR body unchanged, no closing keyword, merge, deployment, az or force push.
+
+The final completion-evidence commit updates only plan/details/changes/state; the
+independent original critique and Review are preserved byte-for-byte, and tested
+source/test/README hashes are unchanged. No new runtime validation is required for
+these administrative Markdown/JSON updates. This is not a full-gate receipt.
+
 ## Follow-Up Items
 
 Full gate under future authorized prerequisites; inherited human/AT/hosted acceptance.
@@ -143,5 +169,7 @@ Canonical list is the plan's Follow-Up Items section. No broader work activated.
 
 ## Return-to-Caller State
 
-Automatic parent, RPI through Review complete, phase Follow-up. Original outcome
-Residual work with conformant scoped implementation. P02 publication still pending.
+Automatic parent, task completed, session running at Follow-up with no child started.
+Original Review Complete / Residual work, P01 Conformant, zero implementation defects.
+P02 source publication and exact-thread resolution verified. Follow-ups remain hosted
+exact-head checks, future authorized full gate and inherited human/AT acceptance.

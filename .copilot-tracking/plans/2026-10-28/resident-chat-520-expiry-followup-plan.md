@@ -103,7 +103,7 @@ missing ruff/mypy errors. Run new regression and the resident-demo selectors, th
 full API ruff check/format at 100 and mypy. No browser run for backend-only changes.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Independent Review and authorized publication
+### [x] P02: Independent Review and authorized publication
 
 Depends on P01. Review once, retain outcome, commit dated evidence, fetch/reconcile
 remote bot commits, rerun affected checks after rebase if required, normal push,
@@ -133,7 +133,10 @@ Original artifact retained at the metadata path. No correction or user decision 
 
 ## Handoff
 
-P01 complete: final exact-test negative control and regression passed their expected
+P01/P02 complete: final exact-test negative control and regression passed their expected
 outcomes; 92 resident tests passed without skips, API Ruff100/format100 and mypy
-(94 source files) passed. Ready for the one independent Review in P02, then authorized
-publication. No unresolved implementation decision. Full gate remains blocked independently.
+(94 source files) passed. One independent Review Complete / Residual work, P01 Conformant,
+no implementation defects. Fix commit 7c9e59db8065f0af3664a56f26921aa1e787ea61 was
+normally pushed and verified before the named thread reply and GraphQL resolution.
+Completion evidence records those remote results. No unresolved implementation decision.
+Full gate and inherited acceptance remain separate outstanding follow-ups.

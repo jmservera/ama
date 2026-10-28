@@ -17,7 +17,7 @@ Research: .copilot-tracking/research/2026-10-28/resident-chat-520-expiry-followu
 | Phase | Name | Status |
 | --- | --- | --- |
 | P01 | Implement and validate expiry boundary | Complete |
-| P02 | Independent Review and publication | Review Complete / Residual work; publication pending |
+| P02 | Independent Review and publication | Complete; original Review Complete / Residual work |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Implement and validate expiry boundary
@@ -71,3 +71,9 @@ it as explicitly authorized, rerun affected checks and record changed boundary.
 Do not force push or modify PR closing semantics. Verify remote includes the tested fix,
 reply in PRRT_kwDOUU8JX86xTMcu with commit and results, resolve via GraphQL and verify.
 Full-gate failure is a declared constraint, not a bypassed or fabricated success.
+
+Completion: one independent Review retained; source fix 7c9e59db8065f0af3664a56f26921aa1e787ea61
+normally pushed and verified using git remote ref and PR GraphQL head. After that,
+reply 4406256965 was posted and PRRT_kwDOUU8JX86xTMcu resolved by GraphQL, then
+queried again to verify isResolved true. No rebase was needed: repeated origin fetches
+showed no newer remote bot commit. Final administrative evidence changes no tested source.
