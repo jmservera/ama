@@ -37,9 +37,117 @@ def words(question: str) -> set[str]:
     return set(re.findall(r"[a-z]+", question.lower()))
 
 
+def _hazard_report(question: str, tokens: set[str]) -> bool:
+    electrical = tokens & {
+        "electric",
+        "electrical",
+        "electricity",
+        "electrics",
+        "power",
+        "socket",
+        "sockets",
+        "outlet",
+        "outlets",
+        "plug",
+        "plugs",
+        "wiring",
+        "wire",
+        "wires",
+        "cable",
+        "cables",
+        "light",
+        "lights",
+        "fuse",
+        "fusebox",
+        "charger",
+        "appliance",
+        "appliances",
+    }
+    active_alarm = tokens & {
+        "sounding",
+        "beeping",
+        "beeps",
+        "chirping",
+        "ringing",
+        "blaring",
+        "alerting",
+        "triggered",
+        "activated",
+    } or any(pair <= tokens for pair in ({"going", "off"}, {"gone", "off"}, {"won", "stop"}))
+    detector = tokens & {"alarm", "alarms", "detector", "detectors"}
+    present = {"there", "is"} <= tokens and not detector
+    monoxide = {"carbon", "monoxide"} <= tokens or "co" in tokens
+    return bool(
+        (
+            monoxide
+            and (
+                active_alarm
+                or present
+                or tokens
+                & {"detected", "leak", "leaking", "poisoning", "poisoned", "exposed", "exposure"}
+            )
+        )
+        or (
+            "smoke" in tokens
+            and (
+                active_alarm
+                or (electrical and not detector and not tokens & {"free", "policy"})
+                or re.search(
+                    r"\bsmoke\s+(?:is\s+)?(?:in|from|through|everywhere|coming|pouring|billowing)\b"
+                    r"|\b(?:see|seeing|smell|smelling|with|of)\s+(?:thick\s+|some\s+)?smoke\b"
+                    r"(?![-\s]+(?:alarm|detector|free))",
+                    question,
+                    re.IGNORECASE,
+                )
+            )
+        )
+        or (
+            electrical
+            and (
+                tokens
+                & {
+                    "sparks",
+                    "sparking",
+                    "smoking",
+                    "smouldering",
+                    "smoldering",
+                    "burning",
+                    "shock",
+                    "shocks",
+                    "shocked",
+                    "zapped",
+                    "electrocuted",
+                    "flood",
+                    "flooded",
+                    "flooding",
+                    "wet",
+                    "soaked",
+                }
+                or (
+                    "water" in tokens
+                    and (
+                        tokens & {"leak", "leaking", "dripping", "pouring", "touching", "around"}
+                        or ("coming" in tokens and tokens & {"through", "onto"})
+                    )
+                )
+            )
+        )
+    )
+
+
 def route(question: str) -> Topic | str:
     tokens = words(question)
-    if tokens & {"danger", "unsafe", "hazard", "safety", "mould", "mold", "damp", "fire", "gas"}:
+    if tokens & {
+        "danger",
+        "unsafe",
+        "hazard",
+        "safety",
+        "mould",
+        "mold",
+        "damp",
+        "fire",
+        "gas",
+    } or _hazard_report(question, tokens):
         return "safety"
     if tokens & {
         "ignore",

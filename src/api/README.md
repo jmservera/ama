@@ -142,6 +142,12 @@ labelled workflow-only rules. Home answers use only the signed-in projection.
 Operational appointment history and works-consent records are not projected:
 answers state Unknown, never infer consent. Safety questions give direct
 human/emergency routes and explicitly state that no report was sent.
+Bounded reports of active CO/carbon monoxide alarms, smoke, electrical sparks or
+shocks, and flooding or leaks involving electrics take this route before ordinary
+topics, even when the question also mentions home or appointments. Routine
+detector documents/status, socket improvements and unrelated water questions
+retain their ordinary routes. This finite rule set is not a safety assessment
+or a guarantee that every possible hazard report is recognized.
 
 Document answers use only the authorized case's resident-facing requests and
 document metadata. The case JSON contract adds `resident_document_requests`,

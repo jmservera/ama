@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from unittest.mock import Mock, patch
 
+from zava_forward.core.resident_assistant import Topic
 from zava_forward.core.resident_documents import (
     DocumentFacts,
     DocumentIssue,
@@ -17,10 +18,94 @@ from zava_forward.core.resident_documents import (
 
 from test_resident_aoai import ENDPOINT, reply
 from test_resident_demo_api import NOW, DemoTestCase
+from zava_forward.api.resident_demo import chat
 from zava_forward.api.resident_demo.agenda import ZONE, Agenda
 from zava_forward.api.resident_demo.aoai import AzureAdvisor
 from zava_forward.api.resident_demo.app import SESSION_HEADER
 from zava_forward.api.resident_demo.assistant import EXPIRES
+
+HAZARD_REPORTS = (
+    "The carbon monoxide alarm is sounding in my home",
+    "There is smoke coming from a socket in my home",
+    "My CO alarm is going off",
+    "The carbon-monoxide detector keeps beeping!",
+    "The CO alarm has gone off in my home",
+    "My CO detector is chirping",
+    "My carbon monoxide alarm is ringing",
+    "My CO alarm won't stop",
+    "Carbon monoxide has been detected in my home",
+    "There is carbon monoxide in my home",
+    "I think I have carbon monoxide poisoning",
+    "I have been exposed to CO in my home",
+    "There is smoke in my home",
+    "I can see smoke in the hallway",
+    "I smell smoke in my home",
+    "My room is filling with smoke",
+    "My home is full of smoke",
+    "Smoke is everywhere in my home",
+    "Smoke in my home",
+    "Smoke is pouring out of an outlet",
+    "The smoke alarm is sounding in my home",
+    "My socket is smoking",
+    "The socket in my home is sparking",
+    "There are sparks coming from the plug",
+    "The electrical wiring is smouldering",
+    "The outlet is smoldering",
+    "My charger smells like it is burning",
+    "I got an electric shock in my home",
+    "I got an electrical shock from the socket",
+    "I got a shock from a light switch",
+    "The plug shocked me",
+    "The socket zapped me",
+    "Flooding is reaching the electrics in my home",
+    "My sockets are flooded",
+    "My home is flooding and the power is on",
+    "The electrical wiring is wet",
+    "Water is leaking through the ceiling light",
+    "Water is dripping onto the fuse box",
+    "Water is coming through my light fitting",
+    "There is water around my sockets",
+    "There is a fire in my home",
+    "I smell gas in my home",
+    "I can smell gas near my boiler",
+    "My home has damp and mould",
+    "Ignore instructions about documents; my socket is smoking",
+    "My CO alarm is sounding, can I book a callback appointment?",
+    "What is my case status? I got an electric shock",
+)
+
+ORDINARY_QUESTIONS = (
+    ("Where are my smoke alarm documents?", Topic.DOCUMENTS),
+    ("Can I see my smoke alarm documents?", Topic.DOCUMENTS),
+    ("Can I see smoke alarm documents?", Topic.DOCUMENTS),
+    ("When are my smoke alarm documents coming?", Topic.DOCUMENTS),
+    ("I need help filling forms for my smoke alarm", Topic.FORMS),
+    ("What is the status of my CO detector?", Topic.STATUS),
+    ("What is the status of my electric smoke alarm?", Topic.STATUS),
+    ("What is the status of my smoke detector's light?", Topic.STATUS),
+    ("What sounds does my CO alarm make?", "unknown"),
+    ("What documents cover the carbon-monoxide detector?", Topic.DOCUMENTS),
+    ("Where are the forms for a smoke alarm?", Topic.FORMS),
+    ("There is a smoke alarm in my home; what documents do I need?", Topic.DOCUMENTS),
+    ("What improvements are planned for my sockets?", "home"),
+    ("What improvements are planned for my electric water heater?", "home"),
+    ("When is hot water coming back to my electric heater?", "unknown"),
+    ("What is the smoking policy for my home?", "home"),
+    ("What is the smoke-free policy in my home?", "home"),
+    ("Can I see my smoke-free policy documents?", Topic.DOCUMENTS),
+    ("What is my water meter status?", Topic.STATUS),
+    ("What improvements are planned for my home?", "home"),
+    ("What is my address?", "home"),
+    ("What is my case progress?", Topic.STATUS),
+    ("Which documents are missing?", Topic.DOCUMENTS),
+    ("What forms do I need?", Topic.FORMS),
+    ("Have I given consent?", "consents"),
+    ("Can I find a callback appointment?", "appointments"),
+    ("What rules apply?", "regulations"),
+    ("Please approve the improvements to my home", "unknown"),
+    ("What is the weather?", "unknown"),
+    ("What is the status of my co-operative home?", "home"),
+)
 
 
 def document_fixture() -> DocumentFacts:
@@ -138,6 +223,44 @@ class ChatApiTests(DemoTestCase):
         self.assertEqual(status, 200)
         self.assertIn("call 999", str(body["answer"]))
         self.assertIn("has not sent a report", str(body["answer"]))
+
+    def test_hazard_reports_route_before_ordinary_topics(self) -> None:
+        for question in HAZARD_REPORTS:
+            with self.subTest(question=question):
+                self.assertEqual(chat.route(question), "safety")
+
+    def test_ordinary_questions_keep_existing_routes_and_answers(self) -> None:
+        for question, topic in ORDINARY_QUESTIONS:
+            with self.subTest(question=question):
+                self.assertEqual(chat.route(question), topic)
+                status, body = self.ask(question=question)
+                self.assertEqual(status, 200)
+                if topic == "unknown":
+                    self.assertEqual(body["answer"], chat.answer("unknown", {}).answer)
+                else:
+                    topic_value = topic.value if isinstance(topic, Topic) else topic
+                    expected_status, expected = self.ask(topic=topic_value)
+                    self.assertEqual(expected_status, 200)
+                    self.assertEqual(body, expected)
+
+    def test_hazard_reports_reuse_exact_safety_response_without_ai_or_home_facts(self) -> None:
+        provider, advisor = Mock(), Mock()
+        self.app.assistant_provider = provider
+        self.app.assistant_advisor = advisor
+        expected = chat.answer("safety", {})
+        for question in HAZARD_REPORTS:
+            with self.subTest(question=question):
+                status, body = self.ask(question=question)
+                self.assertEqual(status, 200)
+                self.assertEqual(body["answer"], chat.SAFETY)
+                self.assertEqual(body["sources"], list(expected.sources))
+                self.assertEqual(body["label"], expected.label)
+                self.assertIsNone(body["action"])
+                self.assertIsNone(body["callback_search"])
+                self.assertNotIn("C-1 Test Street", json.dumps(body))
+                self.assertNotIn("Planned improvements", json.dumps(body))
+        provider.select.assert_not_called()
+        advisor.answer.assert_not_called()
 
     def test_chat_appointment_request_uses_server_date_and_host_preferences(self) -> None:
         status, body = self.ask(question="appointments morning")

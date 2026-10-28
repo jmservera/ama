@@ -14,6 +14,7 @@ from playwright.sync_api import Browser, Page, Route, expect, sync_playwright
 from test_resident_chat_api import document_fixture
 from test_resident_demo_api import FAKE_PASSWORD, NOW, DemoTestCase
 from checks.regulatory_ux_check import AXE_SHA256, scan
+from zava_forward.api.resident_demo import chat
 from zava_forward.api.resident_demo.agenda import Agenda
 
 
@@ -366,6 +367,22 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
     expect(page.locator("#assistant-result")).to_contain_text("C-1 Test Street")
     expect(page.locator("#assistant-result")).not_to_contain_text("C-2 Test Street")
     scan(page, axe, reports, "signed-in-chat", "#resident-chat, #chat-launcher")
+
+    for question in (
+        "The carbon monoxide alarm is sounding in my home",
+        "There is smoke coming from a socket in my home",
+    ):
+        page.locator("#assistant-question").fill(question)
+        with page.expect_response("**/demo/assistant") as response:
+            button.click()
+        assert response.value.json()["answer"] == chat.SAFETY
+        latest = page.locator("#assistant-result > div").last
+        expect(latest).to_contain_text(chat.SAFETY)
+        expect(latest).to_contain_text("Human emergency and repairs route")
+        expect(latest).not_to_contain_text("C-1 Test Street")
+        expect(latest).not_to_contain_text("Planned improvements")
+    scan(page, axe, reports, "typed-hazard-human-route", "#resident-chat, #chat-launcher")
+    page.locator("#assistant-question").fill("my home")
 
     page.route("**/demo/assistant", lambda route: route.abort())
     button.click()
