@@ -82,6 +82,11 @@ class OpenMeteoRejectionTests(unittest.TestCase):
             with self.subTest(bad=bad):
                 self.assertRejected(payload, "hourly_units must be a JSON object")
 
+    def test_repeated_json_keys_are_rejected(self):
+        raw = b'{"hourly": {"time": [], "time": []}}'
+        with self.assertRaisesRegex(ValueError, "Duplicate JSON object key"):
+            cpb._parse_json(raw)
+
     def test_accepts_consistent_series(self):
         series = parse_om(om_payload())
         self.assertEqual(len(series["times"]), 6)

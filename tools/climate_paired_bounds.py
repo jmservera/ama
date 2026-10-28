@@ -100,9 +100,16 @@ def magnus_rh(temperature: float, dew_point: float) -> float:
     return 100 * _saturation(dew_point) / _saturation(temperature)
 
 
+def _no_duplicate_keys(pairs):
+    keys = [key for key, _ in pairs]
+    if len(keys) != len(set(keys)):
+        raise ValueError("Duplicate JSON object key")
+    return dict(pairs)
+
+
 def _parse_json(raw: bytes) -> dict:
     try:
-        data = json.loads(raw)
+        data = json.loads(raw, object_pairs_hook=_no_duplicate_keys)
     except ValueError as exc:
         raise ValueError(f"Invalid JSON: {exc}") from exc
     if not isinstance(data, dict):

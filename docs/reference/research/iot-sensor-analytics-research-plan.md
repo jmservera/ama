@@ -823,7 +823,9 @@ indicating the values were summarised.
 | ERA5 versus ERA5-Land, multi-year window | Pending |
 | NASA POWER licence text | Not retrieved |
 
-Issue #178 criteria stay unticked: the comparison and a recorded source are
+Status at the 2026-10-22 evidence boundary (superseded: #178 was later completed
+after owner-approved integration, see the integration continuation earlier in this
+document). Issue #178 criteria stayed unticked at that point: the comparison and a recorded source are
 done for a bounded demonstrator, bounds are record-derived from the modelled
 sample, and the licence criterion remains open until the owner confirms reuse.
 No indoor model, importer, 60,000-home dataset, #179, #180 or #193 work was
