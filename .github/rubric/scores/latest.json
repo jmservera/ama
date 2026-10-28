@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-28T18:35:57+00:00",
-  "commit": "bdb49dc04c6fe71a35fc7e20975b05cb83f3766a",
+  "scored_at": "2026-10-28T21:36:39+00:00",
+  "commit": "bc74e473efd1cb9a46fc559b87144acf93ee3ce3",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40745399414",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40772450593",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "0b96cfbbedeb2a9b7485a862b37470831ccdc2082bb44e338178089012ce06c1",
-    "solution-code": "ed1d4002477b4a6ccbb6cab0f56502b669cd25cbd98affccc5c84ff2957a5020",
+    "solution-code": "aa2a7a6097f39a8e2833699628f010bce306837bdf590ef28e2590f025e78e29",
     "infrastructure": "921570137e8273400f9b1478087873927c5339c7fd17f63660ab7822f18a062e",
     "capstone-deck": "acb30e4f302663cedec4884bc7c561fcb5a14fb647ab1c4f93ffc377567c8896",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
@@ -29,12 +29,9 @@
     "A1": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/synthetic/climate_history.py:207-298",
-        "src/core/src/zava_forward/core/synthetic/indoor_projection.py:112-152",
-        "src/core/src/zava_forward/core/synthetic/retrofit_effects.py:1-100",
-        "src/core/src/zava_forward/core/synthetic/sensor_identity.py:1-23"
+        "src/api/src/zava_forward/api/web/ops.js:146-183"
       ],
-      "rationale": "Diff only corrects wording on an already-documented ledger-table removal; no new architecture/modularity change. Ceiling retained, unchanged."
+      "rationale": "Diff adds retry/abort UX and legacy contract_version fallback in capacity view; no new module boundary, service split or scaling pattern. Already-ceiling architecture unaffected."
     },
     "A2": {
       "score": 5,
@@ -46,36 +43,34 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "infra/README.md:1451"
+        "src/core/src/zava_forward/core/appointments.py:110",
+        "src/api/tests/test_procurement_api.py:127-165"
       ],
-      "rationale": "Diff corrects documentation accuracy on an existing ledger DELETE (clarifies history retention, non-history scan scope), not a new security control; baseline retained."
+      "rationale": "contract_version now optional (appointments.py:110) but authorization to act on Unknown authority still rejected with 403 (test_procurement_api.py). Compatibility fix, not a new control; ceiling retained."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/web/app.js:143-163",
-        "src/api/checks/employee_workspace_browser_check.py:1-155"
+        "src/api/checks/capacity_browser_check.py:1-100",
+        "src/api/tests/test_procurement_api.py:127-165",
+        "src/api/src/zava_forward/api/web/ops.js:146-183"
       ],
-      "rationale": "Adds a missing-dependency guard with distinct recovery UX and a new browser check covering it; incremental completeness hardening within an already-complete baseline. Unchanged ceiling."
+      "rationale": "Adds legacy-package compatibility, abort-safe retries, missing-dependency guard UX, and a new 784-line browser check plus new API tests covering empty/legacy reads. Strong completeness hardening, but criterion was already at ceiling (5); no higher level exists."
     },
     "A5": {
       "score": 5,
-      "evidence": [
-        "infra/README.md:1451"
-      ],
-      "rationale": "Diff is a documentation wording fix about ledger retention semantics, not new observability/cost/performance instrumentation. Unchanged baseline."
+      "evidence": [],
+      "rationale": "No logging, metrics, tracing, or cost instrumentation changed in this diff. Unchanged baseline."
     },
     "A6": {
       "score": 5,
-      "evidence": [
-        "src/api/tests/test_ai_tasks.py:44-90"
-      ],
-      "rationale": "New tests isolate employee Ai config from resident aliases and confirm missing-endpoint falls back to template without a model call; this is config/test hardening, not new model-choice justification or evaluation harness breadth. Unchanged baseline."
+      "evidence": [],
+      "rationale": "No model choice, prompt or evaluation-harness change in this diff; changes are UI retry/error handling and procurement data compatibility only. Unchanged baseline."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "No agentic orchestration, handoff or state-graph pattern changed in this diff; changes are identity scoping and script-load guarding only. Unchanged baseline."
+      "rationale": "No agentic orchestration, handoff or state-graph pattern touched; changes are UI abort-signal/retry plumbing and backend optional-field handling. Unchanged baseline (Good, not Excellent)."
     },
     "B1": {
       "score": 3,
@@ -114,9 +109,9 @@
     "B6": {
       "score": 5,
       "evidence": [
-        "src/api/README.md:2357-2449"
+        "src/api/README.md:41-80"
       ],
-      "rationale": "README additions are clear and navigable developer documentation, consistent with the existing ceiling; not the capstone deck, so no basis to move the score. Unchanged."
+      "rationale": "README documents the new capacity_browser_check.py clearly with run commands and scope, consistent with existing ceiling; not deck/capstone documentation itself. Unchanged."
     },
     "B7": {
       "score": 5,
