@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-28T22:52:13+00:00",
-  "commit": "704014ef1b21aa8fac3e7d028348cd1daaf0e7c4",
+  "scored_at": "2026-10-28T23:35:09+00:00",
+  "commit": "91caef1c413764aacea2da492368a72bb4366c6f",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40782392793",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40787524729",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "0b96cfbbedeb2a9b7485a862b37470831ccdc2082bb44e338178089012ce06c1",
-    "solution-code": "f75eca15113e3ac15f06cee990032bb8ea79d3968790db64626f6412d4337607",
+    "solution-code": "7669f4facedd0ad7452485ff1cf496d7dc72bdfb4fda250f5c8116368f86b30f",
     "infrastructure": "b6366d357bc22aadb23fdb2e0847cbbda6689e072f25c6a68738113fd875b271",
     "capstone-deck": "acb30e4f302663cedec4884bc7c561fcb5a14fb647ab1c4f93ffc377567c8896",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
@@ -29,10 +29,10 @@
     "A1": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/resident_demo/agenda.py:1-60",
-        "src/api/src/zava_forward/api/resident_demo/app.py:32-40"
+        "src/api/src/zava_forward/api/web/case-workspace.js:1-60",
+        "src/api/src/zava_forward/api/web/app.js:10-70"
       ],
-      "rationale": "Adds cleanly separated local SQLite agenda module and chat router module with explicit boundaries, consistent with existing modular pattern. No new scaling pattern; already at ceiling."
+      "rationale": "New case-workspace.js module is a self-contained journey/summary helper with a clear step table and pure functions, consistent with existing modular pattern; no new scaling pattern shown. Already at ceiling, unchanged."
     },
     "A2": {
       "score": 5,
@@ -44,39 +44,36 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/resident_demo/app.py:228-247",
-        "src/core/src/zava_forward/core/resident_documents.py:60-110",
-        "src/api/src/zava_forward/api/resident_demo/agenda.py:1-35"
+        "src/api/src/zava_forward/api/web/app.js:313-345",
+        "src/api/README.md:10-20"
       ],
-      "rationale": "Adds per-login session-binding header with constant-time compare and 409 on mismatch, strict use_record consent gate, bounded/allowlisted document parsing rejecting malformed input, and parameterized SQLite agenda transactions. Strengthens already-ceiling security."
+      "rationale": "Adds reason-required review gating and discard-before-replace rules for drafts, but no new identity/session-binding or server-side control code is in this diff; README security claims lack new threat-model detail. Ceiling unchanged."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/resident_demo/chat.py:1-225",
-        "src/core/src/zava_forward/core/resident_documents.py:1-178",
-        "src/api/tests/test_resident_chat_agenda.py:1-50",
-        "src/api/checks/resident_assistant_browser_check.py:1-100"
+        "src/api/src/zava_forward/api/web/case-workspace.js:1-157",
+        "src/api/tests/test_case_journey.py:1-660",
+        "src/api/checks/case_journey_browser_check.py:1-100"
       ],
-      "rationale": "Adds complete resident chat routing, document facts parsing, synthetic callback agenda with booking/cancellation transactions, plus matching unit and browser checks. Strong completeness; already at ceiling."
+      "rationale": "Adds a complete six-step journey/tab workspace with extensive unit tests (16 test functions) executing the real shipped JS, plus a new browser accessibility/keyboard check. Strong end-to-end completeness matching existing ceiling; unchanged."
     },
     "A5": {
       "score": 5,
       "evidence": [],
-      "rationale": "No logging, metrics, tracing or cost instrumentation changed; diff adds feature code and stderr error prints consistent with existing pattern. Unchanged baseline."
+      "rationale": "No logging, metrics, tracing or cost instrumentation changed; diff is UI/workspace feature code only. Unchanged baseline."
     },
     "A6": {
       "score": 5,
-      "evidence": [
-        "src/api/src/zava_forward/api/resident_demo/chat.py:120-225",
-        "src/api/README.md:117-140"
-      ],
-      "rationale": "New rule-based router explicitly keeps typed questions out of model prompts/memory and preserves the existing bounded AI advisor unchanged; no model/prompt/eval-harness change. Baseline unchanged."
+      "evidence": [],
+      "rationale": "No model, prompt or evaluation-harness change in this diff; AI review/approval UI text is unchanged in substance. Baseline unchanged."
     },
     "A7": {
       "score": 4,
-      "evidence": [],
-      "rationale": "Chat routing and agenda actions are deterministic rule dispatch and transactional CRUD, not agentic orchestration, planning or handoff. Unchanged baseline (Good, not Excellent)."
+      "evidence": [
+        "src/api/src/zava_forward/api/web/case-workspace.js:18-45"
+      ],
+      "rationale": "Journey/tab state is deterministic rule-based dispatch over stage tables (journey(), defaultTab(), nextTab()), not agentic orchestration, planning or handoff. Unchanged baseline (Good, not Excellent)."
     },
     "B1": {
       "score": 3,
