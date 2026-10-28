@@ -6,7 +6,8 @@ ms.date: 2026-10-28
 
 Task ID: employee-briefing-manager-visibility
 Status: Original delivery complete; PR #516 P04 source and validation complete,
-independent Review Complete / Conformant; publication pending.
+independent Review Complete / Conformant; correction published and all three
+owner-named Copilot threads replied to and resolved.
 
 ## Executive Summary
 
@@ -157,7 +158,7 @@ remain applicable. P04 preserves both without a new scope/architecture decision.
   check cache, then project only eight summaries with current reason redaction.
 * [x] P04-T03: count `min(3, len(top))` for final template source and `len(top)`
   for AI; update paired-store and browser assertions plus API documentation.
-* [ ] P04-T04: run focused regression then core/API discovery and browser;
+* [x] P04-T04: run focused regression then core/API discovery and browser;
   independent correction Review, commit and publish only without open blockers.
 
 Canonical semantic owner remains TasksMixin on JSON/SQLite; no test removals,

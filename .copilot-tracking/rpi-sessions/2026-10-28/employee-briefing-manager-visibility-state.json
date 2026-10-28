@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Follow-up",
-  "status": "active",
+  "status": "completed",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-28/employee-briefing-manager-visibility-research.md",
@@ -15,6 +15,11 @@
     "review": ".copilot-tracking/reviews/logs/2026-10-28/employee-briefing-manager-visibility-review.md"
   },
   "confirmed_decisions": [
+    {
+      "decision": "PR #516 P04 correction committed/pushed; all three named Copilot threads replied to and resolved",
+      "status": "Observed",
+      "evidence": "7388ac91ddbe5497da0d83c5aed0e581842d7034; explicit old-head force-with-lease after rebase; reply IDs 4398998314/4398998319/4398998312, all three resolve mutations true"
+    },
     {
       "decision": "PR #516 P04 independent Review executed Complete; outcome Conformant, no substantive findings or blockers",
       "status": "Complete",
@@ -57,7 +62,7 @@
     }
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Publish reviewed P04 correction with required trailer and lease-protected rebased push; update existing PR, reply to and resolve three threads"},
+  "next_action": {"phase": "Follow-up", "action": "Await hosted checks and owner review for PR #516; finite manual correction complete, no automatic child work, merge or deployment"},
   "prioritized_follow_ups": [
     {
       "rank": 1,

@@ -6,7 +6,8 @@ ms.date: 2026-10-28
 
 Task ID: employee-briefing-manager-visibility
 Current continuation: P04-T01/T02/T03 complete; T04 validation complete,
-independent Review Complete / Conformant, publication pending. No blockers.
+independent Review Complete / Conformant, correction published and three
+Copilot threads resolved. P04 complete. No blockers; hosted/owner review pending.
 Original P01-P03 evidence below is historical.
 Status: P01-P03 complete; original Review Complete / Conformant; PR #516 open.
 Readiness: research C1-C10 resolves role, permission, projection and fixture questions.

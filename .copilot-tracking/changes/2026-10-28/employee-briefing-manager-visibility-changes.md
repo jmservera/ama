@@ -244,3 +244,22 @@ the current evidence. No implementation source changed during/after Review.
 PC-001 full permitted-ID identity and PC-002 publication stop remain satisfied.
 Only commit/push, existing PR description reconciliation and the three thread
 replies/resolutions remain; hosted and owner approval remain independent.
+
+### P04 Publication Observed
+
+Source and dated evidence committed as
+7388ac91ddbe5497da0d83c5aed0e581842d7034 with the required Copilot trailer and
+authenticated account's repository-local noreply author/committer email.
+Fresh main remains 5abc6c6b32c536ad933cd926850eb8a3d8220a77. Reviewed source
+hashes matched immediately before commit. The already-rebased topic was pushed
+using an explicit force-with-lease bound to old remote head
+7f7eaa1ad812e71f57dd133da026edc41c7182db; remote PR head verified at 7388ac91.
+Existing PR #516 description now distinguishes original and correction evidence
+and documents bounded projections and three-case templates. No issue closure.
+
+All three named Copilot threads received replies and resolved successfully:
+queue readiness (4398998314), projection cost (4398998319), template count
+(4398998312). GitHub mutation responses confirmed isResolved=true for each.
+Only administrative evidence/state closeout follows, with no source changes or
+repeat Review. P04 is complete. Hosted checks and owner merge approval remain
+independent; no merge or deployment was performed. `.env` was never read.
