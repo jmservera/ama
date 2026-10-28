@@ -8,7 +8,7 @@ ms.date: 2026-10-28
 
 * Task ID: employee-redeploy-20261028
 * Task slug: employee-redeploy
-* Planning status: Complete / implementation attempted and rolled back
+* Planning status: Complete / rollout rolled back, publication blocked
 * Details: .copilot-tracking/details/2026-10-28/employee-redeploy-phase-details.md
 * Critique: .copilot-tracking/reviews/plans/2026-10-28/employee-redeploy-plan-critique.md
 
@@ -37,7 +37,8 @@ nonblocking admission must succeed without queueing.
 
 * Forward update consumed. Failed system-log verification required rollback;
   another rollout requires separate owner authorization.
-* Publication remains conditional on the complete exact-head local gate.
+* Complete publication gate failed required preflight:
+  `Workflow matrix drift: src-deploy.yml`. No push/PR.
 
 ## User Decisions and Requirements
 
@@ -178,6 +179,13 @@ Fetch main, run full gate externally with `--lock-timeout 0`, verify receipt
 at current main immediately before independent exact-head assessment and push.
 If gate fails, retain original failure externally, record blocker, commit
 historical outcome if needed and do not push/open PR.
+Execution: a05bae82 evidence commit, b2be797b admission evidence, normal
+current-main merge323b3adf (only upstream CI line; src identical).
+Full gate failed preflight against197e5e3c; receipt:
+`/tmp/ama-employee-redeploy-full-gate-20261028-1038/receipt.json`.
+No group passed, no successful receipt verification or exact-head independent
+publication assessment. Final adverse-evidence commit cannot upgrade this
+failed historical receipt. Publication remains incomplete and blocked.
 
 ## Dependencies and Test Ownership
 
@@ -207,7 +215,8 @@ cost decisions; PC-004 proof executed and PC-005 exception restored exactly.
 
 * Authenticated employee acceptance and task-release/model binding verification
   remain owner-operated work outside this no-inference redeploy.
-* Publication is blocked if the full exact-head gate fails.
+* Existing src-deploy.yml workflow matrix drift blocks publication; route to
+  separately scoped tooling/CI work, not an unrelated fix in this operation.
 * Separate later owner authorization is required for another forward rollout.
 
 ## Handoff
@@ -216,5 +225,5 @@ Changes path: .copilot-tracking/changes/2026-10-28/employee-redeploy-changes.md.
 Owner selected later implementation of routed findings; original critique and
 Not accepted Review remain immutable evidence, with no repeated critique/Review.
 P01/P02 execution complete with failed verification and successful rollback,
-not the desired AI-enabled outcome. P03 publication still conditional.
+not the desired AI-enabled outcome. P03 publication blocked by failed preflight.
 No push/PR without cleared publication gate.

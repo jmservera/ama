@@ -16,7 +16,7 @@ ms.date: 2026-10-28
 * Original critique: .copilot-tracking/reviews/plans/2026-10-28/employee-redeploy-plan-critique.md
 * Original status: Blocked before build, push or cloud mutation.
 * Current status: one forward rollout failed verification, exact old-image/env
-  recovery verified Healthy; publication gate pending.
+  recovery verified Healthy; full publication gate failed, push/PR blocked.
 
 ## Owner-selected continuation (2026-10-28)
 
@@ -127,6 +127,32 @@ Reconcile this current-main CI-only change by a normal non-rewriting merge
 into the requested topic, preserving original evidence/ancestry and exact
 built source. No rebase, force-push, main write or additional cloud operation.
 Then run the required complete gate in a fresh external directory.
+
+### P03-T02 final: full gate failed; publication blocked
+
+Non-rewriting topic merge323b3adfaac8b6f55c5972397f0b421f97eeec4a integrated
+current main197e5e3c6d4f7cfb135c9a985af3f13e0f688ac4; no source/runtime change.
+Complete command:
+`python3 tools/rpi-checks.py --all --jobs 3 --lock-timeout 0 --base
+197e5e3c6d4f7cfb135c9a985af3f13e0f688ac4 --out
+/tmp/ama-employee-redeploy-full-gate-20261028-1038`.
+Heavy lock acquired immediately; effective jobs2; full matrix selected.
+Required preflight failed `Workflow matrix drift: src-deploy.yml`, exit1.
+No group passed; original failed receipt retained externally at
+`/tmp/ama-employee-redeploy-full-gate-20261028-1038/receipt.json`.
+No retry/resume/skip/cloud fallback or unrelated workflow fix. No successful
+receipt verification or independent exact-head publication assessment.
+No push or PR: repository publication gate is not bypassed by owner authority
+for one cloud operation. Final adverse-evidence commit does not validate or
+upgrade this historical failed candidate receipt.
+
+Task remains Blocked in Implement, automatic session running, original Review
+Complete / Not accepted unchanged. Desired AI outcome rolled back; exact old
+configuration healthy and ACR restored. P01/P02 executed, P03-T01 historical
+Review retained, P03-T02 commit complete but gate/publication unmet.
+Owned proof container/auth config removed and exact constructed fixture file
+and empty directories removed; backups/receipts retained. No private-data,
+secret-value, .env, resident, role, resource or cost-query operation.
 
 ## Original attempt (historical, retained unchanged below)
 

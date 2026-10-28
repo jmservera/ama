@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "automatic",
   "active_phase": "Implement",
-  "status": "active",
+  "status": "blocked",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-28/employee-redeploy-research.md",
@@ -54,13 +54,13 @@
     },
     {
       "id": "publication-gate",
-      "summary": "Full exact-head local gate remains required after implementation evidence commit.",
-      "resolution": "Run complete gate nonblocking; verify receipt and independent exact-head assessment before push/PR."
+      "summary": "Full gate on candidate 323b3adf/current main 197e5e3c failed required preflight: Workflow matrix drift: src-deploy.yml. No groups passed; external failed receipt retained.",
+      "resolution": "Correct existing workflow matrix drift in separately scoped work, then run new exact-head full gate, receipt verification and independent publication assessment. No push/PR now."
     }
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Full gate blocked admission after main advanced by one CI-only line (#513); exact src tree unchanged. Commit evidence, normally merge current main into topic without rewriting, then run full gate externally. No cloud retry."
+    "action": "Blocked: preserve final committed evidence and healthy exact-image/env recovery. Publication requires workflow-matrix correction and new full gate; another forward rollout requires separate owner authorization. No push/PR or repeated Review."
   },
   "prioritized_follow_ups": [
     {
@@ -71,9 +71,9 @@
     },
     {
       "rank": 2,
-      "task": "Clear exact-head publication gate if it fails",
+      "task": "Correct existing src-deploy.yml matrix drift and re-admit publication",
       "rationale": "Enables requested evidence publication without weakening required gates; no cloud mutation needed.",
-      "evidence": "P03-T02; full gate and external receipt pending."
+      "evidence": "P03-T02; failed full receipt /tmp/ama-employee-redeploy-full-gate-20261028-1038/receipt.json, no groups passed."
     },
     {
       "rank": 3,

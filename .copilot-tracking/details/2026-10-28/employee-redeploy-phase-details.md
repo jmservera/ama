@@ -22,7 +22,8 @@ ms.date: 2026-10-28
 * Fresh backup: `/tmp/ama-employee-redeploy-20261028-resumed.kbxpikmg`,
   JSON0600/directory0700, previous revision/digest preserved.
 * One build and isolated synthetic HTTP proof passed; script indices2<7.
-  Full publication gate pending, no verified receipt/push/PR.
+  Full publication gate failed preflight matrix drift; no verified receipt,
+  push or PR. Task blocked in Implement, automatic session remains running.
 
 <!-- rpi:phase id=P01 -->
 ## P01: Preserve and publish image
@@ -165,7 +166,20 @@ for author/committer; coauthor exactly as requested. No `.tmp`/config/token
 files staged. Full gate command: `python3 tools/rpi-checks.py --all --jobs 3
 --lock-timeout 0 --base <fetched-main-sha> --out <new-external-directory>`.
 No gate success/PR claim unless receipt verification and independent exact-head
-assessment pass. Push only requested topic, no force/amend/merge. PR body uses
+assessment pass. Push only requested topic, no force/amend/main write. PR body uses
 Refs #514, #515, #516 only, with revision/digest/restored policy and all limits.
 Gate failure is a publication blocker, not an app rollback trigger after an
 otherwise healthy rollout; code-gate failure is not runtime failure.
+
+Actual final publication state: first gate rejected admission after main moved.
+After announced normal topic-only merge of upstream's one CI line (src tree
+unchanged), complete gate acquired the heavy lock nonblocking, selected full
+matrix (effective jobs2), then failed required preflight:
+`Workflow matrix drift: src-deploy.yml`. No groups passed.
+Candidate323b3adfaac8b6f55c5972397f0b421f97eeec4a,
+base197e5e3c6d4f7cfb135c9a985af3f13e0f688ac4.
+External original failed receipt:
+`/tmp/ama-employee-redeploy-full-gate-20261028-1038/receipt.json`.
+No receipt-success assertion, independent publication assessment, push or PR.
+Final evidence commit is historical and does not repair that failure.
+No further cloud writes and no unrelated CI fix in this task.
