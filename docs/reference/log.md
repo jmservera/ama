@@ -7736,3 +7736,58 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   Insufficient or NOT RUN, never Pass.
 * No exercise, evaluator, outcome or approval was added. OQ-017 stays open and
   all five #223 criteria stay unmet. The earlier entry is unchanged.
+## [2026-10-20] query | Map tile provider licence, cost and privacy options (#119)
+
+* Added the [options review](./research/ux/map-tile-provider-options.md) and a
+  dated ADR 0002 decision 5 delta, and extended the WCAG baseline manual check
+  record with a map list screen-reader protocol.
+* Sources are public vendor and policy pages read 2026-10-20 with no private
+  coordinates. Azure Maps paid rate, Microsoft and OS processor terms, OS plan
+  prices and MapTiler commercial terms could not be verified and are listed.
+* No provider was selected, bought, configured or approved. No screen reader was
+  available on the host, so no screen-reader run is claimed and the human or
+  assistive-technology gate remains unmet. No UI file changed.
+
+## [2026-10-20] correction | Map options provenance clarification (#119)
+
+* The map tile options review and screen-reader protocol logged above were first
+  drafted before the RPI skills ran, then re-checked through recovery research,
+  plan, critique, implement and review. The re-read evidence (OSM tile policy,
+  Azure Maps pricing page, code and tool availability) was confirmed, and an
+  inconsistent secondary Ordnance Survey rate was labelled unverified.
+* Conclusions are unchanged: no provider selected or bought, no screen-reader
+  run, human gate unmet.
+
+## [2026-10-20] correction | Map options budget wording (#119)
+
+* Corrected the cost wording in the [options review](./research/ux/map-tile-provider-options.md):
+  the owner budget is USD500 in total for the October 2026 calendar month,
+  including accrued and forecast costs across resource group `ama` and other
+  scopes. A separate finite costed execution plan must be approved before any
+  paid execution, not only before account creation. The proposal authorises no
+  spend, and unknown headroom blocks paid execution.
+* Prompted by an independent assessment that returned Defects on the earlier
+  head. No provider selection, purchase, legal or DPO approval, UI change or
+  screen-reader run is claimed; the screen-reader gate and vendor rates, terms
+  and DPA positions stay unverified.
+
+## [2026-10-23] correction | Map options evidence labels and budget currency (#119)
+
+* An independent review of the options proposal found two defects. First, the
+  cost paragraph in the [options review](./research/ux/map-tile-provider-options.md)
+  still presented USD500 as the owner ceiling and USD 535.41 as governing
+  evidence. It now states them as dated superseded history, records the
+  replacement USD 700 all-in ceiling, the unchanged 2026-10-25T16:02Z expiry and
+  Unknown all-in headroom, and links the
+  [addendum budget decision](../case_study_48_addendum.md#revised-owner-budget-decision-2026-10-22).
+  This supersedes the budget and verification wording of the two 2026-10-20
+  entries above; they are retained unchanged.
+* Second, vendor statements that the recovery research recorded as not re-read
+  were written as established. The options review and the ADR 0002 map delta now
+  label them draft, unverified, or secondary, unverified, and only the OSM tile
+  policy and the Azure Maps pricing page free allowance are marked re-read. The
+  earlier recovery completion claim that these labels were applied was not
+  borne out; this is an honest correction, not a new verification.
+* Documentation only. No provider is selected or bought, no terms, DPA, rate,
+  licence or processor decision is made, no web retrieval was done, the screen
+  reader remains not run, and both original issue criteria remain unmet.

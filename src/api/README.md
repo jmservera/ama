@@ -2578,6 +2578,9 @@ records the tested/deployed image and identity initialization.
   The live demo app has `ZF_TILE_URL` set to the public OSM tile URL under a
   scoped, time-limited owner approval for synthetic data only (see
   [infra README](../../infra/README.md)); that is not a production provider choice.
+  See the
+  [tile provider options review](../../docs/reference/research/ux/map-tile-provider-options.md)
+  (#119) for dated, unverified-where-stated licence, cost and privacy options.
 * Local development defaults to local state/documents; Azure selects the
   SQL/Blob backends through configuration. Do not apply local-disk durability
   claims to that deployment or infer tested Blob restoration/erasure from
