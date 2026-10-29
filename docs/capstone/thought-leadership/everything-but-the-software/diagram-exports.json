@@ -1,32 +1,32 @@
 {
   "renderer": "@excalidraw/excalidraw 0.18.1",
-  "browser": "156.0.4314.50",
+  "browser": "155.0.8059.39",
   "export": "Native offline SVG and 3x PNG; source files are never overwritten.",
   "png_scale": 3,
   "diagrams": [
     {
       "stem": "fig-state-inheritance",
-      "source_sha256": "0f8fac3c5d549229c3832912e0bad9ff308b7b311c27adabf215f65bf8addba0",
-      "svg_sha256": "ff52b9422ed34db0112ea780d771644bfd0bb22b916c0a82aa196bde57cfceb9",
-      "png_sha256": "3ca553d629fe56c78ce9ccfd6570584538112b212b094619225c6e8829cd5f0a",
+      "source_sha256": "9d34a1e672297d924379e73808fe4db9bb995821f71db1115d90a85b50fcf6b0",
+      "svg_sha256": "857f5959f07aa631415fee62716d8332510cadd7c487bc041897161bc3f2c333",
+      "png_sha256": "eb5cae30a1ad45781e2ba99bc89a1ed0bc566dd68996f4d19e497ddb61352718",
       "width": 1120,
       "height": 727.5,
       "elements": 17
     },
     {
       "stem": "fig-pilot-design",
-      "source_sha256": "9f7a0144581c99c7ad3cd570172b64f11d4899b3683a2451405d52e3184a38ad",
-      "svg_sha256": "cda5c21c39ba3338d61e656e61858baf5f371e69f98e61ea9d7a2f3f3a6fac3a",
-      "png_sha256": "2e9051eb8f9f0223f617a592a6fd0dc0641afc4c004da62576fc0e3e83cc58a5",
+      "source_sha256": "ba453d4c96330f4145f12b4a7c5a0b759211c5457572c3115502c0e094b03c43",
+      "svg_sha256": "878346ca60bb7142d4dae8df5c4fb628c458121d78e741e49f5d56d8325be334",
+      "png_sha256": "42194168651890f884536ba5f6cad038e8e7814facb67c38f2a5891307aec6d8",
       "width": 1120,
       "height": 915,
       "elements": 33
     },
     {
       "stem": "fig-contract-states",
-      "source_sha256": "fcb6863fd11b4c9ab3e04a904f0fddf2bba3114ba25963b7d92f39da185aebfd",
-      "svg_sha256": "a929036ac929a404632d37abb947efeed5ca8bd6437876aeb38f08425dc77dd5",
-      "png_sha256": "05e3c583c4c51ef0bcbdc8d00f13bf5c9c38ec4e3dffa183957972a251cd50a7",
+      "source_sha256": "a966d9c4a9de33ebd70f8f29b22b1a97da78025559faff1a0aa9e9692fc155a7",
+      "svg_sha256": "cdb2f7d60f6f3ccaa16448dc2918d9fcbccc624d10d8a9d437937395916eed66",
+      "png_sha256": "c7bfd82830c61c553688286b744182c73622f6b85d937f91b54853962ae34d7d",
       "width": 1120,
       "height": 627.5,
       "elements": 14
