@@ -12,6 +12,7 @@ import json
 import hashlib
 import logging
 import os
+import uuid
 from contextlib import contextmanager
 from copy import deepcopy
 from datetime import UTC, date, datetime
@@ -28,14 +29,24 @@ ACCESS_CODES = ("None", "Unknown", "Large print", "Phone only", "Plain language"
 RESIDENT_ACTIONS = ("scope_record", "safe_contact_record", "representative_record", "disclosure_check",
                     "decision_record", "service_open", "service_update", "service_close",
                     "service_reopen", "service_reassign", "update_record", "remedy_confirm", "remedy_update",
-                    "challenge_open", "challenge_resolve")
+                    "challenge_open", "challenge_resolve",
+                    "nomination_record", "nomination_correct", "tenure_intake")
 NOT_RECORDED = "Not recorded"
 AUTHORITY_TASKS = ("Receive information", "Communicate", "Attend", "Works decision")
 AUTHORITY_STATUSES = ("Confirmed", "Unclear", "Disputed", "Revoked")
 RESIDENT_RETENTION_YEARS = 5
 RESIDENT_RETENTION_ID = "resident-decisions"
 RESIDENT_FIELDS = ("resident_scopes", "measure_decisions", "representative_authorities",
-                   "resident_safe_contact", "resident_contact_history", "resident_reviews")
+                   "resident_safe_contact", "resident_contact_history", "resident_reviews",
+                   "nomination_records", "tenure_reports")
+INTAKE_ACTIONS = ("nomination_record", "nomination_correct", "tenure_intake")
+INTAKE_FIELDS = ("nomination_records", "tenure_reports")
+INTAKE_CHANNELS = ("Digital", "Phone", "Letter", "In person", "Trusted intermediary")
+TENURE_HOLD = (
+    "Tenure and lease identity are unverified. Owner: Home Ownership data owner and Legal "
+    "(appointment required). Next action: verify all affected households and obtain a "
+    "Legal-reviewed decision route; no measure offer or work release."
+)
 MANAGERS = ("Retrofit Programme Manager", "Programme Support Officer")
 FOLLOWUP_ACTIONS = ("service_open", "service_update", "service_close", "service_reopen", "service_reassign",
                     "update_record", "remedy_confirm", "remedy_update", "challenge_open", "challenge_resolve")
@@ -88,6 +99,30 @@ def _day(value):
     except (TypeError, ValueError):
         raise ValueError("Enter the next update date as a valid YYYY-MM-DD date.") from None
     return value
+
+
+def _intake_text(value, label, limit=500):
+    if not isinstance(value, str) or not value.strip() or len(value) > limit:
+        raise ValueError(f"Supply {label}, at most {limit} characters; the original is never truncated.")
+    return value
+
+
+def _intake_fields(user, c, body, fields):
+    from . import projection
+    if not projection.appointment_evidence_visible(user):
+        raise PermissionError("Intake evidence needs current resident-workflow and recorded-reason rights.")
+    if set(body) != {"action", *fields}:
+        raise ValueError("Supply only the intake fields. Verification and approvals cannot be supplied here.")
+    if body["case_id"] != c["id"]:
+        raise ValueError("The reported home does not match this case. Ask the data owner to reconcile identity; do not transfer the account.")
+
+
+def _intake_owner(store, email):
+    from . import projection
+    owner = _person(store, email)
+    if not projection.appointment_evidence_visible(owner):
+        raise ValueError("Choose a named follow-up owner with resident-workflow and recorded-reason rights.")
+    return _identity(owner)
 
 
 def _version(body, record):
@@ -505,6 +540,12 @@ def authority_for(c, ref, task, measure, context, version=None):
 
 def resident_gate(c, bindings=None):
     """Case advance checks all measures; scoped work checks only explicit bindings."""
+    if c.get("tenure_review_required") or c.get("tenure_reports"):
+        return [TENURE_HOLD]
+    return _resident_decision_gate(c, bindings)
+
+
+def _resident_decision_gate(c, bindings=None):
     if retention_schedule(c)["expired"]:
         return ["Resident records are past retention. Owner: Resident Liaison Officer. Next action: obtain current human-reviewed evidence."]
     if bindings is None:
@@ -538,7 +579,7 @@ def resident_gate(c, bindings=None):
 
 def resident_status(c):
     """Conservative list/prompt status; a legacy case-wide answer is not scoped evidence."""
-    if not resident_gate(c):
+    if not _resident_decision_gate(c):
         return "Accepted"
     measures = case_measures(c)
     if measures and all(current_context(c, m) and c.get("measure_decisions", {}).get(m)
@@ -607,7 +648,7 @@ class ResidentDecisionMixin:
         action = body.get("action")
         if action not in RESIDENT_ACTIONS:
             raise ValueError("Unknown step.")
-        if action in FOLLOWUP_ACTIONS or action == "decision_record":
+        if action in FOLLOWUP_ACTIONS + INTAKE_ACTIONS or action == "decision_record":
             with _operation(self, user, case_id, body):
                 return
         with self.lock:
@@ -616,6 +657,98 @@ class ResidentDecisionMixin:
             detail = getattr(self, "_res_" + action)(user, c, body)
             self.audit(user["email"], f"resident_{action}", case_id, detail)
             self.save()
+
+    def _res_nomination_record(self, user, c, body):
+        _intake_fields(user, c, body, {
+            "case_id", "kind", "reported_subject_ref", "account", "source", "channel",
+            "owner", "acknowledgement_ref", "next_update", "non_digital_route", "hazard_concern",
+        })
+        if body["hazard_concern"] is not False:
+            raise ValueError("Use the independent hazard intake now (/api/cases/{case_id}/hazard-raise), not the nomination queue. Existing hazard service owns emergency response and clocks.")
+        record = dict(
+            id=f"NOM-{uuid.uuid4().hex}", version=1,
+            case_id=c["id"], kind=k.choice(body["kind"], ("Officer nomination", "Self-referral"), "the referral kind"),
+            original=dict(
+                reported_subject_ref=_intake_text(body["reported_subject_ref"], "the unverified subject reference", 100),
+                account=_intake_text(body["account"], "the original account", 4000),
+                source=_intake_text(body["source"], "the supplied source"),
+                channel=k.choice(body["channel"], INTAKE_CHANNELS, "the supplied channel"),
+                recorded_by=_identity(user), at=_time(),
+            ),
+            identity_status="Unknown", support_needs="Unknown", risk_flags="Unknown",
+            owner=_intake_owner(self, body["owner"]),
+            acknowledgement=dict(
+                reference=_intake_text(body["acknowledgement_ref"], "the staff-recorded acknowledgement evidence"),
+                recorded_by=_identity(user), at=_time(), delivery="Not verified by this system",
+            ),
+            next_update=_day(body["next_update"]),
+            non_digital_route=_intake_text(body["non_digital_route"], "the staffed non-digital route"),
+            review_status="Human identity and eligibility review required",
+            corrections=[],
+        )
+        c.setdefault("nomination_records", []).append(record)
+        return f"{record['id']} unverified intake recorded"
+
+    def _res_nomination_correct(self, user, c, body):
+        _intake_fields(user, c, body, {
+            "case_id", "id", "expected_version", "reported_subject_ref", "account",
+            "source", "channel", "next_update", "challenge_id",
+        })
+        record = k.find(c.get("nomination_records", []), body["id"], "nomination")
+        _version(body, record)
+        _owner_rights(self, user, record["owner"])
+        challenge = None
+        if body["challenge_id"] is not None:
+            challenge = deepcopy(k.find(c.get("affected_challenges", []), body["challenge_id"], "this case's challenge"))
+        correction = dict(
+            version=record["version"] + 1,
+            reported_subject_ref=_intake_text(body["reported_subject_ref"], "the corrected unverified subject reference", 100),
+            account=_intake_text(body["account"], "the competing corrected account", 4000),
+            source=_intake_text(body["source"], "the supplied correction evidence"),
+            channel=k.choice(body["channel"], INTAKE_CHANNELS, "the supplied channel"),
+            recorded_by=_identity(user), at=_time(),
+            challenge=challenge,
+        )
+        next_update = _day(body["next_update"])
+        record["corrections"].append(correction)
+        record.update(version=correction["version"], next_update=next_update,
+                      review_status="Re-review required; no priority or consent change")
+        return f"{record['id']} correction version {record['version']} recorded"
+
+    def _res_tenure_intake(self, user, c, body):
+        _intake_fields(user, c, body, {
+            "case_id", "household_ref", "expected_version", "reported_tenure",
+            "reported_lease_interest", "identity_state", "source", "owner", "next_update",
+        })
+        reports = c.get("tenure_reports", [])
+        _version(body, reports[-1] if reports else None)
+        report = dict(
+            version=len(reports) + 1, case_id=c["id"],
+            household_ref=_intake_text(body["household_ref"], "the reported household reference", 100),
+            reported_tenure=k.choice(body["reported_tenure"], (
+                "Tenant", "Shared owner", "Right to buy leaseholder",
+                "Preserved right to buy leaseholder", "Leaseholder", "Mixed block", "Unknown",
+            ), "the reported tenure"),
+            reported_lease_interest=_intake_text(body["reported_lease_interest"], "the reported lease-interest status or Unknown"),
+            identity_state=k.choice(body["identity_state"], ("Unknown", "Ambiguous"), "the unresolved identity state"),
+            source=_intake_text(body["source"], "the tenure source reference"),
+            verification="Unknown", decision_route="Unknown", legal_position="Unknown",
+            cost_position="Unknown", review_status="Open; human data-owner and Legal review required",
+            owner=_intake_owner(self, body["owner"]), next_update=_day(body["next_update"]),
+            recorded_by=_identity(user), at=_time(),
+            responsibility_questions=[
+                "Which home, household and lease are verified by the data owner?",
+                "What is the current approved measure scope?",
+                "Who decides and is landlord permission needed?",
+                "What is the Legal-reviewed responsibility position and its version?",
+                "What cost position has Finance approved?",
+                "Has Legal recorded the consultation requirement and status?",
+                "Which disputes, defects or charge queries remain open?",
+            ],
+        )
+        c.setdefault("tenure_reports", []).append(report)
+        c["tenure_review_required"] = True
+        return f"tenure intake version {report['version']} recorded; case-wide hold remains"
 
     def _res_challenge_open(self, user, c, body):
         from . import projection
@@ -669,6 +802,8 @@ class ResidentDecisionMixin:
         return f"{record['id']} supplied resolution recorded"
 
     def _res_scope_record(self, user, c, body):
+        if c.get("tenure_review_required") or c.get("tenure_reports"):
+            raise ValueError(TENURE_HOLD)
         measure = body.get("measure")
         if not isinstance(measure, str) or measure not in case_measures(c):
             raise ValueError("Choose one of this home's measures.")

@@ -622,6 +622,47 @@ It is a separate required check, not automatically run by the full RPI gate.
 Local SQL Server/browser execution and post-deployment verification must be
 recorded separately; source coverage alone does not establish live acceptance.
 
+## Staff-recorded safety-consent intake (#130, #131)
+
+`POST /api/cases/{id}/resident` reuses current authentication, role checks and
+the transactional core ledger for these closed payloads. Extra fields,
+including purported verification/approval, are refused. `case_id` must match
+the URL; a wrong identity must go to the data owner, not be transferred.
+All actions require current resident-workflow and recorded-reason rights,
+including after a cached session's staff registration changes.
+
+| Action | Required fields in addition to `action` |
+| --- | --- |
+| `nomination_record` | `case_id`, `kind` (`Officer nomination`/`Self-referral`), `reported_subject_ref`, `account`, `source`, `channel`, `owner` (staff email), `acknowledgement_ref`, `next_update` (YYYY-MM-DD), `non_digital_route`, `hazard_concern` (explicit false) |
+| `nomination_correct` | `case_id`, `id`, `expected_version`, `reported_subject_ref`, `account`, `source`, `channel`, `next_update`, `challenge_id` (same-case existing challenge ID or null) |
+| `tenure_intake` | `case_id`, `household_ref`, `expected_version` (0 initially, latest case tenure revision thereafter), `reported_tenure`, `reported_lease_interest`, `identity_state` (`Unknown`/`Ambiguous`), `source`, `owner`, `next_update` |
+
+Channels: `Digital`, `Phone`, `Letter`, `In person`, `Trusted intermediary`.
+Reported tenure: `Tenant`, `Shared owner`, `Right to buy leaseholder`,
+`Preserved right to buy leaseholder`, `Leaseholder`, `Mixed block`, `Unknown`.
+Missing lease-interest information must be supplied as `Unknown`, not guessed.
+Both identity and tenure verification remain unknown regardless of reported
+values. Original text is preserved, bounded and never silently truncated.
+
+The response contains projected case detail. Restricted roles receive no raw
+intake histories. Stale versions return the existing conflict response.
+A committed write whose acknowledgement fails returns the existing explicit
+409 `outcome: committed`; reload/reconcile history before another action.
+No automatic sending, booking, approval, ranking or lease interpretation.
+Hazard concerns return a refusal directing staff immediately to the existing
+`/api/cases/{id}/hazard-raise` route; this is not automatic hazard referral.
+Use emergency/manual service routes independently without waiting for intake.
+
+See the [core boundary](../core/README.md#unverified-nomination-and-tenure-intake-130-131)
+for the case-wide unresolved hold, deletion interaction, missing whole-programme
+coverage and actual human approvals still required. There is no new web
+interface or operational activation; digital capture is staff API capture,
+not evidence of keyboard, screen-reader or representative participation.
+
+```bash
+PYTHONPATH=../core/tests:../agents/tests python3 -m unittest discover -s tests -p test_resident_api.py -q
+```
+
 ## Specialist screen delivery (#149)
 
 The existing workbench includes a **Specialist screens** destination. Installed
