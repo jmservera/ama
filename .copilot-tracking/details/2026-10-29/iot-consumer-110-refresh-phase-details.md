@@ -14,7 +14,7 @@
 | --- | --- | --- | --- |
 | P01 | Integrate main | Complete | P01-T01, P01-T02 |
 | P02 | Validate | Complete | P02-T01 |
-| P03 | Review and local handoff | Review complete; local commit pending | P03-T01, P03-T02 |
+| P03 | Review and local handoff | Complete locally; publication blocked/deferred | P03-T01, P03-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Integrate main
@@ -80,6 +80,8 @@ Reconcile completed phase markers, details, changes/results and remaining blocke
 
 <!-- rpi:task id=P03-T02 -->
 ### P03-T02: Commit and publication-gate handoff
+
+Completed local implementation/evidence commit 0ab830e6ad1a2755dd640a9f40f62663ce5a003f; authenticated account noreply used for author and committer, required co-author trailer present, worktree clean immediately afterward. No push. Final closeout changes only current evidence/state; no assessed source or original Review is modified. Complete gate and exact-head/hosted acceptance remain coordinator-owned, not passed.
 
 Use gh api user to derive privacy-safe repository-local author/committer. Include required co-author trailer. Keep numeric paid-Hub cost only in local PR notes for the coordinator, with region/currency/date/source/exclusions. Do not edit remote PR or push.
 

@@ -4,8 +4,8 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Review",
-  "status": "active",
-  "session_status": "running",
+  "status": "completed",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-29/iot-consumer-110-refresh-research.md",
     "plan": ".copilot-tracking/plans/2026-10-29/iot-consumer-110-refresh-plan.md",
@@ -39,13 +39,18 @@
       "decision": "Original independent Review executed exactly once",
       "status": "Complete / Conformant with justified divergence; assessed source 5c672618ee0a55368e3be38c97cb8adefdd64129 over b0364e4b326936715d69ab1d75040c4528282af7; RV-001/RV-002 routed to coordinator",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-29/iot-consumer-110-refresh-review.md"
+    },
+    {
+      "decision": "Local implementation and original dated RPI evidence committed without push",
+      "status": "Verified commit 0ab830e6ad1a2755dd640a9f40f62663ce5a003f; clean immediately after commit; final closeout evidence-only; no publication receipt or hosted acceptance",
+      "evidence": ".copilot-tracking/changes/2026-10-29/iot-consumer-110-refresh-changes.md"
     }
   ],
   "blockers": [
     {"id": "publication-gate", "summary": "Complete runner invokes non-cost az bicep commands outside this task's permission; no full receipt/exact-head publication assessment", "resolution": "Coordinator runs full gate in authorized context, verifies fresh-base external receipt and obtains independent exact-head assessment before push"},
     {"id": "hosted-ci", "summary": "Current local rebased head cannot have fresh hosted CI without forbidden push; historical rubric verdict missing", "resolution": "Coordinator owns separately authorized publication and hosted/rubric result"}
   ],
-  "next_action": {"phase": "Review", "action": "Original Review Complete / Conformant with justified divergence; finish P03-T02 local authenticated commit and coordinator handoff without push"},
+  "next_action": {"phase": "Follow-up", "action": "Coordinator owns authorized full gate on final HEAD, fresh-base receipt verification, independent exact-head assessment and separately authorized publication/hosted results; do not infer push permission"},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Complete publication control RV-001", "rationale": "Required before any publication; no source fix needed", "evidence": ".copilot-tracking/reviews/logs/2026-10-29/iot-consumer-110-refresh-review.md"},
     {"rank": 2, "task": "Obtain fresh hosted/rubric results RV-002", "rationale": "Unpushed rebased head has no current hosted verdict; coordinator owns", "evidence": ".copilot-tracking/reviews/logs/2026-10-29/iot-consumer-110-refresh-review.md"}
