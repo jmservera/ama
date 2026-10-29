@@ -391,8 +391,8 @@ function regulatoryChatPanel(caseId) {
         log.append(h("li", {}, h("strong", {}, "You"), " ", question));
         show(answer, tid);
         status.textContent = `${answer.kind}: synthetic-demo turn stored with its sources.${answer.escalation ? " Conflict sent to the exercise owner for human review." : ""}`;
-        await refreshUsage();
         clearSubmittedQuestion(sent);
+        void refreshUsage();
       } catch (e) { status.textContent = `Cited lookup unavailable: ${e.message} Use the ordinary human route.`; }
       finally { button.disabled = false; input.focus(); }
     } }, h("label", { for: "regulatory-question" }, "Cited source question"), input, button),

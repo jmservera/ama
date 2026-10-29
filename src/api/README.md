@@ -3502,6 +3502,10 @@ benefit measurements. The bounded `/usage` result is audit-only, potentially
 partial, never an exact total; see the [core consumption contract](../core/README.md#offline-regulatory-consumption-2026-10-27-208).
 Usage follows the existing draft DPIA/retention/access controls, not a new
 retention exemption.
+After an answer is shown, the lookup clears unchanged submitted text and
+re-enables its control without waiting for the background usage refresh.
+A failed refresh reports unavailable usage separately; it does not replace
+the answer or block the next question.
 
 The local pinned-axe harness exercises automatic conflict routing/restoration,
 usage, keyboard/plain mode, seven staff roles and supplier denial, 320/390/1280
