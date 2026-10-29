@@ -97,7 +97,7 @@ class PanelTests(roles.Matrix):
         self.assertEqual([m["role"] for m in stored], ["user", "assistant"])
         self.assertEqual(stored[1]["evidence"], [c["id"] for c in d["citations"]])
 
-    def test_maximum_question_with_expanding_mask_returns_success(self) -> None:
+    def test_maximum_stored_question_with_expanding_mask_falls_back_safely(self) -> None:
         question = "x" * (MAX_CONTENT - 8) + " NE1 1AA"
         self.assertEqual(len(question), MAX_CONTENT)
         expected = redact(question)[0][:MAX_CONTENT]
@@ -108,7 +108,8 @@ class PanelTests(roles.Matrix):
                 if skill is not None:
                     body["skill"] = skill
                 code, answer = self.api(ROLE, f"/api/chat/threads/{tid}/ask", body)
-                self.assertEqual((code, answer["kind"]), (200, "answer"))
+                self.assertEqual((code, answer["kind"]), (200, "fallback"))
+                self.assertEqual(answer["consumption"]["model_calls"], 0)
                 stored = self.api(ROLE, f"/api/chat/threads/{tid}")[1]["messages"]
                 self.assertEqual(stored[0]["content"], expected)
                 self.assertNotIn("NE1 1AA", stored[0]["content"])
@@ -383,6 +384,7 @@ class PanelTests(roles.Matrix):
             )
         self.assertEqual(self.prompts, [])
         self.assertEqual(self.api(ROLE, f"/api/chat/threads/{tid}")[1]["messages"], [])
+
     def test_status_warning_is_role_scoped_and_describes_input(self) -> None:
         from zava_forward.core.chat_privacy import WARNING
 
@@ -498,6 +500,52 @@ class PanelTests(roles.Matrix):
         finally:
             case["stage"] = stage
 
+    def test_skill_source_change_during_call_withholds_and_keeps_usage(self) -> None:
+        case = self.store.cases["ZF-1"]
+        stage = case["stage"]
+        for skill in ("general", *REGISTRY):
+            with self.subTest(skill=skill):
+                tid = self.thread()
+
+                def mutate(_prompt: str) -> dict[str, Any]:
+                    case["stage"] = "Source changed during skill inference"
+                    return dict(
+                        outcome="returned",
+                        text=json.dumps(dict(answer="STALE-SKILL", citations=["ZF-1/stage"])),
+                        usage=dict(prompt_tokens=5, completion_tokens=2, total_tokens=7),
+                    )
+
+                self.model = mutate
+                try:
+                    code, answer = self.api(
+                        ROLE, f"/api/chat/threads/{tid}/ask", {"content": "Stage?", "skill": skill}
+                    )
+                    self.assertEqual(
+                        (code, answer["kind"], answer["skill"]), (200, "withheld", skill)
+                    )
+                    self.assertNotIn("STALE-SKILL", json.dumps(answer))
+                    self.assertEqual(answer["consumption"]["tokens"]["total_tokens"], 7)
+                finally:
+                    case["stage"] = stage
+
+    def test_skill_context_limit_counts_selected_system_and_preserves_audit(self) -> None:
+        from zava_forward.core import chat_panel
+
+        tid = self.thread()
+        body = {"content": "Stage?", "skill": "general"}
+        self.api(ROLE, f"/api/chat/threads/{tid}/ask", body)
+        limit = len(chat_panel.SYSTEM) + len(self.prompts[-1])
+        self.prompts.clear()
+        tid = self.thread()
+        with patch.object(chat_panel, "MAX_INPUT_CHARS", limit):
+            code, answer = self.api(ROLE, f"/api/chat/threads/{tid}/ask", body)
+        self.assertEqual((code, answer["kind"], answer["skill"]), (200, "fallback", "general"))
+        self.assertEqual(answer["context"], "ZF-1")
+        self.assertEqual(answer["consumption"]["model_calls"], 0)
+        self.assertEqual(self.prompts, [])
+        events = [row for row in self.store.audit_entries() if row["action"] == "chat.answer"]
+        self.assertEqual(json.loads(events[-1]["detail"])["outcome"], "fallback")
+
     def test_role_change_does_not_replay_previous_role_questions(self) -> None:
         tid = self.thread()
         self.ask(tid, "PRIOR-ROLE-CONTEXT")
@@ -527,7 +575,7 @@ class PanelTests(roles.Matrix):
                 ),
             )
             page.route("**/api/chat/status", lambda route: route.abort())
-            page.goto(self.base + "/app#/case/ZF-1")
+            page.goto(self.base + "/app#/case/ZF-1?tab=ai")
             summary = page.locator("#chat-panel > summary")
             summary.focus()
             summary.press("Enter")

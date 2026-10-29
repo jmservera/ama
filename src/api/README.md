@@ -256,7 +256,9 @@ guarantee; do not enter resident names or sensitive/contact details. The audit
 ledger stores thread ID, actual question sequence, selected skill and outcome,
 not duplicated free text. Existing retention and DPO decisions remain required.
 Stored questions retain the 8,000-character limit after masking, including
-when a replacement marker is longer than the original identifier.
+when a replacement marker is longer than the original identifier. This is a
+storage limit, not the inference allowance: questions over 1,000 characters
+return workflow-only help without a model call.
 
 The dialog uses native controls, explicit keyboard focus wrapping, Escape and
 return focus, polite updates, shared `async-action.js` loading feedback and
@@ -3140,7 +3142,10 @@ uncited answers and memory prompting are intentionally removed from that HTTP
 route. Direct memory lifecycle/assembly remains separately testable and off by
 default; neither HTTP route activates it. Sources are complete JSON, bounded
 to 16,000 combined system/prompt characters, with at most 12 user questions /
-4,000 history characters and a 1,000-character new question. Oversize returns
+4,000 history characters and a 1,000-character new question. Selected advisory
+skill instructions count toward the same combined system/prompt cap.
+Completion-time source checks apply the same skill filter as dispatch.
+Oversize returns
 workflow-only. There is one provider attempt, no retries, default 600 output
 tokens. These caps do not approve role budgets, token prices, spend or expiry.
 

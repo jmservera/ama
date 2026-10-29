@@ -1051,6 +1051,8 @@ const app = new Node("main");
 let finish, fail, requests = [], failure;
 const api = async (path, body) => {
   if (path === "/api/assistants") return {assistants: []};
+  if (path === "/api/chat/status")
+    return {warning: "Synthetic privacy warning", retention: "Unknown"};
   if (path.endsWith("/status")) return new Promise(() => {});
   requests.push({path, body});
   if (path === "/api/chat/regulatory/usage") return {
@@ -1069,6 +1071,7 @@ const api = async (path, body) => {
     for (const change of ["none", "text", "space", "answer-failure", "thread-failure"]) {
       requests = []; failure = change === "thread-failure" ? "thread" : null;
       const panel = chatCasePanel("SYN-526");
+      await new Promise(resolve => setImmediate(resolve));
       const root = regulatory ? panel.querySelector("#regulatory-chat") : panel;
       const input = root.querySelector(regulatory ? "#regulatory-question" : "#chat-question");
       const form = root.querySelector("form"), button = form.querySelector("button");
