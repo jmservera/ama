@@ -1,7 +1,7 @@
 ---
 title: Cowork Presentation Outputs
 description: Imported v1 and v2 presentation outputs, owner-selected public v2 scoring deck and verified local extraction
-ms.date: 2026-10-25
+ms.date: 2026-10-29
 ms.topic: reference
 ---
 
@@ -15,6 +15,12 @@ claims. Separate independent review found its seven findings corrected.
 The deck still has 54 slides, all notes and 27 caller returns; the six recovered
 cost slides are byte-identical. Rehearsal, user research, accessibility,
 current legal/deployment acceptance and publication gates remain outstanding.
+
+The [29 October dated-claim review](../../../reference/regulatory/reviewed-updates/2026-10-29-presentation-paper-claim-review.md)
+flags the historical EPC forecast wording, the EHS self-report source mismatch
+and the inconsistent EPC band subtotal in the retained handoff. Official-source
+rechecks were blocked by DNS failure; currentness remains unknown and the PPTX
+and PDF were not changed.
 
 The [dated PR #438 corrections](./review-corrections-2026-10-24.md) now govern
 current deployment labels, price claims and backup navigation. The current
