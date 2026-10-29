@@ -11,6 +11,7 @@ let resetFocus = false;
 const workspaceStatus = document.getElementById("workspace-status");
 let displayedHash = location.hash || "#/";
 let caseSession = null;
+let disposeMapPanel = null;
 
 function h(tag, attrs, ...kids) {
   const el = document.createElement(tag);
@@ -81,6 +82,7 @@ const ago = (s) => {
 const show = (...nodes) => { app.replaceChildren(...nodes.flat().filter((n) => n && n.nodeType)); app.focus(); };
 
 function login(msg) {
+  disposeMapPanel?.();
   caseSession?.controller?.dispose();
   caseSession = null;
   for (const id of Object.keys(fundingAi)) delete fundingAi[id];
@@ -1466,22 +1468,119 @@ function mapAction(marker, action) {
 }
 
 function mapPanel(coordinator = null) {
+  disposeMapPanel?.();
   const signal = routeController.signal;
-  const el = h("div", { id: "leaflet", class: "leafmap", role: "region", "aria-label": "Map of open cases. Zoom with the buttons, mouse wheel or pinch." });
+  const el = h("div", { id: "leaflet", class: "leafmap", role: "region", tabindex: "0", "aria-label": "Map of open cases. Zoom with the buttons, mouse wheel or pinch." });
   const info = h("p", { class: "muted", role: "status", "aria-live": "polite" });
   const open = coordinator
-    ? h("button", { type: "button", class: "alt", onclick: () => document.getElementById("coordinator-records").focus() }, "Show these as a list")
+    ? h("button", { type: "button", class: "alt", onclick: () => {
+      collapse(false);
+      document.getElementById("coordinator-records").focus();
+    } }, "Show these as a list")
     : h("a", { href: "#/all" }, "Show these as a list");
   let map = null, layer = null;
+  let selectedId = null;
+  const markers = new Map();
+  const title = h("h3", { id: "map-home-title", tabindex: "-1" });
+  const address = h("p");
+  const caseId = h("dd");
+  const stage = h("dd");
+  const status = h("dd");
+  const navigate = h("a", { class: "btn" }, "Open home");
+  const restoreMarker = (id) => {
+    const target = markers.get(id)?.getElement();
+    (target?.isConnected ? target : el).focus({ preventScroll: true });
+  };
+  const closeHome = (restore = true) => {
+    if (selectedId === null) return;
+    const id = selectedId;
+    selectedId = null;
+    homeCard.hidden = true;
+    if (restore) restoreMarker(id);
+  };
+  const homeCard = h("section", { class: "map-home-card", hidden: true, "aria-labelledby": "map-home-title" },
+    h("div", { class: "map-home-header" }, title,
+      h("button", { type: "button", class: "alt map-home-close", "aria-label": "Close home summary",
+        onclick: () => closeHome() }, h("span", { "aria-hidden": "true" }, "\u00d7"))),
+    address, h("dl", {}, h("dt", {}, "Case"), caseId, h("dt", {}, "Current stage"), stage,
+      h("dt", {}, "Map status"), status), navigate);
+  const showHome = (point, focus = true) => {
+    selectedId = point.id;
+    title.textContent = point.name || point.id;
+    address.textContent = point.address || "Address not included in this map. Open home for permitted details.";
+    caseId.textContent = point.id;
+    stage.textContent = point.stage || "Unknown";
+    status.replaceChildren(mapSymbol(point.kind), MAP_SIGNALS[point.kind].label);
+    navigate.href = `#/case/${encodeURIComponent(point.id)}`;
+    homeCard.hidden = false;
+    if (focus) title.focus();
+  };
   const listHead = h("summary", { id: "maplist-h" }, "Show the map areas as a list (keyboard and screen reader friendly)");
   const listUl = h("ul", { "aria-labelledby": "maplist-h", class: "plainlist" });
   const listBox = h("details", { class: "maplist" }, listHead, listUl);
+  const sidebar = h("aside", { class: "map-info", "aria-label": "Map information and home summary" },
+    h("p", {}, "Select a home for a summary, then choose Open home. Escape closes the summary first."),
+    h("p", {}, Object.entries(MAP_SIGNALS).map(([kind, signal]) => h("span", { class: `key ${kind}` }, mapSymbol(kind), signal.label))),
+    info, listBox, open);
+  const mapStage = h("div", { class: "map-stage" }, el, homeCard);
+  const dialog = h("dialog", { class: "map-dialog", "aria-labelledby": "map-title",
+    oncancel: (event) => { event.preventDefault(); collapse(); } });
+  const toggle = h("button", { type: "button", class: "alt", "aria-expanded": "false",
+    onclick: () => dialog.open ? collapse() : expand() }, "Expand map");
+  const box = h("section", { class: "card map-panel", onkeydown: (event) => {
+    if (event.key === "Escape" && selectedId !== null) {
+      event.preventDefault();
+      event.stopPropagation();
+      closeHome();
+    }
+  } }, h("div", { class: "row between" }, h("h2", { id: "map-title" }, "Map of open cases"), toggle),
+  h("div", { class: "map-workspace" }, sidebar, mapStage));
+  const slot = h("div", { class: "map-slot" }, box);
+  const resize = () => map?.invalidateSize({ pan: false, animate: false });
+  function expand() {
+    if (slot.inert) return;
+    sidebar.prepend(homeCard);
+    dialog.append(box);
+    document.body.append(dialog);
+    document.body.classList.add("map-expanded");
+    toggle.textContent = "Exit expanded map";
+    toggle.setAttribute("aria-expanded", "true");
+    dialog.showModal();
+    resize();
+    toggle.focus({ preventScroll: true });
+  }
+  function collapse(restore = true) {
+    if (!dialog.open) return;
+    dialog.close();
+    slot.append(box);
+    mapStage.append(homeCard);
+    dialog.remove();
+    document.body.classList.remove("map-expanded");
+    toggle.textContent = "Expand map";
+    toggle.setAttribute("aria-expanded", "false");
+    resize();
+    if (restore) toggle.focus({ preventScroll: true });
+  }
+  const dispose = () => {
+    slot.inert = true;
+    toggle.disabled = true;
+    collapse(false);
+    seq++;
+    dialog.remove();
+    slot.remove();
+    map?.remove();
+    map = null;
+    if (disposeMapPanel === dispose) disposeMapPanel = null;
+    signal.removeEventListener("abort", dispose);
+  };
+  disposeMapPanel = dispose;
+  signal.addEventListener("abort", dispose, { once: true });
   const renderList = (d) => {
     listUl.replaceChildren(...d.items.map((p) => {
       if (d.mode === "clusters") {
         const label = `${p.count} homes, ${p.hazards} with a safety issue open`;
         return h("li", {}, h("button", { type: "button", class: "linkbtn", "aria-label": `${label}. Zoom in to this area`,
-          onclick: () => { map.setView([p.lat, p.lon], Math.min(map.getZoom() + 2, 18)); listHead.focus(); } }, label));
+          onclick: () => { map.setView([p.lat, p.lon], Math.min(map.getZoom() + 2, 18), { animate: false }); listHead.focus(); } }, label));
       }
       return h("li", {}, h("a", { href: `#/case/${encodeURIComponent(p.id)}` }, `${p.name}, ${MAP_SIGNALS[p.kind].label}`));
     }));
@@ -1490,14 +1589,29 @@ function mapPanel(coordinator = null) {
   const draw = async (fit) => {
     if (signal.aborted) return;
     const my = ++seq;
-    if (!coordinator) open.onclick = () => { Object.assign(listState, { flag: ovState.flag === "fundingprog" ? "funding" : ovState.flag, area: ovState.area }); };
+    if (!coordinator) open.onclick = () => {
+      collapse(false);
+      Object.assign(listState, { flag: ovState.flag === "fundingprog" ? "funding" : ovState.flag, area: ovState.area });
+    };
     if (!map) {
-      map = L.map(el, { scrollWheelZoom: true }).setView([54.9, -1.6], 9);
+      map = L.map(el, { scrollWheelZoom: true, keyboard: false, inertia: false,
+        zoomAnimation: false, fadeAnimation: false, markerZoomAnimation: false }).setView([54.9, -1.6], 9);
+      el.addEventListener("keydown", (event) => {
+        if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey
+          || event.target.closest(".leaflet-control")) return;
+        const offsets = { ArrowLeft: [-80, 0], ArrowRight: [80, 0], ArrowUp: [0, -80], ArrowDown: [0, 80] };
+        if (offsets[event.key]) map.panBy(offsets[event.key], { animate: false });
+        else if (["+", "=", "-"].includes(event.key)) {
+          map.setZoom(map.getZoom() + (event.key === "-" ? -1 : 1), { animate: false });
+        } else return;
+        event.preventDefault();
+      });
       if (me.map && me.map.tiles) {
         L.tileLayer(me.map.tiles, { maxZoom: 19, referrerPolicy: "strict-origin-when-cross-origin", attribution: me.map.attribution || "" }).addTo(map);
       }
       layer = L.layerGroup().addTo(map);
       map.on("moveend", () => { if (!fitting) draw(false); });
+      map.on("click", () => closeHome());
     }
     const b = map.getBounds();
     const view = fit ? "" : `&bbox=${[b.getSouth(), b.getWest(), b.getNorth(), b.getEast()].join(",")}`;
@@ -1510,7 +1624,11 @@ function mapPanel(coordinator = null) {
     }
     catch (error) {
       if (signal.aborted || my !== seq || !me) return;
+      const restore = homeCard.contains(document.activeElement) || el.contains(document.activeElement);
+      markers.clear();
       layer.clearLayers();
+      closeHome(false);
+      if (restore) el.focus({ preventScroll: true });
       listUl.replaceChildren();
       info.setAttribute("role", "alert");
       info.textContent = `Map unavailable: ${error.message}. Use the case list or try changing the map filter.`;
@@ -1524,6 +1642,10 @@ function mapPanel(coordinator = null) {
       ? `${d.total} homes in this view, grouped into ${d.shown} areas. Zoom in to see each home.`
       : `${d.total} ${d.total === 1 ? "home" : "homes"} shown`;
     renderList(d);
+    const focusedMarker = [...markers].find(([, marker]) => marker.getElement() === document.activeElement)?.[0];
+    const cardFocused = homeCard.contains(document.activeElement);
+    const previousSelection = selectedId;
+    markers.clear();
     layer.clearLayers();
     d.items.forEach((p) => {
       if (d.mode === "clusters") {
@@ -1532,18 +1654,23 @@ function mapPanel(coordinator = null) {
           h("span", {}, `${p.count} homes`),
           h("span", { class: "cluster-safety" }, `Safety: ${p.hazards}`));
         const m = L.marker([p.lat, p.lon], { icon: L.divIcon({ className: "map-cluster", html: icon, iconSize: [104, 50] }),
-          keyboard: true, title: label, alt: label });
-        mapAction(m, () => map.setView([p.lat, p.lon], Math.min(map.getZoom() + 2, 18)));
+          keyboard: true, autoPanOnFocus: false, title: label, alt: label });
+        mapAction(m, () => map.setView([p.lat, p.lon], Math.min(map.getZoom() + 2, 18), { animate: false }));
         m.addTo(layer);
         return;
       }
       const label = `${p.name}, ${MAP_SIGNALS[p.kind].label}`;
       const m = L.marker([p.lat, p.lon], { icon: L.divIcon({ className: "map-marker", html: mapSymbol(p.kind), iconSize: [28, 28] }),
-        keyboard: true, title: label, alt: label });
-      m.bindTooltip(h("span", {}, label), { direction: "top" });
-      mapAction(m, () => { location.hash = `#/case/${encodeURIComponent(p.id)}`; });
+        keyboard: true, autoPanOnFocus: false, bubblingMouseEvents: false, title: label, alt: label });
+      mapAction(m, () => showHome(p));
       m.addTo(layer);
+      markers.set(p.id, m);
     });
+    const current = d.mode === "points" && d.items.find((point) => point.id === previousSelection);
+    if (current) showHome(current, false);
+    else closeHome(false);
+    if (cardFocused && !current) el.focus({ preventScroll: true });
+    else if (focusedMarker) restoreMarker(focusedMarker);
     if (fit && d.bounds) {
       fitting = true;
       map.fitBounds([[d.bounds[0], d.bounds[1]], [d.bounds[2], d.bounds[3]]], { padding: [30, 30], maxZoom: 15, animate: false });
@@ -1551,10 +1678,7 @@ function mapPanel(coordinator = null) {
       draw(false);
     }
   };
-  const box = h("section", { class: "card" }, h("h2", {}, "Map of open cases"),
-    h("p", {}, Object.entries(MAP_SIGNALS).map(([kind, signal]) => h("span", { class: `key ${kind}` }, mapSymbol(kind), signal.label))),
-    el, listBox, h("div", { class: "row between" }, info, open));
-  return { box, draw, size: () => map && map.invalidateSize() };
+  return { box: slot, draw, size: resize };
 }
 
 async function coordinatorView() {

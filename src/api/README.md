@@ -96,6 +96,60 @@ Coordinate heavy runs through `/tmp/ama-rpi-heavy.lock`; use nonblocking
 then release immediately after heavy checks. Screen-reader, staff usability and
 post-deployment verification remain pending the owner.
 
+## Expanded map and home summaries (#532)
+
+From Overview or Coordinator flow, choose **Expand map** for a near-full-screen
+map with a narrow left information panel. Select a home with a click, Enter or
+Space to read its summary, then choose **Open home** to navigate. The summary
+uses the map's permitted name, address, case ID, current stage and status;
+Coordinator cards retain withheld names/addresses rather than fetching them.
+Unknown or unavailable values are labelled. Status words and shapes remain
+visible independently of colour.
+
+In the embedded view the summary sits over the map, with a top-right close
+icon. Click the map background, choose **Close home summary**, or press Escape
+to dismiss it and return focus to the home marker. In the expanded view the
+summary sits in the left panel. Escape closes the summary first; another Escape
+or **Exit expanded map** returns to the embedded view and its toggle. Filtering,
+failed refreshes and route changes remove obsolete cards. Map animations are
+disabled, including for reduced motion.
+Disposal immediately removes the map slot and makes its controls inactive,
+including while the destination case list is still loading.
+
+With the map or a home marker focused, unmodified arrow keys pan and `+`, `=`
+or `-` zoom the map, including Shift-generated `+`. Ctrl, Meta and Alt shortcuts
+remain available to the browser without moving or zooming the map.
+
+The map area list and **Show these as a list** retain direct manual access
+without map gestures. The expanded Coordinator list shortcut exits the map and
+focuses Selected records. No resident consent, approval, safety or data-access
+authority changes.
+
+Run the focused constructed-data browser check from `src/api`:
+
+```bash
+PYTHONPATH=tests:../core/tests:../agents/tests python3 -m checks.map_fullscreen_browser_check \
+  --axe /path/to/axe-4.10.3.min.js --out /new/external/map-results
+```
+
+The check requires integrity-pinned axe 4.10.3, uses a real loopback API, aborts
+external application requests, and retains scan details and screenshots. It
+covers summary-first keyboard/pointer behavior, Escape/focus, modal containment,
+redraw/failure/filter cleanup, manual paths, coordinator omissions, reduced
+motion and 320/390/1280px expanded layouts. It also checks uncancelled browser
+shortcuts from map/marker focus in both modes and exact ordinary/Shift-plus map
+zoom changes. Session-expiry checks hold overlapping fit
+responses, deliver a 401 before a successful response with bounds, and verify
+that neither that response nor a collapse-triggered resize redraw touches the
+disposed map. Each expiry scenario reloads the document to reset filters,
+authentication initialization and instrumentation. A pending-facets navigation
+check attempts to expand the obsolete map before All open cases renders and
+verifies no dialog or page scroll lock survives. Enlarged-font coverage uses a
+640px viewport and an actual 32px Chromium default font, checking sidebar/map
+geometry, overflow and summary close/exit behavior. Acquire the shared heavy-check lock
+nonblocking before execution. Automated results are not human
+assistive-technology, staff usability or full WCAG acceptance.
+
 ## Workspace script recovery (#524)
 
 When a required employee-workspace script is missing, the current screen retries
