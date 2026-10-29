@@ -67,6 +67,12 @@ current page session/context. Moving focus into the page hides chat without
 redirecting focus or cancelling pending work; the visible launcher remains
 available. Setup and incoming replies never refocus the composer, even while
 chat is visible. Replies, status and inline errors use polite live updates.
+New messages follow the end only when the conversation was already at the
+bottom and focus is outside its history; reading older messages or focusing
+Sources preserves the scroll position. Employee chat sits above embedded map
+panes, controls and home summaries, below the account menu. Close chat has a
+readable explicit hover state on both sites. Same-context filter refreshes
+retain the conversation and the launcher's open/close toggle.
 Employee case navigation, session/access loss and resident consent withdrawal
 clear the relevant conversation and invalidate late results. Reloading does
 not restore a conversation; no resident text is saved in browser storage.

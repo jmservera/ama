@@ -81,6 +81,8 @@ window.ChatWidget = (() => {
       if (value) timer = setTimeout(() => { if (active) loading.hidden = false; }, 200);
     }
     function message(role, text, { label = "", sources = [], detail = "" } = {}) {
+      const follow = log.scrollHeight - log.clientHeight - log.scrollTop <= 1
+        && !log.contains(document.activeElement);
       const item = node("article", "", { class: `chat-widget-message chat-widget-${role}` });
       item.append(node("strong", role === "user" ? "You" : "Assistant"));
       if (label) item.append(node("small", label, { class: "chat-widget-meta" }));
@@ -96,7 +98,7 @@ window.ChatWidget = (() => {
         item.append(details);
       }
       log.append(item);
-      bottom();
+      if (follow) bottom();
       return item;
     }
     launcher.onclick = () => root.hidden ? open() : hide();

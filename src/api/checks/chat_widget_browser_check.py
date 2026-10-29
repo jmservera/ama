@@ -134,6 +134,210 @@ def scan(page: Page, axe: str, root: str) -> None:
     assert not violations, violations
 
 
+def close_hover(page: Page, root: str, audience: str) -> None:
+    close = page.locator(root).get_by_role("button", name="Close chat", exact=True)
+    close.hover()
+    ratio = close.evaluate("""el => {
+      const style = getComputedStyle(el);
+      const luminance = color => {
+        const rgb = color.match(/[\\d.]+/g).slice(0, 3).map(Number);
+        return rgb.map(v => v / 255).map(v =>
+          v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4
+        ).reduce((sum, v, i) => sum + v * [.2126, .7152, .0722][i], 0);
+      };
+      const foreground = luminance(style.color), background = luminance(style.backgroundColor);
+      return (Math.max(foreground, background) + .05)
+        / (Math.min(foreground, background) + .05);
+    }""")
+    assert ratio >= 4.5, f"{audience} Close chat hover contrast: {ratio:.2f}:1"
+    page.mouse.move(0, 0)
+    print(f"PASS {audience}: Close chat hover contrast {ratio:.2f}:1 >= 4.5:1")
+
+
+def reply_scroll(page: Page, root: str, endpoint: str, audience: str) -> None:
+    panel = page.locator(root)
+    log = panel.get_by_role("log")
+    question = panel.locator("textarea")
+    send = panel.get_by_role("button", name="Send", exact=True)
+    for mode in ("older", "sources-older", "sources-bottom", "log-bottom", "follow"):
+        held: list[Route] = []
+        page.route(endpoint, lambda route, *, held=held: held.append(route))
+        try:
+            question.fill(f"Scroll regression {mode}")
+            send.click()
+            expect(panel.locator("form")).to_have_attribute("aria-busy", "true")
+            page.wait_for_function(
+                "() => document.querySelector('.chat-widget form')"
+                ".getAttribute('aria-busy') === 'true'"
+            )
+            assert len(held) == 1
+            expect(panel.locator(".chat-widget-loading")).to_be_visible()
+            assert log.evaluate("el => el.scrollHeight > el.clientHeight")
+            chosen = question
+            if mode.startswith("sources"):
+                summaries = log.locator("summary")
+                chosen = summaries.first if mode == "sources-older" else summaries.last
+            elif mode == "log-bottom":
+                chosen = log
+            chosen.focus()
+            focused = chosen.element_handle()
+            assert focused is not None
+            if mode in ("older", "sources-older"):
+                if mode == "older":
+                    log.evaluate("el => { el.scrollTop = 0; }")
+            else:
+                log.evaluate("el => { el.scrollTop = el.scrollHeight; }")
+            before = log.evaluate("el => el.scrollTop")
+            focused_control_visible(page)
+            held[0].fulfill(
+                json={
+                    "answer": f"Scroll result {mode}. " + "Long fictional reply. " * 60,
+                    "reply": f"Scroll result {mode}. " + "Long fictional reply. " * 60,
+                    "label": "Summary by rules",
+                    "workflow_only": True,
+                    "sources": ["Synthetic own-case source"],
+                    "citations": [{"id": "ZF-1/stage", "text": "Survey"}],
+                }
+            )
+            expect(log).to_contain_text(f"Scroll result {mode}.")
+            expect(panel.locator("form")).to_have_attribute("aria-busy", "false")
+            assert focused.evaluate("el => el === document.activeElement"), (
+                audience,
+                mode,
+                "Reply moved focus",
+            )
+            if mode == "follow":
+                distance = log.evaluate(
+                    "el => Math.abs(el.scrollHeight - el.clientHeight - el.scrollTop)"
+                )
+                assert distance <= 2, (audience, "bottom reader did not follow reply", distance)
+            else:
+                after = log.evaluate("el => el.scrollTop")
+                assert abs(after - before) <= 1, (audience, mode, before, after)
+            focused_control_visible(page)
+        finally:
+            page.unroute(endpoint)
+    print(f"PASS {audience}: older history, focused Sources/log stay put; bottom reader follows")
+
+
+def employee_stacking(page: Page, out: Path) -> None:
+    page.evaluate("location.hash = '#/overview'")
+    expect(page.get_by_role("heading", name="Overview", exact=True)).to_be_visible()
+    expect(page.locator(".map-cluster").first).to_be_attached()
+    page.locator("#mapArea").select_option(label="Point examples")
+    expect(page.locator(".map-marker")).to_have_count(3)
+    page.locator(".map-marker:has(.map-symbol.hazard)").press("Enter")
+    expect(page.locator(".map-home-card")).to_be_visible()
+    page.locator("#leaflet").evaluate("el => el.scrollIntoView({block: 'center'})")
+    page.get_by_role("button", name="Chat", exact=True).click()
+    expect(page.locator("#employee-chat select")).to_be_enabled()
+    expect(page.locator(".leaflet-map-pane")).to_be_attached()
+    results = page.evaluate("""() => {
+      const panel = document.querySelector('#employee-chat');
+      const launcher = document.querySelector('#employee-chat-launcher');
+      const results = [];
+      try {
+        for (const selector of ['#leaflet', '.leaflet-control-zoom', '.map-home-card']) {
+          const target = document.querySelector(selector), r = target.getBoundingClientRect();
+          const x = (Math.max(0, r.left) + Math.min(innerWidth, r.right)) / 2;
+          const y = (Math.max(0, r.top) + Math.min(innerHeight, r.bottom)) / 2;
+          for (const el of [panel, launcher]) {
+            panel.hidden = el !== panel;
+            el.style.cssText = `left:${x - 24}px;top:${y - 24}px;right:auto;bottom:auto`;
+            const stack = document.elementsFromPoint(x, y);
+            results.push({selector, control:el.id, above:el.contains(stack[0]),
+              overlaps:stack.some(node => target.contains(node)),
+              tier:Number(getComputedStyle(el).zIndex)});
+            el.removeAttribute('style');
+          }
+        }
+        panel.hidden = false;
+        window.scrollTo(0, 0);
+        const account = document.querySelector('#account');
+        account.open = true;
+        try {
+          const menu = account.querySelector('.account-panel'), r = menu.getBoundingClientRect();
+          const x = r.left + 24, y = r.top + 24;
+          for (const el of [panel, launcher]) {
+            panel.hidden = el !== panel;
+            el.style.cssText = `left:${x - 12}px;top:${y - 12}px;right:auto;bottom:auto`;
+            const stack = document.elementsFromPoint(x, y);
+            results.push({selector:'.account-panel', control:el.id,
+              above:menu.contains(stack[0]), overlaps:stack.some(node => el.contains(node)),
+              tier:Number(getComputedStyle(el).zIndex)});
+            el.removeAttribute('style');
+          }
+        } finally { account.open = false; }
+      } finally {
+        panel.hidden = false;
+        panel.removeAttribute('style');
+        launcher.removeAttribute('style');
+      }
+      return results;
+    }""")
+    assert len(results) == 8
+    assert all(
+        item["above"] and item["overlaps"] and 1000 < item["tier"] < 1200 for item in results
+    ), results
+    (out / "employee-stacking.json").write_text(json.dumps(results, indent=2))
+    page.keyboard.press("Escape")
+    print("PASS employee: popup/launcher above real map, controls, home card; below account menu")
+
+
+def employee_refresh(page: Page) -> None:
+    page.evaluate("location.hash = '#/coordinator?as_of=2026-01-01T00%3A00%3A00Z'")
+    expect(page.get_by_role("button", name="Apply coordinator filters", exact=True)).to_be_visible()
+    launcher = page.get_by_role("button", name="Chat", exact=True)
+    launcher.click()
+    panel = page.locator("#employee-chat")
+    expect(panel.locator("select")).to_be_enabled()
+    panel.locator("textarea").fill("Retained refresh draft")
+    page.evaluate("""() => {
+      window.refreshChat = {
+        panel:document.querySelector('#employee-chat'),
+        toggle:document.querySelector('#employee-chat-launcher').onclick,
+        icon:document.querySelector('#employee-chat-launcher svg')
+      };
+    }""")
+    try:
+        for opened, area in ((True, "Point examples"), (False, "Cluster examples")):
+            if panel.is_visible() != opened:
+                launcher.click()
+            with page.expect_response("**/api/coordinator?**"):
+                page.locator(".coordinator-filters").evaluate(
+                    """(form, area) => {
+                  form.querySelector('[name=area]').value = area;
+                  form.requestSubmit();
+                }""",
+                    area,
+                )
+            expect(page.locator("#co-area")).to_have_value(area)
+            assert page.evaluate("""() => {
+              const button = document.querySelector('#employee-chat-launcher');
+              return document.querySelector('#employee-chat') === refreshChat.panel
+                && button.onclick === refreshChat.toggle
+                && button.querySelector('svg') === refreshChat.icon;
+            }"""), "Same-context route refresh replaced widget, toggle or decoration"
+            expect(page.locator("#app")).to_be_focused()
+            expect(panel).to_be_hidden()
+            expect(launcher).to_have_attribute("aria-expanded", "false")
+            focused_control_visible(page)
+            launcher.click()
+            expect(panel).to_be_visible()
+            expect(launcher).to_have_attribute("aria-expanded", "true")
+            launcher.click()
+            expect(panel).to_be_hidden()
+            expect(launcher).to_have_attribute("aria-expanded", "false")
+            expect(panel.locator("textarea")).to_have_value("Retained refresh draft")
+            launcher.click()
+            panel.locator("h2").focus()
+            focused_control_visible(page)
+    finally:
+        page.evaluate("delete window.refreshChat")
+        page.evaluate("employeeChat.reset()")
+    print("PASS employee: actual coordinator filter refresh retains open/closed launcher toggle")
+
+
 def shared_ui(page: Page, root: str, endpoint: str, out: Path, audience: str, axe: str) -> None:
     panel = page.locator(root)
     question = panel.locator("textarea")
@@ -185,6 +389,9 @@ def shared_ui(page: Page, root: str, endpoint: str, out: Path, audience: str, ax
         expect(log).to_contain_text(f"answer {index}.")
         expect(send).to_be_enabled()
     assert len(requests) == 4
+    close_hover(page, root, audience)
+    reply_scroll(page, root, endpoint, audience)
+    page.route(endpoint, answer)
     for name in ("Attach", "Voice"):
         control = panel.get_by_role("button", name=name, exact=True)
         expect(control).to_be_disabled()
@@ -520,6 +727,8 @@ def employee(browser: Browser, base: str, out: Path, axe: str) -> None:
         expect(page.locator("#employee-chat [role=log]")).to_contain_text("ordinary case workflow")
         expect(page.get_by_role("button", name="Send", exact=True)).to_be_enabled()
         shared_ui(page, "#employee-chat", "**/api/chat/threads/*/ask", out, "employee", axe)
+        employee_stacking(page, out)
+        employee_refresh(page)
         employee_current_focus(page)
         employee_stale(page)
         for endpoint in ("skills", "threads", "threads/*/ask"):

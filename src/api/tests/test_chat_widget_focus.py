@@ -20,6 +20,7 @@ function harness() {
     getElementById(id) { return elements.get(id); },
     createElement(tag) {
       return {tag, children: [], attrs: {}, dataset: {}, hidden: false, value: "",
+        scrollTop: 0, scrollHeight: 0, clientHeight: 0,
         setAttribute(name, value) {
           this.attrs[name] = value;
           if (name === "id") { this.id = value; elements.set(value, this); }
@@ -97,6 +98,74 @@ class ChatWidgetFocusTests(unittest.TestCase):
             timeout=30,
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_append_follows_only_bottom_readers_without_history_focus(self) -> None:
+        self.run_node(
+            r"""
+const h = harness();
+const ui = h.context.window.ChatWidget.create({
+  id: "unit", title: "Unit chat", launcher: h.launcher,
+  questionLabel: "Question", skillLabel: "Skill"
+});
+ui.open();
+ui.log.scrollHeight = 1000;
+ui.log.clientHeight = 200;
+const append = ui.log.append;
+ui.log.append = function (...items) {
+  append.apply(this, items);
+  this.scrollHeight += 300;
+};
+ui.input.focus();
+ui.log.scrollTop = 100;
+ui.message("assistant", "Older-history reader");
+assert.equal(ui.log.scrollTop, 100, "Reply must not jump an older-history reader");
+ui.log.scrollTop = ui.log.scrollHeight - ui.log.clientHeight - 0.5;
+ui.message("assistant", "Bottom reader");
+assert.equal(ui.log.scrollTop, ui.log.scrollHeight, "Follow with pixel rounding tolerance");
+assert.equal(h.document.activeElement, ui.input);
+const sources = ui.log.children[0].children.find(el => el.tag === "details").children[0];
+for (const focused of [ui.log, sources]) {
+  focused.focus();
+  for (const atBottom of [false, true]) {
+    ui.log.scrollTop = atBottom ? ui.log.scrollHeight - ui.log.clientHeight : 50;
+    const before = ui.log.scrollTop;
+    ui.message("assistant", "Do not move focused history");
+    assert.equal(ui.log.scrollTop, before);
+    assert.equal(h.document.activeElement, focused);
+  }
+}
+ui.dispose();
+"""
+        )
+
+    def test_reinstall_preserves_widget_toggle_and_launcher_state(self) -> None:
+        self.run_node(
+            r"""
+(async () => {
+  const h = harness();
+  h.employee.install();
+  assert.equal(h.launcher.attrs["aria-expanded"], "false");
+  const opening = h.launcher.onclick();
+  await admit(h);
+  await opening;
+  const ui = h.nodes(), toggle = h.launcher.onclick, icon = h.launcher.children[0];
+  ui.input.value = "Retained draft";
+  for (const hidden of [false, true]) {
+    if (ui.root.hidden !== hidden) h.launcher.onclick();
+    for (let count = 0; count < 2; count++) h.employee.install();
+    assert.equal(h.launcher.onclick, toggle, "Install must not replace widget-owned toggle");
+    assert.equal(h.launcher.children[0], icon, "Install must not redecorate live launcher");
+    assert.equal(h.launcher.attrs["aria-expanded"], String(!hidden));
+    h.launcher.onclick();
+    assert.equal(ui.root.hidden, !hidden, "Launcher must toggle after refresh");
+    assert.equal(h.launcher.attrs["aria-expanded"], String(hidden));
+    assert.equal(h.nodes().root, ui.root, "Refresh must retain conversation identity");
+    assert.equal(ui.input.value, "Retained draft");
+  }
+  h.employee.reset();
+})().catch(error => { console.error(error); process.exitCode = 1; });
+"""
+        )
 
     def test_external_focus_hides_without_redirect_or_disposal(self) -> None:
         self.run_node(

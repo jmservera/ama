@@ -35,8 +35,10 @@ const employeeChat = (() => {
       });
       return;
     }
-    button.onclick = open;
-    if (!widget) window.ChatWidget.decorateLauncher(button);
+    if (!widget) {
+      button.onclick = open;
+      window.ChatWidget.decorateLauncher(button);
+    }
   }
   async function open() {
     if (widget) { widget.open(); return; }
