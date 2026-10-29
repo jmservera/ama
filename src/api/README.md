@@ -3654,6 +3654,45 @@ homes SQL database. It is a temporary owner showcase, not resident enrolment, no
 identity and not production authentication. It is a different composition from the loopback-only
 #444 preview above: that preview and its fixture guard are unchanged and are not imported.
 
+### Startup compatibility after resident chat (#525)
+
+An image-only update does not update the SQL view. The resident reader now
+selects 17 named columns from `resident_showcase.v_resident_case`, including
+`documents_json` added by #525. Startup reads that view and builds the admitted
+resident map **before binding HTTP**, even when nobody opens chat and AI is
+disabled. The old 16-column view causes SQL `Invalid column name
+'documents_json'`; the service prints `Refusing to start: SQL read failed
+(ProgrammingError).` and exits 2. Missing projection is not an empty document
+list and must not be bypassed with fabricated facts or broader SQL permissions.
+
+Local Docker diagnosis on 2026-10-29 reproduced that failure with the unchanged
+main image and the pre-#525 view on a throwaway SQL Server. Applying only the
+current [SQL boundary template](../../infra/sql/resident-showcase.sql) to that
+local database made the same image/settings serve successfully. This isolates
+a sufficient local failure mode, not the verified cause of the historical
+Azure revision failure: its console was unavailable, and live schema, secret
+resolution, identity and connectivity were not inspected.
+
+Before a separately authorized rollout, have the responsible operator verify
+and, if needed, review/apply that current view through the existing
+[SQL boundary process](../../infra/README.md#synthetic-resident-showcase-sql-boundary-issue-462),
+then verify the resident principal can run the reader's exact projection.
+Applying the view must not extend allowlist windows, admit new residents or
+grant base-table access. Rebuilding/retrying the image alone cannot supply
+the missing column.
+
+There is **no new mandatory app setting** for resident chat.
+`ZF_DEMO_AGENDA_PATH` is optional local synthetic callback inventory, not a
+startup remedy; leave it unset unless explicitly provisioning that inventory.
+`ZF_DEMO_ASSISTANT_ENABLED` defaults to `false`; an endpoint is needed only
+when deliberately enabling the separately gated AI integration. Keep the
+existing port 8089, image bind `0.0.0.0` and exact Host allowlist. The image's
+HTTP healthcheck sends an allowed Host; it cannot succeed until SQL admission
+has completed. A public health response from an older ready revision does not
+establish that a newly failed revision started.
+
+### Runtime and access controls
+
 * Server: `python -m zava_forward.api.resident_demo`, image `src/api/Dockerfile.resident-demo`
   (`docker build -f src/api/Dockerfile.resident-demo src`; non-root uid 10001; no data or state
   volume, no staff, Entra or AI settings, no secret in the image).

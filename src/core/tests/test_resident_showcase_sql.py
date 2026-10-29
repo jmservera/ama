@@ -304,6 +304,26 @@ class SqlBoundaryTests(unittest.TestCase):
         self.assertIsNone(rs.exclusion(row, datetime(2026, 10, 25, tzinfo=UTC)))
         self.assertEqual(self.reader.fetch_case("C-1"), row)
 
+    def test_missing_document_projection_requires_view_update_before_image(self) -> None:
+        self.add_case("C-1", _body("a@example.com"))
+        try:
+            self.q(
+                "EXEC sys.sp_rename N'resident_showcase.v_resident_case.documents_json', "
+                "N'documents_before_525', N'COLUMN'"
+            )
+            for read in (self.reader.list_rows, lambda: self.reader.fetch_case("C-1")):
+                with self.assertRaisesRegex(mssql_python.ProgrammingError, "documents_json"):
+                    read()
+        finally:
+            for batch in script.render(USER):
+                self.q(batch)
+        [row] = self.reader.list_rows()
+        self.assertEqual((row.case_id, row.email), ("C-1", "a@example.com"))
+        self.assertEqual(self.reader.fetch_case("C-1"), row)
+        self.assertEqual(
+            self.as_user(rsql.LIST_SQL), self.as_user(rsql.ONE_SQL.replace("?", "'C-1'"))
+        )
+
     def test_string_measures_and_text_columns_are_bounded(self) -> None:
         body = json.loads(_body("a@example.com"))
         body["measures"] = "Loft insulation; Cavity wall"
