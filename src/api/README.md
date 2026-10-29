@@ -56,6 +56,16 @@ their ID/revision; a pre-outcome listing cannot unlock them. Retained document
 draft and priority reviews require workspace reload/history checking instead of
 inventing an approval. Upload preparation failures remain correctable locally;
 lost upload confirmations cannot repeat the POST.
+All employee JSON mutations share an in-flight lock keyed by endpoint, action
+and target, independent of replaceable controls. Fieldless actions and rebuilt
+resident, challenge and procurement controls cannot dispatch duplicate POSTs;
+GET refreshes do not release these locks. Malformed mutation responses retain
+unconfirmed-outcome handling instead of consuming drafts.
+Shared-queue refreshes preserve the latest unsubmitted reason and edited JSON,
+including edits typed after a listing starts. Failed listings retain the current
+cards. Changed or missing proposal revisions expose copy-only earlier edits,
+never transplant them to different evidence. Explicit discard/navigation and
+authentication boundaries clear queue recovery state.
 Navigation and page-close warnings also cover unresolved cached drafts while
 proposal controls are loading. A completed document review displays the submitted
 replacement and retains later text or reason as read-only, unsaved recovery tied

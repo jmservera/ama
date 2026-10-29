@@ -34,16 +34,38 @@ function requireCaseHistory(session) {
   if (session) session.historyBarrier = session.historyGeneration = {};
 }
 
+const pendingMutations = new Set();
+
+function mutationKey(path, body) {
+  return JSON.stringify([path, body.action || body.task || (path.endsWith("/draft") ? body.kind : "") || "",
+    ...["id", "index", "measure", "case_id", "package", "capability", "turn"]
+      .map(key => body[key] ?? null)]);
+}
+
 async function api(path, body, signal) {
   signal = signal || routeController.signal;
-  const res = await fetch(path, body === undefined ? { signal } : {
-    method: "POST", headers: { "Content-Type": "application/json", "X-ZF-CSRF": "1" }, body: JSON.stringify(body), signal,
-  });
-  const data = await res.json().catch(() => ({}));
-  signal.throwIfAborted();
-  if (res.status === 401 && path !== "/api/login") { me = null; login("Your session has ended. Sign in again."); throw new Error("Your session has ended. Sign in again."); }
-  if (!res.ok) { const e = new Error(data.error || "Something went wrong."); e.reasons = data.reasons; e.status = res.status; e.outcome = data.outcome; throw e; }
-  return data;
+  const key = body === undefined ? null : mutationKey(path, body);
+  if (key && pendingMutations.has(key)) {
+    const error = new Error("This action is still pending. Wait for its result and check the history before trying again.");
+    error.status = 409;
+    throw error;
+  }
+  if (key) pendingMutations.add(key);
+  try {
+    const res = await fetch(path, body === undefined ? { signal } : {
+      method: "POST", headers: { "Content-Type": "application/json", "X-ZF-CSRF": "1" }, body: JSON.stringify(body), signal,
+    });
+    const data = await res.json().catch(error => {
+      if (key) throw error;
+      return {};
+    });
+    signal.throwIfAborted();
+    if (res.status === 401 && path !== "/api/login") { me = null; login("Your session has ended. Sign in again."); throw new Error("Your session has ended. Sign in again."); }
+    if (!res.ok) { const e = new Error(data.error || "Something went wrong."); e.reasons = data.reasons; e.status = res.status; e.outcome = data.outcome; throw e; }
+    return data;
+  } finally {
+    if (key) pendingMutations.delete(key);
+  }
 }
 
 const fmtDate = (s) => {
@@ -242,6 +264,7 @@ async function route() {
       return;
     }
   }
+  if (nextHash !== displayedHash) delete me.assistantQueueDrafts;
   displayedHash = nextHash;
   if (caseSession && nextHash.split("?")[0] !== `#/case/${encodeURIComponent(caseSession.id)}`) {
     caseSession.controller?.dispose();
@@ -676,10 +699,14 @@ async function caseView(id) {
   const channel = h("select", { "aria-label": "How you spoke" }, ["Phone", "Text message", "Email", "Visit"].map((x) => h("option", {}, x)));
   const draftBox = session.draftBox;
   const kind = async (k) => {
-    const d = await api(`/api/cases/${encodeURIComponent(id)}/draft`, { kind: k });
-    if (!confirmCaseDraftReplacement(draftBox)) return;
-    draftBox.replaceChildren(h("p", { class: "muted" }, d.note), h("textarea", { "aria-label": "Draft message", name: "resident-template", autocomplete: "off" }, d.text));
-    draftBox.querySelector("textarea").value = d.text;
+    try {
+      const d = await api(`/api/cases/${encodeURIComponent(id)}/draft`, { kind: k });
+      if (!confirmCaseDraftReplacement(draftBox)) return;
+      draftBox.replaceChildren(h("p", { class: "muted" }, d.note), h("textarea", { "aria-label": "Draft message", name: "resident-template", autocomplete: "off" }, d.text));
+      draftBox.querySelector("textarea").value = d.text;
+    } catch (error) {
+      draftBox.append(h("p", { class: "err", role: "alert" }, error.message));
+    }
   };
   const aiRun = async (task) => {
     if (!confirmCaseDraftReplacement(draftBox)) return;
@@ -832,10 +859,10 @@ function caseFieldEntries(root = app, deduplicate = true) {
   });
   return [...byKey.values()];
 }
-function snapshotCaseFields(fields) {
+function snapshotCaseFields(fields, session = caseSession) {
   const entries = new Map(caseFieldEntries(app, false).map(item => [item.field, item]));
   return fields.map(item => item.field ? item : { field: item, key: entries.get(item)?.key,
-    session: caseSession, value: item.value, checked: item.checked,
+    session, value: item.value, checked: item.checked,
     files: item.files && [...item.files] });
 }
 function caseFieldUnchanged({ field, value, checked, files }) {
@@ -846,11 +873,11 @@ function caseFieldUnchanged({ field, value, checked, files }) {
     && (!files || (selectedFiles && files.length === selectedFiles.length
       && files.every((file, i) => selectedFiles[i] === file)));
 }
-function reconcileCaseSubmission(sent) {
+function reconcileCaseSubmission(sent, session = caseSession) {
   const current = caseFieldEntries(app, false);
   const forms = new Set();
   sent.forEach(item => {
-    const sameSession = item.session === caseSession;
+    const sameSession = item.session === session;
     const cached = sameSession && item.key && item.session?.pendingFields.get(item.key);
     const consumedCache = cached && cached.value === item.value && cached.checked === item.checked
       && (!cached.fileNode || caseFieldUnchanged({ ...item, field: cached.fileNode }));
@@ -944,7 +971,8 @@ function restoreBoundFields(saved, panel, kind, session) {
   panel.append(recovery);
 }
 app.addEventListener("input", event => {
-  if (caseSession && event.target.matches("input, textarea, select")
+  if ((caseSession || event.target.closest("[data-assistant-queue]"))
+      && event.target.matches("input, textarea, select")
       && !event.target.hasAttribute("data-case-navigation")
       && !event.target.closest("[data-challenge-case]")) event.target.dataset.caseDirty = "true";
 });

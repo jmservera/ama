@@ -107,6 +107,159 @@ def journey(**overrides: Any) -> list[dict[str, Any]]:
 
 
 class CaseJourney(unittest.TestCase):
+    def test_shared_mutation_lock_survives_reconstruction_and_response_parsing(self) -> None:
+        source = (WEB / "app.js").read_text()
+        script = (
+            DOM
+            + shipped_helpers()
+            + "async function api"
+            + source.split("async function api", 1)[1].split("const fmtDate", 1)[0]
+            + r"""
+const routeController = new AbortController();
+let requests = [], finish;
+const fetch = async (path, options) => {
+  if (!options.method) return {ok: true, status: 200, json: async () => ({})};
+  requests.push([path, JSON.parse(options.body)]);
+  return {ok: true, status: 200, json: () => new Promise(resolve => {finish = resolve;})};
+};
+(async () => {
+  const paths = [
+    ["/api/cases/SYN/advance", {}],
+    ["/api/cases/SYN/receive-handoff", {}],
+    ["/api/cases/SYN/withdraw-handoff", {}],
+    ["/api/cases/SYN/quality-submit", {measure: "Loft"}],
+    ["/api/cases/SYN/quality-return", {index: 0}],
+    ["/api/cases/SYN/finance", {action: "commit_raise"}],
+    ["/api/cases/SYN/grant", {action: "grant_propose", id: "G1"}],
+    ["/api/cases/SYN/technical", {action: "design_submit"}],
+    ["/api/cases/SYN/funding", {action: "save_draft"}],
+    ["/api/cases/SYN/hazard-raise", {}],
+    ["/api/cases/SYN/upload", {}],
+    ["/api/packages", {}],
+    ["/api/packages/P1/capacity", {}],
+    ["/api/workorders", {case_id: "SYN", package: "P1"}],
+    ["/api/workorders/W1/appointment", {action: "record_offer"}],
+    ["/api/assistants/assessment-preparation/invoke", {case_id: "SYN"}],
+    ["/api/assistants/proposals/P1/review", {action: "reject", revision: 1}],
+    ["/api/ai/review/R1/edit", {}],
+    ["/api/ai/priority/R1/reject", {}],
+    ["/api/chat/threads/T1/proposals", {capability: "assessment-preparation"}],
+    ["/api/chat/regulatory/threads/T1/doubt", {turn: "TURN1"}],
+    ["/api/time", {case_id: "SYN"}],
+  ];
+  for (const [path, body] of paths) {
+    requests = [];
+    const first = api(path, body);
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(pendingMutations.size, 1, "lock includes response-body parsing");
+    const rebuiltHandler = () => api(path, {...body, note: "Later edit", revision: 99,
+      kind: "Changed document kind"});
+    await assert.rejects(rebuiltHandler(), e => e.status === 409
+      && !mutationNeedsHistory(e) && /still pending/.test(e.message));
+    await api("/api/cases/SYN");
+    assert.equal(pendingMutations.size, 1, "GET cannot release pending POST");
+    assert.equal(requests.length, 1, path + " reconstructed entry dispatches once");
+    finish({}); await first;
+    assert.equal(pendingMutations.size, 0);
+    const retry = rebuiltHandler(); await new Promise(resolve => setImmediate(resolve));
+    assert.equal(requests.length, 2, "completed lock is reusable");
+    finish({}); await retry;
+  }
+  assert.notEqual(mutationKey("/case", {action: "record", id: "A"}),
+    mutationKey("/case", {action: "record", id: "B"}));
+  assert.notEqual(mutationKey("/case", {action: "record", id: "A"}),
+    mutationKey("/case", {action: "approve", id: "A"}));
+  assert.notEqual(mutationKey("/chat", {turn: "A"}), mutationKey("/chat", {turn: "B"}));
+  const a = api("/api/cases/A/advance", {}); await new Promise(r => setImmediate(r));
+  const finishA = finish;
+  const b = api("/api/cases/B/advance", {}); await new Promise(r => setImmediate(r));
+  assert.equal(pendingMutations.size, 2, "unrelated targets proceed independently");
+  finish({}); finishA({}); await Promise.all([a, b]);
+  console.log("PASS");
+})().catch(error => {console.error(error); process.exitCode = 1;});
+"""
+        )
+        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_queue_drafts_survive_old_failed_and_changed_revision_listings(self) -> None:
+        source = (WEB / "app.js").read_text()
+        script = (
+            DOM
+            + shipped_helpers()
+            + "function captureCaseFields"
+            + source.split("function captureCaseFields", 1)[1].split(
+                'app.addEventListener("input"', 1
+            )[0]
+            + r"""
+Node.prototype.replaceChildren = function(...children) {
+  this.children = []; this.append(...children);
+};
+const app = new Node("main"), me = {user: {email: "reviewer@example.test"}};
+const routeController = new AbortController();
+const show = (...nodes) => app.replaceChildren(...nodes);
+let listing, failListing = false, finishReview, heldRead;
+let proposals = [{id: "P1", revision: 1, case_id: "SYN", state: "ready",
+  capability: "assessment-preparation", provenance: [],
+  output: {summary: "Synthetic", findings: [], unknowns: []},
+  verification: {by: me.user.email}}];
+const api = async (path, body) => {
+  if (body) return new Promise((resolve, reject) => {finishReview = {resolve, reject};});
+  if (failListing) throw Object.assign(new Error("Synthetic listing failed"), {status: 503});
+  if (heldRead) return new Promise(resolve => {listing = resolve;});
+  return {proposals};
+};
+"""
+            + (WEB / "assistants.js").read_text()
+            + r"""
+(async () => {
+  await assistantQueueView();
+  let card = app.querySelector("[data-proposal-id]");
+  const [reason, editing] = card.querySelectorAll("textarea");
+  reason.value = "Supplied reason"; editing.value = '{"summary":"Unsubmitted JSON"}';
+  reason.dataset.caseDirty = editing.dataset.caseDirty = "true";
+  const reject = card.querySelectorAll("button").find(b => b.textContent === "Reject");
+  const sending = reject.events.click();
+  heldRead = true;
+  const old = assistantQueueView();
+  reason.value = "Later reason";
+  finishReview.reject(Object.assign(new Error("Unconfirmed"), {status: 503, outcome: "uncertain"}));
+  await sending;
+  listing({proposals}); await old;
+  card = app.querySelector("[data-proposal-id]");
+  assert.equal(card.querySelectorAll("textarea")[0].value, "Later reason");
+  assert.equal(card.querySelectorAll("textarea")[1].value, '{"summary":"Unsubmitted JSON"}');
+  assert.equal(card.querySelector("fieldset").querySelector("button").disabled, true);
+  heldRead = false; failListing = true;
+  await assistantQueueView();
+  assert.equal(app.querySelector("[data-proposal-id]"), card, "failed GET retains original DOM");
+  assert.match(app.textContent, /Synthetic listing failed/);
+  failListing = false;
+  await assistantQueueView();
+  card = app.querySelector("[data-proposal-id]");
+  assert.equal(card.querySelectorAll("textarea")[0].value, "Later reason");
+  assert.equal(card.querySelector("fieldset").querySelector("button").disabled, false);
+  proposals = [{...proposals[0], revision: 2}];
+  await assistantQueueView();
+  assert.equal(app.querySelector("[data-proposal-id]").querySelector("textarea").value, "");
+  let copies = app.querySelector('[data-case-recovery="proposal"]').querySelectorAll("textarea");
+  assert.deepEqual(copies.map(field => field.value),
+    ["Later reason", '{"summary":"Unsubmitted JSON"}']);
+  assert.ok(copies.every(field => field.hasAttribute("readonly")));
+  proposals = [];
+  await assistantQueueView();
+  copies = app.querySelector('[data-case-recovery="proposal"]').querySelectorAll("textarea");
+  assert.equal(copies.length, 2, "missing proposal retains copy-only recovery");
+  app.querySelector('[data-case-recovery="proposal"]').querySelector("button").events.click();
+  assert.equal(me.assistantQueueDrafts.pendingFields.size, 0);
+  assert.equal(app.querySelector('[data-case-recovery="proposal"]'), undefined);
+  console.log("PASS");
+})().catch(error => {console.error(error); process.exitCode = 1;});
+"""
+        )
+        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+
     def test_api_preserves_outcome_before_http_status_classification(self) -> None:
         source = (WEB / "app.js").read_text()
         script = (
@@ -375,9 +528,12 @@ const api = async (path, body) => {
 
     def test_raw_resident_and_challenge_outcomes_exclude_repeat_posts(self) -> None:
         source = (WEB / "panels.js").read_text()
+        app_source = (WEB / "app.js").read_text()
         script = (
             DOM
             + shipped_helpers()
+            + "async function api"
+            + app_source.split("async function api", 1)[1].split("const fmtDate", 1)[0]
             + r"""
 Node.prototype.replaceChildren = function(...children) {
   this.children = []; this.append(...children);
@@ -390,7 +546,10 @@ const refresh = async () => {reloads++;};
 const fetch = async () => {
   requests++;
   await new Promise(resolve => {finish = resolve;});
-  return {ok: false, status, json: async () => ({outcome, error: "Synthetic outcome"})};
+  return {ok: status === 200, status, json: async () => {
+    if (outcome === "malformed") throw new SyntaxError("Malformed response");
+    return {outcome, error: "Synthetic outcome"};
+  }};
 };
 """
             + "const residentForm = "
@@ -400,8 +559,9 @@ const fetch = async () => {
             + r"""
 (async () => {
   for (const challenge of [false, true]) {
-    for (status of [409, 503]) {
-      for (outcome of ["committed", "uncertain", undefined]) {
+    for (status of [200, 409, 503]) {
+      for (outcome of ["committed", "uncertain", undefined, "malformed"]) {
+        if (status === 200 && outcome !== "malformed") continue;
         requests = 0;
         caseSession = {pendingFields: new Map()};
         const container = challenge
@@ -412,14 +572,28 @@ const fetch = async () => {
         input.value = "Retained supplied evidence"; input.validity = {valid: true};
         const submit = () => form.events.submit({preventDefault() {}});
         const pending = submit(); await submit();
+        const rebuilt = challenge
+          ? formFor("synthetic", "Record", [["note", "Note"]], body => body)
+          : residentForm("synthetic", "Record", [["note", "Note"]], "record");
+        const rebuiltForm = rebuilt.querySelector("form");
+        const rebuiltInput = rebuiltForm.querySelector("input");
+        rebuiltInput.value = "Later changed evidence"; rebuiltInput.validity = {valid: true};
+        const rebuiltSubmit = () => rebuiltForm.events.submit({preventDefault() {}});
+        await rebuiltSubmit();
         assert.equal(requests, 1);
+        assert.equal(Boolean(caseSession.historyBarrier), false,
+          "pending duplicate is not an uncertain server outcome");
+        assert.equal(pendingMutations.size, 1);
         finish(); await pending;
+        assert.equal(pendingMutations.size, 0, "including strict JSON parse failure");
         assert.equal(input.value, "Retained supplied evidence");
         assert.equal(button.disabled, outcome !== undefined);
         assert.equal(Boolean(caseSession.historyBarrier), outcome !== undefined);
-        if (outcome !== undefined) {await submit(); assert.equal(requests, 1);}
+        if (outcome !== undefined) {
+          await submit(); await rebuiltSubmit(); assert.equal(requests, 1);
+        }
         else {
-          const retry = submit(); assert.equal(requests, 2);
+          const retry = rebuiltSubmit(); assert.equal(requests, 2);
           finish(); await retry;
         }
         assert.equal(reloads, 0);

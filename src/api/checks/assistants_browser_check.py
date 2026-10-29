@@ -134,12 +134,13 @@ def review_pending_cleanup(page, base, check, scan):
                     expect(action_button).to_be_enabled()
                     expect(card).to_contain_text("Synthetic review refusal")
                 elif queue:
-                    expect(page.get_by_role(
-                        "heading", name="Assistant proposals", exact=True
-                    )).to_be_visible()
-                    expect(card).to_have_count(0)
-                    check("queue reload failure offers no stale review action",
-                          action_button.count() == 0)
+                    expect(page.get_by_role("alert")).to_contain_text(
+                        "Synthetic proposal reload failure")
+                    expect(card).to_have_count(1)
+                    expect(action_button).to_be_disabled()
+                    action_button.evaluate("el => el.click()")
+                    check("queue reload failure retains draft and blocks stale review",
+                          len(pending) == 1)
                 else:
                     expect(card).to_contain_text("Your review was recorded")
                     expect(action_button).to_be_disabled()
@@ -155,7 +156,7 @@ def review_pending_cleanup(page, base, check, scan):
                 for route in loads:
                     route.fulfill(json={"proposals": [proposal], "next_after": None})
                 expect(card).to_have_attribute("data-proposal-revision", str(proposal["revision"]))
-            if not queue:
+            if not queue or change != "cache-only":
                 expected_dirty = change in ("later", "verify", "refusal")
                 check(f"proposal recovery/cache dirty lifecycle/{change}",
                       page.evaluate("hasUnsavedChanges()") == expected_dirty)
@@ -210,12 +211,15 @@ def review_outcome_history(page, base, check, scan):
                 }
                 pending, reads = [], []
                 defer = False
+                missing = False
 
                 def listing(route):
                     if defer:
                         reads.append(route)
                     else:
-                        route.fulfill(json={"proposals": [proposal], "next_after": None})
+                        route.fulfill(json={
+                            "proposals": [] if missing else [proposal], "next_after": None
+                        })
 
                 page.route("**/api/assistants/proposals?**", listing)
                 page.route("**/api/assistants/proposals", listing)
@@ -226,6 +230,10 @@ def review_outcome_history(page, base, check, scan):
                 card = page.locator(f'article[data-proposal-id="{proposal["id"]}"]')
                 reason = card.get_by_label("Reason", exact=True)
                 reason.fill("Retained supplied review reason")
+                card.get_by_role("button", name="Edit", exact=True).click()
+                editing = card.get_by_label("Edited evidence proposal JSON", exact=True)
+                edited = json.dumps(dict(proposal["output"], summary="Unsubmitted queue JSON"))
+                editing.fill(edited)
                 reject = card.get_by_role("button", name=re.compile(r"^Reject"))
                 reject.click()
                 expect(reject).to_be_disabled()
@@ -233,8 +241,14 @@ def review_outcome_history(page, base, check, scan):
                 refresh = page.get_by_role(
                     "button", name="Refresh queue" if queue else "Refresh proposals", exact=True
                 )
+                if not queue:
+                    reason.fill("Later retained review reason")
+                    editing.fill(edited + " ")
                 with page.expect_request(re.compile(r"/api/assistants/proposals(?:\?|$)")):
                     refresh.click()
+                if queue:
+                    reason.fill("Later retained review reason")
+                    editing.fill(edited + " ")
                 # This listing began while the POST was pending, not after its outcome.
                 pending[0].fulfill(
                     status=status, json={"error": "Synthetic review outcome", "outcome": outcome}
@@ -247,10 +261,22 @@ def review_outcome_history(page, base, check, scan):
                 reads.pop().fulfill(json={"proposals": [proposal], "next_after": None})
                 expect(card).to_have_count(1)
                 expect(reject).to_be_disabled()
+                expect(reason).to_have_value("Later retained review reason")
+                expect(editing).to_have_value(edited + " ")
                 reject.evaluate("el => el.click()")
                 check(f"old listing cannot unlock outcome/{queue}/{status}/{outcome}",
                       len(pending) == 1)
                 scan(page, f"review-history-{queue}-{status}-{outcome}")
+                # A failed listing must not replace the only copy of unresolved edits.
+                if queue:
+                    with page.expect_request("**/api/assistants/proposals"):
+                        refresh.click()
+                    reads.pop().fulfill(status=503, json={"error": "Synthetic queue read failed"})
+                    expect(page.get_by_role("alert")).to_contain_text("Synthetic queue read failed")
+                    expect(reason).to_have_value("Later retained review reason")
+                    expect(editing).to_have_value(edited + " ")
+                    expect(reject).to_be_disabled()
+                    scan(page, f"queue-failed-draft-{status}-{outcome}")
                 # A relevant read initiated after the barrier may reconcile this revision.
                 defer = False
                 if outcome == "committed":
@@ -260,9 +286,32 @@ def review_outcome_history(page, base, check, scan):
                 if outcome == "committed":
                     expect(card).to_have_attribute("data-proposal-revision", "2")
                     expect(card).to_contain_text("rejected")
+                    page.locator("[data-case-recovery] > summary").click()
+                    expect(page.get_by_label("Earlier Reason", exact=True)).to_have_value(
+                        "Later retained review reason")
+                    expect(page.get_by_label(
+                        "Earlier Edited evidence proposal JSON", exact=True
+                    )).to_have_value(edited + " ")
                 else:
                     expect(reject).to_be_enabled()
-                    expect(reason).to_have_value("" if queue else "Retained supplied review reason")
+                    expect(reason).to_have_value("Later retained review reason")
+                    expect(editing).to_have_value(edited + " ")
+                scan(page, f"review-fresh-draft-{queue}-{status}-{outcome}")
+                if queue:
+                    # Removed records keep revision-bound, copy-only recovery too.
+                    missing = True
+                    refresh.click()
+                    expect(card).to_have_count(0)
+                    recovery = page.locator('[data-case-recovery="proposal"]')
+                    recovery.locator("summary").click()
+                    expect(page.get_by_label("Earlier Reason", exact=True)).to_have_value(
+                        "Later retained review reason")
+                    expect(page.get_by_label(
+                        "Earlier Edited evidence proposal JSON", exact=True
+                    )).to_have_value(edited + " ")
+                    check("queue recovery is copy-only", recovery.locator(
+                        "textarea:not([readonly])").count() == 0)
+                    scan(page, f"queue-missing-draft-{status}-{outcome}")
                 check(f"fresh proposal listing reconciles/{queue}/{status}/{outcome}",
                       len(pending) == 1)
                 page.unroute("**/api/assistants/proposals?**", listing)

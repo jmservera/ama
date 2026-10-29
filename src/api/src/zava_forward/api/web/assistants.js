@@ -9,7 +9,7 @@ const assistantNames = {
 };
 const proposalReviewStates = new Map();
 
-function assistantProposal(p, reload, recoverable = new Map()) {
+function assistantProposal(p, reload, recoverable = new Map(), session = caseSession) {
   const reviewKey = `${p.id}:${p.revision}`;
   const previous = proposalReviewStates.get(reviewKey);
   if (previous?.state === "uncertain" && recoverable.get(reviewKey) === previous) proposalReviewStates.delete(reviewKey);
@@ -54,7 +54,7 @@ function assistantProposal(p, reload, recoverable = new Map()) {
       try { body.output = JSON.parse(editing.value); }
       catch { invalid(editing, "Enter valid JSON for the edited evidence proposal."); return; }
     }
-    const sent = snapshotCaseFields([note, ...(action === "verify" ? [verified] : action === "edit-accept" ? [editing] : [])]);
+    const sent = snapshotCaseFields([note, ...(action === "verify" ? [verified] : action === "edit-accept" ? [editing] : [])], session);
     setReviewState("pending");
     status.textContent = "Recording your review...";
     let recorded = false;
@@ -62,7 +62,7 @@ function assistantProposal(p, reload, recoverable = new Map()) {
       await api(`/api/assistants/proposals/${p.id}/review`, body);
       recorded = true;
       setReviewState("recorded");
-      reconcileCaseSubmission(sent);
+      reconcileCaseSubmission(sent, session === me.assistantQueueDrafts ? session : caseSession);
       await reload();
     } catch (e) {
       const checkHistory = mutationNeedsHistory(e);
@@ -223,23 +223,46 @@ function assistantCasePanel(id, session) {
 }
 
 async function assistantQueueView(after = "", append = false) {
+  const owner = me;
+  const session = owner.assistantQueueDrafts ||= { pendingFields: new Map() };
+  const signal = routeController.signal;
   const recoverable = new Map(proposalReviewStates);
   try {
     const queue = await api(`/api/assistants/proposals${after ? `?after=${encodeURIComponent(after)}` : ""}`);
-    const cards = queue.proposals.map((p) => assistantProposal(p, () => assistantQueueView(), recoverable));
+    if (signal.aborted || me !== owner || owner.assistantQueueDrafts !== session) return;
+    const existing = app.querySelector("[data-assistant-queue]");
+    if (existing) rememberCaseFields(session);
+    const cards = queue.proposals.map((p) => assistantProposal(p, () => assistantQueueView(), recoverable, session));
     const more = queue.next_after && h("button", { onclick: async (e) => {
       e.currentTarget.remove();
       await assistantQueueView(queue.next_after, true);
     } }, "Show more proposals");
-    if (append) { app.append(...cards, ...(more ? [more] : [])); return; }
-    show(h("h1", {}, "Role-owned assistant proposals"),
+    if (append && existing) {
+      existing.querySelectorAll('[data-case-recovery="proposal"]').forEach(node => node.remove());
+      existing.append(...cards, ...(more ? [more] : []));
+      restoreBoundFields([...session.pendingFields.values()], existing, "proposal", session);
+      return;
+    }
+    const panel = h("div", { "data-assistant-queue": "" }, h("h1", {}, "Role-owned assistant proposals"),
       h("p", { role: "status" }, queue.disabled || "Unreviewed proposals require a separate source check and role review."),
       h("button", { onclick: () => assistantQueueView() }, "Refresh queue"),
       ...cards, more,
       !queue.proposals.length && h("p", {}, "No proposals in your current role and case scope. Use the ordinary case controls."));
+    show(panel);
+    restoreBoundFields([...session.pendingFields.values()], panel, "proposal", session);
   } catch (e) {
-    if (e.name === "AbortError" || !me) return;
-    show(h("h1", {}, "Assistant proposals"), h("p", { role: "alert" }, e.message),
+    if (e.name === "AbortError" || signal.aborted || me !== owner || owner.assistantQueueDrafts !== session) return;
+    const failure = h("div", { "data-queue-error": "" }, h("p", { role: "alert" }, e.message),
+      h("button", { type: "button", onclick: () => assistantQueueView() }, "Try loading proposals again"),
       h("a", { href: "#/" }, "Continue manual case work"));
+    const existing = app.querySelector("[data-assistant-queue]");
+    if (existing) {
+      existing.querySelector("[data-queue-error]")?.remove();
+      existing.append(failure);
+    } else {
+      const panel = h("div", { "data-assistant-queue": "" }, h("h1", {}, "Assistant proposals"), failure);
+      show(panel);
+      restoreBoundFields([...session.pendingFields.values()], panel, "proposal", session);
+    }
   }
 }

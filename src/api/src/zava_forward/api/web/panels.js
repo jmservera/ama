@@ -162,30 +162,18 @@ function residentPanel(c, id, refresh) {
       try {
         const submitted = snapshotCaseFields(inputs.map(({ input }) => input));
         const body = Object.fromEntries(inputs.map(({ name, input }) => [name, input.value]));
-        const payload = JSON.stringify({ action, ...build(body) });
+        const payload = { action, ...build(body) };
         dispatched = true;
-        const response = await fetch(`/api/cases/${encodeURIComponent(id)}/resident`, {
-          method: "POST", headers: { "Content-Type": "application/json", "X-ZF-CSRF": "1" },
-          body: payload
-        });
-        const result = await response.json();
-        if (!response.ok) {
-          status.textContent = result.error || "Could not record this step. Reload to check its history.";
-          status.focus();
-          if (mutationNeedsHistory({ status: response.status, outcome: result.outcome })) {
-            status.textContent = `Reload and check the history before another action. ${status.textContent}`;
-            requireCaseHistory(session);
-          } else button.disabled = false;
-          return;
-        }
+        await api(`/api/cases/${encodeURIComponent(id)}/resident`, payload, new AbortController().signal);
         if (submitted.every(caseFieldUnchanged)) delete form.dataset.unsaved;
         await refresh(async () => {}, submitted);
       } catch (error) {
-        if (dispatched) requireCaseHistory(session);
-        status.textContent = dispatched
+        const checkHistory = dispatched && mutationNeedsHistory(error);
+        if (checkHistory) requireCaseHistory(session);
+        status.textContent = checkHistory
           ? "Confirmation is unavailable. Reload and check the history before another action."
-          : "Check the date and time before recording this step.";
-        if (!dispatched) button.disabled = false;
+          : error.message;
+        if (!checkHistory) button.disabled = false;
         status.focus();
       }
     } }, inputs.flatMap(({ label, input }) => [h("label", { for: input.id }, label), input]), status, button);
@@ -363,21 +351,9 @@ function affectedChallengePanel(c, id, refresh) {
         let dispatched = false;
         const dispatchSignal = routeController.signal;
         try {
-          const payload = JSON.stringify(build(body));
+          const payload = build(body);
           dispatched = true;
-          const response = await fetch(`/api/cases/${encodeURIComponent(id)}/resident`, {
-            method: "POST", headers: { "Content-Type": "application/json", "X-ZF-CSRF": "1" }, body: payload
-          });
-          const result = await response.json();
-          if (!response.ok) {
-            status.textContent = result.error || "Could not record this challenge. Reload and check its history.";
-            if (mutationNeedsHistory({ status: response.status, outcome: result.outcome })) {
-              status.textContent = `Reload and check the history before another action. ${status.textContent}`;
-              requireCaseHistory(session);
-            } else button.disabled = false;
-            status.focus();
-            return;
-          }
+          await api(`/api/cases/${encodeURIComponent(id)}/resident`, payload, new AbortController().signal);
           const changed = inputs.some(({ name, input }) => input.value !== body[name]);
           if (changed) {
             form.dataset.unsaved = "true";
@@ -388,11 +364,12 @@ function affectedChallengePanel(c, id, refresh) {
           if (dispatchSignal.aborted) return;
           await refresh(async () => {});
         } catch (error) {
-          if (dispatched) requireCaseHistory(session);
-          status.textContent = dispatched
+          const checkHistory = dispatched && mutationNeedsHistory(error);
+          if (checkHistory) requireCaseHistory(session);
+          status.textContent = checkHistory
             ? "Confirmation is unavailable. Reload and check the history before recording another action."
             : error.message;
-          if (!dispatched) button.disabled = false;
+          if (!checkHistory) button.disabled = false;
           status.focus();
         } finally {
           button.removeAttribute("aria-busy");
