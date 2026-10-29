@@ -294,28 +294,71 @@ class ProgressDashboard(unittest.TestCase):
             self.archive(start="2026-10-08", end="2026-10-07")
         self.assertEqual(self.archive(start="2020-01-01", end="2026-10-07")["total"], 2)
 
-    def test_malformed_auxiliary_lifecycles_persist_as_unknown_without_aborting_reads(self) -> None:
-        malformed: list[object] = [
+    def test_malformed_lifecycles_persist_as_unknown_without_aborting_reads(self) -> None:
+        containers: list[object] = [
             None,
+            "",
             "not a collection",
+            {},
             {"at": "2026-10-07"},
             42,
+            1.5,
             False,
-            [None],
-            ["not an event"],
-            [{}, None],
-            [dict(at="2026-10-07", closed=True, reopened=True), None],
+        ]
+        elements: list[object] = [None, "", "not an event", [], [{}], 42, 1.5, False, True]
+        actions: list[object] = [
+            None,
+            [],
+            ["Identified"],
+            {},
+            {"action": "Identified"},
+            42,
+            1.5,
+            False,
+            True,
         ]
         originals = {cid: copy.deepcopy(self.store.cases[cid]) for cid in ("ZF-1", "ZF-2")}
-        for field in ("home_case_closures", "returns"):
-            for value in malformed:
-                with self.subTest(field=field, value=value):
+        for field in ("history", "home_case_closures", "returns"):
+            mutations = [("container", value) for value in containers]
+            mutations.extend(("timestamp", value) for value in elements)
+            for position in ("first", "last"):
+                mutations.extend((position, value) for value in elements)
+                if field == "history":
+                    mutations.extend(
+                        (position, dict(at="2026-10-01", is_synthetic=True, action=value))
+                        for value in actions
+                    )
+                    mutations.append((position, dict(at="2026-10-01", is_synthetic=True)))
+            for mode, value in mutations:
+                with self.subTest(field=field, mode=mode, value=value):
                     with self.store.lock:
                         for cid, original in originals.items():
                             case = self.store.cases[cid]
                             case.clear()
                             case.update(copy.deepcopy(original))
-                            case[field] = value
+                            case["is_synthetic"] = True
+                            if mode == "container":
+                                case[field] = copy.deepcopy(value)
+                            else:
+                                rows = copy.deepcopy(
+                                    case.get(
+                                        field,
+                                        [{}, dict(at="2026-10-07", closed=True, reopened=True)],
+                                    )
+                                )
+                                row = (
+                                    dict(
+                                        at=value,
+                                        is_synthetic=True,
+                                        action="Identified",
+                                        closed=True,
+                                        reopened=True,
+                                    )
+                                    if mode == "timestamp"
+                                    else copy.deepcopy(value)
+                                )
+                                rows.insert(0 if mode == "first" else len(rows), row)
+                                case[field] = rows
                             self.assertIsNone(progress.lifecycle(case))
                             if self.backend == "sqlite":
                                 self.store.db.execute(
@@ -330,11 +373,21 @@ class ProgressDashboard(unittest.TestCase):
                         else Store(str(self.path))
                     )
                     try:
+                        for cid in originals:
+                            self.assertIsNone(progress.lifecycle(reader.cases[cid]))
                         report = progress.dashboard(reader, self.pam, {})
                         self.assertEqual(report["coverage"]["synthetic_cases"], 4)
                         self.assertEqual(report["coverage"]["known_lifecycle"], 1)
                         self.assertEqual(report["coverage"]["unknown_lifecycle"], 3)
                         self.assertEqual(report["current"]["overdue"], 1)
+                        self.assertEqual(
+                            report["time_to_close"], dict(median_days=1, p90_days=1, samples=1)
+                        )
+                        for period in ("daily", "weekly"):
+                            self.assertEqual(sum(row["opened"] for row in report[period]), 1)
+                            self.assertEqual(sum(row["closed"] for row in report[period]), 1)
+                            self.assertEqual(sum(row["reopened"] for row in report[period]), 0)
+                            self.assertEqual(report[period][-1]["backlog"], 0)
                         archive = progress.closed_cases(reader, self.pam, {})
                         self.assertEqual(archive["total"], 3)
                         self.assertEqual(archive["unknown_closure_dates"], 2)
@@ -361,11 +414,35 @@ class ProgressDashboard(unittest.TestCase):
                 [],
                 [{}],
                 [dict(event_type="not a transition", at=None)],
+                [dict(event_type=[], at={}, closed=[], reopened={})],
+                [dict(event_type={}, at=[], closed={}, reopened=[])],
+                [dict(event_type=None, at=False, closed=1, reopened=1)],
             ]
             for value in valid:
                 with self.subTest(field=field, value=value):
                     case[field] = value
                     self.assertEqual(progress.lifecycle(case), expected)
+
+    def test_ignored_history_dictionaries_preserve_valid_replay(self) -> None:
+        case = copy.deepcopy(self.store.cases["ZF-1"])
+        expected = progress.lifecycle(case)
+        self.assertIsNotNone(expected)
+        rows: list[dict[str, Any]] = [
+            {},
+            dict(is_synthetic=False, action=[], at={}),
+            dict(is_synthetic=None, action={}, at=[]),
+            dict(is_synthetic="true", action=False, at=None),
+            dict(is_synthetic=[], action={}, at=None),
+            dict(is_synthetic={}, action=[], at=None),
+            dict(is_synthetic=True, action="Synthetic narrative", at=[]),
+            dict(is_synthetic=True, action="", at={}),
+        ]
+        for row in rows:
+            for position in (0, len(case["history"])):
+                with self.subTest(row=row, position=position):
+                    candidate = copy.deepcopy(case)
+                    candidate["history"].insert(position, row)
+                    self.assertEqual(progress.lifecycle(candidate), expected)
 
     def test_overdue_matches_previous_context_without_building_or_context_evaluation(self) -> None:
         shared = fixture()

@@ -81,6 +81,7 @@ def lifecycle(case: dict[str, Any]) -> list[tuple[date, bool]] | None:
     returns = case.get("returns", [])
     if (
         not isinstance(history, list)
+        or not all(isinstance(row, dict) for row in history)
         or not isinstance(closures, list)
         or not all(isinstance(row, dict) for row in closures)
         or not isinstance(returns, list)
@@ -90,9 +91,11 @@ def lifecycle(case: dict[str, Any]) -> list[tuple[date, bool]] | None:
     events: list[tuple[datetime, bool]] = []
     identified: list[datetime] = []
     for row in history:
-        if not isinstance(row, dict) or row.get("is_synthetic") is not True:
+        if row.get("is_synthetic") is not True:
             continue
         action = row.get("action")
+        if not isinstance(action, str):
+            return None
         if action in CLOSE_ACTIONS or action in {"Identified", "Reopened - aftercare"}:
             stamp = observed(row.get("at"))
             if stamp is None:

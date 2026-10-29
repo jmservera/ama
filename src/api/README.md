@@ -22,7 +22,11 @@ reopen, controlled reopen and explicit home closure events supply lifecycle
 dates; current stage dates are not opening dates. Missing or contradictory
 lifecycle evidence is excluded from historical measures with coverage counts.
 Non-list histories, including null, are unknown rather than failed reads.
-Closure and return collections must be lists of dictionaries when present;
+History elements must be dictionaries, and labelled synthetic actions must be
+strings; malformed rows or actions make the lifecycle unknown, not silently
+skipped. Unlabelled dictionary history and valid non-transition actions are
+still ignored. History, closure and return collections must be lists of
+dictionaries when present;
 null, non-list collections or malformed entries make the lifecycle unknown.
 Missing collections remain empty. Malformed synthetic cases still contribute
 to coverage counts and remain in the unbounded archive with unknown dates.
