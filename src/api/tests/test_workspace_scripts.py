@@ -48,7 +48,7 @@ function harness(outcomes = []) {
     querySelectorAll: () => []
   };
   context = vm.createContext({
-    document, AbortController, clearTimeout,
+    document, AbortController, URLSearchParams, clearTimeout,
     setTimeout: (callback, delay) => {
       delays.push(delay);
       return setTimeout(callback, delay === 5000 ? 5 : 0);
@@ -56,6 +56,10 @@ function harness(outcomes = []) {
     me: {user: {role: "Retrofit Programme Manager"}, navigation: []},
     workspaceStatus: {textContent: ""},
     location: {hash: "#/overview"}, displayedHash: "#/overview",
+    caseSession: null, fundingAi: {},
+    rememberCaseFields: session => Array.from(session.pendingFields.values()),
+    window: {confirm: () => false},
+    history: {replaceState: (_state, _title, hash) => {context.location.hash = hash;}},
     routeController: new AbortController(), searchTimer: 0,
     coordinatorOrigin: null, queueOrigin: "mine",
     qualityPanel() {}, financePanel() {}, assistantCasePanel() {}, chatCasePanel() {},
@@ -174,6 +178,24 @@ function harness(outcomes = []) {
   h.context.me = null;
   await h.run("route()");
   assert.deepEqual(h.views, [], "no-session route entry must be harmless");
+
+  h = harness();
+  const selected = [];
+  h.context.caseSession = {id: "ZF-1", pendingFields: new Map([["draft", {value: "Unsent"}]]),
+    controller: {select: value => selected.push(value)}};
+  h.context.displayedHash = "#/case/ZF-1?challenge-target-history=2&tab=ai";
+  h.context.location.hash = "#/case/ZF-1?challenge-target-history=2&tab=survey";
+  await h.run("route()");
+  assert.deepEqual(selected, ["survey"], "pending-only drafts must allow retained tab changes");
+  assert.equal(h.context.caseSession.pendingFields.size, 1);
+  h.context.location.hash = "#/";
+  await h.run("route()");
+  assert.equal(h.context.location.hash, h.context.displayedHash,
+    "pending-only drafts must warn and restore the previous URL on cancellation");
+  assert.deepEqual(h.views, [], "cancelled navigation must not redraw");
+  assert.equal(h.run("hasUnsavedChanges()"), true);
+  h.context.caseSession.pendingFields.clear();
+  assert.equal(h.run("hasUnsavedChanges()"), false, "clean cache must not warn");
   console.log("PASS recovery, bounds, timeout, readiness, route predicates and isolation");
 })().catch(error => {console.error(error); process.exitCode = 1;});
 """,

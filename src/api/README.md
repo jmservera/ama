@@ -2,9 +2,99 @@
 title: Zava Forward API and web workbench
 description: Staff features, configuration, local run, honest limits and container checks for the api project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-28
+ms.date: 2026-10-29
 ms.topic: reference
 ---
+
+
+## Employee case journey workspace (#526)
+
+Employee case routes show a six-step evidence-based journey, six-value summary
+and nine native ARIA tabs. Tab selection lives in `?tab=` inside the hash;
+manual arrow-key focus and Enter/Space activation retain panel DOM and drafts.
+Open safety controls stay above all tabs. Funding and Resident agreement
+completion require recorded confirmation, not position alone.
+
+The [supplied design](../../docs/reference/research/ux/employee-case-workspace-redesign.md)
+records the requirements and explicit chat-review exception. No API `journey`
+or confidence score is added. Draft/proposal review is not an approval, consent
+or safety decision. Chat answers stay advisory; request a separate proposal for
+recorded source verification and review.
+
+From `src/api`, with installed project dev distributions:
+
+```bash
+PYTHONPATH=../core/tests:../agents/tests python3 -m unittest discover -s tests -q
+PYTHONPATH=tests:../core/tests:../agents/tests python3 -m checks.design_system_browser_check
+PYTHONPATH=tests:../core/tests:../agents/tests python3 -m checks.case_journey_browser_check \
+  --axe /path/to/axe-4.10.3.min.js --out /new/external/journey-results
+```
+
+The focused check owns a real loopback app with public constructed fixtures,
+pinned axe, keyboard/reflow states and actual Chromium 200% tab zoom through a
+test-only extension. No Azure, private dataset or live model is used.
+Same-case redraws retain complete document review output and handlers.
+Proposal snapshots survive overlapping loaders and remain bound to their
+proposal revision. Funding and checklist drafts are bound to their AI record or
+measure/checklist version; earlier edits remain copyable rather than being
+applied to replacement evidence. Successful mutations clear only unchanged
+dispatch-time values, not edits made while saving. Source verification does not
+submit or discard edited proposal JSON.
+Successful submissions reconcile exact dispatch-time values across live,
+replaced, copy-recovery and cached controls, bound to the same evidence key.
+Pending review and evidence-save actions exclude duplicate submissions while
+later edits remain available. Malformed edited proposal JSON identifies and
+focuses its editor, not a valid Reason; request failures are status feedback,
+not inferred field invalidity. A recorded action whose reload fails requires
+refresh/history checking rather than repeating the stale action.
+Structured API errors retain their mutation outcome: `committed` and `uncertain`
+take precedence over HTTP status, including 409 and 503. Quality and other case
+submissions remain blocked across tab/measure changes and failed or older reads.
+Only a case reload started after the outcome can recover those controls.
+Proposal reviews similarly require a new authoritative proposal listing for
+their ID/revision; a pre-outcome listing cannot unlock them. Retained document
+draft and priority reviews require workspace reload/history checking instead of
+inventing an approval. Upload preparation failures remain correctable locally;
+lost upload confirmations cannot repeat the POST.
+All employee JSON mutations share an in-flight lock keyed by endpoint, action
+and target, independent of replaceable controls. Fieldless actions and rebuilt
+resident, challenge and procurement controls cannot dispatch duplicate POSTs;
+GET refreshes do not release these locks. Malformed mutation responses retain
+unconfirmed-outcome handling instead of consuming drafts.
+Raw resident and challenge forms also keep their pending/outcome presentation
+in the case session. Rebuilt controls receive eventual history-check feedback.
+Retained challenge drafts become usable again only after a causally fresh case
+history reload; failed or older reads cannot silently unlock them.
+Shared-queue refreshes preserve the latest unsubmitted reason and edited JSON,
+including edits typed after a listing starts. Failed listings retain the current
+cards. Changed or missing proposal revisions expose copy-only earlier edits,
+never transplant them to different evidence. Explicit discard/navigation and
+authentication boundaries clear queue recovery state.
+Navigation and page-close warnings also cover unresolved cached drafts while
+proposal controls are loading. A completed document review displays the submitted
+replacement and retains later text or reason as read-only, unsaved recovery tied
+to that record; its review actions stay disabled. Replacing an edited document or
+resident draft requires explicit discard. Journey links retain challenge-history
+pagination and switch mounted sections without discarding drafts.
+Both chat question forms clear only unchanged dispatch-time text after a
+successful answer; failures and text typed during the request remain unsaved.
+The complete chat panel survives same-case refreshes, including pending buttons,
+thread identity and conversation. Restored proposal editors retain copyable text
+but cannot submit without current readiness and the viewer's own verification.
+AI review counts announce changes politely from the visible summary without
+re-announcing identical counts or the navigation button.
+
+The assistants check can also use pinned axe and retain an external report:
+
+```bash
+PYTHONPATH=tests:../core/tests:../agents/tests python3 -m checks.assistants_browser_check \
+  --axe /path/to/axe-4.10.3.min.js --out /new/external/assistants-results
+```
+
+Coordinate heavy runs through `/tmp/ama-rpi-heavy.lock`; use nonblocking
+`flock -n` admission with short retries bounded to 40 minutes for this correction,
+then release immediately after heavy checks. Screen-reader, staff usability and
+post-deployment verification remain pending the owner.
 
 ## Workspace script recovery (#524)
 

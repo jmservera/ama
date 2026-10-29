@@ -1,0 +1,35 @@
+{
+  "task_id": "526-round9",
+  "task_slug": "case-journey-526-round9",
+  "parent_task": {"task_id": "526-round8", "task_slug": "case-journey-526-round8"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-29/case-journey-526-round9-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-29/case-journey-526-round9-plan.md",
+    "details": ".copilot-tracking/details/2026-10-29/case-journey-526-round9-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-29/case-journey-526-round9-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-29/case-journey-526-round9-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-29/case-journey-526-round9-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Continue corrections until Conformant, local commits only, no Azure/secrets/push", "status": "confirmed", "evidence": "Original user request; round-eight Review RV-001/RV-002"},
+    {"decision": "Round-eight implementation and original Not accepted Review committed locally", "status": "completed", "evidence": "24d7ca9c"},
+    {"decision": "Research reused and Ready; minimal session-owned raw presentation state selected", "status": "completed", "evidence": "Round-nine research and original independent reproductions"},
+    {"decision": "Sole independent critique Complete / Pass, zero findings; plan Ready", "status": "executed", "evidence": "Round-nine critique"},
+    {"decision": "P01 and P02-T01 complete; preserve acknowledged-success draft guard separately from history recovery", "status": "completed", "evidence": "Round-nine changes; final round9-validation-06: 27 focused/117 related units, Ruff100/mypy99, journey406/assistants206 and all five challenge modes pass"},
+    {"decision": "Sole independent Review executed Complete; outcome Conformant; zero findings within four-file child and coupled lifecycle boundary", "status": "completed", "evidence": ".copilot-tracking/reviews/logs/2026-10-29/case-journey-526-round9-review.md; API diff SHA256 4ff233b6f48662b082a0010b9053014edb1ae7d9f3014b09a42614b0bd5d748b against 24d7ca9c"},
+    {"decision": "Transitioned to Follow-up; completed correction and original evidence retained together in the local commit; no child work selected", "status": "completed", "evidence": "Original user instruction: commit locally, do not push; round-nine source/changes/Review retained in 7b987c63f070dff8466acdecc661dd5143985cb4"},
+    {"decision": "New upstream rubric bot commit observed after local retention; fast-forward-only pull refused divergence; preserve reviewed local history", "status": "recorded", "evidence": "origin topic 27d11262; git pull --ff-only exit128; no merge/rebase/amend/push"}
+  ],
+  "blockers": [
+    {"id": "upstream-bot-publication-divergence", "summary": "New upstream rubric bot commit 27d11262 diverges from the two locally reviewed corrections; fast-forward-only pull cannot integrate it. Scoped correction remains Conformant; publication is blocked.", "resolution": "Coordinator reconciles upstream history under owner authorization, preserving original corrections/evidence, then reruns fresh-base exact-head gates before an authorized push. No merge or rewrite authorized here."}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator reconciles newly observed upstream rubric bot divergence, then performs separately authorized exact-head publication gate and push. Manual accessibility/human acceptance remains separate. No further child or push authorized here."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Coordinator upstream bot reconciliation, exact-head publication gate and authorized push", "rationale": "Upstream now diverges at rubric bot 27d11262; required integration and exact-head gates must precede publication, without rewriting reviewed history here", "evidence": "Post-commit changes handoff; refused git pull --ff-only; round-nine Review publication boundary; original user no-push instruction"},
+    {"rank": 2, "task": "Manual accessibility and human journey acceptance", "rationale": "Automated checks pass but incomplete axe items and real-user acceptance remain outside automated evidence", "evidence": "Final journey87/assistants56 axe states; 86/56 incomplete items; round-nine Review"}
+  ]
+}

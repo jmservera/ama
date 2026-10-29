@@ -47,7 +47,7 @@ def run(axe_path: Path) -> dict[str, Any]:
                 page.locator("#pw").fill("synthetic-only")
                 page.locator("button[type=submit]").click()
                 page.locator("#nav").wait_for(state="visible")
-                page.goto(fixture.base + "/app#/case/ZF-1")
+                page.goto(fixture.base + "/app#/case/ZF-1?tab=resident")
                 page.get_by_role(
                     "heading",
                     name="Requirements and doubt route"
@@ -91,7 +91,9 @@ def run(axe_path: Path) -> dict[str, Any]:
                     page.locator("#outcome").fill("SYN unrelated call")
                     page.locator("#note").fill("SYN manual work continues")
                     page.get_by_role("button", name="Save", exact=True).click()
+                    page.get_by_role("tab", name="History", exact=True).click()
                     page.get_by_text("SYN unrelated call", exact=False).first.wait_for()
+                    page.get_by_role("tab", name="Resident", exact=True).click()
                     expect(page.locator("#challenge-open-request")).to_have_value(
                         payload["request"]
                     )
@@ -214,7 +216,7 @@ def run_history(axe_path: Path) -> dict[str, Any]:
             page.locator("#pw").fill("synthetic-only")
             page.locator("button[type=submit]").click()
             page.locator("#nav").wait_for(state="visible")
-            page.goto(fixture.base + "/app#/case/ZF-1")
+            page.goto(fixture.base + "/app#/case/ZF-1?tab=resident")
             page.locator("#affected-challenges").wait_for()
             expect(page.get_by_role("button", name="Older suggestions", exact=True)).to_be_visible()
             expect(page.get_by_text("CH-1: Open.", exact=False)).to_have_count(0)
@@ -367,7 +369,7 @@ def run_refresh_draft(axe_path: Path) -> dict[str, Any]:
             page.locator("#pw").fill("synthetic-only")
             page.locator("button[type=submit]").click()
             page.locator("#nav").wait_for(state="visible")
-            page.goto(fixture.base + "/app#/case/ZF-1")
+            page.goto(fixture.base + "/app#/case/ZF-1?tab=resident")
             page.locator("#affected-challenges").wait_for()
             page.get_by_text("Record supplied resolution for CH-1", exact=True).first.click()
             values = {
@@ -546,7 +548,7 @@ def run_pending_draft(axe_path: Path) -> dict[str, Any]:
             page.locator("button[type=submit]").click()
             page.locator("#nav").wait_for(state="visible")
             for action in ("challenge_open", "challenge_resolve"):
-                page.goto(fixture.base + "/app#/case/ZF-1")
+                page.goto(fixture.base + "/app#/case/ZF-1?tab=resident")
                 page.locator("#affected-challenges").wait_for()
                 opening = action == "challenge_open"
                 key = "challenge-open" if opening else "challenge-resolve-CH-1"
@@ -685,7 +687,7 @@ def run_pending_draft(axe_path: Path) -> dict[str, Any]:
                 page.once("dialog", cancel_navigation)
                 page.get_by_role("link", name="Back to the list", exact=True).click()
                 page.wait_for_function("() => window.challengeNavigationCancelled === true")
-                expect(page).to_have_url(fixture.base + "/app#/case/ZF-1")
+                expect(page).to_have_url(fixture.base + "/app#/case/ZF-1?tab=resident")
                 expect(page.locator(f"#{key}-explanation")).to_have_value(draft["explanation"])
                 page.once("dialog", lambda dialog: dialog.accept())
                 page.locator(f"#{key} button[type=reset]").click()
@@ -748,7 +750,7 @@ def run_navigation() -> dict[str, Any]:
 
             page.route("**/api/cases/ZF-1/resident", hold_acknowledgement)
             for index, destination in enumerate(("#/case/ZF-5", "#/"), start=1):
-                page.goto(fixture.base + "/app#/case/ZF-1")
+                page.goto(fixture.base + "/app#/case/ZF-1?tab=resident")
                 page.locator("#affected-challenges").wait_for()
                 page.get_by_text("Record supplied challenge", exact=True).first.click()
                 page.locator("#challenge-open-proposal_id").fill(payload["proposal_id"])

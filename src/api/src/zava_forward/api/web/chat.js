@@ -9,11 +9,20 @@ const chatProposalNames = {
   "quality-evidence": "Quality evidence",
 };
 
+function clearSubmittedQuestion(sent) {
+  if (!caseFieldUnchanged(sent)) return;
+  sent.field.value = "";
+  sent.field.removeAttribute("data-case-dirty");
+}
+
 function chatMessageItem(role, text, answer) {
   const item = h("li", { class: `chat-msg chat-${role}` },
     h("strong", {}, role === "user" ? "You" : "Assistant"), " ", h("span", {}, text));
   if (answer) {
-    item.append(h("p", { class: "muted" }, answer.label || chatLabel));
+    item.classList.add("ai-suggestion");
+    item.append(h("p", { class: "ai-label" }, `${answer.label || chatLabel}. Not an instruction.`),
+      h("p", {}, "Confidence: not provided. Confidence is not accuracy."),
+      h("p", {}, "This answer is advisory, not a recorded proposal review. Request a proposal below for a separate source check and accept, edit or reject with reason."));
     if (answer.citations && answer.citations.length) {
       item.append(h("ul", { "aria-label": "Sources cited" },
         answer.citations.map((c) => h("li", {}, h("code", {}, c.id), c.text ? `: ${c.text}` : ""))));
@@ -42,16 +51,18 @@ function chatCasePanel(id) {
   };
   const ask = async (event) => {
     event.preventDefault();
+    if (send.disabled) return;
     const question = input.value.trim();
     if (!question) { say("Type a question first."); return; }
+    const sent = snapshotCaseFields([input])[0];
     send.disabled = true;
     say("Asking the assistant. The ordinary case controls stay available.");
     log.append(chatMessageItem("user", question));
-    input.value = "";
     try {
       const tid = await ensureThread();
       const answer = await api(`/api/chat/threads/${encodeURIComponent(tid)}/ask`, { content: question });
       log.append(chatMessageItem("assistant", answer.reply, answer));
+      clearSubmittedQuestion(sent);
       say(answer.workflow_only ? "The assistant is not available. Continue with the ordinary workflow." : "New answer added.");
     } catch (e) {
       say(`Chat unavailable: ${e.message} Continue with the ordinary case workflow.`);
@@ -71,7 +82,7 @@ function chatCasePanel(id) {
       proposals.append(h("button", { type: "button", class: "alt", onclick: () => requestProposal(a.id) },
         `Request proposal: ${chatProposalNames[a.id] || a.id}`));
     }
-  }).catch(() => {});
+  }).catch(error => say(`Proposal requests unavailable: ${error.message} Continue ordinary case work manually.`));
   return h("details", { class: "card", id: "chat-panel" },
     h("summary", {}, "Ask the assistant about this case (optional)"),
     h("p", { class: "muted" }, `${chatLabel}. Answers cite only sources your role may see. The assistant cannot change a record, approve, send or book anything; it can only request a proposal that someone else reviews. Do not type personal details about residents.`),
@@ -222,8 +233,10 @@ function regulatoryChatPanel(caseId) {
     regulatoryGuidance(me.user.role),
     liveLog, h("form", { onsubmit: async (event) => {
       event.preventDefault();
+      if (button.disabled) return;
       const question = input.value.trim();
       if (!question) { status.textContent = "Enter a source question."; return; }
+      const sent = snapshotCaseFields([input])[0];
       button.disabled = true;
       status.textContent = "Looking up cited sources. Human safety routes remain available.";
       try {
@@ -232,7 +245,7 @@ function regulatoryChatPanel(caseId) {
         log.append(h("li", {}, h("strong", {}, "You"), " ", question));
         show(answer, tid);
         status.textContent = `${answer.kind}: synthetic-demo turn stored with its sources.`;
-        if (input.value.trim() === question) input.value = "";
+        clearSubmittedQuestion(sent);
       } catch (e) { status.textContent = `Cited lookup unavailable: ${e.message} Use the ordinary human route.`; }
       finally { button.disabled = false; input.focus(); }
     } }, h("label", { for: "regulatory-question" }, "Cited source question"), input, button),

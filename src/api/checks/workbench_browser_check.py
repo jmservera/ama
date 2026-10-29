@@ -155,6 +155,7 @@ def queue_signal_checks(page: Page, base: str) -> None:
     for case_id in ("ZF-4", "ZF-1"):
         detail = page.request.get(base + f"/api/cases/{case_id}").json()
         page.locator(f'.item[href="#/case/{case_id}"]').click()
+        page.get_by_role("tab", name="Blockers and safety", exact=False).click()
         page.get_by_role("heading", name="Recorded task context", exact=True).wait_for()
         context = page.locator("[aria-label='Recorded task context']")
         suggestion = page.locator("section").filter(
@@ -162,6 +163,7 @@ def queue_signal_checks(page: Page, base: str) -> None:
         )
         if detail["work"]["reason"] not in context.inner_text():
             failures.append(f"{case_id} selected rationale from own API record")
+        page.get_by_role("tab", name="Quality and handover", exact=True).click()
         expected = [f"{item['name']}, {item['role']}" for item in detail["suggestions"]]
         if not expected or suggestion.locator("li strong").all_inner_texts() != expected:
             failures.append(f"{case_id} exact proposed reviewers from own API record")
@@ -180,6 +182,7 @@ def queue_signal_checks(page: Page, base: str) -> None:
 
     page.route("**/api/cases/ZF-1", no_reviewers, times=1)
     page.locator('.item[href="#/case/ZF-1"]').click()
+    page.get_by_role("tab", name="Quality and handover", exact=True).click()
     page.get_by_role("heading", name="Who could take this on", exact=True).wait_for()
     if (
         page.get_by_text(
@@ -447,15 +450,16 @@ def run_browser(base: str) -> None:
                     and "Bea Safe" in page.locator(".item").inner_text()
                     and "2026-10-16" in page.locator(".item").inner_text(),
                 )
-                queue_context = page.locator(".item .work-context").inner_text()
+                queue_context = page.locator(".item .work-context").text_content()
                 page.locator(".item").click()
+                page.get_by_role("tab", name="Blockers and safety", exact=False).click()
                 page.get_by_role("heading", name="Recorded task context", exact=True).wait_for()
                 check(
                     "queue case history and suggestion current context agree",
-                    page.locator(".work-context").count() == 3
+                    page.locator(".work-context").count() == 4
                     and all(
                         text == queue_context
-                        for text in page.locator(".work-context").all_inner_texts()
+                        for text in page.locator(".work-context").all_text_contents()
                     ),
                 )
                 page.get_by_text("Blocked steps and prerequisites", exact=True).click()
@@ -477,12 +481,14 @@ def run_browser(base: str) -> None:
                 page.locator("#reset-queue").click()
                 wait_cases(page, 2)
                 page.locator('.item[href="#/case/ZF-1"]').click()
+                page.get_by_role("tab", name="Blockers and safety", exact=False).click()
                 page.get_by_role("heading", name="Recorded task context", exact=True).wait_for()
                 check(
                     "case switching refreshes reason source and clock without carryover",
-                    "SYN-NEW-WORK" in page.locator(".work-context").first.inner_text()
-                    and "case:ZF-1/stage" in page.locator(".work-context").first.inner_text()
-                    and "Bea Safe" not in page.locator(".work-context").first.inner_text(),
+                    "SYN-NEW-WORK" in (page.locator(".work-context").first.text_content() or "")
+                    and "case:ZF-1/stage"
+                    in (page.locator(".work-context").first.text_content() or "")
+                    and "Bea Safe" not in (page.locator(".work-context").first.text_content() or ""),
                 )
                 page.get_by_role("link", name="Back to the list", exact=True).click()
                 wait_cases(page, 2)

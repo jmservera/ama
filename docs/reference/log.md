@@ -7920,3 +7920,56 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Evidence: mandatory complete publication gate includes `az bicep` commands
   forbidden by the task; no passing complete receipt or publication waiver is
   claimed. The dated assessment records validation/publication limitations.
+## [2026-10-28] ingest | Employee case journey workspace specification (#526)
+
+* Filed the owner-supplied [employee case workspace design](./research/ux/employee-case-workspace-redesign.md)
+  and registered it in the knowledge-base index. Preserve slide order, with
+  Funding and Resident agreement done only when the recorded evidence supports it.
+* Implemented native journey/summary/tab composition in the current `src/api`
+  web assets without changing the Fluent foundation or server decision rights.
+  Journey and missing confidence stay client presentation, not invented API fields.
+* Flagged the chat API limitation: informational turns have no recorded-review
+  identifier; existing separately requested proposals retain source verification
+  and human review. Live verification, screen-reader and real-staff acceptance
+  remain pending the owner. Automated results are engineering evidence only.
+* Final heavy-validation admission exhausted 40 one-minute nonblocking retries.
+  Targeted tests and static checks passed, but complete API/browser/axe/zoom
+  validation, independent Review and publication remain blocked/pending.
+  No push, pull request or complete RPI success is claimed.
+
+## [2026-10-28] validate | Employee case journey continuation (#526)
+
+* Preserve the earlier blocked run and original RPI evidence. The owner
+  authorized another bounded lock window, independent review and topic PR.
+* Actual local API discovery passed 1156 tests (314 opt-in skips). Constructed
+  journey checks pass 37 pinned axe states, retained drafts, keyboard reviews,
+  blocked final-check refusal and real 200% browser zoom. Existing workbench,
+  employee recovery, assistant, provenance, regulatory and challenge checks pass.
+* Corrected mobile summary spacing without shrinking text or hiding values;
+  measured bottom 1581.96875 at 320x800 is below the unchanged 1600 bound.
+  Keyboard-focused tabs now scroll fully into view, including at 200%.
+  Local gate parity includes the hosted journey check and bound result evidence.
+* Updated the [design boundary](./research/ux/employee-case-workspace-redesign.md)
+  and index. These are engineering observations, not screen-reader, staff,
+  legal or deployed acceptance. Independent Review and final publication gates
+  remain separately recorded steps; no cloud action is authorized or performed.
+
+## [2026-10-28] refine | Independent journey review and routed repairs (#526)
+
+* Preserve the original Complete / Defects found Review. Its four findings
+  route to a later implementation: local harness import parity, same-card
+  draft clearing, async proposal review edits and document review counts.
+* Repaired these boundaries with explicit submitted controls, ID/revision-safe
+  restoration and copy recovery, and known-local counts alongside unknown
+  assistant totals. New journey 37-state axe/keyboard/actual-zoom checks and
+  27 assistant scenarios pass. Full committed publication gate is still a
+  separate pending requirement. Human and deployed acceptance remain unchanged.
+
+## [2026-10-28] maintain | Journey gate public recipe binding (#526)
+
+* The first complete gate correctly rejected a stale workbench recipe SHA-256
+  and two over-100-column regulatory harness expressions. Preserve its failure.
+* Refresh only the [scenario manifest](./research/retrofit-synthetic-data/scenario-manifest.json)
+  source hash for retained-tab selectors and wrap the two expressions.
+  Public fixture payloads, versions, inventory review and unavailable full
+  journeys do not change; no private record or owner approval is inferred.

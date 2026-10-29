@@ -44,7 +44,7 @@ def main() -> None:
                     page.locator("#pw").fill("browser-test")
                     page.locator("button[type=submit]").click()
                     page.locator("a.item").first.wait_for()
-                    page.goto(base + "/app#/case/ZF-1")
+                    page.goto(base + "/app#/case/ZF-1?tab=survey")
                     page.get_by_role("heading", name="Documents", exact=True).wait_for()
 
                 def source(prefix: str) -> None:
@@ -65,6 +65,7 @@ def main() -> None:
                 page.get_by_role("link", name="supplied.txt", exact=True).wait_for()
                 assert store.cases["ZF-1"]["document_history"][-1]["source_version"] == "browser-source-7"
 
+                page.get_by_role("tab", name="Quality and handover", exact=True).click()
                 source("ho-offer")
                 page.locator("#ho-offer-reason").press("Enter")
                 page.get_by_text("Waiting for an answer.", exact=False).wait_for()
@@ -72,6 +73,7 @@ def main() -> None:
 
                 context.clear_cookies()
                 login("pam")
+                page.get_by_role("tab", name="Quality and handover", exact=True).click()
                 source("ho-accept")
                 # A concurrent receipt changes the expected handoff version.
                 store.receive_handoff(DATA["staff"][1], "ZF-1")

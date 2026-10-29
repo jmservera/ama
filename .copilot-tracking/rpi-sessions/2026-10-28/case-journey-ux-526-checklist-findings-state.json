@@ -1,0 +1,29 @@
+{
+  "task_id": "526-checklist-findings",
+  "task_slug": "case-journey-ux-526-checklist-findings",
+  "parent_task": {"task_id": "526-correction", "task_slug": "case-journey-ux-526-correction"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "blocked",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-28/case-journey-ux-526-correction-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-28/case-journey-ux-526-checklist-findings-plan.md",
+    "details": ".copilot-tracking/details/2026-10-28/case-journey-ux-526-checklist-findings-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-28/case-journey-ux-526-correction-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-28/case-journey-ux-526-checklist-findings-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-28/case-journey-ux-526-correction-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Later scoped implementation of original RV-001/RV-002 under the existing explicit seven-root-fix task; no new direction or user choice", "status": "Confirmed", "evidence": "User correction request and original Review's rpi-implement routing"},
+    {"decision": "Original Review remains Complete / Not accepted; do not repeat or verify independent closure in that task", "status": "Confirmed", "evidence": ".copilot-tracking/reviews/logs/2026-10-28/case-journey-ux-526-correction-review.md"},
+    {"decision": "Later RV-001/RV-002 implementation and exact regressions complete; 41 no-skip units, 147 journey assertions/38 zero-violation axe scans and 30 assistant checks pass", "status": "Locally verified, not independent closure", "evidence": ".copilot-tracking/changes/2026-10-28/case-journey-ux-526-checklist-findings-changes.md"},
+    {"decision": "Source/tests/original and later RPI evidence safely committed in b314ed0061a7f8447ab39b159cb78b457324c4ba; remote remains d3fbba58 with seven unresolved threads", "status": "Complete locally; not published", "evidence": "Git and read-only GitHub verification after commit"}
+  ],
+  "blockers": [{"id": "publication-no-az", "summary": "Required full gate invokes prohibited az; original independent acceptance is not established", "resolution": "No push/thread resolution without compliant gate/current-base/exact-head independent evidence"}],
+  "next_action": {"phase": "Follow-up", "action": "Publication blocked: resolve mandatory full-gate/no-az conflict, obtain required clean current-base receipt and independent exact-head acceptance, then normal push and seven replies/resolutions; no routine code work remains"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Obtain compliant complete gate and independent exact-head acceptance before publication", "rationale": "Local repaired tests do not alter original Not accepted outcome or waive required full gate", "evidence": "Original Review RV-001/RV-002 and PC-002/003"},
+    {"rank": 2, "task": "Normal push and seven addressed-thread replies/resolutions after gates", "rationale": "User-authorized remote work remains dependency-blocked, not completed", "evidence": "PR #529, Refs #526"}
+  ]
+}
