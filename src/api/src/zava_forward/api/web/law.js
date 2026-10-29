@@ -19,7 +19,7 @@
     d.sources.forEach((s) => {
       const li = el("li"), b = el("button", s.title, "alt");
       b.type = "button";
-      b.addEventListener("click", () => open(s.id).catch(fail));
+      b.addEventListener("click", AsyncAction.handler(() => open(s.id).catch(fail)));
       li.append(b, meta(s), ...caveats(s));
       ul.append(li);
     });
@@ -39,7 +39,7 @@
     d.provisions.forEach((p) => {
       const li = el("li"), b = el("button", p.heading_path, "alt");
       b.type = "button";
-      b.addEventListener("click", () => text(p.id).catch(fail));
+      b.addEventListener("click", AsyncAction.handler(() => text(p.id).catch(fail)));
       li.append(b); ul.append(li);
     });
     nodes.push(ul);
@@ -59,14 +59,14 @@
     d.results.forEach((r) => {
       const li = el("li"), b = el("button", r.title + ": " + r.heading_path, "alt");
       b.type = "button";
-      b.addEventListener("click", () => text(r.id).catch(fail));
+      b.addEventListener("click", AsyncAction.handler(() => text(r.id).catch(fail)));
       li.append(b); ul.append(li);
     });
     nodes.push(ul);
     show(nodes, d.results.length + " results.");
   }
-  const fail = (e) => { status.textContent = e.message; };
-  document.getElementById("law-all").addEventListener("click", () => list().catch(fail));
-  document.getElementById("law-form").addEventListener("submit", (e) => { e.preventDefault(); find(document.getElementById("law-q").value).catch(fail); });
-  list().catch(fail);
+  const fail = (e) => { status.textContent = `${e.message}. Try All sources or search again.`; };
+  document.getElementById("law-all").addEventListener("click", AsyncAction.handler(() => list().catch(fail)));
+  document.getElementById("law-form").addEventListener("submit", AsyncAction.handler((e) => { e.preventDefault(); return find(document.getElementById("law-q").value).catch(fail); }));
+  AsyncAction.run(null, () => list().catch(fail), "Loading sources");
 }());

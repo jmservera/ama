@@ -2,24 +2,24 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-29T01:58:42+00:00",
-  "commit": "b424ac9fe0b74ebbf4ebcbb384a969c1810db66b",
+  "scored_at": "2026-10-28T22:52:13+00:00",
+  "commit": "704014ef1b21aa8fac3e7d028348cd1daaf0e7c4",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40802899425",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40782392793",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "0b96cfbbedeb2a9b7485a862b37470831ccdc2082bb44e338178089012ce06c1",
-    "solution-code": "8399d7830cfc06aebddd116e5226e6d74cfe4a5211d02c92bb04d8ddec80b36b",
+    "solution-code": "f75eca15113e3ac15f06cee990032bb8ea79d3968790db64626f6412d4337607",
     "infrastructure": "b6366d357bc22aadb23fdb2e0847cbbda6689e072f25c6a68738113fd875b271",
     "capstone-deck": "acb30e4f302663cedec4884bc7c561fcb5a14fb647ab1c4f93ffc377567c8896",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
     "thought-leadership": "e624f2558e3b64eea18ca0ac655e25f18da8e183bc908694e0dc58eca050eeb2"
   },
-  "total": 76,
+  "total": 77,
   "sections": {
     "A": 34,
-    "B": 22,
+    "B": 23,
     "C": 11,
     "D": 9
   },
@@ -29,10 +29,10 @@
     "A1": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/web/case-workspace.js:1-157",
-        "src/api/src/zava_forward/api/web/app.js:28-60"
+        "src/api/src/zava_forward/api/resident_demo/agenda.py:1-60",
+        "src/api/src/zava_forward/api/resident_demo/app.py:32-40"
       ],
-      "rationale": "New case-workspace.js cleanly separates journey/tab rendering as a decoupled module; app.js mutation lock is a small addition. Consistent with existing modular pattern, already at ceiling."
+      "rationale": "Adds cleanly separated local SQLite agenda module and chat router module with explicit boundaries, consistent with existing modular pattern. No new scaling pattern; already at ceiling."
     },
     "A2": {
       "score": 5,
@@ -44,32 +44,39 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/web/app.js:36-62"
+        "src/api/src/zava_forward/api/resident_demo/app.py:228-247",
+        "src/core/src/zava_forward/core/resident_documents.py:60-110",
+        "src/api/src/zava_forward/api/resident_demo/agenda.py:1-35"
       ],
-      "rationale": "Adds endpoint/action/target-keyed in-flight mutation lock and dispatch-time snapshot reconciliation, reducing duplicate-submission and race risk. Reinforces already-ceiling controls without a new threat-model dimension."
+      "rationale": "Adds per-login session-binding header with constant-time compare and 409 on mismatch, strict use_record consent gate, bounded/allowlisted document parsing rejecting malformed input, and parameterized SQLite agenda transactions. Strengthens already-ceiling security."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/web/case-workspace.js:1-157",
-        "src/api/tests/test_case_journey.py:1-60"
+        "src/api/src/zava_forward/api/resident_demo/chat.py:1-225",
+        "src/core/src/zava_forward/core/resident_documents.py:1-178",
+        "src/api/tests/test_resident_chat_agenda.py:1-50",
+        "src/api/checks/resident_assistant_browser_check.py:1-100"
       ],
-      "rationale": "Adds a complete six-step case journey workspace with tab navigation, plus 1500+ lines of executed-JS semantics tests and a dedicated browser check. Strong end-to-end completeness; already at ceiling."
+      "rationale": "Adds complete resident chat routing, document facts parsing, synthetic callback agenda with booking/cancellation transactions, plus matching unit and browser checks. Strong completeness; already at ceiling."
     },
     "A5": {
       "score": 5,
       "evidence": [],
-      "rationale": "No logging, metrics, tracing or cost instrumentation changed; diff is feature/UI code and tests. Baseline unchanged."
+      "rationale": "No logging, metrics, tracing or cost instrumentation changed; diff adds feature code and stderr error prints consistent with existing pattern. Unchanged baseline."
     },
     "A6": {
       "score": 5,
-      "evidence": [],
-      "rationale": "No model choice, prompt or evaluation-harness change in this diff. Baseline unchanged."
+      "evidence": [
+        "src/api/src/zava_forward/api/resident_demo/chat.py:120-225",
+        "src/api/README.md:117-140"
+      ],
+      "rationale": "New rule-based router explicitly keeps typed questions out of model prompts/memory and preserves the existing bounded AI advisor unchanged; no model/prompt/eval-harness change. Baseline unchanged."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "New case journey/tab logic and mutation locking are deterministic dispatch and concurrency control, not agentic orchestration, planning or handoff. Baseline unchanged (Good, not Excellent)."
+      "rationale": "Chat routing and agenda actions are deterministic rule dispatch and transactional CRUD, not agentic orchestration, planning or handoff. Unchanged baseline (Good, not Excellent)."
     },
     "B1": {
       "score": 3,
@@ -106,12 +113,11 @@
       "rationale": "Timing contract unchanged in this PR; deck timing lines confirmed byte-identical. Unrehearsed pacing retained."
     },
     "B6": {
-      "score": 4,
+      "score": 5,
       "evidence": [
-        "src/api/README.md:10",
-        "src/api/README.md:171"
+        "src/api/README.md:117-230"
       ],
-      "rationale": "README now contains the 'Employee case journey workspace (#\u200b526)' section duplicated verbatim at two locations (lines 10 and 171), the first being a longer superset. This is an uncorrected editing defect that weakens navigability of otherwise thorough documentation, lowering from ceiling."
+      "rationale": "README adds a thorough, clearly structured section describing the new chat/agenda contract, security model, limits and test commands. Strong engineering documentation; not capstone deck itself. Ceiling unchanged."
     },
     "B7": {
       "score": 5,

@@ -19,9 +19,11 @@
     <button type="submit">Search</button>
     <button type="button" id="law-all" class="alt">All sources</button>
   </form>
-  <p id="law-status" class="muted" role="status"></p>
+  <p id="law-status" class="muted" role="status" aria-live="polite">Loading sources...</p>
+  <div id="action-status"></div>
   <div id="law-out" tabindex="-1"></div>
 </main>
+<script src="/async-action.js"></script>
 <script src="/law.js"></script>
 </body>
 </html>

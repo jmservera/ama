@@ -7973,3 +7973,14 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   source hash for retained-tab selectors and wrap the two expressions.
   Public fixture payloads, versions, inventory review and unavailable full
   journeys do not change; no private record or owner approval is inferred.
+
+## [2026-10-28] refine | Loading feedback and HAX briefing (#531)
+
+* Update the [design-system inventory](./research/ux/design-system.md) and
+  [API guide](../../src/api/README.md#loading-feedback-and-todays-briefing-531)
+  for shell loading/slow/retry, shared immediate async text and 200ms spinner,
+  native pending controls, explicit AI/rules labels, declared statement
+  references and conditional outcome-led draft reviews.
+* Preserve draft-only immutable review, human approval and manual paths.
+  HAX/Fluent sources are pattern references, not employee user research,
+  accessibility conformance, full Fluent adoption or live-site acceptance.

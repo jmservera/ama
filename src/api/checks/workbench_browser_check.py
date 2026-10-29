@@ -331,8 +331,8 @@ def run_browser(base: str) -> None:
                     ),
                     times=1,
                 )
-                page.locator("#wf-mode").check()
-                page.get_by_role("alert").filter(has_text="Synthetic briefing failure").wait_for()
+                page.locator("#wf-mode").select_option("workflow")
+                page.get_by_role("status").filter(has_text="Synthetic briefing failure").wait_for()
                 page.route(
                     "**/api/briefing?mode=workflow",
                     lambda route, _request, payload=briefing_payload: route.fulfill(
@@ -344,8 +344,10 @@ def run_browser(base: str) -> None:
                 page.get_by_text("Retried synthetic briefing", exact=True).wait_for()
                 check(
                     "briefing failure explicitly retries in the selected workflow mode",
-                    page.locator("#wf-mode").is_checked()
-                    and page.get_by_role("alert").count() == 0,
+                    page.locator("#wf-mode").input_value() == "workflow"
+                    and page.get_by_role("status").filter(
+                        has_text="Synthetic briefing failure"
+                    ).count() == 0,
                 )
                 before = page.request.get(base + "/api/cases/ZF-4").json()
                 page.locator(".skip-link").focus()
