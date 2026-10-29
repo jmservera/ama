@@ -5,7 +5,7 @@ ms.date: 2026-10-29
 ---
 
 Task ID: pr-512-rebase-2026-10-29. Scope: full plan P01-P03.
-Implementation execution: P01/P02 complete; P03 local commit pending. Refs #146.
+Implementation execution: P01-P03 complete locally. Refs #146.
 
 ## Plan, Critique and Invocation
 
@@ -145,5 +145,30 @@ resolved local identity for both replayed commits.
 the recorded main is still current and the remote topic remains the original
 3faac99513fff0e73ebd8a2bcef4e91a0ae4946f. No remote write was performed.
 
-Next: commit the task-owned seven new dated artifacts, confirm clean ancestry,
-then persist the final local handoff status. No source changes after Review.
+### Committed Local Handoff
+
+| Command | Actual result |
+| --- | --- |
+| `git add <seven explicit dated task artifacts>; git diff --cached --check` | Passed; only task-owned evidence staged |
+| `/tmp/mv/bin/python -m json.tool .copilot-tracking/rpi-sessions/2026-10-29/monitoring-146-rebase-state.json > /dev/null` | Passed |
+| `git commit -m 'docs(infra): record monitoring rebase RPI evidence' -m 'Refs #146. Reconcile draft PR #512 with current main, preserve both index/log contributions and upstream rubric/scenario authority, and retain scoped validation plus independent review. No push or Azure operations.' -m 'Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>'` | Passed; a92c9d4bb29a00bb67ff4dc70801917c290edb91, seven artifacts committed |
+| `git status --short; git merge-base --is-ancestor origin/main HEAD; git diff --exit-code origin/main -- .github/rubric docs/reference/research/retrofit-synthetic-data/scenario-manifest.json` | Clean status, ancestry and authoritative-file equality pass |
+| `git diff --exit-code c254fa097e96079a4c5d0ae8a6f93f22eda843e5 HEAD -- docs/reference/README.md docs/reference/log.md infra` | Passed; no production-source changes after Review |
+| `git log -1 --format='%H%n%an <%ae>%n%cn <%ce>%n%B'` | Expected privacy-safe author/committer, Conventional Commit, Refs #146 and exact Copilot trailer |
+
+P01-P03 locally complete. Final metadata-only commit records this verified
+result by checking P03-T02 and completing the manual session state. It does
+not change assessed source, repeat Review or claim final-head publication
+acceptance. Final commit subject: `docs(infra): finalize local monitoring rebase handoff`,
+with Refs #146 and the same required co-author trailer.
+
+The final verification command checks clean status, main ancestry, absence
+of unmerged entries, upstream rubric/scenario equality, source identity with
+the assessed implementation, state JSON and last-commit identity/trailer.
+No push is performed. Remote draft PR remains at its old head until the
+coordinator performs a separately authorized rebased-branch update.
+
+Task outcome: bounded local rebase successful; independent Review Complete /
+Conformant. No local correctness blocker. Hosted CI and full publication gate
+remain unrun for this unpublished head; original rubric access failure and
+operational findings remain visible, not closed.
