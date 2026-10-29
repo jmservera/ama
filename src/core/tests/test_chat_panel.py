@@ -1,4 +1,5 @@
 import json
+import sqlite3
 import tempfile
 import unittest
 from pathlib import Path
@@ -6,13 +7,14 @@ from pathlib import Path
 import dataset
 import test_sqlstore
 from zava_forward.core.assistants import REGISTRY
-from zava_forward.core.chat_isolation import ChatIsolation
+from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
 from zava_forward.core.chat_panel import (
     ACTION_CLAIM,
     LABEL,
     LIMIT_REACHED,
     MAX_HISTORY_CHARS,
     MAX_QUESTION_CHARS,
+    WITHHELD,
     ChatPanel,
     normalise_policy_text,
     out_of_scope,
@@ -296,6 +298,10 @@ class StoredQuestionTests(unittest.TestCase):
             self.assertIn("SQL-B-CANARY", b_prompt)
             self.assertNotIn("SQL-A-CANARY", b_prompt)
             self.user["role"] = original_role
+            restarted.db.execute(
+                "UPDATE staff SET body=? WHERE email=?",
+                (json.dumps(self.user), self.user["email"]),
+            )
             a_prompt = self.ask("A followup")
             self.assertIn("SQL-A-CANARY", a_prompt)
             self.assertNotIn("SQL-B-CANARY", a_prompt)
@@ -328,6 +334,114 @@ class StoredQuestionTests(unittest.TestCase):
                         self.assertEqual(messages[0]["content"], masked[:MAX_CONTENT])
                         self.assertNotIn(identifier, messages[0]["content"])
                         self.assertEqual([m["seq"] for m in messages], [1, 2])
+
+
+class SqlRosterTests(unittest.TestCase):
+    def setUp(self) -> None:
+        work = tempfile.TemporaryDirectory()
+        self.addCleanup(work.cleanup)
+        data, db = test_sqlstore.seed(work.name)
+        self.store = SqlStore(data, db)
+        self.addCleanup(self.store.db.close)
+        self.user = dict(self.store.data["staff"][0])
+        self.cached_staff = json.dumps(self.store.staff, sort_keys=True)
+        self.cached_data = json.dumps(self.store.data["staff"], sort_keys=True)
+        self.calls = 0
+        self.panel = ChatPanel(
+            ChatIsolation(
+                self.store,
+                env=dict(
+                    CHAT_DPIA_REF="SYN-DPIA",
+                    CHAT_LAWFUL_BASIS_REF="SYN-BASIS",
+                    CHAT_NOTICE_REF="SYN-NOTICE",
+                ),
+            ),
+            self.model,
+        )
+
+    def model(self, system: str, prompt: str) -> str:
+        self.calls += 1
+        return json.dumps(dict(answer="SQL-ANSWER-CANARY", citations=["ZF-1/stage"]))
+
+    def change_roster(self, changes: dict[str, object] | None) -> None:
+        with sqlite3.connect(self.store.db_path) as writer:
+            if changes is None:
+                writer.execute("DELETE FROM staff WHERE email=?", (self.user["email"],))
+            else:
+                writer.execute(
+                    "UPDATE staff SET body=? WHERE email=?",
+                    (json.dumps(dict(self.user, **changes)), self.user["email"]),
+                )
+        self.assertEqual(json.dumps(self.store.staff, sort_keys=True), self.cached_staff)
+        self.assertEqual(json.dumps(self.store.data["staff"], sort_keys=True), self.cached_data)
+
+    REVOKED: tuple[dict[str, object] | None, ...] = (
+        {"role": "Contractor"},
+        {"role": "Unknown"},
+        {"disabled": True},
+        {"active": False},
+        None,
+    )
+
+    def test_sql_revocation_before_dispatch_denies_stale_cached_actor(self) -> None:
+        for changes in self.REVOKED:
+            with self.subTest(changes=changes):
+                tid = self.store.chat_create_thread(self.user, case_id="ZF-1")["id"]
+                self.change_roster(changes)
+                with self.assertRaises(ChatForbidden):
+                    self.panel.ask(self.user, tid, "What stage is it?")
+                self.assertEqual(self.calls, 0)
+                self.assertEqual(self.store.chat_resume(self.user, tid)["messages"], [])
+
+    def test_sql_revocation_during_inference_denies_without_storing_answer(self) -> None:
+        for changes in self.REVOKED:
+            with self.subTest(changes=changes):
+                self.change_roster({})
+                tid = self.store.chat_create_thread(self.user, case_id="ZF-1")["id"]
+
+                def revoke(
+                    system: str, prompt: str, changes: dict[str, object] | None = changes
+                ) -> str:
+                    reply = self.model(system, prompt)
+                    self.change_roster(changes)
+                    return reply
+
+                self.panel.model = revoke
+                with self.assertRaises(ChatForbidden):
+                    self.panel.ask(self.user, tid, "What stage is it?")
+                messages = self.store.chat_resume(self.user, tid)["messages"]
+                self.assertEqual([m["role"] for m in messages], ["user"])
+                receipt = json.loads(
+                    self.store.db.execute(
+                        "SELECT detail FROM audit WHERE action='chat.turn' ORDER BY seq DESC"
+                    ).fetchone()[0]
+                )
+                self.assertEqual(receipt["outcome"], "access-rejected")
+                self.assertEqual(receipt["model_calls"], 1)
+        self.assertEqual(self.calls, len(self.REVOKED))
+
+    def test_sql_permitted_role_change_during_inference_withholds_answer(self) -> None:
+        tid = self.store.chat_create_thread(self.user, case_id="ZF-1")["id"]
+
+        def demote(system: str, prompt: str) -> str:
+            reply = self.model(system, prompt)
+            self.change_roster({"role": "Quality Inspector"})
+            return reply
+
+        self.panel.model = demote
+        reply = self.panel.ask(self.user, tid, "What stage is it?")
+        self.assertEqual((reply["kind"], reply["reply"]), ("withheld", WITHHELD))
+        self.assertEqual(reply["citations"], [])
+        messages = self.store.chat_resume(self.user, tid)["messages"]
+        self.assertEqual(messages[-1]["content"], WITHHELD)
+        self.assertNotIn("SQL-ANSWER-CANARY", json.dumps(messages))
+
+    def test_unchanged_sql_actor_receives_cited_answer(self) -> None:
+        tid = self.store.chat_create_thread(self.user, case_id="ZF-1")["id"]
+        reply = self.panel.ask(self.user, tid, "What stage is it?")
+        self.assertEqual((reply["kind"], reply["reply"]), ("answer", "SQL-ANSWER-CANARY"))
+        self.assertEqual(reply["citations"][0]["id"], "ZF-1/stage")
+        self.assertEqual(self.calls, 1)
 
 
 if __name__ == "__main__":

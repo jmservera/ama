@@ -1,0 +1,57 @@
+{
+  "task_id": "157-chat-sql-roster",
+  "task_slug": "chat-sql-roster-157",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-29/chat-sql-roster-157-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-29/chat-sql-roster-157-plan.md",
+    "details": ".copilot-tracking/details/2026-10-29/chat-sql-roster-157-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-29/chat-sql-roster-157-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-29/chat-sql-roster-157-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-29/chat-sql-roster-157-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the full RPI loop and commit locally on feat/agent-chat-157; no push, no az, no rubric edits.",
+      "status": "confirmed",
+      "evidence": "Owner request 2026-10-29; git pull --rebase fast-forwarded to 6989bbb5; PR #503 is open against main."
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready; shared resolver direct SQL lookup selected.",
+      "status": "accepted",
+      "evidence": ".copilot-tracking/research/2026-10-29/chat-sql-roster-157-research.md C1-C8"
+    },
+    {
+      "decision": "Exactly one final-candidate plan critique executed; Pass with no findings.",
+      "status": "accepted",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-29/chat-sql-roster-157-plan-critique.md"
+    },
+    {
+      "decision": "Implementation complete; stale-cache regression red before fix, focused tests and configured Ruff/type checks passed.",
+      "status": "validated",
+      "evidence": ".copilot-tracking/changes/2026-10-29/chat-sql-roster-157-changes.md P01 and P02-T01"
+    },
+    {
+      "decision": "Exactly one independent post-implementation Review executed Complete; outcome Conformant; no RV findings.",
+      "status": "accepted",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/chat-sql-roster-157-review.md; source patch fingerprint 48ccded0a41bb6a6d8490b8dcd5eec6ac7ab4db48403ba8df2416b1ae76388bd verified unchanged"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Complete the requested local-only delivery, then await owner selection; publication remains gated and unauthorized."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Complete publication assurance only if the owner later authorizes publication.",
+      "rationale": "Only supported later item: full local gate, current-base receipt and exact-head/hosted assessment are unrun; this task forbids push.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/chat-sql-roster-157-review.md Residual Work"
+    }
+  ]
+}
