@@ -14,8 +14,8 @@ executed once, Pass with no findings.
 
 ## Execution State
 
-P01 implemented and P02-T01 validated. P02-T02 independent Review complete;
-local commit pending; no source work remains.
+P01 implemented and P02-T01 validated. P02-T02 independent Review and local
+implementation/evidence commit complete; all plan work complete.
 
 ## Changes and Validation
 
@@ -123,15 +123,26 @@ Assessed source patch SHA-256:
 `48ccded0a41bb6a6d8490b8dcd5eec6ac7ab4db48403ba8df2416b1ae76388bd`.
 Parent compared the three-path binary diff against the Review fingerprint after
 the reviewer returned: exact match. This is not a committed-head publication
-receipt. Local implementation/evidence commit is the remaining delivery action.
+receipt. At Review closeout, local implementation/evidence commit remained
+pending; its completion is recorded below.
+
+## Local Delivery
+
+Implementation plus original dated evidence committed as `83acf525`
+(`fix(core): reauthorize chat actors from SQL roster`).
+GitHub account resolved via `gh api user`; repository-local author/committer
+email set to the returned account's noreply form. The commit includes
+`Refs #157` and the requested Copilot co-author trailer. No push performed.
+This subsequent evidence-only reconciliation records the completed delivery
+without amending the implementation or original critique/Review artifacts.
 
 ## Blockers, Remaining Work and Follow-Up
 
 No implementation blockers. Full publication gate, SQL Server, real provider,
 human approval and hosted acceptance are not executed or claimed. No push
 authorized. Original #157 acceptance gaps remain outside this correction.
-Plan/details/changes and task markers reconciled after Review; P02-T02 remains
-open only for local commit. RPI task has completed its Review and is in Follow-up;
+Plan/details/changes and task markers reconciled after Review and local commit;
+all P01/P02 tasks complete. RPI task completed its Review and is in Follow-up;
 automatic session remains running with no new work selected. The only supported
 later item is separately authorized publication assurance; Stop automatic session
 and Switch to manual mode remain control options, not inferred selections.

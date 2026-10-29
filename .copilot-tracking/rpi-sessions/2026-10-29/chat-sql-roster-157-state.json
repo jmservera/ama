@@ -39,12 +39,17 @@
       "decision": "Exactly one independent post-implementation Review executed Complete; outcome Conformant; no RV findings.",
       "status": "accepted",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-29/chat-sql-roster-157-review.md; source patch fingerprint 48ccded0a41bb6a6d8490b8dcd5eec6ac7ab4db48403ba8df2416b1ae76388bd verified unchanged"
+    },
+    {
+      "decision": "Implementation and original dated RPI evidence committed locally; no push, az or manual rubric edit.",
+      "status": "completed",
+      "evidence": "83acf525; requested co-author trailer; GitHub-resolved noreply author and committer"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Complete the requested local-only delivery, then await owner selection; publication remains gated and unauthorized."
+    "action": "Await owner selection: separately authorize publication assurance, Stop automatic session, or Switch to manual mode. No new work selected; no push."
   },
   "prioritized_follow_ups": [
     {
