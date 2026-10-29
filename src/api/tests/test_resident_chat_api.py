@@ -90,8 +90,8 @@ ORDINARY_QUESTIONS = (
     ("What improvements are planned for my sockets?", "home"),
     ("What improvements are planned for my electric water heater?", "home"),
     ("When is hot water coming back to my electric heater?", "unknown"),
-    ("What is the smoking policy for my home?", "home"),
-    ("What is the smoke-free policy in my home?", "home"),
+    ("What is the smoking policy for my home?", "unknown"),
+    ("What is the smoke-free policy in my home?", "unknown"),
     ("Can I see my smoke-free policy documents?", Topic.DOCUMENTS),
     ("What is my water meter status?", Topic.STATUS),
     ("What improvements are planned for my home?", "home"),
@@ -104,7 +104,7 @@ ORDINARY_QUESTIONS = (
     ("What rules apply?", "regulations"),
     ("Please approve the improvements to my home", "unknown"),
     ("What is the weather?", "unknown"),
-    ("What is the status of my co-operative home?", "home"),
+    ("What is the status of my co-operative home?", Topic.STATUS),
 )
 
 
@@ -171,7 +171,7 @@ class ChatApiTests(DemoTestCase):
         provider.select.assert_not_called()
 
     def test_own_home_consent_unknown_and_untrusted_questions(self) -> None:
-        for question in ("my home", "my home C-2", "<script>my home</script>"):
+        for question in ("my home", "What is my address?", "What is recorded about my home?"):
             status, body = self.ask(question=question)
             self.assertEqual(status, 200)
             text = json.dumps(body)
@@ -201,6 +201,28 @@ class ChatApiTests(DemoTestCase):
             )[0],
             400,
         )
+
+    def test_unrelated_home_questions_never_return_record_summary_or_call_model(self) -> None:
+        provider = Mock()
+        self.app.assistant_provider = provider
+        for question in (
+            "My home smells like a dead rat",
+            "My home smells strange",
+            "There are rats in my home",
+            "My home needs improvements because of a dead rat",
+            "Why is my home so noisy?",
+            "<script>my home</script>",
+            "my home C-2",
+        ):
+            with self.subTest(question=question):
+                self.assertEqual(chat.route(question), "unknown")
+                status, body = self.ask(question=question)
+                self.assertEqual(status, 200)
+                self.assertIn("cannot answer that", str(body["answer"]))
+                self.assertIn("housing officer", str(body["answer"]))
+                self.assertNotIn("recorded home", str(body["answer"]))
+                self.assertNotIn("Test Street", json.dumps(body))
+        provider.select.assert_not_called()
 
     def test_regulatory_source_metadata_and_legal_refusal_safety_human_route(self) -> None:
         for question in ("what rules apply", "is the provider legally compliant"):

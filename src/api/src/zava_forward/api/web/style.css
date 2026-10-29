@@ -25,11 +25,6 @@
 [hidden]{display:none!important}
 .startup{max-width:45rem;margin:var(--sp-5) auto}
 .async-feedback{display:inline-flex;align-items:center;gap:var(--sp-2);margin:var(--sp-2);overflow-wrap:anywhere}
-.employee-chat{width:min(42rem,calc(100% - 2rem));max-height:calc(100dvh - 2rem);padding:var(--sp-5);border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--surface);color:var(--ink);overflow:auto;overscroll-behavior:contain;overflow-wrap:anywhere}
-.employee-chat::backdrop{background:#0008}
-.employee-chat form{display:grid;gap:var(--sp-3);min-width:0}
-.employee-chat select,.employee-chat textarea{width:100%;min-width:0;color:var(--ink);background:var(--surface)}
-.employee-chat .chat-log{padding-inline:var(--sp-5);max-height:none;overflow:visible}
 .async-spinner{display:inline-block;width:1em;height:1em;flex-shrink:0;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:async-spin 1s linear infinite}
 @keyframes async-spin{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){.async-spinner{animation:none;border-style:dotted}}

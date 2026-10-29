@@ -1049,11 +1049,22 @@ const tick = () => new Promise(resolve => setImmediate(resolve));
             DOM
             + shipped_helpers()
             + r"""
+Node.prototype.replaceChildren = function(...children) {
+  this.children = []; this.append(...children);
+};
+Node.prototype.contains = function(target) {return target === this || this.all().includes(target);};
+document.body = new Node("body");
+document.createElementNS = (_, tag) => new Node(tag);
+document.getElementById = id => document.body.querySelector("#" + id);
+document.addEventListener = document.removeEventListener = () => {};
+const window = {}, location = {hash: "#/case/SYN-526"};
+document.body.append(h("button", {id: "employee-chat-launcher"}));
 const me = {user: {role: "Retrofit Programme Manager"}};
 const app = new Node("main");
 let finish, fail, requests = [], failure;
 const api = async (path, body) => {
   if (path === "/api/assistants") return {assistants: []};
+  if (path === "/api/chat/skills") return {skills: []};
   if (path === "/api/chat/status")
     return {warning: "Synthetic privacy warning", retention: "Unknown"};
   if (path.endsWith("/status")) return new Promise(() => {});
@@ -1067,6 +1078,7 @@ const api = async (path, body) => {
   return await new Promise((resolve, reject) => {finish = resolve; fail = reject;});
 };
 """
+            + (WEB / "chat-widget.js").read_text()
             + (WEB / "chat.js").read_text()
             + r"""
 (async () => {
@@ -1074,18 +1086,23 @@ const api = async (path, body) => {
     for (const change of ["none", "text", "space", "answer-failure", "thread-failure"]) {
       requests = []; failure = change === "thread-failure" ? "thread" : null;
       const panel = chatCasePanel("SYN-526");
+      if (!regulatory) await employeeChat.open();
       await new Promise(resolve => setImmediate(resolve));
-      const root = regulatory ? panel.querySelector("#regulatory-chat") : panel;
-      const input = root.querySelector(regulatory ? "#regulatory-question" : "#chat-question");
-      const form = root.querySelector("form"), button = form.querySelector("button");
+      const root = regulatory ? panel.querySelector("#regulatory-chat")
+        : document.getElementById("employee-chat");
+      const input = root.querySelector(regulatory
+        ? "#regulatory-question" : "#employee-chat-question");
+      const form = root.querySelector("form");
+      const button = form.querySelectorAll("button").find(control => control.type === "submit");
+      const submit = form.onsubmit || form.events.submit;
       input.value = "  Submitted question  "; input.dataset.caseDirty = "true";
       const event = {preventDefault() {}};
-      const pending = form.events.submit(event);
+      const pending = submit(event);
       await new Promise(resolve => setImmediate(resolve));
       if (change !== "thread-failure") {
         assert.equal(button.disabled, true);
         const before = requests.length;
-        await form.events.submit(event);
+        await submit(event);
         assert.equal(requests.length, before, "pending duplicate excluded");
         if (change === "text") input.value = "New question";
         if (change === "space") input.value += " ";
@@ -1107,6 +1124,7 @@ const api = async (path, body) => {
         assert.equal(requests[2].path, "/api/chat/regulatory/usage");
         assert.match(root.querySelector("#regulatory-usage").textContent, /1 turns/);
       }
+      if (!regulatory) employeeChat.reset();
     }
   }
   console.log("PASS");
