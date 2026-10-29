@@ -4,7 +4,7 @@
   "parent_task": {"task_id": "pr-507-refresh-2026-10-29", "task_slug": "rubric-src-198-refresh"},
   "mode": "manual",
   "active_phase": "Review",
-  "status": "active",
+  "status": "blocked",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-29/rubric-src-198-rebase-research.md",
@@ -18,13 +18,14 @@
     {"decision": "Caller explicitly requests all four phases, rebase and local commit without push or Azure changes.", "status": "confirmed", "evidence": "User request 2026-10-29; no ongoing automatic follow-up session requested."},
     {"decision": "Research executed Complete / Ready; single independent final-candidate critique executed Complete / Pass with no findings.", "status": "complete", "evidence": ".copilot-tracking/reviews/plans/2026-10-29/rubric-src-198-rebase-plan-critique.md"},
     {"decision": "P01/P02 complete. Rebase, protected-input identity, both histories and fourteen prior artifacts verified; core/API static checks, twelve focused tests and twenty-five migration tests pass. Rubric suite retains eighteen inherited failures/seven skips; production decision should_score=false, baseline 77.", "status": "complete-with-validation-limitations", "evidence": ".copilot-tracking/changes/2026-10-29/rubric-src-198-rebase-changes.md"},
-    {"decision": "Single independent Review executed Complete / Residual work, no new in-scope defects; assessed worktree document hash 1def559c27d81d2f652c6b3437eedf0642e6057745660650352e75ef29d52247 against base 356a3cfb. RV-001 through RV-005 route later work; no repeat Review.", "status": "complete-residual-work", "evidence": ".copilot-tracking/reviews/logs/2026-10-29/rubric-src-198-rebase-review.md"}
+    {"decision": "Single independent Review executed Complete / Residual work, no new in-scope defects; assessed worktree document hash 1def559c27d81d2f652c6b3437eedf0642e6057745660650352e75ef29d52247 against base 356a3cfb. RV-001 through RV-005 route later work; no repeat Review.", "status": "complete-residual-work", "evidence": ".copilot-tracking/reviews/logs/2026-10-29/rubric-src-198-rebase-review.md"},
+    {"decision": "Reviewed local candidate and original dated RPI evidence committed; clean worktree and main ancestry verified. RV-001 local persistence portion executed; publication/hosted portion remains open. Final tracking-only handoff follows without changing reviewed documents.", "status": "persisted-locally", "evidence": "166e7e1e9ee08b57d442e566de424597ddc6caca; .copilot-tracking/changes/2026-10-29/rubric-src-198-rebase-changes.md"}
   ],
   "blockers": [
     {"id": "inherited-rubric", "summary": "Authoritative-main rubric scripts retain eighteen failures and seven missing-runtime skips.", "resolution": "Separately authorized rubric/runtime owner; do not edit immutable main inputs here."},
     {"id": "hosted-and-publication", "summary": "Fresh hosted CI, remote mergeability and exact-final-head publication evidence cannot be established by this prohibited-push local task.", "resolution": "Coordinator obtains publication gates and authorized push, then actual hosted results."}
   ],
-  "next_action": {"phase": "Review", "action": "Parent persists reviewed candidate/evidence locally; coordinator owns later publication/hosted checks, with no repeat Review."},
+  "next_action": {"phase": "Research", "action": "Coordinator obtains exact-final-head publication evidence and fresh hosted checks after authorized push; separately authorized owners address inherited rubric/runtime and historical gaps. Local loop is complete; no same-task repeat Review."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Coordinator exact-head publication gates and authorized push/hosted CI", "rationale": "Direct prerequisite to proving remote mergeability and CI for the unpushed candidate.", "evidence": ".copilot-tracking/reviews/logs/2026-10-29/rubric-src-198-rebase-review.md RV-001"},
     {"rank": 2, "task": "Separately authorize inherited rubric test reconciliation", "rationale": "Eighteen failures remain but upstream-copy requirement excludes repair from this task.", "evidence": ".copilot-tracking/reviews/logs/2026-10-29/rubric-src-198-rebase-review.md RV-002"},

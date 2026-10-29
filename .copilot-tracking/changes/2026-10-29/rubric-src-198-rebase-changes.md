@@ -131,9 +131,26 @@ publication assessment. No new conformant/CI-green claim.
 
 ## Local Persistence
 
-Parent will stage only the two current documentation updates and seven exact
-new RPI artifact paths, then commit with Conventional Commit, Refs #198 and
-required Copilot trailer using freshly resolved privacy-safe local identity.
-Commit results are recorded by a separate evidence-only handoff commit; its
-self-referential SHA is available in Git history, not guessed in this file.
-No push is authorized; coordinator owns publication prerequisites and push.
+| Command | Result |
+| --- | --- |
+| `identity=$(gh api user --jq '"\(.id)+\(.login)@users.noreply.github.com"') && git config --local user.email "$identity"` immediately before commit | Passed; authenticated privacy-safe address used for author and committer |
+| Explicit `git add` of two current docs and seven new RPI artifacts, then `git diff --cached --check` | Passed; nine task-owned files only |
+| `git commit -m "docs(rubric): preserve PR 507 histories during main rebase" -m "Refs #198" -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"` with matching author/committer emails | Passed; 166e7e1e9ee08b57d442e566de424597ddc6caca, nine files changed; original dated critique and Review included |
+| `git log -1 --format=... && git status --short && git merge-base --is-ancestor origin/main HEAD` after commit | Passed; compliant identity/trailer, clean worktree, recorded main remains ancestor |
+
+This final result/state record is persisted by a separate evidence-only
+`docs(rpi): record PR 507 rebase handoff` commit with Refs #198 and required
+trailer. Its self-referential SHA is available in Git history, not guessed.
+No source or documentation changes after the original Review; only tracking
+handoff evidence. No exact-final-head publication assessment or receipt is
+claimed for either local commit. Coordinator must use final HEAD, not the
+earlier evidence commit. No push or Azure resource operations were performed.
+
+## Final Parent Status
+
+Requested Research/Plan/Implement/Review phases executed in order, single
+critique Complete / Pass and single Review Complete / Residual work. Local
+rebase and evidence are persistent. Manual session remains stopped at Review;
+overall acceptance is blocked only by inherited rubric/runtime evidence and
+coordinator-owned publication/hosted results. No automatic child work selected,
+human approval inferred, issue closed or protected upstream file changed.
