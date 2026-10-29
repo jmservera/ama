@@ -7624,7 +7624,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   change, not full-suite parity, hosted CI/deployed health, private backup
   verification, post-merge rubric comparison or whole-issue closure.
   All five issues remain Refs; owner merge and remaining acceptance are separate.
-
 ## [2026-10-27] deployment | Merged resident features from PR #474
 
 * Updated the [resident guide](../../src/api/README.md#synthetic-resident-showcase-462),
