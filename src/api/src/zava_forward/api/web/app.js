@@ -91,9 +91,14 @@ const ago = (s) => {
 };
 const show = (...nodes) => { app.replaceChildren(...nodes.flat().filter((n) => n && n.nodeType)); app.focus(); };
 
+function workspaceReady() {
+  document.getElementById("startup")?.remove();
+  document.dispatchEvent(new Event("workspace-ready"));
+}
+
 function login(msg) {
   disposeMapPanel?.();
-  document.dispatchEvent(new Event("workspace-ready"));
+  workspaceReady();
   aiMode.workflow = false;
   caseSession?.controller?.dispose();
   caseSession = null;
@@ -136,7 +141,7 @@ async function start() {
   const nav = document.getElementById("nav");
   nav.replaceChildren(...me.navigation.map((item) => h("a", { href: item.href }, item.label)));
   nav.hidden = false;
-  document.dispatchEvent(new Event("workspace-ready"));
+  workspaceReady();
   await route();
 }
 
@@ -1537,7 +1542,7 @@ function startupFailed(error) {
     error.reloadWorkspace
       ? h("button", { type: "button", onclick: () => location.reload() }, "Reload workspace")
       : h("button", { type: "button", onclick: () => start().catch(startupFailed) }, "Try again"));
-  document.dispatchEvent(new Event("workspace-ready"));
+  workspaceReady();
 }
 bootstrapWorkspace().catch(startupFailed);
 

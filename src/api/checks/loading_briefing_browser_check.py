@@ -48,6 +48,7 @@ def shell_check(browser: Browser, base: str) -> None:
             status=503, json={"error": "Synthetic service is unavailable"}))
         page.reload()
         expect(page.get_by_role("heading", name="Workspace unavailable")).to_be_visible()
+        expect(page.locator("#startup")).to_have_count(0)
         expect(page.get_by_role("alert")).to_contain_text("Synthetic service")
         page.unroute("**/api/me")
         page.get_by_role("button", name="Try again", exact=True).click()
@@ -60,6 +61,152 @@ def shell_check(browser: Browser, base: str) -> None:
         page.locator("#startup-retry").click()
         expect(page.get_by_label("Work email", exact=True)).to_be_visible()
         print("PASS static shell, held/failed script, slow/deadline and service retry")
+    finally:
+        context.close()
+
+
+def watchdog_failure_check(browser: Browser, base: str, outcome: str) -> None:
+    context = browser.new_context()
+    context.route("**/*", lambda route: route.continue_()
+                  if route.request.url.startswith(base + "/") else route.abort())
+    try:
+        page = context.new_page()
+        page.clock.install()
+        errors: list[str] = []
+        failures: list[str] = []
+        page.on("pageerror", lambda error: errors.append(str(error)))
+        page.on("requestfailed", lambda request: failures.append(request.url)
+                if request.url == base + "/workspace-shell.js" else None)
+        page.route("**/workspace-shell.js", lambda route: route.abort())
+        if outcome == "error":
+            page.route("**/api/me", lambda route: route.fulfill(
+                status=503, json={"error": "Synthetic startup failure without watchdog"}))
+        page.goto(base + "/app")
+        if outcome == "authenticated":
+            sign_in(page, base)
+            page.reload()
+            expect(page.get_by_role("heading", name="My cases today", exact=True)).to_be_visible()
+        elif outcome == "error":
+            expect(page.get_by_role("heading", name="Workspace unavailable")).to_be_visible()
+            expect(page.get_by_role("alert")).to_contain_text("Synthetic startup failure")
+        else:
+            expect(page.get_by_label("Work email", exact=True)).to_be_visible()
+        expect(page.locator("#startup")).to_have_count(0)
+        page.clock.fast_forward(16000)
+        expect(page.locator("#startup")).to_have_count(0)
+        assert failures, "exercise an actual failed watchdog request"
+        assert not errors, errors
+        if outcome == "error":
+            page.unroute("**/api/me")
+            page.get_by_role("button", name="Try again", exact=True).click()
+            expect(page.get_by_label("Work email", exact=True)).to_be_visible()
+        print(f"PASS failed workspace-shell.js: {outcome}, independent main cleanup")
+    finally:
+        context.close()
+
+
+def companion_failure_check(browser: Browser, base: str, path: str, hash_: str) -> None:
+    context = browser.new_context()
+    context.route("**/*", lambda route: route.continue_()
+                  if route.request.url.startswith(base + "/") else route.abort())
+    try:
+        page = context.new_page()
+        errors: list[str] = []
+        requests: list[str] = []
+        page.on("pageerror", lambda error: errors.append(str(error)))
+
+        def intercept(route: Route) -> None:
+            requests.append(route.request.url)
+            route.abort()
+
+        page.route("**" + path, intercept)
+        page.goto(base + "/app" + hash_)
+        expect(page.get_by_label("Work email", exact=True)).to_be_visible()
+        expect(page.locator("#startup")).to_have_count(0)
+        page.get_by_label("Work email", exact=True).fill("sam@example.test")
+        page.get_by_label("Password", exact=True).fill("synthetic-check")
+        page.get_by_role("button", name="Sign in", exact=True).click()
+        if path == "/case-workspace.js":
+            expect(page.get_by_role("link", name="Back to the list", exact=True)).to_be_visible()
+            expect(page.get_by_role("status").filter(
+                has_text="Tab navigation unavailable. Case sections are listed below"
+            )).to_be_visible()
+            expect(page.locator("#case-panel-survey")).to_be_visible()
+            expect(page.locator("#case-panel-history")).to_be_visible()
+            assert len(requests) == 1, "optional enhancement must not trigger required retries"
+        else:
+            expect(page.get_by_role("heading", name="Workspace unavailable")).to_be_visible()
+            expect(page.get_by_role("alert")).to_contain_text(
+                "Required workspace files did not load: " + path)
+            expect(page.get_by_role("button", name="Reload workspace", exact=True)).to_be_visible()
+            assert len(requests) == 3, requests
+        expect(page.locator("#startup")).to_have_count(0)
+        assert not errors, errors
+        print(f"PASS failed {path}: bounded terminal recovery or explicit plain-case fallback")
+    finally:
+        context.close()
+
+
+def law_startup_check(
+    browser: Browser, base: str, blocked_script: str | None = None,
+    service_failure: str | None = None,
+) -> None:
+    context = browser.new_context()
+    context.route("**/*", lambda route: route.continue_()
+                  if route.request.url.startswith(base + "/") else route.abort())
+    try:
+        page = context.new_page()
+        page.clock.install()
+        errors: list[str] = []
+        failures: list[str] = []
+        reads: list[str] = []
+        page.on("pageerror", lambda error: errors.append(str(error)))
+        page.on("requestfailed", lambda request: failures.append(request.url))
+        if blocked_script:
+            page.route("**" + blocked_script, lambda route: route.abort())
+
+        def sources(route: Route) -> None:
+            reads.append(route.request.url)
+            if service_failure == "rejected":
+                route.abort()
+            elif service_failure:
+                route.fulfill(status=503, json={"error": "Synthetic initial sources failure"})
+            else:
+                route.fulfill(json={"sources": [], "gaps": []})
+
+        page.route("**/api/law/sources", sources)
+        page.goto(base + "/law.html")
+        if blocked_script == "/law.js":
+            expect(page.locator("#startup-status")).to_have_text("Loading sources...")
+            page.clock.fast_forward(4000)
+            expect(page.locator("#startup-status")).to_contain_text("Still starting the law viewer")
+            page.clock.fast_forward(11000)
+            expect(page.locator("#startup-status")).to_contain_text("longer than expected")
+            expect(page.locator("#startup-retry")).to_be_visible()
+            assert not reads, reads
+            page.unroute("**/law.js")
+            page.locator("#law-out").focus()
+            page.keyboard.press("Tab")
+            expect(page.locator("#startup-retry")).to_be_focused()
+            page.keyboard.press("Enter")
+        if service_failure:
+            status = page.locator("#law-status")
+            expect(status).to_contain_text("Try All sources or search again")
+            error_text = status.inner_text()
+            expect(page.locator("#startup")).to_have_count(0)
+            page.clock.fast_forward(16000)
+            expect(status).to_have_text(error_text)
+            expect(page.locator("#startup")).to_have_count(0)
+            service_failure = None
+            page.get_by_role("button", name="All sources", exact=True).click()
+        expect(page.get_by_role("heading", name="Sources held", exact=True)).to_be_visible()
+        expect(page.locator("#startup")).to_have_count(0)
+        page.clock.fast_forward(16000)
+        expect(page.locator("#law-status")).to_have_text("0 sources and 0 gaps shown.")
+        if blocked_script:
+            assert base + blocked_script in failures, failures
+        assert not errors, errors
+        print(f"PASS law startup: blocked={blocked_script}, reads={len(reads)}, terminal cleanup")
     finally:
         context.close()
 
@@ -253,6 +400,20 @@ def run_browser(base: str, axe: str, output: Path) -> None:
         browser = playwright.chromium.launch()
         try:
             shell_check(browser, base)
+            for outcome in ("signed-out", "authenticated", "error"):
+                watchdog_failure_check(browser, base, outcome)
+            for path, hash_ in (
+                ("/panels.js", "#/case/ZF-1"), ("/ops.js", "#/case/ZF-1"),
+                ("/assistants.js", "#/case/ZF-1"), ("/chat.js", "#/case/ZF-1"),
+                ("/timecapture.js", "#/time"), ("/role-screens.js", "#/screens"),
+                ("/vendor/leaflet.js", "#/overview"), ("/case-workspace.js", "#/case/ZF-1"),
+            ):
+                companion_failure_check(browser, base, path, hash_)
+            law_startup_check(browser, base, "/law.js")
+            law_startup_check(browser, base, "/workspace-shell.js")
+            for blocked in (None, "/workspace-shell.js"):
+                for failure in ("503", "rejected"):
+                    law_startup_check(browser, base, blocked, failure)
             for failures in (1, 2, 3):
                 helper_bootstrap_check(browser, base, failures)
             helper_bootstrap_check(browser, base, 1, missing_global=True)

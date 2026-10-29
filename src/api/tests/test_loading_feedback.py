@@ -136,7 +136,62 @@ function tick(ms) {
     await helper.run(managed, async () => {retried = true;});
     assert.equal(retried, true);
     assert.equal(managed.getAttribute("aria-busy"), before);
+    assert.equal(managed.children.filter(node =>
+      node.className === "async-feedback" && node.isConnected).length, 0,
+      "successful retry must remove the earlier error");
   }
+  const connected = node => node.children.filter(child =>
+    child.className === "async-feedback" && child.isConnected);
+  for (const useRegion of [false, true]) {
+    const retry = new Node(), region = useRegion ? new Node("DIV") : null;
+    const host = region || retry;
+    const inline = new Node("P"); inline.textContent = "Handler-owned error";
+    host.append(inline);
+    await helper.run(retry, () => Promise.reject(new Error("First failure")), "Save", region);
+    assert.equal(connected(host).length, 1);
+    let settle;
+    const attempt = helper.run(retry,
+      () => new Promise(resolve => {settle = resolve;}), "Retry", region);
+    assert.equal(connected(host).length, 1, "replace only previous helper feedback");
+    assert.equal(connected(host)[0].textContent, "Retry: working...");
+    assert.equal(helper.run(retry, () => {throw new Error("Duplicate ran");}), attempt);
+    assert.equal(connected(host).length, 1, "overlap keeps original pending status");
+    settle(); await attempt;
+    assert.equal(connected(host).length, 0, "reject then succeed leaves no stale error");
+    await helper.run(retry, () => Promise.reject(new Error("Latest failure")), "Save", region);
+    assert.equal(connected(host).length, 1, "succeed then fail has one current error");
+    assert.match(connected(host)[0].textContent, /Latest failure/);
+    await helper.run(retry, () => {throw new Error("Synchronous failure");}, "Save", region);
+    assert.equal(connected(host).length, 1);
+    assert.match(connected(host)[0].textContent, /Synchronous failure/);
+    assert.equal(helper.run(retry, () => 42, "Save", region), 42);
+    assert.equal(connected(host).length, 0, "sync success clears previous sync error");
+    await helper.run(retry, () => Promise.reject(new Error("Before abort")), "Save", region);
+    await helper.run(retry, () => Promise.reject(
+      Object.assign(new Error("Cancelled"), {name: "AbortError"})), "Save", region);
+    assert.equal(connected(host).length, 0, "abort clears only its replaced attempt");
+    assert.equal(inline.isConnected, true);
+    assert.equal(inline.textContent, "Handler-owned error");
+  }
+  for (const controls of [[new Node(), new Node()], [null, null]]) {
+    const region = new Node("DIV");
+    let rejectFirst, finishSecond;
+    const first = helper.run(controls[0],
+      () => new Promise((_resolve, reject) => {rejectFirst = reject;}), "First", region);
+    const second = helper.run(controls[1],
+      () => new Promise(resolve => {finishSecond = resolve;}), "Second", region);
+    assert.equal(connected(region).length, 2, "independent attempts have independent notices");
+    finishSecond(); await second;
+    assert.equal(connected(region).length, 1, "later success cannot remove pending first");
+    assert.equal(connected(region)[0].textContent, "First: working...");
+    rejectFirst(new Error("First failed")); await first;
+    assert.equal(connected(region).length, 1);
+    assert.match(connected(region)[0].textContent, /First failed/);
+    await helper.run(controls[1], async () => {}, "Third", region);
+    assert.equal(connected(region).length, 1, "other success cannot clear first error");
+  }
+  tick(200);
+  assert.equal(clock.length, 0, "settled/replaced attempts leave no spinner timers");
   console.log("PASS actual helper");
 })().catch(error => {console.error(error); process.exitCode = 1;});
 """,

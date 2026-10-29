@@ -32,7 +32,9 @@ for (const state of ["absent", "null", "empty", "handler-only", "run-only",
   const nodes = {"law-out": out, "law-status": status, "law-form": form,
     "law-q": controls[0], "law-all": controls[2]};
   const context = vm.createContext({
-    document: {getElementById: id => nodes[id], createElement: element},
+    document: {getElementById: id => nodes[id], createElement: element,
+      dispatchEvent() {}},
+    Event,
     location: {reload() {reloads++;}},
     fetch() {reads++; throw new Error("No read before helper readiness");}
   });
@@ -86,10 +88,17 @@ const factory = source.slice(source.indexOf("function h("),
   source.indexOf("function mutationNeedsHistory"));
 const failure = source.slice(source.indexOf("function startupFailed("),
   source.indexOf("bootstrapWorkspace().catch"));
+const ready = source.slice(source.indexOf("function workspaceReady("),
+  source.indexOf("function login("));
 for (const state of ["absent", "null", "empty", "non-callable", "ready"]) {
   const elements = [], events = [], views = [];
   let reloads = 0, wraps = 0;
+  let startupRemovals = 0;
   const document = {
+    getElementById(id) {
+      assert.equal(id, "startup");
+      return {remove() {startupRemovals++;}};
+    },
     createElement(tag) {
       const element = {tag, attrs: {}, children: [], listeners: {},
         setAttribute(name, value) {this.attrs[name] = value;},
@@ -107,7 +116,7 @@ for (const state of ["absent", "null", "empty", "non-callable", "ready"]) {
     : state === "empty" ? {}
     : state === "non-callable" ? {handler: true}
     : {handler: callback => {wraps++; return callback;}};
-  vm.runInContext(factory + failure, context);
+  vm.runInContext(factory + ready + failure, context);
   vm.runInContext(`startupFailed({message: "Synthetic helper unavailable",
     reloadWorkspace: true})`, context);
   assert.equal(views.length, 1, state);
@@ -119,6 +128,7 @@ for (const state of ["absent", "null", "empty", "non-callable", "ready"]) {
   assert.equal(context.workspaceStatus.textContent,
     "Workspace unavailable: Synthetic helper unavailable", state);
   assert.deepEqual(events, ["workspace-ready"], state);
+  assert.equal(startupRemovals, 1, "terminal renderer owns cleanup without watchdog");
   assert.equal(reload.tag, "button", state);
   assert.equal(reload.attrs.type, "button", state);
   assert.equal(text(reload), "Reload workspace", state);

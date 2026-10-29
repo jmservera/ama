@@ -2,6 +2,7 @@
 
 const AsyncAction = (() => {
   const pending = new WeakMap();
+  const notices = new WeakMap();
   function feedback(label, control, region) {
     const status = document.createElement("span");
     status.className = "async-feedback";
@@ -19,6 +20,12 @@ const AsyncAction = (() => {
       spinner.setAttribute("aria-hidden", "true");
       status.prepend(spinner);
     }, 200);
+    const remove = () => {
+      clearTimeout(timer);
+      status.remove();
+      if (control && notices.get(control) === remove) notices.delete(control);
+    };
+    if (control) notices.set(control, remove);
     return {
       finish(error) {
         clearTimeout(timer);
@@ -26,12 +33,13 @@ const AsyncAction = (() => {
         if (error && error.name !== "AbortError") {
           status.classList.add("err");
           status.textContent = `${label}: ${error.message}. Try again.`;
-        } else status.remove();
+        } else remove();
       },
     };
   }
   function run(control, task, label, region) {
     if (control && pending.has(control)) return pending.get(control);
+    if (control) notices.get(control)?.();
     const button = control?.tagName === "FORM"
       ? control.querySelector('button[type="submit"], button:not([type])') : control;
     const originalDisabled = button?.disabled;

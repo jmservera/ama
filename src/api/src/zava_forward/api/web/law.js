@@ -1,6 +1,10 @@
 (function () {
   const out = document.getElementById("law-out");
   const status = document.getElementById("law-status");
+  const ready = () => {
+    document.getElementById("startup")?.remove();
+    document.dispatchEvent(new Event("workspace-ready"));
+  };
   const el = (tag, text, cls) => { const n = document.createElement(tag); if (text !== undefined) n.textContent = text; if (cls) n.className = cls; return n; };
   const get = async (path) => {
     const r = await fetch(path, { credentials: "same-origin" });
@@ -8,7 +12,7 @@
     if (!r.ok) throw new Error(body.error || "Could not load.");
     return body;
   };
-  const show = (nodes, label) => { out.replaceChildren(...nodes); status.textContent = label; out.focus(); };
+  const show = (nodes, label) => { ready(); out.replaceChildren(...nodes); status.textContent = label; out.focus(); };
   const meta = (s) => el("p", ["Status: " + s.status, "Completeness: " + s.completeness, "Effective: " + (s.effective || "not stated"), "Retrieved: " + s.retrieved, "Version " + (s.version || "")].join(" | "), "muted");
   const caveats = (s) => (s.caveats || []).map((c) => el("p", c, "banner"));
 
@@ -65,7 +69,7 @@
     nodes.push(ul);
     show(nodes, d.results.length + " results.");
   }
-  const fail = (e) => { status.textContent = `${e.message}. Try All sources or search again.`; };
+  const fail = (e) => { ready(); status.textContent = `${e.message}. Try All sources or search again.`; };
   if (typeof AsyncAction === "undefined" || !AsyncAction
       || !["handler", "run"].every(method => typeof AsyncAction[method] === "function")) {
     const message = "Required law viewer file did not load: /async-action.js. Reload this page to try again. If this continues, contact application support.";

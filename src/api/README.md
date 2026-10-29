@@ -12,6 +12,11 @@ The employee shell contains startup text before workspace scripts load. An
 independent watchdog shows a slow-start hint and retry at four seconds, then
 support guidance at fifteen seconds. It cannot display before the host returns
 the HTML document. API startup failures show an explicit error and retry.
+Main workspace login, ready and error paths remove startup independently, so
+a failed watchdog download cannot leave the startup message over a working or
+failed workspace. The law viewer reuses the same watchdog for a failed law
+entry-script download; its own success and service-error paths independently
+settle startup, retaining All sources/search retry without clearing prior text.
 Before sign-in or account action listeners are registered, bootstrap checks the
 shared async-action helper and recovers a failed download through the existing
 bounded script loader. Only this helper is required before authentication;
@@ -41,6 +46,9 @@ Editable queue search uses non-control progress: it stays enabled and focused
 while overlapping reads use the existing latest-response sequence guard.
 Busy cleanup restores the attribute captured before the handler runs,
 including handlers that manage their own temporary busy state.
+Each fresh attempt removes only that control's previous helper-owned feedback,
+including after a synchronous failure. Pending duplicate attempts keep the
+same promise and notice; distinct controls and non-control reads stay independent.
 Failed writes are never automatically retried.
 Form progress is a sibling of the busy form; briefing progress is outside its
 busy content. Action-specific live text is not deferred inside those regions.
@@ -101,7 +109,8 @@ PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests pyt
   --axe /path/to/axe-4.10.3.min.js --out /new/external/loading-results
 ```
 
-Use `/tmp/ama-rpi-heavy.lock` nonblocking with retries bounded to 40 minutes.
+Use `/tmp/ama-rpi-heavy.lock` nonblocking; if busy, run targeted checks and record
+the full-suite limitation rather than queuing.
 Constructed loopback data only; no Azure or live model is needed.
 Live employee-site cold-start verification, screen-reader, voice-control and
 staff usability acceptance remain separate owner checks, not local passes.
