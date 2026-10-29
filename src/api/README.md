@@ -940,6 +940,17 @@ adapter; the new advisor returns explicit rules fallback instead.
 
 ## Opt-in IoT consumer and synthetic publisher (#110, #184)
 
+For the bounded hub-only exercise, `DeviceActivation(hub_hostname,
+approval_reference, resource_group="ama")` authorizes only the explicitly
+called X.509 publisher. It requires a valid Hub hostname and nonempty approval,
+but does not pretend a custom Event Hub or routed consumer is ready.
+`HubReceiver` rejects this activation before credential construction;
+its existing `Activation`/managed-identity/routing requirements below remain.
+Approval objects are caller declarations, not verification of deployed access.
+The [2026-10-29 hub reconciliation and blockers](../../infra/README.md#bounded-existing-hub-exercise-2026-10-29-refs-140-184-137)
+record the actual existing B1 resource, registry-permission blocker and unchanged
+service-key prohibition. Local actual SQL tests do not establish live transport.
+
 `iot_stream.HubReceiver` adds an explicitly called finite asynchronous SDK
 adapter around `SensorIngestion`; it adds no HTTP route, startup task or deployed
 service. `HubPublisher` sends one canonical observation/message through a
@@ -948,7 +959,8 @@ uses twins/cloud-to-device management or retrieves a service key.
 Install this project's declared dependencies with pip, including pinned
 `azure-eventhub`, `azure-iot-device` and `aiohttp` for asynchronous identity.
 
-Both runners require `Activation` with resource group `ama`, the exact Hub
+The routed receiver and original routed publisher profile require `Activation`
+with resource group `ama`, the exact Hub
 hostname, matching `eh-<hub-name>.servicebus.windows.net`, `sensor-readings`,
 `api-consumer`, `routing_ready=True` and a nonempty approval reference.
 This is a caller assertion, **not verification or approval of deployment**.

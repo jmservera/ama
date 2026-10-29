@@ -37,6 +37,56 @@ class IotHubModuleTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.template = compile_bicep("modules/iothub.bicep")
         cls.main = compile_bicep("main.bicep")
+        cls.live = compile_bicep("iot-hub-live.bicep")
+
+    def test_live_profile_cannot_deploy_paid_adapter_endpoints_or_roles(self) -> None:
+        self.assertEqual(
+            sorted(item["type"] for item in resources(self.live)),
+            sorted(
+                [
+                    f"{HUB}/eventHubEndpoints/ConsumerGroups",
+                    "Microsoft.Insights/diagnosticSettings",
+                ]
+            ),
+        )
+        self.assertEqual(
+            self.live["parameters"]["name"]["allowedValues"], ["iot-cutover-test-rzsrg"]
+        )
+        self.assertEqual(self.live["parameters"]["skuName"]["allowedValues"], ["B1"])
+        self.assertEqual(self.live["parameters"]["unitCount"]["minValue"], 1)
+        self.assertEqual(self.live["parameters"]["unitCount"]["maxValue"], 1)
+        self.assertEqual(set(self.live["outputs"]), {"id", "hostname", "consumerGroup"})
+        self.assertEqual(unguarded_resources(self.live, "iot-live-scope-guard"), set())
+
+    def test_live_profile_never_puts_existing_hub_and_guards_actual_sku(self) -> None:
+        self.assertFalse(any(item["type"] == HUB for item in resources(self.live)))
+        guard = module(self.live, "iot-live-scope-guard")
+        for key in ("existingHubSkuMustMatch", "existingHubUnitsMustMatch"):
+            self.assertEqual(guard["properties"]["template"]["parameters"][key]["minLength"], 1)
+            self.assertIn("reference(", guard["properties"]["parameters"][key]["value"])
+        for sku, units in (("B1", 1), ("B1", 2), ("S1", 1)):
+            context = {
+                "reference": lambda *args, sku=sku, units=units: SimpleNamespace(
+                    sku=SimpleNamespace(name=sku, capacity=units)
+                ),
+                "string": str,
+            }
+            for key, accepted in (
+                ("existingHubSkuMustMatch", sku == "B1"),
+                ("existingHubUnitsMustMatch", units == 1),
+            ):
+                value = evaluate(
+                    guard["properties"]["parameters"][key],
+                    self.values(self.live),
+                    self.live.get("variables", {}),
+                    context,
+                )["value"]
+                self.assertEqual(bool(value), accepted, (sku, units, key))
+        group = resource(self.live, f"{HUB}/eventHubEndpoints/ConsumerGroups")
+        self.assertIn("/events/api-consumer", group["name"])
+        diagnostics = resource(self.live, "Microsoft.Insights/diagnosticSettings")["properties"]
+        self.assertEqual(diagnostics["logs"], [{"categoryGroup": "allLogs", "enabled": False}])
+        self.assertEqual(diagnostics["metrics"], [{"category": "AllMetrics", "enabled": True}])
 
     def values(self, template=None, **overrides):
         source = self.template if template is None else template

@@ -30,6 +30,16 @@ FR-050 with AC-066 to AC-068.
 
 ## Bounded streaming engineering (2026-10-27, Refs #110, #184)
 
+The [2026-10-29 bounded live exercise](../../../infra/README.md#bounded-existing-hub-exercise-2026-10-29-refs-140-184-137)
+subsequently reconciled metrics-only diagnostics on the already deployed B1 hub
+without changing private access/service authentication or adding paid services.
+Publisher-only activation no longer asserts a fictional custom receiver.
+Existing operator registry permission is absent, so no device was issued and
+no live stream sent. The built-in endpoint's shared-key limitation still blocks
+keyless receive under hub-only authority. Constructed local SQL Server passed
+45 ingestion tests; this is neither actual Hub-to-SQL nor resident-gauge proof.
+The original source-only engineering evidence below remains historical.
+
 The [API transport adapters](../../../src/api/README.md#opt-in-iot-consumer-and-synthetic-publisher-110-184)
 and [core replay model](../../../src/core/README.md#finite-synthetic-stream-replay-184)
 add explicitly called, finite SDK paths on the merged #140 transport definition.

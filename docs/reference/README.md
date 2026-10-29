@@ -60,6 +60,14 @@ Actual cost/AI metering and variance remain Unknown/unreconciled, and existing
 diagnostic privacy exclusion, poison signals, RAI incident integration and live
 owner/threshold approvals remain unmet. No deployment or issue closure follows.
 
+For #140/#184, the [bounded 2026-10-29 existing-hub reconciliation](../../infra/README.md#bounded-existing-hub-exercise-2026-10-29-refs-140-184-137)
+records owner-approved USD10/month B1/one unit within USD5 additional through
+October31, reuse of the deployed hub and successful metrics-only diagnostic
+reconciliation. No new hub, endpoint, role or service key was created. Missing
+operator registry data permission and the unapproved custom receive adapter
+block live-to-SQL and resident-gauge acceptance; actual local SQL evidence is
+not live transport. The following source-only production model remains separate.
+
 For #140, the [IoT infrastructure decision and budget](../../infra/README.md#iot-hub-issue-140-adr-0003-decision-6)
 and [ADR 0003 dated authorization](../adrs/0003-journey-derived-capabilities-runtime-fit.md#source-only-infrastructure-authorization-2026-10-27-refs-140)
 record B1/one unit in `ama`/`uksouth`, private keyless Event Hub routing,

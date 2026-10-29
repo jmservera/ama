@@ -8154,3 +8154,18 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Workbook missing data is Insufficient/Blocked and actual cost/AI metering
   remains Unknown/unreconciled. Source definitions and local checks are not a
   deployment, live approval, SLO claim or issue acceptance.
+
+## [2026-10-29] query | Bounded existing IoT hub exercise and live blockers
+
+* Updated infrastructure cost/environment evidence, ADR0003 dated authorization,
+  API activation guide, streaming synthesis and index for Refs #140 #184 #137.
+* Reused existing UK South B1/one-unit hub. Owner approved USD10/month after
+  cost check, within USD5 additional through October31. Child-only deployment
+  disables all device-bearing resource logs and retains metrics, private
+  attachment, service auth, four app min0 and eight Manual jobs.
+* No new paid hub, Event Hub, endpoint, role, device, key or public SQL change.
+  Existing operator lacks registry data permission; keyless custom adapter/
+  cloud revision and resident projection acceptance remain separately gated.
+* Constructed actual local SQL Server passed45 sensor ingestion tests; do not
+  describe this as live Hub-to-SQL or resident-gauge acceptance. Original
+  source-only history, critique and open credential/OD43 criteria remain.
