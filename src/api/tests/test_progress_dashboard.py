@@ -9,6 +9,7 @@ import threading
 import unittest
 import urllib.error
 import urllib.request
+from collections import Counter
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
@@ -122,6 +123,327 @@ class ProgressDashboard(unittest.TestCase):
 
     def archive(self, **values: str) -> dict[str, Any]:
         return progress.closed_cases(self.store, self.pam, {k: [v] for k, v in values.items()})
+
+    def lifecycle_case(self, sequence: list[tuple[str, str]], closed: bool) -> dict[str, Any]:
+        case: dict[str, Any] = copy.deepcopy(self.store.cases["ZF-1"])
+        case.update(
+            is_synthetic=True,
+            closed=closed,
+            history=[],
+            home_case_closures=[],
+            returns=[],
+        )
+        actions = {
+            "identified": "Identified",
+            "accepted": "Accepted handover",
+            "reopened": "Reopened - aftercare",
+            "withdrawn": "Withdrawn",
+            "excluded": "Excluded",
+        }
+        for when, kind in sequence:
+            if kind in actions:
+                case["history"].append(event(when, actions[kind]))
+            elif kind == "closure":
+                case["home_case_closures"].append(
+                    dict(at=when, closed=True, event_type="human_home_case_closed")
+                )
+            elif kind in ("controlled reopen", "returned"):
+                reopened = kind == "controlled reopen"
+                case["returns"].append(
+                    dict(at=when, reopened=reopened, event_type="reopen" if reopened else "return")
+                )
+            else:
+                self.fail(f"Unknown test event kind: {kind}")
+        return case
+
+    def assert_persisted_lifecycle(
+        self, case: dict[str, Any], expected: list[tuple[str, bool]] | None
+    ) -> None:
+        with self.store.lock:
+            self.store.cases["ZF-1"].clear()
+            self.store.cases["ZF-1"].update(copy.deepcopy(case))
+            if self.backend == "sqlite":
+                self.store.db.execute(
+                    "UPDATE cases SET body = ? WHERE id = ?", (json.dumps(case), "ZF-1")
+                )
+            else:
+                self.store.save()
+        reader: Any = (
+            SqlStore(str(self.path), self.store.db_path)
+            if self.backend == "sqlite"
+            else Store(str(self.path))
+        )
+        try:
+            stored = reader.cases["ZF-1"]
+            for key in ("history", "home_case_closures", "returns", "closed"):
+                self.assertEqual(stored[key], case[key], key)
+            self.assertEqual(
+                progress.lifecycle(stored),
+                None if expected is None else [(progress.day(d), active) for d, active in expected],
+            )
+            report = progress.dashboard(
+                reader, self.pam, {"start": ["2026-09-28"], "end": ["2026-10-07"]}
+            )
+            self.assertEqual(
+                report["coverage"],
+                dict(
+                    synthetic_cases=4,
+                    excluded_unmarked=1,
+                    known_lifecycle=2 + (expected is not None),
+                    unknown_lifecycle=1 + (expected is None),
+                ),
+            )
+            openings = Counter(["2026-10-01", "2026-10-03"])
+            closings = Counter(["2026-10-04"])
+            reopenings: Counter[str] = Counter()
+            durations = [1]
+            if expected is not None:
+                for index, (when, active) in enumerate(expected):
+                    if active:
+                        openings[when] += 1
+                        reopenings[when] += index > 0
+                    else:
+                        closings[when] += 1
+                        durations.append(
+                            (progress.day(when) - progress.day(expected[index - 1][0])).days
+                        )
+            backlog = 0
+            weeks: dict[str, dict[str, Any]] = {}
+            self.assertEqual(
+                [row["date"] for row in report["daily"]],
+                [
+                    "2026-09-28",
+                    "2026-09-29",
+                    "2026-09-30",
+                    *[f"2026-10-{day:02}" for day in range(1, 8)],
+                ],
+            )
+            for row in report["daily"]:
+                when = row["date"]
+                backlog += openings[when] - closings[when]
+                self.assertEqual(
+                    row,
+                    dict(
+                        date=when,
+                        opened=openings[when],
+                        closed=closings[when],
+                        reopened=reopenings[when],
+                        backlog=backlog,
+                    ),
+                )
+                week = "2026-09-28" if when <= "2026-10-04" else "2026-10-05"
+                bucket = weeks.setdefault(
+                    week, dict(date=week, opened=0, closed=0, reopened=0, backlog=0)
+                )
+                for key in ("opened", "closed", "reopened"):
+                    bucket[key] += row[key]
+                bucket["backlog"] = backlog
+            self.assertEqual(report["weekly"], list(weeks.values()))
+            durations.sort()
+            count = len(durations)
+            self.assertEqual(
+                report["time_to_close"],
+                dict(
+                    median_days=(durations[(count - 1) // 2] + durations[count // 2]) / 2,
+                    p90_days=durations[(9 * count + 9) // 10 - 1],
+                    samples=count,
+                ),
+            )
+            archive = progress.closed_cases(reader, self.pam, {})
+            self.assertEqual(archive["total"], 2 + bool(case["closed"]))
+            self.assertEqual(
+                archive["unknown_closure_dates"], 1 + (bool(case["closed"]) and expected is None)
+            )
+            own = progress.closed_cases(reader, self.pam, {"q": ["ZF-1"]})
+            closure = expected[-1][0] if expected and case["closed"] else None
+            self.assertEqual(
+                [row["closed_on"] for row in own["items"]],
+                [closure] if case["closed"] else [],
+            )
+            for bound, when in (("start", "2026-09-28"), ("end", "2026-10-07")):
+                filtered = progress.closed_cases(reader, self.pam, {"q": ["ZF-1"], bound: [when]})
+                self.assertEqual(filtered["total"], int(closure is not None))
+        finally:
+            if self.backend == "sqlite":
+                reader.db.close()
+
+    def test_lifecycle_full_initial_and_pair_transition_table(self) -> None:
+        kinds = ("identified", "accepted", "closure", "reopened", "returned")
+        # Distinct instants: same-kind lifecycle actions are not proven duplicates.
+        table = {
+            None: ("open", "unknown", "unknown", "unknown", "unknown"),
+            "identified": ("unknown", "close", "close", "unknown", "stay"),
+            "accepted": ("unknown", "unknown", "unknown", "open", "unknown"),
+            "closure": ("unknown", "unknown", "unknown", "open", "unknown"),
+            "reopened": ("unknown", "close", "close", "unknown", "stay"),
+            "returned": ("unknown", "close", "close", "unknown", "stay"),
+        }
+        identified = [("2026-09-28", "identified")]
+        prefixes: dict[str | None, tuple[list[tuple[str, str]], list[tuple[str, bool]]]] = {
+            None: ([], []),
+            "identified": (identified, [("2026-09-28", True)]),
+            "accepted": (
+                [*identified, ("2026-09-29", "accepted")],
+                [("2026-09-28", True), ("2026-09-29", False)],
+            ),
+            "closure": (
+                [*identified, ("2026-09-29", "closure")],
+                [("2026-09-28", True), ("2026-09-29", False)],
+            ),
+            "reopened": (
+                [*identified, ("2026-09-29", "accepted"), ("2026-09-30", "reopened")],
+                [("2026-09-28", True), ("2026-09-29", False), ("2026-09-30", True)],
+            ),
+            "returned": (
+                [*identified, ("2026-09-29", "returned")],
+                [("2026-09-28", True)],
+            ),
+        }
+        visited: set[tuple[str | None, str]] = set()
+        for prior, outcomes in table.items():
+            prefix, transitions = prefixes[prior]
+            for kind, outcome in zip(kinds, outcomes, strict=True):
+                with self.subTest(prior=prior, kind=kind, outcome=outcome):
+                    visited.add((prior, kind))
+                    expected = None
+                    if outcome != "unknown":
+                        expected = list(transitions)
+                        if outcome != "stay":
+                            expected.append(("2026-10-01", outcome == "open"))
+                    self.assert_persisted_lifecycle(
+                        self.lifecycle_case(
+                            [*prefix, ("2026-10-01", kind)], closed=kind in ("accepted", "closure")
+                        ),
+                        expected,
+                    )
+        self.assertEqual(visited, {(prior, kind) for prior in (None, *kinds) for kind in kinds})
+
+    def test_lifecycle_duplicate_and_same_instant_episode_controls(self) -> None:
+        i = ("2026-09-28", "identified")
+        a = ("2026-09-29", "accepted")
+        c = ("2026-09-29", "closure")
+        r = ("2026-09-30", "reopened")
+        t = ("2026-09-29", "returned")
+        controls: list[tuple[list[tuple[str, str]], bool, list[tuple[str, bool]]]] = [
+            ([i, i], False, [("2026-09-28", True)]),
+            ([i, a, a], True, [("2026-09-28", True), ("2026-09-29", False)]),
+            ([i, c, c], True, [("2026-09-28", True), ("2026-09-29", False)]),
+            (
+                [i, a, r, r],
+                False,
+                [("2026-09-28", True), ("2026-09-29", False), ("2026-09-30", True)],
+            ),
+            ([i, t, t], False, [("2026-09-28", True)]),
+            ([i, a, c], True, [("2026-09-28", True), ("2026-09-29", False)]),
+            ([i, c, a], True, [("2026-09-28", True), ("2026-09-29", False)]),
+            ([i, ("2026-09-28T01:00:00+01:00", "identified")], False, [("2026-09-28", True)]),
+            ([i, ("2026-09-28", "accepted")], True, [("2026-09-28", True), ("2026-09-28", False)]),
+            (
+                [i, a, ("2026-09-29", "reopened"), a, ("2026-09-29", "reopened")],
+                False,
+                [
+                    ("2026-09-28", True),
+                    ("2026-09-29", False),
+                    ("2026-09-29", True),
+                    ("2026-09-29", False),
+                    ("2026-09-29", True),
+                ],
+            ),
+            (
+                [
+                    i,
+                    a,
+                    ("2026-09-29", "reopened"),
+                    ("2026-09-29", "withdrawn"),
+                    ("2026-09-29", "reopened"),
+                ],
+                False,
+                [
+                    ("2026-09-28", True),
+                    ("2026-09-29", False),
+                    ("2026-09-29", True),
+                    ("2026-09-29", False),
+                    ("2026-09-29", True),
+                ],
+            ),
+            ([i, t, i], False, [("2026-09-28", True)]),
+            (
+                [i, a, r, ("2026-10-01", "returned"), r],
+                False,
+                [("2026-09-28", True), ("2026-09-29", False), ("2026-09-30", True)],
+            ),
+        ]
+        for sequence, closed, expected in controls:
+            with self.subTest(sequence=sequence):
+                self.assert_persisted_lifecycle(self.lifecycle_case(sequence, closed), expected)
+
+    def test_lifecycle_event_representations_ordering_and_final_state(self) -> None:
+        for closure in ("accepted", "closure", "withdrawn", "excluded"):
+            for reopen in ("reopened", "controlled reopen"):
+                with self.subTest(closure=closure, reopen=reopen):
+                    sequence = [
+                        ("2026-09-28", "identified"),
+                        ("2026-09-29", closure),
+                        ("2026-09-30", reopen),
+                        ("2026-10-01", "returned"),
+                        ("2026-10-02", closure),
+                    ]
+                    expected = [
+                        ("2026-09-28", True),
+                        ("2026-09-29", False),
+                        ("2026-09-30", True),
+                        ("2026-10-02", False),
+                    ]
+                    case = self.lifecycle_case(sequence, True)
+                    for field in ("history", "home_case_closures", "returns"):
+                        case[field].reverse()
+                    self.assert_persisted_lifecycle(case, expected)
+                    case["closed"] = False
+                    self.assert_persisted_lifecycle(case, None)
+                    for illegal in ("identified", reopen):
+                        sequence[1] = ("2026-09-29", illegal)
+                        self.assert_persisted_lifecycle(self.lifecycle_case(sequence, True), None)
+        case = self.lifecycle_case([("2026-09-28", "identified")], False)
+        case["returns"] = [dict(at="invalid", reopened=False, event_type="advance")]
+        self.assert_persisted_lifecycle(case, [("2026-09-28", True)])
+        case["returns"] = [dict(at="2026-10-01", reopened=False)]
+        self.assert_persisted_lifecycle(case, [("2026-09-28", True)])
+        case["closed"] = True
+        self.assert_persisted_lifecycle(case, None)
+        for closed in (False, True):
+            self.assert_persisted_lifecycle(self.lifecycle_case([], closed), None)
+        for illegal in ("identified", "controlled reopen"):
+            self.assert_persisted_lifecycle(
+                self.lifecycle_case(
+                    [
+                        ("2026-09-28", "identified"),
+                        ("2026-09-29", "closure"),
+                        ("2026-09-30", "controlled reopen"),
+                        ("2026-10-01", "returned"),
+                        ("2026-10-02", illegal),
+                    ],
+                    False,
+                ),
+                None,
+            )
+
+    def test_lifecycle_review_counterexamples_are_unknown(self) -> None:
+        for sequence in (
+            [
+                ("2026-09-28", "identified"),
+                ("2026-09-29", "accepted"),
+                ("2026-09-30", "identified"),
+            ],
+            [("2026-09-28", "identified"), ("2026-09-30", "reopened")],
+            [
+                ("2026-09-28", "identified"),
+                ("2026-09-28", "accepted"),
+                ("2026-09-28", "identified"),
+            ],
+            [("2026-09-28", "identified"), ("2026-09-28", "reopened")],
+        ):
+            with self.subTest(sequence=sequence):
+                self.assert_persisted_lifecycle(self.lifecycle_case(sequence, False), None)
 
     def test_exact_daily_weekly_backlog_and_episode_percentiles(self) -> None:
         report = self.report(start="2026-09-28", end="2026-10-07")

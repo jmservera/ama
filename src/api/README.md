@@ -30,6 +30,15 @@ dictionaries when present;
 null, non-list collections or malformed entries make the lifecycle unknown.
 Missing collections remain empty. Malformed synthetic cases still contribute
 to coverage counts and remain in the unbounded archive with unknown dates.
+Replay preserves event kinds: only identification starts the first episode,
+accepted handover or closure closes an open episode, reopening requires a
+prior closure, and a return requires an open case without starting an episode.
+Repeated identification after closure is not reopening; reopening an already
+open case is incomplete evidence. Distinct-time repeated lifecycle changes
+without their intervening event are unknown. Exact UTC instant/kind repeats,
+and closing kinds corroborating the same instant, are deduplicated only until
+the next lifecycle-changing event. Ordered same-instant close/reopen episodes
+remain separate, including zero-day durations.
 Opened includes reopened episodes, also counted separately. Daily backlog is
 the end-of-day known-lifecycle count; Monday-based weeks are clipped to the
 selected dates. Time to close uses each observed episode ending in range,

@@ -6,7 +6,7 @@ import math
 import re
 from collections import Counter
 from datetime import UTC, date, datetime, timedelta
-from typing import Any
+from typing import Any, Literal
 
 from zava_forward.core import insights, projection, taskqueues
 from zava_forward.core.workflows import MANAGER_ROLES, handoff_view
@@ -32,6 +32,7 @@ JOURNEY = {
 }
 STEP = {stage: name for name, stages in JOURNEY.items() for stage in stages}
 CLOSE_ACTIONS = {"Accepted handover", "Withdrawn", "Excluded"}
+LifecycleKind = Literal["identified", "accepted", "closure", "reopened", "returned"]
 
 
 class DateRangeError(ValueError):
@@ -88,8 +89,7 @@ def lifecycle(case: dict[str, Any]) -> list[tuple[date, bool]] | None:
         or not all(isinstance(row, dict) for row in returns)
     ):
         return None
-    events: list[tuple[datetime, bool]] = []
-    identified: list[datetime] = []
+    events: list[tuple[datetime, LifecycleKind]] = []
     for row in history:
         if row.get("is_synthetic") is not True:
             continue
@@ -100,32 +100,64 @@ def lifecycle(case: dict[str, Any]) -> list[tuple[date, bool]] | None:
             stamp = observed(row.get("at"))
             if stamp is None:
                 return None
-            events.append((stamp, action not in CLOSE_ACTIONS))
             if action == "Identified":
-                identified.append(stamp)
+                kind: LifecycleKind = "identified"
+            elif action == "Reopened - aftercare":
+                kind = "reopened"
+            elif action == "Accepted handover":
+                kind = "accepted"
+            else:
+                kind = "closure"
+            events.append((stamp, kind))
     for row in closures:
         if row.get("event_type") == "human_home_case_closed" or row.get("closed") is True:
             stamp = observed(row.get("at"))
             if stamp is None:
                 return None
-            events.append((stamp, False))
+            events.append((stamp, "closure"))
     for row in returns:
         if row.get("reopened") is True or row.get("event_type") == "reopen":
             stamp = observed(row.get("at"))
             if stamp is None:
                 return None
-            events.append((stamp, True))
+            events.append((stamp, "reopened"))
+        elif row.get("event_type") == "return" or (
+            "event_type" not in row and row.get("reopened") is False
+        ):
+            stamp = observed(row.get("at"))
+            if stamp is None:
+                return None
+            events.append((stamp, "returned"))
     events.sort(key=lambda event: event[0])
-    if not identified or not events or events[0] != (min(identified), True):
-        return None
     transitions: list[tuple[date, bool]] = []
     state = False
-    for stamp, opened in events:
-        if not transitions and not opened:
-            return None
-        if opened != state:
-            transitions.append((stamp.date(), opened))
-            state = opened
+    last_change: tuple[datetime, LifecycleKind] | None = None
+    for stamp, kind in events:
+        if kind == "returned":
+            if not state:
+                return None
+            continue
+        # Repeated observations cannot cross an intervening episode boundary.
+        if last_change and stamp == last_change[0]:
+            if kind == last_change[1] or (
+                kind in ("accepted", "closure") and last_change[1] in ("accepted", "closure")
+            ):
+                continue
+        if kind == "identified":
+            if transitions:
+                return None
+            opened = True
+        elif kind == "reopened":
+            if not transitions or state:
+                return None
+            opened = True
+        else:
+            if not state:
+                return None
+            opened = False
+        transitions.append((stamp.date(), opened))
+        state = opened
+        last_change = (stamp, kind)
     if not transitions or state == bool(case.get("closed")):
         return None
     return transitions
