@@ -515,7 +515,7 @@ class ResidentApi(unittest.TestCase):
                 page.locator("#pw").fill("synthetic-only")
                 page.locator("button[type=submit]").click()
                 page.locator("#account").wait_for()
-                page.goto(self.base + "/app#/case/ZF-1")
+                page.goto(self.base + "/app#/case/ZF-1?tab=resident")
                 page.get_by_role(
                     "heading", name="Resident-update commitment", exact=True
                 ).wait_for()

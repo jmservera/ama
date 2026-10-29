@@ -105,7 +105,9 @@ class CopyAudit(unittest.TestCase):
         self.assertIn("Requested using:", js)
         self.assertNotIn("Invocation:", js)
         self.assertIn("Accept proposal only", js)
-        self.assertIn("Edit and accept proposal only", js)
+        self.assertIn('onclick: () => act("edit-accept") }, "Save edited proposal"', js)
+        self.assertIn("as a draft by a person. This is not an approval, consent or safety decision.", js)
+        self.assertIn("Confidence: not provided. Confidence is not accuracy.", js)
 
     def test_time_capture_copy_is_guarded(self):
         self.assertIn("timecapture.js", AUDITED_FILES)
