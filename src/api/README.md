@@ -22,6 +22,10 @@ reopen, controlled reopen and explicit home closure events supply lifecycle
 dates; current stage dates are not opening dates. Missing or contradictory
 lifecycle evidence is excluded from historical measures with coverage counts.
 Non-list histories, including null, are unknown rather than failed reads.
+Closure and return collections must be lists of dictionaries when present;
+null, non-list collections or malformed entries make the lifecycle unknown.
+Missing collections remain empty. Malformed synthetic cases still contribute
+to coverage counts and remain in the unbounded archive with unknown dates.
 Opened includes reopened episodes, also counted separately. Daily backlog is
 the end-of-day known-lifecycle count; Monday-based weeks are clipped to the
 selected dates. Time to close uses each observed episode ending in range,
@@ -35,6 +39,10 @@ owners or legal compliance. AI outcomes include only explicitly synthetic
 approval. Rules/templates, missing review dates and unreviewed records are
 disclosed separately. No synthetic usage records means unavailable usage, not
 inferred activity. Every chart has a same-value semantic table alternative.
+
+The overdue count shares the work queue's deadline-only evaluation at the
+dataset snapshot. It does not construct per-case building blockers or full
+work context; building membership does not affect recorded task deadlines.
 
 **Closed cases** uses manager-only `GET /api/closed-cases` with `status` (exact
 recorded stage), `team` (exact owner role), `q` (reference/resident/address,

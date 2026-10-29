@@ -8,8 +8,8 @@ from collections import Counter
 from datetime import UTC, date, datetime, timedelta
 from typing import Any
 
-from zava_forward.core import insights, projection
-from zava_forward.core.workflows import MANAGER_ROLES
+from zava_forward.core import insights, projection, taskqueues
+from zava_forward.core.workflows import MANAGER_ROLES, handoff_view
 
 DAY = timedelta(days=1)
 JOURNEY = {
@@ -77,7 +77,15 @@ def synthetic(case: dict[str, Any]) -> bool:
 def lifecycle(case: dict[str, Any]) -> list[tuple[date, bool]] | None:
     """Return observed open/close transitions; contradictory or partial history is unknown."""
     history = case.get("history")
-    if not isinstance(history, list):
+    closures = case.get("home_case_closures", [])
+    returns = case.get("returns", [])
+    if (
+        not isinstance(history, list)
+        or not isinstance(closures, list)
+        or not all(isinstance(row, dict) for row in closures)
+        or not isinstance(returns, list)
+        or not all(isinstance(row, dict) for row in returns)
+    ):
         return None
     events: list[tuple[datetime, bool]] = []
     identified: list[datetime] = []
@@ -92,13 +100,13 @@ def lifecycle(case: dict[str, Any]) -> list[tuple[date, bool]] | None:
             events.append((stamp, action not in CLOSE_ACTIONS))
             if action == "Identified":
                 identified.append(stamp)
-    for row in case.get("home_case_closures", []):
+    for row in closures:
         if row.get("event_type") == "human_home_case_closed" or row.get("closed") is True:
             stamp = observed(row.get("at"))
             if stamp is None:
                 return None
             events.append((stamp, False))
-    for row in case.get("returns", []):
+    for row in returns:
         if row.get("reopened") is True or row.get("event_type") == "reopen":
             stamp = observed(row.get("at"))
             if stamp is None:
@@ -227,7 +235,10 @@ def dashboard(store: Any, user: dict[str, Any], query: dict[str, list[str]]) -> 
         steps = Counter(STEP.get(case.get("stage"), "Unknown") for case in current)
         teams = Counter(case.get("owner_role") or "Unknown" for case in current)
         stalled = sum(case.get("days_in_stage", 0) >= insights.LONG_WAIT for case in current)
-        overdue = sum(bool(store.work_context(case, user)["overdue"]) for case in current)
+        overdue = sum(
+            bool(taskqueues.overdue_tasks(case, as_of=store.as_of, handoff=handoff_view(case)))
+            for case in current
+        )
         durations.sort()
         count = len(durations)
         median = (durations[(count - 1) // 2] + durations[count // 2]) / 2 if count else None

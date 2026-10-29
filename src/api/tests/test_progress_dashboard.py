@@ -12,8 +12,10 @@ import urllib.request
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
+from unittest.mock import patch
 from urllib.parse import urlencode
 
+from building_fixture import fixture, hold
 from dataset import DATA
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import Store
@@ -291,6 +293,129 @@ class ProgressDashboard(unittest.TestCase):
         with self.assertRaises(progress.DateRangeError):
             self.archive(start="2026-10-08", end="2026-10-07")
         self.assertEqual(self.archive(start="2020-01-01", end="2026-10-07")["total"], 2)
+
+    def test_malformed_auxiliary_lifecycles_persist_as_unknown_without_aborting_reads(self) -> None:
+        malformed: list[object] = [
+            None,
+            "not a collection",
+            {"at": "2026-10-07"},
+            42,
+            False,
+            [None],
+            ["not an event"],
+            [{}, None],
+            [dict(at="2026-10-07", closed=True, reopened=True), None],
+        ]
+        originals = {cid: copy.deepcopy(self.store.cases[cid]) for cid in ("ZF-1", "ZF-2")}
+        for field in ("home_case_closures", "returns"):
+            for value in malformed:
+                with self.subTest(field=field, value=value):
+                    with self.store.lock:
+                        for cid, original in originals.items():
+                            case = self.store.cases[cid]
+                            case.clear()
+                            case.update(copy.deepcopy(original))
+                            case[field] = value
+                            self.assertIsNone(progress.lifecycle(case))
+                            if self.backend == "sqlite":
+                                self.store.db.execute(
+                                    "UPDATE cases SET body = ? WHERE id = ?",
+                                    (json.dumps(case), cid),
+                                )
+                        if self.backend == "json":
+                            self.store.save()
+                    reader: Any = (
+                        SqlStore(str(self.path), self.store.db_path)
+                        if self.backend == "sqlite"
+                        else Store(str(self.path))
+                    )
+                    try:
+                        report = progress.dashboard(reader, self.pam, {})
+                        self.assertEqual(report["coverage"]["synthetic_cases"], 4)
+                        self.assertEqual(report["coverage"]["known_lifecycle"], 1)
+                        self.assertEqual(report["coverage"]["unknown_lifecycle"], 3)
+                        self.assertEqual(report["current"]["overdue"], 1)
+                        archive = progress.closed_cases(reader, self.pam, {})
+                        self.assertEqual(archive["total"], 3)
+                        self.assertEqual(archive["unknown_closure_dates"], 2)
+                        dates = {row["id"]: row["closed_on"] for row in archive["items"]}
+                        self.assertIsNone(dates["ZF-1"])
+                        self.assertEqual(dates["ZF-3"], "2026-10-04")
+                        for bound in ("start", "end"):
+                            filtered = progress.closed_cases(
+                                reader, self.pam, {"q": ["ZF-1"], bound: ["2026-10-07"]}
+                            )
+                            self.assertEqual(filtered["total"], 0)
+                    finally:
+                        if self.backend == "sqlite":
+                            reader.db.close()
+
+    def test_absent_empty_and_dictionary_auxiliary_evidence_preserves_valid_replay(self) -> None:
+        case = copy.deepcopy(self.store.cases["ZF-1"])
+        expected = progress.lifecycle(case)
+        self.assertIsNotNone(expected)
+        for field in ("home_case_closures", "returns"):
+            case.pop(field, None)
+            self.assertEqual(progress.lifecycle(case), expected)
+            valid: list[list[dict[str, Any]]] = [
+                [],
+                [{}],
+                [dict(event_type="not a transition", at=None)],
+            ]
+            for value in valid:
+                with self.subTest(field=field, value=value):
+                    case[field] = value
+                    self.assertEqual(progress.lifecycle(case), expected)
+
+    def test_overdue_matches_previous_context_without_building_or_context_evaluation(self) -> None:
+        shared = fixture()
+        with self.store.lock:
+            self.store.data["buildings"] = shared["buildings"]
+            self.store.data["procurement"] = shared["procurement"]
+            self.store.data["buildings"][0]["holds"] = [hold()]
+            for index, case in enumerate(self.store.cases.values()):
+                case.update(building_id="SYN-B1", is_synthetic=True, closed=False)
+                case["resident_update"] = dict(
+                    due_at="2026-10-06T12:00:00Z",
+                    completed_at="2026-10-07T00:00:00Z" if index == 0 else None,
+                )
+                case["hazards"] = [
+                    dict(
+                        released=True,
+                        response_due_at="2026-10-06T12:00:00Z",
+                        responded_at="2026-10-07T00:00:01Z" if index == 2 else "2026-10-06",
+                    )
+                ]
+                case["handoff"] = dict(
+                    state="Offered" if index == 0 else "Accepted",
+                    from_name="Synthetic sender",
+                    due_at="2026-10-06T12:00:00Z",
+                )
+            self.store.cases["ZF-4"]["closed"] = True
+            self.store.cases["ZF-5"]["is_synthetic"] = False
+            current = [
+                case
+                for case in self.store.cases.values()
+                if progress.synthetic(case) and not case.get("closed")
+            ]
+            self.assertTrue(
+                any(
+                    row["step"] == "Shared building review"
+                    for row in self.store.work_context(current[1], self.pam)["blockers"]
+                ),
+            )
+            expected = sum(bool(self.store.work_context(c, self.pam)["overdue"]) for c in current)
+            self.assertEqual(expected, 3)
+            with (
+                patch.object(
+                    self.store, "work_context", side_effect=AssertionError("full context called")
+                ),
+                patch(
+                    "zava_forward.core.buildings.record",
+                    side_effect=AssertionError("building membership scan called"),
+                ),
+            ):
+                self.assertEqual(self.report()["current"]["overdue"], expected)
 
     def test_ai_review_date_cohort_provenance_and_no_private_fields(self) -> None:
         ai = self.report(start="2026-10-02", end="2026-10-03")["ai"]
