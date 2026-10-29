@@ -312,7 +312,9 @@ class ProgressDashboard(unittest.TestCase):
                             expected.append(("2026-10-01", outcome == "open"))
                     self.assert_persisted_lifecycle(
                         self.lifecycle_case(
-                            [*prefix, ("2026-10-01", kind)], closed=kind in ("accepted", "closure")
+                            [*prefix, ("2026-10-01", kind)],
+                            closed=kind in ("accepted", "closure")
+                            or (kind == "returned" and prior in ("accepted", "closure")),
                         ),
                         expected,
                     )
@@ -371,6 +373,16 @@ class ProgressDashboard(unittest.TestCase):
                 [i, a, r, ("2026-10-01", "returned"), r],
                 False,
                 [("2026-09-28", True), ("2026-09-29", False), ("2026-09-30", True)],
+            ),
+            (
+                [i, a, ("2026-09-29", "controlled reopen")],
+                False,
+                [("2026-09-28", True), ("2026-09-29", False), ("2026-09-29", True)],
+            ),
+            (
+                [i, c, ("2026-09-29", "controlled reopen")],
+                False,
+                [("2026-09-28", True), ("2026-09-29", False), ("2026-09-29", True)],
             ),
         ]
         for sequence, closed, expected in controls:
@@ -444,6 +456,79 @@ class ProgressDashboard(unittest.TestCase):
         ):
             with self.subTest(sequence=sequence):
                 self.assert_persisted_lifecycle(self.lifecycle_case(sequence, False), None)
+        for closure in ("accepted", "closure", "withdrawn", "excluded"):
+            for reopen in ("reopened", "controlled reopen"):
+                sequence = [
+                    ("2026-09-28", "identified"),
+                    ("2026-09-29", closure),
+                    ("2026-09-29", reopen),
+                    ("2026-09-29", closure),
+                    ("2026-09-29", reopen),
+                ]
+                if closure != "closure" and reopen == "reopened":
+                    continue  # These ordered single-stream episodes are positive controls.
+                for closed in (False, True):
+                    with self.subTest(closure=closure, reopen=reopen, closed=closed):
+                        candidate = [
+                            *sequence,
+                            *([("2026-10-02", "closure")] if closed else []),
+                        ]
+                        self.assert_persisted_lifecycle(
+                            self.lifecycle_case(candidate, closed), None
+                        )
+        for sequence in (
+            [
+                ("2026-09-28", "identified"),
+                ("2026-09-29", "accepted"),
+                ("2026-09-29", "controlled reopen"),
+                ("2026-09-29", "closure"),
+            ],
+            [
+                ("2026-09-28", "identified"),
+                ("2026-09-29", "accepted"),
+                ("2026-09-29", "reopened"),
+                ("2026-09-29", "closure"),
+            ],
+            [
+                ("2026-09-28", "identified"),
+                ("2026-09-28", "identified"),
+                ("2026-09-28", "closure"),
+                ("2026-09-28", "controlled reopen"),
+            ],
+        ):
+            for closed in (False, True):
+                with self.subTest(sequence=sequence, closed=closed):
+                    candidate = [*sequence, *([("2026-10-02", "closure")] if closed else [])]
+                    self.assert_persisted_lifecycle(self.lifecycle_case(candidate, closed), None)
+        for kind in ("identified", "accepted", "closure", "reopened", "controlled reopen"):
+            sequence = [] if kind == "identified" else [("2026-09-28", "identified")]
+            if kind in ("reopened", "controlled reopen"):
+                sequence.append(("2026-09-29", "accepted"))
+            sequence.extend([("2026-09-30", kind), ("2026-09-30", kind)])
+            case = self.lifecycle_case(sequence, kind in ("accepted", "closure"))
+            collection = (
+                "returns"
+                if kind == "controlled reopen"
+                else "home_case_closures"
+                if kind == "closure"
+                else "history"
+            )
+            for version, row in enumerate(case[collection][-2:], 1):
+                row["version"] = version
+            with self.subTest(distinct_versions=kind):
+                self.assert_persisted_lifecycle(case, None)
+        case = self.lifecycle_case(
+            [
+                ("2026-09-28", "identified"),
+                ("2026-09-29", "accepted"),
+                ("2026-09-29", "closure"),
+                ("2026-09-29", "closure"),
+            ],
+            True,
+        )
+        for version, row in enumerate(case["home_case_closures"], 1):
+            row["version"] = version
+        self.assert_persisted_lifecycle(case, None)
 
     def test_exact_daily_weekly_backlog_and_episode_percentiles(self) -> None:
         report = self.report(start="2026-09-28", end="2026-10-07")

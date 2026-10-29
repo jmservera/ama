@@ -1,0 +1,29 @@
+{
+  "task_id": "533-tie-remediation",
+  "task_slug": "progress-dashboard-533-tie-remediation",
+  "parent_task": {"task_id": "533-correction4", "task_slug": "progress-dashboard-533-correction4"},
+  "mode": "manual",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-29/progress-dashboard-533-correction4-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-29/progress-dashboard-533-tie-remediation-plan.md",
+    "details": ".copilot-tracking/details/2026-10-29/progress-dashboard-533-tie-remediation-phase-details.md",
+    "critique": null,
+    "changes": ".copilot-tracking/changes/2026-10-29/progress-dashboard-533-tie-remediation-changes.md",
+    "review": null
+  },
+  "confirmed_decisions": [
+    {"decision": "Implement tightly coupled RV-001/RV-003 under user's complete sibling-sequence correction scope; preserve original adverse Review, do not repeat it or claim new independent acceptance.", "status": "implemented", "evidence": ".copilot-tracking/reviews/logs/2026-10-29/progress-dashboard-533-correction4-review.md"},
+    {"decision": "Reuse adequate supplied Review/producer evidence for bounded subsequent implementation; no new Research or critique.", "status": "reused", "evidence": "Original Review RV-001/RV-003"},
+    {"decision": "Source-aware tie ambiguity and distinct observations guarded; return cells independently sensitive. Final 77 targeted tests and API/core mypy/Ruff pass.", "status": "validated-scoped", "evidence": ".copilot-tracking/changes/2026-10-29/progress-dashboard-533-tie-remediation-changes.md"}
+  ],
+  "blockers": [
+    {"id": "RV-002", "summary": "Full API/core and progress browser unavailable after busy heavy-lock admission.", "resolution": "Later explicit coordinated nonblocking admission; no retry or polling this round."}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Commit scoped source remediation and original evidence locally, then stop as requested; full/browser and fresh independent acceptance remain unestablished."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Collect required heavy validation at later coordination.", "rationale": "Outstanding acceptance evidence; targeted results cannot replace it.", "evidence": "Original Review RV-002"}
+  ]
+}

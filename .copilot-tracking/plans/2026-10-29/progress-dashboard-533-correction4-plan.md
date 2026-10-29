@@ -18,8 +18,12 @@ five-by-five event transition table and exercise every cell through reopened
 JSON and SQLite stores, checking both historical measures and archive dates.
 No API response shape or web assets change.
 Implementation and the complete persisted matrix now pass scoped checks.
-Full suites/browser remain blocked by busy nonblocking heavy admission;
-independent Review and local evidence closeout remain due.
+Full suites/browser remain blocked by busy nonblocking heavy admission.
+The single independent original Review completed / Not accepted at source
+60004dde, identifying mixed-source ties (RV-001), masked illegal-return tests
+(RV-003) and blocked heavy validation (RV-002). Bounded subsequent implementation
+is recorded separately under progress-dashboard-533-tie-remediation; it does not
+rewrite the original outcome or claim independent acceptance afterward.
 
 ### What You May Not Know
 
@@ -111,7 +115,10 @@ unrelated existing defects.
 Research: .copilot-tracking/research/2026-10-29/progress-dashboard-533-correction4-research.md
 (executed, Ready, C1-C8). Changes record will be created during Implement at
 .copilot-tracking/changes/2026-10-29/progress-dashboard-533-correction4-changes.md.
-No implementation source changes yet.
+Source candidate: 60004dde. Original Review:
+.copilot-tracking/reviews/logs/2026-10-29/progress-dashboard-533-correction4-review.md.
+Planning-time context is superseded by this original candidate and Review;
+later implementation evidence is separate, not a revised verdict.
 
 ## Sources
 
@@ -142,7 +149,7 @@ projecting to existing date/bool output. Reuse observed() and collection guards.
 Add no generic framework, schema, dependencies, suppressions or UI changes.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Validation, original Review and local closeout
+### [x] P02: Validation, original Review and local closeout
 
 Dependency: P01.
 
@@ -160,12 +167,14 @@ mypy and Ruff lint/format pass. Full/browser acceptance remains blocked, not
 passed. No pinned file changed; scenario manifest regression passes.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Commit candidate, obtain independent Review, retain closeout
+#### [x] P02-T02: Commit candidate, obtain independent Review, retain closeout
 
 Configure local noreply author/committer from gh api user (8036360/jmservera).
 Commit source plus original evidence, assess the immutable source candidate
 once, preserve Review findings/outcome and commit evidence reconciliation.
 Do not fix/re-review findings in this task, push or run cloud/publication work.
+Original Review Complete / Not accepted retained unchanged. RV-001/RV-003 route
+to the distinct bounded subsequent implementation; RV-002 remains blocked.
 
 ## Dependencies
 
@@ -193,6 +202,7 @@ No unresolved significant/divergent decision. No repeated critique.
 
 ## Handoff
 
-P01 and P02-T01 execution complete. Commit the source candidate and obtain one
-independent original Review under P02-T02, explicitly retaining full/browser
-validation blockers. Do not repair/re-review findings in this task.
+Original four-phase task execution complete with Review Not accepted; original
+source/evidence remains preserved. RV-001/RV-003 are owned by the separate
+bounded implementation, not a return to this completed task's Implement/Review.
+RV-002 remains an explicitly open acceptance gap. Local-only closeout, no push.

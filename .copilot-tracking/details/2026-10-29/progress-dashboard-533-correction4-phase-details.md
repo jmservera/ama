@@ -13,7 +13,7 @@
 | Phase | Name | Status | Tasks |
 | --- | --- | --- | --- |
 | P01 | Replay and regression matrix | Complete | P01-T01, P01-T02 |
-| P02 | Validation and local review | Scoped checks complete; full/browser blocked; Review pending | P02-T01, P02-T02 |
+| P02 | Validation and local review | Execution complete; original Review Not accepted; full/browser blocked | P02-T01, P02-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Event-aware replay and exhaustive regressions
@@ -114,3 +114,7 @@ requirements/plan/critique/change boundary; writes only the dated original
 review file. Retain adverse findings without current-task fix/re-review.
 Commit closeout artifacts and stop session as explicitly requested, leaving
 all commits local and publication/human/hosted gates separate.
+Completed original Review: Complete / Not accepted at 60004dde. RV-001 high
+mixed-source ties and RV-003 medium masked return cells route to separate bounded
+implementation progress-dashboard-533-tie-remediation; RV-002 medium full/browser
+validation remains blocked. No repeated critique/Review or rewritten outcome.

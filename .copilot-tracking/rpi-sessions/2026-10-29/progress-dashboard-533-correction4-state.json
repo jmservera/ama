@@ -3,8 +3,8 @@
   "task_slug": "progress-dashboard-533-correction4",
   "parent_task": {"task_id": "533", "task_slug": "progress-dashboard-533"},
   "mode": "manual",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-29/progress-dashboard-533-correction4-research.md",
@@ -12,18 +12,20 @@
     "details": ".copilot-tracking/details/2026-10-29/progress-dashboard-533-correction4-phase-details.md",
     "critique": ".copilot-tracking/reviews/plans/2026-10-29/progress-dashboard-533-correction4-plan-critique.md",
     "changes": ".copilot-tracking/changes/2026-10-29/progress-dashboard-533-correction4-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/logs/2026-10-29/progress-dashboard-533-correction4-review.md"
   },
   "confirmed_decisions": [
     {"decision": "Execute the explicitly requested four-phase correction loop, then stop with local commits; no indefinite automatic follow-up session.", "status": "confirmed", "evidence": "User request 2026-10-29"},
     {"decision": "Reuse clean feat/progress-dashboard-533; git pull --rebase first completed, already up to date.", "status": "executed", "evidence": "HEAD 788937e4; PR #540 OPEN targeting main"},
     {"decision": "Research executed, Planning Readiness Ready (C1-C8).", "status": "complete", "evidence": ".copilot-tracking/research/2026-10-29/progress-dashboard-533-correction4-research.md"},
-    {"decision": "One critique executed, verdict Revise; PC-001 current-transition-only dedup and PC-002 exact backend payload roundtrip applied directly; no user decision required.", "status": "resolved", "evidence": ".copilot-tracking/reviews/plans/2026-10-29/progress-dashboard-533-correction4-plan-critique.md"}
+    {"decision": "One critique executed, verdict Revise; PC-001 current-transition-only dedup and PC-002 exact backend payload roundtrip applied directly; no user decision required.", "status": "resolved", "evidence": ".copilot-tracking/reviews/plans/2026-10-29/progress-dashboard-533-correction4-plan-critique.md"},
+    {"decision": "Source implementation and dated original evidence committed locally; static checks and 77 targeted tests pass; full/browser validation blocked by busy lock.", "status": "executed", "evidence": "60004dde5b1983d74f6b17faa69f509aead36569"},
+    {"decision": "One independent original Review executed: Complete / Not accepted at candidate 60004dde. RV-001 mixed-source timestamp ambiguity, RV-003 masked return-transition tests and RV-002 blocked heavy validation.", "status": "complete", "evidence": ".copilot-tracking/reviews/logs/2026-10-29/progress-dashboard-533-correction4-review.md"}
   ],
   "blockers": [
     {"id": "heavy-validation", "summary": "Nonblocking flock admission returned busy exit 75; full API/core discovery, progress browser and shared editable setup were not launched.", "resolution": "Later explicit coordinated validation with genuine nonblocking admission; do not poll or retry this round."}
   ],
-  "next_action": {"phase": "Review", "action": "Commit source and dated evidence locally, then execute one independent original Review with full/browser validation explicitly blocked."},
+  "next_action": {"phase": "Follow-up", "action": "Bounded subsequent implementation 533-tie-remediation handles RV-001/RV-003 under the user's complete correction scope; original Review remains immutable and is not repeated. Local closeout follows."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Collect required full API/core and progress browser evidence under genuine nonblocking heavy-lock admission.", "rationale": "Only outstanding engineering acceptance gap after strict static checks and 77 targeted tests pass.", "evidence": ".copilot-tracking/changes/2026-10-29/progress-dashboard-533-correction4-changes.md"}
   ]

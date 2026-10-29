@@ -6,6 +6,7 @@ import math
 import re
 from collections import Counter
 from datetime import UTC, date, datetime, timedelta
+from itertools import groupby
 from typing import Any, Literal
 
 from zava_forward.core import insights, projection, taskqueues
@@ -89,7 +90,7 @@ def lifecycle(case: dict[str, Any]) -> list[tuple[date, bool]] | None:
         or not all(isinstance(row, dict) for row in returns)
     ):
         return None
-    events: list[tuple[datetime, LifecycleKind]] = []
+    events: list[tuple[datetime, LifecycleKind, str, dict[str, Any]]] = []
     for row in history:
         if row.get("is_synthetic") is not True:
             continue
@@ -108,40 +109,57 @@ def lifecycle(case: dict[str, Any]) -> list[tuple[date, bool]] | None:
                 kind = "accepted"
             else:
                 kind = "closure"
-            events.append((stamp, kind))
+            events.append((stamp, kind, "history", row))
     for row in closures:
         if row.get("event_type") == "human_home_case_closed" or row.get("closed") is True:
             stamp = observed(row.get("at"))
             if stamp is None:
                 return None
-            events.append((stamp, "closure"))
+            events.append((stamp, "closure", "home_case_closures", row))
     for row in returns:
         if row.get("reopened") is True or row.get("event_type") == "reopen":
             stamp = observed(row.get("at"))
             if stamp is None:
                 return None
-            events.append((stamp, "reopened"))
+            events.append((stamp, "reopened", "returns", row))
         elif row.get("event_type") == "return" or (
             "event_type" not in row and row.get("reopened") is False
         ):
             stamp = observed(row.get("at"))
             if stamp is None:
                 return None
-            events.append((stamp, "returned"))
+            events.append((stamp, "returned", "returns", row))
     events.sort(key=lambda event: event[0])
+    for _, group in groupby(events, key=lambda event: event[0]):
+        tied = [(kind, source) for _, kind, source, _ in group if kind != "returned"]
+        kinds = Counter(kind for kind, _ in tied)
+        closing = kinds["accepted"] + kinds["closure"]
+        if (
+            len({source for _, source in tied}) > 1
+            and closing
+            and kinds["reopened"]
+            and (closing > 1 or kinds["reopened"] > 1 or kinds["identified"] > 1)
+        ):
+            # Separate collections do not prove duplicates versus interleaved episodes.
+            return None
     transitions: list[tuple[date, bool]] = []
     state = False
     last_change: tuple[datetime, LifecycleKind] | None = None
-    for stamp, kind in events:
+    observations: dict[LifecycleKind, dict[str, Any]] = {}
+    for stamp, kind, _, row in events:
         if kind == "returned":
             if not state:
                 return None
             continue
+        evidence = {key: value for key, value in row.items() if key != "at"}
         # Repeated observations cannot cross an intervening episode boundary.
         if last_change and stamp == last_change[0]:
-            if kind == last_change[1] or (
-                kind in ("accepted", "closure") and last_change[1] in ("accepted", "closure")
-            ):
+            if kind in observations:
+                if evidence != observations[kind]:
+                    return None
+                continue
+            if kind in ("accepted", "closure") and last_change[1] in ("accepted", "closure"):
+                observations[kind] = evidence
                 continue
         if kind == "identified":
             if transitions:
@@ -158,6 +176,7 @@ def lifecycle(case: dict[str, Any]) -> list[tuple[date, bool]] | None:
         transitions.append((stamp.date(), opened))
         state = opened
         last_change = (stamp, kind)
+        observations = {kind: evidence}
     if not transitions or state == bool(case.get("closed")):
         return None
     return transitions
