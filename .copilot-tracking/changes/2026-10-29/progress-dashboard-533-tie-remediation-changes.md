@@ -5,8 +5,8 @@ ms.date: 2026-10-29
 ---
 
 Task ID: 533-tie-remediation; parent 533-correction4.
-Declared scope: P01 in matching plan/details. Source and validation complete;
-local commit and durable stopped-session closeout pending.
+Declared scope: P01 in matching plan/details. Bounded implementation complete;
+source/evidence committed locally at 72cdda27 and session stopped.
 Evidence: original Review Complete / Not accepted at 60004dde, unchanged.
 Resolve RV-001 mixed-source tie ambiguity and RV-003 confounded fixture flags
 within the user's full sibling-sequence correction scope. No repeated critique
@@ -94,13 +94,26 @@ using the original Review as adequate evidence for later bounded implementation.
 The observation-version audit is immediately relevant local refinement of
 genuine duplicate semantics; plan/details now name it and all added red evidence
 is retained. No divergent decision, new authority, separate critique or Review.
-P01-T01/T02 complete; P01-T03 validation complete and local commit pending.
+P01-T01/T02/T03 complete; source/evidence committed locally at 72cdda27.
 Original Review remains Complete / Not accepted at immutable source 60004dde.
 These later changes do not assert independently reviewed closure of findings.
 
 ## Remaining Work and Follow-ups
 
-Local source/evidence commit and state closeout only. RV-002 full/browser
+No remaining active implementation task. RV-002 full/browser
 validation remains an acceptance gap for later explicit coordination. No fresh
 independent acceptance, publication receipt, hosted/human approval, push or
 Azure action is claimed.
+
+## Local Closeout
+
+Original implementation/evidence commit:
+60004dde5b1983d74f6b17faa69f509aead36569.
+Subsequent source/original Review/remediation evidence commit:
+72cdda2774c64510aea88c1ac4fddc570fcaa346.
+Final closeout commit updates dated evidence and stopped-session state only.
+Mode manual, current phase Follow-up, bounded task execution completed,
+session stopped as the user requested. No automatic child work, second critique,
+second Review, lock retry, push, force-push, merge, az or publication gate.
+The original Complete / Not accepted review at 60004dde remains unchanged;
+later source changes are scoped-tested, not freshly independently accepted.

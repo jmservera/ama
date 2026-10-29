@@ -54,4 +54,6 @@ Subsequent implementation is not independently re-reviewed or accepted.
 Retain original evidence and commit source/remediation/closeout locally.
 Validation complete: final 77 targeted tests, API/core strict mypy and both Ruff
 commands pass. No heavy retry, browser run or shared editable install.
-Remaining: local source/evidence commit and durable stopped-session closeout.
+Completed: source/original Review/remediation evidence commit
+72cdda2774c64510aea88c1ac4fddc570fcaa346. Final stopped-session closeout contains
+only dated evidence/state changes; no remaining active implementation task.

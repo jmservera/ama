@@ -9,7 +9,7 @@
 * Parent task: 533-correction4
 * Scope: bounded implementation of original Review RV-001 and RV-003.
 * Details: .copilot-tracking/details/2026-10-29/progress-dashboard-533-tie-remediation-phase-details.md
-* Status: Source and scoped validation complete; local commit pending.
+* Status: Bounded implementation complete; committed locally at 72cdda27; session stopped.
 
 ## Executive Summary
 
@@ -96,7 +96,7 @@ Linear equal-instant reconciliation after existing sorting.
 ## Phase Checklist
 
 <!-- rpi:phase id=P01 -->
-### [ ] P01: Resolve ambiguity and coverage confounding
+### [x] P01: Resolve ambiguity and coverage confounding
 
 <!-- rpi:task id=P01-T01 -->
 #### [x] P01-T01: Add persisted regressions and fix return fixture flags
@@ -110,12 +110,13 @@ Retain collection source and reject indistinguishable duplicate/episode
 interpretations; document the conservative boundary in the API README.
 
 <!-- rpi:task id=P01-T03 -->
-#### [ ] P01-T03: Validate and commit local remediation evidence
+#### [x] P01-T03: Validate and commit local remediation evidence
 
 Run API/core mypy/Ruff and targeted units; no heavy retry or second Review.
 Commit source plus original Review and closeout artifacts with required trailer.
-Validation done: final 77 tests pass; API/core mypy/Ruff pass. Remaining action
-is the local source/evidence commit and state closeout only.
+Validation done: final 77 tests pass; API/core mypy/Ruff pass. Source/original
+Review/remediation evidence committed at 72cdda2774c64510aea88c1ac4fddc570fcaa346.
+The stopped-session closeout changes no source. No remaining active plan work.
 
 ## Critique Disposition
 
