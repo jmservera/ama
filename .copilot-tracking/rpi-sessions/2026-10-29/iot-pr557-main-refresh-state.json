@@ -1,0 +1,55 @@
+{
+  "task_id": "pr-557-main-refresh-2026-10-29",
+  "task_slug": "iot-pr557-main-refresh",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Review",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-29/iot-pr557-main-refresh-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-29/iot-pr557-main-refresh-plan.md",
+    "details": ".copilot-tracking/details/2026-10-29/iot-pr557-main-refresh-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-29/iot-pr557-main-refresh-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-29/iot-pr557-main-refresh-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-29/iot-pr557-main-refresh-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the explicitly requested four-phase loop, rebase the existing topic branch, commit locally, and never push or change Azure resources.",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-29"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready; additive docs, main rubric/manifest, existing runtime contracts and local selectors established.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/research/2026-10-29/iot-pr557-main-refresh-research.md C1-C8"
+    },
+    {
+      "decision": "Exactly one final-candidate critique executed Complete / Pass with no findings; plan and details Ready.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-29/iot-pr557-main-refresh-plan-critique.md"
+    },
+    {
+      "decision": "Rebase complete at 9a712fd3 on main 8ee1b77f; additive documentation retained, main rubric/manifest exact, original IoT source/test blobs unchanged.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/changes/2026-10-29/iot-pr557-main-refresh-changes.md P01-T01"
+    },
+    {
+      "decision": "Core/API Ruff+format+mypy and 177 targeted tests passed without skips; no full API suite or cloud operation.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/changes/2026-10-29/iot-pr557-main-refresh-changes.md P02-T01"
+    },
+    {
+      "decision": "Exactly one original independent Review executed Complete / Conformant, no substantive findings, against source boundary 9a712fd3. No second Review or source fix loop.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/iot-pr557-main-refresh-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Finish the already planned local evidence commit and verify clean status, ancestry and identity; then hand off without pushing."
+  },
+  "prioritized_follow_ups": []
+}
