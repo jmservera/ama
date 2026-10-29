@@ -97,12 +97,12 @@ function workspaceReady() {
 }
 
 function login(msg) {
-  if (typeof employeeChat !== "undefined") employeeChat.reset(true);
   disposeMapPanel?.();
   workspaceReady();
   aiMode.workflow = false;
   caseSession?.controller?.dispose();
   caseSession = null;
+  if (typeof employeeChat !== "undefined") employeeChat.reset(true);
   for (const id of Object.keys(fundingAi)) delete fundingAi[id];
   workspaceStatus.textContent = "";
   document.getElementById("nav").hidden = true;
