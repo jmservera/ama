@@ -279,6 +279,8 @@ def make_handler(app):
                     read = progress.dashboard if url.path == "/api/progress" else progress.closed_cases
                     values = parse_qs(url.query, keep_blank_values=True)
                     return self._json(200, read(s, u, values))
+                except progress.DateRangeError as error:
+                    return self._json(400, {"error": str(error), "reasons": {"fields": ["start", "end"]}})
                 except ValueError as error:
                     return self._json(400, {"error": str(error)})
                 except PermissionError as error:

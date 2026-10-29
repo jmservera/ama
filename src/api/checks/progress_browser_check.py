@@ -168,13 +168,66 @@ def run(axe: Path, out: Path) -> None:
                     ),
                 )
                 scan("closed-cases")
-                page.goto(base + "/app#/progress?start=2020-01-01&end=2026-10-07")
-                expect(page.get_by_role("alert")).to_contain_text("at most 366 days")
-                expect(page.locator("#progress-start")).to_have_value("2020-01-01")
-                page.locator("#progress-start").fill("2026-10-01")
-                page.get_by_role("button", name="Apply filters").click()
-                page.get_by_role("heading", name="Progress summary", exact=True).wait_for()
-                check("invalid date range remains editable and recoverable", True)
+                for name, path, start, end in (
+                    ("dashboard-reversed", "#/progress", "2026-10-08", "2026-10-07"),
+                    ("dashboard-oversized", "#/progress", "2020-01-01", "2026-10-07"),
+                    ("archive-reversed", "#/closed", "2026-10-08", "2026-10-07"),
+                    ("dashboard-default-end", "#/progress", "2026-10-08", None),
+                ):
+                    if end is None:
+                        page.goto(base + f"/app{path}?start={start}")
+                    else:
+                        page.goto(base + "/app" + path)
+                        if path == "#/closed":
+                            page.get_by_role("table", name="Matching closed cases").wait_for()
+                        else:
+                            page.get_by_role("heading", name="Progress summary").wait_for()
+                        page.locator("#progress-start").fill(start)
+                        page.locator("#progress-end").fill(end)
+                        page.get_by_role("button", name="Apply filters").click()
+                    expect(page.locator(".field-error")).to_have_count(2)
+                    expect(page.locator("#progress-start")).to_be_focused()
+                    for field, value in (("start", start), ("end", end or "")):
+                        control = page.locator(f"#progress-{field}")
+                        expect(control).to_have_value(value)
+                        expect(control).to_have_attribute("aria-invalid", "true")
+                        expect(control).to_have_attribute(
+                            "aria-describedby", f"progress-{field}-error"
+                        )
+                        message = page.locator(f"#progress-{field}-error")
+                        expect(message).to_be_visible()
+                        expect(message).to_contain_text("end date on or after the start")
+                        if name == "dashboard-oversized":
+                            expect(message).to_contain_text("at most 366 days")
+                    expect(page.get_by_role("alert")).to_have_count(0)
+                    expect(page.get_by_role("button", name="Try again")).to_have_count(0)
+                    scan(name)
+                    page.locator("#progress-start").fill("2026-10-01")
+                    page.locator("#progress-end").fill("2026-10-07")
+                    page.get_by_role("button", name="Apply filters").click()
+                    if path == "#/closed":
+                        page.get_by_role("table", name="Matching closed cases").wait_for()
+                    else:
+                        page.get_by_role("heading", name="Progress summary").wait_for()
+                    expect(page.locator("[aria-invalid=true]")).to_have_count(0)
+                    expect(page.locator(".field-error")).to_have_count(0)
+                    for field in ("start", "end"):
+                        check(
+                            name + f" clears {field} error association after correction",
+                            page.locator(f"#progress-{field}").get_attribute("aria-describedby")
+                            is None,
+                        )
+                    scan(name + "-recovered")
+
+                page.goto(base + "/app#/progress?start=2025-10-07&end=2026-10-07")
+                page.get_by_role("heading", name="Progress summary").wait_for()
+                expect(page.get_by_role("alert")).to_have_count(0)
+                expect(page.locator("[aria-invalid=true]")).to_have_count(0)
+                check("inclusive 366-day dashboard range remains valid", True)
+                page.goto(base + "/app#/closed?start=2020-01-01&end=2026-10-07")
+                page.get_by_role("table", name="Matching closed cases").wait_for()
+                expect(page.locator("[aria-invalid=true]")).to_have_count(0)
+                check("archive has no dashboard duration cap", True)
 
                 def fail(route: Route) -> None:
                     route.fulfill(
@@ -186,9 +239,22 @@ def run(axe: Path, out: Path) -> None:
                 expect(page.get_by_role("alert")).to_have_text(
                     "Synthetic progress read unavailable."
                 )
+                expect(page.locator("[aria-invalid=true], .field-error")).to_have_count(0)
+                expect(page.locator("#progress-start")).not_to_have_attribute(
+                    "aria-describedby", "progress-start-error"
+                )
+                expect(page.locator("main")).to_be_focused()
+                scan("progress-read-failure")
                 page.unroute("**/api/progress?*", fail)
                 page.get_by_role("button", name="Try again", exact=True).click()
                 page.get_by_role("heading", name="Progress summary", exact=True).wait_for()
+                page.goto(base + "/app#/progress?unknown=value")
+                expect(page.get_by_role("alert")).to_contain_text(
+                    "Use each supported filter once."
+                )
+                expect(page.locator("[aria-invalid=true], .field-error")).to_have_count(0)
+                expect(page.locator("main")).to_be_focused()
+                check("unrelated validation failure does not invalidate date fields", True)
                 held: list[Route] = []
                 page.route("**/api/progress?*", lambda request: held.append(request))
                 page.goto(base + "/app#/progress?start=2026-10-01&end=2026-10-07")

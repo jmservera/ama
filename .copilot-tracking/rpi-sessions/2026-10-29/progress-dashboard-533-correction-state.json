@@ -1,0 +1,27 @@
+{
+  "task_id": "533-correction-2026-10-29",
+  "task_slug": "progress-dashboard-533-correction",
+  "parent_task": {"task_id": "533", "task_slug": "progress-dashboard-533"},
+  "mode": "automatic",
+  "active_phase": "Review",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-29/progress-dashboard-533-correction-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-29/progress-dashboard-533-correction-plan.md",
+    "details": ".copilot-tracking/details/2026-10-29/progress-dashboard-533-correction-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-10-29/progress-dashboard-533-correction-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-29/progress-dashboard-533-correction-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-29/progress-dashboard-533-correction-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Execute the full correction RPI loop and commit locally on feat/progress-dashboard-533; Refs #533, PR #540; no push, az or force-push.", "status": "confirmed", "evidence": "Explicit user direction 2026-10-29; recovered parent automatic session."},
+    {"decision": "Use the supplied journey venv with this worktree's src on PYTHONPATH; nonblocking heavy-lock admission for full suites, targeted-only fallback if busy.", "status": "confirmed", "evidence": "Explicit user direction 2026-10-29."},
+    {"decision": "Research executed Complete / Ready; supplied venv absent, existing /tmp/ama-533-venv resolves current src and will be used without installation.", "status": "evidence-backed-environment-deviation", "evidence": ".copilot-tracking/research/2026-10-29/progress-dashboard-533-correction-research.md"},
+    {"decision": "One final-candidate critique executed Complete / Pass with no findings.", "status": "implementation-ready", "evidence": ".copilot-tracking/plans/2026-10-29/progress-dashboard-533-correction-critique.md"},
+    {"decision": "P01/P02 implemented; 25 focused progress and 35 combined targeted tests passed. Nonblocking heavy lock busy, so full discovery skipped. Targeted progress browser and pinned axe passed 11 states with zero violations; current-source lint/type/syntax and four scenario pins pass.", "status": "review-ready-with-explicit-validation-limits", "evidence": ".copilot-tracking/changes/2026-10-29/progress-dashboard-533-correction-changes.md"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Review", "action": "Perform one independent Review of the locally committed correction and preserve outcome; do not fix/re-review within this task."},
+  "prioritized_follow_ups": null
+}

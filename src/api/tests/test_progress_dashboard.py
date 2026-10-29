@@ -263,6 +263,35 @@ class ProgressDashboard(unittest.TestCase):
             self.assertIsNone(progress.lifecycle(case))
             self.assertIsNone(self.archive(q="ZF-1")["items"][0]["closed_on"])
 
+    def test_non_list_history_is_unknown_without_failing_either_read(self) -> None:
+        baseline = self.report()
+        for history in (None, "not a history", {"action": "Identified"}, 42, False):
+            with self.subTest(history=history), self.store.lock:
+                case = self.store.cases["ZF-4"]
+                case.update(is_synthetic=True, history=history)
+                self.assertTrue(progress.synthetic(case))
+                self.assertIsNone(progress.lifecycle(case))
+                self.assertEqual(self.report(), baseline)
+                archive = self.archive()
+                self.assertEqual(archive["unknown_closure_dates"], 1)
+                self.assertEqual(archive["total"], 3)
+                self.assertIsNone(self.archive(q="ZF-4")["items"][0]["closed_on"])
+                self.assertEqual(self.archive(q="ZF-4", start="2026-10-01")["total"], 0)
+                self.assertEqual(self.archive(q="ZF-4", end="2026-10-07")["total"], 0)
+
+    def test_range_validation_preserves_inclusive_limit_and_archive_semantics(self) -> None:
+        self.assertEqual(len(self.report(start="2025-10-07", end="2026-10-07")["daily"]), 366)
+        for values in (
+            dict(start="2025-10-06", end="2026-10-07"),
+            dict(start="2026-10-08", end="2026-10-07"),
+            dict(start="2026-10-08"),
+        ):
+            with self.subTest(values=values), self.assertRaises(progress.DateRangeError):
+                self.report(**values)
+        with self.assertRaises(progress.DateRangeError):
+            self.archive(start="2026-10-08", end="2026-10-07")
+        self.assertEqual(self.archive(start="2020-01-01", end="2026-10-07")["total"], 2)
+
     def test_ai_review_date_cohort_provenance_and_no_private_fields(self) -> None:
         ai = self.report(start="2026-10-02", end="2026-10-03")["ai"]
         self.assertEqual([r["count"] for r in ai["outcomes"]], [1, 1, 0])
@@ -403,6 +432,22 @@ class ProgressDashboard(unittest.TestCase):
                 query = urlencode(dict(status="Withdrawn", team="Quality Inspector", q="ZF-3"))
                 self.assertEqual(request("/api/closed-cases?" + query, cookie)[1]["total"], 1)
                 self.assertEqual(request("/api/closed-cases?page=0", cookie)[0], 400)
+                for path in (
+                    "/api/progress?start=2026-10-08&end=2026-10-07",
+                    "/api/progress?start=2020-01-01&end=2026-10-07",
+                    "/api/progress?start=2026-10-08",
+                    "/api/closed-cases?start=2026-10-08&end=2026-10-07",
+                ):
+                    code, error = request(path, cookie)
+                    self.assertEqual(code, 400)
+                    self.assertEqual(error["reasons"], dict(fields=["start", "end"]))
+                for path in (
+                    "/api/progress?unknown=value",
+                    "/api/closed-cases?page=0",
+                ):
+                    code, error = request(path, cookie)
+                    self.assertEqual(code, 400)
+                    self.assertNotIn("reasons", error)
 
 
 class SqliteProgressDashboard(ProgressDashboard):

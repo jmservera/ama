@@ -68,11 +68,23 @@ const ProgressViews = (() => {
       return await api(`${path}?${values}`, undefined, signal);
     } catch (error) {
       if (signal.aborted || !me) return null;
+      const invalidFields = error.status === 400 && Array.isArray(error.reasons?.fields)
+        ? ["start", "end"].filter(name => error.reasons.fields.includes(name))
+          .map(name => controls.querySelector(`[name=${name}]`)).filter(Boolean)
+        : [];
+      for (const input of invalidFields) {
+        const message = h("p", { id: `${input.id}-error`, class: "field-error", role: "status" }, error.message);
+        input.setAttribute("aria-invalid", "true");
+        input.setAttribute("aria-describedby", message.id);
+        input.after(message);
+      }
       show(h("div", { class: "progress-page" }, h("h1", {}, title),
         h("p", { class: "flag" }, "Demonstration data"),
-        controls, h("p", { class: "err", role: "alert" }, error.message),
-        h("p", {}, "Change the filters or try again. A failed read is not an empty result."),
-        h("button", { type: "button", onclick: route }, "Try again")));
+        controls, !invalidFields.length && [
+          h("p", { class: "err", role: "alert" }, error.message),
+          h("p", {}, "Change the filters or try again. A failed read is not an empty result."),
+          h("button", { type: "button", onclick: route }, "Try again")]));
+      invalidFields[0]?.focus();
       return null;
     }
   }

@@ -34,6 +34,10 @@ STEP = {stage: name for name, stages in JOURNEY.items() for stage in stages}
 CLOSE_ACTIONS = {"Accepted handover", "Withdrawn", "Excluded"}
 
 
+class DateRangeError(ValueError):
+    """The selected start and end dates do not form a supported range."""
+
+
 def parameters(query: dict[str, list[str]], accepted: set[str]) -> dict[str, str]:
     if set(query) - accepted or any(len(values) != 1 for values in query.values()):
         raise ValueError("Use each supported filter once.")
@@ -72,9 +76,12 @@ def synthetic(case: dict[str, Any]) -> bool:
 
 def lifecycle(case: dict[str, Any]) -> list[tuple[date, bool]] | None:
     """Return observed open/close transitions; contradictory or partial history is unknown."""
+    history = case.get("history")
+    if not isinstance(history, list):
+        return None
     events: list[tuple[datetime, bool]] = []
     identified: list[datetime] = []
-    for row in case.get("history", []):
+    for row in history:
         if not isinstance(row, dict) or row.get("is_synthetic") is not True:
             continue
         action = row.get("action")
@@ -125,7 +132,7 @@ def date_range(values: dict[str, str], as_of: str) -> tuple[date, date]:
     except OverflowError:
         raise ValueError("Choose a date range within supported calendar dates.") from None
     if start > end or (end - start).days > 365:
-        raise ValueError("Choose an end date on or after the start, covering at most 366 days.")
+        raise DateRangeError("Choose an end date on or after the start, covering at most 366 days.")
     return start, end
 
 
@@ -261,7 +268,7 @@ def closed_cases(store: Any, user: dict[str, Any], query: dict[str, list[str]]) 
     start = day(values["start"]) if values.get("start") else None
     end = day(values["end"]) if values.get("end") else None
     if start and end and start > end:
-        raise ValueError("Choose an end date on or after the start.")
+        raise DateRangeError("Choose an end date on or after the start.")
     numbers = []
     for name, default, maximum in (("page", "1", 10**9), ("limit", "20", 100)):
         text = values.get(name, default)

@@ -21,6 +21,7 @@ Unmarked records never contribute. Initial `Identified`, simulation aftercare
 reopen, controlled reopen and explicit home closure events supply lifecycle
 dates; current stage dates are not opening dates. Missing or contradictory
 lifecycle evidence is excluded from historical measures with coverage counts.
+Non-list histories, including null, are unknown rather than failed reads.
 Opened includes reopened episodes, also counted separately. Daily backlog is
 the end-of-day known-lifecycle count; Monday-based weeks are clipped to the
 selected dates. Time to close uses each observed episode ending in range,
@@ -46,6 +47,10 @@ count. ID ordering is stable. Out-of-range pages clamp to the final page;
 empty results have page 1 of 1. Hash URL queries retain filters/page through
 reload and browser history, and applying filters resets pagination.
 The legacy case/CSV endpoints are unchanged.
+
+Invalid date ranges show inline errors linked to both date fields and focus the
+start date so the range can be corrected. Service read failures retain a separate
+page alert and retry action without marking valid dates as invalid.
 
 Focused checks, from `src/api` with installed dev distributions:
 
