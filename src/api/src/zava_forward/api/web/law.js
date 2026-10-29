@@ -66,6 +66,19 @@
     show(nodes, d.results.length + " results.");
   }
   const fail = (e) => { status.textContent = `${e.message}. Try All sources or search again.`; };
+  if (typeof AsyncAction === "undefined" || !AsyncAction
+      || !["handler", "run"].every(method => typeof AsyncAction[method] === "function")) {
+    const message = "Required law viewer file did not load: /async-action.js. Reload this page to try again. If this continues, contact application support.";
+    const reload = el("button", "Reload law viewer");
+    reload.type = "button";
+    reload.addEventListener("click", () => location.reload());
+    const error = el("p", message, "err");
+    error.setAttribute("role", "alert");
+    document.getElementById("law-form").querySelectorAll("input, button").forEach(control => { control.disabled = true; });
+    document.getElementById("law-form").addEventListener("submit", event => event.preventDefault());
+    show([el("h2", "Law viewer unavailable"), error, reload], message);
+    return;
+  }
   document.getElementById("law-all").addEventListener("click", AsyncAction.handler(() => list().catch(fail)));
   document.getElementById("law-form").addEventListener("submit", AsyncAction.handler((e) => { e.preventDefault(); return find(document.getElementById("law-q").value).catch(fail); }));
   AsyncAction.run(null, () => list().catch(fail), "Loading sources");

@@ -18,7 +18,7 @@ function h(tag, attrs, ...kids) {
   for (const [k, v] of Object.entries(attrs || {})) {
     if (k === "class") el.className = v;
     else if (k.startsWith("on")) el.addEventListener(k.slice(2),
-      ["onclick", "onsubmit", "onchange"].includes(k) && typeof AsyncAction !== "undefined"
+      ["onclick", "onsubmit", "onchange"].includes(k) && typeof AsyncAction !== "undefined" && AsyncAction
         && typeof AsyncAction.handler === "function"
         ? AsyncAction.handler(v) : v);
     else if (v !== false && v != null) el.setAttribute(k, v === true ? "" : v);
@@ -226,7 +226,8 @@ function missingWorkspaceScripts(hash, caseRoute) {
   const staffCase = Boolean(me) && caseRoute && !contractor;
   const staffDestination = Boolean(me) && !contractor && !caseRoute;
   return [
-    ["/async-action.js", true, typeof AsyncAction !== "undefined" && typeof AsyncAction.handler === "function"],
+    ["/async-action.js", true, typeof AsyncAction !== "undefined" && AsyncAction
+      && ["handler", "run", "feedback"].every(method => typeof AsyncAction[method] === "function")],
     ["/ops.js", staffCase || (staffDestination && hash === "#/capacity") || (contractor && !caseRoute && destination !== "#/screens"), typeof qualityPanel === "function"],
     ["/panels.js", staffCase || (staffDestination && hash === "#/finance"), typeof financePanel === "function"],
     ["/assistants.js", staffCase || (staffDestination && hash === "#/assistants"), typeof assistantCasePanel === "function"],

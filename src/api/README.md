@@ -29,6 +29,11 @@ progress politely. Existing handler-owned disabled states and inline errors win
 over cleanup. CSV, account, filters, appointment forms and the standalone law
 viewer use the same helper; non-control reads and map refreshes show progress
 without disabling navigation. Reduced motion keeps a static icon plus text.
+The standalone law viewer checks its required helper methods before binding
+actions or reading sources. If the helper is missing or incomplete, it shows
+an explicit error and native "Reload law viewer" button; search is disabled
+until reload restores the helper. Workspace startup requires all three helper
+methods (handler, run and feedback), not just an exported object or handler.
 Controls whose handlers already set `aria-disabled="true"` retain that
 focus-preserving state without an additional native disable; pending duplicate
 activation is still suppressed.
@@ -55,7 +60,8 @@ including line breaks before or between references. Common titles and medial
 abbreviations do not fragment statements; genuine sentence and line boundaries
 remain separate. Ambiguous capitalized street suffixes such as "High St." are
 conservatively treated as sentence boundaries, not general language inference.
-Sentence-ending punctuation followed by closing quotes or brackets retains
+Complete sentence-ending punctuation runs (including ellipses and ?!) followed
+by closing quotes or brackets retain
 the same statement/reference boundaries. Terminal name suffixes such as
 "Contact John Smith Jr. Repairs are due." do not borrow the next claim's
 references; lowercase medial continuations and titles remain intact.

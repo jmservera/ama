@@ -28,7 +28,7 @@ PROMPT_VERSION = "2026-10-09.1"
 CITE_RE = re.compile(r"\[\[(.+?)\]\]")
 EMPTY_SOURCES = re.compile(r"(?im)^[ \t]*sources?[ \t]*:[\s;,]*$")
 BULLET = re.compile(r"^\s*[-*\u2022]\s")
-STATEMENT_END = r"""[.!?]["'\u2019\u201d)\]}]*"""
+STATEMENT_END = r"""[.!?\u2026][.!?\u2026"'\u2019\u201d)\]}]*"""
 STATEMENT_ABBREVIATION = re.compile(
     r"\b(?:Mr|Mrs|Ms|Mx|Dr|Prof|Rev|Sr|Jr|St|e\.g|i\.e|vs|cf|approx|etc)\.(?=[ \t]+\w)",
     re.IGNORECASE,
@@ -132,7 +132,7 @@ def analyse(text, sources, bullets=False):
     bad = list(dict.fromkeys(m for m in marks if not resolve(m, sources)))
     clean = CITE_RE.sub("", text)
     clean = EMPTY_SOURCES.sub("", clean)
-    clean = re.sub(r"[ \t]+([.,;:!?])", r"\1", clean)
+    clean = re.sub(r"[ \t]+([.,;:!?\u2026])", r"\1", clean)
     clean = re.sub(r"\n{3,}", "\n\n", clean).strip()
     return clean, good, bad, dropped
 

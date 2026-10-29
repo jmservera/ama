@@ -8,6 +8,70 @@ WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
 
 
 class WorkspaceScripts(unittest.TestCase):
+    def test_law_helper_failure_renders_native_reload_before_reads(self) -> None:
+        result = subprocess.run(
+            [
+                "node",
+                "-e",
+                r"""
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const vm = require("node:vm");
+const source = fs.readFileSync(process.argv[1] + "/law.js", "utf8");
+for (const state of ["absent", "null", "empty", "handler-only", "run-only",
+  "bad-handler", "bad-run"]) {
+  let reloads = 0, reads = 0, helperBindings = 0;
+  const element = tag => ({tag, attrs: {}, children: [], listeners: {},
+    setAttribute(name, value) {this.attrs[name] = value;},
+    addEventListener(name, callback) {this.listeners[name] = callback;},
+    replaceChildren(...children) {this.children = children;},
+    focus() {this.focused = true;}});
+  const out = element("div"), status = element("p"), form = element("form");
+  const controls = [element("input"), element("button"), element("button")];
+  form.querySelectorAll = () => controls;
+  const nodes = {"law-out": out, "law-status": status, "law-form": form,
+    "law-q": controls[0], "law-all": controls[2]};
+  const context = vm.createContext({
+    document: {getElementById: id => nodes[id], createElement: element},
+    location: {reload() {reloads++;}},
+    fetch() {reads++; throw new Error("No read before helper readiness");}
+  });
+  const handler = () => {helperBindings++; throw new Error("Unready helper called");};
+  if (state !== "absent") context.AsyncAction = state === "null" ? null
+    : state === "empty" ? {}
+    : state === "handler-only" ? {handler}
+    : state === "run-only" ? {run: handler}
+    : state === "bad-handler" ? {handler: true, run: handler}
+    : {handler, run: true};
+  assert.doesNotThrow(() => vm.runInContext(source, context), state);
+  assert.equal(reads, 0, state);
+  assert.equal(helperBindings, 0, state);
+  assert.match(status.textContent, /Required law viewer file did not load: \/async-action.js/,
+    state);
+  assert.ok(out.focused, state);
+  const reload = out.children.find(node => node.tag === "button");
+  assert.ok(reload, state);
+  assert.equal(reload.type, "button", state);
+  assert.equal(reload.textContent, "Reload law viewer", state);
+  assert.equal(typeof reload.listeners.click, "function", state);
+  reload.listeners.click();
+  assert.equal(reloads, 1, state);
+  assert.ok(controls.every(control => control.disabled), state);
+  let prevented = false;
+  form.listeners.submit({preventDefault() {prevented = true;}});
+  assert.ok(prevented, state);
+}
+console.log("PASS law helper failure and native reload");
+""",
+                str(WEB),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("PASS law helper failure", result.stdout)
+
     def test_terminal_startup_renders_native_reload_with_unready_helper(self) -> None:
         result = subprocess.run(
             [
@@ -22,7 +86,7 @@ const factory = source.slice(source.indexOf("function h("),
   source.indexOf("function mutationNeedsHistory"));
 const failure = source.slice(source.indexOf("function startupFailed("),
   source.indexOf("bootstrapWorkspace().catch"));
-for (const state of ["absent", "empty", "non-callable", "ready"]) {
+for (const state of ["absent", "null", "empty", "non-callable", "ready"]) {
   const elements = [], events = [], views = [];
   let reloads = 0, wraps = 0;
   const document = {
@@ -39,7 +103,8 @@ for (const state of ["absent", "empty", "non-callable", "ready"]) {
   };
   const context = vm.createContext({document, Event, workspaceStatus: {textContent: ""},
     location: {reload() {reloads++;}}, show: (...nodes) => views.push(nodes)});
-  if (state !== "absent") context.AsyncAction = state === "empty" ? {}
+  if (state !== "absent") context.AsyncAction = state === "null" ? null
+    : state === "empty" ? {}
     : state === "non-callable" ? {handler: true}
     : {handler: callback => {wraps++; return callback;}};
   vm.runInContext(factory + failure, context);
@@ -99,8 +164,15 @@ function harness(outcomes = []) {
       if (outcome === "timeout") return;
       queueMicrotask(() => {
         if (outcome === "unready") context.AsyncAction = {};
+        if (outcome === "null") context.AsyncAction = null;
+        if (outcome.startsWith("partial-")) {
+          context.AsyncAction = {handler: task => task, run() {}, feedback() {}};
+          context.AsyncAction[outcome.slice(8)] = true;
+        }
         if (outcome === "ready") {
-          if (script.src === "/async-action.js") context.AsyncAction = {handler: task => task};
+          if (script.src === "/async-action.js") {
+            context.AsyncAction = {handler: task => task, run() {}, feedback() {}};
+          }
           else if (script.src === "/vendor/leaflet.js") context.L = {};
           else if (script.src === "/role-screens.js") {
             context.roleScreensView = async () => views.push("screens");
@@ -131,7 +203,7 @@ function harness(outcomes = []) {
     history: {replaceState: (_state, _title, hash) => {context.location.hash = hash;}},
     routeController: new AbortController(), searchTimer: 0,
     coordinatorOrigin: null, queueOrigin: "mine",
-    AsyncAction: {handler: task => task},
+    AsyncAction: {handler: task => task, run() {}, feedback() {}},
     qualityPanel() {}, financePanel() {}, assistantCasePanel() {}, chatCasePanel() {},
     timeView() {}, roleScreensView() {},
     overviewView: async () => views.push("overview"),
@@ -170,7 +242,8 @@ function harness(outcomes = []) {
     }
   }
   for (const outcomes of [["ready"], ["error", "ready"], ["error", "error"],
-    ["load"], ["timeout"], ["unready"]]) {
+    ["load"], ["timeout"], ["unready"], ["null"],
+    ["partial-handler"], ["partial-run"], ["partial-feedback"]]) {
     const bootstrap = harness([...outcomes]);
     bootstrap.context.me = null;
     if (outcomes.includes("unready")) bootstrap.context.AsyncAction = {};

@@ -66,7 +66,7 @@ def shell_check(browser: Browser, base: str) -> None:
 
 def helper_bootstrap_check(
     browser: Browser, base: str, failures: int, *, missing_global: bool = False,
-    unready_helper: bool = False,
+    unready_helper: bool = False, unready_method: str | None = None,
 ) -> None:
     context = browser.new_context()
     context.route("**/*", lambda route: route.continue_()
@@ -91,12 +91,16 @@ def helper_bootstrap_check(
                 route.fulfill(content_type="text/javascript", body="/* Missing helper. */")
             elif unready_helper:
                 route.fulfill(content_type="text/javascript", body="var AsyncAction = {};")
+            elif unready_method:
+                route.fulfill(content_type="text/javascript", body=(
+                    "var AsyncAction = {handler: task => task, run() {}, feedback() {}};"
+                    f"AsyncAction.{unready_method} = true;"))
             else:
                 route.continue_()
 
         page.route("**/async-action.js", intercept)
         page.goto(base + "/app#/case/ZF-1?tab=resident")
-        terminal = failures == 3 or missing_global or unready_helper
+        terminal = failures == 3 or missing_global or unready_helper or bool(unready_method)
         if terminal:
             expect(page.get_by_role("heading", name="Workspace unavailable")).to_be_visible()
             expect(page.get_by_role("alert")).to_contain_text(
@@ -107,12 +111,15 @@ def helper_bootstrap_check(
             expect(page.get_by_label("Work email", exact=True)).to_have_count(0)
             expect(page.get_by_role("button", name="Try again", exact=True)).to_have_count(0)
             assert not service_reads, "do not call start before helper readiness"
-            expected_requests = 2 if missing_global or unready_helper else 3
+            expected_requests = 2 if missing_global or unready_helper or unready_method else 3
             assert len(requests) == expected_requests, requests
             if unready_helper:
                 assert page.evaluate(
                     "() => typeof AsyncAction === 'object' && "
                     "typeof AsyncAction.handler !== 'function'")
+            if unready_method:
+                assert page.evaluate(
+                    "(method) => typeof AsyncAction[method] !== 'function'", unready_method)
             page.wait_for_timeout(800)
             assert len(requests) == expected_requests, requests
             assert not errors, errors
@@ -147,7 +154,95 @@ def helper_bootstrap_check(
         expect(signout).to_be_enabled()
         assert not errors, errors
         print(f"PASS helper bootstrap: failures={failures}, missing_global={missing_global}, "
-              f"unready_helper={unready_helper}")
+              f"unready_helper={unready_helper}, unready_method={unready_method}")
+    finally:
+        context.close()
+
+
+def law_helper_check(browser: Browser, base: str, failure: str) -> None:
+    context = browser.new_context()
+    context.route("**/*", lambda route: route.continue_()
+                  if route.request.url.startswith(base + "/") else route.abort())
+    try:
+        page = context.new_page()
+        errors: list[str] = []
+        reads: list[str] = []
+        helper_reads: list[str] = []
+        documents: list[str] = []
+        page.on("pageerror", lambda error: errors.append(str(error)))
+        page.on("request", lambda request: reads.append(request.url)
+                if "/api/law/" in request.url else None)
+        page.on("request", lambda request: documents.append(request.url)
+                if request.resource_type == "document" else None)
+
+        def intercept(route: Route) -> None:
+            helper_reads.append(route.request.url)
+            if failure == "blocked":
+                route.abort()
+            else:
+                scripts = {
+                    "missing": "/* No helper exported. */",
+                    "null": "var AsyncAction = null;",
+                    "handler-only": "var AsyncAction = {handler: task => task};",
+                    "run-only": "var AsyncAction = {run() {}};",
+                }
+                route.fulfill(content_type="text/javascript", body=scripts[failure])
+
+        page.route("**/async-action.js", intercept)
+        meta: dict[str, Any] = dict(
+            status="Synthetic reference", completeness="Complete",
+            effective=None, retrieved="2026-10-29", version="1", caveats=[])
+        source = dict(meta, id="synthetic-source", title="Synthetic source",
+                      owner="Synthetic owner", official_url=None)
+        provision = dict(meta, id="synthetic-provision", heading_path="Synthetic provision",
+                         text="Constructed reference text.")
+        page.route("**/api/law/sources", lambda route: route.fulfill(
+            json={"sources": [source], "gaps": []}))
+        page.route("**/api/law/sources/synthetic-source", lambda route: route.fulfill(
+            json={"source": source, "versions": [dict(meta, content_hash="synthetic")],
+                  "provisions": [provision]}))
+        page.route("**/api/law/provisions/synthetic-provision", lambda route: route.fulfill(
+            json=provision))
+        page.route("**/api/law/search?**", lambda route: route.fulfill(json={
+            "caveats": [], "no_source_held": [], "results": [
+                dict(provision, title="Synthetic source")]}))
+        page.goto(base + "/law.html")
+        expect(page.get_by_role("heading", name="Law viewer unavailable")).to_be_visible()
+        expect(page.get_by_role("alert")).to_contain_text(
+            "Required law viewer file did not load: /async-action.js")
+        expect(page.locator("#law-status")).not_to_contain_text("Loading sources")
+        expect(page.locator("#law-status")).to_have_attribute("aria-live", "polite")
+        expect(page.get_by_role("button", name="All sources", exact=True)).to_be_disabled()
+        expect(page.get_by_role("button", name="Search", exact=True)).to_be_disabled()
+        expect(page.get_by_label("Search the provisions", exact=True)).to_be_disabled()
+        page.locator("#law-form").evaluate("form => form.requestSubmit()")
+        page.wait_for_timeout(800)
+        assert not reads, reads
+        assert not errors, errors
+        assert len(documents) == 1, documents
+        assert len(helper_reads) == 1, helper_reads
+        page.unroute("**/async-action.js")
+        reload = page.get_by_role("button", name="Reload law viewer", exact=True)
+        expect(page.locator("#law-out")).to_be_focused()
+        page.keyboard.press("Tab")
+        expect(reload).to_be_focused()
+        reload.press("Enter")
+        expect(page.get_by_role("heading", name="Sources held", exact=True)).to_be_visible()
+        assert len(documents) == 2, documents
+        assert reads == [base + "/api/law/sources"], reads
+        page.get_by_role("button", name="Synthetic source", exact=True).click()
+        expect(page.get_by_role("heading", name="Synthetic source", exact=True)).to_be_visible()
+        page.get_by_role("button", name="Synthetic provision", exact=True).click()
+        expect(page.locator("#law-out pre")).to_have_text("Constructed reference text.")
+        page.get_by_role("button", name="All sources", exact=True).click()
+        expect(page.get_by_role("heading", name="Sources held", exact=True)).to_be_visible()
+        page.get_by_label("Search the provisions", exact=True).fill("Synthetic")
+        page.get_by_role("button", name="Search", exact=True).click()
+        expect(page.get_by_role("heading", name="Search results", exact=True)).to_be_visible()
+        page.get_by_role("button", name="Synthetic source: Synthetic provision").click()
+        expect(page.locator("#law-out pre")).to_have_text("Constructed reference text.")
+        assert not errors, errors
+        print(f"PASS law helper {failure}: native keyboard reload and restored list/search/details")
     finally:
         context.close()
 
@@ -162,6 +257,10 @@ def run_browser(base: str, axe: str, output: Path) -> None:
                 helper_bootstrap_check(browser, base, failures)
             helper_bootstrap_check(browser, base, 1, missing_global=True)
             helper_bootstrap_check(browser, base, 0, unready_helper=True)
+            for method in ("run", "feedback"):
+                helper_bootstrap_check(browser, base, 0, unready_method=method)
+            for failure in ("blocked", "missing", "null", "handler-only", "run-only"):
+                law_helper_check(browser, base, failure)
             context = browser.new_context(viewport={"width": 1280, "height": 900})
             context.route("**/*", lambda route: route.continue_()
                           if route.request.url.startswith(base + "/") else route.abort())

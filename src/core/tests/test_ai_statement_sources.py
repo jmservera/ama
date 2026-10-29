@@ -25,7 +25,7 @@ class StatementSources(unittest.TestCase):
 
     def test_closing_delimiters_preserve_sentence_and_reference_boundaries(self) -> None:
         sources = {"ZF-1": ["First source", "Second source"]}
-        for punctuation in ".!?":
+        for punctuation in (".", "!", "?", "...", "?!", "!?", "...?!", "\u2026"):
             for opening, closing in (
                 ('"', '"'),
                 ("'", "'"),
@@ -36,6 +36,8 @@ class StatementSources(unittest.TestCase):
                 ("{", "}"),
                 ('("', '")'),
                 ("\u201c[(", ")]\u201d"),
+                ("(", ")."),
+                ('("', '").'),
             ):
                 for separator in (" ", "\t", "\n", "\r\n"):
                     for placement in ("before", "after", "uncited"):
@@ -229,7 +231,7 @@ class StatementSources(unittest.TestCase):
 
     def test_trailing_citations_preserve_sentence_and_source_boundaries(self) -> None:
         sources = {"ZF-1": ["First source", "Second source"]}
-        for punctuation in ".!?":
+        for punctuation in (".", "!", "?", "...", "?!", "!?", "...?!", "\u2026"):
             for separator in (" ", "  ", "\t", "\n"):
                 with self.subTest(punctuation=punctuation, separator=repr(separator)):
                     text = (
@@ -246,6 +248,7 @@ class StatementSources(unittest.TestCase):
                             dict(text="Second.", citations=["Second source"], unresolved=[]),
                         ],
                     )
+
         self.assertEqual(
             statement_sources(
                 "First. [[First source]] [[Unknown source]] Second. [[Second source]]",
@@ -256,3 +259,26 @@ class StatementSources(unittest.TestCase):
                 dict(text="Second.", citations=["Second source"], unresolved=[]),
             ],
         )
+
+    def test_complete_punctuation_run_keeps_full_statement_objects(self) -> None:
+        sources = {"ZF-1": ["First source", "Second source"]}
+        for first in (
+            "Still waiting...",
+            "Still waiting?!",
+            'Still waiting...")',
+            "Still waiting?!]}",
+            "Still waiting\u2026",
+            "(Still waiting...).",
+            '"Still waiting?!"!',
+        ):
+            with self.subTest(first=first):
+                self.assertEqual(
+                    statement_sources(
+                        first + " [[First source]] Repairs are due. [[Second source]]",
+                        sources,
+                    ),
+                    [
+                        dict(text=first, citations=["First source"], unresolved=[]),
+                        dict(text="Repairs are due.", citations=["Second source"], unresolved=[]),
+                    ],
+                )
