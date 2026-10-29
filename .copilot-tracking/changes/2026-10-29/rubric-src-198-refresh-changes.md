@@ -153,6 +153,31 @@ No same-task source fix, repeat Review or acceptance waiver.
 
 After Review, the frozen document diff hash was recomputed unchanged:
 `db7beb113cb2306bc3839ab04b8a4427990d99017c26a6978288d90cc27e7251`.
-Whitespace remained clean. Parent will persist the frozen candidate and
-original dated evidence locally, then record the observed commit result.
+Whitespace remained clean. Parent persisted the frozen candidate and original
+dated evidence locally in `ca82058f8127c8a53d751ddd06128f03a817e32b`.
 No push is authorized or performed.
+
+## Local Commit Result
+
+| Command | Observed result |
+| --- | --- |
+| `identity=$(gh api user --jq '"\(.id)+\(.login)@users.noreply.github.com"')` followed by repository-local `git config user.email` | Authenticated privacy-safe address used for both author and committer. |
+| `git add` with the three durable documents and seven exact 2026-10-29 artifact paths; `git diff --cached --check` | Passed; only task-owned files staged. |
+| `git commit -m "docs(rubric): reconcile PR 507 with current main" -m "Refs #198" -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"` with explicit matching author/committer emails | Passed; ca82058f8127c8a53d751ddd06128f03a817e32b, 10 files changed, original Review included. |
+| `git log -1 --format=...`, `git status --short`, `git merge-base --is-ancestor origin/main HEAD` after commit | Compliant identity/trailer, clean worktree, main ancestor. |
+
+This final result/state bookkeeping is persisted by a separate local
+`docs(rpi): record PR 507 refresh handoff` commit with Refs #198 and the same
+required trailer. Its self-referential SHA is intentionally left to Git history.
+No documents or executable inputs change after the original Review.
+No publication receipt or fresh exact-final-head assessment is claimed for
+either local commit. The coordinator must use the final local HEAD, not the
+earlier source/evidence commit, when running required publication gates.
+
+## Final Parent Status
+
+The bounded Research/Plan/Implement/Review loop executed, and the local rebase
+is persisted. Review remains Complete / Not accepted, with overall green CI
+blocked/unproven. Manual session ends at Review; no automatic continuation,
+child task, Azure write or push. Next action belongs to the coordinator and
+the separately routed owners, not another same-task Review.
