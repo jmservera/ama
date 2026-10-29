@@ -88,6 +88,84 @@ class IotHubModuleTests(unittest.TestCase):
         self.assertEqual(diagnostics["logs"], [{"categoryGroup": "allLogs", "enabled": False}])
         self.assertEqual(diagnostics["metrics"], [{"category": "AllMetrics", "enabled": True}])
 
+    def assert_live_scope_guards(self, template) -> None:
+        guard = module(template, "iot-live-scope-guard")
+        for group, requested, actual in (
+            ("ama", "uksouth", "uksouth"),
+            ("other", "uksouth", "uksouth"),
+            ("ama", "westus", "westus"),
+            ("ama", "uksouth", "westus"),
+            ("ama", "westus", "uksouth"),
+        ):
+            context = {
+                "resourceGroup": lambda group=group: SimpleNamespace(name=group),
+                "reference": lambda *args, actual=actual: SimpleNamespace(location=actual),
+            }
+            for check, accepted in (
+                ("resourceGroupMustBeAma", group == "ama"),
+                ("iotLocationMustBeUKSouth", requested == "uksouth" and actual == requested),
+            ):
+                self.assertIn(check, guard["properties"]["parameters"])
+                self.assertIn(check, guard["properties"]["template"]["parameters"])
+                spec = guard["properties"]["template"]["parameters"][check]
+                self.assertEqual(spec.get("minLength"), 1)
+                value = evaluate(
+                    guard["properties"]["parameters"][check],
+                    self.values(template, location=requested),
+                    template.get("variables", {}),
+                    context,
+                )["value"]
+                self.assertEqual(value, "ok" if accepted else "", (group, requested, actual, check))
+        self.assertEqual(unguarded_resources(template, "iot-live-scope-guard"), set())
+
+    def test_live_profile_scope_checks_requested_and_actual_location(self) -> None:
+        self.assert_live_scope_guards(self.live)
+
+    def test_mutations_reject_live_scope_guard_bypass(self) -> None:
+        for check in ("resourceGroupMustBeAma", "iotLocationMustBeUKSouth"):
+            for change in ("bypass", "input-removed", "constraint", "constraint-removed"):
+                with self.subTest(check=check, change=change):
+                    mutated = deepcopy(self.live)
+                    guard = module(mutated, "iot-live-scope-guard")
+                    if change == "bypass":
+                        guard["properties"]["parameters"][check] = {"value": "ok"}
+                    elif change == "input-removed":
+                        del guard["properties"]["parameters"][check]
+                    else:
+                        spec = guard["properties"]["template"]["parameters"][check]
+                        if change == "constraint":
+                            spec["minLength"] = 0
+                        else:
+                            del spec["minLength"]
+                    with self.assertRaises(AssertionError):
+                        self.assert_live_scope_guards(mutated)
+        actual_location = (
+            "equals(reference(resourceId('Microsoft.Devices/IotHubs', parameters('name')), "
+            "'2023-06-30', 'full').location, parameters('location'))"
+        )
+        for original, replacement in (
+            ("equals(parameters('location'), 'uksouth')", "true()"),
+            (actual_location, "true()"),
+            ("and(", "or("),
+        ):
+            with self.subTest(clause=original):
+                mutated = deepcopy(self.live)
+                params = module(mutated, "iot-live-scope-guard")["properties"]["parameters"]
+                before = params["iotLocationMustBeUKSouth"]
+                params["iotLocationMustBeUKSouth"] = before.replace(original, replacement)
+                self.assertNotEqual(params["iotLocationMustBeUKSouth"], before)
+                with self.assertRaises(AssertionError):
+                    self.assert_live_scope_guards(mutated)
+        for kind in (
+            f"{HUB}/eventHubEndpoints/ConsumerGroups",
+            "Microsoft.Insights/diagnosticSettings",
+        ):
+            with self.subTest(dependency=kind):
+                mutated = deepcopy(self.live)
+                resource(mutated, kind)["dependsOn"] = []
+                with self.assertRaises(AssertionError):
+                    self.assert_live_scope_guards(mutated)
+
     def values(self, template=None, **overrides):
         source = self.template if template is None else template
         defaults = {

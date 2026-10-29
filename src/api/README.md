@@ -951,6 +951,17 @@ The [2026-10-29 hub reconciliation and blockers](../../infra/README.md#bounded-e
 record the actual existing B1 resource, registry-permission blocker and unchanged
 service-key prohibition. Local actual SQL tests do not establish live transport.
 
+For this bounded exercise, explicitly set `RunBudget(..., max_messages=2,
+max_per_second=1.0, max_seconds=60.0)` with the required owner, cost and alert
+references: at most two messages total, one per second globally and 60 seconds
+per run. The default 100 messages and larger supported limits are not approved
+for this exercise. Before each run, the operator must check the UTC date/time
+and ensure the run fits within the remaining approved window through
+31 October 2026 UTC: stop before `2026-11-01T00:00:00Z`, and do not start if
+there is insufficient time to finish within that cutoff. `RunBudget` enforces
+per-run limits, not this calendar cutoff; checking and observing it remains
+the operator's responsibility.
+
 `iot_stream.HubReceiver` adds an explicitly called finite asynchronous SDK
 adapter around `SensorIngestion`; it adds no HTTP route, startup task or deployed
 service. `HubPublisher` sends one canonical observation/message through a
