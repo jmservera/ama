@@ -95,6 +95,10 @@ class App:
 
 
 def get_kind(path):
+    if path == "/api/progress":
+        return "stats"
+    if path == "/api/closed-cases":
+        return "cases"
     if path == "/api/coordinator":
         return "coordinator"
     if path == "/api/form-schemas":
@@ -269,6 +273,16 @@ def make_handler(app):
                     return self._json(400, {"error": str(e)})
             if not projection.allowed(u, get_kind(url.path)):
                 return self._json(403, {"error": "Your role does not include this."})
+            if url.path in ("/api/progress", "/api/closed-cases"):
+                from zava_forward.api import progress
+                try:
+                    read = progress.dashboard if url.path == "/api/progress" else progress.closed_cases
+                    values = parse_qs(url.query, keep_blank_values=True)
+                    return self._json(200, read(s, u, values))
+                except ValueError as error:
+                    return self._json(400, {"error": str(error)})
+                except PermissionError as error:
+                    return self._json(403, {"error": str(error)})
             if url.path == "/api/coordinator":
                 from zava_forward.core import coordinator
                 try:

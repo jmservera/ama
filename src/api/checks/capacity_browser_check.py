@@ -29,6 +29,7 @@ MANAGER_ROUTES = {
     "#/": ("My cases today", ("/api/facets", "/api/cases?view=mine"), "#app .layout"),
     "#/all": ("All open cases", ("/api/facets", "/api/cases?view=all"), "#app .layout"),
     "#/overview": ("Overview", ("/api/stats", "/api/map"), "#mapArea"),
+    "#/progress": ("Progress dashboard", ("/api/progress",), "#app .progress-facts"),
     "#/visits": ("Visits coming up", ("/api/visits?view=all",), "#app .list, #app p"),
     "#/funding": ("Funding applications", ("/api/funding",), "#app table"),
     "#/finance": ("Finance queue", ("/api/finance",), "#app table, #app p"),
@@ -37,7 +38,7 @@ MANAGER_ROUTES = {
         ("/api/packages", "/api/workorders"),
         "#app section[aria-label^='Appointment controls for']",
     ),
-    "#/closed": ("Closed cases", ("/api/cases?view=closed",), "#app .list, #app p"),
+    "#/closed": ("Closed cases", ("/api/closed-cases",), "#app table"),
     "#/assistants": (
         "Role-owned assistant proposals",
         ("/api/assistants/proposals",),
@@ -295,18 +296,27 @@ def check(store: Any) -> None:
                             [response.url.removeprefix(base) for response in reads],
                         )
                         payloads[target.path] = matching[-1].json()
-                    if href in ("#/", "#/all", "#/closed"):
+                    if href == "#/closed":
+                        rows = payloads["/api/closed-cases"]["items"]
+                        links = page.locator("#app tbody a")
+                        expect(links).to_have_count(len(rows))
+                        if rows:
+                            expect(links.first).to_contain_text(rows[0]["resident"])
+                        else:
+                            expect(page.locator("#app tbody")).to_contain_text(
+                                "No recorded data for this view."
+                            )
+                    elif href == "#/progress":
+                        expect(page.locator("#app .progress-chart")).to_have_count(6)
+                        expect(page.locator("#app")).to_contain_text("Demonstration data")
+                    elif href in ("#/", "#/all"):
                         rows = payloads["/api/cases"]["items"]
                         links = page.locator("#app .list > li > a.item")
                         expect(links).to_have_count(len(rows))
                         if rows:
                             expect(links.first).to_contain_text(rows[0]["resident"])
                         else:
-                            expect(
-                                page.get_by_text("No closed cases.", exact=True)
-                                if href == "#/closed"
-                                else page.locator("#app .empty")
-                            ).to_be_visible()
+                            expect(page.locator("#app .empty")).to_be_visible()
                     elif href == "#/visits":
                         rows = payloads["/api/visits"]
                         expect(page.locator("#app .list > li")).to_have_count(len(rows))
