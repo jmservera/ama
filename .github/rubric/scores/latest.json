@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-29T11:34:33+00:00",
-  "commit": "e61cfd1fbd725f6ad88997598911eb89e339837d",
+  "scored_at": "2026-10-29T12:09:29+00:00",
+  "commit": "819d27b9cbe2d6d8f2f502391cc75225ca4d7b5d",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40865599978",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40869814940",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "0b96cfbbedeb2a9b7485a862b37470831ccdc2082bb44e338178089012ce06c1",
-    "solution-code": "f8142ef3a728197393972978153ce57568e080a5463d8603aa661b5984f4ab79",
+    "solution-code": "e58c766489e172f9077d023c13a50c61ecfbdde0d679fff389c0dccf8500e2f6",
     "infrastructure": "b6366d357bc22aadb23fdb2e0847cbbda6689e072f25c6a68738113fd875b271",
     "capstone-deck": "acb30e4f302663cedec4884bc7c561fcb5a14fb647ab1c4f93ffc377567c8896",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
@@ -46,7 +46,8 @@
       "evidence": [
         "src/api/src/zava_forward/api/resident_demo/app.py:228-247",
         "src/core/src/zava_forward/core/resident_documents.py:60-110",
-        "src/api/src/zava_forward/api/resident_demo/agenda.py:1-35"
+        "src/api/src/zava_forward/api/resident_demo/agenda.py:1-35",
+        "src/core/src/zava_forward/core/synthetic/sensor_scenarios.py:650-661"
       ],
       "rationale": "Adds per-login session-binding header with constant-time compare and 409 on mismatch, strict use_record consent gate, bounded/allowlisted document parsing rejecting malformed input, and parameterized SQLite agenda transactions. Strengthens already-ceiling security."
     },
@@ -56,7 +57,9 @@
         "src/api/src/zava_forward/api/resident_demo/chat.py:1-225",
         "src/core/src/zava_forward/core/resident_documents.py:1-178",
         "src/api/tests/test_resident_chat_agenda.py:1-50",
-        "src/api/checks/resident_assistant_browser_check.py:1-100"
+        "src/api/checks/resident_assistant_browser_check.py:1-100",
+        "src/core/tests/test_sensor_scenarios.py:1-385",
+        "src/core/src/zava_forward/core/synthetic/sensor_scenarios.py:1-621"
       ],
       "rationale": "Adds complete resident chat routing, document facts parsing, synthetic callback agenda with booking/cancellation transactions, plus matching unit and browser checks. Strong completeness; already at ceiling."
     },
@@ -115,7 +118,8 @@
     "B6": {
       "score": 5,
       "evidence": [
-        "src/api/README.md:117-230"
+        "src/api/README.md:117-230",
+        "src/core/README.md:2474-2622"
       ],
       "rationale": "README adds a thorough, clearly structured section describing the new chat/agenda contract, security model, limits and test commands. Strong engineering documentation; not capstone deck itself. Ceiling unchanged."
     },
