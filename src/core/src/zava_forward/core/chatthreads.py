@@ -23,7 +23,7 @@ SQLITE_DDL = (
     "title TEXT NOT NULL, task TEXT NOT NULL, task_version TEXT NOT NULL, model TEXT NOT NULL, status TEXT NOT NULL, "
     "rowversion INTEGER NOT NULL, message_count INTEGER NOT NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)",
     "CREATE TABLE IF NOT EXISTS chat_message (thread_id TEXT NOT NULL, seq INTEGER NOT NULL, role TEXT NOT NULL, content TEXT NOT NULL, "
-    "model TEXT NOT NULL, task_version TEXT NOT NULL, evidence TEXT NOT NULL, created_at TEXT NOT NULL, PRIMARY KEY (thread_id, seq))",
+    "model TEXT NOT NULL, task_version TEXT NOT NULL, evidence TEXT NOT NULL, created_at TEXT NOT NULL, actor_role TEXT NOT NULL DEFAULT '', PRIMARY KEY (thread_id, seq))",
     "CREATE TABLE IF NOT EXISTS chat_memory (id TEXT PRIMARY KEY, owner TEXT NOT NULL, owner_role TEXT NOT NULL, content TEXT NOT NULL, "
     "redactions TEXT NOT NULL, item_class TEXT NOT NULL, source TEXT NOT NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL, "
     "expires_at TEXT NULL)",
@@ -38,7 +38,7 @@ MSSQL_DDL = (
     "rowversion BIGINT NOT NULL, message_count INT NOT NULL, created_at NVARCHAR(40) NOT NULL, updated_at NVARCHAR(40) COLLATE Latin1_General_100_BIN2 NOT NULL)",
     "CREATE TABLE chat_message (thread_id NVARCHAR(40) COLLATE Latin1_General_100_BIN2 NOT NULL, seq INT NOT NULL, role NVARCHAR(20) NOT NULL, "
     "content NVARCHAR(MAX) NOT NULL, model NVARCHAR(100) NOT NULL, task_version NVARCHAR(40) NOT NULL, evidence NVARCHAR(MAX) NOT NULL, "
-    "created_at NVARCHAR(40) NOT NULL, PRIMARY KEY (thread_id, seq))",
+    "created_at NVARCHAR(40) NOT NULL, actor_role NVARCHAR(100) NOT NULL DEFAULT N'', PRIMARY KEY (thread_id, seq))",
     "CREATE TABLE chat_memory (id NVARCHAR(40) COLLATE Latin1_General_100_BIN2 NOT NULL PRIMARY KEY, owner NVARCHAR(200) COLLATE Latin1_General_100_BIN2 NOT NULL, "
     "owner_role NVARCHAR(100) NOT NULL, content NVARCHAR(MAX) NOT NULL, redactions NVARCHAR(200) NOT NULL, item_class NVARCHAR(40) NOT NULL, source NVARCHAR(200) NOT NULL, "
     "created_at NVARCHAR(40) NOT NULL, updated_at NVARCHAR(40) NOT NULL, expires_at NVARCHAR(40) COLLATE Latin1_General_100_BIN2 NULL)",
@@ -58,7 +58,7 @@ THREAD_COLS = ("id", "owner", "owner_role", "case_id", "title", "task", "task_ve
 MEMORY_COLS = ("id", "owner", "owner_role", "content", "redactions", "item_class", "source", "created_at", "updated_at", "expires_at")
 CONTROL_COLS = ("scope", "ref", "enabled", "actor", "note", "at")
 MEMORY_ID_PREFIX = "CM-"
-MESSAGE_COLS = ("thread_id", "seq", "role", "content", "model", "task_version", "evidence", "created_at")
+MESSAGE_COLS = ("thread_id", "seq", "role", "content", "model", "task_version", "evidence", "created_at", "actor_role")
 
 
 class ChatNotFound(LookupError):
@@ -331,7 +331,7 @@ class ChatMixin:
             if expected_version is not None and expected_version != t["rowversion"]:
                 raise ConflictError(f"chat thread {tid}")
             now, seq = _now(), t["message_count"] + 1
-            m = dict(thread_id=tid, seq=seq, role=role, content=content, evidence=refs, created_at=now,
+            m = dict(thread_id=tid, seq=seq, role=role, content=content, evidence=refs, created_at=now, actor_role=str(user.get("role") or ""),
                      model=str(model or t["model"])[:100] if role == "assistant" else "", task_version=t["task_version"] if role == "assistant" else "")
             if not repo.update(tid, owner, t["rowversion"], message_count=seq, updated_at=now):
                 raise ConflictError(f"chat thread {tid}")

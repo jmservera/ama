@@ -3295,6 +3295,16 @@ Not in this slice: the panel (#159), model calls, memory (#161), isolation harde
 (#163; retention policy is unlocked for the exercise, legal retention lock deferred). Fixtures are synthetic.
 Tests: `tests/test_chatthreads.py` (in-memory and SQLite parity; `MssqlChatThreads` runs with `ZF_TEST_MSSQL=1`).
 
+The employee panel records server-derived `actor_role` per message and includes
+only prior user questions asked under the caller's current role. Changing from
+role A to B and back does not relabel earlier questions. Existing JSON messages
+without this field and SQL messages migrated with an empty role remain stored
+but are excluded from model context because their asking role is unknown.
+SQLite and SQL Server add the column idempotently; new messages persist it
+across restarts. The panel's 4,000-character history cap measures the actual
+dispatched `UNTRUSTED` block, including delimiter expansion, wrappers and
+newlines, while preserving the newest fitting questions in chronological order.
+
 ## Chat and memory isolation (issue #162)
 
 `chat_isolation.py` sits on the #160 repository and #163 privacy rules and adds no tables. Endpoints (staff roles only; contractors and unknown roles are denied, default deny): `GET/POST /api/chat/threads`, `GET /api/chat/threads/{id}`, `POST /api/chat/threads/{id}/messages|archive|delete`, `GET/POST /api/chat/memory` (the POST needs `task` and a prior opt-in), `GET /api/chat/memory/status?task=`, `POST /api/chat/memory/opt-in|opt-out|erase|global|task` and `POST /api/chat/memory/{id}/edit|delete` (the #285 lifecycle; `global` and `task` switches are administrator-only), `POST /api/chat/breakglass`. The owner is always the authenticated user; request fields such as `owner` or `email` are ignored, and another user's thread, or a case outside the caller's scope, is reported as not found (404, so existence cannot be probed). Prompts carry the masked question and only memory from `privacy.prompt_memory` (opt-in, switch-gated, labelled non-authoritative); stored model replies are redacted like user messages.

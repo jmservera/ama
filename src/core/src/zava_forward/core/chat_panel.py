@@ -417,21 +417,22 @@ class ChatPanel:
             kept = [
                 m
                 for m in thread["messages"]
-                if m["role"] == "user" and thread["owner_role"] == user["role"]
+                if m["role"] == "user" and m.get("actor_role") == user["role"]
             ]
             history_rows: list[str] = []
-            history_chars = 0
+            history = ""
             for message in reversed(kept[-CONTEXT_MESSAGES:]):
                 row = f"user: {message['content']}"
-                if history_chars + len(row) + 1 > MAX_HISTORY_CHARS:
+                candidate = "\n".join([row, *history_rows])
+                expanded = block("thread", candidate, len(candidate))
+                if len(expanded) > MAX_HISTORY_CHARS:
                     break
                 history_rows.insert(0, row)
-                history_chars += len(row) + 1
-            history = "\n".join(history_rows)
+                history = expanded
             source_json = json.dumps(sources, sort_keys=True)
             parts = [block("sources", source_json, len(source_json))]
             if history:
-                parts.append(block("thread", history, MAX_HISTORY_CHARS))
+                parts.append(history)
             parts.append("Question: " + neutralise(masked, MAX_QUESTION_CHARS))
             prompt = "\n\n".join(parts)
             system = SYSTEM

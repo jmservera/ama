@@ -252,6 +252,9 @@ class SqlStore(Store):
         for c, d in CHAT_MEMORY_ADDED:
             if c not in have:
                 self._add_column_default("chat_memory", c, "TEXT", f"'{d}'")
+        message_cols = {r[1] for r in self.db.execute("PRAGMA table_info(chat_message)").fetchall()}
+        if "actor_role" not in message_cols:
+            self._add_column_default("chat_message", "actor_role", "TEXT", "''")
 
     def _create_indexes(self):
         self.db.executescript(INDEXES)

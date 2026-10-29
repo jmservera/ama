@@ -48,6 +48,11 @@ cost below an unestablished quality floor as a saving.
 
 The adapter preserves validated usage independently per invocation, including
 failure or completion-time admission revocation; no shared last-call state.
+Admission callback exceptions before dispatch report `admission-check-failed`
+with zero model calls. Completion callback exceptions report
+`completion-check-failed` with the provider's known calls and validated usage;
+the unchecked answer remains withheld and the panel uses workflow-only fallback.
+Neither error text nor provider text is exposed in the failure receipt.
 The evaluator retains receipts for post-call access rejection from the ledger
 without exposing the forbidden answer. Prompt/source/control bindings now
 include the context caps and complete-source JSON policy.
