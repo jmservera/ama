@@ -13,6 +13,7 @@ from dataset import change_metadata
 from test_form_staging import batch, schema
 from zava_forward.core import form_review, forms
 from zava_forward.core.doc_controls import DocumentUnavailable
+from zava_forward.core.documents import DocumentStoreError
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import ConflictError, Store
 
@@ -103,6 +104,333 @@ class FormReview(unittest.TestCase):
         draft = self.review(store, draft, epc)
         draft = self.review(store, draft, area, "area", "correct", 12)
         return draft, epc, other
+
+    def prepare_alternatives(self, store: Any) -> tuple[Any, list[Any]]:
+        forms.register_schema(store, self.actor, schema())
+        doc = store.add_document(
+            self.actor,
+            "ZF-1",
+            "synthetic.txt",
+            "EPC",
+            b"DE",
+            metadata=change_metadata(store, "ZF-1"),
+        )
+        staged = [
+            forms.stage_candidates(store, self.actor, "ZF-1", batch(doc["id"], raw, start))
+            for start, raw in enumerate("DE")
+        ]
+        draft = form_review.action(
+            store,
+            self.actor,
+            "ZF-1",
+            dict(action="open", schema_id="SYN-TECH", schema_version=1),
+        )
+        return draft, staged
+
+    def test_missing_bytes_block_stale_rejected_and_replaced_retained_history(self) -> None:
+        for store in self.stores:
+            draft, epc, _ = self.prepare(store)
+            draft = self.review(store, draft, epc)
+            draft = form_review.action(
+                store,
+                self.actor,
+                "ZF-1",
+                dict(
+                    action="diagnose",
+                    draft_id=draft["draft_id"],
+                    expected_version=draft["input_version"],
+                ),
+            )
+            replacement = store.add_document(
+                self.actor,
+                "ZF-1",
+                "replacement.txt",
+                "EPC",
+                b"E",
+                metadata=change_metadata(store, "ZF-1"),
+            )
+            staged = forms.stage_candidates(
+                store, self.actor, "ZF-1", batch(replacement["id"], "E", 0)
+            )
+            for state in ("rejected", "replaced", "stale-schema"):
+                with self.subTest(store=type(store).__name__, state=state):
+                    if state == "rejected":
+                        draft = self.review(store, draft, epc, decision="reject")
+                    elif state == "replaced":
+                        draft = self.review(store, draft, staged)
+                    else:
+                        forms.register_schema(store, self.actor, dict(schema(), version=2))
+                    before = copy.deepcopy(store._case("ZF-1"))
+                    audit = list(store.audit_entries())
+                    store.docstore.delete("ZF-1", epc["source"]["id"])
+                    with (
+                        patch.object(
+                            store, "ensure_scanned", side_effect=AssertionError("No scan")
+                        ),
+                        patch.object(store.docstore, "put", side_effect=AssertionError("No put")),
+                        patch.object(
+                            store.docstore, "delete", side_effect=AssertionError("No delete")
+                        ),
+                    ):
+                        with self.assertRaises(DocumentUnavailable):
+                            form_review.view(store, self.actor, "ZF-1")
+                        with self.assertRaises(DocumentUnavailable):
+                            self.review(store, draft, staged, decision="reject")
+                        with self.assertRaises(DocumentUnavailable):
+                            form_review.action(
+                                store,
+                                self.actor,
+                                "ZF-1",
+                                dict(
+                                    action="diagnose",
+                                    draft_id=draft["draft_id"],
+                                    expected_version=draft["input_version"],
+                                ),
+                            )
+                    self.assertEqual(self.reopen(store)._case("ZF-1"), before)
+                    self.assertEqual(list(store.audit_entries()), audit)
+                    store.docstore.put("ZF-1", epc["source"]["id"], b"D", "text/plain")
+                    restored = form_review.view(store, self.actor, "ZF-1")["drafts"][0]
+                    self.assertEqual(restored["history"], draft["history"])
+                    self.assertEqual(
+                        restored["recorded_diagnostics"], before["form_reviews"][0]["diagnostics"]
+                    )
+
+    def test_missing_snapshot_only_sources_block_each_retained_snapshot_surface(self) -> None:
+        for store in self.stores:
+            draft, epc, _ = self.prepare(store)
+            draft = self.review(store, draft, epc)
+            empty_fields = {
+                fid: dict(value=None, state="Unknown", evidence=None) for fid in draft["fields"]
+            }
+            for surface in ("fields", "history", "prior", "attachments"):
+                with self.subTest(store=type(store).__name__, surface=surface):
+                    snapshot = dict(
+                        draft, fields=copy.deepcopy(empty_fields), history=[], attachments=[]
+                    )
+                    if surface == "prior":
+                        snapshot["history"] = [
+                            dict(
+                                draft["history"][0],
+                                prior=copy.deepcopy(draft["fields"]["epc"]),
+                                new=dict(value=None, state="Rejected", evidence=None),
+                            )
+                        ]
+                    else:
+                        snapshot[surface] = copy.deepcopy(draft[surface])
+                    with store.lock:
+                        saved = store._case("ZF-1")["form_reviews"][0]
+                        saved["fields"] = copy.deepcopy(empty_fields)
+                        saved["history"] = []
+                        saved["diagnostics"] = [snapshot]
+                        store.save()
+                    before = copy.deepcopy(store._case("ZF-1"))
+                    store.docstore.delete("ZF-1", epc["source"]["id"])
+                    with self.assertRaises(DocumentUnavailable):
+                        form_review.view(store, self.actor, "ZF-1")
+                    self.assertEqual(self.reopen(store)._case("ZF-1"), before)
+                    store.docstore.put("ZF-1", epc["source"]["id"], b"D", "text/plain")
+                    report = form_review.view(store, self.actor, "ZF-1")["drafts"][0]
+                    self.assertEqual(report["recorded_diagnostics"], [snapshot])
+
+    def test_retained_history_snapshots_and_stale_schema_reuse_one_read_per_report(self) -> None:
+        for store in self.stores:
+            draft, epc, _ = self.prepare_shared_source(store)
+            draft = form_review.action(
+                store,
+                self.actor,
+                "ZF-1",
+                dict(
+                    action="diagnose",
+                    draft_id=draft["draft_id"],
+                    expected_version=draft["input_version"],
+                ),
+            )
+            forms.register_schema(store, self.actor, dict(schema(), version=2))
+            with store.lock:
+                doc = next(
+                    d for d in store._case("ZF-1")["documents"] if d["id"] == epc["source"]["id"]
+                )
+                doc["version"] += 1
+                store.save()
+            for operation in ("view", "diagnose"):
+                with self.subTest(store=type(store).__name__, operation=operation):
+                    with patch.object(store.docstore, "get", wraps=store.docstore.get) as read:
+                        if operation == "view":
+                            with patch.object(store, "save", side_effect=AssertionError("No save")):
+                                report = form_review.view(store, self.actor, "ZF-1")["drafts"][0]
+                        else:
+                            report = form_review.action(
+                                store,
+                                self.actor,
+                                "ZF-1",
+                                dict(
+                                    action="diagnose",
+                                    draft_id=draft["draft_id"],
+                                    expected_version=draft["input_version"],
+                                ),
+                            )
+                            draft = report
+                    read.assert_called_once_with("ZF-1", epc["source"]["id"])
+                    self.assertEqual(report["stale_fields"], ["area", "epc"])
+                    self.assertEqual(report["history"], draft["history"])
+            store.docstore.delete("ZF-1", epc["source"]["id"])
+            with self.assertRaises(DocumentUnavailable):
+                form_review.view(store, self.actor, "ZF-1")
+
+    def test_retained_source_storage_outage_is_not_missing_or_stale(self) -> None:
+        for store in self.stores:
+            draft, epc, _ = self.prepare(store)
+            draft = self.review(store, draft, epc)
+            forms.register_schema(store, self.actor, dict(schema(), version=2))
+            before = copy.deepcopy(store._case("ZF-1"))
+            error = DocumentStoreError("SYN storage service unavailable")
+            with patch.object(store.docstore, "get", side_effect=error):
+                with self.assertRaises(DocumentStoreError) as raised:
+                    form_review.view(store, self.actor, "ZF-1")
+                self.assertIs(raised.exception, error)
+                with self.assertRaises(DocumentStoreError):
+                    self.review(store, draft, epc, decision="reject")
+            self.assertEqual(self.reopen(store)._case("ZF-1"), before)
+
+    def test_conflicts_exclude_unreviewable_alternatives_without_removing_staging(self) -> None:
+        for store in self.stores:
+            draft, staged = self.prepare_alternatives(store)
+            self.assertTrue(any(i["status"] == "Conflict" for i in draft["issues"]))
+            original = copy.deepcopy(store._case("ZF-1"))
+            did = staged[0]["source"]["id"]
+            for changed in (
+                "version",
+                "hash",
+                "kind",
+                "bytes",
+                "missing",
+                "pending",
+                "deleted",
+                "generated",
+                "policy",
+                "case",
+            ):
+                with self.subTest(store=type(store).__name__, changed=changed):
+                    with store.lock:
+                        case = store._case("ZF-1")
+                        case["documents"] = copy.deepcopy(original["documents"])
+                        case["form_staging"] = copy.deepcopy(original["form_staging"])
+                        doc = next(d for d in case["documents"] if d["id"] == did)
+                        if changed == "version":
+                            doc["version"] += 1
+                        elif changed == "hash":
+                            doc["content_sha256"] = "0" * 64
+                        elif changed in ("kind", "policy"):
+                            doc["kind"] = "Survey"
+                            if changed == "policy":
+                                for row in case["form_staging"]:
+                                    row["source"]["kind"] = "Survey"
+                        elif changed == "pending":
+                            doc["scan"]["status"] = "pending"
+                        elif changed == "deleted":
+                            case["documents"].remove(doc)
+                        elif changed == "generated":
+                            doc["generated"] = True
+                        elif changed == "case":
+                            for row in case["form_staging"]:
+                                row["case_id"] = "ZF-2"
+                        store.save()
+                    if changed == "missing":
+                        store.docstore.delete("ZF-1", did)
+                    elif changed == "bytes":
+                        store.docstore.put("ZF-1", did, b"EF", "text/plain")
+                    before = copy.deepcopy(store._case("ZF-1")["form_staging"])
+                    with patch.object(
+                        store, "ensure_scanned", side_effect=AssertionError("No scan")
+                    ):
+                        report = form_review.view(store, self.actor, "ZF-1")["drafts"][0]
+                        self.assertFalse(any(i["status"] == "Conflict" for i in report["issues"]))
+                        report = form_review.action(
+                            store,
+                            self.actor,
+                            "ZF-1",
+                            dict(
+                                action="diagnose",
+                                draft_id=report["draft_id"],
+                                expected_version=report["input_version"],
+                            ),
+                        )
+                        self.assertFalse(any(i["status"] == "Conflict" for i in report["issues"]))
+                        for row in staged:
+                            with self.assertRaises((ValueError, PermissionError)):
+                                self.review(store, report, row)
+                    reopened = self.reopen(store)
+                    self.assertEqual(reopened._case("ZF-1")["form_staging"], before)
+                    self.assertEqual(
+                        reopened._case("ZF-1")["form_reviews"][0]["diagnostics"][-1], report
+                    )
+                    self.assertEqual(report["history"], [])
+                    store.docstore.put("ZF-1", did, b"DE", "text/plain")
+
+    def test_conflict_policy_is_field_specific_with_shared_freshness_and_byte_reads(self) -> None:
+        for store in self.stores:
+            _, staged = self.prepare_alternatives(store)
+            did = staged[0]["source"]["id"]
+            with store.lock:
+                case = store._case("ZF-1")
+                doc = next(d for d in case["documents"] if d["id"] == did)
+                doc["kind"] = "Survey"
+                draft = case["form_reviews"][0]
+                draft["schema"]["fields"][0]["source_authority"].append(
+                    dict(kind="Survey", rank=2, evidence_ref="SYN-POLICY")
+                )
+                for row in case["form_staging"]:
+                    row["source"]["kind"] = "Survey"
+                    row["candidates"].append(dict(row["candidates"][0], field_id="area"))
+                store.save()
+            with patch.object(store.docstore, "get", wraps=store.docstore.get) as read:
+                report = form_review.view(store, self.actor, "ZF-1")["drafts"][0]
+            self.assertEqual(
+                [i["field_id"] for i in report["issues"] if i["status"] == "Conflict"], ["epc"]
+            )
+            read.assert_called_once_with("ZF-1", did)
+            report = self.review(store, report, staged[0])
+            with patch.object(store.docstore, "get", wraps=store.docstore.get) as read:
+                form_review.view(store, self.actor, "ZF-1")
+            read.assert_called_once_with("ZF-1", did)
+
+    def test_alternative_storage_outages_propagate_and_later_reports_recheck(self) -> None:
+        for store in self.stores:
+            draft, staged = self.prepare_alternatives(store)
+            did = staged[0]["source"]["id"]
+            before = copy.deepcopy(store._case("ZF-1"))
+            audit = list(store.audit_entries())
+            error = DocumentStoreError("SYN storage outage")
+            with patch.object(store.docstore, "get", side_effect=error):
+                with self.assertRaises(DocumentStoreError) as raised:
+                    form_review.view(store, self.actor, "ZF-1")
+                self.assertIs(raised.exception, error)
+                with self.assertRaises(DocumentStoreError):
+                    form_review.action(
+                        store,
+                        self.actor,
+                        "ZF-1",
+                        dict(
+                            action="diagnose",
+                            draft_id=draft["draft_id"],
+                            expected_version=draft["input_version"],
+                        ),
+                    )
+            self.assertEqual(self.reopen(store)._case("ZF-1"), before)
+            self.assertEqual(list(store.audit_entries()), audit)
+            with patch.object(store.docstore, "get", wraps=store.docstore.get) as read:
+                report = form_review.view(store, self.actor, "ZF-1")["drafts"][0]
+            self.assertTrue(any(i["status"] == "Conflict" for i in report["issues"]))
+            read.assert_called_once_with("ZF-1", did)
+            store.docstore.delete("ZF-1", did)
+            with patch.object(store.docstore, "get", wraps=store.docstore.get) as read:
+                report = form_review.view(store, self.actor, "ZF-1")["drafts"][0]
+            read.assert_called_once_with("ZF-1", did)
+            self.assertFalse(any(i["status"] == "Conflict" for i in report["issues"]))
+            store.docstore.put("ZF-1", did, b"DE", "text/plain")
+            report = form_review.view(store, self.actor, "ZF-1")["drafts"][0]
+            self.assertTrue(any(i["status"] == "Conflict" for i in report["issues"]))
 
     def test_shared_source_read_once_per_report_and_rechecked_on_later_reports(self) -> None:
         for store in self.stores:

@@ -13,6 +13,7 @@ from .doc_controls import DocumentUnavailable
 from .store import ConflictError
 
 type Record = dict[str, Any]
+type Digests = dict[str, str | None]
 
 NOTICE = (
     "Unapproved working notes only. Not a reviewed application or claim pack; "
@@ -92,25 +93,56 @@ def _document(store: Any, case: Record, did: str) -> Record:
     return doc
 
 
-def _visible(store: Any, case: Record, draft: Record) -> None:
+def _source_document(store: Any, case: Record, field: Record, source: Record) -> Record:
+    doc = _document(store, case, source["id"])
+    if doc["kind"] not in {p["kind"] for p in field["source_authority"]}:
+        raise DocumentUnavailable("Source policy changed. Ask the evidence owner to review it.")
+    return doc
+
+
+def _digest(store: Any, case: Record, did: str, digests: Digests) -> str:
+    if did not in digests:
+        try:
+            data = store.docstore.get(case["id"], did)
+        except KeyError:
+            digests[did] = None
+        else:
+            digests[did] = hashlib.sha256(data).hexdigest()
+    digest = digests[did]
+    if digest is None:
+        raise DocumentUnavailable(
+            "Working evidence is unavailable. Ask the document owner to recover its source."
+        )
+    return digest
+
+
+def _visible(store: Any, case: Record, draft: Record, digests: Digests) -> None:
     fields = {f["id"]: f for f in draft["schema"]["fields"]}
-    for event in draft["history"]:
-        evidence = event["new"]["evidence"]
+
+    def check(fid: str, row: Record) -> None:
+        evidence = row["evidence"]
         if evidence is not None:
-            doc = _document(store, case, evidence["source"]["id"])
-            allowed = {p["kind"] for p in fields[event["field_id"]]["source_authority"]}
-            if doc["kind"] not in allowed:
-                raise DocumentUnavailable(
-                    "Source policy changed. Ask the evidence owner to review it."
-                )
+            source = evidence["source"]
+            _source_document(store, case, fields[fid], source)
+            _digest(store, case, source["id"], digests)
+
+    for report in (draft, *draft["diagnostics"]):
+        for fid, row in report["fields"].items():
+            check(fid, row)
+        for event in report["history"]:
+            for side in ("prior", "new"):
+                check(event["field_id"], event[side])
+        for source in report.get("attachments", []):
+            _document(store, case, source["id"])
+            _digest(store, case, source["id"], digests)
 
 
-def _current(store: Any, case: Record, evidence: Record) -> bool:
+def _current(store: Any, case: Record, evidence: Record, digests: Digests | None = None) -> bool:
     source = evidence["source"]
     doc = _document(store, case, source["id"])
     return (
         all(doc.get(key) == source[key] for key in ("version", "content_sha256", "kind"))
-        and hashlib.sha256(store.docstore.get(case["id"], doc["id"])).hexdigest()
+        and _digest(store, case, doc["id"], {} if digests is None else digests)
         == source["content_sha256"]
     )
 
@@ -142,9 +174,7 @@ def _candidate(
         verification=deepcopy(batch["verification"]),
     )
     field = next(f for f in draft["schema"]["fields"] if f["id"] == fid)
-    doc = _document(store, case, evidence["source"]["id"])
-    if doc["kind"] not in {p["kind"] for p in field["source_authority"]}:
-        raise PermissionError("This source kind is not permitted for the field.")
+    _source_document(store, case, field, evidence["source"])
     if not _current(store, case, evidence):
         raise ValueError("The candidate source changed. Restage and review its current evidence.")
     return evidence
@@ -171,8 +201,9 @@ def _holds(case: Record, draft: Record, actor: Record) -> None:
         )
 
 
-def _report(store: Any, case: Record, draft: Record) -> Record:
-    _visible(store, case, draft)
+def _report(store: Any, case: Record, draft: Record, digests: Digests | None = None) -> Record:
+    hashes = {} if digests is None else digests
+    _visible(store, case, draft, hashes)
     schema = draft["schema"]
     latest = max(
         (
@@ -188,17 +219,21 @@ def _report(store: Any, case: Record, draft: Record) -> Record:
     confirmed: Record = {}
     stale = []
     freshness: dict[tuple[str, int, str, str], bool] = {}
+
+    def current(evidence: Record) -> bool:
+        source = evidence["source"]
+        key = (source["id"], source["version"], source["content_sha256"], source["kind"])
+        if key not in freshness:
+            freshness[key] = _current(store, case, evidence, hashes)
+        return freshness[key]
+
     for field in schema["fields"]:
         fid = field["id"]
         row = fields[fid]
         evidence = row["evidence"]
         source_current = True
         if schema_current and evidence is not None:
-            source = evidence["source"]
-            key = (source["id"], source["version"], source["content_sha256"], source["kind"])
-            if key not in freshness:
-                freshness[key] = _current(store, case, evidence)
-            source_current = freshness[key]
+            source_current = current(evidence)
         if not schema_current or not source_current:
             row["effective_state"] = "Stale"
             stale.append(fid)
@@ -213,20 +248,26 @@ def _report(store: Any, case: Record, draft: Record) -> Record:
             issues.append(
                 dict(field_id=fid, status="Unknown", reason="Bound source/schema changed.")
             )
-        elif row["state"] == "Unknown":
-            alternatives = {
-                c["raw_value"]
-                for batch in case.get("form_staging", [])
-                if batch["schema_id"] == schema["id"]
-                and batch["schema_version"] == schema["version"]
-                and batch["schema_digest"] == draft["schema_digest"]
-                and any(
-                    d["id"] == batch["source"]["id"] and d.get("scan", {}).get("status") == "clean"
-                    for d in case["documents"]
-                )
-                for c in batch["candidates"]
-                if c["field_id"] == fid
-            }
+        elif row["state"] == "Unknown" and field["category"] not in forms.HUMAN_ONLY:
+            alternatives: set[str] = set()
+            for batch in case.get("form_staging", []):
+                if (
+                    batch["case_id"] != case["id"]
+                    or batch["schema_id"] != schema["id"]
+                    or batch["schema_version"] != schema["version"]
+                    or batch["schema_digest"] != draft["schema_digest"]
+                ):
+                    continue
+                candidates = [c for c in batch["candidates"] if c["field_id"] == fid]
+                if not candidates:
+                    continue
+                try:
+                    _source_document(store, case, field, batch["source"])
+                    if not current(batch):
+                        continue
+                except DocumentUnavailable:
+                    continue
+                alternatives.update(c["raw_value"] for c in candidates)
             if len(alternatives) > 1:
                 issues.append(
                     dict(field_id=fid, status="Conflict", reason="Unreviewed source alternatives.")
@@ -327,6 +368,7 @@ def action(store: Any, user: Record, case_id: str, body: object) -> Record:
     forms._fields(body, keys[step], "Working review")
     with controlled(store, user, case_id) as (case, actor):
         forms._actor(store, user)
+        digests: Digests = {}
         if step == "open":
             row = _schema(store, body["schema_id"], body["schema_version"])
             definition = row["definition"]
@@ -351,12 +393,12 @@ def action(store: Any, user: Record, case_id: str, body: object) -> Record:
             expected = forms._positive(body["expected_version"])
             if expected != draft["version"]:
                 raise ConflictError("The working review changed. Reload before retrying.")
-            _visible(store, case, draft)
+            _visible(store, case, draft, digests)
             if step == "review":
                 _review(store, case, draft, actor, body)
             draft["version"] += 1
         _holds(case, draft, actor)
-        report = _report(store, case, draft)
+        report = _report(store, case, draft, digests)
         if step == "diagnose":
             draft["diagnostics"].append(deepcopy(report))
         store.audit(actor["email"], f"form_review_{step}", case_id, draft["id"])

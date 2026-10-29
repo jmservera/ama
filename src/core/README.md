@@ -158,15 +158,27 @@ They are not reviewed application/claim exports or evidence of eligibility.
 Source/schema freshness is evaluated on reads/actions, not pushed into a
 downstream approval graph. Each report checks an exact source ID, version,
 content hash and kind once, reusing its freshness result for shared fields
-only within that report. Later reports check afresh; no cross-request cache
-is retained. A source change marks only its bound working fields
-stale; a new schema version affects all fields bound to that schema. Historical
+and staged alternatives only within that report. Source bytes are read/hashed
+at most once per distinct document across current fields, history, snapshots
+and alternative checks; missing-byte results are also reused locally.
+Action preflight shares these reads with its resulting report. Later reports
+check afresh; no cross-request cache is retained. A source change marks only its
+bound working fields stale; a new schema version affects all fields bound to that schema. Historical
 reviews/values and recorded diagnostic snapshots remain intact. This is not
 full FR-043/AC-051 rule/calculation/pack-review/approval stale propagation.
 Already-clean evidence is required: reads/reviews never scan or save a source.
-Missing, pending, quarantined or deleted evidence blocks disclosure of the
-entire affected draft/history. Recover or rescan through the separate document
-owner route before retrying. Ordinary case detail and generic case exports
+Missing, pending, quarantined or deleted retained evidence blocks disclosure of
+the entire affected draft/history, including recorded diagnostics. Availability
+is checked for current fields, prior/new history evidence and diagnostic
+fields/history/attachments even when the schema is stale or a field was
+rejected/replaced. Staleness alone does not remove available history.
+Unreviewed alternatives count toward Conflict only if their case/schema,
+source version/hash/kind/bytes and field source policy allow review; unavailable
+or stale alternatives are excluded without changing staged history.
+Missing bytes are reported as unavailable evidence; storage-service failures
+remain distinct errors, never empty/successful diagnostics.
+Recover or rescan through the separate document owner route before retrying.
+Ordinary case detail and generic case exports
 exclude the private review/decision-hold records.
 
 Opening notes durably records Held decisions for template/source/rule authority

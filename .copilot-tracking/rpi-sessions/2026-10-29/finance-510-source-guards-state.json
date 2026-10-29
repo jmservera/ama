@@ -1,0 +1,55 @@
+{
+  "task_id": "finance-510-source-guards",
+  "task_slug": "finance-510-source-guards",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-29/finance-510-source-guards-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-29/finance-510-source-guards-plan.md",
+    "details": ".copilot-tracking/details/2026-10-29/finance-510-source-guards-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-29/finance-510-source-guards-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-29/finance-510-source-guards-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-29/finance-510-source-guards-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute all four RPI phases in a bounded manual run, then commit locally only.",
+      "status": "confirmed",
+      "evidence": "Explicit user request on 2026-10-29. No push, no Azure, no edits to rubric scores."
+    },
+    {
+      "decision": "Reuse active PR #510 branch docs/finance-96.",
+      "status": "confirmed",
+      "evidence": "git pull --rebase succeeded first; clean worktree; gh pr view confirms OPEN PR with matching head and main base."
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready. Guard all retained-source surfaces independently of freshness and qualify alternatives without deleting staging.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-10-29/finance-510-source-guards-research.md C1-C6"
+    },
+    {
+      "decision": "Single independent final-candidate critique executed: Complete / Pass, no findings.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-29/finance-510-source-guards-plan-critique.md"
+    },
+    {
+      "decision": "Implementation complete and review-ready; seven new regressions fail on baseline and pass with both fixes. Requested tests, lint, formatting and mypy plus staging pass.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/changes/2026-10-29/finance-510-source-guards-changes.md"
+    },
+    {
+      "decision": "Single independent Review executed: Complete / Conformant, no findings or blockers. Boundary is the three-file implementation diff against baseline HEAD, not the entire PR or publication gate.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/finance-510-source-guards-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Review",
+    "action": "Commit the reviewed implementation and original dated RPI evidence locally, then persist delivery completion. Do not push."
+  },
+  "prioritized_follow_ups": []
+}
