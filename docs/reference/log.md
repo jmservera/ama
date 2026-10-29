@@ -8075,3 +8075,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Original adverse Review is retained. The owner-selected correction has its
   own critique and Review addendum; issue criteria and existing live/deferred
   gates remain unchanged, with Refs rather than Closes.
+
+## [2026-10-29] engineering | Current-main IoT integration (Refs #110, #184)
+
+* Preserved the scenario-pack and IoT engineering entries and index links
+  when integrating current main into the existing IoT branch.
+* Reconciled the [scenario-pack status](./research/iot-sensor-analytics-research-plan.md#bounded-r3-exercise-scenario-pack-2026-10-27-refs-190)
+  and [two-stage guide](../../src/core/README.md#two-stage-simulator-operation-and-limits-194):
+  the separate opt-in SDK publisher and pacing library exist, while verified
+  live operation, credential lifecycle and actual scenario consumer use
+  remain unproven. No historical log entry or live approval was changed.

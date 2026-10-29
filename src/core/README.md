@@ -2,7 +2,7 @@
 title: Zava Forward core library
 description: Domain, store, ledger, law store, chat storage and synthetic-data documentation for the core project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-27
+ms.date: 2026-10-29
 ms.topic: reference
 ---
 
@@ -2688,10 +2688,13 @@ an explicit wholly synthetic register, complete retained hourly source coverage
 and optional synthetic dated measures. Exact subsampling neither fills gaps nor
 repeats years. Storage estimates are not completed full-stock materializations.
 
-Stage 2 (#184) has a delivered shared observation contract (#186), **not a
-runnable live publisher**. No live command, rate limiter, retry/replay scheduler,
-provisioner, credential handling or cloud acceptance is claimed here.
-Future authorized live operation must use the shared schema, stable IDs,
+Stage 2 (#184) has a delivered shared observation contract (#186) and the
+opt-in [finite replay and pacing library](#finite-synthetic-stream-replay-184)
+with an [API SDK publisher](../api/README.md#opt-in-iot-consumer-and-synthetic-publisher-110-184).
+The scenario pack does not invoke that publisher. Local fake-network tests
+are not verified live Hub operation, approved credential lifecycle or cloud
+acceptance. No provisioner or autonomous retry scheduler is added.
+Separately authorized live operation must use the shared schema, stable IDs,
 per-device authentication, synthetic-only identities, explicit N/rate/volume/
 replay/cost limits and the independent #110 consumer controls. The declared
 live exercise accounting is three paired observations/home/day: `3N` records/day,
@@ -2723,7 +2726,7 @@ All emitted indoor data is simulated, not evidence of installed devices or
 real home conditions. No signal diagnoses a hazard, dismisses a resident report,
 starts a clock, releases a hold, changes ranking, grants consent or creates an
 approved task. Human review, resident choice and BRD OD-43 remain unchanged.
-Actual #111/#133 consumer test use, a runnable live stage, competent R2 review,
+Actual #111/#133 consumer test use, verified live stage operation, competent R2 review,
 agreed R3 limits and operational acceptance are still unproven.
 
 ### Existing reproducibility and plausibility evidence

@@ -2,7 +2,7 @@
 title: In-Use Monitoring Analytics Research Plan (Dew Point and Trend Risks)
 description: Research phase plan for analysing humidity and temperature sensor data received through Azure IoT Hub, including dew point and surface condensation risk, with leads, unknowns, evidence rules and exit criteria
 author: AMA programme
-ms.date: 2026-10-27
+ms.date: 2026-10-29
 ms.topic: reference
 ---
 
@@ -647,8 +647,11 @@ seed/byte reproducibility, retained-reading replay, truth separation, threshold
 boundaries, missing-gap/day/night behavior and safe output. This supplies
 bounded #192 scenario evidence, not completion of the R3 gate: agreed miss/
 false-alert limits and R2 competent reviewer/Asset sign-off remain open.
-Actual #193 use by #111/#133 tests and runnable live #184 remain unproven;
-standalone fixture tests are not substituted for those consumers.
+Actual #193 use by #111/#133 tests and verified live #184 operation remain
+unproven; standalone fixture tests are not substituted for those consumers.
+The separate opt-in publisher's local engineering evidence is recorded in
+[bounded streaming engineering](#bounded-streaming-engineering-2026-10-27-refs-110-184),
+not live acceptance or scenario-pack integration.
 R1-R5 statuses and all resident/human approval safeguards above remain unchanged.
 
 ## Constraints

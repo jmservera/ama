@@ -81,7 +81,8 @@ and [two-stage guide](../../src/core/README.md#two-stage-simulator-operation-and
 record seven damp/data-quality cases, four retrofit cases, separate truth,
 per-check results, confusion/sensitivity and exact climate provenance.
 These are synthetic exercise overlays, not validated building physics,
-diagnosis or actual works. Actual #111/#133 test use, a runnable live publisher,
+diagnosis or actual works. The separate opt-in publisher has local engineering
+evidence, not verified live operation. Actual #111/#133 test use, live acceptance,
 R2 competent approval and agreed R3 limits remain unmet; no parent closure or
 owner deferral is inferred.
 
