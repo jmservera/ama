@@ -19,6 +19,10 @@ Add a compiled live-diagnostics assertion helper and mutation tests that reject
 wrong hub scope and workspace. Correct the bounded exercise guide to authorize
 one publisher call only and remove advice to retry uncertain deliveries.
 No runtime or Bicep change is necessary: current wiring is already correct.
+Both corrections are implemented and committed locally. The independent Review
+is Complete / Residual work with zero source defects. Requested checks passed;
+the post-commit complete-gate attempt was blocked by ignored checkout inputs,
+so no publication eligibility or full-gate pass is claimed.
 
 ### What You May Not Know
 
@@ -102,7 +106,7 @@ categories and changed-target rejection. No generated files.
 Edit both relevant README paragraphs; preserve wider receiver recovery semantics.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Validate, independently review and commit locally
+### [x] P02: Validate, independently review and commit locally
 
 Dependency: P01.
 
@@ -114,7 +118,7 @@ Run Ruff check and Ruff format --check against the touched Python only.
 Review Markdown/diff; preserve truthful failures, amendments and divergences.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Run one independent Review and commit locally
+#### [x] P02-T02: Run one independent Review and commit locally
 
 Record original Review execution and outcome without re-review loops.
 Resolve GitHub privacy-safe local commit identity before committing.
@@ -122,6 +126,10 @@ After committing, attempt the repository-required complete local gate with
 nonqueued shared-lock admission and fresh external evidence. Missing prerequisites
 or a foreign lock block the gate, not the independent local fix. Do not repair
 unrelated gate/tooling failures or delete existing ignored inputs. No publication.
+Completion: original Review preserved; implementation and original evidence
+committed as c31437646005ee33f0ad62b1cce538606eebcf30. Complete-gate command
+attempted after fetching main, exit 1: candidate has ignored inputs. This
+marker records the planned attempt, not a passing gate. No push performed.
 
 ## Dependencies
 
@@ -136,14 +144,17 @@ No finding dispositions or user decisions are required. Candidate is Ready.
 
 ## Follow-Up Items
 
-* Prior full publication gate admission failure remains outside this two-finding
-  correction. Any future publication needs fresh exact-head eligibility.
+* Current complete-gate attempt is blocked by ignored checkout inputs; prior
+  full-gate admission failure also remains historical. Any future publication
+  needs an authorized clean candidate, fresh exact-head complete gate and
+  independent/hosted approvals. Unknown ignored inputs were not deleted/moved.
 * Parent live identity/transport/SQL acceptance remains separately blocked and
   requires owner authority; this task performs no Azure operations.
 
 ## Handoff
 
 Implementation record: .copilot-tracking/changes/2026-10-29/iot-live-review-557-changes.md.
-P01 and P02-T01 are complete; source implementation is ready for one independent
-Review. P02-T02 remains pending Review, local commit and gate attempt. Proceed
-through the four requested phases; no push or ongoing follow-up session.
+P01/P02 and all task markers complete within local-only scope. Single original
+Review remains Complete / Residual work; local commit and gate attempt recorded.
+Publication and live acceptance are not delivered. Preserve original critique/
+Review, do not repeat them, and do not infer push or ongoing follow-up authority.

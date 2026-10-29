@@ -84,8 +84,36 @@ Parent disposition: RV-001 continues the already planned local lifecycle;
 RV-002 publication and RV-003 live acceptance remain distinct later follow-ups.
 No source changes or second Review are required or performed.
 
-P02-T02 remains local commit/post-commit gate attempt. `gh api user` resolved
+For P02-T02, `gh api user` resolved
 id 8036360/login jmservera; repository-local author/committer identity is
 8036360+jmservera@users.noreply.github.com. The shared heavy-lock inspection
 showed no holder. Ignored cache/egg-info inputs already exist; do not delete or
 move unknown inputs merely to pass admission. No publication is planned.
+
+## Local Commit and Gate Attempt
+
+Implementation and dated original evidence committed locally as
+c31437646005ee33f0ad62b1cce538606eebcf30, with privacy-safe author/committer and
+required Copilot trailer. No push.
+
+`git fetch origin main` succeeded; reviewed/current origin/main remains
+7fb58c4b7fe425408731537e3f213c97a7317937.
+
+Executed from root after the implementation commit:
+
+```bash
+python3 tools/rpi-checks.py --all --base 7fb58c4b7fe425408731537e3f213c97a7317937 --lock-timeout 0 --out /home/azureuser/.copilot/session-state/062bb25e-03ae-4dc5-99df-29f126b02fb0/files/iot-557-c3143764-full-gate
+```
+
+Exit 1: `BLOCKED: Candidate has ignored inputs; move all scratch outside the checkout`.
+Admission failed before execution/output-directory creation; no receipt exists,
+so receipt verification is unavailable, not passed. Existing ignored cache and
+package metadata were not removed/moved. No foreign heavy-lock holder was
+observed and no queued heavy validation was launched.
+
+RV-001's requested local commit/gate attempt is now executed. Original Review
+is immutable and still records its assessed pre-commit boundary/outcome. RV-002
+publication is explicitly blocked, and RV-003 live acceptance remains open.
+P01/P02 markers and phase details now reflect actual completion of local scope,
+not publication eligibility. Final lifecycle bookkeeping is committed separately;
+it does not alter source or upgrade the failed gate.
