@@ -359,9 +359,10 @@ class ChatPanel:
             receipt["outcome"] = "access-rejected"
             raise
         finally:
-            self.iso.store.audit(
-                user_key(user), "chat.turn", "", json.dumps(receipt, sort_keys=True)
-            )
+            with self.iso.store.lock:
+                self.iso.store.audit(
+                    user_key(user), "chat.turn", "", json.dumps(receipt, sort_keys=True)
+                )
 
     def _ask(
         self,
@@ -386,19 +387,23 @@ class ChatPanel:
         masked, _ = redact(str(question if question is not None else "")[:MAX_CONTENT])
         masked = masked[:MAX_CONTENT]
         iso.privacy._require()
-        question_seq = store.chat_add_message(user, tid, "user", masked)["seq"]
+        with store.lock:
+            question_seq = store.chat_add_message(user, tid, "user", masked)["seq"]
 
         def finish(kind: str, text: str, cites: list[str], model_name: str) -> dict[str, Any]:
-            store.chat_add_message(user, tid, "assistant", text, evidence=cites, model=model_name)
-            store.audit(
-                user_key(user),
-                "chat.answer",
-                case_id,
-                json.dumps(
-                    dict(thread_id=tid, question_seq=question_seq, skill=skill, outcome=kind),
-                    sort_keys=True,
-                ),
-            )
+            with store.lock:
+                store.chat_add_message(
+                    user, tid, "assistant", text, evidence=cites, model=model_name
+                )
+                store.audit(
+                    user_key(user),
+                    "chat.answer",
+                    case_id,
+                    json.dumps(
+                        dict(thread_id=tid, question_seq=question_seq, skill=skill, outcome=kind),
+                        sort_keys=True,
+                    ),
+                )
             return dict(
                 self._reply(kind, text, cites, model_name, sources),
                 skill=skill,

@@ -3308,6 +3308,14 @@ The current question must fit the 1,000-character limit both before and after
 redaction. An oversized masked question returns the context-limit workflow
 fallback without a model call, rather than silently truncating the question.
 
+The panel holds the existing reentrant store lock around message persistence
+and its audit events, the answer event and the final turn receipt, including
+rejected turns. These short sections serialize JSON audit predecessor updates
+with other locked writes; model inference does not hold the lock. Nested JSON
+and SQLite callers retain the same lock ownership and audit-flush behavior.
+Synthetic concurrent rejected/completed-turn regressions verify the shared
+chain, not just receipt counts. This is not a cross-process JSON write guarantee.
+
 Regulatory chat's direct paired-message and referral writers also persist
 `actor_role`. An owner inbox copy keeps the original asking role, not the
 recipient's role; a legacy copy without known provenance keeps an empty role.

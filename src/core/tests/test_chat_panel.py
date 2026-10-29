@@ -2,10 +2,17 @@ import json
 import sqlite3
 import tempfile
 import unittest
+from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor
+from functools import partial
 from pathlib import Path
+from threading import Barrier, BrokenBarrierError
+from typing import Any
+from unittest.mock import patch
 
 import dataset
 import test_sqlstore
+from zava_forward.core import ledger
 from zava_forward.core.assistants import REGISTRY
 from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
 from zava_forward.core.chat_panel import (
@@ -23,7 +30,7 @@ from zava_forward.core.chat_panel import (
     skill_sources,
 )
 from zava_forward.core.chat_privacy import redact
-from zava_forward.core.chatthreads import MAX_CONTENT
+from zava_forward.core.chatthreads import MAX_CONTENT, ChatNotFound
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import Store
 
@@ -200,6 +207,136 @@ class StoredQuestionTests(unittest.TestCase):
     def ask(self, question: str) -> str:
         self.panel.ask(self.user, self.tid, question, skill="general")
         return self.prompts[-1]
+
+    def run_concurrently(self, calls: list[Callable[[], object]]) -> None:
+        start, entries = Barrier(len(calls)), Barrier(2)
+        make_entry = ledger.make_entry
+
+        def interleave(*args: Any, **kwargs: Any) -> Any:
+            # Capture predecessor arguments before letting an unlocked writer overlap.
+            try:
+                entries.wait(timeout=1)
+            except BrokenBarrierError:
+                pass  # Serialized writers cannot meet; the broken barrier stays open.
+            return make_entry(*args, **kwargs)
+
+        def run(call: Callable[[], object]) -> object:
+            start.wait(timeout=5)
+            return call()
+
+        with patch("zava_forward.core.store.ledger.make_entry", side_effect=interleave):
+            with ThreadPoolExecutor(max_workers=len(calls)) as pool:
+                futures = [pool.submit(run, call) for call in calls]
+                for future in futures:
+                    future.result(timeout=10)
+
+    def test_concurrent_rejected_turns_preserve_shared_audit_chain(self) -> None:
+        for missing in (True, False):
+            with self.subTest(missing_thread=missing):
+                before = len(list(self.store.audit_entries()))
+
+                def reject(missing: bool = missing) -> None:
+                    with self.assertRaises(ChatNotFound if missing else ValueError):
+                        self.panel.ask(
+                            self.user,
+                            "CT-missing" if missing else self.tid,
+                            "What stage is it?",
+                            skill="invalid",
+                        )
+
+                self.run_concurrently([reject, reject])
+                with self.store.lock:
+                    self.store.audit("system", "ordinary.write", "", "after rejected turns")
+                entries = list(self.store.audit_entries())[before:]
+                self.assertEqual(
+                    [e["action"] for e in entries], ["chat.turn"] * 2 + ["ordinary.write"]
+                )
+                for entry in entries[:2]:
+                    receipt = json.loads(entry["detail"])
+                    self.assertEqual(
+                        receipt["outcome"], "access-rejected" if missing else "rejected"
+                    )
+                    self.assertEqual(receipt["model_calls"], 0)
+                    self.assertNotIn("What stage is it?", entry["detail"])
+                self.assertEqual(self.prompts, [])
+                self.assertEqual(self.store.chat_resume(self.user, self.tid)["messages"], [])
+                self.assertTrue(self.store.verify_audit())
+                self.assertEqual(self.store.last_hash, entries[-1]["hash"])
+
+    def test_concurrent_completed_turns_serialize_all_panel_events(self) -> None:
+        for question, kind in (("What stage is it?", "abstain"), ("Approve it.", "refused")):
+            with self.subTest(kind=kind):
+                tids = [self.store.chat_create_thread(self.user)["id"] for _ in range(2)]
+                before = len(list(self.store.audit_entries()))
+
+                def ordinary_write() -> None:
+                    with self.store.lock:
+                        self.store.audit("system", "ordinary.write", "", "competing write")
+
+                self.run_concurrently(
+                    [
+                        *(
+                            partial(self.panel.ask, self.user, tid, question, skill="general")
+                            for tid in tids
+                        ),
+                        ordinary_write,
+                    ]
+                )
+                entries = list(self.store.audit_entries())[before:]
+                self.assertEqual(len(entries), 9)
+                self.assertEqual(sum(e["action"] == "chat.message.added" for e in entries), 4)
+                for action in ("chat.answer", "chat.turn"):
+                    receipts = [json.loads(e["detail"]) for e in entries if e["action"] == action]
+                    self.assertEqual(len(receipts), 2)
+                    self.assertEqual([r["outcome"] for r in receipts], [kind, kind])
+                for tid in tids:
+                    messages = self.store.chat_resume(self.user, tid)["messages"]
+                    self.assertEqual([m["role"] for m in messages], ["user", "assistant"])
+                self.assertTrue(self.store.verify_audit())
+
+    def test_inference_does_not_hold_store_lock(self) -> None:
+        def ordinary_write() -> None:
+            with self.store.lock:
+                self.store.audit("system", "ordinary.write", "", "during inference")
+
+        with ThreadPoolExecutor(max_workers=1) as pool:
+
+            def model(system: str, prompt: str) -> str:
+                pool.submit(ordinary_write).result(timeout=5)
+                return "{}"
+
+            self.panel.model = model
+            reply = self.panel.ask(self.user, self.tid, "What stage is it?", skill="general")
+        self.assertEqual(reply["kind"], "abstain")
+        self.assertEqual(reply["consumption"]["provider_outcome"], "returned")
+        self.assertTrue(self.store.verify_audit())
+
+    def test_nested_store_lock_callers_preserve_json_and_sql_audits(self) -> None:
+        with tempfile.TemporaryDirectory() as work:
+            data, db = test_sqlstore.seed(work)
+            sql = SqlStore(data, db)
+            self.addCleanup(sql.db.close)
+            for store in (self.store, sql):
+                with self.subTest(store=type(store).__name__):
+                    user = store.data["staff"][0]
+                    tid = store.chat_create_thread(user)["id"]
+                    panel = ChatPanel(ChatIsolation(store, env=self.panel.iso.env))
+                    before = len(list(store.audit_entries()))
+                    with store.lock:
+                        reply = panel.ask(user, tid, "Approve it.")
+                        with self.assertRaises(ChatNotFound):
+                            panel.ask(user, "CT-missing", "What stage is it?")
+                    self.assertEqual(reply["kind"], "refused")
+                    actions = [e["action"] for e in store.audit_entries()][before:]
+                    self.assertEqual(
+                        actions,
+                        ["chat.message.added"] * 2 + ["chat.answer", "chat.turn", "chat.turn"],
+                    )
+                    self.assertTrue(store.verify_audit())
+            restarted = SqlStore(data, db)
+            self.addCleanup(restarted.db.close)
+            self.assertTrue(restarted.verify_audit())
+            self.assertEqual(list(restarted.audit_entries()), list(sql.audit_entries()))
 
     def test_expanding_redaction_over_question_limit_falls_back_without_dispatch(self) -> None:
         question = "NE1 1AA " * 120 + "What stage is it?"
