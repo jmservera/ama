@@ -136,3 +136,28 @@ P03-T01 complete; P03-T02 local commit is the remaining planned action.
 Pre-commit account re-resolved with `gh api user --jq '{id,login}'`, unchanged.
 `.gitignore` is populated; only the two task-owned test adaptations and seven
 current RPI artifacts are selected. No scratch/browser output is staged.
+
+### Local commit and persistent delivery
+
+`git config --local user.email '8036360+jmservera@users.noreply.github.com'`
+followed by explicit-path `git add` of the two test files and all seven
+current RPI artifacts, `git diff --cached --check` and
+`git diff --cached --stat`: PASS, 9 selected files, no unrelated/scratch data.
+`printf '%s\n' 'fix(ux): reconcile resident content branch with main' ''
+'Refs #153.' ''
+'Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>' |
+git commit -F -`: PASS, commit
+`57ec5c95d17cf45c67aa894bec65dca0f402a42a`.
+
+`git log -1 --format='%H%n%an <%ae>%n%cn <%ce>%n%B'` verified both author and
+committer noreply identities, Conventional Commit, Refs #153 and exact trailer.
+`git status --short`: empty. `git merge-base --is-ancestor origin/main HEAD`:
+exit 0. No commit was amended. Source/test fingerprint remains the reviewed
+one; the final bookkeeping commit changes only this dated evidence, plan,
+details and state. No complete publication receipt or final-head independent
+publication assessment is asserted.
+
+P01-P03 are complete for the requested local scope. The coordinator must own
+publication checks and remote branch update. The original draft remains
+unmodified remotely, so hosted CI and GitHub mergeability cannot yet reflect
+this local candidate. No Azure resource or remote Git ref was written.

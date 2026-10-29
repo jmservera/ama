@@ -3,8 +3,8 @@
   "task_slug": "pr501-main-rebase",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Review",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-29/pr501-main-rebase-research.md",
@@ -39,12 +39,36 @@
       "decision": "One independent Review executed Complete; outcome Conformant with justified divergence; no findings or unresolved blockers. No source changes after Review.",
       "status": "reviewed",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-29/pr501-main-rebase-review.md; parent reproduced the recorded source fingerprint."
+    },
+    {
+      "decision": "Local implementation/original evidence committed, clean tree and main ancestry verified; no push or Azure writes. Task complete; no child work selected.",
+      "status": "completed",
+      "evidence": "57ec5c95d17cf45c67aa894bec65dca0f402a42a and changes artifact. Final bookkeeping is evidence-only; publication and hosted CI remain separate."
     }
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Review",
-    "action": "Review passed; complete the planned local Conventional Commit and verify persistence before transitioning to Follow-up. Do not push."
+    "phase": "Follow-up",
+    "action": "Coordinator owns publication/full gate, authorized remote update and hosted exact-head CI. Automatic session awaits explicit follow-up selection; do not start a child task or push."
   },
-  "prioritized_follow_ups": []
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator publication gates and remote branch update",
+      "rationale": "Only remaining dependency for remote PR mergeability and current hosted CI; local source and bounded checks are ready.",
+      "evidence": "Current Review publication follow-up and changes artifact; no push authorized."
+    },
+    {
+      "rank": 2,
+      "task": "Named exact-wording acceptance for #153",
+      "rationale": "Direct human acceptance remains necessary before resident use; appointment alone is not completed review.",
+      "evidence": "Preserved content standard and current Review planned follow-up; Juan Manuel Servera owns exact-text review."
+    },
+    {
+      "rank": 3,
+      "task": "Resident/representative usability and assistive-technology acceptance",
+      "rationale": "High-value later acceptance under #155; engineering browser checks do not replace participant evidence.",
+      "evidence": "Preserved resident journeys and current Review planned follow-up."
+    }
+  ]
 }
