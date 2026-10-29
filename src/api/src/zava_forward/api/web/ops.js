@@ -120,6 +120,7 @@ function qualityPanel(c, id, refresh, savedFields = [], session = caseSession) {
     api("/api/checklists").then((l) => {
       lists = l;
       if (measures.length) paint();
+      else checks.replaceChildren(h("p", { class: "muted" }, "This case has no measures to check yet."));
     }).catch(error => checks.replaceChildren(h("p", { class: "err", role: "alert" }, `Could not load checklists: ${error.message}. Refresh this case to try again.`)));
     const revision = h("input", { id: "q-revision", type: "number", min: 1 });
     form.append(h("label", { for: "q-measure" }, "Which measure"), measure,

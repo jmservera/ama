@@ -203,3 +203,11 @@ function tick(ms) {
         )
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("PASS actual helper", result.stdout)
+
+
+class ChecklistLoading(unittest.TestCase):
+    def test_empty_measures_replace_the_loading_status(self) -> None:
+        source = (WEB / "ops.js").read_text(encoding="utf-8")
+        branch = source.split('api("/api/checklists")', 1)[1].split(".catch", 1)[0]
+        self.assertIn("if (measures.length) paint();", branch)
+        self.assertIn("no measures to check yet", branch)
