@@ -98,8 +98,39 @@ explicitly authorized busy-lock fallback; this is a limitation, not a pass.
 
 ## Remaining Work and Review Readiness
 
-P01 and P02-T01 complete. P02-T02 candidate persistence pending; original
-independent Review not yet executed. Source and current plan/details agree.
+P01/P02 complete. Candidate implementation and dated original evidence
+committed locally as `0e910aa1e36c616c0b433b48e392e3ba94b97d2e`.
+Original independent Review not yet executed. Source and current plan/details
+agree; full/browser validation is the sole recorded local residual.
 FU-001: later explicitly coordinated editable/full/browser validation after
 the shared lock is free. Browser behavior remains implemented-unverified.
 No new implementation defect is known; no push/cloud/child task authorized.
+
+## Independent Review and Local-Only Closeout
+
+The preceding implementation-readiness statement describes the pre-Review
+boundary and is preserved, not converted into approval. The single independent
+Review completed against source `0e910aa1` versus `204507d6` and current evidence
+reconciliation. Original record:
+`.copilot-tracking/reviews/logs/2026-10-29/loading-briefing-review-538-review.md`.
+Execution Complete; outcome Not accepted.
+
+* RV-001 High: terminal Sr./Jr. suffixes can merge an uncited first sentence
+  into a second cited sentence. Independently reproduced; future implementation.
+* RV-002 Medium: a defined but unready AsyncAction object fails in h() while
+  building the new terminal reload action. Independently reproduced; future
+  implementation.
+* RV-003 Low: original examples are represented in regression fixtures, but
+  the plan lacks their verbatim source/expected-output mapping; future planning
+  evidence reconciliation.
+* RV-004 Medium: actual-browser/full/editable validation remains unperformed;
+  existing FU-001, at a later explicit free-lock coordination event.
+
+Review independently passed the same 83 focused tests with no skips and JS/
+whitespace checks. It did not retry the lock, install, run browser/full suites
+or claim human/hosted acceptance. Its full original finding set is immutable.
+No finding was silently fixed or marked closed and no second Review was run.
+Task loop completed with an unsuccessful acceptance outcome; automatic session
+stopped per explicit user request. Ranked future routes are in the state.
+The final evidence-only commit does not change the assessed source candidate.
+No push, az, force-push, closing keyword or automatic child work occurred.

@@ -112,5 +112,6 @@ Commit implementation and dated original evidence, dispatch exactly one
 independent Review, then persist its unchanged outcome and route any findings
 to later work. Stop local as explicitly requested; no push or automatic child.
 Current reconciliation: source changes complete, static/targeted evidence
-current, full/browser residual explicitly routed to FU-001. Candidate commit
-is the remaining implementation step; independent Review owns its own phase.
+current, full/browser residual explicitly routed to FU-001. Candidate and
+dated original evidence committed locally as `0e910aa1`. P01/P02 Complete;
+independent Review owns its own phase. No further implementation is pending.
