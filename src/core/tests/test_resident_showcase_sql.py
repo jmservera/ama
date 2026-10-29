@@ -17,6 +17,7 @@ from typing import Any
 
 from zava_forward.core import resident_showcase as rs
 from zava_forward.core import resident_showcase_sql as rsql
+from zava_forward.core.resident_documents import document_answer
 
 ROOT = Path(__file__).resolve().parents[3]
 spec = importlib.util.spec_from_file_location(
@@ -303,11 +304,204 @@ class SqlBoundaryTests(unittest.TestCase):
         self.assertIsNone(rs.exclusion(row, datetime(2026, 10, 25, tzinfo=UTC)))
         self.assertEqual(self.reader.fetch_case("C-1"), row)
 
+    def test_missing_document_projection_requires_view_update_before_image(self) -> None:
+        self.add_case("C-1", _body("a@example.com"))
+        try:
+            self.q(
+                "EXEC sys.sp_rename N'resident_showcase.v_resident_case.documents_json', "
+                "N'documents_before_525', N'COLUMN'"
+            )
+            for read in (self.reader.list_rows, lambda: self.reader.fetch_case("C-1")):
+                with self.assertRaisesRegex(mssql_python.ProgrammingError, "documents_json"):
+                    read()
+        finally:
+            for batch in script.render(USER):
+                self.q(batch)
+        [row] = self.reader.list_rows()
+        self.assertEqual((row.case_id, row.email), ("C-1", "a@example.com"))
+        self.assertEqual(self.reader.fetch_case("C-1"), row)
+        self.assertEqual(
+            self.as_user(rsql.LIST_SQL), self.as_user(rsql.ONE_SQL.replace("?", "'C-1'"))
+        )
+
     def test_string_measures_and_text_columns_are_bounded(self) -> None:
         body = json.loads(_body("a@example.com"))
         body["measures"] = "Loft insulation; Cavity wall"
         self.add_case("C-1", json.dumps(body))
         self.assertEqual(self.reader.list_rows()[0].measures, ("Loft insulation", "Cavity wall"))
+
+    def test_document_projection_is_own_case_named_fields_and_untruncated(self) -> None:
+        requests = [dict(id="R1", kind="Survey", how_to_provide="I" * 500)]
+        documents = [
+            dict(
+                id="D1",
+                kind="EPC",
+                generated=False,
+                scan=dict(status="pending", detail="PRIVATE"),
+                resident_issues=[dict(severity="error", message="M" * 500)],
+                name="PRIVATE-FILENAME",
+                summary="PRIVATE-STAFF-NOTE",
+                by="PRIVATE-STAFF",
+            ),
+        ]
+        self.add_case(
+            "C-1", _body("a@example.com", resident_document_requests=requests, documents=documents)
+        )
+        self.add_case(
+            "C-2",
+            _body(
+                "b@example.com",
+                resident_document_requests=[
+                    dict(id="OTHER", kind="Other", how_to_provide="OTHER-RESIDENT")
+                ],
+            ),
+        )
+        row = self.reader.fetch_case("C-1")
+        assert row is not None
+        answer, sources = document_answer(row.documents)
+        self.assertIn("I" * 500, answer)
+        self.assertIn("M" * 500, answer)
+        self.assertIn("Survey: Missing", answer)
+        self.assertIn("document D1", sources[-1])
+        selected = self.as_user(rsql.ONE_SQL.replace("?", "'C-1'"))
+        raw = json.dumps(selected, default=str)
+        for absent in ("PRIVATE", "OTHER-RESIDENT"):
+            self.assertNotIn(absent, raw)
+
+    def test_document_source_containers_scalars_and_limits_fail_explicitly(self) -> None:
+        request = dict(id="R", kind="EPC", how_to_provide="Ask staff")
+        document = dict(
+            id="D", kind="EPC", generated=False, scan=dict(status="pending"), resident_issues=[]
+        )
+        mutations: list[dict[str, Any]] = [
+            dict(resident_document_requests={}),
+            dict(resident_document_requests=7),
+            dict(resident_document_requests="bad"),
+            dict(documents={}),
+            dict(documents=7),
+            dict(documents="bad"),
+            dict(documents=[7]),
+            dict(documents=["bad"]),
+            dict(resident_document_requests=[dict(request, id=7)]),
+            dict(resident_document_requests=[dict(request, how_to_provide="x" * 501)]),
+            dict(resident_document_requests=[dict(request, id=str(n)) for n in range(21)]),
+            dict(documents=[dict(document, kind=7)]),
+            dict(documents=[dict(document, id="x" * 65)]),
+            dict(documents=[dict(document, kind="x" * 4001)]),
+            dict(documents=[dict(document, generated="false")]),
+            dict(documents=[dict(document, scan={"status": 7})]),
+            dict(documents=[dict(document, scan=7)]),
+            dict(documents=[dict(document, scan=[])]),
+            dict(documents=[dict(document, resident_issues={})]),
+            dict(documents=[dict(document, resident_issues=7)]),
+            dict(
+                documents=[
+                    dict(document, resident_issues=[dict(severity="warning", message="x" * 501)])
+                ]
+            ),
+            dict(documents=[dict(document, resident_issues=[dict(severity="error", message=7)])]),
+            dict(
+                documents=[
+                    dict(
+                        document,
+                        resident_issues=[dict(severity="warning", message="x") for _ in range(11)],
+                    )
+                ]
+            ),
+            dict(documents=[dict(document, id=str(n)) for n in range(41)]),
+        ]
+        self.add_case("C-1", _body("a@example.com"))
+        for mutation in mutations:
+            with self.subTest(mutation=mutation):
+                self.q(
+                    "UPDATE cases SET body = ? WHERE id = 'C-1'", _body("a@example.com", **mutation)
+                )
+                with self.assertRaises(rs.ShowcaseDenied):
+                    self.reader.fetch_case("C-1")
+
+    def test_nested_request_and_issue_private_fields_never_leave_the_sql_view(self) -> None:
+        self.add_case(
+            "C-1",
+            _body(
+                "a@example.com",
+                resident_document_requests=[
+                    dict(
+                        id="R1",
+                        kind="EPC",
+                        how_to_provide="Ask staff for a secure link.",
+                        staff_note="PRIVATE-REQUEST-NOTE",
+                        internal={"data": "PRIVATE-REQUEST-NESTED"},
+                    )
+                ],
+                documents=[
+                    dict(
+                        id="D1",
+                        kind="EPC",
+                        generated=False,
+                        scan=dict(status="clean"),
+                        resident_issues=[
+                            dict(
+                                severity="warning",
+                                message="Page 2 is hard to read.",
+                                staff_note="PRIVATE-ISSUE-NOTE",
+                                internal={"data": "PRIVATE-ISSUE-NESTED"},
+                            )
+                        ],
+                    )
+                ],
+            ),
+        )
+        raw = self.as_user(rsql.ONE_SQL.replace("?", "'C-1'"))
+        serialized = json.dumps(raw, default=str)
+        self.assertNotIn("PRIVATE-", serialized)
+        self.assertNotIn("staff_note", serialized)
+        self.assertNotIn("internal", serialized)
+        row = self.reader.fetch_case("C-1")
+        assert row is not None
+        answer, sources = document_answer(row.documents)
+        self.assertIn("secure link", answer)
+        self.assertIn("Page 2 is hard to read", answer)
+        self.assertIn("document D1", sources[-1])
+
+    def test_document_unknown_empty_and_exact_source_limits_survive_view(self) -> None:
+        self.add_case("C-1", _body("a@example.com"))
+        for fields, empty in (
+            ({}, False),
+            (dict(resident_document_requests=None, documents=None), False),
+            (dict(resident_document_requests=[], documents=[]), True),
+        ):
+            self.q("UPDATE cases SET body = ? WHERE id = 'C-1'", _body("a@example.com", **fields))
+            row = self.reader.fetch_case("C-1")
+            assert row is not None
+            self.assertEqual(row.documents.requests, () if empty else None)
+            self.assertEqual(row.documents.documents, () if empty else None)
+        self.q(
+            "UPDATE cases SET body = ? WHERE id = 'C-1'",
+            _body(
+                "a@example.com",
+                resident_document_requests=[
+                    dict(id=str(n).zfill(64), kind="K" * 80, how_to_provide="I" * 500)
+                    for n in range(20)
+                ],
+                documents=[
+                    dict(
+                        id=str(n).zfill(64),
+                        kind="K" * 80,
+                        generated=False,
+                        scan=dict(status="X" * 80),
+                        resident_issues=[
+                            dict(severity="warning", message="M" * 500) for _ in range(10)
+                        ],
+                    )
+                    for n in range(40)
+                ],
+            ),
+        )
+        row = self.reader.fetch_case("C-1")
+        assert row is not None
+        answer, sources = document_answer(row.documents)
+        self.assertEqual(len(sources), 60)
+        self.assertEqual(answer.count("M" * 500), 400)
 
     def test_duplicate_counts_include_non_allowlisted_cases_and_variants(self) -> None:
         self.add_case("C-1", _body("a@example.com"))

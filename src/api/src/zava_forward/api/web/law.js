@@ -1,6 +1,10 @@
 (function () {
   const out = document.getElementById("law-out");
   const status = document.getElementById("law-status");
+  const ready = () => {
+    document.getElementById("startup")?.remove();
+    document.dispatchEvent(new Event("workspace-ready"));
+  };
   const el = (tag, text, cls) => { const n = document.createElement(tag); if (text !== undefined) n.textContent = text; if (cls) n.className = cls; return n; };
   const get = async (path) => {
     const r = await fetch(path, { credentials: "same-origin" });
@@ -8,7 +12,7 @@
     if (!r.ok) throw new Error(body.error || "Could not load.");
     return body;
   };
-  const show = (nodes, label) => { out.replaceChildren(...nodes); status.textContent = label; out.focus(); };
+  const show = (nodes, label) => { ready(); out.replaceChildren(...nodes); status.textContent = label; out.focus(); };
   const meta = (s) => el("p", ["Status: " + s.status, "Completeness: " + s.completeness, "Effective: " + (s.effective || "not stated"), "Retrieved: " + s.retrieved, "Version " + (s.version || "")].join(" | "), "muted");
   const caveats = (s) => (s.caveats || []).map((c) => el("p", c, "banner"));
 
@@ -19,7 +23,7 @@
     d.sources.forEach((s) => {
       const li = el("li"), b = el("button", s.title, "alt");
       b.type = "button";
-      b.addEventListener("click", () => open(s.id).catch(fail));
+      b.addEventListener("click", AsyncAction.handler(() => open(s.id).catch(fail)));
       li.append(b, meta(s), ...caveats(s));
       ul.append(li);
     });
@@ -39,7 +43,7 @@
     d.provisions.forEach((p) => {
       const li = el("li"), b = el("button", p.heading_path, "alt");
       b.type = "button";
-      b.addEventListener("click", () => text(p.id).catch(fail));
+      b.addEventListener("click", AsyncAction.handler(() => text(p.id).catch(fail)));
       li.append(b); ul.append(li);
     });
     nodes.push(ul);
@@ -59,14 +63,27 @@
     d.results.forEach((r) => {
       const li = el("li"), b = el("button", r.title + ": " + r.heading_path, "alt");
       b.type = "button";
-      b.addEventListener("click", () => text(r.id).catch(fail));
+      b.addEventListener("click", AsyncAction.handler(() => text(r.id).catch(fail)));
       li.append(b); ul.append(li);
     });
     nodes.push(ul);
     show(nodes, d.results.length + " results.");
   }
-  const fail = (e) => { status.textContent = e.message; };
-  document.getElementById("law-all").addEventListener("click", () => list().catch(fail));
-  document.getElementById("law-form").addEventListener("submit", (e) => { e.preventDefault(); find(document.getElementById("law-q").value).catch(fail); });
-  list().catch(fail);
+  const fail = (e) => { ready(); status.textContent = `${e.message}. Try All sources or search again.`; };
+  if (typeof AsyncAction === "undefined" || !AsyncAction
+      || !["handler", "run"].every(method => typeof AsyncAction[method] === "function")) {
+    const message = "Required law viewer file did not load: /async-action.js. Reload this page to try again. If this continues, contact application support.";
+    const reload = el("button", "Reload law viewer");
+    reload.type = "button";
+    reload.addEventListener("click", () => location.reload());
+    const error = el("p", message, "err");
+    error.setAttribute("role", "alert");
+    document.getElementById("law-form").querySelectorAll("input, button").forEach(control => { control.disabled = true; });
+    document.getElementById("law-form").addEventListener("submit", event => event.preventDefault());
+    show([el("h2", "Law viewer unavailable"), error, reload], message);
+    return;
+  }
+  document.getElementById("law-all").addEventListener("click", AsyncAction.handler(() => list().catch(fail)));
+  document.getElementById("law-form").addEventListener("submit", AsyncAction.handler((e) => { e.preventDefault(); return find(document.getElementById("law-q").value).catch(fail); }));
+  AsyncAction.run(null, () => list().catch(fail), "Loading sources");
 }());

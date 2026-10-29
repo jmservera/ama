@@ -741,7 +741,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                         "briefing", hit[1].get("release"), hit[1].get("model"))):
                 return hit[1]
             ver = self.version
-            top = [self._case(c["id"]) for c in candidates[:8]]
+            top = [deepcopy(self._case(c["id"])) for c in candidates[:8]]
             for c in top:
                 export_fields.prompt_case(c)
             rows = [self.summary(c) for c in top]
@@ -764,6 +764,15 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                    case_count=len(candidates), summary_count=len(top) if r["source"] == "ai" else len(top[:3]),
                    label=("AI suggestion, not approved" if r["source"] == "ai" else "Summary by rules")
                    + ("" if r["verified"] else ". Unverified: its sources do not match the case record"))
+        if r["source"] != "ai" and r["approval"] != "Quarantined" and top:
+            out["statements"] = [
+                dict(text=f"{c['resident']['name']} "
+                          f"({c['stage'].lower()}, {c['days_in_stage']} days)",
+                     citations=[f"{c['id']}: Stage: {c['stage']}",
+                                f"{c['id']}: Days in stage: {c['days_in_stage']}"],
+                     unresolved=[])
+                for c in top[:3]
+            ]
         with self.lock:
             if self.version - ver <= 1:  # only our own comparison record was saved meanwhile
                 for old in [k for k, v in self._briefings.items() if v[0] != self.version]:

@@ -1,0 +1,82 @@
+{
+  "task_id": "526-pr529-round5-20261028",
+  "task_slug": "case-journey-526-round5",
+  "parent_task": {
+    "task_id": "526-pr529-open-threads-20261028",
+    "task_slug": "case-journey-526-open-threads"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-28/case-journey-526-round5-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-28/case-journey-526-round5-plan.md",
+    "details": ".copilot-tracking/details/2026-10-28/case-journey-526-round5-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-28/case-journey-526-round5-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-28/case-journey-526-round5-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-28/case-journey-526-round5-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Source and all original RPI evidence committed locally with privacy-safe identity and required trailer",
+      "status": "complete; not pushed",
+      "evidence": "6f836a68459dbafee5a6c3382b1d62366c8fcd67; author/committer verified, Refs #526 and Copilot trailer preserved, worktree clean after source commit. Containing documentation-only handoff commit reconciles markers and state."
+    },
+    {
+      "decision": "Later bounded RV-001 implementation completed and validated; original Review outcome unchanged",
+      "status": "local-checks-passed",
+      "evidence": "Separate rv001 changes record; final journey 207 assertions/38 zero-violation scans; assistants unchanged 58/10; 17 units and static checks pass; final source diff bb3f69ae883e67ff2acdc045f19ce34d74739be90dffc53526f2569ffd4c97d9"
+    },
+    {
+      "decision": "Sole independent Review executed Complete / Defects found",
+      "status": "complete; one Low test-ordering finding",
+      "evidence": "Review RV-001: outage-on-Overview assertion runs before new navigation; no production defect found. Preserve original result and perform only bounded later test correction, not another Review."
+    },
+    {
+      "decision": "P01 and P02-T01 complete; final local validation passed",
+      "status": "review-ready",
+      "evidence": "17 focused tests, 43 related contracts, journey 206 assertions/38 axe scans, assistants 58 checks/10 scans; source diff d6c2431f7ac4088036a6354b074e68d83f48658d429409bd604ddeffb89357c5"
+    },
+    {
+      "decision": "Research executed Ready; sole critique Complete / Revise, PC-001 directly applied",
+      "status": "plan-ready",
+      "evidence": "Research C1-C8/W1-W2; plan Critique Disposition retains chat panel across redraw and requires timing regressions."
+    },
+    {
+      "decision": "Run the full RPI correction loop on the existing PR branch",
+      "status": "confirmed",
+      "evidence": "Explicit user request; continuing automatic parent session; clean worktree, open PR 529 and matching topic verified. git fetch and git pull --ff-only completed; HEAD and remote both 1d36e8b3."
+    },
+    {
+      "decision": "No Azure, secrets, remote replies or thread resolution; retain Refs #526",
+      "status": "confirmed",
+      "evidence": "User delegates publication and thread handling to coordinator when full az-dependent gate blocks."
+    }
+  ],
+  "blockers": [
+    {
+      "id": "publication-full-gate",
+      "summary": "The complete publication gate invokes az, prohibited by the user",
+      "resolution": "Commit validated local source and dated evidence; coordinator owns permitted exact-head gate, push and thread replies/resolution."
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Coordinator must complete the permitted full gate on final committed HEAD/current main, verify fresh receipt and independent exact-head assessment, then push and reply/resolve the three original threads. No az or remote publication performed here; original Review outcome preserved. Human acceptance remains separate."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator exact-head publication and resolution of three supplied threads",
+      "rationale": "Only remaining delivery blocker; complete gate invokes prohibited az and no earlier receipt covers the final candidate.",
+      "evidence": "Full-gate source commands, original Review publication boundary, fresh main 9bfed51863b05a25e9939d82504c576524688e14; research exact three thread IDs."
+    },
+    {
+      "rank": 2,
+      "task": "Human screen-reader and staff acceptance",
+      "rationale": "Axe and DOM state checks cannot establish actual speech or staff usability; existing owner acceptance boundary remains separate.",
+      "evidence": "Original Review residual work and WCAG conformance baseline; automated scans have zero violations but manual acceptance not executed."
+    }
+  ]
+}

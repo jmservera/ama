@@ -1,0 +1,63 @@
+{
+  "classification": "Evidence",
+  "capturedDate": "2026-10-28",
+  "repository": "jmservera/ama",
+  "sourceCommit": "9bfed51863b05a25e9939d82504c576524688e14",
+  "limits": "Bounded list snapshots and selected bodies, not an exhaustive audit of historical comments, checks or PR branches.",
+  "queries": [
+    "gh issue list --state all --limit 250 --json number,title,state,url; selected issue numbers retained in issues-list.json",
+    "gh pr list --state all --limit 100 --json number,title,state,url,headRefName,baseRefName; selected PR numbers retained in prs-list.json",
+    "gh issue list --state all --search 'repo:jmservera/ama is:issue RAI' --limit 40 --json number,title,state",
+    "gh issue view 223 --json number,title,state,body",
+    "gh issue view 224 --json number,title,state,body",
+    "gh issue view 520 --json number,title,state,body",
+    "gh issue view 521 --json number,title,state,body",
+    "gh issue view 530 --json number,title,state,body",
+    "gh issue view 531 --json number,title,state,body",
+    "gh pr view 504 --json number,title,state,body",
+    "gh pr view 525 --json number,title,state,body"
+  ],
+  "listArtifacts": ["issues-list.json", "prs-list.json"],
+  "selectedBodyObservations": [
+    {
+      "source": "issue 223",
+      "classification": "Evidence",
+      "observation": "OPEN; human-review effectiveness Not run. Requires seeded critical-defect detection, retained reviewer/source/reason, paired workflow-only effort and automation-bias testing."
+    },
+    {
+      "source": "issue 224",
+      "classification": "Evidence",
+      "observation": "OPEN; legal applicability/currentness review Not started. Official-source and named Legal/DPO decisions required; jurisdiction or high-risk status not inferred."
+    },
+    {
+      "source": "issue 520 and PR 525",
+      "classification": "Evidence",
+      "observation": "Issue OPEN, PR MERGED. PR describes source-grounded synthetic chat, explicit record-use permission and separately confirmed local SQLite callback agenda, not works consent or real appointments. Human/content/AT/zoom, operational integration and real-model acceptance remain pending. Missing-document source criterion is not accepted."
+    },
+    {
+      "source": "PR 525",
+      "classification": "Evidence",
+      "observation": "Historical full-gate and local browser/axe evidence is reported, not rerun by this review. PR retains 59 HIGH and two CRITICAL unfixed scanner findings per consumer image and contrast incompletes in three resident states. Fixable-only gate success is not a vulnerability-free or accessibility-conformance claim."
+    },
+    {
+      "source": "issue 521",
+      "classification": "Evidence",
+      "observation": "OPEN request to extend demo authority to end of January 2027; consistent code/docs/tests, cost/rotation and explicitly confirmed live application remain acceptance criteria. Request does not prove implementation."
+    },
+    {
+      "source": "issue 530",
+      "classification": "Evidence",
+      "observation": "OPEN request for one employee chat with five bounded skills and general work questions. Existing case panel is not proof of all-screen five-skill delivery; role scope, sources, workflow fallback and audits must remain."
+    },
+    {
+      "source": "issue 531",
+      "classification": "Evidence",
+      "observation": "OPEN owner HAX/loading request: distinguish AI/rules/source data, statement references, plain mismatch wording, outcome-based review actions, refresh/reason/correction and safe dismiss/undo. Toolkit URL is a pointer only; no external toolkit retrieval occurred."
+    },
+    {
+      "source": "PR 504",
+      "classification": "Evidence",
+      "observation": "OPEN separate dependency-binding correction with constructed tests. Not credited to baseline. Named release/oversight/incident authority, approved cohort evaluation and actual human effectiveness remain unresolved in its body."
+    }
+  ]
+}

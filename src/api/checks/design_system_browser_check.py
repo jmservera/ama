@@ -208,12 +208,14 @@ def run_browser(base: str) -> None:
             marker = page.locator(".map-marker:has(.map-symbol.hazard)")
             marker.focus()
             marker.press("Enter")
+            page.get_by_role("link", name="Open home", exact=True).click()
             page.wait_for_url("**#/case/ZF-4")
             page.get_by_role("heading", name="Pat Test", exact=False).first.wait_for()
             check("point marker Enter opens the real case", "ZF-4" in page.url)
             page.get_by_role("link", name="Overview", exact=True).click()
             page.locator(".map-marker .map-symbol.normal").wait_for()
             page.locator(".map-marker:has(.map-symbol.normal)").press("Space")
+            page.get_by_role("link", name="Open home", exact=True).click()
             page.wait_for_url("**#/case/ZF-1")
             check("point marker Space opens the real case", "ZF-1" in page.url)
             check(f"no uncaught JavaScript errors ({errors})", not errors)
@@ -225,6 +227,8 @@ def run_browser(base: str) -> None:
 def main(
     browser_check: Callable[[str], None] = run_browser,
     data_factory: Callable[[], dict[str, Any]] = synthetic_data,
+    *,
+    synthetic_chat_privacy: bool = False,
 ) -> None:
     (ROOT / ".venv").mkdir(exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="zf-browser-", dir=ROOT / ".venv") as scratch:
@@ -250,6 +254,12 @@ def main(
             ZF_ENV="development",
             ZF_AUTH="password",
         )
+        if synthetic_chat_privacy:
+            env.update(
+                CHAT_DPIA_REF="SYNTH-BROWSER-DPIA",
+                CHAT_LAWFUL_BASIS_REF="SYNTH-BROWSER-BASIS",
+                CHAT_NOTICE_REF="SYNTH-BROWSER-NOTICE",
+            )
         with (work / "server.log").open("w+", encoding="utf-8") as log:
             process = subprocess.Popen(
                 [sys.executable, "-m", "zava_forward.api.server"],

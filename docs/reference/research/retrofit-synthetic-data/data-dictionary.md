@@ -1,7 +1,7 @@
 ---
 title: Data Dictionary - Retrofit Synthetic Evidence Pack
 description: Field definitions, keys, allowed values and record-keeping notes for the Zava Forward year-one synthetic evidence pack
-ms.date: 2026-10-20
+ms.date: 2026-10-27
 ms.topic: reference
 ---
 
@@ -427,12 +427,107 @@ not verified. Neither generation mode reads real device/resident telemetry.
 Default history is 730 days from 2024-10-01, hourly, unless explicitly overridden.
 Scale mode links fictional `ZF-` homes to `SENS-SYN-` sensors; register mode
 retains supplied opaque synthetic IDs and hashes them for sensor IDs. Synthetic
-permission fixtures are not resident consent. Climate is the labelled
+permission fixtures are not resident consent. Default climate is the labelled
 `synthetic-uk-seasonal-model-v1`; Met Office/Environment Agency data are not
-retrieved or claimed as licensed sources. Moisture, CO2, energy, live ingestion,
-calibration and dated retrofit effects are not delivered by this generator.
+silently used. The approved opt-in composition now also supports the pinned
+paired ERA5 packet, explicit dated synthetic measures and household variation,
+as described below. CO2, energy, measured calibration and live publishing
+are not delivered by this generator.
 Injected faults deliberately include out-of-range measurements; ingestion
 validation and privacy/label validation are separate checks.
+
+#### Composed backfill and shared live-stage contract
+
+The [core guide](../../../../src/core/README.md#approved-paired-climate-composition-2026-10-27-refs-177)
+defines run/estimate commands, seeds, register consent filtering, measures,
+compression, budgets and source-fingerprint behavior. Schema depends on mode,
+not the transport:
+
+| Mode / payload | Fields and meaning |
+| --- | --- |
+| Legacy `reading-v1` | Eleven fields in the table above, including inline historical fault label; not the modern consumer contract |
+| Opt-in/composed `sensor-fault-input-v1` | Exactly `sensor_id`, `reading_id`, `home_id`, UTC `observed_at`, `temperature_c`, `humidity_pct`, `source_type`, `scenario`, `seed`, `schema_version`, `temperature_unit`, `humidity_unit`, `calibrated`; no truth labels |
+| Observation units/types | CSV strings; temperature finite degC, humidity percent; `calibrated` is lowercase `"true"`/`"false"` in the constructed shared contract, not evidence of physical calibration |
+| Identity | Paired reading key `(sensor_id, reading_id)`; canonical stock IDs use hashed `stock-sensor-v2` sensor IDs and timestamp-derived reading IDs; no real device identity implied |
+| Fault input | Units must be inspected even though column remains `temperature_c`; wrong-unit exercises declare degF; gaps omit rows; duplicates preserve IDs |
+| `analysis/` | Fault-mode inputs, sensor register without fault profile, optional sanitized stock/fabric, estimate and manifest |
+| `truth/` | Evaluator-only fault packet label, clean counterfactual, emitted row positions, seed/rates/parameters; separate manifest binds analysis hash |
+| Composed manifest | Paired climate/metadata hashes, explicit measure-history hash, model versions/parameters, source revision, seed/window/cadence, selected/excluded IDs, rows/shards and payload hashes |
+| Dated measure input | `measure_id`, `home_id`, supported `kind`, whole-second UTC `completed_at`, Boolean `is_synthetic=true`; no inferred dates or actual works |
+
+Stage 2 uses this shared 13-field schema (#186) and proposed IoT Hub identities,
+not a second storage schema. The finite offline #110 consumer validates and
+appends accepted records to `sensor_reading`; rejected/duplicate/order/unit/
+mapping/time/calibration exceptions stay separate from derived analysis.
+The [two-stage guide](../../../../src/core/README.md#two-stage-simulator-operation-and-limits-194)
+states the live runner is unavailable: provisioning, credential ownership,
+rate/replay/failure/cost controls and actual cloud operation remain #184 work.
+Three paired observations/home/day implies `3N` records/day, not a measured
+billable-message count. Hourly validation is a separate offline cadence.
+
+Climate provenance: the
+[retained ERA5 packet](../climate-paired-source-178/open-meteo-era5-durham-2023-2024-metadata.json)
+is Open-Meteo/C3S outdoor reanalysis, Durham returned cell 54.75/-1.5,
+hourly 0.25-degree source resolution, 17,544 paired hours covering 2023-2024,
+retrieved 2026-10-27. Raw SHA-256:
+`af76a90414d9ad8f19dacc95a38f06d4c4321a91bdf030ba231558c42506051e`.
+Weather data by [Open-Meteo.com](https://open-meteo.com/),
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); underlying ERA5 is
+Copernicus Climate Change Service (C3S) material. Raw bytes retained unchanged;
+bounds summarised and exact timestamps subsampled for synthetic indoor projections.
+Hersbach et al. (2023), DOI
+[10.24381/cds.adbb2d47](https://doi.org/10.24381/cds.adbb2d47);
+Open-Meteo software: Zippenfenig (2023),
+[10.5281/ZENODO.7970649](https://doi.org/10.5281/ZENODO.7970649).
+The metadata's actual 2026-10-22 terms snapshot records CC BY 4.0/API
+non-commercial conditions; underlying C3S reuse remains legally unverified.
+Owner approval `owner-approvals-2026-10-27-b` is synthetic-demo-only, not
+production/Legal approval or a fresh terms check. Exact provider revision and
+server build are not exposed; retained bytes, not a repeat URL request, pin
+the data. Sample extrema are not safety/healthy-home or regional design limits.
+
+#### Separate scenario validation pack
+
+`synthetic.sensor_scenarios`, version `sensor-scenarios-exercise-v1`, uses
+clean backfill identities/schema with explicit exercise overlays. It does not
+write to general history or use the ERA5 bytes. See the
+[runnable scenario guide and full parameters](../../../../src/core/README.md#synthetic-scenario-validation-pack-190-192-193-194).
+All windows, profile values, sizes and comparator thresholds are exercise
+assumptions, not sourced physical findings.
+
+| Payload / field | Type, units and meaning |
+| --- | --- |
+| `analysis/C01.csv`..`C11.csv` | Shared 13-field strings above; neutral case IDs, common `scenario=SCENARIO_PACK`, actual pack seed and `source_type=SYNTHETIC`; no labels/expected outcomes/RNG keys |
+| `analysis/windows.json` | Version/source strings, `start`/`end_exclusive` UTC strings, integer `cadence_minutes=60`; list of neutral `case_id`, relative `file` and nullable UTC `measure_at` |
+| `truth/cases.json` | One evaluator record per case: `case_id`, `family` (`damp`/`retrofit`), `label`, integer `seed`, string `rng_key`, `expected_outcome`, numeric `temperature_delta_c`/`humidity_delta_points`, integer `delay_days` |
+| Damp truth labels | normal, condensation_prone, sustained_high_humidity, repeated_overnight_peaks, sensor_fault, missing_data, seasonal_shift |
+| Retrofit truth labels | improvement, no_change, delayed_effect, adverse_effect; labelled exercise direction/size, not actual works or causation |
+| `truth/manifest.json` | Schema/method versions, synthetic label, Python version, generator source fingerprint, seed, UTC window/cadence, nominal slots, constructed-weather identity, all exercise parameters, case/row counts, relative `file_sha256` map |
+| `truth/report.json` | Method/version/source, evaluated rules and analysis-only `input_sha256`; per-check list, confusion counters, sensitivity and explicit limits; no overall pass |
+| `checks[]` | Neutral `case_id`, evaluator label, check name (`damp_outcome` or separate `retrofit_early`/`retrofit_late`), fixed expectation, observed analysis/comparison, `status=PASS`/`FAIL` |
+| Analysis result | `status=NO_EXERCISE_SIGNAL`/`REVIEW_CANDIDATE`/`INSUFFICIENT`; expected/present/valid counts, coverage fraction, reasons, longest high/flatline hours, high-night count; nullable mean temperature C/RH percent |
+| Retrofit comparison | Whole and baseline/early/late window analysis, `status=SUFFICIENT`/`INSUFFICIENT`, nullable early/late delta objects (`temperature_c`, `humidity_points`); descriptive-only interpretation |
+| Confusion | Case-level total, eligible, binary_classified, abstained, expected_insufficient, correct/incorrect_insufficient and tp/tn/fp/fn; false-alert/miss rates use classified negative/positive denominators, null when zero |
+| Sensitivity | Same fixed damp truth at RH thresholds 70/75/85; separate confusion objects, four retrofit cases excluded |
+
+Fixed UTC window: [2024-01-01,2024-01-29), 672 hourly slots/case;
+default seed 190, supported integer range 0..2^63-1. Eleven cases yield 6,888
+emitted rows (one 75%-missing case), all synthetic. Weather is constructed
+constant outdoor 2 C/70% RH. Completion is day 14; delayed activation day 21.
+The comparator does not read truth or use seed/identity as labels. It checks
+uniqueness/order/grid, fields/units/labels/calibration and finite domains;
+>=90% valid coverage per whole/day/overnight and no >=24-hour paired flatline
+are required. Gaps break high-RH runs. Threshold 75%, >=12 consecutive hours
+or >=3 nights with >=3 high-RH samples are versioned exercise criteria only.
+Baseline/early/late seven-day windows have independent sufficiency; null
+deltas never become a reassuring negative. Truth separation is not OS access
+control, and a negative exercise result does not establish a safe home.
+
+These are simulated readings, not evidence of an installed device or any real
+home condition. #111/#133 actual downstream tests, live publishing, competent
+R2 review, agreed R3 limits, human approval and real resident consent remain
+separate gates. No sensor result overrides a resident report or changes a
+clock, hold, service, priority or investment decision.
 
 ### Real-person guarantee
 

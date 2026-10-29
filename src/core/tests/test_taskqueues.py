@@ -176,6 +176,92 @@ class QueueDefinitions(unittest.TestCase):
         self.assertEqual(work["reason"], "SYN-BUILDING-BLOCK")
         self.assertEqual(work["source"], "case:ZF-1/building")
 
+    def test_clock_only_overdue_preserves_exact_order_ownership_and_provenance(self) -> None:
+        self.case["hazards"] = [
+            dict(
+                released=True,
+                accepted_by={"name": "Safety reviewer"},
+                response_due_at="2026-10-15T10:00Z",
+                resident_update_due_at="2026-10-15T11:00Z",
+            ),
+            dict(
+                sender={"name": "Safety sender"},
+                response_due_at="2026-10-15T12:00Z",
+                responded_at="2026-10-16T00:00:01Z",
+                resident_update_due_at="2026-10-15T13:00Z",
+                resident_updated_at="2026-10-16T00:00:00Z",
+            ),
+            dict(owner="Fallback owner", response_due_at="2026-10-15"),
+            dict(response_due_at="2026-10-15"),
+        ]
+        self.case["resident_update"] = dict(due_at="2026-10-15T14:00Z", owner="Update owner")
+        handoff = dict(state="Received", due_at="2026-10-15T15:00Z", chase_owner="Handoff sender")
+        expected = [
+            dict(
+                task=label,
+                owner=owner,
+                due_at=due,
+                completion="Not evidenced",
+                case_id=self.case["id"],
+                source=f"case:{self.case['id']}/{path}",
+                version="Unknown",
+                as_of=AS_OF,
+            )
+            for label, owner, due, path in (
+                (
+                    "External safety service response",
+                    "Safety reviewer",
+                    "2026-10-15T10:00Z",
+                    "hazards/0",
+                ),
+                (
+                    "External safety service resident update",
+                    "Safety reviewer",
+                    "2026-10-15T11:00Z",
+                    "hazards/0",
+                ),
+                (
+                    "External safety service response",
+                    "Safety sender",
+                    "2026-10-15T12:00Z",
+                    "hazards/1",
+                ),
+                ("External safety service response", "Fallback owner", "2026-10-15", "hazards/2"),
+                ("External safety service response", "Unknown", "2026-10-15", "hazards/3"),
+                ("Resident update", "Update owner", "2026-10-15T14:00Z", "resident_update"),
+                ("Handoff acceptance", "Handoff sender", "2026-10-15T15:00Z", "handoff"),
+            )
+        ]
+        self.assertEqual(
+            taskqueues.overdue_tasks(self.case, as_of=AS_OF, handoff=handoff), expected
+        )
+        self.assertEqual(evaluate(self.case, handoff=handoff)["overdue"], expected)
+
+    def test_clock_only_overdue_keeps_snapshot_and_completion_boundaries(self) -> None:
+        for due, completed, count in (
+            ("2026-10-15T23:59:59Z", None, 1),
+            ("2026-10-16T00:00:00Z", None, 0),
+            ("2026-10-16T00:00:01Z", None, 0),
+            ("2026-10-16T01:00:00+02:00", None, 1),
+            ("2026-10-15T12:00:00", None, 0),
+            ("bad", None, 0),
+            (None, None, 0),
+            ("2026-10-15", "2026-10-16T00:00:00Z", 0),
+            ("2026-10-15", "2026-10-16T00:00:01Z", 1),
+            ("2026-10-15", "bad", 1),
+        ):
+            with self.subTest(due=due, completed=completed):
+                self.case["resident_update"] = dict(due_at=due, completed_at=completed)
+                self.assertEqual(
+                    len(taskqueues.overdue_tasks(self.case, as_of=AS_OF, handoff=None)), count
+                )
+        for as_of in ("bad", "", "2026-10-16T00:00"):
+            with (
+                self.subTest(as_of=as_of),
+                self.assertRaisesRegex(ValueError, "valid dataset as_of snapshot"),
+            ):
+                taskqueues.overdue_tasks(self.case, as_of=as_of, handoff=None)
+
     def test_projection_for_human_context_and_per_case_sources(self) -> None:
         self.case["returns"] = [
             dict(

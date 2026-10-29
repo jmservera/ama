@@ -1,0 +1,180 @@
+{
+  "projectSlug": "2026-10-28-zava-forward-project",
+  "raiPlanFile": ".copilot-tracking/rai-plans/2026-10-28-zava-forward-project/rai-plan.md",
+  "assessmentDate": "2026-10-28",
+  "sourceCommit": "9bfed51863b05a25e9939d82504c576524688e14",
+  "reviewedMain": "9bfed51863b05a25e9939d82504c576524688e14",
+  "branch": "docs/rai-review-project",
+  "currentPhase": 6,
+  "entryMode": "capture",
+  "disclaimerShownAt": "2026-10-28T23:27:40.874Z",
+  "noticeLog": [
+    {
+      "noticeType": "disclaimer",
+      "phase": 1,
+      "source": "hve-core-all/rules/shared/disclaimer-language.instructions.md#rai-planning",
+      "timestampBasis": "User-supplied session-start timestamp; exact display instant not separately measured."
+    },
+    {
+      "noticeType": "framework-attribution",
+      "phase": 1,
+      "framework": "NIST AI RMF 1.0",
+      "source": "hve-core-all/rules/rai-planning/rai-identity.instructions.md"
+    },
+    {
+      "noticeType": "exit-reminder",
+      "phase": 6,
+      "delivery": "Final CLI handoff of the containing local commit",
+      "source": "hve-core-all/rules/shared/disclaimer-language.instructions.md#rai-planning"
+    }
+  ],
+  "securityPlanRef": null,
+  "assessmentDepth": "comprehensive",
+  "standardsMapped": true,
+  "securityModelAnalysisStarted": true,
+  "raiThreatCount": 12,
+  "impactAssessmentGenerated": true,
+  "evidenceRegisterComplete": true,
+  "handoffGenerated": { "ado": false, "github": true },
+  "handoffMode": "Local proposed synthesis list and pointer only; no creation payload or submitted issues.",
+  "analyticalStatus": "All six phases drafted; qualified confirmations and acceptance remain pending.",
+  "aiComponentInventory": [
+    { "id": "A1", "task": "stock-prioritisation", "autonomy": "recommend/propose; no ranking write" },
+    { "id": "A2", "task": "assessment-preparation", "autonomy": "draft; no professional approval" },
+    { "id": "A3", "task": "funding-evidence", "autonomy": "draft; no eligibility/submission/payment" },
+    { "id": "A4", "task": "works-resident-coordination", "autonomy": "draft; no send/schedule/consent" },
+    { "id": "A5", "task": "quality-evidence", "autonomy": "flag/propose; no quality acceptance" },
+    { "id": "A6", "task": "six retained briefing/message/summary/priority/funding/document paths", "autonomy": "reading/draft proposals" },
+    { "id": "A7", "task": "employee case chat/thread/memory", "autonomy": "bounded answer/proposal; not all-screen five-skill delivery" },
+    { "id": "A8", "task": "resident chat/advisor/synthetic callback", "autonomy": "explain/propose; separate resident confirmation for synthetic SQLite writes" },
+    { "id": "A9", "task": "extractive regulatory lookup", "autonomy": "source excerpts/facts; no legal interpretation" },
+    { "id": "A10", "task": "deterministic policy/workflow/sensor admission", "autonomy": "rules/DQ; trend method proposed; no diagnosis" },
+    { "id": "A11", "task": "worker/importer/orchestrator", "autonomy": "bounded processing/scaffolding; no programme decision authority" },
+    { "id": "A12", "task": "discovery/training/autonomous supervisor", "autonomy": "Unknown; not established as current approved capability" }
+  ],
+  "phaseGates": {
+    "phase1": { "gate": "summary-and-advance", "status": "draft-analysis-complete" },
+    "phase2": { "gate": "hard", "confirmedAt": null, "status": "pending-human-confirmation" },
+    "phase3": { "gate": "hard", "confirmedAt": null, "status": "pending-human-confirmation" },
+    "phase4": { "gate": "summary-and-advance", "status": "draft-analysis-complete" },
+    "phase5": { "gate": "summary-and-advance", "status": "draft-analysis-complete" },
+    "phase6": { "gate": "hard", "confirmedAt": null, "status": "pending-human-review-no-issue-creation" }
+  },
+  "executionBasis": {
+    "classification": "Evidence",
+    "source": "User request, 2026-10-28",
+    "scope": "Whole project, all six analytical phases, repository-only, local backlog proposals, commit and conditional publication.",
+    "gateHandling": "Proceed autonomously with draft analysis under the explicit end-to-end request. Do not fabricate phase confirmations, legal approval, residual-risk acceptance or permission to create issues.",
+    "prohibitedActions": ["source edits", "az", "Azure access", "secrets", ".env", "private datasets", "GitHub issue creation"]
+  },
+  "gateResults": {
+    "prohibitedUsesGate": {
+      "status": "repository-screened-legal-review-unresolved",
+      "sourceFrameworks": ["Local intended/prohibited uses in ai_registry.py; no external legal classification"],
+      "notes": "Evidence: local intended uses do not establish an expressly prohibited purpose; ai_registry.py:20-35 prohibits social scoring, consent manipulation and autonomous changes. Unknown: current applicable legal prohibited-use screening. Not a legal pass."
+    }
+  },
+  "riskClassification": {
+    "framework": {
+      "id": "nist-ai-rmf",
+      "name": "NIST AI Risk Management Framework",
+      "version": "1.0",
+      "source": "rai-standards embedded reference pack; repository addendum Responsible AI Release Position",
+      "replaceDefaultIndicators": false,
+      "replaceDefaultFramework": false
+    },
+    "indicators": {
+      "safety_reliability": {
+        "method": "binary",
+        "nistSource": ["MS-2.5", "MS-2.6"],
+        "activated": true,
+        "observation": "Evidence: hazard routing, quality evidence and sensor-supported condition review are in scope.",
+        "result": "Hypothesis: safety consequences require comprehensive review; no harm incidence established."
+      },
+      "rights_fairness_privacy": {
+        "method": "categorical",
+        "nistSource": ["MS-2.8", "MS-2.10", "MS-2.11"],
+        "activated": true,
+        "observation": "Evidence: consent, support uncertainty, resident access, staff identity and chat content are in scope.",
+        "result": "Unknown: representative outcomes, approved processing and legal currentness."
+      },
+      "security_explainability": {
+        "method": "continuous",
+        "nistSource": ["MS-2.7", "MS-2.9"],
+        "activated": true,
+        "observation": "Evidence: untrusted prompts/sources, cited proposals and model release controls are in scope.",
+        "result": "Hypothesis: material review concern; no unsupported numeric score assigned."
+      }
+    },
+    "activatedCount": 3,
+    "riskScore": null,
+    "suggestedDepthTier": "Comprehensive"
+  },
+  "runningObservations": [
+    {
+      "phase": 1,
+      "observation": "Evidence: requested branch is clean and equals fetched origin/main at the recorded baseline. No assessment state or reusable security-plan state was found.",
+      "flagLevel": "noted"
+    },
+    {
+      "phase": 1,
+      "observation": "Evidence: open PRs 503, 504, 506 and 508 are separate candidates, not current worktree implementation.",
+      "flagLevel": "noted"
+    },
+    {
+      "phase": 5,
+      "observation": "Evidence: finite hazard wording, alternate chat routes, no-AI scope mismatch, separate consent/callback/sensor lifecycles, Unknown-support ordering, uncalibrated synthetic data and stale sensor/retention wording remain open. See evidence-lanes.md and durable synthesis F01-F14.",
+      "flagLevel": "noted"
+    },
+    {
+      "phase": 6,
+      "observation": "Evidence: mandatory full publication gate executes az bicep; user prohibits az/Azure. No gate waiver, substituted partial receipt or successful publication is claimed.",
+      "flagLevel": "noted"
+    }
+  ],
+  "principleTracker": {
+    "validReliable": { "suggestedStatus": "partial", "mappedInPhase3": true, "threatsIdentified": 2, "controlsEvaluated": 2, "nistSubcat": "MS-2.5", "openObservations": ["E03/E04/E06; C01/C04: semantic and actual-model assurance unknown"] },
+    "safe": { "suggestedStatus": "partial", "mappedInPhase3": true, "threatsIdentified": 3, "controlsEvaluated": 3, "nistSubcat": "MS-2.6", "openObservations": ["T-RAI-004/005/010; C03/C04/C10: visibility, staffed receipt and calibrated outcomes unknown"] },
+    "secureResilient": { "suggestedStatus": "partial", "mappedInPhase3": true, "threatsIdentified": 5, "controlsEvaluated": 5, "nistSubcat": "MS-2.7", "openObservations": ["T-RAI-002/003/004/008/011; C01/C02/C03/C08/C11: semantic resistance and deployed boundaries unknown"] },
+    "accountableTransparent": { "suggestedStatus": "partial", "mappedInPhase3": true, "threatsIdentified": 2, "controlsEvaluated": 2, "nistSubcat": "MS-2.8", "openObservations": ["T-RAI-009/012; C09/C12: named authority and meaningful oversight unknown"] },
+    "explainableInterpretable": { "suggestedStatus": "partial", "mappedInPhase3": true, "threatsIdentified": 2, "controlsEvaluated": 2, "nistSubcat": "MS-2.9", "openObservations": ["T-RAI-001/006; C01/C06: claim support and resident comprehension unknown"] },
+    "privacyEnhanced": { "suggestedStatus": "partial", "mappedInPhase3": true, "threatsIdentified": 2, "controlsEvaluated": 2, "nistSubcat": "MS-2.10", "openObservations": ["T-RAI-003/007; C02/C07: semantic minimisation, lifecycle and provider approvals unknown"] },
+    "fairBiasManaged": { "suggestedStatus": "outcome-evidence-gap", "mappedInPhase3": true, "threatsIdentified": 2, "controlsEvaluated": 2, "nistSubcat": "MS-2.11", "openObservations": ["T-RAI-006/010; C06/C10: unapproved cohort protocol, no representative fairness evidence"] }
+  },
+  "referencesProcessed": [],
+  "nextActions": ["Obtain separate qualified human phase/scope/residual-risk acceptance", "Reconcile prohibited az with mandatory full-gate dependency before any publication", "After authorization, fetch main and obtain fresh full receipt, pre-push verification and independent exact-head assessment; no issues created"],
+  "review": {
+    "classification": "Evidence",
+    "artifact": "independent-review.md",
+    "originalOutcome": "No blocking or nonblocking issues found in representative sample; two optional suggestions retained.",
+    "limitations": "Pre-commit report review, not qualified human acceptance or independent exact-head publication assessment.",
+    "subsequentCorrections": "Mechanical source-line bounds and exact named-owner citation corrected; original outcome preserved."
+  },
+  "validation": {
+    "classification": "Evidence",
+    "artifact": "validation.md",
+    "localChecks": "Structural/source-line/link/JSON/append-only/scope checks; initial line-bound failure corrected and rerun passed.",
+    "fullGate": "Not run: mandatory preflight invokes prohibited az.",
+    "receipt": null,
+    "freshProductTests": "Not run for documentation-only assessment."
+  },
+  "signingRequested": false,
+  "signingManifestPath": null,
+  "userPreferences": {
+    "autonomyTier": "partial",
+    "outputDetailLevel": "comprehensive",
+    "targetSystem": "github",
+    "audienceProfile": "mixed",
+    "includeOptionalArtifacts": { "transparencyNote": true, "monitoringSummary": true, "artifactSigning": false },
+    "submission": "No GitHub issues; proposed list in durable synthesis only."
+  },
+  "publication": {
+    "status": "local-only-publication-blocked",
+    "constraint": "The mandated complete local gate includes az bicep version/build/lint. User prohibits az/Azure. Do not execute those commands or claim a passing receipt.",
+    "commit": "Containing local Conventional Commit; no self-referential hash.",
+    "pushAttempted": false,
+    "pullRequestCreated": false,
+    "issuesCreated": false,
+    "preparedDescription": "pr-body.md"
+  }
+}

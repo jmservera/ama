@@ -14,7 +14,7 @@ import re
 from contextlib import contextmanager
 from copy import deepcopy
 
-from . import change_provenance
+from . import change_provenance, rai_release
 from .stock import decision_scope
 from .workflows import MANAGER_ROLES, _now
 from .resident_decisions import require_context
@@ -42,6 +42,10 @@ CHECKLISTS = {
                                                 "Photos of finished work", "Guarantee or certificate issued"]),
 }
 _KEYWORDS = (("loft", "Loft insulation"), ("wall", "Wall insulation"), ("heat pump", "Heat pump"), ("solar", "Solar panels"))
+
+
+def policy_fingerprint() -> str:
+    return rai_release.digest([CHECKLISTS, _KEYWORDS])
 
 
 def checklist_for(measure):

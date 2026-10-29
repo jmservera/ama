@@ -9,11 +9,147 @@ const chatProposalNames = {
   "quality-evidence": "Quality evidence",
 };
 
+const employeeChat = (() => {
+  let dialog = null, controller = null;
+  const launcher = () => document.getElementById("employee-chat-launcher");
+  function reset(hide = false) {
+    controller?.abort();
+    controller = null;
+    if (dialog?.open) dialog.close();
+    dialog?.remove();
+    dialog = null;
+    if (hide) launcher().hidden = true;
+  }
+  function install() {
+    const button = launcher();
+    button.hidden = !me || me.user.role === "Contractor";
+    button.onclick = open;
+  }
+  async function open() {
+    reset();
+    const session = me;
+    if (!session || session.user.role === "Contractor") return;
+    controller = new AbortController();
+    const signal = controller.signal;
+    const match = location.hash.match(/^#\/case\/([^?]+)/);
+    const caseId = match ? decodeURIComponent(match[1]) : "";
+    let tid = null;
+    const root = h("dialog", { class: "employee-chat", "aria-labelledby": "employee-chat-title" });
+    dialog = root;
+    const current = () => dialog === root && me === session && !signal.aborted;
+    const deny = () => {
+      reset();
+      workspaceStatus.textContent = "Chat access ended. Reopen from a record you can see, or sign in again.";
+      app.focus();
+    };
+    const status = h("p", { role: "status", "aria-live": "polite", "aria-atomic": "true" }, "Loading skills.");
+    const log = h("ol", { class: "chat-log" });
+    const liveLog = h("div", { role: "log", "aria-live": "polite", "aria-label": "Employee conversation" }, log);
+    const select = h("select", { id: "employee-chat-skill", name: "skill", disabled: true },
+      h("option", { value: "general" }, "General work help"));
+    const input = h("textarea", { id: "employee-chat-question", name: "question", autocomplete: "off", maxlength: "1000", rows: "3", "aria-describedby": "employee-chat-privacy" });
+    const send = h("button", { type: "submit", disabled: true }, "Ask");
+    const close = h("button", { type: "button", class: "alt", onclick: () => root.close() }, "Close chat");
+    root.addEventListener("keydown", event => {
+      if (event.key !== "Tab") return;
+      const controls = [...root.querySelectorAll("button:not(:disabled), select:not(:disabled), textarea:not(:disabled)")];
+      const first = controls[0], last = controls[controls.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+    root.addEventListener("close", () => {
+      if (dialog !== root) return;
+      reset();
+      if (me === session) launcher().focus();
+    });
+    const form = h("form", { onsubmit: (event) => {
+      event.preventDefault();
+      return AsyncAction.run(send, async () => {
+        const question = input.value.trim();
+        if (!question) {
+          status.textContent = "Type a question first.";
+          input.focus();
+          return;
+        }
+        status.textContent = "Asking the assistant. Ordinary workflow controls remain available after closing chat.";
+        const skill = select.value;
+        select.disabled = true;
+        try {
+          if (!tid) tid = (await api("/api/chat/threads", { case_id: caseId }, signal)).id;
+          if (!current()) return;
+          const answer = await api(`/api/chat/threads/${encodeURIComponent(tid)}/ask`, { content: question, skill }, signal);
+          if (!current()) return;
+          // Keep the visible exchange bounded; server-side history remains owner-filtered.
+          log.replaceChildren(chatMessageItem("user", question),
+            h("li", { class: "ai-suggestion" },
+              h("p", { class: "ai-label" }, answer.label),
+              h("p", {}, `Skill: ${answer.skill}. ${caseId ? `Case: ${caseId}` : "No case or home record is visible."}`),
+              h("p", {}, answer.reply),
+              h("p", {}, answer.kind === "answer" ? "Cited AI suggestion; not independently verified." : "Workflow-only or unverified help. No record changed."),
+              h("ul", { "aria-label": "Sources cited" }, (answer.citations || []).map(source =>
+                h("li", {}, h("code", {}, source.id), `: ${source.text}`)))));
+          if (input.value.trim() === question) input.value = "";
+          status.textContent = answer.workflow_only ? "Workflow-only help. Continue with the ordinary workflow." : "Answer added. Check the sources before relying on it.";
+        } catch (error) {
+          if (!current()) return;
+          if ([401, 403, 404].includes(error.status)) {
+            deny();
+            return;
+          }
+          status.textContent = `Chat unavailable: ${error.message} Continue with the ordinary workflow.`;
+        } finally {
+          if (current()) { select.disabled = false; input.focus(); }
+        }
+      }, "Ask the assistant", status.parentElement);
+    } },
+    h("label", { for: select.id }, "Agent skill"), select,
+    h("label", { for: input.id }, "Your work question"), input, send);
+    root.append(h("h2", { id: "employee-chat-title" }, "Employee assistant"),
+      close,
+      h("p", {}, caseId ? `Context: case ${caseId}. Only facts your role may see are used.` : "General work help. No case or home record is visible. Open a case for record questions."),
+      h("p", { id: "employee-chat-privacy" }, `${chatLabel}. Chat cannot approve, send, book or change records. Do not enter resident names, contact details or sensitive personal information. Stored questions are masked where possible; masking can miss details.`),
+      liveLog, form, status);
+    document.body.append(root);
+    root.showModal();
+    input.focus();
+    try {
+      const data = await api("/api/chat/skills", undefined, signal);
+      if (!current()) return;
+      for (const skill of data.skills) select.append(h("option", { value: skill.id }, `${skill.id}: ${skill.purpose}`));
+      select.disabled = false;
+      send.disabled = false;
+      status.textContent = "Choose a skill or ask a general work question.";
+    } catch (error) {
+      if (!current()) return;
+      if ([401, 403, 404].includes(error.status)) {
+        deny();
+        return;
+      }
+      status.textContent = `Chat unavailable: ${error.message} Close chat and continue with the ordinary workflow.`;
+    }
+  }
+  return { install, reset };
+})();
+
+function clearSubmittedQuestion(sent) {
+  if (!caseFieldUnchanged(sent)) return;
+  sent.field.value = "";
+  sent.field.removeAttribute("data-case-dirty");
+}
+
 function chatMessageItem(role, text, answer) {
   const item = h("li", { class: `chat-msg chat-${role}` },
     h("strong", {}, role === "user" ? "You" : "Assistant"), " ", h("span", {}, text));
   if (answer) {
-    item.append(h("p", { class: "muted" }, answer.label || chatLabel));
+    item.classList.add("ai-suggestion");
+    item.append(h("p", { class: "ai-label" }, `${answer.label || chatLabel}. Not an instruction.`),
+      h("p", {}, "Confidence: not provided. Confidence is not accuracy."),
+      h("p", {}, "This answer is advisory, not a recorded proposal review. Request a proposal below for a separate source check and accept, edit or reject with reason."));
     if (answer.citations && answer.citations.length) {
       item.append(h("ul", { "aria-label": "Sources cited" },
         answer.citations.map((c) => h("li", {}, h("code", {}, c.id), c.text ? `: ${c.text}` : ""))));
@@ -42,16 +178,18 @@ function chatCasePanel(id) {
   };
   const ask = async (event) => {
     event.preventDefault();
+    if (send.disabled) return;
     const question = input.value.trim();
     if (!question) { say("Type a question first."); return; }
+    const sent = snapshotCaseFields([input])[0];
     send.disabled = true;
     say("Asking the assistant. The ordinary case controls stay available.");
     log.append(chatMessageItem("user", question));
-    input.value = "";
     try {
       const tid = await ensureThread();
       const answer = await api(`/api/chat/threads/${encodeURIComponent(tid)}/ask`, { content: question });
       log.append(chatMessageItem("assistant", answer.reply, answer));
+      clearSubmittedQuestion(sent);
       say(answer.workflow_only ? "The assistant is not available. Continue with the ordinary workflow." : "New answer added.");
     } catch (e) {
       say(`Chat unavailable: ${e.message} Continue with the ordinary case workflow.`);
@@ -71,7 +209,7 @@ function chatCasePanel(id) {
       proposals.append(h("button", { type: "button", class: "alt", onclick: () => requestProposal(a.id) },
         `Request proposal: ${chatProposalNames[a.id] || a.id}`));
     }
-  }).catch(() => {});
+  }).catch(error => say(`Proposal requests unavailable: ${error.message} Continue ordinary case work manually.`));
   return h("details", { class: "card", id: "chat-panel" },
     h("summary", {}, "Ask the assistant about this case (optional)"),
     h("p", { class: "muted" }, `${chatLabel}. Answers cite only sources your role may see. The assistant cannot change a record, approve, send or book anything; it can only request a proposal that someone else reviews. Do not type personal details about residents.`),
@@ -222,8 +360,10 @@ function regulatoryChatPanel(caseId) {
     regulatoryGuidance(me.user.role),
     liveLog, h("form", { onsubmit: async (event) => {
       event.preventDefault();
+      if (button.disabled) return;
       const question = input.value.trim();
       if (!question) { status.textContent = "Enter a source question."; return; }
+      const sent = snapshotCaseFields([input])[0];
       button.disabled = true;
       status.textContent = "Looking up cited sources. Human safety routes remain available.";
       try {
@@ -232,7 +372,7 @@ function regulatoryChatPanel(caseId) {
         log.append(h("li", {}, h("strong", {}, "You"), " ", question));
         show(answer, tid);
         status.textContent = `${answer.kind}: synthetic-demo turn stored with its sources.`;
-        if (input.value.trim() === question) input.value = "";
+        clearSubmittedQuestion(sent);
       } catch (e) { status.textContent = `Cited lookup unavailable: ${e.message} Use the ordinary human route.`; }
       finally { button.disabled = false; input.focus(); }
     } }, h("label", { for: "regulatory-question" }, "Cited source question"), input, button),

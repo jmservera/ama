@@ -1,7 +1,7 @@
 ---
 title: Zava Forward Workbench Design System Foundations
 description: Design tokens, component inventory with states, non-colour signal rules and the extend-versus-adopt decision for the workbench UI (issue #150)
-ms.date: 2026-10-23
+ms.date: 2026-10-28
 ms.topic: reference
 ---
 
@@ -102,7 +102,7 @@ States: default, focus, disabled, error, loading, empty, blocked.
 
 | Component | Class or element | States and usage |
 | --- | --- | --- |
-| Button | `button`, `.btn`, `.alt` | Default; hover; focus ring; `disabled` or `aria-disabled=true` greyed with not-allowed cursor; `aria-busy=true` appends "(loading)" text. |
+| Button | `button`, `.btn`, `.alt` | Default; hover; focus ring; native `disabled` while pending; `aria-busy=true` and adjacent polite progress text, spinner after 200ms. |
 | Form field | `input`, `select`, `textarea`, `label` | Default; focus ring; `aria-invalid=true` gets a thick red border and must be paired with a `.field-error` message. |
 | Field error | `.field-error`, `.err` | Warning glyph plus text; never colour alone. |
 | Card and list item | `.card`, `.item` | Default; hover border; one name, one status, one meta. |
@@ -111,7 +111,7 @@ States: default, focus, disabled, error, loading, empty, blocked.
 | Status line | `.status-line`, `.danger`, `.ok`, `.wait` | Border colour plus a leading glyph (warning, tick, hourglass) and the status words. |
 | Tile | `.tile`, `.tile.danger` | Number plus explicit label; `aria-pressed` and visible "Selected"/"Select filter" words distinguish active filters without colour. |
 | Empty state | `.empty` | Dashed border, plain sentence saying what is absent and what to do next. |
-| Loading state | `.loading` or `aria-busy` | "(loading)" text is appended; no spinner-only signal. |
+| Loading state | `.loading`, `.async-feedback` or `aria-busy` | Immediate progress text; decorative spinner after 200ms, static with reduced motion. No spinner-only signal. |
 | Blocked step | `.blocked` | See below. |
 | AI suggestion | `.ai-suggestion` | See below (SA-004). |
 | Map key and markers | `.key`, `.map-symbol`, `.map-marker`, `.cluster` | Circle/O = Normal; square/W = Waiting 60+ days; triangle/! = Safety issue open. Same symbols in key. Clusters show total homes and "Safety: N", including zero. Marker title/tooltip and list use status words. Explicit Enter/Space handlers activate Leaflet marker buttons; list links/buttons remain available. |
@@ -140,8 +140,11 @@ so the state is readable without colour.
   and task-specific sections with the same plain-language warning.
 * Requesting assistance is optional; a case and the manual draft path never
   depend on it.
-* Current `aiNotes()` actions are "Accept as is", "I changed it" and "Reject",
-  with a reason required for edit/reject. Priority suggestions use
+* Current `aiNotes()` actions are "Use this draft", "Edit this draft" and
+  "Do not use this draft". Edit reveals a large editor and required reason;
+  rejection reveals only a required reason. Accept needs no text field.
+  Submission explicitly records a draft review, never approval of works.
+  Priority suggestions use
   "Accept", "Edit" and "Reject". The `.reviewed` style is a foundation pattern,
   not evidence that all existing outputs use it.
 * Human-reviewed output says it was reviewed as a draft and explicitly states
@@ -175,3 +178,9 @@ chains before evaluating thresholds. The synthetic local app check is
 installed, using the installed src projects. It constructs only fictional data
 and serves the real API on loopback. It does not call a live model, SQL Server
 or Azure and does not replace human accessibility acceptance.
+
+The [loading and HAX briefing increment](../../../../src/api/README.md#loading-feedback-and-todays-briefing-531)
+adds immediate/slow/retry shell feedback, shared native async states and
+statement-source presentation. Fluent Storybook is a pattern reference only,
+not new runtime adoption. Staff usability, assistive-technology and deployed
+cold-start acceptance remain separate from synthetic engineering checks.

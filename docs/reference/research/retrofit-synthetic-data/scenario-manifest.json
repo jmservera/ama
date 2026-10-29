@@ -43,8 +43,8 @@
     "Owner ratification, professional approval, human task comprehension, resident consent and operational acceptance"
   ],
   "sources": [
-    {"id": "workbench", "path": "src/api/checks/workbench-manifest.json", "sha256": "521ecbfa50024d5a99a993115aa1d6fd272e4b6a6b78aefc6eecb5127709c326"},
-    {"id": "recipe", "path": "src/api/checks/workbench_browser_check.py", "sha256": "aac5a01cdc4c0d0a1e075d776c831bf0ca8acc428606f82653c6c1e93ef1bbb2"},
+    {"id": "workbench", "path": "src/api/checks/workbench-manifest.json", "sha256": "1569339177bc54b659cecd9bd9cb556ecbb5ac66819ae77a752abd2e471788fb"},
+    {"id": "recipe", "path": "src/api/checks/workbench_browser_check.py", "sha256": "dea58169392471861486ccb9d5ef4f263a4208d34c920847615bfc1a944fe6f0"},
     {"id": "fixture", "path": "src/core/tests/dataset.py", "sha256": "a54612aa549cd5d048281a875b4c80a3a26b22e6d59c9c83d080eebbc8760dc5"},
     {"id": "navigation-tests", "path": "src/api/tests/test_workbench.py", "sha256": "62b3be27e69d32f39ef0cc52b91f44dceae31579edf9fd1c08bb25e36649ba96"}
   ],

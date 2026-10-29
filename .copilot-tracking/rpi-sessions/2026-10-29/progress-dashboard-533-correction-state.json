@@ -1,0 +1,33 @@
+{
+  "task_id": "533-correction-2026-10-29",
+  "task_slug": "progress-dashboard-533-correction",
+  "parent_task": {"task_id": "533", "task_slug": "progress-dashboard-533"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-29/progress-dashboard-533-correction-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-29/progress-dashboard-533-correction-plan.md",
+    "details": ".copilot-tracking/details/2026-10-29/progress-dashboard-533-correction-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-10-29/progress-dashboard-533-correction-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-29/progress-dashboard-533-correction-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-29/progress-dashboard-533-correction-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Execute the full correction RPI loop and commit locally on feat/progress-dashboard-533; Refs #533, PR #540; no push, az or force-push.", "status": "confirmed", "evidence": "Explicit user direction 2026-10-29; recovered parent automatic session."},
+    {"decision": "Use the supplied journey venv with this worktree's src on PYTHONPATH; nonblocking heavy-lock admission for full suites, targeted-only fallback if busy.", "status": "confirmed", "evidence": "Explicit user direction 2026-10-29."},
+    {"decision": "Research executed Complete / Ready; supplied venv absent, existing /tmp/ama-533-venv resolves current src and will be used without installation.", "status": "evidence-backed-environment-deviation", "evidence": ".copilot-tracking/research/2026-10-29/progress-dashboard-533-correction-research.md"},
+    {"decision": "One final-candidate critique executed Complete / Pass with no findings.", "status": "implementation-ready", "evidence": ".copilot-tracking/plans/2026-10-29/progress-dashboard-533-correction-critique.md"},
+    {"decision": "P01/P02 implemented; 25 focused progress and 35 combined targeted tests passed. Nonblocking heavy lock busy, so full discovery skipped. Targeted progress browser and pinned axe passed 11 states with zero violations; current-source lint/type/syntax and four scenario pins pass.", "status": "review-ready-with-explicit-validation-limits", "evidence": ".copilot-tracking/changes/2026-10-29/progress-dashboard-533-correction-changes.md"},
+    {"decision": "One independent Review executed Complete / Conformant with justified divergence, no findings; assessed 604f19f1 against 21458304. Source diff SHA256 e653d3975581e09f493db8d4f49fd4c54246db15a9cda921588e4a7d44d33077. No source edits or repeat Review after assessment.", "status": "review-complete", "evidence": ".copilot-tracking/reviews/logs/2026-10-29/progress-dashboard-533-correction-review.md"},
+    {"decision": "Stop after local implementation and original Review evidence commits; no push or further child task.", "status": "explicit-caller-stop-boundary", "evidence": "User request 2026-10-29: Stop with commits made locally and a summary."}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Stopped at caller's local-only boundary. No further work or publication without new direction."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Run full API discovery once nonblocking heavy admission is available.", "rationale": "Directly restores broader regression coverage omitted under the explicitly permitted busy-lock fallback.", "evidence": ".copilot-tracking/changes/2026-10-29/progress-dashboard-533-correction-changes.md"},
+    {"rank": 2, "task": "Human screen-reader/usability and existing dashboard contrast incomplete assessment.", "rationale": "Engineering field/focus assertions and zero axe violations do not establish human accessibility acceptance.", "evidence": ".copilot-tracking/reviews/logs/2026-10-29/progress-dashboard-533-correction-review.md"},
+    {"rank": 3, "task": "If publication is later authorized, run applicable exact-head publication gates and approvals.", "rationale": "Explicit local-only boundary forbids publication now; no receipt or hosted/human approval is implied.", "evidence": ".copilot-tracking/reviews/logs/2026-10-29/progress-dashboard-533-correction-review.md"}
+  ]
+}

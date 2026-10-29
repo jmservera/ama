@@ -11,6 +11,7 @@ from collections.abc import Callable, Mapping
 from datetime import UTC, datetime
 from typing import Any
 
+from .resident_documents import parse_document_facts
 from .resident_showcase import (
     MAX_MAPPINGS,
     ShowcaseConfigError,
@@ -37,6 +38,7 @@ COLUMNS = (
     "measures_text",
     "sensor_home_id",
     "sensors_json",
+    "documents_json",
 )
 _SELECT = "SELECT " + ", ".join(COLUMNS) + " FROM [resident_showcase].[v_resident_case]"
 LIST_SQL = _SELECT
@@ -104,6 +106,10 @@ def _shape(names: list[str], values: Any) -> ShowcaseRow:
     except (ValueError, TypeError):
         raise ShowcaseDenied("sensor_json") from None
     data["sensors"] = parse_sensors(sensors, data.get("sensor_home_id"))
+    try:
+        data["documents"] = parse_document_facts(json.loads(data.pop("documents_json")))
+    except (ValueError, TypeError):
+        raise ShowcaseDenied("document_json") from None
     return _parse_row(data)
 
 

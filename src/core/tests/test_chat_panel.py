@@ -1,14 +1,24 @@
 import json
+import tempfile
 import unittest
+from pathlib import Path
 
+import dataset
+from zava_forward.core.assistants import REGISTRY
+from zava_forward.core.chat_isolation import ChatIsolation
 from zava_forward.core.chat_panel import (
     ACTION_CLAIM,
     LABEL,
+    ChatPanel,
     normalise_policy_text,
     out_of_scope,
     parse_reply,
     permitted_sources,
+    skill_sources,
 )
+from zava_forward.core.chat_privacy import redact
+from zava_forward.core.chatthreads import MAX_CONTENT
+from zava_forward.core.store import Store
 
 
 class PureTests(unittest.TestCase):
@@ -37,6 +47,27 @@ class PureTests(unittest.TestCase):
             "ZF-1", dict(stage="Survey", resident=dict(adjustment="None"), empty="")
         )
         self.assertEqual(found, {"ZF-1/stage": "Survey", "ZF-1/resident.adjustment": "None"})
+
+    def test_skill_lenses_never_add_case_data_or_unrelated_categories(self) -> None:
+        sources = {
+            "ZF-1/stage": "Survey",
+            "ZF-1/home.epc": "D",
+            "ZF-1/resident.adjustment": "WITHHELD-CANARY",
+            "ZF-1/funding.route": "FUNDING-CANARY",
+        }
+        for skill in REGISTRY:
+            result = skill_sources(skill, sources)
+            self.assertEqual(result["ZF-1/stage"], "Survey")
+            self.assertEqual(result["ZF-1/home.epc"], "D")
+            self.assertNotIn("WITHHELD-CANARY", result.values())
+            if skill != "funding-evidence":
+                self.assertNotIn("FUNDING-CANARY", result.values())
+            self.assertIn("workflow/boundaries", result)
+
+    def test_general_sources_disclose_missing_record(self) -> None:
+        sources = skill_sources("general", {})
+        self.assertTrue(all(key.startswith("workflow/") for key in sources))
+        self.assertIn("No case or home record", sources["workflow/visibility"])
 
 
 class OutOfScopeTests(unittest.TestCase):
@@ -132,6 +163,37 @@ class ActionClaimTests(unittest.TestCase):
 class LabelTests(unittest.TestCase):
     def test_label_matches_the_acceptance_criterion(self) -> None:
         self.assertEqual(LABEL, "AI suggestion, not approved")
+
+
+class StoredQuestionTests(unittest.TestCase):
+    def test_expanding_redaction_stays_bounded_across_chat_modes(self) -> None:
+        with tempfile.TemporaryDirectory() as work:
+            path = Path(work) / "synthetic.json"
+            path.write_text(json.dumps(dataset.DATA))
+            store = Store(str(path))
+            user = dataset.DATA["staff"][0]
+            isolation = ChatIsolation(
+                store,
+                env={
+                    "CHAT_DPIA_REF": "SYNTH-DPIA",
+                    "CHAT_LAWFUL_BASIS_REF": "SYNTH-BASIS",
+                    "CHAT_NOTICE_REF": "SYNTH-NOTICE",
+                },
+            )
+            panel = ChatPanel(isolation)
+            for identifier in ("NE1 1AA", "a@b.co", "asthma"):
+                question = "x" * (MAX_CONTENT - len(identifier) - 1) + " " + identifier
+                masked = redact(question)[0]
+                self.assertEqual(len(question), MAX_CONTENT)
+                self.assertGreater(len(masked), MAX_CONTENT)
+                for skill in (None, "general", *REGISTRY):
+                    with self.subTest(identifier=identifier, skill=skill):
+                        tid = store.chat_create_thread(user)["id"]
+                        panel.ask(user, tid, question, skill=skill)
+                        messages = store.chat_resume(user, tid)["messages"]
+                        self.assertEqual(messages[0]["content"], masked[:MAX_CONTENT])
+                        self.assertNotIn(identifier, messages[0]["content"])
+                        self.assertEqual([m["seq"] for m in messages], [1, 2])
 
 
 if __name__ == "__main__":

@@ -19,27 +19,30 @@ class RoleScreens(unittest.TestCase):
                 r"""
 const fs = require("node:fs");
 const vm = require("node:vm");
-const app = fs.readFileSync(process.argv[1] + "/app.js", "utf8");
+const app = fs.readFileSync(process.argv[1] + "/progress.js", "utf8");
 let rendered;
 const context = vm.createContext({
   isManager: () => true,
-  api: async () => ({total: 2, items: [
+  URLSearchParams, Intl, navigator: {language: "en-GB"},
+  routeController: new AbortController(), me: {user: {role: "Retrofit Programme Manager"}},
+  location: {hash: "#/closed"},
+  api: async () => ({total: 2, page: 1, pages: 1,
+    facets: {statuses: ["Completed"], teams: []}, unknown_closure_dates: 2, items: [
     {id: "CLOSED-SAFETY", resident: "Safety resident", address: "1 Test Street",
-      town: "Test", postcode: "TE1 1ST", stage: "Completed", hazard: true},
+      town: "Test", postcode: "TE1 1ST", status: "Completed", hazard: true},
     {id: "CLOSED-ORDINARY", resident: "Ordinary resident", address: "2 Test Street",
-      town: "Test", postcode: "TE1 1ST", stage: "Completed", hazard: false}
+      town: "Test", postcode: "TE1 1ST", status: "Completed", hazard: false}
   ]}),
   h: (tag, attrs, ...kids) => ({tag, attrs, kids: kids.flat().filter(
     kid => kid !== false && kid !== null && kid !== undefined)}),
   show: (...nodes) => {rendered = nodes;}
 });
-vm.runInContext(app.slice(app.indexOf("async function closedView("),
-  app.indexOf("async function contractorListView(")), context);
-vm.runInContext("closedView()", context).then(() => {
+vm.runInContext(app, context);
+vm.runInContext("ProgressViews.closed()", context).then(() => {
   const links = [];
   function visit(node) {
     if (!node || typeof node !== "object") return;
-    if (node.tag === "a" && node.attrs.class === "item") links.push(node);
+    if (node.tag === "tr" && node.kids[0]?.attrs?.scope === "row") links.push(node);
     for (const child of node.kids || []) visit(child);
   }
   rendered.forEach(visit);
@@ -62,7 +65,7 @@ vm.runInContext("closedView()", context).then(() => {
             (ordinary, "CLOSED-ORDINARY", "Ordinary resident"),
         ):
             with self.subTest(case_id=case_id):
-                self.assertEqual(node["attrs"]["href"], f"#/case/{case_id}")
+                self.assertIn(f"#/case/{case_id}", json.dumps(node))
                 self.assertIn(name, json.dumps(node))
                 self.assertIn("Completed", json.dumps(node))
                 self.assertNotIn("work-context", json.dumps(node))

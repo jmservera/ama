@@ -9,7 +9,7 @@ is not registered gets no model call.
 """
 import hashlib
 import json
-from . import ai_prompts, rai_release
+from . import ai_prompts, rai_release, ranking
 
 from .assistants import REGISTRY as ASSISTANTS, VERSION as ASSISTANT_VERSION
 
@@ -70,9 +70,10 @@ def legacy_deployment(task, ai):
 def legacy_binding(task, ai, deployment):
     """What a retained legacy task would dispatch with; a release must match every field, including the deployment actually called."""
     spec = LEGACY[task]
+    policy = f"{LEGACY_POLICY}:{ranking.policy_hash(ranking.CURRENT)}" if task == "priority" else LEGACY_POLICY
     return dict(registry_version=REGISTRY_VERSION, schema_version=LEGACY_SCHEMA, provider=PROVIDER,
                 endpoint=getattr(ai, "endpoint", "") or "", deployment=deployment or "",
-                prompt_version=ai_prompts.version(task), policy_version=LEGACY_POLICY,
+                prompt_version=ai_prompts.version(task), policy_version=policy,
                 data_version=digest([LEGACY_SCHEMA, spec["categories"]])[:16], provenance_version=LEGACY_PROVENANCE,
                 permission_version=digest([spec["roles"], spec["affected"]])[:16],
                 model_version=(getattr(ai, "model_version_strong", getattr(ai, "model_version", "unattested"))

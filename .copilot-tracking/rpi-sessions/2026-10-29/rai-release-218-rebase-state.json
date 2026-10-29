@@ -1,0 +1,56 @@
+{
+  "task_id": "pr-504-rebase-2026-10-29",
+  "task_slug": "rai-release-218-rebase",
+  "parent_task": {
+    "task_id": null,
+    "task_slug": "rai-release-218"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-29/rai-release-218-rebase-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-29/rai-release-218-rebase-plan.md",
+    "details": ".copilot-tracking/details/2026-10-29/rai-release-218-rebase-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-29/rai-release-218-rebase-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-29/rai-release-218-rebase-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-29/rai-release-218-rebase-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the full RPI loop automatically on the named branch; rebase explicitly authorized; commit but do not push.",
+      "status": "confirmed",
+      "evidence": "User request dated 2026-10-29; verified clean branch and open draft PR #504."
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready. One critique executed, original verdict Revise; PC-001 merge-content preservation, PC-002 exact-base precondition and PC-003 MYPYPATH provenance applied directly.",
+      "status": "resolved",
+      "evidence": ".copilot-tracking/plans/2026-10-29/rai-release-218-rebase-plan.md#critique-disposition"
+    },
+    {
+      "decision": "One independent Review executed Complete; outcome Residual work. Integration preservation verified and 20 focused tests passed independently; no introduced defect. RV-001 publication and RV-002 original RAI acceptance routed to distinct follow-ups.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/rai-release-218-rebase-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Local task complete in the evidence commit; coordinator owns publication prerequisites and hosted CI. No push, source change or child work is authorized at this checkpoint."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator publication gates and hosted CI",
+      "rationale": "Directly enables the requested PR integration to reach remote CI; no push is authorized in this task and scoped checks are not a full receipt.",
+      "evidence": "Current Review RV-001; remote main remains 5653547507 and remote PR branch remains 9e5733ac (old rubric bot commit above original e9b5604d)."
+    },
+    {
+      "rank": 2,
+      "task": "Original RAI competent approval, evaluator and oversight acceptance",
+      "rationale": "Higher operational impact but requires owner/professional decisions and evidence outside a rebase; no automatic child work authorized.",
+      "evidence": "Current Review RV-002 and preserved original 2026-10-27 Review residuals."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "task_id": "526-pr529-open-threads-20261028",
+  "task_slug": "case-journey-526-open-threads",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-28/case-journey-526-open-threads-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-28/case-journey-526-open-threads-plan.md",
+    "details": ".copilot-tracking/details/2026-10-28/case-journey-526-open-threads-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-28/case-journey-526-open-threads-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-28/case-journey-526-open-threads-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-28/case-journey-526-open-threads-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Source, tests and original RPI evidence committed locally; all local plan tasks complete",
+      "status": "verified",
+      "evidence": "2af0c7f6b4d6155b63004d01e83dee9a60c14840; authenticated author/committer and required trailer verified; clean worktree before final docs-only handoff"
+    },
+    {
+      "decision": "Sole independent Review executed Complete; Outcome Conformant for local code; no substantive findings",
+      "status": "complete; publication blocked",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-28/case-journey-526-open-threads-review.md; source diff 211caf8060ab3beeb50294bb8fbcc1c8197f869bb0dc2450e2b3de0c2559747e"
+    },
+    {
+      "decision": "Mandatory local checks completed; Review-ready boundary reconciled",
+      "status": "passed",
+      "evidence": "API 1168/316 skips; focused 14; tooling 31; journey-02 153 assertions/38 zero-violation scans/real zoom; assistants 30; changes artifact exact diff hash"
+    },
+    {
+      "decision": "P01 complete with shared dirty guard, record-bound later review recovery, synchronized native links and exact 38-scan contract",
+      "status": "implemented; P02 validation active",
+      "evidence": "14 focused API tests and 31 tooling tests pass; changes artifact P01 entries"
+    },
+    {
+      "decision": "One critique executed, verdict Revise; PC-001 rejected unsupported parent restriction, PC-002 applied",
+      "status": "disposed; plan Ready",
+      "evidence": "Original critique preserved; plan Critique Disposition"
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready",
+      "status": "complete",
+      "evidence": "Research C1-C7/W1-W2 and completed wider/deeper/contrarian cycle"
+    },
+    {
+      "decision": "Execute the full RPI loop on existing feat/case-journey-ux-526 for PR 529",
+      "status": "confirmed",
+      "evidence": "Explicit user request 2026-10-28; clean worktree and matching open PR verified"
+    },
+    {
+      "decision": "No Azure, no secrets, normal push only and Refs #526",
+      "status": "confirmed",
+      "evidence": "Explicit user constraints"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "publication-full-gate",
+      "summary": "The mandatory full publication gate invokes az, prohibited by the user",
+      "resolution": "Commit validated local candidate and original RPI evidence for coordinator gate/push; no remote thread resolution before publication"
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Coordinator clears complete exact-head gate/publication blocker, normally pushes topic, then replies to and resolves five verified threads; no source follow-up selected"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator publication and resolution of the five verified threads",
+      "rationale": "Only outstanding task-specific delivery action; requires a permitted complete exact-head gate before normal push, then honest thread replies/resolution",
+      "evidence": "Review publication blocker; PR head remains 454fc49f and all five threads unresolved; Refs #526 verified after fetch"
+    }
+  ]
+}

@@ -2,9 +2,52 @@
 title: Zava Forward core library
 description: Domain, store, ledger, law store, chat storage and synthetic-data documentation for the core project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-27
+ms.date: 2026-10-29
 ms.topic: reference
 ---
+
+## Dependent-policy RAI release binding (#218, #219)
+
+The stock assistant and retained priority task bind the actual current
+deterministic ranking policy content, not just their prompt/output-filter
+versions. The quality assistant also binds checklist definitions and ordered
+keyword-to-checklist selection. Changing these policies denies new dispatch,
+queued claims and proposal reliance under the previous release; in-flight
+results are quarantined. Stock evidence explicitly reads the current policy.
+Unrelated assistant/task bindings remain unchanged. No ranking or checklist
+rule is changed by this control.
+
+Existing dependent releases need renewed evaluation and a fresh authorized
+release record; rollback cannot revive a superseded record. No actual release
+is renewed automatically. Constructed matching records prove proposal-only
+mechanics, not approved evaluation evidence or live OQ-017 authority.
+
+From `src/api`, with editable projects installed, local synthetic regressions:
+
+```bash
+PYTHONPATH=tests:../core/tests:../agents/tests python -m unittest \
+  test_assistant_release.DependentPolicyRelease \
+  test_assistants.HumanReviewMechanics -q
+```
+
+The review checks seed plausible wrong, unsupported, incomplete and stale
+proposals, retain scripted rejection/correction provenance and preserve case
+data. Their automation-bias negative control deliberately demonstrates that a
+false source-verification attestation can accept wrong text. Valid citations
+and an acceptance click are not semantic truth, reviewer competence or a
+controlled domain approval. Actual reviewer detection, corrections and total
+preparation/review effort against paired workflow-only scenarios remain
+unmeasured; #223 is not satisfied by these tests.
+
+The #222 cohort manifest in open PR #421 still needs owner approval before
+evaluator implementation. Cohorts, lawful fields, sample sufficiency and
+thresholds remain unapproved, and synthetic results cannot prove fairness.
+Actual release/residual-risk/review/restart holders remain unknown under
+OQ-017. The [incident](#operator-incidents-and-constructed-restart-221) and
+[challenge](#version-bound-affected-person-challenges-220) contracts retain
+their separate approval and coverage limits. No child or epic closure,
+human-witnessed drill, broader assistant/form challenge coverage, legal
+screening or #440 stabilization is inferred.
 
 ## Resident advisory assistant (#469)
 
@@ -19,6 +62,72 @@ person-help route. No submission, consent or decision authority is added.
 The API owns authentication and the disabled real adapter. See the
 [design awaiting owner decision](../../docs/architecture/resident-assistant-prototype.md)
 for model, credential, USD 5 budget and activation boundaries.
+
+## Finite synthetic stream replay (#184)
+
+`synthetic.sensor_stream.replay(selection, Replay(...))` reuses the existing
+seasonal `sensor_backfill.readings` model, forcing its legacy random fault
+profile off, then converts to the shared 13-string `sensor-fault-input-v1`
+contract. It accepts only explicitly selected synthetic stock records;
+declined/unknown monitoring choices produce no device or reading. No installed
+device discovery or real dataset is used. Sensor keys are the existing compact,
+collision-checked stock keys; one `SYN-<sensor_id>` device maps to one home.
+
+Default cadence is 480 minutes: three paired observations/home/day.
+`Replay(seed=183, origin=<UTC whole-second datetime>, days=2,
+first_slot=0, end_slot=None)` describes a finite original model window.
+The complete original random sequence is generated before selecting the
+half-open nominal slot interval, so nonzero and odd suffixes reproduce the
+same values/IDs as the existing clean backfill. Do not restart the seed at
+handover. This slice supports the labelled synthetic seasonal model only;
+climate-backed composed histories and measures are not silently substituted.
+`descriptor(selection, spec)` records the original register `stock_sha256`
+separately from `selected_stock_sha256`, the digest of the validated canonical
+selected model inputs, plus selected home IDs/count, granted count, seed, origin,
+window, cadence, schema/model context and explicit fault mode. Each Frame carries
+the selected digest outside its observation, binding that frame to the snapshot
+actually used for generation. A later selection mutation changes newly computed
+provenance, not old frames; match the descriptor's selected digest to the frames.
+Each Frame also carries `nominal_at`, the UTC time from the original origin and
+slot cadence, outside the observation. Publishers use this time for scheduling,
+not the fault-injected observation timestamp; duplicates retain the same nominal time.
+The descriptor version is `synthetic-stream-v2`; reading IDs/bytes are unchanged.
+Keep descriptors and selected-home evidence restricted, not ordinary telemetry.
+
+The generator limits actual granted homes to 1..100 and original
+homes-times-slots to 100,000 before model generation, independently of summary
+metadata. This aligns with the existing finite consumer control batch; it is
+not 60,000-device throughput evidence. `wire(frame.row)` uses the shared
+consumer's sorted ASCII JSON representation and caps each body at 4096 bytes.
+
+Explicit modes are `valid`, `duplicate`, `out_of_order`, `unmapped`, `wrong_unit`,
+`clock_skewed`, `uncalibrated`, `gap`, `disconnect` and `burst`. Frames keep truth
+outside the observation. Duplicate emits identical IDs/content; out-of-order
+swaps nominal adjacent slots with an odd final singleton unchanged. Selection
+always uses nominal slots, not shifted timestamps. Wrong-unit conversion,
+one-day clock skew and calibration flags are labelled synthetic exercises,
+not science or policy. Gap emits no frames; an empty send run is refused.
+The replay descriptor records the omitted window and mode. Disconnect/burst
+are runner actions, not extra telemetry fields. A normal device claiming a
+mutated unmapped sensor is refused by the API binding before SQL.
+
+`RunBudget` performs finite message/byte/B1 headroom checks before sending.
+`Pacer` exposes `paused` and `stopped`, finite speed in (0,1000], a monotonic
+deadline and a separate maximum send rate. `wait` applies model-time spacing;
+`admit_send` enforces global send-attempt spacing and must be awaited immediately
+before the SDK send, after connection/setup and truth preparation. Speed-up and
+burst never bypass this admission. Active pacing sleeps until the nearer target,
+deadline or 50 ms poll, so rates up to 100/s are not limited by the poll interval.
+Pause keeps positive polling bounded by 50 ms and the deadline even after the
+target passes. Pause continues consuming the run time allowance, not a way to leave a
+simulator running unattended. See the [API runner](../api/README.md#opt-in-iot-consumer-and-synthetic-publisher-110-184)
+for actual SDK operation bounds, credential handling and activation gates.
+
+From `src/core`, with the package installed:
+
+```bash
+python -m unittest discover -s tests -p test_sensor_stream.py -q
+```
 
 ## Constructed offline sensor consumer (#110)
 
@@ -2470,6 +2579,158 @@ answers, snapshot safety, hashes and tiny installed-module CLI replay. Local
 a five-home fictional selection produced 292 delivered rows and 144 truth
 packets across all 11 classes, with byte-identical reruns. These are synthetic
 engineering results, not real-device or predictive-performance evidence.
+
+### Synthetic scenario validation pack (#190, #192, #193, #194)
+
+The installed `synthetic.sensor_scenarios` module generates a separate bounded
+exercise pack; it never appends to general history or reads private stock,
+resident data or installed devices. It reuses clean `sensor_backfill.readings()`
+and the shared observation schema. Profiles are explicit fictional overlays,
+not calibrated building physics or the beneficial-only dated fabric-loss model.
+Default backfill bytes and workflow/check names are unchanged.
+
+From the repository root, with the core package installed:
+
+```bash
+python3 -m zava_forward.core.synthetic.sensor_scenarios \
+  --seed 190 --out /external/new-sensor-scenarios-190
+cd src/core
+python3 -m unittest discover -s tests -p test_sensor_scenarios.py -v
+```
+
+Choose a genuinely new external path, not the literal example if unavailable.
+The CLI rejects repository/worktree destinations, symlink components, files and
+nonempty folders. Same seed, sources and Python version reproduce identical
+bytes. `--seed` is an integer 0..2^63-1 (default 190); `--out` is required.
+`--humidity-threshold` changes the exercise comparator's RH percent threshold
+(finite 0..100, default 75), not the fixed expected labels. Exit 0 means every
+listed exercise outcome/delta check matched, 1 means checks failed (report is
+retained), and 2 means invalid input or an I/O failure. There is deliberately
+no single overall pass field.
+
+| Parameter or profile | Exercise definition |
+| --- | --- |
+| Window/cadence | 2024-01-01 inclusive to 2024-01-29 exclusive, hourly UTC; 672 nominal observations/case |
+| Baseline | 20 C, 55% RH plus 0.15 times centred weekly clean-backfill residuals, repeated weekly |
+| Weather | Constructed constant 2 C/70% outdoor RH; not the separately retained ERA5 data |
+| Normal | Baseline; expected NO_EXERCISE_SIGNAL |
+| Condensation-prone | -5 C/+37 RH points; expected REVIEW_CANDIDATE, not proof of surface condensation |
+| Sustained high humidity | +27 RH points; expected REVIEW_CANDIDATE |
+| Repeated overnight peaks | +30 RH points at UTC hours 00..05; expected REVIEW_CANDIDATE |
+| Sensor fault | Both channels held at 20 C/55% for first 48 hours; expected INSUFFICIENT |
+| Missing data | Retain only every fourth nominal hour (75% missing); expected INSUFFICIENT |
+| Seasonal shift | Linear -2 C/+8 RH points across the window; expected NO_EXERCISE_SIGNAL |
+| Retrofit improvement | From day 14: +2 C/-10 RH points |
+| Retrofit no change | Recorded completion day 14, zero temperature/RH step |
+| Retrofit delayed effect | Recorded completion day 14; from day 21: +1.5 C/-6 RH points |
+| Retrofit adverse effect | From day 14: -1 C/+8 RH points |
+
+These are hand-designed tests, not observed performance, prevalence, a safety
+threshold, evidence of completed works, resident behaviour or a savings promise.
+The linear seasonal case is an exercise trend, not historical climate validation.
+Air temperature/RH alone cannot establish surface condensation or mould.
+
+Point any analysis only at `analysis/`:
+
+* `analysis/C01.csv` through `C11.csv` use the exact 13-field
+  `sensor-fault-input-v1` contract. All have `source_type=SYNTHETIC`,
+  `scenario=SCENARIO_PACK` and the common actual pack seed. Neutral identities
+  and that seed are never used as classification features. No labels,
+  expected outcomes, injected-fault columns or RNG keys are present.
+* `analysis/windows.json` holds neutral case/file IDs, the common UTC window,
+  cadence and a completion instant for the four retrofit cases. It exposes
+  no outcome, size or delayed activation time.
+* `truth/cases.json` holds evaluator-only labels, actual seed/RNG stream keys,
+  expected outcomes, exercise deltas and delay. `truth/report.json` holds
+  per-case checks, observed statistics, confusion and sensitivity.
+* `truth/manifest.json` binds all relative payload hashes, generator/comparator
+  versions, source fingerprint, Python version, seed, weather and parameters.
+  The report separately hashes only its analysis inputs. No absolute path or
+  current wall-clock time affects payloads.
+
+This is interface/file separation, not OS access control. Restrict truth access;
+do not give the evaluator directory to an analysis process. General backfill
+loaders are not scenario importers; no case/control/consent records are granted.
+
+The observations-only exercise comparator checks the exact UTC hourly grid,
+order, uniqueness, units, labels, calibration and finite exercise domains
+(-10..45 C, 0..100% RH). It requires >=90% valid coverage in the whole window,
+each UTC day and each UTC overnight [00:00,06:00), and rejects >=24 consecutive
+identical paired samples as a flatline. Missing slots break persistence runs.
+Invalid/inadequate data yields INSUFFICIENT with reasons and null means.
+Otherwise >=12 consecutive hours at/above the RH threshold, or >=3 nights
+each with >=3 high-RH overnight samples, yields REVIEW_CANDIDATE.
+NO_EXERCISE_SIGNAL is not an assurance of a healthy or safe home. Freshness
+against an operational clock and approved thresholds remain #111 work.
+
+Confusion uses seven damp cases, one case per trial: five binary-eligible
+cases and two expected-insufficient cases. TP/TN/FP/FN use only binary
+predictions; unexpected insufficiency is an explicit abstention, not a true
+negative or silently removed eligible case. Expected-insufficient results
+have separate correct/incorrect counters. Rates state their classified
+denominators and are null when not computable. Sensitivity reruns 70/75/85%
+against the same truth, so the 85% setting exposes misses.
+The four retrofit cases are excluded from binary confusion.
+
+Retrofit comparisons show independent counts/coverage and means for baseline
+[day0,day7), early [day14,day21) and late [day21,day28), with per-window
+sufficiency and null deltas on insufficient input. The first early sample is
+the completion instant; the first late sample is delayed activation.
+Each early/late delta is checked separately against its exercise target
+within 0.02 C/RH points. Matched weekly cycles isolate the constructed step;
+they do not establish causal weather adjustment for real homes.
+
+### Two-stage simulator operation and limits (#194)
+
+Stage 1 is runnable through `synthetic.sensor_backfill`; estimate before writing.
+The legacy, register, fault and approved paired-climate commands above describe
+their distinct schemas and limits. Defaults are 730 days, 60-minute cadence,
+seed 183 and a synthetic seasonal weather model. Explicit `--as-of` selects a
+half-open UTC window; `--cadence` must divide 1440. Paired-climate mode requires
+an explicit wholly synthetic register, complete retained hourly source coverage
+and optional synthetic dated measures. Exact subsampling neither fills gaps nor
+repeats years. Storage estimates are not completed full-stock materializations.
+
+Stage 2 (#184) has a delivered shared observation contract (#186) and the
+opt-in [finite replay and pacing library](#finite-synthetic-stream-replay-184)
+with an [API SDK publisher](../api/README.md#opt-in-iot-consumer-and-synthetic-publisher-110-184).
+The scenario pack does not invoke that publisher. Local fake-network tests
+are not verified live Hub operation, approved credential lifecycle or cloud
+acceptance. No provisioner or autonomous retry scheduler is added.
+Separately authorized live operation must use the shared schema, stable IDs,
+per-device authentication, synthetic-only identities, explicit N/rate/volume/
+replay/cost limits and the independent #110 consumer controls. The declared
+live exercise accounting is three paired observations/home/day: `3N` records/day,
+180,000 for N=60,000; the hourly scenario pack is a separate offline test cadence.
+See the [shared schema and measured-volume contract](../../docs/reference/research/iot-sensor-analytics-research-plan.md#shared-observation-contract-and-volume-2026-10-18-refs-186).
+No simulator discovers, connects to or represents an installed real device.
+Never put device keys/connection strings in source, generated rows or logs.
+
+The [climate source metadata](../../docs/reference/research/climate-paired-source-178/open-meteo-era5-durham-2023-2024-metadata.json)
+records Open-Meteo ERA5 Durham-grid hourly outdoor reanalysis, retrieved
+2026-10-27, 2023-01-01 through 2024-12-31, input SHA-256
+`af76a90414d9ad8f19dacc95a38f06d4c4321a91bdf030ba231558c42506051e`.
+It is one 0.25-degree cell, not a station or indoor measurements.
+Attribution: Weather data by [Open-Meteo.com](https://open-meteo.com/),
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); underlying ERA5 is
+Copernicus Climate Change Service (C3S) material. Raw bytes retained unchanged;
+bounds summarised and exact timestamps subsampled for synthetic projections.
+Hersbach et al. (2023), DOI
+[10.24381/cds.adbb2d47](https://doi.org/10.24381/cds.adbb2d47);
+Open-Meteo software: Zippenfenig (2023),
+[10.5281/ZENODO.7970649](https://doi.org/10.5281/ZENODO.7970649).
+The metadata preserves 2026-10-22 terms snapshots, free-API non-commercial
+conditions and unverified underlying C3S reuse terms. Owner approval
+`owner-approvals-2026-10-27-b` is synthetic-demonstrator-only, not Legal or
+production qualification. No new terms retrieval/approval occurs here.
+The scenario pack uses none of those climate bytes.
+
+All emitted indoor data is simulated, not evidence of installed devices or
+real home conditions. No signal diagnoses a hazard, dismisses a resident report,
+starts a clock, releases a hold, changes ranking, grants consent or creates an
+approved task. Human review, resident choice and BRD OD-43 remain unchanged.
+Actual #111/#133 consumer test use, verified live stage operation, competent R2 review,
+agreed R3 limits and operational acceptance are still unproven.
 
 ### Existing reproducibility and plausibility evidence
 

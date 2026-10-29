@@ -1,0 +1,102 @@
+.progress-page {
+  display: grid;
+  gap: var(--sp-3);
+  min-width: 0;
+}
+.progress-page > *,
+.progress-facts > div {
+  min-width: 0;
+}
+.progress-page h1,
+.progress-page h2 {
+  text-wrap: balance;
+  scroll-margin-top: var(--sp-5);
+}
+.progress-page .flag {
+  justify-self: start;
+  white-space: normal;
+}
+.progress-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  align-items: end;
+}
+.progress-filters > div {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+.progress-filters input,
+.progress-filters select {
+  width: 100%;
+}
+.progress-filters select {
+  background-color: var(--surface);
+  color: var(--ink);
+}
+.progress-page :is(a, button, summary) {
+  touch-action: manipulation;
+}
+.progress-page .btn.alt:hover,
+.progress-page summary:hover {
+  background-color: var(--soft);
+}
+.progress-chart tbody tr {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 3rem;
+}
+.progress-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: var(--sp-4);
+}
+.progress-facts dd {
+  margin: 0;
+  font-size: var(--fs-lg);
+}
+.progress-page :is(dd, td, meter) {
+  font-variant-numeric: tabular-nums;
+}
+.progress-bars {
+  max-height: 22rem;
+  overflow: auto;
+  margin-block: var(--sp-3);
+}
+.progress-bar-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: var(--sp-3);
+  padding-block: var(--sp-2);
+  border-bottom: 1px solid var(--line);
+  content-visibility: auto;
+  contain-intrinsic-size: auto 5rem;
+}
+.progress-bar-value {
+  display: grid;
+}
+.progress-bar-value meter {
+  width: 100%;
+  accent-color: var(--brand);
+}
+.progress-page :is(th, td, .progress-bar-label) {
+  overflow-wrap: anywhere;
+}
+.progress-address {
+  display: block;
+}
+.progress-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-4);
+}
+.progress-unavailable {
+  color: var(--muted);
+}
+.progress-page summary {
+  padding-block: var(--sp-3);
+  cursor: pointer;
+}
+@media (max-width: 390px) {
+  .progress-filters > div { flex-basis: 100%; }
+}
