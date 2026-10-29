@@ -1,5 +1,5 @@
 ---
-title: Everything but the Software - source package (draft v6)
+title: Everything but the Software - source package (draft v7)
 description: Industry-led maintenance argument, inherited-error and instruction-debt evidence, and prospective consolidation protocol
 ms.date: 2026-10-29
 ---
@@ -8,23 +8,153 @@ Working title: *Everything but the Software: Feature-Driven Decay in an Agentic 
 
 ## Current Status
 
-The scoped source revision of 29 October is the latest source record.
+The editorial/visual revision and dated repository-metrics refresh of
+29 October are the latest source record.
 The owner selected the existing twelve trajectories as pilot/estimation work,
 not seven stable hypothesis tests. The pilot has not started, no experimental
 results are reported, and launch remains blocked by the documented runner,
 suite/access, analysis and registration requirements.
 
-The industry-led argument, title, case observations, three arms, four runs
-per arm, suite and resource ceilings are retained. The draft endpoint hierarchy
-and interpretation are prospectively amended; the private kit or tag is not.
-Practitioner material and deferred extensions now accompany the source
-outside the main PDF. The main and reusable bibliographies contain the same
-95 references. No experiment was run or private study material amended.
-The 29 October revision was not compiled because no existing local TeX
-toolchain was available. The earlier external 43-page validation PDF does
-not validate the latest source layout.
-The package PDF and figures remain unchanged by this revision.
-The arXiv bundle has not been refreshed.
+The title, case observations, three arms, four runs per arm, ten-feature
+suite and resource ceilings are retained. AMA now supplies the motivating
+testbed rather than the paper's personal narrative. Impersonal wording does
+not conceal the sole author's participant-observer role or independently
+corroborate that account. The engineering lineage connects Beck, Erich Gamma
+and colleagues, Robert C. Martin and Fowler to specific design choices,
+not to a claimed intervention effect.
+
+The main and reusable bibliographies contain the same 96 references.
+Three new conceptual figures have native `.excalidraw` editing sources,
+vector SVG exports and PNG copies for LaTeX. Existing empirical charts and their input data are
+unchanged. PF1-PF3 are explicit, data-dependent figure TODOs, not mock results.
+Gemini 4 Argon supplied concepts; the implementation corrects its proposed
+twelve-feature sequence to the actual ten-feature suite and does not adopt
+its unsupported guarantee of hidden-test inaccessibility.
+
+The revised source compiles with session-local Tectonic 0.17.0. The delivered
+47-page PDF includes the metrics refresh; its log, all-page text bounds and
+new metrics page were checked. The unchanged conceptual figures retain the
+earlier full-size visual inspection and source/export validation. These are
+engineering and layout checks, not independent scientific or author approval.
+No experiment was run, private study material amended or external submission
+made. The arXiv bundle has not been refreshed.
+The owner selected local-only delivery pending publication clearance; no
+commit, push or pull request was made by the assistant for the editorial
+revision. The owner subsequently committed that work and opened
+[PR #555](https://github.com/jmservera/ama/pull/555). This metrics follow-up
+continues on its existing branch and remains local; it does not authorize
+external manuscript publication.
+
+The [dated review and complete pending checklist](./anc/review-2026-10-29.md)
+records findings, evidence coverage, applied changes, launch blockers and
+deferred work. It supersedes earlier readiness summaries, not the historical
+evidence or original [editorial critique](./critique.md).
+
+## Repository Metrics Refresh 29 October
+
+The [retained snapshot](./anc/repository-metrics-2026-10-29.json) records
+GitHub API retrieval from 17:38:52 to 17:39:47 UTC and document/churn
+measurements at `origin/main` commit
+`9b74ac8daaec2a880172e43161b37ac7f2c3f801`. It excludes the continuing
+paper branch's unmerged edits from default-branch metrics.
+
+| Metric | Captured status |
+| --- | --- |
+| Merged PRs | 314 overall; 262 since 15 October |
+| Post-case merges | 79 after the pinned case integration; 75 on 25-29 October |
+| Issues | 211 total: 136 open and 75 closed |
+| Other PR states | 11 open; 19 closed without merging |
+| Current log | 458 dated entries; 69,352 entry words; 207 hedge matches |
+| Whole-file words | Index 12,535; log 69,465; BRD 43,410; PRD 48,094 |
+| Combined document volume | 173,504 words, not measured session input |
+| Retained automated score | 77/100; A4 implementation completeness 5/5 |
+
+The historical 183 merged-PR count is reconciled, not silently replaced.
+Its pinned commit is timestamped 24 October at 16:19:38 UTC, while PR #445
+records that same commit's integration at 16:19:39. The exact Git-time
+cutoff gives 182; counting through the integration gives 183; the whole
+15-24 October UTC calendar window gives 187. The snapshot retains every
+window and selected PR metadata so the distinction can be checked.
+
+The post-case first-parent heuristic counts 71 integrations, separately
+from the 79 GitHub merges across branches. Its source/test/tracking
+additions are 11,907/31,126/181,261 lines, and tracking/source additions
+are 15.22. No complexity, live usability or cost outcome was measured.
+The score is the retained 17:12:55 UTC assessment of `0717be24`, not a new
+assessment of `9b74ac8d` or proof of a working deployment.
+The main PDF's dated follow-up, conclusion and data-availability statement
+carry these boundaries. Original case tables, figures, pilot and
+unresolved author decisions remain unchanged.
+The refreshed manuscript has approximately 17,450 main-body words and
+96 matching bibliography entries. Snapshot consistency checks, all four
+paper/diagram regressions and the structural checker pass. No live journey,
+experiment or hosted acceptance check was run.
+
+## Editorial and Visual Revision 29 October
+
+The visual reference was
+[Jiang et al., v1](https://arxiv.org/html/2608.14036v1), especially Figure 1's
+separation of experimental pipelines. Both pipeline panels were visually
+inspected. Its reported effects and taxonomy are not transferred to this
+paper, and none of its artwork was copied. The revision adopts the
+communication principle of one scientific distinction per figure.
+
+| Figure | Purpose | Evidence boundary |
+| --- | --- | --- |
+| [State inheritance](./fig-state-inheritance.excalidraw) | Show software and instruction state surviving a fresh session | Conceptual paths, not measured error propagation |
+| [Pilot design](./fig-pilot-design.excalidraw) | Compare A/B/C, budgets and mutation permissions | Prospective ten-feature protocol, not execution evidence |
+| [Contract states](./fig-contract-states.excalidraw) | Separate acquisition, inherited loss and recovery | Logical states, not frequencies or fabricated trajectories |
+| PF1-PF3 | Plan retention, CR1 and resource visualisations | Await actual pilot data and frozen analysis rules |
+
+The revision also replaces lexical matches being called a share of statements,
+removes an unmeasured near-zero ratio denominator, qualifies blanket honesty
+claims and fixes a proposed prompt being described as already used. The
+same-release evidence link, independent mechanism audit and pilot runner
+decisions remain open rather than being resolved editorially.
+
+Excalidraw sources are the editing authority, with stable semantic element
+IDs, bound labels and arrows. Edit them in a compatible local editor or the
+approved Microsoft instance at <https://aka.ms/excalidraw>, not a third-party
+drawing service. The offline exporter uses the actual Excalidraw 0.18.1
+library in a local browser, never a hand-written SVG approximation, and
+never rewrites an edited source. It blocks external HTTP requests.
+
+The [export receipt](./diagram-exports.json) binds each source to its native
+SVG and 3x PNG with SHA-256 hashes, renderer/browser versions and dimensions.
+PNG is used in LaTeX; neither a PDF export nor a flattened screenshot is the
+source for future edits. The empirical Matplotlib generator is unchanged.
+
+Run from the repository root with Node/npm, Python and a local browser:
+
+```powershell
+npm ci --prefix docs\capstone\thought-leadership\everything-but-the-software\anc
+$env:PAPER_BROWSER_CHANNEL = "msedge"
+npm run export --prefix docs\capstone\thought-leadership\everything-but-the-software\anc
+python -B docs\capstone\thought-leadership\everything-but-the-software\anc\check_paper.py
+python -B -m unittest discover -s docs\capstone\thought-leadership\everything-but-the-software\anc -p test_conceptual_figures.py -v
+```
+
+For bundled Chromium instead of installed Edge, install the browser with
+Playwright and leave `PAPER_BROWSER_CHANNEL` unset. The export script accepts
+an optional output-directory argument for isolated validation. The locked
+toolchain uses available esbuild/Playwright releases; the Iconify 3.0.1
+override avoids an upstream dependency requesting unavailable
+`tinyexec@^1.3.1`. No registry or security setting was bypassed.
+
+Compile from this package directory with `pdflatex main.tex` twice, or
+`tectonic main.tex --keep-logs --keep-intermediates --untrusted`. Tectonic
+resolves cross-references automatically. The existing
+`check_paper.py --check-latex-log` expects a pdflatex-style output marker;
+this revision instead checks the actual Tectonic log and rendered PDF.
+The four new tests cover native shape/text bindings, exact source/export
+hashes, full 3x raster dimensions, isolated re-export without source
+overwrites, impersonal narrative, explicit pending plots and the unchanged
+no-results switch.
+The older shell-tooling tests require POSIX and do not validate figure
+rendering.
+
+Earlier dated sections below are historical records. Their source counts,
+toolchain limits and validation claims do not describe draft v7.
 
 ## Judgment and Skills Source Revision 29 October
 

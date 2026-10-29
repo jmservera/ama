@@ -14,7 +14,7 @@
     "infrastructure": "616191ff4cb658ab4b13adc3ef065a3e94163501d89076b526dd8d44cb9de955",
     "capstone-deck": "c5ae9ab5ec15788dd255b786adaf07ee716806bef375e01c066ad1c26701d74e",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
-    "thought-leadership": "951f4d87326ef667330aa41af67d2b117bed7c669e1e3e24935b30fe5707be88"
+    "thought-leadership": "c8d9f57411fca15bfdc36accf9f1fe8749ee4e900968c3f7d0def0f658ad598e"
   },
   "total": 77,
   "sections": {
@@ -167,14 +167,14 @@
         "docs/capstone/thought-leadership/everything-but-the-software/main.tex:9",
         "docs/capstone/thought-leadership/everything-but-the-software/README.md:8-19"
       ],
-      "rationale": "main.tex still has unresolved TODO(author) items (lines 9,41,53,569,633,687,1037,1065,1076,1547); revision not recompiled. Unchanged at 3."
+      "rationale": "main.tex still has unresolved TODO(author) items (26 remain, e.g. lines 9,43,55,601,663,717); revision not recompiled by this reviewer. Unchanged at 3."
     },
     "D3": {
       "score": 2,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:8-19"
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:39"
       ],
-      "rationale": "README confirms no push, submission, registration or publication approval exists. Unchanged at 2."
+      "rationale": "README records owner-committed work in PR #555 while distinguishing the assistant's local-only delivery from external manuscript publication. Submission, registration and publication approval remain pending. Unchanged at 2."
     }
   }
 }
