@@ -3,9 +3,9 @@
   "task_slug": "iot-review-508",
   "parent_task": null,
   "mode": "manual",
-  "active_phase": "Review",
-  "status": "active",
-  "session_status": "running",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-29/iot-review-508-research.md",
     "plan": ".copilot-tracking/plans/2026-10-29/iot-review-508-plan.md",
@@ -44,12 +44,24 @@
       "decision": "One independent post-implementation Review executed; execution Complete, outcome Conformant, zero findings, scoped to working diff from 883ed609 with focused validation.",
       "status": "complete; no blocking local findings",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-29/iot-review-508-review.md"
+    },
+    {
+      "decision": "Implementation and original RPI evidence committed locally; identity/trailer and clean worktree verified; no push.",
+      "status": "complete",
+      "evidence": "19fb66a65629fb725625681bd51539e212cfcfe8"
     }
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Review",
-    "action": "Commit scoped implementation and original dated RPI evidence locally using privacy-safe identity and required trailer; never push."
+    "phase": "Follow-up",
+    "action": "Coordinator may satisfy publication/exact-head/hosted/human gates and push when authorized; this agent must not push or start another loop."
   },
-  "prioritized_follow_ups": []
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator publication handoff",
+      "rationale": "Only remaining lifecycle work; no local Review defects. Coordinator must satisfy publication/exact-head/hosted/human gates before pushing.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/iot-review-508-review.md"
+    }
+  ]
 }

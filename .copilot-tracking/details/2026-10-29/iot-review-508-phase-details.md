@@ -10,7 +10,8 @@ Readiness: Research Ready; one critique complete and disposed in plan; no blocke
 Implementation reconciliation: P01/P02 complete; five new test methods, no removals.
 All requested static checks pass; core 11 tests/API focused 69 tests pass.
 No amendment or significant divergence. P03-T01 Review Complete / Conformant,
-zero findings; P03-T02 local commit remains.
+zero findings; P03-T02 completed in local implementation commit
+19fb66a65629fb725625681bd51539e212cfcfe8. No push.
 
 <!-- phase: P01 -->
 ## P01: Regression-first corrections

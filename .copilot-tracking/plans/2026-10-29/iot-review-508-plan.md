@@ -5,7 +5,7 @@ ms.date: 2026-10-29
 ---
 
 Task ID: pr-508-review-fixes-2026-10-29. Slug: iot-review-508.
-Status: P01/P02 complete; independent Review Complete / Conformant; local commit pending.
+Status: complete; independent Review Complete / Conformant; locally committed, no push.
 
 ## Executive Summary
 
@@ -112,7 +112,7 @@ handoff with focused validation. Coordinator must satisfy publication gates.
 ### P03: Independent Review and local handoff
 
 * [x] P03-T01 Reconcile implementation evidence and execute one independent Review.
-* [ ] P03-T02 Record Review disposition and commit with privacy-safe identity/trailer.
+* [x] P03-T02 Record Review disposition and commit with privacy-safe identity/trailer.
 
 Dependencies: P01-T02 after P01-T01; P02-T02 after P01-T02 and P02-T01;
 P03-T01 after P02-T02; P03-T02 after P03-T01.
