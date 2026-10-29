@@ -6,6 +6,48 @@ ms.date: 2026-10-29
 ms.topic: reference
 ---
 
+## Compact case journey (#552)
+
+The six workflow steps retain text labels and status words alongside the exact
+icons from slide 4 of `docs/capstone/deck/zava-forward-cowork-v2-draft.pptx`.
+The local `web/journey-icons/` PNGs are byte-exact extracts: survey image11,
+assessment image6, funding image12, resident image13, contractor image14 and
+quality image15. A regression checks those bytes against the tracked deck.
+The API package data explicitly includes `web/journey-icons/*.png` so these
+assets also ship in the wheel installed by the container.
+
+Blocked steps and the case summary show a single-line reason with a native
+Details button. Click, tap, Enter or Space opens the complete reasons, owners
+and next actions; Escape, Close details or tapping outside dismisses them.
+Long content wraps and scrolls inside a viewport-bounded, keyboard-focusable
+popover. Status words and existing approval, safety and manual paths remain.
+Native popovers require a current browser; the local check covers Chromium,
+not full cross-browser or assistive-technology acceptance.
+
+Tabs wrap on the same bordered surface as their panel, outside its vertical
+scrolling area. Arrow keys, Home and End move tab focus; Enter or Space selects.
+The selected tab stays in the URL. Sections remain mounted so tab changes
+retain inputs. If enhancement is unavailable or fails, all sections are listed
+without inner scrolling bounds.
+
+From `src/api`, using the existing installed source dependencies:
+
+```bash
+PYTHONPATH=src:../core/src:../agents/src:tests:../core/tests:../agents/tests \
+  /tmp/mv/bin/python -m unittest test_case_journey test_workspace_scripts \
+  test_design_system test_accessibility_baseline test_content_standard -q
+PYTHONPATH=src:../core/src:../agents/src:tests:../core/tests:../agents/tests \
+  /tmp/mv/bin/python -m checks.case_view_ux_browser_check --out /new/external/case-results
+node --check src/zava_forward/api/web/case-workspace.js
+node --check src/zava_forward/api/web/app.js
+```
+
+The browser check starts and stops its own constructed-data loopback app,
+blocks external requests and records 1280/390/320px geometry and screenshots,
+keyboard/touch disclosure, enlarged text, retained fields, panel scrolling and
+both enhancement-fallback paths. `--baseline` captures pre-change geometry.
+These are focused local engineering checks, not publication or WCAG acceptance.
+
 ## Loading feedback and Today's briefing (#531)
 
 The employee shell contains startup text before workspace scripts load. An

@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
+import tomllib
 import unittest
+import zipfile
 from pathlib import Path
 from typing import Any
 
@@ -1248,7 +1251,10 @@ console.log("PASS");
             with self.subTest(label=label):
                 states = journey(work={"blockers": [{"step": label, "reason": "Check evidence"}]})
                 self.assertEqual(states[index]["state"], "blocked")
-                self.assertIn("Check evidence", states[index]["text"])
+                self.assertEqual(states[index]["blockers"][0]["reason"], "Check evidence")
+                self.assertEqual(
+                    states[index]["text"], "Current, blocked" if index == 4 else "Blocked"
+                )
                 self.assertEqual(sum(bool(step["current"]) for step in states), 1)
                 self.assertTrue(states[4]["current"])
                 self.assertNotEqual(states[0]["state"], "blocked")
@@ -1259,7 +1265,80 @@ console.log("PASS");
         )
         self.assertTrue(all(step["state"] == "done" for step in states))
         self.assertFalse(any(step["current"] for step in states))
+        self.assertFalse(any(step["blockers"] for step in states))
         self.assertFalse(any(step["current"] for step in journey(stage="Unknown")))
+
+    def test_journey_icons_are_declared_as_package_data(self) -> None:
+        project = WEB.parents[3]
+        with (project / "pyproject.toml").open("rb") as stream:
+            config = tomllib.load(stream)
+        patterns = config["tool"]["setuptools"]["package-data"]["zava_forward.api"]
+        for name in ("survey", "assessment", "funding", "resident", "contractor", "quality"):
+            with self.subTest(icon=name):
+                relative = f"web/journey-icons/{name}.png"
+                self.assertTrue((WEB.parent / relative).is_file())
+                self.assertTrue(any(Path(relative).match(pattern) for pattern in patterns))
+
+    def test_journey_icons_are_exact_six_step_presentation_assets(self) -> None:
+        root = Path(__file__).resolve().parents[3]
+        deck = root / "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx"
+        icons = evaluate("CaseWorkspace.steps.map(step => step.icon)")
+        expected = ["survey", "assessment", "funding", "resident", "contractor", "quality"]
+        self.assertEqual(icons, expected)
+        with zipfile.ZipFile(deck) as archive:
+            for name, number in zip(expected, (11, 6, 12, 13, 14, 15), strict=True):
+                icon = (WEB / "journey-icons" / f"{name}.png").read_bytes()
+                source = archive.read(f"ppt/media/image{number}.png")
+                self.assertEqual(hashlib.sha256(icon).digest(), hashlib.sha256(source).digest())
+
+    def test_blocker_popovers_keep_full_safe_reasons_and_separate_controls(self) -> None:
+        script = (
+            DOM
+            + shipped_helpers()
+            + r"""
+const app = new Node("main"), aiMode = {workflow: false};
+const location = {hash: "#/case/SYN?tab=overview"}, history = {pushState() {}};
+const MutationObserver = class {observe() {} disconnect() {}};
+const definitions = ["overview", "funding", "ai"].map(id => ({
+  id, label: id, panel: h("section", {}, h("h2", {}, id))
+}));
+const blockers = [
+  {step: "Final checks: funding", reason: "Short reason. " + "Long detail. ".repeat(100),
+    owner: "Finance", next_action: "Check the evidence."},
+  {step: "Final checks: funding", reason: "<script>not executable</script>"}
+];
+"""
+            + (WEB / "case-workspace.js").read_text()
+            + r"""
+const ui = CaseWorkspace.enhance({id: "SYN", hazards: [], work: {blockers}},
+  definitions, null, h("section", {}), h("div", {}));
+const root = h("div", {}, ui.top, ui.tabs);
+const popups = root.querySelectorAll("[popover]");
+assert.equal(popups.length, 2);
+assert.equal(new Set(popups.map(node => node.id)).size, 2);
+for (const popup of popups) {
+  assert.equal(popup.getAttribute("popover"), "auto");
+  assert.match(popup.textContent, /Long detail/);
+  assert.match(popup.textContent, /Owner not recorded. Ask the case owner./);
+  assert.match(popup.textContent, /Ask the case owner to record the next action./);
+  assert.equal(popup.querySelectorAll("script").length, 0);
+  assert.match(popup.textContent, /<script>not executable<\/script>/);
+}
+for (const button of root.querySelectorAll("[popovertarget]")) {
+  assert.equal(button.tagName, "BUTTON");
+  assert.equal(button.closest("a"), null);
+}
+const summaries = root.querySelectorAll(".case-blocker-summary");
+assert.equal(summaries.length, 2);
+assert.equal(summaries[0].textContent, "Short reason.");
+assert.equal(root.querySelectorAll("img").length, 6);
+assert.equal(ui.tabs.getAttribute("role"), "tablist");
+console.log("PASS");
+"""
+        )
+        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("PASS", result.stdout)
 
     def test_summary_empty_values_handoff_and_overdue(self) -> None:
         empty = evaluate("CaseWorkspace.summary({work: {}})")

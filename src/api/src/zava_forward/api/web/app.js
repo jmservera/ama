@@ -950,9 +950,13 @@ async function caseView(id) {
   if (typeof CaseWorkspace !== "undefined") {
     try {
       session.controller = CaseWorkspace.enhance(c, definitions, openHaz.length ? safety : null, assistantPanel, draftBox);
+      workspace.prepend(session.controller.tabs);
+      workspace.classList.add("case-sections");
       top = session.controller.top;
     } catch (error) {
       session.controller = null;
+      workspace.querySelector(".case-tabs")?.remove();
+      workspace.classList.remove("case-sections");
       definitions.forEach(tab => {
         tab.panel.hidden = false;
         ["role", "aria-labelledby", "tabindex"].forEach(name => tab.panel.removeAttribute(name));
