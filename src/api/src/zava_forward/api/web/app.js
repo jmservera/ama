@@ -1604,7 +1604,7 @@ function mapAction(marker, action) {
   });
 }
 
-function mapPanel(coordinator = null) {
+function mapPanel(coordinator = null, filters = null) {
   disposeMapPanel?.();
   const signal = routeController.signal;
   const el = h("div", { id: "leaflet", class: "leafmap", role: "region", tabindex: "0", "aria-label": "Map of open cases. Zoom with the buttons, mouse wheel or pinch." });
@@ -1660,10 +1660,12 @@ function mapPanel(coordinator = null) {
     h("p", {}, Object.entries(MAP_SIGNALS).map(([kind, signal]) => h("span", { class: `key ${kind}` }, mapSymbol(kind), signal.label))),
     info, listBox, open);
   const mapStage = h("div", { class: "map-stage" }, el, homeCard);
+  const filterSlot = filters ? h("div", { class: "map-filter-slot" }, filters) : null;
   const dialog = h("dialog", { class: "map-dialog", "aria-labelledby": "map-title",
     oncancel: (event) => { event.preventDefault(); collapse(); } });
   const toggle = h("button", { type: "button", class: "alt", "aria-expanded": "false",
     onclick: () => dialog.open ? collapse() : expand() }, "Expand map");
+  const workspace = h("div", { class: "map-workspace" }, sidebar, mapStage);
   const box = h("section", { class: "card map-panel", onkeydown: (event) => {
     if (event.key === "Escape" && selectedId !== null) {
       event.preventDefault();
@@ -1671,12 +1673,13 @@ function mapPanel(coordinator = null) {
       closeHome();
     }
   } }, h("div", { class: "row between" }, h("h2", { id: "map-title" }, "Map of open cases"), toggle),
-  h("div", { class: "map-workspace" }, sidebar, mapStage));
+  workspace);
   const slot = h("div", { class: "map-slot" }, box);
-  const resize = () => map?.invalidateSize({ pan: false, animate: false });
+  const resize = () => map?.invalidateSize({ pan: true, animate: false });
   function expand() {
     if (slot.inert) return;
     sidebar.prepend(homeCard);
+    if (filters) box.insertBefore(filters, workspace);
     dialog.append(box);
     document.body.append(dialog);
     document.body.classList.add("map-expanded");
@@ -1690,6 +1693,7 @@ function mapPanel(coordinator = null) {
     if (!dialog.open) return;
     dialog.close();
     slot.append(box);
+    if (filters) filterSlot.append(filters);
     mapStage.append(homeCard);
     dialog.remove();
     document.body.classList.remove("map-expanded");
@@ -1817,12 +1821,13 @@ function mapPanel(coordinator = null) {
     else if (focusedMarker) restoreMarker(focusedMarker);
     if (fit && d.bounds) {
       fitting = true;
-      map.fitBounds([[d.bounds[0], d.bounds[1]], [d.bounds[2], d.bounds[3]]], { padding: [30, 30], maxZoom: 15, animate: false });
+      map.fitBounds([[d.bounds[0], d.bounds[1]], [d.bounds[2], d.bounds[3]]], {
+        paddingTopLeft: [30, 30], paddingBottomRight: [30, 60], maxZoom: 15, animate: false });
       fitting = false;
       draw(false);
     }
   };
-  return { box: slot, draw, size: resize };
+  return { box: slot, filters: filterSlot, draw, size: resize };
 }
 
 async function coordinatorView() {
@@ -1954,19 +1959,30 @@ async function overviewView() {
   const st = await api("/api/stats");
   const k = st.kpis;
   const counts = { "": k.open, hazard: k.hazards, long: k.long, nodecision: k.nodecision, fundingprog: k.funding, support: k.support };
-  const mp = mapPanel();
   const tiles = h("div", { class: "tiles", role: "group", "aria-label": "Choose what the map shows" });
-  const paint = () => tiles.replaceChildren(...OV_TILES.map(([f, label]) => h("button", { class: `tile${f === "hazard" ? " danger" : ""}`, "aria-pressed": String(ovState.flag === f),
-    onclick: () => { ovState.flag = f; paint(); return mp.draw(true); } }, h("strong", {}, String(counts[f])), h("span", {}, label),
-    h("span", { class: "tile-selection" }, ovState.flag === f ? "Selected" : "Select filter"))),
-    h("div", { class: "tile static" }, h("strong", {}, String(k.completed)), h("span", {}, "Completed")));
+  const buttons = OV_TILES.map(([f, label]) => h("button", { type: "button", class: `tile${f === "hazard" ? " danger" : ""}`,
+    onclick: () => {
+      if (ovState.flag === f) return;
+      ovState.flag = f;
+      paint();
+      mp.draw(true);
+    } }, h("strong", {}, String(counts[f])), h("span", {}, label), h("span", { class: "tile-selection" })));
+  const paint = () => buttons.forEach((button, index) => {
+    const selected = ovState.flag === OV_TILES[index][0];
+    button.setAttribute("aria-pressed", String(selected));
+    button.querySelector(".tile-selection").textContent = selected ? "Selected" : "Select filter";
+  });
+  tiles.append(...buttons, h("div", { class: "tile static" }, h("strong", {}, String(k.completed)), h("span", {}, "Completed")));
   paint();
-  const area = h("select", { id: "mapArea", onchange: (e) => { ovState.area = e.target.value; return mp.draw(true); } },
+  const area = h("select", { id: "mapArea", name: "area", autocomplete: "off",
+    onchange: (e) => { ovState.area = e.target.value; mp.draw(true); } },
     h("option", { value: "" }, "All areas"), st.areas.map((a) => h("option", { value: a.label }, a.label)));
   area.value = ovState.area;
+  const filters = h("div", { class: "overview-map-filters" }, tiles,
+    h("div", { class: "row" }, h("label", { for: "mapArea" }, "Show map for"), area));
+  const mp = mapPanel(null, filters);
   show(
-    h("h1", {}, "Overview"), h("p", {}, h("a", { class: "btn alt", href: "#/coordinator" }, "Coordinator heatmap and lifecycle funnel")), tiles,
-    h("div", { class: "row" }, h("label", { for: "mapArea" }, "Show map for"), area), mp.box,
+    h("h1", {}, "Overview"), h("p", {}, h("a", { class: "btn alt", href: "#/coordinator" }, "Coordinator heatmap and lifecycle funnel")), mp.filters, mp.box,
     h("div", { class: "grid" }, bars("Cases by stage", st.stages), bars("Cases by local authority", st.areas)),
     h("div", { class: "grid" }, bars("How long cases have waited", st.ages), bars("Cases by wave", st.waves)),
     h("div", { class: "grid" }, bars("Funding status", st.funding),

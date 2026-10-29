@@ -6,7 +6,7 @@ from pathlib import Path
 WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
 APP = (WEB / "app.js").read_text(encoding="utf-8")
 CSS = (WEB / "style.css").read_text(encoding="utf-8")
-MAP = APP.split("function mapPanel(coordinator = null) {", 1)[1].split(
+MAP = APP.split("function mapPanel(coordinator = null, filters = null) {", 1)[1].split(
     "\nasync function coordinatorView()", 1
 )[0]
 
@@ -82,7 +82,7 @@ class MapFullscreen(unittest.TestCase):
             "keyboard: false, inertia: false",
             "autoPanOnFocus: false",
             "map.panBy(offsets[event.key], { animate: false })",
-            "invalidateSize({ pan: false, animate: false })",
+            "invalidateSize({ pan: true, animate: false })",
         ):
             self.assertIn(expected, MAP)
         for expected in (
@@ -100,6 +100,34 @@ class MapFullscreen(unittest.TestCase):
         self.assertIn('document.getElementById("coordinator-records").focus()', MAP)
         self.assertIn("collapse(false);", MAP)
         self.assertIn("Show the map areas as a list", MAP)
+
+    def test_expanded_filters_reuse_and_restore_original_controls(self) -> None:
+        self.assertIn('h("div", { class: "map-filter-slot" }, filters)', MAP)
+        self.assertIn("if (filters) box.insertBefore(filters, workspace)", MAP)
+        self.assertIn("if (filters) filterSlot.append(filters)", MAP)
+        self.assertIn("filters: filterSlot", MAP)
+        overview = APP.split("async function overviewView() {", 1)[1].split(
+            "\nasync function visitsView()", 1
+        )[0]
+        self.assertIn("mapPanel(null, filters)", overview)
+        self.assertIn('button.setAttribute("aria-pressed", String(selected))', overview)
+        self.assertIn('button.querySelector(".tile-selection").textContent', overview)
+        self.assertIn("if (ovState.flag === f) return", overview)
+        self.assertNotIn("replaceChildren", overview)
+        self.assertNotIn("return mp.draw", overview)
+        self.assertIn('id: "mapArea", name: "area", autocomplete: "off"', overview)
+
+    def test_compact_filters_wrap_scroll_and_preserve_map_space(self) -> None:
+        for expected in (
+            ".map-dialog .overview-map-filters",
+            "minmax(min(100%,8rem),1fr)",
+            "max-height:45%;overflow:auto;overscroll-behavior:contain",
+            ".overview-map-filters .tile.static{display:none}",
+            ".overview-map-filters .tile strong{font-size:var(--fs-base)}",
+            ".overview-map-filters+.map-workspace",
+            "flex-basis:14rem;flex-shrink:0;min-height:14rem",
+        ):
+            self.assertIn(expected, CSS)
 
 
 if __name__ == "__main__":

@@ -377,6 +377,17 @@ post-deployment verification remain pending the owner.
 
 ## Expanded map and home summaries (#532)
 
+Overview's expanded map also places its existing filters along the top (#551).
+The compact buttons retain their counts and visible "Selected"/"Select filter"
+words. Use Tab, Enter or Space to change the selection, or choose an area with
+the labelled native selector. Map reads keep the controls available and focused;
+loading, empty and failed-map feedback remains in the map information panel.
+On exit, the same controls return to the Overview header with the current
+selection. Completed remains a header summary, not an expanded-map filter.
+At narrow widths or enlarged text the filter region scrolls without covering
+the map; the map retains a minimum height, and exit/list paths remain available.
+Coordinator flow retains its separate cohort filters.
+
 From Overview or Coordinator flow, choose **Expand map** for a near-full-screen
 map with a narrow left information panel. Select a home with a click, Enter or
 Space to read its summary, then choose **Open home** to navigate. The summary
@@ -415,7 +426,9 @@ The check requires integrity-pinned axe 4.10.3, uses a real loopback API, aborts
 external application requests, and retains scan details and screenshots. It
 covers summary-first keyboard/pointer behavior, Escape/focus, modal containment,
 redraw/failure/filter cleanup, manual paths, coordinator omissions, reduced
-motion and 320/390/1280px expanded layouts. It also checks uncancelled browser
+motion and 320/390/1280px expanded layouts. Filter regressions cover all six
+flags, area changes, original control identity on exit, held/out-of-order reads,
+keyboard focus, 390x568 layout and 640px with a 32px default font. It also checks uncancelled browser
 shortcuts from map/marker focus in both modes and exact ordinary/Shift-plus map
 zoom changes. Session-expiry checks hold overlapping fit
 responses, deliver a 401 before a successful response with bounds, and verify
