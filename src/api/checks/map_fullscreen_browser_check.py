@@ -81,10 +81,96 @@ def check_browser_shortcuts(page: Page, mode: str) -> None:
         page.remove_listener("request", record_request)
 
 
+def check_pending_navigation(page: Page, out: Path) -> None:
+    page.get_by_role("link", name="Overview", exact=True).click()
+    page.get_by_role("heading", name="Overview", exact=True).wait_for()
+    page.locator(".leaflet-map-pane").wait_for(state="attached")
+    toggle = page.get_by_role("button", name="Expand map", exact=True)
+    toggle.scroll_into_view_if_needed()
+    original_toggle = toggle.element_handle()
+    original_slot = page.locator(".map-slot").element_handle()
+    bounds = toggle.bounding_box()
+    scroll = page.evaluate("() => ({left: scrollX, top: scrollY})")
+    assert original_toggle is not None and original_slot is not None and bounds is not None
+    page.evaluate(
+        """() => {
+          window.mapNavigationCheck = {facetsHeld: false, signal: routeController.signal};
+        }"""
+    )
+    held: list[Route] = []
+    released = False
+    results: dict[str, Any] = {}
+    clean_map = """() => !document.querySelector('.map-dialog, .map-slot')
+      && !document.body.classList.contains('map-expanded')"""
+
+    def hold(route: Route) -> None:
+        held.append(route)
+        page.evaluate("mapNavigationCheck.facetsHeld = true")
+
+    page.route("**/api/facets", hold)
+    try:
+        page.get_by_role("link", name="Show these as a list", exact=True).click()
+        page.wait_for_function("() => mapNavigationCheck.facetsHeld")
+        results["pending"] = page.evaluate(
+            """() => ({
+              oldRouteAborted: mapNavigationCheck.signal.aborted,
+              destinationPending: location.hash === '#/all'
+                && document.querySelector('h1').textContent === 'Overview'
+                && !routeController.signal.aborted
+            })"""
+        )
+        check(
+            "facets held after map route disposal and before destination rendering",
+            len(held) == 1
+            and results["pending"]["oldRouteAborted"]
+            and results["pending"]["destinationPending"],
+        )
+        page.evaluate("position => window.scrollTo(position)", scroll)
+        page.mouse.click(bounds["x"] + bounds["width"] / 2, bounds["y"] + bounds["height"] / 2)
+        results["pointer"] = page.evaluate(
+            """() => ({
+              dialogOpen: Boolean(document.querySelector('.map-dialog[open]')),
+              scrollLocked: document.body.classList.contains('map-expanded')
+            })"""
+        )
+        results["pointerClean"] = page.evaluate(clean_map)
+        check("Expand click during pending facets cannot reopen disposed map", results["pointerClean"])
+        results["slot"] = original_slot.evaluate(
+            "el => ({connected: el.isConnected, inert: el.inert})"
+        )
+        results["toggle"] = original_toggle.evaluate(
+            "el => ({connected: el.isConnected, disabled: el.disabled})"
+        )
+        check(
+            "obsolete map slot is disconnected and controls are inert and disabled",
+            results["slot"] == {"connected": False, "inert": True}
+            and results["toggle"] == {"connected": False, "disabled": True},
+        )
+        original_toggle.evaluate(
+            """el => {
+              el.click();
+              el.dispatchEvent(new MouseEvent('click', {bubbles: true}));
+            }"""
+        )
+        results["retainedClickClean"] = page.evaluate(clean_map)
+        check("retained Expand events cannot reopen disposed map", results["retainedClickClean"])
+        held[0].continue_()
+        released = True
+        page.get_by_role("heading", name="All open cases", exact=True).wait_for()
+        results["destinationClean"] = page.evaluate(clean_map)
+        check("case list renders without disposed map, dialog or scroll lock", results["destinationClean"])
+    finally:
+        if held and not released:
+            held[0].continue_()
+        page.unroute("**/api/facets", hold)
+        (out / "pending-navigation.json").write_text(json.dumps(results, indent=2), encoding="utf-8")
+
+
 def check_session_expiry(page: Page, base: str, out: Path) -> None:
     results: list[dict[str, Any]] = []
     for expanded in (False, True):
         mode = "expanded" if expanded else "embedded"
+        page.reload()
         page.goto(base + "/app#/coordinator")
         page.get_by_role("heading", name="Coordinator flow", exact=True).wait_for()
         expect(page.locator(".map-cluster")).not_to_have_count(0)
@@ -149,7 +235,7 @@ def check_session_expiry(page: Page, base: str, out: Path) -> None:
         expect(page.locator(".map-marker")).to_have_count(3)
         if expanded:
             page.get_by_role("button", name="Expand map", exact=True).click()
-        page.wait_for_function("mapDisposalCheck.draws.every(draw => draw.settled)")
+        page.wait_for_function("() => mapDisposalCheck.draws.every(draw => draw.settled)")
         page.evaluate(
             """async () => {
               await new Promise(resolve => requestAnimationFrame(() =>
@@ -169,7 +255,7 @@ def check_session_expiry(page: Page, base: str, out: Path) -> None:
             for _ in range(2):
                 with page.expect_request("**/api/map?**"):
                     page.locator("#mapArea").dispatch_event("change")
-            page.wait_for_function("mapDisposalCheck.heldRequests === 2")
+            page.wait_for_function("() => mapDisposalCheck.heldRequests === 2")
             check(f"{mode} two latest fit requests held", len(held) == 2)
             check(
                 f"{mode} both draws request bounds without viewport clipping",
@@ -191,7 +277,7 @@ def check_session_expiry(page: Page, base: str, out: Path) -> None:
             expect(page.get_by_role("heading", name="Sign in", exact=True)).to_be_visible()
             expect(page.get_by_role("alert")).to_have_text("Your session has ended. Sign in again.")
             if expanded:
-                page.wait_for_function("mapDisposalCheck.heldRequests >= 3")
+                page.wait_for_function("() => mapDisposalCheck.heldRequests >= 3")
                 check("collapse resize starts a real viewport draw", len(held) >= 3)
             expected_requests = len(held)
             before = page.evaluate(
@@ -200,7 +286,7 @@ def check_session_expiry(page: Page, base: str, out: Path) -> None:
             for route in held[1:]:
                 route.fulfill(json=data)
             page.wait_for_function(
-                """mapDisposalCheck.requests.every(request => request.settled)
+                """() => mapDisposalCheck.requests.every(request => request.settled)
                   && mapDisposalCheck.draws.every(draw => draw.settled)"""
             )
             result = page.evaluate(
@@ -629,6 +715,7 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             page.locator("#maplist-h").click()
             expect(page.locator(".maplist a").first).to_be_visible()
             check("coordinator manual list shortcut restores external list focus", True)
+            check_pending_navigation(page, out)
             check_session_expiry(page, base, out)
             check_enlarged_font(playwright, base, axe, out, reports)
             check(f"no uncaught JavaScript errors ({errors})", not errors)

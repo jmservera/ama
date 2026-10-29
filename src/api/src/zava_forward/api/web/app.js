@@ -1538,6 +1538,7 @@ function mapPanel(coordinator = null) {
   const slot = h("div", { class: "map-slot" }, box);
   const resize = () => map?.invalidateSize({ pan: false, animate: false });
   function expand() {
+    if (slot.inert) return;
     sidebar.prepend(homeCard);
     dialog.append(box);
     document.body.append(dialog);
@@ -1561,9 +1562,12 @@ function mapPanel(coordinator = null) {
     if (restore) toggle.focus({ preventScroll: true });
   }
   const dispose = () => {
+    slot.inert = true;
+    toggle.disabled = true;
     collapse(false);
     seq++;
     dialog.remove();
+    slot.remove();
     map?.remove();
     map = null;
     if (disposeMapPanel === dispose) disposeMapPanel = null;

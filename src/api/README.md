@@ -113,6 +113,8 @@ summary sits in the left panel. Escape closes the summary first; another Escape
 or **Exit expanded map** returns to the embedded view and its toggle. Filtering,
 failed refreshes and route changes remove obsolete cards. Map animations are
 disabled, including for reduced motion.
+Disposal immediately removes the map slot and makes its controls inactive,
+including while the destination case list is still loading.
 
 With the map or a home marker focused, unmodified arrow keys pan and `+`, `=`
 or `-` zoom the map, including Shift-generated `+`. Ctrl, Meta and Alt shortcuts
@@ -139,9 +141,12 @@ shortcuts from map/marker focus in both modes and exact ordinary/Shift-plus map
 zoom changes. Session-expiry checks hold overlapping fit
 responses, deliver a 401 before a successful response with bounds, and verify
 that neither that response nor a collapse-triggered resize redraw touches the
-disposed map. Enlarged-font coverage uses a 640px viewport and an actual 32px
-Chromium default font, checking sidebar/map geometry, overflow and summary
-close/exit behavior. Acquire the shared heavy-check lock
+disposed map. Each expiry scenario reloads the document to reset filters,
+authentication initialization and instrumentation. A pending-facets navigation
+check attempts to expand the obsolete map before All open cases renders and
+verifies no dialog or page scroll lock survives. Enlarged-font coverage uses a
+640px viewport and an actual 32px Chromium default font, checking sidebar/map
+geometry, overflow and summary close/exit behavior. Acquire the shared heavy-check lock
 nonblocking before execution. Automated results are not human
 assistive-technology, staff usability or full WCAG acceptance.
 
