@@ -1,0 +1,443 @@
+{
+  "task_id": "eb7ee1f8-42fd-48a8-9c24-a1cbebb99513",
+  "task_slug": "demo-sites-correction",
+  "source_sha": "77c87e0d76b827544fde9b2f2ce7dfbd9d879232",
+  "scope": "Local validation and anonymous HTTP only; no cloud mutation",
+  "live_deployment": "Blocked",
+  "authority_apply": "Parked",
+  "full_publication_gate": "Not run; prohibited az prerequisite",
+  "validator_sha256_at_export": "69d36c254fc2589bd8591e2ae1bf3674626ceeeb14bc744e93c6ae6ca9c8654a",
+  "commands": [
+    {
+      "name": "editable-setup",
+      "argv": [
+        "/tmp/mv/bin/python",
+        "-m",
+        "pip",
+        "install",
+        "--no-deps",
+        "--no-build-isolation",
+        "-e",
+        "/home/azureuser/source/ama-wt/redeploy-3/src/core",
+        "-e",
+        "/home/azureuser/source/ama-wt/redeploy-3/src/agents",
+        "-e",
+        "/home/azureuser/source/ama-wt/redeploy-3/src/api"
+      ],
+      "cwd": "/home/azureuser/source/ama-wt/redeploy-3",
+      "started": "2026-10-29T09:49:28.963896+00:00",
+      "seconds": 0.42,
+      "exit": 2,
+      "log": "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation/editable-setup.log",
+      "sha256": "2422d3447bd1c8b0367c4ba3e81dd872b6f7d77585e6c836d56bd5fcbb7c2761"
+    },
+    {
+      "name": "editable-setup",
+      "argv": [
+        "/tmp/mv/bin/python",
+        "-m",
+        "pip",
+        "install",
+        "--no-deps",
+        "-e",
+        "/home/azureuser/source/ama-wt/redeploy-3/src/core",
+        "-e",
+        "/home/azureuser/source/ama-wt/redeploy-3/src/agents",
+        "-e",
+        "/home/azureuser/source/ama-wt/redeploy-3/src/api"
+      ],
+      "cwd": "/home/azureuser/source/ama-wt/redeploy-3",
+      "started": "2026-10-29T09:51:14.768426+00:00",
+      "seconds": 7.08,
+      "exit": 0,
+      "log": "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-complete/editable-setup.log",
+      "sha256": "b22f0b3d090a5e8dc0d525a7704dd8408436e5f70f7feaa8ce5c88528b7d2df1"
+    },
+    {
+      "name": "core-ruff-lint",
+      "argv": [
+        "/tmp/mv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        ".",
+        "--no-cache"
+      ],
+      "cwd": "/home/azureuser/source/ama-wt/redeploy-3/src/core",
+      "started": "2026-10-29T09:51:21.847921+00:00",
+      "seconds": 0.12,
+      "exit": 0,
+      "log": "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-complete/core-ruff-lint.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "name": "core-ruff-format",
+      "argv": [
+        "/tmp/mv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        ".",
+        "--no-cache"
+      ],
+      "cwd": "/home/azureuser/source/ama-wt/redeploy-3/src/core",
+      "started": "2026-10-29T09:51:21.963839+00:00",
+      "seconds": 0.11,
+      "exit": 0,
+      "log": "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-complete/core-ruff-format.log",
+      "sha256": "54073445325370522f5e8514f811bc815389f5402f1e4358dc9ec12dc81a0a61"
+    },
+    {
+      "name": "core-mypy",
+      "argv": [
+        "/tmp/mv/bin/python",
+        "-m",
+        "mypy",
+        "--cache-dir",
+        "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-complete/mypy-core"
+      ],
+      "cwd": "/home/azureuser/source/ama-wt/redeploy-3/src/core",
+      "started": "2026-10-29T09:51:22.078778+00:00",
+      "seconds": 4.22,
+      "exit": 0,
+      "log": "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-complete/core-mypy.log",
+      "sha256": "1d5254de1f5cd2b65e2840c11867898bbc80efbab98f343299c70e0beddce4cc"
+    },
+    {
+      "name": "core-units",
+      "argv": [
+        "/tmp/mv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-q"
+      ],
+      "cwd": "/home/azureuser/source/ama-wt/redeploy-3/src/core",
+      "started": "2026-10-29T09:51:26.303396+00:00",
+      "seconds": 306.04,
+      "exit": 0,
+      "log": "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-complete/core-units.log",
+      "sha256": "0598d3effcfc0c9a3b74cf88dcfa6e66f79af22e5509051a74d0dda29ffcfbf8"
+    },
+    {
+      "name": "api-ruff-lint",
+      "argv": [
+        "/tmp/mv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        ".",
+        "--no-cache"
+      ],
+      "cwd": "/home/azureuser/source/ama-wt/redeploy-3/src/api",
+      "started": "2026-10-29T09:56:32.345486+00:00",
+      "seconds": 0.07,
+      "exit": 0,
+      "log": "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-complete/api-ruff-lint.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "name": "api-ruff-format",
+      "argv": [
+        "/tmp/mv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        ".",
+        "--no-cache"
+      ],
+      "cwd": "/home/azureuser/source/ama-wt/redeploy-3/src/api",
+      "started": "2026-10-29T09:56:32.411202+00:00",
+      "seconds": 0.07,
+      "exit": 0,
+      "log": "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-complete/api-ruff-format.log",
+      "sha256": "b642d2f0cc49caff9e609808fb9c82854fc174b2f54b459a0d09dbe4c0f837ab"
+    },
+    {
+      "name": "api-mypy",
+      "argv": [
+        "/tmp/mv/bin/python",
+        "-m",
+        "mypy",
+        "--cache-dir",
+        "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-complete/mypy-api"
+      ],
+      "cwd": "/home/azureuser/source/ama-wt/redeploy-3/src/api",
+      "started": "2026-10-29T09:56:32.477261+00:00",
+      "seconds": 4.58,
+      "exit": 0,
+      "log": "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-complete/api-mypy.log",
+      "sha256": "ff08737d2dbdc175d8d227bea7c88e0687bf85b2e035433b3ef511b998c4a56c"
+    },
+    {
+      "name": "api-units",
+      "argv": [
+        "/tmp/mv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-q"
+      ],
+      "cwd": "/home/azureuser/source/ama-wt/redeploy-3/src/api",
+      "started": "2026-10-29T09:56:37.053090+00:00",
+      "seconds": 0.42,
+      "exit": 1,
+      "log": "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-complete/api-units.log",
+      "sha256": "5051e68df90ccbd3adabab916687e39330bc703a84ff51278744d085916501bd"
+    },
+    {
+      "name": "axe-fetch",
+      "argv": [
+        "curl",
+        "--fail",
+        "--silent",
+        "--show-error",
+        "--max-time",
+        "60",
+        "https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.3/axe.min.js",
+        "--output",
+        "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-complete/axe-4.10.3.min.js"
+      ],
+      "cwd": "/home/azureuser/source/ama-wt/redeploy-3",
+      "started": "2026-10-29T09:56:37.468885+00:00",
+      "seconds": 0.11,
+      "exit": 0,
+      "log": "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-complete/axe-fetch.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "employee_chat-browser",
+      "argv": [
+        "/tmp/mv/bin/python",
+        "-m",
+        "checks.employee_chat_browser_check",
+        "--axe",
+        "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-complete/axe-4.10.3.min.js",
+        "--out",
+        "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-complete/employee_chat-browser"
+      ],
+      "cwd": "/home/azureuser/source/ama-wt/redeploy-3/src/api",
+      "started": "2026-10-29T09:56:37.585285+00:00",
+      "seconds": 6.49,
+      "exit": 0,
+      "log": "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-complete/employee_chat-browser.log",
+      "sha256": "2816f656365ff3a79316cb1961de393d704d8acb103ed97c35d4f9ee27a7ae18"
+    },
+    {
+      "name": "resident_assistant-browser",
+      "argv": [
+        "/tmp/mv/bin/python",
+        "-m",
+        "checks.resident_assistant_browser_check",
+        "--axe",
+        "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-complete/axe-4.10.3.min.js",
+        "--out",
+        "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-complete/resident_assistant-browser"
+      ],
+      "cwd": "/home/azureuser/source/ama-wt/redeploy-3/src/api",
+      "started": "2026-10-29T09:56:44.071219+00:00",
+      "seconds": 14.05,
+      "exit": 0,
+      "log": "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-complete/resident_assistant-browser.log",
+      "sha256": "4db6a7643b04baa6abf111e6bd7716acc117986b792c1e59a14852760f705127"
+    },
+    {
+      "name": "sql-container-start",
+      "argv": [
+        "docker",
+        "run",
+        "--detach",
+        "--rm",
+        "--name",
+        "ama-correction-eb7ee1f8-sql",
+        "--label",
+        "ama.rpi.task=eb7ee1f8-42fd-48a8-9c24-a1cbebb99513",
+        "-e",
+        "ACCEPT_EULA=Y",
+        "-e",
+        "MSSQL_SA_PASSWORD",
+        "-p",
+        "127.0.0.1::1433",
+        "mcr.microsoft.com/mssql/server:2022-latest"
+      ],
+      "cwd": "/home/azureuser/source/ama-wt/redeploy-3",
+      "started": "2026-10-29T09:56:58.123332+00:00",
+      "seconds": 0.92,
+      "exit": 0,
+      "log": "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-complete/sql-container-start.log",
+      "sha256": "29939cf6cc6748225926a810463eef62d1ecf0f2492551756ab9683d276c995d"
+    },
+    {
+      "name": "sql-port",
+      "argv": [
+        "docker",
+        "inspect",
+        "--format",
+        "{{(index (index .NetworkSettings.Ports \"1433/tcp\") 0).HostPort}}",
+        "ama-correction-eb7ee1f8-sql"
+      ],
+      "cwd": "/home/azureuser/source/ama-wt/redeploy-3",
+      "started": "2026-10-29T09:56:59.042612+00:00",
+      "seconds": 0.03,
+      "exit": 0,
+      "log": "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-complete/sql-port.log",
+      "sha256": "5c220a96d2842ac39bbe3e0d5cad8ef5d789e9231daf9b5e3fcd65a8e1911d47"
+    },
+    {
+      "name": "sql-container-cleanup",
+      "argv": [
+        "docker",
+        "rm",
+        "--force",
+        "ama-correction-eb7ee1f8-sql"
+      ],
+      "cwd": "/home/azureuser/source/ama-wt/redeploy-3",
+      "started": "2026-10-29T09:56:59.111665+00:00",
+      "seconds": 0.77,
+      "exit": 0,
+      "log": "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-complete/sql-container-cleanup.log",
+      "sha256": "04968e4b3c04f46e30ff87d8090eab631308cce20a5de22791f22e4231d6b2a3"
+    },
+    {
+      "name": "api-units",
+      "argv": [
+        "/tmp/mv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-q"
+      ],
+      "cwd": "/home/azureuser/source/ama-wt/redeploy-3/src/api",
+      "started": "2026-10-29T09:57:26.939033+00:00",
+      "seconds": 462.81,
+      "exit": 0,
+      "log": "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-corrections/api-units.log",
+      "sha256": "3b19e25f273388067840b2000b26ff776f40a4274127e9140314f8704c12b28a"
+    },
+    {
+      "name": "sql-container-start",
+      "argv": [
+        "docker",
+        "run",
+        "--detach",
+        "--rm",
+        "--name",
+        "ama-correction-eb7ee1f8-sql",
+        "--label",
+        "ama.rpi.task=eb7ee1f8-42fd-48a8-9c24-a1cbebb99513",
+        "-e",
+        "ACCEPT_EULA=Y",
+        "-e",
+        "MSSQL_SA_PASSWORD",
+        "-p",
+        "127.0.0.1::1433",
+        "mcr.microsoft.com/mssql/server:2022-latest"
+      ],
+      "cwd": "/home/azureuser/source/ama-wt/redeploy-3",
+      "started": "2026-10-29T10:05:09.749685+00:00",
+      "seconds": 1.67,
+      "exit": 0,
+      "log": "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-corrections/sql-container-start.log",
+      "sha256": "a5e4eae13a09b08af543930666867acc445ae43d69cc11042516a483f095e1ae"
+    },
+    {
+      "name": "sql-port",
+      "argv": [
+        "docker",
+        "inspect",
+        "--format",
+        "{{(index (index .NetworkSettings.Ports \"1433/tcp\") 0).HostPort}}",
+        "ama-correction-eb7ee1f8-sql"
+      ],
+      "cwd": "/home/azureuser/source/ama-wt/redeploy-3",
+      "started": "2026-10-29T10:05:11.419180+00:00",
+      "seconds": 0.03,
+      "exit": 0,
+      "log": "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-corrections/sql-port.log",
+      "sha256": "3b3fad1a77b39477add792f708e0cd5f8675c4686b0d8010820f13b1a081994e"
+    },
+    {
+      "name": "core-resident-real-sql",
+      "argv": [
+        "/tmp/mv/bin/python",
+        "-m",
+        "unittest",
+        "test_resident_showcase_sql",
+        "-v"
+      ],
+      "cwd": "/home/azureuser/source/ama-wt/redeploy-3/src/core",
+      "started": "2026-10-29T10:05:23.560989+00:00",
+      "seconds": 20.15,
+      "exit": 0,
+      "log": "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-corrections/core-resident-real-sql.log",
+      "sha256": "a56bb8808bf48587a01411b1aba40657a5bd7c54fe5fc861e237ec1ed7663c09"
+    },
+    {
+      "name": "resident-real-sql-browser",
+      "argv": [
+        "/tmp/mv/bin/python",
+        "-m",
+        "checks.resident_demo_browser_check"
+      ],
+      "cwd": "/home/azureuser/source/ama-wt/redeploy-3/src/api",
+      "started": "2026-10-29T10:05:43.715613+00:00",
+      "seconds": 8.94,
+      "exit": 0,
+      "log": "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-corrections/resident-real-sql-browser.log",
+      "sha256": "cc6aa2b3652fbf83301778ac9acfcd359a3952cd195a562482b278131d5a926d"
+    },
+    {
+      "name": "sql-container-cleanup",
+      "argv": [
+        "docker",
+        "rm",
+        "--force",
+        "ama-correction-eb7ee1f8-sql"
+      ],
+      "cwd": "/home/azureuser/source/ama-wt/redeploy-3",
+      "started": "2026-10-29T10:05:52.651399+00:00",
+      "seconds": 0.87,
+      "exit": 0,
+      "log": "/home/azureuser/.copilot/session-state/eb7ee1f8-42fd-48a8-9c24-a1cbebb99513/files/validation-corrections/sql-container-cleanup.log",
+      "sha256": "04968e4b3c04f46e30ff87d8090eab631308cce20a5de22791f22e4231d6b2a3"
+    }
+  ],
+  "http_observations": [
+    {
+      "app": "ca-resident-demo",
+      "path": "/health",
+      "status": 404,
+      "bytes": 23,
+      "curl_exit": 0
+    },
+    {
+      "app": "ca-resident-demo",
+      "path": "/healthz",
+      "status": 200,
+      "bytes": 50,
+      "curl_exit": 0
+    },
+    {
+      "app": "ca-cutover-test-demo-api",
+      "path": "/health",
+      "status": 401,
+      "bytes": 0,
+      "curl_exit": 0
+    },
+    {
+      "app": "ca-cutover-test-demo-api",
+      "path": "/healthz",
+      "status": 200,
+      "bytes": 2,
+      "curl_exit": 0
+    }
+  ]
+}
