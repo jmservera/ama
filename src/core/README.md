@@ -156,7 +156,10 @@ source hashes/versions/locators, attachment references and reviewer history.
 They are not reviewed application/claim exports or evidence of eligibility.
 
 Source/schema freshness is evaluated on reads/actions, not pushed into a
-downstream approval graph. A source change marks only its bound working fields
+downstream approval graph. Each report checks an exact source ID, version,
+content hash and kind once, reusing its freshness result for shared fields
+only within that report. Later reports check afresh; no cross-request cache
+is retained. A source change marks only its bound working fields
 stale; a new schema version affects all fields bound to that schema. Historical
 reviews/values and recorded diagnostic snapshots remain intact. This is not
 full FR-043/AC-051 rule/calculation/pack-review/approval stale propagation.

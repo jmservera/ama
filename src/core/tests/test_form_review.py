@@ -95,6 +95,73 @@ class FormReview(unittest.TestCase):
             ),
         )
 
+    def prepare_shared_source(self, store: Any) -> tuple[Any, Any, Any]:
+        draft, epc, other = self.prepare(store)
+        request = batch(epc["source"]["id"])
+        request["candidates"] = [dict(field_id="area", raw_value="D", locator=dict(start=0, end=1))]
+        area = forms.stage_candidates(store, self.actor, "ZF-1", request)
+        draft = self.review(store, draft, epc)
+        draft = self.review(store, draft, area, "area", "correct", 12)
+        return draft, epc, other
+
+    def test_shared_source_read_once_per_report_and_rechecked_on_later_reports(self) -> None:
+        for store in self.stores:
+            draft, epc, _ = self.prepare_shared_source(store)
+            for operation in ("view", "diagnose"):
+                with self.subTest(store=type(store).__name__, operation=operation):
+                    with patch.object(store.docstore, "get", wraps=store.docstore.get) as read:
+                        for changed in (False, True):
+                            if changed:
+                                read.return_value = b"SYN changed bytes without metadata changes"
+                            if operation == "view":
+                                report = form_review.view(store, self.actor, "ZF-1")["drafts"][0]
+                            else:
+                                report = form_review.action(
+                                    store,
+                                    self.actor,
+                                    "ZF-1",
+                                    dict(
+                                        action="diagnose",
+                                        draft_id=draft["draft_id"],
+                                        expected_version=draft["input_version"],
+                                    ),
+                                )
+                                draft = report
+                            self.assertEqual(read.call_count, 2 if changed else 1)
+                            read.assert_called_with("ZF-1", epc["source"]["id"])
+                            self.assertEqual(
+                                report["stale_fields"], ["area", "epc"] if changed else []
+                            )
+                            self.assertEqual(
+                                report["fields"]["epc"]["effective_state"],
+                                "Stale" if changed else "Accepted",
+                            )
+                            self.assertEqual(
+                                report["fields"]["area"]["effective_state"],
+                                "Stale" if changed else "Corrected",
+                            )
+
+    def test_report_freshness_separates_exact_source_identity(self) -> None:
+        for store in self.stores:
+            _, epc, other = self.prepare_shared_source(store)
+            for key, value in (
+                ("id", other["source"]["id"]),
+                ("version", epc["source"]["version"] + 1),
+                ("content_sha256", "0" * 64),
+                ("kind", "Survey"),
+            ):
+                with self.subTest(store=type(store).__name__, key=key), store.lock:
+                    case = store._case("ZF-1")
+                    draft = copy.deepcopy(case["form_reviews"][0])
+                    draft["fields"]["area"]["evidence"]["source"][key] = value
+                    with patch.object(
+                        form_review, "_current", wraps=form_review._current
+                    ) as current:
+                        report = form_review._report(store, case, draft)
+                    self.assertEqual(current.call_count, 2)
+                    self.assertEqual(report["stale_fields"], ["area"])
+                    self.assertEqual(report["fields"]["epc"]["effective_state"], "Accepted")
+
     def test_isolated_accept_correct_reject_history_and_held_inputs_survive_reopen(self) -> None:
         for store in self.stores:
             draft, epc, area = self.prepare(store)

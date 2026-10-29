@@ -187,11 +187,19 @@ def _report(store: Any, case: Record, draft: Record) -> Record:
     issues: list[Record] = []
     confirmed: Record = {}
     stale = []
+    freshness: dict[tuple[str, int, str, str], bool] = {}
     for field in schema["fields"]:
         fid = field["id"]
         row = fields[fid]
         evidence = row["evidence"]
-        if not schema_current or evidence is not None and not _current(store, case, evidence):
+        source_current = True
+        if schema_current and evidence is not None:
+            source = evidence["source"]
+            key = (source["id"], source["version"], source["content_sha256"], source["kind"])
+            if key not in freshness:
+                freshness[key] = _current(store, case, evidence)
+            source_current = freshness[key]
+        if not schema_current or not source_current:
             row["effective_state"] = "Stale"
             stale.append(fid)
         else:
