@@ -37,6 +37,30 @@ private production profile. They do not authorize deployment.
 
 Optional parameters: `teamsWebhookUrl`, `evidenceStore`, `sharePointSiteId`, `monthlyBudget`. See the M365 section of the ADR.
 
+## Monitoring Authoring Candidate (Refs #146)
+
+The [operator runbooks and issue gap matrix](./monitoring-runbooks.md) catalogue
+existing rules/budget notifications and new disabled job/IoT alert candidates.
+The [workbook source](./monitoring-workbook.json) provides aggregate
+request/error/p95 and availability-test query panels, with configured budget
+separate from Unknown actual cost and missing AI usage/reconciliation.
+`operationsWorkbookId` is the resource output; no deployment, portal rendering
+or operating acceptance is claimed.
+
+Both telemetry queries union the bare table reference with a typed empty
+datatable before projecting fields, so an absent table can use the fallback
+schema and report Insufficient. `tests/test_monitoring_workbook.py` checks this
+source shape for both panels; it does not execute KQL against Azure.
+
+`enableCandidateMonitoringAlerts` defaults false. Even true keeps candidates
+disabled when `monitoringApprovalReference` is empty/whitespace; a nonempty string
+is not proof of actual named-human approval. Actual primary/backup owners,
+thresholds/windows/recipients, privacy exclusion, safe signal producers and
+notification/suspension drills remain activation gates. Existing alerts are not
+reapproved or disabled by this switch. The budget notifies above 80 percent
+actual and 100 percent forecast; it is not a hard cap or AI dispatch control.
+This source-only delivery uses Refs #146 and does not close its criteria.
+
 ## Deploy
 
 ### Bounded Private Publisher Capacity Attempt (2026-10-19, Refs #360)

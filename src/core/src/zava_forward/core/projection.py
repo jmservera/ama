@@ -20,7 +20,7 @@ from copy import deepcopy
 from typing import Any
 
 from .controls import RESIDENT_ROLES, RESIDENT_VIEW_ROLES
-from .resident_decisions import RESIDENT_FIELDS, case_measures, current_context, resident_gate
+from .resident_decisions import INTAKE_FIELDS, RESIDENT_FIELDS, case_measures, current_context, resident_gate
 from .stock import support_status
 
 CONTRACTOR = "Contractor"
@@ -183,6 +183,8 @@ def redact_staff_detail(user, d):
             REDACTED if adjustment != "None" else "None")
     d.update(resident_data)
     if not appointment_evidence_visible(user):
+        for key in INTAKE_FIELDS:
+            d.pop(key, None)
         d.pop("affected_challenges", None)
         d.pop("challenge_targets", None)
     if user.get("role") not in FINANCE_VIEW:

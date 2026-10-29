@@ -97,6 +97,133 @@ class ResidentApi(unittest.TestCase):
     def action(self, action: str, actor: str = "sam", **kw: Any) -> tuple[int, Any]:
         return self.call("/api/cases/ZF-1/resident", actor, dict(action=action, **kw))
 
+    def intake_payload(self, tenure: bool = False, **changes: Any) -> dict[str, Any]:
+        common = dict(
+            case_id="ZF-1",
+            source="SYN-INTAKE-SOURCE-PRIVATE",
+            owner="sam@example.test",
+            next_update="2099-01-01",
+        )
+        if tenure:
+            body = dict(
+                common,
+                action="tenure_intake",
+                household_ref="Unknown",
+                expected_version=0,
+                reported_tenure="Unknown",
+                reported_lease_interest="SYN-LEASE-PRIVATE",
+                identity_state="Ambiguous",
+            )
+        else:
+            body = dict(
+                common,
+                action="nomination_record",
+                kind="Self-referral",
+                reported_subject_ref="SYN-UNVERIFIED",
+                account="SYN-ACCOUNT-PRIVATE",
+                channel="Phone",
+                acknowledgement_ref="SYN staff recorded acknowledgement",
+                non_digital_route="SYN Phone or letter to the staffed office.",
+                hazard_concern=False,
+            )
+        return dict(body, **changes)
+
+    def test_http_nomination_manual_routes_correction_and_no_automatic_decision(self) -> None:
+        before = copy.deepcopy(self.store.cases["ZF-1"])
+        for channel in ("Digital", "Phone", "Letter", "In person", "Trusted intermediary"):
+            code, detail = self.call(
+                "/api/cases/ZF-1/resident", "sam", self.intake_payload(channel=channel)
+            )
+            self.assertEqual(code, 200, detail)
+            self.assertEqual(detail["nomination_records"][-1]["original"]["channel"], channel)
+        code, result = self.action(
+            "nomination_correct",
+            case_id="ZF-1",
+            id=detail["nomination_records"][0]["id"],
+            expected_version=1,
+            reported_subject_ref="SYN-CORRECTED",
+            account="SYN competing evidence",
+            source="SYN correction evidence",
+            channel="Letter",
+            next_update="2099-01-02",
+            challenge_id=None,
+        )
+        self.assertEqual(code, 200, result)
+        record = result["nomination_records"][0]
+        self.assertEqual(record["version"], 2)
+        self.assertEqual(record["original"]["reported_subject_ref"], "SYN-UNVERIFIED")
+        self.assertEqual(record["corrections"][0]["reported_subject_ref"], "SYN-CORRECTED")
+        current = copy.deepcopy(self.store.cases["ZF-1"])
+        current.pop("nomination_records")
+        self.assertEqual(current, before)
+
+    def test_http_tenure_unknown_hold_and_untrusted_fields_refused(self) -> None:
+        payload = self.intake_payload(tenure=True)
+        for invalid in (
+            dict(payload, case_id="ZF-2"),
+            dict(payload, verification="Verified"),
+            dict(payload, expected_version=True),
+            dict(payload, identity_state="Verified"),
+            self.intake_payload(account="X" * 4001),
+            self.intake_payload(hazard_concern=True),
+        ):
+            before = copy.deepcopy(self.store.cases["ZF-1"])
+            audit = list(self.store.audit_entries())
+            self.assertEqual(self.call("/api/cases/ZF-1/resident", "sam", invalid)[0], 400)
+            self.assertEqual(self.store.cases["ZF-1"], before)
+            self.assertEqual(list(self.store.audit_entries()), audit)
+        self.context()
+        code, detail = self.call("/api/cases/ZF-1/resident", "sam", payload)
+        self.assertEqual(code, 200, detail)
+        self.assertTrue(detail["tenure_review_required"])
+        self.assertEqual(detail["tenure_reports"][0]["decision_route"], "Unknown")
+        self.assertTrue(any("Tenure and lease identity" in item for item in detail["gate"]))
+        self.assertEqual(
+            self.action(
+                "scope_record",
+                measure="Loft insulation",
+                design_version=1,
+                scope="SYN changed scope",
+                source="SYN",
+            )[0],
+            400,
+        )
+        self.assertEqual(self.call("/api/cases/ZF-1/resident", "sam", payload)[0], 409)
+
+    def test_http_intake_projection_current_registry_and_export_canaries(self) -> None:
+        for tenure in (False, True):
+            payload = self.intake_payload(tenure=tenure)
+            for actor in ("rex", "kim", "bea"):
+                self.assertEqual(self.call("/api/cases/ZF-1/resident", actor, payload)[0], 403)
+            self.assertEqual(self.call("/api/cases/ZF-1/resident", "sam", payload)[0], 200)
+        cached = copy.deepcopy(self.store.staff["sam@example.test"])
+        for actor in ("rex", "kim", "bea"):
+            code, detail = self.call("/api/cases/ZF-1", actor)
+            self.assertEqual(code, 200, detail)
+            self.assertNotIn("nomination_records", detail)
+            self.assertNotIn("tenure_reports", detail)
+        for registered in (dict(cached, role="Retrofit Coordinator"), None):
+            if registered is None:
+                self.store.db.execute("DELETE FROM staff WHERE email=?", (cached["email"],))
+            else:
+                self.store.db.execute(
+                    "UPDATE staff SET body=? WHERE email=?",
+                    (json.dumps(registered), cached["email"]),
+                )
+            code, denied = self.call("/api/cases/ZF-1", "sam")
+            self.assertEqual(code, 200, denied)
+            self.assertNotIn("nomination_records", denied)
+            self.assertNotIn("tenure_reports", denied)
+            self.assertNotEqual(
+                self.call("/api/cases/ZF-1/resident", "sam", self.intake_payload())[0], 200
+            )
+            for canary in ("SYN-ACCOUNT-PRIVATE", "SYN-LEASE-PRIVATE", "SYN-INTAKE-SOURCE-PRIVATE"):
+                self.assertNotIn(canary, json.dumps(denied))
+        code, csv = self.call("/api/cases.csv", "pam")
+        self.assertEqual(code, 200, csv)
+        for canary in ("SYN-ACCOUNT-PRIVATE", "SYN-LEASE-PRIVATE", "SYN-INTAKE-SOURCE-PRIVATE"):
+            self.assertNotIn(canary, csv)
+
     def context(self) -> None:
         self.assertEqual(
             self.call(
@@ -515,7 +642,7 @@ class ResidentApi(unittest.TestCase):
                 page.locator("#pw").fill("synthetic-only")
                 page.locator("button[type=submit]").click()
                 page.locator("#account").wait_for()
-                page.goto(self.base + "/app#/case/ZF-1")
+                page.goto(self.base + "/app#/case/ZF-1?tab=resident")
                 page.get_by_role(
                     "heading", name="Resident-update commitment", exact=True
                 ).wait_for()

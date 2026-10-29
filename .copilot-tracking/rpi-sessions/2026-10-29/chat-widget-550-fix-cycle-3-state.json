@@ -1,0 +1,68 @@
+{
+  "task_id": "issue-550-pr-556-fix-cycle-3",
+  "task_slug": "chat-widget-550-fix-cycle-3",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-29/chat-widget-550-fix-cycle-3-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-29/chat-widget-550-fix-cycle-3-plan.md",
+    "details": ".copilot-tracking/details/2026-10-29/chat-widget-550-fix-cycle-3-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-29/chat-widget-550-fix-cycle-3-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-29/chat-widget-550-fix-cycle-3-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-29/chat-widget-550-fix-cycle-3-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run the full RPI loop without routine phase prompts; commit locally only.",
+      "status": "confirmed",
+      "evidence": "Explicit user request 2026-10-29; no push, no az, no latest.json edits, source in src/ only."
+    },
+    {
+      "decision": "Reuse feat/chat-widget-550 for active PR 556.",
+      "status": "confirmed",
+      "evidence": "Clean status, matching OPEN PR, git pull --rebase already up to date at 34f7f8fc."
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready. Sample current follow eligibility at each loading visibility change.",
+      "status": "accepted",
+      "evidence": "Research C1-C6; stale send-time flags rejected to preserve intervening reader interaction."
+    },
+    {
+      "decision": "One critique executed, verdict Revise; PC-001 directly resolved in plan/details by guarded status updates in both adapters and error-layout preservation.",
+      "status": "resolved",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-29/chat-widget-550-fix-cycle-3-plan-critique.md; six scoped source files, no second critique or user decision."
+    },
+    {
+      "decision": "P01/P02 complete; final 109 chat tests zero skips, Ruff/format/node/mypy and two-site browser pass; three negative controls reject regressions.",
+      "status": "verified",
+      "evidence": "Dated changes record and external files/fix-cycle-3 logs. Browser attempt 1 failure preserved; attempt 2 passes after ui.status.id correction."
+    },
+    {
+      "decision": "Exactly one independent Review executed; outcome Conformant, no defects or material findings.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/chat-widget-550-fix-cycle-3-review.md; six-file source boundary against 34f7f8fc, not exact-head publication approval."
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Bounded local-only cycle is complete in the containing commit. Await owner direction; no push, publication gate or child task is authorized."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Separately authorized publication gate and exact-head assessment",
+      "rationale": "Required before publishing PR updates; excluded by the current local-only request.",
+      "evidence": "Plan Follow-Up Items and independent Review publication boundary."
+    },
+    {
+      "rank": 2,
+      "task": "Human and live acceptance before broader UX or operational claims",
+      "rationale": "Synthetic Chromium checks do not establish human assistive-technology or live service acceptance.",
+      "evidence": "Independent Review limitations and browser-attempt2/results.json."
+    }
+  ]
+}

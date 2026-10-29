@@ -45,8 +45,8 @@ def neutralise(text, limit=2000):
     return text.replace(OPEN, "< <UNTRUSTED").replace(CLOSE, "UNTRUSTED > >")
 
 
-def block(label, text):
-    return f"{OPEN} {label}\n{neutralise(text)}\n{CLOSE}"
+def block(label, text, limit=2000):
+    return f"{OPEN} {label}\n{neutralise(text, limit)}\n{CLOSE}"
 
 
 class ChatIsolation:
@@ -65,8 +65,13 @@ class ChatIsolation:
             if rec is None or not projection.allowed(dict(rec), "chat"):
                 raise ChatForbidden("Your role does not include chat.")
             return rec
-        rec = self.store.staff.get(key) or next((s for s in self.store.data["staff"] if s["email"].lower() == key), None)
-        if rec is None or not projection.allowed(dict(rec), "chat"):
+        if hasattr(self.store, "db"):
+            with self.store.dblock:
+                row = self.store.db.execute("SELECT body FROM staff WHERE email=?", (key,)).fetchone()
+            rec = json.loads(row[0]) if row else None
+        else:
+            rec = self.store.staff.get(key) or next((s for s in self.store.data["staff"] if s["email"].lower() == key), None)
+        if rec is None or rec.get("disabled") or rec.get("active") is False or not projection.allowed(dict(rec), "chat"):
             raise ChatForbidden("Your role does not include chat.")
         return dict(rec)
 

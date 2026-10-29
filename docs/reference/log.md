@@ -8104,3 +8104,53 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   #440 remain unmet. Publication is separately blocked by the mandatory
   full-gate requirement versus the caller's explicit no-full-gate limit.
   No cloud deployment, model call, private dataset access or approval occurred.
+## [2026-10-27] query | Bounded staff chat and draft privacy evidence
+
+* Updated [DPIA draft](./research/chat-memory-dpia.md) and its index entry:
+  general staff warning is now server-sourced and described at the question,
+  both HTTP turn routes share cited/refusal/admission handling, and neither
+  prompts retained memory before its human decision.
+* Added bounded context and content-free per-turn usage evidence to the
+  [API contract](../../src/api/README.md#staff-chat-hardening-2026-10-27-157)
+  and [shared evaluator](../../src/agents/README.md#chat-consumption-evidence-2026-10-27-164).
+  Reconciled ADR 0004's stale no-implementation statement without changing its
+  accepted direction or granting activation.
+* Local scripted poisoning/injection coverage and Chromium DOM/keyboard checks
+  are engineering evidence, not independent human, serving-model or legal
+  acceptance. The known unsupported-claim/valid-citation failure stays visible.
+* No retention number, lawful basis, staff-notice/DPIA approval, provider
+  transfer position, break-glass policy, threshold or role budget is invented.
+  #157/#162/#159/#164/#163 remain Refs; #440 stabilization and human decisions
+  prevent whole-parent acceptance.
+
+## [2026-10-27] query | Resident content audit and assisted task designs (#153/#154)
+
+* Extended [content standard](./research/ux/content-standard.md) with a dated
+  core/supporting-surface inventory, dynamic-message and visible stored-value
+  residuals, accountable follow-up roles and an honest acceptance matrix.
+* Corrected stale reviewer-appointment wording using the #153 owner comment:
+  Juan Manuel Servera is appointed; actual exact-text review is not evidenced.
+* Extended [resident journeys](./research/ux/customer-journeys/residents.md)
+  with six task flows/text wireframes, individual non-digital alternatives,
+  language/literacy/adjustment and safe-contact rules, scoped representative
+  briefing/actions, expiry/revocation exceptions and Not run #155 scripts.
+* Indexed the evidence and made bounded existing-web draft/proposal,
+  representative-date and time-capture copy clarifications with regressions.
+  Fluent 2, native semantics, non-colour signals and reduced motion remain.
+  No live contact, portal implementation, operational Legal/DPO decision,
+  human usability/AT acceptance or whole-issue closure is claimed.
+## [2026-10-27] ingest | Source-only monitoring candidates (Refs #146)
+
+* Added [operator runbooks and the complete issue evidence/gap matrix](../../infra/monitoring-runbooks.md),
+  source-only job/IoT metric alert candidates and an aggregate operations
+  workbook; updated infra navigation and this knowledge-base index.
+* Corrected the ledger missing-success rule's outer query range to 26 hours.
+  Existing alert names, thresholds and budget notification conditions are
+  preserved; budget notification is not a hard cap.
+* New candidates default disabled; proposed roles are not named appointments.
+  Actual owners/live thresholds, privacy exclusion, poison-queue and AI/harm
+  signal integration, same-period billing/price reconciliation and accepted
+  notification/suspension drills remain unresolved.
+* Workbook missing data is Insufficient/Blocked and actual cost/AI metering
+  remains Unknown/unreconciled. Source definitions and local checks are not a
+  deployment, live approval, SLO claim or issue acceptance.

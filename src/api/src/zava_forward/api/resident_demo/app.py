@@ -45,6 +45,11 @@ ASSETS = {
     "/demo.js": ("demo.js", "text/javascript; charset=utf-8"),
     "/assistant.js": ("assistant.js", "text/javascript; charset=utf-8"),
 }
+SHARED_ASSETS = {
+    "/chat-widget.js": ("chat-widget.js", "text/javascript; charset=utf-8"),
+    "/chat-widget.css": ("chat-widget.css", "text/css; charset=utf-8"),
+}
+SHARED_WEB = Path(__file__).parent.parent / "web"
 SESSION_COOKIE = "__Host-zfdemo"
 CSRF_COOKIE = "__Host-zfdemo-csrf"
 CSRF_HEADER = "X-CSRF-Token"
@@ -292,7 +297,10 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
             if app.expired:
                 self._json(503, dict(error="This synthetic showcase has ended.", banner=rs.BANNER))
                 return
-            if self.command in ("GET", "HEAD") and path in ASSETS:
+            if self.command in ("GET", "HEAD") and path in SHARED_ASSETS:
+                name, ctype = SHARED_ASSETS[path]
+                self._send(200, (SHARED_WEB / name).read_bytes(), ctype)
+            elif self.command in ("GET", "HEAD") and path in ASSETS:
                 name, ctype = ASSETS[path]
                 self._send(200, (WEB / name).read_bytes(), ctype)
             elif self.command in ("GET", "HEAD") and path == "/demo/session":

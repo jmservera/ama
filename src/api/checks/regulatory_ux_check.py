@@ -296,10 +296,11 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             expect(page.locator("#alerts-plain-mode")).to_be_focused()
             page.get_by_role("tab", name="AI assistance", exact=False).press("Enter")
             keyboard_activate(page, "#chat-panel > summary")
-            expect(page.locator("#chat-panel > .muted")).to_contain_text(
-                "AI suggestion, not approved"
-            )
-            expect(page.locator("#chat-panel > .muted")).to_contain_text(
+            disclaimer = page.locator("#chat-panel > summary + p.muted")
+            expect(disclaimer).to_have_count(1)
+            expect(disclaimer).to_be_visible()
+            expect(disclaimer).to_contain_text("AI suggestion, not approved")
+            expect(disclaimer).to_contain_text(
                 "it can only request a proposal that someone else reviews"
             )
             keyboard_activate(page, "#regulatory-chat > summary", "Space")
