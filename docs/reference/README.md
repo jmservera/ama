@@ -82,9 +82,12 @@ For #198, the [rubric src counting reconciliation](../architecture/cutover-evide
 records the 47/100 pre-migration baseline, carried migration snapshots and
 actual #499 retirement score of 77/100 against 77/100. Registry removals
 already merged in #295/#300/#302; source/tests/manifests/Dockerfiles are counted
-without extra globs. Local test reassessment repairs seed/trigger assumptions
-but retains one unrelated deck-selection failure and seven missing-runtime
-skips. Missing fresh historical comparisons and the original registry sequencing
+without extra globs. The original 2026-10-27 test reassessment repaired
+seed/trigger assumptions but retained one unrelated deck-selection failure
+and seven missing-runtime skips. The 2026-10-29 integration keeps main's
+rubric and scenario manifest, not those original rubric edits; historical
+test counts are not current-candidate results.
+Missing fresh historical comparisons and the original registry sequencing
 remain acceptance gaps; no migration-attributed gain or whole-issue closure
 is inferred.
 

@@ -8206,3 +8206,15 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   Thirty-one migration-targeted checks pass. No full gate, cloud, private data
   or scorer dispatch. Missing historic comparisons and prescribed sequence
   remain explicit acceptance gaps; this delivery references rather than closes.
+
+## [2026-10-29] update | PR #507 main integration, Refs #198
+
+* Rebased onto main `5653547507f3056f09a726a18516237728da5e5b`,
+  retaining both sides of the cut-over evidence pack, KB index and this
+  append-only log. Earlier entries and original RPI outcomes remain unchanged.
+* Kept main's complete rubric tree and scenario manifest at the owner's
+  direction. Qualified the reconciliation and index so original rubric
+  repairs and test counts are not presented as the rebased candidate's delta.
+* Corrected the index's duplicate date metadata while retaining its current
+  date. No application source, workflow, score, Azure resource or private
+  dataset changed; no push, issue acceptance or hosted-CI result is claimed.

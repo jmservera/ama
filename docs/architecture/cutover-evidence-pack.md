@@ -1,7 +1,7 @@
 ---
 title: Source cut-over evidence pack
 description: Dated parity, private SQL and public edge proof with remaining owner gates
-ms.date: 2026-10-27
+ms.date: 2026-10-29
 ms.topic: reference
 ---
 
@@ -2114,6 +2114,18 @@ row, historical retirement boundary and earlier failed/unchecked evidence.
 It supplies subsequently retrieved evidence, not retrospective sign-off or
 whole-issue closure. Inspected base: `09099ecd1a66ee9d37ad993707d1f2eda07cdfd4`.
 No model scoring was dispatched, no private dataset read and no score edited.
+
+### Main integration qualification (2026-10-29)
+
+Refs #198, PR #507. Rebased onto main
+`5653547507f3056f09a726a18516237728da5e5b`, preserving both additive
+documentation histories. At the owner's direction, the entire rubric tree
+and scenario manifest now use that main revision's bytes, including its
+recorded score and tests. The 2026-10-27 repairs, guide changes and test counts
+below describe the original candidate, not the rebased executable delta:
+those rubric edits are not retained. Original critique, Review and historical
+acceptance gaps remain unchanged. No new rubric score, hosted CI success,
+publication receipt, merge or issue acceptance is inferred.
 
 ### Baseline and score provenance
 
