@@ -29,11 +29,12 @@ class Node {
   setAttribute(name, value) {this.attrs[name] = value;}
   getAttribute(name) {return this.attrs[name] ?? null;}
   removeAttribute(name) {delete this.attrs[name];}
-  append(node) {this.children.push(node);}
+  append(node) {this.children.push(node); node.parentElement = this;}
   prepend(node) {this.children.unshift(node);}
-  after(node) {this.children.push(node);}
+  after(node) {this.children.push(node); node.parentElement = this.parentElement;}
   remove() {this.isConnected = false;}
-  querySelector() {return this.children.find(n => n.className === "async-spinner");}
+  querySelector(selector) {return this.children.find(n => selector.startsWith("button")
+    ? n.tagName === "BUTTON" : n.className === "async-spinner");}
 }
 class Observer {
   constructor(callback) {this.callback = callback; this.records = []; observer = this;}
@@ -90,6 +91,17 @@ function tick(ms) {
   await helper.run(quick, async () => 1);
   tick(200);
   assert.equal(quick.children[0].children.length, 0, "completed timer is cancelled");
+  const parent = new Node("DIV"), form = new Node("FORM"), submit = new Node();
+  parent.append(form); form.append(submit);
+  const formAction = helper.run(form,
+    () => new Promise(resolve => {release = resolve;}), "Submitting");
+  const formStatus = form.children.find(node => node.className === "async-feedback");
+  assert.equal(form.getAttribute("aria-busy"), "true");
+  assert.equal(formStatus.parentElement, parent,
+    "form status stays outside the busy form");
+  assert.equal(submit.disabled, true);
+  release(); await formAction;
+  assert.equal(submit.disabled, false);
   console.log("PASS actual helper");
 })().catch(error => {console.error(error); process.exitCode = 1;});
 """,

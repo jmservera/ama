@@ -6,6 +6,127 @@ ms.date: 2026-10-28
 
 ## Scope and status
 
+### Authorized rebased continuation (2026-10-29)
+
+The coordinator explicitly authorized rebasing the single implementation commit
+onto `origin/feat/case-journey-ux-526`, then independent review and fixes, unit
+and browser/axe validation, and local commits only. The original implementation
+and Review below remain historical, including their Not accepted outcome.
+Current parent is `27d11262658acdc198277dc3bb38cec230ede971`; rebased
+implementation is `3507a75e9c5b874a7afeccfcf21a72612e50838f`.
+
+The rebase retained both knowledge-base index entries and append-only log
+history, took the incoming tracking artifacts unchanged, and restored
+`.github/rubric/scores/latest.json` from `origin/main`. The app/ops conflicts
+retain mutation outcome metadata, history barriers, pending-submission guards,
+quality save ownership and field-error cleanup. The shared helper wraps native
+handlers once; it does not replace those existing action lifecycles.
+
+A separately requested independent review assessed that rebased head against
+the current parent. It confirmed preservation of the parent safeguards and
+reproduced RV-001/002/003, including refresh resetting a pending review guard.
+This continuation owns those three fixes within P01/P02 and their P03
+regressions. Validation will use this worktree's own source paths and the
+coordinator-specified interpreter, with heavy checks admitted by nonblocking
+flock retries for at most 40 minutes. No push, az, secrets or deployed checks.
+Current execution: three source corrections and fresh local validation complete.
+Local commit only; publication and final exact-head assessment remain with the
+coordinator.
+
+#### Rebased review dispositions and regressions
+
+* P02/RV-001: deep-copy the selected case snapshot while holding the store
+  lock. Prompt facts, rules text, source validation and post-generation
+  statement fragments now share that snapshot. The JSON/SQLite task-mixin
+  regression changes a live case during generation and compares statements,
+  citations and the saved review's shown/workflow output.
+* P01/RV-002: shared form progress is adjacent to, not inside, its busy form.
+  Briefing busy/inert state applies only to content, leaving its primary
+  polite status outside. Controlled-clock helper coverage asserts form
+  topology and disabled cleanup; held-request browser assertions check both
+  actual form and briefing status ancestry.
+* P02/RV-003: local review inputs mark unsaved values even outside a case.
+  Refresh/mode changes require explicit discard, retain old fields after a
+  failed read, and cannot replace pending or history-blocked review controls.
+  Loading also prevents concurrent replacement and makes old content inert.
+  Native guards, dispatched snapshots, late-edit reconciliation and outcome
+  precedence from #529 remain intact. Browser regressions cover cancelled
+  refresh/mode, failed and successful refresh, a held review and committed-409/
+  uncertain-503 barriers without a second POST.
+* API guide documents snapshot/announcement/refresh behavior and source-local
+  validation paths. Original critique and both assessed-head review outcomes
+  remain unchanged; corrections are implementation evidence, not independent
+  acceptance of the changed final head.
+
+#### Preserved validation attempts
+
+All heavy attempts used the specified interpreter and source-local PYTHONPATH,
+holding the nonblocking heavy lock with at most 40 minutes of admission retries.
+
+* Attempt 1: focused helper/journey/AI units passed, 91 tests, no skips. Loading
+  browser reached four passing axe scopes, then the new history-barrier loop
+  reloaded while its one-shot hold route was still installed. Corrected the
+  harness to replace that route with its explicit synthetic response.
+  External evidence: `/tmp/ama-531-rebased-loading-1`.
+* Attempt 2: refresh/mode/history regressions passed; the synthetic navigation
+  then correctly triggered the newly retained unsaved briefing warning.
+  Explicitly accepted this test-only discard to continue into resident checks.
+  External evidence: `/tmp/ama-531-rebased-loading-2`.
+* Attempt 3: resident review passed; the appointment error assertion still
+  searched inside the form after RV-002 moved feedback beside it. Corrected
+  the assertion to the appointment region, retaining its error/duplicate and
+  no-busy-ancestor assertions. External evidence:
+  `/tmp/ama-531-rebased-loading-3`.
+* Focused Ruff100 and explicit E501 checks passed for the new helper/browser
+  files; changed AI/store Ruff and JavaScript syntax/whitespace checks passed.
+  An optional whole-file format probe reported the browser harness's existing
+  compact layout; no unrelated whole-file reformat was applied.
+
+#### Completed rebased validation
+
+Final batch held `/tmp/ama-rpi-heavy.lock` from admission at
+2026-10-29T01:16:41Z through completion, exit 0. Interpreter:
+`/home/azureuser/source/ama-wt/issue-526-journey/.venv/bin/python`.
+All commands ran from `src/api` with
+`PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests`.
+Import provenance was checked: API and core modules resolve to this worktree,
+not the shared venv's editable source.
+
+* `python -m unittest discover -s tests -q`: 1215 tests in 437.567 seconds,
+  OK, 316 environment-dependent skips. This does not establish SQL Server or
+  external-provider acceptance.
+* `checks.loading_briefing_browser_check --axe
+  /tmp/ama-520-axe-4.10.3.min.js --out /tmp/ama-531-rebased-loading-4`:
+  passed all shell, feedback, snapshot-facing UI, refresh/mode/history,
+  resident, appointment, map and law scenarios. Four axe scopes, zero
+  violations; 320/390/1280 reflow and reduced motion.
+* `checks.case_journey_browser_check --axe
+  /tmp/ama-520-axe-4.10.3.min.js --out /tmp/ama-531-rebased-journey-4`:
+  passed current parent journey, immutable dispatch/later edits, cache
+  reconciliation, mutation/history barriers, keyboard/zoom/forced-colours
+  checks; 42 axe scopes, zero violations, no page errors.
+* `checks.assistants_browser_check --axe
+  /tmp/ama-520-axe-4.10.3.min.js --out /tmp/ama-531-rebased-assistants-4`:
+  173 checks passed, 40 axe scopes, zero violations, no page errors.
+* `checks.employee_briefing_browser_check`: passed all supplied employee-role
+  scope/assignment, independent-panel loading, mode and reflow checks.
+* `checks.workspace_scripts_browser_check`: passed actual companion/Leaflet
+  recovery, retry budget and stale/session safeguards.
+* Changed-file Ruff100, explicit new-file E501, changed-JavaScript syntax and
+  `git diff --check` passed. Parent inspected the final briefing screenshot;
+  this is bounded visual QA, not staff or assistive-technology acceptance.
+
+Full transcript:
+`/tmp/1793236670159-copilot-tool-output-538748-efe42b54-30e6-4418-bfac-aec118e34770.txt`.
+Loading/journey Chromium 156.0.8078.4; assistants Chromium 155.0.8059.39.
+All axe reports use pinned 4.10.3. Generated reports remain external.
+RV-001/002/003 have implementation corrections and targeted passing
+regressions; neither historical Not accepted review is rewritten as final-head
+independent acceptance. RV-004 and the prohibited-az complete publication gate
+remain separate. No push, az, secrets or live-site verification.
+
+### Original implementation boundary
+
 Full P01-P03 implementation on `feat/loading-briefing-hax-531`, stacked on
 `feat/case-journey-ux-526` at `6d2c2dc4ce4b2e9bf99853698ac5b71e24c02c1c`.
 Research complete, plan ready after one independent critique with three

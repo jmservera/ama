@@ -54,6 +54,16 @@
       "decision": "Original post-implementation Review outcome",
       "status": "Not accepted",
       "evidence": "RV-001 High, RV-002/RV-003 Medium implementation defects; RV-004 Low residual work; assessed only local candidate against original anchor, not refreshed parent or publication head"
+    },
+    {
+      "decision": "Coordinator-authorized rebase and independently reviewed correction continuation",
+      "status": "implemented and locally validated",
+      "evidence": "Rebased onto 27d11262658acdc198277dc3bb38cec230ede971. Independent assessment of 3507a75e confirmed parent safeguards and RV-001/002/003. All three corrected with targeted regressions; historical Not accepted outcomes preserved."
+    },
+    {
+      "decision": "Rebased source-local locked validation",
+      "status": "passed",
+      "evidence": "1215 API tests, 316 environment-dependent skips; loading/journey/assistants 4/42/40 axe scopes with zero violations; employee briefing and script recovery passed. Changes record contains commands and external reports. No final-head independent acceptance or publication receipt inferred."
     }
   ],
   "blockers": [
@@ -61,43 +71,21 @@
       "id": "publication-full-gate",
       "summary": "Complete publication gate requires az, which the user prohibits",
       "resolution": "Commit locally; coordinator owns authorized complete gate and publication"
-    },
-    {
-      "id": "parent-divergence",
-      "summary": "Remote parent PR #529 now has different ancestry from the original local parent anchor",
-      "resolution": "Coordinator reconciles parent dependency without unauthorized rewrite and reruns exact-candidate evidence"
-    },
-    {
-      "id": "review-not-accepted",
-      "summary": "Original independent Review found three material implementation defects",
-      "resolution": "Later rpi-implement owns RV-001/RV-002/RV-003; preserve this Review without fixing or repeating it inside the completed task"
     }
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Coordinator selects later rpi-implement for RV-001/RV-002/RV-003, then reconciles parent and obtains authorized exact-candidate gate/assessment before publication; no child started or push performed"
+    "action": "Coordinator owns the authorized complete gate, independent exact-head assessment and push of the locally committed continuation. No push or az in this worktree."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Freeze rules statement metadata with its published output snapshot (RV-001)",
-      "rationale": "Highest severity and source-integrity impact; bounded snapshot correction with a deterministic fallback race regression",
-      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/loading-briefing-hax-531-review.md RV-001"
+      "task": "Coordinator completes authorized exact-head publication gates",
+      "rationale": "Local corrections and tests do not substitute for the complete gate and independent exact-head assessment; user reserves push to the coordinator",
+      "evidence": ".copilot-tracking/changes/2026-10-28/loading-briefing-hax-531-changes.md authorized rebased continuation"
     },
     {
       "rank": 2,
-      "task": "Keep action-specific announcers outside busy subtrees (RV-002)",
-      "rationale": "Small shared-helper change with broad accessibility leverage across forms and briefing; preserve deduplication and pending controls",
-      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/loading-briefing-hax-531-review.md RV-002"
-    },
-    {
-      "rank": 3,
-      "task": "Protect unsaved briefing edits and pending review from refresh (RV-003)",
-      "rationale": "Prevents reproduced employee work loss; needs correctly bound retention or explicit discard handling plus success/failure regressions",
-      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/loading-briefing-hax-531-review.md RV-003"
-    },
-    {
-      "rank": 4,
       "task": "Complete separately owned human, deployed and SQL acceptance (RV-004)",
       "rationale": "Required evidence cannot be substituted by local synthetic tests; accessibility, product, operations and SQL owners retain distinct tasks",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-29/loading-briefing-hax-531-review.md RV-004 and plan Follow-Up Items"

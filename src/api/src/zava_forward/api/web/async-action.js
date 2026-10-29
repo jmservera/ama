@@ -10,7 +10,6 @@ const AsyncAction = (() => {
     status.setAttribute("aria-atomic", "true");
     status.textContent = `${label}: working...`;
     if (region) region.append(status);
-    else if (control?.tagName === "FORM") control.append(status);
     else if (control) control.after(status);
     else document.getElementById("action-status")?.append(status);
     const timer = setTimeout(() => {

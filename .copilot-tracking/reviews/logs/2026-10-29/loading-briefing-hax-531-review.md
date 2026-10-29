@@ -429,3 +429,39 @@ Azure, az, secrets or .env access was performed by this reviewer.
   preserves this single original Review and RV-004 owner tasks, and retains
   local-only publication safeguards. This Review performs no correction or
   additional lifecycle invocation.
+
+## Separately authorized rebased assessment (2026-10-29)
+
+The coordinator explicitly requested an independent review of the rebased
+result and correction of its findings. This later assessment does not change
+the original Review above or its Not accepted outcome.
+
+* Assessor: independent read-only code-review agent, no source changes or
+  heavy suites. Web guidelines freshly retrieved before assessment.
+* Assessed head: `3507a75e9c5b874a7afeccfcf21a72612e50838f`.
+* Assessed base: `27d11262658acdc198277dc3bb38cec230ede971`,
+  `origin/feat/case-journey-ux-526`.
+* Execution Complete, outcome Not accepted at that assessed head.
+* Parent pending-action reconciliation, submission guards, field errors,
+  API mutation outcomes/history barriers and capacity lifecycles preserved.
+  The shared helper wraps native handlers once.
+* RV-001 High persists: rules statements/references are rebuilt from mutable
+  cases after the template is captured. Actual-method synthetic reproduction
+  returned different stage/day values in statements and published output.
+* RV-002 Medium persists: form progress is a descendant of the busy form and
+  removed before busy clears; briefing progress is inside the busy section.
+  Actual-helper structural reproduction confirms ancestry, not an observed AT
+  failure. Put announcers outside busy subtrees.
+* RV-003 Medium persists: refresh success/failure discards review text/reason;
+  refreshing during a held review remounts local guards and permits a second
+  POST for the same record. Actual UI functions reproduced both paths. Guard
+  refresh and mode replacement during pending/history-blocked reviews; require
+  explicit discard or retain old-evidence-bound copyable text.
+* Six JavaScript syntax checks, isolated helper and diff checks passed during
+  assessment. Screen-reader, voice-control, deployed and SQL acceptance remain
+  unestablished. No secrets, private data, Azure or publication action.
+
+All three findings are routed to this user-authorized implementation
+continuation and its targeted regressions. Later source changes and test
+results are implementation evidence, not a relabelled independent assessment
+of a different head or a publication receipt.
