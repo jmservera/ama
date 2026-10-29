@@ -427,26 +427,27 @@ function aiNotes(d, onDone, getText) {
     const editBox = h("div", { hidden: true },
       editing && h("label", { for: editing.id }, "Edited draft"), editing,
       getText && h("p", {}, "Change the draft in the text box above, then record why you changed it."));
-    let selected = null;
+    let selected = null, reviewChoice = null;
     const reasonBox = h("div", { hidden: true }, h("label", { for: why.id }, "Reason"), why);
     const submit = h("button", { type: "button", hidden: true, onclick: () => go(selected)() });
     const cancel = h("button", { type: "button", class: "alt", hidden: true, onclick: () => {
       selected = null; editBox.hidden = reasonBox.hidden = submit.hidden = cancel.hidden = true;
-      error.textContent = ""; chooseEdit.focus();
+      error.textContent = ""; reviewChoice?.focus();
     } }, "Cancel review");
-    const choose = action => {
+    const choose = (action, choice) => {
+      reviewChoice = choice;
       selected = action; editBox.hidden = action !== "edit"; reasonBox.hidden = false;
       submit.hidden = cancel.hidden = false;
       submit.textContent = action === "edit" ? "Save edited draft review" : "Record rejection";
       if (action === "edit" && editing) editing.focus(); else why.focus();
     };
-    const chooseEdit = h("button", { class: "alt", type: "button", disabled: unavailable || (!getText && !editing), onclick: () => choose("edit") }, "Edit this draft");
+    const chooseEdit = h("button", { class: "alt", type: "button", disabled: unavailable || (!getText && !editing), onclick: event => choose("edit", event.currentTarget) }, "Edit this draft");
     const box = h("fieldset", {}, h("legend", {}, "Review this draft"),
       h("p", {}, "Use records only after checking them. Using a draft records your review only; it does not approve works, contact a resident or change any case."),
       error,
       unavailable && h("p", {}, "Accept unavailable: check the stale or unverified sources and request a fresh draft."),
       h("div", { class: "row review-choices" }, h("button", { class: "alt", type: "button", disabled: unavailable, onclick: go("accept") }, "Use this draft"),
-        chooseEdit, h("button", { class: "alt", type: "button", onclick: () => choose("reject") }, "Do not use this draft")),
+        chooseEdit, h("button", { class: "alt", type: "button", onclick: event => choose("reject", event.currentTarget) }, "Do not use this draft")),
       editBox, reasonBox, h("div", { class: "row" }, submit, cancel));
     why.addEventListener("input", () => {
       why.dataset.caseDirty = "true";
@@ -706,7 +707,7 @@ async function listView(view) {
   };
   const search = h("input", { id: "f-q", name: "q", type: "search", autocomplete: "off", placeholder: "Name, address or postcode" });
   search.value = listState.q;
-  search.addEventListener("input", () => { listState.q = search.value; clearTimeout(searchTimer); searchTimer = setTimeout(() => AsyncAction.run(search, () => load(), "Finding cases"), 250); });
+  search.addEventListener("input", () => { listState.q = search.value; clearTimeout(searchTimer); searchTimer = setTimeout(() => AsyncAction.run(null, () => load(), "Finding cases", side), 250); });
   const sort = h("select", { id: "f-sort" }, Object.entries(fx.sorts).map(([k, t]) => h("option", { value: k }, t)));
   sort.value = listState.sort;
   sort.addEventListener("change", AsyncAction.handler(() => { listState.sort = sort.value; return load(); }));

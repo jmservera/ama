@@ -144,7 +144,7 @@ def statement_sources(text, sources, bullets=False):
 
     protected = CITE_RE.sub(protect, text)
     # A model may place the citation after the sentence's punctuation.
-    protected = re.sub(r"([.!?])[ \t]*((?:\x00\d+\x00[ \t]*)+)", r" \2\1", protected)
+    protected = re.sub(r"([.!?])[ \t]*((?:\x00\d+\x00[ \t]*)+)", r" \2\1 ", protected)
     statements = []
     for piece in re.split(r"(?<=[.!?])\s+|\n+", protected):
         raw = re.sub(r"\x00(\d+)\x00", lambda m: marks[int(m[1])], piece).strip()

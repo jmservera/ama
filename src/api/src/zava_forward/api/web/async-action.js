@@ -35,6 +35,7 @@ const AsyncAction = (() => {
     const button = control?.tagName === "FORM"
       ? control.querySelector('button[type="submit"], button:not([type])') : control;
     const originalDisabled = button?.disabled;
+    const busy = control?.getAttribute("aria-busy");
     let result;
     try { result = task(); }
     catch (error) {
@@ -44,7 +45,6 @@ const AsyncAction = (() => {
     }
     if (!result || typeof result.then !== "function") return result;
     const notice = feedback(label || button?.textContent.trim() || "Loading", control, region);
-    const busy = control?.getAttribute("aria-busy");
     control?.setAttribute("aria-busy", "true");
     const ownsDisabled = button && !button.disabled && button.getAttribute("aria-disabled") !== "true";
     if (ownsDisabled) button.disabled = true;

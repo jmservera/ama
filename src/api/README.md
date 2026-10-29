@@ -24,6 +24,10 @@ without disabling navigation. Reduced motion keeps a static icon plus text.
 Controls whose handlers already set `aria-disabled="true"` retain that
 focus-preserving state without an additional native disable; pending duplicate
 activation is still suppressed.
+Editable queue search uses non-control progress: it stays enabled and focused
+while overlapping reads use the existing latest-response sequence guard.
+Busy cleanup restores the attribute captured before the handler runs,
+including handlers that manage their own temporary busy state.
 Failed writes are never automatically retried.
 Form progress is a sibling of the busy form; briefing progress is outside its
 busy content. Action-specific live text is not deferred inside those regions.
@@ -36,7 +40,10 @@ references and explanations are not proof of truth. The mode selector says
 draft requests for the page session. Ordinary case work remains available.
 "Use this draft" records a draft review only. "Edit this draft" reveals a large
 editor and required reason; "Do not use this draft" reveals only the reason.
-Cancel retains local text. Hide/Show briefing is local reversible dismissal,
+Cancel retains local text and returns focus to the choice that opened review,
+including rejection when stale or unverified evidence disables editing.
+Trailing sentence citations remain associated with their separate statements.
+Hide/Show briefing is local reversible dismissal,
 not reversal of an immutable recorded review. Server source/review checks and
 all human approval, resident consent and manual boundaries remain unchanged.
 Rules text and statement references use the same immutable case snapshot.

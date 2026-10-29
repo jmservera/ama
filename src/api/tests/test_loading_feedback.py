@@ -113,6 +113,30 @@ function tick(ms) {
   assert.equal(submit.disabled, true);
   release(); await formAction;
   assert.equal(submit.disabled, false);
+  for (const before of [null, "false"]) {
+    const managed = new Node();
+    if (before !== null) managed.setAttribute("aria-busy", before);
+    const managedAction = helper.run(managed, async () => {
+      managed.disabled = true;
+      managed.setAttribute("aria-busy", "true");
+      try {await new Promise(resolve => {release = resolve;});}
+      finally {
+        managed.disabled = false;
+        managed.removeAttribute("aria-busy");
+      }
+      throw new Error("Recoverable handler failure");
+    }, "Recording");
+    assert.equal(managed.getAttribute("aria-busy"), "true");
+    release(); await managedAction;
+    assert.equal(managed.disabled, false);
+    assert.equal(managed.getAttribute("aria-busy"), before,
+      "restore the pre-handler state, not the handler's temporary busy value");
+    assert.match(managed.children.at(-1).textContent, /Recoverable handler failure/);
+    let retried = false;
+    await helper.run(managed, async () => {retried = true;});
+    assert.equal(retried, true);
+    assert.equal(managed.getAttribute("aria-busy"), before);
+  }
   console.log("PASS actual helper");
 })().catch(error => {console.error(error); process.exitCode = 1;});
 """,
