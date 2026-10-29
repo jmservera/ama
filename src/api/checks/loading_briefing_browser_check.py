@@ -64,12 +64,93 @@ def shell_check(browser: Browser, base: str) -> None:
         context.close()
 
 
+def helper_bootstrap_check(
+    browser: Browser, base: str, failures: int, *, missing_global: bool = False,
+) -> None:
+    context = browser.new_context()
+    context.route("**/*", lambda route: route.continue_()
+                  if route.request.url.startswith(base + "/") else route.abort())
+    try:
+        page = context.new_page()
+        errors: list[str] = []
+        requests: list[str] = []
+        documents: list[str] = []
+        service_reads: list[str] = []
+        page.on("pageerror", lambda error: errors.append(str(error)))
+        page.on("request", lambda request: documents.append(request.url)
+                if request.resource_type == "document" else None)
+        page.on("request", lambda request: service_reads.append(request.url)
+                if request.url == base + "/api/me" else None)
+
+        def intercept(route: Route) -> None:
+            requests.append(route.request.url)
+            if len(requests) <= failures:
+                route.abort()
+            elif missing_global:
+                route.fulfill(content_type="text/javascript", body="/* Missing helper. */")
+            else:
+                route.continue_()
+
+        page.route("**/async-action.js", intercept)
+        page.goto(base + "/app#/case/ZF-1?tab=resident")
+        terminal = failures == 3 or missing_global
+        if terminal:
+            expect(page.get_by_role("heading", name="Workspace unavailable")).to_be_visible()
+            expect(page.get_by_role("alert")).to_contain_text(
+                "Required workspace files did not load: /async-action.js")
+            expect(page.locator("#workspace-status")).to_contain_text(
+                "Workspace unavailable:")
+            expect(page.locator("#workspace-status")).to_have_attribute("aria-live", "polite")
+            expect(page.get_by_label("Work email", exact=True)).to_have_count(0)
+            expect(page.get_by_role("button", name="Try again", exact=True)).to_have_count(0)
+            assert not service_reads, "do not call start before helper readiness"
+            assert len(requests) == (2 if missing_global else 3), requests
+            page.wait_for_timeout(800)
+            assert len(requests) == (2 if missing_global else 3), requests
+            page.unroute("**/async-action.js")
+            reload = page.get_by_role("button", name="Reload workspace", exact=True)
+            page.locator("#app").focus()
+            page.keyboard.press("Tab")
+            expect(reload).to_be_focused()
+            reload.press("Enter")
+        expect(page.get_by_label("Work email", exact=True)).to_be_visible()
+        assert page.evaluate("() => typeof AsyncAction.handler === 'function'")
+        if not terminal:
+            assert len(requests) == failures + 1, requests
+            assert len(documents) == 1, "automatic helper recovery must not reload the page"
+        submit = page.get_by_role("button", name="Sign in", exact=True)
+        page.get_by_label("Work email", exact=True).fill("sam@example.test")
+        page.get_by_label("Password", exact=True).fill("synthetic-check")
+        submit.click()
+        expect(page.get_by_role("link", name="Back to the list", exact=True)).to_be_visible()
+        expect(page.get_by_role("button", name="Draft with AI", exact=True)).to_be_visible()
+        page.locator("#account > summary").click()
+        logout: list[Route] = []
+        page.route("**/api/logout", lambda route: logout.append(route))
+        signout = page.get_by_role("button", name="Sign out", exact=True)
+        with page.expect_request("**/api/logout"):
+            signout.click()
+        expect(signout).to_be_disabled()
+        expect(signout).to_have_attribute("aria-busy", "true")
+        assert len(logout) == 1
+        logout[0].fulfill(status=503, json={"error": "Synthetic sign-out failure"})
+        expect(page.locator("#account-error")).to_have_text("Synthetic sign-out failure")
+        expect(signout).to_be_enabled()
+        assert not errors, errors
+        print(f"PASS helper bootstrap: failures={failures}, missing_global={missing_global}")
+    finally:
+        context.close()
+
+
 def run_browser(base: str, axe: str, output: Path) -> None:
     reports: list[dict[str, Any]] = []
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch()
         try:
             shell_check(browser, base)
+            for failures in (1, 2, 3):
+                helper_bootstrap_check(browser, base, failures)
+            helper_bootstrap_check(browser, base, 1, missing_global=True)
             context = browser.new_context(viewport={"width": 1280, "height": 900})
             context.route("**/*", lambda route: route.continue_()
                           if route.request.url.startswith(base + "/") else route.abort())

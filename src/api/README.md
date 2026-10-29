@@ -12,7 +12,13 @@ The employee shell contains startup text before workspace scripts load. An
 independent watchdog shows a slow-start hint and retry at four seconds, then
 support guidance at fifteen seconds. It cannot display before the host returns
 the HTML document. API startup failures show an explicit error and retry.
-Existing bounded workspace-script and Leaflet recovery remains unchanged.
+Before sign-in or account action listeners are registered, bootstrap checks the
+shared async-action helper and recovers a failed download through the existing
+bounded script loader. Only this helper is required before authentication;
+role-specific dependencies are selected after sign-in. Exhausted retries or
+a loaded script without helper readiness show an explicit error and native
+"Reload workspace" action. Other workspace-script and Leaflet retry bounds
+and session/route guards remain unchanged.
 
 The shared native async-action helper wraps click, submit and change handlers.
 It shows text immediately, adds a decorative spinner beside that text after 200ms,
@@ -42,7 +48,11 @@ draft requests for the page session. Ordinary case work remains available.
 editor and required reason; "Do not use this draft" reveals only the reason.
 Cancel retains local text and returns focus to the choice that opened review,
 including rejection when stale or unverified evidence disables editing.
-Trailing sentence citations remain associated with their separate statements.
+Trailing sentence citations remain associated with their separate statements,
+including line breaks before or between references. Common titles and medial
+abbreviations do not fragment statements; genuine sentence and line boundaries
+remain separate. Ambiguous capitalized street suffixes such as "High St." are
+conservatively treated as sentence boundaries, not general language inference.
 Hide/Show briefing is local reversible dismissal,
 not reversal of an immutable recorded review. Server source/review checks and
 all human approval, resident consent and manual boundaries remain unchanged.

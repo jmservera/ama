@@ -221,27 +221,29 @@ function retryWorkspaceScript(path) {
 
 function missingWorkspaceScripts(hash, caseRoute) {
   const destination = hash.split("?")[0];
-  const contractor = me.user.role === "Contractor";
-  const staffCase = caseRoute && !contractor;
-  const staffDestination = !contractor && !caseRoute;
+  const contractor = me?.user.role === "Contractor";
+  const staffCase = Boolean(me) && caseRoute && !contractor;
+  const staffDestination = Boolean(me) && !contractor && !caseRoute;
   return [
+    ["/async-action.js", true, typeof AsyncAction !== "undefined" && typeof AsyncAction.handler === "function"],
     ["/ops.js", staffCase || (staffDestination && hash === "#/capacity") || (contractor && !caseRoute && destination !== "#/screens"), typeof qualityPanel === "function"],
     ["/panels.js", staffCase || (staffDestination && hash === "#/finance"), typeof financePanel === "function"],
     ["/assistants.js", staffCase || (staffDestination && hash === "#/assistants"), typeof assistantCasePanel === "function"],
     ["/chat.js", staffCase, typeof chatCasePanel === "function"],
     ["/timecapture.js", staffDestination && hash === "#/time", typeof timeView === "function"],
-    ["/role-screens.js", destination === "#/screens", typeof roleScreensView === "function"],
+    ["/role-screens.js", Boolean(me) && destination === "#/screens", typeof roleScreensView === "function"],
     ["/progress.js", staffDestination && ["#/progress", "#/closed"].includes(destination), typeof ProgressViews === "object"],
     ["/vendor/leaflet.js", staffDestination && (hash === "#/overview" || destination === "#/coordinator"), typeof L === "object"],
   ].filter(([, needed, loaded]) => needed && !loaded).map(([path]) => path);
 }
 
 async function requireWorkspaceScripts(hash, caseRoute) {
+  const session = me;
   let missing = missingWorkspaceScripts(hash, caseRoute);
   if (missing.length) {
     workspaceStatus.textContent = "Loading workspace files. Please wait.";
     await Promise.all(missing.map(retryWorkspaceScript));
-    if (!me) return;
+    if (me !== session) return;
     missing = missingWorkspaceScripts(hash, caseRoute);
   }
   if (missing.length) {
@@ -1508,8 +1510,13 @@ async function signOut(switchAccount) {
     location.href = "/";
   } catch (e) { document.getElementById("account-error").textContent = e.message; }
 }
-document.getElementById("signout").addEventListener("click", AsyncAction.handler(() => signOut(false)));
-document.getElementById("switch-account").addEventListener("click", AsyncAction.handler(() => signOut(true)));
+async function bootstrapWorkspace() {
+  await requireWorkspaceScripts("", false);
+  workspaceStatus.textContent = "";
+  document.getElementById("signout").addEventListener("click", AsyncAction.handler(() => signOut(false)));
+  document.getElementById("switch-account").addEventListener("click", AsyncAction.handler(() => signOut(true)));
+  await start();
+}
 document.querySelector(".skip-link").addEventListener("click", (event) => { event.preventDefault(); app.focus(); });
 document.addEventListener("keydown", (e) => {
   const menu = document.getElementById("account");
@@ -1522,12 +1529,15 @@ document.addEventListener("click", (e) => {
 window.addEventListener("hashchange", () => me && route());
 function startupFailed(error) {
   if (error.status === 401) return;
+  workspaceStatus.textContent = `Workspace unavailable: ${error.message}`;
   show(h("h1", {}, "Workspace unavailable"),
     h("p", { class: "err", role: "alert" }, `Could not start the workspace: ${error.message}. Try again. If this continues, contact application support.`),
-    h("button", { type: "button", onclick: () => start().catch(startupFailed) }, "Try again"));
+    error.reloadWorkspace
+      ? h("button", { type: "button", onclick: () => location.reload() }, "Reload workspace")
+      : h("button", { type: "button", onclick: () => start().catch(startupFailed) }, "Try again"));
   document.dispatchEvent(new Event("workspace-ready"));
 }
-start().catch(startupFailed);
+bootstrapWorkspace().catch(startupFailed);
 
 // ---- Overview, Visits, Funding screens
 const NS = "http://www.w3.org/2000/svg";

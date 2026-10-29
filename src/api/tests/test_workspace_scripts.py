@@ -24,7 +24,7 @@ const message = path => `Required workspace files did not load: ${path}. Reload 
   + " to try again. If this continues, ask application support to check these files.";
 
 function harness(outcomes = []) {
-  const requests = [], delays = [], removed = [], views = [];
+  const requests = [], delays = [], removed = [], views = [], listeners = [];
   let context;
   const document = {
     createElement: () => ({remove() {removed.push(this);}}),
@@ -34,7 +34,8 @@ function harness(outcomes = []) {
       if (outcome === "timeout") return;
       queueMicrotask(() => {
         if (outcome === "ready") {
-          if (script.src === "/vendor/leaflet.js") context.L = {};
+          if (script.src === "/async-action.js") context.AsyncAction = {handler: task => task};
+          else if (script.src === "/vendor/leaflet.js") context.L = {};
           else if (script.src === "/role-screens.js") {
             context.roleScreensView = async () => views.push("screens");
           }
@@ -45,7 +46,9 @@ function harness(outcomes = []) {
       });
     }},
     querySelector: () => null,
-    querySelectorAll: () => []
+    querySelectorAll: () => [],
+    getElementById: id => ({addEventListener: (event, handler) =>
+      listeners.push({id, event, handler})})
   };
   context = vm.createContext({
     document, AbortController, URLSearchParams, clearTimeout,
@@ -62,6 +65,7 @@ function harness(outcomes = []) {
     history: {replaceState: (_state, _title, hash) => {context.location.hash = hash;}},
     routeController: new AbortController(), searchTimer: 0,
     coordinatorOrigin: null, queueOrigin: "mine",
+    AsyncAction: {handler: task => task},
     qualityPanel() {}, financePanel() {}, assistantCasePanel() {}, chatCasePanel() {},
     timeView() {}, roleScreensView() {},
     overviewView: async () => views.push("overview"),
@@ -69,11 +73,61 @@ function harness(outcomes = []) {
     show: () => views.push("error"), h: () => ({})
   });
   vm.runInContext(loader, context);
-  return {context, requests, delays, removed, views,
+  return {context, requests, delays, removed, views, listeners,
     run: expression => vm.runInContext(expression, context)};
 }
 
 (async () => {
+  for (const hash of ["#/overview", "#/case/ZF-1", "#/screens"]) {
+    let bootstrap = harness(["ready"]);
+    bootstrap.context.me = null;
+    for (const global of ["qualityPanel", "financePanel", "assistantCasePanel",
+      "chatCasePanel", "timeView", "roleScreensView"]) delete bootstrap.context[global];
+    assert.deepEqual(Array.from(bootstrap.run(
+      `missingWorkspaceScripts("${hash}", ${hash.includes("/case/")})`)), []);
+    delete bootstrap.context.AsyncAction;
+    assert.deepEqual(Array.from(bootstrap.run(
+      `missingWorkspaceScripts("${hash}", ${hash.includes("/case/")})`)),
+      ["/async-action.js"], "pre-session deep links only require the helper");
+    await bootstrap.run('requireWorkspaceScripts("", false)');
+    assert.deepEqual(bootstrap.requests, ["/async-action.js"]);
+    assert.equal(bootstrap.run("typeof AsyncAction"), "object");
+    for (const outcomes of [["error", "error"], ["load"], ["timeout"]]) {
+      bootstrap = harness([...outcomes]);
+      bootstrap.context.me = null;
+      delete bootstrap.context.AsyncAction;
+      await assert.rejects(bootstrap.run('requireWorkspaceScripts("", false)'),
+        error => error.message === message("/async-action.js") && error.reloadWorkspace);
+      await assert.rejects(bootstrap.run('requireWorkspaceScripts("", false)'));
+      assert.equal(bootstrap.requests.length, outcomes.length,
+        "null session still checks readiness and retains terminal retry budget");
+    }
+  }
+  for (const outcomes of [["ready"], ["error", "ready"], ["error", "error"],
+    ["load"], ["timeout"]]) {
+    const bootstrap = harness([...outcomes]);
+    bootstrap.context.me = null;
+    delete bootstrap.context.AsyncAction;
+    bootstrap.context.start = async () => bootstrap.views.push("start");
+    bootstrap.context.signOut = async switchAccount => bootstrap.views.push(switchAccount);
+    bootstrap.run(source.slice(source.indexOf("async function bootstrapWorkspace"),
+      source.indexOf('document.querySelector(".skip-link")')));
+    const started = bootstrap.run("bootstrapWorkspace()");
+    assert.equal(bootstrap.listeners.length, 0, "no listeners before helper readiness");
+    assert.deepEqual(bootstrap.views, [], "no API start before helper readiness");
+    if (outcomes.includes("ready")) {
+      await started;
+      assert.deepEqual(bootstrap.views, ["start"]);
+      assert.deepEqual(bootstrap.listeners.map(({id}) => id), ["signout", "switch-account"]);
+      await bootstrap.listeners[0].handler();
+      await bootstrap.listeners[1].handler();
+      assert.deepEqual(bootstrap.views, ["start", false, true]);
+    } else {
+      await assert.rejects(started, error => error.reloadWorkspace);
+      assert.equal(bootstrap.listeners.length, 0);
+      assert.deepEqual(bootstrap.views, [], "terminal bootstrap must not start the workspace");
+    }
+  }
   let h = harness(["ready"]);
   await h.run('requireWorkspaceScripts("#/overview", false)');
   assert.deepEqual(h.requests, ["/vendor/leaflet.js"]);

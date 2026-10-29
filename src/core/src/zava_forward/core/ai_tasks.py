@@ -28,6 +28,10 @@ PROMPT_VERSION = "2026-10-09.1"
 CITE_RE = re.compile(r"\[\[(.+?)\]\]")
 EMPTY_SOURCES = re.compile(r"(?im)^[ \t]*sources?[ \t]*:[\s;,]*$")
 BULLET = re.compile(r"^\s*[-*\u2022]\s")
+STATEMENT_ABBREVIATION = re.compile(
+    r"\b(?:Mr|Mrs|Ms|Mx|Dr|Prof|Rev|Sr|Jr|St|e\.g|i\.e|vs|cf|approx|etc)\.(?=[ \t]+\w)",
+    re.IGNORECASE,
+)
 REVIEW_ACTIONS = {"accept": "Accepted", "edit": "Edited", "reject": "Rejected"}
 NOT_REVIEWED = "Not reviewed"
 HOLD = "Hold"
@@ -145,10 +149,28 @@ def statement_sources(text: str, sources: Any, bullets: bool = False) -> list[di
 
     protected = CITE_RE.sub(protect, text)
     # A model may place the citation after the sentence's punctuation.
-    protected = re.sub(r"([.!?])[ \t]*((?:\x00\d+\x00[ \t]*)+)", r" \2\1 ", protected)
+    protected = re.sub(
+        r"([.!?])\s*((?:\x00\d+\x00\s*)+)",
+        lambda match: " " + " ".join(match[2].split()) + match[1] + " ",
+        protected,
+    )
+
+    def protect_abbreviation(match: re.Match[str]) -> str:
+        word = match.group().casefold()
+        following = match.string[match.end():].lstrip(" \t")
+        if word in ("approx.", "etc.") and not (following[0].islower() or following[0].isdigit()):
+            return match.group()
+        if word == "st.":
+            preceding = re.search(r"(\w+)[ \t]+$", match.string[:match.start()])
+            # A capitalized street suffix is ambiguous; do not merge its next claim.
+            if preceding and preceding[1][0].isupper() and not re.match(r"\w+['\u2019]s\b", following):
+                return match.group()
+        return match.group().replace(".", "\x01")
+
+    protected = STATEMENT_ABBREVIATION.sub(protect_abbreviation, protected)
     statements = []
     for piece in re.split(r"(?<=[.!?])\s+|\n+", protected):
-        raw = re.sub(r"\x00(\d+)\x00", lambda m: marks[int(m[1])], piece).strip()
+        raw = re.sub(r"\x00(\d+)\x00", lambda m: marks[int(m[1])], piece).replace("\x01", ".").strip()
         if not raw:
             continue
         clean, good, bad, _ = analyse(raw, sources)
