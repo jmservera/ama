@@ -77,5 +77,8 @@ P02-T01 complete at final external round7-final run: 25 requested unit tests;
 67 related tests with one existing skip; owning Ruff/format/mypy; journey 259
 assertions and 42 axe states; assistants 173 checks and 40 axe states. Zero axe
 violations or page errors. Native real 200% zoom retained. Detailed hashes and
-limitations live in the changes artifact. P02-T02 awaits sole independent Review
-and local commit; no acceptance or publication receipt implied.
+limitations live in the changes artifact. P02-T02 complete: sole independent
+Review Complete / Not accepted, retained with source/evidence at local commit
+6e35341620686961e6c7e598cbc9caee42b35f37. RV-001 High and RV-002 Medium route to
+later implementation. No acceptance, Review closure or publication receipt
+implied; no source changes after Review and no repeated Review.

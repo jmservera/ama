@@ -15,6 +15,10 @@ after committed or uncertain errors. Audit and repair the same assumption in
 case, proposal, draft, priority, upload and procurement paths while retaining
 correctable explicit refusals and copyable drafts.
 
+Execution complete; independent Review Complete / Not accepted. RV-001 High
+and RV-002 Medium are routed follow-ups below, not repaired or re-reviewed in
+this task. Implementation and original evidence retained locally at 6e353416.
+
 ### What You May Not Know
 
 A 409 can also carry committed, so checking only 503 is insufficient. A case
@@ -78,12 +82,12 @@ both browser checks pass with pinned axe and no serious/critical violation.
 * [x] P01-T02: Focused unit/browser matrices and related README update.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Validate and independently review
+### [x] P02: Validate and independently review
 
 <!-- rpi:task id=P02-T01 -->
 * [x] P02-T01: Locked unit, lint/type and requested axe browser checks.
 <!-- rpi:task id=P02-T02 -->
-* [ ] P02-T02: One independent Review; preserve outcome; commit locally.
+* [x] P02-T02: One independent Review; preserve outcome; commit locally.
 
 ## Test Ownership and Locked Boundary
 
@@ -116,9 +120,15 @@ Planning readiness: Ready.
 
 ## Follow-Up Items
 
+* RV-001 High, later rpi-implement: persist pending identities across fieldless
+  shared actions and rebuilt raw resident/challenge forms; prove one POST.
+* RV-002 Medium, later rpi-implement: preserve unresolved shared-queue reason/
+  JSON through old and fresh listings; keep actions guarded and drafts copyable.
 * Coordinator: required exact-head publication gate and human/hosted approvals.
 
 ## Handoff
 
 Implementation changes record:
 .copilot-tracking/changes/2026-10-29/case-journey-526-round7-changes.md.
+All Pxx markers denote execution/retention, not acceptance. Review remains
+Not accepted; no post-Review source fix or second Review was performed.
