@@ -1,0 +1,40 @@
+{
+  "task_id": "551",
+  "task_slug": "map-filter-request-observation-551",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-29/map-filter-request-observation-551-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-29/map-filter-request-observation-551-plan.md",
+    "details": ".copilot-tracking/details/2026-10-29/map-filter-request-observation-551-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-29/map-filter-request-observation-551-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-29/map-filter-request-observation-551-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-29/map-filter-request-observation-551-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the explicitly requested full RPI loop and commit locally; do not push, use az, or hand-edit rubric scores.",
+      "status": "confirmed",
+      "evidence": "User request dated 2026-10-29."
+    },
+    {
+      "decision": "Research executed / Ready; one critique Complete / Revise, PC-001 directly resolved in plan/details.",
+      "status": "satisfied",
+      "evidence": ".copilot-tracking/plans/2026-10-29/map-filter-request-observation-551-plan.md"
+    },
+    {
+      "decision": "Independent Review executed once: Complete / Conformant with justified divergence; no RV findings.",
+      "status": "satisfied",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/map-filter-request-observation-551-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Create the authorized atomic local-only delivery commit and verify it; no push or automatic child work. No residual product follow-ups; session awaits explicit Stop/manual or new direction."
+  },
+  "prioritized_follow_ups": []
+}
