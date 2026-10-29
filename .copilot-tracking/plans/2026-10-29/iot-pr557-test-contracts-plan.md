@@ -82,7 +82,8 @@ Research executed / Ready. Critique executed once, original Revise verdict,
 PC-001 resolved directly. Implementation evidence is recorded at
 .copilot-tracking/changes/2026-10-29/iot-pr557-test-contracts-changes.md.
 Independent Review executed once, Complete / Conformant, no findings.
-Local commit remains P02-T02. User explicitly requested each phase;
+Local commit a272edfc6c2cbbdcd18da3c4bb92564603c417d8 verified. All tasks complete.
+User explicitly requested each phase;
 no continuing automatic session.
 
 ## Test Ownership and Change Budget
@@ -116,7 +117,7 @@ Replace suffix-only coverage, extract only the shared assertion needed for
 negative tests, and reject wrong hub and wrong group.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Validate, independently review and commit
+### [x] P02: Validate, independently review and commit
 
 Dependency: P01.
 
@@ -126,7 +127,7 @@ Dependency: P01.
 Capture commands, counts and zero-skip results. Review diff for test-only scope.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Preserve independent Review and commit locally
+#### [x] P02-T02: Preserve independent Review and commit locally
 
 Independent Review runs once after implementation. Classify every finding against
 the requested contracts: unresolved in-scope acceptance failures mean blocked or
@@ -155,6 +156,9 @@ unresolved in-scope blockers. Original critique remains unchanged.
 ## Handoff
 
 P01 and P02-T01 complete; requested validation passes without skips.
-Independent Review Complete / Conformant, no findings; local commit remains P02-T02.
+Independent Review Complete / Conformant, no findings; local implementation and
+original evidence commit a272edfc6c2cbbdcd18da3c4bb92564603c417d8 verified.
+All P01/P02 markers complete. Final tracking reconciliation is a separate
+local evidence-only commit, not a new source candidate or repeated Review.
 No unresolved design decision. Changes record path is specified above;
 phase details use the same P01/P02 task IDs.
