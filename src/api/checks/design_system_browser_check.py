@@ -227,6 +227,8 @@ def run_browser(base: str) -> None:
 def main(
     browser_check: Callable[[str], None] = run_browser,
     data_factory: Callable[[], dict[str, Any]] = synthetic_data,
+    *,
+    synthetic_chat_privacy: bool = False,
 ) -> None:
     (ROOT / ".venv").mkdir(exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="zf-browser-", dir=ROOT / ".venv") as scratch:
@@ -252,6 +254,12 @@ def main(
             ZF_ENV="development",
             ZF_AUTH="password",
         )
+        if synthetic_chat_privacy:
+            env.update(
+                CHAT_DPIA_REF="SYNTH-BROWSER-DPIA",
+                CHAT_LAWFUL_BASIS_REF="SYNTH-BROWSER-BASIS",
+                CHAT_NOTICE_REF="SYNTH-BROWSER-NOTICE",
+            )
         with (work / "server.log").open("w+", encoding="utf-8") as log:
             process = subprocess.Popen(
                 [sys.executable, "-m", "zava_forward.api.server"],

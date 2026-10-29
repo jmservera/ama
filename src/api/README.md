@@ -204,6 +204,77 @@ dataset, Azure or a live model. These are engineering checks, not human
 screen-reader/usability acceptance, full Fluent runtime adoption or WCAG
 conformance.
 
+## Employee chat with bounded skills (#530)
+
+The employee header's "Ask the assistant" launcher opens one native dialog from
+every employee workspace route. It reuses core `ChatPanel`, agents `ChatModel`
+and the existing owned-thread API. The existing inline case and regulatory
+panels remain available. Contractors and signed-out users have no launcher or
+chat access.
+
+The five advisory skills use the IDs and purposes from core
+`assistants.REGISTRY`: `stock-prioritisation`, `assessment-preparation`,
+`funding-evidence`, `works-resident-coordination` and `quality-evidence`.
+An explicit selector chooses a skill or general work help; it is not permission
+to invoke that assistant's proposal operation. No tool, approval, sending,
+booking or domain-record write is available.
+
+Design decision (2026-10-29): keep one chat agent with five explicit skills,
+not a separate router or per-agent chat. One bounded `ChatModel` call per
+question avoids a router's additional inference hop and token use; no measured
+latency or cost improvement is claimed. Explicit selection makes the advisory
+purpose auditable, removes a routing-model failure point and retains one
+citation/output-validation and workflow-fallback path. A router offers inferred
+selection but no demonstrated grounding or reliability benefit for these five
+known choices. No departure from the owner-selected design is made.
+
+`GET /api/chat/skills` requires current employee chat permission.
+`POST /api/chat/threads/{id}/ask` accepts `content` and an optional `skill`.
+Omitting `skill` preserves the old case-panel behavior. Explicit `"general"`
+or one registry ID enables the new advisory mode. Null, unknown and nonstring
+skills are rejected before message storage or inference; extra fields are
+rejected. The thread schema and privacy admission are unchanged.
+
+Opening from `#/case/{id}` binds the conversation to that case/home. Every
+turn rereads the current employee and the same role-scoped case projection,
+then applies the existing closed external-context allowlist and skill category
+filter. Survey, funding and quality evidence not in that allowlist is explicitly
+unavailable; selecting its skill does not fetch hidden records. Other routes,
+including shared-building screens, use general workflow sources and disclose
+that no individual case/home is visible. Navigation, session expiry, account
+changes or denied access clear the dialog and abort stale UI results.
+
+Every answer carries "AI suggestion, not approved". Citations show permitted
+record fields or named `workflow/` sources; cited AI output is still not
+independently verified. Missing/failed models return plain workflow-only help,
+not an uncited answer or a record change. Questions are masked and stored in
+the owner's existing chat repository only after the existing DPIA, lawful-basis
+and staff-notice references pass. Best-effort masking is not a privacy
+guarantee; do not enter resident names or sensitive/contact details. The audit
+ledger stores thread ID, actual question sequence, selected skill and outcome,
+not duplicated free text. Existing retention and DPO decisions remain required.
+
+The dialog uses native controls, explicit keyboard focus wrapping, Escape and
+return focus, polite updates, shared `async-action.js` loading feedback and
+Fluent-derived tokens. It adds no motion; shared reduced-motion spinner rules
+still apply. Automated browser/axe evidence is not screen-reader, voice-control,
+employee usability, full Fluent adoption or WCAG-conformance acceptance.
+
+From `src/api`, with the worktree distributions installed:
+
+```bash
+PYTHONPATH=tests:../core/tests:../agents/tests python -m unittest \
+  test_chat_panel test_chat_isolation test_chat_fixture_roles test_workspace_scripts -q
+PYTHONPATH=tests:../core/tests:../agents/tests python -m checks.employee_chat_browser_check \
+  --axe /path/to/axe-4.10.3.min.js --out /new/external/employee-chat-results
+```
+
+The browser check uses an isolated constructed-data loopback server and
+explicit synthetic privacy references, actual unavailable-model fallback,
+intercepted answer-rendering cases and pinned axe on the open dialog.
+Actual SQL Server, live employee-site/model, hosted checks and human acceptance
+are separate. The 2026-10-29 local run did not perform live verification.
+
 ## Employee case journey workspace (#526)
 
 Employee case routes show a six-step evidence-based journey, six-value summary

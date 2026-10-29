@@ -1,6 +1,7 @@
 import json
 import unittest
 
+from zava_forward.core.assistants import REGISTRY
 from zava_forward.core.chat_panel import (
     ACTION_CLAIM,
     LABEL,
@@ -8,6 +9,7 @@ from zava_forward.core.chat_panel import (
     out_of_scope,
     parse_reply,
     permitted_sources,
+    skill_sources,
 )
 
 
@@ -37,6 +39,27 @@ class PureTests(unittest.TestCase):
             "ZF-1", dict(stage="Survey", resident=dict(adjustment="None"), empty="")
         )
         self.assertEqual(found, {"ZF-1/stage": "Survey", "ZF-1/resident.adjustment": "None"})
+
+    def test_skill_lenses_never_add_case_data_or_unrelated_categories(self) -> None:
+        sources = {
+            "ZF-1/stage": "Survey",
+            "ZF-1/home.epc": "D",
+            "ZF-1/resident.adjustment": "WITHHELD-CANARY",
+            "ZF-1/funding.route": "FUNDING-CANARY",
+        }
+        for skill in REGISTRY:
+            result = skill_sources(skill, sources)
+            self.assertEqual(result["ZF-1/stage"], "Survey")
+            self.assertEqual(result["ZF-1/home.epc"], "D")
+            self.assertNotIn("WITHHELD-CANARY", result.values())
+            if skill != "funding-evidence":
+                self.assertNotIn("FUNDING-CANARY", result.values())
+            self.assertIn("workflow/boundaries", result)
+
+    def test_general_sources_disclose_missing_record(self) -> None:
+        sources = skill_sources("general", {})
+        self.assertTrue(all(key.startswith("workflow/") for key in sources))
+        self.assertIn("No case or home record", sources["workflow/visibility"])
 
 
 class OutOfScopeTests(unittest.TestCase):

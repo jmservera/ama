@@ -215,6 +215,7 @@ function harness(outcomes = []) {
     coordinatorOrigin: null, queueOrigin: "mine",
     AsyncAction: {handler: task => task, run() {}, feedback() {}},
     qualityPanel() {}, financePanel() {}, assistantCasePanel() {}, chatCasePanel() {},
+    employeeChat: {install() {}, reset() {}},
     timeView() {}, roleScreensView() {},
     overviewView: async () => views.push("overview"),
     listView: async () => views.push("list"),
@@ -324,17 +325,19 @@ function harness(outcomes = []) {
   const cases = [
     ["#/case/ZF-1", true, "Retrofit Programme Manager",
       ["/ops.js", "/panels.js", "/assistants.js", "/chat.js"]],
-    ["#/capacity", false, "Retrofit Programme Manager", ["/ops.js"]],
-    ["#/finance", false, "Retrofit Programme Manager", ["/panels.js"]],
-    ["#/assistants", false, "Retrofit Programme Manager", ["/assistants.js"]],
-    ["#/time", false, "Retrofit Programme Manager", ["/timecapture.js"]],
-    ["#/screens?screen=example", false, "Retrofit Programme Manager", ["/role-screens.js"]],
-    ["#/overview", false, "Retrofit Programme Manager", ["/vendor/leaflet.js"]],
-    ["#/coordinator?area=example", false, "Retrofit Programme Manager", ["/vendor/leaflet.js"]],
+    ["#/capacity", false, "Retrofit Programme Manager", ["/ops.js", "/chat.js"]],
+    ["#/finance", false, "Retrofit Programme Manager", ["/panels.js", "/chat.js"]],
+    ["#/assistants", false, "Retrofit Programme Manager", ["/assistants.js", "/chat.js"]],
+    ["#/time", false, "Retrofit Programme Manager", ["/chat.js", "/timecapture.js"]],
+    ["#/screens?screen=example", false, "Retrofit Programme Manager",
+      ["/chat.js", "/role-screens.js"]],
+    ["#/overview", false, "Retrofit Programme Manager", ["/chat.js", "/vendor/leaflet.js"]],
+    ["#/coordinator?area=example", false, "Retrofit Programme Manager",
+      ["/chat.js", "/vendor/leaflet.js"]],
     ["#/", false, "Contractor", ["/ops.js"]],
     ["#/case/ZF-1", true, "Contractor", []],
     ["#/screens", false, "Contractor", ["/role-screens.js"]],
-    ["#/", false, "Retrofit Programme Manager", []]
+    ["#/", false, "Retrofit Programme Manager", ["/chat.js"]]
   ];
   for (const [hash, caseRoute, role, expected] of cases) {
     h = harness();

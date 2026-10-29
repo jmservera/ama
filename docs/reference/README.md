@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-10-28
+ms.date: 2026-10-29
 ms.date: 2026-10-23
 ---
 
@@ -20,6 +20,12 @@ Topic hubs work like the Maps of Content used in personal knowledge
 management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
+
+For #530, the [employee chat design and API guide](../../src/api/README.md#employee-chat-with-bounded-skills-530)
+records one read-only chat agent, five repository-defined advisory skills,
+explicit selection, role-projected grounding, minimal audit and workflow-only
+fallback. Local browser/axe checks are not live employee-site, actual model,
+screen-reader, voice-control or operational acceptance.
 
 Evidence: the [whole-project Responsible AI review](./research/rai/project-rai-review.md)
 assesses the 2026-10-28 source baseline across both sites, five bounded agents,

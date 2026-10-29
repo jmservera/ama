@@ -7984,3 +7984,14 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Preserve draft-only immutable review, human approval and manual paths.
   HAX/Fluent sources are pattern references, not employee user research,
   accessibility conformance, full Fluent adoption or live-site acceptance.
+
+## [2026-10-29] query | Employee chat skills design (#530)
+
+* Filed the one-agent/five-skill versus router comparison in the
+  [API guide](../../src/api/README.md#employee-chat-with-bounded-skills-530)
+  and linked it from the index. Explicit selection avoids another model hop;
+  no measured cost or latency improvement is claimed.
+* Preserve role projection, privacy admission, minimal metadata audit,
+  workflow-only fallback and human authority. Local checks do not establish
+  actual SQL/live-site/model acceptance, screen-reader/voice-control acceptance
+  or a complete publication gate.
