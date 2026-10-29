@@ -96,6 +96,186 @@ class FormReview(unittest.TestCase):
             ),
         )
 
+    def unavailable_entry(self, draft: Any) -> dict[str, Any]:
+        return dict(
+            draft_id=draft["draft_id"],
+            status="Unavailable",
+            notice="Working evidence is unavailable. Ask the document owner to recover its source.",
+        )
+
+    def test_blank_required_strings_preserve_corrections_and_saved_missing_diagnostics(
+        self,
+    ) -> None:
+        for store in self.stores:
+            definition = schema()
+            for field in definition["fields"]:
+                field.update(type="string", options=[])
+            draft, epc, area = self.prepare(store, definition)
+            draft = self.review(store, draft, epc)
+            for fid, staged in (("area", area), ("epc", epc)):
+                for blank in ("", " \t\n"):
+                    with self.subTest(store=type(store).__name__, field=fid, value=blank):
+                        draft = self.review(store, draft, staged, fid, "correct", blank)
+                        missing = dict(
+                            field_id=fid,
+                            status="Unknown",
+                            reason="Required confirmed input is missing.",
+                        )
+                        self.assertIn(missing, draft["issues"])
+                        self.assertFalse(any(i["status"] == "Fail" for i in draft["issues"]))
+                        self.assertEqual(draft["fields"][fid]["value"], blank)
+                        self.assertEqual(draft["fields"][fid]["state"], "Corrected")
+                        self.assertEqual(draft["history"][-1]["new"]["value"], blank)
+                        self.assertEqual(draft["history"][-1]["decision"], "correct")
+                        self.assertEqual(
+                            draft["history"][-1]["new"]["evidence"]["raw_value"],
+                            staged["candidates"][0]["raw_value"],
+                        )
+                        if fid == "epc":
+                            self.assertIn(
+                                dict(
+                                    field_id="area",
+                                    status="Unknown",
+                                    reason="Conditional requirement is unknown.",
+                                ),
+                                draft["issues"],
+                            )
+                        history = copy.deepcopy(draft["history"])
+                        draft = form_review.action(
+                            store,
+                            self.actor,
+                            "ZF-1",
+                            dict(
+                                action="diagnose",
+                                draft_id=draft["draft_id"],
+                                expected_version=draft["input_version"],
+                            ),
+                        )
+                        self.assertIn(missing, draft["issues"])
+                        saved = form_review.view(self.reopen(store), self.actor, "ZF-1")
+                        report = saved["drafts"][0]
+                        self.assertIn(missing, report["issues"])
+                        self.assertEqual(report["history"], history)
+                        self.assertEqual(report["recorded_diagnostics"][-1], draft)
+                        self.assertEqual(draft["history"], history)
+
+    def test_required_zero_and_false_remain_confirmed_and_activate_typed_conditions(self) -> None:
+        for store in self.stores:
+            definition = schema()
+            definition["fields"][0].update(type="number", options=[])
+            definition["fields"][1].update(
+                type="boolean", required=True, required_when=[], calculation_ref=None
+            )
+            for fid, controlling, value in (
+                ("zero_detail", "epc", 0),
+                ("false_detail", "area", False),
+            ):
+                definition["fields"].append(
+                    dict(
+                        copy.deepcopy(definition["fields"][0]),
+                        id=fid,
+                        type="string",
+                        required=False,
+                        required_when=[dict(field_id=controlling, equals=value)],
+                    )
+                )
+            draft, epc, area = self.prepare(store, definition)
+            draft = self.review(store, draft, epc, decision="correct", value=0)
+            draft = self.review(store, draft, area, "area", "correct", False)
+            draft = form_review.action(
+                store,
+                self.actor,
+                "ZF-1",
+                dict(
+                    action="diagnose",
+                    draft_id=draft["draft_id"],
+                    expected_version=draft["input_version"],
+                ),
+            )
+            saved = form_review.view(self.reopen(store), self.actor, "ZF-1")["drafts"][0]
+            for report in (draft, saved, saved["recorded_diagnostics"][-1]):
+                self.assertEqual(report["fields"]["epc"]["value"], 0)
+                self.assertIs(report["fields"]["area"]["value"], False)
+                self.assertEqual(
+                    report["issues"],
+                    [
+                        dict(
+                            field_id=fid,
+                            status="Unknown",
+                            reason="Required confirmed input is missing.",
+                        )
+                        for fid in ("zero_detail", "false_detail")
+                    ],
+                )
+
+    def test_unavailable_retained_source_hides_only_affected_draft(self) -> None:
+        for store in self.stores:
+            draft, epc, area = self.prepare(store)
+            draft = self.review(store, draft, epc)
+            draft = form_review.action(
+                store,
+                self.actor,
+                "ZF-1",
+                dict(
+                    action="diagnose",
+                    draft_id=draft["draft_id"],
+                    expected_version=draft["input_version"],
+                ),
+            )
+            sibling = form_review.action(
+                store,
+                self.actor,
+                "ZF-1",
+                dict(action="open", schema_id="SYN-TECH", schema_version=1),
+            )
+            self.review(store, sibling, area, "area", "correct", 12)
+            original = form_review.view(store, self.actor, "ZF-1")
+            documents = copy.deepcopy(store._case("ZF-1")["documents"])
+            did = epc["source"]["id"]
+            for changed in ("missing-bytes", "deleted", "pending", "infected"):
+                with self.subTest(store=type(store).__name__, changed=changed):
+                    if changed == "missing-bytes":
+                        store.docstore.delete("ZF-1", did)
+                    else:
+                        with store.lock:
+                            case = store._case("ZF-1")
+                            doc = next(d for d in case["documents"] if d["id"] == did)
+                            if changed == "deleted":
+                                case["documents"].remove(doc)
+                            else:
+                                doc["scan"]["status"] = changed
+                            store.save()
+                    before = copy.deepcopy(store._case("ZF-1"))
+                    audit = list(store.audit_entries())
+                    reopened = self.reopen(store)
+                    with (
+                        patch.object(reopened, "save", side_effect=AssertionError("No save")),
+                        patch.object(
+                            reopened, "ensure_scanned", side_effect=AssertionError("No scan")
+                        ),
+                        patch.object(
+                            reopened.docstore, "put", side_effect=AssertionError("No put")
+                        ),
+                        patch.object(
+                            reopened.docstore, "delete", side_effect=AssertionError("No delete")
+                        ),
+                    ):
+                        result = form_review.view(reopened, self.actor, "ZF-1")
+                    self.assertEqual(
+                        result["drafts"],
+                        [self.unavailable_entry(draft), original["drafts"][1]],
+                    )
+                    self.assertEqual(result["decision_holds"], original["decision_holds"])
+                    self.assertEqual(self.reopen(store)._case("ZF-1"), before)
+                    self.assertEqual(list(store.audit_entries()), audit)
+                    with store.lock:
+                        store._case("ZF-1")["documents"] = copy.deepcopy(documents)
+                        store.save()
+                    store.docstore.put("ZF-1", did, b"D", "text/plain")
+                    self.assertEqual(
+                        form_review.view(self.reopen(store), self.actor, "ZF-1"), original
+                    )
+
     def prepare_shared_source(self, store: Any) -> tuple[Any, Any, Any]:
         draft, epc, other = self.prepare(store)
         request = batch(epc["source"]["id"])
@@ -172,8 +352,10 @@ class FormReview(unittest.TestCase):
                             store.docstore, "delete", side_effect=AssertionError("No delete")
                         ),
                     ):
-                        with self.assertRaises(DocumentUnavailable):
-                            form_review.view(store, self.actor, "ZF-1")
+                        self.assertEqual(
+                            form_review.view(store, self.actor, "ZF-1")["drafts"],
+                            [self.unavailable_entry(draft)],
+                        )
                         with self.assertRaises(DocumentUnavailable):
                             self.review(store, draft, staged, decision="reject")
                         with self.assertRaises(DocumentUnavailable):
@@ -226,8 +408,10 @@ class FormReview(unittest.TestCase):
                         store.save()
                     before = copy.deepcopy(store._case("ZF-1"))
                     store.docstore.delete("ZF-1", epc["source"]["id"])
-                    with self.assertRaises(DocumentUnavailable):
-                        form_review.view(store, self.actor, "ZF-1")
+                    self.assertEqual(
+                        form_review.view(store, self.actor, "ZF-1")["drafts"],
+                        [self.unavailable_entry(draft)],
+                    )
                     self.assertEqual(self.reopen(store)._case("ZF-1"), before)
                     store.docstore.put("ZF-1", epc["source"]["id"], b"D", "text/plain")
                     report = form_review.view(store, self.actor, "ZF-1")["drafts"][0]
@@ -275,8 +459,10 @@ class FormReview(unittest.TestCase):
                     self.assertEqual(report["stale_fields"], ["area", "epc"])
                     self.assertEqual(report["history"], draft["history"])
             store.docstore.delete("ZF-1", epc["source"]["id"])
-            with self.assertRaises(DocumentUnavailable):
-                form_review.view(store, self.actor, "ZF-1")
+            self.assertEqual(
+                form_review.view(store, self.actor, "ZF-1")["drafts"],
+                [self.unavailable_entry(draft)],
+            )
 
     def test_retained_source_storage_outage_is_not_missing_or_stale(self) -> None:
         for store in self.stores:
@@ -693,8 +879,10 @@ class FormReview(unittest.TestCase):
                         doc["scan"] = dict(status=status)
                     store.save()
                 with patch.object(store, "ensure_scanned", side_effect=AssertionError("No scan")):
-                    with self.assertRaises(DocumentUnavailable):
-                        form_review.view(store, self.actor, "ZF-1")
+                    self.assertEqual(
+                        form_review.view(store, self.actor, "ZF-1")["drafts"],
+                        [self.unavailable_entry(draft)],
+                    )
                     with self.assertRaises(DocumentUnavailable):
                         self.review(store, draft, epc, decision="reject")
                 self.assertEqual(store._case("ZF-1")["form_reviews"][0]["history"], before_history)
@@ -703,8 +891,10 @@ class FormReview(unittest.TestCase):
                     d for d in store._case("ZF-1")["documents"] if d["id"] != epc["source"]["id"]
                 ]
                 store.save()
-            with self.assertRaises(DocumentUnavailable):
-                form_review.view(self.reopen(store), self.actor, "ZF-1")
+            self.assertEqual(
+                form_review.view(self.reopen(store), self.actor, "ZF-1")["drafts"],
+                [self.unavailable_entry(draft)],
+            )
             self.assertEqual(store._case("ZF-1")["form_reviews"][0]["history"], before_history)
 
     def test_foreign_candidate_role_forgery_human_only_and_version_rejected(self) -> None:

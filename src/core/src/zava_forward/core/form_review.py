@@ -241,7 +241,8 @@ def _report(store: Any, case: Record, draft: Record, digests: Digests | None = N
             row["effective_state"] = row["state"]
         if row["effective_state"] in ("Accepted", "Corrected"):
             if _valid(row["value"], field):
-                confirmed[fid] = row["value"]
+                if not isinstance(row["value"], str) or row["value"].strip():
+                    confirmed[fid] = row["value"]
             else:
                 issues.append(dict(field_id=fid, status="Fail", reason="Wrong schema value type."))
         elif row["effective_state"] == "Stale":
@@ -332,11 +333,25 @@ def view(store: Any, user: Record, case_id: str) -> Record:
     with store.lock:
         forms._actor(store, user)
         case = store._case(case_id)
+        drafts = []
+        for draft in case.get("form_reviews", []):
+            try:
+                report = dict(
+                    _report(store, case, draft),
+                    recorded_diagnostics=deepcopy(draft["diagnostics"]),
+                )
+            except DocumentUnavailable:
+                report = dict(
+                    draft_id=draft["id"],
+                    status="Unavailable",
+                    notice=(
+                        "Working evidence is unavailable. "
+                        "Ask the document owner to recover its source."
+                    ),
+                )
+            drafts.append(report)
         return dict(
-            drafts=[
-                dict(_report(store, case, d), recorded_diagnostics=deepcopy(d["diagnostics"]))
-                for d in case.get("form_reviews", [])
-            ],
+            drafts=drafts,
             decision_holds=deepcopy(case.get("finance_decision_holds", [])),
             notice=NOTICE,
         )

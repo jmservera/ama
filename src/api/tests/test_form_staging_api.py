@@ -249,7 +249,7 @@ class FormApi(unittest.TestCase):
         with self.assertRaises(urllib.error.HTTPError) as caught:
             urllib.request.urlopen(self.base + path)
         self.assertEqual(caught.exception.code, 401)
-        _, request = self.working_review()
+        draft, request = self.working_review()
         for actor in ("sam", "kim"):
             self.assertEqual(self.call(actor, path)[0], 403)
             self.assertEqual(self.call(actor, path, request)[0], 403)
@@ -262,9 +262,73 @@ class FormApi(unittest.TestCase):
             self.store._case("ZF-1")["documents"][0]["scan"]["status"] = "infected"
             self.store.save()
         code, denied = self.call("pam", path)
-        self.assertEqual(code, 403, denied)
+        self.assertEqual(code, 200, denied)
+        self.assertEqual(
+            denied["drafts"],
+            [
+                dict(
+                    draft_id=draft["draft_id"],
+                    status="Unavailable",
+                    notice=(
+                        "Working evidence is unavailable. "
+                        "Ask the document owner to recover its source."
+                    ),
+                )
+            ],
+        )
         self.assertNotIn("SYN field review reason", json.dumps(denied))
         self.assertNotIn("raw_value", json.dumps(denied))
+        self.assertEqual(self.call("pam", path, dict(request, expected_version=2))[0], 403)
+
+    def test_unavailable_draft_does_not_block_readable_sibling(self) -> None:
+        path = "/api/cases/ZF-1/form-review"
+        draft, request = self.working_review()
+        self.assertEqual(self.call("pam", path, request)[0], 201)
+        actor = self.store.staff["pam@example.test"]
+        doc = self.store.add_document(
+            actor,
+            "ZF-1",
+            "sibling.txt",
+            "EPC",
+            b"E",
+            metadata=change_metadata(self.store, "ZF-1"),
+        )
+        code, staged = self.call("pam", "/api/cases/ZF-1/form-candidates", batch(doc["id"], "E", 0))
+        self.assertEqual(code, 201, staged)
+        code, sibling = self.call(
+            "pam", path, dict(action="open", schema_id="SYN-TECH", schema_version=1)
+        )
+        self.assertEqual(code, 201, sibling)
+        code, readable = self.call(
+            "pam",
+            path,
+            dict(
+                request,
+                draft_id=sibling["draft_id"],
+                batch_id=staged["id"],
+                candidate_id=staged["candidates"][0]["id"],
+            ),
+        )
+        self.assertEqual(code, 201, readable)
+        with self.store.lock:
+            self.store._case("ZF-1")["documents"][0]["scan"]["status"] = "infected"
+            self.store.save()
+        code, result = self.call("pam", path)
+        self.assertEqual(code, 200, result)
+        self.assertEqual(
+            result["drafts"],
+            [
+                dict(
+                    draft_id=draft["draft_id"],
+                    status="Unavailable",
+                    notice=(
+                        "Working evidence is unavailable. "
+                        "Ask the document owner to recover its source."
+                    ),
+                ),
+                dict(readable, recorded_diagnostics=[]),
+            ],
+        )
 
     def test_working_review_storage_failure_reports_error_without_partial_history(self) -> None:
         path = "/api/cases/ZF-1/form-review"

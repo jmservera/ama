@@ -147,7 +147,10 @@ SQLite additionally protects independent writers with database rowversions.
 diagnostics and source-linked diagnostic manifests. Conditions use confirmed,
 valid, current values only, combine predicates with OR and compare types
 exactly (`true` is not integer `1`). Missing/invalid/stale controlling inputs
-produce Unknown unless another predicate is true. Dates must be valid calendar
+produce Unknown unless another predicate is true. Empty or whitespace-only
+strings remain recorded corrections but are not confirmed inputs: unconditional
+and active conditional requirements still report missing input. Numeric zero
+and boolean false remain valid confirmed inputs. Dates must be valid calendar
 dates in `YYYY-MM-DD`; numeric checks exclude booleans and non-finite floats.
 Units, currency, eligibility and approved calculations remain Not evaluated.
 `reviewed_ready` is always false, even if no local structural issue remains.
@@ -168,8 +171,11 @@ reviews/values and recorded diagnostic snapshots remain intact. This is not
 full FR-043/AC-051 rule/calculation/pack-review/approval stale propagation.
 Already-clean evidence is required: reads/reviews never scan or save a source.
 Missing, pending, quarantined or deleted retained evidence blocks disclosure of
-the entire affected draft/history, including recorded diagnostics. Availability
-is checked for current fields, prior/new history evidence and diagnostic
+the entire affected draft/history, including recorded diagnostics. On `view`,
+availability is isolated per draft: the affected entry contains only `draft_id`,
+`status: "Unavailable"` and a fixed recovery `notice`; unrelated available
+drafts remain readable. Actions on an affected draft still refuse access.
+Availability is checked for current fields, prior/new history evidence and diagnostic
 fields/history/attachments even when the schema is stale or a field was
 rejected/replaced. Staleness alone does not remove available history.
 Unreviewed alternatives count toward Conflict only if their case/schema,
