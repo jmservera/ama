@@ -8012,3 +8012,21 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   unperformed and generated assets unchanged. The full publication gate
   remains blocked by its az invocation under the owner's no-az instruction;
   no push or external submission is made.
+
+## [2026-10-27] ingest | Bounded sensor validation scenarios and two-stage dictionary
+
+* Added a separate installed synthetic scenario pack and external tests for
+  #190/#192/#193/#194: seven damp/data-quality cases, four paired retrofit
+  cases, evaluator-only truth, deterministic per-check reports, case-level
+  confusion, explicit insufficiency and fixed-truth threshold sensitivity.
+* Updated the existing IoT research synthesis, sensor data dictionary, core
+  simulator guide and this index. Corrected the dictionary's stale claim that
+  composed climate/dated measures were unavailable; preserved historical
+  source/approval limits and the original #191 exercise bounds.
+* Recorded the actual retained ERA5 provenance, CC BY attribution, historical
+  terms and synthetic-only owner approval without claiming a fresh terms
+  check, underlying C3S Legal approval or real measurements. New scenario
+  weather is explicitly constructed, not ERA5.
+* Actual #111/#133 integration and a runnable #184 publisher remain unmet.
+  R2 competent review, agreed R3 error limits, real consent, operational use
+  and parent closure are not inferred from standalone synthetic tests.

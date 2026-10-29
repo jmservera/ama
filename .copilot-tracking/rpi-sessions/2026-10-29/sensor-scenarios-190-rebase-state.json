@@ -1,0 +1,93 @@
+{
+  "task_id": "505",
+  "task_slug": "sensor-scenarios-190-rebase",
+  "parent_task": {
+    "task_id": "190",
+    "task_slug": "sensor-scenarios-190"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-29/sensor-scenarios-190-rebase-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-29/sensor-scenarios-190-rebase-plan.md",
+    "details": ".copilot-tracking/details/2026-10-29/sensor-scenarios-190-rebase-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-29/sensor-scenarios-190-rebase-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-29/sensor-scenarios-190-rebase-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-29/sensor-scenarios-190-rebase-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the explicitly selected full-loop follow-up on feat/sensor-scenarios-190; rebase origin/main; commit but do not push",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-29; original parent state records automatic/running Follow-up"
+    },
+    {
+      "decision": "Preserve historical original critique/Review and unmet downstream acceptance; use Refs only",
+      "status": "confirmed",
+      "evidence": "User request and original 2026-10-27 state"
+    },
+    {
+      "decision": "Research executed, Planning Readiness Ready; rebase with main-owned model and fixture pins",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/research/2026-10-29/sensor-scenarios-190-rebase-research.md"
+    },
+    {
+      "decision": "One critique executed Complete/Revise; PC-001 rejected because its asserted /tmp ban is unsupported in parent context and contradicts explicit caller-selected environment",
+      "status": "disposed; plan Ready",
+      "evidence": ".copilot-tracking/plans/2026-10-29/sensor-scenarios-190-rebase-plan.md#critique-disposition"
+    },
+    {
+      "decision": "P01-P03 complete; rebase resolved three docs conflicts; main rubric/manifest retained; core/API static checks pass; selected unit tests 174 run/173 passed/one existing SQL skip; migration 25 passed",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/changes/2026-10-29/sensor-scenarios-190-rebase-changes.md"
+    },
+    {
+      "decision": "One independent Review executed Complete / Conformant for the bounded precommit rebase; zero new findings; no exact-final-head publication acceptance inferred",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/sensor-scenarios-190-rebase-review.md"
+    },
+    {
+      "decision": "Remote branch has one extra rubric-only score commit e2c9f0eb beyond original local head; caller-selected main rubric supersedes it and no implementation work is omitted",
+      "status": "recorded",
+      "evidence": "Read-only git log/diff and PR head metadata; changes artifact Commit and Coordinator Boundary"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "PUBLICATION-GATE",
+      "summary": "Shared heavy lock is held elsewhere; full publication gate has not run",
+      "resolution": "Coordinator runs and verifies the complete gate on exact committed candidate/base when capacity is available; no push in this task"
+    },
+    {
+      "id": "HOSTED-CI",
+      "summary": "Rebased candidate is intentionally unpushed, so no fresh hosted mergeability or CI status exists",
+      "resolution": "Coordinator pushes authorized rewritten branch and observes required hosted checks; draft and original acceptance boundaries stay unchanged"
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Coordinator receives locally committed unpushed candidate; clear publication-gate capacity blocker, verify exact head/base, then publish and observe hosted CI. No child follow-up selected"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator completes exact-candidate publication gate when shared capacity is available",
+      "rationale": "Required evidence before publication; no source defect or further implementation is indicated",
+      "evidence": "PUBLICATION-GATE; repeated final heavy-lock probes exit 1"
+    },
+    {
+      "rank": 2,
+      "task": "Coordinator publishes the rebased branch and verifies hosted CI and mergeability",
+      "rationale": "Direct remaining PR integration outcome, dependent on publication permission and current-base exact-head checks",
+      "evidence": "HOSTED-CI; remote e2c9f0eb intentionally unchanged; only main-owned old rubric score is superseded"
+    },
+    {
+      "rank": 3,
+      "task": "Original owners reconcile historical RV-001 and downstream/live/parent acceptance",
+      "rationale": "Preserves substantive original feature limits without expanding this completed rebase or inventing closure",
+      "evidence": ".copilot-tracking/rpi-sessions/2026-10-27/sensor-scenarios-190-state.json"
+    }
+  ]
+}

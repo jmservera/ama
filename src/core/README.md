@@ -2471,6 +2471,155 @@ a five-home fictional selection produced 292 delivered rows and 144 truth
 packets across all 11 classes, with byte-identical reruns. These are synthetic
 engineering results, not real-device or predictive-performance evidence.
 
+### Synthetic scenario validation pack (#190, #192, #193, #194)
+
+The installed `synthetic.sensor_scenarios` module generates a separate bounded
+exercise pack; it never appends to general history or reads private stock,
+resident data or installed devices. It reuses clean `sensor_backfill.readings()`
+and the shared observation schema. Profiles are explicit fictional overlays,
+not calibrated building physics or the beneficial-only dated fabric-loss model.
+Default backfill bytes and workflow/check names are unchanged.
+
+From the repository root, with the core package installed:
+
+```bash
+python3 -m zava_forward.core.synthetic.sensor_scenarios \
+  --seed 190 --out /external/new-sensor-scenarios-190
+cd src/core
+python3 -m unittest discover -s tests -p test_sensor_scenarios.py -v
+```
+
+Choose a genuinely new external path, not the literal example if unavailable.
+The CLI rejects repository/worktree destinations, symlink components, files and
+nonempty folders. Same seed, sources and Python version reproduce identical
+bytes. `--seed` is an integer 0..2^63-1 (default 190); `--out` is required.
+`--humidity-threshold` changes the exercise comparator's RH percent threshold
+(finite 0..100, default 75), not the fixed expected labels. Exit 0 means every
+listed exercise outcome/delta check matched, 1 means checks failed (report is
+retained), and 2 means invalid input or an I/O failure. There is deliberately
+no single overall pass field.
+
+| Parameter or profile | Exercise definition |
+| --- | --- |
+| Window/cadence | 2024-01-01 inclusive to 2024-01-29 exclusive, hourly UTC; 672 nominal observations/case |
+| Baseline | 20 C, 55% RH plus 0.15 times centred weekly clean-backfill residuals, repeated weekly |
+| Weather | Constructed constant 2 C/70% outdoor RH; not the separately retained ERA5 data |
+| Normal | Baseline; expected NO_EXERCISE_SIGNAL |
+| Condensation-prone | -5 C/+37 RH points; expected REVIEW_CANDIDATE, not proof of surface condensation |
+| Sustained high humidity | +27 RH points; expected REVIEW_CANDIDATE |
+| Repeated overnight peaks | +30 RH points at UTC hours 00..05; expected REVIEW_CANDIDATE |
+| Sensor fault | Both channels held at 20 C/55% for first 48 hours; expected INSUFFICIENT |
+| Missing data | Retain only every fourth nominal hour (75% missing); expected INSUFFICIENT |
+| Seasonal shift | Linear -2 C/+8 RH points across the window; expected NO_EXERCISE_SIGNAL |
+| Retrofit improvement | From day 14: +2 C/-10 RH points |
+| Retrofit no change | Recorded completion day 14, zero temperature/RH step |
+| Retrofit delayed effect | Recorded completion day 14; from day 21: +1.5 C/-6 RH points |
+| Retrofit adverse effect | From day 14: -1 C/+8 RH points |
+
+These are hand-designed tests, not observed performance, prevalence, a safety
+threshold, evidence of completed works, resident behaviour or a savings promise.
+The linear seasonal case is an exercise trend, not historical climate validation.
+Air temperature/RH alone cannot establish surface condensation or mould.
+
+Point any analysis only at `analysis/`:
+
+* `analysis/C01.csv` through `C11.csv` use the exact 13-field
+  `sensor-fault-input-v1` contract. All have `source_type=SYNTHETIC`,
+  `scenario=SCENARIO_PACK` and the common actual pack seed. Neutral identities
+  and that seed are never used as classification features. No labels,
+  expected outcomes, injected-fault columns or RNG keys are present.
+* `analysis/windows.json` holds neutral case/file IDs, the common UTC window,
+  cadence and a completion instant for the four retrofit cases. It exposes
+  no outcome, size or delayed activation time.
+* `truth/cases.json` holds evaluator-only labels, actual seed/RNG stream keys,
+  expected outcomes, exercise deltas and delay. `truth/report.json` holds
+  per-case checks, observed statistics, confusion and sensitivity.
+* `truth/manifest.json` binds all relative payload hashes, generator/comparator
+  versions, source fingerprint, Python version, seed, weather and parameters.
+  The report separately hashes only its analysis inputs. No absolute path or
+  current wall-clock time affects payloads.
+
+This is interface/file separation, not OS access control. Restrict truth access;
+do not give the evaluator directory to an analysis process. General backfill
+loaders are not scenario importers; no case/control/consent records are granted.
+
+The observations-only exercise comparator checks the exact UTC hourly grid,
+order, uniqueness, units, labels, calibration and finite exercise domains
+(-10..45 C, 0..100% RH). It requires >=90% valid coverage in the whole window,
+each UTC day and each UTC overnight [00:00,06:00), and rejects >=24 consecutive
+identical paired samples as a flatline. Missing slots break persistence runs.
+Invalid/inadequate data yields INSUFFICIENT with reasons and null means.
+Otherwise >=12 consecutive hours at/above the RH threshold, or >=3 nights
+each with >=3 high-RH overnight samples, yields REVIEW_CANDIDATE.
+NO_EXERCISE_SIGNAL is not an assurance of a healthy or safe home. Freshness
+against an operational clock and approved thresholds remain #111 work.
+
+Confusion uses seven damp cases, one case per trial: five binary-eligible
+cases and two expected-insufficient cases. TP/TN/FP/FN use only binary
+predictions; unexpected insufficiency is an explicit abstention, not a true
+negative or silently removed eligible case. Expected-insufficient results
+have separate correct/incorrect counters. Rates state their classified
+denominators and are null when not computable. Sensitivity reruns 70/75/85%
+against the same truth, so the 85% setting exposes misses.
+The four retrofit cases are excluded from binary confusion.
+
+Retrofit comparisons show independent counts/coverage and means for baseline
+[day0,day7), early [day14,day21) and late [day21,day28), with per-window
+sufficiency and null deltas on insufficient input. The first early sample is
+the completion instant; the first late sample is delayed activation.
+Each early/late delta is checked separately against its exercise target
+within 0.02 C/RH points. Matched weekly cycles isolate the constructed step;
+they do not establish causal weather adjustment for real homes.
+
+### Two-stage simulator operation and limits (#194)
+
+Stage 1 is runnable through `synthetic.sensor_backfill`; estimate before writing.
+The legacy, register, fault and approved paired-climate commands above describe
+their distinct schemas and limits. Defaults are 730 days, 60-minute cadence,
+seed 183 and a synthetic seasonal weather model. Explicit `--as-of` selects a
+half-open UTC window; `--cadence` must divide 1440. Paired-climate mode requires
+an explicit wholly synthetic register, complete retained hourly source coverage
+and optional synthetic dated measures. Exact subsampling neither fills gaps nor
+repeats years. Storage estimates are not completed full-stock materializations.
+
+Stage 2 (#184) has a delivered shared observation contract (#186), **not a
+runnable live publisher**. No live command, rate limiter, retry/replay scheduler,
+provisioner, credential handling or cloud acceptance is claimed here.
+Future authorized live operation must use the shared schema, stable IDs,
+per-device authentication, synthetic-only identities, explicit N/rate/volume/
+replay/cost limits and the independent #110 consumer controls. The declared
+live exercise accounting is three paired observations/home/day: `3N` records/day,
+180,000 for N=60,000; the hourly scenario pack is a separate offline test cadence.
+See the [shared schema and measured-volume contract](../../docs/reference/research/iot-sensor-analytics-research-plan.md#shared-observation-contract-and-volume-2026-10-18-refs-186).
+No simulator discovers, connects to or represents an installed real device.
+Never put device keys/connection strings in source, generated rows or logs.
+
+The [climate source metadata](../../docs/reference/research/climate-paired-source-178/open-meteo-era5-durham-2023-2024-metadata.json)
+records Open-Meteo ERA5 Durham-grid hourly outdoor reanalysis, retrieved
+2026-10-27, 2023-01-01 through 2024-12-31, input SHA-256
+`af76a90414d9ad8f19dacc95a38f06d4c4321a91bdf030ba231558c42506051e`.
+It is one 0.25-degree cell, not a station or indoor measurements.
+Attribution: Weather data by [Open-Meteo.com](https://open-meteo.com/),
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); underlying ERA5 is
+Copernicus Climate Change Service (C3S) material. Raw bytes retained unchanged;
+bounds summarised and exact timestamps subsampled for synthetic projections.
+Hersbach et al. (2023), DOI
+[10.24381/cds.adbb2d47](https://doi.org/10.24381/cds.adbb2d47);
+Open-Meteo software: Zippenfenig (2023),
+[10.5281/ZENODO.7970649](https://doi.org/10.5281/ZENODO.7970649).
+The metadata preserves 2026-10-22 terms snapshots, free-API non-commercial
+conditions and unverified underlying C3S reuse terms. Owner approval
+`owner-approvals-2026-10-27-b` is synthetic-demonstrator-only, not Legal or
+production qualification. No new terms retrieval/approval occurs here.
+The scenario pack uses none of those climate bytes.
+
+All emitted indoor data is simulated, not evidence of installed devices or
+real home conditions. No signal diagnoses a hazard, dismisses a resident report,
+starts a clock, releases a hold, changes ranking, grants consent or creates an
+approved task. Human review, resident choice and BRD OD-43 remain unchanged.
+Actual #111/#133 consumer test use, a runnable live stage, competent R2 review,
+agreed R3 limits and operational acceptance are still unproven.
+
 ### Existing reproducibility and plausibility evidence
 
 * Reproducibility and refresh (#176): scale fixture v1.2.0 and sensor backfill
