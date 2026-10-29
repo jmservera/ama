@@ -192,6 +192,85 @@ def review_pending_cleanup(page, base, check, scan):
     page.remove_listener("dialog", accept_leave)
 
 
+def review_outcome_history(page, base, check, scan):
+    def accept_leave(dialog):
+        dialog.accept()
+
+    page.on("dialog", accept_leave)
+    for queue in (False, True):
+        for status in (409, 503):
+            for outcome in ("committed", "uncertain"):
+                proposal = {
+                    "id": f"SYN-ROUND7-{queue}-{status}-{outcome}", "revision": 1, "version": 1,
+                    "case_id": "ZF-1", "capability": "stock-prioritisation", "state": "ready",
+                    "display_state": "ready", "manual": "Continue ordinary case work.",
+                    "attempts": 1, "provenance": [], "snapshot": {}, "envelope": {},
+                    "output": {"summary": "Constructed outcome", "findings": [], "unknowns": []},
+                    "verification": {"by": "pam@example.test", "note": "Constructed verification"},
+                }
+                pending, reads = [], []
+                defer = False
+
+                def listing(route):
+                    if defer:
+                        reads.append(route)
+                    else:
+                        route.fulfill(json={"proposals": [proposal], "next_after": None})
+
+                page.route("**/api/assistants/proposals?**", listing)
+                page.route("**/api/assistants/proposals", listing)
+                page.route("**/api/assistants/proposals/*/review",
+                           lambda route: pending.append(route))
+                destination = "#/assistants" if queue else "#/case/ZF-1?tab=ai"
+                page.goto(base + f"/app?round7={queue}-{status}-{outcome}" + destination)
+                card = page.locator(f'article[data-proposal-id="{proposal["id"]}"]')
+                reason = card.get_by_label("Reason", exact=True)
+                reason.fill("Retained supplied review reason")
+                reject = card.get_by_role("button", name=re.compile(r"^Reject"))
+                reject.click()
+                expect(reject).to_be_disabled()
+                defer = True
+                refresh = page.get_by_role(
+                    "button", name="Refresh queue" if queue else "Refresh proposals", exact=True
+                )
+                with page.expect_request(re.compile(r"/api/assistants/proposals(?:\?|$)")):
+                    refresh.click()
+                # This listing began while the POST was pending, not after its outcome.
+                pending[0].fulfill(
+                    status=status, json={"error": "Synthetic review outcome", "outcome": outcome}
+                )
+                page.wait_for_function(
+                    "key => proposalReviewStates.get(key)?.state === 'uncertain'",
+                    arg=f"{proposal['id']}:1",
+                )
+                check(f"old proposal listing held/{queue}/{status}/{outcome}", len(reads) == 1)
+                reads.pop().fulfill(json={"proposals": [proposal], "next_after": None})
+                expect(card).to_have_count(1)
+                expect(reject).to_be_disabled()
+                reject.evaluate("el => el.click()")
+                check(f"old listing cannot unlock outcome/{queue}/{status}/{outcome}",
+                      len(pending) == 1)
+                scan(page, f"review-history-{queue}-{status}-{outcome}")
+                # A relevant read initiated after the barrier may reconcile this revision.
+                defer = False
+                if outcome == "committed":
+                    proposal.update(revision=2, state="rejected", display_state="rejected",
+                                    review={"note": "Retained supplied review reason"})
+                refresh.click()
+                if outcome == "committed":
+                    expect(card).to_have_attribute("data-proposal-revision", "2")
+                    expect(card).to_contain_text("rejected")
+                else:
+                    expect(reject).to_be_enabled()
+                    expect(reason).to_have_value("" if queue else "Retained supplied review reason")
+                check(f"fresh proposal listing reconciles/{queue}/{status}/{outcome}",
+                      len(pending) == 1)
+                page.unroute("**/api/assistants/proposals?**", listing)
+                page.unroute("**/api/assistants/proposals", listing)
+                page.unroute("**/api/assistants/proposals/*/review")
+    page.remove_listener("dialog", accept_leave)
+
+
 def main(axe_path: Path | None = None, out: Path | None = None):
     axe = None
     scans = []
@@ -279,6 +358,7 @@ def main(axe_path: Path | None = None, out: Path | None = None):
             check("all five rendered ready", page.locator("article").count() == 5)
             check("shared role-owned queue link", page.get_by_role("link", name="Shared role-owned review queue").count() == 1)
             review_pending_cleanup(page, base, check, scan)
+            review_outcome_history(page, base, check, scan)
             page.goto(base + "/app?round6-existing=1#/case/ZF-1?tab=ai")
             expect(page.locator("article")).to_have_count(5)
             card = page.locator("article").filter(has=page.locator("h3", has_text="Stock facts and prioritisation"))

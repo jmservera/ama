@@ -26,6 +26,14 @@ function h(tag, attrs, ...kids) {
   return el;
 }
 
+function mutationNeedsHistory(error) {
+  return error.outcome === "committed" || error.outcome === "uncertain" || !error.status;
+}
+
+function requireCaseHistory(session) {
+  if (session) session.historyBarrier = session.historyGeneration = {};
+}
+
 async function api(path, body, signal) {
   signal = signal || routeController.signal;
   const res = await fetch(path, body === undefined ? { signal } : {
@@ -34,7 +42,7 @@ async function api(path, body, signal) {
   const data = await res.json().catch(() => ({}));
   signal.throwIfAborted();
   if (res.status === 401 && path !== "/api/login") { me = null; login("Your session has ended. Sign in again."); throw new Error("Your session has ended. Sign in again."); }
-  if (!res.ok) { const e = new Error(data.error || "Something went wrong."); e.reasons = data.reasons; e.status = res.status; throw e; }
+  if (!res.ok) { const e = new Error(data.error || "Something went wrong."); e.reasons = data.reasons; e.status = res.status; e.outcome = data.outcome; throw e; }
   return data;
 }
 
@@ -326,9 +334,9 @@ function aiNotes(d, onDone, getText) {
       error.textContent = text; why.setAttribute("aria-invalid", "true");
       why.setAttribute("aria-describedby", error.id); why.focus();
     };
-    let pending = false;
+    let pending = false, checkHistory = false;
     const go = (action) => async () => {
-      if (pending || d.approval !== "Not reviewed") return;
+      if (pending || checkHistory || d.approval !== "Not reviewed") return;
       error.textContent = "";
       why.removeAttribute("aria-invalid");
       why.removeAttribute("aria-describedby");
@@ -356,11 +364,12 @@ function aiNotes(d, onDone, getText) {
         app.dispatchEvent(new Event("ai-review-change"));
         if (onDone) onDone(action, text);
       } catch (e) {
-        if (d.approval === "Not reviewed" && e.status) {
+        checkHistory = mutationNeedsHistory(e);
+        if (d.approval === "Not reviewed" && !checkHistory) {
           buttons.forEach(({ button, disabled }) => { button.disabled = disabled; });
         }
-        result.textContent = e.status ? e.message
-          : `Confirmation is unavailable. Refresh and check the review history before another action. ${e.message}`;
+        result.textContent = checkHistory
+          ? `Confirmation needs checking. Reload the workspace and check the review history before another action. ${e.message}` : e.message;
       } finally { pending = false; }
     };
     const unavailable = d.stale || d.verified === false || d.validated === false;
@@ -405,6 +414,7 @@ function aiBox() {
 
 function priorityPanel() {
   const box = h("section", { class: "card ai", "aria-label": "AI priority suggestion" });
+  let pending = false, checkHistory = false;
   const rowsOf = (items, withReason) => h("ol", {}, items.map((i) => h("li", {},
     h("a", { href: `#/case/${encodeURIComponent(i.case_id)}` }, `${i.resident}, ${i.address}`), ` (rank ${i.rank})`,
     withReason && i.reason ? h("div", { class: "muted" }, i.reason, i.cites && i.cites.length ? ` Sources: ${i.cites.join("; ")}.` : "") : null)));
@@ -425,13 +435,23 @@ function priorityPanel() {
         const why = h("input", { id: "pri-why", type: "text", placeholder: "Reason (needed to edit or reject)", maxlength: 300 });
         const keep = rec.items.map((i) => h("input", { type: "checkbox", checked: true, "aria-label": `Keep ${i.resident}` }));
         const act = (action) => async () => {
+          if (pending || checkHistory) return;
           const items = rec.items.filter((_, n) => keep[n].checked).map((i) => ({ case_id: i.case_id, reason: i.reason }));
-          try { paint(await api(`/api/ai/priority/${rec.id}/${action}`, { reason: why.value, items })); } catch (e) { paint(rec, e.message); }
+          pending = true;
+          const buttons = [...box.querySelectorAll("button")].map(button => ({ button, disabled: button.disabled }));
+          buttons.forEach(({ button }) => { button.disabled = true; });
+          try { paint(await api(`/api/ai/priority/${rec.id}/${action}`, { reason: why.value, items })); }
+          catch (e) {
+            checkHistory = mutationNeedsHistory(e);
+            if (!checkHistory) buttons.forEach(({ button, disabled }) => { button.disabled = disabled; });
+            box.append(h("p", { role: "status" }, checkHistory
+              ? `Reload the workspace and check priority review history before another action. ${e.message}` : e.message));
+          } finally { pending = false; }
         };
         kids.push(h("div", { class: "row" }, h("label", { for: "pri-why" }, "Your reason"), why),
           h("div", { class: "row" }, h("span", { class: "muted" }, "To edit, untick cases to drop:"), rec.items.map((i, n) => h("label", {}, keep[n], ` ${i.resident}`))),
-          h("div", { class: "row" }, h("button", { disabled: rec.actionable === false, onclick: act("accept") }, "Accept"), h("button", { class: "alt", disabled: rec.actionable === false, onclick: act("edit") }, "Edit"),
-            h("button", { class: "alt", onclick: act("reject") }, "Reject")));
+          h("div", { class: "row" }, h("button", { disabled: checkHistory || rec.actionable === false, onclick: act("accept") }, "Accept"), h("button", { class: "alt", disabled: checkHistory || rec.actionable === false, onclick: act("edit") }, "Edit"),
+            h("button", { class: "alt", disabled: checkHistory, onclick: act("reject") }, "Reject")));
       } else {
         kids.push(h("p", {}, `${rec.status}${rec.reason ? `: ${rec.reason}` : ""}. Recorded in the audit log.`),
           h("p", {}, h("button", { class: "alt", onclick: ask }, "Suggest again")));
@@ -598,8 +618,14 @@ async function caseView(id) {
   const firstLoad = !sameCase;
   if (firstLoad) show(h("a", { href: queueHref() }, "Back to the list"),
     h("section", { "aria-label": "Case summary", "aria-busy": "true", class: "card" }, "Loading case (loading)"));
+  const recoveryGeneration = session.historyGeneration;
   const c = await api(`/api/cases/${encodeURIComponent(id)}`);
   if (caseSession !== session) return;
+  if (session.historyGeneration !== recoveryGeneration) return;
+  delete session.historyBarrier;
+  session.assistantRequests?.forEach((state, key) => {
+    if (state === "check-history") session.assistantRequests.delete(key);
+  });
   session.pendingSubmissions?.forEach((state, key) => {
     if (state === "check-history") session.pendingSubmissions.delete(key);
   });
@@ -613,7 +639,7 @@ async function caseView(id) {
     const sent = snapshotCaseFields(submitted);
     const key = sent.length ? JSON.stringify(sent.map(item => item.key)) : null;
     session.pendingSubmissions ||= new Map();
-    if (key && session.pendingSubmissions.has(key)) {
+    if (session.historyBarrier || (key && session.pendingSubmissions.has(key))) {
       workspaceStatus.textContent = "This action is pending or needs a history check. Refresh before another submission.";
       return "check-history";
     }
@@ -629,8 +655,9 @@ async function caseView(id) {
       return true;
     } catch (e) {
       if (caseSession !== session) return;
-      const uncertain = !recorded && !e.status;
+      const uncertain = !recorded && mutationNeedsHistory(e);
       checkHistory = recorded || uncertain;
+      if (checkHistory) requireCaseHistory(session);
       msg.replaceChildren(h("p", { class: "err" }, recorded
         ? `Your change was recorded, but the case could not reload. Refresh the case before another action. ${e.message}`
         : uncertain ? `Confirmation is unavailable. Refresh and check the history before another action. ${e.message}` : e.message),
@@ -1018,16 +1045,18 @@ function recordedChangeForm(prefix, label, fields, submit) {
       button.disabled = true;
       button.textContent = "Saving...";
       status.textContent = "Saving the recorded change...";
+      let checkHistory = false;
       try {
         const sent = snapshotCaseFields([...form.querySelectorAll("input, textarea, select")]);
-        await submit(Object.fromEntries(inputs.map(({ name, input }) => [name, input.value.trim()])), sent);
-        if (sent.every(caseFieldUnchanged)) delete form.dataset.unsaved;
+        const outcome = await submit(Object.fromEntries(inputs.map(({ name, input }) => [name, input.value.trim()])), sent);
+        checkHistory = outcome === "check-history";
+        if (outcome !== false && !checkHistory && sent.every(caseFieldUnchanged)) delete form.dataset.unsaved;
       } catch (error) {
         status.replaceChildren(h("p", { class: "err" }, error.message));
         status.setAttribute("tabindex", "-1");
         status.focus();
       } finally {
-        button.disabled = false;
+        button.disabled = checkHistory;
         button.textContent = label;
       }
     } },
@@ -1244,8 +1273,7 @@ function documentsPanel(c, id, refresh) {
       rd.onerror = () => reject(new Error("The file could not be read. Choose the file again."));
       rd.readAsDataURL(f);
     });
-    await api(`/api/cases/${encodeURIComponent(id)}/upload`, { ...metadata, name: f.name, kind: documentKind, data });
-    await refresh(async () => {}, submitted);
+    return refresh(() => api(`/api/cases/${encodeURIComponent(id)}/upload`, { ...metadata, name: f.name, kind: documentKind, data }), submitted);
   };
   const read = async (d) => {
     if (!confirmCaseDraftReplacement(out)) return;

@@ -9,9 +9,10 @@ const assistantNames = {
 };
 const proposalReviewStates = new Map();
 
-function assistantProposal(p, reload) {
+function assistantProposal(p, reload, recoverable = new Map()) {
   const reviewKey = `${p.id}:${p.revision}`;
-  if (proposalReviewStates.get(reviewKey) === "uncertain") proposalReviewStates.delete(reviewKey);
+  const previous = proposalReviewStates.get(reviewKey);
+  if (previous?.state === "uncertain" && recoverable.get(reviewKey) === previous) proposalReviewStates.delete(reviewKey);
   const status = h("p", { role: "status" }, `${p.display_state}. ${p.release_denial ? p.release_denial.reason : (p.reason || "")} ${p.manual}`);
   const note = h("textarea", { id: `proposal-reason-${p.id}`, name: "review-reason", autocomplete: "off", "aria-label": "Reason", maxlength: "1000" });
   const error = h("p", { id: `proposal-error-${p.id}`, class: "field-error", role: "status" });
@@ -34,7 +35,7 @@ function assistantProposal(p, reload) {
     field.focus();
   };
   const setReviewState = (state, message) => {
-    if (state) proposalReviewStates.set(reviewKey, state);
+    if (state) proposalReviewStates.set(reviewKey, { state });
     else proposalReviewStates.delete(reviewKey);
     [card, ...app.querySelectorAll("[data-proposal-id]")].forEach(node => {
       if (node.dataset.proposalId === p.id && String(node.dataset.proposalRevision) === String(p.revision)) node.updateReviewState(message);
@@ -64,10 +65,11 @@ function assistantProposal(p, reload) {
       reconcileCaseSubmission(sent);
       await reload();
     } catch (e) {
+      const checkHistory = mutationNeedsHistory(e);
       const message = recorded
         ? `Your review was recorded, but suggestions could not reload. Refresh before another review. ${e.message}`
-        : e.status ? e.message : `Confirmation is unavailable. Refresh and check the review history before another action. ${e.message}`;
-      setReviewState(recorded ? "recorded" : e.status ? null : "uncertain", message);
+        : checkHistory ? `Confirmation is unavailable. Refresh and check the review history before another action. ${e.message}` : e.message;
+      setReviewState(recorded ? "recorded" : checkHistory ? "uncertain" : null, message);
     }
   };
   const ready = p.state === "ready" && !p.stale && p.actionable !== false
@@ -115,7 +117,7 @@ function assistantProposal(p, reload) {
   const buttons = [...card.querySelector("fieldset").querySelectorAll("button")]
     .map(button => ({ button, disabled: button.disabled }));
   card.updateReviewState = message => {
-    const state = proposalReviewStates.get(reviewKey);
+    const state = proposalReviewStates.get(reviewKey)?.state;
     buttons.forEach(({ button, disabled }) => {
       button.disabled = disabled || Boolean(state);
       if (state === "pending") button.setAttribute("aria-busy", "true");
@@ -137,6 +139,7 @@ function assistantCasePanel(id, session) {
   const deadline = setTimeout(() => controller.abort(), 10000);
   const current = () => panel.isConnected && location.hash.split("?")[0] === routeHash;
   const load = async () => {
+    const recoverable = new Map(proposalReviewStates);
     try {
       const [registry, queue] = await Promise.all([
         api("/api/assistants", undefined, controller.signal),
@@ -159,18 +162,43 @@ function assistantCasePanel(id, session) {
       panel.dataset.waiting = String(proposals.filter(p => p.state === "ready" && p.output && !p.stale).length);
       panel.append(h("p", {}, "These are synthetic exercise rules. Continue ordinary case work manually when assistance is disabled, failed or stale."));
       for (const a of registry.assistants) {
-        panel.append(h("button", { class: "alt", onclick: async () => {
+        session.assistantRequests ||= new Map();
+        const request = h("button", { class: "alt", disabled: session.assistantRequests.has(a.id), "data-assistant-request": a.id, onclick: async () => {
+          if (session.assistantRequests.has(a.id) || session.historyBarrier) return;
+          session.assistantRequests.set(a.id, "pending");
+          request.disabled = true;
+          let recorded = false;
           try {
             await api(`/api/assistants/${a.id}/invoke`, { case_id: id });
+            recorded = true;
+            session.assistantRequests.set(a.id, "check-history");
+            requireCaseHistory(session);
             await caseView(id);
-          } catch (e) { panel.append(h("p", { role: "alert", class: "err" }, e.message)); }
-        } }, `Request ${assistantNames[a.id]}`));
+          } catch (e) {
+            const checkHistory = recorded || mutationNeedsHistory(e);
+            if (checkHistory) {
+              session.assistantRequests.set(a.id, "check-history");
+              requireCaseHistory(session);
+            } else session.assistantRequests.delete(a.id);
+            if (caseSession !== session) return;
+            app.querySelectorAll("[data-assistant-request]").forEach(button => {
+              if (button.dataset.assistantRequest === a.id) button.disabled = checkHistory;
+            });
+            const message = checkHistory ? `Refresh and check proposal history before requesting again. ${e.message}` : e.message;
+            if (panel.isConnected) status.textContent = message;
+            else workspaceStatus.textContent = message;
+          }
+        } }, `Request ${assistantNames[a.id]}`);
+        panel.append(request);
       }
-      panel.append(h("button", { class: "alt", onclick: () => caseView(id) }, "Refresh proposals"),
+      panel.append(h("button", { class: "alt", onclick: async () => {
+        try { await caseView(id); }
+        catch (error) { if (current()) status.textContent = `Could not refresh proposals. ${error.message}`; }
+      } }, "Refresh proposals"),
         h("a", { href: "#/assistants" }, "Shared role-owned review queue"));
       const reviewed = h("details", {}, h("summary", {}, "Reviewed or stale suggestions"));
       for (const p of proposals) {
-        const card = assistantProposal(p, () => caseView(id));
+        const card = assistantProposal(p, () => caseView(id), recoverable);
         if (p.stale || p.review) reviewed.append(card);
         else panel.append(card);
       }
@@ -195,9 +223,10 @@ function assistantCasePanel(id, session) {
 }
 
 async function assistantQueueView(after = "", append = false) {
+  const recoverable = new Map(proposalReviewStates);
   try {
     const queue = await api(`/api/assistants/proposals${after ? `?after=${encodeURIComponent(after)}` : ""}`);
-    const cards = queue.proposals.map((p) => assistantProposal(p, () => assistantQueueView()));
+    const cards = queue.proposals.map((p) => assistantProposal(p, () => assistantQueueView(), recoverable));
     const more = queue.next_after && h("button", { onclick: async (e) => {
       e.currentTarget.remove();
       await assistantQueueView(queue.next_after, true);

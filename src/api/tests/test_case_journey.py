@@ -107,6 +107,332 @@ def journey(**overrides: Any) -> list[dict[str, Any]]:
 
 
 class CaseJourney(unittest.TestCase):
+    def test_api_preserves_outcome_before_http_status_classification(self) -> None:
+        source = (WEB / "app.js").read_text()
+        script = (
+            'const assert = require("node:assert/strict");\n'
+            "const routeController = new AbortController();\nlet response;\n"
+            "const fetch = async () => response;\n"
+            "let caseSession = {id: 'SYN', pendingSubmissions: new Map()};\n"
+            "const app = {querySelector: () => ({dataset: {caseWorkspace: 'SYN'}})};\n"
+            + "function mutationNeedsHistory"
+            + source.split("function mutationNeedsHistory", 1)[1].split("const fmtDate", 1)[0]
+            + "async function recoverCase(id) {"
+            + source.split("async function caseView(id) {", 1)[1].split(
+                "  const savedFields = ", 1
+            )[0]
+            + 'return "rendered";}\n'
+            + r"""
+(async () => {
+  for (const status of [409, 503]) {
+    for (const outcome of [undefined, "committed", "uncertain"]) {
+      response = {status, ok: false, json: async () => ({
+        error: "Synthetic refusal", reasons: ["Synthetic reason"], outcome
+      })};
+      await assert.rejects(api("/api/cases/SYN/quality-submit", {}), error => {
+        assert.equal(error.status, status);
+        assert.equal(error.outcome, outcome);
+        assert.deepEqual(error.reasons, ["Synthetic reason"]);
+        assert.equal(mutationNeedsHistory(error), outcome !== undefined);
+        return true;
+      });
+    }
+  }
+  assert.equal(mutationNeedsHistory(new TypeError("Connection lost")), true);
+  let release;
+  response = {status: 200, ok: true, json: () => new Promise(resolve => {release = resolve;})};
+  const old = recoverCase("SYN");
+  await new Promise(resolve => setImmediate(resolve));
+  requireCaseHistory(caseSession);
+  const barrier = caseSession.historyBarrier;
+  caseSession.qualitySaving = "check-history";
+  caseSession.assistantRequests = new Map([["quality", "check-history"]]);
+  release({});
+  assert.equal(await old, undefined, "pre-outcome read cannot repaint");
+  assert.equal(caseSession.historyBarrier, barrier);
+  assert.equal(caseSession.assistantRequests.size, 1);
+  response = {status: 503, ok: false, json: async () => ({error: "Read failed"})};
+  await assert.rejects(recoverCase("SYN"));
+  assert.equal(caseSession.historyBarrier, barrier, "failed GET cannot unlock");
+  response = {status: 200, ok: true, json: async () => ({})};
+  assert.equal(await recoverCase("SYN"), "rendered");
+  assert.equal(caseSession.historyBarrier, undefined);
+  assert.equal(caseSession.assistantRequests.size, 0);
+  response = {status: 200, ok: true, json: () => new Promise(resolve => {release = resolve;})};
+  const preRecovery = recoverCase("SYN");
+  await new Promise(resolve => setImmediate(resolve));
+  requireCaseHistory(caseSession);
+  response = {status: 200, ok: true, json: async () => ({})};
+  assert.equal(await recoverCase("SYN"), "rendered");
+  release({});
+  assert.equal(await preRecovery, undefined,
+    "pre-outcome GET remains stale even after a later recovery clears the barrier");
+  console.log("PASS");
+})().catch(error => {console.error(error); process.exitCode = 1;});
+"""
+        )
+        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_upload_preparation_and_guarded_dispatch_outcomes(self) -> None:
+        source = (WEB / "app.js").read_text()
+        case = source.split("async function caseView(id)", 1)[1]
+        refresh = case.split("  const refresh = ", 1)[1].split("  const outcome = ", 1)[0]
+        script = (
+            DOM
+            + shipped_helpers()
+            + r"""
+Node.prototype.setCustomValidity = function() {};
+Node.prototype.reportValidity = () => true;
+Node.prototype.replaceChildren = function(...children) {
+  this.children = []; this.append(...children);
+};
+const app = new Node("main"), workspaceStatus = {}, id = "SYN";
+let session, reads = [], requests = 0, refusal, renders = 0;
+const msg = new Node("div");
+let briefingBox;
+const caseView = async () => {renders++;};
+class FileReader {
+  readAsDataURL() {reads.push(this);}
+}
+const api = async () => {
+  requests++;
+  if (refusal) throw refusal;
+  return {};
+};
+const refresh = """
+            + refresh
+            + "function recordedChangeForm"
+            + source.split("function recordedChangeForm", 1)[1].split("window.addEventListener", 1)[
+                0
+            ]
+            + "function documentsPanel"
+            + source.split("function documentsPanel", 1)[1].split("const fundingAi", 1)[0]
+            + r"""
+(async () => {
+  for (const outcome of ["prepare", "refusal", "committed", "uncertain", "transport", "success"]) {
+    requests = 0; reads = []; renders = 0; refusal = null;
+    session = caseSession = {id, pendingFields: new Map(), documentBox: new Node("div")};
+    app.children = [];
+    const panel = documentsPanel({checklist: [], documents: []}, id, refresh); app.append(panel);
+    const form = panel.querySelector("form"), button = form.querySelector("button");
+    form.querySelectorAll("input").forEach(field => {
+      field.value = "Synthetic input"; field.files = [{name: "synthetic.txt"}];
+      field.dataset.caseDirty = "true";
+    });
+    const submit = () => form.events.submit({preventDefault() {}});
+    let saving = submit();
+    await submit();
+    assert.equal(reads.length, 1, "form excludes concurrent file preparation");
+    if (outcome === "prepare") {
+      reads[0].onerror(); await saving;
+      assert.equal(requests, 0); assert.equal(session.historyBarrier, undefined);
+      assert.equal(button.disabled, false);
+      saving = submit();
+    }
+    if (outcome === "refusal") refusal = Object.assign(new Error("Refused"), {status: 409});
+    if (["committed", "uncertain"].includes(outcome))
+      refusal = Object.assign(new Error("Check history"), {status: 503, outcome});
+    if (outcome === "transport") refusal = new TypeError("Connection lost");
+    reads.at(-1).result = "data:text/plain;base64,U1lO";
+    reads.at(-1).onload(); await saving;
+    const blocked = ["committed", "uncertain", "transport"].includes(outcome);
+    assert.equal(button.disabled, blocked, outcome);
+    assert.equal(Boolean(session.historyBarrier), blocked);
+    if (blocked) {
+      await submit();
+      assert.equal(requests, 1, "uncertain upload cannot dispatch again");
+      assert.equal(form.querySelector('[type="file"]').files.length, 1);
+    }
+    if (outcome === "refusal") {
+      assert.equal(button.disabled, false);
+      assert.equal(form.querySelector('[type="file"]').files.length, 1);
+    }
+  }
+  console.log("PASS");
+})().catch(error => {console.error(error); process.exitCode = 1;});
+"""
+        )
+        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_priority_invocation_and_procurement_preserve_history_barriers(self) -> None:
+        source = (WEB / "app.js").read_text()
+        script = (
+            DOM
+            + shipped_helpers()
+            + r"""
+Node.prototype.replaceChildren = function(...children) {
+  this.children = []; this.append(...children);
+};
+const app = new Node("main"), HTMLButtonElement = Node;
+const me = {user: {email: "reviewer@example.test", role: "Retrofit Programme Manager"}};
+const routeController = new AbortController(), location = {hash: "#/case/SYN"};
+const workspaceStatus = {}, aiMode = {};
+const modeBody = body => body, isManager = () => true, fmtDate = value => value;
+const restoreBoundFields = () => {}, show = (...nodes) => app.replaceChildren(...nodes);
+document.querySelectorAll = () => [];
+let pathCalls = [], failure, finish, caseLoads = 0, deferProcurement = false, oldReads = [];
+const caseView = async () => {caseLoads++;};
+const tick = () => new Promise(resolve => setImmediate(resolve));
+const recommendation = {id: "SYN", status: "Proposed", items: [], deterministic: []};
+const api = async (path, body) => {
+  if (body === undefined) {
+    if (path === "/api/ai/priority") return {recommendation};
+    if (path === "/api/assistants") return {assistants: [{id: "quality-evidence"}]};
+    if (path.startsWith("/api/assistants/proposals")) return {proposals: []};
+    if (deferProcurement) return new Promise(resolve => oldReads.push(resolve));
+    return [];
+  }
+  pathCalls.push(path);
+  await new Promise(resolve => {finish = resolve;});
+  if (failure) throw failure;
+  return {};
+};
+"""
+            + "function priorityPanel"
+            + source.split("function priorityPanel", 1)[1].split("function pendingHandoffs", 1)[0]
+            + (WEB / "assistants.js").read_text()
+            + (WEB / "ops.js").read_text()
+            + r"""
+(async () => {
+  for (const family of ["priority", "invoke", "procurement"]) {
+    for (const outcome of ["committed", "uncertain", "refusal", "transport"]) {
+      pathCalls = []; oldReads = [];
+      failure = outcome === "transport" ? new TypeError("Connection lost")
+        : Object.assign(new Error("Synthetic outcome"), {status: 409,
+          ...(outcome === "refusal" ? {} : {outcome})});
+      app.children = [];
+      caseSession = {pendingFields: new Map()};
+      let button;
+      if (family === "priority") {
+        app.append(priorityPanel()); await tick();
+        button = app.querySelectorAll("button").find(b => b.textContent === "Reject");
+      } else if (family === "invoke") {
+        const panel = assistantCasePanel("SYN", caseSession); panel.isConnected = true;
+        app.append(panel); await tick();
+        button = app.querySelector("[data-assistant-request]");
+      } else {
+        await capacityView();
+        button = app.querySelectorAll("button").find(b => b.textContent === "Create package");
+        app.querySelector("#capacity-field-6").value = "v1";
+      }
+      let oldView, laterOldView, oldHeading;
+      if (family === "procurement") {
+        oldHeading = app.children[0];
+        deferProcurement = true;
+        oldView = capacityView(); laterOldView = capacityView(); await tick();
+        deferProcurement = false;
+        assert.equal(oldReads.length, 4);
+      }
+      if (family === "priority") app.querySelector("#pri-why").value = "Keep this reason";
+      button.focus();
+      const sending = button.events.click(); await tick();
+      await button.events.click();
+      assert.equal(pathCalls.length, 1, family + " pending");
+      finish(); await sending;
+      const blocked = outcome !== "refusal";
+      const currentButton = family === "priority"
+        ? app.querySelectorAll("button").find(b => b.textContent === "Reject") : button;
+      assert.equal(currentButton.disabled, blocked, family + "/" + outcome);
+      if (family === "priority")
+        assert.equal(app.querySelector("#pri-why").value, "Keep this reason");
+      if (blocked) {
+        await currentButton.events.click();
+        assert.equal(pathCalls.length, 1, family + " repeated ambiguous mutation");
+      } else {
+        const retry = currentButton.events.click(); await tick();
+        assert.equal(pathCalls.length, 2, family + " explicit refusal is retryable");
+        finish(); await retry;
+      }
+      if (family === "procurement") {
+        oldReads.slice(0, 2).forEach(resolve => resolve([])); await oldView;
+        if (blocked) {
+          assert.equal(app.children[0], oldHeading, "older procurement GET cannot repaint");
+          assert.ok(capacityHistoryBarrier);
+          await capacityView();
+          assert.equal(capacityHistoryBarrier, null, "fresh resource reads recover procurement");
+        }
+        const recoveredHeading = app.children[0];
+        oldReads.slice(2).forEach(resolve => resolve([])); await laterOldView;
+        if (blocked) assert.equal(app.children[0], recoveredHeading,
+          "stale procurement read stays stale after recovery");
+      }
+      if (family === "invoke") {
+        const replacement = assistantCasePanel("SYN", caseSession);
+        replacement.isConnected = true; app.replaceChildren(replacement); await tick();
+        assert.equal(app.querySelector("[data-assistant-request]").disabled, blocked,
+          "render-only rebuild must not recover invocation");
+      }
+    }
+  }
+  console.log("PASS");
+})().catch(error => {console.error(error); process.exitCode = 1;});
+"""
+        )
+        result = subprocess.run(["node", "-e", script], text=True, capture_output=True, timeout=30)
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_raw_resident_and_challenge_outcomes_exclude_repeat_posts(self) -> None:
+        source = (WEB / "panels.js").read_text()
+        script = (
+            DOM
+            + shipped_helpers()
+            + r"""
+Node.prototype.replaceChildren = function(...children) {
+  this.children = []; this.append(...children);
+};
+const app = new Node("main"), id = "SYN", targetOptions = {id: "targets"};
+const me = {user: {role: "Retrofit Programme Manager"}};
+const residentRoles = [me.user.role], routeController = new AbortController();
+let requests = 0, outcome, status, finish, reloads = 0;
+const refresh = async () => {reloads++;};
+const fetch = async () => {
+  requests++;
+  await new Promise(resolve => {finish = resolve;});
+  return {ok: false, status, json: async () => ({outcome, error: "Synthetic outcome"})};
+};
+"""
+            + "const residentForm = "
+            + source.split("  const residentForm = ", 1)[1].split("  const serviceForm", 1)[0]
+            + "const formFor = "
+            + source.split("  const formFor = ", 1)[1].split("  const staff", 1)[0]
+            + r"""
+(async () => {
+  for (const challenge of [false, true]) {
+    for (status of [409, 503]) {
+      for (outcome of ["committed", "uncertain", undefined]) {
+        requests = 0;
+        caseSession = {pendingFields: new Map()};
+        const container = challenge
+          ? formFor("synthetic", "Record", [["note", "Note"]], body => body)
+          : residentForm("synthetic", "Record", [["note", "Note"]], "record");
+        const form = container.tagName === "FORM" ? container : container.querySelector("form");
+        const input = form.querySelector("input"), button = form.querySelector("button");
+        input.value = "Retained supplied evidence"; input.validity = {valid: true};
+        const submit = () => form.events.submit({preventDefault() {}});
+        const pending = submit(); await submit();
+        assert.equal(requests, 1);
+        finish(); await pending;
+        assert.equal(input.value, "Retained supplied evidence");
+        assert.equal(button.disabled, outcome !== undefined);
+        assert.equal(Boolean(caseSession.historyBarrier), outcome !== undefined);
+        if (outcome !== undefined) {await submit(); assert.equal(requests, 1);}
+        else {
+          const retry = submit(); assert.equal(requests, 2);
+          finish(); await retry;
+        }
+        assert.equal(reloads, 0);
+      }
+    }
+  }
+  console.log("PASS");
+})().catch(error => {console.error(error); process.exitCode = 1;});
+"""
+        )
+        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+
     def test_submission_reconciles_semantic_live_recovery_and_cached_values(self) -> None:
         source = (WEB / "app.js").read_text()
         lifecycle = (
@@ -213,7 +539,8 @@ const api = async (path, body) => {
             + r"""
 (async () => {
   for (const sessionless of [false, true]) {
-    for (const outcome of ["success", "refusal", "reload-failure", "uncertain"]) {
+    for (const outcome of ["success", "refusal", "reload-failure", "uncertain",
+      "committed-409", "committed-503", "uncertain-503"]) {
       app.children = []; requests = [];
       caseSession = sessionless ? null : {pendingFields: new Map()};
       const p = {id: `${sessionless}-${outcome}`, revision: 1, case_id: "SYN",
@@ -223,6 +550,7 @@ const api = async (path, body) => {
       const reload = async () => {if (outcome === "reload-failure")
         throw new Error("Synthetic reload failed");};
       const card = assistantProposal(p, reload); app.append(card);
+      const olderRead = new Map(proposalReviewStates);
       const [reason, editing] = card.querySelectorAll("textarea");
       const save = card.querySelectorAll("button")
         .find(button => button.textContent === "Save edited proposal");
@@ -250,15 +578,29 @@ const api = async (path, body) => {
       assert.equal(requests.length, 1, "same-revision rebuilt card cannot resubmit");
       if (outcome === "refusal") reject(Object.assign(new Error("Refused"), {status: 409}));
       else if (outcome === "uncertain") reject(new TypeError("Connection lost"));
+      else if (outcome.includes("-")) {
+        const [result, status] = outcome.split("-");
+        if (result !== "reload") reject(Object.assign(new Error("Check history"),
+          {status: Number(status), outcome: result}));
+        else finish({});
+      }
       else finish({});
       await pending;
       assert.equal(next.disabled, outcome !== "refusal");
       assert.equal(reason.attrs["aria-invalid"], undefined);
       assert.equal(editing.attrs["aria-invalid"], undefined);
       assert.equal(Boolean(reason.dataset.caseDirty),
-        ["refusal", "uncertain"].includes(outcome));
+        outcome !== "success" && outcome !== "reload-failure");
       if (outcome !== "refusal") {
         await next.events.click(); assert.equal(requests.length, 1);
+      }
+      if (outcome.includes("committed-") || outcome.includes("uncertain")) {
+        let rebuilt = assistantProposal(p, reload, olderRead);
+        assert.equal(rebuilt.querySelector("fieldset").querySelector("button").disabled, true,
+          "pre-outcome listing cannot clear history barrier");
+        rebuilt = assistantProposal(p, reload, new Map(proposalReviewStates));
+        assert.equal(rebuilt.querySelector("fieldset").querySelector("button").disabled, false,
+          "post-outcome authoritative listing can recover same revision");
       }
     }
   }
@@ -703,8 +1045,26 @@ const unrelated = {dataset: {caseDirty: "true"}};
 const refresh = """
             + refresh
             + snapshot
+            + "function mutationNeedsHistory"
+            + app.split("function mutationNeedsHistory", 1)[1].split("async function api", 1)[0]
             + """
 (async () => {
+  for (const status of [409, 503]) {
+    for (const outcome of ["committed", "uncertain"]) {
+      let requests = 0;
+      const fn = async () => {requests++; throw Object.assign(new Error("Check history"),
+        {status, outcome});};
+      const result = await refresh(fn, [submitted]);
+      if (result !== "check-history") throw new Error("Missing history result");
+      await refresh(fn, []);
+      submitted.value = "Changed evidence key";
+      await refresh(fn, [submitted]);
+      if (requests !== 1) throw new Error("Repeated ambiguous mutation");
+      if (!session.historyBarrier) throw new Error("Missing case barrier");
+      delete session.historyBarrier; session.pendingSubmissions.clear();
+    }
+  }
+  errors = 0;
   await refresh(async () => { throw Object.assign(new Error("Synthetic refusal"),
     {status: 409}); }, [submitted]);
   const failed = submitted.dataset.caseDirty === "true"
@@ -865,10 +1225,13 @@ const api = async (path, body) => {
 };
 """
             + snapshots
+            + "function mutationNeedsHistory"
+            + source.split("function mutationNeedsHistory", 1)[1].split("async function api", 1)[0]
             + notes
             + r"""
 (async () => {
-  for (const change of ["none", "text", "reason", "both", "failure"]) {
+  for (const change of ["none", "text", "reason", "both", "failure",
+    "committed", "uncertain", "transport"]) {
     requests = []; done = [];
     const record = {record_id: "SYN-REVIEW", approval: "Not reviewed", text: "Original"};
     const meta = aiNotes(record, (action, text) => done.push({action, text}));
@@ -883,19 +1246,27 @@ const api = async (path, body) => {
     if (["text", "both", "failure"].includes(change)) editing.value = "Newer replacement";
     if (["reason", "both", "failure"].includes(change)) reason.value = "Newer reason";
     if (change === "failure") fail(Object.assign(new Error("Synthetic refusal"),
-      {status: 409})); else finish();
+      {status: 409}));
+    else if (["committed", "uncertain", "transport"].includes(change))
+      fail(Object.assign(new Error("Check history"),
+        change === "transport" ? {} : {status: 503, outcome: change}));
+    else finish();
     await pending;
     assert.equal(requests[0].body.text, "Submitted replacement");
     assert.equal(requests[0].body.reason, "Submitted reason");
-    if (change === "failure") {
+    if (["failure", "committed", "uncertain", "transport"].includes(change)) {
       assert.equal(record.approval, "Not reviewed");
       assert.equal(editing.dataset.caseDirty, "true");
       assert.equal(reason.dataset.caseDirty, "true");
-      assert.equal(buttons.some(button => button.disabled), false);
+      assert.equal(buttons.some(button => button.disabled), change !== "failure");
       assert.equal(reason.attrs["aria-invalid"], undefined,
         "server refusal is not invalid Reason");
       assert.equal(editing.attrs["aria-invalid"], undefined);
       assert.equal(done.length, 0);
+      if (change !== "failure") {
+        await buttons[1].attrs.onclick();
+        assert.equal(requests.length, 1, "ambiguous draft review cannot retry");
+      }
       continue;
     }
     assert.equal(record.approval, "Edited");

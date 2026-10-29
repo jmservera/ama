@@ -144,6 +144,7 @@ function residentPanel(c, id, refresh) {
   const named = (owner) => owner?.name || "Unknown";
   const residentForm = (key, title, fields, action, build = (body) => body, label = title) => {
     if (!residentRoles.includes(me.user.role)) return null;
+    const session = caseSession;
     const status = h("p", { id: `${key}-feedback`, role: "status", "aria-live": "polite", tabindex: -1 });
     const inputs = fields.map(([name, label, options]) => {
       const attrs = { id: `${key}-${name}`, name, autocomplete: "off", "aria-describedby": `${key}-feedback` };
@@ -154,7 +155,7 @@ function residentPanel(c, id, refresh) {
     const button = h("button", { type: "submit" }, label);
     const form = h("form", { oninput: () => { form.dataset.unsaved = "true"; }, onsubmit: async (event) => {
       event.preventDefault();
-      if (button.disabled) return;
+      if (button.disabled || session?.historyBarrier) return;
       button.disabled = true;
       status.textContent = "Recording";
       let dispatched = false;
@@ -171,12 +172,16 @@ function residentPanel(c, id, refresh) {
         if (!response.ok) {
           status.textContent = result.error || "Could not record this step. Reload to check its history.";
           status.focus();
-          if (result.outcome !== "committed") button.disabled = false;
+          if (mutationNeedsHistory({ status: response.status, outcome: result.outcome })) {
+            status.textContent = `Reload and check the history before another action. ${status.textContent}`;
+            requireCaseHistory(session);
+          } else button.disabled = false;
           return;
         }
         if (submitted.every(caseFieldUnchanged)) delete form.dataset.unsaved;
         await refresh(async () => {}, submitted);
       } catch (error) {
+        if (dispatched) requireCaseHistory(session);
         status.textContent = dispatched
           ? "Confirmation is unavailable. Reload and check the history before another action."
           : "Check the date and time before recording this step.";
@@ -315,6 +320,7 @@ function affectedChallengePanel(c, id, refresh) {
       h("div", { class: "row" }, newer, older), content);
   };
   const formFor = (key, title, fields, build, correction = false) => {
+    const session = caseSession;
     const status = h("p", { id: `${key}-feedback`, role: "status", "aria-live": "polite", tabindex: -1 });
     const inputs = fields.map(([name, label, options]) => {
       const attrs = { id: `${key}-${name}`, name, autocomplete: "off", "aria-describedby": status.id };
@@ -338,7 +344,7 @@ function affectedChallengePanel(c, id, refresh) {
       },
       onsubmit: async (event) => {
         event.preventDefault();
-        if (button.disabled) return;
+        if (button.disabled || session?.historyBarrier) return;
         for (const { input, label } of inputs) {
           input.removeAttribute("aria-invalid");
           if (!input.value.trim() || !input.validity.valid) {
@@ -365,7 +371,10 @@ function affectedChallengePanel(c, id, refresh) {
           const result = await response.json();
           if (!response.ok) {
             status.textContent = result.error || "Could not record this challenge. Reload and check its history.";
-            if (result.outcome !== "committed") button.disabled = false;
+            if (mutationNeedsHistory({ status: response.status, outcome: result.outcome })) {
+              status.textContent = `Reload and check the history before another action. ${status.textContent}`;
+              requireCaseHistory(session);
+            } else button.disabled = false;
             status.focus();
             return;
           }
@@ -379,6 +388,7 @@ function affectedChallengePanel(c, id, refresh) {
           if (dispatchSignal.aborted) return;
           await refresh(async () => {});
         } catch (error) {
+          if (dispatched) requireCaseHistory(session);
           status.textContent = dispatched
             ? "Confirmation is unavailable. Reload and check the history before recording another action."
             : error.message;

@@ -3,6 +3,8 @@
 const QUALITY_ROLES = ["Quality Inspector", "Retrofit Programme Manager", "Programme Support Officer"];
 const QUALITY_SOURCES = ["Installer", "Contractor", "Provider submission", "Our own inspection"];
 const WO_OUTCOMES = ["Booked", "Declined by provider", "Resident not available", "No access", "Rebooking needed"];
+let capacityHistoryBarrier = null;
+let capacityHistoryGeneration;
 const QUALITY_WORDS = { "Submitted": "Waiting for an independent check", "Returned": "Returned: defect to put right", "Fixed, awaiting reinspection": "Fixed, waiting to be checked again",
   "Accepted": "Accepted, ready to hand over to the resident", "Handed over": "Handed over to the resident",
   "Superseded": "Replaced evidence: previous acceptance and handover no longer apply" };
@@ -183,23 +185,31 @@ function appointmentDrafts() {
 async function capacityView() {
   if (!isManager()) return show(h("p", {}, "Only a manager sees capacity and work orders."));
   const signal = routeController.signal;
+  const recoveryGeneration = capacityHistoryGeneration;
   const msg = h("div", { role: "status", "aria-live": "polite", tabindex: -1 });
-  const go = async (fn = async () => {}, savedForm) => {
+  let saving = false, checkHistory = false;
+  const go = async (fn, savedForm) => {
+    if (fn && (saving || checkHistory || capacityHistoryBarrier)) return;
     const button = document.activeElement;
     if (button instanceof HTMLButtonElement) { button.disabled = true; button.setAttribute("aria-busy", "true"); }
+    let recorded = false;
+    saving = true;
     try {
-      await fn();
+      if (fn) { await fn(); recorded = true; }
       if (savedForm) delete savedForm.dataset.unsaved;
       signal.throwIfAborted();
       await capacityView();
     }
     catch (e) {
       if (signal.aborted || !me) return;
-      msg.replaceChildren(h("p", { class: "err" }, e.message));
-      if (e.capacityLoadFailure) msg.append(h("button", { type: "button", onclick: () => go() }, "Try again"));
+      checkHistory ||= recorded || Boolean(fn && mutationNeedsHistory(e));
+      if (checkHistory) capacityHistoryBarrier = capacityHistoryGeneration = {};
+      msg.replaceChildren(h("p", { class: "err" }, checkHistory
+        ? `Reload and check work order or package history before another action. ${e.message}` : e.message));
+      if (e.capacityLoadFailure || checkHistory) msg.append(h("button", { type: "button", onclick: () => go() }, "Try again"));
       msg.focus();
     }
-    finally { if (button instanceof HTMLButtonElement) { button.disabled = false; button.removeAttribute("aria-busy"); } }
+    finally { saving = false; if (button instanceof HTMLButtonElement) { button.disabled = Boolean(fn && checkHistory); button.removeAttribute("aria-busy"); } }
   };
   const load = async (path, label) => {
     try { return await api(path, undefined, signal); }
@@ -214,6 +224,8 @@ async function capacityView() {
   const [pkgs, orders] = await Promise.all([load("/api/packages", "packages"), load("/api/workorders", "work orders")]);
   signal.throwIfAborted();
   if (!me) return;
+  if (capacityHistoryGeneration !== recoveryGeneration) return;
+  capacityHistoryBarrier = null;
   let field = 0;
   const inp = (label, attrs) => {
     const id = `capacity-field-${++field}`;

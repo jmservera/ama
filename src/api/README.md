@@ -2,7 +2,7 @@
 title: Zava Forward API and web workbench
 description: Staff features, configuration, local run, honest limits and container checks for the api project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-28
+ms.date: 2026-10-29
 ms.topic: reference
 ---
 
@@ -47,6 +47,15 @@ later edits remain available. Malformed edited proposal JSON identifies and
 focuses its editor, not a valid Reason; request failures are status feedback,
 not inferred field invalidity. A recorded action whose reload fails requires
 refresh/history checking rather than repeating the stale action.
+Structured API errors retain their mutation outcome: `committed` and `uncertain`
+take precedence over HTTP status, including 409 and 503. Quality and other case
+submissions remain blocked across tab/measure changes and failed or older reads.
+Only a case reload started after the outcome can recover those controls.
+Proposal reviews similarly require a new authoritative proposal listing for
+their ID/revision; a pre-outcome listing cannot unlock them. Retained document
+draft and priority reviews require workspace reload/history checking instead of
+inventing an approval. Upload preparation failures remain correctable locally;
+lost upload confirmations cannot repeat the POST.
 Navigation and page-close warnings also cover unresolved cached drafts while
 proposal controls are loading. A completed document review displays the submitted
 replacement and retains later text or reason as read-only, unsaved recovery tied

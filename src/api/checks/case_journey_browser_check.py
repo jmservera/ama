@@ -157,6 +157,69 @@ def quality_pending_cleanup(page: Page, base: str) -> None:
             check("quality retains later other-measure evidence", True)
 
 
+def quality_outcome_history(
+    page: Page, base: str, axe: str, reports: list[dict[str, Any]]
+) -> None:
+    for status in (409, 503):
+        for outcome in ("committed", "uncertain"):
+            page.goto(base + f"/app?round7={status}-{outcome}#/case/ZF-1?tab=quality")
+            page.locator("#q-i0").wait_for()
+            page.locator("#q-i0").fill("Retained outcome evidence")
+            page.locator("#q-by").fill("Synthetic installer")
+            page.locator("#q-revision").fill("1")
+            pending: list[Route] = []
+            reads: list[Route] = []
+            page.route("**/api/cases/ZF-1/quality-submit", lambda route: pending.append(route))
+            button = page.locator("[data-quality-save]")
+            button.click()
+            expect(button).to_be_disabled()
+            page.route("**/api/cases/ZF-1", lambda route: reads.append(route))
+            # Start a case read before the outcome, then deliver that old snapshot late.
+            tab(page, "AI assistance")
+            with page.expect_request("**/api/cases/ZF-1"):
+                page.get_by_role("button", name="Refresh proposals", exact=True).click()
+            page.wait_for_function("() => document.querySelector('[data-quality-save]').disabled")
+            with page.expect_response("**/api/cases/ZF-1/quality-submit"):
+                pending[0].fulfill(
+                    status=status, json={"error": "Synthetic recorded outcome", "outcome": outcome}
+                )
+            expect(page.locator("#app")).to_contain_text("Refresh and check the history")
+            check(f"quality API preserves outcome/{status}/{outcome}", page.evaluate(
+                "Boolean(caseSession.historyBarrier)"
+            ))
+            page.wait_for_function("() => document.querySelector('[data-quality-save]').disabled")
+            check(f"quality old read was dispatched/{status}/{outcome}", len(reads) == 1)
+            workspace = page.locator("[data-case-workspace]").element_handle()
+            with page.expect_response("**/api/cases/ZF-1"):
+                old = reads.pop()
+                old.fulfill(response=old.fetch())
+            tab(page, "Quality and handover")
+            expect(button).to_be_disabled()
+            check(f"quality pre-outcome read cannot unlock/{status}/{outcome}",
+                  workspace is not None and workspace.evaluate("el => el.isConnected"))
+            page.locator("#q-measure").select_option(index=1)
+            button.evaluate("el => el.click()")
+            check(f"quality changed measure cannot resubmit/{status}/{outcome}", len(pending) == 1)
+            scan(page, axe, reports, f"quality-history-{status}-{outcome}")
+            tab(page, "AI assistance")
+            with page.expect_request("**/api/cases/ZF-1"):
+                page.get_by_role("button", name="Refresh proposals", exact=True).click()
+            check(f"quality recovery read dispatched/{status}/{outcome}", len(reads) == 1)
+            reads.pop().fulfill(status=503, json={"error": "Synthetic recovery read failure"})
+            expect(page.locator("#app")).to_contain_text("Synthetic recovery")
+            tab(page, "Quality and handover")
+            expect(button).to_be_disabled()
+            page.unroute("**/api/cases/ZF-1")
+            tab(page, "AI assistance")
+            refresh_proposals(page)
+            tab(page, "Quality and handover")
+            expect(button).to_be_enabled()
+            page.locator("#q-measure").select_option(index=0)
+            expect(page.locator("#q-i0")).to_have_value("Retained outcome evidence")
+            check(f"quality authoritative reload recovers/{status}/{outcome}", len(pending) == 1)
+            page.unroute("**/api/cases/ZF-1/quality-submit")
+
+
 def chat_cleanup(page: Page, base: str) -> None:
     def admission(route: Route) -> None:
         route.fulfill(
@@ -329,6 +392,7 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             check("all six summary values", page.locator(".case-summary dt").count() == 6)
             page.screenshot(path=str(out / "desktop-1280.png"))
             quality_pending_cleanup(page, base)
+            quality_outcome_history(page, base, axe, reports)
             chat_cleanup(page, base)
             check(
                 "nine tabs, one selected and one tab stop",
