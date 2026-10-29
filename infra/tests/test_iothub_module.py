@@ -88,17 +88,20 @@ class IotHubModuleTests(unittest.TestCase):
         self.assertEqual(set(self.live["outputs"]), {"id", "hostname", "consumerGroup"})
         self.assertEqual(unguarded_resources(self.live, "iot-live-scope-guard"), set())
 
-    def test_live_profile_never_puts_existing_hub_and_guards_actual_sku(self) -> None:
-        self.assertFalse(any(item["type"] == HUB for item in resources(self.live)))
-        guard = module(self.live, "iot-live-scope-guard")
+    def assert_live_sku_guards(self, template) -> None:
+        self.assertFalse(any(item["type"] == HUB for item in resources(template)))
+        guard = module(template, "iot-live-scope-guard")
         for key in ("existingHubSkuMustMatch", "existingHubUnitsMustMatch"):
             self.assertEqual(guard["properties"]["template"]["parameters"][key]["minLength"], 1)
             self.assertIn("reference(", guard["properties"]["parameters"][key]["value"])
         for sku, units in (("B1", 1), ("B1", 2), ("S1", 1)):
+
+            def reference(identifier, *args, sku=sku, units=units):
+                self.assertEqual(identifier, "/fixture/Microsoft.Devices/IotHubs/fixture")
+                return SimpleNamespace(sku=SimpleNamespace(name=sku, capacity=units))
+
             context = {
-                "reference": lambda *args, sku=sku, units=units: SimpleNamespace(
-                    sku=SimpleNamespace(name=sku, capacity=units)
-                ),
+                "reference": reference,
                 "string": str,
             }
             for key, accepted in (
@@ -107,12 +110,15 @@ class IotHubModuleTests(unittest.TestCase):
             ):
                 value = evaluate(
                     guard["properties"]["parameters"][key],
-                    self.values(self.live),
-                    self.live.get("variables", {}),
+                    self.values(template),
+                    template.get("variables", {}),
                     context,
                 )["value"]
                 self.assertEqual(bool(value), accepted, (sku, units, key))
-        self.assert_live_consumer_group(self.live)
+        self.assert_live_consumer_group(template)
+
+    def test_live_profile_never_puts_existing_hub_and_guards_actual_sku(self) -> None:
+        self.assert_live_sku_guards(self.live)
 
     def assert_live_consumer_group(self, template) -> None:
         group = resource(template, f"{HUB}/eventHubEndpoints/ConsumerGroups")
@@ -140,6 +146,7 @@ class IotHubModuleTests(unittest.TestCase):
         ]
         self.assertEqual(len(diagnostics), 1)
         setting = diagnostics[0]
+        self.assertEqual(setting["name"], "to-log-analytics")
         self.assertEqual(
             setting["scope"], "[resourceId('Microsoft.Devices/IotHubs', parameters('name'))]"
         )
@@ -158,12 +165,14 @@ class IotHubModuleTests(unittest.TestCase):
     def test_live_profile_diagnostics_target_existing_hub_and_workspace(self) -> None:
         self.assert_live_diagnostics(self.live)
 
-    def test_mutations_reject_live_diagnostics_wrong_hub_or_workspace(self) -> None:
-        for change in ("scope", "workspace"):
+    def test_mutations_reject_live_diagnostics_wrong_name_hub_or_workspace(self) -> None:
+        for change in ("name", "scope", "workspace"):
             with self.subTest(change=change):
                 mutated = deepcopy(self.live)
                 setting = resource(mutated, "Microsoft.Insights/diagnosticSettings")
-                if change == "scope":
+                if change == "name":
+                    setting["name"] = "wrong-setting"
+                elif change == "scope":
                     setting["scope"] = "[resourceId('Microsoft.Devices/IotHubs', 'wrong-hub')]"
                 else:
                     setting["properties"]["workspaceId"] = (
@@ -181,9 +190,14 @@ class IotHubModuleTests(unittest.TestCase):
             ("ama", "uksouth", "westus"),
             ("ama", "westus", "uksouth"),
         ):
+
+            def reference(identifier, *args, actual=actual):
+                self.assertEqual(identifier, "/fixture/Microsoft.Devices/IotHubs/fixture")
+                return SimpleNamespace(location=actual)
+
             context = {
                 "resourceGroup": lambda group=group: SimpleNamespace(name=group),
-                "reference": lambda *args, actual=actual: SimpleNamespace(location=actual),
+                "reference": reference,
             }
             for check, accepted in (
                 ("resourceGroupMustBeAma", group == "ama"),
@@ -204,6 +218,30 @@ class IotHubModuleTests(unittest.TestCase):
 
     def test_live_profile_scope_checks_requested_and_actual_location(self) -> None:
         self.assert_live_scope_guards(self.live)
+
+    def test_mutations_reject_live_guards_referencing_another_hub(self) -> None:
+        for key, assert_guards in (
+            ("existingHubSkuMustMatch", self.assert_live_sku_guards),
+            ("existingHubUnitsMustMatch", self.assert_live_sku_guards),
+            ("iotLocationMustBeUKSouth", self.assert_live_scope_guards),
+        ):
+            with self.subTest(key=key):
+                mutated = deepcopy(self.live)
+                params = module(mutated, "iot-live-scope-guard")["properties"]["parameters"]
+                parameter = params[key]
+                before = parameter["value"] if isinstance(parameter, dict) else parameter
+                after = before.replace(
+                    "resourceId('Microsoft.Devices/IotHubs', parameters('name'))",
+                    "resourceId('Microsoft.Devices/IotHubs', 'wrong-hub')",
+                )
+                self.assertNotEqual(after, before)
+                params[key] = {"value": after} if isinstance(parameter, dict) else after
+                with self.assertRaises(AssertionError) as failure:
+                    assert_guards(mutated)
+                self.assertIn(
+                    "/fixture/Microsoft.Devices/IotHubs/wrong-hub", str(failure.exception)
+                )
+                self.assertIn("/fixture/Microsoft.Devices/IotHubs/fixture", str(failure.exception))
 
     def test_mutations_reject_live_scope_guard_bypass(self) -> None:
         for check in ("resourceGroupMustBeAma", "iotLocationMustBeUKSouth"):
