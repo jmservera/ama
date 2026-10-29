@@ -3,8 +3,8 @@
   "task_slug": "demo-sites-live-correction",
   "parent_task": {"task_id": "eb7ee1f8-42fd-48a8-9c24-a1cbebb99513", "task_slug": "demo-sites-correction"},
   "mode": "automatic",
-  "active_phase": "Review",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-29/demo-sites-live-correction-research.md",
@@ -20,10 +20,11 @@
     {"decision": "Research executed Ready; one critique Complete/Revise, PC-001..005 applied directly without repeat.", "status": "recorded", "evidence": ".copilot-tracking/plans/2026-10-29/demo-sites-live-correction-plan.md"},
     {"decision": "SQL view committed; resident then employee Healthy on pinned main with exact protected equality, one forward revision each and ACR/jobs restored.", "status": "executed", "evidence": ".copilot-tracking/changes/2026-10-29/demo-sites-live-correction-changes.md"},
     {"decision": "January authority parked after both healthy: source cap, revision allowance, owner-private credentials, exact-version Modify and individually approved rows unresolved.", "status": "parked", "evidence": ".copilot-tracking/changes/2026-10-29/demo-sites-live-correction-changes.md#p03-t01-january-authority-parked-after-both-healthy"},
-    {"decision": "One original independent child Review executed Complete; outcome Residual work, RV-001/RV-002 Low routed later, live delivery supported.", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-29/demo-sites-live-correction-review.md"}
+    {"decision": "One original independent child Review executed Complete; outcome Residual work, RV-001/RV-002 Low routed later, live delivery supported.", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-29/demo-sites-live-correction-review.md"},
+    {"decision": "Original/new evidence committed locally; privacy-safe author/committer and exact Copilot trailer verified, no push.", "status": "completed", "evidence": "11f58b9064046d5ced32778dfe8e81e3c3f73543"}
   ],
   "blockers": [{"id": "B521", "summary": "January authority needs merged #521 image, separately authorized extra revision, owner-private credential Modify operation and approved existing SQL rows.", "resolution": "Owner/coordinator performs the exact parked steps in changes; no authority write attempted."}],
-  "next_action": {"phase": "Follow-up", "action": "Persist original/new evidence locally with required trailer, then await owner/coordinator follow-up selection. No push."},
+  "next_action": {"phase": "Follow-up", "action": "Await owner/coordinator selection of a recorded follow-up, Stop or manual mode; no new task or push. Coordinator owns publication gates and Refs-only PR."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Integrate #521 and prepare safe January authority apply", "rationale": "Highest remaining user value; blocked on owner-private credentials, named rows and extra revision authorization.", "evidence": ".copilot-tracking/changes/2026-10-29/demo-sites-live-correction-changes.md#p03-t01-january-authority-parked-after-both-healthy"},
     {"rank": 2, "task": "Make future execution logs invocation-unique and append-only", "rationale": "Small evidence-tooling improvement preventing the observed historical retention loss.", "evidence": ".copilot-tracking/reviews/logs/2026-10-29/demo-sites-live-correction-review.md#rv-001-low-four-historical-command-output-streams-are-no-longer-retained"},

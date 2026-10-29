@@ -119,5 +119,8 @@ no repeated deployment or rollback. /health is404 resident/401 employee;
 actual /healthz200 both, source-byte-equal public shells, employee assets401.
 Authority parked after both healthy with exact owner prerequisites in changes.
 No January source/credential/row operation or authenticated smoke performed.
-P03-T02 independent Review and local persistence remain. No publication gate
-or approval is claimed. Parent local validation artifacts remain unchanged.
+P03-T02 independent Review Complete / Residual work and local evidence commit
+11f58b9064046d5ced32778dfe8e81e3c3f73543 complete. Two Low historical evidence
+limitations routed to later work, no reimplementation or repeated Review.
+No publication gate or approval is claimed. Parent local validation artifacts
+remain unchanged.
