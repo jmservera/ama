@@ -10,7 +10,9 @@
 
 ## Execution Status
 
-In progress; full-plan scope. P01/P01-T01 complete; P02 active, P03 pending.
+Full RPI implementation and independent Review complete. All P01-P03 markers
+have execution evidence; final evidence persistence and planned local-gate
+attempt remain bookkeeping before coordinator handoff.
 
 ## Execution Summary
 
@@ -182,10 +184,47 @@ Clarified src/api/README.md: the 8,000-character masked storage limit differs
 from the 1,000-character inference allowance, selected-skill instructions
 count toward the combined cap, and completion rechecks use the same lens.
 
+### Candidate commit and preservation checks
+
+* `git merge-base --is-ancestor <captured-main> HEAD && git diff --check`:
+  passed.
+* Explicit byte assertions via /tmp/mv/bin/python and git show confirm final
+  docs/reference/log.md starts with main's complete original bytes and contains
+  the topic's complete appended entry. Both sides preserved.
+* `git diff --exit-code 949aafaf HEAD -- <original changes, critique, Review>`:
+  empty; original adverse RPI evidence byte-preserved.
+* Re-resolved `gh api user --jq '{id,login}'`, staged only this loop's paths,
+  then `git commit -m "fix(chat): reconcile main integration and refresh regressions"
+  -m "Preserve skill lenses, privacy readiness and completion receipts across the rebase. Record focused validation and retain original acceptance findings."
+  -m "Refs #503" -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"`:
+  success, ca5cb0101040c8176c4f32812be71af02b56670a.
+* `git status --short`: clean after candidate commit. All replayed and new
+  commits use the authenticated numeric-id noreply author/committer address.
+
+### P03 independent Review
+
+Execution Complete; outcome Conformant for the bounded local refresh at
+ca5cb0101040c8176c4f32812be71af02b56670a against captured main.
+One independent assessor, no new refresh finding. Original failed acceptance
+and RV-001 through RV-005 preserved. Full record:
+.copilot-tracking/reviews/logs/2026-10-29/agent-chat-157-refresh-review.md.
+Later evidence commits do not imply independent exact-head approval.
+
+* `git fetch origin main && git rev-parse origin/main HEAD`: main remains
+  5653547507f3056f09a726a18516237728da5e5b; candidate ca5cb010.
+* `flock -n /tmp/ama-rpi-heavy.lock true`: success, exit 0.
+  This is the caller's eligibility probe, not a held lock. The full-gate
+  runner must acquire/hold its own same shared lock for any discovery.
+* Planned after this original Review is committed:
+  `PATH=/tmp/mv/bin:$PATH /tmp/mv/bin/python tools/rpi-checks.py --all
+  --base 5653547507f3056f09a726a18516237728da5e5b
+  --out <session-files>/pr503-full-gate-20261029 --lock-timeout 1`.
+  This is not yet a pass or valid receipt. No cloud fallback is authorized.
+
 ## Pre-Review Reconciliation
 
-P01 complete. P02 source/test/documentation changes and validation complete;
-commit pending. P03 independent Review remains the next lifecycle phase.
+P01 and P02 source/test/documentation changes, validation and commit complete.
+P03 independent Review Complete / Conformant; no new findings to remediate.
 Original 2026-10-27 artifacts and failed acceptance verdict are unchanged.
 No active implementation blocker; fresh hosted CI and publication gate remain
 separate and cannot be inferred from these local results.
@@ -197,8 +236,8 @@ exact-head review and fresh hosted checks; no publication is authorized here.
 
 ## Remaining Work
 
-P02 commit; P03 independent Review and local evidence; complete publication
-gate attempt after original Review is persisted, without push.
+Persist original Review and complete planned publication-gate attempt,
+then persist its actual result and hand off without push.
 
 ## Follow-Up Items
 

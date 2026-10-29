@@ -13,8 +13,8 @@
 | Phase | Name | Status | Tasks |
 | --- | --- | --- | --- |
 | P01 | Reconcile branch | Complete | P01-T01 |
-| P02 | Validate and commit | Complete; candidate commit in progress | P02-T01 |
-| P03 | Review and handoff | Next | P03-T01 |
+| P02 | Validate and commit | Complete; ca5cb010 | P02-T01 |
+| P03 | Review and handoff | Review Complete / Conformant; persistence and gate handoff | P03-T01 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Reconcile branch
