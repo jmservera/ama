@@ -24,6 +24,38 @@ human/live or publication acceptance.
 
 ## Executive Summary
 
+Current bounded P03-T01 continuation (2026-10-29): integrate parent round-9
+at `b424ac9fe0b74ebbf4ebcbb384a969c1810db66b` using the exact authorized
+rebase from `27d11262`. Preserve duplicate-POST exclusion, pending
+reconciliation, shared review drafts and retained mutation feedback. Resolve
+app/timecapture conflicts around the single loading lifecycle. Keep both
+append-only documentation sides, incoming tracking artifacts and main's
+rubric score. Verify the workbench recipe hash and run full API discovery,
+journey/assistants/loading-briefing with pinned axe, employee briefing,
+design-system browser and scenario-manifest tests under the shared heavy lock.
+Use the specified journey worktree interpreter with this worktree's own src.
+Validation is complete. Commit locally only; no push, az or secret reads.
+Earlier completed markers and original Review outcomes remain historical.
+An extra regulatory UX/axe check exposed ambiguous result-status selectors
+while loading feedback is present. P03 also scopes its four result assertions
+to the existing direct panel paragraph status.
+The original failed runs are retained; the supplemental rerun passes.
+That rerun exposed loading-helper native disable overriding a handler's
+focus-preserving `aria-disabled` lifecycle. P01/P03 also preserve that owned
+ARIA state instead of adding native disabled, with controlled-helper and
+actual keyboard regression coverage. All required checks passed on the final
+product source: 1217 API tests (316 existing environment-dependent skips),
+journey/assistants/briefing browser checks with pinned axe, employee briefing,
+design-system browser and 8 scenario-manifest tests. Supplemental regulatory
+axe passed 19 states; 166 distinct axe scopes total have zero detected
+violations, with incompletes retained rather than treated as conformance.
+The law-viewer held-request test also waits for its initial source list before
+intercepting the deliberate button action, preventing an initial-read race
+without changing the exact duplicate/error assertions.
+The synchronized loading/briefing check passed twice. Targeted Ruff/mypy and
+JavaScript syntax checks pass. No repeated original Review, full publication
+gate or independent final-head acceptance is claimed.
+
 Current bounded P03 continuation (2026-10-29, PR #537): reproduce the CI
 design-system module's workflow-mode briefing retry failure with this
 worktree's source. Correct the product only if defective, otherwise correct

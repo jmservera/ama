@@ -21,6 +21,9 @@ progress politely. Existing handler-owned disabled states and inline errors win
 over cleanup. CSV, account, filters, appointment forms and the standalone law
 viewer use the same helper; non-control reads and map refreshes show progress
 without disabling navigation. Reduced motion keeps a static icon plus text.
+Controls whose handlers already set `aria-disabled="true"` retain that
+focus-preserving state without an additional native disable; pending duplicate
+activation is still suppressed.
 Failed writes are never automatically retried.
 Form progress is a sibling of the busy form; briefing progress is outside its
 busy content. Action-specific live text is not deferred inside those regions.

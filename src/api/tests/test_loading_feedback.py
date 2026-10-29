@@ -87,6 +87,17 @@ function tick(ms) {
   assert.match(control.children.at(-1).textContent, /Synthetic failure.*Try again/);
   await helper.run(control, async () => {await Promise.resolve(); control.disabled = true;});
   assert.equal(control.disabled, true, "never override action-owned permanent refusal");
+  const guarded = new Node();
+  const guardedAction = helper.run(guarded, () => {
+    guarded.setAttribute("aria-disabled", "true");
+    return new Promise(resolve => {release = resolve;});
+  });
+  assert.equal(guarded.disabled, false,
+    "preserve focusable action-owned aria-disabled controls");
+  assert.equal(guarded.getAttribute("aria-busy"), "true");
+  release(); await guardedAction;
+  assert.equal(guarded.disabled, false);
+  assert.equal(guarded.getAttribute("aria-disabled"), "true");
   const quick = new Node();
   await helper.run(quick, async () => 1);
   tick(200);

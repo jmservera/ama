@@ -6,6 +6,38 @@ ms.date: 2026-10-28
 
 ## Authorized rebased continuation (2026-10-29)
 
+Round-9 integration scope is P03-T01 and the directly implicated app/timecapture
+conflict resolution, not a new Research/Plan/Review loop. Parent
+`b424ac9fe0b74ebbf4ebcbb384a969c1810db66b` supplies the pending-mutation
+registry, shared drafts, reconciliation and mutation feedback. Preserve those
+lifecycles and one native-handler loading wrapper. Run the exact source-local
+API discovery command with the user-specified interpreter, then journey,
+assistants, loading briefing with verified axe, employee briefing, design-system
+browser and manifest tests. Hold `/tmp/ama-rpi-heavy.lock` via nonblocking
+admission retries for at most 40 minutes. Record results here and in the changes
+record before a local-only Conventional Commit. No push or az.
+The design-system module has no axe option. Supplement it with the existing
+regulatory UX/axe harness; its result-status assertions must distinguish
+direct panel paragraphs from nested loading-helper live regions, preserving
+all original expected text and functional assertions.
+Preserve focusable handler-owned `aria-disabled="true"` controls: the helper
+must not also set native disabled, while still excluding duplicate promises
+and showing busy feedback. Verify the controlled helper lifecycle and actual
+regulatory doubt-button focus without weakening either assertion. Rerun full
+API and required browser suites after this shared-helper correction.
+Before the law-button hold, wait for the real initial sources heading so its
+automatic read cannot be confused with the deliberately dispatched action.
+Use an explicit empty synthetic initial response because this briefing fixture
+has no law store. Remove that route before the deliberate held button read.
+Final continuation outcome: complete. API discovery passed 1217 tests with
+316 existing skips; journey 406 checks/87 axe scopes, assistants 206/56,
+loading briefing twice/4 scopes, employee briefing 74 checks, design-system
+132 checks, supplemental regulatory UX 19 axe states, manifest 8 tests and
+targeted Ruff/mypy all pass. All 166 distinct axe scopes have zero violations;
+incomplete assessments remain explicit. Evidence lives in
+`/tmp/ama-531-round9-final-20261029/` and the existing changes record.
+Original Review remains historical Not accepted; no publication is authorized.
+
 Additional authorized P03 scope: reproduce `python -m
 checks.design_system_browser_check` from `src/api` using source-local
 PYTHONPATH, distinguish initial failure from failed replacement of a cached

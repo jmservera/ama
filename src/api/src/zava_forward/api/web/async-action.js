@@ -46,7 +46,7 @@ const AsyncAction = (() => {
     const notice = feedback(label || button?.textContent.trim() || "Loading", control, region);
     const busy = control?.getAttribute("aria-busy");
     control?.setAttribute("aria-busy", "true");
-    const ownsDisabled = button && !button.disabled;
+    const ownsDisabled = button && !button.disabled && button.getAttribute("aria-disabled") !== "true";
     if (ownsDisabled) button.disabled = true;
     // Existing handlers own any later disabled changes, including permanent refusals.
     const observer = button ? new MutationObserver(() => { changed = true; }) : null;
