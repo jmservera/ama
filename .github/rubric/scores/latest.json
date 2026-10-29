@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-29T10:38:30+00:00",
-  "commit": "78f8990c272de6782899bc16f72bb6775c76fdb6",
+  "scored_at": "2026-10-29T10:48:16+00:00",
+  "commit": "7ac5041d60e2c2f22233b5fd0b47412c9ec81bd8",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40858074162",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40859533803",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
@@ -14,7 +14,7 @@
     "infrastructure": "b6366d357bc22aadb23fdb2e0847cbbda6689e072f25c6a68738113fd875b271",
     "capstone-deck": "acb30e4f302663cedec4884bc7c561fcb5a14fb647ab1c4f93ffc377567c8896",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
-    "thought-leadership": "15736f6e119c9ffa114a1afeef5123f55dc1257c0d360ba4a98cc9827d0ee109"
+    "thought-leadership": "951f4d87326ef667330aa41af67d2b117bed7c669e1e3e24935b30fe5707be88"
   },
   "total": 77,
   "sections": {
@@ -152,7 +152,7 @@
         "docs/capstone/thought-leadership/everything-but-the-software/main.tex:927-985",
         "docs/capstone/thought-leadership/everything-but-the-software/main.tex:3097-3280"
       ],
-      "rationale": "Thought-leadership artifact unchanged in this PR; baseline evidence retained unchanged."
+      "rationale": "Added Jiang/Herdagdelen citations qualify existing claims but remain incremental synthesis, not new empirical contribution. Unchanged at 4."
     },
     "D2": {
       "score": 3,
@@ -160,14 +160,14 @@
         "docs/capstone/thought-leadership/everything-but-the-software/main.tex:9",
         "docs/capstone/thought-leadership/everything-but-the-software/README.md:8-19"
       ],
-      "rationale": "main.tex still carries unresolved TODO(author) items; README confirms execution paused. Unchanged."
+      "rationale": "main.tex still has unresolved TODO(author) items (lines 9,41,53,569,633,687,1037,1065,1076,1547); revision not recompiled. Unchanged at 3."
     },
     "D3": {
       "score": 2,
       "evidence": [
         "docs/capstone/thought-leadership/everything-but-the-software/README.md:8-19"
       ],
-      "rationale": "README still states execution is paused, registration deferred. Unchanged."
+      "rationale": "README confirms no push, submission, registration or publication approval exists. Unchanged at 2."
     }
   }
 }
