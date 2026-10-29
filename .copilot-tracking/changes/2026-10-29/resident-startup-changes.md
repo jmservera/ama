@@ -95,6 +95,29 @@ Authenticated GitHub account resolved read-only as jmservera, id8036360;
 use its repository-local privacy-safe noreply address for author/committer.
 No Azure command, push or publication acceptance is part of closeout.
 
+## Final Local Handoff
+
+Reviewed implementation and all original RPI evidence committed locally as
+c2c57127ea077d144ff07e10378ab6ea5208e258. Author and committer use the freshly
+resolved GitHub account's repository-local noreply address; exact mandated
+Copilot trailer verified. Worktree clean immediately after that commit.
+This final plan/details/state reconciliation is a separate status-only local
+commit, not an amend. The research question table now mirrors the already
+recorded locally answered disposition; no new research or Review was performed.
+
+All P01/P02 markers complete. Task completed; automatic session remains running
+at Follow-up with no child selected. No push, az command, Azure change, .env,
+secret/private-data read, full publication receipt or live readiness claim.
+The deployment prerequisite is documented, not applied to Azure. Original
+critique and Review remain unchanged; Review Complete / Conformant does not
+prove historical cloud causality or approve a rollout.
+
+Ranked residual work: first obtain separate authority for live SQL/view,
+identity/secretRef verification before any retry (highest blocker-removal
+value); second correct the prior local rollout executor serialization/deadline
+findings (engineering-quality leverage). No further discovery or child task
+started. Stop/manual-mode choices remain available in state; no choice inferred.
+
 ## Amendments and Divergences
 
 No material divergence: investigation found a deployment SQL prerequisite

@@ -3,8 +3,8 @@
   "task_slug": "resident-startup",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Review",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-29/resident-startup-research.md",
@@ -44,12 +44,30 @@
       "decision": "Single independent Review executed Complete; outcome Conformant; no substantive findings. Assessed local documentation/regression and recorded validation, not Azure cause, full gate or publication.",
       "status": "reviewed",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-29/resident-startup-review.md."
+    },
+    {
+      "decision": "Reviewed implementation and original dated RPI evidence committed locally as c2c57127ea077d144ff07e10378ab6ea5208e258; author/committer noreply and exact trailer verified; worktree clean after commit; no push.",
+      "status": "committed",
+      "evidence": "git commit and git log verification, 2026-10-29."
     }
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Review",
-    "action": "Create requested privacy-safe local implementation/evidence commit, then persist completion and ranked follow-up handoff without push."
+    "phase": "Follow-up",
+    "action": "Await explicit follow-up selection, Stop automatic session or Switch to manual mode; no new local or cloud action is selected. Publication/live gates remain outside scope."
   },
-  "prioritized_follow_ups": null
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Obtain separate authorization to verify the live view, SQL identity and secretRefs before planning any resident image retry.",
+      "rationale": "Highest impact: the local schema prerequisite is sufficient to cause activation failure, but the actual cloud state and failed-revision exception were unavailable. Verification prevents a speculative retry; no Azure action authorized here.",
+      "evidence": "Research C5-C9; source README startup prerequisite; original Review Plan Follow-Up Assessment."
+    },
+    {
+      "rank": 2,
+      "task": "Address the previously preserved rollout executor secretRef serialization and restoration-deadline findings in a separate local task.",
+      "rationale": "Engineering-quality leverage: remove observed CLI serialization drift and make bounded restoration reliable before a later separately authorized rollout. Not required to establish this local schema failure.",
+      "evidence": "Prior both-demo-sites-redeploy RV-002/RV-003, read at intake; original Review distinct tooling follow-up."
+    }
+  ]
 }

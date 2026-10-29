@@ -46,9 +46,9 @@ specific exception. Old-image recovery success is not current-main success.
 
 | ID | Question | Type | Status |
 | --- | --- | --- | --- |
-| Q1 | Does main import/configure/serve using the ten declared settings? | Depth | Open |
-| Q2 | Which SQL operation is required before bind, and did #525 change it? | Depth | Open |
-| Q3 | Do port, probe, missing-setting or import alternatives explain the failure? | Depth | Open |
+| Q1 | Does main import/configure/serve using the ten declared settings? | Depth | Answered locally, C5/C8/C9 |
+| Q2 | Which SQL operation is required before bind, and did #525 change it? | Depth | Answered, C5-C7/C9 |
+| Q3 | Do port, probe, missing-setting or import alternatives explain the failure? | Depth | Answered locally, C8-C9; Azure cause unverified |
 
 ## Research Cycle Log
 

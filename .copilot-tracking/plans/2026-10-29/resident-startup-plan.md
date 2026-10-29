@@ -104,7 +104,7 @@ assert the reader refuses it, reapply current template in finally, and prove
 the fixture is readable with unchanged restricted access. Dependency: C6-C7.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Validate and review
+### [x] P02: Validate and review
 
 <!-- rpi:task id=P02-T01 -->
 #### [x] P02-T01: Execute static, unit, real SQL and image checks
@@ -113,7 +113,7 @@ Use isolated installed distributions and existing suites; retain commands,
 exit codes/skips and external local probe evidence. Depends on P01.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: One independent Review and local commit
+#### [x] P02-T02: One independent Review and local commit
 
 Reconcile plan/details/changes/state; preserve Review outcome and route findings
 without a second Review. Resolve GitHub account read-only for privacy-safe local
@@ -148,7 +148,8 @@ Exactly one critique executed Complete / Revise. Original is preserved.
 Changes path: .copilot-tracking/changes/2026-10-29/resident-startup-changes.md.
 Ready; critique finding disposed. Parent proceeds to Implement without another critique.
 
-Pre-Review status: P01 and P02-T01 complete. P02-T02 remains open solely for
-the single independent Review and requested local commit; no further source
-implementation remains. Validation evidence:
+Final status: all P01/P02 markers complete. Original independent Review
+Complete / Conformant, zero substantive findings; implementation/original
+evidence committed locally as c2c57127ea077d144ff07e10378ab6ea5208e258.
+No further source work; no second Review; no push. Validation evidence:
 .copilot-tracking/changes/2026-10-29/resident-startup-evidence.json.
