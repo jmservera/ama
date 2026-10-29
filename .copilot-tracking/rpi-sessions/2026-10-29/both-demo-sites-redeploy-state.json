@@ -1,0 +1,58 @@
+{
+  "task_id": "3897222c-2d62-4e25-a059-eecfbdce51d0",
+  "task_slug": "both-demo-sites-redeploy",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-29/both-demo-sites-redeploy-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-29/both-demo-sites-redeploy-plan.md",
+    "details": ".copilot-tracking/details/2026-10-29/both-demo-sites-redeploy-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-29/both-demo-sites-redeploy-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-29/both-demo-sites-redeploy-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-29/both-demo-sites-redeploy-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run the full ordered RPI loop autonomously; redeploy only the two named apps from current main with full backups and invariant verification.",
+      "status": "confirmed",
+      "evidence": "Explicit owner request 2026-10-29."
+    },
+    {
+      "decision": "Use the earlier owner-approved ACR route with exact policy restore. Proceed without cost query. No gh, push, image deletion, SQL changes, role changes or other resource changes.",
+      "status": "confirmed",
+      "evidence": "Explicit owner request 2026-10-29; historical procedure pending verification."
+    },
+    {
+      "decision": "Use existing clean topic branch ops/sites-redeploy-20261029, currently exactly at fetched origin/main d70ee60ab3d7346a9991cf64382d9985f4d09f2e.",
+      "status": "confirmed",
+      "evidence": "Read-only git status, branch and fetch inspection at intake."
+    },
+    {
+      "decision": "Research executed, Planning Readiness Ready; one final-candidate critique Complete / Revise. PC-001 through PC-005 applied directly to frozen execution contracts; no user-decision blocker, no repeat critique.",
+      "status": "resolved",
+      "evidence": ".copilot-tracking/plans/2026-10-29/both-demo-sites-redeploy-plan.md Critique Disposition and phase details Frozen Execution Contracts."
+    },
+    {
+      "decision": "One original independent Review executed Complete / Not accepted at full task boundary. Implementation Partial: employee latest main, resident exact old-image recovery. RV-001/RV-002/RV-003 accepted and routed later; no same-task fixes or repeated Review.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/both-demo-sites-redeploy-review.md; changes Parent Dispositions."
+    },
+    {
+      "decision": "Original Review RV-004 alleges a /tmp lock prohibition without a source in supplied task/repository requirements; retain original finding verbatim but dispute its applicability. No shared lock relocation/deletion is authorized.",
+      "status": "disputed",
+      "evidence": "Original Review RV-004 versus owner instruction to follow earlier successful procedure and that procedure's named nonblocking shared lock."
+    }
+  ],
+  "blockers": [
+    {"id": "resident-latest-main-unmet", "summary": "Resident main revision ActivationFailed; one verified recovery restored original digest/config in rollback-20261029-073718. Latest-main resident outcome unmet. CLI introduced empty value fields alongside refs; actual startup root cause not isolated.", "resolution": "Route diagnosis and any new forward retry to separately authorized follow-up. No SQL changes, secrets access or additional forward revision in this task."}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Full RPI lifecycle assessed; delivery Partial, Review Not accepted. Complete authorized local evidence commit then await ranked follow-up selection. Automatic session remains running; no child or cloud action without selection."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Research resident startup failure and CLI secretRef serialization", "rationale": "Directly unblocks the unmet resident-main outcome; preserve no-secrets/no-SQL boundary until separately authorized.", "evidence": "Resident ActivationFailed, two own CLI empty-value changes, current source17 columns versus older16-column evidence; exact old-image recovery healthy."},
+    {"rank": 2, "task": "Correct and synthetically test exact-secretRef and cleanup-deadline executor behavior", "rationale": "High engineering-quality leverage and no-cloud testability address confirmed RV-002/RV-003 before another deployment.", "evidence": "Original Review RV-002 and RV-003; recovered cloud configuration exact but current forward CLI and cleanup contract remain unsafe/unproved."},
+    {"rank": 3, "task": "Plan separately authorized exact-template resident retry", "rationale": "High delivery value after diagnosis and executor corrections; requires new forward-revision allowance and compatibility evidence.", "evidence": "Successful raw-schema old-image recovery preserved refs; original image-only CLI did not; resident main outcome remains unmet."}
+  ]
+}
