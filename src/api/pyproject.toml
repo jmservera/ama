@@ -79,6 +79,10 @@ module = ["test_progress_report_api", "tests.test_progress_report_api"]
 disallow_untyped_calls = false
 
 [[tool.mypy.overrides]]
+module = ["test_progress_dashboard", "tests.test_progress_dashboard"]
+disallow_untyped_calls = false
+
+[[tool.mypy.overrides]]
 module = ["test_progress_reports"]
 ignore_missing_imports = true
 
