@@ -1,0 +1,2532 @@
+{
+  "schema": "ama-pptx-navigation-review-v1",
+  "date": "2026-10-28",
+  "status": "complete",
+  "review_only": true,
+  "source_modified_by_review": false,
+  "source": "D:\\ama\\docs\\capstone\\deck\\zava-forward-cowork-v2-draft.pptx",
+  "branch": "jmservera/feat-presentation-qa-navigation",
+  "snapshots": [
+    {
+      "name": "before",
+      "sha256": "cff879250b4acf866859f7f259b12aecb0b731cca02e940d5cea8a33598b2577",
+      "bytes": 2618212,
+      "slide_count": 54,
+      "zip_integrity": "pass",
+      "dangling_relationships": [],
+      "slide_order_matches_baseline": true,
+      "action_counts": {
+        "ppaction://hlinkshowjump?jump=lastslideviewed": 27,
+        "ppaction://hlinksldjump": 27
+      }
+    },
+    {
+      "name": "committed",
+      "sha256": "3221b2a485ddb9d4fc4477c0ab5f63fa36fa78d73a3a627838c5c4deac8aac6b",
+      "bytes": 2397137,
+      "slide_count": 54,
+      "zip_integrity": "pass",
+      "dangling_relationships": [],
+      "slide_order_matches_baseline": true,
+      "action_counts": {
+        "ppaction://hlinksldjump": 108
+      }
+    },
+    {
+      "name": "working",
+      "sha256": "2bab9b79de4352a1915dab04d1846a4c4be90f6889a2b9b6af4807e48a33d5f8",
+      "bytes": 2397249,
+      "slide_count": 54,
+      "zip_integrity": "pass",
+      "dangling_relationships": [],
+      "slide_order_matches_baseline": true,
+      "action_counts": {
+        "ppaction://hlinksldjump": 108
+      }
+    }
+  ],
+  "revisions": {
+    "before": "e5f5eb51a7b3a84da7d052c82b802850ee2544d1",
+    "committed": "81e94efcf164e0a497e53dfb73c0a9e1e82ba62f",
+    "working": "uncommitted"
+  },
+  "invariant": {
+    "index_position": 27,
+    "index_stable_id": "4027",
+    "question_range": [
+      1,
+      27
+    ],
+    "answer_position_formula": "27 + question_number",
+    "footer_back_position": 27,
+    "currently_labeled_caller_back_position": 27,
+    "current_caller_action_is_last_slide_viewed": false,
+    "topic_destinations_distinct": true
+  },
+  "deltas": [
+    {
+      "from": "before",
+      "to": "committed",
+      "changed_zip_entries": [
+        "docProps/app.xml",
+        "docProps/core.xml",
+        "ppt/media/image18.png",
+        "ppt/media/image19.png",
+        "ppt/media/image20.png",
+        "ppt/media/image21.png",
+        "ppt/media/image22.png",
+        "ppt/media/image23.png",
+        "ppt/media/image24.png",
+        "ppt/media/image25.jpeg",
+        "ppt/media/image25.png",
+        "ppt/media/image26.png",
+        "ppt/media/image27.png",
+        "ppt/media/image28.png",
+        "ppt/media/image29.png",
+        "ppt/media/image30.png",
+        "ppt/media/image31.png",
+        "ppt/media/image32.png",
+        "ppt/media/image33.jpeg",
+        "ppt/media/image33.png",
+        "ppt/media/image34.jpeg",
+        "ppt/media/image35.png",
+        "ppt/media/image36.jpeg",
+        "ppt/media/image36.png",
+        "ppt/media/image37.png",
+        "ppt/media/image38.png",
+        "ppt/notesMasters/notesMaster1.xml",
+        "ppt/notesSlides/notesSlide11.xml",
+        "ppt/notesSlides/notesSlide13.xml",
+        "ppt/notesSlides/notesSlide15.xml",
+        "ppt/notesSlides/notesSlide21.xml",
+        "ppt/notesSlides/notesSlide22.xml",
+        "ppt/notesSlides/notesSlide32.xml",
+        "ppt/notesSlides/notesSlide36.xml",
+        "ppt/notesSlides/notesSlide39.xml",
+        "ppt/notesSlides/notesSlide40.xml",
+        "ppt/notesSlides/notesSlide51.xml",
+        "ppt/notesSlides/notesSlide52.xml",
+        "ppt/notesSlides/notesSlide6.xml",
+        "ppt/notesSlides/notesSlide7.xml",
+        "ppt/notesSlides/notesSlide8.xml",
+        "ppt/slideLayouts/slideLayout1.xml",
+        "ppt/slideLayouts/slideLayout10.xml",
+        "ppt/slideLayouts/slideLayout11.xml",
+        "ppt/slideLayouts/slideLayout2.xml",
+        "ppt/slideLayouts/slideLayout3.xml",
+        "ppt/slideLayouts/slideLayout4.xml",
+        "ppt/slideLayouts/slideLayout5.xml",
+        "ppt/slideLayouts/slideLayout6.xml",
+        "ppt/slideLayouts/slideLayout7.xml",
+        "ppt/slideLayouts/slideLayout8.xml",
+        "ppt/slideLayouts/slideLayout9.xml",
+        "ppt/slideMasters/slideMaster1.xml",
+        "ppt/slides/_rels/slide10.xml.rels",
+        "ppt/slides/_rels/slide11.xml.rels",
+        "ppt/slides/_rels/slide12.xml.rels",
+        "ppt/slides/_rels/slide13.xml.rels",
+        "ppt/slides/_rels/slide14.xml.rels",
+        "ppt/slides/_rels/slide15.xml.rels",
+        "ppt/slides/_rels/slide16.xml.rels",
+        "ppt/slides/_rels/slide17.xml.rels",
+        "ppt/slides/_rels/slide18.xml.rels",
+        "ppt/slides/_rels/slide19.xml.rels",
+        "ppt/slides/_rels/slide20.xml.rels",
+        "ppt/slides/_rels/slide21.xml.rels",
+        "ppt/slides/_rels/slide22.xml.rels",
+        "ppt/slides/_rels/slide23.xml.rels",
+        "ppt/slides/_rels/slide24.xml.rels",
+        "ppt/slides/_rels/slide25.xml.rels",
+        "ppt/slides/_rels/slide26.xml.rels",
+        "ppt/slides/_rels/slide27.xml.rels",
+        "ppt/slides/_rels/slide28.xml.rels",
+        "ppt/slides/_rels/slide29.xml.rels",
+        "ppt/slides/_rels/slide30.xml.rels",
+        "ppt/slides/_rels/slide31.xml.rels",
+        "ppt/slides/_rels/slide32.xml.rels",
+        "ppt/slides/_rels/slide33.xml.rels",
+        "ppt/slides/_rels/slide34.xml.rels",
+        "ppt/slides/_rels/slide35.xml.rels",
+        "ppt/slides/_rels/slide36.xml.rels",
+        "ppt/slides/_rels/slide37.xml.rels",
+        "ppt/slides/_rels/slide38.xml.rels",
+        "ppt/slides/_rels/slide39.xml.rels",
+        "ppt/slides/_rels/slide40.xml.rels",
+        "ppt/slides/_rels/slide41.xml.rels",
+        "ppt/slides/_rels/slide42.xml.rels",
+        "ppt/slides/_rels/slide43.xml.rels",
+        "ppt/slides/_rels/slide44.xml.rels",
+        "ppt/slides/_rels/slide45.xml.rels",
+        "ppt/slides/_rels/slide46.xml.rels",
+        "ppt/slides/_rels/slide47.xml.rels",
+        "ppt/slides/_rels/slide48.xml.rels",
+        "ppt/slides/_rels/slide49.xml.rels",
+        "ppt/slides/_rels/slide50.xml.rels",
+        "ppt/slides/_rels/slide51.xml.rels",
+        "ppt/slides/_rels/slide52.xml.rels",
+        "ppt/slides/_rels/slide53.xml.rels",
+        "ppt/slides/_rels/slide54.xml.rels",
+        "ppt/slides/_rels/slide8.xml.rels",
+        "ppt/slides/_rels/slide9.xml.rels",
+        "ppt/slides/slide11.xml",
+        "ppt/slides/slide13.xml",
+        "ppt/slides/slide15.xml",
+        "ppt/slides/slide21.xml",
+        "ppt/slides/slide22.xml",
+        "ppt/slides/slide27.xml",
+        "ppt/slides/slide28.xml",
+        "ppt/slides/slide29.xml",
+        "ppt/slides/slide30.xml",
+        "ppt/slides/slide31.xml",
+        "ppt/slides/slide32.xml",
+        "ppt/slides/slide33.xml",
+        "ppt/slides/slide34.xml",
+        "ppt/slides/slide35.xml",
+        "ppt/slides/slide36.xml",
+        "ppt/slides/slide37.xml",
+        "ppt/slides/slide38.xml",
+        "ppt/slides/slide39.xml",
+        "ppt/slides/slide40.xml",
+        "ppt/slides/slide41.xml",
+        "ppt/slides/slide42.xml",
+        "ppt/slides/slide43.xml",
+        "ppt/slides/slide44.xml",
+        "ppt/slides/slide45.xml",
+        "ppt/slides/slide46.xml",
+        "ppt/slides/slide47.xml",
+        "ppt/slides/slide48.xml",
+        "ppt/slides/slide49.xml",
+        "ppt/slides/slide50.xml",
+        "ppt/slides/slide51.xml",
+        "ppt/slides/slide52.xml",
+        "ppt/slides/slide53.xml",
+        "ppt/slides/slide54.xml",
+        "ppt/slides/slide6.xml",
+        "ppt/slides/slide8.xml",
+        "ppt/viewProps.xml"
+      ],
+      "normalized_counts": {
+        "order_changed": 0,
+        "text_changed": 0,
+        "notes_raw_text_changed": 6,
+        "notes_words_changed": 0,
+        "shape_ids_added_removed": 0,
+        "shape_geometry_changed": 0,
+        "zorder_changed": 0,
+        "visual_xml_residual_slides": 0
+      },
+      "link_changes": {
+        "added": 54,
+        "removed": 0,
+        "changed": 27
+      },
+      "notes_whitespace_only_positions": [
+        7,
+        8,
+        13,
+        15,
+        22,
+        51
+      ]
+    },
+    {
+      "from": "committed",
+      "to": "working",
+      "changed_zip_entries": [
+        "docProps/app.xml",
+        "docProps/core.xml",
+        "ppt/notesSlides/notesSlide14.xml",
+        "ppt/notesSlides/notesSlide22.xml",
+        "ppt/notesSlides/notesSlide40.xml",
+        "ppt/slides/slide40.xml",
+        "ppt/slides/slide9.xml",
+        "ppt/viewProps.xml"
+      ],
+      "normalized_counts": {
+        "order_changed": 0,
+        "text_changed": 0,
+        "notes_raw_text_changed": 0,
+        "notes_words_changed": 0,
+        "shape_ids_added_removed": 0,
+        "shape_geometry_changed": 0,
+        "zorder_changed": 0,
+        "visual_xml_residual_slides": 0
+      },
+      "link_changes": {
+        "added": 0,
+        "removed": 0,
+        "changed": 0
+      },
+      "notes_whitespace_only_positions": []
+    }
+  ],
+  "navigation": [
+    {
+      "question": "B01",
+      "index_position": 27,
+      "index_shape_id": "20975",
+      "index_shape": "Index B01",
+      "index_text": "B01 \u00b7 28\u00a0\u00a0\u00a0Why not fix the process and hire more people?",
+      "answer_position": 28,
+      "answer_slide_id": "4246",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 4,
+      "topic_text": "Topic: S04 / slide 4"
+    },
+    {
+      "question": "B02",
+      "index_position": 27,
+      "index_shape_id": "21175",
+      "index_shape": "Index B02",
+      "index_text": "B02 \u00b7 29\u00a0\u00a0\u00a0Replacing or integrating our housing system?",
+      "answer_position": 29,
+      "answer_slide_id": "4466",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 12,
+      "topic_text": "Topic: S11 / slide 12"
+    },
+    {
+      "question": "B03",
+      "index_position": 27,
+      "index_shape_id": "21196",
+      "index_shape": "Index B03",
+      "index_text": "B03 \u00b7 30\u00a0\u00a0\u00a0Why not exactly the five agents requested?",
+      "answer_position": 30,
+      "answer_slide_id": "4687",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 9,
+      "topic_text": "Topic: S08 / slide 9"
+    },
+    {
+      "question": "B04",
+      "index_position": 27,
+      "index_shape_id": "21070",
+      "index_shape": "Index B04",
+      "index_text": "B04 \u00b7 31\u00a0\u00a0\u00a0How do Decision Models cut cost and latency?",
+      "answer_position": 31,
+      "answer_slide_id": "4909",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 16,
+      "topic_text": "Topic: S15 / slide 16"
+    },
+    {
+      "question": "B05",
+      "index_position": 27,
+      "index_shape_id": "21085",
+      "index_shape": "Index B05",
+      "index_text": "B05 \u00b7 32\u00a0\u00a0\u00a0What does the technology cost today?",
+      "answer_position": 32,
+      "answer_slide_id": "5132",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 21,
+      "topic_text": "Topic: S18 / slide 21"
+    },
+    {
+      "question": "B06",
+      "index_position": 27,
+      "index_shape_id": "21316",
+      "index_shape": "Index B06",
+      "index_text": "B06 \u00b7 33\u00a0\u00a0\u00a0How do residents keep choice, incl. offline?",
+      "answer_position": 33,
+      "answer_slide_id": "5356",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 13,
+      "topic_text": "Topic: S12 / slide 13"
+    },
+    {
+      "question": "B07",
+      "index_position": 27,
+      "index_shape_id": "21343",
+      "index_shape": "Index B07",
+      "index_text": "B07 \u00b7 34\u00a0\u00a0\u00a0What stops humans rubber-stamping AI?",
+      "answer_position": 34,
+      "answer_slide_id": "5581",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 20,
+      "topic_text": "Topic: S17 / slide 20"
+    },
+    {
+      "question": "B08",
+      "index_position": 27,
+      "index_shape_id": "20980",
+      "index_shape": "Index B08",
+      "index_text": "B08 \u00b7 35\u00a0\u00a0\u00a0Will this double delivery and capture GBP 40m?",
+      "answer_position": 35,
+      "answer_slide_id": "5807",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 6,
+      "topic_text": "Topic: S05 / slide 6"
+    },
+    {
+      "question": "B09",
+      "index_position": 27,
+      "index_shape_id": "20986",
+      "index_shape": "Index B09",
+      "index_text": "B09 \u00b7 36\u00a0\u00a0\u00a0What is the per-home case and cash exposure?",
+      "answer_position": 36,
+      "answer_slide_id": "6034",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 11,
+      "topic_text": "Topic: S10 / slide 11"
+    },
+    {
+      "question": "B10",
+      "index_position": 27,
+      "index_shape_id": "21218",
+      "index_shape": "Index B10",
+      "index_text": "B10 \u00b7 37\u00a0\u00a0\u00a0Why not deploy each agent independently?",
+      "answer_position": 37,
+      "answer_slide_id": "6262",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 19,
+      "topic_text": "Topic: S16 / slide 19"
+    },
+    {
+      "question": "B11",
+      "index_position": 27,
+      "index_shape_id": "21241",
+      "index_shape": "Index B11",
+      "index_text": "B11 \u00b7 38\u00a0\u00a0\u00a0What proves the AI is real and useful?",
+      "answer_position": 38,
+      "answer_slide_id": "6491",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 16,
+      "topic_text": "Topic: S15 / slide 16"
+    },
+    {
+      "question": "B12",
+      "index_position": 27,
+      "index_shape_id": "21020",
+      "index_shape": "Index B12",
+      "index_text": "B12 \u00b7 39\u00a0\u00a0\u00a0Validated with real residents and staff?",
+      "answer_position": 39,
+      "answer_slide_id": "6721",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 8,
+      "topic_text": "Topic: S07 / slide 8"
+    },
+    {
+      "question": "B13",
+      "index_position": 27,
+      "index_shape_id": "21031",
+      "index_shape": "Index B13",
+      "index_text": "B13 \u00b7 40\u00a0\u00a0\u00a0How did requirements become the backlog?",
+      "answer_position": 40,
+      "answer_slide_id": "6952",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 22,
+      "topic_text": "Topic: S19 / slide 22"
+    },
+    {
+      "question": "B14",
+      "index_position": 27,
+      "index_shape_id": "25950",
+      "index_shape": "Index B14",
+      "index_text": "B14 \u00b7 41\u00a0\u00a0\u00a0Is it agentic if so much is deterministic?",
+      "answer_position": 41,
+      "answer_slide_id": "7184",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 9,
+      "topic_text": "Topic: S08 / slide 9"
+    },
+    {
+      "question": "B15",
+      "index_position": 27,
+      "index_shape_id": "25824",
+      "index_shape": "Index B15",
+      "index_text": "B15 \u00b7 42\u00a0\u00a0\u00a0What must happen before a pilot decision?",
+      "answer_position": 42,
+      "answer_slide_id": "7417",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 24,
+      "topic_text": "Topic: S21 / slide 24"
+    },
+    {
+      "question": "B16",
+      "index_position": 27,
+      "index_shape_id": "21526",
+      "index_shape": "Index B16",
+      "index_text": "B16 \u00b7 43\u00a0\u00a0\u00a0What if the model, cloud or deployment fails?",
+      "answer_position": 43,
+      "answer_slide_id": "7651",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 20,
+      "topic_text": "Topic: S17 / slide 20"
+    },
+    {
+      "question": "B17",
+      "index_position": 27,
+      "index_shape_id": "20993",
+      "index_shape": "Index B17",
+      "index_text": "B17 \u00b7 44\u00a0\u00a0\u00a0When can we go live, and who owns next?",
+      "answer_position": 44,
+      "answer_slide_id": "7886",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 23,
+      "topic_text": "Topic: S20 / slide 23"
+    },
+    {
+      "question": "B18",
+      "index_position": 27,
+      "index_shape_id": "21560",
+      "index_shape": "Index B18",
+      "index_text": "B18 \u00b7 45\u00a0\u00a0\u00a0Can you demo a new live action now?",
+      "answer_position": 45,
+      "answer_slide_id": "8122",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 25,
+      "topic_text": "Topic: S22 / slide 25"
+    },
+    {
+      "question": "B19",
+      "index_position": 27,
+      "index_shape_id": "26092",
+      "index_shape": "Index B19",
+      "index_text": "B19 \u00b7 46\u00a0\u00a0\u00a0Sensors: can AI diagnose damp or mould?",
+      "answer_position": 46,
+      "answer_slide_id": "8359",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 19,
+      "topic_text": "Topic: S16 / slide 19"
+    },
+    {
+      "question": "B20",
+      "index_position": 27,
+      "index_shape_id": "25767",
+      "index_shape": "Index B20",
+      "index_text": "B20 \u00b7 47\u00a0\u00a0\u00a0Why Azure, not M365, Power Platform or buy?",
+      "answer_position": 47,
+      "answer_slide_id": "8597",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 15,
+      "topic_text": "Topic: S14 / slide 15"
+    },
+    {
+      "question": "B21",
+      "index_position": 27,
+      "index_shape_id": "21371",
+      "index_shape": "Index B21",
+      "index_text": "B21 \u00b7 48\u00a0\u00a0\u00a0How do you prevent hallucination and injection?",
+      "answer_position": 48,
+      "answer_slide_id": "8836",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 20,
+      "topic_text": "Topic: S17 / slide 20"
+    },
+    {
+      "question": "B22",
+      "index_position": 27,
+      "index_shape_id": "21400",
+      "index_shape": "Index B22",
+      "index_text": "B22 \u00b7 49\u00a0\u00a0\u00a0Can data leave the UK or train a model?",
+      "answer_position": 49,
+      "answer_slide_id": "9076",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 19,
+      "topic_text": "Topic: S16 / slide 19"
+    },
+    {
+      "question": "B23",
+      "index_position": 27,
+      "index_shape_id": "21430",
+      "index_shape": "Index B23",
+      "index_text": "B23 \u00b7 50\u00a0\u00a0\u00a0How will you know it is fair and accessible?",
+      "answer_position": 50,
+      "answer_slide_id": "9317",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 13,
+      "topic_text": "Topic: S12 / slide 13"
+    },
+    {
+      "question": "B24",
+      "index_position": 27,
+      "index_shape_id": "26019",
+      "index_shape": "Index B24",
+      "index_text": "B24 \u00b7 51\u00a0\u00a0\u00a0How do policy, law and funding stay current?",
+      "answer_position": 51,
+      "answer_slide_id": "9559",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 3,
+      "topic_text": "Topic: S03 / slide 3"
+    },
+    {
+      "question": "B25",
+      "index_position": 27,
+      "index_shape_id": "21101",
+      "index_shape": "Index B25",
+      "index_text": "B25 \u00b7 52\u00a0\u00a0\u00a0Tokenomics unit: can the AI bill run away?",
+      "answer_position": 52,
+      "answer_slide_id": "9802",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 21,
+      "topic_text": "Topic: S18 / slide 21"
+    },
+    {
+      "question": "B26",
+      "index_position": 27,
+      "index_shape_id": "21118",
+      "index_shape": "Index B26",
+      "index_text": "B26 \u00b7 53\u00a0\u00a0\u00a0Why not cache everything, use the cheapest model?",
+      "answer_position": 53,
+      "answer_slide_id": "10046",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 21,
+      "topic_text": "Topic: S18 / slide 21"
+    },
+    {
+      "question": "B27",
+      "index_position": 27,
+      "index_shape_id": "25885",
+      "index_shape": "Index B27",
+      "index_text": "B27 \u00b7 54\u00a0\u00a0\u00a0What stops chat and agent sprawl?",
+      "answer_position": 54,
+      "answer_slide_id": "10291",
+      "footer_back_position": 27,
+      "caller_back_position": 27,
+      "caller_action": "ppaction://hlinksldjump",
+      "topic_position": 21,
+      "topic_text": "Topic: S18 / slide 21"
+    }
+  ],
+  "current_slides": [
+    {
+      "position": 1,
+      "id": "10492",
+      "part": "ppt/slides/slide1.xml",
+      "title": "More homes ready.\nFaster. With control intact.",
+      "actions": []
+    },
+    {
+      "position": 2,
+      "id": "10694",
+      "part": "ppt/slides/slide2.xml",
+      "title": "15,600 homes to lift by 2030.\nThousands more to keep safe.",
+      "actions": []
+    },
+    {
+      "position": 3,
+      "id": "10897",
+      "part": "ppt/slides/slide3.xml",
+      "title": "Three clocks are already running.\n\u00a0",
+      "actions": []
+    },
+    {
+      "position": 4,
+      "id": "11101",
+      "part": "ppt/slides/slide4.xml",
+      "title": "Homes don't stall on ambition.\nThey stall between teams.",
+      "actions": []
+    },
+    {
+      "position": 5,
+      "id": "11306",
+      "part": "ppt/slides/slide5.xml",
+      "title": "Forecast: every Zava home at EPC C by April 2030.\n\u00a0",
+      "actions": []
+    },
+    {
+      "position": 6,
+      "id": "11512",
+      "part": "ppt/slides/slide6.xml",
+      "title": "Forecast: every Zava home at EPC C by April 2030.\n\u00a0",
+      "actions": []
+    },
+    {
+      "position": 7,
+      "id": "11719",
+      "part": "ppt/slides/slide7.xml",
+      "title": "Six weeks of product work\nsit under these slides.",
+      "actions": []
+    },
+    {
+      "position": 8,
+      "id": "11927",
+      "part": "ppt/slides/slide8.xml",
+      "title": "We designed for the people who move a home forward.\n\u00a0",
+      "actions": []
+    },
+    {
+      "position": 9,
+      "id": "12136",
+      "part": "ppt/slides/slide9.xml",
+      "title": "We challenged the brief to make it shippable.\n\u00a0",
+      "actions": []
+    },
+    {
+      "position": 10,
+      "id": "12346",
+      "part": "ppt/slides/slide10.xml",
+      "title": "Every prototype taught us something we kept.\n\u00a0",
+      "actions": []
+    },
+    {
+      "position": 11,
+      "id": "12557",
+      "part": "ppt/slides/slide11.xml",
+      "title": "We stress-tested the economics\nbefore we wrote the product.",
+      "actions": []
+    },
+    {
+      "position": 12,
+      "id": "12769",
+      "part": "ppt/slides/slide12.xml",
+      "title": "Meet the Workbench:\nevery home, one owner, one next step.",
+      "actions": []
+    },
+    {
+      "position": 13,
+      "id": "12982",
+      "part": "ppt/slides/slide13.xml",
+      "title": "One home, end to end: every exception has an owner.",
+      "actions": []
+    },
+    {
+      "position": 14,
+      "id": "13196",
+      "part": "ppt/slides/slide14.xml",
+      "title": "189 backlog items, 16 epics, one coherent product.\n\u00a0",
+      "actions": []
+    },
+    {
+      "position": 15,
+      "id": "13411",
+      "part": "ppt/slides/slide15.xml",
+      "title": "Start Monday with the spreadsheets you already run.\n\u00a0",
+      "actions": []
+    },
+    {
+      "position": 16,
+      "id": "13627",
+      "part": "ppt/slides/slide16.xml",
+      "title": "AI where it earns its place:\nfive assistants, one workbench, people decide.",
+      "actions": []
+    },
+    {
+      "position": 17,
+      "id": "13844",
+      "part": "ppt/slides/slide17.xml",
+      "title": "Secure by design: every home record\nsits inside three boundaries.",
+      "actions": []
+    },
+    {
+      "position": 18,
+      "id": "14062",
+      "part": "ppt/slides/slide18.xml",
+      "title": "Secure by design: every home record\nsits inside three boundaries.",
+      "actions": []
+    },
+    {
+      "position": 19,
+      "id": "14281",
+      "part": "ppt/slides/slide19.xml",
+      "title": "Secure by design: every home record\nsits inside three boundaries.",
+      "actions": []
+    },
+    {
+      "position": 20,
+      "id": "14501",
+      "part": "ppt/slides/slide20.xml",
+      "title": "Seven checkpoints between an AI\ndraft and a real-world decision.",
+      "actions": []
+    },
+    {
+      "position": 21,
+      "id": "14722",
+      "part": "ppt/slides/slide21.xml",
+      "title": "Model inference. Measure accepted value.",
+      "actions": []
+    },
+    {
+      "position": 22,
+      "id": "14944",
+      "part": "ppt/slides/slide22.xml",
+      "title": "Everything But the Software",
+      "actions": []
+    },
+    {
+      "position": 23,
+      "id": "15167",
+      "part": "ppt/slides/slide23.xml",
+      "title": "Validate, pilot, scale: on the clock to April 2030.\n\u00a0",
+      "actions": []
+    },
+    {
+      "position": 24,
+      "id": "15391",
+      "part": "ppt/slides/slide24.xml",
+      "title": "Decision today: fund the validation gate.\n\u00a0",
+      "actions": []
+    },
+    {
+      "position": 25,
+      "id": "15616",
+      "part": "ppt/slides/slide25.xml",
+      "title": "See it work: one home, one exception,\none accountable next step.",
+      "actions": []
+    },
+    {
+      "position": 26,
+      "id": "15842",
+      "part": "ppt/slides/slide26.xml",
+      "title": "More homes ready,\nwith control intact.",
+      "actions": []
+    },
+    {
+      "position": 27,
+      "id": "4027",
+      "part": "ppt/slides/slide27.xml",
+      "title": "Questions we expect, and where the answers are.\n\u00a0",
+      "actions": [
+        {
+          "shape": "Index B01",
+          "shape_id": "20975",
+          "label": "B01 \u00b7 28\u00a0\u00a0\u00a0Why not fix the process and hire more people?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 28,
+          "target_stable_id": "4246"
+        },
+        {
+          "shape": "Index B08",
+          "shape_id": "20980",
+          "label": "B08 \u00b7 35\u00a0\u00a0\u00a0Will this double delivery and capture GBP 40m?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 35,
+          "target_stable_id": "5807"
+        },
+        {
+          "shape": "Index B09",
+          "shape_id": "20986",
+          "label": "B09 \u00b7 36\u00a0\u00a0\u00a0What is the per-home case and cash exposure?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 36,
+          "target_stable_id": "6034"
+        },
+        {
+          "shape": "Index B17",
+          "shape_id": "20993",
+          "label": "B17 \u00b7 44\u00a0\u00a0\u00a0When can we go live, and who owns next?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 44,
+          "target_stable_id": "7886"
+        },
+        {
+          "shape": "Index B12",
+          "shape_id": "21020",
+          "label": "B12 \u00b7 39\u00a0\u00a0\u00a0Validated with real residents and staff?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 39,
+          "target_stable_id": "6721"
+        },
+        {
+          "shape": "Index B13",
+          "shape_id": "21031",
+          "label": "B13 \u00b7 40\u00a0\u00a0\u00a0How did requirements become the backlog?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 40,
+          "target_stable_id": "6952"
+        },
+        {
+          "shape": "Index B04",
+          "shape_id": "21070",
+          "label": "B04 \u00b7 31\u00a0\u00a0\u00a0How do Decision Models cut cost and latency?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 31,
+          "target_stable_id": "4909"
+        },
+        {
+          "shape": "Index B05",
+          "shape_id": "21085",
+          "label": "B05 \u00b7 32\u00a0\u00a0\u00a0What does the technology cost today?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 32,
+          "target_stable_id": "5132"
+        },
+        {
+          "shape": "Index B25",
+          "shape_id": "21101",
+          "label": "B25 \u00b7 52\u00a0\u00a0\u00a0Tokenomics unit: can the AI bill run away?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 52,
+          "target_stable_id": "9802"
+        },
+        {
+          "shape": "Index B26",
+          "shape_id": "21118",
+          "label": "B26 \u00b7 53\u00a0\u00a0\u00a0Why not cache everything, use the cheapest model?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 53,
+          "target_stable_id": "10046"
+        },
+        {
+          "shape": "Index B02",
+          "shape_id": "21175",
+          "label": "B02 \u00b7 29\u00a0\u00a0\u00a0Replacing or integrating our housing system?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 29,
+          "target_stable_id": "4466"
+        },
+        {
+          "shape": "Index B03",
+          "shape_id": "21196",
+          "label": "B03 \u00b7 30\u00a0\u00a0\u00a0Why not exactly the five agents requested?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 30,
+          "target_stable_id": "4687"
+        },
+        {
+          "shape": "Index B10",
+          "shape_id": "21218",
+          "label": "B10 \u00b7 37\u00a0\u00a0\u00a0Why not deploy each agent independently?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 37,
+          "target_stable_id": "6262"
+        },
+        {
+          "shape": "Index B11",
+          "shape_id": "21241",
+          "label": "B11 \u00b7 38\u00a0\u00a0\u00a0What proves the AI is real and useful?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 38,
+          "target_stable_id": "6491"
+        },
+        {
+          "shape": "Index B06",
+          "shape_id": "21316",
+          "label": "B06 \u00b7 33\u00a0\u00a0\u00a0How do residents keep choice, incl. offline?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 33,
+          "target_stable_id": "5356"
+        },
+        {
+          "shape": "Index B07",
+          "shape_id": "21343",
+          "label": "B07 \u00b7 34\u00a0\u00a0\u00a0What stops humans rubber-stamping AI?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 34,
+          "target_stable_id": "5581"
+        },
+        {
+          "shape": "Index B21",
+          "shape_id": "21371",
+          "label": "B21 \u00b7 48\u00a0\u00a0\u00a0How do you prevent hallucination and injection?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 48,
+          "target_stable_id": "8836"
+        },
+        {
+          "shape": "Index B22",
+          "shape_id": "21400",
+          "label": "B22 \u00b7 49\u00a0\u00a0\u00a0Can data leave the UK or train a model?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 49,
+          "target_stable_id": "9076"
+        },
+        {
+          "shape": "Index B23",
+          "shape_id": "21430",
+          "label": "B23 \u00b7 50\u00a0\u00a0\u00a0How will you know it is fair and accessible?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 50,
+          "target_stable_id": "9317"
+        },
+        {
+          "shape": "Index B16",
+          "shape_id": "21526",
+          "label": "B16 \u00b7 43\u00a0\u00a0\u00a0What if the model, cloud or deployment fails?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 43,
+          "target_stable_id": "7651"
+        },
+        {
+          "shape": "Index B18",
+          "shape_id": "21560",
+          "label": "B18 \u00b7 45\u00a0\u00a0\u00a0Can you demo a new live action now?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 45,
+          "target_stable_id": "8122"
+        },
+        {
+          "shape": "Index B20",
+          "shape_id": "25767",
+          "label": "B20 \u00b7 47\u00a0\u00a0\u00a0Why Azure, not M365, Power Platform or buy?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 47,
+          "target_stable_id": "8597"
+        },
+        {
+          "shape": "Index B15",
+          "shape_id": "25824",
+          "label": "B15 \u00b7 42\u00a0\u00a0\u00a0What must happen before a pilot decision?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 42,
+          "target_stable_id": "7417"
+        },
+        {
+          "shape": "Index B27",
+          "shape_id": "25885",
+          "label": "B27 \u00b7 54\u00a0\u00a0\u00a0What stops chat and agent sprawl?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 54,
+          "target_stable_id": "10291"
+        },
+        {
+          "shape": "Index B14",
+          "shape_id": "25950",
+          "label": "B14 \u00b7 41\u00a0\u00a0\u00a0Is it agentic if so much is deterministic?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 41,
+          "target_stable_id": "7184"
+        },
+        {
+          "shape": "Index B24",
+          "shape_id": "26019",
+          "label": "B24 \u00b7 51\u00a0\u00a0\u00a0How do policy, law and funding stay current?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 51,
+          "target_stable_id": "9559"
+        },
+        {
+          "shape": "Index B19",
+          "shape_id": "26092",
+          "label": "B19 \u00b7 46\u00a0\u00a0\u00a0Sensors: can AI diagnose damp or mould?",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 46,
+          "target_stable_id": "8359"
+        }
+      ]
+    },
+    {
+      "position": 28,
+      "id": "4246",
+      "part": "ppt/slides/slide28.xml",
+      "title": "Why not fix the process and hire more people instead?\n\u00a0",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "2667",
+          "label": "B01 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "2672",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S04 / slide 4",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 4,
+          "target_stable_id": "11101"
+        }
+      ]
+    },
+    {
+      "position": 29,
+      "id": "4466",
+      "part": "ppt/slides/slide29.xml",
+      "title": "Is this replacing our housing system or integrating with it?\n\u00a0",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "2702",
+          "label": "B02 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "2712",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S11 / slide 12",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 12,
+          "target_stable_id": "12769"
+        }
+      ]
+    },
+    {
+      "position": 30,
+      "id": "4687",
+      "part": "ppt/slides/slide30.xml",
+      "title": "Why did you not build exactly the five agents we requested?\n\u00a0",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "2762",
+          "label": "B03 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "2777",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S08 / slide 9",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 9,
+          "target_stable_id": "12136"
+        }
+      ]
+    },
+    {
+      "position": 31,
+      "id": "4909",
+      "part": "ppt/slides/slide31.xml",
+      "title": "How do Decision Models reduce cost and response time?\n\u00a0",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "2847",
+          "label": "B04 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "2867",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S15 / slide 16",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 16,
+          "target_stable_id": "13627"
+        }
+      ]
+    },
+    {
+      "position": 32,
+      "id": "5132",
+      "part": "ppt/slides/slide32.xml",
+      "title": "What does the technology cost today?\n\u00a0",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "2957",
+          "label": "B05 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "2982",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S18 / slide 21",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 21,
+          "target_stable_id": "14722"
+        }
+      ]
+    },
+    {
+      "position": 33,
+      "id": "5356",
+      "part": "ppt/slides/slide33.xml",
+      "title": "How do residents retain choice,\nespecially without digital access?",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "3092",
+          "label": "B06 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "3122",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S12 / slide 13",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 13,
+          "target_stable_id": "12982"
+        }
+      ]
+    },
+    {
+      "position": 34,
+      "id": "5581",
+      "part": "ppt/slides/slide34.xml",
+      "title": "What stops a human from rubber-stamping AI?\n\u00a0",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "3252",
+          "label": "B07 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "3287",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S17 / slide 20",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 20,
+          "target_stable_id": "14501"
+        }
+      ]
+    },
+    {
+      "position": 35,
+      "id": "5807",
+      "part": "ppt/slides/slide35.xml",
+      "title": "Will this double retrofit delivery and capture GBP 40 million?\n\u00a0",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "3437",
+          "label": "B08 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "3477",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S05 / slide 6",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 6,
+          "target_stable_id": "11512"
+        }
+      ]
+    },
+    {
+      "position": 36,
+      "id": "6034",
+      "part": "ppt/slides/slide36.xml",
+      "title": "What is the per-home business case and cash exposure?\n\u00a0",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "3647",
+          "label": "B09 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "3692",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S10 / slide 11",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 11,
+          "target_stable_id": "12557"
+        }
+      ]
+    },
+    {
+      "position": 37,
+      "id": "6262",
+      "part": "ppt/slides/slide37.xml",
+      "title": "Why not deploy each agent independently?\n\u00a0",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "3882",
+          "label": "B10 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "3932",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S16 / slide 19",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 19,
+          "target_stable_id": "14281"
+        }
+      ]
+    },
+    {
+      "position": 38,
+      "id": "6491",
+      "part": "ppt/slides/slide38.xml",
+      "title": "What proves the AI is real and useful rather than a template?\n\u00a0",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "4142",
+          "label": "B11 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "4197",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S15 / slide 16",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 16,
+          "target_stable_id": "13627"
+        }
+      ]
+    },
+    {
+      "position": 39,
+      "id": "6721",
+      "part": "ppt/slides/slide39.xml",
+      "title": "Did you validate this with real residents and staff?\n\u00a0",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "4427",
+          "label": "B12 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "4487",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S07 / slide 8",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 8,
+          "target_stable_id": "11927"
+        }
+      ]
+    },
+    {
+      "position": 40,
+      "id": "6952",
+      "part": "ppt/slides/slide40.xml",
+      "title": "How did the requirements become an agent-delivered backlog?\n\u00a0",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "4737",
+          "label": "B13 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "4802",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S19 / slide 22",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 22,
+          "target_stable_id": "14944"
+        }
+      ]
+    },
+    {
+      "position": 41,
+      "id": "7184",
+      "part": "ppt/slides/slide41.xml",
+      "title": "Is this actually agentic if so much is deterministic?\n\u00a0",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "5072",
+          "label": "B14 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "5142",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S08 / slide 9",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 9,
+          "target_stable_id": "12136"
+        }
+      ]
+    },
+    {
+      "position": 42,
+      "id": "7417",
+      "part": "ppt/slides/slide42.xml",
+      "title": "What exactly must happen before a pilot\nor production decision?",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "5432",
+          "label": "B15 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "5507",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S21 / slide 24",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 24,
+          "target_stable_id": "15391"
+        }
+      ]
+    },
+    {
+      "position": 43,
+      "id": "7651",
+      "part": "ppt/slides/slide43.xml",
+      "title": "What happens if the model, cloud or deployment fails?\n\u00a0",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "5817",
+          "label": "B16 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "5897",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S17 / slide 20",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 20,
+          "target_stable_id": "14501"
+        }
+      ]
+    },
+    {
+      "position": 44,
+      "id": "7886",
+      "part": "ppt/slides/slide44.xml",
+      "title": "When can we go live and who owns the next step?\n\u00a0",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "6227",
+          "label": "B17 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "6312",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S20 / slide 23",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 23,
+          "target_stable_id": "15167"
+        }
+      ]
+    },
+    {
+      "position": 45,
+      "id": "8122",
+      "part": "ppt/slides/slide45.xml",
+      "title": "Can you demonstrate a new live action right now?\n\u00a0",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "6662",
+          "label": "B18 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "6752",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S22 / slide 25",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 25,
+          "target_stable_id": "15616"
+        }
+      ]
+    },
+    {
+      "position": 46,
+      "id": "8359",
+      "part": "ppt/slides/slide46.xml",
+      "title": "Where do sensors fit and can AI diagnose damp or mould?\n\u00a0",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "7122",
+          "label": "B19 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "7217",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S16 / slide 19",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 19,
+          "target_stable_id": "14281"
+        }
+      ]
+    },
+    {
+      "position": 47,
+      "id": "8597",
+      "part": "ppt/slides/slide47.xml",
+      "title": "Why Azure instead of M365, Power Platform\nor buying a product?",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "7607",
+          "label": "B20 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "7707",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S14 / slide 15",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 15,
+          "target_stable_id": "13411"
+        }
+      ]
+    },
+    {
+      "position": 48,
+      "id": "8836",
+      "part": "ppt/slides/slide48.xml",
+      "title": "How do you prevent hallucinations and prompt injection?\n\u00a0",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "8117",
+          "label": "B21 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "8222",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S17 / slide 20",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 20,
+          "target_stable_id": "14501"
+        }
+      ]
+    },
+    {
+      "position": 49,
+      "id": "9076",
+      "part": "ppt/slides/slide49.xml",
+      "title": "Can customer data leave the UK or train a provider's model?\n\u00a0",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "8652",
+          "label": "B22 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "8762",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S16 / slide 19",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 19,
+          "target_stable_id": "14281"
+        }
+      ]
+    },
+    {
+      "position": 50,
+      "id": "9317",
+      "part": "ppt/slides/slide50.xml",
+      "title": "How will you know this is fair and accessible?\n\u00a0",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "9212",
+          "label": "B23 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "9327",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S12 / slide 13",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 13,
+          "target_stable_id": "12982"
+        }
+      ]
+    },
+    {
+      "position": 51,
+      "id": "9559",
+      "part": "ppt/slides/slide51.xml",
+      "title": "How will you keep policy, law and funding rules current?\n\u00a0",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "9797",
+          "label": "B24 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "9917",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S03 / slide 3",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 3,
+          "target_stable_id": "10897"
+        }
+      ]
+    },
+    {
+      "position": 52,
+      "id": "9802",
+      "part": "ppt/slides/slide52.xml",
+      "title": "What is your Tokenomics unit and can the AI bill run away?\n\u00a0",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "10407",
+          "label": "B25 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "10532",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S18 / slide 21",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 21,
+          "target_stable_id": "14722"
+        }
+      ]
+    },
+    {
+      "position": 53,
+      "id": "10046",
+      "part": "ppt/slides/slide53.xml",
+      "title": "Why not cache every answer and route\neverything to the cheapest model?",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "11042",
+          "label": "B26 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "11172",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S18 / slide 21",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 21,
+          "target_stable_id": "14722"
+        }
+      ]
+    },
+    {
+      "position": 54,
+      "id": "10291",
+      "part": "ppt/slides/slide54.xml",
+      "title": "What stops chat and agent sprawl multiplying hidden calls?\n\u00a0",
+      "actions": [
+        {
+          "shape": "Footer navigation",
+          "shape_id": "11702",
+          "label": "B27 \u00b7 Index: slide 27",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Return to interrupted calling slide",
+          "shape_id": "11837",
+          "label": "Return to caller",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 27,
+          "target_stable_id": "4027"
+        },
+        {
+          "shape": "Appendix topic destination",
+          "shape_id": "2",
+          "label": "Topic: S18 / slide 21",
+          "group_path": [],
+          "run_text": null,
+          "event": "hlinkClick",
+          "action": "ppaction://hlinksldjump",
+          "target_position": 21,
+          "target_stable_id": "14722"
+        }
+      ]
+    }
+  ],
+  "validation": {
+    "property_validation_issue_counts": {
+      "before": 0,
+      "committed": 0,
+      "working": 0
+    },
+    "notes_present": 54,
+    "zip_integrity_all": "pass",
+    "dangling_all": 0,
+    "numbered_index_destination_checks_passed": 27,
+    "fixed_index_back_checks_passed": 54,
+    "topic_label_destination_checks_passed": 27,
+    "grouped_child_hyperlinks": 0,
+    "text_run_hyperlinks": 0,
+    "native_renderer": "PowerPoint 16.0 COM; ReadOnly=-1; no Save/SaveAs",
+    "native_image_dimensions": [
+      2000,
+      1125
+    ],
+    "working_rendered_positions": [
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54
+    ],
+    "baseline_and_committed_rendered_positions": [
+      27,
+      28
+    ],
+    "decoded_rgb_equal_across_snapshots_at_positions": [
+      27,
+      28
+    ],
+    "geometry_checked_positions": [
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54
+    ],
+    "geometry_findings": {
+      "warning": 347,
+      "info": 12
+    },
+    "geometry_identical_to_baseline": true,
+    "interactive_slideshow_tested": false,
+    "accessibility_acceptance": false,
+    "rehearsal_acceptance": false,
+    "third_party_upload": false,
+    "libreoffice_available": false,
+    "pdftoppm_available": false
+  },
+  "extraction": {
+    "path": "c:\\Users\\juanserv\\.copilot\\session-state\\9980ca66-d38f-4f63-8e1d-bc92df820fc5\\files\\ppt-qa-review\\extracted-working",
+    "slide_positions": [
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54
+    ],
+    "themes_resolved": true,
+    "hyperlink_action_fields_in_yaml": {
+      "hyperlink": 0,
+      "action": 0,
+      "click_action": 0
+    },
+    "safe_as_navigation_rebuild_source": false
+  },
+  "findings": [
+    {
+      "id": "N1",
+      "severity": "warning",
+      "positions": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54
+      ],
+      "summary": "Return to caller label retained after changing Last Slide Viewed to fixed index 27.",
+      "introduced_in": "HEAD"
+    },
+    {
+      "id": "N2",
+      "severity": "warning",
+      "positions": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54
+      ],
+      "summary": "Existing notes still promise Last Slide Viewed; now inconsistent with current actions.",
+      "introduced_in": "HEAD behavior; note wording pre-existing"
+    },
+    {
+      "id": "N3",
+      "severity": "info",
+      "positions": [
+        27
+      ],
+      "summary": "Pre-existing add-hyperlinks handoff instruction is stale; visible instructions mention numeric jumping only."
+    },
+    {
+      "id": "N4",
+      "severity": "info",
+      "positions": [
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54
+      ],
+      "summary": "Geometry warnings/info exactly match baseline; no new native-render layout defect observed."
+    },
+    {
+      "id": "R1",
+      "severity": "warning",
+      "positions": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54
+      ],
+      "summary": "Generated extraction omits shape-level actions; preserve 54-slide source and explicit 108-action map."
+    }
+  ],
+  "scratch": "c:\\Users\\juanserv\\.copilot\\session-state\\9980ca66-d38f-4f63-8e1d-bc92df820fc5\\files\\ppt-qa-review"
+}
