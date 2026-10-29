@@ -68,7 +68,7 @@ and its C1-C5 evidence; current component pyprojects and `src/README.md`.
 
 * [x] P02-T01: Ruff check/format, mypy and relevant core/API unittest modules.
 * [x] P02-T02: One independent Review; reconcile artifacts; commit.
-* [ ] P02-T03: Nonqueued complete-gate attempt; report actual results externally.
+* [x] P02-T03: Nonqueued complete-gate attempt; report actual results externally.
 
 ## Test Ownership and Evidence Lock
 
@@ -99,6 +99,9 @@ finance approval boundaries remain unchanged.
 Original independent Review: Complete / Residual work, RV-001 Low (final
 evidence commit and complete gate). No new integration defect. Outcome remains
 unchanged; no second Review. Publication readiness stays unproven.
+Complete-gate attempt exit 1: candidate has pre-existing ignored inputs.
+No receipt created, verification inapplicable. Gate success remains blocked;
+completion marker records the actual required attempt, not a passed gate.
 
 ## Handoff
 

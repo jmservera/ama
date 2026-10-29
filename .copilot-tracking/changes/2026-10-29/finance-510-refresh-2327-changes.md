@@ -156,3 +156,39 @@ Candidate evidence commit command:
 "docs(finance): refresh PR 510 onto current main (Refs #96)" -m
 "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"`.
 Post-commit full gate will use external output and zero-timeout admission.
+
+## Complete Gate Attempt and Final Handoff
+
+Candidate evidence commit succeeded, exit 0: `89180418`. Seven current-task
+artifacts committed; Conventional Commit with required coauthor trailer.
+Then from repository root:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 tools/rpi-checks.py --all \
+  --base c764a0120b0c9c0b7f5cd608ce50ff54667192f8 --lock-timeout 0 \
+  --out /home/azureuser/.copilot/session-state/0ce49901-f9d1-4aff-8d88-c7ec68aa0903/files/finance-refresh-2327-gate
+```
+
+Actual result: exit 1, `BLOCKED: Candidate has ignored inputs; move all scratch
+outside the checkout`. This is a gate eligibility failure, not a failed source
+test or busy lock. No groups admitted, no receipt generated, receipt verification
+not applicable. Pre-existing ignored caches were not deleted, stashed or moved.
+No cloud/Azure fallback, gate bypass, protection change or fabricated status.
+P02-T03 is complete as an attempt with explicit blocked acceptance, not success.
+
+This final evidence-only correction records the actual attempt and blocker.
+It invalidates any prior exact-head receipt (none exists). A final same-command
+attempt against this correction uses a distinct external `-final` directory;
+only its external output can cover that final HEAD, never this historical
+candidate. Expected eligibility blocker is unchanged; do not infer coverage.
+
+Follow-up priority 1: coordinator obtains authorized clean-input selection or
+an isolated clean candidate, runs complete gate, verifies a successful external
+receipt at current main/exact head and runs hosted CI after authorized push.
+Evidence: Review RV-001 and actual blocked gate above. No automatic cleanup or
+push authorized here. Historical Review stays immutable Complete / Residual work.
+
+Local task result: rebase complete, source/docs preserved, requested focused
+checks passed, original independent critique/Review persisted. Full-gate and
+fresh hosted CI acceptance remain unproven. All checks used constructed
+fixtures; no private data, Azure resources or remote branch was changed.
