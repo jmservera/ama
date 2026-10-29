@@ -302,3 +302,39 @@ class StatementSources(unittest.TestCase):
                         dict(text="Repairs are due.", citations=["Second source"], unresolved=[]),
                     ],
                 )
+
+    def test_closer_run_after_citation_stays_and_next_opening_quote_is_kept(self) -> None:
+        sources = {"ZF-1": ["First source", "Second source"]}
+        self.assertEqual(
+            statement_sources(
+                "The status is [survey booked? [[First source]]]. "
+                "Repairs are due. [[Second source]]",
+                sources,
+            ),
+            [
+                dict(
+                    text="The status is [survey booked?].",
+                    citations=["First source"],
+                    unresolved=[],
+                ),
+                dict(text="Repairs are due.", citations=["Second source"], unresolved=[]),
+            ],
+        )
+        for quote in ('"', "'", "\u201c"):
+            end = {'"': '"', "'": "'", "\u201c": "\u201d"}[quote]
+            with self.subTest(quote=quote):
+                self.assertEqual(
+                    statement_sources(
+                        f"Survey is booked. [[First source]] "
+                        f"{quote}Repairs are due.{end} [[Second source]]",
+                        sources,
+                    ),
+                    [
+                        dict(text="Survey is booked.", citations=["First source"], unresolved=[]),
+                        dict(
+                            text=f"{quote}Repairs are due.{end}",
+                            citations=["Second source"],
+                            unresolved=[],
+                        ),
+                    ],
+                )
