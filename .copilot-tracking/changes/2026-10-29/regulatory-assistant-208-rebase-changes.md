@@ -168,7 +168,7 @@ integration defects. Canonical record:
 .copilot-tracking/reviews/logs/2026-10-29/regulatory-assistant-208-rebase-review.md.
 RV-001 retains final commit/publication evidence; RV-002 preserves original
 acceptance dependencies. No second Review or feature-acceptance upgrade.
-P03-T01 complete; local commit remains.
+P03-T01 complete. P03-T02 local commit subsequently completed below.
 
 Independent checks confirmed all seven original RPI files byte-identical to
 8954d242, complete main log as exact prefix and original topic append as exact
@@ -183,8 +183,34 @@ No source/docs change followed Review.
 
 `gh api user --jq '{id,login}'` successfully reconfirmed the account. Existing
 rebased commits already use the matching privacy-safe noreply author/committer.
-The new commit will explicitly derive/configure that address from API output
-for both author and committer, include the required trailer, and remain local.
+The commit explicitly derived/configured that address from API output
+for both author and committer, included the required trailer, and remains local.
+
+### Local commit result
+
+Executed successfully:
+
+```bash
+email=$(gh api user --jq '"\(.id)+\(.login)@users.noreply.github.com"')
+test -n "$email"
+git config --local user.email "$email"
+export GIT_AUTHOR_EMAIL="$email" GIT_COMMITTER_EMAIL="$email"
+git diff --check
+# Staged only the four integration paths and seven dated task artifacts.
+git commit -m "fix(api): reconcile regulatory assistant checks with main" \
+  -m "Preserve main draft guards and tab navigation alongside regulatory usage and conflict routing. Update existing fixtures and retain dated RPI evidence. Refs #208, #506." \
+  -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"
+test "$(git log -1 --format=%ae)" = "$email"
+test "$(git log -1 --format=%ce)" = "$email"
+git log -1 --format='%H%n%s%n%b'
+git status --short
+```
+
+Result: be64c291597e4e934bb50c5e44917367dd486e2f; 11 files, 884
+insertions; both identity comparisons passed, required trailer present,
+worktree clean. No amend or push. A subsequent evidence-only Conventional
+Commit records this observed result and completed state; it changes no
+assessed source or original Review outcome. P01-P03 complete locally.
 
 Publication requires coordinator push, fresh hosted CI, complete applicable
 exact-head local gate/receipt and human approval; none is inferred here.

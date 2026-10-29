@@ -69,7 +69,7 @@ semantic feature coverage; this task supplies integration regression evidence.
 
 * [x] P01: Integrate main
 * [x] P02: Validate and reconcile
-* [ ] P03: Independent Review and local commit
+* [x] P03: Independent Review and local commit
 
 ## P01: Integrate main
 
@@ -83,7 +83,7 @@ semantic feature coverage; this task supplies integration regression evidence.
 ## P03: Independent Review and local commit
 
 * [x] P03-T01: Reconcile evidence; obtain one read-only independent Review.
-* [ ] P03-T02: Configure privacy-safe identity and commit without pushing.
+* [x] P03-T02: Configure privacy-safe identity and commit without pushing.
 
 ## Critique Disposition
 
@@ -99,4 +99,7 @@ hosted CI and any mandatory final exact-head publication gates. Original human
 and feature acceptance findings remain in the 2026-10-27 Review.
 The single integration Review is Complete / Residual work, no confirmed new
 integration defects; RV-001 retains publication, RV-002 original acceptance.
-The authorized local commit is the only remaining active P03 task.
+Local implementation/evidence commit be64c291 completed P03. The final
+evidence-only commit records completion without changing the assessed source.
+All active plan tasks are complete; publication and original acceptance remain
+distinct follow-ups, not waived gates.

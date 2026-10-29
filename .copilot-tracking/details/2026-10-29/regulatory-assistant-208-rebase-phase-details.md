@@ -59,4 +59,7 @@ to the retained topic endpoint; regulatory browser now selects visible tabs.
 Real regulatory browser passes 21 states with axe; actual existing
 case_journey chat_cleanup passes all ten pending/reconstruction cases.
 No tests added/removed. Original failed attempts remain recorded.
-P03 independent Review and local-only commit remain.
+P03 complete: independent Review Complete / Residual work, no confirmed new
+integration defects; implementation/evidence committed as be64c291.
+Post-commit evidence finalization changes only dated tracking, not reviewed
+source. Publication and original human findings remain outside completion.
