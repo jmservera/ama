@@ -24,6 +24,174 @@ from zava_forward.api.server import App, make_handler
 from zava_forward.core.sqlstore import SqlStore
 
 
+def review_pending_cleanup(page, base, check, scan):
+    def accept_leave(dialog):
+        dialog.accept()
+
+    page.on("dialog", accept_leave)
+    for queue in (False, True):
+        for change in ("none", "later", "verify", "cache-only", "refusal", "reload-failure"):
+            if queue and change == "cache-only":
+                continue  # The queue has no case draft cache or loading replacement.
+            proposal = {
+                "id": f"SYN-ROUND6-{queue}-{change}", "revision": 1, "version": 1,
+                "case_id": "ZF-1", "capability": "stock-prioritisation", "state": "ready",
+                "display_state": "ready", "manual": "Continue ordinary case work.",
+                "attempts": 1, "provenance": [], "snapshot": {}, "envelope": {},
+                "output": {"summary": "Constructed review fixture", "findings": [], "unknowns": []},
+                "verification": {"by": "pam@example.test", "note": "Constructed verification"},
+            }
+            loads = []
+            defer_loads = False
+            fail_loads = False
+            pending = []
+
+            def listing(route):
+                if fail_loads:
+                    route.fulfill(status=503, json={"error": "Synthetic proposal reload failure"})
+                elif defer_loads:
+                    loads.append(route)
+                else:
+                    route.fulfill(json={"proposals": [proposal], "next_after": None})
+
+            page.route("**/api/assistants/proposals?**", listing)
+            page.route("**/api/assistants/proposals", listing)
+            page.route("**/api/assistants/proposals/*/review", lambda route: pending.append(route))
+            destination = "#/assistants" if queue else "#/case/ZF-1?tab=ai"
+            page.goto(base + f"/app?review-round6={queue}-{change}" + destination)
+            card = page.locator(f'article[data-proposal-id="{proposal["id"]}"]')
+            reason = card.get_by_label("Reason", exact=True)
+            editing = card.get_by_label("Edited evidence proposal JSON", exact=True)
+            card.get_by_role("button", name="Edit", exact=True).click()
+            editing.fill("{")
+            save = card.get_by_role("button", name=re.compile(r"^Save edited proposal"))
+            save.click()
+            expect(reason).to_be_focused()
+            expect(reason).to_have_attribute("aria-invalid", "true")
+            reason.fill("Submitted review reason")
+            save.click()
+            expect(editing).to_be_focused()
+            expect(editing).to_have_attribute("aria-invalid", "true")
+            check(f"malformed JSON never invalidates valid Reason/{queue}/{change}",
+                  reason.get_attribute("aria-invalid") is None
+                  and editing.get_attribute("aria-describedby")
+                  == card.locator(".field-error").get_attribute("id") and not pending)
+            scan(page, f"malformed-proposal-json/{queue}/{change}")
+            output = dict(proposal["output"], summary="Submitted replacement")
+            editing.fill(json.dumps(output))
+            check(f"corrected JSON clears stale invalidity/{queue}/{change}",
+                  editing.get_attribute("aria-invalid") is None)
+            action = (
+                "Record human source verification" if change == "verify"
+                else "Save edited proposal"
+            )
+            action_button = card.get_by_role(
+                "button", name=re.compile("^" + re.escape(action) + r"(?: \(loading\))?$"),
+                include_hidden=True,
+            )
+            if change == "verify":
+                card.get_by_label("I checked the cited sources", exact=False).check()
+            with page.expect_request("**/api/assistants/proposals/*/review"):
+                action_button.click()
+            expect(save).to_be_disabled()
+            if change == "later":
+                editing.fill(json.dumps(output) + " ")
+                reason.fill("Later review reason")
+            if change == "cache-only":
+                defer_loads = True
+            refresh = page.get_by_role(
+                "button", name="Refresh queue" if queue else "Refresh proposals", exact=True
+            )
+            previous = card.element_handle()
+            refresh.click()
+            page.wait_for_function("old => !old.isConnected", arg=previous)
+            if change != "cache-only":
+                expect(action_button).to_be_disabled()
+                action_button.evaluate("el => el.click()")
+                check(f"refreshed pending review excludes duplicate/{queue}/{change}",
+                      len(pending) == 1)
+            else:
+                page.get_by_text(
+                    "Loading assistance. Ordinary case controls remain available.", exact=True
+                ).wait_for() if not queue else None
+            if change == "reload-failure":
+                if queue:
+                    fail_loads = True
+                else:
+                    page.route("**/api/cases/ZF-1", lambda route: route.fulfill(
+                        status=503, json={"error": "Synthetic case reload failure"}))
+            if change != "refusal":
+                proposal["revision"] += 1
+                if change != "verify":
+                    proposal.update(state="accepted", display_state="accepted",
+                                    review={"note": "Submitted review reason"}, output=output)
+            pending[0].fulfill(
+                status=409 if change == "refusal" else 200,
+                json={"error": "Synthetic review refusal"} if change == "refusal" else {"ok": True},
+            )
+            if change in ("refusal", "reload-failure"):
+                if change == "refusal":
+                    expect(action_button).to_be_enabled()
+                    expect(card).to_contain_text("Synthetic review refusal")
+                elif queue:
+                    expect(page.get_by_role(
+                        "heading", name="Assistant proposals", exact=True
+                    )).to_be_visible()
+                    expect(card).to_have_count(0)
+                    check("queue reload failure offers no stale review action",
+                          action_button.count() == 0)
+                else:
+                    expect(card).to_contain_text("Your review was recorded")
+                    expect(action_button).to_be_disabled()
+                    action_button.evaluate("el => el.click()")
+                    check(f"committed old revision cannot retry/{queue}", len(pending) == 1)
+            elif change != "cache-only":
+                expect(card).to_have_attribute(
+                    "data-proposal-revision", str(proposal["revision"])
+                )
+            if change == "cache-only":
+                page.wait_for_function("() => caseSession.pendingFields.size === 0")
+                defer_loads = False
+                for route in loads:
+                    route.fulfill(json={"proposals": [proposal], "next_after": None})
+                expect(card).to_have_attribute("data-proposal-revision", str(proposal["revision"]))
+            if not queue:
+                expected_dirty = change in ("later", "verify", "refusal")
+                check(f"proposal recovery/cache dirty lifecycle/{change}",
+                      page.evaluate("hasUnsavedChanges()") == expected_dirty)
+                check(f"proposal unload lifecycle/{change}", page.evaluate("""() => {
+                  const event = new Event('beforeunload', {cancelable: true});
+                  window.dispatchEvent(event); return event.defaultPrevented;
+                }""") == expected_dirty)
+                if change == "later":
+                    page.locator("[data-case-recovery] > summary").click()
+                    expect(page.get_by_label("Earlier Reason", exact=True)).to_have_value(
+                        "Later review reason")
+                    expect(page.get_by_label("Earlier Reason", exact=True)).to_be_visible()
+                    expect(page.get_by_label(
+                        "Earlier Edited evidence proposal JSON", exact=True
+                    )).to_have_value(json.dumps(output) + " ")
+                elif change == "verify":
+                    page.locator("[data-case-recovery] > summary").click()
+                    expect(page.get_by_label(
+                        "Earlier Edited evidence proposal JSON", exact=True
+                    )).to_have_value(json.dumps(output))
+                    check("verified checkbox recovery was consumed",
+                          page.get_by_label("Earlier verified-", exact=False).count() == 0)
+                elif change != "refusal":
+                    check(f"submitted recovery removed/{change}",
+                          page.locator("[data-case-recovery] textarea").count() == 0)
+            check(f"request failures do not falsely invalidate fields/{queue}/{change}",
+                  card.locator('[aria-invalid="true"]').count() == 0)
+            scan(page, f"proposal-pending-settled/{queue}/{change}")
+            page.unroute("**/api/assistants/proposals?**", listing)
+            page.unroute("**/api/assistants/proposals", listing)
+            page.unroute("**/api/assistants/proposals/*/review")
+            if change == "reload-failure" and not queue:
+                page.unroute("**/api/cases/ZF-1")
+    page.remove_listener("dialog", accept_leave)
+
+
 def main(axe_path: Path | None = None, out: Path | None = None):
     axe = None
     scans = []
@@ -110,6 +278,9 @@ def main(axe_path: Path | None = None, out: Path | None = None):
             expect(page.locator("article p[role=status]").filter(has_text=re.compile(r"^ready\."))).to_have_count(5)
             check("all five rendered ready", page.locator("article").count() == 5)
             check("shared role-owned queue link", page.get_by_role("link", name="Shared role-owned review queue").count() == 1)
+            review_pending_cleanup(page, base, check, scan)
+            page.goto(base + "/app?round6-existing=1#/case/ZF-1?tab=ai")
+            expect(page.locator("article")).to_have_count(5)
             card = page.locator("article").filter(has=page.locator("h3", has_text="Stock facts and prioritisation"))
             card.get_by_label("Reason", exact=True).fill(
                 "Checked each cited source and retained unknowns."

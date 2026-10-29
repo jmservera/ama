@@ -7,35 +7,67 @@ const assistantNames = {
   "works-resident-coordination": "Works and resident coordination",
   "quality-evidence": "Quality evidence",
 };
+const proposalReviewStates = new Map();
 
 function assistantProposal(p, reload) {
+  const reviewKey = `${p.id}:${p.revision}`;
+  if (proposalReviewStates.get(reviewKey) === "uncertain") proposalReviewStates.delete(reviewKey);
   const status = h("p", { role: "status" }, `${p.display_state}. ${p.release_denial ? p.release_denial.reason : (p.reason || "")} ${p.manual}`);
   const note = h("textarea", { id: `proposal-reason-${p.id}`, name: "review-reason", autocomplete: "off", "aria-label": "Reason", maxlength: "1000" });
   const error = h("p", { id: `proposal-error-${p.id}`, class: "field-error", role: "status" });
   const verified = h("input", { type: "checkbox", id: `verified-${p.id}` });
   const editing = h("textarea", { name: "edited-proposal", autocomplete: "off", "aria-label": "Edited evidence proposal JSON", maxlength: "16000" },
     JSON.stringify(p.output, null, 2));
+  const clearError = () => {
+    error.textContent = "";
+    [note, editing].forEach(field => {
+      field.removeAttribute("aria-invalid");
+      field.removeAttribute("aria-describedby");
+    });
+  };
+  [note, editing].forEach(field => field.addEventListener("input", clearError));
+  const invalid = (field, text) => {
+    clearError();
+    error.textContent = text;
+    field.setAttribute("aria-invalid", "true");
+    field.setAttribute("aria-describedby", error.id);
+    field.focus();
+  };
+  const setReviewState = (state, message) => {
+    if (state) proposalReviewStates.set(reviewKey, state);
+    else proposalReviewStates.delete(reviewKey);
+    [card, ...app.querySelectorAll("[data-proposal-id]")].forEach(node => {
+      if (node.dataset.proposalId === p.id && String(node.dataset.proposalRevision) === String(p.revision)) node.updateReviewState(message);
+    });
+  };
   const act = async (action) => {
+    if (proposalReviewStates.has(reviewKey)) return;
+    clearError();
     if (["edit-accept", "reject"].includes(action) && !note.value.trim()) {
-      note.setAttribute("aria-invalid", "true");
-      note.setAttribute("aria-describedby", error.id);
-      error.textContent = "Enter a reason to edit or reject this proposal.";
-      note.focus();
+      invalid(note, "Enter a reason to edit or reject this proposal.");
       return;
     }
+    const body = { action, revision: p.revision, note: note.value };
+    if (action === "verify") body.source_verified = verified.checked;
+    if (action === "edit-accept") {
+      try { body.output = JSON.parse(editing.value); }
+      catch { invalid(editing, "Enter valid JSON for the edited evidence proposal."); return; }
+    }
+    const sent = snapshotCaseFields([note, ...(action === "verify" ? [verified] : action === "edit-accept" ? [editing] : [])]);
+    setReviewState("pending");
+    status.textContent = "Recording your review...";
+    let recorded = false;
     try {
-      const body = { action, revision: p.revision, note: note.value };
-      const sent = snapshotCaseFields([note, ...(action === "verify" ? [verified] : action === "edit-accept" ? [editing] : [])]);
-      if (action === "verify") body.source_verified = verified.checked;
-      if (action === "edit-accept") body.output = JSON.parse(editing.value);
       await api(`/api/assistants/proposals/${p.id}/review`, body);
-      sent.forEach(item => {
-        if (caseFieldUnchanged(item)) item.field.removeAttribute("data-case-dirty");
-      });
+      recorded = true;
+      setReviewState("recorded");
+      reconcileCaseSubmission(sent);
       await reload();
     } catch (e) {
-      error.textContent = e.message; note.setAttribute("aria-invalid", "true");
-      note.setAttribute("aria-describedby", error.id); note.focus();
+      const message = recorded
+        ? `Your review was recorded, but suggestions could not reload. Refresh before another review. ${e.message}`
+        : e.status ? e.message : `Confirmation is unavailable. Refresh and check the review history before another action. ${e.message}`;
+      setReviewState(recorded ? "recorded" : e.status ? null : "uncertain", message);
     }
   };
   const ready = p.state === "ready" && !p.stale && p.actionable !== false
@@ -53,7 +85,7 @@ function assistantProposal(p, reload) {
   } }, "Earlier changes to this suggestion");
   const editBox = h("div", { hidden: true, "data-proposal-edit": "" }, h("label", {}, "Edited evidence proposal JSON", editing),
     h("button", { disabled: !ready || !ownVerification, onclick: () => act("edit-accept") }, "Save edited proposal"));
-  return h("article", { class: "card ai-suggestion", "data-proposal-id": p.id, "data-proposal-revision": p.revision },
+  const card = h("article", { class: "card ai-suggestion", "data-proposal-id": p.id, "data-proposal-revision": p.revision },
     h("h3", {}, `${assistantNames[p.capability]} v${p.version}`),
     h("a", { href: `#/case/${encodeURIComponent(p.case_id)}` }, p.case_id), status,
     h("p", { class: "ai-label" }, p.review
@@ -80,6 +112,21 @@ function assistantProposal(p, reload) {
       h("button", { disabled: !ready || !ownVerification, onclick: () => act("accept") }, "Accept"),
       h("button", { class: "alt", disabled: !ready || !ownVerification, onclick: () => { editBox.hidden = false; editing.focus(); } }, "Edit"),
       h("button", { class: "alt", onclick: () => act("reject") }, "Reject")), editBox));
+  const buttons = [...card.querySelector("fieldset").querySelectorAll("button")]
+    .map(button => ({ button, disabled: button.disabled }));
+  card.updateReviewState = message => {
+    const state = proposalReviewStates.get(reviewKey);
+    buttons.forEach(({ button, disabled }) => {
+      button.disabled = disabled || Boolean(state);
+      if (state === "pending") button.setAttribute("aria-busy", "true");
+      else button.removeAttribute("aria-busy");
+    });
+    if (state) status.textContent = state === "pending" ? "Recording your review..."
+      : "Refresh and check the review history before another action on this revision.";
+    if (message) status.textContent = message;
+  };
+  card.updateReviewState();
+  return card;
 }
 
 function assistantCasePanel(id, session) {

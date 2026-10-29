@@ -12,9 +12,20 @@ function actForm(title, fields, run, label) {
     return [name, text, el];
   });
   const body = () => Object.fromEntries(inputs.map(([name, , el]) => [name, el.value]));
+  const button = h("button", { onclick: async () => {
+    if (button.disabled) return;
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
+    try {
+      const outcome = await run(body(), inputs.map(([, , input]) => input));
+      button.disabled = outcome === "check-history";
+    } finally {
+      button.removeAttribute("aria-busy");
+    }
+  } }, label || title);
   return h("details", {}, h("summary", {}, title),
     inputs.flatMap(([name, text, el]) => [h("label", { for: el.id }, text), el]),
-    h("p", {}, h("button", { onclick: () => run(body(), inputs.map(([, , input]) => input)) }, label || title)));
+    h("p", {}, button));
 }
 
 function financePanel(c, id, refresh) {
@@ -143,6 +154,7 @@ function residentPanel(c, id, refresh) {
     const button = h("button", { type: "submit" }, label);
     const form = h("form", { oninput: () => { form.dataset.unsaved = "true"; }, onsubmit: async (event) => {
       event.preventDefault();
+      if (button.disabled) return;
       button.disabled = true;
       status.textContent = "Recording";
       let dispatched = false;
@@ -309,6 +321,10 @@ function affectedChallengePanel(c, id, refresh) {
       const input = options ? h("select", attrs, options.map((option) => h("option", { value: option }, option)))
         : h("input", { ...attrs, type: name === "next_update" ? "date" : "text", maxlength: 300,
           ...(name === "proposal_id" ? { list: targetOptions.id, spellcheck: "false" } : {}) });
+      input.addEventListener("input", () => {
+        input.removeAttribute("aria-invalid");
+        status.textContent = "";
+      });
       return { name, label, input };
     });
     const button = h("button", { type: "submit" }, title);

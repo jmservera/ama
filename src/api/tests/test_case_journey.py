@@ -37,6 +37,8 @@ class Node {
     if (name === "data-case-dirty") delete this.dataset.caseDirty;
   }
   get id() {return this.attrs.id;}
+  get name() {return this.attrs.name;}
+  get type() {return this.attrs.type || (this.tagName === "TEXTAREA" ? "textarea" : "text");}
   get value() {return this._value ?? (this.tagName === "TEXTAREA" ? this.textContent : "");}
   set value(value) {this._value = value;}
   get textContent() {return this._text + this.children.map(k => k.textContent ?? k).join("");}
@@ -57,8 +59,13 @@ class Node {
     return this.all().filter(k => selector.split(",").some(s => k.matches(s.trim())));
   }
   querySelector(selector) {return this.querySelectorAll(selector)[0];}
+  closest(selector) {
+    if (selector.split(",").some(s => this.matches(s.trim()))) return this;
+    return this.parentElement?.closest(selector) || null;
+  }
+  remove() {this.parentElement.children = this.parentElement.children.filter(k => k !== this);}
   addEventListener(name, fn) {this.events[name] = fn;}
-  focus() {}
+  focus() {document.activeElement = this;}
   scrollIntoView() {}
 }
 const document = {createElement: tag => new Node(tag),
@@ -71,10 +78,8 @@ def shipped_helpers() -> str:
     return (
         "function h"
         + source.split("function h", 1)[1].split("async function api", 1)[0]
-        + "function snapshotCaseFields"
-        + source.split("function snapshotCaseFields", 1)[1].split("function captureCaseFields", 1)[
-            0
-        ]
+        + "let caseSession = null;\nfunction caseFieldEntries"
+        + source.split("function caseFieldEntries", 1)[1].split("function captureCaseFields", 1)[0]
     )
 
 
@@ -102,12 +107,300 @@ def journey(**overrides: Any) -> list[dict[str, Any]]:
 
 
 class CaseJourney(unittest.TestCase):
+    def test_submission_reconciles_semantic_live_recovery_and_cached_values(self) -> None:
+        source = (WEB / "app.js").read_text()
+        lifecycle = (
+            "function captureCaseFields"
+            + source.split("function captureCaseFields", 1)[1].split(
+                'app.addEventListener("input"', 1
+            )[0]
+        )
+        script = (
+            DOM
+            + shipped_helpers()
+            + lifecycle
+            + r"""
+const app = new Node("main");
+for (const representation of ["original", "live", "recovery", "cache-only", "both"]) {
+  for (const type of ["text", "checkbox"]) {
+    for (const later of [false, true]) {
+      app.children = [];
+      caseSession = {pendingFields: new Map()};
+      const original = h("input", {id: "original", type,
+        "data-case-field-key": "bound:measure:version:item", "data-case-dirty": "true"});
+      original.value = type === "checkbox" ? "on" : "Submitted text";
+      original.checked = type === "checkbox";
+      original.caseBinding = {kind: "checklist", id: "Measure/version"};
+      app.append(h("form", {"data-unsaved": "true"}, original));
+      const sent = snapshotCaseFields([original]);
+      const cached = {key: sent[0].key, value: sent[0].value, checked: sent[0].checked,
+        type, label: "Evidence", binding: {kind: "checklist", id: "Measure/version"}};
+      caseSession.pendingFields.set(cached.key, cached);
+      const unrelated = {...cached, key: "another:version", value: "Unrelated"};
+      caseSession.pendingFields.set(unrelated.key, unrelated);
+      if (representation !== "original") app.children = [];
+      let current = original;
+      if (["live", "both"].includes(representation)) {
+        current = h("input", {id: "current", type,
+          "data-case-field-key": cached.key, "data-case-dirty": "true"});
+        current.value = cached.value; current.checked = cached.checked;
+        current.caseBinding = original.caseBinding;
+        app.append(h("form", {"data-unsaved": "true"}, current));
+      }
+      if (["recovery", "both"].includes(representation)) {
+        const recovery = h("details", {"data-case-recovery": "checklist"});
+        const copy = h("textarea", {"data-case-dirty": "true"});
+        copy.preservedCaseField = {...cached};
+        copy.value = type === "checkbox" ? String(cached.checked) : cached.value;
+        recovery.append(h("div", {}, copy)); app.append(recovery);
+        if (representation === "recovery") current = copy;
+      }
+      if (later) {
+        if (representation === "cache-only") {
+          caseSession.pendingFields.set(cached.key, {...cached,
+            value: type === "checkbox" ? "on" : "Submitted text ",
+            checked: type === "checkbox" ? false : cached.checked});
+        } else if (type === "checkbox") {
+          if (current.preservedCaseField) current.preservedCaseField.checked = false;
+          else current.checked = false;
+        } else current.value += " ";
+      }
+      reconcileCaseSubmission(sent);
+      assert.equal(caseSession.pendingFields.has(unrelated.key), true);
+      if (representation !== "cache-only") {
+        assert.equal(Boolean(current.dataset.caseDirty), later,
+          `${representation}/${type}/${later}`);
+        if (later) assert.equal(type === "checkbox"
+          ? current.preservedCaseField?.checked ?? current.checked : current.value,
+          type === "checkbox" ? false : "Submitted text ");
+        else if (!current.preservedCaseField && type === "text") {
+          assert.equal(current.value, "");
+        }
+        if (current.closest("form")) assert.equal(
+          Boolean(current.closest("form").dataset.unsaved), later,
+          "form-level unsaved markers follow consumed versus later values");
+      }
+      rememberCaseFields(caseSession);
+      assert.equal(caseSession.pendingFields.has(cached.key), later,
+        `later draft survives remember/${representation}/${type}/${later}`);
+      const replacement = h("section", {});
+      restoreBoundFields([cached], replacement, "checklist", caseSession);
+      assert.equal(replacement.querySelectorAll("textarea").length, later ? 2 : 1,
+        "stale saved array cannot resurrect consumed evidence");
+    }
+  }
+}
+console.log("PASS");
+"""
+        )
+        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("PASS", result.stdout)
+
+    def test_proposal_validation_pending_refresh_and_success_reload_failure(self) -> None:
+        script = (
+            DOM
+            + shipped_helpers()
+            + r"""
+const app = new Node("main"), me = {user: {email: "reviewer@example.test"}};
+let finish, reject, requests = [], reloadFails = false;
+const api = async (path, body) => {
+  requests.push(body);
+  return await new Promise((resolve, fail) => {finish = resolve; reject = fail;});
+};
+"""
+            + (WEB / "assistants.js").read_text()
+            + r"""
+(async () => {
+  for (const sessionless of [false, true]) {
+    for (const outcome of ["success", "refusal", "reload-failure", "uncertain"]) {
+      app.children = []; requests = [];
+      caseSession = sessionless ? null : {pendingFields: new Map()};
+      const p = {id: `${sessionless}-${outcome}`, revision: 1, case_id: "SYN",
+        state: "ready", capability: "assessment-preparation", provenance: [],
+        output: {summary: "Synthetic", findings: [], unknowns: []},
+        verification: {by: me.user.email}};
+      const reload = async () => {if (outcome === "reload-failure")
+        throw new Error("Synthetic reload failed");};
+      const card = assistantProposal(p, reload); app.append(card);
+      const [reason, editing] = card.querySelectorAll("textarea");
+      const save = card.querySelectorAll("button")
+        .find(button => button.textContent === "Save edited proposal");
+      editing.value = "{";
+      await save.events.click();
+      assert.equal(document.activeElement, reason);
+      assert.equal(reason.attrs["aria-invalid"], "true");
+      reason.value = "Valid reason";
+      await save.events.click();
+      assert.equal(document.activeElement, editing);
+      assert.equal(editing.attrs["aria-invalid"], "true");
+      assert.equal(editing.attrs["aria-describedby"], card.querySelector(".field-error").id);
+      assert.equal(reason.attrs["aria-invalid"], undefined);
+      assert.equal(requests.length, 0);
+      editing.value = JSON.stringify(p.output); editing.events.input();
+      assert.equal(editing.attrs["aria-invalid"], undefined);
+      reason.dataset.caseDirty = editing.dataset.caseDirty = "true";
+      const pending = save.events.click();
+      assert.equal(save.disabled, true);
+      const replacement = assistantProposal(p, reload); app.children = []; app.append(replacement);
+      const next = replacement.querySelectorAll("button")
+        .find(button => button.textContent === "Save edited proposal");
+      assert.equal(next.disabled, true);
+      await next.events.click();
+      assert.equal(requests.length, 1, "same-revision rebuilt card cannot resubmit");
+      if (outcome === "refusal") reject(Object.assign(new Error("Refused"), {status: 409}));
+      else if (outcome === "uncertain") reject(new TypeError("Connection lost"));
+      else finish({});
+      await pending;
+      assert.equal(next.disabled, outcome !== "refusal");
+      assert.equal(reason.attrs["aria-invalid"], undefined);
+      assert.equal(editing.attrs["aria-invalid"], undefined);
+      assert.equal(Boolean(reason.dataset.caseDirty),
+        ["refusal", "uncertain"].includes(outcome));
+      if (outcome !== "refusal") {
+        await next.events.click(); assert.equal(requests.length, 1);
+      }
+    }
+  }
+  console.log("PASS");
+})().catch(error => {console.error(error); process.exitCode = 1;});
+"""
+        )
+        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("PASS", result.stdout)
+
+    def test_quality_errors_and_manual_action_pending_siblings(self) -> None:
+        script = (
+            DOM
+            + shipped_helpers()
+            + r"""
+const app = new Node("main"), HTMLButtonElement = Node;
+const me = {user: {role: "Retrofit Programme Manager"}};
+const fmtDate = value => value;
+let finish, refuse, errors = [], requests = 0;
+const api = async () => {
+  requests++;
+  return await new Promise((resolve, reject) => {finish = resolve; refuse = reject;});
+};
+const post = (id, name, body) => api(name, body);
+const refresh = async fn => {
+  try {await fn(); return true;} catch (error) {errors.push(error); return false;}
+};
+"""
+            + (WEB / "ops.js").read_text()
+            + (WEB / "panels.js").read_text()
+            + r"""
+(async () => {
+  const c = {closed: true, measures: "Loft insulation", quality: [{
+    measure: "Loft insulation", state: "Returned", source: "Installer",
+    submitted_by: "Synthetic installer", items: [], aftercare: [], checklist_version: "v1"
+  }]};
+  const panel = qualityPanel(c, "SYN", refresh); app.append(panel);
+  const note = panel.querySelectorAll("input")
+    .find(field => field.name === "quality-note-0");
+  const button = panel.querySelector("button");
+  button.focus();
+  await button.events.click();
+  assert.equal(document.activeElement, note);
+  assert.equal(note.attrs["aria-invalid"], "true");
+  assert.equal(note.attrs["aria-describedby"], "quality-feedback-0");
+  assert.equal(requests, 0);
+  note.value = "Submitted remediation evidence"; note.events.input();
+  assert.equal(note.attrs["aria-invalid"], undefined);
+  button.focus();
+  const pending = button.events.click();
+  assert.equal(button.disabled, true);
+  note.value = "";  // A later edit must not redirect a server refusal to this field.
+  refuse(Object.assign(new Error("Synthetic server refusal"), {status: 409}));
+  await pending;
+  assert.equal(errors.length, 1);
+  assert.equal(note.attrs["aria-invalid"], undefined);
+  assert.equal(document.activeElement.attrs.role, "status");
+  assert.equal(button.disabled, false);
+
+  for (const outcome of [true, false, "check-history"]) {
+    let runs = 0;
+    const form = actForm("Synthetic manual action", [["note", "Note"]], async () => {
+      runs++; return await new Promise(resolve => {finish = resolve;});
+    });
+    const submit = form.querySelector("button");
+    const saving = submit.events.click();
+    assert.equal(submit.disabled, true);
+    await submit.events.click();
+    assert.equal(runs, 1);
+    finish(outcome); await saving;
+    assert.equal(submit.disabled, outcome === "check-history");
+    assert.equal(submit.attrs["aria-busy"], undefined);
+  }
+  console.log("PASS");
+})().catch(error => {console.error(error); process.exitCode = 1;});
+"""
+        )
+        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("PASS", result.stdout)
+
+    def test_file_recovery_and_other_session_are_not_confused_with_submitted_values(self) -> None:
+        script = (
+            DOM
+            + shipped_helpers()
+            + r"""
+const app = new Node("main");
+caseSession = {pendingFields: new Map()};
+const original = h("input", {type: "file", "data-case-field-key": "file",
+  "data-case-dirty": "true"});
+original.files = [{}]; original._value = "same-name.txt";
+Object.defineProperty(original, "value", {
+  get() {return this._value;},
+  set(value) {this._value = value; if (value === "") this.files = [];}
+});
+app.append(original);
+const sent = snapshotCaseFields([original]);
+const saved = {key: "file", value: original.value, checked: original.checked,
+  type: "file", fileNode: original};
+caseSession.pendingFields.set("file", saved);
+const recovery = h("details", {"data-case-recovery": "form"});
+const copy = h("textarea", {"data-case-dirty": "true"});
+copy.preservedCaseField = saved; copy.value = saved.value;
+recovery.append(h("div", {}, copy)); app.children = []; app.append(recovery);
+reconcileCaseSubmission(sent);
+assert.equal(app.querySelectorAll("textarea").length, 0,
+  "compare all counterparts before clearing the shared original FileList");
+assert.equal(caseSession.pendingFields.size, 0);
+
+const current = h("input", {type: "file", "data-case-field-key": "file",
+  "data-case-dirty": "true"});
+current.files = [{}]; current.value = "same-name.txt"; app.append(current);
+const sameName = snapshotCaseFields([current]);
+current.files = [{}];
+reconcileCaseSubmission(sameName);
+assert.equal(current.dataset.caseDirty, "true", "same name is not the same selected File");
+
+const oldSession = caseSession;
+const oldSent = snapshotCaseFields([current]);
+caseSession = {pendingFields: new Map([["file", {...saved, value: "Other case"}]])};
+const other = h("input", {"data-case-field-key": "file", "data-case-dirty": "true"});
+other.value = "Other case"; app.children = []; app.append(other);
+reconcileCaseSubmission(oldSent);
+assert.equal(other.value, "Other case");
+assert.equal(other.dataset.caseDirty, "true");
+assert.equal(caseSession.pendingFields.get("file").value, "Other case");
+assert.notEqual(caseSession, oldSession);
+console.log("PASS");
+"""
+        )
+        result = subprocess.run(["node", "-e", script], text=True, capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("PASS", result.stdout)
+
     def test_both_chat_submissions_clear_only_successful_unchanged_raw_questions(self) -> None:
         script = (
             DOM
             + shipped_helpers()
             + r"""
 const me = {user: {role: "Retrofit Programme Manager"}};
+const app = new Node("main");
 let finish, fail, requests = [], failure;
 const api = async (path, body) => {
   if (path === "/api/assistants") return {assistants: []};
@@ -171,6 +464,7 @@ const api = async (path, body) => {
             DOM
             + shipped_helpers()
             + 'const me = {user: {email: "reviewer@example.test"}};\n'
+            + 'const app = new Node("main");\n'
             + (WEB / "assistants.js").read_text()
             + r"""
 const baseline = {id: "SYN", revision: 1, case_id: "SYN-526", state: "ready",
@@ -396,18 +690,23 @@ console.log("PASS");
             """
 let briefingBox = {}, renders = 0, errors = 0;
 const id = "SYN-526";
-const session = {}, caseSession = session;
+const session = {pendingFields: new Map()}, caseSession = session;
+const app = {querySelectorAll: () => []};
+const caseFieldEntries = () => [];
 const msg = {replaceChildren() { errors++; }};
+const workspaceStatus = {};
 const h = () => ({});
 const caseView = async () => { renders++; };
-const submitted = {dataset: {caseDirty: "true"}};
+const submitted = {dataset: {caseDirty: "true"},
+  removeAttribute() {delete this.dataset.caseDirty;}, closest() {return null;}};
 const unrelated = {dataset: {caseDirty: "true"}};
 const refresh = """
             + refresh
             + snapshot
             + """
 (async () => {
-  await refresh(async () => { throw new Error("Synthetic refusal"); }, [submitted]);
+  await refresh(async () => { throw Object.assign(new Error("Synthetic refusal"),
+    {status: 409}); }, [submitted]);
   const failed = submitted.dataset.caseDirty === "true"
     && unrelated.dataset.caseDirty === "true" && errors === 1 && renders === 0;
   await refresh(async () => {}, [submitted]);
@@ -552,11 +851,13 @@ class Node {
     if (name === "data-case-dirty") delete this.dataset.caseDirty;
   }
   addEventListener() {}
+  closest() {return null;}
   focus() {}
   prepend(node) { this.kids.unshift(node); }
 }
 const h = (tag, attrs, ...kids) => new Node(tag, attrs, kids);
-const app = {dispatchEvent() {}};
+const app = {dispatchEvent() {}, querySelectorAll: () => []};
+const caseSession = null, caseFieldEntries = () => [];
 let finish, fail, requests = [], done = [];
 const api = async (path, body) => {
   requests.push({path, body});
@@ -581,7 +882,8 @@ const api = async (path, body) => {
     assert.equal(requests.length, 1, "duplicate dispatch must not issue another review");
     if (["text", "both", "failure"].includes(change)) editing.value = "Newer replacement";
     if (["reason", "both", "failure"].includes(change)) reason.value = "Newer reason";
-    if (change === "failure") fail(new Error("Synthetic refusal")); else finish();
+    if (change === "failure") fail(Object.assign(new Error("Synthetic refusal"),
+      {status: 409})); else finish();
     await pending;
     assert.equal(requests[0].body.text, "Submitted replacement");
     assert.equal(requests[0].body.reason, "Submitted reason");
@@ -590,6 +892,9 @@ const api = async (path, body) => {
       assert.equal(editing.dataset.caseDirty, "true");
       assert.equal(reason.dataset.caseDirty, "true");
       assert.equal(buttons.some(button => button.disabled), false);
+      assert.equal(reason.attrs["aria-invalid"], undefined,
+        "server refusal is not invalid Reason");
+      assert.equal(editing.attrs["aria-invalid"], undefined);
       assert.equal(done.length, 0);
       continue;
     }

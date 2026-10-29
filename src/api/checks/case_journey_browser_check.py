@@ -6,6 +6,7 @@ import argparse
 import copy
 import hashlib
 import json
+import re
 import tempfile
 from collections.abc import Callable
 from pathlib import Path
@@ -64,6 +65,96 @@ def sign_in(page: Page, base: str, email: str = "sam@example.test") -> None:
     page.locator("#pw").fill("synthetic-check")
     page.get_by_role("button", name="Sign in", exact=True).click()
     page.get_by_role("tab", name="Overview", exact=True).wait_for()
+
+
+def quality_pending_cleanup(page: Page, base: str) -> None:
+    for change in ("none", "later", "other-measure", "cache-only", "refusal", "reload-failure"):
+        page.goto(base + f"/app?quality-round6={change}#/case/ZF-1?tab=quality")
+        page.locator("#q-i0").wait_for()
+        original = page.locator("#q-measure").input_value()
+        other = next(
+            name for name in page.locator("#q-measure option").all_text_contents()
+            if name != original
+        )
+        for field in page.locator("#quality [data-label]").all():
+            field.fill("Submitted synthetic quality evidence")
+        page.locator("#q-by").fill("Synthetic installer")
+        page.locator("#q-revision").fill("1")
+        pending: list[Route] = []
+        page.route("**/api/cases/ZF-1/quality-submit", lambda route: pending.append(route))
+        button = page.locator("[data-quality-save]")
+        with page.expect_request("**/api/cases/ZF-1/quality-submit"):
+            button.click()
+        expect(button).to_be_disabled()
+        button.evaluate("el => el.click()")
+        check(f"quality duplicate pending submission excluded/{change}", len(pending) == 1)
+        if change == "later":
+            page.locator("#q-i0").fill("Submitted synthetic quality evidence ")
+        page.locator("#q-measure").select_option(other)
+        if change == "other-measure":
+            page.locator("#q-i0").fill("Unsubmitted other measure evidence")
+        loads: list[Route] = []
+        if change == "cache-only":
+            page.route("**/api/checklists", lambda route: loads.append(route))
+            tab(page, "AI assistance")
+            refresh_proposals(page)
+            tab(page, "Quality and handover")
+            expect(page.locator("#q-i0")).to_have_count(0)
+        if change == "reload-failure":
+            page.route(
+                "**/api/cases/ZF-1",
+                lambda route: route.fulfill(status=503, json={"error": "Synthetic reload failure"}),
+            )
+        before = page.locator("[data-case-workspace]").element_handle()
+        pending[0].fulfill(
+            status=409 if change == "refusal" else 200,
+            json={"error": "Synthetic quality refusal"} if change == "refusal" else {"ok": True},
+        )
+        page.unroute("**/api/cases/ZF-1/quality-submit")
+        if change in ("refusal", "reload-failure"):
+            page.locator("#app").get_by_text(
+                "Synthetic quality refusal" if change == "refusal"
+                else re.compile("Your change was recorded, but the case could not reload")
+            ).wait_for()
+        else:
+            page.wait_for_function("old => !old.isConnected", arg=before)
+        if loads:
+            page.wait_for_function("() => !document.querySelector('#q-i0')")
+            for route in loads:
+                route.fulfill(response=route.fetch())
+            page.unroute("**/api/checklists")
+        if change == "reload-failure":
+            expect(button).to_be_disabled()
+            button.evaluate("el => el.click()")
+            page.unroute("**/api/cases/ZF-1")
+        else:
+            expect(button).to_be_enabled()
+        if change != "refusal":
+            expect(page.locator("#q-by")).to_have_value("")
+            expect(page.locator("#q-revision")).to_have_value("")
+        expected_dirty = change in ("later", "other-measure", "refusal")
+        check(
+            f"quality semantic success/recovery dirtiness/{change}",
+            page.evaluate("hasUnsavedChanges()") == expected_dirty,
+        )
+        check(
+            f"quality actual unload guard/{change}",
+            page.evaluate("""() => {
+              const event = new Event('beforeunload', {cancelable: true});
+              window.dispatchEvent(event); return event.defaultPrevented;
+            }""") == expected_dirty,
+        )
+        if change != "reload-failure":
+            page.locator("#q-measure").select_option(original)
+            expect(page.locator("#q-i0")).to_have_value(
+                "Submitted synthetic quality evidence " if change == "later"
+                else "Submitted synthetic quality evidence" if change == "refusal" else ""
+            )
+            check(f"quality consumed cache cannot resurrect/{change}", True)
+        if change == "other-measure":
+            page.locator("#q-measure").select_option(other)
+            expect(page.locator("#q-i0")).to_have_value("Unsubmitted other measure evidence")
+            check("quality retains later other-measure evidence", True)
 
 
 def chat_cleanup(page: Page, base: str) -> None:
@@ -237,6 +328,7 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             check(f"all summary values fit 1280x800 ({summary_bottom})", summary_bottom <= 800)
             check("all six summary values", page.locator(".case-summary dt").count() == 6)
             page.screenshot(path=str(out / "desktop-1280.png"))
+            quality_pending_cleanup(page, base)
             chat_cleanup(page, base)
             check(
                 "nine tabs, one selected and one tab stop",

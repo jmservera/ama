@@ -29,25 +29,34 @@ function qualityPanel(c, id, refresh, savedFields = [], session = caseSession) {
     const owner = h("input", { type: "text", maxlength: 80, "aria-label": `Who will put it right for ${r.measure}` });
     const fixer = h("input", { type: "text", name: `quality-fixer-${i}`, autocomplete: "off", maxlength: 80, "aria-label": `Who fixed ${r.measure}` });
     const told = h("input", { type: "checkbox", id: `told-${i}` });
-    const message = h("div", { role: "status", "aria-live": "polite", tabindex: -1 });
+    const message = h("div", { id: `quality-feedback-${i}`, role: "status", "aria-live": "polite", tabindex: -1 });
+    note.addEventListener("input", () => {
+      note.removeAttribute("aria-invalid"); note.removeAttribute("aria-describedby");
+      message.textContent = "";
+    });
     const act = async (name, body) => {
+      if (name === "quality-fix" && !note.value.trim()) {
+        message.textContent = "Enter the remediation evidence before recording the fix.";
+        note.setAttribute("aria-invalid", "true");
+        note.setAttribute("aria-describedby", message.id); note.focus(); return;
+      }
       const button = document.activeElement;
       if (button instanceof HTMLButtonElement) { button.disabled = true; button.setAttribute("aria-busy", "true"); }
+      let outcome;
       try {
-        await refresh(async () => {
+        outcome = await refresh(async () => {
           try { await post(id, name, Object.assign({ index: i }, body)); }
           catch (error) {
             message.textContent = error.message;
             message.className = "err";
-            if (name === "quality-fix" && !note.value.trim()) { note.setAttribute("aria-invalid", "true"); note.focus(); }
-            else message.focus();
+            message.focus();
             throw error;
           }
         }, name === "quality-return" ? [note, defect, owner]
           : name === "quality-fix" ? [note, fixer]
           : name === "quality-handover" ? [note, told] : [note]);
       } finally {
-        if (button instanceof HTMLButtonElement) { button.disabled = false; button.removeAttribute("aria-busy"); }
+        if (button instanceof HTMLButtonElement) { button.disabled = outcome === "check-history"; button.removeAttribute("aria-busy"); }
       }
     };
     return h("li", {},
@@ -79,9 +88,11 @@ function qualityPanel(c, id, refresh, savedFields = [], session = caseSession) {
   });
   box.append(records.length ? h("ul", { class: "list" }, records) : h("p", {}, "No quality checks recorded yet."));
   if (!c.closed) {
+    if (session.qualitySaving === "check-history") session.qualitySaving = false;
     const form = h("div", {}, h("h3", {}, "Record the evidence for a measure"),
       h("p", { class: "muted" }, "Evidence from an installer or contractor is kept as evidence only. It is checked by someone else before it counts. Replacing accepted evidence cancels its previous acceptance and handover. A new independent check and resident handover are needed."));
-    const measure = h("select", { id: "q-measure", "aria-label": "Measure" }, measures.map((m) => h("option", {}, m)));
+    const measure = h("select", { id: "q-measure", "aria-label": "Measure", "data-case-navigation": "" }, measures.map((m) => h("option", {}, m)));
+    if (measures.includes(session.qualityMeasure)) measure.value = session.qualityMeasure;
     const by = h("input", { id: "q-by", type: "text", maxlength: 80 });
     const src = h("select", { id: "q-src" }, QUALITY_SOURCES.map((x) => h("option", {}, x)));
     const checks = h("div", {});
@@ -100,7 +111,10 @@ function qualityPanel(c, id, refresh, savedFields = [], session = caseSession) {
         }));
       restoreBoundFields(savedFields, form, "checklist", session);
     };
-    measure.addEventListener("change", () => lists && paint());
+    measure.addEventListener("change", () => {
+      session.qualityMeasure = measure.value;
+      if (lists) paint();
+    });
     api("/api/checklists").then((l) => {
       lists = l;
       if (measures.length) paint();
@@ -110,11 +124,23 @@ function qualityPanel(c, id, refresh, savedFields = [], session = caseSession) {
       h("label", { for: "q-revision" }, "Scope revision the evidence covers (see the resident decision panel)"), revision,
       h("label", { for: "q-by" }, "Who did the work or sent the evidence"), by,
       h("label", { for: "q-src" }, "Where the evidence came from"), src, checks,
-      h("p", {}, h("button", { class: "alt", onclick: () => {
+      h("p", {}, h("button", { class: "alt", "data-quality-save": "", disabled: Boolean(session.qualitySaving), onclick: async () => {
+        if (session.qualitySaving) return;
         const replaces = (c.quality || []).some((r) => r.measure === measure.value && ["Accepted", "Handed over"].includes(r.state));
         if (replaces && !window.confirm("Replace this measure's evidence? Its previous acceptance and resident handover will no longer apply. The history will be kept.")) return;
-        refresh(() => post(id, "quality-submit", { measure: measure.value, context_revision: Number(revision.value), submitted_by: by.value, source: src.value,
+        const busy = value => {
+          session.qualitySaving = value;
+          if (caseSession !== session) return;
+          app.querySelectorAll("[data-quality-save]").forEach(button => {
+            button.disabled = Boolean(value);
+            if (value === true) button.setAttribute("aria-busy", "true");
+            else button.removeAttribute("aria-busy");
+          });
+        };
+        busy(true);
+        const result = await refresh(() => post(id, "quality-submit", { measure: measure.value, context_revision: Number(revision.value), submitted_by: by.value, source: src.value,
           items: Object.fromEntries([...checks.querySelectorAll("input")].map((i) => [i.dataset.label, i.value])) }), [measure, revision, by, src, ...checks.querySelectorAll("input")]);
+        busy(result === "check-history" ? result : false);
       } }, "Save evidence")));
     box.append(form);
   }

@@ -40,6 +40,13 @@ measure/checklist version; earlier edits remain copyable rather than being
 applied to replacement evidence. Successful mutations clear only unchanged
 dispatch-time values, not edits made while saving. Source verification does not
 submit or discard edited proposal JSON.
+Successful submissions reconcile exact dispatch-time values across live,
+replaced, copy-recovery and cached controls, bound to the same evidence key.
+Pending review and evidence-save actions exclude duplicate submissions while
+later edits remain available. Malformed edited proposal JSON identifies and
+focuses its editor, not a valid Reason; request failures are status feedback,
+not inferred field invalidity. A recorded action whose reload fails requires
+refresh/history checking rather than repeating the stale action.
 Navigation and page-close warnings also cover unresolved cached drafts while
 proposal controls are loading. A completed document review displays the submitted
 replacement and retains later text or reason as read-only, unsaved recovery tied

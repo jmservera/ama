@@ -34,7 +34,7 @@ async function api(path, body, signal) {
   const data = await res.json().catch(() => ({}));
   signal.throwIfAborted();
   if (res.status === 401 && path !== "/api/login") { me = null; login("Your session has ended. Sign in again."); throw new Error("Your session has ended. Sign in again."); }
-  if (!res.ok) { const e = new Error(data.error || "Something went wrong."); e.reasons = data.reasons; throw e; }
+  if (!res.ok) { const e = new Error(data.error || "Something went wrong."); e.reasons = data.reasons; e.status = res.status; throw e; }
   return data;
 }
 
@@ -329,6 +329,9 @@ function aiNotes(d, onDone, getText) {
     let pending = false;
     const go = (action) => async () => {
       if (pending || d.approval !== "Not reviewed") return;
+      error.textContent = "";
+      why.removeAttribute("aria-invalid");
+      why.removeAttribute("aria-describedby");
       if (action !== "accept" && !why.value.trim()) { invalid("Enter a reason to edit or reject this draft."); return; }
       const reason = why.value;
       const text = action === "edit" ? getText ? getText() : editing?.value : undefined;
@@ -342,9 +345,7 @@ function aiNotes(d, onDone, getText) {
         d.approval = REVIEWED[action];
         meta.dataset.reviewState = d.approval;
         result.textContent = `${d.approval} as a draft by a person. This is not an approval, consent or safety decision. Reason: ${reason || "Not supplied"}. Recorded in the audit log.`;
-        sent.forEach(item => {
-          if (caseFieldUnchanged(item)) item.field.removeAttribute("data-case-dirty");
-        });
+        reconcileCaseSubmission(sent);
         const later = [why, editing].filter(field => field?.dataset.caseDirty);
         box.hidden = !later.length;
         if (later.length) {
@@ -355,8 +356,11 @@ function aiNotes(d, onDone, getText) {
         app.dispatchEvent(new Event("ai-review-change"));
         if (onDone) onDone(action, text);
       } catch (e) {
-        buttons.forEach(({ button, disabled }) => { button.disabled = disabled; });
-        invalid(e.message);
+        if (d.approval === "Not reviewed" && e.status) {
+          buttons.forEach(({ button, disabled }) => { button.disabled = disabled; });
+        }
+        result.textContent = e.status ? e.message
+          : `Confirmation is unavailable. Refresh and check the review history before another action. ${e.message}`;
       } finally { pending = false; }
     };
     const unavailable = d.stale || d.verified === false || d.validated === false;
@@ -367,7 +371,7 @@ function aiNotes(d, onDone, getText) {
       h("div", { class: "row" }, h("button", { class: "alt", disabled: unavailable, onclick: go("accept") }, "Accept"),
         h("button", { class: "alt", disabled: unavailable || (!getText && !editing), onclick: go("edit") }, "Edit"),
         h("button", { class: "alt", onclick: go("reject") }, "Reject")));
-    why.addEventListener("input", () => { error.textContent = ""; why.removeAttribute("aria-invalid"); });
+    why.addEventListener("input", () => { error.textContent = ""; why.removeAttribute("aria-invalid"); why.removeAttribute("aria-describedby"); });
     kids.push(box, result);
   }
   const meta = h("div", { class: "aimeta ai-suggestion", "data-record-id": d.record_id, "data-review-state": d.approval }, kids);
@@ -596,6 +600,9 @@ async function caseView(id) {
     h("section", { "aria-label": "Case summary", "aria-busy": "true", class: "card" }, "Loading case (loading)"));
   const c = await api(`/api/cases/${encodeURIComponent(id)}`);
   if (caseSession !== session) return;
+  session.pendingSubmissions?.forEach((state, key) => {
+    if (state === "check-history") session.pendingSubmissions.delete(key);
+  });
   const savedFields = sameCase ? rememberCaseFields(session) : [];
   session.controller?.dispose();
   const assistantPanel = assistantCasePanel(id, session);
@@ -604,15 +611,37 @@ async function caseView(id) {
   const msg = h("div", { role: "status" });
   const refresh = async (fn, submitted = []) => {
     const sent = snapshotCaseFields(submitted);
+    const key = sent.length ? JSON.stringify(sent.map(item => item.key)) : null;
+    session.pendingSubmissions ||= new Map();
+    if (key && session.pendingSubmissions.has(key)) {
+      workspaceStatus.textContent = "This action is pending or needs a history check. Refresh before another submission.";
+      return "check-history";
+    }
+    if (key) session.pendingSubmissions.set(key, "pending");
+    let recorded = false;
+    let checkHistory = false;
     try {
       await fn();
+      recorded = true;
       if (caseSession !== session) return;
-      sent.forEach(item => {
-        if (caseFieldUnchanged(item)) delete item.field.dataset.caseDirty;
-      });
+      reconcileCaseSubmission(sent);
       briefingBox = null; await caseView(id);
+      return true;
     } catch (e) {
-      msg.replaceChildren(h("p", { class: "err" }, e.message), ...(e.reasons || []).map((x) => h("p", {}, x)));
+      if (caseSession !== session) return;
+      const uncertain = !recorded && !e.status;
+      checkHistory = recorded || uncertain;
+      msg.replaceChildren(h("p", { class: "err" }, recorded
+        ? `Your change was recorded, but the case could not reload. Refresh the case before another action. ${e.message}`
+        : uncertain ? `Confirmation is unavailable. Refresh and check the history before another action. ${e.message}` : e.message),
+      ...(e.reasons || []).map((x) => h("p", {}, x)));
+      if (!msg.isConnected) workspaceStatus.textContent = msg.textContent;
+      return recorded || uncertain ? "check-history" : false;
+    } finally {
+      if (key) {
+        if (checkHistory) session.pendingSubmissions.set(key, "check-history");
+        else session.pendingSubmissions.delete(key);
+      }
     }
   };
   const outcome = h("input", { id: "outcome", placeholder: "For example: spoke to resident, visit agreed" });
@@ -751,12 +780,12 @@ async function caseView(id) {
       openHaz.length && h("span", { class: "flag danger" }, "Safety issue open")),
     h("span", { class: "muted" }, `Reference ${c.id}`)), top, workspace);
   restoreChallengeDrafts(challengeDrafts);
-  restoreCaseFields(savedFields);
+  restoreCaseFields([...session.pendingFields.values()]);
   restoreBoundFields(savedFields, app, "form", session);
   session.controller?.counts();
 }
 
-function caseFieldEntries(root = app) {
+function caseFieldEntries(root = app, deduplicate = true) {
   const seen = new Map();
   const entries = [...root.querySelectorAll("input, textarea, select")].filter(field =>
     !field.closest("[data-challenge-case], #resident-draft-output")).map(field => {
@@ -769,6 +798,7 @@ function caseFieldEntries(root = app) {
     return { field, key: field.dataset.caseFieldKey || `${label}:${index}`, binding: field.caseBinding,
       proposal: proposal && { id: proposal.dataset.proposalId, revision: proposal.dataset.proposalRevision } };
   });
+  if (!deduplicate) return entries;
   const byKey = new Map();
   entries.forEach(entry => {
     if (!byKey.has(entry.key) || !entry.field.preservedCaseField) byKey.set(entry.key, entry);
@@ -776,23 +806,59 @@ function caseFieldEntries(root = app) {
   return [...byKey.values()];
 }
 function snapshotCaseFields(fields) {
-  return fields.map(item => item.field ? item : { field: item, value: item.value,
-    checked: item.checked, files: item.files && [...item.files] });
+  const entries = new Map(caseFieldEntries(app, false).map(item => [item.field, item]));
+  return fields.map(item => item.field ? item : { field: item, key: entries.get(item)?.key,
+    session: caseSession, value: item.value, checked: item.checked,
+    files: item.files && [...item.files] });
 }
 function caseFieldUnchanged({ field, value, checked, files }) {
-  return field.value === value && field.checked === checked
-    && (!files || (files.length === field.files.length && files.every((file, i) => field.files[i] === file)));
+  const recovered = field.preservedCaseField;
+  const selectedFiles = recovered?.fileNode?.files || field.files;
+  return (recovered?.type === "checkbox" ? recovered.value : field.value) === value
+    && (recovered ? recovered.checked : field.checked) === checked
+    && (!files || (selectedFiles && files.length === selectedFiles.length
+      && files.every((file, i) => selectedFiles[i] === file)));
+}
+function reconcileCaseSubmission(sent) {
+  const current = caseFieldEntries(app, false);
+  const forms = new Set();
+  sent.forEach(item => {
+    const sameSession = item.session === caseSession;
+    const cached = sameSession && item.key && item.session?.pendingFields.get(item.key);
+    const consumedCache = cached && cached.value === item.value && cached.checked === item.checked
+      && (!cached.fileNode || caseFieldUnchanged({ ...item, field: cached.fileNode }));
+    const fields = new Set([item.field, ...(sameSession && item.key
+      ? current.filter(entry => entry.key === item.key).map(entry => entry.field) : [])]);
+    [...fields].filter(field => caseFieldUnchanged({ ...item, field })).forEach(field => {
+      const form = field.closest("form");
+      if (form) forms.add(form);
+      field.removeAttribute("data-case-dirty");
+      if (field.preservedCaseField) field.parentElement.remove();
+      else if (field.type === "checkbox") field.checked = false;
+      else if (field.tagName !== "SELECT") field.value = "";
+    });
+    forms.forEach(form => {
+      if (!form.querySelector('[data-case-dirty="true"]')) delete form.dataset.unsaved;
+    });
+    if (consumedCache) {
+      item.session.pendingFields.delete(item.key);
+    }
+  });
+  app.querySelectorAll("[data-case-recovery]").forEach(node => {
+    if (!node.querySelector("textarea")) node.remove();
+  });
 }
 function captureCaseFields() {
   return caseFieldEntries().filter(({ field }) => field.dataset.caseDirty)
     .map(({ field, key, proposal, binding }) => {
       const record = field.closest("[data-record-id]");
       const label = field.getAttribute("aria-label") || field.name || field.id;
-      return { key, value: field.value,
+      return { key, value: field.preservedCaseField?.type === "checkbox"
+        ? field.preservedCaseField.value : field.value,
         checked: field.preservedCaseField?.checked ?? field.checked, proposal, binding,
         label: field.preservedCaseField?.label || `${label}${record ? ` for record ${record.dataset.recordId}` : ""}`,
         type: field.preservedCaseField?.type || field.type,
-        fileNode: field.type === "file" ? field : undefined };
+        fileNode: field.preservedCaseField?.fileNode || (field.type === "file" ? field : undefined) };
     });
 }
 function rememberCaseFields(session) {
@@ -827,6 +893,7 @@ function restoreCaseFields(saved, root = app) {
   });
 }
 function restoreBoundFields(saved, panel, kind, session) {
+  saved = [...session.pendingFields.values()];
   panel.querySelectorAll(`[data-case-recovery="${kind}"]`).forEach(node => node.remove());
   restoreCaseFields(saved, panel);
   const keys = new Set(caseFieldEntries(panel).map(({ key }) => key));
@@ -851,6 +918,7 @@ function restoreBoundFields(saved, panel, kind, session) {
 }
 app.addEventListener("input", event => {
   if (caseSession && event.target.matches("input, textarea, select")
+      && !event.target.hasAttribute("data-case-navigation")
       && !event.target.closest("[data-challenge-case]")) event.target.dataset.caseDirty = "true";
 });
 
@@ -942,6 +1010,7 @@ function recordedChangeForm(prefix, label, fields, submit) {
   const form = h("form", { oninput: () => { form.dataset.unsaved = "true"; },
     onsubmit: async (e) => {
       e.preventDefault();
+      if (button.disabled) return;
       for (const { input } of inputs) {
         input.setCustomValidity(input.value.trim() ? "" : "Enter this change detail.");
         if (!input.reportValidity()) { input.focus(); return; }
