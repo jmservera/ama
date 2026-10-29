@@ -16,6 +16,11 @@
   },
   "confirmed_decisions": [
     {
+      "decision": "Round-9 parent integration continuation, P03-T01",
+      "status": "complete and locally validated; local-only commit",
+      "evidence": "Rebased onto b424ac9fe0b74ebbf4ebcbb384a969c1810db66b. Preserved all parent safeguards; corrected handler-owned ARIA disable/focus and related browser harness selectors/startup synchronization. Final API 1217 tests/316 existing skips, journey 406, assistants 206, employee briefing 74, design-system 132 checks, briefing twice, manifest 8, 166 distinct zero-violation axe scopes with incompletes retained, targeted Ruff/mypy and JS syntax pass. External evidence /tmp/ama-531-round9-final-20261029/. Later parent 35309bf2 is rubric-only; requested main rubric bytes retained. No push/az/secrets; historical Review unchanged."
+    },
+    {
       "decision": "Execute the full RPI loop on the existing stacked topic branch",
       "status": "confirmed",
       "evidence": "Explicit user request; parent PR #529 is open and branch matches parent HEAD"
@@ -80,7 +85,7 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Coordinator owns the authorized complete gate, independent exact-head assessment and push of the locally committed continuation, including the CI retry check fix. No push or az in this worktree; historical Review remains unchanged."
+    "action": "Coordinator owns separately authorized complete publication gates, current parent/rubric-only ref reconciliation and independent exact-head assessment of the local-only continuation. No push or az in this worktree; do not repeat or rewrite original Review."
   },
   "prioritized_follow_ups": [
     {

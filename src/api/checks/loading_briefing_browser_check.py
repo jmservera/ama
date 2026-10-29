@@ -333,7 +333,11 @@ def run_browser(base: str, axe: str, output: Path) -> None:
             print("PASS library-driven map refresh regional feedback")
 
             # Real standalone law viewer action uses the same helper, without app.js.
+            page.route("**/api/law/sources", lambda route: route.fulfill(
+                json={"sources": [], "gaps": []}))
             page.goto(base + "/law.html")
+            expect(page.get_by_role("heading", name="Sources held", exact=True)).to_be_visible()
+            page.unroute("**/api/law/sources")
             held.clear()
             page.route("**/api/law/sources", lambda route: held.append(route))
             law = page.get_by_role("button", name="All sources", exact=True)

@@ -6,6 +6,134 @@ ms.date: 2026-10-28
 
 ## Scope and status
 
+### Round-9 parent integration (2026-10-29, P03-T01)
+
+Current bounded outcome: complete and locally validated; local-only commit.
+Original Review and separate publication/human acceptance are unchanged.
+
+The user explicitly authorized rebasing the four pushed child commits from
+`27d11262` onto `origin/feat/case-journey-ux-526`, now
+`b424ac9fe0b74ebbf4ebcbb384a969c1810db66b`, and committing locally without
+push. Starting worktree was clean; PR #537 remains open against parent PR #529.
+Rebase completed with conflicts only in app.js and timecapture.js.
+
+The app resolution retains the parent's mutation key/registry and duplicate
+409 guard, mutation JSON parse errors, finally-based registry cleanup and
+error outcome metadata. One outer loading-feedback lifecycle surrounds it;
+the child's explicit expired-session 401 status is retained. The timecapture
+resolution takes the parent's shared save helper and surfaced local mutation
+feedback unchanged. Native handlers still wrap once through h(), not again
+inside save(). Auto-merged panels/assistants retain parent shared draft and
+pending form state. Incoming tracking files had no conflicts. Both sides'
+documentation additions survive; the rubric score is restored from origin/main.
+The existing workbench recipe digest already matches the scenario manifest.
+
+Planned validation uses this worktree's own src with
+`/home/azureuser/source/ama-wt/issue-526-journey/.venv/bin/python`, the exact
+user-specified PYTHONPATH, synthetic local browser fixtures and verified
+axe 4.10.3. All heavy commands must hold the shared lock after nonblocking
+admission retries lasting no more than 40 minutes. Validation pending.
+Historical critique and Review outcomes are unchanged; publication and
+independent exact-head acceptance remain separately owned.
+
+#### Supplemental axe selector correction
+
+The exact design-system entry point has no axe switch. After its native
+132 checks and all requested suites passed, an additional existing regulatory
+UX/axe run was selected to supplement design coverage. It failed because
+`chat.locator("[role=status]")` matched both the new temporary loading status
+and the existing application result status during the doubt action.
+The preserved failure is
+`/tmp/ama-531-round9-20261029/regulatory-ux.log`.
+Four result assertions now target the panels' direct paragraph status rather
+than every nested live region. Text, inbox/history checks and all other
+assertions are unchanged; this corrects loading-helper test integration, not
+product behavior. The change is an immediately relevant P03 refinement, not
+a new acceptance or repeated Review.
+
+The supplemental rerun passed the corrected result assertion but exposed
+focus loss: the helper added native `disabled` to the doubt button after its
+own handler deliberately set focus-preserving `aria-disabled`. Preserve this
+existing lifecycle by letting the helper own native disabled only when the
+handler has not already set `aria-disabled="true"`. WeakMap pending exclusion,
+busy/spinner feedback and handler guards remain active. The controlled helper
+test now verifies that the action-owned ARIA state persists without native
+disable during or after the promise. This is a directly coupled P01/P03
+integration correction, not an unrelated focus abstraction.
+Second failure: `/tmp/ama-531-round9-20261029/regulatory-ux-after.log`.
+Fresh full unit, requested browser and supplemental axe validation pending.
+
+The final-source full API, journey, assistants and supplemental regulatory
+axe checks passed. The loading check then exposed an independent harness
+race at its law-viewer duplicate assertion: navigation can finish before
+the automatic initial sources read, so the subsequent route hold could capture
+that initial read as well as the deliberate button read. Wait for the
+actual initial "Sources held" heading before installing the held route.
+The exact one-request and disabled/error/recovery assertions remain intact.
+This is P03 harness synchronization only; no further product change.
+Failed run: `/tmp/ama-531-round9-final-20261029/loading-briefing.log`.
+The first synchronization attempt demonstrated that this briefing fixture has
+no law store: its initial read correctly reports that explicit error instead
+of a sources heading. Supply the same explicit empty synthetic sources
+response used by the existing recovery step for the initial read, wait for
+its rendered heading, remove that route, then install the held action route.
+The deliberate 503 and recovery remain separate unchanged checks.
+Attempt evidence:
+`/tmp/ama-531-round9-final-20261029/loading-briefing-after.log`.
+
+#### Final locked validation and handoff
+
+The final product source passed the exact API discovery command using the
+requested journey-worktree interpreter from `src/api` and
+`PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests`.
+All commands below use that interpreter and source path. No imported installed
+API/core/agents source was substituted. All heavy batches acquired
+`/tmp/ama-rpi-heavy.lock` with `flock -n` immediately; no admission exceeded
+the 40-minute ceiling and no foreign lock was bypassed.
+
+Final evidence root: `/tmp/ama-531-round9-final-20261029/`.
+The 02:04:32Z batch passed focused tests, regulatory UX, full API, journey
+and assistants before the law-check harness race described above. Only that
+browser harness changed afterward. The 02:16:23Z continuation passed the
+synchronized loading check twice and all remaining checks, ending 02:16:52Z.
+
+| Command from src/api | Final evidence/result |
+| --- | --- |
+| `python -m unittest discover -s tests -q` | `unit.log`: 1217 tests in 437.173s, OK, 316 existing environment-dependent skips |
+| `python -m unittest test_loading_feedback test_regulatory_ux_check test_scenario_manifest -q` | `focused.log`: 14 tests passed, including ARIA state ownership |
+| `python -m checks.case_journey_browser_check --axe /tmp/ama-520-axe-4.10.3.min.js --out <root>/journey` | `journey.log`: 406 checks; `journey/results.json`: 87 scopes, zero violations, 86 incomplete entries |
+| `python -m checks.assistants_browser_check --axe /tmp/ama-520-axe-4.10.3.min.js --out <root>/assistants` | `assistants.log`: 206 checks; `assistants/results.json`: 56 scopes, zero violations, 56 incomplete entries |
+| `python -m checks.loading_briefing_browser_check --axe /tmp/ama-520-axe-4.10.3.min.js --out <root>/loading-briefing-settled` | `loading-briefing-settled.log`: pass; four axe scopes, zero violations, three incomplete entries |
+| Same loading command with `--out <root>/loading-briefing-repeat` | Independent repeat passed the unchanged law duplicate/error/recovery assertions and all four axe scopes |
+| `python -m checks.employee_briefing_browser_check` | `employee-briefing.log`: 74 checks passed |
+| `python -m checks.design_system_browser_check` | `design-system.log`: 132 checks passed; native runner has no axe switch |
+| `python -m checks.regulatory_ux_check --axe /tmp/ama-520-axe-4.10.3.min.js --out <root>/regulatory-ux.json` | 19 browser states passed, zero violations, nine incomplete entries; actual doubt-button focus and history assertions retained |
+| `python -m unittest test_scenario_manifest -q` | `scenario-manifest.log`: eight tests passed |
+| Targeted Ruff and mypy on changed Python checks/tests | `ruff.log`, `mypy.log`: both passed |
+
+`<root>` denotes the actual external evidence root above, not a repository
+output path. Axe version 4.10.3 is content-verified by the existing harnesses,
+SHA256 `880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb`.
+There are 166 distinct passing axe scopes, not a WCAG or human acceptance
+claim; all incomplete results remain in their reports.
+Fresh fetched Web Interface Guidelines were applied to the changed helper
+and conflict-resolution scope: no remaining introduced findings. Existing
+ASCII/sentence-case repository rules take precedence over generic copy rules.
+JavaScript syntax checks for app/async-action/timecapture and `git diff --check`
+pass. Panels, assistants and timecapture remain byte-identical to the pinned
+round-9 parent; append-only knowledge index/log content is unchanged from the
+pre-rebase child. The scenario recipe SHA256 remains
+`dea58169392471861486ccb9d5ef4f263a4208d34c920847615bfc1a944fe6f0`.
+
+During validation, another process advanced the shared parent remote-tracking
+ref to `35309bf2`, adding only a rubric score bot commit after the pinned
+`b424ac9f` rebase base. No product behavior changed in that advance. The
+explicitly requested main rubric bytes are retained rather than chasing that
+bot output; this is not a claim of latest-remote exact-head publication
+acceptance. The complete gate and independent exact-head assessment remain
+coordinator-owned. No push, az, Azure change, secrets, private data or live
+model access was performed.
+
 ### CI wrapper retry continuation (2026-10-29, P03-T01)
 
 User-authorized scope is the failure in PR #537's exact design-system browser
