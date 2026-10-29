@@ -5,7 +5,7 @@
 
 * Task ID: 531-review-correction-2026-10-29
 * Task slug: loading-briefing-review-correction-531
-* Planning status: Ready; original critique Revise, findings disposed
+* Planning status: Complete; original critique Revise disposed; Review Complete / Conformant
 * Plan date: 2026-10-29
 * Phase details: .copilot-tracking/details/2026-10-29/loading-briefing-review-correction-531-phase-details.md
 * Plan critique: .copilot-tracking/reviews/plans/2026-10-29/loading-briefing-review-correction-531-plan-critique.md
@@ -105,7 +105,7 @@ Expand existing delimiter/trailing citation matrices; add literal supplied
 two-statement regression. Preserve all prior tests and parser behavior.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Validation and local delivery
+### [x] P03: Validation and local delivery
 
 <!-- rpi:task id=P03-T01 -->
 #### [x] P03-T01: Document and validate the correction
@@ -117,7 +117,7 @@ strict mypy, ruff check . and ruff format --check . with source-first paths.
 Do not queue or poll a foreign lock. Check manifest hashes and JS syntax.
 
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: Commit and independently Review once
+#### [x] P03-T02: Commit and independently Review once
 
 Resolve gh api user and use authenticated repository-local noreply identity
 for author/committer. Commit implementation plus original RPI evidence, perform
@@ -163,8 +163,10 @@ critique artifact. No repeated critique.
 
 ## Handoff
 
-Ready after critique disposition. Changes:
+Completed. Changes:
 .copilot-tracking/changes/2026-10-29/loading-briefing-review-correction-531-changes.md.
-Implementation and requested strict/full/browser validation complete.
-P03-T02 owns candidate commit, the parent-owned single Review and final evidence
-only; no source implementation or validation blocker remains.
+Implementation and requested strict/full/browser validation complete; candidate
+ab40785ae86c3cc0ab9e026b064bc17bfc736efa committed locally. One original independent
+Review completed with Conformant outcome and no findings. Final evidence-only
+commit persists Review and stopped lifecycle; no source change after Review.
+No remaining active marker, correction blocker or publication authorization.
