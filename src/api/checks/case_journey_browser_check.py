@@ -578,7 +578,9 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                 "el => el.getBoundingClientRect().bottom"
             )
             check(f"all summary values fit 1280x800 ({summary_bottom})", summary_bottom <= 800)
-            check("all six summary values", page.locator(".case-summary dt").count() == 6)
+            check(
+                "all six summary values", page.locator(".case-summary > dl > div > dt").count() == 6
+            )
             page.screenshot(path=str(out / "desktop-1280.png"))
             quality_pending_cleanup(page, base)
             quality_outcome_history(page, base, axe, reports)

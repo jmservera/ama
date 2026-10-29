@@ -13,6 +13,8 @@ icons from slide 4 of `docs/capstone/deck/zava-forward-cowork-v2-draft.pptx`.
 The local `web/journey-icons/` PNGs are byte-exact extracts: survey image11,
 assessment image6, funding image12, resident image13, contractor image14 and
 quality image15. A regression checks those bytes against the tracked deck.
+The API package data explicitly includes `web/journey-icons/*.png` so these
+assets also ship in the wheel installed by the container.
 
 Blocked steps and the case summary show a single-line reason with a native
 Details button. Click, tap, Enter or Space opens the complete reasons, owners

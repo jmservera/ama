@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import subprocess
+import tomllib
 import unittest
 import zipfile
 from pathlib import Path
@@ -1266,6 +1267,17 @@ console.log("PASS");
         self.assertFalse(any(step["current"] for step in states))
         self.assertFalse(any(step["blockers"] for step in states))
         self.assertFalse(any(step["current"] for step in journey(stage="Unknown")))
+
+    def test_journey_icons_are_declared_as_package_data(self) -> None:
+        project = WEB.parents[3]
+        with (project / "pyproject.toml").open("rb") as stream:
+            config = tomllib.load(stream)
+        patterns = config["tool"]["setuptools"]["package-data"]["zava_forward.api"]
+        for name in ("survey", "assessment", "funding", "resident", "contractor", "quality"):
+            with self.subTest(icon=name):
+                relative = f"web/journey-icons/{name}.png"
+                self.assertTrue((WEB.parent / relative).is_file())
+                self.assertTrue(any(Path(relative).match(pattern) for pattern in patterns))
 
     def test_journey_icons_are_exact_six_step_presentation_assets(self) -> None:
         root = Path(__file__).resolve().parents[3]
