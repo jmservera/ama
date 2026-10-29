@@ -80,7 +80,7 @@ hold `/tmp/ama-rpi-heavy.lock` nonblockingly for its entire run.
 ### P03: Review and commit
 
 * [x] P03-T01 Execute one independent Review of integration and evidence.
-* [ ] P03-T02 Commit with privacy-safe identity and trailer; leave unpushed.
+* [x] P03-T02 Commit with privacy-safe identity and trailer; leave unpushed.
 
 ## Critique Disposition
 

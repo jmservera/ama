@@ -3,8 +3,8 @@
   "task_slug": "iot-508-rebase",
   "parent_task": null,
   "mode": "manual",
-  "active_phase": "Review",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-29/iot-508-rebase-research.md",
@@ -39,7 +39,14 @@
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Commit original evidence and documentation; verify local handoff without push"
+    "action": "Coordinator owns separately authorized publication gate, remote update and hosted/human approval; local task complete, do not push"
   },
-  "prioritized_follow_ups": []
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator publication and remote CI",
+      "rationale": "Local integration and focused checks passed; no push authorized, so remote mergeability and CI are not newly proven",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/iot-508-rebase-review.md"
+    }
+  ]
 }

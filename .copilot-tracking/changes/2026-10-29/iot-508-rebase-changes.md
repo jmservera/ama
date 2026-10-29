@@ -89,7 +89,22 @@ Precommit `gh api user` reconfirmed id 8036360/login jmservera.
 `git fetch origin main` exit 0: main still
 5653547507f3056f09a726a18516237728da5e5b. Ancestry, authoritative main files,
 whitespace and state JSON checks exit 0. No second Review.
-P03-T02 commit is next. No push or Azure operations authorized or performed.
+P03-T02 complete:
+`git -c user.email=8036360+jmservera@users.noreply.github.com commit -m 'fix(iot): reconcile current-main integration for PR 508' -m 'Refs #110, #184, #508. Preserve scenario and bounded streaming documentation, authoritative main artifacts, and dated RPI evidence.' -m 'Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>'`:
+exit 0, commit 69795eb8d75b7e9eb34e65a591061b217e17fd36.
+Explicit staging included only the four integrated documentation files and
+seven new original RPI artifacts.
+`git log -1 --format='%H%n%ae%n%ce%n%B'` verifies both author/committer use the
+authenticated account's privacy-safe address and the required trailer.
+`git status --short`: empty. `git merge-base --is-ancestor origin/main HEAD`:
+exit 0.
+
+Final tracking-only handoff updates completion markers and this result,
+committed separately with `docs(rpi): record PR 508 rebase handoff` and the
+same required trailer. Its exact resulting hash is supplied in the terminal
+handoff to avoid self-referential evidence. It changes no runtime, tests,
+dependency, rubric, manifest or reviewed documentation.
+No push or Azure operations authorized or performed.
 
 ## Amendments and remaining boundaries
 
