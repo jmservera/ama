@@ -7,7 +7,7 @@ ms.date: 2026-10-29
 Task: pr-557-test-strength / iothub-test-strength-557.
 Readiness: research Ready (C1-C6), one final-candidate critique executed with
 original Revise preserved and PC-001/PC-002 disposed in the plan. P01-T01,
-P01-T02, P02-T01 and P02-T02 complete; P02-T03 remains.
+P01-T02, P02-T01, P02-T02 and P02-T03 complete.
 Plan: .copilot-tracking/plans/2026-10-29/iothub-test-strength-557-plan.md.
 
 <!-- phase: P01 -->
@@ -96,3 +96,8 @@ merge, or score-file edit. Confirm clean worktree and commit paths afterward.
 Only claim successful delivery when all requested criteria and validation are
 proven and no material Review finding remains. A blocked candidate may be
 preserved locally only with its incomplete outcome explicitly recorded.
+Evidence: ce55aa80856756ce8fba11a91c37a2bcebbaf7f8 committed the test file and
+seven dated original RPI artifacts. Verified privacy-safe author/committer,
+required coauthor trailer, clean worktree, one unpushed commit and unchanged
+score file. All AC1-AC5 are met for this local-only task. Evidence-only closeout
+is a separate local commit, without changing reviewed Python.
