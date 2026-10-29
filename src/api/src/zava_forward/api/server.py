@@ -25,7 +25,7 @@ from zava_forward.agents.dispatch import AgentWorker
 from zava_forward.core.assistants import Assistants
 from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
 from zava_forward.core.chat_privacy import ChatNotApproved, WARNING as CHAT_WARNING
-from zava_forward.core.chat_panel import ChatPanel
+from zava_forward.core.chat_panel import ChatPanel, chat_skills
 from zava_forward.core.regulatory_chat import RegulatoryChat, TASK as REGULATORY_TASK
 from zava_forward.agents import regulatory_chat
 from zava_forward.core.source_monitor import dated_card
@@ -633,6 +633,9 @@ def make_handler(app):
             if post and not isinstance(body, dict):
                 return self._json(400, {"error": "Chat request must be an object."})
             try:
+                if not post and parts == ["skills"]:
+                    c.current_user(user)
+                    return self._json(200, {"skills": chat_skills()})
                 if parts and parts[0] == "regulatory":
                     self._regulatory_access(user)
                     if not post and parts == ["regulatory", "status"]:
@@ -690,7 +693,11 @@ def make_handler(app):
                     if parts[2] == "messages":
                         return self._json(200, c.turn(u, tid, body.get("content")))
                     if parts[2] == "ask":
-                        return self._json(200, app.panel.ask(u, tid, body.get("content")))
+                        if set(body) - {"content", "skill"}:
+                            raise ValueError("Only content and skill are accepted.")
+                        if "skill" in body and body["skill"] is None:
+                            raise ValueError("Choose a listed skill or omit skill for legacy chat.")
+                        return self._json(200, app.panel.ask(u, tid, body.get("content"), skill=body.get("skill")))
                     if parts[2] == "proposals":
                         # Proposal-only: the existing assistants path queues it for the independent review.
                         t = s.chat_resume(u, tid)

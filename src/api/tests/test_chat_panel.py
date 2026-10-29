@@ -8,12 +8,17 @@ import json
 import os
 import re
 import unittest
+from unittest.mock import patch
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
 import test_role_matrix as roles
 from zava_forward.core.chat_panel import ABSTAIN, FALLBACK, LABEL
+from zava_forward.core.assistants import REGISTRY
+from zava_forward.core import projection
+from zava_forward.core.chat_privacy import redact
+from zava_forward.core.chatthreads import MAX_CONTENT
 
 APPROVED = dict(
     CHAT_DPIA_REF="SYNTH-DPIA-1",
@@ -43,6 +48,7 @@ class PanelTests(roles.Matrix):
 
     def setUp(self) -> None:
         self.prompts: list[str] = []
+        self.systems: list[str] = []
         self.model: Callable[[str], dict[str, Any]] = self.cite_first
         self.original = self.store.ai.evidence
         self.store.ai.evidence = self.fake  # type: ignore[method-assign]
@@ -53,6 +59,7 @@ class PanelTests(roles.Matrix):
         self.store.ai.evidence = self.original  # type: ignore[method-assign]
 
     def fake(self, system: str, prompt: str, *args: Any) -> dict[str, Any]:
+        self.systems.append(system)
         self.prompts.append(prompt)
         return self.model(prompt)
 
@@ -85,6 +92,28 @@ class PanelTests(roles.Matrix):
         stored = self.api(ROLE, f"/api/chat/threads/{tid}")[1]["messages"]
         self.assertEqual([m["role"] for m in stored], ["user", "assistant"])
         self.assertEqual(stored[1]["evidence"], [c["id"] for c in d["citations"]])
+
+    def test_maximum_question_with_expanding_mask_returns_success(self) -> None:
+        question = "x" * (MAX_CONTENT - 8) + " NE1 1AA"
+        self.assertEqual(len(question), MAX_CONTENT)
+        expected = redact(question)[0][:MAX_CONTENT]
+        for skill in (None, "general", *REGISTRY):
+            with self.subTest(skill=skill):
+                tid = self.thread()
+                body = {"content": question}
+                if skill is not None:
+                    body["skill"] = skill
+                code, answer = self.api(ROLE, f"/api/chat/threads/{tid}/ask", body)
+                self.assertEqual((code, answer["kind"]), (200, "answer"))
+                stored = self.api(ROLE, f"/api/chat/threads/{tid}")[1]["messages"]
+                self.assertEqual(stored[0]["content"], expected)
+                self.assertNotIn("NE1 1AA", stored[0]["content"])
+                events = [
+                    json.loads(row["detail"])
+                    for row in self.store.audit_entries()
+                    if row["action"] == "chat.answer"
+                ]
+                self.assertEqual(events[-1]["question_seq"], stored[0]["seq"])
 
     def test_uncited_or_foreign_citation_abstains(self) -> None:
         tid = self.thread()
@@ -236,6 +265,120 @@ class PanelTests(roles.Matrix):
         self.assertNotIn("tabindex", js)
         self.assertNotIn("innerHTML", js)
         self.assertIn("chatCasePanel(id)", (WEB / "app.js").read_text())
+
+    def test_all_five_skills_and_general_use_one_bounded_model_turn(self) -> None:
+        tid = self.thread()
+        before = copy.deepcopy(self.store.cases["ZF-1"])
+        for skill in (*REGISTRY, "general"):
+            self.prompts.clear()
+            code, answer = self.api(
+                ROLE,
+                f"/api/chat/threads/{tid}/ask",
+                {"content": "What stage is it?", "skill": skill},
+            )
+            self.assertEqual((code, answer["kind"], answer["skill"]), (200, "answer", skill))
+            self.assertEqual(len(self.prompts), 1)
+            self.assertIn(f"Selected advisory skill: {skill}.", self.systems[-1])
+            self.assertTrue(
+                all(c["id"].startswith(("ZF-1/", "workflow/")) for c in answer["citations"])
+            )
+        self.assertEqual(self.store.cases["ZF-1"], before)
+        code, skills = self.api(ROLE, "/api/chat/skills")
+        self.assertEqual(code, 200)
+        self.assertEqual([s["id"] for s in skills["skills"]], list(REGISTRY))
+
+    def test_general_help_has_workflow_sources_and_no_record(self) -> None:
+        tid = str(self.api(ROLE, "/api/chat/threads", {})[1]["id"])
+        self.model = lambda _p: envelope(
+            json.dumps(
+                dict(answer="A person reviews decisions.", citations=["workflow/boundaries"])
+            )
+        )
+        code, answer = self.api(
+            ROLE,
+            f"/api/chat/threads/{tid}/ask",
+            {"content": "How can the team use chat?", "skill": "general"},
+        )
+        self.assertEqual((code, answer["kind"], answer["context"]), (200, "answer", "general"))
+        self.assertIn("No case or home record is visible", self.prompts[-1])
+        self.assertNotIn("ZF-1/", self.prompts[-1])
+        self.assertEqual([c["id"] for c in answer["citations"]], ["workflow/boundaries"])
+        self.model = lambda _p: envelope(None, "timeout")
+        self.assertEqual(
+            self.api(ROLE, f"/api/chat/threads/{tid}/ask", {"content": "Help", "skill": "general"})[
+                1
+            ]["kind"],
+            "fallback",
+        )
+
+    def test_invalid_skills_do_not_store_or_infer(self) -> None:
+        tid = self.thread()
+        for invalid in ("router", "", None, 4, [], {}):
+            code, _ = self.api(
+                ROLE, f"/api/chat/threads/{tid}/ask", {"content": "Stage?", "skill": invalid}
+            )
+            self.assertEqual(code, 400, invalid)
+        self.assertEqual(self.api(ROLE, f"/api/chat/threads/{tid}")[1]["messages"], [])
+        self.assertEqual(self.prompts, [])
+
+    def test_skill_scope_and_thread_owner_rechecked_without_inference(self) -> None:
+        tid = self.thread()
+        body = {"content": "Stage?", "skill": "quality-evidence"}
+        self.assertEqual(
+            self.api("Quality Inspector", f"/api/chat/threads/{tid}/ask", body)[0], 404
+        )
+        original = self.store.detail
+        self.store.detail = lambda *a, **k: None
+        try:
+            self.assertEqual(self.api(ROLE, f"/api/chat/threads/{tid}/ask", body)[0], 404)
+        finally:
+            self.store.detail = original
+        self.assertEqual(self.prompts, [])
+        self.assertEqual(self.api(ROLE, f"/api/chat/threads/{tid}")[1]["messages"], [])
+
+    def test_skill_question_outcome_audit_contains_reference_not_content(self) -> None:
+        tid = self.thread()
+        body = {"content": "CANARY private@example.test", "skill": "assessment-preparation"}
+        code, answer = self.api(ROLE, f"/api/chat/threads/{tid}/ask", body)
+        self.assertEqual((code, answer["kind"]), (200, "answer"))
+        events = [row for row in self.store.audit_entries() if row["action"] == "chat.answer"]
+        self.assertTrue(events)
+        serialized = json.dumps(events)
+        self.assertNotIn("CANARY", serialized)
+        self.assertNotIn("private@example.test", serialized)
+        self.assertIn("assessment-preparation", serialized)
+        self.assertIn('"question_seq": 1', serialized.replace('\\"', '"'))
+
+    def test_skill_help_never_bypasses_role_projection_or_privacy_gate(self) -> None:
+        self.model = lambda _p: envelope(
+            json.dumps(dict(answer="Check the workflow.", citations=["workflow/boundaries"]))
+        )
+        for role in roles.ROLES:
+            if role == "Contractor":
+                self.assertEqual(self.api(role, "/api/chat/skills")[0], 403)
+                continue
+            tid = self.thread(role=role)
+            for skill in (*REGISTRY, "general"):
+                code, answer = self.api(
+                    role,
+                    f"/api/chat/threads/{tid}/ask",
+                    {"content": "Explain the workflow", "skill": skill},
+                )
+                self.assertEqual((code, answer["kind"]), (200, "answer"))
+                self.assertNotIn(roles.PHONE, self.prompts[-1])
+                if not projection.can_see_reason(dict(role=role)):
+                    self.assertNotIn(roles.REASON, self.prompts[-1])
+        tid = self.thread()
+        self.prompts.clear()
+        with patch.dict(os.environ, {"CHAT_DPIA_REF": ""}):
+            self.assertEqual(
+                self.api(
+                    ROLE, f"/api/chat/threads/{tid}/ask", {"content": "Help", "skill": "general"}
+                )[0],
+                403,
+            )
+        self.assertEqual(self.prompts, [])
+        self.assertEqual(self.api(ROLE, f"/api/chat/threads/{tid}")[1]["messages"], [])
 
 
 if __name__ == "__main__":

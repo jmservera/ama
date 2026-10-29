@@ -102,6 +102,7 @@ function login(msg) {
   aiMode.workflow = false;
   caseSession?.controller?.dispose();
   caseSession = null;
+  if (typeof employeeChat !== "undefined") employeeChat.reset(true);
   for (const id of Object.keys(fundingAi)) delete fundingAi[id];
   workspaceStatus.textContent = "";
   document.getElementById("nav").hidden = true;
@@ -236,7 +237,7 @@ function missingWorkspaceScripts(hash, caseRoute) {
     ["/ops.js", staffCase || (staffDestination && hash === "#/capacity") || (contractor && !caseRoute && destination !== "#/screens"), typeof qualityPanel === "function"],
     ["/panels.js", staffCase || (staffDestination && hash === "#/finance"), typeof financePanel === "function"],
     ["/assistants.js", staffCase || (staffDestination && hash === "#/assistants"), typeof assistantCasePanel === "function"],
-    ["/chat.js", staffCase, typeof chatCasePanel === "function"],
+    ["/chat.js", Boolean(me) && !contractor, typeof chatCasePanel === "function" && typeof employeeChat !== "undefined"],
     ["/timecapture.js", staffDestination && hash === "#/time", typeof timeView === "function"],
     ["/role-screens.js", Boolean(me) && destination === "#/screens", typeof roleScreensView === "function"],
     ["/progress.js", staffDestination && ["#/progress", "#/closed"].includes(destination), typeof ProgressViews === "object"],
@@ -289,6 +290,8 @@ async function route() {
     }
   }
   if (nextHash !== displayedHash) delete me.assistantQueueDrafts;
+  if (nextHash.split("?")[0] !== displayedHash.split("?")[0]
+      && typeof employeeChat !== "undefined") employeeChat.reset();
   displayedHash = nextHash;
   if (caseSession && nextHash.split("?")[0] !== `#/case/${encodeURIComponent(caseSession.id)}`) {
     caseSession.controller?.dispose();
@@ -313,6 +316,7 @@ async function route() {
   await requireWorkspaceScripts(hash, Boolean(m));
   signal.throwIfAborted();
   if (me !== session) return;
+  if (typeof employeeChat !== "undefined") employeeChat.install();
   workspaceStatus.textContent = routeStatus;
   if (hash.split("?")[0] === "#/screens") return await roleScreensView();
   if (me.user.role === "Contractor") return await (m ? contractorCaseView(decodeURIComponent(m[1])) : contractorListView());
@@ -1513,6 +1517,7 @@ async function signOut(switchAccount) {
   try {
     const r = await api("/api/logout", { switchAccount });
     me = null; briefingBox = null; clearPhoto();
+    if (typeof employeeChat !== "undefined") employeeChat.reset(true);
     if (r && r.redirect) { location.href = r.redirect; return; }
     location.href = "/";
   } catch (e) { document.getElementById("account-error").textContent = e.message; }
