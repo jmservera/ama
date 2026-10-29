@@ -74,6 +74,12 @@ record changes. Hazard-marked reports are refused with the independent
 hazard-intake route; no automatic triage, classification, dispatch or clock
 change occurs.
 
+New nomination identifiers use an opaque `NOM-` plus full random UUID, never a
+ledger position. Retention deletion and subsequent intake therefore cannot
+reuse a deleted record's identity or accept a stale correction for another
+subject. Existing sequential identifiers remain valid for retained records.
+Corrections must use the recorded identifier and its current version.
+
 Tenure reports retain each supplied household reference, reported tenure and
 lease interest, source, unresolved identity state, follow-up owner and update
 date. A report is not verified household membership. Verification, decision
@@ -85,6 +91,12 @@ release or verification action. A static responsibility-question checklist
 identifies missing evidence; it is not a pack derived from reviewed leases.
 Prior homes without intake are unchanged: this does not prove complete tenure
 coverage or an all-offer gate across the programme.
+
+The tenure hold is separate from resident-decision status. An otherwise current
+acceptance remains `Accepted` in lists, prompts and priority suggestions after
+tenure intake; the hold still blocks case-wide and scoped resident work.
+Existing decision retention, scope, human-review and representative-authority
+checks continue to apply.
 
 Raw intake is excluded from unrelated-role detail, contractor output,
 assistant source allow-lists and case CSV. Sensitive histories follow existing

@@ -139,7 +139,7 @@ class ResidentApi(unittest.TestCase):
         code, result = self.action(
             "nomination_correct",
             case_id="ZF-1",
-            id="NOM-1",
+            id=detail["nomination_records"][0]["id"],
             expected_version=1,
             reported_subject_ref="SYN-CORRECTED",
             account="SYN competing evidence",

@@ -12,6 +12,7 @@ import json
 import hashlib
 import logging
 import os
+import uuid
 from contextlib import contextmanager
 from copy import deepcopy
 from datetime import UTC, date, datetime
@@ -541,6 +542,10 @@ def resident_gate(c, bindings=None):
     """Case advance checks all measures; scoped work checks only explicit bindings."""
     if c.get("tenure_review_required") or c.get("tenure_reports"):
         return [TENURE_HOLD]
+    return _resident_decision_gate(c, bindings)
+
+
+def _resident_decision_gate(c, bindings=None):
     if retention_schedule(c)["expired"]:
         return ["Resident records are past retention. Owner: Resident Liaison Officer. Next action: obtain current human-reviewed evidence."]
     if bindings is None:
@@ -574,7 +579,7 @@ def resident_gate(c, bindings=None):
 
 def resident_status(c):
     """Conservative list/prompt status; a legacy case-wide answer is not scoped evidence."""
-    if not resident_gate(c):
+    if not _resident_decision_gate(c):
         return "Accepted"
     measures = case_measures(c)
     if measures and all(current_context(c, m) and c.get("measure_decisions", {}).get(m)
@@ -661,7 +666,7 @@ class ResidentDecisionMixin:
         if body["hazard_concern"] is not False:
             raise ValueError("Use the independent hazard intake now (/api/cases/{case_id}/hazard-raise), not the nomination queue. Existing hazard service owns emergency response and clocks.")
         record = dict(
-            id=k.next_id(c.get("nomination_records", []), "NOM"), version=1,
+            id=f"NOM-{uuid.uuid4().hex}", version=1,
             case_id=c["id"], kind=k.choice(body["kind"], ("Officer nomination", "Self-referral"), "the referral kind"),
             original=dict(
                 reported_subject_ref=_intake_text(body["reported_subject_ref"], "the unverified subject reference", 100),
