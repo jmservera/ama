@@ -5,7 +5,7 @@
 
 * Task ID: 531-correction-2026-10-29
 * Task slug: loading-startup-correction-531
-* Planning status: Ready; original critique Revise, direct dispositions complete
+* Planning status: Complete; original critique Revise preserved, dispositions complete
 * Plan date: 2026-10-29
 * Phase details: .copilot-tracking/details/2026-10-29/loading-startup-correction-531-phase-details.md
 * Plan critique: .copilot-tracking/reviews/plans/2026-10-29/loading-startup-correction-531-plan-critique.md
@@ -16,6 +16,8 @@ Clear only the previous helper-owned feedback when a control starts a fresh
 attempt. Preserve pending duplicate suppression and independently overlapping
 reads/actions. Make app.js remove startup itself on every existing ready/error
 path while keeping the watchdog for a missing app.js.
+Implementation and required checks are complete. The original independent
+Review is Complete / Conformant at implementation commit 7ed914c9.
 
 ### User Decisions and Requirements Highlights
 
@@ -131,7 +133,7 @@ before web edits; independent Review must refresh separately and report scoped
 file:line findings with explicit limits.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Validate and review local candidate
+### [x] P02: Validate and review local candidate
 
 Dependencies: P01.
 
@@ -147,7 +149,7 @@ If the lock or tools are inaccessible, record that distinct prerequisite
 blocker rather than substituting another lock or implying a full pass.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Local commits and one independent Review
+#### [x] P02-T02: Local commits and one independent Review
 
 Update README and implementation evidence, commit source/original artifacts,
 then obtain one fresh task-wide independent Review, record its original
@@ -187,6 +189,8 @@ Original critique execution Complete / verdict Revise is preserved in
 
 ## Handoff
 
-P01 and P02-T01 complete. Ready for local implementation commit and the sole
-independent Review under P02-T02. No significant/divergent user decision.
-No second critique.
+All P01/P02 markers complete. Implementation/original evidence committed in
+7ed914c99d384b297a7c2e5c70a07c475ae174f8. Sole independent Review Complete /
+Conformant, no substantive task findings. Final local evidence prepared for
+commit; no source changes after Review. Stop at caller-requested local-only
+endpoint. No second critique, repeat Review, push or approval claim.

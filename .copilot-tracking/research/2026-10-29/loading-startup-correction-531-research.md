@@ -57,9 +57,9 @@ Audit before editing source. Source stays in src. Preserve existing approval bou
 
 | ID | Question | Type | Status |
 | --- | --- | --- | --- |
-| Q1 | How do every helper consumer and overlapping attempts settle status and controls? | depth | open |
-| Q2 | What happens when each index script or helper script on another page fails? | depth | open |
-| Q3 | Which existing validation and pins must change? | straightforward | open |
+| Q1 | How do every helper consumer and overlapping attempts settle status and controls? | depth | answered |
+| Q2 | What happens when each index script or helper script on another page fails? | depth | answered |
+| Q3 | Which existing validation and pins must change? | straightforward | answered |
 
 ## Prior Knowledge Gate
 

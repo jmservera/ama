@@ -14,7 +14,7 @@
 | Phase | Name | Status | Tasks |
 | --- | --- | --- | --- |
 | P01 | Correct lifecycles and regressions | Complete | P01-T01, P01-T02 |
-| P02 | Validate, commit and review | Active | P02-T01, P02-T02 |
+| P02 | Validate, commit and review | Complete | P02-T01, P02-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Correct lifecycles and regressions
@@ -115,4 +115,8 @@ Initial editable setup lacked setuptools; normal isolated pip install succeeded.
 Distribution direct_url metadata verifies all three packages point at this
 worktree. Post-install helper/loader units and all strict checks passed again.
 Original setup and provenance-wrapper failures are retained in changes.
-P02-T02 remains only for commit, sole Review and final evidence.
+P02-T02 complete: candidate/source/original evidence committed in
+7ed914c99d384b297a7c2e5c70a07c475ae174f8. Sole independent Review executed
+Complete / Conformant, no substantive findings. Final bookkeeping is prepared
+for its local evidence commit, with original Review unchanged and no subsequent
+source edits. Task-scoped automatic session stops at explicit caller endpoint.
