@@ -55,7 +55,7 @@ const employeeChat = (() => {
       questionLabel: "Your work question", skillLabel: "Agent skill",
     });
     widget = ui;
-    const { input, select, send, status } = ui;
+    const { input, select, send } = ui;
     input.disabled = true;
     const current = () => widget === ui && me === session && !signal.aborted;
     const deny = () => {
@@ -90,7 +90,7 @@ const employeeChat = (() => {
       const draft = input.value, skill = select.value;
       ui.clearError();
       ui.busy(true);
-      status.textContent = "Asking the assistant.";
+      ui.setStatus("Asking the assistant.");
       ui.message("user", question);
       try {
         if (!tid) {
@@ -110,7 +110,7 @@ const employeeChat = (() => {
           delete input.dataset.caseDirty;
           delete ui.form.dataset.unsaved;
         }
-        status.textContent = "Answer added. Check the sources before relying on it.";
+        ui.setStatus("Answer added. Check the sources before relying on it.");
       } catch (error) {
         if (!current()) return;
         if ([401, 403, 404].includes(error.status)) { deny(); return; }
@@ -121,7 +121,7 @@ const employeeChat = (() => {
     };
     ui.open();
     ui.busy(true);
-    status.textContent = "Loading skills.";
+    ui.setStatus("Loading skills.");
     try {
       const [data, admission] = await Promise.all([
         api("/api/chat/skills", undefined, signal),
@@ -137,7 +137,7 @@ const employeeChat = (() => {
       for (const skill of data.skills) select.append(h("option", { value: skill.id }, `${skill.id}: ${skill.purpose}`));
       input.disabled = false;
       ui.busy(false);
-      status.textContent = "Choose a skill or ask a general work question.";
+      ui.setStatus("Choose a skill or ask a general work question.");
     } catch (error) {
       if (!current()) return;
       if ([401, 403, 404].includes(error.status)) {

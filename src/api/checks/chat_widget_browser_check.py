@@ -159,11 +159,25 @@ def reply_scroll(page: Page, root: str, endpoint: str, audience: str) -> None:
     log = panel.get_by_role("log")
     question = panel.locator("textarea")
     send = panel.get_by_role("button", name="Send", exact=True)
-    for mode in ("older", "sources-older", "sources-bottom", "log-bottom", "follow"):
+    for mode in (
+        "older",
+        "sources-older",
+        "sources-bottom",
+        "log-bottom",
+        "follow",
+        "older-before-loading",
+        "sources-before-loading",
+    ):
         held: list[Route] = []
         page.route(endpoint, lambda route, *, held=held: held.append(route))
         try:
             question.fill(f"Scroll regression {mode}")
+            chosen = question
+            if mode == "follow":
+                if audience == "resident":
+                    expect(panel.locator('[role="status"]')).to_be_empty()
+                log.evaluate("el => { el.scrollTop = el.scrollHeight; }")
+                assert log.evaluate("el => el.scrollHeight > el.clientHeight")
             send.click()
             expect(panel.locator("form")).to_have_attribute("aria-busy", "true")
             page.wait_for_function(
@@ -171,21 +185,41 @@ def reply_scroll(page: Page, root: str, endpoint: str, audience: str) -> None:
                 ".getAttribute('aria-busy') === 'true'"
             )
             assert len(held) == 1
+            if mode == "follow":
+                assert log.evaluate(
+                    "el => Math.abs(el.scrollHeight - el.clientHeight - el.scrollTop) <= 2"
+                ), (audience, "send/status lost bottom-follow intent")
+            elif mode.endswith("before-loading"):
+                if mode == "older-before-loading":
+                    log.evaluate("el => { el.scrollTop = 0; }")
+                else:
+                    chosen = log.locator("summary").last
+                    chosen.focus()
+                    log.evaluate("el => { el.scrollTop = el.scrollHeight; }")
+                before_loading = log.evaluate("el => el.scrollTop")
+            expect(panel.locator(".chat-widget-loading")).to_be_hidden()
+            page.clock.run_for(200)
             expect(panel.locator(".chat-widget-loading")).to_be_visible()
             assert log.evaluate("el => el.scrollHeight > el.clientHeight")
-            chosen = question
-            if mode.startswith("sources"):
+            if mode == "follow":
+                assert log.evaluate(
+                    "el => Math.abs(el.scrollHeight - el.clientHeight - el.scrollTop) <= 2"
+                ), (audience, "loading lost bottom-follow intent")
+            elif mode.endswith("before-loading"):
+                assert abs(log.evaluate("el => el.scrollTop") - before_loading) <= 1
+            elif mode.startswith("sources"):
                 summaries = log.locator("summary")
                 chosen = summaries.first if mode == "sources-older" else summaries.last
             elif mode == "log-bottom":
                 chosen = log
-            chosen.focus()
+            if mode != "follow":
+                chosen.focus()
             focused = chosen.element_handle()
             assert focused is not None
             if mode in ("older", "sources-older"):
                 if mode == "older":
                     log.evaluate("el => { el.scrollTop = 0; }")
-            else:
+            elif mode not in ("follow", "older-before-loading", "sources-before-loading"):
                 log.evaluate("el => { el.scrollTop = el.scrollHeight; }")
             before = log.evaluate("el => el.scrollTop")
             focused_control_visible(page)
@@ -217,7 +251,10 @@ def reply_scroll(page: Page, root: str, endpoint: str, audience: str) -> None:
             focused_control_visible(page)
         finally:
             page.unroute(endpoint)
-    print(f"PASS {audience}: older history, focused Sources/log stay put; bottom reader follows")
+    print(
+        f"PASS {audience}: pre-send bottom follows delayed loading/reply without repositioning; "
+        "older history and focused Sources/log stay put before/after loading"
+    )
 
 
 def employee_stacking(page: Page, out: Path) -> None:
@@ -390,7 +427,10 @@ def shared_ui(page: Page, root: str, endpoint: str, out: Path, audience: str, ax
         expect(send).to_be_enabled()
     assert len(requests) == 4
     close_hover(page, root, audience)
+    page.clock.install(time=datetime(2030, 1, 1, tzinfo=UTC))
+    page.clock.pause_at(datetime(2030, 1, 1, 0, 0, 1, tzinfo=UTC))
     reply_scroll(page, root, endpoint, audience)
+    page.clock.resume()
     page.route(endpoint, answer)
     for name in ("Attach", "Voice"):
         control = panel.get_by_role("button", name=name, exact=True)
@@ -452,8 +492,7 @@ def shared_ui(page: Page, root: str, endpoint: str, out: Path, audience: str, ax
         page.get_by_role("button", name="Chat", exact=True).click()
         expect(question).to_have_value("Draft survives closing")
         expect(log).to_contain_text("answer 4.")
-    page.clock.install(time=datetime(2030, 1, 1, tzinfo=UTC))
-    page.clock.pause_at(datetime(2030, 1, 1, 0, 0, 1, tzinfo=UTC))
+    page.clock.pause_at(page.evaluate("Date.now() + 1000"))
     loading = panel.locator(".chat-widget-loading")
     question.fill("Fast answer")
     send.click()

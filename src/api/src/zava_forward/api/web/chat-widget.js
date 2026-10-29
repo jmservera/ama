@@ -71,18 +71,31 @@ window.ChatWidget = (() => {
       bottom();
     }
     function bottom() { log.scrollTop = log.scrollHeight; }
+    function following() {
+      return log.scrollHeight - log.clientHeight - log.scrollTop <= 1
+        && !log.contains(document.activeElement);
+    }
+    function preserveBottom(change) {
+      const follow = following();
+      change();
+      if (follow) bottom();
+    }
+    function setStatus(text) {
+      preserveBottom(() => { status.textContent = text; });
+    }
     function busy(value) {
       clearTimeout(timer);
-      loading.hidden = true;
+      preserveBottom(() => { loading.hidden = true; });
       if (value && document.activeElement === send && !root.hidden) input.focus();
       send.disabled = value;
       select.disabled = value;
       form.setAttribute("aria-busy", String(value));
-      if (value) timer = setTimeout(() => { if (active) loading.hidden = false; }, 200);
+      if (value) timer = setTimeout(() => {
+        if (active) preserveBottom(() => { loading.hidden = false; });
+      }, 200);
     }
     function message(role, text, { label = "", sources = [], detail = "" } = {}) {
-      const follow = log.scrollHeight - log.clientHeight - log.scrollTop <= 1
-        && !log.contains(document.activeElement);
+      const follow = following();
       const item = node("article", "", { class: `chat-widget-message chat-widget-${role}` });
       item.append(node("strong", role === "user" ? "You" : "Assistant"));
       if (label) item.append(node("small", label, { class: "chat-widget-meta" }));
@@ -118,9 +131,15 @@ window.ChatWidget = (() => {
     });
     return {
       root, launcher, heading, intro, log, form, beforeInput, input, select, send, status, error,
-      node, open, hide, busy, message,
-      fail(text) { error.textContent = text; error.hidden = false; status.textContent = ""; },
-      clearError() { error.textContent = ""; error.hidden = true; },
+      node, open, hide, busy, message, setStatus,
+      fail(text) {
+        preserveBottom(() => {
+          error.textContent = text; error.hidden = false; status.textContent = "";
+        });
+      },
+      clearError() {
+        preserveBottom(() => { error.textContent = ""; error.hidden = true; });
+      },
       focusInput() { if (active && !root.hidden) input.focus(); },
       dispose() {
         active = false;

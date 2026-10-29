@@ -69,7 +69,10 @@ available. Setup and incoming replies never refocus the composer, even while
 chat is visible. Replies, status and inline errors use polite live updates.
 New messages follow the end only when the conversation was already at the
 bottom and focus is outside its history; reading older messages or focusing
-Sources preserves the scroll position. Employee chat sits above embedded map
+Sources preserves the scroll position. Loading, status and error size changes
+preserve that same current bottom-follow intent, including the 200 ms loading
+row; scrolling upward or focusing history during a pending reply stops following.
+Employee chat sits above embedded map
 panes, controls and home summaries, below the account menu. Close chat has a
 readable explicit hover state on both sites. Same-context filter refreshes
 retain the conversation and the launcher's open/close toggle.
@@ -101,7 +104,8 @@ export PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/te
 The shared browser check starts actual local applications with constructed data,
 checks identical asset bytes, multi-turn layout, 199/200ms loading, Enter/IME/
 Shift+Enter, unobscured external keyboard focus (including 320px sign-in and
-short-window launcher), controlled setup/reply focus preservation, errors,
+short-window launcher), controlled setup/reply focus preservation, delayed
+long-reply following from the pre-send bottom without repositioning after loading, errors,
 reduced motion, collapsed
 sources, consent, stale results and dependency recovery. Existing employee and
 resident browser checks retain their session/access/manual-callback assertions.

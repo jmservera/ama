@@ -99,6 +99,91 @@ class ChatWidgetFocusTests(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
+    def test_delayed_reply_preserves_current_follow_intent_across_layout_changes(self) -> None:
+        self.run_node(
+            r"""
+for (const mode of ["follow", "older-before", "older-after", "log-before",
+    "sources-before", "sources-after", "return-bottom"]) {
+  const h = harness();
+  let scheduled = null;
+  h.context.setTimeout = (fn, delay) => { scheduled = {fn, delay}; return scheduled; };
+  h.context.clearTimeout = timer => { if (timer === scheduled) scheduled = null; };
+  const ui = h.context.window.ChatWidget.create({
+    id: "unit", title: "Unit chat", launcher: h.launcher,
+    questionLabel: "Question", skillLabel: "Skill"
+  });
+  const loading = ui.root.children.find(el => el.attrs.class === "chat-widget-loading");
+  let position = 0;
+  Object.defineProperties(ui.log, {
+    clientHeight: {get() {
+      return 300 - (loading.hidden ? 0 : 24)
+        - Math.ceil((ui.status.textContent || "").length / 24) * 24
+        - (ui.error.hidden ? 0 : 48);
+    }},
+    scrollTop: {
+      get() { return Math.min(position, this.scrollHeight - this.clientHeight); },
+      set(value) { position = Math.max(0, Math.min(value, this.scrollHeight - this.clientHeight)); }
+    }
+  });
+  const append = ui.log.append;
+  ui.log.append = function (...items) {
+    append.apply(this, items);
+    this.scrollHeight += 300;
+  };
+  ui.open();
+  ui.input.focus();
+  ui.message("assistant", "Existing overflowing history");
+  ui.message("assistant", "More history");
+  const sources = ui.log.children[0].children.find(el => el.tag === "details").children[0];
+  const atBottom = () => assert.equal(ui.log.scrollTop,
+    ui.log.scrollHeight - ui.log.clientHeight, `${mode}: bottom-follow lost`);
+  const setStatus = text => ui.setStatus ? ui.setStatus(text) : (ui.status.textContent = text);
+  atBottom();
+  ui.busy(true);
+  setStatus("Getting your advice...");
+  ui.message("user", "Delayed question");
+  atBottom();
+  assert.equal(loading.hidden, true, "No loading row before the scheduled delay");
+  assert.equal(scheduled.delay, 200);
+  let chosen = ui.input;
+  function readHistory() {
+    if (mode.startsWith("older") || mode === "return-bottom") ui.log.scrollTop = 40;
+    if (mode === "log-before") chosen = ui.log;
+    if (mode.startsWith("sources")) chosen = sources;
+    chosen.focus();
+  }
+  if (mode.endsWith("before") || mode === "return-bottom") readHistory();
+  let before = ui.log.scrollTop;
+  scheduled.fn();
+  assert.equal(loading.hidden, false);
+  if (mode === "follow" || mode.endsWith("after")) atBottom();
+  else assert.equal(ui.log.scrollTop, before, `${mode}: loading moved history reader`);
+  if (mode.endsWith("after")) readHistory();
+  if (mode === "return-bottom") ui.log.scrollTop = ui.log.scrollHeight;
+  before = ui.log.scrollTop;
+  const follow = mode === "follow" || mode === "return-bottom";
+  setStatus("");
+  ui.message("assistant", "Long reply ".repeat(100));
+  setStatus("Answer added. Check the sources before relying on it.");
+  if (follow) atBottom();
+  else assert.equal(ui.log.scrollTop, before, `${mode}: reply/status moved history reader`);
+  ui.busy(false);
+  assert.equal(loading.hidden, true);
+  assert.equal(scheduled, null, "Completion cancels the loading timer");
+  if (follow) atBottom();
+  else assert.equal(ui.log.scrollTop, before, `${mode}: loading removal moved history reader`);
+  ui.fail("Controlled failure");
+  ui.clearError();
+  if (follow) atBottom();
+  else assert.equal(ui.log.scrollTop, before, `${mode}: error layout moved history reader`);
+  assert.equal(h.document.activeElement, chosen);
+  ui.busy(true);
+  ui.dispose();
+  assert.equal(scheduled, null, "Disposal cancels the loading timer");
+}
+"""
+        )
+
     def test_append_follows_only_bottom_readers_without_history_focus(self) -> None:
         self.run_node(
             r"""

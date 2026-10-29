@@ -221,8 +221,7 @@
     question.id = "assistant-question";
     question.setAttribute("aria-describedby", "assistant-notice resident-chat-error");
     ui.intro.appendChild(node("p", "Ask about your case, documents, forms or planned improvements. Do not enter sensitive details. Typed messages are not sent to AI or kept as model conversation memory."));
-    var status = ui.status;
-    status.id = "assistant-status";
+    ui.status.id = "assistant-status";
     var result = ui.log;
     result.id = "assistant-result";
     var callbacks = node("button", "Use the manual callback form");
@@ -258,14 +257,14 @@
       var current = generation;
       busy = true;
       ui.busy(true);
-      status.textContent = "Getting your advice\u2026";
+      ui.setStatus("Getting your advice\u2026");
       ui.message("user", text);
       var body = { question: text, use_record: true };
       api("/demo/assistant", { method: "POST", body: JSON.stringify(body) })
         .then(function (response) {
           if (current !== generation || !signedIn) return;
           if (response.status === 401) { sessionExpired("Please sign in again."); return; }
-          status.textContent = "";
+          ui.setStatus("");
           if (!response.ok) {
             ui.fail(response.body.error || "The assistant is not available. Try again or ask your housing officer.");
             return;
@@ -303,7 +302,7 @@
       ui.clearError();
       result.textContent = "";
       question.value = "";
-      status.textContent = consent.checked ? "" : "Record use stopped. Previous answers cleared.";
+      ui.setStatus(consent.checked ? "" : "Record use stopped. Previous answers cleared.");
     });
     return {
       setSession: function (value) {
@@ -316,7 +315,7 @@
         consent.removeAttribute("aria-invalid");
         question.value = "";
         result.textContent = "";
-        status.textContent = "";
+        ui.setStatus("");
         ui.busy(false);
         ui.clearError();
         hide(false);
