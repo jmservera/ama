@@ -10,7 +10,7 @@ Research: .copilot-tracking/research/2026-10-29/case-view-ux-552-research.md.
 | Phase | Status | Tasks |
 | --- | --- | --- |
 | P01 | Complete | P01-T01, P01-T02 |
-| P02 | Local commit pending | P02-T01 complete, P02-T02 Review executed |
+| P02 | Local execution complete; Review Partial / Residual work | P02-T01, P02-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Compact case UI
@@ -97,5 +97,7 @@ Final assertion-expanded run passed at /tmp/case-552-ui-complete-20261029.
 Chromium 156.0.8078.4/Playwright 1.64.0; 54 unittest tests, Node syntax,
 Ruff and focused mypy passed. Independent Review executed Partial / Residual
 work; RV-001 external-evidence access routes to a distinct later research action.
-No source defects identified, no repeated Review. Local commit remains.
+No source defects identified, no repeated Review. Source and original evidence
+committed locally as e130e33f with Refs #552, no push. All task execution markers
+complete; independent rendered acceptance remains open under RV-001.
 No significant unanswered decisions; original critique retained.

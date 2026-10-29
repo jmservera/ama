@@ -2,8 +2,8 @@
 # RPI Changes: Compact case view
 
 Task ID: 552. Task slug: case-view-ux-552. Date: 2026-10-29.
-Scope: full approved plan. Status: implementation and validation complete;
-one independent Review executed Partial / Residual work. Local commit remains.
+Scope: full approved plan. Status: locally committed implementation and
+validation complete; one independent Review executed Partial / Residual work.
 
 ## Plan and Decisions
 
@@ -166,7 +166,7 @@ docs/presentations is absent. This is ordinary evidence-backed local judgment.
 
 ## Remaining Work and Limitations
 
-Local commit remains. Full publication gate, hosted checks,
+Full publication gate, hosted checks,
 human/AT/user acceptance and cross-browser checks are not claimed. A full
 publication gate would include prohibited az tooling and is neither run nor
 waived; no publication is requested. No push, az, Azure modifications or rubric
@@ -201,3 +201,19 @@ Cross-browser/AT/user acceptance and wider Fluent adoption remain separate.
 The local source/test/documentation slice is ready to persist, not approved for
 publication. A local commit is explicitly owner-authorized and is not a push,
 PR creation, Azure change or acceptance of the unresolved review evidence gap.
+
+## Local Commit and Final Handoff
+
+Implementation plus original dated RPI evidence committed as `e130e33f`
+(`feat(api): compact case journey and attach section tabs`). Author and committer
+both use the authenticated GitHub account's privacy-safe address, and the
+requested Copilot co-author trailer is present. The commit uses Refs #552.
+Worktree was clean immediately afterward. No push or PR was performed.
+
+P01/P01-T01/P01-T02/P02/P02-T01/P02-T02 execution is complete for this bounded
+local task; this does not promote the Partial Review to completed independent
+acceptance. This closeout records final plan/detail/state status in a separate
+documentation-only commit, preserving the original Review and source boundary.
+RV-001 remains open and routed to later evidence work; no closure verification
+or second Review is performed here. No full publication gate, hosted approval,
+human approval, Azure operation or rubric-score change is claimed.

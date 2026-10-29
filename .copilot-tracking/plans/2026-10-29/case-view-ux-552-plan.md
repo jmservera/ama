@@ -28,8 +28,10 @@ or establish full WCAG/assistive-technology acceptance.
 
 ### Unresolved Decisions or Blockers
 
-None for implementation. Publication is excluded; a complete publication
-gate is not claimed or bypassed by focused local validation.
+None for implementation. Final local execution is complete; independent Review
+remains Partial / Residual work because of RV-001, the reviewer's external
+rendered-evidence access limitation. Publication is excluded; a complete
+publication gate is not claimed or bypassed by focused local validation.
 
 ## User Decisions and Requirements
 
@@ -94,8 +96,10 @@ docs/reference/research/ux/.
 
 Plan and details paths above are canonical. Changes record:
 .copilot-tracking/changes/2026-10-29/case-view-ux-552-changes.md.
-Research Ready; final candidate ready for critique. Owner explicitly directs
-the remaining ordered phases, without open-ended automatic-session activation.
+Research Ready; one original Revise critique directly dispositioned. Source and
+local validation committed as e130e33f; one independent Review remains
+Partial / Residual work under RV-001. Owner-directed bounded phases have
+executed without open-ended automatic-session activation.
 
 ## Phase Checklist
 
@@ -115,7 +119,7 @@ Implement labelled icons, one-line summaries, native popovers and wrapping
 attached tablist with bounded active panel scrolling. Depends on P01-T01.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Evidence and independent Review
+### [x] P02: Evidence and independent Review
 
 <!-- rpi:task id=P02-T01 -->
 #### [x] P02-T01: Validate and document
@@ -124,7 +128,7 @@ Run focused unittest/Node and real local Chromium desktop/narrow/touch checks.
 Update README and changes evidence. Depends on P01-T02.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Review and commit locally
+#### [x] P02-T02: Review and commit locally
 
 Fresh independent rpi-review, preserve its original outcome, record unresolved
 findings rather than repeat Review. Resolve GitHub identity, local privacy-safe
@@ -171,6 +175,6 @@ These are compatible verification corrections, not significant owner decisions.
 ## Handoff
 
 One critique and one independent Review have executed. Implementation and local
-validation complete; Review Partial / Residual work, RV-001 routed to later
-evidence work. Persist locally with Refs #552, no push. P02-T02/P02 completion
-wait only on the owner-authorized local commit, not a second Review.
+validation committed as e130e33f with Refs #552, no push. All bounded task markers
+are complete for execution; Review remains Partial / Residual work and RV-001
+routes to later evidence work, not a second Review or acceptance claim.
