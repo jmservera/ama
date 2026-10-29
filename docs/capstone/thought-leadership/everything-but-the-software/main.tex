@@ -1115,6 +1115,77 @@ coordinator to stop at checkpoints, review what had been built, exercise the
 functionality and refactor. The outcome of that instruction is outside the
 case's evaluation boundary.
 
+\subsection{Dated repository follow-up: 29 October}\label{sec:currentstatus}
+
+The original case ends on 24~October; it is not silently extended by later
+repository activity. A separate refresh on 29~October, captured between
+17:38:52 and 17:39:47~UTC, queries GitHub metadata and measures the default
+branch at \texttt{9b74ac8d}. This is a repository-status observation, not a
+new deployment test or an experimental result.
+Table~\ref{tab:currentmetrics} summarises the snapshot.
+
+\begin{table}[!htbp]
+\centering\small
+\caption{Repository follow-up captured on 29 October 2026. GitHub counts
+cover all repository branches; document and log measures use pinned
+default-branch files. Counts and scores do not establish accepted
+behaviour.}\label{tab:currentmetrics}
+\begin{tabularx}{\textwidth}{@{}L{5.0cm}Y@{}}
+\toprule
+Measure & Current observation \\
+\midrule
+Merged pull requests & 314 overall; 262 since 15 Oct \\
+Post-case merges & 79 after the pinned case integration;
+75 during 25--29 Oct \\
+Issue states & 211 issues: 136 open and 75 closed \\
+Other PR states & 11 open; 19 closed without merging \\
+Current log entries & 458 dated entries; 69,352 entry words;
+207 lexical hedge matches (2.98 per 1,000 entry words) \\
+Whole-file document sizes & Index 12,535; log 69,465;
+BRD 43,410; PRD 48,094 words \\
+Combined document volume & 173,504 whole-file words across
+the index, log, BRD and PRD \\
+Retained automated rubric score & 77/100; implementation
+completeness remains 5/5, on the scorer's recorded commit \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The merge boundary matters. The pinned case commit
+\texttt{29c6b51} has a Git timestamp of 24~October at 16:19:38~UTC,
+while GitHub records its pull request, \#445, as merged at 16:19:39.
+Counting from 15~October through that integration reproduces the reported
+183. Stopping at the Git timestamp instead gives 182; including the whole
+24~October UTC calendar day gives 187. The historical count is therefore
+retained with its integration boundary made explicit, rather than replaced
+by the whole-day count. Git commit times, PR merge times and retrieval
+times are different measurements.
+
+Using the original first-parent integration heuristic and path classifier,
+the period after the pinned case commit through \texttt{9b74ac8d} contains
+71 integrations. Product-source lines added/removed are 11,907/844;
+tests 31,126/478; documentation 17,338/558; and tracking artefacts
+181,261/34. Tracking additions are 15.22 times product-source additions in
+this follow-up. These are editing volumes, not a quality trend; the 71
+first-parent integrations are not the 79 GitHub merges across all branches.
+
+The log counts parse the current file using the original entry and lexical
+rules. Entry words exclude its preamble; whole-file counts include it.
+Earlier-dated records in the current file need not match the earlier
+pinned version, so differences are not labelled newly appended entries.
+The combined document volume is not a measurement of material actually
+loaded into any agent session.
+
+The retained score was recorded on 29~October at 17:12:55~UTC for
+\texttt{0717be24}, not freshly recomputed for the current default-branch
+commit. Its 5/5 completeness rating remains an automated repository
+assessment, not acceptance of a deployed user journey.
+No live sign-in or end-to-end task was executed for this refresh;
+neither restored usability nor continued failure on 29~October is established.
+The raw selected metadata, document hashes, daily counts, classified churn
+and score provenance are retained in
+\nolinkurl{anc/repository-metrics-2026-10-29.json}.
+
 % ===========================================================================
 \FloatBarrier
 \section{Five candidate mechanisms}\label{sec:mechanisms}
@@ -2254,10 +2325,14 @@ improving task resolution. Code, tests and instructions are all inherited
 state, but they require different measures of correctness and burden.
 
 The exploratory testbed supplies a traceable delivery failure within this wider problem:
-183 merged pull requests did not restore the owner's usable replacement.
+183 merged pull requests did not restore the owner's usable replacement
+within the original observation window.
 The case's five candidate mechanisms frame possible links among accumulated
 obligations, lost lessons, completion proxies and insufficient product-use feedback. Migration and
 deployment dependencies remain central to explaining that particular failure.
+The separately dated repository follow-up records 262 merged pull requests
+since 15~October but no fresh deployed-journey acceptance
+(Section~\ref{sec:currentstatus}).
 
 The planned twelve-trajectory pilot asks what scheduled consolidation leaves
 for later work. It separates final behavioural coverage from retained-contract
@@ -2310,7 +2385,11 @@ actual submission venue's policy, which has not been assessed here.
 \section*{Data availability}
 The repository analysed is public at
 \url{https://github.com/jmservera/ama}; this report uses commit
-\texttt{29c6b512f5e68733bb2cc1882343db39f5eb2cad}. The log-measurement and
+\texttt{29c6b512f5e68733bb2cc1882343db39f5eb2cad}. The separate 29~October
+repository follow-up pins
+\texttt{9b74ac8daaec2a880172e43161b37ac7f2c3f801}; its selected API records,
+retrieval interval, merge-window definitions, document hashes and metrics are
+in \nolinkurl{anc/repository-metrics-2026-10-29.json}. The log-measurement and
 figure-generation scripts are provided with the source. The ancillary
 file \nolinkurl{anc/case-evidence-matrix.json} indexes O1--O5, including
 reported locators and missing release/execution links; it is not newly

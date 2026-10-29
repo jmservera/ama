@@ -8,7 +8,8 @@ Working title: *Everything but the Software: Feature-Driven Decay in an Agentic 
 
 ## Current Status
 
-The editorial and visual revision of 29 October is the latest source record.
+The editorial/visual revision and dated repository-metrics refresh of
+29 October are the latest source record.
 The owner selected the existing twelve trajectories as pilot/estimation work,
 not seven stable hypothesis tests. The pilot has not started, no experimental
 results are reported, and launch remains blocked by the documented runner,
@@ -31,18 +32,63 @@ twelve-feature sequence to the actual ten-feature suite and does not adopt
 its unsupported guarantee of hidden-test inaccessibility.
 
 The revised source compiles with session-local Tectonic 0.17.0. The delivered
-46-page PDF replaces the stale package PDF; compilation/log checks, contact
-sheets and full-size conceptual-figure pages were inspected. These are
+47-page PDF includes the metrics refresh; its log, all-page text bounds and
+new metrics page were checked. The unchanged conceptual figures retain the
+earlier full-size visual inspection and source/export validation. These are
 engineering and layout checks, not independent scientific or author approval.
 No experiment was run, private study material amended or external submission
 made. The arXiv bundle has not been refreshed.
 The owner selected local-only delivery pending publication clearance; no
-commit, push or pull request was made for this revision.
+commit, push or pull request was made by the assistant for the editorial
+revision. The owner subsequently committed that work and opened
+[PR #555](https://github.com/jmservera/ama/pull/555). This metrics follow-up
+continues on its existing branch and remains local; it does not authorize
+external manuscript publication.
 
 The [dated review and complete pending checklist](./anc/review-2026-10-29.md)
 records findings, evidence coverage, applied changes, launch blockers and
 deferred work. It supersedes earlier readiness summaries, not the historical
 evidence or original [editorial critique](./critique.md).
+
+## Repository Metrics Refresh 29 October
+
+The [retained snapshot](./anc/repository-metrics-2026-10-29.json) records
+GitHub API retrieval from 17:38:52 to 17:39:47 UTC and document/churn
+measurements at `origin/main` commit
+`9b74ac8daaec2a880172e43161b37ac7f2c3f801`. It excludes the continuing
+paper branch's unmerged edits from default-branch metrics.
+
+| Metric | Captured status |
+| --- | --- |
+| Merged PRs | 314 overall; 262 since 15 October |
+| Post-case merges | 79 after the pinned case integration; 75 on 25-29 October |
+| Issues | 211 total: 136 open and 75 closed |
+| Other PR states | 11 open; 19 closed without merging |
+| Current log | 458 dated entries; 69,352 entry words; 207 hedge matches |
+| Whole-file words | Index 12,535; log 69,465; BRD 43,410; PRD 48,094 |
+| Combined document volume | 173,504 words, not measured session input |
+| Retained automated score | 77/100; A4 implementation completeness 5/5 |
+
+The historical 183 merged-PR count is reconciled, not silently replaced.
+Its pinned commit is timestamped 24 October at 16:19:38 UTC, while PR #445
+records that same commit's integration at 16:19:39. The exact Git-time
+cutoff gives 182; counting through the integration gives 183; the whole
+15-24 October UTC calendar window gives 187. The snapshot retains every
+window and selected PR metadata so the distinction can be checked.
+
+The post-case first-parent heuristic counts 71 integrations, separately
+from the 79 GitHub merges across branches. Its source/test/tracking
+additions are 11,907/31,126/181,261 lines, and tracking/source additions
+are 15.22. No complexity, live usability or cost outcome was measured.
+The score is the retained 17:12:55 UTC assessment of `0717be24`, not a new
+assessment of `9b74ac8d` or proof of a working deployment.
+The main PDF's dated follow-up, conclusion and data-availability statement
+carry these boundaries. Original case tables, figures, pilot and
+unresolved author decisions remain unchanged.
+The refreshed manuscript has approximately 17,450 main-body words and
+96 matching bibliography entries. Snapshot consistency checks, all four
+paper/diagram regressions and the structural checker pass. No live journey,
+experiment or hosted acceptance check was run.
 
 ## Editorial and Visual Revision 29 October
 
