@@ -73,7 +73,7 @@ requires it, no test skips invented, clean final commit and no push.
 ### P02: Validate and prepare local handoff
 
 * [x] P02-T01: Run project lint/types and relevant unittest regressions.
-* [ ] P02-T02: Reconcile evidence; commit implementation and original RPI evidence.
+* [x] P02-T02: Reconcile evidence; commit implementation and original RPI evidence.
 
 ## Test Ownership and Coverage Lock
 
@@ -104,4 +104,5 @@ Finance/Board approvals remain distinct existing work, not new rebase tasks.
 Details: .copilot-tracking/details/2026-10-29/finance-96-main-rebase-phase-details.md.
 Critique: .copilot-tracking/reviews/plans/2026-10-29/finance-96-main-rebase-plan-critique.md.
 Changes: .copilot-tracking/changes/2026-10-29/finance-96-main-rebase-changes.md.
-Readiness: implementation-ready after single independent critique Pass.
+Readiness: implementation complete; local evidence committed as 50c5c4b6.
+Ready for the single independent integration Review, not publication approval.

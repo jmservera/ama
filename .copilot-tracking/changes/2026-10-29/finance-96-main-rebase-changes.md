@@ -8,8 +8,9 @@ Details: .copilot-tracking/details/2026-10-29/finance-96-main-rebase-phase-detai
 
 ## Execution Status
 
-P01-T01/P01-T02/P02-T01 complete; P02-T02 evidence commit pending.
-Independent critique Complete / Pass, no findings.
+Full plan P01/P02 complete. Independent critique Complete / Pass, no findings.
+Implementation/evidence committed as 50c5c4b6; ready for single independent
+integration Review. No full PR acceptance claim.
 
 ## Commands and Results
 
@@ -89,6 +90,10 @@ Independent critique Complete / Pass, no findings.
 * git ls-remote origin refs/heads/docs/finance-96: remote unchanged at
   373ab1924b2a54338e09aa1693b969589dfe1688.
 * gh api user --jq '{id,login}': authenticated identity reverified before commit.
+* git add <six exact current-task artifacts>; git diff --cached --check;
+  git diff --cached --stat; printf <Conventional Commit plus Copilot trailer>
+  | git commit -F -: passed, 50c5c4b6
+  docs(finance): record main rebase validation (Refs #96).
 
 ## Plan and Evidence Reconciliation
 
@@ -116,7 +121,44 @@ Full publication gate/receipt and fresh hosted CI are not claimed.
 
 ## Remaining Work
 
-P02-T02 local evidence commit; independent post-implementation Review and
-local final handoff. No local test blocker remains. Hosted rubric budget,
+Independent post-implementation Review and local final handoff.
+No local test blocker remains. Hosted rubric budget,
 publication receipt and original Finance/Board/Review boundaries remain
 external or inherited, not newly solved by this rebase.
+
+## Parent Closeout After the Single Review
+
+Review execution Complete; outcome Conformant for bounded local integration
+only, no new findings. Record:
+.copilot-tracking/reviews/logs/2026-10-29/finance-96-main-rebase-review.md.
+Independent checks verified ancestry, range-diff, main-owned files, original
+evidence bytes, main log prefix, README sequence, routes and typing blocks.
+The reviewer attributed the exact parent test/lint/type results rather than
+claiming a second execution. No correction/re-review loop occurred.
+
+Original finance Review remains Not accepted with RV-001/002 open. Actual
+Finance/template/rules and Board OD-12/15 approvals remain unavailable.
+No whole-issue, whole-PR, financial, human or live acceptance is inferred.
+
+Final bookkeeping records task completed, automatic session running at
+Follow-up, no child selected. Ranked handoff: coordinator publication/fresh CI;
+separate RV-001 source-disclosure correction; separate RV-002 freshness
+diagnostic correction; actual human Finance/Board evidence. Stop/manual
+selections remain available to the owner; noninteractive execution does not
+select any later work. No push performed, Azure resources unchanged.
+
+### Closeout Commands and Scope
+
+* git status --short; git diff --stat: only current dated task metadata and
+  the one new Review were pending after independent assessment.
+* git merge-base --is-ancestor origin/main HEAD; protected-path git diff
+  --exit-code; git diff --check; python -m json.tool <current state>:
+  passed after Review.
+* gh api user --jq '{id,login}': authenticated identity reverified for closeout.
+* The final Conventional Commit records only task metadata and the Review,
+  with Refs #96 and the required final Copilot trailer. Source/test/document
+  integration content is unchanged from the assessed candidate 50c5c4b6.
+* No full API discovery, full local publication gate, SQL Server/browser/
+  image scan, gate receipt, remote scoring, hosted rerun, Azure operation or
+  push was run or claimed. The no-push handoff does not waive later publication
+  gates, exact-head assessment or hosted/human approval.

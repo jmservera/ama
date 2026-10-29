@@ -3,8 +3,8 @@
   "task_slug": "finance-96-main-rebase",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-29/finance-96-main-rebase-research.md",
@@ -12,7 +12,7 @@
     "details": ".copilot-tracking/details/2026-10-29/finance-96-main-rebase-phase-details.md",
     "critique": ".copilot-tracking/reviews/plans/2026-10-29/finance-96-main-rebase-plan-critique.md",
     "changes": ".copilot-tracking/changes/2026-10-29/finance-96-main-rebase-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/logs/2026-10-29/finance-96-main-rebase-review.md"
   },
   "confirmed_decisions": [
     {
@@ -34,12 +34,53 @@
       "decision": "Rebase completed onto 356a3cfbaa2cd63a6fbf80e87e11a29cacaaf4c7; six additive conflicts resolved; local core/API lint, format, mypy and selected tests passed",
       "status": "recorded",
       "evidence": ".copilot-tracking/changes/2026-10-29/finance-96-main-rebase-changes.md; core 209 tests with 54 optional skips, API 28 tests with no skips"
+    },
+    {
+      "decision": "Single independent post-implementation Review executed Complete; outcome Conformant only for bounded local integration; no new findings",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/finance-96-main-rebase-review.md; candidate 50c5c4b6 plus explicitly fingerprinted metadata; no whole-PR or publication approval"
     }
   ],
-  "blockers": [],
+  "blockers": [
+    {
+      "id": "publication",
+      "summary": "Fresh hosted CI and remote mergeability not established; no push authorized; full publication receipt absent; historical rubric AIC guardrail failed",
+      "resolution": "Coordinator owns separately authorized publication gate, receipt verification, push and fresh hosted checks; no workflow bypass"
+    },
+    {
+      "id": "inherited-finance",
+      "summary": "Original finance RV-001/002 and actual Finance/Board approval blockers remain unchanged",
+      "resolution": "Separately authorized feature work and actual versioned human financial decisions; local integration pass is not acceptance"
+    }
+  ],
   "next_action": {
-    "phase": "Implement",
-    "action": "Commit dated implementation evidence, then transition to the one independent Review"
+    "phase": "Follow-up",
+    "action": "Coordinator handoff: branch remains unpushed; publication and later work require separate authorization; no child task selected"
   },
-  "prioritized_follow_ups": null
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator publication and fresh hosted CI",
+      "rationale": "Direct next handoff for this bounded task; local conflict resolution and requested checks are complete, remote status cannot update without publication",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/finance-96-main-rebase-review.md FU-PUBLICATION"
+    },
+    {
+      "rank": 2,
+      "task": "Separately implement inherited RV-001 missing-source historical disclosure control",
+      "rationale": "Existing bounded implementation finding; source-disclosure correctness takes priority over diagnostic precision",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/finance-96-98-99-review.md RV-001"
+    },
+    {
+      "rank": 3,
+      "task": "Separately implement inherited RV-002 freshness-qualified conflict alternatives",
+      "rationale": "Existing bounded implementation finding; prevents obsolete candidates becoming current conflict diagnostics",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/finance-96-98-99-review.md RV-002"
+    },
+    {
+      "rank": 4,
+      "task": "Obtain actual Finance/template and Board OD-12/15 approvals",
+      "rationale": "Essential financial authority but human-evidence dependent; no synthetic input or agent decision can substitute",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/finance-96-main-rebase-review.md FU-FINANCE / FU-BOARD"
+    }
+  ]
 }

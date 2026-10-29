@@ -60,7 +60,7 @@ exact-head publication assessment and hosted approval remain separate.
 Final read-only checks: clean worktree, ancestor check, branch, commit/trailer,
 remote ref unchanged. If main moves, report the exact reviewed base honestly.
 
-Pre-Review reconciliation: all implementation and validation complete;
-P02-T02 local evidence commit is the remaining implementation bookkeeping
-operation. Independent Review assesses that committed integration candidate.
+Pre-Review reconciliation: P01/P02 complete; implementation and dated original
+evidence committed as 50c5c4b6. Independent Review assesses that committed
+integration candidate plus the explicit marker/state reconciliation.
 Review findings route to follow-up work, not another fix/Review loop.
