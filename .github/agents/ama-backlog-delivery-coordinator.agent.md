@@ -121,8 +121,10 @@ open-issue count). Decide linking per PR before it merges, not afterwards:
 * Map every PR to the issues it delivers and compare each issue's criteria with
   the PR's reviewed evidence. When the PR proves every remaining criterion of
   an issue, put `Closes #N` (one keyword per issue, GitHub keyword syntax) in the
-  PR description so the merge closes it, and tick the criteria in the same step.
-  Use `Refs #N` only for issues the PR leaves partly unmet, and name the unmet
+  PR description so the merge closes it, and tick the criteria only after the
+  PR merges. A closing keyword works only for a PR that targets the default
+  branch; for a stacked child PR into a parent topic use `Refs #N` and close the
+  issue by hand once the work reaches `main`. Use `Refs #N` only for issues the PR leaves partly unmet, and name the unmet
   criteria. Never write a closing keyword, even negated, for an unmet issue.
 * Epics close only when every child is closed or its criteria are proven.
 * Run a closure audit at the start of every run and after every wave: list open
