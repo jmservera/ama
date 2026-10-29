@@ -7900,3 +7900,23 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   representation pending because ranking has no contact input.
 * Ranking, runtime and the unapproved status are unchanged. All six #222
   criteria remain unmet.
+
+## [2026-10-28] query | Whole-project Responsible AI review
+
+* Evidence: added [project RAI synthesis](./research/rai/project-rai-review.md)
+  and dated six-phase artifacts under
+  `.copilot-tracking/rai-plans/2026-10-28-zava-forward-project/`; updated the
+  knowledge-base index. Repository-only review covers both sites, five
+  bounded assistants, resident/employee chat, briefing, IoT, data and
+  infrastructure at `9bfed51863b05a25e9939d82504c576524688e14`.
+* Evidence: retained prior findings and exposed hazard-language limits,
+  divergent chat routes/no-AI scope, consent/retention distinctions,
+  Unknown-support ordering, synthetic/provenance limits, sensor-document
+  drift and unlocked-retention wording. Open PRs remain candidates, not fixes.
+* Hypothesis: twelve proposed backlog items reuse existing issue references;
+  no GitHub issues, source edits, private dataset/secrets reads or Azure
+  actions. Unknown: qualified approval, legal currentness, representative
+  outcomes and human/accessibility acceptance.
+* Evidence: mandatory complete publication gate includes `az bicep` commands
+  forbidden by the task; no passing complete receipt or publication waiver is
+  claimed. The dated assessment records validation/publication limitations.
