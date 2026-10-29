@@ -7,6 +7,7 @@ import json
 import os
 import unittest
 import urllib.error
+from unittest.mock import patch
 
 from zava_forward.core import projection
 import chat_fixture  # src/agents/tests, on PYTHONPATH until M5
@@ -28,6 +29,9 @@ STAFF = [r for r in ROLES if r != projection.CONTRACTOR]
 class ChatIsolationTests(Matrix):
     @classmethod
     def setUpClass(cls):
+        cls.admission = patch("zava_forward.api.server.chat_admission", return_value=None)
+        cls.admission.start()
+        cls.addClassCleanup(cls.admission.stop)
         super().setUpClass()
         cls.saved = {k: os.environ.get(k) for k in list(APPROVED) + ["CHAT_BREAKGLASS_REF", "CHAT_BREAKGLASS_ROLES"]}
         os.environ.update(APPROVED)
@@ -41,7 +45,10 @@ class ChatIsolationTests(Matrix):
     def setUp(self):
         self.prompts, self.reply = [], "Stage is Survey."
         self.store.ai.endpoint = "http://x"
-        self.store.ai._chat = lambda d, system, user, **k: self.prompts.append(user) or self.reply
+        def provider(system, prompt, *args):
+            self.prompts.append(prompt)
+            return dict(outcome="returned", text=json.dumps(dict(answer=self.reply, citations=["ZF-1/stage"])))
+        self.store.ai.evidence = provider
         self.store.data.pop("chat_threads", None)
         self.store.data.pop("chat_memory", None)
         self.cks = {r: self.session(self.email(r)) for r in ROLES}
@@ -88,7 +95,7 @@ class ChatIsolationTests(Matrix):
         self.assertEqual(self.api(a, f"/api/chat/threads/{tid}/delete", {})[0], 200)
 
     def test_every_role_against_every_chat_endpoint(self):
-        endpoints = [("/api/chat/threads", None), ("/api/chat/threads", {"case_id": "ZF-1"}), ("/api/chat/threads/CT-x", None),
+        endpoints = [("/api/chat/status", None), ("/api/chat/threads", None), ("/api/chat/threads", {"case_id": "ZF-1"}), ("/api/chat/threads/CT-x", None),
                      ("/api/chat/threads/CT-x/messages", {"content": "x"}), ("/api/chat/threads/CT-x/archive", {}),
                      ("/api/chat/threads/CT-x/delete", {}), ("/api/chat/memory", None), ("/api/chat/memory", {"content": "x"}),
                      ("/api/chat/memory/erase", {}), ("/api/chat/memory/opt-in", {}), ("/api/chat/memory/MEM-x/delete", {}), ("/api/chat/memory/global", {"enabled": True}), ("/api/chat/breakglass", {"target": "u1@example.test", "purpose": "investigating a report"}),
@@ -119,7 +126,7 @@ class ChatIsolationTests(Matrix):
         self.prompts.clear()
         self.api(b, f"/api/chat/threads/{tb}/messages", {"content": "What stage is it?"})
         joined = "\n".join(self.prompts)
-        self.assertIn("B-MEMORY-CANARY", joined)
+        self.assertNotIn("B-MEMORY-CANARY", joined)  # Cited panel does not activate memory.
         for forbidden in ("A-MEMORY-CANARY", "A-THREAD-CANARY", REASON, PHONE, "Quentin", "private note"):
             self.assertNotIn(forbidden, joined)
         self.prompts.clear()
@@ -143,7 +150,9 @@ class ChatIsolationTests(Matrix):
     def test_memory_lifecycle_gates_the_prompt(self):
         pm, role = "Retrofit Programme Manager", "Quality Inspector"
         tid = self.thread(role, task=self.TASK)
-        ask = lambda: (self.prompts.clear(), self.api(role, f"/api/chat/threads/{tid}/messages", {"content": "hi"}), "\n".join(self.prompts))[2]
+        # Memory remains testable at its existing isolated assembly boundary,
+        # but neither HTTP turn route activates it before the human decision.
+        ask = lambda: ChatIsolation(self.store).build_prompt(self.store.staff[self.email(role)], tid, "hi")[2]
         self.api(role, "/api/chat/memory/opt-out", {})
         self.assertEqual(self.api(role, "/api/chat/memory", {"content": "M-CANARY", "task": self.TASK})[0], 403)
         mid = self.remember(role, "M-CANARY")[1]["id"]
@@ -211,7 +220,7 @@ class ChatIsolationTests(Matrix):
             self.assertEqual(prompt.count("UNTRUSTED>>"), prompt.count("<<UNTRUSTED"))
             self.assertEqual(neutralise(payload).count("UNTRUSTED>>") + neutralise(payload).count("<<UNTRUSTED"), 0)
             if "tool_call" in payload:
-                self.assertTrue(d["withheld"], payload)
+                self.assertIn(d["kind"], ("withheld", "refused"), payload)
             self.assertEqual(d["label"], "AI suggestion, not approved")
         self.store.cases["ZF-1"]["contacts"][0]["outcome"] = json.loads(before_cases)["ZF-1"]["contacts"][0]["outcome"]
         self.assertEqual(json.dumps(self.store.cases, sort_keys=True, default=str), before_cases)

@@ -388,6 +388,7 @@ class RegulatoryChat:
                             thread_id=tid,
                             seq=number,
                             role=role,
+                            actor_role=str(user["role"]),
                             content=content,
                             evidence=refs,
                             model="offline-extractive",
@@ -498,7 +499,15 @@ class RegulatoryChat:
         )
         repo.insert_thread(inbox)
         for i, original in enumerate((question, selected), 1):
-            repo.add_message(dict(original, thread_id=inbox_id, seq=i, created_at=now))
+            repo.add_message(
+                dict(
+                    original,
+                    actor_role=original.get("actor_role", ""),
+                    thread_id=inbox_id,
+                    seq=i,
+                    created_at=now,
+                )
+            )
         receipt = dict(
             referred_turn=seq,
             owner=OWNER,
@@ -519,6 +528,7 @@ class RegulatoryChat:
                 thread_id=thread["id"],
                 seq=fresh["message_count"] + 1,
                 role="assistant",
+                actor_role=str(user["role"]),
                 content=encode(receipt),
                 evidence=[],
                 model="offline-extractive",

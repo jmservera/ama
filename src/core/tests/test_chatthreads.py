@@ -49,6 +49,18 @@ class ChatBehaviour:
         self.assertEqual(got["messages"][1]["task_version"], t["task_version"])
         self.assertEqual(got["message_count"], 2)
 
+    def test_messages_persist_the_role_of_the_asking_actor_after_restart(self):
+        t = self.thread()
+        role_b = dict(SAM, role="Retrofit Coordinator")
+        for actor, text in ((SAM, "A first"), (role_b, "B first"), (SAM, "A second")):
+            self.store.chat_add_message(actor, t["id"], "user", text)
+        again = self.make_store(self.tmp.name)
+        self.addCleanup(getattr(again, "close", lambda: None))
+        messages = again.chat_resume(SAM, t["id"])["messages"]
+        self.assertEqual([m["actor_role"] for m in messages],
+                         [SAM["role"], role_b["role"], SAM["role"]])
+        self.assertEqual([m["content"] for m in messages], ["A first", "B first", "A second"])
+
     def test_list_archive_and_delete_own_threads(self):
         a, b = self.thread(), self.thread()
         self.assertEqual({t["id"] for t in self.store.chat_list_threads(SAM)}, {a["id"], b["id"]})
@@ -157,6 +169,19 @@ class SqlChatTests(ChatBehaviour, unittest.TestCase):
         self.assertTrue({"chat_thread", "chat_message", "audit"} <= tables)
         self.assertEqual(raw.execute("SELECT COUNT(*) FROM audit WHERE detail LIKE ?", ("%" + SECRET + "%",)).fetchone()[0], 0)
         self.assertEqual(raw.execute("SELECT COUNT(*) FROM chat_message WHERE content=?", (SECRET,)).fetchone()[0], 1)
+
+    def test_legacy_message_role_migration_is_unknown_and_idempotent(self):
+        t = self.thread()
+        self.store.chat_add_message(SAM, t["id"], "user", "legacy")
+        self.store.db.execute("ALTER TABLE chat_message DROP COLUMN actor_role")
+        again = SqlStore(*base.seed(self.tmp.name))
+        self.addCleanup(again.db.close)
+        self.assertEqual(again.chat_resume(SAM, t["id"])["messages"][0]["actor_role"], "")
+        again.chat_add_message(SAM, t["id"], "user", "current")
+        restarted = SqlStore(*base.seed(self.tmp.name))
+        self.addCleanup(restarted.db.close)
+        self.assertEqual([m["actor_role"] for m in restarted.chat_resume(SAM, t["id"])["messages"]],
+                         ["", SAM["role"]])
 
     def test_chat_sql_is_portable(self):
         src = Path(chatthreads.__file__).read_text()

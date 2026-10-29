@@ -167,8 +167,12 @@ function chatCasePanel(id) {
   const log = h("ol", { class: "chat-log", "aria-label": "Conversation" });
   const liveLog = h("div", { role: "log", "aria-live": "polite", "aria-label": "Conversation updates" }, log);
   const status = h("p", { role: "status" }, "");
-  const input = h("textarea", { id: "chat-question", maxlength: "1000", rows: "3" });
-  const send = h("button", { type: "submit" }, "Ask");
+  const privacy = h("p", { id: "chat-privacy", class: "muted" },
+    "Loading the privacy warning. Do not enter text yet.");
+  const input = h("textarea", { id: "chat-question", name: "chat-question", autocomplete: "off",
+    maxlength: "1000", rows: "3", "aria-describedby": "chat-privacy", disabled: true });
+  const send = h("button", { type: "submit", disabled: true }, "Ask");
+  let privacyReady = false;
   const proposals = h("div", { class: "row" });
   const say = (text) => { status.textContent = text; };
   const ensureThread = async () => {
@@ -178,7 +182,7 @@ function chatCasePanel(id) {
   };
   const ask = async (event) => {
     event.preventDefault();
-    if (send.disabled) return;
+    if (!privacyReady || send.disabled) return;
     const question = input.value.trim();
     if (!question) { say("Type a question first."); return; }
     const sent = snapshotCaseFields([input])[0];
@@ -190,7 +194,9 @@ function chatCasePanel(id) {
       const answer = await api(`/api/chat/threads/${encodeURIComponent(tid)}/ask`, { content: question });
       log.append(chatMessageItem("assistant", answer.reply, answer));
       clearSubmittedQuestion(sent);
-      say(answer.workflow_only ? "The assistant is not available. Continue with the ordinary workflow." : "New answer added.");
+      if (!input.value.trim()) delete form.dataset.unsaved;
+      say(answer.kind === "refused" ? "The assistant cannot take that action. Use the human workflow route in the reply."
+        : answer.workflow_only ? "Continue with the ordinary case workflow. See the reply for the reason." : "New answer added.");
     } catch (e) {
       say(`Chat unavailable: ${e.message} Continue with the ordinary case workflow.`);
     } finally { send.disabled = false; input.focus(); }
@@ -210,11 +216,24 @@ function chatCasePanel(id) {
         `Request proposal: ${chatProposalNames[a.id] || a.id}`));
     }
   }).catch(error => say(`Proposal requests unavailable: ${error.message} Continue ordinary case work manually.`));
+  api("/api/chat/status").then((admission) => {
+    if (typeof admission.warning !== "string" || !admission.warning.trim()) {
+      throw new Error("The privacy warning is missing.");
+    }
+    privacy.textContent = `${admission.warning} Retention: ${admission.retention}. Synthetic data only. Model activation requires separate approval.`;
+    privacyReady = true;
+    input.disabled = false;
+    send.disabled = false;
+  }).catch((e) => say(`Chat entry unavailable: ${e.message} Continue with the ordinary case workflow.`));
+  const form = h("form", { onsubmit: ask, oninput: () => {
+    if (input.value.trim()) form.dataset.unsaved = "true";
+    else delete form.dataset.unsaved;
+  } }, h("label", { for: "chat-question" }, "Your question"), input, send);
   return h("details", { class: "card", id: "chat-panel" },
     h("summary", {}, "Ask the assistant about this case (optional)"),
     h("p", { class: "muted" }, `${chatLabel}. Answers cite only sources your role may see. The assistant cannot change a record, approve, send or book anything; it can only request a proposal that someone else reviews. Do not type personal details about residents.`),
-    liveLog,
-    h("form", { onsubmit: ask }, h("label", { for: "chat-question" }, "Your question"), input, send),
+    privacy, liveLog,
+    form,
     proposals, status, regulatoryChatPanel(id));
 }
 

@@ -34,6 +34,65 @@ def raw(bundle: dict[str, Any]) -> dict[str, Any]:
 
 
 class RegulatoryTests(unittest.TestCase):
+    def test_regulatory_writers_preserve_actor_roles(self) -> None:
+        for sql in (False, True):
+            for conflict in (False, True):
+                with self.subTest(sql=sql, conflict=conflict):
+                    f, service, tid = self.make(sql)
+                    self.assertNotEqual(f.user["role"], f.owner["role"])
+                    if conflict:
+                        f.source(2, text="Different synthetic source, not law.")
+                    answer = service.ask(f.user, tid, "hazard sources")
+                    receipt = service.doubt(f.user, tid, answer["turn"])
+                    reopened = f.open()
+                    try:
+                        sender = reopened.chat_resume(f.user, tid)
+                        inbox = reopened.chat_resume(f.owner, receipt["inbox_thread"])
+                        self.assertEqual(len(sender["messages"]), 3)
+                        self.assertEqual(
+                            [m["actor_role"] for m in sender["messages"]],
+                            [f.user["role"]] * 3,
+                        )
+                        self.assertEqual(inbox["owner_role"], f.owner["role"])
+                        self.assertEqual(
+                            [m["actor_role"] for m in inbox["messages"]],
+                            [f.user["role"]] * 2,
+                        )
+                        self.assertEqual(
+                            [m["content"] for m in inbox["messages"]],
+                            [m["content"] for m in sender["messages"][:2]],
+                        )
+                    finally:
+                        if sql:
+                            reopened.db.close()
+                    self.assertEqual(service.usage_status(f.user)["recorded_turns"], 1)
+
+    def test_legacy_referral_keeps_unknown_actor_role(self) -> None:
+        for sql in (False, True):
+            with self.subTest(sql=sql):
+                f, service, tid = self.make(sql)
+                answer = service.ask(f.user, tid, "hazard sources")
+                thread = service.history(f.user, tid)
+                legacy = [
+                    {key: value for key, value in message.items() if key != "actor_role"}
+                    for message in thread["messages"]
+                ]
+                with f.store.chat_repo.txn():
+                    receipt, created = service._refer(
+                        f.user, thread, answer["turn"], f.owner, legacy[0], legacy[1]
+                    )
+                    f.store.chat_repo.commit()
+                self.assertTrue(created)
+                reopened = f.open()
+                try:
+                    inbox = reopened.chat_resume(f.owner, receipt["inbox_thread"])
+                    self.assertEqual([m["actor_role"] for m in inbox["messages"]], ["", ""])
+                    sender = reopened.chat_resume(f.user, tid)
+                    self.assertEqual(sender["messages"][-1]["actor_role"], f.user["role"])
+                finally:
+                    if sql:
+                        reopened.db.close()
+
     def test_conflict_automatically_routes_exact_pair_once_per_stored_turn(self) -> None:
         for sql in (False, True):
             f, service, tid = self.make(sql)

@@ -3295,11 +3295,46 @@ Not in this slice: the panel (#159), model calls, memory (#161), isolation harde
 (#163; retention policy is unlocked for the exercise, legal retention lock deferred). Fixtures are synthetic.
 Tests: `tests/test_chatthreads.py` (in-memory and SQLite parity; `MssqlChatThreads` runs with `ZF_TEST_MSSQL=1`).
 
+The employee panel records server-derived `actor_role` per message and includes
+only prior user questions asked under the caller's current role. Changing from
+role A to B and back does not relabel earlier questions. Existing JSON messages
+without this field and SQL messages migrated with an empty role remain stored
+but are excluded from model context because their asking role is unknown.
+SQLite and SQL Server add the column idempotently; new messages persist it
+across restarts. The panel's 4,000-character history cap measures the actual
+dispatched `UNTRUSTED` block, including delimiter expansion, wrappers and
+newlines, while preserving the newest fitting questions in chronological order.
+The current question must fit the 1,000-character limit both before and after
+redaction. An oversized masked question returns the context-limit workflow
+fallback without a model call, rather than silently truncating the question.
+
+The panel holds the existing reentrant store lock around message persistence
+and its audit events, the answer event and the final turn receipt, including
+rejected turns. These short sections serialize JSON audit predecessor updates
+with other locked writes; model inference does not hold the lock. Nested JSON
+and SQLite callers retain the same lock ownership and audit-flush behavior.
+Synthetic concurrent rejected/completed-turn regressions verify the shared
+chain, not just receipt counts. This is not a cross-process JSON write guarantee.
+
+Regulatory chat's direct paired-message and referral writers also persist
+`actor_role`. An owner inbox copy keeps the original asking role, not the
+recipient's role; a legacy copy without known provenance keeps an empty role.
+Both explicit and automatic conflict referrals retain this distinction across
+JSON and SQLite restarts. The separate bounded audit snapshot and offline
+usage summary do not load these message bodies.
+
 ## Chat and memory isolation (issue #162)
 
 `chat_isolation.py` sits on the #160 repository and #163 privacy rules and adds no tables. Endpoints (staff roles only; contractors and unknown roles are denied, default deny): `GET/POST /api/chat/threads`, `GET /api/chat/threads/{id}`, `POST /api/chat/threads/{id}/messages|archive|delete`, `GET/POST /api/chat/memory` (the POST needs `task` and a prior opt-in), `GET /api/chat/memory/status?task=`, `POST /api/chat/memory/opt-in|opt-out|erase|global|task` and `POST /api/chat/memory/{id}/edit|delete` (the #285 lifecycle; `global` and `task` switches are administrator-only), `POST /api/chat/breakglass`. The owner is always the authenticated user; request fields such as `owner` or `email` are ignored, and another user's thread, or a case outside the caller's scope, is reported as not found (404, so existence cannot be probed). Prompts carry the masked question and only memory from `privacy.prompt_memory` (opt-in, switch-gated, labelled non-authoritative); stored model replies are redacted like user messages.
 
 * Every turn re-reads the user's current role and re-projects the case through the same `store.detail` projection as the case card, so a changed or revoked role applies on the next turn.
+* For roster-backed SQL users, the cited chat panel reads the authoritative SQL
+  staff row at dispatch and again after inference, without relying on the staff
+  cache. Deleted, disabled, inactive or non-chat staff are denied; a changed
+  permitted role or projected source withholds the answer. Rejected completions
+  store no assistant reply. SQLite regressions change rows through an independent
+  connection while leaving both staff caches unchanged; they do not establish
+  SQL Server, live-model or operational acceptance.
 * The prompt holds only the caller's own thread, own unexpired memory and the projected case, each inside `UNTRUSTED` blocks with the block delimiters neutralised. The channel has no tools; replies are text only, labelled as unapproved, and a reply carrying tool-call or record-change syntax or a withheld reason is replaced by a refusal.
 * Break-glass is refused until `CHAT_BREAKGLASS_REF` (owner policy reference) is recorded and the caller role is named in `CHAT_BREAKGLASS_ROLES`. When allowed it needs a purpose, expires within 60 minutes, returns counts and ids only (never content) and writes granted and refused attempts to the audit ledger.
 * Open items: the break-glass and administrator content-access policy is an owner decision (BRD OD-46) and is not decided here; whether contractors may use chat is undecided (denied); the injection set in `src/api/tests/test_chat_isolation.py` is a recorded regression set, not evidence of complete coverage; real-model behaviour was not exercised.

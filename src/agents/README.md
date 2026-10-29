@@ -36,6 +36,39 @@ approval or a universal PII-free guarantee. The separate source-provenance
 audit still rejects three unverified historic source entries, leaving that
 issue #175 criterion unmet. No live service, model or private dataset is used.
 
+### Chat consumption evidence (2026-10-27, #164)
+
+The existing chat evaluator records metadata-only receipts per turn and
+aggregates scripted calls per scenario and per answer passing runtime checks.
+This denominator is not human acceptance. It reports actual model calls as
+zero, tokens as Unknown when the scripted provider has no tokenizer usage,
+and cost as Unknown with missing serving-model usage, dated versioned prices
+and complete human-review effort. It cannot authorize spend or present lower
+cost below an unestablished quality floor as a saving.
+
+The adapter preserves validated usage independently per invocation, including
+failure or completion-time admission revocation; no shared last-call state.
+Admission callback exceptions before dispatch report `admission-check-failed`
+with zero model calls. Completion callback exceptions report
+`completion-check-failed` with the provider's known calls and validated usage;
+the unchecked answer remains withheld and the panel uses workflow-only fallback.
+Neither error text nor provider text is exposed in the failure receipt.
+The evaluator retains receipts for post-call access rejection from the ledger
+without exposing the forbidden answer. Prompt/source/control bindings now
+include the context caps and complete-source JSON policy.
+
+```bash
+# From src/agents, installed core/agents:
+PYTHONPATH=../core/tests python3 -m unittest discover -s tests -p 'test_chat_*.py' -q
+python3 -m zava_forward.agents.chat_eval --json
+```
+
+The full development evaluation intentionally exits 1: the existing unsupported
+claim with a valid citation remains a critical failure and enablement is
+fail/disabled. Synthetic poisoning/injection passes are not actual-model or
+human assurance. Held-out independent labels, approved thresholds/accountable
+reviewer and competent authorized human exercises remain unavailable.
+
 ### Resource-specific isolation fixtures (#172, 2026-10-18)
 
 `test_chat_fixture` separates all eleven persona/memory perspectives from the
