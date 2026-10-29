@@ -39,19 +39,35 @@
       "decision": "Single independent Review executed Complete; outcome Conformant for bounded refresh; no new findings; original acceptance and RV-001 through RV-005 unchanged",
       "status": "complete; source assessed at ca5cb010 against 56535475",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-29/agent-chat-157-refresh-review.md"
+    },
+    {
+      "decision": "Complete local gate attempted from clean exact-commit detached checkout under shared heavy lock; failed API skip contract and four workflow-matrix drift checks; no valid publication receipt",
+      "status": "executed; failed; separate publication blocker",
+      "evidence": "External session files/pr503-full-gate-clean-20261029/receipt.json at 3f108aea; SHA-256 dbe5f862f2065aee2ff9a17fbcfc3302dce18b188d9b153d465b529ec0d1dab1; dated changes artifact"
     }
   ],
-  "blockers": [],
+  "blockers": [
+    {
+      "id": "publication-local-gate",
+      "summary": "Complete gate failed on API integration skip contract and workflow-matrix drift in contracts unchanged from captured main",
+      "resolution": "Coordinator reconciles gate contracts in separately approved work and obtains fresh clean exact-head gate/review evidence; do not weaken checks"
+    },
+    {
+      "id": "hosted-ci-unpublished",
+      "summary": "No push authorized; hosted CI and remote PR mergeability still assess old head",
+      "resolution": "Coordinator publishes rebased history after required gates and observes fresh hosted checks"
+    }
+  ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Persist original Review, finish planned local-gate attempt and present coordinator handoff without push"
+    "action": "Coordinator clears publication gates; await ranked follow-up selection, Stop or manual mode; no push or child task started"
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Coordinator publication gates and fresh hosted CI",
-      "rationale": "Directly completes the requested local-refresh delivery; no remote CI can assess an unpushed candidate",
-      "evidence": "Refresh changes and independent Review; existing rubric conclusion failure"
+      "task": "Coordinator gate-contract reconciliation, exact-head gate/review and fresh hosted CI",
+      "rationale": "Directly unblocks delivery; complete gate failed and no remote CI can assess an unpushed candidate",
+      "evidence": "External failed full-gate receipt at 3f108aea; refresh changes and independent Review; existing rubric conclusion failure"
     },
     {
       "rank": 2,

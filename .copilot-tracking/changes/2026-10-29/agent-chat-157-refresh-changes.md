@@ -11,8 +11,9 @@
 ## Execution Status
 
 Full RPI implementation and independent Review complete. All P01-P03 markers
-have execution evidence; final evidence persistence and planned local-gate
-attempt remain bookkeeping before coordinator handoff.
+have execution evidence. Rebased local candidate is validated by focused checks;
+complete publication gate was attempted and failed. Hosted CI and publication
+remain blocked/separate; no push occurred.
 
 ## Execution Summary
 
@@ -158,8 +159,9 @@ Final raw-JS fixture split was covered by its separate 26-test rerun.
 
 Synthetic API fixtures explicitly log unavailable law-store rule evaluation;
 these expected diagnostics did not fail the focused suites or create approvals.
-No full API discovery, no shared-heavy-lock acquisition for focused tests,
-no live model/private data/Azure operation and no push occurred.
+At the end of focused validation no full API discovery had run. Focused tests
+did not acquire the heavy lock. No live model/private data/Azure operation or
+push occurred. The later locked full-gate attempt is recorded below.
 
 ### Web guideline review
 
@@ -221,24 +223,122 @@ Later evidence commits do not imply independent exact-head approval.
   --out <session-files>/pr503-full-gate-20261029 --lock-timeout 1`.
   This is not yet a pass or valid receipt. No cloud fallback is authorized.
 
+### Complete local gate: actual execution and blockers
+
+* Committed original Review and reconciled state using
+  `git commit -m "docs(chat): preserve independent refresh review and handoff"
+  -m "Record the original bounded Review and retained publication boundaries. Refs #503"
+  -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"`:
+  success, 3f108aea120126bc6e7209fe0411c364e6692ecc.
+  Authenticated account re-resolved before committing.
+* Ran the exact planned `PATH=/tmp/mv/bin:$PATH /tmp/mv/bin/python
+  tools/rpi-checks.py --all --base
+  5653547507f3056f09a726a18516237728da5e5b --out
+  <session-files>/pr503-full-gate-20261029 --lock-timeout 1`.
+  Exit 1: candidate has ignored inputs. Inspection showed lint/type caches,
+  bytecode and editable-install metadata. Nothing pre-existing was deleted,
+  stashed, moved or ignored via a bypass.
+* Alternative local validation route:
+  `git worktree add --detach <session-files>/pr503-gate-candidate
+  3f108aea120126bc6e7209fe0411c364e6692ecc`.
+  Created only this run's clean exact-commit detached checkout, preserving the
+  supplied primary worktree and all its generated/ignored inputs.
+* From that clean checkout:
+  `flock -n /tmp/ama-rpi-heavy.lock true &&
+  PATH=/tmp/mv/bin:$PATH /tmp/mv/bin/python tools/rpi-checks.py --all
+  --base 5653547507f3056f09a726a18516237728da5e5b
+  --out <session-files>/pr503-full-gate-clean-20261029 --lock-timeout 1`.
+  Probe succeeded. Runner acquired the same shared lock at
+  2026-10-29T13:15:17.969151+00:00 and held it during execution. Full API
+  discovery therefore satisfied the caller's lock condition; no probe-only
+  concurrency assumption was used.
+* Full attempt completed, exit 1. Receipt sealed 2026-10-29T13:41:37.146632+00:00.
+  Required project-api group rejected 317 integration/dependency skips even
+  though unittest itself returned OK. Workflow matrix drift was also reported
+  for mvp-ci.yml, mvp-validation.yml, src-deploy.yml and infra-plan.yml.
+  `git diff --exit-code <captured-main> HEAD -- tools/rpi-checks.py
+  .github/workflows` was empty: those gate/workflow contracts are unchanged
+  from captured main, not fixed or weakened in this bounded refresh.
+* Full discovery results: core 1,486 tests / OK / 191 skips; agents 120 / OK;
+  API 1,284 / OK / 317 skips; orchestrator 46 / OK; importer 39 / OK.
+  Skips are not executed integration passes. Browser and real-SQL groups
+  were not completed by this full gate after its API prerequisite rejection.
+  Independently executed focused/browser results above remain their own
+  bounded evidence, not substitutes for the missing full-gate groups.
+* The full run also completed namespace/static/infra/migration and four local
+  image contracts plus the logo-0600 startup stress path. Local Bicep
+  build/lint used offline Azure CLI tooling, not Azure resource operations.
+  No Azure resource was created or modified.
+* Durable external failed receipt:
+  <session-files>/pr503-full-gate-clean-20261029/receipt.json.
+  SHA-256: dbe5f862f2065aee2ff9a17fbcfc3302dce18b188d9b153d465b529ec0d1dab1.
+  Bound HEAD: 3f108aea120126bc6e7209fe0411c364e6692ecc.
+  Scope full / status failed. It is not a valid publication receipt. A later
+  evidence commit invalidates exact-head reuse; do not resume this receipt
+  after a source/evidence/base change.
+* `git -C <session-files>/pr503-gate-candidate status --short`: clean.
+  `git worktree remove <session-files>/pr503-gate-candidate`: success; removed
+  only this run's newly created clean duplicate checkout. Retained all gate
+  logs, environments, images and failed receipt; no historical evidence cleanup.
+
+The clean-checkout gate attempt was ordinary local validation judgment, not a
+new child workstream or a change to the caller's branch/source/approval scope.
+Original independent Review is preserved without a second Review or attempted
+remediation of separate main gate-policy problems.
+
 ## Pre-Review Reconciliation
 
 P01 and P02 source/test/documentation changes, validation and commit complete.
 P03 independent Review Complete / Conformant; no new findings to remediate.
 Original 2026-10-27 artifacts and failed acceptance verdict are unchanged.
-No active implementation blocker; fresh hosted CI and publication gate remain
-separate and cannot be inferred from these local results.
+No new implementation defect established. Complete gate failed on unchanged
+gate/workflow contracts; fresh hosted CI remains unavailable until coordinator
+publication and cannot be inferred from these local results.
 
 ## Blockers
 
-No current implementation blocker. Publication requires separate local gate,
-exact-head review and fresh hosted checks; no publication is authorized here.
+Publication blocked: complete-gate API skip contract and workflow-matrix drift;
+fresh exact-head gate/review and hosted checks are still required. Primary
+worktree ignored caches remain intact, so future gate execution needs an
+authorized clean-candidate strategy. Remote PR still references its old head
+because this task explicitly forbids push. No new source defect is established
+by the failed gate, and no check/protection/policy was weakened.
+
+## Final Local Handoff
+
+* Final `git fetch origin main && git rev-parse origin/main`:
+  fetched main is still 5653547507f3056f09a726a18516237728da5e5b.
+* `git merge-base --is-ancestor origin/main HEAD && git diff --check`:
+  passed. No unresolved paths, source modifications or untracked inputs;
+  final changes consist only of this loop's four evidence/state updates.
+* Final protected-snapshot diff against captured main: empty.
+* `/tmp/mv/bin/python -m json.tool <state-path> > /dev/null`: valid JSON.
+* Re-resolved authenticated GitHub numeric-id/login before final commit.
+* Final evidence-only commit uses
+  `git commit -m "docs(chat): record complete gate blockers and local handoff"
+  -m "Preserve failed gate evidence without changing main gate policy. Leave rebased history local for coordinator publication. Refs #503"
+  -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"`.
+  This does not change the reviewed source tree or upgrade its failed
+  publication receipt to approval of the later exact head.
 
 ## Remaining Work
 
-Persist original Review and complete planned publication-gate attempt,
-then persist its actual result and hand off without push.
+No remaining source implementation or one-pass RPI execution. No child work
+selected or started. Full-gate remediation/publication are distinct follow-up;
+no push or hosted success is claimed.
 
 ## Follow-Up Items
 
-Coordinator publication/fresh CI; original RV-001 through RV-005 unchanged.
+Ranked current choices:
+
+1. Coordinator gate-contract reconciliation, exact-head gate/review and fresh
+   hosted CI: directly unblocks delivery; evidence is the failed external
+   receipt and original hosted rubric failure.
+2. Original RV-001 denied-turn accounting: bounded engineering work with an
+   existing explicit regression objective; original feature acceptance remains
+   Not accepted.
+3. Original named-human accessibility/activation evidence: browser tests cannot
+   replace RV-003/RV-004 human/DPO/Legal decisions.
+
+Stop automatic session and switch to manual mode remain control choices.
+No follow-up is started without owner selection.

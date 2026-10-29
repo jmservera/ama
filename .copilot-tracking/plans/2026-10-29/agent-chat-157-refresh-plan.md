@@ -141,8 +141,11 @@ Critique execution: Complete; original verdict: Revise. No second critique.
 
 ## Follow-Up Items
 
-* Coordinator must push and observe fresh hosted checks; rubric infrastructure
-  failure is not established fixed by local runtime checks.
+* Coordinator must reconcile unchanged main gate/workflow contracts (full gate
+  rejected API integration skips and detected four workflow-matrix drifts),
+  obtain fresh exact-head gate/review evidence, publish and observe hosted
+  checks. Original rubric infrastructure failure is not established fixed by
+  local runtime checks.
 * Existing RV-001 through RV-005 and human/activation gates remain outside
   refresh acceptance.
 
@@ -150,5 +153,6 @@ Critique execution: Complete; original verdict: Revise. No second critique.
 
 Implementation artifact: .copilot-tracking/changes/2026-10-29/agent-chat-157-refresh-changes.md.
 All P01-P03 tasks executed. Single independent Review: Complete / Conformant
-for bounded refresh at ca5cb010. Automatic parent persists evidence and the
-planned publication-gate attempt; no push or whole-feature acceptance implied.
+for bounded refresh at ca5cb010. Complete gate attempted at 3f108aea and failed
+on unchanged gate/workflow contracts. Automatic parent persists final evidence;
+no push, valid publication receipt or whole-feature acceptance implied.
