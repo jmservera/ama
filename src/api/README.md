@@ -951,8 +951,33 @@ The [2026-10-29 hub reconciliation and blockers](../../infra/README.md#bounded-e
 record the actual existing B1 resource, registry-permission blocker and unchanged
 service-key prohibition. Local actual SQL tests do not establish live transport.
 
-For this bounded exercise, explicitly set `RunBudget(..., max_messages=2,
-max_per_second=1.0, max_seconds=60.0)` with the required owner, cost and alert
+Before the single approved run, the named owner must complete and record the
+[quota, cost and alert preflight](../../docs/reference/research/iot-sensor-analytics-research-plan.md#cost-and-scale-before-any-live-run).
+Verify the exact reused hub's current B1 quota usage for the applicable UTC
+day immediately before running; record that consumed 4-KiB-unit count as
+`verified_daily_used_units`. Do not assume an unused hub or use the zero
+default. Account conservatively for other traffic and attempted or uncertain
+deliveries not yet reflected in the reported usage, including traffic expected
+during the run. The verified usage plus the planned run's units (each body plus
+the 1-KiB properties reserve, rounded up to 4-KiB units) and any such additional
+traffic must leave at least 40,000 unused units from the 400,000-unit daily
+allowance. Recheck if the quota day or usage changes before sending; stop if
+usage or concurrent traffic cannot be reliably bounded.
+
+Also verify actual subscription currency and remaining aggregate cost headroom,
+including accrued charges and remaining commitments, within the approved
+USD5 additional allowance through 31 October 2026 and the overall budget.
+The historical USD60/month routed model is not additional spending authority.
+Verify that the budget alert is active (enabled, with the correct budget scope,
+threshold and notification recipient). Record the fresh evidence in the owner,
+cost and alert references; missing, stale or insufficient quota/cost/alert
+evidence blocks the run. References alone do not prove these checks.
+`RunBudget` does not query live quota, verify alerts or enforce aggregate
+spending, and budget alerts are not hard spending stops.
+
+For this bounded exercise, explicitly set `RunBudget(...,
+daily_used_units=verified_daily_used_units, max_messages=2,
+max_per_second=1.0, max_seconds=60.0)` with those verified owner, cost and alert
 references: at most two messages total, one per second globally and 60 seconds
 for ONE `HubPublisher.run()` call for the entire approved bounded exercise.
 Do not make repeated or concurrent calls, including from another publisher
