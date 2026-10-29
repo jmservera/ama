@@ -151,8 +151,8 @@ def statement_sources(text: str, sources: Any, bullets: bool = False) -> list[di
     protected = CITE_RE.sub(protect, text)
     # A model may place the citation after the sentence's punctuation.
     protected = re.sub(
-        rf"({STATEMENT_END})\s*((?:\x00\d+\x00\s*)+)",
-        lambda match: " " + " ".join(match[2].split()) + match[1] + " ",
+        rf"({STATEMENT_END})\s*((?:\x00\d+\x00\s*)+)([\"'\u2019\u201d)\]}}]*)",
+        lambda match: " " + " ".join(match[2].split()) + match[1] + match[3] + " ",
         protected,
     )
 

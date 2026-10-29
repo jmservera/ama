@@ -282,3 +282,23 @@ class StatementSources(unittest.TestCase):
                         dict(text="Repairs are due.", citations=["Second source"], unresolved=[]),
                     ],
                 )
+
+    def test_closing_delimiters_after_a_citation_stay_with_their_statement(self) -> None:
+        sources = {"ZF-1": ["First source", "Second source"]}
+        for first, closer in (
+            ('The status is "Survey booked.', '"'),
+            ("The status is (survey booked.", ")"),
+            ("The status is [survey booked.", "]"),
+            ("The status is \u201csurvey booked.", "\u201d"),
+        ):
+            with self.subTest(first=first):
+                self.assertEqual(
+                    statement_sources(
+                        f"{first} [[First source]]{closer} Repairs are due. [[Second source]]",
+                        sources,
+                    ),
+                    [
+                        dict(text=first + closer, citations=["First source"], unresolved=[]),
+                        dict(text="Repairs are due.", citations=["Second source"], unresolved=[]),
+                    ],
+                )
