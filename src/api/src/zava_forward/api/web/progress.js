@@ -34,7 +34,12 @@ const ProgressViews = (() => {
       if (values.has("limit")) next.set("limit", values.get("limit"));
       navigate(path, next);
     } }, fields, h("button", { type: "submit" }, "Apply filters"),
-    h("a", { href: path }, "Reset filters"));
+    h("a", { href: path, onclick: event => {
+      const modified = event.button || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey;
+      if (modified || location.hash !== path) return;
+      event.preventDefault();
+      route();
+    } }, "Reset filters"));
   }
   function table(title, columns, rows) {
     return h("div", { class: "table-scroll", role: "region", tabindex: 0, "aria-label": `${title} table` },

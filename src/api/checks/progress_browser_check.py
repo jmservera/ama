@@ -154,6 +154,12 @@ def run(axe: Path, out: Path) -> None:
                 # The safety fixture is on page two in stable reference order.
                 page.get_by_role("link", name="Next page", exact=True).click()
                 expect(page.locator("tbody")).to_contain_text("Safety issue open")
+                page.goto(base + "/app#/closed")
+                page.locator("#progress-q").wait_for()
+                page.locator("#progress-q").fill("edited")
+                page.get_by_role("link", name="Reset filters", exact=True).click()
+                expect(page.locator("#progress-q")).to_have_value("")
+                page.goto(base + "/app#/closed")
                 for width in (320, 390, 1280):
                     page.set_viewport_size({"width": width, "height": 900})
                     check(
