@@ -3308,6 +3308,13 @@ The current question must fit the 1,000-character limit both before and after
 redaction. An oversized masked question returns the context-limit workflow
 fallback without a model call, rather than silently truncating the question.
 
+Regulatory chat's direct paired-message and referral writers also persist
+`actor_role`. An owner inbox copy keeps the original asking role, not the
+recipient's role; a legacy copy without known provenance keeps an empty role.
+Both explicit and automatic conflict referrals retain this distinction across
+JSON and SQLite restarts. The separate bounded audit snapshot and offline
+usage summary do not load these message bodies.
+
 ## Chat and memory isolation (issue #162)
 
 `chat_isolation.py` sits on the #160 repository and #163 privacy rules and adds no tables. Endpoints (staff roles only; contractors and unknown roles are denied, default deny): `GET/POST /api/chat/threads`, `GET /api/chat/threads/{id}`, `POST /api/chat/threads/{id}/messages|archive|delete`, `GET/POST /api/chat/memory` (the POST needs `task` and a prior opt-in), `GET /api/chat/memory/status?task=`, `POST /api/chat/memory/opt-in|opt-out|erase|global|task` and `POST /api/chat/memory/{id}/edit|delete` (the #285 lifecycle; `global` and `task` switches are administrator-only), `POST /api/chat/breakglass`. The owner is always the authenticated user; request fields such as `owner` or `email` are ignored, and another user's thread, or a case outside the caller's scope, is reported as not found (404, so existence cannot be probed). Prompts carry the masked question and only memory from `privacy.prompt_memory` (opt-in, switch-gated, labelled non-authoritative); stored model replies are redacted like user messages.
