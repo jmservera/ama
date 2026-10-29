@@ -2,24 +2,24 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-29T00:37:41+00:00",
-  "commit": "815aa615cd319aaab6efdfc6e006534cde8471dc",
+  "scored_at": "2026-10-29T01:03:13+00:00",
+  "commit": "33b0cde3b902522e26f70a1491ad3b96ac51bdc5",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40794682611",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40797145048",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "0b96cfbbedeb2a9b7485a862b37470831ccdc2082bb44e338178089012ce06c1",
-    "solution-code": "748778028830146605d1ae3fef7f8c59aa1d51f97a74503097f8fbc757d3dfe6",
+    "solution-code": "737d1a123245a0fc0dc6873fc19d885500d8c7b6a543865115d3956901bfec19",
     "infrastructure": "b6366d357bc22aadb23fdb2e0847cbbda6689e072f25c6a68738113fd875b271",
     "capstone-deck": "acb30e4f302663cedec4884bc7c561fcb5a14fb647ab1c4f93ffc377567c8896",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
     "thought-leadership": "e624f2558e3b64eea18ca0ac655e25f18da8e183bc908694e0dc58eca050eeb2"
   },
-  "total": 77,
+  "total": 76,
   "sections": {
     "A": 34,
-    "B": 23,
+    "B": 22,
     "C": 11,
     "D": 9
   },
@@ -29,10 +29,10 @@
     "A1": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/resident_demo/agenda.py:1-60",
-        "src/api/src/zava_forward/api/resident_demo/app.py:32-40"
+        "src/api/src/zava_forward/api/web/case-workspace.js:1-24",
+        "src/api/src/zava_forward/api/web/panels.js:1-20"
       ],
-      "rationale": "Adds cleanly separated local SQLite agenda module and chat router module with explicit boundaries, consistent with existing modular pattern. No new scaling pattern; already at ceiling."
+      "rationale": "New case-workspace.js module cleanly separates journey/stepper logic from app.js routing and panels.js rendering, consistent with existing modular split. Already at ceiling; no basis to exceed it."
     },
     "A2": {
       "score": 5,
@@ -43,40 +43,32 @@
     },
     "A3": {
       "score": 5,
-      "evidence": [
-        "src/api/src/zava_forward/api/resident_demo/app.py:228-247",
-        "src/core/src/zava_forward/core/resident_documents.py:60-110",
-        "src/api/src/zava_forward/api/resident_demo/agenda.py:1-35"
-      ],
-      "rationale": "Adds per-login session-binding header with constant-time compare and 409 on mismatch, strict use_record consent gate, bounded/allowlisted document parsing rejecting malformed input, and parameterized SQLite agenda transactions. Strengthens already-ceiling security."
+      "evidence": [],
+      "rationale": "No new threat-model, identity, data-protection or AI-risk controls in this diff; changes are UX journey/state-recovery logic, not security controls. Unchanged baseline."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/resident_demo/chat.py:1-225",
-        "src/core/src/zava_forward/core/resident_documents.py:1-178",
-        "src/api/tests/test_resident_chat_agenda.py:1-50",
-        "src/api/checks/resident_assistant_browser_check.py:1-100"
+        "src/api/src/zava_forward/api/web/case-workspace.js:1-157",
+        "src/api/tests/test_case_journey.py:1-60",
+        "src/api/checks/case_journey_browser_check.py:1-80"
       ],
-      "rationale": "Adds complete resident chat routing, document facts parsing, synthetic callback agenda with booking/cancellation transactions, plus matching unit and browser checks. Strong completeness; already at ceiling."
+      "rationale": "Adds a complete six-step case journey UI, native ARIA tabs, stale-action/history-barrier recovery and matching unit (1336 lines) and browser-check (1408 lines) coverage end to end. Strong completeness; already at ceiling."
     },
     "A5": {
       "score": 5,
       "evidence": [],
-      "rationale": "No logging, metrics, tracing or cost instrumentation changed; diff adds feature code and stderr error prints consistent with existing pattern. Unchanged baseline."
+      "rationale": "No logging, metrics, tracing or cost instrumentation changed; diff adds UI state and recovery logic consistent with existing pattern. Unchanged baseline."
     },
     "A6": {
       "score": 5,
-      "evidence": [
-        "src/api/src/zava_forward/api/resident_demo/chat.py:120-225",
-        "src/api/README.md:117-140"
-      ],
-      "rationale": "New rule-based router explicitly keeps typed questions out of model prompts/memory and preserves the existing bounded AI advisor unchanged; no model/prompt/eval-harness change. Baseline unchanged."
+      "evidence": [],
+      "rationale": "No model choice, prompt or evaluation-harness change in this diff; chat.js changes are UI wiring, not AI solution design. Baseline unchanged."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "Chat routing and agenda actions are deterministic rule dispatch and transactional CRUD, not agentic orchestration, planning or handoff. Unchanged baseline (Good, not Excellent)."
+      "rationale": "Journey/tab navigation and submission-history-barrier logic are deterministic UI state machines, not agentic orchestration, planning or handoff. Unchanged baseline."
     },
     "B1": {
       "score": 3,
@@ -113,11 +105,12 @@
       "rationale": "Timing contract unchanged in this PR; deck timing lines confirmed byte-identical. Unrehearsed pacing retained."
     },
     "B6": {
-      "score": 5,
+      "score": 4,
       "evidence": [
-        "src/api/README.md:117-230"
+        "src/api/README.md:10-42",
+        "src/api/README.md:157-183"
       ],
-      "rationale": "README adds a thorough, clearly structured section describing the new chat/agenda contract, security model, limits and test commands. Strong engineering documentation; not capstone deck itself. Ceiling unchanged."
+      "rationale": "The new Employee case journey workspace section is duplicated verbatim (identical heading and near-identical body) at two places in README.md, a reader-facing documentation defect introduced by this change. Lowered from baseline for thin/confusing documentation."
     },
     "B7": {
       "score": 5,
