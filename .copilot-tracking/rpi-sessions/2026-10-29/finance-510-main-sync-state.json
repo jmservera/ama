@@ -1,0 +1,69 @@
+{
+  "task_id": "finance-510-main-sync",
+  "task_slug": "finance-510-main-sync",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Review",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-29/finance-510-main-sync-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-29/finance-510-main-sync-plan.md",
+    "details": ".copilot-tracking/details/2026-10-29/finance-510-main-sync-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-29/finance-510-main-sync-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-29/finance-510-main-sync-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-29/finance-510-main-sync-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the explicitly requested full RPI loop without routine phase prompts; rebase is authorized, push and Azure changes are prohibited.",
+      "status": "confirmed",
+      "evidence": "User request dated 2026-10-29."
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready. Preserve later source guards and both dated Review outcomes.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-10-29/finance-510-main-sync-research.md C1-C6."
+    },
+    {
+      "decision": "Single critique Complete / Revise; PC-001 bounded fixtures and PC-002 assessed-base enforcement directly resolved. No second critique.",
+      "status": "resolved",
+      "evidence": ".copilot-tracking/plans/2026-10-29/finance-510-main-sync-plan.md Critique Disposition."
+    },
+    {
+      "decision": "Rebase and selected local checks passed. Main SHA enforced, source/original evidence unchanged, main rubric/manifest retained.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-10-29/finance-510-main-sync-changes.md P01/P02."
+    },
+    {
+      "decision": "Single independent Review executed Complete; outcome Conformant, no findings, assessed replay HEAD 5d232eca against start bafcb241/base 8ee1b77f plus current dated evidence.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/finance-510-main-sync-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Commit reviewed evidence locally, verify, then persist completed-task coordinator handoff; do not select child work."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator publication verification and fresh hosted CI",
+      "rationale": "Highest immediate delivery value; local integration passes but no push/hosted action is authorized here.",
+      "evidence": "Review FU-001; prior Source CI and rubric action_required with zero jobs."
+    },
+    {
+      "rank": 2,
+      "task": "Coordinator reconcile PR metadata and current evidence summary",
+      "rationale": "Small documentation task: PR is non-draft and its original defect summary predates the later corrective Review.",
+      "evidence": "Research C5/C6; Review FU-001; no remote mutation performed."
+    },
+    {
+      "rank": 3,
+      "task": "Obtain actual approved Finance/template/Board inputs",
+      "rationale": "High business importance but human-owned authority, not a local engineering follow-up.",
+      "evidence": "Review FU-002; existing Held boundaries and issue #96 unmet acceptance."
+    }
+  ]
+}
