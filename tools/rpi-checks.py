@@ -956,7 +956,7 @@ def verify_results(out: Path, receipt: dict[str, Any]) -> None:
             or journey["axe_version"] != "4.10.3"
             or journey["page_errors"]
             or journey["zoom"] != "chrome.tabs.setZoom=2; innerWidth<=640"
-            or len(journey["scans"]) != 38
+            or len(journey["scans"]) != 87
             or any(
                 item["impact"] in ("serious", "critical")
                 for scan in journey["scans"]

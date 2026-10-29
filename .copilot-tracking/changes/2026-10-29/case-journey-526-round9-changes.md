@@ -163,3 +163,33 @@ Coordinator must reconcile this upstream bot change without losing the two
 local corrections, then rerun the mandatory exact-head publication gates.
 This additional local handoff-metadata commit changes no reviewed executable
 source and does not claim an exact-head gate or a repeated Review.
+
+## Journey Receipt Scan Contract Follow-Up
+
+Owner-selected bounded follow-up to the PR #529 receipt-count comment:
+rerun the current journey harness under the shared heavy lock using this
+worktree's source imports, then align the exact receipt scan count, fixtures
+and adjacent negative counts. Search tools, docs and .github for current
+hard-coded journey counts; preserve historical tracking evidence. Validate
+with tools/test_rpi_checks.py and retain the result in a local Conventional
+Commit only. No push, Azure, secrets, repeated Review or publication claim.
+
+Completed: tools/rpi-checks.py now requires exactly 87 scans, matching the
+fresh emitted report, not a relaxed minimum. tools/test_rpi_checks.py uses
+87-scan passing and serious-violation fixtures; 86/88-scan negative cases
+preserve both exact-count boundaries. The tools/docs/.github search found
+no other hard-coded 38 journey scan counts requiring alignment.
+
+Fresh command: from src/api, .venv/bin/python -m
+checks.case_journey_browser_check --axe /tmp/ama-526-evidence/axe-4.10.3.min.js
+--out <external>/journey. PYTHONPATH explicitly prefixed this worktree's
+api/core/agents src and test directories, not shared editable sources.
+Admission used flock -E 75 -n /tmp/ama-rpi-heavy.lock with 15-second retries
+bounded at 40 minutes. Exit 0: 406 PASS assertions, 87 axe scans, zero
+violations/page errors, Chromium 156.0.8078.4, real 200% tab zoom.
+External evidence: /home/azureuser/.copilot/session-state/90943f3d-0aba-47cf-aeca-89df1265c289/files/journey-scan-contract/
+contains journey/results.json, journey.log and receipt-tests.log.
+Report SHA256: 06d98e38e400f3c0ed20124118a241d2b2fa15e5645ad005e5936484fb92ed69.
+python3 tools/test_rpi_checks.py passed all 31 tests in 11.745 seconds;
+git diff --check passed. Original round-nine outcomes remain historical;
+this follow-up does not extend their independent Review or publication scope.
