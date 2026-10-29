@@ -8,7 +8,8 @@ ms.date: 2026-10-29
 
 Task: 532-map-browser-shortcuts-2026-10-29. Slug: map-browser-shortcuts-532.
 Branch: feat/map-fullscreen-532. Baseline: f4a6bed44ff5891c4edd0455dabcff3ea39492bf.
-Status: implementation-ready; single critique Revise, PC-001 applied.
+Status: complete; single critique Revise, PC-001 applied. Independent Review
+Complete / Conformant with justified divergence. Local-only closeout.
 
 ## Executive Summary
 
@@ -23,6 +24,11 @@ existing /tmp/ama-532-venv is a disclosed validation substitute, with this
 worktree's src packages first on PYTHONPATH. Nonblocking heavy-lock contention
 means targeted-only checks, never an unlocked full suite. No publication or
 human accessibility acceptance is claimed.
+
+The full correction loop is complete. API discovery, map browser and nine axe
+states passed with existing test skips and contrast incompletes explicitly
+retained. Independent Review found no correction defects; its environment
+divergence and separately owned human/publication follow-ups remain visible.
 
 ## Sources
 
@@ -95,12 +101,12 @@ map output, screenshots and axe JSON. Manifest pins unaffected (research C6).
 * [x] P01-T02: Document browser/map key ownership in API README.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Validate and preserve local correction
+### [x] P02: Validate and preserve local correction
 
 <!-- rpi:task id=P02-T01 -->
 * [x] P02-T01: Run requested post-fix local checks.
 <!-- rpi:task id=P02-T02 -->
-* [ ] P02-T02: Record one independent Review and create local commits.
+* [x] P02-T02: Record one independent Review and create local commits.
 
 ## Critique Disposition
 
@@ -121,6 +127,9 @@ Critique: .copilot-tracking/reviews/plans/2026-10-29/map-browser-shortcuts-532-p
 Changes record (implementation-owned):
 .copilot-tracking/changes/2026-10-29/map-browser-shortcuts-532-changes.md.
 
-Source and requested local checks complete: API 1214 tests, 316 existing skips;
-extended map check and nine axe states passed with contrast incompletes retained.
-P02-T02 is explicitly Review/local-commit closeout, not remaining implementation.
+Source, requested local checks and independent Review complete: API 1214 tests,
+316 existing skips; extended map check and nine axe states passed with contrast
+incompletes retained. Implementation/evidence commit: 345df54d. Original
+independent Review is preserved in the dated review record and local closeout
+commit. All phase/task markers complete. Session stops by explicit user direction;
+no child follow-up or publication.
