@@ -8218,3 +8218,18 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Corrected the index's duplicate date metadata while retaining its current
   date. No application source, workflow, score, Azure resource or private
   dataset changed; no push, issue acceptance or hosted-CI result is claimed.
+
+## [2026-10-29] update | PR #507 conflict rebase, Refs #198
+
+* Rebased onto main `356a3cfbaa2cd63a6fbf80e87e11a29cacaaf4c7`.
+  Preserved main's entire log prefix, both original #198 append entries,
+  independent index updates and all fourteen prior RPI artifacts unchanged.
+* Updated the existing
+  [integration qualification](../architecture/cutover-evidence-pack.md#main-integration-qualification-2026-10-29)
+  with the later base and fresh local outcomes. Main's entire rubric tree and
+  scenario manifest are retained byte-for-byte; no application, workflow,
+  Azure resource or private-data change was made.
+* Core/API lint, format, typing and twelve focused tests passed, including
+  scenario source-pin validation. The inherited rubric suite still has
+  18 failures and seven missing-runtime skips; this is not CI-green evidence.
+  No full API suite, full publication gate, push or hosted run was performed.

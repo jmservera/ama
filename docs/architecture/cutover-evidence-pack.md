@@ -2127,6 +2127,16 @@ those rubric edits are not retained. Original critique, Review and historical
 acceptance gaps remain unchanged. No new rubric score, hosted CI success,
 publication receipt, merge or issue acceptance is inferred.
 
+The later same-day conflict rebase uses main
+`356a3cfbaa2cd63a6fbf80e87e11a29cacaaf4c7` and retains that revision's
+complete rubric tree and scenario manifest, superseding only the integration
+base above. Both independent index entries and append-only log histories
+survive. Core/API lint, format, typing and twelve focused tests pass; the
+scenario validator confirms the existing pins without re-pinning. The
+authoritative-main rubric suite still reports 18 failed, 355 passed and seven
+missing-runtime skips. Those failures are not repaired here; no fresh hosted
+CI or remote mergeability is claimed before the coordinator's push.
+
 ### Baseline and score provenance
 
 The pre-migration snapshot at `9261c5cb1dcca013d9bc93c79d3fafebc70b8f71`
