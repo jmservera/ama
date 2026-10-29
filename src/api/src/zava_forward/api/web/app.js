@@ -19,6 +19,7 @@ function h(tag, attrs, ...kids) {
     if (k === "class") el.className = v;
     else if (k.startsWith("on")) el.addEventListener(k.slice(2),
       ["onclick", "onsubmit", "onchange"].includes(k) && typeof AsyncAction !== "undefined"
+        && typeof AsyncAction.handler === "function"
         ? AsyncAction.handler(v) : v);
     else if (v !== false && v != null) el.setAttribute(k, v === true ? "" : v);
   }

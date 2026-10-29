@@ -1469,7 +1469,8 @@ const api = async (path, body) => {
     const reasonBox = meta.querySelectorAll("div").find(node => node.kids.includes(reason));
     assert.equal(editBox.hidden, true);
     assert.equal(reasonBox.hidden, true);
-    buttons.find(button => button.kids.includes("Edit this draft")).attrs.onclick();
+    const editButton = buttons.find(button => button.kids.includes("Edit this draft"));
+    editButton.attrs.onclick({currentTarget: editButton});
     assert.equal(editBox.hidden, false);
     assert.equal(reasonBox.hidden, false);
     const submit = buttons.find(button => button.textContent === "Save edited draft review");
@@ -1500,7 +1501,7 @@ const api = async (path, body) => {
       assert.equal(editing.attrs["aria-invalid"], undefined);
       assert.equal(done.length, 0);
       if (change !== "failure") {
-        await buttons[1].attrs.onclick();
+        await submit.attrs.onclick();
         assert.equal(requests.length, 1, "ambiguous draft review cannot retry");
       }
       continue;

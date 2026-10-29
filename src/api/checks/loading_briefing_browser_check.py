@@ -66,6 +66,7 @@ def shell_check(browser: Browser, base: str) -> None:
 
 def helper_bootstrap_check(
     browser: Browser, base: str, failures: int, *, missing_global: bool = False,
+    unready_helper: bool = False,
 ) -> None:
     context = browser.new_context()
     context.route("**/*", lambda route: route.continue_()
@@ -88,12 +89,14 @@ def helper_bootstrap_check(
                 route.abort()
             elif missing_global:
                 route.fulfill(content_type="text/javascript", body="/* Missing helper. */")
+            elif unready_helper:
+                route.fulfill(content_type="text/javascript", body="var AsyncAction = {};")
             else:
                 route.continue_()
 
         page.route("**/async-action.js", intercept)
         page.goto(base + "/app#/case/ZF-1?tab=resident")
-        terminal = failures == 3 or missing_global
+        terminal = failures == 3 or missing_global or unready_helper
         if terminal:
             expect(page.get_by_role("heading", name="Workspace unavailable")).to_be_visible()
             expect(page.get_by_role("alert")).to_contain_text(
@@ -104,9 +107,15 @@ def helper_bootstrap_check(
             expect(page.get_by_label("Work email", exact=True)).to_have_count(0)
             expect(page.get_by_role("button", name="Try again", exact=True)).to_have_count(0)
             assert not service_reads, "do not call start before helper readiness"
-            assert len(requests) == (2 if missing_global else 3), requests
+            expected_requests = 2 if missing_global or unready_helper else 3
+            assert len(requests) == expected_requests, requests
+            if unready_helper:
+                assert page.evaluate(
+                    "() => typeof AsyncAction === 'object' && "
+                    "typeof AsyncAction.handler !== 'function'")
             page.wait_for_timeout(800)
-            assert len(requests) == (2 if missing_global else 3), requests
+            assert len(requests) == expected_requests, requests
+            assert not errors, errors
             page.unroute("**/async-action.js")
             reload = page.get_by_role("button", name="Reload workspace", exact=True)
             page.locator("#app").focus()
@@ -137,7 +146,8 @@ def helper_bootstrap_check(
         expect(page.locator("#account-error")).to_have_text("Synthetic sign-out failure")
         expect(signout).to_be_enabled()
         assert not errors, errors
-        print(f"PASS helper bootstrap: failures={failures}, missing_global={missing_global}")
+        print(f"PASS helper bootstrap: failures={failures}, missing_global={missing_global}, "
+              f"unready_helper={unready_helper}")
     finally:
         context.close()
 
@@ -151,6 +161,7 @@ def run_browser(base: str, axe: str, output: Path) -> None:
             for failures in (1, 2, 3):
                 helper_bootstrap_check(browser, base, failures)
             helper_bootstrap_check(browser, base, 1, missing_global=True)
+            helper_bootstrap_check(browser, base, 0, unready_helper=True)
             context = browser.new_context(viewport={"width": 1280, "height": 900})
             context.route("**/*", lambda route: route.continue_()
                           if route.request.url.startswith(base + "/") else route.abort())

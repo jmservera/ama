@@ -19,6 +19,8 @@ role-specific dependencies are selected after sign-in. Exhausted retries or
 a loaded script without helper readiness show an explicit error and native
 "Reload workspace" action. Other workspace-script and Leaflet retry bounds
 and session/route guards remain unchanged.
+Recovery controls also retain their native listeners when the helper exists
+but its handler is not callable, so an incomplete helper cannot prevent reload.
 
 The shared native async-action helper wraps click, submit and change handlers.
 It shows text immediately, adds a decorative spinner beside that text after 200ms,
@@ -53,6 +55,10 @@ including line breaks before or between references. Common titles and medial
 abbreviations do not fragment statements; genuine sentence and line boundaries
 remain separate. Ambiguous capitalized street suffixes such as "High St." are
 conservatively treated as sentence boundaries, not general language inference.
+Sentence-ending punctuation followed by closing quotes or brackets retains
+the same statement/reference boundaries. Terminal name suffixes such as
+"Contact John Smith Jr. Repairs are due." do not borrow the next claim's
+references; lowercase medial continuations and titles remain intact.
 Hide/Show briefing is local reversible dismissal,
 not reversal of an immutable recorded review. Server source/review checks and
 all human approval, resident consent and manual boundaries remain unchanged.

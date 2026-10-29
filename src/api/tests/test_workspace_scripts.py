@@ -8,6 +8,71 @@ WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
 
 
 class WorkspaceScripts(unittest.TestCase):
+    def test_terminal_startup_renders_native_reload_with_unready_helper(self) -> None:
+        result = subprocess.run(
+            [
+                "node",
+                "-e",
+                r"""
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const vm = require("node:vm");
+const source = fs.readFileSync(process.argv[1] + "/app.js", "utf8");
+const factory = source.slice(source.indexOf("function h("),
+  source.indexOf("function mutationNeedsHistory"));
+const failure = source.slice(source.indexOf("function startupFailed("),
+  source.indexOf("bootstrapWorkspace().catch"));
+for (const state of ["absent", "empty", "non-callable", "ready"]) {
+  const elements = [], events = [], views = [];
+  let reloads = 0, wraps = 0;
+  const document = {
+    createElement(tag) {
+      const element = {tag, attrs: {}, children: [], listeners: {},
+        setAttribute(name, value) {this.attrs[name] = value;},
+        addEventListener(name, callback) {this.listeners[name] = callback;},
+        append(child) {this.children.push(child);}};
+      elements.push(element);
+      return element;
+    },
+    createTextNode: text => ({nodeType: 3, textContent: text}),
+    dispatchEvent: event => events.push(event.type)
+  };
+  const context = vm.createContext({document, Event, workspaceStatus: {textContent: ""},
+    location: {reload() {reloads++;}}, show: (...nodes) => views.push(nodes)});
+  if (state !== "absent") context.AsyncAction = state === "empty" ? {}
+    : state === "non-callable" ? {handler: true}
+    : {handler: callback => {wraps++; return callback;}};
+  vm.runInContext(factory + failure, context);
+  vm.runInContext(`startupFailed({message: "Synthetic helper unavailable",
+    reloadWorkspace: true})`, context);
+  assert.equal(views.length, 1, state);
+  const [heading, alert, reload] = views[0];
+  const text = node => node.children.map(child => child.textContent).join("");
+  assert.equal(text(heading), "Workspace unavailable", state);
+  assert.equal(alert.attrs.role, "alert", state);
+  assert.match(text(alert), /Synthetic helper unavailable/, state);
+  assert.equal(context.workspaceStatus.textContent,
+    "Workspace unavailable: Synthetic helper unavailable", state);
+  assert.deepEqual(events, ["workspace-ready"], state);
+  assert.equal(reload.tag, "button", state);
+  assert.equal(reload.attrs.type, "button", state);
+  assert.equal(text(reload), "Reload workspace", state);
+  assert.equal(typeof reload.listeners.click, "function", state);
+  reload.listeners.click();
+  assert.equal(reloads, 1, state);
+  assert.equal(wraps, state === "ready" ? 1 : 0, state);
+}
+console.log("PASS actual terminal renderer and native reload");
+""",
+                str(WEB),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("PASS actual terminal renderer", result.stdout)
+
     def test_retry_contracts_and_route_isolation(self) -> None:
         result = subprocess.run(
             [
@@ -33,6 +98,7 @@ function harness(outcomes = []) {
       const outcome = outcomes.shift() || "error";
       if (outcome === "timeout") return;
       queueMicrotask(() => {
+        if (outcome === "unready") context.AsyncAction = {};
         if (outcome === "ready") {
           if (script.src === "/async-action.js") context.AsyncAction = {handler: task => task};
           else if (script.src === "/vendor/leaflet.js") context.L = {};
@@ -92,7 +158,7 @@ function harness(outcomes = []) {
     await bootstrap.run('requireWorkspaceScripts("", false)');
     assert.deepEqual(bootstrap.requests, ["/async-action.js"]);
     assert.equal(bootstrap.run("typeof AsyncAction"), "object");
-    for (const outcomes of [["error", "error"], ["load"], ["timeout"]]) {
+    for (const outcomes of [["error", "error"], ["load"], ["timeout"], ["unready"]]) {
       bootstrap = harness([...outcomes]);
       bootstrap.context.me = null;
       delete bootstrap.context.AsyncAction;
@@ -104,10 +170,11 @@ function harness(outcomes = []) {
     }
   }
   for (const outcomes of [["ready"], ["error", "ready"], ["error", "error"],
-    ["load"], ["timeout"]]) {
+    ["load"], ["timeout"], ["unready"]]) {
     const bootstrap = harness([...outcomes]);
     bootstrap.context.me = null;
-    delete bootstrap.context.AsyncAction;
+    if (outcomes.includes("unready")) bootstrap.context.AsyncAction = {};
+    else delete bootstrap.context.AsyncAction;
     bootstrap.context.start = async () => bootstrap.views.push("start");
     bootstrap.context.signOut = async switchAccount => bootstrap.views.push(switchAccount);
     bootstrap.run(source.slice(source.indexOf("async function bootstrapWorkspace"),

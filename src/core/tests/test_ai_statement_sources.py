@@ -6,6 +6,126 @@ from zava_forward.core.ai_tasks import statement_sources
 
 
 class StatementSources(unittest.TestCase):
+    def test_quoted_statement_keeps_its_own_references(self) -> None:
+        self.assertEqual(
+            statement_sources(
+                'The status is "Survey booked." [[First source]] '
+                "Repairs are due. [[Second source]]",
+                {"ZF-1": ["First source", "Second source"]},
+            ),
+            [
+                dict(
+                    text='The status is "Survey booked."',
+                    citations=["First source"],
+                    unresolved=[],
+                ),
+                dict(text="Repairs are due.", citations=["Second source"], unresolved=[]),
+            ],
+        )
+
+    def test_closing_delimiters_preserve_sentence_and_reference_boundaries(self) -> None:
+        sources = {"ZF-1": ["First source", "Second source"]}
+        for punctuation in ".!?":
+            for opening, closing in (
+                ('"', '"'),
+                ("'", "'"),
+                ("\u201c", "\u201d"),
+                ("\u2018", "\u2019"),
+                ("(", ")"),
+                ("[", "]"),
+                ("{", "}"),
+                ('("', '")'),
+                ("\u201c[(", ")]\u201d"),
+            ):
+                for separator in (" ", "\t", "\n", "\r\n"):
+                    for placement in ("before", "after", "uncited"):
+                        with self.subTest(
+                            punctuation=punctuation,
+                            closing=closing,
+                            separator=repr(separator),
+                            placement=placement,
+                        ):
+                            first = f"Status: {opening}Survey booked{punctuation}{closing}"
+                            reference = "[[First source]] [[Unknown source]]"
+                            if placement == "before":
+                                text = (
+                                    f"Status: {opening}Survey booked {reference}"
+                                    f"{punctuation}{closing}"
+                                )
+                            elif placement == "after":
+                                text = first + separator + reference
+                            else:
+                                text = first
+                            self.assertEqual(
+                                statement_sources(
+                                    text + separator + "Repairs are due. [[Second source]]",
+                                    sources,
+                                ),
+                                [
+                                    dict(
+                                        text=first,
+                                        citations=[]
+                                        if placement == "uncited"
+                                        else ["First source"],
+                                        unresolved=[]
+                                        if placement == "uncited"
+                                        else ["Unknown source"],
+                                    ),
+                                    dict(
+                                        text="Repairs are due.",
+                                        citations=["Second source"],
+                                        unresolved=[],
+                                    ),
+                                ],
+                            )
+
+    def test_terminal_name_suffixes_do_not_borrow_next_statement_references(self) -> None:
+        sources = {"ZF-1": ["First source", "Second source"]}
+        for suffix in ("Jr.", "Sr."):
+            for first_cited, second_cited in ((False, True), (True, False), (True, True)):
+                with self.subTest(
+                    suffix=suffix, first_cited=first_cited, second_cited=second_cited
+                ):
+                    first = f"Contact John Smith {suffix}"
+                    second = "Repairs are due."
+                    self.assertEqual(
+                        statement_sources(
+                            first
+                            + (" [[First source]]" if first_cited else "")
+                            + " "
+                            + second
+                            + (" [[Second source]]" if second_cited else ""),
+                            sources,
+                        ),
+                        [
+                            dict(
+                                text=first,
+                                citations=["First source"] if first_cited else [],
+                                unresolved=[],
+                            ),
+                            dict(
+                                text=second,
+                                citations=["Second source"] if second_cited else [],
+                                unresolved=[],
+                            ),
+                        ],
+                    )
+
+    def test_medial_name_suffixes_keep_the_first_statement_references(self) -> None:
+        sources = {"ZF-1": ["First source", "Second source"]}
+        for suffix in ("Jr.", "Sr."):
+            first = f"Contact John Smith {suffix} about the survey."
+            with self.subTest(suffix=suffix):
+                self.assertEqual(
+                    statement_sources(
+                        first + " [[First source]] Repairs are due. [[Second source]]", sources
+                    ),
+                    [
+                        dict(text=first, citations=["First source"], unresolved=[]),
+                        dict(text="Repairs are due.", citations=["Second source"], unresolved=[]),
+                    ],
+                )
+
     def test_line_breaks_before_trailing_citations(self) -> None:
         sources = {"ZF-1": ["Stage: Survey booked", "Days in stage: 3"]}
         for separator in ("\n", "\r\n", " \n\t"):

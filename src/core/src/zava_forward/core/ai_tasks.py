@@ -28,6 +28,7 @@ PROMPT_VERSION = "2026-10-09.1"
 CITE_RE = re.compile(r"\[\[(.+?)\]\]")
 EMPTY_SOURCES = re.compile(r"(?im)^[ \t]*sources?[ \t]*:[\s;,]*$")
 BULLET = re.compile(r"^\s*[-*\u2022]\s")
+STATEMENT_END = r"""[.!?]["'\u2019\u201d)\]}]*"""
 STATEMENT_ABBREVIATION = re.compile(
     r"\b(?:Mr|Mrs|Ms|Mx|Dr|Prof|Rev|Sr|Jr|St|e\.g|i\.e|vs|cf|approx|etc)\.(?=[ \t]+\w)",
     re.IGNORECASE,
@@ -150,7 +151,7 @@ def statement_sources(text: str, sources: Any, bullets: bool = False) -> list[di
     protected = CITE_RE.sub(protect, text)
     # A model may place the citation after the sentence's punctuation.
     protected = re.sub(
-        r"([.!?])\s*((?:\x00\d+\x00\s*)+)",
+        rf"({STATEMENT_END})\s*((?:\x00\d+\x00\s*)+)",
         lambda match: " " + " ".join(match[2].split()) + match[1] + " ",
         protected,
     )
@@ -160,6 +161,11 @@ def statement_sources(text: str, sources: Any, bullets: bool = False) -> list[di
         following = match.string[match.end():].lstrip(" \t")
         if word in ("approx.", "etc.") and not (following[0].islower() or following[0].isdigit()):
             return match.group()
+        if word in ("jr.", "sr.") and following[0].isupper():
+            # A suffix after a name can end a claim; titles before a name stay medial.
+            if re.search(r"\b[A-Z][\w'\u2019-]*[ \t]+[A-Z][\w'\u2019-]*[ \t]+$",
+                         match.string[:match.start()]):
+                return match.group()
         if word == "st.":
             preceding = re.search(r"(\w+)[ \t]+$", match.string[:match.start()])
             # A capitalized street suffix is ambiguous; do not merge its next claim.
@@ -169,7 +175,8 @@ def statement_sources(text: str, sources: Any, bullets: bool = False) -> list[di
 
     protected = STATEMENT_ABBREVIATION.sub(protect_abbreviation, protected)
     statements = []
-    for piece in re.split(r"(?<=[.!?])\s+|\n+", protected):
+    separated = re.sub(rf"({STATEMENT_END})\s+", r"\1\n", protected)
+    for piece in re.split(r"\n+", separated):
         raw = re.sub(r"\x00(\d+)\x00", lambda m: marks[int(m[1])], piece).replace("\x01", ".").strip()
         if not raw:
             continue
