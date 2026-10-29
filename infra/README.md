@@ -47,6 +47,11 @@ separate from Unknown actual cost and missing AI usage/reconciliation.
 `operationsWorkbookId` is the resource output; no deployment, portal rendering
 or operating acceptance is claimed.
 
+Both telemetry queries union the bare table reference with a typed empty
+datatable before projecting fields, so an absent table can use the fallback
+schema and report Insufficient. `tests/test_monitoring_workbook.py` checks this
+source shape for both panels; it does not execute KQL against Azure.
+
 `enableCandidateMonitoringAlerts` defaults false. Even true keeps candidates
 disabled when `monitoringApprovalReference` is empty/whitespace; a nonempty string
 is not proof of actual named-human approval. Actual primary/backup owners,
