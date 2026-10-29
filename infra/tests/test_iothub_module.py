@@ -1,12 +1,15 @@
 """Compiled IoT transport contracts and mutation guards (issue 140)."""
 
+import json
 import os
 import shutil
+import subprocess
 import unittest
 from copy import deepcopy
 from types import SimpleNamespace
 
 from test_bicep_policy import (
+    INFRA,
     compile_bicep,
     evaluate,
     module,
@@ -38,6 +41,33 @@ class IotHubModuleTests(unittest.TestCase):
         cls.template = compile_bicep("modules/iothub.bicep")
         cls.main = compile_bicep("main.bicep")
         cls.live = compile_bicep("iot-hub-live.bicep")
+
+    def test_live_parameters_compile_and_match_the_approved_contract(self) -> None:
+        result = subprocess.run(
+            [
+                "az",
+                "bicep",
+                "build-params",
+                "--file",
+                str(INFRA / "iot-hub-live.bicepparam"),
+                "--stdout",
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        compiled = json.loads(result.stdout)
+        self.assertEqual(json.loads(compiled["templateJson"]), self.live)
+        self.assertEqual(
+            json.loads(compiled["parametersJson"])["parameters"],
+            {
+                "name": {"value": "iot-cutover-test-rzsrg"},
+                "location": {"value": "uksouth"},
+                "skuName": {"value": "B1"},
+                "unitCount": {"value": 1},
+            },
+        )
 
     def test_live_profile_cannot_deploy_paid_adapter_endpoints_or_roles(self) -> None:
         self.assertEqual(
@@ -82,8 +112,25 @@ class IotHubModuleTests(unittest.TestCase):
                     context,
                 )["value"]
                 self.assertEqual(bool(value), accepted, (sku, units, key))
-        group = resource(self.live, f"{HUB}/eventHubEndpoints/ConsumerGroups")
-        self.assertIn("/events/api-consumer", group["name"])
+        self.assert_live_consumer_group(self.live)
+
+    def assert_live_consumer_group(self, template) -> None:
+        group = resource(template, f"{HUB}/eventHubEndpoints/ConsumerGroups")
+        self.assertEqual(
+            evaluate(group["name"], self.values(template), template.get("variables", {})),
+            "fixture/events/api-consumer",
+        )
+
+    def test_mutations_reject_live_consumer_group_wrong_hub_or_group(self) -> None:
+        for name in (
+            "[format('{0}/events/api-consumer', 'wrong-hub')]",
+            "[format('{0}/events/wrong-group', parameters('name'))]",
+        ):
+            with self.subTest(name=name):
+                mutated = deepcopy(self.live)
+                resource(mutated, f"{HUB}/eventHubEndpoints/ConsumerGroups")["name"] = name
+                with self.assertRaises(AssertionError):
+                    self.assert_live_consumer_group(mutated)
 
     def assert_live_diagnostics(self, template) -> None:
         diagnostics = [
