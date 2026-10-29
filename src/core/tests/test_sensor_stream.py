@@ -3,6 +3,7 @@
 import asyncio
 import unittest
 from dataclasses import replace
+from datetime import UTC, datetime, timedelta
 from unittest.mock import patch
 
 from zava_forward.core.synthetic import sensor_backfill, sensor_faults, sensor_stock
@@ -149,6 +150,23 @@ class ReplayTests(unittest.TestCase):
         self.assertEqual(descriptor(selected, spec)["source_type"], "SYNTHETIC")
         self.assertEqual(descriptor(selected, spec)["stock_sha256"], selected.input_sha256)
 
+    def test_nominal_timing_uses_configured_origin_cadence_and_suffix(self) -> None:
+        spec = Replay(
+            origin=datetime(2025, 2, 1, 3, 15, tzinfo=UTC),
+            cadence_minutes=60,
+            first_slot=3,
+            end_slot=5,
+        )
+        frames = replay(selection(), spec)
+        self.assertEqual(
+            [frame.nominal_at for frame in frames],
+            [spec.origin + timedelta(hours=slot) for slot in (3, 4)],
+        )
+        self.assertEqual(
+            [frame.nominal_at for frame in frames],
+            [datetime.fromisoformat(frame.row["observed_at"]) for frame in frames],
+        )
+
     def test_faults_are_separate_truth_and_nominal_slot_replay(self) -> None:
         for fault in (
             "duplicate",
@@ -167,6 +185,13 @@ class ReplayTests(unittest.TestCase):
                 self.assertEqual(suffix, tuple(frame for frame in full if 3 <= frame.slot < 5))
                 self.assertTrue(all(frame.truth == fault for frame in full))
                 self.assertTrue(all("truth" not in frame.row for frame in full))
+                self.assertEqual(
+                    [frame.nominal_at for frame in full],
+                    [
+                        spec.origin + timedelta(minutes=frame.slot * spec.cadence_minutes)
+                        for frame in full
+                    ],
+                )
                 self.assertEqual(len(full), 12 if fault == "duplicate" else 6)
         self.assertEqual(replay(selection(), Replay(fault="gap")), ())
         odd = replay(selection(), Replay(days=1, fault="out_of_order"))

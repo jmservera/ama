@@ -349,6 +349,7 @@ class HubPublisher:
                 dict(frame.row),
                 frame.truth,
                 frame.selected_stock_sha256,
+                frame.nominal_at,
             )
             for frame in frames
         )
@@ -387,7 +388,7 @@ class HubPublisher:
 
         try:
             for frame in frames:
-                stamp = datetime.fromisoformat(frame.row["observed_at"])
+                stamp = frame.nominal_at
                 interval = max(0.0, (stamp - previous).total_seconds()) if previous else 0.0
                 await _bounded(control.wait(0 if frame.truth == "burst" else interval), deadline)
                 previous = stamp

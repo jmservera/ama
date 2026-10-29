@@ -420,6 +420,55 @@ class PublisherTests(unittest.IsolatedAsyncioTestCase):
         self.client = Mock(connect=AsyncMock(), send_message=AsyncMock(), shutdown=AsyncMock())
         self.truth: list[dict[str, object]] = []
 
+    async def test_out_of_order_suffix_uses_nominal_pacing_and_preserves_payloads(self) -> None:
+        selected = sensor_stock.select(
+            [
+                {
+                    "synthetic_home_id": "ZF-1",
+                    "is_synthetic": "true",
+                    "monitoring_consent": "granted",
+                }
+            ],
+            1,
+        )
+        clean = replay(selected, Replay())
+        frames = replay(selected, Replay(fault="out_of_order", first_slot=3, end_slot=5))
+        self.assertEqual([frame.slot for frame in frames], [3, 4])
+        self.assertEqual([frame.row for frame in frames], [clean[2].row, clean[5].row])
+        observed = [datetime.fromisoformat(frame.row["observed_at"]) for frame in frames]
+        self.assertEqual((observed[1] - observed[0]).total_seconds(), 24 * 3600)
+        budget = replace(self.budget, max_seconds=60)
+        started = time.monotonic()
+        now = [started]
+        control = Pacer(budget, speed=1000, clock=lambda: now[0])
+        sent: list[float] = []
+
+        async def advance(seconds: float) -> None:
+            now[0] += seconds
+
+        async def send(message: object) -> None:
+            sent.append(now[0] - started)
+
+        self.client.send_message.side_effect = send
+        with (
+            patch(
+                "zava_forward.api.iot_stream.IoTHubDeviceClient.create_from_x509_certificate",
+                return_value=self.client,
+            ),
+            patch("zava_forward.core.synthetic.sensor_stream.asyncio.sleep", advance),
+        ):
+            count = await self.publisher.run(frames, budget, pacer=control, truth=self.truth.append)
+        self.assertEqual(count, 2)
+        self.assertEqual(len(sent), 2)
+        self.assertAlmostEqual(sent[0], 0)
+        self.assertAlmostEqual(sent[1], 28.8)
+        self.assertLess(sent[1], budget.max_seconds - 0.5)
+        self.assertEqual(
+            [call.args[0].data for call in self.client.send_message.call_args_list],
+            [wire(clean[index].row).decode("ascii") for index in (2, 5)],
+        )
+        self.client.shutdown.assert_awaited_once()
+
     async def test_cancel_during_cleanup_cancels_and_observes_both_runners(self) -> None:
         for runner in ("receiver", "publisher"):
             with self.subTest(runner=runner):

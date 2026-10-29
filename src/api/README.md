@@ -837,6 +837,9 @@ records including the selected-input digest copied from each Frame, never
 values, home/device IDs or credentials. `attempt` without `sent`
 is uncertain, not proof of no delivery; rerun identical frames to reconcile.
 `disconnect` is an explicit terminal synthetic stop, not an automatic reconnect.
+Model-time spacing uses each Frame's `nominal_at`, not its observation timestamp.
+For example, out-of-order suffix slots 3..4 retain their reordered payload times
+while waiting the nominal 8 hours, or 28.8 seconds at speed 1000.
 `burst` skips model-time spacing but still obeys the configured rate cap.
 Actual send-attempt admission occurs after connection, message construction
 and attempt-truth preparation, immediately before the SDK await in the same

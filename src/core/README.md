@@ -88,6 +88,9 @@ window, cadence, schema/model context and explicit fault mode. Each Frame carrie
 the selected digest outside its observation, binding that frame to the snapshot
 actually used for generation. A later selection mutation changes newly computed
 provenance, not old frames; match the descriptor's selected digest to the frames.
+Each Frame also carries `nominal_at`, the UTC time from the original origin and
+slot cadence, outside the observation. Publishers use this time for scheduling,
+not the fault-injected observation timestamp; duplicates retain the same nominal time.
 The descriptor version is `synthetic-stream-v2`; reading IDs/bytes are unchanged.
 Keep descriptors and selected-home evidence restricted, not ordinary telemetry.
 

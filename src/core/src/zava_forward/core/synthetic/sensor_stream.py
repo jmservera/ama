@@ -83,6 +83,7 @@ class Frame:
     row: dict[str, str]
     truth: str
     selected_stock_sha256: str
+    nominal_at: datetime
 
     @property
     def reference(self) -> str:
@@ -183,13 +184,25 @@ def replay(selection: sensor_stock.Selection, spec: Replay) -> tuple[Frame, ...]
             if spec.fault == "gap":
                 continue
             frame = Frame(
-                "SYN-" + str(sensor["sensor_id"]), slot, row, spec.fault, checked.input_sha256
+                "SYN-" + str(sensor["sensor_id"]),
+                slot,
+                row,
+                spec.fault,
+                checked.input_sha256,
+                spec.origin + timedelta(minutes=slot * spec.cadence_minutes),
             )
             wire(frame.row)
             frames.append(frame)
             if spec.fault == "duplicate":
                 frames.append(
-                    Frame(frame.device_id, slot, dict(row), spec.fault, checked.input_sha256)
+                    Frame(
+                        frame.device_id,
+                        slot,
+                        dict(row),
+                        spec.fault,
+                        checked.input_sha256,
+                        frame.nominal_at,
+                    )
                 )
     return tuple(sorted(frames, key=lambda frame: frame.slot))
 
