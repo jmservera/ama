@@ -14,7 +14,12 @@ P02-T01/T02 complete: project-wide Ruff/format/mypy all pass; core 383 tests
 (87 skips), API 120 (one skip), migration 25 (no skips). No source/test repair,
 addition, removal or generated-output update was necessary. Exact commands
 and qualified integration boundaries are in the dated changes artifact.
-P03-T01 complete; independent Review and final commit/handoff remain.
+P03-T01/T02 complete. One independent Review assessed `edfed594`,
+execution Complete / outcome Residual work, with no in-scope integration
+blocker. P03-T03 finalizes only Review/state/plan/details/changes evidence;
+it changes no reviewed source. The local commit and final checks must succeed
+before the completed handoff is reported. Publication and existing human
+acceptance remain separate RV-001/RV-002 follow-ups.
 
 ## P01: Rebase integration
 

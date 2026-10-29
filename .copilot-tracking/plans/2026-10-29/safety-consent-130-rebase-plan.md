@@ -3,7 +3,7 @@ title: Safety consent PR 509 rebase plan
 ms.date: 2026-10-29
 ---
 
-Task ID: pr-509-rebase-2026-10-29. Status: implementation-ready after direct critique dispositions.
+Task ID: pr-509-rebase-2026-10-29. Status: complete for local unpublished handoff.
 
 ## Executive Summary
 
@@ -86,8 +86,8 @@ misrepresented as passes. Authenticate privacy-safe author/committer identity.
 ### P03: Independent Review and local handoff
 
 * [x] P03-T01: Record commands/results and reconcile plan/details/changes evidence.
-* [ ] P03-T02: Execute one independent Review and route residual work.
-* [ ] P03-T03: Commit implementation/evidence with authenticated identity; verify clean
+* [x] P03-T02: Execute one independent Review and route residual work.
+* [x] P03-T03: Commit implementation/evidence with authenticated identity; verify clean
   main-descendant head and leave push to coordinator.
 
 ## Locked Test Ownership and Coverage
@@ -124,9 +124,16 @@ Neither finding requires a new user decision; no second critique will run.
 
 Hosted CI, final publication gate and formal human acceptance are outside this
 local unpublished integration task. Historical operational blockers remain.
+RV-001 (Low): coordinator establishes current-base/final-head publication
+evidence, any required complete gate/receipt and hosted CI before owner merge.
+RV-002 (Medium): original named human resident/tenure/privacy decisions remain
+unaccepted; no operational activation or issue closure follows this rebase.
 
 ## Handoff
 
 Details: `.copilot-tracking/details/2026-10-29/safety-consent-130-rebase-phase-details.md`.
 Changes: `.copilot-tracking/changes/2026-10-29/safety-consent-130-rebase-changes.md`.
 No unresolved implementation decision is currently identified.
+One independent Review executed Complete / Residual work at `edfed594`;
+no local integration blockers. Final evidence-only reconciliation is not a
+second Review or an assessment/receipt for a later publication head.

@@ -4,8 +4,9 @@ ms.date: 2026-10-29
 ---
 
 Task ID: pr-509-rebase-2026-10-29. Scope: full approved plan.
-Status: implementation and required local validation complete; Review pending.
-Local-only candidate, no push authorized.
+Status: research, plan, implementation and one independent Review complete.
+Local-only handoff; no push authorized. Review outcome: Residual work,
+with no material in-scope integration blocker.
 
 ## Intake and P01: Rebase
 
@@ -139,9 +140,88 @@ the coordinator must retain those gates before publication/merge.
 
 ## P03: Review Handoff
 
-P03-T01 complete. Implementation is reconciled with research, plan, details
-and critique dispositions. P01/P02 are complete; P03-T02 independent Review
-and P03-T03 final local commit/handoff remain. No implementation blocker or
-material divergence was found. New dated evidence will first be committed
-to supply a stable exact candidate for the one independent Review; the Review
-and final evidence-only state update will then be committed separately.
+P03-T01 complete. Implementation was reconciled with research, plan, details
+and critique dispositions before Review. No implementation blocker or
+material divergence was found.
+
+`git fetch origin main && git merge-base --is-ancestor origin/main HEAD`
+succeeded before the candidate commit; main remained
+`356a3cfbaa2cd63a6fbf80e87e11a29cacaaf4c7`.
+JSON validation with `/tmp/mv/bin/python -m json.tool` and
+`git diff --cached --check` passed.
+
+The six then-current dated artifacts were explicitly staged and committed:
+
+```bash
+git -c user.email=8036360+jmservera@users.noreply.github.com commit \
+  -m "chore(safety-consent): record main rebase and local validation" \
+  -m "Refs #130. Preserve both README additions and main's runtime, rubric and scenario manifest updates. Record dated research, plan, critique and validation for the local coordinator handoff." \
+  -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"
+git status --short
+git rev-parse HEAD
+git log -3 --format='%h %an <%ae> | %cn <%ce> %s'
+```
+
+Commit succeeded as `edfed594fc4e4ae60c1c02190a01aa6b3503efe5`;
+worktree clean, authenticated noreply author and committer verified on all
+three then-current topic commits.
+
+P03-T02 complete: exactly one independent Review executed Complete / Residual
+work at that committed candidate and base. It independently verified ancestry,
+README preservation, original historical evidence equality, controlled-file
+equality and source/test scope; it inspected recorded test results rather than
+claiming reruns. No source/required-validation defect was found.
+
+* RV-001 (Low): final publication/current-base/exact-final-head/hosted gates
+  remain coordinator work. No push or final publication readiness is claimed.
+* RV-002 (Medium): historical resident, Legal/Home Ownership, Finance,
+  privacy and operational acceptance remain human-owned and unaccepted.
+
+The original critique and Review verdicts are preserved. No second critique,
+Review, post-Review runtime repair or operational extension was performed.
+
+Before final evidence reconciliation, these commands succeeded:
+
+```bash
+git merge-base --is-ancestor origin/main HEAD
+git diff --exit-code edfed594fc4e4ae60c1c02190a01aa6b3503efe5 -- src docs .github
+git diff --exit-code origin/main -- .github/rubric docs/reference/research/retrofit-synthetic-data/scenario-manifest.json docs/reference/log.md docs/reference/README.md
+git diff --check
+/tmp/mv/bin/python -m json.tool .copilot-tracking/rpi-sessions/2026-10-29/safety-consent-130-rebase-state.json
+git status --short
+git rev-parse origin/main origin/docs/safety-consent-130
+```
+
+Only the state edit and new Review were then uncommitted; source was identical
+to the reviewed candidate. Remote-tracking topic remained the original
+`fa665644e03940c7662498e5cac88665e88e137f`, consistent with no push.
+
+## P03-T03 Final Local Commit Procedure
+
+The final evidence-only commit contains this reconciliation, completed plan/
+details/state and the original Review. It does not change application sources
+or convert the original Review into final-head publication assessment.
+The parent runs the following after serializing this evidence, and reports
+completion only if commit and post-commit assertions all succeed:
+
+```bash
+git diff --check
+/tmp/mv/bin/python -m json.tool .copilot-tracking/rpi-sessions/2026-10-29/safety-consent-130-rebase-state.json
+# Stage only the five changed/new dated tracking files.
+git -c user.email=8036360+jmservera@users.noreply.github.com commit \
+  -m "docs(safety-consent): record independent rebase review and handoff" \
+  -m "Refs #130. Preserve the original residual-work verdict and coordinator publication gates. No push or Azure resource changes." \
+  -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"
+git merge-base --is-ancestor origin/main HEAD
+git diff --exit-code edfed594fc4e4ae60c1c02190a01aa6b3503efe5 -- src docs .github
+git diff --exit-code origin/main -- .github/rubric docs/reference/research/retrofit-synthetic-data/scenario-manifest.json docs/reference/log.md docs/reference/README.md
+git diff --check origin/main...HEAD
+test -z "$(git status --porcelain)"
+git log -1 --format='%H%n%s%n%b%nAuthor: %an <%ae>%nCommitter: %cn <%ce>'
+git status --short --branch
+```
+
+The commit hash is deliberately not self-embedded; use `git rev-parse HEAD`.
+Task scope ends at this local handoff. Coordinator must fetch again and
+establish publication evidence against the actual eventual head before its
+authorized push; remote mergeability and CI remain unobserved here.
