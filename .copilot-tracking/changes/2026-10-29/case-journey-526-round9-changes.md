@@ -147,3 +147,19 @@ Authenticated GitHub identity supplies repository-local privacy-safe author and
 committer email; required Copilot trailer included. Refs #526 is non-closing.
 No push. Coordinator owns separately authorized publication gate/receipt/push,
 hosted approval and manual accessibility/human acceptance.
+
+## Post-Commit Upstream Handoff
+
+Reviewed implementation/evidence commit: 7b987c63f070dff8466acdecc661dd5143985cb4.
+Clean worktree and committed API diff hash independently match the frozen
+Review boundary. Round-eight correction remains 24d7ca9c.
+
+Final upstream inspection discovered rubric bot commit 27d11262 on the topic
+remote, changing only .github/rubric/scores/badge.svg and latest.json.
+The shared remote-tracking ref advanced after intake. The requested
+git pull --ff-only was attempted and safely refused the now-diverged history.
+No merge, rebase, amend, cherry-pick, force-push or ordinary push was performed.
+Coordinator must reconcile this upstream bot change without losing the two
+local corrections, then rerun the mandatory exact-head publication gates.
+This additional local handoff-metadata commit changes no reviewed executable
+source and does not claim an exact-head gate or a repeated Review.
