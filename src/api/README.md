@@ -168,37 +168,6 @@ It is a separate required check, not automatically run by the full RPI gate.
 Local SQL Server/browser execution and post-deployment verification must be
 recorded separately; source coverage alone does not establish live acceptance.
 
-## Employee case journey workspace (#526)
-
-Employee case routes show a six-step evidence-based journey, six-value summary
-and nine native ARIA tabs. Tab selection lives in `?tab=` inside the hash;
-manual arrow-key focus and Enter/Space activation retain panel DOM and drafts.
-Open safety controls stay above all tabs. Funding and Resident agreement
-completion require recorded confirmation, not position alone.
-
-The [supplied design](../../docs/reference/research/ux/employee-case-workspace-redesign.md)
-records the requirements and explicit chat-review exception. No API `journey`
-or confidence score is added. Draft/proposal review is not an approval, consent
-or safety decision. Chat answers stay advisory; request a separate proposal for
-recorded source verification and review.
-
-From `src/api`, with installed project dev distributions:
-
-```bash
-PYTHONPATH=../core/tests:../agents/tests python3 -m unittest discover -s tests -q
-PYTHONPATH=tests:../core/tests:../agents/tests python3 -m checks.design_system_browser_check
-PYTHONPATH=tests:../core/tests:../agents/tests python3 -m checks.case_journey_browser_check \
-  --axe /path/to/axe-4.10.3.min.js --out /new/external/journey-results
-```
-
-The focused check owns a real loopback app with public constructed fixtures,
-pinned axe, keyboard/reflow states and actual Chromium 200% tab zoom through a
-test-only extension. No Azure, private dataset or live model is used.
-Coordinate heavy runs through `/tmp/ama-rpi-heavy.lock`; nonblocking retries
-are bounded to 40 minutes for this correction; release immediately after heavy
-checks. Screen-reader, staff usability and
-post-deployment verification remain pending the owner.
-
 ## Specialist screen delivery (#149)
 
 The existing workbench includes a **Specialist screens** destination. Installed
