@@ -376,6 +376,8 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 d.pop("affected_challenges", None)
                 d.pop("challenge_targets", None)
             d.pop("form_staging", None)
+            d.pop("form_reviews", None)
+            d.pop("finance_decision_holds", None)
             d["support_status"] = stock.support_status(c["resident"])
             d["support_coverage"] = stock.support_coverage(c["resident"])
             d["resident"].setdefault("priority_support", None)

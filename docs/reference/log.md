@@ -8169,3 +8169,20 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Constructed actual local SQL Server passed45 sensor ingestion tests; do not
   describe this as live Hub-to-SQL or resident-gauge acceptance. Original
   source-only history, critique and open credential/OD43 criteria remain.
+
+## [2026-10-27] query | Working Finance reviews and held human decisions
+
+* Indexed the [core working-review boundary](../../src/core/README.md#unapproved-working-field-review-96-98-99)
+  and [authenticated form-review endpoint](../../src/api/README.md#working-form-review-and-held-finance-decisions-96-98-99)
+  for #96, #98 and #99.
+* Isolated accept/correct/reject notes, retained source/reviewer history,
+  field-specific draft diagnostics and linked diagnostic manifests do not
+  approve a template, source policy, eligibility rule or application/claim.
+  Draft-only read/action-time freshness is not full downstream invalidation.
+* Missing template/rule authority and Finance/Board OD-12/15 are durably Held
+  with null approved inputs. Diagnostic pause is not a programme-wide release
+  gate or containment of live activity. Actual approved envelope, liquidity,
+  covenant, downside thresholds and restart authority remain human decisions.
+* No company figures, financial approvals, Azure changes, private datasets or
+  new AI authority are introduced. All three issues remain Refs; engineering
+  evidence is not whole-issue or operational acceptance.

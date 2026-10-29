@@ -13,7 +13,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
-from zava_forward.core import ai_registry, controls, forms, profile
+from zava_forward.core import ai_registry, controls, form_review, forms, profile
 
 from zava_forward.core import identity, projection, quality, ranking, taskqueues
 
@@ -340,7 +340,7 @@ def make_handler(app):
             form_parts = url.path.strip("/").split("/")
             if url.path == "/api/form-schemas" or (
                     len(form_parts) == 4 and form_parts[:2] == ["api", "cases"]
-                    and form_parts[3] == "form-candidates"):
+                    and form_parts[3] in ("form-candidates", "form-review")):
                 return self._forms(u, url.path, None)
             if url.path.startswith("/api/buildings/"):
                 try:
@@ -782,11 +782,15 @@ def make_handler(app):
                     if body is None:
                         return self._json(200, {"schemas": forms.list_schemas(app.store, user)})
                     return self._json(201, forms.register_schema(app.store, user, body))
+                if parts[3] == "form-review":
+                    if body is None:
+                        return self._json(200, form_review.view(app.store, user, parts[2]))
+                    return self._json(201, form_review.action(app.store, user, parts[2], body))
                 if body is None:
                     return self._json(200, {"batches": forms.list_candidates(app.store, user, parts[2])})
                 return self._json(201, forms.stage_candidates(app.store, user, parts[2], body))
             except DocumentStoreError:
-                return self._json(502, {"error": "The document store is unavailable; no candidates were staged."})
+                return self._json(502, {"error": "The document store is unavailable. Reload before retrying; no approval or submission occurred."})
             except ConflictError:
                 return self._json(409, {"error": "The form or source changed. Reload before retrying."})
             except PermissionError as error:
@@ -871,7 +875,7 @@ def make_handler(app):
             parts = url.path.strip("/").split("/")
             if url.path == "/api/form-schemas" or (
                     len(parts) == 4 and parts[:2] == ["api", "cases"]
-                    and parts[3] == "form-candidates"):
+                    and parts[3] in ("form-candidates", "form-review")):
                 return self._forms(u, url.path, body)
             try:
                 if url.path == "/api/bulk-edits/preview":

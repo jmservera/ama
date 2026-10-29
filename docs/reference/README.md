@@ -60,6 +60,16 @@ Actual cost/AI metering and variance remain Unknown/unreconciled, and existing
 diagnostic privacy exclusion, poison signals, RAI incident integration and live
 owner/threshold approvals remain unmet. No deployment or issue closure follows.
 
+For finance #96/#98/#99, the
+[working field-review contract](../../src/core/README.md#unapproved-working-field-review-96-98-99)
+and [authenticated endpoint](../../src/api/README.md#working-form-review-and-held-finance-decisions-96-98-99)
+describe isolated draft reviews, source-linked diagnostic manifests and durable
+Held decision records. Every schema remains Unapproved; approved-rule
+validation/reviewed export and actual Board OD-12/15 envelope/tolerances are
+unavailable. The pause signal is diagnostic only, not a programme-wide release
+or live-activity hold. Synthetic engineering checks do not approve financial
+inputs or establish whole-issue acceptance.
+
 For #140/#184, the [bounded 2026-10-29 existing-hub reconciliation](../../infra/README.md#bounded-existing-hub-exercise-2026-10-29-refs-140-184-137)
 records owner-approved USD10/month B1/one unit within USD5 additional through
 October31, reuse of the deployed hub and successful metrics-only diagnostic

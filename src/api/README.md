@@ -663,6 +663,69 @@ not evidence of keyboard, screen-reader or representative participation.
 PYTHONPATH=../core/tests:../agents/tests python3 -m unittest discover -s tests -p test_resident_api.py -q
 ```
 
+## Working form review and held Finance decisions (#96, #98, #99)
+
+`GET /api/cases/{case_id}/form-review` returns authorized working diagnostics,
+review history, recorded diagnostic manifests and unresolved decision holds.
+An unavailable retained source does not fail the whole GET: its draft entry
+contains only `draft_id`, `status: "Unavailable"` and a fixed recovery `notice`.
+Affected values, history, attachments and recorded diagnostics stay hidden;
+unrelated available drafts remain readable in the same 200 response.
+`POST` accepts only `open`, `review` and `diagnose`; all other actions and extra
+keys are refused. Existing authentication and Finance/resident/reason-view
+checks apply on the server. No UI, model call, approval, submission or
+reviewed-export path is added.
+
+```json
+{"action":"open","schema_id":"SYN-TECH","schema_version":1}
+```
+
+The example schema ID is synthetic and must already be registered. The response
+includes `draft_id` and `input_version`. Individual review uses the exact keys:
+
+```json
+{
+  "action": "review",
+  "draft_id": "<returned draft_id>",
+  "expected_version": 1,
+  "field_id": "epc",
+  "decision": "accept",
+  "batch_id": "<same-case staged batch ID>",
+  "candidate_id": "<staged candidate ID for epc>",
+  "value": null,
+  "reason": "Synthetic example: checked the bound source"
+}
+```
+
+`correct` supplies an explicit scalar value while retaining source lineage;
+`reject` requires null batch/candidate/value and preserves prior history.
+`diagnose` takes only action, draft_id and expected_version. Writes increment
+the draft version; stale writes return 409. Invalid input returns 400, denied
+or unavailable scanned evidence on POST 403, missing case/draft 404, unavailable blob
+storage 502 and storage failure 503. On storage errors, reload before retrying.
+Pending/missing scans use the separate document recovery path, never a hidden
+review-time scan.
+
+Every manifest is Held with `reviewed_ready: false`. Approved-rule validation,
+unit/currency verification and Board breach assessment are Not evaluated.
+Three durable decision-needed entries carry no invented approval or figures;
+the acceleration pause is diagnostic only, not a programme-wide hold.
+See the [core boundary](../core/README.md#unapproved-working-field-review-96-98-99)
+for typed conditions, source/schema freshness, JSON/SQL writer guarantees and
+the still-blocked Finance/Board decisions. Raw values/history/holds are omitted
+from ordinary case detail; the dedicated endpoint refuses affected historical
+evidence after quarantine through the opaque per-draft GET result above.
+
+After pip editable installation, from `src/api`:
+
+```bash
+PYTHONPATH=tests:../core/tests:../agents/tests python3 -m unittest test_form_staging_api -q
+```
+
+This is a synthetic local engineering slice, not approved-template binding,
+full reviewed application/claim export, live financial authority, a Board
+envelope or complete issue acceptance.
+
 ## Specialist screen delivery (#149)
 
 The existing workbench includes a **Specialist screens** destination. Installed

@@ -174,6 +174,175 @@ class FormApi(unittest.TestCase):
             self.assertNotIn("private raw", json.dumps(result))
         self.assertEqual(self.call("pam", path)[1]["batches"], [])
 
+    def working_review(self) -> tuple[Any, Any]:
+        self.assertEqual(self.call("pam", "/api/form-schemas", schema())[0], 201)
+        actor = self.store.staff["pam@example.test"]
+        doc = self.store.add_document(
+            actor,
+            "ZF-1",
+            "synthetic.txt",
+            "EPC",
+            b"EPC D",
+            metadata=change_metadata(self.store, "ZF-1"),
+        )
+        staged = self.call("pam", "/api/cases/ZF-1/form-candidates", batch(doc["id"]))[1]
+        code, draft = self.call(
+            "pam",
+            "/api/cases/ZF-1/form-review",
+            dict(action="open", schema_id="SYN-TECH", schema_version=1),
+        )
+        self.assertEqual(code, 201, draft)
+        request = dict(
+            action="review",
+            draft_id=draft["draft_id"],
+            expected_version=draft["input_version"],
+            field_id="epc",
+            decision="accept",
+            batch_id=staged["id"],
+            candidate_id=staged["candidates"][0]["id"],
+            value=None,
+            reason="SYN field review reason",
+        )
+        return draft, request
+
+    def test_working_field_review_and_manifest_are_held_and_isolated(self) -> None:
+        with urllib.request.urlopen(self.base + "/healthz") as response:
+            self.assertEqual(response.status, 200)
+        path = "/api/cases/ZF-1/form-review"
+        draft, request = self.working_review()
+        before = self.call("pam", "/api/cases/ZF-1")[1]
+        with patch.object(self.store.ai, "_chat", side_effect=AssertionError("No inference")):
+            code, result = self.call("pam", path, request)
+            self.assertEqual(code, 201, result)
+            self.assertEqual(result["fields"]["epc"]["value"], "D")
+            self.assertEqual(result["fields"]["area"], draft["fields"]["area"])
+            self.assertFalse(result["reviewed_ready"])
+            self.assertEqual(self.call("pam", path, request)[0], 409)
+            code, manifest = self.call(
+                "pam",
+                path,
+                dict(
+                    action="diagnose",
+                    draft_id=result["draft_id"],
+                    expected_version=result["input_version"],
+                ),
+            )
+            self.assertEqual(code, 201, manifest)
+            self.assertEqual(manifest["template"], schema()["template"])
+            self.assertEqual(len(manifest["attachments"]), 1)
+            self.assertEqual(manifest["history"][0]["reviewer"], "pam@example.test")
+            code, saved = self.call("pam", path)
+            self.assertEqual(code, 200, saved)
+            self.assertEqual(saved["drafts"][0]["recorded_diagnostics"], [manifest])
+            self.assertEqual(len(saved["decision_holds"]), 3)
+            self.assertTrue(all(h["approval_evidence"] is None for h in saved["decision_holds"]))
+            self.assertEqual(
+                saved["drafts"][0]["acceleration"]["signal"], "Pause for human decision"
+            )
+        self.assertEqual(before, self.call("pam", "/api/cases/ZF-1")[1])
+        self.assertNotIn(
+            "SYN field review reason", json.dumps(self.call("kim", "/api/cases/ZF-1")[1])
+        )
+
+    def test_working_review_denials_quarantine_and_no_approval_actions(self) -> None:
+        path = "/api/cases/ZF-1/form-review"
+        with self.assertRaises(urllib.error.HTTPError) as caught:
+            urllib.request.urlopen(self.base + path)
+        self.assertEqual(caught.exception.code, 401)
+        draft, request = self.working_review()
+        for actor in ("sam", "kim"):
+            self.assertEqual(self.call(actor, path)[0], 403)
+            self.assertEqual(self.call(actor, path, request)[0], 403)
+        self.assertEqual(self.call("pam", path, dict(request, approved=True))[0], 400)
+        for action in ("approve", "submit", "reviewed-export", "restart"):
+            self.assertEqual(self.call("pam", path, dict(action=action))[0], 400)
+        self.assertEqual(self.call("pam", "/api/cases/ZF-2/form-review", request)[0], 404)
+        self.assertEqual(self.call("pam", path, request)[0], 201)
+        with self.store.lock:
+            self.store._case("ZF-1")["documents"][0]["scan"]["status"] = "infected"
+            self.store.save()
+        code, denied = self.call("pam", path)
+        self.assertEqual(code, 200, denied)
+        self.assertEqual(
+            denied["drafts"],
+            [
+                dict(
+                    draft_id=draft["draft_id"],
+                    status="Unavailable",
+                    notice=(
+                        "Working evidence is unavailable. "
+                        "Ask the document owner to recover its source."
+                    ),
+                )
+            ],
+        )
+        self.assertNotIn("SYN field review reason", json.dumps(denied))
+        self.assertNotIn("raw_value", json.dumps(denied))
+        self.assertEqual(self.call("pam", path, dict(request, expected_version=2))[0], 403)
+
+    def test_unavailable_draft_does_not_block_readable_sibling(self) -> None:
+        path = "/api/cases/ZF-1/form-review"
+        draft, request = self.working_review()
+        self.assertEqual(self.call("pam", path, request)[0], 201)
+        actor = self.store.staff["pam@example.test"]
+        doc = self.store.add_document(
+            actor,
+            "ZF-1",
+            "sibling.txt",
+            "EPC",
+            b"E",
+            metadata=change_metadata(self.store, "ZF-1"),
+        )
+        code, staged = self.call("pam", "/api/cases/ZF-1/form-candidates", batch(doc["id"], "E", 0))
+        self.assertEqual(code, 201, staged)
+        code, sibling = self.call(
+            "pam", path, dict(action="open", schema_id="SYN-TECH", schema_version=1)
+        )
+        self.assertEqual(code, 201, sibling)
+        code, readable = self.call(
+            "pam",
+            path,
+            dict(
+                request,
+                draft_id=sibling["draft_id"],
+                batch_id=staged["id"],
+                candidate_id=staged["candidates"][0]["id"],
+            ),
+        )
+        self.assertEqual(code, 201, readable)
+        with self.store.lock:
+            self.store._case("ZF-1")["documents"][0]["scan"]["status"] = "infected"
+            self.store.save()
+        code, result = self.call("pam", path)
+        self.assertEqual(code, 200, result)
+        self.assertEqual(
+            result["drafts"],
+            [
+                dict(
+                    draft_id=draft["draft_id"],
+                    status="Unavailable",
+                    notice=(
+                        "Working evidence is unavailable. "
+                        "Ask the document owner to recover its source."
+                    ),
+                ),
+                dict(readable, recorded_diagnostics=[]),
+            ],
+        )
+
+    def test_working_review_storage_failure_reports_error_without_partial_history(self) -> None:
+        path = "/api/cases/ZF-1/form-review"
+        _, request = self.working_review()
+        with patch.object(self.store, "_append_audit", side_effect=OSError("private failure text")):
+            with self.assertLogs("zava_forward.api.server", level="ERROR"):
+                code, failed = self.call("pam", path, request)
+        self.assertEqual(code, 503, failed)
+        self.assertNotIn("private failure text", json.dumps(failed))
+        code, saved = self.call("pam", path)
+        self.assertEqual(code, 200, saved)
+        self.assertEqual(saved["drafts"][0]["history"], [])
+        self.assertTrue(self.store.verify_audit())
+
 
 if __name__ == "__main__":
     unittest.main()

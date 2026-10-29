@@ -119,6 +119,93 @@ Focused local constructed tests:
 python3 -m unittest discover -s tests -p test_resident_decisions.py -q
 ```
 
+## Unapproved working field review (#96, #98, #99)
+
+`form_review.action(store, user, case_id, body)` supports `open`, `review` and
+`diagnose` only. It binds a supplied registered schema, never an approved form.
+All schemas and source-policy/rule authority remain unapproved. Named staff
+must have the existing Finance, resident-record and reason-view rights.
+
+An individual accept/correct/reject changes only that working field and its
+append-only review history. Acceptance copies the exact candidate raw text;
+typed integer/number/boolean corrections are explicit, retain the raw evidence,
+and require a same-case, exact-schema staged candidate as their source anchor.
+Corrections without a staged source anchor remain unavailable. Declarations,
+signatures, consent and approvals cannot be accepted by this working-review
+path. It never writes original sources, authoritative case fields, ranking,
+consent, budget, invoice, grant, award, submission or cash states.
+
+`review` requires `draft_id`, `expected_version`, `field_id`, `decision`,
+`batch_id`, `candidate_id`, `value` and `reason`, in addition to `action`.
+For `accept`, `value` is null. For `correct`, supply a finite scalar value.
+For `reject`, batch/candidate/value are null; prior evidence remains in history.
+An unknown field, stale version, foreign candidate or extra server-owned key
+is refused. JSON supports one Store/writer with in-instance version checks;
+SQLite additionally protects independent writers with database rowversions.
+
+`view` and `diagnose` provide field-specific Unknown/Conflict/Fail draft
+diagnostics and source-linked diagnostic manifests. Conditions use confirmed,
+valid, current values only, combine predicates with OR and compare types
+exactly (`true` is not integer `1`). Missing/invalid/stale controlling inputs
+produce Unknown unless another predicate is true. Empty or whitespace-only
+strings remain recorded corrections but are not confirmed inputs: unconditional
+and active conditional requirements still report missing input. Numeric zero
+and boolean false remain valid confirmed inputs. Dates must be valid calendar
+dates in `YYYY-MM-DD`; numeric checks exclude booleans and non-finite floats.
+Units, currency, eligibility and approved calculations remain Not evaluated.
+`reviewed_ready` is always false, even if no local structural issue remains.
+Manifests retain exact schema/template/rule/input versions, field IDs/values,
+source hashes/versions/locators, attachment references and reviewer history.
+They are not reviewed application/claim exports or evidence of eligibility.
+
+Source/schema freshness is evaluated on reads/actions, not pushed into a
+downstream approval graph. Each report checks an exact source ID, version,
+content hash and kind once, reusing its freshness result for shared fields
+and staged alternatives only within that report. Source bytes are read/hashed
+at most once per distinct document across current fields, history, snapshots
+and alternative checks; missing-byte results are also reused locally.
+Action preflight shares these reads with its resulting report. Later reports
+check afresh; no cross-request cache is retained. A source change marks only its
+bound working fields stale; a new schema version affects all fields bound to that schema. Historical
+reviews/values and recorded diagnostic snapshots remain intact. This is not
+full FR-043/AC-051 rule/calculation/pack-review/approval stale propagation.
+Already-clean evidence is required: reads/reviews never scan or save a source.
+Missing, pending, quarantined or deleted retained evidence blocks disclosure of
+the entire affected draft/history, including recorded diagnostics. On `view`,
+availability is isolated per draft: the affected entry contains only `draft_id`,
+`status: "Unavailable"` and a fixed recovery `notice`; unrelated available
+drafts remain readable. Actions on an affected draft still refuse access.
+Availability is checked for current fields, prior/new history evidence and diagnostic
+fields/history/attachments even when the schema is stale or a field was
+rejected/replaced. Staleness alone does not remove available history.
+Unreviewed alternatives count toward Conflict only if their case/schema,
+source version/hash/kind/bytes and field source policy allow review; unavailable
+or stale alternatives are excluded without changing staged history.
+Missing bytes are reported as unavailable evidence; storage-service failures
+remain distinct errors, never empty/successful diagnostics.
+Recover or rescan through the separate document owner route before retrying.
+Ordinary case detail and generic case exports
+exclude the private review/decision-hold records.
+
+Opening notes durably records Held decisions for template/source/rule authority
+and Board OD-12/15, with owner role, correction path, recorder/time and null
+approved inputs/evidence. These are decision-needed records, not approvals.
+The diagnostic acceleration signal is `Pause for human decision`, with null
+envelope/tolerances and breach assessment Not evaluated. It does not enforce a
+programme-wide release or contain live activity. Finance/Board must supply
+actual approved investment, liquidity, covenant and downside inputs; no company
+figures, approved thresholds or restart authority are invented.
+
+From `src/core`, after pip editable installation:
+
+```bash
+PYTHONPATH=tests python3 -m unittest test_form_review test_form_staging -q
+```
+
+Tests use the public tiny synthetic fixture with temporary JSON/SQLite storage.
+Full #96/#98 approved readiness/export and #99 envelope/breach acceptance remain
+blocked on human decisions. No issue closure or production acceptance is implied.
+
 ## Resident advisory assistant (#469)
 
 `resident_assistant.advise(topic, CaseProgress(...), provider)` builds bounded
