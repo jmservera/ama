@@ -4,15 +4,15 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Review",
-  "status": "active",
-  "session_status": "running",
+  "status": "blocked",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-29/employee-chat-skills-530-research.md",
     "plan": ".copilot-tracking/plans/2026-10-29/employee-chat-skills-530-plan.md",
     "details": ".copilot-tracking/details/2026-10-29/employee-chat-skills-530-phase-details.md",
     "critique": ".copilot-tracking/plans/2026-10-29/employee-chat-skills-530-critique.md",
     "changes": ".copilot-tracking/changes/2026-10-29/employee-chat-skills-530-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/logs/2026-10-29/employee-chat-skills-530-review.md"
   },
   "confirmed_decisions": [
     {
@@ -24,6 +24,16 @@
       "decision": "Research executed Ready; critique executed once with original Revise verdict; PC-001/002/003/005 accepted, PC-004 unsupported tmp prohibition rejected.",
       "status": "resolved",
       "evidence": ".copilot-tracking/plans/2026-10-29/employee-chat-skills-530-plan.md"
+    },
+    {
+      "decision": "Independent post-implementation Review executed once: Complete.",
+      "status": "executed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/employee-chat-skills-530-review.md; candidate e34cd84a829397f64899ffa4a6e302d5c0a16dc0 against d70ee60ab3d7346a9991cf64382d9985f4d09f2e"
+    },
+    {
+      "decision": "Review outcome Not accepted: RV-001 metadata denial disposal, RV-002 deterministic stale-success proof, RV-003 missing full-suite/SQL evidence. Original findings uncorrected; route later work, no repeated Review.",
+      "status": "not-accepted",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/employee-chat-skills-530-review.md"
     }
   ],
   "blockers": [
@@ -36,11 +46,35 @@
       "id": "publication-gate",
       "summary": "Complete gate invokes az, expressly forbidden; no publication receipt, push or live verification.",
       "resolution": "Separate owner-authorized validation/publication work; current commits stay local."
+    },
+    {
+      "id": "review-findings",
+      "summary": "RV-001 and RV-002 remain original uncorrected implementation/test findings; issue acceptance not established.",
+      "resolution": "Later rpi-implement owns corrections; preserve this round's single original Review and verdict."
     }
   ],
   "next_action": {
-    "phase": "Review",
-    "action": "Implementation reconciled; run one independent Review with full-suite/SQL/publication blockers explicitly assessed."
+    "phase": "Implement",
+    "action": "Session stopped per user direction. Later correction work may implement RV-001/RV-002; later coordinated validation must supply RV-003 evidence. Preserve original Review; no push."
   },
-  "prioritized_follow_ups": null
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Dispose case-context dialog when skills metadata returns 403/404.",
+      "rationale": "Small direct lifecycle correction with immediate role/context consistency value.",
+      "evidence": "Review RV-001; later rpi-implement."
+    },
+    {
+      "rank": 2,
+      "task": "Make delayed-success/session regression deterministic, separate from transport abort.",
+      "rationale": "Small test correction that prevents a false-positive stale-completion acceptance claim.",
+      "evidence": "Review RV-002; later rpi-implement."
+    },
+    {
+      "rank": 3,
+      "task": "Obtain full-suite and owned disposable SQL validation after coordinated nonblocking heavy admission.",
+      "rationale": "High acceptance value, currently blocked by shared resource ownership; no cloud or az fallback.",
+      "evidence": "Review RV-003 and plan P03-T02; later validation evidence work."
+    }
+  ]
 }
