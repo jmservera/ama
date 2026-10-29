@@ -31,6 +31,7 @@ from zava_forward.api.iot_stream import (
     DEVICE,
     Activation,
     Binding,
+    DeviceActivation,
     HubPublisher,
     HubReceiver,
     _observe,
@@ -419,6 +420,44 @@ class PublisherTests(unittest.IsolatedAsyncioTestCase):
         )
         self.client = Mock(connect=AsyncMock(), send_message=AsyncMock(), shutdown=AsyncMock())
         self.truth: list[dict[str, object]] = []
+
+    async def test_device_only_activation_publishes_without_asserting_routed_receiver(self) -> None:
+        active = DeviceActivation(ACTIVE.hub_hostname, "owner-approved finite hub exercise")
+        publisher = HubPublisher(
+            active, tuple(self.publisher.bindings.values()), self.publisher._certificates
+        )
+        with patch(
+            "zava_forward.api.iot_stream.IoTHubDeviceClient.create_from_x509_certificate",
+            return_value=self.client,
+        ):
+            sent = await publisher.run(self.frames, self.budget, truth=self.truth.append)
+        self.assertEqual(sent, 2)
+        self.assertEqual(self.client.send_message.await_count, 2)
+        self.client.shutdown.assert_awaited_once()
+
+    def test_device_only_activation_cannot_construct_receiver(self) -> None:
+        active = DeviceActivation(ACTIVE.hub_hostname, "owner-approved finite hub exercise")
+        with (
+            patch("zava_forward.api.iot_stream.ManagedIdentityCredential") as credential,
+            self.assertRaisesRegex(StreamError, "IOT_ROUTED_RECEIVER_REQUIRED"),
+        ):
+            HubReceiver(Mock(), active, ())  # type: ignore[arg-type]
+        credential.assert_not_called()
+
+    def test_device_only_activation_rejects_missing_authority_and_invalid_scope(self) -> None:
+        for active in (
+            DeviceActivation(ACTIVE.hub_hostname, ""),
+            DeviceActivation(ACTIVE.hub_hostname, " \t"),
+            DeviceActivation(ACTIVE.hub_hostname, "approval", "other"),
+            DeviceActivation("https://" + ACTIVE.hub_hostname, "approval"),
+            DeviceActivation("installed-device.invalid", "approval"),
+            DeviceActivation(ACTIVE.hub_hostname + "/path", "approval"),
+        ):
+            with (
+                self.subTest(active=active),
+                self.assertRaisesRegex(StreamError, "IOT_ACTIVATION_REQUIRED"),
+            ):
+                active.validate()
 
     async def test_out_of_order_suffix_uses_nominal_pacing_and_preserves_payloads(self) -> None:
         selected = sensor_stock.select(

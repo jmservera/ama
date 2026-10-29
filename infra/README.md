@@ -3214,6 +3214,81 @@ all Bicep entry points, compiled controls, mutation regressions and scoped ruff.
 
 ## IoT Hub (issue 140, ADR 0003 decision 6)
 
+### Bounded existing-hub exercise (2026-10-29, Refs #140 #184 #137)
+
+The owner approved paid B1/one unit after the UK South USD10/month cost check,
+with at most USD5 additional through 2026-10-31. Inspection found the existing
+`iot-cutover-test-rzsrg` already B1/one unit, two partitions and one-day retention.
+Reuse it; do not create a second hub. Conservative attribution for three full
+October days is USD10 / 31 * 3 = USD0.97. Reserve USD1 for hub attribution,
+USD1 for shared metrics/bounded job and USD3 contingency. These are estimates,
+not actual billed cost, enforced caps or approval beyond October31. No extra
+fixed hub charge was introduced against the inspected baseline.
+
+`iot-hub-live.bicepparam` is a separate, existing-development-hub reconciliation
+profile. It is **not** an override for `main.bicep` or the production module.
+It references the exact existing hub, verifies actual region/SKU/units, and
+writes only its built-in `api-consumer` group and metrics-only
+`to-log-analytics` setting. It does not PUT the hub, create a namespace/private
+endpoint/budget/role or alter apps/jobs. The initial direct-PUT what-if proposed
+deleting service-owned properties, so it was not applied. The narrowed what-if
+showed only diagnostic log/metric reconciliation, with group NoChange.
+Deployment `iot-live-140-private` succeeded; actual enabled resource logs = 0,
+enabled metric categories = 1. Existing private attachment, fallback route,
+identityNone, local-auth disabled and public-network Disabled were preserved.
+
+```bash
+az bicep build --file infra/modules/iothub.bicep --stdout >/dev/null
+az bicep lint --file infra/modules/iothub.bicep
+az bicep build --file infra/iot-hub-live.bicep --stdout >/dev/null
+az bicep lint --file infra/iot-hub-live.bicep
+az deployment group what-if -g ama --parameters infra/iot-hub-live.bicepparam
+# Review exact child IDs and log/metric-only differences before any apply.
+az deployment group create -g ama --name iot-live-140-private \
+  --parameters infra/iot-hub-live.bicepparam --mode Incremental \
+  --query properties.provisioningState -o tsv
+```
+
+The historical production definition below remains private/keyless and
+source-only; this approval does not authorize its paid Event Hubs adapter,
+endpoints or roles. The built-in group alone does not unblock Entra receive:
+Microsoft's [Entra guidance](https://learn.microsoft.com/en-us/azure/iot-hub/authenticate-authorize-azure-ad),
+checked 2026-10-29, still requires a shared service key there. Service SAS
+remains disabled; no service key was retrieved.
+
+Live device issue/send is parked, not completed: the authenticated operator has
+only inherited Owner on the hub, not registry data permission. No device,
+certificate, key file or temporary public-network change was created. Juan
+Manuel Servera remains the exercise issue/rotate/revoke owner. The precise
+owner decision is whether to authorize a hub-scoped **IoT Hub Registry
+Contributor** grant to the selected operator and approve an actual reachable
+device path. If approved separately, the owner (not this task) can run:
+
+```bash
+az role assignment create --assignee-object-id <approved-operator-object-id> \
+  --assignee-principal-type User --role 'IoT Hub Registry Contributor' \
+  --scope <existing-iot-cutover-test-rzsrg-resource-id>
+```
+
+Do not grant Data Contributor/Owner or a subscription-wide role as a shortcut.
+API Event Hubs Data Receiver is already documented for the separate private
+entity, but that entity does not exist, so no ineffective hub role was added.
+Live-to-SQL and resident gauges remain unproved. Cloud activation needs separately
+approved adapter cost/network/roles and an API revision invoking the consumer;
+the existing finite callable does not run at startup. The resident SQL view
+binds optional sensor tables only at its separately approved view apply, so
+creating sensor tables later also needs view reconciliation, not merely a
+browser refresh. No real-device or OD-43 approval follows.
+Counts-only inspection via the existing in-VNet Manual initializer succeeded
+on 2026-10-29: `sensor_reading`, `sensor_delivery` and
+`sensor_data_quality_exception` are absent (availability false/count zero),
+not existing empty tables. Two initial transient probes failed on driver setup;
+the corrected execution completed without changing the job definition or SQL.
+The installed driver is `mssql-python`: pass login `timeout=20` as a connect
+argument, not the unsupported `Connection Timeout` connection-string property.
+Forty-second process limits kept the counts probes finite. Actual disposable
+local SQL Server passed 45 ingestion tests; no live Hub-to-SQL claim follows.
+
 `modules/iothub.bicep` defines the device-to-cloud boundary for simulated
 monitoring. The 2026-10-27 owner direction approves source authoring and local
 validation within Free/B1, `ama` and the overall USD700 cap, **not deployment**.

@@ -940,6 +940,60 @@ adapter; the new advisor returns explicit rules fallback instead.
 
 ## Opt-in IoT consumer and synthetic publisher (#110, #184)
 
+For the bounded hub-only exercise, `DeviceActivation(hub_hostname,
+approval_reference, resource_group="ama")` authorizes only the explicitly
+called X.509 publisher. It requires a valid Hub hostname and nonempty approval,
+but does not pretend a custom Event Hub or routed consumer is ready.
+`HubReceiver` rejects this activation before credential construction;
+its existing `Activation`/managed-identity/routing requirements below remain.
+Approval objects are caller declarations, not verification of deployed access.
+The [2026-10-29 hub reconciliation and blockers](../../infra/README.md#bounded-existing-hub-exercise-2026-10-29-refs-140-184-137)
+record the actual existing B1 resource, registry-permission blocker and unchanged
+service-key prohibition. Local actual SQL tests do not establish live transport.
+
+Before the single approved run, the named owner must complete and record the
+[quota, cost and alert preflight](../../docs/reference/research/iot-sensor-analytics-research-plan.md#cost-and-scale-before-any-live-run).
+Verify the exact reused hub's current B1 quota usage for the applicable UTC
+day immediately before running; record that consumed 4-KiB-unit count as
+`verified_daily_used_units`. Do not assume an unused hub or use the zero
+default. Account conservatively for other traffic and attempted or uncertain
+deliveries not yet reflected in the reported usage, including traffic expected
+during the run. The verified usage plus the planned run's units (each body plus
+the 1-KiB properties reserve, rounded up to 4-KiB units) and any such additional
+traffic must leave at least 40,000 unused units from the 400,000-unit daily
+allowance. Recheck if the quota day or usage changes before sending; stop if
+usage or concurrent traffic cannot be reliably bounded.
+
+Also verify actual subscription currency and remaining aggregate cost headroom,
+including accrued charges and remaining commitments, within the approved
+USD5 additional allowance through 31 October 2026 and the overall budget.
+The historical USD60/month routed model is not additional spending authority.
+Verify that the budget alert is active (enabled, with the correct budget scope,
+threshold and notification recipient). Record the fresh evidence in the owner,
+cost and alert references; missing, stale or insufficient quota/cost/alert
+evidence blocks the run. References alone do not prove these checks.
+`RunBudget` does not query live quota, verify alerts or enforce aggregate
+spending, and budget alerts are not hard spending stops.
+
+For this bounded exercise, explicitly set `RunBudget(...,
+daily_used_units=verified_daily_used_units, max_messages=2,
+max_per_second=1.0, max_seconds=60.0)` with those verified owner, cost and alert
+references: at most two messages total, one per second globally and 60 seconds
+for ONE `HubPublisher.run()` call for the entire approved bounded exercise.
+Do not make repeated or concurrent calls, including from another publisher
+instance or process. Each call creates a fresh pacer by default; `RunBudget`
+does not cumulatively account for sends or enforce the rate across calls.
+No further run or retry is approved without separate owner approval after
+reconciling all attempted and uncertain deliveries, daily quota usage and
+the remaining budget/window. The default 100 messages and larger supported
+limits are not approved for this exercise. Before the single run, the operator
+must check the UTC date/time and ensure the run fits within the remaining
+approved window through
+31 October 2026 UTC: stop before `2026-11-01T00:00:00Z`, and do not start if
+there is insufficient time to finish within that cutoff. `RunBudget` enforces
+per-run limits, not this calendar cutoff; checking and observing it remains
+the operator's responsibility.
+
 `iot_stream.HubReceiver` adds an explicitly called finite asynchronous SDK
 adapter around `SensorIngestion`; it adds no HTTP route, startup task or deployed
 service. `HubPublisher` sends one canonical observation/message through a
@@ -948,7 +1002,8 @@ uses twins/cloud-to-device management or retrieves a service key.
 Install this project's declared dependencies with pip, including pinned
 `azure-eventhub`, `azure-iot-device` and `aiohttp` for asynchronous identity.
 
-Both runners require `Activation` with resource group `ama`, the exact Hub
+The routed receiver and original routed publisher profile require `Activation`
+with resource group `ama`, the exact Hub
 hostname, matching `eh-<hub-name>.servicebus.windows.net`, `sensor-readings`,
 `api-consumer`, `routing_ready=True` and a nonempty approval reference.
 This is a caller assertion, **not verification or approval of deployment**.
@@ -999,7 +1054,10 @@ Then call `await publisher.run(frames, budget, speed=1000, truth=restricted_trut
 diagnostic logs. It receives synthetic/opaque-reference/slot/fault/status
 records including the selected-input digest copied from each Frame, never
 values, home/device IDs or credentials. `attempt` without `sent`
-is uncertain, not proof of no delivery; rerun identical frames to reconcile.
+is uncertain, not proof of no delivery: stop and retain the truth records for
+review. Do not rerun identical frames or retry an uncertain delivery without
+the separate owner approval and accounting required above; SQL idempotency
+does not refund attempted messages or the exercise allowance.
 `disconnect` is an explicit terminal synthetic stop, not an automatic reconnect.
 Model-time spacing uses each Frame's `nominal_at`, not its observation timestamp.
 For example, out-of-order suffix slots 3..4 retain their reordered payload times
