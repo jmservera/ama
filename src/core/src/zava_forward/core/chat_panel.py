@@ -411,7 +411,7 @@ class ChatPanel:
             text = REFUSED + refusal[1]
             return finish("refused", text, [], model_name)
         kind, text, cites = "abstain", ABSTAIN, []
-        if len(str(question or "")) > MAX_QUESTION_CHARS:
+        if len(str(question or "")) > MAX_QUESTION_CHARS or len(masked) > MAX_QUESTION_CHARS:
             kind, text = "fallback", LIMIT_REACHED
         elif sources and self.model is not None:
             kept = [

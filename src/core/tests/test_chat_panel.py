@@ -10,7 +10,9 @@ from zava_forward.core.chat_isolation import ChatIsolation
 from zava_forward.core.chat_panel import (
     ACTION_CLAIM,
     LABEL,
+    LIMIT_REACHED,
     MAX_HISTORY_CHARS,
+    MAX_QUESTION_CHARS,
     ChatPanel,
     normalise_policy_text,
     out_of_scope,
@@ -196,6 +198,39 @@ class StoredQuestionTests(unittest.TestCase):
     def ask(self, question: str) -> str:
         self.panel.ask(self.user, self.tid, question, skill="general")
         return self.prompts[-1]
+
+    def test_expanding_redaction_over_question_limit_falls_back_without_dispatch(self) -> None:
+        question = "NE1 1AA " * 120 + "What stage is it?"
+        masked = redact(question)[0]
+        self.assertEqual((len(question), len(masked)), (977, 2297))
+        self.assertLess(len(question), MAX_QUESTION_CHARS)
+        self.assertGreater(len(masked), MAX_QUESTION_CHARS)
+        for skill in (None, "general", *REGISTRY):
+            with self.subTest(skill=skill):
+                tid = self.store.chat_create_thread(self.user, case_id="ZF-1")["id"]
+                reply = self.panel.ask(self.user, tid, question, skill=skill)
+                self.assertEqual((reply["kind"], reply["reply"]), ("fallback", LIMIT_REACHED))
+                self.assertTrue(reply["workflow_only"])
+                self.assertEqual(reply["model"], "workflow-only")
+                self.assertEqual(reply["citations"], [])
+                self.assertEqual(reply["consumption"]["model_calls"], 0)
+                self.assertEqual(self.prompts, [])
+                stored = self.store.chat_resume(self.user, tid)["messages"]
+                self.assertEqual([m["content"] for m in stored], [masked, LIMIT_REACHED])
+
+    def test_expanding_redaction_at_question_limit_dispatches_complete_question(self) -> None:
+        question = "x" * 981 + " NE1 1AA"
+        masked = redact(question)[0]
+        self.assertLess(len(question), MAX_QUESTION_CHARS)
+        self.assertEqual(len(masked), MAX_QUESTION_CHARS)
+        for skill in (None, "general", *REGISTRY):
+            with self.subTest(skill=skill):
+                tid = self.store.chat_create_thread(self.user, case_id="ZF-1")["id"]
+                before = len(self.prompts)
+                reply = self.panel.ask(self.user, tid, question, skill=skill)
+                self.assertEqual(reply["consumption"]["model_calls"], 1)
+                self.assertEqual(len(self.prompts), before + 1)
+                self.assertTrue(self.prompts[-1].endswith("Question: " + masked))
 
     def test_history_budget_measures_expanded_dispatched_block(self) -> None:
         for i in range(4):

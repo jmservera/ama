@@ -3304,6 +3304,9 @@ SQLite and SQL Server add the column idempotently; new messages persist it
 across restarts. The panel's 4,000-character history cap measures the actual
 dispatched `UNTRUSTED` block, including delimiter expansion, wrappers and
 newlines, while preserving the newest fitting questions in chronological order.
+The current question must fit the 1,000-character limit both before and after
+redaction. An oversized masked question returns the context-limit workflow
+fallback without a model call, rather than silently truncating the question.
 
 ## Chat and memory isolation (issue #162)
 
