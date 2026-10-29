@@ -3,8 +3,8 @@
   "task_slug": "finance-510-refresh-2221",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Review",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-29/finance-510-refresh-2221-research.md",
@@ -39,12 +39,17 @@
       "decision": "Main advanced after Review to 719e76e5; replay within explicit current-main request, revalidate, preserve original Review boundary and route final exact-head assessment to coordinator.",
       "status": "closeout-amendment",
       "evidence": ".copilot-tracking/changes/2026-10-29/finance-510-refresh-2221-changes.md#closeout-main-drift-amendment"
+    },
+    {
+      "decision": "Evidence commit ac8ceb9e verified clean, main-descended, privacy-safe and fully attributed; P01/P02 complete. Refreshed main 719e76e5 revalidation passes; original Review outcome/boundary retained.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/changes/2026-10-29/finance-510-refresh-2221-changes.md#completed-local-commit-and-verification"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "After verified local commit, complete task and hand off coordinator publication/hosted gates without selecting child work."
+    "action": "Coordinator owns current-main/exact-head publication gate and independent assessment, authorized push and fresh hosted CI. No child work selected; stop/manual choices remain available."
   },
   "prioritized_follow_ups": [
     {

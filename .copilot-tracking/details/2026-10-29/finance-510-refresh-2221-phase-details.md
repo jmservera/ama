@@ -87,6 +87,10 @@ that explicit current-main direction and revalidates without another Review.
 Final exact-head publication assessment remains coordinator-owned.
 Refreshed replay `561ac4c5` on main `719e76e5`: all nine patches equal prior
 assessed series; no Python/test/config change. Final core/API static checks
-and 258/44 focused tests pass. Final local evidence commit remains pending.
+and 258/44 focused tests pass. Evidence commit `ac8ceb9e` contains all seven
+artifacts; clean-tree/main-ancestry/identity/trailer checks pass.
+P01/P02 and P02-T02 complete. No active local work remains. Original Review
+outcome/boundary preserved; publication and final exact-head assessment remain
+coordinator-owned. Completion bookkeeping changes only current-task evidence.
 No tests/source added or removed. Original critique and Review outcomes from
 other tasks remain immutable.

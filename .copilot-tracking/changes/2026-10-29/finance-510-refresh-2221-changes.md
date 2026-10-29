@@ -280,3 +280,35 @@ are used instead of broad add. Read the actual installed commit-message rules
 because the skill's relative path is stale. User-required co-author trailer
 remains final. Reconfirmed authenticated identity and repository-local noreply
 configuration; no global identity change.
+
+## Completed Local Commit and Verification
+
+* `git ls-remote origin refs/heads/docs/finance-96 refs/heads/main`: exit 0;
+  finance still `011f6a6e`, main still `719e76e5`. No remote writes.
+* Authenticated GitHub identity reverified; repository-local privacy-safe email
+  configured. `git add` with exactly seven explicit current-task paths;
+  `git diff --cached --check`; `git diff --cached --stat`: exit 0.
+* `printf <Conventional message, Refs #96/#510, required final Copilot trailer>
+  | git commit -F -`: exit 0, created
+  `ac8ceb9edf3fb41e64ffa614c9878756f4eb2f04`,
+  `docs(finance): record current-main rebase and validation`.
+  Seven original current-task artifacts committed, 1067 insertions.
+* `git status --short; test -z "$(git status --porcelain)"`;
+  `git merge-base --is-ancestor 719e76e5 HEAD`;
+  `git diff --exit-code 561ac4c5 HEAD -- src docs/reference .github/rubric`;
+  `git diff --check origin/main...HEAD`: all exit 0.
+* Python assertions over committed message/identities and state: exit 0.
+  Conventional subject, references only, required final co-author, both
+  authenticated noreply identities and all seven committed artifact pointers.
+* Parent P02-T02 local residual is complete. Plan/details/state reconcile to
+  task completed / Follow-up; automatic session remains running with no child
+  work selected. Original critique and Review are unchanged.
+
+Final bookkeeping commits only current plan/details/changes/state to persist
+these verified results, using a separate Conventional Commit with references
+and the same co-author, not an amend. No source/base correction is included.
+Final commit hash is reported at handoff rather than self-embedded.
+No push, Azure operation, closing issue wording, hosted pass or full publication
+receipt is claimed. Final exact-head/current-main publication assessment remains
+the coordinator's first ranked follow-up; Finance/Board inputs rank second
+because they require human evidence outside local integration.
