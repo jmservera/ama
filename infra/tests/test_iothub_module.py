@@ -84,9 +84,46 @@ class IotHubModuleTests(unittest.TestCase):
                 self.assertEqual(bool(value), accepted, (sku, units, key))
         group = resource(self.live, f"{HUB}/eventHubEndpoints/ConsumerGroups")
         self.assertIn("/events/api-consumer", group["name"])
-        diagnostics = resource(self.live, "Microsoft.Insights/diagnosticSettings")["properties"]
-        self.assertEqual(diagnostics["logs"], [{"categoryGroup": "allLogs", "enabled": False}])
-        self.assertEqual(diagnostics["metrics"], [{"category": "AllMetrics", "enabled": True}])
+
+    def assert_live_diagnostics(self, template) -> None:
+        diagnostics = [
+            item
+            for item in resources(template)
+            if item["type"] == "Microsoft.Insights/diagnosticSettings"
+        ]
+        self.assertEqual(len(diagnostics), 1)
+        setting = diagnostics[0]
+        self.assertEqual(
+            setting["scope"], "[resourceId('Microsoft.Devices/IotHubs', parameters('name'))]"
+        )
+        self.assertEqual(
+            setting["properties"],
+            {
+                "workspaceId": (
+                    "[resourceId('Microsoft.OperationalInsights/workspaces', 'log-cutover-test')]"
+                ),
+                "logAnalyticsDestinationType": "AzureDiagnostics",
+                "logs": [{"categoryGroup": "allLogs", "enabled": False}],
+                "metrics": [{"category": "AllMetrics", "enabled": True}],
+            },
+        )
+
+    def test_live_profile_diagnostics_target_existing_hub_and_workspace(self) -> None:
+        self.assert_live_diagnostics(self.live)
+
+    def test_mutations_reject_live_diagnostics_wrong_hub_or_workspace(self) -> None:
+        for change in ("scope", "workspace"):
+            with self.subTest(change=change):
+                mutated = deepcopy(self.live)
+                setting = resource(mutated, "Microsoft.Insights/diagnosticSettings")
+                if change == "scope":
+                    setting["scope"] = "[resourceId('Microsoft.Devices/IotHubs', 'wrong-hub')]"
+                else:
+                    setting["properties"]["workspaceId"] = (
+                        "[resourceId('Microsoft.OperationalInsights/workspaces', 'wrong-log')]"
+                    )
+                with self.assertRaises(AssertionError):
+                    self.assert_live_diagnostics(mutated)
 
     def assert_live_scope_guards(self, template) -> None:
         guard = module(template, "iot-live-scope-guard")
