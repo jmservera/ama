@@ -115,6 +115,24 @@ same step as the board update, and leave the rest unticked. Close an issue only
 when every criterion is ticked. A closed issue has all criteria ticked and
 board status Done.
 
+Issue closure linking (owner, 2026-10-29: merged PRs were not reducing the
+open-issue count). Decide linking per PR before it merges, not afterwards:
+
+* Map every PR to the issues it delivers and compare each issue's criteria with
+  the PR's reviewed evidence. When the PR proves every remaining criterion of
+  an issue, put `Closes #N` (one keyword per issue, GitHub keyword syntax) in the
+  PR description so the merge closes it, and tick the criteria in the same step.
+  Use `Refs #N` only for issues the PR leaves partly unmet, and name the unmet
+  criteria. Never write a closing keyword, even negated, for an unmet issue.
+* Epics close only when every child is closed or its criteria are proven.
+* Run a closure audit at the start of every run and after every wave: list open
+  issues that have merged PRs (`gh pr list --state merged`), compare criteria
+  with PR evidence, tick what is proven and close issues whose criteria are all
+  proven, with a comment naming the PRs. Report how many issues were closed,
+  and how many remain with the unmet criteria, so the open count visibly falls.
+* Criteria needing live Azure behaviour, human or legal approval, assistive
+  technology testing, resident consent or a later phase stay unproven.
+
 Reconcile the whole backlog at the start of every run and at every scheduled
 check: run `python3 tools/backlog-sync.py` (read-only audit), then `--apply`
 to fix board statuses, add missing items and tick the criteria of closed
