@@ -53,7 +53,7 @@ window.ChatWidget = (() => {
     const status = node("p", "", { role: "status", "aria-live": "polite", "aria-atomic": "true", class: "chat-widget-status" });
     const loading = node("span", "Working...", { class: "chat-widget-loading", "aria-hidden": "true" });
     loading.hidden = true;
-    const error = node("p", "", { id: `${id}-error`, role: "alert", class: "chat-widget-error", tabindex: "-1" });
+    const error = node("p", "", { id: `${id}-error`, role: "alert", "aria-live": "polite", "aria-atomic": "true", class: "chat-widget-error", tabindex: "-1" });
     error.hidden = true;
     form.append(beforeInput, input, tools, reason);
     root.append(header, intro, log, status, loading, error, form);
@@ -104,6 +104,10 @@ window.ChatWidget = (() => {
     root.addEventListener("keydown", event => {
       if (event.key === "Escape") { event.preventDefault(); hide(); }
     });
+    function externalFocus(event) {
+      if (!root.hidden && !root.contains(event.target) && !launcher.contains(event.target)) hide(false);
+    }
+    document.addEventListener("focusin", externalFocus);
     input.addEventListener("keydown", event => {
       if (event.key === "Enter" && !event.shiftKey && !event.isComposing && event.keyCode !== 229) {
         event.preventDefault();
@@ -119,8 +123,8 @@ window.ChatWidget = (() => {
       dispose() {
         active = false;
         clearTimeout(timer);
+        document.removeEventListener("focusin", externalFocus);
         root.remove();
-        launcher.hidden = true;
         launcher.setAttribute("aria-expanded", "false");
       },
     };

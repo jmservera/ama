@@ -217,3 +217,27 @@ by this record.
 
 Execution Complete; outcome Defects found. Review is complete but issue acceptance
 is blocked. Parent may make the requested local commit with Refs only; no push.
+
+## Selected Follow-Up Resolution (2026-10-29)
+
+The original Complete / Defects found assessment above remains unchanged as
+historical evidence. The owner selected a new follow-up RPI loop, task
+550-focus-fixes, implemented and independently reviewed after this original
+Review. Its current engineering status supersedes the original open routing:
+
+| Original finding | Current status | Resolution evidence |
+| --- | --- | --- |
+| RV-001 | Resolved | Shared outside-focus hide(false), removable focusin listener, retained work; short-height overlap removed. Real-app 320x800 Sign in reproduction, bidirectional Tab and both 1280x500 launcher hit-tests pass. |
+| RV-002 | Resolved | Removed async setup/reply refocus; polite updates, denial focus ownership and no transient launcher hiding. Behavioral and browser setup/thread/ask success/error/denial matrices preserve external, launcher and internal focus. |
+
+Independent follow-up Review:
+.copilot-tracking/reviews/logs/2026-10-29/chat-widget-550-focus-fixes-review.md,
+execution Complete / outcome Conformant, no new findings. Changes and exact
+local validation:
+.copilot-tracking/changes/2026-10-29/chat-widget-550-focus-fixes-changes.md.
+196 related tests (one opt-in skip), separate 38 opt-in tests, Ruff check/format,
+mypy, Node syntax, shared and existing audience Playwright checks pass.
+Both new focus tests fail against the original baseline as expected.
+No remaining RV-001/RV-002 blocker; this is not a repeated original Review,
+whole-issue closure, human accessibility acceptance or publication approval.
+No push or Azure operation.

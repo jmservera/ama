@@ -63,7 +63,10 @@ Labels distinguish AI suggestions from workflow-only/rules output, with native
 collapsed Sources details. AI output is advisory and may be incorrect.
 
 Closing and reopening retains history, draft, skill and pending reads in the
-current page session/context. Hidden current replies do not move focus.
+current page session/context. Moving focus into the page hides chat without
+redirecting focus or cancelling pending work; the visible launcher remains
+available. Setup and incoming replies never refocus the composer, even while
+chat is visible. Replies, status and inline errors use polite live updates.
 Employee case navigation, session/access loss and resident consent withdrawal
 clear the relevant conversation and invalidate late results. Reloading does
 not restore a conversation; no resident text is saved in browser storage.
@@ -91,7 +94,9 @@ export PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/te
 
 The shared browser check starts actual local applications with constructed data,
 checks identical asset bytes, multi-turn layout, 199/200ms loading, Enter/IME/
-Shift+Enter, nonmodal keyboard traversal, errors, reduced motion, collapsed
+Shift+Enter, unobscured external keyboard focus (including 320px sign-in and
+short-window launcher), controlled setup/reply focus preservation, errors,
+reduced motion, collapsed
 sources, consent, stale results and dependency recovery. Existing employee and
 resident browser checks retain their session/access/manual-callback assertions.
 These are engineering checks, not human screen-reader, voice-control, live-model,

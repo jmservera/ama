@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Review",
-  "status": "blocked",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-29/chat-widget-550-research.md",
@@ -34,17 +34,18 @@
       "decision": "Owner-authorized local commit follows Review as parent closeout. It preserves the adverse outcome and original phase evidence; no push, issue closure, publication approval or post-Review source correction.",
       "status": "confirmed",
       "evidence": "Original owner request; resulting commit metadata is the persistent execution receipt."
+    },
+    {
+      "decision": "Selected later task 550-focus-fixes resolved original RV-001/RV-002 through a separate explicitly requested RPI loop. Original Review remains historical Complete/Defects found; follow-up Review is Complete/Conformant with no new findings.",
+      "status": "resolved 2026-10-29",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/chat-widget-550-focus-fixes-review.md"
     }
   ],
-  "blockers": [
-    { "id": "RV-001", "summary": "Nonmodal chat can completely obscure external keyboard focus.", "resolution": "Later rpi-implement: unobscured external focus without trapping/cancelling retained work." },
-    { "id": "RV-002", "summary": "Visible-background employee initialization/completion steals deliberately moved focus.", "resolution": "Later rpi-implement: focus-owned completion and external-focus regression." }
-  ],
-  "next_action": { "phase": "Implement", "action": "Later explicitly selected rpi-implement owns RV-001/RV-002. Parent closes out with the requested local commit only; no push or issue-completion claim. Manual mode remains in Review." },
+  "blockers": [],
+  "next_action": { "phase": "Review", "action": "Selected focus follow-up complete; original findings resolved with independent evidence. Manual mode remains in Review; owner acceptance and future publication gates remain separate, no push authorized." },
   "prioritized_follow_ups": [
-    { "rank": 1, "task": "Resolve RV-001/RV-002 keyboard-focus defects in a later implementation task.", "rationale": "Direct AC-9 acceptance blockers with concrete reproductions; preserve one-pass Review.", "evidence": ".copilot-tracking/reviews/logs/2026-10-29/chat-widget-550-review.md" },
-    { "rank": 2, "task": "Investigate the unchanged case-journey mobile summary-height baseline failure.", "rationale": "Existing 1600px oracle fails at 1705.97px with baseline and current assets; keep separate from chat scope.", "evidence": ".copilot-tracking/changes/2026-10-29/chat-widget-550-changes.md" },
-    { "rank": 3, "task": "Obtain human accessibility and live-site acceptance.", "rationale": "Local synthetic browser and axe evidence does not establish operational or assistive-technology acceptance.", "evidence": "src/api/README.md" },
-    { "rank": 4, "task": "Run the full external exact-head gate and publication approvals before any future push.", "rationale": "Owner requests a local commit only; publication is not authorized or proven.", "evidence": ".copilot-tracking/plans/2026-10-29/chat-widget-550-plan.md" }
+    { "rank": 1, "task": "Investigate the unchanged case-journey mobile summary-height baseline failure.", "rationale": "Existing 1600px oracle fails at 1705.97px with baseline and current assets; keep separate from chat scope.", "evidence": ".copilot-tracking/changes/2026-10-29/chat-widget-550-changes.md" },
+    { "rank": 2, "task": "Obtain human accessibility and live-site acceptance.", "rationale": "Local synthetic browser and axe evidence does not establish operational or assistive-technology acceptance.", "evidence": "src/api/README.md" },
+    { "rank": 3, "task": "Run the full external exact-head gate and publication approvals before any future push.", "rationale": "Owner requests a local commit only; publication is not authorized or proven.", "evidence": ".copilot-tracking/plans/2026-10-29/chat-widget-550-plan.md" }
   ]
 }

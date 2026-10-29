@@ -148,3 +148,30 @@ One independent Review, then requested privacy-safe commit without push.
   authorized and no publication/operational readiness is claimed.
 * Owner-maintained case-journey baseline summary-height failure, unchanged by
   this work. Investigate separately without weakening its existing assertion.
+
+## Selected Focus Follow-Up (2026-10-29)
+
+Historical implementation and original adverse Review evidence above is
+preserved. Owner-selected task 550-focus-fixes resolves original RV-001 and
+RV-002 through a separate short research/plan/implementation/Review loop.
+Outside-focus dismissal preserves work; async setup/replies no longer focus
+input, all chat updates explicitly polite, short-window launcher stays visible,
+and access-loss cleanup preserves deliberately external/surviving launcher focus.
+
+Regression module: src/api/tests/test_chat_widget_focus.py (2 tests with
+48 controlled employee combinations), both expected to fail on original source.
+Expanded shared Playwright check proves exact 320px Sign in focus visibility,
+both short-window launchers, bidirectional external traversal, current replies
+and 48 current employee setup/send/denial combinations. Existing employee and
+resident checks migrated only obsolete focus oracles; all prior safety
+assertions retained. Final requested local validation passes: 196 tests/one
+opt-in skip, separate 38 opt-in, Ruff check/format, mypy111, Node syntax, shared
+and both existing audience browser checks.
+
+Full follow-up evidence and commands:
+.copilot-tracking/changes/2026-10-29/chat-widget-550-focus-fixes-changes.md.
+Independent Review:
+.copilot-tracking/reviews/logs/2026-10-29/chat-widget-550-focus-fixes-review.md,
+Complete / Conformant, no new defects. Original RV-001/RV-002 are resolved;
+baseline-layout, human/live acceptance and publication follow-ups remain.
+Owner-authorized local commit only, no push/Azure/rubric-score edits.

@@ -1,0 +1,66 @@
+{
+  "task_id": "550-focus-fixes",
+  "task_slug": "chat-widget-550-focus-fixes",
+  "parent_task": {"task_id": "550", "task_slug": "chat-widget-550"},
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-29/chat-widget-550-focus-fixes-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-29/chat-widget-550-focus-fixes-plan.md",
+    "details": ".copilot-tracking/details/2026-10-29/chat-widget-550-focus-fixes-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-29/chat-widget-550-focus-fixes-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-29/chat-widget-550-focus-fixes-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-29/chat-widget-550-focus-fixes-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Owner explicitly requests all four phases for RV-001/RV-002, local validation and commit without push. Remain manual; no automatic-mode inference.",
+      "status": "confirmed",
+      "evidence": "Owner request 2026-10-29; clean feat/chat-widget-550, no existing PR."
+    },
+    {
+      "decision": "Separate selected follow-up preserves original critique and adverse Review; append resolution evidence without rewriting original findings.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/chat-widget-550-review.md"
+    },
+    {
+      "decision": "Focused research executed/Ready; one plan critique Complete/Revise. PC-001/002/003/004 directly applied; PC-005 rejected as worker-only runtime restriction absent in parent. No significant divergent decision or repeat critique.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/plans/2026-10-29/chat-widget-550-focus-fixes-plan.md"
+    },
+    {
+      "decision": "One independent follow-up Review Complete/Conformant with no new findings. Assessed full uncommitted follow-up source/tests/docs and local evidence against 9658b51b, not exact-head publication. RV-001/RV-002 resolved; no source edits after Review.",
+      "status": "executed; conformant",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/chat-widget-550-focus-fixes-review.md"
+    },
+    {
+      "decision": "Requested finite manual RPI loop complete, local commit containing this final state is the closeout receipt; no push, az, rubric edits or issue/publication acceptance.",
+      "status": "local closeout",
+      "evidence": ".copilot-tracking/changes/2026-10-29/chat-widget-550-focus-fixes-changes.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Review", "action": "No further action in this requested loop. Retain manual mode; no push. Owner may select a distinct residual follow-up."},
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Investigate original unrelated 320px case-summary height baseline.",
+      "rationale": "Known measurable existing failure, isolated from corrected chat focus; do not weaken oracle.",
+      "evidence": ".copilot-tracking/changes/2026-10-29/chat-widget-550-changes.md"
+    },
+    {
+      "rank": 2,
+      "task": "Obtain human accessibility and live-service acceptance.",
+      "rationale": "Local DOM, axe and synthetic browser checks cannot establish screen-reader/voice usability or real service acceptance.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/chat-widget-550-focus-fixes-review.md"
+    },
+    {
+      "rank": 3,
+      "task": "Complete external exact-head gate and publication approvals before any future push.",
+      "rationale": "Local-only commit does not authorize or satisfy publication.",
+      "evidence": ".copilot-tracking/plans/2026-10-29/chat-widget-550-focus-fixes-plan.md"
+    }
+  ]
+}

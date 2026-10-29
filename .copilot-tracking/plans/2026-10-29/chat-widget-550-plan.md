@@ -157,3 +157,13 @@ independent Review and requested local commit as explicit remaining closeout
 work. The broader case checker has the documented unchanged baseline failure;
 all directly affected chat lifecycle assertions passed before that failure.
 Do not publish; no human accessibility or operational acceptance is claimed.
+
+## Selected Follow-Up Pointer (2026-10-29)
+
+The above is the original pre-Review plan snapshot. Owner-selected
+550-focus-fixes now resolves its Review findings RV-001/RV-002; current plan:
+.copilot-tracking/plans/2026-10-29/chat-widget-550-focus-fixes-plan.md.
+Independent follow-up Review Complete / Conformant:
+.copilot-tracking/reviews/logs/2026-10-29/chat-widget-550-focus-fixes-review.md.
+Original critique/Review outcomes remain preserved. Local-only correction and
+commit do not establish human acceptance or permission to publish.

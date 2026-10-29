@@ -19,6 +19,110 @@ from checks.regulatory_ux_check import AXE_SHA256
 WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
 
 
+def focused_control_visible(page: Page) -> None:
+    assert page.evaluate("""() => {
+      const el = document.activeElement, r = el.getBoundingClientRect();
+      const x = (Math.max(0, r.left) + Math.min(innerWidth, r.right)) / 2;
+      const y = (Math.max(0, r.top) + Math.min(innerHeight, r.bottom)) / 2;
+      return r.width > 0 && r.height > 0 && x >= 0 && x < innerWidth
+        && y >= 0 && y < innerHeight && el.contains(document.elementFromPoint(x, y));
+    }"""), "Focused control is obscured or outside the viewport"
+
+
+def external_note(page: Page) -> None:
+    page.evaluate("""() => {
+      const note = document.createElement('textarea');
+      note.id = 'focus-check-note';
+      note.setAttribute('aria-label', 'Synthetic external work note');
+      note.style.cssText = 'position:fixed;right:24px;top:120px;width:120px;height:60px';
+      document.body.append(note);
+    }""")
+
+
+def short_window_launcher(page: Page, root: str) -> None:
+    panel = page.locator(root)
+    launcher = page.get_by_role("button", name="Chat", exact=True)
+    page.set_viewport_size({"width": 1280, "height": 500})
+    panel.locator("h2").focus()
+    page.keyboard.press("Shift+Tab")
+    expect(launcher).to_be_focused()
+    expect(panel).to_be_visible()
+    focused_control_visible(page)
+    launcher.click()
+    expect(panel).to_be_hidden()
+    launcher.click()
+    expect(panel).to_be_visible()
+    page.set_viewport_size({"width": 1280, "height": 900})
+
+
+def current_reply_focus(page: Page, root: str, endpoint: str) -> None:
+    panel = page.locator(root)
+    launcher = page.get_by_role("button", name="Chat", exact=True)
+    question = panel.locator("textarea")
+    send = panel.get_by_role("button", name="Send", exact=True)
+    external_note(page)
+    try:
+        for outcome in ("success", "error"):
+            for target in ("external", "launcher", "internal"):
+                if not panel.is_visible():
+                    launcher.click()
+                held: list[Route] = []
+                page.route(endpoint, lambda route, *, held=held: held.append(route))
+                question.fill(f"Current {outcome} {target}")
+                send.click()
+                page.wait_for_function(
+                    "() => document.querySelector('.chat-widget form')"
+                    ".getAttribute('aria-busy') === 'true'"
+                )
+                chosen = (
+                    page.locator("#focus-check-note")
+                    if target == "external"
+                    else launcher
+                    if target == "launcher"
+                    else panel.locator("h2")
+                )
+                chosen.focus()
+                expect(panel).to_be_hidden() if target == "external" else expect(
+                    panel
+                ).to_be_visible()
+                assert len(held) == 1
+                if outcome == "success":
+                    held[0].fulfill(
+                        json={
+                            "answer": "Current focus-safe reply",
+                            "reply": "Current focus-safe reply",
+                            "label": "Summary by rules",
+                            "workflow_only": True,
+                            "citations": [],
+                            "sources": [],
+                        }
+                    )
+                else:
+                    held[0].fulfill(status=503, json={"error": "Current focus-safe failure"})
+                expect(panel.locator("form")).to_have_attribute("aria-busy", "false")
+                expect(chosen).to_be_focused()
+                focused_control_visible(page)
+                expect(panel.locator('[role="log"]')).to_have_attribute("aria-live", "polite")
+                if outcome == "success":
+                    expect(panel.locator('[role="log"]')).to_contain_text(
+                        "Current focus-safe reply"
+                    )
+                    expect(question).to_have_value("")
+                else:
+                    expect(panel.locator('[role="alert"]')).to_have_attribute("aria-live", "polite")
+                    expect(panel.locator('[role="alert"]')).to_contain_text(
+                        "Current focus-safe failure"
+                    )
+                    expect(question).to_have_value(f"Current {outcome} {target}")
+                if target == "external":
+                    expect(panel).to_be_hidden()
+                    launcher.click()
+                    expect(panel).to_be_visible()
+                page.unroute(endpoint)
+    finally:
+        page.locator("#focus-check-note").evaluate("el => el.remove()")
+
+
 def scan(page: Page, axe: str, root: str) -> None:
     page.evaluate(axe)
     violations = page.evaluate(
@@ -118,15 +222,29 @@ def shared_ui(page: Page, root: str, endpoint: str, out: Path, audience: str, ax
     expect(log).to_contain_text("answer 1.")
     expect(log).to_contain_text("answer 4.")
     expect(question).to_have_value("Draft survives closing")
-    # A nonmodal popup must permit normal Tab traversal into the page.
-    send.focus()
-    left = False
-    for _ in range(6):
-        page.keyboard.press("Tab")
-        if not panel.evaluate("el => el.contains(document.activeElement)"):
-            left = True
-            break
-    assert left, "Nonmodal chat trapped Tab"
+    short_window_launcher(page, root)
+    for key in ("Tab", "Shift+Tab"):
+        (send if key == "Tab" else panel.locator("h2")).focus()
+        left = False
+        for _ in range(12):
+            page.keyboard.press(key)
+            inside = panel.evaluate("el => el.contains(document.activeElement)")
+            at_launcher = page.get_by_role("button", name="Chat", exact=True).evaluate(
+                "el => el === document.activeElement"
+            )
+            at_page_control = page.evaluate(
+                "document.activeElement !== document.body && "
+                "document.activeElement !== document.documentElement"
+            )
+            if not inside and not at_launcher and at_page_control:
+                left = True
+                break
+        assert left, "Nonmodal chat trapped keyboard traversal"
+        expect(panel).to_be_hidden()
+        focused_control_visible(page)
+        page.get_by_role("button", name="Chat", exact=True).click()
+        expect(question).to_have_value("Draft survives closing")
+        expect(log).to_contain_text("answer 4.")
     page.clock.install(time=datetime(2030, 1, 1, tzinfo=UTC))
     page.clock.pause_at(datetime(2030, 1, 1, 0, 0, 1, tzinfo=UTC))
     loading = panel.locator(".chat-widget-loading")
@@ -180,10 +298,105 @@ def shared_ui(page: Page, root: str, endpoint: str, out: Path, audience: str, ax
     page.clock.resume()
     scan(page, axe, root)
     page.unroute(endpoint)
+    current_reply_focus(page, root, endpoint)
     print(
         f"PASS {audience}: thread, pinned input, keyboard, labels, controls; "
-        "200ms loading, errors, focus, axe, reflow"
+        "200ms loading, errors, unobscured external focus, "
+        "no current-reply focus theft, axe, reflow"
     )
+
+
+def employee_current_focus(page: Page) -> None:
+    external_note(page)
+    try:
+        for stage in ("skills", "status", "thread", "ask"):
+            for outcome in ("success", "error", "403", "404"):
+                for target in ("external", "launcher", "internal"):
+                    page.evaluate(
+                        """stage => {
+                      employeeChat.reset();
+                      const state = window.currentChat = {api, stage};
+                      api = (path, body, signal) => {
+                        const hold = stage === 'skills' ? path === '/api/chat/skills'
+                          : stage === 'status' ? path === '/api/chat/status'
+                          : stage === 'thread' ? path === '/api/chat/threads'
+                          : path.endsWith('/ask');
+                        if (!hold) return state.api(path, body, signal);
+                        return new Promise((resolve, reject) => {
+                          state.resolve = resolve; state.reject = reject;
+                        });
+                      };
+                      state.task = employeeChat.open();
+                    }""",
+                        stage,
+                    )
+                    panel = page.locator("#employee-chat")
+                    expect(panel).to_be_visible()
+                    if stage in ("thread", "ask"):
+                        expect(panel.locator("select")).to_be_enabled()
+                        expect(panel.locator("h2")).to_be_focused()
+                        panel.locator("textarea").fill("Current controlled question")
+                        page.evaluate("""() => {
+                          currentChat.task = document.querySelector('#employee-chat form')
+                            .onsubmit(new Event('submit', {cancelable: true}));
+                        }""")
+                    page.wait_for_function("() => typeof currentChat.resolve === 'function'")
+                    chosen = (
+                        page.locator("#focus-check-note")
+                        if target == "external"
+                        else page.locator("#employee-chat-launcher")
+                        if target == "launcher"
+                        else panel.locator("h2")
+                    )
+                    chosen.focus()
+                    page.evaluate(
+                        """async outcome => {
+                      const state = currentChat;
+                      api = state.api;
+                      if (outcome === 'success') state.resolve(
+                        state.stage === 'skills' ? {skills: []}
+                        : state.stage === 'status'
+                          ? {warning:'Synthetic warning', retention:'Local'}
+                        : state.stage === 'thread' ? await state.api('/api/chat/threads', {})
+                        : {reply:'Current controlled reply', citations:[], workflow_only:true});
+                      else {
+                        const error = new Error('Current controlled failure');
+                        if (outcome !== 'error') error.status = Number(outcome);
+                        state.reject(error);
+                      }
+                      await state.task;
+                    }""",
+                        outcome,
+                    )
+                    denied = outcome in ("403", "404")
+                    if denied:
+                        expect(panel).to_have_count(0)
+                        expect(
+                            page.locator("#app") if target == "internal" else chosen
+                        ).to_be_focused()
+                    else:
+                        expect(chosen).to_be_focused()
+                        if target == "external":
+                            expect(panel).to_be_hidden()
+                        else:
+                            expect(panel).to_be_visible()
+                        expect(panel.locator("form")).to_have_attribute("aria-busy", "false")
+                        if outcome == "error":
+                            expect(panel.locator('[role="alert"]')).to_have_attribute(
+                                "aria-live", "polite"
+                            )
+                            expect(panel.locator('[role="alert"]')).to_contain_text(
+                                "Current controlled failure"
+                            )
+                        if stage in ("thread", "ask"):
+                            expect(panel.locator("textarea")).to_have_value(
+                                "" if outcome == "success" else "Current controlled question"
+                            )
+                    focused_control_visible(page)
+                    page.evaluate("() => { employeeChat.reset(); delete window.currentChat; }")
+    finally:
+        page.locator("#focus-check-note").evaluate("el => el.remove()")
+    print("PASS employee: 48 current setup/thread/ask focus and denial combinations")
 
 
 def employee_stale(page: Page) -> None:
@@ -234,6 +447,14 @@ def employee_stale(page: Page) -> None:
                 expect(page.locator("#employee-chat")).to_have_count(0)
                 if transition == "session":
                     page.evaluate("() => { me = staleChat.session; employeeChat.install(); }")
+                else:
+                    destination = page.evaluate("location.hash")
+                    expect(page.locator("#app h1").first).to_have_text(
+                        "Progress dashboard" if destination == "#/progress" else "My cases today"
+                    )
+                    expect(
+                        page.get_by_text("Loading demonstration data\u2026", exact=True)
+                    ).to_have_count(0)
                 page.evaluate("""() => {
                   api = staleChat.api;
                   document.getElementById('employee-chat-launcher').onclick();
@@ -299,6 +520,7 @@ def employee(browser: Browser, base: str, out: Path, axe: str) -> None:
         expect(page.locator("#employee-chat [role=log]")).to_contain_text("ordinary case workflow")
         expect(page.get_by_role("button", name="Send", exact=True)).to_be_enabled()
         shared_ui(page, "#employee-chat", "**/api/chat/threads/*/ask", out, "employee", axe)
+        employee_current_focus(page)
         employee_stale(page)
         for endpoint in ("skills", "threads", "threads/*/ask"):
             for code in (401, 403, 404):
@@ -345,6 +567,15 @@ def resident(browser: Browser, out: Path, axe: str) -> None:
         page.on("request", lambda request: calls.append(request.url))
         page.goto(base)
         expect(page.locator("#signin")).to_be_visible()
+        page.set_viewport_size({"width": 320, "height": 800})
+        page.get_by_role("button", name="Chat", exact=True).click()
+        page.keyboard.press("Shift+Tab")
+        page.keyboard.press("Shift+Tab")
+        expect(page.locator("#signin-button")).to_be_focused()
+        expect(page.locator("#resident-chat")).to_be_hidden()
+        focused_control_visible(page)
+        page.screenshot(path=str(out / "resident-external-focus-320.png"))
+        page.set_viewport_size({"width": 1280, "height": 900})
         for asset in ("chat-widget.js", "chat-widget.css"):
             assert page.request.get(base + "/" + asset).body() == (WEB / asset).read_bytes()
         page.get_by_label("Email address", exact=True).fill("one@example.com")

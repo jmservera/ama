@@ -57,9 +57,10 @@ const employeeChat = (() => {
     input.disabled = true;
     const current = () => widget === ui && me === session && !signal.aborted;
     const deny = () => {
+      const ownedFocus = ui.root.contains(document.activeElement);
       reset();
       workspaceStatus.textContent = "Chat access ended. Reopen from a record you can see, or sign in again.";
-      app.focus();
+      if (ownedFocus) app.focus();
       launcher().hidden = !me || me.user.role === "Contractor";
     };
     select.append(ui.node("option", "General work help", { value: "general" }));
@@ -113,7 +114,7 @@ const employeeChat = (() => {
         if ([401, 403, 404].includes(error.status)) { deny(); return; }
         ui.fail(`Chat unavailable: ${error.message} Try again or continue with the ordinary workflow.`);
       } finally {
-        if (current()) { ui.busy(false); ui.focusInput(); }
+        if (current()) ui.busy(false);
       }
     };
     ui.open();
@@ -135,7 +136,6 @@ const employeeChat = (() => {
       input.disabled = false;
       ui.busy(false);
       status.textContent = "Choose a skill or ask a general work question.";
-      ui.focusInput();
     } catch (error) {
       if (!current()) return;
       if ([401, 403, 404].includes(error.status)) {

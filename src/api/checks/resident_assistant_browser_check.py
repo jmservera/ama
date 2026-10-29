@@ -432,9 +432,7 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
             focus = page.locator("#chat-launcher")
         else:
             summary.focus()
-            expect(panel).to_be_visible()
-            page.get_by_role("button", name="Close chat", exact=True).click()
-            summary.focus()
+            expect(panel).to_be_hidden()
             focus = summary
         expect(panel).to_be_hidden()
         pending["route"].fulfill(response=pending["response"])
@@ -453,10 +451,7 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
     expect(button).to_be_disabled()
     expect(select).to_be_focused()
     select.press("Enter")
-    # Focus can leave the nonmodal popup; explicitly close it without cancelling the read.
-    summary.focus()
-    expect(panel).to_be_visible()
-    page.get_by_role("button", name="Close chat", exact=True).click()
+    # Leaving the nonmodal popup hides it without cancelling the read or redirecting focus.
     summary.focus()
     expect(panel).to_be_hidden()
     pending["route"].fulfill(response=pending["response"])
