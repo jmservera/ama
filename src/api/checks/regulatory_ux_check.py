@@ -427,6 +427,7 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             expect(alerts).to_contain_text("Not active or source uncertain")
             expect(alerts).to_contain_text("Status: breach risk")
             scan(page, axe, reports, "source-changed-retained-risk")
+            page.get_by_role("tab", name="AI assistance", exact=False).press("Enter")
             question.fill("What do the hazard sources say for this home?")
             question.press("Tab")
             page.keyboard.press("Enter")
@@ -454,6 +455,7 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             # Actual service outage and disabled capability, not fake successful responses.
             law = fixture.app.law
             fixture.app.law = None
+            page.get_by_role("tab", name="Blockers and safety", exact=False).press("Enter")
             page.get_by_role("button", name="Refresh alerts", exact=True).click()
             expect(alerts.locator(":scope > p[role=status]")).to_contain_text(
                 "Alert coverage unknown"

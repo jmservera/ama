@@ -221,15 +221,28 @@ def quality_outcome_history(
 
 
 def chat_cleanup(page: Page, base: str) -> None:
+    usage = {
+        "role": "Retrofit Programme Manager",
+        "period": "2026-10-29",
+        "recorded_turns": 0,
+        "outcomes": {"answer": 0, "refused": 0, "conflict": 0},
+        "coverage": "recorded_audit_only",
+    }
+
     def admission(route: Route) -> None:
         route.fulfill(
             json={
                 "privacy": {"chat": {"status": "simulated", "days": 1}},
                 "warning": "Constructed chat lifecycle fixture, not legal approval.",
+                "usage": usage,
             }
         )
 
+    def usage_response(route: Route) -> None:
+        route.fulfill(json=usage)
+
     page.route("**/api/chat/regulatory/status", admission)
+    page.route("**/api/chat/regulatory/usage", usage_response)
     for regulatory in (False, True):
         prefix = "/api/chat/regulatory" if regulatory else "/api/chat"
         question_id = "#regulatory-question" if regulatory else "#chat-question"
@@ -328,6 +341,7 @@ def chat_cleanup(page: Page, base: str) -> None:
             page.unroute(thread_path, threads)
             page.unroute(ask_path, hold)
     page.unroute("**/api/chat/regulatory/status", admission)
+    page.unroute("**/api/chat/regulatory/usage", usage_response)
     page.goto(base + "/app#/case/ZF-1?tab=overview")
     page.get_by_role("tab", name="Overview", exact=True).wait_for()
 

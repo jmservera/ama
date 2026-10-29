@@ -973,6 +973,10 @@ const api = async (path, body) => {
   if (path === "/api/assistants") return {assistants: []};
   if (path.endsWith("/status")) return new Promise(() => {});
   requests.push({path, body});
+  if (path === "/api/chat/regulatory/usage") return {
+    role: me.user.role, period: "2026-10-29", recorded_turns: 1,
+    outcomes: {answer: 1, refused: 0, conflict: 0}, coverage: "recorded_audit_only"
+  };
   if (failure === "thread" && path.endsWith("/threads")) throw new Error("Thread failed");
   if (path.endsWith("/threads")) return {id: "SYN-CHAT"};
   return await new Promise((resolve, reject) => {finish = resolve; fail = reject;});
@@ -1012,6 +1016,10 @@ const api = async (path, body) => {
       assert.equal(requests[0].body.case_id, "SYN-526");
       if (change !== "thread-failure") {
         assert.equal(requests[1].body.content, "Submitted question");
+      }
+      if (regulatory && !change.endsWith("failure")) {
+        assert.equal(requests[2].path, "/api/chat/regulatory/usage");
+        assert.match(root.querySelector("#regulatory-usage").textContent, /1 turns/);
       }
     }
   }
