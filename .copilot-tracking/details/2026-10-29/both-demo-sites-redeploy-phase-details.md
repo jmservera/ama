@@ -12,6 +12,9 @@ Research .copilot-tracking/research/2026-10-29/both-demo-sites-redeploy-research
 Status: Implementation Partial, original Review Complete / Not accepted. Employee
 main deployment and resident old-image recovery verified; resident latest main unmet.
 One original critique Complete / Revise preserved, five findings disposed in plan.
+Local evidence handoff complete; original evidence commit59049aa80de14972c717e1d31a27309b984e7c7c
+verified with privacy-safe author/committer and requested Copilot trailer.
+No push or publication gate pass. Final parent handoff status is committed separately.
 
 ## Frozen Execution Contracts
 

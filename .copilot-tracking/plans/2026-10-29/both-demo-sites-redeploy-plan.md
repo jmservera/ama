@@ -13,7 +13,7 @@ ms.date: 2026-10-29
 * Research: .copilot-tracking/research/2026-10-29/both-demo-sites-redeploy-research.md
 * Details: .copilot-tracking/details/2026-10-29/both-demo-sites-redeploy-phase-details.md
 * Changes target: .copilot-tracking/changes/2026-10-29/both-demo-sites-redeploy-changes.md
-* Status: Implementation Partial; original Review Complete / Not accepted; local evidence handoff pending
+* Status: RPI lifecycle/local evidence handoff complete; implementation Partial, original Review Complete / Not accepted
 
 ## Executive Summary
 
@@ -127,10 +127,10 @@ Generated targets: private backups/build export and sanitized evidence only.
 * [x] P02-T03: Final cross-check both apps and ACR; record actual partial result.
 
 <!-- rpi:phase id=P03 -->
-### P03: Independent Review and local handoff
+### P03: Independent Review and local handoff (complete)
 
 * [x] P03-T01: One independent Review against complete execution evidence, Complete / Not accepted.
-* [ ] P03-T02: Reconcile evidence/state, commit locally, leave publication to coordinator.
+* [x] P03-T02: Reconcile evidence/state, commit locally, leave publication to coordinator.
 
 ## Dependencies and Recovery
 
@@ -190,8 +190,10 @@ the original planning disposition is not rewritten or treated as closure.
 
 ## Handoff
 
-Original independent Review executed Complete / Not accepted. P01 and
+Original independent Review executed Complete / Not accepted. Original dated
+evidence committed locally as59049aa80de14972c717e1d31a27309b984e7c7c,
+privacy-safe author/committer and requested trailer verified. P01 and
 employee/final-safety proof complete; resident latest-main acceptance unmet
-despite verified recovery. Parent completes only local evidence handoff and
-routes later work; no fixes, more rollouts or repeated Review. Original
+despite verified recovery. Local handoff complete; automatic session remains
+running at Follow-up awaiting selection. No push, fixes, more rollouts or repeated Review. Original
 critique, Review and failed execution evidence preserved.

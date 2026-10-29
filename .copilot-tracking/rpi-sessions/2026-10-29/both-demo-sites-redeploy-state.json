@@ -44,12 +44,17 @@
       "decision": "Original Review RV-004 alleges a /tmp lock prohibition without a source in supplied task/repository requirements; retain original finding verbatim but dispute its applicability. No shared lock relocation/deletion is authorized.",
       "status": "disputed",
       "evidence": "Original Review RV-004 versus owner instruction to follow earlier successful procedure and that procedure's named nonblocking shared lock."
+    },
+    {
+      "decision": "Original dated evidence committed locally; author/committer privacy-safe identity and mandated trailer verified. Only eight named task artifacts; no gh, push, PR or full publication gate.",
+      "status": "completed",
+      "evidence": "Local commit59049aa80de14972c717e1d31a27309b984e7c7c and git metadata/scope verification. Final parent handoff state recorded in a separate local commit."
     }
   ],
   "blockers": [
     {"id": "resident-latest-main-unmet", "summary": "Resident main revision ActivationFailed; one verified recovery restored original digest/config in rollback-20261029-073718. Latest-main resident outcome unmet. CLI introduced empty value fields alongside refs; actual startup root cause not isolated.", "resolution": "Route diagnosis and any new forward retry to separately authorized follow-up. No SQL changes, secrets access or additional forward revision in this task."}
   ],
-  "next_action": {"phase": "Follow-up", "action": "Full RPI lifecycle assessed; delivery Partial, Review Not accepted. Complete authorized local evidence commit then await ranked follow-up selection. Automatic session remains running; no child or cloud action without selection."},
+  "next_action": {"phase": "Follow-up", "action": "Full ordered RPI loop and local handoff complete; delivery Partial, original Review Not accepted. Await ranked follow-up selection, Stop automatic session or Switch to manual mode. Coordinator owns publication gates and Refs-only PR; no further cloud action authorized."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Research resident startup failure and CLI secretRef serialization", "rationale": "Directly unblocks the unmet resident-main outcome; preserve no-secrets/no-SQL boundary until separately authorized.", "evidence": "Resident ActivationFailed, two own CLI empty-value changes, current source17 columns versus older16-column evidence; exact old-image recovery healthy."},
     {"rank": 2, "task": "Correct and synthetically test exact-secretRef and cleanup-deadline executor behavior", "rationale": "High engineering-quality leverage and no-cloud testability address confirmed RV-002/RV-003 before another deployment.", "evidence": "Original Review RV-002 and RV-003; recovered cloud configuration exact but current forward CLI and cleanup contract remain unsafe/unproved."},

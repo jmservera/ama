@@ -15,7 +15,7 @@ ms.date: 2026-10-29
 * Details: .copilot-tracking/details/2026-10-29/both-demo-sites-redeploy-phase-details.md.
 * Original critique: Complete / Revise, five compatible corrections applied;
   original artifact retained, no second critique.
-* Current status: Implementation Partial; original independent Review Complete / Not accepted. Local evidence commit pending.
+* Current status: RPI lifecycle and local evidence handoff complete; implementation Partial, original independent Review Complete / Not accepted.
 
 ## Authorized Route and Constraints
 
@@ -234,6 +234,31 @@ No ongoing final protected-state mismatch found.
 Review findings are routed to later work, not corrected or closure-verified
 inside this completed task. The task lifecycle can finish despite the explicitly
 unmet delivery outcome. Human/authenticated acceptance remains unperformed.
+
+## Local Evidence Commit and Coordinator Handoff
+
+Original dated evidence, including unmodified critique/Review and sanitized
+machine receipt, committed locally as
+59049aa80de14972c717e1d31a27309b984e7c7c.
+Both author and committer use the existing repository-local privacy-safe
+noreply identity; exact mandated Co-authored-by trailer verified in the commit.
+No fresh gh lookup, gh command, push, PR, merge or history rewrite.
+
+JSON shape/state pointers, evidence secret-field exclusion, explicit Partial
+result, existing .gitignore and staged whitespace checks passed. Commit contains
+only the eight named task artifacts; raw backups/logs/configuration are external.
+Working tree was clean immediately after the original evidence commit.
+This final parent-status update is a separate local commit, not an amend.
+
+RPI task status completed means the full ordered loop and handoff finished,
+NOT that both apps reached latest main. Automatic session remains running at
+Follow-up; no child selected and no further action authorized. Coordinator
+owns publication and a Refs-only PR after required gates; no full receipt,
+independent exact-head publication approval or hosted/human approval exists.
+Original backups remain host-local in the protected session evidence root,
+not in an approved remote artifact store; no historical/generated evidence was
+deleted. Owned temporary credential config and local image-export tar files
+were removed, and no ACR tag/image/revision or shared lock was deleted.
 
 ## Follow-Up Items
 
