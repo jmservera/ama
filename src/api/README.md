@@ -428,6 +428,7 @@ covers summary-first keyboard/pointer behavior, Escape/focus, modal containment,
 redraw/failure/filter cleanup, manual paths, coordinator omissions, reduced
 motion and 320/390/1280px expanded layouts. Filter regressions cover all six
 flags, area changes, original control identity on exit, held/out-of-order reads,
+all-request observation proving repeated selected-filter activation adds no read,
 keyboard focus, 390x568 layout and 640px with a 32px default font. It also checks uncancelled browser
 shortcuts from map/marker focus in both modes and exact ordinary/Shift-plus map
 zoom changes. Session-expiry checks hold overlapping fit

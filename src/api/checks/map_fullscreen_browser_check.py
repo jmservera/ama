@@ -98,9 +98,8 @@ def check_expanded_filters(
     expect(tiles.locator(".static")).to_be_hidden()
     check(
         "expanded filters use smaller count text",
-        tiles.locator("strong").first.evaluate(
-            "el => parseFloat(getComputedStyle(el).fontSize)"
-        ) < header_count_size,
+        tiles.locator("strong").first.evaluate("el => parseFloat(getComputedStyle(el).fontSize)")
+        < header_count_size,
     )
     flags = (
         ("", "Open cases"),
@@ -124,9 +123,10 @@ def check_expanded_filters(
         expect(page.locator(".map-marker")).to_have_count(expected["total"])
         expect(page.locator("#leaflet")).not_to_have_attribute("aria-busy", "true")
         expect(button).to_be_focused()
-        check(f"{label} keeps visible keyboard focus", button.evaluate(
-            "el => getComputedStyle(el).outlineStyle === 'solid'"
-        ))
+        check(
+            f"{label} keeps visible keyboard focus",
+            button.evaluate("el => getComputedStyle(el).outlineStyle === 'solid'"),
+        )
         selections.append(dict(flag=flag, total=expected["total"]))
     check("zero-result support filter is exercised", selections[-1]["total"] == 0)
     expect(page.locator(".map-info [role=status]")).to_have_text("0 homes shown")
@@ -143,15 +143,33 @@ def check_expanded_filters(
     page.route("**/api/map?**", hold_first)
     try:
         safety = tiles.get_by_role("button", name="Safety issues open", exact=False)
-        with page.expect_request("**/api/map?**"):
+        requests: list[str] = []
+
+        def record_request(request: Request) -> None:
+            if "/api/map?" in request.url:
+                requests.append(request.url)
+
+        page.on("request", record_request)
+        try:
+            with page.expect_request("**/api/map?**"):
+                safety.press("Space")
+            expect(safety).to_be_focused()
+            expect(safety).to_be_enabled()
+            expect(page.locator("#leaflet")).to_have_attribute("aria-busy", "true")
+            check(
+                "filter progress stays outside the compact control group",
+                filters.locator(".async-feedback").count() == 0,
+            )
+            check("first flag activation issues one map request", len(requests) == 1)
+            before_repeat = len(requests)
             safety.press("Space")
-        expect(safety).to_be_focused()
-        expect(safety).to_be_enabled()
-        expect(page.locator("#leaflet")).to_have_attribute("aria-busy", "true")
-        check("filter progress stays outside the compact control group",
-              filters.locator(".async-feedback").count() == 0)
-        safety.press("Space")
-        check("selected flag suppresses duplicate reads", len(held) == 1)
+            page.evaluate(
+                """async () => await new Promise(resolve => requestAnimationFrame(() =>
+                  requestAnimationFrame(resolve)))"""
+            )
+            check("selected flag suppresses duplicate reads", len(requests) == before_repeat)
+        finally:
+            page.remove_listener("request", record_request)
         page.keyboard.press("Tab")
         expect(tiles.get_by_role("button", name="Waiting 60+ days", exact=False)).to_be_focused()
         older = held[0].fetch()
@@ -166,8 +184,10 @@ def check_expanded_filters(
         expect(page.locator(".map-panel .async-feedback")).to_have_count(0)
         expect(page.locator(".map-marker")).to_have_count(0)
         expect(page.locator(".map-info [role=status]")).to_have_text("0 homes shown")
-        check("latest area selection survives older successful flag response",
-              area.input_value() == "Cluster examples")
+        check(
+            "latest area selection survives older successful flag response",
+            area.input_value() == "Cluster examples",
+        )
     finally:
         page.unroute("**/api/map?**", hold_first)
 
@@ -189,9 +209,11 @@ def check_expanded_filters(
         page.unroute("**/api/map?**", hold_first)
 
     page.get_by_role("button", name="Exit expanded map", exact=True).click()
-    check("original filter and area nodes return to header", original.evaluate(
-        "el => el.parentElement.classList.contains('map-filter-slot')"
-    ) and original_area.evaluate("el => el === document.getElementById('mapArea')"))
+    check(
+        "original filter and area nodes return to header",
+        original.evaluate("el => el.parentElement.classList.contains('map-filter-slot')")
+        and original_area.evaluate("el => el === document.getElementById('mapArea')"),
+    )
     expect(safety).to_have_attribute("aria-pressed", "true")
     expect(area).to_have_value("Point examples")
     expect(tiles.locator(".static")).to_be_visible()
@@ -233,13 +255,16 @@ def check_expanded_filters(
             }"""
         )
         geometry.append(dimensions)
-        check(f"filters and map fit at {width}x{height}", (
-            dimensions["pageWidth"] <= width
-            and dimensions["filtersScroll"] <= dimensions["filtersWidth"]
-            and dimensions["filtersBottom"] <= dimensions["workspaceTop"]
-            and dimensions["mapWidth"] > 80
-            and dimensions["mapHeight"] >= dimensions["minimumHeight"]
-        ))
+        check(
+            f"filters and map fit at {width}x{height}",
+            (
+                dimensions["pageWidth"] <= width
+                and dimensions["filtersScroll"] <= dimensions["filtersWidth"]
+                and dimensions["filtersBottom"] <= dimensions["workspaceTop"]
+                and dimensions["mapWidth"] > 80
+                and dimensions["mapHeight"] >= dimensions["minimumHeight"]
+            ),
+        )
         if height == 568:
             held[0].continue_()
             page.unroute("**/api/map?**", hold_first)
@@ -247,15 +272,18 @@ def check_expanded_filters(
             expect(page.locator(".map-panel .async-feedback")).to_have_count(0)
         for button in tiles.get_by_role("button").all():
             button.focus()
-            check(f"filter label and focus fit at {width}x{height}", button.evaluate(
-                """el => {
+            check(
+                f"filter label and focus fit at {width}x{height}",
+                button.evaluate(
+                    """el => {
                   const r = el.getBoundingClientRect();
                   const p = el.closest('.overview-map-filters').getBoundingClientRect();
                   return r.height >= 40 && el.scrollWidth <= el.clientWidth
                     && r.top >= p.top && r.bottom <= p.bottom
                     && getComputedStyle(el).outlineStyle === 'solid';
                 }"""
-            ))
+                ),
+            )
         area.focus()
         expect(area).to_be_in_viewport()
         exit_map = page.get_by_role("button", name="Exit expanded map", exact=True)
@@ -331,7 +359,9 @@ def check_pending_navigation(page: Page, out: Path) -> None:
             })"""
         )
         results["pointerClean"] = page.evaluate(clean_map)
-        check("Expand click during pending facets cannot reopen disposed map", results["pointerClean"])
+        check(
+            "Expand click during pending facets cannot reopen disposed map", results["pointerClean"]
+        )
         results["slot"] = original_slot.evaluate(
             "el => ({connected: el.isConnected, inert: el.inert})"
         )
@@ -355,12 +385,17 @@ def check_pending_navigation(page: Page, out: Path) -> None:
         released = True
         page.get_by_role("heading", name="All open cases", exact=True).wait_for()
         results["destinationClean"] = page.evaluate(clean_map)
-        check("case list renders without disposed map, dialog or scroll lock", results["destinationClean"])
+        check(
+            "case list renders without disposed map, dialog or scroll lock",
+            results["destinationClean"],
+        )
     finally:
         if held and not released:
             held[0].continue_()
         page.unroute("**/api/facets", hold)
-        (out / "pending-navigation.json").write_text(json.dumps(results, indent=2), encoding="utf-8")
+        (out / "pending-navigation.json").write_text(
+            json.dumps(results, indent=2), encoding="utf-8"
+        )
 
 
 def check_session_expiry(page: Page, base: str, out: Path) -> None:
@@ -465,7 +500,10 @@ def check_session_expiry(page: Page, base: str, out: Path) -> None:
             )
             response = held[1].fetch()
             data = response.json()
-            check(f"{mode} genuine successful fit response has bounds", response.ok and bool(data["bounds"]))
+            check(
+                f"{mode} genuine successful fit response has bounds",
+                response.ok and bool(data["bounds"]),
+            )
             page.evaluate(
                 "(expanded) => { mapDisposalCheck.forceCollapseDraw = expanded; }",
                 expanded,
@@ -512,11 +550,16 @@ def check_session_expiry(page: Page, base: str, out: Path) -> None:
                 f"{mode} late responses never fit or redraw the disposed map",
                 result["before"] == result["after"],
             )
-            check(f"{mode} late responses start no further map requests", len(result["requests"]) == expected_requests)
+            check(
+                f"{mode} late responses start no further map requests",
+                len(result["requests"]) == expected_requests,
+            )
             check(f"{mode} session expiry removes map, dialog and body lock", result["clean"])
         finally:
             page.unroute("**/api/map?**", hold)
-            (out / "session-expiry.json").write_text(json.dumps(results, indent=2), encoding="utf-8")
+            (out / "session-expiry.json").write_text(
+                json.dumps(results, indent=2), encoding="utf-8"
+            )
 
 
 def check_enlarged_font(
@@ -585,15 +628,18 @@ def check_enlarged_font(
             and geometry["sidebarWidth"] <= geometry["workspaceWidth"] * 0.45 + 1
             and geometry["mapWidth"] > 80,
         )
-        check("enlarged-text filters preserve width and minimum map height",
-              geometry["filterScroll"] <= geometry["filterWidth"]
-              and geometry["mapHeight"] >= geometry["minimumHeight"])
+        check(
+            "enlarged-text filters preserve width and minimum map height",
+            geometry["filterScroll"] <= geometry["filterWidth"]
+            and geometry["mapHeight"] >= geometry["minimumHeight"],
+        )
         for button in page.locator(".overview-map-filters button").all():
             button.focus()
             expect(button).to_be_in_viewport()
-            check("enlarged-text filter labels fit", button.evaluate(
-                "el => el.scrollWidth <= el.clientWidth"
-            ))
+            check(
+                "enlarged-text filter labels fit",
+                button.evaluate("el => el.scrollWidth <= el.clientWidth"),
+            )
         close = page.get_by_role("button", name="Close home summary", exact=True)
         close.scroll_into_view_if_needed()
         expect(close).to_be_in_viewport()
