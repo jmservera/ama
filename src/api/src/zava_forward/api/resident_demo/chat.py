@@ -176,7 +176,12 @@ def route(question: str) -> Topic | str:
         return "appointments"
     if tokens & {"consent", "consents", "permission"}:
         return "consents"
-    if tokens & {"home", "address", "improvements"}:
+    if re.fullmatch(
+        r"(?:my home|(?:what|which) (?:is|are) (?:my )?address|"
+        r"(?:what|which) (?:is )?recorded about my home|"
+        r"(?:what|which) improvements are planned(?: for my [a-z ]+)?)[?.!]*",
+        question.lower().strip(),
+    ):
         return "home"
     if tokens & {"status", "case", "progress"}:
         return Topic.STATUS

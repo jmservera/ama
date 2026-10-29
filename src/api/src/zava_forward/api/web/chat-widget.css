@@ -1,0 +1,31 @@
+.chat-widget-launcher{position:fixed;right:max(var(--spacingHorizontalL),env(safe-area-inset-right));bottom:max(var(--spacingHorizontalL),env(safe-area-inset-bottom));z-index:4;display:grid;place-items:center;min-width:3.5rem;min-height:3.5rem;padding:var(--spacingHorizontalS);border-radius:var(--borderRadiusXLarge);background:var(--brand);color:var(--surface);touch-action:manipulation}
+.chat-widget{position:fixed;inset:auto max(var(--spacingHorizontalL),env(safe-area-inset-right)) calc(5.5rem + env(safe-area-inset-bottom)) auto;z-index:4;width:min(28rem,calc(100vw - 2 * var(--spacingHorizontalL)));height:min(40rem,calc(100dvh - 7rem - env(safe-area-inset-bottom) - env(safe-area-inset-top)));display:flex;flex-direction:column;gap:var(--spacingHorizontalS);padding:var(--spacingHorizontalM);border:1px solid var(--line);border-radius:var(--borderRadiusXLarge);background:var(--surface);color:var(--ink);overflow:hidden;overflow-wrap:anywhere;overscroll-behavior:contain}
+.chat-widget[hidden]{display:none}
+.chat-widget-header{display:flex;align-items:center;justify-content:space-between;gap:var(--spacingHorizontalS);flex:none}
+.chat-widget-header h2{font-size:var(--fontSizeBase500);line-height:1.3;margin:0}
+.chat-widget-close{background:var(--surface);color:var(--brand);padding:var(--spacingHorizontalS)}
+.chat-widget-intro{flex:0 1 auto;min-height:0;max-height:30%;overflow:auto}
+.chat-widget-intro p{margin:var(--spacingHorizontalS) 0}
+.chat-widget summary{cursor:pointer;min-height:2rem;padding:var(--spacingHorizontalS);touch-action:manipulation}
+.chat-widget summary:hover{background:var(--soft)}
+.chat-widget-log{flex:1;min-height:3rem;overflow:auto;overscroll-behavior:contain;list-style:none;padding:var(--spacingHorizontalS);margin:0;scroll-padding:var(--spacingHorizontalS)}
+.chat-widget-message{margin:0 0 var(--spacingHorizontalM);padding:var(--spacingHorizontalM);background:var(--bg);border-radius:var(--borderRadiusMedium)}
+.chat-widget-message:nth-child(n+51){content-visibility:auto;contain-intrinsic-size:auto 8rem}
+.chat-widget-user{margin-left:var(--spacingHorizontalXXL);background:var(--soft)}
+.chat-widget-message p{white-space:pre-wrap;margin:var(--spacingHorizontalS) 0}
+.chat-widget-meta{display:block;color:var(--muted);font-size:.8rem;line-height:1.4}
+.chat-widget-composer{flex:0 1 auto;min-width:0;min-height:0;margin:0;display:grid;gap:var(--spacingHorizontalS);max-height:55%;overflow:auto}
+.chat-widget textarea,.chat-widget select{font:inherit;background:var(--surface);color:var(--ink);border:1px solid var(--muted);border-radius:var(--borderRadiusMedium);padding:var(--spacingHorizontalS);min-width:0;max-width:100%;margin:0;touch-action:manipulation}
+.chat-widget textarea{width:100%;min-height:3rem;resize:vertical;max-height:7rem}
+.chat-widget-tools{display:flex;align-items:center;gap:var(--spacingHorizontalS);flex-wrap:wrap}
+.chat-widget-tools select{flex:1 1 9rem;width:0;min-height:2.5rem}
+.chat-widget-tools button{padding:var(--spacingHorizontalS);min-height:2.5rem}
+.chat-widget-status{font-size:.85rem;color:var(--muted);margin:0;flex:none}
+.chat-widget-status:empty{display:none}
+.chat-widget-error{flex:none;max-height:20%;overflow:auto;background:var(--warn-bg);color:var(--warn);padding:var(--spacingHorizontalS);margin:0;border-left:3px solid var(--warn)}
+.chat-widget-loading{font-size:.85rem;color:var(--muted);flex:none}
+.chat-widget-loading::before{content:"";display:inline-block;width:.8rem;height:.8rem;margin-right:var(--spacingHorizontalS);border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:chat-widget-spin 1s linear infinite}
+.chat-widget .check{margin:0;font-size:.85rem;line-height:1.3}
+@keyframes chat-widget-spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.chat-widget-loading::before{animation:none}.chat-widget,.chat-widget-launcher{transition:none}}
+@media(max-height:35rem){.chat-widget{bottom:var(--spacingHorizontalS);height:calc(100dvh - 2 * var(--spacingHorizontalL));right:var(--spacingHorizontalS)}}

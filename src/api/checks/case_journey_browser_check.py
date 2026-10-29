@@ -245,7 +245,7 @@ def chat_cleanup(page: Page, base: str) -> None:
     page.route("**/api/chat/regulatory/usage", usage_response)
     for regulatory in (False, True):
         prefix = "/api/chat/regulatory" if regulatory else "/api/chat"
-        question_id = "#regulatory-question" if regulatory else "#chat-question"
+        question_id = "#regulatory-question" if regulatory else "#employee-chat-question"
         for change in ("none", "text", "space", "answer-failure", "thread-failure"):
             held: list[Route] = []
             thread_path = f"**{prefix}/threads"
@@ -270,9 +270,11 @@ def chat_cleanup(page: Page, base: str) -> None:
             page.locator("#chat-panel > summary").click()
             if regulatory:
                 page.locator("#regulatory-chat > summary").click()
+            else:
+                page.get_by_role("button", name="Open chat", exact=True).click()
             field = page.locator(question_id)
             button = page.get_by_role(
-                "button", name="Look up cited sources" if regulatory else "Ask", exact=True
+                "button", name="Look up cited sources" if regulatory else "Send", exact=True
             )
             expect(button).to_be_enabled()
             field.fill("  Synthetic submitted question  ")
@@ -284,6 +286,8 @@ def chat_cleanup(page: Page, base: str) -> None:
                 field.fill("Later question")
             elif change == "space":
                 field.fill("  Synthetic submitted question   ")
+            if not regulatory:
+                page.keyboard.press("Escape")
             tab(page, "Resident")
             page.locator("#outcome").fill("Save during pending chat")
             old = page.locator("[data-case-workspace]").element_handle()
@@ -291,6 +295,8 @@ def chat_cleanup(page: Page, base: str) -> None:
             page.wait_for_function("old => !old.isConnected", arg=old)
             page.locator("#note").fill("Unrelated unsaved note")
             tab(page, "AI assistance")
+            if not regulatory:
+                page.locator("#employee-chat-launcher").click()
             expect(field).to_be_visible()
             check(
                 f"chat retained pending controls/{regulatory}/{change}",
@@ -321,6 +327,8 @@ def chat_cleanup(page: Page, base: str) -> None:
                 f"chat success/failure raw cleanup/{regulatory}/{change}",
                 (field.get_attribute("data-case-dirty") == "true") == (change != "none"),
             )
+            if not regulatory:
+                page.keyboard.press("Escape")
             tab(page, "Resident")
             expect(page.locator("#note")).to_have_value("Unrelated unsaved note")
             page.locator("#note").fill("")

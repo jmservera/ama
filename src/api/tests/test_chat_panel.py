@@ -254,20 +254,21 @@ class PanelTests(roles.Matrix):
 
     def test_web_panel_is_keyboard_operable_and_announces(self) -> None:
         js, index = (WEB / "chat.js").read_text(), (WEB / "index.html").read_text()
+        widget = (WEB / "chat-widget.js").read_text()
         self.assertIn("/chat.js", index)
+        self.assertIn("/chat-widget.js", index)
         for needle in (
-            'role: "log"',
-            '"aria-live": "polite"',
             'role: "status"',
             'h("details"',
-            'h("form"',
-            'type: "submit"',
-            'h("label", { for: "chat-question" }',
+            "employeeChat.open()",
+            "window.ChatWidget.create(",
             "AI suggestion, not approved",
             "optional",
         ):
             self.assertIn(needle, js)
-        self.assertNotIn("tabindex", js)
+        for needle in ('role: "log"', '"aria-live": "polite"', 'type: "submit"'):
+            self.assertIn(needle, widget)
+        self.assertNotIn('id: "chat-question"', js)
         self.assertNotIn("innerHTML", js)
         self.assertIn("chatCasePanel(id)", (WEB / "app.js").read_text())
 
@@ -394,8 +395,9 @@ class PanelTests(roles.Matrix):
         self.assertEqual(self.api("Contractor", "/api/chat/status")[0], 403)
         self.assertEqual(self.call("", "/api/chat/status")[0], 401)
         js = (WEB / "chat.js").read_text()
-        self.assertIn('"aria-describedby": "chat-privacy"', js)
-        self.assertIn("if (!privacyReady || send.disabled) return;", js)
+        self.assertIn("chat-privacy employee-chat-error", js)
+        self.assertIn("if (send.disabled) return;", js)
+        self.assertIn('api("/api/chat/status", undefined, signal)', js)
 
     def test_both_turn_routes_deny_unapproved_model_without_calling_provider(self) -> None:
         with patch("zava_forward.api.server.chat_admission", wraps=chat_admission):
@@ -579,41 +581,44 @@ class PanelTests(roles.Matrix):
             summary = page.locator("#chat-panel > summary")
             summary.focus()
             summary.press("Enter")
-            expect(page.locator("#chat-question")).to_be_disabled()
-            expect(page.locator("#chat-panel").get_by_role("status").first).to_contain_text(
-                "Chat entry unavailable"
+            page.get_by_role("button", name="Open chat", exact=True).click()
+            expect(page.locator("#employee-chat-question")).to_be_visible()
+            expect(
+                page.locator("#employee-chat").get_by_role("button", name="Send")
+            ).to_be_disabled()
+            expect(page.locator("#employee-chat").get_by_role("alert")).to_contain_text(
+                "Chat unavailable"
             )
             page.unroute("**/api/chat/status")
             page.reload()
             summary = page.locator("#chat-panel > summary")
             summary.focus()
             summary.press("Enter")
-            question = page.get_by_label("Your question", exact=True)
+            page.get_by_role("button", name="Open chat", exact=True).click()
+            question = page.get_by_label("Your work question", exact=True)
             expect(question).to_be_enabled()
-            expect(question).to_have_attribute("aria-describedby", "chat-privacy")
+            expect(
+                page.locator("#employee-chat").get_by_role("button", name="Send")
+            ).to_be_enabled()
+            self.assertIn("chat-privacy", question.get_attribute("aria-describedby") or "")
             expect(page.locator("#chat-privacy")).to_contain_text("Do not type health")
             question.focus()
             question.fill("Approve this case")
-            expect(page.locator("#chat-panel form").first).to_have_attribute("data-unsaved", "true")
-            question.press("Tab")
-            page.keyboard.press("Enter")
+            expect(page.locator("#employee-chat form")).to_have_attribute("data-unsaved", "true")
+            question.press("Enter")
             expect(question).to_be_focused()
-            expect(page.locator(".chat-assistant").last).to_contain_text("cannot do it")
-            expect(page.locator("#chat-panel").get_by_role("status").first).to_contain_text(
-                "human workflow route"
-            )
-            expect(page.get_by_role("log", name="Conversation updates")).to_have_attribute(
-                "aria-live", "polite"
-            )
+            expect(page.locator(".chat-widget-assistant").last).to_contain_text("cannot do it")
+            expect(
+                page.get_by_role("log", name="Employee assistant conversation")
+            ).to_have_attribute("aria-live", "polite")
             page.route("**/api/chat/threads/*/ask", lambda route: route.abort())
             question.fill("Keep my unsent question")
-            question.press("Tab")
-            page.keyboard.press("Enter")
-            expect(page.locator("#chat-panel").get_by_role("status").first).to_contain_text(
+            question.press("Enter")
+            expect(page.locator("#employee-chat").get_by_role("alert")).to_contain_text(
                 "Chat unavailable"
             )
             expect(question).to_have_value("Keep my unsent question")
-            expect(page.locator("#chat-panel form").first).to_have_attribute("data-unsaved", "true")
+            expect(page.locator("#employee-chat form")).to_have_attribute("data-unsaved", "true")
             page.set_viewport_size({"width": 390, "height": 844})
             expect(question).to_be_visible()
             self.assertEqual(self.prompts, [])

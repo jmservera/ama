@@ -190,109 +190,51 @@
     var generation = 0;
     var signedIn = false;
     var busy = false;
-    var launcher = node("button", "Chat");
+    if (typeof window.ChatWidget?.create !== "function") {
+      var unavailable = node("p", "Chat could not load. Reload this page to try again, or contact your housing officer using your usual contact details. The manual callback form is still available.");
+      unavailable.setAttribute("role", "alert");
+      content.appendChild(unavailable);
+      return { setSession: function () {} };
+    }
+    var ui = window.ChatWidget.create({
+      id: "resident-chat", title: "Help with your case",
+      questionLabel: "Your question", skillLabel: "Assistant", maxLength: 500
+    });
+    var launcher = ui.launcher, panel = ui.root, title = ui.heading;
     launcher.id = "chat-launcher";
-    launcher.className = "chat-launcher";
-    launcher.type = "button";
-    launcher.setAttribute("aria-controls", "resident-chat");
-    launcher.setAttribute("aria-expanded", "false");
-    launcher.insertAdjacentHTML("afterbegin", '<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path d="M4 3h16v13H9l-5 5V3zm4 5h8M8 12h6" fill="none" stroke="currentColor" stroke-width="2"/></svg>');
-    var panel = node("section");
-    panel.id = "resident-chat";
-    panel.className = "assistant chat-window";
-    panel.hidden = true;
-    panel.setAttribute("role", "dialog");
-    panel.setAttribute("aria-labelledby", "assistant-title");
-    var title = node("h2", "Help with your case");
     title.id = "assistant-title";
-    title.tabIndex = -1;
-    panel.appendChild(title);
-    var close = node("button", "Close chat");
-    close.type = "button";
-    close.className = "secondary";
-    panel.appendChild(close);
+    panel.setAttribute("aria-labelledby", title.id);
     var notice = node("p", "Advisory only. Chat cannot submit forms, give consent or make decisions. Callback booking needs your separate confirmation.");
     notice.id = "assistant-notice";
-    panel.appendChild(notice);
-    panel.appendChild(node("p", "AI may help explain your case. Each answer says whether AI or rules were used. AI cannot decide eligibility or give legal, safety or financial advice. This chat does not send messages to staff."));
+    ui.intro.appendChild(notice);
+    ui.intro.appendChild(node("p", "AI may help explain your case. Each answer says whether AI or rules were used. AI cannot decide eligibility or give legal, safety or financial advice. This chat does not send messages to staff."));
     var anonymous = node("p", "Sign in to ask about your own record. You can ask a person for help without using chat.");
-    panel.appendChild(anonymous);
-    var form = node("form");
-    var consent = checkbox(form, "assistant-consent", "Use my own record to answer this question or find synthetic callback times. AI may use the bounded case answer if enabled. No works consent is given.");
-    consent.setAttribute("aria-describedby", "assistant-status");
-    var label = node("label", "Your question");
-    label.htmlFor = "assistant-topic";
-    form.appendChild(label);
-    var select = node("select");
-    select.id = "assistant-topic";
-    select.name = "topic";
-    select.autocomplete = "off";
-    select.setAttribute("aria-describedby", "assistant-notice");
-    [
-      ["status", "Where is my case now?"], ["documents", "Which documents should I send?"],
-      ["forms", "How can I fill in a form?"], ["home", "What is recorded about my home?"],
-      ["consents", "What about my works consent?"], ["appointments", "Help with appointments"],
-      ["regulations", "Which repair rules are held?"], ["safety", "I need safety help"]
-    ].forEach(function (item) {
-      var option = node("option", item[1]);
-      option.value = item[0];
-      select.appendChild(option);
-    });
-    form.appendChild(select);
-    var questionLabel = node("label", "Or type a question (optional)");
-    questionLabel.htmlFor = "assistant-question";
-    form.appendChild(questionLabel);
-    var question = node("input");
+    panel.insertBefore(anonymous, ui.log);
+    var form = ui.form;
+    var consent = checkbox(ui.beforeInput, "assistant-consent", "Use my own record for this chat. AI may use a bounded case answer if enabled. This is not consent to works.");
+    consent.setAttribute("aria-describedby", "resident-chat-error assistant-status");
+    var select = ui.select;
+    var option = node("option", "Resident assistant");
+    option.value = "resident";
+    select.appendChild(option);
+    var question = ui.input;
     question.id = "assistant-question";
-    question.name = "question";
-    question.type = "text";
-    question.maxLength = 500;
-    question.autocomplete = "off";
-    form.appendChild(question);
-    form.appendChild(node("p", "Supported topics only. Do not enter sensitive details. Typed messages are not sent to AI or kept as conversation memory."));
-    var button = node("button", "Get advice");
-    button.type = "submit";
-    form.appendChild(button);
-    panel.appendChild(form);
-    var status = node("p");
-    status.className = "status";
+    question.setAttribute("aria-describedby", "assistant-notice resident-chat-error");
+    ui.intro.appendChild(node("p", "Ask about your case, documents, forms or planned improvements. Do not enter sensitive details. Typed messages are not sent to AI or kept as model conversation memory."));
+    var status = ui.status;
     status.id = "assistant-status";
-    status.setAttribute("role", "status");
-    panel.appendChild(status);
-    var result = node("div");
+    var result = ui.log;
     result.id = "assistant-result";
-    result.setAttribute("role", "log");
-    result.setAttribute("aria-label", "Chat answers");
-    result.setAttribute("aria-live", "polite");
-    result.setAttribute("aria-relevant", "additions");
-    panel.appendChild(result);
     var callbacks = node("button", "Use the manual callback form");
     callbacks.type = "button";
     callbacks.className = "secondary";
-    panel.appendChild(callbacks);
-    panel.appendChild(node("p", "A person can help instead. Phone your housing officer using your usual number, or write to or visit your local office."));
-    panel.appendChild(node("p", "For immediate danger, call 999. Report safety concerns directly to a person or emergency repairs service. Chat has not alerted anyone."));
-    content.appendChild(launcher);
-    content.appendChild(panel);
+    ui.intro.appendChild(callbacks);
+    ui.intro.appendChild(node("p", "A person can help instead. Phone your housing officer using your usual number, or write to or visit your local office."));
+    ui.intro.appendChild(node("p", "For immediate danger, call 999. Report safety concerns directly to a person or emergency repairs service. Chat has not alerted anyone."));
 
     function hide(returnFocus) {
-      panel.hidden = true;
-      launcher.setAttribute("aria-expanded", "false");
-      if (returnFocus) launcher.focus();
+      ui.hide(returnFocus);
     }
-    launcher.addEventListener("click", function () {
-      if (!panel.hidden) { hide(true); return; }
-      panel.hidden = false;
-      launcher.setAttribute("aria-expanded", "true");
-      title.focus();
-    });
-    close.addEventListener("click", function () { hide(true); });
-    panel.addEventListener("keydown", function (event) {
-      if (event.key === "Escape") { event.preventDefault(); hide(true); }
-    });
-    document.addEventListener("focusin", function (event) {
-      if (!panel.hidden && !panel.contains(event.target) && event.target !== launcher) hide(false);
-    });
     callbacks.addEventListener("click", function () {
       hide(false);
       var target = ["callback-title", "email", "retry"].map(function (id) {
@@ -302,62 +244,63 @@
     });
     form.addEventListener("submit", function (event) {
       event.preventDefault();
-      if (busy) return;
+      if (busy || !signedIn) return;
+      ui.clearError();
       if (!consent.checked) {
         consent.setAttribute("aria-invalid", "true");
-        status.textContent = "Agree to use your own record for this question first.";
+        ui.fail("Agree to use your own record for this question first.");
         consent.focus();
         return;
       }
-      var current = generation;
-      busy = true;
-      button.setAttribute("aria-disabled", "true");
-      select.disabled = true;
-      status.textContent = "Getting your advice\u2026";
       var draft = question.value;
       var text = draft.trim();
-      var body = text ? { question: text, use_record: true } : { topic: select.value, use_record: true };
+      if (!text) { ui.fail("Type a question first."); question.focus(); return; }
+      var current = generation;
+      busy = true;
+      ui.busy(true);
+      status.textContent = "Getting your advice\u2026";
+      ui.message("user", text);
+      var body = { question: text, use_record: true };
       api("/demo/assistant", { method: "POST", body: JSON.stringify(body) })
         .then(function (response) {
           if (current !== generation || !signedIn) return;
           if (response.status === 401) { sessionExpired("Please sign in again."); return; }
           status.textContent = "";
           if (!response.ok) {
-            status.textContent = response.body.error || "The assistant is not available. Try again or ask your housing officer.";
+            ui.fail(response.body.error || "The assistant is not available. Try again or ask your housing officer.");
             return;
           }
-          var entry = node("div");
-          entry.appendChild(node("p", "You: " + (text || select.options[select.selectedIndex].textContent)));
-          entry.appendChild(node("p", response.body.label));
-          entry.appendChild(node("p", response.body.answer));
-          entry.appendChild(node("h3", "Sources"));
-          var sources = node("ul");
-          response.body.sources.forEach(function (source) { sources.appendChild(node("li", source)); });
-          entry.appendChild(sources);
-          result.appendChild(entry);
-          while (result.childElementCount > 10) result.firstElementChild.remove();
+          var entry = ui.message("assistant", response.body.answer, {
+            label: response.body.label, sources: response.body.sources,
+            detail: response.body.label.startsWith("AI") ? "AI-generated content may be incorrect. Check the sources." : ""
+          });
           if (question.value === draft) question.value = "";
-          if (response.body.action === "appointments" && !panel.hidden) {
-            hide(false);
-            searchCallbacks(response.body.callback_search);
+          if (response.body.action === "appointments") {
+            var search = node("button", "Find callback times in the manual form");
+            search.type = "button";
+            search.addEventListener("click", function () {
+              if (current !== generation || !signedIn || !consent.checked) return;
+              hide(false);
+              searchCallbacks(response.body.callback_search);
+            });
+            entry.appendChild(search);
           }
         })
         .catch(function () {
-          if (current === generation && signedIn) status.textContent = "We could not reach the assistant. Check your connection, then try again or ask your housing officer.";
+          if (current === generation && signedIn) ui.fail("We could not reach the assistant. Check your connection, then try again or ask your housing officer.");
         })
         .then(function () {
           if (current !== generation) return;
           busy = false;
-          button.removeAttribute("aria-disabled");
-          select.disabled = false;
+          ui.busy(false);
         });
     });
     consent.addEventListener("change", function () {
       consent.removeAttribute("aria-invalid");
       generation += 1;
       busy = false;
-      button.removeAttribute("aria-disabled");
-      select.disabled = false;
+      ui.busy(false);
+      ui.clearError();
       result.textContent = "";
       question.value = "";
       status.textContent = consent.checked ? "" : "Record use stopped. Previous answers cleared.";
@@ -374,8 +317,8 @@
         question.value = "";
         result.textContent = "";
         status.textContent = "";
-        select.disabled = false;
-        button.removeAttribute("aria-disabled");
+        ui.busy(false);
+        ui.clearError();
         hide(false);
       }
     };

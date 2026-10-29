@@ -48,6 +48,55 @@ keyboard/touch disclosure, enlarged text, retained fields, panel scrolling and
 both enhancement-fallback paths. `--baseline` captures pre-change geometry.
 These are focused local engineering checks, not publication or WCAG acceptance.
 
+## Shared resident and employee chat widget (#550)
+
+Both applications serve the same `web/chat-widget.js` and `web/chat-widget.css`.
+A bottom-right icon opens a nonmodal popup: the thread scrolls independently,
+the composer stays below it, Enter sends and Shift+Enter inserts a newline.
+The employee input-area selector uses the general option and five bounded
+skills from `/api/chat/skills`; residents use the resident assistant only.
+The case panel's Open chat action opens this same popup, not another composer.
+Employee input stays disabled until the existing API privacy warning loads;
+drafts retain the workspace's unsaved-change and unload protection.
+Attach and Voice are disabled with a visible unsupported-capability reason.
+Labels distinguish AI suggestions from workflow-only/rules output, with native
+collapsed Sources details. AI output is advisory and may be incorrect.
+
+Closing and reopening retains history, draft, skill and pending reads in the
+current page session/context. Hidden current replies do not move focus.
+Employee case navigation, session/access loss and resident consent withdrawal
+clear the relevant conversation and invalidate late results. Reloading does
+not restore a conversation; no resident text is saved in browser storage.
+Resident record-use consent remains explicit before requests and is not works
+consent. Raw resident text is still host-routed, never forwarded to the model.
+Only explicit home-record/address/planned-improvement questions receive that
+summary; unsupported concerns, including the dead-rat example, receive an honest
+inability to answer and the housing-officer contact route, never a diagnosis.
+Safety reports keep the existing independent human/emergency route.
+
+Resident callback answers leave chat open and offer an explicit action to use
+the manual callback form. Booking/cancellation still requires the separate
+specific confirmation; chat has not alerted staff or booked works.
+Missing shared employee script recovery is bounded and does not block ordinary
+authorized work. Resident script failure shows a visible manual-help route.
+
+From `src/api`, using the source distributions and existing `/tmp/mv` tools:
+
+```bash
+export PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests
+/tmp/mv/bin/python -m unittest test_resident_chat_api test_chat_panel test_chat_isolation -q
+/tmp/mv/bin/python -m checks.chat_widget_browser_check \
+  --axe /path/to/axe-4.10.3.min.js --out /new/external/chat-widget-results
+```
+
+The shared browser check starts actual local applications with constructed data,
+checks identical asset bytes, multi-turn layout, 199/200ms loading, Enter/IME/
+Shift+Enter, nonmodal keyboard traversal, errors, reduced motion, collapsed
+sources, consent, stale results and dependency recovery. Existing employee and
+resident browser checks retain their session/access/manual-callback assertions.
+These are engineering checks, not human screen-reader, voice-control, live-model,
+live-site, full Fluent adoption or WCAG-conformance acceptance.
+
 ## Loading feedback and Today's briefing (#531)
 
 The employee shell contains startup text before workspace scripts load. An
@@ -288,7 +337,8 @@ changes or denied access clear the dialog and abort stale UI results.
 Denials during skill loading, thread creation or asking remove case context
 and return focus to the workspace; session expiry returns to sign-in instead.
 
-Every answer carries "AI suggestion, not approved". Citations show permitted
+AI answers carry "AI suggestion, not approved"; the shared widget distinguishes
+workflow-only replies without claiming they are AI-generated. Citations show permitted
 record fields or named `workflow/` sources; cited AI output is still not
 independently verified. Missing/failed models return plain workflow-only help,
 not an uncited answer or a record change. Questions are masked and stored in
@@ -302,10 +352,10 @@ when a replacement marker is longer than the original identifier. This is a
 storage limit, not the inference allowance: questions over 1,000 characters
 return workflow-only help without a model call.
 
-The dialog uses native controls, explicit keyboard focus wrapping, Escape and
-return focus, polite updates, shared `async-action.js` loading feedback and
-Fluent-derived tokens. It adds no motion; shared reduced-motion spinner rules
-still apply. Automated browser/axe evidence is not screen-reader, voice-control,
+The shared nonmodal popup uses native controls, normal Tab traversal, Escape and
+return focus, polite updates, a delayed 200ms loading indicator and Fluent-derived
+tokens. Reduced motion keeps a static loading signal. Automated browser/axe
+evidence is not screen-reader, voice-control,
 employee usability, full Fluent adoption or WCAG-conformance acceptance.
 
 From `src/api`, with the worktree distributions installed:
@@ -321,9 +371,9 @@ The browser check uses an isolated constructed-data loopback server and
 explicit synthetic privacy references, actual unavailable-model fallback,
 intercepted answer-rendering cases and pinned axe on the open dialog.
 It requires ask arrival before navigation in the transport test, then separately
-settles controlled successful API promises after close, navigation and session
-change. Transcript, status and focus must remain unchanged, including detached
-and replacement dialogs. These are synthetic application-completion checks,
+settles controlled successful API promises after hide, navigation and session
+change. Hide retains current reads without moving focus; navigation/session
+disposal fences detached and replacement popup state. These are synthetic application-completion checks,
 not evidence of a live provider response.
 Actual SQL Server, live employee-site/model, hosted checks and human acceptance
 are separate. The 2026-10-29 local run did not perform live verification.
@@ -825,10 +875,10 @@ PYTHONPATH=tests:../core/tests:../agents/tests python -m checks.resident_assista
 Full unit discovery remains the normal API command. Browser evidence does not
 establish screen-reader, user or live-service acceptance.
 
-The focused check covers Account disclosure before sign-out and submit focus
+The focused check covers Account disclosure before sign-out and composer focus
 after success or failure, including duplicate suppression and delayed logout
-isolation. Busy advice keeps the native submit button focusable with
-`aria-disabled`. Optional reservation I/O failures return the generic assistant
+isolation. Busy advice disables the native submit button and keeps focus in the
+textarea, with duplicate suppression. Optional reservation I/O failures return the generic assistant
 503 without acquiring a token or calling the model transport in the legacy
 adapter; the new advisor returns explicit rules fallback instead.
 
