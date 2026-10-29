@@ -17,7 +17,7 @@ import os
 import re
 import time
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 
 from . import projection, ai_prompts, export_fields
 from .resident_decisions import resident_status
@@ -131,6 +131,31 @@ def analyse(text, sources, bullets=False):
     return clean, good, bad, dropped
 
 
+def statement_sources(text, sources, bullets=False):
+    """Keep declared references with their statement, without guessing missing ones."""
+    if bullets:
+        text = "\n".join(line for line in text.splitlines()
+                         if not analyse(line, sources, bullets=True)[3])
+    marks = []
+
+    def protect(match):
+        marks.append(match.group())
+        return f"\x00{len(marks) - 1}\x00"
+
+    protected = CITE_RE.sub(protect, text)
+    # A model may place the citation after the sentence's punctuation.
+    protected = re.sub(r"([.!?])[ \t]*((?:\x00\d+\x00[ \t]*)+)", r" \2\1", protected)
+    statements = []
+    for piece in re.split(r"(?<=[.!?])\s+|\n+", protected):
+        raw = re.sub(r"\x00(\d+)\x00", lambda m: marks[int(m[1])], piece).strip()
+        if not raw:
+            continue
+        clean, good, bad, _ = analyse(raw, sources)
+        if clean:
+            statements.append(dict(text=clean, citations=good, unresolved=bad))
+    return statements
+
+
 def priority_items(text, n, sources):
     """Validate priority JSON. Returns (items, dropped, error). Items without resolving citations are dropped."""
     try:
@@ -228,7 +253,12 @@ def finish(store, user, task, case_ids, r, workflow_text, sources, template_cite
         result = dict(r, source="template", model=None, reason=why) if late else r
         return dict(result, text=shown, citations=citations, unresolved=bad, dropped_uncited=dropped, verified=checked,
                     approval=rec["status"], instruction_status="Not an instruction", envelope=env, record_id=rec["id"],
-                    continuity_epoch=epoch0, mode=mode, prompt_version=ai_prompts.version(task))
+                    continuity_epoch=epoch0, mode=mode, prompt_version=ai_prompts.version(task),
+                    generated_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                    source_case_ids=list(sources),
+                    statements=statement_sources(r["text"], sources, bullets)
+                    if not late and r["source"] == "ai" else [
+                        dict(text=shown, citations=citations, unresolved=[] if late else bad)])
     return store.continuity_publish(task, epoch0, r["source"], publish)
 
 

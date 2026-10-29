@@ -58,7 +58,8 @@ def run_browser(base: str) -> None:
                           briefing["scope_label"] == label and briefing["case_count"] == expected)
                     check(f"{role['role']} renders programme/personal scope",
                           f"{expected} permitted open" in section.inner_text()
-                          and f"{min(expected, 3)} included in this summary" in section.inner_text())
+                          and f"{min(expected, 3)} included in this summary"
+                          in section.inner_text())
                     check(f"{role['role']} retains exact personal queue", ids(page) == role["ids"])
                     if manager:
                         check(f"{role['role']} briefing does not claim personal cases",
@@ -66,13 +67,17 @@ def run_browser(base: str) -> None:
                     if role["role"] == "Programme Support Officer":
                         check("unassigned manager still has programme briefing",
                               expected > 0 and not ids(page)
-                              and "No open cases are assigned to you." in page.locator("main").inner_text())
-                    toggle = section.get_by_role("checkbox", name="Workflow only (no AI) for my AI requests")
+                              and "No open cases are assigned to you."
+                              in page.locator("main").inner_text())
+                    toggle = section.get_by_label("How to prepare briefings and draft requests")
                     toggle.focus()
-                    with page.expect_response(lambda result: "/api/briefing?mode=workflow" in result.url):
-                        toggle.press("Space")
+                    with page.expect_response(
+                        lambda result: "/api/briefing?mode=workflow" in result.url
+                    ):
+                        toggle.select_option("workflow")
                     section.get_by_role("heading", name=label, exact=True).wait_for()
-                    check(f"{role['role']} keyboard workflow toggle retains scope", toggle.is_checked())
+                    check(f"{role['role']} workflow choice retains scope",
+                          toggle.input_value() == "workflow")
                     for width in (320, 390, 1280):
                         page.set_viewport_size({"width": width, "height": 900})
                         check(f"{role['role']} briefing reflows at {width}px",
@@ -80,7 +85,8 @@ def run_browser(base: str) -> None:
                     check(f"{role['role']} has no uncaught JavaScript errors", not errors)
                 finally:
                     context.close()
-            print(f"Chromium {browser.version}; synthetic loopback only; no live AI, SQL Server or Azure.")
+            print(f"Chromium {browser.version}; synthetic loopback only; "
+                  "no live AI, SQL Server or Azure.")
         finally:
             browser.close()
 

@@ -29,6 +29,14 @@ proposes a backlog without creating issues. Operational approval, legal
 currentness, fairness, meaningful human oversight and direct accessibility
 acceptance remain unestablished; earlier RAI findings are not silently closed.
 
+For #531, the [design-system state inventory](./research/ux/design-system.md)
+and [API loading/briefing guide](../../src/api/README.md#loading-feedback-and-todays-briefing-531)
+record shared async feedback and the HAX briefing interaction: actual declared
+sources and preparation time, explicit AI/rules labels, conditional draft
+review and reversible local dismissal. These native Fluent-derived patterns
+do not establish full Fluent adoption, staff usability, screen-reader/voice
+acceptance or live employee-site cold-start verification.
+
 For #140, the [IoT infrastructure decision and budget](../../infra/README.md#iot-hub-issue-140-adr-0003-decision-6)
 and [ADR 0003 dated authorization](../adrs/0003-journey-derived-capabilities-runtime-fit.md#source-only-infrastructure-authorization-2026-10-27-refs-140)
 record B1/one unit in `ama`/`uksouth`, private keyless Event Hub routing,

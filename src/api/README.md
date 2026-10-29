@@ -6,6 +6,65 @@ ms.date: 2026-10-29
 ms.topic: reference
 ---
 
+## Loading feedback and Today's briefing (#531)
+
+The employee shell contains startup text before workspace scripts load. An
+independent watchdog shows a slow-start hint and retry at four seconds, then
+support guidance at fifteen seconds. It cannot display before the host returns
+the HTML document. API startup failures show an explicit error and retry.
+Existing bounded workspace-script and Leaflet recovery remains unchanged.
+
+The shared native async-action helper wraps click, submit and change handlers.
+It shows text immediately, adds a decorative spinner beside that text after 200ms,
+disables the pending control, suppresses duplicate activation and announces
+progress politely. Existing handler-owned disabled states and inline errors win
+over cleanup. CSV, account, filters, appointment forms and the standalone law
+viewer use the same helper; non-control reads and map refreshes show progress
+without disabling navigation. Reduced motion keeps a static icon plus text.
+Failed writes are never automatically retried.
+
+Today's briefing distinguishes "AI suggestion, not approved" from "Summary by
+rules", shows the actual preparation timestamp and statement references, and
+links declared case sources. Missing/unresolved references are explicit;
+references and explanations are not proof of truth. The mode selector says
+"Use rules and templates, without AI" and applies to subsequent briefing and
+draft requests for the page session. Ordinary case work remains available.
+"Use this draft" records a draft review only. "Edit this draft" reveals a large
+editor and required reason; "Do not use this draft" reveals only the reason.
+Cancel retains local text. Hide/Show briefing is local reversible dismissal,
+not reversal of an immutable recorded review. Server source/review checks and
+all human approval, resident consent and manual boundaries remain unchanged.
+
+HAX design mapping (pattern references, not usability acceptance):
+
+| Guideline | Applied pattern |
+| --- | --- |
+| [G1/G2](https://www.microsoft.com/en-us/haxtoolkit/library/) | Source-type label, explicit limits, confidence not inferred |
+| G7 | Explicit assistance-mode choice and refresh action |
+| [G8](https://www.microsoft.com/en-us/haxtoolkit/guideline/support-efficient-dismissal/) | Hide/Show briefing, no case mutation |
+| [G9](https://www.microsoft.com/en-us/haxtoolkit/guideline/support-efficient-correction/) | Outcome selection, conditional editor/reason, cancel before recording |
+| [G11](https://www.microsoft.com/en-us/haxtoolkit/guideline/make-clear-why-the-system-did-what-it-did/) | Ranking/scope rationale, actual timestamp and declared statement references, trust caveat |
+| G15 | Explicit draft feedback and immutable review result |
+
+[Fluent UI React Storybook](https://storybooks.fluentui.dev/react/) and its
+Spinner guidance inform native loading/button/field patterns only. No React
+dependency or framework adoption is added. This bounded mapping uses the cited
+guidelines and owner feedback; it is not staff user research.
+
+From `src/api`, with installed source distributions and dev dependencies:
+
+```bash
+PYTHONPATH=tests:../core/tests:../agents/tests python -m unittest \
+  test_loading_feedback test_workspace_scripts test_ai_tasks -q
+PYTHONPATH=tests:../core/tests:../agents/tests python -m checks.loading_briefing_browser_check \
+  --axe /path/to/axe-4.10.3.min.js --out /new/external/loading-results
+```
+
+Use `/tmp/ama-rpi-heavy.lock` nonblocking with retries bounded to 40 minutes.
+Constructed loopback data only; no Azure or live model is needed.
+Live employee-site cold-start verification, screen-reader, voice-control and
+staff usability acceptance remain separate owner checks, not local passes.
+
 
 ## Progress dashboard and closed case archive (#533)
 

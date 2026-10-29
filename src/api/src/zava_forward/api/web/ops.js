@@ -97,7 +97,7 @@ function qualityPanel(c, id, refresh, savedFields = [], session = caseSession) {
     if (measures.includes(session.qualityMeasure)) measure.value = session.qualityMeasure;
     const by = h("input", { id: "q-by", type: "text", maxlength: 80 });
     const src = h("select", { id: "q-src" }, QUALITY_SOURCES.map((x) => h("option", {}, x)));
-    const checks = h("div", {});
+    const checks = h("div", {}, h("p", { role: "status" }, "Loading checklists..."));
     let lists = null;
     const paint = () => {
       if (box.isConnected) savedFields = rememberCaseFields(session);
@@ -356,7 +356,7 @@ function appointmentControls(w, submit) {
       onsubmit: (e) => {
       e.preventDefault();
       if (action === "close_case" && !window.confirm(`Record the supplied human closure of underlying home case ${state.case_id}? This resets its active no-access count, not its history. Outstanding resident updates and remedies remain. This is not investigation task disposition or technical, legal or financial approval.`)) return;
-      submit(Object.assign({ action, event_ref: event[1].value }, body(), form.appointmentContext), form);
+      return submit(Object.assign({ action, event_ref: event[1].value }, body(), form.appointmentContext), form);
     } }, ...event, ...fields, h("button", { type: "submit", class: "alt" }, title),
     h("button", { type: "reset", class: "alt" }, "Discard this draft"));
     const initialContext = action === "offer" ? { expected_offer_id: offer ? offer.id : null }
