@@ -18,6 +18,7 @@ import re
 import time
 import uuid
 from datetime import datetime, timezone
+from typing import Any
 
 from . import projection, ai_prompts, export_fields
 from .resident_decisions import resident_status
@@ -131,14 +132,14 @@ def analyse(text, sources, bullets=False):
     return clean, good, bad, dropped
 
 
-def statement_sources(text, sources, bullets=False):
+def statement_sources(text: str, sources: Any, bullets: bool = False) -> list[dict[str, Any]]:
     """Keep declared references with their statement, without guessing missing ones."""
     if bullets:
         text = "\n".join(line for line in text.splitlines()
                          if not analyse(line, sources, bullets=True)[3])
-    marks = []
+    marks: list[str] = []
 
-    def protect(match):
+    def protect(match: re.Match[str]) -> str:
         marks.append(match.group())
         return f"\x00{len(marks) - 1}\x00"
 

@@ -6,7 +6,7 @@ from zava_forward.core.ai_tasks import statement_sources
 
 
 class StatementSources(unittest.TestCase):
-    def test_trailing_citations_preserve_sentence_and_source_boundaries(self):
+    def test_trailing_citations_preserve_sentence_and_source_boundaries(self) -> None:
         sources = {"ZF-1": ["First source", "Second source"]}
         for punctuation in ".!?":
             for separator in (" ", "  ", "\t", "\n"):
