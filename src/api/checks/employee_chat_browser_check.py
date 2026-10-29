@@ -24,6 +24,106 @@ def scan(page: Page, axe: str, state: str) -> dict[str, Any]:
     return {"state": state, "violations": result["violations"], "passes": len(result["passes"])}
 
 
+def late_success(page: Page, pending: str, transition: str) -> None:
+    """Settle an actual successful API promise independently of transport abort."""
+    page.evaluate("""pending => {
+      const state = window.employeeLate = {pending, api, run: AsyncAction.run, askCalls: 0};
+      api = (path, body, signal) => {
+        if (path.endsWith('/ask')) state.askCalls++;
+        const hold = pending === 'skills' ? path === '/api/chat/skills'
+          : pending === 'thread' ? path === '/api/chat/threads' : path.endsWith('/ask');
+        if (!hold || state.resolve) return state.api(path, body, signal);
+        state.signal = signal;
+        return new Promise(resolve => { state.resolve = resolve; }).then(value => {
+          state.fulfilled = true;
+          return value;
+        });
+      };
+      AsyncAction.run = (control, ...args) => {
+        const result = state.run(control, ...args);
+        if (control?.tagName === 'BUTTON' && control.closest('dialog.employee-chat'))
+          state.task = result;
+        return result;
+      };
+      state.open = document.getElementById('employee-chat-launcher').onclick();
+      if (pending === 'skills') state.task = state.open;
+    }""", pending)
+    try:
+        dialog = page.get_by_role("dialog", name="Employee assistant")
+        expect(dialog).to_be_visible()
+        if pending != "skills":
+            expect(page.get_by_label("Agent skill", exact=True)).to_be_enabled()
+            page.get_by_label("Your work question", exact=True).fill("Controlled late question")
+            dialog.get_by_role("button", name="Ask", exact=True).click()
+        page.wait_for_function("() => typeof window.employeeLate.resolve === 'function'")
+        page.evaluate("""() => {
+          const state = window.employeeLate;
+          state.root = document.querySelector('dialog.employee-chat');
+          state.log = state.root.querySelector('[role=log]');
+          state.status = state.root.querySelector('p[role=status]');
+        }""")
+        if transition == "close":
+            page.keyboard.press("Escape")
+            expect(page.locator("dialog.employee-chat")).to_have_count(0)
+            expect(page.locator("#employee-chat-launcher")).to_be_focused()
+        elif transition == "route":
+            destination = "#/" if page.url.endswith("#/progress") else "#/progress"
+            page.evaluate("hash => { location.hash = hash; }", destination)
+            expect(page.locator("dialog.employee-chat")).to_have_count(0)
+            expect(page.locator("#app h1").first).to_be_visible()
+            page.locator("#employee-chat-launcher").click()
+            expect(page.get_by_label("Agent skill", exact=True)).to_be_enabled()
+            page.get_by_label("Your work question", exact=True).fill("Replacement draft")
+        else:
+            assert transition == "session"
+            page.evaluate("""() => {
+              window.employeeLate.session = me;
+              me = null;
+              login('Synthetic session change');
+            }""")
+            expect(page.locator("dialog.employee-chat")).to_have_count(0)
+            page.get_by_label("Work email", exact=True).focus()
+
+        before = page.evaluate("""() => {
+          const state = window.employeeLate;
+          state.focus = document.activeElement;
+          state.snapshot = () => ({
+            oldLog: state.log.textContent, oldStatus: state.status.textContent,
+            log: document.querySelector('dialog [role=log]')?.textContent ?? null,
+            status: document.querySelector('dialog p[role=status]')?.textContent ?? null,
+            question: document.querySelector('#employee-chat-question')?.value ?? null,
+            workspace: document.getElementById('workspace-status').textContent,
+            dialogs: document.querySelectorAll('dialog.employee-chat').length
+          });
+          return state.snapshot();
+        }""")
+        after = page.evaluate("""async () => {
+          const state = window.employeeLate;
+          if (!state.signal.aborted) throw new Error(`Expected disposal to abort ${state.pending} transport`);
+          if (typeof state.task?.then !== 'function') throw new Error('Missing tracked API consumer task');
+          state.resolve(state.pending === 'skills' ? {skills: []}
+            : state.pending === 'thread' ? {id: 'controlled-stale-thread'}
+            : {kind: 'answer', reply: 'CONTROLLED LATE SUCCESS', skill: 'general',
+               label: 'AI suggestion, not approved', workflow_only: false, citations: []});
+          await state.task;
+          if (!state.fulfilled) throw new Error('Successful API promise did not settle');
+          if (state.askCalls !== (state.pending === 'ask' ? 1 : 0))
+            throw new Error('Obsolete thread completion started an ask');
+          if (document.activeElement !== state.focus) throw new Error('Late success moved focus');
+          return state.snapshot();
+        }""")
+        assert after == before, (pending, transition, before, after)
+    finally:
+        page.evaluate("""async () => {
+          const state = window.employeeLate;
+          api = state.api;
+          AsyncAction.run = state.run;
+          employeeChat.reset();
+          if (state.session) await start();
+          delete window.employeeLate;
+        }""")
+
+
 def run_browser(base: str, axe: str, output: Path) -> None:
     reports = []
     with sync_playwright() as playwright:
@@ -57,7 +157,7 @@ def run_browser(base: str, axe: str, output: Path) -> None:
             expect(dialog.get_by_role("log")).to_have_attribute("aria-live", "polite")
             reports.append(scan(page, axe, "actual-model-unavailable"))
             page.keyboard.press("Escape")
-            expect(dialog).to_have_count(0)
+            expect(page.locator("dialog.employee-chat")).to_have_count(0)
             expect(launcher).to_be_focused()
 
             for destination in ("#/", "#/all", "#/overview", "#/time", "#/progress",
@@ -109,38 +209,67 @@ def run_browser(base: str, axe: str, output: Path) -> None:
 
             page.unroute("**/api/chat/threads/*/ask", answer)
             held: list[Route] = []
-            page.route("**/api/chat/threads/*/ask", lambda route: held.append(route))
+            def hold(route: Route) -> None:
+                held.append(route)
+                page.evaluate("() => { window.employeeAskArrived = true; }")
+
+            page.route("**/api/chat/threads/*/ask", hold)
             question.fill("Delayed case question")
             page.get_by_role("dialog").get_by_role("button", name="Ask", exact=True).click()
-            page.wait_for_function("() => document.querySelector('dialog [aria-busy=true]')")
+            page.wait_for_function("() => window.employeeAskArrived === true")
+            assert len(held) == 1
             page.evaluate("() => { location.hash = '#/progress'; }")
-            expect(page.get_by_role("dialog")).to_have_count(0)
-            if held:
-                try:
-                    answer(held[0])
-                except PlaywrightError as error:
-                    # The navigation abort is an expected transport failure, not a result.
-                    assert "Invalid" in str(error) or "Target" in str(error), str(error)
+            expect(page.locator("dialog.employee-chat")).to_have_count(0)
+            try:
+                answer(held[0])
+            except PlaywrightError as error:
+                # Transport cancellation is separate from the successful API proof below.
+                assert "Invalid" in str(error) or "Target" in str(error), str(error)
             launcher.click()
             expect(page.get_by_role("dialog")).not_to_contain_text("Synthetic cited case explanation")
             page.keyboard.press("Escape")
             page.unroute("**/api/chat/threads/*/ask")
 
-            for denied in (403, 404, 401):
-                launcher.click()
-                expect(page.get_by_label("Agent skill", exact=True)).to_be_enabled()
-                question.fill("Check access")
-                def denied_reply(route: Route) -> None:
-                    route.fulfill(status=denied, json={"error": "Synthetic access ended"})
+            for pending in ("skills", "thread", "ask"):
+                for transition in ("close", "route", "session"):
+                    try:
+                        late_success(page, pending, transition)
+                    except PlaywrightError as error:
+                        raise AssertionError(f"Late success failed: {pending}/{transition}") from error
 
-                page.route("**/api/chat/threads/*/ask", denied_reply)
-                page.get_by_role("dialog").get_by_role("button", name="Ask", exact=True).click()
-                expect(page.get_by_role("dialog")).to_have_count(0)
-                page.unroute("**/api/chat/threads/*/ask")
+            for endpoint in ("skills", "threads", "threads/*/ask"):
+                for denied in (403, 404, 401):
+                    if page.get_by_label("Work email", exact=True).is_visible():
+                        page.get_by_label("Work email", exact=True).fill("sam@example.test")
+                        page.get_by_label("Password", exact=True).fill("synthetic-check")
+                        page.get_by_role("button", name="Sign in", exact=True).click()
+                        expect(launcher).to_be_visible()
+                        expect(page.locator("#app h1").first).to_be_visible()
+                    page.evaluate("() => { location.hash = '#/case/ZF-1'; }")
+                    expect(page.get_by_role("link", name="Back to the list", exact=True)).to_be_visible()
+                    def denied_reply(route: Route) -> None:
+                        route.fulfill(status=denied, json={"error": "Synthetic access ended"})
+
+                    pattern = f"**/api/chat/{endpoint}"
+                    page.route(pattern, denied_reply)
+                    launcher.click()
+                    if endpoint != "skills":
+                        expect(page.get_by_label("Agent skill", exact=True)).to_be_enabled()
+                        question.fill("Check access")
+                        page.get_by_role("dialog").get_by_role("button", name="Ask", exact=True).click()
+                    expect(page.locator("dialog.employee-chat")).to_have_count(0)
+                    expect(page.locator("#app")).to_be_focused()
+                    if denied != 401:
+                        expect(page.locator("#workspace-status")).to_contain_text("Chat access ended.")
+                        expect(launcher).to_be_visible()
+                    else:
+                        expect(page.get_by_label("Work email", exact=True)).to_be_visible()
+                        expect(launcher).to_be_hidden()
+                    page.unroute(pattern, denied_reply)
             expect(page.get_by_label("Work email", exact=True)).to_be_visible()
             expect(launcher).to_be_hidden()
             assert not errors, errors
-            print("PASS employee chat: real fallback; all six selections; route/session disposal; keyboard, focus, live, reduced motion, reflow and dialog axe")
+            print("PASS employee chat: real fallback; six selections; arrived transport; nine controlled late successes; metadata/thread/ask denials; route/session disposal; keyboard, focus, live, reduced motion, reflow and dialog axe")
         finally:
             context.close()
             browser.close()

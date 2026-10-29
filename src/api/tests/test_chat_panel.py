@@ -17,6 +17,8 @@ import test_role_matrix as roles
 from zava_forward.core.chat_panel import ABSTAIN, FALLBACK, LABEL
 from zava_forward.core.assistants import REGISTRY
 from zava_forward.core import projection
+from zava_forward.core.chat_privacy import redact
+from zava_forward.core.chatthreads import MAX_CONTENT
 
 APPROVED = dict(
     CHAT_DPIA_REF="SYNTH-DPIA-1",
@@ -90,6 +92,28 @@ class PanelTests(roles.Matrix):
         stored = self.api(ROLE, f"/api/chat/threads/{tid}")[1]["messages"]
         self.assertEqual([m["role"] for m in stored], ["user", "assistant"])
         self.assertEqual(stored[1]["evidence"], [c["id"] for c in d["citations"]])
+
+    def test_maximum_question_with_expanding_mask_returns_success(self) -> None:
+        question = "x" * (MAX_CONTENT - 8) + " NE1 1AA"
+        self.assertEqual(len(question), MAX_CONTENT)
+        expected = redact(question)[0][:MAX_CONTENT]
+        for skill in (None, "general", *REGISTRY):
+            with self.subTest(skill=skill):
+                tid = self.thread()
+                body = {"content": question}
+                if skill is not None:
+                    body["skill"] = skill
+                code, answer = self.api(ROLE, f"/api/chat/threads/{tid}/ask", body)
+                self.assertEqual((code, answer["kind"]), (200, "answer"))
+                stored = self.api(ROLE, f"/api/chat/threads/{tid}")[1]["messages"]
+                self.assertEqual(stored[0]["content"], expected)
+                self.assertNotIn("NE1 1AA", stored[0]["content"])
+                events = [
+                    json.loads(row["detail"])
+                    for row in self.store.audit_entries()
+                    if row["action"] == "chat.answer"
+                ]
+                self.assertEqual(events[-1]["question_seq"], stored[0]["seq"])
 
     def test_uncited_or_foreign_citation_abstains(self) -> None:
         tid = self.thread()

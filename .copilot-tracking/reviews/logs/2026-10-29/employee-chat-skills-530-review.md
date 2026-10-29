@@ -4,6 +4,11 @@ description: Single post-implementation review of the committed candidate
 ms.date: 2026-10-29
 ---
 
+Current note: the original whole-feature Review below is preserved unchanged.
+The user explicitly selected later PR #541 correction work; its separate finite
+pass assessment is appended at the end of this existing record, not a rewrite
+of the original outcome.
+
 ## Opening Review State
 
 * Interpreted review goal: independently assess issue #530 implementation, permissions, stale asynchronous state, legacy panels and meaningful validation.
@@ -236,3 +241,84 @@ Supplied external results are useful evidence, not a clean exact-head/base/tool/
 ## Next Steps
 
 Return this record to the active parent. Route RV-001/RV-002 to later rpi-implement and RV-003 to rpi-research for permitted missing validation evidence. Preserve the original critique and this finding set; do not run a second Review or alter source in this stage. Keep all work local and retain the current resource/az/publication restrictions.
+
+## PR #541 correction pass independent Review
+
+### Opening Review State
+
+* Goal: assess the explicitly authorized later correction diff against starting HEAD 15252634719907841f238fc033d6e30a53fd779f, not the original feature against main.
+* Scope: P04, all three supplied correction threads, sibling skills/thread/ask await-point audit, denial and successful stale-completion proof, post-redaction length bound, related tests and documentation.
+* Evidence readiness: supplied correction research C7-C9, plan/details P04, critique dispositions, changes and parent state are available for comparison; reported local validation is supplied, not independently rerun.
+* Acceptance basis: current P04 contract and explicit parent/user boundaries. Historical Not accepted and RV-001/RV-002/RV-003 remain unchanged; correction conformance cannot establish whole-feature release acceptance.
+* Initial comparison: complete uncommitted source/test diff and reconciled correction evidence.
+* Authority: append only this section; no source, plan, state, other artifacts, commits, remote writes, az, delegation or further Review.
+* Fresh Web Interface Guidelines retrieval succeeded from https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md before reading changed web code. Applicable guidance is subject to repository content/design/accessibility precedence.
+* Initial blockers: none to this bounded Review. Full publication, real SQL, live model/site and human approval remain outside its acceptance boundary.
+
+### Compared boundary and reconciliation
+
+* Reviewed git diff HEAD at the stated starting commit, including the complete correction source/test/documentation diff and RPI amendments. The branch is feat/employee-chat-skills-530; existing parent-owned uncommitted changes were retained.
+* Research C7-C9, plan/details P04 and changes agree on the three requested corrections and one sibling audit. P04-T01-T04 completion evidence is present. P04-T05 correctly remains pending this Review, parent reconciliation and the requested local commit; no commit is implied by this record.
+* The added core mypy exemption is documented in changes and limited to disallow_untyped_calls for test_chat_panel/tests.test_chat_panel, matching the existing migrated integration boundary. It does not suppress typed-body errors or ignore the entire test module. Two added unit methods and one browser helper fit the declared budget; no dependency, test removal or feature expansion was found.
+* Correction critique execution Complete / Revise and CP-PC-001 are preserved. The parent's explicit rejection of its tooling-path premise is reconciled in the current plan; the supplied parent instructions permit installed tooling and named external generated evidence. No new unsupported environment finding is raised.
+* Original P03-T02 and RV-003 remain incomplete at the whole-feature boundary. Full core discovery is new evidence, not whole API discovery, actual SQL, publication or live/human acceptance. Existing separate follow-ups retain their owner/next action; they are neither new P04 defects nor additional active implementation.
+* State correctly identifies the active correction Review and next parent reconciliation/local-commit action. Historical decisions and prioritized original RV routes remain historical; the parent owns their later reconciliation, not this reviewer.
+
+### Source and regression assessment
+
+| Requirement | Evidence | Assessment |
+| --- | --- | --- |
+| C7 / P04-T01: consistent denial disposal and focus | src/api/src/zava_forward/api/web/chat.js:39-44,98-106,120-133; browser check:240-271 | Shared modal-only deny helper resets context, posts recovery guidance and focuses #app for current 403/404 at metadata, thread and ask. Both catches first reject stale completions. The existing api() 401 path nulls me and invokes login(), so these catches cannot override sign-in with stale workspace guidance. All nine endpoint/status combinations are mandatory. Recoverable non-denial errors retain their existing workflow guidance. |
+| C8 / transport arrival | src/api/checks/employee_chat_browser_check.py:210-233 | Arrival flag is set by the intercepted ask handler and awaited before navigation; held must contain exactly one request. No optional held-response skip remains. Accepted transport cancellation is explicitly separate from successful application-completion evidence. |
+| C8 / actual successful late consumer completion | src/api/checks/employee_chat_browser_check.py:27-124,234-239; chat.js:72-108,120-134; async-action.js:40-82 | All skills/thread/ask times close/route/session combinations run unconditionally. Controlled API promises deliberately ignore abort and set fulfilled only on successful resolution. Metadata awaits open(); thread/ask capture and await the real Ask-button AsyncAction.run result, including its final cleanup. Missing task, missing fulfillment and obsolete follow-on ask each fail. Detached/current transcript and status, current/replacement draft, workspace status, dialog count and exact active-element identity are compared after settlement. Wrappers are restored between cases. No remaining substantive false-positive path was identified in this boundary. |
+| C8 / closed-dialog race | src/api/checks/employee_chat_browser_check.py:65-85,102 | Actual zero dialog.employee-chat DOM nodes, not disappearance from the accessibility tree, is awaited before resolving. Aborted signal is then mandatory. This synchronizes with disposal instead of masking the first failed abort assertion with repeated successful runs. The initial failure and subsequent harness correction remain recorded in changes/details. |
+| C9 / P04-T03: masked storage bound | src/core/src/zava_forward/core/chat_panel.py:314-317,350-354 | Final truncation follows the complete redact() call, before persistence. Current-user/thread/case/skill checks and privacy._require() remain in place. Prompt construction reuses masked; the actual chat_add_message return supplies question_seq. No privacy or authorization gate was removed. |
+| C9 / regression siblings | src/core/tests/test_chat_panel.py:168-196; src/api/tests/test_chat_panel.py:96-116 | Core checks three expanding identifier masks at MAX_CONTENT across omitted/general/five skills, bounded stored text, original-identifier removal and user/assistant sequence. HTTP checks successful 200/answer, bounded masked storage and audit question_seq against the stored user message across the same modes. Separate privacy/general APIs and assistant-output bounds are unchanged, not silently widened into this task. |
+| Related documentation | src/api/README.md:246-280 | Denial focus, post-mask 8,000-character limit and synthetic successful-completion proof match implementation, with actual SQL/live/provider/human evidence kept separate. |
+
+### Fresh Web Interface Guidelines assessment
+
+Retrieval completed successfully before changed-web inspection. All fetched rule categories were considered against the changed chat.js hunks and their necessary native-dialog/API/AsyncAction context; unrelated UI was not audited.
+
+* src/api/src/zava_forward/api/web/chat.js:40 - pass: denial removes the modal and restores workspace focus with actionable polite status guidance.
+* src/api/src/zava_forward/api/web/chat.js:98 - pass: current-only error/finally handling preserves focus and prevents stale submit completion from updating replacement state.
+* src/api/src/zava_forward/api/web/chat.js:127 - pass: metadata denial now shares disposal; stale catches do not steal sign-in focus.
+* Native semantics, labels, keyboard behavior, text-only rendering and existing reduced-motion behavior are retained. No changed media, animations, formatting, hydration, gesture or large-list surface requires additional findings. Repository ASCII/sentence-case copy and privacy boundaries take precedence over generic typography/title-case/URL-state suggestions.
+* No substantive changed-hunk guideline finding. This is not whole-site, full Fluent or WCAG/assistive-technology acceptance.
+
+### Validation evidence and boundaries
+
+| Check | Result and provenance | Boundary |
+| --- | --- | --- |
+| node --check chat.js; git diff --check HEAD | Passed, independently executed during this Review | Syntax and whitespace only. |
+| Core/API Ruff, format, mypy | Passed, parent execution report and correction changes record | 157 core / 107 API typed files; not independently rerun. |
+| Full core discovery | Passed; exact supplied core-unittest.log inspected: 1,470 tests in 310.671s, OK (skipped=190) | Existing skips do not establish actual SQL Server evidence; not rerun. |
+| API selected discovery | Passed, parent report and changes record: 83 tests | test_chat_panel, test_chat_isolation, test_chat_fixture_roles, test_role_endpoint_inventory, test_workspace_scripts; not whole API discovery or independently rerun. |
+| Final loopback employee browser check | Passed, parent final-run report; complete helper and mandatory loops inspected | Nine successful stale-completion combinations and nine denial cases, missing-model fallback, keyboard/focus/reflow/reduced motion. Browser not rerun; earlier failed race run is preserved. |
+| Pinned axe 4.10.3 | Supplied browser-final/axe-results.json independently read: actual-model-unavailable and synthetic-cited-answer each 0 violations / 20 passes | Pin verification/execution reported by parent; scan source enforces hash. Two dialog states, not full accessibility acceptance. |
+| Whole API, actual SQL, live provider/site, human approval, full publication gate | Not run by this Review; outside P04 acceptance and still unmet where required for the original feature | Full gate invokes forbidden az. No receipt, push, deployment or release acceptance asserted. |
+
+Exact supplied external evidence read: /home/azureuser/.copilot/session-state/285059ff-9e53-4387-9191-986e1300eb2f/files/pr541-checks/core-unittest.log and /home/azureuser/.copilot/session-state/285059ff-9e53-4387-9191-986e1300eb2f/files/pr541-checks/browser-final/axe-results.json. These are local parent-run evidence, not a clean committed exact-head publication receipt.
+
+### Findings, outcome and routing
+
+* Review execution: Complete.
+* Correction outcome: Conformant, limited to the explicit later PR #541 P04 correction boundary.
+* New substantive findings: none. Severity counts: Critical 0, High 0, Medium 0, Low 0; confidence High in the source/test assessment, with execution provenance qualified above.
+* Later correction evidence addresses the mechanisms described by original RV-001 and RV-002 and the newly supplied expanding-mask bug. Their original text, severity and Not accepted verdict are unchanged. This record does not reissue whole-feature acceptance or close RV-003.
+* No correction defect routes to rpi-implement, decision gap to rpi-plan or new material evidence gap to rpi-research. Existing RV-003 evidence work remains separately routed; publication/live/manual follow-ups retain their distinct owners.
+* Parent retains P04-T05 reconciliation and the requested local commit. No further Review, implementation loop, commit, push or az was performed by this reviewer.
+
+| Artifact | Description |
+| --- | --- |
+| [.copilot-tracking/research/2026-10-29/employee-chat-skills-530-research.md](.copilot-tracking/research/2026-10-29/employee-chat-skills-530-research.md) | Correction cycle 2 C7-C9. |
+| [.copilot-tracking/plans/2026-10-29/employee-chat-skills-530-plan.md](.copilot-tracking/plans/2026-10-29/employee-chat-skills-530-plan.md) | Current P04 contract and critique disposition. |
+| [.copilot-tracking/details/2026-10-29/employee-chat-skills-530-phase-details.md](.copilot-tracking/details/2026-10-29/employee-chat-skills-530-phase-details.md) | Correction task and race reconciliation. |
+| [.copilot-tracking/plans/2026-10-29/employee-chat-skills-530-critique.md](.copilot-tracking/plans/2026-10-29/employee-chat-skills-530-critique.md) | Preserved original and correction critiques. |
+| [.copilot-tracking/changes/2026-10-29/employee-chat-skills-530-changes.md](.copilot-tracking/changes/2026-10-29/employee-chat-skills-530-changes.md) | Correction implementation and validation history. |
+| [.copilot-tracking/rpi-sessions/2026-10-29/employee-chat-skills-530-state.json](.copilot-tracking/rpi-sessions/2026-10-29/employee-chat-skills-530-state.json) | Parent-owned Review continuation state. |
+| [.copilot-tracking/reviews/logs/2026-10-29/employee-chat-skills-530-review.md](.copilot-tracking/reviews/logs/2026-10-29/employee-chat-skills-530-review.md) | Appended correction Review; all historical verdicts preserved. |
+
+## Next Steps
+
+Return this one correction Review to the active parent for reconciliation and the authorized local commit, without push, az or another Review. Preserve original whole-feature Not accepted/RV-003 and separate publication/live/human gates. No user action is required.

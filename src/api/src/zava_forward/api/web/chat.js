@@ -37,6 +37,11 @@ const employeeChat = (() => {
     const root = h("dialog", { class: "employee-chat", "aria-labelledby": "employee-chat-title" });
     dialog = root;
     const current = () => dialog === root && me === session && !signal.aborted;
+    const deny = () => {
+      reset();
+      workspaceStatus.textContent = "Chat access ended. Reopen from a record you can see, or sign in again.";
+      app.focus();
+    };
     const status = h("p", { role: "status", "aria-live": "polite", "aria-atomic": "true" }, "Loading skills.");
     const log = h("ol", { class: "chat-log" });
     const liveLog = h("div", { role: "log", "aria-live": "polite", "aria-label": "Employee conversation" }, log);
@@ -93,8 +98,7 @@ const employeeChat = (() => {
         } catch (error) {
           if (!current()) return;
           if ([401, 403, 404].includes(error.status)) {
-            reset();
-            workspaceStatus.textContent = "Chat access ended. Reopen from a record you can see, or sign in again.";
+            deny();
             return;
           }
           status.textContent = `Chat unavailable: ${error.message} Continue with the ordinary workflow.`;
@@ -121,7 +125,12 @@ const employeeChat = (() => {
       send.disabled = false;
       status.textContent = "Choose a skill or ask a general work question.";
     } catch (error) {
-      if (current()) status.textContent = `Chat unavailable: ${error.message} Close chat and continue with the ordinary workflow.`;
+      if (!current()) return;
+      if ([401, 403, 404].includes(error.status)) {
+        deny();
+        return;
+      }
+      status.textContent = `Chat unavailable: ${error.message} Close chat and continue with the ordinary workflow.`;
     }
   }
   return { install, reset };

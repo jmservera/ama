@@ -312,6 +312,7 @@ class ChatPanel:
         if isinstance(skill, str):
             sources = skill_sources(skill, sources)
         masked, _ = redact(str(question if question is not None else "")[:MAX_CONTENT])
+        masked = masked[:MAX_CONTENT]
         iso.privacy._require()
         question_seq = store.chat_add_message(user, tid, "user", masked)["seq"]
 

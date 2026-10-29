@@ -243,6 +243,8 @@ unavailable; selecting its skill does not fetch hidden records. Other routes,
 including shared-building screens, use general workflow sources and disclose
 that no individual case/home is visible. Navigation, session expiry, account
 changes or denied access clear the dialog and abort stale UI results.
+Denials during skill loading, thread creation or asking remove case context
+and return focus to the workspace; session expiry returns to sign-in instead.
 
 Every answer carries "AI suggestion, not approved". Citations show permitted
 record fields or named `workflow/` sources; cited AI output is still not
@@ -253,6 +255,8 @@ and staff-notice references pass. Best-effort masking is not a privacy
 guarantee; do not enter resident names or sensitive/contact details. The audit
 ledger stores thread ID, actual question sequence, selected skill and outcome,
 not duplicated free text. Existing retention and DPO decisions remain required.
+Stored questions retain the 8,000-character limit after masking, including
+when a replacement marker is longer than the original identifier.
 
 The dialog uses native controls, explicit keyboard focus wrapping, Escape and
 return focus, polite updates, shared `async-action.js` loading feedback and
@@ -272,6 +276,11 @@ PYTHONPATH=tests:../core/tests:../agents/tests python -m checks.employee_chat_br
 The browser check uses an isolated constructed-data loopback server and
 explicit synthetic privacy references, actual unavailable-model fallback,
 intercepted answer-rendering cases and pinned axe on the open dialog.
+It requires ask arrival before navigation in the transport test, then separately
+settles controlled successful API promises after close, navigation and session
+change. Transcript, status and focus must remain unchanged, including detached
+and replacement dialogs. These are synthetic application-completion checks,
+not evidence of a live provider response.
 Actual SQL Server, live employee-site/model, hosted checks and human acceptance
 are separate. The 2026-10-29 local run did not perform live verification.
 

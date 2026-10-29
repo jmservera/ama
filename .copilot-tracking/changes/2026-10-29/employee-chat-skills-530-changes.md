@@ -89,3 +89,99 @@ plain ASCII and sentence-case standard takes precedence over generic copy.
 Plan/details/changes reconciled. One independent post-implementation Review
 assesses the full working candidate against origin/main baseline above, with
 full-suite/SQL, publication, live and human acceptance explicitly unmet.
+
+## PR #541 correction pass opening
+
+Scope P04 only, explicit user-directed finite RPI pass. Research cycle 2
+executed/Ready (C7-C9). One independent correction critique Complete/Revise;
+CP-PC-001 rejected with parent-authority rationale in the plan. Original
+critique and Review remain unchanged historical outcomes. Implement shared
+metadata/submit denial disposal and focus, deterministic late-success tests,
+and bounded redacted questions with core/HTTP regressions. Validation pending.
+No push, az, shared-venv mutation or complete gate invocation.
+
+### P04-T01/T03 implementation and targeted checks
+
+Shared deny helper now removes the dialog, reports workspace guidance and
+focuses #app for metadata/submit denials. Existing api() session-expiry path
+still owns sign-in and current() prevents obsolete catches stealing focus.
+Masked questions are bounded again before writing and prompt reuse.
+Core regression covers three expanding masks across legacy/general/five
+skills; HTTP regression covers the exact 8,000-character postcode example
+across the same modes, stored mask and actual audit sequence. Both pass.
+API chat/isolation/fixture/endpoint/workspace selectors: 83 tests pass.
+
+Current-state amendment: the new typed core regression calls migrated untyped
+Store/ChatIsolation/privacy boundaries. Initial mypy correctly reported five
+no-untyped-call errors; add only test_chat_panel/tests.test_chat_panel to the
+existing disallow_untyped_calls override, retaining strict body checking.
+Core Ruff/format/mypy now pass (157 files). API Ruff/format/mypy pass (107 files);
+an initial new browser undefined launcher reference was corrected.
+Initial browser command lacked the documented shared test fixture PYTHONPATH
+and failed import; retry will use the documented paths. No dependencies added.
+Full core discovery admitted under the shared lock and running; browser awaits
+that owned run's completion before nonblocking admission.
+
+### P04-T02/T04 final validation
+
+Browser regression requires the intercepted ask to arrive before navigation;
+transport cancellation remains a separate check. One controlled-api helper
+resolves successful metadata/thread/ask promises after close, navigation to a
+replacement dialog or session expiry. It awaits the real consumer task, checks
+promise fulfillment, prevents obsolete thread completion starting an ask, and
+compares detached/current transcript, status, draft and active element.
+All nine combinations and nine metadata/thread/ask 403/404/401 cases pass.
+
+An initial browser run exposed a harness race: a role locator no longer matches
+a closed dialog before its asynchronous close event actually removes it and
+aborts the controller. An abort assertion failed once. Diagnostic runs passed
+five times, but that did not resolve the race; final code now waits for zero
+actual dialog.employee-chat DOM elements before taking the snapshot/resolving.
+Final browser run after this correction passes. No failure was converted into
+a skip or transport-abort substitute for successful completion.
+
+Commands and results (installed distributions point to this worktree):
+
+* From src/core: /tmp/mv/bin/ruff check .; ruff format --check .; mypy:
+  pass, 157 files. No broad type-ignore added; only existing untyped-call
+  boundary exemption extended to the new integration test owner.
+* From src/api: same commands, pass, 107 typed files. JavaScript node --check
+  for chat.js and git diff --check pass.
+* From src/core: flock -n /tmp/ama-rpi-heavy.lock /tmp/mv/bin/python -m
+  unittest discover -s tests -q: 1,470 tests in 310.671s, OK (190 skipped).
+  Existing opt-in integration skips are not real SQL Server evidence.
+* From src/api: PYTHONPATH=tests:../core/tests:../agents/tests /tmp/mv/bin/python
+  -m unittest test_chat_panel test_chat_isolation test_chat_fixture_roles
+  test_role_endpoint_inventory test_workspace_scripts -q: 83 tests, OK.
+  Existing synthetic rule-check-unavailable diagnostics are expected, not failures.
+* From src/api: same PYTHONPATH, flock -n /tmp/ama-rpi-heavy.lock
+  /tmp/mv/bin/python -m checks.employee_chat_browser_check --axe <external
+  pinned-file> --out <external browser-final>: pass; owned constructed-data
+  loopback server health checked and terminated by its harness. Two axe states
+  report zero violations; pinned 4.10.3 SHA-256 verified before execution.
+
+External generated evidence: current session
+285059ff-9e53-4387-9191-986e1300eb2f/files/pr541-checks under
+/home/azureuser/.copilot/session-state (core-unittest.log, browser-final/
+axe-results.json and verified axe input). No historical output deleted.
+Whole API discovery, actual SQL Server, live provider/site, human approval and
+complete publication receipt are not claimed. Full gate invokes forbidden az,
+so it was not run. No push or az occurred.
+
+### Correction Review handoff
+
+P04 source/test/docs implementation and requested validation reconciled.
+One independent Review will assess only this later correction diff against
+starting HEAD 15252634, not reissue the original whole-feature Review.
+Original PC/RV verdicts remain preserved. No additional feature discovery,
+second correction Review or source changes are scheduled after that Review.
+
+### Independent correction Review result
+
+Execution Complete; outcome Conformant for P04; no new substantive findings.
+The independent reviewer inspected the complete correction boundary, actual
+core/axe output and fresh web guidelines, and ran JS syntax/diff checks.
+Original Review Not accepted/RV-003 remains unchanged. Resolved correction
+mechanisms are removed from current follow-ups without rewriting their
+historical findings. Local implementation/evidence commit is the next action;
+no source changes or second Review after this assessment.

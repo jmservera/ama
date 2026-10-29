@@ -1,16 +1,24 @@
 import json
+import tempfile
 import unittest
+from pathlib import Path
 
+import dataset
 from zava_forward.core.assistants import REGISTRY
+from zava_forward.core.chat_isolation import ChatIsolation
 from zava_forward.core.chat_panel import (
     ACTION_CLAIM,
     LABEL,
+    ChatPanel,
     normalise_policy_text,
     out_of_scope,
     parse_reply,
     permitted_sources,
     skill_sources,
 )
+from zava_forward.core.chat_privacy import redact
+from zava_forward.core.chatthreads import MAX_CONTENT
+from zava_forward.core.store import Store
 
 
 class PureTests(unittest.TestCase):
@@ -155,6 +163,37 @@ class ActionClaimTests(unittest.TestCase):
 class LabelTests(unittest.TestCase):
     def test_label_matches_the_acceptance_criterion(self) -> None:
         self.assertEqual(LABEL, "AI suggestion, not approved")
+
+
+class StoredQuestionTests(unittest.TestCase):
+    def test_expanding_redaction_stays_bounded_across_chat_modes(self) -> None:
+        with tempfile.TemporaryDirectory() as work:
+            path = Path(work) / "synthetic.json"
+            path.write_text(json.dumps(dataset.DATA))
+            store = Store(str(path))
+            user = dataset.DATA["staff"][0]
+            isolation = ChatIsolation(
+                store,
+                env={
+                    "CHAT_DPIA_REF": "SYNTH-DPIA",
+                    "CHAT_LAWFUL_BASIS_REF": "SYNTH-BASIS",
+                    "CHAT_NOTICE_REF": "SYNTH-NOTICE",
+                },
+            )
+            panel = ChatPanel(isolation)
+            for identifier in ("NE1 1AA", "a@b.co", "asthma"):
+                question = "x" * (MAX_CONTENT - len(identifier) - 1) + " " + identifier
+                masked = redact(question)[0]
+                self.assertEqual(len(question), MAX_CONTENT)
+                self.assertGreater(len(masked), MAX_CONTENT)
+                for skill in (None, "general", *REGISTRY):
+                    with self.subTest(identifier=identifier, skill=skill):
+                        tid = store.chat_create_thread(user)["id"]
+                        panel.ask(user, tid, question, skill=skill)
+                        messages = store.chat_resume(user, tid)["messages"]
+                        self.assertEqual(messages[0]["content"], masked[:MAX_CONTENT])
+                        self.assertNotIn(identifier, messages[0]["content"])
+                        self.assertEqual([m["seq"] for m in messages], [1, 2])
 
 
 if __name__ == "__main__":

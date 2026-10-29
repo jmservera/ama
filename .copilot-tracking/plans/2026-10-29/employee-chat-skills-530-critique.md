@@ -274,3 +274,95 @@ ms.date: 2026-10-29
 The active planning parent should apply the five direct corrections, preserve
 this original verdict, and continue the ordered local-only RPI work without
 another critique, push or az. No user action is required.
+
+## PR #541 correction pass critique
+
+### Metadata and boundary
+
+* Independent assessor: GitHub Copilot correction-pass critique sub-agent,
+  separate from the planning parent; 2026-10-29.
+* Execution status: Complete. Verdict: Revise.
+* Exactly one assessment of task 530 / employee-chat-skills-530, research
+  correction cycle 2 C7-C9, plan P04 and phase-details P04. Earlier PC findings
+  and original Review outcomes remain historical and are not reassessed,
+  replaced or marked resolved here.
+* Inputs: .copilot-tracking/research/2026-10-29/employee-chat-skills-530-research.md:94-158;
+  .copilot-tracking/plans/2026-10-29/employee-chat-skills-530-plan.md:120-159;
+  .copilot-tracking/details/2026-10-29/employee-chat-skills-530-phase-details.md:75-107.
+* Criterion boundary: the three requested correction threads, one bounded
+  sibling audit, deterministic proof design, test-addition budget, requested
+  local checks and evidence limits. Read-only inspection confirmed PR #541 is
+  open from the current feat/employee-chat-skills-530 branch to main.
+* Existing dirty research, plan, details and state belong to the parent; they
+  were neither moved nor edited. Only this critique section was appended.
+
+### Coverage assessment
+
+| IDs | Coverage | Evidence and assessment |
+| --- | --- | --- |
+| C7 / P04-T01 | Covered | chat.js:61-129 has metadata and submit catches covering metadata/thread/ask awaits. Shared current-only denial cleanup, 403/404 at each entry point, #app focus and preserved API-owned 401 login handling directly address the request. app.js:69-74,99-107 and index.html:42 support the proposed boundary. |
+| C8 / P04-T02 | Covered | employee_chat_browser_check.py:112-133 currently permits absent arrival and abort instead of success; app.js:69 can discard even a successful transport response. P04 separately requires actual intercepted arrival and a controlled successful API promise ignoring abort, followed by awaited whole-form settlement. |
+| C8 / disposal siblings | Covered | chat.js:38 and post-await guards bind dialog, session and abort state. Close, navigation/replacement and changed-session cases compare detached/current transcript, status and active element. async-action.js:40-82 returns task settlement; capture and await the outer form task, including its cleanup, as planned, rather than only resolving the held API promise. |
+| C9 / P04-T03 | Covered | chat_panel.py:314-316 stores redacted content directly; chatthreads.py:322-323 rejects lengths above MAX_CONTENT. Planned final masked bound and reused prompt value restore the bounded write without altering the input contract. |
+| C9 / regression siblings | Covered | One source audit included chat_isolation.py:115-119, chat_privacy.py:90-97,153-157 and existing core/API test owners. Legacy omitted skill, general and five registry skills share the write; parameterized expanding-postcode and sibling-identifier assertions fit the three-unit-method limit. Separate privacy/general and assistant-output bounds remain explicitly outside this correction. |
+| P04-T04/T05 | Partial | Requested Ruff/format/mypy for core/API, core discovery, API chat/workspace selectors, feasible local browser/axe, independent Review and local trailer-bearing commit are specified. The temporary-path tooling instruction requires CP-PC-001. |
+| Change and evidence limits | Covered | At most three new unit methods and two browser helpers; no removals, new dependencies or files. Synthetic fixtures, pinned axe, owned loopback server and nonblocking heavy admission are credible. Busy/unavailable browser evidence must remain blocked, not passed; no SQL, live/provider, deployment, human acceptance or publication receipt is inferred. |
+
+### Complete actionable finding set
+
+<!-- rpi:critique id=CP-PC-001 -->
+#### CP-PC-001 [Medium]: Validation tooling path violates the execution boundary
+
+* Related IDs: P04-T04/T05.
+* Exact evidence:
+  .copilot-tracking/details/2026-10-29/employee-chat-skills-530-phase-details.md:100-104
+  directs execution of installed /tmp/mv tools and session-external output.
+  The current execution instructions prohibit any /tmp file operations and
+  require newly created files to be workspace-relative. Prior availability of
+  that environment does not authorize its reuse in this correction pass.
+* Impact: the required validation recipe is not executable as written under
+  the supplied constraints; implicit tool caches and synthetic-server output
+  could also cross the prohibited boundary.
+* Smallest useful change: replace that recipe with a permitted existing
+  interpreter/tool environment and explicit workspace-relative output/cache/
+  synthetic-data paths. If no permitted installed environment is available,
+  record the affected checks as blocked; do not silently reuse /tmp, mutate a
+  shared environment, add dependencies or claim a pass.
+* Action owner: Planning parent.
+* Exact resolving evidence: revised P04-T04/T05 names the permitted tool
+  executable paths and workspace-relative write locations, including browser
+  fixture/output and tool caches; subsequent validation records actual
+  commands and outcomes or the concrete missing-environment blocker.
+* Decision route: Direct planner correction; no new user decision required.
+
+### Strengths, limitations and disposition
+
+* No additional mandatory lifecycle, denial or bounds findings arise from
+  this supplied boundary. The success-vs-abort distinction and full task
+  settlement are explicit rather than inferred from a missing late answer.
+* Preserve 401 sign-in focus and recoverable non-denial behavior; restore
+  controlled wrappers after each browser case. Retain the real fallback,
+  six-selection, keyboard/reflow/reduced-motion and pinned dialog-axe checks.
+* This is planning credibility, not implementation acceptance or a fresh UI/
+  accessibility conformance review. No implementation, unit/static/browser/
+  SQL check, delegation, commit, push or az command was performed. Historical
+  guideline retrieval and environment availability are supplied evidence, not
+  newly verified results. Local-only correction evidence does not authorize
+  publication or replace any required exact-head/publication/human gate.
+* Severity counts: Critical 0; High 0; Medium 1; Low 0.
+* Highest-impact finding: CP-PC-001. Owner: Planning parent. Smallest next
+  action: correct the validation paths before implementation/validation.
+  User response required: No.
+
+| Artifact | Description |
+| --- | --- |
+| [.copilot-tracking/plans/2026-10-29/employee-chat-skills-530-plan.md](.copilot-tracking/plans/2026-10-29/employee-chat-skills-530-plan.md) | P04 correction candidate assessed. |
+| [.copilot-tracking/details/2026-10-29/employee-chat-skills-530-phase-details.md](.copilot-tracking/details/2026-10-29/employee-chat-skills-530-phase-details.md) | P04 tasks and validation recipe assessed. |
+| [.copilot-tracking/research/2026-10-29/employee-chat-skills-530-research.md](.copilot-tracking/research/2026-10-29/employee-chat-skills-530-research.md) | Correction cycle 2 C7-C9 evidence. |
+| [.copilot-tracking/plans/2026-10-29/employee-chat-skills-530-critique.md](.copilot-tracking/plans/2026-10-29/employee-chat-skills-530-critique.md) | Appended independent correction critique; historical text preserved. |
+
+## Next Steps
+
+The active planning parent should apply CP-PC-001 directly, then continue the
+requested correction pass and its independent Review without another plan
+critique. This assessor stops here. No user action is required.

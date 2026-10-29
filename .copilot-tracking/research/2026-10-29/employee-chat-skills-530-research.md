@@ -90,3 +90,67 @@ One completed wider/deeper/contrarian cycle; another cycle is not justified by
 remaining source uncertainty. No latency/cost benchmark or live access asserted.
 Required independent critique, browser/axe, units, typing/lint and actual SQL
 remain implementation evidence, not research results.
+
+## PR #541 correction pass intake
+
+User explicitly requests a short Research/Plan/Implement/Review pass for three
+review threads and sibling cases, reusing this task and its artifacts. Original
+critique and Review remain historical evidence, not rewritten outcomes.
+Focused convergence; scope is employee-chat denial/disposal, deterministic
+late-success proof and post-redaction question bounds. No push or az; local
+commit with required trailer. Required checks: API/core Ruff, format, mypy,
+core units, API chat/workspace units, local browser where feasible.
+No new UX design or broad audit. Web guidelines selected and fully retrieved
+2026-10-29. Independent critique and Review are scoped to this correction pass.
+Prior-knowledge gate: current state routes RV-001/RV-002 to later correction;
+the user now explicitly selects that work and adds the length regression.
+Research is inline because the code trace is tightly coupled.
+
+## Correction cycle 2
+
+### Wider
+
+C7: src/api/src/zava_forward/api/web/chat.js:61-129 has three initialization/
+submit awaits: skills metadata, thread creation and ask. Submit denials already
+reset the modal but do not explicitly restore focus; metadata denials only
+change its status. All completions share the current-dialog/session guard.
+Sibling audit includes all three awaits and 401/403/404.
+
+### Deeper
+
+C8: src/api/checks/employee_chat_browser_check.py:112-133 waits for aria-busy,
+which AsyncAction sets before request arrival. Optional held-route handling
+and permitted cancellation cannot prove a successful late application result.
+app.js:49-79 also checks abort after fetch, so even successful transport cannot
+prove the dialog's own stale-completion guard. Use separate transport-arrival
+and controlled API-promise proofs, with explicit settlement awaited.
+
+C9: src/core/src/zava_forward/core/chat_panel.py:314-316 now writes masked
+content directly; chatthreads.py:322 rejects content beyond 8,000 characters.
+The prior ChatIsolation -> privacy.add_message route performed a second
+pre-redaction truncation. For already masked questions that bounded the final
+write. Reapply the bound to ChatPanel's masked question before storage/prompt.
+Core and HTTP regressions must assert masked stored text and actual question
+sequence. Legacy/explicit skill modes share this write. Regulatory chat has a
+separate 1,000-character input contract; assistant-output bounds and privacy's
+first-pass general API are pre-existing, not changed by this correction.
+
+### Contrarian
+
+Relying only on fetch interception still lets AbortSignal rejection substitute
+for success; controlled API promises intentionally ignore abort and settle
+after disposal/session replacement. Assert old and replacement transcript/
+status plus active element, not merely absence of an answer in a new modal.
+Keep real transport cancellation as a separate check requiring arrival.
+Do not refactor all chat/privacy services or change allowed input lengths.
+Denial cleanup belongs in one modal-local helper used by both catches; keep
+401 login handling in api() and do not steal focus from the login screen.
+
+### Synthesis and readiness
+
+Research disposition: executed. Planning Readiness: Ready. Selected surgical
+corrections cover all three supplied threads; no evidence justifies another
+cycle or broad UI change. Current source/PR threads confirmed on the named open
+branch. Existing installed dependencies and Chromium are available; the heavy
+lock was unoccupied on initial inspection, not a reservation or test result.
+Historical SQL/full-publication/human gates remain distinct from this pass.
