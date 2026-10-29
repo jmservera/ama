@@ -79,3 +79,15 @@ API/core mypy/Ruff pass. Full suites/browser remain explicitly Blocked after
 nonblocking admission exit 75, not performed checks. P02-T02 remains active
 for candidate commit, one independent Review and local closeout. No source
 scope change, acceptance relaxation or repeated critique.
+
+## Local Closeout
+
+P02-T02 complete: candidate 20385e3a950500d11cbb033170961d8b4661d108
+contains source and original dated RPI evidence. The single independent Review
+is Complete / Not accepted, RV-001 Medium for unavailable required full/browser
+checks; no confirmed source defect. Preserve that original result and route
+later coordinated evidence work to rpi-research, not another current-task
+implementation/Review. The local closeout commit contains only orchestration
+and Review evidence. Plan markers are complete as execution dispositions;
+validation acceptance remains incomplete. Session stops per explicit caller
+direction with no push, az, child task, shared-lock retry or publication claim.
