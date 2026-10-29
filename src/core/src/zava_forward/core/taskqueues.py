@@ -96,6 +96,70 @@ def instant(value: object) -> datetime | None:
     return parsed.astimezone(UTC) if parsed.tzinfo is not None else None
 
 
+def overdue_tasks(
+    case: dict[str, Any], *, as_of: str, handoff: dict[str, Any] | None
+) -> list[dict[str, Any]]:
+    """Evaluate recorded deadlines without building blockers or other work context."""
+    now = instant(as_of)
+    if now is None:
+        raise ValueError("Queue evaluation requires a valid dataset as_of snapshot.")
+    overdue: list[dict[str, Any]] = []
+
+    def deadline(due: object, completed: object, label: str, named: str, path: str) -> None:
+        end = instant(due)
+        done = instant(completed)
+        satisfied = done is not None and done <= now
+        if end is not None and end < now and not satisfied:
+            overdue.append(
+                dict(
+                    task=label,
+                    owner=named or UNKNOWN,
+                    due_at=due,
+                    completion="Not evidenced",
+                    case_id=case["id"],
+                    source=f"case:{case['id']}/{path}",
+                    version=UNKNOWN,
+                    as_of=as_of,
+                )
+            )
+
+    for index, hazard in enumerate(case.get("hazards", [])):
+        follow = hazard.get("accepted_by") or hazard.get("sender") or {}
+        named = follow.get("name") or hazard.get("owner") or UNKNOWN
+        path = f"hazards/{index}"
+        deadline(
+            hazard.get("response_due_at"),
+            hazard.get("responded_at"),
+            "External safety service response",
+            named,
+            path,
+        )
+        deadline(
+            hazard.get("resident_update_due_at"),
+            hazard.get("resident_updated_at"),
+            "External safety service resident update",
+            named,
+            path,
+        )
+    update = case.get("resident_update") or {}
+    deadline(
+        update.get("due_at"),
+        update.get("completed_at"),
+        "Resident update",
+        update.get("owner") or UNKNOWN,
+        "resident_update",
+    )
+    if handoff and handoff.get("state") in PENDING:
+        deadline(
+            handoff.get("due_at"),
+            None,
+            "Handoff acceptance",
+            handoff.get("chase_owner") or UNKNOWN,
+            "handoff",
+        )
+    return overdue
+
+
 def context(
     case: dict[str, Any],
     *,
@@ -148,22 +212,6 @@ def context(
         )
 
     clocks: list[dict[str, Any]] = []
-    overdue: list[dict[str, Any]] = []
-
-    def deadline(due: object, completed: object, label: str, named: str, path: str) -> None:
-        end = instant(due)
-        done = instant(completed)
-        satisfied = done is not None and done <= now
-        if end is not None and end < now and not satisfied:
-            overdue.append(
-                dict(
-                    task=label,
-                    owner=named or UNKNOWN,
-                    due_at=due,
-                    completion="Not evidenced",
-                    **origin(path),
-                )
-            )
 
     for index, hazard in enumerate(case.get("hazards", [])):
         follow = hazard.get("accepted_by") or hazard.get("sender") or {}
@@ -192,20 +240,6 @@ def context(
                     **origin(path, hazard.get("referral_version")),
                 )
             )
-        deadline(
-            hazard.get("response_due_at"),
-            hazard.get("responded_at"),
-            "External safety service response",
-            named,
-            path,
-        )
-        deadline(
-            hazard.get("resident_update_due_at"),
-            hazard.get("resident_updated_at"),
-            "External safety service resident update",
-            named,
-            path,
-        )
     for query in stock_queries:
         block(
             "Stock review",
@@ -279,23 +313,8 @@ def context(
         for s in (case.get("technical") or {}).get("signoffs", {}).values()
     )
     stale = stale or reassess
-    update = case.get("resident_update") or {}
-    deadline(
-        update.get("due_at"),
-        update.get("completed_at"),
-        "Resident update",
-        update.get("owner") or UNKNOWN,
-        "resident_update",
-    )
+    overdue = overdue_tasks(case, as_of=as_of, handoff=handoff)
     pending = bool(handoff and handoff.get("state") in PENDING)
-    if pending and handoff:
-        deadline(
-            handoff.get("due_at"),
-            None,
-            "Handoff acceptance",
-            handoff.get("chase_owner") or UNKNOWN,
-            "handoff",
-        )
     started = instant(case.get("stage_since"))
     new = started is not None and 0 <= (now - started).total_seconds() <= 7 * 86400
     active = [b for b in blockers if b["current_stop"]]

@@ -7,6 +7,94 @@ ms.topic: reference
 ---
 
 
+## Progress dashboard and closed case archive (#533)
+
+**Progress dashboard** shows demonstration data only. `GET /api/progress`
+accepts inclusive UTC `start` and `end` dates (`YYYY-MM-DD`), defaulting to the
+30 days ending at the dataset's recorded `as_of`, with at most 366 days.
+The existing staff stats permission applies; contractors and application-only
+administrators cannot read it.
+
+The read model admits explicitly synthetic cases, or cases with a nonempty,
+wholly labelled synthetic simulation history. It opens no data files itself.
+Unmarked records never contribute. Initial `Identified`, simulation aftercare
+reopen, controlled reopen and explicit home closure events supply lifecycle
+dates; current stage dates are not opening dates. Missing or contradictory
+lifecycle evidence is excluded from historical measures with coverage counts.
+Non-list histories, including null, are unknown rather than failed reads.
+History elements must be dictionaries, and labelled synthetic actions must be
+strings; malformed rows or actions make the lifecycle unknown, not silently
+skipped. Unlabelled dictionary history and valid non-transition actions are
+still ignored. History, closure and return collections must be lists of
+dictionaries when present;
+null, non-list collections or malformed entries make the lifecycle unknown.
+Missing collections remain empty. Malformed synthetic cases still contribute
+to coverage counts and remain in the unbounded archive with unknown dates.
+Replay preserves event kinds: only identification starts the first episode,
+accepted handover or closure closes an open episode, reopening requires a
+prior closure, and a return requires an open case without starting an episode.
+Repeated identification after closure is not reopening; reopening an already
+open case is incomplete evidence. Distinct-time repeated lifecycle changes
+without their intervening event are unknown. Identical event observations at
+the same normalized UTC instant, and closing kinds corroborating that instant,
+are deduplicated only until the next lifecycle-changing event. Distinct event
+versions or other differing observation fields are not assumed duplicates.
+Ordered same-instant close/reopen episodes
+remain separate within an evidenced collection order, including zero-day
+durations. Mixed-source same-instant repeated closing/opening evidence around
+a reopen is unknown when duplicate observations cannot be distinguished from
+interleaved episodes; collection concatenation does not establish that order.
+Opened includes reopened episodes, also counted separately. Daily backlog is
+the end-of-day known-lifecycle count; Monday-based weeks are clipped to the
+selected dates. Time to close uses each observed episode ending in range,
+calendar days and nearest-rank p90; no samples means Unknown, not zero.
+
+Journey steps, team workload (recorded owner role), 60-day stalled signals and
+recorded overdue tasks describe the current view, not reconstructed historical
+owners or legal compliance. AI outcomes include only explicitly synthetic
+`task=briefing`, `source=ai` records with nonempty case links all admitted and
+`resolved_at` in range. Accepted/Changed/Rejected are draft reviews, never
+approval. Rules/templates, missing review dates and unreviewed records are
+disclosed separately. No synthetic usage records means unavailable usage, not
+inferred activity. Every chart has a same-value semantic table alternative.
+
+The overdue count shares the work queue's deadline-only evaluation at the
+dataset snapshot. It does not construct per-case building blockers or full
+work context; building membership does not affect recorded task deadlines.
+
+**Closed cases** uses manager-only `GET /api/closed-cases` with `status` (exact
+recorded stage), `team` (exact owner role), `q` (reference/resident/address,
+maximum 200 characters), inclusive closure `start`/`end`, `page` (1-based) and
+`limit` (default 20, maximum 100). Defaults are unbounded, independent of the
+dashboard range. Only synthetic cases enter this demonstration archive.
+Closure date is the latest observed closure after reopening; unknown dates
+are included unbounded and excluded by either date filter, with a coverage
+count. ID ordering is stable. Out-of-range pages clamp to the final page;
+empty results have page 1 of 1. Hash URL queries retain filters/page through
+reload and browser history, and applying filters resets pagination.
+The legacy case/CSV endpoints are unchanged.
+
+Invalid date ranges show inline errors linked to both date fields and focus the
+start date so the range can be corrected. Service read failures retain a separate
+page alert and retry action without marking valid dates as invalid.
+
+Focused checks, from `src/api` with installed dev distributions:
+
+```bash
+PYTHONPATH=tests:../core/tests:../agents/tests python -m unittest \
+  test_progress_dashboard test_workbench test_role_screens test_workspace_scripts -q
+PYTHONPATH=tests:../core/tests:../agents/tests python -m checks.progress_browser_check \
+  --axe /path/to/axe-4.10.3.min.js --out /new/external/progress-results
+```
+
+Take `/tmp/ama-rpi-heavy.lock` with nonblocking `flock -n` admission before
+heavy checks, retrying for at most 40 minutes. The browser check owns a fictional
+loopback server and checks table/chart/API equality, keyboard, URL/paging,
+failure/retry, cancellation, reflow and pinned axe. It never uses the working
+dataset, Azure or a live model. These are engineering checks, not human
+screen-reader/usability acceptance, full Fluent runtime adoption or WCAG
+conformance.
+
 ## Employee case journey workspace (#526)
 
 Employee case routes show a six-step evidence-based journey, six-value summary

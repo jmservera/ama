@@ -219,6 +219,7 @@ function missingWorkspaceScripts(hash, caseRoute) {
     ["/chat.js", staffCase, typeof chatCasePanel === "function"],
     ["/timecapture.js", staffDestination && hash === "#/time", typeof timeView === "function"],
     ["/role-screens.js", destination === "#/screens", typeof roleScreensView === "function"],
+    ["/progress.js", staffDestination && ["#/progress", "#/closed"].includes(destination), typeof ProgressViews === "object"],
     ["/vendor/leaflet.js", staffDestination && (hash === "#/overview" || destination === "#/coordinator"), typeof L === "object"],
   ].filter(([, needed, loaded]) => needed && !loaded).map(([path]) => path);
 }
@@ -299,7 +300,8 @@ async function route() {
   if (building) return await buildingView(decodeURIComponent(building[1]));
   if (hash === "#/assistants") return await assistantQueueView();
   if (hash === "#/time") return await timeView();
-  if (hash === "#/closed") return await closedView();
+  if (hash.split("?")[0] === "#/closed") return await ProgressViews.closed();
+  if (hash.split("?")[0] === "#/progress") return await ProgressViews.dashboard();
   if (hash === "#/capacity") return await capacityView();
   if (hash === "#/import") return await importView();
   if (hash === "#/overview") return await overviewView();
@@ -1233,16 +1235,6 @@ function safetyPanel(c, id, refresh) {
       h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "hazard-raise", {
         category: cat.value, priority: pri.value, note: note.value, source: source.value, aware_at: iso(aware.value)
       }), [cat, pri, note, source, aware]) }, "Raise safety issue"))));
-}
-
-async function closedView() {
-  if (!isManager()) return show(h("p", {}, "Only a manager sees closed cases."));
-  const d = await api("/api/cases?view=closed&limit=100");
-  show(h("h1", {}, "Closed cases"), h("p", { class: "muted" }, `${d.total} closed. Open one to reopen it with a reason.`),
-    h("ul", { class: "list" }, d.items.length ? d.items.map((r) => h("li", {}, h("a", { class: "item", href: `#/case/${encodeURIComponent(r.id)}` },
-      h("div", {}, h("span", { class: "name" }, r.resident),
-        r.hazard && h("span", { class: "flag danger" }, "Safety issue open"),
-        h("div", {}, `${r.address}, ${r.town} ${r.postcode}`)), h("div", { class: "meta" }, r.stage)))) : h("li", { class: "card" }, "No closed cases.")));
 }
 
 async function contractorListView() {
