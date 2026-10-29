@@ -14,7 +14,7 @@ Research: .copilot-tracking/research/2026-10-29/iot-hub-live-140-pr557-fix-cycle
 | Phase | Status | Tasks |
 | --- | --- | --- |
 | P01 | Complete and validated | P01-T01, P01-T02 |
-| P02 | P02-T01 complete; P02-T02 lifecycle pending | P02-T01, P02-T02 |
+| P02 | Local tasks complete; publication gate failed | P02-T01, P02-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Address both bounded review findings
@@ -55,3 +55,5 @@ Observed: targeted IoT18 tests pass; full infra470 tests pass with REQUIRE_AZ_BI
 Reconcile plan markers, details and changes before invoking Review once. Preserve all original review findings; route later work rather than repeat Review. Local commit includes implementation and dated original evidence, uses gh api user derived noreply identity and required trailer. Attempt complete local gate after commit with fetched main, new external output and --lock-timeout0; busy foreign lock/prerequisites block publication, not authority to terminate a foreign process or bypass checks. No push even on success.
 
 Completion: local commit persistent; external gate evidence retained and accurately qualified. Human/hosted/live approval remain separate.
+
+Observed: original independent Review Complete / Residual work, no source defects. Implementation and original evidence committed as dd69200b with noreply author/committer and required trailer. Initial full-gate admission refused existing ignored cache/install inputs; preserved them and used a clean detached exact-commit worktree rather than delete/move unknown files. Complete --all run executed, failed required SQL/browser skip admission in API discovery (1338 tests,318 skips); browser/MSSQL groups blocked. External receipt verification correctly refused eligibility. Final evidence commit is local-only bookkeeping and invalidates prior receipt identity; no valid exact-final-head publication gate or repeated Review is claimed.

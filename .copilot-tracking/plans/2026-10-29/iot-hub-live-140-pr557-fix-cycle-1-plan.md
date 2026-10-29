@@ -7,19 +7,19 @@ ms.date: 2026-10-29
 
 * Task ID: 140-184-pr557-fix-cycle-1
 * Task slug: iot-hub-live-140-pr557-fix-cycle-1
-* Planning status: Ready; independent critique Complete / Pass
+* Planning status: Executed locally; independent critique Complete / Pass; original Review Complete / Residual work
 * Phase details: .copilot-tracking/details/2026-10-29/iot-hub-live-140-pr557-fix-cycle-1-phase-details.md
 * Critique: .copilot-tracking/reviews/plans/2026-10-29/iot-hub-live-140-pr557-fix-cycle-1-plan-critique.md
 
 ## Executive Summary
 
-Add compiled behavioral coverage for the existing live ama/UK South guard and mutations that prove regressions are rejected. Add explicit two-message, one-per-second, 60-second operator settings and the October 31 UTC authorization cutoff beside hub-only activation guidance. Preserve existing Bicep and runtime behavior; commit locally after requested checks and one independent Review.
+Added compiled behavioral coverage for the existing live ama/UK South guard and mutations that prove regressions are rejected. Added explicit two-message, one-per-second, 60-second operator settings and the October 31 UTC authorization cutoff beside hub-only activation guidance. Preserved existing Bicep and runtime behavior; implementation and original evidence committed locally as dd69200b after requested checks and one independent Review.
 
 ### What You May Not Know
 
 RunBudget defaults allow 100 messages and its validation permits larger limits. It does not enforce a calendar cutoff. The operator must verify remaining UTC authorization time, not rely on the per-run deadline. This fix does not close either parent issue or repair historical live/publication blockers.
 
-No unresolved implementation decision. Full local publication-gate evidence may remain blocked; never substitute focused checks for that gate.
+No unresolved implementation decision. Complete local gate failed API required-integration skip admission; browser/MSSQL groups were blocked. No valid publication receipt is established; focused checks do not substitute for that gate.
 
 ## Sources
 
@@ -82,7 +82,7 @@ Follow existing assertion/deep-copy pattern; do not modify template behavior.
 Independent of P01-T01; adjacent to DeviceActivation guidance.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Validate and preserve local handoff
+### [x] P02: Validate and preserve local handoff
 
 Dependencies: P01.
 
@@ -92,7 +92,7 @@ Dependencies: P01.
 REQUIRE_AZ_BICEP=1 prevents missing compiler from becoming an accepted skip. Offline Bicep compilation only. Infra Ruff uses existing isolated E,F,I,B,UP py312 line-length100 policy. API Ruff runs project scope. API unittest selectors: test_iot_stream, test_sensor_ingestion, test_sensor_stream, test_resident_sensors using caller PYTHONPATH.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Reconcile evidence, run one Review, commit locally
+#### [x] P02-T02: Reconcile evidence, run one Review, commit locally
 
 Resolve account through gh api user; repository-local noreply email for author/committer, coauthor trailer. No push. After committing original evidence, attempt complete local gate with --all, fetched origin/main and a new external directory under nonqueued shared-lock admission. Preserve failures and keep final receipt external; no cloud fallback, skip token or hosted acceptance claim.
 
@@ -111,9 +111,8 @@ Exactly one final-candidate critique executed: Complete / Pass, zero findings, n
 ## Follow-Up Items
 
 * Historical live and full-gate blockers remain owned by the parent task; not acceptance criteria for these two local review corrections.
+* Current full gate reproduces the parent API discovery/admission mismatch: 1338 API tests exit0 with318 skips, required SQL/browser skips are rejected, browser/MSSQL groups blocked. Distinct gate follow-up owns correction without weakening integration policy. Final evidence commits invalidate prior receipt identities; any future publication requires a new complete exact-head gate and independent exact-head assessment.
 
 ## Handoff
 
-Changes path: .copilot-tracking/changes/2026-10-29/iot-hub-live-140-pr557-fix-cycle-1-changes.md. Implement P01 after critique disposition. User explicitly authorized this full cycle; no persistent automatic session.
-
-Pre-Review status: P01 and P02-T01 complete. Targeted infra18, full infra470 and relevant unit94 pass; infra/API Ruff check and format check pass after one formatter correction. P02-T02 remains for the original independent Review, local commit and external gate attempt. No source blocker.
+Changes path: .copilot-tracking/changes/2026-10-29/iot-hub-live-140-pr557-fix-cycle-1-changes.md. All source/check/local-lifecycle markers complete, not a full-gate pass. Targeted infra18, full infra470 and relevant unit94 pass; infra/API Ruff check and format check pass after one formatter correction. One original Review Complete / Residual work found no source defects; its lifecycle and inherited-parent routes are preserved. User explicitly authorized this full cycle; manual mode, no persistent automatic session, no push. Publication remains blocked.

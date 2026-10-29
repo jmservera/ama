@@ -4,7 +4,7 @@
   "parent_task": {"task_id": "140-184", "task_slug": "iot-hub-live-140"},
   "mode": "manual",
   "active_phase": "Review",
-  "status": "active",
+  "status": "completed",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-29/iot-hub-live-140-pr557-fix-cycle-1-research.md",
@@ -19,11 +19,15 @@
     {"decision": "Reuse clean active feat/iot-hub-live-140; first git pull --rebase succeeded, already up to date at 3c04f84814052a7a552d4816a2fbd0834c1d3db8.", "status": "complete", "evidence": "Local git inspection and gh pr view 557: OPEN, same head branch, base main."},
     {"decision": "No Azure operations, secrets, rubric score edits or push. Commit locally with required Copilot trailer.", "status": "confirmed", "evidence": "Owner request; overrides historical live-operation authority for this cycle."},
     {"decision": "Research executed, Ready; exactly one independent critique executed, Complete / Pass, zero findings.", "status": "complete", "evidence": "Research C1-C8; .copilot-tracking/reviews/plans/2026-10-29/iot-hub-live-140-pr557-fix-cycle-1-plan-critique.md"},
-    {"decision": "Exactly one independent Review executed Complete / Residual work. Both source findings conformantly addressed; no source defects. Two Low residuals: RV-001 local lifecycle, RV-002 inherited parent blockers.", "status": "complete-residual-work", "evidence": ".copilot-tracking/reviews/logs/2026-10-29/iot-hub-live-140-pr557-fix-cycle-1-review.md; frozen two-file diff SHA256 3e5d39485e4414c188bb8235248a56eaadba1055ed2aee34bbc5af9c1e4d0d31"}
+    {"decision": "Exactly one independent Review executed Complete / Residual work. Both source findings conformantly addressed; no source defects. Two Low residuals: RV-001 local lifecycle, RV-002 inherited parent blockers.", "status": "complete-residual-work", "evidence": ".copilot-tracking/reviews/logs/2026-10-29/iot-hub-live-140-pr557-fix-cycle-1-review.md; frozen two-file diff SHA256 3e5d39485e4414c188bb8235248a56eaadba1055ed2aee34bbc5af9c1e4d0d31"},
+    {"decision": "Implementation and original RPI evidence committed locally with privacy-safe identity and required trailer. Complete local gate executed from clean exact-commit worktree after preserving ignored working inputs; failed API required-integration skip admission. Verification rejected eligibility. No push or final-head publication-pass claim.", "status": "local-delivery-complete-publication-blocked", "evidence": "Implementation dd69200ba54e077bb5d1119977f63cff2e75e87f; /home/azureuser/.copilot/session-state/f212780b-b61f-40a3-aaea-96edfdb33a23/files/iot-pr557-fix-cycle-1-dd69200b-clean-gate/receipt.json; final evidence bookkeeping invalidates prior receipt head identity"}
   ],
-  "blockers": [],
-  "next_action": {"phase": "Review", "action": "Parent-owned P02-T02 local lifecycle: commit original implementation/evidence with required identity/trailer, then attempt complete external gate against fetched main 356a3cfbaa2cd63a6fbf80e87e11a29cacaaf4c7; no push, source change or repeated Review."},
+  "blockers": [
+    {"id": "publication-full-gate", "summary": "Clean implementation-commit full gate failed API required SQL/browser skip admission (1338 tests/318 skips); browser/MSSQL groups blocked. Current working checkout also contains ignored cache/install inputs. No eligible final-head receipt.", "resolution": "Separate gate/tooling follow-up preserves integration policy; use a clean candidate, complete fresh exact-head gate and independent assessment before any future publication. Do not delete unknown inputs, bypass admission, infer approval or push."}
+  ],
+  "next_action": {"phase": "Review", "action": "Local-only fix cycle complete; persist final lifecycle evidence commit and retain failed external receipt. No further source work or automatic session. Future publication remains blocked pending fresh exact-head gate/admission follow-up; no push or repeated Review."},
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Retain inherited live/publication blockers under the parent task", "rationale": "These local corrections do not establish registry authority, live transport, SQL/resident-gauge delivery or publication readiness.", "evidence": "Original parent state and Review RV-002"}
+    {"rank": 1, "task": "Correct full-gate API integration skip admission without weakening required policy", "rationale": "Current complete run reproduces the inherited tooling blocker; required before a future publishable exact-head receipt, outside these two source findings.", "evidence": "External failed dd69200b full receipt; API1338/skips318; browser/MSSQL prerequisite blocks"},
+    {"rank": 2, "task": "Retain inherited live delivery blockers under the parent task", "rationale": "These local corrections do not establish registry authority, live transport or SQL/resident-gauge delivery; resolving them needs separate owner authority.", "evidence": "Original parent state and Review RV-002"}
   ]
 }
