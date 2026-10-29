@@ -3,8 +3,8 @@
   "task_slug": "finance-510-main-sync",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Review",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-29/finance-510-main-sync-research.md",
@@ -39,12 +39,17 @@
       "decision": "Single independent Review executed Complete; outcome Conformant, no findings, assessed replay HEAD 5d232eca against start bafcb241/base 8ee1b77f plus current dated evidence.",
       "status": "confirmed",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-29/finance-510-main-sync-review.md"
+    },
+    {
+      "decision": "Evidence commit c807ebae6d0adb9c5e5f96d4d17ff58e38d46abc verified clean with correct attribution/trailer and unchanged reviewed source/docs. P01/P02 complete; no push or Azure changes.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-10-29/finance-510-main-sync-changes.md Completed Local Commit and Verification."
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Commit reviewed evidence locally, verify, then persist completed-task coordinator handoff; do not select child work."
+    "action": "Coordinator owns publication verification, authorized push and fresh hosted CI; no child selected. Await a ranked follow-up selection, Stop automatic session or Switch to manual mode."
   },
   "prioritized_follow_ups": [
     {

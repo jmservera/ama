@@ -10,7 +10,7 @@ ms.date: 2026-10-29
 Task ID / slug: `finance-510-main-sync`. Scope: full plan P01/P02.
 Plan: .copilot-tracking/plans/2026-10-29/finance-510-main-sync-plan.md.
 Details: .copilot-tracking/details/2026-10-29/finance-510-main-sync-phase-details.md.
-P01 and P02-T01 complete; P02-T02 Review complete, local commit pending.
+Full P01/P02 complete, including P01-T01, P02-T01 and P02-T02.
 Critique Complete / Revise, PC-001/002 directly resolved in plan/details.
 Original critique unchanged, no repeat critique.
 
@@ -181,6 +181,45 @@ No new source work, correction or repeated Review is requested.
 
 ## Remaining Work and Validation Boundaries
 
-Local evidence commit and postcommit checks remain; the single Review is done.
+No remaining active implementation or Review work. Final bookkeeping persists
+this verified local result and coordinator handoff, without source changes.
 No push, Azure operation, private data, hosted success, financial approval or
 complete publication receipt is authorized or claimed.
+
+## Completed Local Commit and Verification
+
+* Reverified authenticated identity and set repository-local email from API.
+  Staged exactly the seven current dated RPI artifacts, then
+  `git diff --cached --check; git diff --cached --stat`: exit 0.
+* `printf <Conventional message, Refs #96/#510, Copilot footer/trailer>
+  | git commit -F -`: exit 0; created
+  `c807ebae6d0adb9c5e5f96d4d17ff58e38d46abc`
+  (`docs(finance): record reviewed main synchronization`), seven files,
+  963 insertions. Commit included original critique and single Review.
+* `git status --short; test -z "$(git status --porcelain)"`: exit 0, clean.
+* `git merge-base --is-ancestor 8ee1b77f HEAD`: exit 0.
+* `git diff --exit-code 5d232eca -- src docs/reference .github/rubric`:
+  exit 0; all reviewed executable/document/protected content unchanged.
+* `git diff --check 8ee1b77f...HEAD`: exit 0.
+* Python assertions over committed message/identities/artifacts: exit 0,
+  Conventional message, references only, required final Copilot trailer,
+  author and committer use authenticated noreply email, seven committed
+  artifacts exist and match state paths.
+* Final bookkeeping stages only current plan/details/changes/state to persist
+  completion and follow-up routing. It uses a separate Conventional Commit
+  with references and the same required attribution/trailer, no amend or
+  source change. Any later publication requires fresh exact-head evidence;
+  neither local evidence commit is a publication receipt.
+
+## Current Ranked Handoff
+
+1. Coordinator publication gate/fresh hosted CI: immediate delivery value;
+   previous Source CI/rubric require action, no push authorized here.
+2. Coordinator PR metadata/evidence summary: low-effort reconciliation of
+   non-draft status and old defect text with later corrective Review.
+3. Finance/template/Board approved inputs: business-critical human evidence,
+   not a local integration or engineering-acceptance claim.
+
+Automatic task completed at Follow-up, session running without selecting
+child work. Stop/manual choices remain available; noninteractive completion
+does not infer a new work selection.
