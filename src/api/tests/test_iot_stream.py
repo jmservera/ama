@@ -33,6 +33,7 @@ from zava_forward.api.iot_stream import (
     Binding,
     HubPublisher,
     HubReceiver,
+    _observe,
     decode,
 )
 from zava_forward.api.sensor_ingestion import SensorIngestion
@@ -418,6 +419,131 @@ class PublisherTests(unittest.IsolatedAsyncioTestCase):
         )
         self.client = Mock(connect=AsyncMock(), send_message=AsyncMock(), shutdown=AsyncMock())
         self.truth: list[dict[str, object]] = []
+
+    async def test_cancel_during_cleanup_cancels_and_observes_both_runners(self) -> None:
+        for runner in ("receiver", "publisher"):
+            with self.subTest(runner=runner):
+                entered: asyncio.Queue[asyncio.Task[object]] = asyncio.Queue()
+                cancelled: list[asyncio.Task[object]] = []
+                owned: list[asyncio.Task[object]] = []
+                release = asyncio.Event()
+
+                async def shutdown(
+                    entered: asyncio.Queue[asyncio.Task[object]] = entered,
+                    cancelled: list[asyncio.Task[object]] = cancelled,
+                    release: asyncio.Event = release,
+                ) -> None:
+                    task = asyncio.current_task()
+                    assert task is not None
+                    entered.put_nowait(task)
+                    try:
+                        await asyncio.Event().wait()
+                    except asyncio.CancelledError:
+                        cancelled.append(task)
+                        await release.wait()
+                        raise RuntimeError("constructed late shutdown failure") from None
+
+                credential = Mock(close=AsyncMock(side_effect=shutdown))
+                client = Mock(
+                    receive=AsyncMock(),
+                    close=AsyncMock(side_effect=shutdown),
+                    connect=AsyncMock(),
+                    send_message=AsyncMock(),
+                    shutdown=AsyncMock(side_effect=shutdown),
+                )
+                with (
+                    patch(
+                        "zava_forward.api.iot_stream.ManagedIdentityCredential",
+                        return_value=credential,
+                    ),
+                    patch(
+                        "zava_forward.api.iot_stream.EventHubConsumerClient",
+                        return_value=client,
+                    ),
+                    patch(
+                        "zava_forward.api.iot_stream.IoTHubDeviceClient."
+                        "create_from_x509_certificate",
+                        return_value=client,
+                    ),
+                    patch("zava_forward.api.iot_stream._observe", wraps=_observe) as observe,
+                ):
+                    run: Awaitable[object]
+                    if runner == "receiver":
+                        run = HubReceiver(Mock(), ACTIVE, (BINDING,)).run(
+                            max_seconds=2, max_events=1
+                        )
+                    else:
+                        run = self.publisher.run(self.frames, self.budget, truth=self.truth.append)
+                    running = asyncio.ensure_future(run)
+                    try:
+                        for _ in range(2 if runner == "receiver" else 1):
+                            owned.append(await asyncio.wait_for(entered.get(), timeout=1))
+                        started = time.monotonic()
+                        running.cancel()
+                        with self.assertRaises(asyncio.CancelledError):
+                            await asyncio.wait_for(running, timeout=0.25)
+                        self.assertLess(time.monotonic() - started, 0.5)
+                        await asyncio.sleep(0)
+                        self.assertCountEqual(cancelled, owned)
+                        self.assertTrue(all(not task.done() for task in owned))
+                        release.set()
+                        done, pending = await asyncio.wait(owned, timeout=0.25)
+                        self.assertFalse(pending)
+                        await asyncio.sleep(0)
+                        for task in done:
+                            observe.assert_any_call(task)
+                    finally:
+                        release.set()
+                        running.cancel()
+                        for task in owned:
+                            if not task.done():
+                                task.cancel()
+                        await asyncio.gather(running, *owned, return_exceptions=True)
+
+    async def test_invalid_supplied_pacer_limits_refuse_before_client_creation(self) -> None:
+        with patch(
+            "zava_forward.api.iot_stream.IoTHubDeviceClient.create_from_x509_certificate",
+            return_value=self.client,
+        ) as factory:
+            for rate in (-1, 0, float("nan"), float("inf"), -float("inf"), True, 101):
+                with self.subTest(rate=rate):
+                    factory.reset_mock()
+                    control = Pacer(replace(self.budget, max_per_second=rate))
+                    with self.assertRaisesRegex(StreamError, "^INVALID_RUN_RATE$"):
+                        await self.publisher.run(
+                            self.frames, self.budget, pacer=control, truth=self.truth.append
+                        )
+                    factory.assert_not_called()
+            for deadline in (
+                float("nan"),
+                float("inf"),
+                -float("inf"),
+                time.monotonic() + 100,
+            ):
+                with self.subTest(deadline=deadline):
+                    factory.reset_mock()
+                    control = Pacer(self.budget)
+                    control.deadline = deadline
+                    with self.assertRaisesRegex(StreamError, "^INVALID_RUN_DEADLINE$"):
+                        await self.publisher.run(
+                            self.frames, self.budget, pacer=control, truth=self.truth.append
+                        )
+                    factory.assert_not_called()
+        self.assertEqual(self.truth, [])
+
+    async def test_stricter_supplied_pacer_limits_remain_usable(self) -> None:
+        control = Pacer(replace(self.budget, max_seconds=1.5, max_per_second=50))
+        with patch(
+            "zava_forward.api.iot_stream.IoTHubDeviceClient.create_from_x509_certificate",
+            return_value=self.client,
+        ):
+            self.assertEqual(
+                await self.publisher.run(
+                    self.frames, self.budget, pacer=control, truth=self.truth.append
+                ),
+                len(self.frames),
+            )
+        self.client.shutdown.assert_awaited_once()
 
     async def test_actual_send_rate_after_connect_and_preparation_across_devices(self) -> None:
         selected = sensor_stock.select(

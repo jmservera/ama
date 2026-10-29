@@ -2,6 +2,7 @@
 
 import asyncio
 import json
+import math
 import re
 import time
 from collections.abc import Awaitable, Callable, Iterable, Mapping
@@ -166,15 +167,17 @@ async def _cleanup(operations: list[Awaitable[object]]) -> None:
     tasks = [asyncio.ensure_future(operation) for operation in operations]
     if not tasks:
         return
-    done, pending = await asyncio.wait(tasks, timeout=0.5)
-    for task in pending:
-        task.cancel()
-    results = await asyncio.gather(*done, return_exceptions=True)
-    # Consume cancellation without waiting indefinitely for an SDK shutdown.
-    for task in pending:
-        task.add_done_callback(_observe)
-    if pending or any(isinstance(result, BaseException) for result in results):
-        raise StreamError("IOT_CLEANUP_FAILED")
+    try:
+        done, pending = await asyncio.wait(tasks, timeout=0.5)
+        results = await asyncio.gather(*done, return_exceptions=True)
+        if pending or any(isinstance(result, BaseException) for result in results):
+            raise StreamError("IOT_CLEANUP_FAILED")
+    finally:
+        # Do not await SDK cancellation acknowledgement beyond the cleanup allowance.
+        for task in tasks:
+            if not task.done():
+                task.cancel()
+            task.add_done_callback(_observe)
 
 
 class HubReceiver:
@@ -351,11 +354,20 @@ class HubPublisher:
         )
         budget.validate(frames)
         control = pacer or Pacer(budget, speed=speed)
-        if control.deadline > time.monotonic() + budget.max_seconds:
+        now = time.monotonic()
+        if (
+            type(control.deadline) not in (int, float)
+            or not math.isfinite(control.deadline)
+            or control.deadline > now + budget.max_seconds
+        ):
             raise StreamError("INVALID_RUN_DEADLINE")
-        if control.max_per_second > budget.max_per_second:
+        if (
+            type(control.max_per_second) not in (int, float)
+            or not math.isfinite(control.max_per_second)
+            or not 0 < control.max_per_second <= budget.max_per_second
+        ):
             raise StreamError("INVALID_RUN_RATE")
-        deadline = min(control.deadline, time.monotonic() + budget.max_seconds) - 0.5
+        deadline = min(control.deadline, now + budget.max_seconds) - 0.5
         for frame in frames:
             binding = self.bindings.get(frame.device_id)
             if binding is None or (frame.row.get("sensor_id"), frame.row.get("home_id")) != (

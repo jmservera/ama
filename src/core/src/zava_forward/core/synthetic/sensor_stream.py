@@ -253,4 +253,7 @@ class Pacer:
                 raise StreamError("RUN_DEADLINE")
             if not self.paused and now >= target:
                 return
-            await asyncio.sleep(min(0.05, self.deadline - now))
+            delay = min(0.05, self.deadline - now)
+            if not self.paused:
+                delay = min(delay, target - now)
+            await asyncio.sleep(delay)

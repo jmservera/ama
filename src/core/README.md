@@ -113,8 +113,10 @@ mutated unmapped sensor is refused by the API binding before SQL.
 deadline and a separate maximum send rate. `wait` applies model-time spacing;
 `admit_send` enforces global send-attempt spacing and must be awaited immediately
 before the SDK send, after connection/setup and truth preparation. Speed-up and
-burst never bypass this admission. Pause continues consuming the run time
-allowance, not a way to leave a
+burst never bypass this admission. Active pacing sleeps until the nearer target,
+deadline or 50 ms poll, so rates up to 100/s are not limited by the poll interval.
+Pause keeps positive polling bounded by 50 ms and the deadline even after the
+target passes. Pause continues consuming the run time allowance, not a way to leave a
 simulator running unattended. See the [API runner](../api/README.md#opt-in-iot-consumer-and-synthetic-publisher-110-184)
 for actual SDK operation bounds, credential handling and activation gates.
 

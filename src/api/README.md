@@ -854,8 +854,14 @@ It reserves >=40,000 of B1's 400,000 daily 4-KiB units, counting every attempted
 message including duplicates and reserving 1 KiB/message for properties.
 No autonomous send retry, connection retry or auto-connect is enabled.
 Pause/stop flags on an optional `Pacer` are checked during pacing; stop is also
-checked during connect/send. The deadline covers network waits with 0.5 seconds
-reserved for cleanup. Cleanup failure is explicit. Cancelling an SDK send cannot
+checked during connect/send. A supplied pacer's deadline must be finite and within
+the validated run budget; its rate must be finite, positive and no greater than
+the validated budget's rate. Invalid controls are refused before SDK client creation.
+The deadline covers network waits with 0.5 seconds reserved for cleanup.
+Even when cancellation interrupts cleanup, unfinished shutdown tasks are cancelled
+and every cleanup task's eventual exception is observed without waiting past the
+allowance for SDK cancellation acknowledgement. Cleanup failure is explicit.
+Cancelling an SDK send cannot
 prove it was not delivered. Cancelling/timing out a receiver does not cancel a
 shielded SQL commit; its outcome remains uncertain until exact replay.
 The caller must keep the store available until in-flight SQL work settles.

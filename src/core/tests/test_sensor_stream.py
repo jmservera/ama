@@ -215,6 +215,61 @@ class ReplayTests(unittest.TestCase):
 
 
 class PacingTests(unittest.IsolatedAsyncioTestCase):
+    async def test_high_rate_and_short_nominal_targets_do_not_wait_for_poll_interval(self) -> None:
+        for rate in (25, 50, 100):
+            with self.subTest(rate=rate):
+                now = [0.0]
+                sleeps: list[float] = []
+
+                def clock(now: list[float] = now) -> float:
+                    return now[0]
+
+                pacer = Pacer(
+                    RunBudget("owner", "cost", "alert", max_per_second=rate),
+                    clock=clock,
+                )
+
+                async def advance(
+                    seconds: float, sleeps: list[float] = sleeps, now: list[float] = now
+                ) -> None:
+                    sleeps.append(seconds)
+                    now[0] += seconds
+
+                with patch("zava_forward.core.synthetic.sensor_stream.asyncio.sleep", advance):
+                    admissions = []
+                    for _ in range(4):
+                        await pacer.admit_send()
+                        admissions.append(now[0])
+                    for index, actual in enumerate(admissions):
+                        self.assertAlmostEqual(actual, index / rate)
+                    self.assertTrue(all(0 < delay <= 1 / rate for delay in sleeps))
+                    before = now[0]
+                    await pacer.wait(0.005)
+                    self.assertAlmostEqual(now[0] - before, 0.005)
+
+    async def test_paused_elapsed_target_uses_positive_bounded_deadline_polling(self) -> None:
+        now = [0.0]
+        sleeps: list[float] = []
+        pacer = Pacer(
+            RunBudget("owner", "cost", "alert", max_seconds=1),
+            clock=lambda: now[0],
+        )
+        pacer.paused = True
+        pacer.deadline = 0.12
+
+        async def advance(seconds: float) -> None:
+            self.assertGreater(seconds, 0)
+            self.assertLessEqual(seconds, 0.05)
+            sleeps.append(seconds)
+            now[0] += seconds
+
+        with patch("zava_forward.core.synthetic.sensor_stream.asyncio.sleep", advance):
+            with self.assertRaisesRegex(StreamError, "^RUN_DEADLINE$"):
+                await pacer.wait(0)
+        self.assertEqual(len(sleeps), 3)
+        self.assertAlmostEqual(sleeps[-1], 0.02)
+        self.assertAlmostEqual(now[0], pacer.deadline)
+
     async def test_send_admission_rate_pause_stop_deadline_and_cancel(self) -> None:
         now = [0.0]
         pacer = Pacer(
