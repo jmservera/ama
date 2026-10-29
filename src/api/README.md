@@ -61,6 +61,10 @@ and target, independent of replaceable controls. Fieldless actions and rebuilt
 resident, challenge and procurement controls cannot dispatch duplicate POSTs;
 GET refreshes do not release these locks. Malformed mutation responses retain
 unconfirmed-outcome handling instead of consuming drafts.
+Raw resident and challenge forms also keep their pending/outcome presentation
+in the case session. Rebuilt controls receive eventual history-check feedback.
+Retained challenge drafts become usable again only after a causally fresh case
+history reload; failed or older reads cannot silently unlock them.
 Shared-queue refreshes preserve the latest unsubmitted reason and edited JSON,
 including edits typed after a listing starts. Failed listings retain the current
 cards. Changed or missing proposal revisions expose copy-only earlier edits,

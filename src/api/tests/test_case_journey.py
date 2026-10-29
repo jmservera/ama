@@ -538,11 +538,21 @@ const api = async (path, body) => {
 Node.prototype.replaceChildren = function(...children) {
   this.children = []; this.append(...children);
 };
+Node.prototype.replaceWith = function(node) {
+  const parent = this.parentElement, index = parent.children.indexOf(this);
+  parent.children[index] = node; node.parentElement = parent;
+};
 const app = new Node("main"), id = "SYN", targetOptions = {id: "targets"};
+document.getElementById = id => app.querySelector("#" + id);
+document.querySelectorAll = () => app.querySelectorAll("form")
+  .filter(form => form.dataset.challengeCase && form.dataset.unsaved === "true");
 const me = {user: {role: "Retrofit Programme Manager"}};
 const residentRoles = [me.user.role], routeController = new AbortController();
 let requests = 0, outcome, status, finish, reloads = 0;
-const refresh = async () => {reloads++;};
+const refresh = async () => {
+  reloads++;
+  if (outcome === "reload-failure") {requireCaseHistory(caseSession); return "check-history";}
+};
 const fetch = async () => {
   requests++;
   await new Promise(resolve => {finish = resolve;});
@@ -552,6 +562,12 @@ const fetch = async () => {
   }};
 };
 """
+            + "function bindCaseMutationForm"
+            + source.split("function bindCaseMutationForm", 1)[1].split("function actForm", 1)[0]
+            + "function captureChallengeDrafts"
+            + source.split("function captureChallengeDrafts", 1)[1].split(
+                "function affectedChallengePanel", 1
+            )[0]
             + "const residentForm = "
             + source.split("  const residentForm = ", 1)[1].split("  const serviceForm", 1)[0]
             + "const formFor = "
@@ -560,9 +576,14 @@ const fetch = async () => {
 (async () => {
   for (const challenge of [false, true]) {
     for (status of [200, 409, 503]) {
-      for (outcome of ["committed", "uncertain", undefined, "malformed"]) {
-        if (status === 200 && outcome !== "malformed") continue;
-        requests = 0;
+      for (outcome of ["committed", "uncertain", undefined, "malformed",
+        "success", "reload-failure"]) {
+        const successful = ["success", "reload-failure"].includes(outcome);
+        if (status === 200 && outcome !== "malformed" && !successful) continue;
+        if (status !== 200 && successful) continue;
+        const reportedStatus = status, reportedOutcome = outcome;
+        const expectsHistory = outcome !== undefined && outcome !== "success";
+        requests = 0; reloads = 0;
         caseSession = {pendingFields: new Map()};
         const container = challenge
           ? formFor("synthetic", "Record", [["note", "Note"]], body => body)
@@ -571,32 +592,62 @@ const fetch = async () => {
         const input = form.querySelector("input"), button = form.querySelector("button");
         input.value = "Retained supplied evidence"; input.validity = {valid: true};
         const submit = () => form.events.submit({preventDefault() {}});
-        const pending = submit(); await submit();
+        const pending = submit();
         const rebuilt = challenge
           ? formFor("synthetic", "Record", [["note", "Note"]], body => body)
           : residentForm("synthetic", "Record", [["note", "Note"]], "record");
         const rebuiltForm = rebuilt.querySelector("form");
         const rebuiltInput = rebuiltForm.querySelector("input");
         rebuiltInput.value = "Later changed evidence"; rebuiltInput.validity = {valid: true};
+        rebuiltInput.events.input?.();
+        const originalValue = challenge && successful
+          ? "Later retained original evidence" : "Retained supplied evidence";
+        input.value = originalValue; input.events.input?.();
+        rebuiltForm.dataset.unsaved = "true";
+        app.replaceChildren(rebuilt);
         const rebuiltSubmit = () => rebuiltForm.events.submit({preventDefault() {}});
-        await rebuiltSubmit();
+        const rebuiltButton = rebuiltForm.querySelector("button");
+        assert.equal(rebuiltButton.disabled, true);
+        assert.match(rebuiltForm.querySelector("p").textContent, /Recording/);
         assert.equal(requests, 1);
         assert.equal(Boolean(caseSession.historyBarrier), false,
           "pending duplicate is not an uncertain server outcome");
         assert.equal(pendingMutations.size, 1);
         finish(); await pending;
         assert.equal(pendingMutations.size, 0, "including strict JSON parse failure");
-        assert.equal(input.value, "Retained supplied evidence");
-        assert.equal(button.disabled, outcome !== undefined);
-        assert.equal(Boolean(caseSession.historyBarrier), outcome !== undefined);
-        if (outcome !== undefined) {
+        assert.equal(input.value, originalValue);
+        assert.equal(rebuiltButton.disabled, expectsHistory);
+        assert.equal(Boolean(caseSession.historyBarrier), expectsHistory);
+        assert.match(rebuiltForm.querySelector("p").textContent,
+          outcome === undefined ? /Synthetic outcome/ : outcome === "success"
+            ? challenge ? /Only the submitted values were recorded/ : /Supplied evidence recorded/
+            : /Reload and check the history/);
+        if (challenge && successful) {
+          form.updateMutationState();
+          assert.equal(button.disabled, true, "acknowledged retained draft cannot repeat");
+          rebuiltForm.updateMutationState();
+        }
+        if (expectsHistory) {
           await submit(); await rebuiltSubmit(); assert.equal(requests, 1);
+          const drafts = challenge ? captureChallengeDrafts(id) : [];
+          rebuiltForm.updateMutationState();
+          assert.equal(rebuiltButton.disabled, true, "unresolved read cannot unlock");
+          delete caseSession.historyBarrier;
+          if (challenge) {
+            const replacement = formFor("synthetic", "Record", [["note", "Note"]], b => b);
+            app.replaceChildren(replacement);
+            restoreChallengeDrafts(drafts);
+            assert.equal(app.querySelector("form"), rebuiltForm, "whole form is retained");
+          } else rebuiltForm.updateMutationState();
+          assert.equal(rebuiltButton.disabled, false, "fresh history recovers retained control");
+          assert.match(rebuiltForm.querySelector("p").textContent, /Case history reloaded/);
+          assert.equal(rebuiltInput.value, "Later changed evidence");
         }
-        else {
-          const retry = rebuiltSubmit(); assert.equal(requests, 2);
-          finish(); await retry;
-        }
-        assert.equal(reloads, 0);
+        outcome = undefined; status = 409;
+        const retry = rebuiltSubmit(); assert.equal(requests, 2);
+        finish(); await retry;
+        status = reportedStatus; outcome = reportedOutcome;
+        assert.equal(reloads, successful ? 1 : 0);
       }
     }
   }

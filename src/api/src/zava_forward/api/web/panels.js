@@ -4,6 +4,32 @@ const FIN_ROLES = ["Grants and Evidence Officer", "Retrofit Programme Manager", 
 const money = (n) => `£${Number(n).toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 const caseApi = (id, part, body) => api(`/api/cases/${encodeURIComponent(id)}/${part}`, body);
 
+function bindCaseMutationForm(session, key, form, button, status) {
+  session.rawFormStates ||= new Map();
+  if (!session.rawFormStates.has(key)) session.rawFormStates.set(key, { pending: false, message: "" });
+  const state = session.rawFormStates.get(key);
+  const update = () => {
+    state.update = update;
+    if (state.checkHistory && !state.pending && !session.historyBarrier) {
+      state.checkHistory = false;
+      state.message = "Case history reloaded. Check the recorded events before another action. Your unsubmitted edits are retained.";
+    }
+    button.disabled = state.pending || state.recordedForm === form || Boolean(session.historyBarrier);
+    if (state.pending) button.setAttribute("aria-busy", "true");
+    else button.removeAttribute("aria-busy");
+    status.textContent = state.pending ? "Recording the supplied evidence."
+      : session.historyBarrier ? state.checkHistory ? state.message
+        : "Another action needs confirmation. Reload and check the history before another action."
+      : state.recordedForm === form
+        ? "Only the submitted values were recorded. Your later edits remain an unsaved draft; they were not submitted. Discard this draft before recording another action."
+      : state.message;
+    if (state.focus) { status.focus(); state.focus = false; }
+  };
+  form.updateMutationState = update;
+  update();
+  return state;
+}
+
 function actForm(title, fields, run, label) {
   const inputs = fields.map(([name, text, opts]) => {
     const el = opts && opts.options
@@ -153,11 +179,11 @@ function residentPanel(c, id, refresh) {
       return { name, label, input };
     });
     const button = h("button", { type: "submit" }, label);
-    const form = h("form", { oninput: () => { form.dataset.unsaved = "true"; }, onsubmit: async (event) => {
+    const form = h("form", { id: key, oninput: () => { form.dataset.unsaved = "true"; }, onsubmit: async (event) => {
       event.preventDefault();
-      if (button.disabled || session?.historyBarrier) return;
-      button.disabled = true;
-      status.textContent = "Recording";
+      if (button.disabled || session?.historyBarrier) { mutation.update(); return; }
+      mutation.pending = true;
+      mutation.update();
       let dispatched = false;
       try {
         const submitted = snapshotCaseFields(inputs.map(({ input }) => input));
@@ -166,17 +192,25 @@ function residentPanel(c, id, refresh) {
         dispatched = true;
         await api(`/api/cases/${encodeURIComponent(id)}/resident`, payload, new AbortController().signal);
         if (submitted.every(caseFieldUnchanged)) delete form.dataset.unsaved;
-        await refresh(async () => {}, submitted);
+        const result = await refresh(async () => {}, submitted);
+        mutation.checkHistory = result === "check-history";
+        mutation.message = mutation.checkHistory
+          ? "The evidence was recorded, but case history could not be reloaded. Reload and check the history before another action. Your unsubmitted edits are retained."
+          : "Supplied evidence recorded. Your unsubmitted edits are retained.";
       } catch (error) {
         const checkHistory = dispatched && mutationNeedsHistory(error);
         if (checkHistory) requireCaseHistory(session);
-        status.textContent = checkHistory
+        mutation.checkHistory = checkHistory;
+        mutation.message = checkHistory
           ? "Confirmation is unavailable. Reload and check the history before another action."
           : error.message;
-        if (!checkHistory) button.disabled = false;
-        status.focus();
+        mutation.focus = true;
+      } finally {
+        mutation.pending = false;
+        mutation.update();
       }
     } }, inputs.flatMap(({ label, input }) => [h("label", { for: input.id }, label), input]), status, button);
+    const mutation = bindCaseMutationForm(session, key, form, button, status);
     return h("details", {}, h("summary", {}, title), form);
   };
   const serviceForm = (key, title, fields, action, build = (body) => body, label = title) =>
@@ -254,10 +288,12 @@ function restoreChallengeDrafts(drafts) {
     if (replacement) {
       replacement.parentElement.open = draft.open;
       replacement.replaceWith(draft.form);
+      draft.form.updateMutationState?.();
     } else {
       const containerId = draft.form.id.startsWith("challenge-resolve-")
         ? "challenge-record-history-content" : "affected-challenges";
       document.getElementById(containerId)?.append(draft.details);
+      draft.form.updateMutationState?.();
     }
   }
 }
@@ -317,7 +353,8 @@ function affectedChallengePanel(c, id, refresh) {
           ...(name === "proposal_id" ? { list: targetOptions.id, spellcheck: "false" } : {}) });
       input.addEventListener("input", () => {
         input.removeAttribute("aria-invalid");
-        status.textContent = "";
+        if (!mutation.pending && !session.historyBarrier) mutation.message = "";
+        mutation.update();
       });
       return { name, label, input };
     });
@@ -328,11 +365,15 @@ function affectedChallengePanel(c, id, refresh) {
         if (!window.confirm("Discard only this unsaved challenge draft?")) { event.preventDefault(); return; }
         delete form.dataset.unsaved;
         inputs.forEach(({ input }) => input.removeAttribute("aria-invalid"));
-        status.textContent = "";
+        if (!mutation.pending && !session.historyBarrier) {
+          mutation.message = "";
+          mutation.recordedForm = null;
+        }
+        mutation.update();
       },
       onsubmit: async (event) => {
         event.preventDefault();
-        if (button.disabled || session?.historyBarrier) return;
+        if (button.disabled || session?.historyBarrier) { mutation.update(); return; }
         for (const { input, label } of inputs) {
           input.removeAttribute("aria-invalid");
           if (!input.value.trim() || !input.validity.valid) {
@@ -345,9 +386,8 @@ function affectedChallengePanel(c, id, refresh) {
         const body = Object.fromEntries(inputs.map(({ name, input }) => [name, input.value]));
         if (correction && body.resolution === "Correction recorded"
             && !window.confirm("Record this supplied human correction? Only suggestions and reviews that use the challenged version will need a fresh review. No works choice or safety response changes.")) return;
-        button.disabled = true;
-        button.setAttribute("aria-busy", "true");
-        status.textContent = "Recording the supplied evidence.";
+        mutation.pending = true;
+        mutation.update();
         let dispatched = false;
         const dispatchSignal = routeController.signal;
         try {
@@ -355,28 +395,34 @@ function affectedChallengePanel(c, id, refresh) {
           dispatched = true;
           await api(`/api/cases/${encodeURIComponent(id)}/resident`, payload, new AbortController().signal);
           const changed = inputs.some(({ name, input }) => input.value !== body[name]);
+          mutation.recordedForm = changed ? form : null;
           if (changed) {
             form.dataset.unsaved = "true";
-            status.textContent = "Only the submitted values were recorded. Your later edits remain an unsaved draft; they were not submitted. Check the history before another action.";
+            mutation.message = "Only the submitted values were recorded. Your later edits remain an unsaved draft; they were not submitted. Check the history before another action.";
           } else {
             delete form.dataset.unsaved;
           }
           if (dispatchSignal.aborted) return;
-          await refresh(async () => {});
+          const result = await refresh(async () => {});
+          mutation.checkHistory = result === "check-history";
+          if (mutation.checkHistory) mutation.message = "The evidence was recorded, but case history could not be reloaded. Reload and check the history before another action. Your unsubmitted edits are retained.";
+          else if (!changed) mutation.message = "Supplied evidence recorded.";
         } catch (error) {
           const checkHistory = dispatched && mutationNeedsHistory(error);
           if (checkHistory) requireCaseHistory(session);
-          status.textContent = checkHistory
+          mutation.checkHistory = checkHistory;
+          mutation.message = checkHistory
             ? "Confirmation is unavailable. Reload and check the history before recording another action."
             : error.message;
-          if (!checkHistory) button.disabled = false;
-          status.focus();
+          mutation.focus = true;
         } finally {
-          button.removeAttribute("aria-busy");
+          mutation.pending = false;
+          mutation.update();
         }
       } },
     inputs.flatMap(({ label, input }) => [h("label", { for: input.id }, label), input]),
     status, button, h("button", { type: "reset", class: "alt" }, "Discard challenge draft"));
+    const mutation = bindCaseMutationForm(session, key, form, button, status);
     return h("details", {}, h("summary", {}, title), form);
   };
   const staff = (me.staff || []).filter((person) => [

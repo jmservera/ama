@@ -335,8 +335,11 @@ def chat_cleanup(page: Page, base: str) -> None:
 def mutation_reconstruction(
     page: Page, base: str, axe: str, reports: list[dict[str, Any]]
 ) -> None:
-    for family in ("advance", "resident", "challenge"):
-        for outcome in ("refusal", "uncertain", "malformed-200", "malformed-409", "malformed-503"):
+    for family in ("advance", "resident", "challenge", "challenge-rebuilt"):
+        for outcome in (
+            "refusal", "committed", "uncertain", "malformed-200", "malformed-409", "malformed-503",
+            "reload-failure",
+        ):
             case_id = "SYN-526-FINAL" if family == "advance" else "ZF-1"
             case_path = f"**/api/cases/{case_id}"
             snapshot = page.request.get(base + f"/api/cases/{case_id}").json()
@@ -368,10 +371,13 @@ def mutation_reconstruction(
                     field.dispatchEvent(new Event('input', {bubbles: true}));
                   }
                 }""")
-                button = form.get_by_role("button", name=(
+                label = (
                     "Record or reassign update commitment" if family == "resident"
                     else "Record supplied challenge"
-                ), exact=True)
+                )
+                button = form.get_by_role(
+                    "button", name=re.compile("^" + re.escape(label) + r"(?: \(loading\))?$")
+                )
             with page.expect_request(path):
                 button.click()
             page.wait_for_function("() => pendingMutations.size === 1")
@@ -381,7 +387,7 @@ def mutation_reconstruction(
                 tab(page, "Overview")
             else:
                 tab(page, "Resident")
-                if family == "challenge":
+                if family == "challenge-rebuilt":
                     # Exercise fresh shipped handlers even when draft retention reused the form.
                     page.evaluate("""snapshot => {
                       const old = document.querySelector('#affected-challenges');
@@ -400,22 +406,37 @@ def mutation_reconstruction(
                         field.dispatchEvent(new Event('input', {bubbles: true}));
                       }
                     }""")
-                else:
+                elif family == "resident":
                     page.locator("#ru-record-purpose").fill("Later changed update purpose")
-            button.evaluate("el => el.click()")
-            page.wait_for_function("() => document.querySelector('#app').textContent"
-                                   ".includes('This action is still pending')")
+                else:
+                    page.locator("#challenge-open-request").fill("Later evidence")
+            if family == "advance":
+                button.evaluate("el => el.click()")
+                page.wait_for_function("() => document.querySelector('#app').textContent"
+                                       ".includes('This action is still pending')")
+            else:
+                expect(button).to_be_disabled()
+                feedback = page.locator(
+                    "#ru-record-feedback" if family == "resident" else "#challenge-open-feedback"
+                )
+                expect(feedback).to_contain_text("Recording the supplied evidence")
             check(f"rebuilt pending entry dispatches once/{family}/{outcome}", len(pending) == 1)
             check(f"pending duplicate is not an outcome barrier/{family}/{outcome}",
                   not page.evaluate("Boolean(caseSession.historyBarrier)"))
-            if outcome.startswith("malformed"):
+            def failed_recovery(route: Route) -> None:
+                route.fulfill(status=503, json={"error": "Synthetic raw recovery failed"})
+
+            if outcome == "reload-failure":
+                page.route(case_path, failed_recovery)
+                pending[0].fulfill(json={"ok": True})
+            elif outcome.startswith("malformed"):
                 pending[0].fulfill(
                     status=int(outcome.split("-")[1]), content_type="application/json", body="{"
                 )
             else:
                 pending[0].fulfill(status=409 if outcome == "refusal" else 503, json={
                     "error": "Synthetic mutation result",
-                    **({"outcome": "uncertain"} if outcome == "uncertain" else {}),
+                    **({"outcome": outcome} if outcome in ("committed", "uncertain") else {}),
                 })
             page.wait_for_function("() => pendingMutations.size === 0")
             page.wait_for_function(
@@ -429,9 +450,16 @@ def mutation_reconstruction(
                 expect(field).to_have_value(
                     "Later changed update purpose" if family == "resident" else "Later evidence"
                 )
+                expect(feedback).to_contain_text(
+                    "Synthetic mutation result" if outcome == "refusal"
+                    else "Reload and check the history"
+                )
+                if outcome != "refusal":
+                    expect(button).to_be_disabled()
             if outcome == "refusal":
                 with page.expect_request(path):
                     button.evaluate("el => el.click()")
+                page.wait_for_function("() => pendingMutations.size === 1")
                 check(f"explicit refusal remains retryable/{family}", len(pending) == 2)
                 pending[1].fulfill(status=409, json={"error": "Synthetic retry refusal"})
                 page.wait_for_function("() => pendingMutations.size === 0")
@@ -439,6 +467,40 @@ def mutation_reconstruction(
                 button.evaluate("el => el.click()")
                 check(f"unconfirmed outcome blocks repeats/{family}/{outcome}", len(pending) == 1)
             scan(page, axe, reports, f"rebuilt-mutation-{family}-{outcome}")
+            if family != "advance" and outcome != "refusal":
+                if outcome != "reload-failure":
+                    page.route(case_path, failed_recovery)
+                tab(page, "AI assistance")
+                with page.expect_response(case_path):
+                    page.get_by_role("button", name="Refresh proposals", exact=True).click()
+                tab(page, "Resident")
+                expect(button).to_be_disabled()
+                page.unroute(case_path, failed_recovery)
+                tab(page, "AI assistance")
+                refresh_proposals(page)
+                tab(page, "Resident")
+                expect(field).to_have_value(
+                    "Later changed update purpose" if family == "resident" else "Later evidence"
+                )
+                if family == "challenge" and outcome == "reload-failure":
+                    expect(button).to_be_disabled()
+                    expect(feedback).to_contain_text("Only the submitted values were recorded")
+                    button.evaluate("el => el.click()")
+                    check("acknowledged challenge draft never repeats its submitted action",
+                          len(pending) == 1)
+                    page.unroute(path)
+                    page.unroute(case_path)
+                    continue
+                expect(feedback).to_contain_text("Case history reloaded")
+                expect(button).to_be_enabled()
+                with page.expect_request(path):
+                    button.click()
+                page.wait_for_function("() => pendingMutations.size === 1")
+                check(f"fresh history permits retained draft retry/{family}/{outcome}",
+                      len(pending) == 2)
+                pending[1].fulfill(status=409, json={"error": "Synthetic corrected retry refusal"})
+                expect(button).to_be_enabled()
+                scan(page, axe, reports, f"raw-history-recovered-{family}-{outcome}")
             page.unroute(path)
             page.unroute(case_path)
     page.goto(base + "/app#/case/ZF-1?tab=overview")
@@ -678,7 +740,8 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             )
             finance.get_by_role("button", name="Open", exact=True).click()
             finance.wait_for_function(
-                "() => document.querySelector('#request-open-feedback').textContent === 'Recording'"
+                "() => document.querySelector('#request-open-feedback').textContent"
+                ".includes('Recording the supplied evidence')"
             )
             finance.locator("#request-open-summary").fill("Later complaint edit")
             resident_body = pending_resident[0].request.post_data_json
@@ -693,7 +756,8 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             finance.wait_for_function(
                 "() => document.querySelector('#request-open-summary')"
                 ".dataset.caseDirty === 'true'"
-                " && !document.querySelector('#request-open-feedback').textContent"
+                " && document.querySelector('#request-open-feedback').textContent"
+                ".includes('Supplied evidence recorded')"
             )
             check("resident mutation preserves later dirty edits", True)
 
