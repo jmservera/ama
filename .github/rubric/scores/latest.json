@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-29T16:44:27+00:00",
-  "commit": "a321f69cfce15739a6aae6f56493cb0b8e6b30b5",
+  "scored_at": "2026-10-29T17:12:55+00:00",
+  "commit": "0717be24c7a090b2df8637795c8c3ce8d7aef3f9",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/40913127752",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/40917642631",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "2d39f53a07786b983481017272b9927e2b4d706e0cfa05b0d17f9f3b13576192",
-    "solution-code": "59bb4913a5a0080196d623184e09dbe6a549b7ca4374a0c4e6cbb0764b8e5a60",
+    "solution-code": "89f49a3284266ecaf1bc8ca7ab6fbcb0259257483e99ad4779045d679bcf22c0",
     "infrastructure": "b6366d357bc22aadb23fdb2e0847cbbda6689e072f25c6a68738113fd875b271",
     "capstone-deck": "c5ae9ab5ec15788dd255b786adaf07ee716806bef375e01c066ad1c26701d74e",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
@@ -65,8 +65,11 @@
     },
     "A5": {
       "score": 5,
-      "evidence": [],
-      "rationale": "No logging, metrics, tracing or cost instrumentation changed; diff adds feature code and stderr error prints consistent with existing pattern. Unchanged baseline."
+      "evidence": [
+        "src/core/src/zava_forward/core/chat_panel.py:337-365",
+        "src/agents/src/zava_forward/agents/chat_eval.py:389-408"
+      ],
+      "rationale": "PR #\u200b503 adds per-turn consumption receipts (model_calls, tokens, cost=Unknown, missing_cost_inputs) and an evaluator economics summary, but these are audit/evidence records, not production logging/metrics/tracing or a measured cost-per-value model. Qualitative instrumentation only; baseline (bas..."
     },
     "A6": {
       "score": 5,
@@ -79,7 +82,7 @@
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "Chat routing and agenda actions are deterministic rule dispatch and transactional CRUD, not agentic orchestration, planning or handoff. Unchanged baseline (Good, not Excellent)."
+      "rationale": "Chat routing and agenda actions are deterministic rule dispatch and transactional CRUD, not agentic orchestration, planning or handoff. PR #\u200b503's admission gating and SQL re-checks are guardrails on an existing call, not new autonomy. Unchanged baseline (Good, not Excellent)."
     },
     "B1": {
       "score": 3,
