@@ -7,10 +7,11 @@ import hashlib
 import json
 from pathlib import Path
 from typing import Any
+from urllib.parse import parse_qs, urlsplit
 
 from checks.design_system_browser_check import check, main
 from checks.regulatory_ux_check import AXE_SHA256
-from playwright.sync_api import Page, expect, sync_playwright
+from playwright.sync_api import Page, Request, expect, sync_playwright
 
 
 def scan(page: Page, axe: str, reports: list[dict[str, Any]], state: str) -> None:
@@ -27,6 +28,57 @@ def scan(page: Page, axe: str, reports: list[dict[str, Any]], state: str) -> Non
         f"axe no unresolved ARIA references: {state}",
         not any(item["id"].startswith("aria-") for item in result["incomplete"]),
     )
+
+
+def check_browser_shortcuts(page: Page, mode: str) -> None:
+    requests: list[str] = []
+
+    def record_request(request: Request) -> None:
+        if "/api/map?" in request.url:
+            requests.append(request.url)
+
+    page.on("request", record_request)
+    try:
+        for selector in ("#leaflet", ".map-marker:has(.map-symbol.normal)"):
+            target = page.locator(selector)
+            target.focus()
+            results = target.evaluate(
+                """async el => {
+                  const pane = document.querySelector('.leaflet-map-pane');
+                  const before = pane.outerHTML;
+                  const url = location.href;
+                  const results = [];
+                  for (const modifiers of [
+                    {ctrlKey: true}, {metaKey: true}, {altKey: true},
+                    {ctrlKey: true, metaKey: true, altKey: true, shiftKey: true}
+                  ]) {
+                    for (const key of ['=', '+', '-', 'ArrowLeft', 'ArrowRight',
+                      'ArrowUp', 'ArrowDown']) {
+                      const event = new KeyboardEvent('keydown', {
+                        key, bubbles: true, cancelable: true, ...modifiers
+                      });
+                      const allowed = el.dispatchEvent(event);
+                      results.push({
+                        key, modifiers, allowed,
+                        unchanged: pane.outerHTML === before
+                          && location.href === url && document.activeElement === el
+                      });
+                    }
+                  }
+                  await new Promise(resolve => requestAnimationFrame(() =>
+                    requestAnimationFrame(resolve)));
+                  return results;
+                }"""
+            )
+            for result in results:
+                check(
+                    f"{mode} {selector} leaves browser shortcut unchanged: "
+                    f"{result['modifiers']} {result['key']}",
+                    result["allowed"] and result["unchanged"],
+                )
+        check(f"{mode} browser shortcuts issue no map requests", not requests)
+    finally:
+        page.remove_listener("request", record_request)
 
 
 def run_browser(base: str, axe: str, out: Path) -> None:
@@ -60,6 +112,7 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             page.locator(".map-cluster").first.wait_for()
             page.locator("#mapArea").select_option(label="Point examples")
             expect(page.locator(".map-marker")).to_have_count(3)
+            check_browser_shortcuts(page, "embedded")
             normal.focus()
             normal.press("Enter")
             expect(card).to_be_visible()
@@ -176,6 +229,7 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             expect(page.locator("#map-home-title")).to_be_focused()
             scan(page, axe, reports, "expanded-home")
             page.screenshot(path=str(out / "expanded-desktop.png"))
+            check_browser_shortcuts(page, "expanded")
 
             # Background redraw replaces markers but not the focused summary action.
             open_home.focus()
@@ -212,6 +266,19 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                 ),
             )
             map_region.focus()
+            with page.expect_response("**/api/map?**") as zoom_response:
+                page.locator(".leaflet-control-zoom-out").click()
+            zoom = int(parse_qs(urlsplit(zoom_response.value.url).query)["zoom"][0])
+            expect(page.locator(".map-marker")).to_have_count(3)
+            map_region.focus()
+            for key, delta in (("Shift++", 1), ("=", 1), ("-", -1)):
+                old_marker = normal.element_handle()
+                with page.expect_response("**/api/map?**") as zoom_response:
+                    map_region.press(key)
+                actual_zoom = int(parse_qs(urlsplit(zoom_response.value.url).query)["zoom"][0])
+                check(f"{key} changes map zoom by {delta}", actual_zoom == zoom + delta)
+                page.wait_for_function("old => !old.isConnected", arg=old_marker)
+                zoom = actual_zoom
             old_marker = normal.element_handle()
             pane = page.locator(".leaflet-map-pane")
             before_pan = pane.evaluate(

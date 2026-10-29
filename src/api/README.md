@@ -114,6 +114,10 @@ or **Exit expanded map** returns to the embedded view and its toggle. Filtering,
 failed refreshes and route changes remove obsolete cards. Map animations are
 disabled, including for reduced motion.
 
+With the map or a home marker focused, unmodified arrow keys pan and `+`, `=`
+or `-` zoom the map, including Shift-generated `+`. Ctrl, Meta and Alt shortcuts
+remain available to the browser without moving or zooming the map.
+
 The map area list and **Show these as a list** retain direct manual access
 without map gestures. The expanded Coordinator list shortcut exits the map and
 focuses Selected records. No resident consent, approval, safety or data-access
@@ -130,7 +134,9 @@ The check requires integrity-pinned axe 4.10.3, uses a real loopback API, aborts
 external application requests, and retains scan details and screenshots. It
 covers summary-first keyboard/pointer behavior, Escape/focus, modal containment,
 redraw/failure/filter cleanup, manual paths, coordinator omissions, reduced
-motion and 320/390/1280px expanded layouts. Acquire the shared heavy-check lock
+motion and 320/390/1280px expanded layouts. It also checks uncancelled browser
+shortcuts from map/marker focus in both modes and exact ordinary/Shift-plus map
+zoom changes. Acquire the shared heavy-check lock
 nonblocking before execution. Automated results are not human
 assistive-technology, staff usability or full WCAG acceptance.
 

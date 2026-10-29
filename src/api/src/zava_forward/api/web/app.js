@@ -1592,7 +1592,8 @@ function mapPanel(coordinator = null) {
       map = L.map(el, { scrollWheelZoom: true, keyboard: false, inertia: false,
         zoomAnimation: false, fadeAnimation: false, markerZoomAnimation: false }).setView([54.9, -1.6], 9);
       el.addEventListener("keydown", (event) => {
-        if (event.defaultPrevented || event.target.closest(".leaflet-control")) return;
+        if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey
+          || event.target.closest(".leaflet-control")) return;
         const offsets = { ArrowLeft: [-80, 0], ArrowRight: [80, 0], ArrowUp: [0, -80], ArrowDown: [0, 80] };
         if (offsets[event.key]) map.panBy(offsets[event.key], { animate: false });
         else if (["+", "=", "-"].includes(event.key)) {
