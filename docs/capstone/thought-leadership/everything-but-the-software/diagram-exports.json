@@ -1,0 +1,35 @@
+{
+  "renderer": "@excalidraw/excalidraw 0.18.1",
+  "browser": "156.0.4314.50",
+  "export": "Native offline SVG and 3x PNG; source files are never overwritten.",
+  "png_scale": 3,
+  "diagrams": [
+    {
+      "stem": "fig-state-inheritance",
+      "source_sha256": "0f8fac3c5d549229c3832912e0bad9ff308b7b311c27adabf215f65bf8addba0",
+      "svg_sha256": "ff52b9422ed34db0112ea780d771644bfd0bb22b916c0a82aa196bde57cfceb9",
+      "png_sha256": "3ca553d629fe56c78ce9ccfd6570584538112b212b094619225c6e8829cd5f0a",
+      "width": 1120,
+      "height": 727.5,
+      "elements": 17
+    },
+    {
+      "stem": "fig-pilot-design",
+      "source_sha256": "9f7a0144581c99c7ad3cd570172b64f11d4899b3683a2451405d52e3184a38ad",
+      "svg_sha256": "cda5c21c39ba3338d61e656e61858baf5f371e69f98e61ea9d7a2f3f3a6fac3a",
+      "png_sha256": "2e9051eb8f9f0223f617a592a6fd0dc0641afc4c004da62576fc0e3e83cc58a5",
+      "width": 1120,
+      "height": 915,
+      "elements": 33
+    },
+    {
+      "stem": "fig-contract-states",
+      "source_sha256": "fcb6863fd11b4c9ab3e04a904f0fddf2bba3114ba25963b7d92f39da185aebfd",
+      "svg_sha256": "a929036ac929a404632d37abb947efeed5ca8bd6437876aeb38f08425dc77dd5",
+      "png_sha256": "05e3c583c4c51ef0bcbdc8d00f13bf5c9c38ec4e3dffa183957972a251cd50a7",
+      "width": 1120,
+      "height": 627.5,
+      "elements": 14
+    }
+  ]
+}
