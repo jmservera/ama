@@ -64,6 +64,11 @@
       "decision": "Rebased source-local locked validation",
       "status": "passed",
       "evidence": "1215 API tests, 316 environment-dependent skips; loading/journey/assistants 4/42/40 axe scopes with zero violations; employee briefing and script recovery passed. Changes record contains commands and external reports. No final-head independent acceptance or publication receipt inferred."
+    },
+    {
+      "decision": "User-authorized CI retry check continuation, P03-T01",
+      "status": "implemented and locally validated",
+      "evidence": "Both source-local unmodified entry points reproduce the same stale initial-load retry selector after failed cached refresh. Product unchanged. Exact CI wrapper and standalone now pass 132/100 checks, four briefing axe scopes have zero violations, 8 manifest tests and targeted Ruff/mypy pass. Manifest recipe hash synchronized; changes record retains failed and passing logs. Local commit only; historical Review and publication gates unchanged."
     }
   ],
   "blockers": [
@@ -75,7 +80,7 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Coordinator owns the authorized complete gate, independent exact-head assessment and push of the locally committed continuation. No push or az in this worktree."
+    "action": "Coordinator owns the authorized complete gate, independent exact-head assessment and push of the locally committed continuation, including the CI retry check fix. No push or az in this worktree; historical Review remains unchanged."
   },
   "prioritized_follow_ups": [
     {

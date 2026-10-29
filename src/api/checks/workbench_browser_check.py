@@ -332,7 +332,18 @@ def run_browser(base: str) -> None:
                     times=1,
                 )
                 page.locator("#wf-mode").select_option("workflow")
-                page.get_by_role("status").filter(has_text="Synthetic briefing failure").wait_for()
+                briefing.get_by_role("status").filter(
+                    has_text="Synthetic briefing failure"
+                ).wait_for()
+                refresh = briefing.get_by_role("button", name="Refresh briefing", exact=True)
+                check(
+                    "failed mode change retains the previous briefing and refresh control",
+                    briefing.get_by_text("Current synthetic briefing", exact=True).is_visible()
+                    and refresh.is_enabled()
+                    and briefing.get_by_role(
+                        "button", name="Try loading briefing again", exact=True
+                    ).count() == 0,
+                )
                 page.route(
                     "**/api/briefing?mode=workflow",
                     lambda route, _request, payload=briefing_payload: route.fulfill(
@@ -340,14 +351,58 @@ def run_browser(base: str) -> None:
                     ),
                     times=1,
                 )
-                page.get_by_role("button", name="Try loading briefing again").click()
+                with page.expect_request("**/api/briefing?mode=workflow"):
+                    refresh.click()
                 page.get_by_text("Retried synthetic briefing", exact=True).wait_for()
                 check(
                     "briefing failure explicitly retries in the selected workflow mode",
                     page.locator("#wf-mode").input_value() == "workflow"
+                    and briefing.get_by_text("Current synthetic briefing", exact=True).count()
+                    == 0
                     and page.get_by_role("status").filter(
                         has_text="Synthetic briefing failure"
                     ).count() == 0,
+                )
+                page.route(
+                    "**/api/briefing",
+                    lambda route: route.fulfill(
+                        status=503, json={"error": "Synthetic initial briefing failure"}
+                    ),
+                    times=1,
+                )
+                page.reload()
+                wait_cases(page, 2)
+                briefing.get_by_role("status").filter(
+                    has_text="Synthetic initial briefing failure"
+                ).wait_for()
+                check(
+                    "initial briefing failure has no cached content or refresh control",
+                    briefing.locator(".briefing-statements").count() == 0
+                    and briefing.get_by_role(
+                        "button", name="Refresh briefing", exact=True
+                    ).count() == 0,
+                )
+                page.route(
+                    "**/api/briefing",
+                    lambda route, _request, payload=briefing_payload: route.fulfill(
+                        json={**payload, "text": "Retried initial synthetic briefing"}
+                    ),
+                    times=1,
+                )
+                with page.expect_request("**/api/briefing"):
+                    briefing.get_by_role(
+                        "button", name="Try loading briefing again", exact=True
+                    ).click()
+                briefing.get_by_text("Retried initial synthetic briefing", exact=True).wait_for()
+                check(
+                    "initial briefing failure explicitly retries and clears its error",
+                    page.locator("#wf-mode").input_value() == "ai"
+                    and briefing.get_by_role("status").filter(
+                        has_text="Synthetic initial briefing failure"
+                    ).count() == 0
+                    and briefing.get_by_role(
+                        "button", name="Refresh briefing", exact=True
+                    ).is_enabled(),
                 )
                 before = page.request.get(base + "/api/cases/ZF-4").json()
                 page.locator(".skip-link").focus()

@@ -24,6 +24,23 @@ human/live or publication acceptance.
 
 ## Executive Summary
 
+Current bounded P03 continuation (2026-10-29, PR #537): reproduce the CI
+design-system module's workflow-mode briefing retry failure with this
+worktree's source. Correct the product only if defective, otherwise correct
+the check without weakening assertions; synchronize its scenario-manifest
+hash and run the manifest tests. Heavy runs require nonblocking lock admission
+with at most 40 minutes of retries. Shared product changes additionally require
+journey, assistants and briefing checks with axe. Commit locally; no push or az.
+Reproduction confirmed both wrapper and standalone fail on the same stale
+initial-load selector after `55241ede` retained cached content on failure.
+Product code remains unchanged. The check now asserts the preserved refresh
+path and separately verifies initial-load recovery; both modes of invocation
+and manifest/static checks are the bounded completion criteria.
+Bounded continuation complete: exact CI wrapper and standalone pass (132/100
+checks), all 8 manifest tests and owning-project Ruff/mypy pass. The existing
+briefing check additionally passes four zero-violation axe scopes. No product
+change, repeated Review or publication acceptance is implied.
+
 Make startup and async actions visible without replacing the native UI.
 Restructure briefing into labelled output, declared sources and explicit draft
 review choices. Retain all authority and manual paths.
