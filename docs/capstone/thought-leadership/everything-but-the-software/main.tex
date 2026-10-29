@@ -49,7 +49,7 @@ author's own and do not necessarily reflect those of Microsoft. The case
 organisation, Zava North Homes, is fictional.}\\[4pt]
 \small Senior Partner Solution Architect, Microsoft Schweiz, Zurich}
 
-\date{Draft of 27 October 2026}
+\date{Draft of 29 October 2026}
 % TODO(author): replace with the submission date.
 
 \begin{document}
@@ -434,6 +434,18 @@ without changing the target model's weights~\cite{microsoft2026skillopt}.
 Procedural knowledge needs evaluation and maintenance; its length alone
 tells us little about its quality.
 
+Jiang et~al.'s preprint compares workflow memory with skills distilled from
+the same execution histories. Its paired trajectory analysis associates
+skills chiefly with more reliable procedures, while also identifying
+misapplication and insufficient runtime verification
+\cite[Secs.~3.3, 5.1--5.3]{jiang2026skills}.
+This qualifies an instruction-debt account: retained guidance can stabilise
+execution rather than merely burden context. Their retrieval study also
+separates skill access from task success; poorer exact-match access does
+not produce a corresponding collapse in downstream success
+\cite[Sec.~5.5]{jiang2026skills}. Neither result measures the effects of
+accumulating repository instructions across feature changes.
+
 \subsection{Refactoring, review and evaluation boundaries}\label{sec:evaluationwork}
 
 Agentic refactoring, review and human correction are already studied.
@@ -707,8 +719,18 @@ systems. Versioned claims, locators and transcription details are retained
 in the source package README and \nolinkurl{anc/published-evidence.json}.
 The review offers a focused narrative synthesis, with no claim to systematic
 coverage.
+The two sources added on 29~October were selected by the owner for relevance
+to judgment and skill reuse, not through an updated systematic search.
 
 \subsection{Constructs and evidential boundaries}\label{sec:constructs}
+
+Here an \emph{agent} is a configured model--tool--instruction loop that
+selects and executes actions, not the model alone or an independently
+accountable person. A \emph{skill} is a reusable procedural resource describing
+when and how to act and verify the outcome, distinct from an execution
+history or a model-weight update. This procedural distinction follows
+Jiang et~al.~\cite[Sec.~1]{jiang2026skills}; the pilot's handover note is
+retained context, not a separately manipulated skill treatment.
 
 \emph{Working behaviour} means completing an intended task through the
 running system, including the identity, data and service dependencies needed
@@ -794,6 +816,12 @@ been completed. The supplied editorial critique prompted stronger boundaries
 and explicit rival explanations, but does not fill that gap. An independent
 check of O1--O5 against retained source and execution records remains necessary
 before presenting the interpretations as independently corroborated.
+Jiang et~al. make mechanism analysis inspectable through matched trajectories,
+evidence-linked labels and a separate human check of taxonomy construction,
+while distinguishing that check from exhaustive human coding
+\cite[Sec.~4, App.~A.2]{jiang2026skills}. Here the five mechanisms organise
+selected episodes; they are not frequencies derived from such a coding
+pipeline or effects isolated by matched executions.
 The machine-readable index \nolinkurl{anc/case-evidence-matrix.json}
 separates reported locators, author accounts and missing execution or
 release identifiers. Each null identifier marks an evidence link that still
@@ -1255,6 +1283,10 @@ Instruction debt and learning evaporation can therefore coexist. A correction
 may remain in an expanding agent definition while the evidence explaining
 when it applies falls off the next session's read path. The result can be
 a larger instruction set with weaker access to the relevant lesson.
+However, unavailable guidance, accessed-but-misapplied guidance and guidance
+insufficient for the task are different explanations
+\cite[Secs.~5.2--5.5]{jiang2026skills}. Without actual session inputs and
+access/use traces, this case cannot distinguish them.
 
 Naur explains why recording was not enough. A program's theory lives in the
 people who build it, and a second team with full documentation can still
@@ -1322,8 +1354,9 @@ merged pull request compared with cost per accepted outcome.
 even though artefact-level validation is abundant.} This differs from merely having
 few tests, a long feedback delay or missing context: many checks can pass
 while none disconfirms the claim that the intended user journey works.
-Independence here means evidence obtained by exercising the outcome rather
+Outcome-level independence here means evidence obtained by exercising the outcome rather
 than rereading its completion record; it need not imply a different model.
+It does not establish independent human judgment.
 The loop prioritised completing the specified plan rather than shortening the
 path to such feedback. I regard feedback starvation as central to the account,
 although the case cannot separate its contribution from the other mechanisms.
@@ -2080,6 +2113,19 @@ open. The narrower
 experimental question is whether bounded post-feature correction preserves
 behaviour and later changeability.
 
+Human sign-off also need not establish who formed a judgment. In Anthropic's
+randomised study, 50 agent-using professional analysts matched their agent's
+randomly assigned preference on 86\% of four analytical choices
+\cite[Study design; Results]{herdagdelen2026judgment}. The preferences were
+deliberately strengthened in one farming-analysis task with one model; the
+rate is not an estimate for coding or Zava North Homes
+\cite[Our study's limitations]{herdagdelen2026judgment}.
+This challenges an assumption that retaining approval alone preserves
+independent judgment, not the case's reported decisions. Recording alternatives
+and a human's reasons before accepting an agent's recommendation is a proposed
+safeguard, not an evaluated remedy here
+\cite[What this means]{herdagdelen2026judgment}.
+
 \subsection{Can another agent restore futures?}
 
 Beck's alternation suggests preserving the options consumed by feature
@@ -2154,6 +2200,8 @@ not evidence for the case findings or consolidation hypothesis.
 AI assistance supplied neither an independent
 empirical coder nor replicated application or study results. The package
 README retains the revision-by-revision account and source-access limits.
+GitHub Copilot CLI assisted the 29~October source integration and scoped
+method-clarity revision.
 
 I supplied the observations, selected the case and made the analytical
 judgements. I checked the repository figures and Azure expenditure, and
@@ -2444,6 +2492,12 @@ C.~A.~E. Goodhart.
 \newblock In \emph{Papers in Monetary Economics}. Reserve Bank of Australia,
 Sydney, 1975.
 
+\bibitem{herdagdelen2026judgment}
+A.~Herda\u{g}delen, H.~Joren, and A.~Tamkin.
+\newblock How {AI} agents shape experts' judgment calls.
+\newblock Anthropic research article, 27 October 2026; accessed 29 October 2026.
+\newblock \url{https://www.anthropic.com/research/agents-judgment-calls}.
+
 \bibitem{herraiz2013laws}
 I.~Herraiz, D.~Rodriguez, G.~Robles, and J.~M. Gonzalez-Barahona.
 \newblock The evolution of the laws of software evolution: A discussion based
@@ -2478,6 +2532,13 @@ A.~Hunt and D.~Thomas.
 \newblock GitHub repository and documentation, accessed 24 October 2026.
 \newblock \url{https://github.com/microsoft/hve-core};
 \url{https://microsoft.github.io/hve-core/}.
+
+\bibitem{jiang2026skills}
+Z.~Jiang, F.~Huang, H.~Xing, X.~Wu, Y.~Gao, R.~Cao, M.~Wang,
+S.~Liu, and Y.~Li.
+\newblock Demystifying agent skills: Why they work--until they don't.
+\newblock arXiv preprint arXiv:2608.14036v1, 2026; accessed 29 October 2026.
+\newblock \url{https://arxiv.org/html/2608.14036v1}.
 
 \bibitem{kassis2026skills}
 T.~Kassis, V.~Agarwal, Y.~He, D.~Patel, and A.~M.~Brueckner.

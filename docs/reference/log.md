@@ -7995,3 +7995,20 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   workflow-only fallback and human authority. Local checks do not establish
   actual SQL/live-site/model acceptance, screen-reader/voice-control acceptance
   or a complete publication gate.
+
+## [2026-10-29] refine | Whitepaper judgment and skills sources
+
+* Add the two owner-selected sources, retrieved 2026-10-29, to both
+  bibliographies and the existing argument. The
+  [source ledger and methodological dispositions](../capstone/thought-leadership/everything-but-the-software/README.md#judgment-and-skills-source-revision-29-october)
+  distinguish Anthropic's analyst influence study from Zava evidence and
+  Jiang et al.'s procedural skill/history comparisons from repository decay.
+* Clarify agent/skill definitions, selected-episode versus matched-trajectory
+  inference, missing access/use traces and approval versus independent
+  judgment. Preserve observations, pilot design and historical critique.
+  Update the index; no empirical audit, experiment or approval is invented.
+* Paper structural checks and all seven existing tooling tests pass.
+  No local TeX compiler is available, so PDF/build/layout checks remain
+  unperformed and generated assets unchanged. The full publication gate
+  remains blocked by its az invocation under the owner's no-az instruction;
+  no push or external submission is made.
