@@ -3,8 +3,8 @@
   "task_slug": "iot-pr557-main-refresh",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Review",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-29/iot-pr557-main-refresh-research.md",
@@ -44,12 +44,30 @@
       "decision": "Exactly one original independent Review executed Complete / Conformant, no substantive findings, against source boundary 9a712fd3. No second Review or source fix loop.",
       "status": "complete",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-29/iot-pr557-main-refresh-review.md"
+    },
+    {
+      "decision": "All original task evidence committed locally as fbb41ac9c5d2f210b70113fefe318e8b4b17bc29 with authenticated noreply identity and required trailer. Clean status, ancestry, generated identities and unchanged reviewed source verified. Final reconciliation is evidence-only; no push.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/changes/2026-10-29/iot-pr557-main-refresh-changes.md P03-T01"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Finish the already planned local evidence commit and verify clean status, ancestry and identity; then hand off without pushing."
+    "action": "Coordinator handoff only: obtain required current exact-head publication gate and hosted CI before merge. No push or child task from this session."
   },
-  "prioritized_follow_ups": []
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator publication validation and hosted CI",
+      "rationale": "Only remaining path to verifying remote mergeability/CI; outside this no-push task and not established by targeted checks.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/iot-pr557-main-refresh-review.md Plan Follow-Up Assessment"
+    },
+    {
+      "rank": 2,
+      "task": "Separately authorized historical IoT live acceptance",
+      "rationale": "Registry/adapter/live-to-SQL/resident-gauge evidence remains unmet and cannot be inferred from local preservation tests.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/iot-pr557-main-refresh-review.md Residual Work"
+    }
+  ]
 }
