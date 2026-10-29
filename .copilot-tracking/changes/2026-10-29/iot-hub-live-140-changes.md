@@ -186,3 +186,71 @@ Four app minima0/eight Manual jobs verified at final boundary. Documentation inc
 API contract, synthesis/index and append-only log.
 Remaining lifecycle: original independent Review, local commit, complete gate
 on committed exacthead if admitted; no push. Human approval stays unmet.
+
+## Post-Review local lifecycle outcome
+
+Original independent Review executed Complete, full live-delivery outcome
+Not accepted. No substantive runtime/infra code defect found. Preserve RV001
+live residuals, RV002 reviewer-specific filesystem claim, RV003 low historical/
+current SQL-limit prose reconciliation and RV004 then-pending local lifecycle.
+No source correction or repeated Review occurred. RV002 does not override the
+parent's actual tools or the owner's explicit /tmp/mv instruction; no parent
+temporary-file prohibition exists. RV003 is routed to later evidence cleanup,
+not silently relabelled resolved. Original critique/Review remain unchanged.
+
+Resolved GitHub identity with `gh api user`: login jmservera, id8036360.
+Set repository-local name and privacy-safe author/committer address
+`8036360+jmservera@users.noreply.github.com`.
+Explicitly staged19 implementation/documentation/original RPI files and committed
+`2115ac9f51a08f4b86d60e88ae2d72e1eda8a3f9`, message
+`feat(iot): reconcile approved B1 hub and separate publisher activation`,
+`Refs #140 #184`, required Copilot coauthor trailer. No push.
+
+Fetched main again: ecbb5a80470292c885764c28d6833c0e5ef63dfa unchanged.
+Actual heavy-lock lookup found no owner; nonqueued admission acquired.
+Created a clean detached exact-head worktree outside the repository to avoid
+development caches/egg-info as candidate inputs. Ran unchanged complete gate:
+
+```bash
+python3 tools/rpi-checks.py --all \
+  --base ecbb5a80470292c885764c28d6833c0e5ef63dfa \
+  --out /home/azureuser/.copilot/session-state/83204432-d5b6-46b3-b6df-63a5f308ead9/files/iot-full-gate-2115ac9f \
+  --lock-timeout 0
+```
+
+Exit1, status failed,169 recorded commands. External original receipt:
+`/home/azureuser/.copilot/session-state/83204432-d5b6-46b3-b6df-63a5f308ead9/files/iot-full-gate-2115ac9f/receipt.json`.
+Receipt binds head2115ac9f/baseecbb5a80, full scope.
+Completed groups: preflight, core, agents, orchestrator, importer, namespace,
+static, infra, migration, four image contracts and logo0600. API general
+discovery command itself exit0,1332 tests in509.724seconds,318 skips.
+The runner rejects unexpected required integration/dependency skips, including
+50 assistant SQL skips labelled `needs disposable SQL Server (ZF_TEST_MSSQL=1)`
+and other opt-in SQL/browser skips. Its API group therefore fails; browser and
+full mssql groups are blocked by prerequisite. This is not a full pass and does
+not replace the separately successful targeted actual local SQL45 evidence.
+Do not add a skip token, relax policy or fix unrelated runner/discovery code
+inside this completed task. Route gate admission separately.
+
+Explicit failed-receipt verification command, with the same base:
+`python3 tools/rpi-checks.py --verify-receipt <external-receipt> --base <base>`
+returned exit1, `BLOCKED: Receipt does not establish an eligible run`, as expected.
+No publication evidence is claimed. Final lifecycle-evidence-only commit
+necessarily changes HEAD; the failed2115ac9f receipt remains historical, not a
+receipt for that later commit. A future publication requires a new complete
+gate after fixing the routed admission issue and obtaining remaining approvals.
+
+Gate-owned running containers remaining0. Both directly owned local SQL
+containers removed, three cloud test executions terminal, no device credentials
+or identities created, no persistent cloud test resources needing deletion.
+Preserve failed gate receipt/logs and gate verification images under retention
+policy; remove only the known supplementary clean exact-head worktree and
+transient session probe scripts/template/execution-name scratch after use.
+No original evidence, foreign resource, score file or remote branch changed.
+
+Final bounded result: existing hub reconciled, source activation separation
+delivered, required focused checks passed; live sensor-to-resident flow blocked.
+USD10/month baseline hub/<=USD0.97 three-day attribution is an estimate, not
+actual invoice. No new fixed paid resource or ongoing simulator was introduced.
+Manual full-loop session ends blocked on owner/live and publication gates,
+with no automatic child work.
