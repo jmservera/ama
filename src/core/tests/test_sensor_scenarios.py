@@ -262,6 +262,17 @@ class SensorScenarioTests(unittest.TestCase):
         malformed = ss.retrofit_comparison(({}, *case.rows[1:]), ss.START + timedelta(days=14))
         self.assertEqual(malformed["status"], ss.INSUFFICIENT)
         self.assertEqual(malformed["deltas"], {"early": None, "late": None})
+        truncated = {**case.rows[0], "observed_at": None, "temperature_c": None}
+        for rows_with_truncated in (
+            [truncated, *case.rows[1:]],
+            [{**case.rows[0], "humidity_pct": None}, *case.rows[1:]],
+        ):
+            result = ss.retrofit_comparison(
+                rows_with_truncated,  # type: ignore[arg-type]
+                ss.START + timedelta(days=14),
+            )
+            self.assertEqual(result["status"], ss.INSUFFICIENT)
+            self.assertEqual(result["deltas"], {"early": None, "late": None})
 
     def test_snapshot_bytes_hashes_schema_and_no_truth_leakage(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

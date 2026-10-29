@@ -125,7 +125,9 @@ def analyse(
     identities: set[tuple[str, str]] = set()
     previous: datetime | None = None
     for row in rows:
-        if set(row) != set(sensor_faults.READING_FIELDS):
+        if set(row) != set(sensor_faults.READING_FIELDS) or not all(
+            isinstance(value, str) for value in row.values()
+        ):
             reasons.add("SCHEMA_FIELDS")
             continue
         try:
@@ -361,7 +363,8 @@ def retrofit_comparison(
             [
                 row
                 for row in rows
-                if "observed_at" in row and _stamp(w.start) <= row["observed_at"] < _stamp(w.end)
+                if isinstance(row.get("observed_at"), str)
+                and _stamp(w.start) <= row["observed_at"] < _stamp(w.end)
             ],
             w,
         )
