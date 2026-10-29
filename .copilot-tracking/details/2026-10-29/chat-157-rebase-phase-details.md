@@ -98,6 +98,10 @@ Core focused 123 tests pass without skips; agents focused 49 plus regulatory
 Full API separately admitted and held the shared lock: 1,324 tests, exit 0,
 318 skips, 469.210s. Skips are not SQL/browser/live acceptance.
 Ruff check/check-format/mypy passed for core, agents and API.
-P03-T01 remains the independent Review and local persistence step.
+P03-T01 complete: single independent Review executed Complete / Residual work,
+implementation Conformant; 5faa132970904d15ef159b328efdad802eb5fd67 locally
+commits reviewed implementation and evidence. Identity/trailer/Refs, clean
+status, main ancestry and main-owned bytes verified. Original Review retained.
+RV-001 persistence fulfilled; RV-002/003 remain distinct follow-ups.
 No implementation source edits are planned after Review. Coordinator owns
 fresh publication gate, exact-head assessment and hosted/human acceptance.

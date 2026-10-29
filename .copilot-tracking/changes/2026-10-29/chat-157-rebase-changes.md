@@ -143,3 +143,28 @@ evidence. A separate local tracking closeout commit records the first commit's
 actual metadata/status verification, without amending or changing source.
 Neither commit is pushed. Hosted/human/publication/actual SQL acceptance
 remains distinct and not inferred.
+
+## Local Delivery
+
+`git add <the two reviewed core paths and seven dated task artifacts> &&
+git diff --cached --check`: exit 0.
+`GIT_AUTHOR_EMAIL='8036360+jmservera@users.noreply.github.com'
+GIT_COMMITTER_EMAIL='8036360+jmservera@users.noreply.github.com'
+git commit -m 'fix(chat): preserve regulatory provenance after main rebase (Refs #157)'
+-m <scope paragraph> -m 'Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>'`:
+exit 0; commit 5faa132970904d15ef159b328efdad802eb5fd67.
+Nine files, 1,064 additions. No source edits after Review.
+`git show -s --format='%H%n%an <%ae>%n%cn <%ce>%n%B' HEAD`:
+both identities use authenticated noreply, Conventional Commit/Refs/coauthor
+present; no issue-closing keyword. `git status --short`: empty.
+Main-owned diff and pinned-main ancestry checks both exit 0.
+
+This fulfills RV-001's already-planned local persistence without rewriting
+the original Review or running another Review. P01/P02/P03 now complete.
+Tracking-only closeout reconciles markers/state and this actual commit
+verification in a second Conventional Commit with the same identity/trailer.
+Its hash is obtained from git after committing, not embedded self-referentially.
+No new candidate-bound publication receipt exists; no push is authorized.
+The rebased local branch is based on the pinned fetched main, but the remote PR
+will remain unchanged until coordinator publication. Fresh hosted CI remains
+unavailable here, not claimed green.

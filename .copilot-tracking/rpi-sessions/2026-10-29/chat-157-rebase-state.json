@@ -3,8 +3,8 @@
   "task_slug": "chat-157-rebase",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Review",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-29/chat-157-rebase-research.md",
@@ -34,10 +34,15 @@
       "decision": "Single independent Review execution Complete; original outcome Residual work, implementation Conformant. No defects. RV-001 is planned local persistence; RV-002/003 remain distinct publication and operational-acceptance follow-ups.",
       "status": "recorded",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-29/chat-157-rebase-review.md"
+    },
+    {
+      "decision": "Reviewed source, tests and original RPI evidence persisted in 5faa132970904d15ef159b328efdad802eb5fd67. Commit author/committer authenticated noreply, Conventional Commit, Refs #157 and required coauthor verified; status clean, main ancestry and main-owned files verified. RV-001 local persistence fulfilled without changing original Review.",
+      "status": "verified",
+      "evidence": "git commit/show/status/diff/merge-base exit 0; .copilot-tracking/changes/2026-10-29/chat-157-rebase-changes.md Local Delivery"
     }
   ],
   "blockers": [],
-  "next_action": {"phase": "Review", "action": "Persist reviewed implementation and original evidence locally; verify commit metadata and clean status, then record Follow-up transition. No push."},
+  "next_action": {"phase": "Follow-up", "action": "Coordinator owns ranked publication/acceptance follow-ups; no child selected, no push authorized here. Persist tracking-only closeout and verify final clean local branch. Automatic session remains running at Follow-up."},
   "prioritized_follow_ups": [
     {
       "rank": 1,

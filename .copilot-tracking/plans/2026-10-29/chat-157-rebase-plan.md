@@ -84,9 +84,9 @@ referral/offline usage and bounded reads; regression selectors preserve chat.
 * [x] P02-T02: Ruff/check-format/mypy; focused core/agents/API and manifest tests.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Review and persist
+### [x] P03: Review and persist
 <!-- rpi:task id=P03-T01 -->
-* [ ] P03-T01: Independent single Review; reconcile artifacts and commit locally.
+* [x] P03-T01: Independent single Review; reconcile artifacts and commit locally.
 
 ## Critique Disposition
 
@@ -112,3 +112,8 @@ changes. No second critique. Implementation ready after direct dispositions.
 
 Details: .copilot-tracking/details/2026-10-29/chat-157-rebase-phase-details.md.
 Changes: .copilot-tracking/changes/2026-10-29/chat-157-rebase-changes.md.
+P01-P03 complete locally. Reviewed implementation/evidence commit
+5faa132970904d15ef159b328efdad802eb5fd67 verified. Single Review Complete /
+Residual work, implementation Conformant; original outcome unchanged.
+RV-001 persistence fulfilled; RV-002/003 remain coordinator-owned follow-ups.
+No push, no Azure, no hosted-green or full publication-readiness claim.
