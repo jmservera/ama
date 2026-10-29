@@ -75,6 +75,12 @@ diagnosis or actual works. Actual #111/#133 test use, a runnable live publisher,
 R2 competent approval and agreed R3 limits remain unmet; no parent closure or
 owner deferral is inferred.
 
+For #218/#219, the [dependent-policy RAI binding](../../src/core/README.md#dependent-policy-rai-release-binding-218-219)
+records ranking/checklist content invalidation and scripted review-mechanics
+regressions. Unknown OQ-017 holders, #222 manifest approval, actual #223 reviewer
+effectiveness, #221 witnessed acceptance and wider #220 challenge coverage remain
+open. This engineering evidence does not close the epic or approve live use.
+
 For #199-#203, the
 [owner-authorized 2026-10-27 directory retirement](../architecture/cutover-evidence-pack.md#owner-authorized-directory-retirement-2026-10-27)
 records explicit cut-over sign-off, local archive `v0.21.0`, removal of the

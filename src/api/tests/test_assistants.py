@@ -484,6 +484,89 @@ class ContractTests(Base):
         disabled.start()
         self.assertEqual(disabled.threads, [])
 
+class HumanReviewMechanics(Base):
+    """Scripted dispositions, not competent participants or effectiveness evidence."""
+
+    def seeded(self, text):
+        original = self.provider.evidence
+        def result(*args, **kwargs):
+            envelope = original(*args, **kwargs)
+            output = json.loads(envelope["text"])
+            output["findings"][0]["text"] = text
+            envelope["text"] = canonical(output)
+            return envelope
+        with patch.object(self.provider, "evidence", side_effect=result):
+            return self.run_ready("stock-prioritisation")
+
+    def test_seeded_defects_require_explicit_disposition_and_retain_source_reason_actor(self):
+        defects = {
+            "wrong": "The recorded EPC band is A.",
+            "unsupported": "A signed survey confirms that wall work is suitable.",
+            "incomplete": "All critical home fields are complete.",
+            "stale": "The recorded EPC band is E.",
+        }
+        for kind, text in defects.items():
+            with self.subTest(kind=kind):
+                self.case(lambda c: c["home"].update(epc="E", built=None, address=f"SYN {kind}"))
+                p = self.seeded(text)
+                self.assertEqual(p["output"]["findings"][0]["citations"], ["source:home"])
+                self.assertIn("source.home.built", p["output"]["unknowns"])
+                if kind == "stale":
+                    self.case(lambda c: c["home"].update(epc="F"))
+                before = self.domain()
+                p = self.service.detail(self.pm, p["id"])
+                with self.assertRaises(ValueError):
+                    self.service.review(self.pm, p["id"], "accept", p["revision"], "Citation exists")
+                note = f"SYN scripted {kind} defect: compared home EPC/build fields; use manual work."
+                rejected = self.service.review(self.pm, p["id"], "reject", p["revision"], note)
+                self.assertEqual(rejected["state"], "rejected")
+                self.assertFalse(rejected["actionable"])
+                self.assertFalse(rejected["relied_on"])
+                self.assertEqual(rejected["review"]["by"], self.pm["email"])
+                self.assertEqual(rejected["review"]["note"], note)
+                self.assertEqual(rejected["source_signature"], p["source_signature"])
+                self.assertEqual(rejected["snapshot"], p["snapshot"])
+                self.assertTrue(any(e.get("reviewer") == self.pm["email"]
+                                    and e.get("source_signature") == p["source_signature"]
+                                    and e.get("note") == note for e in rejected["provenance"]))
+                self.assertEqual(self.domain(), before)
+
+    def test_source_based_correction_retains_original_and_never_approves_case_work(self):
+        self.case(lambda c: c["home"].update(epc="E", built=None))
+        p = self.seeded("The recorded EPC band is A.")
+        before = self.domain()
+        original = copy.deepcopy(p["output"])
+        p = self.service.review(self.pm, p["id"], "verify", p["revision"],
+                                "SYN source:home records EPC E, not A; build year unknown.",
+                                source_verified=True)
+        corrected = copy.deepcopy(p["output"])
+        corrected["findings"][0]["text"] = "The recorded EPC band is E; the build year is unknown."
+        p = self.service.review(self.pm, p["id"], "edit-accept", p["revision"],
+                                "SYN corrected EPC from source:home; proposal only.", corrected)
+        reopened = self.other().detail(self.pm, p["id"])
+        self.assertEqual(reopened["output"], corrected)
+        self.assertEqual(reopened["verification"]["by"], self.pm["email"])
+        self.assertEqual(reopened["verification"]["signature"], p["source_signature"])
+        self.assertTrue(any(e.get("output") == original for e in reopened["provenance"]))
+        self.assertTrue(any(e.get("edited_output") == corrected for e in reopened["provenance"]))
+        self.assertEqual(self.domain(), before)
+
+    def test_automation_bias_negative_control_false_attestation_is_not_semantic_truth(self):
+        self.case(lambda c: c["home"].update(epc="E"))
+        p = self.seeded("The recorded EPC band is A.")
+        before = self.domain()
+        # A dishonest scripted attestation is possible; this is not a human-effectiveness pass.
+        p = self.service.review(self.pm, p["id"], "verify", p["revision"],
+                                "SYN deliberately false attestation for automation-bias control.",
+                                source_verified=True)
+        p = self.service.review(self.pm, p["id"], "accept", p["revision"],
+                                "SYN default acceptance despite contradictory source.")
+        self.assertEqual(p["state"], "accepted")
+        self.assertEqual(p["snapshot"]["sources"]["home"]["epc"], "E")
+        self.assertEqual(p["output"]["findings"][0]["text"], "The recorded EPC band is A.")
+        self.assertEqual(self.domain(), before)
+
+
 class ReviewTests(Base):
     def test_material_only_staleness_accept_reject(self):
         for cap in REGISTRY:
