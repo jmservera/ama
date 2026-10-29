@@ -6,6 +6,97 @@ ms.date: 2026-10-28
 
 ## Scope and status
 
+### CI wrapper retry continuation (2026-10-29, P03-T01)
+
+User-authorized scope is the failure in PR #537's exact design-system browser
+module, on the existing clean `feat/loading-briefing-hax-531` worktree. Initial
+HEAD is `124ec768`. Read-only PR inspection confirms OPEN with parent base
+`feat/case-journey-ux-526`. First execution boundary is unmodified
+`python -m checks.design_system_browser_check` from `src/api`, with
+`PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests`
+and the existing `/tmp/ama-531-venv/bin/python`.
+
+The approved write boundary is the failing check and scenario-manifest recipe
+hash, or directly implicated product code if reproduction shows a product
+defect, plus existing RPI evidence. Assertions must not be weakened. Shared
+product changes require journey, assistants and briefing browser checks with
+pinned axe. All heavy runs use `flock -n` admission on
+`/tmp/ama-rpi-heavy.lock` with at most 40 minutes of retries. The first run is
+waiting for the existing foreign holder; no bypass or foreign output reuse.
+Implementation and local validation are now complete within this bounded
+P03 continuation; local commit only, no push, az, secret reads or change to
+historical critique/Review outcomes.
+
+#### Reproduction and root cause
+
+The exact unmodified CI module acquired the lock at 2026-10-29T01:38:33Z and
+failed with exit 1 at the reported button click after 30 seconds. The
+standalone module, using identical source-local imports, independently acquired
+the lock at 01:39:14Z and failed at the same click with exit 1.
+Logs: `/tmp/ama-531-ci-wrapper-before.log` and
+`/tmp/ama-531-standalone-before.log`. Thus no wrapper-specific dataset,
+route-order, selector-mode or timing difference is needed to reproduce this
+candidate; the claimed standalone pass is not reproducible at current HEAD.
+
+Commit `55241ede` intentionally changed `aiBox.load` to preserve existing
+briefing content after a failed refresh or mode change, protecting review edits.
+The cancelled/cached briefing scenario has already painted "Current synthetic
+briefing" before the workflow-mode 503. Its existing "Refresh briefing" remains
+enabled after cleanup; "Try loading briefing again" is rendered only when
+content was empty. The check retained that now-stale initial-load selector.
+Product preservation behavior is correct and is not changed.
+
+The P03 check now explicitly verifies retained content, the enabled refresh
+control, absence of the initial-load control, an exact workflow retry request,
+replacement output and cleared error. A separate fresh-page 503 verifies the
+initial-load retry control still works and clears its error. No generic
+either-button fallback, weakened assertion or timing increase is introduced.
+
+#### Completed CI retry validation
+
+All commands below use the interpreter and source-local PYTHONPATH above.
+Heavy checks held the shared lock for their complete command execution, with
+nonblocking retries admitted within the user-authorized 40-minute limit.
+
+* From `src/api`, `python -m checks.design_system_browser_check`: exit 0,
+  132 passing checks, Chromium 156.0.8078.4. Lock admission:
+  2026-10-29T01:40:52Z. Both cached-refresh and initial-load recovery pass
+  inside the exact CI entry point, followed by every existing role, queue,
+  navigation, safety, reflow and stale-response assertion.
+  Log: `/tmp/ama-531-ci-wrapper-after.log`.
+* From `src/api`, `python -m checks.workbench_browser_check`: exit 0,
+  100 passing checks, same Chromium. Lock admission:
+  2026-10-29T01:44:35Z.
+  Log: `/tmp/ama-531-standalone-after.log`.
+* In the same locked batch, `python -m
+  checks.loading_briefing_browser_check --axe
+  /tmp/ama-520-axe-4.10.3.min.js --out
+  /tmp/ama-531-ci-retry-loading-axe`: exit 0. Existing shell, refresh/edit
+  preservation, pending/history guards, resident, appointment, map and law
+  checks pass. Four axe 4.10.3 scopes have zero violations.
+  Log: `/tmp/ama-531-ci-retry-loading-axe.log`; report:
+  `/tmp/ama-531-ci-retry-loading-axe/axe-results.json`.
+* Recipe `sha256sum`:
+  `dea58169392471861486ccb9d5ef4f263a4208d34c920847615bfc1a944fe6f0`.
+  The scenario manifest records that exact digest.
+  From root, `PYTHONPATH=src/core/src:src/core/tests python -m unittest
+  test_scenario_manifest -q`: exit 0, all 8 tests pass.
+* Owning-project `ruff check src/api/checks/workbench_browser_check.py`:
+  exit 0. From `src/api`, `python -m mypy --follow-imports=silent
+  checks/workbench_browser_check.py`: exit 0, no issues.
+  `git diff --check`: exit 0.
+* An additional isolated strict Ruff probe reports the same three pre-existing
+  I001/B023/E501 findings in both HEAD and the changed file, outside the edited
+  block. They are covered by existing project exemptions and were not changed.
+  No new strict diagnostic was introduced; whole-file formatting was not run.
+
+The API guide now distinguishes the two recovery controls. No shared product
+code changed, so the conditional journey/assistants reruns are not applicable.
+Briefing/axe was nevertheless rerun as directly related regression evidence.
+No new original Review, full publication gate, Azure, paid inference, private
+dataset access, push or live acceptance is claimed. The complete publication
+gate remains coordinator-owned and blocked here by the no-az instruction.
+
 ### Authorized rebased continuation (2026-10-29)
 
 The coordinator explicitly authorized rebasing the single implementation commit

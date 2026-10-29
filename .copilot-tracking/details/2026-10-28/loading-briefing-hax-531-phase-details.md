@@ -6,6 +6,25 @@ ms.date: 2026-10-28
 
 ## Authorized rebased continuation (2026-10-29)
 
+Additional authorized P03 scope: reproduce `python -m
+checks.design_system_browser_check` from `src/api` using source-local
+PYTHONPATH, distinguish initial failure from failed replacement of a cached
+briefing, and preserve explicit selected-mode retry/error assertions. Update
+the recipe SHA256 in the scenario manifest and run its tests. The first
+execution boundary is the unmodified CI wrapper under the shared heavy lock.
+Record actual failures and later passing evidence in the existing changes
+record. No publication or repeated original Review is authorized.
+Both unmodified invocations reproduced the same timeout. The P03 check now
+requires retained cached output and "Refresh briefing" after failed mode change,
+an exact workflow retry, and independent fresh-page initial-error recovery.
+Product code is unchanged; shared-product journey/assistants reruns are not
+required by this continuation. The existing briefing/axe check is additionally
+selected to exercise preservation and pending-review regressions.
+Completed evidence: wrapper 132 checks, standalone 100 checks, four briefing
+axe scopes without violations, 8 manifest tests and targeted Ruff/mypy pass.
+The recipe digest is synchronized. P03 remains performed-work complete; the
+historical Review and separately owned publication/human gates are unchanged.
+
 The coordinator authorized rebase, independent review and correction of the
 result, without push. Parent is `27d11262`. The rebased independent assessment
 confirmed RV-001/002/003 remain open; the original Review is preserved.

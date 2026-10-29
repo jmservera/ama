@@ -40,6 +40,9 @@ Rules text and statement references use the same immutable case snapshot.
 Refreshing or changing mode requires explicit discard of unsubmitted review
 edits; a failed refresh retains them. Neither action can replace a pending
 review or clear a committed/uncertain outcome's history-check barrier.
+An initial load failure offers "Try loading briefing again". A failed refresh
+or mode change retains the previous briefing and its "Refresh briefing"
+control; retry uses the currently selected mode.
 
 HAX design mapping (pattern references, not usability acceptance):
 
