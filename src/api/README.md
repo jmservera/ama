@@ -774,6 +774,115 @@ isolation. Busy advice keeps the native submit button focusable with
 503 without acquiring a token or calling the model transport in the legacy
 adapter; the new advisor returns explicit rules fallback instead.
 
+## Opt-in IoT consumer and synthetic publisher (#110, #184)
+
+`iot_stream.HubReceiver` adds an explicitly called finite asynchronous SDK
+adapter around `SensorIngestion`; it adds no HTTP route, startup task or deployed
+service. `HubPublisher` sends one canonical observation/message through a
+distinct `SYN-<sensor_id>` X.509 device identity. It never discovers devices,
+uses twins/cloud-to-device management or retrieves a service key.
+Install this project's declared dependencies with pip, including pinned
+`azure-eventhub`, `azure-iot-device` and `aiohttp` for asynchronous identity.
+
+Both runners require `Activation` with resource group `ama`, the exact Hub
+hostname, matching `eh-<hub-name>.servicebus.windows.net`, `sensor-readings`,
+`api-consumer`, `routing_ready=True` and a nonempty approval reference.
+This is a caller assertion, **not verification or approval of deployment**.
+The [infrastructure activation procedure](../../infra/README.md#keyless-consumer-and-explicit-activation)
+must be separately completed first. The default bootstrap profile cannot send.
+Do not treat this callable as permission to provision, enrol or read credentials.
+
+The receiver creates only `ManagedIdentityCredential`, optionally with the
+API's managed-identity client ID. It uses no developer credential chain or
+connection string. An independently installed tuple of `Binding(device_id,
+sensor_id, home_id)` fences the device and payload before SQL. The custom Event
+Hub's sole authorized sender must remain the IoT Hub system identity: the
+routed `iothub-connection-device-id` and device/X.509 authentication metadata
+are accepted as byte-keyed AMQP application properties under that restricted
+origin, not as arbitrary client assertions. String-key aliases, simultaneous
+annotations, missing/wrong types, modules, wrong devices and changed sensor/home
+claims are refused. Actual Azure routing representation remains unverified.
+Independent SQL mapping, consent, calibration and policy remain mandatory.
+Do not install them from telemetry or infer them from a synthetic label.
+
+`await receiver.run(max_seconds=60, max_events=100, stop=stop_event)` returns
+the existing opaque SQL receipts. Accepted and owned DQ outcomes are durable
+before return. SQL/identity/envelope failure stops further admission, with a
+fixed sanitized error rather than raw SDK exception text.
+Constructor/startup failures use the same fixed-error boundary; any credential
+or client successfully returned before failure is closed by bounded cleanup.
+Each partition is
+serialized; two partitions do not share an offset or imply global event order.
+There is deliberately **no checkpoint store or checkpoint update**. Every
+fresh finite receiver uses `starting_position="-1"` and reconciles retained
+history through SQL idempotency, including SQL commits whose acknowledgements
+were lost. This is a single-runner, bounded demonstration strategy, not durable
+multi-instance partition ownership. Events older than the configured one-day
+transport retention cannot be recovered by it; a poison transport envelope
+will stop again until separately investigated, not silently skipped.
+
+The publisher takes an exact per-binding mapping of SDK `X509` objects supplied
+from separately approved certificate/key mounts. No credential lookup,
+issuance, rotation or deletion is implemented. The already named exercise
+credential owner, Juan Manuel Servera, must separately approve/perform the
+Key Vault lifecycle and removal of every run-owned simulated identity (#185).
+Do not give this code installed-device credentials or enable SDK debug tracing.
+No actual identity or credential has been created or read for local tests.
+
+Prepare frames with the [core replay API](../core/README.md#finite-synthetic-stream-replay-184).
+Then call `await publisher.run(frames, budget, speed=1000, truth=restricted_truth.append)`.
+`truth` is a required evaluator-owned sink, separate from telemetry and ordinary
+diagnostic logs. It receives synthetic/opaque-reference/slot/fault/status
+records including the selected-input digest copied from each Frame, never
+values, home/device IDs or credentials. `attempt` without `sent`
+is uncertain, not proof of no delivery; rerun identical frames to reconcile.
+`disconnect` is an explicit terminal synthetic stop, not an automatic reconnect.
+Model-time spacing uses each Frame's `nominal_at`, not its observation timestamp.
+For example, out-of-order suffix slots 3..4 retain their reordered payload times
+while waiting the nominal 8 hours, or 28.8 seconds at speed 1000.
+`burst` skips model-time spacing but still obeys the configured rate cap.
+Actual send-attempt admission occurs after connection, message construction
+and attempt-truth preparation, immediately before the SDK await in the same
+coroutine. One limiter spans all device clients, so slow setup cannot spend an
+interval and compress subsequent sends. Pause, stop and deadline are rechecked
+at admission; an attempt truth record may precede a refused admission.
+Normal-device altered sensor IDs are transport refusals. To exercise SQL
+UNMAPPED, independently install an exact synthetic binding with that deliberately
+unmapped sensor absent from SQL controls; payload truth never grants a bypass.
+
+`RunBudget` requires owner, prior cost estimate reference and budget-alert
+reference, finite messages, 1..3600 seconds, <=100 messages/second and declared
+daily quota already used. These are declarations, not live billing checks.
+It reserves >=40,000 of B1's 400,000 daily 4-KiB units, counting every attempted
+message including duplicates and reserving 1 KiB/message for properties.
+No autonomous send retry, connection retry or auto-connect is enabled.
+Pause/stop flags on an optional `Pacer` are checked during pacing; stop is also
+checked during connect/send. A supplied pacer's deadline must be finite and within
+the validated run budget; its rate must be finite, positive and no greater than
+the validated budget's rate. Invalid controls are refused before SDK client creation.
+The deadline covers network waits with 0.5 seconds reserved for cleanup.
+Even when cancellation interrupts cleanup, unfinished shutdown tasks are cancelled
+and every cleanup task's eventual exception is observed without waiting past the
+allowance for SDK cancellation acknowledgement. Cleanup failure is explicit.
+Cancelling an SDK send cannot
+prove it was not delivered. Cancelling/timing out a receiver does not cancel a
+shielded SQL commit; its outcome remains uncertain until exact replay.
+The caller must keep the store available until in-flight SQL work settles.
+These controls do not establish an Azure spending stop or operational SLA.
+
+Local regression commands, with installed distributions:
+
+```bash
+cd src/api
+PYTHONPATH=tests:../core/tests:../agents/tests python -m unittest test_iot_stream test_sensor_ingestion -q
+```
+
+The tests use actual SDK message objects, fake network clients and temporary
+constructed SQLite only. They prove code paths, not authenticated Azure
+transport, actual credentials/alerts, Azure SQL restart or whole PRD AC-066.
+The [issue evidence and deferrals](../../docs/reference/research/iot-sensor-analytics-research-plan.md#bounded-streaming-engineering-2026-10-27-refs-110-184)
+keep every child and live gate visible.
+
 ## Finite offline sensor ingestion (#110)
 
 `sensor_ingestion.SensorIngestion(store).consume(observations, received_at=...)`

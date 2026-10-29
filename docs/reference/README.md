@@ -43,6 +43,16 @@ review and reversible local dismissal. These native Fluent-derived patterns
 do not establish full Fluent adoption, staff usability, screen-reader/voice
 acceptance or live employee-site cold-start verification.
 
+For #110/#184, the [bounded streaming engineering and child dispositions](./research/iot-sensor-analytics-research-plan.md#bounded-streaming-engineering-2026-10-27-refs-110-184)
+describe opt-in API SDK adapters, synthetic-only seeded replay, exact device
+bindings, retained-history/SQL recovery and finite cost/rate/time controls.
+Local fake-network/actual-constructed-SQLite evidence is not actual Hub,
+credential lifecycle, Azure SQL handover, active budget alerts or whole AC-066.
+Outstanding #185/#187/#188/#189 live criteria and OD-43 remain explicit.
+The same synthesis records the bounded correction: actual global send-attempt
+admission after setup, partial-construction cleanup and selected-snapshot
+descriptor/frame provenance. Local regressions do not close live criteria.
+
 For #140, the [IoT infrastructure decision and budget](../../infra/README.md#iot-hub-issue-140-adr-0003-decision-6)
 and [ADR 0003 dated authorization](../adrs/0003-journey-derived-capabilities-runtime-fit.md#source-only-infrastructure-authorization-2026-10-27-refs-140)
 record B1/one unit in `ama`/`uksouth`, private keyless Event Hub routing,
@@ -71,7 +81,8 @@ and [two-stage guide](../../src/core/README.md#two-stage-simulator-operation-and
 record seven damp/data-quality cases, four retrofit cases, separate truth,
 per-check results, confusion/sensitivity and exact climate provenance.
 These are synthetic exercise overlays, not validated building physics,
-diagnosis or actual works. Actual #111/#133 test use, a runnable live publisher,
+diagnosis or actual works. The separate opt-in publisher has local engineering
+evidence, not verified live operation. Actual #111/#133 test use, live acceptance,
 R2 competent approval and agreed R3 limits remain unmet; no parent closure or
 owner deferral is inferred.
 

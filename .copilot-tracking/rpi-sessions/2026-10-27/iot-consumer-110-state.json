@@ -1,0 +1,75 @@
+{
+  "task_id": "110",
+  "task_slug": "iot-consumer-110",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-27/iot-consumer-110-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-27/iot-consumer-110-plan.md",
+    "details": ".copilot-tracking/details/2026-10-27/iot-consumer-110-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-27/iot-consumer-110-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-27/iot-consumer-110-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-27/iot-consumer-110-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run the full ordered RPI loop and publish one topic PR",
+      "status": "explicit user direction",
+      "evidence": "Current task; pre-created clean feat/iot-consumer-110; no existing PR"
+    },
+    {
+      "decision": "Local tests only; no full gate, deployment, secrets or private datasets",
+      "status": "confirmed",
+      "evidence": "Current task constraints"
+    },
+    {
+      "decision": "Research complete and Plan ready; one critique executed, original verdict Revise",
+      "status": "PC-001 through PC-006 directly disposed in plan; no new user decision",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-27/iot-consumer-110-plan-critique.md"
+    },
+    {
+      "decision": "Exactly one independent post-implementation Review executed",
+      "status": "Complete / Not accepted; three Medium defects routed to later implementation, not fixed or re-reviewed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/iot-consumer-110-review.md"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "review-defects",
+      "summary": "RV-001 actual send rate, RV-002 selected-input provenance, RV-003 receiver partial construction",
+      "resolution": "Later owner-selected rpi-implement; preserve original adverse Review"
+    },
+    {
+      "id": "publication",
+      "summary": "Review Not accepted; final publication gates unproven and --all explicitly unauthorized",
+      "resolution": "Keep local committed candidate; no push or PR without applicable gate and independent acceptance"
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Local candidate committed as 7cd2400f; await later owner-selected implementation of ranked Review defects. No push/PR; scoped gate not run and full gate unauthorized."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Enforce actual send-attempt rate after connection/setup",
+      "rationale": "Directly restores the declared cost/rate safety control with localized scheduling regressions",
+      "evidence": "Review RV-001"
+    },
+    {
+      "rank": 2,
+      "task": "Cover receiver partial construction cleanup and sanitized errors",
+      "rationale": "Small lifecycle fix with clear resource/error-boundary value",
+      "evidence": "Review RV-003"
+    },
+    {
+      "rank": 3,
+      "task": "Bind replay descriptor to validated selected-input snapshot",
+      "rationale": "Restores reproducible stock/subset provenance without changing the model",
+      "evidence": "Review RV-002"
+    }
+  ]
+}
