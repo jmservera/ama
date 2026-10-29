@@ -83,7 +83,11 @@ to distinct follow-ups. No new implementation or repeated Review is implied.
 
 ## Local Commit Handoff
 
-All five production targets and seven dated RPI artifacts are ready for the
-authorized local docs(paper) commit. No unrelated work is staged. Resolve the
-authenticated account's repository-local noreply identity before committing.
-No remote write, gate run, experiment or generated PDF is part of closeout.
+All five production targets and seven dated RPI artifacts were committed at
+b957316f, docs(paper): integrate judgment and procedural skills evidence.
+Authenticated GitHub id/login supplied the repository-local noreply author
+and committer address; the requested Co-authored-by trailer is present.
+No unrelated work was staged. No remote write, gate run, experiment or
+generated PDF is part of closeout. A separate local docs(paper) evidence-only
+commit records completed plan markers and stopped session state; it changes
+no reviewed manuscript content and does not trigger a second Review.

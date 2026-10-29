@@ -100,13 +100,13 @@ venue/peer-review or Zava claims. No broader evidence re-audit or critique rewri
 #### [x] P01-T02: Document source support, adopted/deferred lessons and KB routing
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Validate and preserve review evidence
+### [x] P02: Validate and preserve review evidence
 
 <!-- rpi:task id=P02-T01 -->
 #### [x] P02-T01: Run existing checks/tests and conditional build
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Complete one independent Review and local commits
+#### [x] P02-T02: Complete one independent Review and local commits
 
 Dependencies: P01-T02 follows P01-T01; P02-T01 follows both P01 tasks;
 P02-T02 follows P02-T01. Read-only compiler discovery may occur independently.
@@ -140,6 +140,12 @@ limits explicit.
   with owner no-az direction. No gate success or receipt is claimed.
 
 ## Handoff
+
+Source implementation and original RPI evidence committed locally at b957316f;
+the original single Review is Complete / Conformant within scoped source
+integration, with RV-001/002/003 retained as distinct follow-ups. All plan
+tasks are complete. This closeout records the requested stopped session,
+not publication or scientific acceptance. No push or child task.
 
 Details: .copilot-tracking/details/2026-10-29/whitepaper-agent-judgment-sources-phase-details.md
 Critique: .copilot-tracking/reviews/plans/2026-10-29/whitepaper-agent-judgment-sources-plan-critique.md
