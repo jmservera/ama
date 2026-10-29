@@ -1,14 +1,14 @@
 ---
 title: Everything but the Software - source package (draft v6)
 description: Industry-led maintenance argument, inherited-error and instruction-debt evidence, and prospective consolidation protocol
-ms.date: 2026-10-27
+ms.date: 2026-10-29
 ---
 
 Working title: *Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop. An Exploratory Case Study and an Experiment Protocol.*
 
 ## Current Status
 
-The executive-feedback revision of 27 October is the latest source record.
+The scoped source revision of 29 October is the latest source record.
 The owner selected the existing twelve trajectories as pilot/estimation work,
 not seven stable hypothesis tests. The pilot has not started, no experimental
 results are reported, and launch remains blocked by the documented runner,
@@ -19,11 +19,90 @@ per arm, suite and resource ceilings are retained. The draft endpoint hierarchy
 and interpretation are prospectively amended; the private kit or tag is not.
 Practitioner material and deferred extensions now accompany the source
 outside the main PDF. The main and reusable bibliographies contain the same
-93 references. No experiment was run or private study material amended.
-The fresh external validation PDF has 43 pages; compilation and preservation
-checks are recorded below.
-This task does not overwrite the package PDF or regenerate its figures.
+95 references. No experiment was run or private study material amended.
+The 29 October revision was not compiled because no existing local TeX
+toolchain was available. The earlier external 43-page validation PDF does
+not validate the latest source layout.
+The package PDF and figures remain unchanged by this revision.
 The arXiv bundle has not been refreshed.
+
+## Judgment and Skills Source Revision 29 October
+
+GitHub Copilot CLI assisted this scoped edit using the scientific-paper
+writer/reviewer behavior. Both owner-selected sources were retrieved and read
+on 2026-10-29. Coverage includes the complete Anthropic article and the
+arXiv v1 main text, references, Appendices A-C, prompts and numbered tables.
+Table cells missing from simplified web output were read from the primary
+HTML. Figure captions/descriptions were read, not visually assessed. The
+Anthropic article's separately linked technical PDF was not inspected; the
+citation identifies the article, not that PDF.
+
+### Source Support and Qualifications
+
+| Citation | Inspected locator and support | Applied role and boundary |
+| --- | --- | --- |
+| `herdagdelen2026judgment`, [How AI agents shape experts' judgment calls](https://www.anthropic.com/research/agents-judgment-calls), 2026-10-27 | Study design; Results: 50 agent-using professional analysts matched randomly assigned preferences on 86% of four analytical choices. Our study's limitations: deliberately strengthened preferences, one farming-analysis task and model. What this means: independent judgment cannot be inferred from sign-off alone; alternative designs are proposals | Discussion, "What remained mine in this case", qualifies formal approval as a proxy for independent judgment. The 86% does not cover all five decisions, estimate coding behavior or describe Zava North Homes. No proposed safeguard is declared effective |
+| `jiang2026skills`, [Demystifying Agent Skills: Why They Work--Until They Don't](https://arxiv.org/html/2608.14036v1), preprint v1 | Sections 1, 3.3 and 5.1-5.3 distinguish procedural skills from workflow histories and examine matched representations, operational gains and failure boundaries. Section 5.5 separates exact-ground-truth access from downstream success. Section 4 and Appendix A.2 explain evidence-linked trajectory analysis and limited human validation | Background, Constructs, Chain of evidence and Learning evaporation: skills can stabilise procedures, but availability/access does not establish correct application. The study does not test repository instruction growth, explain the AMA failure or validate its five mechanisms |
+
+These are full-text-supported paraphrases of the inspected passages, not
+replications. No direct contradiction with the case observations was found.
+There are important challenges to broader interpretations: instruction
+maintenance can help rather than merely add debt, and nominal human approval
+does not ensure independent judgment. Those qualifications are explicit in
+the manuscript, rather than resolved by asserting a new case finding.
+The skills study's paired skill-versus-raw interval includes zero
+(Appendix A.3, Table 10); its matched cost analysis finds workflow memory
+more token-efficient than skills (Appendix A.9, Table 13).
+Neither uniform benefit nor universal cost savings is claimed.
+
+### Methodological Exemplar: Adopted and Deferred
+
+The arXiv study frames a mechanism question, decomposes representation,
+outcome labels, transfer and retrieval into separate comparisons (Section 3),
+then separates taxonomy construction from findings and implementation details
+(Sections 4-5, Appendices A-C). Its agent configurations are concrete
+framework/model/tool settings, and skills are reusable procedural resources,
+not independent actors or model-weight changes.
+
+| Adopted clarification | Manuscript location | What remains for human authors |
+| --- | --- | --- |
+| Define agent as a configured model/tool/instruction loop and skill as a reusable procedure, distinct from history | Constructs and evidential boundaries | Confirm terminology fits actual historical runtime and skill artifacts |
+| Explain that this case's selected-episode interpretation is not the exemplar's matched trajectory/coding pipeline | Chain of evidence and reflexivity | Independently audit O1-O5 and consequential mechanism assignments; no new coding or agreement score was produced |
+| Separate absent guidance, misapplication and task insufficiency | Learning evaporation | Recover actual session inputs and access/use traces before attributing a missing lesson |
+| Record owner-selected source addition and distinguish retained notes from a skill treatment | Data and analysis; Constructs | Keep the narrative source-selection boundary; a matched history/skill ablation requires a separate study |
+| Distinguish outcome-level evidence from independent human judgment | Feedback starvation; Discussion | Check meaningful approval and competing reasons; proposed decision records are not a tested remedy |
+
+The existing RQs and case-plus-protocol structure were retained. No taxonomy,
+sampling scheme, new control arm, paired run, inter-rater result or quantitative
+effect was borrowed from the exemplar. Its Section 7 and Appendix A.2 also
+limit generalisation and disclose sampled/LLM-assisted coding rather than
+exhaustive human annotation. The original `critique.md` is unchanged historical
+editorial input, not a review or approval of this revision.
+
+### Validation and Remaining Gates
+
+Run from the repository root with the available system Python; the documented
+`.venv/bin/python` is absent locally:
+
+```bash
+python3 -B docs/capstone/thought-leadership/everything-but-the-software/anc/check_paper.py
+python3 -B -m unittest discover -s docs/capstone/thought-leadership/everything-but-the-software/anc -p test_paper_tooling.py -v
+```
+
+Both pass: 95 matching cited, embedded and reusable keys, 1,609 abstract source
+characters, approximately 16,426 main-body words and all seven tooling tests.
+The optional historical baseline is available locally; its 10,353-word count
+is not this revision's starting manuscript. The abstract, case tables, pilot
+design, arms, sample, outcomes and budgets are unchanged. No tools/tests,
+figures, PDF, bundle or private study materials were modified.
+
+No `pdflatex`, `tectonic`, `latexmk`, `xelatex` or `lualatex` is available on
+PATH. No compiler was installed, no PDF was rebuilt and no fresh LaTeX-log,
+rendered-layout or end-to-end PDF review is claimed. The complete repository
+publication gate was not run: its preflight invokes `az bicep version`, which
+conflicts with the owner's explicit no-az instruction. Paper checks do not
+replace that gate. No push, submission, experiment, registration, independent
+human peer review or author/publication approval is established by this edit.
 
 ## Executive Feedback and Pilot Amendment 27 October
 
