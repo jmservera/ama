@@ -13,8 +13,9 @@ methods failed on original source and now pass on JSON and SQLite. Two existing
 ID fixtures use returned IDs; no deletion/retention metadata changes, no removed
 tests. Complete core static checks and selected core/API modules pass, with
 explicit skips and environment details in changes. P03-T01 Review is Complete /
-Conformant with justified divergence, no substantive findings. P03-T02 local
-commit remains, and is not represented as already complete.
+Conformant with justified divergence, no substantive findings. P03-T02 is
+complete: reviewed source and original dated evidence committed at 3b67e016;
+this final reconciliation changes evidence only. No push.
 
 <!-- P01 -->
 ## P01: Regression and implementation

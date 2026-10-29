@@ -13,7 +13,8 @@ hold. Preserve nomination identity across retention deletion with fresh opaque
 UUID-based identifiers, including already-deleted legacy records. Add JSON/SQLite regression
 coverage, run requested checks and one independent Review, then commit locally.
 Implementation Review Complete / Conformant with justified divergence, no
-substantive findings. Requested checks pass. Local commit remains.
+substantive findings. Requested checks pass. Reviewed source and dated evidence
+committed locally at 3b67e016; final reconciliation is evidence-only.
 Original critique Complete / Revise and direct dispositions are preserved.
 
 ## User Decisions and Requirements
@@ -113,7 +114,7 @@ api/src and api/tests ahead of installed editable paths. Static commands from sr
 ### P03: Review and local commit
 
 * [x] P03-T01 Execute one independent Review; route any findings, no second loop.
-* [ ] P03-T02 Finalize state/evidence and commit locally with trailer.
+* [x] P03-T02 Finalize state/evidence and commit locally with trailer.
 
 ## Critique Disposition
 
@@ -135,6 +136,9 @@ design, with no new authority or service.
 
 Existing human/operational acceptance and publication/hosted gates remain
 outside this local fix cycle. No automatic child work.
+Current rank: separately authorized publication preparation first, then
+issue-wide qualified human acceptance. Both remain excluded now; Stop and
+manual-mode selections are also available. No unsupported third work item.
 
 ## Handoff
 
