@@ -82,6 +82,34 @@ class TasksMixin:
         rejected_line = "- One valid [[ZF-1: Stage: Survey booked]]. Invalid [[invented]]."
         self.assertEqual(ai_tasks.statement_sources(rejected_line, sources, bullets=True), [])
 
+    def test_rules_briefing_keeps_published_snapshot_during_case_change(self):
+        run = self.store.ai.run
+        before = copy.deepcopy(self.store._case("ZF-1"))
+
+        def change_case(*args, **kwargs):
+            with self.store.lock:
+                case = self.store._case("ZF-1")
+                case.update(stage="Design in progress", days_in_stage=1)
+                self.store.save()
+            return run(*args, **kwargs)
+
+        with mock.patch.object(self.store.ai, "run", side_effect=change_case):
+            result = self.store.briefing(self.sam, mode="workflow")
+        record = next(r for r in self.records() if r["id"] == result["record_id"])
+        self.assertEqual(record["shown_output"], result["text"])
+        self.assertEqual(record["workflow_output"], result["text"])
+        self.assertEqual(record["citations"], result["citations"])
+        self.assertTrue(result["verified"])
+        for statement in result["statements"]:
+            self.assertIn(statement["text"], record["shown_output"])
+            self.assertTrue(all(cite in record["citations"] for cite in statement["citations"]))
+        statement = next(s for s in result["statements"]
+                         if any(c.startswith("ZF-1: ") for c in s["citations"]))
+        self.assertIn(f"ZF-1: Stage: {before['stage']}", statement["citations"])
+        self.assertIn(f"ZF-1: Days in stage: {before['days_in_stage']}",
+                      statement["citations"])
+        self.assertNotIn("design in progress", statement["text"])
+
     def test_quarantined_output_never_exposes_abandoned_ai_statement_sources(self):
         from unittest.mock import patch
 

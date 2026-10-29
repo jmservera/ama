@@ -741,7 +741,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                         "briefing", hit[1].get("release"), hit[1].get("model"))):
                 return hit[1]
             ver = self.version
-            top = [self._case(c["id"]) for c in candidates[:8]]
+            top = [deepcopy(self._case(c["id"])) for c in candidates[:8]]
             for c in top:
                 export_fields.prompt_case(c)
             rows = [self.summary(c) for c in top]

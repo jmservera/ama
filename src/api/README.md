@@ -22,6 +22,8 @@ over cleanup. CSV, account, filters, appointment forms and the standalone law
 viewer use the same helper; non-control reads and map refreshes show progress
 without disabling navigation. Reduced motion keeps a static icon plus text.
 Failed writes are never automatically retried.
+Form progress is a sibling of the busy form; briefing progress is outside its
+busy content. Action-specific live text is not deferred inside those regions.
 
 Today's briefing distinguishes "AI suggestion, not approved" from "Summary by
 rules", shows the actual preparation timestamp and statement references, and
@@ -34,6 +36,10 @@ editor and required reason; "Do not use this draft" reveals only the reason.
 Cancel retains local text. Hide/Show briefing is local reversible dismissal,
 not reversal of an immutable recorded review. Server source/review checks and
 all human approval, resident consent and manual boundaries remain unchanged.
+Rules text and statement references use the same immutable case snapshot.
+Refreshing or changing mode requires explicit discard of unsubmitted review
+edits; a failed refresh retains them. Neither action can replace a pending
+review or clear a committed/uncertain outcome's history-check barrier.
 
 HAX design mapping (pattern references, not usability acceptance):
 
@@ -54,9 +60,9 @@ guidelines and owner feedback; it is not staff user research.
 From `src/api`, with installed source distributions and dev dependencies:
 
 ```bash
-PYTHONPATH=tests:../core/tests:../agents/tests python -m unittest \
+PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests python -m unittest \
   test_loading_feedback test_workspace_scripts test_ai_tasks -q
-PYTHONPATH=tests:../core/tests:../agents/tests python -m checks.loading_briefing_browser_check \
+PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests python -m checks.loading_briefing_browser_check \
   --axe /path/to/axe-4.10.3.min.js --out /new/external/loading-results
 ```
 

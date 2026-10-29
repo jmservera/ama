@@ -9,6 +9,19 @@ ms.date: 2026-10-28
 Task #531, slug `loading-briefing-hax-531`. Stacked on PR #529,
 base `feat/case-journey-ux-526`. Research readiness: Ready.
 
+Current authorized continuation (2026-10-29): rebased onto parent `27d11262`.
+The coordinator requested an independent assessment and fixes of the rebased
+result. Original critique and Review remain historical. Current bounded
+implementation covers RV-001/002/003 and fresh P03 evidence, preserving all
+parent reconciliation, duplicate-submission and field-error behavior.
+Snapshot attribution, non-busy announcer topology and briefing refresh guards
+are required corrections, not changes to draft review authority.
+The continuation is implemented: RV-001/002/003 have targeted passing
+regressions. Source-local full API discovery passed 1215 tests (316 existing
+environment-dependent skips); requested locked browser/axe checks passed.
+Original phase markers below remain performed-work history, not formal
+human/live or publication acceptance.
+
 ## Executive Summary
 
 Make startup and async actions visible without replacing the native UI.
@@ -126,14 +139,11 @@ Dispositioned before implementation. No repeated critique and no user decision r
 
 * Human screen-reader, voice-control, staff usability and deployed employee-site
   cold-start verification remain owner tasks, outside local synthetic acceptance.
-* Original Review RV-001: freeze rules statement metadata with its published
-  snapshot; later `rpi-implement`, outside this task's one-pass boundary.
-* Original Review RV-002: separate action-specific live announcers from busy
-  subtrees; later `rpi-implement`, no AT acceptance inferred.
-* Original Review RV-003: protect unsaved briefing correction/reason values and
-  pending reviews from refresh; later `rpi-implement`.
 * RV-004 retains distinct SQL/data-store, accessibility, product and operations
   acceptance owners. None of these follow-ups is an active P01-P03 task.
+* Coordinator owns the complete gate and independent exact-head publication
+  assessment. The authorized continuation corrected RV-001/002/003 after the
+  separately requested rebased assessment; historical verdicts are preserved.
 
 ## Handoff
 
@@ -145,7 +155,10 @@ skips, required browser checks and additional assistants/design checks passed.
 Original independent Review completed once: execution Complete, outcome
 Not accepted, at
 `.copilot-tracking/reviews/logs/2026-10-29/loading-briefing-hax-531-review.md`.
-Completed markers represent performed implementation, not defect closure or
-acceptance. Complete publication gate remains blocked by no-az; remote
-parent ancestry now differs from the original local anchor and needs
-coordinator reconciliation before publication. No rebase/merge was performed.
+Completed markers represent performed implementation, not formal acceptance.
+The separately authorized continuation rebased onto parent `27d11262`,
+preserved its guards, recorded independent assessment of `3507a75e`, corrected
+RV-001/002/003 and passed fresh unit/browser validation. See the changes
+record's continuation section for commands and external evidence. Complete
+publication gate remains blocked by no-az and coordinator-owned exact-head
+assessment remains required before publication. No push or merge performed.

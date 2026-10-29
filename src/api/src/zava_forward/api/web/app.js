@@ -390,6 +390,7 @@ function aiNotes(d, onDone, getText) {
       const sent = snapshotCaseFields([...(action === "accept" ? [] : [why]), ...(action === "edit" && editing ? [editing] : [])]);
       const buttons = [...box.querySelectorAll("button")].map(button => ({ button, disabled: button.disabled }));
       pending = true;
+      meta.dataset.reviewPending = "pending";
       buttons.forEach(({ button }) => { button.disabled = true; });
       result.textContent = "Recording your review...";
       try {
@@ -411,12 +412,16 @@ function aiNotes(d, onDone, getText) {
         if (onDone) onDone(action, text);
       } catch (e) {
         checkHistory = mutationNeedsHistory(e);
+        if (checkHistory) meta.dataset.reviewPending = "check-history";
         if (d.approval === "Not reviewed" && !checkHistory) {
           buttons.forEach(({ button, disabled }) => { button.disabled = disabled; });
         }
         result.textContent = checkHistory
           ? `Confirmation needs checking. Reload the workspace and check the review history before another action. ${e.message}` : e.message;
-      } finally { pending = false; }
+      } finally {
+        pending = false;
+        if (!checkHistory) meta.removeAttribute("data-review-pending");
+      }
     };
     const unavailable = d.stale || d.verified === false || d.validated === false;
     const editBox = h("div", { hidden: true },
@@ -443,7 +448,11 @@ function aiNotes(d, onDone, getText) {
       h("div", { class: "row review-choices" }, h("button", { class: "alt", type: "button", disabled: unavailable, onclick: go("accept") }, "Use this draft"),
         chooseEdit, h("button", { class: "alt", type: "button", onclick: () => choose("reject") }, "Do not use this draft")),
       editBox, reasonBox, h("div", { class: "row" }, submit, cancel));
-    why.addEventListener("input", () => { error.textContent = ""; why.removeAttribute("aria-invalid"); why.removeAttribute("aria-describedby"); });
+    why.addEventListener("input", () => {
+      why.dataset.caseDirty = "true";
+      error.textContent = ""; why.removeAttribute("aria-invalid"); why.removeAttribute("aria-describedby");
+    });
+    editing?.addEventListener("input", () => { editing.dataset.caseDirty = "true"; });
     kids.push(box, result);
   }
   const meta = h("div", { class: "aimeta ai-suggestion", "data-record-id": d.record_id, "data-review-state": d.approval }, kids);
@@ -456,9 +465,8 @@ function aiBox() {
   const box = h("section", { class: "card ai briefing" }, h("h2", {}, "Today's briefing"));
   const content = h("div", { class: "briefing-content" });
   const status = h("p", { role: "status", "aria-live": "polite" });
-  const toggle = h("select", { id: "wf-mode", name: "assistance-mode", onchange: () => {
-    aiMode.workflow = toggle.value === "workflow"; return load();
-  } }, h("option", { value: "ai" }, "Allow AI suggestions"),
+  const toggle = h("select", { id: "wf-mode", name: "assistance-mode", onchange: () => load() },
+    h("option", { value: "ai" }, "Allow AI suggestions"),
     h("option", { value: "workflow" }, "Use rules and templates, without AI"));
   toggle.value = aiMode.workflow ? "workflow" : "ai";
   const mode = h("div", {}, h("label", { for: "wf-mode" }, "How to prepare briefings and draft requests"), toggle,
@@ -491,15 +499,30 @@ function aiBox() {
           statement.citations.length ? h("ul", {}, statement.citations.map(cite => h("li", {}, source(cite, b.source_case_ids || [])))) : h("p", {}, "No statement references were provided. Check the case record."),
           statement.unresolved?.length ? h("p", { class: "err" }, `These references do not match the record: ${statement.unresolved.join("; ")}. Do not rely on this statement.`) : null)))),
       h("p", {}, "References show what was cited, not whether the statement is correct. Correct the draft or explain why you will not use it below. Recorded reviews cannot be undone."),
-      aiNotes(b), h("button", { type: "button", class: "alt", onclick: load }, "Refresh briefing"));
+      aiNotes(b), h("button", { type: "button", class: "alt", onclick: () => load() }, "Refresh briefing"));
   };
-  let sequence = 0;
+  let sequence = 0, loading = false;
   const load = async () => {
+    if (loading) return;
+    if (content.querySelector("[data-review-pending]")) {
+      toggle.value = aiMode.workflow ? "workflow" : "ai";
+      status.textContent = "Finish the pending review first. If confirmation needs checking, reload the workspace and check review history before requesting a fresh briefing.";
+      return;
+    }
+    if (content.querySelector('[data-case-dirty="true"]')
+        && !window.confirm("Replace this briefing and discard its unsubmitted review edits? Copy anything you need first.")) {
+      toggle.value = aiMode.workflow ? "workflow" : "ai";
+      return;
+    }
+    aiMode.workflow = toggle.value === "workflow";
+    loading = true;
+    toggle.disabled = true;
+    content.inert = true;
     const own = ++sequence;
     const signal = routeController.signal;
     const cancel = () => { if (briefingBox === box) briefingBox = null; };
     signal.addEventListener("abort", cancel, { once: true });
-    box.setAttribute("aria-busy", "true");
+    content.setAttribute("aria-busy", "true");
     status.textContent = "Reading case summaries...";
     try {
       const b = await api(`/api/briefing${aiMode.workflow ? "?mode=workflow" : ""}`, undefined, signal);
@@ -508,10 +531,17 @@ function aiBox() {
     } catch (error) {
       if (signal.aborted || own !== sequence) return;
       status.textContent = `Briefing unavailable: ${error.message}. Try loading the briefing again.`;
-      content.replaceChildren(h("button", { type: "button", onclick: load }, "Try loading briefing again"));
+      if (!content.childElementCount) {
+        content.replaceChildren(h("button", { type: "button", onclick: () => load() }, "Try loading briefing again"));
+      }
     } finally {
       signal.removeEventListener("abort", cancel);
-      if (own === sequence) box.removeAttribute("aria-busy");
+      if (own === sequence) {
+        content.removeAttribute("aria-busy");
+        content.inert = false;
+        toggle.disabled = false;
+        loading = false;
+      }
     }
   };
   box.append(status, dismiss, mode, content);

@@ -4,6 +4,23 @@ description: Evidence-based task contracts for issue 531
 ms.date: 2026-10-28
 ---
 
+## Authorized rebased continuation (2026-10-29)
+
+The coordinator authorized rebase, independent review and correction of the
+result, without push. Parent is `27d11262`. The rebased independent assessment
+confirmed RV-001/002/003 remain open; the original Review is preserved.
+P02 captures rules fragments/references before generation, protects unsaved
+briefing review values with explicit discard confirmation, and blocks refresh
+and mode replacement during pending or history-blocked reviews. P01 places
+form and briefing announcers outside busy subtrees without replacing existing
+pending/disabled ownership. P03 adds targeted regressions, runs source-local
+API discovery and locked journey/assistants/briefing browser checks with axe.
+Continuation complete: source-local API discovery passed 1215 tests with 316
+environment-dependent skips. Loading/briefing, journey and assistants checks
+passed with 4/42/40 zero-violation axe scopes; employee briefing and workspace
+script recovery passed. Corrections and regression evidence are in the changes
+record; original Review outcome is unchanged. No push or publication receipt.
+
 <!-- rpi:phase id=P01 -->
 ## P01: Loading and action feedback
 

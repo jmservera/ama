@@ -97,6 +97,38 @@ def run_browser(base: str, axe: str, output: Path) -> None:
             briefing.get_by_role("button", name="Edit this draft", exact=True).click()
             expect(edit).to_have_value("Locally corrected briefing")
             expect(reason).to_have_value("Checked the records")
+            reads: list[str] = []
+            page.on("request", lambda request: reads.append(request.url)
+                    if "/api/briefing" in request.url else None)
+            refresh = briefing.get_by_role("button", name="Refresh briefing", exact=True)
+            mode = briefing.get_by_label(
+                "How to prepare briefings and draft requests", exact=True)
+            page.once("dialog", lambda dialog: dialog.dismiss())
+            refresh.click()
+            expect(edit).to_have_value("Locally corrected briefing")
+            assert not reads, "cancelled refresh must not read or replace evidence"
+            page.once("dialog", lambda dialog: dialog.dismiss())
+            mode.select_option("workflow")
+            expect(mode).to_have_value("ai")
+            expect(reason).to_have_value("Checked the records")
+            assert not reads, "cancelled mode change must not read or replace evidence"
+            page.route("**/api/briefing", lambda route: route.fulfill(
+                status=503, json={"error": "Synthetic refresh failure"}))
+            page.once("dialog", lambda dialog: dialog.accept())
+            refresh.click()
+            expect(briefing.get_by_role("status").filter(
+                has_text="Synthetic refresh failure")).to_be_visible()
+            expect(edit).to_have_value("Locally corrected briefing")
+            expect(reason).to_have_value("Checked the records")
+            page.unroute("**/api/briefing")
+            page.once("dialog", lambda dialog: dialog.accept())
+            refresh.click()
+            expect(edit).to_be_hidden()
+            briefing.get_by_role("button", name="Edit this draft", exact=True).click()
+            expect(edit).not_to_have_value("Locally corrected briefing")
+            expect(reason).to_have_value("")
+            edit.fill("Locally corrected briefing")
+            reason.fill("Checked the records")
             held: list[Route] = []
             page.route("**/api/ai/review/*/edit", lambda route: held.append(route))
             submit = briefing.get_by_role("button", name="Save edited draft review", exact=True)
@@ -105,6 +137,14 @@ def run_browser(base: str, axe: str, output: Path) -> None:
             expect(submit).to_be_disabled()
             expect(briefing.locator(".async-feedback").first).to_be_visible()
             expect(briefing.locator(".async-spinner").first).to_be_visible()
+            before_reads = len(reads)
+            refresh.click()
+            mode.select_option("workflow")
+            expect(mode).to_have_value("ai")
+            expect(briefing).to_contain_text("Finish the pending review first")
+            assert len(reads) == before_reads
+            submit.evaluate("el => el.click()")
+            assert len(held) == 1, "refresh cannot remount a second review dispatcher"
             assert held[0].request.post_data_json == {
                 "reason": "Checked the records", "text": "Locally corrected briefing"}
             held[0].fulfill(status=503, json={"error": "Synthetic review failed"})
@@ -154,8 +194,16 @@ def run_browser(base: str, axe: str, output: Path) -> None:
                          citations=[], unresolved=["ZF-1: Invented fact"]),
                 ],
             )
-            page.route("**/api/briefing", lambda route: route.fulfill(json=original))
-            briefing.get_by_role("button", name="Refresh briefing", exact=True).click()
+            held_briefing: list[Route] = []
+            page.route("**/api/briefing", lambda route: held_briefing.append(route))
+            page.once("dialog", lambda dialog: dialog.accept())
+            with page.expect_request("**/api/briefing"):
+                refresh.click()
+            expect(briefing.locator(".briefing-content")).to_have_attribute("aria-busy", "true")
+            assert briefing.get_by_role("status").filter(
+                has_text="Reading case summaries").evaluate(
+                    "el => !el.closest('[aria-busy=true]')")
+            held_briefing[0].fulfill(json=original)
             expect(briefing).to_contain_text("Generated briefing and its sources")
             assert briefing.locator(".field-error").evaluate(
                 "el => getComputedStyle(el, ':before').content") == "none"
@@ -174,8 +222,36 @@ def run_browser(base: str, axe: str, output: Path) -> None:
             reports.append(dict(state="ai-unverified-sources", result=result))
             assert not result["violations"], json.dumps(result["violations"], indent=2)
             page.unroute("**/api/briefing")
+            page.route("**/api/briefing", lambda route: route.fulfill(json=original))
+            for http_status, outcome in ((409, "committed"), (503, "uncertain")):
+                page.reload()
+                expect(briefing).to_contain_text("Generated briefing and its sources")
+                briefing.get_by_role(
+                    "button", name="Do not use this draft", exact=True).click()
+                briefing.get_by_label("Reason", exact=True).fill("Check this review history")
+                held.clear()
+                page.route("**/api/ai/review/*/reject", lambda route: held.append(route))
+                rejection = briefing.get_by_role("button", name="Record rejection", exact=True)
+                with page.expect_request("**/api/ai/review/*/reject"):
+                    rejection.click()
+                held[0].fulfill(status=http_status, json={
+                    "error": "Synthetic confirmation needs checking", "outcome": outcome})
+                expect(briefing).to_contain_text("Confirmation needs checking")
+                expect(rejection).to_be_disabled()
+                before_reads = len(reads)
+                refresh.click()
+                mode.select_option("workflow")
+                expect(mode).to_have_value("ai")
+                expect(briefing).to_contain_text("Finish the pending review first")
+                assert len(reads) == before_reads
+                rejection.evaluate("el => el.click()")
+                assert len(held) == 1, "history barrier must not allow a second review"
+                page.unroute("**/api/ai/review/*/reject")
+            print("PASS guarded refresh/mode, retained failed-refresh edits and outcome barriers")
+            page.unroute("**/api/briefing")
             page.screenshot(path=str(output / "briefing.png"), full_page=True)
             # Actual resident draft action, with getText-backed review.
+            page.once("dialog", lambda dialog: dialog.accept())
             page.goto(base + "/app#/case/ZF-1?tab=resident")
             draft = page.get_by_role("button", name="Draft with AI", exact=True)
             held.clear()
@@ -228,11 +304,13 @@ def run_browser(base: str, axe: str, output: Path) -> None:
             with page.expect_request("**/api/workorders/SYN-531/appointment-control"):
                 appointment_submit.click()
             expect(appointment_submit).to_be_disabled()
-            expect(form.locator(".async-spinner")).to_be_visible()
+            expect(appointment.locator(".async-spinner")).to_be_visible()
+            assert appointment.locator(".async-feedback").evaluate(
+                "el => !el.closest('[aria-busy=true]')")
             form.evaluate("el => el.requestSubmit()")
             assert len(held) == 1
             held[0].fulfill(status=503, json={"error": "Synthetic appointment failure"})
-            expect(form.get_by_role("status").filter(
+            expect(appointment.get_by_role("status").filter(
                 has_text="Synthetic appointment failure")).to_be_visible()
             expect(appointment_submit).to_be_enabled()
             # Test-only UI is removed; no synthetic mutation reached the store.
