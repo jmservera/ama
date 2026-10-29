@@ -17,6 +17,7 @@ from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
 from zava_forward.core.chat_privacy import redact
 from zava_forward.core.chatthreads import MAX_CONTENT, ChatNotFound, user_key
 from zava_forward.core.regulatory_privacy import retention_report
+from zava_forward.core.regulatory_usage import MAX_BYTES, MAX_POSITIONS, offline_usage, summarize
 from zava_forward.core.rule_engine import citation_eligibility
 from zava_forward.core.source_monitor import card_freshness
 
@@ -69,7 +70,12 @@ class RegulatoryChat:
                 raise ChatForbidden("The staff principal is no longer provisioned.")
             person = json.loads(person[0])
             user = (
-                dict(person, role=user["role"])
+                dict(
+                    person,
+                    role=user["role"],
+                    auth_provider="trusted-proxy",
+                    rule_roles=user.get("rule_roles", []),
+                )
                 if user.get("auth_provider") == "trusted-proxy"
                 else person
             )
@@ -93,7 +99,12 @@ class RegulatoryChat:
             return dict(user)
         current = self.iso.current_user(user)
         if user.get("auth_provider") == "trusted-proxy":
-            current = dict(current, role=user["role"])
+            current = dict(
+                current,
+                role=user["role"],
+                auth_provider="trusted-proxy",
+                rule_roles=user.get("rule_roles", []),
+            )
             if not projection.allowed(current, "chat"):
                 raise ChatForbidden("The authenticated staff role does not include chat.")
         return dict(current)
@@ -129,6 +140,50 @@ class RegulatoryChat:
             if t["title"].startswith(TASK + ":") and t["owner_role"] == user["role"]
         ]
         return retention_report(threads, self.iso.env, self.clock())
+
+    def usage_status(self, user: dict[str, Any]) -> dict[str, Any]:
+        user = self.admit(user)
+        details = []
+        if hasattr(self.store, "assistant_connection"):
+            with self.store.dblock:
+                latest = self.store.db.execute("SELECT MAX(seq) FROM audit").fetchone()[0] or 0
+                rows = self.store.db.execute(
+                    "SELECT CASE WHEN who=? AND action=? THEN detail ELSE NULL END "
+                    "FROM audit WHERE seq>? AND seq<=? ORDER BY seq",
+                    (
+                        user_key(user),
+                        "chat.regulatory.turn",
+                        max(0, latest - MAX_POSITIONS),
+                        latest,
+                    ),
+                ).fetchall()
+            details = [row[0] for row in rows if row[0] is not None]
+            truncated = latest > MAX_POSITIONS
+        else:
+            try:
+                stream = open(self.store.audit_path, "rb")
+            except FileNotFoundError:
+                lines, truncated = [], False
+            else:
+                with stream:
+                    size = stream.seek(0, 2)
+                    start = max(0, size - MAX_BYTES)
+                    stream.seek(start)
+                    lines = stream.read(size - start).splitlines()
+                if start:
+                    lines = lines[1:]
+                truncated = bool(start) or len(lines) > MAX_POSITIONS
+                lines = lines[-MAX_POSITIONS:]
+            for line in lines:
+                record = json.loads(line)
+                if record["who"] == user_key(user) and record["action"] == "chat.regulatory.turn":
+                    details.append(record["detail"])
+        return summarize(
+            details,
+            user["role"],
+            self.clock().astimezone(UTC).date().isoformat(),
+            truncated=truncated,
+        )
 
     def _audit(
         self, user: dict[str, Any], action: str, thread: dict[str, Any], **meta: Any
@@ -294,17 +349,24 @@ class RegulatoryChat:
             raise ValueError("Question must contain 1 to 1000 characters.")
         masked: str = redact(question.strip())[0]
         reply = self.render(self.bundle(user, thread["case_id"], masked))
+        outcome = reply["kind"]
+        usage = offline_usage(TASK, SCHEMA, outcome, reply["as_of"])
+        reply["usage"] = usage
         text = encode(reply)
         repo = self.store.chat_repo
+        receipt = None
+        expected_version = thread["rowversion"]
         with self.store.lock:
             before = copy.deepcopy(self.store.data.get("chat_threads", {}))
             try:
                 with repo.txn():
+                    user, thread = self.thread(user, tid)
+                    owner = self._owner(user, thread["case_id"]) if outcome == "conflict" else None
                     fresh = repo.get(tid, user_key(user))
                     if (
                         fresh is None
                         or fresh["status"] != "active"
-                        or fresh["rowversion"] != thread["rowversion"]
+                        or fresh["rowversion"] != expected_version
                     ):
                         raise self.store._chat_conflict(tid)
                     now = self.clock().isoformat(timespec="milliseconds")
@@ -317,22 +379,23 @@ class RegulatoryChat:
                         updated_at=now,
                     ):
                         raise self.store._chat_conflict(tid)
+                    pair = []
                     for role, content, number, refs in (
                         ("user", masked, seq - 1, []),
                         ("assistant", text, seq, [c["id"] for c in reply["citations"]]),
                     ):
-                        repo.add_message(
-                            dict(
-                                thread_id=tid,
-                                seq=number,
-                                role=role,
-                                content=content,
-                                evidence=refs,
-                                model="offline-extractive",
-                                task_version="",
-                                created_at=now,
-                            )
+                        message = dict(
+                            thread_id=tid,
+                            seq=number,
+                            role=role,
+                            content=content,
+                            evidence=refs,
+                            model="offline-extractive",
+                            task_version="",
+                            created_at=now,
                         )
+                        repo.add_message(message)
+                        pair.append(message)
                     if hasattr(self.store, "assistant_connection"):
                         self._audit(
                             user,
@@ -342,15 +405,38 @@ class RegulatoryChat:
                             model="offline-extractive",
                             citations=[c["id"] for c in reply["citations"]],
                             answer_hash=hashlib.sha256(text.encode()).hexdigest(),
+                            usage=usage,
                         )
+                    if owner is not None:
+                        receipt, _ = self._refer(user, thread, seq, owner, pair[0], pair[1])
                     repo.commit()
             except BaseException:
                 if not hasattr(self.store, "assistant_connection"):
                     self.store.data["chat_threads"] = before
                 raise
         if not hasattr(self.store, "assistant_connection"):
-            self._audit(user, "chat.regulatory.turn", dict(thread, message_count=seq), turn=seq)
-        return dict(reply, turn=seq)
+            try:
+                self._audit(
+                    user,
+                    "chat.regulatory.turn",
+                    dict(thread, message_count=seq),
+                    turn=seq,
+                    usage=usage,
+                )
+                if receipt:
+                    self._audit(
+                        user,
+                        "chat.regulatory.doubt",
+                        dict(thread, message_count=seq + 1),
+                        turn=seq,
+                        inbox_thread=receipt["inbox_thread"],
+                    )
+            except Exception as exc:
+                raise RuntimeError(
+                    "The turn and any referral were saved, but their audit failed. "
+                    "Reload stored history before retrying; metering may be incomplete."
+                ) from exc
+        return dict(reply, turn=seq, **({"escalation": receipt} if receipt else {}))
 
     def _owner(self, sender: dict[str, Any], case_id: str) -> dict[str, Any]:
         staff = list(self.store.staff.values())
@@ -368,11 +454,88 @@ class RegulatoryChat:
                 "Named synthetic-demo owner is missing or ambiguous; no turn was sent."
             )
         owner = self.admit(owners[0])
+        if sender.get("auth_provider") == "trusted-proxy" and "regulatory_chat" not in owner.get(
+            "rule_roles", []
+        ):
+            raise ChatForbidden("The named owner lacks the separately assigned chat capability.")
         if sender["role"] in HAZARD_ROLES and owner["role"] not in HAZARD_ROLES:
             raise ChatForbidden("The named owner's current role cannot read these hazard facts.")
         if case_id and self.store.detail(case_id, owner) is None:
             raise ChatNotFound(case_id)
         return owner
+
+    def _refer(
+        self,
+        user: dict[str, Any],
+        thread: dict[str, Any],
+        seq: int,
+        owner: dict[str, Any],
+        question: dict[str, Any],
+        selected: dict[str, Any],
+    ) -> tuple[dict[str, Any], bool]:
+        """Caller owns the transaction and current-principal/case authorization."""
+        repo = self.store.chat_repo
+        for message in repo.messages(thread["id"]):
+            if message["role"] == "assistant":
+                prior = json.loads(message["content"])
+                if prior.get("referred_turn") == seq:
+                    return dict(prior), False
+        fresh = repo.get(thread["id"], user_key(user))
+        if fresh is None or fresh["status"] != "active":
+            raise self.store._chat_conflict(thread["id"])
+        now = self.clock().isoformat(timespec="milliseconds")
+        inbox_id = "CT-" + uuid.uuid4().hex[:16]
+        inbox = dict(
+            fresh,
+            id=inbox_id,
+            owner=user_key(owner),
+            owner_role=owner["role"],
+            title=TASK + ": doubt inbox synthetic-demo",
+            rowversion=1,
+            message_count=2,
+            created_at=now,
+            updated_at=now,
+        )
+        repo.insert_thread(inbox)
+        for i, original in enumerate((question, selected), 1):
+            repo.add_message(dict(original, thread_id=inbox_id, seq=i, created_at=now))
+        receipt = dict(
+            referred_turn=seq,
+            owner=OWNER,
+            label=MARKER,
+            status="sent-to-exercise-inbox",
+            inbox_thread=inbox_id,
+        )
+        if not repo.update(
+            thread["id"],
+            user_key(user),
+            fresh["rowversion"],
+            message_count=fresh["message_count"] + 1,
+            updated_at=now,
+        ):
+            raise self.store._chat_conflict(thread["id"])
+        repo.add_message(
+            dict(
+                thread_id=thread["id"],
+                seq=fresh["message_count"] + 1,
+                role="assistant",
+                content=encode(receipt),
+                evidence=[],
+                model="offline-extractive",
+                task_version="",
+                created_at=now,
+            )
+        )
+        if hasattr(self.store, "assistant_connection"):
+            self._audit(
+                user,
+                "chat.regulatory.doubt",
+                dict(thread, message_count=fresh["message_count"] + 1),
+                turn=seq,
+                inbox_thread=inbox_id,
+                decision_owner=user_key(owner),
+            )
+        return receipt, True
 
     def doubt(self, user: dict[str, Any], tid: str, seq: object) -> dict[str, Any]:
         user, thread = self.thread(user, tid)
@@ -388,85 +551,28 @@ class RegulatoryChat:
             raise ValueError("Only a stored cited turn can be referred.")
         owner = self._owner(user, thread["case_id"])
         repo = self.store.chat_repo
+        expected_version = thread["rowversion"]
         # MemoryRepo only locks; preserve its pre-image as SQL rollback does.
         with self.store.lock:
             before = copy.deepcopy(self.store.data.get("chat_threads", {}))
             try:
                 with repo.txn():
+                    user, thread = self.thread(user, tid)
+                    owner = self._owner(user, thread["case_id"])
                     fresh = repo.get(tid, user_key(user))
                     if (
                         fresh is None
                         or fresh["status"] != "active"
-                        or fresh["rowversion"] != thread["rowversion"]
+                        or fresh["rowversion"] != expected_version
                     ):
                         raise self.store._chat_conflict(tid)
-                    for message in repo.messages(tid):
-                        if message["role"] == "assistant":
-                            try:
-                                prior = json.loads(message["content"])
-                            except ValueError:
-                                continue
-                            if prior.get("referred_turn") == seq:
-                                return dict(prior)
-                    now = self.clock().isoformat(timespec="milliseconds")
-                    inbox_id = "CT-" + uuid.uuid4().hex[:16]
-                    inbox = dict(
-                        thread,
-                        id=inbox_id,
-                        owner=user_key(owner),
-                        owner_role=owner["role"],
-                        title=TASK + ": doubt inbox synthetic-demo",
-                        rowversion=1,
-                        message_count=2,
-                        created_at=now,
-                        updated_at=now,
-                    )
-                    inbox.pop("messages")
-                    repo.insert_thread(inbox)
-                    for i, original in enumerate((question, selected), 1):
-                        repo.add_message(dict(original, thread_id=inbox_id, seq=i, created_at=now))
-                    receipt = dict(
-                        referred_turn=seq,
-                        owner=OWNER,
-                        label=MARKER,
-                        status="sent-to-exercise-inbox",
-                        inbox_thread=inbox_id,
-                    )
-                    if not repo.update(
-                        tid,
-                        user_key(user),
-                        fresh["rowversion"],
-                        message_count=fresh["message_count"] + 1,
-                        updated_at=now,
-                    ):
-                        raise self.store._chat_conflict(tid)
-                    repo.add_message(
-                        dict(
-                            thread_id=tid,
-                            seq=fresh["message_count"] + 1,
-                            role="assistant",
-                            content=encode(receipt),
-                            evidence=[],
-                            model="offline-extractive",
-                            task_version="",
-                            created_at=now,
-                        )
-                    )
-                    if hasattr(self.store, "assistant_connection"):
-                        self._audit(
-                            user,
-                            "chat.regulatory.doubt",
-                            dict(thread, message_count=fresh["message_count"] + 1),
-                            turn=seq,
-                            inbox_thread=inbox_id,
-                            decision_owner=user_key(owner),
-                        )
+                    receipt, created = self._refer(user, thread, seq, owner, question, selected)
                     repo.commit()
             except BaseException:
                 if not hasattr(self.store, "assistant_connection"):
                     self.store.data["chat_threads"] = before
                 raise
-        if not hasattr(self.store, "assistant_connection"):
+        if created and not hasattr(self.store, "assistant_connection"):
             self._audit(
                 user,
                 "chat.regulatory.doubt",

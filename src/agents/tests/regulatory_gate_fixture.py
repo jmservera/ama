@@ -101,6 +101,22 @@ def oracle(case: dict[str, Any]) -> dict[str, Any]:
     expected: dict[str, Any] = dict(
         kind=case["kind"], sources=[], facts=[], cards=[], as_of="2026-10-16T12:00:00+00:00"
     )
+    expected["usage"] = dict(
+        schema="regulatory-usage-v1",
+        task="regulatory-home-chat",
+        task_version="regulatory-chat-v1",
+        model="none",
+        outcome=case["kind"],
+        period="2026-10-16",
+        period_basis="UTC day",
+        model_calls=0,
+        input_tokens=0,
+        output_tokens=0,
+        cached_tokens=0,
+        retries=0,
+        model_call_limit_per_role_period=0,
+        limit_basis="Inference disabled for every role; not a paid budget approval.",
+    )
     if case.get("reason"):
         expected["reason"] = REASONS[case["reason"]]
         if case["reason"] == "no_source":

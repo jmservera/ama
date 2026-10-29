@@ -641,9 +641,12 @@ def make_handler(app):
                     if not post and parts == ["regulatory", "status"]:
                         return self._json(200, {"label": "synthetic-demo", "enabled": True,
                                                "privacy": app.regulatory.privacy_status(user),
+                                               "usage": app.regulatory.usage_status(user),
                                                "warning": CHAT_WARNING})
                     if not post and parts == ["regulatory", "inbox"]:
                         return self._json(200, app.regulatory.inbox(user))
+                    if not post and parts == ["regulatory", "usage"]:
+                        return self._json(200, app.regulatory.usage_status(user))
                     if post and parts == ["regulatory", "threads"]:
                         if set(body) != {"case_id"}:
                             raise ValueError("Only case_id is accepted.")

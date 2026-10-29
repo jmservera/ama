@@ -222,12 +222,33 @@ class RegulatoryGates(unittest.TestCase):
             self.assertEqual(result["status"], "not_evaluated")
             self.assertEqual(result["ship_recommendation"], "cards_only")
             self.assertTrue(all(value is None for value in result["measurements"].values()))
+            costs = result["economics"]
+            self.assertEqual(costs["ai_cost_per_accepted_check"], "Unknown")
+            self.assertEqual(len(costs["missing_inputs"]), 4)
+            self.assertEqual(costs["execution"]["model_call_limit"], 0)
+            self.assertEqual(costs["execution"]["paid_authority"], "none")
         for row in self.paired:
             self.assertEqual(row["baseline_source_ids"], row["chat_source_ids"])
             for card in row["baseline_cards"]:
                 self.assertTrue(card["link"])
                 self.assertTrue(all(p["link"] for p in card["provisions"]))
         self.assertEqual(self.stale["matched"], 1)
+
+    def test_forged_usage_or_content_bearing_metering_fails_contract(self) -> None:
+        for field, value in (
+            ("model_calls", 1),
+            ("model_calls", False),
+            ("model", "live"),
+            ("question", "PRIVATE-METER-CANARY"),
+            ("outcome", "approved"),
+            ("period", "2026-10-17"),
+        ):
+            case = self.mutation()
+            case["actual"]["usage"][field] = value
+            self.assertEqual(self.failures(case, "answer_contract"), [case["id"]])
+        case = self.mutation()
+        case["actual"].pop("usage")
+        self.assertEqual(self.failures(case, "answer_contract"), [case["id"]])
 
     def test_recorded_60000_home_report_matches_exact_rerun(self) -> None:
         recorded = Path(__file__).resolve().parents[1] / "evals/regulatory_gates_results.json"

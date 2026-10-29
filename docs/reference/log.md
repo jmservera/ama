@@ -8085,3 +8085,22 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   the separate opt-in SDK publisher and pacing library exist, while verified
   live operation, credential lifecycle and actual scenario consumer use
   remain unproven. No historical log entry or live approval was changed.
+## [2026-10-27] implement | Synthetic regulatory conflict routing and consumption (Refs #208, #214, #216, #215, #217)
+
+* Extended existing cited-home chat with automatic supported-conflict referrals
+  to the named exercise owner's isolated inbox and a durable sender receipt.
+  SQL turn/referral/audit is transactional; JSON's post-save audit limitation
+  is explicit. No legal interpretation or activation authority is added.
+* Added closed zero-model usage metadata and bounded own-role/day audit-only
+  summaries. Cost remains Unknown and paid authority absent; deterministic
+  alerts, safety intake and cards-only shipment boundaries are unchanged.
+* Updated the existing regulatory-literacy synthesis and draft DPIA data map,
+  project guides and this index. DPO necessity/notice/recipient/rights/periods
+  review must include automatic referrals and metadata; no human checkbox,
+  legal snapshot, owner memory or original case-study text was changed.
+* Local synthetic unit/evaluation/browser evidence and original failures are
+  retained in the dated RPI artifacts. Staff comprehension, owner-agreed
+  thresholds, continuing-stock validation, actual identity/deployed SQL and
+  #440 remain unmet. Publication is separately blocked by the mandatory
+  full-gate requirement versus the caller's explicit no-full-gate limit.
+  No cloud deployment, model call, private dataset access or approval occurred.

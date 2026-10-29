@@ -109,6 +109,9 @@ class RuleAlertApi(unittest.TestCase):
         a = self.alert()
         self.assertEqual(a["result"], "breach risk")
         self.assertEqual(a["trigger"], "data_change")
+        self.assertEqual(a["usage"]["model_calls"], 0)
+        self.assertEqual(a["usage"]["outcome"], a["result"])
+        self.assertEqual(a["usage"]["model_call_limit_per_role_period"], 0)
         for actor, expected in (
             ("owner", 200),
             ("other", 200),

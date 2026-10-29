@@ -288,6 +288,7 @@ function regulatoryAlertsPanel(caseId) {
           h("dt", {}, "Check recorded at"), h("dd", {}, `${alert.at || "unknown"}; step: ${alert.step || "unknown"}; card: ${alert.card_id}@${alert.card_version}`),
           h("dt", {}, "Current control"), h("dd", {}, alert.active_control ? "Active bounded control" : "Not active or source uncertain; retained risk still needs human review"),
           h("dt", {}, "Latest check"), h("dd", {}, `${alert.latest_result || "unknown"} at ${alert.latest_evaluated_at || "unknown"}`)),
+        h("p", {}, alert.usage ? "Model calls per check and alert: 0. Inference is disabled for every role. Service cost: Unknown; price and billing allocation are not held." : "Historical model usage was not recorded. Service cost: Unknown."),
         h("h4", {}, "Source and status"), regulatorySources(alert.citations),
         h("p", {}, `Owner acknowledgement: ${alert.requires_acknowledgement ? "required" : "not outstanding"}. Owner outcome: ${alert.requires_outcome ? "required" : "not outstanding"}. This panel cannot acknowledge, decide compliance or restart stopped retrofit work.`))));
       status.textContent = `${alerts.length} visible alerts. Coverage: ${data.coverage_status || "unknown"}. ${alerts.length ? "Only alerts permitted for your role are shown." : "No visible alerts does not mean no risk, complete coverage or compliance."}`;
@@ -310,16 +311,29 @@ function regulatoryChatPanel(caseId) {
   const status = h("p", { role: "status" });
   const privacy = h("p", { id: "regulatory-privacy", class: "muted" },
     "Synthetic data only. Do not enter resident personal or special-category details. DPIA and retention review remain incomplete.");
+  const usageStatus = h("p", { id: "regulatory-usage", "aria-live": "polite", "aria-atomic": "true" },
+    "Recorded usage is not available yet. No model calls are permitted.");
+  const showUsage = (usage) => {
+    const n = new Intl.NumberFormat();
+    const day = new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeZone: "UTC" })
+      .format(new Date(`${usage.period}T00:00:00Z`));
+    usageStatus.textContent = `Your current role: ${usage.role}. Recorded usage for ${day} (UTC): ${n.format(usage.recorded_turns)} turns; ${n.format(usage.outcomes.answer)} answers, ${n.format(usage.outcomes.refused)} refusals, ${n.format(usage.outcomes.conflict)} conflicts. ${usage.coverage === "bounded_partial" ? "Partial audit window." : "Audit records only."} This is not an exact turn total. Model-call limit per role and UTC day: 0. Service cost: Unknown; accepted-check counts, prices, billing allocation and review effort are not held.`;
+  };
+  const refreshUsage = async () => {
+    try { showUsage(await api("/api/chat/regulatory/usage")); }
+    catch (e) { usageStatus.textContent = `Recorded usage unavailable: ${e.message} No model calls are permitted; use the human owner route.`; }
+  };
   const log = h("ol", { "aria-label": "Cited regulatory turns" });
   const liveLog = h("div", { role: "log", "aria-live": "polite", "aria-label": "Cited regulatory updates" }, log);
-  const input = h("textarea", { id: "regulatory-question", maxlength: "1000", rows: "3", "aria-describedby": "regulatory-privacy" });
+  const input = h("textarea", { id: "regulatory-question", name: "regulatory-question", autocomplete: "off", maxlength: "1000", rows: "3", "aria-describedby": "regulatory-privacy" });
   const button = h("button", { type: "submit" }, "Look up cited sources");
   let tid = null;
   const show = (answer, thread) => {
     const sections = answer.sections;
     const item = h("li", { class: "regulatory-turn" },
       h("h3", {}, `Lookup status: ${answer.kind}`),
-      h("p", {}, answer.label || "synthetic-demo: not legal advice or approval"));
+      h("p", {}, answer.label || "synthetic-demo: not legal advice or approval"),
+      h("p", {}, answer.usage ? "Model calls for this question: 0. Inference is disabled. Service cost: Unknown, not zero." : "Historical model usage was not recorded. Service cost: Unknown."));
     if (sections) {
       item.append(h("h4", {}, "What the sources say"),
         h("p", { class: "plain-explanation" }, "These are exact excerpts, not a decision about which duty applies. Check the source status and dates."),
@@ -350,11 +364,16 @@ function regulatoryChatPanel(caseId) {
         doubt.removeAttribute("aria-disabled");
       }
     } }, "In doubt: send this turn to Juan Manuel Servera");
+    if (answer.escalation) {
+      doubt.setAttribute("aria-disabled", "true");
+      doubt.textContent = "Sent to exercise owner; awaiting human review";
+      item.append(h("p", {}, `Turn sent to ${answer.escalation.owner}'s exercise inbox. No legal decision recorded.`));
+    }
     item.append(citations, doubt);
     log.append(item);
   };
   root.append(h("p", {}, "synthetic-demo only. Exact source excerpts and recorded facts, not legal interpretation. Ask about hazard sources or automated decisions. Safety routes and deterministic alerts remain independent."),
-    privacy,
+    privacy, usageStatus,
     regulatoryPlainMode(root, "chat-plain-mode"),
     h("p", { class: "plain-explanation" }, "Use short questions to find sources. Missing, conflicting, stale or future sources are not proof of a duty. For lease, grant or contract terms, obtain the actual document and ask the named human owner."),
     regulatoryGuidance(me.user.role),
@@ -362,7 +381,7 @@ function regulatoryChatPanel(caseId) {
       event.preventDefault();
       if (button.disabled) return;
       const question = input.value.trim();
-      if (!question) { status.textContent = "Enter a source question."; return; }
+      if (!question) { status.textContent = "Enter a source question."; input.focus(); return; }
       const sent = snapshotCaseFields([input])[0];
       button.disabled = true;
       status.textContent = "Looking up cited sources. Human safety routes remain available.";
@@ -371,8 +390,9 @@ function regulatoryChatPanel(caseId) {
         const answer = await api(`/api/chat/regulatory/threads/${encodeURIComponent(tid)}/ask`, { content: question });
         log.append(h("li", {}, h("strong", {}, "You"), " ", question));
         show(answer, tid);
-        status.textContent = `${answer.kind}: synthetic-demo turn stored with its sources.`;
+        status.textContent = `${answer.kind}: synthetic-demo turn stored with its sources.${answer.escalation ? " Conflict sent to the exercise owner for human review." : ""}`;
         clearSubmittedQuestion(sent);
+        void refreshUsage();
       } catch (e) { status.textContent = `Cited lookup unavailable: ${e.message} Use the ordinary human route.`; }
       finally { button.disabled = false; input.focus(); }
     } }, h("label", { for: "regulatory-question" }, "Cited source question"), input, button),
@@ -393,6 +413,7 @@ function regulatoryChatPanel(caseId) {
     status.textContent = "Synthetic source lookup available. No legal approval is implied.";
     const schedule = admission.privacy.chat;
     privacy.textContent = `${admission.warning} DPIA: draft for DPO review. Retention: ${schedule.status === "simulated" ? `${schedule.days} days (simulated only)` : "unknown, DPO period not set"}. No automatic deletion or operational approval.`;
+    showUsage(admission.usage);
     try {
       const threads = await api("/api/chat/threads");
       const latest = threads.find((thread) => thread.case_id === caseId &&
@@ -400,11 +421,14 @@ function regulatoryChatPanel(caseId) {
       if (!latest) return;
       const history = await api(`/api/chat/regulatory/threads/${encodeURIComponent(latest.id)}`);
       tid = history.id;
+      const receipts = new Map(history.messages.filter((turn) => turn.role === "assistant")
+        .map((turn) => JSON.parse(turn.content)).filter((turn) => Number.isInteger(turn.referred_turn))
+        .map((receipt) => [receipt.referred_turn, receipt]));
       for (const turn of history.messages) {
         if (turn.role === "user") log.append(h("li", {}, h("strong", {}, "You"), " ", turn.content));
         else {
           const answer = JSON.parse(turn.content);
-          if (answer.schema === "regulatory-chat-v1") show({ ...answer, turn: turn.seq }, tid);
+          if (answer.schema === "regulatory-chat-v1") show({ ...answer, turn: turn.seq, escalation: receipts.get(turn.seq) }, tid);
         }
       }
       status.textContent = "Stored synthetic-demo excerpts restored. These are historical records; ask again for a fresh lookup.";

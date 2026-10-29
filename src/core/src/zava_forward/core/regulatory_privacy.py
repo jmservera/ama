@@ -12,6 +12,11 @@ CLASSES = (
     ("check", "reg_check and reg_checkpoint; case linkage and input hashes"),
     ("alert", "reg_alert and reg_alert_event; named owner dispositions"),
     ("audit", "Append-only rule/check/alert records and chat metadata ledger"),
+    (
+        "usage",
+        "Content-free regulatory turn audit metadata and reg_check/reg_alert usage; "
+        "inherits parent record access, retention and audit review",
+    ),
 )
 
 

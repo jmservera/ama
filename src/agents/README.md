@@ -2,7 +2,7 @@
 title: Zava Forward agents
 description: Five retrofit assistants, the offline AI evaluation harness and their dated validation record for the agents project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-18
+ms.date: 2026-10-27
 ms.topic: reference
 ---
 
@@ -172,6 +172,18 @@ explicit unknown-state diagnostics, not uncaught suite errors. Empty-store and
 unavailable-store HTTP behavior are exercised separately. The stricter merged
 human-decision reasons requirement is satisfied by declared synthetic fixture
 evidence, not disabled in the engine. All acceptance limitations below remain.
+
+### Offline economics delta (2026-10-27, #208)
+
+The comparator additionally reports task/outcome zero-call usage, zero tokens,
+zero enabled inference allowance and absent paid authority. The independent
+fixture specifies the complete expected metadata; mutation tests reject forged
+calls, tokens and a missing usage shape. AI cost per accepted check and total
+service cost remain Unknown: there is no owner-agreed acceptance denominator,
+dated price, attributable billing/allocation or measured human review effort.
+The regenerated 60,000-home report remains stateless synthetic development
+evidence, not a continuing-stock ingestion baseline or a staff trial.
+`cards_only` remains the recommendation, not an operational approval.
 
 ### Acceptance audit (2026-10-16)
 

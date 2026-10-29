@@ -961,6 +961,86 @@ console.log("PASS");
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("PASS", result.stdout)
 
+    def test_regulatory_answer_releases_form_before_usage_refresh_settles(self) -> None:
+        script = (
+            DOM
+            + shipped_helpers()
+            + r"""
+const me = {user: {role: "Retrofit Programme Manager"}};
+const app = new Node("main");
+let answerReady, usageReady, usageFailed, usageRequests;
+const api = async path => {
+  if (path.endsWith("/status")) return new Promise(() => {});
+  if (path.endsWith("/threads")) return {id: "SYN-CHAT"};
+  if (path.endsWith("/ask")) return new Promise(resolve => {answerReady = resolve;});
+  if (path === "/api/chat/regulatory/usage") {
+    usageRequests++;
+    return new Promise((resolve, reject) => {usageReady = resolve; usageFailed = reject;});
+  }
+  throw new Error(`Unexpected request: ${path}`);
+};
+const tick = () => new Promise(resolve => setImmediate(resolve));
+"""
+            + (WEB / "chat.js").read_text()
+            + r"""
+(async () => {
+  for (const outcome of ["success", "failure"]) {
+    for (const edited of [false, true]) {
+      usageRequests = 0;
+      const root = regulatoryChatPanel("SYN-208");
+      const input = root.querySelector("#regulatory-question");
+      const form = root.querySelector("form"), button = form.querySelector("button");
+      const status = root.querySelector('[role="status"]');
+      const usage = root.querySelector("#regulatory-usage");
+      const log = root.querySelector('[aria-label="Cited regulatory turns"]');
+      input.value = "Submitted question"; input.dataset.caseDirty = "true";
+      let submitted = false;
+      const pending = form.events.submit({preventDefault() {}})
+        .then(() => {submitted = true;});
+      await tick();
+      assert.equal(button.disabled, true, "lookup stays disabled while answer is pending");
+      if (edited) input.value = "Next question";
+      answerReady({reply: "Synthetic answer", kind: "answer", citations: []});
+      await tick();
+      assert.match(log.textContent, /Submitted question/);
+      assert.match(log.textContent, /Synthetic answer/);
+      assert.equal(usageRequests, 1, "answer starts the secondary usage read");
+      assert.equal(button.disabled, false, "usage must not keep lookup disabled");
+      assert.equal(submitted, true, "submit must settle while usage is still pending");
+      assert.equal(document.activeElement, input);
+      assert.equal(input.value, edited ? "Next question" : "");
+      assert.equal(Boolean(input.dataset.caseDirty), edited);
+      const answerStatus = status.textContent;
+      assert.match(answerStatus, /answer: synthetic-demo turn stored/);
+      if (outcome === "failure") usageFailed(new Error("Metering offline"));
+      else usageReady({
+        role: me.user.role, period: "2026-10-29", recorded_turns: 1,
+        outcomes: {answer: 1, refused: 0, conflict: 0}, coverage: "recorded_audit_only"
+      });
+      await tick();
+      await pending;
+      assert.match(usage.textContent, outcome === "failure"
+        ? /Recorded usage unavailable: Metering offline/ : /1 turns/);
+      assert.equal(status.textContent, answerStatus, "usage cannot replace answer success");
+      assert.equal(button.disabled, false);
+      assert.equal(document.activeElement, input);
+      assert.equal(input.value, edited ? "Next question" : "");
+      assert.equal(Boolean(input.dataset.caseDirty), edited);
+    }
+  }
+  console.log("PASS");
+})().catch(error => {console.error(error); process.exitCode = 1;});
+"""
+        )
+        result = subprocess.run(
+            ["node", "--unhandled-rejections=strict", "-e", script],
+            text=True,
+            capture_output=True,
+            timeout=30,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("PASS", result.stdout)
+
     def test_both_chat_submissions_clear_only_successful_unchanged_raw_questions(self) -> None:
         script = (
             DOM
@@ -973,6 +1053,10 @@ const api = async (path, body) => {
   if (path === "/api/assistants") return {assistants: []};
   if (path.endsWith("/status")) return new Promise(() => {});
   requests.push({path, body});
+  if (path === "/api/chat/regulatory/usage") return {
+    role: me.user.role, period: "2026-10-29", recorded_turns: 1,
+    outcomes: {answer: 1, refused: 0, conflict: 0}, coverage: "recorded_audit_only"
+  };
   if (failure === "thread" && path.endsWith("/threads")) throw new Error("Thread failed");
   if (path.endsWith("/threads")) return {id: "SYN-CHAT"};
   return await new Promise((resolve, reject) => {finish = resolve; fail = reject;});
@@ -1012,6 +1096,10 @@ const api = async (path, body) => {
       assert.equal(requests[0].body.case_id, "SYN-526");
       if (change !== "thread-failure") {
         assert.equal(requests[1].body.content, "Submitted question");
+      }
+      if (regulatory && !change.endsWith("failure")) {
+        assert.equal(requests[2].path, "/api/chat/regulatory/usage");
+        assert.match(root.querySelector("#regulatory-usage").textContent, /1 turns/);
       }
     }
   }

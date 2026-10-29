@@ -1925,10 +1925,11 @@ fixed five-part answer. No sixth assistant or live AI task is activated.
 
 | Method and path | Contract |
 | --- | --- |
-| `GET /api/chat/regulatory/status` | Synthetic admission, free-text warning and metadata-only own-role retention review; 403 when disabled or unauthorized |
+| `GET /api/chat/regulatory/status` | Synthetic admission, warning, own-role retention review and bounded audit-only usage; 403 when disabled or unauthorized |
+| `GET /api/chat/regulatory/usage` | Metadata-only current-user/current-role/UTC-day recorded outcomes; same synthetic/privacy/capability guards, no message reads |
 | `POST /api/chat/regulatory/threads` | `{"case_id":"ZF-1"}`; owned thread bound to that home/case |
 | `GET /api/chat/regulatory/threads/{id}` | Owner-only historical messages, source snapshots and current role/case checks |
-| `POST /api/chat/regulatory/threads/{id}/ask` | `{"content":"What do the hazard sources say for this home?"}`; exact source/fact answer or explicit refusal |
+| `POST /api/chat/regulatory/threads/{id}/ask` | `{"content":"What do the hazard sources say for this home?"}`; exact answer/refusal, zero-call usage, or conflicting sources with atomic `escalation` receipt |
 | `POST /api/chat/regulatory/threads/{id}/doubt` | `{"turn":2}`; atomically copy that stored question/answer pair into the named exercise owner's isolated inbox |
 | `GET /api/chat/regulatory/inbox` | Juan Manuel Servera's provisioned exercise principal only; no access to senders' threads or memory |
 
@@ -3481,6 +3482,36 @@ success. Source excerpts retain snapshot/currentness and truncation caveats.
 The existing doubt action sends the actual turn to Juan Manuel Servera's
 synthetic exercise inbox; its receipt is not legal approval or a resident
 message. Failed referrals are explicit and retryable.
+
+### Synthetic completion boundary (2026-10-27, #208)
+
+Supported conflicts now automatically reach the named exercise inbox with
+both source versions, the original question and a durable sender receipt.
+Automatic/manual routing deduplicates one stored thread/turn, not repeated ask
+requests. History restores the actual receipt and marks the doubt button sent;
+no human decision or legal resolution is implied. Sender/recipient provisioning,
+role and case scope are rechecked inside the transaction. Trusted-proxy referral
+also requires the recipient's separately recorded chat capability; actual
+tenant assignment remains unverified, not inferred from a job title.
+
+Chat displays calls per question (zero), current-role/UTC-day recorded outcomes,
+the zero inference allowance and explicit Unknown service cost. Alerts display
+zero calls per deterministic check/alert; historical records without metadata
+say usage was not recorded. These are not quotes, spend authorization or staff
+benefit measurements. The bounded `/usage` result is audit-only, potentially
+partial, never an exact total; see the [core consumption contract](../core/README.md#offline-regulatory-consumption-2026-10-27-208).
+Usage follows the existing draft DPIA/retention/access controls, not a new
+retention exemption.
+After an answer is shown, the lookup clears unchanged submitted text and
+re-enables its control without waiting for the background usage refresh.
+A failed refresh reports unavailable usage separately; it does not replace
+the answer or block the next question.
+
+The local pinned-axe harness exercises automatic conflict routing/restoration,
+usage, keyboard/plain mode, seven staff roles and supplier denial, 320/390/1280
+widths, enlarged text, reduced motion and failure paths. This is scoped browser
+engineering evidence, not WCAG conformance or repairs/housing/grants
+comprehension acceptance. All original human/live criteria remain unmet.
 
 ### Audience patterns and delivery boundary
 
