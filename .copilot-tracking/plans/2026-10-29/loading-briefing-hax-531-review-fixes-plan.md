@@ -174,7 +174,7 @@ API/core checks pass. No broad/browser acceptance is claimed.
   regressions pass; actual browser is unperformed due to busy shared lock.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Validate and persist local correction
+### [x] P03: Validate and persist local correction
 
 * Intent: retain reliable validation and independent original Review evidence.
 * Dependencies: P01 and P02.
@@ -191,11 +191,15 @@ API/core checks pass. No broad/browser acceptance is claimed.
   flock -n returned 75, owner PID 679022. No retry/poll/foreign interruption.
 
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: Commit implementation and independent Review evidence
+#### [x] P03-T02: Commit implementation and independent Review evidence
 
 * Configure authenticated noreply email repository-locally; local Conventional
   Commit with exact Co-authored-by trailer. Review once independently, route any
   residual work without cycling this task, commit final original evidence.
+* Completion: implementation commit 2b37261be30e61cf8baf7494561def0607693e0d;
+  original independent Review Complete / Residual work, no source defect found.
+  Final local evidence commit retains RV-001/FU-001 and RV-002/FU-002; session
+  stopped per explicit user direction. No push or subsequent source changes.
 
 ## Test Ownership and Change Budget
 
@@ -236,6 +240,7 @@ is preserved. No user decision needed and no repeat critique.
 
 ## Handoff
 
-* Source implementation complete; P03-T02 local commit and original Review next.
+* Full bounded correction round complete with authorized targeted fallback.
+  Original Review Complete / Residual work; task completed, session stopped.
 * Implementation artifact: .copilot-tracking/changes/2026-10-29/loading-briefing-hax-531-review-fixes-changes.md
 * No unresolved user decision; broad/browser validation blocker retained.

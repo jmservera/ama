@@ -14,7 +14,7 @@
 | --- | --- | --- | --- |
 | P01 | Parser and review harness | complete; focused regressions pass | P01-T01 through P01-T03 |
 | P02 | Helper recovery | complete; unit pass, browser unperformed due busy lock | P02-T01 |
-| P03 | Validation and local persistence | P03-T01 targeted fallback complete; P03-T02 original Review/local persistence next | P03-T01, P03-T02 |
+| P03 | Validation and local persistence | complete; targeted fallback, original Review and local evidence retained | P03-T01, P03-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Parser and review harness
@@ -152,3 +152,10 @@ Context: C7-C8 and exact user commands. Original failure evidence is immutable.
   human approval remain separate; no publication gate bypass or receipt claim.
 * Dependencies: completed P01/P02 and recorded validation.
 * Expected evidence: clean local worktree, local commit IDs and original Review.
+* Completion evidence: implementation commit
+  2b37261be30e61cf8baf7494561def0607693e0d; original independent Review at
+  .copilot-tracking/reviews/logs/2026-10-29/loading-briefing-hax-531-review-fixes-review.md
+  is Complete / Residual work, no source defect identified. Independent 11-test
+  regression run passed; RV-001/FU-001 retains full/browser validation and
+  RV-002/FU-002 retains owner approval boundaries. Final local evidence commit
+  follows; no further source changes or repeated Review.

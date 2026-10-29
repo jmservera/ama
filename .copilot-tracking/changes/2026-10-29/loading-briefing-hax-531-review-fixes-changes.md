@@ -10,10 +10,10 @@
 
 ## Execution Status
 
-* Status: Implementation complete; local persistence/original Review next
+* Status: Complete under authorized targeted fallback; original Review Complete / Residual work
 * Declared invocation scope: full plan
-* Completed scope markers: P01/P02 and all their tasks; P03-T01 authorized fallback
-* Remaining active-plan markers: P03/P03-T02 local persistence and original Review
+* Completed scope markers: P01/P02/P03 and all their tasks
+* Remaining active-plan markers: none; separate FU-001/FU-002 remain open
 * Source implementation complete; full/browser validation explicitly unmet.
 * Approved targets: named core/API sources, owning tests, existing loading browser
   check, API README and this task's dated tracking evidence.
@@ -54,6 +54,22 @@ force-push, cloud fallback or publication.
   after script load; it must reject before registering account actions/start.
 * API README documents behavior; no design/style changes.
 
+### Local persistence and original independent Review
+
+* P03-T02: implementation and original research/plan/details/critique/changes
+  committed as 2b37261be30e61cf8baf7494561def0607693e0d with Conventional
+  Commit subject and required Copilot trailer; authenticated noreply email
+  configured repository-locally for author and committer.
+* One original independent Review assessed that commit against intake
+  81ab4a0e76e1ab86ce0d7174c630c809d8487064. Execution Complete; outcome Residual
+  work. No implementation defects identified; independent 11-test parser/
+  dispatcher/recovery run, syntax/diff and concrete source imports passed.
+* RV-001 Medium routes to FU-001 full/browser validation; RV-002 Low routes
+  to FU-002 publication/human/hosted boundary. No repeat Review or source edits.
+* Final evidence commit retains original Review and reconciles plan/details/
+  changes/state. Automatic task completed; session stopped as explicitly
+  requested, without selecting a child or writing remotely.
+
 ## Implementation-Time Plan and Detail Updates
 
 No material divergence. PC-001 replay-safe injection and PC-002 literal parser
@@ -92,6 +108,7 @@ goldens were resolved by planning before implementation.
 | Full API/core unit discovery | Both components | Unperformed | Nonblocking flock exit 75, owner PID 679022 |
 | Loading/briefing browser incl. unready helper and axe | Existing synthetic browser check | Unperformed | Same busy-lock admission; no browser launched or axe acceptance claimed |
 | /tmp/mv editable setup | Current src/core/agents/api | Unperformed | Heavy command exited before pip install; source-first imports verified instead |
+| Independent original Review | Exact correction commit vs intake | Complete / Residual work | No source defects; 11 focused tests pass independently; two residual findings routed |
 
 ### Exact successful commands
 
@@ -125,13 +142,16 @@ created, no browser/SQL/cloud work ran. Later scheduling belongs to FU-001.
 
 ## Pre-Review Reconciliation
 
-* Plan markers/details: P01/P02 complete with explicit unmet browser evidence;
-  P03-T01 complete under user-authorized fallback. P03-T02 local persistence/
-  original Review pending, no source implementation left.
+* Pre-Review snapshot: P01/P02 complete with explicit unmet browser evidence;
+  P03-T01 complete under user-authorized fallback. At assessment, P03-T02 local
+  implementation commit existed and original Review/evidence persistence was next.
 * Evidence and handoff: current; exact original failures and critique preserved.
 * Validation/blockers/follow-ups: current, full/browser unperformed.
 * Review readiness: ready for independent assessment of implemented correction
   and explicit validation limits; not publication/human/hosted acceptance.
+* Post-Review parent closeout: all bounded plan markers now complete; original
+  Review Complete / Residual work retained unchanged. State completed/stopped;
+  FU-001/FU-002 still open. Only evidence reconciliation after assessed commit.
 
 ## Blockers
 
@@ -140,7 +160,7 @@ created, no browser/SQL/cloud work ran. Later scheduling belongs to FU-001.
 
 ## Remaining Work
 
-P03-T02 local commits and independent original Review only. No source work pending.
+No active-plan or source work pending. FU-001/FU-002 remain distinct residual work.
 
 ## Follow-Up Items
 
@@ -149,6 +169,8 @@ P03-T02 local commits and independent original Review only. No source work pendi
 
 ## Return-to-Caller State
 
-Source implementation and authorized fallback complete, independent Review
-ready. Planning Ready; original critique Revise preserved with PC-001/002
-resolved directly. RPI parent owns local persistence and original Review.
+Full bounded correction round complete under authorized targeted fallback.
+Original critique Complete / Revise and direct dispositions preserved; original
+Review Complete / Residual work, no source defects identified. Local commits
+only; automatic session stopped per explicit user instruction. Full/browser/
+publication/human/hosted acceptance remains unestablished, routed to FU-001/002.
