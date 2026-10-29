@@ -13,7 +13,7 @@
 | Phase ID | Name | Status | Detail sections |
 | --- | --- | --- | --- |
 | P01 | Restore source guards and regressions | Complete, regression evidence recorded | P01-T01 through P01-T03 |
-| P02 | Validate and independently review | P02-T01 complete; Review/local commit pending | P02-T01, P02-T02 |
+| P02 | Validate and independently review | Complete; independent Review and local commit delivered | P02-T01, P02-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Restore source guards and regressions
@@ -81,3 +81,4 @@ No evidence/model/financial authority changes belong here.
 * Commit source, tests, README and original RPI evidence locally; verify clean status and unchanged rubric. No push or live/publication gate.
 * Dependencies: P02-T01.
 * Completion: durable independent outcome and local commit. No unresolved human/hosted approval is claimed.
+* Actual evidence: original Review Complete / Conformant, zero findings, with independent checks and exact source fingerprints. Local implementation/evidence commit 5ce4bae3; lifecycle-only closeout records do not change the reviewed source boundary.
