@@ -174,7 +174,7 @@
       "evidence": [
         "docs/capstone/thought-leadership/everything-but-the-software/README.md:39"
       ],
-      "rationale": "README confirms the owner selected local-only delivery; no commit, push, submission, registration or publication approval exists. Unchanged at 2."
+      "rationale": "README records owner-committed work in PR #555 while distinguishing the assistant's local-only delivery from external manuscript publication. Submission, registration and publication approval remain pending. Unchanged at 2."
     }
   }
 }
