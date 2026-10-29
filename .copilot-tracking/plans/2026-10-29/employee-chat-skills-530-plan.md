@@ -6,7 +6,7 @@ ms.date: 2026-10-29
 
 Task: 530 / employee-chat-skills-530. Current scope: PR #541 P04 corrections
 implemented and locally validated; independent correction Review Complete /
-Conformant, local commit pending.
+Conformant, committed locally as 0dd763c5. P04 complete.
 Original whole-feature SQL/publication acceptance remains incomplete.
 
 ## Executive Summary
@@ -148,7 +148,7 @@ Maximum additions: three unit methods and two browser helper functions.
   core and HTTP regressions for expanding masks at the limit across modes.
 * [x] P04-T04 API/core Ruff, format, mypy; core suite; API chat/workspace
   selectors; browser/axe under nonblocking heavy admission where feasible.
-* [ ] P04-T05 One independent correction Review, evidence reconciliation and
+* [x] P04-T05 One independent correction Review, evidence reconciliation and
   local commit with authenticated noreply identity and required trailer.
 
 P04-T01/T03 are independent; T02 verifies T01 and existing lifecycle guards.
@@ -177,8 +177,10 @@ Final browser/axe passes all nine controlled-success combinations and all
 nine metadata/thread/ask denial cases, plus existing keyboard/layout checks.
 Await actual DOM removal, not merely disappearance from the accessibility tree,
 before resolving controlled success; details and changes preserve first-run
-failure and correction. P04-T05 independent Review complete; local commit pending.
+failure and correction. P04-T05 independent Review and local commit complete.
 
-P04-T05 independent Review now Complete / Conformant, no new substantive
-findings. Local implementation/evidence commit and completion reconciliation
-remain; do not repeat Review or infer whole-feature acceptance.
+P04-T05 independent Review Complete / Conformant, no new substantive findings.
+Implementation and original evidence committed locally as 0dd763c5; completion
+reconciled in existing artifacts. P04 complete, manual mode retained and
+automatic session stopped. No further source work or Review in this pass.
+No push, az, remote thread resolution or whole-feature acceptance.

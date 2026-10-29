@@ -118,5 +118,7 @@ Denials cover skills metadata/thread creation/ask times 403/404/401; 401 returns
 to login without stale workspace guidance. All requested local static checks,
 core discovery and selected API suites pass; final owned browser/axe passes.
 Core discovery's 190 skips do not establish opt-in SQL integrations.
-T05 independent Review Complete/Conformant, local-only commit pending. Original
+T05 independent Review Complete/Conformant, local-only commit 0dd763c5 complete. Original
 P03-T02 whole-feature SQL/API/full-gate gaps remain outside this bounded scope.
+P04-T01-T05 complete. Evidence-only closeout records actual commit completion;
+no repeated Review or complete publication receipt is implied.

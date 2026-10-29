@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Review",
-  "status": "active",
+  "status": "completed",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-29/employee-chat-skills-530-research.md",
@@ -49,6 +49,11 @@
       "decision": "P04 correction Review outcome Conformant; no new substantive findings. Original whole-feature Not accepted/RV-003 remains historical and unclosed; no publication receipt or human approval inferred.",
       "status": "conformant-scoped",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-29/employee-chat-skills-530-review.md; P04-T01-T04 validation recorded in changes."
+    },
+    {
+      "decision": "Finite user-directed PR #541 P04 correction pass completed and implementation/original evidence committed locally as 0dd763c5; all three supplied threads addressed in code/tests. Automatic session remains stopped; no remote thread resolution, push or az.",
+      "status": "completed-local",
+      "evidence": "Commit 0dd763c5; plan P04 and correction changes/Review. Subsequent evidence-only closeout does not imply a complete exact-head publication receipt."
     }
   ],
   "blockers": [
@@ -65,7 +70,7 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Correction Review Complete/Conformant. Commit implementation and original dated correction evidence locally, then record completion in these existing artifacts; keep automatic session stopped, no push or az."
+    "action": "No further action in this finite correction pass. Remaining original-feature validation/publication and human acceptance require separately scoped authorization; keep commits local, no push or az."
   },
   "prioritized_follow_ups": [
     {
