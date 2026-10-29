@@ -2,7 +2,7 @@
 title: Zava Forward core library
 description: Domain, store, ledger, law store, chat storage and synthetic-data documentation for the core project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-27
+ms.date: 2026-10-29
 ms.topic: reference
 ---
 
@@ -62,6 +62,72 @@ person-help route. No submission, consent or decision authority is added.
 The API owns authentication and the disabled real adapter. See the
 [design awaiting owner decision](../../docs/architecture/resident-assistant-prototype.md)
 for model, credential, USD 5 budget and activation boundaries.
+
+## Finite synthetic stream replay (#184)
+
+`synthetic.sensor_stream.replay(selection, Replay(...))` reuses the existing
+seasonal `sensor_backfill.readings` model, forcing its legacy random fault
+profile off, then converts to the shared 13-string `sensor-fault-input-v1`
+contract. It accepts only explicitly selected synthetic stock records;
+declined/unknown monitoring choices produce no device or reading. No installed
+device discovery or real dataset is used. Sensor keys are the existing compact,
+collision-checked stock keys; one `SYN-<sensor_id>` device maps to one home.
+
+Default cadence is 480 minutes: three paired observations/home/day.
+`Replay(seed=183, origin=<UTC whole-second datetime>, days=2,
+first_slot=0, end_slot=None)` describes a finite original model window.
+The complete original random sequence is generated before selecting the
+half-open nominal slot interval, so nonzero and odd suffixes reproduce the
+same values/IDs as the existing clean backfill. Do not restart the seed at
+handover. This slice supports the labelled synthetic seasonal model only;
+climate-backed composed histories and measures are not silently substituted.
+`descriptor(selection, spec)` records the original register `stock_sha256`
+separately from `selected_stock_sha256`, the digest of the validated canonical
+selected model inputs, plus selected home IDs/count, granted count, seed, origin,
+window, cadence, schema/model context and explicit fault mode. Each Frame carries
+the selected digest outside its observation, binding that frame to the snapshot
+actually used for generation. A later selection mutation changes newly computed
+provenance, not old frames; match the descriptor's selected digest to the frames.
+Each Frame also carries `nominal_at`, the UTC time from the original origin and
+slot cadence, outside the observation. Publishers use this time for scheduling,
+not the fault-injected observation timestamp; duplicates retain the same nominal time.
+The descriptor version is `synthetic-stream-v2`; reading IDs/bytes are unchanged.
+Keep descriptors and selected-home evidence restricted, not ordinary telemetry.
+
+The generator limits actual granted homes to 1..100 and original
+homes-times-slots to 100,000 before model generation, independently of summary
+metadata. This aligns with the existing finite consumer control batch; it is
+not 60,000-device throughput evidence. `wire(frame.row)` uses the shared
+consumer's sorted ASCII JSON representation and caps each body at 4096 bytes.
+
+Explicit modes are `valid`, `duplicate`, `out_of_order`, `unmapped`, `wrong_unit`,
+`clock_skewed`, `uncalibrated`, `gap`, `disconnect` and `burst`. Frames keep truth
+outside the observation. Duplicate emits identical IDs/content; out-of-order
+swaps nominal adjacent slots with an odd final singleton unchanged. Selection
+always uses nominal slots, not shifted timestamps. Wrong-unit conversion,
+one-day clock skew and calibration flags are labelled synthetic exercises,
+not science or policy. Gap emits no frames; an empty send run is refused.
+The replay descriptor records the omitted window and mode. Disconnect/burst
+are runner actions, not extra telemetry fields. A normal device claiming a
+mutated unmapped sensor is refused by the API binding before SQL.
+
+`RunBudget` performs finite message/byte/B1 headroom checks before sending.
+`Pacer` exposes `paused` and `stopped`, finite speed in (0,1000], a monotonic
+deadline and a separate maximum send rate. `wait` applies model-time spacing;
+`admit_send` enforces global send-attempt spacing and must be awaited immediately
+before the SDK send, after connection/setup and truth preparation. Speed-up and
+burst never bypass this admission. Active pacing sleeps until the nearer target,
+deadline or 50 ms poll, so rates up to 100/s are not limited by the poll interval.
+Pause keeps positive polling bounded by 50 ms and the deadline even after the
+target passes. Pause continues consuming the run time allowance, not a way to leave a
+simulator running unattended. See the [API runner](../api/README.md#opt-in-iot-consumer-and-synthetic-publisher-110-184)
+for actual SDK operation bounds, credential handling and activation gates.
+
+From `src/core`, with the package installed:
+
+```bash
+python -m unittest discover -s tests -p test_sensor_stream.py -q
+```
 
 ## Constructed offline sensor consumer (#110)
 
@@ -2625,10 +2691,13 @@ an explicit wholly synthetic register, complete retained hourly source coverage
 and optional synthetic dated measures. Exact subsampling neither fills gaps nor
 repeats years. Storage estimates are not completed full-stock materializations.
 
-Stage 2 (#184) has a delivered shared observation contract (#186), **not a
-runnable live publisher**. No live command, rate limiter, retry/replay scheduler,
-provisioner, credential handling or cloud acceptance is claimed here.
-Future authorized live operation must use the shared schema, stable IDs,
+Stage 2 (#184) has a delivered shared observation contract (#186) and the
+opt-in [finite replay and pacing library](#finite-synthetic-stream-replay-184)
+with an [API SDK publisher](../api/README.md#opt-in-iot-consumer-and-synthetic-publisher-110-184).
+The scenario pack does not invoke that publisher. Local fake-network tests
+are not verified live Hub operation, approved credential lifecycle or cloud
+acceptance. No provisioner or autonomous retry scheduler is added.
+Separately authorized live operation must use the shared schema, stable IDs,
 per-device authentication, synthetic-only identities, explicit N/rate/volume/
 replay/cost limits and the independent #110 consumer controls. The declared
 live exercise accounting is three paired observations/home/day: `3N` records/day,
@@ -2660,7 +2729,7 @@ All emitted indoor data is simulated, not evidence of installed devices or
 real home conditions. No signal diagnoses a hazard, dismisses a resident report,
 starts a clock, releases a hold, changes ranking, grants consent or creates an
 approved task. Human review, resident choice and BRD OD-43 remain unchanged.
-Actual #111/#133 consumer test use, a runnable live stage, competent R2 review,
+Actual #111/#133 consumer test use, verified live stage operation, competent R2 review,
 agreed R3 limits and operational acceptance are still unproven.
 
 ### Existing reproducibility and plausibility evidence
