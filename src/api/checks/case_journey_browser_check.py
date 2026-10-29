@@ -922,6 +922,7 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                 and ("1 to review" in tab_count or "1 local drafts to review" in tab_count),
             )
             document_review = page.locator("#case-panel-survey .aimeta")
+            document_review.get_by_role("button", name="Edit this draft", exact=True).click()
             document_review.get_by_label("Edited draft", exact=True).fill(
                 "Reviewed replacement synthetic document text"
             )
@@ -947,6 +948,7 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             # The call changes source hashes. A new review must use fresh evidence.
             with page.expect_response("**/api/cases/ZF-1/read-doc"):
                 page.get_by_role("button", name="Read with AI", exact=True).last.click()
+            document_review.get_by_role("button", name="Edit this draft", exact=True).click()
             document_review.get_by_label("Edited draft", exact=True).fill(
                 "Reviewed replacement synthetic document text"
             )
@@ -954,7 +956,9 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             pending_review: list[Route] = []
             page.route("**/api/ai/review/*/edit", lambda route: pending_review.append(route))
             with page.expect_request("**/api/ai/review/*/edit"):
-                document_review.get_by_role("button", name="Edit", exact=True).click()
+                document_review.get_by_role(
+                    "button", name="Save edited draft review", exact=True
+                ).click()
             document_review.get_by_label("Edited draft", exact=True).fill(
                 "Later unsubmitted document text"
             )
@@ -1144,14 +1148,20 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                 raise AssertionError(page.locator("#resident-draft-output").inner_text())
             page.get_by_role("textbox", name="Draft", exact=True).wait_for()
             card = page.locator("#resident-draft-output .ai-suggestion")
+            draft_label = (
+                "AI suggestion, not approved" if draft_response.value.json()["source"] == "ai"
+                else "Template draft, not approved"
+            )
             check(
                 "AI card exact warning and missing confidence",
-                "AI suggestion, not approved. Not an instruction." in card.inner_text()
+                f"{draft_label}. Not an instruction." in card.inner_text()
                 and "Confidence: not provided" in card.inner_text(),
             )
             record = card.get_attribute("data-record-id")
             page.get_by_role("textbox", name="Draft", exact=True).fill("Edited synthetic wording")
-            card.get_by_role("button", name="Edit", exact=True).focus()
+            card.get_by_role("button", name="Edit this draft", exact=True).focus()
+            page.keyboard.press("Enter")
+            card.get_by_role("button", name="Save edited draft review", exact=True).focus()
             page.keyboard.press("Enter")
             check(
                 "edit requires linked reason",
@@ -1169,7 +1179,7 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                 and page.get_by_role("textbox", name="Draft", exact=True).input_value()
                 == "Edited synthetic wording",
             )
-            card.get_by_role("button", name="Edit", exact=True).focus()
+            card.get_by_role("button", name="Save edited draft review", exact=True).focus()
             page.keyboard.press("Enter")
             page.wait_for_function(
                 "() => document.querySelector('#resident-draft-output .aimeta')"
@@ -1179,14 +1189,18 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                 "recorded edit keeps approval boundary",
                 "not an approval, consent or safety" in card.inner_text(),
             )
-            for action, reviewed in (("Accept", "Accepted"), ("Reject", "Rejected")):
+            for action, reviewed in (
+                ("Use this draft", "Accepted"), ("Do not use this draft", "Rejected")
+            ):
                 page.get_by_role("button", name="Draft with AI", exact=True).focus()
                 with page.expect_response("**/api/cases/ZF-1/ai"):
                     page.keyboard.press("Enter")
                 card = page.locator("#resident-draft-output .ai-suggestion")
                 card.get_by_role("button", name=action, exact=True).wait_for()
-                if action == "Reject":
+                if reviewed == "Rejected":
                     card.get_by_role("button", name=action, exact=True).focus()
+                    page.keyboard.press("Enter")
+                    card.get_by_role("button", name="Record rejection", exact=True).focus()
                     page.keyboard.press("Enter")
                     check(
                         "keyboard reject focuses required reason",
@@ -1196,7 +1210,10 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                         ),
                     )
                     page.keyboard.type("Checked synthetic rejection")
-                card.get_by_role("button", name=action, exact=True).focus()
+                card.get_by_role(
+                    "button", name="Record rejection" if reviewed == "Rejected" else action,
+                    exact=True
+                ).focus()
                 page.keyboard.press("Enter")
                 page.wait_for_function(
                     "state => document.querySelector('#resident-draft-output .aimeta')"

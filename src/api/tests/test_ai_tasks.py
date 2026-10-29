@@ -43,6 +43,89 @@ class TasksMixin:
     def records(self):
         return [r for r in self.store.data["recommendations"] if r.get("kind") == "ai_task"]
 
+    def test_briefing_statement_sources_and_cached_generation_time(self):
+        from datetime import datetime
+
+        result = self.store.briefing(self.sam, mode="workflow")
+        generated = datetime.fromisoformat(result["generated_at"])
+        self.assertIsNotNone(generated.utcoffset())
+        self.assertIs(self.store.briefing(self.sam, mode="workflow"), result)
+        self.assertEqual(self.store.briefing(self.sam, mode="workflow")["generated_at"],
+                         result["generated_at"])
+        expected = [c["id"] for c in self.store.list_cases(self.sam)][:3]
+        self.assertEqual(result["source_case_ids"],
+                         [c["id"] for c in self.store.list_cases(self.sam)][:8])
+        self.assertEqual(len(result["statements"]), len(expected))
+        for statement, cid in zip(result["statements"], expected):
+            self.assertIn(statement["text"], result["text"])
+            self.assertEqual(statement["unresolved"], [])
+            self.assertTrue(all(cite.startswith(cid + ": ") for cite in statement["citations"]))
+        for c in self.store.cases.values():
+            c["closed"] = True
+        self.store.save()
+        empty = self.store.briefing(self.sam, mode="workflow")
+        self.assertEqual(empty["statements"],
+                         [dict(text=empty["text"], citations=[], unresolved=[])])
+
+    def test_statement_references_preserve_valid_unresolved_and_dropped_output(self):
+        sources = {"ZF-1": ["Stage: Survey booked"]}
+        raw = ("Check survey [[ZF-1: Stage: Survey booked]]. "
+               "Check funding. [[ZF-1: Funding: invented]]")
+        statements = ai_tasks.statement_sources(raw, sources)
+        self.assertEqual([s["text"] for s in statements], ["Check survey.", "Check funding."])
+        self.assertEqual(statements[0]["citations"], ["ZF-1: Stage: Survey booked"])
+        self.assertEqual(statements[1]["unresolved"], ["ZF-1: Funding: invented"])
+        filtered = ai_tasks.statement_sources(
+            "- Keep [[ZF-1: Stage: Survey booked]].\n- Remove invented.", sources, bullets=True)
+        self.assertEqual(len(filtered), 1)
+        self.assertEqual(filtered[0]["text"], "- Keep.")
+        rejected_line = "- One valid [[ZF-1: Stage: Survey booked]]. Invalid [[invented]]."
+        self.assertEqual(ai_tasks.statement_sources(rejected_line, sources, bullets=True), [])
+
+    def test_rules_briefing_keeps_published_snapshot_during_case_change(self):
+        run = self.store.ai.run
+        before = copy.deepcopy(self.store._case("ZF-1"))
+
+        def change_case(*args, **kwargs):
+            with self.store.lock:
+                case = self.store._case("ZF-1")
+                case.update(stage="Design in progress", days_in_stage=1)
+                self.store.save()
+            return run(*args, **kwargs)
+
+        with mock.patch.object(self.store.ai, "run", side_effect=change_case):
+            result = self.store.briefing(self.sam, mode="workflow")
+        record = next(r for r in self.records() if r["id"] == result["record_id"])
+        self.assertEqual(record["shown_output"], result["text"])
+        self.assertEqual(record["workflow_output"], result["text"])
+        self.assertEqual(record["citations"], result["citations"])
+        self.assertTrue(result["verified"])
+        for statement in result["statements"]:
+            self.assertIn(statement["text"], record["shown_output"])
+            self.assertTrue(all(cite in record["citations"] for cite in statement["citations"]))
+        statement = next(s for s in result["statements"]
+                         if any(c.startswith("ZF-1: ") for c in s["citations"]))
+        self.assertIn(f"ZF-1: Stage: {before['stage']}", statement["citations"])
+        self.assertIn(f"ZF-1: Days in stage: {before['days_in_stage']}",
+                      statement["citations"])
+        self.assertNotIn("design in progress", statement["text"])
+
+    def test_quarantined_output_never_exposes_abandoned_ai_statement_sources(self):
+        from unittest.mock import patch
+
+        case = self.store._case("ZF-1")
+        raw = dict(source="ai", text="Abandoned AI [[ZF-1: Stage: Survey booked]].",
+                   model="synthetic", reason=None)
+        with patch.object(self.store, "continuity_publish",
+                          side_effect=lambda task, epoch, source, publish: publish(True)):
+            result = ai_tasks.finish(
+                self.store, self.sam, "briefing", ["ZF-1"], raw, "Manual summary.",
+                {"ZF-1": ai_tasks.source_labels(case)}, [], epoch0=0)
+        self.assertEqual(result["source"], "template")
+        self.assertEqual(result["approval"], "Quarantined")
+        self.assertEqual(result["statements"],
+                         [dict(text="Manual summary.", citations=[], unresolved=[])])
+
     def test_unbound_entra_briefing_is_empty_assignment_not_empty_programme(self):
         user = identity.principal(
             "11111111-2222-3333-4444-555555555555",

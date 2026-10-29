@@ -1422,7 +1422,7 @@ const assert = require("node:assert/strict");
 class Node {
   constructor(tag, attrs, kids) {
     this.tag = tag; this.attrs = attrs || {}; this.kids = kids.flat().filter(Boolean);
-    this.dataset = {}; this.value = ""; this.hidden = false;
+    this.dataset = {}; this.value = ""; this.hidden = Boolean(this.attrs.hidden);
     this.disabled = Boolean(this.attrs.disabled);
     if (tag === "textarea") this.value = kids.join("");
   }
@@ -1460,13 +1460,25 @@ const api = async (path, body) => {
     requests = []; done = [];
     const record = {record_id: "SYN-REVIEW", approval: "Not reviewed", text: "Original"};
     const meta = aiNotes(record, (action, text) => done.push({action, text}));
-    const editing = meta.querySelector("textarea"), reason = meta.querySelector("input");
+    const editing = meta.querySelectorAll("textarea")
+      .find(field => field.attrs.name === "edited-draft");
+    const reason = meta.querySelectorAll("textarea")
+      .find(field => field.attrs.name === "review-reason");
     const box = meta.querySelector("fieldset"), buttons = box.querySelectorAll("button");
+    const editBox = meta.querySelectorAll("div").find(node => node.kids.includes(editing));
+    const reasonBox = meta.querySelectorAll("div").find(node => node.kids.includes(reason));
+    assert.equal(editBox.hidden, true);
+    assert.equal(reasonBox.hidden, true);
+    const editButton = buttons.find(button => button.kids.includes("Edit this draft"));
+    editButton.attrs.onclick({currentTarget: editButton});
+    assert.equal(editBox.hidden, false);
+    assert.equal(reasonBox.hidden, false);
+    const submit = buttons.find(button => button.textContent === "Save edited draft review");
     editing.value = "Submitted replacement"; reason.value = "Submitted reason";
     editing.dataset.caseDirty = reason.dataset.caseDirty = "true";
-    const pending = buttons[1].attrs.onclick();
+    const pending = submit.attrs.onclick();
     assert.equal(buttons.every(button => button.disabled), true);
-    await buttons[1].attrs.onclick();
+    await submit.attrs.onclick();
     assert.equal(requests.length, 1, "duplicate dispatch must not issue another review");
     if (["text", "both", "failure"].includes(change)) editing.value = "Newer replacement";
     if (["reason", "both", "failure"].includes(change)) reason.value = "Newer reason";
@@ -1489,7 +1501,7 @@ const api = async (path, body) => {
       assert.equal(editing.attrs["aria-invalid"], undefined);
       assert.equal(done.length, 0);
       if (change !== "failure") {
-        await buttons[1].attrs.onclick();
+        await submit.attrs.onclick();
         assert.equal(requests.length, 1, "ambiguous draft review cannot retry");
       }
       continue;
@@ -1502,9 +1514,11 @@ const api = async (path, body) => {
     if (change !== "none") {
       assert.equal(editing.readOnly, true);
       assert.equal(reason.readOnly, true);
+      assert.equal(editBox.hidden, !["text", "both"].includes(change));
+      assert.equal(reasonBox.hidden, !["reason", "both"].includes(change));
       assert.match(box.querySelector("legend").textContent, /reviewed record SYN-REVIEW/);
     }
-    await buttons[2].attrs.onclick();
+    await buttons.find(button => button.kids.includes("Use this draft")).attrs.onclick();
     assert.equal(requests.length, 1, "completed review cannot submit again");
     assert.equal(buttons.every(button => button.disabled), true);
   }

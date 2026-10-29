@@ -357,7 +357,7 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             doubt = chat.locator(".regulatory-turn button").first
             doubt.focus()
             page.keyboard.press("Enter")
-            expect(chat.locator("[role=status]")).to_contain_text("exercise inbox")
+            expect(chat.locator(":scope > p[role=status]")).to_contain_text("exercise inbox")
             expect(doubt).to_be_focused()
             expect(doubt).to_have_attribute("aria-disabled", "true")
             page.get_by_role("tab", name="Blockers and safety", exact=False).press("Enter")
@@ -409,7 +409,7 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             page.locator("#chat-panel > summary").click()
             page.locator("#regulatory-chat > summary").click()
             expect(chat.locator(".regulatory-turn")).to_have_count(2)
-            expect(chat.locator("[role=status]")).to_have_text(
+            expect(chat.locator(":scope > p[role=status]")).to_have_text(
                 "Stored synthetic-demo excerpts restored. "
                 "These are historical records; ask again for a fresh lookup."
             )
@@ -428,7 +428,9 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             law = fixture.app.law
             fixture.app.law = None
             page.get_by_role("button", name="Refresh alerts", exact=True).click()
-            expect(alerts.locator("[role=status]")).to_contain_text("Alert coverage unknown")
+            expect(alerts.locator(":scope > p[role=status]")).to_contain_text(
+                "Alert coverage unknown"
+            )
             expect(alerts.locator(".regulatory-alert")).to_have_count(0)
             fixture.app.law = law
             fixture.app.regulatory.env = {}
@@ -437,7 +439,9 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             page.locator("#chat-panel > summary").click()
             page.locator("#regulatory-chat > summary").click()
             expect(question).to_be_disabled()
-            expect(chat.locator("[role=status]")).to_contain_text("Cited lookup unavailable")
+            expect(chat.locator(":scope > p[role=status]")).to_contain_text(
+                "Cited lookup unavailable"
+            )
             scan(page, axe, reports, "disabled-chat")
             fixture.app.regulatory.env = fixture.app.chat.env
 

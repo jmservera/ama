@@ -17,7 +17,10 @@ function h(tag, attrs, ...kids) {
   const el = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs || {})) {
     if (k === "class") el.className = v;
-    else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else if (k.startsWith("on")) el.addEventListener(k.slice(2),
+      ["onclick", "onsubmit", "onchange"].includes(k) && typeof AsyncAction !== "undefined" && AsyncAction
+        && typeof AsyncAction.handler === "function"
+        ? AsyncAction.handler(v) : v);
     else if (v !== false && v != null) el.setAttribute(k, v === true ? "" : v);
   }
   for (const kid of kids.flat()) {
@@ -44,6 +47,9 @@ function mutationKey(path, body) {
 }
 
 async function api(path, body, signal) {
+  const progress = typeof AsyncAction !== "undefined"
+    ? AsyncAction.feedback("Loading workspace data") : null;
+  try {
   signal = signal || routeController.signal;
   const key = body === undefined ? null : mutationKey(path, body);
   if (key && pendingMutations.has(key)) {
@@ -61,12 +67,16 @@ async function api(path, body, signal) {
       return {};
     });
     signal.throwIfAborted();
-    if (res.status === 401 && path !== "/api/login") { me = null; login("Your session has ended. Sign in again."); throw new Error("Your session has ended. Sign in again."); }
+    if (res.status === 401 && path !== "/api/login") {
+      me = null; login("Your session has ended. Sign in again.");
+      const error = new Error("Your session has ended. Sign in again."); error.status = 401; throw error;
+    }
     if (!res.ok) { const e = new Error(data.error || "Something went wrong."); e.reasons = data.reasons; e.status = res.status; e.outcome = data.outcome; throw e; }
     return data;
   } finally {
     if (key) pendingMutations.delete(key);
   }
+  } finally { progress?.finish(); }
 }
 
 const fmtDate = (s) => {
@@ -81,8 +91,15 @@ const ago = (s) => {
 };
 const show = (...nodes) => { app.replaceChildren(...nodes.flat().filter((n) => n && n.nodeType)); app.focus(); };
 
+function workspaceReady() {
+  document.getElementById("startup")?.remove();
+  document.dispatchEvent(new Event("workspace-ready"));
+}
+
 function login(msg) {
   disposeMapPanel?.();
+  workspaceReady();
+  aiMode.workflow = false;
   caseSession?.controller?.dispose();
   caseSession = null;
   for (const id of Object.keys(fundingAi)) delete fundingAi[id];
@@ -124,7 +141,8 @@ async function start() {
   const nav = document.getElementById("nav");
   nav.replaceChildren(...me.navigation.map((item) => h("a", { href: item.href }, item.label)));
   nav.hidden = false;
-  route();
+  workspaceReady();
+  await route();
 }
 
 function clearPhoto() {
@@ -209,27 +227,30 @@ function retryWorkspaceScript(path) {
 
 function missingWorkspaceScripts(hash, caseRoute) {
   const destination = hash.split("?")[0];
-  const contractor = me.user.role === "Contractor";
-  const staffCase = caseRoute && !contractor;
-  const staffDestination = !contractor && !caseRoute;
+  const contractor = me?.user.role === "Contractor";
+  const staffCase = Boolean(me) && caseRoute && !contractor;
+  const staffDestination = Boolean(me) && !contractor && !caseRoute;
   return [
+    ["/async-action.js", true, typeof AsyncAction !== "undefined" && AsyncAction
+      && ["handler", "run", "feedback"].every(method => typeof AsyncAction[method] === "function")],
     ["/ops.js", staffCase || (staffDestination && hash === "#/capacity") || (contractor && !caseRoute && destination !== "#/screens"), typeof qualityPanel === "function"],
     ["/panels.js", staffCase || (staffDestination && hash === "#/finance"), typeof financePanel === "function"],
     ["/assistants.js", staffCase || (staffDestination && hash === "#/assistants"), typeof assistantCasePanel === "function"],
     ["/chat.js", staffCase, typeof chatCasePanel === "function"],
     ["/timecapture.js", staffDestination && hash === "#/time", typeof timeView === "function"],
-    ["/role-screens.js", destination === "#/screens", typeof roleScreensView === "function"],
+    ["/role-screens.js", Boolean(me) && destination === "#/screens", typeof roleScreensView === "function"],
     ["/progress.js", staffDestination && ["#/progress", "#/closed"].includes(destination), typeof ProgressViews === "object"],
     ["/vendor/leaflet.js", staffDestination && (hash === "#/overview" || destination === "#/coordinator"), typeof L === "object"],
   ].filter(([, needed, loaded]) => needed && !loaded).map(([path]) => path);
 }
 
 async function requireWorkspaceScripts(hash, caseRoute) {
+  const session = me;
   let missing = missingWorkspaceScripts(hash, caseRoute);
   if (missing.length) {
     workspaceStatus.textContent = "Loading workspace files. Please wait.";
     await Promise.all(missing.map(retryWorkspaceScript));
-    if (!me) return;
+    if (me !== session) return;
     missing = missingWorkspaceScripts(hash, caseRoute);
   }
   if (missing.length) {
@@ -351,15 +372,20 @@ function aiNotes(d, onDone, getText) {
   kids.push(h("p", { class: "muted" }, "Sources: " + (cites.join("; ") || "Not provided. Check the record before use.")));
   kids.push(h("p", { class: "muted" }, "Confidence: not provided. Confidence is not accuracy."));
   if (d.dropped_uncited) kids.push(h("p", { class: "muted" }, `${d.dropped_uncited} uncited statement(s) removed.`));
-  kids.push(h("p", { class: "muted" }, d.approval === "Not reviewed" ? "AI suggestion, not approved. Not an instruction. Not reviewed by a person yet." : `${d.approval} as a draft by a person. Not an instruction. This is not an approval, consent or safety decision.`));
+  kids.push(h("p", { class: "muted" }, d.approval === "Not reviewed"
+    ? `${d.source === "ai" ? "AI suggestion, not approved" : "Template draft, not approved"}. Not an instruction. Not reviewed by a person yet.`
+    : ["Accepted", "Edited", "Rejected"].includes(d.approval)
+      ? `${d.approval} as a draft by a person. Not an instruction. This is not an approval, consent or safety decision.`
+      : `${d.approval || "Review unavailable"}. Not reviewed by a person. Not an instruction. Request fresh evidence; ordinary case work stays available.`));
   if (d.record_id && d.approval === "Not reviewed") {
-    const why = h("input", { id: `ai-reason-${d.record_id}`, name: "review-reason", autocomplete: "off", type: "text", maxlength: 300 });
-    const editing = !getText && typeof d.text === "string" ? h("textarea", { id: `ai-edit-${d.record_id}`, name: "edited-draft", autocomplete: "off" }, d.text) : null;
+    const why = h("textarea", { id: `ai-reason-${d.record_id}`, name: "review-reason", autocomplete: "off", rows: 4, maxlength: 300 });
+    const editing = !getText && typeof d.text === "string" ? h("textarea", { id: `ai-edit-${d.record_id}`, name: "edited-draft", autocomplete: "off", rows: 8 }, d.text) : null;
     const error = h("p", { id: `ai-error-${d.record_id}`, class: "field-error", role: "status" });
     const result = h("p", { role: "status" });
     const invalid = text => {
       error.textContent = text; why.setAttribute("aria-invalid", "true");
-      why.setAttribute("aria-describedby", error.id); why.focus();
+      why.setAttribute("aria-describedby", error.id);
+      if (reasonBox.hidden) { error.tabIndex = -1; error.focus(); } else why.focus();
     };
     let pending = false, checkHistory = false;
     const go = (action) => async () => {
@@ -368,11 +394,12 @@ function aiNotes(d, onDone, getText) {
       why.removeAttribute("aria-invalid");
       why.removeAttribute("aria-describedby");
       if (action !== "accept" && !why.value.trim()) { invalid("Enter a reason to edit or reject this draft."); return; }
-      const reason = why.value;
+      const reason = action === "accept" ? "" : why.value;
       const text = action === "edit" ? getText ? getText() : editing?.value : undefined;
-      const sent = snapshotCaseFields([why, ...(action === "edit" && editing ? [editing] : [])]);
+      const sent = snapshotCaseFields([...(action === "accept" ? [] : [why]), ...(action === "edit" && editing ? [editing] : [])]);
       const buttons = [...box.querySelectorAll("button")].map(button => ({ button, disabled: button.disabled }));
       pending = true;
+      meta.dataset.reviewPending = "pending";
       buttons.forEach(({ button }) => { button.disabled = true; });
       result.textContent = "Recording your review...";
       try {
@@ -386,28 +413,56 @@ function aiNotes(d, onDone, getText) {
         if (later.length) {
           box.querySelector("legend").textContent = `Unsubmitted edits for reviewed record ${d.record_id}`;
           box.prepend(h("p", { role: "status" }, "These later edits were not submitted. Copy what you need before discarding them. This review is complete; request fresh evidence for another review."));
+          reasonBox.hidden = !why.dataset.caseDirty;
+          editBox.hidden = !editing?.dataset.caseDirty;
           [why, editing].filter(Boolean).forEach(field => { field.readOnly = true; });
         }
         app.dispatchEvent(new Event("ai-review-change"));
         if (onDone) onDone(action, text);
       } catch (e) {
         checkHistory = mutationNeedsHistory(e);
+        if (checkHistory) meta.dataset.reviewPending = "check-history";
         if (d.approval === "Not reviewed" && !checkHistory) {
           buttons.forEach(({ button, disabled }) => { button.disabled = disabled; });
         }
         result.textContent = checkHistory
           ? `Confirmation needs checking. Reload the workspace and check the review history before another action. ${e.message}` : e.message;
-      } finally { pending = false; }
+      } finally {
+        pending = false;
+        if (!checkHistory) meta.removeAttribute("data-review-pending");
+      }
     };
     const unavailable = d.stale || d.verified === false || d.validated === false;
-    const box = h("fieldset", {}, h("legend", {}, "Your review"),
+    const editBox = h("div", { hidden: true },
       editing && h("label", { for: editing.id }, "Edited draft"), editing,
-      h("label", { for: why.id }, "Reason"), why, error,
+      getText && h("p", {}, "Change the draft in the text box above, then record why you changed it."));
+    let selected = null, reviewChoice = null;
+    const reasonBox = h("div", { hidden: true }, h("label", { for: why.id }, "Reason"), why);
+    const submit = h("button", { type: "button", hidden: true, onclick: () => go(selected)() });
+    const cancel = h("button", { type: "button", class: "alt", hidden: true, onclick: () => {
+      selected = null; editBox.hidden = reasonBox.hidden = submit.hidden = cancel.hidden = true;
+      error.textContent = ""; reviewChoice?.focus();
+    } }, "Cancel review");
+    const choose = (action, choice) => {
+      reviewChoice = choice;
+      selected = action; editBox.hidden = action !== "edit"; reasonBox.hidden = false;
+      submit.hidden = cancel.hidden = false;
+      submit.textContent = action === "edit" ? "Save edited draft review" : "Record rejection";
+      if (action === "edit" && editing) editing.focus(); else why.focus();
+    };
+    const chooseEdit = h("button", { class: "alt", type: "button", disabled: unavailable || (!getText && !editing), onclick: event => choose("edit", event.currentTarget) }, "Edit this draft");
+    const box = h("fieldset", {}, h("legend", {}, "Review this draft"),
+      h("p", {}, "Use records only after checking them. Using a draft records your review only; it does not approve works, contact a resident or change any case."),
+      error,
       unavailable && h("p", {}, "Accept unavailable: check the stale or unverified sources and request a fresh draft."),
-      h("div", { class: "row" }, h("button", { class: "alt", disabled: unavailable, onclick: go("accept") }, "Accept"),
-        h("button", { class: "alt", disabled: unavailable || (!getText && !editing), onclick: go("edit") }, "Edit"),
-        h("button", { class: "alt", onclick: go("reject") }, "Reject")));
-    why.addEventListener("input", () => { error.textContent = ""; why.removeAttribute("aria-invalid"); why.removeAttribute("aria-describedby"); });
+      h("div", { class: "row review-choices" }, h("button", { class: "alt", type: "button", disabled: unavailable, onclick: go("accept") }, "Use this draft"),
+        chooseEdit, h("button", { class: "alt", type: "button", onclick: event => choose("reject", event.currentTarget) }, "Do not use this draft")),
+      editBox, reasonBox, h("div", { class: "row" }, submit, cancel));
+    why.addEventListener("input", () => {
+      why.dataset.caseDirty = "true";
+      error.textContent = ""; why.removeAttribute("aria-invalid"); why.removeAttribute("aria-describedby");
+    });
+    editing?.addEventListener("input", () => { editing.dataset.caseDirty = "true"; });
     kids.push(box, result);
   }
   const meta = h("div", { class: "aimeta ai-suggestion", "data-record-id": d.record_id, "data-review-state": d.approval }, kids);
@@ -417,24 +472,89 @@ const REVIEWED = { accept: "Accepted", edit: "Edited", reject: "Rejected" };
 
 function aiBox() {
   const number = new Intl.NumberFormat("en-GB");
-  const box = h("section", { class: "card ai", "aria-live": "polite" }, h("h2", {}, "Today's briefing"), h("p", { class: "muted" }, "Reading case summaries..."));
-  const toggle = h("input", { type: "checkbox", id: "wf-mode", checked: aiMode.workflow, onchange: () => { aiMode.workflow = toggle.checked; load(); } });
-  const load = () => {
+  const box = h("section", { class: "card ai briefing" }, h("h2", {}, "Today's briefing"));
+  const content = h("div", { class: "briefing-content" });
+  const status = h("p", { role: "status", "aria-live": "polite" });
+  const toggle = h("select", { id: "wf-mode", name: "assistance-mode", onchange: () => load() },
+    h("option", { value: "ai" }, "Allow AI suggestions"),
+    h("option", { value: "workflow" }, "Use rules and templates, without AI"));
+  toggle.value = aiMode.workflow ? "workflow" : "ai";
+  const mode = h("div", {}, h("label", { for: "wf-mode" }, "How to prepare briefings and draft requests"), toggle,
+    h("p", { class: "muted" }, "This choice applies to your briefing and draft requests until you sign out or reload. Rules and templates never call AI. Ordinary case work stays available."));
+  const dismiss = h("button", { type: "button", class: "alt", onclick: () => {
+    const hidden = !content.hidden; content.hidden = mode.hidden = hidden;
+    dismiss.textContent = hidden ? "Show briefing" : "Hide briefing";
+    status.textContent = hidden ? "Briefing hidden. No review or case record changed. Choose Show briefing to undo." : "Briefing shown.";
+  } }, "Hide briefing");
+  const source = (cite, caseIds) => {
+    const prefix = cite.split(": ")[0];
+    const id = caseIds.includes(prefix) ? prefix : caseIds.length === 1 ? caseIds[0] : null;
+    return id
+      ? h("a", { href: `#/case/${encodeURIComponent(id)}` }, cite) : cite;
+  };
+  const paint = b => {
+    const ai = b.source === "ai";
+    const refreshed = b.generated_at ? new Date(b.generated_at) : null;
+    content.replaceChildren(h("h3", {}, b.scope_label),
+      h("p", { class: "muted" }, `${number.format(b.case_count)} permitted open ${b.case_count === 1 ? "case" : "cases"}. ${number.format(b.summary_count)} included in this summary (up to 8).`),
+      h("p", { class: "ai-label" }, ai ? "AI suggestion, not approved. Not an instruction." : "Summary by rules. Not an instruction."),
+      h("p", {}, "Why these cases: the fixed case ranking selects the first permitted open cases, with safety first. This briefing does not change that order. Check the linked records before using the text."),
+      h("p", { class: "muted" }, "Prepared at: ", refreshed && !Number.isNaN(refreshed.valueOf())
+        ? h("time", { datetime: b.generated_at }, new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeStyle: "long" }).format(refreshed))
+        : "Not provided. Refresh to request current records."),
+      h("h3", {}, ai ? "Generated briefing and its sources" : "Rules-derived summary and its sources"),
+      h("ol", { class: "briefing-statements" }, (b.statements || [{ text: b.text, citations: [], unresolved: [] }]).map(statement => h("li", {},
+        h("p", {}, statement.text),
+        h("details", {}, h("summary", {}, `Sources used (${statement.citations.length})`),
+          statement.citations.length ? h("ul", {}, statement.citations.map(cite => h("li", {}, source(cite, b.source_case_ids || [])))) : h("p", {}, "No statement references were provided. Check the case record."),
+          statement.unresolved?.length ? h("p", { class: "err" }, `These references do not match the record: ${statement.unresolved.join("; ")}. Do not rely on this statement.`) : null)))),
+      h("p", {}, "References show what was cited, not whether the statement is correct. Correct the draft or explain why you will not use it below. Recorded reviews cannot be undone."),
+      aiNotes(b), h("button", { type: "button", class: "alt", onclick: () => load() }, "Refresh briefing"));
+  };
+  let sequence = 0, loading = false;
+  const load = async () => {
+    if (loading) return;
+    if (content.querySelector("[data-review-pending]")) {
+      toggle.value = aiMode.workflow ? "workflow" : "ai";
+      status.textContent = "Finish the pending review first. If confirmation needs checking, reload the workspace and check review history before requesting a fresh briefing.";
+      return;
+    }
+    if (content.querySelector('[data-case-dirty="true"]')
+        && !window.confirm("Replace this briefing and discard its unsubmitted review edits? Copy anything you need first.")) {
+      toggle.value = aiMode.workflow ? "workflow" : "ai";
+      return;
+    }
+    aiMode.workflow = toggle.value === "workflow";
+    loading = true;
+    toggle.disabled = true;
+    content.inert = true;
+    const own = ++sequence;
     const signal = routeController.signal;
     const cancel = () => { if (briefingBox === box) briefingBox = null; };
     signal.addEventListener("abort", cancel, { once: true });
-    return api(`/api/briefing${aiMode.workflow ? "?mode=workflow" : ""}`, undefined, signal).then((b) => box.replaceChildren(h("h2", {}, "Today's briefing"), h("h3", {}, b.scope_label),
-      h("p", { class: "muted" }, `${number.format(b.case_count)} permitted open ${b.case_count === 1 ? "case" : "cases"}. ${number.format(b.summary_count)} included in this summary (up to 8).`), h("p", {}, b.text),
-      h("p", { class: "muted" }, `${b.label}. Suggestions only. Refreshed when case data changes.`), aiNotes(b),
-      h("p", {}, toggle, h("label", { for: "wf-mode" }, " Workflow only (no AI) for my AI requests"))))
-      .catch((error) => {
-        if (signal.aborted) { box.remove(); return; }
-        box.replaceChildren(h("h2", {}, "Today's briefing"),
-          h("p", { class: "err", role: "alert" }, `Briefing unavailable: ${error.message}`),
-          h("button", { onclick: load }, "Try loading briefing again"));
-      })
-      .finally(() => signal.removeEventListener("abort", cancel));
+    content.setAttribute("aria-busy", "true");
+    status.textContent = "Reading case summaries...";
+    try {
+      const b = await api(`/api/briefing${aiMode.workflow ? "?mode=workflow" : ""}`, undefined, signal);
+      if (signal.aborted || own !== sequence) return;
+      paint(b); status.textContent = "Briefing ready. Check the sources, then choose how to review the draft.";
+    } catch (error) {
+      if (signal.aborted || own !== sequence) return;
+      status.textContent = `Briefing unavailable: ${error.message}. Try loading the briefing again.`;
+      if (!content.childElementCount) {
+        content.replaceChildren(h("button", { type: "button", onclick: () => load() }, "Try loading briefing again"));
+      }
+    } finally {
+      signal.removeEventListener("abort", cancel);
+      if (own === sequence) {
+        content.removeAttribute("aria-busy");
+        content.inert = false;
+        toggle.disabled = false;
+        loading = false;
+      }
+    }
   };
+  box.append(status, dismiss, mode, content);
   load();
   return box;
 }
@@ -487,14 +607,18 @@ function priorityPanel() {
     box.replaceChildren(...kids);
   };
   const ask = async () => { box.setAttribute("aria-busy", "true"); try { paint(await api("/api/ai/priority", modeBody({ n: 5 }))); } catch (e) { paint(null, e.message); } box.removeAttribute("aria-busy"); };
-  api("/api/ai/priority").then((d) => paint(d.recommendation && d.recommendation.status === "Proposed" ? d.recommendation : null)).catch(() => paint(null));
+  box.append(h("p", { role: "status" }, "Loading priority suggestions..."));
+  api("/api/ai/priority").then((d) => paint(d.recommendation && d.recommendation.status === "Proposed" ? d.recommendation : null)).catch(error => {
+    if (error.name !== "AbortError") paint(null, `Priority suggestions unavailable: ${error.message}. Try requesting a suggestion again.`);
+  });
   return box;
 }
 
 function pendingHandoffs() {
-  const box = h("section", { class: "card", "aria-label": "Handoffs waiting for you", hidden: true });
+  const box = h("section", { class: "card", "aria-label": "Handoffs waiting for you" },
+    h("p", { role: "status" }, "Loading handoffs..."));
   api("/api/handoffs").then((rows) => {
-    if (!rows.length) return;
+    if (!rows.length) { box.hidden = true; return; }
     box.hidden = false;
     box.replaceChildren(h("h2", {}, "Handoffs waiting for you"), h("ul", { class: "list" }, rows.map((x) => h("li", {},
       h("a", { href: `#/case/${encodeURIComponent(x.case_id)}` }, `${x.resident}, ${x.address}`),
@@ -587,15 +711,15 @@ async function listView(view) {
   const field = (label, key, opts) => {
     const el = h("select", { id: `f-${key}` }, h("option", { value: "" }, "Any"), opts.map(([v, t]) => h("option", { value: v }, t)));
     el.value = listState[key];
-    el.addEventListener("change", () => { listState[key] = el.value; load(); });
+    el.addEventListener("change", AsyncAction.handler(() => { listState[key] = el.value; return load(); }));
     return [h("label", { for: `f-${key}` }, label), el];
   };
   const search = h("input", { id: "f-q", name: "q", type: "search", autocomplete: "off", placeholder: "Name, address or postcode" });
   search.value = listState.q;
-  search.addEventListener("input", () => { listState.q = search.value; clearTimeout(searchTimer); searchTimer = setTimeout(() => load(), 250); });
+  search.addEventListener("input", () => { listState.q = search.value; clearTimeout(searchTimer); searchTimer = setTimeout(() => AsyncAction.run(null, () => load(), "Finding cases", side), 250); });
   const sort = h("select", { id: "f-sort" }, Object.entries(fx.sorts).map(([k, t]) => h("option", { value: k }, t)));
   sort.value = listState.sort;
-  sort.addEventListener("change", () => { listState.sort = sort.value; load(); });
+  sort.addEventListener("change", AsyncAction.handler(() => { listState.sort = sort.value; return load(); }));
   const side = h("aside", { class: "side", "aria-label": "Filters" }, h("h2", {}, "Filter"),
     h("label", { for: "f-q" }, "Find"), search,
     field("Stage", "stage", fx.stages.map((x) => [x, x])),
@@ -611,7 +735,7 @@ async function listView(view) {
       resetFocus = true;
       const target = me.work_queues.default.view === "all" ? "#/all" : "#/";
       if (location.hash !== target) location.hash = target;
-      else route();
+      else return route();
     } }, "Reset my queue")),
     h("p", { class: "muted" }, `Default ${me.work_queues.version}: returns to ${me.work_queues.default.view === "all" ? "all permitted open cases" : "your assigned cases"}, ${fx.sorts[me.work_queues.default.sort]}, first page and no case selection. No records change.`),
     h("details", {}, h("summary", {}, "Queue definitions"),
@@ -1368,9 +1492,10 @@ function fundingPanel(c, id, refresh, savedFields = [], session = caseSession) {
 function importView() {
   const out = h("div", {});
   const file = h("input", { type: "file", accept: ".csv,text/csv", id: "f" });
-  file.addEventListener("change", async () => {
-    const text = await file.files[0].text();
+  file.addEventListener("change", AsyncAction.handler(async () => {
+    if (!file.files.length) return;
     try {
+      const text = await file.files[0].text();
       const r = await api("/api/import-check", { text });
       out.replaceChildren(
         h("p", { class: "notice" }, r.message),
@@ -1378,7 +1503,7 @@ function importView() {
         h("p", {}, "We found these columns: ", Object.entries(r.columns).map(([k, v]) => `${k}: ${v || "not found"}`).join("; ")),
         r.to_fix.length ? h("div", {}, h("h2", {}, "Rows to fix"), h("ul", {}, r.to_fix.map((x) => h("li", {}, `Row ${x.row}: ${x.problem}`)))) : h("p", {}, "No rows need fixing."));
     } catch (e) { out.replaceChildren(h("p", { class: "err" }, e.message)); }
-  });
+  }));
   show(h("a", { class: "back", href: "#/" }, "Back to the list"), h("h1", {}, "Check a spreadsheet"),
     h("p", {}, "Choose any spreadsheet saved as CSV. We match the columns for you and list anything to fix. Your file is never changed."),
     h("label", { for: "f" }, "Spreadsheet (CSV)"), file, out);
@@ -1392,8 +1517,13 @@ async function signOut(switchAccount) {
     location.href = "/";
   } catch (e) { document.getElementById("account-error").textContent = e.message; }
 }
-document.getElementById("signout").addEventListener("click", () => signOut(false));
-document.getElementById("switch-account").addEventListener("click", () => signOut(true));
+async function bootstrapWorkspace() {
+  await requireWorkspaceScripts("", false);
+  workspaceStatus.textContent = "";
+  document.getElementById("signout").addEventListener("click", AsyncAction.handler(() => signOut(false)));
+  document.getElementById("switch-account").addEventListener("click", AsyncAction.handler(() => signOut(true)));
+  await start();
+}
 document.querySelector(".skip-link").addEventListener("click", (event) => { event.preventDefault(); app.focus(); });
 document.addEventListener("keydown", (e) => {
   const menu = document.getElementById("account");
@@ -1404,7 +1534,17 @@ document.addEventListener("click", (e) => {
   if (!menu.contains(e.target)) menu.open = false;
 });
 window.addEventListener("hashchange", () => me && route());
-start().catch((e) => login(e.message));
+function startupFailed(error) {
+  if (error.status === 401) return;
+  workspaceStatus.textContent = `Workspace unavailable: ${error.message}`;
+  show(h("h1", {}, "Workspace unavailable"),
+    h("p", { class: "err", role: "alert" }, `Could not start the workspace: ${error.message}. Try again. If this continues, contact application support.`),
+    error.reloadWorkspace
+      ? h("button", { type: "button", onclick: () => location.reload() }, "Reload workspace")
+      : h("button", { type: "button", onclick: () => start().catch(startupFailed) }, "Try again"));
+  workspaceReady();
+}
+bootstrapWorkspace().catch(startupFailed);
 
 // ---- Overview, Visits, Funding screens
 const NS = "http://www.w3.org/2000/svg";
@@ -1581,6 +1721,10 @@ function mapPanel(coordinator = null) {
   const draw = async (fit) => {
     if (signal.aborted) return;
     const my = ++seq;
+    info.setAttribute("role", "status");
+    info.textContent = "Loading map records. The case list remains available.";
+    el.setAttribute("aria-busy", "true");
+    const progress = AsyncAction.feedback("Loading map records", null, box);
     if (!coordinator) open.onclick = () => {
       collapse(false);
       Object.assign(listState, { flag: ovState.flag === "fundingprog" ? "funding" : ovState.flag, area: ovState.area });
@@ -1625,6 +1769,9 @@ function mapPanel(coordinator = null) {
       info.setAttribute("role", "alert");
       info.textContent = `Map unavailable: ${error.message}. Use the case list or try changing the map filter.`;
       return;
+    } finally {
+      progress.finish();
+      if (my === seq) el.removeAttribute("aria-busy");
     }
     if (signal.aborted || my !== seq) return;
     info.setAttribute("role", "status");
@@ -1805,11 +1952,11 @@ async function overviewView() {
   const mp = mapPanel();
   const tiles = h("div", { class: "tiles", role: "group", "aria-label": "Choose what the map shows" });
   const paint = () => tiles.replaceChildren(...OV_TILES.map(([f, label]) => h("button", { class: `tile${f === "hazard" ? " danger" : ""}`, "aria-pressed": String(ovState.flag === f),
-    onclick: () => { ovState.flag = f; paint(); mp.draw(true); } }, h("strong", {}, String(counts[f])), h("span", {}, label),
+    onclick: () => { ovState.flag = f; paint(); return mp.draw(true); } }, h("strong", {}, String(counts[f])), h("span", {}, label),
     h("span", { class: "tile-selection" }, ovState.flag === f ? "Selected" : "Select filter"))),
     h("div", { class: "tile static" }, h("strong", {}, String(k.completed)), h("span", {}, "Completed")));
   paint();
-  const area = h("select", { id: "mapArea", onchange: (e) => { ovState.area = e.target.value; mp.draw(true); } },
+  const area = h("select", { id: "mapArea", onchange: (e) => { ovState.area = e.target.value; return mp.draw(true); } },
     h("option", { value: "" }, "All areas"), st.areas.map((a) => h("option", { value: a.label }, a.label)));
   area.value = ovState.area;
   show(

@@ -23,6 +23,18 @@
 @media(prefers-reduced-motion:reduce){:root{--motion:0s}}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
+.startup{max-width:45rem;margin:var(--sp-5) auto}
+.async-feedback{display:inline-flex;align-items:center;gap:var(--sp-2);margin:var(--sp-2);overflow-wrap:anywhere}
+.async-spinner{display:inline-block;width:1em;height:1em;flex-shrink:0;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:async-spin 1s linear infinite}
+@keyframes async-spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.async-spinner{animation:none;border-style:dotted}}
+.briefing{min-width:0;overflow-wrap:anywhere}
+.briefing fieldset{min-width:0;border:1px solid var(--line);border-radius:var(--radius);padding:var(--sp-3)}
+.briefing textarea,.aimeta textarea{min-height:9rem}
+.briefing-statements>li{margin-block:var(--sp-4)}
+.briefing-content{border-left:3px solid var(--brand);padding-left:var(--sp-4)}
+.briefing .review-choices{margin-block:var(--sp-3)}
+.aimeta .field-error:empty:before{content:none}
 body{margin:0;font:var(--fs-base)/var(--lh) var(--font);color:var(--ink);background:var(--bg)}
 .top{display:flex;justify-content:space-between;align-items:center;background:var(--brand);color:#fff;padding:.6rem 1.25rem}
 .brand{display:flex;gap:.7rem;align-items:center;color:#fff;text-decoration:none;font-weight:600;font-size:1.15rem}
@@ -246,7 +258,8 @@ th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid var(--line);f
 button,.btn{transition:border-color var(--motion)}
 .item,.tile{transition:background-color var(--motion),border-color var(--motion)}
 button:disabled,button[aria-disabled=true],.btn[aria-disabled=true]{background:var(--disabled-bg);border-color:var(--field-line);color:var(--disabled-ink);cursor:not-allowed}
-button[aria-busy=true]:after,.loading:after{content:" (loading)"}
+button[aria-busy=true]{cursor:progress}
+.loading:after{content:" (loading)"}
 input[aria-invalid=true],select[aria-invalid=true],textarea[aria-invalid=true]{border:2px solid var(--warn)}
 .field-error{color:var(--warn);font-weight:600;margin:.2rem 0 0}
 .field-error:before{content:"\26A0\00a0"}

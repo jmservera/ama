@@ -6,6 +6,115 @@ ms.date: 2026-10-29
 ms.topic: reference
 ---
 
+## Loading feedback and Today's briefing (#531)
+
+The employee shell contains startup text before workspace scripts load. An
+independent watchdog shows a slow-start hint and retry at four seconds, then
+support guidance at fifteen seconds. It cannot display before the host returns
+the HTML document. API startup failures show an explicit error and retry.
+Main workspace login, ready and error paths remove startup independently, so
+a failed watchdog download cannot leave the startup message over a working or
+failed workspace. The law viewer reuses the same watchdog for a failed law
+entry-script download; its own success and service-error paths independently
+settle startup, retaining All sources/search retry without clearing prior text.
+Before sign-in or account action listeners are registered, bootstrap checks the
+shared async-action helper and recovers a failed download through the existing
+bounded script loader. Only this helper is required before authentication;
+role-specific dependencies are selected after sign-in. Exhausted retries or
+a loaded script without helper readiness show an explicit error and native
+"Reload workspace" action. Other workspace-script and Leaflet retry bounds
+and session/route guards remain unchanged.
+Recovery controls also retain their native listeners when the helper exists
+but its handler is not callable, so an incomplete helper cannot prevent reload.
+
+The shared native async-action helper wraps click, submit and change handlers.
+It shows text immediately, adds a decorative spinner beside that text after 200ms,
+disables the pending control, suppresses duplicate activation and announces
+progress politely. Existing handler-owned disabled states and inline errors win
+over cleanup. CSV, account, filters, appointment forms and the standalone law
+viewer use the same helper; non-control reads and map refreshes show progress
+without disabling navigation. Reduced motion keeps a static icon plus text.
+The standalone law viewer checks its required helper methods before binding
+actions or reading sources. If the helper is missing or incomplete, it shows
+an explicit error and native "Reload law viewer" button; search is disabled
+until reload restores the helper. Workspace startup requires all three helper
+methods (handler, run and feedback), not just an exported object or handler.
+Controls whose handlers already set `aria-disabled="true"` retain that
+focus-preserving state without an additional native disable; pending duplicate
+activation is still suppressed.
+Editable queue search uses non-control progress: it stays enabled and focused
+while overlapping reads use the existing latest-response sequence guard.
+Busy cleanup restores the attribute captured before the handler runs,
+including handlers that manage their own temporary busy state.
+Each fresh attempt removes only that control's previous helper-owned feedback,
+including after a synchronous failure. Pending duplicate attempts keep the
+same promise and notice; distinct controls and non-control reads stay independent.
+Failed writes are never automatically retried.
+Form progress is a sibling of the busy form; briefing progress is outside its
+busy content. Action-specific live text is not deferred inside those regions.
+
+Today's briefing distinguishes "AI suggestion, not approved" from "Summary by
+rules", shows the actual preparation timestamp and statement references, and
+links declared case sources. Missing/unresolved references are explicit;
+references and explanations are not proof of truth. The mode selector says
+"Use rules and templates, without AI" and applies to subsequent briefing and
+draft requests for the page session. Ordinary case work remains available.
+"Use this draft" records a draft review only. "Edit this draft" reveals a large
+editor and required reason; "Do not use this draft" reveals only the reason.
+Cancel retains local text and returns focus to the choice that opened review,
+including rejection when stale or unverified evidence disables editing.
+Trailing sentence citations remain associated with their separate statements,
+including line breaks before or between references. Common titles and medial
+abbreviations do not fragment statements; genuine sentence and line boundaries
+remain separate. Ambiguous capitalized street suffixes such as "High St." are
+conservatively treated as sentence boundaries, not general language inference.
+Complete sentence-ending punctuation runs (including ellipses and ?!) followed
+by closing quotes or brackets retain
+the same statement/reference boundaries. Terminal name suffixes such as
+"Contact John Smith Jr. Repairs are due." do not borrow the next claim's
+references; lowercase medial continuations and titles remain intact.
+Hide/Show briefing is local reversible dismissal,
+not reversal of an immutable recorded review. Server source/review checks and
+all human approval, resident consent and manual boundaries remain unchanged.
+Rules text and statement references use the same immutable case snapshot.
+Refreshing or changing mode requires explicit discard of unsubmitted review
+edits; a failed refresh retains them. Neither action can replace a pending
+review or clear a committed/uncertain outcome's history-check barrier.
+An initial load failure offers "Try loading briefing again". A failed refresh
+or mode change retains the previous briefing and its "Refresh briefing"
+control; retry uses the currently selected mode.
+
+HAX design mapping (pattern references, not usability acceptance):
+
+| Guideline | Applied pattern |
+| --- | --- |
+| [G1/G2](https://www.microsoft.com/en-us/haxtoolkit/library/) | Source-type label, explicit limits, confidence not inferred |
+| G7 | Explicit assistance-mode choice and refresh action |
+| [G8](https://www.microsoft.com/en-us/haxtoolkit/guideline/support-efficient-dismissal/) | Hide/Show briefing, no case mutation |
+| [G9](https://www.microsoft.com/en-us/haxtoolkit/guideline/support-efficient-correction/) | Outcome selection, conditional editor/reason, cancel before recording |
+| [G11](https://www.microsoft.com/en-us/haxtoolkit/guideline/make-clear-why-the-system-did-what-it-did/) | Ranking/scope rationale, actual timestamp and declared statement references, trust caveat |
+| G15 | Explicit draft feedback and immutable review result |
+
+[Fluent UI React Storybook](https://storybooks.fluentui.dev/react/) and its
+Spinner guidance inform native loading/button/field patterns only. No React
+dependency or framework adoption is added. This bounded mapping uses the cited
+guidelines and owner feedback; it is not staff user research.
+
+From `src/api`, with installed source distributions and dev dependencies:
+
+```bash
+PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests python -m unittest \
+  test_loading_feedback test_workspace_scripts test_ai_tasks -q
+PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests python -m checks.loading_briefing_browser_check \
+  --axe /path/to/axe-4.10.3.min.js --out /new/external/loading-results
+```
+
+Use `/tmp/ama-rpi-heavy.lock` nonblocking; if busy, run targeted checks and record
+the full-suite limitation rather than queuing.
+Constructed loopback data only; no Azure or live model is needed.
+Live employee-site cold-start verification, screen-reader, voice-control and
+staff usability acceptance remain separate owner checks, not local passes.
+
 
 ## Progress dashboard and closed case archive (#533)
 

@@ -8,6 +8,146 @@ WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
 
 
 class WorkspaceScripts(unittest.TestCase):
+    def test_law_helper_failure_renders_native_reload_before_reads(self) -> None:
+        result = subprocess.run(
+            [
+                "node",
+                "-e",
+                r"""
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const vm = require("node:vm");
+const source = fs.readFileSync(process.argv[1] + "/law.js", "utf8");
+for (const state of ["absent", "null", "empty", "handler-only", "run-only",
+  "bad-handler", "bad-run"]) {
+  let reloads = 0, reads = 0, helperBindings = 0;
+  const element = tag => ({tag, attrs: {}, children: [], listeners: {},
+    setAttribute(name, value) {this.attrs[name] = value;},
+    addEventListener(name, callback) {this.listeners[name] = callback;},
+    replaceChildren(...children) {this.children = children;},
+    focus() {this.focused = true;}});
+  const out = element("div"), status = element("p"), form = element("form");
+  const controls = [element("input"), element("button"), element("button")];
+  form.querySelectorAll = () => controls;
+  const nodes = {"law-out": out, "law-status": status, "law-form": form,
+    "law-q": controls[0], "law-all": controls[2]};
+  const context = vm.createContext({
+    document: {getElementById: id => nodes[id], createElement: element,
+      dispatchEvent() {}},
+    Event,
+    location: {reload() {reloads++;}},
+    fetch() {reads++; throw new Error("No read before helper readiness");}
+  });
+  const handler = () => {helperBindings++; throw new Error("Unready helper called");};
+  if (state !== "absent") context.AsyncAction = state === "null" ? null
+    : state === "empty" ? {}
+    : state === "handler-only" ? {handler}
+    : state === "run-only" ? {run: handler}
+    : state === "bad-handler" ? {handler: true, run: handler}
+    : {handler, run: true};
+  assert.doesNotThrow(() => vm.runInContext(source, context), state);
+  assert.equal(reads, 0, state);
+  assert.equal(helperBindings, 0, state);
+  assert.match(status.textContent, /Required law viewer file did not load: \/async-action.js/,
+    state);
+  assert.ok(out.focused, state);
+  const reload = out.children.find(node => node.tag === "button");
+  assert.ok(reload, state);
+  assert.equal(reload.type, "button", state);
+  assert.equal(reload.textContent, "Reload law viewer", state);
+  assert.equal(typeof reload.listeners.click, "function", state);
+  reload.listeners.click();
+  assert.equal(reloads, 1, state);
+  assert.ok(controls.every(control => control.disabled), state);
+  let prevented = false;
+  form.listeners.submit({preventDefault() {prevented = true;}});
+  assert.ok(prevented, state);
+}
+console.log("PASS law helper failure and native reload");
+""",
+                str(WEB),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("PASS law helper failure", result.stdout)
+
+    def test_terminal_startup_renders_native_reload_with_unready_helper(self) -> None:
+        result = subprocess.run(
+            [
+                "node",
+                "-e",
+                r"""
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const vm = require("node:vm");
+const source = fs.readFileSync(process.argv[1] + "/app.js", "utf8");
+const factory = source.slice(source.indexOf("function h("),
+  source.indexOf("function mutationNeedsHistory"));
+const failure = source.slice(source.indexOf("function startupFailed("),
+  source.indexOf("bootstrapWorkspace().catch"));
+const ready = source.slice(source.indexOf("function workspaceReady("),
+  source.indexOf("function login("));
+for (const state of ["absent", "null", "empty", "non-callable", "ready"]) {
+  const elements = [], events = [], views = [];
+  let reloads = 0, wraps = 0;
+  let startupRemovals = 0;
+  const document = {
+    getElementById(id) {
+      assert.equal(id, "startup");
+      return {remove() {startupRemovals++;}};
+    },
+    createElement(tag) {
+      const element = {tag, attrs: {}, children: [], listeners: {},
+        setAttribute(name, value) {this.attrs[name] = value;},
+        addEventListener(name, callback) {this.listeners[name] = callback;},
+        append(child) {this.children.push(child);}};
+      elements.push(element);
+      return element;
+    },
+    createTextNode: text => ({nodeType: 3, textContent: text}),
+    dispatchEvent: event => events.push(event.type)
+  };
+  const context = vm.createContext({document, Event, workspaceStatus: {textContent: ""},
+    location: {reload() {reloads++;}}, show: (...nodes) => views.push(nodes)});
+  if (state !== "absent") context.AsyncAction = state === "null" ? null
+    : state === "empty" ? {}
+    : state === "non-callable" ? {handler: true}
+    : {handler: callback => {wraps++; return callback;}};
+  vm.runInContext(factory + ready + failure, context);
+  vm.runInContext(`startupFailed({message: "Synthetic helper unavailable",
+    reloadWorkspace: true})`, context);
+  assert.equal(views.length, 1, state);
+  const [heading, alert, reload] = views[0];
+  const text = node => node.children.map(child => child.textContent).join("");
+  assert.equal(text(heading), "Workspace unavailable", state);
+  assert.equal(alert.attrs.role, "alert", state);
+  assert.match(text(alert), /Synthetic helper unavailable/, state);
+  assert.equal(context.workspaceStatus.textContent,
+    "Workspace unavailable: Synthetic helper unavailable", state);
+  assert.deepEqual(events, ["workspace-ready"], state);
+  assert.equal(startupRemovals, 1, "terminal renderer owns cleanup without watchdog");
+  assert.equal(reload.tag, "button", state);
+  assert.equal(reload.attrs.type, "button", state);
+  assert.equal(text(reload), "Reload workspace", state);
+  assert.equal(typeof reload.listeners.click, "function", state);
+  reload.listeners.click();
+  assert.equal(reloads, 1, state);
+  assert.equal(wraps, state === "ready" ? 1 : 0, state);
+}
+console.log("PASS actual terminal renderer and native reload");
+""",
+                str(WEB),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("PASS actual terminal renderer", result.stdout)
+
     def test_retry_contracts_and_route_isolation(self) -> None:
         result = subprocess.run(
             [
@@ -24,7 +164,7 @@ const message = path => `Required workspace files did not load: ${path}. Reload 
   + " to try again. If this continues, ask application support to check these files.";
 
 function harness(outcomes = []) {
-  const requests = [], delays = [], removed = [], views = [];
+  const requests = [], delays = [], removed = [], views = [], listeners = [];
   let context;
   const document = {
     createElement: () => ({remove() {removed.push(this);}}),
@@ -33,8 +173,17 @@ function harness(outcomes = []) {
       const outcome = outcomes.shift() || "error";
       if (outcome === "timeout") return;
       queueMicrotask(() => {
+        if (outcome === "unready") context.AsyncAction = {};
+        if (outcome === "null") context.AsyncAction = null;
+        if (outcome.startsWith("partial-")) {
+          context.AsyncAction = {handler: task => task, run() {}, feedback() {}};
+          context.AsyncAction[outcome.slice(8)] = true;
+        }
         if (outcome === "ready") {
-          if (script.src === "/vendor/leaflet.js") context.L = {};
+          if (script.src === "/async-action.js") {
+            context.AsyncAction = {handler: task => task, run() {}, feedback() {}};
+          }
+          else if (script.src === "/vendor/leaflet.js") context.L = {};
           else if (script.src === "/role-screens.js") {
             context.roleScreensView = async () => views.push("screens");
           }
@@ -45,7 +194,9 @@ function harness(outcomes = []) {
       });
     }},
     querySelector: () => null,
-    querySelectorAll: () => []
+    querySelectorAll: () => [],
+    getElementById: id => ({addEventListener: (event, handler) =>
+      listeners.push({id, event, handler})})
   };
   context = vm.createContext({
     document, AbortController, URLSearchParams, clearTimeout,
@@ -62,6 +213,7 @@ function harness(outcomes = []) {
     history: {replaceState: (_state, _title, hash) => {context.location.hash = hash;}},
     routeController: new AbortController(), searchTimer: 0,
     coordinatorOrigin: null, queueOrigin: "mine",
+    AsyncAction: {handler: task => task, run() {}, feedback() {}},
     qualityPanel() {}, financePanel() {}, assistantCasePanel() {}, chatCasePanel() {},
     timeView() {}, roleScreensView() {},
     overviewView: async () => views.push("overview"),
@@ -69,11 +221,63 @@ function harness(outcomes = []) {
     show: () => views.push("error"), h: () => ({})
   });
   vm.runInContext(loader, context);
-  return {context, requests, delays, removed, views,
+  return {context, requests, delays, removed, views, listeners,
     run: expression => vm.runInContext(expression, context)};
 }
 
 (async () => {
+  for (const hash of ["#/overview", "#/case/ZF-1", "#/screens"]) {
+    let bootstrap = harness(["ready"]);
+    bootstrap.context.me = null;
+    for (const global of ["qualityPanel", "financePanel", "assistantCasePanel",
+      "chatCasePanel", "timeView", "roleScreensView"]) delete bootstrap.context[global];
+    assert.deepEqual(Array.from(bootstrap.run(
+      `missingWorkspaceScripts("${hash}", ${hash.includes("/case/")})`)), []);
+    delete bootstrap.context.AsyncAction;
+    assert.deepEqual(Array.from(bootstrap.run(
+      `missingWorkspaceScripts("${hash}", ${hash.includes("/case/")})`)),
+      ["/async-action.js"], "pre-session deep links only require the helper");
+    await bootstrap.run('requireWorkspaceScripts("", false)');
+    assert.deepEqual(bootstrap.requests, ["/async-action.js"]);
+    assert.equal(bootstrap.run("typeof AsyncAction"), "object");
+    for (const outcomes of [["error", "error"], ["load"], ["timeout"], ["unready"]]) {
+      bootstrap = harness([...outcomes]);
+      bootstrap.context.me = null;
+      delete bootstrap.context.AsyncAction;
+      await assert.rejects(bootstrap.run('requireWorkspaceScripts("", false)'),
+        error => error.message === message("/async-action.js") && error.reloadWorkspace);
+      await assert.rejects(bootstrap.run('requireWorkspaceScripts("", false)'));
+      assert.equal(bootstrap.requests.length, outcomes.length,
+        "null session still checks readiness and retains terminal retry budget");
+    }
+  }
+  for (const outcomes of [["ready"], ["error", "ready"], ["error", "error"],
+    ["load"], ["timeout"], ["unready"], ["null"],
+    ["partial-handler"], ["partial-run"], ["partial-feedback"]]) {
+    const bootstrap = harness([...outcomes]);
+    bootstrap.context.me = null;
+    if (outcomes.includes("unready")) bootstrap.context.AsyncAction = {};
+    else delete bootstrap.context.AsyncAction;
+    bootstrap.context.start = async () => bootstrap.views.push("start");
+    bootstrap.context.signOut = async switchAccount => bootstrap.views.push(switchAccount);
+    bootstrap.run(source.slice(source.indexOf("async function bootstrapWorkspace"),
+      source.indexOf('document.querySelector(".skip-link")')));
+    const started = bootstrap.run("bootstrapWorkspace()");
+    assert.equal(bootstrap.listeners.length, 0, "no listeners before helper readiness");
+    assert.deepEqual(bootstrap.views, [], "no API start before helper readiness");
+    if (outcomes.includes("ready")) {
+      await started;
+      assert.deepEqual(bootstrap.views, ["start"]);
+      assert.deepEqual(bootstrap.listeners.map(({id}) => id), ["signout", "switch-account"]);
+      await bootstrap.listeners[0].handler();
+      await bootstrap.listeners[1].handler();
+      assert.deepEqual(bootstrap.views, ["start", false, true]);
+    } else {
+      await assert.rejects(started, error => error.reloadWorkspace);
+      assert.equal(bootstrap.listeners.length, 0);
+      assert.deepEqual(bootstrap.views, [], "terminal bootstrap must not start the workspace");
+    }
+  }
   let h = harness(["ready"]);
   await h.run('requireWorkspaceScripts("#/overview", false)');
   assert.deepEqual(h.requests, ["/vendor/leaflet.js"]);
