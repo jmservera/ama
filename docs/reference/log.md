@@ -8325,3 +8325,27 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   action, inference extension or live verification occurred. Owner operational
   approval, January funding/headroom and exact-head publication gates remain
   separate; the USD700 cap and source guards are unchanged.
+
+## [2026-10-29] query | Project-wide Microsoft Fabric fit assessment
+
+* Added the [component review and Fabric assessment](./research/microsoft-fabric-fit-assessment.md)
+  and its knowledge-base index entries. Source baseline is
+  `9b74ac8daaec2a880172e43161b37ac7f2c3f801`; current official product/pricing
+  sources were retrieved on 2026-10-29, with three independent component
+  investigations and a separate contrarian challenge.
+* Proposed retaining API/core/Azure SQL operational authority and deferring
+  mandatory dedicated Fabric, while preserving a selective read-only analytics
+  option for explicit portfolio/history requirements. Compared SQL/read models
+  and Power BI; recorded decision-changing capacity, workload, governance and
+  comparative-measurement evidence rather than asserting no analytics need.
+* Distinguished ledger history from current tables, JSON text and BIGINT from
+  native SQL type exclusions, private/keyless options, data-agent feature status,
+  OneLake/SQL security, route-specific gateway consumption, F2/F64 licensing,
+  illustrative non-regional pricing and expired earlier spending authority.
+  Preserved later canonical sensor-key integration and distinct synthetic
+  43.8M-row history versus declared three/day scale arithmetic.
+* Research/documents only: no application/infrastructure change, private data,
+  tenant/cloud operation, deployment, paid inference, benchmark, approval,
+  commit, push or PR. Existing adverse reviews and operational/human gates
+  remain unchanged; artifact/arithmetic/diff checks are not a complete local
+  publication gate or product acceptance.

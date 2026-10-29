@@ -26,6 +26,14 @@ results and the corrected both-stage dictionary. Per-check engineering evidence
 is not composed-climate/live acceptance, downstream #111/#133 test use or an
 owner-accepted deferral of open children.
 
+The [Microsoft Fabric fit assessment](./research/microsoft-fabric-fit-assessment.md)
+reviews the current project components and official product documentation at
+2026-10-29. It recommends retaining API/core/Azure SQL authority and deferring
+mandatory dedicated Fabric, while preserving a conditional read-only analytics
+option for explicit portfolio/history needs. Ledger, permission/history,
+private connectivity, CU/licensing and unknown current budget evidence are
+qualified; source/contrarian research is not live validation or adoption approval.
+
 For #530, the [employee chat design and API guide](../../src/api/README.md#employee-chat-with-bounded-skills-530)
 records one read-only chat agent, five repository-defined advisory skills,
 explicit selection, role-projected grounding, minimal audit and workflow-only
@@ -631,6 +639,7 @@ or infra acceptance claimed.
 
 | Document | Summary | Updated |
 | --- | --- | --- |
+| [Microsoft Fabric Fit Assessment](./research/microsoft-fabric-fit-assessment.md) | Component-level project review and current official Fabric research with independent contrarian challenge. Retain operational API/core/Azure SQL, defer mandatory dedicated Fabric, and conditionally compare selective analytics with SQL/read models plus Power BI. Distinguishes actual generated history, scenario rate, ledger/history/types, private/keyless options, access paths, capacity/licensing and expired spending authority. No implementation, private-data, live benchmark or approval | 2026-10-29 |
 | [Housing Association Primer](./research/sector/housing-association-primer.md) | What a UK housing association is, sector scale and archetypes, tenure types, lease responsibility rules for retrofit, resident needs, board capital patterns, funding model and implications for Zava North Homes | 2026-09-25 |
 | [UK Social Housing Baseline Research](./research/sector/uk-social-housing-baseline-research.md) | Provisional sector benchmarks for energy, repairs, safety, grants, finance, delivery and quality | 2026-09-11 |
 | [UK Social Housing Baseline Source Register](./research/sector/uk-social-housing-baseline-source-register.md) | Official publications and datasets behind each baseline benchmark | 2026-09-11 |
