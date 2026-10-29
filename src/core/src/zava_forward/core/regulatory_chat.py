@@ -169,7 +169,7 @@ class RegulatoryChat:
                     size = stream.seek(0, 2)
                     start = max(0, size - MAX_BYTES)
                     stream.seek(start)
-                    lines = stream.read(MAX_BYTES).splitlines()
+                    lines = stream.read(size - start).splitlines()
                 if start:
                     lines = lines[1:]
                 truncated = bool(start) or len(lines) > MAX_POSITIONS

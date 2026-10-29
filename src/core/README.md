@@ -3499,8 +3499,9 @@ inference, not a spending approval, request quota or limit on urgent intake.
 The authenticated user's current-role/day summary reads at most the latest
 1,000 audit positions. SQL uses a primary-key sequence window and projects
 other actors/actions' detail as NULL; it never loads chat messages or performs
-an all-ledger detail query. JSON additionally tails at most 256 KiB and drops
-a partial line. Truncation returns `bounded_partial`; otherwise
+an all-ledger detail query. JSON additionally tails at most 256 KiB from the
+captured file size, excludes later appends and drops the leading partial line.
+Truncation returns `bounded_partial`; otherwise
 `recorded_audit_only`. Counts describe recorded events, never exact daily turn
 totals: legacy unmetered records and post-save JSON audit failures cannot be
 reconstructed. Unmetered events in the selected role/window are explicit.

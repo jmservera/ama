@@ -9,8 +9,9 @@ import unittest
 from collections.abc import Iterator
 from contextlib import contextmanager
 from datetime import timedelta
+from pathlib import Path
 from typing import Any
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from regulatory_fixture import ENV, NOW, PID, QUOTE, Fixture
 from zava_forward.core import rule_engine, rulecards
@@ -242,6 +243,30 @@ class RegulatoryTests(unittest.TestCase):
                 service.iso.store = f.store
                 if sql:
                     reopened.db.close()
+
+    def test_json_usage_snapshot_excludes_append_crossing_byte_limit(self) -> None:
+        f, service, tid = self.make()
+        service.ask(f.user, tid, "hazard sources")
+        expected = service.usage_status(f.user)
+        path = Path(f.store.audit_path)
+        size = path.stat().st_size
+        self.assertLess(size, MAX_BYTES)
+        self.assertEqual(expected["recorded_turns"], 1)
+        with path.open("rb") as stream:
+            reader = MagicMock(wraps=stream)
+            reader.__enter__.return_value = reader
+
+            def append_before_read(length: int) -> bytes:
+                f.store.audit(f.owner["email"], "unrelated", "-", "x" * (MAX_BYTES + 1))
+                self.assertGreater(path.stat().st_size, MAX_BYTES)
+                return stream.read(length)
+
+            reader.read.side_effect = append_before_read
+            with patch("zava_forward.core.regulatory_chat.open", return_value=reader):
+                actual = service.usage_status(f.user)
+            reader.read.assert_called_once_with(size)
+        self.assertEqual(actual, expected)
+        self.assertEqual(service.usage_status(f.user)["coverage"], "bounded_partial")
 
     def test_sql_turn_and_referral_audit_failure_roll_back_messages_and_ledger(self) -> None:
         f, service, tid = self.make(sql=True)
