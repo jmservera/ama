@@ -11,9 +11,10 @@
 ## Execution Status
 
 * Scope: full plan.
-* Status: Implementation and independent Review complete.
-* Completed: P01/P02 and P03-T01; requested and adjacent validation.
-* Remaining: P03-T02 local commit and gate attempt.
+* Status: Bounded local-only task complete; full-gate acceptance blocked.
+* Completed: P01/P02/P03 and all tasks; requested and adjacent validation,
+  independent Review, local commit and honest full-gate attempt.
+* Remaining active-plan tasks: none. RV-001 remains a separate residual.
 * Write boundary: approved core module, external tests, component READMEs and
   dated artifacts. No push, Azure or rubric-score editing.
 
@@ -85,6 +86,29 @@ None; the approved plan remains Ready.
   get_changed_files is unavailable in this host. Use repository Conventional
   Commit, explicit scoped staging and required coauthor trailer instead.
 
+### Local commit and actual full-gate refusal
+
+* P03-T02: committed implementation and original evidence locally as
+  cdbbd4606160eaf285dcbc9d4d5e391125fc9367.
+* Authenticated GitHub identity resolved immediately before commit. Repository-
+  local privacy-safe email 8036360+jmservera@users.noreply.github.com used for
+  author and committer; required Copilot coauthor trailer included.
+* Fetched main; base 719e76e50b9f54b71514ee7b90833005f9bb4be8.
+* Actual command from repository root:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 tools/rpi-checks.py --all --base 719e76e50b9f54b71514ee7b90833005f9bb4be8 --lock-timeout 0 --out /home/azureuser/.copilot/session-state/f0ad9e37-f38b-4230-b815-593da420a420/files/finance-review-full-gate-cdbbd460
+```
+
+* Result exit 1: `BLOCKED: Candidate has ignored inputs; move all scratch outside
+  the checkout`. Admission stopped before tools/heavy checks/containers; no
+  receipt or output directory was created. No Azure operation occurred.
+* External raw log:
+  /home/azureuser/.copilot/session-state/f0ad9e37-f38b-4230-b815-593da420a420/files/finance-review-gate-attempt-cdbbd460.log.
+* Preserve original Review Complete / Residual work and RV-001. This evidence
+  closeout changes no executable file and does not repeat Review or claim
+  successful full validation. A later exact-head attempt must use fresh output.
+
 ## Validation Record
 
 | Check | Result | Evidence |
@@ -101,6 +125,7 @@ None; the approved plan remains Ready.
 | API test_form_staging_api | Passed, exit 0 | 7 tests, 7.233 seconds |
 | API changed-test Ruff/format/mypy | Passed, exit 0 | 1 file formatted/typed, no issues |
 | git diff --check | Passed, exit 0 | No whitespace errors |
+| Complete local gate after implementation commit | Blocked, exit 1 | Ignored candidate inputs; no receipt or admitted checks |
 
 Commands from src/core (all four requested commands, unchanged):
 
@@ -127,7 +152,8 @@ Use PYTHONDONTWRITEBYTECODE=1 and external caches for further validation.
 
 ## Pre-Review Reconciliation
 
-* Plan P01/P02 and details completion current; P03 Review/commit/gate remain.
+* Original pre-Review reconciliation: P01/P02 complete, then P03 Review/commit/
+  gate pending. Subsequent bookkeeping now marks every bounded task complete.
 * Required and adjacent checks passed; failing-before evidence retained.
 * No unresolved implementation divergence or follow-up source change.
 * Single independent task-delta Review complete; original Residual work outcome
@@ -143,7 +169,8 @@ publication. No push is authorized in this task.
 
 ## Remaining Work
 
-P03-T02 local commit/gate attempt.
+None inside the bounded plan. Full-gate acceptance remains blocked and routed
+as RV-001 before any future publication; no push is authorized.
 
 ## Follow-Up Items
 
@@ -152,6 +179,7 @@ owner-authorized follow-up outside this local-only fix.
 
 ## Return-to-Caller State
 
-Implementation and Review complete; parent owns local commit/gate bookkeeping
-under the explicit bounded loop request. Required focused checks passed;
-full gate is not claimed. Preserve original Complete / Residual work Review.
+Implementation, Review and authorized local commit/gate attempt complete.
+Required focused checks passed; full gate is blocked, never claimed passed.
+Preserve original Complete / Residual work Review. Close this bounded manual
+session after local evidence persistence; no child follow-up or push authorized.

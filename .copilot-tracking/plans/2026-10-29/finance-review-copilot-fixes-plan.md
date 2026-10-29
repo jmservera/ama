@@ -109,7 +109,7 @@ existing core dev dependencies and editable core/agents/api distributions.
 * HTTP contract reflects explicit per-entry status; no frontend implementation.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Validate and preserve local candidate
+### [x] P03: Validate and preserve local candidate
 
 <!-- rpi:task id=P03-T01 -->
 #### [x] P03-T01: Run requested checks and independent Review
@@ -118,7 +118,7 @@ existing core dev dependencies and editable core/agents/api distributions.
 * Review findings route later, with no second Review in this task.
 
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: Commit locally and attempt required external local gate
+#### [x] P03-T02: Commit locally and attempt required external local gate
 
 * Commit implementation and original evidence; no push.
 * Fetch main, use tools/rpi-checks.py --all with --lock-timeout 0 and a new
@@ -164,9 +164,13 @@ existing core dev dependencies and editable core/agents/api distributions.
 * Changes: .copilot-tracking/changes/2026-10-29/finance-review-copilot-fixes-changes.md
 * First task: P01-T01, after critique dispositions are resolved.
 * User's explicit full-loop direction owns continuation, not indefinite auto mode.
-* P01/P02 and P03-T01 complete. Required core checks passed; adjacent staging/API
-  checks passed. Independent Review executed Complete / Residual work, no code
-  defects, one Low gate-readiness residual. Commit/gate P03-T02 remains.
+* All bounded plan tasks complete. Required core checks passed; adjacent
+  staging/API checks passed. Independent Review executed Complete / Residual
+  work, no code defects, one Low gate-readiness residual.
+* Local implementation/evidence commit: cdbbd4606160eaf285dcbc9d4d5e391125fc9367.
+  Complete gate attempted afterward against fetched origin/main
+  719e76e50b9f54b71514ee7b90833005f9bb4be8; exit 1, ignored-input refusal.
+  No receipt exists. This completes the planned attempt, not gate acceptance.
 * Gate eligibility: current checkout has ignored cache/bytecode/egg-info inputs;
   no blanket cleanup is authorized. Preserve them; report actual gate refusal
   after local commit rather than fabricating a full receipt.

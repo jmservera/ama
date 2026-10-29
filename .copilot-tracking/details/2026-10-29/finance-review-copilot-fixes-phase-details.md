@@ -14,7 +14,7 @@
 | --- | --- | --- | --- |
 | P01 | Required-input diagnostics | Complete | P01-T01 |
 | P02 | Per-draft unavailability | Complete | P02-T01, P02-T02 |
-| P03 | Validation and local commit | Checks/Review complete; commit/gate pending | P03-T01, P03-T02 |
+| P03 | Validation and local commit | Complete; full-gate attempt blocked | P03-T01, P03-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Required-input diagnostics
@@ -98,3 +98,8 @@
   refuses ignored inputs. Preserve unknown/pre-existing scratch rather than
   deleting it under this task; local focused results remain valid, full gate
   remains blocked until a clean authorized candidate is available.
+* Completion: local commit cdbbd4606160eaf285dcbc9d4d5e391125fc9367 preserves
+  implementation and original evidence. Full gate attempt after fetching main
+  returned exit 1: "Candidate has ignored inputs; move all scratch outside the
+  checkout". No checks admitted and no receipt created. P03-T02's attempted
+  gate is complete, but full-gate acceptance and RV-001 remain blocked.
