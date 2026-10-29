@@ -16,7 +16,7 @@ Research: .copilot-tracking/research/2026-10-29/case-view-review-fixes-552-resea
 | Phase | Status | Tasks |
 | --- | --- | --- |
 | P01 | Complete | P01-T01, P01-T02 |
-| P02 | Ready for independent Review and local commit | P02-T01 |
+| P02 | Complete; local commit verified | P02-T01 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Correct and validate both findings
@@ -110,3 +110,9 @@ Use both author/committer privacy-safe identity, Conventional Commit with Refs
 #552 and the exact requested Copilot trailer. Commit only task-owned paths,
 verify final commit/trailer/worktree, and leave all remote state unchanged.
 Completion means persistent local correction and evidence, not merge acceptance.
+
+Completion evidence: one Review Complete / Conformant with justified divergence,
+no new findings; source and original dated evidence committed as 5a3edfe6.
+Author/committer privacy-safe email, exact Copilot trailer and clean worktree
+verified. Final documentation-only closeout records this result separately.
+No push, az, manual rubric edit, repeated Review or publication gate waiver.
