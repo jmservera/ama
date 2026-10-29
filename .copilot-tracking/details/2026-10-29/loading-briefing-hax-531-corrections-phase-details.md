@@ -15,7 +15,7 @@ Plan: .copilot-tracking/plans/2026-10-29/loading-briefing-hax-531-corrections-pl
 | Phase | Status | Tasks |
 | --- | --- | --- |
 | P01 | Complete | P01-T01, P01-T02 |
-| P02 | Targeted fallback complete; Review/commit pending | P02-T01, P02-T02 |
+| P02 | Complete under permitted targeted fallback; local-only | P02-T01, P02-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Surgical behavior corrections
@@ -80,3 +80,9 @@ Configure authenticated privacy-safe email repository-locally; use Conventional
 Commits with Refs #531 and required coauthor. Leave commits local, no push.
 Keep final state, changes and plan markers reconciled with actual evidence.
 Publication and human acceptance remain outside this round, not implied passes.
+Completion evidence: source/original artifacts committed as d6e0e864.
+One independent Review assessed that source boundary: execution Complete,
+outcome Residual work, no implementation defect identified. RV-001/FU-001
+retains the broad/browser validation limitation. Final local evidence commit
+preserves the original Review and reconciled state; no runtime changes after
+the assessed implementation commit. Session stops as explicitly requested.

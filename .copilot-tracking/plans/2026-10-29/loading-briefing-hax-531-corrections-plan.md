@@ -96,7 +96,7 @@ Run the new helper/parser regressions against unchanged runtime first to
 preserve failing evidence, then apply the runtime corrections.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Validate, review and commit locally
+### [x] P02: Validate, review and commit locally
 
 Dependencies: P01.
 
@@ -112,7 +112,7 @@ targeted fallback completed. Full units and browser/axe suites are unperformed,
 not passed. No lock retry or browser launch.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Preserve independent Review and local commits
+#### [x] P02-T02: Preserve independent Review and local commits
 
 Commit implementation/original dated evidence, then final review/state evidence.
 No full publication receipt is claimed; az prohibited and publication excluded.
@@ -151,7 +151,9 @@ than P02 which depends on P01. No significant user decision or second critique.
 ## Handoff
 
 Changes path: .copilot-tracking/changes/2026-10-29/loading-briefing-hax-531-corrections-changes.md.
-P01 and P02-T01 complete under the explicit lock-contention fallback.
-Ready for independent Review of the bounded correction candidate with
-unperformed full/browser evidence disclosed. P02-T02 remains administrative
-Review and local-commit work, not an incomplete source implementation.
+P01/P02 complete under the explicit lock-contention fallback. Implementation
+commit d6e0e864 preserves the source and original phase evidence.
+One independent Review executed: Complete / Residual work, no implementation
+defect found; RV-001 routes unperformed full/browser checks to FU-001.
+Final evidence-only local persistence preserves that original outcome.
+Session stops under explicit user direction; no push or child task.
