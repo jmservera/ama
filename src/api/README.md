@@ -136,7 +136,12 @@ covers summary-first keyboard/pointer behavior, Escape/focus, modal containment,
 redraw/failure/filter cleanup, manual paths, coordinator omissions, reduced
 motion and 320/390/1280px expanded layouts. It also checks uncancelled browser
 shortcuts from map/marker focus in both modes and exact ordinary/Shift-plus map
-zoom changes. Acquire the shared heavy-check lock
+zoom changes. Session-expiry checks hold overlapping fit
+responses, deliver a 401 before a successful response with bounds, and verify
+that neither that response nor a collapse-triggered resize redraw touches the
+disposed map. Enlarged-font coverage uses a 640px viewport and an actual 32px
+Chromium default font, checking sidebar/map geometry, overflow and summary
+close/exit behavior. Acquire the shared heavy-check lock
 nonblocking before execution. Automated results are not human
 assistive-technology, staff usability or full WCAG acceptance.
 

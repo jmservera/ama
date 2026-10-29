@@ -59,6 +59,10 @@ class MapFullscreen(unittest.TestCase):
         ):
             self.assertIn(expected, MAP)
         self.assertIn("function login(msg) {\n  disposeMapPanel?.();", APP)
+        dispose = MAP.split("const dispose = () => {", 1)[1].split("\n  };", 1)[0]
+        steps = ("collapse(false);", "seq++;", "dialog.remove();", "map?.remove();", "map = null;")
+        positions = [dispose.index(step) for step in steps]
+        self.assertEqual(positions, sorted(positions))
 
     def test_no_map_animation_and_bounded_native_layout(self) -> None:
         for expected in (
@@ -72,7 +76,7 @@ class MapFullscreen(unittest.TestCase):
         ):
             self.assertIn(expected, MAP)
         for expected in (
-            "grid-template-columns:19rem minmax(0,1fr)",
+            "grid-template-columns:min(19rem,45%) minmax(0,1fr)",
             "height:calc(100dvh",
             "overscroll-behavior:contain",
             "env(safe-area-inset-top)",

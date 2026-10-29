@@ -1562,6 +1562,7 @@ function mapPanel(coordinator = null) {
   }
   const dispose = () => {
     collapse(false);
+    seq++;
     dialog.remove();
     map?.remove();
     map = null;

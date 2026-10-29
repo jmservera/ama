@@ -11,7 +11,7 @@ from urllib.parse import parse_qs, urlsplit
 
 from checks.design_system_browser_check import check, main
 from checks.regulatory_ux_check import AXE_SHA256
-from playwright.sync_api import Page, Request, expect, sync_playwright
+from playwright.sync_api import Page, Playwright, Request, Route, expect, sync_playwright
 
 
 def scan(page: Page, axe: str, reports: list[dict[str, Any]], state: str) -> None:
@@ -79,6 +79,240 @@ def check_browser_shortcuts(page: Page, mode: str) -> None:
         check(f"{mode} browser shortcuts issue no map requests", not requests)
     finally:
         page.remove_listener("request", record_request)
+
+
+def check_session_expiry(page: Page, base: str, out: Path) -> None:
+    results: list[dict[str, Any]] = []
+    for expanded in (False, True):
+        mode = "expanded" if expanded else "embedded"
+        page.goto(base + "/app#/coordinator")
+        page.get_by_role("heading", name="Coordinator flow", exact=True).wait_for()
+        expect(page.locator(".map-cluster")).not_to_have_count(0)
+        page.evaluate(
+            """() => {
+              const state = window.mapDisposalCheck = {
+                armed: false, requests: [], draws: [], fits: 0, clears: 0,
+                forceCollapseDraw: false
+              };
+              const originalPanel = mapPanel;
+              mapPanel = (...args) => {
+                const panel = originalPanel(...args);
+                const draw = panel.draw;
+                panel.draw = fit => {
+                  const attempt = {fit, settled: false, error: null};
+                  state.draws.push(attempt);
+                  const pending = draw(fit);
+                  pending.then(() => { attempt.settled = true; }, error => {
+                    attempt.error = String(error);
+                    attempt.settled = true;
+                  });
+                  return pending;
+                };
+                return panel;
+              };
+              const originalApi = api;
+              api = (path, body, signal) => {
+                if (!state.armed || !path.startsWith('/api/map?'))
+                  return originalApi(path, body, signal);
+                const request = {path, signal: signal || routeController.signal,
+                  settled: false};
+                state.requests.push(request);
+                return originalApi(path, body, signal).finally(() => {
+                  request.settled = true;
+                });
+              };
+              const fitBounds = L.Map.prototype.fitBounds;
+              L.Map.prototype.fitBounds = function (...args) {
+                state.fits++;
+                return fitBounds.apply(this, args);
+              };
+              const clearLayers = L.LayerGroup.prototype.clearLayers;
+              L.LayerGroup.prototype.clearLayers = function (...args) {
+                state.clears++;
+                return clearLayers.apply(this, args);
+              };
+              const invalidateSize = L.Map.prototype.invalidateSize;
+              L.Map.prototype.invalidateSize = function (...args) {
+                const result = invalidateSize.apply(this, args);
+                if (state.forceCollapseDraw
+                  && !document.querySelector('.map-dialog[open]')) {
+                  state.forceCollapseDraw = false;
+                  this.fire('moveend');
+                }
+                return result;
+              };
+            }"""
+        )
+        page.get_by_role("link", name="Overview", exact=True).click()
+        page.locator(".map-cluster").first.wait_for()
+        page.locator("#mapArea").select_option(label="Point examples")
+        expect(page.locator(".map-marker")).to_have_count(3)
+        if expanded:
+            page.get_by_role("button", name="Expand map", exact=True).click()
+        page.wait_for_function("mapDisposalCheck.draws.every(draw => draw.settled)")
+        page.evaluate(
+            """async () => {
+              await new Promise(resolve => requestAnimationFrame(() =>
+                requestAnimationFrame(resolve)));
+              mapDisposalCheck.draws = [];
+              mapDisposalCheck.armed = true;
+            }"""
+        )
+        held: list[Route] = []
+
+        def hold(route: Route) -> None:
+            held.append(route)
+            page.evaluate("count => { mapDisposalCheck.heldRequests = count; }", len(held))
+
+        page.route("**/api/map?**", hold)
+        try:
+            for _ in range(2):
+                with page.expect_request("**/api/map?**"):
+                    page.locator("#mapArea").dispatch_event("change")
+            page.wait_for_function("mapDisposalCheck.heldRequests === 2")
+            check(f"{mode} two latest fit requests held", len(held) == 2)
+            check(
+                f"{mode} both draws request bounds without viewport clipping",
+                page.evaluate(
+                    """() => mapDisposalCheck.draws.length === 2
+                      && mapDisposalCheck.draws.every(draw => draw.fit && !draw.settled)
+                      && mapDisposalCheck.requests.every(request =>
+                        !new URL(request.path, location.origin).searchParams.has('bbox'))"""
+                ),
+            )
+            response = held[1].fetch()
+            data = response.json()
+            check(f"{mode} genuine successful fit response has bounds", response.ok and bool(data["bounds"]))
+            page.evaluate(
+                "(expanded) => { mapDisposalCheck.forceCollapseDraw = expanded; }",
+                expanded,
+            )
+            held[0].fulfill(status=401, json={"error": "Synthetic session expiry"})
+            expect(page.get_by_role("heading", name="Sign in", exact=True)).to_be_visible()
+            expect(page.get_by_role("alert")).to_have_text("Your session has ended. Sign in again.")
+            if expanded:
+                page.wait_for_function("mapDisposalCheck.heldRequests >= 3")
+                check("collapse resize starts a real viewport draw", len(held) >= 3)
+            expected_requests = len(held)
+            before = page.evaluate(
+                "() => ({fits: mapDisposalCheck.fits, clears: mapDisposalCheck.clears})"
+            )
+            for route in held[1:]:
+                route.fulfill(json=data)
+            page.wait_for_function(
+                """mapDisposalCheck.requests.every(request => request.settled)
+                  && mapDisposalCheck.draws.every(draw => draw.settled)"""
+            )
+            result = page.evaluate(
+                """async before => {
+                  await new Promise(resolve => requestAnimationFrame(() =>
+                    requestAnimationFrame(resolve)));
+                  const state = mapDisposalCheck;
+                  return {
+                    before, after: {fits: state.fits, clears: state.clears},
+                    errors: state.draws.map(draw => draw.error).filter(Boolean),
+                    signalsLive: state.requests.every(request => !request.signal.aborted),
+                    requests: state.requests.map(request => request.path),
+                    clean: !document.querySelector('.map-dialog, .map-slot')
+                      && !document.body.classList.contains('map-expanded')
+                  };
+                }""",
+                before,
+            )
+            results.append(dict(mode=mode, **result))
+            check(f"{mode} session expiry leaves route signals live", result["signalsLive"])
+            check(
+                f"{mode} late successful draw settles without rejection",
+                not result["errors"],
+            )
+            check(
+                f"{mode} late responses never fit or redraw the disposed map",
+                result["before"] == result["after"],
+            )
+            check(f"{mode} late responses start no further map requests", len(result["requests"]) == expected_requests)
+            check(f"{mode} session expiry removes map, dialog and body lock", result["clean"])
+        finally:
+            page.unroute("**/api/map?**", hold)
+            (out / "session-expiry.json").write_text(json.dumps(results, indent=2), encoding="utf-8")
+
+
+def check_enlarged_font(
+    playwright: Playwright, base: str, axe: str, out: Path, reports: list[dict[str, Any]]
+) -> None:
+    browser = playwright.chromium.launch(args=["--blink-settings=defaultFontSize=32"])
+    try:
+        context = browser.new_context(viewport={"width": 640, "height": 900})
+        context.route(
+            "**/*",
+            lambda route: (
+                route.continue_() if route.request.url.startswith(base + "/") else route.abort()
+            ),
+        )
+        page = context.new_page()
+        errors: list[str] = []
+        page.on("pageerror", lambda error: errors.append(str(error)))
+        check(
+            "browser default font is 32px on an unstyled document",
+            page.evaluate("getComputedStyle(document.body).fontSize") == "32px",
+        )
+        page.goto(base + "/app")
+        page.locator("#email").fill("sam@example.test")
+        page.locator("#pw").fill("synthetic-check")
+        page.get_by_role("button", name="Sign in", exact=True).click()
+        page.get_by_role("heading", name="My cases today").wait_for()
+        check(
+            "real app inherits the 32px browser default",
+            page.evaluate("getComputedStyle(document.documentElement).fontSize") == "32px",
+        )
+        page.get_by_role("link", name="Overview", exact=True).click()
+        page.locator(".map-cluster").first.wait_for()
+        page.locator("#mapArea").select_option(label="Point examples")
+        expect(page.locator(".map-marker")).to_have_count(3)
+        page.get_by_role("button", name="Expand map", exact=True).click()
+        page.locator(".map-marker:has(.map-symbol.hazard)").press("Enter")
+        expect(page.locator(".map-home-card")).to_be_visible()
+        geometry = page.evaluate(
+            """() => {
+              const dialog = document.querySelector('.map-dialog');
+              const workspace = dialog.querySelector('.map-workspace');
+              const sidebar = dialog.querySelector('.map-info');
+              const map = dialog.querySelector('.leafmap');
+              return {
+                viewport: innerWidth, rootFont: getComputedStyle(document.documentElement).fontSize,
+                documentWidth: document.documentElement.scrollWidth,
+                dialogWidth: dialog.clientWidth, dialogScroll: dialog.scrollWidth,
+                workspaceWidth: workspace.clientWidth, workspaceScroll: workspace.scrollWidth,
+                sidebarWidth: sidebar.getBoundingClientRect().width,
+                sidebarScroll: sidebar.scrollWidth, sidebarClient: sidebar.clientWidth,
+                mapWidth: map.clientWidth
+              };
+            }"""
+        )
+        (out / "enlarged-font.json").write_text(json.dumps(geometry, indent=2), encoding="utf-8")
+        check(
+            "expanded map reflows at 640px with a 32px browser default",
+            geometry["viewport"] == 640
+            and geometry["documentWidth"] <= 640
+            and geometry["dialogScroll"] <= geometry["dialogWidth"]
+            and geometry["workspaceScroll"] <= geometry["workspaceWidth"]
+            and geometry["sidebarScroll"] <= geometry["sidebarClient"]
+            and geometry["sidebarWidth"] <= geometry["workspaceWidth"] * 0.45 + 1
+            and geometry["mapWidth"] > 80,
+        )
+        close = page.get_by_role("button", name="Close home summary", exact=True)
+        close.scroll_into_view_if_needed()
+        expect(close).to_be_in_viewport()
+        close.click()
+        expect(page.locator(".map-home-card")).to_be_hidden()
+        expect(page.locator(".map-marker:has(.map-symbol.hazard)")).to_be_focused()
+        scan(page, axe, reports, "expanded-640-default-font-32")
+        page.screenshot(path=str(out / "expanded-640-default-font-32.png"))
+        page.get_by_role("button", name="Exit expanded map", exact=True).click()
+        expect(page.get_by_role("dialog")).to_have_count(0)
+        expect(page.get_by_role("button", name="Expand map", exact=True)).to_be_focused()
+        check(f"enlarged-font map has no uncaught JavaScript errors ({errors})", not errors)
+    finally:
+        browser.close()
 
 
 def run_browser(base: str, axe: str, out: Path) -> None:
@@ -395,6 +629,8 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             page.locator("#maplist-h").click()
             expect(page.locator(".maplist a").first).to_be_visible()
             check("coordinator manual list shortcut restores external list focus", True)
+            check_session_expiry(page, base, out)
+            check_enlarged_font(playwright, base, axe, out, reports)
             check(f"no uncaught JavaScript errors ({errors})", not errors)
         finally:
             (out / "axe-results.json").write_text(json.dumps(reports, indent=2), encoding="utf-8")
