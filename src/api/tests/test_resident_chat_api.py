@@ -724,22 +724,25 @@ class ChatApiTests(DemoTestCase):
             "How do I send the document?",
             "What is wrong with my document warning or error?",
         ):
-            status, body = self.ask(question=question)
-            self.assertEqual(status, 200)
-            text = json.dumps(body)
-            for expected in (
-                "Survey: Missing",
-                "secure upload link",
-                "Page 2 is hard to read",
-                "home address does not match",
-                "file check has not finished",
-                "document request R-SURVEY",
-                "document D-EPC",
-                "not a decision",
-                "cannot upload or send",
-            ):
-                self.assertIn(expected, text)
-            self.assertNotIn("C-2", text)
+            with self.subTest(question=question):
+                status, body = self.ask(question=question)
+                self.assertEqual(status, 200)
+                self.assertEqual(chat.route(question), Topic.DOCUMENTS)
+                self.assertEqual(body["label"], "Summary by rules - AI is not enabled")
+                text = json.dumps(body)
+                for expected in (
+                    "Survey: Missing",
+                    "secure upload link",
+                    "Page 2 is hard to read",
+                    "home address does not match",
+                    "file check has not finished",
+                    "document request R-SURVEY",
+                    "document D-EPC",
+                    "not a decision",
+                    "cannot upload or send",
+                ):
+                    self.assertIn(expected, text)
+                self.assertNotIn("C-2", text)
         status, body, _ = self.client_two.call(
             "POST",
             "/demo/assistant",
@@ -753,6 +756,27 @@ class ChatApiTests(DemoTestCase):
             self.assertIn("cannot answer that", str(self.ask(question=question)[1]["answer"]))
         self.reader.rows["C-1"] = replace(self.reader.rows["C-1"], revoked=True)
         self.assertEqual(self.ask(topic="documents")[0], 401)
+
+    def test_browser_form_question_retains_rules_and_no_submission_advice(self) -> None:
+        question = "How do I fill in my form?"
+        status, body = self.ask(question=question)
+        self.assertEqual(status, 200)
+        self.assertEqual(chat.route(question), Topic.FORMS)
+        self.assertEqual(body["label"], "Summary by rules - AI is not enabled")
+        for expected in ("Do not guess", "cannot submit", "housing officer"):
+            self.assertIn(expected, json.dumps(body))
+
+    def test_obsolete_browser_prompts_stay_host_owned_refusals(self) -> None:
+        self.assert_host_routes(
+            [
+                (question, "unknown")
+                for question in (
+                    "documents help",
+                    "forms help",
+                    "What does my document warning or error mean?",
+                )
+            ]
+        )
 
     def test_document_ai_success_and_unavailable_keep_rules_facts_and_citations(self) -> None:
         self.reader.rows["C-1"] = replace(self.reader.rows["C-1"], documents=document_fixture())

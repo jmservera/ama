@@ -1,0 +1,221 @@
+{
+  "task": 571,
+  "date": "2026-10-30",
+  "executed_by": "parent implementation process; independently reviewable captured outputs, not independent reruns",
+  "baseline_commit": "3d9d523d",
+  "logs": {
+    "baseline_browser": {
+      "path": "/tmp/ama-571-resident-baseline.log",
+      "bytes": 5726,
+      "sha256": "e7351ecbdcb7f6f757dbf2192aa47d333ac3eaea011759fe53df86794292196e",
+      "output": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/home/azureuser/source/ama-wt/issue-571-resident-check/src/api/checks/resident_assistant_browser_check.py\", line 686, in <module>\n    main()\n  File \"/home/azureuser/source/ama-wt/issue-571-resident-check/src/api/checks/resident_assistant_browser_check.py\", line 676, in main\n    result = run(browser, f\"http://127.0.0.1:{fixture.app.port}\", axe, out)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/azureuser/source/ama-wt/issue-571-resident-check/src/api/checks/resident_assistant_browser_check.py\", line 330, in run\n    expect(page.locator(\"#assistant-result\")).to_contain_text(text)\n  File \"/tmp/ama-571-venv/lib/python3.12/site-packages/playwright/sync_api/_generated.py\", line 14961, in to_contain_text\n    self._sync(\n  File \"/tmp/ama-571-venv/lib/python3.12/site-packages/playwright/_impl/_sync_base.py\", line 111, in _sync\n    return task.result()\n           ^^^^^^^^^^^^^\n  File \"/tmp/ama-571-venv/lib/python3.12/site-packages/playwright/_impl/_assertions.py\", line 303, in to_contain_text\n    await self._expect_impl(\n  File \"/tmp/ama-571-venv/lib/python3.12/site-packages/playwright/_impl/_assertions.py\", line 128, in _expect_impl\n    _record_soft_or_raise(\n  File \"/tmp/ama-571-venv/lib/python3.12/site-packages/playwright/_impl/_assertions.py\", line 60, in _record_soft_or_raise\n    raise error\nAssertionError: Locator expected to contain text 'Survey: Missing'\nActual value: YouWhat is my case status?AssistantSummary by rules - AI is not enabledWe are arranging a survey of your home. We will offer you a time. Nothing is booked until it is confirmed.Advisory only. This assistant cannot submit forms, give consent, book works or make decisions. Speak to your housing officer, or write to or visit your local office.Sources (2)Your case: Where things areYour case: What happens nextYoudocuments helpAssistantSummary by rules - workflow only, no AI usedI cannot answer that or act on instructions in a message. Ask about your case, home, documents, forms, consent, appointments or rules. I cannot approve, decide, diagnose, give consent, book from chat text or access anyone else's record. A person can help through your housing officer.Advisory only. This assistant cannot submit forms, give consent, book works or make decisions. Speak to your housing officer, or write to or visit your local office.Sources (1)Assistant task limits \nCall log:\n  - Expect \"to_contain_text\" locator(\"#assistant-result\") with timeout 5000ms\n  - waiting for locator(\"#assistant-result\")\n    - locator resolved to <div role=\"log\" tabindex=\"0\" aria-live=\"polite\" id=\"assistant-result\" class=\"chat-widget-log\" aria-relevant=\"additions\" aria-label=\"Help with your case conversation\">\u2026</div>\n    - unexpected value \"YouWhat is my case status?AssistantSummary by rules - AI is not enabledWe are arranging a survey of your home. We will offer you a time. Nothing is booked until it is confirmed.Advisory only. This assistant cannot submit forms, give consent, book works or make decisions. Speak to your housing officer, or write to or visit your local office.Sources (2)Your case: Where things areYour case: What happens nextYoudocuments help\"\n    13 \u00d7 locator resolved to <div role=\"log\" tabindex=\"0\" aria-live=\"polite\" id=\"assistant-result\" class=\"chat-widget-log\" aria-relevant=\"additions\" aria-label=\"Help with your case conversation\">\u2026</div>\n       - unexpected value \"YouWhat is my case status?AssistantSummary by rules - AI is not enabledWe are arranging a survey of your home. We will offer you a time. Nothing is booked until it is confirmed.Advisory only. This assistant cannot submit forms, give consent, book works or make decisions. Speak to your housing officer, or write to or visit your local office.Sources (2)Your case: Where things areYour case: What happens nextYoudocuments helpAssistantSummary by rules - workflow only, no AI usedI cannot answer that or act on instructions in a message. Ask about your case, home, documents, forms, consent, appointments or rules. I cannot approve, decide, diagnose, give consent, book from chat text or access anyone else's record. A person can help through your housing officer.Advisory only. This assistant cannot submit forms, give consent, book works or make decisions. Speak to your housing officer, or write to or visit your local office.Sources (1)Assistant task limits\"\n\nAria snapshot:\n- log \"Help with your case conversation\":\n  - article:\n    - strong: You\n    - paragraph: What is my case status?\n  - article:\n    - strong: Assistant\n    - text: Summary by rules - AI is not enabled\n    - paragraph: We are arranging a survey of your home. We will offer you a time. Nothing is booked until it is confirmed.\n    - text: Advisory only. This assistant cannot submit forms, give consent, book works or make decisions. Speak to your housing officer, or write to or visit your local office.\n    - group: Sources (2)\n  - article:\n    - strong: You\n    - paragraph: documents help\n  - article:\n    - strong: Assistant\n    - text: Summary by rules - workflow only, no AI used\n    - paragraph: I cannot answer that or act on instructions in a message. Ask about your case, home, documents, forms, consent, appointments or rules. I cannot approve, decide, diagnose, give consent, book from chat text or access anyone else's record. A person can help through your housing officer.\n    - text: Advisory only. This assistant cannot submit forms, give consent, book works or make decisions. Speak to your housing officer, or write to or visit your local office.\n    - group: Sources (1)\n",
+      "output_scope": "complete"
+    },
+    "positive_browser": {
+      "path": "/tmp/ama-571-resident-green.log",
+      "bytes": 90,
+      "sha256": "560f6de4ab7104e03f5d3cbfd2da8c4c966d18ea78029fcc8d7a8d8ca4c28d12",
+      "output": "PASS resident chat and callback flows; axe executed; evidence /tmp/ama-571-resident-green\n",
+      "output_scope": "complete"
+    },
+    "negative_browser": {
+      "path": "/tmp/ama-571-resident-negative.log",
+      "bytes": 2171,
+      "sha256": "992478acb9c807d4c7c37934d86eb24475032b6338091b00430053570ba0431b",
+      "output": "EXPECTED FAILURE: second document reply refuses despite earlier successful document facts\nLocator expected to contain text 'Survey: Missing'\nActual value: AssistantSummary by rules - workflow only, no AI usedI cannot answer that or act on instructions in a message. Ask about your case, home, documents, forms, consent, appointments or rules. I cannot approve, decide, diagnose, give consent, book from chat text or access anyone else's record. A person can help through your housing officer.Advisory only. This assistant cannot submit forms, give consent, book works or make decisions. Speak to your housing officer, or write to or visit your local office.Sources (1)Assistant task limits \nCall log:\n  - Expect \"to_contain_text\" locator(\"#assistant-result > article.chat-widget-assistant\").nth(6) with timeout 5000ms\n  - waiting for locator(\"#assistant-result > article.chat-widget-assistant\").nth(6)\n    14 \u00d7 locator resolved to <article class=\"chat-widget-message chat-widget-assistant\">\u2026</article>\n       - unexpected value \"AssistantSummary by rules - workflow only, no AI usedI cannot answer that or act on instructions in a message. Ask about your case, home, documents, forms, consent, appointments or rules. I cannot approve, decide, diagnose, give consent, book from chat text or access anyone else's record. A person can help through your housing officer.Advisory only. This assistant cannot submit forms, give consent, book works or make decisions. Speak to your housing officer, or write to or visit your local office.Sources (1)Assistant task limits\"\n\nAria snapshot:\n- article:\n  - strong: Assistant\n  - text: Summary by rules - workflow only, no AI used\n  - paragraph: I cannot answer that or act on instructions in a message. Ask about your case, home, documents, forms, consent, appointments or rules. I cannot approve, decide, diagnose, give consent, book from chat text or access anyone else's record. A person can help through your housing officer.\n  - text: Advisory only. This assistant cannot submit forms, give consent, book works or make decisions. Speak to your housing officer, or write to or visit your local office.\n  - group: Sources (1)\n",
+      "output_scope": "complete"
+    },
+    "chat_units": {
+      "path": "/tmp/ama-571-chat-units.log",
+      "bytes": 220,
+      "sha256": "b34289a0b66619724c661a7a6ab62668096fc10537f5bbdd30f9e643899c72b3",
+      "output": "resident callback agenda unavailable\nresident_assistant outcome=rules_fallback\nresident_assistant outcome=rules_fallback\n----------------------------------------------------------------------\nRan 27 tests in 23.946s\n\nOK\n",
+      "output_scope": "complete"
+    },
+    "resident_units": {
+      "path": "/tmp/ama-571-resident-units.log",
+      "bytes": 37025,
+      "sha256": "595f0cc3f2aa7a19d791b71293711b2e852818dad0b3f05f1180763b0cfa33c8",
+      "output": "PASS signed-out session status succeeds\nPASS session reports signed out without an active session ID\nRefusing to start: The preview binds to loopback only (127.0.0.1 or ::1).\nRefusing to start: The preview binds to loopback only (127.0.0.1 or ::1).\nRefusing to start: That subject is not in the synthetic fixture.\nRefusing to start: The dataset file was not found. Build a synthetic fixture first.\nRefusing to start: Refusing to start with application, cloud, store or AI settings in the environment (ZF_DATA). Start the preview from a clean environment.\nRefusing to start: Build from a clean environment (no ZF_, AI_ or cloud settings).\n----------------------------------------------------------------------\nRan 154 tests in 75.109s\n\nOK (skipped=7)\n",
+      "output_scope": "last 12 lines; full original external"
+    },
+    "full_api_units": {
+      "path": "/tmp/ama-571-api-units.log",
+      "bytes": 100959,
+      "sha256": "c149f23fd573faddc8a1c7d2c4d9b8ab512394da2f5ddbd07a0742e6e9a0da7f",
+      "output": "PASS signed-out session status succeeds\nPASS session reports signed out without an active session ID\nRefusing to start: The preview binds to loopback only (127.0.0.1 or ::1).\nRefusing to start: The preview binds to loopback only (127.0.0.1 or ::1).\nRefusing to start: That subject is not in the synthetic fixture.\nRefusing to start: The dataset file was not found. Build a synthetic fixture first.\nRefusing to start: Refusing to start with application, cloud, store or AI settings in the environment (ZF_DATA). Start the preview from a clean environment.\nRefusing to start: Build from a clean environment (no ZF_, AI_ or cloud settings).\n----------------------------------------------------------------------\nRan 1363 tests in 482.777s\n\nOK (skipped=318)\n",
+      "output_scope": "last 12 lines; full original external"
+    },
+    "static": {
+      "path": "/tmp/ama-571-static-final.log",
+      "bytes": 91,
+      "sha256": "bce04f5913731e9e0ce9c966440b455d2657cb2082ea0b51c9fa86ee67ea1a97",
+      "output": "All checks passed!\n59 files already formatted\nSuccess: no issues found in 114 source files\n",
+      "output_scope": "complete"
+    }
+  },
+  "browser": {
+    "axe_status": "executed",
+    "browser": "156.0.8078.4",
+    "keyboard": "Passed engineering assertions",
+    "human_and_assistive_technology": "Not run; pending acceptance",
+    "zoom": "320 CSS px is 400%-equivalent reflow from 1280; not native browser zoom",
+    "text_resize": "root font-size 200%, not device scale",
+    "time_zone": "America/New_York browser; Europe/London app dates",
+    "console_errors": [],
+    "external_requests": []
+  },
+  "axe_scan_count": 32,
+  "axe_scans": [
+    {
+      "state": "shared-browser-old-tab-cleared",
+      "violations": []
+    },
+    {
+      "state": "same-resident-new-login-and-late-hint",
+      "violations": []
+    },
+    {
+      "state": "stale-session-view-failure-fenced",
+      "violations": []
+    },
+    {
+      "state": "unnotified-cookie-switch-rejected",
+      "violations": []
+    },
+    {
+      "state": "delayed-logout-preserves-two@example.com",
+      "violations": []
+    },
+    {
+      "state": "delayed-logout-preserves-one@example.com",
+      "violations": []
+    },
+    {
+      "state": "anonymous",
+      "violations": []
+    },
+    {
+      "state": "document-facts",
+      "violations": []
+    },
+    {
+      "state": "document-facts-320-text-200",
+      "violations": []
+    },
+    {
+      "state": "signed-in-chat",
+      "violations": []
+    },
+    {
+      "state": "typed-hazard-human-route",
+      "violations": []
+    },
+    {
+      "state": "typed-ahead-draft-preserved",
+      "violations": []
+    },
+    {
+      "state": "dismissed-appointments-Escape",
+      "violations": []
+    },
+    {
+      "state": "dismissed-appointments-outside",
+      "violations": []
+    },
+    {
+      "state": "punctuated-morning-proposals",
+      "violations": []
+    },
+    {
+      "state": "punctuated-afternoon-proposals",
+      "violations": []
+    },
+    {
+      "state": "callback-booked",
+      "violations": []
+    },
+    {
+      "state": "chat-1280-text-100",
+      "violations": []
+    },
+    {
+      "state": "manual-1280-text-100",
+      "violations": []
+    },
+    {
+      "state": "chat-1280-text-200",
+      "violations": []
+    },
+    {
+      "state": "manual-1280-text-200",
+      "violations": []
+    },
+    {
+      "state": "chat-390-text-100",
+      "violations": []
+    },
+    {
+      "state": "manual-390-text-100",
+      "violations": []
+    },
+    {
+      "state": "chat-390-text-200",
+      "violations": []
+    },
+    {
+      "state": "manual-390-text-200",
+      "violations": []
+    },
+    {
+      "state": "chat-320-text-100",
+      "violations": []
+    },
+    {
+      "state": "manual-320-text-100",
+      "violations": []
+    },
+    {
+      "state": "chat-320-text-200",
+      "violations": []
+    },
+    {
+      "state": "manual-320-text-200",
+      "violations": []
+    },
+    {
+      "state": "page-error-help",
+      "violations": []
+    },
+    {
+      "state": "page-error-manual-retry-focus",
+      "violations": []
+    },
+    {
+      "state": "loading-manual-launcher-focus",
+      "violations": []
+    }
+  ],
+  "browser_report": {
+    "path": "/tmp/ama-571-resident-green/report.json",
+    "sha256": "5aa3e680700a69c6ad27764b718fd8db4904ce1b7230bf2e9866b924f2783ceb"
+  },
+  "validation_summary": {
+    "resident_units": {
+      "run": 154,
+      "skipped": 7,
+      "failed": 0
+    },
+    "full_api_units": {
+      "run": 1363,
+      "skipped": 318,
+      "failed": 0,
+      "lock": "flock -w 600 /tmp/ama-rpi-heavy.lock"
+    },
+    "static": "Ruff check/format and mypy passed"
+  },
+  "limitations": [
+    "No live identity, real credentials, Azure, deployment or model transport",
+    "Local-only commit; full publication gate, hosted checks and human acceptance not run"
+  ]
+}

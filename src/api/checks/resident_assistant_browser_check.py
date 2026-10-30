@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 from urllib.request import Request, urlopen
 
-from playwright.sync_api import Browser, Page, Route, expect, sync_playwright
+from playwright.sync_api import Browser, Locator, Page, Route, expect, sync_playwright
 from test_resident_chat_api import document_fixture
 from test_resident_demo_api import FAKE_PASSWORD, NOW, DemoTestCase
 from checks.regulatory_ux_check import AXE_SHA256, scan
@@ -30,6 +30,17 @@ def open_chat(page: Page) -> None:
         page.get_by_role("button", name="Chat", exact=True).click()
     expect(page.locator("#assistant-title")).to_be_focused()
     page.locator("#resident-chat .chat-widget-intro").evaluate("el => { el.open = true; }")
+
+
+def ask_chat(page: Page, question: str) -> Locator:
+    replies = page.locator("#assistant-result > article.chat-widget-assistant")
+    previous = replies.count()
+    page.get_by_label("Your question", exact=True).fill(question)
+    with page.expect_response("**/demo/assistant") as response:
+        page.get_by_role("button", name="Send").click()
+    assert response.value.status == 200
+    expect(replies).to_have_count(previous + 1)
+    return replies.nth(previous)
 
 
 def shared_session_checks(
@@ -318,23 +329,22 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
     expect(page.locator("#assistant-result")).to_contain_text("Your case: Where things are")
     expect(select).to_be_focused()
     expect(page.locator("#assistant-result")).to_contain_text("Summary by rules")
-    for topic, text in (
-        ("documents", "Survey: Missing"),
-        ("forms", "Do not guess"),
-        ("consents", "cannot say whether"),
-        ("regulations", "retrieved 2026-09-19"),
-        ("safety", "has not sent a report"),
+    for question, text in (
+        ("Which documents are missing from my case?", "Survey: Missing"),
+        ("How do I fill in my form?", "Do not guess"),
+        ("Have I given consent?", "cannot say whether"),
+        ("What rules apply?", "retrieved 2026-09-19"),
+        ("Help with safety", "has not sent a report"),
     ):
-        select.fill(topic + " help")
-        button.click()
-        expect(page.locator("#assistant-result")).to_contain_text(text)
+        reply = ask_chat(page, question)
+        expect(reply).to_contain_text(text)
+        expect(reply.locator(".chat-widget-meta").first).to_contain_text("Summary by rules")
     for question in (
         "Which documents are missing from my case?",
         "How do I send the document?",
-        "What does my document warning or error mean?",
+        "What is wrong with my document warning or error?",
     ):
-        page.locator("#assistant-question").fill(question)
-        button.click()
+        reply = ask_chat(page, question)
         for text in (
             "Survey: Missing",
             "secure upload link",
@@ -347,13 +357,14 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
             "cannot upload or send",
             "Summary by rules",
         ):
-            expect(page.locator("#assistant-result")).to_contain_text(text)
-        expect(page.locator("#assistant-result")).not_to_contain_text("C-2 Test Street")
+            expect(reply).to_contain_text(text)
+        expect(reply.locator(".chat-widget-meta").first).to_contain_text("Summary by rules")
+        expect(reply).not_to_contain_text("C-2 Test Street")
     scan(page, axe, reports, "document-facts", "#resident-chat, #chat-launcher")
     page.set_viewport_size({"width": 320, "height": 900})
     page.evaluate("document.documentElement.style.fontSize = '200%'")
     assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
-    document_source = page.locator("#assistant-result li").filter(has_text="document D-EPC").last
+    document_source = reply.locator("li").filter(has_text="document D-EPC")
     document_source.evaluate("el => { el.closest('details').open = true; }")
     document_source.scroll_into_view_if_needed()
     expect(document_source).to_be_in_viewport()
@@ -478,11 +489,10 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
     button.click()
     expect(page.locator("#assistant-result")).to_contain_text("Design work is under way")
     expect(page.locator("#assistant-result")).not_to_contain_text("arranging a survey")
-    select.fill("Which documents are missing?")
-    button.click()
-    expect(page.locator("#assistant-result")).to_contain_text("cannot tell you what to send")
-    expect(page.locator("#assistant-result")).not_to_contain_text("R-SURVEY")
-    expect(page.locator("#assistant-result")).not_to_contain_text("D-EPC")
+    reply = ask_chat(page, "Which documents are missing?")
+    expect(reply).to_contain_text("cannot tell you what to send")
+    expect(reply).not_to_contain_text("R-SURVEY")
+    expect(reply).not_to_contain_text("D-EPC")
     select.fill("Help with appointments")
     button.click()
     expect(button).to_be_enabled()

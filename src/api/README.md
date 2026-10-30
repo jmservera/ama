@@ -983,6 +983,17 @@ Human resident/content, screen-reader/assistive-technology, real-model #164 and
 live-service acceptance remain pending. Automated checks are not WCAG
 conformance or whole-issue acceptance.
 
+The standalone assistant check uses complete supported questions, such as
+"Which documents are missing from my case?", "How do I fill in my form?" and
+"What is wrong with my document warning or error?". The older check inputs
+"documents help", "forms help" and "What does my document warning or error
+mean?" are outside the current finite grammar and receive a task-limit refusal.
+This is not general language understanding. The check asserts each newly
+added reply, not earlier chat history, retaining missing-document facts,
+warnings, sources, truthful rules labels, own-case isolation and the limits on
+sending or making decisions. API tests cover both supported questions and
+those refused inputs without enabling AI or changing resident authority.
+
 ### Preserved bounded Azure advisor (#469)
 
 The resident showcase retains three fixed model-assisted questions through
