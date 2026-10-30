@@ -35,6 +35,38 @@ RESERVATION_CENTS = 1
 MAX_INPUT_TOKENS = 8192
 MAX_COST_USD = MAX_INPUT_TOKENS * 0.000484 / 1000 + MAX_OUTPUT * 0.001936 / 1000
 
+FALLBACK_REASONS = {
+    "expired": "the AI exercise has ended",
+    "question_limit": "the question is too long or empty",
+    "request_limit": "the question and supporting information exceed the AI request limit",
+    "usage_limit": "the AI usage limit was reached",
+    "credential_or_expiry": "AI access is unavailable or the exercise has ended",
+    "accounting_unavailable": "the AI usage check is unavailable",
+    "accounting_close_failed": "the AI usage check could not finish",
+    "reply_limit": "the AI reply exceeded the response limit",
+    "invalid_usage": "the AI usage response could not be verified",
+    "invalid_choices": "the AI reply could not be verified",
+    "incomplete": "the AI reply was incomplete",
+    "invalid_output": "the AI reply did not match the required format",
+    "invalid_answer": "the AI answer or its sources could not be verified",
+    "invalid_guidance": "the AI guidance could not be verified",
+    "inconsistent_guidance": "the AI guidance did not match your recorded update",
+}
+
+
+def _fallback(base: Advice, error: Exception) -> Advice:
+    reason = (
+        error.args[0]
+        if isinstance(error, AssistantUnavailable)
+        and error.args
+        and isinstance(error.args[0], str)
+        and error.args[0] in FALLBACK_REASONS
+        else "unavailable"
+    )
+    LOG.warning("resident_assistant outcome=rules_fallback reason=%s", reason)
+    detail = FALLBACK_REASONS.get(reason, "the AI service could not provide a verified reply")
+    return replace(base, label=f"Summary by rules - AI unavailable: {detail}")
+
 
 class Accounting(Protocol):
     def reserve(self, resident: str) -> str | None: ...
@@ -120,9 +152,8 @@ class AzureAdvisor:
             TypeError,
             AttributeError,
             IndexError,
-        ):
-            LOG.warning("resident_assistant outcome=rules_fallback")
-            return replace(base, label="Summary by rules - AI unavailable or usage limit reached")
+        ) as error:
+            return _fallback(base, error)
 
     def _question(self, question: str, case: CaseProgress, resident: str, base: Advice) -> Advice:
         if self.clock() >= EXPIRES:
@@ -219,12 +250,8 @@ class AzureAdvisor:
             TypeError,
             AttributeError,
             IndexError,
-        ):
-            LOG.warning("resident_assistant outcome=rules_fallback")
-            return replace(
-                base,
-                label="Summary by rules - AI unavailable or usage limit reached",
-            )
+        ) as error:
+            return _fallback(base, error)
 
     def _answer(self, topic: Topic, case: CaseProgress, resident: str, base: Advice) -> Advice:
         if self.clock() >= EXPIRES:

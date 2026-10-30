@@ -198,7 +198,8 @@
     }
     var ui = window.ChatWidget.create({
       id: "resident-chat", title: "Help with your case",
-      questionLabel: "Your question", skillLabel: "Assistant", maxLength: 500
+      questionLabel: "Your question", skillLabel: "Assistant", maxLength: 500,
+      resizable: true
     });
     var launcher = ui.launcher, panel = ui.root, title = ui.heading;
     launcher.id = "chat-launcher";

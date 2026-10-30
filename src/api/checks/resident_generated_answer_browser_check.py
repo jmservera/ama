@@ -1,22 +1,147 @@
 """Local HTTP/UI evidence with constructed residents and scripted inference, never cloud."""
 
 import argparse
+import hashlib
 import json
 from dataclasses import replace
 from pathlib import Path
 from typing import Any
 from unittest.mock import Mock
 
-from playwright.sync_api import Route, expect, sync_playwright
+from playwright.sync_api import Page, Route, expect, sync_playwright
 from test_resident_aoai import ENDPOINT, question_reply
 from test_resident_demo_api import FAKE_PASSWORD, DemoTestCase
 
 from zava_forward.api.resident_demo.aoai import AzureAdvisor
 from zava_forward.api.resident_demo.assistant import EXPIRES
+from checks.regulatory_ux_check import AXE_SHA256
 
 
-def run(out: Path) -> None:
+def sizing(page: Page, out: Path, axe: str | None) -> list[dict[str, Any]]:
+    panel = page.locator("#resident-chat")
+    log = panel.get_by_role("log")
+    question = panel.locator("textarea")
+    dock = panel.get_by_role("button", name="Dock to right edge", exact=True)
+    sizes = panel.locator(".chat-widget-size")
+    sizes.locator("summary").click()
+    width = panel.get_by_label("Preferred width (% of screen)")
+    height = panel.get_by_label("Preferred height (% of screen)")
+    question.fill("Retained resize draft")
+    count = log.locator("article").count()
+    records: list[dict[str, Any]] = []
+    for follow in (False, True):
+        for control, key in (
+            (width, "End"), (width, "Home"), (height, "Home"),
+            (height, "End"), (dock, "Enter"), (dock, "Enter"),
+        ):
+            control.focus()
+            log.evaluate(
+                "(el, follow) => { el.scrollTop = follow ? el.scrollHeight : 100; }", follow
+            )
+            before = log.evaluate("""el => {
+              const top = el.getBoundingClientRect().top;
+              const i = [...el.children].findIndex(x => x.getBoundingClientRect().bottom > top);
+              const box = el.children[i].getBoundingClientRect();
+              return {i, fraction:(top-box.top)/box.height};
+            }""")
+            old_box = panel.bounding_box()
+            control.press(key)
+            expect(control).to_be_focused()
+            after = log.evaluate("""(el, before) => {
+              const box = el.children[before.i].getBoundingClientRect();
+              return {fraction:(el.getBoundingClientRect().top-box.top)/box.height,
+                bottom:el.scrollHeight-el.clientHeight-el.scrollTop};
+            }""", before)
+            if follow:
+                assert abs(after["bottom"]) <= 3, after
+            else:
+                assert abs(after["fraction"] - before["fraction"]) <= .02, (before, after)
+            expect(question).to_have_value("Retained resize draft")
+            assert log.locator("article").count() == count
+            box = panel.bounding_box()
+            assert box and old_box
+            delta = (
+                box["width"] - old_box["width"]
+                if control == width
+                else box["height"] - old_box["height"]
+            )
+            assert abs(delta) > 1, (old_box, box)
+            records.append({"following": follow, "key": key, "before": before, "after": after, "box": box})
+    old_box = panel.bounding_box()
+    width.click(position={"x": 80, "y": 12})
+    expect(width).to_be_focused()
+    assert width.input_value() != "20"
+    box = panel.bounding_box()
+    assert box and old_box and abs(box["width"] - old_box["width"]) > 1
+    preferred = int(width.input_value())
+    width.press("ArrowRight")
+    expect(width).to_have_value(str(preferred + 1))
+    expect(width).to_be_focused()
+    dock.focus()
+    dock.press("Enter")
+    expect(dock).to_have_attribute("aria-pressed", "true")
+    expect(height).to_be_disabled()
+    expect(page.locator("#chat-launcher")).to_be_hidden()
+    for screen_width, screen_height in ((1280, 900), (390, 900), (320, 900), (1280, 500)):
+        page.set_viewport_size({"width": screen_width, "height": screen_height})
+        for scale in (100, 200):
+            page.evaluate("n => document.documentElement.style.fontSize = n + '%'", scale)
+            box = panel.bounding_box()
+            assert box and abs(box["y"]) <= 1 and abs(box["height"] - screen_height) <= 1
+            assert abs(box["x"] + box["width"] - screen_width) <= 1
+            assert box["x"] >= 0
+            assert panel.evaluate("el => el.scrollWidth <= el.clientWidth")
+            assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+            if axe:
+                page.evaluate(axe)
+                violations = page.evaluate("""async () => (await axe.run(
+                  document.querySelector('#resident-chat'), {
+                    runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}
+                  })).violations""")
+                assert not violations, violations
+            for control in (width, question, panel.get_by_role("button", name="Send", exact=True)):
+                control.focus()
+                expect(control).to_be_in_viewport()
+                assert control.evaluate("""el => {
+                  const r = el.getBoundingClientRect();
+                  const x = r.left + r.width/2, y = r.top + r.height/2;
+                  return el.contains(document.elementFromPoint(x,y));
+                }"""), "Docked control is obscured"
+            log.focus()
+            log.press("End")
+            page.wait_for_function("""() => {
+              const el = document.querySelector('#resident-chat [role="log"]');
+              return el.scrollHeight-el.clientHeight-el.scrollTop <= 3;
+            }""")
+            page.screenshot(path=str(out / f"docked-{screen_width}-{screen_height}-{scale}.png"))
+            records.append({"viewport": [screen_width, screen_height], "text_percent": scale, "box": box})
+    page.evaluate("document.documentElement.style.fontSize = ''")
+    page.set_viewport_size({"width": 1280, "height": 900})
+    page.keyboard.press("Escape")
+    expect(panel).to_be_hidden()
+    launcher = page.get_by_role("button", name="Chat", exact=True)
+    expect(launcher).to_be_focused()
+    launcher.press("Enter")
+    expect(panel).to_be_visible()
+    expect(launcher).to_be_hidden()
+    dock.focus()
+    dock.press("Enter")
+    expect(dock).to_have_attribute("aria-pressed", "false")
+    expect(height).to_be_enabled()
+    expect(launcher).to_be_visible()
+    sizes.locator("summary").click()
+    expect(question).to_have_value("Retained resize draft")
+    question.fill("")
+    return records
+
+
+def run(out: Path, axe_path: Path | None = None) -> None:
     out.mkdir(parents=True, exist_ok=False)
+    axe = None
+    if axe_path:
+        raw = axe_path.read_bytes()
+        assert hashlib.sha256(raw).hexdigest() == AXE_SHA256
+        axe = raw.decode("utf-8")
     fixture = DemoTestCase()
     fixture.setUp()
     fixture.app.allowed_hosts = ("127.0.0.1",)
@@ -27,6 +152,7 @@ def run(out: Path) -> None:
         "You mentioned a dead-rat-like smell. Your recorded survey update does not explain "
         "the cause. I cannot confirm what is causing it. Ask your housing officer how to "
         "report it, including where it is and when it started. "
+    ) * 4 + (
         "<script>window.injected = true</script>"
     )
 
@@ -87,7 +213,7 @@ def run(out: Path) -> None:
                 expect(consent.locator("..")).to_contain_text("question and limited own-case")
                 consent.check()
                 assert not prompts
-                question.fill("My home smells like a dead rat")
+                question.fill("There is a smell of dead rat in my house")
                 question.focus()
                 with page.expect_response("**/demo/assistant") as response:
                     question.press("Enter")
@@ -107,7 +233,7 @@ def run(out: Path) -> None:
                 expect(panel).to_be_visible()
                 assert len(prompts) == 1
                 content = json.loads(prompts[0]["messages"][1]["content"])
-                assert content["question"] == "My home smells like a dead rat"
+                assert content["question"] == "There is a smell of dead rat in my house"
                 assert "arranging a survey" in content["sources"]["case"]
                 for excluded in ("C-1", "C-2", "Test Street", "example.com"):
                     assert excluded not in json.dumps(prompts)
@@ -158,11 +284,12 @@ def run(out: Path) -> None:
                     )
                     == "0s"
                 )
+                size_results = sizing(page, out, axe)
                 mode["unavailable"] = True
                 question.fill("My home smells strange")
                 send.click()
                 latest = page.locator("#assistant-result .chat-widget-assistant").last
-                expect(latest).to_contain_text("AI unavailable or usage limit reached")
+                expect(latest).to_contain_text("AI unavailable: the AI service could not provide a verified reply")
                 expect(latest).to_contain_text("cannot confirm the cause")
                 expect(latest).to_contain_text("housing officer")
                 expect(latest).to_contain_text("has not sent a report")
@@ -190,6 +317,8 @@ def run(out: Path) -> None:
                     "consent_withdrawal_clears_thread": True,
                     "reduced_motion": "0s",
                     "geometry": geometries,
+                    "sizing_and_docking": size_results,
+                    "docked_expanded_controls_axe": "Passed" if axe else "Not run",
                     "external_requests": external,
                     "page_errors": errors,
                     "human_AT_live_acceptance": "Not run",
@@ -206,4 +335,6 @@ def run(out: Path) -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", type=Path, required=True)
-    run(parser.parse_args().out)
+    parser.add_argument("--axe", type=Path)
+    args = parser.parse_args()
+    run(args.out, args.axe)

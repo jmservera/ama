@@ -26,7 +26,7 @@ window.ChatWidget = (() => {
     icon.append(path);
     launcher.append(icon);
   }
-  function create({ id, title, launcher, questionLabel, skillLabel, maxLength = 1000 }) {
+  function create({ id, title, launcher, questionLabel, skillLabel, maxLength = 1000, resizable = false }) {
     let active = true, timer = null;
     launcher ||= node("button", "", { type: "button" });
     decorateLauncher(launcher);
@@ -58,14 +58,63 @@ window.ChatWidget = (() => {
     form.append(beforeInput, input, tools, reason);
     root.append(header, intro, log, status, loading, error, form);
     document.body.append(launcher, root);
+    let docked = false;
+    if (resizable) {
+      root.classList.add("chat-widget-resizable");
+      const dock = node("button", "Dock to right edge", { type: "button", "aria-pressed": "false", class: "chat-widget-close" });
+      const sizes = node("details", "", { class: "chat-widget-size" });
+      sizes.append(node("summary", "Chat size"));
+      sizes.append(node("p", "Adjust the width and height. Docking uses the full screen height. Sizes stay within the screen and keep a minimum reading area."));
+      sizes.append(dock);
+      const controls = {};
+      for (const [dimension, value] of [["width", 35], ["height", 70]]) {
+        const label = node("label", `Preferred ${dimension} (% of screen)`, { for: `${id}-${dimension}` });
+        const range = node("input", "", { type: "range", id: `${id}-${dimension}`, name: dimension, autocomplete: "off", min: "20", max: "100", step: "1", value: String(value) });
+        const output = node("output", `${value}%`, { for: range.id, "aria-hidden": "true" });
+        label.append(output);
+        sizes.append(label, range);
+        controls[dimension] = range;
+        range.addEventListener("input", () => {
+          resize(() => {
+            root.style.setProperty(`--chat-${dimension}`, `${range.value}${dimension === "width" ? "vw" : "dvh"}`);
+            output.textContent = `${range.value}%`;
+          });
+        });
+      }
+      dock.addEventListener("click", () => {
+        resize(() => {
+          docked = !docked;
+          root.classList.toggle("chat-widget-docked", docked);
+          dock.setAttribute("aria-pressed", String(docked));
+          controls.height.disabled = docked;
+          launcher.hidden = docked;
+        });
+      });
+      root.insertBefore(sizes, log);
+    }
+    function resize(change) {
+      const follow = following();
+      const top = log.getBoundingClientRect().top;
+      const anchor = [...log.children].find(item => item.getBoundingClientRect().bottom > top);
+      const box = anchor?.getBoundingClientRect();
+      const fraction = box ? (top - box.top) / box.height : 0;
+      change();
+      if (follow) bottom();
+      else if (anchor) {
+        const after = anchor.getBoundingClientRect();
+        log.scrollTop += after.top - log.getBoundingClientRect().top + fraction * after.height;
+      }
+    }
     function hide(returnFocus = true) {
       root.hidden = true;
+      launcher.hidden = false;
       launcher.setAttribute("aria-expanded", "false");
       if (returnFocus && active) launcher.focus();
     }
     function open() {
       if (!active) return;
       root.hidden = false;
+      launcher.hidden = docked;
       launcher.setAttribute("aria-expanded", "true");
       heading.focus();
       bottom();
@@ -146,6 +195,7 @@ window.ChatWidget = (() => {
         clearTimeout(timer);
         document.removeEventListener("focusin", externalFocus);
         root.remove();
+        launcher.hidden = false;
         launcher.setAttribute("aria-expanded", "false");
       },
     };
