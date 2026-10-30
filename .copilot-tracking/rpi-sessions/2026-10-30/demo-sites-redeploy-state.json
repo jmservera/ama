@@ -1,0 +1,49 @@
+{
+  "task_id": "f09558e0-64f4-4440-856f-8e9a302dbb6f",
+  "task_slug": "demo-sites-redeploy",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "blocked",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/demo-sites-redeploy-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/demo-sites-redeploy-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/demo-sites-redeploy-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/demo-sites-redeploy-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/demo-sites-redeploy-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/demo-sites-redeploy-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Owner explicitly requests full ordered RPI loop and local-only commit; all four phases are explicitly requested, without automatic follow-up session opt-in.",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-30"
+    },
+    {
+      "decision": "Redeploy RG ama through 2026-11-15; minimum IoT data-plane role and existing in-VNet sensor SQL init authorized; preserve stated guardrails.",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-30"
+    },
+    {
+      "decision": "Research executed Ready; one critique Complete/Revise PC-001..004 directly applied, no significant user decision or second critique.",
+      "status": "resolved",
+      "evidence": ".copilot-tracking/plans/2026-10-30/demo-sites-redeploy-plan.md"
+    },
+    {
+      "decision": "One independent Review executed Complete; outcome Not accepted; assessed complete task and actual Partial/Blocked execution. RV-001..004 accepted and routed to later work, no post-Review implementation or repeat Review.",
+      "status": "review-complete-outcome-not-accepted",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-30/demo-sites-redeploy-review.md"
+    }
+  ],
+  "blockers": [
+    {"id": "B-001", "summary": "All-in headroom Unknown despite successful RG-only cost reads; outside-ama liabilities U and commitments cannot be established inside authorized scope.", "resolution": "Coordinator supplies sanitized bounded all-in accrued/forecast/commitment/reserve evidence under existing envelope; no broader reads/RBAC inferred."},
+    {"id": "B-002", "summary": "No owner-authenticated browser session; resident password owner-held and employee Entra sign-in required. Shared resident widget assets404 because no new rollout.", "resolution": "After admitted rollout, owner performs authenticated named UX acceptance without disclosing credentials."}
+  ],
+  "next_action": {"phase": "Review", "action": "Persist original evidence and blocked outcome in local-only commit, then stop manual full-loop execution; coordinator owns blocker clearing/publication"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Establish all-in headroom and resume both deployments with SQL init", "rationale": "Required delivery is unmet; financial admission is the immediate dependency.", "evidence": ".copilot-tracking/changes/2026-10-30/demo-sites-redeploy-evidence.json"},
+    {"rank": 2, "task": "Owner authenticated UX acceptance on both new revisions", "rationale": "Named chat/map/case features cannot be accepted from anonymous shells or old images.", "evidence": ".copilot-tracking/changes/2026-10-30/demo-sites-redeploy-changes.md"},
+    {"rank": 3, "task": "Preserve or qualify original browser-result provenance during later acceptance", "rationale": "Low-severity RV-004: current DOM/viewport/sign-in summaries are transcribed and final raw snapshot empty; independent curl evidence remains valid.", "evidence": ".copilot-tracking/reviews/logs/2026-10-30/demo-sites-redeploy-review.md"}
+  ]
+}
