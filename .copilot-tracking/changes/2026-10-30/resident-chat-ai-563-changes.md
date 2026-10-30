@@ -10,7 +10,8 @@ Original critique: .copilot-tracking/reviews/plans/2026-10-30/resident-chat-ai-5
 
 ## Execution Status
 
-P01/P01-T01 and P02/P02-T01 complete; P03 original Review/local persistence pending.
+P01/P01-T01, P02/P02-T01 and P03/P03-T01 executed. Task loop complete;
+original Review Not accepted, full local gate blocked, no publication.
 Original critique executed once,
 Pass with no findings. Approved source/test/UI boundaries are in the plan.
 
@@ -61,7 +62,8 @@ the existing runtime lacked source distributions. No shared runtime modified.
 ## Blockers and Remaining Work
 
 No local implementation blocker. Actual-model/live acceptance and human approval
-remain separate; no deployment or push. Only P03 remains active.
+remain separate; no deployment or push. P03 was subsequently executed below;
+RV-001 acceptance and advanced-main publication blockers remain open.
 
 ## Final Local Validation: P02-T01
 
@@ -143,3 +145,33 @@ in an external clean exact-commit worktree so task-generated editable-install/
 Python/Ruff caches do not masquerade as clean inputs or require unsafe cleanup.
 No existing tracking/generated history is deleted or moved. The external gate
 receipt/log will remain external; a blocked gate is not publication evidence.
+
+Implementation and dated original evidence committed locally as
+f3be331041c25f86fde3bb64d6b35046146007e3, with privacy-safe author/committer,
+Refs #563 and the requested Copilot trailer. Main worktree tracked/untracked
+status was clean after commit; ignored install/Python/Ruff caches remain
+unmodified rather than claiming authority to delete unknown historical inputs.
+
+Full gate command in the clean exact-commit external gate-candidate worktree:
+`PYTHONDONTWRITEBYTECODE=1 python3 tools/rpi-checks.py --all --base
+f7482602ee8dd8e7eb36dc05426732a56aa982f7 --lock-timeout 0 --out
+/home/azureuser/.copilot/session-state/0187b0f6-c98e-4159-80bc-4c269348ac7c/files/full-gate-original`.
+It returned exit 1: "BLOCKED: Candidate does not descend from the reviewed
+main base". Exact log: external files/full-gate-original.log. No SQL/image/
+scanner/full-suite run or passing receipt followed this guard. No ancestry
+rewrite, merge, skip flag, cloud fallback or shared-lock interference occurred.
+
+This final closeout commit changes only lifecycle evidence and invalidates any
+earlier exact-head gate claim; none was passing. A final same-command external
+clean exact-head attempt uses files/gate-final-candidate and
+files/full-gate-final with sibling .log, after a fresh read-only main fetch.
+Its external result is authoritative; no success or receipt is preclaimed.
+
+## Return-to-Caller State
+
+Full local RPI loop executed; implementation persisted, original independent
+Review Complete / Not accepted. All P01-P03 execution markers checked, not
+acceptance checkboxes. Automatic session remains running at Follow-up, with
+no child started. Ranked work: RV-001 bounded admission/refusal fix; owner
+activation/actual-model/live evidence (RV-002); human/content/AT (RV-003).
+No issue criteria ticked, no closing keyword, push or Azure change.

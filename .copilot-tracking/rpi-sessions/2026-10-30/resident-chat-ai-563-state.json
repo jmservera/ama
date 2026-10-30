@@ -20,9 +20,10 @@
     {"decision": "Independent Review executed once: Complete / Not accepted; RV-001 Medium remains open and routed to later implementation, not repaired or reviewed again in this task", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-30/resident-chat-ai-563-review.md"}
   ],
   "blockers": [
-    {"id": "RV-001", "summary": "Review Not accepted: overbroad repair/action admission", "resolution": "Later rpi-implement must add bounded housing admission and negative route regressions"}
+    {"id": "RV-001", "summary": "Review Not accepted: overbroad repair/action admission", "resolution": "Later rpi-implement must add bounded housing admission and negative route regressions"},
+    {"id": "full-gate-ancestry", "summary": "Complete local gate blocked: candidate does not descend from fetched origin/main f7482602ee8dd8e7eb36dc05426732a56aa982f7", "resolution": "Owner-authorized ancestry reconciliation and fresh exact-head full gate before any publication; no rewrite performed"}
   ],
-  "next_action": {"phase": "Follow-up", "action": "Preserve Review, commit locally, attempt external full gate; then await follow-up selection without starting child work"},
+  "next_action": {"phase": "Follow-up", "action": "Local commit and blocked full-gate evidence persisted; await ranked follow-up, Stop or manual selection; no child started"},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Constrain housing repair admission and deterministic action refusals", "rationale": "Bounded, high-value source fix for the sole Medium acceptance defect", "evidence": "Original Review RV-001"},
     {"rank": 2, "task": "Owner-authorized activation and actual-model/live acceptance", "rationale": "Needed for issue acceptance; default-off and near tariff expiry mean source delivery alone cannot enable live answers", "evidence": "Original Review RV-002; src/api/README.md owner prerequisite"},

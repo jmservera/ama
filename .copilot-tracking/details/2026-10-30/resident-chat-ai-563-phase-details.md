@@ -11,7 +11,7 @@ Evidence: .copilot-tracking/research/2026-10-30/resident-chat-ai-563-research.md
 | --- | --- | --- |
 | P01 | Implement generation | Complete |
 | P02 | Local validation | Complete |
-| P03 | Review/local persistence | Review Complete / Not accepted; persistence pending |
+| P03 | Review/local persistence | Executed; Review Not accepted; full gate blocked |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Implement grounded resident generation
@@ -84,3 +84,8 @@ commit source and dated evidence with Copilot trailer and Refs #563 only.
 Attempt the repository full local gate externally after commit; do not queue
 behind another user's heavy gate or change shared infrastructure. Missing
 prerequisites remain publication blockers. Never push or deploy.
+Completion evidence: local implementation/original evidence commit
+f3be331041c25f86fde3bb64d6b35046146007e3. Clean exact-commit external full-gate
+attempt refused advanced-main base f7482602ee8dd8e7eb36dc05426732a56aa982f7.
+No passing receipt, rebase or publication. Final closeout is separately
+persisted without changing source or softening the original Review.

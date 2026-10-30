@@ -101,9 +101,9 @@ Dependencies: completed research and one critique. Details own exact boundaries.
 Depends on P01-T01. Save sanitized results externally and summarize in changes.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Review and local persistence
+### [x] P03: Review and local persistence
 <!-- rpi:task id=P03-T01 -->
-#### [ ] P03-T01: One independent Review and local commit
+#### [x] P03-T01: One independent Review and local commit
 
 Depends on P02-T01. Preserve original critique and Review; route findings to
 later work, do not repeat Review. Local-only commit; full gate attempt after
@@ -139,6 +139,9 @@ Original: .copilot-tracking/reviews/plans/2026-10-30/resident-chat-ai-563-plan-c
   host-owned refusal for unrelated repair words and report/contact actions.
   Original Review reproduces five negative examples; no current-task repair
   or repeat Review is authorized by the one-pass lifecycle.
+* Publication: full local gate blocked by candidate ancestry after main advanced.
+  Any ancestry reconciliation needs separate authorization; no rewrite or
+  passing full receipt is claimed by this local-only delivery.
 * Owner: separately enable/review deployment settings and prove actual-model
   relevance with authenticated live Playwright. Outside local-only scope.
 * Human resident/content and assistive-technology approval remain separate.
@@ -148,5 +151,7 @@ Original: .copilot-tracking/reviews/plans/2026-10-30/resident-chat-ai-563-plan-c
 Implementation changes record:
 .copilot-tracking/changes/2026-10-30/resident-chat-ai-563-changes.md.
 P01/P02 complete and reconciled; original Review Complete / Not accepted.
-P03 local persistence/full-gate attempt remains. No product decision gap;
-RV-001 is a later implementation defect, not completed acceptance.
+P03 executed: original Review preserved, implementation/evidence committed
+locally, full gate attempted and blocked by advanced-main ancestry.
+No product decision gap; RV-001 is a later implementation defect, not completed
+acceptance. Task execution is complete; automatic session waits at Follow-up.
