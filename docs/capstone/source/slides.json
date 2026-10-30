@@ -9,13 +9,20 @@
       "number": 1,
       "code": "S01",
       "title": "More homes ready. Faster. With control intact.\r",
-      "layout": "baseline",
+      "layout": "text",
       "notes": "S01 | More homes ready. Faster. With control intact.\r\nTIMING: 40 s for this slide (all builds together) · 00:00-00:40 on the 23:45 narration clock.\r\n\r\nSAY\r\nGood morning. Zava North Homes has 60,000 homes and three legal clocks running. In the next 25 minutes I will show you the size of that challenge in hard numbers, how we analysed it, the product we designed for it and a forecast you can hold us to.\r\n\r\nZava Forward is one accountable workbench for the retrofit programme, with damp, mould and hazard referral built into every decision: every home has an owner, every decision has evidence, and AI does the preparation so your people can make the calls that matter.\r\n\r\nMy ask is simple and specific: fund the validation gate, then scale. Let me show you why it is worth it.\r\n\r\nSOURCES AND CALCULATIONS\r\nCase brief (E01); exercise addendum (E02).\r\n",
       "revised_notes": [
         "S01 | More homes ready, with control intact: a proposal to validate.",
         "SAY within the existing 40-second opening: Zava Forward is a proposal for a controlled retrofit workflow, not five autonomous managers. We will follow one fictional home, explain the required delivery scenario and the evidence behind the technology choices, then ask for the next bounded validation decision. People retain resident choice, professional acceptance and Finance authority. The delivery pace and benefits are hypotheses to test, not a forecast or outcome I can promise today.",
         "The case ambition, dated regulatory evidence and live operational duties are different things. We will keep those distinctions visible. This presentation neither renews spending authority nor asks for production approval.",
         "SOURCES: docs/case_study_48_original.md; docs/case_study_48_addendum.md; docs/reference/regulatory/README.md. Company information, sector scenarios, synthetic exercises and observed technical integration remain separate evidence classes."
+      ],
+      "replacements": [
+        {
+          "id": 59781,
+          "from": "Decision today: fund the validation gate, then scale",
+          "to": "Decision today: scope, owners, then a costed plan"
+        }
       ]
     },
     {
@@ -316,15 +323,465 @@
     {
       "number": 14,
       "code": "S13",
-      "title": "189 backlog items, 16 epics, one coherent product.\r",
-      "layout": "baseline",
+      "title": "Fabric: shared insight, not a new system of record.",
+      "layout": "native",
+      "keep_ids": [
+        39457,
+        39459,
+        39462
+      ],
+      "headers": [
+        {
+          "id": 39459,
+          "text": "Fabric: shared insight, not a new system of record.",
+          "size": 30,
+          "box": [
+            0.6,
+            0.92,
+            12.13,
+            0.7
+          ]
+        },
+        {
+          "id": 39462,
+          "text": "Sources: roadmap recommendations (30 Oct); Fabric fit (29 Oct). Conditional proposal, not deployment.",
+          "size": 12,
+          "box": [
+            0.6,
+            6.7,
+            9.7,
+            0.3
+          ]
+        }
+      ],
+      "elements": [
+        {
+          "key": "authority-band",
+          "box": [
+            0.6,
+            1.94,
+            12.13,
+            0.62
+          ],
+          "fill": "173F35"
+        },
+        {
+          "key": "authority",
+          "box": [
+            0.82,
+            2.08,
+            11.69,
+            0.35
+          ],
+          "size": 18,
+          "bold": true,
+          "color": "FAF9F6",
+          "text": "RETAIN API + AZURE SQL | authoritative cases, decisions and audit"
+        },
+        {
+          "key": "projection",
+          "box": [
+            0.6,
+            2.68,
+            12.13,
+            0.32
+          ],
+          "size": 14,
+          "color": "50655E",
+          "text": "OPTIONAL ANALYTICAL ROUTE: minimum approved read-only projection; no automatic transfer of access rights"
+        },
+        {
+          "key": "fabric-band",
+          "box": [
+            0.6,
+            3.2,
+            5.75,
+            0.94
+          ],
+          "fill": "E8F1ED"
+        },
+        {
+          "key": "fabric-label",
+          "box": [
+            1.65,
+            3.45,
+            4.4,
+            0.44
+          ],
+          "size": 24,
+          "bold": true,
+          "text": "Microsoft Fabric"
+        },
+        {
+          "key": "analytics-arrow",
+          "box": [
+            6.53,
+            3.5,
+            0.35,
+            0.28
+          ],
+          "geometry": "rightArrow",
+          "fill": "173F35"
+        },
+        {
+          "key": "bi-band",
+          "box": [
+            7.05,
+            3.2,
+            5.68,
+            0.94
+          ],
+          "fill": "E8F2FB"
+        },
+        {
+          "key": "bi-label",
+          "box": [
+            8.1,
+            3.45,
+            4.33,
+            0.44
+          ],
+          "size": 24,
+          "bold": true,
+          "text": "Power BI"
+        },
+        {
+          "key": "value-title",
+          "box": [
+            0.6,
+            4.5,
+            3.87,
+            0.34
+          ],
+          "size": 17,
+          "bold": true,
+          "text": "POTENTIAL VALUE"
+        },
+        {
+          "key": "value",
+          "box": [
+            0.6,
+            5.02,
+            3.87,
+            0.78
+          ],
+          "size": 17,
+          "text": "Shared history and measures;\nless repeated report preparation."
+        },
+        {
+          "key": "wait-title",
+          "box": [
+            4.73,
+            4.5,
+            3.87,
+            0.34
+          ],
+          "size": 17,
+          "bold": true,
+          "text": "WHY WAIT"
+        },
+        {
+          "key": "wait",
+          "box": [
+            4.73,
+            5.02,
+            3.87,
+            0.78
+          ],
+          "size": 17,
+          "text": "Governed inputs, capacity\nand full-cost evidence first."
+        },
+        {
+          "key": "unlock-title",
+          "box": [
+            8.86,
+            4.5,
+            3.87,
+            0.34
+          ],
+          "size": 17,
+          "bold": true,
+          "text": "WHAT UNLOCKS IT"
+        },
+        {
+          "key": "unlock",
+          "box": [
+            8.86,
+            5.02,
+            3.87,
+            0.78
+          ],
+          "size": 17,
+          "text": "Beat SQL history + Power BI\non one recurring question."
+        },
+        {
+          "key": "choice-band",
+          "box": [
+            0.6,
+            5.99,
+            12.13,
+            0.48
+          ],
+          "fill": "FFF1D6"
+        },
+        {
+          "key": "choice",
+          "box": [
+            0.8,
+            6.09,
+            11.73,
+            0.3
+          ],
+          "size": 14,
+          "bold": true,
+          "text": "Select the smallest winning path. Data agents or Eventhouse need a distinct question, not a bundle purchase."
+        }
+      ],
+      "images": [
+        {
+          "asset": "fabric",
+          "box": [
+            0.82,
+            3.31,
+            0.7,
+            0.7
+          ],
+          "alt": "Official Microsoft Fabric product icon; conditional analytical option, not deployed Zava branding."
+        },
+        {
+          "asset": "power-bi",
+          "box": [
+            7.27,
+            3.31,
+            0.7,
+            0.7
+          ],
+          "alt": "Official Microsoft Power BI product icon; reporting option usable with Fabric or the SQL comparator."
+        }
+      ],
+      "sources": [
+        "docs/capstone/source/roadmap-recommendations.md",
+        "docs/reference/research/microsoft-fabric-fit-assessment.md",
+        "docs/prds/zava-forward-retrofit-programme-demonstrator.md"
+      ],
+      "revised_notes": [
+        "S13 | Fabric: shared insight, not a new system of record.",
+        "SAY in the retained 50-second slot: After one home is controlled, leaders need to see where the programme stalls. Selective Microsoft Fabric with Power BI could reuse approved history and shared measures across reports. SQL would still own cases and decisions. We postpone a dedicated estate because source governance, a named workload and complete cost evidence are not established. First compare the same portfolio question with the simpler route: governed SQL history and Power BI Import. Adopt the smallest path that improves quality, preparation effort, freshness or total cost. Analytical Q&A or Eventhouse follows only for a distinct need.",
+        "VALUE HYPOTHESIS: less repeated cross-source preparation and consistent accepted-handovers, stage-dwell and returns measures. Reporting is required; a new Fabric estate is not yet proven necessary. Power BI does not inherently require Fabric capacity or a lakehouse. Existing approved spare capacity could improve the appraisal, but is unknown.",
+        "WHY NOT NOW: application projections and source SQL controls are not inherited automatically by OneLake or mirroring; current-state replication is not retained event/audit history. Approve minimum fields, audience rights, retention/corrections and recovery, then price capacity, licensing, private routes, source load and operations. No mirror of resident narratives, staff chat, memory or representative grants is implied.",
+        "UNLOCK: one named recurring question with owner, cohort, history, freshness, concurrency and reconciliation criteria; same permitted synthetic projection for SQL/Power BI and a small Fabric path. Measure total preparation/review effort, quality, latency, source load, capacity/full cost and denial/recovery. Retain the simpler path if it wins. No savings, purchase, tenant action or data export is approved by this slide.",
+        "SOURCES: docs/capstone/source/roadmap-recommendations.md; docs/reference/research/microsoft-fabric-fit-assessment.md (29 October assessment and official-source register); PRD FR-020..024. Official Fabric and Power BI icons were retrieved from Microsoft's linked archive on 30 October; catalog retains original SVGs, PNG derivation, hashes and usage terms.",
+        "TRANSITION: shared insight is useful only when inputs are trustworthy. Next, reduce repeated preparation by connecting real sources and extracting evidence carefully. Deeper Fabric comparison remains B20/page 47; question index page 27. Native links remain fixed destinations."
+      ],
       "notes": "S13 | 189 backlog items, 16 epics, one coherent product.\r\nTIMING: 50 s for this slide (all builds together) · 12:40-13:30 on the 23:45 narration clock.\r\n\r\nSAY\r\nBehind the workbench is a real, structured product backlog. 189 items across 16 epics, generated from the business requirements, the product requirements and the architecture decisions.\r\n\r\n54 are delivered, 24 are in progress and 111 are queued and ready to be picked up in dependency order. Every item traces back to a requirement and forward to a pull request with its evidence.\r\n\r\nThis is what makes the plan credible: we are not asking you to imagine a product. We are showing you the inventory of one, and the order we will build the rest in.\r\n\r\nSOURCES AND CALCULATIONS\r\nAMA Plan project snapshot (E20): 189 items; labels: 16 epic, 110 feature, 34 story, 29 other; status 54 Done, 24 In Progress, 111 Todo. Per-epic counts computed from item area labels (items outside the 16 epic areas: 28).\r\n"
     },
     {
       "number": 15,
       "code": "S14",
-      "title": "Start Monday with the spreadsheets you already run.",
-      "layout": "baseline",
+      "title": "Connect once. Reduce repeated preparation.",
+      "layout": "native",
+      "keep_ids": [
+        55251,
+        55253,
+        55256
+      ],
+      "headers": [
+        {
+          "id": 55253,
+          "text": "Connect once. Reduce repeated preparation.",
+          "size": 30,
+          "box": [
+            0.6,
+            0.92,
+            12.13,
+            0.7
+          ]
+        },
+        {
+          "id": 55256,
+          "text": "Sources: importer/API guides; ADR 0001; model-fit research; roadmap review (30 Oct). Proposed extensions.",
+          "size": 12,
+          "box": [
+            0.6,
+            6.7,
+            9.7,
+            0.3
+          ]
+        },
+        {
+          "id": 55260,
+          "text": "S14 · Fabric: B20",
+          "size": 12,
+          "box": [
+            10.4,
+            6.7,
+            2.3333,
+            0.3
+          ]
+        }
+      ],
+      "elements": [
+        {
+          "key": "baseline-band",
+          "box": [
+            0.6,
+            1.94,
+            12.13,
+            0.62
+          ],
+          "fill": "173F35"
+        },
+        {
+          "key": "baseline",
+          "box": [
+            0.82,
+            2.08,
+            11.69,
+            0.35
+          ],
+          "size": 17,
+          "bold": true,
+          "color": "FAF9F6",
+          "text": "START WITH BOUNDED FILES | preview, validate, quarantine; preserve the source"
+        },
+        {
+          "key": "connector-band",
+          "box": [
+            0.6,
+            2.92,
+            3.87,
+            2.55
+          ],
+          "fill": "E8F1ED"
+        },
+        {
+          "key": "connector-title",
+          "box": [
+            0.82,
+            3.15,
+            3.43,
+            0.65
+          ],
+          "size": 21,
+          "bold": true,
+          "text": "Connect real sources"
+        },
+        {
+          "key": "connector-body",
+          "box": [
+            0.82,
+            4.0,
+            3.43,
+            1.05
+          ],
+          "size": 17,
+          "text": "Less re-keying\nKnown IDs and field owners\nReplay and conflict tests first"
+        },
+        {
+          "key": "extraction-band",
+          "box": [
+            4.73,
+            2.92,
+            3.87,
+            2.55
+          ],
+          "fill": "E8F2FB"
+        },
+        {
+          "key": "extraction-title",
+          "box": [
+            4.95,
+            3.15,
+            3.43,
+            0.65
+          ],
+          "size": 21,
+          "bold": true,
+          "text": "Document Intelligence"
+        },
+        {
+          "key": "extraction-body",
+          "box": [
+            4.95,
+            4.0,
+            3.43,
+            1.05
+          ],
+          "size": 17,
+          "text": "Less manual transcription\nPage and version provenance\nAccuracy and review trial first"
+        },
+        {
+          "key": "m365-band",
+          "box": [
+            8.86,
+            2.92,
+            3.87,
+            2.55
+          ],
+          "fill": "E8F1ED"
+        },
+        {
+          "key": "m365-title",
+          "box": [
+            9.08,
+            3.15,
+            3.43,
+            0.65
+          ],
+          "size": 21,
+          "bold": true,
+          "text": "M365 connections"
+        },
+        {
+          "key": "m365-body",
+          "box": [
+            9.08,
+            4.0,
+            3.43,
+            1.05
+          ],
+          "size": 17,
+          "text": "SharePoint evidence links\nTeams nudges, not approvals\nSite rights; reconcile first"
+        },
+        {
+          "key": "condition-band",
+          "box": [
+            0.6,
+            5.9,
+            12.13,
+            0.55
+          ],
+          "fill": "FFF1D6"
+        },
+        {
+          "key": "condition",
+          "box": [
+            0.82,
+            6.01,
+            11.69,
+            0.34
+          ],
+          "size": 15,
+          "bold": true,
+          "text": "Connectors and extraction must beat the manual/file route. Excel, exports and assisted service remain."
+        }
+      ],
+      "sources": [
+        "docs/capstone/source/roadmap-recommendations.md",
+        "src/importer/README.md",
+        "src/api/README.md",
+        "docs/adrs/0001-azure-architecture.md",
+        "docs/ideas/typesafe-system-one-agent-fit.md"
+      ],
+      "revised_notes": [
+        "S14 | Connect once. Reduce repeated preparation.",
+        "SAY in the retained 70-second slot: We start with the files people already use: preview, validation, quarantine and unchanged source workbooks, with exports keeping Finance's tools usable. Then improve the repeated work. Housing, repairs and scheduling connectors could remove re-keying, but only with agreed field authority, exact IDs, reconciliation and actual capacity. Document Intelligence could extract survey or EPC fields; test accuracy and total review effort on a small permitted document set first. SharePoint could hold referenced evidence and Teams could nudge an owner, but neither a parameter nor a channel is an implemented approval workflow. Keep the manual/file route until the new path proves useful and controlled.",
+        "CURRENT STATUS: the importer is a bounded XLSX preview/mapping/quarantine/export tool, not a production source-integration platform. No live housing/repairs or operational booking integration is proven. Historical Entra/Graph observations are not current full staff access acceptance. Several resident/callback source capabilities exist; source presence does not establish operational appointment or resident enrolment acceptance.",
+        "WHY WAIT: source/tenant rights, authoritative fields, document versions, conflicts, retries, retention and owned exceptions must be established. Extraction can introduce errors and is separate from malware scanning. M365 connectors need site/channel owners and least privilege; Teams never grants approval, consent or a safety response.",
+        "UNLOCK AND VALUE TEST: compare preparation and reconciliation effort with manual/file work; test exact identity mapping, source versions, retry/replay and negative access. For the proposed narrow OCR trial, use permitted synthetic/redacted documents, agreed field accuracy and complete staff correction effort. No transcription saving or live connector is claimed.",
+        "SOURCES: docs/capstone/source/roadmap-recommendations.md; src/importer/README.md; src/api/README.md; docs/adrs/0001-azure-architecture.md (M365 and deferred extraction); docs/ideas/typesafe-system-one-agent-fit.md. These are retained proposals and source boundaries, not a procurement or activation decision.",
+        "TRANSITION: better inputs do not mean more model authority. The next page keeps rules, bounded proposals and human decisions separate. B20/page 47 retains platform alternatives; fixed links remain unchanged."
+      ],
       "notes": "S14 | Start Monday with the spreadsheets you already run.\n\r\nTIMING: 70 s for this slide (all builds together) · 13:30-14:40 on the 23:45 narration clock.\n\r\n\n\r\nSAY\n\r\nAdoption is where good products die, so we designed the first day, not just the hundredth.\n\r\n\n\r\nZava runs the programme on spreadsheets today. On day one the importer takes those workbooks, previews them, validates every row, quarantines anything that fails and never modifies the source file. Then we run side by side with named Excel editors, compare read-only, and only when the team trusts the numbers do the workbooks become read-only. It is a strangler plan, not a big bang.\n\r\n\n\r\nGoing the other way, anything in the workbench exports to Excel or CSV, without write-back, so Finance's models and the board pack keep working. Stakeholder progress packs are already delivered, and evidence export is being built.\n\r\n\n\r\nIn the historical MVP of 12-14 October, Entra ID sign-in and Microsoft Graph profile integration were demonstrated. Current staff sign-in/Graph acceptance remains outstanding. For the wider Microsoft 365 integration, operations alerts can flow to a Teams channel, a SharePoint evidence library is designed in, and Teams review nudges are on the roadmap. Microsoft 365 is where people work and documents live; the workbench stays the system of record, and a hazard is never routed through a Teams nudge.\n\r\n\n\r\nSOURCES AND CALCULATIONS\n\r\nPRD FR-029/AC-031 (import declared Excel structures; quarantine; source unchanged), FR-030 (export to Excel or CSV, no write-back), NFR-010, transition plan L235-243, performance targets L1283; infra/main.bicep (entraClientId, teamsWebhookUrl, evidenceStore=sharepoint option); architecture README (EasyAuth sign-in; Graph User.Read profile photo; SharePoint adapter not yet implemented; Teams never an approval or safety path); AMA Plan #80 (Todo), #100 (In Progress), #102 (Done).\n\r\n\n\r\nRELATED ANSWERS: B20 = slide 47. Question index = slide 27.\n\r\n"
     },
     {
@@ -649,21 +1106,45 @@
       "code": "S16",
       "title": "Secure by design: every home record sits inside three boundaries.  [build 1 of 3 - click through to the next build]\r",
       "layout": "baseline",
-      "notes": "S16 | Secure by design: every home record sits inside three boundaries.  [build 1 of 3 - click through to the next build]\r\nTIMING: 110 s for this slide (all builds together) · 15:50-17:40 on the 23:45 narration clock.\r\n\r\nSAY\r\nNow the question every CIO asks: is it safe? Let me build the architecture up in three steps.\r\n\r\n[Build 1] The core is deliberately simple. Staff use a browser. One API on Azure Container Apps runs the workflow, enforces permissions and hosts the five bounded assistants. Azure SQL holds the cases, proposals and audit, with ledger checks; Blob storage holds evidence files, hashed in SQL. Models, GPT-4.1 mini and GPT-4.1, are called through one scoped path and return proposals, never authoritative state.\r\n\r\n[Build 2] Then three boundaries. Identity: everyone signs in with Microsoft Entra ID, and the API rechecks role, case and field on every request; switching the screen perspective never grants access, and nobody can approve their own work. Network: SQL and Key Vault sit on private endpoints with private DNS, public access is off by default in the production profile, four workloads authenticate with managed identities and there are no SQL logins at all. Edge: Front Door Premium with a web application firewall in prevention mode and a Private Link origin is designed into the infrastructure code. Operations alert on throttling, errors, restarts and any ledger digest mismatch.\r\n\r\n[Build 3] And the edges where people work: spreadsheets come in through a validated import and go out as Excel, CSV, progress packs and evidence; Microsoft 365 provides sign-in, profile, operations alerts and, next, a SharePoint evidence library. The workbench stays the system of record.\r\n\r\nSOURCES AND CALCULATIONS\r\ninfra/main.bicep at 140d8f4: production profile (SQL always private, allowPublicNetworkAccess false, Key Vault purge protection, registry quarantine), network module with private endpoints and private DNS for Key Vault and SQL, enablePublicEdge (Front Door Premium, WAF Prevention, Private Link origin), four managed identities, Entra admin group and no SQL logins, Foundry deployments gpt-4.1-mini and gpt-4.1 (GlobalStandard), alerts and budget; architecture README (EasyAuth sign-in, API recheck of role/case/field, Graph profile, Teams alerts, SharePoint option); PRD NFR-003 (perspective switch never grants access); BRD RULE-004/AC-013/AC-099 (no self-approval); PRD FR-029/FR-030.\r\n\r\nRELATED ANSWERS: B10 = slide 37; B19 = slide 46; B22 = slide 49. Question index = slide 27."
+      "notes": "S16 | Secure by design: every home record sits inside three boundaries.  [build 1 of 3 - click through to the next build]\r\nTIMING: 110 s for this slide (all builds together) · 15:50-17:40 on the 23:45 narration clock.\r\n\r\nSAY\r\nNow the question every CIO asks: is it safe? Let me build the architecture up in three steps.\r\n\r\n[Build 1] The core is deliberately simple. Staff use a browser. One API on Azure Container Apps runs the workflow, enforces permissions and hosts the five bounded assistants. Azure SQL holds the cases, proposals and audit, with ledger checks; Blob storage holds evidence files, hashed in SQL. Models, GPT-4.1 mini and GPT-4.1, are called through one scoped path and return proposals, never authoritative state.\r\n\r\n[Build 2] Then three boundaries. Identity: everyone signs in with Microsoft Entra ID, and the API rechecks role, case and field on every request; switching the screen perspective never grants access, and nobody can approve their own work. Network: SQL and Key Vault sit on private endpoints with private DNS, public access is off by default in the production profile, four workloads authenticate with managed identities and there are no SQL logins at all. Edge: Front Door Premium with a web application firewall in prevention mode and a Private Link origin is designed into the infrastructure code. Operations alert on throttling, errors, restarts and any ledger digest mismatch.\r\n\r\n[Build 3] And the edges where people work: spreadsheets come in through a validated import and go out as Excel, CSV, progress packs and evidence; Microsoft 365 provides sign-in, profile, operations alerts and, next, a SharePoint evidence library. The workbench stays the system of record.\r\n\r\nSOURCES AND CALCULATIONS\r\ninfra/main.bicep at 140d8f4: production profile (SQL always private, allowPublicNetworkAccess false, Key Vault purge protection, registry quarantine), network module with private endpoints and private DNS for Key Vault and SQL, enablePublicEdge (Front Door Premium, WAF Prevention, Private Link origin), four managed identities, Entra admin group and no SQL logins, Foundry deployments gpt-4.1-mini and gpt-4.1 (GlobalStandard), alerts and budget; architecture README (EasyAuth sign-in, API recheck of role/case/field, Graph profile, Teams alerts, SharePoint option); PRD NFR-003 (perspective switch never grants access); BRD RULE-004/AC-013/AC-099 (no self-approval); PRD FR-029/FR-030.\r\n\r\nRELATED ANSWERS: B10 = slide 37; B19 = slide 46; B22 = slide 49. Question index = slide 27.",
+      "revised_notes": [
+        "S16 | Source architecture, historical observations and current acceptance are different.",
+        "SAY across the retained 110-second three-build slot: This is the source architecture, not proof that the complete route is currently accepted live. Historical Azure, SQL and model observations exist; current end-to-end staff, role, SQL and AI acceptance still needs its own evidence. The retained design is simple: one Container Apps API owns workflow and scoped help; SQL holds cases and audit, Blob holds evidence, and model outputs remain proposals. Entra authenticates while the API rechecks role, case and field. Private endpoints, managed identities, edge and monitoring settings are authored controls, not acceptance by diagram. At the edges, files and later permitted connectors support familiar working. Sensors ask for human review; resident reports bypass telemetry. Optional resident service keeps assisted routes. New analytics stays read-only and earns its place against the simpler comparator.",
+        "BUILD CUES: page 17 explains operational authority; page 18 adds identity/network and current-acceptance limits; page 19 adds external inputs, monitoring and human routes. These pages share one 110-second slot, not three separate narrations.",
+        "CURRENTNESS: the 29 October existing-hub reconciliation was bounded and real, but missing registry permissions and an unapproved custom receiver block live-to-SQL. The authored private Event Hub route is not thereby proven. No current staff session, connected device, professional approval, resident consent or full infrastructure acceptance is inferred.",
+        "SOURCES: docs/architecture/README.md; infra/README.md; docs/adrs/0002-pilot-readiness-architecture.md; docs/adrs/0003-journey-derived-capabilities-runtime-fit.md; docs/capstone/source/roadmap-recommendations.md. Read the diagrams' status labels with these boundaries. No new deployment or spending is authorized.",
+        "NAVIGATION: B10/page 37, B19/page 46 and B22/page 49 retain deeper detail; actual buttons are fixed jumps."
+      ]
     },
     {
       "number": 18,
       "code": "S16",
       "title": "Secure by design: every home record sits inside three boundaries.  [build 2 of 3 - click through to the next build]\r",
       "layout": "baseline",
-      "notes": "S16 | Secure by design: every home record sits inside three boundaries.  [build 2 of 3 - click through to the next build]\r\nTIMING: 110 s for this slide (all builds together) · 15:50-17:40 on the 23:45 narration clock.\r\n\r\nSAY\r\nNow the question every CIO asks: is it safe? Let me build the architecture up in three steps.\r\n\r\n[Build 1] The core is deliberately simple. Staff use a browser. One API on Azure Container Apps runs the workflow, enforces permissions and hosts the five bounded assistants. Azure SQL holds the cases, proposals and audit, with ledger checks; Blob storage holds evidence files, hashed in SQL. Models, GPT-4.1 mini and GPT-4.1, are called through one scoped path and return proposals, never authoritative state.\r\n\r\n[Build 2] Then three boundaries. Identity: everyone signs in with Microsoft Entra ID, and the API rechecks role, case and field on every request; switching the screen perspective never grants access, and nobody can approve their own work. Network: SQL and Key Vault sit on private endpoints with private DNS, public access is off by default in the production profile, four workloads authenticate with managed identities and there are no SQL logins at all. Edge: Front Door Premium with a web application firewall in prevention mode and a Private Link origin is designed into the infrastructure code. Operations alert on throttling, errors, restarts and any ledger digest mismatch.\r\n\r\n[Build 3] And the edges where people work: spreadsheets come in through a validated import and go out as Excel, CSV, progress packs and evidence; Microsoft 365 provides sign-in, profile, operations alerts and, next, a SharePoint evidence library. The workbench stays the system of record.\r\n\r\nCURRENT DEPLOYMENT QUALIFICATION (24 OCTOBER 2026)\r\nImplemented source functionality and historical exercise observations are not a claim of current deployed access. The cutover evidence pack records four-route 403 responses and unmet staff sign-in/Graph prerequisites. Current browser/role, SQL and real-AI acceptance remain outstanding. Do not describe Entra or Graph as currently live on the strength of this diagram.\r\n\r\nSOURCES AND CALCULATIONS\r\ninfra/main.bicep at 140d8f4: production profile (SQL always private, allowPublicNetworkAccess false, Key Vault purge protection, registry quarantine), network module with private endpoints and private DNS for Key Vault and SQL, enablePublicEdge (Front Door Premium, WAF Prevention, Private Link origin), four managed identities, Entra admin group and no SQL logins, Foundry deployments gpt-4.1-mini and gpt-4.1 (GlobalStandard), alerts and budget; architecture README (EasyAuth sign-in, API recheck of role/case/field, Graph profile, Teams alerts, SharePoint option); PRD NFR-003 (perspective switch never grants access); BRD RULE-004/AC-013/AC-099 (no self-approval); PRD FR-029/FR-030.\r\n\r\nRELATED ANSWERS: B10 = slide 37; B19 = slide 46; B22 = slide 49. Question index = slide 27."
+      "notes": "S16 | Secure by design: every home record sits inside three boundaries.  [build 2 of 3 - click through to the next build]\r\nTIMING: 110 s for this slide (all builds together) · 15:50-17:40 on the 23:45 narration clock.\r\n\r\nSAY\r\nNow the question every CIO asks: is it safe? Let me build the architecture up in three steps.\r\n\r\n[Build 1] The core is deliberately simple. Staff use a browser. One API on Azure Container Apps runs the workflow, enforces permissions and hosts the five bounded assistants. Azure SQL holds the cases, proposals and audit, with ledger checks; Blob storage holds evidence files, hashed in SQL. Models, GPT-4.1 mini and GPT-4.1, are called through one scoped path and return proposals, never authoritative state.\r\n\r\n[Build 2] Then three boundaries. Identity: everyone signs in with Microsoft Entra ID, and the API rechecks role, case and field on every request; switching the screen perspective never grants access, and nobody can approve their own work. Network: SQL and Key Vault sit on private endpoints with private DNS, public access is off by default in the production profile, four workloads authenticate with managed identities and there are no SQL logins at all. Edge: Front Door Premium with a web application firewall in prevention mode and a Private Link origin is designed into the infrastructure code. Operations alert on throttling, errors, restarts and any ledger digest mismatch.\r\n\r\n[Build 3] And the edges where people work: spreadsheets come in through a validated import and go out as Excel, CSV, progress packs and evidence; Microsoft 365 provides sign-in, profile, operations alerts and, next, a SharePoint evidence library. The workbench stays the system of record.\r\n\r\nCURRENT DEPLOYMENT QUALIFICATION (24 OCTOBER 2026)\r\nImplemented source functionality and historical exercise observations are not a claim of current deployed access. The cutover evidence pack records four-route 403 responses and unmet staff sign-in/Graph prerequisites. Current browser/role, SQL and real-AI acceptance remain outstanding. Do not describe Entra or Graph as currently live on the strength of this diagram.\r\n\r\nSOURCES AND CALCULATIONS\r\ninfra/main.bicep at 140d8f4: production profile (SQL always private, allowPublicNetworkAccess false, Key Vault purge protection, registry quarantine), network module with private endpoints and private DNS for Key Vault and SQL, enablePublicEdge (Front Door Premium, WAF Prevention, Private Link origin), four managed identities, Entra admin group and no SQL logins, Foundry deployments gpt-4.1-mini and gpt-4.1 (GlobalStandard), alerts and budget; architecture README (EasyAuth sign-in, API recheck of role/case/field, Graph profile, Teams alerts, SharePoint option); PRD NFR-003 (perspective switch never grants access); BRD RULE-004/AC-013/AC-099 (no self-approval); PRD FR-029/FR-030.\r\n\r\nRELATED ANSWERS: B10 = slide 37; B19 = slide 46; B22 = slide 49. Question index = slide 27.",
+      "revised_notes": [
+        "S16 | Source architecture, historical observations and current acceptance are different.",
+        "SAY across the retained 110-second three-build slot: This is the source architecture, not proof that the complete route is currently accepted live. Historical Azure, SQL and model observations exist; current end-to-end staff, role, SQL and AI acceptance still needs its own evidence. The retained design is simple: one Container Apps API owns workflow and scoped help; SQL holds cases and audit, Blob holds evidence, and model outputs remain proposals. Entra authenticates while the API rechecks role, case and field. Private endpoints, managed identities, edge and monitoring settings are authored controls, not acceptance by diagram. At the edges, files and later permitted connectors support familiar working. Sensors ask for human review; resident reports bypass telemetry. Optional resident service keeps assisted routes. New analytics stays read-only and earns its place against the simpler comparator.",
+        "BUILD CUES: page 17 explains operational authority; page 18 adds identity/network and current-acceptance limits; page 19 adds external inputs, monitoring and human routes. These pages share one 110-second slot, not three separate narrations.",
+        "CURRENTNESS: the 29 October existing-hub reconciliation was bounded and real, but missing registry permissions and an unapproved custom receiver block live-to-SQL. The authored private Event Hub route is not thereby proven. No current staff session, connected device, professional approval, resident consent or full infrastructure acceptance is inferred.",
+        "SOURCES: docs/architecture/README.md; infra/README.md; docs/adrs/0002-pilot-readiness-architecture.md; docs/adrs/0003-journey-derived-capabilities-runtime-fit.md; docs/capstone/source/roadmap-recommendations.md. Read the diagrams' status labels with these boundaries. No new deployment or spending is authorized.",
+        "NAVIGATION: B10/page 37, B19/page 46 and B22/page 49 retain deeper detail; actual buttons are fixed jumps."
+      ]
     },
     {
       "number": 19,
       "code": "S16",
       "title": "Secure by design: every home record sits inside three boundaries.  [build 3 of 3 - complete slide]\r",
       "layout": "baseline",
-      "notes": "S16 | Secure by design: every home record sits inside three boundaries.  [build 3 of 3 - complete slide]\r\nTIMING: 110 s for this slide (all builds together) · 15:50-17:40 on the 23:45 narration clock.\r\n\r\nSAY\r\nNow the question every CIO asks: is it safe? Let me build the architecture up in three steps.\r\n\r\n[Build 1] The core is deliberately simple. Staff use a browser. One API on Azure Container Apps runs the workflow, enforces permissions and hosts the five bounded assistants. Azure SQL holds the cases, proposals and audit, with ledger checks; Blob storage holds evidence files, hashed in SQL. Models, GPT-4.1 mini and GPT-4.1, are called through one scoped path and return proposals, never authoritative state.\r\n\r\n[Build 2] Then three boundaries. Identity: everyone signs in with Microsoft Entra ID, and the API rechecks role, case and field on every request; switching the screen perspective never grants access, and nobody can approve their own work. Network: SQL and Key Vault sit on private endpoints with private DNS, public access is off by default in the production profile, four workloads authenticate with managed identities and there are no SQL logins at all. Edge: Front Door Premium with a web application firewall in prevention mode and a Private Link origin is designed into the infrastructure code. Operations alert on throttling, errors, restarts and any ledger digest mismatch.\r\n\r\n[Build 3] In-use monitoring closes the feedback loop: sensors or a labelled simulator send temperature and humidity via IoT Hub Basic, through API checks into SQL; deterministic signals ask a person to review. This accepted exercise design is not live integration or diagnosis. Resident reports bypass it. Excel and Microsoft 365 remain; #441 assesses optional resident self-service, not a deployed portal.\r\n\r\nCURRENT DEPLOYMENT QUALIFICATION (24 OCTOBER 2026)\r\nImplemented source functionality and historical exercise observations are not a claim of current deployed access. The cutover evidence pack records four-route 403 responses and unmet staff sign-in/Graph prerequisites. Current browser/role, SQL and real-AI acceptance remain outstanding. Do not describe Entra or Graph as currently live on the strength of this diagram.\r\n\r\nSOURCES AND CALCULATIONS\r\nADR 0003, decision 6 and implementation status: Basic IoT Hub is accepted for exercise device-to-cloud telemetry; live identity, transport, derived analysis and review-task acceptance remain separate gates. Signals never suppress resident reports, diagnose hazards, change priority or release holds. Issue #441, read 23 October 2026: optional portal/workflow first; bounded resident-answer task separately gated, per-message human review normative and routine automation off. No measured call reduction or time saving is claimed.\r\ninfra/main.bicep at 140d8f4: production profile (SQL always private, allowPublicNetworkAccess false, Key Vault purge protection, registry quarantine), network module with private endpoints and private DNS for Key Vault and SQL, enablePublicEdge (Front Door Premium, WAF Prevention, Private Link origin), four managed identities, Entra admin group and no SQL logins, Foundry deployments gpt-4.1-mini and gpt-4.1 (GlobalStandard), alerts and budget; architecture README (EasyAuth sign-in, API recheck of role/case/field, Graph profile, Teams alerts, SharePoint option); PRD NFR-003 (perspective switch never grants access); BRD RULE-004/AC-013/AC-099 (no self-approval); PRD FR-029/FR-030.\r\n\r\nRELATED ANSWERS: B10 = slide 37; B19 = slide 46; B22 = slide 49. Question index = slide 27."
+      "notes": "S16 | Secure by design: every home record sits inside three boundaries.  [build 3 of 3 - complete slide]\r\nTIMING: 110 s for this slide (all builds together) · 15:50-17:40 on the 23:45 narration clock.\r\n\r\nSAY\r\nNow the question every CIO asks: is it safe? Let me build the architecture up in three steps.\r\n\r\n[Build 1] The core is deliberately simple. Staff use a browser. One API on Azure Container Apps runs the workflow, enforces permissions and hosts the five bounded assistants. Azure SQL holds the cases, proposals and audit, with ledger checks; Blob storage holds evidence files, hashed in SQL. Models, GPT-4.1 mini and GPT-4.1, are called through one scoped path and return proposals, never authoritative state.\r\n\r\n[Build 2] Then three boundaries. Identity: everyone signs in with Microsoft Entra ID, and the API rechecks role, case and field on every request; switching the screen perspective never grants access, and nobody can approve their own work. Network: SQL and Key Vault sit on private endpoints with private DNS, public access is off by default in the production profile, four workloads authenticate with managed identities and there are no SQL logins at all. Edge: Front Door Premium with a web application firewall in prevention mode and a Private Link origin is designed into the infrastructure code. Operations alert on throttling, errors, restarts and any ledger digest mismatch.\r\n\r\n[Build 3] In-use monitoring closes the feedback loop: sensors or a labelled simulator send temperature and humidity via IoT Hub Basic, through API checks into SQL; deterministic signals ask a person to review. This accepted exercise design is not live integration or diagnosis. Resident reports bypass it. Excel and Microsoft 365 remain; #441 assesses optional resident self-service, not a deployed portal.\r\n\r\nCURRENT DEPLOYMENT QUALIFICATION (24 OCTOBER 2026)\r\nImplemented source functionality and historical exercise observations are not a claim of current deployed access. The cutover evidence pack records four-route 403 responses and unmet staff sign-in/Graph prerequisites. Current browser/role, SQL and real-AI acceptance remain outstanding. Do not describe Entra or Graph as currently live on the strength of this diagram.\r\n\r\nSOURCES AND CALCULATIONS\r\nADR 0003, decision 6 and implementation status: Basic IoT Hub is accepted for exercise device-to-cloud telemetry; live identity, transport, derived analysis and review-task acceptance remain separate gates. Signals never suppress resident reports, diagnose hazards, change priority or release holds. Issue #441, read 23 October 2026: optional portal/workflow first; bounded resident-answer task separately gated, per-message human review normative and routine automation off. No measured call reduction or time saving is claimed.\r\ninfra/main.bicep at 140d8f4: production profile (SQL always private, allowPublicNetworkAccess false, Key Vault purge protection, registry quarantine), network module with private endpoints and private DNS for Key Vault and SQL, enablePublicEdge (Front Door Premium, WAF Prevention, Private Link origin), four managed identities, Entra admin group and no SQL logins, Foundry deployments gpt-4.1-mini and gpt-4.1 (GlobalStandard), alerts and budget; architecture README (EasyAuth sign-in, API recheck of role/case/field, Graph profile, Teams alerts, SharePoint option); PRD NFR-003 (perspective switch never grants access); BRD RULE-004/AC-013/AC-099 (no self-approval); PRD FR-029/FR-030.\r\n\r\nRELATED ANSWERS: B10 = slide 37; B19 = slide 46; B22 = slide 49. Question index = slide 27.",
+      "revised_notes": [
+        "S16 | Source architecture, historical observations and current acceptance are different.",
+        "SAY across the retained 110-second three-build slot: This is the source architecture, not proof that the complete route is currently accepted live. Historical Azure, SQL and model observations exist; current end-to-end staff, role, SQL and AI acceptance still needs its own evidence. The retained design is simple: one Container Apps API owns workflow and scoped help; SQL holds cases and audit, Blob holds evidence, and model outputs remain proposals. Entra authenticates while the API rechecks role, case and field. Private endpoints, managed identities, edge and monitoring settings are authored controls, not acceptance by diagram. At the edges, files and later permitted connectors support familiar working. Sensors ask for human review; resident reports bypass telemetry. Optional resident service keeps assisted routes. New analytics stays read-only and earns its place against the simpler comparator.",
+        "BUILD CUES: page 17 explains operational authority; page 18 adds identity/network and current-acceptance limits; page 19 adds external inputs, monitoring and human routes. These pages share one 110-second slot, not three separate narrations.",
+        "CURRENTNESS: the 29 October existing-hub reconciliation was bounded and real, but missing registry permissions and an unapproved custom receiver block live-to-SQL. The authored private Event Hub route is not thereby proven. No current staff session, connected device, professional approval, resident consent or full infrastructure acceptance is inferred.",
+        "SOURCES: docs/architecture/README.md; infra/README.md; docs/adrs/0002-pilot-readiness-architecture.md; docs/adrs/0003-journey-derived-capabilities-runtime-fit.md; docs/capstone/source/roadmap-recommendations.md. Read the diagrams' status labels with these boundaries. No new deployment or spending is authorized.",
+        "NAVIGATION: B10/page 37, B19/page 46 and B22/page 49 retain deeper detail; actual buttons are fixed jumps."
+      ]
     },
     {
       "number": 20,
@@ -684,27 +1165,380 @@
       "code": "S19",
       "title": "Delivery learning: Everything But the Software",
       "layout": "baseline",
-      "notes": "S19 | Delivery learning: Everything But the Software\nTIMING: 60 s for this slide (all builds together) · 19:30-20:30 on the 23:45 narration clock.\nSPEAKER SCRIPT\nThe latest delivery lesson is the draft paper Everything But the Software, with author clarification dated 25 October 2026. Table 2 (Before and during the delivery loop) records 183 merged pull requests over 15-24 October and 36,755 words appended to the knowledge-base log over 15-22 October. These are different windows; the author could no longer use the replacement.\nThis is an exploratory single case with rival explanations, not causal proof that agents degrade software. It challenges counting output as usable delivery. My proposed feedback rail is feature, tests, use journey, then keep, cut or tidy before adding more.\nThe research question is whether an additional agent can perform bounded reflection and course correction, not whether reflection is exclusively human. The selected S1 comparison is four runs per arm, ten features and full CR1. The proposed consolidation experiment is paused, registration is pending and there are no study results. HVE has human stops by default; the long coordinator loop was owner-designed. B/C share an equal extra budget while A has less time; differing tests and notes also prevent isolating pure refactoring.\nThe paper experiment is separate. \nZava's\n next decision is to validate one usable home journey against the comparator.\nDIAGRAM TEXT EQUIVALENT\nContrast: 183 merged PRs over 15-24 October and 36,755 added knowledge-base log words over 15-22 October versus the author unable to use the replacement. Proposed feedback rail: Feature -> Tests -> Use journey -> Keep/cut/tidy -> next feature. The paper's bounded experiment is paused, registration pending and no results; this is an exploratory non-causal single case, not published or accepted research.\nEVIDENCE AND LIMITS\nTable 2 defines 183 merged PRs as 15-24 October and 36,755 appended log words as 15-22 October. These are retrospective activity measures, not controlled productivity or causation measures.\nThe paper's 192 initial issues, the dated 23 October board snapshot of 189 items and the 183-PR window are distinct scopes and must never be substituted for one another.\nExperiment execution is paused, registration pending, exact tagged materials still to be supplied; no study results or retrospective preregistration claim.\nHVE normally stops for human handoffs. The case coordinator loop was owner-designed; it is not the default HVE workflow. Existing cost caveats remain unvalidated prices.\nSOURCES\ndocs/capstone/thought-leadership/everything-but-the-software/\nmain.tex\ndocs/capstone/thought-leadership/everything-but-the-software/README.md\nNAVIGATION\nS19 main route; B13 on slide 40 carries method context and planned experiment detail. Existing footer and links remain unchanged.\nExisting source footers are retained verbatim; the paths above identify the sources for this revision."
+      "notes": "S19 | Delivery learning: Everything But the Software\nTIMING: 60 s for this slide (all builds together) · 19:30-20:30 on the 23:45 narration clock.\nSPEAKER SCRIPT\nThe latest delivery lesson is the draft paper Everything But the Software, with author clarification dated 25 October 2026. Table 2 (Before and during the delivery loop) records 183 merged pull requests over 15-24 October and 36,755 words appended to the knowledge-base log over 15-22 October. These are different windows; the author could no longer use the replacement.\nThis is an exploratory single case with rival explanations, not causal proof that agents degrade software. It challenges counting output as usable delivery. My proposed feedback rail is feature, tests, use journey, then keep, cut or tidy before adding more.\nThe research question is whether an additional agent can perform bounded reflection and course correction, not whether reflection is exclusively human. The selected S1 comparison is four runs per arm, ten features and full CR1. The proposed consolidation experiment is paused, registration is pending and there are no study results. HVE has human stops by default; the long coordinator loop was owner-designed. B/C share an equal extra budget while A has less time; differing tests and notes also prevent isolating pure refactoring.\nThe paper experiment is separate. \nZava's\n next decision is to validate one usable home journey against the comparator.\nDIAGRAM TEXT EQUIVALENT\nContrast: 183 merged PRs over 15-24 October and 36,755 added knowledge-base log words over 15-22 October versus the author unable to use the replacement. Proposed feedback rail: Feature -> Tests -> Use journey -> Keep/cut/tidy -> next feature. The paper's bounded experiment is paused, registration pending and no results; this is an exploratory non-causal single case, not published or accepted research.\nEVIDENCE AND LIMITS\nTable 2 defines 183 merged PRs as 15-24 October and 36,755 appended log words as 15-22 October. These are retrospective activity measures, not controlled productivity or causation measures.\nThe paper's 192 initial issues, the dated 23 October board snapshot of 189 items and the 183-PR window are distinct scopes and must never be substituted for one another.\nExperiment execution is paused, registration pending, exact tagged materials still to be supplied; no study results or retrospective preregistration claim.\nHVE normally stops for human handoffs. The case coordinator loop was owner-designed; it is not the default HVE workflow. Existing cost caveats remain unvalidated prices.\nSOURCES\ndocs/capstone/thought-leadership/everything-but-the-software/\nmain.tex\ndocs/capstone/thought-leadership/everything-but-the-software/README.md\nNAVIGATION\nS19 main route; B13 on slide 40 carries method context and planned experiment detail. Existing footer and links remain unchanged.\nExisting source footers are retained verbatim; the paths above identify the sources for this revision.",
+      "revised_notes": [
+        "S19 | Delivery learning: test usability, not just output.",
+        "SAY in the retained 60-second slot: There is one delivery lesson behind this roadmap. Our exploratory paper distinguishes activity from a usable outcome; more pull requests are not proof that the replacement works for its user. It is a single case with competing explanations, not a causal result. The proposed consolidation experiment is separate, paused and without results in the retained record. For this customer, the practical next step is simpler: use one home journey, test it against the comparator, inspect failures and total effort, then keep, change or stop before adding another capability. That is why the roadmap has evidence gates rather than a platform shopping list.",
+        "DETAIL: the original PR/log observation windows, proposed experiment arms and rival explanations remain in the dated paper/story evidence and B13/page 40. They are not new housing results or an authority to execute research. Do not spend the main-route minute explaining the experimental arms.",
+        "SOURCES: docs/capstone/thought-leadership/everything-but-the-software/README.md; retained 25 October story review in docs/capstone/history/cowork-generated/presentation-review-2026-10-25.md. This narration does not edit or freshly peer-review the paper.",
+        "TRANSITION: now show what could earn its way onto the customer roadmap, with a value hypothesis and an explicit unlock for each lane. Existing fixed links remain unchanged."
+      ]
     },
     {
       "number": 23,
       "code": "S20",
-      "title": "Validate, pilot, scale: on the clock to April 2030.\r",
-      "layout": "baseline",
+      "title": "Four improvements. One evidence-led sequence.",
+      "layout": "native",
+      "keep_ids": [
+        31210,
+        31212,
+        31215
+      ],
+      "headers": [
+        {
+          "id": 31212,
+          "text": "Four improvements. One evidence-led sequence.",
+          "size": 30,
+          "box": [
+            0.6,
+            0.92,
+            12.13,
+            0.7
+          ]
+        },
+        {
+          "id": 31215,
+          "text": "Sources: roadmap recommendations (30 Oct), ADRs, Fabric/IoT research and current component guides.",
+          "size": 12,
+          "box": [
+            0.6,
+            6.7,
+            9.7,
+            0.3
+          ]
+        }
+      ],
+      "elements": [
+        {
+          "key": "readiness-band",
+          "box": [
+            0.6,
+            1.92,
+            12.13,
+            0.65
+          ],
+          "fill": "173F35"
+        },
+        {
+          "key": "readiness",
+          "box": [
+            0.82,
+            2.07,
+            11.69,
+            0.36
+          ],
+          "size": 16,
+          "bold": true,
+          "color": "FAF9F6",
+          "text": "BEFORE LIVE EXPANSION | accepted access, recovery, review, privacy, accessibility and cost scope"
+        },
+        {
+          "key": "inputs-title",
+          "box": [
+            0.6,
+            2.96,
+            5.75,
+            0.45
+          ],
+          "size": 23,
+          "bold": true,
+          "text": "Connect + extract"
+        },
+        {
+          "key": "inputs-body",
+          "box": [
+            0.6,
+            3.55,
+            5.75,
+            0.62
+          ],
+          "size": 17,
+          "text": "Less re-keying and transcription\nUnlock: source rights, accuracy and reconciliation"
+        },
+        {
+          "key": "resident-title",
+          "box": [
+            6.98,
+            2.96,
+            5.75,
+            0.45
+          ],
+          "size": 23,
+          "bold": true,
+          "text": "Resident service"
+        },
+        {
+          "key": "resident-body",
+          "box": [
+            6.98,
+            3.55,
+            5.75,
+            0.62
+          ],
+          "size": 17,
+          "text": "Easier status access; assisted routes stay\nUnlock: identity, inclusion and comprehension"
+        },
+        {
+          "key": "portfolio-title",
+          "box": [
+            1.43,
+            4.62,
+            4.92,
+            0.45
+          ],
+          "size": 23,
+          "bold": true,
+          "text": "Fabric + Power BI"
+        },
+        {
+          "key": "portfolio-body",
+          "box": [
+            0.6,
+            5.2,
+            5.75,
+            0.62
+          ],
+          "size": 17,
+          "text": "Reusable portfolio history and measures\nUnlock: beat the SQL / BI comparator"
+        },
+        {
+          "key": "assist-title",
+          "box": [
+            6.98,
+            4.62,
+            5.75,
+            0.45
+          ],
+          "size": 23,
+          "bold": true,
+          "text": "Better assistance"
+        },
+        {
+          "key": "assist-body",
+          "box": [
+            6.98,
+            5.2,
+            5.75,
+            0.62
+          ],
+          "size": 17,
+          "text": "Potential: faster help, less repeat work\nUnlock: quality and total-effort evidence"
+        },
+        {
+          "key": "source-status",
+          "box": [
+            0.6,
+            6.12,
+            12.13,
+            0.28
+          ],
+          "size": 13,
+          "color": "50655E",
+          "text": "Source exists in several lanes; value and live acceptance remain conditional. Split workers only for measured need."
+        }
+      ],
+      "images": [
+        {
+          "asset": "fabric",
+          "box": [
+            0.6,
+            4.54,
+            0.62,
+            0.62
+          ],
+          "alt": "Official Microsoft Fabric icon, marking a conditional portfolio-insight roadmap lane."
+        }
+      ],
+      "sources": [
+        "docs/capstone/source/roadmap-recommendations.md",
+        "docs/reference/research/microsoft-fabric-fit-assessment.md",
+        "docs/architecture/resident-assistant-prototype.md",
+        "docs/reference/research/iot-sensor-analytics-research-plan.md",
+        "infra/monitoring-runbooks.md"
+      ],
+      "revised_notes": [
+        "S20 | Four improvements. One evidence-led sequence.",
+        "SAY in the retained 60-second slot: The next step is not to buy the whole roadmap. First close the applicable access, review, recovery, privacy, accessibility and cost-evidence gates. Then choose a capability around a measured problem. Connectors and document extraction could reduce re-keying. Optional resident service could make status easier without closing assisted routes. Fabric and Power BI could reuse programme history across reports. Better assistance means tested Decision 1 tasks, routing, cache, opt-in memory and useful proactive checks, not automatic activation. Each option needs an owner, a simpler comparator and a stop condition. Live sensing and separate workers also need evidence; neither is an inevitable next platform. Dates follow the dependencies.",
+        "FULL PROPOSAL COVERAGE: the roadmap register reviews selective Data Factory/OneLake, Fabric data agents and Eventhouse/Eventstream; portal, bounded resident advice and separately gated communication; M365/SharePoint/Teams, housing/repairs and contractor APIs; Document Intelligence; live IoT; Decision 1/IDEA-001 and IDEA-001a delay notes, IDEA-001b screening, IDEA-001c comparative evaluation and IDEA-001d regulatory-change classification; routing/context trimming, caching, memory and proactive checks; queue workers/Service Bus; AI Search, Content Understanding, Spark/learned forecasts and alternate hosting/platform contingencies. Related proposals are grouped into the four visible lanes, not silently omitted or approved.",
+        "CURRENT VERSUS FUTURE: dashboards, bounded assistants, chat/threads, isolated memory lifecycle, synthetic resident/advisor/callback source and bounded jobs already exist at their stated boundaries. The work is to verify usefulness and live acceptance, not promise to build them all from zero. The 29 October existing-hub reconciliation was a real bounded exercise; registry permission and the unapproved custom receive adapter still block live-to-SQL acceptance. It does not prove the entire private Event Hub source route.",
+        "SEQUENCING: controlled data preparation underpins reporting and model proposals. Accepted resident identity/rights and human service routes precede operational resident automation. Trusted facts and a named portfolio question precede analytical Q&A. A distinct history/latency need precedes Eventhouse; measured isolation, throughput or recovery need precedes queue workers. Exact chosen sources, privacy, cost and owned recovery govern each bounded stage.",
+        "NOT OPTIONAL ROADMAP FEATURES: meaningful human review, role denial, privacy, legal/professional applicability, accessibility, restore/recovery, monitoring ownership and complete financial controls are applicable acceptance gates. A dashboard or alert is not proof of readiness or a hard spending stop. Do not trade them away to fund optional technology.",
+        "NOT PROMISED LATER: shared case memory, model-owned consent/approvals/ranking, fine-tuning as legal authority, or replacing operational SQL with Fabric. Hosted/low-code/PostgreSQL/AKS/Cosmos alternatives require a new fit/control appraisal, not a presumed maturity path. The paused delivery-consolidation study remains separate research, with no product or causal benefit claimed.",
+        "SOURCES: docs/capstone/source/roadmap-recommendations.md contains the full review and individual evidence links; Microsoft Fabric fit assessment; ADRs 0001..0005; current component guides; infra/monitoring-runbooks.md. This roadmap is a proposed ordering of evidence-led choices, not a commitment to all lanes, a dated delivery plan, measured savings, new funding or live authority.",
+        "TRANSITION: the decision is to agree a bounded validation scope and owners, then return with a costed proposal for the next selected capability. B17/page 44 remains deeper dependency discussion; appendix pages are optional, not added narration time."
+      ],
       "notes": "S20 | Validate, pilot, scale: on the clock to April 2030.\r\nTIMING: 60 s for this slide (all builds together) · 20:30-21:30 on the 23:45 narration clock.\r\n\r\nSAY\r\nHere is the plan, on the real calendar.\r\n\r\nPhase 0, six to eight weeks: validate one connected journey against a paired comparator, so we measure what the workflow improves and what the AI adds on top.\r\n\r\nThen a six to nine month pilot with clear targets from our requirements: at least 50 accepted handovers from 80 to 100 candidate homes, cycle time at least 20 per cent shorter and 25 per cent fewer coordination hours per home. It lands inside the wave 3 funding window, which runs to March 2028.\r\n\r\nThen scale. The arithmetic is fixed: 88 homes a week to reach 15,600 homes by 1 April 2030. The workbench is how Zava runs that pace with control intact.\r\n\r\nSOURCES AND CALCULATIONS\r\nBRD BG-011 pilot proposal (Phase 0 6-8 weeks; pilot 6-9 months; ≥50 accepted handovers from 80-100 candidates; ≥20% shorter cycle time; 25% fewer coordination hours per home; targets under review, OD-18); measurement design (E10); Awaab's Law phase 2 30 Nov 2026 (MHCLG); WH:SHF wave 3 spend by 31 Mar 2028; EPC C 1 Apr 2030 (MHCLG/DESNZ); pace from the forecast slide.\r\n\r\nRELATED ANSWERS: B17 = slide 44. Question index = slide 27.\r\n"
     },
     {
       "number": 24,
       "code": "S21",
-      "title": "Decision today: fund the validation gate.\r",
-      "layout": "baseline",
-      "notes": "S21 | Decision today: fund the validation gate.\r\nTIMING: 60 s for this slide (all builds together) · 21:30-22:30 on the 23:45 narration clock.\r\n\r\nSAY\r\nSo here is the decision I am asking for today: fund Phase 0, six to eight weeks to validate one connected journey.\r\n\r\nThe scope is one connected journey and a paired comparator. The owners are named roles: the programme defines accepted progress, Finance sets the cost boundary and approves the spend, the technical owner proves the deployment, and control reviewers own acceptance.\r\n\r\nWe measure accepted handovers per week, preparation and review time, rework and the cost per accepted outcome. When quality, control and net value clear the bar, we scale. That is a small, finite commitment that buys a decision-quality answer, on the way to 88 homes a week.\r\n\r\nSOURCES AND CALCULATIONS\r\nDecision card from the authoring package S16 (E02, E10, E11, E13).\r\n\r\nRELATED ANSWERS: B15 = slide 42. Question index = slide 27.\r\n"
+      "title": "Agree the next proof. Return before expansion.",
+      "layout": "native",
+      "keep_ids": [
+        31648,
+        31650,
+        31653
+      ],
+      "headers": [
+        {
+          "id": 31650,
+          "text": "Agree the next proof. Return before expansion.",
+          "size": 30,
+          "box": [
+            0.6,
+            0.92,
+            12.13,
+            0.7
+          ]
+        },
+        {
+          "id": 31653,
+          "text": "Sources: roadmap review, measurement design and current acceptance/cost boundaries. No new spend approved.",
+          "size": 12,
+          "box": [
+            0.6,
+            6.7,
+            9.7,
+            0.3
+          ]
+        }
+      ],
+      "elements": [
+        {
+          "key": "ask-band",
+          "box": [
+            0.6,
+            1.95,
+            12.13,
+            0.85
+          ],
+          "fill": "173F35"
+        },
+        {
+          "key": "ask",
+          "box": [
+            0.84,
+            2.15,
+            11.65,
+            0.44
+          ],
+          "size": 22,
+          "bold": true,
+          "color": "FAF9F6",
+          "text": "ONE HOME JOURNEY + ONE RECURRING PORTFOLIO QUESTION"
+        },
+        {
+          "key": "programme-title",
+          "box": [
+            0.6,
+            3.25,
+            3.87,
+            0.45
+          ],
+          "size": 22,
+          "bold": true,
+          "text": "Programme + service"
+        },
+        {
+          "key": "programme",
+          "box": [
+            0.6,
+            3.95,
+            3.87,
+            1.0
+          ],
+          "size": 18,
+          "text": "Define accepted progress.\nName owners and manual routes.\nInclude resident effort."
+        },
+        {
+          "key": "finance-title",
+          "box": [
+            4.73,
+            3.25,
+            3.87,
+            0.45
+          ],
+          "size": 22,
+          "bold": true,
+          "text": "Finance + data"
+        },
+        {
+          "key": "finance",
+          "box": [
+            4.73,
+            3.95,
+            3.87,
+            1.0
+          ],
+          "size": 18,
+          "text": "Agree comparison and quality.\nBound total cost and data rights.\nNo assumed spare capacity."
+        },
+        {
+          "key": "technical-title",
+          "box": [
+            8.86,
+            3.25,
+            3.87,
+            0.45
+          ],
+          "size": 22,
+          "bold": true,
+          "text": "Technical + control"
+        },
+        {
+          "key": "technical",
+          "box": [
+            8.86,
+            3.95,
+            3.87,
+            1.0
+          ],
+          "size": 18,
+          "text": "Plan access and recovery.\nAgree task review checks.\nKeep human decisions separate."
+        },
+        {
+          "key": "return-band",
+          "box": [
+            0.6,
+            5.56,
+            12.13,
+            0.8
+          ],
+          "fill": "FFF1D6"
+        },
+        {
+          "key": "return",
+          "box": [
+            0.82,
+            5.74,
+            11.69,
+            0.45
+          ],
+          "size": 18,
+          "bold": true,
+          "text": "Cost the plan. Authorize execution separately. Review results before pilot or expansion."
+        }
+      ],
+      "sources": [
+        "docs/capstone/source/roadmap-recommendations.md",
+        "docs/reference/research/company/pilot-measurement-challenge.md",
+        "docs/case_study_48_addendum.md"
+      ],
+      "notes": "S21 | Decision today: fund the validation gate.\r\nTIMING: 60 s for this slide (all builds together) · 21:30-22:30 on the 23:45 narration clock.\r\n\r\nSAY\r\nSo here is the decision I am asking for today: fund Phase 0, six to eight weeks to validate one connected journey.\r\n\r\nThe scope is one connected journey and a paired comparator. The owners are named roles: the programme defines accepted progress, Finance sets the cost boundary and approves the spend, the technical owner proves the deployment, and control reviewers own acceptance.\r\n\r\nWe measure accepted handovers per week, preparation and review time, rework and the cost per accepted outcome. When quality, control and net value clear the bar, we scale. That is a small, finite commitment that buys a decision-quality answer, on the way to 88 homes a week.\r\n\r\nSOURCES AND CALCULATIONS\r\nDecision card from the authoring package S16 (E02, E10, E11, E13).\r\n\r\nRELATED ANSWERS: B15 = slide 42. Question index = slide 27.\r\n",
+      "revised_notes": [
+        "S21 | Agree the next proof. Return before expansion.",
+        "SAY in the retained 60-second slot: Agree one home journey and one recurring portfolio question. Nominate accountable owners, bound the planning effort and set a review checkpoint. First return with a costed, permission-bounded comparison plan, including staff and resident effort, quality, recovery and full cost. Obtain separate authority before paid execution. Then bring the results back before pilot or expansion. Programme defines accepted progress, Finance and data set the boundaries, and technical and control owners design the tests. This is a decision-quality next step, not a platform purchase, a promised pace or renewed spending approval.",
+        "APPROVAL SEQUENCE: agree the bounded scoping work and review checkpoint; prepare a costed plan; obtain separate current permissions and execution/spending authority; run the authorized comparison; review results before pilot or optional expansion. Planning effort is bounded too. No date, budget amount, staff appointment or authority is invented.",
+        "SUCCESS AND STOP: reconcile the same cohort and evidence; retain critical misses, corrections, human effort, uncertainty, source load and full cost. Keep the smaller or manual route if the proposed capability does not improve the agreed result. Sponsor agreement does not replace professional sign-off, privacy/legal review, resident choice or independent Finance authorization.",
+        "SOURCES: docs/capstone/source/roadmap-recommendations.md; docs/reference/research/company/pilot-measurement-challenge.md; docs/case_study_48_addendum.md. Proposed role responsibilities are not confirmed company appointments. Any scoped later exercise authority remains specific to its workload and dates; none automatically funds Fabric.",
+        "TRANSITION: the demo now shows the same evidence, owner and decision boundary. Choose the authorized live/evidence/unavailable route at preflight. Existing fixed navigation remains; B15/page 42 carries readiness detail."
+      ]
     },
     {
       "number": 25,
       "code": "S22",
       "title": "See it work: one home, one exception, one accountable next step.\r",
-      "layout": "baseline",
+      "layout": "text",
       "notes": "S22 | See it work: one home, one exception, one accountable next step.\r\nTIMING: 45 s for this slide (all builds together) · 22:30-23:15 on the 23:45 narration clock.\r\n\r\nSAY\r\nNow let me show you, rather than tell you. In the next ten minutes, watch three things.\r\n\r\nWatch the evidence conflict find its owner. Watch what the AI drafts, and what only a person can approve. And watch the record keep the next action, so nothing disappears between teams.\r\n\r\nWe confirm the route at preflight: the live exercise, or a recorded walkthrough of the same steps. Either way you will see the same home, the same exception and the same accountable next step.\r\n\r\nSOURCES AND CALCULATIONS\r\nTen-minute demo runbook: routes L and E, preflight checklist, eight-minute core route (E07, E13).\r\n\r\nRELATED ANSWERS: B18 = slide 45. Question index = slide 27.\r\n",
       "revised_notes": [
         "S22 | One home, one exception, one accountable next step.",
@@ -712,21 +1546,61 @@
         "Within two minutes show the fictional home, the evidence conflict, its accountable owner and the boundary between a draft and a human decision. The full prepared route is eight minutes plus two for questions or one recovery. Do not promise every step as working in a live system. Name what is observed, what is a source contract and what remains unproved.",
         "SOURCES: docs/capstone/demo/runbook.md; docs/capstone/pitch/README.md; current src component guides. No live operation, data export, sending, approval, paid model call or spending authority is granted by this introduction.",
         "NAVIGATION: S23/page 26 is the close after the separate demo. Its retained 30 seconds already belong to the presentation narration allocation."
+      ],
+      "replacements": [
+        {
+          "id": 37904,
+          "from": "recorded walkthrough",
+          "to": "labelled evidence walkthrough"
+        }
       ]
     },
     {
       "number": 26,
       "code": "S23",
       "title": "More homes ready, with control intact.\r",
-      "layout": "baseline",
-      "notes": "S23 | More homes ready, with control intact.\r\nTIMING: 30 s for this slide (all builds together) · 23:15-23:45 on the 23:45 narration clock.\r\n\r\nSAY\r\nLet me close where we started. 15,600 homes to lift by 2030, thousands more to keep safe, and a product that runs that programme one accountable decision at a time.\r\n\r\nAgree the validation gate. Name the owners. And let's start the 2030 run.\r\n\r\nThank you.\r\n\r\nSOURCES AND CALCULATIONS\r\nSummary of the forecast and decision slides.\r\n"
+      "layout": "text",
+      "revised_notes": [
+        "S23 | More homes ready, with control intact.",
+        "SAY in the retained 30-second close: One accountable home journey comes first. Then better inputs, easier resident service, shared portfolio insight and more useful assistance can earn their place. Keep people in authority and SQL as the record. Agree the validation question, name its owners and return with evidence before expanding. That is the next step, not a promise of savings, a platform purchase or automatic scale-up.",
+        "SOURCES: current roadmap recommendations, same-home story and measurement design. The physical delivery scenario remains an assumption; acceptance, cost authority and the next technology choice remain separate decisions."
+      ],
+      "notes": "S23 | More homes ready, with control intact.\r\nTIMING: 30 s for this slide (all builds together) · 23:15-23:45 on the 23:45 narration clock.\r\n\r\nSAY\r\nLet me close where we started. 15,600 homes to lift by 2030, thousands more to keep safe, and a product that runs that programme one accountable decision at a time.\r\n\r\nAgree the validation gate. Name the owners. And let's start the 2030 run.\r\n\r\nThank you.\r\n\r\nSOURCES AND CALCULATIONS\r\nSummary of the forecast and decision slides.\r\n",
+      "replacements": [
+        {
+          "id": 33364,
+          "from": "Start the 2030 run",
+          "to": "Review a costed plan"
+        }
+      ]
     },
     {
       "number": 27,
       "code": "QX",
       "title": "Question index - appendix, navigation only\r",
-      "layout": "baseline",
-      "notes": "QX | Question index - appendix, navigation only\r\nNOT PART OF THE SPOKEN ROUTE. Slide 26 (S23, the close) is the last spoken slide. Do not advance into the appendix during the talk.\r\n\r\nHOW TO NAVIGATE\r\nIn Slide Show, type the slide number and press Enter to jump to an answer (for example 52 + Enter for B25). Each answer slide shows the main slide to return to and its number. Question index = slide 27.\r\nThe live build engine could not create clickable internal hyperlinks or hidden slides; add them in desktop PowerPoint using the link map in the build handoff before delivery, then validate them in the target viewer.\r\n\r\nINTERRUPTION PROTOCOL (from audience-and-delivery.md)\r\n1. Restate: \"Your question is whether [business concern], rather than simply whether the model works.\"\r\n2. Answer first in one sentence. State the relevant evidence and its limit.\r\n3. Ask for a decision only when appropriate; otherwise park the deeper detail with an owner and return to the current main slide.\r\nBridges: \"The short answer is no: that is a proposed control, not an observed one.\" | \"There are two questions there: whether the workflow works, and whether AI improves it. We test them separately.\" | \"I do not have a defensible unit price today. Here is the denominator and evidence the next gate must produce.\" | \"We retained the five responsibilities and changed the autonomy.\" | \"That would change the authority boundary; it needs a separate decision.\"\r\nDo not say a decision has been made because the audience did not object. A full backup explanation replaces detail on the main route; it does not add free time.\r\n\r\nFULL QUESTION LIST (slide titles B01-B27)\r\nB01 (slide 28, return S04 slide 4): Why not fix the process and hire more people instead?\r\nB02 (slide 29, return S11 slide 12): Is this replacing our housing system or integrating with it?\r\nB03 (slide 30, return S08 slide 9): Why did you not build exactly the five agents we requested?\r\nB04 (slide 31, return S15 slide 16): How do Decision Models reduce cost and response time?\r\nB05 (slide 32, return S18 slide 21): What does the technology cost today?\r\nB06 (slide 33, return S12 slide 13): How do residents retain choice, especially without digital access?\r\nB07 (slide 34, return S17 slide 20): What stops a human from rubber-stamping AI?\r\nB08 (slide 35, return S05 slide 6): Will this double retrofit delivery and capture GBP 40 million?\r\nB09 (slide 36, return S10 slide 11): What is the per-home business case and cash exposure?\r\nB10 (slide 37, return S16 slide 19): Why not deploy each agent independently?\r\nB11 (slide 38, return S15 slide 16): What proves the AI is real and useful rather than a template?\r\nB12 (slide 39, return S07 slide 8): Did you validate this with real residents and staff?\r\nB13 (slide 40, return S19 slide 22): How did the requirements become an agent-delivered backlog?\r\nB14 (slide 41, return S08 slide 9): Is this actually agentic if so much is deterministic?\r\nB15 (slide 42, return S21 slide 24): What exactly must happen before a pilot or production decision?\r\nB16 (slide 43, return S17 slide 20): What happens if the model, cloud or deployment fails?\r\nB17 (slide 44, return S20 slide 23): When can we go live and who owns the next step?\r\nB18 (slide 45, return S22 slide 25): Can you demonstrate a new live action right now?\r\nB19 (slide 46, return S16 slide 19): Where do sensors fit and can AI diagnose damp or mould?\r\nB20 (slide 47, return S14 slide 15): Why Azure instead of M365, Power Platform or buying a product?\r\nB21 (slide 48, return S17 slide 20): How do you prevent hallucinations and prompt injection?\r\nB22 (slide 49, return S16 slide 19): Can customer data leave the UK or train a provider's model?\r\nB23 (slide 50, return S12 slide 13): How will you know this is fair and accessible?\r\nB24 (slide 51, return S03 slide 3): How will you keep policy, law and funding rules current?\r\nB25 (slide 52, return S18 slide 21): What is your Tokenomics unit and can the AI bill run away?\r\nB26 (slide 53, return S18 slide 21): Why not cache every answer and route everything to the cheapest model?\r\nB27 (slide 54, return S18 slide 21): What stops chat and agent sprawl multiplying hidden calls?\r\n"
+      "revised_notes": [
+        "QX | Question index: optional depth, not additional narration.",
+        "The main story ends at page 26. Use the existing fixed native slide-jump links or type the desired page number deliberately. The deck already has native internal links; original build-engine limitations are historical, not the current interaction contract. PDF history depends on the viewer.",
+        "B20/page 47 now advertises why Fabric is conditional, its value, cost and alternatives. The main opportunity is page 14; the retained appendix Topic button still targets page 15, the input-preparation bridge. B04/page 31 is a conditional comparison with simpler rules, not a presumption of cost or latency advantage.",
+        "Restate the audience's question, answer it directly, then add one evidence point and its limit. Return to the actual interrupted page deliberately. Do not infer consent, approval, spending authority or agreement from silence. Optional answers replace depth within the discussion reserve; they do not add free meeting time.",
+        "SOURCES: current main-story roadmap, source register and question bank. Native action targets are preserved; keyboard/viewer/accessibility acceptance remains a separate check."
+      ],
+      "layout": "text",
+      "notes": "QX | Question index - appendix, navigation only\r\nNOT PART OF THE SPOKEN ROUTE. Slide 26 (S23, the close) is the last spoken slide. Do not advance into the appendix during the talk.\r\n\r\nHOW TO NAVIGATE\r\nIn Slide Show, type the slide number and press Enter to jump to an answer (for example 52 + Enter for B25). Each answer slide shows the main slide to return to and its number. Question index = slide 27.\r\nThe live build engine could not create clickable internal hyperlinks or hidden slides; add them in desktop PowerPoint using the link map in the build handoff before delivery, then validate them in the target viewer.\r\n\r\nINTERRUPTION PROTOCOL (from audience-and-delivery.md)\r\n1. Restate: \"Your question is whether [business concern], rather than simply whether the model works.\"\r\n2. Answer first in one sentence. State the relevant evidence and its limit.\r\n3. Ask for a decision only when appropriate; otherwise park the deeper detail with an owner and return to the current main slide.\r\nBridges: \"The short answer is no: that is a proposed control, not an observed one.\" | \"There are two questions there: whether the workflow works, and whether AI improves it. We test them separately.\" | \"I do not have a defensible unit price today. Here is the denominator and evidence the next gate must produce.\" | \"We retained the five responsibilities and changed the autonomy.\" | \"That would change the authority boundary; it needs a separate decision.\"\r\nDo not say a decision has been made because the audience did not object. A full backup explanation replaces detail on the main route; it does not add free time.\r\n\r\nFULL QUESTION LIST (slide titles B01-B27)\r\nB01 (slide 28, return S04 slide 4): Why not fix the process and hire more people instead?\r\nB02 (slide 29, return S11 slide 12): Is this replacing our housing system or integrating with it?\r\nB03 (slide 30, return S08 slide 9): Why did you not build exactly the five agents we requested?\r\nB04 (slide 31, return S15 slide 16): How do Decision Models reduce cost and response time?\r\nB05 (slide 32, return S18 slide 21): What does the technology cost today?\r\nB06 (slide 33, return S12 slide 13): How do residents retain choice, especially without digital access?\r\nB07 (slide 34, return S17 slide 20): What stops a human from rubber-stamping AI?\r\nB08 (slide 35, return S05 slide 6): Will this double retrofit delivery and capture GBP 40 million?\r\nB09 (slide 36, return S10 slide 11): What is the per-home business case and cash exposure?\r\nB10 (slide 37, return S16 slide 19): Why not deploy each agent independently?\r\nB11 (slide 38, return S15 slide 16): What proves the AI is real and useful rather than a template?\r\nB12 (slide 39, return S07 slide 8): Did you validate this with real residents and staff?\r\nB13 (slide 40, return S19 slide 22): How did the requirements become an agent-delivered backlog?\r\nB14 (slide 41, return S08 slide 9): Is this actually agentic if so much is deterministic?\r\nB15 (slide 42, return S21 slide 24): What exactly must happen before a pilot or production decision?\r\nB16 (slide 43, return S17 slide 20): What happens if the model, cloud or deployment fails?\r\nB17 (slide 44, return S20 slide 23): When can we go live and who owns the next step?\r\nB18 (slide 45, return S22 slide 25): Can you demonstrate a new live action right now?\r\nB19 (slide 46, return S16 slide 19): Where do sensors fit and can AI diagnose damp or mould?\r\nB20 (slide 47, return S14 slide 15): Why Azure instead of M365, Power Platform or buying a product?\r\nB21 (slide 48, return S17 slide 20): How do you prevent hallucinations and prompt injection?\r\nB22 (slide 49, return S16 slide 19): Can customer data leave the UK or train a provider's model?\r\nB23 (slide 50, return S12 slide 13): How will you know this is fair and accessible?\r\nB24 (slide 51, return S03 slide 3): How will you keep policy, law and funding rules current?\r\nB25 (slide 52, return S18 slide 21): What is your Tokenomics unit and can the AI bill run away?\r\nB26 (slide 53, return S18 slide 21): Why not cache every answer and route everything to the cheapest model?\r\nB27 (slide 54, return S18 slide 21): What stops chat and agent sprawl multiplying hidden calls?\r\n",
+      "replacements": [
+        {
+          "id": 25767,
+          "from": "Why Azure, not M365, Power Platform or buy?",
+          "to": "Why Fabric later? Value, cost and alternatives",
+          "box": [0.6, 3.02, 5.8667, 0.33]
+        },
+        {
+          "id": 21070,
+          "from": "How do Decision Models cut cost and latency?",
+          "to": "When does Decision 1 beat simpler rules?",
+          "box": [0.6, 4.98, 5.8667, 0.33]
+        }
+      ]
     },
     {
       "number": 28,
@@ -1537,6 +2411,7 @@
       ],
       "revised_notes": [
         "B19 | Where do sensors fit, and can AI diagnose damp or mould?",
+        "LATER ACTUAL OBSERVATION: on 29 October, a bounded existing-hub reconciliation succeeded with metrics-only diagnostics. Missing operator registry permission and the unapproved custom receive adapter still block live-to-SQL. This narrow real exercise does not prove the full source-only private Event Hub route, credential lifecycle or whole live acceptance. No Azure or sensor operation was performed by this presentation task.",
         "SHORT ANSWER: No diagnosis. The source design admits bounded synthetic observations and can request accountable human review. Reports from residents bypass this analytics route and go directly to the independent human safety service.",
         "UPDATED ROUTE: exact synthetic X.509 device binding -> IoT Hub Basic B1/one unit -> custom private Event Hub with Hub-only Data Sender -> keyless receiver -> API validation and SQL admission/replay/DQ -> human review. Event Hubs alone was not selected as the device identity boundary; the adapter serves the separate private keyless-consumption requirement.",
         "WHY NOT STANDARD OR A STREAMING ESTATE: this exercise needs one-way intake, not remote device commands, twins, DPS or device-management automation. Tier or Eventhouse/Eventstream additions need their own workload, cost and control justification. No device provisioning, credential issue or paid run is authorised by a diagram.",
@@ -1759,6 +2634,7 @@
       ],
       "revised_notes": [
         "B20 | Why this platform now, and when would Microsoft Fabric add value?",
+        "CURRENT MAIN-STORY NAVIGATION: Fabric is S13/page 14; the input-preparation bridge is S14/page 15. The retained Topic button still targets page 15, not the new Fabric page. Type page 14 deliberately when returning to the Fabric opportunity. The question index now advertises Fabric value, cost and alternatives. Existing fixed links are not dynamic caller return.",
         "SHORT ANSWER: keep the API, core domain logic and Azure SQL as operational authority. Fabric has a credible conditional role as read-only analytics, not as the programme's transaction, consent or approval engine. Reporting requirements remain in scope even when a new platform is deferred.",
         "WHY AZURE / NOT SELECTED NOW: the retained application needs controlled relational transitions, version-bound reviews, scoped evidence and auditable human decisions. Container Apps, Entra, SQL and Blob reuse the established contracts. Keep Excel and M365 as bounded inputs and assisted working routes. Low-code and a bought product remain alternatives for a real fit/integration/control-cost appraisal; no completed procurement or categorical product inferiority is claimed.",
         "WHAT FABRIC COULD ADD: reusable cross-source portfolio history, shared business measures, repeatable extracts and stakeholder reporting. Data Factory could help recurring heterogeneous extracts; a small OneLake/semantic-model path could reduce repeated preparation across reports. Eventhouse/Eventstream need a distinct retained time-series or latency question, not automatic inclusion. The 43.8 million reconciled synthetic daily observations make historical analysis credible, but prove neither SQL inadequacy nor F2 sufficiency.",
@@ -1822,5 +2698,6 @@
       "layout": "baseline",
       "notes": "B27 | What stops chat and agent sprawl multiplying hidden calls?\r\nQuestion-led appendix answer | Audience: CTO / CIO / panel | Not part of the spoken route; show only when asked.\r\n\r\nANSWER FIRST (one sentence), THEN THE STRONGEST EVIDENCE AND ITS LIMIT\r\nThe assistant design does not run an open-ended autonomous agent conversation. However, chat, memory, retries and additional model paths can multiply calls, so a finite authority allowance alone is not enough to describe cost per user request. The merged Tokenomics requirements call for complete per-call metering, request attribution, task/period monetary budgets and tested call/depth bounds with a workflow-only stop. AC-109 is the acceptance test that proves it in the pilot. No API gateway, semantic cache or hard currency stop should be drawn as implemented to satisfy this answer.\r\n\r\nON-SLIDE COPY (slides.json, verbatim)\r\n- Deterministic state graph, not an open-ended agent loop\r\n- Existing bounded authority expires and exhausts\r\n- Per-request call/depth limits are proposed, Not run\r\n\r\nVISUAL\r\nOne user request branching into a bounded call tree, all proposed request bounds marked dashed. Avoid presenting draft Big-T notation as an industry standard.\r\n\r\nRETURN\r\nReturn to S18 (slide 21), AI economics. Question index = slide 27. In Slide Show type the number and press Enter.\r\nA full backup explanation replaces detail on the main route; it does not add free time.\r\n\r\nEVIDENCE AND CLAIM CLASSIFICATION\r\nE19 | docs/reference/resources/ai-tokenomics.md; docs/capstone/pitch/tokenomics-pitch-brief.md | What Zava Forward Can Already Show; Gaps; Executive Questions; Numbers to Bring\r\n   Classification: PR #433 merged 2026-10-23 baseline: public draft framing, repository observations and proposed requirements\r\n   Supports: 6,884 tokens/five runs; partial metering; finite authority not money cap; accepted-proposal quality-floor unit; TCA and keep/revert comparison\r\n   Limit: No dated price or human-accepted denominator, no cheaper/faster/payback claim. Public Tokenomics framing is draft, not an industry standard. No internal Microsoft material is included.\r\nE09 | docs/adrs/0002-pilot-readiness-architecture.md; src/agents/README.md; src/core/src/zava_forward/core/assistants.py | Five-assistant exercise runtime and finite operator authority; proposal capture/review and token handling\r\n   Classification: Source controls and dated bounded operator observations\r\n   Supports: Five current API assistants, SQL transactions, scoped evidence, inference outside locks, finite allowances, expired/disabled denial and unreviewed output\r\n   Limit: Normal authority/scans off after bounded QA; token allowances are not currency caps or complete per-request/period budgets.\r\n\r\nEVIDENCE GUARDRAILS FOR THIS SLIDE\r\n- Finite call/token allowances and expiry are not a currency cap. Complete metering, monetary/task/period budgets and request/depth limits are proposed requirements, not observed controls.\r\n- Public Tokenomics community framing is draft - not an industry or Microsoft standard. No internal Microsoft material is used.\nNAVIGATION (PR438 correction): During an interruption, Return to caller uses Last Slide Viewed to resume the interrupted main slide. Use the separate fixed Topic button only after entry from the appendix index. PDF readers use the fixed topic link or their own Back history."
     }
-  ]
+  ],
+  "content_date": "2026-10-30"
 }

@@ -1,7 +1,7 @@
 ---
 title: Capstone Authoring Source
 description: Complete native-template and JSON editing contract, retained media and technology-decision evidence
-ms.date: 2026-10-29
+ms.date: 2026-10-30
 ms.topic: how-to
 ---
 
@@ -10,9 +10,10 @@ ms.topic: how-to
 | Input | Responsibility |
 | --- | --- |
 | [baseline.pptx](./baseline.pptx) | Immutable snapshot of the actual owner-supplied 54-slide deck at this reorganization; native layouts, sections, media, relationships and untouched content |
-| [slides.json](./slides.json) | All 54 ordered slide records and original notes; six native-layout revisions and explicit current narration corrections |
-| [assets/catalog.json](./assets/catalog.json) | Every embedded media member, retained file, SHA-256, slide usage and provenance/clearance limit |
+| [slides.json](./slides.json) | All 54 ordered records/notes, native main-story roadmap layouts, exact text/bounds corrections and explicit current narration |
+| [assets/catalog.json](./assets/catalog.json) | Captured media in `media`; official roadmap images in `additional_media`, with original SVG/PNG hashes and exact new usage |
 | [assets/media](./assets/media/) | All 36 original embedded media files, not flattened pictures of whole slides |
+| [Official product icons](./assets/official/README.md) | Fabric and Power BI source SVGs, native PNG derivatives, permitted-use guidance and archive provenance |
 | [Invoke-Capstone.ps1](../../../tools/capstone/Invoke-Capstone.ps1) | Current ExportSource, Build, Verify and native Render entry point |
 | [Native shape helper](../../../tools/cowork-native-recovery/Invoke-StoryReview.ps1) | Existing XML/native-shape functions used by the current builder; its historical standalone workflow is not the current build command |
 | [validation.json](./validation.json) | Compact delivery/verification receipt, not another build input |
@@ -30,19 +31,25 @@ and checking its `code`. Several main-story IDs have progressive build pages.
 * `layout: baseline` retains native slide geometry from the pinned template.
 * `layout: native` defines replacement content in `elements`, with retained
   header IDs in `keep_ids` and `headers`. Measurements are inches and points.
-* `layout: text` makes explicit, uniquely matched text replacements.
+* `layout: text` makes uniquely matched text replacements; optional `box`
+  changes only the identified frame bounds, not its native action target.
 * `notes` retains the captured original. When present, `revised_notes` owns
   the current notes and takes precedence; original timing lines are retained.
 * `sources` lists repository evidence required by a revision. A path is not
   proof that the underlying claim is current, approved or observed.
+* `images` references catalog asset IDs with contained placement and alternative
+  text. The builder preserves aspect ratio and verifies original/derived hashes.
+* `content_date` dates generated pitch metadata; it is not legal or provider
+  currentness verification.
 
 Keep physical slide order, native link objects, source/version labels and
 approval boundaries unless changing them is a separate explicit task.
-For a native layout beyond the revised pages, make a deliberate template
-revision and update its pin and source manifest, then repeat validation.
+New native layouts use the manifest and retained template headers. Change the
+template pin only for a deliberate structural/template revision, never merely
+because a generated content layout changes. Repeat validation for either case.
 Do not silently re-export from the delivery file or replace the source JSON
 with `ExportSource`: that initialization action starts from the baseline,
-not the current five-slide revision.
+not the current roadmap and prior content revisions.
 
 Edit media only with a documented origin and reuse right. Update its catalog
 hash deliberately and rerender every affected page. Asset extraction preserves
@@ -56,7 +63,8 @@ Use the [root build commands](../README.md#rebuild). Every run writes to an
 explicit external directory and checks:
 
 * The pinned template, complete ordered manifest and every media input
-* Exact expected package bytes, including unchanged relationships and themes
+* Exact expected package bytes: 293 captured baseline members plus two declared
+  roadmap PNG members; only declared image relationships change, not action targets
 * All 54 nonempty note blocks and retained timing lines
 * Native navigation actions and unique shape IDs
 * The six protected cost slides on pages 6, 11, 21, 32, 36 and 52; notes may
@@ -72,13 +80,28 @@ changed pages and relevant neighbours, fix findings, and rerender. The current
 technology-page review had seven findings corrected. A later reader review
 corrected inherited legal/forecast, navigation and demo-fallback passages and
 opening inconsistencies. The legal-status page is the sixth visual revision.
-The final export has zero revised-text overflow and 264 inherited bound warnings;
+The 29 October export had zero revised-text overflow and 264 inherited warnings.
+The 30 October roadmap export also has zero revised overflow and 234 inherited warnings;
 they are not erased or described as accessibility acceptance.
 
 See the [dated review](./review-2026-10-29.md) for original findings and
 qualitative coverage of all 20 criteria. Cost-slide graphics and arithmetic
 remain unchanged; the note exceptions on pages 32, 36 and 52 correct only
 false Last Slide Viewed instructions. The builder checks that exact exception.
+
+The [30 October roadmap review](./review-2026-10-30.md) preserves the later
+visual/story findings, corrections and focused checks. Main page 14 promotes
+Fabric's value, delay and unlock; page 15 covers connectors/extraction; page
+23 groups conditional improvements and page 24 states the planning/execution
+approval sequence. The [full proposal register](./roadmap-recommendations.md)
+maps all 25 reviewed families into 22 grouped dispositions. This is not a
+commitment to every option, a purchase or a new approved product requirement.
+
+Captured `media.slides` records describe baseline usage; retained media can
+remain necessary to reproduce the pinned baseline even when a revised layout
+no longer displays it. `additional_media.slides` is verified against actual
+generated relationships. Original 36 inputs remain unchanged. Two official
+icons add two package members and four retained SVG/PNG source files.
 
 Build and Verify also generate current main-route speaker notes and appendix
 Q&A under the run's `pitch/` folder. Publish the matching PPTX/PDF and those

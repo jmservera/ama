@@ -1,7 +1,7 @@
 ---
 title: Capstone Demo and Recovery Runbook
 description: Current v2 same-home story, under-two-minute hook, ten-minute route and honest live/evidence preflight
-ms.date: 2026-10-29
+ms.date: 2026-10-30
 ms.topic: how-to
 ---
 
@@ -27,9 +27,10 @@ model, resident-data or workflow mutation is authorized by this runbook.
 | L: live exercise | Exact chosen build, identity/role/case denial, SQL persistence, permitted task and effective finite authority all preflighted | "This is the preflighted Azure exercise using constructed data; I will show only the authorized case and actions." |
 | U: unavailable | Neither route can support an inspectable explanation | "The demo is unavailable. I will explain the intended control and missing evidence, not simulate a pass." |
 
-Earlier technical observations do not make route L ready now. The last
-recorded scoped spending authority expired on 25 October; do not activate
-anything under that expired approval. Do not repair infrastructure, relax
+Earlier observations do not make route L ready now. The 25 October window
+cannot authorize a new run; later narrow exercise scopes do not automatically
+cover the demo, roadmap or Fabric. Confirm current task-specific authority.
+Do not repair infrastructure, relax
 private access or discover a new live feature in front of the audience.
 
 ## Executive Hook
@@ -78,6 +79,9 @@ officer routes stay available; login is not works consent.
 
 ## Technology Questions
 
+Keep the demo on one home and an accountable next action, not a platform tour.
+Main pages 14/15 explain optional Fabric and input preparation; page 23 shows
+the conditional roadmap and page 24 separates planning from execution approval.
 Use page 31 for rules versus Decision 1 versus generation, page 37 for the
 shared API/SQL/Blob decision, page 46 for the source-only IoT route and page 47
 for conditional Fabric analytics. The updated sensor route includes the
