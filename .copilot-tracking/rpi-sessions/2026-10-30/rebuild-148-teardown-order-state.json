@@ -6,8 +6,8 @@
     "task_slug": "rebuild-148-refresh"
   },
   "mode": "automatic",
-  "active_phase": "Review",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-30/rebuild-148-teardown-order-research.md",
@@ -42,12 +42,30 @@
       "decision": "One independent post-implementation Review executed: Complete / Conformant. No findings. Source and requested local validation accepted at the bounded diff against abb34dc7; local commit administrative closeout remains.",
       "status": "recorded",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-30/rebuild-148-teardown-order-review.md"
+    },
+    {
+      "decision": "Implementation and original dated RPI evidence committed locally in 574954e0 with Conventional Commit, required Copilot trailer and authenticated privacy-safe author/committer email. All bounded plan tasks complete. No push or Azure access.",
+      "status": "recorded",
+      "evidence": "Actual successful git commit result; plan P02-T02 and dated changes closeout. Subsequent status-only evidence is not a new source candidate or repeated Review."
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Persist the reviewed implementation and original dated RPI evidence in a local Conventional Commit, then record completed task and commit proof. No source changes, repeat Review, push or Azure access."
+    "action": "Persist this status-only closeout locally, then await explicit follow-up selection, Stop automatic session or Switch to manual mode. No child selected; no further source changes, Review, push or Azure access. Publication requires separately authorized fresh complete gate and existing hosted/human approval."
   },
-  "prioritized_follow_ups": []
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Original CLI failure-evidence preservation",
+      "rationale": "Known inherited Medium defect; directly improves inspectable partial state and is independent of Azure or publication.",
+      "evidence": ".copilot-tracking/rpi-sessions/2026-10-30/rebuild-148-refresh-state.json; original 2026-10-27 Review RV-001 remains open and outside this correction."
+    },
+    {
+      "rank": 2,
+      "task": "Coordinator clean-input complete gate and publication prerequisites",
+      "rationale": "Required only before separately authorized publication; current task forbids push. Fresh exact-head/current-base gate and hosted/human controls remain unmet by these local checks.",
+      "evidence": ".copilot-tracking/rpi-sessions/2026-10-30/rebuild-148-refresh-state.json; inherited full-gate ignored-inputs and hosted/human blockers."
+    }
+  ]
 }
