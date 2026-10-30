@@ -11,7 +11,7 @@ Details: .copilot-tracking/details/2026-10-30/rubric-src-198-sync-phase-details.
 
 Full plan in scope. Research Complete / Ready. Independent critique Complete /
 Pass, no findings. P01/P02 and all task markers complete. One independent Review
-executed Complete / Defects found, one Low RV-001; local commit pending.
+executed Complete / Defects found, one Low RV-001; local candidate committed.
 Focused checks passed; inherited rubric acceptance remains unmet.
 No push, full API suite, Azure action or legacy/application change authorized.
 
@@ -165,3 +165,26 @@ Other residual work remains distinct: rubric-owner inherited failures/runtime,
 coordinator publication/hosted evidence, and owner historical #198 gaps.
 Parent now finalizes local persistence and metadata only. The Review is
 worktree-bound, not an exact-final-head publication assessment or approval.
+
+## Local Persistence and Final Handoff
+
+| Command | Result |
+| --- | --- |
+| `identity=$(gh api user --jq '"\(.id)+\(.login)@users.noreply.github.com"') && git config --local user.email "$identity"` immediately before commit | Passed; privacy-safe authenticated address used for both author and committer |
+| Explicit `git add` of three current docs and seven dated RPI artifacts, then `git diff --cached --check` | Passed; ten task-owned files only |
+| `GIT_AUTHOR_EMAIL="$identity" GIT_COMMITTER_EMAIL="$identity" git commit -m "docs(rubric): synchronize PR 507 with current main" -m "Refs #198" -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"` | Passed; 2a203c13386de52d7dff008c37d8dd17e6d9c3a4, ten files; original critique and Review retained |
+| `git log -1 --format=... && git status --short && git merge-base --is-ancestor origin/main HEAD` | Passed; compliant author/committer/trailer, clean worktree, integrated main remains ancestor |
+| `git diff origin/main -- docs/architecture/cutover-evidence-pack.md docs/reference/README.md docs/reference/log.md \| sha256sum` after commit | Passed; frozen hash remains 8059b4aa91f469ff735c33c620bd23cc1b529d108a5737a08d862b53f0061883 |
+
+This final command-result/state bookkeeping is persisted in an additional
+evidence-only Conventional Commit with Refs #198 and the required trailer.
+Its exact final SHA is available in Git history, not guessed in a
+self-referential artifact. No non-tracking change, same-task defect correction
+or repeat Review follows the independent assessment.
+
+Requested full RPI execution and local persistence are complete. Automatic
+session remains running at Follow-up with no child selected; no further source
+work begins here. Outcome remains Defects found, RV-001 Low, with inherited
+rubric/runtime and coordinator publication limitations explicit. No push,
+Azure action, full API suite, full publication receipt, fresh hosted success,
+remote mergeability or whole-issue acceptance is claimed.

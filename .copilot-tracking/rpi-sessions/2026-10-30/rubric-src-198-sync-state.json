@@ -39,6 +39,11 @@
       "decision": "One independent Review executed Complete / Defects found; frozen worktree boundary assessed, one Low RV-001 audit-path defect routed to later implementation. No same-task correction or repeat Review.",
       "status": "recorded",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-30/rubric-src-198-sync-review.md"
+    },
+    {
+      "decision": "Local candidate and original dated RPI evidence committed with authenticated noreply identity, Refs #198 and required Copilot trailer; clean worktree and frozen diff verified. Final bookkeeping is evidence-only.",
+      "status": "completed",
+      "evidence": "2a203c13386de52d7dff008c37d8dd17e6d9c3a4; .copilot-tracking/changes/2026-10-30/rubric-src-198-sync-changes.md Local Persistence and Final Handoff"
     }
   ],
   "blockers": [
@@ -55,7 +60,7 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Parent finalizes authorized local commit/metadata; no child task selected and no push authorized."
+    "action": "Coordinator owns publication gates, authorized push and fresh hosted checks; RV-001 and other ranked residual work require later selection. No child selected or push authorized here."
   },
   "prioritized_follow_ups": [
     {
