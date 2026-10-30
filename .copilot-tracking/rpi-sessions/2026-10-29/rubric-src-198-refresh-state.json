@@ -1,0 +1,86 @@
+{
+  "task_id": "pr-507-refresh-2026-10-29",
+  "task_slug": "rubric-src-198-refresh",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "blocked",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-29/rubric-src-198-refresh-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-29/rubric-src-198-refresh-plan.md",
+    "details": ".copilot-tracking/details/2026-10-29/rubric-src-198-refresh-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-29/rubric-src-198-refresh-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-29/rubric-src-198-refresh-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-29/rubric-src-198-refresh-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute all four phases for this bounded task; rebase on origin/main; preserve main rubric/scenario files; commit locally without pushing or Azure changes.",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-29; explicit phase advancement supplied for the complete loop, no ongoing automatic mode requested."
+    },
+    {
+      "decision": "Research executed, Ready; one independent plan critique executed Complete / Pass with no findings.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-29/rubric-src-198-refresh-plan-critique.md"
+    },
+    {
+      "decision": "Rebase and all implementation markers complete; core/API lint, format, typing and 12 focused tests passed. Main-owned rubric suite has 18 failures and seven runtime skips.",
+      "status": "complete-with-validation-limitations",
+      "evidence": ".copilot-tracking/changes/2026-10-29/rubric-src-198-refresh-changes.md"
+    },
+    {
+      "decision": "Single independent Review executed Complete / Not accepted; no new in-scope source/documentation defect; RV-001 through RV-005 routed later.",
+      "status": "complete-not-accepted",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/rubric-src-198-refresh-review.md; frozen document diff db7beb113cb2306bc3839ab04b8a4427990d99017c26a6978288d90cc27e7251"
+    },
+    {
+      "decision": "Local rebased candidate and all original dated RPI evidence committed; no push or Azure resource changes.",
+      "status": "persisted",
+      "evidence": "ca82058f8127c8a53d751ddd06128f03a817e32b; final bookkeeping follows as a separate local commit."
+    }
+  ],
+  "blockers": [
+    {
+      "id": "inherited-rubric-suite",
+      "summary": "18 failures and seven runtime skips in authoritative main rubric inputs; no complete-suite green claim.",
+      "resolution": "Rubric owner handles separately; do not violate this task's explicit main-copy policy."
+    },
+    {
+      "id": "publication-and-hosted-ci",
+      "summary": "No final publication receipt or fresh hosted CI; pushing is explicitly prohibited.",
+      "resolution": "Coordinator owns required exact-head publication gates and authorized push; hosted CI follows."
+    }
+  ],
+  "next_action": {
+    "phase": "Research",
+    "action": "Coordinator resolves acceptance evidence under RV-001, coordinates separately authorized inherited-rubric repairs, then runs full exact-final-HEAD publication gate and fresh hosted checks after authorized push. No same-task implementation or repeat Review."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator publication gate and fresh hosted checks",
+      "rationale": "Required before the unpushed local candidate can be considered remotely mergeable/CI-green.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/rubric-src-198-refresh-review.md RV-001"
+    },
+    {
+      "rank": 2,
+      "task": "Repair inherited rubric tests in a separately authorized workstream",
+      "rationale": "Main-copy policy prevents local repairs despite 18 current inherited failures.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/rubric-src-198-refresh-review.md RV-002"
+    },
+    {
+      "rank": 3,
+      "task": "Owner disposition of historical scoring and registry sequencing gaps",
+      "rationale": "These unchanged issue-198 acceptance questions are not resolved by rebasing.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/rubric-src-198-refresh-review.md RV-004 and RV-005"
+    },
+    {
+      "rank": 4,
+      "task": "Provide verified pinned gh-aw runtime and execute actual runtime cases",
+      "rationale": "Seven missing-runtime skips remain distinct from passing deterministic tests.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/rubric-src-198-refresh-review.md RV-003"
+    }
+  ]
+}

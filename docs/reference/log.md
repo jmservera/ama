@@ -8202,3 +8202,84 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * No company figures, financial approvals, Azure changes, private datasets or
   new AI authority are introduced. All three issues remain Refs; engineering
   evidence is not whole-issue or operational acceptance.
+
+## [2026-10-27] query | Rubric src counting and migration score reconciliation
+
+* Refs #198. Added the
+  [dated rubric reconciliation](../architecture/cutover-evidence-pack.md#rubric-src-counting-reconciliation-2026-10-27)
+  and updated the index and rubric guide. Preserved original sign-off outcomes
+  and every earlier log entry.
+* Verified src package/tests/manifest/Dockerfile coverage and excluded
+  vendor/private/build paths. #295/#300/#302 already removed legacy includes;
+  no production registry, rubric_version, score or workflow/check name changed.
+* Recorded 47/100 original baseline and carried migration snapshots separately
+  from #499's actual 77/100 vs 77/100 retirement comparison. No attributable
+  migration gain, fresh per-migration assessment or retroactive ordering is
+  claimed. Re-evidence routes identify seven criteria and their source PRs.
+* Re-assessed historical 19 failures: current baseline 18 failed/355 passed/
+  seven skipped; after migration-related test repairs, one unrelated
+  deck-selection failure/374 passed/seven missing-runtime skips remain.
+  Thirty-one migration-targeted checks pass. No full gate, cloud, private data
+  or scorer dispatch. Missing historic comparisons and prescribed sequence
+  remain explicit acceptance gaps; this delivery references rather than closes.
+
+## [2026-10-29] update | PR #507 main integration, Refs #198
+
+* Rebased onto main `5653547507f3056f09a726a18516237728da5e5b`,
+  retaining both sides of the cut-over evidence pack, KB index and this
+  append-only log. Earlier entries and original RPI outcomes remain unchanged.
+* Kept main's complete rubric tree and scenario manifest at the owner's
+  direction. Qualified the reconciliation and index so original rubric
+  repairs and test counts are not presented as the rebased candidate's delta.
+* Corrected the index's duplicate date metadata while retaining its current
+  date. No application source, workflow, score, Azure resource or private
+  dataset changed; no push, issue acceptance or hosted-CI result is claimed.
+
+## [2026-10-29] update | PR #507 conflict rebase, Refs #198
+
+* Rebased onto main `356a3cfbaa2cd63a6fbf80e87e11a29cacaaf4c7`.
+  Preserved main's entire log prefix, both original #198 append entries,
+  independent index updates and all fourteen prior RPI artifacts unchanged.
+* Updated the existing
+  [integration qualification](../architecture/cutover-evidence-pack.md#main-integration-qualification-2026-10-29)
+  with the later base and fresh local outcomes. Main's entire rubric tree and
+  scenario manifest are retained byte-for-byte; no application, workflow,
+  Azure resource or private-data change was made.
+* Core/API lint, format, typing and twelve focused tests passed, including
+  scenario source-pin validation. The inherited rubric suite still has
+  18 failures and seven missing-runtime skips; this is not CI-green evidence.
+  No full API suite, full publication gate, push or hosted run was performed.
+
+## [2026-10-30] update | PR #507 current-main synchronization, Refs #198
+
+* Rebased onto main `91e890e07af036263316c153cbc7ceff780cdaa2`, then onto
+  concurrently updated `ffd8f35e63b24905b9aeb937dbf2a7fe9968747f`, retaining
+  main's complete log prefix, every original topic entry and independent index
+  additions, including monitoring, finance and existing-hub reconciliation.
+* Added the [current synchronization qualification](../architecture/cutover-evidence-pack.md#current-main-synchronization-2026-10-30)
+  and indexed it without rewriting earlier dated results or acceptance gaps.
+  Main's rubric and scenario manifest remain authoritative and unchanged.
+* No application, workflow, infrastructure or legacy code changed. No Azure
+  resource operation, push, fresh hosted result or issue acceptance is claimed.
+  Dated RPI artifacts retain the local commands, results and independent Review;
+  publication and hosted checks remain coordinator-owned.
+* Fresh core/API lint, format, typing and twelve focused tests pass, as do
+  twenty-five migration tests. Unchanged main rubric inputs still yield
+  18 failures, 355 passes and seven runtime skips. Prepare reports no scored
+  artifact change; no full API suite or publication gate was run.
+
+## [2026-10-30] update | PR #507 review evidence correction, Refs #198
+
+* Corrected the existing
+  [rubric reconciliation](../architecture/cutover-evidence-pack.md#pr-507-review-correction-2026-10-30)
+  and indexed the distinction between the original candidate and integrated
+  documentation-only delta, including their different historical frozen diffs.
+* Qualified discarded fixture/guide claims and acceptance rows in place.
+  Original 374/1/7 and 31 fixture passes remain historical; integrated results
+  are 355 passed, 18 failed and seven runtime skips, not a green suite.
+* Replaced the unregistered rubric-guide B6 route with scored `src/README.md`
+  in proposed later PR `docs(src): strengthen B6 navigation and evidence`,
+  only when that PR actually changes the artifact. No score gain, new scored
+  evidence, historical acceptance or remote metadata update is claimed.
+* Prepared the replacement PR description separately for owner application.
+  No rubric, test, source, workflow or score edits; local-only commit, no push.
