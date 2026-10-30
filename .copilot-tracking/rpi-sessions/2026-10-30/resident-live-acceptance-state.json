@@ -1,0 +1,75 @@
+{
+  "task_id": "resident-live-acceptance-2026-10-30",
+  "task_slug": "resident-live-acceptance",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/resident-live-acceptance-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/resident-live-acceptance-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/resident-live-acceptance-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-10-30/resident-live-acceptance-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/resident-live-acceptance-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/resident-live-acceptance-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the explicitly requested full RPI loop autonomously, resident-only; commit locally, no push.",
+      "status": "confirmed",
+      "evidence": "Owner request 2026-10-30; clean existing chore/resident-acceptance-1030 branch, no prior PR."
+    },
+    {
+      "decision": "Use real CSRF form, trim credentials only in automation, at most two attempts; stop live work on HTTP 401.",
+      "status": "confirmed",
+      "evidence": "Owner request; no vault, Azure, credential output, screenshots, traces, video or HAR."
+    },
+    {
+      "decision": "Research executed, Planning Readiness Ready. One critique executed, original Revise; PC-001 rejected as inapplicable parent restriction, PC-002/003 applied directly.",
+      "status": "ready",
+      "evidence": ".copilot-tracking/plans/2026-10-30/resident-live-acceptance-plan.md; original critique preserved."
+    },
+    {
+      "decision": "One actual real-form login returned 200; authenticated resident checks executed. Three scoped criteria proven, sixteen whole criteria incomplete/outside scope. No actual AI generation observed.",
+      "status": "executed",
+      "evidence": ".copilot-tracking/changes/2026-10-30/resident-live-acceptance/evidence.json; exact script hash and measurable observations verified."
+    },
+    {
+      "decision": "One independent original Review executed; outcome Residual work. Findings RV-001 Medium, RV-002/003/004 Low; routed later, no current-task repair or repeat Review.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-30/resident-live-acceptance-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Finalize local-only commit and nonqueued full gate attempt; then await explicit later-work selection, Stop or manual mode."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Design missing resident live evidence for pinned scrolling, exact loading/errors and actual AI labels.",
+      "rationale": "Closest bounded acceptance gap; high value before wider employee work. Model/server evidence needs separate authority, not enablement.",
+      "evidence": "Review RV-001; 550-01/02/04/06/07/09 remain compound Unmet."
+    },
+    {
+      "rank": 2,
+      "task": "Run separately authorized employee shared-chat, expanded-map and single-case acceptance.",
+      "rationale": "Covers most outside-resident obligations but depends on separate identity/scope; no resident proxy proof.",
+      "evidence": "Review RV-002; issues 551/552 and both-site obligations."
+    },
+    {
+      "rank": 3,
+      "task": "Scope human accessibility acceptance and missing AT/zoom/contrast/touch evidence.",
+      "rationale": "Essential human-quality gate beyond successful browser basics; requires the appropriate human/test environment.",
+      "evidence": "Review RV-003; no conformance or human approval established."
+    },
+    {
+      "rank": 4,
+      "task": "If historical replay is required, retain exact source versions before future automation amendments.",
+      "rationale": "Low conditional provenance leverage; final run already has exact hash binding and no replay is needed now.",
+      "evidence": "Review RV-004; original timeout source differs from final script, limitation retained."
+    }
+  ]
+}
