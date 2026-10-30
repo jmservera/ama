@@ -6,6 +6,44 @@ ms.date: 2026-10-30
 ms.topic: reference
 ---
 
+## Employee acceptance identity check (#570)
+
+For Entra staff, `/api/me.user.tid` and `oid` identify the person. The assigned
+app role controls access; roster binding is optional business metadata.
+`account.email`, `display_email` and names are display-only, and an unbound
+`user.email` is a derived `@entra.invalid` key, not the sign-in UPN.
+`account.email` may be empty when email-like claims are absent or multiple.
+Do not provision a roster row or change application mapping to fix an
+acceptance runner's display-email comparison.
+
+Future authorized acceptance runners should import `BINDING` from
+`checks.employee_identity_check` (run from this project directory) and use
+`page.evaluate(BINDING, expected)`. `expected` must contain independently
+verified tenant `tid` and account object `oid` GUIDs, supplied by the
+owner/identity administrator before attempting sign-in, never copied from
+the observed response. Optional `email` supplies a diagnostic comparison only.
+The predicate requires the expected IDs, trusted-proxy provider, Entra schema,
+ProgrammeManager app/effective role and strict `view_only=false`. It returns
+only booleans, including explicit transport/JSON failure flags.
+`displayEmailMatches` and `rosterBound` never grant or deny admission.
+Fetch failures, redirects, non-JSON/status failures and malformed expectations
+fail closed. It has no sign-in entry point and consumes no attempt itself.
+
+The recorded 2026-10-30 failure proves a failed display-email comparison,
+not whether the requested account actually signed in or which display claim
+was missing/different. Case was already normalized and roster binding was not
+an admission gate. The offline regression demonstrates the faulty runner
+expectation; it does not demonstrate an application mapping defect or
+retrospectively establish the historical identity.
+
+Next live attempt: obtain explicit owner authorization and a fresh finite
+attempt budget, independently verify expected tenant/object IDs, and integrate
+this predicate into a fresh guarded runner/manifest with capture-free boolean
+evidence. The previous two employee slots remain consumed; do not replay their
+immutable runners or reuse historical sessions. Only after strict identity
+admission should the runner exercise employee chat/skill switching, map
+filters and the case view. These live criteria remain unverified here.
+
 ## Compact case journey (#552)
 
 The six workflow steps retain text labels and status words alongside the exact
