@@ -164,7 +164,7 @@ Focused regressions:
 
 ```bash
 pwsh -NoLogo -NoProfile -File tools/capstone/Test-NativeShapes.ps1 -RepoRoot "$PWD"
-"$Run/venv/bin/python" -m pytest -q tools/capstone/test_render_preview.py
+PYTHONDONTWRITEBYTECODE=1 "$Run/venv/bin/python" -m pytest -p no:cacheprovider -q tools/capstone/test_render_preview.py
 node docs/capstone/source/diagrams/discovery-journey/build-resident-journey.mjs --check
 ```
 
