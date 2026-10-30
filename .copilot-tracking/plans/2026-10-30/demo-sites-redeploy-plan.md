@@ -97,7 +97,7 @@ Feature result matrix distinguishes live pass, static availability and blocked.
 <!-- rpi:task id=P03-T01 -->
 #### [ ] P03-T01: Live curl/Playwright checks and invariant readback
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: One independent Review and local evidence commit
+#### [x] P03-T02: One independent Review and local evidence commit
 
 ## Current Work Disposition
 
@@ -108,7 +108,7 @@ Feature result matrix distinguishes live pass, static availability and blocked.
 | P02-T02 | SQL initialization stopped before any job/schema write |
 | P02-T03 | Both app rollouts stopped before write; no new revision |
 | P03-T01 | Public curl/browser and full invariant readback pass; named authenticated UX blocked/unavailable |
-| P03-T02 | Independent Review and local-only persistence pending |
+| P03-T02 | Independent Review Complete / Not accepted; original eight-file evidence committed locally as e05183b6, no push |
 
 ## Test Ownership and Targets
 

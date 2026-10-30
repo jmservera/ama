@@ -139,3 +139,13 @@ to infer live-manifest retention; no deletion/write was attempted.
 Source unchanged after final fetch. Plan, changes and state agree on Partial.
 Ready for one independent Review of this blocked boundary, not deployment
 acceptance. Recovery/SQL/ACR restoration failure paths unexercised.
+
+## Local Persistence
+
+P03-T02 complete: original independent Review Complete / Not accepted and
+eight-file original evidence committed locally as
+e05183b637d63def9616c74e3fc2a96aab03b98e. Exact required trailer, Refs-only
+message and privacy-safe author/committer verified; worktree clean immediately
+after commit. This parent status closeout is a separate commit, not an amend.
+P01/P02/P03 overall remain Partial/Blocked; no delivery or publication acceptance
+is inferred. Original critique/Review unchanged, no post-Review implementation.
