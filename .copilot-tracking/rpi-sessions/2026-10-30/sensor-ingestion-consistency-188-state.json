@@ -1,0 +1,61 @@
+{
+  "task_id": "188",
+  "task_slug": "sensor-ingestion-consistency-188",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/sensor-ingestion-consistency-188-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/sensor-ingestion-consistency-188-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/sensor-ingestion-consistency-188-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/sensor-ingestion-consistency-188-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/sensor-ingestion-consistency-188-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/sensor-ingestion-consistency-188-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute research, plan, implement, review in order; commit locally only.",
+      "status": "confirmed",
+      "evidence": "Explicit caller request 2026-10-30"
+    },
+    {
+      "decision": "Research executed/Ready; one critique executed with original Revise verdict. PC-001/003 applied, PC-002 rejected against explicit caller lock/external evidence direction.",
+      "status": "implementation-ready",
+      "evidence": ".copilot-tracking/plans/2026-10-30/sensor-ingestion-consistency-188-plan.md"
+    },
+    {
+      "decision": "One independent original Review executed: Complete, outcome Residual work. No implementation defects; RV-001 live evidence and RV-002 subsequent candidate/publication validation routed separately.",
+      "status": "review-complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-30/sensor-ingestion-consistency-188-review.md"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "RV-001",
+      "summary": "Actual Hub/Azure SQL evidence remains unproven under explicit no-Azure authority.",
+      "resolution": "Coordinator/owner separately establishes #110 readiness, authority, budget and live evidence."
+    },
+    {
+      "id": "RV-002",
+      "summary": "Publication remains coordinator-owned and requires committed-candidate full gate, current-base exact-head assessment and hosted/human approval.",
+      "resolution": "Inspect external final gate result and verify its receipt against fetched current main before any separately authorized push."
+    }
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Local commit and full gate continuation; preserve sealed candidate and inspect external result at /home/azureuser/.copilot/session-state/b669b987-2355-43d4-99ca-bf7c5c0215a9/files/rpi-188-final. Coordinator verifies receipt/current main/exact head and owns publication. No push or child task."},
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator verifies committed-candidate gate and exact-head/publication prerequisites.",
+      "rationale": "Required before publication; preserves exact candidate and original evidence.",
+      "evidence": "RV-002"
+    },
+    {
+      "rank": 2,
+      "task": "Separately authorized live Hub-to-Azure SQL handover exercise after #110 readiness.",
+      "rationale": "Only actual live evidence can substantiate remaining whole-issue criteria; forbidden in this local task.",
+      "evidence": "RV-001"
+    }
+  ]
+}

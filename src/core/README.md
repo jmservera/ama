@@ -2,7 +2,7 @@
 title: Zava Forward core library
 description: Domain, store, ledger, law store, chat storage and synthetic-data documentation for the core project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-29
+ms.date: 2026-10-30
 ms.topic: reference
 ---
 
@@ -236,8 +236,13 @@ first_slot=0, end_slot=None)` describes a finite original model window.
 The complete original random sequence is generated before selecting the
 half-open nominal slot interval, so nonzero and odd suffixes reproduce the
 same values/IDs as the existing clean backfill. Do not restart the seed at
-handover. This slice supports the labelled synthetic seasonal model only;
-climate-backed composed histories and measures are not silently substituted.
+handover. The default remains the labelled synthetic seasonal model.
+For composed backfill parity, explicitly pass the same `climate=` adapter and
+`measures=` tuple to both `replay` and `descriptor` as to the backfill writer.
+This reuses its full-origin household and dated retrofit projection; it never
+restarts model state at the handover. The climate adapter must supply the complete
+original window. Composed descriptors include climate manifest, model parameters
+and sorted dated-history hash; these match the composed backfill manifest.
 `descriptor(selection, spec)` records the original register `stock_sha256`
 separately from `selected_stock_sha256`, the digest of the validated canonical
 selected model inputs, plus selected home IDs/count, granted count, seed, origin,
@@ -250,6 +255,37 @@ slot cadence, outside the observation. Publishers use this time for scheduling,
 not the fault-injected observation timestamp; duplicates retain the same nominal time.
 The descriptor version is `synthetic-stream-v2`; reading IDs/bytes are unchanged.
 Keep descriptors and selected-home evidence restricted, not ordinary telemetry.
+
+### Synthetic handover consistency (#188)
+
+`synthetic.sensor_consistency.report(observed, reference, handover=...,
+cadence_minutes=480)` compares a joint queried window with an independently
+generated continuous same-input reference. Both inputs use the canonical
+13-field observation contract. Each home has exactly one sensor; every expected
+UTC slot, stable reading ID, unit, schema and provenance field must match.
+There must be at least two samples on each side per home. Malformed, empty,
+duplicate, incomplete or irregular series raise explicit errors, not a pass.
+Use explicit SQL observation queries plus trusted persisted control units, not
+relabelled incoming units, when constructing the observed input.
+
+The JSON-compatible result includes `passed`, declared tolerances and per-home
+before/after counts, channel means and population standard deviations.
+`Tolerance(point=0, mean_step=0, stddev=0)` is the default for each of the
+`temperature=` and `humidity=` arguments. All limits are inclusive, finite and
+nonnegative, in C or RH percentage points; decimal arithmetic preserves decimal
+point/mean boundary comparisons. Mean-step error subtracts the reference's
+expected step, while point and per-side standard-deviation errors prevent
+offset/variance cancellation. This detects ingestion discontinuity without
+calling legitimate weather or dated works a seam. A numeric failure sets
+`passed=False` with individual metric checks; it does not invent replacement
+readings or approve sensor accuracy.
+
+The constructed four-day proof uses two granted homes (including a long stock
+ID), changing outdoor weather, works at handover, actual CSV bytes and the shared
+consumer. It retains twelve readings/home at three/day and replays all 24 after
+reopening. See the [API SQL proof](../api/README.md#synthetic-handover-sql-proof-188).
+This is model/ingestion parity, not a real-sensor statistical assessment, live
+Hub run, actual Azure SQL proof, physical calibration or whole-issue acceptance.
 
 The generator limits actual granted homes to 1..100 and original
 homes-times-slots to 100,000 before model generation, independently of summary

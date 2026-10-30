@@ -1415,6 +1415,36 @@ transport, actual credentials/alerts, Azure SQL restart or whole PRD AC-066.
 The [issue evidence and deferrals](../../docs/reference/research/iot-sensor-analytics-research-plan.md#bounded-streaming-engineering-2026-10-27-refs-110-184)
 keep every child and live gate visible.
 
+### Synthetic handover SQL proof (#188)
+
+`tests/test_sensor_consistency.py` writes composed backfill CSV, admits its
+prefix through #110, then decodes the replay suffix using actual SDK `EventData`
+and exact device bindings before the same SQL append. Ordered queries return
+both phases per canonical home. The strict core report checks all 24 values
+against the continuous writer reference with zero C/RH point, mean-step and
+population-standard-deviation error tolerance. After reopening, whole-window
+replay must return accepted replay receipts without changing readings,
+deliveries, DQ, cases or audit. The existing fake-receiver seam test now also
+uses the composed climate path.
+
+```bash
+cd src/api
+PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests \
+  python -m unittest \
+  test_sensor_consistency.SqlHandoverTests.test_composed_joint_query_statistics_and_reopened_window_replay -v
+cd ../..
+flock -w 600 /tmp/ama-rpi-heavy.lock python src/api/checks/sensor_sql_check.py
+```
+
+Ordinary discovery exercises SQLite. The second command explicitly selects this
+same handover test alongside the existing ingestion suite on its own local SQL
+Server; the test asserts the actual selected backend. The standard complete
+gate does not implicitly include this sensor-specific SQL selector.
+Constructed SDK origin properties and local SQL Server do not prove actual
+authenticated IoT Hub delivery, Azure SQL query/restart or live handover.
+Those criteria and #110 prerequisites remain unmet; no cloud execution or
+issue status change is authorized by this source.
+
 ## Finite offline sensor ingestion (#110)
 
 `sensor_ingestion.SensorIngestion(store).consume(observations, received_at=...)`
@@ -1463,7 +1493,7 @@ python src/api/checks/sensor_sql_check.py
 
 The second command owns a uniquely named, memory/CPU-bounded SQL Server container
 and loopback port with random process-only credentials and finally cleanup.
-It exercises the same actual API suite, including concurrent independent
+It exercises the same actual API suite plus the #188 handover selector, including concurrent independent
 connections, reopen, real engine-trigger rollback and accepted/rejected
 postcommit reconciliation. It never connects to Azure or uses private datasets.
 Local SQLite/MSSQL/nonroot read-only image evidence does not meet whole AC-066:

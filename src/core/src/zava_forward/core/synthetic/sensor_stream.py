@@ -1,15 +1,24 @@
 """Finite synthetic replay of the existing seasonal backfill, never device discovery."""
 
 import asyncio
+import copy
 import hashlib
 import json
 import math
 import time
 from collections.abc import Callable, Mapping
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from datetime import UTC, datetime, timedelta
+from typing import Protocol
 
-from . import sensor_backfill, sensor_faults, sensor_stock
+from . import (
+    household_conditions,
+    indoor_projection,
+    retrofit_effects,
+    sensor_backfill,
+    sensor_faults,
+    sensor_stock,
+)
 
 VERSION = "synthetic-stream-v2"
 FAULTS = frozenset(
@@ -30,6 +39,11 @@ FAULTS = frozenset(
 
 class StreamError(RuntimeError):
     """Only fixed error codes may cross the transport boundary."""
+
+
+class Climate(Protocol):
+    def series(self, start: datetime, days: int, cadence: int) -> list[tuple[float, float]]: ...
+    def manifest(self) -> dict[str, object]: ...
 
 
 def wire(row: Mapping[str, str]) -> bytes:
@@ -146,12 +160,23 @@ def _selected(
     return checked, sensors
 
 
-def replay(selection: sensor_stock.Selection, spec: Replay) -> tuple[Frame, ...]:
+def replay(
+    selection: sensor_stock.Selection,
+    spec: Replay,
+    *,
+    climate: Climate | None = None,
+    measures: tuple[retrofit_effects.Measure, ...] = (),
+) -> tuple[Frame, ...]:
     checked, sensors = _selected(selection, spec)
+    sensor_backfill._validate_model(checked, climate, measures)
     slots, first, end = spec.bounds()
-    outdoor = sensor_backfill.outdoor_series(
-        spec.seed, spec.days, spec.cadence_minutes, spec.origin
+    outdoor = (
+        climate.series(spec.origin, spec.days, spec.cadence_minutes)
+        if climate is not None
+        else sensor_backfill.outdoor_series(spec.seed, spec.days, spec.cadence_minutes, spec.origin)
     )
+    if len(outdoor) != slots:
+        raise StreamError("REPLAY_CLIMATE_COVERAGE")
     frames: list[Frame] = []
     for sensor in sensors:
         source = sensor_backfill.readings(
@@ -161,6 +186,8 @@ def replay(selection: sensor_stock.Selection, spec: Replay) -> tuple[Frame, ...]
             spec.cadence_minutes,
             outdoor,
             spec.origin,
+            composed=climate is not None,
+            measures=measures,
         )
         clean = [sensor_faults.observation(row) for row in source]
         for slot in range(first, end):
@@ -207,9 +234,16 @@ def replay(selection: sensor_stock.Selection, spec: Replay) -> tuple[Frame, ...]
     return tuple(sorted(frames, key=lambda frame: frame.slot))
 
 
-def descriptor(selection: sensor_stock.Selection, spec: Replay) -> dict[str, object]:
+def descriptor(
+    selection: sensor_stock.Selection,
+    spec: Replay,
+    *,
+    climate: Climate | None = None,
+    measures: tuple[retrofit_effects.Measure, ...] = (),
+) -> dict[str, object]:
     checked, sensors = _selected(selection, spec)
-    return {
+    sensor_backfill._validate_model(checked, climate, measures)
+    result: dict[str, object] = {
         "source_type": "SYNTHETIC",
         "version": VERSION,
         "model": sensor_backfill.VERSION,
@@ -230,6 +264,28 @@ def descriptor(selection: sensor_stock.Selection, spec: Replay) -> dict[str, obj
         "fault": spec.fault,
         "fault_profile": "none; explicit transport exercise only",
     }
+    if climate is not None:
+        history = [
+            {**asdict(measure), "completed_at": measure.completed_at.isoformat()}
+            for measure in sorted(
+                measures, key=lambda value: (value.home_id, value.completed_at, value.measure_id)
+            )
+        ]
+        result.update(
+            model=sensor_backfill.COMPOSED_VERSION,
+            climate=copy.deepcopy(climate.manifest()),
+            composed_model=copy.deepcopy(indoor_projection.COMPOSED_PARAMETERS),
+            household_model={
+                "version": household_conditions.VERSION,
+                "distributions": dict(household_conditions.DISTRIBUTIONS),
+            },
+            retrofit_model=copy.deepcopy(retrofit_effects.PARAMETERS),
+            retrofit_history=history,
+            retrofit_history_sha256=hashlib.sha256(
+                json.dumps(history, sort_keys=True).encode()
+            ).hexdigest(),
+        )
+    return result
 
 
 class Pacer:

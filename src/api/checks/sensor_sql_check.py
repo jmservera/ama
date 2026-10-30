@@ -78,18 +78,17 @@ def main() -> int:
             ZF_SQL_USER="sa",
             ZF_SQL_PASSWORD=password,
             ZF_SQL_TRUST_CERT="1",
-            PYTHONPATH=str(root / "src/core/tests"),
+            PYTHONPATH=os.pathsep.join(
+                (str(root / "src/api/tests"), str(root / "src/core/tests"))
+            ),
         )
         return subprocess.run(
             [
                 python,
                 "-m",
                 "unittest",
-                "discover",
-                "-s",
-                "src/api/tests",
-                "-p",
-                "test_sensor_ingestion.py",
+                "test_sensor_ingestion",
+                "test_sensor_consistency.SqlHandoverTests.test_composed_joint_query_statistics_and_reopened_window_replay",
                 "-q",
             ],
             cwd=root,
