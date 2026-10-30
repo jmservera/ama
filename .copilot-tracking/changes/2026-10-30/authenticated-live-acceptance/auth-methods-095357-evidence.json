@@ -1,0 +1,170 @@
+{
+  "started": "2026-10-30T09:53:52.512309+00:00",
+  "mode": "auth-methods",
+  "sites": {
+    "employee": {
+      "before": {
+        "headings": [
+          "Sign in"
+        ],
+        "submit_labels": [
+          "Next"
+        ],
+        "controls": [
+          {
+            "tag": "input",
+            "type": "email",
+            "id": "i0116",
+            "name": "Enter your email, phone, or Skype.",
+            "disabled": false
+          },
+          {
+            "tag": "input",
+            "type": "password",
+            "id": "i0118",
+            "name": null,
+            "disabled": false
+          },
+          {
+            "tag": "a",
+            "type": null,
+            "id": "cantAccessAccount",
+            "name": "Can\u2019t access your account?",
+            "disabled": false
+          },
+          {
+            "tag": "input",
+            "type": "submit",
+            "id": "idSIButton9",
+            "name": null,
+            "disabled": false
+          },
+          {
+            "tag": "a",
+            "type": null,
+            "id": "ftrTerms",
+            "name": "Terms of use",
+            "disabled": false
+          },
+          {
+            "tag": "a",
+            "type": null,
+            "id": "ftrPrivacy",
+            "name": "Privacy & cookies",
+            "disabled": false
+          },
+          {
+            "tag": "a",
+            "type": null,
+            "id": "moreOptions",
+            "name": "Click here for troubleshooting information",
+            "disabled": false
+          }
+        ]
+      },
+      "after_username": {
+        "headings": [
+          "Face, fingerprint, PIN or security key"
+        ],
+        "submit_labels": [],
+        "controls": [
+          {
+            "tag": "button",
+            "type": "button",
+            "id": "idBtn_Back",
+            "name": "Back",
+            "disabled": false
+          },
+          {
+            "tag": "a",
+            "type": null,
+            "id": "ftrTerms",
+            "name": "Terms of use",
+            "disabled": false
+          },
+          {
+            "tag": "a",
+            "type": null,
+            "id": "ftrPrivacy",
+            "name": "Privacy & cookies",
+            "disabled": false
+          },
+          {
+            "tag": "a",
+            "type": null,
+            "id": "moreOptions",
+            "name": "Click here for troubleshooting information",
+            "disabled": false
+          }
+        ]
+      },
+      "after_back": {
+        "headings": [
+          "Sign in"
+        ],
+        "controls": [
+          {
+            "tag": "input",
+            "type": "email",
+            "id": "i0116",
+            "name": "Enter your email, phone, or Skype.",
+            "disabled": false
+          },
+          {
+            "tag": "input",
+            "type": "password",
+            "id": "i0118",
+            "name": null,
+            "disabled": false
+          },
+          {
+            "tag": "a",
+            "type": null,
+            "id": "cantAccessAccount",
+            "name": "Can\u2019t access your account?",
+            "disabled": false
+          },
+          {
+            "tag": "input",
+            "type": "submit",
+            "id": "idSIButton9",
+            "name": null,
+            "disabled": false
+          },
+          {
+            "tag": "div",
+            "type": null,
+            "id": "",
+            "name": "Sign-in options",
+            "disabled": false
+          },
+          {
+            "tag": "a",
+            "type": null,
+            "id": "ftrTerms",
+            "name": "Terms of use",
+            "disabled": false
+          },
+          {
+            "tag": "a",
+            "type": null,
+            "id": "ftrPrivacy",
+            "name": "Privacy & cookies",
+            "disabled": false
+          },
+          {
+            "tag": "a",
+            "type": null,
+            "id": "moreOptions",
+            "name": "Click here for troubleshooting information",
+            "disabled": false
+          }
+        ]
+      }
+    }
+  },
+  "browser_version": "156.0.8078.4",
+  "browser_closed": true,
+  "owned_scratch_removed": true,
+  "ended": "2026-10-30T09:53:57.704237+00:00"
+}

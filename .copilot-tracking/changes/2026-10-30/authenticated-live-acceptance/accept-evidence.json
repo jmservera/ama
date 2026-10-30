@@ -1,0 +1,51 @@
+{
+  "started": "2026-10-30T09:41:33.846497+00:00",
+  "mode": "accept",
+  "sites": {
+    "employee": {
+      "failure_type": "TimeoutError"
+    },
+    "resident": {
+      "started": "2026-10-30T09:41:58.665553+00:00",
+      "password_submitted": true,
+      "password_field_remaining": true,
+      "sign_in_error": true,
+      "controls": [
+        {
+          "tag": "a",
+          "type": null,
+          "id": "",
+          "disabled": false
+        },
+        {
+          "tag": "input",
+          "type": "email",
+          "id": "email",
+          "disabled": false
+        },
+        {
+          "tag": "input",
+          "type": "password",
+          "id": "password",
+          "disabled": false
+        },
+        {
+          "tag": "button",
+          "type": "submit",
+          "id": "signin-button",
+          "disabled": false
+        },
+        {
+          "tag": "button",
+          "type": "button",
+          "id": "chat-launcher",
+          "disabled": false
+        }
+      ]
+    }
+  },
+  "browser_version": "156.0.8078.4",
+  "browser_closed": true,
+  "owned_scratch_removed": true,
+  "ended": "2026-10-30T09:42:01.346250+00:00"
+}
