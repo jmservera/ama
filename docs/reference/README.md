@@ -20,6 +20,12 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+For #190, the [current sensor validation and child dispositions](./research/iot-sensor-analytics-research-plan.md#current-validation-and-child-dispositions-2026-10-30-refs-190)
+record annual offline backfill/replay checks, unchanged isolated scenario
+results and the corrected both-stage dictionary. Per-check engineering evidence
+is not composed-climate/live acceptance, downstream #111/#133 test use or an
+owner-accepted deferral of open children.
+
 For #530, the [employee chat design and API guide](../../src/api/README.md#employee-chat-with-bounded-skills-530)
 records one read-only chat agent, five repository-defined advisory skills,
 explicit selection, role-projected grounding, minimal audit and workflow-only

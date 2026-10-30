@@ -2839,6 +2839,30 @@ they do not establish causal weather adjustment for real homes.
 
 ### Two-stage simulator operation and limits (#194)
 
+Run the credential-free validation from `src/core` after installing the core
+distribution with pip:
+
+```bash
+flock -w 600 /tmp/ama-rpi-heavy.lock \
+  python3 -m unittest discover -s tests -p 'test_sensor_*.py' -v
+```
+
+Verbose unittest output reports each check independently, including failures
+and skips; a skipped SQL integration is not a pass. Existing Source CI discovers
+these tests without a new workflow. `test_sensor_stage_validation.py` compares
+365 hourly days for four declared synthetic homes (35,040 samples/stage,
+seed 190, origin 2024-01-01 UTC). It asserts the stock-derived dwelling, age and
+heating profiles before generation. Annual exact-row/mean/population-standard-
+deviation/inclusive-quartile equality is deterministic backfill/replay parity,
+not independent proof of climate accuracy. Separate per-stage checks cover
+finite exercise domains (-10..45 C, 0..100% RH), annual mean/spread, January/July
+structure, winter noon/midnight structure and paired flatlines, with corrupted
+inputs proving that range and flatline guards fail. Every range and seasonal/
+diurnal expectation is an exercise value, not a safety or healthy-home limit.
+Existing plausibility/fault/replay tests retain stochastic injection-rate,
+gap/duplicate, timing and pacing coverage. Composed ERA5-model continuity and
+actual transport are not established by legacy-model parity.
+
 Stage 1 is runnable through `synthetic.sensor_backfill`; estimate before writing.
 The legacy, register, fault and approved paired-climate commands above describe
 their distinct schemas and limits. Defaults are 730 days, 60-minute cadence,

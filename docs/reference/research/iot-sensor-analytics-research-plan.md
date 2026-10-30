@@ -2,7 +2,7 @@
 title: In-Use Monitoring Analytics Research Plan (Dew Point and Trend Risks)
 description: Research phase plan for analysing humidity and temperature sensor data received through Azure IoT Hub, including dew point and surface condensation risk, with leads, unknowns, evidence rules and exit criteria
 author: AMA programme
-ms.date: 2026-10-29
+ms.date: 2026-10-30
 ms.topic: reference
 ---
 
@@ -663,6 +663,33 @@ The separate opt-in publisher's local engineering evidence is recorded in
 [bounded streaming engineering](#bounded-streaming-engineering-2026-10-27-refs-110-184),
 not live acceptance or scenario-pack integration.
 R1-R5 statuses and all resident/human approval safeguards above remain unchanged.
+
+### Current validation and child dispositions (2026-10-30, Refs #190)
+
+The [offline two-stage validation recipe](../../../src/core/README.md#two-stage-simulator-operation-and-limits-194)
+adds annual four-home seasonal-backfill/replay checks without changing the
+eleven-case pack or its fifteen independent results. The constructed stock
+profiles are asserted, not inferred from authored age/heating overrides.
+Per-home row/summary equality has zero tolerance and proves deterministic
+legacy-model parity only. Independent finite-domain, mean/spread, seasonal,
+diurnal and flatline checks use labelled exercise expectations. They do not
+validate composed ERA5/live continuity or establish R2/R3 method approval.
+Verbose unittest emits each check separately; scenario evaluation retains
+fixed-truth confusion and sensitivity rather than an overall pass.
+
+| Child | Current bounded evidence | Disposition and remaining acceptance |
+| --- | --- | --- |
+| #191 | Existing CI-discovered bounds, structure, flatline and configured fault/missing-rate tests; annual cross-stage regressions extend local coverage | Closed on GitHub at 2026-10-30 read; no new live claim |
+| #192 | Seven seeded damp/data-quality cases, isolated analysis/truth, expected outcomes and fixed-truth confusion summary | Local scenario scope delivered; GitHub remains open, coordinator/owner acceptance pending |
+| #193 | Improvement, unchanged, delayed and adverse profiles; exercise deltas and early/late comparisons | Actual #111/#133 test consumption remains unmet; proposed deferral to those consumer workstreams, not an accepted owner deferral |
+| #194 | Current backfill/replay/SDK guides and dictionary distinguish schemas, metadata, parameters, limits, seeds, source terms and synthetic-only boundary | Local documentation scope delivered; verified live run remains blocked by #184 prerequisites, not fabricated as a runnable credential-free live exercise |
+
+The parent's "all child stories closed or deferred" criterion is not proven:
+three stories remain open and no owner-accepted deferral was supplied. This is
+a local disposition record, not a GitHub update or authority to close stories.
+The per-check reporting criterion is supported by existing report objects and
+individual CI-discovered tests. No result dismisses a resident report, changes
+consent, resolves a hazard or grants clinical, legal or operational approval.
 
 ## Constraints
 
