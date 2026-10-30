@@ -165,6 +165,19 @@ REPAIR_QUESTIONS = (
     "Why is my boiler leaking?",
 )
 
+RECORD_QUESTIONS = tuple(
+    (question, topic)
+    for question, topic in ORDINARY_QUESTIONS
+    if isinstance(topic, Topic) or topic == "home"
+) + (
+    ("What is my case status?", Topic.STATUS),
+    ("Which documents are missing from my case?", Topic.DOCUMENTS),
+    ("How do I provide my documents?", Topic.DOCUMENTS),
+    ("How do I send the document?", Topic.DOCUMENTS),
+    ("What is wrong with my document warning or error?", Topic.DOCUMENTS),
+    ("What is recorded about my home?", "home"),
+)
+
 
 def document_fixture() -> DocumentFacts:
     return DocumentFacts(
@@ -438,17 +451,9 @@ class ChatApiTests(DemoTestCase):
         advisor.answer_question.assert_not_called()
 
     def test_repair_words_preserve_exact_host_routes_without_model_work(self) -> None:
-        accounting, token, transport, provider = Mock(), Mock(), Mock(), Mock()
-        advisor = AzureAdvisor(
-            ENDPOINT, accounting, token, transport=transport, clock=lambda: EXPIRES - 10
-        )
-        self.app.assistant_advisor = advisor
-        self.app.assistant_provider = provider
-        with (
-            patch.object(advisor, "answer", wraps=advisor.answer) as legacy,
-            patch.object(advisor, "answer_question", wraps=advisor.answer_question) as generated,
-        ):
-            questions = list(REPAIR_HOST_ROUTES) + [
+        self.assert_host_routes(
+            list(REPAIR_HOST_ROUTES)
+            + [
                 (question + suffix, "unknown")
                 for question in REPAIR_QUESTIONS
                 for suffix in (
@@ -460,16 +465,81 @@ class ChatApiTests(DemoTestCase):
                     ". Telephone my housing officer",
                 )
             ]
+        )
+
+    def test_every_generated_route_requires_a_complete_recognised_message(self) -> None:
+        self.assert_host_routes(
+            [
+                ("What is my case status, then sing a song", "unknown"),
+                ("What improvements are planned for my home then sing a song?", "unknown"),
+                ("What improvements are planned for my shopping list?", "unknown"),
+                ("Which documents are missing and what is my case status?", "unknown"),
+                ("What forms do I need and which documents are missing?", "unknown"),
+            ]
+            + [
+                (question + suffix, "unknown")
+                for question, _ in RECORD_QUESTIONS
+                for suffix in (
+                    ", then sing a song",
+                    " then sing a song",
+                    " and make a shopping list",
+                    "; calculate two plus two",
+                    "\nalso recommend a movie",
+                    ". Telephone my housing officer",
+                    "? What is my case status?",
+                    "\x00sing a song",
+                )
+            ]
+            + [("Sing a song then " + question, "unknown") for question, _ in RECORD_QUESTIONS]
+        )
+
+    def test_legal_and_consent_intents_precede_all_generated_record_routes(self) -> None:
+        self.assert_host_routes(
+            [
+                (question, topic)
+                for question, topic in (
+                    ("What legal rules apply to my documents?", "regulations"),
+                    ("Are my documents legally compliant?", "regulations"),
+                    ("Which laws apply to my forms?", "regulations"),
+                    ("What is my case status under these regulations?", "regulations"),
+                    ("What legal rules apply to my home?", "regulations"),
+                    ("Have I given consent for my documents?", "consents"),
+                    ("What permission is needed for my paperwork?", "consents"),
+                    ("What is my case consent status?", "consents"),
+                    ("Have I given consent for these forms?", "consents"),
+                    ("What consent is needed for my home?", "consents"),
+                )
+            ]
+        )
+
+    def assert_host_routes(self, questions: list[tuple[str, Topic | str]]) -> None:
+        accounting, token, transport, provider = Mock(), Mock(), Mock(), Mock()
+        advisor = AzureAdvisor(
+            ENDPOINT, accounting, token, transport=transport, clock=lambda: EXPIRES - 10
+        )
+        self.app.assistant_advisor = advisor
+        self.app.assistant_provider = provider
+        with (
+            patch.object(advisor, "answer", wraps=advisor.answer) as legacy,
+            patch.object(advisor, "answer_question", wraps=advisor.answer_question) as generated,
+        ):
             for question, expected_route in questions:
                 with self.subTest(question=question):
-                    self.assertEqual(chat.route(question), expected_route)
                     status, body = self.ask(question=question)
                     self.assertEqual(status, 200)
+                    self.assertEqual(chat.route(question), expected_route)
+                    assert isinstance(expected_route, str)
                     expected = chat.answer(expected_route, {})
                     self.assertEqual(body["answer"], expected.answer)
                     self.assertEqual(body["sources"], list(expected.sources))
                     self.assertEqual(body["label"], expected.label)
                     self.assertNotIn("Test Street", json.dumps(body))
+                    legacy.assert_not_called()
+                    generated.assert_not_called()
+                    accounting.reserve.assert_not_called()
+                    accounting.complete.assert_not_called()
+                    token.assert_not_called()
+                    transport.assert_not_called()
             legacy.assert_not_called()
             generated.assert_not_called()
         provider.select.assert_not_called()
@@ -477,6 +547,28 @@ class ChatApiTests(DemoTestCase):
         accounting.complete.assert_not_called()
         token.assert_not_called()
         transport.assert_not_called()
+
+    def test_complete_record_questions_still_generate(self) -> None:
+        accounting, token = Mock(), Mock(return_value="FAKE")
+        transport = Mock(return_value=question_reply("Ask your housing officer about this record."))
+        self.app.assistant_advisor = AzureAdvisor(
+            ENDPOINT, accounting, token, transport=transport, clock=lambda: EXPIRES - 10
+        )
+        for question, topic in RECORD_QUESTIONS:
+            with self.subTest(question=question):
+                self.assertEqual(chat.route(question), topic)
+                status, body = self.ask(question=question)
+                self.assertEqual(status, 200)
+                self.assertEqual(body["label"], "AI-generated")
+                self.assertEqual(body["answer"], "Ask your housing officer about this record.")
+                payload = json.loads(transport.call_args.args[1])
+                self.assertEqual(
+                    json.loads(payload["messages"][1]["content"])["question"], question
+                )
+        self.assertEqual(accounting.reserve.call_count, len(RECORD_QUESTIONS))
+        self.assertEqual(accounting.complete.call_count, len(RECORD_QUESTIONS))
+        self.assertEqual(token.call_count, len(RECORD_QUESTIONS))
+        self.assertEqual(transport.call_count, len(RECORD_QUESTIONS))
 
     def test_household_repair_observations_and_questions_reach_generated_answers(self) -> None:
         accounting = Mock()

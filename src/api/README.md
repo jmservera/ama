@@ -85,9 +85,12 @@ question and a limited own-case answer/progress, not the full case or identity.
 Repair concerns, including the dead-rat example, now reach grounded generation
 instead of the unrelated home summary. AI can explain how to ask for help,
 not diagnose the cause, assess safety or claim a repair was reported.
-Repair admission matches the complete text against recognised household repair
-observations and informational questions; a repair keyword or recognised prefix
-alone is not enough. Combined requests, instruction-style and report/contact
+Every generated route matches the complete message against recognised questions
+or observations: status, documents, forms, home and household repairs. A keyword
+or recognised prefix alone is not enough. Legal and consent intents take
+precedence over document and other record admission and keep protected rules
+replies, without calling the advisor or reserving model usage.
+Combined requests, instruction-style and report/contact
 actions remain deterministic refusals, including when they mention a home.
 Recognised questions about how residents can report a repair or whom they should
 contact may receive informational guidance. This conservative finite grammar is

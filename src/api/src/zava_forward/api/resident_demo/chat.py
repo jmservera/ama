@@ -171,6 +171,56 @@ def _repair_question(question: str) -> bool:
     )
 
 
+def _record_question(question: str) -> Topic | str:
+    subject = (
+        r"(?:(?:electric |electrical )?"
+        r"(?:smoke alarm|smoke detector|co alarm|co detector|carbon[- ]monoxide detector)"
+        r"(?:'s light)?|water meter|co-operative home|home|house|flat|sockets?|"
+        r"(?:electric )?(?:water heater|heater)|boiler|heating)"
+    )
+    documents = (
+        r"(?:(?:my|the) )?(?:(?:smoke alarm|smoke-free policy|carbon-monoxide detector) )?"
+        r"(?:documents?|paperwork)"
+    )
+    forms = r"(?:(?:my|the) )?forms?"
+    patterns = (
+        (
+            Topic.DOCUMENTS,
+            rf"(?:{documents}|where (?:is|are) {documents}|can i see {documents}|"
+            rf"when (?:is|are) {documents} coming|"
+            rf"what documents cover (?:the |my )?{subject}|"
+            rf"(?:what|which) {documents} (?:are missing(?: from my case)?|do i need)|"
+            r"there is a smoke alarm in my home; what documents do i need|"
+            rf"how do i (?:provide|send) {documents}|"
+            rf"what is wrong with {documents}(?: warning or error)?)",
+        ),
+        (
+            Topic.STATUS,
+            r"(?:(?:my )?(?:case|status|progress|case status|case progress)|"
+            r"what is my (?:case )?(?:status|progress)|"
+            rf"what is the (?:status|progress) of (?:my|the) {subject}|"
+            rf"what is my {subject} status|how is my case progressing)",
+        ),
+        (
+            Topic.FORMS,
+            rf"(?:{forms}|what {forms} do i need|"
+            rf"i need help filling {forms}(?: for (?:my|a) {subject})?|"
+            rf"where are {forms}(?: for (?:my|a) {subject})?|"
+            rf"how do i fill (?:in|out) {forms})",
+        ),
+        (
+            "home",
+            r"(?:my home|(?:what|which) (?:is|are) (?:my )?address|"
+            r"(?:what|which) (?:is )?recorded about my home|"
+            rf"(?:what|which) improvements are planned(?: for my {subject})?)",
+        ),
+    )
+    for topic, pattern in patterns:
+        if re.fullmatch(pattern + r"[?.!]*", question.lower().strip()):
+            return topic
+    return "unknown"
+
+
 def route(question: str) -> Topic | str:
     tokens = words(question)
     if tokens & {
@@ -232,30 +282,25 @@ def route(question: str) -> Topic | str:
         and not repair
     ):
         return "unknown"
-    if tokens & {"documents", "document", "paperwork"}:
-        return Topic.DOCUMENTS
-    if "send" in tokens:
-        return "unknown"
-    if tokens & {"law", "laws", "legal", "regulation", "regulations", "rules", "compliant", "duty"}:
+    if tokens & {
+        "law",
+        "laws",
+        "legal",
+        "legally",
+        "regulation",
+        "regulations",
+        "rules",
+        "compliant",
+        "duty",
+    }:
         return "regulations"
-    if tokens & {"appointment", "appointments", "callback", "agenda", "slots"}:
-        return "appointments"
     if tokens & {"consent", "consents", "permission"}:
         return "consents"
-    if re.fullmatch(
-        r"(?:my home|(?:what|which) (?:is|are) (?:my )?address|"
-        r"(?:what|which) (?:is )?recorded about my home|"
-        r"(?:what|which) improvements are planned(?: for my [a-z ]+)?)[?.!]*",
-        question.lower().strip(),
-    ):
-        return "home"
-    if tokens & {"status", "case", "progress"}:
-        return Topic.STATUS
-    if tokens & {"form", "forms"}:
-        return Topic.FORMS
+    if tokens & {"appointment", "appointments", "callback", "agenda", "slots"}:
+        return "appointments"
     if repair:
         return "repair"
-    return "unknown"
+    return _record_question(question)
 
 
 def answer(topic: str, view: dict[str, Any]) -> Advice:
