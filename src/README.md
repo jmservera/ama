@@ -106,6 +106,46 @@ Schema-4 receipts bind their full/partial scope and recomputed path selection.
 Verification defaults to requiring full coverage; `--required-scope partial`
 explicitly accepts partial coverage and never upgrades it to a full claim.
 
+#### Measuring full-gate scheduling
+
+Compare the existing serial baseline (`--all --jobs 1`) with parallel scheduling
+(`--all --jobs 3`) at the same clean committed HEAD and reviewed main base.
+Use a new external output directory for each run, with no `--changed`, resume
+or differing extra selectors. The runner already owns
+`/tmp/ama-rpi-heavy.lock`; use its `--lock-timeout 600`, not an outer `flock`
+around this self-locking command. Other heavy validation must use the same lock.
+
+```bash
+python3 tools/rpi-checks.py --all --jobs 1 --lock-timeout 600 \
+  --base "$BASE_SHA" --out /tmp/rpi-ISSUE-serial \
+  > /tmp/rpi-ISSUE-serial.log 2>&1
+python3 tools/rpi-checks.py --all --jobs 3 --lock-timeout 600 \
+  --base "$BASE_SHA" --out /tmp/rpi-ISSUE-parallel \
+  > /tmp/rpi-ISSUE-parallel.log 2>&1
+```
+
+For each run, record the command exit, receipt path, HEAD/base, selected
+groups/extras, requested jobs and admitted `receipt.jobs`. Measure the same
+execution interval in both logs: from the runner's `Lock ... acquired`
+timestamp to `receipt.sealed`. Report queued-to-acquired time separately.
+This interval includes setup, checks and cleanup but excludes lock queueing
+and final receipt verification; summed command durations are not parallel
+wall time. Independently verify each receipt with the default full scope.
+
+Only two passing, verified full runs with serial admission of one worker and
+parallel admission above one support a full serial/parallel comparison.
+Compare tool/package versions, CPU/memory admission conditions and selected
+inputs; disclose scanner-database, download/cache and serial-first order
+effects. Fresh output directories do not make Docker or host caches cold.
+Material uncontrolled differences make the observations noncomparable, not
+proof of a scheduling speedup. A single ordered pair is descriptive, not a
+statistical performance guarantee. Failed or incomplete runs, partial receipts,
+lock timeouts or parallel admission capped at one leave the parallel timing
+criterion unproven; preserve their evidence without substituting historical
+partial timings. Record successful full timings and these qualifications in
+the delivery PR. Later evidence commits invalidate these receipts for final
+publication, but do not erase their historical benchmark observations.
+
 Use a new external output directory for every run; never overwrite a failed
 receipt. The runner tests a fresh detached exact-HEAD checkout, installs each
 project's existing dev dependencies with pip into isolated external venvs and
