@@ -23,6 +23,37 @@ def sign_in(page: Page, base: str) -> None:
     expect(page.locator(".briefing [data-record-id]")).to_be_visible()
 
 
+def static_shell_check(browser: Browser, base: str, output: Path) -> None:
+    context = browser.new_context(java_script_enabled=False)
+    context.route("**/*", lambda route: route.continue_()
+                  if route.request.url.startswith(base + "/") else route.abort())
+    try:
+        page = context.new_page()
+        script_requests: list[str] = []
+        page.on("request", lambda request: script_requests.append(request.url)
+                if request.resource_type == "script" else None)
+        page.goto(base + "/app")
+        status = page.locator("#startup-status")
+        expect(status).to_have_text(
+            "Starting the workspace, this can take up to a minute when the service has been idle.")
+        expect(status).to_have_attribute("role", "status")
+        expect(status).to_have_attribute("aria-live", "polite")
+        expect(page.locator("#app")).to_be_empty()
+        expect(page.locator("#startup-retry")).to_be_hidden()
+        assert page.locator("#startup").evaluate("""shell => [...document.scripts].every(
+            script => Boolean(shell.compareDocumentPosition(script)
+                & Node.DOCUMENT_POSITION_FOLLOWING))""")
+        for width in (320, 1280):
+            page.set_viewport_size({"width": width, "height": 900})
+            expect(status).to_be_in_viewport()
+            assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+            page.screenshot(path=str(output / f"static-shell-{width}.png"), full_page=True)
+        assert not script_requests, script_requests
+        print("PASS static shell at 320/1280px with page JavaScript disabled; no scripts requested")
+    finally:
+        context.close()
+
+
 def shell_check(browser: Browser, base: str) -> None:
     context = browser.new_context()
     try:
@@ -399,6 +430,7 @@ def run_browser(base: str, axe: str, output: Path) -> None:
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch()
         try:
+            static_shell_check(browser, base, output)
             shell_check(browser, base)
             for outcome in ("signed-out", "authenticated", "error"):
                 watchdog_failure_check(browser, base, outcome)
