@@ -31,10 +31,21 @@
       "evidence": ".copilot-tracking/reviews/logs/2026-10-30/rebuild-148-refresh-review.md; refresh RV-001 through RV-003; original RV-001 remains open."
     }
   ],
-  "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Main freshness reconciled to ffd8f35e, original patches preserved and local checks repeated successfully; commit evidence then attempt full external gate. No push."},
+  "blockers": [
+    {
+      "id": "full-gate-ignored-inputs",
+      "summary": "Complete gate on committed candidate 6c833ab8 exited 1 before workloads: candidate has ignored inputs. No receipt or verifier success.",
+      "resolution": "Coordinator arranges approved finite cleanup/archive selection or appropriate clean candidate inputs, then runs and verifies a fresh complete gate and exact-head assessment. No unauthorized scratch removal."
+    },
+    {
+      "id": "hosted-and-human-gates",
+      "summary": "No push is authorized; remote PR/check state is unchanged. Historical rubric permission failure and human gates remain.",
+      "resolution": "Coordinator owns publication, fresh hosted checks, permissions disposition and owner approval; original RV-001 remains separate."
+    }
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator clears recorded publication blockers before push/merge; no child work selected. Automatic session remains running at the follow-up checkpoint; Stop or manual mode require explicit direction."},
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Coordinator publication and fresh hosted checks", "rationale": "Required before merge; no push is authorized in this task.", "evidence": "Refresh Review RV-003 and historical rubric permission failure."},
+    {"rank": 1, "task": "Coordinator clean-input full gate, exact-head assessment and fresh hosted checks", "rationale": "Required before merge; full gate blocked on ignored inputs and no push is authorized in this task.", "evidence": "Refresh Review RV-003, committed failed gate result and historical rubric permission failure."},
     {"rank": 2, "task": "Original CLI failure-evidence preservation", "rationale": "Known Medium defect remains outside refresh; preserves inspectable partial state.", "evidence": "Original 2026-10-27 Review RV-001."}
   ]
 }

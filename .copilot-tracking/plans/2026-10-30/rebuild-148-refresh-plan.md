@@ -16,6 +16,9 @@ Rebase the existing draft onto fetched main and keep the original synthetic
 rehearsal scope. Preserve both documentation intents and current-main
 rubric/manifest data. Validate locally, record independent Review and commit;
 the coordinator alone pushes.
+Local execution is complete, with requested checks passing. The one Review
+is Complete / Residual work and the full gate is blocked on ignored checkout
+inputs before workloads; no receipt or fresh hosted acceptance is available.
 
 ### What You May Not Know
 
@@ -95,9 +98,9 @@ Attempt complete local gate only after commit, honoring the shared heavy lock
 and no-Azure boundary; unavailable prerequisites block publication.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Review and commit
+### [x] P03: Review and commit
 <!-- rpi:task id=P03-T01 -->
-#### [ ] P03-T01: Independent Review and local handoff
+#### [x] P03-T01: Independent Review and local handoff
 
 Fresh independent reviewer assesses refresh against main, validation and
 plan; preserve outcome without a second Review or hidden follow-up fix.
@@ -107,6 +110,10 @@ clean state and ancestry. No push.
 At source-review handoff P01/P02 are complete with passing checks; P03 remains
 unchecked until Review, evidence commit and the post-commit gate attempt are
 recorded. This is administrative remaining work, not unfinished source.
+Final administration is complete: one Review is Complete / Residual work,
+evidence candidate 6c833ab8 is committed, and the complete gate was attempted
+and blocked by ignored inputs. This checked marker denotes completion of the
+planned local attempt, not a passing receipt or publication acceptance.
 
 ## Critique Disposition
 
@@ -121,6 +128,8 @@ preserved in changes rather than presented as conformant sequencing.
 
 * Original RV-001 belongs to a separately selected implementation task.
 * Hosted rubric permission/score and publication gates belong to coordinator.
+* Complete gate blocked by ignored inputs; approved cleanup selection, fresh
+  final-candidate gate/verifier and exact-head assessment remain required.
 
 ## Handoff
 

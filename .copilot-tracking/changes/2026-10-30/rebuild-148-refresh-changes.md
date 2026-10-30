@@ -140,6 +140,53 @@ Administrative freshness continuation:
 Local evidence commit and required post-commit full gate attempt are next.
 Any blocked attempt will be recorded without pretending it produced a receipt.
 
+## Local commit and complete-gate result
+
+Candidate evidence committed as 6c833ab8 with
+`chore(orchestrator): refresh rebuild branch against main`, Refs #148 and
+the required Copilot coauthor trailer. `git show -s` confirms both author and
+committer use the authenticated GitHub noreply identity.
+
+Post-commit commands:
+
+```bash
+git fetch origin main
+/tmp/mv/bin/python tools/rpi-checks.py --all --base ffd8f35e63b24905b9aeb937dbf2a7fe9968747f --out /tmp/ama-rpi-511-refresh-20261030-candidate --lock-timeout 0
+```
+
+Fetch passed; main remains ffd8f35e. Complete gate exited 1 before execution:
+`BLOCKED: Candidate has ignored inputs; move all scratch outside the checkout`.
+No full API discovery, dependency installation, heavy gate workload, receipt
+or Azure operation occurred. The earlier nonblocking lock probe succeeded;
+the gate itself stopped before lock acquisition. No receipt verifier was
+invoked because no receipt exists. `test ! -e
+/tmp/ama-rpi-511-refresh-20261030-candidate/receipt.json` passed.
+
+Ignored inputs include validation-generated Ruff/mypy/bytecode caches; initial
+ignored-file provenance was not inventoried. Retention policy requires an
+approved finite cleanup/archive selection and does not authorize removal of
+unknown pre-existing inputs. Do not silently delete/move them or claim a clean
+publication gate. Complete-gate/publication evidence remains blocked.
+
+This final administrative result is committed separately so commands/results
+are durable. That evidence-only commit is later than the source Review and
+the failed gate, so neither is exact-final-head acceptance. There is no passing
+receipt to reuse or invalidate into a pass. Coordinator must arrange approved
+clean inputs, run/verify a fresh full receipt for the final candidate and base,
+obtain exact-head independent assessment and fresh hosted checks before merge.
+No push was performed; draft PR #511's remote head/check state is unchanged.
+
+## Final bounded outcome
+
+P01/P02 and P03's local Review/commit/gate-attempt administration are complete.
+All requested local project checks pass, 108 focused/migration tests pass,
+and both CLI modes pass. Branch source and seven original RPI files are
+preserved. One new critique Complete / Revise is directly dispositioned;
+one new independent Review Complete / Residual work is preserved unchanged.
+No new source defects were reported; original RV-001 remains open.
+Current-main ancestry was reconciled after Review without a second Review.
+No hosted CI pass, publication receipt, human approval or issue closure claimed.
+
 ## Amendments, divergences and follow-ups
 
 PC-001 adds fresh-base/receipt verification on success; no scope divergence.
