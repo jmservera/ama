@@ -33,9 +33,10 @@
   ],
   "blockers": [
     {"id": "browser-lock", "summary": "Three final browser attempts exhausted 600-second shared-lock waits before execution.", "resolution": "Coordinator reruns final generated-answer/expanded-dock axe and shared-widget browser checks after the heavy lock is available."},
-    {"id": "main-base", "summary": "Fetched origin/main advanced to 9b13cef9 while owner-selected work remains based on d986c4c4.", "resolution": "Coordinator reconciles integration and runs the complete gate on the resulting clean candidate; no automatic rebase or merge."}
+    {"id": "main-base", "summary": "Fetched origin/main advanced to f168d079 while owner-selected work remains based on d986c4c4.", "resolution": "Coordinator reconciles integration and runs the complete gate on the resulting clean candidate; no automatic rebase or merge."},
+    {"id": "gate-inputs", "summary": "Post-commit full gate exited 1 in preflight: Candidate has ignored inputs. No receipt created.", "resolution": "Coordinator selects retention-safe scratch cleanup/isolation; no automatic removal of unknown inputs."}
   ],
-  "next_action": {"phase": "Follow-up", "action": "Preserve Not accepted result, commit local candidate and original RPI evidence, attempt complete gate, then hand off validation/integration blockers without push."},
+  "next_action": {"phase": "Follow-up", "action": "Coordinator handoff: recover RV-001 final browser evidence when the shared lock is available; resolve RV-002 checkout/base prerequisites and obtain a clean full gate. Original Review Not accepted remains unchanged. No push authorized."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Recover final local browser evidence after shared lock availability.", "rationale": "Highest-value small evidence recovery; resolves RV-001 without bypassing coordination.", "evidence": ".copilot-tracking/reviews/logs/2026-10-30/resident-chat-dock-review.md RV-001"},
     {"rank": 2, "task": "Coordinator reconciles current-main ancestry and runs complete local gate.", "rationale": "Required for publication; explicit owner branch direction prevents silent rebase/merge.", "evidence": ".copilot-tracking/reviews/logs/2026-10-30/resident-chat-dock-review.md RV-002"},

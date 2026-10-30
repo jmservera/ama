@@ -99,6 +99,55 @@ dispose; bound floating width by both actual safe-area insets. These changes
 are source-reviewed and JS parses, but the final browser lock failure means
 their exact candidate remains browser-unverified.
 
+## Independent Review and local persistence
+
+The one independent Review executed Complete, outcome Not accepted, with
+RV-001 High (missing final browser evidence) and RV-002 Medium (gate/current-main
+prerequisite). No source defect was demonstrated. Original Review and critique
+remain unchanged. Source diff digest independently reviewed:
+222faedfd9740a83e7abdb287bcd113c9edcbb3f0cd178dde84fd40497d354bf.
+
+Local implementation/evidence commit:
+734be219cd8cd47fcfefa72d698d0e4f685b50e9.
+Required privacy-safe author/committer identity and Copilot trailer applied.
+No push, PR, rebase or merge. Later tracking-only handoff bookkeeping does not
+change the reviewed src/api diff or erase the unaccepted original outcome.
+
+## Complete gate attempt and handoff limits
+
+After committing, fetched main at f168d0799624e7f8e943fde6ef6fb08a17db151d.
+Command: /tmp/mv/bin/python tools/rpi-checks.py --all --lock-timeout 600
+--base f168d0799624e7f8e943fde6ef6fb08a17db151d
+--out /home/azureuser/.copilot/session-state/14a25525-dc6f-4329-9a2d-51155d0f7b03/files/resident-validation/complete-gate-734be219.
+The runner owns the mandated shared lock; no nested outer flock.
+Exit 1: "BLOCKED: Candidate has ignored inputs; move all scratch outside the
+checkout". Its preflight stopped before heavy execution, tool/cloud calls or
+receipt creation. External log: complete-gate-734be219.log.
+No ignored input was removed, moved or read; preserve unknown/pre-existing
+inputs pending coordinator retention-backed selection. This is not a scanner,
+SQL or browser pass. Current-main ancestry is an additional known prerequisite,
+not the observed first rejection. No final receipt exists to verify.
+
+P03-T02 and the P03-T03 attempt are complete; P03-T01 remains incomplete.
+The loop reached its one Review, but the candidate remains Not accepted.
+Coordinator owns final browser/axe/shared-widget recovery, authorized checkout/
+base reconciliation and a clean exact-head complete gate before any push.
+No subsequent source fix or second Review was performed.
+
+## Criteria proven and not proven
+
+* AC1/AC2: local constructed HTTP tests prove recognised paraphrases reach
+  generation, own-case projection/consent/protected routes remain, and fixed
+  fallback reasons preserve facts/human help without private exception data.
+* API discovery: 1380 tests, 320 skips; final targeted 43 tests, Ruff, format,
+  mypy and JS parse checks pass within their recorded boundaries.
+* AC3: native resize/dock code, browser assertions and historical generated-2
+  evidence exist; final geometry/focus/axe/shared regression is NOT proven.
+* AC4: original dated research, plan/details, critique, changes and independent
+  Review are persisted locally. Final browser and passing complete gate are
+  NOT proven. No live model/configuration, authenticated live acceptance,
+  human/AT conformance, formal approval or whole-issue acceptance is claimed.
+
 ## Amendments and divergences
 
 No material divergence. Critique PC-002 rejected with evidence of the caller's

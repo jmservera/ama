@@ -3,7 +3,8 @@ title: Resident chat fallback and dock plan
 ms.date: 2026-10-30
 ---
 
-Task: resident-chat-dock-520-563. Status: Ready after one critique.
+Task: resident-chat-dock-520-563. Implementation persisted; independent Review
+Complete / Not accepted. P03-T01 final browser evidence remains incomplete.
 
 ## Executive Summary
 
@@ -95,8 +96,8 @@ commit, subject to no-cloud and installed local prerequisites.
 ### P03: Validate and review
 
 * [ ] P03-T01 Run required local commands under lock and refresh web guidelines.
-* [ ] P03-T02 Run one independent Review, retain findings and commit locally.
-* [ ] P03-T03 Attempt external complete gate and record publication limits.
+* [x] P03-T02 Run one independent Review, retain findings and commit locally.
+* [x] P03-T03 Attempt external complete gate and record publication limits.
 
 ## Critique Disposition
 
@@ -126,6 +127,9 @@ waits. Preserve earlier passing and failing evidence; no final-candidate browser
 pass is claimed. Current origin/main has advanced beyond the owner-selected
 base; coordinator integration is required before a publishable complete gate.
 P03-T01 remains incomplete for that browser requirement.
+The post-commit complete-gate attempt rejected ignored checkout inputs before
+execution; no full receipt exists. Preserve the ignored inputs unless cleanup
+is explicitly selected under repository retention rules.
 
 ## Sources and Handoff
 
