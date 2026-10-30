@@ -1,0 +1,64 @@
+{
+  "task_id": "466",
+  "task_slug": "resident-sensor-gauges-466",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/resident-sensor-gauges-466-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/resident-sensor-gauges-466-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/resident-sensor-gauges-466-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-10-30/resident-sensor-gauges-466-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/resident-sensor-gauges-466-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/resident-sensor-gauges-466-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run the full ordered RPI loop and commit locally without pushing",
+      "status": "confirmed",
+      "evidence": "Explicit user request 2026-10-30"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready for documentation reconciliation",
+      "status": "executed",
+      "evidence": ".copilot-tracking/research/2026-10-30/resident-sensor-gauges-466-research.md"
+    },
+    {
+      "decision": "Final-candidate critique executed once; Pass; zero findings",
+      "status": "Pass",
+      "evidence": ".copilot-tracking/plans/2026-10-30/resident-sensor-gauges-466-critique.md"
+    },
+    {
+      "decision": "One independent Review executed; outcome Residual work; no implementation defects, three Medium acceptance residuals",
+      "status": "Complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-30/resident-sensor-gauges-466-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Coordinator handoff after local commit and external full gate; follow-up selection requires owner, no child work or push"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Owner scope/priority confirmation and coordinator decision-checkbox reconciliation",
+      "rationale": "Smallest highest-value acceptance action; preserves existing model decision rather than choosing it again",
+      "evidence": "Review RV-001"
+    },
+    {
+      "rank": 2,
+      "task": "Adjudicate axe incompletes and conduct direct accessibility acceptance",
+      "rationale": "Clarifies unresolved contrast and referenced-control results without assuming a source defect",
+      "evidence": "Review RV-002; 46 incomplete rule/state results across 35 zero-violation states"
+    },
+    {
+      "rank": 3,
+      "task": "Separately authorize and verify live model readiness and expiring cost/authority envelope",
+      "rationale": "High value but requires owner authorization and prerequisites excluded from this task",
+      "evidence": "Review RV-003; 2026-11-01 tariff expiry"
+    }
+  ]
+}
