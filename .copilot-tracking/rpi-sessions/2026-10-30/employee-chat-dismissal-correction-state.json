@@ -52,6 +52,11 @@
       "decision": "Exactly one independent Review executed Complete; original RV-001 and RV-002 resolved within boundary; no new source defect; outcome Not accepted on broad AC4 due baseline resident failure RV-003",
       "status": "recorded",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-30/employee-chat-dismissal-correction-review.md"
+    },
+    {
+      "decision": "Authorized local source/evidence commit completed as 2b12ce3f, Refs #550 only; privacy-safe author/committer and required trailer; no push",
+      "status": "recorded",
+      "evidence": "Successful local git commit; closeout reconciles only tracking artifacts without source changes or repeated Review"
     }
   ],
   "blockers": [
@@ -63,7 +68,7 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Review loop complete, no new source work; perform authorized local Refs-only commit and record delivery, then await coordinator-selected follow-up"
+    "action": "Source/evidence committed locally; await coordinator selection of ranked follow-up, Stop automatic session or Switch to manual mode; no child or remote action authorized"
   },
   "prioritized_follow_ups": [
     {

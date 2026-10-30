@@ -13,7 +13,7 @@
 | Phase | Name | Status | Tasks |
 | --- | --- | --- | --- |
 | P01 | Focus correction | Complete, red/green browser proven | P01-T01 |
-| P02 | Validation and local delivery | P02-T01 executed, P02-T02 ready | P02-T01/P02-T02 |
+| P02 | Validation and local delivery | Complete execution/delivery, broad AC4 unmet | P02-T01/P02-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Focus correction
@@ -68,3 +68,5 @@ Actual result: complete locked rerun exited 0, 1361 tests in 474.769s, OK / 318 
 Dependencies: P02-T01 evidence reconciled. Fresh reviewer may write only new Review artifact. Preserve original critique and adverse Review. One Review execution, distinct outcome and follow-up routing. Parent records current phase/checklist/state before and after transition, then privacy-safe local commit after gh api user lookup without printing credentials. Refs #550 only, required Copilot coauthor. No push or live warmup.
 
 Completion evidence: independent Review artifact and local Git commit; full publication gate, hosted checks and human approvals unclaimed. No blockers known at candidate drafting.
+
+Actual result: exactly one Review Complete / Not accepted on broad AC4; original RV-001/RV-002 resolved, RV-003 baseline resident residual. Source and original dated correction evidence committed locally as 2b12ce3f with authenticated privacy-safe author/committer, Refs #550 and required coauthor. No push, no source changes after Review. Closeout artifact reconciliation is documentation/state only; no repeated Review.

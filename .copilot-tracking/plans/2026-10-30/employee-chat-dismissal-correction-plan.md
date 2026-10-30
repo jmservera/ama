@@ -91,7 +91,7 @@ Dependencies: finalized critique dispositions.
 Extend exact delayed-dismissal assertions first, preserve failing original-source log, then minimally correct show and document same-context scope. Verify navigation counterexamples and original matrix.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Complete local evidence and independent assessment
+### [x] P02: Complete local evidence and independent assessment
 
 Dependencies: P01.
 
@@ -103,9 +103,11 @@ Use fresh external session evidence paths, flock -w 600, existing pinned axe 4.1
 Execution complete, not all-success acceptance: full API passed, static/focused/shared/employee passed, additional resident browser failed both candidate and original baseline. Changes preserves every adverse attempt and routes unrelated resident reconciliation.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Independent Review and local commit
+#### [x] P02-T02: Independent Review and local commit
 
 Reconcile artifacts, dispatch one read-only fresh Review, record outcome separately from execution. Route new findings rather than repeating Review. Resolve GitHub identity privately, local privacy-safe author/committer, Refs #550 only, required trailer. Do not push.
+
+Completion evidence: one independent Review Complete / Not accepted on broad AC4, original RV-001/RV-002 resolved; local source/evidence commit 2b12ce3f. This marker records execution/delivery, not broad acceptance. No source changes after Review and no push.
 
 ## Dependencies
 
@@ -124,4 +126,4 @@ Exactly one final-candidate independent critique executed Complete / Pass with n
 
 ## Handoff
 
-P01 and P02-T01 complete with reconciled execution evidence. One independent Review executed Complete / Not accepted on broad AC4; original RV-001/RV-002 resolved, RV-003 separate resident residual. P02-T02 only authorized local commit remains. No unresolved owner decision, source correction or repeated Review.
+All P01/P02 execution/delivery markers complete; source/evidence committed locally as 2b12ce3f. One independent Review Complete / Not accepted on broad AC4; original RV-001/RV-002 resolved, RV-003 separate resident residual. Automatic session remains at Follow-up with no child authorized. No source correction, repeat Review or push.
