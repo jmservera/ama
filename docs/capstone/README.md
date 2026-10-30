@@ -1,319 +1,94 @@
 ---
-title: Capstone Deliverables and Storage Map
-description: Where every capstone asset must be stored so the rubric gate can find and score it, and what scores 0 until it exists
-author: AMA programme
-ms.date: 2026-10-27
-ms.topic: reference
+title: Capstone Working Set
+description: Current presentation, reproducible sources, pitch, demo and rubric inputs
+ms.date: 2026-10-29
+ms.topic: how-to
 ---
 
-The rubric gate scores only what is committed to this repository. A criterion
-that needs an artifact which has not been committed is recorded as 0 by the
-gate, not by the model. Rules are in
-[rubric.json](../../.github/rubric/rubric.json) and the artifact registry in
-[artifacts.json](../../.github/rubric/artifacts.json); the criteria come from
-the [Capstone Assessment Guide](../reference/method/ama-capstone-assessment-guide.md).
+## Start Here
 
-## Storage map
+Use the 54-slide Cowork v2 presentation. There is one current deck, not a
+choice between the older executive and Cowork routes.
 
-| Rubric section | Asset | Store it at | Format the scorer reads |
-| --- | --- | --- | --- |
-| A1 to A7 | Business requirements | `docs/brds/` | Markdown |
-| A1 to A7, B6, C1 | Product requirements | `docs/prds/` | Markdown |
-| A1 to A3, B6 | Architecture decision records | `docs/adrs/` | Markdown |
-| A1, A3 to A7, B6 | Solution code, tests, README and diagrams | `src/` and registered synthetic-data generator scripts (see the registry globs) | Source files |
-| A1, A3, A5 | Infrastructure as code | `infra/` | Bicep, Terraform |
-| B1, B2, B6, B7 | Capstone deck, with speaker notes | `docs/capstone/deck/` (sole published executive deck; no duplicate in `docs/presentations/`) | `.pptx` (scorer reads slide and notes text) |
-| B1 to B5, B7, C2, C3 | Pitch rehearsal and Q&A transcripts, timing notes, demo script and recovery notes, restated-challenge examples | `docs/capstone/pitch/` | `.md`, `.txt`, `.vtt` |
-| D1 to D3 | Thought leadership artifact | `docs/capstone/thought-leadership/<artifact-name>/` | `.md`, `.txt`, `.vtt`, plus `.pptx` as support |
-
-Recordings (video or audio) are not read by the scorer. Commit the transcript
-or written notes next to the recording and link the recording from them.
-
-The owner selected the [Cowork v2 presentation](./deck/cowork-generated/README.md)
-as the capstone scoring candidate on 2026-10-23. Its original v2 PDF, contact
-sheet and both build handoffs are retained there. V1 exports, preview ZIPs
-and the original protected binary are described in those handoffs but are
-not retained in this checkout. The selected scoring path is
-`docs/capstone/deck/zava-forward-cowork-v2-draft.pptx`; an approved unencrypted
-v2 export is now supplied at that path. The scorer's actual extractor reads
-54 slides and 54 speaker-note blocks, including the final slide-39 wording
-recorded by Cowork. The earlier protected source is retained as history.
-The registry does not fall back to the old deck or treat PDF slides as notes.
-
-The [IoT and optional-resident-portal refinement](./deck/cowork-generated/refinement-2026-10-23/README.md)
-updates the same 54-slide v2 PPTX and provides a
-[new native PowerPoint PDF](./deck/zava-forward-cowork-v2-draft.pdf).
-IoT is visible on the main architecture build; resident self-service is an
-optional benefit assessment in issue #441, not a delivered channel or saving.
-Assisted routes and human review remain explicit. Five changed slides were
-natively rendered and visually checked; rehearsal, human and live acceptance
-remain separate. The corrected registry selects the exact current v2 PPTX
-with a 20 MB allowance; the historical draft and its previews are not scored.
-
-The [2026-10-24 PR review corrections](./deck/cowork-generated/review-corrections-2026-10-24.md)
-qualify current deployment status, remove unsupported inference prices,
-preserve authored diagrams during notes rebuilds, and distinguish caller
-returns from fixed appendix topic links. The imported handoff remains history.
-
-The earlier [Zava Forward council proposal](./deck/draft/zava-forward-executive-draft.pptx)
-is retained as historical evidence, not the scoring candidate. The owner retired its
-duplicate in `docs/presentations/` on 2026-10-11; that folder still holds the
-separate mentor presentation. All decks remain drafts: production approval,
-measured benefits and live pitch evidence are separate gates.
-
-The deck was detected in PR #61, but the scorer's `:slideN` references did not
-match the deterministic gate's text-only anchor parser. This discarded its
-proposed B1, B2, B6 and B7 changes and left misleading missing-deck baseline
-rationales in the comment. See the
-[gate repair and activation boundary](../../.github/rubric/README.md).
-Do not treat a saved-scorecard replay as a fresh score for the revised deck.
-
-## Resident proposal pitch boundary (2026-10-23, #441)
-
-The [addendum's resident proposal](../case_study_48_addendum.md#optional-resident-service-proposal-2026-10-23-441)
-and [unregistered architecture working artifact](../../.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md)
-are unsigned requirements/architecture content, not a deck update, registered
-ADR, implemented portal, activated automation or company signoff. Existing
-executive assets retain their dated staff-assisted baseline; do not present
-them as proof of resident delivery or replace their historical scope labels.
-The proposal's synthetic workload and illustrative net staff-hours are not
-observed benefits, production capacity, cash/headcount or a delivery date.
-Full registration, OD-52-55, live privacy/service/authority and application
-acceptance remain unmet; no rubric score is manually changed.
-## Main Presentation Cowork Handoff (2026-10-23)
-
-The [complete Cowork authoring package](./pitch/cowork-main-presentation/README.md)
-provides the owner-requested top-down 30-minute presentation plus a separate
-10-minute demo. Give Cowork the entire folder and start with its
-[authoring brief](./pitch/cowork-main-presentation/COWORK-BRIEF.md).
-It includes 18 main slides, 27 CXO backups, full speaker notes, interruption
-routes, a preflight-gated demo, seven progressive slide-sized Excalidraw
-diagrams with official Azure icons, Tokenomics and cost evidence, and the
-HVE/design-thinking/prototype-to-backlog delivery story.
-
-The original "around 180" is an approximate issue count, including epics and
-stories, not agents or stories alone. A read-only AMA Plan project snapshot
-retrieved on 2026-10-23 has 189 items across epics, features, stories and other
-issues. Its included board image is an explicitly labelled API-derived
-visual, not a screenshot of GitHub's website or accepted delivery.
-
-This route supersedes the old 15-minute limit only for the new authoring
-job. It incorporates merged Tokenomics PR #433, separates the owner-set
-October USD 700 ceiling from blocked execution gates, and labels unmeasured
-benefits and outstanding human acceptance.
-
-Cowork subsequently generated a v1 presentation and a revised v2 story.
-The [imported output index](./deck/cowork-generated/README.md) distinguishes
-the original 54-page v2 PDF and handoff from historical v1 exports and the
-original 18-slide authoring contract. The owner selected v2 for scoring and
-confirmed repository clearance, but its saved PPTX is protected and its
-reported OneDrive save failure is retained as historical evidence. A later
-owner-supplied public v2 export is now installed at the selected scoring path;
-local extraction verifies all 54 slides/notes and the final-save marker.
-Full source/notes parity, review, native-viewer checks and publication gates
-remain outstanding; no fresh rubric score or rehearsal is claimed. Keep the
-eventual validated executive delivery under `docs/capstone/deck/`.
-
-## Tokenomics Pitch Preparation (2026-10-22)
-
-A mentor raised Tokenomics at the progress review, reported by the owner and
-not yet confirmed with the mentor. The
-[Tokenomics pitch brief](./pitch/tokenomics-pitch-brief.md) proposes where the
-idea fits in the 15-minute route (a strengthened slide 16, a Q&A card on slide
-20 and an optional appendix), draft slide copy and notes, the numbers to bring,
-executive questions and the claims to keep out. It maps to rubric criteria A5,
-A6, B7, C1 and C3. The deck is unchanged: placement is an owner decision, the
-route is not rehearsed with it and no cost-per-accepted-proposal figure exists.
-Sources and evidence labels are in the
-[AI Tokenomics resource note](../reference/resources/ai-tokenomics.md).
-
-## Solution Architecture Views (2026-10-14)
-
-The [architecture handover](../architecture/README.md) provides an
-[executive Excalidraw view](../architecture/zava-forward-executive-architecture.excalidraw)
-and a [CTO/technical Excalidraw view](../architecture/zava-forward-technical-architecture.excalidraw),
-with official Azure icons and SVG/PNG previews. Both describe the same #68
-source baseline. The executive view explains one accountable workflow;
-the technical view distinguishes the single-API five-assistant implementation
-from deferred workers, network target versus development exceptions, and
-conditional M365/operational paths. The Excalidraw sources remain separate
-architecture assets; the presentation adaptation below does not replace them
-or slide 13's business-process map.
-
-### Architecture and UX Refresh (2026-10-14)
-
-The owner-requested UX Designer and PowerPoint agents informed the current
-[24-slide council proposal](./deck/draft/zava-forward-executive-draft.pptx).
-It retains the 18-slide main route and adds only two optional appendices.
-The architecture is adapted into native PowerPoint boxes, text and
-connectors, with individual official Azure service icons, rather than
-shrinking the detailed diagram into a slide-sized picture.
-
-| Slide | Audience and purpose | Rendered preview |
-| --- | --- | --- |
-| 10 | Executive: one workbench, controlled evidence, bounded AI and human authority | [Executive architecture](./deck/draft/architecture-executive-native.png) |
-| 19 | Technical: current runtime, identity, SQL/Blob/model contracts and separate proposal review | [Runtime interactions](./deck/draft/architecture-runtime-native.png) |
-| 23 | Technical: token renewal, deployment, operations, network context and failure domains | [Operations and identity](./deck/draft/architecture-operations-native.png) |
-| 24 | Technical: deferred workers/import, conditional M365, intended edge and unimplemented anchoring | [Deferred topology](./deck/draft/architecture-deferred-native.png) |
-
-The UX review made alternatives explicit on the main route, separated
-recorded technical evidence from acceptance still outstanding, and clarified
-the planning-only recommendation and proposed owner/deliverable pairs.
-`Ready` means generated and unreviewed; `acceptance outstanding` replaces
-ambiguous open-gate wording. Internal links lead from the executive view to
-technical detail, with a return to the decision. Expert artifact review is
-not real audience testing, resident engagement or observed comprehension.
-
-Slide 13 retains its native five-capability process map and equal peer
-title/body starts. Fixed top-aligned text, source-linked notes and explicit
-status words preserve the distinction between current implementation,
-configured controls, conditional routes and deferred work.
-
-The planned main route remains 795 seconds, including the 110-second public
-repository-evidence walkthrough and its in-slot fallback. With 75 seconds
-for questions and 30 seconds contingency, the plan is 15 minutes.
-Appendices 19-24 are optional depth, not extra main-route speaking time.
-No timed rehearsal, fresh live demo, calibrated model benefit, spending
-authority or production approval follows from this refresh.
-
-The [current authoring and validation handover](../../.copilot-tracking/ppt/2026-10-14/zava-forward-architecture-refresh/build-handover.md)
-retains all 24 YAML slides, source-to-native architecture mapping, UX
-dispositions, actual rendered checks and warning limitations. The
-[UX design brief](../../.copilot-tracking/ppt/2026-10-14/zava-forward-architecture-refresh/research/ux-design-review.md)
-checks contributions and gaps against all 20 assessment criteria and the
-section/individual floors; it is not a score or panel acceptance. Native
-PowerPoint/font, keyboard/screen-reader navigation, projection, human
-comprehension and pitch evidence remain separate checks.
-
-The [parent inspection and publication receipt](../../.copilot-tracking/ppt/2026-10-14/zava-forward-architecture-refresh/reports/parent-publication.md)
-records the byte-identical delivery and matching previews. All 387 current
-text frames are explicit TOP/fixed and pass complete rendered-word bounds;
-all 24 notes resolve to their actual slide relationships. Generic geometry
-still has 197 warnings and 27 info, zero errors, with explicit dispositions.
-Those local checks do not establish native-viewer accessibility or audience
-acceptance.
-
-## Agents in the Retrofit Process (2026-10-13)
-
-### Native PowerPoint Rebuild (2026-10-14)
-
-The earlier AMA Presentation Communications Strategist and PowerPoint Builder
-refresh produced a 22-slide baseline. The current 24-slide delivery is
-described above; the following records the earlier native-map implementation,
-not fresh counts for the new deck.
-Slide 13 now uses editable PowerPoint boxes, text and directional connectors,
-not an embedded SVG or PNG. It retains all five capability stages, human
-owners, on-request help, OFF-labelled proactive triggers, workflow controls
-and the hazard/funding boundaries. Its notes contain the full text equivalent,
-source references and a proposed 60-second explanation.
-
-Titles have fixed, top-aligned regions and corresponding body text starts
-at a common height across peer cards, including different title lengths.
-The earlier checked baseline had 311 explicit TOP-anchored, fixed-size text
-frames and 56 exactly aligned peer rows. The map has 43 native textboxes,
-12 backgrounds,
-four connectors and one identified branding image; no process-diagram image.
-
-The revised story distinguishes five observed real operator-service model
-paths and SQL-content/restart proof from unexecuted staff/human, semantic and
-value acceptance. Ordinary assistant authority remains absent and proactive
-scans remain off after bounded QA. The planned 18-slide main route is 13:15,
-including a recorded public-evidence walkthrough; discussion/contingency
-brings the plan to 15 minutes. Four appendices are optional. This is not an
-observed rehearsal or a new live model demonstration.
-
-All 22 baseline slides had relationship-correct, source-linked notes.
-Whole-deck LibreOffice exports and independent saved-shape/notes checks were
-inspected,
-including the native map and variable-length title cards. Generic compact
-spacing/edge-band warnings remain explicitly classified, not claimed as a
-clean heuristic pass. Liberation Sans is explicit because Aptos is unavailable
-locally; native PowerPoint/font fidelity, SDK vision validation, human
-acceptance and timed rehearsal are not claimed as passed.
-
-The [earlier working sources and handover](../../.copilot-tracking/ppt/2026-10-14/zava-forward-capstone-rebuild/build-handover.md)
-include all 22 slide YAML files, style, build commands and validation assets.
-At that publication, the 22-slide PPTX matched the checked working copy. The
-2026-10-11 21-slide sources and 2026-10-13 image-insertion sources are historical;
-do not use them or the superseded 22-slide build as the current full-deck
-source. Use the architecture/UX refresh handover above.
-
-![Preview of native editable slide 13: five aligned capability cards, human decision owners, on-request help, OFF-labelled triggers and deterministic workflow boundaries. Edit the boxes in the linked PowerPoint, not this preview image.](./deck/draft/agents-in-retrofit-process-native.png)
-
-The standalone [vector process map](./deck/draft/agents-in-retrofit-process.svg)
-and [original PNG](./deck/draft/agents-in-retrofit-process.png) remain reference
-illustrations of the proposed design, not the current editable slide or five
-autonomous managers. The workflow owns progression and accountable people retain
-policy, resident choice, technical acceptance, work release, grant submission,
-quality acceptance and payment. Funding spans preparation through later
-claim/cash reconciliation; an award is not a receipt, and reviewed funding,
-budget, resident choice and capacity precede work release.
-
-| Bounded capability | Staff-requested help | Proactive review trigger, not an approval | Intended improvement and value test |
-| --- | --- | --- | --- |
-| Stock Prioritisation | Explain source-bound candidate evidence; propose reconciliation of conflicting records, never change ranking policy or queues | New/conflicting stock/EPC evidence or an eligible freshness review | Fewer data blind spots; compare reconciliation time, critical conflicts found and homes still viable after survey |
-| Assessment Preparation | Pre-fill a survey/design pack from sourced facts, never invent site observations | Changed, missing or stale assessment evidence | Less review/rework; compare returns, reapprovals and assessment-to-ready time, retaining separate assessor/coordinator sign-off |
-| Grant and Funding Evidence | Draft a source-linked application or evidence pack; rules own eligibility and calculations, Finance owns review/submission | Changed terms or missing evidence routed for human review, never silent activation of a new rule | Fewer pack gaps; compare first-time evidence acceptance, rejection/rework and time to claim; award/claim/cash stay separate |
-| Contractor and Resident Coordination | Draft an update or suggest slots within committed capacity; no auto-send, instruction, booking or consent inference | Unaccepted handoff or missed resident-update commitment to an owned queue | Clearer ownership; compare coordination effort per accepted home, failed visits and unowned handoffs, preserving resident choice and independent work release |
-| Quality Evidence Assurance | Assemble evidence for independent review; raise missing or contradictory evidence, never accept or clear | New quality evidence, missing items or anomaly signals within a registered task | Earlier reviewed defect signals; compare evidence rework, first-time acceptance and missed critical defects |
-
-Proactive means an authorized event or scheduled check makes a task eligible.
-The deterministic task registry selects rules, bounded AI or human handling;
-only permitted, source/version-bound tasks may produce an unreviewed draft or
-raise-only flag to a named human queue. Structured freshness, deadlines and
-readiness are rules, not evidence of agent reasoning. Any hazard uses the
-independent human safety route immediately; a negative model result never
-suppresses intake or changes its clocks. Failed/stale/disabled assistance
-preserves controlled state and an owned manual route.
-
-All improvement claims are hypotheses. Paired comparison with the same
-rules/manual workflow counts preparation, review, correction and shifted
-burden alongside critical errors, latency, cost and uncertainty. The observed
-five operator-service model paths, fixture tests and diagram arrows do not
-prove all workflow
-capabilities, proactive deployment, calibrated quality or measured benefit.
-The [draft closure review](../reference/research/gap-analysis-next-build.md#draft-experiment-closure-review-2026-10-13)
-keeps absent #58 capabilities and current-infrastructure verification explicit.
-
-Content is grounded in the [addendum agent map](../case_study_48_addendum.md#agentic-architecture-brief),
-[agent request challenge](../reference/research/company/agent-request-challenge.md#summary)
-and [PRD bounded-agent pattern](../prds/zava-forward-retrofit-programme-demonstrator.md#bounded-agent-orchestration-pattern).
-No new requirement, authority, numerical benefit or operational approval is
-introduced. The diagram's intended contribution to A1/A3/A6/A7 and B1/B2/B6/B7
-is explanation of fit, triggers, controls and value tests, not a fresh rubric
-score or panel-readiness claim. Live pitch/rehearsal and the complete rubric
-floors remain separate.
-
-## Thought leadership artifact (Section D)
-
-Commit exactly one artifact folder, `docs/capstone/thought-leadership/<artifact-name>/`,
-with a `README.md` that states the format, the audience, the engagement evidence
-and where it is published or submitted.
-
-| Format | What to commit in the folder |
+| Work | Current material |
 | --- | --- |
-| White paper or architecture guidance | The paper, 2,000+ words, structured and sourced |
-| Technical blog post | The post, 800+ words, plus the publication or submission link and date |
-| Reference implementation or accelerator | A `README.md` covering purpose, architecture, setup and known limitations, linking the repository that holds the working code |
-| IP disclosure or patent filing | The disclosure document and the submission reference |
-| Community or conference session | Published materials, written notes or a transcript, and a link to the recording |
-| Slide deck | Never enough alone. Commit written notes or a transcript with it |
+| Present or review | [PowerPoint](./deck/zava-forward-cowork-v2-draft.pptx) and [matching PDF](./deck/zava-forward-cowork-v2-draft.pdf) |
+| Edit and rebuild | [Source guide](./source/README.md), [54-slide manifest](./source/slides.json) and [native baseline](./source/baseline.pptx) |
+| Find image inputs and provenance | [Asset catalog](./source/assets/catalog.json) and [retained media](./source/assets/media/) |
+| Prepare the pitch | [Speaker notes](./pitch/speaker-script.md), [question bank](./pitch/questions-and-answers.md) and [pitch folder](./pitch/) |
+| Prepare the demo | [Ten-minute runbook](./demo/runbook.md), including the under-two-minute executive hook and recovery route |
+| Understand technology choices | [Decision register](./source/README.md#technology-decisions); main page 16 and appendix pages 31, 37, 46 and 47 |
+| Inspect findings and checks | [Dated review](./source/review-2026-10-29.md), including the legal-status correction on page 3 and all-criteria evidence gaps |
+| Recover previous work | [History and restore map](./history/README.md); original findings and authoring sources are retained |
+| Continue thought leadership | [Existing paper package](./thought-leadership/everything-but-the-software/README.md), unchanged by this reorganization |
 
-D1 to D3 score 0 until a text artifact exists in this folder. D3 stays at the
-bottom band until a real publication, filing or delivery beyond the cohort is
-recorded with its link and date. BRDs, PRDs and code never count toward Section D.
+The PPTX and PDF are drafts for owner review. Prepared notes, native rendering
+and local extraction do not establish rehearsal, human acceptance, measured
+benefits or a fresh rubric score.
 
-## What scores 0 or is capped until it exists
+## What To Keep
 
-| Criteria | Needs at least one of | Without it |
-| --- | --- | --- |
-| B1, B2, B7 | Capstone deck or pitch transcripts | 0 |
-| B3 to B5, C2, C3 | Pitch transcripts and notes (demo, Q&A, timing) | 0 |
-| D1 to D3 | Thought leadership artifact | 0, and the outcome is Incomplete |
-| B6 | Capstone deck, plus the documentation already in the repository | Capped at 3 |
+Keep the complete source package and its builder dependencies. The JSON covers
+all 54 slide records and notes; the pinned native baseline owns unchanged
+layouts, relationships, themes and embedded graphics. JSON alone does not
+reconstruct those native designs. The 36 separate media inputs make image
+dependencies inspectable and editable.
 
-Missing pitch and thought-leadership evidence still prevents the associated
-criteria and floors from being satisfied. A deck alone cannot clear them.
-Scores rise only as the assets above are committed and assessed.
-Masterclass attendance is a floor in the guide but is not repository evidence
-and is not scored by the gate.
+Keep pitch and demo material together with the same deck revision. Do not edit
+the generated speaker notes or Q&A independently of the source manifest.
+Only actual rehearsal/delivery records should be described as transcripts.
+
+The historical 18-slide brief, seven editable Excalidraw diagrams, original
+Azure icon sources and earlier native recovery inputs are under
+[history](./history/README.md). They are not another current build route.
+The 15 approved redundant exports were archived and restored before removal;
+their exact paths and hashes are in the
+[cleanup receipt](./history/reorganization-2026-10-29.json).
+
+## Rebuild
+
+From the repository root in PowerShell 7.4 or newer, choose a new external
+directory for each build. Build and Verify do not require Office. Render
+requires installed Windows PowerPoint.
+
+```powershell
+$Run = Join-Path $env:LOCALAPPDATA ("ama/capstone-runs/" + [guid]::NewGuid().ToString('N'))
+./tools/capstone/Invoke-Capstone.ps1 -Action Build -RepoRoot $PWD.Path -OutputDir $Run
+./tools/capstone/Invoke-Capstone.ps1 -Action Verify -RepoRoot $PWD.Path -OutputDir $Run
+./tools/capstone/Invoke-Capstone.ps1 -Action Render -RepoRoot $PWD.Path -OutputDir $Run
+```
+
+The run produces a PPTX, native PDF/PNGs, verification reports and synchronized
+pitch notes. Review those outputs before replacing the delivery files. Heavy
+previews stay outside the checkout. See the [source guide](./source/README.md)
+for the editing contract and [compact validation receipt](./source/validation.json)
+for the current delivery identity.
+
+## Rubric Inputs
+
+The [artifact registry](../../.github/rubric/artifacts.json) selects exactly
+the current deck path with a 20 MB allowance. It also reads Markdown, text
+and VTT material under both `pitch/` and `demo/`. Source inputs and history
+are not substitute current pitch evidence. Thought-leadership registration
+is unchanged. PDFs and images do not substitute for PPTX speaker notes.
+
+Local checks use the real PPTX extractor and deterministic registry/gate
+tests. Hosted scoring uses trusted configuration from base `main`; the new
+demo-folder registration takes effect there only after the registry update
+is integrated. No recorded score is manually changed.
+
+## Next Work
+
+Rehearse the retained 23:45 narration plan within the 30-minute presentation
+slot, with a separate ten-minute demo. Build variants share their timing;
+appendix answers are optional depth. Confirm the actual panel slot before
+the final rehearsal rather than reviving a historical timing route.
+
+Resolve the original image URL/prompt/licence gaps before new external reuse.
+Complete the actual live-demo preflight, direct accessibility/navigation and
+audience checks, remaining legal/privacy/product gates and the repository's
+publication gates separately. The retained buttons use fixed slide jumps;
+their historical "Return to caller" wording is not dynamic viewer history.
+
+No deployment, data export, paid inference, spending approval, commit, push,
+hosted rubric run or production acceptance is part of this reorganization.

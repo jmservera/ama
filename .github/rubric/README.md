@@ -1,7 +1,7 @@
 ---
 title: Capstone Rubric Gate
 description: How the rubric-score agentic workflow scores the capstone against the FY27 AMA rubric and blocks pull requests that lower the score
-ms.date: 2026-10-24
+ms.date: 2026-10-29
 ms.topic: how-to
 ---
 
@@ -29,7 +29,7 @@ A criterion can only move when an artifact that informs it changes, and every mo
 The registry selects only
 `docs/capstone/deck/zava-forward-cowork-v2-draft.pptx` for `capstone-deck`.
 The older executive deck and the
-[imported Cowork source and historical exports](../../docs/capstone/deck/cowork-generated/README.md)
+[imported Cowork source and historical exports](../../docs/capstone/history/cowork-generated/README.md)
 are not alternate scored decks. The imported source PPTX is encrypted;
 the later owner-supplied public v2 export is installed at the selected path.
 Local verification with the actual extractor reads 54 slides and 54
@@ -49,6 +49,24 @@ loads its trusted registry and tooling from base `main`. They must reach
 that trusted base before a fresh v2 assessment can use the new selection
 and allowance. Do not edit `scores/latest.json`, fall back to the historical
 deck, or claim a v2 pass while readable slide-and-notes evidence is missing.
+
+### Capstone Reorganization (2026-10-29)
+
+The [current capstone index](../../docs/capstone/README.md) separates delivery,
+complete native/JSON/image sources, pitch, demo and preserved history. The
+scoring PPTX stays at the same exact path with the same 20 MB allowance.
+The `pitch` artifact now includes `.md`, `.txt` and `.vtt` files in both
+`docs/capstone/pitch/` and `docs/capstone/demo/`. Historical packages and
+the source baseline are outside those scopes; they are not current rehearsal
+evidence. Thought-leadership registration and recorded scores are unchanged.
+
+The actual supplied deck has 108 fixed slide-jump actions, not the older
+review's 27 dynamic caller returns. The new builder preserves its actual
+navigation and all 54 notes; original findings and counts remain dated history.
+Local registry/extraction tests do not dispatch the scoring agent or establish
+a fresh grade. Hosted PR preparation still uses trusted base-`main`
+configuration, so the new demo-folder scope is active there only after this
+registry update is integrated. Preserve the normal publication and review gates.
 
 ### PPTX Slide Citation Repair
 
