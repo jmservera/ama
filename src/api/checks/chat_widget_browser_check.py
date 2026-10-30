@@ -12,6 +12,7 @@ from typing import Any
 from playwright.sync_api import Browser, Page, Route, expect, sync_playwright
 from test_resident_demo_api import FAKE_PASSWORD, DemoTestCase
 
+from checks.chat_submit_browser_check import employee as submit_employee
 from checks.design_system_browser_check import main as employee_server
 from checks.design_system_browser_check import synthetic_data
 from checks.regulatory_ux_check import AXE_SHA256
@@ -355,9 +356,14 @@ def employee_refresh(page: Page) -> None:
                 && button.onclick === refreshChat.toggle
                 && button.querySelector('svg') === refreshChat.icon;
             }"""), "Same-context route refresh replaced widget, toggle or decoration"
-            expect(page.locator("#app")).to_be_focused()
+            expect(panel).to_be_visible() if opened else expect(panel).to_be_hidden()
+            expect(launcher).to_have_attribute("aria-expanded", str(opened).lower())
+            if opened:
+                expect(panel.locator("textarea")).to_be_focused()
+                launcher.click()
+            else:
+                expect(page.locator("#app")).to_be_focused()
             expect(panel).to_be_hidden()
-            expect(launcher).to_have_attribute("aria-expanded", "false")
             focused_control_visible(page)
             launcher.click()
             expect(panel).to_be_visible()
@@ -946,6 +952,7 @@ def main() -> None:
 
             def check_employee(base: str) -> None:
                 employee(browser, base, args.out, axe)
+                submit_employee(browser, base, args.out)
                 recovery(browser, base)
 
             employee_server(check_employee, synthetic_data, synthetic_chat_privacy=True)

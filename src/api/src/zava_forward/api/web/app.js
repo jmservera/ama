@@ -89,7 +89,11 @@ const ago = (s) => {
   const days = Math.floor((Date.now() - new Date(s)) / 864e5);
   return days <= 0 ? "Today" : days === 1 ? "Yesterday" : `${days} days ago`;
 };
-const show = (...nodes) => { app.replaceChildren(...nodes.flat().filter((n) => n && n.nodeType)); app.focus(); };
+const show = (...nodes) => {
+  const chatOwnsFocus = document.activeElement?.closest(".chat-widget:not([hidden])");
+  app.replaceChildren(...nodes.flat().filter((n) => n && n.nodeType));
+  if (!chatOwnsFocus) app.focus();
+};
 
 function workspaceReady() {
   document.getElementById("startup")?.remove();
@@ -131,9 +135,18 @@ function login(msg) {
 }
 
 async function start() {
+  const session = me;
+  const refreshed = await api("/api/me");
+  if (me !== session) return;
+  if (session && JSON.stringify(session.user) === JSON.stringify(refreshed.user)
+      && JSON.stringify(session.account) === JSON.stringify(refreshed.account)) {
+    Object.assign(session, refreshed);
+  } else {
+    if (typeof employeeChat !== "undefined") employeeChat.reset(true);
+    me = refreshed;
+  }
   caseSession?.controller?.dispose();
   caseSession = null;
-  me = await api("/api/me");
   Object.assign(listState, defaultListState());
   queueOrigin = "mine";
   briefingBox = null;

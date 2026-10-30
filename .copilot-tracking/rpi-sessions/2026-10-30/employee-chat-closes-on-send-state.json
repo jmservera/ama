@@ -1,0 +1,33 @@
+{
+  "task_id": "employee-chat-closes-on-send-2026-10-30",
+  "task_slug": "employee-chat-closes-on-send",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/employee-chat-closes-on-send-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/employee-chat-closes-on-send-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/employee-chat-closes-on-send-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/employee-chat-closes-on-send-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/employee-chat-closes-on-send-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/employee-chat-closes-on-send-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Execute ordered full RPI loop; local commit only; Refs-only; no push, Azure or deployment", "status": "confirmed", "evidence": "Explicit owner request 2026-10-30"},
+    {"decision": "Reuse clean matching topic branch with no existing PR", "status": "confirmed", "evidence": "git status, branch and gh pr list at intake"},
+    {"decision": "Research executed, Ready; one plan critique executed with Revise verdict; PC-001/PC-002 planning changes applied directly", "status": "confirmed", "evidence": ".copilot-tracking/plans/2026-10-30/employee-chat-closes-on-send-plan.md"},
+    {"decision": "One independent Review executed Complete; outcome Not accepted; RV-001 focus defect and RV-002 full-unit evidence gap routed without repeating Review", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-30/employee-chat-closes-on-send-review.md"}
+  ],
+  "blockers": [
+    {"id": "full-api-units-lock", "summary": "RV-002: required full API suite not started because shared heavy lock is busy; focused/static/browser validation passed", "resolution": "Run documented full API unittest discovery when lock is available; no bypass or waiting queue"},
+    {"id": "delayed-dismissal-focus", "summary": "RV-001: delayed render after Escape or external focus still redirects focus to app; original Review Not accepted", "resolution": "Later rpi-implement work preserves deliberately chosen connected focus and corrects regression expectation; do not repeat original Review"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Requested ordered loop and local-only delivery commit complete; candidate Not accepted. Ranked findings remain routed, no new child task or remote operation authorized"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Correct delayed-dismissal focus preservation", "rationale": "Bounded medium acceptance defect; preserves Escape-return/navigation focus without weakening headline chat visibility fix", "evidence": "RV-001 in original Review"},
+    {"rank": 2, "task": "Collect required full API unit evidence when shared lock is available", "rationale": "Completes requested package validation without bypass or queue", "evidence": "RV-002 in original Review"},
+    {"rank": 3, "task": "Coordinator verifies deployed employee-site behavior after separately authorized redeployment", "rationale": "Local constructed browser evidence cannot prove actual owner-site trigger; no deployment authorized here", "evidence": "Plan Follow-Up Items and original Review"}
+  ]
+}
