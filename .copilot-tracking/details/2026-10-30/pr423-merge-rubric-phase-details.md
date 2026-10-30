@@ -13,7 +13,7 @@
 | Phase | Name | Status | Tasks |
 | --- | --- | --- | --- |
 | P01 | Preserve integration and improve evidence | Complete | P01-T01, P01-T02 |
-| P02 | Validate and deliver local candidate | Active | P02-T01, P02-T02 |
+| P02 | Validate and deliver local candidate | Complete execution; gate blocked | P02-T01, P02-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Preserve integration and improve evidence
@@ -100,3 +100,13 @@ Local-only bounded validation. Historical receipts do not validate new inputs.
   if a final evidence-only commit is needed. No publication here.
 * Completion: original Review, committed candidate, transparent gate disposition
   and coordinator handoff, not implied human/hosted approval.
+
+Actual P02-T02 outcome: merge commit f74b270d7cd370173272b801ff3a93b434b37262
+contains both pinned parents and original Review evidence, with privacy-safe
+author/committer and required trailer. The first gate refused task-generated
+ignored caches; 163 files in 16 exact cache/metadata directories were reversibly
+externalized with verified archive/restore hashes and no tracked-file removal.
+The clean retry then timed out on the shared heavy-resource lock after
+600 seconds, before checks or receipt creation. Original adverse Review and
+gate results remain; coordinator publication is blocked pending a new full
+gate at the final clean commit/current reviewed main.

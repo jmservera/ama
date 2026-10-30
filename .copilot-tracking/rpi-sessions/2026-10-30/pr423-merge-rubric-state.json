@@ -3,8 +3,8 @@
   "task_slug": "pr423-merge-rubric",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Review",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-30/pr423-merge-rubric-research.md",
@@ -39,18 +39,42 @@
       "decision": "Original independent Review executed once; execution Complete, outcome Residual work at pre-commit working-candidate boundary",
       "status": "complete",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-30/pr423-merge-rubric-review.md; RV-001 commit/full gate pending, RV-002 inherited failures, RV-003 whitespace qualification"
+    },
+    {
+      "decision": "Local merge f74b270d preserves both parents; full clean gate attempted and blocked after 600-second shared-lock timeout",
+      "status": "publication blocked",
+      "evidence": ".copilot-tracking/changes/2026-10-30/pr423-merge-rubric-changes.md; external pr423-gate-clean-console.log; no passing receipt"
     }
   ],
   "blockers": [
     {
       "id": "RV-001",
-      "summary": "Final candidate commit and full local gate not yet established; publication remains blocked",
-      "resolution": "Commit original evidence locally, verify ancestry/identity and execute full gate externally; coordinator retains publication/human/hosted gates"
+      "summary": "Merge/evidence committed and ancestry/identity verified; clean full gate blocked by shared heavy-resource lock after 600 seconds",
+      "resolution": "Coordinator must obtain lock normally, run and verify a new full exact-head gate against current reviewed main; no bypass, push or acceptance inferred"
     }
   ],
   "next_action": {
-    "phase": "Review",
-    "action": "Preserve completed Review; finish P02-T02 local commit and external full gate without repeating Review"
+    "phase": "Follow-up",
+    "action": "Coordinator clears shared-lock prerequisite and runs final exact-head gate before publication; no child follow-up selected, automatic session remains running"
   },
-  "prioritized_follow_ups": []
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator runs full exact-head gate when shared lock is available",
+      "rationale": "Required publication blocker; local implementation and commit are complete but cannot substitute for gate evidence",
+      "evidence": "RV-001; pr423-gate-clean-console.log, 600-second lock timeout"
+    },
+    {
+      "rank": 2,
+      "task": "Repair inherited rubric fixture/registry test debt separately",
+      "rationale": "Eight reproducible failures on unchanged main; useful bounded maintenance, not scoring relaxation",
+      "evidence": "RV-002; candidate350 passed8 failed, main348 passed8 failed"
+    },
+    {
+      "rank": 3,
+      "task": "Obtain separately authorized live transport and real presentation/publication evidence",
+      "rationale": "Addresses actual operational and capstone gaps but requires new authority and human participation",
+      "evidence": "DN1-DN5 live prerequisites; capstone B3/B4/B5/C2 and D1-D3 descriptors"
+    }
+  ]
 }

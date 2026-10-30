@@ -28,9 +28,10 @@ invented to raise the total.
 
 ### Unresolved Decisions or Blockers
 
-No implementation decision outstanding. Full local gate prerequisites remain
-to be exercised; failed prerequisites block publication, not evidence capture
-or the requested local handoff.
+No implementation decision outstanding. The full local gate was attempted
+after the merge/evidence commit but the shared heavy-resource lock timed out
+after 600 seconds. Publication remains blocked; no successful receipt exists.
+Requested local implementation and one-pass RPI evidence are complete.
 
 ## User Decisions and Requirements
 
@@ -118,7 +119,7 @@ Depends on P01-T01. Update existing adapter/preflight tests and transport/
 rubric docs, KB index/log. Retain all original statements as dated history.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Validate and deliver local candidate
+### [x] P02: Validate and deliver local candidate
 
 Depends on P01.
 
@@ -130,7 +131,7 @@ record-workflow tests, gate orchestration tests and migration regressions.
 Run corresponding lint/type/workflow checks.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Reconcile evidence, Review once, commit and attempt full gate
+#### [x] P02-T02: Reconcile evidence, Review once, commit and attempt full gate
 
 Depends on P02-T01. Original Review is independent, read-only and once only.
 Classify findings as acceptance-blocking or deferrable; preserve the original
@@ -170,6 +171,11 @@ One critique executed, original verdict Revise, preserved unchanged.
 
 ## Follow-Up Items
 
+* Coordinator must obtain the shared local heavy-resource lock and run a new
+  full exact-head gate before publication. The actual 600-second lock timeout
+  is preserved; no lock was removed, bypassed or another worktree touched.
+* Rubric/test maintainers should repair the eight independently reproduced
+  inherited fixture/registry failures separately, without relaxing scoring.
 * Fresh hosted rubric submission after coordinator push; local checks cannot
   establish hosted output compliance or replace exact-head assessment.
 * Real private transport, production action-name/size verification, signed
@@ -179,4 +185,6 @@ One critique executed, original verdict Revise, preserved unchanged.
 
 Implementation changes record:
 .copilot-tracking/changes/2026-10-30/pr423-merge-rubric-changes.md.
-Ready task after critique disposition: P01-T01.
+All P01/P02 execution tasks are complete, including the failed full-gate
+attempt; this is not full-gate acceptance. Original Review remains Complete /
+Residual work. Coordinator owns the blocked final exact-head publication gate.

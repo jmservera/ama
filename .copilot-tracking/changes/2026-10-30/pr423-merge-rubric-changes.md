@@ -12,9 +12,10 @@
 
 ## Execution Status
 
-Full plan in progress. P01, P01-T01, P01-T02 and P02-T01 complete; P02-T02
-active (Review, local commit and full gate). No source edits before Research
-and Plan/critique completed.
+Full-plan local execution complete: P01/P02 and all task markers complete,
+including the attempted full gate. Original independent Review Complete /
+Residual work is preserved. Full-gate acceptance/publication remains Blocked.
+No source edits before Research and Plan/critique completed.
 
 ## Execution Summary
 
@@ -124,7 +125,9 @@ Normal local gate remains required; no broad tooling change or bypass.
 | Focused Git diff whitespace | Passed | Current task/integration surfaces against main pass; no conflict markers |
 | Whole staged merge whitespace | Failed, inherited | Original main tracking whitespace retained byte-identical; not a clean whole-index check (RV-003) |
 | New documentation links | Passed | New single-line relative links and heading anchors verified in four changed guides |
-| Full local gate | Pending | Requires original Review/candidate commit first; no historical receipt reused |
+| First full local gate | Blocked before checks | Candidate f74b270d: ignored task-generated caches/metadata; no receipt |
+| Clean full local gate retry | Blocked before checks | Candidate f74b270d: Global heavy-resource lock timeout after 600 seconds; no receipt, no pass |
+| Local commit identity/ancestry | Passed | f74b270d7cd370173272b801ff3a93b434b37262 has both pinned parents; author/committer 8036360+jmservera@users.noreply.github.com, required Copilot trailer and Refs #360 |
 
 ## Pre-Review Reconciliation
 
@@ -136,22 +139,57 @@ The original Review is preserved, not repeated or promoted to acceptance.
 
 | Finding | Disposition | Remaining requirement |
 | --- | --- | --- |
-| RV-001 High | Active acceptance blocker | Local candidate commit/ancestry/identity then actual full external gate; no publication pass inferred |
+| RV-001 High | Commit/ancestry/identity completed; gate still blocked | Actual clean full-gate attempt timed out on shared lock; no publication pass inferred |
 | RV-002 Medium | Deferred inherited rubric maintenance | Same eight failures reproduced on unchanged main; separate follow-up, not repaired by this task |
 | RV-003 Low | Qualified, original finding preserved | Focused whitespace passes; whole staged merge contains byte-identical historical main whitespace and is not clean |
 
 ## Blockers
 
-RV-001: final committed-candidate/full-gate evidence not yet established.
-No implementation decision or source defect blocks the requested local
-commit. Required human/hosted approval remains outside this local task.
+RV-001: full-gate evidence unavailable because the shared heavy-resource lock
+timed out after 600 seconds. Do not remove/bypass that lock or interfere with
+other tasks. Coordinator must run a new full gate on the final clean commit,
+verify a successful receipt against current reviewed main, and obtain the
+separate exact-head/hosted/human assessments. No publication is performed here.
 
 ## Remaining Work
 
-P02-T02 Review, local commit and full gate.
+No remaining implementation markers. Full-gate acceptance is blocked, not
+silently treated as passing; separate coordinator publication work remains.
+
+## Local Commits and External Evidence
+
+The two-parent merge is f74b270d7cd370173272b801ff3a93b434b37262.
+This subsequent evidence-only commit records actual gate outcomes and current
+state; it does not change source or the original critique/Review. It invalidates
+any earlier candidate receipt in principle; no successful receipt exists here.
+A final exact-head retry uses a new external directory and a finite lock wait;
+its console is retained beside the earlier adverse attempts.
+
+External root:
+`/home/azureuser/.copilot/session-state/d04ece3f-6926-4a9f-96ce-ecc3975fc9db/files/`.
+
+* `pr423-gate-initial-console.log`: ignored-input refusal.
+* `pr423-gate-clean-console.log`: actual 600-second lock timeout.
+* `validation-generated-inputs/manifest.json`, `archive/` and
+  `restore-selected/`: exact finite selection of 163 task-generated cache/
+  metadata files in 16 directories; full restore/readback hashes verified before
+  externalization. No historical tracking output or private dataset selected.
+* `rubric-tests.log` and `rubric-main-tests.log`: 350/8 versus 348/8.
+* Saved run context and fallback output remain external with hashes in Research.
+* `index-whitespace.log`: preserved whole-index inherited whitespace failure.
+
+No Azure activity, warming, live sign-in, push or other worktree access occurred.
 
 ## Follow-Up Items
 
+Ranked current follow-ups:
+
+1. Coordinator full exact-head gate after shared-lock availability: highest
+   priority because RV-001 blocks publication, despite completed local repair.
+2. Separate rubric fixture/registry maintenance: eight inherited failures
+   reproduced on main; bounded quality improvement without grade manipulation.
+3. Authorized real transport validation and actual pitch/dissemination evidence:
+   larger operational/human work, never inferred from offline infrastructure.
+
 Fresh hosted rubric and exact-head assessment belong to coordinator after
-push. Live transport sizes/permissions/routing, signed attestation and human/
-panel/publication acceptance remain separate unverified follow-ups.
+push. No child follow-up is selected or started in this non-interactive task.

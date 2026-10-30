@@ -55,9 +55,9 @@ automatic task, with no authority to select later follow-up work.
 
 | ID | Question | Type | Status |
 | --- | --- | --- | --- |
-| Q1 | What conflicts and migration interactions need resolution? | depth | Open |
-| Q2 | What caused the rubric failure, and what is score versus schema failure? | depth | Open |
-| Q3 | What honest in-scope improvements and local validation are appropriate? | depth | Open |
+| Q1 | What conflicts and migration interactions need resolution? | depth | Answered |
+| Q2 | What caused the rubric failure, and what is score versus schema failure? | depth | Answered |
+| Q3 | What honest in-scope improvements and local validation are appropriate? | depth | Answered |
 
 ## Prior Knowledge Gate
 
