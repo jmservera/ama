@@ -7,11 +7,15 @@ import sqlite3
 import tempfile
 import threading
 import unittest
+from copy import deepcopy
 from pathlib import Path
 
 import dataset
 import test_sqlstore as base
 from zava_forward.core import chatthreads
+from zava_forward.core.assistants import REGISTRY
+from zava_forward.core.chat_isolation import ChatIsolation
+from zava_forward.core.chat_panel import FALLBACK, LABEL, ChatPanel, ModelUnavailable
 from zava_forward.core.chatthreads import ChatNotFound
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import ConflictError, Store
@@ -120,6 +124,99 @@ class ChatBehaviour:
         self.assertEqual([e["action"] for e in entries], ["chat.thread.created", "chat.message.added", "chat.thread.deleted"])
         self.assertNotIn(SECRET, json.dumps(entries))
         self.assertEqual(json.loads(entries[1]["detail"])["thread"], t["id"])
+        self.assertTrue(self.store.verify_audit())
+
+    def test_employee_skills_persist_cited_answers_and_minimal_audit(self):
+        if hasattr(self.store, "db"):
+            self.addCleanup(self.store.db.close)
+        env = dict(CHAT_DPIA_REF="SYN-DPIA", CHAT_LAWFUL_BASIS_REF="SYN-BASIS",
+                   CHAT_NOTICE_REF="SYN-NOTICE")
+        calls = []
+
+        def model(system, prompt):
+            calls.append((system, prompt))
+            return json.dumps(dict(answer="Check the case stage.", citations=["ZF-1/stage"]))
+
+        panel = ChatPanel(ChatIsolation(self.store, env=env), model)
+        before = deepcopy(self.store.cases["ZF-1"])
+        turns = []
+        for skill in (*REGISTRY, "general"):
+            with self.subTest(skill=skill):
+                thread = self.thread()
+                count = len(calls)
+                answer = panel.ask(SAM, thread["id"], f"{SECRET} private@example.test",
+                                   skill=skill)
+                self.assertEqual(len(calls), count + 1)
+                self.assertIn(f"Selected advisory skill: {skill}.", calls[-1][0])
+                self.assertEqual((answer["kind"], answer["skill"], answer["label"]),
+                                 ("answer", skill, LABEL))
+                self.assertEqual(answer["consumption"]["model_calls"], 1)
+                self.assertEqual([c["id"] for c in answer["citations"]], ["ZF-1/stage"])
+                self.assertIn('"ZF-1/stage"', calls[-1][1])
+                turns.append((thread["id"], skill, answer))
+        self.store.save()
+        again = self.make_store(self.tmp.name)
+        if hasattr(again, "db"):
+            self.addCleanup(again.db.close)
+        events = [json.loads(e["detail"]) for e in again.audit_entries()
+                  if e["action"] == "chat.answer"]
+        for tid, skill, answer in turns:
+            with self.subTest(reopened_skill=skill):
+                messages = again.chat_resume(SAM, tid)["messages"]
+                self.assertEqual([m["role"] for m in messages], ["user", "assistant"])
+                self.assertIn(SECRET, messages[0]["content"])
+                self.assertNotIn("private@example.test", messages[0]["content"])
+                self.assertEqual(messages[1]["content"], answer["reply"])
+                self.assertEqual(messages[1]["evidence"], ["ZF-1/stage"])
+                self.assertIn(dict(thread_id=tid, question_seq=messages[0]["seq"],
+                                   skill=skill, outcome="answer"), events)
+        self.assertNotIn(SECRET, json.dumps(list(again.audit_entries())))
+        self.assertNotIn("private@example.test", json.dumps(list(again.audit_entries())))
+        self.assertEqual(again.cases["ZF-1"], before)
+        self.assertTrue(again.verify_audit())
+
+    def test_employee_general_sources_fallback_and_foreign_owner_denial(self):
+        if hasattr(self.store, "db"):
+            self.addCleanup(self.store.db.close)
+        env = dict(CHAT_DPIA_REF="SYN-DPIA", CHAT_LAWFUL_BASIS_REF="SYN-BASIS",
+                   CHAT_NOTICE_REF="SYN-NOTICE")
+        calls = []
+
+        def model(system, prompt):
+            calls.append(prompt)
+            self.assertIn("No case or home record is visible", prompt)
+            self.assertNotIn("ZF-1/", prompt)
+            return json.dumps(dict(answer="A person reviews decisions.",
+                                   citations=["workflow/boundaries"]))
+
+        def unavailable(system, prompt):
+            raise ModelUnavailable("timeout", calls=1)
+
+        panel = ChatPanel(ChatIsolation(self.store, env=env), model)
+        for skill in (*REGISTRY, "general"):
+            with self.subTest(skill=skill):
+                tid = self.thread(case_id="")["id"]
+                panel.model = model
+                count = len(calls)
+                answer = panel.ask(SAM, tid, "Explain the workflow", skill=skill)
+                self.assertEqual((answer["kind"], answer["context"]), ("answer", "general"))
+                self.assertEqual(len(calls), count + 1)
+                self.assertEqual([c["id"] for c in answer["citations"]],
+                                 ["workflow/boundaries"])
+                messages = self.store.chat_resume(SAM, tid)["messages"]
+                with self.assertRaises(ChatNotFound):
+                    panel.ask(PAM, tid, "Read another employee's question", skill=skill)
+                self.assertEqual(len(calls), count + 1)
+                self.assertEqual(self.store.chat_resume(SAM, tid)["messages"], messages)
+                for provider in (None, unavailable):
+                    panel.model = provider
+                    fallback = panel.ask(SAM, tid, "Explain the workflow", skill=skill)
+                    self.assertEqual((fallback["kind"], fallback["reply"],
+                                      fallback["workflow_only"]), ("fallback", FALLBACK, True))
+                    event = [json.loads(e["detail"]) for e in self.store.audit_entries()
+                             if e["action"] == "chat.answer"][-1]
+                    self.assertEqual((event["thread_id"], event["skill"], event["outcome"]),
+                                     (tid, skill, "fallback"))
         self.assertTrue(self.store.verify_audit())
 
     def test_validation(self):
