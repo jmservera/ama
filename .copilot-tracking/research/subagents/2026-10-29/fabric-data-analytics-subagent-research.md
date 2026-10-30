@@ -151,3 +151,21 @@ The most concrete current technical gap is the sensor producer/consumer identifi
 ## Stop Decision
 
 Stop reason: delegated lane criteria met. The required internal implementation/data-boundary inventory, tests, arithmetic, uncertainties and falsifying checks are recorded. Current Fabric product fit, cost/licensing, tenant capacity and final recommendation remain for parent synthesis and other lanes.
+
+## Dated Cadence Correction (2026-10-30, Refs #558)
+
+The original arithmetic bullet and gaps summary above incorrectly describe
+131,025,000 rows as an hourly/dropout estimate. Those statements are retained
+as original research, not current sizing guidance. The controlling
+[backfill estimate record](../../../../docs/reference/research/iot-sensor-analytics-research-plan.md#historical-backfill-stack-boundary-2026-10-27-refs-177)
+specifies `estimate(homes=60000, days=730, cadence=480)`, with cadence in
+minutes and a 20-home legacy sample.
+
+Thus 1440 / 480 = three paired observations/home/day before dropout:
+60,000 x 730 x 3 = 131,400,000 nominal records. The 131,025,000-row/14.77-GiB
+estimate is the same three/day scenario after sampled dropout, not hourly
+sampling, a measured generated run or an hourly storage bound. The generator's
+hourly default in L7 does not override the explicit estimate parameter.
+A hypothetical complete hourly history is 60,000 x 730 x 24 = 1,051,200,000
+rows before dropout. The separate recorded 43,800,000-row generated run is
+daily; none of these figures proves production throughput or Fabric sizing.

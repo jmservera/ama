@@ -102,10 +102,10 @@ ms.date: 2026-10-30
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/plans/2026-10-30/fabric-rebase-558-plan.md](.copilot-tracking/plans/2026-10-30/fabric-rebase-558-plan.md) | Assessed final-candidate plan |
-| [.copilot-tracking/details/2026-10-30/fabric-rebase-558-phase-details.md](.copilot-tracking/details/2026-10-30/fabric-rebase-558-phase-details.md) | Assessed phase details |
-| [.copilot-tracking/research/2026-10-30/fabric-rebase-558-research.md](.copilot-tracking/research/2026-10-30/fabric-rebase-558-research.md) | Supplied original research |
-| [.copilot-tracking/reviews/plans/2026-10-30/fabric-rebase-558-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-30/fabric-rebase-558-plan-critique.md) | This single independent critique |
+| [.copilot-tracking/plans/2026-10-30/fabric-rebase-558-plan.md](../../../plans/2026-10-30/fabric-rebase-558-plan.md) | Assessed final-candidate plan |
+| [.copilot-tracking/details/2026-10-30/fabric-rebase-558-phase-details.md](../../../details/2026-10-30/fabric-rebase-558-phase-details.md) | Assessed phase details |
+| [.copilot-tracking/research/2026-10-30/fabric-rebase-558-research.md](../../../research/2026-10-30/fabric-rebase-558-research.md) | Supplied original research |
+| [.copilot-tracking/reviews/plans/2026-10-30/fabric-rebase-558-plan-critique.md](../../../reviews/plans/2026-10-30/fabric-rebase-558-plan-critique.md) | This single independent critique |
 
 ## Next Steps
 

@@ -90,3 +90,25 @@ For this Wider wave, map credible infrastructure and governance evidence that su
 * Not inspected or established: live tenant Fabric availability/capacity/license/region; live Azure inventory beyond retained evidence; actual query volumes, BI consumers, source-system count, reporting latency, service SLOs, agreement pricing or current spend headroom; deployment/recovery operation; human accessibility, DPO/security and operational acceptance.
 * No external Fabric-product research is included in this internal lane; the parent owns external capability comparison.
 * Stop decision: delegated internal Wider criteria met. Further source reads are likely redundant for the bounded infrastructure/governance question. Parent synthesis must not convert source/pipeline contracts into deployed or accepted service claims.
+
+## Dated Funding Reconciliation (2026-10-30, Refs #558)
+
+Finding 8 and the historical/current budget clarification above omit a later
+decision that already existed at this lane's source baseline. Their description
+of October25 as the current overall expiry is incorrect. Preserve those
+original findings as historical evidence, subject to this correction.
+The [27 October resident prototype decision](../../../../docs/architecture/resident-assistant-prototype.md#current-owner-decision-and-implementation-2026-10-27)
+records renewed overall USD700 funding through 2026-12-31, with resident USD30
+and a USD20 inference ceiling inside it. The narrower tariff/inference and
+showcase/session/SQL admission windows remain separate; overall renewal does
+not extend them.
+
+The earlier addendum's October25 expiry describes the earlier exercise
+authority, not the latest overall funding record. All-in actual spending,
+forecast and remaining comparable headroom are still unestablished. Neither
+the renewal nor the resident allocation proves spare USD700, approved shared
+Fabric CU, or permission to fund Fabric. The cost-headroom evidence row must
+be read as rejecting USD700 as available headroom, not rejecting the recorded
+renewal itself. A Fabric trial/purchase still requires its own approved scope
+and complete incremental cost boundary. This reconciliation changes no
+resource, funding allocation, operational acceptance or original review outcome.
