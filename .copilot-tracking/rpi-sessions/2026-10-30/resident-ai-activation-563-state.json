@@ -1,0 +1,33 @@
+{
+  "task_id": "563",
+  "task_slug": "resident-ai-activation-563",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/resident-ai-activation-563-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/resident-ai-activation-563-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/resident-ai-activation-563-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/resident-ai-activation-563-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/resident-ai-activation-563-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/resident-ai-activation-563-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Execute the explicitly requested full RPI loop in order and commit locally; no push", "status": "confirmed", "evidence": "User request 2026-10-30"},
+    {"decision": "Resident activation approved within USD20 through pilot expiry 2026-11-01; redeploy authority through 2026-11-15", "status": "confirmed", "evidence": "Owner decision 2026-10-30T16:31Z"},
+    {"decision": "Research executed, Ready only for safe stop; activation blocked", "status": "recorded", "evidence": "Research C1-C8"},
+    {"decision": "One critique executed, Revise; PC-001 acceptance-blocking classification applied; post-Review correction suggestion rejected against wrapper routing contract", "status": "disposed", "evidence": ".copilot-tracking/reviews/plans/2026-10-30/resident-ai-activation-563-plan-critique.md"},
+    {"decision": "One independent Review executed Complete; outcome Residual work; no safe-stop defects established; actual activation remains blocked", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-30/resident-ai-activation-563-review.md"},
+    {"decision": "Original Review RV-001 to private SQL research; RV-002 to later activation; RV-003 scheduled local closeout, with actual gate result external", "status": "routed", "evidence": "Review RV-001 through RV-003; changes Local Persistence and Post-Commit Gate Handoff"}
+  ],
+  "blockers": [
+    {"id": "B1", "summary": "Private SQL accounting state and headroom cannot be verified; public connection denied with SQL 47073", "resolution": "Authorized private SQL admin must verify procedures, rights, preserved lifetime reserved cents and remaining rate allowance; approve migration separately if absent"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Preserve Review and local commit, execute external full gate; then await authorized private SQL receipt; no activation or push"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Obtain private SQL accounting evidence", "rationale": "Highest safety leverage and prerequisite to any paid activation; current host denied47073", "evidence": "Research C5/C8; Review RV-001"},
+    {"rank": 2, "task": "Activate resident AI and prove authenticated actual-model behavior after prerequisite clearance", "rationale": "Direct issue value but depends on SQL proof and valid cost/expiry authority; no activation permitted at this checkpoint", "evidence": "Review RV-002; live acceptance matrix"}
+  ]
+}
