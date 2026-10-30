@@ -8306,3 +8306,14 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   commit, push or PR. Existing adverse reviews and operational/human gates
   remain unchanged; artifact/arithmetic/diff checks are not a complete local
   publication gate or product acceptance.
+
+## [2026-10-30] query | Fabric assessment branch reconciliation (Refs #558)
+
+* Reconciled the [Fabric assessment](./research/microsoft-fabric-fit-assessment.md)
+  branch with main, preserving both sets of knowledge-base navigation and all
+  append-only log entries. Retained the original dated assessment and research
+  unchanged; this is not a new product or regulatory-currentness assessment.
+* Retained main's rubric records and scenario manifest. No application,
+  infrastructure, Azure resource, operational approval or issue closure is
+  introduced. Local reconciliation does not establish hosted CI or authorize
+  publication; the coordinator owns the subsequent push and checks.
