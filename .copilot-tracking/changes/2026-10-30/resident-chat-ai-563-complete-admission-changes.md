@@ -6,9 +6,10 @@ ms.date: 2026-10-30
 
 ## Execution State
 
-P01-T01 complete; P02-T01 active. This later rpi-implement invocation consumes the complete
+P01-P03 executed; source correction complete and independently Conformant.
+This later rpi-implement invocation consumes the complete
 independent resident-chat-ai-563-rv001-review.md (Complete / Not accepted).
-Both adverse Reviews are immutable. No repeat Review is planned or claimed.
+Both adverse Reviews are immutable. Neither earlier task's Review is repeated.
 The original user-selected deterministic-boundary fix authorises this bounded
 remaining implementation; no unrelated work or product decision is added.
 
@@ -71,3 +72,69 @@ persistence occurs. Use authenticated GitHub noreply identity, Refs #563 only
 and the required Copilot trailer. Then attempt the complete local gate in a
 clean exact-commit external worktree, preserving ignored existing inputs in
 this checkout rather than deleting them. Final gate evidence remains external.
+
+## P02-T01: Local Persistence and Failed Complete Gate
+
+Implementation and dated evidence committed locally as
+48001b35112755d502d75380ac9b29039b8e216b. Authenticated account id/login
+produced the repository-local noreply email for both author and committer.
+Message uses Refs #563 only and the exact requested Copilot trailer. No push.
+
+Complete local gate ran to completion in a clean exact-commit external
+worktree, against fetched main f7482602ee8dd8e7eb36dc05426732a56aa982f7:
+`PYTHONDONTWRITEBYTECODE=1 python3 tools/rpi-checks.py --all --base
+f7482602ee8dd8e7eb36dc05426732a56aa982f7 --lock-timeout 0 --out
+/home/azureuser/.copilot/session-state/1f24faca-4dc1-4e9a-9431-c81211ada179/files/full-gate-implementation`.
+
+Exit 1, failed receipt sealed 2026-10-30T11:57:44Z. Authoritative receipt:
+external files/full-gate-implementation/receipt.json; complete log:
+external files/full-gate-implementation.log. Failure: project-api rejects
+unexpected required integration/dependency skips in general discovery,
+including opt-in SQL/browser selectors. Browser and mssql groups consequently
+blocked by the failed prerequisite. Preflight, other project groups, namespace,
+static, infra, migration, four image groups and logo-0600 are listed as executed.
+Nested workflow-drift messages in runner unit-test output are not actual
+outer-gate failures. No passing receipt, cloud fallback, skip token or
+protection change. No unrelated runner/dependency issue is repaired here.
+
+Fresh main fetch remains f7482602 and ancestry passes. Preserve this failed
+receipt as historical exact-48001b35 evidence. Later lifecycle commits
+invalidate exact-head claims; no publication is authorised or claimed.
+
+## Immediately Relevant P03 Update
+
+The original user requested implement then review. This later task now adds
+its own first independent Review of the complete-request implementation,
+frozen at source commit 48001b35, with full validation and failed-gate evidence.
+This does not rerun or overwrite the earlier prefix-candidate Review, and no
+critique/product decision/source correction loop is added. Plan/details/state
+are reconciled before handoff. No new source work is authorised in Review.
+
+## P03-T01: Independent Review and Final Handoff
+
+First independent Review of this later task executed once: Complete /
+Conformant for bounded source scope, zero new substantive findings.
+Record: .copilot-tracking/reviews/logs/2026-10-30/resident-chat-ai-563-complete-admission-review.md.
+Reviewer compared the full three-file source delta, current evidence and failed
+receipt, plus independent complete-consumption/protected-route probes. The
+entire original requested repair boundary is addressed within the documented
+finite language contract. No source changed after 48001b35 or after this Review.
+
+Both earlier adverse Reviews are preserved unchanged. This later result does
+not rewrite their outcomes. Final lifecycle evidence is committed separately
+with Refs #563 and the Copilot trailer; no push or cloud operation. That
+metadata-only commit invalidates any exact-48001b35 gate applicability, and the
+retained full receipt was failed in any event. No passing final receipt or
+publication approval is claimed.
+
+Remaining ranked work, outside this local correction:
+
+1. Separate gate/dependency owner reconciles unexpected integration skips and
+   obtains a fresh passing complete exact-head gate before publication.
+2. Owner authorises activation/tariff/budget/access and actual-model/live
+   relevance evidence (original RV-002).
+3. Resident/content/accessibility owners supply human and AT acceptance
+   (original RV-003).
+
+No local implementation blocker remains. Automatic session remains at
+Follow-up, task execution complete; no further child work selected or started.

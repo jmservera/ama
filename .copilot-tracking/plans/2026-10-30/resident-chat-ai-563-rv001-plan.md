@@ -58,9 +58,9 @@ full mypy (113 files) pass. Diff whitespace passes. External logs are listed
 in the changes record.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Independent Review and local persistence
+### [x] P03: Independent Review and local persistence
 <!-- rpi:task id=P03-T01 -->
-#### [ ] P03-T01: Review once, preserve outcome and commit locally
+#### [x] P03-T01: Review once, preserve outcome and commit locally
 
 Depends on P02-T01. Review this follow-up's exact diff and evidence, not the
 parent Review again. Preserve findings without a same-task correction loop.
@@ -76,11 +76,11 @@ hosted/human approval. The parent's original advanced-main ancestry failure is
 historical; fresh fetch shows origin/main f7482602 is already an ancestor of
 this branch. This does not establish a passing current full gate.
 
-## Review Handoff
+## Original Review Handoff
 
 P01/P02 complete with bounded local evidence. No implementation blocker or
 material product decision. Original critique Pass and parent Review Not accepted
-remain unchanged. P03 Review/local persistence remains unchecked until executed.
+remain unchanged. At that handoff, P03 Review/local persistence was unchecked.
 No actual-model, Azure, live browser or human/AT acceptance is claimed.
 
 ## Executed Review and Routed Implementation
@@ -90,4 +90,9 @@ It found comma/then continuations escaping partial matching. Preserve that
 outcome; no repeat Review. Routed RV-001 is implemented separately by
 resident-chat-ai-563-complete-admission, within the original user direction.
 This plan describes the reviewed intermediate candidate, not final-source
-acceptance. P03 local persistence and subsequent gate attempt remain pending.
+acceptance. P03 persistence and gate execution are recorded below.
+
+P03 executed: original follow-up Review preserved with Complete / Not accepted,
+source and dated evidence committed in 48001b35, complete gate attempted and
+failed on API integration/dependency skips. Later complete-request
+implementation has separate artifacts; no acceptance is retroactively claimed.

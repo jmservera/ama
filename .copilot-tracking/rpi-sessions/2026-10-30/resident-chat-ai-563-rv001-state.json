@@ -17,12 +17,14 @@
   "confirmed_decisions": [
     {"decision": "User selected RV-001 follow-up: implement then review, commit locally, Refs #563 only, no push or Azure", "status": "confirmed", "evidence": "User request 2026-10-30"},
     {"decision": "Research reused and planning readiness satisfied; original critique Complete / Pass retained; no repeat critique for bounded accepted review finding", "status": "recorded", "evidence": "Parent Review RV-001 and child plan"},
-    {"decision": "Independent follow-up Review executed once: Complete / Not accepted; appended comma/then requests remain admitted and are routed to later implementation within the original user-selected fix", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-30/resident-chat-ai-563-rv001-review.md"}
+    {"decision": "Independent follow-up Review executed once: Complete / Not accepted; appended comma/then requests remain admitted and are routed to later implementation within the original user-selected fix", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-30/resident-chat-ai-563-rv001-review.md"},
+    {"decision": "Routed later complete-admission task implemented full-request grammar and received its first Review Complete / Conformant; this earlier adverse Review remains unchanged", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-30/resident-chat-ai-563-complete-admission-review.md"}
   ],
   "blockers": [],
-  "next_action": {"phase": "Implement", "action": "Routed to resident-chat-ai-563-complete-admission later implementation; this Review remains Complete / Not accepted"},
+  "next_action": {"phase": "Follow-up", "action": "Routed complete-admission task finished with bounded Conformant Review; current state is resident-chat-ai-563-complete-admission-state.json. Earlier Review remains Not accepted; publication gate still failed"},
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Owner-authorized activation and actual-model/live acceptance", "rationale": "Required for whole-issue acceptance, excluded from local repair", "evidence": "Parent RV-002"},
-    {"rank": 2, "task": "Human content and assistive-technology acceptance", "rationale": "Engineering checks cannot establish human approval", "evidence": "Parent RV-003"}
+    {"rank": 1, "task": "Reconcile failed complete local gate before publication", "rationale": "Current local source passes focused checks and bounded Review, but full gate rejects integration skips", "evidence": "External full-gate-implementation/receipt.json"},
+    {"rank": 2, "task": "Owner-authorized activation and actual-model/live acceptance", "rationale": "Required for whole-issue acceptance, excluded from local repair", "evidence": "Parent RV-002"},
+    {"rank": 3, "task": "Human content and assistive-technology acceptance", "rationale": "Engineering checks cannot establish human approval", "evidence": "Parent RV-003"}
   ]
 }

@@ -17,15 +17,15 @@
   "confirmed_decisions": [
     {"decision": "Run the full RPI loop automatically; commit locally only; no secrets or Azure deployment", "status": "confirmed", "evidence": "Explicit user request 2026-10-30"},
     {"decision": "Research executed, Planning Readiness Ready; independent critique executed once, Pass, no findings", "status": "confirmed", "evidence": ".copilot-tracking/reviews/plans/2026-10-30/resident-chat-ai-563-plan-critique.md"},
-    {"decision": "Independent Review executed once: Complete / Not accepted; RV-001 Medium remains open and routed to later implementation, not repaired or reviewed again in this task", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-30/resident-chat-ai-563-review.md"}
+    {"decision": "Independent Review executed once: Complete / Not accepted; RV-001 Medium remains open and routed to later implementation, not repaired or reviewed again in this task", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-30/resident-chat-ai-563-review.md"},
+    {"decision": "Owner-selected RV-001 later implementation completed as resident-chat-ai-563-complete-admission, source 48001b35, with its own first Review Complete / Conformant; original adverse Reviews preserved", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-30/resident-chat-ai-563-complete-admission-review.md"}
   ],
   "blockers": [
-    {"id": "RV-001", "summary": "Review Not accepted: overbroad repair/action admission", "resolution": "Later rpi-implement must add bounded housing admission and negative route regressions"},
-    {"id": "full-gate-ancestry", "summary": "Complete local gate blocked: candidate does not descend from fetched origin/main f7482602ee8dd8e7eb36dc05426732a56aa982f7", "resolution": "Owner-authorized ancestry reconciliation and fresh exact-head full gate before any publication; no rewrite performed"}
+    {"id": "full-local-gate", "summary": "Later complete gate failed at 48001b35: unexpected API integration/dependency skips; browser/mssql blocked by prerequisite. Earlier ancestry failure is historical", "resolution": "Separate gate/dependency reconciliation and fresh passing exact-head complete gate before publication; retained external failed receipt"}
   ],
-  "next_action": {"phase": "Follow-up", "action": "Local commit and blocked full-gate evidence persisted; await ranked follow-up, Stop or manual selection; no child started"},
+  "next_action": {"phase": "Follow-up", "action": "Selected RV-001 implementation finished; use resident-chat-ai-563-complete-admission-state.json for current evidence. Await authorised follow-up, Stop or manual selection; no push/Azure"},
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Constrain housing repair admission and deterministic action refusals", "rationale": "Bounded, high-value source fix for the sole Medium acceptance defect", "evidence": "Original Review RV-001"},
+    {"rank": 1, "task": "Reconcile failed complete local gate before publication", "rationale": "Source RV-001 corrected and independently Conformant in later task; failed full gate remains the engineering publication blocker", "evidence": "External full-gate-implementation/receipt.json; complete-admission Review"},
     {"rank": 2, "task": "Owner-authorized activation and actual-model/live acceptance", "rationale": "Needed for issue acceptance; default-off and near tariff expiry mean source delivery alone cannot enable live answers", "evidence": "Original Review RV-002; src/api/README.md owner prerequisite"},
     {"rank": 3, "task": "Human content and assistive-technology acceptance", "rationale": "Preserves semantic-quality and accessibility boundaries beyond local scripted browser proof", "evidence": "Original Review RV-003"}
   ]

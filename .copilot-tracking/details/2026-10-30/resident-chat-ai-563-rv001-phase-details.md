@@ -38,9 +38,9 @@ No new dependency/install needed. P01/P02 evidence and markers reconciled.
 
 ## P03-T01
 
-Active next: independent Review of baseline 66924f3a to current working diff
+Original handoff: independent Review of baseline 66924f3a to then-current working diff
 and child evidence. Review output is resident-chat-ai-563-rv001-review.md.
-Local commit and post-commit full gate are not yet executed.
+Local commit and post-commit full gate had not yet executed at that handoff.
 Fresh read-only fetch shows origin/main f7482602 is an ancestor of HEAD;
 the parent's original ancestry failure remains historical, not a current claim.
 
@@ -51,3 +51,9 @@ noreply author/committer, Refs #563 and the supplied Copilot trailer.
 Then attempt the complete local gate externally; no publication is requested.
 If ancestry or tooling blocks it, retain the blocker without cloud fallback,
 history rewrite, skip token or fabricated receipt.
+
+Executed: this task's Review Complete / Not accepted; routed implementation
+has separate complete-admission artifacts. Local persistence in 48001b35
+retains the adverse Review. Complete gate subsequently ran and failed on
+unexpected API integration/dependency skips, blocking browser/mssql.
+No accepted original Review, passing receipt or publication is claimed.
