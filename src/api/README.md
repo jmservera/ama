@@ -712,6 +712,7 @@ source distributions and API dev dependencies installed:
 ```bash
 PYTHONPATH=src/api/tests:src/core/tests:src/agents/tests python3 src/api/checks/capacity_browser_check.py
 PYTHONPATH=src/api/tests:src/core/tests:src/agents/tests python3 src/api/checks/capacity_browser_check.py --mssql
+PYTHONPATH=src/api:src/api/tests:src/core/tests:src/agents/tests python3 -m checks.capacity_browser_check --mssql --axe /path/to/axe-4.10.3.min.js
 ```
 
 Both modes acquire `/tmp/ama-rpi-heavy.lock` nonblocking. Default is SQLite;
@@ -732,6 +733,13 @@ retry reads and verifies sign-in remains after the retry continuation finishes.
 It is a separate required check, not automatically run by the full RPI gate.
 Local SQL Server/browser execution and post-deployment verification must be
 recorded separately; source coverage alone does not establish live acceptance.
+With `--axe`, the check verifies the repository-pinned axe-core 4.10.3 digest
+before starting the app or SQL container. It scans the capacity workspace's
+seeded, each failed-read and empty state for WCAG A/AA rules, prints violations
+and checks needing human review, and fails on violations. Without the option,
+scans are explicitly reported as not run. Initial failed-read retries are
+activated with the keyboard. These focused engineering checks do not establish
+full WCAG conformance, assistive-technology acceptance or live verification.
 
 ## Staff-recorded safety-consent intake (#130, #131)
 
@@ -4044,10 +4052,12 @@ Neither audience receives a new chat interface or invented source in this slice.
 ### Local engineering checks
 
 Unit discovery requires only the installed runtime distributions, not Playwright
-or a browser. The regulatory harness imports its browser APIs only when browser
-operations run; target-size boundary and axe-integrity assertions always run in
-the unit suite. A subprocess regression also blocks Playwright imports even
-when the dev extra is installed. From the repository root:
+or a browser. The regulatory and capacity harnesses import their browser APIs
+only when browser operations run; target-size boundary, axe-integrity and capacity
+scanner-result assertions always run in the unit suite. Subprocess regressions
+also block Playwright imports even when the dev extra is installed; the capacity
+regression executes all four scanner/pin tests under that blocker and confirms
+browser execution still fails explicitly without Playwright. From the repository root:
 
 ```bash
 python3 -m venv /tmp/v215c

@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-30T20:05:50+00:00",
-  "commit": "eca81f0f49d8e5a0359583b20800a5a04837f594",
+  "scored_at": "2026-10-30T20:20:48+00:00",
+  "commit": "095173ca004055043d812a0c25eaa72eb2c80c54",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41118747228",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41121610778",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "9d9f0573aedbd36aa31f590ba080362c5dc459b70db76f1b8705315bd9663a7a",
+    "solution-code": "396ac39046d23d541c9bcb570b9ebb7279bf9fe7d39d48a8b9804e62d84bd717",
     "infrastructure": "3702890e4770eecc7d31cbb2f57d031ad7cbf4f9afcf069cf507d7a9ade57fb5",
     "capstone-deck": "c5ae9ab5ec15788dd255b786adaf07ee716806bef375e01c066ad1c26701d74e",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
@@ -71,7 +71,7 @@
         "src/api/src/zava_forward/api/resident_demo/chat.py:120-225",
         "src/api/README.md:117-140"
       ],
-      "rationale": "This PR touches only an identity acceptance check, not model choice or evaluation harness. Baseline unchanged."
+      "rationale": "This PR touches only an identity/accessibility acceptance check, not model choice or evaluation harness. Baseline unchanged."
     },
     "A7": {
       "score": 4,
@@ -117,7 +117,7 @@
       "evidence": [
         "src/api/README.md:9-45"
       ],
-      "rationale": "README adds a new, clearly structured section documenting the identity check's rationale, limits and next steps, consistent with the existing strong engineering documentation quality. Not the capstone deck itself; ceiling unchanged."
+      "rationale": "README documents the new axe-core accessibility scan, its scope, limits and the keyboard-driven retry change clearly, consistent with existing strong engineering documentation. Not the capstone deck itself; ceiling unchanged."
     },
     "B7": {
       "score": 5,
