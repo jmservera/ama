@@ -289,8 +289,12 @@ PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests pyt
   --axe /path/to/axe-4.10.3.min.js --out /new/external/loading-results
 ```
 
-Use `/tmp/ama-rpi-heavy.lock` nonblocking; if busy, run targeted checks and record
-the full-suite limitation rather than queuing.
+Run heavy checks under `flock -w 600 /tmp/ama-rpi-heavy.lock <command>`. A
+lock timeout blocks that check; do not run it concurrently without the lock.
+The browser check also disables page JavaScript to verify the static startup
+message at 320 and 1280 CSS px, without script requests.
+This is separate from the held-script slow-start and retry scenarios and the
+script-enabled axe scans.
 Constructed loopback data only; no Azure or live model is needed.
 Live employee-site cold-start verification, screen-reader, voice-control and
 staff usability acceptance remain separate owner checks, not local passes.

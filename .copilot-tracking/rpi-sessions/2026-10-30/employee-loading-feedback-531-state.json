@@ -1,0 +1,33 @@
+{
+  "task_id": "531",
+  "task_slug": "employee-loading-feedback-531",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/employee-loading-feedback-531-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/employee-loading-feedback-531-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/employee-loading-feedback-531-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/employee-loading-feedback-531-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/employee-loading-feedback-531-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/employee-loading-feedback-531-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Run the full ordered RPI loop autonomously; commit locally, never push", "status": "confirmed", "evidence": "Explicit user request 2026-10-30"},
+    {"decision": "Research executed; Planning Readiness Ready", "status": "complete", "evidence": "Research C1-C7"},
+    {"decision": "Critique executed once, original verdict Revise; PC-001 rejected as worker-local restriction conflicts with explicit caller /tmp lock; PC-002 timing attribution corrected", "status": "resolved", "evidence": "Plan Critique Disposition"},
+    {"decision": "Review executed once; Complete / Conformant with justified divergence; no RV findings; two-file diff with inherited behavior and disclosed local test adjustment", "status": "complete", "evidence": ".copilot-tracking/reviews/logs/2026-10-30/employee-loading-feedback-531-review.md"}
+  ],
+  "blockers": [
+    {"id": "live-ac7", "summary": "Live employee verification is not authorized or proven", "resolution": "Coordinator obtains separate live authorization and records AC7 evidence"},
+    {"id": "publication", "summary": "Publication remains coordinator-owned; local checks and original Review are not an exact-head gate receipt or push permission", "resolution": "Read external /tmp/ama-issue-531-20261030-final-gate.log and receipt outcome, clear failures and verify against freshly fetched main immediately before coordinator publication"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Original ordered loop complete; commit locally and attempt exact-head gate with result external at /tmp/ama-issue-531-20261030-final-gate.log and /tmp/ama-issue-531-20261030-final-gate/receipt.json. Coordinator owns verification and any push; no child work selected"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Coordinator exact-head publication gates", "rationale": "Required before any publication; no push authorized here", "evidence": "Repository local-RPI gate and original Review"},
+    {"rank": 2, "task": "Separately authorized live employee verification", "rationale": "Only outstanding issue acceptance criterion; cannot be proven by loopback simulation", "evidence": "Issue AC7 and owner merge comment"},
+    {"rank": 3, "task": "Human AT and staff usability acceptance in existing workstreams", "rationale": "Automated axe is not screen-reader, voice-control or usability acceptance", "evidence": "Original Review acceptance boundaries"}
+  ]
+}
