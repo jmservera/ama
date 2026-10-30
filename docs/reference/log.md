@@ -8251,3 +8251,19 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   twenty-five migration tests. Unchanged main rubric inputs still yield
   18 failures, 355 passes and seven runtime skips. Prepare reports no scored
   artifact change; no full API suite or publication gate was run.
+
+## [2026-10-30] update | PR #507 review evidence correction, Refs #198
+
+* Corrected the existing
+  [rubric reconciliation](../architecture/cutover-evidence-pack.md#pr-507-review-correction-2026-10-30)
+  and indexed the distinction between the original candidate and integrated
+  documentation-only delta, including their different historical frozen diffs.
+* Qualified discarded fixture/guide claims and acceptance rows in place.
+  Original 374/1/7 and 31 fixture passes remain historical; integrated results
+  are 355 passed, 18 failed and seven runtime skips, not a green suite.
+* Replaced the unregistered rubric-guide B6 route with scored `src/README.md`
+  in proposed later PR `docs(src): strengthen B6 navigation and evidence`,
+  only when that PR actually changes the artifact. No score gain, new scored
+  evidence, historical acceptance or remote metadata update is claimed.
+* Prepared the replacement PR description separately for owner application.
+  No rubric, test, source, workflow or score edits; local-only commit, no push.

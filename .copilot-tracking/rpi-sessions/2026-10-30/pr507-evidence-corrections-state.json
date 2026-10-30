@@ -1,0 +1,81 @@
+{
+  "task_id": "pr507-evidence-corrections",
+  "task_slug": "pr507-evidence-corrections",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/pr507-evidence-corrections-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/pr507-evidence-corrections-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/pr507-evidence-corrections-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/pr507-evidence-corrections-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/pr507-evidence-corrections-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/pr507-evidence-corrections-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the explicitly requested full Research, Plan, Implement, Review loop; no automatic follow-up session inferred.",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-30; branch feat/rubric-src-198, PR #507 open; commit locally, do not push."
+    },
+    {
+      "decision": "Research executed Complete / Ready; Plan Complete / Ready after exactly one critique.",
+      "status": "accepted",
+      "evidence": ".copilot-tracking/research/2026-10-30/pr507-evidence-corrections-research.md"
+    },
+    {
+      "decision": "Critique executed Complete / Revise; PC-001 rejected as conflicting with explicit caller paths and relying on a worker-local restriction not applicable to parent. No repeated critique.",
+      "status": "disposed",
+      "evidence": ".copilot-tracking/plans/2026-10-30/pr507-evidence-corrections-plan.md Critique Disposition"
+    },
+    {
+      "decision": "Exactly one independent Review executed Complete / Conformant, zero new RV findings; assessed frozen docs diff 2f71a66c. External body and raw logs assessed from supplied evidence, directly verified by parent.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-30/pr507-evidence-corrections-review.md"
+    },
+    {
+      "decision": "Implementation complete; full unchanged rubric result reproduced as 355 passed, 18 failed, 7 skipped; migration 25 passed; semantic/link checks passed.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/changes/2026-10-30/pr507-evidence-corrections-changes.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "One independent Review Complete / Conformant; finalize authorized local commit, verify metadata and hashes, then complete this bounded full-loop request without starting child work or pushing."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Owner applies /tmp/pr507-body.md and its suggested documentation-only title.",
+      "rationale": "Small direct action makes PR metadata consistent; remote writes excluded from this task.",
+      "evidence": "External body SHA256 bcd8e350ba2ded0eb912d35aaba4ebe145194ac1fdc72ac93c2293309eca221e"
+    },
+    {
+      "rank": 2,
+      "task": "Rubric owner addresses inherited failures and verified runtime evidence.",
+      "rationale": "355/18/7 full result and 14/2 focused result remain adverse; tests intentionally unchanged.",
+      "evidence": ".copilot-tracking/changes/2026-10-30/pr507-evidence-corrections-changes.md Validation Record"
+    },
+    {
+      "rank": 3,
+      "task": "Later proposed docs(src): strengthen B6 navigation and evidence PR changes actual scored README.",
+      "rationale": "Registered changed evidence can enable reassessment; this correction cannot recover a grade.",
+      "evidence": "docs/architecture/cutover-evidence-pack.md Registry sequence and recovery expectation"
+    },
+    {
+      "rank": 4,
+      "task": "Coordinator performs required current-base publication gates before authorized push.",
+      "rationale": "Local correction Review is not final-head receipt, hosted CI or publication permission.",
+      "evidence": "No-push user direction and canonical Review residual work"
+    },
+    {
+      "rank": 5,
+      "task": "Owner resolves historical issue 198 evidence gaps and separately routed prior audit locator finding.",
+      "rationale": "Unmet historical acceptance and prior RV-001 cannot be silently resolved by these two corrections.",
+      "evidence": "docs/architecture/cutover-evidence-pack.md acceptance table; prior sync Review RV-001"
+    }
+  ]
+}

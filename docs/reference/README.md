@@ -90,6 +90,10 @@ test counts are not current-candidate results.
 The [2026-10-30 synchronization](../architecture/cutover-evidence-pack.md#current-main-synchronization-2026-10-30)
 retains the same upstream-input and history-preservation boundaries on the
 latest reviewed main; publication and hosted checks remain coordinator-owned.
+The [PR #507 review correction](../architecture/cutover-evidence-pack.md#pr-507-review-correction-2026-10-30)
+distinguishes the original and integrated frozen diffs, discarded fixtures/guide
+edits and current 355 passed/18 failed/seven skipped results. B6 recovery requires
+an actual registered artifact change in a later PR, not the unscored rubric guide.
 Missing fresh historical comparisons and the original registry sequencing
 remain acceptance gaps; no migration-attributed gain or whole-issue closure
 is inferred.
