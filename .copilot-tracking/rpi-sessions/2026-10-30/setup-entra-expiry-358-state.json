@@ -1,0 +1,44 @@
+{
+  "task_id": "358",
+  "task_slug": "setup-entra-expiry-358",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/setup-entra-expiry-358-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/setup-entra-expiry-358-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/setup-entra-expiry-358-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/setup-entra-expiry-358-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/setup-entra-expiry-358-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/setup-entra-expiry-358-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the explicitly requested full RPI loop on the supplied topic branch; local commit only, no Azure or credential access.",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-30"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready for bounded offline reassessment, no source changes needed.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/research/2026-10-30/setup-entra-expiry-358-research.md"
+    },
+    {
+      "decision": "Critique executed once: Complete / Revise. PC-001 rejected because its project-only runtime restriction is absent from parent context and conflicts with explicit shared-lock/session paths.",
+      "status": "disposed",
+      "evidence": ".copilot-tracking/plans/2026-10-30/setup-entra-expiry-358-plan.md#critique-disposition"
+    },
+    {
+      "decision": "One independent Review executed: Complete / Residual work. No source defect; RV-001 is unmet live AC2, RV-002 is remaining local administrative handoff.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-30/setup-entra-expiry-358-review.md"
+    }
+  ],
+  "blockers": [{"id":"AC2","summary":"Originally populated deployed-app/full-setup live preservation remains unproven; Azure and credential access prohibited.","resolution":"Coordinator separately authorizes and scopes live target validation outside this run."}],
+  "next_action": {"phase": "Follow-up", "action": "Persist completed bounded RPI result, then perform authorized local commit and external postcommit gate attempt; no child or remote publication."},
+  "prioritized_follow_ups": [
+    {"rank":1,"task":"FU1: separately authorized originally populated existing-app/full-setup preservation exercise","rationale":"Only remaining substantive issue criterion; offline tests and prior synthetic component proof cannot substitute.","evidence":"Review RV-001; issue 358 comments; plan AC2"}
+  ]
+}
