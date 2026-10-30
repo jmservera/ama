@@ -22,6 +22,8 @@ partial timing does not prove it. A foreign heavy-lock owner, inherited failures
 resource admission or unavailable downloads may prevent completed measurements.
 The existing runner locks itself; an outer flock would deadlock. No push or PR
 is authorized, so actual PR publication remains coordinator-owned.
+Implementation admission timed out for the full serial run and corrected API
+suite. No successful full timing or final receipt exists; AC4 remains unmet.
 
 ## User Decisions and Requirements
 
@@ -104,23 +106,29 @@ Use the caller's exact API discovery paths and project lint/format/mypy.
 Run gate regressions and strict tooling static checks. Keep logs external.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Attempt full serial/parallel measurement
+#### [x] P02-T02: Attempt full serial/parallel measurement
 
 Commit candidate before full runs; use unchanged commit/base and new external
 outputs. Do not retry inherited failures or modify source outside scope.
 If blocked, record exact command/result and leave AC4 unmet.
+Completed disposition: full serial runner exited 1 after its 600-second
+foreign-lock timeout; parallel was not launched against the same blocker.
+This marker means the planned attempt was disposed, not that AC4 passed.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Independent Review and local handoff
+### [x] P03: Independent Review and local handoff
 
 Depends on P02 attempt disposition.
 
 <!-- rpi:task id=P03-T01 -->
-#### [ ] P03-T01: Run one independent Review and commit dated evidence
+#### [x] P03-T01: Run one independent Review and commit dated evidence
 
 Preserve original findings. Leave human approval unchecked. Commit locally,
 then require fresh final exact-head full gate before coordinator publication.
 A later evidence commit invalidates earlier receipts; never label them final.
+Review executed Complete, outcome Not accepted: RV-001 full timing missing,
+RV-002 corrected API execution missing, RV-003 publication handoff residual.
+Original Review is preserved; no fixes or second Review are part of this task.
 
 ## Dependencies
 
@@ -139,8 +147,18 @@ No significant/divergent decision and no second critique are required.
 
 * Coordinator must put actual successful full timings in its PR and satisfy
   final exact-head publication gates; pushing is excluded from this task.
+* Coordinate free heavy-lock admission for corrected API validation and a
+  same-candidate serial/parallel pair. Preserve initial missing-Node and
+  lock-timeout evidence; these do not establish benchmark acceptance.
+* RV-001 routes full timing evidence and RV-002 routes corrected API evidence
+  to distinct later research/evidence work. RV-003 retains coordinator-owned
+  final publication and approval gates. No source defect was identified.
 
 ## Handoff
 
 Planning complete, Ready after direct PC-001 disposition. Changes record:
 `.copilot-tracking/changes/2026-10-30/faster-local-gate-470-changes.md`.
+RPI Review is complete / Not accepted, not issue completion. P02-T01/P02 remain
+unchecked. Final post-commit gate output is external at
+`/mnt/ama-rpi-gates/issue470-20261030-validation/final-gate.log`; it cannot
+retroactively relabel the original Review or supply the missing full pair.

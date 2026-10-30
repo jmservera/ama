@@ -13,9 +13,9 @@ Research: `.copilot-tracking/research/2026-10-30/faster-local-gate-470-research.
 
 | Phase | Direction | Status |
 | --- | --- | --- |
-| P01 | Reproducible benchmark procedure | Candidate |
-| P02 | Existing tests and actual measurement attempts | Candidate |
-| P03 | Independent original Review and local commit | Candidate |
+| P01 | Reproducible benchmark procedure | Complete |
+| P02 | Existing tests and actual measurement attempts | Blocked, attempt evidence recorded |
+| P03 | Independent original Review and local commit | Review Complete / Not accepted; local handoff recorded |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Preserve merged implementation
@@ -75,3 +75,19 @@ After Review, route findings rather than implement or re-review this task.
 Commit evidence locally with resolved privacy-safe author/committer identity.
 Final receipt must refer to the final commit and current main and stay
 external. No push/PR/merge.
+
+## Implementation Disposition
+
+P01-T01 complete: procedure added, PC-001 eligibility requirements included.
+P02-T01: gate regressions (35) and gate/API lint/format/types passed. Initial
+API discovery ran 1370 tests with 76 missing-Node errors and 318 skips; its
+sanitized PATH was corrected, but the corrected complete invocation timed out
+waiting for the foreign heavy lock. P02-T01 remains unchecked, not successful.
+P02-T02: serial full attempt at a5d483c6/base 9ee48592 timed out before admission
+or receipt generation; parallel not launched against the common blocker.
+Its checked marker records disposition of the attempt, not AC4 completion.
+P03 read-only Review may assess this delivered/blocked boundary without
+claiming successful full acceptance. Coordinator must arrange later admission.
+Review is now executed Complete / Not accepted, with RV-001/RV-002 distinct
+evidence follow-ups and RV-003 coordinator publication residual. Original
+findings remain unchanged; no later source correction or repeat Review ran.
