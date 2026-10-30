@@ -12,9 +12,9 @@ Manual full sequence explicitly requested. Original outcomes remain unchanged.
 
 ## Executive Summary
 
-Use the now-authorised exact prior publishing route, restore ACR immediately,
-then run the corrected in-VNet initializer and roll both digest-pinned images.
-Existing current-main builds are reusable after source/archive/config checks.
+Completed the now-authorised exact prior publishing route, restored ACR,
+ran the corrected in-VNet initializer and rolled both digest-pinned images.
+Existing current-main builds were reused after source/archive/config checks.
 Resident AI remains off because the separate generated-prose activation gates
 are not established. No source changes, credentials or new infrastructure.
 
@@ -110,11 +110,11 @@ exhausted bounded readiness triggers diagnostics/recovery, not first timeout.
 <!-- rpi:task id=P02-T02 -->
 #### [x] P02-T02: Resident then employee exact-target rollout/recovery
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Verify and persist
+### [x] P03: Verify and persist
 <!-- rpi:task id=P03-T01 -->
 #### [x] P03-T01: Warm curl/browser/source/preservation evidence
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: Reconcile, independent Review and local-only commit
+#### [x] P03-T02: Reconcile, independent Review and local-only commit
 
 ## Test Ownership
 
@@ -148,6 +148,10 @@ Ready after these explicit execution contracts; no live outcome is inferred.
 
 Research Complete/Ready. One critique Complete/Revise, all three findings directly
 disposed before affected execution. P01/P02/P03-T01 complete with actual evidence.
-No deployment blocker; AI remains intentionally off. P03-T02 one independent
-Review and local persistence remain, no further implementation planned. Changes:
+No deployment blocker; AI remains intentionally off. One independent Review
+Complete / Residual work at its pre-commit boundary, zero new substantive defects.
+P03-T02 complete: original reviewed evidence committed locally ae3ec78a466a440240f43dc7151cb7366c6b1ca6,
+verified privacy-safe author/committer, Refs/trailer and clean worktree, no push.
+Administrative status persistence is separate, not a second Review or
+post-Review implementation. Requested manual session stops. Changes:
 .copilot-tracking/changes/2026-10-30/demo-sites-redeploy-1030b-publish-changes.md.

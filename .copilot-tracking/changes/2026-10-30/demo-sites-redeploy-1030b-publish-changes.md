@@ -171,3 +171,30 @@ AI scope/prerequisites, RF-003 authenticated/model acceptance and RF-004 console
 attribution are distinct later work, not new implementation defects. No further
 cloud/source operations or review planned. Local identity/staging/commit proof
 will be recorded after the actual operation, not presumed completed here.
+
+## Local Persistence
+
+`PYTHONDONTWRITEBYTECODE=1 python3 <root>/commit.py` exit0: ten explicit
+paths committed as ae3ec78a466a440240f43dc7151cb7366c6b1ca6,
+`chore(ops): redeploy both demo sites from current main`, Refs #563/#550 only
+and exact Copilot trailer. Original eight child artifacts plus append-only
+parent changes/Review pointers retained. Each helper subprocess used check=True:
+branch/status/staged-path guards, JSON parse and `git diff --check`, fresh
+`gh api user`, computed repo-local privacy-safe name/email for both author and
+committer, exact `git add -- <ten paths>`, staged-path equality and sensitive
+marker/whitespace checks, `git commit -F -`, author/committer/message/trailer/
+HEAD/status readback all passed. External local-commit-proof.json retained.
+No push, PR, merge, amend, rebase or history rewrite.
+
+Review's original Complete / Residual work outcome remains unchanged; its
+pre-commit RF-001 is administratively handled here, not a closure Review.
+P03-T02 checked only after actual original evidence commit. This final
+plan/details/state/changes status record is persisted separately with
+`PYTHONDONTWRITEBYTECODE=1 python3 <root>/commit.py --closure`, using the same
+fresh identity and strict four-path/Refs/trailer/clean-tree checks. Its actual
+result is retained externally in closure-commit-proof.json and the durable
+session tool transcript; it is not predeclared successful in this record.
+No further source/cloud work or second Review. Requested manual full loop and
+deployment complete; session stopped with AI intentionally off. RF-002..004
+remain owner-selected later work. No full publication gate or remote/human
+approval is claimed and no push is authorised.
