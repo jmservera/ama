@@ -1,0 +1,69 @@
+{
+  "task_id": "563",
+  "task_slug": "resident-ai-diagnosis-563",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Review",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/resident-ai-diagnosis-563-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/resident-ai-diagnosis-563-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/resident-ai-diagnosis-563-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/resident-ai-diagnosis-563-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/resident-ai-diagnosis-563-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/resident-ai-diagnosis-563-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the explicitly requested full ordered RPI loop; diagnose only using read-only Azure evidence in resource group ama. No Azure writes, deployment, sign-in, credentials, secret reads, push or issue closure.",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-30; branch ops/resident-ai-diagnosis-563 at d934478fa4b877a17f83773a7f9eb7c2bd37b218."
+    },
+    {
+      "decision": "Research executed through Wider/Deeper/Contrarian; ready only for evidence packaging. No source defect or corrective configuration established.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-10-30/resident-ai-diagnosis-563-research.md C2-C8,W1-W7; B1 preserved."
+    },
+    {
+      "decision": "Single final-candidate critique executed Complete / Pass for evidence packaging only, zero findings; no additional critique.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-30/resident-ai-diagnosis-563-plan-critique.md"
+    },
+    {
+      "decision": "P01 report and all four caller validation commands completed. Initial missing-dependency failure preserved; external pinned pip restoration followed by 1370 tests passing with 318 skips, Ruff lint/format and mypy passing under requested shared lock.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-10-30/resident-ai-diagnosis-563-changes.md; external validation logs hashed there."
+    },
+    {
+      "decision": "One independent Review executed Complete / Not accepted as causal diagnosis. RV-001/B1 routes to later research; RV-002 is scheduled local persistence. RV-003 original lock-conflict assertion preserved but not adopted: exact shared lock was explicitly prescribed by caller; no conflicting restriction evidenced in this execution context.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-30/resident-ai-diagnosis-563-review.md and parent disposition in changes."
+    }
+  ],
+  "blockers": [
+    {
+      "id": "B1",
+      "summary": "Exact enabled-advisor runtime failure cannot be established: stopped replica unavailable, Log Analytics network-perimeter denial, App Insights access denial; generic fallback log has no failure stage.",
+      "resolution": "Coordinator retrieves historical failed-attempt telemetry via existing approved private access; do not infer a corrective config or retry inference."
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Complete scheduled local-only P02-T02 persistence, preserve original Review and B1, then hand off historical telemetry retrieval to coordinator."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator retrieves failed-attempt historical telemetry through existing approved private access.",
+      "rationale": "Highest value prerequisite: exact runtime failure remains unknown; do not retry enablement or inference.",
+      "evidence": "B1, C5-C6, W4-W6, Review RV-001; exact revision/interval/query in changes."
+    },
+    {
+      "rank": 2,
+      "task": "Conditionally scope privacy-safe stage/reason diagnostics if historical evidence is insufficient.",
+      "rationale": "Generic fallback logs cannot distinguish every stage; new source/deployment/reproduction needs separate scope and authorization.",
+      "evidence": "Research C6 and changes Exact Next Coordinator Action."
+    }
+  ]
+}
