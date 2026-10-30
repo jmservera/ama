@@ -37,7 +37,7 @@
     }
   ],
   "blockers": [{"id":"AC2","summary":"Originally populated deployed-app/full-setup live preservation remains unproven; Azure and credential access prohibited.","resolution":"Coordinator separately authorizes and scopes live target validation outside this run."}],
-  "next_action": {"phase": "Follow-up", "action": "Persist completed bounded RPI result, then perform authorized local commit and external postcommit gate attempt; no child or remote publication."},
+  "next_action": {"phase": "Follow-up", "action": "After final local reconciliation commit, execute external full-gate attempt; coordinator inspects final-full-gate.log, then owns current-main receipt/publication gates and separately authorized FU1. No child or remote publication."},
   "prioritized_follow_ups": [
     {"rank":1,"task":"FU1: separately authorized originally populated existing-app/full-setup preservation exercise","rationale":"Only remaining substantive issue criterion; offline tests and prior synthetic component proof cannot substitute.","evidence":"Review RV-001; issue 358 comments; plan AC2"}
   ]

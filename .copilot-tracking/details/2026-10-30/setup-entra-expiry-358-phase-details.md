@@ -14,7 +14,7 @@ Research: .copilot-tracking/research/2026-10-30/setup-entra-expiry-358-research.
 
 | Phase | Name | Status | Tasks |
 | --- | --- | --- | --- |
-| P01 | Preserve implementation and refresh acceptance evidence | P01-T01/T02 complete; Review pending | P01-T01 through P01-T03 |
+| P01 | Preserve implementation and refresh acceptance evidence | Complete, bounded offline scope | P01-T01 through P01-T03 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Preserve implementation and refresh acceptance evidence
@@ -83,9 +83,14 @@ P01-T01: 124 setup tests and 17 initializer tests passed. API discovery passed
 invocations failed before analysis due to `RUFF_NO_CACHE=1`; retry with
 `true` passed lint and format (60 files already formatted).
 P01-T02: dated runbook reassessment added; source/tests/history unchanged.
-P01-T03: independent Review and local commit remain pending.
+P01-T03: one independent Review Complete / Residual work; local original
+candidate commit `097354d9e6a6738aab1ff5683d477cde59aaee51` exists.
+Final reconciliation commit precedes the separate external full-gate attempt.
+Original Review's pending handoff observations remain unchanged as history.
 
 ## Unresolved Items
 
 AC2 remains blocked by explicit no-Azure/no-credentials direction. Full local
 publication receipt and exact-head assessment are not claimed by this plan.
+The external final gate result is authoritative only for its actual candidate;
+this snapshot intentionally does not predict success.

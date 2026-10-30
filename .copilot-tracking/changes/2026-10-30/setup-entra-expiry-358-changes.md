@@ -12,8 +12,9 @@ Details: .copilot-tracking/details/2026-10-30/setup-entra-expiry-358-phase-detai
 
 ## Execution Status
 
-Full plan declared; P01-T01 and P01-T02 complete. Remaining P01-T03
-(independent Review, local commit and full local gate attempt).
+Full plan declared; P01 and P01-T01 through P01-T03 complete for bounded
+offline reassessment. Full issue AC2 remains unmet. The separate postcommit
+full gate is pending after the final administrative reconciliation commit.
 Write boundary: dated tracking artifacts and `infra/README.md` only.
 Existing implementation and regressions are already merged; no speculative
 source changes or duplicate tests. No web changes.
@@ -91,7 +92,7 @@ infra/tests and src is empty against the supplied base.
 | AC1 expired stored credential regression | Proven locally, already merged | Frozen-clock test plus seven-mutation test executed in 124-test suite |
 | AC2 originally populated deployed-app/full setup preservation | Unmet | Caller prohibits Azure/credential access; historical synthetic component proof explicitly excludes this case |
 | AC3 keep delegating legacy main after conflict integration | Proven locally, already merged | Existing delegation test executed; #352/#356 merged; current initializer main retained |
-| AC4 dated current reassessment and local persistence | Implementation prepared; local commit pending | Current dated artifacts and 18-line runbook addition |
+| AC4 dated current reassessment and local persistence | Proven locally | Original candidate/evidence committed as 097354d9e6a6738aab1ff5683d477cde59aaee51; 18-line runbook addition |
 
 ## Pre-Review Reconciliation
 
@@ -111,7 +112,10 @@ verification allowed under caller limits. No offline substitute.
 The single independent Review executed: Complete / Residual work. RV-001
 routes live AC2 to FU1; RV-002 routes the existing local administrative handoff
 to the parent. The original Review is preserved, not repeated or upgraded.
-Local commit and post-commit full gate attempt remain.
+Original candidate/evidence local commit now exists:
+`097354d9e6a6738aab1ff5683d477cde59aaee51`. Parent reconciliation completes
+P01-T03's Review/local handoff without changing the original Review's snapshot.
+Final administrative commit and separate postcommit full-gate attempt follow.
 No full publication receipt, push, PR or hosted/human approval claimed.
 
 ## Post-Review Administrative Preparation
@@ -124,6 +128,15 @@ SHA-256 inventory (`metadata-sha256.txt`). All copied bytes were verified with
 pruned and no source/test file changed. `git ls-files --others --ignored
 --exclude-standard` now reports no ignored candidate inputs.
 This only prepares a clean committed candidate for gate preflight.
+
+The final gate command is
+`python3 tools/rpi-checks.py --all --base 9ee48592a2e80e3a9f9e3c90ef039b9fa1987d19 --out /home/azureuser/.copilot/session-state/ff88c0b4-017d-4da1-9a9a-a3ea3c2615fd/files/issue-358/final-full-gate`.
+The runner itself acquires the exact shared heavy lock (600-second timeout);
+an outer flock would deadlock. Output goes to external `final-full-gate.log`
+and any receipt stays external. This pre-gate snapshot makes no result claim.
+The user supplied the reviewed base; current-main reconciliation, fresh final
+receipt verification immediately before push and independent exact-head/
+human/hosted approval remain coordinator-owned. No fetch/rebase/push occurs here.
 
 ## Follow-Up Items
 

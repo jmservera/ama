@@ -82,7 +82,7 @@ C1-C9/W1-W3; current issue comments and current runbook.
 ## Phase Checklist
 
 <!-- rpi:phase id=P01 -->
-### [ ] P01: Preserve implementation and refresh acceptance evidence
+### [x] P01: Preserve implementation and refresh acceptance evidence
 
 <!-- rpi:task id=P01-T01 -->
 #### [x] P01-T01: Run existing local regression and requested project checks
@@ -100,7 +100,7 @@ write changes evidence and reconcile plan/details/state. Preserve prior
 paragraphs, tests, production files and historical RPI artifacts byte-for-byte.
 
 <!-- rpi:task id=P01-T03 -->
-#### [ ] P01-T03: Independent Review and local handoff
+#### [x] P01-T03: Independent Review and local handoff
 
 Dependencies: P01-T02. One independent post-implementation Review, route
 findings without a repeat loop. Commit bounded candidate locally with trailer.
@@ -108,6 +108,12 @@ Attempt the repository's full local gate after the commit, with external
 output; its built-in acquisition of the exact shared lock avoids double-lock
 deadlock. Final receipt verification against current main/publication and
 exact-head approval remain coordinator-owned; no push or PR.
+Completion evidence: the one independent Review is Complete / Residual work;
+the original candidate and evidence are locally committed as
+`097354d9e6a6738aab1ff5683d477cde59aaee51`. This administrative reconciliation
+does not change that Review or resolve AC2. The postcommit gate is a separate
+validation control after the final reconciliation commit, not issue acceptance
+or a prerequisite to recording the already-observed local commit.
 
 ## Dependencies
 
@@ -135,4 +141,8 @@ disposition, not a change to the original critique or another critique run.
 ## Handoff
 
 Changes path: .copilot-tracking/changes/2026-10-30/setup-entra-expiry-358-changes.md.
-Ready after critique disposition. AC2 remains blocked regardless of phase checks.
+Bounded phase complete. AC2 remains blocked regardless of phase checks.
+Final external full-gate output root:
+`/home/azureuser/.copilot/session-state/ff88c0b4-017d-4da1-9a9a-a3ea3c2615fd/files/issue-358/final-full-gate`.
+Gate result is intentionally external so recording it does not invalidate
+the committed candidate. No gate success is claimed in this pre-gate snapshot.
