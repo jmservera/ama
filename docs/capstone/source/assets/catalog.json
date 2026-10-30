@@ -1,0 +1,429 @@
+{
+  "schema_version": 1,
+  "media": [
+    {
+      "part": "ppt/media/image24.png",
+      "path": "assets/media/image24.png",
+      "sha256": "5dadd74a601a0df2ba4382c48f4bfdb6c60e2d4107d8459f817d1e9396a41af0",
+      "slides": [
+        14,
+        20
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image3.png",
+      "path": "assets/media/image3.png",
+      "sha256": "d95ca8edffdf15d873894273fd23221e4b64db7b0bd2d1116ac2bba6c9ec13ee",
+      "slides": [
+        2,
+        3
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image1.jpeg",
+      "path": "assets/media/image1.jpeg",
+      "sha256": "6366cbdd650b1111490ccce4bd91e7c62c254e64ced46e2c1813a6a178002f30",
+      "slides": [
+        1
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image2.jpeg",
+      "path": "assets/media/image2.jpeg",
+      "sha256": "3b8bb9ba6d85267d9b30bf66609f9cb391528f55581c11f63dc0685fd6298f1f",
+      "slides": [
+        2
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image4.png",
+      "path": "assets/media/image4.png",
+      "sha256": "e3e4d8f8a30e1b12051907eccaeefdd870d6dc797dcf8cda21e4cbda392fc087",
+      "slides": [
+        2,
+        3,
+        14
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image5.png",
+      "path": "assets/media/image5.png",
+      "sha256": "27a40fa88c31e01c0463d44b75524495d5d06087ac16ce79c534e493d1c3f0a4",
+      "slides": [
+        2,
+        14
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image6.png",
+      "path": "assets/media/image6.png",
+      "sha256": "cbecff037664e043a446729b1a992dddbce5991faf1cce3f3553cd718c122172",
+      "slides": [
+        2,
+        4,
+        12,
+        14,
+        25
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image7.png",
+      "path": "assets/media/image7.png",
+      "sha256": "d8f4e36552d64749eba01f9ab42d5eba861a3f5ff35857688b34e8cf453112d3",
+      "slides": [
+        3,
+        14
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image8.png",
+      "path": "assets/media/image8.png",
+      "sha256": "0921c048b6e26b48df72211e4ead064fd6d11eb985841c2026ea294f1534421b",
+      "slides": [
+        3,
+        25
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image9.png",
+      "path": "assets/media/image9.png",
+      "sha256": "f837d8412ff5db2480c42003dd1e8b2d91d64fd1251cd74d7a127f31bfe05e2a",
+      "slides": [
+        3,
+        4,
+        9,
+        14,
+        15,
+        23
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image10.png",
+      "path": "assets/media/image10.png",
+      "sha256": "978cc6759f06276619d3122f47119298cc546f6f224b39b276c8b5c67af37eb6",
+      "slides": [
+        3,
+        10
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image11.png",
+      "path": "assets/media/image11.png",
+      "sha256": "691d12c8568fa7cff1e4233fb6a2091a794b71e65f18e8f515f6fa0efc2a15e2",
+      "slides": [
+        4
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image12.png",
+      "path": "assets/media/image12.png",
+      "sha256": "4c7fde72fef9bd8261a31cacea3b82499b853546e6c0196a8e5796ba7eb2592a",
+      "slides": [
+        4,
+        10,
+        14,
+        21
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image13.png",
+      "path": "assets/media/image13.png",
+      "sha256": "5e5cb76dbec297b3b7313f5aabacfb37cba179ef941705077071199f0e3b209b",
+      "slides": [
+        4,
+        15
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image14.png",
+      "path": "assets/media/image14.png",
+      "sha256": "3be0d5dda089346613a7b8d4484d6ed26f88d276f08fc36189d854982b4cdf04",
+      "slides": [
+        4,
+        14
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image15.png",
+      "path": "assets/media/image15.png",
+      "sha256": "f4be1e6c6f532148eb6524330337905b9642bdfbbcee0c39544801957ce6029f",
+      "slides": [
+        4,
+        10,
+        12,
+        14,
+        16,
+        20,
+        23
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image16.png",
+      "path": "assets/media/image16.png",
+      "sha256": "820cb545d3b9bc45586fb17b55fa7d26d57845eb62b684f17871df3196073a8e",
+      "slides": [
+        6,
+        9,
+        10,
+        12,
+        14,
+        21,
+        25
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image17.jpeg",
+      "path": "assets/media/image17.jpeg",
+      "sha256": "c62033ff4e502bf98d5caeedc00ed02a8c59564becd47d3229529f919b1d74a8",
+      "slides": [
+        7
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image18.png",
+      "path": "assets/media/image18.png",
+      "sha256": "f21a36def20b4c56fe326e3ab978fc47812eeb4bf2783dae0e032cabb0c67cc8",
+      "slides": [
+        9,
+        14,
+        15,
+        19
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image19.png",
+      "path": "assets/media/image19.png",
+      "sha256": "466804586e17270c33fc4166b91cdfbb6cc9bd7c7eff1959dde181c16f21f234",
+      "slides": [
+        9,
+        24
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image20.png",
+      "path": "assets/media/image20.png",
+      "sha256": "67150ff376e070366e80f86c6a957ac8ec4a6be84134e44a41cd78e5116d4280",
+      "slides": [
+        10,
+        11,
+        14,
+        15
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image21.png",
+      "path": "assets/media/image21.png",
+      "sha256": "d2aa1d175862272ec09f0290b016a49828a72be91dc854dcf91b2836d3b5fd08",
+      "slides": [
+        10,
+        14
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image22.png",
+      "path": "assets/media/image22.png",
+      "sha256": "3cd719fa3276ef4afc628e2db8ee3f3516a1d8a93ef29c3c24af6fde73e8b10f",
+      "slides": [
+        10,
+        12,
+        14,
+        25
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image23.png",
+      "path": "assets/media/image23.png",
+      "sha256": "0e4231fd8ab05f89816ea9d2734f343aaf96628e4c60b08eefaec65faeb99ab3",
+      "slides": [
+        14,
+        21,
+        23
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image25.png",
+      "path": "assets/media/image25.png",
+      "sha256": "d1cdb27d97b240ec9d5f8019956fe41d10007b1694d0de418307dab0c619865d",
+      "slides": [
+        14
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image26.png",
+      "path": "assets/media/image26.png",
+      "sha256": "cca715f0f049f88ee7882c64606e3c7ce12b23cd87fb07d0d5989ad15dd3e98f",
+      "slides": [
+        16,
+        17,
+        18,
+        19,
+        52
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image27.png",
+      "path": "assets/media/image27.png",
+      "sha256": "6a20d62e592f1d4db3238d855206a55b84e671f85dbae23237ef3b6ad6be7b03",
+      "slides": [
+        17,
+        18,
+        19,
+        43
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image28.png",
+      "path": "assets/media/image28.png",
+      "sha256": "e8575262cc18b899520be492c4d9917dc40bbdd3535fa2f11c0429a04d0e3105",
+      "slides": [
+        17,
+        18,
+        19,
+        46
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image29.png",
+      "path": "assets/media/image29.png",
+      "sha256": "43f4d575312397cb2313fe600418c2a4fd1c68b50f3b4d055861009dcee8cd0c",
+      "slides": [
+        17,
+        18,
+        19
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image30.png",
+      "path": "assets/media/image30.png",
+      "sha256": "2fc2bb2c0d60f603a34094320e16abd22842e3dbe015c8b62f37a8edf38c0634",
+      "slides": [
+        18,
+        19
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image31.png",
+      "path": "assets/media/image31.png",
+      "sha256": "dba7bc0927ea2a28f2b5b15c5474f39ac52d645c3d4e10c1329ec6864880f117",
+      "slides": [
+        18,
+        19,
+        43
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image32.png",
+      "path": "assets/media/image32.png",
+      "sha256": "7865d31d71a1872ae721fa11e3ddb3a647a4502cea4610f4867eeddf8729b820",
+      "slides": [
+        18,
+        19,
+        43
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image33.jpeg",
+      "path": "assets/media/image33.jpeg",
+      "sha256": "9d16c323216e0833ea5b6a91ab6f7b19dcefcff192897e2cf61b5b8826c58820",
+      "slides": [
+        20
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image34.jpeg",
+      "path": "assets/media/image34.jpeg",
+      "sha256": "d603fadeb3f4afc81cd849ef2acc974dadaf6ca95b805cb2f95d129c449f69c6",
+      "slides": [
+        26
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image36.png",
+      "path": "assets/media/image36.png",
+      "sha256": "7a767d390d4a42574ed28830638a5c6efc65e98147b632fb86f58f5cadba19aa",
+      "slides": [
+        52
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    },
+    {
+      "part": "ppt/media/image35.png",
+      "path": "assets/media/image35.png",
+      "sha256": "56ceb10da5366826ba75dcbca82799a52d9d860f4945077861d102447279f27a",
+      "slides": [
+        46
+      ],
+      "provenance": "Owner-supplied native Cowork deck. Embedded source bytes retained; individual original URL, prompt and licence are not established by extraction.",
+      "clearance": "Repository clearance was recorded for the supplied Cowork outputs; no new external-publication clearance is inferred."
+    }
+  ]
+}

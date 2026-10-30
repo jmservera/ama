@@ -8377,3 +8377,44 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   findings, including the 480-minute, three/day 131.025M dropout estimate,
   not hourly sizing. The retained recommendation is conditional advice,
   not a renewed purchase, deployment, benchmark or operational approval.
+
+## [2026-10-29] restructure | Capstone working set and technology rationale
+
+* Replaced the long capstone entry point with the
+  [current working set](../capstone/README.md): one 54-slide PPTX/native PDF,
+  [native/JSON authoring source](../capstone/source/README.md), 36 retained
+  media inputs with usage/hashes, synchronized pitch notes/Q&A and a separate
+  demo runbook. The older 18-slide brief, editable diagrams, icon/evidence
+  sources and dated reviews remain under history, not current scoring inputs.
+* The owner selected the existing Fabric research branch and approved exactly
+  15 obsolete generated exports for archive-backed removal. Full readback of
+  4,411 capstone/tracking entries and selected-file restore/hash checks preceded
+  removal; protected bytes were checked after the initial moves. The
+  [restore map and finite receipt](../capstone/history/README.md) record local
+  custody and portability limits. No original RPI evidence or thought-leadership
+  file was pruned; no broader cleanup authority is inferred.
+* Five existing technology pages explain rules/Decision 1/generation, shared
+  API/Entra/SQL/Blob, deferred workers and the private Event Hub route. Fabric
+  is a conditional read-only history/reporting option compared with SQL/read
+  models plus Power BI, not a mandatory dependency, purchase or SQL-ledger
+  replacement. Existing dated research, unknown benefits/current cost headroom
+  and expired authority remain explicit; no fresh provider/legal check occurred.
+* Independent image review raised seven original issues; corrections and
+  rerenders are retained in the [dated review](../capstone/source/review-2026-10-29.md).
+  Reader review exposed inherited legal/forecast claims, obsolete dynamic-return
+  instructions and a recording/fallback contradiction. Legal-status page 3 and
+  opening/scenario/demo notes were reconciled; current notes describe actual
+  fixed jumps. All six protected cost-slide bytes and calculations remain;
+  cost-note exceptions 32/36/52 change navigation sentences only.
+* Actual native rendering covers all 54 slides with zero revised-text overflow;
+  264 inherited bound warnings are not accessibility acceptance. The actual
+  scorer's isolated indexed fixture extracts 54 slides/54 notes, finds the
+  current deck and pitch/demo, and excludes source/history. Registry now pins
+  the exact deck and includes the demo folder; trusted-base integration remains
+  necessary for hosted scope. No score file was changed.
+* Existing rubric/authoring suites report 149 passed, 23 failed and one skip.
+  Seven score-fixture failures reproduce on unchanged HEAD; sixteen need
+  missing `jq`. Native/source/link/editor checks do not replace rehearsal,
+  fresh legal review, direct accessibility/human acceptance, current live-demo
+  authority, the complete RPI publication gate, hosted scoring or owner merge.
+  No commit, push, deployment, paid inference or new operational approval.
