@@ -13,7 +13,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
-from zava_forward.core import controls, forms, profile
+from zava_forward.core import ai_registry, controls, form_review, forms, profile
 
 from zava_forward.core import identity, projection, quality, ranking, taskqueues
 
@@ -25,7 +25,7 @@ from zava_forward.agents.dispatch import AgentWorker
 from zava_forward.core.assistants import Assistants
 from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
 from zava_forward.core.chat_privacy import ChatNotApproved, WARNING as CHAT_WARNING
-from zava_forward.core.chat_panel import ChatPanel
+from zava_forward.core.chat_panel import ChatPanel, chat_skills, TASK as CHAT_TASK, MAX_INPUT_CHARS, MAX_HISTORY_CHARS
 from zava_forward.core.regulatory_chat import RegulatoryChat, TASK as REGULATORY_TASK
 from zava_forward.agents import regulatory_chat
 from zava_forward.core.source_monitor import dated_card
@@ -41,6 +41,13 @@ TYPES = {".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=u
 OSM_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
 OSM_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 SECURITY = {"X-Content-Type-Options": "nosniff", "Referrer-Policy": "strict-origin-when-cross-origin", "Cache-Control": "no-store", "Strict-Transport-Security": "max-age=31536000"}
+
+
+def chat_admission(store):
+    """Synthetic privacy references cannot authorize a conversational model call."""
+    if not ai_registry.authorizes_live(CHAT_TASK) or store.ai.gate is None:
+        return "activation-not-approved"
+    return store.ai.gate(CHAT_TASK, store.ai.fast)
 
 
 def tile_config(env=None):
@@ -67,7 +74,9 @@ class App:
         # The provider call is agents code; the API composes it in process until the queue transport (#144) replaces it.
         self.assistants = Assistants(store, provider=AgentWorker(lambda *args: store.ai.evidence(*args)).provider_call)
         self.chat = ChatIsolation(store)
-        self.panel = ChatPanel(self.chat, ChatModel(AgentWorker(lambda *args: store.ai.evidence(*args))))
+        self.panel = ChatPanel(self.chat, ChatModel(
+            AgentWorker(lambda *args: store.ai.evidence(*args)),
+            admission=lambda: chat_admission(store)))
         self.law = law
         self.regulatory = RegulatoryChat(
             self.chat, law, regulatory_chat.answer, regulatory_chat.purpose, regulatory_chat.refusal
@@ -95,6 +104,10 @@ class App:
 
 
 def get_kind(path):
+    if path == "/api/progress":
+        return "stats"
+    if path == "/api/closed-cases":
+        return "cases"
     if path == "/api/coordinator":
         return "coordinator"
     if path == "/api/form-schemas":
@@ -269,6 +282,18 @@ def make_handler(app):
                     return self._json(400, {"error": str(e)})
             if not projection.allowed(u, get_kind(url.path)):
                 return self._json(403, {"error": "Your role does not include this."})
+            if url.path in ("/api/progress", "/api/closed-cases"):
+                from zava_forward.api import progress
+                try:
+                    read = progress.dashboard if url.path == "/api/progress" else progress.closed_cases
+                    values = parse_qs(url.query, keep_blank_values=True)
+                    return self._json(200, read(s, u, values))
+                except progress.DateRangeError as error:
+                    return self._json(400, {"error": str(error), "reasons": {"fields": ["start", "end"]}})
+                except ValueError as error:
+                    return self._json(400, {"error": str(error)})
+                except PermissionError as error:
+                    return self._json(403, {"error": str(error)})
             if url.path == "/api/coordinator":
                 from zava_forward.core import coordinator
                 try:
@@ -315,7 +340,7 @@ def make_handler(app):
             form_parts = url.path.strip("/").split("/")
             if url.path == "/api/form-schemas" or (
                     len(form_parts) == 4 and form_parts[:2] == ["api", "cases"]
-                    and form_parts[3] == "form-candidates"):
+                    and form_parts[3] in ("form-candidates", "form-review")):
                 return self._forms(u, url.path, None)
             if url.path.startswith("/api/buildings/"):
                 try:
@@ -617,14 +642,28 @@ def make_handler(app):
             if post and not isinstance(body, dict):
                 return self._json(400, {"error": "Chat request must be an object."})
             try:
+                if not post and parts == ["skills"]:
+                    c.current_user(user)
+                    return self._json(200, {"skills": chat_skills()})
+                if not post and parts == ["status"]:
+                    c.current_user(user)
+                    return self._json(200, {
+                        "warning": CHAT_WARNING, "retention": c.privacy.decision()["retention"],
+                        "activation": "disabled; approval evidence required",
+                        "limits": {"calls_per_turn": 1, "retries": 0, "output_tokens": 600,
+                                   "context_chars": MAX_INPUT_CHARS, "history_chars": MAX_HISTORY_CHARS,
+                                   "memory_used": False, "authority": "engineering caps, not spend authorization"}})
                 if parts and parts[0] == "regulatory":
                     self._regulatory_access(user)
                     if not post and parts == ["regulatory", "status"]:
                         return self._json(200, {"label": "synthetic-demo", "enabled": True,
                                                "privacy": app.regulatory.privacy_status(user),
+                                               "usage": app.regulatory.usage_status(user),
                                                "warning": CHAT_WARNING})
                     if not post and parts == ["regulatory", "inbox"]:
                         return self._json(200, app.regulatory.inbox(user))
+                    if not post and parts == ["regulatory", "usage"]:
+                        return self._json(200, app.regulatory.usage_status(user))
                     if post and parts == ["regulatory", "threads"]:
                         if set(body) != {"case_id"}:
                             raise ValueError("Only case_id is accepted.")
@@ -672,9 +711,14 @@ def make_handler(app):
                         if parts[2] not in ("archive", "delete"):
                             raise ValueError("Use the bounded regulatory endpoint for this thread.")
                     if parts[2] == "messages":
-                        return self._json(200, c.turn(u, tid, body.get("content")))
+                        answer = app.panel.ask(u, tid, body.get("content"))
+                        return self._json(200, dict(answer, withheld=answer["kind"] == "withheld"))
                     if parts[2] == "ask":
-                        return self._json(200, app.panel.ask(u, tid, body.get("content")))
+                        if set(body) - {"content", "skill"}:
+                            raise ValueError("Only content and skill are accepted.")
+                        if "skill" in body and body["skill"] is None:
+                            raise ValueError("Choose a listed skill or omit skill for legacy chat.")
+                        return self._json(200, app.panel.ask(u, tid, body.get("content"), skill=body.get("skill")))
                     if parts[2] == "proposals":
                         # Proposal-only: the existing assistants path queues it for the independent review.
                         t = s.chat_resume(u, tid)
@@ -738,11 +782,15 @@ def make_handler(app):
                     if body is None:
                         return self._json(200, {"schemas": forms.list_schemas(app.store, user)})
                     return self._json(201, forms.register_schema(app.store, user, body))
+                if parts[3] == "form-review":
+                    if body is None:
+                        return self._json(200, form_review.view(app.store, user, parts[2]))
+                    return self._json(201, form_review.action(app.store, user, parts[2], body))
                 if body is None:
                     return self._json(200, {"batches": forms.list_candidates(app.store, user, parts[2])})
                 return self._json(201, forms.stage_candidates(app.store, user, parts[2], body))
             except DocumentStoreError:
-                return self._json(502, {"error": "The document store is unavailable; no candidates were staged."})
+                return self._json(502, {"error": "The document store is unavailable. Reload before retrying; no approval or submission occurred."})
             except ConflictError:
                 return self._json(409, {"error": "The form or source changed. Reload before retrying."})
             except PermissionError as error:
@@ -827,7 +875,7 @@ def make_handler(app):
             parts = url.path.strip("/").split("/")
             if url.path == "/api/form-schemas" or (
                     len(parts) == 4 and parts[:2] == ["api", "cases"]
-                    and parts[3] == "form-candidates"):
+                    and parts[3] in ("form-candidates", "form-review")):
                 return self._forms(u, url.path, body)
             try:
                 if url.path == "/api/bulk-edits/preview":

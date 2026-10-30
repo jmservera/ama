@@ -1,0 +1,1592 @@
+{
+  "task_id": "f09558e0-64f4-4440-856f-8e9a302dbb6f",
+  "task_slug": "demo-sites-redeploy",
+  "generated_utc": "2026-10-30T08:30:52.865056+00:00",
+  "outcome": "Partial; deployment blocked before publishing, SQL or app writes",
+  "build": {
+    "source": "ffd8f35e63b24905b9aeb937dbf2a7fe9968747f",
+    "archive_sha256": "a6263f027c20a42f99d3566f96c435799d4dbbba4cac743fd724dc01453cabb1",
+    "src_tree": "83d4657d53e4577955ad9d4be66e771a33d4da24",
+    "images": [
+      {
+        "kind": "resident",
+        "repository": "zava-resident-demo",
+        "tag": "crcutovertestrzsrg.azurecr.io/zava-resident-demo:main-20261030-ffd8f35e63b2-resident",
+        "local_id": "sha256:885014246f83819475af0d4ffaadd898776253fb089cb36b765527b92f52bf93",
+        "config_digest": "sha256:52a68ac4e785bb3eb6dfaaa0db9bb67c83b07bf7f9f4737431732bddc421dd95"
+      },
+      {
+        "kind": "employee",
+        "repository": "zava-forward-api",
+        "tag": "crcutovertestrzsrg.azurecr.io/zava-forward-api:main-20261030-ffd8f35e63b2-employee",
+        "local_id": "sha256:e4fa88041d4f4fedfdd230fa3e3eb5f73a53c89c43bace46e0658dcf30cf9799",
+        "config_digest": "sha256:3e4f5299bdddcf430f2c4d54fb2777515faeb50177f4a19fc12c19ccf1727f98"
+      }
+    ]
+  },
+  "financial_admission": {
+    "query": {
+      "status": "returned",
+      "scope": "ama",
+      "period": {
+        "from": "2026-10-01T00:00:00Z",
+        "to": "2026-10-30T23:59:59Z"
+      },
+      "rows": 20,
+      "total": 337.19112853637773,
+      "currencies": [
+        "USD"
+      ],
+      "columns": [
+        "PreTaxCost",
+        "UsageDate",
+        "Currency"
+      ],
+      "next_link_present": false
+    },
+    "forecast": {
+      "status": "returned",
+      "scope": "ama",
+      "period": {
+        "from": "2026-10-30T00:00:00Z",
+        "to": "2026-10-31T23:59:59Z"
+      },
+      "rows": 3,
+      "total": 36.23934745788574,
+      "currencies": [
+        "USD"
+      ],
+      "columns": [
+        "PreTaxCost",
+        "UsageDate",
+        "CostStatus",
+        "Currency"
+      ],
+      "next_link_present": false
+    },
+    "retrieved_utc": "2026-10-30T08:27:13.333867+00:00",
+    "all_in_headroom": "Unknown",
+    "outside_group_liabilities": "Unknown; no broader reads permitted",
+    "cap_usd": 700,
+    "reserve_usd": 30,
+    "billing_lag": "Unknown; current-month data estimates may be delayed or rerated",
+    "paid_actions_admitted": false,
+    "blocked_steps": [
+      "private ACR push",
+      "in-VNet SQL initialization",
+      "both app rollouts"
+    ],
+    "reason": "RG-only costs cannot establish all-in headroom or bound U, commitments and delayed liabilities"
+  },
+  "role": {
+    "role": "IoT Hub Registry Contributor",
+    "role_definition": "4ea46cd5-c1b2-4a8e-910b-273211f9ce47",
+    "principal_id": "2d4fe550-794a-4ee9-8093-e680ca02fe18",
+    "principal_type": "ServicePrincipal",
+    "scope": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Devices/IotHubs/iot-cutover-test-rzsrg",
+    "assignment_id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Devices/IotHubs/iot-cutover-test-rzsrg/providers/Microsoft.Authorization/roleAssignments/3438cffb-4db8-5470-9d1a-d4861573d030",
+    "created": true,
+    "hub_unchanged": true,
+    "unrelated_assignments_preserved": true,
+    "device_or_data_action_exercised": false,
+    "data_plane_propagation_verified": false
+  },
+  "final_verification": {
+    "apps": [
+      {
+        "app": "ca-resident-demo",
+        "host": "ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io",
+        "revision": "ca-resident-demo--res-live-20261029-102142",
+        "latest_equals_ready": true,
+        "health": "Healthy",
+        "image": "crcutovertestrzsrg.azurecr.io/zava-resident-demo@sha256:3ab5febcc40429fd709940b272fc58ab33ff14190494e45c87eb55f307491086",
+        "min_replicas": 0,
+        "protected_equal": true,
+        "auth_equal": true,
+        "revisions_unchanged": true,
+        "redeployed": false,
+        "requests": [
+          {
+            "path": "/healthz",
+            "status": 200,
+            "bytes": 50,
+            "sha256": "f3fc2ca8cb4f655ce205a3200689c21698e5edb6d3ea9754d91ef86d67828787"
+          },
+          {
+            "path": "/",
+            "status": 200,
+            "bytes": 3180,
+            "sha256": "4db767ae9d57fcb29d75ca5aaa6bd9843fbfbb163d5b36031c60a4a1881cc795"
+          },
+          {
+            "path": "/chat-widget.js",
+            "status": 404,
+            "bytes": 23,
+            "sha256": "0743dbc4abee97c5dea19f6d92113fe479368b6301760dffda65e5ef62e5ea21"
+          },
+          {
+            "path": "/chat-widget.css",
+            "status": 404,
+            "bytes": 23,
+            "sha256": "0743dbc4abee97c5dea19f6d92113fe479368b6301760dffda65e5ef62e5ea21"
+          }
+        ]
+      },
+      {
+        "app": "ca-cutover-test-demo-api",
+        "host": "ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io",
+        "revision": "ca-cutover-test-demo-api--emp-live-20261029-102306",
+        "latest_equals_ready": true,
+        "health": "Healthy",
+        "image": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:5215e019a78a8c7ae07987dcd26dbcabbe87eb4b5ecf2077688f7a9ca5f9034e",
+        "min_replicas": 0,
+        "protected_equal": true,
+        "auth_equal": true,
+        "revisions_unchanged": true,
+        "redeployed": false,
+        "requests": [
+          {
+            "path": "/healthz",
+            "status": 200,
+            "bytes": 2,
+            "sha256": "2689367b205c16ce32ed4200942b8b8b1e262dfc70d9bc9fbc77c49699a4f1df"
+          },
+          {
+            "path": "/",
+            "status": 200,
+            "bytes": 2040,
+            "sha256": "c38290f27474fe2097645f8b7cdff481f95852ae39247afd642b50491a4d629a"
+          },
+          {
+            "path": "/chat-widget.js",
+            "status": 401,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "/chat-widget.css",
+            "status": 401,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "/app",
+            "status": 401,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "/app.js",
+            "status": 401,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "/ops.js",
+            "status": 401,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ]
+      }
+    ],
+    "jobs": [
+      {
+        "name": "job-cutover-test-init",
+        "unchanged": true,
+        "trigger": "Manual"
+      },
+      {
+        "name": "job-cutover-test-verify",
+        "unchanged": true,
+        "trigger": "Manual"
+      },
+      {
+        "name": "job-cutover-test-ledger-verify",
+        "unchanged": true,
+        "trigger": "Manual"
+      },
+      {
+        "name": "job-cutover-test-import",
+        "unchanged": true,
+        "trigger": "Manual"
+      },
+      {
+        "name": "job-cutover-test-orchestrator",
+        "unchanged": true,
+        "trigger": "Manual"
+      },
+      {
+        "name": "job-cutover-test-smoke",
+        "unchanged": true,
+        "trigger": "Manual"
+      },
+      {
+        "name": "job-cutover-test-mi-http",
+        "unchanged": true,
+        "trigger": "Manual"
+      },
+      {
+        "name": "job-cutover-test-public-audit",
+        "unchanged": true,
+        "trigger": "Manual"
+      }
+    ],
+    "source": "ffd8f35e63b24905b9aeb937dbf2a7fe9968747f",
+    "acr_exact_stable_equal": true,
+    "all_app_minima": {
+      "ca-cutover-test-api": 0,
+      "ca-cutover-test-agents": 0,
+      "ca-cutover-test-demo-api": 0,
+      "ca-resident-demo": 0
+    },
+    "origin_main_at_final": "ffd8f35e63b24905b9aeb937dbf2a7fe9968747f",
+    "source_still_pinned": true
+  },
+  "browser": {
+    "tool": "Playwright MCP",
+    "existing_tabs_at_start": [
+      "about:blank"
+    ],
+    "results": [
+      {
+        "site": "resident",
+        "viewport": [
+          1365,
+          900
+        ],
+        "password_inputs": 1,
+        "shared_widget_launchers": 0,
+        "shared_widget_scripts": 0,
+        "active_chat_dialogs": 0,
+        "horizontal_overflow": false
+      },
+      {
+        "site": "resident",
+        "viewport": [
+          390,
+          844
+        ],
+        "password_inputs": 1,
+        "shared_widget_launchers": 0,
+        "shared_widget_scripts": 0,
+        "active_chat_dialogs": 0,
+        "horizontal_overflow": false
+      },
+      {
+        "site": "employee-public",
+        "viewport": [
+          390,
+          844
+        ],
+        "shared_widget_launchers": 0,
+        "horizontal_overflow": false
+      },
+      {
+        "site": "employee-public",
+        "viewport": [
+          1365,
+          900
+        ],
+        "shared_widget_launchers": 0,
+        "horizontal_overflow": false
+      },
+      {
+        "site": "employee-app",
+        "requested_path": "/app",
+        "result": "Microsoft Entra sign-in page; no authenticated session",
+        "credentials_entered": false
+      }
+    ],
+    "failures": [
+      {
+        "operation": "browser_evaluate with filename outside allowed roots",
+        "result": "file access denied",
+        "resolution": "read-only evaluation repeated without file write"
+      }
+    ],
+    "raw_public_artifacts": [
+      ".playwright-mcp/page-2026-10-30T08-28-56-099Z.yml",
+      ".playwright-mcp/console-2026-10-30T08-28-20-065Z.log",
+      ".playwright-mcp/page-2026-10-30T08-30-13-548Z.yml",
+      ".playwright-mcp/console-2026-10-30T08-30-13-396Z.log",
+      ".playwright-mcp/page-2026-10-30T08-30-25-400Z.yml"
+    ],
+    "console": "One error reported per site; not asserted clean; raw public artifacts retained",
+    "semantic_features": {
+      "550": "resident shared widget unavailable: script/css404 and no launcher; employee blocked by auth; neither redeployed",
+      "551": "blocked: employee Entra sign-in, no expanded-map interaction",
+      "552": "blocked: employee Entra sign-in, no case journey interaction",
+      "503": "blocked: no authenticated chat, model, grounding or human acceptance",
+      "553": "blocked: no live map filter synchronization at desktop/narrow width",
+      "554": "blocked: no live case icons/blocker popover/attached tabs",
+      "556": "not deployed: resident shared assets404; employee authentication blocks inspection"
+    }
+  },
+  "commands": [
+    {
+      "started": "2026-10-30T08:26:48.966849+00:00",
+      "argv": [
+        "git",
+        "rev-parse",
+        "origin/main"
+      ],
+      "exit": 0,
+      "label": "build-main-pin-1793348808969949289",
+      "duration_seconds": 0.003,
+      "stdout_sha256": "c65caab6a57720759517babc31efa7c8cfeccb859c5194bbad163040b9bce0ed",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:26:48.982206+00:00",
+      "argv": [
+        "git",
+        "rev-parse",
+        "origin/main"
+      ],
+      "exit": 0,
+      "label": "preflight-main-1793348808984976225",
+      "duration_seconds": 0.003,
+      "stdout_sha256": "c65caab6a57720759517babc31efa7c8cfeccb859c5194bbad163040b9bce0ed",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:26:48.970297+00:00",
+      "argv": [
+        "git",
+        "archive",
+        "--format=tar",
+        "--output=/home/azureuser/.copilot/session-state/f09558e0-64f4-4440-856f-8e9a302dbb6f/files/redeploy/source.tar",
+        "ffd8f35e63b24905b9aeb937dbf2a7fe9968747f",
+        "src"
+      ],
+      "exit": 0,
+      "label": "source-archive-1793348809023671435",
+      "duration_seconds": 0.054,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:26:49.024065+00:00",
+      "argv": [
+        "tar",
+        "-xf",
+        "/home/azureuser/.copilot/session-state/f09558e0-64f4-4440-856f-8e9a302dbb6f/files/redeploy/source.tar",
+        "-C",
+        "/home/azureuser/.copilot/session-state/f09558e0-64f4-4440-856f-8e9a302dbb6f/files/redeploy/build-context"
+      ],
+      "exit": 0,
+      "label": "source-extract-1793348809047770981",
+      "duration_seconds": 0.024,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:26:49.058429+00:00",
+      "argv": [
+        "git",
+        "rev-parse",
+        "ffd8f35e63b24905b9aeb937dbf2a7fe9968747f:src"
+      ],
+      "exit": 0,
+      "label": "source-tree-1793348809063261177",
+      "duration_seconds": 0.005,
+      "stdout_sha256": "e2797ba3ff695b530538a0df52401eb6bf7151ca30a10ebfb1003e05f5c24bdf",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:26:48.985234+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "get",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/containerApps/ca-resident-demo?api-version=2025-07-01",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "backup-ca-resident-demo-1793348810131955504",
+      "duration_seconds": 1.147,
+      "stdout_sha256": "da998ce3e9e59915947a249a15e0d1fe44a6a9f90766e327140983b2584565fa",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:26:50.132764+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "get",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/containerApps/ca-resident-demo/authConfigs/current?api-version=2025-07-01",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 1,
+      "label": "auth-current-ca-resident-demo-1793348811066594583",
+      "duration_seconds": 0.963,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e164cfcc6c969178492cb55a62b841f8288b0f01c28159de62ab54676b599db8"
+    },
+    {
+      "started": "2026-10-30T08:26:51.096479+00:00",
+      "argv": [
+        "az",
+        "containerapp",
+        "revision",
+        "list",
+        "-g",
+        "ama",
+        "-n",
+        "ca-resident-demo",
+        "--all",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "revisions-ca-resident-demo-1793348812476847022",
+      "duration_seconds": 1.381,
+      "stdout_sha256": "b5feedbc33481e25188e06fdfd5c4a95ee72e87d3ea92e37fd27820d6027cc87",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:26:52.478577+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "get",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/containerApps/ca-cutover-test-demo-api?api-version=2025-07-01",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "backup-ca-cutover-test-demo-api-1793348813411099522",
+      "duration_seconds": 0.933,
+      "stdout_sha256": "af7c223ca495fe1ed8bced49c870f87cf6edc3af7b7ba5b14babcd6dbae71413",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:26:53.412314+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "get",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/containerApps/ca-cutover-test-demo-api/authConfigs/current?api-version=2025-07-01",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "auth-current-ca-cutover-test-demo-api-1793348814154953431",
+      "duration_seconds": 0.743,
+      "stdout_sha256": "ead07be2c9d033b8575ebfc4f547e2bda5e2893c484e105c958742c0291cc4bf",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:26:54.155668+00:00",
+      "argv": [
+        "az",
+        "containerapp",
+        "revision",
+        "list",
+        "-g",
+        "ama",
+        "-n",
+        "ca-cutover-test-demo-api",
+        "--all",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "revisions-ca-cutover-test-demo-api-1793348815625908099",
+      "duration_seconds": 1.471,
+      "stdout_sha256": "6f466ec87552707acda4d09cb7db43866146c8812483723bdc342fe6441afb49",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:26:55.630240+00:00",
+      "argv": [
+        "az",
+        "containerapp",
+        "job",
+        "list",
+        "-g",
+        "ama",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "jobs-before-1793348818571168236",
+      "duration_seconds": 2.941,
+      "stdout_sha256": "38aafbefbc0c40ba842b7dad720106250a07df77570d0b70df35b29bdb51a3a6",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:26:58.573029+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "get",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-init?api-version=2025-07-01",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "backup-job-cutover-test-init-1793348819307498935",
+      "duration_seconds": 0.735,
+      "stdout_sha256": "76fa7ee29c355c9af6fc52fa51212b014b154f6425893a9b59192e06665a51b2",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:26:59.308151+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "get",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-verify?api-version=2025-07-01",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "backup-job-cutover-test-verify-1793348819801891137",
+      "duration_seconds": 0.494,
+      "stdout_sha256": "caa5ecbbfd7870c8c049028a554ea7f06b1d35cf4af2e5195d2dee4e6a384a07",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:26:59.803121+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "get",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-ledger-verify?api-version=2025-07-01",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "backup-job-cutover-test-ledger-verify-1793348820382236543",
+      "duration_seconds": 0.579,
+      "stdout_sha256": "63b77eec2bf85a517b70a5266555a75aff9f382f0e76cbc51c29d55baeee519d",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:27:00.382979+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "get",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-import?api-version=2025-07-01",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "backup-job-cutover-test-import-1793348820899125199",
+      "duration_seconds": 0.516,
+      "stdout_sha256": "4bbeac6dd11c5e4af3aa5580a348ff14e3f895d96f14c792292fffea253ad557",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:27:00.900048+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "get",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-orchestrator?api-version=2025-07-01",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "backup-job-cutover-test-orchestrator-1793348821448178833",
+      "duration_seconds": 0.548,
+      "stdout_sha256": "cd4a641510b09694880b11bc3da6deacc843b6a729954e62e8ffd2e679d900f3",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:27:01.449085+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "get",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-smoke?api-version=2025-07-01",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "backup-job-cutover-test-smoke-1793348822006134602",
+      "duration_seconds": 0.557,
+      "stdout_sha256": "34dd7ecf24b00bef36fab2a56e1e0bb9cb65fa040e9dc069d868c9646866626c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:27:02.006811+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "get",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-mi-http?api-version=2025-07-01",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "backup-job-cutover-test-mi-http-1793348822556386638",
+      "duration_seconds": 0.55,
+      "stdout_sha256": "0e28e99f8564051f02fa090a1d5004d688243eb8673ffc550023adcb30946787",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:27:02.557307+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "get",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-public-audit?api-version=2025-07-01",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "backup-job-cutover-test-public-audit-1793348823131002517",
+      "duration_seconds": 0.574,
+      "stdout_sha256": "0953065e91908cd33aa6baee15e5cf41b90995b837cf469fd4481cf92733de57",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:27:03.131879+00:00",
+      "argv": [
+        "az",
+        "acr",
+        "show",
+        "-g",
+        "ama",
+        "-n",
+        "crcutovertestrzsrg",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "acr-before-1793348823899013812",
+      "duration_seconds": 0.767,
+      "stdout_sha256": "6233475a1158d31ce77c481031c8a02430309af1509288ac702f628942ed0716",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:27:03.900166+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "post",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.CostManagement/query?api-version=2025-03-01",
+        "--body",
+        "@/home/azureuser/.copilot/session-state/f09558e0-64f4-4440-856f-8e9a302dbb6f/files/redeploy/request-1793348823900079320.json",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "cost-query-1793348827994140280",
+      "duration_seconds": 4.094,
+      "stdout_sha256": "479a8258fa8c05f4f973a136328e46fa1d9467af73561e462bcee424a60aa716",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:27:07.995082+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "post",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.CostManagement/forecast?api-version=2025-03-01",
+        "--body",
+        "@/home/azureuser/.copilot/session-state/f09558e0-64f4-4440-856f-8e9a302dbb6f/files/redeploy/request-1793348827994955986.json",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "cost-forecast-1793348833333197887",
+      "duration_seconds": 5.338,
+      "stdout_sha256": "e77cefa08676f67972067cb4086d7d647c9b03ce987c15017e05f4dccd550a7b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:27:13.841818+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "get",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Devices/IotHubs/iot-cutover-test-rzsrg?api-version=2023-06-30",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "hub-before-1793348834651784986",
+      "duration_seconds": 0.81,
+      "stdout_sha256": "dda84e11c758da223776fbcd88cd15f775e0a687f4b97a49e7e9aaac3a9f8f8b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:27:14.652549+00:00",
+      "argv": [
+        "az",
+        "role",
+        "assignment",
+        "list",
+        "--scope",
+        "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Devices/IotHubs/iot-cutover-test-rzsrg",
+        "--include-inherited",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "hub-roles-before-1793348836459498669",
+      "duration_seconds": 1.807,
+      "stdout_sha256": "37ded786222229e5c4f1a4c859e5046ad6b928604f67200a4ccb3595aef0659e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:26:49.063781+00:00",
+      "argv": [
+        "docker",
+        "build",
+        "--label",
+        "org.opencontainers.image.revision=ffd8f35e63b24905b9aeb937dbf2a7fe9968747f",
+        "-t",
+        "crcutovertestrzsrg.azurecr.io/zava-resident-demo:main-20261030-ffd8f35e63b2-resident",
+        "-f",
+        "/home/azureuser/.copilot/session-state/f09558e0-64f4-4440-856f-8e9a302dbb6f/files/redeploy/build-context/src/api/Dockerfile.resident-demo",
+        "/home/azureuser/.copilot/session-state/f09558e0-64f4-4440-856f-8e9a302dbb6f/files/redeploy/build-context/src"
+      ],
+      "exit": 0,
+      "label": "build-resident-1793348837868091104",
+      "duration_seconds": 28.805,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "1c4e48f17b29ed48997dd86eea1f3e0f1b983ba7ab189ec0f016cab6642bbeb4"
+    },
+    {
+      "started": "2026-10-30T08:27:17.868588+00:00",
+      "argv": [
+        "docker",
+        "image",
+        "inspect",
+        "crcutovertestrzsrg.azurecr.io/zava-resident-demo:main-20261030-ffd8f35e63b2-resident"
+      ],
+      "exit": 0,
+      "label": "inspect-resident-1793348837920332583",
+      "duration_seconds": 0.052,
+      "stdout_sha256": "f71540b6c84dc51c7b3c0868b75397f6c609699def65409caa20ebb7027e6ba8",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:27:16.460377+00:00",
+      "argv": [
+        "az",
+        "role",
+        "assignment",
+        "create",
+        "--name",
+        "3438cffb-4db8-5470-9d1a-d4861573d030",
+        "--assignee-object-id",
+        "2d4fe550-794a-4ee9-8093-e680ca02fe18",
+        "--assignee-principal-type",
+        "ServicePrincipal",
+        "--role",
+        "4ea46cd5-c1b2-4a8e-910b-273211f9ce47",
+        "--scope",
+        "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Devices/IotHubs/iot-cutover-test-rzsrg",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "hub-role-create-1793348840026154800",
+      "duration_seconds": 3.566,
+      "stdout_sha256": "cfe3ee8f6ef7d042c21d2fbcc28c33bce9bbf3bb8766b5a97668db7041eff367",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:27:17.920754+00:00",
+      "argv": [
+        "docker",
+        "save",
+        "-o",
+        "/home/azureuser/.copilot/session-state/f09558e0-64f4-4440-856f-8e9a302dbb6f/files/redeploy/resident-image.tar",
+        "crcutovertestrzsrg.azurecr.io/zava-resident-demo:main-20261030-ffd8f35e63b2-resident"
+      ],
+      "exit": 0,
+      "label": "save-resident-1793348840302461195",
+      "duration_seconds": 2.382,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:27:20.026707+00:00",
+      "argv": [
+        "az",
+        "role",
+        "assignment",
+        "list",
+        "--scope",
+        "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Devices/IotHubs/iot-cutover-test-rzsrg",
+        "--include-inherited",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "hub-roles-after-1793348841348216965",
+      "duration_seconds": 1.322,
+      "stdout_sha256": "646eeda37c7902ce6c3fd90cf4131b8b3e8eb5805998566b409583a324d25ec2",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:27:21.349098+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "get",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Devices/IotHubs/iot-cutover-test-rzsrg?api-version=2023-06-30",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "hub-after-1793348842131562371",
+      "duration_seconds": 0.783,
+      "stdout_sha256": "dda84e11c758da223776fbcd88cd15f775e0a687f4b97a49e7e9aaac3a9f8f8b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:27:20.315617+00:00",
+      "argv": [
+        "docker",
+        "build",
+        "--label",
+        "org.opencontainers.image.revision=ffd8f35e63b24905b9aeb937dbf2a7fe9968747f",
+        "-t",
+        "crcutovertestrzsrg.azurecr.io/zava-forward-api:main-20261030-ffd8f35e63b2-employee",
+        "-f",
+        "/home/azureuser/.copilot/session-state/f09558e0-64f4-4440-856f-8e9a302dbb6f/files/redeploy/build-context/src/api/Dockerfile",
+        "/home/azureuser/.copilot/session-state/f09558e0-64f4-4440-856f-8e9a302dbb6f/files/redeploy/build-context/src"
+      ],
+      "exit": 0,
+      "label": "build-employee-1793348863213755448",
+      "duration_seconds": 22.898,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "d0a589b5a24c260015b4b39c53c278495ffc070d8f90340bd511a54aab84e291"
+    },
+    {
+      "started": "2026-10-30T08:27:43.214228+00:00",
+      "argv": [
+        "docker",
+        "image",
+        "inspect",
+        "crcutovertestrzsrg.azurecr.io/zava-forward-api:main-20261030-ffd8f35e63b2-employee"
+      ],
+      "exit": 0,
+      "label": "inspect-employee-1793348863268962538",
+      "duration_seconds": 0.055,
+      "stdout_sha256": "c1f8792ac7377a28a6e44b72855ccf6a9118dbebf0c4565690185d5522f29fdb",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:27:43.269435+00:00",
+      "argv": [
+        "docker",
+        "save",
+        "-o",
+        "/home/azureuser/.copilot/session-state/f09558e0-64f4-4440-856f-8e9a302dbb6f/files/redeploy/employee-image.tar",
+        "crcutovertestrzsrg.azurecr.io/zava-forward-api:main-20261030-ffd8f35e63b2-employee"
+      ],
+      "exit": 0,
+      "label": "save-employee-1793348865662766788",
+      "duration_seconds": 2.394,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:29:18.120814+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "get",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/containerApps/ca-resident-demo?api-version=2025-07-01",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "verify-app-ca-resident-demo-1793348958776171450",
+      "duration_seconds": 0.656,
+      "stdout_sha256": "da998ce3e9e59915947a249a15e0d1fe44a6a9f90766e327140983b2584565fa",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:29:18.777277+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "get",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/containerApps/ca-resident-demo/authConfigs/current?api-version=2025-07-01",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 1,
+      "label": "verify-auth-ca-resident-demo-1793348959557978788",
+      "duration_seconds": 0.781,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e164cfcc6c969178492cb55a62b841f8288b0f01c28159de62ab54676b599db8"
+    },
+    {
+      "started": "2026-10-30T08:29:19.558937+00:00",
+      "argv": [
+        "az",
+        "containerapp",
+        "revision",
+        "list",
+        "-g",
+        "ama",
+        "-n",
+        "ca-resident-demo",
+        "--all",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "verify-history-ca-resident-demo-1793348960607417880",
+      "duration_seconds": 1.049,
+      "stdout_sha256": "80a16ddc40764f97955f8b25fcc5221e31603245eacf281944c214d05e3fe45e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:29:20.608133+00:00",
+      "argv": [
+        "az",
+        "containerapp",
+        "revision",
+        "show",
+        "-g",
+        "ama",
+        "-n",
+        "ca-resident-demo",
+        "--revision",
+        "ca-resident-demo--res-live-20261029-102142",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "verify-revision-ca-resident-demo-1793348961640916738",
+      "duration_seconds": 1.033,
+      "stdout_sha256": "7aef3c189f010c6ba14fe9e35ab56fbef9aac5dd09343dc4d8ebbfa058f182da",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:29:21.641414+00:00",
+      "argv": [
+        "curl",
+        "--silent",
+        "--show-error",
+        "--connect-timeout",
+        "15",
+        "--max-time",
+        "60",
+        "--output",
+        "/home/azureuser/.copilot/session-state/f09558e0-64f4-4440-856f-8e9a302dbb6f/files/redeploy/http-ca-resident-demo-1793348961641386560.body",
+        "--write-out",
+        "%{http_code}",
+        "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/healthz"
+      ],
+      "exit": 0,
+      "label": "verify-http-ca-resident-demo_healthz-1793348961751961411",
+      "duration_seconds": 0.111,
+      "stdout_sha256": "27badc983df1780b60c2b3fa9d3a19a00e46aac798451f0febdca52920faaddf",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:29:21.752316+00:00",
+      "argv": [
+        "curl",
+        "--silent",
+        "--show-error",
+        "--connect-timeout",
+        "15",
+        "--max-time",
+        "60",
+        "--output",
+        "/home/azureuser/.copilot/session-state/f09558e0-64f4-4440-856f-8e9a302dbb6f/files/redeploy/http-ca-resident-demo-1793348961752294781.body",
+        "--write-out",
+        "%{http_code}",
+        "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/"
+      ],
+      "exit": 0,
+      "label": "verify-http-ca-resident-demo_-1793348961858189810",
+      "duration_seconds": 0.106,
+      "stdout_sha256": "27badc983df1780b60c2b3fa9d3a19a00e46aac798451f0febdca52920faaddf",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:29:21.858576+00:00",
+      "argv": [
+        "curl",
+        "--silent",
+        "--show-error",
+        "--connect-timeout",
+        "15",
+        "--max-time",
+        "60",
+        "--output",
+        "/home/azureuser/.copilot/session-state/f09558e0-64f4-4440-856f-8e9a302dbb6f/files/redeploy/http-ca-resident-demo-1793348961858546352.body",
+        "--write-out",
+        "%{http_code}",
+        "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/chat-widget.js"
+      ],
+      "exit": 0,
+      "label": "verify-http-ca-resident-demo_chat-widget.js-1793348961963599148",
+      "duration_seconds": 0.105,
+      "stdout_sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:29:21.963932+00:00",
+      "argv": [
+        "curl",
+        "--silent",
+        "--show-error",
+        "--connect-timeout",
+        "15",
+        "--max-time",
+        "60",
+        "--output",
+        "/home/azureuser/.copilot/session-state/f09558e0-64f4-4440-856f-8e9a302dbb6f/files/redeploy/http-ca-resident-demo-1793348961963911889.body",
+        "--write-out",
+        "%{http_code}",
+        "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/chat-widget.css"
+      ],
+      "exit": 0,
+      "label": "verify-http-ca-resident-demo_chat-widget.css-1793348962067493040",
+      "duration_seconds": 0.104,
+      "stdout_sha256": "6b3c238ebcf1f3c07cf0e556faa82c6b8fe96840ff4b6b7e9962a2d855843a0b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:29:22.068088+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "get",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/containerApps/ca-cutover-test-demo-api?api-version=2025-07-01",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "verify-app-ca-cutover-test-demo-api-1793348962568240590",
+      "duration_seconds": 0.501,
+      "stdout_sha256": "af7c223ca495fe1ed8bced49c870f87cf6edc3af7b7ba5b14babcd6dbae71413",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:29:22.570029+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "get",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/containerApps/ca-cutover-test-demo-api/authConfigs/current?api-version=2025-07-01",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "verify-auth-ca-cutover-test-demo-api-1793348963074576766",
+      "duration_seconds": 0.505,
+      "stdout_sha256": "ead07be2c9d033b8575ebfc4f547e2bda5e2893c484e105c958742c0291cc4bf",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:29:23.075078+00:00",
+      "argv": [
+        "az",
+        "containerapp",
+        "revision",
+        "list",
+        "-g",
+        "ama",
+        "-n",
+        "ca-cutover-test-demo-api",
+        "--all",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "verify-history-ca-cutover-test-demo-api-1793348964187271200",
+      "duration_seconds": 1.112,
+      "stdout_sha256": "6f466ec87552707acda4d09cb7db43866146c8812483723bdc342fe6441afb49",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:29:24.188692+00:00",
+      "argv": [
+        "az",
+        "containerapp",
+        "revision",
+        "show",
+        "-g",
+        "ama",
+        "-n",
+        "ca-cutover-test-demo-api",
+        "--revision",
+        "ca-cutover-test-demo-api--emp-live-20261029-102306",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "verify-revision-ca-cutover-test-demo-api-1793348965176160303",
+      "duration_seconds": 0.988,
+      "stdout_sha256": "a0b59e32819b506c07fc32e8c3b67cd6b4b4b4ad2b68c8fb98feea1dc86e0564",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:29:25.176639+00:00",
+      "argv": [
+        "curl",
+        "--silent",
+        "--show-error",
+        "--connect-timeout",
+        "15",
+        "--max-time",
+        "60",
+        "--output",
+        "/home/azureuser/.copilot/session-state/f09558e0-64f4-4440-856f-8e9a302dbb6f/files/redeploy/http-ca-cutover-test-demo-api-1793348965176614448.body",
+        "--write-out",
+        "%{http_code}",
+        "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/healthz"
+      ],
+      "exit": 0,
+      "label": "verify-http-ca-cutover-test-demo-api_healthz-1793348996500032292",
+      "duration_seconds": 31.324,
+      "stdout_sha256": "27badc983df1780b60c2b3fa9d3a19a00e46aac798451f0febdca52920faaddf",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:29:56.500408+00:00",
+      "argv": [
+        "curl",
+        "--silent",
+        "--show-error",
+        "--connect-timeout",
+        "15",
+        "--max-time",
+        "60",
+        "--output",
+        "/home/azureuser/.copilot/session-state/f09558e0-64f4-4440-856f-8e9a302dbb6f/files/redeploy/http-ca-cutover-test-demo-api-1793348996500385518.body",
+        "--write-out",
+        "%{http_code}",
+        "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/"
+      ],
+      "exit": 0,
+      "label": "verify-http-ca-cutover-test-demo-api_-1793348996633240377",
+      "duration_seconds": 0.133,
+      "stdout_sha256": "27badc983df1780b60c2b3fa9d3a19a00e46aac798451f0febdca52920faaddf",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:29:56.633652+00:00",
+      "argv": [
+        "curl",
+        "--silent",
+        "--show-error",
+        "--connect-timeout",
+        "15",
+        "--max-time",
+        "60",
+        "--output",
+        "/home/azureuser/.copilot/session-state/f09558e0-64f4-4440-856f-8e9a302dbb6f/files/redeploy/http-ca-cutover-test-demo-api-1793348996633630201.body",
+        "--write-out",
+        "%{http_code}",
+        "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/chat-widget.js"
+      ],
+      "exit": 0,
+      "label": "verify-http-ca-cutover-test-demo-api_chat-widget.js-1793348997274071992",
+      "duration_seconds": 0.641,
+      "stdout_sha256": "dcaadad1cfce437735b81ab025f776e5857e48558c47f6960e6a5f2595664a85",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:29:57.274424+00:00",
+      "argv": [
+        "curl",
+        "--silent",
+        "--show-error",
+        "--connect-timeout",
+        "15",
+        "--max-time",
+        "60",
+        "--output",
+        "/home/azureuser/.copilot/session-state/f09558e0-64f4-4440-856f-8e9a302dbb6f/files/redeploy/http-ca-cutover-test-demo-api-1793348997274402365.body",
+        "--write-out",
+        "%{http_code}",
+        "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/chat-widget.css"
+      ],
+      "exit": 0,
+      "label": "verify-http-ca-cutover-test-demo-api_chat-widget.css-1793348997385736910",
+      "duration_seconds": 0.112,
+      "stdout_sha256": "dcaadad1cfce437735b81ab025f776e5857e48558c47f6960e6a5f2595664a85",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:29:57.386085+00:00",
+      "argv": [
+        "curl",
+        "--silent",
+        "--show-error",
+        "--connect-timeout",
+        "15",
+        "--max-time",
+        "60",
+        "--output",
+        "/home/azureuser/.copilot/session-state/f09558e0-64f4-4440-856f-8e9a302dbb6f/files/redeploy/http-ca-cutover-test-demo-api-1793348997386064449.body",
+        "--write-out",
+        "%{http_code}",
+        "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app"
+      ],
+      "exit": 0,
+      "label": "verify-http-ca-cutover-test-demo-api_app-1793348997496068397",
+      "duration_seconds": 0.11,
+      "stdout_sha256": "dcaadad1cfce437735b81ab025f776e5857e48558c47f6960e6a5f2595664a85",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:29:57.496428+00:00",
+      "argv": [
+        "curl",
+        "--silent",
+        "--show-error",
+        "--connect-timeout",
+        "15",
+        "--max-time",
+        "60",
+        "--output",
+        "/home/azureuser/.copilot/session-state/f09558e0-64f4-4440-856f-8e9a302dbb6f/files/redeploy/http-ca-cutover-test-demo-api-1793348997496407006.body",
+        "--write-out",
+        "%{http_code}",
+        "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app.js"
+      ],
+      "exit": 0,
+      "label": "verify-http-ca-cutover-test-demo-api_app.js-1793348997598790969",
+      "duration_seconds": 0.103,
+      "stdout_sha256": "dcaadad1cfce437735b81ab025f776e5857e48558c47f6960e6a5f2595664a85",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:29:57.599264+00:00",
+      "argv": [
+        "curl",
+        "--silent",
+        "--show-error",
+        "--connect-timeout",
+        "15",
+        "--max-time",
+        "60",
+        "--output",
+        "/home/azureuser/.copilot/session-state/f09558e0-64f4-4440-856f-8e9a302dbb6f/files/redeploy/http-ca-cutover-test-demo-api-1793348997599228572.body",
+        "--write-out",
+        "%{http_code}",
+        "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/ops.js"
+      ],
+      "exit": 0,
+      "label": "verify-http-ca-cutover-test-demo-api_ops.js-1793348997699999601",
+      "duration_seconds": 0.101,
+      "stdout_sha256": "dcaadad1cfce437735b81ab025f776e5857e48558c47f6960e6a5f2595664a85",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:29:57.700819+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "get",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-init?api-version=2025-07-01",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "verify-job-job-cutover-test-init-1793348998350677673",
+      "duration_seconds": 0.65,
+      "stdout_sha256": "76fa7ee29c355c9af6fc52fa51212b014b154f6425893a9b59192e06665a51b2",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:29:58.352062+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "get",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-verify?api-version=2025-07-01",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "verify-job-job-cutover-test-verify-1793348998800912931",
+      "duration_seconds": 0.449,
+      "stdout_sha256": "caa5ecbbfd7870c8c049028a554ea7f06b1d35cf4af2e5195d2dee4e6a384a07",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:29:58.802006+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "get",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-ledger-verify?api-version=2025-07-01",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "verify-job-job-cutover-test-ledger-verify-1793348999362499496",
+      "duration_seconds": 0.561,
+      "stdout_sha256": "63b77eec2bf85a517b70a5266555a75aff9f382f0e76cbc51c29d55baeee519d",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:29:59.363514+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "get",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-import?api-version=2025-07-01",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "verify-job-job-cutover-test-import-1793348999997209969",
+      "duration_seconds": 0.634,
+      "stdout_sha256": "4bbeac6dd11c5e4af3aa5580a348ff14e3f895d96f14c792292fffea253ad557",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:29:59.998201+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "get",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-orchestrator?api-version=2025-07-01",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "verify-job-job-cutover-test-orchestrator-1793349000520387913",
+      "duration_seconds": 0.522,
+      "stdout_sha256": "cd4a641510b09694880b11bc3da6deacc843b6a729954e62e8ffd2e679d900f3",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:30:00.521390+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "get",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-smoke?api-version=2025-07-01",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "verify-job-job-cutover-test-smoke-1793349000995947289",
+      "duration_seconds": 0.475,
+      "stdout_sha256": "34dd7ecf24b00bef36fab2a56e1e0bb9cb65fa040e9dc069d868c9646866626c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:30:00.996931+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "get",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-mi-http?api-version=2025-07-01",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "verify-job-job-cutover-test-mi-http-1793349001465961470",
+      "duration_seconds": 0.469,
+      "stdout_sha256": "0e28e99f8564051f02fa090a1d5004d688243eb8673ffc550023adcb30946787",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:30:01.467019+00:00",
+      "argv": [
+        "az",
+        "rest",
+        "--method",
+        "get",
+        "--url",
+        "https://management.azure.com/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.App/jobs/job-cutover-test-public-audit?api-version=2025-07-01",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "verify-job-job-cutover-test-public-audit-1793349001937239400",
+      "duration_seconds": 0.471,
+      "stdout_sha256": "0953065e91908cd33aa6baee15e5cf41b90995b837cf469fd4481cf92733de57",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:30:01.938742+00:00",
+      "argv": [
+        "az",
+        "acr",
+        "show",
+        "-g",
+        "ama",
+        "-n",
+        "crcutovertestrzsrg",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "verify-acr-1793349002642760509",
+      "duration_seconds": 0.704,
+      "stdout_sha256": "6233475a1158d31ce77c481031c8a02430309af1509288ac702f628942ed0716",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:30:02.643910+00:00",
+      "argv": [
+        "az",
+        "containerapp",
+        "list",
+        "-g",
+        "ama",
+        "--only-show-errors",
+        "-o",
+        "json"
+      ],
+      "exit": 0,
+      "label": "verify-all-minima-1793349004770580476",
+      "duration_seconds": 2.127,
+      "stdout_sha256": "16fc9736ae4562a9988364e35041c215356ec463522a63fd097adebc144ab3b8",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "started": "2026-10-30T08:30:04.771201+00:00",
+      "argv": [
+        "git",
+        "rev-parse",
+        "origin/main"
+      ],
+      "exit": 0,
+      "label": "verify-main-1793349004773702697",
+      "duration_seconds": 0.003,
+      "stdout_sha256": "c65caab6a57720759517babc31efa7c8cfeccb859c5194bbad163040b9bce0ed",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "external_executor_hashes": {
+    "live.py": "c6dbe404944de746902c403d48f37b99021fd22417b9a9c0881ceefc1b29fa4f",
+    "images.py": "ca5f11add5e1d3ba29caaa8b00f127b7d92d75ca1e2e4971c1b63e016119a72d",
+    "preflight.py": "d9d25379addfaf2e30d57a33b7a1a674fd44c269b86c36d6eac0d338f4537771",
+    "verify.py": "89a0e53e12153fced540b478baaf2ffd5b64d36126526d1f4dd396569ffb8159",
+    "export.py": "c7329aa2d127656b6eff945032a35b41a9f2bf3cdaf5e74bdbc4621e66d8cd90"
+  },
+  "heavy_admission": {
+    "command": [
+      "flock",
+      "-n",
+      "-E",
+      "75",
+      "/tmp/ama-rpi-heavy.lock",
+      "python3",
+      "/home/azureuser/.copilot/session-state/f09558e0-64f4-4440-856f-8e9a302dbb6f/files/redeploy/images.py",
+      "build"
+    ],
+    "exit": 0,
+    "both_builds_covered": true
+  },
+  "not_performed": [
+    "ACR push/network-policy changes/data-plane digest verification",
+    "SQL initializer start, sensor counts, schema or view changes",
+    "app rollouts or rollback",
+    "authenticated feature/model acceptance",
+    "complete publication gate",
+    "push, PR creation or merge"
+  ]
+}

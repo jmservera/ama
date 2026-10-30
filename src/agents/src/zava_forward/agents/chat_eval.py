@@ -92,7 +92,7 @@ class Scripted:
         if script is None:
             return json.dumps(dict(answer="", citations=[]))
         if script.get("fail"):
-            raise ModelUnavailable("scripted failure")
+            raise ModelUnavailable("scripted failure", calls=1)
         if "raw" in script:
             return str(script["raw"])
         cites = [self.expand(c) for c in script.get("citations", [])]
@@ -258,13 +258,20 @@ def _comparison(run: Run, turn: dict[str, Any], reply: dict[str, Any] | None) ->
 def run_scenario(sc: dict[str, Any], workdir: str) -> dict[str, Any]:
     fails: list[dict[str, Any]] = []
     comparison: list[dict[str, Any]] = []
+    consumption: list[dict[str, Any]] = []
     try:
         run = Run(sc, workdir)
         for n, turn in enumerate(sc["turns"], 1):
             for op in turn.get("before", []):
                 run.apply(op, n, fails)
             before, state = len(run.model.prompts), _state(run.store)
+            receipts_before = len(list(run.store.audit_entries()))
             reply, error = run.ask(turn)
+            consumption.extend(
+                {k: v for k, v in json.loads(e["detail"]).items() if k != "thread_id"}
+                for e in list(run.store.audit_entries())[receipts_before:]
+                if e["action"] == "chat.turn"
+            )
             _check_turn(run, n, turn, reply, error, before, state, fails)
             if turn.get("expect", {}).get("kind") == "answer":
                 comparison.append(_comparison(run, turn, reply))
@@ -312,6 +319,8 @@ def run_scenario(sc: dict[str, Any], workdir: str) -> dict[str, Any]:
             for f in fails
         ],
         comparison=comparison,
+        consumption=consumption,
+        economics=consumption_summary(consumption),
         non_ai_panel_kind=non_ai_kind,
     )
 
@@ -331,6 +340,10 @@ def bindings(raw: bytes) -> dict[str, str]:
                 chat_panel.CONFUSABLES,
                 "NFKC; remove Cf; translate confusables; collapse whitespace",
                 chat_panel.HISTORY_POLICY,
+                chat_panel.MAX_INPUT_CHARS,
+                chat_panel.MAX_HISTORY_CHARS,
+                chat_panel.MAX_QUESTION_CHARS,
+                "recheck sources and role after provider; no panel memory",
             ]
         )[:16],
         source_version=digest(
@@ -340,6 +353,7 @@ def bindings(raw: bytes) -> dict[str, str]:
                 "closed-chat-fields-v1",
                 chat_panel.MAX_SOURCES,
                 chat_panel.MAX_VALUE,
+                "complete source JSON",
             ]
         )[:16],
         memory_version=digest(list(MEMORY_CLASSES))[:16],
@@ -368,6 +382,31 @@ def summarise(results: Sequence[dict[str, Any]]) -> dict[str, Any]:
         ai_answered=sum(c["ai_kind"] == "answer" for c in rows),
         card_could_answer=sum(c["card_has_cited_facts"] for c in rows),
         non_ai_panel_answers=sum(r["non_ai_panel_kind"] == "answer" for r in results),
+        economics=consumption_summary([c for r in results for c in r["consumption"]]),
+    )
+
+
+def consumption_summary(receipts: Sequence[dict[str, Any]]) -> dict[str, Any]:
+    calls = sum(r["model_calls"] for r in receipts)
+    answers = sum(r["outcome"] == "answer" for r in receipts)
+    complete = all(r["tokens"] is not None for r in receipts if r["model_calls"])
+    tokens = sum(r["tokens"]["total_tokens"] for r in receipts if r["tokens"] is not None)
+    return dict(
+        scripted_calls=calls,
+        actual_model_calls=0,
+        tokens=tokens if complete else None,
+        tokens_status="known" if complete else "Unknown: scripted provider has no tokenizer usage",
+        runtime_accepted_answers=answers,
+        calls_per_runtime_accepted_answer=calls / answers if answers else None,
+        tokens_per_runtime_accepted_answer=tokens / answers if complete and answers else None,
+        human_accepted_answers=None,
+        cost="Unknown",
+        missing_cost_inputs=[
+            "serving model usage",
+            "dated versioned prices",
+            "complete human review effort",
+        ],
+        quality_floor="not established; lower cost cannot establish a saving or enablement",
     )
 
 
@@ -419,6 +458,7 @@ def run_eval(golden: Path = GOLDEN) -> dict[str, Any]:
         bindings=bindings(raw),
         evidence=dict(
             provider="scripted",
+            economics="Scripted invocations only; no actual model calls or authorized spend",
             actual_model_evaluation="not evaluated (scripted provider)",
             human_effectiveness="not evaluated (no authorised participants)",
             held_out="not produced (development set only)",

@@ -12,6 +12,42 @@
   var account = document.getElementById("account");
   var accountEmail = document.getElementById("account-email");
   var csrf = "";
+  var sessionId = "";
+  var transition = 0;
+  var sessionChannel = new BroadcastChannel("resident-demo-session");
+  var callbackController = null;
+  var assistant = window.mountResidentAssistant(document.body, api, showSignin, function (search) {
+    if (callbackController) callbackController.searchFromChat(search);
+  });
+  assistant.setSession(false);
+  function removeAppointments() {
+    if (callbackController) callbackController.dispose();
+    callbackController = null;
+  }
+
+  function clearPersonal() {
+    transition += 1;
+    sessionId = "";
+    removeAppointments();
+    assistant.setSession(false);
+    content.textContent = "";
+    content.hidden = true;
+    hideAccount();
+  }
+
+  sessionChannel.addEventListener("message", function () {
+    if (!sessionId) return;
+    var current = transition;
+    var held = sessionId;
+    api("/demo/session").then(function (res) {
+      if (current !== transition) return;
+      if (!res.ok || res.body.session_id !== held) {
+        showSignin("Your sign-in changed in another tab. Please sign in again.");
+      }
+    }).catch(function () {
+      if (current === transition) fail("We could not check your sign-in. Select Try again.");
+    });
+  });
 
   function el(tag, text, cls) {
     var node = document.createElement(tag);
@@ -170,6 +206,8 @@
   }
 
   function render(view, announce) {
+    removeAppointments();
+    assistant.setSession(true);
     content.textContent = "";
     if (view.banner) {
       var note = card("About this showcase");
@@ -207,18 +245,22 @@
     help.appendChild(hl);
     help.appendChild(el("p", view.help.note));
     content.appendChild(help);
-    window.mountResidentAssistant(content, api, showSignin);
+    var callbacks = el("section", null, "card callbacks");
+    callbacks.setAttribute("aria-labelledby", "callback-title");
+    content.appendChild(callbacks);
+    callbackController = window.mountResidentAppointments(callbacks, api, showSignin);
 
     var unavailable = card("Not available in this showcase");
     var ul = el("ul", null, "unavail");
-    view.unavailable.forEach(function (u) {
+    view.unavailable.filter(function (u) { return u.feature !== "Automated answers"; }).forEach(function (u) {
       var li = el("li");
-      var b = el("button", u.feature);
+      var appointment = u.feature === "Replying to an appointment";
+      var b = el("button", appointment ? "Operational appointments" : u.feature);
       b.type = "button";
       b.disabled = true;
       b.setAttribute("aria-disabled", "true");
       li.appendChild(b);
-      li.appendChild(el("span", u.reason, "why"));
+      li.appendChild(el("span", appointment ? "You cannot change live works appointments here. Use the form above for local synthetic callbacks only." : u.reason, "why"));
       ul.appendChild(li);
     });
     unavailable.appendChild(ul);
@@ -246,8 +288,8 @@
   }
 
   function showSignin(message) {
-    content.hidden = true;
-    hideAccount();
+    clearPersonal();
+    signinButton.disabled = false;
     errorEl.hidden = true;
     statusEl.textContent = "";
     signin.hidden = false;
@@ -261,9 +303,8 @@
   }
 
   function fail(message) {
-    content.hidden = true;
+    clearPersonal();
     signin.hidden = true;
-    hideAccount();
     statusEl.textContent = "";
     errorText.textContent = message;
     errorEl.hidden = false;
@@ -272,18 +313,27 @@
 
   function api(path, options) {
     options = options || {};
+    var current = transition;
     var headers = { Accept: "application/json" };
     if (options.body) headers["Content-Type"] = "application/json";
     if (options.method === "POST") headers["X-CSRF-Token"] = csrf;
+    if (["/demo/view", "/demo/assistant", "/demo/agenda"].includes(path)) {
+      headers["X-Resident-Session"] = sessionId;
+    }
     return fetch(path, { method: options.method || "GET", headers: headers, body: options.body, cache: "no-store", credentials: "same-origin" })
       .then(function (r) {
-        return r.json().then(function (body) { return { ok: r.ok, status: r.status, body: body }; });
+        return r.json().then(function (body) {
+          if (current === transition && body.session_changed) showSignin(body.error);
+          return { ok: r.ok, status: r.status, body: body };
+        });
       });
   }
 
   function loadView(announce) {
+    var current = transition;
     statusEl.textContent = "Loading your progress\u2026";
     return api("/demo/view").then(function (res) {
+      if (current !== transition) return;
       if (res.ok) render(res.body, announce);
       else if (res.status === 401) showSignin("Please sign in again.");
       else fail(res.body.error || "Something went wrong.");
@@ -293,13 +343,20 @@
   var signedOut = false;
 
   function start() {
+    clearPersonal();
+    var current = transition;
+    signin.hidden = true;
     errorEl.hidden = true;
     statusEl.textContent = "Loading\u2026";
     api("/demo/session")
       .then(function (res) {
+        if (current !== transition) return;
         if (!res.ok) { fail(res.body.error || "The showcase is not available right now."); return; }
         csrf = res.body.csrf;
-        if (res.body.signed_in) return loadView();
+        if (res.body.signed_in) {
+          sessionId = res.body.session_id;
+          return loadView();
+        }
         showSignin();
         if (signedOut) {
           signedOut = false;
@@ -309,7 +366,7 @@
         }
       })
       .catch(function () {
-        fail("We could not reach the showcase. Check your connection, then try again.");
+        if (current === transition) fail("We could not reach the showcase. Check your connection, then try again.");
       });
   }
 
@@ -325,29 +382,38 @@
     }
     signinButton.disabled = true;
     signinError.hidden = true;
+    var current = ++transition;
     api("/demo/login", { method: "POST", body: JSON.stringify({ email: email, password: password }) })
       .then(function (res) {
+        if (current !== transition) return;
         document.getElementById("password").value = "";
         if (res.ok) {
           csrf = res.body.csrf || csrf;
+          sessionId = res.body.session_id;
+          sessionChannel.postMessage("changed");
           return loadView("You are signed in. Your progress is shown below.");
         }
         if (res.status === 403) { start(); return; }
         showSignin(res.body.error || "We could not sign you in.");
       })
       .catch(function () {
-        showSignin("We could not reach the showcase. Try again.");
+        if (current === transition) showSignin("We could not reach the showcase. Try again.");
       })
-      .then(function () { signinButton.disabled = false; });
+      .then(function () { if (current === transition) signinButton.disabled = false; });
   });
 
   document.getElementById("signout").addEventListener("click", function () {
+    var held = sessionId;
+    clearPersonal();
+    var current = transition;
     function notConfirmed() {
-      fail("We could not confirm that you were signed out. Your session may still be active on this device and ends by itself within 30 minutes. Select Try again to check, then sign out again.");
+      if (current === transition) fail("We could not confirm that you were signed out. Your session may still be active on this device and ends by itself within 30 minutes. Select Try again to check, then sign out again.");
     }
-    fetch("/demo/logout", { method: "POST", headers: { "X-CSRF-Token": csrf, "Content-Type": "application/json" }, body: "{}", cache: "no-store", credentials: "same-origin" })
+    fetch("/demo/logout", { method: "POST", headers: { "X-CSRF-Token": csrf, "X-Resident-Session": held, "Content-Type": "application/json" }, body: "{}", cache: "no-store", credentials: "same-origin" })
       .then(function (r) {
+        if (current !== transition) return;
         if (!r.ok) { notConfirmed(); return; }
+        sessionChannel.postMessage("changed");
         content.textContent = "";
         hideAccount();
         csrf = "";

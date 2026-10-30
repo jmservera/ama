@@ -1,0 +1,87 @@
+{
+  "task_id": "8053a799-0279-4f5c-b23b-adea3537291b",
+  "task_slug": "demo-sites-redeploy-admitted",
+  "parent_task": {
+    "task_id": "f09558e0-64f4-4440-856f-8e9a302dbb6f",
+    "task_slug": "demo-sites-redeploy"
+  },
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/demo-sites-redeploy-admitted-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/demo-sites-redeploy-admitted-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/demo-sites-redeploy-admitted-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/demo-sites-redeploy-admitted-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/demo-sites-redeploy-admitted-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/demo-sites-redeploy-admitted-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Proceed: RG cost 337.19 of 700 is sufficient headroom for this redeploy",
+      "status": "owner-confirmed-redeploy-only",
+      "evidence": "Owner verbatim 2026-10-30 08:36Z, current request"
+    },
+    {
+      "decision": "Full ordered RPI loop and local-only Conventional Commit explicitly requested; no push and Refs only. Redeploy authorized through 2026-11-15; existing IoT role and in-VNet sensor SQL init approved.",
+      "status": "confirmed",
+      "evidence": "Owner request 2026-10-30"
+    },
+    {
+      "decision": "Research executed Complete / Ready; retained images/source verified, fresh execution contracts required.",
+      "status": "resolved",
+      "evidence": ".copilot-tracking/research/2026-10-30/demo-sites-redeploy-admitted-research.md"
+    },
+    {
+      "decision": "One independent final-candidate critique Complete / Pass, zero findings, no unresolved decision.",
+      "status": "critique-complete-pass",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-30/demo-sites-redeploy-admitted-plan-critique.md"
+    },
+    {
+      "decision": "Implementation complete after explicit SQL ledger-verifier diagnostics, rolled-back failures and minimal empty-history COALESCE correction. One new real-SQL test, no removals; 44 selected tests pass. Both pinned images delivered and preservation/anonymous browser checks pass; owner-held authenticated acceptance not claimed.",
+      "status": "implementation-complete-review-intended",
+      "evidence": ".copilot-tracking/changes/2026-10-30/demo-sites-redeploy-admitted-changes.md; .copilot-tracking/changes/2026-10-30/demo-sites-redeploy-admitted-evidence.json"
+    },
+    {
+      "decision": "One post-implementation Review execution Complete, with independent read-only operational-provenance/SQL-correctness lens; no second Review or post-Review implementation.",
+      "status": "review-execution-complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-30/demo-sites-redeploy-admitted-review.md"
+    },
+    {
+      "decision": "Review outcome Conformant with justified divergence; no material open defect/provenance gap. RV-001/002/003 are low nonblocking employee/resident authenticated acceptance and public console triage, routed to distinct later work. Old-image runtime rollback and publication gates not claimed.",
+      "status": "review-outcome-conformant-with-justified-divergence",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-30/demo-sites-redeploy-admitted-review.md"
+    },
+    {
+      "decision": "Reviewed implementation and original four-phase evidence committed locally with privacy-safe authenticated author/committer, Conventional Commit, Refs only and requested Copilot trailer. No push, merge, history rewrite or post-Review source change.",
+      "status": "local-implementation-commit-created",
+      "evidence": "a5ead9e6fd04ee19cf0dfca317f27fa361ff85cb; durable own-session command/result transcript"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "No remaining active implementation or Review. Owner-run ranked authenticated acceptance, then optional separate console triage; future publication requires its complete gate/approvals. No automatic child work or push. Actual local commits/administrative command results are verified in the private durable files/redeploy/local-closeout-proof.json in this session."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Owner-run employee Entra feature acceptance",
+      "rationale": "Highest-value remaining acceptance: shared chat selector, expanded-map marker/header/filter and single-case step/blocker/tab behavior require owner-held sign-in, not anonymous HTTP proxies.",
+      "evidence": "Final anonymous employee routes401 and Playwright Microsoft Entra sign-in; Refs #550/#556/#551/#553/#552/#554."
+    },
+    {
+      "rank": 2,
+      "task": "Owner-run resident authenticated consent/error and sensor-grounded journeys",
+      "rationale": "Resident assets/runtime are restored and522 view projections valid, but authenticated access, conversation/consent/errors and model grounding remain intentionally unexercised.",
+      "evidence": "Final resident shared assets200, demo/view401, SQL arrays522; Refs #503/#550/#556."
+    },
+    {
+      "rank": 3,
+      "task": "Separately triage public console resource/CSP residuals",
+      "rationale": "Low-impact observed console residuals are outside the scoped asset repair; first attribute the resident resource404 and employee image CSP error without broad redesign.",
+      "evidence": "Fresh public Playwright result and retained native trace; neither is claimed clean."
+    }
+  ]
+}

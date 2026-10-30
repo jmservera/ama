@@ -1,0 +1,77 @@
+{
+  "started": "2026-10-30T11:54:58.033506+00:00",
+  "script_sha256": "a0fe4b094f1c0dea156346f52fa4acc988f886d262499264e9f5ca3ce5f70b1f",
+  "captures": {
+    "screenshots": false,
+    "video": false,
+    "har": false,
+    "trace": false
+  },
+  "outcome": "submission_delivery_uncertain_stop",
+  "browser_version": "156.0.8078.4",
+  "browser_closed": true,
+  "owned_scratch_removed": true,
+  "ended": "2026-10-30T11:55:19.450926+00:00",
+  "attempts": [
+    {
+      "number": 1,
+      "started": "2026-10-30T11:52:59.800180+00:00",
+      "status": "browser_or_route_failure_stop",
+      "credential_fill_attempted": false,
+      "credential_fill_completed": false,
+      "submission_attempted": false,
+      "submission_delivery": "not_attempted"
+    },
+    {
+      "number": 2,
+      "started": "2026-10-30T11:54:58.453423+00:00",
+      "status": "submission_delivery_uncertain_stop",
+      "credential_fill_attempted": true,
+      "credential_fill_completed": true,
+      "submission_attempted": true,
+      "submission_delivery": "keypress_completed_not_authentication",
+      "failure_stage": "provider_route",
+      "steps": [
+        {
+          "host": "login.microsoftonline.com",
+          "text": "Sign in\nCan\u2019t access your account?\n\nZava\n\n\t\nSign-in options\n\n\nTerms of use Privacy & cookies ...",
+          "controls": [
+            "Can\u2019t access your account?",
+            "Next",
+            "Sign-in options",
+            "Terms of use",
+            "Privacy & cookies",
+            "Click here for troubleshooting information"
+          ]
+        },
+        {
+          "host": "login.microsoftonline.com",
+          "text": "[redacted]\nEnter password\nForgot my password\n\nZava\n\n\n\nTerms of use Privacy & cookies ...",
+          "controls": [
+            "Back",
+            "Forgot my password",
+            "Sign in",
+            "Terms of use",
+            "Privacy & cookies",
+            "Click here for troubleshooting information"
+          ]
+        },
+        {
+          "host": "login.microsoftonline.com",
+          "text": "[redacted]\nStay signed in?\nDo this to reduce the number of times you are asked to sign in.\nDon't show this again\n \n\nZava\n\n\n\nTerms of use Privacy & cookies ...",
+          "controls": [
+            "Yes",
+            "Terms of use",
+            "Privacy & cookies",
+            "Click here for troubleshooting information"
+          ]
+        }
+      ],
+      "username_submission_attempted": true,
+      "credential_method": "password",
+      "http_navigation_failure": false,
+      "final_origin_is_app": true,
+      "final_origin_is_provider": false
+    }
+  ]
+}

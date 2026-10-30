@@ -57,6 +57,17 @@
    "contains_real_data": false
   },
   {
+   "id": "cohort-manifest-draft",
+   "path": "src/agents/evals/cohort_manifest_draft.json",
+   "version": "cohort-manifest-draft-v0.2.0",
+   "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
+   "purpose": "DRAFT, UNAPPROVED, NOT EXECUTED wholly synthetic paired cohort and missing-data scenario manifest for owner review (#222). Development draft, not held-out: agent-authored proposals, no approved labels, thresholds or fairness evidence. Not read by any evaluator.",
+   "used_by": [
+    "src/agents/tests/test_cohort_manifest_draft.py"
+   ],
+   "contains_real_data": false
+  },
+  {
    "id": "stock-scale-fixture",
    "path": "ZF_DATA/scale-fixture/ (generated, not committed, outside the repository)",
    "generator": "src/core/src/zava_forward/core/synthetic/scale_fixture.py",
@@ -92,6 +103,17 @@
     "src/importer/tests/test_document_form_fixtures.py"
    ],
    "seed": 20260901,
+   "contains_real_data": false
+  },
+  {
+   "id": "fictional-form-review-pack",
+   "path": "src/core/evals/fictional_form_review_pack.json",
+   "version": "fictional-form-review-pack-v1",
+   "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
+   "purpose": "FICTIONAL synthetic form/template review pack for #97: field contract, authority, freshness and stale-trigger proposals, with Finance decision fields FD-01..FD-14 unresolved. Not an approved template; no submission, payment, grant terms or Finance signature.",
+   "used_by": [
+    "src/core/tests/test_form_review_pack.py"
+   ],
    "contains_real_data": false
   },
   {

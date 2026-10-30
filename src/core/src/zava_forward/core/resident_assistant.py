@@ -1,8 +1,10 @@
-"""Own-case advisory answers with a deliberately fact-free provider boundary."""
+"""Own-case advisory contracts and host-owned fixed-topic answers."""
 
 from dataclasses import dataclass
 from enum import StrEnum
 from typing import Protocol
+
+from .resident_documents import DocumentFacts, document_answer
 
 NOTICE = (
     "Advisory only. This assistant cannot submit forms, give consent, book works or make decisions."
@@ -40,6 +42,7 @@ class CaseProgress:
     progress: str
     next_step: str
     closed: str = ""
+    documents: DocumentFacts = DocumentFacts()
 
 
 @dataclass(frozen=True)
@@ -53,6 +56,10 @@ class Advice:
 
 class Advisor(Protocol):
     def answer(self, topic: Topic, case: CaseProgress, resident: str) -> Advice: ...
+
+    def answer_question(
+        self, question: str, case: CaseProgress, resident: str, base: Advice
+    ) -> Advice: ...
 
 
 def guidance(topic: Topic, case: CaseProgress) -> dict[str, str]:
@@ -87,12 +94,7 @@ def advise(topic: Topic, case: CaseProgress, provider: Provider) -> Advice:
         answer = " ".join(part for part in (case.progress, case.closed, case.next_step) if part)
         sources = ("Your case: Where things are", "Your case: What happens next")
     elif topic is Topic.DOCUMENTS:
-        answer = (
-            "This showcase does not show which documents have been requested for your case. "
-            "It cannot tell you what to send. Ask your housing officer to confirm the documents "
-            "and a safe way to send them. Do not send passwords or bank details here."
-        )
-        sources = ("Showcase limit: requested documents are not available",)
+        answer, sources = document_answer(case.documents)
     else:
         answer = (
             "Read each question on your form. Use details you know are correct. "

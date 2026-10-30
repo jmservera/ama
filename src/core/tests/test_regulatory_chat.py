@@ -6,14 +6,19 @@ import copy
 import json
 import tempfile
 import unittest
+from collections.abc import Iterator
+from contextlib import contextmanager
+from datetime import timedelta
+from pathlib import Path
 from typing import Any
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from regulatory_fixture import ENV, NOW, PID, QUOTE, Fixture
 from zava_forward.core import rule_engine, rulecards
 from zava_forward.core.chat_isolation import ChatForbidden
 from zava_forward.core.chatthreads import ChatNotFound
 from zava_forward.core.regulatory_chat import RegulatoryChat, encode
+from zava_forward.core.regulatory_usage import MAX_BYTES, MAX_POSITIONS
 from zava_forward.core.store import ConflictError
 
 
@@ -21,6 +26,7 @@ def raw(bundle: dict[str, Any]) -> dict[str, Any]:
     """Core tests inspect the bounded API bundle without depending on agents."""
     return dict(
         schema="regulatory-chat-v1",
+        kind="conflict" if bundle["conflict"] else "answer" if bundle["sources"] else "refused",
         citations=bundle["sources"] + bundle["facts"],
         reply="synthetic-demo",
         **{k: v for k, v in bundle.items() if k != "sources"},
@@ -28,6 +34,299 @@ def raw(bundle: dict[str, Any]) -> dict[str, Any]:
 
 
 class RegulatoryTests(unittest.TestCase):
+    def test_regulatory_writers_preserve_actor_roles(self) -> None:
+        for sql in (False, True):
+            for conflict in (False, True):
+                with self.subTest(sql=sql, conflict=conflict):
+                    f, service, tid = self.make(sql)
+                    self.assertNotEqual(f.user["role"], f.owner["role"])
+                    if conflict:
+                        f.source(2, text="Different synthetic source, not law.")
+                    answer = service.ask(f.user, tid, "hazard sources")
+                    receipt = service.doubt(f.user, tid, answer["turn"])
+                    reopened = f.open()
+                    try:
+                        sender = reopened.chat_resume(f.user, tid)
+                        inbox = reopened.chat_resume(f.owner, receipt["inbox_thread"])
+                        self.assertEqual(len(sender["messages"]), 3)
+                        self.assertEqual(
+                            [m["actor_role"] for m in sender["messages"]],
+                            [f.user["role"]] * 3,
+                        )
+                        self.assertEqual(inbox["owner_role"], f.owner["role"])
+                        self.assertEqual(
+                            [m["actor_role"] for m in inbox["messages"]],
+                            [f.user["role"]] * 2,
+                        )
+                        self.assertEqual(
+                            [m["content"] for m in inbox["messages"]],
+                            [m["content"] for m in sender["messages"][:2]],
+                        )
+                    finally:
+                        if sql:
+                            reopened.db.close()
+                    self.assertEqual(service.usage_status(f.user)["recorded_turns"], 1)
+
+    def test_legacy_referral_keeps_unknown_actor_role(self) -> None:
+        for sql in (False, True):
+            with self.subTest(sql=sql):
+                f, service, tid = self.make(sql)
+                answer = service.ask(f.user, tid, "hazard sources")
+                thread = service.history(f.user, tid)
+                legacy = [
+                    {key: value for key, value in message.items() if key != "actor_role"}
+                    for message in thread["messages"]
+                ]
+                with f.store.chat_repo.txn():
+                    receipt, created = service._refer(
+                        f.user, thread, answer["turn"], f.owner, legacy[0], legacy[1]
+                    )
+                    f.store.chat_repo.commit()
+                self.assertTrue(created)
+                reopened = f.open()
+                try:
+                    inbox = reopened.chat_resume(f.owner, receipt["inbox_thread"])
+                    self.assertEqual([m["actor_role"] for m in inbox["messages"]], ["", ""])
+                    sender = reopened.chat_resume(f.user, tid)
+                    self.assertEqual(sender["messages"][-1]["actor_role"], f.user["role"])
+                finally:
+                    if sql:
+                        reopened.db.close()
+
+    def test_conflict_automatically_routes_exact_pair_once_per_stored_turn(self) -> None:
+        for sql in (False, True):
+            f, service, tid = self.make(sql)
+            f.source(2, text="Different synthetic source, not law.")
+            answer = service.ask(f.user, tid, "hazard sources")
+            receipt = answer["escalation"]
+            self.assertEqual(service.doubt(f.user, tid, answer["turn"]), receipt)
+            self.assertEqual(service.doubt(f.user, tid, answer["turn"]), receipt)
+            inbox = service.inbox(f.owner)["threads"]
+            self.assertEqual(len(inbox), 1)
+            stored = json.loads(inbox[0]["messages"][1]["content"])
+            self.assertEqual(stored["citations"], answer["citations"])
+            self.assertEqual(len(stored["citations"]), 2)
+            self.assertEqual(service.usage_status(f.user)["outcomes"]["conflict"], 1)
+            reopened = f.open()
+            try:
+                self.assertEqual(
+                    len(reopened.chat_resume(f.user, tid)["messages"]),
+                    3,
+                )
+                self.assertEqual(len(reopened.chat_list_threads(f.owner)), 1)
+            finally:
+                if sql:
+                    reopened.db.close()
+            again = service.ask(f.user, tid, "hazard sources")
+            self.assertNotEqual(again["turn"], answer["turn"])
+            self.assertEqual(len(service.inbox(f.owner)["threads"]), 2)
+
+    def test_automatic_referral_write_and_save_failures_roll_back_complete_pair(self) -> None:
+        for sql in (False, True):
+            for operation in ("insert_thread", "commit", "_append_audit"):
+                if operation == "_append_audit" and not sql:
+                    continue
+                f, service, tid = self.make(sql)
+                f.source(2, text="Different synthetic source, not law.")
+                before = service.history(f.user, tid)
+                head = f.store.ledger_head()
+                target = f.store if operation == "_append_audit" else f.store.chat_repo
+                with patch.object(target, operation, side_effect=RuntimeError("injected")):
+                    with self.assertRaises(RuntimeError):
+                        service.ask(f.user, tid, "hazard sources")
+                reopened = f.open()
+                try:
+                    self.assertEqual(reopened.chat_resume(f.user, tid), before)
+                    self.assertEqual(reopened.chat_list_threads(f.owner), [])
+                    self.assertEqual(reopened.ledger_head(), head)
+                finally:
+                    if sql:
+                        reopened.db.close()
+
+    def test_transaction_rechecks_sender_owner_and_case_before_conflict_mutation(self) -> None:
+        for sql in (False, True):
+            for change in ("sender", "owner", "case", "ambiguous-owner", "missing-owner"):
+                f, service, tid = self.make(sql)
+                f.source(2, text="Different synthetic source, not law.")
+                before = service.history(f.user, tid)
+                txn = f.store.chat_repo.txn
+                detail = f.store.detail
+
+                @contextmanager
+                def changed(
+                    change: str = change,
+                    f: Fixture = f,
+                    sql: bool = sql,
+                    txn: Any = txn,
+                ) -> Iterator[None]:
+                    if change == "missing-owner":
+                        if sql:
+                            f.store.db.execute(
+                                "DELETE FROM staff WHERE email=?", (f.owner["email"],)
+                            )
+                        else:
+                            del f.store.staff[f.owner["email"]]
+                    elif change in ("sender", "owner", "ambiguous-owner"):
+                        person = f.user if change == "sender" else f.owner
+                        key = (
+                            "duplicate-owner@example.test"
+                            if change == "ambiguous-owner"
+                            else person["email"]
+                        )
+                        updated = dict(
+                            person,
+                            role=person["role"]
+                            if change == "ambiguous-owner"
+                            else "Quality Inspector",
+                            email=key,
+                        )
+                        if sql:
+                            if change == "ambiguous-owner":
+                                f.store.db.execute(
+                                    "INSERT INTO staff (body,email) VALUES (?,?)",
+                                    (json.dumps(updated), key),
+                                )
+                            else:
+                                f.store.db.execute(
+                                    "UPDATE staff SET body=? WHERE email=?",
+                                    (json.dumps(updated), key),
+                                )
+                        else:
+                            f.store.staff[key] = updated
+                    with txn():
+                        if change == "case":
+                            with patch.object(f.store, "detail", return_value=None):
+                                yield
+                        else:
+                            yield
+
+                with patch.object(f.store.chat_repo, "txn", changed):
+                    with self.assertRaises((ChatForbidden, ChatNotFound, ValueError)):
+                        service.ask(f.user, tid, "hazard sources")
+                self.assertEqual(f.store.chat_repo.messages(tid), before["messages"])
+                self.assertEqual(f.store.chat_list_threads(f.owner), [])
+                self.assertIsNotNone(detail("ZF-1", f.owner))
+
+    def test_real_sql_commit_attempt_failure_rolls_back_turn_referral_and_audit(self) -> None:
+        f, service, tid = self.make(sql=True)
+        f.source(2, text="Different synthetic source, not law.")
+        before = service.history(f.user, tid)
+        head = f.store.ledger_head()
+        db = f.store.db
+        attempted = []
+
+        class FailCommit:
+            def __getattr__(self, name: str) -> Any:
+                return getattr(db, name)
+
+            def execute(self, statement: str, *args: Any) -> Any:
+                if statement == "COMMIT":
+                    attempted.append(statement)
+                    raise RuntimeError("Injected before SQL COMMIT takes effect")
+                return db.execute(statement, *args)
+
+        with patch.object(f.store, "db", FailCommit()):
+            with self.assertRaisesRegex(RuntimeError, "SQL COMMIT"):
+                service.ask(f.user, tid, "hazard sources")
+        self.assertTrue(attempted)
+        reopened = f.open()
+        try:
+            self.assertEqual(reopened.chat_resume(f.user, tid), before)
+            self.assertEqual(reopened.chat_list_threads(f.owner), [])
+            self.assertEqual(reopened.ledger_head(), head)
+            self.assertTrue(reopened.verify_ledger()["intact"])
+        finally:
+            reopened.db.close()
+
+    def test_json_automatic_referral_audit_failure_preserves_durable_receipt(self) -> None:
+        f, service, tid = self.make()
+        f.source(2, text="Different synthetic source, not law.")
+        with patch.object(f.store, "audit", side_effect=OSError("injected audit failure")):
+            with self.assertRaisesRegex(RuntimeError, "were saved.*audit failed"):
+                service.ask(f.user, tid, "hazard sources")
+        reopened = f.open()
+        history = reopened.chat_resume(f.user, tid)
+        self.assertEqual(len(history["messages"]), 3)
+        self.assertEqual(len(reopened.chat_list_threads(f.owner)), 1)
+        receipt = json.loads(history["messages"][2]["content"])
+        self.assertEqual(service.doubt(f.user, tid, 2), receipt)
+        status = service.usage_status(f.user)
+        self.assertEqual(status["recorded_turns"], 0)
+        self.assertEqual(status["coverage"], "recorded_audit_only")
+        self.assertIn("not exact turn totals", status["coverage_note"])
+
+    def test_usage_reads_only_bounded_audit_metadata_and_survives_restart(self) -> None:
+        for sql in (False, True):
+            f, service, tid = self.make(sql)
+            service.ask(f.user, tid, "hazard sources")
+            service.clock = lambda: NOW + timedelta(days=1)
+            service.ask(f.user, tid, "hazard sources")
+            service.clock = lambda: NOW
+            for who, role in (
+                (f.owner["email"], f.user["role"]),
+                (f.user["email"], "Quality Inspector"),
+            ):
+                f.store.audit(who, "chat.regulatory.turn", "ZF-1", json.dumps(dict(role=role)))
+            for operation in ("audit_entries",):
+                with (
+                    patch.object(f.store, operation, side_effect=AssertionError("No full scan")),
+                    patch.object(
+                        f.store.chat_repo, "messages", side_effect=AssertionError("No content")
+                    ),
+                ):
+                    status = service.usage_status(f.user)
+            self.assertEqual(status["recorded_turns"], 1)
+            self.assertEqual(status["unmetered_events_in_window"], 0)
+            self.assertNotIn("PRIVATE-", json.dumps(status))
+            self.assertNotIn(QUOTE, json.dumps(status))
+            f.store.audit(
+                f.user["email"],
+                "chat.regulatory.turn",
+                "ZF-1",
+                json.dumps(dict(role=f.user["role"])),
+            )
+            self.assertEqual(service.usage_status(f.user)["unmetered_events_in_window"], 1)
+            for _ in range(MAX_POSITIONS + 1):
+                f.store.audit(f.owner["email"], "unrelated", "-", "PRIVATE-FOREIGN-DETAIL")
+            self.assertEqual(service.usage_status(f.user)["coverage"], "bounded_partial")
+            if not sql:
+                f.store.audit(f.owner["email"], "unrelated", "-", "x" * (MAX_BYTES + 1))
+                self.assertEqual(service.usage_status(f.user)["coverage"], "bounded_partial")
+            reopened = f.open()
+            try:
+                service.store = reopened
+                service.iso.store = reopened
+                self.assertEqual(service.usage_status(f.user)["coverage"], "bounded_partial")
+            finally:
+                service.store = f.store
+                service.iso.store = f.store
+                if sql:
+                    reopened.db.close()
+
+    def test_json_usage_snapshot_excludes_append_crossing_byte_limit(self) -> None:
+        f, service, tid = self.make()
+        service.ask(f.user, tid, "hazard sources")
+        expected = service.usage_status(f.user)
+        path = Path(f.store.audit_path)
+        size = path.stat().st_size
+        self.assertLess(size, MAX_BYTES)
+        self.assertEqual(expected["recorded_turns"], 1)
+        with path.open("rb") as stream:
+            reader = MagicMock(wraps=stream)
+            reader.__enter__.return_value = reader
+
+            def append_before_read(length: int) -> bytes:
+                f.store.audit(f.owner["email"], "unrelated", "-", "x" * (MAX_BYTES + 1))
+                self.assertGreater(path.stat().st_size, MAX_BYTES)
+                return stream.read(length)
+
+            reader.read.side_effect = append_before_read
+            with patch("zava_forward.core.regulatory_chat.open", return_value=reader):
+                actual = service.usage_status(f.user)
+            reader.read.assert_called_once_with(size)
+        self.assertEqual(actual, expected)
+        self.assertEqual(service.usage_status(f.user)["coverage"], "bounded_partial")
+
     def test_sql_turn_and_referral_audit_failure_roll_back_messages_and_ledger(self) -> None:
         f, service, tid = self.make(sql=True)
         before = service.history(f.user, tid)
@@ -190,7 +489,7 @@ class RegulatoryTests(unittest.TestCase):
         result = service.ask(f.user, tid, "hazard")
         self.assertTrue(result["conflict"])
         self.assertEqual([c["id"] for c in result["citations"]], [PID, "synthetic@v2#0001"])
-        self.assertEqual(len(f.store.chat_list_threads(f.owner)), 0)
+        self.assertEqual(len(f.store.chat_list_threads(f.owner)), 1)
 
     def test_card_conflict_and_no_rule_alert_suppression(self) -> None:
         f, service, tid = self.make(sql=True)

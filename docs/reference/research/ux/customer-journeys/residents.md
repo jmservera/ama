@@ -5,7 +5,7 @@ perspective: "Resident Engagement and Insight"
 status: "Research hypotheses; not resident validation or operational approval"
 scope: "Rented households; shared owners/leaseholders; representatives; support workers"
 evidence_boundary: "Local sources only; no new legal claims"
-ms.date: 2026-10-25
+ms.date: 2026-10-27
 ms.topic: reference
 ---
 
@@ -89,6 +89,264 @@ Need: reliable context, manageable workload and clear boundaries. Liaison/suppor
 | 5. Aftercare and insight: arrange help, route complaints/defects, record what feedback changed. | Improve services and demonstrate resident value. | Closure targets masking unresolved discomfort or affordability. | Owned resolution and traceable design changes. | Service directors decide actions; Engagement reports themes without identifying households unnecessarily. |
 
 Wording: "I can record your request; the responsible service must confirm bookings, funding and outcomes."
+
+## Resident and representative task designs (2026-10-27, #154)
+
+Design version: resident-assisted-v1. These task flows and text wireframes
+make the maps above reviewable; they are synthetic design hypotheses, not
+implemented resident screens, approved wording or usability results.
+Existing staff panels are evidence of records, not evidence that residents
+can use those panels. The optional portal proposal below is separate;
+this increment neither builds it nor sends messages.
+
+Trace: [PRD SA-003/004/008, FR-017/033/045/046/048/049, AC-055/056/062/063/064/065](../../../../prds/zava-forward-retrofit-programme-demonstrator.md);
+[BRD FR-045/046, NFR-008/009, RULE-022, OD-41/42](../../../../brds/agentic-retrofit-programme-brd.md).
+The [atlas themes and O04/O05/O13/O15](./customer-journey-atlas.md)
+ground choice, disruption, controls practice and scoped representative briefing.
+The [content standard](../content-standard.md),
+[Fluent 2 foundations](../design-system.md) and
+[WCAG baseline](../wcag-conformance-baseline.md) remain authoritative design
+constraints, not achieved conformance. No new legal interpretation is made.
+
+### Shared frame and assisted service
+
+Each proposed view or staff-read explanation follows this order:
+task/home reference, plain status and recorded date, what is known/unknown,
+available choices, receipt/history, next owner/update and human help.
+Names, safe routes and promised dates come only from confirmed records.
+Missing information is "Unknown - ask your named officer to confirm"; this
+is a gap to resolve before live use, not a fictional appointment or SLA.
+Do not disclose a case before identity and current task permission are checked.
+
+All six designs inherit these requirements:
+
+* Ask privately which language, format, channel, contact times and adjustments
+  the person wants. Support large print, Easy Read, read-aloud, interpreting,
+  breaks and accompanied discussion as individually agreed service proposals.
+  Do not infer incapacity, refusal, risk or lower priority from language,
+  literacy, age, disability, non-response or not using digital services.
+* Phone, accessible letter and agreed visit/assisted discussion must achieve
+  the same task without a portal or smartphone, with no service detriment.
+  Staff read back the specific record and offer a copy in the chosen safe
+  format. Translation/format availability is Unknown until arranged; ask
+  rather than claim that an unavailable translation was provided.
+* Check the current safe route before every contact, read-back or receipt.
+  An unsafe/changed number, address or representative stops disclosure on that
+  route; obtain an accessible private confirmation through the authorised
+  Housing process. No sensitive voicemail, shared-device preview or generic
+  household/representative distribution. Do not silently substitute email/text.
+* Retain native headings, labels, links, buttons and grouped choices, visible
+  keyboard focus, linked text errors, polite status announcements and an
+  always-reachable human route. Never rely on colour; say "Offered", "Waiting
+  for confirmation", "Confirmed" or "Unknown". Preserve reduced motion and
+  the baseline's resize/reflow/AT requirements. No timeout or cognitive test
+  may be used as evidence of comprehension or consent.
+* Candidate wording below needs Juan Manuel Servera's recorded wording review
+  and the #155 usability/AT programme before any use. Do not paste it into
+  live letters, calls, portal content or an outbound queue. Named per-message
+  review remains default; no prospective routine-policy exception activates.
+
+### J1: Choose each proposed measure
+
+Trigger: a person has supplied a reviewed proposal for an exact home, measure,
+scope revision and design version. Housing/Liaison checks identity, safe
+contact, necessary support and any representative authority before explaining.
+
+| Text wireframe order | Candidate content or assisted prompt |
+| --- | --- |
+| Heading and status | "Your choice about this improvement" / "No decision recorded" |
+| Scope and explanation | Measure, what will change, reviewed proposal version, practical disruption and reviewed cost position; unknown costs stay unknown and go to Finance/Legal |
+| Choice | "Agree to this measure", "Do not agree", "Need more information", "Decide later"; no preselected choice and no bundle-wide acceptance |
+| Read-back and receipt | Repeat the measure/version and supplied choice; "Your answer was recorded. This does not confirm a visit." Include record reference/date/source |
+| Next step and help | Named Liaison/update owner and actual due date/basis or Unknown; "Ask for a person to explain or review this" |
+
+Flow: explain proposal -> answer questions -> resident supplies a choice ->
+authorised staff records -> read back exact scope/answer. Survey access,
+data sharing, works decision, quality acceptance and appointment confirmation
+are separate. Changed scope returns for a fresh explanation/choice, never
+carries a prior yes forward. If write acknowledgement is uncertain, check
+history before repeating; do not show "recorded" without a receipt.
+
+Non-digital equivalent: read the same version on a safe phone call or visit,
+offer accessible paper and an interpreter, record only the supplied answer.
+Housing owns unresolved identity/permission; Programme/technical staff own
+scope questions. No decision or silence becomes refusal or consent.
+
+### J2: Pause, withdraw or ask for more time
+
+| Text wireframe order | Candidate content or assisted prompt |
+| --- | --- |
+| Heading and current choice | "Change your choice" plus selected measure/scope/version and current recorded answer |
+| Action | "Ask to pause this measure", "Withdraw agreement to this measure", "Ask about the next step"; explain the affected measure before recording |
+| Receipt | "Your change was recorded for this measure. Your other choices have not changed. A person must review the next step." |
+| Next step | Named Liaison update owner; Programme/technical owner reviews affected work/readiness and any safe stopping arrangements |
+
+Flow: resident identifies measure -> staff read back scope/change -> record
+supplied pause/withdrawal -> flag dependent discretionary readiness for human
+review -> give a safe update route. Do not promise immediate physical cessation
+of hazardous work, cancel unrelated measures, infer sanctions or pause the
+independent hazard service. Restart needs the existing evidenced human review
+and a current supplied resident decision, not a new AI recommendation.
+
+Non-digital equivalent: telephone or assisted visit with read-back and chosen
+safe-format receipt. Lost confirmation remains "We cannot confirm whether
+this was recorded. Your officer must check the history before repeating it."
+The same owner/date or explicit Unknown remains visible.
+
+### J3: Compare appointment offers and confirmations
+
+| Text wireframe order | Candidate content or assisted prompt |
+| --- | --- |
+| Heading/status | "Visit options" / "Offered - not booked" |
+| Practical information | Offered date/period, purpose, duration if known, noise/outage/access needs; current household constraints and alternatives, not diagnoses |
+| Options | "This option suits me", "Suggest another time", "Ask to postpone", "Ask for support"; optional bundle separately explained/agreed |
+| Response receipt | "Your response was recorded. Waiting for confirmation. This is not agreement to works." |
+| Confirmed state | "Visit confirmed" only after current resident/authorised representative, authorised staff and evidenced contractor capacity confirmations |
+| Recovery | Named scheduling and resident-update owner, next promised update/date or Unknown; "The provider could not attend" is separate from resident non-access |
+
+Flow: compare feasible offers -> resident responds -> staff verify current
+authority/capacity -> independently record confirmations -> read back actual
+status and receipt. Changed offer/capacity returns to waiting, not an old
+confirmation. No urgent safety visit waits for a bundle or investigation.
+An interpreter's availability is not works consent. Unknown outcome or an
+unanswered offer never counts as resident refusal or verified no-access.
+
+Non-digital equivalent: Liaison compares options by safe phone/letter/visit,
+checks care/work/noise constraints and reads back the same separate response
+and confirmation states. Do not invent appointment slots or response deadlines.
+
+### J4: Know who will update you and when
+
+| Text wireframe order | Candidate content or assisted prompt |
+| --- | --- |
+| Heading and commitment | "Your next update" / purpose or linked issue |
+| Responsibility | Named owner, due date/time and basis, chosen safe channel and adjustment reference; missing values explicitly Unknown |
+| State and history | "Proposed update", "Update due", or "Sending recorded" with source/date; sending is not receipt or understanding |
+| Action | "Ask about a missed update" or "Change how we contact you" |
+
+Flow: resident and officer establish safe preferences -> staff records actual
+commitment -> recipient/update owner remains accountable even if another team
+rejects the handoff -> owner chases/escalates an overdue update -> explicit
+reassignment retains the prior promise/history. A draft commitment is not a
+sent message. Housing owns continuity; specialist teams retain their decisions.
+
+Non-digital equivalent: read the promise/reference aloud and offer a safe paper
+copy; a telephone/visit enquiry uses the same commitment history. No receipt
+goes to an unsafe old contact. Do not make a promised service time up.
+
+### J5: Handover, practise controls and get aftercare
+
+| Text wireframe order | Candidate content or assisted prompt |
+| --- | --- |
+| Heading/status | "Using your improvement" with the specific measure and quality/handover states separately |
+| Information | Current approved instructions, guarantees and contact route in chosen format; evidence version and unresolved defects visible |
+| Optional action | "Show me the controls again", "Ask for different instructions", "Report a problem"; no comprehension score |
+| Receipt/next step | Record the supplied handover/help request and reference; named Quality/aftercare owner and next update/date or Unknown |
+
+Flow: independent professional acceptance -> accessible handover discussion ->
+optional demonstration/practice with interpreter -> record actual handover
+evidence separately -> route aftercare issue. "Evidence submitted" is not
+"Work accepted"; installer completion is not independent quality acceptance.
+Replacing accepted evidence reopens dependent acceptance/handover. Higher bills,
+discomfort and defects are investigated, not blamed on the resident or hidden
+by package closure. No savings or compensation promise is invented.
+
+Non-digital equivalent: agreed home demonstration and accessible printed
+instructions, phone/visit aftercare request. Asking for help or declining
+practice never establishes or removes consent, competence or entitlement.
+Urgent hazards use the independent human emergency/repairs route immediately.
+
+### J6: Challenge, complain and follow a remedy
+
+| Text wireframe order | Candidate content or assisted prompt |
+| --- | --- |
+| Heading and account | "Ask for a review or report a problem" / preserve the resident's account and desired outcome |
+| Options | "Correct information", "Ask for independent human review", "Use the formal complaints route", "Ask about a defect or charge" |
+| Receipt | Reference, received/recorded date and actual responsible owner; recording here does not dispatch to a live service |
+| Separate status rows | Complaint response, remedy, defect, charge dispute, package, handover and financial closure each with owner/date; missing evidence stays Unknown |
+| Next step | Actual next update and safe route; open remedy stays visible even when "Response closed" |
+
+Flow: preserve account -> confirm chosen route/support -> record request ->
+receiving service separately accepts ownership -> update resident -> record
+response and remedy progress independently. No detriment for challenging,
+withdrawing, or using the formal route. A completed response is not a completed
+remedy. Missing lease/cost evidence goes to Legal/Finance; no AI interpretation.
+Housing/Complaints owns the route and remedy update; independent review needs
+a genuinely separate authorised person, not a different display name.
+
+Non-digital equivalent: safe telephone, letter or assisted visit records the
+same account/reference, offers accessible read-back and the formal service's
+verified contact route. Actual service contacts, response targets and remedy
+age bands remain unconfigured here; owner must confirm them before use.
+
+### R1: Task-limited representative briefing and actions
+
+Text wireframe: "Helping with this task" -> verified resident/case and task ->
+"You may [recorded task] for [scope/version] until [recorded date]" ->
+source/review date and resident's stated wishes -> permitted briefing/actions ->
+"Ask the officer to check authority" and independent resident help.
+At the measure-authority review date, authority is unavailable from that date;
+do not imply it remains valid throughout the day. Appointment-specific expiry
+uses its own recorded validity rules, not a guessed measure-date conversion.
+
+| Permission record | Proposed information/action boundary |
+| --- | --- |
+| Interpreter-only or attendance support | Only the minimum authorised material for the current discussion/visit; interpret or attend, never agree to works or infer incapacity |
+| Receive information / communicate | Only the explicitly recorded case, task and scope; a representative briefing is not a full household timeline, health record, unrelated measure or other representative's authority record |
+| Scheduling authority | Permitted appointment options/necessary instructions only; current appointment-specific authority required; no grant of works consent |
+| Works-decision authority | Show only the evidenced measure/scope/version and permitted decision; separate supplied answer/source and resident wishes, never authority inferred from relationship/login |
+| Missing, unclear, disputed, expired or revoked authority | No restricted briefing or consent action. Candidate: "We cannot share this task's details until a person checks your permission. Ask the named officer to confirm it safely with the resident." No case details in denied response |
+
+Check authority again at each access/action, not only initial login. Clear
+displayed restricted content when a recorded revocation/expiry is detected;
+deny the next request, preserve only authorised minimal history and offer
+accessible human help. These are design requirements, not implemented
+resident-session enforcement or an assertion that old copies can be recalled.
+Several representatives never receive the union of each other's permissions.
+Changed safe contact prevents reuse of an old grant until a person confirms
+the current safe arrangement. The resident can change the arrangement directly
+through a private accessible route. OD-42 still requires Legal/DPO/Engagement
+approval of evidence, review/revocation, channel and retention; no policy is
+selected by these wireframes.
+
+Non-digital equivalent: staff privately verifies current permissions for the
+exact call/visit, prepares only the permitted briefing and records read-back/
+action source. A family relationship or possession of a letter is not authority.
+If verification fails, disclose nothing further and arrange safe human review.
+
+### Validation handoff and issue acceptance
+
+Use the #155 programme; these scripts do not recruit participants, approve
+recording, set a pass threshold or produce results. Engagement/Programme must
+agree voluntary participation, accessible support, audit-use statement,
+minimal data handling and aggregate reporting first. Juan Manuel Servera
+reviews exact candidate text/version; this is separate from resident feedback.
+Direct resident/representative participation, including non-digital,
+language/literacy and adjustment needs, must be supported rather than simulated
+by role agents. Proxy results, if used, must be labelled as such.
+
+| Script | Observe and record, including negative/inconclusive outcomes | Result / tester / browser or AT / date |
+| --- | --- | --- |
+| J1/J2: two measures, change one choice | Explain exact scope, start Not recorded, withdraw one only, find independent help; no consent inferred | Not run |
+| J3: offer, response, three confirmations, provider cancellation | Distinguish offered/responded/confirmed; negotiate constraints, find non-digital route; no blame for provider failure | Not run |
+| J4: overdue update and changed unsafe number | Find owner/due/basis; resolve missing promise; no old-route disclosure | Not run |
+| J5: controls practice and reopened defect | Request usable instructions without a score; retain independent QA, aftercare and urgent route | Not run |
+| J6: closed response, open remedy or charge query | Explain separate statuses, correct/challenge through formal route without detriment | Not run |
+| R1: interpreter-only, several representatives, expiry/revocation | No works decision or extra fields; denied next request reveals no restricted case information; safe assisted recovery | Not run |
+| All tasks: keyboard, screen reader and non-digital equivalent | Baseline viewports/text resize/zoom; labels, status/errors, focus, non-colour and reduced motion; record effort and support needs without incapacity inference | Not run |
+
+| Issue #154 criterion | Design evidence | Acceptance disposition |
+| --- | --- | --- |
+| Measure choice, pause/withdrawal, appointments, updates, handover and complaints/remedy | J1-J6 task flows/text wireframes | Design coverage delivered, not validated |
+| Accessible non-digital alternatives, language/literacy/adjustments | Shared frame plus each J1-J6/R1 alternative | Specified; actual accessibility/usability acceptance Not run |
+| Representative views task-limited and expiring | R1 field/action boundaries and negative script | Specified; resident-view implementation/user acceptance not claimed |
+| Offers visibly distinct from commitments | J3 explicit text statuses and confirmation conditions | Specified; comprehension validation Not run |
+| No live contact; usability before any use | Synthetic-only/no-send boundary and #155 scripts above | No contact performed; required human validation outstanding |
+
+OD-41/42, real service ownership/routes/targets, exact-text review and actual
+usability/AT outcomes remain owner/specialist steps. #153/#154 stay open:
+design coverage and local copy regressions must not be reported as whole-issue
+acceptance or permission to contact residents.
 
 ## Future assistance: invented, bounded and reversible
 

@@ -1,3 +1,4 @@
+import copy
 import json
 import os
 import tempfile
@@ -12,17 +13,19 @@ from unittest import mock
 import release_support
 
 import test_mvp
-from zava_forward.core import ai_tasks
+from zava_forward.core import ai_tasks, identity, projection
+from zava_forward.core.ai import Ai
 from zava_forward.agents import ai_eval
 from zava_forward.api.server import App, make_handler
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import Store
+from zava_forward.core.workflows import MANAGER_ROLES
 
 
 class TasksMixin:
     """Same behaviour on the JSON store and the SQLite store."""
 
-    def make(self, tmp):
+    def make(self, tmp, data=None):
         raise NotImplementedError
 
     def setUp(self):
@@ -39,6 +42,335 @@ class TasksMixin:
 
     def records(self):
         return [r for r in self.store.data["recommendations"] if r.get("kind") == "ai_task"]
+
+    def test_briefing_statement_sources_and_cached_generation_time(self):
+        from datetime import datetime
+
+        result = self.store.briefing(self.sam, mode="workflow")
+        generated = datetime.fromisoformat(result["generated_at"])
+        self.assertIsNotNone(generated.utcoffset())
+        self.assertIs(self.store.briefing(self.sam, mode="workflow"), result)
+        self.assertEqual(self.store.briefing(self.sam, mode="workflow")["generated_at"],
+                         result["generated_at"])
+        expected = [c["id"] for c in self.store.list_cases(self.sam)][:3]
+        self.assertEqual(result["source_case_ids"],
+                         [c["id"] for c in self.store.list_cases(self.sam)][:8])
+        self.assertEqual(len(result["statements"]), len(expected))
+        for statement, cid in zip(result["statements"], expected):
+            self.assertIn(statement["text"], result["text"])
+            self.assertEqual(statement["unresolved"], [])
+            self.assertTrue(all(cite.startswith(cid + ": ") for cite in statement["citations"]))
+        for c in self.store.cases.values():
+            c["closed"] = True
+        self.store.save()
+        empty = self.store.briefing(self.sam, mode="workflow")
+        self.assertEqual(empty["statements"],
+                         [dict(text=empty["text"], citations=[], unresolved=[])])
+
+    def test_statement_references_preserve_valid_unresolved_and_dropped_output(self):
+        sources = {"ZF-1": ["Stage: Survey booked"]}
+        raw = ("Check survey [[ZF-1: Stage: Survey booked]]. "
+               "Check funding. [[ZF-1: Funding: invented]]")
+        statements = ai_tasks.statement_sources(raw, sources)
+        self.assertEqual([s["text"] for s in statements], ["Check survey.", "Check funding."])
+        self.assertEqual(statements[0]["citations"], ["ZF-1: Stage: Survey booked"])
+        self.assertEqual(statements[1]["unresolved"], ["ZF-1: Funding: invented"])
+        filtered = ai_tasks.statement_sources(
+            "- Keep [[ZF-1: Stage: Survey booked]].\n- Remove invented.", sources, bullets=True)
+        self.assertEqual(len(filtered), 1)
+        self.assertEqual(filtered[0]["text"], "- Keep.")
+        rejected_line = "- One valid [[ZF-1: Stage: Survey booked]]. Invalid [[invented]]."
+        self.assertEqual(ai_tasks.statement_sources(rejected_line, sources, bullets=True), [])
+
+    def test_rules_briefing_keeps_published_snapshot_during_case_change(self):
+        run = self.store.ai.run
+        before = copy.deepcopy(self.store._case("ZF-1"))
+
+        def change_case(*args, **kwargs):
+            with self.store.lock:
+                case = self.store._case("ZF-1")
+                case.update(stage="Design in progress", days_in_stage=1)
+                self.store.save()
+            return run(*args, **kwargs)
+
+        with mock.patch.object(self.store.ai, "run", side_effect=change_case):
+            result = self.store.briefing(self.sam, mode="workflow")
+        record = next(r for r in self.records() if r["id"] == result["record_id"])
+        self.assertEqual(record["shown_output"], result["text"])
+        self.assertEqual(record["workflow_output"], result["text"])
+        self.assertEqual(record["citations"], result["citations"])
+        self.assertTrue(result["verified"])
+        for statement in result["statements"]:
+            self.assertIn(statement["text"], record["shown_output"])
+            self.assertTrue(all(cite in record["citations"] for cite in statement["citations"]))
+        statement = next(s for s in result["statements"]
+                         if any(c.startswith("ZF-1: ") for c in s["citations"]))
+        self.assertIn(f"ZF-1: Stage: {before['stage']}", statement["citations"])
+        self.assertIn(f"ZF-1: Days in stage: {before['days_in_stage']}",
+                      statement["citations"])
+        self.assertNotIn("design in progress", statement["text"])
+
+    def test_quarantined_output_never_exposes_abandoned_ai_statement_sources(self):
+        from unittest.mock import patch
+
+        case = self.store._case("ZF-1")
+        raw = dict(source="ai", text="Abandoned AI [[ZF-1: Stage: Survey booked]].",
+                   model="synthetic", reason=None)
+        with patch.object(self.store, "continuity_publish",
+                          side_effect=lambda task, epoch, source, publish: publish(True)):
+            result = ai_tasks.finish(
+                self.store, self.sam, "briefing", ["ZF-1"], raw, "Manual summary.",
+                {"ZF-1": ai_tasks.source_labels(case)}, [], epoch0=0)
+        self.assertEqual(result["source"], "template")
+        self.assertEqual(result["approval"], "Quarantined")
+        self.assertEqual(result["statements"],
+                         [dict(text="Manual summary.", citations=[], unresolved=[])])
+
+    def test_unbound_entra_briefing_is_empty_assignment_not_empty_programme(self):
+        user = identity.principal(
+            "11111111-2222-3333-4444-555555555555",
+            "aaaaaaaa-0000-0000-0000-000000000001",
+            self.sam["role"], email=self.sam["email"],
+        )
+        user = identity.bind(self.store, user)
+        self.assertNotEqual(user["code"], self.sam["code"])
+        self.assertEqual(self.store.page_cases(user)["total"], 0)
+        self.assertGreater(self.store.page_cases(user, "all")["total"], 0)
+        briefing = self.store.briefing(user, mode="workflow")
+        self.assertEqual(briefing["text"],
+                         "No open cases are assigned to you. This does not mean the programme has no work.")
+        record = next(r for r in self.records() if r["id"] == briefing["record_id"])
+        self.assertEqual(record["case_ids"], [])
+
+    def test_bound_entra_briefing_uses_seeded_workload_code_and_excludes_closed(self):
+        tenant = "11111111-2222-3333-4444-555555555555"
+        oid = "aaaaaaaa-0000-0000-0000-000000000001"
+        row = dict(self.sam, tid=tenant, oid=oid)
+        if hasattr(self.store, "db"):
+            self.store.db.execute("UPDATE staff SET body=? WHERE email=?", (json.dumps(row), self.sam["email"]))
+        else:
+            self.store.staff[self.sam["email"]] = row
+        with self.store.lock:
+            owned = [c for c in self.store.cases.values() if c["owner_code"] == self.sam["code"]]
+            self.store._case(owned[0]["id"])["closed"] = True
+            self.store.save()
+        user = identity.bind(self.store, identity.principal(tenant, oid, self.sam["role"]))
+        self.assertEqual(user["code"], self.sam["code"])
+        expected = {c["id"] for c in owned if not c["closed"]}
+        self.assertTrue(expected)
+        self.assertEqual({c["id"] for c in self.store.list_cases(user)}, expected)
+        briefing = self.store.briefing(user, mode="workflow")
+        record = next(r for r in self.records() if r["id"] == briefing["record_id"])
+        self.assertEqual(set(record["case_ids"]), expected)
+        self.assertNotIn(owned[0]["id"], record["case_ids"])
+
+    def test_existing_managers_brief_all_permitted_open_cases_without_assigning(self):
+        with self.store.lock:
+            self.store._case("ZF-2")["closed"] = True
+            self.store.save()
+        before = copy.deepcopy(list(self.store.cases.values()))
+        expected = [r["id"] for r in self.store.list_cases(self.pam, "all")]
+        self.assertIn("ZF-4", expected)
+        self.assertIn("ZF-5", expected)
+        for role in MANAGER_ROLES:
+            with self.subTest(role=role):
+                user = dict(self.pam, role=role)
+                assignments = self.store.counts(user)["mine"]
+                result = self.store.briefing(user, mode="workflow")
+                record = next(r for r in self.records() if r["id"] == result["record_id"])
+                self.assertEqual(record["case_ids"], expected)
+                self.assertEqual(record["case_ids"][0], "ZF-4")
+                self.assertEqual((result["scope"], result["scope_label"]), ("programme", "All programme cases"))
+                self.assertEqual((result["case_count"], result["summary_count"]), (4, 3))
+                self.assertEqual(self.store.counts(user)["mine"], assignments)
+                self.assertEqual({r["id"] for r in self.store.list_cases(user)}, {"ZF-5"})
+                self.assertEqual(result["approval"], "Not reviewed")
+        self.assertEqual(list(self.store.cases.values()), before)
+
+    def test_other_staff_briefings_stay_assignment_only(self):
+        expected = [r["id"] for r in self.store.list_cases(self.sam)]
+        for role in projection.STAFF_ROLES:
+            if role in MANAGER_ROLES:
+                continue
+            with self.subTest(role=role):
+                result = self.store.briefing(dict(self.sam, role=role), mode="workflow")
+                record = next(r for r in self.records() if r["id"] == result["record_id"])
+                self.assertEqual(record["case_ids"], expected)
+                self.assertNotIn("ZF-5", record["case_ids"])
+                self.assertEqual((result["scope"], result["scope_label"]), ("assigned", "My assigned cases"))
+
+    def test_unbound_managers_have_programme_briefing_but_zero_assignments(self):
+        for role in MANAGER_ROLES:
+            with self.subTest(role=role):
+                user = identity.bind(self.store, identity.principal(
+                    "11111111-2222-3333-4444-555555555555",
+                    "aaaaaaaa-0000-0000-0000-000000000001", role, email=self.pam["email"],
+                ))
+                self.assertNotEqual(user["code"], self.pam["code"])
+                self.assertEqual(self.store.page_cases(user)["total"], 0)
+                result = self.store.briefing(user, mode="workflow")
+                record = next(r for r in self.records() if r["id"] == result["record_id"])
+                self.assertEqual(record["case_ids"], [r["id"] for r in self.store.list_cases(user, "all")])
+                self.assertEqual(result["scope_label"], "All programme cases")
+                self.assertEqual(self.store.counts(user)["mine"], 0)
+                self.assertEqual(self.store.page_cases(user)["total"], 0)
+
+    def test_denied_roles_cannot_dispatch_or_reuse_briefing(self):
+        self.store.briefing(self.pam, mode="workflow")
+        for role in ("Contractor", "Application Administrator", "Unknown", ""):
+            with self.subTest(role=role), mock.patch.object(self.store.ai, "run") as run:
+                with self.assertRaises(PermissionError):
+                    self.store.briefing(dict(self.pam, role=role), mode="workflow")
+                run.assert_not_called()
+
+    def test_permitted_read_controls_full_count_top_eight_facts_and_cache(self):
+        data = copy.deepcopy(test_mvp.DATA)
+        for c in data["cases"]:
+            c["resident"]["name"] = f"SYN Resident {c['id']}"
+        for number in range(6, 12):
+            c = copy.deepcopy(data["cases"][0])
+            c["id"] = f"ZF-{number}"
+            c["resident"]["name"] = f"SYN Resident {number}"
+            data["cases"].append(c)
+        for c in data["cases"]:
+            c["building_id"] = "SYN-BRIEFING"
+        data["buildings"] = [dict(id="SYN-BRIEFING", name="Synthetic briefing block",
+                                 version=1, source="SYN-REGISTER", systems=[],
+                                 dependencies=[], holds=[], works=[], costs=[])]
+        expanded = Path(self.tmp.name) / "expanded"
+        expanded.mkdir()
+        if hasattr(self.store, "db"):
+            self.store.db.close()
+        self.store = self.make(str(expanded), data)
+        self.store.ai.endpoint = "http://scripted-model.invalid"
+        release_support.install(self.store)
+        permitted = sorted(self.store._filtered(self.pam, "all", "", {}),
+                           key=lambda c: self.store._ranking()[c["id"]]["rank"])
+        with mock.patch.object(self.store, "_filtered", return_value=permitted) as read, \
+                mock.patch.object(self.store, "summary", wraps=self.store.summary) as project, \
+                mock.patch.object(self.store, "work_context", side_effect=AssertionError("No queue projection")):
+            first = self.store.briefing(self.pam, mode="workflow")
+            read.assert_called_once_with(self.pam, "all", "", {})
+            self.assertEqual(project.call_count, 8)
+            version = self.store.version
+            self.assertIs(self.store.briefing(self.pam, mode="workflow"), first)
+            self.assertEqual(self.store.version, version)
+            self.assertEqual(project.call_count, 8)
+            read.return_value = permitted[:-1]
+            fewer = self.store.briefing(self.pam, mode="workflow")
+            self.assertNotEqual(fewer["record_id"], first["record_id"])
+            self.assertEqual((first["case_count"], fewer["case_count"]), (11, 10))
+            self.assertEqual((first["summary_count"], fewer["summary_count"]), (3, 3))
+            self.assertEqual(project.call_count, 16)
+            for result in (first, fewer):
+                record = next(r for r in self.records() if r["id"] == result["record_id"])
+                self.assertEqual(record["case_ids"], [r["id"] for r in permitted[:8]])
+                self.assertEqual(record["case_ids"][0], "ZF-4")
+                for c in permitted[:3]:
+                    self.assertIn(c["resident"]["name"], result["text"])
+                for c in permitted[3:8]:
+                    self.assertNotIn(c["resident"]["name"], result["text"])
+            read.return_value = permitted
+            citation = f"SYN [[{permitted[0]['id']}: Days in stage: {permitted[0]['days_in_stage']}]]"
+            with mock.patch.object(self.store.ai, "_chat", return_value=citation):
+                enabled = self.store.briefing(self.pam)
+            self.assertEqual((enabled["source"], enabled["summary_count"]), ("ai", 8))
+            with mock.patch.object(self.store.ai, "_chat", side_effect=TimeoutError), \
+                    mock.patch.object(self.store, "ai_epoch_current", return_value=False):
+                fallback = self.store.briefing(self.pam)
+            self.assertEqual((fallback["source"], fallback["summary_count"]), ("template", 3))
+            read.return_value = [next(r for r in permitted if r["id"] == "ZF-5")]
+            with mock.patch.object(self.store.ai, "_chat", return_value="SYN [[Stage: Contacting resident]]") as chat:
+                restricted = self.store.briefing(self.pam)
+            prompt = chat.call_args.args[2]
+            self.assertIn("ZF-5", prompt)
+            self.assertNotIn("ZF-4", prompt)
+            record = next(r for r in self.records() if r["id"] == restricted["record_id"])
+            self.assertEqual(record["case_ids"], ["ZF-5"])
+            self.assertEqual((restricted["case_count"], restricted["summary_count"]), (1, 1))
+
+    def test_briefing_cache_separates_role_actor_and_workflow_mode(self):
+        manager = self.store.briefing(self.pam, mode="workflow")
+        downgraded = dict(self.pam, role=self.sam["role"])
+        personal = self.store.briefing(downgraded, mode="workflow")
+        self.assertEqual(personal["scope"], "assigned")
+        self.assertNotEqual(personal["record_id"], manager["record_id"])
+        record = next(r for r in self.records() if r["id"] == personal["record_id"])
+        self.assertEqual(record["case_ids"], ["ZF-5"])
+        first_actor = self.store.briefing(self.pam, mode="workflow")
+        other_actor = dict(self.pam, email="different@example.test")
+        second_actor = self.store.briefing(other_actor, mode="workflow")
+        self.assertNotEqual(first_actor["record_id"], second_actor["record_id"])
+        record = next(r for r in self.records() if r["id"] == second_actor["record_id"])
+        self.assertEqual(record["user"], other_actor["email"])
+        self.assertIs(self.store.briefing(other_actor, mode="workflow"), second_actor)
+        with mock.patch.object(self.store.ai, "_chat", return_value="SYN [[ZF-1: Stage: Contacting resident]]") as chat:
+            enabled = self.store.briefing(other_actor)
+        chat.assert_called_once()
+        self.assertNotEqual(enabled["record_id"], second_actor["record_id"])
+
+    def test_expanded_briefing_uses_projected_status_and_reason_policy_cache(self):
+        private = "SYN-PRIVATE-WAITING-REASON"
+        with self.store.lock:
+            self.store._case("ZF-1")["reason"] = private
+            self.store.save()
+        with mock.patch.object(self.store.ai, "_chat", return_value="SYN [[ZF-1: Stage: Contacting resident]]") as chat:
+            visible = self.store.briefing(self.pam)
+            self.assertIn(private, chat.call_args.args[2])
+            with mock.patch.dict(os.environ, {"ZF_REASON_ROLES": ""}):
+                held = self.store.briefing(self.pam)
+                self.assertNotIn(private, chat.call_args.args[2])
+                self.assertNotEqual(held["record_id"], visible["record_id"])
+            support = self.store.briefing(dict(self.pam, role="Programme Support Officer"))
+            self.assertNotIn(private, chat.call_args.args[2])
+            self.assertEqual(support["scope"], "programme")
+        self.assertEqual(self.store.cases["ZF-1"]["reason"], private)
+
+    def test_empty_programme_is_not_reported_as_empty_assignments(self):
+        with mock.patch.object(self.store, "_filtered", return_value=[]):
+            result = self.store.briefing(self.pam, mode="workflow")
+        self.assertEqual(result["text"], "No permitted open programme cases are available.")
+        self.assertEqual((result["case_count"], result["summary_count"]), (0, 0))
+        record = next(r for r in self.records() if r["id"] == result["record_id"])
+        self.assertEqual(record["case_ids"], [])
+
+    def test_briefing_scope_over_existing_authenticated_route(self):
+        app = App(self.store, "SYN-briefing-test")
+        httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(app))
+        thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+        thread.start()
+        try:
+            for user, scope, count in (
+                (self.sam, "assigned", 4), (self.pam, "programme", 5),
+                (dict(self.pam, role="Programme Support Officer", code="UNBOUND"), "programme", 5),
+                (dict(self.pam, role="Contractor"), None, None),
+                (dict(self.pam, role="Application Administrator"), None, None),
+            ):
+                with self.subTest(role=user["role"]), mock.patch.object(
+                    app.provider, "authenticate", return_value=user,
+                ):
+                    url = f"http://127.0.0.1:{httpd.server_port}/api/briefing?mode=workflow"
+                    if scope is None:
+                        with self.assertRaises(urllib.error.HTTPError) as error:
+                            urllib.request.urlopen(url)
+                        self.assertEqual(error.exception.code, 403)
+                    else:
+                        with urllib.request.urlopen(url) as response:
+                            result = json.load(response)
+                        self.assertEqual((result["scope"], result["case_count"]), (scope, count))
+        finally:
+            httpd.shutdown()
+            httpd.server_close()
+            thread.join(timeout=5)
+
+    def test_missing_employee_endpoint_uses_explicit_template_without_model_call(self):
+        self.store.ai.endpoint = ""
+        with mock.patch.object(self.store.ai, "_chat", side_effect=AssertionError("No model call")) as chat:
+            result = self.store.briefing(self.sam)
+        chat.assert_not_called()
+        self.assertEqual((result["source"], result["model"], result["reason"]),
+                         ("template", None, "AI is not configured"))
+        self.assertEqual((result["case_count"], result["summary_count"]), (4, 3))
 
     def test_cited_summary_is_verified_but_not_approved(self):
         self.out["text"] = "- Contacting resident [[Stage: Contacting resident]]\n- Waiting [[Days in stage: 10]]"
@@ -161,9 +493,9 @@ class TasksMixin:
 
 
 class JsonTasks(TasksMixin, unittest.TestCase):
-    def make(self, tmp):
+    def make(self, tmp, data=None):
         p = Path(tmp) / "zavaforward.json"
-        p.write_text(json.dumps(test_mvp.DATA))
+        p.write_text(json.dumps(test_mvp.DATA if data is None else data))
         self.path = str(p)
         return Store(self.path, os.path.join(tmp, "live.json"), os.path.join(tmp, "audit.jsonl"))
 
@@ -172,9 +504,9 @@ class JsonTasks(TasksMixin, unittest.TestCase):
 
 
 class SqlTasks(TasksMixin, unittest.TestCase):
-    def make(self, tmp):
+    def make(self, tmp, data=None):
         p = Path(tmp) / "zavaforward.json"
-        p.write_text(json.dumps(test_mvp.DATA))
+        p.write_text(json.dumps(test_mvp.DATA if data is None else data))
         self.path, self.db = str(p), os.path.join(tmp, "pw.sqlite")
         return SqlStore(self.path, self.db)
 
@@ -183,6 +515,26 @@ class SqlTasks(TasksMixin, unittest.TestCase):
 
 
 class NegativeControls(unittest.TestCase):
+    def test_employee_ai_reads_its_settings_not_resident_or_endpoint_aliases(self):
+        with mock.patch.dict(os.environ, {
+            "AI_ENDPOINT": "https://employee.invalid/",
+            "AI_DEPLOYMENT": "employee-standard",
+            "AI_DEPLOYMENT_STRONG": "employee-capable",
+            "AI_MODEL_VERSION": "standard-version",
+            "AI_MODEL_VERSION_STRONG": "capable-version",
+            "ZF_DEMO_ASSISTANT_ENDPOINT": "https://resident.invalid",
+            "AZURE_OPENAI_ENDPOINT": "https://alias.invalid",
+        }, clear=True):
+            ai = Ai()
+        self.assertEqual((ai.endpoint, ai.fast, ai.strong, ai.model_version, ai.model_version_strong),
+                         ("https://employee.invalid", "employee-standard", "employee-capable",
+                          "standard-version", "capable-version"))
+        with mock.patch.dict(os.environ, {
+            "ZF_DEMO_ASSISTANT_ENDPOINT": "https://resident.invalid",
+            "AZURE_OPENAI_ENDPOINT": "https://alias.invalid",
+        }, clear=True):
+            self.assertFalse(Ai().configured)
+
     def test_harness_fails_when_citations_are_not_checked(self):
         with mock.patch.object(ai_tasks, "resolve", lambda *a, **k: True):
             rep = ai_eval.run_eval()

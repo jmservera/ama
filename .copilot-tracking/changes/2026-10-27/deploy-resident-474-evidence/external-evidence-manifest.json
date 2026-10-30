@@ -1,0 +1,66 @@
+{
+  "external_evidence_root": "/home/azureuser/.copilot/session-state/710d3084-f7dd-4354-b231-efa421b8f5f6/files/deploy-474",
+  "files": {
+    "docker-build.log": {
+      "sha256": "bdde26bc24551d7db01398783d53780dbb40a682c1a0f4c8360bd845fa395717",
+      "bytes": 8257
+    },
+    "docker-push.log": {
+      "sha256": "6dda1b770bc07da44b2c3a00d36d5282dfd8225a5e8fc1ac81274cdc77098519",
+      "bytes": 861
+    },
+    "image-scan.json": {
+      "sha256": "545827c728bc109ead64bc87f874d5c5e1cebb983e6737186cefa2bd7b2bdbad",
+      "bytes": 444757
+    },
+    "scan.log": {
+      "sha256": "04a58f129e20c99c50aefffccb81a39ca7b2f5ebd71d806008ccc76f53f3f3fb",
+      "bytes": 4979
+    },
+    "image-contract.json": {
+      "sha256": "e1002a17bab4c2fa103af9ebdebbf3a63e9f1a33e6c538c7ff685fbeae520272",
+      "bytes": 411
+    },
+    "remote-run.log": {
+      "sha256": "ef3498398f4e0d25e5c340e94f84068093d3e3186d3a73fa33622fa7d8323c84",
+      "bytes": 666
+    },
+    "view-execution-log.jsonl": {
+      "sha256": "5c2496fca15f97d11b8b7410535e55b7814ea3a8f00e9f13b6fe09ab54013b87",
+      "bytes": 973
+    },
+    "live-result.json": {
+      "sha256": "9aa645c5b5dbcac070fa96dcd203180d7a6a0892d1011ab10a25a7f8bc202291",
+      "bytes": 4528
+    },
+    "live-signin-desktop.png": {
+      "sha256": "545752e134c60c74b32dfa3e9465d2a7f250ca3453f2428ffda9e6bcf7f76729",
+      "bytes": 77076
+    },
+    "live-signin-mobile.png": {
+      "sha256": "aabe6e66ab89096b3e9c921db90e3ab2298f1308103ac9985c0a8e6b6b4a24fb",
+      "bytes": 74333
+    },
+    "preservation.json": {
+      "sha256": "715cac385f5189c2bbc4c669ba3a52d049cdeb45965a376432403d0f92149706",
+      "bytes": 693
+    },
+    "revision-final.json": {
+      "sha256": "068a8d02aa43c011e233c175e23d70f01d76c70d547b1b063371994cf9a01f43",
+      "bytes": 260
+    },
+    "live-attempt1/live-result.json": {
+      "sha256": "c7c4ecba941fbd5b5bb9d90cf2035c35180dfc277bed0d427fb5fc3e898afc09",
+      "bytes": 859
+    }
+  },
+  "scanner": "Trivy0.76.0",
+  "scan_policy": "src/trivy.yaml; vuln; ignore-unfixed; HIGH,CRITICAL; exit1",
+  "scan_database": {
+    "Version": 2,
+    "NextUpdate": "2026-10-28T07:13:33.504286922Z",
+    "UpdatedAt": "2026-10-27T07:13:33.504287223Z",
+    "DownloadedAt": "2026-10-27T09:13:17.37181032Z"
+  },
+  "full_report": "Not produced: timeout0 heavy lock held by another full gate; blocking exact-image scan passed"
+}

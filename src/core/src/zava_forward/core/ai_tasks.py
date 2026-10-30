@@ -17,7 +17,8 @@ import os
 import re
 import time
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
+from typing import Any
 
 from . import projection, ai_prompts, export_fields
 from .resident_decisions import resident_status
@@ -27,6 +28,11 @@ PROMPT_VERSION = "2026-10-09.1"
 CITE_RE = re.compile(r"\[\[(.+?)\]\]")
 EMPTY_SOURCES = re.compile(r"(?im)^[ \t]*sources?[ \t]*:[\s;,]*$")
 BULLET = re.compile(r"^\s*[-*\u2022]\s")
+STATEMENT_END = r"""[.!?\u2026][.!?\u2026"'\u2019\u201d)\]}]*"""
+STATEMENT_ABBREVIATION = re.compile(
+    r"\b(?:Mr|Mrs|Ms|Mx|Dr|Prof|Rev|Sr|Jr|St|e\.g|i\.e|vs|cf|approx|etc)\.(?=[ \t]+\w)",
+    re.IGNORECASE,
+)
 REVIEW_ACTIONS = {"accept": "Accepted", "edit": "Edited", "reject": "Rejected"}
 NOT_REVIEWED = "Not reviewed"
 HOLD = "Hold"
@@ -126,9 +132,58 @@ def analyse(text, sources, bullets=False):
     bad = list(dict.fromkeys(m for m in marks if not resolve(m, sources)))
     clean = CITE_RE.sub("", text)
     clean = EMPTY_SOURCES.sub("", clean)
-    clean = re.sub(r"[ \t]+([.,;:!?])", r"\1", clean)
+    clean = re.sub(r"[ \t]+([.,;:!?\u2026])", r"\1", clean)
     clean = re.sub(r"\n{3,}", "\n\n", clean).strip()
     return clean, good, bad, dropped
+
+
+def statement_sources(text: str, sources: Any, bullets: bool = False) -> list[dict[str, Any]]:
+    """Keep declared references with their statement, without guessing missing ones."""
+    if bullets:
+        text = "\n".join(line for line in text.splitlines()
+                         if not analyse(line, sources, bullets=True)[3])
+    marks: list[str] = []
+
+    def protect(match: re.Match[str]) -> str:
+        marks.append(match.group())
+        return f"\x00{len(marks) - 1}\x00"
+
+    protected = CITE_RE.sub(protect, text)
+    # A model may place the citation after the sentence's punctuation.
+    protected = re.sub(
+        rf"({STATEMENT_END})\s*(\x00\d+\x00(?:\s*\x00\d+\x00)*)([.!?\u2026\"'\u2019\u201d)\]}}]*)",
+        lambda match: " " + " ".join(match[2].split()) + match[1] + match[3] + " ",
+        protected,
+    )
+
+    def protect_abbreviation(match: re.Match[str]) -> str:
+        word = match.group().casefold()
+        following = match.string[match.end():].lstrip(" \t")
+        if word in ("approx.", "etc.") and not (following[0].islower() or following[0].isdigit()):
+            return match.group()
+        if word in ("jr.", "sr.") and following[0].isupper():
+            # A suffix after a name can end a claim; titles before a name stay medial.
+            if re.search(r"\b[A-Z][\w'\u2019-]*[ \t]+[A-Z][\w'\u2019-]*[ \t]+$",
+                         match.string[:match.start()]):
+                return match.group()
+        if word == "st.":
+            preceding = re.search(r"(\w+)[ \t]+$", match.string[:match.start()])
+            # A capitalized street suffix is ambiguous; do not merge its next claim.
+            if preceding and preceding[1][0].isupper() and not re.match(r"\w+['\u2019]s\b", following):
+                return match.group()
+        return match.group().replace(".", "\x01")
+
+    protected = STATEMENT_ABBREVIATION.sub(protect_abbreviation, protected)
+    statements = []
+    separated = re.sub(rf"({STATEMENT_END})\s+", r"\1\n", protected)
+    for piece in re.split(r"\n+", separated):
+        raw = re.sub(r"\x00(\d+)\x00", lambda m: marks[int(m[1])], piece).replace("\x01", ".").strip()
+        if not raw:
+            continue
+        clean, good, bad, _ = analyse(raw, sources)
+        if clean:
+            statements.append(dict(text=clean, citations=good, unresolved=bad))
+    return statements
 
 
 def priority_items(text, n, sources):
@@ -228,7 +283,12 @@ def finish(store, user, task, case_ids, r, workflow_text, sources, template_cite
         result = dict(r, source="template", model=None, reason=why) if late else r
         return dict(result, text=shown, citations=citations, unresolved=bad, dropped_uncited=dropped, verified=checked,
                     approval=rec["status"], instruction_status="Not an instruction", envelope=env, record_id=rec["id"],
-                    continuity_epoch=epoch0, mode=mode, prompt_version=ai_prompts.version(task))
+                    continuity_epoch=epoch0, mode=mode, prompt_version=ai_prompts.version(task),
+                    generated_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                    source_case_ids=list(sources),
+                    statements=statement_sources(r["text"], sources, bullets)
+                    if not late and r["source"] == "ai" else [
+                        dict(text=shown, citations=citations, unresolved=[] if late else bad)])
     return store.continuity_publish(task, epoch0, r["source"], publish)
 
 

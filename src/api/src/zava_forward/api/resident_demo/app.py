@@ -7,11 +7,15 @@ row through the allowlist view and re-checks admission, so revocation and expiry
 """
 
 import json
+import re
+import secrets
 import socket
+import sqlite3
 import sys
 import threading
 import time
 from collections.abc import Callable, Mapping
+from dataclasses import replace
 from datetime import UTC, datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -29,6 +33,9 @@ from zava_forward.core.resident_assistant import (
     advise,
 )
 
+from . import chat
+from .agenda import MANUAL, ZONE, Agenda, AgendaConflict
+from .agenda import NOTICE as AGENDA_NOTICE
 from .aoai import resident_key
 
 WEB = Path(__file__).parent / "web"
@@ -39,9 +46,15 @@ ASSETS = {
     "/demo.js": ("demo.js", "text/javascript; charset=utf-8"),
     "/assistant.js": ("assistant.js", "text/javascript; charset=utf-8"),
 }
+SHARED_ASSETS = {
+    "/chat-widget.js": ("chat-widget.js", "text/javascript; charset=utf-8"),
+    "/chat-widget.css": ("chat-widget.css", "text/css; charset=utf-8"),
+}
+SHARED_WEB = Path(__file__).parent.parent / "web"
 SESSION_COOKIE = "__Host-zfdemo"
 CSRF_COOKIE = "__Host-zfdemo-csrf"
 CSRF_HEADER = "X-CSRF-Token"
+SESSION_HEADER = "X-Resident-Session"
 MAX_BODY = 2048
 MAX_CONCURRENT = 8
 SOCKET_TIMEOUT = 10
@@ -94,6 +107,7 @@ class ResidentDemo:
         client_address: str = "peer",
         assistant_provider: Provider | None = None,
         assistant_advisor: Advisor | None = None,
+        agenda: Agenda | None = None,
     ):
         self.client_address = client_address
         self.reader, self.identity, self.verifier = reader, identity, verifier
@@ -106,6 +120,7 @@ class ResidentDemo:
             assistant_provider if assistant_provider is not None else FakeProvider()
         )
         self.assistant_advisor = assistant_advisor
+        self.agenda = agenda
 
     @property
     def ready(self) -> bool:
@@ -142,6 +157,14 @@ class ResidentDemo:
         return token
 
     def view_for(self, token: str | None) -> dict[str, Any] | None:
+        row = self.row_for(token)
+        if row is None:
+            return None
+        view: dict[str, Any] = rs.showcase_view(row)
+        view["account"] = {"email": self.identity.email_for(row.case_id)}
+        return view
+
+    def row_for(self, token: str | None) -> rs.ShowcaseRow | None:
         found = self.codec.verify(token)
         case_id = self.by_handle.get(found[0]) if found else None
         if case_id is None:
@@ -153,9 +176,7 @@ class ResidentDemo:
             rs.authorise(row, self.now(), case_id, self.identity.email_for(case_id))
         except rs.ShowcaseDenied:
             return None
-        view: dict[str, Any] = rs.showcase_view(row)
-        view["account"] = {"email": self.identity.email_for(case_id)}
-        return view
+        return row
 
 
 def _cookies(header: str | None) -> dict[str, str]:
@@ -210,6 +231,27 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
             sent = _cookies(self.headers.get("Cookie")).get(CSRF_COOKIE)
             return bool(app.codec.csrf_ok(sent, self.headers.get(CSRF_HEADER)))
 
+        def _session_bound(self) -> bool:
+            signed = app.codec.verify(_cookies(self.headers.get("Cookie")).get(SESSION_COOKIE))
+            if signed is None:
+                self._json(401, dict(error="Please sign in again."))
+                return False
+            values = self.headers.get_all(SESSION_HEADER) or []
+            if (
+                len(values) != 1
+                or re.fullmatch(r"[0-9a-f]{16}", values[0]) is None
+                or not secrets.compare_digest(values[0], signed[1])
+            ):
+                self._json(
+                    409,
+                    dict(
+                        error="Your sign-in changed. Please sign in again.",
+                        session_changed=True,
+                    ),
+                )
+                return False
+            return True
+
         def _body(self) -> dict[str, Any] | None:
             ctype = (self.headers.get("Content-Type") or "").split(";")[0].strip().lower()
             length = self.headers.get("Content-Length", "")
@@ -256,15 +298,29 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
             if app.expired:
                 self._json(503, dict(error="This synthetic showcase has ended.", banner=rs.BANNER))
                 return
-            if self.command in ("GET", "HEAD") and path in ASSETS:
+            if self.command in ("GET", "HEAD") and path in SHARED_ASSETS:
+                name, ctype = SHARED_ASSETS[path]
+                self._send(200, (SHARED_WEB / name).read_bytes(), ctype)
+            elif self.command in ("GET", "HEAD") and path in ASSETS:
                 name, ctype = ASSETS[path]
                 self._send(200, (WEB / name).read_bytes(), ctype)
             elif self.command in ("GET", "HEAD") and path == "/demo/session":
                 token, cookie = self._csrf_cookie()
                 signed = app.codec.verify(_cookies(self.headers.get("Cookie")).get(SESSION_COOKIE))
                 signed_in = signed is not None and signed[0] in app.by_handle
-                self._json(200, dict(csrf=token, signed_in=signed_in, banner=rs.BANNER), (cookie,))
+                self._json(
+                    200,
+                    dict(
+                        csrf=token,
+                        signed_in=signed_in,
+                        session_id=signed[1] if signed_in and signed else None,
+                        banner=rs.BANNER,
+                    ),
+                    (cookie,),
+                )
             elif self.command in ("GET", "HEAD") and path == "/demo/view":
+                if not self._session_bound():
+                    return
                 view = app.view_for(_cookies(self.headers.get("Cookie")).get(SESSION_COOKIE))
                 if view is None:
                     self._json(401, dict(error="Please sign in again."))
@@ -276,9 +332,11 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                 self._logout()
             elif self.command == "POST" and path == "/demo/assistant":
                 self._assistant()
+            elif self.command == "POST" and path == "/demo/agenda":
+                self._agenda()
             elif path in ASSETS or path in ("/demo/session", "/demo/view", "/demo/login"):
                 self._json(405, dict(error="That is not allowed here."))
-            elif path in ("/demo/logout", "/demo/assistant"):
+            elif path in ("/demo/logout", "/demo/assistant", "/demo/agenda"):
                 self._json(405, dict(error="That is not allowed here."))
             else:
                 self._json(404, dict(error="Not found."))
@@ -310,38 +368,82 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                 return
             csrf, csrf_cookie = self._csrf_cookie()
             session = _set_cookie(SESSION_COOKIE, token, rs.SESSION_SECONDS, True)
-            self._json(200, dict(signed_in=True, csrf=csrf), (session, csrf_cookie))
+            signed = app.codec.verify(token)
+            if signed is None:
+                self._json(401, dict(error=GENERIC_DENIAL))
+                return
+            self._json(
+                200,
+                dict(signed_in=True, csrf=csrf, session_id=signed[1]),
+                (session, csrf_cookie),
+            )
 
         def _assistant(self) -> None:
             if not (self._same_origin() and self._csrf_ok()):
                 self._json(403, dict(error="Please reload the page and try again."))
                 return
             session = _cookies(self.headers.get("Cookie")).get(SESSION_COOKIE)
-            view = app.view_for(session)
-            if view is None:
+            body = self._body()
+            if (
+                body is None
+                or set(body) not in ({"topic", "use_record"}, {"question", "use_record"})
+                or body.get("use_record") is not True
+            ):
+                self._json(400, dict(error="Agree to use your own record for this question."))
+                return
+            if not self._session_bound():
+                return
+            row = app.row_for(session)
+            if row is None:
                 self._json(401, dict(error="Please sign in again."))
                 return
-            body = self._body()
-            if body is None or set(body) != {"topic"} or not isinstance(body["topic"], str):
+            view = rs.showcase_view(row)
+            value = body.get("topic", body.get("question"))
+            if not isinstance(value, str) or not 1 <= len(value.strip()) <= 500:
                 self._json(400, dict(error="Choose one of the listed questions."))
                 return
+            if "question" in body:
+                topic = chat.route(value)
+            else:
+                try:
+                    topic = Topic(value)
+                except ValueError:
+                    if value not in ("home", "consents", "appointments", "regulations", "safety"):
+                        self._json(400, dict(error="Choose one of the listed questions."))
+                        return
+                    topic = value
             try:
-                topic = Topic(body["topic"])
-            except ValueError:
-                self._json(400, dict(error="Choose one of the listed questions."))
-                return
-            try:
-                case = CaseProgress(view["progress"], view["next_step"], view.get("closed", ""))
+                case = CaseProgress(
+                    view["progress"], view["next_step"], view.get("closed", ""), row.documents
+                )
                 signed = app.codec.verify(session)
                 case_id = app.by_handle.get(signed[0]) if signed else None
                 if case_id is None:
                     self._json(401, dict(error="Please sign in again."))
                     return
-                advice = (
-                    app.assistant_advisor.answer(topic, case, resident_key(case_id))
-                    if app.assistant_advisor is not None
-                    else advise(topic, case, app.assistant_provider)
-                )
+                if "question" in body and (isinstance(topic, Topic) or topic in ("home", "repair")):
+                    base = (
+                        advise(topic, case, FakeProvider())
+                        if isinstance(topic, Topic)
+                        else chat.answer(topic, view)
+                    )
+                    advice = (
+                        app.assistant_advisor.answer_question(
+                            value.strip(), case, resident_key(case_id), base
+                        )
+                        if app.assistant_advisor is not None
+                        else replace(base, label="Summary by rules - AI is not enabled")
+                    )
+                else:
+                    advice = (
+                        (
+                            app.assistant_advisor.answer(topic, case, resident_key(case_id))
+                            if app.assistant_advisor is not None
+                            else advise(topic, case, app.assistant_provider)
+                        )
+                        if isinstance(topic, Topic)
+                        else chat.answer(topic, view)
+                    )
             except AssistantUnavailable:
                 print("resident assistant unavailable", file=sys.stderr)
                 self._json(
@@ -362,19 +464,123 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                     label=advice.label,
                     notice=advice.notice,
                     help=advice.help,
+                    action="appointments" if topic == "appointments" else None,
+                    callback_search=(
+                        {
+                            "earliest": app.now().astimezone(ZONE).date().isoformat(),
+                            "period": (
+                                "morning"
+                                if "morning" in chat.words(value)
+                                else "afternoon"
+                                if "afternoon" in chat.words(value)
+                                else "any"
+                            ),
+                        }
+                        if topic == "appointments"
+                        else None
+                    ),
                 ),
             )
+
+        def _agenda(self) -> None:
+            if not (self._same_origin() and self._csrf_ok()):
+                self._json(403, dict(error="Please reload the page and try again."))
+                return
+            body = self._body()
+            if body is None or body.get("use_record") is not True:
+                self._json(400, dict(error="Agree to use your own record for callbacks."))
+                return
+            action = body.get("action")
+            keys = {
+                "list": {"action", "use_record"},
+                "find": {"action", "use_record", "earliest", "period"},
+                "book": {"action", "use_record", "proposal", "confirmed"},
+                "cancel": {"action", "use_record", "reference", "confirmed"},
+            }
+            if not isinstance(action, str) or action not in keys or set(body) != keys[action]:
+                self._json(400, dict(error="Choose a listed callback action."))
+                return
+            if action in ("book", "cancel"):
+                field = "proposal" if action == "book" else "reference"
+                if (
+                    body.get("confirmed") is not True
+                    or not isinstance(body[field], str)
+                    or not 1 <= len(body[field]) <= 100
+                ):
+                    self._json(400, dict(error="Confirm the specific callback action first."))
+                    return
+            if not self._session_bound():
+                return
+            session = _cookies(self.headers.get("Cookie")).get(SESSION_COOKIE)
+            if app.view_for(session) is None:
+                self._json(401, dict(error="Please sign in again."))
+                return
+            signed = app.codec.verify(session)
+            case_id = app.by_handle.get(signed[0]) if signed else None
+            if case_id is None:
+                self._json(401, dict(error="Please sign in again."))
+                return
+            if app.agenda is None:
+                self._json(503, dict(error="The local callback agenda is not connected. " + MANUAL))
+                return
+            owner = resident_key(case_id)
+
+            def authorised() -> bool:
+                return app.view_for(session) is not None and not app.expired
+
+            try:
+                result: dict[str, Any] = dict(notice=AGENDA_NOTICE, manual=MANUAL)
+                if action == "find":
+                    result["proposals"] = app.agenda.find(
+                        owner,
+                        app.now(),
+                        body["earliest"],
+                        body["period"],
+                        authorised,
+                    )
+                elif action == "book":
+                    result["booking"] = app.agenda.book(
+                        owner,
+                        body["proposal"],
+                        app.now,
+                        authorised,
+                    )
+                elif action == "cancel":
+                    app.agenda.cancel(owner, body["reference"], authorised)
+                    result["cancelled"] = True
+                result["bookings"] = app.agenda.own(owner)
+                if not authorised():
+                    raise PermissionError
+            except AgendaConflict as error:
+                self._json(409, dict(error=str(error)))
+                return
+            except PermissionError:
+                self._json(401, dict(error="Please sign in again."))
+                return
+            except ValueError as error:
+                self._json(400, dict(error=str(error)))
+                return
+            except sqlite3.Error:
+                print("resident callback agenda unavailable", file=sys.stderr)
+                self._json(
+                    503,
+                    dict(
+                        error="The callback result could not be confirmed. "
+                        "Check your callbacks before trying again. " + MANUAL
+                    ),
+                )
+                return
+            self._json(200, result)
 
         def _logout(self) -> None:
             if not (self._same_origin() and self._csrf_ok()):
                 self._json(403, dict(error="Please reload the page and try again."))
                 return
+            if not self._session_bound():
+                return
             app.codec.revoke(_cookies(self.headers.get("Cookie")).get(SESSION_COOKIE))
-            self._json(
-                200,
-                dict(signed_in=False),
-                (_set_cookie(SESSION_COOKIE, "", 0, True), _set_cookie(CSRF_COOKIE, "", 0, False)),
-            )
+            # A delayed response must not delete another tab's replacement login cookies.
+            self._json(200, dict(signed_in=False))
 
         do_GET = do_HEAD = do_POST = do_PUT = do_PATCH = do_DELETE = do_OPTIONS = _route
 

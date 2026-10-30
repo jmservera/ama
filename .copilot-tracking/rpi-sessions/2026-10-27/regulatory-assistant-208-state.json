@@ -1,0 +1,124 @@
+{
+  "task_id": "208",
+  "task_slug": "regulatory-assistant-208",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-27/regulatory-assistant-208-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-27/regulatory-assistant-208-plan.md",
+    "details": ".copilot-tracking/details/2026-10-27/regulatory-assistant-208-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-27/regulatory-assistant-208-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-27/regulatory-assistant-208-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-27/regulatory-assistant-208-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute research, plan, implement and review in order on the supplied branch",
+      "status": "confirmed",
+      "evidence": "Explicit user request 2026-10-27"
+    },
+    {
+      "decision": "Synthetic development only; no owner, Legal, DPO or Compliance decisions inferred",
+      "status": "confirmed",
+      "evidence": "User request and ADR 0005"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready for independent synthetic completion only",
+      "status": "complete",
+      "evidence": ".copilot-tracking/research/2026-10-27/regulatory-assistant-208-research.md"
+    },
+    {
+      "decision": "One final-candidate critique executed, Revise; PC-001 through PC-006 directly applied by planner, no divergent decision required",
+      "status": "disposed; Plan ready",
+      "evidence": ".copilot-tracking/plans/2026-10-27/regulatory-assistant-208-plan.md#critique-disposition"
+    },
+    {
+      "decision": "P01-P03 synthetic implementation and evidence reconciled; one independent Review is next, not yet executed",
+      "status": "implementation complete; no issue acceptance",
+      "evidence": ".copilot-tracking/changes/2026-10-27/regulatory-assistant-208-changes.md"
+    },
+    {
+      "decision": "One independent post-implementation Review executed against c6ea1f05b926d912ca38e901bf5509c554a65f7d, complete synthetic slice and 35 criterion boundaries",
+      "status": "execution Complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/regulatory-assistant-208-review.md"
+    },
+    {
+      "decision": "Original Review outcome Not accepted; no confirmed in-scope implementation defect, seven decision/evidence/dependency/residual findings routed to later work",
+      "status": "outcome Not accepted; no corrections or repeat Review",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/regulatory-assistant-208-review.md RV-001 through RV-007"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "publication-gate",
+      "summary": "Caller forbids full --all gate; repository instructions require it before publication",
+      "resolution": "Retain local implementation and evidence; do not bypass mandatory publication policy"
+    },
+    {
+      "id": "human-acceptance",
+      "summary": "Owner acceptance thresholds/protocol and actual Legal/Compliance/DPO appointments, DPIA, retention and rights decisions are absent",
+      "resolution": "Route RV-002/RV-003 to planning and actual accountable human owners; retain synthetic-only live block"
+    },
+    {
+      "id": "acceptance-evidence",
+      "summary": "Continuing-stock, held-out human grading, staff value/comprehension/manual accessibility and deployed identity/SQL evidence remain unavailable",
+      "resolution": "Route RV-004/RV-005 to separately authorized research after required decisions; no private data, cloud or model action under this task"
+    },
+    {
+      "id": "epic-stabilization",
+      "summary": "The #440 checkpoint and child-phase acceptance are not supplied",
+      "resolution": "Retain RV-006 in the existing coordinator workstream; do not close any named issue"
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await a ranked follow-up selection, Stop automatic session or Switch to manual mode; no child selected and publication remains blocked. Preserve the original Review outcome; no repeat Review or source changes in this completed loop."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Reconcile publication authority through rpi-plan",
+      "rationale": "Highest delivery impact and smallest prerequisite decision; no code or optional scoped gate can authorize publication",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/regulatory-assistant-208-review.md RV-001"
+    },
+    {
+      "rank": 2,
+      "task": "Record owner acceptance tasks, thresholds, accepted-check definition and paired-trial protocol through rpi-plan",
+      "rationale": "Small decision package unlocks meaningful evaluation and prevents wasted implementation or unsupported benefit/cost claims",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/regulatory-assistant-208-review.md RV-002"
+    },
+    {
+      "rank": 3,
+      "task": "Obtain actual Legal/Compliance/DPO authority and privacy/retention/rights decisions through rpi-plan",
+      "rationale": "High safety/privacy impact and necessary before actual processing; cannot be replaced by tests or synthetic owner labels",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/regulatory-assistant-208-review.md RV-003"
+    },
+    {
+      "rank": 4,
+      "task": "Coordinate existing #440 stabilization and child acceptance",
+      "rationale": "Explicit epic dependency; reuse its workstream rather than duplicate broad stabilization in this slice",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/regulatory-assistant-208-review.md RV-006"
+    },
+    {
+      "rank": 5,
+      "task": "Collect authorized continuing-stock, held-out, staff and manual accessibility evidence through rpi-research",
+      "rationale": "High acceptance value but depends on owner protocols and applicable human/privacy authority",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/regulatory-assistant-208-review.md RV-004"
+    },
+    {
+      "rank": 6,
+      "task": "Define separately authorized deployed identity/SQL/currentness/privacy evidence through rpi-research",
+      "rationale": "Closes platform proof gaps only after intended deployment and authority are established; no live action is authorized here",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/regulatory-assistant-208-review.md RV-005"
+    },
+    {
+      "rank": 7,
+      "task": "Triage inherited draft recovery/navigation guard and readable provenance formatting",
+      "rationale": "Small native-UI quality improvement, but lower impact than mandatory delivery and acceptance gates; not a new code defect",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/regulatory-assistant-208-review.md RV-007"
+    }
+  ]
+}

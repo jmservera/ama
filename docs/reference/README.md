@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-10-27
+ms.date: 2026-10-30
 ms.topic: overview
 ---
 
@@ -20,6 +20,139 @@ Topic hubs work like the Maps of Content used in personal knowledge
 management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
+
+For Refs #360, the
+[transport integration qualification](../architecture/cutover-evidence-pack.md#transport-integration-qualification-2026-10-30-refs-360)
+retains main's `src/` retirement and current infrastructure alongside DN1-DN5
+and the offline private Blob implementation. The linked rubric diagnosis
+distinguishes invalid D1 model output from a numerical regression; it claims
+neither a fresh score nor live transport acceptance.
+
+For #530, the [employee chat design and API guide](../../src/api/README.md#employee-chat-with-bounded-skills-530)
+records one read-only chat agent, five repository-defined advisory skills,
+explicit selection, role-projected grounding, minimal audit and workflow-only
+fallback. Local browser/axe checks are not live employee-site, actual model,
+screen-reader, voice-control or operational acceptance.
+
+Evidence: the [whole-project Responsible AI review](./research/rai/project-rai-review.md)
+assesses the 2026-10-28 source baseline across both sites, five bounded agents,
+chat, briefing, IoT, data and infrastructure against NIST AI RMF 1.0. It links
+the dated six-phase planner artifacts, labels evidence/hypotheses/unknowns and
+proposes a backlog without creating issues. Operational approval, legal
+currentness, fairness, meaningful human oversight and direct accessibility
+acceptance remain unestablished; earlier RAI findings are not silently closed.
+
+For #531, the [design-system state inventory](./research/ux/design-system.md)
+and [API loading/briefing guide](../../src/api/README.md#loading-feedback-and-todays-briefing-531)
+record shared async feedback and the HAX briefing interaction: actual declared
+sources and preparation time, explicit AI/rules labels, conditional draft
+review and reversible local dismissal. These native Fluent-derived patterns
+do not establish full Fluent adoption, staff usability, screen-reader/voice
+acceptance or live employee-site cold-start verification.
+
+For #110/#184, the [bounded streaming engineering and child dispositions](./research/iot-sensor-analytics-research-plan.md#bounded-streaming-engineering-2026-10-27-refs-110-184)
+describe opt-in API SDK adapters, synthetic-only seeded replay, exact device
+bindings, retained-history/SQL recovery and finite cost/rate/time controls.
+Local fake-network/actual-constructed-SQLite evidence is not actual Hub,
+credential lifecycle, Azure SQL handover, active budget alerts or whole AC-066.
+Outstanding #185/#187/#188/#189 live criteria and OD-43 remain explicit.
+The same synthesis records the bounded correction: actual global send-attempt
+admission after setup, partial-construction cleanup and selected-snapshot
+descriptor/frame provenance. Local regressions do not close live criteria.
+
+For #146, the [monitoring runbooks and evidence/gap matrix](../../infra/monitoring-runbooks.md)
+record the source-only job/IoT alert candidates, aggregate operations workbook,
+existing alert/budget catalogue and corrected ledger 26-hour query range.
+New candidates default disabled; proposed roles are not named appointments.
+Actual cost/AI metering and variance remain Unknown/unreconciled, and existing
+diagnostic privacy exclusion, poison signals, RAI incident integration and live
+owner/threshold approvals remain unmet. No deployment or issue closure follows.
+
+For finance #96/#98/#99, the
+[working field-review contract](../../src/core/README.md#unapproved-working-field-review-96-98-99)
+and [authenticated endpoint](../../src/api/README.md#working-form-review-and-held-finance-decisions-96-98-99)
+describe isolated draft reviews, source-linked diagnostic manifests and durable
+Held decision records. Every schema remains Unapproved; approved-rule
+validation/reviewed export and actual Board OD-12/15 envelope/tolerances are
+unavailable. The pause signal is diagnostic only, not a programme-wide release
+or live-activity hold. Synthetic engineering checks do not approve financial
+inputs or establish whole-issue acceptance.
+
+For #140/#184, the [bounded 2026-10-29 existing-hub reconciliation](../../infra/README.md#bounded-existing-hub-exercise-2026-10-29-refs-140-184-137)
+records owner-approved USD10/month B1/one unit within USD5 additional through
+October31, reuse of the deployed hub and successful metrics-only diagnostic
+reconciliation. No new hub, endpoint, role or service key was created. Missing
+operator registry data permission and the unapproved custom receive adapter
+block live-to-SQL and resident-gauge acceptance; actual local SQL evidence is
+not live transport. The following source-only production model remains separate.
+
+For #198, the [rubric src counting reconciliation](../architecture/cutover-evidence-pack.md#rubric-src-counting-reconciliation-2026-10-27)
+records the 47/100 pre-migration baseline, carried migration snapshots and
+actual #499 retirement score of 77/100 against 77/100. Registry removals
+already merged in #295/#300/#302; source/tests/manifests/Dockerfiles are counted
+without extra globs. The original 2026-10-27 test reassessment repaired
+seed/trigger assumptions but retained one unrelated deck-selection failure
+and seven missing-runtime skips. The 2026-10-29 integration keeps main's
+rubric and scenario manifest, not those original rubric edits; historical
+test counts are not current-candidate results.
+The [2026-10-30 synchronization](../architecture/cutover-evidence-pack.md#current-main-synchronization-2026-10-30)
+retains the same upstream-input and history-preservation boundaries on the
+latest reviewed main; publication and hosted checks remain coordinator-owned.
+The [PR #507 review correction](../architecture/cutover-evidence-pack.md#pr-507-review-correction-2026-10-30)
+distinguishes the original and integrated frozen diffs, discarded fixtures/guide
+edits and current 355 passed/18 failed/seven skipped results. B6 recovery requires
+an actual registered artifact change in a later PR, not the unscored rubric guide.
+Missing fresh historical comparisons and the original registry sequencing
+remain acceptance gaps; no migration-attributed gain or whole-issue closure
+is inferred.
+
+For #140, the [IoT infrastructure decision and budget](../../infra/README.md#iot-hub-issue-140-adr-0003-decision-6)
+and [ADR 0003 dated authorization](../adrs/0003-journey-derived-capabilities-runtime-fit.md#source-only-infrastructure-authorization-2026-10-27-refs-140)
+record B1/one unit in `ama`/`uksouth`, private keyless Event Hub routing,
+metrics-only diagnostics and a USD60/month model inside the overall USD700
+cap. The old built-in-endpoint receiver role was not a supported Entra path;
+connection/identity logs also contain device IDs. Bootstrap omits endpoint
+registration until separately approved sender-role propagation verification.
+These are source-only definitions and local checks, not Azure what-if,
+provisioning, actual budget headroom, credential issue or OD-43 acceptance.
+
+For #179, the [dated indoor-envelope correction and criterion audit](./research/iot-sensor-analytics-research-plan.md#indoor-record-derived-envelope-correction-2026-10-27-179)
+records v2 per-outdoor-pair dwelling/household-derived bounds in both projection
+paths, replacing the fixed 8 C and 15..98% exercise clips. Model inputs,
+coefficients and bounded-noise parameters remain exercise values. The pinned
+public 17,544-hour ERA5 record supplies regression evidence, not calibrated
+indoor physics, a safety threshold, OD-43 or whole-parent/live PRD acceptance.
+The [snapshot versioning correction](./research/retrofit-synthetic-data/README.md#determinism-manifests-and-refresh-policy-2026-10-15)
+distinguishes the intentionally changed v2 indoor model from new containing
+snapshot versions and their version-bound golden; published historical bytes
+and unchanged scale/register goldens are preserved.
+
+For #190/#192/#193/#194, the
+[bounded R3 exercise pack](./research/iot-sensor-analytics-research-plan.md#bounded-r3-exercise-scenario-pack-2026-10-27-refs-190),
+[sensor dictionary](./research/retrofit-synthetic-data/data-dictionary.md#sensor-data)
+and [two-stage guide](../../src/core/README.md#two-stage-simulator-operation-and-limits-194)
+record seven damp/data-quality cases, four retrofit cases, separate truth,
+per-check results, confusion/sensitivity and exact climate provenance.
+These are synthetic exercise overlays, not validated building physics,
+diagnosis or actual works. The separate opt-in publisher has local engineering
+evidence, not verified live operation. Actual #111/#133 test use, live acceptance,
+R2 competent approval and agreed R3 limits remain unmet; no parent closure or
+owner deferral is inferred.
+
+For #218/#219, the [dependent-policy RAI binding](../../src/core/README.md#dependent-policy-rai-release-binding-218-219)
+records ranking/checklist content invalidation and scripted review-mechanics
+regressions. Unknown OQ-017 holders, #222 manifest approval, actual #223 reviewer
+effectiveness, #221 witnessed acceptance and wider #220 challenge coverage remain
+open. This engineering evidence does not close the epic or approve live use.
+
+For #199-#203, the
+[owner-authorized 2026-10-27 directory retirement](../architecture/cutover-evidence-pack.md#owner-authorized-directory-retirement-2026-10-27)
+records explicit cut-over sign-off, local archive `v0.21.0`, removal of the
+remaining pointer, current `src/` paths and intentional historical/defensive
+reference exceptions. The [repository archive instructions](../../README.md#source-cut-over-archive)
+give the owner-only tag push command. Original blocked/unchecked acceptance
+evidence is preserved; no fresh deployment, full baseline parity, release or
+post-merge rubric acceptance is inferred.
 
 For #177, the [historical backfill stack boundary](./research/iot-sensor-analytics-research-plan.md#historical-backfill-stack-boundary-2026-10-27-refs-177)
 preserves the original five-child blocked outcome and records the approved
@@ -54,6 +187,26 @@ retain original outcomes and siblings, including
 and [v0.12.0](./research/reports/2026-10-10/proper-warm-prd-v0-12-0/challenge-disposition.md).
 Original tracking records remain; selected historical previews are explicitly
 archive-backed, not live-local. Promotion changes no approval or review gates.
+For issue #440, the
+[first bounded local stabilization checkpoint](../architecture/cutover-evidence-pack.md#first-bounded-local-stabilization-checkpoint-2026-10-23-440)
+pins merged-main runtime inputs, BRD/PRD/ADR versions and covered journeys.
+Focused/package checks and actual browser/SQL Server/Docker observations are
+separate from the policy candidate. The native full run failed a1500ms SQL-read
+benchmark at17383ms; three focused repeats passed but do not repair its failed
+receipt. Native policy-host discovery remains Deferred. No total-product pass,
+new confirmed code defect, acceptance tick, cloud/real-AI approval, final
+publication receipt or PR is implied. Independent local lanes can continue.
+For issue #119, the [map tile provider options review](./research/ux/map-tile-provider-options.md)
+records dated licence, attribution, coverage, cost, processor and privacy
+evidence for the public OSM server, Azure Maps, OS Maps API, MapTiler and
+self-hosted tiles, and what cannot yet be verified. Vendor statements carry
+evidence-status labels: only the OSM tile policy and Azure Maps pricing page
+were re-read, the rest is draft, unverified. Its budget wording follows the
+[addendum](../case_study_48_addendum.md#revised-owner-budget-decision-2026-10-22)
+(USD 700 all-in ceiling, headroom Unknown, earlier USD500 and 535.41 as history). It is a proposal for owner
+review, not a provider selection or purchase. The
+[screen-reader protocol and unmet gate](./research/ux/wcag-conformance-baseline.md#map-list-alternative-screen-reader-check-119)
+record that no screen reader was available, so no run is claimed.
 
 For issue #221, the [core incident boundary](../../src/core/README.md#operator-incidents-and-constructed-restart-221)
 and [API contract](../../src/api/README.md#incident-and-restart-contract-221)
@@ -84,6 +237,14 @@ No populated baseline exists, so the literal round-trip remains Blocked /
 Not run, with zero writes/listSecrets and no new mock-only delivery. The
 demo's real profile guard separately refuses unknown/malformed deployment
 evidence; labels alone do not pass it. Prior offline evidence remains unchanged.
+
+For issue #360 / PR #459, the
+[dated schema correction](../../.copilot-tracking/research/2026-10-25/remove-synthetic-example-360-research.md#schema-correction-2026-10-28-pr-459-review)
+and [runbook](../../infra/README.md#historical-deployment-recipe) distinguish
+active-case removal from erasure: the live updatable ledger `cases` table
+retains the old body in system-managed history after current-row deletion.
+The non-history reference scan does not prove erasure; the audit trigger is a
+non-ledger alternative, not extra live-ledger protection.
 
 For issue #360 / PR #416 rubric recovery, the
 [post-push visibility and exact-head sequence](../../.github/rubric/README.md#post-push-visibility-and-exact-head-completion)
@@ -150,6 +311,15 @@ extends the existing seven-file lexical guard to chat, including snapshot/envelo
 wording and recorded-time labels. Safety restart authority, exact AI labelling
 and verbatim sources remain distinct. This is partial synthetic engineering
 coverage, not universal error coverage, comprehension or named resident review.
+
+For #153/#154, the [2026-10-27 content inventory and residual messages](./research/ux/content-standard.md#dated-surface-and-message-audit-2026-10-27-153154)
+and [six resident task designs with representative briefing rules](./research/ux/customer-journeys/residents.md#resident-and-representative-task-designs-2026-10-27-154)
+add text wireframes, accessible non-digital alternatives, safe-contact and
+task/date-limited authority, offer/confirmation and separate remedy states.
+The lexical guard now includes staff time capture. Juan Manuel Servera was
+appointed wording reviewer on 2026-10-15; completed exact-text review and actual
+resident/representative usability/AT acceptance remain Not run. No portal,
+live contact, operational authority or whole-issue closure is delivered.
 
 For issue #172, the [chat fixture isolation boundary](./research/retrofit-synthetic-data/data-dictionary.md#resource-specific-isolation-coverage-2026-10-18-172)
 distinguishes 22 personas/eleven perspectives from current eligible thread owners
@@ -324,7 +494,7 @@ or infra acceptance claimed.
 | Inspect per-measure quality, defects and replacement (#91) | [Core quality and handover contract](../../src/core/README.md#per-measure-quality-and-handover-controls-91) | [Existing API/screen](../../src/api/README.md#per-measure-quality-api-91) and [dated programme journey continuation](./research/ux/customer-journeys/programme.md#quality-control-engineering-continuation-2026-10-17-91): current staff, retained contributor independence, remediation, all-prior same-measure acceptance/handover invalidation and rollback on fictional JSON/SQLite/local SQL Server. Original Review Not accepted retained; authorized correction ONE resolves known legacy historical recorders and committed-refresh exactly-once audit/reload handling. No new contractor writes, risk policy, payment, professional authority or human/Azure/WCAG acceptance |
 | Inspect record-only finance matching and independent approval (#94) | [Core finance contract](../../src/core/README.md#record-only-finance-controls-94) and [authenticated API](../../src/api/README.md#record-only-finance-api-94) | [Dated Finance journey audit](./research/ux/customer-journeys/finance.md#exact-finance-control-audit-2026-10-17-94): actual line indices, unknown/ambiguous input refusal, email/code/OID independence and record-only status. Correction TWO quarantines failed SQL audit before recovery reads and preserves original errors/prior audit. Authorized integration of merged #84 / PR #382 on main bbbc924 retains committed document snapshots, stock caller scope and all transaction hooks; 232 local passes/one browser skip and 37 actual local SQL Server passes. External independent closure pending. #93 hierarchy only, no invented #90 dependency. Stale BRD numbering disclosed; no real authority/payment, browser, Azure or full PRD acceptance |
 | Inspect evidenced capacity and controlled orders (#90) | [Core authority, source and quota contract](../../src/core/README.md#evidenced-provider-capacity-and-controlled-orders-90) | [Existing API/screen and local replay](../../src/api/README.md#provider-capacity-and-order-api-90) and [dated engineering synthesis](./research/ux/zava-forward-prototype-profile-review.md#provider-capacity-engineering-continuation-2026-10-17-90): exact four controls exercised on fictional JSON/SQLite/local SQL Server; correction ONE requires version at creation, refreshes exact fixture hash and preserves independent safety-booking prerequisites. Coordinator external closure pending; no actual delegation, live supplier order, operational approval or WCAG acceptance |
-| Inspect constructed iteration coverage (#103) | [Exact two-criterion audit](./research/retrofit-synthetic-data/README.md#constructed-scenario-manifest-acceptance-audit-2026-10-17-103) | [Existing scenario manifest v0.2.1](./research/retrofit-synthetic-data/scenario-manifest.json) and [core enforcement](../../src/core/README.md#constructed-scenario-manifest-103): all eleven/nine PRD-proposed full journeys explicitly unavailable, partial IA source hashes and exact tiny-fixture defaults retained. Correction ONE enforces provisional/proposed source authority with customer/owner approval not established; independent final-head review required. No approved blanket deferrals, new registry/data population, private-stock reads or full FR-035/human/application acceptance |
+| Inspect constructed iteration coverage (#103) | [Exact two-criterion audit](./research/retrofit-synthetic-data/README.md#constructed-scenario-manifest-acceptance-audit-2026-10-17-103) | [Existing scenario manifest v0.2.1](./research/retrofit-synthetic-data/scenario-manifest.json) and [core enforcement](../../src/core/README.md#constructed-scenario-manifest-103): all eleven/nine PRD-proposed full journeys explicitly unavailable, partial IA source hashes and exact tiny-fixture defaults retained. Recipe hash refreshed 2026-10-28 for the [briefing browser regression fix](../../src/api/README.md#shared-workbench-information-architecture-152) and #526 retained-tab selectors; fixture/inventory versions and coverage claims unchanged. Correction ONE enforces provisional/proposed source authority with customer/owner approval not established; independent final-head review required. No approved blanket deferrals, new registry/data population, private-stock reads or full FR-035/human/application acceptance |
 | Inspect private initializer image publication (Refs #360) | [Actual renewed ACR CLI outcome](../architecture/cutover-evidence-pack.md#renewed-initializer-acr-cli-attempt-2026-10-17) | [Read-only root diagnosis/options](../../infra/README.md#initializer-registry403-read-only-diagnosis-2026-10-17-360): primary record places dbb before isolation, ARM metadata confirms later registry writes; current cpu2 dbc uploaded/downloaded source then failed login403. Likely network isolation, not proven RBAC denial; task-bypass property absent, no named task/pool/ama VM, no guaranteed flag fix. PR385 integrated onto main bbbc924; historical tested source/receipt remains bab4bf3, original Review Residual work, external final-head gate pending. No new build/write in diagnosis, exact image smoke/pin unperformed; d/e UNMET |
 | Inspect controlled administrative edits and bulk previews (#78) | [API contract and criterion evidence](../../src/api/README.md#controlled-bulk-preview-api-78) | [Core freshness, provenance and atomicity](../../src/core/README.md#controlled-administrative-bulk-edits-78) and [dated synthesis](./research/ux/zava-forward-prototype-profile-review.md#controlled-bulk-edit-engineering-continuation-2026-10-17-78): RV-001 immutable eligibility retained; correction TWO implements RV-002 explicit upload/offer/accept source/version/reason, exact old/new events and required UI/API callers. Final-head independent review pending; no approval/ownership bypass, live SQL Server or human/WCAG acceptance |
 | Inspect scoped initializer API and approved relay permissions (Refs #360) | [Approved relay delta](../architecture/cutover-evidence-pack.md#approved-existing-job-relay-delta-2026-10-17) and [original API receipt](../architecture/cutover-evidence-pack.md#scoped-initializer-iam-activation-2026-10-17) | [Exact relay runbook/IDs/actions](../../infra/README.md#approved-existing-job-relay-delta-2026-10-17-360): new explicit owner approval, unchanged reviewed includeResultRelay=true, two relay Creates plus independently proven API no-op, successful apply and separate actions/job-scope/principal readback. No tag payload test, job configuration/run or broader grant. API/AcrPull preserved. Private publisher and genuine tenant/browser/SQL/AI remain unproven; d/e UNMET |
@@ -332,6 +502,7 @@ or infra acceptance claimed.
 | Inspect queue signal definitions, scope and reset (#77) | [API behavior and offline boundary](../../src/api/README.md#queue-signal-completion-77-2026-10-17) | [Dated UX continuation](./research/ux/zava-forward-prototype-profile-review.md#queue-signal-engineering-continuation-2026-10-17-77): six queue/five Show only definitions, authenticated stage scope, versioned reset and own-case rationale/reviewers; no role simulator, operational approval or live-platform acceptance |
 | Resume single-command demo authentication (Refs #360) | [Automatic setup runbook](../../infra/README.md#post-deployment-api-authentication-initialization) and [in-VNet staff step](../../infra/README.md#in-vnet-sql-staff-step-refs-360) | 2026-10-17 profile follow-up resolves exact resource-bound exported template contracts: neutral app staging adds no profile; omitted real production defaults, malformed/unknown/conflicting evidence and failed reads still refuse. Supplied live shape reproduced failing-before/passing-after offline; no live setup or Azure changes. Prior compatibility fix recognizes unique explicit direct-ingress plus legacy workload API tags, preserves exact old override and refuses mixed direct ambiguity. Check/dry-run/list-staff prohibit cloud job/secret transport even on fallback; private-host verification may remain incomplete. [Current laptop/migration audit](../architecture/cutover-evidence-pack.md#laptop-setup-and-restricted-migration-readiness-2026-10-17): encrypted ARM-tag results, secureString ARM Key Vault handoff, no private console prerequisite or app fallback. Verified restricted replacement returns 403; old stack and six private services preserved. [Concrete publisher/IAM evidence](../../infra/README.md#private-publication-blocker-evidence-2026-10-17-pr-375-continuation) and current ACR diagnosis above distinguish historical failures/authority from renewed CLI results. #374 expiry/inventory/pending-handoff/legacy source/tests preserved. PR #375 app-backed reuse guard retained. Live credentials, initializer publication 403 and tenant/browser/SQL/AI acceptance remain unmet |
 | Inspect form schema registry and candidate lineage (Refs #97) | [Core collection contract](../../src/core/README.md#form-schema-registry-and-candidate-staging-97) | [Schema/candidate API](../../src/api/README.md#form-schema-and-candidate-api-97): immutable unapproved versions, source hash/version/locator, exact text/CSV verification, unverified imported OCR lineage and owned manual recovery. No actual template authority, approved preparation, live extraction or #98 review/pack/staleness acceptance |
+| Review the fictional form template and Finance decision fields (Refs #97) | [Fictional form review guide](./research/retrofit-synthetic-data/form-review-pack-97.md) | Fictional versioned template over the existing schema contract with field authority, evidence, freshness, lineage, proposed role separation and stale propagation, and fourteen unresolved Finance authority/binding decisions; registered as `DS-FICT-FORM-REVIEW-PACK`. Not an approved template, no submission or payment; criterion 1 stays unmet |
 | Audit synthetic dictionary, privacy patterns and provenance (Refs #175) | [Dataset dictionary and criterion audit](./research/retrofit-synthetic-data/data-dictionary.md#issue-175-acceptance-audit-2026-10-16) | [Offline core checker](../../src/core/README.md#offline-provenance-and-privacy-audit-175) and [chat fixture regression](../../src/agents/README.md#generated-chat-provenance-175): current sensor/scale/fabric/chat coverage, public-only scans and rehashed mutations. Three historic external source dates/terms remain unverified and fail strict audit; no universal PII guarantee, private-data attestation or operational approval |
 | Preserve seeded staff behavior (Refs #360) | [Automatic setup runbook](../../infra/README.md#post-deployment-api-authentication-initialization) | [Historical roster acceptance audit](../architecture/cutover-evidence-pack.md#automatic-demo-roster-follow-up-2026-10-16): production-refusing seeded assignment, first ProgrammeManager admin, mailbox-purpose eligibility and private persisted roster. Restore existing roster for bound SQL; never reuse people. Transport now follows the current laptop audit above. Graph/mailbox, tenant/browser/SQL and human acceptance remain unmet |
 | Implement the direct HTTPS synthetic-demo entry (Refs #360) | [Direct demo migration proposal](../../infra/README.md#direct-demo-ingress-migration-proposal-2026-10-16-360) | [Current criterion audit](../architecture/cutover-evidence-pack.md#laptop-setup-and-restricted-migration-readiness-2026-10-17), [ADR decision](../adrs/0001-azure-architecture.md#direct-synthetic-demo-entry-decision-2026-10-16): owner-approved additive API/auth staged with deny-all in existing external environment; no public exposure or retirement. d/e remain unmet pending genuine sign-in/roles/SQL/AI and later reviewed retirement. Historical Front Door proof is not direct-demo acceptance |
@@ -350,15 +521,18 @@ or infra acceptance claimed.
 | Inspect deterministic checks and role-scoped step alerts (#212) | [Core bounded contracts and schedule](../../src/core/README.md#deterministic-checks-and-alerts-212) | [Alert API and outage boundary](../../src/api/README.md#deterministic-step-alert-api-212): immutable owner-approved executable contracts, SQL checks/checkpoints, home grouping, clock/harm ranking, attention limits and retained owner dispositions. Issue #329 pins exact source-gating labels and cross-case/episode 24-hour attention limits with mutation evidence; runtime unchanged. No seed approvals, inferred clocks, resident messages or hold release. Step UI, hosted timer, legal/staff/live-platform and continuing-stock acceptance remain unmet |
 | Inspect regulatory alert and home chat UX (#215) | [Audience patterns and criterion audit](../../src/api/README.md#regulatory-alert-and-home-chat-ux-215) | Existing scoped alerts outside optional chat, structured cited lookup and explicit doubt/outage states. Runtime-only unit discovery retains pure size/hash assertions without Playwright; source CI separately runs the browser regression with hash-pinned optional axe, measured 24px targets and mutation-protected 44px disclosure sizing. Staff comprehension protocol is Not run; full WCAG conformance, chat value and operational approval remain unproved |
 | Inspect source monitoring and regulatory change reviews (#213) | [Core contract and acceptance audit](../../src/core/README.md#source-change-monitoring-and-review-213) | [Offline orchestrator job](../../src/orchestrator/README.md#offline-source-change-job-213): isolated unverified candidates, versioned source cadence/likelihood, bounded impact, simulated Juan Manuel Servera review, regression/effective-date gates and atomic rollback. No live adapter/timer, candidate publication, actual human legal approval, new endpoint or communication delivery |
-| Inspect regulatory security, privacy and audit (#217) | [API acceptance audit](../../src/api/README.md#regulatory-security-privacy-and-audit-217) | [Draft DPIA for DPO review](./research/chat-memory-dpia.md#regulatory-assistant-dpia-draft-for-dpo-review-2026-10-16-refs-217): separate trusted chat capability, metadata-only unknown/simulated retention, transactional SQL turn audit and explicit human reasons. DPO completion/periods, live Entra/SQL and actual-model/privacy/legal acceptance remain unmet |
+| Inspect regulatory security, privacy and audit (#217) | [API acceptance audit](../../src/api/README.md#regulatory-security-privacy-and-audit-217) | [Draft DPIA for DPO review](./research/chat-memory-dpia.md#regulatory-assistant-dpia-draft-for-dpo-review-2026-10-16-refs-217): separate chat capability, unknown/simulated retention, atomic SQL turn/referral/audit, bounded content-free usage and explicit human reasons. 2026-10-27 engineering delta does not complete DPO periods/rights, live Entra/SQL or legal acceptance |
 | Inspect bounded document rescans and retention authority (#117) | [Offline job contract](../../src/orchestrator/README.md#bounded-document-rescan-job-117) | [Synthetic engineering boundary](./research/retrofit-synthetic-data/README.md#pending-document-rescan-engineering-boundary-2026-10-17-refs-117): original Review Not accepted retained byte-exact; correction ONE fixes recovery/scanner boundaries and coordinator reports independent closure. Final correction TWO restores driverless SQLite/help with failing-first real discovery, native SQL error sanitization and authorized merged396 integration parity. Final coordinator clearance pending; no second full Review/self-Pass. Real Defender, hosted cadence and owner/Legal/DPO approvals remain unmet |
 | Design Awaab's Law, damp and mould or safety controls | [social-housing-regulation/](./regulatory/social-housing-regulation/) | [Company Profile Research](./research/company/company-profile-research.md) |
 | Design sensor data capture, map signals or prioritisation | [Sensor Data Capture, Analysis and Map](../adrs/0002-pilot-readiness-architecture.md#sensor-data-capture-analysis-and-map) | [Case Study 48 Addendum](../case_study_48_addendum.md#sensor-data-capture-analysis-and-map-demonstrator-design) and BRD RULE-014/AC-047; simulator only, with sensor inventory and operational thresholds still open |
 | Reproduce synthetic generator outputs and plan a refresh (Refs #176) | [Offline acceptance audit](./research/retrofit-synthetic-data/README.md#offline-acceptance-audit-2026-10-16-refs-176) | [Fabric CLI replay inputs](../../src/core/README.md#datasets-fixtures-and-synthetic-tools) and proposed refresh policy: exact consumed-input/date provenance, byte-level generator/sensor evidence and nonempty-snapshot refusal. Original OSM-backed register generator and pinned inputs remain absent; historical manifests and live records are unchanged, owner policy adoption is not inferred |
 | Select historical outdoor climate evidence (Refs #178) | [Online climate comparison, source register and criterion audit](./research/iot-sensor-analytics-research-plan.md#historical-climate-evidence-2026-10-17-refs-178) | Official coverage/resolution/terms comparison; exact regional HadUK-Grid v1.3.2.ceda context candidate/OGL citation, CEDA login blocker and [retrieved Durham monthly temperature statistics](./research/climate-source-evidence-178.json). 351 accepted 1991-2020 pairs, no RH or replay-envelope claim; synthetic generator unchanged. Owner licence/reuse approval UNMET; issue remains open |
+| Paired climate access check (Refs #178) | [Access blocker section](./research/iot-sensor-analytics-research-plan.md#paired-historical-climate-access-check-2026-10-21-refs-178) | Anonymous MIDAS files need CEDA login; EA Hydrology has no humidity; [blocker record](./research/climate-paired-source-blocker-178.json). No bounds, owner approval UNMET |
+| Modelled paired climate source (Refs #178) | [Alternative source section](./research/iot-sensor-analytics-research-plan.md#alternative-modelled-paired-climate-source-2026-10-22-refs-178) | Open-Meteo ERA5 hourly Durham 2023 sample, [bounds report](./research/climate-paired-bounds-178.json), labelled modelled; NASA POWER cross-check with retained API identity/version provenance; licence, precision and representativeness pending |
 | Design EPC C, energy standard or grant logic | [energy-efficiency/](./regulatory/energy-efficiency/) and [retrofit-standards-and-funding/](./regulatory/retrofit-standards-and-funding/) | [UK Social Housing Baseline Research](./research/sector/uk-social-housing-baseline-research.md) |
 | Assess Responsible AI and operational activation | [RAI release position and verified recovery](../case_study_48_addendum.md#responsible-ai-release-position-2026-10-14) | [PRD RAI contract](../prds/zava-forward-retrofit-programme-demonstrator.md#responsible-ai-release-and-oversight-contract-2026-10-14) and [ADR control plane](../adrs/0002-pilot-readiness-architecture.md#responsible-ai-control-plane-2026-10-14); proposals pending human acceptance, not compliance certification |
 | Inspect task-bound AI release admission (#219) | [Core release contract](../../src/core/README.md#task-bound-rai-release-records-219) | [API and synthetic HTTP exercise](../../src/api/README.md#rai-task-release-api-219): extended existing SQL records, exact activation binding and material-change invalidation; JSON inference denies without SQL evidence. OQ-017 holders, real evaluation/attestation and live approval remain open |
+| Inspect proposed meaningful human-review protocol (#223) | [Agents README protocol](../../src/agents/README.md#meaningful-human-review-protocol-223-proposed-not-run) | Preparation only, Not run: seeded critical-error case classes, baseline and automation-bias controls, retention, OQ-017 authority evidence, denominators and full-effort comparators. All thresholds, samples, roles and approvals are PROPOSED/UNFILLED; #108 and the unapproved #222 manifest remain dependencies; no #223 criterion is met |
 | Handle resident data, consent or automated decisions | [data-protection/](./regulatory/data-protection/) | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) |
 | Record resident decisions, representative authority or pause/withdrawal (#86) | [Resident API and evidence limits](../../src/api/README.md#resident-decisions-and-representative-api-86) | [Core scoped-decision contract](../../src/core/README.md#resident-decisions-and-representatives-86): supplied human answers, task/date/contact authority, isolated work/QA dependencies and independent review; owner-confirmed five-year first-contact retention restarts from the first recorded contact after manager-approved deletion, using a personal-data-free boundary tombstone, without reviving consent. Field matrix and synthetic SQL verification remain; formal complaint integration, historical erasure design, contact/identity reconciliation and human acceptance remain open |
 | Write or review requirements | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) | [Retrofit Flow and Constraint Discovery Brief](../brds/retrofit-flow-discovery-brief.md) |
@@ -407,12 +581,14 @@ or infra acceptance claimed.
 | Inspect building shared systems, dependencies, stopped works and costs | [Core building model](../../src/core/README.md#building-shared-context-issue-75) | [Staff API/view](../../src/api/README.md#building-shared-context-issue-75); #75 adds explicit home/package scopes, read-only source assertions and Finance-only amounts. Home consent, approvals, evidence and allocations stay independent; real register, governed updates and live platform/human acceptance remain open |
 | Inspect the synthetic resident feedback preview (#444) | [Resident preview API and start-up](../../src/api/README.md#synthetic-resident-feedback-preview-444) | [Core boundary and fixture](../../src/core/README.md#resident-owned-preview-boundary-444): server-owned fixture identity, default-deny grants, positive-allowlist view, offers versus confirmed arrangements, loopback only. Invented data, read-only, not enrolment, not an approved resident design; PR 442 is input only. Live Azure/SQL/real-AI acceptance and resident enrolment remain separate later gates |
 | Inspect the synthetic resident showcase with fake-email sign-in (#462) | [Showcase server, image and checks](../../src/api/README.md#synthetic-resident-showcase-462) | [Core boundary](../../src/core/README.md#synthetic-resident-showcase-boundary-462) and [SQL view and read-only principal](../../infra/README.md#synthetic-resident-showcase-sql-boundary-issue-462). Local candidate only: shared demo password by design, invented allowlisted records, no cloud deployment, live criteria blocked |
-| Plan or review the move of `mvp/` and `prototype/` into `src/` | [Parity matrix and migration order](../architecture/mvp-to-src-parity-matrix.md) | Per-file outcomes, reopen list, group order for #199 (M1 to M5 done; the synthetic-data pack paths now point at `src/`); R1 first slice (agents dispatch worker, #107) done; `prototype/` retired in #202 step 1 |
+| Trace source migration and retirement | [Parity matrix and migration order](../architecture/mvp-to-src-parity-matrix.md) | M1-M6 migrated; [owner cut-over sign-off, archive v0.21.0 and remaining acceptance](../architecture/cutover-evidence-pack.md#owner-authorized-directory-retirement-2026-10-27); current guides under `src/` |
 | Configure or troubleshoot rubric scoring authentication | [Capstone Rubric Gate](../../.github/rubric/README.md#owner-setup) | Built-in Actions token, job-scoped permissions and Copilot inference eligibility; compilation and a passing score do not establish product acceptance |
 | Compare cheaper rubric-scoring models | [Dated Sonnet/Haiku/Luna pilot](./resources/ai-tokenomics.md#rubric-scorer-model-pilot-2026-10-24) | Original final-response pilot plus two pinned-runtime native MCP invocations: one valid append each but nine grade differences and Haiku rationale overlength; not full hosted equivalence or application-model acceptance |
 | Complete exact-head validation after a rubric score append | [Rubric publication lifecycle](../../.github/rubric/README.md#post-push-visibility-and-exact-head-completion) | Bounded visibility wait, exact resulting SHA, failed-push/concurrent-movement denial; final-head receipt and independent/hosted checks without recursive scoring |
 | Design a looped agent goal | [Capstone Deliverables and Storage Map](../capstone/README.md) | Where each capstone asset (deck, pitch transcripts, thought leadership artifact, code) must be stored for the rubric gate, and which criteria score 0 until it exists |
 | Compare feedback-first agent delivery with AI software factories | [Thought-leadership source review](../capstone/thought-leadership/everything-but-the-software/README.md#related-work-review-of-25-october) | Pavlenko et al. v1: bounded optimisation, evidence-scoped memory, qualified efficiency estimates and distinction from the unchanged post-feature consolidation experiment |
+| Trace the paper's judgment and skills evidence | [Judgment and skills source revision](../capstone/thought-leadership/everything-but-the-software/README.md#judgment-and-skills-source-revision-29-october) | Anthropic's induced-preference analyst study and Jiang et al. v1: approval versus independent judgment, procedural skills versus history, source locators, scoped method clarifications and author verification still needed; neither study establishes Zava outcomes |
+| Trace the industry-led paper revision and its empirical charts | [Industry-led revision](../capstone/thought-leadership/everything-but-the-software/README.md#industry-led-revision-27-october) | Knight Capital, WyCash and PhotoCraft precede AMA; paired repository inheritance, instruction maintenance and context-file costs are distinguished. Published-data charts, source locators, retained counterevidence and unchanged protocol |
 | Trace the critique-revised agentic-delivery paper | [Draft v4 revision and boundaries](../capstone/thought-leadership/everything-but-the-software/README.md#critique-revision-25-october) | Observed usability/completion divergence, candidate-mechanism audits, expanded rivals, verified citation corrections and preserved protocol with explicit identification/precision limits; no results, independent empirical review or publication approval |
 | Trace the paper's table-flow and exploratory first-pass revision | [Table flow and developmental revision](../capstone/thought-leadership/everything-but-the-software/README.md#table-flow-and-developmental-revision-25-october) | Unchanged title/subtitle; nearby table placement, operational-failure bridge, unresolved H4/H7 definitions and owner-selected exploratory framing; no private-tag amendment or new empirical evidence |
 | Trace the broader motivation for the paper's steering hypothesis | [Repository-context revision](../capstone/thought-leadership/everything-but-the-software/README.md#repository-context-and-hypothesis-revision-25-october) | Pinned Aithena, Squad and PhotoCraft observations, dated tracker counts, menu-versus-behaviour distinction and retained counter-evidence; purposive context, not comparative framework results, measured decay or proof of human necessity |
@@ -429,6 +605,7 @@ or infra acceptance claimed.
 | [Original Case Study 48](../case_study_48_original.md) | Initial problem specification. Preserved unchanged | 2026-09-10 |
 | [Case Study 48 Addendum](../case_study_48_addendum.md) | Preserved baseline and mandatory real-platform builds; dated rebuild/identity/session/CI learning and experiment-retirement boundary. Adds proposed RAI release/oversight gates and a provisional humidity/temperature simulator design, map signal and human condition-review path; no sensor inventory, thresholds or production authority is assumed. #19/#24/#27 may retire as learning; #58 needs explicit capability disposition | 2026-10-14 |
 | [Recovered RAI baseline audit](./research/reports/2026-10-14/rai-report-ama-20261014.md) | Six-framework bounded audit of original v0.14.0/source baseline: 29 checks, 7 PASS/11 PARTIAL/11 NOT_ASSESSED; 8 MEDIUM/3 LOW residuals. Inline recovery and report contracts validated; baseline report owner-accepted on 2026-10-15 for remediation planning only; controls proposed/Not run, qualified approval pending, live use BLOCKED | 2026-10-14 |
+| [Whole-project RAI review](./research/rai/project-rai-review.md) | Evidence: repository-only review of resident/employee sites, five bounded assistants, chat, briefing, IoT, data and infrastructure; dated six-phase NIST AI RMF plan, threat/impact/control catalog and proposed backlog. Unknown: operational acceptance, legal currentness, representative fairness and human/AT effectiveness; no issue creation or source changes | 2026-10-28 |
 | [RAI remediation implementation plan](../../.copilot-tracking/plans/2026-10-15/rai-remediation-plan.md) | Six phases/thirteen tasks covering eleven residuals and eleven unassessed evidence gates; current PRD v0.16.0 IDs, test ownership and default-deny authority. Independent standard critique Complete/Pass; offline engineering ready, real-service/legal/human/live gates remain | 2026-10-15 |
 | [RAI remediation backlog coverage review](../../.copilot-tracking/github-issues/prds/rai-remediation/artifact-analysis.md) | Post-merge Functional Planner review: all thirteen tasks and 22 open checks map to twelve existing issues; owner review added chat issue 164; all thirteen body updates are now applied and verified, without enabling chat or implementing remediation. No issues were created. [Executed handoff](../../.copilot-tracking/github-issues/prds/rai-remediation/handoff.md) records completed owner review and verified issue updates; operational evidence gates remain. | 2026-10-15 |
 | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) | v0.21.0 merged unsigned draft: resident FR-053 to FR-062/AC-104 to AC-126 and Entra staff access FR-063/064/AC-127 to AC-132; NFR-013/014, CON-008, RULE-027/028 and OD-52-55. Counts: 64 FR, 132 AC, 14 NFR, 8 constraints, 28 rules, 13 goals, 55 OD. Routine policy remains OFF; identity, role ownership and assisted parity are proposed. Conditional workload/benefit scenarios are author judgement, no observed/cash/headcount claim. Original FAIL/Define BLOCKED, Govern NOT_EVALUATED, unsigned status and live gates remain | 2026-10-24 |
@@ -449,7 +626,8 @@ or infra acceptance claimed.
 | [System One Decision Models for Retrofit Agents](../ideas/typesafe-system-one-agent-fit.md) | Dated #58 selection/generation feasibility and parallel experiment boundaries retained; historical revision ca-properwarm-mvp--0000018 restored exactly, not renamed into a fictitious deployment. No calibrated benefit, production selection or blanket spending authority | 2026-10-13 |
 | [AMA mentor progress review](../presentations/ama-mentor-progress-review.pptx) | Published 15-slide deck, including the knowledge-organisation appendix, with Zava branding. Covers research, value challenge, governance, learning and mentor questions. #65 migration validation is recorded; 2026-10-13 audit confirms delivery bytes equal the working PPTX, superseding the earlier publish-blocked note. Existing narrative/layouts were not freshly redesigned. Maintained with `ama-mentor-deck`; working files remain under `.copilot-tracking/ppt/2026-09-26/ama-mentor-progress-review/` | Publication equality checked, 2026-10-13 |
 | [Native agent process map](../capstone/deck/draft/zava-forward-executive-draft.pptx) | Editable PowerPoint slide 13 in the historical 24-slide deck, retaining five native capability cards, human owners, on-request help, OFF-labelled proactive triggers and aligned deterministic workflow. [Retained preview](../capstone/deck/draft/agents-in-retrofit-process-native.png) and [text equivalent/value tests](../capstone/README.md#agents-in-the-retrofit-process-2026-10-13); original [SVG](../capstone/deck/draft/agents-in-retrofit-process.svg)/[PNG](../capstone/deck/draft/agents-in-retrofit-process.png) remain reference illustrations. Benefits hypotheses, not autonomous authority | 2026-10-24 |
-| [Cowork v2 capstone outputs](../capstone/deck/cowork-generated/README.md) | Owner-designated 54-slide v2 with [25 October paper/journey story review](../capstone/deck/cowork-generated/presentation-review-2026-10-25.md), graphical journey maps, seven corrected independent findings, current native PDF and 27 caller returns. Six cost-recovery slides remain byte-identical; the [required rebuild guard](../capstone/pitch/cowork-main-presentation/COWORK-BRIEF.md#required-cost-preservation-on-every-rebuild) passes. The qualitative full-criteria review is not a score or readiness finding. Research hypotheses, paused paper experiment, unknown accepted-outcome cost and prior adverse evidence remain explicit; rehearsal, access/legal/user acceptance and publication gates stay separate | 2026-10-25 |
+| [Cowork v2 capstone outputs](../capstone/deck/cowork-generated/README.md) | Owner-designated 54-slide v2 with [25 October paper/journey story review](../capstone/deck/cowork-generated/presentation-review-2026-10-25.md), graphical journey maps and seven corrected findings. The [29 October dated-claim review](./regulatory/reviewed-updates/2026-10-29-presentation-paper-claim-review.md) records unresolved source currentness, EPC/EHS discrepancies and the human legal-review boundary; presentation binaries remain unchanged | 2026-10-29 |
+| [Dated evidence review for the paper and Cowork v2 story](./regulatory/reviewed-updates/2026-10-29-presentation-paper-claim-review.md) | Claim table maps all regulatory, funding and sector rows in the source report; preserves source dates and report-level retrieval limits, flags known discrepancies, and routes legal interpretation to human review. Live official-source rechecks failed, so currentness is `unknown` | 2026-10-29 |
 | [Historical Zava Forward executive capstone deck](../capstone/deck/draft/zava-forward-executive-draft.pptx) | Superseded as the scoring candidate by the owner-selected Cowork v2 on 2026-10-23. Retained under draft with its process/architecture previews as historical evidence, not a v2 fallback or a fresh rehearsal, acceptance or score | 2026-10-24 |
 | [85-day roadmap](../case-study-85-day-roadmap.svg) | C-suite solution roadmap diagram, with its [Excalidraw source](../case-study-85-day-roadmap.excalidraw) | Binary file |
 
@@ -465,16 +643,18 @@ or infra acceptance claimed.
 | [Agent Request Challenge](./research/company/agent-request-challenge.md) | Role-agent challenge of the five requested agents: real problems, non-agent alternatives, bounded AI fit, shared foundation, value tests and stop criteria | 2026-09-26 |
 | [Agent What-If Study](./research/company/agent-what-if-study.md) | Follow-up thought experiment running 20 augmentation scenarios across the requested agents, from phone-captured evidence and structured invoices to funder integrations, sensors and call transcription, with role-agent clarification answers re-run against the current proposal, a value-versus-complexity grid and a reconciliation with the agent-led modernisation reframe; headline verdict unchanged after the post-merge review | 2026-09-27 |
 | [Pilot Measurement Challenge](./research/company/pilot-measurement-challenge.md) | Role-agent challenge of measuring acceleration with a dashboard, short history and non-pilot comparison, plus the owner's modernisation decision: Comparison 1 and 2, frozen protocol, benefits scorecard, guardrails, vanity metrics and history sources | 2026-09-26 |
+| [Cohort and Missing-Data Evaluation Review Pack](./research/evaluation/cohort-evaluation-review-pack.md) | DRAFT, unapproved, not executed owner review pack for issue #222 (v0.2.0 correction returned for owner approval): synthetic paired-scenario manifest, proposed held-out custody and independent reviewer protocol (roles unfilled), sample-size, error-rule and uncertainty options, critical-error and review-burden handling, Unknown-support policy proposal, AC traceability and owner checklist; no fairness evidence | 2026-10-20 |
 | [Retrofit Operating-Data Exercise Pack](./research/retrofit-synthetic-data/README.md) | Version 2.0.0: fifteen months of constructed operating records for 980 candidate homes. The case presents a professional team aware of bottlenecks but not where they occur. The pack covers the tracker, stage event log, property register, CRM contacts, supplier appointments, safety holds, QA and evidence, grant and finance, capacity, board reports and issues log, with realistic record-keeping imperfections, a data dictionary and a manifest. These records are for the exercise and are not evidence of actual company performance. The answer key and generator are held outside the knowledge base so analysis can stay blind. Stock-to-case link report and synthetic fabric attributes for the 60,000-home stock added; synthetic EPC, survey records and a seeded EPC conflict manifest added (#170); per-user chat and memory test fixtures (personas, threads, memory, isolation and deletion cases) added (#172) | 2026-10-15 |
 | [Program Manager Document Workspace Journey](./research/ux/program-manager-document-workspace-journey.md) | Stakeholder-informed JTBD analysis, journey map, accessibility requirements and design handoff for the repository-backed Program Workbench canvas. All behavioural findings remain reported or assumed pending direct user research | 2026-10-02 |
 | [Customer Journey Atlas and Company-Role Maps](./research/ux/customer-journeys/customer-journey-atlas.md) | Nine company-role contributions cover employees, professionals, residents/representatives, suppliers and external assurance readers: 28 stage-based maps, two missing subjourneys, motivations/pains/gains and 24 practical/exploratory agent requests with authority, fallback and non-AI comparisons. Snapshot provenance reconciled to Zava naming and current five-assistant operator evidence; no user/benefit validation or authority expansion | 2026-10-14 |
-| [Regulatory Literacy for Journey Users and Agents](./research/ux/regulatory-literacy-for-journeys.md) | What each journey role should know about current law, with the agent integration pattern (desk research, 2026-10-15) |
+| [Regulatory Literacy for Journey Users and Agents](./research/ux/regulatory-literacy-for-journeys.md) | Dated regulatory-literacy research and agent integration pattern; 2026-10-27 synthetic conflict-referral/usage delta retains human comprehension, approval and cards-only shipment boundaries |
 | [Zava Forward Prototype Profile Review](./research/ux/zava-forward-prototype-profile-review.md#screen-backlog-coverage-snapshot-2026-10-18-156) | #156 complete bounded issue inventory, captured 2026-10-18 before 04:13:45 UTC at source/base 2ca6d1c4: 184 issues (139 open/45 closed), 74 individual screen traces, 86 no-screen, 16 aggregate epics and eight explicitly reviewed surface choices. Exact journey/task-flow links or named gaps; all 74 current screen designs NOT SUPPLIED. Original eleven-profile/four-core-flow rows, decisions and Blocked gate preserved. Literal AC1 and design/human/accessibility/content/user acceptance remain open; closed #150 and historical H/engineering E are not approval | 2026-10-18 |
 | [Prototype Learnings and Simplicity Review](./research/ux/prototype-learnings-and-simplicity-review.md) | Historical simplicity/platform learning plus requested UX Designer draft review: exact-intent/tab-local recovery, owner/source reconciliation and unique #58 journeys absent from main. Corrects untested first-task claims; real AI/SQL/Azure, human UX and quality/value gates stay separate | 2026-10-13 |
 | [Zava Forward Workbench Design System Foundations](./research/ux/design-system.md) | Owner-selected Fluent 2 adoption supersedes the extend proposal (#150). Partial sourced token/native foundations; circle/O, square/W, triangle/! markers, explicit cluster safety counts and selected-filter words. Seven-state inventory and actual AI draft-review controls; synthetic local browser checks, not full Fluent runtime delivery or human accessibility acceptance | 2026-10-15 |
+| [Employee Case Workspace Redesign](./research/ux/employee-case-workspace-redesign.md) | Issue #526 specification and implementation boundary: six evidence-based journey steps, summary strip, nine retained tabs and consistent draft/proposal reviews. Constructed-data unit, browser/37-state axe, keyboard and actual 200% zoom checks pass after mobile spacing/focus corrections. No new journey/confidence API fields; chat answers retain their separate proposal-review route. Screen-reader, staff usability, live acceptance and publication gates remain separate | 2026-10-28 |
 | [Zava Forward Workbench WCAG 2.2 Conformance Baseline](./research/ux/wcag-conformance-baseline.md) | Proposed WCAG 2.2 AA target and scope, first audit with computed contrast, fixes (focus indicator, field border, chart table equivalent), automated check coverage, manual check record per role and accessibility statement draft with known gaps (issue #151). Owner confirmation, rendered scanner, and all screen-reader, zoom and target-size tests remain open; no conformance claim | 2026-10-15 |
 | [Zava Forward Workbench Content Standard, Glossary and Copy Audit](./research/ux/content-standard.md) | Plain-language content standard, status and next-action glossary, blocked-message pattern (reason, owner, next action), AI suggestion wording (SA-003, SA-004) and the core-flow copy audit (issue #153). Named human review of resident-facing wording, reading-age targets and user testing remain open | 2026-10-15 |
-| [Chat and Memory Data Protection Analysis Record](./research/chat-memory-dpia.md) | Draft DPIA working record for per-user chat and memory: data map, decision record with no lawful basis, notice, DPIA or retention recorded, rights handling, logging, provider and redaction. Provider terms not recorded; warning not wired into any UI; DPO and Legal decisions remain open (issue #163) | 2026-10-15 |
+| [Chat and Memory Data Protection Analysis Record](./research/chat-memory-dpia.md) | Draft only: [staff hardening boundary](./research/chat-memory-dpia.md#staff-chat-engineering-boundary-2026-10-27-refs-157162159164163) records canonical question warning, shared cited routes, default-deny dispatch, bounded context and content-free consumption receipts. No approved retention, lawful basis, notice, provider terms or DPIA; no live activation or human accessibility/evaluation acceptance (#157/#162/#159/#164/#163) | 2026-10-27 |
 | [Gap Analysis and Next Build](./research/gap-analysis-next-build.md) | Dated gaps/build direction and #65 recovery retained; PM/UX closure matrix pins four drafts, recommends learning-only retirement for #19/#24/#27 and keeps #58 unresolved with capability/requirement/evidence queue. No wholesale import, product acceptance or resource deletion | 2026-10-13 |
 | [Decision 1 Behaviour Specification](./research/decision-1-behaviour-specification.md) | Clean-rebuild contract linked to the overall application design: workbench/API integration, scoring versus generation, human review and application boundaries, tasks, thresholds, provider contract, guard, liabilities and tests | 2026-10-11 |
 | [Zava Forward API README](../../src/api/README.md) (split per project in M6 of #199: [core](../../src/core/README.md), [agents](../../src/agents/README.md), [orchestrator](../../src/orchestrator/README.md), [importer](../../src/importer/README.md)) | Continuing local/Azure application on retained constructed cases and private stock geography; real SQL/model evidence, Entra initialization, welcome/photo/account choice and current tests distinguished from historical snapshots. Full workflow, human, recovery, accessibility and production acceptance remain separate; evaluation dataset registry and seeded 60,000-home fixture added; frozen protocol, BG-011 MDE register, release decisions and breach pauses recorded (#126, no approvals claimed); importer Excel transition library (preview, quarantine, export, comparison) added for #80 with thresholds, UI and AI assist still open | 2026-10-15 |

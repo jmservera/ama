@@ -31,7 +31,7 @@ from zava_forward.core import resident_showcase_sql as rsql
 from zava_forward.core.mssqlstore import TABLES
 
 if TYPE_CHECKING:
-    from playwright.sync_api import Page
+    from playwright.sync_api import BrowserContext, Page
 
 FAKE_PASSWORD = "FAKE-TEST-FIXTURE-ONLY-not-a-real-demo-password"
 SQL_AUTHORIZATION_END = datetime(2026, 11, 1, tzinfo=UTC)
@@ -99,7 +99,8 @@ def database() -> Iterator[str]:
             run_sql(
                 name,
                 "INSERT INTO cases (id, seq, stage, area, wave, owner_code, closed, hazard,"
-                " postcode, address, body) VALUES (?, ?, 'Survey', 'A', 'W', 'O', 0, 0, 'P', 'A', ?)",
+                " postcode, address, body)"
+                " VALUES (?, ?, 'Survey', 'A', 'W', 'O', 0, 0, 'P', 'A', ?)",
                 f"SYN-{n}",
                 n,
                 body,
@@ -189,6 +190,45 @@ def sign_in_by_keyboard(page: Page, email: str, password: str) -> None:
     page.keyboard.press("Enter")
 
 
+def signed_in_session(context: BrowserContext, base: str) -> tuple[str, str]:
+    token = {c["name"]: c for c in context.cookies()}["__Host-zfdemo"]["value"]
+    response = context.request.get(base + "/demo/session")
+    check("session status succeeds before sign out", response.status == 200)
+    session = response.json()
+    session_id = session["session_id"]
+    check(
+        "session is signed in before sign out",
+        session["signed_in"] is True and isinstance(session_id, str) and bool(session_id),
+    )
+    check(
+        "original session fence authenticates before sign out",
+        context.request.get(
+            base + "/demo/view", headers={"X-Resident-Session": session_id}
+        ).status == 200,
+    )
+    return token, session_id
+
+
+def check_signed_out(context: BrowserContext, base: str, token: str, session_id: str) -> None:
+    check(
+        "sign out retains the original session cookie",
+        {c["name"]: c["value"] for c in context.cookies()}.get("__Host-zfdemo") == token,
+    )
+    check(
+        "retained signed-out token cannot authenticate",
+        context.request.get(
+            base + "/demo/view", headers={"X-Resident-Session": session_id}
+        ).status == 401,
+    )
+    response = context.request.get(base + "/demo/session")
+    check("signed-out session status succeeds", response.status == 200)
+    session = response.json()
+    check(
+        "session reports signed out without an active session ID",
+        session["signed_in"] is False and session["session_id"] is None,
+    )
+
+
 def main() -> None:
     from playwright.sync_api import sync_playwright
 
@@ -264,7 +304,15 @@ def check_sign_in_and_cookies(browser: Any, base: str) -> None:
     )
     check(
         "cookies are returned on the next request",
-        context.request.get(base + "/demo/view").status == 200,
+        context.request.get(
+            base + "/demo/view",
+            headers={
+                "X-Resident-Session": context.request.get(base + "/demo/session").json()[
+                    "session_id"
+                ]
+            },
+        ).status
+        == 200,
     )
     check("unavailable actions are disabled buttons", page.locator("button[disabled]").count() >= 1)
     page.locator("#account > summary").click()
@@ -311,7 +359,7 @@ def check_cross_case_and_logout(browser: Any, base: str) -> None:
     page_a.wait_for_selector("#signin:not([hidden])")
     sign_in_by_keyboard(page_a, "alice.demo@example.com", FAKE_PASSWORD)
     page_a.wait_for_selector("#content:not([hidden])")
-    token_a = {c["name"]: c for c in ctx_a.cookies()}["__Host-zfdemo"]["value"]
+    token_a, session_id_a = signed_in_session(ctx_a, base)
     ctx_b, page_b, _ = new_page(browser)
     page_b.goto(base + "/")
     page_b.wait_for_selector("#signin:not([hidden])")
@@ -341,17 +389,28 @@ def check_cross_case_and_logout(browser: Any, base: str) -> None:
         "sign out returns to the sign-in form with no data",
         "Alder Close" not in page_a.inner_text("body"),
     )
-    check("session cookie is cleared", "__Host-zfdemo" not in {c["name"] for c in ctx_a.cookies()})
+    check_signed_out(ctx_a, base, token_a, session_id_a)
     replay = browser.new_context()
     check(
         "signed-out token cannot be replayed",
         replay.request.get(
-            base + "/demo/view", headers={"Cookie": "__Host-zfdemo=" + token_a}
+            base + "/demo/view",
+            headers={
+                "Cookie": "__Host-zfdemo=" + token_a,
+                "X-Resident-Session": session_id_a,
+            },
         ).status
         == 401,
     )
     check(
-        "other resident session is unaffected", ctx_b.request.get(base + "/demo/view").status == 200
+        "other resident session is unaffected",
+        ctx_b.request.get(
+            base + "/demo/view",
+            headers={
+                "X-Resident-Session": ctx_b.request.get(base + "/demo/session").json()["session_id"]
+            },
+        ).status
+        == 200,
     )
     replay.close()
     ctx_a.close()
@@ -365,6 +424,7 @@ def check_logout_failure(browser: Any, base: str) -> None:
         page.wait_for_selector("#signin:not([hidden])")
         sign_in_by_keyboard(page, "alice.demo@example.com", FAKE_PASSWORD)
         page.wait_for_selector("#content:not([hidden])")
+        token, session_id = signed_in_session(ctx, base)
         if status is None:
             page.route("**/demo/logout", lambda route, _request: route.abort())
         else:
@@ -408,10 +468,7 @@ def check_logout_failure(browser: Any, base: str) -> None:
         page.locator("#account > summary").click()
         page.click("#signout")
         page.wait_for_selector("#signin:not([hidden])")
-        check(
-            f"sign-out succeeds after a failed attempt ({label})",
-            "__Host-zfdemo" not in {c["name"] for c in ctx.cookies()},
-        )
+        check_signed_out(ctx, base, token, session_id)
         ctx.close()
 
 

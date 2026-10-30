@@ -1,0 +1,11 @@
+{
+  "agent": {
+    "cpu": 2
+  },
+  "createTime": "2026-10-27T09:12:03.541378+00:00",
+  "finishTime": "2026-10-27T09:12:15.735447+00:00",
+  "runErrorMessage": "failed during run, err: exit status 1",
+  "runId": "dbf",
+  "startTime": "2026-10-27T09:12:03.743491+00:00",
+  "status": "Failed"
+}

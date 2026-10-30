@@ -50,7 +50,8 @@ Zava Forward demonstrator, infrastructure and supporting tools.
   `docs/reference/research/company/company-profile-research.md`.
 * `.github/agents/ama-*` are AMA helper agents with knowledge extracted from the AMA trainings.
 * `src/` holds the migrated Zava Forward projects (`core`, `agents`, `api`, `orchestrator`, `importer`), each with its
-  README; `mvp/` keeps only a pointer README until deleted at cut-over; `infra/` contains
+  README; the legacy directories were retired at owner-approved cut-over on
+  2026-10-27 (archive `v0.21.0`, see `README.md`); `infra/` contains
   Bicep and initialization helpers; `tools/` contains migration and authoring
   tools. Their READMEs define current commands and evidence boundaries.
 
@@ -169,6 +170,12 @@ request. Do not commit or push directly to `main`.
 * Let the pull request checks, including the rubric scoring workflow, run
   before merge. Address review feedback with further commits on the same
   branch.
+* Link each pull request to the issues it delivers. Use `Closes #N` only when
+  the PR's reviewed evidence proves every acceptance criterion of that issue,
+  and `Refs #N` with the unmet criteria otherwise; never use a closing keyword,
+  even negated, for an unmet issue. After merge, tick the proven criteria and
+  close issues whose criteria are all proven, so the open-issue count reflects
+  delivered work.
 * Leave the merge decision to the owner. Do not merge, force-push or rewrite
   `main` history unless the owner asks.
 

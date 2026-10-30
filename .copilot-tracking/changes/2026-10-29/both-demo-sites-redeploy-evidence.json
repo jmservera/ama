@@ -1,0 +1,810 @@
+{
+  "credential_cleanup": {
+    "no_local_image_export_tar_left": true,
+    "no_owned_auth_config_left": true
+  },
+  "date": "2026-10-29",
+  "executor_path": "/home/azureuser/.copilot/session-state/3897222c-2d62-4e25-a059-eecfbdce51d0/files/redeploy.py",
+  "executor_sha256": "135857a344db3590bd4786e9a9cdf97929539a979903255742095072c671f7c4",
+  "external_evidence_root": "/home/azureuser/.copilot/session-state/3897222c-2d62-4e25-a059-eecfbdce51d0/files/redeploy-20261029",
+  "inventory_notes": {
+    "employee": {
+      "baseline_names": [
+        "ca-cutover-test-demo-api--wncofr9",
+        "ca-cutover-test-demo-api--0000001",
+        "ca-cutover-test-demo-api--0000002",
+        "ca-cutover-test-demo-api--0000003",
+        "ca-cutover-test-demo-api--0000004",
+        "ca-cutover-test-demo-api--0000005",
+        "ca-cutover-test-demo-api--0000006",
+        "ca-cutover-test-demo-api--emp-20261028-102834",
+        "ca-cutover-test-demo-api--rollback-20261028-103137",
+        "ca-cutover-test-demo-api--emp-reapply-20261028-110058"
+      ],
+      "captured": "2026-10-29T07:26:01.669735+00:00",
+      "method": "Retrospective --all inventory partitioned by immutable createdTime before recorded update intent; initial backup was active-only"
+    },
+    "resident": {
+      "baseline_names": [
+        "ca-resident-demo--22wz6xv",
+        "ca-resident-demo--0000001",
+        "ca-resident-demo--0000002",
+        "ca-resident-demo--0000003"
+      ],
+      "captured": "2026-10-29T07:26:04.491686+00:00",
+      "method": "Fresh --all inventory captured before resident mutation"
+    }
+  },
+  "private_backup_hashes": {
+    "acr-before.json": "d8ebaeaa73aa55aa9b4245654765fc7ff32d27d39c454e0c9f882ee7ba7e1e54",
+    "acr-final.json": "c4609eb1e01ad1b5efa096edb67d8062e313a1830034a26171be8024bb0cf426",
+    "employee-app-before.json": "4f1276d506a00be23c198f38737711f019fb67633bdb24a850d03f89e2c78f80",
+    "employee-app-final.json": "bb6da318033c86917eb9a35c24916506ba8e38cf1dd31320ee64529b3cc76c97",
+    "employee-auth-before.json": "a468a00cd80df19d1aaec0e1138cd0f576cb238e57ee5eca630a37e169b9fb28",
+    "employee-revision-after.json": "03abed0704e5ee079ef6d2667da36a9cc950e683bffc730f4e27bfc735754b40",
+    "employee-revision-inventory-baseline.json": "542db5bde1ab8f25c25a222590e9173823099a1fea3162bb0f8fb9f70c66316d",
+    "employee-revisions-after.json": "572f54b50fecef21384944b3d7670108946f9af2c1639d81c3c6992f12cb8fec",
+    "employee-revisions-before.json": "9d499cafbed011fbbbc676fdfdc73530212a12cb47f58c69093e62a34d80baf6",
+    "resident-app-before.json": "ae960cfd9bb094306d87079d08299b8ffd04903fc37b25dc5a1c4f7e596e9d63",
+    "resident-app-final.json": "2a5dff329575a4efe5c1952c645604335f3570cf67efa14bc80d9311b3a9f538",
+    "resident-auth-before.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+    "resident-recovery-revision-after.json": "8fbc22ec639a2d567c75519d15349934821178f787950a139690a4159efadcf9",
+    "resident-recovery-revisions-after.json": "95fb2ab5ed2d9bbd6df7034877a1b80b1373138f613d422213e9f708b4007f11",
+    "resident-revision-after.json": "9b026f2131463defc54388fba51eecc8e828dec7c8ffa8ef5dcee435ab9a90f0",
+    "resident-revision-inventory-baseline.json": "ec92e9c277d550d20abc8520e05af6cb6c8b283ed615e18438cec608b92023f2",
+    "resident-revisions-after.json": "e15d38aee2bca9cc99d4a7eb2a4f790809dcbf34674a547e399c998e2546c634",
+    "resident-revisions-before.json": "fa3d8ed2c2d51d652e519e4f79f5da63b58a9513f758affd0cff3236ede7ebb6"
+  },
+  "raw_configuration_not_committed": true,
+  "records": {
+    "baseline-summary": {
+      "acr_exclusions": [
+        "systemData",
+        "provisioningState",
+        "status"
+      ],
+      "acr_projection_sha256": "6c90667eb84b9a98b3b62997e25aee07c805f4c75bdee586176a25a423fa0fba",
+      "app_exclusions": [
+        "systemData",
+        "properties.latestRevisionName",
+        "properties.latestReadyRevisionName",
+        "properties.latestRevisionFqdn",
+        "properties.provisioningState",
+        "properties.runningStatus"
+      ],
+      "apps": {
+        "employee": {
+          "app_projection_sha256": "4410295198c76a92b1aac5e3a759d8e825f75f064eb33585be3269ad95a254e1",
+          "before_image": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:e6b6e7440c2b64577e96b6322c852bf630f1c5113608267132ebffc07d39fa19",
+          "before_revision": "ca-cutover-test-demo-api--emp-reapply-20261028-110058",
+          "configuration_sha256": "a6d6ee4873446b58494755ddd46075ad02a74a31864f471e4eeee171d1156b99",
+          "env_count": 30,
+          "host": "ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io",
+          "identity_sha256": "979f2da617dc8ba2eaca3d9b7d84c09ee3811679c6a36851b81843402d3e5536",
+          "max_replicas": 4,
+          "min_replicas": 0,
+          "name": "ca-cutover-test-demo-api",
+          "secret_definition_count": 1,
+          "secretref_count": 0,
+          "template_sha256": "794cb3b7dd1171415d2b8754da86ce1d9c489629ddc5faed24f8cebec1245388"
+        },
+        "resident": {
+          "app_projection_sha256": "099d344e70738bfeccf310b0faab9bdf9a9d42855ed93f9e7e7a5ceb2f2fc760",
+          "before_image": "crcutovertestrzsrg.azurecr.io/zava-resident-demo@sha256:fab6a85318f65db006bc610f3b3aff8ae799046d1b9a1813662b3b315c1b6fc7",
+          "before_revision": "ca-resident-demo--0000003",
+          "configuration_sha256": "1aa63ccd8d88d58dd1bfc1b2c623481fce999840657ee568117dee84d2432ecd",
+          "env_count": 10,
+          "host": "ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io",
+          "identity_sha256": "db5c7ae82cf89714f51582f0c8dc97210f2c6095065d752283477accb5251189",
+          "max_replicas": 1,
+          "min_replicas": 0,
+          "name": "ca-resident-demo",
+          "secret_definition_count": 2,
+          "secretref_count": 2,
+          "template_sha256": "cd1e144a5b815fe65f1ced5d62487ef0fbf8b7a9b7a0917b7438ee32de93e772"
+        }
+      },
+      "comparator_sha256": "57d4b45161379d42607bd500fddc78d351bb22aca0915d7bc0d59ad405d46838",
+      "source": "d70ee60ab3d7346a9991cf64382d9985f4d09f2e",
+      "src_tree": "6684959daaa64df7f8768c4fddb24406f198a308",
+      "time": "2026-10-29T07:19:08.110900+00:00"
+    },
+    "build-result": {
+      "completed": "2026-10-29T07:20:07.874174+00:00",
+      "images": {
+        "employee": {
+          "config_id": "sha256:41db94689ae934e3daa6c7f8fb57d8de5cc58a53995efd50217189231ac1f0c1",
+          "context": "src/",
+          "dockerfile": "src/api/Dockerfile",
+          "platform": "linux/amd64",
+          "source_label_equal": true,
+          "tag": "crcutovertestrzsrg.azurecr.io/zava-forward-api:employee-main-d70ee60a-20261029-071923"
+        },
+        "resident": {
+          "config_id": "sha256:1c0881a9855ce7ffcaad26da06422a7c7be7d9cf536073ec9c5d955889882354",
+          "context": "src/",
+          "dockerfile": "src/api/Dockerfile.resident-demo",
+          "platform": "linux/amd64",
+          "source_label_equal": true,
+          "tag": "crcutovertestrzsrg.azurecr.io/zava-resident-demo:resident-main-d70ee60a-20261029-071923"
+        }
+      },
+      "source": "d70ee60ab3d7346a9991cf64382d9985f4d09f2e",
+      "started": "2026-10-29T07:19:23.201829+00:00"
+    },
+    "employee-deploy-original-verification": {
+      "added_revisions": [
+        "ca-cutover-test-demo-api--emp-main-20261029-072248"
+      ],
+      "app": "ca-cutover-test-demo-api",
+      "app_provisioning": "Succeeded",
+      "auth_equal": true,
+      "comparator_sha256": "a40376db92a04eb7fccd35d4e5eb29eb3b6aa089d1abe186be5acd3d3e4c3258",
+      "completed": "2026-10-29T07:23:56.333760+00:00",
+      "exactly_one_added_revision": true,
+      "image": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:41db94689ae934e3daa6c7f8fb57d8de5cc58a53995efd50217189231ac1f0c1",
+      "latest_equals_ready_equals_target": true,
+      "latest_revision_fqdn_expected": true,
+      "logs": {
+        "revision": "ca-cutover-test-demo-api--emp-main-20261029-072248",
+        "time": "2026-10-29T07:23:50.375974+00:00",
+        "types": {
+          "console": {
+            "available": true,
+            "positive_startup_count": 1,
+            "records": 3,
+            "scope": "selected revision/container",
+            "startup_error_count": 0,
+            "target_records": 3
+          },
+          "system": {
+            "available": true,
+            "positive_startup_count": 0,
+            "records": 29,
+            "scope": "app records filtered by revision",
+            "startup_error_count": 0,
+            "target_records": 13
+          }
+        }
+      },
+      "probes": {
+        "host": "ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io",
+        "routes": {
+          "/": {
+            "expected": false,
+            "status": 200
+          },
+          "/app": {
+            "expected": true,
+            "status": 401
+          },
+          "/app.js": {
+            "expected": true,
+            "status": 401
+          },
+          "/healthz": {
+            "expected": true,
+            "status": 200
+          },
+          "/ops.js": {
+            "expected": true,
+            "status": 401
+          }
+        },
+        "time": "2026-10-29T07:23:48.856349+00:00"
+      },
+      "ready_container_observed": true,
+      "recovery": false,
+      "removed_revisions": [],
+      "replica_count": 1,
+      "revision": "ca-cutover-test-demo-api--emp-main-20261029-072248",
+      "revision_state": {
+        "active": true,
+        "healthState": "Healthy",
+        "provisioningState": "Provisioned",
+        "replicas": 1,
+        "runningState": "Running",
+        "trafficWeight": 100
+      },
+      "revision_template_equal": false,
+      "started": "2026-10-29T07:23:04.856681+00:00",
+      "success": false,
+      "unexpected_changed_paths": []
+    },
+    "employee-deploy-result": {
+      "added_revisions": [
+        "ca-cutover-test-demo-api--emp-main-20261029-072248"
+      ],
+      "app": "ca-cutover-test-demo-api",
+      "app_provisioning": "Succeeded",
+      "auth_equal": true,
+      "comparator_sha256": "12da508f25a73295c8f584cb4bdab2dc41c3020ba4b4d1fcbad0e53f30016b10",
+      "completed": "2026-10-29T07:26:13.829753+00:00",
+      "exactly_one_added_revision": true,
+      "image": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:41db94689ae934e3daa6c7f8fb57d8de5cc58a53995efd50217189231ac1f0c1",
+      "latest_equals_ready_equals_target": true,
+      "latest_revision_fqdn_expected": true,
+      "logs": {
+        "revision": "ca-cutover-test-demo-api--emp-main-20261029-072248",
+        "time": "2026-10-29T07:26:09.244448+00:00",
+        "types": {
+          "console": {
+            "available": true,
+            "positive_startup_count": 1,
+            "records": 3,
+            "scope": "selected revision/container",
+            "startup_error_count": 0,
+            "target_records": 3
+          },
+          "system": {
+            "available": true,
+            "positive_startup_count": 0,
+            "records": 29,
+            "scope": "app records filtered by revision",
+            "startup_error_count": 0,
+            "target_records": 11
+          }
+        }
+      },
+      "probes": {
+        "host": "ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io",
+        "routes": {
+          "/": {
+            "expected": true,
+            "sha256": "c38290f27474fe2097645f8b7cdff481f95852ae39247afd642b50491a4d629a",
+            "signin_link": true,
+            "static_main_welcome_equal": true,
+            "status": 200
+          },
+          "/app": {
+            "expected": true,
+            "status": 401
+          },
+          "/app.js": {
+            "expected": true,
+            "status": 401
+          },
+          "/healthz": {
+            "expected": true,
+            "status": 200
+          },
+          "/ops.js": {
+            "expected": true,
+            "status": 401
+          }
+        },
+        "time": "2026-10-29T07:26:08.708064+00:00"
+      },
+      "ready_container_observed": true,
+      "recovery": false,
+      "removed_revisions": [],
+      "replica_count": 1,
+      "revision": "ca-cutover-test-demo-api--emp-main-20261029-072248",
+      "revision_state": {
+        "active": true,
+        "healthState": "Healthy",
+        "provisioningState": "Provisioned",
+        "replicas": 1,
+        "runningState": "Running",
+        "trafficWeight": 100
+      },
+      "revision_template_comparison": {
+        "app_template_protected_separately": true,
+        "service_representation_paths": [
+          "customMetricsSettings",
+          "containers[0].imageType",
+          "containers[0].resources.ephemeralStorage",
+          "scale.cooldownPeriod",
+          "scale.pollingInterval",
+          "revisionSuffix (null on revision GET)"
+        ],
+        "unexpected_changed_paths": []
+      },
+      "revision_template_equal": true,
+      "started": "2026-10-29T07:26:04.563001+00:00",
+      "success": true,
+      "unexpected_changed_paths": []
+    },
+    "employee-final-log-summary": {
+      "revision": "ca-cutover-test-demo-api--emp-main-20261029-072248",
+      "time": "2026-10-29T07:43:51.422014+00:00",
+      "types": {
+        "console": {
+          "available": true,
+          "event_reasons": [],
+          "positive_startup_count": 1,
+          "records": 3,
+          "scope": "selected revision/container",
+          "startup_error_count": 0,
+          "target_records": 3
+        },
+        "system": {
+          "available": true,
+          "event_reasons": [],
+          "positive_startup_count": 0,
+          "records": 2,
+          "scope": "app records filtered by revision",
+          "startup_error_count": 0,
+          "target_records": 0
+        }
+      }
+    },
+    "employee-push-attempt1-result": {
+      "app": "employee",
+      "cleanup_errors": [],
+      "closed": "2026-10-29T07:20:51.023033+00:00",
+      "credential_config_removed": true,
+      "exception_seconds": 21.7,
+      "opened": "2026-10-29T07:20:29.321660+00:00",
+      "policy_exactly_restored": true,
+      "success": false
+    },
+    "employee-push-result": {
+      "app": "employee",
+      "cleanup_errors": [],
+      "closed": "2026-10-29T07:21:59.262924+00:00",
+      "continuation": "Read-only manifest admission after successful push and identifier-tooling failure; no re-push",
+      "credential_config_removed": true,
+      "exception_seconds": 18.81,
+      "image": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:41db94689ae934e3daa6c7f8fb57d8de5cc58a53995efd50217189231ac1f0c1",
+      "local_config_id": "sha256:d02236b5242ce91dd11a4df013277593c4abd87b3c6938eaf3442e4721eac3ef",
+      "local_image_id": "sha256:41db94689ae934e3daa6c7f8fb57d8de5cc58a53995efd50217189231ac1f0c1",
+      "manifest_config_digest": "sha256:d02236b5242ce91dd11a4df013277593c4abd87b3c6938eaf3442e4721eac3ef",
+      "manifest_config_local_id_equal": true,
+      "manifest_digest": "sha256:41db94689ae934e3daa6c7f8fb57d8de5cc58a53995efd50217189231ac1f0c1",
+      "old_manifest_preserved": "sha256:e6b6e7440c2b64577e96b6322c852bf630f1c5113608267132ebffc07d39fa19",
+      "opened": "2026-10-29T07:21:40.456194+00:00",
+      "platform_manifest_digest": "sha256:60b806cec50071591904f6697efa2eb18f6de52f87742685951391af4ece879e",
+      "policy_exactly_restored": true,
+      "push_remote_repodigest_equal": true,
+      "source": "d70ee60ab3d7346a9991cf64382d9985f4d09f2e",
+      "success": true,
+      "tag": "crcutovertestrzsrg.azurecr.io/zava-forward-api:employee-main-d70ee60a-20261029-071923"
+    },
+    "employee-verification-072604": {
+      "added_revisions": [
+        "ca-cutover-test-demo-api--emp-main-20261029-072248"
+      ],
+      "app": "ca-cutover-test-demo-api",
+      "app_provisioning": "Succeeded",
+      "auth_equal": true,
+      "comparator_sha256": "7fa5ae815ba179fa9f55fba409b5be78c7a7a1ecb76487507b4b99dfe9d98142",
+      "completed": "2026-10-29T07:24:49.690054+00:00",
+      "exactly_one_added_revision": false,
+      "image": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:41db94689ae934e3daa6c7f8fb57d8de5cc58a53995efd50217189231ac1f0c1",
+      "latest_equals_ready_equals_target": true,
+      "latest_revision_fqdn_expected": true,
+      "logs": {
+        "revision": "ca-cutover-test-demo-api--emp-main-20261029-072248",
+        "time": "2026-10-29T07:24:44.509630+00:00",
+        "types": {
+          "console": {
+            "available": true,
+            "positive_startup_count": 1,
+            "records": 3,
+            "scope": "selected revision/container",
+            "startup_error_count": 0,
+            "target_records": 3
+          },
+          "system": {
+            "available": true,
+            "positive_startup_count": 0,
+            "records": 29,
+            "scope": "app records filtered by revision",
+            "startup_error_count": 0,
+            "target_records": 11
+          }
+        }
+      },
+      "probes": {
+        "host": "ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io",
+        "routes": {
+          "/": {
+            "expected": true,
+            "sha256": "c38290f27474fe2097645f8b7cdff481f95852ae39247afd642b50491a4d629a",
+            "signin_link": true,
+            "static_main_welcome_equal": true,
+            "status": 200
+          },
+          "/app": {
+            "expected": true,
+            "status": 401
+          },
+          "/app.js": {
+            "expected": true,
+            "status": 401
+          },
+          "/healthz": {
+            "expected": true,
+            "status": 200
+          },
+          "/ops.js": {
+            "expected": true,
+            "status": 401
+          }
+        },
+        "time": "2026-10-29T07:24:43.947118+00:00"
+      },
+      "ready_container_observed": true,
+      "recovery": false,
+      "removed_revisions": [
+        "ca-cutover-test-demo-api--emp-reapply-20261028-110058"
+      ],
+      "replica_count": 1,
+      "revision": "ca-cutover-test-demo-api--emp-main-20261029-072248",
+      "revision_state": {
+        "active": true,
+        "healthState": "Healthy",
+        "provisioningState": "Provisioned",
+        "replicas": 1,
+        "runningState": "Running",
+        "trafficWeight": 100
+      },
+      "revision_template_comparison": {
+        "app_template_protected_separately": true,
+        "service_representation_paths": [
+          "customMetricsSettings",
+          "containers[0].imageType",
+          "containers[0].resources.ephemeralStorage",
+          "scale.cooldownPeriod",
+          "scale.pollingInterval",
+          "revisionSuffix (null on revision GET)"
+        ],
+        "unexpected_changed_paths": [
+          "scale.cooldownPeriod",
+          "scale.pollingInterval"
+        ]
+      },
+      "revision_template_equal": false,
+      "started": "2026-10-29T07:24:38.632115+00:00",
+      "success": false,
+      "unexpected_changed_paths": []
+    },
+    "final-result": {
+      "acr_exact_policy_equality": true,
+      "acr_exclusions": [
+        "systemData",
+        "provisioningState",
+        "status"
+      ],
+      "app_exclusions": [
+        "systemData",
+        "properties.latestRevisionName",
+        "properties.latestReadyRevisionName",
+        "properties.latestRevisionFqdn",
+        "properties.provisioningState",
+        "properties.runningStatus"
+      ],
+      "apps": {
+        "employee": {
+          "added_revisions": [
+            "ca-cutover-test-demo-api--emp-main-20261029-072248"
+          ],
+          "auth_equal": true,
+          "exactly_one_forward_revision": true,
+          "image": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:41db94689ae934e3daa6c7f8fb57d8de5cc58a53995efd50217189231ac1f0c1",
+          "latest_main_deployed": true,
+          "max_replicas": 4,
+          "min_replicas": 0,
+          "protected_fields_equal": true,
+          "removed_revisions": [],
+          "revision": "ca-cutover-test-demo-api--emp-main-20261029-072248",
+          "rollback_revision_count": 0
+        },
+        "resident": {
+          "added_revisions": [
+            "ca-resident-demo--res-main-20261029-072628",
+            "ca-resident-demo--rollback-20261029-073718"
+          ],
+          "auth_equal": true,
+          "exactly_one_forward_revision": true,
+          "image": "crcutovertestrzsrg.azurecr.io/zava-resident-demo@sha256:fab6a85318f65db006bc610f3b3aff8ae799046d1b9a1813662b3b315c1b6fc7",
+          "latest_main_deployed": false,
+          "max_replicas": 1,
+          "min_replicas": 0,
+          "protected_fields_equal": true,
+          "removed_revisions": [],
+          "revision": "ca-resident-demo--rollback-20261029-073718",
+          "rollback_revision_count": 1
+        }
+      },
+      "comparator_sha256": "7d5195743ca40a25ded078d07b923b8e5cb10a7881d182ba8ceb1336a150115e",
+      "outcome": "Partial: employee latest main; resident old image recovered after actual startup failure",
+      "requested_redeploy_complete": false,
+      "safety_checks_passed": true,
+      "source": "d70ee60ab3d7346a9991cf64382d9985f4d09f2e",
+      "time": "2026-10-29T07:43:13.356246+00:00"
+    },
+    "local-config-result": {
+      "images": {
+        "employee": {
+          "config_digest": "sha256:d02236b5242ce91dd11a4df013277593c4abd87b3c6938eaf3442e4721eac3ef",
+          "docker_save_config_path": "blobs/sha256/d02236b5242ce91dd11a4df013277593c4abd87b3c6938eaf3442e4721eac3ef",
+          "identifier_note": "Docker containerd image-store Id is OCI index digest, not config digest",
+          "local_image_id": "sha256:41db94689ae934e3daa6c7f8fb57d8de5cc58a53995efd50217189231ac1f0c1",
+          "source_label_equal": true
+        },
+        "resident": {
+          "config_digest": "sha256:207f7ca16fbe8f87753e7a389e6e2165cdaacaeb4a6c1be77f236199fd61afc8",
+          "docker_save_config_path": "blobs/sha256/207f7ca16fbe8f87753e7a389e6e2165cdaacaeb4a6c1be77f236199fd61afc8",
+          "identifier_note": "Docker containerd image-store Id is OCI index digest, not config digest",
+          "local_image_id": "sha256:1c0881a9855ce7ffcaad26da06422a7c7be7d9cf536073ec9c5d955889882354",
+          "source_label_equal": true
+        }
+      },
+      "source": "d70ee60ab3d7346a9991cf64382d9985f4d09f2e",
+      "time": "2026-10-29T07:21:29.577511+00:00"
+    },
+    "resident-deploy-result": {
+      "added_revisions": [
+        "ca-resident-demo--res-main-20261029-072628"
+      ],
+      "app": "ca-resident-demo",
+      "app_provisioning": "Succeeded",
+      "auth_equal": true,
+      "comparator_sha256": "dcfa0014751f4f006f8b2a78364086b4439a0cd3ca92fcda94fac058e6cbd629",
+      "completed": "2026-10-29T07:37:16.772141+00:00",
+      "exactly_one_added_revision": true,
+      "image": "crcutovertestrzsrg.azurecr.io/zava-resident-demo@sha256:1c0881a9855ce7ffcaad26da06422a7c7be7d9cf536073ec9c5d955889882354",
+      "latest_equals_ready_equals_target": false,
+      "latest_revision_fqdn_expected": true,
+      "logs": {
+        "revision": "ca-resident-demo--res-main-20261029-072628",
+        "time": "2026-10-29T07:37:12.580322+00:00",
+        "types": {
+          "console": {
+            "available": false,
+            "error_type": "RuntimeError"
+          },
+          "system": {
+            "available": true,
+            "event_reasons": [
+              "ContainerCreated",
+              "ContainerStarted",
+              "ContainerTerminated",
+              "KEDAScaleTargetDeactivated",
+              "PulledImage",
+              "PullingImage"
+            ],
+            "positive_startup_count": 2,
+            "records": 23,
+            "scope": "app records filtered by revision",
+            "startup_error_count": 0,
+            "target_records": 11
+          }
+        }
+      },
+      "probes": {
+        "host": "ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io",
+        "routes": {
+          "/": {
+            "expected": false,
+            "no_embedded_json_script": true,
+            "password_input": true,
+            "sha256": "25f9c35518aa36da8a1f3ebf29d2b5fb449971708c8c5eb8c772a9674d8866d1",
+            "signin_marker": true,
+            "static_main_shell_equal": false,
+            "status": 200,
+            "synthetic_marker": true
+          },
+          "/healthz": {
+            "expected": true,
+            "status": 200
+          }
+        },
+        "time": "2026-10-29T07:37:12.371264+00:00"
+      },
+      "ready_container_observed": false,
+      "recovery": false,
+      "removed_revisions": [],
+      "replica_count": 0,
+      "revision": "ca-resident-demo--res-main-20261029-072628",
+      "revision_state": {
+        "active": true,
+        "healthState": "None",
+        "provisioningState": "Provisioned",
+        "replicas": 0,
+        "runningState": "ActivationFailed",
+        "trafficWeight": 100
+      },
+      "revision_template_comparison": {
+        "app_template_protected_separately": true,
+        "service_representation_paths": [
+          "customMetricsSettings",
+          "containers[0].imageType",
+          "containers[0].resources.ephemeralStorage",
+          "scale.cooldownPeriod",
+          "scale.pollingInterval",
+          "containers[0].probes (exactly equal old revision platform defaults)",
+          "revisionSuffix (null on revision GET)"
+        ],
+        "unexpected_changed_paths": [
+          "containers[0].env[3].value",
+          "containers[0].env[4].value"
+        ]
+      },
+      "revision_template_equal": false,
+      "runtime_failure": {
+        "health": "None",
+        "provisioning": "Provisioned",
+        "running": "ActivationFailed"
+      },
+      "started": "2026-10-29T07:37:07.563074+00:00",
+      "success": false,
+      "unexpected_changed_paths": [
+        "properties.template.containers[0].env[3].value",
+        "properties.template.containers[0].env[4].value"
+      ]
+    },
+    "resident-isolated-startup": {
+      "exit": 2,
+      "import_errors": [],
+      "missing_config_refusal": true,
+      "no_cloud_environment_supplied": true
+    },
+    "resident-push-result": {
+      "app": "resident",
+      "cleanup_errors": [],
+      "closed": "2026-10-29T07:22:25.834012+00:00",
+      "credential_config_removed": true,
+      "exception_seconds": 19.8,
+      "image": "crcutovertestrzsrg.azurecr.io/zava-resident-demo@sha256:1c0881a9855ce7ffcaad26da06422a7c7be7d9cf536073ec9c5d955889882354",
+      "local_config_id": "sha256:207f7ca16fbe8f87753e7a389e6e2165cdaacaeb4a6c1be77f236199fd61afc8",
+      "local_image_id": "sha256:1c0881a9855ce7ffcaad26da06422a7c7be7d9cf536073ec9c5d955889882354",
+      "manifest_config_digest": "sha256:207f7ca16fbe8f87753e7a389e6e2165cdaacaeb4a6c1be77f236199fd61afc8",
+      "manifest_config_local_id_equal": true,
+      "manifest_digest": "sha256:1c0881a9855ce7ffcaad26da06422a7c7be7d9cf536073ec9c5d955889882354",
+      "old_manifest_preserved": "sha256:fab6a85318f65db006bc610f3b3aff8ae799046d1b9a1813662b3b315c1b6fc7",
+      "opened": "2026-10-29T07:22:06.037860+00:00",
+      "platform_manifest_digest": "sha256:997fa7342028a1a4d487e4bb1a3eeddde5af7569d6f1819a8e8ea4ef86340003",
+      "policy_exactly_restored": true,
+      "push_remote_repodigest_equal": true,
+      "source": "d70ee60ab3d7346a9991cf64382d9985f4d09f2e",
+      "success": true,
+      "tag": "crcutovertestrzsrg.azurecr.io/zava-resident-demo:resident-main-d70ee60a-20261029-071923"
+    },
+    "resident-recovery-command": {
+      "attempts": 1,
+      "success": false,
+      "time": "2026-10-29T07:37:19.759334+00:00"
+    },
+    "resident-recovery-intent": {
+      "attempt": 1,
+      "image": "crcutovertestrzsrg.azurecr.io/zava-resident-demo@sha256:fab6a85318f65db006bc610f3b3aff8ae799046d1b9a1813662b3b315c1b6fc7",
+      "method": "ARM PATCH exact writable backup template; no env CLI normalization",
+      "removed_readonly_request_fields": [
+        "containers[].imageType",
+        "containers[].resources.ephemeralStorage"
+      ],
+      "restoring_own_cli_added_empty_value_paths": [
+        "properties.template.containers[0].env[3].value",
+        "properties.template.containers[0].env[4].value"
+      ],
+      "suffix": "rollback-20261029-073718",
+      "time": "2026-10-29T07:37:18.865923+00:00",
+      "trigger": {
+        "health": "None",
+        "provisioning": "Provisioned",
+        "running": "ActivationFailed"
+      }
+    },
+    "resident-recovery-result": {
+      "added_revisions": [
+        "ca-resident-demo--rollback-20261029-073718"
+      ],
+      "app": "ca-resident-demo",
+      "app_provisioning": "Succeeded",
+      "auth_equal": true,
+      "comparator_sha256": "dcfa0014751f4f006f8b2a78364086b4439a0cd3ca92fcda94fac058e6cbd629",
+      "completed": "2026-10-29T07:42:28.715448+00:00",
+      "exactly_one_added_revision": true,
+      "image": "crcutovertestrzsrg.azurecr.io/zava-resident-demo@sha256:fab6a85318f65db006bc610f3b3aff8ae799046d1b9a1813662b3b315c1b6fc7",
+      "latest_equals_ready_equals_target": true,
+      "latest_revision_fqdn_expected": true,
+      "logs": {
+        "revision": "ca-resident-demo--rollback-20261029-073718",
+        "time": "2026-10-29T07:42:23.274880+00:00",
+        "types": {
+          "console": {
+            "available": true,
+            "event_reasons": [],
+            "positive_startup_count": 0,
+            "records": 3,
+            "scope": "selected revision/container",
+            "startup_error_count": 0,
+            "target_records": 3
+          },
+          "system": {
+            "available": true,
+            "event_reasons": [
+              "AssigningReplica",
+              "ContainerCreated",
+              "ContainerStarted",
+              "KEDAScalersStarted",
+              "ProbeFailed",
+              "PulledImage",
+              "PullingImage",
+              "RevisionReady"
+            ],
+            "positive_startup_count": 1,
+            "records": 33,
+            "scope": "app records filtered by revision",
+            "startup_error_count": 0,
+            "target_records": 13
+          }
+        }
+      },
+      "probes": {
+        "host": "ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io",
+        "routes": {
+          "/": {
+            "boundary": "Restored old-image public shell; current-main byte equality not required or claimed",
+            "expected": true,
+            "no_embedded_json_script": true,
+            "password_input": true,
+            "sha256": "25f9c35518aa36da8a1f3ebf29d2b5fb449971708c8c5eb8c772a9674d8866d1",
+            "signin_marker": true,
+            "static_main_shell_equal": false,
+            "status": 200,
+            "synthetic_marker": true
+          },
+          "/healthz": {
+            "expected": true,
+            "status": 200
+          }
+        },
+        "time": "2026-10-29T07:42:23.048778+00:00"
+      },
+      "ready_container_observed": true,
+      "recovery": true,
+      "removed_revisions": [],
+      "replica_count": 1,
+      "revision": "ca-resident-demo--rollback-20261029-073718",
+      "revision_state": {
+        "active": true,
+        "healthState": "Healthy",
+        "provisioningState": "Provisioned",
+        "replicas": 1,
+        "runningState": "RunningAtMaxScale",
+        "trafficWeight": 100
+      },
+      "revision_template_comparison": {
+        "app_template_protected_separately": true,
+        "service_representation_paths": [
+          "customMetricsSettings",
+          "containers[0].imageType",
+          "containers[0].resources.ephemeralStorage",
+          "scale.cooldownPeriod",
+          "scale.pollingInterval",
+          "containers[0].probes (exactly equal old revision platform defaults)",
+          "revisionSuffix (null on revision GET)"
+        ],
+        "unexpected_changed_paths": []
+      },
+      "revision_template_equal": true,
+      "started": "2026-10-29T07:41:38.619899+00:00",
+      "success": true,
+      "unexpected_changed_paths": []
+    },
+    "resident-recovery-schema-correction": {
+      "attempt": 2,
+      "corrected_field": "template.customMetricsSettings null is CLI-only, absent in raw API GET",
+      "error_codes": [],
+      "exit": 0,
+      "known_field_mentions": [],
+      "new_revision_before_request": false,
+      "success": true,
+      "time": "2026-10-29T07:41:31.136006+00:00"
+    },
+    "source-export": {
+      "archive_sha256": "8f0d0ba0f419b83fb6ad5f481f4660077eba1564a0a010202847d364362c147e",
+      "no_untracked_inputs": true,
+      "source": "d70ee60ab3d7346a9991cf64382d9985f4d09f2e",
+      "src_tree": "6684959daaa64df7f8768c4fddb24406f198a308",
+      "tracked_paths": 388
+    }
+  },
+  "source": "d70ee60ab3d7346a9991cf64382d9985f4d09f2e",
+  "task_id": "3897222c-2d62-4e25-a059-eecfbdce51d0",
+  "task_slug": "both-demo-sites-redeploy"
+}

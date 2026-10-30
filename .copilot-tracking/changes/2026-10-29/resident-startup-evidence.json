@@ -1,0 +1,90 @@
+{
+  "date": "2026-10-29",
+  "task_id": "f568fbf4-e1b7-45d5-ae08-d7034d24a85b",
+  "source_base": "d70ee60ab3d7346a9991cf64382d9985f4d09f2e",
+  "image_source_tree": "6684959daaa64df7f8768c4fddb24406f198a308",
+  "image": "ama-resident-startup:main-d70ee60a",
+  "image_id": "sha256:e7308bca68dc315405b2054f51497d0eb02fe33c21c8c4b6e21d485abfc6def2",
+  "docker_version": "29.9.0",
+  "python_version": "3.12.3",
+  "ruff_version": "0.17.1",
+  "mypy_version": "2.4.0",
+  "build_command": "docker build --progress=plain -f src/api/Dockerfile.resident-demo -t ama-resident-startup:main-d70ee60a src",
+  "runtime_user": "10001:10001",
+  "heavy_admission": "flock -n -E 75 /tmp/ama-rpi-heavy.lock",
+  "setting_names_only": [
+    "PORT",
+    "ZF_DEMO_ALLOWED_HOSTS",
+    "ZF_DEMO_CLIENT_ADDRESS",
+    "ZF_DEMO_EXPIRES_AT",
+    "ZF_DEMO_PASSWORD_VERIFIER",
+    "ZF_DEMO_SESSION_KEY",
+    "ZF_SQL_AUTH",
+    "ZF_SQL_CLIENT_ID",
+    "ZF_SQL_DATABASE",
+    "ZF_SQL_SERVER"
+  ],
+  "dummy_msi_network_none": {
+    "exit_code": 2,
+    "passed_configuration": true,
+    "failure": "SQL read failed (InterfaceError)",
+    "azure_authentication_proven": false
+  },
+  "same_image_sql_comparison": {
+    "sql": "task-owned loopback SQL Server, constructed records, password authentication",
+    "old_template_source": "9bfed518^:infra/sql/resident-showcase.sql",
+    "old_view": {
+      "column_count": 16,
+      "exit_code": 2,
+      "startup_stderr": "Refusing to start: SQL read failed (ProgrammingError).",
+      "local_driver_detail": "Invalid column name 'documents_json'.",
+      "http_bound": false
+    },
+    "current_view_only_update": {
+      "template": "infra/sql/resident-showcase.sql",
+      "column_count": 17,
+      "running": true,
+      "bind": "0.0.0.0:8089",
+      "health": 200,
+      "image_healthcheck_command": 200,
+      "public_shell": 200,
+      "unsigned_view": 401,
+      "wrong_host_health": 403
+    }
+  },
+  "validation": [
+    {"check": "core ruff check .", "exit_code": 0},
+    {"check": "core ruff format --check .", "exit_code": 0, "formatted_files": 104},
+    {"check": "core mypy", "exit_code": 0, "source_files": 157},
+    {"check": "api ruff check .", "exit_code": 0},
+    {"check": "api ruff format --check .", "exit_code": 0, "formatted_files": 56},
+    {"check": "api mypy", "exit_code": 0, "source_files": 106},
+    {"check": "core unittest discover -s tests -p test_resident*.py -v", "exit_code": 0, "total": 306, "skipped": 88},
+    {"check": "api unittest discover -s tests -p test_resident*.py -v", "exit_code": 0, "total": 135, "skipped": 7},
+    {"check": "core unittest tests.test_dependency_rule -q", "exit_code": 0, "total": 2, "skipped": 0},
+    {"check": "api unittest tests.test_dependency_rule -q", "exit_code": 0, "total": 2, "skipped": 0},
+    {"check": "core ZF_TEST_MSSQL=1 unittest tests.test_resident_showcase_sql -v", "exit_code": 0, "total": 34, "skipped": 0},
+    {"check": "api python -m checks.resident_demo_image_check", "exit_code": 0, "assertions": 22}
+  ],
+  "discovery_skip_disposition": "Opt-in SQL/Azure/browser tests skipped in general discovery; the relevant complete resident-showcase SQL module was rerun against the task-owned local server with zero skips. Other integration suites are not passes claimed here.",
+  "external_root": "/home/azureuser/.copilot/session-state/f568fbf4-e1b7-45d5-ae08-d7034d24a85b/files",
+  "external_sha256": {
+    "resident-main-build.log": "202f30b9f73c2b4f5eed8502a3ca96e032fb6970735494d5975713df7990cfe3",
+    "resident-sql-probe-main-d70ee60a.json": "742393545ba6ad8da4a8b555bb1c4a67fc13b87498ce8428b29191ba361edf93",
+    "core-resident-sql.log": "670638ceb1d6a061a9a96f253c32424baaaa9cd2aa70e8f9a5328c2f97554515",
+    "resident-image-check.log": "8e553ffab1f44dd77d96d940ca3e3c11d53557111160ceafc961c7bf3a091db1",
+    "static-core.log": "8357c0be70b041068b4c21d981d389b353a0d3898a2f174841060ee5d91b6816",
+    "static-api.log": "07c1d5b2c0dc5847b309ffecdce222e5780d60426e5b7a4fa1ff0cb18b94cdec",
+    "unit-core.log": "a09358c5fc18ce211a0f9b5ee33d23a6da9b09b17382821343b2d4ff62202d18",
+    "unit-api.log": "082d20c9699394a3a96e5dce428ac442ef5d7151a359bba590727769477a1b63"
+  },
+  "owned_containers_removed": true,
+  "existing_image_check_owned_image_removed": true,
+  "baseline_diagnostic_image_retained_for_evidence": true,
+  "production_runtime_changed": false,
+  "azure_commands_or_changes": false,
+  "secrets_or_private_data_read": false,
+  "push": false,
+  "full_publication_gate": "not run: no-az/no-push local boundary; no publication receipt or approval claimed",
+  "azure_historical_cause": "unverified; local sufficient failure isolated"
+}

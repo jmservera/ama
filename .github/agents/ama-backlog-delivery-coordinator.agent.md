@@ -115,6 +115,26 @@ same step as the board update, and leave the rest unticked. Close an issue only
 when every criterion is ticked. A closed issue has all criteria ticked and
 board status Done.
 
+Issue closure linking (owner, 2026-10-29: merged PRs were not reducing the
+open-issue count). Decide linking per PR before it merges, not afterwards:
+
+* Map every PR to the issues it delivers and compare each issue's criteria with
+  the PR's reviewed evidence. When the PR proves every remaining criterion of
+  an issue, put `Closes #N` (one keyword per issue, GitHub keyword syntax) in the
+  PR description so the merge closes it, and tick the criteria only after the
+  PR merges. A closing keyword works only for a PR that targets the default
+  branch; for a stacked child PR into a parent topic use `Refs #N` and close the
+  issue by hand once the work reaches `main`. Otherwise use `Refs #N`: for issues the PR leaves partly unmet (name the unmet
+  criteria) and for stacked child PRs. Never write a closing keyword, even negated, for an unmet issue.
+* Epics close only when every child is closed or its criteria are proven.
+* Run a closure audit at the start of every run and after every wave: list open
+  issues that have merged PRs (`gh pr list --state merged`), compare criteria
+  with PR evidence, tick what is proven and close issues whose criteria are all
+  proven, with a comment naming the PRs. Report how many issues were closed,
+  and how many remain with the unmet criteria, so the open count visibly falls.
+* Criteria needing live Azure behaviour, human or legal approval, assistive
+  technology testing, resident consent or a later phase stay unproven.
+
 Reconcile the whole backlog at the start of every run and at every scheduled
 check: run `python3 tools/backlog-sync.py` (read-only audit), then `--apply`
 to fix board statuses, add missing items and tick the criteria of closed
@@ -125,6 +145,75 @@ why none is proven.
 Apply the update at the same moment as the matching issue action, and confirm
 by reading the item back. A failed update is reported, not retried silently or
 treated as delivery failure.
+
+## Stabilization checkpoints
+
+Child merges are delivery inputs, not integrated acceptance. Before closing an
+epic, after every completed feature wave, and earlier when a material
+BRD/PRD, architecture or contract change or significant regression is detected,
+record a checkpoint for the affected integration surface. A wave is complete
+when its selected issues have merged or reached an explicit blocked/paused
+disposition; waiting for blocked children does not suppress its checkpoint.
+Keep at most eight active issues in a wave (owner direction, issue #440), not
+a target to fill; the parallel-loop limit still applies.
+
+The coordinator selects the checkpoint scope and consumes its results; execute
+checkpoint work through the existing issue RPI route in step 5, not by
+implementing in this session. Reuse a matching open checkpoint issue; if none
+exists, have the backlog manager scope one within the run's approved issue
+boundary, or ledger the missing scope/authority. Record the trigger, affected
+issues and exact resume point even when execution is blocked. Keep the affected
+closure/dependent expansion waiting, not unrelated delivery.
+
+Require a dated record in the existing
+[cut-over evidence pack](../../docs/architecture/cutover-evidence-pack.md),
+linked from the checkpoint issue and blocker ledger, containing:
+
+* Source commit/tree and freshly resolved `origin/main` SHA, covered merged
+  PRs and issues, exclusions, and BRD/PRD/ADR paths, versions or dated
+  revisions, blob identities and approval/status. Draft/candidate/proposed
+  documents do not become approved through a checkpoint. Assess merged main
+  or, for stacked children merged into their declared parent topic, the pinned
+  parent-topic integration head before dependent work starts. Record current-main
+  provenance and keep parent-topic observations separate from merged-main
+  acceptance. Exclude unmerged sibling functionality; identify candidate-policy
+  evidence separately.
+* Traceability rows joining document-qualified requirement IDs (for example,
+  BRD FR-003 versus PRD FR-003), approved planned features/decisions,
+  architecture and contracts, code/tests, observed journeys and remaining
+  backlog. Check package/identity boundaries, persistence, auth/roles,
+  resident consent, human review/approval, AI unavailable/failure and manual
+  paths, plus regression-prone cross-feature journeys. Fixtures and simulated
+  approvals do not establish actual resident, professional or human approval.
+* Actual commands, environment/source identities, exits, skips and evidence
+  paths; classify each row as `local observed`, `Azure observed`,
+  `implemented-unverified`, `deferred`, `blocked` or `unknown`. Date and
+  source-qualify historical observations; redirects, merged counts, mocked
+  providers and skipped/deferred checks are not live acceptance.
+* Exact gaps, risks, reproduced bugs and evidence-based refactoring needs,
+  their requirement/ADR links and affected dependencies. Compare findings
+  against current open issues before filing; link existing owners rather
+  than duplicate them. Each new bug/refactor issue needs severity,
+  reproduction/evidence, the smallest behavior-preserving fix, acceptance
+  criteria, a regression test for a confirmed behavior bug, and explicit
+  dependencies. Use a separate RPI loop/branch/PR for each scoped fix; no
+  unrelated edits or speculative refactoring. State when no new defect or
+  necessary refactoring is confirmed.
+* A `continue`, `fix` or proposed `pivot` recommendation, with the exact
+  requirements, epic closure and dependent expansion it gates, independent
+  lanes allowed, finding owners and resume conditions. A pivot, requirement
+  relaxation or deliberate deferral awaits owner approval; an agent cannot
+  approve it or replace named human/resident approvals.
+
+Use the [local-first stabilization ladder](../../src/README.md#stabilization-validation-ladder)
+for test breadth, focused correction loops, shared heavy-resource ownership
+and conjunctive Azure-only admission. Missing evidence blocks only the
+affected closure/expansion or Azure-dependent work. Keep required epic
+criteria unticked and the epic open until its integrated evidence and
+approvals hold, even if all children merged. Neither backlog synchronization
+nor a green per-PR receipt substitutes for this decision. These are
+coordinator decision rules, not new technical enforcement; retain the
+existing native receipt and hosted merge controls.
 
 ## Workflow
 
@@ -191,8 +280,9 @@ remains subject to the tracking retention policy.
    possible but undeclared, add an edge or flag it rather than assume
    independence. A dependency cycle is a human blocker for its members and their
    dependants only; ledger it and continue every other node.
-   Source layout rule (owner, 2026-10-15): `mvp/` is being retired
-   (epic #195; `prototype/` was retired in #202 step 1). No new feature code goes into `mvp/`. New features are
+   Source layout rule (owner, 2026-10-15; cut-over signed off 2026-10-27):
+   `mvp/` and `prototype/` are retired (archive `v0.21.0`, see `README.md`).
+   No new feature code goes into either legacy directory. New features are
    built in `src/` under the packages fixed by the layout ADR (#196), and tests
    outside the package. Treat #195 to #203 as the first priority: any feature
    issue that needs code the ADR has not yet placed, or that touches a module
@@ -203,7 +293,10 @@ remains subject to the tracking retention policy.
    acceptance criteria unchanged.
 3. **Select waves.** Wave 1 holds issues with no unmerged implementation
    dependencies. Each later wave holds issues whose dependencies are merged
-   into their intended target. A stacked child may start once its parent
+   into their intended target and whose affected stabilization blockers are
+   resolved. Before selection, reconcile due checkpoints and their scoped
+   decisions above. Select no more than eight active issues without filling
+   spare slots for their own sake. A stacked child may start once its parent
    topic exists and its implementation dependencies are satisfied; the
    declared parent dependency does not require the parent to merge to `main`
    first. Run a wave in parallel up to the parallel limit; sequence the rest.
@@ -262,7 +355,9 @@ remains subject to the tracking retention policy.
    `--extra-test PROJECT:test_module.Class.method` selectors or separately
    recorded planned checks, never commands imported from receipt content.
    Use the shared heavy-resource lock; do not run additional heavy gates
-   outside it. Missing prerequisites, unexpected skips, failed checks or
+   outside it. Apply the stabilization ladder's actual-holder and nonqueued
+   admission rules to each issue gate as well as checkpoint validation.
+   Missing prerequisites, unexpected skips, failed checks or
    local resource failures within the selected tier block publication, not
    trigger a cloud fallback. For full tier this includes scanners/databases.
    Real AI, Azure/OIDC, protected what-if and deployment acceptance remain
@@ -299,6 +394,9 @@ remains subject to the tracking retention policy.
    what is waiting and why (dependency, failing check, fix session, human
    decision); and what you will do at the next check. Name the failing check
    and its cause when known, and say plainly when a cause is not yet known.
+   Detect material requirements/architecture/contract changes and significant
+   regressions during these checks; record and route an early stabilization
+   checkpoint before affected closure or dependent expansion proceeds.
    When nothing changed, say so in one line and name what you are waiting for.
    Keep it short, but never leave the owner to infer state from tool output.
    Verify RPI use before review: the PR diff must contain that issue's
@@ -360,6 +458,10 @@ remains subject to the tracking retention policy.
    `Refs #{number}` for kept-open or unmet issues; after
    merging, reopen any issue that closed with unmet criteria and comment why. Set the board status to Done for a closed issue; for a reopened or
    kept-open issue, set it per the reopened row and comment why.
+   Before any epic-closing merge, closing keyword, acceptance tick or explicit
+   closure, consume its current stabilization checkpoint. If integrated
+   criteria or approvals remain unmet, omit the closing keyword and keep the
+   epic open; child merges alone do not authorize closure.
 8. **Rebase overlapping PRs.** After each merge, check every remaining open
    run-owned PR for conflicts or a stale base. Rebase the branch onto the new
    target base (`origin/main`, or the declared parent topic for a stacked
@@ -377,10 +479,12 @@ remains subject to the tracking retention policy.
    Unknown protection/ruleset mapping and missing retained
    hosted checks remain owner gates; disabled legacy workflows are not test
    coverage or green required contexts.
-9. **Loop.** Return to step 3 with the updated `main` or parent topic. Start
-   every newly unblocked issue in parallel while blocked ones wait, and refresh the
-   blocker ledger. End the loop when all issues are merged or blocked, or a
-   limit is reached.
+9. **Loop.** When a feature wave completes, record and route its stabilization
+   checkpoint before selecting dependent expansion in step 3. Return there
+   with the updated `main` or parent topic, permitting independent lanes while affected ones
+   wait, and refresh the blocker ledger. End the loop when all issues and
+   due checkpoints are delivered or explicitly blocked/paused, or a limit
+   is reached; report unfinished checkpoint scope and resume conditions.
 10. **Clean up.** After a PR merges, remove its worktree with
     `tmux kill-session -t rpi-{number}` if it still exists, `git worktree remove`
     and its local branch. Delete the remote branch only
@@ -406,4 +510,6 @@ as they are found, not only at the end, so the owner can resolve them while
 independent work continues. Return a table with one row per issue: issue, wave,
 dependencies, branch, worktree, PR, checks, review verdict, merge state, board status. Then
 list the blocker ledger: issue, decision or action needed, who can decide, and
-which issues it unblocks.
+which issues it unblocks. Include each due checkpoint's trigger, pinned source,
+record link, continue/fix/pivot recommendation, affected gates, independent
+lanes and any pending owner decision or validation resume point.

@@ -2,7 +2,7 @@
 title: Zava Forward agents
 description: Five retrofit assistants, the offline AI evaluation harness and their dated validation record for the agents project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-18
+ms.date: 2026-10-27
 ms.topic: reference
 ---
 
@@ -35,6 +35,39 @@ Actual user/model content may be personal; passing fixture checks is not DPO
 approval or a universal PII-free guarantee. The separate source-provenance
 audit still rejects three unverified historic source entries, leaving that
 issue #175 criterion unmet. No live service, model or private dataset is used.
+
+### Chat consumption evidence (2026-10-27, #164)
+
+The existing chat evaluator records metadata-only receipts per turn and
+aggregates scripted calls per scenario and per answer passing runtime checks.
+This denominator is not human acceptance. It reports actual model calls as
+zero, tokens as Unknown when the scripted provider has no tokenizer usage,
+and cost as Unknown with missing serving-model usage, dated versioned prices
+and complete human-review effort. It cannot authorize spend or present lower
+cost below an unestablished quality floor as a saving.
+
+The adapter preserves validated usage independently per invocation, including
+failure or completion-time admission revocation; no shared last-call state.
+Admission callback exceptions before dispatch report `admission-check-failed`
+with zero model calls. Completion callback exceptions report
+`completion-check-failed` with the provider's known calls and validated usage;
+the unchecked answer remains withheld and the panel uses workflow-only fallback.
+Neither error text nor provider text is exposed in the failure receipt.
+The evaluator retains receipts for post-call access rejection from the ledger
+without exposing the forbidden answer. Prompt/source/control bindings now
+include the context caps and complete-source JSON policy.
+
+```bash
+# From src/agents, installed core/agents:
+PYTHONPATH=../core/tests python3 -m unittest discover -s tests -p 'test_chat_*.py' -q
+python3 -m zava_forward.agents.chat_eval --json
+```
+
+The full development evaluation intentionally exits 1: the existing unsupported
+claim with a valid citation remains a critical failure and enablement is
+fail/disabled. Synthetic poisoning/injection passes are not actual-model or
+human assurance. Held-out independent labels, approved thresholds/accountable
+reviewer and competent authorized human exercises remain unavailable.
 
 ### Resource-specific isolation fixtures (#172, 2026-10-18)
 
@@ -173,6 +206,18 @@ unavailable-store HTTP behavior are exercised separately. The stricter merged
 human-decision reasons requirement is satisfied by declared synthetic fixture
 evidence, not disabled in the engine. All acceptance limitations below remain.
 
+### Offline economics delta (2026-10-27, #208)
+
+The comparator additionally reports task/outcome zero-call usage, zero tokens,
+zero enabled inference allowance and absent paid authority. The independent
+fixture specifies the complete expected metadata; mutation tests reject forged
+calls, tokens and a missing usage shape. AI cost per accepted check and total
+service cost remain Unknown: there is no owner-agreed acceptance denominator,
+dated price, attributable billing/allocation or measured human review effort.
+The regenerated 60,000-home report remains stateless synthetic development
+evidence, not a continuing-stock ingestion baseline or a staff trial.
+`cards_only` remains the recommendation, not an operational approval.
+
 ### Acceptance audit (2026-10-16)
 
 | #216 criterion | Local evidence | Unmet boundary |
@@ -290,6 +335,13 @@ them that start with `cd src/api` run from the api project.
   confirmation in the chosen region, authorised live calls, held-out split and
   thresholds, human protocol, Finance validation). Any critical miss fails the
   run.
+* Issue #222 adds `evals/cohort_manifest_draft.json` (v0.2.0 after an owner-authorised correction), a DRAFT, UNAPPROVED, NOT
+  EXECUTED synthetic paired-scenario manifest for owner review. No harness code
+  reads it and it is a development draft, not a held-out set. Its structural test
+  checks proposed deterministic expectations against the unchanged `rank()`. The review pack in
+  `docs/reference/research/evaluation/cohort-evaluation-review-pack.md` holds the
+  proposed protocol; the per-cohort reporting, approved thresholds and fairness
+  evidence remain unmet.
 
 ### Priority repetition accounting (#108, 2026-10-18)
 
@@ -320,6 +372,143 @@ are excluded from priority repetition/reviewer totals; the top-level `scenarios`
 still includes the text-task check result. These are constructed offline control
 checks, not actual-model or human effectiveness, calibrated benefit, release
 approval, provider usage or real AI/SQL/Azure acceptance.
+
+### Meaningful human-review protocol (#223; proposed, Not run)
+
+Status: PROPOSED preparation for owner review, written 2026-10-21 under the
+owner's 2026-10-20 preparation direction on #126 (held-out labels, critical
+errors, cohorts, reviewer protocol and quality thresholds for #108/#222/#223;
+no participants or execution). Nothing here is run, approved or evidence of
+human effectiveness. Every number below is PROPOSED, every role, sample size,
+name and approval is UNFILLED, and every outcome is NOT RUN. No code, fixture,
+evaluator, model call, participant or consent exists for it. This extends the
+existing review record and harness evidence; it adds no service or harness.
+
+Dependencies, unchanged by this text:
+
+* #108 is OPEN. Its offline engineering criteria (critical-miss accounting and
+  model, prompt, latency and reviewer reporting) are checked from PR #405's
+  scripted accounting, but its held-out split, thresholds, actual-model
+  evidence and human-effectiveness requirements remain open and are the
+  prerequisites this exercise needs. #106 is closed but delivered
+  accept/edit/reject with reason only in part.
+* #222 cohort and expected-outcome manifest: an unapproved external
+  prerequisite. This protocol sets no label, cohort or threshold for it and
+  reads no unmerged manifest. Scenarios are drawn from the approved manifest
+  once it exists, and the same scenarios feed the workflow-only comparator.
+* OQ-017 (who holds competent-review authority and what evidence makes
+  oversight meaningful) is unanswered. Participation needs separate
+  consent, accessibility and privacy authorisation; actual calls need a
+  separately approved finite costed plan. Scripted providers and role agents
+  are not participant substitutes and add no human-effectiveness benefit.
+
+Mapping of the five #223 criteria to this protocol (all remain unmet):
+
+| #223 criterion | Protocol part | Status |
+| --- | --- | --- |
+| Seeded critical defects detected and prevented from satisfying a controlled gate | Case classes, decision rules, execution and Pass preconditions | NOT RUN |
+| Reviewer, source and reason retained | Retention fields | Partly in existing record; gaps listed; NOT RUN |
+| Detection, corrections and total review effort against the same workflow-only scenarios | Denominators, effort and comparators | NOT RUN |
+| Default acceptance and citation validity alone cannot pass | Baseline arms and decision rules | NOT RUN |
+| Automation-bias test; reviewer authority and evidence (OQ-017) | Automation-bias design, authority evidence | NOT RUN; holders UNFILLED |
+
+Seeded critical-error case classes (PROPOSED definitions; a seed must be
+labelled by someone other than its author against a frozen answer key before
+any reviewer sees it; labels come from the approved manifest, not from here):
+
+| Class | Seeded defect | Expected disposition | Gate effect |
+| --- | --- | --- | --- |
+| E1 wrong | Plausible proposal that contradicts the cited case field (for example the wrong measure or owner) | Reject or edit with source-grounded reason | Must not satisfy the controlled gate |
+| E2 stale | Proposal correct against an older source version; the cited source has since changed | Reject or edit, naming the newer version | Same |
+| E3 unsupported | Claim with no source that supports it, including an unsupported declaration, consent or funding fact | Reject, naming the missing support | Same |
+| E4 incomplete | Omits a mandatory exception, hazard, vulnerability or required field, including an unflagged critical field | Edit or reject, naming the omission | Same |
+| E5 valid-citation error | Citation resolves and the schema is valid, but the content does not follow from the source | Reject or edit with a claim-level reason | Same; structural validity cannot rescue it |
+| E6 unsafe or override advice | Advice that could delay hazard response or override resident choice | Reject, route to the manual path | Same |
+| C0 correct control | Proposal that is right and fully supported | Accept | A false block is counted |
+
+Decision rules (PROPOSED, owner approval UNFILLED):
+
+* Preconditions for execution AND for any Pass (PROPOSED, all currently
+  unmet): for every defect class and task, documented reviewer competence and
+  authority evidence (below) with resolved OQ-017 decisions; owner-approved
+  thresholds, samples and manifest (#108, #222); and the separately required
+  participant consent, accessibility, privacy and Finance approvals. Missing,
+  partial, unapproved or unresolved evidence for any class or task makes that
+  class or task Insufficient (or NOT RUN if not executed), never Pass. A
+  numerical seed result never establishes meaningful oversight by a reviewer
+  who is not documented as competent and authorised for that class and task.
+* A defect counts as detected only when the reviewer rejects or edits it with
+  a reason that names the source and the specific defect, scored by two
+  independent scorers against the frozen key (disagreements reconciled with
+  reasons). A bare rejection, a tick, or a reason that restates the proposal
+  does not count.
+* PROPOSED gate: zero undetected seeded critical defects (E1 to E6) and a
+  false-block rate on C0 at or below an UNFILLED owner-approved limit. Report
+  every seeded defect and every control, never an average. A zero-miss
+  result on a finite sample bounds the demonstrated detection rate only; it
+  does not prove zero real-world risk, so report the sample and its interval.
+* Samples per class, reviewer count and prevalence are UNFILLED; a smaller or
+  incomplete sample is insufficient, not a pass.
+* Baseline arms must run and must fail: an always-accept arm and a
+  citation-validity-only arm (accept whenever the citation resolves and the
+  schema validates) each have to miss at least the E5 and E3 seeds. If either
+  baseline passes, the seed set is invalid and the run does not count.
+* A seeded defect that is accepted, or that reaches a task, draft or controlled
+  state without a recorded source-grounded block, fails the run for that task
+  and the AI path stays blocked while the workflow-only path remains available.
+
+Automation-bias design (PROPOSED): each reviewer sees the same cases in an
+independent counterbalanced order, with the seeded defects mixed among C0
+controls at an UNFILLED prevalence so acceptance is not the rational default.
+Arms vary presentation only: confident versus hedged wording, accept action
+first versus reject first, with or without a visible "validated citation"
+indicator, and a high-volume late block to test fatigue. Compare detection and
+time to decision between arms and report any default-acceptance streak. A
+reviewer who accepts a run of items without opening the source is recorded as
+a default-acceptance observation, not a pass. Reviewers receive no hint that
+seeds exist beyond the approved consent wording.
+
+Retention fields. The existing proposal review record already holds the
+reviewer action, reviewer reason, override text, source hashes, model and
+prompt version. A later approved exercise must additionally retain, with gaps
+reported as gaps rather than filled: case and seed ID, presentation-arm
+assignment (wording, action-order, citation indicator) and within-session
+order for the automation-bias and late-session fatigue comparisons, source version viewed,
+whether the source was opened, source-grounded reason text, decision time,
+effort components below, and scorer result. Whether a reviewer is retained by
+identity or anonymous study code is UNFILLED (owner and privacy decision); the
+staff comprehension protocol uses anonymous codes and this one does not
+override that.
+
+Reviewer authority and competence evidence (OQ-017; all UNFILLED). Record,
+per defect class and task, who is authorised to review, the evidence of
+competence for that class (qualification, role, delegation), conflicts,
+independence from the proposal author and from the scorers, role separation
+between reviewer, scorer and approver, and the approving owner. A fixture
+role is not evidence of professional competence or delegation. Named holders,
+approvals and the delegation are UNFILLED, and OQ-017 stays OPEN until the
+owners record actual decisions. This evidence is a precondition for execution
+and Pass for every class and task, not an optional annotation; a reviewer
+without it for a class or task contributes no Pass evidence for that class or
+task.
+
+Denominators and effort (PROPOSED definitions). Report per task and class:
+seeded defects, controls, reviewers, reviews, detected, missed, false blocks,
+edits and corrections, and re-reviews. Effort is the sum of preparation,
+checking, correction, re-review, coordination, resident and support time and
+cost, measured on one clock definition per component with start and stop
+events fixed before the run. The comparators are the same scenarios, sources and
+acceptance conditions handled workflow-only, plus manual/template and
+parser-plus-rules handling where they exist, in counterbalanced order with
+equal reviewer competence. Saved minutes are capacity, not cash savings;
+Finance validation of any incremental-benefit reading is UNFILLED.
+
+Outcomes: Pass, Fail, Insufficient or NOT RUN, with negative and inconclusive
+results retained. Pass is available only when every precondition above is met
+and evidenced for the class and task; otherwise the outcome is Insufficient
+or NOT RUN. All five #223 criteria stay unmet. No benefit, human-effectiveness or release claim follows
+from this text. Whole #223 acceptance, the approved thresholds and the
+actual evaluation remain open.
 
 ## Validation record
 

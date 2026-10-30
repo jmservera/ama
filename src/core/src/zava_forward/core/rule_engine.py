@@ -9,6 +9,8 @@ from collections import defaultdict
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
+from zava_forward.core.regulatory_usage import offline_usage
+
 KINDS = ("hazard-awareness-clock", "automated-decision-safeguard")
 AUDIENCES = {
     KINDS[0]: ("Building Safety Liaison", "Resident Liaison Officer", "Retrofit Programme Manager"),
@@ -328,7 +330,7 @@ class RuleEngine:
                     result = source_state
                     if not eligible or spec is None:
                         result = "unknown"
-                    rows = (
+                    rows: list[dict[str, Any]] = (
                         evaluate(spec["kind"], spec, facts, now)
                         if eligible and spec is not None and result == "active"
                         else [
@@ -366,6 +368,12 @@ class RuleEngine:
                             label=card["label"],
                             audience=list(
                                 AUDIENCES.get(spec["kind"] if spec else card["card_id"], ())
+                            ),
+                            usage=offline_usage(
+                                "regulatory-check",
+                                str(ENGINE_VERSION),
+                                r["result"],
+                                now.isoformat(),
                             ),
                         )
                         self.sql.run(

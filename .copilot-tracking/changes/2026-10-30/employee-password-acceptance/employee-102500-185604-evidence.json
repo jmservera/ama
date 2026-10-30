@@ -1,0 +1,81 @@
+{
+  "started": "2026-10-30T10:25:00.185627+00:00",
+  "script_sha256": "dd3f27b501ec3fb232bb1d138ef7b827a6889b664e107d623ca194ebe3832ffb",
+  "password_submitted": false,
+  "captures": {
+    "screenshots": false,
+    "video": false,
+    "trace": false,
+    "har": false
+  },
+  "credential_parsed": true,
+  "browser_version": "156.0.8078.4",
+  "steps": [
+    {
+      "host": "login.microsoftonline.com",
+      "text": "Sign in\nCan\u2019t access your account?\n\nZava\n\n\t\nSign-in options\n\n\nTerms of use Privacy & cookies ...",
+      "controls": [
+        "Can\u2019t access your account?",
+        "Next",
+        "Sign-in options",
+        "Terms of use",
+        "Privacy & cookies",
+        "Click here for troubleshooting information"
+      ]
+    },
+    {
+      "host": "login.microsoft.com",
+      "text": "[redacted]\nFace, fingerprint, PIN or security key\nYour device will open a security window. Follow the instructions there to sign in.\nZava\n\t\nTerms of usePrivacy & cookies...",
+      "controls": [
+        "Back",
+        "Terms of use",
+        "Privacy & cookies",
+        "Click here for troubleshooting information"
+      ],
+      "selected_action": "back"
+    },
+    {
+      "host": "login.microsoftonline.com",
+      "text": "Sign in\nCan\u2019t access your account?\n\nZava\n\n\t\nSign-in options\n\n\nTerms of use Privacy & cookies ...",
+      "controls": [
+        "Can\u2019t access your account?",
+        "Next",
+        "Sign-in options",
+        "Terms of use",
+        "Privacy & cookies",
+        "Click here for troubleshooting information"
+      ],
+      "selected_action": "options"
+    },
+    {
+      "host": "login.microsoftonline.com",
+      "text": "Sign-in options\n\t\nFace, fingerprint, PIN or security key\nUse your device to sign in with a passkey.\n\t\nSign in with GitHub\n\nZava\n\n\n\nTerms of use Privacy & cookies ...",
+      "controls": [
+        "Face, fingerprint, PIN or security key Use your device to sign in with a passkey.",
+        "Learn more about signing in with face, fingerprint, PIN, or a security key",
+        "Sign in with GitHub",
+        "Terms of use",
+        "Privacy & cookies",
+        "Click here for troubleshooting information"
+      ]
+    }
+  ],
+  "username_submitted": true,
+  "outcome": "password_route_not_offered",
+  "final_offered_page": {
+    "host": "login.microsoftonline.com",
+    "text": "Sign-in options\n\t\nFace, fingerprint, PIN or security key\nUse your device to sign in with a passkey.\n\t\nSign in with GitHub\n\nZava\n\n\n\nTerms of use Privacy & cookies ...",
+    "controls": [
+      "Face, fingerprint, PIN or security key Use your device to sign in with a passkey.",
+      "Learn more about signing in with face, fingerprint, PIN, or a security key",
+      "Sign in with GitHub",
+      "Terms of use",
+      "Privacy & cookies",
+      "Click here for troubleshooting information"
+    ]
+  },
+  "browser_closed": true,
+  "owned_scratch_cleanup_expected": true,
+  "owned_scratch_removed": true,
+  "ended": "2026-10-30T10:25:07.389451+00:00"
+}

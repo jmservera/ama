@@ -1,0 +1,65 @@
+{
+  "started": "2026-10-30T09:42:12.323070+00:00",
+  "mode": "auth-inspect",
+  "sites": {
+    "employee": {
+      "host": "login.microsoftonline.com",
+      "controls": [
+        {
+          "tag": "input",
+          "type": "email",
+          "id": "i0116",
+          "name": "Enter your email, phone, or Skype.",
+          "disabled": false
+        },
+        {
+          "tag": "input",
+          "type": "password",
+          "id": "i0118",
+          "name": null,
+          "disabled": false
+        },
+        {
+          "tag": "a",
+          "type": null,
+          "id": "cantAccessAccount",
+          "name": "Can\u2019t access your account?",
+          "disabled": false
+        },
+        {
+          "tag": "input",
+          "type": "submit",
+          "id": "idSIButton9",
+          "name": null,
+          "disabled": false
+        },
+        {
+          "tag": "a",
+          "type": null,
+          "id": "ftrTerms",
+          "name": "Terms of use",
+          "disabled": false
+        },
+        {
+          "tag": "a",
+          "type": null,
+          "id": "ftrPrivacy",
+          "name": "Privacy & cookies",
+          "disabled": false
+        },
+        {
+          "tag": "a",
+          "type": null,
+          "id": "moreOptions",
+          "name": "Click here for troubleshooting information",
+          "disabled": false
+        }
+      ],
+      "passwordFields": 1
+    }
+  },
+  "browser_version": "156.0.8078.4",
+  "browser_closed": true,
+  "owned_scratch_removed": true,
+  "ended": "2026-10-30T09:42:15.273245+00:00"
+}

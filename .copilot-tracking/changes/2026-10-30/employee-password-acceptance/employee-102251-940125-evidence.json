@@ -1,0 +1,57 @@
+{
+  "started": "2026-10-30T10:22:51.940147+00:00",
+  "script_sha256": "e0fd05ce7f21cdefd275ff3b3954005ac402c2d0307a32dd040b9eaab64c84b0",
+  "password_submitted": true,
+  "captures": {
+    "screenshots": false,
+    "video": false,
+    "trace": false,
+    "har": false
+  },
+  "credential_parsed": true,
+  "browser_version": "156.0.8078.4",
+  "steps": [
+    {
+      "host": "login.microsoftonline.com",
+      "text": "Sign in\nCan\u2019t access your account?\n\nZava\n\n\t\nSign-in options\n\n\nTerms of use Privacy & cookies ...",
+      "controls": [
+        "Can\u2019t access your account?",
+        "Next",
+        "Sign-in options",
+        "Terms of use",
+        "Privacy & cookies",
+        "Click here for troubleshooting information"
+      ]
+    },
+    {
+      "host": "login.microsoftonline.com",
+      "text": "Sign in\nEnter a valid email address, phone number, or Skype name.\nCan\u2019t access your account?\n\nZava\n\n\t\nSign-in options\n\n\nTerms of use Privacy & cookies ...",
+      "controls": [
+        "Can\u2019t access your account?",
+        "Next",
+        "Sign-in options",
+        "Terms of use",
+        "Privacy & cookies",
+        "Click here for troubleshooting information"
+      ]
+    }
+  ],
+  "password_field_filled": true,
+  "outcome": "password_rejected_or_challenge_repeated",
+  "final_offered_page": {
+    "host": "login.microsoftonline.com",
+    "text": "Sign in\nEnter a valid email address, phone number, or Skype name.\nCan\u2019t access your account?\n\nZava\n\n\t\nSign-in options\n\n\nTerms of use Privacy & cookies ...",
+    "controls": [
+      "Can\u2019t access your account?",
+      "Next",
+      "Sign-in options",
+      "Terms of use",
+      "Privacy & cookies",
+      "Click here for troubleshooting information"
+    ]
+  },
+  "browser_closed": true,
+  "owned_scratch_cleanup_expected": true,
+  "owned_scratch_removed": true,
+  "ended": "2026-10-30T10:23:25.955851+00:00"
+}

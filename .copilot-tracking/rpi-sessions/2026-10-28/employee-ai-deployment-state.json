@@ -1,0 +1,85 @@
+{
+  "task_id": "employee-ai-deployment-2026-10-28",
+  "task_slug": "employee-ai-deployment",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-28/employee-ai-deployment-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-28/employee-ai-deployment-plan.md",
+    "details": ".copilot-tracking/details/2026-10-28/employee-ai-deployment-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-28/employee-ai-deployment-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-28/employee-ai-deployment-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-28/employee-ai-deployment-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run the full RPI loop autonomously on the pre-created feat/employee-ai-deployment-bicep branch.",
+      "status": "confirmed",
+      "evidence": "Current user request; /tmp/brief-common.md; clean worktree with no existing PR."
+    },
+    {
+      "decision": "Create one minimal employee model deployment only in ama on aif-cutover-test-rzsrg; add only its API OpenAI User assignment if absent. Do not modify the live app or any other resource.",
+      "status": "confirmed",
+      "evidence": "Current user request quoting owner decision dated 2026-10-27."
+    },
+    {
+      "decision": "Use local targeted tests; no full --all gate. At most one scoped --changed gate under the nonblocking heavy lock if warranted.",
+      "status": "confirmed",
+      "evidence": "Explicit owner brief /tmp/brief-common.md overrides the repository default full-tier policy for this task."
+    },
+    {
+      "decision": "Research executed Complete / Planning Readiness Ready. Plan critique executed once Complete / Revise, original preserved; PC-002..005 applied, PC-001 rejected because no parent /tmp prohibition exists. Plan Ready.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/plans/2026-10-28/employee-ai-deployment-plan.md#critique-disposition"
+    },
+    {
+      "decision": "Planned capacity-one fallback selected after Azure rejected gpt-4o-mini as ServiceModelDeprecating: standard gpt-4.1-nano 2025-04-14 GlobalStandard1 succeeded; source/default/tests/handover reconciled. Exactly one missing API OpenAI User role added; live app unchanged.",
+      "status": "executed-and-read-back",
+      "evidence": ".copilot-tracking/changes/2026-10-28/employee-ai-deployment-changes.md"
+    },
+    {
+      "decision": "One independent post-implementation Review executed Complete; outcome Conformant with justified divergence, zero implementation defects. RV-001/RV-002 routed separately. Assessed infra patch SHA256 589cb6072ca2cb33211843f9b140e2f61f6c2505634982a985122b7adb4ccd89; human approval unchecked.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-28/employee-ai-deployment-review.md"
+    },
+    {
+      "decision": "Published requested Refs-only PR #515 to main on topic branch. Exactly one partial gate attempt failed workflow-matrix preflight; failure disclosed, no passing receipt/merge/readiness claimed. No source changes after independent Review.",
+      "status": "published-with-disclosed-gate-exception",
+      "evidence": "https://github.com/jmservera/ama/pull/515"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "scoped-gate-preflight",
+      "summary": "Only permitted scoped gate failed preflight: Workflow matrix drift: src-deploy.yml. No passing receipt; no gate groups completed.",
+      "resolution": "Disclose in requested PR; retain hosted/human approval gates. Separate owner-selected workflow/runner reconciliation is needed for future gate acceptance; no retry in this task."
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await selection of ranked operator activation, cost/model lifecycle, or workflow/gate follow-up; Stop automatic session and Switch to manual mode remain options. Do not start a child task or modify the live app automatically."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator configures/redeploys employee app and verifies bounded registered source=ai result.",
+      "rationale": "Highest immediate value: model/role now exist but live app remains intentionally unconfigured; #514 has merged.",
+      "evidence": "Review RV-001; Changes exact settings/readback."
+    },
+    {
+      "rank": 2,
+      "task": "Owner verifies exercise spending controls, model quality and lifecycle before further use.",
+      "rationale": "Capacity is not a dollar cap; USD30 authorization ends 2026-10-31 and Legacy model retirement is recorded.",
+      "evidence": "Review RV-002; infra/README.md dated employee model handover."
+    },
+    {
+      "rank": 3,
+      "task": "Reconcile src-deploy.yml and the gate's reviewed workflow matrix in a separate task.",
+      "rationale": "Removes the observed preflight blocker for later exact-head publication gates; unrelated runner/workflow edits are excluded from this task.",
+      "evidence": "/tmp/ama-employee-ai-scoped-gate-20261028/receipt.json; Changes sole scoped-gate attempt."
+    }
+  ]
+}

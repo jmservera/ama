@@ -1,0 +1,67 @@
+{
+  "analysis_version": "paired-climate-access-blocker-v1",
+  "retrieved_on": "2026-10-21",
+  "method": "curl without cookies, credentials or account, 2026-10-21 01:23Z to 01:25Z; public official endpoints only",
+  "status": "blocked",
+  "owner_reuse_approval": "UNMET",
+  "owner_source_selection": "Not made for any retrieved source; owner 2026-10-15 direction is Met Office (UKCP18) and Environment Agency OGL data where available, otherwise clearly labelled synthetic data",
+  "synthetic_substitution": {
+    "applied": false,
+    "rule": "Synthetic data, if used later, must be labelled synthetic and never presented as observations or used to fulfil record-derived historical bounds"
+  },
+  "paired_observed_bounds": {
+    "status": "unavailable",
+    "reason": "No actual paired temperature and humidity records could be lawfully retrieved without an account"
+  },
+  "humidity": {
+    "status": "unavailable",
+    "reason": "No humidity or dew-point records retrieved; Durham monthly temperature statistics from the earlier evidence file are not promoted"
+  },
+  "probes": [
+    {
+      "id": "midas-directory-listing",
+      "url": "https://dap.ceda.ac.uk/badc/ukmo-midas-open/data/uk-hourly-weather-obs/dataset-version-202607/",
+      "result": "HTTP 200 anonymous directory listing; county and station folders visible",
+      "yields_observations": false
+    },
+    {
+      "id": "midas-file-bytes",
+      "url": "https://dap.ceda.ac.uk/badc/ukmo-midas-open/data/uk-hourly-weather-obs/dataset-version-202607/tyne-and-wear/00307_newcastle-weather-centre/midas-open_uk-hourly-weather-obs_dv-202607_tyne-and-wear_00307_newcastle-weather-centre_capability.csv",
+      "result": "Body 'Unauthenticated' / HTTP 302 to login; same for the dataset licence README and station-metadata CSV",
+      "yields_observations": false
+    },
+    {
+      "id": "midas-catalogue-licence",
+      "url": "https://catalogue.ceda.ac.uk/uuid/dbd451271eb04662beade68da43546e1/",
+      "result": "HTTP 200; page states Open Government Licence. Licence acceptance for project reuse remains an owner decision",
+      "yields_observations": false
+    },
+    {
+      "id": "ea-hydrology-humidity",
+      "url": "https://environment.data.gov.uk/hydrology/id/measures.json?_limit=3&observedProperty=humidity",
+      "result": "HTTP 200, OGL 3 declared in response metadata, zero items; sampled 2000 measures were water flow, water level, rainfall, water temperature and groundwater level only",
+      "yields_observations": false
+    },
+    {
+      "id": "ukcp18",
+      "url": "https://www.metoffice.gov.uk/research/approach/collaboration/ukcp",
+      "result": "Projection and observation product family; no anonymous hourly paired historical product identified in this task; not probed as a data source and not a substitute",
+      "yields_observations": false
+    }
+  ],
+  "midas_listing_year_coverage_unverified": {
+    "note": "From anonymous qc-version-1 file names only; file contents and humidity completeness unverified",
+    "stations": {
+      "Durham 00326": "1972-2025",
+      "Newcastle Weather Centre 00307": "1974-2005",
+      "Tynemouth 00313": "1957-2001",
+      "South Shields 00330": "1985-2003",
+      "Sunderland University 00332": "1989-2003",
+      "Washington 00329": "1973-1981",
+      "Houghall 00324": "1972-1978"
+    }
+  },
+  "owner_action": "An authorised human uses their own existing CEDA account to download selected MIDAS Open qc-version-1 yearly CSVs and licence text, records reuse approval and station choice, then supplies the files for a hash-pinned adapter task; or the owner explicitly approves a different public no-login source. Agents must not create accounts or obtain credentials.",
+  "retest_trigger": "Owner action, change in CEDA access policy, or a new official anonymous paired source",
+  "interpretation": "Access-evidence blocker only; not bounds, replay limits, thresholds or a source decision"
+}

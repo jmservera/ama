@@ -147,7 +147,7 @@ def scan_mid_fade(page: Page, axe: str | None, reports: list[dict[str, Any]], st
 def open_home(page: Page, base: str) -> None:
     from playwright.sync_api import expect
 
-    page.goto(base + "/app#/case/ZF-1")
+    page.goto(base + "/app#/case/ZF-1?tab=blockers")
     page.reload()
     expect(page.locator("#regulatory-alerts")).to_be_visible()
     expect(page.locator("#regulatory-alerts [role=status]")).not_to_contain_text("Loading")
@@ -294,11 +294,13 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             expect(alerts.locator("a").first).to_be_focused()
             page.keyboard.press("Shift+Tab")
             expect(page.locator("#alerts-plain-mode")).to_be_focused()
+            page.get_by_role("tab", name="AI assistance", exact=False).press("Enter")
             keyboard_activate(page, "#chat-panel > summary")
-            expect(page.locator("#chat-panel > .muted")).to_contain_text(
-                "AI suggestion, not approved"
-            )
-            expect(page.locator("#chat-panel > .muted")).to_contain_text(
+            disclaimer = page.locator("#chat-panel > summary + p.muted")
+            expect(disclaimer).to_have_count(1)
+            expect(disclaimer).to_be_visible()
+            expect(disclaimer).to_contain_text("AI suggestion, not approved")
+            expect(disclaimer).to_contain_text(
                 "it can only request a proposal that someone else reviews"
             )
             keyboard_activate(page, "#regulatory-chat > summary", "Space")
@@ -347,6 +349,10 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             expect(chat.locator("blockquote")).to_have_text(
                 f"[synthetic@v2#0001] {COPY_SOURCE_CANARY}"
             )
+            expect(chat).to_contain_text("Model calls for this question: 0")
+            expect(page.locator("#regulatory-usage")).to_contain_text("1 turns")
+            expect(page.locator("#regulatory-usage")).to_contain_text("Service cost: Unknown")
+            expect(alerts).to_contain_text("Model calls per check and alert: 0")
             expect(chat).to_contain_text("Effective: 2026-01-01")
             expect(chat.locator("a").first).to_have_attribute(
                 "href", "/api/law/provisions/synthetic%40v2%230001"
@@ -356,10 +362,12 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             doubt = chat.locator(".regulatory-turn button").first
             doubt.focus()
             page.keyboard.press("Enter")
-            expect(chat.locator("[role=status]")).to_contain_text("exercise inbox")
+            expect(chat.locator(":scope > p[role=status]")).to_contain_text("exercise inbox")
             expect(doubt).to_be_focused()
             expect(doubt).to_have_attribute("aria-disabled", "true")
+            page.get_by_role("tab", name="Blockers and safety", exact=False).press("Enter")
             keyboard_walk(page, "#regulatory-alerts")
+            page.get_by_role("tab", name="AI assistance", exact=False).press("Enter")
             keyboard_walk(page, "#regulatory-chat")
             inbox = fixture.call("/api/chat/regulatory/inbox", email="exercise-owner@example.test")[
                 1
@@ -375,6 +383,12 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             for width in (320, 390, 1280):
                 page.set_viewport_size({"width": width, "height": 900})
                 for selector in ("#regulatory-alerts", "#regulatory-chat"):
+                    name = (
+                        "Blockers and safety"
+                        if selector == "#regulatory-alerts"
+                        else "AI assistance"
+                    )
+                    page.get_by_role("tab", name=name, exact=False).press("Enter")
                     assert page.locator(selector).evaluate(
                         "el => el.scrollWidth <= el.clientWidth + 1"
                     ), f"Horizontal overflow at {width}px: {selector}"
@@ -384,17 +398,23 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             )
             page.set_viewport_size({"width": 320, "height": 900})
             for selector in ("#regulatory-alerts", "#regulatory-chat"):
+                name = (
+                    "Blockers and safety" if selector == "#regulatory-alerts" else "AI assistance"
+                )
+                page.get_by_role("tab", name=name, exact=False).press("Enter")
                 assert page.locator(selector).evaluate(
                     "el => el.scrollWidth <= el.clientWidth + 1"
                 ), f"200% text overflow: {selector}"
             scan(page, axe, reports, "200-percent-text-320px")
             page.set_viewport_size({"width": 1280, "height": 900})
             page.reload()
+            page.get_by_role("tab", name="Blockers and safety", exact=False).press("Enter")
             expect(page.locator("#regulatory-alerts")).to_be_visible()
+            page.get_by_role("tab", name="AI assistance", exact=False).press("Enter")
             page.locator("#chat-panel > summary").click()
             page.locator("#regulatory-chat > summary").click()
             expect(chat.locator(".regulatory-turn")).to_have_count(2)
-            expect(chat.locator("[role=status]")).to_have_text(
+            expect(chat.locator(":scope > p[role=status]")).to_have_text(
                 "Stored synthetic-demo excerpts restored. "
                 "These are historical records; ask again for a fresh lookup."
             )
@@ -403,24 +423,55 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             )
 
             fixture.f.source(version=3)
+            page.get_by_role("tab", name="Blockers and safety", exact=False).press("Enter")
             page.get_by_role("button", name="Refresh alerts", exact=True).click()
             expect(alerts).to_contain_text("Not active or source uncertain")
             expect(alerts).to_contain_text("Status: breach risk")
             scan(page, axe, reports, "source-changed-retained-risk")
+            page.get_by_role("tab", name="AI assistance", exact=False).press("Enter")
+            question.fill("What do the hazard sources say for this home?")
+            question.press("Tab")
+            page.keyboard.press("Enter")
+            expect(chat.locator(".regulatory-turn")).to_have_count(3)
+            conflict = chat.locator(".regulatory-turn").last
+            expect(conflict).to_contain_text("Lookup status: conflict")
+            expect(conflict.locator("blockquote")).to_have_count(2)
+            expect(conflict).to_contain_text("Turn sent to Juan Manuel Servera's exercise inbox")
+            expect(conflict.locator("button")).to_have_attribute("aria-disabled", "true")
+            expect(page.locator("#regulatory-usage")).to_contain_text("1 conflicts")
+            inbox = fixture.call("/api/chat/regulatory/inbox", email="exercise-owner@example.test")[
+                1
+            ]
+            assert len(inbox["threads"]) == 2
+            scan(page, axe, reports, "conflict-auto-referral")
+            page.reload()
+            page.locator("#chat-panel > summary").click()
+            page.locator("#regulatory-chat > summary").click()
+            expect(chat.locator(".regulatory-turn")).to_have_count(3)
+            expect(chat.locator(".regulatory-turn").last).to_contain_text(
+                "Turn sent to Juan Manuel Servera's exercise inbox"
+            )
+            scan(page, axe, reports, "conflict-referral-restored")
 
             # Actual service outage and disabled capability, not fake successful responses.
             law = fixture.app.law
             fixture.app.law = None
+            page.get_by_role("tab", name="Blockers and safety", exact=False).press("Enter")
             page.get_by_role("button", name="Refresh alerts", exact=True).click()
-            expect(alerts.locator("[role=status]")).to_contain_text("Alert coverage unknown")
+            expect(alerts.locator(":scope > p[role=status]")).to_contain_text(
+                "Alert coverage unknown"
+            )
             expect(alerts.locator(".regulatory-alert")).to_have_count(0)
             fixture.app.law = law
             fixture.app.regulatory.env = {}
+            page.get_by_role("tab", name="AI assistance", exact=False).press("Enter")
             page.reload()
             page.locator("#chat-panel > summary").click()
             page.locator("#regulatory-chat > summary").click()
             expect(question).to_be_disabled()
-            expect(chat.locator("[role=status]")).to_contain_text("Cited lookup unavailable")
+            expect(chat.locator(":scope > p[role=status]")).to_contain_text(
+                "Cited lookup unavailable"
+            )
             scan(page, axe, reports, "disabled-chat")
             fixture.app.regulatory.env = fixture.app.chat.env
 

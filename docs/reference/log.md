@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-10-25
+ms.date: 2026-10-29
 ms.topic: reference
 ---
 
@@ -7386,6 +7386,34 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   this editing session did not commit, merge or push. The final build record
   and inspected PDF remain local, without a completed publication gate.
 
+## [2026-10-27] research | Industry-led paper framing and inherited state
+
+* A read-only critique and source-research agents preceded changes to the
+  [paper](../capstone/thought-leadership/everything-but-the-software/main.tex).
+  The [revision record](../capstone/thought-leadership/everything-but-the-software/README.md#industry-led-revision-27-october)
+  preserves source versions, locators, access limits and the final scoped
+  critique. Knight Capital, WyCash and PhotoCraft now introduce the wider
+  maintenance problem before AMA's triggering experience.
+* Distinguished conversational self-conditioning from repository-carried
+  faults and instruction maintenance. Added six matching references covering
+  the SEC account, instruction-file histories, context-file evaluation,
+  GitHub practitioner guidance and Anthropic context engineering. Context
+  debt is attributed to prior work; entropy remains an engineering analogy.
+* Added [published chart data](../capstone/thought-leadership/everything-but-the-software/anc/published-evidence.json)
+  and two reproducible figures: paired-history event-resolution differences
+  with published intervals, and overlapping instruction-edit labels. Retained
+  clean-history and useful-context counterevidence; no net-token growth,
+  reproduced external defect or new study result is inferred from them.
+* The protocol is unchanged after line-ending normalisation. Structural
+  checks pass with 114 matching references; chart-data, denominator and image
+  checks pass. Tectonic produces an external 49-page PDF with resolved
+  references, four minor overflows below six points, one underfull line and
+  a fontconfig warning. The existing package PDF and case figures are
+  unchanged. Python plotting dependencies were installed with pip at the
+  owner's direction; the cancelled PDF-renderer install was not retried.
+* Updated the reference index and package record without rewriting earlier
+  log entries or the owner's memory. No private study edit, experiment,
+  commit, push, complete publication gate or submission occurred.
 ## [2026-10-27] design | Resident advisory assistant prototype (Refs #469)
 
 * Added the [owner-decision design](../architecture/resident-assistant-prototype.md)
@@ -7601,3 +7629,734 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   operator profile as ARM and an explicit overall time budget. Both are
   implemented and tested offline. Live routing, token acquisition, deployment,
   role grants and spend remain NOT RUN. Refs #360, never closes.
+
+## [2026-10-27] query | Source-only IoT infrastructure definition (Refs #140)
+
+* Recorded the owner's 2026-10-27 ADR 0003 authoring authorization: Free/B1
+  envelope, `ama`/`uksouth`, overall USD700 cap, never delete `ama`, no deployment.
+* Corrected the existing keyless-consumer claim using official Microsoft
+  guidance retrieved 2026-10-27: the built-in IoT endpoint still requires a
+  shared service key; managed-identity consumption uses a dedicated custom
+  Standard Event Hub. Recorded the separate system-sender/API-receiver scopes,
+  private endpoints and trusted-service routing exception.
+* Corrected diagnostic minimisation: connection and identity-operation logs
+  also contain device IDs. The source now exports metrics only and explicitly
+  disables resource logs; this is not historical log erasure.
+* Filed the public B1/TU/ingress price inputs and explicit unverified
+  endpoint/variable allowances in a USD60/month transport scenario, inside
+  rather than additional to USD700. Actual currency, commitments and remaining
+  aggregate headroom remain unverified and block provisioning.
+* Updated `infra/README.md`, ADR 0003 and the knowledge-base index. Explicit
+  bootstrap omits endpoint registration; later activation requires separate
+  approval and actual sender-role propagation. Individual device credential
+  work remains #185; SDK transport #110 and BRD OD-43 human gates remain open.
+* No Azure what-if, deployment, secret read, device creation, operational
+  approval, issue closure or full RPI gate is claimed.
+
+## [2026-10-27] restructure | Owner-authorized source cut-over (Refs #199-#203)
+
+* Owner explicitly SIGNED OFF cut-over #201 on 2026-10-27 in the retirement
+  task direction. Added the dated record to the
+  [existing evidence pack](../architecture/cutover-evidence-pack.md#owner-authorized-directory-retirement-2026-10-27)
+  and ADR 0006, preserving original failures and unchecked historical gates.
+* Verified fetched main `65a514ed20e97816dbf47e9fb981ab4cfe40597d`:
+  executable code/tests/images/CI/Bicep/scripts already use `src/`;
+  only the pointer remained, and the earlier prototype was already absent.
+  Removed the pointer; no private data or backups were inspected.
+* Created locally absent annotated archive `v0.21.0`, matching current BRD
+  version `0.21.0`, at that last pre-deletion commit. The owner, not the
+  agent, publishes it with
+  `git push origin refs/tags/v0.21.0:refs/tags/v0.21.0`.
+  No tag push or GitHub release is claimed.
+* Updated repository/source/architecture guidance, capstone registry table,
+  active PRD location clarification, rubric summary, parity navigation,
+  regulatory UX source path, coordinator source-layout note and KB index.
+  Workflow/check names, memory,
+  original case study, historical reports/audits and earlier log bytes remain
+  unchanged. Historical/defensive old-path strings are classified in the
+  evidence pack, not globally rewritten.
+* Additive repair map for earlier log links into the removed guide:
+  the two Entra/CSP entries now resolve through
+  [current account behavior](../../src/api/README.md#entra-id-on-container-apps);
+  the honest-limits entry through
+  [current limits](../../src/api/README.md#honest-limits);
+  the five-assistant configuration entry through the
+  [migrated assistant guide](../../src/agents/README.md#five-retrofit-assistants-2026-10-13-implementation).
+  Earlier link text and targets are intentionally untouched.
+* Scoped existing tests and reference/link checks support this maintenance
+  change, not full-suite parity, hosted CI/deployed health, private backup
+  verification, post-merge rubric comparison or whole-issue closure.
+  All five issues remain Refs; owner merge and remaining acceptance are separate.
+## [2026-10-27] deployment | Merged resident features from PR #474
+
+* Updated the [resident guide](../../src/api/README.md#synthetic-resident-showcase-462),
+  [assistant design](../architecture/resident-assistant-prototype.md) and index
+  with the supplied 08:59Z USD30 authorization, including USD20 AI subcap,
+  MI-only boundary and expiry 2026-10-31T23:59Z.
+* Deployed merged source 885ee05f and its required resident projection view.
+  Retained the original failed startup caused by missing sensor columns;
+  transactional exact-merged view deployment changed no table/row/grant.
+  Twenty-seven actual unauthenticated HTTPS/Playwright checks passed.
+* Registered-login, authenticated own-case account/gauges/history/assistant/
+  sign-out and natural session expiry remain unproved because the owner-held
+  password was not read. No model was provisioned: runtime MI/ledger wiring
+  is absent, so deterministic rules remain. No production/human acceptance.
+* Restored exact ACR policy. Final resident ingress disabled, tested revision
+  inactive/zero replicas; all four app minima 0, eight Manual jobs and SQL
+  Standard/10 DTU preserved. Publication gates and independent Review are
+  recorded separately; this entry is not hosted or human approval.
+
+## [2026-10-27] query | Indoor outdoor-record-derived exercise bounds (#179)
+
+* Updated the existing IoT research synthesis with a dated three-criterion
+  #179 audit and indexed it in the knowledge-base README; core README records
+  the v2 equations, assumptions, envelopes and changed seeded-value boundary.
+* Both indoor paths now derive bounds from each supplied outdoor pair and
+  dwelling/household model with explicitly exercise-valued capped noise,
+  replacing the fixed 8 C floor and 15..98% clips. Physical RH saturation
+  remains distinct from an exercise threshold.
+* Added independent equation/envelope, RNG order/state, forced-tail,
+  saturation, domain/sensitivity and pinned public hourly-history tests.
+  No new climate retrieval, private data, calibration or live approval.
+* Preserved original historical stack, aggregate hashes, adverse Review and
+  legal/operational blockers. Model-consistent synthetic bounds do not close
+  parent #177 or establish PRD AC-066--068, OD-43 or real-dwelling physics.
+
+## [2026-10-27] query | Indoor snapshot versioning correction (#179, PR #502)
+
+* Filed the deliberate projection-v2 row-change decision in the existing
+  synthetic-data determinism/versioning synthesis, core README and index.
+  New default/stock/composed/fault snapshot versions distinguish new bytes
+  without changing fault algorithms, reading schemas or published datasets.
+* Preserved the original sensor golden hash as historical evidence; current
+  golden binds literal snapshot/model versions. Scale/register goldens remain
+  unchanged. Current loaders reject stale snapshot versions, while privacy
+  auditing still recognizes historical and current stock snapshot layouts.
+* Original targeted validation and adverse hosted failure remain in dated RPI
+  evidence. The correction requires exact full core CI tests, lint and mypy;
+  no cloud, private dataset, heavy gate or real-use approval is introduced.
+## [2026-10-23] update | First bounded local stabilization checkpoint (#440)
+
+* Added the executed current-main checkpoint to the existing cutover evidence
+  pack and indexed it, pinning source140d8f49, preliminary candidate d8a65061,
+  BRD0.19.0/PRD0.18.0 and ADR blobs/statuses. Runtime inputs were byte-identical
+  to merged main; policy candidate evidence is separate.
+* Recorded174 focused passes and five final standalone suites2392 discovered/
+  468 skipped, with original archive-harness failures and corrections retained.
+  Actual native Chromium/axe, disposable SQL Server244 tests (one JSON-only
+  skip), four Docker/non-root/scanner/SPDX groups and logo0600 check ran.
+* Preserved the failed full receipt: core SQL filtered read17383ms exceeded
+  the unchanged1500ms bound. Three focused retests passed106-108ms but do not
+  repair it or establish cause. Native host discovery remains Deferred despite
+  static and independently graded simulation passes.
+* No confirmed stable code defect/refactor, new bug issue, source feature,
+  private/cloud/paid inference operation, acceptance tick, final release pass
+  or publication is claimed. #349/#350/#360/#432 and human gates remain;
+  independent lanes continue while affected validation/publication is blocked.
+  Earlier log entries, original case study and memory are unchanged.
+
+## 2026-10-25 stabilization checkpoint main reconciliation (#440)
+
+* Merged main `ea5577b2` into the #440 branch without rewriting history and appended a dated reconciliation note to the [cutover evidence pack](../architecture/cutover-evidence-pack.md#reconciliation-with-later-main-2026-10-25-440).
+* The first checkpoint is kept as historical evidence for main `140d8f49`; native discovery is recorded as attested only, the failed 17383 ms receipt remains a repository record with unknown root cause and an unwaived threshold, and no acceptance, Conformant outcome, publication or cloud approval is claimed.
+* Earlier log entries, the original case study and memory are unchanged.
+## 2026-10-25: obsolete synthetic proof case removed from the live demo database
+
+* Removed the single obsolete synthetic proof case from the deployed `retrofit` database at the owner's request (issue 360): 981 to 980 cases, 444 to 443 open, one appended audit entry, no seed case or earlier audit row changed. The API cache needs a revision restart after an external delete.
+* Recorded the route, guards and limits in the [infrastructure runbook](../../infra/README.md) and the dated `remove-synthetic-example-360` RPI artifacts. No source, image, deploy or configuration change.
+
+## 2026-10-25: correction to the synthetic proof case removal entry
+
+* Corrects the entry above: the earlier 17 audit rows were not compared per row. Preservation is inferred from a verified chain (count 17 to 18, head equal to the audit head) and the append-only ledger, not proven by row or hash comparison. The superseded draft phase details are marked as not a runbook. Documentation only; see the [review correction](../../.copilot-tracking/reviews/2026-10-25/remove-synthetic-example-360-review.md).
+
+## 2026-10-28: ledger-history correction to synthetic proof case removal (#360, PR #459)
+
+* The earlier removal entries describe removal of the current row and active-case projections, not data erasure. The live `cases` table is an updatable ledger table; its old body remains in system-managed ledger history. The non-history reference scan does not prove erasure, and the audit trigger is an alternative for non-ledger databases, not additional live-ledger protection.
+* Corrected the [runbook](../../infra/README.md#historical-deployment-recipe), added a [dated research correction](../../.copilot-tracking/research/2026-10-25/remove-synthetic-example-360-research.md#schema-correction-2026-10-28-pr-459-review) without changing the original text, and qualified the related plan and changes evidence. Updated the index and [existing review artifact](../../.copilot-tracking/reviews/2026-10-25/remove-synthetic-example-360-review.md#ledger-history-correction-cycle-2026-10-28-pr-459); no new full RPI loop or live verification.
+
+## 2026-10-28: briefing browser harness source binding (Refs #517, #516)
+
+* Refreshed only the public recipe SHA-256 in the [scenario manifest](./research/retrofit-synthetic-data/scenario-manifest.json) after correcting the [shared-IA browser check](../../src/api/checks/workbench_browser_check.py) to match #516's programme-neutral loading copy and scope/count response fields. The stale text wait reproduced PR #517's 30-second failure locally, including correct loading with external requests blocked; no CDN flake was identified.
+* Fixture IDs/defaults, inventory and manifest versions, unavailable full-journey status, pending owner review and all authority boundaries are unchanged. This source-binding maintenance is not a new scenario iteration, private-data read, full journey acceptance or operational approval.
+## [2026-10-21] query | Meaningful human-review protocol preparation (#223)
+
+* Added a proposed, Not run protocol section to the existing agents README
+  evaluation area and indexed it: seeded wrong/stale/unsupported/incomplete/
+  valid-citation-error case classes, baseline and automation-bias controls,
+  retention fields, OQ-017 authority evidence, denominators and full-effort
+  comparators.
+* Prepared under the owner's 2026-10-20 preparation direction. All thresholds,
+  samples, roles and approvals are PROPOSED or UNFILLED; no participants,
+  model calls or execution. #108 remains open and the #222 manifest is an
+  unapproved external prerequisite. No #223 criterion is met.
+
+## [2026-10-21] update | Human-review protocol Pass preconditions (#223)
+
+* Corrected the proposed, Not run protocol after an independent publication
+  assessment: documented per-class and per-task reviewer competence and
+  authority, resolved OQ-017 decisions and the required approvals are now
+  explicit preconditions for execution and for any Pass. Missing evidence means
+  Insufficient or NOT RUN, never Pass.
+* No exercise, evaluator, outcome or approval was added. OQ-017 stays open and
+  all five #223 criteria stay unmet. The earlier entry is unchanged.
+## [2026-10-20] query | Map tile provider licence, cost and privacy options (#119)
+
+* Added the [options review](./research/ux/map-tile-provider-options.md) and a
+  dated ADR 0002 decision 5 delta, and extended the WCAG baseline manual check
+  record with a map list screen-reader protocol.
+* Sources are public vendor and policy pages read 2026-10-20 with no private
+  coordinates. Azure Maps paid rate, Microsoft and OS processor terms, OS plan
+  prices and MapTiler commercial terms could not be verified and are listed.
+* No provider was selected, bought, configured or approved. No screen reader was
+  available on the host, so no screen-reader run is claimed and the human or
+  assistive-technology gate remains unmet. No UI file changed.
+
+## [2026-10-20] correction | Map options provenance clarification (#119)
+
+* The map tile options review and screen-reader protocol logged above were first
+  drafted before the RPI skills ran, then re-checked through recovery research,
+  plan, critique, implement and review. The re-read evidence (OSM tile policy,
+  Azure Maps pricing page, code and tool availability) was confirmed, and an
+  inconsistent secondary Ordnance Survey rate was labelled unverified.
+* Conclusions are unchanged: no provider selected or bought, no screen-reader
+  run, human gate unmet.
+
+## [2026-10-20] correction | Map options budget wording (#119)
+
+* Corrected the cost wording in the [options review](./research/ux/map-tile-provider-options.md):
+  the owner budget is USD500 in total for the October 2026 calendar month,
+  including accrued and forecast costs across resource group `ama` and other
+  scopes. A separate finite costed execution plan must be approved before any
+  paid execution, not only before account creation. The proposal authorises no
+  spend, and unknown headroom blocks paid execution.
+* Prompted by an independent assessment that returned Defects on the earlier
+  head. No provider selection, purchase, legal or DPO approval, UI change or
+  screen-reader run is claimed; the screen-reader gate and vendor rates, terms
+  and DPA positions stay unverified.
+
+## [2026-10-23] correction | Map options evidence labels and budget currency (#119)
+
+* An independent review of the options proposal found two defects. First, the
+  cost paragraph in the [options review](./research/ux/map-tile-provider-options.md)
+  still presented USD500 as the owner ceiling and USD 535.41 as governing
+  evidence. It now states them as dated superseded history, records the
+  replacement USD 700 all-in ceiling, the unchanged 2026-10-25T16:02Z expiry and
+  Unknown all-in headroom, and links the
+  [addendum budget decision](../case_study_48_addendum.md#revised-owner-budget-decision-2026-10-22).
+  This supersedes the budget and verification wording of the two 2026-10-20
+  entries above; they are retained unchanged.
+* Second, vendor statements that the recovery research recorded as not re-read
+  were written as established. The options review and the ADR 0002 map delta now
+  label them draft, unverified, or secondary, unverified, and only the OSM tile
+  policy and the Azure Maps pricing page free allowance are marked re-read. The
+  earlier recovery completion claim that these labels were applied was not
+  borne out; this is an honest correction, not a new verification.
+* Documentation only. No provider is selected or bought, no terms, DPA, rate,
+  licence or processor decision is made, no web retrieval was done, the screen
+  reader remains not run, and both original issue criteria remain unmet.
+## [2026-10-21] query | Paired historical climate access check (#178)
+
+* Tested anonymous retrieval of official paired North-East temperature and
+  humidity records. MIDAS Open files require a CEDA login and EA Hydrology
+  has no humidity or dew point, so no records were retrieved and no bounds
+  were derived.
+* Added the access-blocker record, a synthesis section and index row. The
+  owner action is an authorised human supplying MIDAS files from their own
+  account with reuse approval, or approval of another source.
+* Source selection and licence/reuse remain UNMET, synthetic data is not
+  substituted for observations, and the issue criteria stay unticked.
+
+## [2026-10-22] query | Modelled paired historical climate source (#178)
+
+* Following the owner decision of 2026-10-22, retrieved a fixed anonymous
+  hourly Durham 2023 sample from Open-Meteo (ERA5) with a NASA POWER
+  cross-check, hash-pinned under the climate sample folder, and derived
+  temperature and humidity sample bounds with a validating adapter that
+  rejects gaps, misalignment and inconsistent humidity.
+* The source is labelled modelled, not observed. The two modelled sources
+  differ (about 1 degC and 8 humidity points mean absolute), so accuracy is
+  demonstrator level only. Production precision, licence and commercial-use
+  confirmation, underlying C3S terms and regional representativeness remain
+  pending and no approval is asserted.
+* The 2026-10-21 MIDAS blocker and the Durham temperature-only report are
+  unchanged. Issue criteria stay unticked.
+
+## 2026-10-22 climate paired source: monthly timestamp correction (Refs #178)
+
+* Corrected the modelled paired climate report after independent review: monthly
+  minimum and maximum now carry every tied UTC timestamp and the paired value,
+  regenerated from the same retained Open-Meteo records with tests for ties,
+  provenance and reconciliation with the annual extremes.
+* Earlier entries and the first gate receipt are preserved as historical. The
+  source stays modelled, not observed; licence and reuse confirmation, production
+  precision and representativeness remain pending, and issue criteria stay
+  unmet. No legal approval is inferred.
+
+## 2026-10-22 climate paired source: precise NASA attribution (Refs #178)
+
+* Corrected generated NASA attribution to carry `POWER Hourly API` version
+  `v2.10.3` from the hash-pinned retained response and its retrieval date
+  2026-10-22, rather than static wildcard text. Missing or imprecise optional
+  API metadata yields explicit `UNVERIFIED` attribution without changing
+  climate-input rejection behavior.
+* Report statistics, raw fixtures and source selection are unchanged. Licence,
+  reuse, human owner/legal decisions, production precision and regional coverage
+  remain unresolved; no issue acceptance criterion is ticked.
+## [2026-10-20] query | Fictional form template and Finance decision review pack (#97)
+
+* Added a registered fictional versioned form/template pack and reviewer guide
+  over the existing form schema contract, with field type, unit, requirement,
+  authority, evidence, freshness and lineage, proposed preparer/reviewer
+  separation and stale propagation, and fourteen unresolved Finance
+  authority/binding decision fields. Indexed it, the dictionary subsection and
+  the core guide pointer. No runtime, API or schema engine changed.
+* The pack is not an approved template, with no submission, payment, grant term
+  or Finance signature. Issue #97 criterion 1 (actual authority and binding)
+  stays unmet pending a named human authority; criterion 2 was delivered earlier.
+* Process note: an earlier uncommitted draft was hand-authored before the RPI
+  skills were activated. It is preserved with a dated disclosure and was
+  re-verified through the executed research, plan, implement and review skills.
+
+## [2026-10-23] lint | Corrected form review pack registration claims (#97)
+
+* Files touched: the fictional form review guide, the core guide paragraph on the review pack, and this log (`ms.date`).
+* Contradiction found by independent full-diff review (FIN-001): both documents said the public fictional schema registers unchanged, but `register_schema` refuses its placeholder reviewer, and the focused test expects that refusal before registering a derived copy with a registered reviewer substituted.
+* Corrected both statements: the public file is refused as published; only a copy differing in `reviewer`, set to an existing registered person, registers, as `Unapproved`, recording no approval. No runtime, test, fixture, index, dictionary or provenance change; Finance FD-01..FD-14, template authority and OQ-015 stay unresolved and criterion 1 unmet. Earlier entries retained.
+## [2026-10-20] query | Cohort and missing-data evaluation manifest preparation (#222)
+
+* Added a DRAFT, UNAPPROVED, NOT EXECUTED wholly synthetic paired-scenario
+  manifest to the existing eval registry and an owner [review pack](./research/evaluation/cohort-evaluation-review-pack.md)
+  with proposed held-out custody, independent reviewer, small-sample,
+  critical-error, review-burden and uncertainty handling and an AC1 to AC6
+  traceability table. Owner decision 2026-10-20 authorised preparation only.
+* Retained adverse evidence: ranking policy 1.0.0 is an unsigned draft, and
+  support Unknown currently sorts with No (candidate defect, owner decision
+  pending). The manifest is a development draft, not a held-out set; expected
+  outcomes are agent-authored proposals and numeric values are illustrative.
+* No evaluator, model run, participant, live data, threshold approval or
+  fairness evidence. All six #222 criteria and the #108 actual-model and human
+  results remain unmet.
+
+## [2026-10-20] query | Cohort manifest correction v0.2.0 returned for owner approval (#222)
+
+* Owner-authorised correction of the draft [review pack](./research/evaluation/cohort-evaluation-review-pack.md)
+  and manifest (v0.2.0): split the multi-factor pairs, bound deterministic
+  expectations to the unchanged `rank()` through the structural test, replaced the
+  arbitrary 30 and 10 percent with sample-size, error-rule and uncertainty options,
+  kept zero critical misses as a proposal, made Unknown-support review priority a
+  policy proposal only, defined review burden over eligible cases, required fresh
+  held-out scenarios with new IDs and limited the test support exemption to
+  `support_state` pairs.
+* Reviewer, adjudicator and custodian roles remain unfilled. No ranking change,
+  evaluator, run, participant, data, approval or fairness evidence. All six #222
+  criteria remain unmet; the manifest is returned for owner approval before any
+  evaluator work.
+
+## [2026-10-21] query | Cohort manifest correction after independent assessment (#222)
+
+* Corrected the draft [review pack](./research/evaluation/cohort-evaluation-review-pack.md)
+  and manifest wording: inside an open safety case the ranking order is support,
+  then waiting days, then stage, then case id, not "behind only older open
+  safety cases". The structural test now carries the sensor, source and
+  appointment fields to the ranker input and proves a missing-data exclusion or
+  appointment penalty fails the binding check. The contact_need pair stays
+  representation pending because ranking has no contact input.
+* Ranking, runtime and the unapproved status are unchanged. All six #222
+  criteria remain unmet.
+
+## [2026-10-28] query | Whole-project Responsible AI review
+
+* Evidence: added [project RAI synthesis](./research/rai/project-rai-review.md)
+  and dated six-phase artifacts under
+  `.copilot-tracking/rai-plans/2026-10-28-zava-forward-project/`; updated the
+  knowledge-base index. Repository-only review covers both sites, five
+  bounded assistants, resident/employee chat, briefing, IoT, data and
+  infrastructure at `9bfed51863b05a25e9939d82504c576524688e14`.
+* Evidence: retained prior findings and exposed hazard-language limits,
+  divergent chat routes/no-AI scope, consent/retention distinctions,
+  Unknown-support ordering, synthetic/provenance limits, sensor-document
+  drift and unlocked-retention wording. Open PRs remain candidates, not fixes.
+* Hypothesis: twelve proposed backlog items reuse existing issue references;
+  no GitHub issues, source edits, private dataset/secrets reads or Azure
+  actions. Unknown: qualified approval, legal currentness, representative
+  outcomes and human/accessibility acceptance.
+* Evidence: mandatory complete publication gate includes `az bicep` commands
+  forbidden by the task; no passing complete receipt or publication waiver is
+  claimed. The dated assessment records validation/publication limitations.
+## [2026-10-28] ingest | Employee case journey workspace specification (#526)
+
+* Filed the owner-supplied [employee case workspace design](./research/ux/employee-case-workspace-redesign.md)
+  and registered it in the knowledge-base index. Preserve slide order, with
+  Funding and Resident agreement done only when the recorded evidence supports it.
+* Implemented native journey/summary/tab composition in the current `src/api`
+  web assets without changing the Fluent foundation or server decision rights.
+  Journey and missing confidence stay client presentation, not invented API fields.
+* Flagged the chat API limitation: informational turns have no recorded-review
+  identifier; existing separately requested proposals retain source verification
+  and human review. Live verification, screen-reader and real-staff acceptance
+  remain pending the owner. Automated results are engineering evidence only.
+* Final heavy-validation admission exhausted 40 one-minute nonblocking retries.
+  Targeted tests and static checks passed, but complete API/browser/axe/zoom
+  validation, independent Review and publication remain blocked/pending.
+  No push, pull request or complete RPI success is claimed.
+
+## [2026-10-28] validate | Employee case journey continuation (#526)
+
+* Preserve the earlier blocked run and original RPI evidence. The owner
+  authorized another bounded lock window, independent review and topic PR.
+* Actual local API discovery passed 1156 tests (314 opt-in skips). Constructed
+  journey checks pass 37 pinned axe states, retained drafts, keyboard reviews,
+  blocked final-check refusal and real 200% browser zoom. Existing workbench,
+  employee recovery, assistant, provenance, regulatory and challenge checks pass.
+* Corrected mobile summary spacing without shrinking text or hiding values;
+  measured bottom 1581.96875 at 320x800 is below the unchanged 1600 bound.
+  Keyboard-focused tabs now scroll fully into view, including at 200%.
+  Local gate parity includes the hosted journey check and bound result evidence.
+* Updated the [design boundary](./research/ux/employee-case-workspace-redesign.md)
+  and index. These are engineering observations, not screen-reader, staff,
+  legal or deployed acceptance. Independent Review and final publication gates
+  remain separately recorded steps; no cloud action is authorized or performed.
+
+## [2026-10-28] refine | Independent journey review and routed repairs (#526)
+
+* Preserve the original Complete / Defects found Review. Its four findings
+  route to a later implementation: local harness import parity, same-card
+  draft clearing, async proposal review edits and document review counts.
+* Repaired these boundaries with explicit submitted controls, ID/revision-safe
+  restoration and copy recovery, and known-local counts alongside unknown
+  assistant totals. New journey 37-state axe/keyboard/actual-zoom checks and
+  27 assistant scenarios pass. Full committed publication gate is still a
+  separate pending requirement. Human and deployed acceptance remain unchanged.
+
+## [2026-10-28] maintain | Journey gate public recipe binding (#526)
+
+* The first complete gate correctly rejected a stale workbench recipe SHA-256
+  and two over-100-column regulatory harness expressions. Preserve its failure.
+* Refresh only the [scenario manifest](./research/retrofit-synthetic-data/scenario-manifest.json)
+  source hash for retained-tab selectors and wrap the two expressions.
+  Public fixture payloads, versions, inventory review and unavailable full
+  journeys do not change; no private record or owner approval is inferred.
+
+## [2026-10-28] refine | Loading feedback and HAX briefing (#531)
+
+* Update the [design-system inventory](./research/ux/design-system.md) and
+  [API guide](../../src/api/README.md#loading-feedback-and-todays-briefing-531)
+  for shell loading/slow/retry, shared immediate async text and 200ms spinner,
+  native pending controls, explicit AI/rules labels, declared statement
+  references and conditional outcome-led draft reviews.
+* Preserve draft-only immutable review, human approval and manual paths.
+  HAX/Fluent sources are pattern references, not employee user research,
+  accessibility conformance, full Fluent adoption or live-site acceptance.
+
+## [2026-10-29] query | Employee chat skills design (#530)
+
+* Filed the one-agent/five-skill versus router comparison in the
+  [API guide](../../src/api/README.md#employee-chat-with-bounded-skills-530)
+  and linked it from the index. Explicit selection avoids another model hop;
+  no measured cost or latency improvement is claimed.
+* Preserve role projection, privacy admission, minimal metadata audit,
+  workflow-only fallback and human authority. Local checks do not establish
+  actual SQL/live-site/model acceptance, screen-reader/voice-control acceptance
+  or a complete publication gate.
+
+## [2026-10-29] refine | Whitepaper judgment and skills sources
+
+* Add the two owner-selected sources, retrieved 2026-10-29, to both
+  bibliographies and the existing argument. The
+  [source ledger and methodological dispositions](../capstone/thought-leadership/everything-but-the-software/README.md#judgment-and-skills-source-revision-29-october)
+  distinguish Anthropic's analyst influence study from Zava evidence and
+  Jiang et al.'s procedural skill/history comparisons from repository decay.
+* Clarify agent/skill definitions, selected-episode versus matched-trajectory
+  inference, missing access/use traces and approval versus independent
+  judgment. Preserve observations, pilot design and historical critique.
+  Update the index; no empirical audit, experiment or approval is invented.
+* Paper structural checks and all seven existing tooling tests pass.
+  No local TeX compiler is available, so PDF/build/layout checks remain
+  unperformed and generated assets unchanged. The full publication gate
+  remains blocked by its az invocation under the owner's no-az instruction;
+  no push or external submission is made.
+
+## [2026-10-27] ingest | Bounded sensor validation scenarios and two-stage dictionary
+
+* Added a separate installed synthetic scenario pack and external tests for
+  #190/#192/#193/#194: seven damp/data-quality cases, four paired retrofit
+  cases, evaluator-only truth, deterministic per-check reports, case-level
+  confusion, explicit insufficiency and fixed-truth threshold sensitivity.
+* Updated the existing IoT research synthesis, sensor data dictionary, core
+  simulator guide and this index. Corrected the dictionary's stale claim that
+  composed climate/dated measures were unavailable; preserved historical
+  source/approval limits and the original #191 exercise bounds.
+* Recorded the actual retained ERA5 provenance, CC BY attribution, historical
+  terms and synthetic-only owner approval without claiming a fresh terms
+  check, underlying C3S Legal approval or real measurements. New scenario
+  weather is explicitly constructed, not ERA5.
+* Actual #111/#133 integration and a runnable #184 publisher remain unmet.
+  R2 competent review, agreed R3 error limits, real consent, operational use
+  and parent closure are not inferred from standalone synthetic tests.
+
+## 2026-10-27: Dependent-policy RAI release binding (#218)
+
+* The [core contract](../../src/core/README.md#dependent-policy-rai-release-binding-218-219)
+  documents ranking-content binding for stock/retained priority, ordered
+  checklist-policy binding for quality, and explicit current-policy capture.
+  Rules, permissions, workflow/check names and actual release records are unchanged.
+* Five failing-first assertions exposed the dependency/default-policy gaps.
+  Local synthetic lifecycle and scripted review regressions distinguish
+  release denial, source staleness and retained proposal-only decisions.
+* The automation-bias negative control demonstrates the limit of citation
+  syntax and false attestation, not effective human oversight. Actual paired
+  human preparation/review effort is unmeasured.
+* #222's corrected manifest in open PR #421 remains unapproved; no evaluator
+  or participant study is implemented. OQ-017 holders, actual restart/drill
+  acceptance, wider assistant/form challenge coverage, #224 legal screening
+  and #440 stabilization remain open. No acceptance criterion is ticked and
+  no operational, fairness, Azure or whole-epic approval is inferred.
+
+## [2026-10-29] query | Presentation paper and journey evidence refresh
+
+* Added a dated claim table to the
+  [regulatory review update](./regulatory/reviewed-updates/2026-10-29-presentation-paper-claim-review.md)
+  and linked it from the regulatory register, deck index and knowledge-base
+  index. Official-page retrieval failed; currentness is `unknown` except for
+  discrepancies established by retained source records.
+* Updated the paper only to date its sixteen-snapshot regulatory corpus
+  (downloaded 2026-09-19) and note the failed 2026-10-29 retrievals; it makes
+  no EPC policy change. The review and Cowork v2 handoff record the later
+  two-metric EPC policy, the 15,600/15,900 band-count discrepancy and the
+  38%/39% survey-vintage mismatch; presentation binaries remain unchanged.
+* No snapshot was rewritten. No legal duty is declared satisfied or approved.
+  @jmservera is asked to appoint a qualified Legal/Compliance reviewer;
+  Finance/funder confirmation remains necessary for grant terms.
+## [2026-10-27] engineering | Bounded IoT streaming (Refs #110, #184)
+
+* Extended the [existing IoT synthesis](./research/iot-sensor-analytics-research-plan.md#bounded-streaming-engineering-2026-10-27-refs-110-184)
+  with SDK origin/identity, SQL retained-history replay, seeded seasonal
+  continuity, finite-run and B1 cost/quota boundaries.
+* Added API/core component usage and explicit #185-#189 criterion dispositions;
+  #186 remains previously delivered. No issue status or criterion was ticked.
+* Recorded the inherited individual-identity/credential owner and selected
+  allowed X.509 path without credential issuance, access, rotation or teardown.
+  No Azure deployment, real device discovery, private data, inference or
+  operational OD-43/Legal/DPO approval was performed or inferred.
+* Updated the knowledge-base index. Local constructed engineering evidence is
+  separate from actual Hub/Azure SQL, hosted checks, publication and owner merge.
+
+## [2026-10-27] query | IoT correction cycle 1 (Refs #110, #184)
+
+* Updated the [bounded IoT synthesis](./research/iot-sensor-analytics-research-plan.md#bounded-streaming-engineering-2026-10-27-refs-110-184)
+  and index with actual global send-attempt admission after setup/truth,
+  receiver partial-construction cleanup and selected-input descriptor/frame
+  provenance. Component guides explain the split pacing/admission contract
+  and `synthetic-stream-v2` evidence format; observation bytes/IDs are unchanged.
+* Focused synthetic regressions use fake SDK calls and constructed temporary
+  SQLite, not actual Hub or Azure SQL. No deployment, private dataset, device
+  credential, real resident consent or owner/Legal/DPO approval is inferred.
+* Original adverse Review is retained. The owner-selected correction has its
+  own critique and Review addendum; issue criteria and existing live/deferred
+  gates remain unchanged, with Refs rather than Closes.
+
+## [2026-10-29] engineering | Current-main IoT integration (Refs #110, #184)
+
+* Preserved the scenario-pack and IoT engineering entries and index links
+  when integrating current main into the existing IoT branch.
+* Reconciled the [scenario-pack status](./research/iot-sensor-analytics-research-plan.md#bounded-r3-exercise-scenario-pack-2026-10-27-refs-190)
+  and [two-stage guide](../../src/core/README.md#two-stage-simulator-operation-and-limits-194):
+  the separate opt-in SDK publisher and pacing library exist, while verified
+  live operation, credential lifecycle and actual scenario consumer use
+  remain unproven. No historical log entry or live approval was changed.
+## [2026-10-27] implement | Synthetic regulatory conflict routing and consumption (Refs #208, #214, #216, #215, #217)
+
+* Extended existing cited-home chat with automatic supported-conflict referrals
+  to the named exercise owner's isolated inbox and a durable sender receipt.
+  SQL turn/referral/audit is transactional; JSON's post-save audit limitation
+  is explicit. No legal interpretation or activation authority is added.
+* Added closed zero-model usage metadata and bounded own-role/day audit-only
+  summaries. Cost remains Unknown and paid authority absent; deterministic
+  alerts, safety intake and cards-only shipment boundaries are unchanged.
+* Updated the existing regulatory-literacy synthesis and draft DPIA data map,
+  project guides and this index. DPO necessity/notice/recipient/rights/periods
+  review must include automatic referrals and metadata; no human checkbox,
+  legal snapshot, owner memory or original case-study text was changed.
+* Local synthetic unit/evaluation/browser evidence and original failures are
+  retained in the dated RPI artifacts. Staff comprehension, owner-agreed
+  thresholds, continuing-stock validation, actual identity/deployed SQL and
+  #440 remain unmet. Publication is separately blocked by the mandatory
+  full-gate requirement versus the caller's explicit no-full-gate limit.
+  No cloud deployment, model call, private dataset access or approval occurred.
+## [2026-10-27] query | Bounded staff chat and draft privacy evidence
+
+* Updated [DPIA draft](./research/chat-memory-dpia.md) and its index entry:
+  general staff warning is now server-sourced and described at the question,
+  both HTTP turn routes share cited/refusal/admission handling, and neither
+  prompts retained memory before its human decision.
+* Added bounded context and content-free per-turn usage evidence to the
+  [API contract](../../src/api/README.md#staff-chat-hardening-2026-10-27-157)
+  and [shared evaluator](../../src/agents/README.md#chat-consumption-evidence-2026-10-27-164).
+  Reconciled ADR 0004's stale no-implementation statement without changing its
+  accepted direction or granting activation.
+* Local scripted poisoning/injection coverage and Chromium DOM/keyboard checks
+  are engineering evidence, not independent human, serving-model or legal
+  acceptance. The known unsupported-claim/valid-citation failure stays visible.
+* No retention number, lawful basis, staff-notice/DPIA approval, provider
+  transfer position, break-glass policy, threshold or role budget is invented.
+  #157/#162/#159/#164/#163 remain Refs; #440 stabilization and human decisions
+  prevent whole-parent acceptance.
+
+## [2026-10-27] query | Resident content audit and assisted task designs (#153/#154)
+
+* Extended [content standard](./research/ux/content-standard.md) with a dated
+  core/supporting-surface inventory, dynamic-message and visible stored-value
+  residuals, accountable follow-up roles and an honest acceptance matrix.
+* Corrected stale reviewer-appointment wording using the #153 owner comment:
+  Juan Manuel Servera is appointed; actual exact-text review is not evidenced.
+* Extended [resident journeys](./research/ux/customer-journeys/residents.md)
+  with six task flows/text wireframes, individual non-digital alternatives,
+  language/literacy/adjustment and safe-contact rules, scoped representative
+  briefing/actions, expiry/revocation exceptions and Not run #155 scripts.
+* Indexed the evidence and made bounded existing-web draft/proposal,
+  representative-date and time-capture copy clarifications with regressions.
+  Fluent 2, native semantics, non-colour signals and reduced motion remain.
+  No live contact, portal implementation, operational Legal/DPO decision,
+  human usability/AT acceptance or whole-issue closure is claimed.
+## [2026-10-27] ingest | Source-only monitoring candidates (Refs #146)
+
+* Added [operator runbooks and the complete issue evidence/gap matrix](../../infra/monitoring-runbooks.md),
+  source-only job/IoT metric alert candidates and an aggregate operations
+  workbook; updated infra navigation and this knowledge-base index.
+* Corrected the ledger missing-success rule's outer query range to 26 hours.
+  Existing alert names, thresholds and budget notification conditions are
+  preserved; budget notification is not a hard cap.
+* New candidates default disabled; proposed roles are not named appointments.
+  Actual owners/live thresholds, privacy exclusion, poison-queue and AI/harm
+  signal integration, same-period billing/price reconciliation and accepted
+  notification/suspension drills remain unresolved.
+* Workbook missing data is Insufficient/Blocked and actual cost/AI metering
+  remains Unknown/unreconciled. Source definitions and local checks are not a
+  deployment, live approval, SLO claim or issue acceptance.
+
+## [2026-10-29] query | Bounded existing IoT hub exercise and live blockers
+
+* Updated infrastructure cost/environment evidence, ADR0003 dated authorization,
+  API activation guide, streaming synthesis and index for Refs #140 #184 #137.
+* Reused existing UK South B1/one-unit hub. Owner approved USD10/month after
+  cost check, within USD5 additional through October31. Child-only deployment
+  disables all device-bearing resource logs and retains metrics, private
+  attachment, service auth, four app min0 and eight Manual jobs.
+* No new paid hub, Event Hub, endpoint, role, device, key or public SQL change.
+  Existing operator lacks registry data permission; keyless custom adapter/
+  cloud revision and resident projection acceptance remain separately gated.
+* Constructed actual local SQL Server passed45 sensor ingestion tests; do not
+  describe this as live Hub-to-SQL or resident-gauge acceptance. Original
+  source-only history, critique and open credential/OD43 criteria remain.
+
+## [2026-10-27] query | Working Finance reviews and held human decisions
+
+* Indexed the [core working-review boundary](../../src/core/README.md#unapproved-working-field-review-96-98-99)
+  and [authenticated form-review endpoint](../../src/api/README.md#working-form-review-and-held-finance-decisions-96-98-99)
+  for #96, #98 and #99.
+* Isolated accept/correct/reject notes, retained source/reviewer history,
+  field-specific draft diagnostics and linked diagnostic manifests do not
+  approve a template, source policy, eligibility rule or application/claim.
+  Draft-only read/action-time freshness is not full downstream invalidation.
+* Missing template/rule authority and Finance/Board OD-12/15 are durably Held
+  with null approved inputs. Diagnostic pause is not a programme-wide release
+  gate or containment of live activity. Actual approved envelope, liquidity,
+  covenant, downside thresholds and restart authority remain human decisions.
+* No company figures, financial approvals, Azure changes, private datasets or
+  new AI authority are introduced. All three issues remain Refs; engineering
+  evidence is not whole-issue or operational acceptance.
+
+## [2026-10-27] query | Rubric src counting and migration score reconciliation
+
+* Refs #198. Added the
+  [dated rubric reconciliation](../architecture/cutover-evidence-pack.md#rubric-src-counting-reconciliation-2026-10-27)
+  and updated the index and rubric guide. Preserved original sign-off outcomes
+  and every earlier log entry.
+* Verified src package/tests/manifest/Dockerfile coverage and excluded
+  vendor/private/build paths. #295/#300/#302 already removed legacy includes;
+  no production registry, rubric_version, score or workflow/check name changed.
+* Recorded 47/100 original baseline and carried migration snapshots separately
+  from #499's actual 77/100 vs 77/100 retirement comparison. No attributable
+  migration gain, fresh per-migration assessment or retroactive ordering is
+  claimed. Re-evidence routes identify seven criteria and their source PRs.
+* Re-assessed historical 19 failures: current baseline 18 failed/355 passed/
+  seven skipped; after migration-related test repairs, one unrelated
+  deck-selection failure/374 passed/seven missing-runtime skips remain.
+  Thirty-one migration-targeted checks pass. No full gate, cloud, private data
+  or scorer dispatch. Missing historic comparisons and prescribed sequence
+  remain explicit acceptance gaps; this delivery references rather than closes.
+
+## [2026-10-29] update | PR #507 main integration, Refs #198
+
+* Rebased onto main `5653547507f3056f09a726a18516237728da5e5b`,
+  retaining both sides of the cut-over evidence pack, KB index and this
+  append-only log. Earlier entries and original RPI outcomes remain unchanged.
+* Kept main's complete rubric tree and scenario manifest at the owner's
+  direction. Qualified the reconciliation and index so original rubric
+  repairs and test counts are not presented as the rebased candidate's delta.
+* Corrected the index's duplicate date metadata while retaining its current
+  date. No application source, workflow, score, Azure resource or private
+  dataset changed; no push, issue acceptance or hosted-CI result is claimed.
+
+## [2026-10-29] update | PR #507 conflict rebase, Refs #198
+
+* Rebased onto main `356a3cfbaa2cd63a6fbf80e87e11a29cacaaf4c7`.
+  Preserved main's entire log prefix, both original #198 append entries,
+  independent index updates and all fourteen prior RPI artifacts unchanged.
+* Updated the existing
+  [integration qualification](../architecture/cutover-evidence-pack.md#main-integration-qualification-2026-10-29)
+  with the later base and fresh local outcomes. Main's entire rubric tree and
+  scenario manifest are retained byte-for-byte; no application, workflow,
+  Azure resource or private-data change was made.
+* Core/API lint, format, typing and twelve focused tests passed, including
+  scenario source-pin validation. The inherited rubric suite still has
+  18 failures and seven missing-runtime skips; this is not CI-green evidence.
+  No full API suite, full publication gate, push or hosted run was performed.
+
+## [2026-10-30] update | PR #507 current-main synchronization, Refs #198
+
+* Rebased onto main `91e890e07af036263316c153cbc7ceff780cdaa2`, then onto
+  concurrently updated `ffd8f35e63b24905b9aeb937dbf2a7fe9968747f`, retaining
+  main's complete log prefix, every original topic entry and independent index
+  additions, including monitoring, finance and existing-hub reconciliation.
+* Added the [current synchronization qualification](../architecture/cutover-evidence-pack.md#current-main-synchronization-2026-10-30)
+  and indexed it without rewriting earlier dated results or acceptance gaps.
+  Main's rubric and scenario manifest remain authoritative and unchanged.
+* No application, workflow, infrastructure or legacy code changed. No Azure
+  resource operation, push, fresh hosted result or issue acceptance is claimed.
+  Dated RPI artifacts retain the local commands, results and independent Review;
+  publication and hosted checks remain coordinator-owned.
+* Fresh core/API lint, format, typing and twelve focused tests pass, as do
+  twenty-five migration tests. Unchanged main rubric inputs still yield
+  18 failures, 355 passes and seven runtime skips. Prepare reports no scored
+  artifact change; no full API suite or publication gate was run.
+
+## [2026-10-30] update | PR #507 review evidence correction, Refs #198
+
+* Corrected the existing
+  [rubric reconciliation](../architecture/cutover-evidence-pack.md#pr-507-review-correction-2026-10-30)
+  and indexed the distinction between the original candidate and integrated
+  documentation-only delta, including their different historical frozen diffs.
+* Qualified discarded fixture/guide claims and acceptance rows in place.
+  Original 374/1/7 and 31 fixture passes remain historical; integrated results
+  are 355 passed, 18 failed and seven runtime skips, not a green suite.
+* Replaced the unregistered rubric-guide B6 route with scored `src/README.md`
+  in proposed later PR `docs(src): strengthen B6 navigation and evidence`,
+  only when that PR actually changes the artifact. No score gain, new scored
+  evidence, historical acceptance or remote metadata update is claimed.
+* Prepared the replacement PR description separately for owner application.
+  No rubric, test, source, workflow or score edits; local-only commit, no push.
+
+## [2026-10-30] update | Private Blob transport integration and rubric diagnosis, Refs #360
+
+* Preserved both append-only log ranges and original research/review outcomes
+  while integrating main's current src, IoT, release and retirement records.
+  DN1-DN5, Blob paging/profile/deadline tests and private writer scope remain.
+* Updated the transport runbook, evidence pack and index with traceable
+  evidence/rationale/change_reason and dated-expiry qualification.
+* The actual failed rubric submission added `evidence2` to D1. No score was
+  recorded. Removing only that key in a diagnostic replay gives 77 versus 77,
+  not a new assessment; open A1/A3/A5 were already at 5. Added exact rejection
+  regressions without weakening validation or editing score files.
+* Live transport, real sizes/data actions, attestation, hosted scoring and
+  human acceptance remain separate. No Azure, sign-in, warming or push.

@@ -1,0 +1,95 @@
+{
+  "task_id": "523",
+  "task_slug": "capacity-page-523",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-28/capacity-page-523-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-28/capacity-page-523-plan.md",
+    "details": ".copilot-tracking/details/2026-10-28/capacity-page-523-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-28/capacity-page-523-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-28/capacity-page-523-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-28/capacity-page-523-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Full ordered RPI loop and branch publication authorized by caller",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-28; issue #523"
+    },
+    {
+      "decision": "Research executed, Ready for bounded repair; SQL/browser acceptance blocked",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/research/2026-10-28/capacity-page-523-research.md"
+    },
+    {
+      "decision": "One critique executed, original Revise; PC-002 through PC-005 applied; PC-001 exact-head boundary applied but repeat-loop advice rejected under one-pass rule",
+      "status": "disposed",
+      "evidence": ".copilot-tracking/plans/2026-10-28/capacity-page-523-plan.md"
+    },
+    {
+      "decision": "Single independent Review executed on the uncommitted candidate",
+      "status": "Complete; full-task execution Partial; outcome Not accepted",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-28/capacity-page-523-review.md; RV-001 through RV-006"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "heavy-lock",
+      "summary": "Shared heavy lock held by PID 4053825 at intake; SQL Server, browser and full gate blocked",
+      "resolution": "Explicit coordination event followed by nonblocking lock admission; no polling"
+    },
+    {
+      "id": "review-defects",
+      "summary": "RV-002 unsaved-draft retry loss and RV-003 incomplete browser assertions block publication",
+      "resolution": "Later rpi-implement under accepted scope; preserve original Review and do not repeat it"
+    },
+    {
+      "id": "publication-gates",
+      "summary": "SQL Server, browser, requested full API suite, full exact-head receipt and final publication assessment unavailable",
+      "resolution": "Resolve source findings and obtain admitted required evidence before any push or PR"
+    }
+  ],
+  "next_action": { "phase": "Follow-up", "action": "Await later implementation selection for RV-002/RV-003; required heavy coordination and publication gates remain blocked" },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Repair read-only refresh retry without losing unsaved appointment drafts",
+      "rationale": "High-severity introduced defect, small bounded fix, required before publication",
+      "evidence": "RV-002"
+    },
+    {
+      "rank": 2,
+      "task": "Strengthen manager destination, read and transport assertions",
+      "rationale": "Bounded medium-severity test defect; needed for trustworthy acceptance evidence",
+      "evidence": "RV-003"
+    },
+    {
+      "rank": 3,
+      "task": "Complete admitted SQL Server/browser/full API and exact-head publication gates",
+      "rationale": "Required high-value acceptance evidence, blocked until explicit heavy coordination",
+      "evidence": "RV-001; publication gate policy"
+    },
+    {
+      "rank": 4,
+      "task": "Measure 601-order rendering before considering bounded rendering",
+      "rationale": "Pre-existing scale risk; measurement first avoids speculative redesign",
+      "evidence": "RV-004"
+    },
+    {
+      "rank": 5,
+      "task": "Add missing metadata to existing free-text controls",
+      "rationale": "Low-risk pre-existing UI cleanup, nonblocking and outside current repair",
+      "evidence": "RV-005"
+    },
+    {
+      "rank": 6,
+      "task": "Evaluate work-order withdrawal confirmation or undo",
+      "rationale": "Pre-existing interaction follow-up requiring scoped UX treatment",
+      "evidence": "RV-006"
+    }
+  ]
+}

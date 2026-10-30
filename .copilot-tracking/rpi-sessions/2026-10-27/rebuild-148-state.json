@@ -1,0 +1,64 @@
+{
+  "task_id": "148",
+  "task_slug": "rebuild-148",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-27/rebuild-148-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-27/rebuild-148-plan.md",
+    "details": ".copilot-tracking/details/2026-10-27/rebuild-148-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-27/rebuild-148-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-27/rebuild-148-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-27/rebuild-148-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run research, plan, implement, review in order; authoring and local validation only; publish one draft PR with honest Refs",
+      "status": "confirmed",
+      "evidence": "Explicit owner request 2026-10-27"
+    },
+    {
+      "decision": "Research executed, Ready for source-only Plan; one critique executed with original Revise verdict",
+      "status": "resolved for implementation",
+      "evidence": "Plan Critique Disposition: PC-001/002 applied; PC-003 rejected unsupported environment premise"
+    },
+    {
+      "decision": "One independent Review executed; outcome Not accepted; authored local boundary only",
+      "status": "executed; RV-001 remains open",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/rebuild-148-review.md"
+    },
+    {
+      "decision": "Publish one draft PR to main with Refs #148 and no closing references",
+      "status": "published; draft OPEN verified",
+      "evidence": "https://github.com/jmservera/ama/pull/511; source/evidence commit 64d4c67ac161848af823bb06dd75c79700d3c508"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Await owner disposition of ranked follow-ups on draft PR #511; issue acceptance remains partial and Review Not accepted; no child work selected"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Preserve failed-rehearsal evidence and sanitized checkpoint context",
+      "rationale": "Bounded Medium RV-001 correction with immediate diagnostic/reliability value; owner-selected later implementation",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/rebuild-148-review.md RV-001"
+    },
+    {
+      "rank": 2,
+      "task": "Plan real helper integration and exact preservation/retention authority",
+      "rationale": "Prerequisite for useful Azure automation; retain existing deployment, credential, SQL and staff abstractions rather than duplicate them",
+      "evidence": ".copilot-tracking/plans/2026-10-27/rebuild-148-plan.md Follow-Up Items"
+    },
+    {
+      "rank": 3,
+      "task": "Authorized disposable Azure rebuild and teardown acceptance",
+      "rationale": "High acceptance value but depends on integration, owner-approved exact inventory and relevant tenant/retention authority; not authorized now",
+      "evidence": "Issue #148 acceptance criteria; research C3/C6/C7"
+    }
+  ]
+}

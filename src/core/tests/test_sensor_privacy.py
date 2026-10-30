@@ -43,6 +43,33 @@ class SensorPrivacyTests(unittest.TestCase):
         sb.write(out, homes=1, days=1, cadence=360)
         return out
 
+    def test_stale_snapshot_versions_refuse_before_replay_or_sql(self) -> None:
+        stock = ss.select(
+            [dict(synthetic_home_id="ZF-1", is_synthetic="true", monitoring_consent="granted")],
+            1,
+        )
+        for name, selection, stale in (
+            ("default", None, "sensor-backfill-v2"),
+            ("stock", stock, "sensor-backfill-stock-v1"),
+        ):
+            with self.subTest(mode=name):
+                out = self.root / name
+                sb.write(out, homes=1 if selection is None else None, stock=selection, days=1)
+                path = out / "manifest.json"
+                manifest = json.loads(path.read_text())
+                path.write_text(json.dumps({**manifest, "version": stale}))
+                connection, schema = Mock(), Mock()
+                with patch.object(sb, "write") as replay:
+                    with self.assertRaisesRegex(ValueError, "Unsupported sensor provenance"):
+                        sb._verify_snapshot(out, self.root / "unused", selection, 1000)
+                    with self.assertRaisesRegex(ValueError, "verified current synthetic snapshot"):
+                        sb.load_into(connection, out, create_schema=schema, stock=selection)
+                    replay.assert_not_called()
+                schema.assert_not_called()
+                connection.assert_not_called()
+                self.assertEqual(connection.mock_calls, [])
+                self.assertFalse((self.root / "unused").exists())
+
     def assert_clean(self, value: object) -> None:
         text = json.dumps(value, default=str)
         self.assertNotIn(DEVICE, text)

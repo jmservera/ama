@@ -1,7 +1,7 @@
 ---
 title: Zava Forward Workbench Content Standard, Glossary and Copy Audit
 description: Plain-language content standard, status and next-action glossary, blocked-message pattern, AI label wording and the copy audit of the core flow (issue #153)
-ms.date: 2026-10-23
+ms.date: 2026-10-27
 ms.topic: reference
 ---
 
@@ -140,10 +140,68 @@ exercises changed wording and safety/unknown/AI boundaries, not actual staff
 or resident comprehension, operational approval, full WCAG conformance or
 named human acceptance of resident-facing wording.
 
+### Dated surface and message audit (2026-10-27, #153/#154)
+
+This source inspection extends, not replaces, the historical audit above.
+The inventory covers the existing core flow and supporting web assets in
+`src/api/src/zava_forward/api/web/`. It is not exhaustive enumeration of every
+dynamic message, a reading-age result, comprehension validation or a full
+web/accessibility audit. The [resident task designs](./customer-journeys/residents.md#resident-and-representative-task-designs-2026-10-27-154)
+are candidate copy, not approved communications.
+
+| Surface and source | Inspected content and states | Outcome and limits |
+| --- | --- | --- |
+| `app.js`, `index.html`, `welcome.html`: entry, account, work lists, case, overview | Signed-out/session-ended, loading/error/empty queues, recorded task owner/reason/action, safety text, manual path | Core statuses use words; safety remains independent. Long task/source explanations need comprehension testing. Welcome is a research demonstrator, not a resident service |
+| `app.js`: resident drafts, document reading, briefing, priority and funding | Exact AI label, optional templates/rules, unreviewed and reviewed drafts, failed requests | Draft-only heading and named-review/no-send explanation clarified. Priority review status and funding approval terminology need a separate end-to-end review; not globally certified |
+| `assistants.js`, `chat.js`: proposal, source check, review, chat and alerts | Proposed/ready/stale/failed/reviewed, exact AI warning, unknown source coverage, historical lookup | "Requested using" replaces technical "Invocation"; proposal review now explicitly excludes approval, consent and safety decisions. Quotes, source titles and user/model text remain verbatim |
+| `panels.js`: resident measure/representative, updates and complaints | Not recorded/paused/withdrawn decisions, scoped source/date checks, update owner/due/basis, separate response and remedy | Review-date label now says authority is unavailable from that date. Complaint response closure never promises remedy completion or live dispatch |
+| `ops.js`: quality, appointments and capacity | Independent acceptance/defect/reinspection/handover, offer and three separate confirmations, provider failure | Offer, consent and confirmation remain separate. Existing instructions are staff-facing, not resident-ready text; no live contact |
+| `panels.js`: finance, grants, technical and stock; `app.js`: documents/import/building | Payment pause, grant stages, sign-offs, competing sources, missing files, CSV errors, shared-work restrictions | "Keep on hold" is still a visible stored finance option/disposition; lexical allowance does not mean plain-language compliance. No data migration performed |
+| `timecapture.js`, `role-screens.js`: supporting staff tasks | Enabling refusal, read-only evidence, invalid page/role/empty state | Ordinary "hold the same role" changed to "have the same role". Time-capture added to the lexical guard; specialist server-projected content remains manually inspected only |
+| `law.js`, `law.html`: supporting reference viewer | Sources/gaps, source status/date/caveats, failed requests, no-AI/no-legal-advice warning | "Sources held", provision metadata and raw failures remain technical supporting copy. They are outside the lexical guard, not an accepted resident explanation |
+
+Identifiers/API fields, stored decisions, quoted evidence and application-owned
+labels are different evidence classes. Do not blanket-replace or redact source
+quotations to make the lexical test pass. The guard now covers eight named
+files; `role-screens.js`, `law.js` and `law.html` are inventoried above, not
+silently treated as lexically compliant.
+
+#### Open message findings and accountable follow-up
+
+These are source-inspection findings, not claims about every possible response.
+Follow-up roles below own design remediation, not invented live case assignments.
+
+| Finding and source locator | Missing requirement | Follow-up owner and next action |
+| --- | --- | --- |
+| `app.js`, `api()`: "Something went wrong." and forwarded `data.error`; case refresh forwards `e.message` | Unknown cause, no reliable owner or next action on every error | API/content maintainer: inventory typed error outcomes and supply a truthful recovery/owner contract, including uncertain writes; do not advise blind retry |
+| `store.py`, `ranking_snapshot()`: manager-only "ranking snapshot" error; finance option in `panels.js` | Dynamic/internal wording remains visible despite lexical tests | Content and Finance owners: review display-only mappings separately from stored values; retain exact audit history |
+| `signoffs.py`, `mutate()`: "Record the design first." and independent-person refusals | Some messages give a fix but no explicit owner; not all reasons follow three-part pattern | Technical workflow/content owner: map each refusal to the actual responsible role and next permitted action |
+| `chat.js`, `regulatoryAlertsPanel()`: unknown/"Unassigned" decision owner; `law.js`, `fail()` forwards raw message | Missing owner is explicit but unresolved; recovery is not always actionable | Regulatory-service/content owner: resolve actual appointment or keep Unknown with an owned investigation; no fabricated approver |
+| `app.js`, `priorityPanel()` reviewed status; `fundingPanel()` human approval vs AI draft review | Adjacent explanations do not prove every reviewed output disclaims decision authority | AI-task and Finance/content owners: exercise reviewed/failed/stale states and keep draft review distinct from controlled financial approval |
+
+Generic error recovery must distinguish a failed read from an uncertain write:
+check recorded history before repeating a change. The existing resident-update
+form already uses this distinction. Adding a generic role name to every raw
+error would not establish real accountability.
+
+#### Issue #153 acceptance evidence
+
+| Criterion | Evidence and disposition |
+| --- | --- |
+| Standard and glossary | Exists in this document; previously checked issue criterion preserved |
+| Core-flow audit removes internal terms | Expanded inventory delivered; partial, because dynamic messages and visible stored finance wording above remain |
+| Errors/blocked steps give reason, owner, next action | Existing final-check reasons tested; partial, residuals above prevent universal acceptance |
+| Exact AI label and reviewed-draft authority | Exact label retained; draft/proposal disclaimer strengthened. Partial, not a global certification of every reviewed/error state |
+| Named human resident wording review before use | Reviewer appointed below; actual review of exact copy Not run. No use authorized |
+
 ## Human review
 
-Resident-facing wording defaults to named per-message review; no reviewer is
-appointed and no live text or sending is approved. Review records need name,
+Resident-facing wording defaults to named per-message review. The owner
+[appointed Juan Manuel Servera (@jmservera)](https://github.com/jmservera/ama/issues/153)
+on 2026-10-15 in the issue comments. This corrects the earlier "no reviewer"
+statement; appointment does not establish completed review. No completed named
+human review of this candidate wording is evidenced and no live text or sending
+is approved. Review records need name,
 role, date, exact text and outcome. Unreviewed drafts remain "not approved"
 and synthetic only.
 
@@ -176,8 +234,8 @@ received/reviewed/accepted/published/confirmed states must stay distinct.
 
 ## Open items
 
-* Owner to name the reviewer for resident-facing wording and confirm the
-  review process.
+* Appointed reviewer Juan Manuel Servera to record name, role, date, exact
+  wording/version and outcome before resident use; owner to confirm process.
 * The finance decision value "Keep on hold" is stored data; renaming it needs
   a migration decision.
 * Reading-age targets, translation and accessible-format wording are not set.

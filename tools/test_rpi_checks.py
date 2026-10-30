@@ -26,6 +26,24 @@ SPEC.loader.exec_module(gate)
 
 
 class GateTests(unittest.TestCase):
+    def test_journey_import_paths_keep_safety_and_shared_fixtures(self) -> None:
+        checks = gate.required_checks(
+            Path("."),
+            {
+                "owner": "a" * 24,
+                "sql": {},
+                "images": {},
+                "extras": [],
+                "executed_groups": ["browser"],
+            },
+        )
+        journey = next(row for row in checks if "checks.case_journey_browser_check" in row["argv"])
+        self.assertEqual(
+            journey["env"]["PYTHONPATH"],
+            "<output>/safety:<checkout>/src/api/tests:<checkout>/src/core/tests:"
+            "<checkout>/src/agents/tests",
+        )
+
     def setUp(self) -> None:
         self.temp = tempfile.TemporaryDirectory(prefix="rpi-contract-")
         self.addCleanup(self.temp.cleanup)
@@ -405,6 +423,7 @@ class GateTests(unittest.TestCase):
             "files": {
                 "axe-4.10.3.min.js": "fixture",
                 "regulatory-ux-results.json": "fixture",
+                "case-journey-results.json": "fixture",
                 "workflow-coverage.json": "fixture",
                 "browser-bytecode-policy.pth": "fixture",
                 "snapshot-inputs.log": "fixture",
@@ -467,6 +486,14 @@ class GateTests(unittest.TestCase):
                     "axe_version": "4.10.3",
                     "axe_sha256": gate.AXE_SHA256,
                     "scans": [{"violations": []}],
+                }
+            elif name == "case-journey-results.json":
+                content = {
+                    "browser": "fixture Chromium",
+                    "axe_version": "4.10.3",
+                    "page_errors": [],
+                    "zoom": "chrome.tabs.setZoom=2; innerWidth<=640",
+                    "scans": [{"violations": []} for _ in range(87)],
                 }
             elif name == "workflow-coverage.json":
                 content = {"steps": []}
@@ -562,6 +589,16 @@ class GateTests(unittest.TestCase):
                         )
             for name, key, value in (
                 ("regulatory-ux-results.json", "outcome", "failed"),
+                ("case-journey-results.json", "zoom", "device scale only"),
+                ("case-journey-results.json", "scans", []),
+                ("case-journey-results.json", "scans", [{"violations": []}] * 86),
+                ("case-journey-results.json", "scans", [{"violations": []}] * 88),
+                (
+                    "case-journey-results.json",
+                    "scans",
+                    [{"violations": [{"impact": "serious"}]}] * 87,
+                ),
+                ("case-journey-results.json", "page_errors", ["Uncaught failure"]),
                 ("api-gate.json", "Results", [{"Vulnerabilities": [{"Severity": "HIGH"}]}]),
                 ("api.spdx.json", "packages", []),
                 ("workflow-coverage.json", "steps", [{"coverage": "fabricated"}]),
@@ -1217,6 +1254,13 @@ class GateTests(unittest.TestCase):
     def test_matrix_drift_and_unreviewed_extra_commands_refuse(self) -> None:
         self.assertEqual(len(gate.required_groups([])), 17)
         self.assertEqual(gate.SQL_SELECTORS[0], "test_mssqlstore")
+        self.assertEqual(set(gate.WORKFLOW_HASHES), set(gate.WORKFLOWS))
+        root = Path(__file__).resolve().parents[1]
+        for name in gate.WORKFLOWS:
+            with self.subTest(workflow=name):
+                self.assertEqual(
+                    gate.WORKFLOW_HASHES[name], gate.digest(root / ".github/workflows" / name)
+                )
         for value in (
             "api:test_module;curl external",
             "api:../../private",
@@ -1232,15 +1276,32 @@ class GateTests(unittest.TestCase):
         runner.snapshot = self.root
 
         def version(argv: list[str], **kwargs: Any) -> str:
+            runner.rows.append({"group": runner.group})
             return "Python 3.12.3" if argv[0] == "python3" else "Version: 0.76.0"
 
         with (
             patch.object(runner, "command", side_effect=version) as command,
             patch.object(gate, "tool_identity", return_value={}),
+            patch.dict(
+                gate.WORKFLOW_HASHES,
+                {
+                    name: gate.digest(self.root / ".github/workflows" / name)
+                    for name in gate.WORKFLOWS
+                },
+            ),
         ):
             runner.preflight()
+            self.assertEqual(runner.failures, [])
+            for name in gate.WORKFLOWS:
+                with self.subTest(drift=name):
+                    path = self.root / ".github/workflows" / name
+                    original = path.read_bytes()
+                    path.write_bytes(original + b"# changed\n")
+                    runner.preflight()
+                    self.assertEqual(runner.failures, [f"preflight: Workflow matrix drift: {name}"])
+                    path.write_bytes(original)
+                    runner.failures.clear()
         command.assert_any_call(["shellcheck", "--version"], timeout=60)
-        self.assertTrue(runner.failures)
 
     def test_axe_and_scan_database_cannot_silently_skip(self) -> None:
         with self.assertRaises(gate.GateError):

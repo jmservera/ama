@@ -2,7 +2,7 @@
 title: Zava Forward orchestrator
 description: Scheduled job documentation (ledger digest publish and verification) for the orchestrator project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-18
+ms.date: 2026-10-27
 ms.topic: reference
 ---
 
@@ -17,6 +17,41 @@ New-tag deployment and healthy job executions remain cut-over evidence, not
 established by changing the template. Tests are in `src/orchestrator/tests/` and run with
 `PYTHONPATH=../core/tests python3 -m unittest discover -s tests`. The section below is moved
 unchanged from the former `mvp/README.md` (M6 of #199).
+
+## Source-only rebuild rehearsal (#148)
+
+`python -m zava_forward.orchestrator.rebuild --dry-run` prints a fixed ordered
+contract for parameter review, dependency bootstrap, output discovery, applicable
+digest-pinned workload images, private credential provisioning, SQL users and
+synthetic seed, apps, auth/staff reconciliation and separate health, API denial,
+browser, workload-SQL, two-model and restart checks. It creates no workspace
+and performs no backend operations. No arbitrary commands or input data paths
+are accepted.
+
+`python -m zava_forward.orchestrator.rebuild --synthetic-local` rehearses that
+sequence in an owned temporary SQLite database and tears down its modeled
+resource/budget inventory. It generates only fictional local rows, reopens
+connections for seed/staff/audit checks, stops on failed operations/readback,
+and removes only its owned temporary workspace. It ignores inherited data/store
+configuration. Every report states SYNTHETIC/local scope; image/auth/HTTP/model
+stages are `simulated-not-live`, SQL fixture checks are `local-sql-verified`.
+Neither classification proves Azure SQL, application-store parity, workload
+identity, model access, staff delegation, resident consent or live acceptance.
+
+There is **no Azure adapter, deployment or apply mode**. Existing infrastructure,
+release, credential and staff helpers are integration contracts, not invoked by
+this module. See the [infra runbook and residual gates](../../infra/README.md#rebuild-authoring-and-local-rehearsal-refs-148).
+All issue #148 acceptance criteria remain partial; local simulation cannot
+establish a disposable Azure rebuild. Unknown/locked/retained resource types
+fail closed rather than authorizing destruction. Teardown removes Front Door
+profiles before their target managed environments, releasing the modeled
+managed Private Link origin dependency first; profiles also precede their WAF
+policies. Run the new focused tests
+from this directory after installing the package:
+
+```bash
+python -m unittest discover -s tests -p test_rebuild.py -q
+```
 
 ## Offline source change job (#213)
 

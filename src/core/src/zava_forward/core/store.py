@@ -365,15 +365,19 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             if not c or (user is not None and projection.is_contractor(user) and not projection.own_case(user, c)):
                 return None
             d = json.loads(json.dumps(c))
-            from .resident_decisions import followup_view, challenge_references_visible
+            from .resident_decisions import INTAKE_FIELDS, followup_view, challenge_references_visible
             followup_view(d)
             if user is not None and challenge_references_visible(self, user):
                 from .resident_decisions import challenge_catalog
                 d["challenge_targets"] = challenge_catalog(self, case_id)
             elif user is not None:
+                for field in INTAKE_FIELDS:
+                    d.pop(field, None)
                 d.pop("affected_challenges", None)
                 d.pop("challenge_targets", None)
             d.pop("form_staging", None)
+            d.pop("form_reviews", None)
+            d.pop("finance_decision_holds", None)
             d["support_status"] = stock.support_status(c["resident"])
             d["support_coverage"] = stock.support_coverage(c["resident"])
             d["resident"].setdefault("priority_support", None)
@@ -724,33 +728,60 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                     + ("" if r["verified"] else ". Unverified: its sources do not match the case record"))
 
     def briefing(self, user, mode=None):
+        if not projection.allowed(user, "briefing"):
+            raise PermissionError("Your role does not include this.")
         off = ai_tasks.workflow_only(mode)
+        programme = user["role"] in MANAGER_ROLES
         with self.lock:
-            hit = self._briefings.get((user["code"], off))
+            candidates = self._filtered(user, "all" if programme else "mine", "", {})
+            ranks = self._ranking()
+            candidates.sort(key=lambda c: ranks[c["id"]]["rank"])
+            key = (user["code"], user["email"], user["role"], user.get("tid"), user.get("oid"),
+                   projection.can_see_reason(user), tuple(c["id"] for c in candidates), off)
+            hit = self._briefings.get(key)
             if hit and hit[0] == self.version and (hit[1]["source"] != "ai" or
                     self.ai_epoch_current(hit[1])) and not self.continuity_suspension("briefing") and (
                     (hit[1]["source"] != "ai" and (off or not self.ai.configured)) or self.release_current(
                         "briefing", hit[1].get("release"), hit[1].get("model"))):
                 return hit[1]
             ver = self.version
-            mine = [c for c in self.cases.values() if not c["closed"] and c["owner_code"] == user["code"]]
-            ranks = self._ranking()
-            mine.sort(key=lambda c: ranks[c["id"]]["rank"])
-            top = mine[:8]
+            top = [deepcopy(self._case(c["id"])) for c in candidates[:8]]
             for c in top:
                 export_fields.prompt_case(c)
-            facts = "\n".join(f"{c['id']} {c['resident']['name']}: {c['stage']}, {c['days_in_stage']} days. {self.status_line(c)}" for c in top)
-            tmpl = "Start with: " + "; ".join(f"{c['resident']['name']} ({c['stage'].lower()}, {c['days_in_stage']} days)" for c in top[:3]) if top else "No open cases."
+            rows = [self.summary(c) for c in top]
+            if not projection.can_see_reason(user):
+                for row in rows:
+                    if row["status"].startswith("Waiting on "):
+                        row["status"] = "Waiting for the recorded next step"
+            facts = "\n".join(f"{c['id']} {c['resident']['name']}: {c['stage']}, {c['days_in_stage']} days. {row['status']}"
+                              for c, row in zip(top, rows))
+            empty = "No permitted open programme cases are available." if programme else \
+                "No open cases are assigned to you. This does not mean the programme has no work."
+            tmpl = "Start with: " + "; ".join(f"{c['resident']['name']} ({c['stage'].lower()}, {c['days_in_stage']} days)" for c in top[:3]) if top else empty
         sysmsg, prompt = ai_prompts.render("briefing", facts=facts)
         r = ai_tasks.run_text_task(self, user, "briefing", top, sysmsg, prompt, tmpl,
                                    [x for c in top[:3] for x in [f"{c['id']}: Stage: {c['stage']}", f"{c['id']}: Days in stage: {c['days_in_stage']}"]],
                                    mode=mode)
         self.audit(user["email"], "ai_run", "-", f"briefing source={r['source']} model={r['model']} verified={r['verified']}")
-        out = dict(r, label=("AI suggestion, not approved" if r["source"] == "ai" else "Summary by rules")
+        out = dict(r, scope="programme" if programme else "assigned",
+                   scope_label="All programme cases" if programme else "My assigned cases",
+                   case_count=len(candidates), summary_count=len(top) if r["source"] == "ai" else len(top[:3]),
+                   label=("AI suggestion, not approved" if r["source"] == "ai" else "Summary by rules")
                    + ("" if r["verified"] else ". Unverified: its sources do not match the case record"))
+        if r["source"] != "ai" and r["approval"] != "Quarantined" and top:
+            out["statements"] = [
+                dict(text=f"{c['resident']['name']} "
+                          f"({c['stage'].lower()}, {c['days_in_stage']} days)",
+                     citations=[f"{c['id']}: Stage: {c['stage']}",
+                                f"{c['id']}: Days in stage: {c['days_in_stage']}"],
+                     unresolved=[])
+                for c in top[:3]
+            ]
         with self.lock:
             if self.version - ver <= 1:  # only our own comparison record was saved meanwhile
-                self._briefings[(user["code"], off)] = (self.version, out)
+                for old in [k for k, v in self._briefings.items() if v[0] != self.version]:
+                    del self._briefings[old]
+                self._briefings[key] = (self.version, out)
         return out
 
     # ---- AI priority recommendation: advice beside the deterministic order, never part of it

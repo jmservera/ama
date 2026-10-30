@@ -1,0 +1,129 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "ama-paper",
+  "elements": [
+    {
+      "id": "heading", "type": "text", "x": 0, "y": 0, "width": 1080, "height": 80,
+      "text": "CONCEPTUAL | What survives a fresh session?",
+      "fontSize": 32, "fontFamily": 2, "lineHeight": 1.25, "strokeColor": "#000000",
+      "textAlign": "left", "verticalAlign": "top", "containerId": null
+    },
+    {
+      "id": "reset-note", "type": "text", "x": 0, "y": 90, "width": 1080, "height": 60,
+      "text": "A conversation reset is not a repository reset.",
+      "fontSize": 24, "fontFamily": 2, "lineHeight": 1.25, "strokeColor": "#000000",
+      "textAlign": "left", "verticalAlign": "top", "containerId": null
+    },
+    {
+      "id": "session-k", "type": "rectangle", "x": 0, "y": 270, "width": 250, "height": 180,
+      "strokeColor": "#495057", "backgroundColor": "#F3F2F1", "fillStyle": "solid",
+      "strokeWidth": 2, "roughness": 0, "seed": 101, "roundness": { "type": 3 },
+      "boundElements": [
+        { "type": "text", "id": "session-k-label" },
+        { "type": "arrow", "id": "write-software" },
+        { "type": "arrow", "id": "write-instructions" }
+      ]
+    },
+    {
+      "id": "session-k-label", "type": "text", "x": 15, "y": 330, "width": 220, "height": 60,
+      "text": "Feature k\nAgent session",
+      "fontSize": 24, "fontFamily": 2, "lineHeight": 1.25, "strokeColor": "#000000",
+      "textAlign": "center", "verticalAlign": "middle", "containerId": "session-k"
+    },
+    {
+      "id": "software", "type": "rectangle", "x": 390, "y": 170, "width": 300, "height": 180,
+      "strokeColor": "#0078D4", "backgroundColor": "#CFE4FA", "fillStyle": "solid",
+      "strokeWidth": 2, "roughness": 0, "seed": 102, "roundness": { "type": 3 },
+      "boundElements": [
+        { "type": "text", "id": "software-label" },
+        { "type": "arrow", "id": "write-software" },
+        { "type": "arrow", "id": "read-software" }
+      ]
+    },
+    {
+      "id": "software-label", "type": "text", "x": 405, "y": 215, "width": 270, "height": 90,
+      "text": "Software state\nCode, tests,\nconfiguration",
+      "fontSize": 24, "fontFamily": 2, "lineHeight": 1.25, "strokeColor": "#000000",
+      "textAlign": "center", "verticalAlign": "middle", "containerId": "software"
+    },
+    {
+      "id": "instructions", "type": "rectangle", "x": 390, "y": 430, "width": 300, "height": 180,
+      "strokeColor": "#5C2D91", "backgroundColor": "#E8DAEF", "fillStyle": "solid",
+      "strokeWidth": 2, "roughness": 0, "seed": 103, "roundness": { "type": 3 },
+      "boundElements": [
+        { "type": "text", "id": "instructions-label" },
+        { "type": "arrow", "id": "write-instructions" },
+        { "type": "arrow", "id": "read-instructions" }
+      ]
+    },
+    {
+      "id": "instructions-label", "type": "text", "x": 405, "y": 475, "width": 270, "height": 90,
+      "text": "Instruction state\nPrompts, skills,\nhandover notes",
+      "fontSize": 24, "fontFamily": 2, "lineHeight": 1.25, "strokeColor": "#000000",
+      "textAlign": "center", "verticalAlign": "middle", "containerId": "instructions"
+    },
+    {
+      "id": "session-next", "type": "rectangle", "x": 830, "y": 270, "width": 250, "height": 180,
+      "strokeColor": "#495057", "backgroundColor": "#F3F2F1", "fillStyle": "solid",
+      "strokeWidth": 2, "roughness": 0, "seed": 104, "roundness": { "type": 3 },
+      "boundElements": [
+        { "type": "text", "id": "session-next-label" },
+        { "type": "arrow", "id": "read-software" },
+        { "type": "arrow", "id": "read-instructions" }
+      ]
+    },
+    {
+      "id": "session-next-label", "type": "text", "x": 845, "y": 330, "width": 220, "height": 60,
+      "text": "Feature k + 1\nFresh session",
+      "fontSize": 24, "fontFamily": 2, "lineHeight": 1.25, "strokeColor": "#000000",
+      "textAlign": "center", "verticalAlign": "middle", "containerId": "session-next"
+    },
+    {
+      "id": "write-software", "type": "arrow", "x": 258, "y": 260, "width": 124, "height": 40,
+      "points": [[0, 40], [124, 0]], "strokeColor": "#495057", "strokeWidth": 2,
+      "roughness": 0, "seed": 105, "startArrowhead": null, "endArrowhead": "arrow",
+      "startBinding": { "elementId": "session-k", "focus": -0.5, "gap": 8 },
+      "endBinding": { "elementId": "software", "focus": 0, "gap": 8 }
+    },
+    {
+      "id": "write-instructions", "type": "arrow", "x": 258, "y": 420, "width": 124, "height": 100,
+      "points": [[0, 0], [124, 100]], "strokeColor": "#495057", "strokeWidth": 2,
+      "roughness": 0, "seed": 106, "startArrowhead": null, "endArrowhead": "arrow",
+      "startBinding": { "elementId": "session-k", "focus": 0.5, "gap": 8 },
+      "endBinding": { "elementId": "instructions", "focus": 0, "gap": 8 }
+    },
+    {
+      "id": "read-software", "type": "arrow", "x": 698, "y": 260, "width": 124, "height": 40,
+      "points": [[0, 0], [124, 40]], "strokeColor": "#495057", "strokeWidth": 2,
+      "roughness": 0, "seed": 107, "startArrowhead": null, "endArrowhead": "arrow",
+      "startBinding": { "elementId": "software", "focus": 0, "gap": 8 },
+      "endBinding": { "elementId": "session-next", "focus": -0.5, "gap": 8 }
+    },
+    {
+      "id": "read-instructions", "type": "arrow", "x": 698, "y": 420, "width": 124, "height": 100,
+      "points": [[0, 100], [124, 0]], "strokeColor": "#495057", "strokeWidth": 2,
+      "roughness": 0, "seed": 108, "startArrowhead": null, "endArrowhead": "arrow",
+      "startBinding": { "elementId": "instructions", "focus": 0, "gap": 8 },
+      "endBinding": { "elementId": "session-next", "focus": 0.5, "gap": 8 }
+    },
+    {
+      "id": "write-label", "type": "text", "x": 270, "y": 200, "width": 100, "height": 55,
+      "text": "write", "fontSize": 22, "fontFamily": 2, "lineHeight": 1.25,
+      "strokeColor": "#000000", "textAlign": "center", "verticalAlign": "top", "containerId": null
+    },
+    {
+      "id": "read-label", "type": "text", "x": 710, "y": 200, "width": 100, "height": 55,
+      "text": "read", "fontSize": 22, "fontFamily": 2, "lineHeight": 1.25,
+      "strokeColor": "#000000", "textAlign": "center", "verticalAlign": "top", "containerId": null
+    },
+    {
+      "id": "evidence-note", "type": "text", "x": 0, "y": 660, "width": 1080, "height": 55,
+      "text": "Correct or faulty state can transfer; transport alone is not decay.",
+      "fontSize": 22, "fontFamily": 2, "lineHeight": 1.25, "strokeColor": "#000000",
+      "textAlign": "left", "verticalAlign": "top", "containerId": null
+    }
+  ],
+  "appState": { "viewBackgroundColor": "#ffffff", "exportBackground": true, "exportWithDarkMode": false, "gridSize": 20 },
+  "files": {}
+}

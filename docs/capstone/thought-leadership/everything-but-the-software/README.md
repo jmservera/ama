@@ -1,24 +1,508 @@
 ---
-title: Everything but the Software - source package (draft v5)
-description: Developmentally revised case, bounded candidate explanations and prospective exploratory consolidation protocol
-ms.date: 2026-10-26
+title: Everything but the Software - source package (draft v7)
+description: Industry-led maintenance argument, inherited-error and instruction-debt evidence, and prospective consolidation protocol
+ms.date: 2026-10-29
 ---
 
 Working title: *Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop. An Exploratory Case Study and an Experiment Protocol.*
 
 ## Current Status
 
-The compounding-error evidence integration below is the latest source record.
-The owner's preferred subtitle and prospective decay-measurement proposal
-remain in place: decay is the hypothesis motivated by a small observational
-base, not an established case result. No experiment results are added. The
-private tagged study kit was not inspected, amended or executed.
+The editorial/visual revision and dated repository-metrics refresh of
+29 October are the latest source record.
+The owner selected the existing twelve trajectories as pilot/estimation work,
+not seven stable hypothesis tests. The pilot has not started, no experimental
+results are reported, and launch remains blocked by the documented runner,
+suite/access, analysis and registration requirements.
 
-The latest external validation build is 45 pages, under
-`/tmp/ama-paper-compounding-P8QOXK/`. Earlier builds below are historical.
-The workspace PDF regenerated during source editing; preservation of its
-initial bytes cannot be claimed. It was not restored over the modified copy.
-The arXiv bundle is not refreshed.
+The title, case observations, three arms, four runs per arm, ten-feature
+suite and resource ceilings are retained. AMA now supplies the motivating
+testbed rather than the paper's personal narrative. Impersonal wording does
+not conceal the sole author's participant-observer role or independently
+corroborate that account. The engineering lineage connects Beck, Erich Gamma
+and colleagues, Robert C. Martin and Fowler to specific design choices,
+not to a claimed intervention effect.
+
+The main and reusable bibliographies contain the same 96 references.
+Three new conceptual figures have native `.excalidraw` editing sources,
+vector SVG exports and PNG copies for LaTeX. Existing empirical charts and their input data are
+unchanged. PF1-PF3 are explicit, data-dependent figure TODOs, not mock results.
+Gemini 4 Argon supplied concepts; the implementation corrects its proposed
+twelve-feature sequence to the actual ten-feature suite and does not adopt
+its unsupported guarantee of hidden-test inaccessibility.
+
+The revised source compiles with session-local Tectonic 0.17.0. The delivered
+47-page PDF includes the metrics refresh; its log, all-page text bounds and
+new metrics page were checked. The unchanged conceptual figures retain the
+earlier full-size visual inspection and source/export validation. These are
+engineering and layout checks, not independent scientific or author approval.
+No experiment was run, private study material amended or external submission
+made. The arXiv bundle has not been refreshed.
+The owner selected local-only delivery pending publication clearance; no
+commit, push or pull request was made by the assistant for the editorial
+revision. The owner subsequently committed that work and opened
+[PR #555](https://github.com/jmservera/ama/pull/555). This metrics follow-up
+continues on its existing branch and remains local; it does not authorize
+external manuscript publication.
+
+The [dated review and complete pending checklist](./anc/review-2026-10-29.md)
+records findings, evidence coverage, applied changes, launch blockers and
+deferred work. It supersedes earlier readiness summaries, not the historical
+evidence or original [editorial critique](./critique.md).
+
+## Repository Metrics Refresh 29 October
+
+The [retained snapshot](./anc/repository-metrics-2026-10-29.json) records
+GitHub API retrieval from 17:38:52 to 17:39:47 UTC and document/churn
+measurements at `origin/main` commit
+`9b74ac8daaec2a880172e43161b37ac7f2c3f801`. It excludes the continuing
+paper branch's unmerged edits from default-branch metrics.
+
+| Metric | Captured status |
+| --- | --- |
+| Merged PRs | 314 overall; 262 since 15 October |
+| Post-case merges | 79 after the pinned case integration; 75 on 25-29 October |
+| Issues | 211 total: 136 open and 75 closed |
+| Other PR states | 11 open; 19 closed without merging |
+| Current log | 458 dated entries; 69,352 entry words; 207 hedge matches |
+| Whole-file words | Index 12,535; log 69,465; BRD 43,410; PRD 48,094 |
+| Combined document volume | 173,504 words, not measured session input |
+| Retained automated score | 77/100; A4 implementation completeness 5/5 |
+
+The historical 183 merged-PR count is reconciled, not silently replaced.
+Its pinned commit is timestamped 24 October at 16:19:38 UTC, while PR #445
+records that same commit's integration at 16:19:39. The exact Git-time
+cutoff gives 182; counting through the integration gives 183; the whole
+15-24 October UTC calendar window gives 187. The snapshot retains every
+window and selected PR metadata so the distinction can be checked.
+
+The post-case first-parent heuristic counts 71 integrations, separately
+from the 79 GitHub merges across branches. Its source/test/tracking
+additions are 11,907/31,126/181,261 lines, and tracking/source additions
+are 15.22. No complexity, live usability or cost outcome was measured.
+The score is the retained 17:12:55 UTC assessment of `0717be24`, not a new
+assessment of `9b74ac8d` or proof of a working deployment.
+The main PDF's dated follow-up, conclusion and data-availability statement
+carry these boundaries. Original case tables, figures, pilot and
+unresolved author decisions remain unchanged.
+The refreshed manuscript has approximately 17,450 main-body words and
+96 matching bibliography entries. Snapshot consistency checks, all four
+paper/diagram regressions and the structural checker pass. No live journey,
+experiment or hosted acceptance check was run.
+
+## Editorial and Visual Revision 29 October
+
+The visual reference was
+[Jiang et al., v1](https://arxiv.org/html/2608.14036v1), especially Figure 1's
+separation of experimental pipelines. Both pipeline panels were visually
+inspected. Its reported effects and taxonomy are not transferred to this
+paper, and none of its artwork was copied. The revision adopts the
+communication principle of one scientific distinction per figure.
+
+| Figure | Purpose | Evidence boundary |
+| --- | --- | --- |
+| [State inheritance](./fig-state-inheritance.excalidraw) | Show software and instruction state surviving a fresh session | Conceptual paths, not measured error propagation |
+| [Pilot design](./fig-pilot-design.excalidraw) | Compare A/B/C, budgets and mutation permissions | Prospective ten-feature protocol, not execution evidence |
+| [Contract states](./fig-contract-states.excalidraw) | Separate acquisition, inherited loss and recovery | Logical states, not frequencies or fabricated trajectories |
+| PF1-PF3 | Plan retention, CR1 and resource visualisations | Await actual pilot data and frozen analysis rules |
+
+The revision also replaces lexical matches being called a share of statements,
+removes an unmeasured near-zero ratio denominator, qualifies blanket honesty
+claims and fixes a proposed prompt being described as already used. The
+same-release evidence link, independent mechanism audit and pilot runner
+decisions remain open rather than being resolved editorially.
+
+Excalidraw sources are the editing authority, with stable semantic element
+IDs, bound labels and arrows. Edit them in a compatible local editor or the
+approved Microsoft instance at <https://aka.ms/excalidraw>, not a third-party
+drawing service. The offline exporter uses the actual Excalidraw 0.18.1
+library in a local browser, never a hand-written SVG approximation, and
+never rewrites an edited source. It blocks external HTTP requests.
+
+The [export receipt](./diagram-exports.json) binds each source to its native
+SVG and 3x PNG with SHA-256 hashes, renderer/browser versions and dimensions.
+PNG is used in LaTeX; neither a PDF export nor a flattened screenshot is the
+source for future edits. The empirical Matplotlib generator is unchanged.
+
+Run from the repository root with Node/npm, Python and a local browser:
+
+```powershell
+npm ci --prefix docs\capstone\thought-leadership\everything-but-the-software\anc
+$env:PAPER_BROWSER_CHANNEL = "msedge"
+npm run export --prefix docs\capstone\thought-leadership\everything-but-the-software\anc
+python -B docs\capstone\thought-leadership\everything-but-the-software\anc\check_paper.py
+python -B -m unittest discover -s docs\capstone\thought-leadership\everything-but-the-software\anc -p test_conceptual_figures.py -v
+```
+
+For bundled Chromium instead of installed Edge, install the browser with
+Playwright and leave `PAPER_BROWSER_CHANNEL` unset. The export script accepts
+an optional output-directory argument for isolated validation. The locked
+toolchain uses available esbuild/Playwright releases; the Iconify 3.0.1
+override avoids an upstream dependency requesting unavailable
+`tinyexec@^1.3.1`. No registry or security setting was bypassed.
+
+Compile from this package directory with `pdflatex main.tex` twice, or
+`tectonic main.tex --keep-logs --keep-intermediates --untrusted`. Tectonic
+resolves cross-references automatically. The existing
+`check_paper.py --check-latex-log` expects a pdflatex-style output marker;
+this revision instead checks the actual Tectonic log and rendered PDF.
+The four new tests cover native shape/text bindings, exact source/export
+hashes, full 3x raster dimensions, isolated re-export without source
+overwrites, impersonal narrative, explicit pending plots and the unchanged
+no-results switch.
+The older shell-tooling tests require POSIX and do not validate figure
+rendering.
+
+Earlier dated sections below are historical records. Their source counts,
+toolchain limits and validation claims do not describe draft v7.
+
+## Judgment and Skills Source Revision 29 October
+
+GitHub Copilot CLI assisted this scoped edit using the scientific-paper
+writer/reviewer behavior. Both owner-selected sources were retrieved and read
+on 2026-10-29. Coverage includes the complete Anthropic article and the
+arXiv v1 main text, references, Appendices A-C, prompts and numbered tables.
+Table cells missing from simplified web output were read from the primary
+HTML. Figure captions/descriptions were read, not visually assessed. The
+Anthropic article's separately linked technical PDF was not inspected; the
+citation identifies the article, not that PDF.
+
+### Source Support and Qualifications
+
+| Citation | Inspected locator and support | Applied role and boundary |
+| --- | --- | --- |
+| `herdagdelen2026judgment`, [How AI agents shape experts' judgment calls](https://www.anthropic.com/research/agents-judgment-calls), 2026-10-27 | Study design; Results: 50 agent-using professional analysts matched randomly assigned preferences on 86% of four analytical choices. Our study's limitations: deliberately strengthened preferences, one farming-analysis task and model. What this means: independent judgment cannot be inferred from sign-off alone; alternative designs are proposals | Discussion, "What remained mine in this case", qualifies formal approval as a proxy for independent judgment. The 86% does not cover all five decisions, estimate coding behavior or describe Zava North Homes. No proposed safeguard is declared effective |
+| `jiang2026skills`, [Demystifying Agent Skills: Why They Work--Until They Don't](https://arxiv.org/html/2608.14036v1), preprint v1 | Sections 1, 3.3 and 5.1-5.3 distinguish procedural skills from workflow histories and examine matched representations, operational gains and failure boundaries. Section 5.5 separates exact-ground-truth access from downstream success. Section 4 and Appendix A.2 explain evidence-linked trajectory analysis and limited human validation | Background, Constructs, Chain of evidence and Learning evaporation: skills can stabilise procedures, but availability/access does not establish correct application. The study does not test repository instruction growth, explain the AMA failure or validate its five mechanisms |
+
+These are full-text-supported paraphrases of the inspected passages, not
+replications. No direct contradiction with the case observations was found.
+There are important challenges to broader interpretations: instruction
+maintenance can help rather than merely add debt, and nominal human approval
+does not ensure independent judgment. Those qualifications are explicit in
+the manuscript, rather than resolved by asserting a new case finding.
+The skills study's paired skill-versus-raw interval includes zero
+(Appendix A.3, Table 10); its matched cost analysis finds workflow memory
+more token-efficient than skills (Appendix A.9, Table 13).
+Neither uniform benefit nor universal cost savings is claimed.
+
+### Methodological Exemplar: Adopted and Deferred
+
+The arXiv study frames a mechanism question, decomposes representation,
+outcome labels, transfer and retrieval into separate comparisons (Section 3),
+then separates taxonomy construction from findings and implementation details
+(Sections 4-5, Appendices A-C). Its agent configurations are concrete
+framework/model/tool settings, and skills are reusable procedural resources,
+not independent actors or model-weight changes.
+
+| Adopted clarification | Manuscript location | What remains for human authors |
+| --- | --- | --- |
+| Define agent as a configured model/tool/instruction loop and skill as a reusable procedure, distinct from history | Constructs and evidential boundaries | Confirm terminology fits actual historical runtime and skill artifacts |
+| Explain that this case's selected-episode interpretation is not the exemplar's matched trajectory/coding pipeline | Chain of evidence and reflexivity | Independently audit O1-O5 and consequential mechanism assignments; no new coding or agreement score was produced |
+| Separate absent guidance, misapplication and task insufficiency | Learning evaporation | Recover actual session inputs and access/use traces before attributing a missing lesson |
+| Record owner-selected source addition and distinguish retained notes from a skill treatment | Data and analysis; Constructs | Keep the narrative source-selection boundary; a matched history/skill ablation requires a separate study |
+| Distinguish outcome-level evidence from independent human judgment | Feedback starvation; Discussion | Check meaningful approval and competing reasons; proposed decision records are not a tested remedy |
+
+The existing RQs and case-plus-protocol structure were retained. No taxonomy,
+sampling scheme, new control arm, paired run, inter-rater result or quantitative
+effect was borrowed from the exemplar. Its Section 7 and Appendix A.2 also
+limit generalisation and disclose sampled/LLM-assisted coding rather than
+exhaustive human annotation. The original `critique.md` is unchanged historical
+editorial input, not a review or approval of this revision.
+
+### Validation and Remaining Gates
+
+Run from the repository root with the available system Python; the documented
+`.venv/bin/python` is absent locally:
+
+```bash
+python3 -B docs/capstone/thought-leadership/everything-but-the-software/anc/check_paper.py
+python3 -B -m unittest discover -s docs/capstone/thought-leadership/everything-but-the-software/anc -p test_paper_tooling.py -v
+```
+
+Both pass: 95 matching cited, embedded and reusable keys, 1,609 abstract source
+characters, approximately 16,426 main-body words and all seven tooling tests.
+The optional historical baseline is available locally; its 10,353-word count
+is not this revision's starting manuscript. The abstract, case tables, pilot
+design, arms, sample, outcomes and budgets are unchanged. No tools/tests,
+figures, PDF, bundle or private study materials were modified.
+
+No `pdflatex`, `tectonic`, `latexmk`, `xelatex` or `lualatex` is available on
+PATH. No compiler was installed, no PDF was rebuilt and no fresh LaTeX-log,
+rendered-layout or end-to-end PDF review is claimed. The complete repository
+publication gate was not run: its preflight invokes `az bicep version`, which
+conflicts with the owner's explicit no-az instruction. Paper checks do not
+replace that gate. No push, submission, experiment, registration, independent
+human peer review or author/publication approval is established by this edit.
+
+## Executive Feedback and Pilot Amendment 27 October
+
+The supplied executive review is editorial input, not independent
+corroboration of the case or approval to launch an experiment. Its paragraph
+identifiers below refer to the local extraction, not Word page numbers.
+The original review and earlier seven-hypothesis proposal remain unchanged;
+the latter is recoverable from the pre-revision source at commit `701dcea`.
+
+### Applied Changes and Open Evidence
+
+| Review point | Applied manuscript disposition | Remaining evidence or action |
+| --- | --- | --- |
+| Title/construct boundary, P0107 | Retain the title and explicitly define feature-driven decay as a prospectively investigated phenomenon, not an AMA effect | The case does not measure a decay rate |
+| Three central questions, P0070-P0074 | Concentrate on retained behaviour, future changeability and resource cost; use H1/H2/H6 only as historical traceability labels | No pilot hypothesis verdicts or powered effect claims |
+| Endpoint hierarchy, P0158/P0215 | Name final coverage as the primary practical outcome, retained-contract loss as the primary decay outcome and CR1 as the changeability probe | Reconcile extraction/checkpoint definitions with the actual runner before launch |
+| H4/H7, P0074/P0211 | Remove the joint comprehension and half-gap claims from the formal first-pass set; make H3/H5 metrics descriptive too | Do not invent non-inferiority margins or dependent-contrast thresholds |
+| Twelve-cluster precision, P0160-P0165/P0214 | Owner chose to keep four runs per arm as pilot/estimation work for feasibility, variation, endpoint behaviour and failure modes | No power/coverage simulation was performed; method boundary checks remain pre-run work, and a later confirmatory study needs a separate precision/replication plan |
+| CR1 estimands, P0166-P0168/P0212 | Specify allocated-run success, conservative binary risk-difference intervals, actual failed-session consumption and explicitly conditional successful-run cost | Interval implementation, missingness/event rules and boundary cases require versioned checks before launch |
+| Access/evaluator boundaries, P0171-P0178/P0209 | Separate independent suite/oracle/access review from evaluator-feedback policy and require both before exposure | Not performed or frozen by this edit; launch remains blocked |
+| Failure/reset/prerequisite/outage policies, P0210 | Keep each unresolved runner branch explicit and distinguish agent failure from missing infrastructure observations | Freeze and verify B/C-after-failure, dependent continuation, retries, outages and missing-data disposition before launch |
+| Measurement/runner agreement, P0213 | Keep the retained-contract panel, feature/post-feature checkpoints and reference-gap description; require actual runner/analysis reconciliation | The private kit was not opened, amended or declared in agreement |
+| Independent suite/access review, P0216 | Retain as a launch prerequisite, not a completed safeguard | Requires actual independent review and retained access/oracle evidence |
+| O1-O5 evidence chain, P0135/P0222 | Add the machine-readable case-evidence index and link it from the audit trail and data-availability statement | Known/reported locators are separated from null release, configuration and execution identifiers; missing corroboration is not fabricated |
+| Scorer/sign-in correspondence, P0136 | Preserve chronological coexistence rather than promote it to a same-release contradiction | Dated score, assessed release/scope, deployment and journey records still need linking |
+| Mechanism-assignment independence, P0137 | Retain the sole-participant/AI-assistance boundary and explicitly record the unperformed independent assignment audit | Editorial revision is not independent empirical coding |
+| Mechanisms versus experiment, P0223/P0243 | State prominently that no pilot contrast manipulates or validates the five candidate mechanisms separately | The pilot estimates complete package differences only |
+| Positioning, P0201-P0204/P0218 | Add AutoSaddler, SkillOpt and AgentRx with scoped first-party citations; narrow novelty to interleaved repository consolidation and retention/changeability measurement | Publication abstracts/engineering accounts were inspected, not independently replicated experiments |
+| Editorial economy, P0087-P0094/P0220-P0221 | Shorten HVE exposition and the discussion; move practitioner context, Aithena/PhotoCraft detail, seven proposed practices and human-role agenda to the ancillary companion | Specific validity/identification boundaries remain near the methods they qualify |
+| Optional extensions, P0224-P0230 | Defer formal fault lineage, early/late change probes, additional suites/models/CRs and matched human/agent steering | No extra sessions or extensions are added to the 212-session pilot |
+| Research readiness, P0233-P0251 | Preserve one-suite/model/CR and weak-access limits without turning them into repeated global caveats | No venue compliance, acceptance, registration or human approval is claimed |
+
+### New Positioning Sources
+
+Retrieval date: 2026-10-27. The citations identify the inspected first-party
+pages, rather than inventing author lists or publication venues for linked
+papers.
+
+| Source | Inspected support | Boundary |
+| --- | --- | --- |
+| [AutoSaddler publication page](https://www.microsoft.com/en-us/research/publication/autosaddler-automatic-harness-optimization-with-durable-updates-from-agent-execution-traces-2/) | Abstract: offline harness optimisation using failure diagnosis, structured patches and validation-based update selection; page metadata published 2026-08-24 | Agent-led reflection/harness improvement is prior work, not the novelty claimed for repository consolidation |
+| [SkillOpt engineering account](https://www.microsoft.com/en-us/research/blog/skillopt-agent-skills-as-trainable-parameters/) and [publication abstract](https://www.microsoft.com/en-us/research/publication/skillopt-executive-strategy-for-self-evolving-agent-skills/) | Bounded skill edits, held-out validation, retained successful versions and reported transfer; blog metadata published 2026-06-30 | Counterevidence to treating instruction change as inherently harmful; no independent replication or peer-review status is inferred |
+| [AgentRx engineering release](https://www.microsoft.com/en-us/research/blog/systematic-debugging-for-ai-agents-introducing-the-agentrx-framework/) | Guarded executable constraints and evidence-backed first-critical-failure localisation; blog metadata published 2026-03-12 | Supports traceable diagnosis, not an independent diagnosis of AMA; the review's immediately-before-manuscript timing is not adopted |
+
+### Preserved Scope
+
+The twelve-trajectory pilot remains S1, arms A/B/C, four runs per arm,
+ten features and CR1. Its ceiling is 212 sessions and 89 agent-hours;
+the separately planned calibration stage adds 50 sessions and 20 hours.
+The combined ceilings, exposed runtime/model choices, 2,500-credit ceiling
+and separate USD 500 statement are unchanged. Affordability and actual
+calibrated caps remain unverified. No calibration or experiment was executed
+as part of this manuscript task.
+
+The earlier formal right/wrong thresholds are historical proposal material,
+not active seven-test criteria for the pilot. This is a declared prospective
+amendment, not a claim that the private tag, runner or registration has
+already changed. Source-level revisions and formatting checks do not satisfy
+launch, publication or independent-review gates.
+
+### Validation and Unperformed Work
+
+* The existing paper checker passes with 93 matching cited, embedded and
+   BibTeX references, results disabled and 1,658 abstract source characters.
+* Using the checker's documented main-body counting method, the source
+   decreases from approximately 17,382 words at `701dcea` to 16,064:
+   1,318 fewer words, excluding the additional material moved out of the PDF.
+   The checker's unrelated configured historical Git baseline remains
+   unavailable; this comparison explicitly uses the available revision base.
+* Targeted checks confirm the unchanged suite, runtime/resource numbers and
+   original O1-O5 case table; the core table contains H1/H2/H6 only.
+   The evidence index retains null release/execution identifiers rather than
+   supplying fabricated links.
+* Tectonic produces a fresh 43-page external PDF with no unresolved
+   references, rerun requests, overfull boxes or underfull boxes in its final
+   TeX log. The process still reports the separate Windows Fontconfig
+   configuration warning. No fresh page-by-page visual review or pdfLaTeX
+   validation is claimed.
+* No experiment, calibration, power simulation, private-runner check,
+   independent suite/access review, preregistration or publication gate was
+   performed. The pilot remains not started and launch-blocked.
+* This task did not replace the package PDF, regenerate figures, modify the
+   private kit, commit, push or submit externally. A separate change to the
+   package PDF appeared during final validation and was left untouched.
+
+## Citation Relevance Follow-up 27 October
+
+The bibliography audit's sixteen relevance warnings are addressed by
+removing redundant or unsupported citations and making retained sources'
+roles explicit. A methodological precedent, historical framing or tooling
+disclosure need not study agentic decay to serve its stated purpose.
+These changes do not raise the original audit scores, establish new source
+verification or constitute an exhaustive re-audit or independent peer review.
+
+| Audit key | Applied disposition | Evidence boundary |
+| --- | --- | --- |
+| `bavota2015quality` | Replace the broad benefit-attribution claim with the study's finding that observed refactorings do not consistently target or remove code smells; separate the Kim citation | A refactoring label does not guarantee improvement; no causal benefit estimate is inferred |
+| `bird2014extrinsic` | Identify the Windows/co-installed-application setting and retain it only as a methodological analogy for environmental influences | It neither tests AI-agent configuration nor diagnoses the case's sign-in failure |
+| `cockburn2004crystal` | Retain Crystal Clear for incremental team practice, separate it from Hunt and Thomas's tracer bullets, and remove the unverified walking-skeleton attribution | No uninspected page or pinpoint passage is asserted |
+| `dora2024` | Retain the primary report alongside the 2025 report as industry background | No mechanism-level or causal finding about this case is attributed to DORA |
+| `dora2025blog` | Remove the redundant announcement from the text and both bibliography forms; retain the primary 2025 report | The report, not its announcement, carries the background citation |
+| `fakhoury2024ticoder` | Move the citation from the bundled P7 recommendation to a separate test-driven interactive-generation rationale | It motivates making intended behaviour checkable, not the seven-practice package, consolidation or cross-feature retention |
+| `gamma2025syntax` | Remove the unverified stochastic-evaluation remark from the mechanism argument; retain the episode's documented testing topics in practitioner context | Show notes are not a transcript or evidence that deterministic tests are unreliable or the case's scorer failed |
+| `harvey2024dora` | Remove the redundant announcement from the text and both bibliography forms; retain the primary 2024 report | No separate evidentiary weight is assigned to the announcement |
+| `heander2026codehealth` | State the observational review-cost/batch-fix result and its measurement role | It does not test scheduled consolidation or establish agent-caused decay |
+| `hoque2022thriftydagger` | Identify robotic imitation learning as a cross-domain measurement precedent and attach the citation to incidence, action and switching-cost distinctions | Coding-harness effectiveness and software-decay findings are not borrowed from it |
+| `karpathy2025vibe` | Give the throwaway-project framing its own sentence and citation | An illustrative practitioner position, not empirical support for decay or the harness |
+| `kassis2026skills` | Retain the actual assistance-tool citation in the generative-AI disclosure and state its provenance-only role | It does not substantiate case findings or the consolidation hypothesis |
+| `kelly2019hgdagger` | Identify robotic imitation learning as a cross-domain measurement precedent and attach the citation to takeover/return of control | The proposed HIR definition and study design remain the paper's own |
+| `martin2024weprogrammers` | Remove the book from both bibliography forms and rely on the already-cited Product Engineers interview for executable feedback and customer understanding | No unverified chapter or page is supplied |
+| `martin2026outcodes` | Remove the inaccessible video and its attributions from the text and both bibliography forms; use the existing Product Engineers interview for the supported practitioner argument | The video's spoken content is not retrospectively declared verified |
+| `willison2025vibeeng` | Describe the post's concrete testing, planning, documentation, version-control and review practices with a separate citation | Practitioner accountability, not an experimental comparison or harness-effectiveness result |
+
+The original audit remains a historical assessment. Retaining a source for
+an explicitly bounded role is a disposition of its recommendation, not a
+claim that its intrinsic topic or original numerical relevance score changed.
+Other audit findings, including unverified source-specific numerical
+passages and unrelated access or attribution notes, are not closed by this
+relevance-only follow-up. Publication and human approval gates remain open.
+
+### Validation
+
+* The existing paper checker passes with 110 cited, embedded and reusable
+   bibliography keys, results disabled, 1,604 abstract source characters
+   and approximately 17,380 main-body words under its documented counting
+   method. Its historical Git-baseline comparison remains unavailable.
+* A separate pre-edit comparison confirms that the abstract is unchanged
+   and the experiment protocol is identical after line-ending normalisation,
+   except for its source-context paragraph about robotic intervention
+   measures. Hypotheses, outcomes, HIR definition, budgets, thresholds and
+   study status are unchanged.
+* All sixteen original warning keys have a disposition above. The four
+   removed keys are absent from manuscript and BibTeX; all twelve retained
+   sources remain cited with explicit roles. The original audit is not
+   overwritten or re-scored.
+* Tectonic 0.17.0 produces a fresh 49-page external PDF with no unresolved
+   citations, references or rerun requests. Four small overfull boxes
+   remain, maximum 5.295 points, plus one underfull bibliography line and
+   the environment's fontconfig configuration warning. This is not a
+   pdfLaTeX build or a fresh page-by-page visual review.
+* The package PDF, figures, arXiv bundle and private study materials remain
+   unchanged. No complete RPI publication gate, commit, push, submission
+   or human approval is claimed.
+
+## Industry-Led Revision 27 October
+
+A read-only developmental critique preceded all edits. Three research-agent
+lanes investigated historical maintenance, inherited coding errors and chart
+data, and instruction context with PhotoCraft. A follow-up checked
+longitudinal instruction-file studies. A fresh scoped critique found no
+material remaining framing issues. These were assisted editorial and
+research passes, not independent human peer review.
+
+The revision changes the argument's order:
+
+* Knight Capital's dormant fault and deployment failure, followed by
+   Cunningham's WyCash consolidation account, establish the pre-AI problem.
+* PhotoCraft's command coverage and project-authored readiness estimates
+   introduce the distinction between completed features and usable workflows.
+* Paired repository-history evidence makes errors inherited by later feature
+   work distinct from errors carried within a conversation.
+* Instruction-file histories and context-file experiments extend maintenance
+   to the prompts, skills and notes governing development.
+* AMA follows as the traceable trigger for the consolidation experiment.
+   The mechanism summary now separates accumulation, transmission, selection
+   and correction, instead of treating every process problem as propagation.
+
+The abstract, research questions and conclusion follow that structure.
+Repeated validity disclaimers are reduced in the narrative; specific
+sampling, measurement and identification limits remain beside their methods
+and in the limitations sections. Software entropy is a maintenance analogy,
+not an asserted physical law. Context debt is attributed to prior work.
+
+### Source Checks
+
+All retrievals below are dated 2026-10-27. Locators identify the inspected
+source material, not experiments reproduced here. This is a focused source
+synthesis rather than an exhaustive or systematic review.
+
+| Source | Inspected support and use | Coverage and interpretation |
+| --- | --- | --- |
+| [SEC release 2013-222](https://www.sec.gov/newsroom/press-releases/2013-222), 16 October 2013 | Paragraph beginning "According to the SEC's order": 2005 router defect, 2012 incorrect deployment, more than four million orders for 212 customer orders and loss above USD 460 million | Full-text support in the official release. The linked order PDF was not meaningfully extracted. This is a latent-fault, deployment and control example, not a feature-churn rate |
+| [Cunningham's original WyCash report](http://c2.com/doc/oopsla92.html), 1992 | Paragraphs on adapting the financial product, revising mature code and consolidating an initially expedient implementation | Original industrial experience account; no controlled cost estimate or longitudinal numerical dataset is attributed to it |
+| [Pan et al. v1](https://arxiv.org/html/2610.14768v1), 10 October 2026 | Sections 2.5, 3.1-3.2 and 4.1-4.2, Tables 2-3, and Section 5.1, Figures 4-5: fresh sessions, paired history, inherited-test failures, clean histories and two fault-reuse examples | Full-text support for the scoped claims and chart transcription. ER includes current and prior tests; TR concerns the current task alone. Selected cohorts overlap and are not randomised repairs |
+| [Chatlatanagulchai et al. v2](https://arxiv.org/html/2511.12884v2), 9 August 2026 | Sections 4.2.2-4.2.3: sampled post-adoption commits, overlapping edit labels, additions and deletions; Section 5.1: context-debt proposal | Full-text support. The paper associates day-scale updates with project maintenance, not immediate corrective prompt tuning. Edit labels do not measure loaded context or downstream performance |
+| [Mohsenimofidi et al. v4](https://arxiv.org/html/2510.21413v4), 5 February 2026 | Section 4.3 and Table 2: 155 files, 77 unchanged after creation; detailed coding of 169 commits in ten high-change files | Full-text support. Add/modify/remove categories overlap; the selected files do not establish an ecosystem-wide rate. Intent was not coded |
+| [Gloaguen et al. v3](https://arxiv.org/html/2602.11988v3), 29 September 2026 | Sections 4.1-4.4, Tables 2-3 and Appendix B: context inclusion, cost, task resolution, instruction-following, length analysis and documentation-removal ablation | Full-text support. Reported 20%/23% average cost increases concern generated files on SWE-bench Lite/CTXbench; resolution differences are non-significant. Length alone did not explain results; useful-context counterevidence is retained |
+| [Nigh's GitHub article](https://github.blog/ai-and-ml/github-copilot/how-to-write-a-great-agents-md-lessons-from-over-2500-repositories/), 19 November 2025, updated 25 November | "What works in practice" and "Key takeaways": explicit commands, examples, boundaries and iterative additions | Full-text practitioner account, not a controlled evaluation or numerical effect of corrective instructions. Its custom-agent definitions are distinguished from repository-wide context files |
+| [Rajasekaran et al., Anthropic](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents), 29 September 2025 | "The anatomy of effective context" and long-horizon context sections: brittle prompt logic, exception lists, curation, retrieval and note maintenance | Full-text first-party engineering account; the paper uses its design reasoning rather than a quantified intervention effect |
+| [PhotoCraft pinned source](https://github.com/storytold/photocraft/tree/5bb853654196eca807212ff8955ba2eb293071ea) | Scorecard, target-app parity assessment and dispatch-count implementation, checked against the existing dated observation record | Source-level and project-authored support, not fresh application execution. The original source pin and 25 October tracker boundary remain unchanged |
+
+Sinha and Laban were rechecked by the research lane with their previously
+inspected versions. Their conversation-history results remain separate from
+repository inheritance. No points were estimated from their curves. The
+Laban version's 39% main-text versus 35% teaser discrepancy remains recorded
+in the historical source note below. SlopCodeBench's full-text extraction
+was still incomplete; SWE-CI remains supporting context rather than a new
+plotted dataset. Existing author-verification tasks are not marked complete.
+
+### Published-Data Figures
+
+[published-evidence.json](./anc/published-evidence.json) retains source
+versions, locators, units, cohorts and transcription notes. The existing
+[figure generator](./anc/make_figures.py) now supports all figures, only the
+case figures, or only the published-data figures.
+
+* [Inherited-history figure](./fig-inherited-history.png) plots Pan's Table 3
+   event-resolution differences and published 95% repository-clustered
+   bootstrap intervals. The aggregate, inherited-failure and clean-history
+   rows remain visible. Values are transcribed, not recomputed from rounded
+   percentage columns; no across-study pooling or curve digitisation occurs.
+* [Instruction-maintenance figure](./fig-instruction-maintenance.png) plots
+   78 addition, 32 modification, 19 deletion and ten maintenance labels in
+   100 sampled commits. Labels overlap. Add/delete totals combine line-level
+   and section-level labels; maintenance is the remainder of 139 assignments.
+   These are neither distinct-commit percentages nor a context-degradation curve.
+
+Both captions identify the source, denominator, definition and relevant
+conditioning. New chart images were visually inspected and checked for
+nonblank output. The generator's complete default path was also run in
+external scratch, leaving the two existing case figures untouched.
+
+### Validation and Reproduction
+
+Tectonic 0.17.0 was installed from its official Windows release into the user
+profile. The archive SHA-256 was checked against the release metadata:
+
+```text
+f61ce51f0b0ade1015b7de7ef368541c5424e9756ecbd0d7af97d6d48030845f
+```
+
+The author requested pip rather than uv. Plot dependencies were installed
+with the existing virtual environment's pip, using matplotlib 3.10.7 and
+Pillow 12.0.0. Earlier uv download attempts failed; the editor's generic
+installer also invoked uv and was not used for the successful installation.
+No project dependency manifest was changed. A separate PyMuPDF installation
+was cancelled and not retried. The browser's PDF viewer was used instead.
+Context7 tools were unavailable; official Tectonic documentation and release
+metadata supplied the installation information.
+
+The successful commands, from the repository root, are:
+
+```powershell
+& .\.venv\Scripts\python.exe docs/capstone/thought-leadership/everything-but-the-software/anc/check_paper.py
+& .\.venv\Scripts\python.exe docs/capstone/thought-leadership/everything-but-the-software/anc/make_figures.py --only published
+& "$env:LOCALAPPDATA\Programs\Tectonic\0.17.0\tectonic.exe" --untrusted --keep-logs --keep-intermediates --outdir "$env:TEMP\ama-paper-industry-20261027-23e0fd2e" docs/capstone/thought-leadership/everything-but-the-software/main.tex
+```
+
+The external PDF has 49 pages. Its title page and the two standalone new
+figure images were visually inspected. The browser did not follow PDF page
+fragments or expose page controls, so page-by-page PDF layout review was not
+performed. The final TeX log has no unresolved references or rerun requests and no
+overflow above ten points. Four smaller overfull boxes remain (maximum
+5.295 points), plus one underfull bibliography line. Tectonic also emits
+a fontconfig configuration warning; the PDF opens with rendered text.
+This is a Tectonic/XeTeX build, not a new pdfLaTeX validation.
+
+The structural checker passes with 114 matching cited, embedded and reusable
+bibliography keys and results disabled. The protocol section is identical
+to the starting commit after normalising line endings. Transcription,
+denominator, image-dimension and nonblank checks pass. Editor diagnostics
+report no errors in the changed manuscript, bibliography or plotting script.
+Historical-baseline word comparison is unavailable because its configured
+Git object is missing; the current approximate body count is 17,277.
+
+Output is under `%TEMP%/ama-paper-industry-20261027-23e0fd2e/`. The package
+PDF and case figures remain unchanged against the starting commit. No
+experiment, private-kit modification, commit, push, submission or complete
+RPI publication gate was performed. Remaining venue and external-publication
+decisions are unchanged.
 
 ## Compounding-Error Evidence 26 October
 
@@ -531,7 +1015,9 @@ verification of research statistics.
 | `main.tex` | Paper source. The bibliography is embedded, so it compiles on arXiv without BibTeX. |
 | `fig-log-growth.png` | Figure 1: words and hedging phrases appended to the project log per day (400 dpi). |
 | `fig-causal-loop.png` | Figure 2: the reinforcing loop and the feedback-first intervention (400 dpi). |
-| `references.bib` | The same 104 references as BibTeX, for reuse or a later switch to `\bibliography{}`; both bibliographies are ordered by key. |
+| `references.bib` | The same 93 main-paper references as BibTeX, for reuse or a later switch to `\bibliography{}`; both bibliographies are ordered by key. |
+| `anc/case-evidence-matrix.json` | Machine-readable O1-O5 index distinguishing reported source locators, author accounts and missing release/execution evidence; not new independent corroboration. |
+| `anc/supplementary-context.md` | Practitioner/framework context, external repository observations, proposed practices and deferred extensions moved outside the main PDF. |
 | `anc/log_metrics.py` | Recomputes the log measures in Appendix A from `docs/reference/log.md` at commit `29c6b51`; `--json` writes the per-day data. |
 | `anc/log_daily.json` | Per-day entries, words and hedging phrases (output of `log_metrics.py --json`). |
 | `anc/make_figures.py` | Redraws both figures from `anc/log_daily.json`. |

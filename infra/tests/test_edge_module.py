@@ -16,7 +16,7 @@ COVERAGE = {
     "keyvault.bicep": ["vault"],
     "registry.bicep": ["registry"],
     "foundry.bicep": ["account"],
-    "iothub.bicep": ["iotHub"],
+    "iothub.bicep": ["iotHub", "namespace"],
     "monitoring.bicep": ["azuremonitor"],
     "authTokenStore.bicep": ["blob"],
 }
@@ -29,7 +29,10 @@ EXPECTED_ZONES = {
     "keyvault.bicep": {"vault": ["privatelink.vaultcore.azure.net"]},
     "registry.bicep": {"registry": ["privatelink${environment().suffixes.acrLoginServer}"]},
     "foundry.bicep": {"account": ["privatelink.cognitiveservices.azure.com", "privatelink.openai.azure.com", "privatelink.services.ai.azure.com"]},
-    "iothub.bicep": {"iotHub": ["privatelink.azure-devices.net", "privatelink.servicebus.windows.net"]},
+    "iothub.bicep": {
+        "iotHub": ["privatelink.azure-devices.net", "privatelink.servicebus.windows.net"],
+        "namespace": ["privatelink.servicebus.windows.net"],
+    },
     "monitoring.bicep": {"azuremonitor": ["privatelink.monitor.azure.com", "privatelink.oms.opinsights.azure.com", "privatelink.ods.opinsights.azure.com", "privatelink.agentsvc.azure-automation.net", "privatelink.blob."]},
     "authTokenStore.bicep": {"blob": ["privatelink.blob."]},
 }

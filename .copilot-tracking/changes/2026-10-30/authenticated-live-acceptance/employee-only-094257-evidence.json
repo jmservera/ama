@@ -1,0 +1,17 @@
+{
+  "started": "2026-10-30T09:42:32.824269+00:00",
+  "mode": "employee-only",
+  "sites": {
+    "employee": {
+      "started": "2026-10-30T09:42:33.276268+00:00",
+      "password_submitted": true,
+      "stage": "provider_password_submit",
+      "failure_type": "TimeoutError",
+      "host": "login.microsoft.com"
+    }
+  },
+  "browser_version": "156.0.8078.4",
+  "browser_closed": true,
+  "owned_scratch_removed": true,
+  "ended": "2026-10-30T09:42:57.402801+00:00"
+}

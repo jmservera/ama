@@ -1,0 +1,91 @@
+{
+  "task_id": "pr-507-sync-2026-10-30",
+  "task_slug": "rubric-src-198-sync",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/rubric-src-198-sync-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/rubric-src-198-sync-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/rubric-src-198-sync-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/rubric-src-198-sync-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/rubric-src-198-sync-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/rubric-src-198-sync-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the explicitly requested full RPI loop with a local rebase and commit; never push or change Azure resources.",
+      "status": "confirmed",
+      "evidence": "User request dated 2026-10-30; clean requested topic branch and open draft PR 507 verified."
+    },
+    {
+      "decision": "Research executed, Complete; Planning Readiness Ready. Preserve upstream rubric/manifest and both document histories.",
+      "status": "accepted",
+      "evidence": ".copilot-tracking/research/2026-10-30/rubric-src-198-sync-research.md"
+    },
+    {
+      "decision": "One independent final-candidate critique executed Complete / Pass; no findings or required decisions.",
+      "status": "accepted",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-30/rubric-src-198-sync-plan-critique.md"
+    },
+    {
+      "decision": "Implementation complete; main advanced only a development lockfile and was integrated before Review. All requested focused checks pass; inherited rubric/runtime evidence remains adverse.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/changes/2026-10-30/rubric-src-198-sync-changes.md; final base ffd8f35e63b24905b9aeb937dbf2a7fe9968747f"
+    },
+    {
+      "decision": "One independent Review executed Complete / Defects found; frozen worktree boundary assessed, one Low RV-001 audit-path defect routed to later implementation. No same-task correction or repeat Review.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-30/rubric-src-198-sync-review.md"
+    },
+    {
+      "decision": "Local candidate and original dated RPI evidence committed with authenticated noreply identity, Refs #198 and required Copilot trailer; clean worktree and frozen diff verified. Final bookkeeping is evidence-only.",
+      "status": "completed",
+      "evidence": "2a203c13386de52d7dff008c37d8dd17e6d9c3a4; .copilot-tracking/changes/2026-10-30/rubric-src-198-sync-changes.md Local Persistence and Final Handoff"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "inherited-rubric",
+      "summary": "Authoritative-main rubric suite has 18 failures and 7 missing-runtime skips; CI-green cannot be claimed.",
+      "resolution": "Separate rubric-owner repair/runtime evidence; preserve main-copy policy here."
+    },
+    {
+      "id": "coordinator-publication",
+      "summary": "Push prohibited; fresh hosted CI, remote mergeability and publication gates unavailable in this task.",
+      "resolution": "Coordinator owns authorized publication and hosted evidence after local handoff."
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Coordinator owns publication gates, authorized push and fresh hosted checks; RV-001 and other ranked residual work require later selection. No child selected or push authorized here."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Correct RV-001 audit lockfile locator in separately scoped implementation.",
+      "rationale": "Small factual correction, low implementation cost; does not change verified preservation or test conclusions.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-30/rubric-src-198-sync-review.md RV-001"
+    },
+    {
+      "rank": 2,
+      "task": "Rubric owner repairs inherited regression assumptions and supplies verified runtime evidence.",
+      "rationale": "18 failures and 7 runtime skips prevent a green full-suite claim, but main-copy scope forbids repairs here.",
+      "evidence": ".copilot-tracking/changes/2026-10-30/rubric-src-198-sync-changes.md P02"
+    },
+    {
+      "rank": 3,
+      "task": "Coordinator performs authorized final publication gates, push and fresh hosted checks.",
+      "rationale": "Required for remote mergeability and CI evidence; local task is explicitly no-push.",
+      "evidence": "User no-push direction and independent Review residual work"
+    },
+    {
+      "rank": 4,
+      "task": "Owner resolves historical issue 198 score-comparison and sequencing gaps.",
+      "rationale": "Historical acceptance cannot be recreated through a current-main synchronization.",
+      "evidence": "docs/architecture/cutover-evidence-pack.md rubric reconciliation"
+    }
+  ]
+}

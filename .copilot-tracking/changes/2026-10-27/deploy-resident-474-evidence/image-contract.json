@@ -1,0 +1,9 @@
+{
+  "image_id": "sha256:0568deb725e7258c3b09d425b6c0a28a736a2e23434fc22c350bac6333888043",
+  "source": "885ee05fc45122cf7a1ea4f7f003dc88bfda08ee",
+  "configured_non_root": true,
+  "hardened_non_secret_contract": "non-root/no-data/packaged-assets/no-capabilities passed",
+  "missing_config_refusal": true,
+  "refusal_message": "Refusing to start: ZF_DEMO_EXPIRES_AT is required.",
+  "fixable_high_critical": 0
+}

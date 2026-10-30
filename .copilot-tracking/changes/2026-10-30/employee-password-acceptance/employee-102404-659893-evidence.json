@@ -1,0 +1,51 @@
+{
+  "started": "2026-10-30T10:24:04.659913+00:00",
+  "script_sha256": "96491bbec8a5d2c33b2d975ca36b2339ab1cc02eac41f8ca7c530a7de731717b",
+  "password_submitted": false,
+  "captures": {
+    "screenshots": false,
+    "video": false,
+    "trace": false,
+    "har": false
+  },
+  "credential_parsed": true,
+  "browser_version": "156.0.8078.4",
+  "steps": [
+    {
+      "host": "login.microsoftonline.com",
+      "text": "Sign in\nCan\u2019t access your account?\n\nZava\n\n\t\nSign-in options\n\n\nTerms of use Privacy & cookies ...",
+      "controls": [
+        "Can\u2019t access your account?",
+        "Next",
+        "Sign-in options",
+        "Terms of use",
+        "Privacy & cookies",
+        "Click here for troubleshooting information"
+      ]
+    },
+    {
+      "host": "login.microsoft.com",
+      "text": "[redacted]\nZava\n\t\nTerms of usePrivacy & cookies...",
+      "controls": [
+        "Terms of use",
+        "Privacy & cookies",
+        "Click here for troubleshooting information"
+      ]
+    }
+  ],
+  "username_submitted": true,
+  "outcome": "password_route_not_offered",
+  "final_offered_page": {
+    "host": "login.microsoft.com",
+    "text": "[redacted]\nZava\n\t\nTerms of usePrivacy & cookies...",
+    "controls": [
+      "Terms of use",
+      "Privacy & cookies",
+      "Click here for troubleshooting information"
+    ]
+  },
+  "browser_closed": true,
+  "owned_scratch_cleanup_expected": true,
+  "owned_scratch_removed": true,
+  "ended": "2026-10-30T10:24:08.963742+00:00"
+}

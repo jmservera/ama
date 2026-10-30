@@ -24,6 +24,40 @@ from zava_forward.api.server import App, make_handler
 
 
 class RegulatoryApi(unittest.TestCase):
+    def test_conflict_auto_referral_and_content_free_usage_http(self) -> None:
+        self.f.source(2, text="Different synthetic source, not law.")
+        tid = self.start()
+        route = f"/api/chat/regulatory/threads/{tid}"
+        code, reply = self.call(route + "/ask", dict(content="What are the hazard sources?"))
+        self.assertEqual((code, reply["kind"]), (200, "conflict"))
+        self.assertEqual(len(reply["citations"]), 2)
+        self.assertEqual(reply["usage"]["model_calls"], 0)
+        receipt = reply["escalation"]
+        self.assertEqual(self.call(route + "/doubt", dict(turn=reply["turn"]))[1], receipt)
+        inbox = self.call("/api/chat/regulatory/inbox", email="exercise-owner@example.test")[1]
+        self.assertEqual(len(inbox["threads"]), 1)
+        with (
+            patch.object(
+                self.f.store, "audit_entries", side_effect=AssertionError("No ledger scan")
+            ),
+            patch.object(
+                self.f.store.chat_repo, "messages", side_effect=AssertionError("No messages")
+            ),
+        ):
+            code, usage = self.call("/api/chat/regulatory/usage")
+        self.assertEqual(code, 200, usage)
+        self.assertEqual(usage["outcomes"], dict(answer=0, refused=0, conflict=1))
+        self.assertEqual(usage["economics"]["cost"], "Unknown")
+        self.assertNotIn("PRIVATE-", json.dumps(usage))
+        self.assertNotIn("Different synthetic", json.dumps(usage))
+        self.assertEqual(
+            self.call("/api/chat/regulatory/usage", email="exercise-owner@example.test")[1][
+                "recorded_turns"
+            ],
+            0,
+        )
+        self.assertEqual(self.call(route, email="exercise-owner@example.test")[0], 404)
+
     def setUp(self) -> None:
         temp = tempfile.TemporaryDirectory()
         self.addCleanup(temp.cleanup)
@@ -164,6 +198,7 @@ class RegulatoryApi(unittest.TestCase):
         with patch.object(self.app.provider, "authenticate", return_value=user):
             for path, body in (
                 ("/api/chat/regulatory/status", None),
+                ("/api/chat/regulatory/usage", None),
                 (route, None),
                 (route + "/ask", dict(content="hazard sources")),
                 (route + "/doubt", dict(turn=2)),

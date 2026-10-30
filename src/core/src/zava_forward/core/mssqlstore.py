@@ -254,6 +254,8 @@ class MssqlStore(SqlStore):
                 for col, default in CHAT_MEMORY_ADDED:
                     if self.db.execute("SELECT COL_LENGTH(N'chat_memory', ?)", (col,)).fetchone()[0] is None:
                         self._add_column_default("chat_memory", col, f"NVARCHAR({200 if col == 'source' else 40})", f"N'{default}'", f"df_chat_memory_{col}")
+                if self.db.execute("SELECT COL_LENGTH(N'chat_message', N'actor_role')").fetchone()[0] is None:
+                    self._add_column_default("chat_message", "actor_role", "NVARCHAR(100)", "N''", "df_chat_message_actor_role")
                 self.db.execute("COMMIT")
             except BaseException:
                 self.db.execute("ROLLBACK")

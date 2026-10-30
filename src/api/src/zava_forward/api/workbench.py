@@ -34,6 +34,7 @@ def navigation(user: dict[str, str]) -> list[Destination]:
         ("#/", "My cases", "My assigned cases", "cases", True),
         ("#/all", "All cases", "All permitted open cases", "cases", True),
         ("#/overview", "Overview", "Programme overview", "stats", True),
+        ("#/progress", "Progress dashboard", "Synthetic programme progress", "stats", True),
         ("#/visits", "Visits", "Programme visits" if manager else "My visits", "visits", True),
         ("#/funding", "Funding", "Programme funding evidence", "funding", True),
         (

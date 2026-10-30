@@ -1,0 +1,67 @@
+{
+  "task_id": "issue-563-generated-routes",
+  "task_slug": "resident-chat-ai-563-generated-routes",
+  "parent_task": {
+    "task_id": "issue-563-complete-admission",
+    "task_slug": "resident-chat-ai-563-complete-admission"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/reviews/logs/2026-10-30/resident-chat-ai-563-complete-admission-review.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/resident-chat-ai-563-generated-routes-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/resident-chat-ai-563-generated-routes-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/resident-chat-ai-563-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/resident-chat-ai-563-generated-routes-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/resident-chat-ai-563-generated-routes-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Continue automatic parent with explicitly selected Implement then Review scope; local commit, Refs #563 only, exact Copilot trailer, no push or Azure",
+      "status": "confirmed",
+      "evidence": "Current user request naming PRRT_kwDOUU8JX86x9VaI on PR 564"
+    },
+    {
+      "decision": "Research reused and planning ready from exact review reproduction and current source; original critique historical, not rerun",
+      "status": "recorded",
+      "evidence": "PR review comment 4423467062 and generated-routes plan"
+    },
+    {
+      "decision": "Single independent Review executed Complete / Conformant; no implementation defects, RV-001 preserves separate publication/live/human gates",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-30/resident-chat-ai-563-generated-routes-review.md"
+    },
+    {
+      "decision": "Implementation and original dated evidence persisted locally with authenticated noreply author/committer, Refs #563 only and exact Copilot trailer; no push",
+      "status": "recorded",
+      "evidence": "7e0e0c6b148f4bd3322fe823ce42bd54ead99792"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Requested local correction complete and conformant; final lifecycle evidence persisted by containing commit. No push or Azure; no follow-up selected or started"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Obtain fresh complete exact-head publication gate when publication is authorised",
+      "rationale": "Existing engineering publication prerequisite, not required for this no-push local correction",
+      "evidence": "Current Review RV-001 and historical failed full gate"
+    },
+    {
+      "rank": 2,
+      "task": "Obtain separately authorised actual-model evaluation",
+      "rationale": "Scripted routing tests do not establish model relevance or quality",
+      "evidence": "Current Review RV-001 and original parent RV-002"
+    },
+    {
+      "rank": 3,
+      "task": "Obtain human/content and assistive-technology acceptance",
+      "rationale": "Engineering validation does not establish resident comprehension or human approval",
+      "evidence": "Current Review RV-001 and original parent RV-003"
+    }
+  ]
+}

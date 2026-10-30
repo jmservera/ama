@@ -4,6 +4,32 @@ const FIN_ROLES = ["Grants and Evidence Officer", "Retrofit Programme Manager", 
 const money = (n) => `£${Number(n).toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 const caseApi = (id, part, body) => api(`/api/cases/${encodeURIComponent(id)}/${part}`, body);
 
+function bindCaseMutationForm(session, key, form, button, status) {
+  session.rawFormStates ||= new Map();
+  if (!session.rawFormStates.has(key)) session.rawFormStates.set(key, { pending: false, message: "" });
+  const state = session.rawFormStates.get(key);
+  const update = () => {
+    state.update = update;
+    if (state.checkHistory && !state.pending && !session.historyBarrier) {
+      state.checkHistory = false;
+      state.message = "Case history reloaded. Check the recorded events before another action. Your unsubmitted edits are retained.";
+    }
+    button.disabled = state.pending || state.recordedForm === form || Boolean(session.historyBarrier);
+    if (state.pending) button.setAttribute("aria-busy", "true");
+    else button.removeAttribute("aria-busy");
+    status.textContent = state.pending ? "Recording the supplied evidence."
+      : session.historyBarrier ? state.checkHistory ? state.message
+        : "Another action needs confirmation. Reload and check the history before another action."
+      : state.recordedForm === form
+        ? "Only the submitted values were recorded. Your later edits remain an unsaved draft; they were not submitted. Discard this draft before recording another action."
+      : state.message;
+    if (state.focus) { status.focus(); state.focus = false; }
+  };
+  form.updateMutationState = update;
+  update();
+  return state;
+}
+
 function actForm(title, fields, run, label) {
   const inputs = fields.map(([name, text, opts]) => {
     const el = opts && opts.options
@@ -12,15 +38,26 @@ function actForm(title, fields, run, label) {
     return [name, text, el];
   });
   const body = () => Object.fromEntries(inputs.map(([name, , el]) => [name, el.value]));
+  const button = h("button", { onclick: async () => {
+    if (button.disabled) return;
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
+    try {
+      const outcome = await run(body(), inputs.map(([, , input]) => input));
+      button.disabled = outcome === "check-history";
+    } finally {
+      button.removeAttribute("aria-busy");
+    }
+  } }, label || title);
   return h("details", {}, h("summary", {}, title),
     inputs.flatMap(([name, text, el]) => [h("label", { for: el.id }, text), el]),
-    h("p", {}, h("button", { onclick: () => run(body()) }, label || title)));
+    h("p", {}, button));
 }
 
 function financePanel(c, id, refresh) {
   const f = c.finance;
   if (!FIN_ROLES.includes(me.user.role)) return null;
-  const go = (action, extra) => refresh(() => caseApi(id, "finance", Object.assign({ action }, extra)));
+  const go = (action, extra, submitted) => refresh(() => caseApi(id, "finance", Object.assign({ action }, extra)), submitted);
   const fx = f || { budget: null, commitments: [], invoices: [] };
   const invoiceIds = fx.invoices.map((i) => i.id);
   const pick = (o) => Object.assign({ options: invoiceIds.length ? invoiceIds : [""] }, o);
@@ -32,36 +69,36 @@ function financePanel(c, id, refresh) {
       h("strong", {}, `${i.id}: ${i.kind.toLowerCase()} ${i.ref} from ${i.supplier}. ${i.status}.`),
       h("div", { class: "muted" }, `Payment: ${i.payment_status}. ${i.disposition ? `Finance decision: ${i.disposition} (${i.disposition_by}).` : "No Finance decision yet."}${i.hold ? ` Payment paused: ${i.hold.reason}.` : ""}`),
       i.exceptions.length ? h("ul", {}, i.exceptions.map((e) => h("li", {}, `${e.line == null ? "Whole invoice" : `Line ${e.line + 1}`}: ${e.message}`))) : null)) : null,
-    actForm("Propose a budget", [["amount", "Amount in pounds"], ["note", "Note"]], (b) => go("budget_propose", b), "Save proposed budget"),
+    actForm("Propose a budget", [["amount", "Amount in pounds"], ["note", "Note"]], (b, submitted) => go("budget_propose", b, submitted), "Save proposed budget"),
     fx.budget && fx.budget.status === "Proposed" ? h("p", {}, h("button", { onclick: () => go("budget_approve") }, `Approve the budget as ${me.user.name}`)) : null,
-    actForm("Raise a commitment", [["supplier", "Supplier"], ["contract", "Contract reference"], ["work_order", "Work order"], ["measure", "Measure"], ["amount", "Amount in pounds"], ["quantity", "Quantity"]], (b) => go("commit_raise", b), "Raise commitment"),
-    actForm("Approve a commitment", [["id", "Commitment", { options: fx.commitments.filter((m) => m.status === "Raised").map((m) => m.id).concat([""]) }]], (b) => go("commit_approve", b), "Approve"),
+    actForm("Raise a commitment", [["supplier", "Supplier"], ["contract", "Contract reference"], ["work_order", "Work order"], ["measure", "Measure"], ["amount", "Amount in pounds"], ["quantity", "Quantity"]], (b, submitted) => go("commit_raise", b, submitted), "Raise commitment"),
+    actForm("Approve a commitment", [["id", "Commitment", { options: fx.commitments.filter((m) => m.status === "Raised").map((m) => m.id).concat([""]) }]], (b, submitted) => go("commit_approve", b, submitted), "Approve"),
     actForm("Record an invoice or valuation", [["kind", "Kind", { options: ["Invoice", "Valuation"] }], ["supplier", "Supplier"], ["work_order", "Work order"], ["ref", "Provider's reference"], ["measure", "Measure on the line"], ["quantity", "Quantity"], ["amount", "Line amount in pounds"], ["milestone_ref", "Accepted milestone evidence reference (leave blank if unknown)"]],
-      (b) => go("invoice_receive", { kind: b.kind, supplier: b.supplier, work_order: b.work_order, ref: b.ref, lines: [{ measure: b.measure, quantity: b.quantity, amount: b.amount, milestone_ref: b.milestone_ref }] }), "Record invoice"),
+      (b, submitted) => go("invoice_receive", { kind: b.kind, supplier: b.supplier, work_order: b.work_order, ref: b.ref, lines: [{ measure: b.measure, quantity: b.quantity, amount: b.amount, milestone_ref: b.milestone_ref }] }, submitted), "Record invoice"),
     invoiceIds.length ? [
-      actForm("Check an invoice against the commitment", [["id", "Invoice", pick()]], (b) => go("invoice_match", b), "Check now"),
-      actForm("Pause payment on an invoice", [["id", "Invoice", pick()], ["reason", "Why"]], (b) => go("hold_place", b), "Pause payment"),
-      actForm("Restart payment on an invoice", [["id", "Invoice", pick()], ["note", "Why it is restarted"]], (b) => go("hold_release", b), "Restart payment"),
-      actForm("Finance decision", [["id", "Invoice", pick()], ["decision", "Decision", { options: ["Accept for payment", "Reject and return to provider", "Keep on hold"] }], ["note", "Note"]], (b) => go("disposition", b), "Record decision"),
-      actForm("Note the payment status", [["id", "Invoice", pick()], ["status", "Status", { options: ["Not payable yet", "Awaiting payment run", "Paid outside this system"] }]], (b) => go("payment_status", b), "Save note"),
+      actForm("Check an invoice against the commitment", [["id", "Invoice", pick()]], (b, submitted) => go("invoice_match", b, submitted), "Check now"),
+      actForm("Pause payment on an invoice", [["id", "Invoice", pick()], ["reason", "Why"]], (b, submitted) => go("hold_place", b, submitted), "Pause payment"),
+      actForm("Restart payment on an invoice", [["id", "Invoice", pick()], ["note", "Why it is restarted"]], (b, submitted) => go("hold_release", b, submitted), "Restart payment"),
+      actForm("Finance decision", [["id", "Invoice", pick()], ["decision", "Decision", { options: ["Accept for payment", "Reject and return to provider", "Keep on hold"] }], ["note", "Note"]], (b, submitted) => go("disposition", b, submitted), "Record decision"),
+      actForm("Note the payment status", [["id", "Invoice", pick()], ["status", "Status", { options: ["Not payable yet", "Awaiting payment run", "Paid outside this system"] }]], (b, submitted) => go("payment_status", b, submitted), "Save note"),
     ] : null);
 }
 
 function grantPanel(c, id, refresh) {
   if (!FIN_ROLES.includes(me.user.role)) return null;
   const grants = c.grants || [];
-  const go = (action, extra) => refresh(() => caseApi(id, "grant", Object.assign({ action }, extra)));
+  const go = (action, extra, submitted) => refresh(() => caseApi(id, "grant", Object.assign({ action }, extra)), submitted);
   const ids = grants.map((g) => g.id);
   return h("section", { class: "card" }, h("h2", {}, "Grant stages"),
     h("p", { class: "muted" }, "Each stage is kept on its own with its evidence and who approved it. Grants are separate from invoices and payments."),
     grants.length ? grants.map((g) => h("div", {}, h("strong", {}, `${g.id}: ${g.scheme}. Now: ${g.state}.`),
       g.pending ? h("div", { class: "muted" }, `Waiting for approval: ${g.pending.to}, proposed by ${g.pending.name}. Evidence: ${g.pending.source}.`) : null,
       h("ul", {}, g.history.map((x) => h("li", {}, `${x.state}: ${x.source}. Proposed by ${x.proposed_by}, approved by ${x.approved_by}.${x.amount ? ` ${money(x.amount)}.` : ""}`))))) : h("p", { class: "muted" }, "No grant recorded."),
-    actForm("Add a grant", [["scheme", "Scheme or funder"], ["source", "Evidence for the opportunity"]], (b) => go("grant_open", b), "Add grant"),
+    actForm("Add a grant", [["scheme", "Scheme or funder"], ["source", "Evidence for the opportunity"]], (b, submitted) => go("grant_open", b, submitted), "Add grant"),
     ids.length ? [
-      actForm("Propose the next stage", [["id", "Grant", { options: ids }], ["to", "Next stage", { options: ["Award", "Claimable", "Submitted", "Accepted", "Rejected", "Cash received"] }], ["source", "Evidence"], ["amount", "Amount in pounds (needed for cash received)"]], (b) => go("grant_propose", b), "Propose"),
-      actForm("Approve a proposed stage", [["id", "Grant", { options: ids }]], (b) => go("grant_approve", b), "Approve"),
-      actForm("Withdraw a proposal", [["id", "Grant", { options: ids }]], (b) => go("grant_withdraw", b), "Withdraw"),
+      actForm("Propose the next stage", [["id", "Grant", { options: ids }], ["to", "Next stage", { options: ["Award", "Claimable", "Submitted", "Accepted", "Rejected", "Cash received"] }], ["source", "Evidence"], ["amount", "Amount in pounds (needed for cash received)"]], (b, submitted) => go("grant_propose", b, submitted), "Propose"),
+      actForm("Approve a proposed stage", [["id", "Grant", { options: ids }]], (b, submitted) => go("grant_approve", b, submitted), "Approve"),
+      actForm("Withdraw a proposal", [["id", "Grant", { options: ids }]], (b, submitted) => go("grant_withdraw", b, submitted), "Withdraw"),
     ] : null);
 }
 
@@ -86,7 +123,7 @@ function stockPanel(c) {
 
 function technicalPanel(c, id, refresh) {
   const t = c.technical;
-  const go = (action, extra) => refresh(() => caseApi(id, "technical", Object.assign({ action }, extra)));
+  const go = (action, extra, submitted) => refresh(() => caseApi(id, "technical", Object.assign({ action }, extra)), submitted);
   const TYPES = [["assessment", "Retrofit assessment"], ["design", "Design"], ["building", "Building and safety dependency"], ["coordination", "Coordination"]];
   return h("section", { class: "card" }, h("h2", {}, "Assessment and technical sign-offs"),
     !t ? h("p", { class: "muted" }, "No design recorded yet.") : [
@@ -96,12 +133,12 @@ function technicalPanel(c, id, refresh) {
         h("tbody", {}, TYPES.map(([k, label]) => { const s = t.signoffs[k]; return h("tr", {}, h("td", {}, label), h("td", {}, s ? s.status : "Not given"), h("td", {}, s && s.version ? String(s.version) : "Not given"), h("td", {}, s && s.by ? s.by : ""), h("td", {}, s ? (s.reason || s.note || "") : "")); }))),
       c.technical_missing.length ? [h("p", {}, "Still needed before this stage can pass:"), h("ul", {}, c.technical_missing.map((m) => h("li", {}, `${m.item}. For the ${m.assigned_to}.`)))] : h("p", {}, "Every sign-off and piece of evidence is in place."),
     ],
-    !t ? actForm("Record the design", [["note", "What the design covers"]], (b) => go("design_submit", b), "Record design")
+    !t ? actForm("Record the design", [["note", "What the design covers"]], (b, submitted) => go("design_submit", b, submitted), "Record design")
       : actForm("The design has changed", [["note", "What changed"], ["affects", "Which sign-offs this affects", { options: ["All that depend on the design", "design", "building", "coordination"] }]],
-        (b) => go("design_change", { note: b.note, affects: b.affects.startsWith("All") ? undefined : [b.affects] }), "Record change"),
+        (b, submitted) => go("design_change", { note: b.note, affects: b.affects.startsWith("All") ? undefined : [b.affects] }, submitted), "Record change"),
     t ? [
-      actForm("Give a sign-off", [["type", "Which one", { options: TYPES.map((x) => x[0]) }], ["note", "Note"]], (b) => go("signoff_give", b), `Sign off as ${me.user.name}`),
-      actForm("Send a sign-off back", [["type", "Which one", { options: TYPES.map((x) => x[0]) }], ["reason", "Why"]], (b) => go("signoff_return", b), "Send back"),
+      actForm("Give a sign-off", [["type", "Which one", { options: TYPES.map((x) => x[0]) }], ["note", "Note"]], (b, submitted) => go("signoff_give", b, submitted), `Sign off as ${me.user.name}`),
+      actForm("Send a sign-off back", [["type", "Which one", { options: TYPES.map((x) => x[0]) }], ["reason", "Why"]], (b, submitted) => go("signoff_return", b, submitted), "Send back"),
     ] : null);
 }
 
@@ -111,13 +148,13 @@ function residentPanel(c, id, refresh) {
       c.resident_readiness.map((m) => h("p", {}, `${m.measure}: ${m.flag}`)));
   }
   const recordForm = (...args) => c.can_record_resident ? actForm(...args) : null;
-  const go = (action, extra) => refresh(() => {
+  const go = (action, extra, submitted) => refresh(() => {
     const body = Object.assign({ action }, extra);
     for (const key of ["context_revision", "design_version", "review_decision_version"]) {
       if (body[key] !== undefined) body[key] = Number(body[key]);
     }
     return caseApi(id, "resident", body);
-  });
+  }, submitted);
   const measures = (c.measure_decisions || []);
   const reqs = c.service_requests || [];
   const residentRoles = ["Resident Liaison Officer", "Retrofit Coordinator", "Retrofit Programme Manager", "Programme Support Officer"];
@@ -133,6 +170,7 @@ function residentPanel(c, id, refresh) {
   const named = (owner) => owner?.name || "Unknown";
   const residentForm = (key, title, fields, action, build = (body) => body, label = title) => {
     if (!residentRoles.includes(me.user.role)) return null;
+    const session = caseSession;
     const status = h("p", { id: `${key}-feedback`, role: "status", "aria-live": "polite", tabindex: -1 });
     const inputs = fields.map(([name, label, options]) => {
       const attrs = { id: `${key}-${name}`, name, autocomplete: "off", "aria-describedby": `${key}-feedback` };
@@ -141,36 +179,38 @@ function residentPanel(c, id, refresh) {
       return { name, label, input };
     });
     const button = h("button", { type: "submit" }, label);
-    const form = h("form", { oninput: () => { form.dataset.unsaved = "true"; }, onsubmit: async (event) => {
+    const form = h("form", { id: key, oninput: () => { form.dataset.unsaved = "true"; }, onsubmit: async (event) => {
       event.preventDefault();
-      button.disabled = true;
-      status.textContent = "Recording";
+      if (button.disabled || session?.historyBarrier) { mutation.update(); return; }
+      mutation.pending = true;
+      mutation.update();
       let dispatched = false;
       try {
+        const submitted = snapshotCaseFields(inputs.map(({ input }) => input));
         const body = Object.fromEntries(inputs.map(({ name, input }) => [name, input.value]));
-        const payload = JSON.stringify({ action, ...build(body) });
+        const payload = { action, ...build(body) };
         dispatched = true;
-        const response = await fetch(`/api/cases/${encodeURIComponent(id)}/resident`, {
-          method: "POST", headers: { "Content-Type": "application/json", "X-ZF-CSRF": "1" },
-          body: payload
-        });
-        const result = await response.json();
-        if (!response.ok) {
-          status.textContent = result.error || "Could not record this step. Reload to check its history.";
-          status.focus();
-          if (result.outcome !== "committed") button.disabled = false;
-          return;
-        }
-        delete form.dataset.unsaved;
-        await refresh(async () => {});
+        await api(`/api/cases/${encodeURIComponent(id)}/resident`, payload, new AbortController().signal);
+        if (submitted.every(caseFieldUnchanged)) delete form.dataset.unsaved;
+        const result = await refresh(async () => {}, submitted);
+        mutation.checkHistory = result === "check-history";
+        mutation.message = mutation.checkHistory
+          ? "The evidence was recorded, but case history could not be reloaded. Reload and check the history before another action. Your unsubmitted edits are retained."
+          : "Supplied evidence recorded. Your unsubmitted edits are retained.";
       } catch (error) {
-        status.textContent = dispatched
+        const checkHistory = dispatched && mutationNeedsHistory(error);
+        if (checkHistory) requireCaseHistory(session);
+        mutation.checkHistory = checkHistory;
+        mutation.message = checkHistory
           ? "Confirmation is unavailable. Reload and check the history before another action."
-          : "Check the date and time before recording this step.";
-        if (!dispatched) button.disabled = false;
-        status.focus();
+          : error.message;
+        mutation.focus = true;
+      } finally {
+        mutation.pending = false;
+        mutation.update();
       }
     } }, inputs.flatMap(({ label, input }) => [h("label", { for: input.id }, label), input]), status, button);
+    const mutation = bindCaseMutationForm(session, key, form, button, status);
     return h("details", {}, h("summary", {}, title), form);
   };
   const serviceForm = (key, title, fields, action, build = (body) => body, label = title) =>
@@ -181,14 +221,14 @@ function residentPanel(c, id, refresh) {
     h("table", {}, h("thead", {}, h("tr", {}, ["Measure", "Their answer", "Versions"].map((x) => h("th", {}, x)))),
       h("tbody", {}, measures.map((m) => h("tr", {}, h("td", {}, `${m.measure}: ${m.context ? `scope ${m.context.scope}, revision ${m.context.revision}, design ${m.context.design_version}` : "Current scope not recorded"}`), h("td", {}, `${m.status}. ${m.readiness}`),
         h("td", {}, m.versions.map((v) => `v${v.version} ${v.status} (${v.answered_by}, recorded by ${v.recorded_by}${v.note ? `: ${v.note}` : ""})`).join("; ") || "None"))))),
-    recordForm("Record the measure scope", [["measure", "Measure", { options: ["", ...measures.map((m) => m.measure)] }], ["scope", "Exact scope reference"], ["design_version", "Current technical design version", { type: "number" }], ["source", "Supplied scope source reference"]], (b) => go("scope_record", b), "Record scope"),
-    recordForm("Record what the resident said", [["measure", "Measure", { options: ["", ...measures.map((m) => m.measure)] }], ["context_revision", "Current scope revision", { type: "number" }], ["status", "Their supplied answer", { options: ["", "Waiting", "Accepted", "Declined", "Paused", "Withdrawn"] }], ["answered_by", "Who said it", { options: ["", "The resident", "Their representative"] }], ["source", "Supplied answer source reference"], ["representative_ref", "Reference for the representative, if any"], ["review_ref", "Human review evidence if restarting after a pause or withdrawal"], ["note", "In their words (needed for declined, paused or withdrawn)"]], (b) => go("decision_record", b), "Save supplied answer"),
+    recordForm("Record the measure scope", [["measure", "Measure", { options: ["", ...measures.map((m) => m.measure)] }], ["scope", "Exact scope reference"], ["design_version", "Current technical design version", { type: "number" }], ["source", "Supplied scope source reference"]], (b, submitted) => go("scope_record", b, submitted), "Record scope"),
+    recordForm("Record what the resident said", [["measure", "Measure", { options: ["", ...measures.map((m) => m.measure)] }], ["context_revision", "Current scope revision", { type: "number" }], ["status", "Their supplied answer", { options: ["", "Waiting", "Accepted", "Declined", "Paused", "Withdrawn"] }], ["answered_by", "Who said it", { options: ["", "The resident", "Their representative"] }], ["source", "Supplied answer source reference"], ["representative_ref", "Reference for the representative, if any"], ["review_ref", "Human review evidence if restarting after a pause or withdrawal"], ["note", "In their words (needed for declined, paused or withdrawn)"]], (b, submitted) => go("decision_record", b, submitted), "Save supplied answer"),
     h("h3", {}, "Representative authority"),
     h("p", { class: "muted" }, "A person confirms authority with the resident. Scheduling or interpreting is not authority for works consent. A changed safe contact, expired, disputed or unclear authority stops representative steps. Nothing is sent here. Retention is five years from first recorded resident contact, including withdrawn or expired records."),
-    recordForm("Confirm the safe contact reference", [["safe_contact_ref", "Resident-confirmed safe contact reference"], ["source", "Supplied confirmation source"]], (b) => go("safe_contact_record", b), "Record confirmation"),
-    recordForm("Record representative authority", [["measure", "Measure", { options: ["", ...measures.map((m) => m.measure)] }], ["context_revision", "Current scope revision", { type: "number" }], ["representative_ref", "Representative reference"], ["status", "Authority status", { options: ["", "Confirmed", "Unclear", "Disputed", "Revoked"] }], ["task", "Evidenced task", { options: ["", "Receive information", "Communicate", "Attend", "Works decision"] }], ["authority_date", "Authority evidence date", { type: "date" }], ["review_date", "Review due date (authority held from this date)", { type: "date" }], ["safe_contact_ref", "Current safe contact reference"], ["source", "Authority evidence reference"], ["resident_wishes", "Resident's own stated wishes"]],
-      (b) => go("representative_record", Object.assign({}, b, { tasks: [b.task] })), "Record authority version"),
-    recordForm("Check a representative task", [["measure", "Measure", { options: ["", ...measures.map((m) => m.measure)] }], ["context_revision", "Current scope revision", { type: "number" }], ["representative_ref", "Representative reference"], ["task", "Task", { options: ["", "Receive information", "Communicate", "Attend", "Works decision"] }]], (b) => go("disclosure_check", b), "Check only; nothing sent"),
+    recordForm("Confirm the safe contact reference", [["safe_contact_ref", "Resident-confirmed safe contact reference"], ["source", "Supplied confirmation source"]], (b, submitted) => go("safe_contact_record", b, submitted), "Record confirmation"),
+    recordForm("Record representative authority", [["measure", "Measure", { options: ["", ...measures.map((m) => m.measure)] }], ["context_revision", "Current scope revision", { type: "number" }], ["representative_ref", "Representative reference"], ["status", "Authority status", { options: ["", "Confirmed", "Unclear", "Disputed", "Revoked"] }], ["task", "Evidenced task", { options: ["", "Receive information", "Communicate", "Attend", "Works decision"] }], ["authority_date", "Authority evidence date", { type: "date" }], ["review_date", "Review due date (authority unavailable from this date)", { type: "date" }], ["safe_contact_ref", "Current safe contact reference"], ["source", "Authority evidence reference"], ["resident_wishes", "Resident's own stated wishes"]],
+      (b, submitted) => go("representative_record", Object.assign({}, b, { tasks: [b.task] }), submitted), "Record authority version"),
+    recordForm("Check a representative task", [["measure", "Measure", { options: ["", ...measures.map((m) => m.measure)] }], ["context_revision", "Current scope revision", { type: "number" }], ["representative_ref", "Representative reference"], ["task", "Task", { options: ["", "Receive information", "Communicate", "Attend", "Works decision"] }]], (b, submitted) => go("disclosure_check", b, submitted), "Check only; nothing sent"),
     h("h2", {}, "Resident-update commitment"),
     h("p", {}, "A commitment is not a message. Nothing is sent or marked received here. Handoffs do not clear or reassign it."),
     update ? h("p", {}, `${update.status || "Unknown"}: ${update.purpose || "Unknown purpose"}. Owner: ${named(update.owner_identity)}. Due: ${stamp(update.due_at)}. Basis: ${update.basis || "Unknown"}. Safe route reference: ${update.safe_contact_ref || "Unknown"}. Status date: ${stamp(update.at)}. Original date: ${stamp(update.opened_at)}. Version ${update.version || 0}.`) : h("p", {}, "No commitment recorded."),
@@ -248,10 +288,12 @@ function restoreChallengeDrafts(drafts) {
     if (replacement) {
       replacement.parentElement.open = draft.open;
       replacement.replaceWith(draft.form);
+      draft.form.updateMutationState?.();
     } else {
       const containerId = draft.form.id.startsWith("challenge-resolve-")
         ? "challenge-record-history-content" : "affected-challenges";
       document.getElementById(containerId)?.append(draft.details);
+      draft.form.updateMutationState?.();
     }
   }
 }
@@ -277,6 +319,7 @@ function affectedChallengePanel(c, id, refresh) {
       query.set(key, String(page));
       history.replaceState(null, "", `#/case/${encodeURIComponent(id)}?${query}`);
       displayedHash = location.hash;
+      caseSession?.controller?.syncLinks();
       draw();
       status.focus();
     };
@@ -301,12 +344,18 @@ function affectedChallengePanel(c, id, refresh) {
       h("div", { class: "row" }, newer, older), content);
   };
   const formFor = (key, title, fields, build, correction = false) => {
+    const session = caseSession;
     const status = h("p", { id: `${key}-feedback`, role: "status", "aria-live": "polite", tabindex: -1 });
     const inputs = fields.map(([name, label, options]) => {
       const attrs = { id: `${key}-${name}`, name, autocomplete: "off", "aria-describedby": status.id };
       const input = options ? h("select", attrs, options.map((option) => h("option", { value: option }, option)))
         : h("input", { ...attrs, type: name === "next_update" ? "date" : "text", maxlength: 300,
           ...(name === "proposal_id" ? { list: targetOptions.id, spellcheck: "false" } : {}) });
+      input.addEventListener("input", () => {
+        input.removeAttribute("aria-invalid");
+        if (!mutation.pending && !session.historyBarrier) mutation.message = "";
+        mutation.update();
+      });
       return { name, label, input };
     });
     const button = h("button", { type: "submit" }, title);
@@ -316,11 +365,15 @@ function affectedChallengePanel(c, id, refresh) {
         if (!window.confirm("Discard only this unsaved challenge draft?")) { event.preventDefault(); return; }
         delete form.dataset.unsaved;
         inputs.forEach(({ input }) => input.removeAttribute("aria-invalid"));
-        status.textContent = "";
+        if (!mutation.pending && !session.historyBarrier) {
+          mutation.message = "";
+          mutation.recordedForm = null;
+        }
+        mutation.update();
       },
       onsubmit: async (event) => {
         event.preventDefault();
-        if (button.disabled) return;
+        if (button.disabled || session?.historyBarrier) { mutation.update(); return; }
         for (const { input, label } of inputs) {
           input.removeAttribute("aria-invalid");
           if (!input.value.trim() || !input.validity.valid) {
@@ -333,45 +386,43 @@ function affectedChallengePanel(c, id, refresh) {
         const body = Object.fromEntries(inputs.map(({ name, input }) => [name, input.value]));
         if (correction && body.resolution === "Correction recorded"
             && !window.confirm("Record this supplied human correction? Only suggestions and reviews that use the challenged version will need a fresh review. No works choice or safety response changes.")) return;
-        button.disabled = true;
-        button.setAttribute("aria-busy", "true");
-        status.textContent = "Recording the supplied evidence.";
+        mutation.pending = true;
+        mutation.update();
         let dispatched = false;
         const dispatchSignal = routeController.signal;
         try {
-          const payload = JSON.stringify(build(body));
+          const payload = build(body);
           dispatched = true;
-          const response = await fetch(`/api/cases/${encodeURIComponent(id)}/resident`, {
-            method: "POST", headers: { "Content-Type": "application/json", "X-ZF-CSRF": "1" }, body: payload
-          });
-          const result = await response.json();
-          if (!response.ok) {
-            status.textContent = result.error || "Could not record this challenge. Reload and check its history.";
-            if (result.outcome !== "committed") button.disabled = false;
-            status.focus();
-            return;
-          }
+          await api(`/api/cases/${encodeURIComponent(id)}/resident`, payload, new AbortController().signal);
           const changed = inputs.some(({ name, input }) => input.value !== body[name]);
+          mutation.recordedForm = changed ? form : null;
           if (changed) {
             form.dataset.unsaved = "true";
-            status.textContent = "Only the submitted values were recorded. Your later edits remain an unsaved draft; they were not submitted. Check the history before another action.";
+            mutation.message = "Only the submitted values were recorded. Your later edits remain an unsaved draft; they were not submitted. Check the history before another action.";
           } else {
             delete form.dataset.unsaved;
           }
           if (dispatchSignal.aborted) return;
-          await refresh(async () => {});
+          const result = await refresh(async () => {});
+          mutation.checkHistory = result === "check-history";
+          if (mutation.checkHistory) mutation.message = "The evidence was recorded, but case history could not be reloaded. Reload and check the history before another action. Your unsubmitted edits are retained.";
+          else if (!changed) mutation.message = "Supplied evidence recorded.";
         } catch (error) {
-          status.textContent = dispatched
+          const checkHistory = dispatched && mutationNeedsHistory(error);
+          if (checkHistory) requireCaseHistory(session);
+          mutation.checkHistory = checkHistory;
+          mutation.message = checkHistory
             ? "Confirmation is unavailable. Reload and check the history before recording another action."
             : error.message;
-          if (!dispatched) button.disabled = false;
-          status.focus();
+          mutation.focus = true;
         } finally {
-          button.removeAttribute("aria-busy");
+          mutation.pending = false;
+          mutation.update();
         }
       } },
     inputs.flatMap(({ label, input }) => [h("label", { for: input.id }, label), input]),
     status, button, h("button", { type: "reset", class: "alt" }, "Discard challenge draft"));
+    const mutation = bindCaseMutationForm(session, key, form, button, status);
     return h("details", {}, h("summary", {}, title), form);
   };
   const staff = (me.staff || []).filter((person) => [

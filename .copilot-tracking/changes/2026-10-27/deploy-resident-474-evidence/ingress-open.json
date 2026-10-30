@@ -1,0 +1,26 @@
+{
+  "image": "crcutovertestrzsrg.azurecr.io/zava-resident-demo@sha256:0568deb725e7258c3b09d425b6c0a28a736a2e23434fc22c350bac6333888043",
+  "ingress": {
+    "additionalPortMappings": null,
+    "allowInsecure": false,
+    "clientCertificateMode": null,
+    "corsPolicy": null,
+    "customDomains": null,
+    "exposedPort": 0,
+    "external": true,
+    "fqdn": "ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io",
+    "ipSecurityRestrictions": null,
+    "stickySessions": null,
+    "targetPort": 8089,
+    "targetPortHttpScheme": null,
+    "traffic": [
+      {
+        "latestRevision": true,
+        "weight": 100
+      }
+    ],
+    "transport": "Http"
+  },
+  "ready": "ca-resident-demo--0000002",
+  "opened_at": "2026-10-27T09:27:30.672831+00:00"
+}

@@ -1,7 +1,7 @@
 ---
 title: Regulatory literacy for journey users and agents
 description: What each journey role should know about current law and regulation, and how agents can surface it so people make safe decisions when in doubt
-ms.date: 2026-10-15
+ms.date: 2026-10-27
 ms.topic: reference
 status: Research synthesis and design proposal; not legal advice, validated user need or approved requirement
 ---
@@ -50,7 +50,8 @@ Dated status is from the local snapshots (retrieved 2026-09-19; register
 
 The MVP already restricts the five assistants to proposal-only output with
 captured source IDs and mandatory citations
-(`mvp/zavaforward_mvp/assistants.py`). A regulatory layer fits the same
+(`src/core/src/zava_forward/core/assistants.py`, migrated under ADR 0006).
+A regulatory layer fits the same
 pattern.
 
 1. A regulatory source register as data: ID, authority type, status
@@ -100,6 +101,28 @@ pattern.
 * Over-reliance: prompts can create false comfort. Measure whether users
   escalate correctly, and test with real staff before any claim of benefit.
 * Cost and timing of monitoring are unknown.
+
+## Synthetic engineering delta (2026-10-27, Refs #208)
+
+The existing offline home-specific panel now automatically routes supported
+source conflicts, preserving both cited versions, question and sender receipt
+in the named exercise owner's isolated inbox. It does not resolve the conflict
+or approve a rule. Ordinary answers/refusals retain the manual doubt route;
+real emergency/hazard intake never waits for either.
+
+The same native UI shows zero model calls per question/check/alert, bounded
+own-role/UTC-day recorded outcomes and Unknown service cost. This is not a
+paid budget, an exact daily total or evidence of staff benefit. The stateless
+synthetic evaluation retains separate citation/refusal/hazard checks and a
+cards-only shipment recommendation. Scoped browser/axe evidence is engineering
+coverage, not a staff comprehension study or full accessibility acceptance.
+
+[API engineering boundaries](../../../../src/api/README.md#synthetic-completion-boundary-2026-10-27-208)
+and the [DPIA draft](../chat-memory-dpia.md#regulatory-assistant-dpia-draft-for-dpo-review-2026-10-16-refs-217)
+record the actual surfaces and unresolved human gates. DPO retention/rights,
+real Entra scope, owner-ratified targets, continuing-stock evidence and
+repairs/housing/grants comprehension remain unmet. No legal-currentness check,
+real-data approval, operational activation or completed business gain follows.
 
 ## Suggested next steps
 

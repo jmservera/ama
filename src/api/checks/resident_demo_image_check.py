@@ -205,11 +205,12 @@ def main() -> None:
             good_body = json.dumps(
                 {"email": "alice.demo@example.com", "password": FAKE_PASSWORD}
             ).encode()
-            status, cookies2, _ = call(port, "POST", "/demo/login", post, good_body)
+            status, cookies2, login_data = call(port, "POST", "/demo/login", post, good_body)
             check("fake demo sign-in succeeds in the container", status == 200)
             session = {
                 **host,
                 "Cookie": jar + "; " + "; ".join(f"{k}={v}" for k, v in cookies2.items()),
+                "X-Resident-Session": json.loads(login_data)["session_id"],
             }
             status, _, data = call(port, "GET", "/demo/view", session)
             check(

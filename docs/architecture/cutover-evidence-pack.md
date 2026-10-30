@@ -1,11 +1,32 @@
 ---
 title: Source cut-over evidence pack
 description: Dated parity, private SQL and public edge proof with remaining owner gates
-ms.date: 2026-10-20
+ms.date: 2026-10-30
 ms.topic: reference
 ---
 
+## Transport integration qualification (2026-10-30, Refs #360)
+
+Current main and the private Blob transport branch are integrated without
+rewriting their original evidence. The
+[transport evidence map](../../infra/README.md#transport-evidence-and-integration-2026-10-30-refs-360)
+preserves DN1-DN5, private/no-key/no-tag controls, bounded complete results
+and offline-only proof. Main's later `src/` cut-over, identity, IoT and release
+records remain authoritative for their dated scopes; the historical proposal
+does not undo directory retirement or prove this transport live.
+
+The [rubric incident diagnosis](../../.github/rubric/README.md#pr-423-invalid-d1-details-2026-10-30-refs-360)
+records an invalid extra D1 `evidence2` key, not a measured score regression.
+Removing that field only in a diagnostic replay yields 77 versus 77; no
+scorecard is repaired or published here. Actual hosted scoring, current-head
+publication gates and live/human acceptance remain separate.
+
 ## Decision and Scope
+
+This section records the original 2026-10-16 decision boundary. For the later
+owner sign-off and directory retirement, see the
+[2026-10-27 record](#owner-authorized-directory-retirement-2026-10-27).
+Original failures, outcomes and unchecked historical gates below are preserved.
 
 Refs #200. Refs #201. Evidence prepared on 2026-10-16 against base
 `aedd616ffff8abfcf0379a538b895e4427147c8f`, then refreshed after integrating
@@ -1897,3 +1918,449 @@ All boxes are deliberately unchecked. Technical evidence is not owner approval.
   no soak has started and no duration is chosen.
 * [ ] Explicitly record go/no-go and sign-off in #201. Only a later authorized
   #202/#203 change may remove legacy paths; this PR never performs deletion.
+
+## Owner-authorized directory retirement (2026-10-27)
+
+Refs #199. Refs #200. Refs #201. Refs #202. Refs #203.
+The owner explicitly **SIGNED OFF cut-over (#201) on 2026-10-27** in the
+retirement task direction. This later authority permits directory retirement;
+it supersedes the earlier unsigned deletion status, not the original technical
+results, unresolved human/operational gates or historical unchecked checklist.
+No new soak, deployment, private-data inspection or backup verification ran.
+
+Fetched `origin/main` at `65a514ed20e97816dbf47e9fb981ab4cfe40597d`
+already contained all executable migration: the five installed source projects,
+source-context Dockerfiles, source CI and new Bicep job module paths.
+Only `mvp/README.md` remained tracked; `prototype/` was already retired by
+`a7e3004` / #295. This retirement removes that pointer, not application code.
+Working data remains external through `ZF_DATA`; no agent read a private dataset.
+
+The current BRD frontmatter is `0.21.0`. Local annotated tag `v0.21.0`
+was absent and was created at the main SHA above, the last pre-deletion commit
+containing the pointer. It archives the pointer-era tree; earlier code remains
+in its Git history. Neither tag publication nor a GitHub release was performed.
+The owner publishes the tag with exactly:
+
+```bash
+git push origin refs/tags/v0.21.0:refs/tags/v0.21.0
+```
+
+### Remaining-reference policy
+
+Current build/test/deploy commands use `src/` and installed `zava_forward`
+packages. Workflow/check names remain unchanged, including dispatch-only legacy
+workflow files. Do not remove required contexts or rename them during cleanup.
+The rubric registry already includes source projects, not legacy directories;
+deleting the unscored pointer adds no loss of scored source coverage. A measured
+post-merge score comparison is still required; no score or recovery is invented.
+
+Intentional old-path occurrences remain in dated ADRs, parity/audit TSVs,
+reports, pinned GitHub URLs and original RPI evidence. The append-only log
+retains old links with an additive repair map in its 2026-10-27 entry.
+Historical `zavaforward_mvp`/`properwarm_mvp` strings in migration fixtures and
+the cut-over audit parser test historical inputs, not live imports. Defensive
+`mvp/data` ignores/refusal checks and obsolete registry excludes remain to
+prevent accidental private-data reintroduction. Archive `v0.21.0` supplies the
+cut-over boundary for these intentional exceptions; earlier pinned commits
+remain the authoritative source for their original executable content.
+
+### Acceptance boundary
+
+This maintenance change supplies source-reference reconciliation, local
+archive creation, pointer deletion and current navigation. Existing API,
+rename and narrow parity/registry tests are the scoped validation; no full
+gate is authorized for this task. Hosted CI and owner merge remain required.
+It does not prove all-suite baseline parity, fresh deployed health, release
+publication, every dependent-epic disposition or post-merge rubric comparison.
+Accordingly all five issues are referenced, not closed. The literal zero-token
+repository-wide criterion in #203 is not claimed complete: preserved history
+and defensive fixtures are explicit exceptions.
+## First Bounded Local Stabilization Checkpoint (2026-10-23, #440)
+
+**Executed, partial; not a product or release pass.** This checkpoint assesses
+merged-main runtime inputs, separately from the proposed coordinator policy.
+No issue/epic criterion was ticked, no cloud action or paid inference ran, and
+no resident, professional or release approval is inferred.
+
+### Source, coverage and requirement baseline
+
+Fresh `origin/main` before testing and after the run:
+`140d8f494482c78e84d15f3d46b9223d3c487af0`, tree
+`e4910768767a071827a771d9c0c919451cccae57`. Focused tests used an external
+exact-main export, installed distributions and constructed fixtures. The native
+runner requires a clean commit: preliminary policy/evidence head
+`d8a6506100c56c9454a85bcc31bac11d56b4a3bc`, tree
+`681da68894aa36082d84bfe4f4b15f45502e5992`, was frozen for its entire run.
+Its diff from main contained only the existing coordinator, `src/README.md`
+and this issue's tracking evidence. All application, test, dependency, tool,
+workflow and executable build inputs were identical to main. The external
+allowlist proof is `/tmp/ama-440-preliminary-identity-20261023.json`.
+The receipt binds that preliminary head, **not literally main HEAD and not a
+final publication candidate**. Subsequent checkpoint-documentation commits
+invalidate any publication eligibility independently of its failed status.
+
+Bounded recent merged coverage is #419 / #221 (incident/restart source,
+`993a7b88c03f5240f1e7a4c7c7afa7c064281622`), #418 / #220 (resident
+challenge/correction, `7e95f0224bfb7a8a62990a1de162fbcfa68db539`), #427 /
+#151 (contrast correction, `9e55a392b95c90730c6410b9a4db4ad3a5ae70ce`)
+and #414 / #413 (native gate,
+`fa659cfd021100f7c64f8ec73bbff76c03adf234`). Requirements amendments #433 /
+#432 are at the source pin; #431 / #122
+(`3deb179d57b6520e114a27862f79ca95399f833e`) remains a custody proposal,
+not observed recovery-service delivery. Older merged runtime code supports
+the tested welcome, session, proposal, import and persistence boundaries;
+this is not exhaustive feature, PR or acceptance coverage. Unmerged #437 and
+all sibling-branch functionality are excluded. #349, #350 and #360 remain
+open live-acceptance gaps, not new duplicate bugs.
+
+| Baseline document | Version/status at source pin | Git blob |
+| --- | --- | --- |
+| [BRD](../brds/agentic-retrofit-programme-brd.md) | Draft 0.19.0, 2026-10-22 | `e96c4b16010f47a8ce01b29a9c208e4b3bb34319` |
+| [Demonstrator PRD](../prds/zava-forward-retrofit-programme-demonstrator.md) | Candidate 0.18.0, 2026-10-22; historical exercise acceptance of 0.12.0 does not accept this delta | `a1fa17ab39924bb4bed7cd92c7bf2c8c79772410` |
+| [ADR 0001](../adrs/0001-azure-architecture.md) | Proposed, dated amendments | `9f53b5b6ee36ff0a21854c3058e10c55e3bd7835` |
+| [ADR 0002](../adrs/0002-pilot-readiness-architecture.md) | Proposed, dated shared-API realization | `e6c8ce004e04dd0aeda3beafc01719ebe81c927a` |
+| [ADR 0003](../adrs/0003-journey-derived-capabilities-runtime-fit.md) | Accepted with Basic IoT Hub amendment | `6044e1061f45964393e649aefa80b2293644d58f` |
+| [ADR 0004](../adrs/0004-per-user-agent-chat-and-memory.md) | Accepted staged | `259358e53e37ddeade73f9ee3aafd8dcacea20f9` |
+| [ADR 0005](../adrs/0005-regulatory-compliance-assistant.md) | Accepted synthetic-development scope only | `4d610335a5a18bb282e29c6cb3053404beda995d` |
+| [ADR 0006](../adrs/0006-src-layout-and-cutover.md) | Accepted layout/dependency boundary | `a5063f8f31c79044137b529145fbef7667841305` |
+
+Document-qualified IDs below are traceability, not new document approval,
+legal-currentness confirmation or activation of operational controls.
+
+### Actual local commands and outcomes
+
+Focused environment: `/tmp/ama-440-focused-20261023`, Python 3.12.3, installed
+all five `src/` distributions with pip after the chosen import probe actually
+failed `ModuleNotFoundError: zava_forward`. No `PYTHONPATH=mvp`, default/private
+dataset, private roster or `.env` was used. From each exported component,
+the installed interpreter ran `-m unittest -v` with these exact selector sets:
+
+| Component | Selectors | Actual result |
+| --- | --- | --- |
+| API | `test_auth.ProxyHttpTests`, `test_auth.PasswordProviderTests`, `test_auth.TrustedProxyTests`, `test_assistants.ContractTests.test_every_capability_failure_disabled_and_malformed`, `test_assistants.DurabilityTests.test_schema_failure_disables_assistance_not_manual_reads`, `test_assistants.ApiTests.test_invalid_payload_and_store_failure_leave_manual_api_available`, `test_assistants.ReviewTests.test_independent_qa_reviewer_and_separate_human_verification`, `test_resident_api.ResidentApi.test_live_local_http_decision_pause_redress_and_restart`, `test_workflows.SqlFlows.test_safety_flow_blocks_booking_until_released_by_someone_else`, `test_ai_tasks` | 60 passed, 16.309s, exit0 |
+| Core | `test_sqlstore test_recovery test_dependency_rule` | 32 passed, 9.258s, exit0 |
+| Importer | `test_excel_transition test_dependency_rule` | 32 passed, 0.118s, exit0 |
+| Orchestrator | `test_digest_blob test_token_store test_document_rescan_job test_source_monitor test_dependency_rule` | 44 passed, 4.744s, exit0 |
+| Agents | `test_ai_identity test_dependency_rule` | 6 passed, 0.069s, exit0 |
+
+API used fixture-only `PYTHONPATH=tests:../core/tests:../agents/tests`.
+The five existing component discoveries used the installed interpreter,
+`-m unittest discover -s tests -q` and documented shared fixture paths.
+Final standalone outcomes: core1243/307.123s, skipped167; agents105/18.226s;
+API959/386.227s, skipped301; orchestrator46/4.863s; importer39/0.147s.
+All exited0: 2392 discovered, 468 skipped, 1924 executed successfully.
+Skipped checks are not passes.
+
+The original archive-only core run failed three tests and errored once:
+Git audit/provenance and repository-output guards require Git metadata.
+Restoring metadata from the exact local pin, preserving erroneous generated
+outputs externally, then running all four focused failures and the full core
+suite resolved them without source edits. Intermediate mistyped-SHA/import-path
+and stale-fixture retries are retained, not hidden. Logs are
+`*-focused.log`, `*-suite.log`, `core-harness-reproduction*.log`,
+`core-suite-git-aware.log` and `archive-harness-artifacts/` under the focused
+directory. These harness failures are not confirmed application bugs.
+
+The existing native gate then ran once, 13:10:49-13:41:44Z:
+
+```bash
+python3 tools/rpi-checks.py --all --base 140d8f494482c78e84d15f3d46b9223d3c487af0 --out /tmp/ama-440-preliminary-20261023-d8a65061 --lock-timeout 0
+```
+
+**Exit1, failed receipt preserved.** Sixteen groups passed; `project-core`
+failed one benchmark. The runner continued its other groups rather than
+converting the overall result to success.
+
+| Native result | Exact evidence in native output directory | Classification and limitation |
+| --- | --- | --- |
+| Core1243/361.428s, one failure, skipped167 | `0012-project-core.log`: `test_sqlreads.Scale.test_sql_reads_at_60000`, filtered page17383.017630ms, required strictly below1500ms | Local observed failure; core Ruff/format/mypy were not reached in this group |
+| Agents105, API959 skipped301, orchestrator46, importer39; all exit0 | `0018`, `0027`, `0036`, `0045` component logs; their Ruff/format/mypy commands passed | Local observed; integration skips remain qualified |
+| Namespace, static, infra and migration groups passed | Receipt command ledger; static runner12 tests, infra368 tests; offline Bicep build/lint and workflow inventory | Local observed, not Azure deployment/what-if |
+| Actual Chromium design-system and regulatory UX harnesses exit0 | `0139-browser.log`, `0140-browser.log`, `regulatory-ux-results.json`; Chromium156.0.8078.4, pinned axe4.10.3 | Local observed, synthetic changed surfaces only; 19 scans, zero reported violations, ten color-contrast incomplete observations needing manual review |
+| Actual disposable SQL Server244/378.736s, exit0, skipped1 | `0155-mssql.log`; owned loopback SQL container and random credentials, seven existing SQL selector groups | Local observed persistence/proposal/review/ledger parity; one JSON-only separate-file audit test deliberately skipped, not SQL proof |
+| Four Docker/non-root contracts and separate API logo-mode0600 contract passed | `image-api`, `image-agents`, `image-orchestrator`, `image-importer`, `logo-0600` receipt groups | Local observed startup/negative-probe controls, not deployed workload equivalence |
+| Four configured scanner gates and SPDX reports produced | Each component `*-gate.json`, `*-all.json`, `*.spdx.json` | Local observed: zero fixable HIGH/CRITICAL under configured gate; full reports retain residuals, not vulnerability-free certification |
+
+Native output and retained environments:
+`/tmp/ama-440-preliminary-20261023-d8a65061`.
+Failed receipt SHA256:
+`ce6ff80079f2086b49159dd33a9d208fb1f328998de1d4cc85dd14de8b2990a9`.
+The official `--verify-receipt` with that `receipt.json` and the same current
+base exited1: `Receipt does not establish a complete passing run`.
+Verification output is `/tmp/ama-440-preliminary-verification-20261023.log`.
+There is **no eligible final receipt**.
+
+After the gate released its lock, a nonqueued focused invocation repeated
+`test_sqlreads.Scale.test_sql_reads_at_60000` three times in the exact-main
+focused environment. All three passed in55.045s; filtered measurements were
+108/106/108ms, with the original1500ms assertion unchanged. Full standalone
+core had also passed earlier. These retests do not repair the failed receipt
+or prove the cause of the17.383s observation. Contention and suite-order effects
+remain unproven possibilities; bounded host-tool image restores overlapped
+the native run, so environmental interference cannot be excluded.
+
+### Requirement, architecture and journey reconciliation
+
+| Qualified requirement / decision | Planned boundary and actual local observation | Remaining gap / classification |
+| --- | --- | --- |
+| PRD FR-003, AC-004/005, NFR-003; ADR0002 | Public feedback-first welcome, protected workbench/API, missing-principal401, dev-cookie expiry and trusted-proxy role/case denial exercised by focused `test_auth` and browser harness | Local observed only. Real Entra callback/session/role provisioning blocked under #349; historical #350 redirect is not JSON/API acceptance |
+| PRD FR-028/044/047, AC-030/052/058-061; BRD RULE-018, FR-044 | Disabled/malformed/schema/storage/provider failures preserve manual reads and explicit AI status; independent proposal QA/human-verification separation, unchanged controlled state and durable proposal evidence tested locally and in SQL | Local observed scripted/model-off behavior. Real task-bound AI, task quality/value and deployed AC-057 blocked/unverified under #360, not accepted from mocks |
+| PRD FR-045/046; BRD CON-006/RULE-006 | Local HTTP supplied measure decision/pause/redress/restart and scoped safety/booking hold; unrelated choices and manual paths remain separate | Local observed constructed decisions, not actual resident consent, appointed professional review or witnessed restart |
+| BRD RULE-020/024; #221 | Incident/restart guards and distinct-authority fixture checks included in package suites; emergency/manual routes independent | Actual OD-35 named acceptance/thresholds and controlled restart remain blocked/unknown; synthetic reviewer cannot release work |
+| PRD FR-001/005, NFR-010; ADR0002/0006 | SQLite reopen/recovery plus actual SQL Server store, ledger, assistant durability/review/API tests | Local observed parity, not production Azure SQL identity, backup/restore or deployed restart acceptance; #350/#360 remain |
+| PRD FR-030; ADR0006 supporting importer boundary | Import quarantine/preparer-reviewer refusal, retained source/history and namespace contracts exercised; portable exports are a separate PRD obligation | Local observed library/API support, not complete import UI/worker/approval-channel delivery |
+| ADR0006 | Five installed distributions and namespace/dependency tests; workloads depend on core, temporary API-to-agents edge allowed; no workload-to-API | Local observed accepted layout. Cohesive core is an accepted trade-off, not evidence demanding speculative decomposition |
+| ADR0001 versus ADR0002 | Shared API proposal realization tested; orchestrator digest/token/rescan/source and importer interfaces exercised with local/mocked providers | Separate autonomous worker/identity estate remains proposed/deferred, not delivered by skeletons or unit tests |
+| ADR0003/0004/0005 | Existing synthetic sensor, staged chat/memory and compliance-assistant guards fall within component/regulatory harness scope | Live Hub transport, privacy/human gates and qualified legal/RAI acceptance remain implemented-unverified, blocked or deferred as applicable; no operational-law approval |
+| BRD FR-052/NFR-012, PRD Tokenomics amendments from #433 | Pinned requirement delta reconciled against existing proposal usage controls | Full all-in cost/value reporting deferred to existing #432, not a newly discovered regression or inferred acceptance |
+
+No new `Azure observed` row exists. Complete all-in headroom is Unknown despite
+the USD700 replacement ceiling and unchanged 2026-10-25T16:02Z expiry. Cloud,
+Graph, tenant, paid inference and private-data operations were not authorized
+or executed. Staff comprehension, resident wording review, screen-reader/
+universal WCAG conformance and actual human approvals remain unmet.
+
+### Findings, scoped recommendation and resume
+
+| Priority / severity | Finding and reproduction | Smallest next action, owner and dependency |
+| --- | --- | --- |
+| 1 / High delivery blocker; source-defect severity unknown | PRD NFR-002/PR-005 and ADR0002 paging boundary: native core benchmark17383ms exceeds its existing1500ms assertion; standalone suite and three focused repeats pass. Original failure and recipe above retained | Issue440/coordinator validation owner: diagnose performance repeatability/environment attribution in separately scoped work if needed; retain unchanged threshold and regression. No speculative query refactor or code fix here. A later complete stable-candidate run, not a focused pass, is required for publication |
+| 2 / High validation blocker, not a product defect | Policy static Pass and seven-scenario simulation Complete/Pass; independent host metadata/references pass, but actual contained native chooser did not discover the candidate | P04-T01 host-validation owner: establish safe supported exact-candidate native discovery without selecting/launching coordinator, model submissions, private credentials or cloud effects. HVE remains Deferred, original RPI Review and final publication gate not yet eligible |
+| Existing acceptance gates | #349 tenant/session, #350 deployed parity, #360 real deployed/AI workflow; #432 requirements delta; named safety/resident/quality authority | Existing owners, no duplicate issues, no ticks/closure. Local fixture success cannot substitute for these gates |
+
+Current open-issue inventory was refreshed; exact benchmark-name body search
+found no open match, and existing #76 remains the queue-functionality owner.
+No stable application defect or necessary refactor was confirmed, so no new
+bug issue or code change was manufactured. The transient measured gate failure
+is an explicit regression/reliability risk, not dismissed as a pass.
+
+Recommendation: **fix the affected validation evidence before publication or
+affected closure/dependent expansion; continue independent local lanes**.
+No product pivot, requirement relaxation or deliberate acceptance deferral is
+approved or proposed. Epics cannot close merely because their children merged.
+The original critique, failed runs and unchecked human sign-off above remain.
+The shared heavy lock was free after the owned gate and focused repeats; no
+#349 process/output or receipt environment was interrupted, read or reused.
+
+### Reconciliation with later main (2026-10-25, #440)
+
+The checkpoint above describes main `140d8f49` and BRD 0.19.0 / PRD 0.18.0 only.
+Main has since advanced to `ea5577b2` (BRD 0.21.0, PRD 0.20.0, ADR0001/0002
+changes, and #360 Entra-authoritative access, ledger-safe migration and seed
+merge runtime changes). That later runtime was not assessed by the checkpoint,
+which stays historical evidence; a further checkpoint is a separate
+coordinator-scheduled item. The branch now includes main through a
+non-rewriting merge, with the append-only knowledge-base index and log
+conflicts resolved by keeping both sides.
+
+Evidence classes stay separate. The one-time owner-approved native `/agent`
+discovery succeeded only as reported in the coordinator comment on #440
+(6385349053); the retained local transcript does not show the entry, so it is
+attested and not independently reproducible, is not behavioral acceptance, and
+will not be repeated. The seven HVE scenarios remain simulated proxy evidence
+with the human checkbox unchecked. The external failed-receipt directories were
+found absent on 2026-10-24 and are not recreated; the failed 17383 ms against
+1500 ms measurement, its receipt SHA256 and its unknown root cause remain
+repository records only. The threshold is unwaived. The original Review
+(Partial, Residual work) is unchanged. No Conformant outcome, live AI, Entra,
+Azure or resident-UX acceptance is claimed; Azure authority has expired. The
+final full gate on the merged exact head is recorded after it runs.
+
+## Rubric src counting reconciliation (2026-10-27)
+
+Refs #198. This additive reconciliation preserves the original UNMET rubric
+row, historical retirement boundary and earlier failed/unchecked evidence.
+It supplies subsequently retrieved evidence, not retrospective sign-off or
+whole-issue closure. Inspected base: `09099ecd1a66ee9d37ad993707d1f2eda07cdfd4`.
+No model scoring was dispatched, no private dataset read and no score edited.
+
+### Main integration qualification (2026-10-29)
+
+Refs #198, PR #507. Rebased onto main
+`5653547507f3056f09a726a18516237728da5e5b`, preserving both additive
+documentation histories. At the owner's direction, the entire rubric tree
+and scenario manifest now use that main revision's bytes, including its
+recorded score and tests. The 2026-10-27 repairs, guide changes and test counts
+below describe the original candidate, not the rebased executable delta:
+those rubric edits are not retained. Original critique, Review and historical
+acceptance gaps remain unchanged. No new rubric score, hosted CI success,
+publication receipt, merge or issue acceptance is inferred.
+
+The later same-day conflict rebase uses main
+`356a3cfbaa2cd63a6fbf80e87e11a29cacaaf4c7` and retains that revision's
+complete rubric tree and scenario manifest, superseding only the integration
+base above. Both independent index entries and append-only log histories
+survive. Core/API lint, format, typing and twelve focused tests pass; the
+scenario validator confirms the existing pins without re-pinning. The
+authoritative-main rubric suite still reports 18 failed, 355 passed and seven
+missing-runtime skips. Those failures are not repaired here; no fresh hosted
+CI or remote mergeability is claimed before the coordinator's push.
+
+### Current-main synchronization (2026-10-30)
+
+Refs #198, PR #507. The new conflict rebase first used main
+`91e890e07af036263316c153cbc7ceff780cdaa2`, then integrated the concurrently
+updated `ffd8f35e63b24905b9aeb937dbf2a7fe9968747f` before Review.
+The intervening changes affect only a training-material development lockfile.
+Main's complete rubric and scenario
+manifest are retained, together with all independent index entries, both
+append-only log histories and the original dated RPI outcomes. The earlier
+integration bases and test counts above remain historical observations, not
+results for this candidate. No application, workflow, infrastructure or legacy
+code is changed. Local synchronization does not establish a fresh hosted CI
+result, remote mergeability, publication approval or whole-issue acceptance;
+the coordinator owns the later push and hosted checks.
+
+For this candidate, core/API Ruff lint, format and mypy passed, as did twelve
+focused manifest/dependency tests and twenty-five migration regressions.
+Scenario source pins validated without re-pinning. Main's unchanged rubric
+suite still reports 18 failed, 355 passed and seven missing-runtime skips;
+this is not a green full-suite result. The actual prepare decision is
+`should_score=false`, baseline 77/100, because no scored artifact changed.
+No full API suite or full publication gate was run.
+
+### PR #507 review correction (2026-10-30)
+
+Refs #198. The integrated PR is documentation-only. The original 2026-10-27
+candidate's synthetic fixtures, workflow-test repairs and rubric-guide edits
+were discarded during integration; they are not current deliverables.
+Its **374 passed / one failed / seven skipped** result and 31 targeted passes
+are historical only. The integrated inputs instead report **355 passed /
+18 failed / seven skipped**, with no scored artifact changed and
+`should_score=false`. No new model score or B6 recovery is delivered.
+
+The original Review froze the non-tracking diff against
+`09099ecd1a66ee9d37ad993707d1f2eda07cdfd4` with SHA-256
+`de87d9e063b59ca93f178241776d82c2ac447d68efc02ba9780373fb17a75962`.
+The later integrated Review assessed `86ce8f660d846a57da03ddd973ab513dd482465f`
+plus its documentation edits against
+`ffd8f35e63b24905b9aeb937dbf2a7fe9968747f`. Its three-document diff
+(`docs/architecture/cutover-evidence-pack.md`, `docs/reference/README.md`,
+`docs/reference/log.md`) has SHA-256
+`8059b4aa91f469ff735c33c620bd23cc1b529d108a5737a08d862b53f0061883`,
+preserved in the
+[pre-correction integrated snapshot](https://github.com/jmservera/ama/compare/ffd8f35e63b24905b9aeb937dbf2a7fe9968747f...254d2274693c8190f827067c3732e03d102a563d).
+These identify different historical assessed boundaries, not this corrected
+candidate's diff or a fresh exact-head publication assessment. This correction
+changes the documentation delta; it does not restore the discarded changes,
+repeat those Reviews or change their original outcomes.
+
+### Baseline and score provenance
+
+The pre-migration snapshot at `9261c5cb1dcca013d9bc93c79d3fafebc70b8f71`
+records 47/100, rubric_version 2, scored commit
+`80660e95014c5abf5327d5e5e235c0612b991aa1`, 2026-10-14 15:47:56 UTC,
+[run 38590975162](https://github.com/jmservera/ama/actions/runs/38590975162).
+Its solution-code criteria are A1=4, A3=5, A4=5, A5=3, A6=3, A7=4, B6=4;
+the score file preserves original rationale and evidence, including then-live
+`mvp/` paths. Those are historical citations, not current live links.
+
+| Boundary / PR | Repository snapshot | Recorded total vs 47 | Evidence qualification |
+| --- | --- | --- | --- |
+| Registry exclusions #292 | `ef4656a1` | 47, delta 0 | Existing assessment of `fa730d63`, not a fresh score of this merge |
+| Prototype retirement #295 | `a7e30046` | 47, delta 0 | Same carried assessment |
+| M1 #296 | `5c717d9e` | 47, delta 0 | Same carried assessment |
+| M2 #297 | `14b776c0` | 47, delta 0 | Same carried assessment |
+| M3 #298 | `55462829` | 47, delta 0 | Same carried assessment |
+| M4 #299 | `74a84dcf` | 47, delta 0 | Same carried assessment |
+| M5 #300 | `e0192934` | 47, delta 0 | Same carried assessment |
+| R1 #301 | `a99e38e9` | 47, delta 0 | Same carried assessment |
+| M6 #302 | `a381532d` | 47, delta 0 | Same carried assessment |
+| Last pre-pointer-deletion main | `65a514ed` | 77, delta +30 | Score of `89c52cba`, not of this snapshot |
+| Pointer deletion #499 | `4a02baf6` | 77, delta +30 | Hosted PR score 77 vs then-baseline 77; scored `1ed59d75`, not merge SHA |
+| Main inspected on 2026-10-27 | `09099ecd` | 77, delta +30 | Score of `f1be9b1d`, not a new #198 assessment |
+
+All migration snapshots above contain the same assessment of
+`fa730d63190c200e36b9a09c890445f17e8cb164`, dated 2026-10-15 15:58:33 UTC,
+[run 38763347056](https://github.com/jmservera/ama/actions/runs/38763347056),
+with the same seven criterion values as the pre-migration baseline.
+No sticky rubric scorecards were available on #292/#295/#296-#302 when queried
+on 2026-10-27. The snapshots prove carried state only; they do not prove
+each PR was freshly scored or recorded its comparison during the dual window.
+
+The pre-deletion assessment is
+[run 40548249080](https://github.com/jmservera/ama/actions/runs/40548249080),
+2026-10-27 17:18:42 UTC. The actual #499
+[sticky comparison](https://github.com/jmservera/ama/pull/499#issuecomment-6450533583)
+and [run 40560161654](https://github.com/jmservera/ama/actions/runs/40560161654),
+2026-10-27 18:38:28 UTC, record **77/100 against 77/100**, delta 0.
+The assessment inspected on 2026-10-27 is
+[run 40569657958](https://github.com/jmservera/ama/actions/runs/40569657958),
+2026-10-27 19:50:57 UTC. Each has A1=5, A3=5, A4=5, A5=5, A6=5, A7=4,
+B6=5 and rubric_version 2. Intervening features, deck and other portfolio
+changes prevent attributing the +30 from the old baseline to migration.
+
+### Registry sequence and recovery expectation
+
+PR #292 added src vendor/data/egg-info/build exclusions before the first
+module move. `src/**/*` already covers package code, external project tests,
+`pyproject.toml`, Dockerfiles, READMEs and web assets. No extra include is
+needed. Actual legacy removals were distributed across merged PRs:
+#295 removed `prototype/deploy/**/*.bicep`; #300 removed executable/web/test/
+Dockerfile mvp globs in the same PR as the moves; #302 removed `mvp/README.md`
+when its content moved to source guides. #499 later removed the unscored pointer.
+They were not one dedicated final registry PR. Production prepare reads the
+base registry. The original candidate's temporary-Git regressions demonstrated
+old-registry deletion detection and merged-registry exclusion, not that every
+historic run succeeded; those added fixtures were discarded during integration.
+
+No dip is visible in the available snapshots or actual #499 comparison.
+There is therefore no evidenced moved-out-of-glob/deleted-evidence loss to
+assign as its cause. The owner accepts a temporary dip if one is observed:
+record the removed path and affected criterion, distinguish deleted evidence
+from an out-of-glob move, and recover by relevant changed src evidence, never
+by inflating grades, changing version or treating an unchanged file as new.
+
+| Criterion | Re-evidence route and delivery PR | Recovery expectation / limit |
+| --- | --- | --- |
+| A1 | `src/core/src/zava_forward/core/`, #296/#297; project manifests and Dockerfiles, #290/#300 | Assess actual modularity/dependency boundaries, not rename volume |
+| A3 | `src/core/src/zava_forward/core/ai.py`, #296; `assistants.py`, #297; API auth, #300 | Re-evidence scope/consent/approval controls; no live approval inferred |
+| A4 | Core modules, #297; `src/api/src/zava_forward/api/server.py`, #300; worker `src/agents/src/zava_forward/agents/dispatch.py`, #301 | Completeness requires actual composed evidence, not file presence |
+| A5 | `src/core/src/zava_forward/core/ledger.py`, #297; orchestrator jobs and image, #300 | Measured operational evidence remains separate from moved implementation |
+| A6 | Core AI client, #296; `src/agents/evals/` and AI eval, #298/#299 | Evaluation artifacts and results, not a model-quality claim from tests alone |
+| A7 | Proposal service, #297; database-free worker dispatch, #301 | Worker slice does not establish deployed queue orchestration |
+| B6 | Five project READMEs delivered by #302; registered `src/README.md` is the proposed recovery target in a later PR titled `docs(src): strengthen B6 navigation and evidence` | That PR is proposed, not created or delivered here. Only when it actually changes this scored README can it reopen B6 and supply a changed-file citation; no score increase or deck/live-session acceptance is inferred |
+
+The historical delivery PRs above are not fresh scores or a promise of grade
+recovery. `.github/rubric/README.md` is outside every artifact in
+`artifacts.json`; changing it cannot open B6 or supply a changed-file citation
+for an increase. It is also unchanged by this integrated branch. In contrast,
+`src/README.md` is included in the registered `solution-code` artifact, which
+informs B6. If a new dip needs changed evidence, the later scoped PR must name
+that criterion and the actual changed evidence; an unchanged historical file
+cannot justify an incremental increase. This #198 branch now changes
+documentation only, not tests or scored artifacts, and makes no claim to
+recover application grades.
+
+### Local test reassessment and acceptance
+
+PR #292 reported 124 passed / 19 failed / seven skipped. PR #295 removed eight
+stale prototype cases, leaving 11 pre-existing failures then. Original candidate
+baseline `09099ecd`: 355 passed / 18 failed / seven skipped. Re-assessed causes: seven
+mutable-score assertions; ten obsolete workflow event/path assumptions; one
+unrelated deck-selection mismatch. After the original candidate's scoped
+repairs, its complete rubric suite reported **374 passed / one failed /
+seven skipped**. Its remaining failure was the executive-deck exclusion
+expectation versus the
+`docs/capstone/deck/*.pptx` wildcard. Seven real MCP runtime tests skip because
+the pinned runtime is unavailable; generated-schema tests do not replace them.
+Original migration-targeted fixtures: 31 passed. Those repairs and added
+fixtures are not retained by the integrated PR. Its unchanged-main suite
+reports **355 passed / 18 failed / seven skipped**, not 374/1/7.
+No full/heavy gate or cloud checks ran; workflow Markdown/lock, production
+registry, rubric and scores are unchanged by this documentation-only delta.
+
+| #198 acceptance | Evidence and remaining boundary |
+| --- | --- |
+| Pre-migration baseline and seven criteria | Historical 47 snapshot and original evidence retained above |
+| src tests/Dockerfile counting and exclusions | #292 and existing upstream prepare coverage remain; original candidate's added fixtures were discarded, not current deliverables. No extra layout glob needed |
+| Each dual-window PR records fresh comparison/cause/recovery | Not proven; merge snapshots are carried scores, not contemporaneous per-PR assessments |
+| Dedicated cut-over registry PR / preceding old-registry deletion | Actual #295/#300/#302 sequencing recorded; cannot retroactively meet original ordering |
+| README update and 19 failures re-assessed | Original candidate's guide/test repairs discarded; no rubric README update delivered now. Historical 374/1/7 and integrated 355/18/7 results distinguished; this original acceptance criterion is not met by the documentation-only correction |
+| Workflow Markdown change requires compiled lock | Not applicable: neither file changes |
+| Comparison and recovery in sign-off | Later additive 47/77/77 evidence and criterion routes supplied; not a pre-sign-off fresh migration assessment or post-merge assessment of this branch |
+
+Keep Refs #198. Recovering any missing historic scorecards or accepting a
+historical sequencing/scoring deviation belongs to the owner; no such
+decision is guessed here. This does not block the bounded documentation correction
+or authorize issue closure, merge, release or live use.

@@ -2,7 +2,7 @@
 title: Azure Infrastructure (Bicep)
 description: Bicep deployment of the proposed Zava Forward demonstrator Azure architecture
 author: AMA programme
-ms.date: 2026-10-27
+ms.date: 2026-10-30
 ms.topic: how-to
 ---
 
@@ -36,6 +36,30 @@ private production profile. They do not authorize deployment.
   for an existing internal, authenticated API; preserves data-service settings.
 
 Optional parameters: `teamsWebhookUrl`, `evidenceStore`, `sharePointSiteId`, `monthlyBudget`. See the M365 section of the ADR.
+
+## Monitoring Authoring Candidate (Refs #146)
+
+The [operator runbooks and issue gap matrix](./monitoring-runbooks.md) catalogue
+existing rules/budget notifications and new disabled job/IoT alert candidates.
+The [workbook source](./monitoring-workbook.json) provides aggregate
+request/error/p95 and availability-test query panels, with configured budget
+separate from Unknown actual cost and missing AI usage/reconciliation.
+`operationsWorkbookId` is the resource output; no deployment, portal rendering
+or operating acceptance is claimed.
+
+Both telemetry queries union the bare table reference with a typed empty
+datatable before projecting fields, so an absent table can use the fallback
+schema and report Insufficient. `tests/test_monitoring_workbook.py` checks this
+source shape for both panels; it does not execute KQL against Azure.
+
+`enableCandidateMonitoringAlerts` defaults false. Even true keeps candidates
+disabled when `monitoringApprovalReference` is empty/whitespace; a nonempty string
+is not proof of actual named-human approval. Actual primary/backup owners,
+thresholds/windows/recipients, privacy exclusion, safe signal producers and
+notification/suspension drills remain activation gates. Existing alerts are not
+reapproved or disabled by this switch. The budget notifies above 80 percent
+actual and 100 percent forecast; it is not a hard cap or AI dispatch control.
+This source-only delivery uses Refs #146 and does not close its criteria.
 
 ## Deploy
 
@@ -263,11 +287,22 @@ Failed plans attach a failed-status summary when the helper has started.
 The workflow must first merge to the default branch before this trigger exists.
 
 Release is manual, **main-only**, and serialized across all environments in
-`ama`. It builds all four source images from the same immutable workflow SHA.
+`ama`. Before dispatching release, manually run `Source projects CI`
+(`src-ci.yml`) on `main` and wait for success on the exact commit being released.
+Source CI does not run on main pushes. The release's read-only prerequisite
+checks the workflow-specific API for a completed, successful manual main run
+matching its immutable SHA; missing, failed, malformed or inaccessible evidence
+stops before image builds or Azure login. A green PR run or earlier main commit
+is not sufficient. No workflow/check name or branch protection is changed.
+It builds all four source images from that same immutable workflow SHA.
 Every image passes the existing non-root/hardened/plain startup contract and
 the same `src/trivy.yaml` fixable HIGH/CRITICAL gate as source CI; full reports
 including unfixed findings are retained even on gate failure. Only passing
-images leave the unprivileged hosted build job. Private publish jobs load
+images leave the unprivileged hosted build job. Each rebuilt release image
+also gets an SPDX JSON SBOM, retained for seven days as
+`release-sbom-<project>`; generation and upload must succeed before image export.
+Source-CI SBOMs do not substitute for this inventory of the rebuilt images.
+Private publish jobs load
 (never execute) those same-run image artifacts, push tags
 `sha-<commit>-r<run>-a<attempt>` to separate `zava-forward-<project>` repositories
 and capture registry digests. Importer maps to Bicep `importImage`; agents to
@@ -438,11 +473,19 @@ python3 infra/scripts/deploy.py \
   --parameter sqlAdminPrincipalType=Application \
   --parameter entraClientId=<existing-application-client-id> \
   --parameter entraBearerOnly=true \
-  --parameter alertEmail=<approved-mailbox> --parameter 'modelDeployments=[]' \
+  --parameter alertEmail=<approved-mailbox> \
   --parameter regionCheckReference=<reviewed-region-record> \
   --parameter quotaCheckReference=<reviewed-quota-record>
 # Repeat with --apply only after reviewing the what-if.
 ```
+
+The historical `modelDeployments=[]` bootstrap override is no longer valid.
+The model array must be nonempty: even an environment-only operation includes
+the default small model. This changes provisioning and potential inference
+cost, not just application startup. For an existing evaluated stack, pass its
+explicit reviewed `modelDeployments` array to preserve its model set, names,
+versions, SKU and capacity. These full-stack commands are not the bounded
+model-only operation described below.
 
 `deployEnvironmentOnly=true` creates the environment and internal DNS without
 starting workloads. It is additive to `deployApplications`; neither flag deletes
@@ -1212,9 +1255,9 @@ owners and sources still a gap before operational reliance.
 | --- | --- | --- | --- | --- |
 | Azure Policy assignments (SQL and storage public access, Key Vault deletion protection, required tags) | [`governance.bicep`](./governance.bicep), subscription scope, deployed separately by the subscription owner | Built-in definitions, audit only (`enforcementMode=DoNotEnforce`): policy reports non-compliance but blocks nothing; a Deny stance is an open owner decision | Juan Manuel Servera | No charge for Azure Policy |
 | Defender for Cloud plans (Storage, SQL servers, Key Vaults, Containers) | [`governance.bicep`](./governance.bicep) | No pricing resource is submitted until the owner accepts a cost and sets `enableDefenderPlans=true`; then the four plans request Standard. Existing paid or Free subscription plans are preserved when disabled | Juan Manuel Servera | Per-resource pricing, not yet estimated: open item, confirm in the Azure pricing calculator before enabling |
-| Resource locks | `enableLocks` in `main.bicep` (Key Vault, SQL, storage) | [`main.pilot.example.bicepparam`](./main.pilot.example.bicepparam) (a non-deployable example with placeholders; copy it to a private file and fill every value) sets `true`; the development file keeps `false` so the stack can be reset | Juan Manuel Servera | None |
+| Resource locks | `enableLocks` in `main.bicep` (Key Vault, SQL, storage) | [`main.pilot.example.bicepparam`](./main.pilot.example.bicepparam) (a non-deployable example with placeholders; copy it to a private file and fill every value) sets `true`; `pilotRequiresLocks` rejects a pilot override to `false` before dependent resources; dev/test retain their explicit lock choice | Juan Manuel Servera | None |
 | Tagging standard | `allTags` in `main.bicep` | Required tags on taggable resources, component refinements and untaggable-child exceptions documented in Environments; group tags remain separate | Juan Manuel Servera (exercise resource contact) | None |
-| Known exceptions | [`policy-exceptions.json`](./policy-exceptions.json) | EX-001: `SecurityControl=Ignore` on the development resource group (MCAPS SQL public-access policy); expires 2026-12-31 | Juan Manuel Servera | None |
+| Known exceptions | [`policy-exceptions.json`](./policy-exceptions.json) | Historical EX-001: `SecurityControl=Ignore` on the development resource group (MCAPS SQL public-access policy); expires 2026-12-31. It does not authorize public SQL in current templates or helpers | Juan Manuel Servera | None |
 
 ```bash
 az deployment sub what-if -l uksouth -f infra/governance.bicep
@@ -1234,6 +1277,17 @@ pricing resources rather than changing any plan. This is a code decision, not
 evidence of deployed policy compliance, protection, or financial approval.
 The subscription-scoped governance template is outside a resource-group-only
 `ama` execution boundary and was compiled/tested only in this task.
+
+Authoring review, 2026-10-27 (Refs #147/#138): policy/Defender definitions,
+pilot locks, tags and the dated exception register are present; no policy
+deployment/compliance, Defender cost acceptance or protection is established.
+The subscription owner @jmservera must record selected plan/subplan coverage,
+current subscription-specific quantities and cost, and an explicit activation
+decision before enabling paid plans. Cost remains **not estimated / not approved**,
+not zero. No new exception, renewal or public SQL bypass is approved.
+Offline pipeline contracts are not observed federation, environment approval,
+registry publication, deployment or health acceptance. Both issues remain open
+at those owner/live gates; no Azure deployment was performed for this authoring.
 
 ## Hardened source image rollout (#118)
 
@@ -1274,7 +1328,7 @@ legal approval. Real owners and sources remain a gap before operational reliance
 
 | Identity | Scope and role | Reason |
 | --- | --- | --- |
-| api | Key Vault Secrets User; blob Data Contributor; queue Message Sender; AcrPull; OpenAI User and Azure AI User (only when `enableApiAi`); IoT Hub Event Hubs Data Receiver; SQL reader, writer, ddladmin | Serve the workbench, enqueue tasks, read telemetry |
+| api | Key Vault Secrets User; blob Data Contributor; queue Message Sender; AcrPull; OpenAI User and Azure AI User (only when `enableApiAi`); Data Receiver on the dedicated IoT telemetry Event Hub; SQL reader, writer, ddladmin | Serve the workbench, enqueue tasks, read telemetry |
 | agents | queue Data Contributor; AcrPull; OpenAI User and Azure AI User; no SQL | Run agents, reach data only through the API |
 | orchestrator | queue Message Sender; AcrPull; no SQL | Enqueue only |
 | import | blob and queue Data Contributor; AcrPull; SQL reader and writer | Imports |
@@ -1426,6 +1480,7 @@ Notes:
 * The API listens on 8088 and serves only `/healthz` for probes (there is no `/readyz`). The agents, orchestrator and import workloads still run the placeholder image because no code for them exists yet.
 * `ZF_ENV=production` is set when authentication is on, so the map has no background until `tileUrl` is set (for a dev test: `tileUrl=https://tile.openstreetmap.org/{z}/{x}/{y}.png tileAttribution='&copy; OpenStreetMap contributors'`, within the OSM tile usage policy; choose a licensed provider before real use). The CSP follows the tile host.
 * Demo basemap (issue 119, 2026-10-25, scoped owner approval to 16:02Z): on the live `ca-cutover-test-demo-api` only `ZF_TILE_URL=https://tile.openstreetmap.org/{z}/{x}/{y}.png` and `ZF_TILE_ATTRIBUTION` (the `OSM_ATTRIBUTION` string in `server.py`) were set with `az containerapp update --set-env-vars`, single-quoting both values because the attribution contains quotes, `&` and angle brackets. Both were empty before; revision `--0000006` took 100 percent of traffic on the same image, and a sanitized before and after diff showed only those two entries changed. Rollback is setting both back to empty strings and confirming both keys. This is the public OpenStreetMap tile service for a synthetic demo only: best effort, no SLA, the browser discloses its IP, the viewed map area and the site origin to OSM, the attribution must stay visible, and there must be no bulk, prefetch, offline or headless use ([tile usage policy](https://operations.osmfoundation.org/policies/tiles/), [privacy policy](https://osmfoundation.org/wiki/Privacy_Policy)). It is not a production provider decision; #119 licence, cost, coverage, processor choice and screen-reader acceptance remain open.
+* Active-case removal from the live `retrofit` database (2026-10-25, the obsolete synthetic proof case; schema wording corrected 2026-10-28): `cases` is an updatable ledger table, so the guarded single-row `DELETE` removes the current row but retains its old body in system-managed ledger history. The guard's non-history reference scan does not establish data erasure. The same transaction appends one `case_removed` entry to the append-only `audit` ledger; the audit trigger is an alternative for non-ledger databases, not extra protection on the live ledger. See the [ledger-safe schema research](../.copilot-tracking/research/2026-10-24/ledger-safe-migration-360-research.md#evidence). The API process keeps cases in memory and never evicts them after an external delete, so restart the revision afterwards (`az containerapp revision restart`) before checking the map or lists. Evidence: `.copilot-tracking/*/2026-10-25/remove-synthetic-example-360-*`. This was a one-off owner-authorised active-case removal, not data erasure or a general delete API.
 * The previous `allowedPrincipals` restriction on the auth config was removed: it listed managed identity client ids where object ids are expected and would have blocked signed-in users. Access is limited by the app role requirement instead.
 * For the existing MVP's direct, human-reviewed model drafts, explicitly set
   `enableApiAi=true`. This grants the API identity model invocation access and
@@ -1437,6 +1492,68 @@ Notes:
   URLs and is not proof of a completed identity rename. An authorised
   registration owner must update those separately; remove the transitional
   mapping when the new default `ZavaForward.*` values are issued.
+
+### Small employee model prerequisite (2026-10-28, Refs #514)
+
+`main.bicep` now defaults to one `standard` deployment using
+`gpt-4.1-nano` / `2025-04-14` / `GlobalStandard`, capacity `1`.
+`chatModelName`, `chatModelVersion`, `chatModelSku` (`GlobalStandard` or
+`Standard`) and positive `chatModelCapacity` parameterize that default.
+`modelDeployments` remains the explicit nonempty array override for existing
+or separately evaluated model sets. The first entry backs the standard route;
+the second backs the capable route, or a single entry backs both. Sharing a
+small model does not prove a stronger-task quality threshold. Keep explicit
+arrays on existing stacks rather than unintentionally changing evaluated tiers.
+`NoAutoUpgrade` and `Microsoft.DefaultV2` filtering are retained.
+
+With `enableApiAi=true`, the API receives the account-advertised Azure OpenAI
+endpoint, deployment names and `AI_MODEL_VERSION`/`AI_MODEL_VERSION_STRONG`
+derived from the model name plus dated version. The latter must match the
+provider response `model`, for example `gpt-4.1-nano-2025-04-14`, not just
+`2025-04-14`. The generic Foundry endpoint used by other workloads is retained.
+API AI remains disabled in Bicep by default. No keys are needed: preserve
+the attached API identity selected by `AZURE_CLIENT_ID`, account-scoped
+Cognitive Services OpenAI User access and private networking. See the
+[API configuration contract](../src/api/README.md#configuration).
+
+For the existing employee account `aif-cutover-test-rzsrg` in `ama`, the
+coordinator's intended settings after #514 merges are:
+
+| Setting | Value |
+| --- | --- |
+| `AI_ENDPOINT` | `https://aif-cutover-test-rzsrg.openai.azure.com/` |
+| `AI_DEPLOYMENT` | `standard` |
+| `AI_DEPLOYMENT_STRONG` | `standard` |
+| `AI_MODEL_VERSION` | `gpt-4.1-nano-2025-04-14` |
+| `AI_MODEL_VERSION_STRONG` | `gpt-4.1-nano-2025-04-14` |
+| `AZURE_CLIENT_ID` (retain) | `1b1fe44e-f4cf-4aae-98d0-b30c7927a5e3` |
+
+Azure readback on 2026-10-28 confirms exactly one `standard` deployment,
+Succeeded, with the configuration above, `NoAutoUpgrade` and
+`Microsoft.DefaultV2`. The missing API account-scoped Cognitive Services
+OpenAI User assignment was added for principal
+`6ac4c6b9-c516-4e24-81a6-f32663a93aab`; no other role was added.
+The live app remains revision `ca-cutover-test-demo-api--0000006`,
+with AI_* settings absent and the same selected identity. No app update or
+inference occurred.
+
+This task authorizes only the one small model and that missing OpenAI
+User assignment, not a live container-app update, full-stack Bicep deployment,
+other assignments or inference. Coordinator redeployment must preserve
+SQL/Blob/auth/identity settings and separately check registered task releases,
+evaluation/model bindings, budget/incident controls, private reachability and
+a bounded `source=ai` result. Manual/workflow-only routes and human/resident
+approval boundaries remain unchanged. The initial gpt-4o-mini request was
+rejected with `ServiceModelDeprecating`; catalogue visibility alone did not
+permit new deployment. The accepted gpt-4.1-nano version is listed as Legacy,
+with inference retirement on 2027-04-14 in the account model metadata checked
+on 2026-10-28; reevaluate availability before a later deployment.
+
+Cost authority is **USD30 additional employee AI through 2026-10-31**,
+separate from resident resources/budget. Capacity one is throughput, not a
+hard dollar cap or an automatic expiry. No inference is performed by this
+change; no exact token price, forecast or actual charge is asserted. Do not
+silently continue billable use after that authorization window.
 
 ### Current exercise handover (2026-10-13)
 
@@ -2955,6 +3072,11 @@ authenticated encryption turns that into a refusal, not a false success.
 
 #### Live prerequisites (all NOT RUN)
 
+These are the dated 2026-10-22 prerequisites, not current execution authority.
+The October expiry in item 1 has passed. Main's later dated budget/identity/
+handover records are preserved; they do not prove this Blob path was deployed
+or tested live. A new finite plan and the relevant approvals are still needed.
+
 1. Coordinator release of a verified affordable finite execution plan within the USD 700 replacement all-in October forecast ceiling (expiry 2026-10-25T16:02Z). No Azure charge, deployment or role write before that.
 2. Deploy the storage change so the `staff-results` container and lifecycle rule exist, then deploy the RBAC template with `includeResultBlob=true` and `storageAccountName`, container first, role second. A deployer with `Microsoft.Authorization/roleAssignments/write` and role definition write at the resource group is needed; resource group ownership does not prove Microsoft Graph permissions.
 3. Operator identity: `Storage Blob Data Reader` (or an equivalent list/read data role) on the `staff-results` container, ARM read on the job, storage account, containers and the API app, and a private-connected host that resolves and reaches the Blob private endpoint.
@@ -2970,6 +3092,36 @@ job, deployment of the Bicep, Entra or browser acceptance, role acceptance with
 real users, AI behaviour, signed source or image attestation (DN5, deferred),
 and demo screen-reader acceptance (documented unverified production follow-up).
 Local tests use fake clients and prove only the offline contract.
+
+#### Transport evidence and integration (2026-10-30, Refs #360)
+
+The current-main integration keeps the installed `src/` namespace,
+main's IoT sender/receiver scopes and release controls, and the private Blob
+transport from this branch. Helpers remain in `infra/scripts`; the worker
+imports `zava_forward.core.mssqlstore` from the installed core distribution.
+No retired `mvp/` code or old tag permission is restored. The preceding
+DN1-DN5 decisions and historical failures remain unchanged.
+
+| Claim | evidence | rationale | change_reason |
+| --- | --- | --- | --- |
+| Private result channel, DN1 | [Blob codec](./scripts/staff_blob.py), [controller](./scripts/staff_azure.py), [RBAC](./staff-initializer-rbac.bicep), [role matrix tests](./tests/test_identity_rbac.py) | Managed-identity write and operator-profile Entra read avoid tags, SAS, shared keys and public access; fake clients do not prove a live private route | Replaces the historical tag relay; main's unrelated IoT roles are retained |
+| Complete bounded results, DN2 | `BlobCodecTests`, `StorageContractTests` and controller cases in [transport tests](./tests/test_staff_azure.py) | Authenticated run/image/input binding, page totals, expiry and fail-closed checks refuse ambiguity rather than truncate | Preserves paging and profile/deadline correction; real position count and size remain unmeasured |
+| Historical failures and role authority, DN3/DN4 | Decision table above, [worker](./scripts/staff-azure-worker.py), [staff initializer](./scripts/initialize-workbench-staff.py) | Unknown earlier failures are not retroactively explained; transport changes do not confer tenant roles, professional authority or permission to delete resources | Retains decisions while main's later identity and directory-retirement evidence remains authoritative for its own dated scope |
+| Controlled worker, DN5 | `ProfileCredentialTests`, `StorageContractTests`, `BuildContextTests` and image-drift cases in [transport tests](./tests/test_staff_azure.py) | Source tests establish local refusal and packaging contracts, not independent image-to-source provenance | No attestation or live-success claim added; signed provenance remains deferred |
+
+These columns describe engineering provenance, not a scorecard or instructions
+to the scorer. For the capstone, this is narrow A1/A3/A5 infrastructure evidence.
+It supplies no new AI evaluation, autonomous behavior, measured live latency/
+cost, pitch rehearsal or thought-leadership publication. Local tests must be
+reported with their actual results; prior counts are dated, not a current pass.
+
+The rejected alternatives remain explicit: tags expose management metadata
+and imposed a small result bound; console output was historically ambiguous;
+public Blob/SAS/shared keys violate DN1; silently shrinking results violates
+DN2. Private Blob instead requires a genuinely private-connected controller,
+separate data-plane RBAC, retained ciphertext lifecycle and a newly approved
+finite run. Those operational costs and live prerequisites are not removed
+by offline success.
 
 ### Public welcome and Microsoft account photos
 
@@ -3287,6 +3439,53 @@ workbench sign-in are separate concerns: updating the registration does not
 automatically consent another client to call the API, and an API token cannot
 be substituted with a Graph token or forged proxy claims.
 
+## Rebuild authoring and local rehearsal (Refs #148)
+
+The installed module below authors the ordered rebuild/check contracts and runs
+a **synthetic local SQLite control-plane simulation only**. It is not an Azure
+deployment/teardown script, does not invoke the infrastructure helpers, and
+cannot complete issue #148. There is deliberately no cloud adapter or `--apply`
+option. The historical observed rebuild below remains unchanged.
+
+After installing the [source packages](../src/README.md#commands):
+
+```bash
+python3 -m zava_forward.orchestrator.rebuild --dry-run
+python3 -m zava_forward.orchestrator.rebuild --synthetic-local
+```
+
+Dry-run prints the fixed stage, integration and verification contracts without
+backend reads, workspace creation, credentials or Azure access. The local mode
+creates an exclusively owned temporary SQLite file, generates an invented case,
+audit witness and `example.test` staff row, checks them through reopened
+connections, removes modeled resources in dependency order and separately checks
+budget inventory. It cleans only that owned temporary workspace. It never reads
+`ZF_DATA`, a roster, an Azure profile, `.env` or private programme data.
+`local-sql-verified` means a SQLite fixture check, not Azure SQL, workload identity
+or application-store acceptance; `simulated-not-live` means no corresponding
+image, auth, HTTP or model operation was executed. A failing checkpoint exits
+nonzero with `REBUILD_FAILED`, never an automatically reported successful rebuild.
+
+The sequencing library rejects foreign subscription/group IDs, unknown types,
+duplicate IDs, locks, retained resources and missing boolean safety evidence.
+It admits at most 1,000 combined resource/budget records per authoring inventory.
+It validates both inventories before the first deletion and compares their
+exact remaining records before and after each deletion, stopping on drift,
+unconfirmed deletion or unexplained disappearance. Its bounded allowlist/order
+covers the modeled resource types, not every possible Azure child or extension;
+unsupported inventory must stop, not be skipped. It never removes locks,
+purges soft-deleted services or weakens retention to obtain an empty result.
+Budgets are separate and last. These checks do not eliminate cloud races.
+
+Actual #148 acceptance still needs integration with the existing #138
+deployment/release helpers and SQL/auth/staff setup, authorized preservation of
+the continuing synthetic stock/programme lineage, private credential/tenant
+operations and a separately authorized disposable Azure rebuild/teardown.
+An owner must approve the exact deletion/preservation inventory; Legal/Compliance
+must resolve any applicable retained-data/hold disposal decision before a later
+live adapter may act. No such decision, authority, deployment or cloud test is
+inferred from this rehearsal. All four issue criteria remain partial.
+
 ## From-empty rebuild observed on 2026-10-12
 
 The owner-authorised `ama` reset retained the group, its policy-exception tag,
@@ -3372,22 +3571,197 @@ all Bicep entry points, compiled controls, mutation regressions and scoped ruff.
 
 ## IoT Hub (issue 140, ADR 0003 decision 6)
 
-`modules/iothub.bicep` provisions the device-to-cloud ingestion boundary for simulated in-use monitoring. Decisions recorded here are proposals pending owner approval of ADR 0003.
+### Bounded existing-hub exercise (2026-10-29, Refs #140 #184 #137)
+
+The owner approved paid B1/one unit after the UK South USD10/month cost check,
+with at most USD5 additional through 2026-10-31. Inspection found the existing
+`iot-cutover-test-rzsrg` already B1/one unit, two partitions and one-day retention.
+Reuse it; do not create a second hub. Conservative attribution for three full
+October days is USD10 / 31 * 3 = USD0.97. Reserve USD1 for hub attribution,
+USD1 for shared metrics/bounded job and USD3 contingency. These are estimates,
+not actual billed cost, enforced caps or approval beyond October31. No extra
+fixed hub charge was introduced against the inspected baseline.
+
+`iot-hub-live.bicepparam` is a separate, existing-development-hub reconciliation
+profile. It is **not** an override for `main.bicep` or the production module.
+It references the exact existing hub, verifies actual region/SKU/units, and
+writes only its built-in `api-consumer` group and metrics-only
+`to-log-analytics` setting. It does not PUT the hub, create a namespace/private
+endpoint/budget/role or alter apps/jobs. The initial direct-PUT what-if proposed
+deleting service-owned properties, so it was not applied. The narrowed what-if
+showed only diagnostic log/metric reconciliation, with group NoChange.
+Deployment `iot-live-140-private` succeeded; actual enabled resource logs = 0,
+enabled metric categories = 1. Existing private attachment, fallback route,
+identityNone, local-auth disabled and public-network Disabled were preserved.
+
+```bash
+az bicep build --file infra/modules/iothub.bicep --stdout >/dev/null
+az bicep lint --file infra/modules/iothub.bicep
+az bicep build --file infra/iot-hub-live.bicep --stdout >/dev/null
+az bicep lint --file infra/iot-hub-live.bicep
+az deployment group what-if -g ama --parameters infra/iot-hub-live.bicepparam
+# Review exact child IDs and log/metric-only differences before any apply.
+az deployment group create -g ama --name iot-live-140-private \
+  --parameters infra/iot-hub-live.bicepparam --mode Incremental \
+  --query properties.provisioningState -o tsv
+```
+
+The historical production definition below remains private/keyless and
+source-only; this approval does not authorize its paid Event Hubs adapter,
+endpoints or roles. The built-in group alone does not unblock Entra receive:
+Microsoft's [Entra guidance](https://learn.microsoft.com/en-us/azure/iot-hub/authenticate-authorize-azure-ad),
+checked 2026-10-29, still requires a shared service key there. Service SAS
+remains disabled; no service key was retrieved.
+
+Live device issue/send is parked, not completed: the authenticated operator has
+only inherited Owner on the hub, not registry data permission. No device,
+certificate, key file or temporary public-network change was created. Juan
+Manuel Servera remains the exercise issue/rotate/revoke owner. The precise
+owner decision is whether to authorize a hub-scoped **IoT Hub Registry
+Contributor** grant to the selected operator and approve an actual reachable
+device path. If approved separately, the owner (not this task) can run:
+
+```bash
+az role assignment create --assignee-object-id <approved-operator-object-id> \
+  --assignee-principal-type User --role 'IoT Hub Registry Contributor' \
+  --scope <existing-iot-cutover-test-rzsrg-resource-id>
+```
+
+Do not grant Data Contributor/Owner or a subscription-wide role as a shortcut.
+API Event Hubs Data Receiver is already documented for the separate private
+entity, but that entity does not exist, so no ineffective hub role was added.
+Live-to-SQL and resident gauges remain unproved. Cloud activation needs separately
+approved adapter cost/network/roles and an API revision invoking the consumer;
+the existing finite callable does not run at startup. The resident SQL view
+binds optional sensor tables only at its separately approved view apply, so
+creating sensor tables later also needs view reconciliation, not merely a
+browser refresh. No real-device or OD-43 approval follows.
+Counts-only inspection via the existing in-VNet Manual initializer succeeded
+on 2026-10-29: `sensor_reading`, `sensor_delivery` and
+`sensor_data_quality_exception` are absent (availability false/count zero),
+not existing empty tables. Two initial transient probes failed on driver setup;
+the corrected execution completed without changing the job definition or SQL.
+The installed driver is `mssql-python`: pass login `timeout=20` as a connect
+argument, not the unsupported `Connection Timeout` connection-string property.
+Forty-second process limits kept the counts probes finite. Actual disposable
+local SQL Server passed 45 ingestion tests; no live Hub-to-SQL claim follows.
+
+`modules/iothub.bicep` defines the device-to-cloud boundary for simulated
+monitoring. The 2026-10-27 owner direction approves source authoring and local
+validation within Free/B1, `ama` and the overall USD700 cap, **not deployment**.
+Never delete resource group `ama`. No resource group, device, key, credential
+rotation, live transport or Azure what-if is created/executed by this work.
 
 | Item | Decision |
 | --- | --- |
-| Region | uksouth (owner decision) |
-| Tier and units | B1, 1 unit: device-to-cloud and message routing only, enough for the simulator. Move to S1 (parameter `iotHubSku`) only if twins, cloud-to-device or IoT Edge are needed |
-| Cost | Estimate of 25 per month in the billing currency, set as a hub-scoped budget (`iotHubMonthlyCost`) with 80 percent actual and 100 percent forecast alerts. An estimate: confirm against the Azure pricing page before provisioning |
-| Retention | Built-in endpoint keeps messages 1 day (`iotHubRetentionDays`, maximum 7). Azure SQL is the system of record |
-| Consumer | Consumer group `api-consumer` on the built-in endpoint; the API managed identity has only Azure Event Hubs Data Receiver on the hub |
-| Service credentials | `disableLocalAuth` is true: no shared access policy or connection string exists, so none can be stored in source or logs |
-| Network | Production profile: public access disabled, private endpoint with `privatelink.azure-devices.net` and `privatelink.servicebus.windows.net`. Development profile: public access allowed for a throwaway stack |
-| Diagnostics | Connections, DeviceIdentityOperations, Routes, Configurations and metrics to Log Analytics. DeviceTelemetry is not logged, keeping readings and device ids out of logs |
-| Device identity | Individual device identities with per-device keys or X.509 certificates, issued by the simulator provisioning step (#185). Device Provisioning Service is deferred until real sensors are in scope |
-| Credential owner | Juan Manuel Servera issues and rotates device credentials (owner decision); device keys are held in Key Vault, never in source |
+| Region and scope | `uksouth`, existing `ama` only. Named checks in main's parameter guard precede the entire main graph; a separate module guard protects standalone use. Independent SQL and global-resource locations are not changed |
+| Tier and units | B1, exactly one unit, two partitions by default. S1 and scale-out are rejected by constraints. Free is not selected: its limited allowance and inability to upgrade are not a drop-in Basic profile. Twins, cloud-to-device and device management remain excluded |
+| Retention | One day in the built-in transport endpoint and custom Event Hub, configurable 1-7 days. This is not SQL/DPO record retention; Azure SQL remains the record system |
+| Consumer | `api-consumer` on `sensor-readings` in dedicated Standard Event Hubs namespace `eh-<hub-name>`, one TU, no auto-inflate. API identity gets only Azure Event Hubs Data Receiver on that event hub |
+| Routing identity | IoT Hub system-assigned identity gets Data Sender on its dedicated namespace. All DeviceMessages route to the custom Event Hub when explicitly activated; built-in fallback is disabled |
+| Service credentials | Local service auth disabled on both services; no service key lookup, value or connection string in Bicep/outputs. Disabled shared access does not prove provider-generated policies/keys do not exist |
+| Network | Hub: public disabled by default, unconditional private endpoint and both IoT/servicebus DNS zones. Public hub access requires the existing explicit development profile opt-in. Namespace: always public Disabled, default Deny, unconditional private endpoint with servicebus DNS; trusted Microsoft services exception permits system-identity routing, still requiring sender RBAC. This is not IoT egress through its private endpoint |
+| Diagnostics | `AllMetrics` to the supplied Log Analytics workspace on hub and namespace; `allLogs` explicitly disabled. Connections and DeviceIdentityOperations also contain device IDs, so excluding DeviceTelemetry alone is insufficient. No raw readings, device IDs or keys are intentionally exported. This does not erase historical logs or cover every external diagnostic setting |
+| Device provisioning | Individual device-registry identities, one per simulated sensor/gateway, provisioned later under #185. Per-device symmetric SAS or X.509, never a shared service policy; device SAS remains enabled, module SAS disabled. DPS is deferred; disabling service SAS is not compatible with assuming DPS already works |
+| Credential owner | Juan Manuel Servera is the selected exercise issue/rotate/revoke owner. Later #185 work must place credentials in the approved Key Vault, control access, record expiry/rotation and revoke compromised identities without logging values. No real operational appointment, key read/write or credential issuance is established here |
 
-Gates: `az bicep build` and `az bicep lint` run in `mvp-validation.yml`; `infra/tests/test_iothub_module.py` guards the module. Open: a live `az deployment group what-if` against the target resource group needs subscription access and has not been run; real pricing confirmation; B1 private endpoint behaviour verified in a deployment.
+### Keyless consumer and explicit activation
+
+The earlier receiver assignment on IoT Hub was ineffective: Microsoft says
+the built-in Event Hubs-compatible endpoint still requires a shared access
+key. The custom Event Hub is an Entra consumption adapter; it does not replace
+IoT Hub's per-device boundary or implement the #110 consumer. Nonsecret main
+outputs `iotHubEventHubNamespaceFqdn`, `iotHubEventHubName`,
+`iotHubConsumerGroup` and `iotHubRoutingEnabled` describe its future contract.
+The namespace output is a hostname without scheme, port or trailing slash,
+including when Azure returns `https://<host>:443/`. The routing endpoint is
+constructed separately as `sb://<host>/` from that same normalized hostname.
+
+`iotHubRoutingReady=false` (default; module `routingReady`) is **bootstrap
+only**: system identity, namespace, entity, group, roles and endpoints are
+defined, but no custom routing endpoint is registered and no route/fallback
+is active. Do not enrol devices or send messages in this state. A system
+identity exists only after hub creation; registering its routing endpoint
+before its sender grant has propagated can fail. The hub therefore does not
+depend on its own downstream sender assignment, which would form a cycle.
+
+Only a later separately authorized operator may apply bootstrap, verify actual
+sender authorization/propagation, record that evidence, and then apply the same
+definition with `iotHubRoutingReady=true`. Preserve true in every subsequent
+private parameter set: omitting it reverts to bootstrap and disables routing.
+Do not run the generic deployment pipeline for an activated hub without
+reviewing its effective parameter set and what-if. No automatic apply/retry,
+device provisioning, SDK activation or live propagation check runs here.
+
+### Transport budget entry (2026-10-27)
+
+The public [Azure Retail Prices API](https://prices.azure.com/api/retail/prices),
+queried for `armRegionName eq 'uksouth'`, USD, Consumption, returned B1 Unit
+USD10/month (product `IoT Hub`), Standard Throughput Unit USD0.03/hour and
+Standard Ingress Events USD0.028/million (product `Event Hubs`). These are public
+list-price estimates, not the subscription's actual offer, spend or headroom.
+
+| Component | Monthly USD scenario |
+| --- | --- |
+| B1, one unit | 10.00 |
+| Standard Event Hubs, one TU for 730 hours | 21.90 |
+| Ingress, illustrative 400,000 events/day for 30 days, each <=64 KiB | 0.336 |
+| Two private endpoints | 14.60 planning allowance, assuming USD0.01/endpoint-hour; not verified by the fetched regional price response |
+| Shared DNS, metric ingestion, endpoint data processing and contingency | 13.164 planning allowance, not a measured usage/quote |
+| Total planned transport allocation | 60.00/month, inside rather than additional to the overall USD700 cap |
+
+The [Private Link pricing page](https://azure.microsoft.com/en-us/pricing/details/private-link/)
+retrieved on 2026-10-27 returned currency placeholders, not a usable numeric
+quote. Endpoint/variable allowances above are explicit modelling assumptions.
+The ingress example is not a traffic forecast; IoT B1 metering uses 4 KiB
+blocks, so larger observations reduce its daily observation capacity.
+Peak throughput, December funding duration, billing-currency conversion,
+current aggregate spend, commitments and remaining USD700 headroom must all be
+checked before provisioning. USD60/month is not an approved extra purchase or
+a claim the complete programme fits the cap. This authoring task spends zero
+on Azure resources.
+
+`iotHubMonthlyCost` / `monthlyCostEstimate` defaults to 60 in the actual
+billing currency, constrained to 1-700; do not treat that number as USD unless
+the account currency/conversion is reconciled. The dedicated monthly budget
+filters hub, namespace and both endpoint resource IDs, with 80% actual and
+100% forecast alerts. Shared workspace/DNS charges remain in the overall
+budget. Azure budgets send alerts, **not hard spending stops**; this template
+cannot enforce the aggregate cap.
+
+### Acceptance and validation boundary
+
+Build/lint are wired through the existing `mvp-validation.yml` check;
+`infra/tests/test_iothub_module.py` now examines compiled resources, both
+activation states and rejection mutations. The existing
+`Infrastructure PR what-if` workflow checks trusted candidate Bicep through
+approved plan environments in `ama`; its presence does not mean it ran.
+This task uses local tests only, not the full RPI gate.
+
+| #140 criterion | Authored evidence | Remaining evidence |
+| --- | --- | --- |
+| Tier, region, units, cost, retention | Decision table, constraints and budget scenario above | Actual price/currency/headroom and quota verification before provisioning |
+| Hub, consumer/routing and diagnostics | Compiled Bicep and semantic/mutation tests | No actual routed message or Log Analytics arrival |
+| API identity / no keys | Event-hub-scoped receiver, separate system sender, role matrix and key-auth guards | Actual #110 SDK/token transport |
+| Production network | Both endpoints/DNS, disabled public namespace and trusted-service exception | Actual private resolution and access denial/success |
+| Provisioning and owner | Individual identities and named exercise credential owner above | #185 implementation and actual issue/rotate/revoke evidence |
+| Gates and cost entry | Local build/lint/infra tests, existing owner-gated what-if wiring, bounded budget definition | Live what-if not run/authorized; not whole-issue closure |
+
+BRD OD-43 remains open for real inventory, lawful basis/DPIA, resident choice,
+record retention, calibration, freshness/thresholds and human review ownership.
+No operational monitoring or human approval follows from passing local checks.
+Incremental deployment would not remove old role assignments/resources absent
+from the new source; any live reconciliation needs separate exact-resource
+authority, never resource-group deletion.
+
+Official references, retrieved 2026-10-27:
+
+* [IoT Hub Entra authorization and built-in-endpoint limitation](https://learn.microsoft.com/en-us/azure/iot-hub/authenticate-authorize-azure-ad)
+* [Managed-identity routing and role propagation](https://learn.microsoft.com/en-us/azure/iot-hub/iot-hub-managed-identity)
+* [IoT private networking](https://learn.microsoft.com/en-us/azure/iot-hub/virtual-network-support)
+* [Event Hubs private access and trusted-service exception](https://learn.microsoft.com/en-us/azure/event-hubs/private-link-service)
+* [Tier capabilities and metering](https://learn.microsoft.com/en-us/azure/iot-hub/iot-hub-scaling)
+* [Monitoring log schemas, including device IDs](https://learn.microsoft.com/en-us/azure/iot-hub/monitor-iot-hub-reference)
 
 ## Private networking and public edge (issue 143, ADR 0002 decision 6)
 
@@ -3432,6 +3806,13 @@ Key Vault grant is made. The approved design names the existing vault `kv-cutove
 is not a retrieval path: no role or private network route exists for it yet. The cloud deployment
 stays blocked on budget headroom proof and the human approvals recorded in the issue 462 tracking
 files.
+
+When the optional sensor tables exist but contain no matching readings, the
+view returns `[]`, not SQL NULL, for `sensors_json`. Reapplying the view after
+sensor-table initialization must verify this evaluated projection as well as
+column shape and row counts; `SELECT TOP (0)` does not exercise empty history.
+The real-SQL regression is
+`test_resident_showcase_sql.SqlBoundaryTests.test_empty_sensor_tables_preserve_valid_empty_history`.
 
 [`scripts/resident_demo_verifier.py`](scripts/resident_demo_verifier.py) is the owner-run offline
 tool: it takes no arguments, needs an interactive terminal, reads the demo password twice with hidden

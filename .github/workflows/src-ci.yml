@@ -102,6 +102,14 @@ jobs:
             --output "$RUNNER_TEMP/axe-4.10.3.min.js"
           PYTHONPATH="$GITHUB_WORKSPACE/src/api/tests:$GITHUB_WORKSPACE/src/core/tests:$GITHUB_WORKSPACE/src/agents/tests" \
             python -m checks.regulatory_ux_check --axe "$RUNNER_TEMP/axe-4.10.3.min.js" --out "$RUNNER_TEMP/regulatory-ux-results.json"
+          PYTHONPATH="$GITHUB_WORKSPACE/src/api/tests:$GITHUB_WORKSPACE/src/core/tests:$GITHUB_WORKSPACE/src/agents/tests" \
+            python -m checks.case_journey_browser_check --axe "$RUNNER_TEMP/axe-4.10.3.min.js" --out "$RUNNER_TEMP/case-journey-results"
+      - name: Retain case journey UX evidence
+        if: always() && matrix.project == 'api'
+        uses: actions/upload-artifact@v4
+        with:
+          name: case-journey-results
+          path: ${{ runner.temp }}/case-journey-results
       - name: Retain regulatory UX evidence
         if: always() && matrix.project == 'api'
         uses: actions/upload-artifact@v4

@@ -1,0 +1,98 @@
+{
+  "started": "2026-10-30T11:52:59.130161+00:00",
+  "script_sha256": "290038286a84bfdf78f6dc5dc9956f38af8bf4e95f4631384ccb23d0045cf97c",
+  "status": "completed",
+  "attempts": [
+    {
+      "number": 1,
+      "started": "2026-10-30T11:52:59.800180+00:00",
+      "status": "browser_or_route_failure_stop",
+      "credential_fill_attempted": false,
+      "credential_fill_completed": false,
+      "submission_attempted": false,
+      "submission_delivery": "not_attempted"
+    },
+    {
+      "number": 2,
+      "started": "2026-10-30T11:54:58.453423+00:00",
+      "status": "submission_delivery_uncertain_stop",
+      "credential_fill_attempted": true,
+      "credential_fill_completed": true,
+      "submission_attempted": true,
+      "submission_delivery": "keypress_completed_not_authentication",
+      "failure_stage": "provider_route",
+      "steps": [
+        {
+          "host": "login.microsoftonline.com",
+          "text": "Sign in\nCan\u2019t access your account?\n\nZava\n\n\t\nSign-in options\n\n\nTerms of use Privacy & cookies ...",
+          "controls": [
+            "Can\u2019t access your account?",
+            "Next",
+            "Sign-in options",
+            "Terms of use",
+            "Privacy & cookies",
+            "Click here for troubleshooting information"
+          ]
+        },
+        {
+          "host": "login.microsoftonline.com",
+          "text": "[redacted]\nEnter password\nForgot my password\n\nZava\n\n\n\nTerms of use Privacy & cookies ...",
+          "controls": [
+            "Back",
+            "Forgot my password",
+            "Sign in",
+            "Terms of use",
+            "Privacy & cookies",
+            "Click here for troubleshooting information"
+          ]
+        },
+        {
+          "host": "login.microsoftonline.com",
+          "text": "[redacted]\nStay signed in?\nDo this to reduce the number of times you are asked to sign in.\nDon't show this again\n \n\nZava\n\n\n\nTerms of use Privacy & cookies ...",
+          "controls": [
+            "Yes",
+            "Terms of use",
+            "Privacy & cookies",
+            "Click here for troubleshooting information"
+          ]
+        }
+      ],
+      "username_submission_attempted": true,
+      "credential_method": "password",
+      "http_navigation_failure": false,
+      "final_origin_is_app": true,
+      "final_origin_is_provider": false
+    }
+  ],
+  "captures": {
+    "screenshots": false,
+    "video": false,
+    "har": false,
+    "trace": false
+  },
+  "ended": "2026-10-30T11:55:19.477011+00:00",
+  "evidence": "attempt3-second-evidence.json",
+  "evidence_sha256": "ddc8038ab8228ac4fe09d2d49a798530f708770e01417dd2de800083ca503bab",
+  "safe_completed_continuation": true,
+  "current_script_sha256": "a0fe4b094f1c0dea156346f52fa4acc988f886d262499264e9f5ca3ce5f70b1f",
+  "source_versions": [
+    {
+      "file": "attempt3-first-run.py.txt",
+      "sha256": "290038286a84bfdf78f6dc5dc9956f38af8bf4e95f4631384ccb23d0045cf97c"
+    },
+    {
+      "file": "attempt3.py",
+      "sha256": "a0fe4b094f1c0dea156346f52fa4acc988f886d262499264e9f5ca3ce5f70b1f"
+    }
+  ],
+  "evidence_files": [
+    {
+      "file": "attempt3-evidence.json",
+      "sha256": "84fb0ed7323aa348a774ba842ab9af524bfacfd81f7054c62ca56858cbe412e1"
+    },
+    {
+      "file": "attempt3-second-evidence.json",
+      "sha256": "ddc8038ab8228ac4fe09d2d49a798530f708770e01417dd2de800083ca503bab"
+    }
+  ]
+}

@@ -183,6 +183,9 @@ class SensorFaultTests(unittest.TestCase):
                 days=10,
                 fault_rates={"gap": 0.2, "duplicate": 0.2, "out_of_order": 0.2},
             )
+            self.assertEqual(manifest["version"], "sensor-backfill-faults-v2")
+            self.assertEqual(manifest["fault_model_version"], "sensor-fault-packets-v1")
+            self.assertEqual(manifest["schema_version"], "sensor-fault-input-v1")
             payloads = {
                 path.name: rows(path) for path in (root / "analysis").glob("readings-*.csv")
             }

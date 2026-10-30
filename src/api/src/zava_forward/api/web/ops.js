@@ -3,6 +3,8 @@
 const QUALITY_ROLES = ["Quality Inspector", "Retrofit Programme Manager", "Programme Support Officer"];
 const QUALITY_SOURCES = ["Installer", "Contractor", "Provider submission", "Our own inspection"];
 const WO_OUTCOMES = ["Booked", "Declined by provider", "Resident not available", "No access", "Rebooking needed"];
+let capacityHistoryBarrier = null;
+let capacityHistoryGeneration;
 const QUALITY_WORDS = { "Submitted": "Waiting for an independent check", "Returned": "Returned: defect to put right", "Fixed, awaiting reinspection": "Fixed, waiting to be checked again",
   "Accepted": "Accepted, ready to hand over to the resident", "Handed over": "Handed over to the resident",
   "Superseded": "Replaced evidence: previous acceptance and handover no longer apply" };
@@ -18,7 +20,7 @@ function residentBindings(text) {
   });
 }
 
-function qualityPanel(c, id, refresh) {
+function qualityPanel(c, id, refresh, savedFields = [], session = caseSession) {
   const box = h("section", { class: "card", id: "quality" }, h("h2", {}, "Quality checks and defects"));
   const canCheck = QUALITY_ROLES.includes(me.user.role);
   const measures = (Array.isArray(c.measures) ? c.measures : String(c.measures).split(",")).map((x) => x.trim()).filter(Boolean);
@@ -29,23 +31,34 @@ function qualityPanel(c, id, refresh) {
     const owner = h("input", { type: "text", maxlength: 80, "aria-label": `Who will put it right for ${r.measure}` });
     const fixer = h("input", { type: "text", name: `quality-fixer-${i}`, autocomplete: "off", maxlength: 80, "aria-label": `Who fixed ${r.measure}` });
     const told = h("input", { type: "checkbox", id: `told-${i}` });
-    const message = h("div", { role: "status", "aria-live": "polite", tabindex: -1 });
+    const message = h("div", { id: `quality-feedback-${i}`, role: "status", "aria-live": "polite", tabindex: -1 });
+    note.addEventListener("input", () => {
+      note.removeAttribute("aria-invalid"); note.removeAttribute("aria-describedby");
+      message.textContent = "";
+    });
     const act = async (name, body) => {
+      if (name === "quality-fix" && !note.value.trim()) {
+        message.textContent = "Enter the remediation evidence before recording the fix.";
+        note.setAttribute("aria-invalid", "true");
+        note.setAttribute("aria-describedby", message.id); note.focus(); return;
+      }
       const button = document.activeElement;
       if (button instanceof HTMLButtonElement) { button.disabled = true; button.setAttribute("aria-busy", "true"); }
+      let outcome;
       try {
-        await refresh(async () => {
+        outcome = await refresh(async () => {
           try { await post(id, name, Object.assign({ index: i }, body)); }
           catch (error) {
             message.textContent = error.message;
             message.className = "err";
-            if (name === "quality-fix" && !note.value.trim()) { note.setAttribute("aria-invalid", "true"); note.focus(); }
-            else message.focus();
+            message.focus();
             throw error;
           }
-        });
+        }, name === "quality-return" ? [note, defect, owner]
+          : name === "quality-fix" ? [note, fixer]
+          : name === "quality-handover" ? [note, told] : [note]);
       } finally {
-        if (button instanceof HTMLButtonElement) { button.disabled = false; button.removeAttribute("aria-busy"); }
+        if (button instanceof HTMLButtonElement) { button.disabled = outcome === "check-history"; button.removeAttribute("aria-busy"); }
       }
     };
     return h("li", {},
@@ -77,32 +90,60 @@ function qualityPanel(c, id, refresh) {
   });
   box.append(records.length ? h("ul", { class: "list" }, records) : h("p", {}, "No quality checks recorded yet."));
   if (!c.closed) {
+    if (session.qualitySaving === "check-history") session.qualitySaving = false;
     const form = h("div", {}, h("h3", {}, "Record the evidence for a measure"),
       h("p", { class: "muted" }, "Evidence from an installer or contractor is kept as evidence only. It is checked by someone else before it counts. Replacing accepted evidence cancels its previous acceptance and handover. A new independent check and resident handover are needed."));
-    const measure = h("select", { id: "q-measure", "aria-label": "Measure" }, measures.map((m) => h("option", {}, m)));
+    const measure = h("select", { id: "q-measure", "aria-label": "Measure", "data-case-navigation": "" }, measures.map((m) => h("option", {}, m)));
+    if (measures.includes(session.qualityMeasure)) measure.value = session.qualityMeasure;
     const by = h("input", { id: "q-by", type: "text", maxlength: 80 });
     const src = h("select", { id: "q-src" }, QUALITY_SOURCES.map((x) => h("option", {}, x)));
-    const checks = h("div", {});
+    const checks = h("div", {}, h("p", { role: "status" }, "Loading checklists..."));
     let lists = null;
     const paint = () => {
+      if (box.isConnected) savedFields = rememberCaseFields(session);
       const m = measures.find((x) => x === measure.value) || "";
       const key = [["loft", "Loft insulation"], ["wall", "Wall insulation"], ["heat pump", "Heat pump"], ["solar", "Solar panels"]].find(([w]) => m.toLowerCase().includes(w));
       const list = lists[key ? key[1] : "General"];
       checks.replaceChildren(h("p", { class: "muted" }, `Checklist ${list.version}. Say what was seen for every check.`),
-        ...list.items.map((lab, n) => h("div", {}, h("label", { for: `q-i${n}` }, lab), h("input", { id: `q-i${n}`, type: "text", maxlength: 200, "data-label": lab }))));
+        ...list.items.map((lab, n) => {
+          const input = h("input", { id: `q-i${n}`, name: "checklist-evidence", autocomplete: "off", type: "text", maxlength: 200, "data-label": lab,
+            "data-case-field-key": JSON.stringify(["checklist", m, list.version, lab]) });
+          input.caseBinding = { kind: "checklist", id: `${m}, checklist ${list.version}` };
+          return h("div", {}, h("label", { for: input.id }, lab), input);
+        }));
+      restoreBoundFields(savedFields, form, "checklist", session);
     };
-    measure.addEventListener("change", () => lists && paint());
-    api("/api/checklists").then((l) => { lists = l; if (measures.length) paint(); });
+    measure.addEventListener("change", () => {
+      session.qualityMeasure = measure.value;
+      if (lists) paint();
+    });
+    api("/api/checklists").then((l) => {
+      lists = l;
+      if (measures.length) paint();
+      else checks.replaceChildren(h("p", { class: "muted" }, "This case has no measures to check yet."));
+    }).catch(error => checks.replaceChildren(h("p", { class: "err", role: "alert" }, `Could not load checklists: ${error.message}. Refresh this case to try again.`)));
     const revision = h("input", { id: "q-revision", type: "number", min: 1 });
     form.append(h("label", { for: "q-measure" }, "Which measure"), measure,
       h("label", { for: "q-revision" }, "Scope revision the evidence covers (see the resident decision panel)"), revision,
       h("label", { for: "q-by" }, "Who did the work or sent the evidence"), by,
       h("label", { for: "q-src" }, "Where the evidence came from"), src, checks,
-      h("p", {}, h("button", { class: "alt", onclick: () => {
+      h("p", {}, h("button", { class: "alt", "data-quality-save": "", disabled: Boolean(session.qualitySaving), onclick: async () => {
+        if (session.qualitySaving) return;
         const replaces = (c.quality || []).some((r) => r.measure === measure.value && ["Accepted", "Handed over"].includes(r.state));
         if (replaces && !window.confirm("Replace this measure's evidence? Its previous acceptance and resident handover will no longer apply. The history will be kept.")) return;
-        refresh(() => post(id, "quality-submit", { measure: measure.value, context_revision: Number(revision.value), submitted_by: by.value, source: src.value,
-          items: Object.fromEntries([...checks.querySelectorAll("input")].map((i) => [i.dataset.label, i.value])) }));
+        const busy = value => {
+          session.qualitySaving = value;
+          if (caseSession !== session) return;
+          app.querySelectorAll("[data-quality-save]").forEach(button => {
+            button.disabled = Boolean(value);
+            if (value === true) button.setAttribute("aria-busy", "true");
+            else button.removeAttribute("aria-busy");
+          });
+        };
+        busy(true);
+        const result = await refresh(() => post(id, "quality-submit", { measure: measure.value, context_revision: Number(revision.value), submitted_by: by.value, source: src.value,
+          items: Object.fromEntries([...checks.querySelectorAll("input")].map((i) => [i.dataset.label, i.value])) }), [measure, revision, by, src, ...checks.querySelectorAll("input")]);
+        busy(result === "check-history" ? result : false);
       } }, "Save evidence")));
     box.append(form);
   }
@@ -144,19 +185,48 @@ function appointmentDrafts() {
 
 async function capacityView() {
   if (!isManager()) return show(h("p", {}, "Only a manager sees capacity and work orders."));
+  const signal = routeController.signal;
+  const recoveryGeneration = capacityHistoryGeneration;
   const msg = h("div", { role: "status", "aria-live": "polite", tabindex: -1 });
+  let saving = false, checkHistory = false;
   const go = async (fn, savedForm) => {
+    if (fn && (saving || checkHistory || capacityHistoryBarrier)) return;
     const button = document.activeElement;
     if (button instanceof HTMLButtonElement) { button.disabled = true; button.setAttribute("aria-busy", "true"); }
+    let recorded = false;
+    saving = true;
     try {
-      await fn();
+      if (fn) { await fn(); recorded = true; }
       if (savedForm) delete savedForm.dataset.unsaved;
+      signal.throwIfAborted();
       await capacityView();
     }
-    catch (e) { msg.replaceChildren(h("p", { class: "err" }, e.message)); msg.focus(); }
-    finally { if (button instanceof HTMLButtonElement) { button.disabled = false; button.removeAttribute("aria-busy"); } }
+    catch (e) {
+      if (signal.aborted || !me) return;
+      checkHistory ||= recorded || Boolean(fn && mutationNeedsHistory(e));
+      if (checkHistory) capacityHistoryBarrier = capacityHistoryGeneration = {};
+      msg.replaceChildren(h("p", { class: "err" }, checkHistory
+        ? `Reload and check work order or package history before another action. ${e.message}` : e.message));
+      if (e.capacityLoadFailure || checkHistory) msg.append(h("button", { type: "button", onclick: () => go() }, "Try again"));
+      msg.focus();
+    }
+    finally { saving = false; if (button instanceof HTMLButtonElement) { button.disabled = Boolean(fn && checkHistory); button.removeAttribute("aria-busy"); } }
   };
-  const [pkgs, orders] = await Promise.all([api("/api/packages"), api("/api/workorders")]);
+  const load = async (path, label) => {
+    try { return await api(path, undefined, signal); }
+    catch (error) {
+      if (signal.aborted || !me) throw error;
+      const detail = error instanceof TypeError || error.message === "Something went wrong." ? "" : ` ${error.message}`;
+      error.message = `We could not load ${label}. Try again. If this continues, contact application support.${detail}`;
+      error.capacityLoadFailure = true;
+      throw error;
+    }
+  };
+  const [pkgs, orders] = await Promise.all([load("/api/packages", "packages"), load("/api/workorders", "work orders")]);
+  signal.throwIfAborted();
+  if (!me) return;
+  if (capacityHistoryGeneration !== recoveryGeneration) return;
+  capacityHistoryBarrier = null;
   let field = 0;
   const inp = (label, attrs) => {
     const id = `capacity-field-${++field}`;
@@ -232,7 +302,8 @@ async function capacityView() {
   const drafts = appointmentDrafts();
   show(h("h1", {}, "Capacity and work orders"),
     h("p", { class: "muted" }, "Work orders are controlled: every change is a new version with who issued it, and nothing is issued beyond a contractor's evidenced commitment."),
-    msg, create, ...cards, h("section", { class: "card" }, h("h2", {}, "Work orders"), orders.length ? h("ul", { class: "list" }, actions) : h("p", {}, "No work orders yet.")));
+    msg, create, ...(cards.length ? cards : [h("p", {}, "No packages yet.")]),
+    h("section", { class: "card" }, h("h2", {}, "Work orders"), orders.length ? h("ul", { class: "list" }, actions) : h("p", {}, "No work orders yet.")));
   for (const draft of drafts) {
     const form = [...document.querySelectorAll("form[data-appointment-form]")].find((el) => el.dataset.appointmentForm === draft.key);
     if (!form) continue;
@@ -286,7 +357,7 @@ function appointmentControls(w, submit) {
       onsubmit: (e) => {
       e.preventDefault();
       if (action === "close_case" && !window.confirm(`Record the supplied human closure of underlying home case ${state.case_id}? This resets its active no-access count, not its history. Outstanding resident updates and remedies remain. This is not investigation task disposition or technical, legal or financial approval.`)) return;
-      submit(Object.assign({ action, event_ref: event[1].value }, body(), form.appointmentContext), form);
+      return submit(Object.assign({ action, event_ref: event[1].value }, body(), form.appointmentContext), form);
     } }, ...event, ...fields, h("button", { type: "submit", class: "alt" }, title),
     h("button", { type: "reset", class: "alt" }, "Discard this draft"));
     const initialContext = action === "offer" ? { expected_offer_id: offer ? offer.id : null }

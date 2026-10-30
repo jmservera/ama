@@ -7,6 +7,7 @@ import threading
 import unittest
 import urllib.error
 import urllib.request
+from html.parser import HTMLParser
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 
@@ -77,6 +78,39 @@ class Base(unittest.TestCase):
 
 
 class ScreensApi(Base):
+    def test_employee_shell_aliases_serve_all_scripts_with_security_headers(self):
+        class Scripts(HTMLParser):
+            def __init__(self):
+                super().__init__()
+                self.paths = []
+
+            def handle_starttag(self, tag, attrs):
+                if tag == "script":
+                    self.paths.append(dict(attrs)["src"])
+
+        shells = []
+        for path in ("/app", "/app?synthetic=case", "/index.html"):
+            with urllib.request.urlopen(self.base + path) as response:
+                self.assertEqual(response.status, 200)
+                self.assertIn("text/html", response.headers["Content-Type"])
+                shells.append(response.read())
+        self.assertEqual(shells, [shells[0]] * 3)
+        scripts = Scripts()
+        scripts.feed(shells[0].decode())
+        self.assertIn("/ops.js", scripts.paths)
+        self.assertLess(scripts.paths.index("/ops.js"), scripts.paths.index("/app.js"))
+        for path in scripts.paths:
+            with self.subTest(path=path), urllib.request.urlopen(self.base + path) as response:
+                self.assertEqual(response.status, 200)
+                self.assertIn("text/javascript", response.headers["Content-Type"])
+                self.assertEqual(response.read(), (WEB / path.lstrip("/")).read_bytes())
+                self.assertEqual(response.headers["Cache-Control"], "no-store")
+                self.assertEqual(response.headers["X-Content-Type-Options"], "nosniff")
+                self.assertTrue(response.headers["Content-Security-Policy"].startswith("default-src 'self';"))
+        with self.assertRaises(urllib.error.HTTPError) as missing:
+            urllib.request.urlopen(self.base + "/app/")
+        self.assertEqual(missing.exception.code, 404)
+
     def test_closed_list_is_manager_only_and_reopen_works(self):
         sam, pam = self.login("sam@example.test"), self.login("pam@example.test")
         self.assertEqual(self.call(sam, "/api/cases?view=closed")[0], 403)

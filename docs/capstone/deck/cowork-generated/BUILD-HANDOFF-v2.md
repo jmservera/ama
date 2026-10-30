@@ -1,7 +1,7 @@
 ---
 title: Zava Forward v2 - build handoff
 description: Cowork-generated v2 build report retained as supplied, with repository metadata added
-ms.date: 2026-10-23
+ms.date: 2026-10-29
 ---
 
 ## Zava Forward v2 build handoff
@@ -42,7 +42,28 @@ Method: national rates from official statistics applied to 60,000 homes. Deadlin
 | Stage-one complaints a year | 3,210 (53.5 per 1,000 homes) | Sector median rate | RSH Tenant Satisfaction Measures 2024/25 |
 | AI inference, whole programme | ≈ $6,873 | 20 AI tasks a home, each 10x the observed 1,376.8-token run, all tokens at the GPT-4.1 mini output list price ($1.60 per 1M) | Repository operator exercise; price from third-party trackers of Azure retail prices |
 
-Reconciliation note: the repository BRD/ADD use 39% (23,400 households) and about 3,270 complaints from slightly different tables. The deck uses the verified 38% and 53.5 per 1,000.
+Reconciliation note: the repository BRD/ADD use 39% (23,400 households) and about 3,270 complaints from slightly different tables. The deck's 38% source and population require reconciliation; 53.5 is the 2024/25 median landlord LCRA rate.
+
+## Dated Evidence Review (2026-10-29)
+
+The [claim review](../../../reference/regulatory/reviewed-updates/2026-10-29-presentation-paper-claim-review.md)
+records official source dates, last recorded retrieval limits and unresolved
+currentness. Official pages could not be retrieved on 29 October, so historical
+forecast inputs are not silently replaced or described as current.
+
+Items requiring source/owner reconciliation before this handoff is reused:
+
+* The below-C band counts on line 35 (14,400 + 1,200 + 300) total 15,900, not
+  15,600.
+* The 38% self-report figure on line 41 is attributed to the 9 July 2026
+  perceptions report, while the retained source comparison records 39% for
+  housing association renters in that report and 38% for an earlier measure.
+* The forecast wording that every home reaches EPC C by April 2030 needs review
+  against the later two-metric policy. Treat it as an exercise scenario, not a
+  legal duty or compliance finding.
+
+The 53.5 complaints figure is the 2024/25 median landlord rate for LCRA homes,
+not the sector-wide rate or a damp-specific count.
 
 ## Story map (spoken route, about 24 minutes)
 

@@ -1,0 +1,35 @@
+{
+  "task_id": "526-round7",
+  "task_slug": "case-journey-526-round7",
+  "parent_task": {"task_id": "526", "task_slug": "case-journey-ux-526"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-29/case-journey-526-round7-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-29/case-journey-526-round7-plan.md",
+    "details": ".copilot-tracking/details/2026-10-29/case-journey-526-round7-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-29/case-journey-526-round7-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-29/case-journey-526-round7-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-29/case-journey-526-round7-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Execute the full RPI loop", "status": "confirmed", "evidence": "Explicit user request 2026-10-29"},
+    {"decision": "Local commits only; no push, PR update, thread reply or resolution; retain Refs #526", "status": "confirmed", "evidence": "Explicit user request"},
+    {"decision": "Reuse clean feat/case-journey-ux-526; no remote-only bot commit to pull", "status": "verified", "evidence": "git fetch origin and HEAD..origin/feat/case-journey-ux-526 empty; PR #529 open"},
+    {"decision": "Sole critique Complete / Revise; PC-001 through PC-003 applied directly; plan Ready", "status": "executed", "evidence": ".copilot-tracking/reviews/plans/2026-10-29/case-journey-526-round7-plan-critique.md"},
+    {"decision": "Sole independent Review Complete / Not accepted; requested post-outcome correction passes but RV-001 High and RV-002 Medium remain", "status": "executed", "evidence": ".copilot-tracking/reviews/logs/2026-10-29/case-journey-526-round7-review.md"},
+    {"decision": "Original implementation and seven RPI artifacts committed locally; no push", "status": "completed", "evidence": "6e35341620686961e6c7e598cbc9caee42b35f37"}
+  ],
+  "blockers": [
+    {"id": "RV-001", "summary": "Acceptance blocked by duplicate pending fieldless/rebuilt raw-form POSTs", "resolution": "Later rpi-implement; preserve this Review unchanged"},
+    {"id": "RV-002", "summary": "Acceptance blocked by unresolved shared-queue review draft loss", "resolution": "Later rpi-implement; preserve this Review unchanged"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Await coordinator selection of ranked implementation follow-ups; publication remains gated; no child selected or push authorized"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Implement RV-001 persistent pending identities for fieldless and rebuilt raw forms", "rationale": "High severity: duplicate requests may commit before any outcome guard is established", "evidence": ".copilot-tracking/reviews/logs/2026-10-29/case-journey-526-round7-review.md RV-001"},
+    {"rank": 2, "task": "Implement RV-002 shared-queue review draft preservation", "rationale": "Medium severity: unresolved review reason and edited JSON lose their only copy during stale listing replacement", "evidence": ".copilot-tracking/reviews/logs/2026-10-29/case-journey-526-round7-review.md RV-002"},
+    {"rank": 3, "task": "Coordinator publication and approval gates after routed defects", "rationale": "Explicit local-only/no-Azure boundary; no complete receipt or hosted/human acceptance claimed", "evidence": ".copilot-tracking/changes/2026-10-29/case-journey-526-round7-changes.md"}
+  ]
+}

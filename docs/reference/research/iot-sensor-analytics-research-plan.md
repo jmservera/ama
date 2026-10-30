@@ -2,7 +2,7 @@
 title: In-Use Monitoring Analytics Research Plan (Dew Point and Trend Risks)
 description: Research phase plan for analysing humidity and temperature sensor data received through Azure IoT Hub, including dew point and surface condensation risk, with leads, unknowns, evidence rules and exit criteria
 author: AMA programme
-ms.date: 2026-10-27
+ms.date: 2026-10-29
 ms.topic: reference
 ---
 
@@ -27,6 +27,117 @@ Related decisions: [ADR 0003](../../adrs/0003-journey-derived-capabilities-runti
 (Azure IoT Hub ingestion), [ADR 0002](../../adrs/0002-pilot-readiness-architecture.md#sensor-data-capture-analysis-and-map)
 (capture and review-signal design), BRD FR-048/AC-090 and RULE-014, and PRD
 FR-050 with AC-066 to AC-068.
+
+## Bounded streaming engineering (2026-10-27, Refs #110, #184)
+
+The [2026-10-29 bounded live exercise](../../../infra/README.md#bounded-existing-hub-exercise-2026-10-29-refs-140-184-137)
+subsequently reconciled metrics-only diagnostics on the already deployed B1 hub
+without changing private access/service authentication or adding paid services.
+Publisher-only activation no longer asserts a fictional custom receiver.
+Existing operator registry permission is absent, so no device was issued and
+no live stream sent. The built-in endpoint's shared-key limitation still blocks
+keyless receive under hub-only authority. Constructed local SQL Server passed
+45 ingestion tests; this is neither actual Hub-to-SQL nor resident-gauge proof.
+The original source-only engineering evidence below remains historical.
+
+The [API transport adapters](../../../src/api/README.md#opt-in-iot-consumer-and-synthetic-publisher-110-184)
+and [core replay model](../../../src/core/README.md#finite-synthetic-stream-replay-184)
+add explicitly called, finite SDK paths on the merged #140 transport definition.
+They do not deploy, register devices, retrieve credentials, discover installed
+devices, run inference or change resident/human approval boundaries.
+All telemetry is labelled SYNTHETIC. No whole live acceptance is inferred.
+
+The [ADR 0003 source authorization](../../adrs/0003-journey-derived-capabilities-runtime-fit.md#source-only-infrastructure-authorization-2026-10-27-refs-140)
+and [infrastructure decision](../../../infra/README.md#iot-hub-issue-140-adr-0003-decision-6)
+remain the authority for B1/one unit, ama/uksouth, the custom private Event Hub,
+individual provisioning and Juan Manuel Servera as exercise credential owner.
+This implementation selects the allowed per-device X.509 path; DPS, service
+keys, automatic credential issue and device-management operations are excluded.
+Approved Key Vault issuance, mount access, expiry/rotation, revocation and
+teardown of exact run-owned identities remain owner work. A nonempty approval,
+cost or alert reference in code is a declaration, not verified evidence.
+
+Each explicit SYN device binding resolves to exactly one compact stock sensor
+key and one canonical stock home ID. The current consumer uses `home_key`
+(up to 128 UTF-16 units); the earlier 2026-10-18 example/table below described
+its original legacy fixture, not a requirement to truncate stock IDs.
+Only independently granted synthetic selections produce readings. No synthetic
+choice constitutes real resident consent or calibration.
+
+The custom Event Hub's Hub-only Data Sender grant is an essential origin
+boundary. Routed byte-keyed AMQP device/authentication properties are decoded
+through pinned EventData accessors; arbitrary application claims on an endpoint
+with other senders are not authenticated Hub identity. Actual Azure metadata,
+role propagation, private resolution and routing remain unverified. Missing,
+ambiguous or mismatched bindings stop before SQL. A deliberately unmapped exact
+binding can produce SQL UNMAPPED DQ without weakening normal-device fencing.
+
+Fresh receivers always replay the retained beginning and use SQL outcomes as
+their durable state. They install no checkpoint store and call no misleading
+no-store checkpoint no-op. Retention expiry is a recovery limit, and multiple
+receivers are not coordinated by this finite demonstration. Database commit
+uncertainty remains explicit: cancellation cannot prove rollback. A poisoned
+transport envelope stops for investigation rather than silently advancing.
+
+Seeded replay selects nominal slots from the complete original seasonal
+generator sequence, with canonical observation conversion and unchanged stable
+reading IDs. Local overlap tolerance is exactly zero for both numeric values,
+IDs, units and timestamps. This is a deterministic model-continuity witness,
+not a statistical validation of real sensors or an actual live handover.
+Climate-backed composed backfill continuity remains deferred.
+
+The 2026-10-27 correction binds `synthetic-stream-v2` descriptors and Frames to
+the same validated canonical selected-input digest, separately from the original
+register digest. Selected subset, fabric or monitoring-choice mutations change
+new provenance; retained frames keep their original snapshot digest. This is
+restricted synthetic evidence, not an added telemetry field or real consent.
+Receiver constructor/startup errors now share bounded owned cleanup and fixed
+error codes; partial setup does not leave a returned credential unclosed.
+
+### Cost and scale before any live run
+
+The existing dated transport model allocates USD60/month within, not additional
+to, the overall USD700 cap. No Azure run occurred here; actual incremental
+Azure spend from this task is zero. Actual subscription currency, aggregate
+headroom, quota already consumed and active alerts must be verified by the
+named owner before a live run. Budget alerts are not hard spending stops.
+
+At three paired observations/home/day, N=1 gives 3 and N=60,000 gives 180,000
+observations/day. The sender chooses one observation/message. It accounts each
+attempt in 4-KiB units including a conservative 1-KiB properties reserve and
+requires >=40,000 unused units from B1's 400,000/day allowance. A 366-byte
+sample plus reserve uses one unit: 180,000 leaves 220,000 before other traffic.
+Worst allowed 4096-byte body plus reserve uses two units: 360,000 leaves 40,000,
+with no allowance for additional traffic/retries. These are arithmetic
+scenarios, not throughput, actual billing or approval to run 60,000 devices.
+The implemented local run is limited to 100 granted homes, 100,000 original
+model home-slots/messages, <=100 messages/second and <=3600 seconds. A declared
+owner/cost/alert reference and preflight quota check are mandatory. Speed/burst
+cannot bypass global actual send-attempt admission, which occurs after
+connection/message/truth setup immediately adjacent to the SDK send await.
+Local delayed-connect/preparation and multiple-device timestamp regressions
+cover that boundary, not just Pacer return times. Pause consumes the deadline;
+stop/cancel closes
+owned clients. SDK retries and auto-connect are disabled.
+
+### Issue criterion evidence and remaining gates
+
+No issue checkbox or status is changed by this source-only work.
+
+| Issue | Locally evidenced scope | Explicit remaining / deferred criteria |
+| --- | --- | --- |
+| #110 | Existing SQL append/replay/DQ reused; SDK/identity fencing; no public ingestion route or source credential; constructed actual SQLite receipts and property non-mutation | Actual distinct Hub identities, authenticated routed input classes, Azure SQL/restart, actual source/telemetry secret assurance and whole AC-066 registered-AI/build acceptance |
+| #184 | Synthetic-only selection/no discovery; per-device send path; all five child dispositions recorded here | Owner acceptance of outstanding child deferrals; actual credential/log/telemetry and live exercise evidence |
+| #185 | Individual X.509 approach and existing named owner; one device/sensor/home mapping in code | Actual approved issue/storage/access/expiry/rotation/revocation and teardown of all simulated identities; no teardown success claimed because none were created |
+| #186 | Previously closed by #412; unchanged imported schema and stable identities; three/day default | No reopening or new whole-live claim; explicit cadence overrides remain run declarations |
+| #187 | Exact legacy-backfill seeded replay, odd/nonzero suffixes, speed/pause/stop, labelled separate truth, duplicate/order/unit/skew/calibration and transport disconnect/burst tests | Live Hub replay; composed-climate replay; injected normal-device UNMAPPED is a transport refusal, separately configured unmapped binding supplies local SQL DQ only |
+| #188 | Temporary constructed SQLite union per home, zero-difference seeded overlap and exact-window idempotency | Actual Azure SQL query/restart, live/backfill statistical handover and composed-model continuity |
+| #189 | Dated cost model, B1 arithmetic, finite owner/time/rate/message bounds, quota preflight and required alert reference | Actual pre-run aggregate headroom/quota/currency and active alert verification; references alone do not prove an alert exists |
+
+No operational OD-43, DPO/Legal/Compliance, real inventory, lawful-basis,
+retention, threshold or human-review decision is made here. Synthetic tests
+cannot close those gates. Required hosted checks, independent exact-head
+assessment, owner merge and applicable publication gates remain separate.
 
 ## Shared observation contract and volume (2026-10-18, Refs #186)
 
@@ -373,6 +484,46 @@ The new gate, independent exact-head publication assessment and hosted checks
 are separate prerequisites; no second full Review, full-stock rerun, private-
 register equality, production or human approval is inferred.
 
+### Indoor record-derived envelope correction (2026-10-27, #179)
+
+The later #179 correction replaces the fixed exercise 8 C floor and 15..98%
+RH clips in both projection paths. This supersedes the earlier current-value
+claim that legacy default reading bytes are unchanged, not the original
+stack's findings, tests, Review outcome or recorded aggregate hashes.
+Versions `indoor-projection-exercise-v2` and
+`indoor-projection-composed-exercise-v2` retain the noiseless equations and
+two-draw RNG order but cap each Gaussian residual at three standard deviations.
+The cap, scales, schedules, model coefficients and supported input domains
+remain explicitly exercise assumptions.
+
+For each retained outdoor temperature/RH pair and dwelling model, calculate
+noiseless indoor temperature `B` and vapour `V`. Temperature bounds are
+`[B-0.9,B+0.9]` C; RH bounds are
+`[100*V/sat(B+0.9)-4.5,100*V/sat(B-0.9)+4.5]`, with each endpoint limited
+to the physical 0..100% RH domain. The [core model documentation](../../../src/core/README.md#register-backed-sensor-history-177)
+defines inputs, equations, tail policy, provenance, rounding and nominal/fault
+boundaries. No independent fixed indoor floor/clip is substituted.
+
+The [projection regression suite](../../../src/core/tests/test_indoor_projection.py)
+checks actual hash-pinned public 2023-2024 ERA5 pairs through legacy and
+composed generator paths: all 17,544 hourly pairs for apartments and detached
+dwellings, with independently reconstructed equations, household conditions
+and an explicit synthetic dated retrofit. It also checks supported-domain
+endpoints, forced tails, saturation, weather/fabric sensitivity and exact
+equation/RNG behaviour. These are engineering checks of an exercise model,
+not observed indoor data or empirical physical calibration.
+
+| #179 criterion | Re-evaluation and evidence boundary |
+| --- | --- |
+| 1. Inputs, equations and parameters documented and versioned | Supported by both v2 parameter mappings, manifest/model fingerprint binding tests and the core documentation. |
+| 2. Every parameter sourced or labelled exercise | All coefficients, factors, schedules, domains and noise/tail parameters are explicitly exercise-valued; physical RH saturation is distinguished. No new parameter source is asserted. |
+| 3. Indoor series within plausible bounds derived from outdoor record | Supported at the synthetic exercise boundary by per-pair temperature/vapour-derived envelopes, full retained public hourly-record traversal through both paths and adversarial tests. Not calibrated or validated as a real dwelling model. |
+
+This correction does not establish PRD AC-066 live IoT Hub/SQL/AI acceptance,
+AC-067 operational analysis, AC-068 competent method/threshold approval, OD-43,
+private-stock equality or whole-parent #177 acceptance. Existing monitoring
+choice, manual/safety and human approval boundaries are unchanged.
+
 ## Sensor privacy engineering boundary (2026-10-17, Refs #112)
 
 The source audit at upstream `74617981b71bc3f10bd21d0b78691bc3cf36c473`
@@ -458,6 +609,60 @@ read.
 | R3 Synthetic validation | Generate labelled fictional scenarios (normal, condensation-prone, sensor fault, missing data, seasonal shift) and test each method for detection, false alerts and sufficiency handling | Scenario pack, confusion summary and sensitivity notes, kept separate from real data | Methods meet agreed false-alert and miss limits on synthetic data; limits are labelled exercise values |
 | R4 Explainability and review | Draft the reviewer view, resident-safe wording and non-AI comparator; check accessibility and no-diagnosis wording | Review-ready explanation set | DPO, Resident Engagement and Safety review wording; no diagnosis or blame |
 | R5 Real-data readiness | Confirm inventory, mapping, calibration, lawful basis, retention and thresholds with owners | Updated OD-43 disposition | Named owners approve before any non-synthetic use |
+
+## Bounded R3 exercise scenario pack (2026-10-27, Refs #190)
+
+The [installed scenario CLI](../../../src/core/README.md#synthetic-scenario-validation-pack-190-192-193-194)
+and [sensor dictionary](./retrofit-synthetic-data/data-dictionary.md#separate-scenario-validation-pack)
+provide seven damp/data-quality scenarios and four before/after retrofit
+scenarios using clean merged backfill rows and the shared observation schema.
+They live in a separate external snapshot, not general stock history.
+Analysis receives only `analysis/`; evaluator labels, RNG keys, expected
+directions/sizes, manifest and results stay in `truth/`. Seed 190 is the common
+observation provenance value, not a feature used by the comparator.
+
+All new thresholds, magnitudes, intervals and outcomes are labelled exercise
+assumptions. `sensor-comparator-exercise-v1` classifies only observed RH
+persistence/repeated overnight peaks after field/unit/grid/order/coverage/
+flatline checks. It is not the competent-reviewer-approved R2 method, a
+dew-point/surface-moisture calculation or a diagnosis. Condensation-prone is
+an evaluator scenario label, not a finding of actual condensation. Constructed
+constant weather and periodic residuals are explicit; the pack does not
+silently inherit ERA5 provenance, physical calibration or source bounds.
+
+At seed 190/default RH threshold 75%, the seven-case exercise comparison has
+three true-positive and two true-negative binary cases, plus two independently
+correct insufficient cases (sensor fault and 75% missing data). It reports
+zero binary misses/false alerts, five eligible/binary-classified cases and zero
+abstentions, not thousands of independent observation-level trials. Altered
+predictions/truth and zero-denominator tests prove that misses, false alerts,
+wrong sufficiency and abstentions change the counters. Sensitivity reruns
+70/75/85% against fixed truth; 85% exposes missed targets rather than rewriting
+the expected labels. These hand-designed counts do not estimate operational
+prevalence, calibrated sensitivity/specificity or acceptable real-world risk.
+
+Four retrofit cases separately check eight early/late mean deltas:
+improvement +2 C/-10 RH points; no change 0/0; delayed +1.5 C/-6 points from
+day 21 rather than completion day 14; adverse -1 C/+8 points. Every magnitude
+is fictional. Matched seven-day residual cycles and exact activation tests
+isolate the constructed step; they are not a causal evaluation, attribution
+to residents or a savings promise. Missing/invalid windows return INSUFFICIENT,
+null deltas and explicit expected/present/valid counts. Four retrofit cases
+never enter the damp binary confusion population.
+
+The pack emits one result per check (seven outcomes plus eight deltas), raw
+sufficiency reasons/counts, fixed-truth confusion denominators and sensitivity
+notes. The [core tests](../../../src/core/tests/test_sensor_scenarios.py) prove
+seed/byte reproducibility, retained-reading replay, truth separation, threshold
+boundaries, missing-gap/day/night behavior and safe output. This supplies
+bounded #192 scenario evidence, not completion of the R3 gate: agreed miss/
+false-alert limits and R2 competent reviewer/Asset sign-off remain open.
+Actual #193 use by #111/#133 tests and verified live #184 operation remain
+unproven; standalone fixture tests are not substituted for those consumers.
+The separate opt-in publisher's local engineering evidence is recorded in
+[bounded streaming engineering](#bounded-streaming-engineering-2026-10-27-refs-110-184),
+not live acceptance or scenario-pack integration.
+R1-R5 statuses and all resident/human approval safeguards above remain unchanged.
 
 ## Constraints
 
@@ -676,6 +881,120 @@ Leave original issue checkboxes unchanged and #178 open. No sensor-method,
 live-platform, legal or operational acceptance follows. The next human actions
 are dataset-specific reuse/access review and, if authorized, provision of the
 exact paired source/station/QC packet; not invention of missing bounds.
+
+## Paired historical climate access check (2026-10-21, Refs #178)
+
+A bounded continuation tested whether official paired North-East temperature
+and humidity records can be retrieved without an account. Retrievals occurred
+on 2026-10-21 UTC (not a publication or approval date). Evidence:
+[access-blocker record](./climate-paired-source-blocker-178.json).
+
+* MIDAS Open (OGL stated on its CEDA catalogue page) exposes anonymous
+  directory listings, including North-East stations, but every file fetched
+  (data licence README, station metadata, station capability) required a CEDA
+  login. Account creation or credential use is outside this task, so no
+  hourly temperature or relative humidity records were obtained.
+* Environment Agency Hydrology (OGL 3) carries no humidity or dew-point
+  property; its temperature measures are not atmospheric paired data.
+* No bounds, thresholds or replay limits are derived. The Durham monthly
+  temperature statistics remain temperature-only, and no synthetic value
+  stands in for observed records. Synthetic data stays permitted only when
+  clearly labelled synthetic and cannot fulfil record-derived bounds.
+* Owner action: an authorised human with their own CEDA account supplies
+  selected MIDAS qc-version-1 files and licence text and records reuse and
+  station approval, or the owner approves another public no-login source.
+  Source selection and licence/reuse remain UNMET. #179 stays sequenced behind
+  grounded paired input.
+
+## Alternative modelled paired climate source (2026-10-22, Refs #178)
+
+The owner decided on 2026-10-22 to investigate another source, accepting
+demonstrator accuracy provided the production gaps stay documented. This
+section adds a usable modelled source. It does not replace or edit the
+[2026-10-21 access blocker](./climate-paired-source-blocker-178.json) or the
+[Durham monthly temperature report](./climate-source-evidence-178.json), which
+stay as separate temperature-only and negative evidence.
+
+Retrieved 2026-10-22 UTC, anonymously, with no key, account or payment, for
+Durham (54.768 N, -1.585 E) over 2023-01-01 to 2023-12-31, hourly, UTC. The raw
+responses are pinned by SHA-256 in
+[climate-paired-sample-178/](./climate-paired-sample-178/).
+
+The NASA response identifies `header.api.name` as `POWER Hourly API` and
+`header.api.version` as `v2.10.3`. The adapter carries these retained metadata
+fields into the report's source provenance and attribution with retrieval date
+2026-10-22; it marks attribution `UNVERIFIED` if identity or a precise version
+cannot be carried through. This records source metadata, not independent API
+verification, licence/reuse approval or the human owner/legal decision.
+
+| Source | Read on 2026-10-22 | Result |
+| --- | --- | --- |
+| [Open-Meteo Historical Weather API](https://open-meteo.com/en/docs/historical-weather-api) (ERA5, 0.25 degrees) | [Terms](https://open-meteo.com/en/terms): free API for non-commercial use; [licence](https://open-meteo.com/en/licence): CC BY 4.0 with attribution; underlying Copernicus C3S material has its own licence | **Selected demonstrator source (modelled).** 8,760 paired hours, no gaps; grid cell 54.75 N, -1.5 E, 98 m |
+| [NASA POWER hourly API](https://power.larc.nasa.gov/docs/services/api/) (MERRA-2) | [Referencing guide](https://power.larc.nasa.gov/docs/referencing/) only; licence text not retrieved (data policy page returned HTTP 403) | Cross-check only. 8,760 paired hours, no fill values; model elevation 144 m |
+| MIDAS Open, HadUK-Grid | Login required (2026-10-21) | Not retrievable anonymously; retained as the production route |
+| Durham station file | Temperature only, monthly | Unchanged, no humidity |
+| EA Hydrology | No humidity or dew point | Not applicable |
+| CIBSE weather files, ERA5 via CDS | Licensed or account/key required | Not retrieved |
+| Meteostat | Not examined | Not retrieved, no finding made |
+
+Derived by the [validating adapter](../../../tools/climate_paired_bounds.py)
+into the [bounds report](./climate-paired-bounds-178.json). These are sample
+statistics of a modelled grid cell for one year, not station observations,
+design extremes or safety thresholds:
+
+| Variable (Open-Meteo ERA5, 2023) | Minimum | 1st percentile | Mean | 99th percentile | Maximum |
+| --- | --- | --- | --- | --- | --- |
+| Temperature (degC) | -5.5 (2023-12-02 04:00Z, RH 95) | -1.4 | 10.3 | 22.5 | 26.7 (2023-09-09 14:00Z, RH 63) |
+| Relative humidity (%) | 36 (2023-06-14 13:00Z, 22.4 degC) | 50 | 81.0 | 97 | 100 |
+
+The report also lists, for each calendar month, the minimum and maximum of each
+variable with every UTC timestamp at which that value occurs (ties are all
+listed in chronological order) and the paired value of the other variable at
+that hour. These are taken from the retained Open-Meteo records, never filled.
+
+The adapter rejects hash mismatch, unit or timezone mismatch, nulls, fill
+values, gaps, duplicate or reordered hours, unequal series, humidity outside
+0..100, dew point above temperature, and humidity that disagrees with the
+Magnus value from temperature and dew point by more than 1.0 point (the
+retrieved maximum residual is 0.85). Nothing is filled or inferred. Reproduce:
+
+```bash
+python3 tools/climate_paired_bounds.py \
+  --open-meteo docs/reference/research/climate-paired-sample-178/open-meteo-era5-durham-2023-raw.json \
+  --open-meteo-url 'https://archive-api.open-meteo.com/v1/archive?latitude=54.768&longitude=-1.585&start_date=2023-01-01&end_date=2023-12-31&hourly=temperature_2m,relative_humidity_2m,dew_point_2m&models=era5&timezone=UTC&temperature_unit=celsius' \
+  --open-meteo-sha256 96e707ea5f7bd35af3ebdf896c7f9a41a055d220a0a0e832aa5ad008b7484a26 \
+  --power docs/reference/research/climate-paired-sample-178/nasa-power-merra2-durham-2023-raw.json \
+  --power-url 'https://power.larc.nasa.gov/api/temporal/hourly/point?parameters=T2M,RH2M&community=RE&longitude=-1.585&latitude=54.768&start=20230101&end=20231231&format=JSON&time-standard=UTC' \
+  --power-sha256 cba9cf308878e9a4b2f2847cbbc4e66f06d14a1b734d4da48be0133fef9c6db1 \
+  --retrieved-on 2026-10-22 --latitude 54.768 --longitude -1.585
+python3 -m unittest discover -s tools -p 'test_climate_paired_bounds.py' -v
+```
+
+The two modelled sources disagree: on the same 8,760 UTC hours ERA5 minus POWER
+averages +0.96 degC (mean absolute 1.24) for temperature and -7.1 points (mean
+absolute 8.3) for humidity, and NASA POWER's range is narrower (-3.35 to
+24.61 degC, 43.4 to 100 percent). This is the demonstrator accuracy limit and
+a reason the figures are labelled modelled and must not be presented as
+observed. Attribution if used: "Weather data by Open-Meteo.com", CC BY 4.0,
+indicating the values were summarised.
+
+### Pending for production (owner decision 2026-10-22)
+
+| Pending point | Status |
+| --- | --- |
+| Licence and reuse confirmation, including whether the demonstrator is non-commercial and the underlying C3S terms | Unmet; no approval is asserted. Open-Meteo's free tier excludes commercial use |
+| Precision against station observations for the North East | Pending; requires an authorised MIDAS or other station source |
+| Regional representativeness (one grid cell, one year, coast to Pennine terrain) | Pending |
+| ERA5 versus ERA5-Land, multi-year window | Pending |
+| NASA POWER licence text | Not retrieved |
+
+Status at the 2026-10-22 evidence boundary (superseded: #178 was later completed
+after owner-approved integration, see the integration continuation earlier in this
+document). Issue #178 criteria stayed unticked at that point: the comparison and a recorded source are
+done for a bounded demonstrator, bounds are record-derived from the modelled
+sample, and the licence criterion remains open until the owner confirms reuse.
+No indoor model, importer, 60,000-home dataset, #179, #180 or #193 work was
+done.
 
 ## Historical outdoor climate source decision (2026-10-16, Refs #178)
 

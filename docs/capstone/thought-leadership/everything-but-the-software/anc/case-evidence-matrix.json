@@ -1,0 +1,177 @@
+{
+  "schema_version": "1.0",
+  "created": "2026-10-27",
+  "scope": "Index of O1-O5 source locators reported in the manuscript, not a new independent source audit or execution record.",
+  "case_repository": "https://github.com/jmservera/ama",
+  "reported_case_commit": "29c6b512f5e68733bb2cc1882343db39f5eb2cad",
+  "case_period": {
+    "start": "2026-09-11",
+    "end": "2026-10-24"
+  },
+  "locator_policy": "Reported file/version/date locators are distinguished from inspected execution evidence. Null identifiers and unverified links must not be interpreted as completed checks.",
+  "experiment_status": "Planned twelve-trajectory pilot; not started; no experimental results.",
+  "observations": [
+    {
+      "id": "O1",
+      "manuscript_anchor": "tab:audittrail",
+      "reported_observation": "An MVP with sign-in and realistic synthetic data was used during 8-14 October; the replacement was reported on 16 October as having one case, no staff and no model.",
+      "evidence_state": "Partial: reported log provenance plus author account; no new execution corroboration.",
+      "sources": [
+        {
+          "kind": "repository_log",
+          "reported_path": "docs/reference/log.md",
+          "reported_commit": "29c6b512f5e68733bb2cc1882343db39f5eb2cad",
+          "reported_date_range": ["2026-10-08", "2026-10-14"],
+          "reported_later_entry_date": "2026-10-16",
+          "exact_entry_anchor": null,
+          "exact_lines": null,
+          "locator_independently_rechecked_in_this_revision": false
+        },
+        {
+          "kind": "author_report",
+          "reported_activity": "Intermittent use of the MVP",
+          "retained_execution_record": null
+        }
+      ],
+      "deployment_revision": null,
+      "before_after_journey_record": null,
+      "interpretation": "A usability discontinuity motivates checking migration, configuration and retained behaviour separately.",
+      "required_corroboration": [
+        "Recover dated before/after journey records and deployment revisions.",
+        "Execute the same journey against identified configurations before calling the observation a code regression."
+      ]
+    },
+    {
+      "id": "O2",
+      "manuscript_anchor": "tab:audittrail",
+      "reported_observation": "183 pull requests were merged during 15-24 October; the scorer recorded 5/5 completeness; the author could not sign in to the replacement.",
+      "evidence_state": "Partial: chronology and author report; release/scope correspondence and retained source captures remain unverified.",
+      "sources": [
+        {
+          "kind": "reported_github_api_metadata",
+          "reported_retrieval_date": "2026-10-24",
+          "reported_period": ["2026-10-15", "2026-10-24"],
+          "retained_response_path": null,
+          "response_checksum": null
+        },
+        {
+          "kind": "reported_rubric_score",
+          "score": "5/5 implementation completeness",
+          "score_capture_path": null,
+          "assessed_commit": null,
+          "assessed_capability_scope": null
+        },
+        {
+          "kind": "author_report",
+          "reported_activity": "Failed sign-in to the replacement",
+          "retained_execution_record": null
+        }
+      ],
+      "deployment_revision": null,
+      "same_release_contradiction_established": false,
+      "interpretation": "Completion and usability differed in the chronology; this is not yet a verified same-release contradiction.",
+      "required_corroboration": [
+        "Retain the dated API and score captures.",
+        "Link assessed commit, capability scope, deployment/configuration and failed journey before testing score/behaviour agreement."
+      ]
+    },
+    {
+      "id": "O3",
+      "manuscript_anchor": "tab:audittrail",
+      "reported_observation": "Requirements and log records grew; PR445 is reported as a two-line change accompanied by a 78-line evidence record.",
+      "evidence_state": "Reported repository/version locators; the index adds no new review-effort measurement.",
+      "sources": [
+        {
+          "kind": "requirements",
+          "reported_path": "docs/brds/agentic-retrofit-programme-brd.md",
+          "reported_version": "0.19",
+          "reported_commit": "29c6b512f5e68733bb2cc1882343db39f5eb2cad",
+          "locator_independently_rechecked_in_this_revision": false
+        },
+        {
+          "kind": "requirements",
+          "reported_path": "docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+          "reported_version": "0.18",
+          "reported_commit": "29c6b512f5e68733bb2cc1882343db39f5eb2cad",
+          "locator_independently_rechecked_in_this_revision": false
+        },
+        {
+          "kind": "pull_request",
+          "url": "https://github.com/jmservera/ama/pull/445",
+          "reported_changed_lines": 2,
+          "reported_evidence_record_lines": 78,
+          "exact_pr_commit": null,
+          "retained_diff_or_record_path": null
+        }
+      ],
+      "measured_review_effort": null,
+      "interpretation": "Artefact volume motivates examining burden; it is not itself a measure of decay or wasted effort.",
+      "required_corroboration": [
+        "Recover exact PR/diff and evidence-record locators.",
+        "Measure effort, avoided defects and accepted behaviour before assigning a net process cost."
+      ]
+    },
+    {
+      "id": "O4",
+      "manuscript_anchor": "tab:audittrail",
+      "reported_observation": "Log tracing found the last simplicity citation on 13 October; the replacement lacked registration/staff bindings.",
+      "evidence_state": "Reported log tracing and deployment account; actual session context and fault transmission are unverified.",
+      "sources": [
+        {
+          "kind": "repository_log",
+          "reported_path": "docs/reference/log.md",
+          "reported_commit": "29c6b512f5e68733bb2cc1882343db39f5eb2cad",
+          "reported_entry_date": "2026-10-13",
+          "reported_entry_topic": "Simplicity",
+          "exact_entry_anchor": null,
+          "actual_later_session_input_record": null
+        },
+        {
+          "kind": "reported_deployment_configuration",
+          "reported_missing_dependencies": ["registration bindings", "staff bindings"],
+          "deployment_revision": null,
+          "retained_configuration_record": null
+        }
+      ],
+      "interpretation": "The effective read path is a candidate explanation, not a demonstrated loss of agent knowledge.",
+      "required_corroboration": [
+        "Recover the actual later session inputs and configuration evidence.",
+        "Check whether the lesson was available, understood and executable rather than inferring absence of knowledge from a missing citation."
+      ]
+    },
+    {
+      "id": "O5",
+      "manuscript_anchor": "tab:audittrail",
+      "reported_observation": "Coordinator instructions and ADR0006 describe RPI records, full gates, delegated merging and migration priority; the author continued resolving blockers.",
+      "evidence_state": "Reported instruction/decision locators plus author account; product-use cadence was not independently instrumented.",
+      "sources": [
+        {
+          "kind": "coordinator_definition",
+          "reported_path": ".github/agents/ama-backlog-delivery-coordinator.agent.md",
+          "reported_commit": "29c6b512f5e68733bb2cc1882343db39f5eb2cad",
+          "exact_lines": null,
+          "actual_session_trace": null
+        },
+        {
+          "kind": "architecture_decision",
+          "reported_path": "docs/adrs/0006-src-layout-and-cutover.md",
+          "reported_commit": "29c6b512f5e68733bb2cc1882343db39f5eb2cad",
+          "exact_section_anchor": null
+        },
+        {
+          "kind": "author_report",
+          "reported_activity": "Approvals and technical-blocker resolution",
+          "retained_event_log": null
+        }
+      ],
+      "measured_product_use_cadence": null,
+      "independent_mechanism_assignment_audit": null,
+      "interpretation": "Substantial oversight can coexist with weak outcome-level feedback; the case does not isolate an autonomy effect.",
+      "required_corroboration": [
+        "Recover session and approval/product-use events where retained.",
+        "Independently challenge the candidate-mechanism assignments.",
+        "Keep migration, workload, model and deployment rivals distinct from the separate consolidation pilot."
+      ]
+    }
+  ]
+}

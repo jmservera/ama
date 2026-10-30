@@ -9,30 +9,158 @@ const chatProposalNames = {
   "quality-evidence": "Quality evidence",
 };
 
-function chatMessageItem(role, text, answer) {
-  const item = h("li", { class: `chat-msg chat-${role}` },
-    h("strong", {}, role === "user" ? "You" : "Assistant"), " ", h("span", {}, text));
-  if (answer) {
-    item.append(h("p", { class: "muted" }, answer.label || chatLabel));
-    if (answer.citations && answer.citations.length) {
-      item.append(h("ul", { "aria-label": "Sources cited" },
-        answer.citations.map((c) => h("li", {}, h("code", {}, c.id), c.text ? `: ${c.text}` : ""))));
-    } else if (answer.kind === "abstain") {
-      item.append(h("p", { class: "muted" }, "No permitted source answers this question."));
-    } else if (answer.kind === "refused") {
-      item.append(h("p", { class: "muted" }, "Outside the chat scope: use the workflow route in the reply."));
+const employeeChat = (() => {
+  let widget = null, controller = null;
+  const launcher = () => document.getElementById("employee-chat-launcher");
+  function reset(hide = false) {
+    controller?.abort();
+    controller = null;
+    widget?.dispose();
+    widget = null;
+    launcher().hidden = hide || !me || me.user.role === "Contractor";
+    launcher().onclick = open;
+  }
+  function install() {
+    const button = launcher();
+    button.hidden = !me || me.user.role === "Contractor";
+    if (button.hidden) return;
+    if (typeof window.ChatWidget?.create !== "function") {
+      button.hidden = true;
+      const session = me;
+      workspaceStatus.textContent = "Loading chat. Ordinary work remains available.";
+      retryWorkspaceScript("/chat-widget.js").then(() => {
+        if (me !== session) return;
+        if (typeof window.ChatWidget?.create === "function") install();
+        else workspaceStatus.textContent = "Chat could not load. Reload the page to try again, or continue with the ordinary workflow.";
+      });
+      return;
+    }
+    if (!widget) {
+      button.onclick = open;
+      window.ChatWidget.decorateLauncher(button);
     }
   }
-  return item;
+  async function open() {
+    if (widget) { widget.open(); return; }
+    if (typeof window.ChatWidget?.create !== "function") { install(); return; }
+    const session = me;
+    if (!session || session.user.role === "Contractor") return;
+    controller = new AbortController();
+    const signal = controller.signal;
+    const match = location.hash.match(/^#\/case\/([^?]+)/);
+    const caseId = match ? decodeURIComponent(match[1]) : "";
+    let tid = null;
+    const ui = window.ChatWidget.create({
+      id: "employee-chat", title: "Employee assistant", launcher: launcher(),
+      questionLabel: "Your work question", skillLabel: "Agent skill",
+    });
+    widget = ui;
+    const { input, select, send } = ui;
+    input.disabled = true;
+    const current = () => widget === ui && me === session && !signal.aborted;
+    const deny = () => {
+      const ownedFocus = ui.root.contains(document.activeElement);
+      reset();
+      workspaceStatus.textContent = "Chat access ended. Reopen from a record you can see, or sign in again.";
+      if (ownedFocus) app.focus();
+      launcher().hidden = !me || me.user.role === "Contractor";
+    };
+    select.append(ui.node("option", "General work help", { value: "general" }));
+    input.setAttribute("aria-describedby", "employee-chat-entry-warning employee-chat-error");
+    ui.beforeInput.append(ui.node("small",
+      "Do not enter personal or sensitive resident information. Chat cannot approve or change records.",
+      { id: "employee-chat-entry-warning", class: "chat-widget-meta" }));
+    input.addEventListener("input", () => {
+      if (input.value) {
+        input.dataset.caseDirty = "true";
+        ui.form.dataset.unsaved = "true";
+      } else {
+        delete input.dataset.caseDirty;
+        delete ui.form.dataset.unsaved;
+      }
+    });
+    ui.intro.append(
+      h("p", {}, caseId ? `Context: case ${caseId}. Only facts your role may see are used.` : "General work help. No case or home record is visible. Open a case for record questions."),
+      h("p", { id: "employee-chat-privacy" }, `${chatLabel}. Chat cannot approve, send, book or change records. Do not enter resident names, contact details or sensitive personal information. Stored questions are masked where possible; masking can miss details.`));
+    ui.form.onsubmit = async event => {
+      event.preventDefault();
+      if (send.disabled) return;
+      const question = input.value.trim();
+      if (!question) { ui.fail("Type a question first."); ui.focusInput(); return; }
+      const draft = input.value, skill = select.value;
+      ui.clearError();
+      ui.busy(true);
+      ui.setStatus("Asking the assistant.");
+      ui.message("user", question);
+      try {
+        if (!tid) {
+          const thread = await api("/api/chat/threads", { case_id: caseId }, signal);
+          if (!current()) return;
+          tid = thread.id;
+        }
+        const answer = await api(`/api/chat/threads/${encodeURIComponent(tid)}/ask`, { content: question, skill }, signal);
+        if (!current()) return;
+        ui.message("assistant", answer.reply, {
+          label: answer.workflow_only ? "Workflow-only help, no record changed" : answer.label,
+          detail: `Skill: ${answer.skill}. ${answer.kind === "answer" ? "AI-generated content may be incorrect. Check the sources." : "Workflow-only or unverified help. No record changed."}`,
+          sources: (answer.citations || []).map(source => `${source.id}: ${source.text}`),
+        });
+        if (input.value === draft) {
+          input.value = "";
+          delete input.dataset.caseDirty;
+          delete ui.form.dataset.unsaved;
+        }
+        ui.setStatus("Answer added. Check the sources before relying on it.");
+      } catch (error) {
+        if (!current()) return;
+        if ([401, 403, 404].includes(error.status)) { deny(); return; }
+        ui.fail(`Chat unavailable: ${error.message} Try again or continue with the ordinary workflow.`);
+      } finally {
+        if (current()) ui.busy(false);
+      }
+    };
+    ui.open();
+    ui.busy(true);
+    ui.setStatus("Loading skills.");
+    try {
+      const [data, admission] = await Promise.all([
+        api("/api/chat/skills", undefined, signal),
+        api("/api/chat/status", undefined, signal),
+      ]);
+      if (!current()) return;
+      if (typeof admission.warning !== "string" || !admission.warning.trim()) {
+        throw new Error("The privacy warning is missing.");
+      }
+      ui.intro.append(h("p", { id: "chat-privacy" },
+        `${admission.warning} Retention: ${admission.retention}. Synthetic data only. Model activation requires separate approval.`));
+      input.setAttribute("aria-describedby", "employee-chat-entry-warning chat-privacy employee-chat-error");
+      for (const skill of data.skills) select.append(h("option", { value: skill.id }, `${skill.id}: ${skill.purpose}`));
+      input.disabled = false;
+      ui.busy(false);
+      ui.setStatus("Choose a skill or ask a general work question.");
+    } catch (error) {
+      if (!current()) return;
+      if ([401, 403, 404].includes(error.status)) {
+        deny();
+        return;
+      }
+      ui.busy(false);
+      send.disabled = true;
+      ui.fail(`Chat unavailable: ${error.message} Reload the page to try again, or continue with the ordinary workflow.`);
+    }
+  }
+  return { install, reset, open };
+})();
+
+function clearSubmittedQuestion(sent) {
+  if (!caseFieldUnchanged(sent)) return;
+  sent.field.value = "";
+  sent.field.removeAttribute("data-case-dirty");
 }
 
 function chatCasePanel(id) {
   let threadId = null;
-  const log = h("ol", { class: "chat-log", "aria-label": "Conversation" });
-  const liveLog = h("div", { role: "log", "aria-live": "polite", "aria-label": "Conversation updates" }, log);
   const status = h("p", { role: "status" }, "");
-  const input = h("textarea", { id: "chat-question", maxlength: "1000", rows: "3" });
-  const send = h("button", { type: "submit" }, "Ask");
   const proposals = h("div", { class: "row" });
   const say = (text) => { status.textContent = text; };
   const ensureThread = async () => {
@@ -40,29 +168,11 @@ function chatCasePanel(id) {
     threadId = (await api("/api/chat/threads", { case_id: id })).id;
     return threadId;
   };
-  const ask = async (event) => {
-    event.preventDefault();
-    const question = input.value.trim();
-    if (!question) { say("Type a question first."); return; }
-    send.disabled = true;
-    say("Asking the assistant. The ordinary case controls stay available.");
-    log.append(chatMessageItem("user", question));
-    input.value = "";
-    try {
-      const tid = await ensureThread();
-      const answer = await api(`/api/chat/threads/${encodeURIComponent(tid)}/ask`, { content: question });
-      log.append(chatMessageItem("assistant", answer.reply, answer));
-      say(answer.workflow_only ? "The assistant is not available. Continue with the ordinary workflow." : "New answer added.");
-    } catch (e) {
-      say(`Chat unavailable: ${e.message} Continue with the ordinary case workflow.`);
-    } finally { send.disabled = false; input.focus(); }
-  };
   const requestProposal = async (capability) => {
     say("Requesting a proposal for independent review.");
     try {
       const tid = await ensureThread();
       await api(`/api/chat/threads/${encodeURIComponent(tid)}/proposals`, { capability });
-      log.append(chatMessageItem("assistant", "Proposal requested. It needs a separate source check and role review before anything changes."));
       say("Proposal requested. Find it in the proposals panel and the review queue.");
     } catch (e) { say(`Proposal not requested: ${e.message}`); }
   };
@@ -71,12 +181,11 @@ function chatCasePanel(id) {
       proposals.append(h("button", { type: "button", class: "alt", onclick: () => requestProposal(a.id) },
         `Request proposal: ${chatProposalNames[a.id] || a.id}`));
     }
-  }).catch(() => {});
+  }).catch(error => say(`Proposal requests unavailable: ${error.message} Continue ordinary case work manually.`));
   return h("details", { class: "card", id: "chat-panel" },
     h("summary", {}, "Ask the assistant about this case (optional)"),
     h("p", { class: "muted" }, `${chatLabel}. Answers cite only sources your role may see. The assistant cannot change a record, approve, send or book anything; it can only request a proposal that someone else reviews. Do not type personal details about residents.`),
-    liveLog,
-    h("form", { onsubmit: ask }, h("label", { for: "chat-question" }, "Your question"), input, send),
+    h("button", { type: "button", onclick: () => employeeChat.open() }, "Open chat"),
     proposals, status, regulatoryChatPanel(id));
 }
 
@@ -150,6 +259,7 @@ function regulatoryAlertsPanel(caseId) {
           h("dt", {}, "Check recorded at"), h("dd", {}, `${alert.at || "unknown"}; step: ${alert.step || "unknown"}; card: ${alert.card_id}@${alert.card_version}`),
           h("dt", {}, "Current control"), h("dd", {}, alert.active_control ? "Active bounded control" : "Not active or source uncertain; retained risk still needs human review"),
           h("dt", {}, "Latest check"), h("dd", {}, `${alert.latest_result || "unknown"} at ${alert.latest_evaluated_at || "unknown"}`)),
+        h("p", {}, alert.usage ? "Model calls per check and alert: 0. Inference is disabled for every role. Service cost: Unknown; price and billing allocation are not held." : "Historical model usage was not recorded. Service cost: Unknown."),
         h("h4", {}, "Source and status"), regulatorySources(alert.citations),
         h("p", {}, `Owner acknowledgement: ${alert.requires_acknowledgement ? "required" : "not outstanding"}. Owner outcome: ${alert.requires_outcome ? "required" : "not outstanding"}. This panel cannot acknowledge, decide compliance or restart stopped retrofit work.`))));
       status.textContent = `${alerts.length} visible alerts. Coverage: ${data.coverage_status || "unknown"}. ${alerts.length ? "Only alerts permitted for your role are shown." : "No visible alerts does not mean no risk, complete coverage or compliance."}`;
@@ -172,16 +282,29 @@ function regulatoryChatPanel(caseId) {
   const status = h("p", { role: "status" });
   const privacy = h("p", { id: "regulatory-privacy", class: "muted" },
     "Synthetic data only. Do not enter resident personal or special-category details. DPIA and retention review remain incomplete.");
+  const usageStatus = h("p", { id: "regulatory-usage", "aria-live": "polite", "aria-atomic": "true" },
+    "Recorded usage is not available yet. No model calls are permitted.");
+  const showUsage = (usage) => {
+    const n = new Intl.NumberFormat();
+    const day = new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeZone: "UTC" })
+      .format(new Date(`${usage.period}T00:00:00Z`));
+    usageStatus.textContent = `Your current role: ${usage.role}. Recorded usage for ${day} (UTC): ${n.format(usage.recorded_turns)} turns; ${n.format(usage.outcomes.answer)} answers, ${n.format(usage.outcomes.refused)} refusals, ${n.format(usage.outcomes.conflict)} conflicts. ${usage.coverage === "bounded_partial" ? "Partial audit window." : "Audit records only."} This is not an exact turn total. Model-call limit per role and UTC day: 0. Service cost: Unknown; accepted-check counts, prices, billing allocation and review effort are not held.`;
+  };
+  const refreshUsage = async () => {
+    try { showUsage(await api("/api/chat/regulatory/usage")); }
+    catch (e) { usageStatus.textContent = `Recorded usage unavailable: ${e.message} No model calls are permitted; use the human owner route.`; }
+  };
   const log = h("ol", { "aria-label": "Cited regulatory turns" });
   const liveLog = h("div", { role: "log", "aria-live": "polite", "aria-label": "Cited regulatory updates" }, log);
-  const input = h("textarea", { id: "regulatory-question", maxlength: "1000", rows: "3", "aria-describedby": "regulatory-privacy" });
+  const input = h("textarea", { id: "regulatory-question", name: "regulatory-question", autocomplete: "off", maxlength: "1000", rows: "3", "aria-describedby": "regulatory-privacy" });
   const button = h("button", { type: "submit" }, "Look up cited sources");
   let tid = null;
   const show = (answer, thread) => {
     const sections = answer.sections;
     const item = h("li", { class: "regulatory-turn" },
       h("h3", {}, `Lookup status: ${answer.kind}`),
-      h("p", {}, answer.label || "synthetic-demo: not legal advice or approval"));
+      h("p", {}, answer.label || "synthetic-demo: not legal advice or approval"),
+      h("p", {}, answer.usage ? "Model calls for this question: 0. Inference is disabled. Service cost: Unknown, not zero." : "Historical model usage was not recorded. Service cost: Unknown."));
     if (sections) {
       item.append(h("h4", {}, "What the sources say"),
         h("p", { class: "plain-explanation" }, "These are exact excerpts, not a decision about which duty applies. Check the source status and dates."),
@@ -212,18 +335,25 @@ function regulatoryChatPanel(caseId) {
         doubt.removeAttribute("aria-disabled");
       }
     } }, "In doubt: send this turn to Juan Manuel Servera");
+    if (answer.escalation) {
+      doubt.setAttribute("aria-disabled", "true");
+      doubt.textContent = "Sent to exercise owner; awaiting human review";
+      item.append(h("p", {}, `Turn sent to ${answer.escalation.owner}'s exercise inbox. No legal decision recorded.`));
+    }
     item.append(citations, doubt);
     log.append(item);
   };
   root.append(h("p", {}, "synthetic-demo only. Exact source excerpts and recorded facts, not legal interpretation. Ask about hazard sources or automated decisions. Safety routes and deterministic alerts remain independent."),
-    privacy,
+    privacy, usageStatus,
     regulatoryPlainMode(root, "chat-plain-mode"),
     h("p", { class: "plain-explanation" }, "Use short questions to find sources. Missing, conflicting, stale or future sources are not proof of a duty. For lease, grant or contract terms, obtain the actual document and ask the named human owner."),
     regulatoryGuidance(me.user.role),
     liveLog, h("form", { onsubmit: async (event) => {
       event.preventDefault();
+      if (button.disabled) return;
       const question = input.value.trim();
-      if (!question) { status.textContent = "Enter a source question."; return; }
+      if (!question) { status.textContent = "Enter a source question."; input.focus(); return; }
+      const sent = snapshotCaseFields([input])[0];
       button.disabled = true;
       status.textContent = "Looking up cited sources. Human safety routes remain available.";
       try {
@@ -231,8 +361,9 @@ function regulatoryChatPanel(caseId) {
         const answer = await api(`/api/chat/regulatory/threads/${encodeURIComponent(tid)}/ask`, { content: question });
         log.append(h("li", {}, h("strong", {}, "You"), " ", question));
         show(answer, tid);
-        status.textContent = `${answer.kind}: synthetic-demo turn stored with its sources.`;
-        if (input.value.trim() === question) input.value = "";
+        status.textContent = `${answer.kind}: synthetic-demo turn stored with its sources.${answer.escalation ? " Conflict sent to the exercise owner for human review." : ""}`;
+        clearSubmittedQuestion(sent);
+        void refreshUsage();
       } catch (e) { status.textContent = `Cited lookup unavailable: ${e.message} Use the ordinary human route.`; }
       finally { button.disabled = false; input.focus(); }
     } }, h("label", { for: "regulatory-question" }, "Cited source question"), input, button),
@@ -253,6 +384,7 @@ function regulatoryChatPanel(caseId) {
     status.textContent = "Synthetic source lookup available. No legal approval is implied.";
     const schedule = admission.privacy.chat;
     privacy.textContent = `${admission.warning} DPIA: draft for DPO review. Retention: ${schedule.status === "simulated" ? `${schedule.days} days (simulated only)` : "unknown, DPO period not set"}. No automatic deletion or operational approval.`;
+    showUsage(admission.usage);
     try {
       const threads = await api("/api/chat/threads");
       const latest = threads.find((thread) => thread.case_id === caseId &&
@@ -260,11 +392,14 @@ function regulatoryChatPanel(caseId) {
       if (!latest) return;
       const history = await api(`/api/chat/regulatory/threads/${encodeURIComponent(latest.id)}`);
       tid = history.id;
+      const receipts = new Map(history.messages.filter((turn) => turn.role === "assistant")
+        .map((turn) => JSON.parse(turn.content)).filter((turn) => Number.isInteger(turn.referred_turn))
+        .map((receipt) => [receipt.referred_turn, receipt]));
       for (const turn of history.messages) {
         if (turn.role === "user") log.append(h("li", {}, h("strong", {}, "You"), " ", turn.content));
         else {
           const answer = JSON.parse(turn.content);
-          if (answer.schema === "regulatory-chat-v1") show({ ...answer, turn: turn.seq }, tid);
+          if (answer.schema === "regulatory-chat-v1") show({ ...answer, turn: turn.seq, escalation: receipts.get(turn.seq) }, tid);
         }
       }
       status.textContent = "Stored synthetic-demo excerpts restored. These are historical records; ask again for a fresh lookup.";

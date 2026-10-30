@@ -1,0 +1,76 @@
+{
+  "task_id": "520-safety",
+  "task_slug": "resident-chat-520-safety",
+  "parent_task": {"task_id": "520", "task_slug": "resident-chat-520"},
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "blocked",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-28/resident-chat-520-safety-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-28/resident-chat-520-safety-plan.md",
+    "details": ".copilot-tracking/details/2026-10-28/resident-chat-520-safety-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-28/resident-chat-520-safety-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-28/resident-chat-520-safety-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-28/resident-chat-520-safety-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Caller explicitly authorizes all four RPI phases in sequence, local commit, normal push if publication gates permit, and fixing-thread reply/resolution. No automatic follow-up session inferred.",
+      "status": "confirmed",
+      "evidence": "2026-10-28 user request; PR #525 thread PRRT_kwDOUU8JX86xVvlj"
+    },
+    {
+      "decision": "Reuse existing SAFETY text; preserve ordinary routing, Refs #520, prior RPI evidence and human acceptance boundaries. No az/Azure, secrets, .env, private datasets or force push.",
+      "status": "confirmed",
+      "evidence": "2026-10-28 user request"
+    },
+    {
+      "decision": "Clean matching topic branch and open PR verified. Fetched origin and ran git pull --ff-only before changes: already up to date at 49561c345e367a4abfd289cf2cfdf8c7036ab61d.",
+      "status": "recorded",
+      "evidence": "Intake git/gh inspection"
+    },
+    {
+      "decision": "Research executed, Planning Readiness Ready. Plan ready after exactly one independent critique Complete / Revise; PC-001 rejected because replacing explicitly required /tmp shared lock conflicts with caller direction and relies on an unsupported parent path prohibition. Original critique preserved.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/plans/2026-10-28/resident-chat-520-safety-plan.md"
+    },
+    {
+      "decision": "P01 and P02-T01 completed. Final-source 47 hazard and 30 baseline-equivalent ordinary queries; 33 focused tests; API discovery 1182 tests, OK with 316 skips; Ruff100/format/mypy97; actual Chromium/pinned axe32 states, zero reported violations and seven contrast incompletes. SAFETY/answer and ordinary branches unchanged.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/changes/2026-10-28/resident-chat-520-safety-changes.md"
+    },
+    {
+      "decision": "Exactly one original independent Review executed Complete / Residual work; bounded source conformant, no implementation defects. RV-001 Medium publication gap and RV-002 Low inherited contrast/human acceptance routed to distinct later work. No source correction or another Review.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-28/resident-chat-520-safety-review.md"
+    },
+    {
+      "decision": "Local fixing commit 8e57253a8dbe30ada2ec747552ef12533e476955 contains implementation and original dated RPI evidence. Clean tracked/untracked tree, privacy-safe author/committer, exact required trailer and four reviewed source hashes verified. Final evidence-only handoff commit changes no assessed source. No push, thread reply/resolution or az/Azure.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/changes/2026-10-28/resident-chat-520-safety-changes.md"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "full-gate-no-az",
+      "summary": "Mandatory full exact-head publication gate preflight executes az; caller prohibits all az/Azure. Scoped passing evidence is not a full receipt.",
+      "resolution": "Commit locally as explicitly authorized; coordinator obtains required current-base full receipt and independent exact-head assessment, pushes normally, replies and resolves the named thread."
+    }
+  ],
+  "next_action": {"phase": "Review", "action": "Coordinator clears RV-001 with mandatory full current-base exact-head receipt and independent exact-head assessment, pushes this branch normally, replies with fixing commit 8e57253a8dbe30ada2ec747552ef12533e476955 and resolves PRRT_kwDOUU8JX86xVvlj. Keep Refs #520 and original adverse evidence. No automatic child work or repeated Review."},
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator establishes complete current-base exact-head receipt and publication",
+      "rationale": "Only publication blocker; preserves caller no-az boundary while enabling normal push, fixing-commit reply and resolution of PRRT_kwDOUU8JX86xVvlj.",
+      "evidence": "Original Review RV-001; full-gate-no-az"
+    },
+    {
+      "rank": 2,
+      "task": "Existing acceptance owner completes contrast, human/resident and assistive-technology assessment",
+      "rationale": "Retained automated incompletes do not establish conformance; separate acceptance, not a routing implementation defect.",
+      "evidence": "Original Review RV-002; safety-browser/report.json"
+    }
+  ]
+}

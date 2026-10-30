@@ -1,0 +1,54 @@
+{
+  "started": "2026-10-30T09:43:51.972236+00:00",
+  "mode": "employee-only",
+  "sites": {
+    "employee": {
+      "started": "2026-10-30T09:43:52.429340+00:00",
+      "password_submitted": true,
+      "stage": "decline_stay_signed_in",
+      "stay_signed_in_navigation_timeout": true,
+      "outcome": "provider_flow_not_completed",
+      "ended": "2026-10-30T09:49:52.507911+00:00",
+      "final_host": "login.microsoft.com",
+      "remaining_controls": [
+        {
+          "tag": "button",
+          "type": "button",
+          "id": "idBtn_Back",
+          "disabled": false
+        },
+        {
+          "tag": "a",
+          "type": null,
+          "id": "ftrTerms",
+          "disabled": false
+        },
+        {
+          "tag": "a",
+          "type": null,
+          "id": "ftrPrivacy",
+          "disabled": false
+        },
+        {
+          "tag": "a",
+          "type": null,
+          "id": "moreOptions",
+          "disabled": false
+        }
+      ],
+      "failure_categories": {
+        "invalidPassword": false,
+        "accessDenied": false,
+        "staySignedIn": false,
+        "permissionConsent": false,
+        "unavailable": false,
+        "updatePassword": false,
+        "signInBlocked": false
+      }
+    }
+  },
+  "browser_version": "156.0.8078.4",
+  "browser_closed": true,
+  "owned_scratch_removed": true,
+  "ended": "2026-10-30T09:49:52.591495+00:00"
+}

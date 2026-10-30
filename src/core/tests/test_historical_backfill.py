@@ -126,6 +126,7 @@ class HistoricalBackfillTests(unittest.TestCase):
             self.assertEqual(files(root / "a"), files(root / "b"))
             self.assertEqual(manifest["rows"], 8)
             self.assertEqual(manifest["homes_covered"], 2)
+            self.assertEqual(manifest["version"], "sensor-backfill-integrated-v2")
             self.assertEqual(manifest["schema_version"], "sensor-fault-input-v1")
             composed, household, retrofit = (
                 manifest[key] for key in ("composed_model", "household_model", "retrofit_model")
@@ -287,6 +288,36 @@ class HistoricalBackfillTests(unittest.TestCase):
                         write.assert_not_called()
                         series.assert_not_called()
                         process.assert_not_called()
+
+    def test_stale_composed_version_refuses_before_scratch_replay_or_consumer(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            stock, climate = selection(), ConstructedClimate()
+            sb.write(root / "history", stock=stock, climate=climate, days=1, cadence=720)
+            path = root / "history/manifest.json"
+            manifest = json.loads(path.read_text())
+            path.write_text(json.dumps({**manifest, "version": "sensor-backfill-integrated-v1"}))
+            store = store_at(str(root))
+            self.addCleanup(store.db.close)
+            consumer = SensorConsumer(store)
+            with (
+                patch(
+                    "zava_forward.core.synthetic.sensor_backfill.tempfile.TemporaryDirectory"
+                ) as scratch,
+                patch.object(sb, "write") as replay,
+                patch.object(consumer, "process") as process,
+            ):
+                with self.assertRaisesRegex(ValueError, "Current composed synthetic snapshot"):
+                    sb.load_with_consumer(
+                        consumer,
+                        root / "history",
+                        stock=stock,
+                        climate=climate,
+                        received_at=RECEIVED,
+                    )
+                scratch.assert_not_called()
+                replay.assert_not_called()
+                process.assert_not_called()
 
     def test_zero_granted_replay_preserves_metadata_budget(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

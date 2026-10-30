@@ -1,0 +1,42 @@
+{
+  "task_id": "live-acceptance-1030c-2026-10-30",
+  "task_slug": "live-acceptance-1030c",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/live-acceptance-1030c-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/live-acceptance-1030c-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/live-acceptance-1030c-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-10-30/live-acceptance-1030c-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/live-acceptance-1030c-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/live-acceptance-1030c-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Full ordered loop explicitly requested at intake; automatic progression and local commit only",
+      "status": "confirmed",
+      "evidence": "Caller request 2026-10-30; no push, Refs-only, two attempts per site"
+    },
+    {"decision":"Research executed / Ready; critique executed once / Revise, PC-001 rejected for nonexistent constraint, PC-002..004 applied; Plan Ready","status":"recorded","evidence":".copilot-tracking/plans/2026-10-30/live-acceptance-1030c-plan.md"},
+    {"decision":"Bounded implementation complete; original and second source/evidence hashes verified, nine offline safety tests and Ruff pass; one resident/two employee launches; no further live action","status":"recorded","evidence":".copilot-tracking/changes/2026-10-30/live-acceptance-1030c-changes.md"},
+    {"decision":"One independent Review executed Complete / Not accepted, assessed immutable run sources/evidence and 24 criteria; RV-001 High, RV-002/003 Medium, RV-004 Low retained and routed, no repeat Review","status":"recorded","evidence":".copilot-tracking/reviews/logs/2026-10-30/live-acceptance-1030c-review.md"},
+    {"decision":"RV-002 qualifies historical 550-05 visibility assertion: current outcome Partial; effective 3 scoped Proven, 9 Partial, 12 Unproven, no source repair or closure claimed","status":"qualified","evidence":".copilot-tracking/changes/2026-10-30/live-acceptance-1030c-changes.md"},
+    {"decision":"Local implementation/evidence committed 040e2a4a; original full gate attempted and failed on project-api required integration skips; no full receipt pass. Final metadata commit and exact-head attempt next, outcome external","status":"recorded","evidence":".copilot-tracking/changes/2026-10-30/live-acceptance-1030c-changes.md"}
+  ],
+  "blockers": [
+    {"id":"employee-identity","summary":"Final /api/me HTTP 200 and valid role/provider/schema, but expectedIdentity false; employee features unperformed; two attempts exhausted","resolution":"Owner-led authoritative identity reconciliation and separately authorized later acceptance"},
+    {"id":"enabled-ai","summary":"AI deliberately disabled; enabled AI label/grounding criteria unproven","resolution":"Separate authorized enabled-model acceptance, not activation in this task"},
+    {"id":"complete-gate","summary":"Original full gate failed project-api unexpected required integration/dependency skips; no browser/MSSQL groups or successful full receipt","resolution":"Later gate-maintainer reconciliation and clean exact-head full receipt before publication; final current-task attempt result external"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Parent commits final metadata and runs exact-head full gate; authoritative result in external session files/live-acceptance-1030c-closeout.json; then await explicitly selected follow-up, no child or further live auth"},
+  "prioritized_follow_ups": [
+    {"rank":1,"task":"Reconcile requested-account identity projection","rationale":"Blocks every employee live criterion; no third attempt authorized","evidence":".copilot-tracking/changes/2026-10-30/live-acceptance-1030c/second/evidence.json"},
+    {"rank":2,"task":"Harden runner visibility predicates and failure-path tests","rationale":"RV-002/003 medium; small bounded implementation with strong engineering-quality leverage before reuse; owner runner maintainer","evidence":".copilot-tracking/reviews/logs/2026-10-30/live-acceptance-1030c-review.md"},
+    {"rank":3,"task":"Complete employee widget/map/case live acceptance","rationale":"High acceptance value after identity and runner readiness; owner acceptance coordinator; not product defects yet","evidence":".copilot-tracking/changes/2026-10-30/live-acceptance-1030c-changes.md"},
+    {"rank":4,"task":"Separately authorized enabled-model acceptance","rationale":"Required model/label/grounding evidence cannot be inferred from disabled-AI fallback; model/acceptance owner","evidence":".copilot-tracking/changes/2026-10-30/live-acceptance-1030c-changes.md"},
+    {"rank":5,"task":"Named human accessibility and AT acceptance","rationale":"Browser semantics do not establish whole-baseline or native AT acceptance; accessibility acceptance owner","evidence":".copilot-tracking/reviews/logs/2026-10-30/live-acceptance-1030c-review.md"}
+  ]
+}

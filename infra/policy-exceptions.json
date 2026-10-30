@@ -5,7 +5,7 @@
       "id": "EX-001",
       "scope": "Resource group tag SecurityControl=Ignore on the development stack",
       "policy": "MCAPS external policy that reverts Azure SQL publicNetworkAccess to Disabled",
-      "reason": "Development profile with allowPublicNetworkAccess=true needs SQL reachable from external networks (infra/README.md, Development access from external networks)",
+      "reason": "Historical development exception recorded before SQL became always private. Current templates and deployment helpers require SQL publicNetworkAccess=Disabled in every profile; this record grants no present public SQL access or policy bypass.",
       "owner": "Juan Manuel Servera",
       "expiry": "2026-12-31",
       "expiryStatus": "set 2026-10-15: expires 2026-12-31 or when the development stack is retired, whichever is first; never apply to a pilot resource group",

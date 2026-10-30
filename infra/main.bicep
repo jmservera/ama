@@ -21,19 +21,28 @@ param teamsWebhookUrl string = ''
 @allowed(['blob', 'sharepoint'])
 param evidenceStore string = 'blob'
 param sharePointSiteId string = ''
-@description('Monthly budget in the billing currency, with alerts at 80 and 100 percent forecast and actual.')
+@description('Monthly budget in the billing currency. Notifications above 80 percent actual and 100 percent forecast are not a hard cap.')
 param monthlyBudget int = 300
 param budgetStartDate string = utcNow('yyyy-MM-01')
+@description('Enable new job/IoT alert candidates only after separate named-human signal, owner and threshold approval. Defaults disabled; see infra/monitoring-runbooks.md.')
+param enableCandidateMonitoringAlerts bool = false
+@description('Non-secret reference to separate monitoring activation approval. Empty or whitespace keeps candidates disabled; a string is not approval evidence by itself.')
+param monitoringApprovalReference string = ''
 @description('IoT Hub tier for simulated in-use monitoring (ADR 0003 decision 6, issue 140).')
-@allowed(['B1', 'S1'])
+@allowed(['B1'])
 param iotHubSku string = 'B1'
 @minValue(1)
+@maxValue(1)
 param iotHubUnits int = 1
 @minValue(1)
 @maxValue(7)
 param iotHubRetentionDays int = 1
-@description('Estimated monthly IoT Hub cost in the billing currency; sets the hub-scoped budget. An estimate to confirm against the Azure pricing page before provisioning.')
-param iotHubMonthlyCost int = 25
+@description('Monthly IoT transport allocation in the billing currency, including the keyless Event Hub adapter and endpoints. Alerts only; verify total USD700 headroom before any provisioning.')
+@minValue(1)
+@maxValue(700)
+param iotHubMonthlyCost int = 60
+@description('Bootstrap false registers no custom endpoint or route. Set and preserve true only after separately approved IoT sender-role propagation verification.')
+param iotHubRoutingReady bool = false
 @description('Entra security group that administers the SQL server (no SQL logins exist).')
 param sqlAdminGroupName string
 param sqlAdminGroupObjectId string
@@ -94,23 +103,26 @@ param allowPublicNetworkAccess bool = false
 param keyVaultPurgeProtection bool = true
 @description('Development only. Explicit false permits immediate image pulls without quarantine. Production requires true.')
 param registryQuarantineEnabled bool = true
-@description('CanNotDelete locks on stateful resources.')
+@description('CanNotDelete locks on stateful resources. Required for pilot deployments.')
 param enableLocks bool = false
-@description('Model deployments. The standard tier is the default; the capable tier is used only where the PRD model evaluation shows the standard tier misses a task threshold.')
+@description('Small employee chat model. Model availability and task evaluation must be checked before activation.')
+param chatModelName string = 'gpt-4.1-nano'
+@description('Pinned ARM model version, not the combined provider response-model identity.')
+param chatModelVersion string = '2025-04-14'
+@allowed(['GlobalStandard', 'Standard'])
+param chatModelSku string = 'GlobalStandard'
+@description('Chat model throughput capacity, not a monetary spending cap. One is the smallest requested allocation.')
+@minValue(1)
+param chatModelCapacity int = 1
+@description('Explicit model override for existing/evaluated stacks. First entry serves standard; second serves capable, or the first serves both when only one is configured. A shared model does not establish capable-tier quality.')
+@minLength(1)
 param modelDeployments array = [
   {
     name: 'standard'
-    model: 'gpt-4.1-mini'
-    version: '2025-04-14'
-    skuName: 'GlobalStandard'
-    capacity: 30
-  }
-  {
-    name: 'capable'
-    model: 'gpt-4.1'
-    version: '2025-04-14'
-    skuName: 'GlobalStandard'
-    capacity: 30
+    model: chatModelName
+    version: chatModelVersion
+    skuName: chatModelSku
+    capacity: chatModelCapacity
   }
 ]
 @description('Region for the Azure SQL server when the primary region is not accepting new SQL servers. The private endpoint stays in the primary VNet.')
@@ -147,6 +159,8 @@ var storageQueueDataSender = 'c6a89b2d-59bc-44d0-9896-0f6e12d7b80a'
 module guard 'modules/guard.bicep' = {
   name: 'parameter-guard'
   params: {
+    resourceGroupMustBeAma: resourceGroup().name == 'ama' ? 'ok' : ''
+    primaryLocationMustBeUKSouth: location == 'uksouth' ? 'ok' : ''
     productionProfileForbidsPublicNetworkAccess: isDev || !allowPublicNetworkAccess ? 'ok' : ''
     productionProfileRequiresKeyVaultPurgeProtection: isDev || keyVaultPurgeProtection ? 'ok' : ''
     productionProfileRequiresRegistryQuarantine: isDev || registryQuarantineEnabled ? 'ok' : ''
@@ -155,6 +169,7 @@ module guard 'modules/guard.bicep' = {
     deploymentLocationsMustBeSelected: !empty(location) && !empty(sqlLocation) ? 'ok' : ''
     publicEdgeRequiresProductionProfile: !enablePublicEdge || (!isDev && !allowPublicNetworkAccess) ? 'ok' : ''
     pilotRequiresProductionProfile: environmentName != 'pilot' || (!isDev && !allowPublicNetworkAccess) ? 'ok' : ''
+    pilotRequiresLocks: environmentName != 'pilot' || enableLocks ? 'ok' : ''
     publicEdgeRequiresApplications: !enablePublicEdge || deployApplications ? 'ok' : ''
     sharePointEvidenceStoreRequiresSiteId: evidenceStore != 'sharepoint' || !empty(sharePointSiteId) ? 'ok' : ''
     tokenStoreReadyRequiresTokenStore: !entraTokenStoreReady || enableEntraTokenStore ? 'ok' : ''
@@ -301,6 +316,7 @@ module foundry 'modules/foundry.bicep' = {
 
 module iotHub 'modules/iothub.bicep' = {
   name: 'iothub'
+  dependsOn: [guard]
   params: {
     allowPublicNetworkAccess: publicAccess
     name: 'iot-${prefix}-${unique}'
@@ -309,11 +325,12 @@ module iotHub 'modules/iothub.bicep' = {
     workspaceId: monitoring.outputs.workspaceId
     peSubnetId: network.outputs.peSubnetId
     zoneIds: network.outputs.zoneIds
-    consumerPrincipalIds: [identity.outputs.principalIds.api]
+    consumerPrincipalId: identity.outputs.principalIds.api
     skuName: iotHubSku
     unitCount: iotHubUnits
     retentionDays: iotHubRetentionDays
     monthlyCostEstimate: iotHubMonthlyCost
+    routingReady: iotHubRoutingReady
     alertEmail: alertEmail
     budgetStartDate: budgetStartDate
   }
@@ -340,8 +357,10 @@ module apps 'modules/containerapps.bicep' = if (deployApplications || deployEnvi
     sqlDatabaseName: sql.outputs.databaseName
     storageAccountName: storage.outputs.name
     foundryEndpoint: foundry.outputs.endpoint
+    openAiEndpoint: foundry.outputs.openAiEndpoint
     foundryProjectName: foundry.outputs.projectName
-    modelDeploymentNames: { standard: 'standard', capable: 'capable' }
+    modelDeploymentNames: foundry.outputs.modelDeploymentNames
+    modelVersions: foundry.outputs.modelVersions
     keyVaultUri: 'https://${keyvault.outputs.name}${environment().suffixes.keyvaultDns}'
     entraClientId: entraClientId
     entraClientSecretName: entraClientSecretName
@@ -551,6 +570,7 @@ resource ledgerVerifyMissing 'Microsoft.Insights/scheduledQueryRules@2023-03-15-
     scopes: [monitoring.outputs.workspaceId]
     evaluationFrequency: 'PT1H'
     windowSize: 'P1D'
+    overrideQueryTimeRange: 'PT26H'
     criteria: {
       allOf: [
         {
@@ -563,6 +583,31 @@ resource ledgerVerifyMissing 'Microsoft.Insights/scheduledQueryRules@2023-03-15-
       ]
     }
     actions: { actionGroups: [monitoring.outputs.actionGroupId] }
+  }
+}
+
+module operationalMonitoring 'modules/operationalMonitoring.bicep' = {
+  name: 'operational-monitoring'
+  dependsOn: [guard, apps]
+  params: {
+    prefix: prefix
+    location: location
+    tags: allTags
+    workspaceId: monitoring.outputs.workspaceId
+    appInsightsId: monitoring.outputs.appInsightsId
+    actionGroupId: monitoring.outputs.actionGroupId
+    iotHubId: iotHub.outputs.id
+    jobNames: deployApplications && deployBackgroundWorkloads ? concat([
+      demoDirectIngress ? 'job-${applicationPrefix}-orch' : 'job-${applicationPrefix}-orchestrator'
+      ledgerJobName
+      demoDirectIngress ? 'job-${applicationPrefix}-load' : 'job-${applicationPrefix}-import'
+    ], enableEntraTokenStore ? [
+      demoDirectIngress ? 'job-${applicationPrefix}-auth' : 'job-${applicationPrefix}-auth-renewal'
+    ] : []) : []
+    monthlyBudget: monthlyBudget
+    budgetName: budget.name
+    enableCandidateAlerts: enableCandidateMonitoringAlerts
+    approvalReference: monitoringApprovalReference
   }
 }
 
@@ -599,8 +644,12 @@ output sqlServer string = sql.outputs.fqdn
 output keyVaultName string = keyvault.outputs.name
 output iotHubName string = iotHub.outputs.name
 output iotHubConsumerGroup string = iotHub.outputs.consumerGroup
+output iotHubEventHubNamespaceFqdn string = iotHub.outputs.eventHubNamespaceFqdn
+output iotHubEventHubName string = iotHub.outputs.eventHubCompatibleName
+output iotHubRoutingEnabled bool = iotHub.outputs.routingEnabled
 output foundryEndpoint string = foundry.outputs.endpoint
 output identityPrincipalIds object = identity.outputs.principalIds
 output logAnalyticsWorkspace string = monitoring.outputs.workspaceName
+output operationsWorkbookId string = operationalMonitoring.outputs.workbookId
 output publicEdgeHostName string = enablePublicEdge ? edge!.outputs.publicHostName : ''
 output entraRedirectUri string = enablePublicEdge ? edge!.outputs.entraRedirectUri : ''

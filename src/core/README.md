@@ -2,9 +2,209 @@
 title: Zava Forward core library
 description: Domain, store, ledger, law store, chat storage and synthetic-data documentation for the core project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-27
+ms.date: 2026-10-29
 ms.topic: reference
 ---
+
+## Dependent-policy RAI release binding (#218, #219)
+
+The stock assistant and retained priority task bind the actual current
+deterministic ranking policy content, not just their prompt/output-filter
+versions. The quality assistant also binds checklist definitions and ordered
+keyword-to-checklist selection. Changing these policies denies new dispatch,
+queued claims and proposal reliance under the previous release; in-flight
+results are quarantined. Stock evidence explicitly reads the current policy.
+Unrelated assistant/task bindings remain unchanged. No ranking or checklist
+rule is changed by this control.
+
+Existing dependent releases need renewed evaluation and a fresh authorized
+release record; rollback cannot revive a superseded record. No actual release
+is renewed automatically. Constructed matching records prove proposal-only
+mechanics, not approved evaluation evidence or live OQ-017 authority.
+
+From `src/api`, with editable projects installed, local synthetic regressions:
+
+```bash
+PYTHONPATH=tests:../core/tests:../agents/tests python -m unittest \
+  test_assistant_release.DependentPolicyRelease \
+  test_assistants.HumanReviewMechanics -q
+```
+
+The review checks seed plausible wrong, unsupported, incomplete and stale
+proposals, retain scripted rejection/correction provenance and preserve case
+data. Their automation-bias negative control deliberately demonstrates that a
+false source-verification attestation can accept wrong text. Valid citations
+and an acceptance click are not semantic truth, reviewer competence or a
+controlled domain approval. Actual reviewer detection, corrections and total
+preparation/review effort against paired workflow-only scenarios remain
+unmeasured; #223 is not satisfied by these tests.
+
+The #222 cohort manifest in open PR #421 still needs owner approval before
+evaluator implementation. Cohorts, lawful fields, sample sufficiency and
+thresholds remain unapproved, and synthetic results cannot prove fairness.
+Actual release/residual-risk/review/restart holders remain unknown under
+OQ-017. The [incident](#operator-incidents-and-constructed-restart-221) and
+[challenge](#version-bound-affected-person-challenges-220) contracts retain
+their separate approval and coverage limits. No child or epic closure,
+human-witnessed drill, broader assistant/form challenge coverage, legal
+screening or #440 stabilization is inferred.
+
+## Unverified nomination and tenure intake (#130, #131)
+
+The existing `resident_action` ledger accepts `nomination_record`,
+`nomination_correct` and `tenure_intake`. These are constructed staff-recorded
+intake, not nomination eligibility, verified identity, consent, Legal approval
+or an offer. Current registered staff need both resident-workflow and
+recorded-reason rights. Owners are named follow-up staff, not appointed Legal
+or Home Ownership decision makers. Each successful command is audited with
+non-sensitive record identifiers and persisted using the existing transaction.
+SQL writers recheck the actor, owner and current case revision before commit.
+
+Nomination keeps the exact supplied original account, source, reported subject
+and channel, a staff-recorded acknowledgement reference, named owner,
+next-update date and staffed non-digital route. Acknowledgement evidence is
+not verified delivery. Digital, phone, letter, in-person and trusted-intermediary
+channels are supported as staff capture, not direct resident authentication.
+Accounts longer than 4000 characters are refused, never truncated.
+Identity, support needs and risk flags remain `Unknown`. Corrections retain
+the original and competing accounts/subject references with actor/time and
+require re-review; a same-case generic challenge may be linked without
+resolving it. No resident identity, authority, ranking, consent or hazard
+record changes. Hazard-marked reports are refused with the independent
+hazard-intake route; no automatic triage, classification, dispatch or clock
+change occurs.
+
+New nomination identifiers use an opaque `NOM-` plus full random UUID, never a
+ledger position. Retention deletion and subsequent intake therefore cannot
+reuse a deleted record's identity or accept a stale correction for another
+subject. Existing sequential identifiers remain valid for retained records.
+Corrections must use the recorded identifier and its current version.
+
+Tenure reports retain each supplied household reference, reported tenure and
+lease interest, source, unresolved identity state, follow-up owner and update
+date. A report is not verified household membership. Verification, decision
+route, Legal responsibility and Finance cost remain `Unknown`. Every report
+sets a case-wide hold on resident work gates and new measure-scope recording,
+including ambiguous/unknown households and otherwise accepted measures.
+Revisions and other households' agreements cannot release it. There is no
+release or verification action. A static responsibility-question checklist
+identifies missing evidence; it is not a pack derived from reviewed leases.
+Prior homes without intake are unchanged: this does not prove complete tenure
+coverage or an all-offer gate across the programme.
+
+The tenure hold is separate from resident-decision status. An otherwise current
+acceptance remains `Accepted` in lists, prompts and priority suggestions after
+tenure intake; the hold still blocks case-wide and scoped resident work.
+Existing decision retention, scope, human-review and representative-authority
+checks continue to apply.
+
+Raw intake is excluded from unrelated-role detail, contractor output,
+assistant source allow-lists and case CSV. Sensitive histories follow existing
+resident-record deletion handling for constructed tests; the separate
+non-sensitive `tenure_review_required` marker survives evidence deletion so
+deletion is not approval. No new actual retention duration, applicability,
+lawful basis or privacy approval is established.
+
+Operational extensions remain blocked on OD-41/42, real participant and
+representative evidence, a named Legal/Home Ownership decision owner,
+verified household/lease identity, approved responsibility/cost and applicable
+DPO/Compliance retention/release decisions. Nothing is sent, booked or
+approved. No issue-wide acceptance or user/accessibility conformance is claimed.
+The existing generic RAI challenge remains separate from nomination-specific
+eligibility and review decisions.
+
+Focused local constructed tests:
+
+```bash
+python3 -m unittest discover -s tests -p test_resident_decisions.py -q
+```
+
+## Unapproved working field review (#96, #98, #99)
+
+`form_review.action(store, user, case_id, body)` supports `open`, `review` and
+`diagnose` only. It binds a supplied registered schema, never an approved form.
+All schemas and source-policy/rule authority remain unapproved. Named staff
+must have the existing Finance, resident-record and reason-view rights.
+
+An individual accept/correct/reject changes only that working field and its
+append-only review history. Acceptance copies the exact candidate raw text;
+typed integer/number/boolean corrections are explicit, retain the raw evidence,
+and require a same-case, exact-schema staged candidate as their source anchor.
+Corrections without a staged source anchor remain unavailable. Declarations,
+signatures, consent and approvals cannot be accepted by this working-review
+path. It never writes original sources, authoritative case fields, ranking,
+consent, budget, invoice, grant, award, submission or cash states.
+
+`review` requires `draft_id`, `expected_version`, `field_id`, `decision`,
+`batch_id`, `candidate_id`, `value` and `reason`, in addition to `action`.
+For `accept`, `value` is null. For `correct`, supply a finite scalar value.
+For `reject`, batch/candidate/value are null; prior evidence remains in history.
+An unknown field, stale version, foreign candidate or extra server-owned key
+is refused. JSON supports one Store/writer with in-instance version checks;
+SQLite additionally protects independent writers with database rowversions.
+
+`view` and `diagnose` provide field-specific Unknown/Conflict/Fail draft
+diagnostics and source-linked diagnostic manifests. Conditions use confirmed,
+valid, current values only, combine predicates with OR and compare types
+exactly (`true` is not integer `1`). Missing/invalid/stale controlling inputs
+produce Unknown unless another predicate is true. Empty or whitespace-only
+strings remain recorded corrections but are not confirmed inputs: unconditional
+and active conditional requirements still report missing input. Numeric zero
+and boolean false remain valid confirmed inputs. Dates must be valid calendar
+dates in `YYYY-MM-DD`; numeric checks exclude booleans and non-finite floats.
+Units, currency, eligibility and approved calculations remain Not evaluated.
+`reviewed_ready` is always false, even if no local structural issue remains.
+Manifests retain exact schema/template/rule/input versions, field IDs/values,
+source hashes/versions/locators, attachment references and reviewer history.
+They are not reviewed application/claim exports or evidence of eligibility.
+
+Source/schema freshness is evaluated on reads/actions, not pushed into a
+downstream approval graph. Each report checks an exact source ID, version,
+content hash and kind once, reusing its freshness result for shared fields
+and staged alternatives only within that report. Source bytes are read/hashed
+at most once per distinct document across current fields, history, snapshots
+and alternative checks; missing-byte results are also reused locally.
+Action preflight shares these reads with its resulting report. Later reports
+check afresh; no cross-request cache is retained. A source change marks only its
+bound working fields stale; a new schema version affects all fields bound to that schema. Historical
+reviews/values and recorded diagnostic snapshots remain intact. This is not
+full FR-043/AC-051 rule/calculation/pack-review/approval stale propagation.
+Already-clean evidence is required: reads/reviews never scan or save a source.
+Missing, pending, quarantined or deleted retained evidence blocks disclosure of
+the entire affected draft/history, including recorded diagnostics. On `view`,
+availability is isolated per draft: the affected entry contains only `draft_id`,
+`status: "Unavailable"` and a fixed recovery `notice`; unrelated available
+drafts remain readable. Actions on an affected draft still refuse access.
+Availability is checked for current fields, prior/new history evidence and diagnostic
+fields/history/attachments even when the schema is stale or a field was
+rejected/replaced. Staleness alone does not remove available history.
+Unreviewed alternatives count toward Conflict only if their case/schema,
+source version/hash/kind/bytes and field source policy allow review; unavailable
+or stale alternatives are excluded without changing staged history.
+Missing bytes are reported as unavailable evidence; storage-service failures
+remain distinct errors, never empty/successful diagnostics.
+Recover or rescan through the separate document owner route before retrying.
+Ordinary case detail and generic case exports
+exclude the private review/decision-hold records.
+
+Opening notes durably records Held decisions for template/source/rule authority
+and Board OD-12/15, with owner role, correction path, recorder/time and null
+approved inputs/evidence. These are decision-needed records, not approvals.
+The diagnostic acceleration signal is `Pause for human decision`, with null
+envelope/tolerances and breach assessment Not evaluated. It does not enforce a
+programme-wide release or contain live activity. Finance/Board must supply
+actual approved investment, liquidity, covenant and downside inputs; no company
+figures, approved thresholds or restart authority are invented.
+
+From `src/core`, after pip editable installation:
+
+```bash
+PYTHONPATH=tests python3 -m unittest test_form_review test_form_staging -q
+```
+
+Tests use the public tiny synthetic fixture with temporary JSON/SQLite storage.
+Full #96/#98 approved readiness/export and #99 envelope/breach acceptance remain
+blocked on human decisions. No issue closure or production acceptance is implied.
 
 ## Resident advisory assistant (#469)
 
@@ -19,6 +219,72 @@ person-help route. No submission, consent or decision authority is added.
 The API owns authentication and the disabled real adapter. See the
 [design awaiting owner decision](../../docs/architecture/resident-assistant-prototype.md)
 for model, credential, USD 5 budget and activation boundaries.
+
+## Finite synthetic stream replay (#184)
+
+`synthetic.sensor_stream.replay(selection, Replay(...))` reuses the existing
+seasonal `sensor_backfill.readings` model, forcing its legacy random fault
+profile off, then converts to the shared 13-string `sensor-fault-input-v1`
+contract. It accepts only explicitly selected synthetic stock records;
+declined/unknown monitoring choices produce no device or reading. No installed
+device discovery or real dataset is used. Sensor keys are the existing compact,
+collision-checked stock keys; one `SYN-<sensor_id>` device maps to one home.
+
+Default cadence is 480 minutes: three paired observations/home/day.
+`Replay(seed=183, origin=<UTC whole-second datetime>, days=2,
+first_slot=0, end_slot=None)` describes a finite original model window.
+The complete original random sequence is generated before selecting the
+half-open nominal slot interval, so nonzero and odd suffixes reproduce the
+same values/IDs as the existing clean backfill. Do not restart the seed at
+handover. This slice supports the labelled synthetic seasonal model only;
+climate-backed composed histories and measures are not silently substituted.
+`descriptor(selection, spec)` records the original register `stock_sha256`
+separately from `selected_stock_sha256`, the digest of the validated canonical
+selected model inputs, plus selected home IDs/count, granted count, seed, origin,
+window, cadence, schema/model context and explicit fault mode. Each Frame carries
+the selected digest outside its observation, binding that frame to the snapshot
+actually used for generation. A later selection mutation changes newly computed
+provenance, not old frames; match the descriptor's selected digest to the frames.
+Each Frame also carries `nominal_at`, the UTC time from the original origin and
+slot cadence, outside the observation. Publishers use this time for scheduling,
+not the fault-injected observation timestamp; duplicates retain the same nominal time.
+The descriptor version is `synthetic-stream-v2`; reading IDs/bytes are unchanged.
+Keep descriptors and selected-home evidence restricted, not ordinary telemetry.
+
+The generator limits actual granted homes to 1..100 and original
+homes-times-slots to 100,000 before model generation, independently of summary
+metadata. This aligns with the existing finite consumer control batch; it is
+not 60,000-device throughput evidence. `wire(frame.row)` uses the shared
+consumer's sorted ASCII JSON representation and caps each body at 4096 bytes.
+
+Explicit modes are `valid`, `duplicate`, `out_of_order`, `unmapped`, `wrong_unit`,
+`clock_skewed`, `uncalibrated`, `gap`, `disconnect` and `burst`. Frames keep truth
+outside the observation. Duplicate emits identical IDs/content; out-of-order
+swaps nominal adjacent slots with an odd final singleton unchanged. Selection
+always uses nominal slots, not shifted timestamps. Wrong-unit conversion,
+one-day clock skew and calibration flags are labelled synthetic exercises,
+not science or policy. Gap emits no frames; an empty send run is refused.
+The replay descriptor records the omitted window and mode. Disconnect/burst
+are runner actions, not extra telemetry fields. A normal device claiming a
+mutated unmapped sensor is refused by the API binding before SQL.
+
+`RunBudget` performs finite message/byte/B1 headroom checks before sending.
+`Pacer` exposes `paused` and `stopped`, finite speed in (0,1000], a monotonic
+deadline and a separate maximum send rate. `wait` applies model-time spacing;
+`admit_send` enforces global send-attempt spacing and must be awaited immediately
+before the SDK send, after connection/setup and truth preparation. Speed-up and
+burst never bypass this admission. Active pacing sleeps until the nearer target,
+deadline or 50 ms poll, so rates up to 100/s are not limited by the poll interval.
+Pause keeps positive polling bounded by 50 ms and the deadline even after the
+target passes. Pause continues consuming the run time allowance, not a way to leave a
+simulator running unattended. See the [API runner](../api/README.md#opt-in-iot-consumer-and-synthetic-publisher-110-184)
+for actual SDK operation bounds, credential handling and activation gates.
+
+From `src/core`, with the package installed:
+
+```bash
+python -m unittest discover -s tests -p test_sensor_stream.py -q
+```
 
 ## Constructed offline sensor consumer (#110)
 
@@ -942,6 +1208,16 @@ approved form/template or delegated authority was supplied for this slice.
 It cannot prepare an approved form; real recorded version-specific authority
 and binding remain unmet. Synthetic fixtures demonstrate mechanics only.
 
+A separate fictional review pack, `src/core/evals/fictional_form_review_pack.json`
+(registered `DS-FICT-FORM-REVIEW-PACK`; [reviewer guide](../../docs/reference/research/retrofit-synthetic-data/form-review-pack-97.md)),
+supplies a concrete versioned template, per-field authority, evidence, freshness
+and lineage, proposed role separation and stale propagation, and fourteen null
+Finance decision fields for human review. Its schema uses this path, but the
+public file carries a placeholder reviewer (public payloads may not hold email
+addresses) and is refused as published; only a copy differing in `reviewer`,
+set to an existing registered person, registers, as `Unapproved`. The pack is
+not an approved template, and criterion 1 stays unmet.
+
 Candidate collection copies the existing case-owned document ID,
 `content_sha256`, version and upload date. Original bytes must match the stored
 hash; generated placeholders, foreign documents and unclean sources are not
@@ -960,7 +1236,8 @@ The separate server verifier is `form-source-locator-1`:
 * CSV: strict UTF-8 and the standard strict CSV reader; one-based `row` and
   `column`, including the header. Quoted/multiline cells retain their decoded
   cell text as raw value.
-* OCR import: asserted one-based page and region, supplied route evidence and
+* OCR import: asserted one-based page and a nonblank region string (at most 300
+  characters), supplied route evidence and
   error record required. Pixel content and route authority are **unverified**;
   no OCR/model is called or approved.
 
@@ -2106,7 +2383,7 @@ generation still uses the existing tools and `ZF_DATA`, not this metadata CLI.
 
 * Evaluation dataset registry (`src/agents/evals/registry.json`) lists every golden and
   evaluation dataset with version, owner and purpose; a test fails for an
-  unregistered file in `mvp/evals/` or any `src/<project>/evals/` folder. The stock-scale fixture (60,000 homes, 600,000
+  unregistered file in any `src/<project>/evals/` folder. The stock-scale fixture (60,000 homes, 600,000
   events, wholly fictional, seeded) is rebuilt with
   `python3 -m zava_forward.core.synthetic.scale_fixture` (moved in M3), writes to
   `scale-fixture/` under the per-user `ZF_DATA` folder (default
@@ -2144,18 +2421,69 @@ generation still uses the existing tools and `ZF_DATA`, not this metadata CLI.
 The following three component descriptions preserve their original independent
 delivery boundaries. Their approved opt-in integration is described below.
 
-The #179 stacked exercise component extracts the unchanged indoor equation
-to `synthetic.indoor_projection`, version `indoor-projection-exercise-v1`.
-Every factor, schedule, noise scale and coefficient is an exercise assumption;
-`PARAMETERS` records equations and UTC schedule boundaries in each manifest.
-Its supported input domain (-80..60 C, 0..100% RH, known fabric factors) is
-an API guard, not measured climate bounds or a healthy-home threshold.
-Invalid inputs raise `ValueError`. Legacy reading values and RNG order are
-preserved for supported inputs; source fingerprints intentionally change and
-include the extracted helper. Existing snapshots are not migrated.
-No paired historical record or physics calibration is supplied, so #179's
-record-derived physical-bounds criterion remains unmet. This child does not
-integrate the separately reviewed dated-retrofit/household components.
+The #179 exercise component is `synthetic.indoor_projection`. As of 2026-10-27,
+`indoor-projection-exercise-v2` and `indoor-projection-composed-exercise-v2`
+replace v1's fixed 8 C floor and 15..98% RH clips with per-outdoor-record,
+dwelling-derived nominal envelopes. Both paths use the same calculation.
+Every factor, schedule, coefficient, noise scale and tail cap is an exercise
+assumption, not calibrated building physics. `PARAMETERS` and
+`COMPOSED_PARAMETERS` record equations, noise policy and envelope derivation
+in manifests. The supported outdoor input domain (-80..60 C, 0..100% RH,
+known fabric factors) remains an API guard, not measured climate bounds or a
+healthy-home threshold; invalid inputs raise `ValueError`.
+
+For each supplied outdoor pair, let `L` be the dwelling/age/construction loss
+with its applicable retrofit factor. The noiseless indoor temperature is
+`B = setpoint + min(0,(outdoor-5)*0.08*L) + max(0,(outdoor-16)*0.35)`.
+Model vapour `V = sat(outdoor)*outdoor_RH/100 + moisture*L`, divided by the
+ventilation multiplier on the moisture term in composed mode. The saturation
+equation is `sat(T) = 6.112*exp(17.62*T/(243.12+T))` hPa; these coefficients
+also remain exercise values. Temperature and RH residuals are Gaussian draws
+with exercise standard deviations 0.3 C and 1.5 percentage points, each capped
+at +/-3 standard deviations. This tail cap is a selected exercise policy,
+not an empirical confidence interval.
+
+Nominal temperature therefore lies in `[B-0.9, B+0.9]` C. Since saturation
+pressure increases over the supported indoor range and `V >= 0`, nominal RH
+lies between `100*V/sat(B+0.9)-4.5` and `100*V/sat(B-0.9)+4.5`, with each
+endpoint limited to the physical RH domain 0..100%. Saturation can reach 100%;
+there is no replacement fixed exercise humidity floor or ceiling. These bounds
+are causal functions of each actual outdoor pair and dwelling/household input,
+not typed historical extrema. CSV rounding can differ from an endpoint by
+0.005. Injected faults are deliberately outside the nominal-bound guarantee.
+
+Tests traverse all 17,544 paired hours of the pinned public Durham ERA5
+record through both generator paths for two synthetic dwelling forms, with
+explicit household conditions and a dated synthetic retrofit, independently
+checking each row's envelope. Endpoint, forced-tail, saturation and exact
+equation/RNG tests supplement that record-specific evidence. Default outdoor
+inputs remain the labelled synthetic seasonal series; the approved paired
+history requires the explicit climate mode below. This establishes
+model-consistent exercise bounds, not measured indoor plausibility, safety,
+building-physics calibration or operational acceptance.
+The two Gaussian draws retain their order; v2 intentionally changes nominal
+values where v1 clipped or an uncapped tail escaped. Source fingerprints bind
+the helper. Old snapshots remain unchanged and require their original generator
+revision for replay; they are not silently migrated.
+
+Snapshot versions also advance for these intentional row changes: default
+`sensor-backfill-v3`, register `sensor-backfill-stock-v2`, paired-climate
+`sensor-backfill-integrated-v2`, and non-composed fault output
+`sensor-backfill-faults-v2`. The fault snapshot records
+`fault_model_version=sensor-fault-packets-v1`; its packet algorithm, truth
+version and reading schemas are unchanged. Fault-enabled composed output uses
+the integrated v2 snapshot version. Loaders admit only current versions and
+exact current-revision replays; historical snapshots require their original
+generator revision/runtime, not relabelling or automatic migration.
+
+The versioned golden in `tests/test_synthetic_determinism.py` pins default v3
+with projection v2. For its seed183, 12-home, three-day fixture, the reading
+SHA-256 changes from
+`657ff373107807b34bd4bb6720dec534fcef13134292c5d753ef24bdbd723549` to
+`25bb5259d89554560e179ae5412f3148595c47a87def9ee2fca61518e18ded5b`.
+Scale payload and sensor-register goldens remain unchanged. This is a new
+generator baseline, not approval to refresh or overwrite published datasets;
+follow the [snapshot version and refresh policy](../../docs/reference/research/retrofit-synthetic-data/README.md#determinism-manifests-and-refresh-policy-2026-10-15).
 
 The #180 stacked `synthetic.retrofit_effects` component is deliberately not yet
 wired into the writer. It accepts explicit synthetic `Measure` records with
@@ -2187,7 +2515,7 @@ No demographic inputs, resident assessment or attribution are used.
 The writer still uses its legacy schedules until #179/#183 integration;
 no full household-model history or resident choice approval is claimed.
 
-The explicit `--register` mode (`sensor-backfill-stock-v1`) reuses merged
+The explicit `--register` mode (`sensor-backfill-stock-v2`) reuses merged
 `stock-fabric-v1`, seed 4820260930, rather than drawing unrelated dwelling
 attributes or treating the scale fixture as the private stock. Supply a wholly
 synthetic CSV with `synthetic_home_id`, `is_synthetic=true`,
@@ -2232,8 +2560,9 @@ precast concrete 1.10, Timber frame 0.90, partial-fill cavity 0.85 and full-fill
 cavity 0.75. Heating schedules are seeded equal-choice morning/evening, all-day
 or low; they are variation fixtures, not judgements of residents. All factors
 and bounds are exercise assumptions, not calibrated physics or climatic facts.
-The current equations and basic fault rates remain in `sensor_backfill.py`;
-construction factors and exact fabric mappings are in `sensor_stock.py`.
+The shared indoor equations are in `indoor_projection.py`; basic fault rates
+remain in `sensor_backfill.py`, and construction factors and exact fabric
+mappings are in `sensor_stock.py`.
 No dated measure history is supplied: `retrofitted=False` is a modelling
 assumption, not evidence that no works occurred, and no before/after claim follows.
 
@@ -2244,8 +2573,9 @@ for the existing `UNMAPPED-` fault namespace. Reading IDs append epoch seconds.
 Home IDs preserve case and Unicode and must fit 128 UTF-16 code units. For a fresh
 SQL Server database apply `STOCK_SQL_DDL` (`stock-reading-v1`, sensor
 VARCHAR(73), reading VARCHAR(96), home NVARCHAR(128)), then call
-`load_into(conn, output, create_schema=None)`. Legacy `SQL_DDL` and CSV payloads
-are unchanged; do not use the narrow legacy DDL for stock mode. The loader
+`load_into(conn, output, create_schema=None)`. Legacy `SQL_DDL` and CSV field
+layouts are unchanged; v2 projection values can differ. Do not use the narrow
+legacy DDL for stock mode. The loader
 does not migrate databases. SQLite tests and portable conditional-insert checks
 do not prove live SQL Server execution.
 
@@ -2290,7 +2620,8 @@ No dates, consent or calibration are inferred from the stock.
 Composed projection is separately versioned: baseline dwelling/age/construction
 loss is multiplied by active dated measures; household setpoint affects indoor
 temperature, and household moisture divided by ventilation affects vapour.
-The legacy `project()` equation and default seeded values remain unchanged.
+Both projection paths now use the v2 derived envelopes described above;
+noiseless equations and RNG draw order are retained, not v1 output values.
 All model coefficients/distributions are exercise assumptions. Manifest hashes
 bind climate/metadata, stock, explicit measure history, source revisions, seed,
 window, cadence, payloads and model versions. No operational approval claim
@@ -2405,6 +2736,158 @@ answers, snapshot safety, hashes and tiny installed-module CLI replay. Local
 a five-home fictional selection produced 292 delivered rows and 144 truth
 packets across all 11 classes, with byte-identical reruns. These are synthetic
 engineering results, not real-device or predictive-performance evidence.
+
+### Synthetic scenario validation pack (#190, #192, #193, #194)
+
+The installed `synthetic.sensor_scenarios` module generates a separate bounded
+exercise pack; it never appends to general history or reads private stock,
+resident data or installed devices. It reuses clean `sensor_backfill.readings()`
+and the shared observation schema. Profiles are explicit fictional overlays,
+not calibrated building physics or the beneficial-only dated fabric-loss model.
+Default backfill bytes and workflow/check names are unchanged.
+
+From the repository root, with the core package installed:
+
+```bash
+python3 -m zava_forward.core.synthetic.sensor_scenarios \
+  --seed 190 --out /external/new-sensor-scenarios-190
+cd src/core
+python3 -m unittest discover -s tests -p test_sensor_scenarios.py -v
+```
+
+Choose a genuinely new external path, not the literal example if unavailable.
+The CLI rejects repository/worktree destinations, symlink components, files and
+nonempty folders. Same seed, sources and Python version reproduce identical
+bytes. `--seed` is an integer 0..2^63-1 (default 190); `--out` is required.
+`--humidity-threshold` changes the exercise comparator's RH percent threshold
+(finite 0..100, default 75), not the fixed expected labels. Exit 0 means every
+listed exercise outcome/delta check matched, 1 means checks failed (report is
+retained), and 2 means invalid input or an I/O failure. There is deliberately
+no single overall pass field.
+
+| Parameter or profile | Exercise definition |
+| --- | --- |
+| Window/cadence | 2024-01-01 inclusive to 2024-01-29 exclusive, hourly UTC; 672 nominal observations/case |
+| Baseline | 20 C, 55% RH plus 0.15 times centred weekly clean-backfill residuals, repeated weekly |
+| Weather | Constructed constant 2 C/70% outdoor RH; not the separately retained ERA5 data |
+| Normal | Baseline; expected NO_EXERCISE_SIGNAL |
+| Condensation-prone | -5 C/+37 RH points; expected REVIEW_CANDIDATE, not proof of surface condensation |
+| Sustained high humidity | +27 RH points; expected REVIEW_CANDIDATE |
+| Repeated overnight peaks | +30 RH points at UTC hours 00..05; expected REVIEW_CANDIDATE |
+| Sensor fault | Both channels held at 20 C/55% for first 48 hours; expected INSUFFICIENT |
+| Missing data | Retain only every fourth nominal hour (75% missing); expected INSUFFICIENT |
+| Seasonal shift | Linear -2 C/+8 RH points across the window; expected NO_EXERCISE_SIGNAL |
+| Retrofit improvement | From day 14: +2 C/-10 RH points |
+| Retrofit no change | Recorded completion day 14, zero temperature/RH step |
+| Retrofit delayed effect | Recorded completion day 14; from day 21: +1.5 C/-6 RH points |
+| Retrofit adverse effect | From day 14: -1 C/+8 RH points |
+
+These are hand-designed tests, not observed performance, prevalence, a safety
+threshold, evidence of completed works, resident behaviour or a savings promise.
+The linear seasonal case is an exercise trend, not historical climate validation.
+Air temperature/RH alone cannot establish surface condensation or mould.
+
+Point any analysis only at `analysis/`:
+
+* `analysis/C01.csv` through `C11.csv` use the exact 13-field
+  `sensor-fault-input-v1` contract. All have `source_type=SYNTHETIC`,
+  `scenario=SCENARIO_PACK` and the common actual pack seed. Neutral identities
+  and that seed are never used as classification features. No labels,
+  expected outcomes, injected-fault columns or RNG keys are present.
+* `analysis/windows.json` holds neutral case/file IDs, the common UTC window,
+  cadence and a completion instant for the four retrofit cases. It exposes
+  no outcome, size or delayed activation time.
+* `truth/cases.json` holds evaluator-only labels, actual seed/RNG stream keys,
+  expected outcomes, exercise deltas and delay. `truth/report.json` holds
+  per-case checks, observed statistics, confusion and sensitivity.
+* `truth/manifest.json` binds all relative payload hashes, generator/comparator
+  versions, source fingerprint, Python version, seed, weather and parameters.
+  The report separately hashes only its analysis inputs. No absolute path or
+  current wall-clock time affects payloads.
+
+This is interface/file separation, not OS access control. Restrict truth access;
+do not give the evaluator directory to an analysis process. General backfill
+loaders are not scenario importers; no case/control/consent records are granted.
+
+The observations-only exercise comparator checks the exact UTC hourly grid,
+order, uniqueness, units, labels, calibration and finite exercise domains
+(-10..45 C, 0..100% RH). It requires >=90% valid coverage in the whole window,
+each UTC day and each UTC overnight [00:00,06:00), and rejects >=24 consecutive
+identical paired samples as a flatline. Missing slots break persistence runs.
+Invalid/inadequate data yields INSUFFICIENT with reasons and null means.
+Otherwise >=12 consecutive hours at/above the RH threshold, or >=3 nights
+each with >=3 high-RH overnight samples, yields REVIEW_CANDIDATE.
+NO_EXERCISE_SIGNAL is not an assurance of a healthy or safe home. Freshness
+against an operational clock and approved thresholds remain #111 work.
+
+Confusion uses seven damp cases, one case per trial: five binary-eligible
+cases and two expected-insufficient cases. TP/TN/FP/FN use only binary
+predictions; unexpected insufficiency is an explicit abstention, not a true
+negative or silently removed eligible case. Expected-insufficient results
+have separate correct/incorrect counters. Rates state their classified
+denominators and are null when not computable. Sensitivity reruns 70/75/85%
+against the same truth, so the 85% setting exposes misses.
+The four retrofit cases are excluded from binary confusion.
+
+Retrofit comparisons show independent counts/coverage and means for baseline
+[day0,day7), early [day14,day21) and late [day21,day28), with per-window
+sufficiency and null deltas on insufficient input. The first early sample is
+the completion instant; the first late sample is delayed activation.
+Each early/late delta is checked separately against its exercise target
+within 0.02 C/RH points. Matched weekly cycles isolate the constructed step;
+they do not establish causal weather adjustment for real homes.
+
+### Two-stage simulator operation and limits (#194)
+
+Stage 1 is runnable through `synthetic.sensor_backfill`; estimate before writing.
+The legacy, register, fault and approved paired-climate commands above describe
+their distinct schemas and limits. Defaults are 730 days, 60-minute cadence,
+seed 183 and a synthetic seasonal weather model. Explicit `--as-of` selects a
+half-open UTC window; `--cadence` must divide 1440. Paired-climate mode requires
+an explicit wholly synthetic register, complete retained hourly source coverage
+and optional synthetic dated measures. Exact subsampling neither fills gaps nor
+repeats years. Storage estimates are not completed full-stock materializations.
+
+Stage 2 (#184) has a delivered shared observation contract (#186) and the
+opt-in [finite replay and pacing library](#finite-synthetic-stream-replay-184)
+with an [API SDK publisher](../api/README.md#opt-in-iot-consumer-and-synthetic-publisher-110-184).
+The scenario pack does not invoke that publisher. Local fake-network tests
+are not verified live Hub operation, approved credential lifecycle or cloud
+acceptance. No provisioner or autonomous retry scheduler is added.
+Separately authorized live operation must use the shared schema, stable IDs,
+per-device authentication, synthetic-only identities, explicit N/rate/volume/
+replay/cost limits and the independent #110 consumer controls. The declared
+live exercise accounting is three paired observations/home/day: `3N` records/day,
+180,000 for N=60,000; the hourly scenario pack is a separate offline test cadence.
+See the [shared schema and measured-volume contract](../../docs/reference/research/iot-sensor-analytics-research-plan.md#shared-observation-contract-and-volume-2026-10-18-refs-186).
+No simulator discovers, connects to or represents an installed real device.
+Never put device keys/connection strings in source, generated rows or logs.
+
+The [climate source metadata](../../docs/reference/research/climate-paired-source-178/open-meteo-era5-durham-2023-2024-metadata.json)
+records Open-Meteo ERA5 Durham-grid hourly outdoor reanalysis, retrieved
+2026-10-27, 2023-01-01 through 2024-12-31, input SHA-256
+`af76a90414d9ad8f19dacc95a38f06d4c4321a91bdf030ba231558c42506051e`.
+It is one 0.25-degree cell, not a station or indoor measurements.
+Attribution: Weather data by [Open-Meteo.com](https://open-meteo.com/),
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); underlying ERA5 is
+Copernicus Climate Change Service (C3S) material. Raw bytes retained unchanged;
+bounds summarised and exact timestamps subsampled for synthetic projections.
+Hersbach et al. (2023), DOI
+[10.24381/cds.adbb2d47](https://doi.org/10.24381/cds.adbb2d47);
+Open-Meteo software: Zippenfenig (2023),
+[10.5281/ZENODO.7970649](https://doi.org/10.5281/ZENODO.7970649).
+The metadata preserves 2026-10-22 terms snapshots, free-API non-commercial
+conditions and unverified underlying C3S reuse terms. Owner approval
+`owner-approvals-2026-10-27-b` is synthetic-demonstrator-only, not Legal or
+production qualification. No new terms retrieval/approval occurs here.
+The scenario pack uses none of those climate bytes.
+
+All emitted indoor data is simulated, not evidence of installed devices or
+real home conditions. No signal diagnoses a hazard, dismisses a resident report,
+starts a clock, releases a hold, changes ranking, grants consent or creates an
+approved task. Human review, resident choice and BRD OD-43 remain unchanged.
+Actual #111/#133 consumer test use, verified live stage operation, competent R2 review,
+agreed R3 limits and operational acceptance are still unproven.
 
 ### Existing reproducibility and plausibility evidence
 
@@ -2969,11 +3452,46 @@ Not in this slice: the panel (#159), model calls, memory (#161), isolation harde
 (#163; retention policy is unlocked for the exercise, legal retention lock deferred). Fixtures are synthetic.
 Tests: `tests/test_chatthreads.py` (in-memory and SQLite parity; `MssqlChatThreads` runs with `ZF_TEST_MSSQL=1`).
 
+The employee panel records server-derived `actor_role` per message and includes
+only prior user questions asked under the caller's current role. Changing from
+role A to B and back does not relabel earlier questions. Existing JSON messages
+without this field and SQL messages migrated with an empty role remain stored
+but are excluded from model context because their asking role is unknown.
+SQLite and SQL Server add the column idempotently; new messages persist it
+across restarts. The panel's 4,000-character history cap measures the actual
+dispatched `UNTRUSTED` block, including delimiter expansion, wrappers and
+newlines, while preserving the newest fitting questions in chronological order.
+The current question must fit the 1,000-character limit both before and after
+redaction. An oversized masked question returns the context-limit workflow
+fallback without a model call, rather than silently truncating the question.
+
+The panel holds the existing reentrant store lock around message persistence
+and its audit events, the answer event and the final turn receipt, including
+rejected turns. These short sections serialize JSON audit predecessor updates
+with other locked writes; model inference does not hold the lock. Nested JSON
+and SQLite callers retain the same lock ownership and audit-flush behavior.
+Synthetic concurrent rejected/completed-turn regressions verify the shared
+chain, not just receipt counts. This is not a cross-process JSON write guarantee.
+
+Regulatory chat's direct paired-message and referral writers also persist
+`actor_role`. An owner inbox copy keeps the original asking role, not the
+recipient's role; a legacy copy without known provenance keeps an empty role.
+Both explicit and automatic conflict referrals retain this distinction across
+JSON and SQLite restarts. The separate bounded audit snapshot and offline
+usage summary do not load these message bodies.
+
 ## Chat and memory isolation (issue #162)
 
 `chat_isolation.py` sits on the #160 repository and #163 privacy rules and adds no tables. Endpoints (staff roles only; contractors and unknown roles are denied, default deny): `GET/POST /api/chat/threads`, `GET /api/chat/threads/{id}`, `POST /api/chat/threads/{id}/messages|archive|delete`, `GET/POST /api/chat/memory` (the POST needs `task` and a prior opt-in), `GET /api/chat/memory/status?task=`, `POST /api/chat/memory/opt-in|opt-out|erase|global|task` and `POST /api/chat/memory/{id}/edit|delete` (the #285 lifecycle; `global` and `task` switches are administrator-only), `POST /api/chat/breakglass`. The owner is always the authenticated user; request fields such as `owner` or `email` are ignored, and another user's thread, or a case outside the caller's scope, is reported as not found (404, so existence cannot be probed). Prompts carry the masked question and only memory from `privacy.prompt_memory` (opt-in, switch-gated, labelled non-authoritative); stored model replies are redacted like user messages.
 
 * Every turn re-reads the user's current role and re-projects the case through the same `store.detail` projection as the case card, so a changed or revoked role applies on the next turn.
+* For roster-backed SQL users, the cited chat panel reads the authoritative SQL
+  staff row at dispatch and again after inference, without relying on the staff
+  cache. Deleted, disabled, inactive or non-chat staff are denied; a changed
+  permitted role or projected source withholds the answer. Rejected completions
+  store no assistant reply. SQLite regressions change rows through an independent
+  connection while leaving both staff caches unchanged; they do not establish
+  SQL Server, live-model or operational acceptance.
 * The prompt holds only the caller's own thread, own unexpired memory and the projected case, each inside `UNTRUSTED` blocks with the block delimiters neutralised. The channel has no tools; replies are text only, labelled as unapproved, and a reply carrying tool-call or record-change syntax or a withheld reason is replaced by a refusal.
 * Break-glass is refused until `CHAT_BREAKGLASS_REF` (owner policy reference) is recorded and the caller role is named in `CHAT_BREAKGLASS_ROLES`. When allowed it needs a purpose, expires within 60 minutes, returns counts and ids only (never content) and writes granted and refused attempts to the audit ledger.
 * Open items: the break-glass and administrator content-access policy is an owner decision (BRD OD-46) and is not decided here; whether contractors may use chat is undecided (denied); the injection set in `src/api/tests/test_chat_isolation.py` is a recorded regression set, not evidence of complete coverage; real-model behaviour was not exercised.
@@ -3101,17 +3619,30 @@ the existing 8,000-character message limit fails before writing; it is never
 silently truncated.
 
 Answer pairs and explicit selected-turn doubt copies use single chat-repository
-transactions. JSON restores a pre-image on failure; SQLite uses rollback.
+transactions. Supported conflicts automatically copy both cited versions and
+the question to the named exercise owner's inbox in the same transaction as
+the answer and sender receipt. Missing, ambiguous or unauthorized owner scope
+prevents that conflict turn from being stored. Ordinary answers and refusals
+retain the manual doubt action. JSON restores a pre-image on pre-save failure;
+SQLite uses rollback.
 A copied pair lives in the uniquely provisioned Juan Manuel Servera exercise
-owner's own isolated thread, with a sender receipt and idempotent retries.
+owner's own isolated thread, with a sender receipt and idempotent referrals per
+stored source-thread/assistant-turn. A repeated ask, even with equal text, is
+a new turn and may create a new referral; reload history after uncertain
+responses instead of blindly resubmitting.
 The sender's other messages and memory are not shared. Both current roles/case
-rights are checked; SQL provisioning is read freshly, not from the legacy
+rights are checked again inside the locked transaction before mutation; SQL
+provisioning is read freshly, not from the legacy
 staff cache. Trusted-proxy roles remain claim-derived instead of being replaced
 by a wider staff-register role. Historical reads deny changed roles instead of
 replaying wider content. SQL turn/referral metadata audit now commits in the
 same transaction as the messages and receipt; an audit failure rolls back both.
-The JSON file store alone retains the post-commit separate-ledger error boundary;
-it is not evidence of SQL audit atomicity. Audit holds metadata only.
+The JSON file store alone retains the post-commit separate-ledger error boundary:
+an audit failure after save reports that the turn/referral was saved and
+requires history reload. It is not evidence of SQL audit atomicity. Audit holds
+metadata only. Tests distinguish a real SQL COMMIT-before-effect failure from
+the repository's no-op commit hook; neither establishes lost-acknowledgement
+idempotency.
 Copies have independent thread ownership/deletion; deleting the sender's
 thread does not delete the explicit owner's copy. No email or live delivery
 is implied. No rule-engine alert, consent, safety hold or case fact is changed.
@@ -3134,7 +3665,9 @@ be valid, the reference must start `SYNTH-` and days must be 1..36500 (technical
 input bound, not a legal period). Review due is creation time plus days,
 inclusive at the exact due instant, and includes archived regulatory threads.
 No content is loaded, no records are deleted and no DPO approval is inferred.
-Other source/card/check/alert/audit periods stay explicitly unknown. This is
+Other source/card/check/alert/audit/usage periods stay explicitly unknown. Usage
+inherits its parent records' access and unresolved DPO retention/hold review;
+it has no separate indefinite-retention permission. This is
 not a complete retention or rights implementation; the
 [draft DPIA](../../docs/reference/research/chat-memory-dpia.md#regulatory-assistant-dpia-draft-for-dpo-review-2026-10-16-refs-217)
 requires DPO review and remains unapproved.
@@ -3145,6 +3678,30 @@ model, citation IDs and answer hash, never question/answer/excerpt/health conten
 Referrals retain receipt and decision-owner linkage, once per selected pair.
 Rollback-after-audit-insert and reopen tests cover the chain head and data.
 Metadata and linkable hashes are not anonymous; DPO retention review is still needed.
+
+### Offline regulatory consumption (2026-10-27, #208)
+
+`regulatory_usage` records task/schema version, UTC day, outcome and zero model
+calls/input/output/cached tokens/retries, without case/chat/source content.
+Chat SQL audit writes this metadata with its turn; checks and alerts retain
+the corresponding model-free metadata in their existing append-only records.
+Every role's inference allowance is zero per UTC day. This is disabled
+inference, not a spending approval, request quota or limit on urgent intake.
+
+The authenticated user's current-role/day summary reads at most the latest
+1,000 audit positions. SQL uses a primary-key sequence window and projects
+other actors/actions' detail as NULL; it never loads chat messages or performs
+an all-ledger detail query. JSON additionally tails at most 256 KiB from the
+captured file size, excludes later appends and drops the leading partial line.
+Truncation returns `bounded_partial`; otherwise
+`recorded_audit_only`. Counts describe recorded events, never exact daily turn
+totals: legacy unmetered records and post-save JSON audit failures cannot be
+reconstructed. Unmetered events in the selected role/window are explicit.
+
+Service cost and AI cost per accepted check remain Unknown, not zero. Missing
+inputs are owner-agreed acceptance/counts, dated prices, attributable billing/
+shared-service allocation and human review effort. No model evaluation or
+paid budget/expiry authority is created.
 
 Engine contract version 2 requires nonempty `reasons` as well as named human,
 source, evidence and decision timestamp before a significant-decision check is

@@ -1,0 +1,56 @@
+{
+  "task_id": "pr423-merge-rubric-2026-10-30",
+  "task_slug": "pr423-merge-rubric",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Review",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/pr423-merge-rubric-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/pr423-merge-rubric-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/pr423-merge-rubric-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/pr423-merge-rubric-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/pr423-merge-rubric-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/pr423-merge-rubric-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Full ordered RPI loop, local merge and commits, no push; Refs #360 only",
+      "status": "confirmed",
+      "evidence": "Owner request 2026-10-30"
+    },
+    {
+      "decision": "Merge origin/main instead of rewriting ancestry",
+      "status": "selected",
+      "evidence": "Owner permits merge or rebase; merge preserves both histories"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready",
+      "status": "complete",
+      "evidence": ".copilot-tracking/research/2026-10-30/pr423-merge-rubric-research.md"
+    },
+    {
+      "decision": "One critique executed, verdict Revise; PC-001 and PC-003 applied, PC-002 rejected as unsupported runtime premise; plan Ready",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-30/pr423-merge-rubric-plan-critique.md; plan Critique Disposition"
+    },
+    {
+      "decision": "Original independent Review executed once; execution Complete, outcome Residual work at pre-commit working-candidate boundary",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-30/pr423-merge-rubric-review.md; RV-001 commit/full gate pending, RV-002 inherited failures, RV-003 whitespace qualification"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "RV-001",
+      "summary": "Final candidate commit and full local gate not yet established; publication remains blocked",
+      "resolution": "Commit original evidence locally, verify ancestry/identity and execute full gate externally; coordinator retains publication/human/hosted gates"
+    }
+  ],
+  "next_action": {
+    "phase": "Review",
+    "action": "Preserve completed Review; finish P02-T02 local commit and external full gate without repeating Review"
+  },
+  "prioritized_follow_ups": []
+}

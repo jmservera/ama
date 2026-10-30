@@ -1,0 +1,31 @@
+{
+  "task_id": "97-b6",
+  "task_slug": "fictional-form-review-97-b6-rubric",
+  "parent_task": {"task_id": "97-fin001", "task_slug": "fictional-form-review-97-fin001"},
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-23/fictional-form-review-97-b6-rubric-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-23/fictional-form-review-97-b6-rubric-plan.md",
+    "details": ".copilot-tracking/details/2026-10-23/fictional-form-review-97-b6-rubric-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-23/fictional-form-review-97-b6-rubric-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-23/fictional-form-review-97-b6-rubric-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-23/fictional-form-review-97-b6-rubric-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Critique executed once before implementation", "status": "Revise; PC-001..PC-007 accepted", "evidence": "critique and plan Critique Disposition"},
+    {"decision": "Review executed once", "status": "Complete; outcome Residual work", "evidence": "review log"},
+    {"decision": "No hand edit of generated latest.json", "status": "confirmed", "evidence": "git diff a74652aa HEAD for latest.json is empty"}
+  ],
+  "blockers": [
+    {"id": "B6", "summary": "Generated rubric B6 rationale/evidence mismatch unresolved; needs rescore or owner decision", "resolution": "coordinator or owner"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator schedules one complete gate after PR 441 releases the lock, then independent exact-head review; push needs owner-authorized force-with-lease or reset plus merge"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Resolve B6 by rescore, bot-commit removal or recorded residual", "rationale": "Open reviewer finding", "evidence": "changes record"},
+    {"rank": 2, "task": "Add rationale-versus-evidence check to gate.py", "rationale": "Root cause", "evidence": "gate.py lines ~180-196"},
+    {"rank": 3, "task": "Investigate 21 failing rubric-script tests", "rationale": "Unrelated inherited", "evidence": "pytest run"}
+  ]
+}
