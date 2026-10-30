@@ -111,10 +111,15 @@ def run(axe: Path, out: Path) -> None:
                 expect(page.locator("#closed-results")).to_have_text(
                     "24 matching closed cases. Page 1 of 2."
                 )
+                expect(page.get_by_role("link", name="Previous page", exact=True)).to_have_count(0)
+                expect(page.get_by_text("Previous page (unavailable)", exact=True)).to_be_visible()
+                expect(page.locator("tbody tr")).to_have_count(20)
                 page.get_by_role("link", name="Next page", exact=True).click()
                 page.wait_for_url("**#/closed?page=2")
                 expect(page.locator("#closed-results")).to_contain_text("Page 2 of 2")
                 check("last page has four cases", page.locator("tbody tr").count() == 4)
+                expect(page.get_by_role("link", name="Next page", exact=True)).to_have_count(0)
+                expect(page.get_by_text("Next page (unavailable)", exact=True)).to_be_visible()
                 page.reload()
                 expect(page.locator("#closed-results")).to_contain_text("Page 2 of 2")
                 page.get_by_role("link", name="Previous page", exact=True).click()
@@ -149,6 +154,20 @@ def run(axe: Path, out: Path) -> None:
                 page.get_by_role("button", name="Apply filters").click()
                 expect(page.locator("#closed-results")).to_contain_text("0 matching closed cases")
                 expect(page.locator("tbody")).to_contain_text("No recorded data")
+                expect(page.get_by_role("navigation", name="Closed case pages").get_by_role("link")).to_have_count(0)
+                expect(page.get_by_text("Previous page (unavailable)", exact=True)).to_be_visible()
+                expect(page.get_by_text("Next page (unavailable)", exact=True)).to_be_visible()
+                empty_url = page.url + "&page=999"
+                page.goto(empty_url)
+                expect(page.locator("#closed-results")).to_have_text(
+                    "0 matching closed cases. Page 1 of 1."
+                )
+                page.wait_for_url(empty_url.removesuffix("999") + "1")
+                expect(page.locator("#progress-status")).to_have_value("Withdrawn")
+                expect(page.locator("#progress-team")).to_have_value("Quality Inspector")
+                expect(page.locator("#progress-start")).to_have_value("2026-10-04")
+                expect(page.locator("#progress-end")).to_have_value("2026-10-04")
+                expect(page.locator("#progress-q")).to_have_value("No such fictional case")
                 page.get_by_role("link", name="Reset filters", exact=True).click()
                 page.get_by_role("table", name="Matching closed cases", exact=True).wait_for()
                 # The safety fixture is on page two in stable reference order.
