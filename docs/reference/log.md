@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-10-25
+ms.date: 2026-10-29
 ms.topic: reference
 ---
 
@@ -8048,6 +8048,22 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   acceptance, wider assistant/form challenge coverage, #224 legal screening
   and #440 stabilization remain open. No acceptance criterion is ticked and
   no operational, fairness, Azure or whole-epic approval is inferred.
+
+## [2026-10-29] query | Presentation paper and journey evidence refresh
+
+* Added a dated claim table to the
+  [regulatory review update](./regulatory/reviewed-updates/2026-10-29-presentation-paper-claim-review.md)
+  and linked it from the regulatory register, deck index and knowledge-base
+  index. Official-page retrieval failed; currentness is `unknown` except for
+  discrepancies established by retained source records.
+* Updated the paper only to date its sixteen-snapshot regulatory corpus
+  (downloaded 2026-09-19) and note the failed 2026-10-29 retrievals; it makes
+  no EPC policy change. The review and Cowork v2 handoff record the later
+  two-metric EPC policy, the 15,600/15,900 band-count discrepancy and the
+  38%/39% survey-vintage mismatch; presentation binaries remain unchanged.
+* No snapshot was rewritten. No legal duty is declared satisfied or approved.
+  @jmservera is asked to appoint a qualified Legal/Compliance reviewer;
+  Finance/funder confirmation remains necessary for grant terms.
 ## [2026-10-27] engineering | Bounded IoT streaming (Refs #110, #184)
 
 * Extended the [existing IoT synthesis](./research/iot-sensor-analytics-research-plan.md#bounded-streaming-engineering-2026-10-27-refs-110-184)

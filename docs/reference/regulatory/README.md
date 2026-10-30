@@ -1,7 +1,7 @@
 ---
 title: Regulatory Context Reference Documents
 description: Authoritative reference documents for the Case Study 48 regulatory context
-ms.date: 2026-10-15
+ms.date: 2026-10-29
 ms.topic: reference
 ---
 
@@ -79,6 +79,16 @@ supporting detail will change, not the importance of the source.
 Phase 3 of Awaab's Law is not represented by an implementing instrument in
 this collection. Monitor MHCLG, legislation.gov.uk and GOV.UK monthly, moving
 to weekly checks when draft regulations are laid.
+
+## Reviewed Update: Presentation Paper and Cowork v2 Claims (2026-10-29)
+
+The dated claim inventory is in the
+[paper and Cowork v2 evidence review](./reviewed-updates/2026-10-29-presentation-paper-claim-review.md).
+It records the final-policy change to the EPC-C framing, the handoff's
+38%-versus-39% self-report source discrepancy, and the due RSH stock release.
+Official-page retrieval failed on 2026-10-29, so unverified currentness remains
+`unknown`; earlier source snapshots and the 2026-10-23 sector report were not
+rewritten. No legal or funding interpretation is approved.
 
 ## Managed Update Workflow
 
