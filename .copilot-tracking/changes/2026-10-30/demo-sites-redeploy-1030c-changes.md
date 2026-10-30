@@ -190,3 +190,30 @@ resolved. Git-commit skill's additional instruction file was absent and its
 get_changed_files tool unavailable; repository-required explicit staging,
 Git diff checks and identity/Refs/trailer readback are used instead.
 Local commit proof will be recorded after execution, not presumed here.
+
+## Local Persistence and Task Closeout
+
+`PYTHONDONTWRITEBYTECODE=1 python3 <root>/commit.py` exit0:
+nine explicit evidence paths committed as8507e31cdfd16d00dddd34e7def9b0d510f75588,
+`chore(ops): redeploy both demo sites from main 252a498e`.
+Every helper subprocess check=True: nonempty .gitignore, correct branch,
+initial empty index/exact nine changed paths, JSON/sensitive-marker/whitespace
+checks, fresh gh api user, computed repository-local privacy-safe identity for
+author/committer, explicit staging/exact staged set, commit via STDIN and exact
+message/email/trailer/clean-tree readback. Refs #563/#550/#568 only and required
+Copilot trailer verified. Actual local-commit-proof.json remains external.
+No push/PR/merge/amend/rebase/history rewrite.
+
+Original Review Complete / Residual work preserved, not reclassified or
+repeated. Its RV001 administrative local-persistence action handled here.
+All P01/P02/P03 complete. RV002 signed-in/model/human acceptance, RV003 AI
+activation/prerequisites and RV004 console attribution remain distinct later
+owner-selected work; no current operational blocker or inferred acceptance.
+Full requested manual RPI sequence complete; session stops with AI off.
+
+This final four-file plan/details/state/changes administrative reconciliation
+is persisted by `PYTHONDONTWRITEBYTECODE=1 python3 <root>/commit.py --closure`
+with the same fresh identity, exact paths, Refs/trailer and clean-tree checks.
+Its actual commit/result is retained externally in closure-commit-proof.json
+and session events rather than predeclared successful here. No cloud/source
+change or second Review follows. No publication receipt/human approval claimed.
