@@ -1,7 +1,7 @@
 ---
 title: Source cut-over evidence pack
 description: Dated parity, private SQL and public edge proof with remaining owner gates
-ms.date: 2026-10-29
+ms.date: 2026-10-30
 ms.topic: reference
 ---
 
@@ -2136,6 +2136,29 @@ scenario validator confirms the existing pins without re-pinning. The
 authoritative-main rubric suite still reports 18 failed, 355 passed and seven
 missing-runtime skips. Those failures are not repaired here; no fresh hosted
 CI or remote mergeability is claimed before the coordinator's push.
+
+### Current-main synchronization (2026-10-30)
+
+Refs #198, PR #507. The new conflict rebase first used main
+`91e890e07af036263316c153cbc7ceff780cdaa2`, then integrated the concurrently
+updated `ffd8f35e63b24905b9aeb937dbf2a7fe9968747f` before Review.
+The intervening changes affect only a training-material development lockfile.
+Main's complete rubric and scenario
+manifest are retained, together with all independent index entries, both
+append-only log histories and the original dated RPI outcomes. The earlier
+integration bases and test counts above remain historical observations, not
+results for this candidate. No application, workflow, infrastructure or legacy
+code is changed. Local synchronization does not establish a fresh hosted CI
+result, remote mergeability, publication approval or whole-issue acceptance;
+the coordinator owns the later push and hosted checks.
+
+For this candidate, core/API Ruff lint, format and mypy passed, as did twelve
+focused manifest/dependency tests and twenty-five migration regressions.
+Scenario source pins validated without re-pinning. Main's unchanged rubric
+suite still reports 18 failed, 355 passed and seven missing-runtime skips;
+this is not a green full-suite result. The actual prepare decision is
+`should_score=false`, baseline 77/100, because no scored artifact changed.
+No full API suite or full publication gate was run.
 
 ### Baseline and score provenance
 

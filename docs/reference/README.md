@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-10-29
+ms.date: 2026-10-30
 ---
 
 ## Purpose
@@ -87,6 +87,9 @@ seed/trigger assumptions but retained one unrelated deck-selection failure
 and seven missing-runtime skips. The 2026-10-29 integration keeps main's
 rubric and scenario manifest, not those original rubric edits; historical
 test counts are not current-candidate results.
+The [2026-10-30 synchronization](../architecture/cutover-evidence-pack.md#current-main-synchronization-2026-10-30)
+retains the same upstream-input and history-preservation boundaries on the
+latest reviewed main; publication and hosted checks remain coordinator-owned.
 Missing fresh historical comparisons and the original registry sequencing
 remain acceptance gaps; no migration-attributed gain or whole-issue closure
 is inferred.
