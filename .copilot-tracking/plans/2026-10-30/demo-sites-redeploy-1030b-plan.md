@@ -102,11 +102,11 @@ Playwright context; no password/session import or OAuth query logging.
 #### [ ] P02-T02: In-VNet initialization then resident/employee roll (blocked)
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Verification and local handoff
+### [x] P03: Verification and local handoff
 <!-- rpi:task id=P03-T01 -->
 #### [x] P03-T01: Warm public checks, Playwright and final preservation
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: Reconcile, independent Review and local evidence commit
+#### [x] P03-T02: Reconcile, independent Review and local evidence commit
 
 ## Test Ownership
 
@@ -138,6 +138,8 @@ independently eligible work, full deployment still blocked.
 
 Implement only P01/P03 while B1 unresolved; P02 stays unchecked. Changes path:
 .copilot-tracking/changes/2026-10-30/demo-sites-redeploy-1030b-changes.md.
-P01 and P03-T01 now complete. P02 blocked; P03-T02 ready for exactly one
-independent Review, then local administrative commit. AC2..4 remain unmet;
-overall implementation Partial/Blocked, not deployment success.
+P01/P03 complete. Original evidence committed locally as
+baef7d8f33970cddd8af7250736ec9bd7caf00f2 after one independent Review,
+Complete / Not accepted. P02 and AC2..4 remain blocked/unmet. Overall
+implementation Partial/Blocked, not deployment success. Final parent-status
+persistence is administrative only; no second Review or implementation.

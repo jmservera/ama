@@ -157,7 +157,16 @@ Findings routed once, no post-Review implementation or repeated Review.
 
 ## Local Persistence Boundary
 
-Original eight dated task artifacts will be committed locally with fresh
-authenticated privacy-safe author/committer identity, Refs only and exact Copilot
-trailer. No push, PR, merge, amend or publication receipt. The requested full
-RPI sequence is complete, but redeployment is NOT complete. P02 remains blocked.
+Original eight dated task artifacts committed locally as
+baef7d8f33970cddd8af7250736ec9bd7caf00f2 with fresh authenticated privacy-safe
+author/committer identity, Refs only and exact Copilot trailer. `test -s .gitignore`,
+whitespace/status checks, fresh `gh api user`, repo-local name/email config,
+exact eight-path stage equality, JSON/sensitive-marker checks, staged diff check,
+`git commit -F -`, author/committer/trailer readback and clean-tree check all
+succeeded. No push, PR, merge, amend or publication receipt.
+The requested full RPI sequence is complete, but redeployment is NOT complete.
+P02 remains blocked. This final parent-status/marker update is administrative,
+persisted separately without modifying original critique/Review/machine evidence
+or performing post-Review implementation. Private backups, local images and
+raw receipts retained. Owner needs an authorized publishing path before a
+fresh admitted rollout; the existing sites and AI default-off state are unchanged.

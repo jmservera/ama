@@ -4,8 +4,8 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Review",
-  "status": "active",
-  "session_status": "running",
+  "status": "blocked",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-30/demo-sites-redeploy-1030b-research.md",
     "plan": ".copilot-tracking/plans/2026-10-30/demo-sites-redeploy-1030b-plan.md",
@@ -22,13 +22,15 @@
     },
     {"decision": "Research executed Complete; ready for bounded partial implementation, full deployment blocked", "status": "recorded", "evidence": ".copilot-tracking/research/2026-10-30/demo-sites-redeploy-1030b-research.md"},
     {"decision": "One critique Complete/Revise; PC-001 rejected because its asserted /tmp prohibition is absent and conflicts with exact shared-lock procedure", "status": "disposed", "evidence": ".copilot-tracking/plans/2026-10-30/demo-sites-redeploy-1030b-plan.md#critique-disposition"},
-    {"decision": "One post-implementation Review Complete / Not accepted; full boundary and independent raw provenance assessed, RV-001..003 routed later", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-30/demo-sites-redeploy-1030b-review.md"}
+    {"decision": "One post-implementation Review Complete / Not accepted; full boundary and independent raw provenance assessed, RV-001..003 routed later", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-30/demo-sites-redeploy-1030b-review.md"},
+    {"decision": "Original eight dated RPI artifacts committed locally with verified privacy-safe identities, Refs/trailer and clean worktree; no push", "status": "completed", "evidence": "baef7d8f33970cddd8af7250736ec9bd7caf00f2"},
+    {"decision": "Requested manual full phase sequence finished; task remains blocked and no automatic follow-up session starts", "status": "confirmed", "evidence": "Current request local persistence only; P02/AC2-AC4 unmet"}
   ],
   "blockers": [
     {"id": "B1", "summary": "Exact prior publisher temporarily enables public ACR; current request forbids public network; existing private TCP route times out", "resolution": "Owner-approved usable private publishing path, or explicit authority amendment for prior temporary VM/32 exception"},
     {"id": "B2", "summary": "Resident AI enablement/endpoint absent; prior sentence-selector pilot does not establish generated-prose activation or live accounting prerequisites", "resolution": "Keep disabled; owner confirms generated-answer scope and any missing SQL migration/grants, then verify allowance and existing MI access"}
   ],
-  "next_action": {"phase": "Review", "action": "Persist original evidence locally then stop; owner clears RV-001 network/procedure conflict before any later deployment"},
+  "next_action": {"phase": "Plan", "action": "Owner clears RV-001 network/procedure conflict before later /rpi-plan and fresh deployment; confirm RV-002 generated-prose pilot scope separately"},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Resolve approved publishing execution path", "rationale": "Unblocks all undelivered current-main rollout criteria without weakening current network restrictions", "evidence": "RV-001"},
     {"rank": 2, "task": "Confirm generated-prose pilot scope and live accounting/access/allowance prerequisites", "rationale": "Required before optional activation; existing tariff expires Nov1, no speculative extension", "evidence": "RV-002"},
