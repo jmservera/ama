@@ -7,22 +7,30 @@ ms.topic: reference
 
 ## Main-Story Argument
 
-Control one home before adding platforms. Once the evidence and ownership
-work, improve repeated preparation, make service easier to reach, and reuse
-portfolio history. Each addition must solve a named problem better than its
-simpler comparator. The roadmap is a set of conditional recommendations, not
-a purchase order, approved delivery dates or measured benefits.
+We built Zava Forward to turn fragmented retrofit work into an owned,
+evidence-linked next step. Establish that product and the reasoning behind
+it before proposing more technology. Today the foundation is the Workbench,
+shared API, SQL/Blob, deterministic rules, bounded AI and existing read-model
+reporting. Neither Microsoft Fabric nor Power BI is part of the current product.
+
+Near the close, propose how joined portfolio history, consistent definitions
+and relationship-aware agent context could make that foundation stronger.
+The future is conditional, not a purchase, approved delivery date, installed
+platform or measured benefit. The broader proposal register remains a review
+inventory, not a technology shopping list to read through the main story.
 
 | Main page | Storytelling job |
 | --- | --- |
-| 14 / S13 | Make selective Microsoft Fabric and Power BI a visible portfolio-insight option; SQL remains authoritative; explain value, delay and comparison |
-| 15 / S14 | Start with bounded files, then connect source systems and extract document fields when authority, accuracy and reconciliation are proven |
-| 23 / S20 | Show the complete capability roadmap, with required readiness underneath and four conditional improvement lanes |
-| 24 / S21 | Ask for a bounded validation scope, owners and one portfolio question, followed by a costed proposal before paid execution |
+| 8 / S07 | Explain how the brief and sector sources became role-instrument research, journey hypotheses, pain/gain synthesis and bounded design/test decisions |
+| 13 / S12 | Show one genuine resident-journey example, with actions/needs, pain hypotheses and proposed responses; retain editable Excalidraw and source trace |
+| 14 / S13 | Show what we built: scoped case/evidence, owned next action, versioned reviews, bounded help and current reporting |
+| 15 / S14 | Explain existing preview/quarantine/export library and CLI, plus the limits of an unaccepted web/enterprise adoption journey |
+| 23 / S20 | Propose future Fabric/Power BI history and shared measures, plus optional semantic/ontology context for agents; not current product components |
+| 24 / S21 | Verify the current journey, compare analytics for one question and test context independently; cost and authorize execution separately |
 | 26 / S23 | Close on an evidence-led next step rather than a guaranteed pace, platform purchase or automatic scale-up |
 
-The five replacement/bridge slots retain the existing 50/70/60/60/30-second
-allocations. The 54-page structure, 23:45 narration plan, discussion reserve
+The existing page slots are retained, including 60 seconds each for discovery
+and the resident map. The 54-page structure, 23:45 narration plan, discussion reserve
 within 30 minutes and separate ten-minute demo remain. These are planned,
 unrehearsed timings. Appendix answers retain deeper comparison detail.
 
@@ -106,6 +114,29 @@ are dispositions, not a commitment to implement every option.
 | Operations / full AI cost controls | Required-readiness and monitoring gap matrix; no hard-stop claim from alerts |
 | Delivery consolidation experiment | Separate paused-research row and shortened page-22 lesson, not product scope |
 
+## Future History And Agent Context
+
+Keep the 60,000 fictional stock homes, 980 retained programme cases and
+43.8M generated daily observations over 730 days distinct. They are not one
+joined production dataset, resident-account count or validated device inventory.
+Historical volume makes reusable history a credible future question, not proof
+that the existing SQL design is inadequate.
+
+The [30 October ontology follow-up](../../reference/research/microsoft-fabric-fit-assessment.md#future-agent-context-option-2026-10-30)
+records current official product evidence: ontology is preview, defines
+business entities/relationships/source bindings and can provide context to
+supported consumers. Illustrative Home -> Assessment -> Measure -> Evidence
+links could make permitted source context less dependent on ad hoc joins and
+prompt explanations. Source versions, missing relationships and unknowns must
+remain visible; context is not authority, permission, consent or a quality result.
+
+Evaluate existing scoped context, curated SQL/read-model context and optional
+ontology context against checked answers, unsupported claims, abstention,
+stale/forbidden links, review/correction effort, latency and full cost. This
+test is independent of whether a managed analytics investment wins. Better
+context might come from the simpler SQL projection. No direct compatibility
+with the current assistants or quality gain has been demonstrated.
+
 ## Fabric Recommendation And Stop Condition
 
 Retain API/core/Azure SQL as operational authority. Compare one named portfolio
@@ -115,8 +146,9 @@ freshness/query behaviour, source load and full cost, plus denial/recovery.
 Existing approved spare capacity may improve the case, but is not assumed.
 
 Adopt the least complex configuration that wins the comparison without
-weakening controls. If SQL/history plus Power BI meets the need more simply,
-keep it. Add analytical Q&A or time-series workloads only for distinct needs.
+weakening controls. Existing SQL/read-model reporting is the current baseline;
+Power BI Import and selective Fabric are both future options, not already
+installed components. Add analytical Q&A or time-series workloads only for distinct needs.
 Mirroring does not inherit application permissions or create retained audit
 history. Fabric SQL ledger limits rule out an equivalent operational swap
 on the assessed evidence, not all selective current-table replication.

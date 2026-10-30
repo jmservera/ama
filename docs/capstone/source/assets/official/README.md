@@ -22,8 +22,9 @@ reserves other rights; this page does not grant broader trademark permission.
 
 The [asset catalog](../catalog.json) pins archive/member/source/derived hashes,
 retrieval date, dimensions and exact slide usage. The native builder preserves
-aspect ratio and verifies original SVG, PNG and packaged usage. Fabric appears
-on main pages 14 and 23; Power BI's official icon appears on page 14.
+aspect ratio and verifies original SVG, PNG and packaged usage. Both official
+icons appear only on future-roadmap page 23, not current-product pages 14-15.
+Their placement is a proposal, not current adoption or deployed integration.
 
 Retain all four image inputs and the catalog for reconstruction. The source
 SVGs carry the original design; PNGs supply cross-viewer presentation support.

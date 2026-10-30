@@ -80,8 +80,11 @@ officer routes stay available; login is not works consent.
 ## Technology Questions
 
 Keep the demo on one home and an accountable next action, not a platform tour.
-Main pages 14/15 explain optional Fabric and input preparation; page 23 shows
-the conditional roadmap and page 24 separates planning from execution approval.
+Main pages 14-15 explain the built Workbench and existing file/CLI adoption.
+The demo is that current-product story, not the future platform. Page 13's
+resident map explains the pains and design responses, labelled as hypotheses.
+Only closing pages 23-24 propose optional Fabric/Power BI history and richer
+semantic/preview ontology context; analytics and context tests are separate.
 Use page 31 for rules versus Decision 1 versus generation, page 37 for the
 shared API/SQL/Blob decision, page 46 for the source-only IoT route and page 47
 for conditional Fabric analytics. The updated sensor route includes the

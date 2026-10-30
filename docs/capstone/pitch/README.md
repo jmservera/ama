@@ -44,19 +44,21 @@ at 23:45, leaving 6:15 inside the 30-minute presentation slot for questions
 and contingency. The separate demo is ten minutes, with its outcome hook
 inside two minutes. These are plans, not observed timings.
 
-Follow the argument: stakes and qualified legal/policy timelines -> service/handoff problem -> research
-and alternatives -> one-home workbench -> shared insight and better inputs ->
-bounded AI and controls -> cost and delivery learning -> conditional roadmap ->
-bounded planning decision -> demo -> close. Replacements retain the existing
-slots rather than adding scheduled slides.
+Follow the argument: problem and stakes -> evidence and journey hypotheses ->
+how those changed the design -> the built Workbench and bounded adoption ->
+rules, AI and controls -> costs and delivery learning -> separate future
+history/context proposal -> evidence-led next step -> current-product demo
+and close. Fabric and Power BI are not part of today's product. They are
+proposed only near the end of the main presentation, before optional Q&A.
 
 | Moment | Main message / optional depth |
 | --- | --- |
-| Page 13: same-home blueprint | A changed fact has an owner; resident choice, Finance and QA remain separate |
-| Page 14: Microsoft Fabric + Power BI | Shared history/measures could reduce repeated preparation; wait for governed inputs, workload and full cost; compare SQL/BI first |
-| Page 15: connect and extract | Less re-keying/transcription; source authority, document accuracy and tenant reconciliation unlock adoption |
+| Page 8: discovery method | Brief/sector evidence -> role research instruments -> journey hypotheses -> pain/design/test; eight earlier challenge instruments versus nine later atlas instruments, not interviews |
+| Page 13: resident journey | DT Coach's editable Excalidraw map connects actions/needs, pain hypotheses and proposed gains across five moments; direct validation pending |
+| Page 14: what we built | Owned work, versioned evidence, separate decisions, bounded assistance and existing read-model reporting; dated technical proof is not whole-service acceptance |
+| Page 15: bounded adoption | Existing preview/quarantine/export library and CLI, not an accepted web import journey or live enterprise replacement |
 | Page 16: AI placement | Five business capabilities; rules enforce, models propose and people decide |
-| Pages 22-24: lesson, roadmap, decision | Test usability before adding capability; four improvement lanes; agree scope/owners, cost the plan, authorize execution separately, review results before expansion |
+| Pages 22-24: lesson, future, decision | Test usability, then propose future portfolio history and semantic/preview ontology context. Compare analytics and agent context independently; retain the simpler route when it wins |
 | Page 31 / B04 | Decision 1 must beat the parser/manual comparator; a successful call is not a benefit result |
 | Page 37 / B10 | Shared Container Apps API, Entra, SQL and Blob; split only for measured operating need |
 | Page 46 / B19 | Source-only synthetic IoT flow, private Event Hub and independent human safety route |
@@ -67,7 +69,8 @@ slots rather than adding scheduled slides.
 
 * Keep posture still for the recommendation and the final ask; do not talk to the diagram.
 * Use one measured gesture across the workflow, then separate resident, professional and Finance decisions.
-* Move aside for dense evidence or the same-home blueprint; return attention to the room for the conclusion.
+* On page 13, trace contact, choice and aftercare once; do not read every map cell. Distinguish the pain hypothesis, designed response and actual test.
+* On pages 23-24, pause on "future, not today's product" and "ontology is preview"; explain the benefit in business terms before naming components.
 * Say "historical observation", "source implementation", "proposed" or "not evaluated" where each applies.
 * Slow the voice for currencies, denominators, alternatives and unknowns; do not rush caveats after a confident claim.
 * Keep facial expression neutral and attentive during challenge; restate the objection before defending the design.

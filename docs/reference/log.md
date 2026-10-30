@@ -8459,3 +8459,42 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   file, application, infrastructure or original RPI evidence was changed.
   No hosted score, complete publication gate, commit, push, cloud/tenant action,
   paid inference or spending approval was performed by this task.
+
+## [2026-10-30] refine | Product-first story, DT journey and future context
+
+* Applied the owner's correction that Fabric and Power BI are not current
+  product components. Current pages 14-15 now explain the built Workbench,
+  owned/versioned controls, bounded AI, read-model reporting and actual file/CLI
+  adoption limits. Only closing pages 23-24 propose future history/semantics
+  and separately evaluated agent context. The prior roadmap/review above is
+  retained as the earlier candidate, not rewritten into the current outcome.
+* Worked with the DT Coach and Product Manager Advisor. The
+  [editable resident journey](../capstone/source/diagrams/discovery-journey/text-equivalent.md)
+  retains Excalidraw/SVG/PNG, deterministic generator, provision-level sources
+  and five pain -> design -> test traces. Page 8 shows the discovery method;
+  page 13 shows five resident moments with actions/needs, pain hypotheses and
+  proposed gains. Eight earlier challenge instruments and nine later atlas
+  instruments are not interviews; the 27+1 maps are hypotheses, not validation.
+* Added a [dated ontology follow-up](./research/microsoft-fabric-fit-assessment.md#future-agent-context-option-2026-10-30)
+  using official Fabric IQ/ontology pages retrieved 30 October. Ontology is
+  preview and a future context option, not current integration or automatic
+  quality/authority. The 60,000 fictional homes, 980 cases and 43.8M synthetic
+  readings remain separate cohorts. A curated SQL context can win without
+  adopting managed analytics; analytics and context comparisons are independent.
+* Independent product, visual and DT follow-ups found no material remaining
+  issue in their reviewed scopes after exact layout/narration corrections.
+  [Original findings and owner correction](../capstone/source/review-2026-10-30.md)
+  remain visible. Native render preserves 54 slides/notes, 108 action targets,
+  all timing and protected cost evidence; zero revised overflow and 231 inherited
+  bounds warnings do not establish accessibility or human acceptance.
+* Focused scorer regressions pass 22 tests; actual isolated-index extraction
+  verifies current product without early future logos, future-only page 23,
+  preview/independent context statements, image hashes and registered pitch/demo.
+  DT source checks pass 49 elements, 15 cells, 22 locators, 31 links and exact
+  regeneration. The approved Excalidraw viewer required sign-in; no diagram was
+  uploaded and no native browser export is claimed. The PNG is rasterized by
+  PowerPoint from the same-geometry SVG. Previous delivery is preserved externally.
+* No original RPI evidence, application/infrastructure, thought-leadership files,
+  scorecard or prior staged selection was discarded. No deployment, tenant
+  mutation, paid inference, spending approval, commit, push, hosted rubric run,
+  full RPI publication gate, rehearsal or direct user/AT acceptance was performed.

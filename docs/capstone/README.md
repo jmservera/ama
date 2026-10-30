@@ -17,7 +17,8 @@ choice between the older executive and Cowork routes.
 | Find image inputs and provenance | [Asset catalog](./source/assets/catalog.json), [retained media](./source/assets/media/) and [official Fabric/Power BI sources](./source/assets/official/README.md) |
 | Prepare the pitch | [Speaker notes](./pitch/speaker-script.md), [question bank](./pitch/questions-and-answers.md) and [pitch folder](./pitch/) |
 | Prepare the demo | [Ten-minute runbook](./demo/runbook.md), including the under-two-minute executive hook and recovery route |
-| Understand what comes next | [Roadmap recommendations and full proposal crosswalk](./source/roadmap-recommendations.md); main pages 14, 15, 23 and 24, with a bounded close on page 26 |
+| Understand the discovery and journey | [DT Coach method, pain/gain and decision trace](./source/diagrams/discovery-journey/text-equivalent.md), [editable Excalidraw](./source/diagrams/discovery-journey/resident-journey.excalidraw) and [PNG](./source/diagrams/discovery-journey/resident-journey.png); main pages 8 and 13 |
+| Understand what comes next | [Future roadmap and proposal crosswalk](./source/roadmap-recommendations.md); future Fabric/Power BI and agent-context proposal only near the close on pages 23-24 |
 | Understand technology choices | [Decision register](./source/README.md#technology-decisions); main page 16 and deeper appendix comparisons |
 | Inspect findings and checks | [30 October roadmap review](./source/review-2026-10-30.md) and preserved [29 October review](./source/review-2026-10-29.md) |
 | Recover previous work | [History and restore map](./history/README.md); original findings and authoring sources are retained |
@@ -33,8 +34,11 @@ Keep the complete source package and its builder dependencies. The JSON covers
 all 54 slide records and notes; the pinned native baseline owns unchanged
 layouts, relationships, themes and embedded graphics. JSON alone does not
 reconstruct those native designs. Keep the 36 captured media inputs and the
-two official roadmap product icons, each with original SVG and PNG derivative.
-The catalog pins every input and approved new-image placement.
+two official future-roadmap icons, each with original SVG and PNG derivative,
+and the DT journey's editable Excalidraw, SVG, PNG, generator and text equivalent.
+The catalog pins every input and approved new-image placement. Neither Fabric
+nor Power BI is a current product component; pages 14-15 explain the built
+Workbench and existing bounded adoption tools without those logos.
 
 Keep pitch and demo material together with the same deck revision. Do not edit
 the generated speaker notes or Q&A independently of the source manifest.
