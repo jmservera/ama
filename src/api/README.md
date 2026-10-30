@@ -75,15 +75,25 @@ PYTHONPATH=src:../core/src:../agents/src:tests:../core/tests:../agents/tests \
   /tmp/mv/bin/python -m unittest test_case_journey test_workspace_scripts \
   test_design_system test_accessibility_baseline test_content_standard -q
 PYTHONPATH=src:../core/src:../agents/src:tests:../core/tests:../agents/tests \
-  /tmp/mv/bin/python -m checks.case_view_ux_browser_check --out /new/external/case-results
+  /tmp/mv/bin/python -m checks.case_view_ux_browser_check --out /new/external/case-results \
+  --axe /path/to/axe-4.10.3.min.js
 node --check src/zava_forward/api/web/case-workspace.js
 node --check src/zava_forward/api/web/app.js
 ```
 
+Normal verification requires the repository-hash-verified axe-core 4.10.3 asset
+before starting the app.
 The browser check starts and stops its own constructed-data loopback app,
 blocks external requests and records 1280/390/320px geometry and screenshots,
 keyboard/touch disclosure, enlarged text, retained fields, panel scrolling and
-both enhancement-fallback paths. `--baseline` captures pre-change geometry.
+both enhancement-fallback paths. Attached-tab geometry and actual keyboard
+panel scrolling are checked at all three widths. Axe scans the overview, open
+blocker and scrolled Resident panel at each width, rejects every violation,
+and retains full findings and incomplete checks in `results.json`, including
+on a failed run. Incomplete axe checks still need human assessment.
+`--baseline` captures geometry without requiring axe and is not acceptance
+verification. The UI was already delivered by PR #554; a later verification
+run is not a new before/after redesign.
 These are focused local engineering checks, not publication or WCAG acceptance.
 
 ## Shared resident and employee chat widget (#550)
