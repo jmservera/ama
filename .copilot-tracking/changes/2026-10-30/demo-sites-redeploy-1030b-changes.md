@@ -170,3 +170,18 @@ persisted separately without modifying original critique/Review/machine evidence
 or performing post-Review implementation. Private backups, local images and
 raw receipts retained. Owner needs an authorized publishing path before a
 fresh admitted rollout; the existing sites and AI default-off state are unchanged.
+
+## Owner-selected Publishing Continuation (13:10Z Update)
+
+The original blocked execution and Review above are unchanged historical records.
+Owner now explicitly authorises the short VM-IP ACR window and selects RV-001
+continuation in this same worktree. Child demo-sites-redeploy-1030b-publish
+preserves one critique/Review per task rather than repeating the original
+assessment. Dated research/plan/details/changes/machine evidence use that slug.
+Child changes:
+.copilot-tracking/changes/2026-10-30/demo-sites-redeploy-1030b-publish-changes.md.
+Both current-main images now published, initializer Succeeded, both exact new
+revisions healthy/ready/traffic100, ACR exact private restoration, min0/eight
+Manual preserved. New-source curl/browser anonymous checks complete; child
+independent Review/local persistence follows. AI remains off; original RV-002
+activation and RV-003 authenticated/model acceptance boundaries are not closed.

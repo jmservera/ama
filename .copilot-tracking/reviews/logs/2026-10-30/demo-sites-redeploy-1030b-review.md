@@ -129,3 +129,19 @@ completion, conformance, issue closure, live acceptance or publication approval.
 Full publication gate, hosted/human approval and push were not requested/run.
 Local commit identity/trailer/clean-tree checks occur after this assessment.
 No second Review or in-task implementation follows; later work owns RV-001..003.
+
+## Owner-selected RV-001 Continuation
+
+Appended after the owner's13:10Z ACR publishing decision. All original Review
+execution/outcome/findings above remain unchanged historical evidence. The
+selected later child demo-sites-redeploy-1030b-publish completed its own one
+critique and one independent Review in this same worktree. Current-main source
+a72cb268 is now published/initialised/deployed on both exact new healthy/ready
+targets, with private ACR/min0/eight Manual and config/auth/history preserved.
+Child Review Complete / Residual work: operational AC1..7 conformant, no new
+substantive defects; local administrative persistence remained pending at that
+assessment. No retrospective change to this original Not accepted outcome.
+AI stays off and authenticated/model acceptance remains separate later work.
+Child changes and one Review:
+.copilot-tracking/changes/2026-10-30/demo-sites-redeploy-1030b-publish-changes.md;
+.copilot-tracking/reviews/logs/2026-10-30/demo-sites-redeploy-1030b-publish-review.md.
