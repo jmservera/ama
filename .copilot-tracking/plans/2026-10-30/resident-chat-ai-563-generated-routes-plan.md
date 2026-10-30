@@ -58,7 +58,7 @@ README command selected an unrelated editable worktree; failed evidence is
 preserved and superseded by the explicit candidate-source run.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Review and persist locally
+### [x] P03: Review and persist locally
 <!-- rpi:task id=P03-T01 -->
 #### [x] P03-T01: One independent bounded Review
 
@@ -70,12 +70,18 @@ Completion: one independent Review executed Complete / Conformant, no source
 defect. RV-001 retains existing separate acceptance gates. All source
 fingerprints unchanged after validation and Review.
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: Local commit
+#### [x] P03-T02: Local commit
 
 Depends on P03-T01. Resolve authenticated noreply identity, commit implementation
 and original dated evidence with Refs #563 only and the exact Copilot trailer.
 No push. No publication acceptance claimed: the prior failed complete local
 gate is historical and a new exact-head complete gate is needed for publication.
+
+Completion: implementation and original dated Review/evidence committed locally
+as 7e0e0c6b148f4bd3322fe823ce42bd54ead99792, authenticated noreply author and
+committer, Refs #563 only and exact Copilot trailer. No push or Azure.
+The containing lifecycle-only commit records completion without changing
+the reviewed source or original Review.
 
 ## Follow-Up Items
 
