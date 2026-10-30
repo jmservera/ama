@@ -126,7 +126,7 @@ Later implementation or evidence collection does not require another Review. Pre
 
 ## Residual Work
 
-* Separate live-model, human/AT and legal/operational approval follow-ups remain with the owners above. They do not close #520/#563, activate the model, authorize deployment or expand this task.
+* Separate live-model, human/AT and legal/operational approval follow-ups remain with the owners above. They do not establish whole-issue acceptance for #520/#563, activate the model, authorize deployment or expand this task.
 * Final-browser and gate/base blockers are not silently reclassified as optional residual work.
 
 ## Blockers and Remaining Work

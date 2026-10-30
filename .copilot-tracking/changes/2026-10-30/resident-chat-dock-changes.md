@@ -103,8 +103,10 @@ their exact candidate remains browser-unverified.
 
 The one independent Review executed Complete, outcome Not accepted, with
 RV-001 High (missing final browser evidence) and RV-002 Medium (gate/current-main
-prerequisite). No source defect was demonstrated. Original Review and critique
-remain unchanged. Source diff digest independently reviewed:
+prerequisite). No source defect was demonstrated. Original Review outcome,
+findings and critique remain unchanged. An editorial reference-wording correction
+removes prohibited issue-action wording without another Review or verdict change.
+Source diff digest independently reviewed:
 222faedfd9740a83e7abdb287bcd113c9edcbb3f0cd178dde84fd40497d354bf.
 
 Local implementation/evidence commit:
