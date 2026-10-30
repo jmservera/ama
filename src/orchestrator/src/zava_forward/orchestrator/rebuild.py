@@ -76,7 +76,7 @@ ORDER = {
     "microsoft.insights/metricalerts": 1,
     "microsoft.insights/scheduledqueryrules": 1,
     "microsoft.authorization/roleassignments": 1,
-    "microsoft.cdn/profiles": 2,
+    "microsoft.cdn/profiles": 1,
     "microsoft.network/frontdoorwebapplicationfirewallpolicies": 3,
     "microsoft.insights/privatelinkscopes": 2,
     "microsoft.app/managedenvironments": 2,

@@ -43,7 +43,10 @@ release, credential and staff helpers are integration contracts, not invoked by
 this module. See the [infra runbook and residual gates](../../infra/README.md#rebuild-authoring-and-local-rehearsal-refs-148).
 All issue #148 acceptance criteria remain partial; local simulation cannot
 establish a disposable Azure rebuild. Unknown/locked/retained resource types
-fail closed rather than authorizing destruction. Run the new focused tests
+fail closed rather than authorizing destruction. Teardown removes Front Door
+profiles before their target managed environments, releasing the modeled
+managed Private Link origin dependency first; profiles also precede their WAF
+policies. Run the new focused tests
 from this directory after installing the package:
 
 ```bash

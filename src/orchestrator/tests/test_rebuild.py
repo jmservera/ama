@@ -164,6 +164,23 @@ class RebuildTests(unittest.TestCase):
             deletion_order(Inventory((child, parent)), LOCAL_SUBSCRIPTION), (child, parent)
         )
 
+    def test_front_door_profile_before_private_link_environment_and_waf(self) -> None:
+        app = resource("Microsoft.App/containerApps")
+        job = resource("Microsoft.App/jobs")
+        profile = resource("mIcRoSoFt.CdN/PrOfIlEs", "aaa-profile")
+        environment = resource("Microsoft.App/managedEnvironments", "zzz-environment")
+        waf = resource("Microsoft.Network/FrontDoorWebApplicationFirewallPolicies")
+        expected = (app, job, profile, environment, waf)
+        records = (environment, waf, job, profile, app)
+        for items in (records, tuple(reversed(records))):
+            with self.subTest(items=items):
+                inventory = Inventory(items)
+                self.assertEqual(deletion_order(inventory, LOCAL_SUBSCRIPTION), expected)
+                backend = MemoryBackend(inventory)
+                teardown(backend, LOCAL_SUBSCRIPTION)
+                self.assertEqual(backend.deleted, list(expected))
+                self.assertEqual(backend.state, Inventory())
+
     def test_invalid_scope_type_path_duplicate_and_safety_fail_before_delete(self) -> None:
         good = resource("Microsoft.App/jobs")
         invalid = (
@@ -330,6 +347,10 @@ class RebuildTests(unittest.TestCase):
         self.assertIn("no Azure adapter", report["scope"])
         self.assertEqual(
             [row["name"] for row in report["stages"]], [stage.name for stage in STAGES]
+        )
+        order = report["teardown"]["order"]
+        self.assertLess(
+            order.index("microsoft.cdn/profiles"), order.index("microsoft.app/managedenvironments")
         )
 
     def test_cli_rehearsal_ignores_private_dataset_and_prints_only_synthetic_scope(self) -> None:
