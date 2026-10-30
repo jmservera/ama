@@ -1,0 +1,51 @@
+{
+  "task_id": "190",
+  "task_slug": "sensor-simulation-validation-190",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/sensor-simulation-validation-190-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/sensor-simulation-validation-190-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/sensor-simulation-validation-190-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/sensor-simulation-validation-190-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/sensor-simulation-validation-190-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/sensor-simulation-validation-190-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the full ordered RPI loop on the supplied branch and base; commit locally only, using Refs #190.",
+      "status": "confirmed",
+      "evidence": "User request dated 2026-10-30 explicitly authorizes all four phases. No Azure, deployments, credentials, live sign-in or push."
+    },
+    {
+      "decision": "Research executed / Ready; Plan Ready after single critique Complete / Revise",
+      "status": "PC-001, PC-002 and PC-003 applied directly; no repeated critique",
+      "evidence": ".copilot-tracking/plans/2026-10-30/sensor-simulation-validation-190-plan.md, Critique Disposition"
+    },
+    {
+      "decision": "One independent original Review executed against the complete precommit candidate and approved base",
+      "status": "Complete / Not accepted for aggregate #190; no implementation defects identified",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-30/sensor-simulation-validation-190-review.md; RV-001 child acceptance, RV-002 downstream use, RV-003 base drift"
+    },
+    {
+      "decision": "Preserve the supplied branch/base and finish the authorized local-only commit",
+      "status": "No rebase, substituted base, repeated Review, remote mutation or push; publication blocked",
+      "evidence": "Fresh fetch after Review confirms origin/main df73e9028c20c95c789f4fb858433212de25e680 differs from approved a31048f15fa3120c58bacd22a375d86ae5ab7431. Exact final commit/gate result will remain external."
+    }
+  ],
+  "blockers": [
+    {"id": "RV-001", "summary": "Parent criterion requires actual child closure or accepted deferral; three children remain open.", "resolution": "Owner/coordinator records genuine completion or explicit accepted deferral; no authority inferred."},
+    {"id": "RV-002", "summary": "Actual #193 use by #111 and #133 tests remains absent.", "resolution": "Distinct downstream consumer work; standalone fixture checks do not substitute."},
+    {"id": "RV-003", "summary": "Current main has moved from the explicitly approved base; complete current-base gate and final exact-head assessment are unavailable.", "resolution": "Coordinator obtains base-reconciliation authority, then runs/verifies complete gate and independent exact-head assessment; no push here."}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator resolves RV-003 and RV-001; later selected consumer/live work owns RV-002 and #184. Wrapper commit/full-gate terminal evidence belongs in the external handoff; no publication-ready claim."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Resolve approved-base drift and committed-head publication gates", "rationale": "Highest immediate release leverage; prevents stale-base or unsupported publication without changing this reviewed candidate.", "evidence": "RV-003; fresh origin/main df73e9028c20c95c789f4fb858433212de25e680"},
+    {"rank": 2, "task": "Obtain actual child completion or owner-accepted deferrals", "rationale": "Low-code acceptance work with direct impact on the parent criterion; no remote decision is inferred.", "evidence": "RV-001; #191 closed, #192/#193/#194 open"},
+    {"rank": 3, "task": "Use retained retrofit scenarios in actual #111/#133 consumer tests", "rationale": "Closes the remaining engineering criterion but belongs to independently planned consumer work.", "evidence": "RV-002; #193 third acceptance criterion"},
+    {"rank": 4, "task": "Separately authorize and verify #184 live operation and credential lifecycle", "rationale": "Outside this explicit no-cloud/no-credential scope; local parity and mock transport cannot prove live acceptance.", "evidence": "Plan Follow-Up Items and existing bounded streaming synthesis"}
+  ]
+}

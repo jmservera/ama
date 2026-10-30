@@ -8283,3 +8283,17 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   evidence, historical acceptance or remote metadata update is claimed.
 * Prepared the replacement PR description separately for owner application.
   No rubric, test, source, workflow or score edits; local-only commit, no push.
+
+## [2026-10-30] query | Sensor validation and current two-stage dictionary, Refs #190
+
+* Filed current child dispositions and annual offline legacy-backfill/replay
+  validation boundaries in the existing IoT research synthesis and KB index.
+  Existing eleven-case scenario results remain separate from general history.
+* Corrected stale sensor snapshot versions and unavailable-runner wording in
+  the data dictionary; distinguished finite replay/SDK adapters, evaluator
+  metadata, shared wire rows and SQL storage. Linked the existing core/API
+  run guides and the credential-free per-check validation recipe.
+* Retained dated climate attribution/terms, exercise-only thresholds and all
+  original RPI evidence. Open children, downstream #111/#133 test use, live
+  #184 execution and owner acceptance remain explicit; no remote mutation,
+  live operation, new legal currentness check or whole-parent acceptance.
