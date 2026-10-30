@@ -14,6 +14,7 @@ from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+from unittest.mock import patch
 
 from zava_forward.core import resident_showcase as rs
 from zava_forward.core import resident_showcase_sql as rsql
@@ -31,6 +32,16 @@ ON = os.environ.get("ZF_TEST_MSSQL") == "1" and os.environ.get("ZF_SQL_SERVER") 
     "localhost",
 )
 USER = "zf_showcase_user"
+
+
+def _view_batch() -> str:
+    [batch] = [
+        batch
+        for batch in script.render(USER)
+        if "CREATE OR ALTER VIEW resident_showcase.v_resident_case" in batch
+    ]
+    return batch
+
 
 if ON:
     import mssql_python
@@ -139,6 +150,31 @@ class PrincipalVerificationTests(unittest.TestCase):
 
 
 class RenderTests(unittest.TestCase):
+    def test_view_batch_selection_is_independent_of_batch_order(self) -> None:
+        batches = script.render(USER)
+        [view] = [
+            batch
+            for batch in batches
+            if "CREATE OR ALTER VIEW resident_showcase.v_resident_case" in batch
+        ]
+        others = [batch for batch in batches if batch != view]
+        for index in range(len(batches)):
+            with self.subTest(index=index):
+                reordered = others[:index] + [view] + others[index:]
+                with patch.object(script, "render", return_value=reordered) as render:
+                    self.assertEqual(_view_batch(), view)
+                render.assert_called_once_with(USER)
+
+    def test_view_batch_selection_requires_exactly_one_match(self) -> None:
+        view = _view_batch()
+        for batches in ([], ["SELECT 1"], [view, view]):
+            with self.subTest(batches=batches):
+                with (
+                    patch.object(script, "render", return_value=batches),
+                    self.assertRaises(ValueError),
+                ):
+                    _view_batch()
+
     def test_principal_substituted_and_validated(self) -> None:
         batches = script.render("id-cutover-test-resident-demo")
         text = "\n".join(batches)
@@ -354,15 +390,15 @@ class SqlBoundaryTests(unittest.TestCase):
             for ddl in STOCK_SQL_DDL.split(";"):
                 if ddl.strip():
                     self.q(ddl)
-            self.q(script.render(USER)[2])
+            self.q(_view_batch())
             self.assertEqual(
                 [
                     tuple(value)
                     for value in self.as_user(
-                        "SELECT sensors_json FROM resident_showcase.v_resident_case"
+                        "SELECT sensor_home_id, sensors_json FROM resident_showcase.v_resident_case"
                     )
                 ],
-                [("[]",)],
+                [("HOME-A", "[]")],
             )
             [row] = self.reader.list_rows()
             self.assertEqual(row.sensors, ())
@@ -370,7 +406,7 @@ class SqlBoundaryTests(unittest.TestCase):
         finally:
             self.q("DROP TABLE IF EXISTS sensor_reading")
             self.q("DROP TABLE IF EXISTS sensor_register")
-            self.q(script.render(USER)[2])
+            self.q(_view_batch())
 
     def test_string_measures_and_text_columns_are_bounded(self) -> None:
         body = json.loads(_body("a@example.com"))
