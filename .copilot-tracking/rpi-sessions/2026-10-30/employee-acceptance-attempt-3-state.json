@@ -19,6 +19,11 @@
   },
   "confirmed_decisions": [
     {
+      "decision": "Original evidence/Review committed locally 441bc564 with privacy-safe identity and Refs only. Full external local gate attempted against fetched main f7482602ee8dd8e7eb36dc05426732a56aa982f7; blocked by non-ancestor base, no checks/receipt. Final metadata exact-head gate result stays external; no rebase/merge/push.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/changes/2026-10-30/employee-acceptance-attempt-3-changes.md#post-review-local-commit-and-gate-result"
+    },
+    {
       "decision": "One independent Review executed Complete; outcome Not accepted, task execution Partial, findings 2 High/2 Medium. RV-001 later research; RV-002..004 later runner implementation. No fixes or repeated Review.",
       "status": "recorded",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-30/employee-acceptance-attempt-3-review.md"
@@ -49,11 +54,16 @@
       "id": "B1",
       "summary": "Attempt cap exhausted; authoritative employee session/binding and feature acceptance remain unverified after callback/API transition failure.",
       "resolution": "No more sign-ins in this task. Preserve evidence and route later runner/session investigation separately without tenant/resource/role changes."
+    },
+    {
+      "id": "B2",
+      "summary": "Complete local gate blocked: topic candidate does not descend from current origin/main. No eligible receipt or publication readiness.",
+      "resolution": "No lineage rewrite or push authorized. Any separately authorized integration requires a fresh exact-head/full gate; final current-task gate result remains external."
     }
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Complete post-Review P02-T02 privacy-safe local Refs-only commit and complete external gate attempt. Then await explicitly selected follow-up; no new work, push or live sign-in."
+    "action": "Bounded plan complete; retain final metadata exact-head gate result externally, then await explicitly selected ranked follow-up, Stop or manual mode. No child selected, no further sign-in or push."
   },
   "prioritized_follow_ups": [
     {

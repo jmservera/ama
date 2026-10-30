@@ -11,7 +11,7 @@
 | Phase | Status | Tasks |
 | --- | --- | --- |
 | P01 | Complete as bounded investigation, access unconfirmed | P01-T01, P01-T02 |
-| P02 | P02-T01 complete; P02-T02 pending Review | P02-T01, P02-T02 |
+| P02 | Complete as evidence/persistence/gate attempt, not acceptance | P02-T01, P02-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Safe bounded execution
@@ -73,3 +73,5 @@ P01-T01 complete: attempt3.py/test_attempt3.py created. Fifteen offline construc
 11:55Z completion: seventeen constructed tests and Ruff checks pass on final executed source. TWO of TWO sign-in slots consumed. Attempt 2 reached actual Enter password, filled/submitted once and reached Stay signed in, then app-origin observed on exception handling. No verified binding or employee features were returned. Retain raw conservative outcome submission_delivery_uncertain_stop alongside keypress_completed_not_authentication; it does not establish that the credential was never delivered or that authentication failed. Browser closed and scratch removed. P01 complete only as bounded investigation; current acceptance remains eighteen unmet plus inherited source-only 551-04. P02-T02 local commit/gate remains post-Review.
 
 Original independent Review now Complete / Not accepted, task execution Partial, 2 High/2 Medium findings retained in its one original log. RV-001 later research, RV-002..004 later runner implementation, no repairs or repeat Review. Dated continuation pointers appended to original Review logs, preserving all original content and outcomes. P02-T02 local commit and full gate attempt are the only remaining parent work.
+
+P02-T02 completion: original evidence/Review committed locally as 441bc564 with Refs #550, Refs #551, Refs #552 and required trailer, privacy-safe author/committer. Complete external local gate attempted against fetched main, blocked: candidate does not descend from reviewed main base. No checks/receipt, no bypass/rebase/merge/push. Final bookkeeping commit invalidates previous exact-head gate; a final same-policy attempt and closeout stay external. All bounded markers complete; feature acceptance remains Not accepted/Partial, with no further live attempts.

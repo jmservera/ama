@@ -11,9 +11,9 @@
 ## Execution Status
 
 * Declared scope: full plan.
-* Status: Partial acceptance; bounded execution complete, Review-ready.
-* Completed markers: P01, P01-T01/T02, P02-T01.
-* Remaining: P02-T02 (one independent Review, local persistence and gate).
+* Status: Bounded plan complete; employee acceptance Partial / Not accepted.
+* Completed markers: P01/P02 and P01-T01/T02, P02-T01/T02.
+* Remaining active-plan markers: none. Final metadata exact-head gate result stays external; no further live execution or publication.
 * Approved boundary: tracking-only runner/tests/evidence and dated append-only result sections. No application, resident, Azure, policy or role writes.
 * Validation intent: offline safety unittest/Ruff before any live attempt; original independent Review then local Refs-only commit and complete external gate attempt.
 
@@ -47,7 +47,7 @@ PC-001..003: tightened all employee evidence to boolean predicates; pinned immut
 
 ## Blockers and Remaining Work
 
-Binding and employee-session admission are unverified, not false. Both sign-in attempts are consumed; no further live action in this task. P02-T02 remains. No acceptance or gate pass claimed.
+Binding and employee-session admission are unverified, not false. Both sign-in attempts are consumed; no further live action in this task. Bounded persistence and complete gate attempt finished; ancestry blocks full gate and publication. No acceptance or gate pass claimed.
 
 ## 2026-10-30 11:53Z: First counted attempt, pre-credential navigation failure
 
@@ -153,3 +153,29 @@ One manifest durably preserves both slots and both source/evidence hash pairs. N
 * No ignored inputs were found in the pre-commit read-only listing.
 * The git-commit skill's referenced commit-message instruction file and get_changed_files tool are unavailable. Repository Conventional Commit, task-only staging, Refs-only, privacy-safe identity and required trailer rules apply.
 * Candidate commit and complete external gate attempt remain next. Keep the final exact-head result external unless another local bookkeeping commit is necessary; any later commit invalidates an earlier gate.
+
+## Post-Review Local Commit and Gate Result
+
+The preparation section records its earlier state. Original execution evidence
+and independent Review were committed locally as 441bc564, with Refs #550,
+Refs #551, Refs #552, privacy-safe author/committer and required coauthor
+trailer. No push or issue mutation.
+
+After fetching main, executed:
+
+```bash
+python3 tools/rpi-checks.py --all --base f7482602ee8dd8e7eb36dc05426732a56aa982f7 --out /home/azureuser/.copilot/session-state/f9b9373f-4be0-4022-93b4-545f8d63f363/files/employee-attempt3-441bc564-gate --lock-timeout 0
+```
+
+Exit 1, BLOCKED: Candidate does not descend from the reviewed main base.
+No checks or eligible receipt were produced; no receipt verification can be
+claimed. No waiting/bypass/rebase/merge/cloud fallback or Azure mutation.
+This is a local publication/gate ancestry blocker, not a feature test failure.
+
+This final metadata commit persists the original result, does not repair
+Review findings, and invalidates the first attempt as exact-final-head proof.
+Run the same complete gate on final HEAD against freshly fetched main in a
+new external directory, retaining its exact result outside git at the session's
+files/employee-attempt3-closeout.json. No push. P02-T02 and the bounded plan
+are complete as local persistence plus an honest complete-gate attempt;
+employee feature acceptance remains Partial / Not accepted.

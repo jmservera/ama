@@ -86,7 +86,7 @@ Avoid inherited safety defects and test the exact submission/origin/parser/class
 Dependency: P01-T01. Stop at terminal no-route or uncertain delivery; preserve exact executable/evidence hashes. Details P01-T02.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Evidence, Review and local persistence
+### [x] P02: Evidence, Review and local persistence
 
 Dependency: P01 bounded execution disposition.
 
@@ -96,7 +96,7 @@ Dependency: P01 bounded execution disposition.
 Record only observed proof and missing subparts; update state and details before one independent Review. Details P02-T01.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Preserve Review and commit locally, then attempt full gate
+#### [x] P02-T02: Preserve Review and commit locally, then attempt full gate
 
 Dependency: P02-T01 and original independent Review. No remote writes. Details P02-T02.
 
@@ -135,4 +135,4 @@ No unresolved significant/divergent choice; no second critique.
 
 ## Handoff
 
-Review-ready bounded execution: P01 and P02-T01 complete as investigation/decision inventory, NOT feature acceptance. P02-T02 remains for one original independent Review, local commit and external gate attempt. No further sign-in is authorized.
+All bounded plan markers complete: one original independent Review Complete / Not accepted, local candidate 441bc564 committed Refs-only and complete external gate attempted. Gate blocked because candidate does not descend from current reviewed main; no receipt or publication readiness. Final metadata commit requires a fresh external exact-head attempt, with final result kept external. Employee acceptance remains Partial, no further sign-in or push.
