@@ -31,10 +31,22 @@
       "evidence": ".copilot-tracking/reviews/logs/2026-10-30/resident-chat-launcher-520-review.md; diff SHA-256 e2462113c9f7629e073bdd4135d69da0f4abc3937637e150b2f7d4bf5a6a2313."
     }
   ],
-  "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Local commit and complete gate at /tmp/ama-520-20261030-final-gate-1; consume external receipt/result before coordinator exact-head assessment and any publication. No push or child task authorized."},
+  "blockers": [
+    {
+      "id": "complete-gate-baseline",
+      "summary": "Complete gate at 41fb3c7a failed in untouched baseline paths: static rejected Chromium skip strings from successful runner tests; isolated browser lint found nine B023 errors in case_journey_browser_check.py. Dependent groups blocked; failed receipt cannot verify.",
+      "resolution": "Coordinator resolves unrelated baseline gate issues separately, then fetches main and runs/verifies a fresh complete exact-head gate; no publication until passing evidence and required independent/hosted/human gates."
+    },
+    {
+      "id": "fresh-final-head-gate",
+      "summary": "Post-gate metadata commit makes the failed receipt historical. Shared-lock inspection found a foreign holder (flock PID 2321440); no duplicate gate queued or foreign run inspected.",
+      "resolution": "Coordinator obtains heavy-lock admission for a fresh run in a new external directory after baseline blockers are resolved. No push authorized here."
+    }
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator consumes local commits, original Review and historical failed receipt /tmp/ama-520-20261030-final-gate-1/receipt.json; resolves baseline gate blockers and reruns exact-head gate before publication. No push or child task authorized."},
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Resolve scoped axe incomplete determinations and record accessibility acceptance", "rationale": "Bounded next evidence work; avoid unsupported conformance claims without changing the working implementation.", "evidence": "RV-001; 18 contrast and 25 ARIA incomplete entries, human/AT pending."},
-    {"rank": 2, "task": "Obtain separately authorized owner live resident/service acceptance", "rationale": "High service value but explicitly outside this local-only request and dependent on fresh authority.", "evidence": "RV-002; issue comments and synthetic/unknown operational boundaries."}
+    {"rank": 1, "task": "Resolve baseline complete-gate blockers and obtain a fresh exact-head receipt", "rationale": "Highest delivery leverage: publication is blocked despite passing scoped implementation checks; no unrelated fixes are authorized in this task.", "evidence": "/tmp/ama-520-20261030-final-gate-1/receipt.json; post-Review appendix in changes."},
+    {"rank": 2, "task": "Resolve scoped axe incomplete determinations and record accessibility acceptance", "rationale": "Bounded next evidence work; avoid unsupported conformance claims without changing the working implementation.", "evidence": "RV-001; 18 contrast and 25 ARIA incomplete entries, human/AT pending."},
+    {"rank": 3, "task": "Obtain separately authorized owner live resident/service acceptance", "rationale": "High service value but explicitly outside this local-only request and dependent on fresh authority.", "evidence": "RV-002; issue comments and synthetic/unknown operational boundaries."}
   ]
 }
