@@ -231,3 +231,74 @@ A receipt, if generated, must remain external and be verified using
 Any gate failure remains an explicit blocker; do not install bypasses, push,
 infer hosted/human approval, or change the preserved original Review outcome.
 Task completion means the authorized safety-stop branch, not AI activation.
+
+## Actual Local Persistence and Full-Gate Result
+
+The staging/configuration commands above succeeded. Actual multi-paragraph
+commit invocation used stdin instead of the planned `-m` equivalent:
+`printf '%s\n' 'docs(ops): record blocked resident AI activation (Refs #563)'
+'' 'Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>' |
+git commit -F -`, exit0. Original candidate:
+e055b94b8c06271c17be38ca6dd22a96eff19ab7. Seven RPI evidence files only.
+
+`git status --porcelain=v1 --untracked-files=all &&
+git log -1 --format='%H%n%an <%ae>%n%cn <%ce>%n%B' &&
+git diff --name-only a0670b58a171255284b005ad281b26fd50ea89c7 HEAD &&
+stat -c '%a %n' <backup-root> <backup-root>/before-app.json`: exit0;
+clean, privacy-safe author/committer, requested trailer, backup0700/0600.
+No push.
+
+Full gate command above ran with `set -o pipefail` and `2>&1 | tee
+/home/azureuser/.copilot/session-state/83552de8-08ca-41d8-9731-98a1baa7b2b9/files/local-closeout.log`.
+Exit1. Started2026-10-30T16:43:30Z; sealed17:10:02Z.
+Scope full, status failed, exact assessed HEAD e055b94b, reviewed base a0670b58.
+Receipt failure: project-api required integration/dependency skips, including
+MssqlApiTests and MssqlContractTests requiring disposable SQL with
+ZF_TEST_MSSQL=1. This is not a pass and does not establish live/private SQL.
+Receipt lists fourteen executed groups; project-api/browser/mssql do not have
+successful group completion. Do not equate selected full scope with full success.
+
+The external receipt contains all171 gate subprocess argv/results and tool/
+image identities; local-closeout.log retains their output. These generated
+records are the command/result annex to this changes artifact, not invented
+status summaries. Small `tail`/`grep` inspections of that external log during
+the run succeeded and made no changes.
+
+Post-run commands/results:
+
+* `tail -55 <external-log>` and Python receipt-key/status extraction: exit0,
+  output too large; then narrowed extraction was used.
+* Narrowed Python receipt summary initially raised TypeError treating group
+  strings as dicts; no evidence or source was modified. Corrected read-only
+  extraction exit0 confirmed status failed/full, actual head/base, fourteen
+  group names and171 command entries.
+* `python3 tools/rpi-checks.py --verify-receipt
+  /home/azureuser/.copilot/session-state/83552de8-08ca-41d8-9731-98a1baa7b2b9/files/resident-full-gate/receipt.json
+  --base a0670b58a171255284b005ad281b26fd50ea89c7`: exit1,
+  `BLOCKED: Receipt does not establish an eligible run`.
+
+This final closeout updates evidence/state/markers only, preserving original
+critique and Review. It records B2 and RV-003's actual scheduled outcome; it
+does not fix or re-review an implementation finding. The original failed
+receipt is historical after this evidence-only commit, not a current-head
+publication receipt. No repeated identical full run is justified without
+resolving the required SQL test setup. A fresh complete gate on the exact
+eventual candidate remains mandatory before any later authorized publication.
+
+Final local commit command (result available in git history and external
+closeout summary):
+`printf '%s\n' 'docs(ops): record resident activation gate outcome (Refs #563)'
+'' 'Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>' |
+git commit -F -`. Stage only this changes file, plan, details and state.
+Re-resolve gh api user and keep the returned privacy-safe local identity.
+No push, PR, issue checkbox edit, merge or issue closure is authorized/performed.
+
+## Final Safe-Stop Outcome
+
+RPI phases executed in order, one critique and one Review, original adverse/
+residual outcomes preserved. P01/P02 safe-stop actions complete including
+local persistence and the attempted (failed) full gate. AI activation and
+authenticated Playwright/model acceptance remain blocked/unperformed.
+B1 private SQL proof is the first unblock action; B2 local SQL integration
+setup/full gate is an independent future publication prerequisite.
+No post-Review source correction, cloud mutation or rollback occurred.
