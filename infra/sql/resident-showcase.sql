@@ -18,8 +18,29 @@ CREATE TABLE resident_showcase.allowed_case (
   valid_to DATETIME2(0) NOT NULL,
   revoked BIT NOT NULL CONSTRAINT df_allowed_case_revoked DEFAULT 0,
   CONSTRAINT ck_allowed_case_provenance CHECK (LEN(LTRIM(RTRIM(provenance))) > 0),
-  CONSTRAINT ck_allowed_case_window CHECK (valid_to > valid_from AND valid_to <= '2026-11-01T00:00:00')
+  CONSTRAINT ck_allowed_case_window CHECK (valid_to > valid_from AND valid_to <= '{{AUTHORITY_END}}')
 );
+GO
+-- The renderer uses the packaged resident policy for both creation and renewal.
+-- Reapply updates the existing check, never row windows or principal permissions.
+SET XACT_ABORT ON;
+BEGIN TRY
+  BEGIN TRANSACTION;
+  IF EXISTS (
+    SELECT 1 FROM sys.check_constraints
+    WHERE parent_object_id = OBJECT_ID(N'resident_showcase.allowed_case')
+      AND name = N'ck_allowed_case_window'
+  )
+    ALTER TABLE resident_showcase.allowed_case DROP CONSTRAINT ck_allowed_case_window;
+  ALTER TABLE resident_showcase.allowed_case WITH CHECK
+    ADD CONSTRAINT ck_allowed_case_window
+    CHECK (valid_to > valid_from AND valid_to <= '{{AUTHORITY_END}}');
+  COMMIT TRANSACTION;
+END TRY
+BEGIN CATCH
+  IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+  THROW;
+END CATCH;
 GO
 -- Optional tables are bound only when present at the separately authorised view apply.
 -- No sensor table is created and the resident principal receives no additional grant.

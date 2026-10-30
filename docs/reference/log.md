@@ -8297,3 +8297,31 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   original RPI evidence. Open children, downstream #111/#133 test use, live
   #184 execution and owner acceptance remain explicit; no remote mutation,
   live operation, new legal currentness check or whole-parent acceptance.
+## [2026-10-28] implementation | January resident demo authority source renewal (#521)
+
+* Updated the [knowledge index](./README.md) and
+  [resident operations guide](../../infra/README.md#january-authority-source-renewal-2026-10-28-refs-521):
+  shared source cap 2027-02-01T00:00:00Z, exclusive serving end after
+  January 31 UTC; SQL rendering/migration keeps row approvals and rights.
+* Documented proposed credential/version and SQL access renewal, the
+  new-secret helper's unchanged Modify refusal, conditional USD15.50 January
+  estimate plus USD10 reserve and unchanged USD700 all-in ceiling.
+  Actual headroom and January funding are Unknown.
+* No Azure, secrets or .env access. Live apply remains Pending separate
+  exact owner confirmation and verification. No inference tariff extension,
+  new resource, role, network path or replica minimum change is authorized.
+
+## [2026-10-30] validation | January resident authority local evidence (Refs #521)
+
+* Updated the [knowledge index](./README.md) and
+  [resident operations guide](../../infra/README.md#january-authority-source-renewal-2026-10-28-refs-521)
+  with fresh domain/HTTP/helper and disposable local SQL results. The 27
+  real-SQL tests passed without skips, including legacy constraint migration,
+  trusted reapply, rollback and narrow-rights preservation.
+* API discovery passed 1380 tests with 320 opt-in integration skips; API/core
+  Ruff, formatting and mypy passed. Targeted infra static findings reproduce
+  on the reviewed main baseline and remain separate residual work.
+* No Azure resource operation, deployment, actual credential access, paid
+  action, inference extension or live verification occurred. Owner operational
+  approval, January funding/headroom and exact-head publication gates remain
+  separate; the USD700 cap and source guards are unchanged.

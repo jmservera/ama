@@ -4479,7 +4479,8 @@ establish that a newly failed revision started.
 * Configuration (environment only; the server refuses to start on any missing, expired, mixed or
   unsafe value, and never echoes a value):
   `ZF_DEMO_EXPIRES_AT` (explicit UTC, in the future, no later than the packaged
-  `resident-demo.json` cap, currently2026-12-31T23:59:59Z inclusive;
+  `resident-demo.json` cap, currently 2027-02-01T00:00:00Z (configuration may
+  equal the cap, serving ends exclusively at that instant, after January 31 UTC);
   startup and requests refuse at/after the configured expiry),
   `ZF_DEMO_ALLOWED_HOSTS` (exact host names), `ZF_DEMO_PASSWORD_VERIFIER` (a scrypt verifier, never
   the password), `ZF_DEMO_SESSION_KEY` (base64url, 32 bytes or more), `ZF_SQL_SERVER`,
@@ -4524,7 +4525,8 @@ establish that a newly failed revision started.
   unavailable). Anything else is hidden until it is mapped.
 * SQL boundary: [`infra/sql/resident-showcase.sql`](../../infra/sql/resident-showcase.sql) creates
   the schema, an EMPTY allowlist table (rows need named human approval, provenance and a window ending
-  by 2026-11-01T00:00Z (exclusive, through 31 October UTC)), the view and a read-only principal that has SELECT on that view only. The
+  by the shared 2027-02-01T00:00:00Z exclusive cutoff), the view and a read-only
+  principal that has SELECT on that view only. The
   [`resident_showcase_sql.py`](../../infra/scripts/resident_showcase_sql.py) script renders it and
   only dry-runs unless `--apply` is used from an approved private job.
 * Offline verifier: the owner chooses and keeps the password. Run `(umask 077; python3 infra/scripts/resident_demo_verifier.py > owner-only-file)`
@@ -4549,6 +4551,13 @@ establish that a newly failed revision started.
 Live criteria still blocked (not proven here): remaining budget headroom, live email-to-case
 equality in the homes database, the private job that creates the view and principal, the Key Vault
 secret retrieval role and client, and any deployment. The page is not WCAG conformance evidence.
+
+The #521 source renewal covers January 31, 2027 UTC, but does not deploy an
+image, renew configured app/secret expiries or extend existing SQL row windows.
+The [rotation, conditional cost estimate and pending live-apply plan](../../infra/README.md#january-authority-source-renewal-2026-10-28-refs-521)
+requires separate exact owner confirmation and a fresh USD700 all-in headroom
+check. The independent resident model tariff and SQL inference admission cutoff
+are unchanged; extending resident access does not authorize later paid inference.
 
 ### Own-home synthetic sensor history (#468)
 

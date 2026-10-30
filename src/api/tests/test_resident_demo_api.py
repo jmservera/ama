@@ -402,6 +402,37 @@ class SessionTests(DemoTestCase):
         self.clock.now += 2
         self.assertEqual(c.call("GET", "/demo/view")[0], 401)
 
+    def test_extended_authority_allows_january_and_stops_at_exact_february_boundary(self) -> None:
+        self.stop()
+        self.reader.rows = {"C-1": make_row("C-1", "one@example.com", valid_to=rs.AUTHORITY_END)}
+        self.clock.now = datetime(2027, 1, 31, 23, 59, 59, tzinfo=UTC).timestamp()
+        identity = rs.build_identity_map(
+            self.reader.list_rows(), datetime.fromtimestamp(self.clock.now, UTC)
+        )
+        self.codec = rs.SessionCodec(KEY, rs.AUTHORITY_END, self.clock)
+        self.app = demo.ResidentDemo(
+            self.reader,
+            identity,
+            rs.PasswordVerifier(rs.make_verifier(FAKE_PASSWORD, n=2**14)),
+            self.codec,
+            rs.LoginLimiter(clock=self.clock),
+            (HOST,),
+            rs.AUTHORITY_END,
+            "127.0.0.1",
+            0,
+            self.clock,
+        )
+        self.server = demo.serve(self.app)
+        threading.Thread(target=self.server.serve_forever, daemon=True).start()
+        c = self.client()
+        self.assertEqual(c.login("one@example.com"), 200)
+        self.assertEqual(c.call("GET", "/demo/view")[0], 200)
+        token = c.cookies[demo.SESSION_COOKIE]
+        self.clock.now = rs.AUTHORITY_END.timestamp()
+        self.assertIsNone(self.codec.verify(token))
+        self.assertEqual(c.call("GET", "/demo/view")[0], 503)
+        self.assertEqual(self.client().login("one@example.com"), 503)
+
     def test_logout_revokes_and_replay_fails(self) -> None:
         c = self.client()
         c.login("one@example.com")
