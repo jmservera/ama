@@ -86,7 +86,7 @@ Add one inherited test method in ProgressDashboard, run against JSON and SQLite,
 Extend existing browser flow to assert first/final/empty unavailable links, table counts, preserved filters and beyond-empty URL canonicalization. Update related README coverage description. No web runtime edits expected.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Validate and preserve evidence
+### [x] P02: Validate and preserve evidence
 
 <!-- rpi:task id=P02-T01 -->
 #### [x] P02-T01: Execute component validation
@@ -94,7 +94,7 @@ Extend existing browser flow to assert first/final/empty unavailable links, tabl
 Under the shared heavy lock, use existing /tmp/mv/bin Python (system Python lacks tools), caller's exact source/fixture paths, complete API discovery, Ruff check/format and mypy. Fetch only public pinned axe 4.10.3 into a fresh external evidence directory; verify SHA256 through existing checker. Run local constructed-data progress browser checker; no credential files or live sign-in.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Review, commit and attempt final gate
+#### [x] P02-T02: Review, commit and attempt final gate
 
 Refresh guidelines, independently review exact diff and evidence once, preserving original outcome. Reconcile plan/details/changes/state; resolve gh api user and local noreply identity, commit with required trailer. Fetch main read-only, attempt complete tools/rpi-checks.py --all with external output; runner already owns shared lock, do not recursively acquire it. Do not push. Report actual receipt status and every unmet acceptance.
 
@@ -113,6 +113,8 @@ Single critique executed, original verdict Revise preserved. PC-001 (planning pa
 
 ## Handoff
 
-Source implementation and P02-T01 complete; single independent Review completed. P02-T02 remains post-Review local commit/final-gate administration, not missing implementation. Component result: 1372 tests, OK with 318 explicit skips; Ruff/format/mypy passed; actual local browser and 11 axe states passed. No ordinary decision gap. Publication remains coordinator-owned.
+Source implementation and all plan execution tasks complete; single independent Review completed. Component result: 1372 tests, OK with 318 explicit skips; Ruff/format/mypy passed; actual local browser and 11 axe states passed. Full gate was attempted but is blocked by the newer-main/base mismatch. Publication remains coordinator-owned.
 
-Review now executed once: Complete / Residual work, no implementation defects, RV-001/RV-002 retained. P02-T02's post-Review execution is recorded by the local candidate commit and external final-gate log/receipt, not a second Review or a later self-invalidating receipt commit. Consult changes for exact external paths and limitations.
+Review executed once: Complete / Residual work, no implementation defects, RV-001/RV-002 retained. P02-T02's post-Review execution is recorded by the local candidate commit and external failed preflight logs, not a second Review. No full receipt exists. Consult changes for exact external paths and limitations.
+
+Final P02-T02 disposition: executed, local candidate 01c0e9405228686278dea36349397322c39cc45f committed with required identity/trailer. Complete gate attempted, but BLOCKED before execution: reviewed base differs from freshly fetched origin/main. The earlier ignored-cache blocker was resolved by finite manifest, complete tracking/cache archive, verified full readback, selected-file restore/hash checks and protected-source checks before/after removal. No receipt exists. All plan execution markers are complete; the gate itself did not pass. This final administrative evidence is committed separately without rewriting the original critique/Review. Coordinator must resolve newer-main lineage and rerun the complete gate; no automatic rebase or push.

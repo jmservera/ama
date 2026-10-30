@@ -91,3 +91,20 @@ Final gate output is external at /home/azureuser/.copilot/session-state/5b21606e
 | AC3 | Combined filters, custom and default pages, first/final/empty/beyond boundaries and URL/history/reload | Deployed archive |
 | AC4 | Demonstration labels and synthetic-only cohort checks | Live company data validity |
 | AC5 | Requested local unit/static checks and actual Playwright/axe passed, with 318 explicit unit-discovery skips retained | Owner's deployed check; whole-issue, human/hosted acceptance and final gate result not established by component evidence |
+
+## Final Administrative Results (P02-T02)
+
+Local implementation and original RPI evidence committed as 01c0e9405228686278dea36349397322c39cc45f with authenticated noreply author/committer and required Copilot trailer. No push, PR creation, issue mutation, rebase or history rewrite.
+
+Complete gate attempt 1 returned BLOCKED before any heavy gate: candidate has ignored inputs. These were 217 generated Python/Ruff/mypy caches from this run. Cleanup selected exactly those finite known cache files, never historical evidence. External cache-preservation/manifest.json records names, member types/sizes/SHA256 and protected tracked sources. tracking-and-caches.tar.gz preserves the complete existing tracking snapshot plus selected caches; full archive readback and all selected restores were verified before removal. removal-journal.jsonl records pending/actual removals; receipt.json confirms all 217 restored and hash-checked and protected source unchanged before/after. No broad directory deletion or unselected cleanup occurred.
+
+After cleanup, clean unchanged candidate attempt 2 returned:
+
+```text
+BLOCKED: Reviewed base differs from current origin/main; reconcile before validation
+```
+
+Actual external log: /home/azureuser/.copilot/session-state/5b21606e-f1d6-41bc-83ee-6b0f634bdd6e/files/validation-533/final-gate-base.log.
+No heavy gate ran and no receipt was created. Read-only guard source tools/rpi-checks.py requires the reviewed base equal origin/main before any execution; supplied base 5634f9a077d175a931c15e3400114665d8c071ee differs from fetched 9ee48592a2e80e3a9f9e3c90ef039b9fa1987d19. Switching bases, rebasing or hiding the new remote tip would violate the assigned lineage or gate contract, so no workaround was used.
+
+P02-T02 is complete as an execution/attempt task, not a passing full gate. This administrative addendum preserves the original one-pass Review outcome unchanged. Coordinator must reconcile main and run/verify a fresh exact-head complete gate before publication. Local AC1-AC5 engineering evidence remains as above; deployed, full-gate, human and hosted acceptance remain unproven.
