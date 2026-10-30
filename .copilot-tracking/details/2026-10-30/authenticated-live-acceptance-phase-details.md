@@ -13,7 +13,7 @@
 | Phase | Name | Status | Tasks |
 | --- | --- | --- | --- |
 | P01 | Actual access and feature acceptance | Complete; authenticated surfaces blocked | P01-T01, P01-T02 |
-| P02 | Reconcile, Review and local persistence | P02-T01 complete; P02-T02 pending | P02-T01, P02-T02 |
+| P02 | Reconcile, Review and local persistence | Complete; local gate blocked, no receipt | P02-T01, P02-T02 |
 
 Actual result: employee username Next enters passkey route; normal alternatives
 offer no password. Resident supplied login returns 401. Roster unknown, not
@@ -21,6 +21,11 @@ absent. Three public resident shell widths and keyboard/motion checks are
 partial evidence only. The changes artifact contains all 19 criterion
 decisions and explicitly disqualifies early autofill/Next flags as password
 authentication proof. No authenticated map/case/chat or private-data edits.
+One independent Review executed Complete, outcome Not accepted, RV-001..005
+routed without fixes/repetition. Original evidence locally committed 2e07c2ad.
+Full gate attempts stop before checks because current main is not an ancestor
+of the topic. No rebase/merge/push. The final metadata commit records these
+post-Review facts; its final gate attempt remains external.
 
 Critique dispositions: PC-001's claimed temporary-path restriction is absent
 from actual caller instructions and rejected; its profile-containment concern

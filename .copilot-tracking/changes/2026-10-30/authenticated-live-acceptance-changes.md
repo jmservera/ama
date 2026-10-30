@@ -10,9 +10,10 @@
 
 ## Execution Status
 
-Full-plan acceptance execution complete through P02-T01; independent Review,
-local commit and external gate attempt remain P02-T02. Product/live acceptance
-is BLOCKED, not passed. No product or private-data changes.
+Full RPI loop and bounded evidence persistence complete. Actual authenticated
+feature execution remains Partial/Blocked; independent Review execution
+Complete, outcome Not accepted. P01/P02 markers complete as evidence work,
+not product acceptance. No product or private-data changes.
 
 ## Execution Summary
 
@@ -140,14 +141,15 @@ Original critique Revise retained; no second critique.
 | Python AST and 14 generated JSON parses | Passed initial reconciliation | No bytecode created |
 | All 19 criteria and final evidence links | Passed | Ordered 9/4/6 IDs; definitive JSON and all three PNGs exist |
 | Script Ruff and formatting | Passed after direct lint fixes | Removed unused import, explicit expected exception types, repository formatting |
-| Full local RPI gate | Pending candidate commit | External exact-head receipt; no publication |
+| Original-evidence local commit | Passed | 2e07c2ad; Refs #550, Refs #551, Refs #552; no push |
+| Full local RPI gate | Blocked before checks | Ignored Ruff cache corrected; then advanced main and non-descendant base; no receipt or publication |
 
 ## Pre-Review Reconciliation
 
-Plan/details reconcile P01 and P02-T01 complete; P02-T02 owns original Review
-and local persistence. Product blockers remain explicit. Ready for independent
-Review of bounded evidence quality and acceptance classification, not a
-conformant/product-acceptance verdict.
+Original handoff reconciled P01/P02-T01 and left P02-T02 for independent Review
+and persistence. That one Review is now complete and its original artifact is
+unchanged. Post-Review administrative work committed original evidence and
+attempted the full gate. No finding remediation or second Review occurred.
 
 ## Blockers
 
@@ -160,20 +162,52 @@ conformant/product-acceptance verdict.
 * B3: Employee roster binding unknown because authenticated /api/me unavailable.
   Only after access is available can an authorized account probe establish it.
   No absent-binding claim or initializer mutation.
+* B4: Full local gate blocked: latest fetched main
+  63422cdf9fd477dd8892a27ac8b11487bc3a2429 is not an ancestor of this topic
+  candidate. No automatic rebase, merge, history rewrite, skip or cloud fallback.
+  Any later integration/publication requires a separately authorized lineage
+  decision and a fresh exact-head full gate/independent assessment.
 
 ## Remaining Work
 
-P02-T02: one independent Review, local commit, external gate attempt.
+No remaining active-plan evidence/persistence task. Product criteria and routed
+Review findings remain open, not accepted or fixed.
 Current script has post-execution dead-code removal, timestamped future
 screenshot naming, explicit exception types and formatting. E1 was generated
 before those maintenance edits; no exact script hash was captured for E1.
 These limitations are retained for independent assessment rather than claiming
 an exact-head receipt for the live run.
 
-Independent Review is now complete. Local commit and full external gate
-attempt remain administrative persistence work; the original assessed boundary
-does not include the later commit or gate. Full loop is complete with an
-unaccepted/blocked acceptance outcome, not a conformant result.
+Independent Review is complete. Its original assessed boundary does not include
+the later local commits/gate. The containing closeout commit persists only
+administrative state after original-evidence commit 2e07c2ad; this is a direct
+recordkeeping refinement, not a second Review or product change. Full loop
+finished with an unaccepted/blocked outcome, not a conformant result.
+
+### Post-Review local gate attempts
+
+* Original source/evidence candidate: 2e07c2ad, clean after commit.
+* First command: python3 tools/rpi-checks.py --all --jobs 1 --base
+  80a7606bf0f8131df39f93b54ed5ac1fd479f467 --out
+  /tmp/ama-auth-acceptance-20261030-2e07c2ad-gate.
+  Blocked by task-created ignored .ruff_cache files. Removed only its three
+  known cache files and their empty owned directories, not historical evidence.
+* Second new output path ended -gate-attempt2; same reviewed base. Blocked
+  because origin/main advanced. No checks, receipt or output tree produced.
+* Fetched/reconciled main: 63422cdf9fd477dd8892a27ac8b11487bc3a2429.
+  Delta since 80a7606b includes merged rubric/cutover evidence and an unrelated
+  synthetic orchestrator rebuild module/tests, not employee/resident web code.
+  No deployed parity or additional Review is inferred from this read-only delta.
+* Third command used that current base and output path ending -gate-attempt3.
+  Blocked: "Candidate does not descend from the reviewed main base".
+  No rebase/merge was authorized or performed; no checks ran and no receipt
+  exists to verify. This is a gate/lineage blocker, not a live UI test failure.
+* Final containing commit invalidates earlier gate attempts as current-head
+  evidence. A final same-policy attempt is kept external; the lineage blocker
+  is not repaired by metadata. No push or final-head acceptance is claimed.
+* The git-commit skill's referenced commit-message instruction file was
+  unavailable at both resolved plugin paths. Repository Conventional Commit,
+  Refs-only, noreply identity and required Copilot trailer rules were followed.
 
 ## Follow-Up Items
 

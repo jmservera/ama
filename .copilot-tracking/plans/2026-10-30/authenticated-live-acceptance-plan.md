@@ -15,8 +15,9 @@
 Executed both actual sites using the supplied test identity. The 19-row matrix
 records one source-test-coverage criterion proven and eighteen unmet/blocked.
 Only the resident public shell was reachable. No product fixes/access changes.
-Independent Review executed Complete, outcome Not accepted. Local
-persistence/gate attempt remain. RV-003 blocks reuse of the runner until a
+Independent Review executed Complete, outcome Not accepted. Original evidence
+committed locally as 2e07c2ad; complete gate attempted and blocked by topic/main
+lineage. No push. RV-003 blocks reuse of the runner until a
 separate safety correction; no fix or second Review belongs to this task.
 
 ### What You May Not Know
@@ -162,7 +163,7 @@ Record per-site outcome, binding evidence where authorized and safe captures.
 Depends on P01-T01 per surface. Preserve blocked criteria rather than bypassing.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Reconcile evidence, independent Review and local commit
+### [x] P02: Reconcile evidence, independent Review and local commit
 
 Depends on P01.
 
@@ -172,7 +173,7 @@ Depends on P01.
 Record observed, partial, blocked and not-run distinctions.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Independent Review and local persistence
+#### [x] P02-T02: Independent Review and local persistence
 
 One independent Review; do not fix routed findings or repeat Review. Resolve
 authenticated GitHub account and local noreply email before commit. Commit
@@ -207,11 +208,16 @@ Original one-pass critique verdict: Revise. No second critique.
 * RV-001/002: later evidence research/execution must collect blocked authenticated
   criteria with exact script/runtime and uniquely hashed per-run outputs.
   No remediation, retroactive provenance edits or issue closure inferred.
+* Full gate lineage blocker: candidate does not descend from current main
+  63422cdf9fd477dd8892a27ac8b11487bc3a2429. No unauthorized integration/rebase;
+  any later publication needs owner-directed integration and fresh exact-head
+  gate/assessment. Metadata closeout is a second local commit because the first
+  original-evidence candidate had to exist before the gate attempt.
 
 ## Handoff
 
-P01 and P02-T01 complete as an honest bounded investigation. Live/product
-acceptance blocked; 1 source-coverage criterion proven, 18 unmet. P02-T02 remains
-for local persistence/gate attempt. One independent Review executed Complete,
-outcome Not accepted; its original findings remain routed, not repaired.
+P01/P02 complete as an honest bounded investigation and local evidence
+persistence. Live/product acceptance blocked; 1 source-coverage criterion proven,
+18 unmet. One independent Review executed Complete, outcome Not accepted;
+original findings remain routed, not repaired. Gate attempted, no valid receipt.
 Implementation owns .copilot-tracking/changes/2026-10-30/authenticated-live-acceptance-changes.md.

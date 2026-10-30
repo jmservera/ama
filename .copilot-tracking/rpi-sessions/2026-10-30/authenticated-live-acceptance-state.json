@@ -16,6 +16,11 @@
   },
   "confirmed_decisions": [
     {
+      "decision": "Original evidence committed locally 2e07c2ad with Refs only and privacy-safe author/committer; full gate attempted but no receipt: current main 63422cdf9fd477dd8892a27ac8b11487bc3a2429 is not an ancestor. No rebase/merge/push. Final metadata commit and gate result external; no finding fixes or further Review.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/changes/2026-10-30/authenticated-live-acceptance-changes.md#post-review-local-gate-attempts"
+    },
+    {
       "decision": "One independent Review executed Complete; outcome Not accepted; task execution Partial. RV-001/002 route later evidence research, RV-003 later runner implementation, RV-004/005 distinct identity/account owners. No fixes or repeat Review in this task.",
       "status": "recorded",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-30/authenticated-live-acceptance-review.md"
@@ -51,11 +56,21 @@
       "id": "B3",
       "summary": "Roster binding remains unknown, not absent, because authorized /api/me was not reached.",
       "resolution": "After employee access is available, derive binding status from authorized account response without retaining claims or private data."
+    },
+    {
+      "id": "B4",
+      "summary": "Complete local gate blocked because topic candidate does not descend from current origin/main 63422cdf9fd477dd8892a27ac8b11487bc3a2429; no checks/receipt.",
+      "resolution": "Owner-directed integration would be needed before any publication and a fresh exact-head gate. No automatic rebase/merge or push."
+    },
+    {
+      "id": "B5",
+      "summary": "RV-003 High: runner public capture is not isolated/fail-closed after future successful resident login; do not reuse before correction. Actual supplied public crops were safe.",
+      "resolution": "Later separately selected rpi-implement work; no fix or repeat Review in this task."
     }
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Review complete, Not accepted. Preserve original findings, make the user-requested local Refs-only evidence commit and attempt full gate externally; do not start routed work."
+    "action": "Await a separately selected ranked follow-up, Stop or manual mode; no child work selected. RPI task completed with Partial execution/Not accepted outcome. Keep final local-commit/gate result external; no push."
   },
   "prioritized_follow_ups": [
     {
