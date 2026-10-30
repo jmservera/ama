@@ -114,7 +114,7 @@ def render_focus(page: Page) -> None:
         page.evaluate("async () => { await route(); }")
         expect(panel).to_be_visible()
         assert page.evaluate("document.activeElement === renderFocus"), selector
-    for dismissal in ("Escape", "external"):
+    for dismissal in ("Escape", "Close", "external"):
         panel.locator("h2").focus()
         page.evaluate("""() => {
           window.renderWait = {api};
@@ -130,6 +130,9 @@ def render_focus(page: Page) -> None:
         if dismissal == "Escape":
             page.keyboard.press("Escape")
             expect(page.locator("#employee-chat-launcher")).to_be_focused()
+        elif dismissal == "Close":
+            panel.get_by_role("button", name="Close chat", exact=True).click()
+            expect(page.locator("#employee-chat-launcher")).to_be_focused()
         else:
             page.locator("#nav a").first.focus()
         page.evaluate("window.renderFocus = document.activeElement")
@@ -142,11 +145,57 @@ def render_focus(page: Page) -> None:
         }""")
         expect(panel).to_be_hidden()
         expect(page.locator("#employee-chat-launcher")).to_have_attribute("aria-expanded", "false")
-        # A normal render can focus the app when chat no longer owns focus.
-        expect(page.locator("#app")).to_be_focused()
+        assert page.evaluate("document.activeElement === renderFocus"), (
+            f"{dismissal}: delayed render redirected deliberate dismissal focus"
+        )
         page.locator("#employee-chat-launcher").click()
         expect(panel.locator("textarea")).to_have_value("Retained draft")
-    print("PASS employee: composer/history/Sources focus retained; dismissed chat never reopens")
+    print("PASS employee: composer/history/Sources and deliberate dismissal focus retained; no reopening")
+
+
+def workspace_focus(page: Page) -> None:
+    page.keyboard.press("Escape")
+    page.locator("#nav a").first.focus()
+    page.evaluate("""async () => {
+      history.replaceState(null, '', '#/');
+      await route();
+    }""")
+    expect(page.locator("#app")).to_be_focused()
+    expect(page.locator("#employee-chat")).to_have_count(0)
+    for removed in ("workspace", "external", "body"):
+        page.evaluate("""target => {
+          employeeChat.reset();
+          if (target === 'body') {
+            document.activeElement.blur();
+            return;
+          }
+          const input = document.createElement('input');
+          (target === 'workspace' ? app : document.body).append(input);
+          input.focus();
+          if (target !== 'workspace') input.remove();
+        }""", removed)
+        page.evaluate("async () => { await route(); }")
+        expect(page.locator("#app")).to_be_focused()
+    page.locator("#nav a").first.focus()
+
+    def changed_session(route: Route) -> None:
+        data = route.fetch().json()
+        data["account"]["email"] = "focus-change@example.test"
+        route.fulfill(json=data)
+
+    page.route("**/api/me", changed_session)
+    try:
+        page.evaluate("async () => { await start(); }")
+        expect(page.locator("#app")).to_be_focused()
+    finally:
+        page.unroute("**/api/me", changed_session)
+    page.evaluate("""async () => {
+      await start();
+      history.replaceState(null, '', '#/case/ZF-1');
+      await route();
+    }""")
+    expect(page.locator("#app")).to_be_focused()
+    print("PASS employee: destination/session changes and removed/body focus land in workspace")
 
 
 def session_lifecycle(page: Page) -> None:
@@ -325,6 +374,7 @@ def employee(browser: Browser, base: str, out: Path) -> None:
         results = send_matrix(page)
         page.screenshot(path=str(out / "employee-answer-visible.png"))
         render_focus(page)
+        workspace_focus(page)
         session_lifecycle(page)
         assert not errors, errors
         (out / "employee-matrix.json").write_text(json.dumps(results, indent=2))

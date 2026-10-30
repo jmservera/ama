@@ -12,6 +12,7 @@ const workspaceStatus = document.getElementById("workspace-status");
 let displayedHash = location.hash || "#/";
 let caseSession = null;
 let disposeMapPanel = null;
+let renderedContext = null;
 
 function h(tag, attrs, ...kids) {
   const el = document.createElement(tag);
@@ -90,9 +91,15 @@ const ago = (s) => {
   return days <= 0 ? "Today" : days === 1 ? "Yesterday" : `${days} days ago`;
 };
 const show = (...nodes) => {
-  const chatOwnsFocus = document.activeElement?.closest(".chat-widget:not([hidden])");
+  const focused = document.activeElement;
+  const path = (location.hash || "#/").split("?")[0];
+  const sameContext = me && renderedContext?.session === me && renderedContext.path === path;
+  const preserveFocus = focused?.closest(".chat-widget:not([hidden])")
+    || (sameContext && focused !== document.body && focused !== document.documentElement
+      && !app.contains(focused));
   app.replaceChildren(...nodes.flat().filter((n) => n && n.nodeType));
-  if (!chatOwnsFocus) app.focus();
+  renderedContext = { session: me, path };
+  if (!preserveFocus || !focused?.isConnected) app.focus();
 };
 
 function workspaceReady() {

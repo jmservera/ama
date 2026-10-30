@@ -1,0 +1,82 @@
+{
+  "task_id": "employee-chat-dismissal-correction-2026-10-30",
+  "task_slug": "employee-chat-dismissal-correction",
+  "parent_task": {
+    "task_id": "employee-chat-closes-on-send-2026-10-30",
+    "task_slug": "employee-chat-closes-on-send"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/employee-chat-dismissal-correction-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/employee-chat-dismissal-correction-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/employee-chat-dismissal-correction-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/employee-chat-dismissal-correction-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/employee-chat-dismissal-correction-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/employee-chat-dismissal-correction-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Owner selected a correction child loop for RV-001 and RV-002 from the existing running automatic session",
+      "status": "confirmed",
+      "evidence": "Owner request 2026-10-30 and parent employee-chat-closes-on-send-state.json"
+    },
+    {
+      "decision": "Reuse clean fix/employee-chat-closes-on-send at 366ca4a2; commit locally, Refs-only, no push, live warming, Azure or credentials",
+      "status": "confirmed",
+      "evidence": "Owner request; git status clean; branch HEAD verified; gh pr view found no PR"
+    },
+    {
+      "decision": "Full API discovery must hold /tmp/ama-rpi-heavy.lock using flock -w 600",
+      "status": "confirmed",
+      "evidence": "Owner explicitly authorizes waiting up to 10 minutes, superseding prior nonqueued admission for this command"
+    },
+    {
+      "decision": "Research executed / Ready; exactly one plan critique executed Complete / Pass, zero findings",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/research/2026-10-30/employee-chat-dismissal-correction-research.md and matching plan-critique.md"
+    },
+    {
+      "decision": "RV-001 red-before-green and all 12 sends pass; full API discovery 1361 tests OK / 318 skips under flock, static and focused/shared/employee browsers pass",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/changes/2026-10-30/employee-chat-dismissal-correction-changes.md"
+    },
+    {
+      "decision": "Preserve initial missing-Node full-suite failure and additional unchanged resident browser failure; original-source resident baseline confirms same failure",
+      "status": "recorded",
+      "evidence": "External full-api-units.log, full-api-units-final.log, resident-green.log, resident-baseline.log under session files/dismissal-correction"
+    },
+    {
+      "decision": "Exactly one independent Review executed Complete; original RV-001 and RV-002 resolved within boundary; no new source defect; outcome Not accepted on broad AC4 due baseline resident failure RV-003",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-30/employee-chat-dismissal-correction-review.md"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "resident-legacy-browser",
+      "summary": "Additional standalone resident browser fails unchanged documents help expectation; broad AC4 unmet",
+      "resolution": "Route separate resident fixture/grammar reconciliation; retain failure, do not broaden employee correction"
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Review loop complete, no new source work; perform authorized local Refs-only commit and record delivery, then await coordinator-selected follow-up"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Reconcile standalone resident browser prompts with current finite grammar",
+      "rationale": "Bounded baseline-proven mismatch blocks broad AC4; highest-value current local follow-up, not an employee focus defect",
+      "evidence": "RV-003 in employee-chat-dismissal-correction-review.md; candidate and original baseline resident logs"
+    },
+    {
+      "rank": 2,
+      "task": "Coordinator verifies deployed employee-site behavior after separately authorized deployment",
+      "rationale": "Local synthetic proof cannot establish deployed trigger; requires separate owner/live authority",
+      "evidence": "Original and correction plan Follow-Up Items; no live work authorized in this task"
+    }
+  ]
+}

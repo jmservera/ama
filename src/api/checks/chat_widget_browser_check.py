@@ -362,7 +362,7 @@ def employee_refresh(page: Page) -> None:
                 expect(panel.locator("textarea")).to_be_focused()
                 launcher.click()
             else:
-                expect(page.locator("#app")).to_be_focused()
+                expect(launcher).to_be_focused()
             expect(panel).to_be_hidden()
             focused_control_visible(page)
             launcher.click()
