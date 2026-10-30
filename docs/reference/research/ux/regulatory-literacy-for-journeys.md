@@ -102,6 +102,28 @@ pattern.
   escalate correctly, and test with real staff before any claim of benefit.
 * Cost and timing of monitoring are unknown.
 
+## Synthetic engineering delta (2026-10-27, Refs #208)
+
+The existing offline home-specific panel now automatically routes supported
+source conflicts, preserving both cited versions, question and sender receipt
+in the named exercise owner's isolated inbox. It does not resolve the conflict
+or approve a rule. Ordinary answers/refusals retain the manual doubt route;
+real emergency/hazard intake never waits for either.
+
+The same native UI shows zero model calls per question/check/alert, bounded
+own-role/UTC-day recorded outcomes and Unknown service cost. This is not a
+paid budget, an exact daily total or evidence of staff benefit. The stateless
+synthetic evaluation retains separate citation/refusal/hazard checks and a
+cards-only shipment recommendation. Scoped browser/axe evidence is engineering
+coverage, not a staff comprehension study or full accessibility acceptance.
+
+[API engineering boundaries](../../../../src/api/README.md#synthetic-completion-boundary-2026-10-27-208)
+and the [DPIA draft](../chat-memory-dpia.md#regulatory-assistant-dpia-draft-for-dpo-review-2026-10-16-refs-217)
+record the actual surfaces and unresolved human gates. DPO retention/rights,
+real Entra scope, owner-ratified targets, continuing-stock evidence and
+repairs/housing/grants comprehension remain unmet. No legal-currentness check,
+real-data approval, operational activation or completed business gain follows.
+
 ## Suggested next steps
 
 1. Owner decision on whether the first build adds a read-only rule-card and

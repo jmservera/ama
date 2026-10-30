@@ -1,0 +1,74 @@
+{
+  "task_id": "pr501-main-rebase",
+  "task_slug": "pr501-main-rebase",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-29/pr501-main-rebase-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-29/pr501-main-rebase-plan.md",
+    "details": ".copilot-tracking/details/2026-10-29/pr501-main-rebase-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-29/pr501-main-rebase-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-29/pr501-main-rebase-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-29/pr501-main-rebase-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run the full RPI loop autonomously, rebase the existing PR branch, commit locally, and do not push.",
+      "status": "confirmed",
+      "evidence": "Explicit task instruction on 2026-10-29; PR #501 is open/draft on docs/resident-ux-153; initial worktree clean."
+    },
+    {
+      "decision": "Preserve both documentation intents; use origin/main rubric and scenario manifest; no Azure writes or issue-closing keywords.",
+      "status": "confirmed",
+      "evidence": "Explicit task constraints."
+    },
+    {
+      "decision": "Research executed/Ready; one plan critique Complete/Revise; PC-001 applied directly as a no-unresolved-blocker Review disposition gate.",
+      "status": "resolved",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-29/pr501-main-rebase-plan-critique.md and current plan/details."
+    },
+    {
+      "decision": "Rebase complete; upstream main unchanged, canonical files equal main, both documentation intents preserved, bounded local engineering checks pass.",
+      "status": "validated",
+      "evidence": ".copilot-tracking/changes/2026-10-29/pr501-main-rebase-changes.md; source diff SHA256 fc434dc4acac82d6febf58a346fc8c55ae8c18e34f30c37ea7f8f5272c0822fa."
+    },
+    {
+      "decision": "One independent Review executed Complete; outcome Conformant with justified divergence; no findings or unresolved blockers. No source changes after Review.",
+      "status": "reviewed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/pr501-main-rebase-review.md; parent reproduced the recorded source fingerprint."
+    },
+    {
+      "decision": "Local implementation/original evidence committed, clean tree and main ancestry verified; no push or Azure writes. Task complete; no child work selected.",
+      "status": "completed",
+      "evidence": "57ec5c95d17cf45c67aa894bec65dca0f402a42a and changes artifact. Final bookkeeping is evidence-only; publication and hosted CI remain separate."
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Coordinator owns publication/full gate, authorized remote update and hosted exact-head CI. Automatic session awaits explicit follow-up selection; do not start a child task or push."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator publication gates and remote branch update",
+      "rationale": "Only remaining dependency for remote PR mergeability and current hosted CI; local source and bounded checks are ready.",
+      "evidence": "Current Review publication follow-up and changes artifact; no push authorized."
+    },
+    {
+      "rank": 2,
+      "task": "Named exact-wording acceptance for #153",
+      "rationale": "Direct human acceptance remains necessary before resident use; appointment alone is not completed review.",
+      "evidence": "Preserved content standard and current Review planned follow-up; Juan Manuel Servera owns exact-text review."
+    },
+    {
+      "rank": 3,
+      "task": "Resident/representative usability and assistive-technology acceptance",
+      "rationale": "High-value later acceptance under #155; engineering browser checks do not replace participant evidence.",
+      "evidence": "Preserved resident journeys and current Review planned follow-up."
+    }
+  ]
+}

@@ -6,6 +6,112 @@ ms.date: 2026-10-29
 ms.topic: reference
 ---
 
+## Compact case journey (#552)
+
+The six workflow steps retain text labels and status words alongside the exact
+icons from slide 4 of `docs/capstone/deck/zava-forward-cowork-v2-draft.pptx`.
+The local `web/journey-icons/` PNGs are byte-exact extracts: survey image11,
+assessment image6, funding image12, resident image13, contractor image14 and
+quality image15. A regression checks those bytes against the tracked deck.
+The API package data explicitly includes `web/journey-icons/*.png` so these
+assets also ship in the wheel installed by the container.
+
+Blocked steps and the case summary show a single-line reason with a native
+Details button. Click, tap, Enter or Space opens the complete reasons, owners
+and next actions; Escape, Close details or tapping outside dismisses them.
+Long content wraps and scrolls inside a viewport-bounded, keyboard-focusable
+popover. Status words and existing approval, safety and manual paths remain.
+Native popovers require a current browser; the local check covers Chromium,
+not full cross-browser or assistive-technology acceptance.
+
+Tabs wrap on the same bordered surface as their panel, outside its vertical
+scrolling area. Arrow keys, Home and End move tab focus; Enter or Space selects.
+The selected tab stays in the URL. Sections remain mounted so tab changes
+retain inputs. If enhancement is unavailable or fails, all sections are listed
+without inner scrolling bounds.
+
+From `src/api`, using the existing installed source dependencies:
+
+```bash
+PYTHONPATH=src:../core/src:../agents/src:tests:../core/tests:../agents/tests \
+  /tmp/mv/bin/python -m unittest test_case_journey test_workspace_scripts \
+  test_design_system test_accessibility_baseline test_content_standard -q
+PYTHONPATH=src:../core/src:../agents/src:tests:../core/tests:../agents/tests \
+  /tmp/mv/bin/python -m checks.case_view_ux_browser_check --out /new/external/case-results
+node --check src/zava_forward/api/web/case-workspace.js
+node --check src/zava_forward/api/web/app.js
+```
+
+The browser check starts and stops its own constructed-data loopback app,
+blocks external requests and records 1280/390/320px geometry and screenshots,
+keyboard/touch disclosure, enlarged text, retained fields, panel scrolling and
+both enhancement-fallback paths. `--baseline` captures pre-change geometry.
+These are focused local engineering checks, not publication or WCAG acceptance.
+
+## Shared resident and employee chat widget (#550)
+
+Both applications serve the same `web/chat-widget.js` and `web/chat-widget.css`.
+A bottom-right icon opens a nonmodal popup: the thread scrolls independently,
+the composer stays below it, Enter sends and Shift+Enter inserts a newline.
+The employee input-area selector uses the general option and five bounded
+skills from `/api/chat/skills`; residents use the resident assistant only.
+The case panel's Open chat action opens this same popup, not another composer.
+Employee input stays disabled until the existing API privacy warning loads;
+drafts retain the workspace's unsaved-change and unload protection.
+Attach and Voice are disabled with a visible unsupported-capability reason.
+Labels distinguish AI suggestions from workflow-only/rules output, with native
+collapsed Sources details. AI output is advisory and may be incorrect.
+
+Closing and reopening retains history, draft, skill and pending reads in the
+current page session/context. Moving focus into the page hides chat without
+redirecting focus or cancelling pending work; the visible launcher remains
+available. Setup and incoming replies never refocus the composer, even while
+chat is visible. Replies, status and inline errors use polite live updates.
+New messages follow the end only when the conversation was already at the
+bottom and focus is outside its history; reading older messages or focusing
+Sources preserves the scroll position. Loading, status and error size changes
+preserve that same current bottom-follow intent, including the 200 ms loading
+row; scrolling upward or focusing history during a pending reply stops following.
+Employee chat sits above embedded map
+panes, controls and home summaries, below the account menu. Close chat has a
+readable explicit hover state on both sites. Same-context filter refreshes
+retain the conversation and the launcher's open/close toggle.
+Employee case navigation, session/access loss and resident consent withdrawal
+clear the relevant conversation and invalidate late results. Reloading does
+not restore a conversation; no resident text is saved in browser storage.
+Resident record-use consent remains explicit before requests and is not works
+consent. Raw resident text is still host-routed, never forwarded to the model.
+Only explicit home-record/address/planned-improvement questions receive that
+summary; unsupported concerns, including the dead-rat example, receive an honest
+inability to answer and the housing-officer contact route, never a diagnosis.
+Safety reports keep the existing independent human/emergency route.
+
+Resident callback answers leave chat open and offer an explicit action to use
+the manual callback form. Booking/cancellation still requires the separate
+specific confirmation; chat has not alerted staff or booked works.
+Missing shared employee script recovery is bounded and does not block ordinary
+authorized work. Resident script failure shows a visible manual-help route.
+
+From `src/api`, using the source distributions and existing `/tmp/mv` tools:
+
+```bash
+export PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests
+/tmp/mv/bin/python -m unittest test_resident_chat_api test_chat_panel test_chat_isolation -q
+/tmp/mv/bin/python -m checks.chat_widget_browser_check \
+  --axe /path/to/axe-4.10.3.min.js --out /new/external/chat-widget-results
+```
+
+The shared browser check starts actual local applications with constructed data,
+checks identical asset bytes, multi-turn layout, 199/200ms loading, Enter/IME/
+Shift+Enter, unobscured external keyboard focus (including 320px sign-in and
+short-window launcher), controlled setup/reply focus preservation, delayed
+long-reply following from the pre-send bottom without repositioning after loading, errors,
+reduced motion, collapsed
+sources, consent, stale results and dependency recovery. Existing employee and
+resident browser checks retain their session/access/manual-callback assertions.
+These are engineering checks, not human screen-reader, voice-control, live-model,
+live-site, full Fluent adoption or WCAG-conformance acceptance.
+
 ## Loading feedback and Today's briefing (#531)
 
 The employee shell contains startup text before workspace scripts load. An
@@ -246,7 +352,8 @@ changes or denied access clear the dialog and abort stale UI results.
 Denials during skill loading, thread creation or asking remove case context
 and return focus to the workspace; session expiry returns to sign-in instead.
 
-Every answer carries "AI suggestion, not approved". Citations show permitted
+AI answers carry "AI suggestion, not approved"; the shared widget distinguishes
+workflow-only replies without claiming they are AI-generated. Citations show permitted
 record fields or named `workflow/` sources; cited AI output is still not
 independently verified. Missing/failed models return plain workflow-only help,
 not an uncited answer or a record change. Questions are masked and stored in
@@ -256,12 +363,14 @@ guarantee; do not enter resident names or sensitive/contact details. The audit
 ledger stores thread ID, actual question sequence, selected skill and outcome,
 not duplicated free text. Existing retention and DPO decisions remain required.
 Stored questions retain the 8,000-character limit after masking, including
-when a replacement marker is longer than the original identifier.
+when a replacement marker is longer than the original identifier. This is a
+storage limit, not the inference allowance: questions over 1,000 characters
+return workflow-only help without a model call.
 
-The dialog uses native controls, explicit keyboard focus wrapping, Escape and
-return focus, polite updates, shared `async-action.js` loading feedback and
-Fluent-derived tokens. It adds no motion; shared reduced-motion spinner rules
-still apply. Automated browser/axe evidence is not screen-reader, voice-control,
+The shared nonmodal popup uses native controls, normal Tab traversal, Escape and
+return focus, polite updates, a delayed 200ms loading indicator and Fluent-derived
+tokens. Reduced motion keeps a static loading signal. Automated browser/axe
+evidence is not screen-reader, voice-control,
 employee usability, full Fluent adoption or WCAG-conformance acceptance.
 
 From `src/api`, with the worktree distributions installed:
@@ -277,9 +386,9 @@ The browser check uses an isolated constructed-data loopback server and
 explicit synthetic privacy references, actual unavailable-model fallback,
 intercepted answer-rendering cases and pinned axe on the open dialog.
 It requires ask arrival before navigation in the transport test, then separately
-settles controlled successful API promises after close, navigation and session
-change. Transcript, status and focus must remain unchanged, including detached
-and replacement dialogs. These are synthetic application-completion checks,
+settles controlled successful API promises after hide, navigation and session
+change. Hide retains current reads without moving focus; navigation/session
+disposal fences detached and replacement popup state. These are synthetic application-completion checks,
 not evidence of a live provider response.
 Actual SQL Server, live employee-site/model, hosted checks and human acceptance
 are separate. The 2026-10-29 local run did not perform live verification.
@@ -375,6 +484,17 @@ post-deployment verification remain pending the owner.
 
 ## Expanded map and home summaries (#532)
 
+Overview's expanded map also places its existing filters along the top (#551).
+The compact buttons retain their counts and visible "Selected"/"Select filter"
+words. Use Tab, Enter or Space to change the selection, or choose an area with
+the labelled native selector. Map reads keep the controls available and focused;
+loading, empty and failed-map feedback remains in the map information panel.
+On exit, the same controls return to the Overview header with the current
+selection. Completed remains a header summary, not an expanded-map filter.
+At narrow widths or enlarged text the filter region scrolls without covering
+the map; the map retains a minimum height, and exit/list paths remain available.
+Coordinator flow retains its separate cohort filters.
+
 From Overview or Coordinator flow, choose **Expand map** for a near-full-screen
 map with a narrow left information panel. Select a home with a click, Enter or
 Space to read its summary, then choose **Open home** to navigate. The summary
@@ -413,7 +533,10 @@ The check requires integrity-pinned axe 4.10.3, uses a real loopback API, aborts
 external application requests, and retains scan details and screenshots. It
 covers summary-first keyboard/pointer behavior, Escape/focus, modal containment,
 redraw/failure/filter cleanup, manual paths, coordinator omissions, reduced
-motion and 320/390/1280px expanded layouts. It also checks uncancelled browser
+motion and 320/390/1280px expanded layouts. Filter regressions cover all six
+flags, area changes, original control identity on exit, held/out-of-order reads,
+all-request observation proving repeated selected-filter activation adds no read,
+keyboard focus, 390x568 layout and 640px with a 32px default font. It also checks uncancelled browser
 shortcuts from map/marker focus in both modes and exact ordinary/Shift-plus map
 zoom changes. Session-expiry checks hold overlapping fit
 responses, deliver a 401 before a successful response with bounds, and verify
@@ -498,6 +621,110 @@ retry reads and verifies sign-in remains after the retry continuation finishes.
 It is a separate required check, not automatically run by the full RPI gate.
 Local SQL Server/browser execution and post-deployment verification must be
 recorded separately; source coverage alone does not establish live acceptance.
+
+## Staff-recorded safety-consent intake (#130, #131)
+
+`POST /api/cases/{id}/resident` reuses current authentication, role checks and
+the transactional core ledger for these closed payloads. Extra fields,
+including purported verification/approval, are refused. `case_id` must match
+the URL; a wrong identity must go to the data owner, not be transferred.
+All actions require current resident-workflow and recorded-reason rights,
+including after a cached session's staff registration changes.
+
+| Action | Required fields in addition to `action` |
+| --- | --- |
+| `nomination_record` | `case_id`, `kind` (`Officer nomination`/`Self-referral`), `reported_subject_ref`, `account`, `source`, `channel`, `owner` (staff email), `acknowledgement_ref`, `next_update` (YYYY-MM-DD), `non_digital_route`, `hazard_concern` (explicit false) |
+| `nomination_correct` | `case_id`, `id`, `expected_version`, `reported_subject_ref`, `account`, `source`, `channel`, `next_update`, `challenge_id` (same-case existing challenge ID or null) |
+| `tenure_intake` | `case_id`, `household_ref`, `expected_version` (0 initially, latest case tenure revision thereafter), `reported_tenure`, `reported_lease_interest`, `identity_state` (`Unknown`/`Ambiguous`), `source`, `owner`, `next_update` |
+
+Channels: `Digital`, `Phone`, `Letter`, `In person`, `Trusted intermediary`.
+Reported tenure: `Tenant`, `Shared owner`, `Right to buy leaseholder`,
+`Preserved right to buy leaseholder`, `Leaseholder`, `Mixed block`, `Unknown`.
+Missing lease-interest information must be supplied as `Unknown`, not guessed.
+Both identity and tenure verification remain unknown regardless of reported
+values. Original text is preserved, bounded and never silently truncated.
+
+The response contains projected case detail. Restricted roles receive no raw
+intake histories. Stale versions return the existing conflict response.
+A committed write whose acknowledgement fails returns the existing explicit
+409 `outcome: committed`; reload/reconcile history before another action.
+No automatic sending, booking, approval, ranking or lease interpretation.
+Hazard concerns return a refusal directing staff immediately to the existing
+`/api/cases/{id}/hazard-raise` route; this is not automatic hazard referral.
+Use emergency/manual service routes independently without waiting for intake.
+
+See the [core boundary](../core/README.md#unverified-nomination-and-tenure-intake-130-131)
+for the case-wide unresolved hold, deletion interaction, missing whole-programme
+coverage and actual human approvals still required. There is no new web
+interface or operational activation; digital capture is staff API capture,
+not evidence of keyboard, screen-reader or representative participation.
+
+```bash
+PYTHONPATH=../core/tests:../agents/tests python3 -m unittest discover -s tests -p test_resident_api.py -q
+```
+
+## Working form review and held Finance decisions (#96, #98, #99)
+
+`GET /api/cases/{case_id}/form-review` returns authorized working diagnostics,
+review history, recorded diagnostic manifests and unresolved decision holds.
+An unavailable retained source does not fail the whole GET: its draft entry
+contains only `draft_id`, `status: "Unavailable"` and a fixed recovery `notice`.
+Affected values, history, attachments and recorded diagnostics stay hidden;
+unrelated available drafts remain readable in the same 200 response.
+`POST` accepts only `open`, `review` and `diagnose`; all other actions and extra
+keys are refused. Existing authentication and Finance/resident/reason-view
+checks apply on the server. No UI, model call, approval, submission or
+reviewed-export path is added.
+
+```json
+{"action":"open","schema_id":"SYN-TECH","schema_version":1}
+```
+
+The example schema ID is synthetic and must already be registered. The response
+includes `draft_id` and `input_version`. Individual review uses the exact keys:
+
+```json
+{
+  "action": "review",
+  "draft_id": "<returned draft_id>",
+  "expected_version": 1,
+  "field_id": "epc",
+  "decision": "accept",
+  "batch_id": "<same-case staged batch ID>",
+  "candidate_id": "<staged candidate ID for epc>",
+  "value": null,
+  "reason": "Synthetic example: checked the bound source"
+}
+```
+
+`correct` supplies an explicit scalar value while retaining source lineage;
+`reject` requires null batch/candidate/value and preserves prior history.
+`diagnose` takes only action, draft_id and expected_version. Writes increment
+the draft version; stale writes return 409. Invalid input returns 400, denied
+or unavailable scanned evidence on POST 403, missing case/draft 404, unavailable blob
+storage 502 and storage failure 503. On storage errors, reload before retrying.
+Pending/missing scans use the separate document recovery path, never a hidden
+review-time scan.
+
+Every manifest is Held with `reviewed_ready: false`. Approved-rule validation,
+unit/currency verification and Board breach assessment are Not evaluated.
+Three durable decision-needed entries carry no invented approval or figures;
+the acceleration pause is diagnostic only, not a programme-wide hold.
+See the [core boundary](../core/README.md#unapproved-working-field-review-96-98-99)
+for typed conditions, source/schema freshness, JSON/SQL writer guarantees and
+the still-blocked Finance/Board decisions. Raw values/history/holds are omitted
+from ordinary case detail; the dedicated endpoint refuses affected historical
+evidence after quarantine through the opaque per-draft GET result above.
+
+After pip editable installation, from `src/api`:
+
+```bash
+PYTHONPATH=tests:../core/tests:../agents/tests python3 -m unittest test_form_staging_api -q
+```
+
+This is a synthetic local engineering slice, not approved-template binding,
+full reviewed application/claim export, live financial authority, a Board
+envelope or complete issue acceptance.
 
 ## Specialist screen delivery (#149)
 
@@ -767,14 +994,68 @@ PYTHONPATH=tests:../core/tests:../agents/tests python -m checks.resident_assista
 Full unit discovery remains the normal API command. Browser evidence does not
 establish screen-reader, user or live-service acceptance.
 
-The focused check covers Account disclosure before sign-out and submit focus
+The focused check covers Account disclosure before sign-out and composer focus
 after success or failure, including duplicate suppression and delayed logout
-isolation. Busy advice keeps the native submit button focusable with
-`aria-disabled`. Optional reservation I/O failures return the generic assistant
+isolation. Busy advice disables the native submit button and keeps focus in the
+textarea, with duplicate suppression. Optional reservation I/O failures return the generic assistant
 503 without acquiring a token or calling the model transport in the legacy
 adapter; the new advisor returns explicit rules fallback instead.
 
 ## Opt-in IoT consumer and synthetic publisher (#110, #184)
+
+For the bounded hub-only exercise, `DeviceActivation(hub_hostname,
+approval_reference, resource_group="ama")` authorizes only the explicitly
+called X.509 publisher. It requires a valid Hub hostname and nonempty approval,
+but does not pretend a custom Event Hub or routed consumer is ready.
+`HubReceiver` rejects this activation before credential construction;
+its existing `Activation`/managed-identity/routing requirements below remain.
+Approval objects are caller declarations, not verification of deployed access.
+The [2026-10-29 hub reconciliation and blockers](../../infra/README.md#bounded-existing-hub-exercise-2026-10-29-refs-140-184-137)
+record the actual existing B1 resource, registry-permission blocker and unchanged
+service-key prohibition. Local actual SQL tests do not establish live transport.
+
+Before the single approved run, the named owner must complete and record the
+[quota, cost and alert preflight](../../docs/reference/research/iot-sensor-analytics-research-plan.md#cost-and-scale-before-any-live-run).
+Verify the exact reused hub's current B1 quota usage for the applicable UTC
+day immediately before running; record that consumed 4-KiB-unit count as
+`verified_daily_used_units`. Do not assume an unused hub or use the zero
+default. Account conservatively for other traffic and attempted or uncertain
+deliveries not yet reflected in the reported usage, including traffic expected
+during the run. The verified usage plus the planned run's units (each body plus
+the 1-KiB properties reserve, rounded up to 4-KiB units) and any such additional
+traffic must leave at least 40,000 unused units from the 400,000-unit daily
+allowance. Recheck if the quota day or usage changes before sending; stop if
+usage or concurrent traffic cannot be reliably bounded.
+
+Also verify actual subscription currency and remaining aggregate cost headroom,
+including accrued charges and remaining commitments, within the approved
+USD5 additional allowance through 31 October 2026 and the overall budget.
+The historical USD60/month routed model is not additional spending authority.
+Verify that the budget alert is active (enabled, with the correct budget scope,
+threshold and notification recipient). Record the fresh evidence in the owner,
+cost and alert references; missing, stale or insufficient quota/cost/alert
+evidence blocks the run. References alone do not prove these checks.
+`RunBudget` does not query live quota, verify alerts or enforce aggregate
+spending, and budget alerts are not hard spending stops.
+
+For this bounded exercise, explicitly set `RunBudget(...,
+daily_used_units=verified_daily_used_units, max_messages=2,
+max_per_second=1.0, max_seconds=60.0)` with those verified owner, cost and alert
+references: at most two messages total, one per second globally and 60 seconds
+for ONE `HubPublisher.run()` call for the entire approved bounded exercise.
+Do not make repeated or concurrent calls, including from another publisher
+instance or process. Each call creates a fresh pacer by default; `RunBudget`
+does not cumulatively account for sends or enforce the rate across calls.
+No further run or retry is approved without separate owner approval after
+reconciling all attempted and uncertain deliveries, daily quota usage and
+the remaining budget/window. The default 100 messages and larger supported
+limits are not approved for this exercise. Before the single run, the operator
+must check the UTC date/time and ensure the run fits within the remaining
+approved window through
+31 October 2026 UTC: stop before `2026-11-01T00:00:00Z`, and do not start if
+there is insufficient time to finish within that cutoff. `RunBudget` enforces
+per-run limits, not this calendar cutoff; checking and observing it remains
+the operator's responsibility.
 
 `iot_stream.HubReceiver` adds an explicitly called finite asynchronous SDK
 adapter around `SensorIngestion`; it adds no HTTP route, startup task or deployed
@@ -784,7 +1065,8 @@ uses twins/cloud-to-device management or retrieves a service key.
 Install this project's declared dependencies with pip, including pinned
 `azure-eventhub`, `azure-iot-device` and `aiohttp` for asynchronous identity.
 
-Both runners require `Activation` with resource group `ama`, the exact Hub
+The routed receiver and original routed publisher profile require `Activation`
+with resource group `ama`, the exact Hub
 hostname, matching `eh-<hub-name>.servicebus.windows.net`, `sensor-readings`,
 `api-consumer`, `routing_ready=True` and a nonempty approval reference.
 This is a caller assertion, **not verification or approval of deployment**.
@@ -835,7 +1117,10 @@ Then call `await publisher.run(frames, budget, speed=1000, truth=restricted_trut
 diagnostic logs. It receives synthetic/opaque-reference/slot/fault/status
 records including the selected-input digest copied from each Frame, never
 values, home/device IDs or credentials. `attempt` without `sent`
-is uncertain, not proof of no delivery; rerun identical frames to reconcile.
+is uncertain, not proof of no delivery: stop and retain the truth records for
+review. Do not rerun identical frames or retry an uncertain delivery without
+the separate owner approval and accounting required above; SQL idempotency
+does not refund attempted messages or the exercise allowance.
 `disconnect` is an explicit terminal synthetic stop, not an automatic reconnect.
 Model-time spacing uses each Frame's `nominal_at`, not its observation timestamp.
 For example, out-of-order suffix slots 3..4 retain their reordered payload times
@@ -1925,10 +2210,11 @@ fixed five-part answer. No sixth assistant or live AI task is activated.
 
 | Method and path | Contract |
 | --- | --- |
-| `GET /api/chat/regulatory/status` | Synthetic admission, free-text warning and metadata-only own-role retention review; 403 when disabled or unauthorized |
+| `GET /api/chat/regulatory/status` | Synthetic admission, warning, own-role retention review and bounded audit-only usage; 403 when disabled or unauthorized |
+| `GET /api/chat/regulatory/usage` | Metadata-only current-user/current-role/UTC-day recorded outcomes; same synthetic/privacy/capability guards, no message reads |
 | `POST /api/chat/regulatory/threads` | `{"case_id":"ZF-1"}`; owned thread bound to that home/case |
 | `GET /api/chat/regulatory/threads/{id}` | Owner-only historical messages, source snapshots and current role/case checks |
-| `POST /api/chat/regulatory/threads/{id}/ask` | `{"content":"What do the hazard sources say for this home?"}`; exact source/fact answer or explicit refusal |
+| `POST /api/chat/regulatory/threads/{id}/ask` | `{"content":"What do the hazard sources say for this home?"}`; exact answer/refusal, zero-call usage, or conflicting sources with atomic `escalation` receipt |
 | `POST /api/chat/regulatory/threads/{id}/doubt` | `{"turn":2}`; atomically copy that stored question/answer pair into the named exercise owner's isolated inbox |
 | `GET /api/chat/regulatory/inbox` | Juan Manuel Servera's provisioned exercise principal only; no access to senders' threads or memory |
 
@@ -3125,6 +3411,57 @@ the model is down.
 * Not evidenced here: a screen-reader test (needs a manual run with a named reader), a live model run (no Azure
   endpoint locally) and real chat data (DPIA, lawful basis and notice references are unset, so storage stays refused).
 
+### Staff chat hardening (2026-10-27, #157)
+
+`GET /api/chat/status` returns the canonical special-category warning,
+unapproved retention status and engineering caps for permitted staff only.
+The question field remains disabled until its warning loads and uses
+`aria-describedby`. A failed fetch has an explicit ordinary-workflow route.
+Refusals announce the human route, not a misleading model-outage message.
+
+Both `/ask` and legacy `/messages` use the cited panel; `/messages` retains
+`reply`, `label`, `model` and `withheld` and adds the panel fields. Legacy
+uncited answers and memory prompting are intentionally removed from that HTTP
+route. Direct memory lifecycle/assembly remains separately testable and off by
+default; neither HTTP route activates it. Sources are complete JSON, bounded
+to 16,000 combined system/prompt characters, with at most 12 user questions /
+4,000 history characters and a 1,000-character new question. Selected advisory
+skill instructions count toward the same combined system/prompt cap.
+Completion-time source checks apply the same skill filter as dispatch.
+Oversize returns
+workflow-only. There is one provider attempt, no retries, default 600 output
+tokens. These caps do not approve role budgets, token prices, spend or expiry.
+
+`ChatModel` requires admission before and after dispatch. The server requires
+registered live authority and the existing continuity/release gate. No approved
+conversational task/release exists, so general staff model calls remain denied;
+synthetic privacy references cannot enable them. The regulatory offline
+extractive path and independent proposal-review path are unchanged.
+
+Each turn returns `consumption` and records one content-free `chat.turn` audit
+event with calls, validated tokens or null/Unknown, outcome and bounds. A
+post-call permission/case/thread rejection still records incurred consumption
+but releases no answer. Changed projected sources withhold the completion.
+Decoded answer text is checked for tool syntax as well as the raw JSON.
+Consumption accounting is not a transactional exactly-once billing system:
+process/storage failure remains an operational reconciliation requirement.
+
+Local Chromium covers warning fetch failure, keyboard disclosure/submission,
+focus return, refusal status, live-log attributes and 390px visibility:
+
+```bash
+# From src/api, after pip editable installs:
+ZF_BROWSER_TESTS=1 PYTHONPATH=tests:../core/tests:../agents/tests \
+  python3 -m unittest test_chat_panel.PanelTests.test_browser_warning_failure_keyboard_refusal_and_live_log -q
+```
+
+Default unit discovery skips this optional browser method; explicit execution
+requires installed Chromium. This is not a named human screen-reader test or
+complete WCAG acceptance. DPO/Legal/provider/retention/access decisions,
+independent held-out/serving-model/human evaluation, approved thresholds and
+finite role budgets remain blockers. All five issues remain Refs, including
+parent stabilization #440.
+
 ## Configuration
 
 | Variable | Purpose |
@@ -3481,6 +3818,36 @@ success. Source excerpts retain snapshot/currentness and truncation caveats.
 The existing doubt action sends the actual turn to Juan Manuel Servera's
 synthetic exercise inbox; its receipt is not legal approval or a resident
 message. Failed referrals are explicit and retryable.
+
+### Synthetic completion boundary (2026-10-27, #208)
+
+Supported conflicts now automatically reach the named exercise inbox with
+both source versions, the original question and a durable sender receipt.
+Automatic/manual routing deduplicates one stored thread/turn, not repeated ask
+requests. History restores the actual receipt and marks the doubt button sent;
+no human decision or legal resolution is implied. Sender/recipient provisioning,
+role and case scope are rechecked inside the transaction. Trusted-proxy referral
+also requires the recipient's separately recorded chat capability; actual
+tenant assignment remains unverified, not inferred from a job title.
+
+Chat displays calls per question (zero), current-role/UTC-day recorded outcomes,
+the zero inference allowance and explicit Unknown service cost. Alerts display
+zero calls per deterministic check/alert; historical records without metadata
+say usage was not recorded. These are not quotes, spend authorization or staff
+benefit measurements. The bounded `/usage` result is audit-only, potentially
+partial, never an exact total; see the [core consumption contract](../core/README.md#offline-regulatory-consumption-2026-10-27-208).
+Usage follows the existing draft DPIA/retention/access controls, not a new
+retention exemption.
+After an answer is shown, the lookup clears unchanged submitted text and
+re-enables its control without waiting for the background usage refresh.
+A failed refresh reports unavailable usage separately; it does not replace
+the answer or block the next question.
+
+The local pinned-axe harness exercises automatic conflict routing/restoration,
+usage, keyboard/plain mode, seven staff roles and supplier denial, 320/390/1280
+widths, enlarged text, reduced motion and failure paths. This is scoped browser
+engineering evidence, not WCAG conformance or repairs/housing/grants
+comprehension acceptance. All original human/live criteria remain unmet.
 
 ### Audience patterns and delivery boundary
 

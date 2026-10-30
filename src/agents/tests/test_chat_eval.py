@@ -133,6 +133,22 @@ class GoldenRunTests(unittest.TestCase):
         self.assertEqual(report["enablement"]["outcome"], "insufficient")
         self.assertEqual(report["enablement"]["blocking_gaps"], [])
 
+    def test_consumption_is_reported_per_turn_scenario_and_runtime_answer(self) -> None:
+        summary = self.report["summary"]["economics"]
+        self.assertEqual(summary["actual_model_calls"], 0)
+        self.assertIsNone(summary["tokens"])
+        self.assertEqual(summary["cost"], "Unknown")
+        calls = 0
+        for result in self.report["results"]:
+            calls += result["economics"]["scripted_calls"]
+            for receipt in result["consumption"]:
+                self.assertIn(receipt["model_calls"], (0, 1))
+                self.assertFalse(receipt["memory_used"])
+                self.assertNotIn("Question", json.dumps(receipt))
+        self.assertEqual(calls, summary["scripted_calls"])
+        self.assertGreater(summary["calls_per_runtime_accepted_answer"], 0)
+        self.assertIsNone(summary["human_accepted_answers"])
+
 
 class NegativeControlTests(unittest.TestCase):
     """Break one property at a time and expect the harness to notice."""

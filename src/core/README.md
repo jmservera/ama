@@ -49,6 +49,163 @@ their separate approval and coverage limits. No child or epic closure,
 human-witnessed drill, broader assistant/form challenge coverage, legal
 screening or #440 stabilization is inferred.
 
+## Unverified nomination and tenure intake (#130, #131)
+
+The existing `resident_action` ledger accepts `nomination_record`,
+`nomination_correct` and `tenure_intake`. These are constructed staff-recorded
+intake, not nomination eligibility, verified identity, consent, Legal approval
+or an offer. Current registered staff need both resident-workflow and
+recorded-reason rights. Owners are named follow-up staff, not appointed Legal
+or Home Ownership decision makers. Each successful command is audited with
+non-sensitive record identifiers and persisted using the existing transaction.
+SQL writers recheck the actor, owner and current case revision before commit.
+
+Nomination keeps the exact supplied original account, source, reported subject
+and channel, a staff-recorded acknowledgement reference, named owner,
+next-update date and staffed non-digital route. Acknowledgement evidence is
+not verified delivery. Digital, phone, letter, in-person and trusted-intermediary
+channels are supported as staff capture, not direct resident authentication.
+Accounts longer than 4000 characters are refused, never truncated.
+Identity, support needs and risk flags remain `Unknown`. Corrections retain
+the original and competing accounts/subject references with actor/time and
+require re-review; a same-case generic challenge may be linked without
+resolving it. No resident identity, authority, ranking, consent or hazard
+record changes. Hazard-marked reports are refused with the independent
+hazard-intake route; no automatic triage, classification, dispatch or clock
+change occurs.
+
+New nomination identifiers use an opaque `NOM-` plus full random UUID, never a
+ledger position. Retention deletion and subsequent intake therefore cannot
+reuse a deleted record's identity or accept a stale correction for another
+subject. Existing sequential identifiers remain valid for retained records.
+Corrections must use the recorded identifier and its current version.
+
+Tenure reports retain each supplied household reference, reported tenure and
+lease interest, source, unresolved identity state, follow-up owner and update
+date. A report is not verified household membership. Verification, decision
+route, Legal responsibility and Finance cost remain `Unknown`. Every report
+sets a case-wide hold on resident work gates and new measure-scope recording,
+including ambiguous/unknown households and otherwise accepted measures.
+Revisions and other households' agreements cannot release it. There is no
+release or verification action. A static responsibility-question checklist
+identifies missing evidence; it is not a pack derived from reviewed leases.
+Prior homes without intake are unchanged: this does not prove complete tenure
+coverage or an all-offer gate across the programme.
+
+The tenure hold is separate from resident-decision status. An otherwise current
+acceptance remains `Accepted` in lists, prompts and priority suggestions after
+tenure intake; the hold still blocks case-wide and scoped resident work.
+Existing decision retention, scope, human-review and representative-authority
+checks continue to apply.
+
+Raw intake is excluded from unrelated-role detail, contractor output,
+assistant source allow-lists and case CSV. Sensitive histories follow existing
+resident-record deletion handling for constructed tests; the separate
+non-sensitive `tenure_review_required` marker survives evidence deletion so
+deletion is not approval. No new actual retention duration, applicability,
+lawful basis or privacy approval is established.
+
+Operational extensions remain blocked on OD-41/42, real participant and
+representative evidence, a named Legal/Home Ownership decision owner,
+verified household/lease identity, approved responsibility/cost and applicable
+DPO/Compliance retention/release decisions. Nothing is sent, booked or
+approved. No issue-wide acceptance or user/accessibility conformance is claimed.
+The existing generic RAI challenge remains separate from nomination-specific
+eligibility and review decisions.
+
+Focused local constructed tests:
+
+```bash
+python3 -m unittest discover -s tests -p test_resident_decisions.py -q
+```
+
+## Unapproved working field review (#96, #98, #99)
+
+`form_review.action(store, user, case_id, body)` supports `open`, `review` and
+`diagnose` only. It binds a supplied registered schema, never an approved form.
+All schemas and source-policy/rule authority remain unapproved. Named staff
+must have the existing Finance, resident-record and reason-view rights.
+
+An individual accept/correct/reject changes only that working field and its
+append-only review history. Acceptance copies the exact candidate raw text;
+typed integer/number/boolean corrections are explicit, retain the raw evidence,
+and require a same-case, exact-schema staged candidate as their source anchor.
+Corrections without a staged source anchor remain unavailable. Declarations,
+signatures, consent and approvals cannot be accepted by this working-review
+path. It never writes original sources, authoritative case fields, ranking,
+consent, budget, invoice, grant, award, submission or cash states.
+
+`review` requires `draft_id`, `expected_version`, `field_id`, `decision`,
+`batch_id`, `candidate_id`, `value` and `reason`, in addition to `action`.
+For `accept`, `value` is null. For `correct`, supply a finite scalar value.
+For `reject`, batch/candidate/value are null; prior evidence remains in history.
+An unknown field, stale version, foreign candidate or extra server-owned key
+is refused. JSON supports one Store/writer with in-instance version checks;
+SQLite additionally protects independent writers with database rowversions.
+
+`view` and `diagnose` provide field-specific Unknown/Conflict/Fail draft
+diagnostics and source-linked diagnostic manifests. Conditions use confirmed,
+valid, current values only, combine predicates with OR and compare types
+exactly (`true` is not integer `1`). Missing/invalid/stale controlling inputs
+produce Unknown unless another predicate is true. Empty or whitespace-only
+strings remain recorded corrections but are not confirmed inputs: unconditional
+and active conditional requirements still report missing input. Numeric zero
+and boolean false remain valid confirmed inputs. Dates must be valid calendar
+dates in `YYYY-MM-DD`; numeric checks exclude booleans and non-finite floats.
+Units, currency, eligibility and approved calculations remain Not evaluated.
+`reviewed_ready` is always false, even if no local structural issue remains.
+Manifests retain exact schema/template/rule/input versions, field IDs/values,
+source hashes/versions/locators, attachment references and reviewer history.
+They are not reviewed application/claim exports or evidence of eligibility.
+
+Source/schema freshness is evaluated on reads/actions, not pushed into a
+downstream approval graph. Each report checks an exact source ID, version,
+content hash and kind once, reusing its freshness result for shared fields
+and staged alternatives only within that report. Source bytes are read/hashed
+at most once per distinct document across current fields, history, snapshots
+and alternative checks; missing-byte results are also reused locally.
+Action preflight shares these reads with its resulting report. Later reports
+check afresh; no cross-request cache is retained. A source change marks only its
+bound working fields stale; a new schema version affects all fields bound to that schema. Historical
+reviews/values and recorded diagnostic snapshots remain intact. This is not
+full FR-043/AC-051 rule/calculation/pack-review/approval stale propagation.
+Already-clean evidence is required: reads/reviews never scan or save a source.
+Missing, pending, quarantined or deleted retained evidence blocks disclosure of
+the entire affected draft/history, including recorded diagnostics. On `view`,
+availability is isolated per draft: the affected entry contains only `draft_id`,
+`status: "Unavailable"` and a fixed recovery `notice`; unrelated available
+drafts remain readable. Actions on an affected draft still refuse access.
+Availability is checked for current fields, prior/new history evidence and diagnostic
+fields/history/attachments even when the schema is stale or a field was
+rejected/replaced. Staleness alone does not remove available history.
+Unreviewed alternatives count toward Conflict only if their case/schema,
+source version/hash/kind/bytes and field source policy allow review; unavailable
+or stale alternatives are excluded without changing staged history.
+Missing bytes are reported as unavailable evidence; storage-service failures
+remain distinct errors, never empty/successful diagnostics.
+Recover or rescan through the separate document owner route before retrying.
+Ordinary case detail and generic case exports
+exclude the private review/decision-hold records.
+
+Opening notes durably records Held decisions for template/source/rule authority
+and Board OD-12/15, with owner role, correction path, recorder/time and null
+approved inputs/evidence. These are decision-needed records, not approvals.
+The diagnostic acceleration signal is `Pause for human decision`, with null
+envelope/tolerances and breach assessment Not evaluated. It does not enforce a
+programme-wide release or contain live activity. Finance/Board must supply
+actual approved investment, liquidity, covenant and downside inputs; no company
+figures, approved thresholds or restart authority are invented.
+
+From `src/core`, after pip editable installation:
+
+```bash
+PYTHONPATH=tests python3 -m unittest test_form_review test_form_staging -q
+```
+
+Tests use the public tiny synthetic fixture with temporary JSON/SQLite storage.
+Full #96/#98 approved readiness/export and #99 envelope/breach acceptance remain
+blocked on human decisions. No issue closure or production acceptance is implied.
+
 ## Resident advisory assistant (#469)
 
 `resident_assistant.advise(topic, CaseProgress(...), provider)` builds bounded
@@ -3295,11 +3452,46 @@ Not in this slice: the panel (#159), model calls, memory (#161), isolation harde
 (#163; retention policy is unlocked for the exercise, legal retention lock deferred). Fixtures are synthetic.
 Tests: `tests/test_chatthreads.py` (in-memory and SQLite parity; `MssqlChatThreads` runs with `ZF_TEST_MSSQL=1`).
 
+The employee panel records server-derived `actor_role` per message and includes
+only prior user questions asked under the caller's current role. Changing from
+role A to B and back does not relabel earlier questions. Existing JSON messages
+without this field and SQL messages migrated with an empty role remain stored
+but are excluded from model context because their asking role is unknown.
+SQLite and SQL Server add the column idempotently; new messages persist it
+across restarts. The panel's 4,000-character history cap measures the actual
+dispatched `UNTRUSTED` block, including delimiter expansion, wrappers and
+newlines, while preserving the newest fitting questions in chronological order.
+The current question must fit the 1,000-character limit both before and after
+redaction. An oversized masked question returns the context-limit workflow
+fallback without a model call, rather than silently truncating the question.
+
+The panel holds the existing reentrant store lock around message persistence
+and its audit events, the answer event and the final turn receipt, including
+rejected turns. These short sections serialize JSON audit predecessor updates
+with other locked writes; model inference does not hold the lock. Nested JSON
+and SQLite callers retain the same lock ownership and audit-flush behavior.
+Synthetic concurrent rejected/completed-turn regressions verify the shared
+chain, not just receipt counts. This is not a cross-process JSON write guarantee.
+
+Regulatory chat's direct paired-message and referral writers also persist
+`actor_role`. An owner inbox copy keeps the original asking role, not the
+recipient's role; a legacy copy without known provenance keeps an empty role.
+Both explicit and automatic conflict referrals retain this distinction across
+JSON and SQLite restarts. The separate bounded audit snapshot and offline
+usage summary do not load these message bodies.
+
 ## Chat and memory isolation (issue #162)
 
 `chat_isolation.py` sits on the #160 repository and #163 privacy rules and adds no tables. Endpoints (staff roles only; contractors and unknown roles are denied, default deny): `GET/POST /api/chat/threads`, `GET /api/chat/threads/{id}`, `POST /api/chat/threads/{id}/messages|archive|delete`, `GET/POST /api/chat/memory` (the POST needs `task` and a prior opt-in), `GET /api/chat/memory/status?task=`, `POST /api/chat/memory/opt-in|opt-out|erase|global|task` and `POST /api/chat/memory/{id}/edit|delete` (the #285 lifecycle; `global` and `task` switches are administrator-only), `POST /api/chat/breakglass`. The owner is always the authenticated user; request fields such as `owner` or `email` are ignored, and another user's thread, or a case outside the caller's scope, is reported as not found (404, so existence cannot be probed). Prompts carry the masked question and only memory from `privacy.prompt_memory` (opt-in, switch-gated, labelled non-authoritative); stored model replies are redacted like user messages.
 
 * Every turn re-reads the user's current role and re-projects the case through the same `store.detail` projection as the case card, so a changed or revoked role applies on the next turn.
+* For roster-backed SQL users, the cited chat panel reads the authoritative SQL
+  staff row at dispatch and again after inference, without relying on the staff
+  cache. Deleted, disabled, inactive or non-chat staff are denied; a changed
+  permitted role or projected source withholds the answer. Rejected completions
+  store no assistant reply. SQLite regressions change rows through an independent
+  connection while leaving both staff caches unchanged; they do not establish
+  SQL Server, live-model or operational acceptance.
 * The prompt holds only the caller's own thread, own unexpired memory and the projected case, each inside `UNTRUSTED` blocks with the block delimiters neutralised. The channel has no tools; replies are text only, labelled as unapproved, and a reply carrying tool-call or record-change syntax or a withheld reason is replaced by a refusal.
 * Break-glass is refused until `CHAT_BREAKGLASS_REF` (owner policy reference) is recorded and the caller role is named in `CHAT_BREAKGLASS_ROLES`. When allowed it needs a purpose, expires within 60 minutes, returns counts and ids only (never content) and writes granted and refused attempts to the audit ledger.
 * Open items: the break-glass and administrator content-access policy is an owner decision (BRD OD-46) and is not decided here; whether contractors may use chat is undecided (denied); the injection set in `src/api/tests/test_chat_isolation.py` is a recorded regression set, not evidence of complete coverage; real-model behaviour was not exercised.
@@ -3427,17 +3619,30 @@ the existing 8,000-character message limit fails before writing; it is never
 silently truncated.
 
 Answer pairs and explicit selected-turn doubt copies use single chat-repository
-transactions. JSON restores a pre-image on failure; SQLite uses rollback.
+transactions. Supported conflicts automatically copy both cited versions and
+the question to the named exercise owner's inbox in the same transaction as
+the answer and sender receipt. Missing, ambiguous or unauthorized owner scope
+prevents that conflict turn from being stored. Ordinary answers and refusals
+retain the manual doubt action. JSON restores a pre-image on pre-save failure;
+SQLite uses rollback.
 A copied pair lives in the uniquely provisioned Juan Manuel Servera exercise
-owner's own isolated thread, with a sender receipt and idempotent retries.
+owner's own isolated thread, with a sender receipt and idempotent referrals per
+stored source-thread/assistant-turn. A repeated ask, even with equal text, is
+a new turn and may create a new referral; reload history after uncertain
+responses instead of blindly resubmitting.
 The sender's other messages and memory are not shared. Both current roles/case
-rights are checked; SQL provisioning is read freshly, not from the legacy
+rights are checked again inside the locked transaction before mutation; SQL
+provisioning is read freshly, not from the legacy
 staff cache. Trusted-proxy roles remain claim-derived instead of being replaced
 by a wider staff-register role. Historical reads deny changed roles instead of
 replaying wider content. SQL turn/referral metadata audit now commits in the
 same transaction as the messages and receipt; an audit failure rolls back both.
-The JSON file store alone retains the post-commit separate-ledger error boundary;
-it is not evidence of SQL audit atomicity. Audit holds metadata only.
+The JSON file store alone retains the post-commit separate-ledger error boundary:
+an audit failure after save reports that the turn/referral was saved and
+requires history reload. It is not evidence of SQL audit atomicity. Audit holds
+metadata only. Tests distinguish a real SQL COMMIT-before-effect failure from
+the repository's no-op commit hook; neither establishes lost-acknowledgement
+idempotency.
 Copies have independent thread ownership/deletion; deleting the sender's
 thread does not delete the explicit owner's copy. No email or live delivery
 is implied. No rule-engine alert, consent, safety hold or case fact is changed.
@@ -3460,7 +3665,9 @@ be valid, the reference must start `SYNTH-` and days must be 1..36500 (technical
 input bound, not a legal period). Review due is creation time plus days,
 inclusive at the exact due instant, and includes archived regulatory threads.
 No content is loaded, no records are deleted and no DPO approval is inferred.
-Other source/card/check/alert/audit periods stay explicitly unknown. This is
+Other source/card/check/alert/audit/usage periods stay explicitly unknown. Usage
+inherits its parent records' access and unresolved DPO retention/hold review;
+it has no separate indefinite-retention permission. This is
 not a complete retention or rights implementation; the
 [draft DPIA](../../docs/reference/research/chat-memory-dpia.md#regulatory-assistant-dpia-draft-for-dpo-review-2026-10-16-refs-217)
 requires DPO review and remains unapproved.
@@ -3471,6 +3678,30 @@ model, citation IDs and answer hash, never question/answer/excerpt/health conten
 Referrals retain receipt and decision-owner linkage, once per selected pair.
 Rollback-after-audit-insert and reopen tests cover the chain head and data.
 Metadata and linkable hashes are not anonymous; DPO retention review is still needed.
+
+### Offline regulatory consumption (2026-10-27, #208)
+
+`regulatory_usage` records task/schema version, UTC day, outcome and zero model
+calls/input/output/cached tokens/retries, without case/chat/source content.
+Chat SQL audit writes this metadata with its turn; checks and alerts retain
+the corresponding model-free metadata in their existing append-only records.
+Every role's inference allowance is zero per UTC day. This is disabled
+inference, not a spending approval, request quota or limit on urgent intake.
+
+The authenticated user's current-role/day summary reads at most the latest
+1,000 audit positions. SQL uses a primary-key sequence window and projects
+other actors/actions' detail as NULL; it never loads chat messages or performs
+an all-ledger detail query. JSON additionally tails at most 256 KiB from the
+captured file size, excludes later appends and drops the leading partial line.
+Truncation returns `bounded_partial`; otherwise
+`recorded_audit_only`. Counts describe recorded events, never exact daily turn
+totals: legacy unmetered records and post-save JSON audit failures cannot be
+reconstructed. Unmetered events in the selected role/window are explicit.
+
+Service cost and AI cost per accepted check remain Unknown, not zero. Missing
+inputs are owner-agreed acceptance/counts, dated prices, attributable billing/
+shared-service allocation and human review effort. No model evaluation or
+paid budget/expiry authority is created.
 
 Engine contract version 2 requires nonempty `reasons` as well as named human,
 source, evidence and decision timestamp before a significant-decision check is

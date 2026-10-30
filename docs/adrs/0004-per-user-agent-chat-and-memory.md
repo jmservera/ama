@@ -222,6 +222,12 @@ number, model choice per task and any cost target.
 
 ## Implementation status
 
-Not implemented. Acceptance changes status only. No migration, API, screen
-change, test run or deployment follows from this ADR; implementation is tracked
-in #159 to #164.
+The original acceptance did not itself implement or activate the capability.
+Subsequent source delivery exists under `src/` (threads, isolated memory,
+privacy, cited panel and scripted evaluation). The
+[2026-10-27 engineering boundary](../reference/research/chat-memory-dpia.md#staff-chat-engineering-boundary-2026-10-27-refs-157162159164163)
+records current bounded staff HTTP turns, warning and consumption evidence.
+It does not amend this decision or supply a conversational registry/release,
+privacy/access policy, thresholds, serving-model/human effectiveness or a named
+screen-reader exercise. General staff model dispatch and HTTP memory prompting
+remain denied; #159 to #164 and parent #157 are not accepted in full.

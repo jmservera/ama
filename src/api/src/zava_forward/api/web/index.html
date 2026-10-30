@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="/vendor/leaflet.css">
 <link rel="stylesheet" href="/style.css">
 <link rel="stylesheet" href="/progress.css">
+<link rel="stylesheet" href="/chat-widget.css">
 </head>
 <body data-auth-provider="__AUTH_PROVIDER__">
 <a class="skip-link" href="#app">Skip to main content</a>
@@ -20,7 +21,6 @@
 <header class="top">
   <a class="brand" href="/app" id="home"><img class="zava-logo" src="/zava-logo.png" alt="Zava North Homes"><span>Zava Forward<small>Zava North Homes</small></span></a>
   <nav id="nav" aria-label="Workbench" hidden></nav>
-  <button id="employee-chat-launcher" type="button" class="alt" aria-haspopup="dialog" hidden>Ask the assistant</button>
   <details id="account" class="account" hidden>
     <summary aria-label="Your account">
       <span class="avatar"><img id="account-photo" alt="" hidden><span id="account-initials" aria-hidden="true"></span></span>
@@ -40,11 +40,13 @@
 <p id="workspace-status" class="workspace-status" role="status" aria-live="polite" aria-atomic="true"></p>
 <div id="action-status" class="workspace-status"></div>
 <main id="app" tabindex="-1"></main>
+<button id="employee-chat-launcher" type="button" aria-label="Chat" hidden></button>
 <script src="/async-action.js"></script>
 <script src="/vendor/leaflet.js"></script>
 <script src="/panels.js"></script>
 <script src="/ops.js"></script>
 <script src="/assistants.js"></script>
+<script src="/chat-widget.js"></script>
 <script src="/chat.js"></script>
 <script src="/timecapture.js"></script>
 <script src="/role-screens.js"></script>

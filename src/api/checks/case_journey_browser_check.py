@@ -221,18 +221,31 @@ def quality_outcome_history(
 
 
 def chat_cleanup(page: Page, base: str) -> None:
+    usage = {
+        "role": "Retrofit Programme Manager",
+        "period": "2026-10-29",
+        "recorded_turns": 0,
+        "outcomes": {"answer": 0, "refused": 0, "conflict": 0},
+        "coverage": "recorded_audit_only",
+    }
+
     def admission(route: Route) -> None:
         route.fulfill(
             json={
                 "privacy": {"chat": {"status": "simulated", "days": 1}},
                 "warning": "Constructed chat lifecycle fixture, not legal approval.",
+                "usage": usage,
             }
         )
 
+    def usage_response(route: Route) -> None:
+        route.fulfill(json=usage)
+
     page.route("**/api/chat/regulatory/status", admission)
+    page.route("**/api/chat/regulatory/usage", usage_response)
     for regulatory in (False, True):
         prefix = "/api/chat/regulatory" if regulatory else "/api/chat"
-        question_id = "#regulatory-question" if regulatory else "#chat-question"
+        question_id = "#regulatory-question" if regulatory else "#employee-chat-question"
         for change in ("none", "text", "space", "answer-failure", "thread-failure"):
             held: list[Route] = []
             thread_path = f"**{prefix}/threads"
@@ -257,9 +270,11 @@ def chat_cleanup(page: Page, base: str) -> None:
             page.locator("#chat-panel > summary").click()
             if regulatory:
                 page.locator("#regulatory-chat > summary").click()
+            else:
+                page.get_by_role("button", name="Open chat", exact=True).click()
             field = page.locator(question_id)
             button = page.get_by_role(
-                "button", name="Look up cited sources" if regulatory else "Ask", exact=True
+                "button", name="Look up cited sources" if regulatory else "Send", exact=True
             )
             expect(button).to_be_enabled()
             field.fill("  Synthetic submitted question  ")
@@ -271,6 +286,8 @@ def chat_cleanup(page: Page, base: str) -> None:
                 field.fill("Later question")
             elif change == "space":
                 field.fill("  Synthetic submitted question   ")
+            if not regulatory:
+                page.keyboard.press("Escape")
             tab(page, "Resident")
             page.locator("#outcome").fill("Save during pending chat")
             old = page.locator("[data-case-workspace]").element_handle()
@@ -278,6 +295,8 @@ def chat_cleanup(page: Page, base: str) -> None:
             page.wait_for_function("old => !old.isConnected", arg=old)
             page.locator("#note").fill("Unrelated unsaved note")
             tab(page, "AI assistance")
+            if not regulatory:
+                page.locator("#employee-chat-launcher").click()
             expect(field).to_be_visible()
             check(
                 f"chat retained pending controls/{regulatory}/{change}",
@@ -308,6 +327,8 @@ def chat_cleanup(page: Page, base: str) -> None:
                 f"chat success/failure raw cleanup/{regulatory}/{change}",
                 (field.get_attribute("data-case-dirty") == "true") == (change != "none"),
             )
+            if not regulatory:
+                page.keyboard.press("Escape")
             tab(page, "Resident")
             expect(page.locator("#note")).to_have_value("Unrelated unsaved note")
             page.locator("#note").fill("")
@@ -328,6 +349,7 @@ def chat_cleanup(page: Page, base: str) -> None:
             page.unroute(thread_path, threads)
             page.unroute(ask_path, hold)
     page.unroute("**/api/chat/regulatory/status", admission)
+    page.unroute("**/api/chat/regulatory/usage", usage_response)
     page.goto(base + "/app#/case/ZF-1?tab=overview")
     page.get_by_role("tab", name="Overview", exact=True).wait_for()
 
@@ -564,7 +586,9 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                 "el => el.getBoundingClientRect().bottom"
             )
             check(f"all summary values fit 1280x800 ({summary_bottom})", summary_bottom <= 800)
-            check("all six summary values", page.locator(".case-summary dt").count() == 6)
+            check(
+                "all six summary values", page.locator(".case-summary > dl > div > dt").count() == 6
+            )
             page.screenshot(path=str(out / "desktop-1280.png"))
             quality_pending_cleanup(page, base)
             quality_outcome_history(page, base, axe, reports)

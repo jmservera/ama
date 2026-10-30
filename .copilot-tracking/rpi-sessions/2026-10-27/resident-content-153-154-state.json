@@ -1,0 +1,48 @@
+{
+  "task_id": "issues-153-154",
+  "task_slug": "resident-content-153-154",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-27/resident-content-153-154-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-27/resident-content-153-154-plan.md",
+    "details": ".copilot-tracking/details/2026-10-27/resident-content-153-154-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-27/resident-content-153-154-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-27/resident-content-153-154-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-27/resident-content-153-154-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute research, plan, implement, review in order on the supplied topic branch and publish one PR with local validation only.",
+      "status": "confirmed",
+      "evidence": "Explicit user task, 2026-10-27."
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready. Critique executed once, original verdict Revise; PC-001 and PC-002 applied directly, plan Ready.",
+      "status": "recorded",
+      "evidence": "Research, plan Critique Disposition and original critique artifact."
+    },
+    {
+      "decision": "Review executed once: Complete / Conformant for unchanged bounded delivery; seven inherited/planned residuals, no introduced defects.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-27/resident-content-153-154-review.md; source diff SHA-256 97dee43f07ed09aa0e21e2a056badb5f2ee8d89bf182d946e8e8acee6e64cc81."
+    },
+    {
+      "decision": "Published one draft PR to main with Refs #153/#154; no source change, rebase or force push. Draft retains latest-main integration and owner acceptance boundaries.",
+      "status": "recorded",
+      "evidence": "https://github.com/jmservera/ama/pull/501; implementation commit 9cef40e5d8b788785fd6cf888968ac748a1e197e. Main advanced after Review via #498 to 09099ecd1a66ee9d37ad993707d1f2eda07cdfd4, including shared index/log. Original Review is not exact-head/latest-main acceptance."
+    }
+  ],
+  "blockers": [],
+  "next_action": { "phase": "Follow-up", "action": "Await owner integration/acceptance of draft PR #501 and selection of evidence-grounded follow-up. No child started. Wording, usability/AT and OD-41/42 remain human steps; automatic session remains running, task completed." },
+  "prioritized_follow_ups": [
+    { "rank": 1, "task": "Named exact-text wording review and supported usability/AT acceptance", "rationale": "Directly clears use-blocking human evidence, rather than adding unvalidated features.", "evidence": "RV-007; #153 appointed reviewer Juan Manuel Servera; #155; J1-J6/R1 Not run scripts." },
+    { "rank": 2, "task": "Reconcile representative retention and operational service authority", "rationale": "Avoid operational use of an unapproved fixed default; requires Legal/DPO/Engagement, not an engineering guess.", "evidence": "RV-006/RV-007; OD-41/42; existing panels.js retention statement." },
+    { "rank": 3, "task": "Bound one form family for accessible error, announcement and draft recovery", "rationale": "High engineering-quality leverage through shared semantics and recovery, without a framework overhaul.", "evidence": "RV-002; #149/#151 inherited form findings." },
+    { "rank": 4, "task": "Complete typed error and plain-language display inventory", "rationale": "Needed for remaining universal #153 criteria; uncertainty and actual owners must be preserved.", "evidence": "RV-001; content-standard dated residual messages." },
+    { "rank": 5, "task": "Plan bounded URL state, large-list and display-localisation improvements", "rationale": "Lower-risk inherited usability/performance polish after human and authority prerequisites; scope each separately.", "evidence": "RV-003/RV-004/RV-005." }
+  ]
+}

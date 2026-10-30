@@ -1,0 +1,73 @@
+{
+  "task_id": "pr-557-main-refresh-2026-10-29",
+  "task_slug": "iot-pr557-main-refresh",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-29/iot-pr557-main-refresh-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-29/iot-pr557-main-refresh-plan.md",
+    "details": ".copilot-tracking/details/2026-10-29/iot-pr557-main-refresh-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-29/iot-pr557-main-refresh-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-29/iot-pr557-main-refresh-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-29/iot-pr557-main-refresh-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the explicitly requested four-phase loop, rebase the existing topic branch, commit locally, and never push or change Azure resources.",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-29"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready; additive docs, main rubric/manifest, existing runtime contracts and local selectors established.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/research/2026-10-29/iot-pr557-main-refresh-research.md C1-C8"
+    },
+    {
+      "decision": "Exactly one final-candidate critique executed Complete / Pass with no findings; plan and details Ready.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-29/iot-pr557-main-refresh-plan-critique.md"
+    },
+    {
+      "decision": "Rebase complete at 9a712fd3 on main 8ee1b77f; additive documentation retained, main rubric/manifest exact, original IoT source/test blobs unchanged.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/changes/2026-10-29/iot-pr557-main-refresh-changes.md P01-T01"
+    },
+    {
+      "decision": "Core/API Ruff+format+mypy and 177 targeted tests passed without skips; no full API suite or cloud operation.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/changes/2026-10-29/iot-pr557-main-refresh-changes.md P02-T01"
+    },
+    {
+      "decision": "Exactly one original independent Review executed Complete / Conformant, no substantive findings, against source boundary 9a712fd3. No second Review or source fix loop.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/iot-pr557-main-refresh-review.md"
+    },
+    {
+      "decision": "All original task evidence committed locally as fbb41ac9c5d2f210b70113fefe318e8b4b17bc29 with authenticated noreply identity and required trailer. Clean status, ancestry, generated identities and unchanged reviewed source verified. Final reconciliation is evidence-only; no push.",
+      "status": "complete",
+      "evidence": ".copilot-tracking/changes/2026-10-29/iot-pr557-main-refresh-changes.md P03-T01"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Coordinator handoff only: obtain required current exact-head publication gate and hosted CI before merge. No push or child task from this session."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator publication validation and hosted CI",
+      "rationale": "Only remaining path to verifying remote mergeability/CI; outside this no-push task and not established by targeted checks.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/iot-pr557-main-refresh-review.md Plan Follow-Up Assessment"
+    },
+    {
+      "rank": 2,
+      "task": "Separately authorized historical IoT live acceptance",
+      "rationale": "Registry/adapter/live-to-SQL/resident-gauge evidence remains unmet and cannot be inferred from local preservation tests.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/iot-pr557-main-refresh-review.md Residual Work"
+    }
+  ]
+}

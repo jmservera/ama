@@ -25,6 +25,25 @@ MODULE = b"iothub-connection-module-id"
 AUTH = b"iothub-connection-auth-method"
 
 
+def _validate_device_activation(hostname: str, approval: str, resource_group: str) -> None:
+    if (
+        resource_group != "ama"
+        or not approval.strip()
+        or not re.fullmatch(r"[a-z0-9][a-z0-9-]{1,61}\.azure-devices\.net", hostname)
+    ):
+        raise StreamError("IOT_ACTIVATION_REQUIRED")
+
+
+@dataclass(frozen=True)
+class DeviceActivation:
+    hub_hostname: str
+    approval_reference: str
+    resource_group: str = "ama"
+
+    def validate(self) -> None:
+        _validate_device_activation(self.hub_hostname, self.approval_reference, self.resource_group)
+
+
 @dataclass(frozen=True)
 class Activation:
     hub_hostname: str
@@ -37,11 +56,9 @@ class Activation:
     managed_identity_client_id: str | None = None
 
     def validate(self) -> None:
+        _validate_device_activation(self.hub_hostname, self.approval_reference, self.resource_group)
         if (
-            self.resource_group != "ama"
-            or self.routing_ready is not True
-            or not self.approval_reference.strip()
-            or not re.fullmatch(r"[a-z0-9][a-z0-9-]{1,61}\.azure-devices\.net", self.hub_hostname)
+            self.routing_ready is not True
             or self.eventhub_namespace
             != "eh-"
             + self.hub_hostname.removesuffix(".azure-devices.net")
@@ -187,6 +204,8 @@ class HubReceiver:
         activation: Activation,
         bindings: tuple[Binding, ...],
     ) -> None:
+        if not isinstance(activation, Activation):
+            raise StreamError("IOT_ROUTED_RECEIVER_REQUIRED")
         activation.validate()
         self.bindings = _bindings(bindings)
         self.ingestion = ingestion
@@ -321,7 +340,7 @@ class HubReceiver:
 class HubPublisher:
     def __init__(
         self,
-        activation: Activation,
+        activation: Activation | DeviceActivation,
         bindings: tuple[Binding, ...],
         certificates: Mapping[str, X509],
     ) -> None:

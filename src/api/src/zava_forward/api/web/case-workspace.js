@@ -2,12 +2,12 @@
 
 const CaseWorkspace = (() => {
   const steps = [
-    { name: "Survey", tab: "survey", stages: ["Home identified", "Checking lease", "Rescheduled", "Contacting resident", "Contact paused", "Survey being booked", "Survey booked", "Survey write-up"] },
-    { name: "Assessment", tab: "survey", stages: ["Design starting", "Design in progress", "Design awaiting approval", "Design being corrected", "Waiting on other works"] },
-    { name: "Funding", tab: "funding", stages: ["Funding check", "Final checks before ordering"] },
-    { name: "Resident agreement", tab: "resident", stages: ["Waiting for resident decision", "Resident paused works"] },
-    { name: "Contractor", tab: "contractor", stages: ["Waiting for block programme", "With contractor", "Install booked", "Works under way"] },
-    { name: "Quality and handover", tab: "quality", stages: ["Handover to arrange", "Quality check", "Closing down", "Aftercare issue"] },
+    { name: "Survey", icon: "survey", tab: "survey", stages: ["Home identified", "Checking lease", "Rescheduled", "Contacting resident", "Contact paused", "Survey being booked", "Survey booked", "Survey write-up"] },
+    { name: "Assessment", icon: "assessment", tab: "survey", stages: ["Design starting", "Design in progress", "Design awaiting approval", "Design being corrected", "Waiting on other works"] },
+    { name: "Funding", icon: "funding", tab: "funding", stages: ["Funding check", "Final checks before ordering"] },
+    { name: "Resident agreement", icon: "resident", tab: "resident", stages: ["Waiting for resident decision", "Resident paused works"] },
+    { name: "Contractor", icon: "contractor", tab: "contractor", stages: ["Waiting for block programme", "With contractor", "Install booked", "Works under way"] },
+    { name: "Quality and handover", icon: "quality", tab: "quality", stages: ["Handover to arrange", "Quality check", "Closing down", "Aftercare issue"] },
   ];
   const stageStep = Object.fromEntries(steps.flatMap((step, index) => step.stages.map(stage => [stage, index])));
   const blockerSteps = {
@@ -30,10 +30,10 @@ const CaseWorkspace = (() => {
       if (index === current) { state = "current"; text = "Current"; }
       if (blockers.length) {
         state = "blocked";
-        text = `${index === current ? "Current, blocked" : "Blocked"}: ${blockers.map(b => b.reason).join(" ")}`;
+        text = index === current ? "Current, blocked" : "Blocked";
       }
       if (c.closed) { state = "done"; text = "Done"; }
-      return { name: step.name, tab: step.tab, state, text, current: !c.closed && index === current };
+      return { name: step.name, icon: step.icon, tab: step.tab, state, text, blockers: c.closed ? [] : blockers, current: !c.closed && index === current };
     });
   }
   function defaultTab(c) {
@@ -60,6 +60,24 @@ const CaseWorkspace = (() => {
       blockers: first ? `${work.blockers.length} blockers. ${first.reason} Owner: ${first.owner || "Unknown"}. Next action: ${first.next_action || "Ask the case owner to record the next action."}` : "No recorded blockers.",
       overdue: work.overdue?.length || 0,
     };
+  }
+  function blockerDisclosure(blockers, id, label) {
+    const reason = blockers[0].reason || "Reason not recorded. Ask the case owner.";
+    const short = reason.split(/(?<=[.!?])\s/)[0];
+    const popupId = `case-blocker-${id}`;
+    return h("div", { class: "case-blocker" },
+      h("button", { class: "alt case-blocker-trigger", type: "button", popovertarget: popupId,
+        "aria-label": `${label}: why blocked. ${short} Details` },
+        h("span", { class: "case-blocker-summary" }, short),
+        h("span", { class: "case-blocker-hint" }, "Details")),
+      h("div", { id: popupId, class: "case-blocker-popover", popover: "auto",
+        role: "region", "aria-label": `${label} blocker details`, tabindex: 0 },
+        h("h2", {}, `${label}: ${blockers.length} ${blockers.length === 1 ? "blocker" : "blockers"}`),
+        h("button", { type: "button", class: "alt", popovertarget: popupId, popovertargetaction: "hide" }, "Close details"),
+        blockers.map(blocker => h("dl", {},
+          h("dt", {}, "Why it is blocked"), h("dd", {}, blocker.reason || "Reason not recorded. Ask the case owner."),
+          h("dt", {}, "Owner"), h("dd", {}, blocker.owner || "Owner not recorded. Ask the case owner."),
+          h("dt", {}, "Next action"), h("dd", {}, blocker.next_action || "Ask the case owner to record the next action.")))));
   }
   function enhance(c, definitions, safety, assistant, drafts) {
     const values = summary(c);
@@ -88,18 +106,20 @@ const CaseWorkspace = (() => {
       item("Current step", values.step),
       item("Next action", values.next, jump(nextTab(c), "Open next action")),
       item("Owner", values.owner),
-      item("Blockers", `${values.blockers}${values.overdue ? ` ${values.overdue} overdue tasks.` : ""}`, jump("blockers", "See all blockers")),
+      item("Blockers", h("div", { class: "case-summary-blockers" },
+        c.work?.blockers?.length ? blockerDisclosure(c.work.blockers, "summary", "Case") : "No recorded blockers.",
+        values.overdue ? h("span", {}, `${values.overdue} overdue tasks.`) : null), jump("blockers", "See all blockers")),
       h("div", {}, h("dt", {}, "AI"), aiValue)));
     const aiJump = jump("ai", "Review AI suggestions");
     aiValue.append(aiJump);
     const nav = h("nav", { class: "case-journey", "aria-label": "Retrofit journey" },
-      h("ol", { class: "stepper" }, journey(c).map(step => h("li", {
+      h("ol", { class: "stepper" }, journey(c).map((step, index) => h("li", {
         class: `step ${step.state}`, "aria-current": step.current ? "step" : null,
       }, h("a", { href: `#/case/${encodeURIComponent(c.id)}?tab=${step.tab}`, "data-case-tab": step.tab },
-        h("span", { class: "step-glyph", "aria-hidden": "true" }, { done: "\u2713", current: "\u25cf", blocked: "\u26d4", upcoming: "\u25cb" }[step.state]),
-        h("span", { class: "step-name" }, step.name), h("span", { class: "step-state" }, step.text))))));
-    const tabs = h("div", { role: "tablist", "aria-label": "Case sections" });
-    const tabRegion = h("div", { class: "case-tabs-scroll", role: "region", "aria-label": "Case section tabs", tabindex: 0 }, tabs);
+        h("img", { class: "step-icon", src: `/journey-icons/${step.icon}.png`, alt: "", "aria-hidden": "true", width: 24, height: 24 }),
+        h("span", { class: "step-name" }, step.name), h("span", { class: "step-state" }, step.text)),
+        step.blockers.length ? blockerDisclosure(step.blockers, `step-${index}`, step.name) : null))));
+    const tabs = h("div", { class: "case-tabs", role: "tablist", "aria-label": "Case sections" });
     let active;
     function syncLinks() {
       nav.querySelectorAll("a[data-case-tab]").forEach(link => {
@@ -150,7 +170,7 @@ const CaseWorkspace = (() => {
     app.addEventListener("ai-review-change", counts);
     select(new URLSearchParams(location.hash.split("?")[1] || "").get("tab"));
     counts();
-    return { top: [section, safety, nav, tabRegion].filter(Boolean), select, counts, syncLinks,
+    return { top: [section, safety, nav].filter(Boolean), tabs, select, counts, syncLinks,
       dispose: () => { observer.disconnect(); app.removeEventListener("ai-review-change", counts); } };
   }
   return { steps, stageStep, journey, summary, defaultTab, nextTab, waiting, enhance };

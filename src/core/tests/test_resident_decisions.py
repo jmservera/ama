@@ -17,7 +17,7 @@ from typing import Any
 from unittest.mock import patch
 
 from dataset import DATA, supplied_appointment_fixture, supplied_contract_fixture
-from zava_forward.core import ai_tasks, controls, projection, resident_decisions
+from zava_forward.core import ai_tasks, assistants, controls, projection, resident_decisions
 from zava_forward.core.quality import checklist_for
 from zava_forward.core.resident_decisions import resident_gate
 from zava_forward.core.sqlstore import SqlStore
@@ -127,6 +127,344 @@ class JsonResidentDecisions(unittest.TestCase):
 
     def action(self, action: str, **body: Any) -> None:
         self.store.resident_action(self.sam, "ZF-1", dict(action=action, **body))
+
+    def nomination(self, **changes: Any) -> dict[str, Any]:
+        return dict(
+            dict(
+                action="nomination_record",
+                case_id="ZF-1",
+                kind="Self-referral",
+                reported_subject_ref="SYN-WRONG-PERSON",
+                account="  SYN-ORIGINAL-ACCOUNT\n",
+                source="SYN-NOM-SOURCE",
+                channel="Phone",
+                owner=self.sam["email"],
+                acknowledgement_ref="SYN-ACK-RECORDED",
+                next_update="2099-01-01",
+                non_digital_route="SYN Phone Sam or write to the staffed office.",
+                hazard_concern=False,
+            ),
+            **changes,
+        )
+
+    def tenure(self, **changes: Any) -> dict[str, Any]:
+        return dict(
+            dict(
+                action="tenure_intake",
+                case_id="ZF-1",
+                household_ref="SYN-HOUSEHOLD",
+                expected_version=0,
+                reported_tenure="Shared owner",
+                reported_lease_interest="SYN-LEASE-PRIVATE",
+                identity_state="Ambiguous",
+                source="SYN-TENURE-SOURCE",
+                owner=self.sam["email"],
+                next_update="2099-01-01",
+            ),
+            **changes,
+        )
+
+    def test_intake_original_subject_correction_and_manual_history(self) -> None:
+        proposal = self.priority_fixture()
+        self.store.resident_action(self.sam, "ZF-1", self.challenge_body(proposal))
+        before = copy.deepcopy(self.store.cases["ZF-1"])
+        ranking = self.store._ranking()
+        for channel in resident_decisions.INTAKE_CHANNELS:
+            self.store.resident_action(self.sam, "ZF-1", self.nomination(channel=channel))
+        original = copy.deepcopy(self.store.cases["ZF-1"]["nomination_records"][0]["original"])
+        body = dict(
+            action="nomination_correct",
+            case_id="ZF-1",
+            id=self.store.cases["ZF-1"]["nomination_records"][0]["id"],
+            expected_version=1,
+            reported_subject_ref="SYN-CORRECTED-PERSON",
+            account="SYN competing evidence",
+            source="SYN correction evidence",
+            channel="Trusted intermediary",
+            next_update="2099-01-02",
+            challenge_id="CH-1",
+        )
+        self.store.resident_action(self.sam, "ZF-1", body)
+        self.unchanged_failure(lambda: self.store.resident_action(self.sam, "ZF-1", body))
+        records = self.open_store().detail("ZF-1", self.sam)["nomination_records"]
+        self.assertEqual(records[0]["original"], original)
+        self.assertEqual(original["account"], "  SYN-ORIGINAL-ACCOUNT\n")
+        self.assertEqual(
+            records[0]["corrections"][0]["reported_subject_ref"], "SYN-CORRECTED-PERSON"
+        )
+        self.assertEqual(
+            records[0]["corrections"][0]["challenge"], before["affected_challenges"][0]
+        )
+        self.assertEqual(records[0]["corrections"][0]["recorded_by"]["code"], self.sam["code"])
+        self.assertEqual(
+            records[0]["review_status"], "Re-review required; no priority or consent change"
+        )
+        self.assertEqual(
+            [r["original"]["channel"] for r in records], list(resident_decisions.INTAKE_CHANNELS)
+        )
+        for record in records:
+            self.assertEqual(record["identity_status"], "Unknown")
+            self.assertEqual(record["support_needs"], "Unknown")
+            self.assertEqual(record["risk_flags"], "Unknown")
+            self.assertEqual(record["owner"]["code"], self.sam["code"])
+            self.assertEqual(record["acknowledgement"]["delivery"], "Not verified by this system")
+        after = copy.deepcopy(self.open_store().cases["ZF-1"])
+        after.pop("nomination_records")
+        self.assertEqual(after, before)
+        self.assertEqual(self.store._ranking(), ranking)
+        self.assertTrue(self.open_store().verify_audit())
+
+    def test_intake_wrong_identity_hazard_and_closed_input_no_mutation(self) -> None:
+        for invalid in (
+            self.nomination(case_id="ZF-2"),
+            self.nomination(account="X" * 4001),
+            self.nomination(hazard_concern=True),
+            self.nomination(hazard_concern=None),
+            self.nomination(owner=self.kim["email"]),
+            self.nomination(owner=self.rex["email"]),
+            self.nomination(verification="Approved"),
+            self.nomination(channel="Unknown"),
+            self.tenure(decision_route="Approved"),
+            self.tenure(case_id="ZF-2"),
+        ):
+            with self.subTest(invalid=invalid["action"]):
+                self.unchanged_failure(
+                    partial(self.store.resident_action, self.sam, "ZF-1", invalid)
+                )
+        self.unchanged_failure(
+            lambda: self.store.resident_action(
+                dict(self.sam, code="FORGED"), "ZF-1", self.nomination()
+            )
+        )
+        self.store.raise_hazard(
+            self.sam,
+            "ZF-1",
+            "Damp and mould",
+            "Emergency",
+            "SYN independent",
+            dict(source="SYN human hazard report", aware_at="2026-01-01T10:00:00Z"),
+        )
+        self.assertTrue(
+            self.open_store().cases["ZF-1"]["hazards"][-1]["hold"]["status"] == "Active"
+        )
+        self.assertNotIn("nomination_records", self.open_store().cases["ZF-1"])
+
+    def test_intake_tenure_unknown_case_wide_hold_and_reopen(self) -> None:
+        for measure in MEASURES:
+            self.scope(measure)
+            self.answer(measure)
+        self.assertEqual(resident_gate(self.store.cases["ZF-1"]), [])
+        before = copy.deepcopy(self.store.cases["ZF-1"])
+        self.store.resident_action(self.sam, "ZF-1", self.tenure())
+        self.store.resident_action(
+            self.sam,
+            "ZF-1",
+            self.tenure(
+                expected_version=1,
+                household_ref="Unknown",
+                reported_tenure="Unknown",
+                reported_lease_interest="Unknown",
+                identity_state="Unknown",
+            ),
+        )
+        self.unchanged_failure(lambda: self.store.resident_action(self.sam, "ZF-1", self.tenure()))
+        self.unchanged_failure(lambda: self.scope())
+        current = self.open_store().cases["ZF-1"]
+        self.assertEqual(len(current["tenure_reports"]), 2)
+        self.assertEqual(current["tenure_reports"][0]["reported_tenure"], "Shared owner")
+        for report in current["tenure_reports"]:
+            self.assertEqual(report["verification"], "Unknown")
+            self.assertEqual(report["decision_route"], "Unknown")
+            self.assertEqual(report["legal_position"], "Unknown")
+            self.assertEqual(report["cost_position"], "Unknown")
+            self.assertEqual(len(report["responsibility_questions"]), 7)
+        self.assertEqual(resident_gate(current), [resident_decisions.TENURE_HOLD])
+        self.assertEqual(
+            resident_gate(current, self.bind(MEASURES[1])), [resident_decisions.TENURE_HOLD]
+        )
+        after = copy.deepcopy(current)
+        after.pop("tenure_reports")
+        after.pop("tenure_review_required")
+        self.assertEqual(after, before)
+        self.assertFalse(
+            resident_gate(self.store.cases["ZF-2"]) == [resident_decisions.TENURE_HOLD]
+        )
+
+    def test_intake_sensitive_deletion_never_releases_tenure_hold(self) -> None:
+        self.store.resident_action(self.sam, "ZF-1", self.nomination())
+        self.store.resident_action(self.sam, "ZF-1", self.tenure())
+        with self.store.lock:
+            c = self.store._case("ZF-1")
+            c["resident"]["first_contact_at"] = "2020-01-01"
+            c["legal_hold"] = dict(active=True)
+            self.store.save()
+        self.unchanged_failure(
+            lambda: self.store.delete_resident_records(self.pam, "ZF-1", "2040-01-01")
+        )
+        with self.store.lock:
+            self.store._case("ZF-1")["legal_hold"]["active"] = False
+            self.store.save()
+        self.store.delete_resident_records(self.pam, "ZF-1", "2040-01-01")
+        c = self.open_store().cases["ZF-1"]
+        self.assertNotIn("nomination_records", c)
+        self.assertNotIn("tenure_reports", c)
+        self.assertTrue(c["tenure_review_required"])
+        self.assertEqual(resident_gate(c), [resident_decisions.TENURE_HOLD])
+
+    def test_tenure_intake_preserves_accepted_status_and_heuristic_priority(self) -> None:
+        for measure in MEASURES:
+            self.scope(measure)
+            self.answer(measure)
+        current = self.store.cases["ZF-1"]
+        competitor = copy.deepcopy(current)
+        competitor.update(id="ZF-COMPETITOR", days_in_stage=current["days_in_stage"] + 4)
+        before = self.store._heuristic_priority([current, competitor], 2)
+        self.assertEqual([item["case_id"] for item in before], ["ZF-COMPETITOR", "ZF-1"])
+        self.assertEqual(resident_decisions.resident_status(current), "Accepted")
+        decisions = copy.deepcopy(current["measure_decisions"])
+
+        self.store.resident_action(self.sam, "ZF-1", self.tenure())
+        self.store = self.open_store()
+        current = self.store.cases["ZF-1"]
+        self.assertEqual(current["measure_decisions"], decisions)
+        self.assertEqual(resident_gate(current), [resident_decisions.TENURE_HOLD])
+        self.assertEqual(
+            resident_gate(current, self.bind(MEASURES[0])), [resident_decisions.TENURE_HOLD]
+        )
+        self.assertEqual(resident_decisions.resident_status(current), "Accepted")
+        self.assertEqual(self.store._heuristic_priority([current, competitor], 2), before)
+
+    def test_nomination_identity_survives_retention_deletion_and_failed_intake(self) -> None:
+        self.store.resident_action(self.sam, "ZF-1", self.nomination())
+        with self.store.lock:
+            self.store._case("ZF-1")["nomination_records"][0]["id"] = "NOM-1"
+            self.store.save()
+        deleted_ids = set()
+        for cycle in range(2):
+            old_id = self.store.cases["ZF-1"]["nomination_records"][-1]["id"]
+            deleted_ids.add(old_id)
+            correction = dict(
+                action="nomination_correct",
+                case_id="ZF-1",
+                id=old_id,
+                expected_version=1,
+                reported_subject_ref="SYN-DELETED-SUBJECT",
+                account="SYN-DELETED-CORRECTION",
+                source="SYN-DELETED-SOURCE",
+                channel="Letter",
+                next_update="2099-01-02",
+                challenge_id=None,
+            )
+            with self.store.lock:
+                c = self.store._case("ZF-1")
+                c["resident"]["first_contact_at"] = f"{2020 + cycle * 20}-01-01"
+                self.store.save()
+            self.store.delete_resident_records(self.pam, "ZF-1", f"{2030 + cycle * 20}-01-01")
+            self.store = self.open_store()
+            self.assertNotIn("nomination_records", self.store.cases["ZF-1"])
+            before = copy.deepcopy(self.store.cases["ZF-1"])
+            audit = list(self.store.audit_entries())
+            with patch.object(self.store, "save", side_effect=RuntimeError("SYN precommit")):
+                with self.assertRaises(RuntimeError):
+                    self.store.resident_action(self.sam, "ZF-1", self.nomination())
+            self.assertEqual(self.store.cases["ZF-1"], before)
+            self.assertEqual(self.open_store().cases["ZF-1"], before)
+            self.assertEqual(list(self.store.audit_entries()), audit)
+
+            self.store.resident_action(
+                self.sam,
+                "ZF-1",
+                self.nomination(reported_subject_ref="SYN-NEW-SUBJECT", account="SYN-NEW-ACCOUNT"),
+            )
+            self.store = self.open_store()
+            record = copy.deepcopy(self.store.cases["ZF-1"]["nomination_records"][0])
+            self.assertNotIn(record["id"], deleted_ids)
+            self.assertEqual(record["version"], 1)
+            self.assertEqual(record["corrections"], [])
+            before = copy.deepcopy(self.store.cases["ZF-1"])
+            audit = list(self.store.audit_entries())
+            with self.assertRaisesRegex(ValueError, "nomination was not found"):
+                self.store.resident_action(self.sam, "ZF-1", correction)
+            self.assertEqual(self.store.cases["ZF-1"], before)
+            self.assertEqual(self.open_store().cases["ZF-1"], before)
+            self.assertEqual(list(self.store.audit_entries()), audit)
+
+        self.store.resident_action(self.sam, "ZF-1", dict(correction, id=record["id"]))
+        record = self.open_store().cases["ZF-1"]["nomination_records"][0]
+        self.assertEqual(record["version"], 2)
+        self.assertEqual(record["corrections"][0]["account"], "SYN-DELETED-CORRECTION")
+        self.assertEqual(record["original"]["reported_subject_ref"], "SYN-NEW-SUBJECT")
+        self.assertTrue(self.open_store().verify_audit())
+
+    def test_nomination_identity_after_legacy_deletion_without_high_water_mark(self) -> None:
+        with self.store.lock:
+            c = self.store._case("ZF-1")
+            c["resident_retention_deleted_at"] = "2025-01-01"
+            c["resident_retention_tombstone"] = dict(contacts_before_deletion=0)
+            self.store.save()
+        self.store = self.open_store()
+        self.store.resident_action(self.sam, "ZF-1", self.nomination())
+        current = copy.deepcopy(self.store.cases["ZF-1"])
+        record = current["nomination_records"][0]
+        self.assertNotEqual(record["id"], "NOM-1")
+        audit = list(self.store.audit_entries())
+        with self.assertRaisesRegex(ValueError, "nomination was not found"):
+            self.store.resident_action(
+                self.sam,
+                "ZF-1",
+                dict(
+                    action="nomination_correct",
+                    case_id="ZF-1",
+                    id="NOM-1",
+                    expected_version=1,
+                    reported_subject_ref="SYN-DELETED-SUBJECT",
+                    account="SYN-DELETED-CORRECTION",
+                    source="SYN-DELETED-SOURCE",
+                    channel="Phone",
+                    next_update="2099-01-02",
+                    challenge_id=None,
+                ),
+            )
+        self.assertEqual(self.store.cases["ZF-1"], current)
+        self.assertEqual(self.open_store().cases["ZF-1"], current)
+        self.assertEqual(list(self.store.audit_entries()), audit)
+
+    def test_intake_private_projection_and_existing_authority_unchanged(self) -> None:
+        self.scope()
+        self.action("safe_contact_record", safe_contact_ref="SYN-SAFE-CANARY", source="SYN")
+        self.authority(tasks=["Communicate"])
+        authority = copy.deepcopy(self.store.cases["ZF-1"]["representative_authorities"])
+        self.store.resident_action(
+            self.sam, "ZF-1", self.nomination(channel="Trusted intermediary")
+        )
+        self.store.resident_action(self.sam, "ZF-1", self.tenure())
+        for actor in (self.rex, self.kim):
+            output = json.dumps(self.store.detail("ZF-1", actor))
+            for canary in ("SYN-ORIGINAL-ACCOUNT", "SYN-LEASE-PRIVATE", "SYN-TENURE-SOURCE"):
+                self.assertNotIn(canary, output)
+            for field in resident_decisions.INTAKE_FIELDS:
+                self.assertNotIn(field, self.store.detail("ZF-1", actor))
+            self.unchanged_failure(
+                partial(self.store.resident_action, actor, "ZF-1", self.nomination())
+            )
+        self.assertEqual(self.store.cases["ZF-1"]["representative_authorities"], authority)
+        self.assertNotIn("measure_decisions", self.store.cases["ZF-1"])
+        self.assertIn("nomination_records", self.store.detail("ZF-1", self.sam))
+        for capability in assistants.REGISTRY:
+            prompt = json.dumps(assistants.capture(capability, self.store.cases["ZF-1"]))
+            for canary in ("SYN-ORIGINAL-ACCOUNT", "SYN-LEASE-PRIVATE", "SYN-TENURE-SOURCE"):
+                self.assertNotIn(canary, prompt)
+
+    def test_intake_precommit_failure_rolls_back_state_and_audit(self) -> None:
+        for body in (self.nomination(), self.tenure()):
+            before = copy.deepcopy(self.store.cases["ZF-1"])
+            audit = list(self.store.audit_entries())
+            with patch.object(self.store, "save", side_effect=RuntimeError("SYN precommit")):
+                with self.assertRaises(RuntimeError):
+                    self.store.resident_action(self.sam, "ZF-1", body)
+            self.assertEqual(self.store.cases["ZF-1"], before)
+            self.assertEqual(list(self.store.audit_entries()), audit)
+            self.assertEqual(self.open_store().cases["ZF-1"], before)
 
     def scope(self, measure: str = MEASURES[0], design: int = 1) -> None:
         self.action(
@@ -2445,6 +2783,76 @@ class AzureResidentDecisions(unittest.TestCase):
 
 class SqlResidentDecisions(JsonResidentDecisions):
     sql = True
+
+    def test_intake_writer_rechecks_actor_and_named_owner(self) -> None:
+        for subject in (self.sam, self.rae):
+            for body in (
+                self.nomination(owner=self.rae["email"]),
+                self.tenure(owner=self.rae["email"]),
+            ):
+                save = self.store.save
+
+                def revoke(
+                    subject: dict[str, Any] = subject, save: Callable[[], None] = save
+                ) -> None:
+                    other = self.store.assistant_connection()
+                    try:
+                        other.execute(
+                            "UPDATE staff SET body=? WHERE email=?",
+                            (json.dumps(dict(subject, role="Contractor")), subject["email"]),
+                        )
+                    finally:
+                        other.close()
+                    save()
+
+                with patch.object(self.store, "save", side_effect=revoke):
+                    self.unchanged_failure(
+                        partial(self.store.resident_action, self.sam, "ZF-1", body)
+                    )
+                self.register_followup_actor(subject)
+                current = self.open_store().cases["ZF-1"]
+                self.assertNotIn("nomination_records", current)
+                self.assertNotIn("tenure_reports", current)
+                self.assertNotIn("tenure_review_required", current)
+
+    def test_intake_competing_tenure_revision_one_durable_success(self) -> None:
+        other = self.open_store()
+        save = self.store.save
+        body = self.tenure()
+
+        def compete() -> None:
+            other.resident_action(self.sam, "ZF-1", body)
+            save()
+
+        with patch.object(self.store, "save", side_effect=compete):
+            with self.assertRaises(ConflictError):
+                self.store.resident_action(self.sam, "ZF-1", body)
+        current = self.open_store()
+        self.assertEqual(len(current.cases["ZF-1"]["tenure_reports"]), 1)
+        self.assertTrue(current.cases["ZF-1"]["tenure_review_required"])
+        self.assertEqual(
+            sum(e["action"] == "resident_tenure_intake" for e in current.audit_entries()), 1
+        )
+
+    def test_intake_committed_acknowledgement_failure_is_truthful(self) -> None:
+        save = self.store.save
+
+        def committed() -> None:
+            save()
+            raise OSError("SYN postcommit acknowledgement")
+
+        with (
+            patch.object(self.store, "save", side_effect=committed),
+            self.assertLogs("zava_forward.core.resident_decisions", level="ERROR"),
+            self.assertRaises(resident_decisions.ResidentCommittedError),
+        ):
+            self.store.resident_action(self.sam, "ZF-1", self.nomination())
+        current = self.open_store()
+        self.assertEqual(len(current.cases["ZF-1"]["nomination_records"]), 1)
+        self.assertEqual(
+            sum(e["action"] == "resident_nomination_record" for e in current.audit_entries()), 1
+        )
+
     store: SqlStore
 
     def test_challenge_adjacent_release_denial_is_persisted_without_disposition(self) -> None:

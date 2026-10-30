@@ -1,0 +1,67 @@
+{
+  "task_id": "552-pr554-review-fixes",
+  "task_slug": "case-view-review-fixes-552",
+  "parent_task": { "task_id": "552", "task_slug": "case-view-ux-552" },
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-29/case-view-review-fixes-552-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-29/case-view-review-fixes-552-plan.md",
+    "details": ".copilot-tracking/details/2026-10-29/case-view-review-fixes-552-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-29/case-view-review-fixes-552-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-29/case-view-review-fixes-552-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-29/case-view-review-fixes-552-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute all four RPI phases as explicitly requested, without switching to an ongoing automatic session.",
+      "status": "confirmed",
+      "evidence": "User requests full research, plan, implement, review loop for two named findings, local commit only, no push or az."
+    },
+    {
+      "decision": "Reuse open PR #554 branch feat/case-view-ux-552; pull rubric commit before changes.",
+      "status": "completed",
+      "evidence": "Clean worktree; git pull --rebase fast-forwarded 8f3f0f99 to 4220e7aa; gh pr view confirms OPEN/main."
+    },
+    {
+      "decision": "Research executed with Planning Readiness Ready; both failures reproduced.",
+      "status": "completed",
+      "evidence": ".copilot-tracking/research/2026-10-29/case-view-review-fixes-552-research.md C1-C8"
+    },
+    {
+      "decision": "One critique Complete / original Revise. PC-001 parent filesystem premise contradicted by successful baseline execution; reviewer-access concern addressed with tracked result extracts and honest review boundary.",
+      "status": "resolved",
+      "evidence": ".copilot-tracking/plans/2026-10-29/case-view-review-fixes-552-plan.md Critique Disposition"
+    },
+    {
+      "decision": "P01 complete: 55 focused tests, lint, exclusion-aware format, JS syntax, actual six-member wheel, complete journey/compact browsers passed. Legacy explicit formatter failure confirmed pre-existing; 50 axe incomplete checks not acceptance.",
+      "status": "completed",
+      "evidence": ".copilot-tracking/changes/2026-10-29/case-view-review-fixes-552-changes.md Validation Record"
+    },
+    {
+      "decision": "One independent Review executed Complete; outcome Conformant with justified divergence, no new findings. Source/record boundary excludes raw external inspection and wider rendered acceptance.",
+      "status": "completed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/case-view-review-fixes-552-review.md"
+    },
+    {
+      "decision": "Implementation and original RPI evidence committed locally as 5a3edfe674368de9a144af137107722434927857; privacy-safe author/committer, requested trailer and clean worktree verified. No push.",
+      "status": "completed",
+      "evidence": "git log -1 and git status --short after commit; .copilot-tracking/changes/2026-10-29/case-view-review-fixes-552-changes.md Local Commit and Final Closeout"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Review",
+    "action": "No further action for these two corrections. Keep commits local; inherited RV-001 remains a separate future owner-selected follow-up."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Preserve and separately reconcile inherited RV-001 rendered acceptance evidence.",
+      "rationale": "Existing issue-wide follow-up is outside these two source/package corrections; current Review neither reissues nor closes it.",
+      "evidence": ".copilot-tracking/rpi-sessions/2026-10-29/case-view-ux-552-state.json"
+    }
+  ]
+}

@@ -8100,3 +8100,104 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   the separate opt-in SDK publisher and pacing library exist, while verified
   live operation, credential lifecycle and actual scenario consumer use
   remain unproven. No historical log entry or live approval was changed.
+## [2026-10-27] implement | Synthetic regulatory conflict routing and consumption (Refs #208, #214, #216, #215, #217)
+
+* Extended existing cited-home chat with automatic supported-conflict referrals
+  to the named exercise owner's isolated inbox and a durable sender receipt.
+  SQL turn/referral/audit is transactional; JSON's post-save audit limitation
+  is explicit. No legal interpretation or activation authority is added.
+* Added closed zero-model usage metadata and bounded own-role/day audit-only
+  summaries. Cost remains Unknown and paid authority absent; deterministic
+  alerts, safety intake and cards-only shipment boundaries are unchanged.
+* Updated the existing regulatory-literacy synthesis and draft DPIA data map,
+  project guides and this index. DPO necessity/notice/recipient/rights/periods
+  review must include automatic referrals and metadata; no human checkbox,
+  legal snapshot, owner memory or original case-study text was changed.
+* Local synthetic unit/evaluation/browser evidence and original failures are
+  retained in the dated RPI artifacts. Staff comprehension, owner-agreed
+  thresholds, continuing-stock validation, actual identity/deployed SQL and
+  #440 remain unmet. Publication is separately blocked by the mandatory
+  full-gate requirement versus the caller's explicit no-full-gate limit.
+  No cloud deployment, model call, private dataset access or approval occurred.
+## [2026-10-27] query | Bounded staff chat and draft privacy evidence
+
+* Updated [DPIA draft](./research/chat-memory-dpia.md) and its index entry:
+  general staff warning is now server-sourced and described at the question,
+  both HTTP turn routes share cited/refusal/admission handling, and neither
+  prompts retained memory before its human decision.
+* Added bounded context and content-free per-turn usage evidence to the
+  [API contract](../../src/api/README.md#staff-chat-hardening-2026-10-27-157)
+  and [shared evaluator](../../src/agents/README.md#chat-consumption-evidence-2026-10-27-164).
+  Reconciled ADR 0004's stale no-implementation statement without changing its
+  accepted direction or granting activation.
+* Local scripted poisoning/injection coverage and Chromium DOM/keyboard checks
+  are engineering evidence, not independent human, serving-model or legal
+  acceptance. The known unsupported-claim/valid-citation failure stays visible.
+* No retention number, lawful basis, staff-notice/DPIA approval, provider
+  transfer position, break-glass policy, threshold or role budget is invented.
+  #157/#162/#159/#164/#163 remain Refs; #440 stabilization and human decisions
+  prevent whole-parent acceptance.
+
+## [2026-10-27] query | Resident content audit and assisted task designs (#153/#154)
+
+* Extended [content standard](./research/ux/content-standard.md) with a dated
+  core/supporting-surface inventory, dynamic-message and visible stored-value
+  residuals, accountable follow-up roles and an honest acceptance matrix.
+* Corrected stale reviewer-appointment wording using the #153 owner comment:
+  Juan Manuel Servera is appointed; actual exact-text review is not evidenced.
+* Extended [resident journeys](./research/ux/customer-journeys/residents.md)
+  with six task flows/text wireframes, individual non-digital alternatives,
+  language/literacy/adjustment and safe-contact rules, scoped representative
+  briefing/actions, expiry/revocation exceptions and Not run #155 scripts.
+* Indexed the evidence and made bounded existing-web draft/proposal,
+  representative-date and time-capture copy clarifications with regressions.
+  Fluent 2, native semantics, non-colour signals and reduced motion remain.
+  No live contact, portal implementation, operational Legal/DPO decision,
+  human usability/AT acceptance or whole-issue closure is claimed.
+## [2026-10-27] ingest | Source-only monitoring candidates (Refs #146)
+
+* Added [operator runbooks and the complete issue evidence/gap matrix](../../infra/monitoring-runbooks.md),
+  source-only job/IoT metric alert candidates and an aggregate operations
+  workbook; updated infra navigation and this knowledge-base index.
+* Corrected the ledger missing-success rule's outer query range to 26 hours.
+  Existing alert names, thresholds and budget notification conditions are
+  preserved; budget notification is not a hard cap.
+* New candidates default disabled; proposed roles are not named appointments.
+  Actual owners/live thresholds, privacy exclusion, poison-queue and AI/harm
+  signal integration, same-period billing/price reconciliation and accepted
+  notification/suspension drills remain unresolved.
+* Workbook missing data is Insufficient/Blocked and actual cost/AI metering
+  remains Unknown/unreconciled. Source definitions and local checks are not a
+  deployment, live approval, SLO claim or issue acceptance.
+
+## [2026-10-29] query | Bounded existing IoT hub exercise and live blockers
+
+* Updated infrastructure cost/environment evidence, ADR0003 dated authorization,
+  API activation guide, streaming synthesis and index for Refs #140 #184 #137.
+* Reused existing UK South B1/one-unit hub. Owner approved USD10/month after
+  cost check, within USD5 additional through October31. Child-only deployment
+  disables all device-bearing resource logs and retains metrics, private
+  attachment, service auth, four app min0 and eight Manual jobs.
+* No new paid hub, Event Hub, endpoint, role, device, key or public SQL change.
+  Existing operator lacks registry data permission; keyless custom adapter/
+  cloud revision and resident projection acceptance remain separately gated.
+* Constructed actual local SQL Server passed45 sensor ingestion tests; do not
+  describe this as live Hub-to-SQL or resident-gauge acceptance. Original
+  source-only history, critique and open credential/OD43 criteria remain.
+
+## [2026-10-27] query | Working Finance reviews and held human decisions
+
+* Indexed the [core working-review boundary](../../src/core/README.md#unapproved-working-field-review-96-98-99)
+  and [authenticated form-review endpoint](../../src/api/README.md#working-form-review-and-held-finance-decisions-96-98-99)
+  for #96, #98 and #99.
+* Isolated accept/correct/reject notes, retained source/reviewer history,
+  field-specific draft diagnostics and linked diagnostic manifests do not
+  approve a template, source policy, eligibility rule or application/claim.
+  Draft-only read/action-time freshness is not full downstream invalidation.
+* Missing template/rule authority and Finance/Board OD-12/15 are durably Held
+  with null approved inputs. Diagnostic pause is not a programme-wide release
+  gate or containment of live activity. Actual approved envelope, liquidity,
+  covenant, downside thresholds and restart authority remain human decisions.
+* No company figures, financial approvals, Azure changes, private datasets or
+  new AI authority are introduced. All three issues remain Refs; engineering
+  evidence is not whole-issue or operational acceptance.

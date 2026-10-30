@@ -6,6 +6,8 @@ from collections import Counter
 from collections.abc import Iterable
 from typing import Any
 
+from zava_forward.core.regulatory_usage import economics
+
 OWNER = "Juan Manuel Servera"
 LABEL = "synthetic-demo | source excerpts, not legal advice or approval"
 SAFE = (
@@ -111,6 +113,13 @@ def grade_answer(actual: dict[str, Any], expected: dict[str, Any]) -> dict[str, 
                 for field in fields
             )
     output_sections = actual.get("sections")
+    usage = actual.get("usage")
+    expected_usage = expected["usage"]
+    valid_usage = (
+        isinstance(usage, dict)
+        and usage == expected_usage
+        and all(type(usage[key]) is type(value) for key, value in expected_usage.items())
+    )
     support &= (
         isinstance(output_sections, dict)
         and output_sections.get("what_sources_say") == quotes
@@ -129,6 +138,7 @@ def grade_answer(actual: dict[str, Any], expected: dict[str, Any]) -> dict[str, 
         and actual.get("requires_human") is (kind != "answer")
         and actual.get("cards") == expected["cards"]
         and actual.get("as_of") == expected["as_of"]
+        and valid_usage
     )
     return dict(citation_validity=bool(support), answer_contract=envelope)
 
@@ -272,5 +282,6 @@ def comparison(baselines: list[dict[str, Any]]) -> dict[str, Any]:
         ship_recommendation="cards_only",
         reason="No measured staff value; structural joins do not satisfy the ADR 0005 ship test.",
         approval="Recommendation only; cards retain their own source and approval gates.",
+        economics=economics(),
         synthetic_development_lookup="unchanged; explicit synthetic-demo admission only",
     )

@@ -235,6 +235,27 @@
     "approval": "Recommendation only; cards retain their own source and approval gates.",
     "baseline": "same role-scoped deterministic cards with provision links",
     "check": "paired_staff_comparison",
+    "economics": {
+      "ai_cost_per_accepted_check": "Unknown",
+      "cost": "Unknown",
+      "execution": {
+        "input_tokens": 0,
+        "model_call_limit": 0,
+        "model_calls": 0,
+        "output_tokens": 0,
+        "paid_authority": "none",
+        "paid_authority_expires_at": null,
+        "paid_budget_limit": 0,
+        "reason": "Offline only; no model dispatch or spend authority exists.",
+        "token_limit": 0
+      },
+      "missing_inputs": [
+        "Owner-agreed accepted-check definition and human acceptance count",
+        "Dated versioned price source",
+        "Attributable billing and shared-service allocation",
+        "Measured human review effort"
+      ]
+    },
     "measurements": {
       "added_value": null,
       "attributable_service_cost": null,
@@ -481,7 +502,7 @@
   "evidence": {
     "as_of": "2026-10-16T12:00:00+00:00",
     "dataset": "regulatory_gates_cases.json",
-    "fixture_sha256": "889b9441baa5240aef44dbb31cf15839326ed6c3ee4b3d0e16677fff5338085b",
+    "fixture_sha256": "605a0003761ad649b72eec7b40f214a2e75cd5051fdbe5182f748fd0d1662a6a",
     "homes": 60000,
     "provider": "offline-extractive; zero model calls",
     "rule_checks": 120000,

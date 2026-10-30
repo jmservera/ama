@@ -29,6 +29,7 @@ def open_chat(page: Page) -> None:
     if not page.locator("#resident-chat").is_visible():
         page.get_by_role("button", name="Chat", exact=True).click()
     expect(page.locator("#assistant-title")).to_be_focused()
+    page.locator("#resident-chat .chat-widget-intro").evaluate("el => { el.open = true; }")
 
 
 def shared_session_checks(
@@ -80,14 +81,12 @@ def shared_session_checks(
         open_chat(first)
         first.locator("#assistant-consent").check()
         first.locator("#assistant-question").fill("my home")
-        first.get_by_role("button", name="Get advice").click()
+        first.get_by_role("button", name="Send").click()
         expect(first.locator("#assistant-result")).to_contain_text("C-1 Test Street")
         first.route("**/demo/assistant", hold)
         first.locator("#assistant-question").fill("my home")
-        first.get_by_role("button", name="Get advice").click()
-        expect(first.get_by_role("button", name="Get advice")).to_have_attribute(
-            "aria-disabled", "true"
-        )
+        first.get_by_role("button", name="Send").click()
+        expect(first.get_by_role("button", name="Send")).to_be_disabled()
         first.keyboard.press("Escape")
         first.locator("#callback-consent").check()
         first.get_by_role("button", name="Check my callbacks").click()
@@ -160,7 +159,7 @@ def shared_session_checks(
         open_chat(first)
         first.locator("#assistant-consent").check()
         first.locator("#assistant-question").fill("my home")
-        first.get_by_role("button", name="Get advice").click()
+        first.get_by_role("button", name="Send").click()
         expect(first.locator("#assistant-result")).to_contain_text("C-2 Test Street")
         csrf = next(
             cookie["value"]
@@ -174,7 +173,7 @@ def shared_session_checks(
         )
         assert response.ok
         first.locator("#assistant-question").fill("my home")
-        first.get_by_role("button", name="Get advice").click()
+        first.get_by_role("button", name="Send").click()
         expect(first.locator("#signin-error")).to_contain_text("Your sign-in changed")
         expect(first.locator("#content")).to_be_empty()
         expect(first.locator("#assistant-result")).to_be_empty()
@@ -221,7 +220,7 @@ def shared_session_checks(
             open_chat(second)
             second.locator("#assistant-consent").check()
             second.locator("#assistant-question").fill("my home")
-            second.get_by_role("button", name="Get advice").click()
+            second.get_by_role("button", name="Send").click()
             expect(second.locator("#assistant-result")).to_contain_text(address)
             second.keyboard.press("Escape")
             second.locator("#callback-consent").check()
@@ -305,19 +304,19 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
     expect(panel).to_contain_text("Advisory only")
     expect(panel).to_contain_text("Each answer says whether AI or rules were used")
     select = page.get_by_label("Your question", exact=True)
-    button = page.get_by_role("button", name="Get advice")
+    button = page.get_by_role("button", name="Send")
     button.click()
     expect(page.locator("#assistant-consent")).to_be_focused()
     expect(page.locator("#assistant-result")).to_be_empty()
     page.locator("#assistant-consent").check()
     select.focus()
-    select.select_option("status")
+    select.fill("What is my case status?")
     button.focus()
     page.keyboard.press("Enter")
     expect(page.locator("#assistant-result")).to_contain_text("arranging a survey")
     expect(page.locator("#assistant-result")).not_to_contain_text("Design work")
     expect(page.locator("#assistant-result")).to_contain_text("Your case: Where things are")
-    expect(button).to_be_focused()
+    expect(select).to_be_focused()
     expect(page.locator("#assistant-result")).to_contain_text("Summary by rules")
     for topic, text in (
         ("documents", "Survey: Missing"),
@@ -326,7 +325,7 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
         ("regulations", "retrieved 2026-09-19"),
         ("safety", "has not sent a report"),
     ):
-        select.select_option(topic)
+        select.fill(topic + " help")
         button.click()
         expect(page.locator("#assistant-result")).to_contain_text(text)
     for question in (
@@ -355,6 +354,7 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
     page.evaluate("document.documentElement.style.fontSize = '200%'")
     assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
     document_source = page.locator("#assistant-result li").filter(has_text="document D-EPC").last
+    document_source.evaluate("el => { el.closest('details').open = true; }")
     document_source.scroll_into_view_if_needed()
     expect(document_source).to_be_in_viewport()
     assert panel.evaluate("element => element.scrollWidth <= element.clientWidth")
@@ -376,7 +376,7 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
         with page.expect_response("**/demo/assistant") as response:
             button.click()
         assert response.value.json()["answer"] == chat.SAFETY
-        latest = page.locator("#assistant-result > div").last
+        latest = page.locator("#assistant-result > article.chat-widget-assistant").last
         expect(latest).to_contain_text(chat.SAFETY)
         expect(latest).to_contain_text("Human emergency and repairs route")
         expect(latest).not_to_contain_text("C-1 Test Street")
@@ -386,8 +386,8 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
 
     page.route("**/demo/assistant", lambda route: route.abort())
     button.click()
-    expect(page.locator("#assistant-status")).to_contain_text("could not reach")
-    expect(button).to_be_focused()
+    expect(panel.get_by_role("alert")).to_contain_text("could not reach")
+    expect(select).to_be_focused()
     page.unroute("**/demo/assistant")
     page.route(
         "**/demo/assistant",
@@ -396,11 +396,11 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
         ),
     )
     button.press("Enter")
-    expect(page.locator("#assistant-status")).to_have_text("Try again later.")
+    expect(panel.get_by_role("alert")).to_have_text("Try again later.")
     expect(select).to_be_enabled()
-    expect(button).to_be_focused()
+    expect(select).to_be_focused()
     page.unroute("**/demo/assistant")
-    select.select_option("status")
+    select.fill("What is my case status?")
     pending: dict[str, Any] = {}
 
     def hold(route: Route) -> None:
@@ -410,7 +410,7 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
     page.route("**/demo/assistant", hold)
     page.locator("#assistant-question").fill("  my home?  ")
     button.click()
-    expect(button).to_have_attribute("aria-disabled", "true")
+    expect(button).to_be_disabled()
     page.locator("#assistant-question").fill("My next question about documents")
     pending["route"].fulfill(response=pending["response"])
     expect(select).to_be_enabled()
@@ -418,20 +418,21 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
     scan(page, axe, reports, "typed-ahead-draft-preserved", "#resident-chat")
     page.locator("#assistant-question").fill("my home")
     button.click()
-    expect(button).to_have_attribute("aria-disabled", "true")
+    expect(button).to_be_disabled()
     pending["route"].fulfill(response=pending["response"])
     expect(page.locator("#assistant-question")).to_have_value("")
     summary = page.locator("#account > summary")
     for dismissal in ("Escape", "outside"):
         page.locator("#assistant-question").fill("appointments in the afternoon?")
         button.click()
-        expect(button).to_have_attribute("aria-disabled", "true")
+        expect(button).to_be_disabled()
         before_agenda = requests.count(base + "/demo/agenda")
         if dismissal == "Escape":
             page.keyboard.press("Escape")
             focus = page.locator("#chat-launcher")
         else:
             summary.focus()
+            expect(panel).to_be_hidden()
             focus = summary
         expect(panel).to_be_hidden()
         pending["route"].fulfill(response=pending["response"])
@@ -443,14 +444,14 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
         page.get_by_role("button", name="Use the manual callback form").click()
         expect(page.locator("#callback-title")).to_be_focused()
         open_chat(page)
-    select.select_option("status")
+    select.fill("What is my case status?")
     before = requests.count(base + "/demo/assistant")
     button.press("Enter")
     expect(page.locator("#assistant-status")).to_have_text("Getting your advice\u2026")
-    expect(button).to_have_attribute("aria-disabled", "true")
-    expect(button).to_be_focused()
-    button.press("Enter")
-    # Moving focus out closes the nonmodal overlay rather than hiding a background control.
+    expect(button).to_be_disabled()
+    expect(select).to_be_focused()
+    select.press("Enter")
+    # Leaving the nonmodal popup hides it without cancelling the read or redirecting focus.
     summary.focus()
     expect(panel).to_be_hidden()
     pending["route"].fulfill(response=pending["response"])
@@ -458,8 +459,9 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
     expect(summary).to_be_focused()
     assert requests.count(base + "/demo/assistant") == before + 1
     open_chat(page)
+    select.fill("What is my case status?")
     button.click()
-    expect(button).to_have_attribute("aria-disabled", "true")
+    expect(button).to_be_disabled()
     summary.click()
     page.get_by_role("button", name="Sign out", exact=True).click()
     expect(page.get_by_role("button", name="Sign in", exact=True)).to_be_visible()
@@ -472,16 +474,20 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
     open_chat(page)
     expect(page.locator("#assistant-consent")).not_to_be_checked()
     page.locator("#assistant-consent").check()
+    select.fill("What is my case status?")
     button.click()
     expect(page.locator("#assistant-result")).to_contain_text("Design work is under way")
     expect(page.locator("#assistant-result")).not_to_contain_text("arranging a survey")
-    select.select_option("documents")
+    select.fill("Which documents are missing?")
     button.click()
     expect(page.locator("#assistant-result")).to_contain_text("cannot tell you what to send")
     expect(page.locator("#assistant-result")).not_to_contain_text("R-SURVEY")
     expect(page.locator("#assistant-result")).not_to_contain_text("D-EPC")
-    select.select_option("appointments")
+    select.fill("Help with appointments")
     button.click()
+    expect(button).to_be_enabled()
+    expect(panel).to_be_visible()
+    page.get_by_role("button", name="Find callback times in the manual form", exact=True).last.click()
     expect(panel).to_be_hidden()
     expect(page.locator("#callback-proposals .callback-item")).to_have_count(3)
     expect(page.locator("#callback-title")).to_be_focused()
@@ -491,6 +497,9 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
         open_chat(page)
         page.locator("#assistant-question").fill(f"appointments in the {period}?")
         button.click()
+        expect(button).to_be_enabled()
+        expect(panel).to_be_visible()
+        page.get_by_role("button", name="Find callback times in the manual form", exact=True).last.click()
         expect(panel).to_be_hidden()
         expect(page.locator("#callback-period")).to_have_value(period)
         expect(page.locator("#callback-proposals .callback-item")).to_have_count(2)
@@ -583,6 +592,7 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
             status=401, content_type="application/json", body='{"error":"Please sign in again."}'
         ),
     )
+    select.fill("What is my case status?")
     button.click()
     expect(page.locator("#signin-error")).to_have_text("Please sign in again.")
     expect(page.locator("#content")).to_be_hidden()

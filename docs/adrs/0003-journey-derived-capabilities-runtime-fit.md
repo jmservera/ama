@@ -2,7 +2,7 @@
 title: ADR 0003 Journey-Derived Capabilities and IoT Hub Sensor Ingestion
 description: Owner-accepted decisions with an exercise Basic IoT Hub amendment, retaining proposal history and separate live implementation gates
 author: AMA programme
-ms.date: 2026-10-27
+ms.date: 2026-10-29
 ms.topic: reference
 ---
 
@@ -60,6 +60,22 @@ future activation requires separately approved actual sender-role propagation.
 No Azure provisioning, role activation or consumer SDK implementation follows.
 
 ## Context
+
+### Bounded live exercise authorization (2026-10-29, Refs #140 #184)
+
+The owner subsequently approved paid B1/one unit in existing `ama`/`uksouth`,
+after a USD10/month cost check, with USD5 additional through 2026-10-31.
+This supersedes only the earlier source-only prohibition for the bounded hub
+exercise; it does not authorize the dedicated Event Hub, new private endpoints,
+broad RBAC, application revisions, public SQL or real-device operation.
+The [dated infrastructure evidence](../../infra/README.md#bounded-existing-hub-exercise-2026-10-29-refs-140-184-137)
+records reuse of the already deployed B1 hub, successful metrics-only child
+reconciliation, preserved private network/service auth and exact residuals.
+No new hub was needed. Existing operator ARM Owner does not supply registry
+data permission; no role was self-granted, service key read or device issued.
+Live-to-SQL/resident visibility remains blocked, not delivered. The earlier
+source-only authorization and production keyless adapter design remain
+historical/current evidence respectively, not implicit paid-adapter permission.
 
 The [customer journey atlas](../reference/research/ux/customer-journeys/customer-journey-atlas.md)
 (2026-10-14) is role-instrument desk research. It is a sector-informed

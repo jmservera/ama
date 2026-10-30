@@ -119,6 +119,10 @@ module = ["test_progress_event_capture", "tests.test_progress_event_capture"]
 disallow_untyped_calls = false
 
 [[tool.mypy.overrides]]
+module = ["zava_forward.core.form_review", "test_form_review", "tests.test_form_review"]
+disallow_untyped_calls = false
+
+[[tool.mypy.overrides]]
 module = ["zava_forward.core.coordinator", "test_coordinator", "tests.test_coordinator"]
 disallow_untyped_calls = false
 

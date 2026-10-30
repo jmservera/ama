@@ -2,7 +2,7 @@
 title: Zava Forward agents
 description: Five retrofit assistants, the offline AI evaluation harness and their dated validation record for the agents project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-18
+ms.date: 2026-10-27
 ms.topic: reference
 ---
 
@@ -35,6 +35,39 @@ Actual user/model content may be personal; passing fixture checks is not DPO
 approval or a universal PII-free guarantee. The separate source-provenance
 audit still rejects three unverified historic source entries, leaving that
 issue #175 criterion unmet. No live service, model or private dataset is used.
+
+### Chat consumption evidence (2026-10-27, #164)
+
+The existing chat evaluator records metadata-only receipts per turn and
+aggregates scripted calls per scenario and per answer passing runtime checks.
+This denominator is not human acceptance. It reports actual model calls as
+zero, tokens as Unknown when the scripted provider has no tokenizer usage,
+and cost as Unknown with missing serving-model usage, dated versioned prices
+and complete human-review effort. It cannot authorize spend or present lower
+cost below an unestablished quality floor as a saving.
+
+The adapter preserves validated usage independently per invocation, including
+failure or completion-time admission revocation; no shared last-call state.
+Admission callback exceptions before dispatch report `admission-check-failed`
+with zero model calls. Completion callback exceptions report
+`completion-check-failed` with the provider's known calls and validated usage;
+the unchecked answer remains withheld and the panel uses workflow-only fallback.
+Neither error text nor provider text is exposed in the failure receipt.
+The evaluator retains receipts for post-call access rejection from the ledger
+without exposing the forbidden answer. Prompt/source/control bindings now
+include the context caps and complete-source JSON policy.
+
+```bash
+# From src/agents, installed core/agents:
+PYTHONPATH=../core/tests python3 -m unittest discover -s tests -p 'test_chat_*.py' -q
+python3 -m zava_forward.agents.chat_eval --json
+```
+
+The full development evaluation intentionally exits 1: the existing unsupported
+claim with a valid citation remains a critical failure and enablement is
+fail/disabled. Synthetic poisoning/injection passes are not actual-model or
+human assurance. Held-out independent labels, approved thresholds/accountable
+reviewer and competent authorized human exercises remain unavailable.
 
 ### Resource-specific isolation fixtures (#172, 2026-10-18)
 
@@ -172,6 +205,18 @@ explicit unknown-state diagnostics, not uncaught suite errors. Empty-store and
 unavailable-store HTTP behavior are exercised separately. The stricter merged
 human-decision reasons requirement is satisfied by declared synthetic fixture
 evidence, not disabled in the engine. All acceptance limitations below remain.
+
+### Offline economics delta (2026-10-27, #208)
+
+The comparator additionally reports task/outcome zero-call usage, zero tokens,
+zero enabled inference allowance and absent paid authority. The independent
+fixture specifies the complete expected metadata; mutation tests reject forged
+calls, tokens and a missing usage shape. AI cost per accepted check and total
+service cost remain Unknown: there is no owner-agreed acceptance denominator,
+dated price, attributable billing/allocation or measured human review effort.
+The regenerated 60,000-home report remains stateless synthetic development
+evidence, not a continuing-stock ingestion baseline or a staff trial.
+`cards_only` remains the recommendation, not an operational approval.
 
 ### Acceptance audit (2026-10-16)
 

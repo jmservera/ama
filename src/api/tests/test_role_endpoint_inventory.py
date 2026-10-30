@@ -23,11 +23,11 @@ GET_ENDPOINTS = ["/api/coordinator?as_of=2026-10-10T12:00:00Z", "/api/me", "/api
                  "/api/governance", "/api/continuity", "/api/continuity/export", "/api/retention", "/api/docs/ZF-1/none",
                  "/api/time/status", "/api/time/mine", "/api/time/report", "/api/law/sources", "/api/law/search?q=x",
                  "/api/law/cards", "/api/law/cards/reviews", "/api/law/cards/hazard-awareness-clock", "/api/law/alerts",
-                 "/api/assistants", "/api/assistants/proposals", "/api/chat/threads", "/api/chat/memory", "/api/buildings/SYN-B1",
-                 "/api/form-schemas", "/api/cases/ZF-1/form-candidates", "/api/nothing"]
+                 "/api/assistants", "/api/assistants/proposals", "/api/chat/status", "/api/chat/threads", "/api/chat/memory", "/api/buildings/SYN-B1",
+                 "/api/form-schemas", "/api/cases/ZF-1/form-candidates", "/api/cases/ZF-1/form-review", "/api/nothing"]
 POST_ENDPOINTS = [("/api/bulk-edits/preview", {}), ("/api/bulk-edits/apply", {}),
                   ("/api/ai/priority", {"n": 3}), ("/api/cases/ZF-1/ai", {"task": "summary"}), ("/api/cases/ZF-1/ai", {"task": "message"}),
-                  ("/api/form-schemas", {}), ("/api/cases/ZF-1/form-candidates", {}),
+                  ("/api/form-schemas", {}), ("/api/cases/ZF-1/form-candidates", {}), ("/api/cases/ZF-1/form-review", {}),
                   ("/api/cases/ZF-1/resident", {"action": "decision_record"}),
                   ("/api/cases/ZF-1/technical", {"action": "signoff_give", "type": "design"}),
                   ("/api/cases/ZF-1/stock-reconciliation", {}),
@@ -72,7 +72,7 @@ class RoleEndpointInventory(Matrix):
 
     def test_inventory_covers_dynamic_case_actions_added_by_integration(self):
         tested = {path.rsplit("/", 1)[-1] for path, _ in POST_ENDPOINTS}
-        for action in ("resident", "technical", "stock-reconciliation", "stock-query-event", "form-candidates"):
+        for action in ("resident", "technical", "stock-reconciliation", "stock-query-event", "form-candidates", "form-review"):
             self.assertIn(action, tested)
 
     def test_every_role_against_every_endpoint(self):

@@ -1,7 +1,6 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-10-23
 ms.date: 2026-10-29
 ---
 
@@ -52,6 +51,32 @@ Outstanding #185/#187/#188/#189 live criteria and OD-43 remain explicit.
 The same synthesis records the bounded correction: actual global send-attempt
 admission after setup, partial-construction cleanup and selected-snapshot
 descriptor/frame provenance. Local regressions do not close live criteria.
+
+For #146, the [monitoring runbooks and evidence/gap matrix](../../infra/monitoring-runbooks.md)
+record the source-only job/IoT alert candidates, aggregate operations workbook,
+existing alert/budget catalogue and corrected ledger 26-hour query range.
+New candidates default disabled; proposed roles are not named appointments.
+Actual cost/AI metering and variance remain Unknown/unreconciled, and existing
+diagnostic privacy exclusion, poison signals, RAI incident integration and live
+owner/threshold approvals remain unmet. No deployment or issue closure follows.
+
+For finance #96/#98/#99, the
+[working field-review contract](../../src/core/README.md#unapproved-working-field-review-96-98-99)
+and [authenticated endpoint](../../src/api/README.md#working-form-review-and-held-finance-decisions-96-98-99)
+describe isolated draft reviews, source-linked diagnostic manifests and durable
+Held decision records. Every schema remains Unapproved; approved-rule
+validation/reviewed export and actual Board OD-12/15 envelope/tolerances are
+unavailable. The pause signal is diagnostic only, not a programme-wide release
+or live-activity hold. Synthetic engineering checks do not approve financial
+inputs or establish whole-issue acceptance.
+
+For #140/#184, the [bounded 2026-10-29 existing-hub reconciliation](../../infra/README.md#bounded-existing-hub-exercise-2026-10-29-refs-140-184-137)
+records owner-approved USD10/month B1/one unit within USD5 additional through
+October31, reuse of the deployed hub and successful metrics-only diagnostic
+reconciliation. No new hub, endpoint, role or service key was created. Missing
+operator registry data permission and the unapproved custom receive adapter
+block live-to-SQL and resident-gauge acceptance; actual local SQL evidence is
+not live transport. The following source-only production model remains separate.
 
 For #140, the [IoT infrastructure decision and budget](../../infra/README.md#iot-hub-issue-140-adr-0003-decision-6)
 and [ADR 0003 dated authorization](../adrs/0003-journey-derived-capabilities-runtime-fit.md#source-only-infrastructure-authorization-2026-10-27-refs-140)
@@ -259,6 +284,15 @@ wording and recorded-time labels. Safety restart authority, exact AI labelling
 and verbatim sources remain distinct. This is partial synthetic engineering
 coverage, not universal error coverage, comprehension or named resident review.
 
+For #153/#154, the [2026-10-27 content inventory and residual messages](./research/ux/content-standard.md#dated-surface-and-message-audit-2026-10-27-153154)
+and [six resident task designs with representative briefing rules](./research/ux/customer-journeys/residents.md#resident-and-representative-task-designs-2026-10-27-154)
+add text wireframes, accessible non-digital alternatives, safe-contact and
+task/date-limited authority, offer/confirmation and separate remedy states.
+The lexical guard now includes staff time capture. Juan Manuel Servera was
+appointed wording reviewer on 2026-10-15; completed exact-text review and actual
+resident/representative usability/AT acceptance remain Not run. No portal,
+live contact, operational authority or whole-issue closure is delivered.
+
 For issue #172, the [chat fixture isolation boundary](./research/retrofit-synthetic-data/data-dictionary.md#resource-specific-isolation-coverage-2026-10-18-172)
 distinguishes 22 personas/eleven perspectives from current eligible thread owners
 (14 users/seven perspectives). Explicit both-contractor read/list/search denial
@@ -448,7 +482,7 @@ or infra acceptance claimed.
 | Inspect deterministic checks and role-scoped step alerts (#212) | [Core bounded contracts and schedule](../../src/core/README.md#deterministic-checks-and-alerts-212) | [Alert API and outage boundary](../../src/api/README.md#deterministic-step-alert-api-212): immutable owner-approved executable contracts, SQL checks/checkpoints, home grouping, clock/harm ranking, attention limits and retained owner dispositions. Issue #329 pins exact source-gating labels and cross-case/episode 24-hour attention limits with mutation evidence; runtime unchanged. No seed approvals, inferred clocks, resident messages or hold release. Step UI, hosted timer, legal/staff/live-platform and continuing-stock acceptance remain unmet |
 | Inspect regulatory alert and home chat UX (#215) | [Audience patterns and criterion audit](../../src/api/README.md#regulatory-alert-and-home-chat-ux-215) | Existing scoped alerts outside optional chat, structured cited lookup and explicit doubt/outage states. Runtime-only unit discovery retains pure size/hash assertions without Playwright; source CI separately runs the browser regression with hash-pinned optional axe, measured 24px targets and mutation-protected 44px disclosure sizing. Staff comprehension protocol is Not run; full WCAG conformance, chat value and operational approval remain unproved |
 | Inspect source monitoring and regulatory change reviews (#213) | [Core contract and acceptance audit](../../src/core/README.md#source-change-monitoring-and-review-213) | [Offline orchestrator job](../../src/orchestrator/README.md#offline-source-change-job-213): isolated unverified candidates, versioned source cadence/likelihood, bounded impact, simulated Juan Manuel Servera review, regression/effective-date gates and atomic rollback. No live adapter/timer, candidate publication, actual human legal approval, new endpoint or communication delivery |
-| Inspect regulatory security, privacy and audit (#217) | [API acceptance audit](../../src/api/README.md#regulatory-security-privacy-and-audit-217) | [Draft DPIA for DPO review](./research/chat-memory-dpia.md#regulatory-assistant-dpia-draft-for-dpo-review-2026-10-16-refs-217): separate trusted chat capability, metadata-only unknown/simulated retention, transactional SQL turn audit and explicit human reasons. DPO completion/periods, live Entra/SQL and actual-model/privacy/legal acceptance remain unmet |
+| Inspect regulatory security, privacy and audit (#217) | [API acceptance audit](../../src/api/README.md#regulatory-security-privacy-and-audit-217) | [Draft DPIA for DPO review](./research/chat-memory-dpia.md#regulatory-assistant-dpia-draft-for-dpo-review-2026-10-16-refs-217): separate chat capability, unknown/simulated retention, atomic SQL turn/referral/audit, bounded content-free usage and explicit human reasons. 2026-10-27 engineering delta does not complete DPO periods/rights, live Entra/SQL or legal acceptance |
 | Inspect bounded document rescans and retention authority (#117) | [Offline job contract](../../src/orchestrator/README.md#bounded-document-rescan-job-117) | [Synthetic engineering boundary](./research/retrofit-synthetic-data/README.md#pending-document-rescan-engineering-boundary-2026-10-17-refs-117): original Review Not accepted retained byte-exact; correction ONE fixes recovery/scanner boundaries and coordinator reports independent closure. Final correction TWO restores driverless SQLite/help with failing-first real discovery, native SQL error sanitization and authorized merged396 integration parity. Final coordinator clearance pending; no second full Review/self-Pass. Real Defender, hosted cadence and owner/Legal/DPO approvals remain unmet |
 | Design Awaab's Law, damp and mould or safety controls | [social-housing-regulation/](./regulatory/social-housing-regulation/) | [Company Profile Research](./research/company/company-profile-research.md) |
 | Design sensor data capture, map signals or prioritisation | [Sensor Data Capture, Analysis and Map](../adrs/0002-pilot-readiness-architecture.md#sensor-data-capture-analysis-and-map) | [Case Study 48 Addendum](../case_study_48_addendum.md#sensor-data-capture-analysis-and-map-demonstrator-design) and BRD RULE-014/AC-047; simulator only, with sensor inventory and operational thresholds still open |
@@ -574,14 +608,14 @@ or infra acceptance claimed.
 | [Retrofit Operating-Data Exercise Pack](./research/retrofit-synthetic-data/README.md) | Version 2.0.0: fifteen months of constructed operating records for 980 candidate homes. The case presents a professional team aware of bottlenecks but not where they occur. The pack covers the tracker, stage event log, property register, CRM contacts, supplier appointments, safety holds, QA and evidence, grant and finance, capacity, board reports and issues log, with realistic record-keeping imperfections, a data dictionary and a manifest. These records are for the exercise and are not evidence of actual company performance. The answer key and generator are held outside the knowledge base so analysis can stay blind. Stock-to-case link report and synthetic fabric attributes for the 60,000-home stock added; synthetic EPC, survey records and a seeded EPC conflict manifest added (#170); per-user chat and memory test fixtures (personas, threads, memory, isolation and deletion cases) added (#172) | 2026-10-15 |
 | [Program Manager Document Workspace Journey](./research/ux/program-manager-document-workspace-journey.md) | Stakeholder-informed JTBD analysis, journey map, accessibility requirements and design handoff for the repository-backed Program Workbench canvas. All behavioural findings remain reported or assumed pending direct user research | 2026-10-02 |
 | [Customer Journey Atlas and Company-Role Maps](./research/ux/customer-journeys/customer-journey-atlas.md) | Nine company-role contributions cover employees, professionals, residents/representatives, suppliers and external assurance readers: 28 stage-based maps, two missing subjourneys, motivations/pains/gains and 24 practical/exploratory agent requests with authority, fallback and non-AI comparisons. Snapshot provenance reconciled to Zava naming and current five-assistant operator evidence; no user/benefit validation or authority expansion | 2026-10-14 |
-| [Regulatory Literacy for Journey Users and Agents](./research/ux/regulatory-literacy-for-journeys.md) | What each journey role should know about current law, with the agent integration pattern (desk research, 2026-10-15) |
+| [Regulatory Literacy for Journey Users and Agents](./research/ux/regulatory-literacy-for-journeys.md) | Dated regulatory-literacy research and agent integration pattern; 2026-10-27 synthetic conflict-referral/usage delta retains human comprehension, approval and cards-only shipment boundaries |
 | [Zava Forward Prototype Profile Review](./research/ux/zava-forward-prototype-profile-review.md#screen-backlog-coverage-snapshot-2026-10-18-156) | #156 complete bounded issue inventory, captured 2026-10-18 before 04:13:45 UTC at source/base 2ca6d1c4: 184 issues (139 open/45 closed), 74 individual screen traces, 86 no-screen, 16 aggregate epics and eight explicitly reviewed surface choices. Exact journey/task-flow links or named gaps; all 74 current screen designs NOT SUPPLIED. Original eleven-profile/four-core-flow rows, decisions and Blocked gate preserved. Literal AC1 and design/human/accessibility/content/user acceptance remain open; closed #150 and historical H/engineering E are not approval | 2026-10-18 |
 | [Prototype Learnings and Simplicity Review](./research/ux/prototype-learnings-and-simplicity-review.md) | Historical simplicity/platform learning plus requested UX Designer draft review: exact-intent/tab-local recovery, owner/source reconciliation and unique #58 journeys absent from main. Corrects untested first-task claims; real AI/SQL/Azure, human UX and quality/value gates stay separate | 2026-10-13 |
 | [Zava Forward Workbench Design System Foundations](./research/ux/design-system.md) | Owner-selected Fluent 2 adoption supersedes the extend proposal (#150). Partial sourced token/native foundations; circle/O, square/W, triangle/! markers, explicit cluster safety counts and selected-filter words. Seven-state inventory and actual AI draft-review controls; synthetic local browser checks, not full Fluent runtime delivery or human accessibility acceptance | 2026-10-15 |
 | [Employee Case Workspace Redesign](./research/ux/employee-case-workspace-redesign.md) | Issue #526 specification and implementation boundary: six evidence-based journey steps, summary strip, nine retained tabs and consistent draft/proposal reviews. Constructed-data unit, browser/37-state axe, keyboard and actual 200% zoom checks pass after mobile spacing/focus corrections. No new journey/confidence API fields; chat answers retain their separate proposal-review route. Screen-reader, staff usability, live acceptance and publication gates remain separate | 2026-10-28 |
 | [Zava Forward Workbench WCAG 2.2 Conformance Baseline](./research/ux/wcag-conformance-baseline.md) | Proposed WCAG 2.2 AA target and scope, first audit with computed contrast, fixes (focus indicator, field border, chart table equivalent), automated check coverage, manual check record per role and accessibility statement draft with known gaps (issue #151). Owner confirmation, rendered scanner, and all screen-reader, zoom and target-size tests remain open; no conformance claim | 2026-10-15 |
 | [Zava Forward Workbench Content Standard, Glossary and Copy Audit](./research/ux/content-standard.md) | Plain-language content standard, status and next-action glossary, blocked-message pattern (reason, owner, next action), AI suggestion wording (SA-003, SA-004) and the core-flow copy audit (issue #153). Named human review of resident-facing wording, reading-age targets and user testing remain open | 2026-10-15 |
-| [Chat and Memory Data Protection Analysis Record](./research/chat-memory-dpia.md) | Draft DPIA working record for per-user chat and memory: data map, decision record with no lawful basis, notice, DPIA or retention recorded, rights handling, logging, provider and redaction. Provider terms not recorded; warning not wired into any UI; DPO and Legal decisions remain open (issue #163) | 2026-10-15 |
+| [Chat and Memory Data Protection Analysis Record](./research/chat-memory-dpia.md) | Draft only: [staff hardening boundary](./research/chat-memory-dpia.md#staff-chat-engineering-boundary-2026-10-27-refs-157162159164163) records canonical question warning, shared cited routes, default-deny dispatch, bounded context and content-free consumption receipts. No approved retention, lawful basis, notice, provider terms or DPIA; no live activation or human accessibility/evaluation acceptance (#157/#162/#159/#164/#163) | 2026-10-27 |
 | [Gap Analysis and Next Build](./research/gap-analysis-next-build.md) | Dated gaps/build direction and #65 recovery retained; PM/UX closure matrix pins four drafts, recommends learning-only retirement for #19/#24/#27 and keeps #58 unresolved with capability/requirement/evidence queue. No wholesale import, product acceptance or resource deletion | 2026-10-13 |
 | [Decision 1 Behaviour Specification](./research/decision-1-behaviour-specification.md) | Clean-rebuild contract linked to the overall application design: workbench/API integration, scoring versus generation, human review and application boundaries, tasks, thresholds, provider contract, guard, liabilities and tests | 2026-10-11 |
 | [Zava Forward API README](../../src/api/README.md) (split per project in M6 of #199: [core](../../src/core/README.md), [agents](../../src/agents/README.md), [orchestrator](../../src/orchestrator/README.md), [importer](../../src/importer/README.md)) | Continuing local/Azure application on retained constructed cases and private stock geography; real SQL/model evidence, Entra initialization, welcome/photo/account choice and current tests distinguished from historical snapshots. Full workflow, human, recovery, accessibility and production acceptance remain separate; evaluation dataset registry and seeded 60,000-home fixture added; frozen protocol, BG-011 MDE register, release decisions and breach pauses recorded (#126, no approvals claimed); importer Excel transition library (preview, quarantine, export, comparison) added for #80 with thresholds, UI and AI assist still open | 2026-10-15 |

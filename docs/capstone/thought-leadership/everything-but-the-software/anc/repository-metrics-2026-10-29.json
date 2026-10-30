@@ -1,0 +1,3218 @@
+{
+  "schema_version": "1.0",
+  "repository": "jmservera/ama",
+  "retrieval_started_at": "2026-10-29T17:38:52.574109+00:00",
+  "retrieval_finished_at": "2026-10-29T17:39:47.727768+00:00",
+  "current_main_commit": "9b74ac8daaec2a880172e43161b37ac7f2c3f801",
+  "current_main_committed_at": "2026-10-29T18:26:00+01:00",
+  "historical_case_commit": "29c6b512f5e68733bb2cc1882343db39f5eb2cad",
+  "historical_case_git_commit_time": "2026-10-24T16:19:38+00:00",
+  "historical_case_integration_cutoff": "2026-10-24T16:19:39+00:00",
+  "github_counts": {
+    "defaultBranchRef": {
+      "name": "main",
+      "target": {
+        "oid": "9b74ac8daaec2a880172e43161b37ac7f2c3f801"
+      }
+    },
+    "openIssues": {
+      "totalCount": 136
+    },
+    "closedIssues": {
+      "totalCount": 75
+    },
+    "openPRs": {
+      "totalCount": 11
+    },
+    "mergedPRs": {
+      "totalCount": 314
+    },
+    "unmergedClosedPRs": {
+      "totalCount": 19
+    }
+  },
+  "merged_pr_windows": {
+    "before_loop_26_sep_14_oct": {
+      "start": "2026-09-26T00:00:00+00:00",
+      "end": "2026-10-14T23:59:59+00:00",
+      "count": 52
+    },
+    "15_oct_through_historical_git_commit_time": {
+      "start": "2026-10-15T00:00:00+00:00",
+      "end": "2026-10-24T16:19:38+00:00",
+      "count": 182
+    },
+    "after_historical_git_commit_time_to_retrieval": {
+      "start": "2026-10-24T16:19:39+00:00",
+      "end": "2026-10-29T17:39:47.727768+00:00",
+      "count": 80
+    },
+    "since_loop_to_retrieval": {
+      "start": "2026-10-15T00:00:00+00:00",
+      "end": "2026-10-29T17:39:47.727768+00:00",
+      "count": 262
+    },
+    "original_case_calendar_dates": {
+      "start": "2026-10-15T00:00:00+00:00",
+      "end": "2026-10-24T23:59:59+00:00",
+      "count": 187
+    },
+    "25_29_oct_follow_up": {
+      "start": "2026-10-25T00:00:00+00:00",
+      "end": "2026-10-29T17:39:47.727768+00:00",
+      "count": 75
+    },
+    "original_case_through_pin_integration": {
+      "start": "2026-10-15T00:00:00+00:00",
+      "end": "2026-10-24T16:19:39+00:00",
+      "count": 183
+    },
+    "post_pin_integration_to_retrieval": {
+      "start": "2026-10-24T16:19:40+00:00",
+      "end": "2026-10-29T17:39:47.727768+00:00",
+      "count": 79
+    }
+  },
+  "github_pull_metadata": [
+    {
+      "base": "main",
+      "closed_at": "2026-09-26T15:56:54Z",
+      "created_at": "2026-09-20T21:21:36Z",
+      "merged_at": "2026-09-26T15:56:54Z",
+      "number": 1,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-09-26T19:05:03Z",
+      "created_at": "2026-09-26T17:13:26Z",
+      "merged_at": "2026-09-26T19:05:03Z",
+      "number": 2,
+      "state": "closed"
+    },
+    {
+      "base": "brd-review-01",
+      "closed_at": "2026-09-26T19:03:12Z",
+      "created_at": "2026-09-26T18:53:07Z",
+      "merged_at": "2026-09-26T19:03:12Z",
+      "number": 3,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-09-28T05:59:58Z",
+      "created_at": "2026-09-27T09:13:02Z",
+      "merged_at": "2026-09-28T05:59:58Z",
+      "number": 4,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-09-28T06:00:00Z",
+      "created_at": "2026-09-27T14:50:28Z",
+      "merged_at": "2026-09-28T06:00:00Z",
+      "number": 5,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-02T15:53:56Z",
+      "created_at": "2026-10-02T15:36:59Z",
+      "merged_at": "2026-10-02T15:53:56Z",
+      "number": 7,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-02T17:34:44Z",
+      "created_at": "2026-10-02T17:18:12Z",
+      "merged_at": "2026-10-02T17:34:43Z",
+      "number": 8,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-02T17:26:56Z",
+      "created_at": "2026-10-02T17:24:36Z",
+      "merged_at": "2026-10-02T17:26:56Z",
+      "number": 9,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-03T09:41:40Z",
+      "created_at": "2026-10-03T09:08:01Z",
+      "merged_at": "2026-10-03T09:41:40Z",
+      "number": 11,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-03T18:17:54Z",
+      "created_at": "2026-10-03T09:57:12Z",
+      "merged_at": "2026-10-03T18:17:54Z",
+      "number": 12,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-03T21:30:41Z",
+      "created_at": "2026-10-03T20:33:18Z",
+      "merged_at": "2026-10-03T21:30:41Z",
+      "number": 13,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-05T07:17:00Z",
+      "created_at": "2026-10-04T16:33:44Z",
+      "merged_at": "2026-10-05T07:16:59Z",
+      "number": 14,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-05T20:27:13Z",
+      "created_at": "2026-10-05T09:28:27Z",
+      "merged_at": "2026-10-05T20:27:13Z",
+      "number": 15,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-05T12:49:27Z",
+      "created_at": "2026-10-05T09:53:36Z",
+      "merged_at": "2026-10-05T12:49:27Z",
+      "number": 16,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-05T15:38:02Z",
+      "created_at": "2026-10-05T15:29:10Z",
+      "merged_at": "2026-10-05T15:38:02Z",
+      "number": 17,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-05T19:12:26Z",
+      "created_at": "2026-10-05T16:43:30Z",
+      "merged_at": "2026-10-05T19:12:25Z",
+      "number": 18,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-14T21:10:04Z",
+      "created_at": "2026-10-05T20:40:56Z",
+      "merged_at": null,
+      "number": 19,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-05T22:34:51Z",
+      "created_at": "2026-10-05T21:37:21Z",
+      "merged_at": "2026-10-05T22:34:51Z",
+      "number": 20,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-07T20:24:16Z",
+      "created_at": "2026-10-06T10:03:26Z",
+      "merged_at": "2026-10-07T20:24:16Z",
+      "number": 21,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-07T21:03:21Z",
+      "created_at": "2026-10-07T20:44:18Z",
+      "merged_at": "2026-10-07T21:03:21Z",
+      "number": 22,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-14T21:10:04Z",
+      "created_at": "2026-10-07T21:16:19Z",
+      "merged_at": null,
+      "number": 24,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-07T22:20:45Z",
+      "created_at": "2026-10-07T21:40:33Z",
+      "merged_at": "2026-10-07T22:20:45Z",
+      "number": 25,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-07T22:27:35Z",
+      "created_at": "2026-10-07T22:05:15Z",
+      "merged_at": "2026-10-07T22:27:35Z",
+      "number": 26,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-14T21:10:05Z",
+      "created_at": "2026-10-07T22:38:04Z",
+      "merged_at": null,
+      "number": 27,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-08T16:59:29Z",
+      "created_at": "2026-10-07T23:06:49Z",
+      "merged_at": "2026-10-08T16:59:29Z",
+      "number": 28,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-08T17:19:04Z",
+      "created_at": "2026-10-08T17:05:38Z",
+      "merged_at": "2026-10-08T17:19:04Z",
+      "number": 29,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-08T17:19:41Z",
+      "created_at": "2026-10-08T17:15:09Z",
+      "merged_at": "2026-10-08T17:19:41Z",
+      "number": 30,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-08T18:09:10Z",
+      "created_at": "2026-10-08T17:31:07Z",
+      "merged_at": "2026-10-08T18:09:10Z",
+      "number": 31,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-08T18:10:06Z",
+      "created_at": "2026-10-08T17:43:03Z",
+      "merged_at": "2026-10-08T18:10:06Z",
+      "number": 32,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-08T20:55:29Z",
+      "created_at": "2026-10-08T18:16:58Z",
+      "merged_at": "2026-10-08T20:55:29Z",
+      "number": 34,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-09T07:08:23Z",
+      "created_at": "2026-10-08T21:06:32Z",
+      "merged_at": "2026-10-09T07:08:23Z",
+      "number": 35,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-09T07:09:43Z",
+      "created_at": "2026-10-08T22:08:22Z",
+      "merged_at": "2026-10-09T07:09:43Z",
+      "number": 36,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-08T22:17:05Z",
+      "created_at": "2026-10-08T22:11:46Z",
+      "merged_at": "2026-10-08T22:17:05Z",
+      "number": 37,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-09T08:12:28Z",
+      "created_at": "2026-10-09T07:17:18Z",
+      "merged_at": "2026-10-09T08:12:28Z",
+      "number": 39,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-09T07:47:26Z",
+      "created_at": "2026-10-09T07:24:23Z",
+      "merged_at": "2026-10-09T07:47:26Z",
+      "number": 40,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-09T07:59:45Z",
+      "created_at": "2026-10-09T07:26:19Z",
+      "merged_at": "2026-10-09T07:59:45Z",
+      "number": 41,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-09T08:07:33Z",
+      "created_at": "2026-10-09T07:29:07Z",
+      "merged_at": "2026-10-09T08:07:32Z",
+      "number": 42,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-09T08:03:18Z",
+      "created_at": "2026-10-09T07:31:29Z",
+      "merged_at": "2026-10-09T08:03:18Z",
+      "number": 43,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-09T08:11:08Z",
+      "created_at": "2026-10-09T07:33:10Z",
+      "merged_at": "2026-10-09T08:11:08Z",
+      "number": 44,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-09T07:50:21Z",
+      "created_at": "2026-10-09T07:42:29Z",
+      "merged_at": "2026-10-09T07:50:21Z",
+      "number": 45,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-09T08:21:22Z",
+      "created_at": "2026-10-09T08:15:09Z",
+      "merged_at": "2026-10-09T08:21:22Z",
+      "number": 50,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-10T10:38:53Z",
+      "created_at": "2026-10-10T08:55:42Z",
+      "merged_at": null,
+      "number": 54,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-10T10:38:51Z",
+      "created_at": "2026-10-10T09:31:47Z",
+      "merged_at": "2026-10-10T10:38:51Z",
+      "number": 55,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-10T10:19:53Z",
+      "created_at": "2026-10-10T09:55:19Z",
+      "merged_at": "2026-10-10T10:19:53Z",
+      "number": 56,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-10T13:23:54Z",
+      "created_at": "2026-10-10T13:12:23Z",
+      "merged_at": "2026-10-10T13:23:54Z",
+      "number": 57,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-14T21:10:06Z",
+      "created_at": "2026-10-10T14:14:19Z",
+      "merged_at": null,
+      "number": 58,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-11T17:47:42Z",
+      "created_at": "2026-10-10T23:09:11Z",
+      "merged_at": "2026-10-11T17:47:41Z",
+      "number": 59,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-11T19:50:31Z",
+      "created_at": "2026-10-11T18:01:16Z",
+      "merged_at": "2026-10-11T19:50:31Z",
+      "number": 60,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-11T22:36:41Z",
+      "created_at": "2026-10-11T19:11:00Z",
+      "merged_at": "2026-10-11T22:36:41Z",
+      "number": 61,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-11T22:21:37Z",
+      "created_at": "2026-10-11T21:22:32Z",
+      "merged_at": "2026-10-11T22:21:37Z",
+      "number": 62,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-11T22:19:13Z",
+      "created_at": "2026-10-11T22:15:22Z",
+      "merged_at": "2026-10-11T22:19:13Z",
+      "number": 63,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-13T11:48:43Z",
+      "created_at": "2026-10-11T22:52:00Z",
+      "merged_at": "2026-10-13T11:48:43Z",
+      "number": 65,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-11T23:20:11Z",
+      "created_at": "2026-10-11T23:00:15Z",
+      "merged_at": null,
+      "number": 66,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-13T12:18:27Z",
+      "created_at": "2026-10-13T12:11:01Z",
+      "merged_at": "2026-10-13T12:18:27Z",
+      "number": 67,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-14T16:23:07Z",
+      "created_at": "2026-10-13T13:29:41Z",
+      "merged_at": "2026-10-14T16:23:07Z",
+      "number": 68,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-14T20:14:44Z",
+      "created_at": "2026-10-14T18:32:34Z",
+      "merged_at": "2026-10-14T20:14:44Z",
+      "number": 69,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-14T21:07:34Z",
+      "created_at": "2026-10-14T20:56:05Z",
+      "merged_at": "2026-10-14T21:07:34Z",
+      "number": 70,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-14T22:21:01Z",
+      "created_at": "2026-10-14T21:17:31Z",
+      "merged_at": "2026-10-14T22:21:01Z",
+      "number": 71,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T06:29:46Z",
+      "created_at": "2026-10-14T21:40:48Z",
+      "merged_at": "2026-10-15T06:29:46Z",
+      "number": 72,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T06:51:46Z",
+      "created_at": "2026-10-14T23:39:25Z",
+      "merged_at": "2026-10-15T06:51:46Z",
+      "number": 204,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T07:35:47Z",
+      "created_at": "2026-10-15T06:40:46Z",
+      "merged_at": "2026-10-15T07:35:47Z",
+      "number": 205,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T07:26:20Z",
+      "created_at": "2026-10-15T06:59:54Z",
+      "merged_at": "2026-10-15T07:26:20Z",
+      "number": 207,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T08:06:27Z",
+      "created_at": "2026-10-15T08:04:14Z",
+      "merged_at": "2026-10-15T08:06:27Z",
+      "number": 234,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T08:55:41Z",
+      "created_at": "2026-10-15T08:13:56Z",
+      "merged_at": "2026-10-15T08:55:40Z",
+      "number": 235,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T09:00:54Z",
+      "created_at": "2026-10-15T08:14:33Z",
+      "merged_at": "2026-10-15T09:00:53Z",
+      "number": 236,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T09:09:47Z",
+      "created_at": "2026-10-15T08:14:35Z",
+      "merged_at": "2026-10-15T09:09:47Z",
+      "number": 237,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T09:04:53Z",
+      "created_at": "2026-10-15T08:15:03Z",
+      "merged_at": "2026-10-15T09:04:53Z",
+      "number": 238,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T08:43:29Z",
+      "created_at": "2026-10-15T08:21:24Z",
+      "merged_at": "2026-10-15T08:43:29Z",
+      "number": 239,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T09:28:27Z",
+      "created_at": "2026-10-15T09:14:10Z",
+      "merged_at": "2026-10-15T09:28:26Z",
+      "number": 240,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T09:32:05Z",
+      "created_at": "2026-10-15T09:14:24Z",
+      "merged_at": "2026-10-15T09:32:05Z",
+      "number": 241,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T09:45:52Z",
+      "created_at": "2026-10-15T09:36:25Z",
+      "merged_at": "2026-10-15T09:45:52Z",
+      "number": 242,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T09:58:47Z",
+      "created_at": "2026-10-15T09:50:04Z",
+      "merged_at": "2026-10-15T09:58:47Z",
+      "number": 243,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T10:02:47Z",
+      "created_at": "2026-10-15T09:51:08Z",
+      "merged_at": "2026-10-15T10:02:47Z",
+      "number": 244,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T10:16:32Z",
+      "created_at": "2026-10-15T10:15:57Z",
+      "merged_at": "2026-10-15T10:16:32Z",
+      "number": 245,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T10:35:50Z",
+      "created_at": "2026-10-15T10:20:45Z",
+      "merged_at": "2026-10-15T10:35:50Z",
+      "number": 246,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T10:43:24Z",
+      "created_at": "2026-10-15T10:22:56Z",
+      "merged_at": "2026-10-15T10:43:24Z",
+      "number": 247,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T10:39:45Z",
+      "created_at": "2026-10-15T10:23:18Z",
+      "merged_at": "2026-10-15T10:39:45Z",
+      "number": 248,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T10:57:52Z",
+      "created_at": "2026-10-15T10:46:26Z",
+      "merged_at": "2026-10-15T10:57:52Z",
+      "number": 249,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T11:01:55Z",
+      "created_at": "2026-10-15T10:48:49Z",
+      "merged_at": "2026-10-15T11:01:55Z",
+      "number": 250,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T11:01:51Z",
+      "created_at": "2026-10-15T10:48:54Z",
+      "merged_at": "2026-10-15T11:01:51Z",
+      "number": 251,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T11:32:10Z",
+      "created_at": "2026-10-15T11:14:41Z",
+      "merged_at": "2026-10-15T11:32:10Z",
+      "number": 252,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T11:34:53Z",
+      "created_at": "2026-10-15T11:18:30Z",
+      "merged_at": "2026-10-15T11:34:52Z",
+      "number": 253,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T11:26:32Z",
+      "created_at": "2026-10-15T11:21:59Z",
+      "merged_at": "2026-10-15T11:26:32Z",
+      "number": 254,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T11:27:54Z",
+      "created_at": "2026-10-15T11:27:27Z",
+      "merged_at": "2026-10-15T11:27:54Z",
+      "number": 255,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T12:50:27Z",
+      "created_at": "2026-10-15T11:36:14Z",
+      "merged_at": "2026-10-15T12:50:27Z",
+      "number": 256,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T11:57:47Z",
+      "created_at": "2026-10-15T11:39:16Z",
+      "merged_at": "2026-10-15T11:57:47Z",
+      "number": 257,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T11:54:45Z",
+      "created_at": "2026-10-15T11:42:56Z",
+      "merged_at": "2026-10-15T11:54:45Z",
+      "number": 258,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T11:50:52Z",
+      "created_at": "2026-10-15T11:45:16Z",
+      "merged_at": "2026-10-15T11:50:52Z",
+      "number": 259,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T11:50:48Z",
+      "created_at": "2026-10-15T11:45:50Z",
+      "merged_at": "2026-10-15T11:50:48Z",
+      "number": 260,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T12:15:18Z",
+      "created_at": "2026-10-15T11:46:19Z",
+      "merged_at": "2026-10-15T12:15:18Z",
+      "number": 261,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T12:10:33Z",
+      "created_at": "2026-10-15T11:47:53Z",
+      "merged_at": "2026-10-15T12:10:33Z",
+      "number": 262,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T12:07:26Z",
+      "created_at": "2026-10-15T12:02:27Z",
+      "merged_at": "2026-10-15T12:07:26Z",
+      "number": 263,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T12:07:11Z",
+      "created_at": "2026-10-15T12:06:43Z",
+      "merged_at": "2026-10-15T12:07:11Z",
+      "number": 264,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T12:31:35Z",
+      "created_at": "2026-10-15T12:21:38Z",
+      "merged_at": "2026-10-15T12:31:35Z",
+      "number": 265,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T12:29:07Z",
+      "created_at": "2026-10-15T12:24:16Z",
+      "merged_at": "2026-10-15T12:29:07Z",
+      "number": 266,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T13:03:37Z",
+      "created_at": "2026-10-15T12:27:48Z",
+      "merged_at": "2026-10-15T13:03:37Z",
+      "number": 267,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T12:46:31Z",
+      "created_at": "2026-10-15T12:27:56Z",
+      "merged_at": "2026-10-15T12:46:31Z",
+      "number": 268,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T13:09:25Z",
+      "created_at": "2026-10-15T12:31:01Z",
+      "merged_at": "2026-10-15T13:09:25Z",
+      "number": 269,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T12:58:39Z",
+      "created_at": "2026-10-15T12:33:49Z",
+      "merged_at": "2026-10-15T12:58:39Z",
+      "number": 270,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T13:19:38Z",
+      "created_at": "2026-10-15T13:11:12Z",
+      "merged_at": "2026-10-15T13:19:38Z",
+      "number": 271,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T13:51:48Z",
+      "created_at": "2026-10-15T13:27:52Z",
+      "merged_at": "2026-10-15T13:51:48Z",
+      "number": 272,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T13:32:31Z",
+      "created_at": "2026-10-15T13:28:15Z",
+      "merged_at": "2026-10-15T13:32:31Z",
+      "number": 273,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T13:38:07Z",
+      "created_at": "2026-10-15T13:28:28Z",
+      "merged_at": "2026-10-15T13:38:06Z",
+      "number": 274,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T13:51:41Z",
+      "created_at": "2026-10-15T13:28:33Z",
+      "merged_at": "2026-10-15T13:51:41Z",
+      "number": 275,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T13:38:12Z",
+      "created_at": "2026-10-15T13:29:24Z",
+      "merged_at": "2026-10-15T13:38:12Z",
+      "number": 276,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T14:13:13Z",
+      "created_at": "2026-10-15T14:01:57Z",
+      "merged_at": "2026-10-15T14:13:13Z",
+      "number": 277,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T14:18:48Z",
+      "created_at": "2026-10-15T14:02:33Z",
+      "merged_at": "2026-10-15T14:18:48Z",
+      "number": 278,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T14:18:54Z",
+      "created_at": "2026-10-15T14:03:33Z",
+      "merged_at": "2026-10-15T14:18:54Z",
+      "number": 279,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T14:13:20Z",
+      "created_at": "2026-10-15T14:04:15Z",
+      "merged_at": "2026-10-15T14:13:20Z",
+      "number": 280,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T14:56:01Z",
+      "created_at": "2026-10-15T14:26:44Z",
+      "merged_at": "2026-10-15T14:56:01Z",
+      "number": 281,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T14:45:14Z",
+      "created_at": "2026-10-15T14:27:47Z",
+      "merged_at": "2026-10-15T14:45:14Z",
+      "number": 282,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T14:30:37Z",
+      "created_at": "2026-10-15T14:27:57Z",
+      "merged_at": "2026-10-15T14:30:37Z",
+      "number": 283,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T14:39:50Z",
+      "created_at": "2026-10-15T14:36:35Z",
+      "merged_at": "2026-10-15T14:39:50Z",
+      "number": 284,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T15:18:19Z",
+      "created_at": "2026-10-15T15:04:24Z",
+      "merged_at": "2026-10-15T15:18:19Z",
+      "number": 285,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T15:34:07Z",
+      "created_at": "2026-10-15T15:04:51Z",
+      "merged_at": "2026-10-15T15:34:07Z",
+      "number": 286,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T16:10:21Z",
+      "created_at": "2026-10-15T15:46:54Z",
+      "merged_at": "2026-10-15T16:10:21Z",
+      "number": 287,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T16:17:39Z",
+      "created_at": "2026-10-15T15:56:41Z",
+      "merged_at": "2026-10-15T16:17:39Z",
+      "number": 288,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T16:23:14Z",
+      "created_at": "2026-10-15T16:08:41Z",
+      "merged_at": "2026-10-15T16:23:14Z",
+      "number": 289,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T16:43:08Z",
+      "created_at": "2026-10-15T16:16:46Z",
+      "merged_at": "2026-10-15T16:43:08Z",
+      "number": 291,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T16:31:12Z",
+      "created_at": "2026-10-15T16:25:08Z",
+      "merged_at": "2026-10-15T16:31:12Z",
+      "number": 292,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T16:37:41Z",
+      "created_at": "2026-10-15T16:33:38Z",
+      "merged_at": "2026-10-15T16:37:41Z",
+      "number": 293,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T16:52:07Z",
+      "created_at": "2026-10-15T16:48:03Z",
+      "merged_at": "2026-10-15T16:52:07Z",
+      "number": 294,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T17:00:43Z",
+      "created_at": "2026-10-15T16:51:26Z",
+      "merged_at": "2026-10-15T17:00:43Z",
+      "number": 295,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T17:19:25Z",
+      "created_at": "2026-10-15T17:06:40Z",
+      "merged_at": "2026-10-15T17:19:25Z",
+      "number": 296,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T17:49:08Z",
+      "created_at": "2026-10-15T17:38:26Z",
+      "merged_at": "2026-10-15T17:49:08Z",
+      "number": 297,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T18:12:58Z",
+      "created_at": "2026-10-15T18:08:45Z",
+      "merged_at": "2026-10-15T18:12:58Z",
+      "number": 298,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T18:33:08Z",
+      "created_at": "2026-10-15T18:25:29Z",
+      "merged_at": "2026-10-15T18:33:08Z",
+      "number": 299,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T19:02:51Z",
+      "created_at": "2026-10-15T18:51:29Z",
+      "merged_at": "2026-10-15T19:02:50Z",
+      "number": 300,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T19:19:49Z",
+      "created_at": "2026-10-15T19:15:13Z",
+      "merged_at": "2026-10-15T19:19:49Z",
+      "number": 301,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T19:27:15Z",
+      "created_at": "2026-10-15T19:17:52Z",
+      "merged_at": "2026-10-15T19:27:15Z",
+      "number": 302,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T19:48:14Z",
+      "created_at": "2026-10-15T19:31:51Z",
+      "merged_at": "2026-10-15T19:48:14Z",
+      "number": 303,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T19:39:33Z",
+      "created_at": "2026-10-15T19:35:01Z",
+      "merged_at": "2026-10-15T19:39:33Z",
+      "number": 304,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T20:04:10Z",
+      "created_at": "2026-10-15T19:45:14Z",
+      "merged_at": "2026-10-15T20:04:10Z",
+      "number": 305,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T19:55:19Z",
+      "created_at": "2026-10-15T19:51:00Z",
+      "merged_at": "2026-10-15T19:55:19Z",
+      "number": 306,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T20:36:59Z",
+      "created_at": "2026-10-15T20:16:12Z",
+      "merged_at": "2026-10-15T20:36:59Z",
+      "number": 307,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T21:00:25Z",
+      "created_at": "2026-10-15T20:54:54Z",
+      "merged_at": "2026-10-15T21:00:25Z",
+      "number": 308,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T21:08:51Z",
+      "created_at": "2026-10-15T20:57:57Z",
+      "merged_at": "2026-10-15T21:08:50Z",
+      "number": 309,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T21:19:27Z",
+      "created_at": "2026-10-15T21:04:33Z",
+      "merged_at": "2026-10-15T21:19:27Z",
+      "number": 310,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T21:30:56Z",
+      "created_at": "2026-10-15T21:08:07Z",
+      "merged_at": "2026-10-15T21:30:56Z",
+      "number": 311,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T22:02:21Z",
+      "created_at": "2026-10-15T21:45:08Z",
+      "merged_at": "2026-10-15T22:02:20Z",
+      "number": 312,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T22:14:44Z",
+      "created_at": "2026-10-15T21:58:40Z",
+      "merged_at": "2026-10-15T22:14:44Z",
+      "number": 313,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T22:30:22Z",
+      "created_at": "2026-10-15T21:59:30Z",
+      "merged_at": "2026-10-15T22:30:22Z",
+      "number": 314,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T22:41:15Z",
+      "created_at": "2026-10-15T22:01:33Z",
+      "merged_at": "2026-10-15T22:41:15Z",
+      "number": 315,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T23:05:13Z",
+      "created_at": "2026-10-15T22:52:23Z",
+      "merged_at": "2026-10-15T23:05:13Z",
+      "number": 316,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T23:36:08Z",
+      "created_at": "2026-10-15T22:57:12Z",
+      "merged_at": "2026-10-15T23:36:08Z",
+      "number": 317,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T23:44:12Z",
+      "created_at": "2026-10-15T23:03:39Z",
+      "merged_at": "2026-10-15T23:44:12Z",
+      "number": 318,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T06:42:36Z",
+      "created_at": "2026-10-15T23:07:42Z",
+      "merged_at": "2026-10-16T06:42:36Z",
+      "number": 319,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-15T23:31:00Z",
+      "created_at": "2026-10-15T23:23:57Z",
+      "merged_at": "2026-10-15T23:31:00Z",
+      "number": 320,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T07:18:05Z",
+      "created_at": "2026-10-16T07:10:48Z",
+      "merged_at": "2026-10-16T07:18:04Z",
+      "number": 321,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T07:30:14Z",
+      "created_at": "2026-10-16T07:19:56Z",
+      "merged_at": "2026-10-16T07:30:14Z",
+      "number": 324,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T07:45:55Z",
+      "created_at": "2026-10-16T07:26:53Z",
+      "merged_at": "2026-10-16T07:45:55Z",
+      "number": 325,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T08:09:05Z",
+      "created_at": "2026-10-16T07:37:59Z",
+      "merged_at": "2026-10-16T08:09:05Z",
+      "number": 326,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T08:22:11Z",
+      "created_at": "2026-10-16T08:02:14Z",
+      "merged_at": "2026-10-16T08:22:11Z",
+      "number": 328,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T08:39:37Z",
+      "created_at": "2026-10-16T08:28:55Z",
+      "merged_at": "2026-10-16T08:39:37Z",
+      "number": 330,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T08:57:38Z",
+      "created_at": "2026-10-16T08:48:07Z",
+      "merged_at": "2026-10-16T08:57:38Z",
+      "number": 331,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T09:21:16Z",
+      "created_at": "2026-10-16T09:15:27Z",
+      "merged_at": "2026-10-16T09:21:16Z",
+      "number": 333,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T09:56:13Z",
+      "created_at": "2026-10-16T09:37:21Z",
+      "merged_at": "2026-10-16T09:56:13Z",
+      "number": 334,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T09:49:26Z",
+      "created_at": "2026-10-16T09:38:20Z",
+      "merged_at": "2026-10-16T09:49:26Z",
+      "number": 335,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T10:04:18Z",
+      "created_at": "2026-10-16T09:43:51Z",
+      "merged_at": "2026-10-16T10:04:18Z",
+      "number": 336,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T12:12:25Z",
+      "created_at": "2026-10-16T12:04:35Z",
+      "merged_at": "2026-10-16T12:12:25Z",
+      "number": 337,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T12:18:31Z",
+      "created_at": "2026-10-16T12:07:05Z",
+      "merged_at": "2026-10-16T12:18:31Z",
+      "number": 338,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T12:43:22Z",
+      "created_at": "2026-10-16T12:22:00Z",
+      "merged_at": "2026-10-16T12:43:22Z",
+      "number": 340,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T12:39:00Z",
+      "created_at": "2026-10-16T12:22:50Z",
+      "merged_at": "2026-10-16T12:39:00Z",
+      "number": 341,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T14:55:57Z",
+      "created_at": "2026-10-16T14:34:59Z",
+      "merged_at": "2026-10-16T14:55:57Z",
+      "number": 342,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T15:02:38Z",
+      "created_at": "2026-10-16T14:38:03Z",
+      "merged_at": "2026-10-16T15:02:38Z",
+      "number": 343,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T16:11:35Z",
+      "created_at": "2026-10-16T16:06:47Z",
+      "merged_at": "2026-10-16T16:11:35Z",
+      "number": 345,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T16:24:54Z",
+      "created_at": "2026-10-16T16:15:05Z",
+      "merged_at": "2026-10-16T16:24:54Z",
+      "number": 346,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T17:37:58Z",
+      "created_at": "2026-10-16T16:25:00Z",
+      "merged_at": "2026-10-16T17:37:57Z",
+      "number": 347,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T16:51:47Z",
+      "created_at": "2026-10-16T16:26:46Z",
+      "merged_at": "2026-10-16T16:51:47Z",
+      "number": 348,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T18:47:59Z",
+      "created_at": "2026-10-16T17:10:44Z",
+      "merged_at": "2026-10-16T18:47:59Z",
+      "number": 352,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T17:48:40Z",
+      "created_at": "2026-10-16T17:13:01Z",
+      "merged_at": "2026-10-16T17:48:40Z",
+      "number": 353,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T18:32:51Z",
+      "created_at": "2026-10-16T17:14:21Z",
+      "merged_at": "2026-10-16T18:32:51Z",
+      "number": 354,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T19:04:48Z",
+      "created_at": "2026-10-16T17:25:25Z",
+      "merged_at": "2026-10-16T19:04:48Z",
+      "number": 355,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T18:24:48Z",
+      "created_at": "2026-10-16T17:28:07Z",
+      "merged_at": "2026-10-16T18:24:48Z",
+      "number": 356,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T18:53:21Z",
+      "created_at": "2026-10-16T18:04:53Z",
+      "merged_at": "2026-10-16T18:53:21Z",
+      "number": 357,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T19:49:25Z",
+      "created_at": "2026-10-16T19:32:36Z",
+      "merged_at": "2026-10-16T19:49:25Z",
+      "number": 359,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T20:03:37Z",
+      "created_at": "2026-10-16T19:58:44Z",
+      "merged_at": "2026-10-16T20:03:37Z",
+      "number": 361,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T21:17:02Z",
+      "created_at": "2026-10-16T20:24:29Z",
+      "merged_at": "2026-10-16T21:17:01Z",
+      "number": 362,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T21:59:11Z",
+      "created_at": "2026-10-16T21:42:48Z",
+      "merged_at": "2026-10-16T21:59:10Z",
+      "number": 363,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T23:29:46Z",
+      "created_at": "2026-10-16T22:40:15Z",
+      "merged_at": "2026-10-16T23:29:46Z",
+      "number": 364,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T23:05:11Z",
+      "created_at": "2026-10-16T22:56:13Z",
+      "merged_at": "2026-10-16T23:05:11Z",
+      "number": 365,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T23:23:50Z",
+      "created_at": "2026-10-16T23:15:43Z",
+      "merged_at": "2026-10-16T23:23:50Z",
+      "number": 366,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T23:36:40Z",
+      "created_at": "2026-10-16T23:17:13Z",
+      "merged_at": "2026-10-16T23:36:40Z",
+      "number": 367,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-17T08:08:57Z",
+      "created_at": "2026-10-16T23:19:58Z",
+      "merged_at": "2026-10-17T08:08:57Z",
+      "number": 368,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-16T23:45:34Z",
+      "created_at": "2026-10-16T23:41:10Z",
+      "merged_at": "2026-10-16T23:45:34Z",
+      "number": 369,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-17T08:23:54Z",
+      "created_at": "2026-10-16T23:41:30Z",
+      "merged_at": "2026-10-17T08:23:54Z",
+      "number": 370,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-17T08:35:10Z",
+      "created_at": "2026-10-17T08:15:57Z",
+      "merged_at": "2026-10-17T08:35:10Z",
+      "number": 371,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-17T08:51:26Z",
+      "created_at": "2026-10-17T08:17:50Z",
+      "merged_at": "2026-10-17T08:51:26Z",
+      "number": 372,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-17T11:21:07Z",
+      "created_at": "2026-10-17T11:13:56Z",
+      "merged_at": "2026-10-17T11:21:07Z",
+      "number": 373,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-17T11:29:58Z",
+      "created_at": "2026-10-17T11:14:02Z",
+      "merged_at": "2026-10-17T11:29:58Z",
+      "number": 374,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-17T12:13:15Z",
+      "created_at": "2026-10-17T11:27:48Z",
+      "merged_at": "2026-10-17T12:13:15Z",
+      "number": 375,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-17T12:01:27Z",
+      "created_at": "2026-10-17T11:43:57Z",
+      "merged_at": "2026-10-17T12:01:27Z",
+      "number": 376,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-17T12:42:56Z",
+      "created_at": "2026-10-17T11:58:32Z",
+      "merged_at": "2026-10-17T12:42:56Z",
+      "number": 377,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-17T14:31:04Z",
+      "created_at": "2026-10-17T12:36:25Z",
+      "merged_at": "2026-10-17T14:31:04Z",
+      "number": 378,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-17T14:41:15Z",
+      "created_at": "2026-10-17T13:04:09Z",
+      "merged_at": "2026-10-17T14:41:15Z",
+      "number": 379,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-17T17:00:51Z",
+      "created_at": "2026-10-17T14:55:36Z",
+      "merged_at": "2026-10-17T17:00:51Z",
+      "number": 380,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-17T17:13:39Z",
+      "created_at": "2026-10-17T17:03:45Z",
+      "merged_at": "2026-10-17T17:13:39Z",
+      "number": 381,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-17T18:04:14Z",
+      "created_at": "2026-10-17T17:36:52Z",
+      "merged_at": "2026-10-17T18:04:14Z",
+      "number": 382,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-17T18:24:53Z",
+      "created_at": "2026-10-17T17:42:46Z",
+      "merged_at": "2026-10-17T18:24:53Z",
+      "number": 383,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-17T18:41:59Z",
+      "created_at": "2026-10-17T17:51:11Z",
+      "merged_at": "2026-10-17T18:41:59Z",
+      "number": 384,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-17T18:51:27Z",
+      "created_at": "2026-10-17T18:07:45Z",
+      "merged_at": "2026-10-17T18:51:27Z",
+      "number": 385,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-17T19:19:15Z",
+      "created_at": "2026-10-17T19:08:59Z",
+      "merged_at": "2026-10-17T19:19:15Z",
+      "number": 386,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-17T20:17:47Z",
+      "created_at": "2026-10-17T19:25:37Z",
+      "merged_at": "2026-10-17T20:17:47Z",
+      "number": 387,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-17T19:39:29Z",
+      "created_at": "2026-10-17T19:26:10Z",
+      "merged_at": "2026-10-17T19:39:29Z",
+      "number": 388,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-18T09:58:29Z",
+      "created_at": "2026-10-17T19:43:45Z",
+      "merged_at": "2026-10-18T09:58:29Z",
+      "number": 389,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-17T20:49:38Z",
+      "created_at": "2026-10-17T20:10:16Z",
+      "merged_at": "2026-10-17T20:49:38Z",
+      "number": 390,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-17T21:06:59Z",
+      "created_at": "2026-10-17T20:29:19Z",
+      "merged_at": "2026-10-17T21:06:59Z",
+      "number": 391,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-17T22:58:13Z",
+      "created_at": "2026-10-17T20:40:09Z",
+      "merged_at": "2026-10-17T22:58:13Z",
+      "number": 392,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-17T22:26:23Z",
+      "created_at": "2026-10-17T22:16:58Z",
+      "merged_at": "2026-10-17T22:26:23Z",
+      "number": 393,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-17T23:17:40Z",
+      "created_at": "2026-10-17T22:26:17Z",
+      "merged_at": "2026-10-17T23:17:40Z",
+      "number": 394,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-18T00:32:45Z",
+      "created_at": "2026-10-17T23:52:54Z",
+      "merged_at": "2026-10-18T00:32:45Z",
+      "number": 395,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-18T00:10:49Z",
+      "created_at": "2026-10-17T23:59:05Z",
+      "merged_at": "2026-10-18T00:10:49Z",
+      "number": 396,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-18T02:49:35Z",
+      "created_at": "2026-10-18T02:02:17Z",
+      "merged_at": "2026-10-18T02:49:35Z",
+      "number": 397,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-18T10:52:29Z",
+      "created_at": "2026-10-18T02:48:24Z",
+      "merged_at": "2026-10-18T10:52:29Z",
+      "number": 398,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-18T03:41:21Z",
+      "created_at": "2026-10-18T03:31:00Z",
+      "merged_at": "2026-10-18T03:41:21Z",
+      "number": 399,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-18T04:10:28Z",
+      "created_at": "2026-10-18T03:58:44Z",
+      "merged_at": "2026-10-18T04:10:28Z",
+      "number": 400,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-18T04:51:42Z",
+      "created_at": "2026-10-18T04:36:44Z",
+      "merged_at": "2026-10-18T04:51:42Z",
+      "number": 401,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-18T05:31:00Z",
+      "created_at": "2026-10-18T05:03:42Z",
+      "merged_at": "2026-10-18T05:30:59Z",
+      "number": 402,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-18T05:44:21Z",
+      "created_at": "2026-10-18T05:28:18Z",
+      "merged_at": "2026-10-18T05:44:21Z",
+      "number": 403,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-18T06:43:23Z",
+      "created_at": "2026-10-18T06:07:53Z",
+      "merged_at": "2026-10-18T06:43:23Z",
+      "number": 404,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-18T07:20:01Z",
+      "created_at": "2026-10-18T07:09:13Z",
+      "merged_at": "2026-10-18T07:20:01Z",
+      "number": 405,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-18T08:20:25Z",
+      "created_at": "2026-10-18T08:10:34Z",
+      "merged_at": "2026-10-18T08:20:25Z",
+      "number": 406,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-18T08:58:24Z",
+      "created_at": "2026-10-18T08:29:41Z",
+      "merged_at": "2026-10-18T08:58:24Z",
+      "number": 407,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-18T09:32:14Z",
+      "created_at": "2026-10-18T09:23:25Z",
+      "merged_at": "2026-10-18T09:32:14Z",
+      "number": 408,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-18T10:33:24Z",
+      "created_at": "2026-10-18T10:08:32Z",
+      "merged_at": "2026-10-18T10:33:24Z",
+      "number": 409,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-18T11:22:20Z",
+      "created_at": "2026-10-18T11:14:12Z",
+      "merged_at": "2026-10-18T11:22:20Z",
+      "number": 410,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-18T12:32:15Z",
+      "created_at": "2026-10-18T11:21:41Z",
+      "merged_at": "2026-10-18T12:32:15Z",
+      "number": 411,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-18T13:17:00Z",
+      "created_at": "2026-10-18T13:03:03Z",
+      "merged_at": "2026-10-18T13:16:59Z",
+      "number": 412,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-18T22:21:53Z",
+      "created_at": "2026-10-18T20:33:53Z",
+      "merged_at": "2026-10-18T22:21:53Z",
+      "number": 414,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-19T07:46:55Z",
+      "created_at": "2026-10-19T07:34:02Z",
+      "merged_at": "2026-10-19T07:46:55Z",
+      "number": 415,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-19T14:13:42Z",
+      "created_at": "2026-10-19T10:30:42Z",
+      "merged_at": "2026-10-19T14:13:42Z",
+      "number": 416,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-19T18:31:14Z",
+      "created_at": "2026-10-19T15:47:58Z",
+      "merged_at": "2026-10-19T18:31:14Z",
+      "number": 417,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-20T02:25:56Z",
+      "created_at": "2026-10-19T20:41:19Z",
+      "merged_at": "2026-10-20T02:25:56Z",
+      "number": 418,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-20T08:33:42Z",
+      "created_at": "2026-10-20T05:15:08Z",
+      "merged_at": "2026-10-20T08:33:42Z",
+      "number": 419,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-21T08:26:10Z",
+      "created_at": "2026-10-20T12:30:14Z",
+      "merged_at": "2026-10-21T08:26:10Z",
+      "number": 420,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-28T15:25:09Z",
+      "created_at": "2026-10-20T15:28:39Z",
+      "merged_at": "2026-10-28T15:25:09Z",
+      "number": 421,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-22T18:39:19Z",
+      "created_at": "2026-10-21T00:53:49Z",
+      "merged_at": "2026-10-22T18:39:19Z",
+      "number": 422,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": null,
+      "created_at": "2026-10-21T01:22:00Z",
+      "merged_at": null,
+      "number": 423,
+      "state": "open"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-28T13:57:53Z",
+      "created_at": "2026-10-21T01:51:18Z",
+      "merged_at": "2026-10-28T13:57:53Z",
+      "number": 424,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-28T13:30:18Z",
+      "created_at": "2026-10-21T06:10:10Z",
+      "merged_at": "2026-10-28T13:30:18Z",
+      "number": 425,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-28T13:13:21Z",
+      "created_at": "2026-10-21T07:07:50Z",
+      "merged_at": "2026-10-28T13:13:21Z",
+      "number": 426,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-21T15:39:42Z",
+      "created_at": "2026-10-21T09:18:24Z",
+      "merged_at": "2026-10-21T15:39:42Z",
+      "number": 427,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-28T12:46:09Z",
+      "created_at": "2026-10-21T10:11:33Z",
+      "merged_at": "2026-10-28T12:46:09Z",
+      "number": 428,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-27T11:53:05Z",
+      "created_at": "2026-10-21T10:39:51Z",
+      "merged_at": "2026-10-27T11:53:05Z",
+      "number": 429,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-22T16:37:15Z",
+      "created_at": "2026-10-21T16:21:36Z",
+      "merged_at": "2026-10-22T16:37:15Z",
+      "number": 431,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-23T07:07:05Z",
+      "created_at": "2026-10-22T16:53:43Z",
+      "merged_at": "2026-10-23T07:07:05Z",
+      "number": 433,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-26T20:30:49Z",
+      "created_at": "2026-10-22T17:29:45Z",
+      "merged_at": "2026-10-26T20:30:49Z",
+      "number": 436,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-26T14:08:46Z",
+      "created_at": "2026-10-22T21:36:09Z",
+      "merged_at": "2026-10-26T14:08:46Z",
+      "number": 437,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-24T16:41:58Z",
+      "created_at": "2026-10-23T07:37:20Z",
+      "merged_at": "2026-10-24T16:41:58Z",
+      "number": 438,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-27T10:39:10Z",
+      "created_at": "2026-10-23T11:36:49Z",
+      "merged_at": "2026-10-27T10:39:10Z",
+      "number": 439,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-24T21:37:09Z",
+      "created_at": "2026-10-23T22:16:13Z",
+      "merged_at": "2026-10-24T21:37:09Z",
+      "number": 442,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-23T22:18:08Z",
+      "created_at": "2026-10-23T22:17:55Z",
+      "merged_at": "2026-10-23T22:18:08Z",
+      "number": 443,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-24T16:19:39Z",
+      "created_at": "2026-10-24T15:48:42Z",
+      "merged_at": "2026-10-24T16:19:39Z",
+      "number": 445,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-24T17:56:50Z",
+      "created_at": "2026-10-24T17:55:54Z",
+      "merged_at": "2026-10-24T17:56:49Z",
+      "number": 446,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-24T18:03:23Z",
+      "created_at": "2026-10-24T17:56:55Z",
+      "merged_at": null,
+      "number": 447,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-25T08:54:50Z",
+      "created_at": "2026-10-24T18:02:59Z",
+      "merged_at": "2026-10-25T08:54:50Z",
+      "number": 448,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-24T20:40:10Z",
+      "created_at": "2026-10-24T19:58:36Z",
+      "merged_at": "2026-10-24T20:40:10Z",
+      "number": 449,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-25T01:01:20Z",
+      "created_at": "2026-10-24T22:45:53Z",
+      "merged_at": "2026-10-25T01:01:20Z",
+      "number": 450,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-27T19:50:35Z",
+      "created_at": "2026-10-24T23:44:20Z",
+      "merged_at": "2026-10-27T19:50:35Z",
+      "number": 451,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-27T19:50:42Z",
+      "created_at": "2026-10-24T23:44:28Z",
+      "merged_at": "2026-10-27T19:50:42Z",
+      "number": 452,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-25T04:14:15Z",
+      "created_at": "2026-10-25T01:54:06Z",
+      "merged_at": "2026-10-25T04:14:14Z",
+      "number": 453,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-27T16:07:08Z",
+      "created_at": "2026-10-25T02:27:58Z",
+      "merged_at": "2026-10-27T16:07:08Z",
+      "number": 454,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-25T21:25:42Z",
+      "created_at": "2026-10-25T08:02:21Z",
+      "merged_at": "2026-10-25T21:25:42Z",
+      "number": 455,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-25T09:41:15Z",
+      "created_at": "2026-10-25T09:26:06Z",
+      "merged_at": "2026-10-25T09:41:15Z",
+      "number": 456,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-25T11:17:26Z",
+      "created_at": "2026-10-25T10:25:11Z",
+      "merged_at": "2026-10-25T11:17:26Z",
+      "number": 457,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-25T14:20:13Z",
+      "created_at": "2026-10-25T12:49:27Z",
+      "merged_at": "2026-10-25T14:20:13Z",
+      "number": 458,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-28T09:03:32Z",
+      "created_at": "2026-10-25T13:16:17Z",
+      "merged_at": "2026-10-28T09:03:31Z",
+      "number": 459,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-26T08:22:20Z",
+      "created_at": "2026-10-25T14:26:34Z",
+      "merged_at": "2026-10-26T08:22:20Z",
+      "number": 460,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-28T08:25:34Z",
+      "created_at": "2026-10-25T16:26:25Z",
+      "merged_at": "2026-10-28T08:25:34Z",
+      "number": 461,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-26T22:50:09Z",
+      "created_at": "2026-10-26T01:01:18Z",
+      "merged_at": "2026-10-26T22:50:09Z",
+      "number": 463,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-26T18:47:52Z",
+      "created_at": "2026-10-26T14:40:12Z",
+      "merged_at": "2026-10-26T18:47:52Z",
+      "number": 464,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-27T00:42:39Z",
+      "created_at": "2026-10-26T23:26:17Z",
+      "merged_at": "2026-10-27T00:42:38Z",
+      "number": 465,
+      "state": "closed"
+    },
+    {
+      "base": "feat/resident-interactive",
+      "closed_at": "2026-10-27T00:54:22Z",
+      "created_at": "2026-10-27T00:34:20Z",
+      "merged_at": "2026-10-27T00:54:22Z",
+      "number": 471,
+      "state": "closed"
+    },
+    {
+      "base": "feat/resident-interactive",
+      "closed_at": "2026-10-27T01:03:58Z",
+      "created_at": "2026-10-27T00:45:34Z",
+      "merged_at": "2026-10-27T01:03:58Z",
+      "number": 472,
+      "state": "closed"
+    },
+    {
+      "base": "feat/resident-interactive",
+      "closed_at": "2026-10-27T01:11:57Z",
+      "created_at": "2026-10-27T00:47:20Z",
+      "merged_at": "2026-10-27T01:11:57Z",
+      "number": 473,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-27T02:58:17Z",
+      "created_at": "2026-10-27T01:12:06Z",
+      "merged_at": "2026-10-27T02:58:17Z",
+      "number": 474,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-27T03:48:19Z",
+      "created_at": "2026-10-27T03:39:40Z",
+      "merged_at": "2026-10-27T03:48:19Z",
+      "number": 475,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-27T04:24:50Z",
+      "created_at": "2026-10-27T04:15:21Z",
+      "merged_at": "2026-10-27T04:24:49Z",
+      "number": 476,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-27T19:47:27Z",
+      "created_at": "2026-10-27T09:05:46Z",
+      "merged_at": "2026-10-27T19:47:27Z",
+      "number": 477,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-27T22:48:52Z",
+      "created_at": "2026-10-27T10:20:44Z",
+      "merged_at": "2026-10-27T22:48:52Z",
+      "number": 478,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-27T15:07:26Z",
+      "created_at": "2026-10-27T11:26:55Z",
+      "merged_at": "2026-10-27T15:07:26Z",
+      "number": 479,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-27T13:05:35Z",
+      "created_at": "2026-10-27T12:49:28Z",
+      "merged_at": "2026-10-27T13:05:35Z",
+      "number": 480,
+      "state": "closed"
+    },
+    {
+      "base": "feat/sensor-backfill-177",
+      "closed_at": "2026-10-27T15:56:16Z",
+      "created_at": "2026-10-27T13:26:58Z",
+      "merged_at": "2026-10-27T15:56:16Z",
+      "number": 481,
+      "state": "closed"
+    },
+    {
+      "base": "feat/sensor-backfill-177",
+      "closed_at": "2026-10-27T15:56:16Z",
+      "created_at": "2026-10-27T13:29:06Z",
+      "merged_at": "2026-10-27T15:56:16Z",
+      "number": 482,
+      "state": "closed"
+    },
+    {
+      "base": "feat/sensor-backfill-177",
+      "closed_at": "2026-10-27T15:56:16Z",
+      "created_at": "2026-10-27T13:30:41Z",
+      "merged_at": "2026-10-27T15:56:16Z",
+      "number": 483,
+      "state": "closed"
+    },
+    {
+      "base": "feat/sensor-backfill-177",
+      "closed_at": "2026-10-27T15:56:16Z",
+      "created_at": "2026-10-27T13:32:31Z",
+      "merged_at": "2026-10-27T15:56:16Z",
+      "number": 484,
+      "state": "closed"
+    },
+    {
+      "base": "feat/sensor-backfill-177",
+      "closed_at": "2026-10-27T15:56:16Z",
+      "created_at": "2026-10-27T13:33:37Z",
+      "merged_at": "2026-10-27T15:56:16Z",
+      "number": 485,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-27T16:40:12Z",
+      "created_at": "2026-10-27T13:41:01Z",
+      "merged_at": "2026-10-27T16:40:12Z",
+      "number": 486,
+      "state": "closed"
+    },
+    {
+      "base": "feat/role-screens-149",
+      "closed_at": "2026-10-27T17:39:07Z",
+      "created_at": "2026-10-27T15:31:56Z",
+      "merged_at": null,
+      "number": 487,
+      "state": "closed"
+    },
+    {
+      "base": "feat/role-screens-149",
+      "closed_at": "2026-10-27T17:39:08Z",
+      "created_at": "2026-10-27T15:31:59Z",
+      "merged_at": null,
+      "number": 488,
+      "state": "closed"
+    },
+    {
+      "base": "feat/role-screens-149",
+      "closed_at": "2026-10-27T17:39:09Z",
+      "created_at": "2026-10-27T15:32:02Z",
+      "merged_at": null,
+      "number": 489,
+      "state": "closed"
+    },
+    {
+      "base": "feat/role-screens-149",
+      "closed_at": "2026-10-27T17:39:10Z",
+      "created_at": "2026-10-27T15:32:05Z",
+      "merged_at": null,
+      "number": 490,
+      "state": "closed"
+    },
+    {
+      "base": "feat/role-screens-149",
+      "closed_at": "2026-10-27T17:39:10Z",
+      "created_at": "2026-10-27T15:32:09Z",
+      "merged_at": null,
+      "number": 491,
+      "state": "closed"
+    },
+    {
+      "base": "feat/role-screens-149",
+      "closed_at": "2026-10-27T17:39:11Z",
+      "created_at": "2026-10-27T15:32:12Z",
+      "merged_at": null,
+      "number": 492,
+      "state": "closed"
+    },
+    {
+      "base": "feat/role-screens-149",
+      "closed_at": "2026-10-27T17:39:12Z",
+      "created_at": "2026-10-27T15:32:15Z",
+      "merged_at": null,
+      "number": 493,
+      "state": "closed"
+    },
+    {
+      "base": "feat/role-screens-149",
+      "closed_at": "2026-10-27T17:39:13Z",
+      "created_at": "2026-10-27T15:32:19Z",
+      "merged_at": null,
+      "number": 494,
+      "state": "closed"
+    },
+    {
+      "base": "feat/role-screens-149",
+      "closed_at": "2026-10-27T17:39:14Z",
+      "created_at": "2026-10-27T15:32:23Z",
+      "merged_at": null,
+      "number": 495,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-27T17:39:04Z",
+      "created_at": "2026-10-27T15:32:27Z",
+      "merged_at": "2026-10-27T17:39:04Z",
+      "number": 496,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-27T16:16:29Z",
+      "created_at": "2026-10-27T16:16:17Z",
+      "merged_at": "2026-10-27T16:16:29Z",
+      "number": 497,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-27T20:11:25Z",
+      "created_at": "2026-10-27T18:24:12Z",
+      "merged_at": "2026-10-27T20:11:24Z",
+      "number": 498,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-27T18:51:44Z",
+      "created_at": "2026-10-27T18:25:11Z",
+      "merged_at": "2026-10-27T18:51:44Z",
+      "number": 499,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-27T20:52:44Z",
+      "created_at": "2026-10-27T20:07:04Z",
+      "merged_at": "2026-10-27T20:52:44Z",
+      "number": 500,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": null,
+      "created_at": "2026-10-27T20:13:34Z",
+      "merged_at": null,
+      "number": 501,
+      "state": "open"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-27T23:00:05Z",
+      "created_at": "2026-10-27T20:16:31Z",
+      "merged_at": "2026-10-27T23:00:05Z",
+      "number": 502,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-29T17:26:01Z",
+      "created_at": "2026-10-27T20:19:30Z",
+      "merged_at": "2026-10-29T17:26:01Z",
+      "number": 503,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-29T13:49:50Z",
+      "created_at": "2026-10-27T20:21:32Z",
+      "merged_at": "2026-10-29T13:49:50Z",
+      "number": 504,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-29T12:22:19Z",
+      "created_at": "2026-10-27T20:23:20Z",
+      "merged_at": "2026-10-29T12:22:19Z",
+      "number": 505,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-29T15:31:28Z",
+      "created_at": "2026-10-27T20:28:50Z",
+      "merged_at": "2026-10-29T15:31:28Z",
+      "number": 506,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": null,
+      "created_at": "2026-10-27T20:46:28Z",
+      "merged_at": null,
+      "number": 507,
+      "state": "open"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-29T14:24:05Z",
+      "created_at": "2026-10-27T20:47:18Z",
+      "merged_at": "2026-10-29T14:24:05Z",
+      "number": 508,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": null,
+      "created_at": "2026-10-27T20:52:26Z",
+      "merged_at": null,
+      "number": 509,
+      "state": "open"
+    },
+    {
+      "base": "main",
+      "closed_at": null,
+      "created_at": "2026-10-27T20:55:52Z",
+      "merged_at": null,
+      "number": 510,
+      "state": "open"
+    },
+    {
+      "base": "main",
+      "closed_at": null,
+      "created_at": "2026-10-27T21:16:00Z",
+      "merged_at": null,
+      "number": 511,
+      "state": "open"
+    },
+    {
+      "base": "main",
+      "closed_at": null,
+      "created_at": "2026-10-27T21:22:12Z",
+      "merged_at": null,
+      "number": 512,
+      "state": "open"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-28T10:30:43Z",
+      "created_at": "2026-10-27T22:32:19Z",
+      "merged_at": "2026-10-28T10:30:43Z",
+      "number": 513,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-28T08:36:17Z",
+      "created_at": "2026-10-27T23:08:57Z",
+      "merged_at": "2026-10-28T08:36:17Z",
+      "number": 514,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-28T09:20:02Z",
+      "created_at": "2026-10-28T08:48:46Z",
+      "merged_at": "2026-10-28T09:20:02Z",
+      "number": 515,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-28T09:57:52Z",
+      "created_at": "2026-10-28T09:00:36Z",
+      "merged_at": "2026-10-28T09:57:51Z",
+      "number": 516,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-28T12:01:55Z",
+      "created_at": "2026-10-28T10:09:10Z",
+      "merged_at": "2026-10-28T12:01:55Z",
+      "number": 517,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-28T12:12:59Z",
+      "created_at": "2026-10-28T11:03:15Z",
+      "merged_at": "2026-10-28T12:12:59Z",
+      "number": 518,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-28T11:39:27Z",
+      "created_at": "2026-10-28T11:25:24Z",
+      "merged_at": "2026-10-28T11:39:27Z",
+      "number": 519,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-28T23:12:33Z",
+      "created_at": "2026-10-28T16:33:22Z",
+      "merged_at": "2026-10-28T23:12:33Z",
+      "number": 525,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-28T20:12:17Z",
+      "created_at": "2026-10-28T18:28:06Z",
+      "merged_at": "2026-10-28T20:12:17Z",
+      "number": 527,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-28T21:56:47Z",
+      "created_at": "2026-10-28T19:22:41Z",
+      "merged_at": "2026-10-28T21:56:47Z",
+      "number": 528,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-29T02:37:11Z",
+      "created_at": "2026-10-28T21:05:55Z",
+      "merged_at": "2026-10-29T02:37:11Z",
+      "number": 529,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-29T00:05:40Z",
+      "created_at": "2026-10-28T23:44:17Z",
+      "merged_at": "2026-10-29T00:05:40Z",
+      "number": 534,
+      "state": "closed"
+    },
+    {
+      "base": "feat/case-journey-ux-526",
+      "closed_at": "2026-10-29T02:37:14Z",
+      "created_at": "2026-10-29T01:05:20Z",
+      "merged_at": null,
+      "number": 535,
+      "state": "closed"
+    },
+    {
+      "base": "feat/case-journey-ux-526",
+      "closed_at": "2026-10-29T02:37:15Z",
+      "created_at": "2026-10-29T01:05:24Z",
+      "merged_at": null,
+      "number": 536,
+      "state": "closed"
+    },
+    {
+      "base": "feat/case-journey-ux-526",
+      "closed_at": "2026-10-29T02:37:16Z",
+      "created_at": "2026-10-29T01:27:44Z",
+      "merged_at": null,
+      "number": 537,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-29T07:10:46Z",
+      "created_at": "2026-10-29T02:37:51Z",
+      "merged_at": "2026-10-29T07:10:46Z",
+      "number": 538,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-29T04:57:26Z",
+      "created_at": "2026-10-29T02:37:54Z",
+      "merged_at": "2026-10-29T04:57:26Z",
+      "number": 539,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-29T05:36:32Z",
+      "created_at": "2026-10-29T02:37:56Z",
+      "merged_at": "2026-10-29T05:36:32Z",
+      "number": 540,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-29T09:33:47Z",
+      "created_at": "2026-10-29T08:04:31Z",
+      "merged_at": "2026-10-29T09:33:47Z",
+      "number": 541,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-29T08:33:05Z",
+      "created_at": "2026-10-29T08:04:57Z",
+      "merged_at": "2026-10-29T08:33:05Z",
+      "number": 542,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-29T08:44:45Z",
+      "created_at": "2026-10-29T08:23:21Z",
+      "merged_at": "2026-10-29T08:44:45Z",
+      "number": 543,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-29T11:01:07Z",
+      "created_at": "2026-10-29T10:30:14Z",
+      "merged_at": "2026-10-29T11:01:07Z",
+      "number": 544,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-29T10:46:50Z",
+      "created_at": "2026-10-29T10:35:38Z",
+      "merged_at": "2026-10-29T10:46:50Z",
+      "number": 545,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-29T14:50:48Z",
+      "created_at": "2026-10-29T13:59:41Z",
+      "merged_at": "2026-10-29T14:50:48Z",
+      "number": 546,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": null,
+      "created_at": "2026-10-29T14:06:33Z",
+      "merged_at": null,
+      "number": 547,
+      "state": "open"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-29T14:45:16Z",
+      "created_at": "2026-10-29T14:31:59Z",
+      "merged_at": "2026-10-29T14:45:16Z",
+      "number": 548,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": "2026-10-29T14:42:20Z",
+      "created_at": "2026-10-29T14:42:06Z",
+      "merged_at": "2026-10-29T14:42:20Z",
+      "number": 549,
+      "state": "closed"
+    },
+    {
+      "base": "main",
+      "closed_at": null,
+      "created_at": "2026-10-29T16:46:38Z",
+      "merged_at": null,
+      "number": 553,
+      "state": "open"
+    },
+    {
+      "base": "main",
+      "closed_at": null,
+      "created_at": "2026-10-29T16:46:43Z",
+      "merged_at": null,
+      "number": 554,
+      "state": "open"
+    },
+    {
+      "base": "main",
+      "closed_at": null,
+      "created_at": "2026-10-29T16:51:42Z",
+      "merged_at": null,
+      "number": 555,
+      "state": "open"
+    }
+  ],
+  "documents_at_current_main": {
+    "knowledge_base_index": {
+      "path": "docs/reference/README.md",
+      "words": 12535,
+      "sha256": "7d340f61406e9e88c813031f4af5282f1976384f40e74d281f62c79eda7d1ba4",
+      "git_blob": "7188d9d4219bebbce092a7ae5d13db8478f7fff4"
+    },
+    "knowledge_base_log": {
+      "path": "docs/reference/log.md",
+      "words": 69465,
+      "sha256": "542fdaed00fb28a0461a6eadf1690a06bd657cc5a588764cddb75a09665cb184",
+      "git_blob": "627aae95f739e0c8040b601c601d4d7554e5282c"
+    },
+    "brd": {
+      "path": "docs/brds/agentic-retrofit-programme-brd.md",
+      "words": 43410,
+      "sha256": "e6dee8e2d56a78115a824b74fc6ff6230640f8bee1922d12cac6371bd929368e",
+      "git_blob": "34d88395de861e9799eb9e24121a21c92c7a5adc"
+    },
+    "prd": {
+      "path": "docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+      "words": 48094,
+      "sha256": "a6a0c7b96ccbc226feb0763c664889a147d5cbed7b5818033d998e95be57c9aa",
+      "git_blob": "c788b917bafaede215f326f0efc71e071a687f1c"
+    }
+  },
+  "combined_index_log_brd_prd_words": 173504,
+  "log": {
+    "parsed_first_date": "2026-09-11",
+    "parsed_last_date": "2026-10-29",
+    "all_current_entries": {
+      "entries": 458,
+      "words": 69352,
+      "hedge_matches": 207,
+      "hedge_matches_per_1000_words": 2.9847733302572386
+    },
+    "through_22_oct": {
+      "entries": 382,
+      "words": 58207,
+      "hedge_matches": 176,
+      "hedge_matches_per_1000_words": 3.0236913086054944
+    },
+    "23_29_oct": {
+      "entries": 76,
+      "words": 11145,
+      "hedge_matches": 31,
+      "hedge_matches_per_1000_words": 2.781516375056079
+    },
+    "daily_columns": [
+      "entries",
+      "words",
+      "hedge_matches"
+    ],
+    "daily": {
+      "2026-09-11": [
+        1,
+        29,
+        0
+      ],
+      "2026-09-19": [
+        1,
+        35,
+        0
+      ],
+      "2026-09-25": [
+        4,
+        604,
+        0
+      ],
+      "2026-09-26": [
+        8,
+        1653,
+        1
+      ],
+      "2026-09-27": [
+        7,
+        1893,
+        0
+      ],
+      "2026-09-30": [
+        7,
+        847,
+        0
+      ],
+      "2026-10-02": [
+        1,
+        142,
+        0
+      ],
+      "2026-10-03": [
+        7,
+        1221,
+        1
+      ],
+      "2026-10-04": [
+        7,
+        1035,
+        9
+      ],
+      "2026-10-05": [
+        2,
+        392,
+        1
+      ],
+      "2026-10-06": [
+        4,
+        641,
+        1
+      ],
+      "2026-10-07": [
+        3,
+        352,
+        0
+      ],
+      "2026-10-08": [
+        19,
+        1932,
+        0
+      ],
+      "2026-10-09": [
+        7,
+        830,
+        0
+      ],
+      "2026-10-10": [
+        4,
+        749,
+        0
+      ],
+      "2026-10-11": [
+        12,
+        1949,
+        4
+      ],
+      "2026-10-12": [
+        6,
+        1056,
+        1
+      ],
+      "2026-10-13": [
+        13,
+        2438,
+        3
+      ],
+      "2026-10-14": [
+        13,
+        2173,
+        3
+      ],
+      "2026-10-15": [
+        91,
+        9343,
+        14
+      ],
+      "2026-10-16": [
+        48,
+        9096,
+        43
+      ],
+      "2026-10-17": [
+        68,
+        12566,
+        51
+      ],
+      "2026-10-18": [
+        18,
+        3147,
+        22
+      ],
+      "2026-10-19": [
+        10,
+        1562,
+        9
+      ],
+      "2026-10-20": [
+        9,
+        979,
+        6
+      ],
+      "2026-10-21": [
+        5,
+        496,
+        5
+      ],
+      "2026-10-22": [
+        7,
+        1047,
+        2
+      ],
+      "2026-10-23": [
+        12,
+        2348,
+        10
+      ],
+      "2026-10-24": [
+        11,
+        1978,
+        1
+      ],
+      "2026-10-25": [
+        21,
+        2920,
+        4
+      ],
+      "2026-10-26": [
+        4,
+        224,
+        1
+      ],
+      "2026-10-27": [
+        17,
+        2553,
+        13
+      ],
+      "2026-10-28": [
+        8,
+        854,
+        1
+      ],
+      "2026-10-29": [
+        3,
+        268,
+        1
+      ]
+    }
+  },
+  "first_parent_churn": {
+    "before_loop_08_14_oct": {
+      "integration_commits": 31,
+      "literal_merges": 7,
+      "direct_commits_excluded": 0,
+      "classes": {
+        "product source": {
+          "added": 8136,
+          "removed": 421
+        },
+        "tests": {
+          "added": 6871,
+          "removed": 537
+        },
+        "documentation": {
+          "added": 12065,
+          "removed": 1297
+        },
+        ".copilot-tracking artefacts": {
+          "added": 238185,
+          "removed": 2642
+        },
+        "infrastructure": {
+          "added": 2708,
+          "removed": 73
+        },
+        "CI and workflows": {
+          "added": 240,
+          "removed": 64
+        },
+        "other": {
+          "added": 25320,
+          "removed": 1099
+        }
+      },
+      "tracking_added_per_product_added": 29.275442477876105
+    },
+    "original_case_to_pin": {
+      "integration_commits": 177,
+      "literal_merges": 7,
+      "direct_commits_excluded": 2,
+      "classes": {
+        "product source": {
+          "added": 23408,
+          "removed": 2184
+        },
+        "tests": {
+          "added": 73478,
+          "removed": 1416
+        },
+        "documentation": {
+          "added": 25210,
+          "removed": 2455
+        },
+        ".copilot-tracking artefacts": {
+          "added": 240369,
+          "removed": 1
+        },
+        "infrastructure": {
+          "added": 6162,
+          "removed": 485
+        },
+        "CI and workflows": {
+          "added": 897,
+          "removed": 246
+        },
+        "other": {
+          "added": 72711,
+          "removed": 1776
+        }
+      },
+      "tracking_added_per_product_added": 10.268668831168831
+    },
+    "post_case_to_current_main": {
+      "integration_commits": 71,
+      "literal_merges": 0,
+      "direct_commits_excluded": 0,
+      "classes": {
+        "product source": {
+          "added": 11907,
+          "removed": 844
+        },
+        "tests": {
+          "added": 31126,
+          "removed": 478
+        },
+        "documentation": {
+          "added": 17338,
+          "removed": 558
+        },
+        ".copilot-tracking artefacts": {
+          "added": 181261,
+          "removed": 34
+        },
+        "infrastructure": {
+          "added": 2292,
+          "removed": 101
+        },
+        "CI and workflows": {
+          "added": 57,
+          "removed": 3
+        },
+        "other": {
+          "added": 31405,
+          "removed": 2633
+        }
+      },
+      "tracking_added_per_product_added": 15.223062064331906
+    }
+  },
+  "rubric_at_current_main": {
+    "path": ".github/rubric/scores/latest.json",
+    "sha256": "9babe7743be461cb5eb292abb27a580bbbe25959a08278ce3bc099c0419fd07d",
+    "scored_at": "2026-10-29T17:12:55+00:00",
+    "commit": "0717be24c7a090b2df8637795c8c3ce8d7aef3f9",
+    "model": "claude-sonnet-5",
+    "run_url": "https://github.com/jmservera/ama/actions/runs/40917642631",
+    "total": 77,
+    "sections": {
+      "A": 34,
+      "B": 23,
+      "C": 11,
+      "D": 9
+    },
+    "implementation_completeness": {
+      "score": 5,
+      "evidence": [
+        "src/api/src/zava_forward/api/resident_demo/chat.py:1-225",
+        "src/core/src/zava_forward/core/resident_documents.py:1-178",
+        "src/api/tests/test_resident_chat_agenda.py:1-50",
+        "src/api/checks/resident_assistant_browser_check.py:1-100",
+        "src/core/tests/test_sensor_scenarios.py:1-385",
+        "src/core/src/zava_forward/core/synthetic/sensor_scenarios.py:1-621"
+      ],
+      "rationale": "Adds complete resident chat routing, document facts parsing, synthetic callback agenda with booking/cancellation transactions, plus matching unit and browser checks. Strong completeness; already at ceiling."
+    },
+    "limit": "Retained automated score on its recorded commit, not a fresh score of current main or a deployed-journey acceptance test."
+  },
+  "methods": {
+    "github_counts_query": "query { repository(owner:\"jmservera\", name:\"ama\") {\ndefaultBranchRef { name target { oid } }\nopenIssues:issues(states:OPEN) { totalCount }\nclosedIssues:issues(states:CLOSED) { totalCount }\nopenPRs:pullRequests(states:OPEN) { totalCount }\nmergedPRs:pullRequests(states:MERGED) { totalCount }\nunmergedClosedPRs:pullRequests(states:CLOSED) { totalCount }\n} }",
+    "pull_metadata_command": "gh api --paginate repos/jmservera/ama/pulls?state=all&per_page=100 --jq 'map({number,state,created_at,closed_at,merged_at,base:.base.ref}) | @json'; parse one JSON array per page",
+    "documents": "git show CURRENT_MAIN:PATH; whitespace tokenization; hashes are of original blob bytes",
+    "log": "Reuse anc/log_metrics.py entries() and HEDGE; counts exclude preamble and do not reconstruct earlier log versions.",
+    "churn": "Reuse anc/repo_history_metrics.py changes()/path_class() on pinned first-parent history, multi-parent plus PR-number-suffixed squash commits; UTC committer-date periods; binary deltas excluded.",
+    "limits": [
+      "GitHub API retrieval spans an interval and is not an atomic historical snapshot.",
+      "Git commit dates and GitHub merge timestamps are different measurements.",
+      "Issue state counts do not measure delivered acceptance; open_issues_count mixes issues and pull requests.",
+      "Volume, churn, lexical matches and automated scores do not establish usability, decay or benefits.",
+      "No new live deployment journey, experiment, cost attribution or structural-complexity measurement."
+    ]
+  },
+  "boundary_reconciliation": {
+    "checked_at": "2026-10-29T17:41:33.049541+00:00",
+    "pull_request": {
+      "base": "main",
+      "merge_commit_sha": "29c6b512f5e68733bb2cc1882343db39f5eb2cad",
+      "merged_at": "2026-10-24T16:19:39Z",
+      "number": 445
+    },
+    "explanation": "The pinned Git commit timestamp is 16:19:38 UTC, but its PR445 integration is recorded by GitHub at 16:19:39 UTC. Counting through that integration reproduces the reported 183; the whole 15-24 October UTC calendar window contains 187. These are distinct cutoffs."
+  }
+}

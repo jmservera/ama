@@ -1,0 +1,71 @@
+{
+  "task_id": "157-chat-review-fixes-2026-10-29",
+  "task_slug": "chat-review-fixes-157",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-29/chat-review-fixes-157-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-29/chat-review-fixes-157-plan.md",
+    "details": ".copilot-tracking/details/2026-10-29/chat-review-fixes-157-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-29/chat-review-fixes-157-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-29/chat-review-fixes-157-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-29/chat-review-fixes-157-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute all four phases explicitly requested in this invocation; retain manual mode rather than infer an automatic session.",
+      "status": "confirmed",
+      "evidence": "Owner request 2026-10-29: full RPI loop, three findings, local commit only, no push, az or other worktrees."
+    },
+    {
+      "decision": "Reuse feat/agent-chat-157, open PR 503 targeting main.",
+      "status": "confirmed",
+      "evidence": "git pull --rebase fast-forwarded 61c67ba8 to c5d8873a; clean status; gh pr view 503."
+    },
+    {
+      "decision": "Research executed, Ready; single independent final-candidate critique Complete / Pass, no findings.",
+      "status": "complete",
+      "evidence": "Dated research, plan, details and critique artifacts."
+    },
+    {
+      "decision": "P01/P02 and P03-T01 complete; final core 1493 (191 skips), agents 122, focused core 119, API 267 (188 skips); both package Ruff/check-format/mypy pass.",
+      "status": "complete; SQL Server/publication acceptance not established",
+      "evidence": ".copilot-tracking/changes/2026-10-29/chat-review-fixes-157-changes.md"
+    },
+    {
+      "decision": "Single independent Review execution Complete; outcome Conformant with justified divergence for bounded implementation; no implementation defects. RV-001 SQL Server and RV-002 publication/hosted/human/activation remain Medium residuals.",
+      "status": "complete; not a publication or operational approval",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-29/chat-review-fixes-157-review.md; reviewer independently passed 62 tests and both package Ruff/format/mypy."
+    }
+  ],
+  "blockers": [
+    {
+      "id": "sql-server-validation",
+      "summary": "Actual SQL Server migration/shared behavior tests not run; disposable owned server was not selected.",
+      "resolution": "Coordinator runs the existing opt-in SQL Server contracts against an approved owned disposable service."
+    },
+    {
+      "id": "publication-gate",
+      "summary": "No complete publication gate or hosted/human approval; complete gate checkout/tool actions conflict with no-other-worktrees/no-az boundary.",
+      "resolution": "Separate owner-authorized publication work obtains fresh exact-head gates; no push is authorized here."
+    }
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Persist this completed local task and its original evidence in the authorized local commit; no push or child task. Residual gates require separately authorized work."},
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Run existing SQL Server migration and role persistence contracts against an owned disposable service.",
+      "rationale": "Directly validates the newly added SQL Server column and migration; SQLite is not a substitute.",
+      "evidence": "Review RV-001; actual SQL Server tests skipped by opt-in."
+    },
+    {
+      "rank": 2,
+      "task": "Obtain separately authorized exact-head publication gates and hosted/human/activation evidence.",
+      "rationale": "Required for eventual publication or live acceptance; not authorized or replaced by this local bug-fix loop.",
+      "evidence": "Review RV-002; no push, az or other worktrees permitted."
+    }
+  ]
+}
