@@ -20,7 +20,7 @@ choice between the older executive and Cowork routes.
 | Understand the discovery and journey | [DT Coach method, pain/gain and decision trace](./source/diagrams/discovery-journey/text-equivalent.md), [editable Excalidraw](./source/diagrams/discovery-journey/resident-journey.excalidraw) and [PNG](./source/diagrams/discovery-journey/resident-journey.png); main pages 8 and 13 |
 | Understand what comes next | [Future roadmap and proposal crosswalk](./source/roadmap-recommendations.md); future Fabric/Power BI and agent-context proposal only near the close on pages 23-24 |
 | Understand technology choices | [Decision register](./source/README.md#technology-decisions); main page 16 and deeper appendix comparisons |
-| Inspect findings and checks | [30 October roadmap review](./source/review-2026-10-30.md) and preserved [29 October review](./source/review-2026-10-29.md) |
+| Inspect findings and checks | [30 October illustrated visual refresh](./source/review-2026-10-30.md#illustrated-visual-refresh-on-linux), earlier roadmap findings on the same page and preserved [29 October review](./source/review-2026-10-29.md) |
 | Recover previous work | [History and restore map](./history/README.md); original findings and authoring sources are retained |
 | Continue thought leadership | [Existing paper package](./thought-leadership/everything-but-the-software/README.md), unchanged by this reorganization |
 
@@ -69,6 +69,13 @@ pitch notes. Review those outputs before replacing the delivery files. Heavy
 previews stay outside the checkout. See the [source guide](./source/README.md)
 for the editing contract and [compact validation receipt](./source/validation.json)
 for the current delivery identity.
+
+On Linux, use the [explicit preview route](./source/README.md#linux-preview)
+after Build. It renders all slides with LibreOffice and restores the 108 PDF
+slide jumps from the actual PPTX. This is not native Windows PowerPoint
+validation. The current refresh restores the illustrated timeline on page 3,
+the resident touchpoint map on page 13 and the editable pain/gain canvas on
+page 39, with coordinated visual refinements on ten other pages.
 
 ## Rubric Inputs
 

@@ -8498,3 +8498,27 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   scorecard or prior staged selection was discarded. No deployment, tenant
   mutation, paid inference, spending approval, commit, push, hosted rubric run,
   full RPI publication gate, rehearsal or direct user/AT acceptance was performed.
+
+## [2026-10-30] restructure | Restore illustrated capstone visuals on Linux
+
+* Refined 13 current slide layouts while preserving the product-first story.
+  Page 3 restores the original illustrated timeline; page 13 uses a locally
+  exported editable resident touchpoint map; page 39 adds a native pain/gain
+  value canvas. Hypotheses, proposed gains, assisted routes and separate human
+  authority remain explicit. No sentiment measurements or interviews are invented.
+* Updated the [source contract](../capstone/source/README.md#linux-preview),
+  [text equivalent](../capstone/source/diagrams/discovery-journey/text-equivalent.md),
+  [dated render findings](../capstone/source/review-2026-10-30.md#illustrated-visual-refresh-on-linux),
+  media hashes, delivery files, pitch notes and compact validation receipt.
+  The new Linux preview reconstructs all 108 fixed PDF jumps from the actual
+  candidate after LibreOffice drops them, then verifies their destinations
+  and hit regions. It does not invent Last Slide Viewed behaviour.
+* Build/Verify preserve 54 slides/notes, timing, protected costs and all 36
+  original media inputs. The 41 untouched same-renderer page images are
+  pixel-identical; 213 revised native text frames contain all source words.
+  Actual image inspection remains separate from that rectangular-frame check.
+* Focused checks: 27 PDF/rubric regressions, 21 native-shape checks, Ruff and
+  deterministic 68-element journey/source checks pass. Earlier curved-sector,
+  connector and PDF-navigation findings are preserved with their corrections.
+  Linux preview is not native Windows PowerPoint, human/AT acceptance, rehearsal,
+  hosted scoring or a publication-gate pass. Earlier adverse evidence is retained.

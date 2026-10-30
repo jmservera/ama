@@ -1,6 +1,6 @@
 {
   "source_as_of": "2026-10-30",
-  "revision": "Product-first / DT journey / future-only Fabric ontology",
+  "revision": "Illustrated visual refresh; Linux-rendered with verified fixed PDF navigation",
   "package": {
     "status": "pass",
     "slides": 54,
@@ -82,6 +82,7 @@
       "ppt/slides/slide3.xml",
       "ppt/slides/slide31.xml",
       "ppt/slides/slide37.xml",
+      "ppt/slides/slide39.xml",
       "ppt/slides/slide46.xml",
       "ppt/slides/slide47.xml",
       "ppt/slides/slide8.xml",
@@ -97,14 +98,57 @@
       52
     ],
     "full_manifest_and_media_verified": true,
-    "candidate_sha256": "f8fc59568ff6d8221e55dd77bf87734144732fae851d6e46eec92b6443a519fd",
+    "candidate_sha256": "d7e2eba9e2bd3b6e503a4731f5d49d5702c4c4a725ff1f11c4b818d039a1a86b",
     "baseline_sha256": "2bab9b79de4352a1915dab04d1846a4c4be90f6889a2b9b6af4807e48a33d5f8",
-    "manifest_sha256": "4c5eb91f4766cd57ea97110035cea92840d1a7bcf85d014047e07b5e29e2935f",
-    "asset_catalog_sha256": "b9683f35905ac79f7a3d2ea284f8bf681b8d78abf8f7a8fb68cc5c5f15fdfad9",
-    "builder_sha256": "9bd5c13167c116009be24735f47782304b3c00ea3cdc958c3613aea089a38ea5",
-    "native_helper_sha256": "b4ff97279c094ecc120b4736ec9b3a7b37bc0f2d01e6e5896fca47a9cc16d002"
+    "manifest_sha256": "45e959b323a5acc6d60aad76c77de37ab8cedd1f73ef7f949ac1448219f712bf",
+    "asset_catalog_sha256": "833c28d4cabeb49ea18f073200102604c6af38004da9677bb41ca5148fbd97b7",
+    "builder_sha256": "9e744184cc3016664bd8f4e260b54e40825039700144c178659e53a01ce72568",
+    "native_helper_sha256": "631c97549708bf4a50c06cf5ac091d46550a12bf5a60f8df56392d5851a42bf6"
+  },
+  "preview": {
+    "renderer": "LibreOffice 24.2.7.2 420(Build:2)",
+    "native_powerpoint_validation": false,
+    "source_sha256": "d7e2eba9e2bd3b6e503a4731f5d49d5702c4c4a725ff1f11c4b818d039a1a86b",
+    "pdf_sha256": "6778011723fe3bbfa93c7d07a4262091143ffb15d0bad56a941300121e316270",
+    "navigation": {
+      "slides": 54,
+      "fixed_slide_jumps": 108,
+      "all_destinations_and_hit_regions_verified": true
+    },
+    "rendered_images": 54,
+    "text_bound_metrics": "Not native PowerPoint metrics; inspect rendered images and measure source frames separately.",
+    "human_acceptance": false
+  },
+  "frame_and_preservation_checks": {
+    "pdf_pages": 54,
+    "revised_pages": [
+      3,
+      8,
+      13,
+      14,
+      15,
+      16,
+      23,
+      24,
+      31,
+      37,
+      39,
+      46,
+      47
+    ],
+    "native_text_frames_checked": 213,
+    "source_text_frames_missing_words": [],
+    "unchanged_pages_pixel_differences": [],
+    "fixed_pdf_links": 108,
+    "journey_cell_projected_points": 20.227,
+    "journey_role_projected_points": 15.436
   },
   "native": {
+    "performed_on_current_candidate": false,
+    "reason": "Linux VM; Microsoft PowerPoint COM is unavailable. LibreOffice preview is explicitly separate.",
+    "human_acceptance": false
+  },
+  "historical_native": {
     "renderer": "Microsoft PowerPoint 16.0 COM",
     "slides": 54,
     "pdf_sha256": "11926cc3b0936d8905979295414bf9e7841af78676cfc276046d6ec671b84f50",
@@ -119,18 +163,35 @@
       23,
       24
     ],
-    "human_acceptance": false
+    "human_acceptance": false,
+    "candidate_sha256": "f8fc59568ff6d8221e55dd77bf87734144732fae851d6e46eec92b6443a519fd",
+    "current_candidate_validated": false
   },
   "review": {
+    "illustrated_timeline": 3,
+    "resident_journey": 13,
+    "editable_value_canvas": 39,
+    "revised_pages": [
+      3,
+      8,
+      13,
+      14,
+      15,
+      16,
+      23,
+      24,
+      31,
+      37,
+      39,
+      46,
+      47
+    ],
+    "unchanged_same_renderer_pages": 41,
     "current_product_pages": [
       12,
       14,
       15,
       16
-    ],
-    "discovery_pages": [
-      8,
-      13
     ],
     "future_roadmap_pages": [
       23,
@@ -139,19 +200,26 @@
     "logo_pages": [
       23
     ],
-    "dt_coach": "Created editable source and source-linked decision trace; final method/readability follow-up found no material issue.",
-    "product_manager": "Original five findings closed in candidate; no material issue in reviewed scope.",
-    "visual": "Zero revised overflow; no material visible issue in final reviewed pages.",
-    "ontology": "Official Learn preview overview retrieved 30 Oct; future context proposal, no integration or quality benefit proven.",
-    "viewer_export": "Approved Excalidraw page required sign-in; no native browser export or diagram upload. PNG is PowerPoint-rasterized same-geometry SVG.",
-    "actual_scorer_fixture": "Pass: 54 slides/notes, current Workbench/adoption on 14-15 without Fabric/PBI branding, future-only logos on 23, source-bound journey on 13, preview ontology and independent context test; exact current deck/pitch/demo selected, history/baseline excluded; isolated fixture index only."
+    "visual": "Actual rendered images inspected; curved-sector, heading-connector and hidden-arrow findings corrected.",
+    "evidence": "Desk-research hypotheses and proposed gains remain distinct from resident validation and measured outcomes.",
+    "pdf_navigation": "All 108 fixed jumps reconstructed from actual PPTX shape bounds and targets, then verified after saving. No dynamic caller history.",
+    "direct_viewer_keyboard_at_acceptance": false
   },
   "tests": {
-    "focused_scorer_regressions_passed": 22,
-    "dt_source_check": "Pass:49 elements,15 single-line cells,22 source locators,31 links; deterministic native/SVG regeneration.",
-    "earlier_broad_suite": "Prior 29 Oct result remains historical, not rerun or relabelled."
+    "focused_pdf_and_rubric_regressions_passed": 27,
+    "native_shape_checks_passed": 21,
+    "ruff_lint_and_format": "pass",
+    "dt_source_check": "Pass: 68 editable elements, 15 two-line cells, five illustrated touchpoints, 22 source locators, 31 local links, deterministic native/SVG regeneration.",
+    "earlier_broad_suites": "Historical results in the dated reviews remain unchanged; not a new whole-repository pass."
   },
-  "local_evidence_directory": "~/AppData/Local/ama/capstone-runs/2026-10-30-now-future-v2",
+  "tools": {
+    "tools/capstone/render_preview.py": "bc0edde8e56522d02ea27ee337e8e5e06f696b84f01989fc51be95f1670222c7",
+    "tools/capstone/test_render_preview.py": "48ddc3693efa42b09a64e668c2b9b4d2b0e0c3f7da722f4792682790f6e0e384",
+    "tools/capstone/requirements.txt": "31923004463ebf2784222992795839819f4ab6451797401cbe5860e94bdeadad",
+    "tools/capstone/Test-NativeShapes.ps1": "d92c01a3cd6bc746ded5c5085fc620fea433981b8c61bbb007186b024dfae7c4",
+    "docs/capstone/source/diagrams/discovery-journey/build-resident-journey.mjs": "fea0d2dccd1e11cab382d21b5f0f05259f93ecd1ec81d0f38d5b55fe2c57ccf8"
+  },
+  "local_evidence_directory": "/home/jmservera/.copilot/session-state/aee50f3c-b57c-4ce1-89b4-86de6c6f8e4e/files/capstone-visual-refresh-linux",
   "hosted_rubric_run": false,
-  "publication_gate_run": false
+  "publication_gate_passed": false
 }
