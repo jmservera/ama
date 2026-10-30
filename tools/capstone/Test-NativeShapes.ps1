@@ -1,7 +1,7 @@
 #!/usr/bin/env pwsh
 # Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: MIT
-#Requires -Version 7.4
+#Requires -Version 5.1
 <#
 .SYNOPSIS
 Check editable diagram primitives without Office or third-party modules.
@@ -49,7 +49,12 @@ if ($MyInvocation.InvocationName -ne '.') {
     Assert-NativeShape @{ key = 'centred'; box = @(0.6, 2, 2, 1); text = 'Choice'; size = 20; valign = 'ctr'; stroke = '173F35'; stroke_width = 1.5 } "//a:bodyPr[@anchor='ctr']"
     Assert-NativeShape @{ key = 'outline'; box = @(0.6, 2, 2, 1); stroke = '173F35'; stroke_width = 1.5 } "//a:ln[@w='19050']/a:solidFill/a:srgbClr[@val='173F35']"
     Assert-RefusedShape @{ key = 'negative-size'; box = @(0.6, 2, -1, 1) } 'Invalid margins'
-    Assert-RefusedShape @{ key = 'nonfinite'; box = @(0.6, 2, [double]::NaN, 1) } 'Invalid margins'
+    foreach ($Value in @([double]::NaN, [double]::PositiveInfinity, [double]::NegativeInfinity)) {
+        Assert-RefusedShape @{ key = 'nonfinite-box'; box = @(0.6, 2, $Value, 1) } 'Invalid margins'
+        Assert-RefusedShape @{ key = 'nonfinite-pie'; box = @(0.6, 2, 2, 1); geometry = 'pie'; angles = @(30, $Value) } 'Invalid pie angles'
+        Assert-RefusedShape @{ key = 'nonfinite-polygon'; box = @(0.6, 2, 2, 1); geometry = 'polygon'; points = @(@(0, 0), @($Value, 0), @(50, 100)) } 'Invalid polygon point'
+        Assert-RefusedShape @{ key = 'nonfinite-outline'; box = @(0.6, 2, 2, 1); stroke = '173F35'; stroke_width = $Value } 'Invalid native outline'
+    }
     Assert-RefusedShape @{ key = 'off-slide'; box = @(12, 2, 2, 1) } 'Invalid margins'
     Assert-RefusedShape @{ key = 'unknown'; box = @(0.6, 2, 2, 1); geometry = 'hexagon' } 'Unsupported native geometry'
     Assert-RefusedShape @{ key = 'pie'; box = @(0.6, 2, 2, 2); geometry = 'pie'; angles = @(30, 30) } 'Invalid pie angles'
@@ -57,5 +62,5 @@ if ($MyInvocation.InvocationName -ne '.') {
     Assert-RefusedShape @{ key = 'polygon'; box = @(0.6, 2, 2, 1); geometry = 'polygon'; points = @(@(0, 0), @(101, 0), @(50, 100)) } 'Invalid polygon point'
     Assert-RefusedShape @{ key = 'outline'; box = @(0.6, 2, 2, 1); stroke = 'red' } 'Invalid native outline'
     Assert-RefusedShape @{ key = 'anchor'; box = @(0.6, 2, 2, 1); valign = 'middle' } 'Invalid vertical anchor'
-    Write-Output '21 native-shape checks passed: geometry, path closure, pie angles, outlines, centring and invalid-input refusal.'
+    Write-Output '32 native-shape checks passed: geometry, path closure, pie angles, outlines, centring and NaN/infinity refusal in all four guards.'
 }

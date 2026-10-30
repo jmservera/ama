@@ -232,3 +232,121 @@ Conventional Commit, `docs: record Fabric reconciliation closeout`, with the
 same identity and Copilot trailer. Postcommit identity/status/ancestry/scope
 checks are written to task-owned external final-verification.log. No source,
 original research, review outcome, base, remote or validation contract changes.
+
+## 2026-10-31 Local Recovery and Review Corrections
+
+The earlier record remains historical evidence. The owner restarted conflict
+recovery after aborting an unfinished merge, then selected a local rebase
+without force-push. Current intake was clean on `jmservera/fabric-research`,
+tracking the OPEN PR #558 branch at `bde84d8b`. Both remaining review threads
+were retrieved from GitHub; neither was silently treated as already resolved.
+
+### Identities and Conflict Dispositions
+
+* Original published head: `bde84d8bc9f920ddc58f4b885970abc33371a724`.
+* Recovery branch: `chore/fabric-558-pre-rebase-20261031`.
+* First execution main: `18602ae7103ceee89fa4c87ca312b04a57ca0dba`.
+* Rebase command: `GIT_EDITOR=true GIT_SEQUENCE_EDITOR=true git rebase
+  --empty=drop --reapply-cherry-picks 18602ae7103ceee89fa4c87ca312b04a57ca0dba`.
+* Completed replay: `9719326437a874e23b6ef8698dffb39c21ef462a`, 14 topic
+  commits. The duplicate employee-identity commit became empty after preserving
+  current upstream scores; no application or infrastructure delta remains.
+
+| Conflict | Disposition |
+| --- | --- |
+| KB index | Retain capstone/Fabric navigation and upstream sensor navigation |
+| KB log | Exact upstream prefix followed by every original branch entry |
+| src guide | Keep main's detailed, stricter browser/skip contract |
+| Gate runner | Keep main's implementation/tests; preserve hosted browser addition and update only its workflow SHA-256 |
+| Latest rubric scores | Keep actual upstream score evidence, not an older replay |
+
+The scenario manifest and six reviewed Fabric files retain exact required
+bytes. The later capstone registry edits are retained intentionally; they fix
+a registry selection test which still fails on execution main. Neither old
+plan whole-directory equality nor a stale grade is used to undo them.
+
+### Remaining Review Threads
+
+* `PRRT_kwDOUU8JX86x-FsF`: all four source hashes already matched actual LF
+  inputs at this intake, and the complete source package now exists. Documented
+  exact UTF-8 LF hashing, ran the actual deck Verify action and refreshed the
+  receipt from its output. Only the compatibility-edited native helper hash
+  changed. The actual delivered PPTX and PDF remain byte-identical.
+* `PRRT_kwDOUU8JX86yGM7B`: replaced all four `Double.IsFinite` uses with
+  `Double.IsNaN`/`Double.IsInfinity`. The existing regression script now permits
+  PowerShell 5.1 and covers NaN/positive infinity/negative infinity in every
+  guard: 32 checks pass on PowerShell 7.6.4 Linux. Windows PowerShell 5.1 and
+  native PowerPoint execution are unperformed.
+* Both threads remain open while the fixes are unpublished. No remote
+  mutation, force-push, issue closure or hosted success is claimed.
+
+### Commands and Observed Results
+
+Run-owned output root, abbreviated `E` below:
+`/home/jmservera/.copilot/session-state/684453ca-82ac-4b63-accd-515f3e4b285b/files/fabric-558-20261031`.
+`V` denotes `E/venv/bin`; every Python validation sets
+`PYTHONDONTWRITEBYTECODE=1`, Ruff uses `RUFF_NO_CACHE=true` and mypy caches
+are external. Project checks prepend local/sibling src/tests as in the
+historical commands, with actual module-origin assertions.
+
+| Command / assertion | Observed result |
+| --- | --- |
+| `git fetch origin`; captured refs; `git merge-tree --write-tree --name-only HEAD <main>` | Initial five conflict paths; no prior merge/rebase state or dirty input |
+| Rebase, scoped `git add` and `GIT_EDITOR=true git rebase --continue` | Four conflict stops resolved; 14 topic commits remain, no conflict stages |
+| Exact Git-object/current-byte assertions | Main log prefix and original suffix preserved; six Fabric files unchanged; upstream score/manifest/gate tests preserved; no src/infra delta |
+| Gate bytes versus main, allowing only actual workflow hash | Pass; hosted selector occurs exactly once; current regression suite retained |
+| `git ls-files --eol` for four authoring inputs | Index LF, worktree LF on all four |
+| Copy delivered PPTX to `E/verify/zava-forward-cowork-v2-draft.pptx`; `pwsh -NoLogo -NoProfile -File tools/capstone/Invoke-Capstone.ps1 -Action Verify -RepoRoot /home/jmservera/source/ama -OutputDir E/verify` | Exit 0; 296 members, 54 slides/notes, 108 actions, all declared media/timing/cost content verified |
+| Receipt package equals actual report; all source/tool digests recomputed | Pass; report SHA-256 `1c5b265a4fd84ac32a5ec8ba976d2c84bcd3718adc236f4bb24f2f17a08aec72`; delivery unchanged |
+| `pwsh -NoLogo -NoProfile -File tools/capstone/Test-NativeShapes.ps1 -RepoRoot /home/jmservera/source/ama` | Exit 0; 32 checks, including all 12 nonfinite combinations |
+| `python3 -m unittest discover -s tools -p test_rpi_checks.py -q` | Exit 0; 35 tests. Expected negative-case diagnostics are retained in the log |
+| Core `V/ruff check .`; `V/ruff format --check .`; `V/python -m mypy --cache-dir E/mypy-core`; scenario/dependency modules | All pass; 113 formatted files, 166 typed files, 10 units |
+| API equivalent chain with `E/mypy-api`; dependency module | All pass; 61 formatted files, 117 typed files, two units |
+| Gate runner/tests pinned Ruff/format and strict mypy | All pass; two typed files |
+| `V/python tools/rename-zava-tests.py` after dependency restoration | Exit 0; 25 tests |
+| `V/python -m pytest -p no:cacheprovider -q tools/capstone/test_render_preview.py` | Exit 0; nine tests |
+| `node docs/capstone/source/diagrams/discovery-journey/build-resident-journey.mjs --check` | Exit 0; 68 native elements, 31 links, deterministic derivatives |
+| API `ZF_BROWSER_TESTS=1 V/python -m unittest -v test_chat_panel.PanelTests.test_browser_warning_failure_keyboard_refusal_and_live_log`, run-owned `PLAYWRIGHT_BROWSERS_PATH` | Exit 0; one actual Chromium test, zero skips |
+| Combined PDF/rubric pytest run | Exit 1; 365 passed, 17 failed, seven optional pinned-runtime skips |
+| Full rubric suite on separate clean detached `18602ae7` worktree | Exit 1; 355 passed, 18 failed, same seven skips. All 17 candidate failure IDs occur on main; main additionally fails the retained registry-selection fix |
+
+The 17 inherited failures consist of seven stale 66-point seed expectations and
+ten workflow-trigger expectations using string `on` after PyYAML parses
+unquoted keys. No source, score, test expectation or skip was changed to conceal
+them. The clean temporary baseline worktree was removed after the run.
+
+### Adverse Attempts and Environment Recovery
+
+* Original `/tmp/mv` is absent, global mypy and project distributions are
+  missing, and global Ruff is not the project pin. The first PDF run failed
+  collection because PyMuPDF was absent. Restored a run-owned venv using
+  `python3 -m venv E/venv` and `V/python -m pip install -r
+  tools/capstone/requirements.txt -e './src/core[dev]' -e ./src/agents -e
+  './src/api[dev]'`; no pins were relaxed or shared environments mutated.
+* A rubric `unittest discover` attempt ran zero tests and exited 5. Corrected
+  the runner to pytest; that result is not counted as coverage.
+* The first core-origin probe used the wrong module path and stopped before
+  checks. Corrected it to `zava_forward.core.synthetic.scenario_manifest`;
+  actual local origins and the full selected chain then passed.
+* Migration initially had seven missing `pptx`/`PIL` import errors. Installed
+  existing `tools/rename-zava-requirements.txt` into the run-owned venv; all 25
+  tests then passed.
+* Chromium initially lacked its pinned executable. Used run-owned
+  `PLAYWRIGHT_BROWSERS_PATH` with `V/python -m playwright install chromium`,
+  then reran the actual test successfully.
+* Initial baseline comparison incorrectly required identical failure sets.
+  Exact evidence instead shows the candidate's 17 failures are a strict subset
+  of main's 18, with the intentional registry improvement accounting for the
+  difference. No first comparison is represented as passing.
+
+### Latest-Main Drift and Remaining Local Work
+
+The final refresh observed `ec2d784255c3377ab39e5d2d1b5140e76c8e7f36`:
+one resident-chat PR with source/guide/score changes. Its merge-tree probe
+against the completed topic is conflict-free. P04 commits this validated
+correction, rebases onto that separate main identity, reruns affected checks
+and obtains one independent continuation Review before final local closeout.
+Earlier validation remains bound to `18602ae7`; no main identity is silently
+substituted. Publication/full gate, hosted checks, thread resolution and owner
+merge approval remain outstanding. No Azure, real model or private dataset
+was accessed.

@@ -166,3 +166,47 @@ Implementation P01/P02 is complete with all planned scoped checks passing.
 No remaining active implementation marker. The single independent Review is
 Complete / Conformant with justified divergence, with no implementation defects.
 Parent owns final local commit; coordinator owns publication and hosted gates.
+
+## 2026-10-31 Local Recovery Continuation
+
+The sections above preserve the original 30 October execution and its Review.
+The current owner request extends that historical docs-only scope to all
+remaining conflicts and both unresolved PR comments. The owner selected
+`rebase`, explicitly local-only and without force-push.
+
+* Active topic: `jmservera/fabric-research`; original published head
+  `bde84d8bc9f920ddc58f4b885970abc33371a724`.
+* Recovery branch: `chore/fabric-558-pre-rebase-20261031`.
+* First execution main: `18602ae7103ceee89fa4c87ca312b04a57ca0dba`.
+  Completed rebase head: `9719326437a874e23b6ef8698dffb39c21ef462a`.
+* Latest observed main: `ec2d784255c3377ab39e5d2d1b5140e76c8e7f36`.
+  This separate drift identity is not substituted into earlier results.
+
+### [x] P03: Recover conflicts and correct review feedback
+
+Preserved both index/log histories. Kept main's stricter gate implementation
+and its tests instead of duplicating browser dispatch; retained the intentional
+hosted browser command and its exact workflow hash. Main's scores and scenario
+manifest are byte-identical. Later capstone registry changes remain intentional;
+the original AC3 whole-rubric equality does not erase those intervening changes.
+All six reviewed Fabric research inputs match the published tip byte-for-byte.
+
+The exact LF source convention is documented and the real Verify action
+revalidates the unchanged delivery. All four finite guards now use APIs
+available in Windows PowerShell 5.1; 32 native-shape checks pass on Linux.
+Actual Windows PowerShell/PowerPoint execution remains unperformed.
+
+Core/API static checks, 12 owning units, 35 gate regressions, 25 migration
+regressions, nine PDF checks and the actual Chromium selector pass.
+All 17 broader rubric failures reproduce on unchanged execution main, which
+also has an additional registry failure. Those pre-existing failures are not
+changed, skipped or relabelled as a pass.
+
+### [ ] P04: Rebind to latest main and independently review
+
+Commit the validated local correction, then rebase onto the separately
+observed `ec2d7842` main. Its merge-tree probe is conflict-free. Verify fresh
+ancestry and upstream-owned bytes, rerun affected API/Chromium checks and retain
+one independent continuation Review. Record subsequent drift rather than mix
+validation identities. Keep the remote branch and both unpublished threads
+unchanged; publication gates and owner merge approval remain outstanding.

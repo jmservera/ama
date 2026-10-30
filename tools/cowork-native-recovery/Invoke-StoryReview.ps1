@@ -163,7 +163,7 @@ function Add-TextParagraph {
 function Add-NativeShape {
     param([xml]$Document, $Tree, $Element, [int]$Id, [int]$SlideNumber)
     $Box = @($Element.box)
-    if ($Box.Count -ne 4 -or @($Box | Where-Object { -not [double]::IsFinite([double]$_) }).Count -or
+    if ($Box.Count -ne 4 -or @($Box | Where-Object { [double]::IsNaN([double]$_) -or [double]::IsInfinity([double]$_) }).Count -or
         $Box[2] -le 0 -or $Box[3] -le 0 -or $Box[0] -lt 0.5 -or $Box[1] -lt 0.5 -or
         $Box[0] + $Box[2] -gt 12.834 -or $Box[1] + $Box[3] -gt 7.0) { throw "Invalid margins: $($Element.key)" }
     if ($Element.text -and $Element.size -lt 12) { throw "Text below 12pt: $($Element.key)" }
@@ -187,7 +187,7 @@ function Add-NativeShape {
         if ($Element.geometry -eq 'pie') {
             $Angles = @($Element.angles)
             if ($Angles.Count -ne 2 -or $Angles[0] -eq $Angles[1] -or
-                @($Angles | Where-Object { -not [double]::IsFinite([double]$_) -or $_ -lt 0 -or $_ -ge 360 }).Count) {
+                @($Angles | Where-Object { [double]::IsNaN([double]$_) -or [double]::IsInfinity([double]$_) -or $_ -lt 0 -or $_ -ge 360 }).Count) {
                 throw "Invalid pie angles: $($Element.key)"
             }
             foreach ($Index in 0..1) {
@@ -213,7 +213,7 @@ function Add-NativeShape {
             $Path.SetAttribute('h', '100000')
             for ($Index = 0; $Index -lt $Points.Count; $Index++) {
                 $Point = @($Points[$Index])
-                if ($Point.Count -ne 2 -or @($Point | Where-Object { -not [double]::IsFinite([double]$_) -or $_ -lt 0 -or $_ -gt 100 }).Count) {
+                if ($Point.Count -ne 2 -or @($Point | Where-Object { [double]::IsNaN([double]$_) -or [double]::IsInfinity([double]$_) -or $_ -lt 0 -or $_ -gt 100 }).Count) {
                     throw "Invalid polygon point: $($Element.key)"
                 }
                 $Command = 'lnTo'
@@ -248,7 +248,7 @@ function Add-NativeShape {
     if ($Element.stroke) {
         $Width = 1.25
         if ($null -ne $Element.stroke_width) { $Width = [double]$Element.stroke_width }
-        if ($Element.stroke -cnotmatch '^[0-9A-Fa-f]{6}$' -or -not [double]::IsFinite($Width) -or $Width -le 0 -or $Width -gt 12) {
+        if ($Element.stroke -cnotmatch '^[0-9A-Fa-f]{6}$' -or [double]::IsNaN($Width) -or [double]::IsInfinity($Width) -or $Width -le 0 -or $Width -gt 12) {
             throw "Invalid native outline: $($Element.key)"
         }
         $Line = $Shape.SelectSingleNode('p:spPr/a:ln', $Namespaces)

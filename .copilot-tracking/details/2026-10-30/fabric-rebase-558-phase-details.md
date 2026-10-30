@@ -80,3 +80,33 @@ Review artifact. Preserve findings; route any remaining work honestly. Resolve
 authenticated account's noreply identity before commit; use a new Conventional
 Commit and required trailer, never amend or push. Verify clean status, ancestry,
 commit metadata and remote branch unchanged. Publication remains coordinator-owned.
+
+## 2026-10-31 Continuation Details
+
+The owner selected a local rebase of the existing published topic, without a
+force-push. Recovery ref `chore/fabric-558-pre-rebase-20261031` retains
+`bde84d8b`. First execution main is `18602ae7`; first completed replay is
+`97193264`. No prior execution or Review is rewritten by this continuation.
+
+P03 is complete. Resolve shared index/log conflicts by union. For the duplicate
+gate replay, retain main's exact implementation/tests and detailed guide, plus
+the branch's hosted browser command and updated workflow hash. Keep upstream
+rubric scores and scenario manifest, and retain later capstone registry edits.
+The five conflict paths are the KB index/log, src guide, gate runner and scores.
+
+For review feedback, document exact UTF-8 LF source hashing and Verify the actual
+delivered PPTX in external scratch. Preserve the matching output bytes and all
+earlier preview/native limits. Replace only the four unsupported finite guards;
+exercise NaN and both infinity signs for every guard using the existing script.
+
+All output belongs to the task-owned external directory:
+`/home/jmservera/.copilot/session-state/684453ca-82ac-4b63-accd-515f3e4b285b/files/fabric-558-20261031`.
+The original `/tmp/mv` environment is absent. Restore actually missing packages
+with pip into this run's venv, not shared environments; use the existing pinned
+project/capstone/migration manifests. Chromium is likewise run-owned.
+
+P04 remains active: main advanced independently to `ec2d7842` with resident chat
+and rubric evidence changes. Commit the validated correction, rebase cleanly,
+recheck current-main byte ownership, rerun affected API/Chromium checks and
+retain an independent continuation Review. The original 17 rubric failures
+also occur on unchanged main; no success or publication receipt is fabricated.

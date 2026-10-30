@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-10-30
+ms.date: 2026-10-31
 ---
 
 ## Purpose
@@ -42,6 +42,11 @@ renders unchanged in the same renderer, with no overlapping PDF destinations.
 Page 16 and the appendices retain deeper comparisons. Native links remain
 fixed jumps, not dynamic caller return.
 No fresh rubric score, rehearsal, deployment or business benefit is inferred.
+
+The [31 October source-binding and guard check](../capstone/source/review-2026-10-30.md#source-binding-and-guard-compatibility-2026-10-31)
+re-verifies the unchanged delivered PPTX against LF authoring inputs and tests
+NaN/infinity refusal in all four native-shape guards. Windows PowerShell 5.1
+execution remains unperformed; local recovery is not hosted publication.
 
 For #190, the [current sensor validation and child dispositions](./research/iot-sensor-analytics-research-plan.md#current-validation-and-child-dispositions-2026-10-30-refs-190)
 record annual offline backfill/replay checks, unchanged isolated scenario

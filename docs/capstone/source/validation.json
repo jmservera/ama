@@ -103,7 +103,15 @@
     "manifest_sha256": "d50151ae3784c185f7340539c11ff067ba9638129145c9621e936efe99f9104a",
     "asset_catalog_sha256": "de34d2eba585eab470ebe7438b40695e0b239f6b2c8183a3cd4236ca5a1dc901",
     "builder_sha256": "9e744184cc3016664bd8f4e260b54e40825039700144c178659e53a01ce72568",
-    "native_helper_sha256": "631c97549708bf4a50c06cf5ac091d46550a12bf5a60f8df56392d5851a42bf6"
+    "native_helper_sha256": "956d56cf4032d33deca9f61c606899927e3a3ae431878811bfe84aefba742c94"
+  },
+  "source_verification": {
+    "verified_on": "2026-10-31",
+    "action": "Verify",
+    "source_hash_convention": "SHA-256 of exact UTF-8 LF-only bytes; no whitespace or line-ending normalization.",
+    "verification_report_sha256": "1c5b265a4fd84ac32a5ec8ba976d2c84bcd3718adc236f4bb24f2f17a08aec72",
+    "delivery_unchanged": true,
+    "native_shape_runtime": "PowerShell 7.6.4 on Linux; Windows PowerShell 5.1 execution remains unperformed."
   },
   "preview": {
     "renderer": "LibreOffice 24.2.7.2 420(Build:2)",
@@ -217,7 +225,7 @@
   },
   "tests": {
     "focused_pdf_and_rubric_regressions_passed": 29,
-    "native_shape_checks_passed": 21,
+    "native_shape_checks_passed": 32,
     "ruff_lint_and_format": "pass",
     "dt_source_check": "Pass: 68 editable elements, 15 two-line cells, five illustrated touchpoints, 22 source locators, 31 local links, deterministic native/SVG regeneration.",
     "earlier_broad_suites": "Historical results in the dated reviews remain unchanged; not a new whole-repository pass."
@@ -226,7 +234,7 @@
     "tools/capstone/render_preview.py": "75ea6696b929a52ba6765285260d90052fb1248e52914d5e75048ffff33e2368",
     "tools/capstone/test_render_preview.py": "b5e340e16c0aef6f7b90593375dc848539e6ea6139a94f6a679f73d70beab605",
     "tools/capstone/requirements.txt": "31923004463ebf2784222992795839819f4ab6451797401cbe5860e94bdeadad",
-    "tools/capstone/Test-NativeShapes.ps1": "d92c01a3cd6bc746ded5c5085fc620fea433981b8c61bbb007186b024dfae7c4",
+    "tools/capstone/Test-NativeShapes.ps1": "d9570012702b217458bf8155a4efd4ebfd32eba8300d7e72c986369c5e9dba42",
     "docs/capstone/source/diagrams/discovery-journey/build-resident-journey.mjs": "fea0d2dccd1e11cab382d21b5f0f05259f93ecd1ec81d0f38d5b55fe2c57ccf8"
   },
   "local_evidence_directory": "/home/jmservera/.copilot/session-state/aee50f3c-b57c-4ce1-89b4-86de6c6f8e4e/files/capstone-visual-refresh-linux",

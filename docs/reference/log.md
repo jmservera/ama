@@ -8680,3 +8680,28 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Original failed full-gate evidence and earlier reviews remain unchanged.
   New source/workflow changes require a fresh exact-head gate and independent
   assessment; this entry is not issue acceptance, hosted success or a waiver.
+
+## [2026-10-31] update | Local Fabric conflict recovery and review corrections, Refs #558
+
+* The owner selected a local rebase, without force-push. Replayed the existing
+  Fabric/capstone topic onto execution main `18602ae7`, preserving main's exact
+  log prefix, every original branch log entry and all six reviewed Fabric
+  research files. The recovery branch retains the original published tip.
+* Retained upstream gate logic, regression tests, scenario manifest and recorded
+  rubric scores rather than replaying obsolete duplicates. Preserved the
+  branch's intentional capstone registry changes and hosted chat-panel browser
+  command, updating its workflow binding without weakening skip enforcement.
+* The [source-binding correction](../capstone/source/review-2026-10-30.md#source-binding-and-guard-compatibility-2026-10-31)
+  documents exact LF hashing and reruns the real deck verifier. All 54 slides,
+  108 actions and 296 members verify; delivered PPTX/PDF bytes are unchanged.
+  Windows-compatible NaN/infinity guards pass all 32 local shape checks.
+* Core/API lint, format, typing and 12 focused units pass; 35 gate regressions,
+  25 migration regressions, nine PDF checks and the actual named Chromium case
+  pass. The broader rubric run has 17 failures, all also present on unchanged
+  main; that baseline has one additional registry failure. No score or
+  unrelated test expectation was altered to hide those results.
+* Main advanced to `ec2d7842` during validation. Its integration and affected
+  revalidation are tracked separately in the existing recovery plan. Original
+  adverse evidence remains intact. No push, thread resolution, Azure/model
+  operation, full publication gate, native Windows execution or human
+  acceptance is claimed.

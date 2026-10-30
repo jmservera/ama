@@ -1,7 +1,7 @@
 ---
 title: Capstone Authoring Source
 description: Complete native-template and JSON editing contract, retained media and technology-decision evidence
-ms.date: 2026-10-30
+ms.date: 2026-10-31
 ms.topic: how-to
 ---
 
@@ -134,6 +134,14 @@ Q&A under the run's `pitch/` folder. Publish the matching PPTX/PDF and those
 two Markdown outputs together after review. Retain dated review evidence;
 do not commit all temporary renders. The compact receipt binds the candidate
 to the baseline, manifest, media catalog, builder and shared native helper.
+
+The four text-source hashes use the exact UTF-8, LF-only bytes of the manifest,
+media catalog and two scripts, consistent with the root `.gitattributes` policy.
+Hashing does not normalize whitespace or convert line endings. Check those
+inputs with `git ls-files --eol` before verification; both index and working
+tree must report `lf`. Run Verify against the actual candidate and regenerate
+the receipt from its successful report after any source change. Substituting
+digests without verifying the source-to-delivery binding is not validation.
 
 ### Linux Preview
 
