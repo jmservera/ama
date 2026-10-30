@@ -89,7 +89,7 @@ diff whitespace and complete external local gate after commit.
 ### P02: Evidence reconciliation and persistence
 
 * [x] P02-T01: Record all 24 decisions, limitations and commands.
-* [ ] P02-T02: One independent Review; local Refs-only commit and complete gate attempt.
+* [x] P02-T02: One independent Review; local Refs-only commit and complete gate attempt.
 
 ## Critique Disposition
 

@@ -103,3 +103,13 @@ only task files with Refs and coauthor trailer. Fetch main, run full gate
 `python3 tools/rpi-checks.py --all --base SHA --lock-timeout 0 --out EXTERNAL`.
 Do not wait on a foreign lock. Gate results remain external to avoid another
 commit invalidating exact-head evidence. No push, no issue updates.
+P02-T02 complete: original independent Review Complete / Not accepted,
+implementation/evidence commit 040e2a4a, full gate exit 1 with failed receipt.
+Project-api unexpected required integration/dependency skips blocked browser/
+MSSQL groups. Parent metadata commit requires a final exact-head attempt;
+its authoritative result remains external as named in changes.
+
+Parent outcome qualification after original Review: original four-Proven
+matrix is retained historical; RV-002 means 550-05 visible-reason assertion is
+not proven. Current conservative totals: three scoped Proven, nine Partial,
+twelve Unproven. No source fix, verified finding closure or second Review.

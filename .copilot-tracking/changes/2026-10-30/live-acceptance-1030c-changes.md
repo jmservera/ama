@@ -223,3 +223,53 @@ Git-commit skill's referenced commit-message instruction file and
 get_changed_files tool are unavailable. Existing repository Conventional
 Commit, narrow allowlist, git staged inspection, privacy-safe identity and
 required coauthor rules are used; no broad staging fallback.
+
+## Local Commit and Original Complete Gate
+
+Original implementation/evidence and dated critique/Review committed locally
+as 040e2a4a5fe7d858d6b99bf21455c6990e8fe712. Author and committer use the
+authenticated privacy-safe address; required coauthor trailer retained.
+All fourteen allowlisted files committed, no foreign or ignored files.
+
+Command:
+
+```bash
+python3 tools/rpi-checks.py --all --base 29eab2e50dd7f958ea2f8d385411562e5573e8e9 --lock-timeout 0 --out /home/azureuser/.copilot/session-state/c954d59d-b202-4376-b450-a9e92fdcc546/files/live-acceptance-1030c-original-gate
+```
+
+Result: exit 1, full-scope receipt status failed, sealed 2026-10-30T14:37:52Z.
+Lock acquired without waiting at 14:10:08Z; runner selected one worker.
+Preflight, core, agents, orchestrator, importer, namespace, static, infra,
+migration, four image groups and logo-0600 are in the receipt's completed
+groups. Project-api failed its unexpected required integration/dependency-skip
+guard, including disposable SQL selectors and opt-in browser tests.
+Browser and MSSQL groups did not execute; receipt sql is empty.
+This is not a successful complete gate and does not prove SQL/browser coverage.
+Original raw failure list, commands, group logs and receipt remain external:
+the output directory above and sibling live-acceptance-1030c-original-gate.log.
+
+No product or gate-tool repair, skip token, cloud fallback, protection change,
+Azure action, push or extra live sign-in. Existing gate failure is a separate
+validation/publication blocker, not a diagnosed deployed-site defect.
+Fresh origin/main still equals 29eab2e50dd7f958ea2f8d385411562e5573e8e9.
+
+P02-T02 complete as original independent Review, local persistence and an
+honest complete-gate attempt; no passing gate or human approval claimed.
+This final parent metadata commit invalidates the first receipt as exact-final-
+head evidence. Final same-command run uses the new external directory
+files/live-acceptance-1030c-final-gate and sibling .log; its result stays external
+in files/live-acceptance-1030c-closeout.json to avoid another receipt-invalidating
+commit. Original source/evidence/critique/Review remain unchanged.
+
+## Parent Closeout
+
+All bounded plan tasks complete. Research, Plan, Implement and one Review ran
+in order. Overall live acceptance remains Partial / Not accepted, with three
+resident-scoped Proven, nine Partial, twelve Unproven after the explicit RV-002
+qualification. No issue accepted or checklist changed.
+Automatic task transitions to Follow-up / completed; session remains running
+for an explicitly selected later work item, with no child started here.
+Ranked later work: identity reconciliation; runner predicate/fault-path hardening;
+employee widget/map/case acceptance; separately enabled-model acceptance;
+named human accessibility/AT acceptance. Full-gate failure is a prerequisite
+for any later publication. No further source repair or Review in this task.
