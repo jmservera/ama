@@ -1,8 +1,9 @@
-"""Host-owned routing and dated explanations; raw resident questions never reach AI."""
+"""Host-owned housing routes, protected replies and grounding for optional AI."""
 
 import re
 from typing import Any
 
+from zava_forward.core.resident_assistant import NOTICE as ADVISORY_NOTICE
 from zava_forward.core.resident_assistant import Advice, Topic
 
 from .agenda import MANUAL, NOTICE
@@ -187,11 +188,39 @@ def route(question: str) -> Topic | str:
         return Topic.STATUS
     if tokens & {"form", "forms"}:
         return Topic.FORMS
+    if (
+        tokens
+        & {
+            "repair",
+            "repairs",
+            "smell",
+            "smells",
+            "smelling",
+            "odour",
+            "odor",
+            "rat",
+            "rats",
+            "pest",
+            "pests",
+            "noise",
+            "noisy",
+            "leak",
+            "leaking",
+            "heating",
+            "heater",
+            "boiler",
+            "broken",
+            "dripping",
+        }
+        or {"hot", "water"} <= tokens
+    ):
+        return "repair"
     return "unknown"
 
 
 def answer(topic: str, view: dict[str, Any]) -> Advice:
     sources: tuple[str, ...]
+    notice = ADVISORY_NOTICE
     if topic == "home":
         home = view["home"]
         answer = (
@@ -202,6 +231,20 @@ def answer(topic: str, view: dict[str, Any]) -> Advice:
             + "."
         )
         sources = ("Your signed-in home record and planned improvements",)
+    elif topic == "repair":
+        notice += (
+            " Chat cannot confirm the cause of a repair problem or assess safety. "
+            "This chat has not sent a report or alerted anyone."
+        )
+        answer = (
+            "I cannot confirm the cause of the problem from chat or tell you that your home "
+            "is safe. Contact your housing officer using your usual contact details. "
+            "Explain what you have noticed, where it is and when it started. "
+            "Ask how to report a repair and what happens next. "
+            "This chat has not sent a report or alerted anyone. "
+            "If someone may be in immediate danger, do not wait for chat; call 999."
+        )
+        sources = ("General repair-reporting guidance, not a diagnosis or repair history",)
     elif topic == "consents":
         answer = (
             "Works consent is not available in this showcase. I cannot say whether you have "
@@ -227,4 +270,4 @@ def answer(topic: str, view: dict[str, Any]) -> Advice:
             "access anyone else's record. A person can help through your housing officer."
         )
         sources = ("Assistant task limits",)
-    return Advice(answer, sources, "Summary by rules - workflow only, no AI used")
+    return Advice(answer, sources, "Summary by rules - workflow only, no AI used", notice=notice)

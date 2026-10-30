@@ -1,4 +1,4 @@
-"""Own-case advisory answers with a deliberately fact-free provider boundary."""
+"""Own-case advisory contracts and host-owned fixed-topic answers."""
 
 from dataclasses import dataclass
 from enum import StrEnum
@@ -56,6 +56,10 @@ class Advice:
 
 class Advisor(Protocol):
     def answer(self, topic: Topic, case: CaseProgress, resident: str) -> Advice: ...
+
+    def answer_question(
+        self, question: str, case: CaseProgress, resident: str, base: Advice
+    ) -> Advice: ...
 
 
 def guidance(topic: Topic, case: CaseProgress) -> dict[str, str]:

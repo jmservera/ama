@@ -843,7 +843,8 @@ def resident(browser: Browser, out: Path, axe: str) -> None:
         assert base + "/demo/assistant" not in calls
         question.fill("My home smells like a dead rat")
         panel.get_by_role("button", name="Send", exact=True).click()
-        expect(panel.get_by_role("log")).to_contain_text("cannot answer that")
+        expect(panel.get_by_role("log")).to_contain_text("cannot confirm the cause")
+        expect(panel.get_by_role("log")).to_contain_text("AI is not enabled")
         expect(panel.get_by_role("log")).to_contain_text("housing officer")
         expect(panel.get_by_role("log")).not_to_contain_text("Test Street")
         question.fill("What is my address?")
@@ -881,7 +882,7 @@ def resident(browser: Browser, out: Path, axe: str) -> None:
         assert not errors, errors
         assert all(url.startswith(base) for url in calls), calls
         print(
-            "PASS resident: actual rat refusal, own record, consent-before-request; "
+            "PASS resident: explicit disabled-AI repair fallback, own record, consent-before-request; "
             "pending withdrawal/re-consent and session clear"
         )
     finally:

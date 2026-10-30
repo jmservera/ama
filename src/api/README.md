@@ -2,7 +2,7 @@
 title: Zava Forward API and web workbench
 description: Staff features, configuration, local run, honest limits and container checks for the api project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-29
+ms.date: 2026-10-30
 ms.topic: reference
 ---
 
@@ -80,11 +80,20 @@ Employee case navigation, session/access loss and resident consent withdrawal
 clear the relevant conversation and invalidate late results. Reloading does
 not restore a conversation; no resident text is saved in browser storage.
 Resident record-use consent remains explicit before requests and is not works
-consent. Raw resident text is still host-routed, never forwarded to the model.
-Only explicit home-record/address/planned-improvement questions receive that
-summary; unsupported concerns, including the dead-rat example, receive an honest
-inability to answer and the housing-officer contact route, never a diagnosis.
-Safety reports keep the existing independent human/emergency route.
+consent. For consented, in-scope typed questions, an enabled advisor receives the
+question and a limited own-case answer/progress, not the full case or identity.
+Repair concerns, including the dead-rat example, now reach grounded generation
+instead of the unrelated home summary. AI can explain how to ask for help,
+not diagnose the cause, assess safety or claim a repair was reported.
+Safety, legal, consent, appointments, action requests and out-of-scope messages
+keep their host-owned rules/human routes. No model conversation is retained.
+Disabled AI and inference failures show an explicit rules fallback and human help.
+
+Generated typed replies use a thin "AI-generated" metadata label, with visible
+"Not approved" and "AI-generated content may be incorrect" wording. Sources
+remain native collapsed details, keyboard-operable. This resident-specific
+label follows the [Teams AI content-label pattern](https://learn.microsoft.com/en-us/microsoftteams/platform/agents-in-teams/integrate-ai/ai-content-labels);
+staff and legacy fixed-topic labels are unchanged.
 
 Resident callback answers leave chat open and offer an explicit action to use
 the manual callback form. Booking/cancellation still requires the separate
@@ -960,9 +969,15 @@ The [design note](../../docs/architecture/resident-assistant-prototype.md)
 records the 2026-10-27 owner decision: managed identity and USD20 model ceiling.
 Default `FakeProvider` is deterministic local rules: no model connection or cost.
 The legacy `AzureTopicProvider` remains available for compatibility.
-The new startup-wired `AzureAdvisor` calls regional Standard `gpt-4.1-mini`
-2025-04-14, selecting approved own-case explanatory sentences, not arbitrary
-prose. All mandatory facts and caveats remain host-owned. A fresh authorization
+The startup-wired `AzureAdvisor` calls regional Standard `gpt-4.1-mini`
+2025-04-14. Explicit `topic` requests retain approved explanatory-sentence
+selection. In-scope `question` requests now ask for short generated prose using
+only host-supplied own-case grounding and repair-reporting guidance. Strict
+output validation requires bounded nonempty text and known, unique source IDs;
+source descriptions come from the host, never model-provided URLs. Text renders
+as text, not HTML. These structural checks cannot prove semantic correctness;
+actual-model evaluation and human content acceptance remain outstanding.
+Host-owned advisory/human-help limits stay visible. A fresh authorization
 check after inference/fallback prevents stale replies after revocation/expiry.
 
 Enable only after the [SQL/infra prerequisites](../../infra/README.md#resident-azure-openai-469):
@@ -978,6 +993,41 @@ unlabelled AI success. Token usage logs contain counts only. There are no
 automatic retries/refunds. The complete request is <=4096 bytes with <=256
 output tokens. Reviewed inference tariff expires 2026-11-01T00:00:00Z; the
 December funding horizon does not extend resident access.
+
+#### Owner deployment prerequisite for resident generated answers (#563)
+
+The source defect was twofold: host routing sent repair questions directly to
+rules, and even an enabled advisor only selected prewritten sentence IDs.
+Changing an enablement setting alone did not address either defect.
+`infra/resident-demo.bicep` does not supply the assistant enablement/endpoint
+settings. Live settings were not inspected, so this is not a diagnosis of the
+current Azure configuration. No Azure deployment or setting change was made.
+For a separately authorized deployment of the fixed image, the owner must
+explicitly supply the four settings above, verify existing SQL reservation
+procedures/permissions and managed-identity model access, and review the
+remaining rate/budget balance. Keep default-off behavior until those gates.
+After 2026-11-01T00:00:00Z the existing tariff expiry deliberately returns
+rules; review/renew the cost/authority envelope separately, not by bypassing it.
+Authenticated live Playwright and actual-model relevance are still required
+for issue acceptance; local scripted transport is not that evidence.
+
+From `src/api`, with installed source distributions and dev tools:
+
+```bash
+PYTHONPATH=../core/src:../agents/src:../core/tests:../agents/tests \
+  python -m unittest discover -s tests -p 'test_resident*.py' -q
+ruff check . && ruff format --check . && mypy
+PYTHONPATH=tests:../core/src:../agents/src:../core/tests:../agents/tests \
+  python -m checks.resident_generated_answer_browser_check --out /new/external/resident-ai
+```
+
+The focused generated-answer check starts the actual loopback application with
+constructed residents and a scripted Azure transport. It checks consent before
+request/reservation, own-case prompt exclusion, generated-text rendering,
+thin-label geometry, collapsed keyboard sources, 1280/390/320px reflow at
+100%/200% text, unavailable/disabled fallback and withdrawal. No paid inference,
+private data or credential lookup occurs. Full AT/WCAG and live acceptance are
+not established.
 
 Focused units: `PYTHONPATH=tests:../core/tests:../agents/tests python -m unittest
 test_resident_aoai test_resident_assistant_api test_resident_assistant_provider`.

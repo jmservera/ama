@@ -1,0 +1,31 @@
+{
+  "task_id": "issue-563",
+  "task_slug": "resident-chat-ai-563",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/resident-chat-ai-563-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/resident-chat-ai-563-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/resident-chat-ai-563-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/resident-chat-ai-563-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/resident-chat-ai-563-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/resident-chat-ai-563-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Run the full RPI loop automatically; commit locally only; no secrets or Azure deployment", "status": "confirmed", "evidence": "Explicit user request 2026-10-30"},
+    {"decision": "Research executed, Planning Readiness Ready; independent critique executed once, Pass, no findings", "status": "confirmed", "evidence": ".copilot-tracking/reviews/plans/2026-10-30/resident-chat-ai-563-plan-critique.md"},
+    {"decision": "Independent Review executed once: Complete / Not accepted; RV-001 Medium remains open and routed to later implementation, not repaired or reviewed again in this task", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-30/resident-chat-ai-563-review.md"}
+  ],
+  "blockers": [
+    {"id": "RV-001", "summary": "Review Not accepted: overbroad repair/action admission", "resolution": "Later rpi-implement must add bounded housing admission and negative route regressions"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Preserve Review, commit locally, attempt external full gate; then await follow-up selection without starting child work"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Constrain housing repair admission and deterministic action refusals", "rationale": "Bounded, high-value source fix for the sole Medium acceptance defect", "evidence": "Original Review RV-001"},
+    {"rank": 2, "task": "Owner-authorized activation and actual-model/live acceptance", "rationale": "Needed for issue acceptance; default-off and near tariff expiry mean source delivery alone cannot enable live answers", "evidence": "Original Review RV-002; src/api/README.md owner prerequisite"},
+    {"rank": 3, "task": "Human content and assistive-technology acceptance", "rationale": "Preserves semantic-quality and accessibility boundaries beyond local scripted browser proof", "evidence": "Original Review RV-003"}
+  ]
+}
