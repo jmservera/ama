@@ -101,6 +101,15 @@ These are focused local engineering checks, not publication or WCAG acceptance.
 Both applications serve the same `web/chat-widget.js` and `web/chat-widget.css`.
 A bottom-right icon opens a nonmodal popup: the thread scrolls independently,
 the composer stays below it, Enter sends and Shift+Enter inserts a newline.
+Resident chat also offers **Chat size**, with native width/height sliders
+(pointer or arrow keys, Home and End), and **Dock to right edge**. Docking fills
+the right vertical edge from top to bottom; the height slider is disabled while
+docked. The same button returns to the floating window. Sizes fit the viewport,
+including small screens, and no resize animation runs. Size changes preserve
+the first visible message and relative reading position, or keep readers at the
+end if they were following replies. Escape restores the launcher; reopening
+retains the existing scroll-to-end behavior. Drafts and replies remain in this
+page session only. No chat text or size is saved in browser storage.
 The employee input-area selector uses the general option and five bounded
 skills from `/api/chat/skills`; residents use the resident assistant only.
 The case panel's Open chat action opens this same popup, not another composer.
@@ -152,9 +161,19 @@ Recognised questions about how residents can report a repair or whom they should
 contact may receive informational guidance. This conservative finite grammar is
 not general language understanding; unrecognised descriptions or wording keep
 the host-owned refusal and human-help route.
+Complete polite requests such as "Can you tell me about my case?", "What is
+happening with my retrofit?", "What documents do I need to upload?" and
+"There is a smell of dead rat in my house" now reach their bounded generated
+route when AI is configured. This is not arbitrary free-text admission:
+mixed actions, unrelated suffixes and protected intents still use rules.
 Safety, legal, consent, appointments, action requests and out-of-scope messages
 keep their host-owned rules/human routes. No model conversation is retained.
 Disabled AI and inference failures show an explicit rules fallback and human help.
+Inference fallback labels distinguish exercise expiry, usage limits, request/
+response limits and invalid or incomplete replies. Logs record only a fixed
+reason code, never exception details, questions, case identifiers or credentials.
+Unknown service/parsing errors show an unverified-reply reason. Local synthetic
+checks do not determine the live site's configuration or establish model quality.
 
 Generated typed replies use a thin "AI-generated" metadata label, with visible
 "Not approved" and "AI-generated content may be incorrect" wording. Sources
