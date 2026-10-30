@@ -3,9 +3,9 @@
   "task_slug": "pr507-evidence-corrections",
   "parent_task": null,
   "mode": "manual",
-  "active_phase": "Review",
-  "status": "active",
-  "session_status": "running",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-30/pr507-evidence-corrections-research.md",
     "plan": ".copilot-tracking/plans/2026-10-30/pr507-evidence-corrections-plan.md",
@@ -36,6 +36,11 @@
       "evidence": ".copilot-tracking/reviews/logs/2026-10-30/pr507-evidence-corrections-review.md"
     },
     {
+      "decision": "Local correction committed with authenticated privacy-safe identity and required trailer; clean status and unchanged frozen docs/body hashes verified. Final bookkeeping is tracking-only; no push.",
+      "status": "completed",
+      "evidence": "7a6aabbbd2366904ae110cdf4fe49043e03df332; changes record Local Commit Results and Final State"
+    },
+    {
       "decision": "Implementation complete; full unchanged rubric result reproduced as 355 passed, 18 failed, 7 skipped; migration 25 passed; semantic/link checks passed.",
       "status": "recorded",
       "evidence": ".copilot-tracking/changes/2026-10-30/pr507-evidence-corrections-changes.md"
@@ -44,7 +49,7 @@
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "One independent Review Complete / Conformant; finalize authorized local commit, verify metadata and hashes, then complete this bounded full-loop request without starting child work or pushing."
+    "action": "Bounded full-loop request completed and locally committed. Owner applies /tmp/pr507-body.md and suggested title. No child work or push authorized; publication and inherited acceptance remain separate."
   },
   "prioritized_follow_ups": [
     {

@@ -110,9 +110,9 @@ Prior audit-path RV-001 is outside this task, unchanged.
 
 ## Return-to-Caller State
 
-Implementation Complete under full-loop request; ready for one independent
-Review. Parent then commits locally, never pushes. The historical and current
-Review outcomes remain separate from publication or whole-issue approval.
+Full-loop execution Complete; sole independent Review Complete / Conformant.
+Local correction committed and verified below; no push. The historical and
+current Review outcomes remain separate from publication or whole-issue approval.
 
 ## Independent Review and Local Persistence Handoff
 
@@ -131,3 +131,22 @@ using freshly authenticated repository-local noreply email for both author and
 committer, Refs #198 and the required Copilot trailer. Then verify metadata,
 clean status and frozen hashes. Final bookkeeping is tracking-only and does
 not change the assessed docs/body. No push or remote metadata operation.
+
+## Local Commit Results and Final State
+
+| Action | Result |
+| --- | --- |
+| Fresh `gh api user` identity and repository-local `user.email` | Authenticated privacy-safe noreply address used for both author and committer |
+| Explicit staging of three docs and seven task artifacts; `git diff --cached --check` | Passed; ten files only |
+| `git commit` with subject `docs(rubric): correct PR 507 integrated evidence claims`, Refs #198 and required Copilot trailer | Created 7a6aabbbd2366904ae110cdf4fe49043e03df332 |
+| `git log -1 --format=...`; `git status --short` | Correct subject, matching authenticated author/committer emails, required trailer; clean worktree |
+| Post-commit `/tmp/mv/bin/python <session-root>/pr507-verify.py` | Passed; protected inputs/original artifacts and all semantic/link checks retained; exact frozen docs/body hashes unchanged |
+
+This final tracking-only bookkeeping is persisted in a separate local
+Conventional Commit with the same Refs #198 and trailer, without amending
+history or changing the reviewed three-doc delta or external body. Its exact
+SHA is canonical in Git, avoiding a self-referential commit claim.
+The single bounded full-loop request is completed; manual mode, session stopped,
+Follow-up, no child work selected. Owner applies /tmp/pr507-body.md and its
+suggested title. Full publication gates and hosted acceptance remain separate;
+no push, score edit, remote metadata update or issue acceptance performed.
