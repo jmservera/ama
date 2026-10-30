@@ -1,7 +1,7 @@
 ---
 title: Data Dictionary - Retrofit Synthetic Evidence Pack
 description: Field definitions, keys, allowed values and record-keeping notes for the Zava Forward year-one synthetic evidence pack
-ms.date: 2026-10-27
+ms.date: 2026-10-30
 ms.topic: reference
 ---
 
@@ -412,7 +412,9 @@ are fixture targets for #160 to #164, not evidence that a runtime enforces them.
 ### Sensor data
 
 `src/core/src/zava_forward/core/synthetic/sensor_backfill.py` delivers
-`sensor-backfill-v2` and register-backed `sensor-backfill-stock-v1`. Small
+`sensor-backfill-v3`, register-backed `sensor-backfill-stock-v2`, fault
+`sensor-backfill-faults-v2` and paired-climate `sensor-backfill-integrated-v2`
+snapshots. These container versions are distinct from the row schemas below. Small
 generated snapshots are tested; a canonical full-stock materialization is
 not verified. Neither generation mode reads real device/resident telemetry.
 
@@ -455,15 +457,35 @@ not the transport:
 | Composed manifest | Paired climate/metadata hashes, explicit measure-history hash, model versions/parameters, source revision, seed/window/cadence, selected/excluded IDs, rows/shards and payload hashes |
 | Dated measure input | `measure_id`, `home_id`, supported `kind`, whole-second UTC `completed_at`, Boolean `is_synthetic=true`; no inferred dates or actual works |
 
-Stage 2 uses this shared 13-field schema (#186) and proposed IoT Hub identities,
-not a second storage schema. The finite offline #110 consumer validates and
+Stage 2 uses this shared 13-string schema (#186) and explicitly bound synthetic
+IoT Hub identities, not a second storage schema. The finite offline #110 consumer validates and
 appends accepted records to `sensor_reading`; rejected/duplicate/order/unit/
 mapping/time/calibration exceptions stay separate from derived analysis.
 The [two-stage guide](../../../../src/core/README.md#two-stage-simulator-operation-and-limits-194)
-states the live runner is unavailable: provisioning, credential ownership,
-rate/replay/failure/cost controls and actual cloud operation remain #184 work.
+links the delivered replay/pacing library and opt-in
+[finite SDK publisher/receiver](../../../../src/api/README.md#opt-in-iot-consumer-and-synthetic-publisher-110-184).
+There is no autonomous startup or general live CLI. Provisioning, credential
+lifecycle approval and actual cloud operation remain separate #184 gates;
+local fake-network evidence does not establish them. No credential is needed
+for the [offline cross-stage checks](../../../../src/core/README.md#two-stage-simulator-operation-and-limits-194).
 Three paired observations/home/day implies `3N` records/day, not a measured
 billable-message count. Hourly validation is a separate offline cadence.
+
+| Replay metadata (not extra wire fields) | Type, units and meaning |
+| --- | --- |
+| `Replay` | Integer seed (absolute value <=2^63-1), UTC whole-second origin, 1..3660 days, positive cadence dividing1440 minutes, half-open nominal slot indices and named transport fault |
+| `Frame` | `device_id`, integer `slot`, shared-schema string `row`, evaluator-only `truth`, selected-stock digest and UTC `nominal_at`; only the canonical row is sent |
+| `descriptor()` | `synthetic-stream-v2`, `source_type=SYNTHETIC`, model/schema/stock versions, original/selected stock digests, selected IDs/counts, seed/window/cadence/slot/fault declarations |
+| Replay limits | 1..100 granted synthetic sensors and <=100,000 nominal samples before construction; excluded stock choices emit no readings |
+| `RunBudget` | Declared owner/cost/alert references, finite message/time/rate/daily-quota bounds; validates attempted-message volume, not actual billing or approval |
+| Validation results | Existing verbose core tests report individual named checks; isolated scenario `truth/report.json` retains each expected/observed result, not one overall pass |
+
+`Frame.truth`, descriptors and device bindings are not analysis inputs or
+new `sensor_reading` columns. Transport frame order uses nominal time; injected
+observation skew/reordering remains a distinct data-quality exercise. Wire units
+are `degC`/`percent`; wrong-unit cases declare `degF` rather than silently
+changing the meaning of the numeric field. All data remains simulated and is
+not evidence of an installed device or any real home condition.
 
 Climate provenance: the
 [retained ERA5 packet](../climate-paired-source-178/open-meteo-era5-durham-2023-2024-metadata.json)

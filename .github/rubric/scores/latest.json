@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-30T18:02:19+00:00",
-  "commit": "bda7975f91705f614376849accb4e57e126b725a",
+  "scored_at": "2026-10-30T22:13:21+00:00",
+  "commit": "bee231e16cdf3032a36773e096a90b72965d9200",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41101368098",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41135609995",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "68e3db2b0be561a37b6866f56213ed9ed3852f4a29236101a5a540d2c723e168",
-    "infrastructure": "a4d4a5389d157f41e83321997f941e5788b4951cb6f7d805a49b746ce1f21fd0",
+    "solution-code": "d292200a29809facffb0e00c17173b527b4675910106799c0af2620cbbfb2894",
+    "infrastructure": "2134a8696551b2e96a7a786ef28086896a4b19a725b2a61a27a18c09180e3f82",
     "capstone-deck": "c5ae9ab5ec15788dd255b786adaf07ee716806bef375e01c066ad1c26701d74e",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
     "thought-leadership": "592719a5da0d19d4d4c81dd5779faa45a9039c4777e3749cbc055d241aed8970"
@@ -71,7 +71,7 @@
         "src/api/src/zava_forward/api/resident_demo/chat.py:120-225",
         "src/api/README.md:117-140"
       ],
-      "rationale": "This PR touches only an identity acceptance check, not model choice or evaluation harness. Baseline unchanged."
+      "rationale": "This PR touches only an identity/accessibility acceptance check, not model choice or evaluation harness. Baseline unchanged."
     },
     "A7": {
       "score": 4,
@@ -117,7 +117,7 @@
       "evidence": [
         "src/api/README.md:9-45"
       ],
-      "rationale": "README adds a new, clearly structured section documenting the identity check's rationale, limits and next steps, consistent with the existing strong engineering documentation quality. Not the capstone deck itself; ceiling unchanged."
+      "rationale": "README documents the new axe-core accessibility scan, its scope, limits and the keyboard-driven retry change clearly, consistent with existing strong engineering documentation. Not the capstone deck itself; ceiling unchanged."
     },
     "B7": {
       "score": 5,

@@ -85,6 +85,13 @@ EXPECTED_SKIP_REASONS = {
     "requires owned loopback SQL Server",
     "Explicit isolated synthetic Azure SQL database required",
 }
+CHAT_PANEL_BROWSER_SELECTOR = (
+    "test_chat_panel.PanelTests.test_browser_warning_failure_keyboard_refusal_and_live_log"
+)
+CHAT_PANEL_DISCOVERY_SKIP = (
+    f"{CHAT_PANEL_BROWSER_SELECTOR.rsplit('.', 1)[1]} ({CHAT_PANEL_BROWSER_SELECTOR})",
+    "opt-in local Chromium",
+)
 SQL_NOT_APPLICABLE = {
     (
         "test_json_postsave_audit_failure_reports_persisted_uncertainty "
@@ -696,6 +703,13 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
         lint(python, (f"checks/{name}.py",), "src/api")
     add([python, "-m", "playwright", "install", "chromium"])
     add(
+        [python, "-m", "unittest", "-v", CHAT_PANEL_BROWSER_SELECTOR],
+        "src/api",
+        env={"PYTHONPATH": test_paths("api", True), "ZF_BROWSER_TESTS": "1"},
+        suite=True,
+        integration=True,
+    )
+    add(
         [python, "-c", BROWSER_ENTRY, "checks.design_system_browser_check"],
         "src/api",
         env={"PYTHONPATH": "<output>/safety"},
@@ -922,7 +936,7 @@ def verify_commands(root: Path, out: Path, receipt: dict[str, Any]) -> None:
             elif row.get("expected_probe_failure"):
                 raise GateError("Successful command mislabeled as a failed probe")
             if check["suite"]:
-                counts = check_skips(output, integration=check["integration"])
+                counts = check_skips(output, integration=check["integration"], group=check["group"])
                 if counts["executed"] <= 0 or any(row.get(k) != v for k, v in counts.items()):
                     raise GateError("Required suite result evidence missing/mismatched")
             if check["group"] == "static" and check["argv"][0] == "git" and output.strip():
@@ -1006,7 +1020,7 @@ def extra_selector(value: str) -> tuple[str, str]:
     return project, selector
 
 
-def check_skips(text: str, *, integration: bool = False) -> dict[str, Any]:
+def check_skips(text: str, *, integration: bool = False, group: str = "") -> dict[str, Any]:
     counts = re.findall(r"Ran (\d+) tests? in ", text)
     skips = [
         {"test": match[0], "reason": match[1]}
@@ -1016,7 +1030,15 @@ def check_skips(text: str, *, integration: bool = False) -> dict[str, Any]:
         raise GateError("Unittest command did not report an executed suite")
     if (
         integration and any((s["test"], s["reason"]) not in SQL_NOT_APPLICABLE for s in skips)
-    ) or any(s["reason"] not in EXPECTED_SKIP_REASONS for s in skips):
+    ) or any(
+        s["reason"] not in EXPECTED_SKIP_REASONS
+        and not (
+            group == "project-api"
+            and not integration
+            and (s["test"], s["reason"]) == CHAT_PANEL_DISCOVERY_SKIP
+        )
+        for s in skips
+    ):
         raise GateError(f"Unexpected required integration/dependency skip: {skips}")
     summary = re.findall(r"(?m)^OK(?: \((.*?)\))?$", text)
     if not summary:
@@ -1259,7 +1281,7 @@ class Runner:
                 return output
             raise GateError(f"{self.group} failed ({code}); see {logfile}")
         if suite:
-            entry.update(check_skips(output, integration=integration))
+            entry.update(check_skips(output, integration=integration, group=self.group))
         return output
 
     def stop_command(self) -> str:
@@ -1579,6 +1601,13 @@ class Runner:
             ):
                 self.lint(py, (f"checks/{name}.py",), "src/api")
             self.command([py, "-m", "playwright", "install", "chromium"], timeout=900)
+            self.command(
+                [py, "-m", "unittest", "-v", CHAT_PANEL_BROWSER_SELECTOR],
+                "src/api",
+                env={**self.tests_env("api", True), "ZF_BROWSER_TESTS": "1"},
+                suite=True,
+                integration=True,
+            )
             axe = self.out / "axe-4.10.3.min.js"
             with urlopen(
                 "https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.3/axe.min.js", timeout=60

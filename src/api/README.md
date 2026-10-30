@@ -289,8 +289,12 @@ PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests pyt
   --axe /path/to/axe-4.10.3.min.js --out /new/external/loading-results
 ```
 
-Use `/tmp/ama-rpi-heavy.lock` nonblocking; if busy, run targeted checks and record
-the full-suite limitation rather than queuing.
+Run heavy checks under `flock -w 600 /tmp/ama-rpi-heavy.lock <command>`. A
+lock timeout blocks that check; do not run it concurrently without the lock.
+The browser check also disables page JavaScript to verify the static startup
+message at 320 and 1280 CSS px, without script requests.
+This is separate from the held-script slow-start and retry scenarios and the
+script-enabled axe scans.
 Constructed loopback data only; no Azure or live model is needed.
 Live employee-site cold-start verification, screen-reader, voice-control and
 staff usability acceptance remain separate owner checks, not local passes.
@@ -377,8 +381,12 @@ PYTHONPATH=tests:../core/tests:../agents/tests python -m checks.progress_browser
 ```
 
 Take `/tmp/ama-rpi-heavy.lock` with nonblocking `flock -n` admission before
-heavy checks, retrying for at most 40 minutes. The browser check owns a fictional
+heavy checks, retrying for at most 40 minutes. The unit checks also partition a
+combined-filter cohort across custom-size pages on JSON and SQLite, including
+nonmatching cases, empty results and beyond-final-page clamping.
+The browser check owns a fictional
 loopback server and checks table/chart/API equality, keyboard, URL/paging,
+first/final/empty paging controls and empty-page URL correction with filters retained,
 failure/retry, cancellation, reflow and pinned axe. It never uses the working
 dataset, Azure or a live model. These are engineering checks, not human
 screen-reader/usability acceptance, full Fluent runtime adoption or WCAG
@@ -466,6 +474,23 @@ disposal fences detached and replacement popup state. These are synthetic applic
 not evidence of a live provider response.
 Actual SQL Server, live employee-site/model, hosted checks and human acceptance
 are separate. The 2026-10-29 local run did not perform live verification.
+
+Local evidence refresh (2026-10-30): two shared `ChatBehaviour` regressions in
+`core/tests/test_chatthreads.py` cover all five skills and general help. They
+check one call per cited answer, persisted masked questions, citations and
+metadata-only skill/outcome audit after reopening, unchanged case records,
+general help without a case, missing/timed-out model fallback and foreign-owner
+denial without inference. JSON and SQLite ran four passing test cases; eight
+focused HTTP contracts also passed, including role projection and privacy
+admission. API/core Ruff, configured formatting and mypy passed.
+
+`test_mssqlstore.MssqlChatThreads` inherits the same two regressions for the
+existing owned SQL gate; inheritance is not an actual SQL pass. The requested
+heavy-gate attempt timed out acquiring `/tmp/ama-rpi-heavy.lock` after 600 seconds
+before executing any check. Complete API discovery, fresh employee browser/axe
+and actual SQL Server were therefore not run in this refresh. These remain
+required local evidence, alongside separate live verification. No employee-site,
+provider, screen-reader or voice-control acceptance is claimed.
 
 ## Employee case journey workspace (#526)
 
@@ -608,7 +633,9 @@ external application requests, and retains scan details and screenshots. It
 covers summary-first keyboard/pointer behavior, Escape/focus, modal containment,
 redraw/failure/filter cleanup, manual paths, coordinator omissions, reduced
 motion and 320/390/1280px expanded layouts. Filter regressions cover all six
-flags, area changes, original control identity on exit, held/out-of-order reads,
+flags, exact selected home IDs through keyboard-opened marker summaries,
+per-flag header/expanded selection round trips in both directions, area changes,
+original control identity on exit, held/out-of-order reads,
 all-request observation proving repeated selected-filter activation adds no read,
 keyboard focus, 390x568 layout and 640px with a 32px default font. It also checks uncancelled browser
 shortcuts from map/marker focus in both modes and exact ordinary/Shift-plus map
@@ -656,6 +683,18 @@ or establish post-deployment acceptance. Authenticated live response status,
 size, headers and cold-start/auth correlation, plus verification after an
 owner-approved deployment, remain pending the owner.
 
+Current-main local verification (2026-10-30, Refs #524) retained the already
+merged runtime and existing test owners unchanged. API discovery passed 1370
+tests with 318 existing opt-in/integration skips; the three workspace unit tests,
+Ruff check/format and mypy passed. Actual Chromium confirmed failed-first-load
+recovery without a document refresh, bounded exhaustion, native keyboard reload,
+stale route/session protection and local Leaflet HTTP 200 with 147552 bytes,
+correct MIME/length and no-store. Scoped pinned axe 4.10.3 detected no violations
+in loading, recovered and exhausted states with reduced motion; the recovered
+map retained 21 contrast-incomplete nodes, so this is not manual contrast or
+whole-site accessibility acceptance. The historical live cause is unresolved;
+post-deployment verification remains pending the owner.
+
 ## Capacity page compatibility (#523)
 
 Legacy generated packages without a contract version remain readable, with
@@ -675,6 +714,7 @@ source distributions and API dev dependencies installed:
 ```bash
 PYTHONPATH=src/api/tests:src/core/tests:src/agents/tests python3 src/api/checks/capacity_browser_check.py
 PYTHONPATH=src/api/tests:src/core/tests:src/agents/tests python3 src/api/checks/capacity_browser_check.py --mssql
+PYTHONPATH=src/api:src/api/tests:src/core/tests:src/agents/tests python3 -m checks.capacity_browser_check --mssql --axe /path/to/axe-4.10.3.min.js
 ```
 
 Both modes acquire `/tmp/ama-rpi-heavy.lock` nonblocking. Default is SQLite;
@@ -695,6 +735,13 @@ retry reads and verifies sign-in remains after the retry continuation finishes.
 It is a separate required check, not automatically run by the full RPI gate.
 Local SQL Server/browser execution and post-deployment verification must be
 recorded separately; source coverage alone does not establish live acceptance.
+With `--axe`, the check verifies the repository-pinned axe-core 4.10.3 digest
+before starting the app or SQL container. It scans the capacity workspace's
+seeded, each failed-read and empty state for WCAG A/AA rules, prints violations
+and checks needing human review, and fails on violations. Without the option,
+scans are explicitly reported as not run. Initial failed-read retries are
+activated with the keyboard. These focused engineering checks do not establish
+full WCAG conformance, assistive-technology acceptance or live verification.
 
 ## Staff-recorded safety-consent intake (#130, #131)
 
@@ -1039,7 +1086,8 @@ The resident showcase retains three fixed model-assisted questions through
 record-use boolean above. The endpoint requires the existing session, same-origin and CSRF
 checks and fetches/re-authorizes the resident's own case for every request.
 It never accepts a case selector, writes a case, submits a form or records consent.
-Document requests are explicitly unknown in the current projection.
+Document replies use the current own-case request facts when available.
+Missing or unrecognised facts stay explicitly unknown, not "nothing to send".
 
 The [design note](../../docs/architecture/resident-assistant-prototype.md)
 records the 2026-10-27 owner decision: managed identity and USD20 model ceiling.
@@ -1070,6 +1118,28 @@ automatic retries/refunds. The complete request is <=4096 bytes with <=256
 output tokens. Reviewed inference tariff expires 2026-11-01T00:00:00Z; the
 December funding horizon does not extend resident access.
 
+#### Issue #466 acceptance evidence reconciliation (2026-10-30)
+
+The gauges/history and advisory assistant already exist in the source baseline.
+This reconciliation adds no new runtime, model activation or resident authority.
+The issue's current checkboxes and its older USD5 proposal are not silently
+updated by this guide.
+
+| Issue criterion | Source evidence and boundary |
+| --- | --- |
+| Owner confirms scope and priority | Unproven. The implementation request does not establish a separate owner scope/priority decision. |
+| Own-home gauges and history labelled synthetic | Implemented: temperature/humidity meters, static histories and equivalent table use only the signed-session home's generated readings. `test_resident_sensors.py` and `checks.resident_sensors_browser_check` cover isolation, missing/fault/empty states and text alternatives. CO2 was an issue example, not an available generated channel. |
+| Grounded case status, required documents and form help with advisory notice | Implemented: own-case status and document facts, honest unknowns and general form guidance; `test_resident_assistant_api.py`, `test_resident_chat_api.py` and `checks.resident_assistant_browser_check` cover these paths. The assistant does not submit, consent or decide. |
+| No other resident's data | Tested by separate synthetic sessions, forged selectors, revocation and shared-browser session changes in the resident API and browser checks. These are local engineering checks, not live identity acceptance. |
+| Accessible gauges, charts and chat, with text alternatives | Existing native meters, static named SVGs, equivalent table, labelled chat controls, keyboard focus, non-colour statuses and reduced motion have automated engineering checks. Screen-reader, real-resident and full WCAG acceptance remain separate; passing axe alone does not establish conformance. |
+| Model, cost cap and credential route decided and recorded | The [2026-10-27 decision](../../docs/architecture/resident-assistant-prototype.md#current-owner-decision-and-implementation-2026-10-27), delivered in merged #480, records regional Standard `gpt-4.1-mini` 2025-04-14, a permanent USD20 inference ceiling inside the resident USD30 allocation and managed identity only. The issue checkbox remains unticked pending owner/coordinator reconciliation; this is evidence of a recorded decision, not a new approval or live activation. |
+
+Default-off AI, SQL accounting prerequisites and the 2026-11-01T00:00:00Z tariff
+expiry remain unchanged. No deployment, current budget headroom, authenticated
+live model call or renewed cost/authority window is established by local tests.
+The historical fixed-topic design note must be read with the newer generated
+answer contract and its separate acceptance gaps below. Refs #466 only.
+
 #### Owner deployment prerequisite for resident generated answers (#563)
 
 The source defect was twofold: host routing sent repair questions directly to
@@ -1086,6 +1156,16 @@ After 2026-11-01T00:00:00Z the existing tariff expiry deliberately returns
 rules; review/renew the cost/authority envelope separately, not by bypassing it.
 Authenticated live Playwright and actual-model relevance are still required
 for issue acceptance; local scripted transport is not that evidence.
+
+For authorized live checks, finish the rollout and warm `/healthz` before
+signing in with a fresh browser session. Resident session and CSRF tokens are
+process-bound: a restart or new revision invalidates them even when the signing
+secret is unchanged. Do not reuse a pre-rollout login or wait only for signed-in
+content after a reload; detect sign-in and error states explicitly. After a
+successful login response, wait for the asynchronous own-case view to render
+or an explicit error, not the still-visible pre-login form. Allow several
+minutes for scale-to-zero startup, use bounded long health/navigation timeouts
+and retries, and do not retry an uncertain login or model request blindly.
 
 From `src/api`, with installed source distributions and dev tools:
 
@@ -3581,8 +3661,14 @@ ZF_BROWSER_TESTS=1 PYTHONPATH=tests:../core/tests:../agents/tests \
   python3 -m unittest test_chat_panel.PanelTests.test_browser_warning_failure_keyboard_refusal_and_live_log -q
 ```
 
-Default unit discovery skips this optional browser method; explicit execution
-requires installed Chromium. This is not a named human screen-reader test or
+Default unit discovery skips this opt-in browser method; explicit execution
+requires installed Chromium. The complete local RPI gate owns this exact case
+in its required `browser` group with `ZF_BROWSER_TESTS=1`, verbose unittest
+execution counts and a retained external log. Its exact ID/reason skip is
+accepted only in API general discovery, never in the required browser stage.
+The trusted command inventory and receipt verification enforce the selector,
+flag and shared-fixture paths; unexpected skips still fail closed (Refs #572).
+This is not a named human screen-reader test or
 complete WCAG acceptance. DPO/Legal/provider/retention/access decisions,
 independent held-out/serving-model/human evaluation, approved thresholds and
 finite role budgets remain blockers. All five issues remain Refs, including
@@ -4001,10 +4087,12 @@ Neither audience receives a new chat interface or invented source in this slice.
 ### Local engineering checks
 
 Unit discovery requires only the installed runtime distributions, not Playwright
-or a browser. The regulatory harness imports its browser APIs only when browser
-operations run; target-size boundary and axe-integrity assertions always run in
-the unit suite. A subprocess regression also blocks Playwright imports even
-when the dev extra is installed. From the repository root:
+or a browser. The regulatory and capacity harnesses import their browser APIs
+only when browser operations run; target-size boundary, axe-integrity and capacity
+scanner-result assertions always run in the unit suite. Subprocess regressions
+also block Playwright imports even when the dev extra is installed; the capacity
+regression executes all four scanner/pin tests under that blocker and confirms
+browser execution still fails explicitly without Playwright. From the repository root:
 
 ```bash
 python3 -m venv /tmp/v215c

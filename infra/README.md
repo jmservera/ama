@@ -1765,6 +1765,24 @@ proof. Even `--check` may create a temporary Azure job, so it was not run live.
 The [acceptance audit](../docs/architecture/cutover-evidence-pack.md#credential-preservation-offline-follow-up-2026-10-17)
 records the exact remaining criterion and #360 sequencing.
 
+#### Offline acceptance reassessment (2026-10-30, Refs #358)
+
+The current source already includes stored-credential expiry regressions for
+generated and legacy names, including expired, equal-to-now, missing and future
+expiry. Existing behavioral mutations detect bypasses of both expiry guards.
+Mixed-secret regressions assert exact Key Vault URL/identity, ordinary values,
+environment secret references and token-store bindings. Fresh offline execution
+passed all 124 setup tests (including the seven-mutation test) and all 17 legacy
+initializer tests; the setup suite also verifies that the legacy CLI delegates
+to `setup-entra.py`. No new source or test change was needed.
+
+This reassessment performed no Azure operation, credential access, deployment
+or live sign-in. The earlier real temporary synthetic roundtrip remains the
+bounded evidence described below, not proof of the originally populated
+deployed-app/token-store/full-setup case. That remaining acceptance criterion
+is still **UNMET** and needs a separately authorized operator exercise; local
+tests do not satisfy it.
+
 Discovery prefers the API's Key Vault secret references and their attached
 identity, then its configured vault URI/attached identities, deployment-tagged
 resources in `ama`, and available Bicep outputs. A unique resource is selected
