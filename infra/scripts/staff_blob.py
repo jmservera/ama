@@ -106,20 +106,28 @@ def split_pages(result: dict[str, Any]) -> tuple[list[dict[str, Any]], int, int]
     items = items or []
     pages: list[dict[str, Any]] = [{"head": head, "items": []}]
     size = len(_compact(pages[0]))
-    total = 0
+    if size > PAGE_BYTES:
+        raise StaffJobError("Staff result head exceeds one page; no result was disclosed.")
+    empty_size = len(_compact({"items": []}))
     for item in items:
-        length = len(_compact(item)) + 1
-        if length > PAGE_BYTES:
+        length = len(_compact(item))
+        if empty_size + length > PAGE_BYTES:
             raise StaffJobError("Staff result item exceeds one page; no result was disclosed.")
-        if size + length > PAGE_BYTES:
+        addition = length + bool(pages[-1]["items"])
+        if size + addition > PAGE_BYTES:
             pages.append({"items": []})
-            size = len(_compact(pages[-1]))
+            size = empty_size
+            addition = length
+        if len(pages) > MAX_PAGES:
+            raise StaffJobError(
+                "Staff result exceeds the bounded page set; no result was disclosed."
+            )
         pages[-1]["items"].append(item)
-        size += length
-        total += length
-    if size > PAGE_BYTES or len(pages) > MAX_PAGES:
+        size += addition
+    sizes = [len(_compact(page)) for page in pages]
+    if any(size > PAGE_BYTES for size in sizes):
         raise StaffJobError("Staff result exceeds the bounded page set; no result was disclosed.")
-    return pages, len(items), sum(len(_compact(p)) for p in pages)
+    return pages, len(items), sum(sizes)
 
 
 def encode_pages(
@@ -242,11 +250,13 @@ def read_result(
         for index in range(count):
             name = blob_name(request["run"], index)
             raw = _bounded(
-                lambda name=name: container.download_blob(name, timeout=BLOB_TIMEOUT).readall(),
+                lambda name=name: container.download_blob(
+                    name, offset=0, length=MAX_BLOB + 1, timeout=BLOB_TIMEOUT
+                ).readall(),
                 limit,
                 expired,
             )
-            if len(raw) != found[index]:
+            if len(raw) > MAX_BLOB or len(raw) != found[index]:
                 raise ValueError
             record = json.loads(raw)
             if not isinstance(record, dict) or set(record) != HEADER | {"nonce", "ct"}:

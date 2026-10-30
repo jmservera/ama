@@ -8374,3 +8374,21 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   original RPI evidence. Open children, downstream #111/#133 test use, live
   #184 execution and owner acceptance remain explicit; no remote mutation,
   live operation, new legal currentness check or whole-parent acceptance.
+
+## [2026-10-30] update | PR 423 review corrections, Refs #360
+
+* Corrected the [current private Blob runbook](../../infra/README.md#review-corrections-2026-10-30)
+  to use default-off `includeResultBlob`, separately approved private-container
+  write, operator Entra list/read and private routing, with lifecycle-retained
+  ciphertext rather than source-job result tags or tag cleanup.
+* Bound controller downloads before buffering and validated complete serialized
+  pages, including initial head, item wrappers and exact byte limits.
+  Offline regressions demonstrate the original defects and corrected behavior;
+  they do not prove live SDK/private-route or managed-identity behavior.
+* Preserved both branches' knowledge additions and dated activation, critique,
+  Review and adverse gate records while integrating main d986c4c4. Historical
+  run9 is not a current-candidate receipt. A coordinator-ready local PR-body
+  correction separates as-of committed evidence from final external gate
+  evidence; remote metadata was not changed.
+* Existing hosted rubric 77/100 PASS is historical, not a new unpublished-head
+  assessment. No score, scorer, rubric protection, Azure or sign-in changes.

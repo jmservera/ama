@@ -26,7 +26,11 @@ For Refs #360, the
 retains main's `src/` retirement and current infrastructure alongside DN1-DN5
 and the offline private Blob implementation. The linked rubric diagnosis
 distinguishes invalid D1 model output from a numerical regression; it claims
-neither a fresh score nor live transport acceptance.
+neither a fresh score nor live transport acceptance. The
+[2026-10-30 review corrections](../../infra/README.md#review-corrections-2026-10-30)
+bound download allocation and every serialized page and correct the active
+Blob runbook without rewriting historical tag receipts. Prior exact-head
+receipts remain historical; fresh local and hosted evidence is separate.
 
 For #190, the [current sensor validation and child dispositions](./research/iot-sensor-analytics-research-plan.md#current-validation-and-child-dispositions-2026-10-30-refs-190)
 record annual offline backfill/replay checks, unchanged isolated scenario

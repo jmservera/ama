@@ -63,6 +63,8 @@ class FakeContainer:
         self.stall_list = None
         self.stall_download = None
         self.timeouts = []
+        self.downloads = []
+        self.read_sizes = []
 
     def list_blobs(self, name_starts_with="", timeout=None):
         self.timeouts.append(timeout)
@@ -76,13 +78,21 @@ class FakeContainer:
             if name.startswith(name_starts_with)
         ]
 
-    def download_blob(self, name, timeout=None):
+    def download_blob(self, name, timeout=None, *, offset=0, length=None):
         self.timeouts.append(timeout)
+        self.downloads.append((name, offset, length))
         if self.stall_download is not None:
             self.stall_download.wait(10)
         if self.unreachable:
             raise OSError("unreachable")
-        return Mock(readall=lambda: self.blobs[name])
+
+        def readall():
+            end = None if length is None else offset + length
+            data = self.blobs[name][offset:end]
+            self.read_sizes.append(len(data))
+            return data
+
+        return Mock(readall=readall)
 
     def upload_blob(self, name, body, overwrite=False, length=None):
         if self.unreachable:
@@ -698,7 +708,7 @@ class TransportTests(unittest.TestCase):
     def test_failing_download_is_unverified_and_cleaned_up(self):
         original = self.fake.container.download_blob
 
-        def failing(name, timeout=None):
+        def failing(name, timeout=None, *, offset=0, length=None):
             raise OSError("reset")
 
         self.fake.container.download_blob = failing
@@ -706,6 +716,21 @@ class TransportTests(unittest.TestCase):
             self.execute()
         self.fake.container.download_blob = original
         self.assertFalse(self.fake.jobs)
+
+    def test_replaced_oversized_download_is_bounded_and_job_secret_is_cleaned_up(self):
+        original = self.fake.container.download_blob
+
+        def replaced(name, timeout=None, *, offset=0, length=None):
+            self.fake.container.blobs[name] = b"x" * (BLOB.MAX_BLOB + 1024)
+            return original(name, timeout, offset=offset, length=length)
+
+        self.fake.container.download_blob = replaced
+        with self.assertRaises(JOB.StaffJobError):
+            self.execute()
+        self.assertEqual(self.fake.container.downloads[0][1:], (0, BLOB.MAX_BLOB + 1))
+        self.assertEqual(self.fake.container.read_sizes, [BLOB.MAX_BLOB + 1])
+        self.assertEqual(len(self.fake.deleted), 1)
+        self.assert_private()
 
     def test_exhausted_deadline_refuses_without_calling_the_sdk(self):
         self.fake.container.blobs.clear()
@@ -755,6 +780,61 @@ class BlobCodecTests(unittest.TestCase):
         self.assertGreater(len(container.blobs), 1)
         self.assertTrue(all(len(b) <= BLOB.MAX_BLOB for b in container.blobs.values()))
         self.assertEqual(BLOB.read_result(container, request), self.result(1000))
+        self.assertTrue(all(offset == 0 for _, offset, _ in container.downloads))
+        self.assertTrue(all(length == BLOB.MAX_BLOB + 1 for _, _, length in container.downloads))
+
+    def test_oversized_intermediate_page_includes_wrapper_in_bound(self):
+        with self.assertRaises(JOB.StaffJobError):
+            BLOB.split_pages({"candidates": ["x" * (BLOB.PAGE_BYTES - 3), "y"]})
+
+    def test_oversized_initial_head_is_refused_even_when_final_page_fits(self):
+        for candidates in ([], ["y"]):
+            with self.subTest(candidates=candidates), self.assertRaises(JOB.StaffJobError):
+                BLOB.split_pages({"metadata": "x" * BLOB.PAGE_BYTES, "candidates": candidates})
+
+    def test_exact_page_limit_and_near_boundary_multiple_pages(self):
+        head = {"metadata": "h" * 100}
+        first_overhead = len(BLOB._compact({"head": head, "items": [""]}))
+        later_overhead = len(BLOB._compact({"items": [""]}))
+        items = [
+            "x" * (BLOB.PAGE_BYTES - first_overhead),
+            "y" * (BLOB.PAGE_BYTES - later_overhead),
+            "z",
+        ]
+        pages, count, size = BLOB.split_pages({**head, "candidates": items})
+        sizes = [len(BLOB._compact(page)) for page in pages]
+        self.assertEqual(sizes[:2], [BLOB.PAGE_BYTES, BLOB.PAGE_BYTES])
+        self.assertTrue(all(length <= BLOB.PAGE_BYTES for length in sizes))
+        self.assertEqual(pages[0]["head"], head)
+        self.assertEqual([item for page in pages for item in page["items"]], items)
+        self.assertEqual(count, len(items))
+        self.assertEqual(size, sum(sizes))
+
+    def test_one_byte_over_complete_item_wrapper_is_refused_before_upload(self):
+        container = FakeContainer()
+        overhead = len(BLOB._compact({"items": [""]}))
+        result = dict(self.result(0), candidates=["x" * (BLOB.PAGE_BYTES - overhead + 1)])
+        with self.assertRaises(JOB.StaffJobError):
+            BLOB.write_result(container, self.request(), result)
+        self.assertFalse(container.uploads)
+
+    def test_escaped_unicode_items_preserve_exact_serialized_byte_totals(self):
+        items = ['"\\\n\u00e9' * 1000 for _ in range(20)]
+        pages, count, size = BLOB.split_pages({"candidates": items})
+        self.assertGreater(len(pages), 1)
+        self.assertTrue(all(len(BLOB._compact(page)) <= BLOB.PAGE_BYTES for page in pages))
+        self.assertEqual(count, len(items))
+        self.assertEqual(size, sum(len(BLOB._compact(page)) for page in pages))
+        self.assertEqual([item for page in pages for item in page["items"]], items)
+
+    def test_exact_max_page_count_and_one_more_page_refusal(self):
+        overhead = len(BLOB._compact({"items": [""]}))
+        item = "x" * (BLOB.PAGE_BYTES - overhead)
+        pages, count, _ = BLOB.split_pages({"candidates": [item] * (BLOB.MAX_PAGES - 1)})
+        self.assertEqual(len(pages), BLOB.MAX_PAGES)
+        self.assertEqual(count, BLOB.MAX_PAGES - 1)
+        with self.assertRaisesRegex(JOB.StaffJobError, "bounded page set"):
+            BLOB.split_pages({"candidates": [item] * BLOB.MAX_PAGES})
 
     def test_empty_prefix_reads_none_and_unpageable_results_are_refused(self):
         self.assertIsNone(BLOB.read_result(FakeContainer(), self.request()))

@@ -2207,21 +2207,30 @@ Prerequisites (not executed or deployed by setup):
   `python /app/scripts/staff-azure-worker.py`. No Azure CLI is needed in the image.
 * Operator management permissions to read the API/environment, SQL
   server/database/admin and identity, create/start/read/stop/delete temporary
-  jobs, and read/merge/delete result tags on the source initializer. Results
-  use ARM only, not console streaming or a Log Analytics query. Private
-  environment log-endpoint reachability is no longer required. The operator
+  jobs, and read the private storage account/container configuration.
+  Result reads use operator-profile Entra list/read data-plane permissions
+  on the `staff-results` container and a private-connected host that resolves
+  and reaches its private endpoint. ARM job control alone is insufficient.
+  There is no console streaming, Log Analytics, public Blob, SAS, shared-key
+  or tag fallback. Private environment log-endpoint reachability is not
+  required. The operator
   also needs existing vault metadata/secret-deployment and group deployment/
   what-if permissions; no role is created by setup. Local cryptography comes from
   `python3 -m pip install -r src/api/requirements.txt`.
 * The existing initializer identity needs its existing SQL-admin and AcrPull
-  permissions plus the narrowly scoped API restart and source-job-only tags
+  permissions plus the narrowly scoped API restart and private-container write
   roles below. These definitions are **not activated by setup or this delivery**.
-  The tag role grants only Microsoft.Resources/tags/read and tags/write on the
-  existing initializer, not jobs/write, listSecrets or resource-group access.
+  The Blob role grants only `blobs/write` and `blobs/add/action` on
+  `staff-results`, not read, list, delete, jobs/write, listSecrets or
+  resource-group access. Its activation needs separate explicit approval.
   No new identity,
   Graph permission or general Contributor role is introduced. SQL remains
-  Entra-only with public access Disabled; private DNS/subnet and the actual
+  Entra-only with public access Disabled; Blob public network, anonymous
+  access and shared keys remain disabled. Private DNS/subnet and the actual
   SQL administrator principal are verified before a roster is transferred.
+  Provision the private `staff-results` container and lifecycle policy through
+  the reviewed storage module before an authorized Blob writer grant. Set
+  `ZF_BLOB_ACCOUNT_URL` on the API and use a rebuilt digest-pinned proof image.
 
 Required later, authorized image build (shown only; not run for this change):
 
@@ -2232,10 +2241,12 @@ Required later, authorized image build (shown only; not run for this change):
 az containerapp job update -g ama -n <existing-init-job> \
   --image <registry-server>/zava-forward-cutover-proof@sha256:<proof-digest> -o none
 az deployment group what-if -g ama --template-file infra/staff-initializer-rbac.bicep \
-  --parameters apiName=<api-name> initializerIdentityName=<existing-init-identity-name>
+  --parameters apiName=<api-name> initializerIdentityName=<existing-init-identity-name> \
+  includeResultBlob=false
 # Requires explicit role-creation/assignment authorization, not merely RG Owner:
 az deployment group create -g ama --template-file infra/staff-initializer-rbac.bicep \
-  --parameters apiName=<api-name> initializerIdentityName=<existing-init-identity-name> -o none
+  --parameters apiName=<api-name> initializerIdentityName=<existing-init-identity-name> \
+  includeResultBlob=false -o none
 ```
 
 Build context is only `infra/`; API image context remains `src/`. The displayed
@@ -2248,23 +2259,36 @@ unreachable. Publication remains **Blocked**, not permission to run public ACR
 Tasks, add a paid pool, change routing or open the registry. An authorized
 existing private publisher must supply the immutable proof digest.
 The standalone Bicep template refuses non-ama scope and assigns app/revision/
-replica reads/restart only to the selected API, plus tags read/write only to
-the existing initializer. It changes neither SQL admin nor network configuration.
+replica reads/restart only to the selected API. A separately approved opt-in
+adds container-scoped Blob write for the initializer identity. It changes
+neither SQL admin nor network configuration.
 Role activation is an explicit IAM-operator action after authorization and
 what-if review, never inferred from the owner asking to continue the demo.
 
-For approval limited to API read/restart, pass `includeResultRelay=false` to
-both what-if and create. This omits both the result-tag role definition and
-its assignment; the four API actions and API-only assignment stay unchanged.
-The default remains `true` for compatibility, so omitting the parameter still
-requires explicit approval for existing-initializer-job
-`Microsoft.Resources/tags/read` and `Microsoft.Resources/tags/write`.
-Approval for temporary staff-job lifecycle does not authorize those existing
-job tag grants. Temporary-job operations belong to the operator, not this
+For approval limited to API read/restart, pass `includeResultBlob=false` to
+both what-if and create (also the default). This omits the Blob role definition
+and assignment; the four API actions and API-only assignment stay unchanged.
+After separate explicit approval and container provisioning, preview and
+apply the writer grant with the same exact parameters:
+
+```bash
+az deployment group what-if -g ama --template-file infra/staff-initializer-rbac.bicep \
+  --parameters apiName=<api-name> initializerIdentityName=<existing-init-identity-name> \
+  storageAccountName=<private-storage-account> includeResultBlob=true
+az deployment group create -g ama --template-file infra/staff-initializer-rbac.bicep \
+  --parameters apiName=<api-name> initializerIdentityName=<existing-init-identity-name> \
+  storageAccountName=<private-storage-account> includeResultBlob=true -o none
+```
+
+These are conditional runbook examples, not current execution authority.
+Approval for temporary staff-job lifecycle does not authorize the Blob grant.
+Temporary-job operations belong to the operator, not this
 template or the initializer MI; do not add a general jobs/Contributor role.
-Incremental deployment with relay disabled does not revoke any pre-existing
-relay assignment. See the [scoped activation receipt](#scoped-initializer-iam-activation-2026-10-17-360)
-for the exact live outcome and remaining gates.
+Incremental deployment with Blob disabled does not revoke a pre-existing
+Blob assignment or historical tag assignment. The dated
+[scoped activation receipt](#scoped-initializer-iam-activation-2026-10-17-360)
+records historical grants, not approval of the replacement Blob transport;
+any grant retirement needs separately authorized IAM review.
 
 Each operation clones only the verified source image/registry/identity into a
 unique `job-staff-<random>` manual job, with one replica, no retries and a
@@ -2272,8 +2296,9 @@ unique `job-staff-<random>` manual job, with one replica, no retries and a
 (maximum 12 KiB of payload) and a fresh result-encryption key as a Container Apps
 secret, via a private mode-0600 ARM body file outside Git. CLI logging and
 telemetry are disabled; body files are removed even on failure. No identities
-or secret values occur in CLI arguments. No blob/Key Vault data-plane path
-is required. The job never receives an operator access token.
+or secret values occur in CLI arguments. Private Blob data-plane access is
+required for worker writes and operator reads; no Key Vault data-plane path
+is used for result transport. The job never receives an operator access token.
 
 The job reads the existing SQL positions, uses the canonical protected-profile
 and atomic installation rules, rereads to verify zero remaining drift, then
@@ -2296,8 +2321,9 @@ or a deadline failure cannot be mistaken for success, and there is no tag,
 console or local fallback.
 
 Setup stops uncertain/failed executions and deletes only its owned temporary
-job, including the roster secret; it polls for confirmed absence and then
-selectively deletes only this run's encrypted result tags and confirms absence.
+job, including the roster secret; it polls for confirmed absence. Encrypted
+result Blobs are retained for the configured one-day lifecycle deletion,
+with 30-day soft-delete retention, not immediately deleted by setup.
 It never deletes the source initializer or changes its configuration. A cleanup failure blocks success
 and prints only the owned temporary job name. Hard termination/power loss
 cannot guarantee cleanup: in a serialized operator window, inspect the
@@ -2309,9 +2335,10 @@ az containerapp job delete -g ama -n <owned-job-staff-name> --yes -o none
 ```
 
 After confirming that the worker has stopped and the exact job is absent,
-remove only the source initializer tags whose `zfstaff-<full-run-id>-` prefix
-matches that request. Never remove other tags, infer ownership from a short
-prefix, or delete the source initializer. Interrupted hard-kill recovery
+leave encrypted result Blobs to the configured lifecycle; setup has no
+Blob-delete grant and does not mutate source initializer tags. Never infer
+ownership from a short prefix or delete the source initializer.
+Interrupted hard-kill recovery
 requires the serialized operator window; retained ciphertext is not a clear
 roster and cannot be decrypted after losing the request key.
 Never delete `ama` or an unowned job. SQL may already have committed; first use
@@ -3070,6 +3097,29 @@ tag relay of the 2026-10-20 design above and records owner decisions DN1 to DN5
 Residual risk: principals with account-wide data or management rights, such as
 subscription Contributors or Owners, can overwrite or delete blobs. The
 authenticated encryption turns that into a refusal, not a false success.
+
+#### Review corrections (2026-10-30)
+
+The controller requests at most 128 KiB + 1 byte from offset zero for each
+download, rather than buffering an unrestricted replacement before checking
+the listed size. Overflow and listing/download length changes are refused
+before decoding; the extra byte detects growth beyond the Blob bound.
+The existing overall deadline and temporary-job/roster-secret cleanup remain.
+
+Paging measures the complete serialized head and each items wrapper, including
+comma/escaping overhead. Exact 48 KiB pages are accepted; oversized heads,
+items or intermediate pages and a 65th page are refused before any upload.
+The offline regressions include the reviewer's near-boundary counterexample,
+exact limits, escaped/Unicode content and replacement between list/download
+with confirmed controller cleanup. Fake clients do not establish live SDK,
+private-route or managed-identity behavior.
+
+The current setup prerequisites, RBAC examples and cleanup above now describe
+the default-off Blob grant and lifecycle-retained ciphertext. Explicitly dated
+tag activation receipts below remain historical; their removed parameters are
+not current deployment instructions. The older run9 receipt predates current
+main integration and is not exact-head validation. Fresh local gate evidence
+and hosted scoring must be bound to the final published candidate separately.
 
 #### Correction 1 (2026-10-22): operator context and operation budget
 
