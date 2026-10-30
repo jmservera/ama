@@ -1,0 +1,62 @@
+{
+  "started": "2026-10-30T14:01:22.227248+00:00",
+  "script_sha256": "bfca66bdc4623e35c33f056497613592d417a3db3e98d61363b64bd2fe8e10ee",
+  "steps": [
+    {
+      "command": "employee attempt 2: GET /healthz timeout=120000 retries=3",
+      "started": "2026-10-30T14:01:22.628495+00:00",
+      "result": {
+        "warm": true,
+        "tries": [
+          {
+            "http": 200
+          }
+        ]
+      },
+      "status": "observed",
+      "finished": "2026-10-30T14:01:22.779213+00:00"
+    },
+    {
+      "command": "employee attempt 2 FINAL: actual login, KMSI, 180s callback, /api/me",
+      "started": "2026-10-30T14:01:22.811950+00:00",
+      "result": {
+        "authenticated": false,
+        "lastBinding": {
+          "responseOk": true,
+          "schemaValid": true,
+          "providerMatches": true,
+          "expectedIdentity": false,
+          "employeeRole": true,
+          "notViewOnly": true,
+          "authenticated": false,
+          "rosterBound": false
+        },
+        "lastHttp": 200,
+        "usernameSubmitted": true,
+        "passwordSubmissionIntent": true,
+        "kmsiHandled": true,
+        "appOriginSeen": true,
+        "finalAppOrigin": true,
+        "finalProviderOrigin": false,
+        "bindingFailures": 0,
+        "callbackWaitExhausted": true
+      },
+      "status": "observed",
+      "finished": "2026-10-30T14:04:25.502010+00:00"
+    }
+  ],
+  "captures": false,
+  "firstProvenance": {
+    "acceptance.py": "bfca66bdc4623e35c33f056497613592d417a3db3e98d61363b64bd2fe8e10ee",
+    "evidence.json": "fe5f0dcb185774c2c62a5e036386ebf80b7cc936acd7c2bc737a9c57d0bafa4c",
+    "manifest.json": "099da77011f5b443f54435b563980187c81dbecc03441cb463ce3cc4ba460c19"
+  },
+  "second_runner_sha256": "861d494e8665fa057d07534b5f1ce0bf3db6015d4b212b50b7a238d06596f356",
+  "taskEmployeeLaunchCeiling": 2,
+  "browser": "156.0.8078.4",
+  "employeeFeatures": "blocked_no_verified_session",
+  "contextClosed": true,
+  "browserClosed": true,
+  "finished": "2026-10-30T14:04:25.549578+00:00",
+  "second_runner_sha256_after": "861d494e8665fa057d07534b5f1ce0bf3db6015d4b212b50b7a238d06596f356"
+}
