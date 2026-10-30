@@ -15,8 +15,8 @@ Intake HEAD: 5ba952ec456af4813b3b2913d52df1eabe99214d.
 ## Execution Status
 
 Full-plan implementation complete: P01, P01-T01/P01-T02, P02,
-P02-T01/P02-T02. No active implementation markers remain. Single Review and
-parent local commit are next lifecycle actions, not yet claimed completed.
+P02-T01/P02-T02. No active implementation markers remain. Single Review is
+Complete / Residual work and the attributed implementation commit is verified.
 Only approved Markdown/evidence targets changed. Missing capstone package
 blocks receipt regeneration, not other fixes.
 Current critique execution Complete / Pass; PC-001 remains an accepted dependency.
@@ -25,8 +25,8 @@ Current critique execution Complete / Pass; PC-001 remains an accepted dependenc
 
 Implemented seven source-backed thread fixes and one precise owner question,
 historical prefix/label preservation and current capstone regression checks.
-Single independent Review is Complete / Residual work; attributed local commit
-is mandatory parent closeout. No push.
+Single independent Review is Complete / Residual work; implementation and
+original RPI evidence are committed locally in `60c30bff`. No push.
 
 ## Completed Work
 
@@ -57,7 +57,7 @@ No historical outcome was replaced or re-run.
 | Existing capstone regression tests | Passed | `PYTHONDONTWRITEBYTECODE=1 python3 -m pytest docs/capstone/pitch/cowork-main-presentation/test_build_assets.py -q -p no:cacheprovider`; 24 passed, 3.65s |
 | Missing source receipt verification/regeneration | Unavailable | `docs/capstone/source/` absent from exact local HEAD/Git tree/history and PR-head contents API returns 404; current Cowork-v2 checks do not bind this missing receipt |
 | Diff whitespace | Passed | `git diff --check`; no executable or deck delta |
-| Local links, anchors, historical byte preservation, ASCII/LF additions and arithmetic | Passed | External `files/check_fabric_558.py` / `files/fabric-558-validation.json` in this CLI session; 83 local links/anchors, original three research/log byte prefixes, exactly 24+4 destination-only changes, ASCII/LF additions and 131.4M/1.0512B arithmetic; renewal independently present at original 9b74ac8 source baseline |
+| Local links, anchors, historical byte preservation, ASCII/LF additions and arithmetic | Passed | External `files/check_fabric_558.py` / `files/fabric-558-validation.json` in this CLI session; 83 implementation links and 106 including Review, original three research/log byte prefixes, exactly 24+4 destination-only changes, ASCII/LF additions and 131.4M/1.0512B arithmetic; renewal independently present at original 9b74ac8 source baseline; rechecked committed candidate in `files/fabric-558-committed-validation.json` |
 
 No dependency installation or dataset/cloud access was required. No source
 hashes were substituted, and no new capstone receipt is claimed.
@@ -93,10 +93,21 @@ the canonical identity across state/plan/details/changes is `558-review-threads`
 
 ## Local Closeout
 
-Parent will create the authorized implementation/evidence commit with the
-authenticated account's repository-local noreply email for both author and
-committer and the required Copilot trailer. A final metadata-only local commit
-will persist its actual identity and verification. Neither commit is pushed.
+Created implementation/evidence commit
+`60c30bff68caecf9f035f0862d80dc22d802a258`:
+`docs: address Fabric review evidence (Refs #558)`.
+Authenticated account-derived repository-local noreply identity is used for
+both author and committer; actual commit inspection confirms the exact
+`Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>` trailer.
+Working tree was clean immediately after that commit, and committed diff/
+106-link/preservation verification passed. This parent execution fulfills
+RV-002 without changing or repeating the original Review.
+
+A final metadata-only local commit persists these actual results in this
+record and state; its hash is returned by final Git inspection, rather than a
+self-referential receipt. Neither commit is pushed. The external checker was
+adjusted to handle newly committed files absent from the intake tree; no
+repository/source behavior changed after Review.
 No hosted or complete local publication gate is claimed; coordinator must run
 those on the eventual exact candidate/current main before publication.
 
