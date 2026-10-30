@@ -29,7 +29,7 @@ DECLARE @history NVARCHAR(MAX) = N'CAST(NULL AS NVARCHAR(128)) AS sensor_home_id
 IF OBJECT_ID(N'dbo.sensor_register', N'U') IS NOT NULL
    AND OBJECT_ID(N'dbo.sensor_reading', N'U') IS NOT NULL
 SET @history = N'JSON_VALUE(k.body, ''$.home.stock_id'') AS sensor_home_id,
-  (SELECT TOP (48) r.home_id, CONVERT(VARCHAR(19), r.observed_at, 126) + ''Z'' AS observed_at,
+  COALESCE((SELECT TOP (48) r.home_id, CONVERT(VARCHAR(19), r.observed_at, 126) + ''Z'' AS observed_at,
           r.temperature_c, r.humidity_pct, r.source_type, r.injected_fault
    FROM dbo.sensor_reading AS r
    JOIN dbo.sensor_register AS s
@@ -49,7 +49,7 @@ SET @history = N'JSON_VALUE(k.body, ''$.home.stock_id'') AS sensor_home_id,
      AND r.source_type COLLATE Latin1_General_100_BIN2 = ''SYNTHETIC''
      AND DATALENGTH(CONVERT(NVARCHAR(MAX), r.source_type)) = DATALENGTH(N''SYNTHETIC'')
    ORDER BY r.observed_at DESC, r.sensor_id, r.reading_id
-   FOR JSON PATH, INCLUDE_NULL_VALUES) AS sensors_json';
+   FOR JSON PATH, INCLUDE_NULL_VALUES), N''[]'') AS sensors_json';
 DECLARE @view NVARCHAR(MAX) = N'CREATE OR ALTER VIEW resident_showcase.v_resident_case AS
 WITH canon AS (
   SELECT c.id, c.stage, c.closed, c.body,
