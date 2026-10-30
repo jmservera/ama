@@ -17,9 +17,25 @@ RELS = "http://schemas.openxmlformats.org/package/2006/relationships"
 
 
 def make_deck(
-    directory: Path, action: str = "ppaction://hlinksldjump", target: str = "slide2.xml"
+    directory: Path,
+    action: str = "ppaction://hlinksldjump",
+    target: str = "slide2.xml",
+    overlapping_target: str | None = None,
 ) -> Path:
     deck = directory / "deck.pptx"
+    extra_shape = ""
+    extra_relationship = ""
+    if overlapping_target is not None:
+        extra_shape = (
+            '<p:sp><p:nvSpPr><p:cNvPr id="2">'
+            '<a:hlinkClick action="ppaction://hlinksldjump" r:id="extra"/>'
+            "</p:cNvPr></p:nvSpPr><p:spPr><a:xfrm>"
+            '<a:off x="150" y="75"/><a:ext cx="300" cy="100"/>'
+            "</a:xfrm></p:spPr></p:sp>"
+        )
+        extra_relationship = (
+            f'<Relationship Id="extra" Target="{overlapping_target}" Type="{R}/slide"/>'
+        )
     with zipfile.ZipFile(deck, "w") as archive:
         archive.writestr(
             "ppt/presentation.xml",
@@ -36,7 +52,7 @@ def make_deck(
             f'<p:sld xmlns:p="{P}" xmlns:a="{A}" xmlns:r="{R}"><p:cSld><p:spTree><p:sp>'
             f'<p:nvSpPr><p:cNvPr id="1"><a:hlinkClick action="{action}" r:id="jump"/></p:cNvPr></p:nvSpPr>'
             '<p:spPr><a:xfrm><a:off x="100" y="50"/><a:ext cx="300" cy="100"/></a:xfrm></p:spPr>'
-            "</p:sp></p:spTree></p:cSld></p:sld>",
+            f"</p:sp>{extra_shape}</p:spTree></p:cSld></p:sld>",
         )
         archive.writestr(
             "ppt/slides/slide2.xml",
@@ -44,7 +60,7 @@ def make_deck(
         )
         archive.writestr(
             "ppt/slides/_rels/slide1.xml.rels",
-            f'<Relationships xmlns="{RELS}"><Relationship Id="jump" Target="{target}" Type="{R}/slide"/></Relationships>',
+            f'<Relationships xmlns="{RELS}"><Relationship Id="jump" Target="{target}" Type="{R}/slide"/>{extra_relationship}</Relationships>',
         )
     return deck
 
@@ -120,3 +136,32 @@ def test_given_existing_output_when_restoring_then_not_overwritten(tmp_path):
         restore_slide_links(make_deck(tmp_path), make_pdf(tmp_path), output)
 
     assert output.read_bytes() == b"keep"
+
+
+def test_given_overlapping_different_targets_when_restoring_then_refused_before_saving(
+    tmp_path,
+):
+    output = tmp_path / "linked.pdf"
+
+    with pytest.raises(
+        ValueError, match="Overlapping slide-jump hit regions on slide 1"
+    ):
+        restore_slide_links(
+            make_deck(tmp_path, overlapping_target="slide1.xml"),
+            make_pdf(tmp_path),
+            output,
+        )
+
+    assert not output.exists()
+
+
+def test_given_overlapping_same_target_when_restoring_then_both_links_preserved(
+    tmp_path,
+):
+    result = restore_slide_links(
+        make_deck(tmp_path, overlapping_target="slide2.xml"),
+        make_pdf(tmp_path),
+        tmp_path / "linked.pdf",
+    )
+
+    assert result["fixed_slide_jumps"] == 2

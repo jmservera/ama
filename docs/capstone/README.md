@@ -75,7 +75,9 @@ after Build. It renders all slides with LibreOffice and restores the 108 PDF
 slide jumps from the actual PPTX. This is not native Windows PowerPoint
 validation. The current refresh restores the illustrated timeline on page 3,
 the resident touchpoint map on page 13 and the editable pain/gain canvas on
-page 39, with coordinated visual refinements on ten other pages.
+page 39, with coordinated visual refinements on ten other pages. The question
+index also separates two formerly overlapping click regions without changing
+their destinations.
 
 ## Rubric Inputs
 

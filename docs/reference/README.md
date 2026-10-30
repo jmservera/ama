@@ -37,7 +37,8 @@ The [illustrated visual refresh](../capstone/source/review-2026-10-30.md#illustr
 restores page 3's timeline, improves page 13's native-exported resident map
 and adds page 39's editable pain/gain value canvas. The explicit Linux preview
 preserves 108 PDF slide jumps; it does not replace native PowerPoint or human
-acceptance. All 41 untouched slide renders are unchanged in the same renderer.
+acceptance. The additional index hit-region fix leaves 40 untouched slide
+renders unchanged in the same renderer, with no overlapping PDF destinations.
 Page 16 and the appendices retain deeper comparisons. Native links remain
 fixed jumps, not dynamic caller return.
 No fresh rubric score, rehearsal, deployment or business benefit is inferred.

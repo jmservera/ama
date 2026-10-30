@@ -145,11 +145,27 @@ def jump_key(source: int, target: int, rectangle: pymupdf.Rect) -> tuple:
     return source, target, *(round(value, 2) for value in rectangle)
 
 
+def add_hit_region(
+    regions: dict[int, list[tuple[int, pymupdf.Rect]]],
+    source: int,
+    target: int,
+    rectangle: pymupdf.Rect,
+) -> None:
+    page_regions = regions.setdefault(source, [])
+    if any(
+        existing_target != target and (rectangle & region).get_area() > 0.1
+        for existing_target, region in page_regions
+    ):
+        raise ValueError(f"Overlapping slide-jump hit regions on slide {source + 1}")
+    page_regions.append((target, rectangle))
+
+
 def restore_slide_links(deck: Path, rendered: Path, output: Path) -> dict:
     count, jumps = read_slide_jumps(deck)
     if output.exists():
         raise ValueError("PDF destination already exists; choose a fresh output")
     expected: Counter = Counter()
+    hit_regions: dict[int, list[tuple[int, pymupdf.Rect]]] = {}
     with pymupdf.open(rendered) as document:
         if len(document) != count:
             raise ValueError("Rendered PDF and presentation slide counts differ")
@@ -167,6 +183,7 @@ def restore_slide_links(deck: Path, rendered: Path, output: Path) -> dict:
                 (x + w) * bounds.width,
                 (y + h) * bounds.height,
             )
+            add_hit_region(hit_regions, jump.source, jump.target, rectangle)
             page.insert_link(
                 {
                     "kind": pymupdf.LINK_GOTO,
@@ -178,10 +195,12 @@ def restore_slide_links(deck: Path, rendered: Path, output: Path) -> dict:
             expected[jump_key(jump.source, jump.target, rectangle)] += 1
         document.save(output, garbage=4, deflate=True)
     actual: Counter = Counter()
+    saved_regions: dict[int, list[tuple[int, pymupdf.Rect]]] = {}
     with pymupdf.open(output) as document:
         for number, page in enumerate(document):
             for link in page.get_links():
                 if link["kind"] == pymupdf.LINK_GOTO:
+                    add_hit_region(saved_regions, number, link["page"], link["from"])
                     actual[jump_key(number, link["page"], link["from"])] += 1
     if actual != expected:
         raise ValueError("PDF slide-jump readback differs from the presentation")
@@ -189,6 +208,7 @@ def restore_slide_links(deck: Path, rendered: Path, output: Path) -> dict:
         "slides": count,
         "fixed_slide_jumps": len(jumps),
         "all_destinations_and_hit_regions_verified": True,
+        "unambiguous_hit_regions": True,
     }
 
 

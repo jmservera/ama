@@ -86,7 +86,7 @@ direct acceptance testing.
 Native Windows Render produces a PDF and 54 PNGs plus measured text bounds.
 The [current Linux visual refresh](./review-2026-10-30.md#illustrated-visual-refresh-on-linux)
 uses the explicitly separate preview route below: all 54 pages rendered,
-108 PDF jumps verified, all text present in 213 revised frames and the 41
+108 PDF jumps verified, all text present in 215 revised frames and the 40
 untouched page renders pixel-identical to the Linux before-render.
 These are not native PowerPoint bound metrics or accessibility acceptance.
 Inspect changed pages and relevant neighbours, fix findings, and rerender.
@@ -153,7 +153,10 @@ The preview writes the matching PDF, 54 slide PNGs and a compact report with
 source/PDF hashes. LibreOffice drops these slide-jump actions on import, so the
 tool reads actual shape bounds, slide order and destinations from the candidate
 PPTX, reconstructs the fixed PDF links, then verifies every destination and hit
-region after saving. Unsupported navigation fails explicitly; dynamic history
+region after saving. Differing destinations may not share a click region;
+ambiguous overlaps fail before and after saving. The B04 index frame moves
+up by 0.07 inch, retaining its font, height and destination while clearing B05.
+Unsupported navigation fails explicitly; dynamic history
 is never invented. Native PowerPoint viewing and direct keyboard/AT acceptance
 remain separate checks.
 
