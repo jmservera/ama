@@ -105,8 +105,17 @@ The original `/tmp/mv` environment is absent. Restore actually missing packages
 with pip into this run's venv, not shared environments; use the existing pinned
 project/capstone/migration manifests. Chromium is likewise run-owned.
 
-P04 remains active: main advanced independently to `ec2d7842` with resident chat
-and rubric evidence changes. Commit the validated correction, rebase cleanly,
-recheck current-main byte ownership, rerun affected API/Chromium checks and
-retain an independent continuation Review. The original 17 rubric failures
-also occur on unchanged main; no success or publication receipt is fabricated.
+P04 is complete for the local-only recovery. Main
+advanced independently to `ec2d7842` with resident chat and rubric evidence
+changes. The validated correction was committed as `b7772aaa` and replayed
+without conflict, producing `aedc6713`. Fresh upstream ownership, main ancestry,
+research/delivery preservation, receipt equality and four new link/anchor checks
+pass. Both component static chains pass again, with ten core units and three
+API units including the executed Chromium case, zero skips. The single
+independent continuation Review is Conformant within scope with no correctness
+findings. Its read-only tooling prevented its own append, so the parent
+persisted the complete original response in the existing Review log without
+changing the historical prefix. Final closeout changes only metadata/logs.
+The original 17 rubric failures also occur on unchanged main; no publication
+receipt or final-publication exact-head approval is fabricated or inherited
+across bases.

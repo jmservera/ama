@@ -202,11 +202,18 @@ All 17 broader rubric failures reproduce on unchanged execution main, which
 also has an additional registry failure. Those pre-existing failures are not
 changed, skipped or relabelled as a pass.
 
-### [ ] P04: Rebind to latest main and independently review
+### [x] P04: Rebind to latest main and independently review
 
-Commit the validated local correction, then rebase onto the separately
-observed `ec2d7842` main. Its merge-tree probe is conflict-free. Verify fresh
-ancestry and upstream-owned bytes, rerun affected API/Chromium checks and retain
-one independent continuation Review. Record subsequent drift rather than mix
-validation identities. Keep the remote branch and both unpublished threads
-unchanged; publication gates and owner merge approval remain outstanding.
+The validated correction was committed as `b7772aaa` and replayed cleanly onto
+the separately observed `ec2d7842` main, producing
+`aedc67139e51215b3f1dce39715e60dbdaf3f82a`. Fresh ancestry, upstream-owned bytes,
+unchanged research/delivery, receipt equality and four new documentation
+links/anchors pass. Core/API lint, format and typing pass again; ten core units
+and three API units, including actual Chromium execution, pass without skips.
+The single independent continuation Review is Conformant within its bounded
+scope, with zero correctness findings. Its original response is retained in
+the existing Review log, including the reviewer's read-only persistence limit;
+the parent persisted that response without changing the historical prefix.
+The final metadata-only local commit records this closeout, not a new
+publication exact-head approval. Keep the remote branch and both unpublished
+threads unchanged; publication gates and owner merge approval remain outstanding.

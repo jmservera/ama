@@ -8705,3 +8705,22 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   adverse evidence remains intact. No push, thread resolution, Azure/model
   operation, full publication gate, native Windows execution or human
   acceptance is claimed.
+
+## [2026-10-31] validation | Local Fabric recovery closeout, Refs #558
+
+* Completed the second local rebase onto observed main `ec2d7842` without
+  conflicts, retaining implementation `aedc6713`. Fresh preservation checks
+  confirm main ancestry, upstream scores/manifest/gate ownership, unchanged
+  Fabric research and delivery, and the verified source-to-deck receipt.
+* Repeated core/API static checks pass on the new base. Ten core units and
+  three API units, including actual Chromium execution, pass without skips.
+  The earlier 17 rubric failures remain explicitly dated inherited failures,
+  not a current full-suite pass or a fresh rubric grade.
+* The [independent continuation Review](../../.copilot-tracking/reviews/logs/2026-10-30/fabric-rebase-558-review.md#2026-10-31-independent-continuation-review)
+  is Conformant within its bounded scope with zero correctness findings.
+  Its original response and read-only persistence limitation are preserved;
+  parent persistence does not turn it into final-publication approval.
+* Final closeout is metadata/logs only. The remote PR branch and both review
+  threads remain unchanged pending authorized publication. No force-push,
+  full publication gate, native Windows execution, hosted approval or owner
+  merge approval is implied.

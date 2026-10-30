@@ -343,10 +343,63 @@ them. The clean temporary baseline worktree was removed after the run.
 
 The final refresh observed `ec2d784255c3377ab39e5d2d1b5140e76c8e7f36`:
 one resident-chat PR with source/guide/score changes. Its merge-tree probe
-against the completed topic is conflict-free. P04 commits this validated
-correction, rebases onto that separate main identity, reruns affected checks
-and obtains one independent continuation Review before final local closeout.
-Earlier validation remains bound to `18602ae7`; no main identity is silently
-substituted. Publication/full gate, hosted checks, thread resolution and owner
-merge approval remain outstanding. No Azure, real model or private dataset
-was accessed.
+against the completed topic was conflict-free. The validated correction and
+dated evidence were committed as `b7772aaa`, with authenticated noreply author/
+committer and the required Conventional Commit footer/coauthor trailer.
+The explicit second rebase command was:
+
+```bash
+GIT_EDITOR=true GIT_SEQUENCE_EDITOR=true git rebase --empty=drop --reapply-cherry-picks ec2d784255c3377ab39e5d2d1b5140e76c8e7f36
+```
+
+It exited 0 without conflicts, producing
+`aedc67139e51215b3f1dce39715e60dbdaf3f82a`. Fresh results bind to this second
+execution base, not by relabelling earlier runs:
+
+| Final-base check | Result |
+| --- | --- |
+| API pinned Ruff/format/mypy | Pass; 61 formatted and 117 typed files |
+| API dependency module plus exact opt-in Chromium selector in one unittest command | Pass; three tests, zero skips |
+| Core pinned Ruff/format/mypy and scenario/dependency modules | Pass; 113 formatted and 166 typed files, ten tests |
+| Actual Git-object/byte assertions | Main is ancestor; no conflict stages or src/infra delta; latest scores, manifest and gate tests match second base; stricter gate logic retained |
+| Research, delivery and receipt checks | Six Fabric inputs and PPTX/PDF unchanged; receipt still equals the successful real Verify report |
+| Added documentation link/anchor and frontmatter checks | Pass; all four new relative links/anchors and unique required frontmatter |
+| `git diff --check`; merge-tree probe against second base | Pass; clean tracked worktree before continuation metadata, conflict-free candidate |
+
+The two bases have identical numeric rubric criterion values. The earlier
+17-failure comparison remains dated to `18602ae7`, not a fresh rubric pass or
+an invented second baseline run. Publication/full gate, hosted checks, thread
+resolution and owner merge approval remain outstanding. No Azure, real model
+or private dataset was accessed.
+
+### Independent Continuation Review and Local Closeout
+
+The single Implementation Validator continuation Review returned Conformant
+within its bounded scope, with zero Critical, Major or Minor correctness
+findings. It assessed implementation
+`aedc67139e51215b3f1dce39715e60dbdaf3f82a` against second execution base
+`ec2d784255c3377ab39e5d2d1b5140e76c8e7f36`, reviewing the actual source,
+receipt, preservation and observed validation evidence. It did not rerun
+tests, examine the broader visual feature or authorize publication.
+
+The reviewer's tools were read-only, so it returned the complete original
+response instead of appending. The parent persisted that response verbatim
+in the existing Review log, including its original persistence-blocked
+status and validation limits. The historical Review remains an exact byte
+prefix. This resolves persistence, not a source defect, and does not invent
+a second Review or change the independent verdict.
+
+The final append-prefix check caught an ambiguous patch context placing the
+new KB closeout block before an older entry. The parent moved only that new
+block to the actual tail and repeated exact-prefix validation before commit;
+no historical log text was changed.
+
+The final local closeout commit contains only plan/details/changes, the
+append-only Review and the factual KB closeout log. Code, deck, receipt and
+validation inputs remain the reviewed implementation. Authenticated account
+identity was refreshed before closeout; author and committer use its
+repository-local noreply address, with Conventional Commit footer and Copilot
+coauthor trailer. No amend, push, force-push, remote comment/issue mutation,
+Azure action, full publication gate or final-publication exact-head approval
+is claimed. Final Git identity/status/ancestry and original-prefix assertions
+are recorded externally after that metadata-only commit.
