@@ -52,7 +52,7 @@ RUFF_GROUPS = (
 WORKFLOWS = ("src-ci.yml", "mvp-ci.yml", "mvp-validation.yml", "src-deploy.yml", "infra-plan.yml")
 # Explicitly updated with the matrix whenever native workflow commands change.
 WORKFLOW_HASHES = {
-    "src-ci.yml": "94730d9a7c926613827fcbda312185720e80c51f304815f00d8f9ef17c89f076",
+    "src-ci.yml": "9b5374e18a1445bba28e2aeeb075343761580f7755f9b3d5e16eed2074e6ec8c",
     "mvp-ci.yml": "92178fff316a4cd8b4e619c47e96c0238106c311cad928263b6e795797a3a54e",
     "mvp-validation.yml": "94feeb7e0c6807a94dc2624eaf7c5e76c807a234e1777b593b169fd801e511cc",
     "src-deploy.yml": "3c2f1ed59b1486fc1316a48207cc4ef7d6a830bbba1dcad4152acab4bd2f1bbc",
@@ -91,6 +91,16 @@ SQL_NOT_APPLICABLE = {
         "test_json_postsave_audit_failure_reports_persisted_uncertainty)",
         "JSON-only separate-file audit ordering",
     )
+}
+BROWSER_CONTRACTS = (
+    (
+        "test_chat_panel.PanelTests.test_browser_warning_failure_keyboard_refusal_and_live_log",
+        "opt-in local Chromium",
+    ),
+)
+BROWSER_DISCOVERY_SKIPS = {
+    (f"{selector.rsplit('.', 1)[-1]} ({selector})", reason)
+    for selector, reason in BROWSER_CONTRACTS
 }
 TYPE_GROUPS = (
     ("--strict", "src/check-container.py"),
@@ -726,6 +736,14 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
         env={"PYTHONPATH": test_paths("api", True)},
     )
     add([python, "-c", REGULATORY_ASSERT, "<output>/regulatory-ux-results.json"])
+    for selector, _ in BROWSER_CONTRACTS:
+        add(
+            [python, "-m", "unittest", "-v", selector],
+            "src/api",
+            env={"PYTHONPATH": test_paths("api", True), "ZF_BROWSER_TESTS": "1"},
+            suite=True,
+            integration=True,
+        )
     group = "mssql"
     sql = sql if "mssql" in groups else {"container": "", "port": ""}
     add([python, "-m", "pip", "install", "--require-hashes", "-r", "src/api/requirements.txt"])
@@ -1012,10 +1030,17 @@ def check_skips(text: str, *, integration: bool = False) -> dict[str, Any]:
     ]
     if not counts or int(counts[-1]) == 0:
         raise GateError("Unittest command did not report an executed suite")
-    if (
-        integration and any((s["test"], s["reason"]) not in SQL_NOT_APPLICABLE for s in skips)
-    ) or any(s["reason"] not in EXPECTED_SKIP_REASONS for s in skips):
-        raise GateError(f"Unexpected required integration/dependency skip: {skips}")
+    unexpected = [
+        skip
+        for skip in skips
+        if (integration and (skip["test"], skip["reason"]) not in SQL_NOT_APPLICABLE)
+        or (
+            skip["reason"] not in EXPECTED_SKIP_REASONS
+            and (integration or (skip["test"], skip["reason"]) not in BROWSER_DISCOVERY_SKIPS)
+        )
+    ]
+    if unexpected:
+        raise GateError(f"Unexpected required integration/dependency skip: {unexpected}")
     summary = re.findall(r"(?m)^OK(?: \((.*?)\))?$", text)
     if not summary:
         raise GateError("Unittest success summary missing")
@@ -1646,6 +1671,15 @@ class Runner:
                     str(self.out / "regulatory-ux-results.json"),
                 ]
             )
+            for selector, _ in BROWSER_CONTRACTS:
+                self.command(
+                    [py, "-m", "unittest", "-v", selector],
+                    "src/api",
+                    env={**self.tests_env("api", True), "ZF_BROWSER_TESTS": "1"},
+                    suite=True,
+                    integration=True,
+                    timeout=900,
+                )
 
     def sql(self) -> None:
         with self.gate("mssql"):

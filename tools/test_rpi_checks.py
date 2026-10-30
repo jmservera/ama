@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import importlib.util
+import io
 import json
 import os
 import subprocess
@@ -212,6 +214,89 @@ class GateTests(unittest.TestCase):
                 self.assertRaises(gate.GateError),
             ):
                 gate.check_skips(value, integration=integration)
+
+    def test_given_browser_opt_in_when_discovered_then_only_exact_skip_is_recorded(self) -> None:
+        selector, reason = gate.BROWSER_CONTRACTS[0]
+        identity = f"{selector.rsplit('.', 1)[-1]} ({selector})"
+        text = f"{identity} ... skipped '{reason}'\nRan 1 test in 0.1s\n\nOK (skipped=1)\n"
+
+        self.assertEqual(gate.check_skips(text)["skips"], [{"test": identity, "reason": reason}])
+        self.assertNotIn(reason, gate.EXPECTED_SKIP_REASONS)
+        for output, integration in (
+            (text, True),
+            (text.replace(identity, "test_other (test_other.Panel.test_other)"), False),
+            (text.replace(reason, "missing Chromium dependency"), False),
+        ):
+            with self.subTest(output=output, integration=integration):
+                with self.assertRaises(gate.GateError):
+                    gate.check_skips(output, integration=integration)
+
+    def test_given_browser_contract_when_planned_then_execution_and_ci_are_required(self) -> None:
+        receipt = {
+            "owner": "a" * 24,
+            "sql": {},
+            "images": {},
+            "extras": [],
+            "executed_groups": ["browser"],
+        }
+        checks = gate.required_checks(self.root, receipt)
+        workflow = Path(__file__).resolve().parents[1] / ".github/workflows/src-ci.yml"
+
+        for selector, _ in gate.BROWSER_CONTRACTS:
+            with self.subTest(selector=selector):
+                matches = [row for row in checks if selector in row["argv"]]
+                self.assertEqual(len(matches), 1)
+                self.assertEqual(matches[0]["group"], "browser")
+                self.assertTrue(matches[0]["suite"])
+                self.assertTrue(matches[0]["integration"])
+                self.assertEqual(matches[0]["cwd"], "src/api")
+                self.assertEqual(matches[0]["env"]["ZF_BROWSER_TESTS"], "1")
+                self.assertEqual(matches[0]["env"]["PYTHONPATH"], gate.test_paths("api", True))
+                self.assertIn(
+                    f"ZF_BROWSER_TESTS=1 python -m unittest -v {selector}", workflow.read_text()
+                )
+        self.assertEqual(gate.digest(workflow), gate.WORKFLOW_HASHES["src-ci.yml"])
+
+    def test_given_browser_contract_when_dispatched_then_runtime_matches_inventory(self) -> None:
+        runner = self.runner()
+        runner.snapshot = self.root
+        (runner.envs / "api/lib/python3.12/site-packages").mkdir(parents=True)
+        calls: list[dict[str, Any]] = []
+        axe = b"fixture axe"
+
+        def record(argv: list[str], cwd: str = ".", **kwargs: Any) -> str:
+            calls.append({"argv": argv, "cwd": cwd, **kwargs})
+            runner.rows.append({"group": runner.group})
+            if "checks.case_journey_browser_check" in argv:
+                results = runner.out / "case-journey"
+                results.mkdir()
+                (results / "results.json").write_text("{}")
+            return ""
+
+        with (
+            patch.object(runner, "command", side_effect=record, autospec=True),
+            patch.object(runner, "lint"),
+            patch.object(gate, "urlopen", return_value=io.BytesIO(axe)),
+            patch.object(gate, "AXE_SHA256", hashlib.sha256(axe).hexdigest()),
+        ):
+            runner.browser()
+
+        self.assertEqual(runner.failures, [])
+        self.assertIn("browser", runner.groups)
+        for selector, _ in gate.BROWSER_CONTRACTS:
+            with self.subTest(selector=selector):
+                matches = [row for row in calls if selector in row["argv"]]
+                self.assertEqual(len(matches), 1)
+                self.assertEqual(
+                    matches[0]["argv"], [runner.python("api"), "-m", "unittest", "-v", selector]
+                )
+                self.assertEqual(matches[0]["env"]["ZF_BROWSER_TESTS"], "1")
+                self.assertEqual(
+                    matches[0]["env"]["PYTHONPATH"],
+                    runner.tests_env("api", True)["PYTHONPATH"],
+                )
+                self.assertTrue(matches[0]["suite"])
+                self.assertTrue(matches[0]["integration"])
 
     def test_commit_identity_change_invalidates(self) -> None:
         before = gate.clean_identity(self.root, self.base)
@@ -550,7 +635,7 @@ class GateTests(unittest.TestCase):
             for row in suites:
                 changed["commands"].remove(row)
                 changed["files"].pop(row["log"])
-            self.assertEqual(len(suites), 8)
+            self.assertEqual(len(suites), 9)
             gate.atomic_json(path, changed)
             (self.out / "receipt.sha256").write_text(real_digest(path))
             with self.assertRaises(gate.GateError):

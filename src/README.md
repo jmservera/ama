@@ -132,6 +132,12 @@ required integration skips fail. Existing private-data, real AI, Azure/OIDC,
 reviewer protection, privileged what-if and deployment acceptance remain
 separate controls, not local successes.
 
+The chat-panel Chromium contract is an exact general-discovery opt-in, not a
+blanket skip reason. The complete browser stage and the existing API browser CI
+step must execute its named case with `ZF_BROWSER_TESTS=1`. Its command inventory
+requires an executed unittest suite and rejects any integration skip. A missing
+browser, dependency, command or flag remains a failure.
+
 ShellCheck is a required preflight dependency, not an optional actionlint
 enhancement: native workflow lint must analyze shell scripts as hosted lint
 does. Its version is logged and its binary identity is receipt-bound; a missing
