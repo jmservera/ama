@@ -49,6 +49,13 @@ results and the corrected both-stage dictionary. Per-check engineering evidence
 is not composed-climate/live acceptance, downstream #111/#133 test use or an
 owner-accepted deferral of open children.
 
+Publication blocker [#572](https://github.com/jmservera/ama/issues/572) has a
+[source candidate and focused evidence](../capstone/source/review-2026-10-30.md#publication-gate-unblock-for-572):
+exact chat-panel discovery matching is paired with enforced Chromium execution
+in the local gate and API CI. Focused checks and the actual browser case pass;
+complete exact-head validation and independent assessment remain required.
+The original failed receipt is not relabelled as successful.
+
 The [Microsoft Fabric fit assessment](./research/microsoft-fabric-fit-assessment.md)
 preserves the 2026-10-29 component assessment, scoped evidence corrections on
 2026-10-30 and a separately labelled

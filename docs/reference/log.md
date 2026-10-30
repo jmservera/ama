@@ -8661,3 +8661,22 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Preserved earlier scoped reviews and the superseded full-gate run. The latter
   was stopped, not presented as passed. Corrected exact-head publication checks
   and independent follow-up remain required; no stale receipt is reused.
+
+## [2026-10-30] restructure | Pair chat-panel discovery with enforced browser coverage
+
+* Resumed the capstone publication workflow at the owner's direction and
+  integrated latest main without rewriting history or changing deck artifacts.
+* For #572, registered only the exact chat-panel test identity/reason as a
+  general-discovery opt-in. The shared declaration also requires real browser
+  execution in both the runner inventory and runtime; the existing API browser
+  CI step executes the same selector with `ZF_BROWSER_TESTS=1`.
+* Preserved strict integration-skip rejection, required-command verification,
+  workflow/check names and all other gates. The broad skip-reason allowlist is
+  unchanged. Error output now isolates unexpected skips instead of repeating
+  all declared SQL opt-outs.
+* Focused evidence: 34 gate/receipt regressions, strict typing, pinned Ruff and
+  actionlint pass. The named test ran in local Chromium with one test, zero
+  skips and no real account, cloud/model call or private dataset.
+* Original failed full-gate evidence and earlier reviews remain unchanged.
+  New source/workflow changes require a fresh exact-head gate and independent
+  assessment; this entry is not issue acceptance, hosted success or a waiver.
