@@ -136,6 +136,41 @@ def _hazard_report(question: str, tokens: set[str]) -> bool:
     )
 
 
+def _repair_question(question: str) -> bool:
+    household = (
+        r"(?:my|our|the) (?:(?:electric|broken|leaking|noisy|dripping) )*"
+        r"(?:(?:kitchen|bathroom|bedroom) )?"
+        r"(?:home|house|flat|bungalow|kitchen|bathroom|bedroom|ceiling|roof|"
+        r"boiler|heater|heating|radiator|tap|pipes|toilet)"
+    )
+    issue = (
+        r"(?:a |an |some )?(?:(?:dead|strange|bad|unpleasant) )?"
+        r"(?:rats?(?: smell)?|pests?|smell|odour|odor|noise|leak|repairs?|"
+        r"broken heating|hot water problem)"
+    )
+    location = rf"(?:in|at|from|under|near) {household}"
+    state = r"(?:not working|broken|leaking|dripping|(?:very |too |so )?(?:noisy|cold))"
+    smell = rf"smells?(?: (?:strange|bad|unpleasant|awful|(?:like|of) {issue}))?"
+    return bool(
+        re.fullmatch(
+            rf"(?:{household} (?:{smell}|(?:is|are) {state}|"
+            rf"(?:isn't|aren't) working|has {issue}|has no hot water|"
+            rf"needs (?:repairs?|improvements)(?: because of {issue})?)|"
+            rf"there (?:is|are) {issue} {location}|"
+            rf"i (?:can smell|smell|can hear|hear|have noticed) {issue} {location}|"
+            rf"(?:why|how|when) (?:is|are) {household} {state}|"
+            rf"(?:is|are) {household} {state}|"
+            rf"when (?:will|does) {household} (?:work|start working)|"
+            rf"when is hot water coming back (?:to|in) {household}|"
+            rf"how (?:do|can|should) (?:i|we) report {issue} {location}|"
+            rf"who (?:do|can|should) (?:i|we) contact about "
+            rf"(?:{household}|{issue} {location}))"
+            r"[?.!]*",
+            question.lower().strip(),
+        )
+    )
+
+
 def route(question: str) -> Topic | str:
     tokens = words(question)
     if tokens & {
@@ -165,7 +200,37 @@ def route(question: str) -> Topic | str:
         "submit",
         "book",
         "cancel",
+        "write",
+        "poem",
+        "joke",
+        "story",
+        "pretend",
+        "roleplay",
+        "translate",
+        "generate",
+        "execute",
+        "override",
+        "tell",
+        "compose",
+        "play",
+        "output",
     }:
+        return "unknown"
+    repair = _repair_question(question)
+    if (
+        tokens
+        & {
+            "report",
+            "contact",
+            "notify",
+            "email",
+            "call",
+            "arrange",
+            "schedule",
+            "fix",
+        }
+        and not repair
+    ):
         return "unknown"
     if tokens & {"documents", "document", "paperwork"}:
         return Topic.DOCUMENTS
@@ -188,32 +253,7 @@ def route(question: str) -> Topic | str:
         return Topic.STATUS
     if tokens & {"form", "forms"}:
         return Topic.FORMS
-    if (
-        tokens
-        & {
-            "repair",
-            "repairs",
-            "smell",
-            "smells",
-            "smelling",
-            "odour",
-            "odor",
-            "rat",
-            "rats",
-            "pest",
-            "pests",
-            "noise",
-            "noisy",
-            "leak",
-            "leaking",
-            "heating",
-            "heater",
-            "boiler",
-            "broken",
-            "dripping",
-        }
-        or {"hot", "water"} <= tokens
-    ):
+    if repair:
         return "repair"
     return "unknown"
 

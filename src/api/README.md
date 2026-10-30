@@ -85,6 +85,14 @@ question and a limited own-case answer/progress, not the full case or identity.
 Repair concerns, including the dead-rat example, now reach grounded generation
 instead of the unrelated home summary. AI can explain how to ask for help,
 not diagnose the cause, assess safety or claim a repair was reported.
+Repair admission matches the complete text against recognised household repair
+observations and informational questions; a repair keyword or recognised prefix
+alone is not enough. Combined requests, instruction-style and report/contact
+actions remain deterministic refusals, including when they mention a home.
+Recognised questions about how residents can report a repair or whom they should
+contact may receive informational guidance. This conservative finite grammar is
+not general language understanding; unrecognised descriptions or wording keep
+the host-owned refusal and human-help route.
 Safety, legal, consent, appointments, action requests and out-of-scope messages
 keep their host-owned rules/human routes. No model conversation is retained.
 Disabled AI and inference failures show an explicit rules fallback and human help.
