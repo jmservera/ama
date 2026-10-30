@@ -1132,6 +1132,16 @@ rules; review/renew the cost/authority envelope separately, not by bypassing it.
 Authenticated live Playwright and actual-model relevance are still required
 for issue acceptance; local scripted transport is not that evidence.
 
+For authorized live checks, finish the rollout and warm `/healthz` before
+signing in with a fresh browser session. Resident session and CSRF tokens are
+process-bound: a restart or new revision invalidates them even when the signing
+secret is unchanged. Do not reuse a pre-rollout login or wait only for signed-in
+content after a reload; detect sign-in and error states explicitly. After a
+successful login response, wait for the asynchronous own-case view to render
+or an explicit error, not the still-visible pre-login form. Allow several
+minutes for scale-to-zero startup, use bounded long health/navigation timeouts
+and retries, and do not retry an uncertain login or model request blindly.
+
 From `src/api`, with installed source distributions and dev tools:
 
 ```bash

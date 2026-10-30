@@ -1,0 +1,33 @@
+{
+  "task_id": "563-timeout-recovery-20261030",
+  "task_slug": "resident-ai-activation-563-timeout-recovery",
+  "parent_task": {"task_id": "563-owner-enable-20261030T1710Z", "task_slug": "resident-ai-activation-563-owner-enable"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/resident-ai-activation-563-timeout-recovery-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/resident-ai-activation-563-timeout-recovery-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/resident-ai-activation-563-timeout-recovery-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/resident-ai-activation-563-timeout-recovery-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/resident-ai-activation-563-timeout-recovery-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/resident-ai-activation-563-timeout-recovery-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Full ordered continuation loop, local commits only, no push; owner approves activation and monitors cost, no ledger read or SQL public access", "status": "confirmed", "evidence": "User request 2026-10-30T17:57Z"},
+    {"decision": "Four additional resident sign-in submissions total; exact private backup and mandatory rollback on failed verification; USD20, November1 expiry, min0, Manual jobs retained", "status": "confirmed", "evidence": "User request 2026-10-30T17:57Z"},
+    {"decision": "Research executed Complete/Ready; exactly one independent critique Complete/Pass, zero findings; fresh post-rollout login retains process-bound nonce", "status": "recorded", "evidence": "Research C1-C9; new plan critique"},
+    {"decision": "One independent Review Complete / Not accepted; RV-001 later private telemetry research, RV-002 scheduled local closeout; original outcome preserved, no repeat Review or operational retry", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-30/resident-ai-activation-563-timeout-recovery-review.md"}
+  ],
+  "blockers": [
+    {"id": "B1", "summary": "Consented enabled pest POST200 returned AI-unavailable/usage-limit rules fallback; actual AI/grounding/thin label/out-of-scope not proven; baseline restored", "resolution": "Investigate existing private operational telemetry without ledger read, broader RBAC or public networking; no blind inference retry"},
+    {"id": "B2", "summary": "Inactive enabled pod logs unavailable404; existing Log Analytics workspace access denied by NspValidationFailedError", "resolution": "Use authorized existing private-perimeter telemetry access in a later task; do not broaden workspace/SQL access"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Finish scheduled local persistence/bounded gate closeout; activation disabled, no push; await later work selection, Stop or manual mode"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Diagnose resident runtime fallback within existing private telemetry boundary", "rationale": "Only remaining live activation blocker; do not speculate accounting/model cause or retry inference", "evidence": "attempt2 enabled_pest HTTP200 explicit fallback; workspace perimeter denial"},
+    {"rank": 2, "task": "Coordinate fresh complete exact-head/current-main local publication gate", "rationale": "Independent publication prerequisite, earlier lock occupied", "evidence": "PID2080792 holds shared heavy lock; P02 gate pending"},
+    {"rank": 3, "task": "Human content/resident acceptance after actual AI is available", "rationale": "Structural browser proof cannot establish semantic/operational approval", "evidence": "Plan AC2-AC6; actual AI remains unobserved"}
+  ]
+}
