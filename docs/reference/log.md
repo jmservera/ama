@@ -8375,3 +8375,44 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   fresh legal review, direct accessibility/human acceptance, current live-demo
   authority, the complete RPI publication gate, hosted scoring or owner merge.
   No commit, push, deployment, paid inference or new operational approval.
+
+## [2026-10-30] refine | Promote roadmap recommendations into the main story
+
+* Reviewed the retained proposals and added the
+  [roadmap register and explicit crosswalk](../capstone/source/roadmap-recommendations.md):
+  25 families through 22 grouped dispositions, with value hypotheses, reasons
+  to wait, simpler comparators and evidence-led adoption conditions. Existing
+  source work and required readiness are not presented as optional new features.
+* Promoted selective Fabric/Power BI into main page 14, source connectors,
+  Document Intelligence and M365 into page 15, and four improvement lanes into
+  page 23. Page 24 now asks for bounded scope/owners and a costed plan before
+  separately authorized execution, with results reviewed before expansion.
+  Opening, demo, close and appendix labels follow the same bounded argument.
+* Retrieved official Fabric and Power BI icons from the Microsoft Learn-linked
+  archive. Retained unchanged SVGs, native PNG derivatives, hashes, member/URL
+  provenance and permitted-use guidance. Two declared PNG package members
+  augment the 293-member captured baseline; all original media remain intact.
+  The rebuild verifies source/derived hashes, exact usage, aspect and native
+  action preservation. No dependency or paid platform was introduced.
+* Independent visual/story reviews and corrections are preserved in the
+  [dated review](../capstone/source/review-2026-10-30.md). Fixed wrapping,
+  presumed-benefit wording, mismatched visible calls to action, approval-order
+  ambiguity and an overlong paper detour. The architecture/IoT notes now
+  distinguish historical/source work, the actual bounded 29 October hub
+  reconciliation, and unmet live-to-SQL/full-route acceptance. The paper
+  remains unchanged and is not new causal or product evidence.
+* Native render preserves 54 slides/notes, all 108 existing navigation actions,
+  original timing and cost graphics/calculations. Final revised overflow is
+  zero; 234 inherited bound warnings are not accessibility acceptance.
+  Focused existing scorer regressions pass 22 tests. Actual isolated-index
+  extraction discovers the exact current deck/pitch/demo, excludes history/
+  baselines, reads all 54 note blocks and verifies main-route roadmap content
+  and both embedded official PNGs. Three negative preservation checks pass.
+* Updated the current deck/PDF, generated notes/Q&A, working guides and index;
+  previous delivery and heavy outputs remain in external working evidence.
+  The 29 October broad-suite failures retain their original scope; no new
+  full-suite pass, rehearsal, current legal/provider-cost review, live-service,
+  resident, human/accessibility or production acceptance is inferred. No score
+  file, application, infrastructure or original RPI evidence was changed.
+  No hosted score, complete publication gate, commit, push, cloud/tenant action,
+  paid inference or spending approval was performed by this task.

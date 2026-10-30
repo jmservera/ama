@@ -121,7 +121,30 @@ function Export-AuthoringSource {
         }
         $Name = "ppt/slides/slide$($Slide.number).xml"
         if ($Slide.layout -eq 'native') { $Parts[$Name] = Set-StorySlide $Archive $Slide }
-        elseif ($Slide.layout -eq 'text') { $Parts[$Name] = Set-TargetedPart $Archive $Name $Slide.replacements @() $Slide.number }
+        elseif ($Slide.layout -eq 'text') {
+            $Parts[$Name] = Set-TargetedPart $Archive $Name $Slide.replacements @() $Slide.number
+            foreach ($Replacement in $Slide.replacements | Where-Object { $_.box }) {
+                $Box = @($Replacement.box)
+                if (-not $Replacement.id -or $Box.Count -ne 4 -or $Box[0] -lt 0.5 -or $Box[1] -lt 0.5 -or
+                    $Box[2] -le 0 -or $Box[3] -le 0 -or $Box[0] + $Box[2] -gt 12.834 -or $Box[1] + $Box[3] -gt 7.0) {
+                    throw 'Text-only bounds correction is invalid'
+                }
+                $TextDocument = [xml]::new()
+                $TextDocument.PreserveWhitespace = $true
+                $TextDocument.LoadXml([Text.Encoding]::UTF8.GetString($Parts[$Name]))
+                $TextNamespaces = Get-Namespaces $TextDocument
+                $Shape = $TextDocument.SelectSingleNode("//p:sp[p:nvSpPr/p:cNvPr[@id='$($Replacement.id)']]", $TextNamespaces)
+                if (-not $Shape) { throw 'Text bounds target missing' }
+                $Transform = $Shape.SelectSingleNode('p:spPr/a:xfrm', $TextNamespaces)
+                $Offset = $Transform.SelectSingleNode('a:off', $TextNamespaces)
+                $Extent = $Transform.SelectSingleNode('a:ext', $TextNamespaces)
+                $Offset.SetAttribute('x', [string][int][Math]::Round($Box[0] * 914400))
+                $Offset.SetAttribute('y', [string][int][Math]::Round($Box[1] * 914400))
+                $Extent.SetAttribute('cx', [string][int][Math]::Round($Box[2] * 914400))
+                $Extent.SetAttribute('cy', [string][int][Math]::Round($Box[3] * 914400))
+                $Parts[$Name] = Get-XmlBytes $TextDocument
+            }
+        }
         elseif ($Slide.layout -ne 'baseline') { throw "Unsupported slide layout: $($Slide.layout)" }
         $Before = Get-SlideInventory $Archive $Slide.number
         $Text = $Slide.notes
@@ -153,7 +176,75 @@ function Export-AuthoringSource {
         if (($Usage -join ',') -cne (@($Asset.slides) -join ',')) { throw "Asset usage mismatch: $($Asset.part)" }
         $Parts[$Asset.part] = $Bytes
     }
+    $Additional = @($Catalog.additional_media | Where-Object { $_ })
+    if (@($Additional.id | Select-Object -Unique).Count -ne $Additional.Count -or
+        @($Additional.part | Select-Object -Unique).Count -ne $Additional.Count) { throw 'Duplicate additional-media identity' }
+    foreach ($Asset in $Additional) {
+        if ($Asset.id -cnotmatch '^[a-z][a-z0-9-]*$' -or $Asset.part -cnotmatch '^ppt/media/roadmap-[a-z0-9-]+\.png$' -or
+            $Archive.GetEntry($Asset.part)) { throw 'Invalid or colliding additional-media part' }
+        $Bytes = [IO.File]::ReadAllBytes((Resolve-LocalInput $Root $Asset.path))
+        if ((Get-ByteHash $Bytes) -cne $Asset.sha256) { throw "Additional media hash mismatch: $($Asset.id)" }
+        if ($Asset.source_svg) {
+            $VectorBytes = [IO.File]::ReadAllBytes((Resolve-LocalInput $Root $Asset.source_svg))
+            if ((Get-ByteHash $VectorBytes) -cne $Asset.source_sha256) { throw "Original SVG hash mismatch: $($Asset.id)" }
+        }
+        $Parts[$Asset.part] = $Bytes
+    }
+    foreach ($Slide in $Definition.slides | Where-Object { $_.images }) {
+        $Name = "ppt/slides/slide$($Slide.number).xml"
+        $Document = Get-PartDocument $Archive $Name
+        if ($Parts.ContainsKey($Name)) { $Document.LoadXml([Text.Encoding]::UTF8.GetString($Parts[$Name])) }
+        $RelationshipName = "ppt/slides/_rels/slide$($Slide.number).xml.rels"
+        $Relationships = Get-PartDocument $Archive $RelationshipName
+        Add-DeckImage $Document $Relationships $Slide.images $Additional $Slide.number
+        $Parts[$Name] = Get-XmlBytes $Document
+        $Parts[$RelationshipName] = Get-XmlBytes $Relationships
+    }
     return ,$Parts
+}
+
+function Add-DeckImage {
+    param([xml]$Document, [xml]$Relationships, $Images, $Assets, [int]$SlideNumber)
+    $Namespaces = Get-Namespaces $Document
+    $Tree = $Document.SelectSingleNode('/p:sld/p:cSld/p:spTree', $Namespaces)
+    $Id = [Math]::Max(2000000, ([int]($Tree.SelectNodes('.//p:cNvPr', $Namespaces) | ForEach-Object { [int]$_.id } | Measure-Object -Maximum).Maximum) + 1)
+    $RelationshipNamespace = 'http://schemas.openxmlformats.org/package/2006/relationships'
+    foreach ($Image in $Images) {
+        $Matches = @($Assets | Where-Object id -CEQ $Image.asset)
+        if ($Matches.Count -ne 1 -or $SlideNumber -notin @($Matches[0].slides)) { throw 'Image is not in the approved asset/slide mapping' }
+        $Asset = $Matches[0]
+        $Box = @($Image.box)
+        if ($Box.Count -ne 4 -or $Box[0] -lt 0.5 -or $Box[1] -lt 0.5 -or $Box[2] -le 0 -or $Box[3] -le 0 -or
+            $Box[0] + $Box[2] -gt 12.834 -or $Box[1] + $Box[3] -gt 7.0 -or -not $Image.alt) { throw 'Image bounds or alternative text invalid' }
+        if ($Asset.pixel_width -le 0 -or $Asset.pixel_height -le 0) { throw 'Image aspect ratio unavailable' }
+        $Scale = [Math]::Min($Box[2] / $Asset.pixel_width, $Box[3] / $Asset.pixel_height)
+        $Width = $Asset.pixel_width * $Scale
+        $Height = $Asset.pixel_height * $Scale
+        $Left = $Box[0] + ($Box[2] - $Width) / 2
+        $Top = $Box[1] + ($Box[3] - $Height) / 2
+        $RelationshipId = 'rIdRoadmap' + $Id
+        if ($Relationships.DocumentElement.ChildNodes | Where-Object Id -CEQ $RelationshipId) { throw 'Image relationship collision' }
+        $Relationship = $Relationships.CreateElement('Relationship', $RelationshipNamespace)
+        $Relationship.SetAttribute('Id', $RelationshipId)
+        $Relationship.SetAttribute('Type', 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image')
+        $Relationship.SetAttribute('Target', '../media/' + [IO.Path]::GetFileName($Asset.part))
+        [void]$Relationships.DocumentElement.AppendChild($Relationship)
+        $Fragment = [xml]'<p:pic xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><p:nvPicPr><p:cNvPr id="1" name="Roadmap image"/><p:cNvPicPr><a:picLocks noChangeAspect="1"/></p:cNvPicPr><p:nvPr/></p:nvPicPr><p:blipFill><a:blip r:embed="image"/><a:stretch><a:fillRect/></a:stretch></p:blipFill><p:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="1" cy="1"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:ln><a:noFill/></a:ln></p:spPr></p:pic>'
+        $Picture = $Document.ImportNode($Fragment.DocumentElement, $true)
+        $Properties = $Picture.SelectSingleNode('p:nvPicPr/p:cNvPr', $Namespaces)
+        $Properties.SetAttribute('id', [string]$Id)
+        $Properties.SetAttribute('name', "Roadmap-$SlideNumber-$($Asset.id)")
+        $Properties.SetAttribute('descr', [string]$Image.alt)
+        [void]$Picture.SelectSingleNode('p:blipFill/a:blip', $Namespaces).SetAttribute('embed', 'http://schemas.openxmlformats.org/officeDocument/2006/relationships', $RelationshipId)
+        $Offset = $Picture.SelectSingleNode('p:spPr/a:xfrm/a:off', $Namespaces)
+        $Extent = $Picture.SelectSingleNode('p:spPr/a:xfrm/a:ext', $Namespaces)
+        $Offset.SetAttribute('x', [string][int][Math]::Round($Left * 914400))
+        $Offset.SetAttribute('y', [string][int][Math]::Round($Top * 914400))
+        $Extent.SetAttribute('cx', [string][int][Math]::Round($Width * 914400))
+        $Extent.SetAttribute('cy', [string][int][Math]::Round($Height * 914400))
+        [void]$Tree.AppendChild($Picture)
+        $Id++
+    }
 }
 
 function Test-DeckCandidate {
@@ -161,17 +252,20 @@ function Test-DeckCandidate {
     $Candidate = [IO.Compression.ZipFile]::OpenRead($CandidatePath)
     try {
         $Names = @($BaselineArchive.Entries.FullName | Sort-Object)
+        $Added = @($Parts.Keys | Where-Object { -not $BaselineArchive.GetEntry($_) } | Sort-Object)
+        $ExpectedNames = @($Names + $Added | Sort-Object)
         $OtherNames = @($Candidate.Entries.FullName | Sort-Object)
-        if ($Names.Count -ne $OtherNames.Count -or @($OtherNames | Select-Object -Unique).Count -ne $OtherNames.Count -or
-            @(Compare-Object $Names $OtherNames).Count) { throw 'Package member set changed' }
+        if ($ExpectedNames.Count -ne $OtherNames.Count -or @($OtherNames | Select-Object -Unique).Count -ne $OtherNames.Count -or
+            @(Compare-Object $ExpectedNames $OtherNames).Count) { throw 'Package member set differs from explicit baseline and added-media inputs' }
         $Changed = @()
-        foreach ($Name in $Names) {
-            $Original = Get-PartBytes $BaselineArchive $Name
+        foreach ($Name in $ExpectedNames) {
+            $Original = $null
+            if ($BaselineArchive.GetEntry($Name)) { $Original = Get-PartBytes $BaselineArchive $Name }
             $Expected = $Original
             if ($Parts.ContainsKey($Name)) { $Expected = $Parts[$Name] }
             $Actual = Get-PartBytes $Candidate $Name
             if ((Get-ByteHash $Expected) -cne (Get-ByteHash $Actual)) { throw "Candidate content mismatch: $Name" }
-            if ((Get-ByteHash $Original) -cne (Get-ByteHash $Actual)) { $Changed += $Name }
+            if ($null -eq $Original -or (Get-ByteHash $Original) -cne (Get-ByteHash $Actual)) { $Changed += $Name }
         }
         $Actions = 0
         $BaselineActions = 0
@@ -203,9 +297,15 @@ function Test-DeckCandidate {
                 $CostNavigationUpdates += $Number
             }
         }
+        $Catalog = Get-Content -LiteralPath (Resolve-LocalInput $SourceRoot $Definition.assets) -Raw | ConvertFrom-Json
+        foreach ($Asset in $Catalog.additional_media) {
+            $ActualUsage = @(Get-MediaUsage $Candidate $Asset.part)
+            if (($ActualUsage -join ',') -cne (@($Asset.slides | Sort-Object -Unique) -join ',')) { throw "Additional media usage mismatch: $($Asset.id)" }
+        }
         return [ordered]@{
             status = 'pass'; slides = 54; nonempty_notes = 54; navigation_actions = $Actions
-            package_members = $Names.Count; changed_members = $Changed; timing_preserved = $true
+            package_members = $ExpectedNames.Count; baseline_members = $Names.Count; added_media_parts = $Added
+            changed_members = $Changed; timing_preserved = $true
             native_navigation_preserved = $true; six_cost_slide_bytes_preserved = $true
             cost_note_calculations_preserved = $true; cost_note_navigation_only_updates = $CostNavigationUpdates
             full_manifest_and_media_verified = $true; candidate_sha256 = (Get-FileHash $CandidatePath -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -240,7 +340,8 @@ function Export-NativeDeck {
                     bound_height = $Range.BoundHeight; available_height = $AvailableHeight
                     bound_width = $Range.BoundWidth; available_width = $AvailableWidth
                     overflow = ($Range.BoundHeight -gt $AvailableHeight + 0.75 -or $Range.BoundWidth -gt $AvailableWidth + 0.75)
-                    revised = ($Spec.layout -eq 'native' -and ($Shape.Name.StartsWith('Story-') -or $Shape.Id -in @($Spec.headers.id)))
+                    revised = (($Spec.layout -eq 'native' -and ($Shape.Name.StartsWith('Story-') -or $Shape.Id -in @($Spec.headers.id))) -or
+                        ($Spec.layout -eq 'text' -and $Shape.Id -in @($Spec.replacements.id)))
                 }
                 [void][Runtime.InteropServices.Marshal]::ReleaseComObject($Range)
                 [void][Runtime.InteropServices.Marshal]::ReleaseComObject($Frame)
@@ -268,6 +369,8 @@ function Export-NativeDeck {
 
 function Export-PitchMaterials {
     param([string]$CandidatePath, [string]$Output, $Definition, $Report)
+    $ContentDate = '2026-10-29'
+    if ($Definition.content_date) { $ContentDate = [string]$Definition.content_date }
     $Pitch = Join-Path $Output 'pitch'
     [void][IO.Directory]::CreateDirectory($Pitch)
     $Archive = [IO.Compression.ZipFile]::OpenRead($CandidatePath)
@@ -280,7 +383,7 @@ function Export-PitchMaterials {
             $Lines = @(
                 '---', "title: $Title"
                 'description: Generated from the current 54-slide source; preparation, not a rehearsal transcript'
-                'ms.date: 2026-10-29', 'ms.topic: reference', '---', ''
+                "ms.date: $ContentDate", 'ms.topic: reference', '---', ''
                 '## Authority', ''
                 'Generated by tools/capstone/Invoke-Capstone.ps1 from the current deck. Edit the source manifest, not this generated copy.'
                 "Candidate SHA-256: ``$($Report.candidate_sha256)``.", ''
@@ -293,7 +396,9 @@ function Export-PitchMaterials {
                 $Inventory = Get-SlideInventory $Archive $Number
                 $Lines += @("## Page $Number / $($Spec.code)", '', $Spec.title, '', $Inventory.notes, '')
             }
-            $Lines | Set-Content -LiteralPath (Join-Path $Pitch $Name) -Encoding utf8NoBOM
+            $Content = ($Lines -join "`n").Replace("`r", '')
+            $Content = [regex]::Replace($Content, '(?m)[ \t]+$', '')
+            [IO.File]::WriteAllText((Join-Path $Pitch $Name), $Content + "`n", [Text.UTF8Encoding]::new($false))
         }
     } finally { $Archive.Dispose() }
 }
@@ -338,6 +443,12 @@ if ($MyInvocation.InvocationName -ne '.') {
                     if ($Parts.ContainsKey($Entry.FullName)) { $Bytes = $Parts[$Entry.FullName] }
                     $Stream = $NewEntry.Open()
                     try { $Stream.Write($Bytes, 0, $Bytes.Length) } finally { $Stream.Dispose() }
+                }
+                foreach ($Name in $Parts.Keys | Where-Object { -not $BaselineArchive.GetEntry($_) } | Sort-Object) {
+                    $Entry = $Destination.CreateEntry($Name, [IO.Compression.CompressionLevel]::Optimal)
+                    $Entry.LastWriteTime = [DateTimeOffset]::Parse('2026-10-30T00:00:00Z')
+                    $Stream = $Entry.Open()
+                    try { $Stream.Write($Parts[$Name], 0, $Parts[$Name].Length) } finally { $Stream.Dispose() }
                 }
             } finally { $Destination.Dispose() }
         }

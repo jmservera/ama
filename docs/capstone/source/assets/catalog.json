@@ -1,5 +1,43 @@
 {
   "schema_version": 1,
+  "additional_media": [
+    {
+      "id": "fabric",
+      "part": "ppt/media/roadmap-fabric.png",
+      "path": "assets/official/fabric.png",
+      "sha256": "ed3e3ce3b4d1f45f16e281620e259ddbc6880d55a9686a5a0a89dd6b63285df0",
+      "source_svg": "assets/official/fabric.svg",
+      "source_sha256": "ef80d2edbfc1b045241d2e9550b7930b648d8018e0274116a3df6d6ccf3adbf9",
+      "pixel_width": 512,
+      "pixel_height": 512,
+      "slides": [14, 23],
+      "source_page": "https://learn.microsoft.com/en-us/fabric/fundamentals/icons",
+      "download_url": "https://raw.githubusercontent.com/microsoft/fabric-samples/main/docs-samples/Icons.zip",
+      "archive_sha256": "fc22e71b0545ed15e22c53f16bf4fb06ffe72daabd3c90a947a6e481c9675e6b",
+      "archive_member": "v6.1.0/package/dist/svg/fabric_48_color.svg",
+      "retrieved": "2026-10-30",
+      "terms": "Microsoft permits architectural diagrams, training, slide decks and documentation; retain labels and unchanged icon appearance. Other rights reserved.",
+      "derivation": "Official SVG rasterized by native PowerPoint Shape.Export; no crop, recolour, flip or rotation."
+    },
+    {
+      "id": "power-bi",
+      "part": "ppt/media/roadmap-power-bi.png",
+      "path": "assets/official/power-bi.png",
+      "sha256": "619caa7a146b2e6d9d65586b23aa7af29de7597d1721250fa89b6c557763dd8e",
+      "source_svg": "assets/official/power-bi.svg",
+      "source_sha256": "264abad01f50acaffb697b3ede22215b7d87f387c1af92f0a0b14117d2c2e4f1",
+      "pixel_width": 512,
+      "pixel_height": 512,
+      "slides": [14],
+      "source_page": "https://learn.microsoft.com/en-us/fabric/fundamentals/icons",
+      "download_url": "https://raw.githubusercontent.com/microsoft/fabric-samples/main/docs-samples/Icons.zip",
+      "archive_sha256": "fc22e71b0545ed15e22c53f16bf4fb06ffe72daabd3c90a947a6e481c9675e6b",
+      "archive_member": "v6.1.0/package/dist/svg/power_bi_48_color.svg",
+      "retrieved": "2026-10-30",
+      "terms": "Microsoft permits architectural diagrams, training, slide decks and documentation; retain labels and unchanged icon appearance. Other rights reserved.",
+      "derivation": "Official SVG rasterized by native PowerPoint Shape.Export; no crop, recolour, flip or rotation."
+    }
+  ],
   "media": [
     {
       "part": "ppt/media/image24.png",

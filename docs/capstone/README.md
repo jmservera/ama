@@ -1,7 +1,7 @@
 ---
 title: Capstone Working Set
 description: Current presentation, reproducible sources, pitch, demo and rubric inputs
-ms.date: 2026-10-29
+ms.date: 2026-10-30
 ms.topic: how-to
 ---
 
@@ -14,11 +14,12 @@ choice between the older executive and Cowork routes.
 | --- | --- |
 | Present or review | [PowerPoint](./deck/zava-forward-cowork-v2-draft.pptx) and [matching PDF](./deck/zava-forward-cowork-v2-draft.pdf) |
 | Edit and rebuild | [Source guide](./source/README.md), [54-slide manifest](./source/slides.json) and [native baseline](./source/baseline.pptx) |
-| Find image inputs and provenance | [Asset catalog](./source/assets/catalog.json) and [retained media](./source/assets/media/) |
+| Find image inputs and provenance | [Asset catalog](./source/assets/catalog.json), [retained media](./source/assets/media/) and [official Fabric/Power BI sources](./source/assets/official/README.md) |
 | Prepare the pitch | [Speaker notes](./pitch/speaker-script.md), [question bank](./pitch/questions-and-answers.md) and [pitch folder](./pitch/) |
 | Prepare the demo | [Ten-minute runbook](./demo/runbook.md), including the under-two-minute executive hook and recovery route |
-| Understand technology choices | [Decision register](./source/README.md#technology-decisions); main page 16 and appendix pages 31, 37, 46 and 47 |
-| Inspect findings and checks | [Dated review](./source/review-2026-10-29.md), including the legal-status correction on page 3 and all-criteria evidence gaps |
+| Understand what comes next | [Roadmap recommendations and full proposal crosswalk](./source/roadmap-recommendations.md); main pages 14, 15, 23 and 24, with a bounded close on page 26 |
+| Understand technology choices | [Decision register](./source/README.md#technology-decisions); main page 16 and deeper appendix comparisons |
+| Inspect findings and checks | [30 October roadmap review](./source/review-2026-10-30.md) and preserved [29 October review](./source/review-2026-10-29.md) |
 | Recover previous work | [History and restore map](./history/README.md); original findings and authoring sources are retained |
 | Continue thought leadership | [Existing paper package](./thought-leadership/everything-but-the-software/README.md), unchanged by this reorganization |
 
@@ -31,8 +32,9 @@ benefits or a fresh rubric score.
 Keep the complete source package and its builder dependencies. The JSON covers
 all 54 slide records and notes; the pinned native baseline owns unchanged
 layouts, relationships, themes and embedded graphics. JSON alone does not
-reconstruct those native designs. The 36 separate media inputs make image
-dependencies inspectable and editable.
+reconstruct those native designs. Keep the 36 captured media inputs and the
+two official roadmap product icons, each with original SVG and PNG derivative.
+The catalog pins every input and approved new-image placement.
 
 Keep pitch and demo material together with the same deck revision. Do not edit
 the generated speaker notes or Q&A independently of the source manifest.

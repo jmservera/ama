@@ -1,16 +1,33 @@
 {
-  "source_as_of": "2026-10-29",
+  "source_as_of": "2026-10-30",
   "package": {
     "status": "pass",
     "slides": 54,
     "nonempty_notes": 54,
     "navigation_actions": 108,
-    "package_members": 293,
+    "package_members": 295,
+    "baseline_members": 293,
+    "added_media_parts": [
+      "ppt/media/roadmap-fabric.png",
+      "ppt/media/roadmap-power-bi.png"
+    ],
     "changed_members": [
+      "ppt/media/roadmap-fabric.png",
+      "ppt/media/roadmap-power-bi.png",
       "ppt/notesSlides/notesSlide1.xml",
+      "ppt/notesSlides/notesSlide14.xml",
+      "ppt/notesSlides/notesSlide15.xml",
       "ppt/notesSlides/notesSlide16.xml",
+      "ppt/notesSlides/notesSlide17.xml",
+      "ppt/notesSlides/notesSlide18.xml",
+      "ppt/notesSlides/notesSlide19.xml",
       "ppt/notesSlides/notesSlide2.xml",
+      "ppt/notesSlides/notesSlide22.xml",
+      "ppt/notesSlides/notesSlide23.xml",
+      "ppt/notesSlides/notesSlide24.xml",
       "ppt/notesSlides/notesSlide25.xml",
+      "ppt/notesSlides/notesSlide26.xml",
+      "ppt/notesSlides/notesSlide27.xml",
       "ppt/notesSlides/notesSlide28.xml",
       "ppt/notesSlides/notesSlide29.xml",
       "ppt/notesSlides/notesSlide3.xml",
@@ -39,7 +56,17 @@
       "ppt/notesSlides/notesSlide52.xml",
       "ppt/notesSlides/notesSlide53.xml",
       "ppt/notesSlides/notesSlide54.xml",
+      "ppt/slides/_rels/slide14.xml.rels",
+      "ppt/slides/_rels/slide23.xml.rels",
+      "ppt/slides/slide1.xml",
+      "ppt/slides/slide14.xml",
+      "ppt/slides/slide15.xml",
       "ppt/slides/slide16.xml",
+      "ppt/slides/slide23.xml",
+      "ppt/slides/slide24.xml",
+      "ppt/slides/slide25.xml",
+      "ppt/slides/slide26.xml",
+      "ppt/slides/slide27.xml",
       "ppt/slides/slide3.xml",
       "ppt/slides/slide31.xml",
       "ppt/slides/slide37.xml",
@@ -56,47 +83,62 @@
       52
     ],
     "full_manifest_and_media_verified": true,
-    "candidate_sha256": "57c55d1171b549138a6fe79c12c30580283ccafb1dbaa417104de97209b2c5b9",
+    "candidate_sha256": "0da44c8a679a8ffab0c0d7fd97ec2fe5079e1595c593ad1f321e38d403aa027b",
     "baseline_sha256": "2bab9b79de4352a1915dab04d1846a4c4be90f6889a2b9b6af4807e48a33d5f8",
-    "manifest_sha256": "c182449e685aa6cee2be90b85e47fde6ca171c1db2f32bf2647dd73239c74c2c",
-    "asset_catalog_sha256": "f4d885a20ed9fc3e2b28cbc5bf8cfc287d8e73511614e17b4cef4ed924cdc2b4",
-    "builder_sha256": "7b148984a44e1213cd6e5ea7282c95ed7c105288d7b1b67571b574699967c042",
+    "manifest_sha256": "c0457a6769a03b960000c3a858fabc4da86401f1cc3e936339b7dfee7ccb6128",
+    "asset_catalog_sha256": "b967979ff22213c3e4ae2a7d4958663e86550a63f16fafad9f8bb943ead5fcc3",
+    "builder_sha256": "8e32b418d69f0c6ffb72c29e480bdfcce4ee7da449f165bbf38db278567fc154",
     "native_helper_sha256": "b4ff97279c094ecc120b4736ec9b3a7b37bc0f2d01e6e5896fca47a9cc16d002"
   },
   "native": {
     "renderer": "Microsoft PowerPoint 16.0 COM",
     "slides": 54,
-    "pdf_sha256": "d3b0509a2c3ada4e7690716b1297d389fb31f3f8b554952d415906c4373a4eff",
+    "pdf_sha256": "9646f2d7ff54770d5fbf017d0f496f8e6ec5e16d19b77425e18b0fea73d3cf95",
     "revised_text_overflow": 0,
-    "inherited_bound_warnings": 264,
+    "inherited_bound_warnings": 234,
     "independently_inspected_pages": [
-      3,
-      16,
-      31,
-      37,
-      46,
-      47
+      1,
+      14,
+      15,
+      23,
+      24,
+      25,
+      26,
+      27
     ],
     "human_acceptance": false
   },
   "review": {
-    "initial_visual_findings": 7,
-    "initial_reader_findings": 4,
-    "opening_followup_findings": 2,
-    "final_independent_followup": "Scoped editorial closure confirmed in delivered notes; original visual and reader findings remain in the dated review. Not whole-product, legal, human, accessibility or publication acceptance.",
-    "actual_scorer_registry_fixture": "Pass: 54 slides/notes, exact current deck, all four current pitch/demo documents, baseline/history excluded; isolated fixture index only.",
+    "main_roadmap_pages": [
+      14,
+      15,
+      23,
+      24
+    ],
+    "close_and_label_pages": [
+      1,
+      25,
+      26,
+      27
+    ],
+    "proposal_families_crosswalk": 25,
+    "grouped_dispositions": 22,
+    "independent_visual_followup": "No material visible issue in final corrected close/index; earlier roadmap corrections retained in dated review.",
+    "independent_story_followup": "No remaining material roadmap omission or approval-order contradiction within reviewed scope.",
     "note_page_ownership_guard": true,
-    "scorer_extraction_54_notes": true,
-    "six_flagged_phrases_absent": true
+    "actual_scorer_fixture": "Pass: 54 slides/notes, exact current deck/pitch/demo, baseline/history excluded, main-route Fabric value/wait/unlock and four lanes present, both official packaged PNG hashes verified; isolated fixture index only."
   },
   "tests": {
-    "passed": 149,
-    "failed": 23,
-    "skipped": 1,
-    "unchanged_head_score_fixture_failures": 7,
-    "missing_jq_preflight_failures": 16
+    "focused_scorer_regressions_passed": 22,
+    "negative_checks_passed": [
+      "mismatched_note_owner_refused",
+      "altered_official_image_hash_refused",
+      "tampered_packaged_logo_refused"
+    ],
+    "earlier_broad_suite": "2026-10-29:149 passed,23 failed,1 skipped;7 unchanged score fixtures and16 missing-jq preflights; not rerun or relabelled as current pass."
   },
-  "local_evidence_directory": "~/AppData/Local/ama/capstone-runs/2026-10-29-final-owned",
+  "local_evidence_directory": "~/AppData/Local/ama/capstone-runs/2026-10-30-roadmap-final",
+  "negative_evidence_directory": "~/AppData/Local/ama/capstone-runs/2026-10-30-roadmap-negative-checks",
   "hosted_rubric_run": false,
   "publication_gate_run": false
 }

@@ -1,7 +1,7 @@
 ---
 title: Current Capstone Pitch Preparation
 description: Audience strategy, current narration route, delivery cues and honest preparation boundaries
-ms.date: 2026-10-29
+ms.date: 2026-10-30
 ms.topic: how-to
 ---
 
@@ -45,14 +45,18 @@ and contingency. The separate demo is ten minutes, with its outcome hook
 inside two minutes. These are plans, not observed timings.
 
 Follow the argument: stakes and qualified legal/policy timelines -> service/handoff problem -> research
-and alternatives -> one-home workbench -> bounded AI and controls -> cost and
-delivery learning -> validation decision -> demo -> close. The five technology
-revisions replace existing material rather than adding scheduled slides.
+and alternatives -> one-home workbench -> shared insight and better inputs ->
+bounded AI and controls -> cost and delivery learning -> conditional roadmap ->
+bounded planning decision -> demo -> close. Replacements retain the existing
+slots rather than adding scheduled slides.
 
 | Moment | Main message / optional depth |
 | --- | --- |
 | Page 13: same-home blueprint | A changed fact has an owner; resident choice, Finance and QA remain separate |
+| Page 14: Microsoft Fabric + Power BI | Shared history/measures could reduce repeated preparation; wait for governed inputs, workload and full cost; compare SQL/BI first |
+| Page 15: connect and extract | Less re-keying/transcription; source authority, document accuracy and tenant reconciliation unlock adoption |
 | Page 16: AI placement | Five business capabilities; rules enforce, models propose and people decide |
+| Pages 22-24: lesson, roadmap, decision | Test usability before adding capability; four improvement lanes; agree scope/owners, cost the plan, authorize execution separately, review results before expansion |
 | Page 31 / B04 | Decision 1 must beat the parser/manual comparator; a successful call is not a benefit result |
 | Page 37 / B10 | Shared Container Apps API, Entra, SQL and Blob; split only for measured operating need |
 | Page 46 / B19 | Source-only synthetic IoT flow, private Event Hub and independent human safety route |
@@ -84,12 +88,13 @@ they occur. A prepared answer is not evidence of live listening or composure.
 Current live identity/SQL/model acceptance, reviewer effectiveness,
 accessibility and direct human comprehension remain separate gates. The
 critical unsupported-claim-with-valid-citation counterexample remains open.
-The earlier scoped cost authority expired; no new paid run is authorized.
+The earlier general exercise window expired; later narrow task approvals do
+not automatically fund this roadmap or Fabric. No new paid run is authorized here.
 Fresh provider/price checks and original-image reuse provenance remain
 necessary before a consequential new use. Nothing here changes the paper,
 rubric baseline, ADR approvals, privacy decisions or operational controls.
 
 Use the [complete assessment guide](../../reference/method/ama-capstone-assessment-guide.md)
-and the [source decision register](../source/README.md#technology-decisions)
+and the [full roadmap/proposal register](../source/roadmap-recommendations.md)
 to challenge the argument. Section floors, no individual score of 1, artifact
 submission and attendance requirements cannot be inferred from local checks.
