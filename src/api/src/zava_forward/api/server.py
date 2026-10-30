@@ -33,6 +33,7 @@ from zava_forward.core.chatthreads import ChatNotFound
 from zava_forward.core.documents import DocumentStoreError
 from zava_forward.core.factory import open_store
 from zava_forward.api.timecapture import TimeCapture
+from zava_forward.api.static_assets import StaticAssets
 from zava_forward.core.store import MANAGER_ROLES, ConflictError, GateError
 
 WEB = Path(__file__).resolve().parent / "web"
@@ -189,7 +190,11 @@ def bbox(q):
     return (min(s, n), min(w, e), max(s, n), max(w, e))
 
 
-def make_handler(app):
+def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
+    assets = StaticAssets({
+        "/" + path.relative_to(WEB).as_posix(): (path, TYPES.get(path.suffix, "application/octet-stream"))
+        for path in WEB.rglob("*") if path.is_file() and WEB in path.resolve().parents
+    })
     class H(BaseHTTPRequestHandler):
         server_version = "ZavaForward"
 
@@ -200,11 +205,13 @@ def make_handler(app):
             raw = body if isinstance(body, bytes) else body.encode()
             self.send_response(code)
             self.send_header("Content-Type", ctype)
-            self.send_header("Content-Length", str(len(raw)))
+            if code != 304:
+                self.send_header("Content-Length", str(len(raw)))
             for k, v in {**SECURITY, "Content-Security-Policy": app.csp, **(extra or {})}.items():
                 self.send_header(k, v)
             self.end_headers()
-            self.wfile.write(raw)
+            if self.command != "HEAD" and code != 304:
+                self.wfile.write(raw)
 
         def _json(self, code, obj, extra=None):
             self._send(code, json.dumps(obj), extra=extra)
@@ -227,6 +234,9 @@ def make_handler(app):
             if n > 8_000_000:
                 raise ValueError("Too large")
             return json.loads(self.rfile.read(n) or b"{}")
+
+        def do_HEAD(self):
+            self.do_GET()
 
         def do_GET(self):
             url = urlparse(self.path)
@@ -252,12 +262,17 @@ def make_handler(app):
                         if self.headers.get("X-MS-CLIENT-PRINCIPAL"):
                             return self._send(403, '<h1>Account not authorised</h1><p>Your account needs a provisioned workbench role.</p><a href="/.auth/logout?post_logout_redirect_uri=%2F">Sign out</a>', "text/html; charset=utf-8")
                         return self._send(302, "", extra={"Location": "/sign-in"})
-                    raw = f.read_bytes()
+                    asset = assets.get("/" + name)
+                    if asset is None:
+                        return self._send(404, "Not found", "text/plain")
+                    raw = asset.body
                     if name == "index.html":
                         if app.provider.name == "trusted-proxy":
                             print("auth flow: workbench-entered", flush=True)
                         raw = raw.replace(b"__AUTH_PROVIDER__", app.provider.name.encode())
-                    return self._send(200, raw, TYPES.get(f.suffix, "application/octet-stream"))
+                    if asset.not_modified(self.headers.get("If-None-Match")):
+                        return self._send(304, b"", asset.content_type, asset.headers())
+                    return self._send(200, raw, asset.content_type, asset.headers())
                 return self._send(404, "Not found", "text/plain")
             u = self._user()
             if not u:

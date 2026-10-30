@@ -29,6 +29,40 @@ def open_employee(page: Page) -> None:
     expect(page.locator("#employee-chat-question")).to_be_enabled()
     expect(page.locator("#employee-chat")).to_be_visible()
 
+def real_employee_replies(page: Page) -> list[dict[str, Any]]:
+    """Ordinary launcher to actual local API, without a widget reset or fulfilled reply."""
+    page.locator("#employee-chat-launcher").click()
+    panel = page.locator("#employee-chat")
+    question = panel.locator("textarea")
+    expect(question).to_be_enabled()
+    results = []
+    for activation in ("Enter", "Send"):
+        before = panel.locator(".chat-widget-assistant").count()
+        question.fill("What can chat do?")
+        with page.expect_response(lambda response: response.url.endswith("/ask")) as reply:
+            if activation == "Enter":
+                question.press("Enter")
+            else:
+                panel.get_by_role("button", name="Send", exact=True).click()
+        assert reply.value.status == 200
+        data = reply.value.json()
+        assert data["reply"].strip()
+        expect(panel.locator(".chat-widget-assistant")).to_have_count(before + 1)
+        expect(panel.locator(".chat-widget-assistant").last).to_contain_text(data["reply"])
+        expect(panel).to_be_visible()
+        expect(page.locator("#employee-chat-launcher")).to_have_attribute("aria-expanded", "true")
+        expect(question).to_be_focused()
+        expect(question).to_have_value("")
+        page.evaluate("async () => { await route(); }")
+        expect(panel).to_be_visible()
+        expect(question).to_be_focused()
+        results.append({"activation": activation, "http_status": reply.value.status,
+                        "reply_visible": True, "normal_launcher": True})
+    page.keyboard.press("Escape")
+    expect(panel).to_be_hidden()
+    print("PASS employee: ordinary launcher Enter/Send receive real local API replies")
+    return results
+
 
 def send_matrix(page: Page) -> list[dict[str, Any]]:
     results = []
@@ -348,6 +382,7 @@ def resident(browser: Browser) -> None:
             expect(panel).to_be_visible()
             expect(panel.locator("textarea")).to_be_focused()
             expect(panel.locator("form")).to_have_attribute("aria-busy", "false")
+            expect(page.locator("#chat-launcher")).to_have_attribute("aria-expanded", "true")
         page.keyboard.press("Escape")
         expect(panel).to_be_hidden()
         expect(page.locator("#chat-launcher")).to_be_focused()
@@ -371,6 +406,7 @@ def employee(browser: Browser, base: str, out: Path) -> None:
         errors: list[str] = []
         page.on("pageerror", lambda error: errors.append(str(error)))
         sign_in(page, base)
+        real_results = real_employee_replies(page)
         results = send_matrix(page)
         page.screenshot(path=str(out / "employee-answer-visible.png"))
         render_focus(page)
@@ -378,6 +414,7 @@ def employee(browser: Browser, base: str, out: Path) -> None:
         session_lifecycle(page)
         assert not errors, errors
         (out / "employee-matrix.json").write_text(json.dumps(results, indent=2))
+        (out / "employee-real-replies.json").write_text(json.dumps(real_results, indent=2))
     finally:
         context.close()
 

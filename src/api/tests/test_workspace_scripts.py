@@ -8,6 +8,49 @@ WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
 
 
 class WorkspaceScripts(unittest.TestCase):
+    def test_retry_uses_the_initial_release_url_for_shared_and_vendor_scripts(self) -> None:
+        result = subprocess.run(
+            [
+                "node",
+                "-e",
+                r"""
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const vm = require("node:vm");
+const source = fs.readFileSync(process.argv[1] + "/app.js", "utf8");
+const loader = source.slice(source.indexOf("const workspaceScriptLoads"),
+  source.indexOf("function missingWorkspaceScripts"));
+(async () => {
+  for (const path of ["/chat-widget.js", "/chat.js", "/vendor/leaflet.js", "/async-action.js"]) {
+    const url = path + "?v=constructed-release", requests = [];
+    const context = vm.createContext({
+      setTimeout(fn, delay) { if (delay < 5000) queueMicrotask(fn); return 1; },
+      clearTimeout() {},
+      document: {
+        querySelectorAll: () => [{getAttribute: () => url}],
+        createElement: () => ({remove() {}}),
+        head: {append(script) {
+          requests.push(script.src);
+          queueMicrotask(() => requests.length === 1 ? script.onerror() : script.onload());
+        }}
+      }
+    });
+    vm.runInContext(loader, context);
+    await vm.runInContext(`retryWorkspaceScript(${JSON.stringify(path)})`, context);
+    assert.deepEqual(requests, [url, url], path);
+    await vm.runInContext(`retryWorkspaceScript(${JSON.stringify(path)})`, context);
+    assert.equal(requests.length, 2, "Same release recovery is bounded and deduplicated");
+  }
+})().catch(error => { console.error(error); process.exitCode = 1; });
+""",
+                str(WEB),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
     def test_law_helper_failure_renders_native_reload_before_reads(self) -> None:
         result = subprocess.run(
             [
