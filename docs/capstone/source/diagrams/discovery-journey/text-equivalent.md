@@ -20,20 +20,23 @@ not an appointment, approval or completed action.
 * [resident-journey.svg](resident-journey.svg) is a standard-library preview from the same geometry, not a native Excalidraw export
 * [build-resident-journey.mjs](build-resident-journey.mjs) regenerates both without dependencies
 
-The composition is 1600 x 900, with five columns and three behavioural rows.
-All 33 text labels are black, single-line and at least 34 native pixels
-(25.5 pt at 96 dpi); the title is 48 pixels. Text dimensions are explicit,
-with generous 2.5 line height and reciprocal cell-label bindings. Wrappers
-are transparent; only leaf cells have fills. There are no arrow or line
-elements requiring point arrays or endpoint bindings. The existing deck's
-green `#173F35`, ivory `#FAF9F6`, pale green `#E8F1ED` and amber
-`#885500`/`#FFF1D6` are reused. Words identify hypotheses and proposals
-without relying on colour.
+The 1600 x 560 composition fits the deck's content area without duplicating
+its title. Five original monoline touchpoint illustrations connect the stages;
+actions/needs, pains to test and gains sought form three clear lanes.
+Cell text is 38 native pixels with two intentional lines and 1.14 line height.
+Stage labels are 34 pixels and proposed human roles are 29 pixels.
+Reciprocal cell-label bindings, explicit line points and deterministic source
+checks preserve editability. The deck's green `#173F35`, ivory `#FAF9F6`,
+pale green `#E8F1ED` and amber `#885500`/`#FFF1D6` remain the visual language.
+Labels, not colour alone, distinguish pains from proposed gains.
 
-Keep the whole 16:9 frame when integrating it. Fitting this image inside a
-smaller slide panel also shrinks its type; the main agent must check the final
-projected size. No separate pain/gain chart is needed: the second and third
-rows already make that comparison inside a genuine resident journey.
+Keep the complete frame and inspect the actual slide export. The native slide
+owns the title, hypothesis notice and assisted-service/safety boundary, so
+these do not become tiny text inside a scaled diagram. No emotion scores or
+observed sentiment curve are invented. The PNG is rendered locally from the
+editable scene with `@excalidraw/cli`; no upload or account is required.
+Page 39 adds a complementary native PowerPoint value-proposition canvas,
+not a second claim of resident validation.
 
 ## Complete Text Equivalent
 
@@ -188,11 +191,11 @@ workflow support.
 
 ## Main Page 13 Recommendation
 
-Physical page 13 is `S12`, currently The same-home service blueprint. Keep
+Physical page 13 is `S12`, the illustrated resident journey. Keep
 its existing 60-second slot, 11:40-12:40. Recommend the resident journey as the
 main image, rather than relabelling a multi-department workflow as a journey.
 
-* Title: Zava Forward: a resident's retrofit journey
+* Title: A resident's journey: less friction, more choice
 * Use the complete five-moment, three-row map, not a crop
 * Keep the hypothesis notice, human roles and safety/assisted-route footer
 * Close aloud on concrete product controls, not assumed resident gains
@@ -221,11 +224,31 @@ must now test understanding, total effort and failures against the same
 workflow without AI.
 ```
 
+## Pain/Gain Canvas on Page 39
+
+The appendix keeps its question, "Did you validate this with real residents
+and staff?", and answers "Not yet." The native square and segmented customer
+profile show the proposed fit without implying a measured result.
+
+| Canvas area | Visible content | Evidence boundary |
+| --- | --- | --- |
+| Products / services | Owned case; visit + help (supported visit and aftercare) | Proposed service response, not an accepted resident outcome |
+| Gain creators | Scope-specific choice; agreed arrangements | Design intent; not consent, a booking or a proven benefit |
+| Pain relievers | One named contact; visible open remedies | Proposed response to the repetition and lost-concern hypotheses |
+| Customer jobs | Choose works; keep routines; use / query | Representative rented-household map, not interview testimony |
+| Gains sought | Meaningful choice; owned aftercare | Desired gains, not reported satisfaction |
+| Pains to test | Repeating a story; pressure to agree | Hypotheses requiring direct research |
+
+The fit arrow means "test this relationship", not that the offer has been
+validated. Direct task/comprehension tests, assisted routes, actual handoffs
+and total effort remain next. The existing assessor and Finance maps remain
+research depth in the atlas and notes; the visual does not reclassify them.
+
 ## Source Register and Provision Locators
 
 Line references describe the public checked-out source, not a fresh official
 retrieval. Full source hashes, resolved line locators and classifications are
-embedded in the native wrapper metadata, relevant elements and SVG metadata.
+embedded in the native canvas metadata, relevant elements and SVG metadata.
 Dates below are source/retrieval context, not a new legal-currentness claim.
 
 | Key | Repository source and local locator | Classification / date / use |

@@ -32,6 +32,11 @@ and checking its `code`. Several main-story IDs have progressive build pages.
 * `layout: baseline` retains native slide geometry from the pinned template.
 * `layout: native` defines replacement content in `elements`, with retained
   header IDs in `keep_ids` and `headers`. Measurements are inches and points.
+  Editable diagram primitives include `ellipse`, `roundRect`, `can` and `line`.
+  A `polygon` has at least three `points` in 0-100 local coordinates; a `pie`
+  has two distinct clockwise `angles` in degrees from 0 to less than 360.
+  Optional `stroke`/`stroke_width` define a hex outline and its point width;
+  `valign` is `t`, `ctr` or `b`. Invalid geometry, bounds or styles fail the build.
 * `layout: text` makes uniquely matched text replacements; optional `box`
   changes only the identified frame bounds, not its native action target.
 * `notes` retains the captured original. When present, `revised_notes` owns
@@ -78,14 +83,20 @@ actual targets; neither their labels nor an older review establishes dynamic
 Last Slide Viewed behaviour. Native viewer/keyboard interaction still needs
 direct acceptance testing.
 
-Render produces a PDF and 54 PNGs plus measured text bounds. Inspect the
-changed pages and relevant neighbours, fix findings, and rerender. The current
+Native Windows Render produces a PDF and 54 PNGs plus measured text bounds.
+The [current Linux visual refresh](./review-2026-10-30.md#illustrated-visual-refresh-on-linux)
+uses the explicitly separate preview route below: all 54 pages rendered,
+108 PDF jumps verified, all text present in 213 revised frames and the 41
+untouched page renders pixel-identical to the Linux before-render.
+These are not native PowerPoint bound metrics or accessibility acceptance.
+Inspect changed pages and relevant neighbours, fix findings, and rerender.
+The earlier
 technology-page review had seven findings corrected. A later reader review
 corrected inherited legal/forecast, navigation and demo-fallback passages and
 opening inconsistencies. The legal-status page is the sixth visual revision.
 The 29 October export had zero revised-text overflow and 264 inherited warnings.
 The earlier 30 October roadmap export had zero revised overflow and 234 inherited warnings.
-The owner-corrected product/DT/future export has zero revised overflow and 231 inherited warnings;
+The earlier owner-corrected product/DT/future native export had zero revised overflow and 231 inherited warnings;
 they are not erased or described as accessibility acceptance.
 
 See the [dated review](./review-2026-10-29.md) for original findings and
@@ -109,9 +120,13 @@ remain necessary to reproduce the pinned baseline even when a revised layout
 no longer displays it. `additional_media.slides` is verified against actual
 generated relationships. Original 36 inputs remain unchanged. The two official
 icons are placed only on future page 23. The DT journey is placed only on page
-13; keep its native/SVG/PNG/generator/text-equivalent files together. The approved
-Excalidraw browser required sign-in; the PNG is a PowerPoint rasterization of
-the same-geometry SVG, not a native browser export. Direct resident/staff and
+13; keep its native/SVG/PNG/generator/text-equivalent files together. The current
+PNG is a local native `@excalidraw/cli` export of the editable 1600 x 560 scene,
+not the earlier PowerPoint rasterization. No account or upload was used.
+The slide owns its title, status and safety boundary; projected cell text is
+20.2 pt and the proposed human-role labels are 15.4 pt. Page 39's complementary
+value-proposition canvas uses editable native PowerPoint sectors and text.
+Direct resident/staff and
 projection/accessibility acceptance remain unperformed.
 
 Build and Verify also generate current main-route speaker notes and appendix
@@ -119,6 +134,42 @@ Q&A under the run's `pitch/` folder. Publish the matching PPTX/PDF and those
 two Markdown outputs together after review. Retain dated review evidence;
 do not commit all temporary renders. The compact receipt binds the candidate
 to the baseline, manifest, media catalog, builder and shared native helper.
+
+### Linux Preview
+
+LibreOffice and Arial-compatible fonts are required. The preview refuses an
+existing destination and never substitutes for the Windows Render action.
+From the repository root, use a fresh external run:
+
+```bash
+Run="$(mktemp -d /tmp/ama-capstone-XXXXXX)"
+python3 -m venv "$Run/venv"
+"$Run/venv/bin/python" -m pip install -r tools/capstone/requirements.txt
+pwsh -NoLogo -NoProfile -File tools/capstone/Invoke-Capstone.ps1 -Action Build -RepoRoot "$PWD" -OutputDir "$Run/build"
+"$Run/venv/bin/python" tools/capstone/render_preview.py --input "$Run/build/zava-forward-cowork-v2-draft.pptx" --output-dir "$Run/preview"
+```
+
+The preview writes the matching PDF, 54 slide PNGs and a compact report with
+source/PDF hashes. LibreOffice drops these slide-jump actions on import, so the
+tool reads actual shape bounds, slide order and destinations from the candidate
+PPTX, reconstructs the fixed PDF links, then verifies every destination and hit
+region after saving. Unsupported navigation fails explicitly; dynamic history
+is never invented. Native PowerPoint viewing and direct keyboard/AT acceptance
+remain separate checks.
+
+Focused regressions:
+
+```bash
+pwsh -NoLogo -NoProfile -File tools/capstone/Test-NativeShapes.ps1 -RepoRoot "$PWD"
+"$Run/venv/bin/python" -m pytest -q tools/capstone/test_render_preview.py
+node docs/capstone/source/diagrams/discovery-journey/build-resident-journey.mjs --check
+```
+
+To regenerate a journey derivative, run the generator without `--check`, then
+use `excalidraw render` locally with `--padding 0 --scale 1.5 --max-width 2400
+--max-height 840 --fonts-url none`. Supply `--browser-path` if the existing
+Chromium/Chrome binary is not on PATH. Render externally, inspect the result
+and deliberately update all three catalog hashes before rebuilding.
 
 ## Technology Decisions
 

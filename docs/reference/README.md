@@ -33,6 +33,11 @@ Fabric and Power BI are not current components: only closing pages 23-24
 propose future portfolio history and semantic/preview ontology agent context.
 Original media and editable diagram sources are retained; the broader proposal
 crosswalk remains reference depth, not the current-product architecture.
+The [illustrated visual refresh](../capstone/source/review-2026-10-30.md#illustrated-visual-refresh-on-linux)
+restores page 3's timeline, improves page 13's native-exported resident map
+and adds page 39's editable pain/gain value canvas. The explicit Linux preview
+preserves 108 PDF slide jumps; it does not replace native PowerPoint or human
+acceptance. All 41 untouched slide renders are unchanged in the same renderer.
 Page 16 and the appendices retain deeper comparisons. Native links remain
 fixed jumps, not dynamic caller return.
 No fresh rubric score, rehearsal, deployment or business benefit is inferred.

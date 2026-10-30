@@ -14,6 +14,8 @@ const palette = {
   paleGreen: "#E8F1ED",
   paleAmber: "#FFF1D6",
   white: "#FFFFFF",
+  rule: "#C7D8CF",
+  muted: "#50655E",
 };
 const sourceInputs = [
   ["brief", "docs/case_study_48_original.md", "## Business Challenge", "Case-study fact; requested autonomy and outcomes are not results"],
@@ -62,19 +64,19 @@ const moments = [
   { key: "aftercare", title: "05  Live with it", owner: "QA / Housing", action: "Use / query", pain: "Concern lost", gain: "Owned help", sources: ["resident", "quality", "independent-qa", "finance"] },
 ];
 const rows = [
-  { key: "action", label: "Do / need", top: 378, fill: palette.white, stroke: palette.green },
-  { key: "pain", label: "Pain (hyp.)", top: 496, fill: palette.paleAmber, stroke: palette.amber },
-  { key: "gain", label: "Gain (prop.)", top: 614, fill: palette.paleGreen, stroke: palette.green },
+  { key: "action", label: "ACTION /\nNEED", top: 180, fill: palette.ivory, color: palette.green },
+  { key: "pain", label: "PAIN\nTO TEST", top: 302, fill: palette.paleAmber, color: palette.amber },
+  { key: "gain", label: "GAIN\nSOUGHT", top: 424, fill: palette.paleGreen, color: palette.green },
 ];
 const metadata = {
   title: "Zava Forward: a resident's retrofit journey",
   date: "2026-10-30",
-  canvas: { width: 1600, height: 900 },
+  canvas: { width: 1600, height: 560 },
   status: "Desk-research hypothesis; direct resident validation pending",
   method: "Case brief and official-sector research -> nine role RESEARCH INSTRUMENTS -> 28 journey HYPOTHESES -> pain/gain synthesis -> bounded design choices and tests",
   counting: "The 2026-09-26 agent-request challenge used eight instruments; the 2026-10-14 atlas used nine, including the Executive Reviewer. The 28 maps are 27 companion maps plus one leasehold-service staff map; two subjourneys and six later synthetic portal scripts are not additional stage maps.",
   geometrySource: "build-resident-journey.mjs",
-  svgBoundary: "Standard-library SVG preview generated from the same native element geometry; not a native Excalidraw export",
+  svgBoundary: "Same-geometry SVG from the editable Excalidraw elements; no observed or quantified sentiment curve",
   authority: "Human roles are proposed responsibilities, not verified postholder appointments. Gains are proposed responses, not delivered resident benefits. Independent QA, assisted routes, works choice and the separate human safety route remain mandatory design boundaries.",
   sources,
 };
@@ -107,10 +109,10 @@ function common(id, type, x, y, width, height, evidence = []) {
   };
 }
 
-function text(id, value, x, y, width, size = 34, evidence = [], containerId = null, align = "left") {
+function text(id, value, x, y, width, size = 38, evidence = [], containerId = null, align = "left", color = palette.green) {
   const element = {
-    ...common(id, "text", x, y, width, size * 2.5, evidence),
-    strokeColor: palette.black,
+    ...common(id, "text", x, y, width, value.split("\n").length * size * 1.14, evidence),
+    strokeColor: color,
     text: value,
     originalText: value,
     fontSize: size,
@@ -118,43 +120,101 @@ function text(id, value, x, y, width, size = 34, evidence = [], containerId = nu
     textAlign: align,
     verticalAlign: "middle",
     containerId,
-    lineHeight: 2.5,
+    lineHeight: 1.14,
     autoResize: false,
   };
   elements.push(element);
   return element;
 }
 
-elements.push({
-  ...common("journey-wrapper", "rectangle", 32, 222, 1536, 496, ["resident", "atlas"]),
-  strokeColor: "transparent",
-  strokeWidth: 0,
-  customData: { role: "wrapper", ...metadata },
+function line(id, points, color = palette.green, width = 2.5, evidence = []) {
+  const left = Math.min(...points.map(([x]) => x));
+  const top = Math.min(...points.map(([, y]) => y));
+  const right = Math.max(...points.map(([x]) => x));
+  const bottom = Math.max(...points.map(([, y]) => y));
+  elements.push({
+    ...common(id, "line", left, top, right - left, bottom - top, evidence),
+    strokeColor: color,
+    strokeWidth: width,
+    points: points.map(([x, y]) => [x - left, y - top]),
+    lastCommittedPoint: null,
+    startBinding: null,
+    endBinding: null,
+    startArrowhead: null,
+    endArrowhead: null,
+  });
+}
+
+function rectangle(id, x, y, width, height, fill, evidence = [], extra = {}) {
+  elements.push({
+    ...common(id, "rectangle", x, y, width, height, evidence),
+    backgroundColor: fill,
+    strokeColor: "transparent",
+    strokeWidth: 0,
+    ...extra,
+  });
+}
+
+function icon(moment, cx) {
+  elements.push({
+    ...common(`${moment.key}-icon-disc`, "ellipse", cx - 36, 4, 72, 72, moment.sources),
+    backgroundColor: palette.paleGreen,
+    customData: { role: "touchpoint-icon", evidence: moment.sources.map((key) => ({ key, ...sources[key] })) },
+  });
+  const stroke = (suffix, points) => line(`${moment.key}-icon-${suffix}`, points.map(([x, y]) => [cx + x, y]), palette.green, 2.8, moment.sources);
+  if (moment.key === "contact") {
+    stroke("bubble", [[-21, 21], [21, 21], [21, 49], [-5, 49], [-16, 59], [-12, 49], [-21, 49], [-21, 21]]);
+    stroke("message-one", [[-12, 31], [12, 31]]);
+    stroke("message-two", [[-12, 39], [5, 39]]);
+  } else if (moment.key === "survey") {
+    stroke("clipboard", [[-18, 19], [18, 19], [18, 60], [-18, 60], [-18, 19]]);
+    stroke("clip", [[-8, 24], [-8, 15], [8, 15], [8, 24], [-8, 24]]);
+    [35, 44, 53].forEach((y, index) => stroke(`row-${index}`, [[-9, y], [10, y]]));
+  } else if (moment.key === "choice") {
+    stroke("shield", [[0, 15], [21, 23], [18, 44], [10, 55], [0, 63], [-10, 55], [-18, 44], [-21, 23], [0, 15]]);
+    stroke("check", [[-10, 38], [-2, 46], [13, 30]]);
+  } else if (moment.key === "works") {
+    stroke("roof", [[-25, 35], [0, 15], [25, 35]]);
+    stroke("home", [[-18, 30], [-18, 61], [18, 61], [18, 30]]);
+    stroke("door", [[-5, 61], [-5, 44], [6, 44], [6, 61]]);
+  } else {
+    stroke("care", [[0, 58], [-22, 38], [-22, 27], [-14, 19], [-5, 19], [0, 26], [5, 19], [14, 19], [22, 27], [22, 38], [0, 58]]);
+  }
+}
+
+const displays = {
+  contact: ["Call /\nbe heard", "Story\nrepeated", "Clear\ncontact"],
+  survey: ["Plan\nvisit", "Needs\nmissed", "Visit\nsupport"],
+  choice: ["Choose\nworks", "Rushed\nchoice", "Pause /\ndefer"],
+  works: ["Keep\nroutines", "Disrupted\nday", "Agreed\nvisit"],
+  aftercare: ["Use /\nquery", "Concern\nlost", "Owned\nhelp"],
+};
+
+rectangle("journey-canvas", 0, 0, 1600, 560, palette.ivory, ["resident", "atlas"], {
+  customData: { role: "canvas", ...metadata },
 });
-text("journey-title", metadata.title, 48, 12, 1504, 48, ["resident"]);
-text("hypothesis-notice", metadata.status, 48, 124, 1504, 34, ["atlas", "resident"]);
-text("human-label", "Human role", 48, 286, 224, 34, ["profile"]);
+line("touchpoint-rail", [[353, 40], [1433, 40]], palette.rule, 3.5, ["resident"]);
+text("human-label", "Human role", 0, 131, 204, 29, ["profile"], null, "left", palette.muted);
 
 moments.forEach((moment, index) => {
-  const left = 300 + index * 252;
-  text(`${moment.key}-title`, moment.title, left + 6, 212, 232, 34, moment.sources, null, "center");
-  text(`${moment.key}-owner`, moment.owner, left + 6, 286, 232, 34, moment.sources, null, "center");
-  rows.forEach((row) => {
+  const left = 226 + index * 270;
+  icon(moment, left + 127);
+  text(`${moment.key}-title`, moment.title.replace(/\s+/g, " "), left, 86, 254, 34, moment.sources, null, "center");
+  text(`${moment.key}-owner`, moment.owner, left, 131, 254, 29, moment.sources, null, "center", palette.muted);
+  rows.forEach((row, rowIndex) => {
     const boxId = `${moment.key}-${row.key}`;
     const labelId = `${boxId}-text`;
-    elements.push({
-      ...common(boxId, "rectangle", left, row.top, 244, 104, moment.sources),
-      strokeColor: row.stroke,
-      backgroundColor: row.fill,
+    rectangle(boxId, left, row.top, 254, 104, row.fill, moment.sources, {
       boundElements: [{ id: labelId, type: "text" }],
       customData: { role: "leaf", moment: moment.key, row: row.key, traceId: `D0${index + 1}`, classification: row.key === "gain" ? "Proposed design response; gain unmeasured" : "Desk-research journey hypothesis", evidence: moment.sources.map((key) => ({ key, ...sources[key] })) },
     });
-    text(labelId, moment[row.key], left + 8, row.top + 9.5, 228, 34, moment.sources, boxId, "center");
+    text(labelId, displays[moment.key][rowIndex], left + 8, row.top + 8.5, 238, 38, moment.sources, boxId, "center", row.color);
   });
 });
-rows.forEach((row) => text(`${row.key}-label`, row.label, 48, row.top + 9.5, 224, 34, ["resident"]));
-text("retained-boundaries", "Phone / letter / assisted visits; independent QA; urgent safety -> human repairs.", 48, 722, 1504, 34, ["resident", "assisted", "quality"]);
-text("discovery-trace", "Brief + official sources > 9 role instruments > 28 maps > bounded design", 48, 810, 1504, 34, ["brief", "atlas", "themes", "challenge", "sector-research", "safety-standard", "hazard-guidance", "resident-adjustments", "pas-overview"]);
+rows.forEach((row) => {
+  rectangle(`${row.key}-accent`, 0, row.top + 9, 5, 86, row.color, ["resident"]);
+  text(`${row.key}-label`, row.label, 20, row.top + 15, 184, 30, ["resident"], null, "left", row.color);
+});
 
 const drawing = {
   type: "excalidraw",
@@ -173,23 +233,33 @@ function validate() {
   assert.equal(elements.filter((element) => element.customData?.role === "leaf").length, 15);
   for (const element of elements) {
     assert([element.x, element.y, element.width, element.height].every(Number.isFinite), element.id);
-    assert(element.width > 0 && element.height > 0, element.id);
-    assert(element.x >= 0 && element.y >= 0 && element.x + element.width <= 1600 && element.y + element.height <= 900, `Canvas overflow: ${element.id}`);
+    assert(element.width >= 0 && element.height >= 0 && (element.width > 0 || element.height > 0), element.id);
+    assert(element.x >= 0 && element.y >= 0 && element.x + element.width <= metadata.canvas.width && element.y + element.height <= metadata.canvas.height, `Canvas overflow: ${element.id}`);
     if (element.type === "text") {
-      assert.equal(element.strokeColor, palette.black, element.id);
-      assert(element.fontSize >= 34, `Below 25.5pt at 96dpi: ${element.id}`);
-      assert(!element.text.includes("\n"), `Wrapped cell: ${element.id}`);
-      assert.equal(element.height, element.fontSize * 2.5, element.id);
+      assert(element.fontSize >= 29, `Unreadable diagram label: ${element.id}`);
+      assert(element.text.split("\n").length <= 2, `Overloaded cell: ${element.id}`);
+      assert.equal(element.height, element.text.split("\n").length * element.fontSize * 1.14, element.id);
       if (element.containerId) {
         const container = ids.get(element.containerId);
         assert(container?.boundElements.some((entry) => entry.id === element.id && entry.type === "text"), `Missing reciprocal binding: ${element.id}`);
         assert(element.x >= container.x && element.y >= container.y && element.x + element.width <= container.x + container.width && element.y + element.height <= container.y + container.height, `Cell overflow: ${element.id}`);
       }
     }
-    if (element.customData?.role === "wrapper") assert.equal(element.backgroundColor, "transparent");
+    if (element.type === "line") {
+      assert(element.points.length >= 2, `Missing line points: ${element.id}`);
+      assert(element.points.every((point) => point.length === 2 && point.every(Number.isFinite)), element.id);
+      assert.equal(element.startBinding, null);
+      assert.equal(element.endBinding, null);
+    }
     for (const bound of element.boundElements ?? []) assert.equal(ids.get(bound.id)?.containerId, element.id);
   }
-  assert.equal(ids.get("hypothesis-notice").text, metadata.status);
+  assert.equal(elements.filter((element) => element.customData?.role === "touchpoint-icon").length, 5);
+  for (const moment of moments) {
+    for (const key of ["action", "pain", "gain"]) {
+      const displayed = ids.get(`${moment.key}-${key}-text`).text.replaceAll("\n", " ");
+      assert.equal(displayed, moment[key], `Changed source claim: ${moment.key}/${key}`);
+    }
+  }
 }
 
 function escapeXml(value) {
@@ -201,16 +271,25 @@ function svgFromDrawing() {
     if (element.type === "rectangle") {
       return `<rect id="${element.id}" x="${element.x}" y="${element.y}" width="${element.width}" height="${element.height}" fill="${element.backgroundColor === "transparent" ? "none" : element.backgroundColor}" stroke="${element.strokeColor === "transparent" ? "none" : element.strokeColor}" stroke-width="${element.strokeWidth}"/>`;
     }
+    if (element.type === "ellipse") {
+      return `<ellipse id="${element.id}" cx="${element.x + element.width / 2}" cy="${element.y + element.height / 2}" rx="${element.width / 2}" ry="${element.height / 2}" fill="${element.backgroundColor}" stroke="${element.strokeColor}" stroke-width="${element.strokeWidth}"/>`;
+    }
+    if (element.type === "line") {
+      const points = element.points.map(([x, y]) => `${element.x + x},${element.y + y}`).join(" ");
+      return `<polyline id="${element.id}" points="${points}" fill="none" stroke="${element.strokeColor}" stroke-width="${element.strokeWidth}" stroke-linecap="round" stroke-linejoin="round"/>`;
+    }
     assert.equal(element.type, "text");
     const horizontal = element.textAlign === "center" ? element.x + element.width / 2 : element.x;
-    return `<text id="${element.id}" x="${horizontal}" y="${element.y + element.height / 2}" font-family="Helvetica, Arial, sans-serif" font-size="${element.fontSize}" fill="#000000" text-anchor="${element.textAlign === "center" ? "middle" : "start"}" dominant-baseline="central">${escapeXml(element.text)}</text>`;
+    const lines = element.text.split("\n").map((value, index) =>
+      `<tspan x="${horizontal}" y="${element.y + element.fontSize * (0.88 + index * element.lineHeight)}">${escapeXml(value)}</tspan>`);
+    return `<text id="${element.id}" font-family="Arial, Helvetica, sans-serif" font-size="${element.fontSize}" fill="${element.strokeColor}" text-anchor="${element.textAlign === "center" ? "middle" : "start"}">${lines.join("")}</text>`;
   });
   return [
-    '<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title description">',
+    `<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="560" viewBox="0 0 1600 560" role="img" aria-labelledby="title description">`,
     `<title id="title">${escapeXml(metadata.title)}</title>`,
     `<desc id="description">${escapeXml(`${metadata.status}. Five resident moments; three rows: actions and needs, pain hypotheses, proposed gains. Human roles are proposed. ${metadata.authority} Read text-equivalent.md for full stage descriptions, source provisions, decision tests and presentation notes.`)}</desc>`,
     `<metadata>${escapeXml(JSON.stringify(metadata))}</metadata>`,
-    `<rect width="1600" height="900" fill="${palette.ivory}"/>`,
+    `<rect width="1600" height="560" fill="${palette.ivory}"/>`,
     ...markup,
     "</svg>",
     "",
@@ -265,5 +344,5 @@ for (const [filename, content] of outputs) {
   if (process.argv.includes("--check")) assert.equal(readFileSync(destination, "utf8"), content, `Stale generated asset: ${filename}`);
   else writeFileSync(destination, content, { encoding: "utf8" });
 }
-console.log(`Validated ${elements.length} native elements, 15 single-line cells, five moments, three rows, reciprocal bindings, 1600x900 bounds and ${Object.keys(sources).length} source locators.`);
-console.log(`All visible text is black, minimum 34px (25.5pt at 96dpi). ${process.argv.includes("--check") ? "Generated files match source." : "Native JSON and same-geometry SVG generated."}`);
+console.log(`Validated ${elements.length} native elements, 15 two-line cells, five illustrated touchpoints, reciprocal bindings, 1600x560 bounds and ${Object.keys(sources).length} source locators.`);
+console.log(`Cell text is 38px; labels are at least 29px. ${process.argv.includes("--check") ? "Generated files match source." : "Native JSON and same-geometry SVG generated."}`);
