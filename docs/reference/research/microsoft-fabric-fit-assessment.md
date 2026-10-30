@@ -1,7 +1,7 @@
 ---
 title: Project Review and Microsoft Fabric Fit Assessment
 description: Component-level assessment of Zava Forward and whether Microsoft Fabric adds justified analytical value or unnecessary platform complexity
-ms.date: 2026-10-29
+ms.date: 2026-10-30
 ms.topic: reference
 ---
 
@@ -9,6 +9,9 @@ ms.topic: reference
 
 Assessment date: 2026-10-29. Source baseline:
 `9b74ac8daaec2a880172e43161b37ac7f2c3f801`.
+Scoped evidence corrections dated 2026-10-30 reconcile the 27 October funding
+renewal and SQL idle-compute comparison; they are not a fresh whole-platform
+assessment or live inventory.
 High and Medium below describe platform-decision risks, not newly discovered
 exploits or an operational acceptance verdict.
 
@@ -84,9 +87,14 @@ CU-hours/hour. One continuously running member on that meter would exceed F2's
 sustained capacity before reports, pipelines or Eventhouse. Other private routes
 have different costs and must not automatically be assigned that meter.
 
-The last recorded scoped spending authority expired on 2026-10-25T16:02Z, and
-all-in headroom remains Unknown/Blocked. No earlier USD 450, USD 700 or Bicep
-budget parameter establishes authority for a new Fabric purchase.
+The [27 October resident prototype decision](../../architecture/resident-assistant-prototype.md#current-owner-decision-and-implementation-2026-10-27)
+records renewed overall USD700 funding through 2026-12-31, with resident USD30
+and USD20 inference limits within it. The earlier exercise approval expired on
+2026-10-25T16:02Z; that is not the latest overall funding record. All-in actual
+spending, forecast and remaining headroom remain unestablished. Neither the
+renewal, the resident allocation nor a Bicep budget parameter establishes spare
+funds or Fabric-specific purchase permission. Overall funding renewal does not
+extend narrower tariff/inference or showcase/session/SQL admission windows.
 
 Evidence: [budget decision](../../case_study_48_addendum.md#L414),
 [all-in headroom qualification](../../case_study_48_addendum.md#L592), W4, W6, W15.
@@ -312,7 +320,25 @@ too; their inactivity/scheduling options are not a free always-on safety service
 (W12, W13).
 
 Mirroring's source snapshot and replication can add SQL CPU, IO and transaction-log
-work. Monitor source write/query behavior, log growth, pipeline lag/reseeding,
+work. The [authored source baseline](../../../infra/modules/sql.bicep#L51)
+is General Purpose serverless with 60-minute auto-pause and 0.5 minimum vCores.
+A continuously enabled mirror that prevents idle pause loses those compute
+savings even when the application is idle, independently of snapshot/IO load.
+Active serverless compute is billed at least at its configured minimum compute
+limits; paused compute is zero while storage remains billed (W17).
+Conservatively include that no-auto-pause source cost in the comparison until
+the selected mirroring path's actual idle behavior is verified.
+
+Evidence qualification (2026-10-30): re-fetched W2/W8 do not state that enabling
+mirroring automatically changes the auto-pause setting. Do not present that
+mechanism as verified, or equate Fabric mirroring with W18's geo-replication
+blocker. Before an authorized trial, record actual settings and idle behavior.
+After the trial, verify source mirroring/change-feed cleanup, restoration of the
+approved 60-minute auto-pause/0.5-vCore baseline and actual idle pause, disconnecting
+diagnostic sessions that would keep SQL awake (W18). Restored settings alone
+do not establish resumed savings; no live restoration is claimed here.
+
+Monitor source write/query behavior, log growth, pipeline lag/reseeding,
 model freshness, CU contention and failure recovery. A shared capacity can
 reduce marginal cash expenditure but still has opportunity cost, throttling
 risk and an owner-approved allocation (W3, W8).
@@ -327,8 +353,9 @@ cash saving, headcount saving or positive return is established here.
 
 Current shared capacity, tenant eligibility, regional prices and all-in headroom
 are unknown. Any trial activation, paid capacity, identity change or data export
-needs its own current scope and approval. The expired earlier approval is not
-renewed by this report.
+needs its own current scope and approval under the renewed overall envelope.
+The recorded renewal is not unspent headroom or Fabric approval, and this
+report grants neither.
 
 ## Alternatives
 
@@ -389,7 +416,9 @@ a valid reason to retain that path rather than expand the Fabric design.
   valid citation identifiers alone do not prove that a claim is supported.
 * Complete relevant live identity/transport, monitored recovery, assistive-technology
   and human acceptance evidence without presenting earlier local checks as approval.
-* Restore a current complete cost scope/authority before another paid service.
+* Confirm complete cost scope, remaining headroom and task-specific spending
+  authority before another paid service, without treating overall renewal as
+  approval to spend the resident allocation on Fabric.
 
 Fabric could help deliver an accepted analytical capability. It does not remove
 these responsibilities or make the business-case assumptions observed results.
@@ -415,7 +444,9 @@ owner request.
 
 ## Official Sources
 
-All sources below were retrieved on 2026-10-29. Product limits, rates, regional
+W1-W16 were originally retrieved on 2026-10-29; W2/W8 were re-fetched for the
+scoped 2026-10-30 cost qualification. W17/W18 were retrieved on 2026-10-30.
+Product limits, rates, regional
 availability and licensing can change; reverify the selected path before an
 approved experiment or purchase. Summaries are paraphrases, not product guarantees.
 
@@ -437,6 +468,8 @@ approved experiment or purchase. Summaries are paraphrases, not product guarante
 | W14 | [Direct Lake overview](https://learn.microsoft.com/en-us/fabric/fundamentals/direct-lake-overview) | Delta/semantic-model fit, F2 guardrails and OneLake versus SQL security |
 | W15 | [VNet gateway capacity consumption](https://learn.microsoft.com/en-us/data-integration/vnet/data-gateway-business-model) | Standard four-CU/member uptime meter, route-specific qualification |
 | W16 | [Azure SQL mirroring tutorial](https://learn.microsoft.com/en-us/fabric/mirroring/azure-sql-database-tutorial) | Entra/workspace identity, source-server primary identity, selected tables and setup permissions |
+| W17 | [SQL serverless compute overview](https://learn.microsoft.com/en-us/azure/azure-sql/database/serverless-tier-overview?view=azuresql) | Active minimum compute versus zero paused compute; retained storage charges |
+| W18 | [SQL serverless auto-pause and auto-resume](https://learn.microsoft.com/en-us/azure/azure-sql/database/serverless-tier-auto-pause-resume?view=azuresql) | Idle sessions/CPU conditions, actual-pause verification and distinct documented geo-replication blocker |
 
 The Fabric SQL limitations page contains inconsistent TDE wording between prose
 and its feature table. No encryption conclusion relies on that inconsistency;

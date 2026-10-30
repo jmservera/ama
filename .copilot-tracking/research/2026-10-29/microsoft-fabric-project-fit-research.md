@@ -396,3 +396,61 @@ No /rpi-plan advisory is issued because no implementation handoff is requested. 
 * [x] Ingested evidence remained data; no embedded authority changes followed and no secrets recorded.
 * Checked sections: brief through closeout, evidence/source register, alternatives, arithmetic and final durable-doc diagnostics/diff/scope. Relative source links were reviewed against inspected files; no repository-wide link/conformance audit is claimed.
 * Limitations: no exhaustive line-by-line security review, fresh UI/conformance audit, legal currentness determination, full RPI publication gate, actual comparative benchmark or tenant-specific quote.
+
+## Dated Evidence Qualifications (2026-10-30, Refs #558)
+
+### Funding: C9 and Derived Conclusions
+
+Original C9 incorrectly treats the 2026-10-25T16:02Z expiry as the latest overall
+funding authority. The [27 October resident prototype decision](../../../docs/architecture/resident-assistant-prototype.md#current-owner-decision-and-implementation-2026-10-27),
+already present at this research's source baseline, records renewed overall
+USD700 funding through 2026-12-31, with resident USD30 and USD20 inference
+limits within it. The addendum's earlier exercise expiry and Unknown/Blocked
+all-in cost scope do not disprove that renewal. The resident prototype's
+tariff/inference and showcase/session/SQL admission windows remain separately
+bounded; the overall renewal does not extend them.
+
+Read C9, the infrastructure lane's finding 8/budget clarification, Q5 economics,
+the dedicated/shared-capacity discovery, the selected recommendation, the
+decision-changing comparison, and the implementation funding gate with this
+dated correction. All-in actual/forecast and remaining headroom remain
+unestablished, as do an approved Fabric allocation/purchase and shared CU
+availability. Do not equate renewed overall funding with spare USD700 or
+permission to redirect the resident allocation to Fabric. "Fresh scoped
+authority" means authority for the selected Fabric task, not a claim that all
+project funding expired.
+
+The advice to retain API/core/SQL, defer mandatory dedicated Fabric and compare
+a conditional analytical sidecar survives: measured workload, comparative
+economics, capacity ownership and data/operating approval are still missing.
+Renewal removes the erroneous blanket-expiry premise; it does not fund or
+approve that comparison. Original C9 and derived text are preserved above as
+dated research, not rewritten or silently reaffirmed.
+
+### Cadence and Source-Cost Comparison
+
+The data lane's original arithmetic and summary mislabel 131.025M as hourly.
+The [recorded estimate](../../../docs/reference/research/iot-sensor-analytics-research-plan.md#historical-backfill-stack-boundary-2026-10-27-refs-177)
+uses cadence=480 minutes: three/day before dropout, 131.4M nominal over 730
+days/60,000 homes and 131.025M estimated after sampled dropout. It is not hourly
+sizing. Complete hypothetical hourly history is 1.0512B rows before dropout;
+43.8M remains the separate daily generated run.
+
+C10's [SQL definition](../../../infra/modules/sql.bicep#L51) configures
+60-minute auto-pause and 0.5 minimum vCores. Include foregone idle auto-pause
+savings in a continuously enabled mirroring comparison, separately from
+snapshot/replication CPU, IO and log load: active serverless compute retains a
+minimum bill while paused compute is zero, excluding storage. Conservatively
+cost the source as remaining online until selected-path behavior is verified.
+The 2026-10-30 re-fetch of original W2/W8 does not establish an automatic
+auto-pause-setting change, so do not claim that mechanism as verified.
+
+Additional official evidence, retrieved 2026-10-30:
+[serverless billing overview](https://learn.microsoft.com/en-us/azure/azure-sql/database/serverless-tier-overview?view=azuresql)
+and [auto-pause conditions](https://learn.microsoft.com/en-us/azure/azure-sql/database/serverless-tier-auto-pause-resume?view=azuresql).
+The latter's geo-replication blocker is not proof about Fabric mirroring.
+Before any authorized trial, record actual source settings and idle behavior;
+afterwards verify mirroring/change-feed cleanup, restoration of the approved
+60-minute/0.5-vCore baseline and actual idle pause without diagnostic sessions
+keeping SQL awake. Restoring settings alone is not evidence that savings resume.
+No live trial, source-cost measurement or restoration was performed here.

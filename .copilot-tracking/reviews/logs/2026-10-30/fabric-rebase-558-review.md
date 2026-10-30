@@ -222,30 +222,30 @@ no claim is made that the original inline validator was reproduced exactly.
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/plans/2026-10-30/fabric-rebase-558-plan.md](.copilot-tracking/plans/2026-10-30/fabric-rebase-558-plan.md) | AC1-AC7, dispositions and follow-up scope |
-| [.copilot-tracking/details/2026-10-30/fabric-rebase-558-phase-details.md](.copilot-tracking/details/2026-10-30/fabric-rebase-558-phase-details.md) | Completed P01/P02 and parent-closeout boundary |
-| [.copilot-tracking/reviews/plans/2026-10-30/fabric-rebase-558-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-30/fabric-rebase-558-plan-critique.md) | Original Complete / Revise critique preserved |
-| [.copilot-tracking/changes/2026-10-30/fabric-rebase-558-changes.md](.copilot-tracking/changes/2026-10-30/fabric-rebase-558-changes.md) | Commands, adverse attempts, outcomes and exclusions |
-| [.copilot-tracking/research/2026-10-30/fabric-rebase-558-research.md](.copilot-tracking/research/2026-10-30/fabric-rebase-558-research.md) | Historical research base and local-validation rationale |
-| [.copilot-tracking/rpi-sessions/2026-10-30/fabric-rebase-558-state.json](.copilot-tracking/rpi-sessions/2026-10-30/fabric-rebase-558-state.json) | Observed parent continuation, not changed by reviewer |
-| [docs/reference/README.md](docs/reference/README.md) | Exact navigation union and date update |
-| [docs/reference/log.md](docs/reference/log.md) | Exact prefix/suffix preservation and reconciliation entry |
-| [docs/reference/research/microsoft-fabric-fit-assessment.md](docs/reference/research/microsoft-fabric-fit-assessment.md) | Byte-preserved dated assessment |
-| [.copilot-tracking/research/2026-10-29/microsoft-fabric-project-fit-research.md](.copilot-tracking/research/2026-10-29/microsoft-fabric-project-fit-research.md) | Byte-preserved original parent research |
-| [.copilot-tracking/research/subagents/2026-10-29/fabric-contrarian-fit-subagent-research.md](.copilot-tracking/research/subagents/2026-10-29/fabric-contrarian-fit-subagent-research.md) | Byte-preserved contrarian evidence |
-| [.copilot-tracking/research/subagents/2026-10-29/fabric-data-analytics-subagent-research.md](.copilot-tracking/research/subagents/2026-10-29/fabric-data-analytics-subagent-research.md) | Byte-preserved analytics evidence |
-| [.copilot-tracking/research/subagents/2026-10-29/fabric-infrastructure-governance-subagent-research.md](.copilot-tracking/research/subagents/2026-10-29/fabric-infrastructure-governance-subagent-research.md) | Byte-preserved governance evidence |
-| [.copilot-tracking/research/subagents/2026-10-29/fabric-operational-architecture-subagent-research.md](.copilot-tracking/research/subagents/2026-10-29/fabric-operational-architecture-subagent-research.md) | Byte-preserved architecture evidence |
-| [docs/reference/research/retrofit-synthetic-data/scenario-manifest.json](docs/reference/research/retrofit-synthetic-data/scenario-manifest.json) | Execution-base manifest, unchanged |
-| [docs/reference/method/tracking-retention-policy.md](docs/reference/method/tracking-retention-policy.md) | External scratch and original-evidence retention policy |
-| [src/README.md](src/README.md) | Source/test ownership and local/publication gate distinctions |
-| [src/core/pyproject.toml](src/core/pyproject.toml) | Existing core lint/type scope and exemptions |
-| [src/api/pyproject.toml](src/api/pyproject.toml) | Existing API lint/type scope and exemptions |
-| [src/core/tests/test_scenario_manifest.py](src/core/tests/test_scenario_manifest.py) | Selected manifest regression contract |
-| [src/core/tests/test_dependency_rule.py](src/core/tests/test_dependency_rule.py) | Selected core dependency contract |
-| [src/api/tests/test_dependency_rule.py](src/api/tests/test_dependency_rule.py) | Selected API dependency contract |
-| [.github/workflows/src-ci.yml](.github/workflows/src-ci.yml) | Hosted selectors and component commands, not hosted execution evidence |
-| [.copilot-tracking/reviews/logs/2026-10-30/fabric-rebase-558-review.md](.copilot-tracking/reviews/logs/2026-10-30/fabric-rebase-558-review.md) | This one completed independent Review |
+| [.copilot-tracking/plans/2026-10-30/fabric-rebase-558-plan.md](../../../plans/2026-10-30/fabric-rebase-558-plan.md) | AC1-AC7, dispositions and follow-up scope |
+| [.copilot-tracking/details/2026-10-30/fabric-rebase-558-phase-details.md](../../../details/2026-10-30/fabric-rebase-558-phase-details.md) | Completed P01/P02 and parent-closeout boundary |
+| [.copilot-tracking/reviews/plans/2026-10-30/fabric-rebase-558-plan-critique.md](../../../reviews/plans/2026-10-30/fabric-rebase-558-plan-critique.md) | Original Complete / Revise critique preserved |
+| [.copilot-tracking/changes/2026-10-30/fabric-rebase-558-changes.md](../../../changes/2026-10-30/fabric-rebase-558-changes.md) | Commands, adverse attempts, outcomes and exclusions |
+| [.copilot-tracking/research/2026-10-30/fabric-rebase-558-research.md](../../../research/2026-10-30/fabric-rebase-558-research.md) | Historical research base and local-validation rationale |
+| [.copilot-tracking/rpi-sessions/2026-10-30/fabric-rebase-558-state.json](../../../rpi-sessions/2026-10-30/fabric-rebase-558-state.json) | Observed parent continuation, not changed by reviewer |
+| [docs/reference/README.md](../../../../docs/reference/README.md) | Exact navigation union and date update |
+| [docs/reference/log.md](../../../../docs/reference/log.md) | Exact prefix/suffix preservation and reconciliation entry |
+| [docs/reference/research/microsoft-fabric-fit-assessment.md](../../../../docs/reference/research/microsoft-fabric-fit-assessment.md) | Byte-preserved dated assessment |
+| [.copilot-tracking/research/2026-10-29/microsoft-fabric-project-fit-research.md](../../../research/2026-10-29/microsoft-fabric-project-fit-research.md) | Byte-preserved original parent research |
+| [.copilot-tracking/research/subagents/2026-10-29/fabric-contrarian-fit-subagent-research.md](../../../research/subagents/2026-10-29/fabric-contrarian-fit-subagent-research.md) | Byte-preserved contrarian evidence |
+| [.copilot-tracking/research/subagents/2026-10-29/fabric-data-analytics-subagent-research.md](../../../research/subagents/2026-10-29/fabric-data-analytics-subagent-research.md) | Byte-preserved analytics evidence |
+| [.copilot-tracking/research/subagents/2026-10-29/fabric-infrastructure-governance-subagent-research.md](../../../research/subagents/2026-10-29/fabric-infrastructure-governance-subagent-research.md) | Byte-preserved governance evidence |
+| [.copilot-tracking/research/subagents/2026-10-29/fabric-operational-architecture-subagent-research.md](../../../research/subagents/2026-10-29/fabric-operational-architecture-subagent-research.md) | Byte-preserved architecture evidence |
+| [docs/reference/research/retrofit-synthetic-data/scenario-manifest.json](../../../../docs/reference/research/retrofit-synthetic-data/scenario-manifest.json) | Execution-base manifest, unchanged |
+| [docs/reference/method/tracking-retention-policy.md](../../../../docs/reference/method/tracking-retention-policy.md) | External scratch and original-evidence retention policy |
+| [src/README.md](../../../../src/README.md) | Source/test ownership and local/publication gate distinctions |
+| [src/core/pyproject.toml](../../../../src/core/pyproject.toml) | Existing core lint/type scope and exemptions |
+| [src/api/pyproject.toml](../../../../src/api/pyproject.toml) | Existing API lint/type scope and exemptions |
+| [src/core/tests/test_scenario_manifest.py](../../../../src/core/tests/test_scenario_manifest.py) | Selected manifest regression contract |
+| [src/core/tests/test_dependency_rule.py](../../../../src/core/tests/test_dependency_rule.py) | Selected core dependency contract |
+| [src/api/tests/test_dependency_rule.py](../../../../src/api/tests/test_dependency_rule.py) | Selected API dependency contract |
+| [.github/workflows/src-ci.yml](../../../../.github/workflows/src-ci.yml) | Hosted selectors and component commands, not hosted execution evidence |
+| [.copilot-tracking/reviews/logs/2026-10-30/fabric-rebase-558-review.md](../../../reviews/logs/2026-10-30/fabric-rebase-558-review.md) | This one completed independent Review |
 
 ## Next Steps
 

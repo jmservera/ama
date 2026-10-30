@@ -21,12 +21,17 @@ management: short pages that point to clusters of related material.
 ## How to Use This Knowledge Base
 
 The [Microsoft Fabric fit assessment](./research/microsoft-fabric-fit-assessment.md)
-reviews the current project components and official product documentation at
-2026-10-29. It recommends retaining API/core/Azure SQL authority and deferring
+reviews the project components and official product documentation at
+2026-10-29, with scoped evidence corrections on 2026-10-30. It recommends
+retaining API/core/Azure SQL authority and deferring
 mandatory dedicated Fabric, while preserving a conditional read-only analytics
 option for explicit portfolio/history needs. Ledger, permission/history,
-private connectivity, CU/licensing and unknown current budget evidence are
-qualified; source/contrarian research is not live validation or adoption approval.
+private connectivity and CU/licensing are qualified. The 27 October overall
+USD700 renewal through 2026-12-31 is distinct from unknown remaining headroom
+and unestablished Fabric purchase permission; the source-cost comparison
+includes potential loss of serverless idle-pause savings and post-trial
+restoration verification. Source/contrarian research is not live validation or
+adoption approval.
 
 For #530, the [employee chat design and API guide](../../src/api/README.md#employee-chat-with-bounded-skills-530)
 records one read-only chat agent, five repository-defined advisory skills,

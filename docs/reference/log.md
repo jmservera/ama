@@ -8317,3 +8317,20 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   infrastructure, Azure resource, operational approval or issue closure is
   introduced. Local reconciliation does not establish hosted CI or authorize
   publication; the coordinator owns the subsequent push and checks.
+
+## [2026-10-30] query | Fabric review evidence corrections (Refs #558)
+
+* Corrected the maintained [Fabric assessment](./research/microsoft-fabric-fit-assessment.md)
+  and index to distinguish the 27 October renewed overall USD700 funding through
+  2026-12-31 from unknown remaining headroom, resident/inference sublimits and
+  unestablished Fabric-specific purchase permission. The earlier October25
+  exercise expiry is not the latest overall funding authority.
+* Added the configured serverless SQL 60-minute auto-pause/0.5-vCore baseline,
+  potential loss of idle compute savings, conservative no-auto-pause comparison
+  and post-trial cleanup/settings/actual-pause verification. Current W2/W8 do
+  not establish an automatic setting change; fresh SQL serverless sources
+  support the billing/idle conditions without conflating geo-replication.
+* Original research receives dated qualifications rather than rewritten
+  findings, including the 480-minute, three/day 131.025M dropout estimate,
+  not hourly sizing. The retained recommendation is conditional advice,
+  not a renewed purchase, deployment, benchmark or operational approval.
