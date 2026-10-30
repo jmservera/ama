@@ -4,7 +4,7 @@ description: Acceptance reconciliation for issue 466
 ms.date: 2026-10-30
 ---
 
-Task: 466 / resident-sensor-gauges-466. Status: Implemented; ready for Review.
+Task: 466 / resident-sensor-gauges-466. Status: Review executed; full gate blocked.
 
 ## Executive Summary
 
@@ -94,6 +94,8 @@ technology acceptance; publication by coordinator only after a valid full gate.
 Research: `.copilot-tracking/research/2026-10-30/resident-sensor-gauges-466-research.md`.
 Details: `.copilot-tracking/details/2026-10-30/resident-sensor-gauges-466-phase-details.md`.
 Changes will be `.copilot-tracking/changes/2026-10-30/resident-sensor-gauges-466-changes.md`.
-Guide reconciliation and local validation are complete; Review may assess the
-candidate. P02-T02 remains pending because it contains the original Review,
-local commit and final committed-candidate gate, not unfinished source edits.
+Guide reconciliation and local validation are complete. The original Review
+executed Complete, outcome Residual work, and local commit succeeded.
+P02-T02 remains incomplete because the complete gate could not acquire its
+shared heavy lock within 600 seconds. No full receipt exists; coordinator
+must rerun the gate on the final clean commit. No source task remains.

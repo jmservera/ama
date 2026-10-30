@@ -91,3 +91,37 @@ live activation and human accessibility acceptance remain unproven.
 P02-T01 is complete. P02-T02 is lifecycle follow-through, intentionally pending
 at the Review handoff: original Review, commit and final gate occur in that order.
 The final gate's outcome remains external after the commit to avoid self-reference.
+
+## Parent follow-through after the original Review
+
+The original independent Review executed Complete, outcome Residual work,
+with no implementation defects and three Medium acceptance residuals
+(RV-001 owner/coordinator, RV-002 accessibility, RV-003 live/model).
+It is preserved unchanged; no correction or second Review was performed.
+
+Implementation and original evidence were committed locally as `909bd57d`.
+Fresh fetch still resolved main to the supplied
+`a31048f15fa3120c58bacd22a375d86ae5ab7431`.
+The complete gate was attempted with:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 tools/rpi-checks.py --all \
+  --base a31048f15fa3120c58bacd22a375d86ae5ab7431 \
+  --out /home/azureuser/.copilot/session-state/611be626-15c5-4ba7-b195-00d207b2cfa2/files/full-gate-909bd57d \
+  --lock-timeout 600
+```
+
+Result: exit 1, `BLOCKED: Global heavy-resource lock timeout`, before the
+runner's check matrix began. The runner implements the same exclusive flock
+on `/tmp/ama-rpi-heavy.lock`; no outer flock was nested around it.
+No full receipt exists and no full-gate success or exact-head publication
+eligibility is claimed. Log: external root `full-gate.log`.
+Do not bypass the lock or substitute targeted/browser results for this gate.
+
+This final evidence-only follow-through records the blocker on the local
+candidate. P02-T02 remains incomplete for full-gate coverage. The coordinator
+must run a fresh complete gate on the final clean commit, fetch/verify the
+current base and receipt before any publication. No push or PR was performed.
+Only the named caches and egg-info created by this session were removed after
+archive creation and manifest verification; `generated-inputs.tar.gz` and
+`generated-inputs-manifest.txt` remain in the external evidence root.

@@ -46,10 +46,19 @@ Run complete local gate on the committed candidate with external output;
 the runner itself acquires the heavy lock. Preserve receipt outside git,
 not by a later evidence commit that would invalidate it. No push or PR.
 
-## Current handoff
+## Review intake handoff
 
 P01-T01 and P02-T01 are complete. Changes record retains commands, counts,
 external log hashes and browser/axe incompletes. No runtime or web assets
 changed. P02-T02 deliberately remains pending at Review intake because the
 original Review and committed-candidate full gate are its remaining lifecycle
 operations; this is not an unimplemented product requirement.
+
+## Final parent handoff
+
+Original Review and local implementation/evidence commit are complete.
+The complete gate timed out waiting 600 seconds for the shared heavy lock.
+P02-T02 remains incomplete for that gate only. No full receipt exists.
+Changes and state record the blocker without changing the original Review.
+Coordinator owns the fresh exact-head complete run and receipt verification;
+no push or new follow-up implementation is performed in this execution.

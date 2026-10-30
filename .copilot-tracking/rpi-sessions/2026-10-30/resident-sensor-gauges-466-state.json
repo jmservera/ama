@@ -36,10 +36,16 @@
       "evidence": ".copilot-tracking/reviews/logs/2026-10-30/resident-sensor-gauges-466-review.md"
     }
   ],
-  "blockers": [],
+  "blockers": [
+    {
+      "id": "full-gate-heavy-lock",
+      "summary": "Complete gate could not start: shared heavy-resource lock timed out after 600 seconds; no full receipt exists",
+      "resolution": "Coordinator reruns complete local gate on the final clean committed head after the lock becomes available; verify receipt before publication"
+    }
+  ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Coordinator handoff after local commit and external full gate; follow-up selection requires owner, no child work or push"
+    "action": "Coordinator clears full-gate lock blocker and runs exact-head complete gate before publication; follow-up selection requires owner, no child work or push"
   },
   "prioritized_follow_ups": [
     {
