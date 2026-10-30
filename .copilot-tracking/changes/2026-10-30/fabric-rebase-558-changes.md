@@ -159,8 +159,8 @@ by this local-only task.
 
 ## Remaining Work
 
-No active implementation markers. The single independent Review is complete.
-Parent metadata closeout and local Conventional Commit remain.
+No active implementation markers. The single independent Review and parent
+local commit/verification are complete. Only coordinator publication remains.
 
 ## Follow-Up Items
 
@@ -169,9 +169,11 @@ exact-head verification, authorized push, hosted CI and owner merge decision.
 
 ## Return-to-Caller State
 
-Full plan implementation Complete; ready for single independent Review.
-Automatic parent owns Review and local commit. No push, merge, issue edits or
-Azure. Original critique remains Complete / Revise with parent dispositions.
+Full plan implementation Complete; single Review Complete / Conformant with
+justified divergence. Parent local commit/verification complete. Automatic
+session remains running at Follow-up with no child task started. Coordinator
+owns publication; no push, merge, issue edits or Azure. Original critique
+remains Complete / Revise with parent dispositions.
 
 ## Parent Closeout After the Single Review
 
@@ -207,3 +209,26 @@ git commit -m "docs: reconcile Fabric assessment with main" \
   -m "Refs #558" \
   -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"
 ```
+
+### Actual Local Commit and Verification Results
+
+The staging and commit command above exited 0 and created
+ac20ebd8eb1ca653ac3df250ec3bffcce86b7927. Exactly the two shared documents and
+seven task records were committed. `git status --short` returned no entries.
+`git log -1 --format=fuller` verified both author and committer use the
+authenticated account's noreply identity, and the message includes the exact
+Copilot trailer and Refs #558. No issue-closing keyword was introduced.
+
+`git merge-base --is-ancestor origin/main HEAD` and
+`git diff --quiet origin/main HEAD -- src tools infra .github` both exited 0.
+`git rev-parse HEAD origin/main origin/jmservera/fabric-research` confirmed the
+committed candidate above, unchanged execution base ffd8f35 and unchanged remote
+owner head f009d37. RV-001's parent-owned local step is complete; the original
+working-candidate Review remains unchanged and is not relabelled exact-head
+approval. RV-002 remains coordinator-owned.
+
+This final metadata-only update records observed results in a second local
+Conventional Commit, `docs: record Fabric reconciliation closeout`, with the
+same identity and Copilot trailer. Postcommit identity/status/ancestry/scope
+checks are written to task-owned external final-verification.log. No source,
+original research, review outcome, base, remote or validation contract changes.
