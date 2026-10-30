@@ -1,0 +1,40 @@
+{
+  "task_id": "pr-511-refresh-2026-10-30",
+  "task_slug": "rebuild-148-refresh",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/rebuild-148-refresh-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/rebuild-148-refresh-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/rebuild-148-refresh-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/rebuild-148-refresh-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/rebuild-148-refresh-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/rebuild-148-refresh-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the explicitly requested full local RPI loop and rebase; no push or Azure operations.",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-30; clean existing matching branch and open draft PR 511."
+    },
+    {
+      "decision": "Research executed, Planning Readiness Ready. Critique executed once, Complete / Revise; PC-001 directly applied without another critique.",
+      "status": "recorded",
+      "evidence": "Dated research, plan, phase details and original critique."
+    },
+    {
+      "decision": "Single independent Review executed: Complete / Residual work at 71fafa3d and recorded main 91e890e0. No new source defects; newly advanced main ffd8f35e, historical ordering deviation and administrative/publication remainder routed separately.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-30/rebuild-148-refresh-review.md; refresh RV-001 through RV-003; original RV-001 remains open."
+    }
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Main freshness reconciled to ffd8f35e, original patches preserved and local checks repeated successfully; commit evidence then attempt full external gate. No push."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Coordinator publication and fresh hosted checks", "rationale": "Required before merge; no push is authorized in this task.", "evidence": "Refresh Review RV-003 and historical rubric permission failure."},
+    {"rank": 2, "task": "Original CLI failure-evidence preservation", "rationale": "Known Medium defect remains outside refresh; preserves inspectable partial state.", "evidence": "Original 2026-10-27 Review RV-001."}
+  ]
+}
