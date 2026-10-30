@@ -127,7 +127,67 @@ def check_expanded_filters(
             f"{label} keeps visible keyboard focus",
             button.evaluate("el => getComputedStyle(el).outlineStyle === 'solid'"),
         )
-        selections.append(dict(flag=flag, total=expected["total"]))
+        check(f"{label} API supplies individual homes", expected["mode"] == "points")
+        expected_ids = sorted(point["id"] for point in expected["items"])
+        summary_ids: list[str] = []
+        for marker in page.locator(".map-marker").all():
+            marker.press("Enter")
+            card = page.locator(".map-home-card")
+            expect(card).to_be_visible()
+            case_id = card.locator("dd").first.inner_text()
+            expect(card.get_by_role("link", name="Open home", exact=True)).to_have_attribute(
+                "href", f"#/case/{case_id}"
+            )
+            summary_ids.append(case_id)
+            page.get_by_role("button", name="Close home summary", exact=True).press("Space")
+            expect(marker).to_be_focused()
+        check(f"{label} renders the exact selected homes", sorted(summary_ids) == expected_ids)
+
+        page.get_by_role("button", name="Exit expanded map", exact=True).press("Enter")
+        check(
+            f"{label} restores original header controls",
+            original.evaluate("el => el.parentElement.classList.contains('map-filter-slot')")
+            and original_area.evaluate("el => el === document.getElementById('mapArea')"),
+        )
+        expect(button).to_have_attribute("aria-pressed", "true")
+        expect(button.locator(".tile-selection")).to_have_text("Selected")
+        expect(tiles.locator('[aria-pressed="true"]')).to_have_count(1)
+        expect(area).to_have_value("Point examples")
+        alternate_flag, alternate_label = flags[1 if not flag else 0]
+        alternate = tiles.get_by_role("button", name=alternate_label, exact=False)
+        alternate_expected = page.request.get(
+            base + "/api/map?zoom=15&area=Point%20examples&flag=" + alternate_flag
+        ).json()
+        alternate.press("Space")
+        expect(alternate).to_have_attribute("aria-pressed", "true")
+        expect(button).to_have_attribute("aria-pressed", "false")
+        expect(button.locator(".tile-selection")).to_have_text("Select filter")
+        expect(page.locator(".map-marker")).to_have_count(alternate_expected["total"])
+        expect(page.locator("#leaflet")).not_to_have_attribute("aria-busy", "true")
+        expect(alternate).to_be_focused()
+        page.get_by_role("button", name="Expand map", exact=True).press("Space")
+        expect(alternate).to_have_attribute("aria-pressed", "true")
+        expect(alternate.locator(".tile-selection")).to_have_text("Selected")
+        button.press("Enter")
+        expect(button).to_have_attribute("aria-pressed", "true")
+        expect(page.locator(".map-marker")).to_have_count(expected["total"])
+        expect(page.locator("#leaflet")).not_to_have_attribute("aria-busy", "true")
+        check(
+            f"{label} restores the exact home list after header round trip",
+            page.locator(".maplist li a").evaluate_all(
+                "links => links.map(link => link.getAttribute('href')).sort()"
+            )
+            == [f"#/case/{case_id}" for case_id in expected_ids],
+        )
+        selections.append(
+            dict(
+                flag=flag,
+                total=expected["total"],
+                expected_ids=expected_ids,
+                summary_ids=sorted(summary_ids),
+                header_alternate=alternate_flag,
+            )
+        )
     check("zero-result support filter is exercised", selections[-1]["total"] == 0)
     expect(page.locator(".map-info [role=status]")).to_have_text("0 homes shown")
 
