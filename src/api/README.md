@@ -656,6 +656,18 @@ or establish post-deployment acceptance. Authenticated live response status,
 size, headers and cold-start/auth correlation, plus verification after an
 owner-approved deployment, remain pending the owner.
 
+Current-main local verification (2026-10-30, Refs #524) retained the already
+merged runtime and existing test owners unchanged. API discovery passed 1370
+tests with 318 existing opt-in/integration skips; the three workspace unit tests,
+Ruff check/format and mypy passed. Actual Chromium confirmed failed-first-load
+recovery without a document refresh, bounded exhaustion, native keyboard reload,
+stale route/session protection and local Leaflet HTTP 200 with 147552 bytes,
+correct MIME/length and no-store. Scoped pinned axe 4.10.3 detected no violations
+in loading, recovered and exhausted states with reduced motion; the recovered
+map retained 21 contrast-incomplete nodes, so this is not manual contrast or
+whole-site accessibility acceptance. The historical live cause is unresolved;
+post-deployment verification remains pending the owner.
+
 ## Capacity page compatibility (#523)
 
 Legacy generated packages without a contract version remain readable, with
