@@ -324,6 +324,34 @@ class SqlBoundaryTests(unittest.TestCase):
             self.as_user(rsql.LIST_SQL), self.as_user(rsql.ONE_SQL.replace("?", "'C-1'"))
         )
 
+    def test_empty_sensor_tables_preserve_valid_empty_history(self) -> None:
+        from zava_forward.core.synthetic.sensor_backfill import STOCK_SQL_DDL
+
+        body = json.loads(_body("a@example.com"))
+        body["home"]["stock_id"] = "HOME-A"
+        self.add_case("C-1", json.dumps(body))
+        try:
+            for ddl in STOCK_SQL_DDL.split(";"):
+                if ddl.strip():
+                    self.q(ddl)
+            self.q(script.render(USER)[2])
+            self.assertEqual(
+                [
+                    tuple(value)
+                    for value in self.as_user(
+                        "SELECT sensors_json FROM resident_showcase.v_resident_case"
+                    )
+                ],
+                [("[]",)],
+            )
+            [row] = self.reader.list_rows()
+            self.assertEqual(row.sensors, ())
+            self.assertEqual(self.reader.fetch_case("C-1"), row)
+        finally:
+            self.q("DROP TABLE IF EXISTS sensor_reading")
+            self.q("DROP TABLE IF EXISTS sensor_register")
+            self.q(script.render(USER)[2])
+
     def test_string_measures_and_text_columns_are_bounded(self) -> None:
         body = json.loads(_body("a@example.com"))
         body["measures"] = "Loft insulation; Cavity wall"

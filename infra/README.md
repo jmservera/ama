@@ -3497,6 +3497,13 @@ is not a retrieval path: no role or private network route exists for it yet. The
 stays blocked on budget headroom proof and the human approvals recorded in the issue 462 tracking
 files.
 
+When the optional sensor tables exist but contain no matching readings, the
+view returns `[]`, not SQL NULL, for `sensors_json`. Reapplying the view after
+sensor-table initialization must verify this evaluated projection as well as
+column shape and row counts; `SELECT TOP (0)` does not exercise empty history.
+The real-SQL regression is
+`test_resident_showcase_sql.SqlBoundaryTests.test_empty_sensor_tables_preserve_valid_empty_history`.
+
 [`scripts/resident_demo_verifier.py`](scripts/resident_demo_verifier.py) is the owner-run offline
 tool: it takes no arguments, needs an interactive terminal, reads the demo password twice with hidden
 input and prints only the scrypt verifier (sensitive; keep it out of chat and git). It has no
