@@ -75,7 +75,15 @@ row; scrolling upward or focusing history during a pending reply stops following
 Employee chat sits above embedded map
 panes, controls and home summaries, below the account menu. Close chat has a
 readable explicit hover state on both sites. Same-context filter refreshes
-retain the conversation and the launcher's open/close toggle.
+retain the conversation and the launcher's open/close toggle. Background
+workspace rendering leaves chat-owned focus in place, so Enter and Send keep
+the dialog and answer visible during a same-context route refresh. After
+Escape, Close chat or moving focus outside, a delayed same-context render also
+leaves the selected connected launcher or page control focused and keeps chat
+closed. Destination or authenticated-session changes, and removal of the focused
+control, still move focus to the workspace. A successful
+session re-check with identical authenticated user and account details also
+retains pending answers; changed identity or capabilities clear the conversation.
 Employee case navigation, session/access loss and resident consent withdrawal
 clear the relevant conversation and invalidate late results. Reloading does
 not restore a conversation; no resident text is saved in browser storage.
@@ -117,6 +125,8 @@ From `src/api`, using the source distributions and existing `/tmp/mv` tools:
 ```bash
 export PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests
 /tmp/mv/bin/python -m unittest test_resident_chat_api test_chat_panel test_chat_isolation -q
+/tmp/mv/bin/python -m checks.chat_submit_browser_check \
+  --out /new/external/chat-submit-results
 /tmp/mv/bin/python -m checks.chat_widget_browser_check \
   --axe /path/to/axe-4.10.3.min.js --out /new/external/chat-widget-results
 ```
@@ -131,6 +141,12 @@ sources, consent, stale results and dependency recovery. Existing employee and
 resident browser checks retain their session/access/manual-callback assertions.
 These are engineering checks, not human screen-reader, voice-control, live-model,
 live-site, full Fluent adoption or WCAG-conformance acceptance.
+
+The focused submit check exercises real Enter and mouse Send with and without
+a case, delayed replies during actual route/session refreshes, exact focus,
+delayed deliberate dismissal without reopening, ordinary navigation focus,
+auth snapshot changes and stale re-checks. It also checks actual resident rules
+answers with both send methods. No live model or deployment is needed.
 
 ## Loading feedback and Today's briefing (#531)
 

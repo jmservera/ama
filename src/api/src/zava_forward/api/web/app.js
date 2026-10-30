@@ -12,6 +12,7 @@ const workspaceStatus = document.getElementById("workspace-status");
 let displayedHash = location.hash || "#/";
 let caseSession = null;
 let disposeMapPanel = null;
+let renderedContext = null;
 
 function h(tag, attrs, ...kids) {
   const el = document.createElement(tag);
@@ -89,7 +90,17 @@ const ago = (s) => {
   const days = Math.floor((Date.now() - new Date(s)) / 864e5);
   return days <= 0 ? "Today" : days === 1 ? "Yesterday" : `${days} days ago`;
 };
-const show = (...nodes) => { app.replaceChildren(...nodes.flat().filter((n) => n && n.nodeType)); app.focus(); };
+const show = (...nodes) => {
+  const focused = document.activeElement;
+  const path = (location.hash || "#/").split("?")[0];
+  const sameContext = me && renderedContext?.session === me && renderedContext.path === path;
+  const preserveFocus = focused?.closest(".chat-widget:not([hidden])")
+    || (sameContext && focused !== document.body && focused !== document.documentElement
+      && !app.contains(focused));
+  app.replaceChildren(...nodes.flat().filter((n) => n && n.nodeType));
+  renderedContext = { session: me, path };
+  if (!preserveFocus || !focused?.isConnected) app.focus();
+};
 
 function workspaceReady() {
   document.getElementById("startup")?.remove();
@@ -131,9 +142,18 @@ function login(msg) {
 }
 
 async function start() {
+  const session = me;
+  const refreshed = await api("/api/me");
+  if (me !== session) return;
+  if (session && JSON.stringify(session.user) === JSON.stringify(refreshed.user)
+      && JSON.stringify(session.account) === JSON.stringify(refreshed.account)) {
+    Object.assign(session, refreshed);
+  } else {
+    if (typeof employeeChat !== "undefined") employeeChat.reset(true);
+    me = refreshed;
+  }
   caseSession?.controller?.dispose();
   caseSession = null;
-  me = await api("/api/me");
   Object.assign(listState, defaultListState());
   queueOrigin = "mine";
   briefingBox = null;
