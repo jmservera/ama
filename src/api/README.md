@@ -4052,10 +4052,12 @@ Neither audience receives a new chat interface or invented source in this slice.
 ### Local engineering checks
 
 Unit discovery requires only the installed runtime distributions, not Playwright
-or a browser. The regulatory harness imports its browser APIs only when browser
-operations run; target-size boundary and axe-integrity assertions always run in
-the unit suite. A subprocess regression also blocks Playwright imports even
-when the dev extra is installed. From the repository root:
+or a browser. The regulatory and capacity harnesses import their browser APIs
+only when browser operations run; target-size boundary, axe-integrity and capacity
+scanner-result assertions always run in the unit suite. Subprocess regressions
+also block Playwright imports even when the dev extra is installed; the capacity
+regression executes all four scanner/pin tests under that blocker and confirms
+browser execution still fails explicitly without Playwright. From the repository root:
 
 ```bash
 python3 -m venv /tmp/v215c

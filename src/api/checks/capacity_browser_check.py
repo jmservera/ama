@@ -1,5 +1,7 @@
 """Generated-demo capacity and manager navigation checks on owned local stores."""
 
+from __future__ import annotations
+
 import argparse
 import fcntl
 import hashlib
@@ -15,14 +17,16 @@ import uuid
 from contextlib import contextmanager
 from http.server import ThreadingHTTPServer
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from unittest.mock import patch
 from urllib.parse import parse_qs, urlsplit
 
-from playwright.sync_api import Page, Request, Response, Route, expect, sync_playwright
 from zava_forward.core.sqlstore import SqlStore
 
 from zava_forward.api import server
+
+if TYPE_CHECKING:
+    from playwright.sync_api import Page, Request, Response, Route
 
 generated = importlib.import_module("test_generated_dataset")
 fixtures = importlib.import_module("dataset")
@@ -167,6 +171,8 @@ def owned_store(seed: Path, mssql: bool) -> Any:
 
 
 def check(store: Any, axe: str | None = None) -> None:
+    from playwright.sync_api import expect, sync_playwright
+
     manager = next(
         user for user in store.staff.values() if user["role"] == "Retrofit Programme Manager"
     )
