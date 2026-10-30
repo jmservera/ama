@@ -1,0 +1,55 @@
+{
+  "started": "2026-10-30T10:24:32.233365+00:00",
+  "script_sha256": "9cabd631379732329d48cb7e4dea6026aa54aacfc73ad627fb0b16df27ce1082",
+  "password_submitted": false,
+  "captures": {
+    "screenshots": false,
+    "video": false,
+    "trace": false,
+    "har": false
+  },
+  "credential_parsed": true,
+  "browser_version": "156.0.8078.4",
+  "steps": [
+    {
+      "host": "login.microsoftonline.com",
+      "text": "Sign in\nCan\u2019t access your account?\n\nZava\n\n\t\nSign-in options\n\n\nTerms of use Privacy & cookies ...",
+      "controls": [
+        "Can\u2019t access your account?",
+        "Next",
+        "Sign-in options",
+        "Terms of use",
+        "Privacy & cookies",
+        "Click here for troubleshooting information"
+      ]
+    },
+    {
+      "host": "login.microsoft.com",
+      "text": "[redacted]\nFace, fingerprint, PIN or security key\nYour device will open a security window. Follow the instructions there to sign in.\nZava\n\t\nTerms of usePrivacy & cookies...",
+      "controls": [
+        "Back",
+        "Terms of use",
+        "Privacy & cookies",
+        "Click here for troubleshooting information"
+      ],
+      "selected_action": "back"
+    }
+  ],
+  "username_submitted": true,
+  "outcome": "browser_action_failed",
+  "error_category": "playwright_error_details_not_retained",
+  "final_offered_page": {
+    "host": "login.microsoft.com",
+    "text": "[redacted]\nFace, fingerprint, PIN or security key\nYour device will open a security window. Follow the instructions there to sign in.\nZava\n\t\nTerms of usePrivacy & cookies...",
+    "controls": [
+      "Back",
+      "Terms of use",
+      "Privacy & cookies",
+      "Click here for troubleshooting information"
+    ]
+  },
+  "browser_closed": true,
+  "owned_scratch_cleanup_expected": true,
+  "owned_scratch_removed": true,
+  "ended": "2026-10-30T10:24:44.413046+00:00"
+}

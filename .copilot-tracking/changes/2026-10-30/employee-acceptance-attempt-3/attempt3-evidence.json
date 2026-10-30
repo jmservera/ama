@@ -1,0 +1,26 @@
+{
+  "started": "2026-10-30T11:52:59.134224+00:00",
+  "script_sha256": "290038286a84bfdf78f6dc5dc9956f38af8bf4e95f4631384ccb23d0045cf97c",
+  "captures": {
+    "screenshots": false,
+    "video": false,
+    "har": false,
+    "trace": false
+  },
+  "outcome": "browser_or_route_failure_stop",
+  "browser_version": "156.0.8078.4",
+  "browser_closed": true,
+  "owned_scratch_removed": true,
+  "ended": "2026-10-30T11:53:24.860417+00:00",
+  "attempts": [
+    {
+      "number": 1,
+      "started": "2026-10-30T11:52:59.800180+00:00",
+      "status": "browser_or_route_failure_stop",
+      "credential_fill_attempted": false,
+      "credential_fill_completed": false,
+      "submission_attempted": false,
+      "submission_delivery": "not_attempted"
+    }
+  ]
+}

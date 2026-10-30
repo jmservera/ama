@@ -1,0 +1,71 @@
+{
+  "started": "2026-10-30T09:40:10.520461+00:00",
+  "mode": "inspect",
+  "sites": {
+    "employee": {
+      "host": "ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io",
+      "controls": [
+        {
+          "tag": "a",
+          "type": null,
+          "id": "",
+          "name": "Zava North Homes home",
+          "disabled": false
+        },
+        {
+          "tag": "a",
+          "type": null,
+          "id": "",
+          "name": "Sign in to the workbench \u2192",
+          "disabled": false
+        }
+      ],
+      "passwordFields": 0
+    },
+    "resident": {
+      "host": "ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io",
+      "controls": [
+        {
+          "tag": "a",
+          "type": null,
+          "id": "",
+          "name": "Skip to the main content",
+          "disabled": false
+        },
+        {
+          "tag": "input",
+          "type": "email",
+          "id": "email",
+          "name": null,
+          "disabled": false
+        },
+        {
+          "tag": "input",
+          "type": "password",
+          "id": "password",
+          "name": null,
+          "disabled": false
+        },
+        {
+          "tag": "button",
+          "type": "submit",
+          "id": "signin-button",
+          "name": "Sign in",
+          "disabled": false
+        },
+        {
+          "tag": "button",
+          "type": "button",
+          "id": "chat-launcher",
+          "name": "Chat",
+          "disabled": false
+        }
+      ],
+      "passwordFields": 1
+    }
+  },
+  "browser_version": "156.0.8078.4",
+  "browser_closed": true,
+  "owned_scratch_removed": true,
+  "ended": "2026-10-30T09:41:21.253656+00:00"
+}
