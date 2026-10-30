@@ -125,6 +125,29 @@ are routed distinct follow-ups, not source fixes or repeated Review here.
 Local commit and authoritative post-commit gate result remain subsequent
 lifecycle steps. Their exact-head evidence must remain external.
 
+## Local Commit and Complete-Gate Admission
+
+Implementation and original RPI evidence were committed locally as
+`5f6ae0055cdb0898c5f4c7fd5a6d3e1547263f68`, with the authenticated account's
+privacy-safe author/committer address, Refs #524 and required Copilot trailer.
+The worktree was clean, including ignored inputs. No push or PR was performed.
+
+The required `python3 tools/rpi-checks.py --all --base
+5634f9a077d175a931c15e3400114665d8c071ee --out <external full-gate>` attempt
+failed admission with `BLOCKED: Global heavy-resource lock timeout` after its
+600-second internal wait on the prescribed shared lock. Original output:
+`full-gate-attempt.log` under the external evidence root above.
+No complete matrix executed and no receipt was produced. Do not equate the
+successful focused API/browser checks with a complete passing gate.
+
+This final lifecycle-record commit follows that failed admission; therefore no
+passing exact-head receipt exists for the final candidate. The coordinator must
+run a fresh complete gate in a new external directory when the shared lock is
+available, then verify the receipt against fetched current main and obtain
+independent exact-head/hosted/human approval before any publication.
+No lock bypass, cloud fallback, prerequisite skip or protection change was used.
+The original one-pass Review remains unchanged and is not rerun.
+
 ## Follow-Up Items
 
 Owner live diagnosis and verification after separately approved deployment.

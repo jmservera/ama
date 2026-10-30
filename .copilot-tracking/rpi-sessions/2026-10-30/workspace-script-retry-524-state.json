@@ -39,12 +39,23 @@
       "decision": "One independent Review executed: Complete / Residual work. No implementation defects; RV-001 owner-live and RV-002 manual contrast remain distinct follow-ups.",
       "status": "review-complete-residual-work",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-30/workspace-script-retry-524-review.md"
+    },
+    {
+      "decision": "Local implementation/original evidence commit created; complete gate attempted but shared-lock admission expired after 600 seconds. No matrix or receipt; no publication.",
+      "status": "gate-blocked",
+      "evidence": "5f6ae0055cdb0898c5f4c7fd5a6d3e1547263f68; external files/issue-524/full-gate-attempt.log"
     }
   ],
-  "blockers": [],
+  "blockers": [
+    {
+      "id": "complete-gate-admission",
+      "summary": "Complete gate could not acquire the prescribed shared heavy lock within 600 seconds. No passing final-candidate receipt exists.",
+      "resolution": "Coordinator runs a fresh complete local gate for final HEAD in a new external directory when lock is available, verifies receipt against fetched current main and obtains independent exact-head assessment before publication."
+    }
+  ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Complete local commit and external gate attempt; retain routed owner-live and accessibility follow-ups without starting child work."
+    "action": "Coordinator clears complete-gate publication blocker for final HEAD; retain ranked owner-live and contrast follow-ups without starting child work. No push authorized here."
   },
   "prioritized_follow_ups": [
     {
