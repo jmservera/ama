@@ -1,0 +1,31 @@
+{
+  "task_id": "552",
+  "task_slug": "employee-single-case-view-552",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/employee-single-case-view-552-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/employee-single-case-view-552-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/employee-single-case-view-552-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/employee-single-case-view-552-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/employee-single-case-view-552-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/employee-single-case-view-552-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Run full ordered RPI loop and commit locally; no push", "status": "confirmed", "evidence": "Explicit user request 2026-10-30"},
+    {"decision": "Research executed; Planning Readiness Ready; reuse delivered runtime and strengthen focused evidence", "status": "complete", "evidence": ".copilot-tracking/research/2026-10-30/employee-single-case-view-552-research.md C1-C7"},
+    {"decision": "One critique executed Complete / Revise; PC-001 worker-only parent restriction rejected, reviewer-readable external path selected", "status": "disposed; Plan Ready", "evidence": ".copilot-tracking/plans/2026-10-30/employee-single-case-view-552-plan.md Critique Disposition"},
+    {"decision": "Scoped implementation and required local API/browser validation complete; ready for single independent Review", "status": "complete; full-gate publication blocker unchanged", "evidence": ".copilot-tracking/changes/2026-10-30/employee-single-case-view-552-changes.md"},
+    {"decision": "One independent Review executed Complete; outcome Residual work, no introduced defect; all six local criteria supported with AC5 qualification", "status": "complete; not publication acceptance", "evidence": ".copilot-tracking/reviews/logs/2026-10-30/employee-single-case-view-552-review.md"}
+  ],
+  "blockers": [{"id": "full-gate-no-azure", "summary": "Complete gate mandates az bicep version/build/lint, conflicting with no-Azure direction", "resolution": "Coordinator must resolve the execution boundary before publication; no substitute full receipt"}],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator resolves RV-001 before publication; RV-002/RV-003 await separately selected follow-up; no child or push authorized"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Resolve complete-gate execution boundary before publication", "rationale": "High release-gate impact; no source change or Azure execution authorized here", "evidence": "Review RV-001"},
+    {"rank": 2, "task": "Assess visible Resident heading and Notes contrast with named tester", "rationale": "Narrow bounded evidence gap; existing accessibility acceptance work", "evidence": "Review RV-002"},
+    {"rank": 3, "task": "Assess inherited native-form metadata and motion guideline debt", "rationale": "Low-risk maintenance leverage, outside unchanged runtime scope", "evidence": "Review RV-003"}
+  ]
+}

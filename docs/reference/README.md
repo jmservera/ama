@@ -116,6 +116,15 @@ Missing fresh historical comparisons and the original registry sequencing
 remain acceptance gaps; no migration-attributed gain or whole-issue closure
 is inferred.
 
+For #521, the [January resident authority source renewal](../../infra/README.md#january-authority-source-renewal-2026-10-28-refs-521)
+sets the shared exclusive serving end to 2027-02-01T00:00:00Z and documents
+conditional credential/SQL rotation and added-cost assumptions within USD700.
+Live apply, January funding/headroom and owner verification remain pending;
+the separate paid-inference cutoff is unchanged. The guide records fresh
+2026-10-30 local domain, HTTP/helper and disposable SQL migration evidence,
+including explicit integration skips and pre-existing infra static findings;
+these do not establish live or publication acceptance.
+
 For #140, the [IoT infrastructure decision and budget](../../infra/README.md#iot-hub-issue-140-adr-0003-decision-6)
 and [ADR 0003 dated authorization](../adrs/0003-journey-derived-capabilities-runtime-fit.md#source-only-infrastructure-authorization-2026-10-27-refs-140)
 record B1/one unit in `ama`/`uksouth`, private keyless Event Hub routing,

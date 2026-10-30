@@ -1,0 +1,72 @@
+{
+  "task_id": "521",
+  "task_slug": "resident-authority-extension-521",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-28/resident-authority-extension-521-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-28/resident-authority-extension-521-plan.md",
+    "details": ".copilot-tracking/details/2026-10-28/resident-authority-extension-521-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-10-28/resident-authority-extension-521-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-28/resident-authority-extension-521-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-28/resident-authority-extension-521-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the explicitly requested ordered full RPI loop; source-only, no Azure or secrets; live apply pending owner confirmation.",
+      "status": "confirmed",
+      "evidence": "User request and gh issue view 521 on 2026-10-28"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready. Final-candidate critique executed once with original Revise verdict; PC-001 through PC-003 directly applied to plan/details.",
+      "status": "resolved",
+      "evidence": ".copilot-tracking/plans/2026-10-28/resident-authority-extension-521-critique.md"
+    },
+    {
+      "decision": "Original independent Review executed once: Complete / Residual work, acceptance withheld. Boundary: uncommitted source diff at base 413ccaf253fce4566e855bae9d0a924b2a82b506; not exact-head publication assessment.",
+      "status": "review-complete-acceptance-withheld",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-28/resident-authority-extension-521-review.md"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "heavy-admission",
+      "summary": "Foreign python3 PID 3991262 holds /tmp/ama-rpi-heavy.lock; required package setup and dependent validation not admitted.",
+      "resolution": "Later explicit coordination event after lock is free; nonblocking admission only, no polling or interruption."
+    },
+    {
+      "id": "publication-gate",
+      "summary": "Required complete local SQL-change publication gate invokes az, explicitly prohibited; no full receipt, push or PR.",
+      "resolution": "Separate permitted validation arrangement satisfying unchanged full exact-head/current-base gate and independent assessment."
+    },
+    {
+      "id": "live-apply",
+      "summary": "Live credential/SQL/app renewal and all-in headroom verification pending; no Azure action authorized.",
+      "resolution": "Separate owner confirmation of exact live plan after cost, approval and source-validation gates."
+    }
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Await explicit coordination/selection for ranked validation and publication follow-ups; retain no-push/no-PR and owner-only live apply. No child task selected; automatic session remains running."},
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Complete existing runtime and owned-loopback SQL validation after explicit heavy-run coordination",
+      "rationale": "Highest immediate correctness value; executes already authored tests without adding abstractions or scope.",
+      "evidence": "RV-001; P02-T02; heavy-admission blocker"
+    },
+    {
+      "rank": 2,
+      "task": "Resolve permitted complete gate and exact-head publication arrangement",
+      "rationale": "Necessary to publish once safely; no-az restriction cannot be bypassed or replaced by partial evidence.",
+      "evidence": "RV-002; PC-003; publication-gate blocker"
+    },
+    {
+      "rank": 3,
+      "task": "Obtain owner confirmation for exact January live renewal with fresh USD700 headroom",
+      "rationale": "Required for eventual live acceptance, but depends on validated source, funded allocation and separate operational authority.",
+      "evidence": "RV-003; infra/README.md January authority source renewal; live-apply blocker"
+    }
+  ]
+}

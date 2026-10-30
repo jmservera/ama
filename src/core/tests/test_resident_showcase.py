@@ -88,6 +88,17 @@ class AdmissionTests(unittest.TestCase):
         self.assertIsNotNone(rs.exclusion(r, late))
         self.assertIsNone(rs.exclusion(r, rs.AUTHORITY_END - timedelta(seconds=1)))
 
+    def test_january_authority_supersedes_old_cutoffs_but_remains_exclusive(self) -> None:
+        r = row(valid_from=NOW, valid_to=rs.AUTHORITY_END)
+        for moment in (
+            datetime(2026, 11, 1, tzinfo=UTC),
+            datetime(2026, 12, 31, 23, 59, 59, tzinfo=UTC),
+            datetime(2027, 1, 31, 23, 59, 59, 999999, tzinfo=UTC),
+        ):
+            self.assertIsNone(rs.exclusion(r, moment))
+        self.assertEqual(rs.exclusion(r, rs.AUTHORITY_END), "window")
+        self.assertEqual(rs.exclusion(r, rs.AUTHORITY_END + timedelta(seconds=1)), "window")
+
     def test_duplicate_email_in_supplied_rows_excludes_the_later_one(self) -> None:
         ident = rs.build_identity_map([row("C-1"), row("C-2")], NOW)
         self.assertEqual(ident.cases, {"a.demo@example.com": "C-1"})
@@ -380,7 +391,7 @@ class ViewTests(unittest.TestCase):
 class ConfigTests(unittest.TestCase):
     def env(self, **over: Any) -> dict[str, str]:
         base = {
-            "ZF_DEMO_EXPIRES_AT": "2026-12-31T23:59:59Z",
+            "ZF_DEMO_EXPIRES_AT": "2027-02-01T00:00:00Z",
             "ZF_DEMO_ALLOWED_HOSTS": "demo.example.invalid",
             "ZF_DEMO_PASSWORD_VERIFIER": rs.make_verifier(FAKE_PASSWORD, n=2**14),
             "ZF_DEMO_SESSION_KEY": FAKE_KEY,
@@ -420,8 +431,13 @@ class ConfigTests(unittest.TestCase):
             self.refuse(**{name: None})
 
     def test_config_accepts_inclusive_cap_but_stops_serving_at_expiry(self) -> None:
-        self.assertEqual(rs.AUTHORITY_END, datetime(2026, 12, 31, 23, 59, 59, tzinfo=UTC))
-        for expires in ("2026-11-15T12:00:00Z", "2026-12-31T23:59:00Z"):
+        self.assertEqual(rs.AUTHORITY_END, datetime(2027, 2, 1, tzinfo=UTC))
+        for expires in (
+            "2026-11-01T00:00:00Z",
+            "2026-12-31T23:59:59Z",
+            "2027-01-31T23:59:59Z",
+            "2027-02-01T00:00:00Z",
+        ):
             cfg = rs.config_from_env(self.env(ZF_DEMO_EXPIRES_AT=expires), NOW)
             self.assertEqual(cfg.expires_at.isoformat().replace("+00:00", "Z"), expires)
         with self.assertRaises(rs.ShowcaseConfigError):
@@ -434,8 +450,8 @@ class ConfigTests(unittest.TestCase):
         self.assertIsNotNone(rs.exclusion(far, rs.AUTHORITY_END))
 
     def test_expiry_rules(self) -> None:
-        self.refuse(ZF_DEMO_EXPIRES_AT="2027-01-01T00:00:00Z")
-        self.refuse(ZF_DEMO_EXPIRES_AT="2026-12-31T23:59:59.001Z")
+        self.refuse(ZF_DEMO_EXPIRES_AT="2027-02-01T00:00:01Z")
+        self.refuse(ZF_DEMO_EXPIRES_AT="2027-02-01T00:00:00.001Z")
         self.refuse(ZF_DEMO_EXPIRES_AT="2026-10-25T11:59:59Z")
         self.refuse(ZF_DEMO_EXPIRES_AT="2026-10-26T11:00:00")
         self.refuse(ZF_DEMO_EXPIRES_AT="2026-10-26T13:00:00+01:00")

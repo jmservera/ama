@@ -421,7 +421,11 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                 if case_id is None:
                     self._json(401, dict(error="Please sign in again."))
                     return
-                if "question" in body and (isinstance(topic, Topic) or topic in ("home", "repair")):
+                if (
+                    "question" in body
+                    and topic is not Topic.DOCUMENTS
+                    and (isinstance(topic, Topic) or topic in ("home", "repair"))
+                ):
                     base = (
                         advise(topic, case, FakeProvider())
                         if isinstance(topic, Topic)
@@ -444,6 +448,13 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                         if isinstance(topic, Topic)
                         else chat.answer(topic, view)
                     )
+                    if (
+                        "question" in body
+                        and topic is Topic.DOCUMENTS
+                        and app.assistant_advisor is None
+                        and not app.assistant_provider.ai
+                    ):
+                        advice = replace(advice, label="Summary by rules - AI is not enabled")
             except AssistantUnavailable:
                 print("resident assistant unavailable", file=sys.stderr)
                 self._json(

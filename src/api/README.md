@@ -75,15 +75,25 @@ PYTHONPATH=src:../core/src:../agents/src:tests:../core/tests:../agents/tests \
   /tmp/mv/bin/python -m unittest test_case_journey test_workspace_scripts \
   test_design_system test_accessibility_baseline test_content_standard -q
 PYTHONPATH=src:../core/src:../agents/src:tests:../core/tests:../agents/tests \
-  /tmp/mv/bin/python -m checks.case_view_ux_browser_check --out /new/external/case-results
+  /tmp/mv/bin/python -m checks.case_view_ux_browser_check --out /new/external/case-results \
+  --axe /path/to/axe-4.10.3.min.js
 node --check src/zava_forward/api/web/case-workspace.js
 node --check src/zava_forward/api/web/app.js
 ```
 
+Normal verification requires the repository-hash-verified axe-core 4.10.3 asset
+before starting the app.
 The browser check starts and stops its own constructed-data loopback app,
 blocks external requests and records 1280/390/320px geometry and screenshots,
 keyboard/touch disclosure, enlarged text, retained fields, panel scrolling and
-both enhancement-fallback paths. `--baseline` captures pre-change geometry.
+both enhancement-fallback paths. Attached-tab geometry and actual keyboard
+panel scrolling are checked at all three widths. Axe scans the overview, open
+blocker and scrolled Resident panel at each width, rejects every violation,
+and retains full findings and incomplete checks in `results.json`, including
+on a failed run. Incomplete axe checks still need human assessment.
+`--baseline` captures geometry without requiring axe and is not acceptance
+verification. The UI was already delivered by PR #554; a later verification
+run is not a new before/after redesign.
 These are focused local engineering checks, not publication or WCAG acceptance.
 
 ## Shared resident and employee chat widget (#550)
@@ -902,12 +912,17 @@ that permission. Sign-in is not consent to assistant use or works.
 `POST /demo/assistant` accepts exactly either `{"topic":"status","use_record":true}`
 or `{"question":"Where is my case?","use_record":true}`. Supported topics:
 status, documents, forms, home, consents, appointments, regulations and safety.
-Typed questions are bounded to 500 characters and routed by host-owned rules;
-they never enter model prompts or durable conversation memory. Unsupported
+Typed questions are bounded to 500 characters and routed by host-owned rules.
+Eligible non-document questions can enter the bounded generated-answer prompt;
+document questions use fixed-topic guidance selection instead. Neither is kept
+in durable conversation memory. Unsupported
 questions abstain. No client case/home/email selector is accepted.
 
-Status/documents/forms retain the bounded Azure route below; other answers are
-labelled workflow-only rules. Home answers use only the signed-in projection.
+Document questions retain the mandatory own-case facts and source references
+under the bounded Azure guidance selector below. Unlike other eligible typed
+questions, document replies do not use free-form generated prose. Status/forms
+retain their existing Azure route; other protected answers are labelled
+workflow-only rules. Home answers use only the signed-in projection.
 Operational appointment history and works-consent records are not projected:
 answers state Unknown, never infer consent. Safety questions give direct
 human/emergency routes and explicitly state that no report was sent.
@@ -1069,11 +1084,14 @@ live-service acceptance remain pending. Automated checks are not WCAG
 conformance or whole-issue acceptance.
 
 The standalone assistant check uses complete supported questions, such as
-"Which documents are missing from my case?", "How do I fill in my form?" and
-"What is wrong with my document warning or error?". The older check inputs
-"documents help", "forms help" and "What does my document warning or error
-mean?" are outside the current finite grammar and receive a task-limit refusal.
-This is not general language understanding. The check asserts each newly
+"Which documents are missing from my case?", "Which documents do I still need
+to provide?", "How do I upload my documents?", "How do I fill in my form?" and
+"What does my document warning or error mean?". Document wording also accepts
+provide/send/upload questions and singular or plural warning/error meanings.
+This asks how to provide a file; it does not upload one. "documents help",
+"forms help", upload commands, approval requests and questions combined with
+unrelated requests still receive a task-limit refusal. This finite grammar
+is not general language understanding. The check asserts each newly
 added reply, not earlier chat history, retaining missing-document facts,
 warnings, sources, truthful rules labels, own-case isolation and the limits on
 sending or making decisions. API tests cover both supported questions and
@@ -1088,6 +1106,8 @@ checks and fetches/re-authorizes the resident's own case for every request.
 It never accepts a case selector, writes a case, submits a form or records consent.
 Document replies use the current own-case request facts when available.
 Missing or unrecognised facts stay explicitly unknown, not "nothing to send".
+Document requests may be unknown in the projection; the answer says so rather
+than invent a checklist.
 
 The [design note](../../docs/architecture/resident-assistant-prototype.md)
 records the 2026-10-27 owner decision: managed identity and USD20 model ceiling.
@@ -1095,7 +1115,9 @@ Default `FakeProvider` is deterministic local rules: no model connection or cost
 The legacy `AzureTopicProvider` remains available for compatibility.
 The startup-wired `AzureAdvisor` calls regional Standard `gpt-4.1-mini`
 2025-04-14. Explicit `topic` requests retain approved explanatory-sentence
-selection. In-scope `question` requests now ask for short generated prose using
+selection. Document `question` requests use that same selector so missing-file,
+provision and warning/error facts, references and no-approval wording cannot be
+replaced by model text. Other in-scope `question` requests ask for short generated prose using
 only host-supplied own-case grounding and repair-reporting guidance. Strict
 output validation requires bounded nonempty text and known, unique source IDs;
 source descriptions come from the host, never model-provided URLs. Text renders
@@ -4469,7 +4491,8 @@ establish that a newly failed revision started.
 * Configuration (environment only; the server refuses to start on any missing, expired, mixed or
   unsafe value, and never echoes a value):
   `ZF_DEMO_EXPIRES_AT` (explicit UTC, in the future, no later than the packaged
-  `resident-demo.json` cap, currently2026-12-31T23:59:59Z inclusive;
+  `resident-demo.json` cap, currently 2027-02-01T00:00:00Z (configuration may
+  equal the cap, serving ends exclusively at that instant, after January 31 UTC);
   startup and requests refuse at/after the configured expiry),
   `ZF_DEMO_ALLOWED_HOSTS` (exact host names), `ZF_DEMO_PASSWORD_VERIFIER` (a scrypt verifier, never
   the password), `ZF_DEMO_SESSION_KEY` (base64url, 32 bytes or more), `ZF_SQL_SERVER`,
@@ -4514,7 +4537,8 @@ establish that a newly failed revision started.
   unavailable). Anything else is hidden until it is mapped.
 * SQL boundary: [`infra/sql/resident-showcase.sql`](../../infra/sql/resident-showcase.sql) creates
   the schema, an EMPTY allowlist table (rows need named human approval, provenance and a window ending
-  by 2026-11-01T00:00Z (exclusive, through 31 October UTC)), the view and a read-only principal that has SELECT on that view only. The
+  by the shared 2027-02-01T00:00:00Z exclusive cutoff), the view and a read-only
+  principal that has SELECT on that view only. The
   [`resident_showcase_sql.py`](../../infra/scripts/resident_showcase_sql.py) script renders it and
   only dry-runs unless `--apply` is used from an approved private job.
 * Offline verifier: the owner chooses and keeps the password. Run `(umask 077; python3 infra/scripts/resident_demo_verifier.py > owner-only-file)`
@@ -4539,6 +4563,13 @@ establish that a newly failed revision started.
 Live criteria still blocked (not proven here): remaining budget headroom, live email-to-case
 equality in the homes database, the private job that creates the view and principal, the Key Vault
 secret retrieval role and client, and any deployment. The page is not WCAG conformance evidence.
+
+The #521 source renewal covers January 31, 2027 UTC, but does not deploy an
+image, renew configured app/secret expiries or extend existing SQL row windows.
+The [rotation, conditional cost estimate and pending live-apply plan](../../infra/README.md#january-authority-source-renewal-2026-10-28-refs-521)
+requires separate exact owner confirmation and a fresh USD700 all-in headroom
+check. The independent resident model tariff and SQL inference admission cutoff
+are unchanged; extending resident access does not authorize later paid inference.
 
 ### Own-home synthetic sensor history (#468)
 

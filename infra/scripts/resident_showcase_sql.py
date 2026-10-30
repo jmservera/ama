@@ -21,15 +21,18 @@ import sys
 import uuid
 from pathlib import Path
 
+from zava_forward.core.resident_showcase import AUTHORITY_END
+
 SQL_FILE = Path(__file__).resolve().parent.parent / "sql" / "resident-showcase.sql"
 NAME = re.compile(r"[A-Za-z0-9_-]{3,60}")
 
 
 def render(principal: str, text: str | None = None) -> list[str]:
-    """Return the non-empty batches with the validated principal substituted."""
+    """Render the principal and packaged UTC authority into non-empty batches."""
     if not NAME.fullmatch(principal):
         raise ValueError("The principal name must be 3 to 60 letters, digits, _ or -.")
     source = SQL_FILE.read_text(encoding="utf-8") if text is None else text
+    source = source.replace("{{AUTHORITY_END}}", AUTHORITY_END.strftime("%Y-%m-%dT%H:%M:%S"))
     batches = [b.strip() for b in re.split(r"^GO\s*$", source, flags=re.MULTILINE)]
     return [b.replace("{{PRINCIPAL}}", principal) for b in batches if b]
 

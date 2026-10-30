@@ -341,8 +341,12 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
         expect(reply.locator(".chat-widget-meta").first).to_contain_text("Summary by rules")
     for question in (
         "Which documents are missing from my case?",
+        "Which documents do I still need to provide?",
         "How do I send the document?",
+        "How do I upload my documents?",
         "What is wrong with my document warning or error?",
+        "What does my document warning or error mean?",
+        "What does my document error mean?",
     ):
         reply = ask_chat(page, question)
         for text in (
@@ -489,7 +493,7 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
     button.click()
     expect(page.locator("#assistant-result")).to_contain_text("Design work is under way")
     expect(page.locator("#assistant-result")).not_to_contain_text("arranging a survey")
-    reply = ask_chat(page, "Which documents are missing?")
+    reply = ask_chat(page, "What does my document warning or error mean?")
     expect(reply).to_contain_text("cannot tell you what to send")
     expect(reply).not_to_contain_text("R-SURVEY")
     expect(reply).not_to_contain_text("D-EPC")

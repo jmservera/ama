@@ -189,10 +189,13 @@ def _record_question(question: str) -> Topic | str:
             rf"(?:{documents}|where (?:is|are) {documents}|can i see {documents}|"
             rf"when (?:is|are) {documents} coming|"
             rf"what documents cover (?:the |my )?{subject}|"
-            rf"(?:what|which) {documents} (?:are missing(?: from my case)?|do i need)|"
+            rf"(?:what|which) {documents} (?:are missing(?: from my case)?|"
+            r"do i (?:still )?need(?: to (?:provide|send|upload))?)|"
             r"there is a smoke alarm in my home; what documents do i need|"
-            rf"how do i (?:provide|send) {documents}|"
-            rf"what is wrong with {documents}(?: warning or error)?)",
+            rf"how (?:do|can|should) i (?:provide|send|upload) {documents}|"
+            rf"what is wrong with {documents}(?: warnings?(?: or errors?)?| errors?)?|"
+            rf"what (?:does {documents} (?:warning(?: or error)?|error)|"
+            rf"do {documents} (?:warnings(?: or errors)?|errors)) mean)",
         ),
         (
             Topic.STATUS,

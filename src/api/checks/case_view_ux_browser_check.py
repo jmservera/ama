@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.metadata
 import json
 import re
@@ -11,8 +12,9 @@ from typing import Any
 
 from playwright.sync_api import Browser, Page, Route, expect, sync_playwright
 
-from checks.case_journey_browser_check import journey_data, sign_in
+from checks.case_journey_browser_check import journey_data, scan, sign_in
 from checks.design_system_browser_check import check, main
+from checks.regulatory_ux_check import AXE_SHA256
 
 
 def fixture(route: Route) -> None:
@@ -201,8 +203,21 @@ def fallback_cases(browser: Browser, base: str) -> list[dict[str, Any]]:
     return records
 
 
-def run_browser(base: str, out: Path, baseline: bool) -> None:
-    results: dict[str, Any] = {"baseline": baseline, "viewports": [], "checks": []}
+def run_browser(base: str, out: Path, baseline: bool, axe: str | None = None) -> None:
+    if not baseline and axe is None:
+        raise ValueError("Normal verification requires pinned axe-core via --axe")
+    reports: list[dict[str, Any]] = []
+    results: dict[str, Any] = {
+        "baseline": baseline, "completed": False, "viewports": [], "checks": [],
+        "scans": reports, "attached_tabs": [], "axe_sha256": AXE_SHA256 if axe else None,
+    }
+
+    def scan_state(page: Page, state: str) -> None:
+        if axe is None:
+            raise ValueError("Cannot scan without pinned axe-core")
+        scan(page, axe, reports, state)
+        check(f"axe no violations: {state}", not reports[-1]["violations"])
+
     with sync_playwright() as pw:
         browser = pw.chromium.launch()
         results["browser_version"] = browser.version
@@ -233,6 +248,7 @@ def run_browser(base: str, out: Path, baseline: bool) -> None:
                         max(record["heights"]) <= ceiling,
                     )
             if baseline:
+                results["completed"] = True
                 return
             icons = page.locator(".step-icon")
             check(
@@ -254,6 +270,11 @@ def run_browser(base: str, out: Path, baseline: bool) -> None:
                     ),
                 )
                 page.screenshot(path=str(out / f"case-{width}.png"), full_page=True)
+                scan_state(page, f"overview/{width}")
+                page.get_by_role("button", name=re.compile("^Funding: why blocked")).click()
+                expect(page.locator(".case-blocker-popover:popover-open")).to_be_visible()
+                scan_state(page, f"blocker-open/{width}")
+                page.keyboard.press("Escape")
             page.set_viewport_size({"width": 320, "height": 480})
             trigger = page.get_by_role("button", name=re.compile("^Funding: why blocked"))
             trigger.focus()
@@ -355,22 +376,47 @@ def run_browser(base: str, out: Path, baseline: bool) -> None:
             page.get_by_role("tab", name="Funding", exact=True).click()
             page.get_by_role("tab", name="Resident", exact=True).click()
             expect(page.locator("#note")).to_have_value("Retained synthetic note")
-            panel = page.get_by_role("tabpanel", name="Resident", exact=True)
-            tablist = page.get_by_role("tablist", name="Case sections")
-            tablist.scroll_into_view_if_needed()
-            before = tablist.bounding_box()
-            panel.focus()
-            panel.press("Control+End")
-            page.wait_for_function(
-                "() => document.querySelector('#case-panel-resident').scrollTop > 0"
-            )
-            check(
-                "panel scrolls while attached tabs stay stationary",
-                panel.evaluate(
-                    "el => el.scrollTop > 0 && !el.contains(document.querySelector('[role=tablist]'))"
+            for width in (1280, 390, 320):
+                page.set_viewport_size({"width": width, "height": 800})
+                panel = page.get_by_role("tabpanel", name="Resident", exact=True)
+                tablist = page.get_by_role("tablist", name="Case sections")
+                tablist.scroll_into_view_if_needed()
+                panel.focus()
+                panel.press("Control+Home")
+                page.wait_for_function(
+                    "() => document.querySelector('#case-panel-resident').scrollTop === 0"
                 )
-                and before == tablist.bounding_box(),
-            )
+                before = tablist.bounding_box()
+                panel.press("Control+End")
+                page.wait_for_function(
+                    "() => document.querySelector('#case-panel-resident').scrollTop > 0"
+                )
+                record = panel.evaluate("""el => {
+                  const tabs = document.querySelector('[role=tablist]');
+                  const surface = el.parentElement;
+                  const scrolling = node => /(auto|scroll|hidden|clip)/.test(
+                    getComputedStyle(node).overflowY);
+                  return {width: innerWidth, scrollTop: el.scrollTop,
+                    scrollHeight: el.scrollHeight, clientHeight: el.clientHeight,
+                    sharedSurface: surface.classList.contains('case-sections')
+                      && tabs.parentElement === surface,
+                    tabsOutsideScroller: !scrolling(surface) && !scrolling(tabs)
+                      && !el.contains(tabs),
+                    adjacent: Math.abs(tabs.getBoundingClientRect().bottom
+                      - el.getBoundingClientRect().top) <= 1};
+                }""")
+                record["tabs_before"] = before
+                record["tabs_after"] = tablist.bounding_box()
+                results["attached_tabs"].append(record)
+                check(
+                    f"panel scrolls beneath stationary attached tabs/{width}",
+                    record["scrollTop"] > 0
+                    and record["sharedSurface"] and record["tabsOutsideScroller"]
+                    and record["adjacent"] and before == record["tabs_after"],
+                )
+                expect(page.locator("#note")).to_have_value("Retained synthetic note")
+                scan_state(page, f"resident-scrolled/{width}")
+                page.screenshot(path=str(out / f"attached-tabs-{width}.png"), full_page=True)
             results["checks"].append("manual tab keys, URL/back, retained fields, stationary tabs")
             page.emulate_media(reduced_motion="reduce")
             check(
@@ -379,11 +425,11 @@ def run_browser(base: str, out: Path, baseline: bool) -> None:
                     "getComputedStyle(document.documentElement).getPropertyValue('--motion').trim() === '0s'"
                 ),
             )
-            page.screenshot(path=str(out / "attached-tabs-1280.png"))
             results["touch"] = touch_disclosure(browser, base, out)
             results["fallbacks"] = fallback_cases(browser, base)
             check("no unexpected JavaScript errors", not errors)
             results["errors"] = errors
+            results["completed"] = True
         finally:
             (out / "results.json").write_text(json.dumps(results, indent=2) + "\n")
             context.close()
@@ -394,6 +440,15 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--baseline", action="store_true")
+    parser.add_argument("--axe", type=Path, help="Pinned axe-core 4.10.3, required unless --baseline")
     args = parser.parse_args()
+    if not args.baseline and args.axe is None:
+        parser.error("--axe is required unless --baseline")
+    axe = None
+    if args.axe is not None:
+        raw = args.axe.read_bytes()
+        if hashlib.sha256(raw).hexdigest() != AXE_SHA256:
+            raise ValueError("Expected pinned axe-core 4.10.3")
+        axe = raw.decode()
     args.out.mkdir(parents=True, exist_ok=False)
-    main(lambda base: run_browser(base, args.out, args.baseline), journey_data)
+    main(lambda base: run_browser(base, args.out, args.baseline, axe), journey_data)

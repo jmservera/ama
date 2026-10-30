@@ -301,8 +301,8 @@ class CommandTests(unittest.TestCase):
 
     def test_expiry_image_and_terminal_fail_closed(self):
         for expires in (
-            "2027-01-01T00:00:00Z",
-            "2026-12-31T23:59:59.001Z",
+            "2027-02-01T00:00:01Z",
+            "2027-02-01T00:00:00.001Z",
             "2026-12-31T23:59:59+01:00Z",
             "2026-10-27T08:00:00Z",
             "2026-10-31",
@@ -340,11 +340,16 @@ class CommandTests(unittest.TestCase):
         self.assertEqual(self.run_cmd(cli, apply=True, expires="2026-10-27T08:00:00Z"), 1)
         self.assertEqual(cli.calls, [])
         cli = FakeCli(create(OWNED))
-        self.assertEqual(self.run_cmd(cli, "--no-ingress", expires="2027-01-01T00:00:00Z"), 1)
+        self.assertEqual(self.run_cmd(cli, "--no-ingress", expires="2027-02-01T00:00:01Z"), 1)
         self.assertEqual(cli.calls, [])
 
-    def test_inclusive_maximum_and_november_deployment(self):
-        for expires in ("2026-11-15T12:00:00Z", "2026-12-31T23:59:59Z"):
+    def test_inclusive_maximum_and_extended_window_deployment(self):
+        for expires in (
+            "2026-11-01T00:00:00Z",
+            "2026-12-31T23:59:59Z",
+            "2027-01-31T23:59:59Z",
+            "2027-02-01T00:00:00Z",
+        ):
             cli = FakeCli(create(OWNED))
             self.assertEqual(self.run_cmd(cli, apply=True, expires=expires), 0)
             self.assertIn(f"expiresAt={expires}", cli.calls[0])

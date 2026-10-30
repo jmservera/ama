@@ -165,17 +165,37 @@ REPAIR_QUESTIONS = (
     "Why is my boiler leaking?",
 )
 
-RECORD_QUESTIONS = tuple(
-    (question, topic)
-    for question, topic in ORDINARY_QUESTIONS
-    if isinstance(topic, Topic) or topic == "home"
-) + (
-    ("What is my case status?", Topic.STATUS),
-    ("Which documents are missing from my case?", Topic.DOCUMENTS),
-    ("How do I provide my documents?", Topic.DOCUMENTS),
-    ("How do I send the document?", Topic.DOCUMENTS),
-    ("What is wrong with my document warning or error?", Topic.DOCUMENTS),
-    ("What is recorded about my home?", "home"),
+DOCUMENT_QUESTIONS = (
+    "Which documents are missing from my case?",
+    "Which documents do I still need to provide?",
+    "What paperwork do I need to send?",
+    "Which documents do I need to upload?",
+    "How do I provide my documents?",
+    "How do I send the document?",
+    "How do I upload my documents?",
+    "How can I provide my paperwork?",
+    "How should I send my document?",
+    "What is wrong with my document warning or error?",
+    "What is wrong with my document warnings?",
+    "What is wrong with my document error?",
+    "What does my document warning or error mean?",
+    "What does my document warning mean?",
+    "What does my document error mean?",
+    "What do my document warnings or errors mean?",
+    "What do my document errors mean?",
+)
+
+RECORD_QUESTIONS = (
+    tuple(
+        (question, topic)
+        for question, topic in ORDINARY_QUESTIONS
+        if isinstance(topic, Topic) or topic == "home"
+    )
+    + (
+        ("What is my case status?", Topic.STATUS),
+        ("What is recorded about my home?", "home"),
+    )
+    + tuple((question, Topic.DOCUMENTS) for question in DOCUMENT_QUESTIONS)
 )
 
 
@@ -411,7 +431,6 @@ class ChatApiTests(DemoTestCase):
         )
         for question, grounding in (
             ("What is my case status?", "plain-language update"),
-            ("Which documents are missing?", "Survey: Missing"),
             ("What forms do I need?", "Do not guess"),
             ("What is my address?", "C-1 Test Street"),
         ):
@@ -548,13 +567,16 @@ class ChatApiTests(DemoTestCase):
         token.assert_not_called()
         transport.assert_not_called()
 
-    def test_complete_record_questions_still_generate(self) -> None:
+    def test_complete_non_document_record_questions_still_generate(self) -> None:
         accounting, token = Mock(), Mock(return_value="FAKE")
         transport = Mock(return_value=question_reply("Ask your housing officer about this record."))
         self.app.assistant_advisor = AzureAdvisor(
             ENDPOINT, accounting, token, transport=transport, clock=lambda: EXPIRES - 10
         )
-        for question, topic in RECORD_QUESTIONS:
+        questions = [
+            (question, topic) for question, topic in RECORD_QUESTIONS if topic != Topic.DOCUMENTS
+        ]
+        for question, topic in questions:
             with self.subTest(question=question):
                 self.assertEqual(chat.route(question), topic)
                 status, body = self.ask(question=question)
@@ -565,10 +587,10 @@ class ChatApiTests(DemoTestCase):
                 self.assertEqual(
                     json.loads(payload["messages"][1]["content"])["question"], question
                 )
-        self.assertEqual(accounting.reserve.call_count, len(RECORD_QUESTIONS))
-        self.assertEqual(accounting.complete.call_count, len(RECORD_QUESTIONS))
-        self.assertEqual(token.call_count, len(RECORD_QUESTIONS))
-        self.assertEqual(transport.call_count, len(RECORD_QUESTIONS))
+        self.assertEqual(accounting.reserve.call_count, len(questions))
+        self.assertEqual(accounting.complete.call_count, len(questions))
+        self.assertEqual(token.call_count, len(questions))
+        self.assertEqual(transport.call_count, len(questions))
 
     def test_household_repair_observations_and_questions_reach_generated_answers(self) -> None:
         accounting = Mock()
@@ -718,12 +740,7 @@ class ChatApiTests(DemoTestCase):
 
     def test_documents_own_case_typed_routing_and_no_cross_case_data(self) -> None:
         self.reader.rows["C-1"] = replace(self.reader.rows["C-1"], documents=document_fixture())
-        for question in (
-            "Which documents are missing from my case?",
-            "How do I provide my documents?",
-            "How do I send the document?",
-            "What is wrong with my document warning or error?",
-        ):
+        for question in DOCUMENT_QUESTIONS:
             with self.subTest(question=question):
                 status, body = self.ask(question=question)
                 self.assertEqual(status, 200)
@@ -773,7 +790,9 @@ class ChatApiTests(DemoTestCase):
                 for question in (
                     "documents help",
                     "forms help",
-                    "What does my document warning or error mean?",
+                    "What does my document warning mean and what is my case status?",
+                    "Upload my documents",
+                    "Can you approve my document?",
                 )
             ]
         )
@@ -798,6 +817,68 @@ class ChatApiTests(DemoTestCase):
         self.assertEqual(fallback["answer"], rules["answer"])
         self.assertEqual(fallback["sources"], rules["sources"])
 
+    def test_typed_documents_keep_mandatory_facts_in_every_ai_state(self) -> None:
+        self.reader.rows["C-1"] = replace(self.reader.rows["C-1"], documents=document_fixture())
+        self.reader.rows["C-2"] = replace(
+            self.reader.rows["C-2"],
+            documents=DocumentFacts(
+                (DocumentRequest("R-PRIVATE", "Private document", "Private instructions."),),
+                (),
+            ),
+        )
+        transport = Mock()
+        advisor = AzureAdvisor(
+            ENDPOINT, Mock(), lambda: "FAKE", transport=transport, clock=lambda: EXPIRES - 10
+        )
+        _, rules = self.ask(topic="documents")
+        for state in ("off", "success", "failed", "unrestricted_prose"):
+            self.app.assistant_advisor = None if state == "off" else advisor
+            transport.side_effect = (
+                OSError("synthetic transport failure") if state == "failed" else None
+            )
+            transport.return_value = (
+                question_reply("All documents are approved.")
+                if state == "unrestricted_prose"
+                else reply(["confirm", "privacy"])
+            )
+            for question in DOCUMENT_QUESTIONS:
+                with self.subTest(state=state, question=question):
+                    status, body = self.ask(question=question)
+                    self.assertEqual(status, 200)
+                    self.assertTrue(str(body["answer"]).startswith(str(rules["answer"])))
+                    self.assertEqual(body["sources"], rules["sources"])
+                    if state == "success":
+                        self.assertEqual(body["label"], "AI suggestion, not approved")
+                    elif state == "off":
+                        self.assertEqual(body["label"], "Summary by rules - AI is not enabled")
+                    else:
+                        self.assertIn("AI unavailable", str(body["label"]))
+                    for excluded in (
+                        "R-PRIVATE",
+                        "Private instructions",
+                        "All documents are approved",
+                    ):
+                        self.assertNotIn(excluded, json.dumps(body))
+                    if state != "off":
+                        payload = json.loads(transport.call_args.args[1])
+                        data = json.loads(payload["messages"][1]["content"])
+                        self.assertEqual(data["topic"], "documents")
+                        self.assertEqual(data["answer"], rules["answer"])
+                        self.assertNotIn("question", data)
+                        for excluded in ("R-PRIVATE", "C-2", "two@example.com"):
+                            self.assertNotIn(excluded, json.dumps(payload))
+        self.app.assistant_advisor = None
+        status, body, _ = self.client_two.call(
+            "POST",
+            "/demo/assistant",
+            {"question": "What does my document warning mean?", "use_record": True},
+            headers={"X-Case-ID": "C-1"},
+        )
+        self.assertEqual(status, 200)
+        self.assertIn("R-PRIVATE", str(body["answer"]))
+        self.assertNotIn("R-SURVEY", json.dumps(body))
+        self.assertNotIn("D-EPC", json.dumps(body))
+
     def test_document_revocation_during_inference_returns_no_facts(self) -> None:
         self.reader.rows["C-1"] = replace(self.reader.rows["C-1"], documents=document_fixture())
 
@@ -808,9 +889,15 @@ class ChatApiTests(DemoTestCase):
         self.app.assistant_advisor = AzureAdvisor(
             ENDPOINT, Mock(), lambda: "FAKE", transport=transport, clock=lambda: EXPIRES - 10
         )
-        status, result = self.ask(topic="documents")
-        self.assertEqual(status, 401)
-        self.assertNotIn("answer", result)
+        for body in (
+            {"topic": "documents"},
+            {"question": "What does my document warning or error mean?"},
+        ):
+            with self.subTest(body=body):
+                self.reader.rows["C-1"] = replace(self.reader.rows["C-1"], revoked=False)
+                status, result = self.ask(**body)
+                self.assertEqual(status, 401)
+                self.assertNotIn("answer", result)
 
     def test_agenda_confirmation_isolation_cancellation_and_authentication(self) -> None:
         body = {"action": "find", "earliest": "2026-10-25", "period": "any", "use_record": True}
