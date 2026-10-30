@@ -1,0 +1,7 @@
+{
+  "evidence": "employee-102500-185604-evidence.json",
+  "evidence_sha256": "6d8cd2f2adf89ad1b4a47ce39e687876b38d154bc42470fbb1f817e0cf677b82",
+  "script": "employee_acceptance.py",
+  "script_sha256": "dd3f27b501ec3fb232bb1d138ef7b827a6889b664e107d623ca194ebe3832ffb",
+  "screenshots": []
+}
