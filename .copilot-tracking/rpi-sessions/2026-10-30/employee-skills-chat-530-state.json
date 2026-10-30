@@ -3,8 +3,8 @@
   "task_slug": "employee-skills-chat-530",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Review",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-30/employee-skills-chat-530-research.md",
@@ -29,6 +29,11 @@
       "decision": "One independent Review executed Complete; outcome Not accepted, RV-001 High for missing full API/browser/actual SQL. No new source defect identified. External log access unavailable to reviewer.",
       "status": "review-complete-not-accepted",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-30/employee-skills-chat-530-review.md"
+    },
+    {
+      "decision": "Ordered RPI sequence completed with Partial implementation and Not accepted Review; local implementation/evidence commit exists. No push or full acceptance.",
+      "status": "local-handoff",
+      "evidence": "aa127630c4cc9565202015880e1997c71f1f7d44"
     }
   ],
   "blockers": [
@@ -45,7 +50,26 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Commit the bounded implementation and dated original evidence locally, record the handoff, then leave RV-001 to coordinator-admitted later work; no push."
+    "action": "Coordinator owns later RV-001 heavy-gate evidence collection and separately authorized publication/live acceptance. No child work selected and no push."
   },
-  "prioritized_follow_ups": null
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Collect missing current full API, employee browser/axe and owned actual SQL evidence",
+      "rationale": "Direct acceptance blocker; highest value without speculative source changes. Requires later coordinator heavy-lock admission.",
+      "evidence": "RV-001 High; P02-T01; 600-second lock timeout"
+    },
+    {
+      "rank": 2,
+      "task": "Obtain complete committed-candidate publication evidence under appropriate authority",
+      "rationale": "Exact-head gate is required before publication; current no-Azure boundary prevents the complete matrix.",
+      "evidence": "src/README.md local RPI gate; publication-live blocker"
+    },
+    {
+      "rank": 3,
+      "task": "Perform separately authorized live employee acceptance and confirm five agent names",
+      "rationale": "Required for whole-issue acceptance but deliberately outside local noninteractive authority.",
+      "evidence": "Issue #530 comments and AC8; FU-530-LIVE"
+    }
+  ]
 }

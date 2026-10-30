@@ -115,15 +115,20 @@ Update the API guide and dated changes with actual commands/exits/skips, externa
 paths, identities and unresolved full/live gates; reconcile plan/details.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Independent Review and local handoff
+### [x] P03: Independent Review and local handoff
 
 <!-- rpi:task id=P03-T01 -->
-#### [ ] P03-T01: Review once and commit locally
+#### [x] P03-T01: Review once and commit locally
 
 Obtain independent exact-diff Review; preserve findings without a second Review.
 Record state and evidence, configure authenticated privacy-safe identity and
 commit with the required trailer. No push or PR. Attempt only authorized local
 publication checks; a full receipt remains blocked by the no-Azure boundary.
+Completion: one independent Review Complete / Not accepted, RV-001 High.
+Implementation and original dated RPI records committed locally as
+aa127630c4cc9565202015880e1997c71f1f7d44 with authenticated noreply identity
+and required coauthor. No push. Final metadata handoff is a separate local
+evidence commit, not a new source candidate or a repeat Review.
 
 ## Dependencies
 
@@ -140,6 +145,9 @@ Original verdict is preserved.
 
 ## Follow-Up Items
 
+* RV-001 High: coordinator-admitted later research/evidence collection owns the
+  missing full API/browser/actual SQL execution. P02-T01 stays incomplete here,
+  not downgraded into optional acceptance or inferred closed.
 * Owner/coordinator: separately authorized live site/name acceptance and complete
   publication gate. Outside this run's explicit no-live/no-Azure/no-push scope.
 
@@ -147,6 +155,7 @@ Original verdict is preserved.
 
 Implementation changes record:
 .copilot-tracking/changes/2026-10-30/employee-skills-chat-530-changes.md.
-P01 and P02-T02 complete; P02-T01 blocked on heavy-lock admission. Proceed to the
-single independent Review with the validation gap explicitly unresolved, then
-local commit only. This is not a publication-ready candidate.
+RPI sequence and local commit complete; implementation is Partial and Review is
+Not accepted. P01/P03/P02-T02 complete; P02-T01 remains blocked. No push, full
+receipt, live acceptance or whole-issue delivery claim. Coordinator owns later
+RV-001 evidence collection and publication/live authority.

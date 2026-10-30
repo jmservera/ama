@@ -10,8 +10,9 @@
 ## Execution Status
 
 Partial; full plan scope. P01/P01-T01 and P02-T02 complete. P02-T01 blocked on
-heavy-lock admission. P03 independent Review/local handoff remains. No runtime
-or web source file changed.
+heavy-lock admission. P03 independent Review/local handoff complete. No runtime
+or web source file changed. The ordered RPI sequence is complete, not whole-task
+acceptance or publication readiness.
 
 ## Execution Summary
 
@@ -35,6 +36,15 @@ MssqlChatThreads inherits both methods without adding another harness.
 
 src/api/README.md records the dated local refresh and incomplete heavy/live
 evidence. Historical Review RV-003 and all earlier artifacts remain unchanged.
+
+### Independent Review and local commit (P03-T01)
+
+One independent Review: Complete / Not accepted, RV-001 High. No new source
+defect found; missing heavy-gate evidence remains material. Original implementation
+and dated evidence committed as aa127630c4cc9565202015880e1997c71f1f7d44,
+with authenticated GitHub noreply author/committer and required coauthor trailer.
+No push. The subsequent metadata-only handoff commit records this completed
+local action, not a second Review or a publication receipt.
 
 ## Implementation-Time Plan and Detail Updates
 
@@ -101,7 +111,7 @@ confirmation requires separate owner authority. No full receipt exists.
 
 ## Remaining Work
 
-P02-T01 heavy checks and P03 local commit. The single independent Review is
+P02-T01 heavy checks remain. The single independent Review is
 Complete / Not accepted, RV-001 High: required current local evidence missing.
 No new source defect found. Reviewer could inspect the diff and canonical
 records, but could not open the external /tmp logs under its own access
@@ -110,10 +120,26 @@ independently authenticated raw logs.
 
 ## Follow-Up Items
 
-Owner/coordinator: full publication gate, live acceptance and name confirmation.
+RV-001 High: coordinator-admitted later research/evidence collection for full API,
+browser/axe and actual SQL. Owner/coordinator: full publication gate, live
+acceptance and name confirmation. These do not close incomplete P02-T01.
+
+## Acceptance Disposition
+
+| Issue criterion | Proven boundary | Not proven in this run |
+| --- | --- | --- |
+| AC1 design | Existing recorded skills/router comparison, six one-call contracts | No measured latency/cost gain asserted |
+| AC2 launcher and questions | Six API/storage selections and existing launcher implementation | Fresh every-screen browser execution |
+| AC3 case grounding/labels | Case-stage citations, fixed AI label and general visibility disclosure | Live model truth/quality |
+| AC4 role/scope | Current targeted HTTP role/privacy/owner denial contracts | Operational identity acceptance |
+| AC5 failure | Missing/timed-out synthetic model yields explicit workflow-only help | Live provider outage |
+| AC6 accessibility automation | Historical checked criterion retained, existing script inspected | Fresh browser/axe, screen-reader/voice acceptance |
+| AC7 audit | Skill/outcome/question references, canary exclusion, persisted valid chain | Operational minimization/retention guarantees |
+| AC8 local/live | Targeted tests and static gates only | Full API/browser/actual SQL, publication and live verification |
 
 ## Return-to-Caller State
 
-The single Review is complete with outcome Not accepted. Parent will commit
-the bounded test/documentation candidate and original dated RPI records locally,
-then route RV-001 to later evidence collection. No second Review or remote write.
+The RPI sequence and local commit are complete; implementation is Partial and
+Review remains Not accepted. Parent routes RV-001 to later coordinator-admitted
+evidence collection without starting another task. No second Review, full
+receipt, push or live/whole-issue claim.
