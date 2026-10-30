@@ -406,3 +406,80 @@ existing runner's own nonblocking lock to avoid nested lock deadlock:
 If admission times out, no group/receipt exists. No extra waiting gate or cloud
 fallback. If full gate runs, preserve its actual outcome and exact-head limits.
 No push is authorized/performed. These are scheduled, not success claims.
+
+## P02 Actual Local Persistence and Full-Gate Admission Result
+
+`privacy_email=$(gh api user --jq '"\(.id)+\(.login)@users.noreply.github.com"');
+git config --local user.email "$privacy_email"; git config --local user.name
+"$(gh api user --jq '.login')"; git diff --check; git add -- <the eight
+explicit task files>; GIT_AUTHOR_EMAIL="$privacy_email"
+GIT_COMMITTER_EMAIL="$privacy_email" git -c commit.gpgsign=false commit
+-m "docs(ops): diagnose resident activation timeout and record safe rollback (Refs #563)"
+-m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>";
+git status --short; git log -1 <identity/message>; git fetch origin main
+--quiet; git rev-parse origin/main`: exit0. Local candidate
+e3adbdbd02c438e49278111e225300ec72af2af5 persisted original implementation and
+dated original RPI evidence, including unchanged independent Review.
+Author/committer both8036360+jmservera@users.noreply.github.com.
+Worktree clean; no push. No closing keyword in commit.
+
+Fetched main moved from5634f9a0 to
+b9c6561a365587ab877bd61e9560ffa8cd31f5d2 while this continuation ran.
+`git log --oneline 5634f9a0..origin/main; git diff --stat
+5634f9a0..origin/main; git diff 5634f9a0..origin/main -- src/api/README.md
+src/core/src/zava_forward/core/resident_showcase.py
+src/api/src/zava_forward/api/resident_demo tools/rpi-checks.py;
+git status --porcelain=v1; git ls-files --others --ignored --exclude-standard`:
+exit0. Only prior activation tracking was merged; no relevant source/tool change.
+Reviewed new main as the gate base; no rebase/history rewrite/remote write.
+
+Actual gate command2026-10-30T18:15:46Z-18:25:46Z:
+
+```bash
+flock -w 600 /tmp/ama-rpi-heavy.lock true
+# Only on successful admission, after releasing the probe's lock:
+python3 tools/rpi-checks.py --all \
+  --base b9c6561a365587ab877bd61e9560ffa8cd31f5d2 \
+  --out /home/azureuser/.copilot/session-state/08a62660-191e-4f02-ae50-1579b60d2956/files/resident-recovery/gate-e3adbdbd-b9c6561a \
+  --lock-timeout 0 --jobs 3
+```
+
+Admission exited1 after600s: BLOCKED shared heavy lock. Conditional Python
+runner did not execute; no group ran, no output receipt exists. This is a
+failed admission for the planned full gate, not a failed SQL/browser/scanner
+group, passing gate or complete-gate execution. No foreign process was
+interrupted, no output reused, no second queued gate or cloud substitute.
+Log:
+<private-root>/gate-e3adbdbd-b9c6561a.log, SHA256
+db0ee1c5653742817f0eab116df3b15f4614fe911b7d8fafa6e2de47831f52a2.
+`sha256sum <log>; test ! -e <gate-out>/receipt.json`: exit0, no receipt.
+Receipt verification cannot run without a receipt; publication blocked.
+
+`gh pr view 576 --json state,mergedAt,mergeCommit,headRefName`:
+exit0, coordinator/external actor merged prior PR at2026-10-30T18:09:08Z,
+merge b9c6561a, while this requested branch's continuation was in progress.
+No merge or remote mutation by this executor. Explicit requested topic retained;
+no silent branch switch/rebase/retarget. Coordinator owns successor publication/
+lineage for these unpushed local continuation commits.
+
+Post-gate `git status --short; git rev-parse HEAD; git diff --check`: exit0,
+candidate unchanged/clean at e3adbdbd before this evidence-only closeout.
+P02-T01 execution now complete: local original evidence persisted, one Review
+preserved, exact actual gate admission outcome recorded. Activation remains
+Unmet; full gate Blocked and no eligible receipt. Original Review's Not accepted
+and RV-001/RV-002 assessed boundary remain unchanged. No repeat Review.
+Final evidence-only local commit is planned immediately after this update with
+the same privacy-safe identity, Refs #563 and required trailer; any later
+publication requires a fresh complete exact-head/current-main gate and
+independent exact-head assessment. No push.
+
+## Final Return-to-Coordinator State
+
+Full ordered Research/Plan/Implement/Review execution complete through the
+authorized rollback branch and local closeout; activation not delivered.
+Automatic task completed, session running at Follow-up with no child started.
+2/4 new sign-ins used,2 unused; no further credential/model action.
+Disabled exact effective original baseline, min0/max1 and eight Manual jobs
+preserved. Runtime fallback/private telemetry gap is RV-001, full publication
+gate is lock-blocked; no receipt or human approval. Coordinator owns any later
+scope selection, private telemetry access and successor publication.

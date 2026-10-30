@@ -29,9 +29,12 @@ Both variables were removed and exact effective original baseline restored in
 ready100% recover-safe-180814. Activation remains Unmet. Two of four newly
 granted sign-ins used; no blind inference retry. The inactive pod's console
 is unavailable; existing workspace telemetry is network-perimeter denied.
-Complete local publication gate is independent and may remain lock-blocked.
+Local candidate e3adbdbd committed with original evidence; full local gate
+admission blocked after600s shared-lock timeout, no group ran/no receipt.
+Evidence-only final closeout does not create publication eligibility.
 One independent Review is Complete / Not accepted; RV-001 routes runtime
-diagnosis to later work, RV-002 schedules the remaining local closeout.
+diagnosis to later work, RV-002's scheduled local closeout was executed with
+the full gate still blocked. Its original assessment remains unchanged.
 
 ## Sources
 
@@ -139,10 +142,10 @@ Execution complete via verified rollback; AI/grounding/thin label and
 out-of-scope acceptance Unmet/Not proven, not converted to completed acceptance.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Reconcile, review and persist
+### [x] P02: Reconcile, review and persist
 
 <!-- rpi:task id=P02-T01 -->
-#### [ ] P02-T01: Reconcile evidence and local closeout
+#### [x] P02-T01: Reconcile evidence and local closeout
 
 Depends P01-T02 including rollback branch. Update markers/details/state and
 changes, preserve commands/results and independent outcomes. One independent
@@ -183,5 +186,8 @@ No unresolved owner decision; no second critique.
 
 Changes .copilot-tracking/changes/2026-10-30/resident-ai-activation-563-timeout-recovery-changes.md.
 P01 execution complete through rollback, actual activation Unmet.
-One original Review Complete / Not accepted. P02-T01 local commit/gate pending.
-No new cloud/browser/model action or repeat critique.
+One original Review Complete / Not accepted. P02-T01 complete through local
+commit and blocked full-gate admission; no receipt, no publication eligibility.
+Original Review's pending closeout assessment preserved. Prior PR #576 was
+merged externally while continuation ran; coordinator owns successor lineage/
+publication. No push, new cloud/browser/model action or repeat critique.

@@ -12,7 +12,7 @@ Research same slug under research/2026-10-30, evidence C1-C9. No research gap.
 | Phase | Status | Tasks |
 | --- | --- | --- |
 | P01 | Complete via verified rollback, activation Unmet | T01 backup/activate; T02 live/rollback |
-| P02 | Active | T01 reconcile/review/local persistence/gate |
+| P02 | Complete; publication gate blocked | T01 reconcile/review/local persistence/gate |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Preserve and activate safely
@@ -96,3 +96,12 @@ One original independent Review Complete / Not accepted; RV-001 later research,
 RV-002 scheduled parent local persistence/full gate. P02 remains active until
 local commit and actual bounded gate result are recorded. Review outcome stays
 historical; no second Review or operational correction in this task.
+
+Scheduled local closeout now executed: candidate e3adbdbd persisted all original
+evidence. Reviewed newly fetched main b9c6561a (prior PR #576 merged externally,
+no relevant source/tool drift). Literal flock-w600 gate admission timed out
+18:15:46-18:25:46UTC, exit1; native full runner not admitted, no groups/receipt.
+P02-T01 complete as execution/evidence closeout, not successful validation or
+activation. Final evidence-only local commit follows, no push. Coordinator
+must obtain fresh exact-head/current-main gate and independent exact-head
+assessment for successor publication; no receipt verification possible here.
