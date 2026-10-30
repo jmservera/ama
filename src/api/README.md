@@ -475,6 +475,23 @@ not evidence of a live provider response.
 Actual SQL Server, live employee-site/model, hosted checks and human acceptance
 are separate. The 2026-10-29 local run did not perform live verification.
 
+Local evidence refresh (2026-10-30): two shared `ChatBehaviour` regressions in
+`core/tests/test_chatthreads.py` cover all five skills and general help. They
+check one call per cited answer, persisted masked questions, citations and
+metadata-only skill/outcome audit after reopening, unchanged case records,
+general help without a case, missing/timed-out model fallback and foreign-owner
+denial without inference. JSON and SQLite ran four passing test cases; eight
+focused HTTP contracts also passed, including role projection and privacy
+admission. API/core Ruff, configured formatting and mypy passed.
+
+`test_mssqlstore.MssqlChatThreads` inherits the same two regressions for the
+existing owned SQL gate; inheritance is not an actual SQL pass. The requested
+heavy-gate attempt timed out acquiring `/tmp/ama-rpi-heavy.lock` after 600 seconds
+before executing any check. Complete API discovery, fresh employee browser/axe
+and actual SQL Server were therefore not run in this refresh. These remain
+required local evidence, alongside separate live verification. No employee-site,
+provider, screen-reader or voice-control acceptance is claimed.
+
 ## Employee case journey workspace (#526)
 
 Employee case routes show a six-step evidence-based journey, six-value summary
