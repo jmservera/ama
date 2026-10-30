@@ -1,8 +1,9 @@
-"""Host-owned routing and dated explanations; raw resident questions never reach AI."""
+"""Host-owned housing routes, protected replies and grounding for optional AI."""
 
 import re
 from typing import Any
 
+from zava_forward.core.resident_assistant import NOTICE as ADVISORY_NOTICE
 from zava_forward.core.resident_assistant import Advice, Topic
 
 from .agenda import MANUAL, NOTICE
@@ -135,6 +136,91 @@ def _hazard_report(question: str, tokens: set[str]) -> bool:
     )
 
 
+def _repair_question(question: str) -> bool:
+    household = (
+        r"(?:my|our|the) (?:(?:electric|broken|leaking|noisy|dripping) )*"
+        r"(?:(?:kitchen|bathroom|bedroom) )?"
+        r"(?:home|house|flat|bungalow|kitchen|bathroom|bedroom|ceiling|roof|"
+        r"boiler|heater|heating|radiator|tap|pipes|toilet)"
+    )
+    issue = (
+        r"(?:a |an |some )?(?:(?:dead|strange|bad|unpleasant) )?"
+        r"(?:rats?(?: smell)?|pests?|smell|odour|odor|noise|leak|repairs?|"
+        r"broken heating|hot water problem)"
+    )
+    location = rf"(?:in|at|from|under|near) {household}"
+    state = r"(?:not working|broken|leaking|dripping|(?:very |too |so )?(?:noisy|cold))"
+    smell = rf"smells?(?: (?:strange|bad|unpleasant|awful|(?:like|of) {issue}))?"
+    return bool(
+        re.fullmatch(
+            rf"(?:{household} (?:{smell}|(?:is|are) {state}|"
+            rf"(?:isn't|aren't) working|has {issue}|has no hot water|"
+            rf"needs (?:repairs?|improvements)(?: because of {issue})?)|"
+            rf"there (?:is|are) {issue} {location}|"
+            rf"i (?:can smell|smell|can hear|hear|have noticed) {issue} {location}|"
+            rf"(?:why|how|when) (?:is|are) {household} {state}|"
+            rf"(?:is|are) {household} {state}|"
+            rf"when (?:will|does) {household} (?:work|start working)|"
+            rf"when is hot water coming back (?:to|in) {household}|"
+            rf"how (?:do|can|should) (?:i|we) report {issue} {location}|"
+            rf"who (?:do|can|should) (?:i|we) contact about "
+            rf"(?:{household}|{issue} {location}))"
+            r"[?.!]*",
+            question.lower().strip(),
+        )
+    )
+
+
+def _record_question(question: str) -> Topic | str:
+    subject = (
+        r"(?:(?:electric |electrical )?"
+        r"(?:smoke alarm|smoke detector|co alarm|co detector|carbon[- ]monoxide detector)"
+        r"(?:'s light)?|water meter|co-operative home|home|house|flat|sockets?|"
+        r"(?:electric )?(?:water heater|heater)|boiler|heating)"
+    )
+    documents = (
+        r"(?:(?:my|the) )?(?:(?:smoke alarm|smoke-free policy|carbon-monoxide detector) )?"
+        r"(?:documents?|paperwork)"
+    )
+    forms = r"(?:(?:my|the) )?forms?"
+    patterns = (
+        (
+            Topic.DOCUMENTS,
+            rf"(?:{documents}|where (?:is|are) {documents}|can i see {documents}|"
+            rf"when (?:is|are) {documents} coming|"
+            rf"what documents cover (?:the |my )?{subject}|"
+            rf"(?:what|which) {documents} (?:are missing(?: from my case)?|do i need)|"
+            r"there is a smoke alarm in my home; what documents do i need|"
+            rf"how do i (?:provide|send) {documents}|"
+            rf"what is wrong with {documents}(?: warning or error)?)",
+        ),
+        (
+            Topic.STATUS,
+            r"(?:(?:my )?(?:case|status|progress|case status|case progress)|"
+            r"what is my (?:case )?(?:status|progress)|"
+            rf"what is the (?:status|progress) of (?:my|the) {subject}|"
+            rf"what is my {subject} status|how is my case progressing)",
+        ),
+        (
+            Topic.FORMS,
+            rf"(?:{forms}|what {forms} do i need|"
+            rf"i need help filling {forms}(?: for (?:my|a) {subject})?|"
+            rf"where are {forms}(?: for (?:my|a) {subject})?|"
+            rf"how do i fill (?:in|out) {forms})",
+        ),
+        (
+            "home",
+            r"(?:my home|(?:what|which) (?:is|are) (?:my )?address|"
+            r"(?:what|which) (?:is )?recorded about my home|"
+            rf"(?:what|which) improvements are planned(?: for my {subject})?)",
+        ),
+    )
+    for topic, pattern in patterns:
+        if re.fullmatch(pattern + r"[?.!]*", question.lower().strip()):
+            return topic
+    return "unknown"
+
+
 def route(question: str) -> Topic | str:
     tokens = words(question)
     if tokens & {
@@ -164,34 +250,62 @@ def route(question: str) -> Topic | str:
         "submit",
         "book",
         "cancel",
+        "write",
+        "poem",
+        "joke",
+        "story",
+        "pretend",
+        "roleplay",
+        "translate",
+        "generate",
+        "execute",
+        "override",
+        "tell",
+        "compose",
+        "play",
+        "output",
     }:
         return "unknown"
-    if tokens & {"documents", "document", "paperwork"}:
-        return Topic.DOCUMENTS
-    if "send" in tokens:
+    repair = _repair_question(question)
+    if (
+        tokens
+        & {
+            "report",
+            "contact",
+            "notify",
+            "email",
+            "call",
+            "arrange",
+            "schedule",
+            "fix",
+        }
+        and not repair
+    ):
         return "unknown"
-    if tokens & {"law", "laws", "legal", "regulation", "regulations", "rules", "compliant", "duty"}:
+    if tokens & {
+        "law",
+        "laws",
+        "legal",
+        "legally",
+        "regulation",
+        "regulations",
+        "rules",
+        "compliant",
+        "duty",
+    }:
         return "regulations"
-    if tokens & {"appointment", "appointments", "callback", "agenda", "slots"}:
-        return "appointments"
     if tokens & {"consent", "consents", "permission"}:
         return "consents"
-    if re.fullmatch(
-        r"(?:my home|(?:what|which) (?:is|are) (?:my )?address|"
-        r"(?:what|which) (?:is )?recorded about my home|"
-        r"(?:what|which) improvements are planned(?: for my [a-z ]+)?)[?.!]*",
-        question.lower().strip(),
-    ):
-        return "home"
-    if tokens & {"status", "case", "progress"}:
-        return Topic.STATUS
-    if tokens & {"form", "forms"}:
-        return Topic.FORMS
-    return "unknown"
+    if tokens & {"appointment", "appointments", "callback", "agenda", "slots"}:
+        return "appointments"
+    if repair:
+        return "repair"
+    return _record_question(question)
 
 
 def answer(topic: str, view: dict[str, Any]) -> Advice:
     sources: tuple[str, ...]
+    notice = ADVISORY_NOTICE
     if topic == "home":
         home = view["home"]
         answer = (
@@ -202,6 +316,20 @@ def answer(topic: str, view: dict[str, Any]) -> Advice:
             + "."
         )
         sources = ("Your signed-in home record and planned improvements",)
+    elif topic == "repair":
+        notice += (
+            " Chat cannot confirm the cause of a repair problem or assess safety. "
+            "This chat has not sent a report or alerted anyone."
+        )
+        answer = (
+            "I cannot confirm the cause of the problem from chat or tell you that your home "
+            "is safe. Contact your housing officer using your usual contact details. "
+            "Explain what you have noticed, where it is and when it started. "
+            "Ask how to report a repair and what happens next. "
+            "This chat has not sent a report or alerted anyone. "
+            "If someone may be in immediate danger, do not wait for chat; call 999."
+        )
+        sources = ("General repair-reporting guidance, not a diagnosis or repair history",)
     elif topic == "consents":
         answer = (
             "Works consent is not available in this showcase. I cannot say whether you have "
@@ -227,4 +355,4 @@ def answer(topic: str, view: dict[str, Any]) -> Advice:
             "access anyone else's record. A person can help through your housing officer."
         )
         sources = ("Assistant task limits",)
-    return Advice(answer, sources, "Summary by rules - workflow only, no AI used")
+    return Advice(answer, sources, "Summary by rules - workflow only, no AI used", notice=notice)

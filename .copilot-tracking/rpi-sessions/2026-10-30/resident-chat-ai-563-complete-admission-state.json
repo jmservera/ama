@@ -1,0 +1,31 @@
+{
+  "task_id": "issue-563-complete-admission",
+  "task_slug": "resident-chat-ai-563-complete-admission",
+  "parent_task": {"task_id": "issue-563-rv001", "task_slug": "resident-chat-ai-563-rv001"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/reviews/logs/2026-10-30/resident-chat-ai-563-rv001-review.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/resident-chat-ai-563-complete-admission-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/resident-chat-ai-563-complete-admission-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/resident-chat-ai-563-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/resident-chat-ai-563-complete-admission-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/resident-chat-ai-563-complete-admission-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Continue original user-requested fix through the routed bounded implementation; local commit only, Refs #563, no push/Azure", "status": "confirmed", "evidence": "Original user task and independently routed RV-001"},
+    {"decision": "Earlier Review executed once Complete / Not accepted; preserve it and do not rerun or claim it accepts later source", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-30/resident-chat-ai-563-rv001-review.md"},
+    {"decision": "This later task's first independent Review executed Complete / Conformant for bounded source, zero new substantive findings; no source changes after 48001b35", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-30/resident-chat-ai-563-complete-admission-review.md"}
+  ],
+  "blockers": [
+    {"id": "full-local-gate", "summary": "Complete gate failed: unexpected API integration/dependency skips; browser/mssql blocked by prerequisite", "resolution": "Separate gate/dependency reconciliation and fresh passing exact-head complete gate before publication; retained external failed receipt"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Local correction complete; final lifecycle evidence persisted by containing commit. Await separately authorised ranked follow-up, Stop or manual mode; no push or Azure"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Resolve gate integration prerequisites and obtain a fresh passing complete exact-head gate before publication", "rationale": "Sole current engineering publication blocker; focused checks and bounded source Review pass", "evidence": "External full-gate-implementation/receipt.json failed at 48001b35"},
+    {"rank": 2, "task": "Owner-authorised activation and actual-model/live acceptance", "rationale": "Required for whole-issue acceptance but excluded from local repair", "evidence": "Original parent RV-002"},
+    {"rank": 3, "task": "Human content and assistive-technology acceptance", "rationale": "Engineering evidence cannot establish resident comprehension or human approval", "evidence": "Original parent RV-003"}
+  ]
+}

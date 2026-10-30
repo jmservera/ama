@@ -15,6 +15,7 @@ import sys
 import threading
 import time
 from collections.abc import Callable, Mapping
+from dataclasses import replace
 from datetime import UTC, datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -420,15 +421,29 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                 if case_id is None:
                     self._json(401, dict(error="Please sign in again."))
                     return
-                advice = (
-                    (
-                        app.assistant_advisor.answer(topic, case, resident_key(case_id))
-                        if app.assistant_advisor is not None
-                        else advise(topic, case, app.assistant_provider)
+                if "question" in body and (isinstance(topic, Topic) or topic in ("home", "repair")):
+                    base = (
+                        advise(topic, case, FakeProvider())
+                        if isinstance(topic, Topic)
+                        else chat.answer(topic, view)
                     )
-                    if isinstance(topic, Topic)
-                    else chat.answer(topic, view)
-                )
+                    advice = (
+                        app.assistant_advisor.answer_question(
+                            value.strip(), case, resident_key(case_id), base
+                        )
+                        if app.assistant_advisor is not None
+                        else replace(base, label="Summary by rules - AI is not enabled")
+                    )
+                else:
+                    advice = (
+                        (
+                            app.assistant_advisor.answer(topic, case, resident_key(case_id))
+                            if app.assistant_advisor is not None
+                            else advise(topic, case, app.assistant_provider)
+                        )
+                        if isinstance(topic, Topic)
+                        else chat.answer(topic, view)
+                    )
             except AssistantUnavailable:
                 print("resident assistant unavailable", file=sys.stderr)
                 self._json(

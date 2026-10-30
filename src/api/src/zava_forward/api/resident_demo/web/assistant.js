@@ -211,7 +211,7 @@
     var anonymous = node("p", "Sign in to ask about your own record. You can ask a person for help without using chat.");
     panel.insertBefore(anonymous, ui.log);
     var form = ui.form;
-    var consent = checkbox(ui.beforeInput, "assistant-consent", "Use my own record for this chat. AI may use a bounded case answer if enabled. This is not consent to works.");
+    var consent = checkbox(ui.beforeInput, "assistant-consent", "Use my question and limited own-case details for this chat, including AI when enabled. This is not consent to works.");
     consent.setAttribute("aria-describedby", "resident-chat-error assistant-status");
     var select = ui.select;
     var option = node("option", "Resident assistant");
@@ -220,7 +220,7 @@
     var question = ui.input;
     question.id = "assistant-question";
     question.setAttribute("aria-describedby", "assistant-notice resident-chat-error");
-    ui.intro.appendChild(node("p", "Ask about your case, documents, forms or planned improvements. Do not enter sensitive details. Typed messages are not sent to AI or kept as model conversation memory."));
+    ui.intro.appendChild(node("p", "Ask about your case, documents, forms, planned improvements or a repair concern. Do not enter sensitive or contact details. With your permission, your question and limited own-case details may be sent to AI. Chat is not kept as model conversation memory."));
     ui.status.id = "assistant-status";
     var result = ui.log;
     result.id = "assistant-result";
@@ -271,7 +271,10 @@
           }
           var entry = ui.message("assistant", response.body.answer, {
             label: response.body.label, sources: response.body.sources,
-            detail: response.body.label.startsWith("AI") ? "AI-generated content may be incorrect. Check the sources." : ""
+            detail: [
+              response.body.label.startsWith("AI") ? "Not approved. AI-generated content may be incorrect. Check the sources." : "",
+              response.body.notice, response.body.help
+            ].filter(Boolean).join(" ")
           });
           if (question.value === draft) question.value = "";
           if (response.body.action === "appointments") {

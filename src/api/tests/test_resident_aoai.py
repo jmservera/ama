@@ -6,6 +6,7 @@ from unittest.mock import Mock, patch
 
 from zava_forward.core.resident_assistant import CaseProgress, Topic
 
+from zava_forward.api.resident_demo import chat
 from zava_forward.api.resident_demo.aoai import (
     MAX_COST_USD,
     MAX_PAYLOAD,
@@ -33,6 +34,16 @@ def reply(ids: object = None, **extra: object) -> bytes:
             **extra,
         }
     ).encode()
+
+
+def question_reply(
+    answer: str = "You mentioned a dead-rat smell. Your survey update does not explain its cause. "
+    "Ask your housing officer how to report the smell, where it is and when it started.",
+    sources: object = ("guidance", "case"),
+) -> bytes:
+    body = json.loads(reply())
+    body["choices"][0]["message"]["content"] = json.dumps({"answer": answer, "sources": sources})
+    return json.dumps(body).encode()
 
 
 class AzureAdvisorTests(unittest.TestCase):
@@ -221,3 +232,87 @@ class AzureAdvisorTests(unittest.TestCase):
             conn.cursor.return_value.execute.call_args.args,
             ("EXEC resident_ai.complete @reservation=?, @prompt=?, @completion=?", (ticket, 10, 2)),
         )
+
+    def test_question_generates_prose_with_projected_grounding_and_prepaid_cost(self) -> None:
+        self.transport.side_effect = None
+        self.transport.return_value = question_reply()
+        base = chat.answer("repair", {})
+        result = self.advisor.answer_question(
+            "My home smells like a dead rat", CASE, resident_key("C-1"), base
+        )
+        self.assertEqual(self.events, ["reserve", "token"])
+        self.assertEqual(result.label, "AI-generated")
+        self.assertIn("dead-rat smell", result.answer)
+        self.assertNotEqual(result.answer, base.answer)
+        self.assertIn("Your case: Where things are", result.sources)
+        self.assertEqual(result.help, base.help)
+        payload = json.loads(self.transport.call_args.args[1])
+        content = json.loads(payload["messages"][1]["content"])
+        self.assertEqual(content["question"], "My home smells like a dead rat")
+        self.assertIn(CASE.progress, content["sources"]["case"])
+        self.assertEqual(content["sources"]["guidance"], base.answer)
+        self.assertEqual(payload["response_format"]["json_schema"]["name"], "resident_answer")
+        self.assertEqual(payload["max_tokens"], 256)
+        self.assertLessEqual(len(self.transport.call_args.args[1]), MAX_PAYLOAD)
+        self.accounting.complete.assert_called_once_with("ticket", 400, 20)
+        for forbidden in ("C-1", resident_key("C-1"), "FAKE-TOKEN", "example.com"):
+            self.assertNotIn(forbidden, json.dumps(payload))
+
+    def test_question_invalid_outputs_have_explicit_rules_fallback(self) -> None:
+        base = chat.answer("repair", {})
+        invalid = [
+            question_reply("", ["case"]),
+            question_reply("x" * 1601),
+            question_reply("Unsafe\x00text"),
+            question_reply(sources=[]),
+            question_reply(sources=["invented"]),
+            question_reply(sources=["case", "case"]),
+            question_reply(sources="case"),
+            reply(["contact"]),
+            b"not-json",
+            b"x" * 4097,
+            reply(choices=[{"finish_reason": "length", "message": {"content": "{}"}}]),
+            reply(usage={"prompt_tokens": True, "completion_tokens": 1}),
+        ]
+        self.transport.side_effect = None
+        for raw in invalid:
+            with self.subTest(raw=raw[:80]):
+                self.transport.return_value = raw
+                result = self.advisor.answer_question("A smell", CASE, resident_key("C-1"), base)
+                self.assertIn("AI unavailable", result.label)
+                self.assertEqual(result.answer, base.answer)
+                self.assertEqual(result.sources, base.sources)
+
+    def test_question_expiry_budget_outage_and_limits_do_not_bypass_accounting(self) -> None:
+        base = chat.answer("repair", {})
+        for failure in ("expired", "budget", "transport", "accounting", "oversize"):
+            with self.subTest(failure=failure):
+                self.setUp()
+                if failure == "expired":
+                    self.advisor.clock = lambda: EXPIRES
+                if failure == "budget":
+                    self.accounting.reserve.side_effect = lambda _: None
+                if failure == "transport":
+                    self.transport.side_effect = OSError("private failure")
+                if failure == "accounting":
+                    self.accounting.complete.side_effect = OSError("private failure")
+                result = self.advisor.answer_question(
+                    "x" * 501 if failure == "oversize" else "A smell",
+                    CASE,
+                    resident_key("C-1"),
+                    base,
+                )
+                self.assertIn("Summary by rules", result.label)
+                self.assertEqual(result.answer, base.answer)
+                if failure in ("expired", "budget", "oversize"):
+                    self.token.assert_not_called()
+                    self.transport.assert_not_called()
+
+    def test_question_expiry_after_response_rejects_generated_text(self) -> None:
+        self.advisor.clock = Mock(side_effect=[EXPIRES - 1, EXPIRES - 1, EXPIRES])
+        self.transport.side_effect = None
+        self.transport.return_value = question_reply()
+        base = chat.answer("repair", {})
+        result = self.advisor.answer_question("A smell", CASE, resident_key("C-1"), base)
+        self.assertIn("AI unavailable", result.label)
+        self.assertEqual(result.answer, base.answer)
