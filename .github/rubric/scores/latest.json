@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-30T16:21:04+00:00",
-  "commit": "71726274edda5a7fc830cf8eeaf5894efd52db7f",
+  "scored_at": "2026-10-30T16:41:41+00:00",
+  "commit": "50ad9b46c7a823222bb9fcffab0a9a5d268be25b",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41088121734",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41091385302",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "3b14ab481b020c5c4d71b7d94645f553b95354d03a028c48ce5588b0a4ced5c9",
+    "solution-code": "68e3db2b0be561a37b6866f56213ed9ed3852f4a29236101a5a540d2c723e168",
     "infrastructure": "3702890e4770eecc7d31cbb2f57d031ad7cbf4f9afcf069cf507d7a9ade57fb5",
     "capstone-deck": "c5ae9ab5ec15788dd255b786adaf07ee716806bef375e01c066ad1c26701d74e",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
@@ -44,24 +44,18 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/resident_demo/app.py:228-247",
-        "src/core/src/zava_forward/core/resident_documents.py:60-110",
-        "src/api/src/zava_forward/api/resident_demo/agenda.py:1-35",
-        "src/core/src/zava_forward/core/synthetic/sensor_scenarios.py:650-661"
+        "src/api/checks/employee_identity_check.py:1-53",
+        "src/api/README.md:9-21"
       ],
-      "rationale": "Adds per-login session-binding header with constant-time compare and 409 on mismatch, strict use_record consent gate, bounded/allowlisted document parsing rejecting malformed input, and parameterized SQLite agenda transactions. Strengthens already-ceiling security."
+      "rationale": "New employee identity predicate is fail-closed, requires independently verified tenant/object GUIDs, excludes display email/roster from admission, and is exercised by exhaustive offline tests. Reinforces already-ceiling security posture; no basis to exceed 5."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/resident_demo/chat.py:1-225",
-        "src/core/src/zava_forward/core/resident_documents.py:1-178",
-        "src/api/tests/test_resident_chat_agenda.py:1-50",
-        "src/api/checks/resident_assistant_browser_check.py:1-100",
-        "src/core/tests/test_sensor_scenarios.py:1-385",
-        "src/core/src/zava_forward/core/synthetic/sensor_scenarios.py:1-621"
+        "src/api/checks/employee_identity_check.py:1-53",
+        "src/api/tests/test_employee_identity_check.py:1-50"
       ],
-      "rationale": "Adds complete resident chat routing, document facts parsing, synthetic callback agenda with booking/cancellation transactions, plus matching unit and browser checks. Strong completeness; already at ceiling."
+      "rationale": "The new files are acceptance-test tooling (a predicate plus its offline harness), not a required production capability; core end-to-end implementation evidence is unchanged by this PR. Baseline unchanged."
     },
     "A5": {
       "score": 5,
@@ -69,7 +63,7 @@
         "src/core/src/zava_forward/core/chat_panel.py:337-365",
         "src/agents/src/zava_forward/agents/chat_eval.py:389-408"
       ],
-      "rationale": "Per-turn consumption receipts and evaluator economics summary are audit/evidence records, not production logging/metrics/tracing or measured cost-per-value. Qualitative instrumentation only; baseline unchanged."
+      "rationale": "Per-turn consumption receipts and evaluator economics summary are audit/evidence records, not production logging/metrics/tracing or measured cost-per-value. This PR adds no instrumentation; qualitative baseline unchanged."
     },
     "A6": {
       "score": 5,
@@ -77,12 +71,12 @@
         "src/api/src/zava_forward/api/resident_demo/chat.py:120-225",
         "src/api/README.md:117-140"
       ],
-      "rationale": "New rule-based router explicitly keeps typed questions out of model prompts/memory and preserves the existing bounded AI advisor unchanged; no model/prompt/eval-harness change. Baseline unchanged."
+      "rationale": "This PR touches only an identity acceptance check, not model choice or evaluation harness. Baseline unchanged."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "Chat routing and agenda actions are deterministic rule dispatch and transactional CRUD, not agentic orchestration, planning or handoff. Admission gating and SQL re-checks are guardrails on an existing call, not new autonomy. Unchanged baseline (Good, not Excellent)."
+      "rationale": "Identity check predicate is deterministic schema/claim validation, not agentic orchestration, planning or handoff. Unchanged baseline (Good, not Excellent)."
     },
     "B1": {
       "score": 3,
@@ -121,10 +115,9 @@
     "B6": {
       "score": 5,
       "evidence": [
-        "src/api/README.md:117-230",
-        "src/core/README.md:2474-2622"
+        "src/api/README.md:9-45"
       ],
-      "rationale": "README adds a thorough, clearly structured section describing the chat/agenda contract, security model, limits and test commands. Strong engineering documentation; not capstone deck itself. Ceiling unchanged."
+      "rationale": "README adds a new, clearly structured section documenting the identity check's rationale, limits and next steps, consistent with the existing strong engineering documentation quality. Not the capstone deck itself; ceiling unchanged."
     },
     "B7": {
       "score": 5,
