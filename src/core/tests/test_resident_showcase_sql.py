@@ -40,7 +40,7 @@ def _view_batch() -> str:
         for batch in script.render(USER)
         if "CREATE OR ALTER VIEW resident_showcase.v_resident_case" in batch
     ]
-    return batch
+    return str(batch)
 
 
 if ON:
