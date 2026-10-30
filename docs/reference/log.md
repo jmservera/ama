@@ -8056,10 +8056,11 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   and linked it from the regulatory register, deck index and knowledge-base
   index. Official-page retrieval failed; currentness is `unknown` except for
   discrepancies established by retained source records.
-* Updated the paper to identify the later two-metric EPC policy and date its
-  regulatory snapshot corpus. The Cowork v2 handoff flags the 15,600/15,900
-  band-count arithmetic discrepancy, the 38%/39% survey-vintage mismatch and
-  the later EPC policy; presentation binaries remain unchanged.
+* Updated the paper only to date its sixteen-snapshot regulatory corpus
+  (downloaded 2026-09-19) and note the failed 2026-10-29 retrievals; it makes
+  no EPC policy change. The review and Cowork v2 handoff record the later
+  two-metric EPC policy, the 15,600/15,900 band-count discrepancy and the
+  38%/39% survey-vintage mismatch; presentation binaries remain unchanged.
 * No snapshot was rewritten. No legal duty is declared satisfied or approved.
   @jmservera is asked to appoint a qualified Legal/Compliance reviewer;
   Finance/funder confirmation remains necessary for grant terms.
