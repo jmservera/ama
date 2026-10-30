@@ -272,8 +272,11 @@ The JSON-compatible result includes `passed`, declared tolerances and per-home
 before/after counts, channel means and population standard deviations.
 `Tolerance(point=0, mean_step=0, stddev=0)` is the default for each of the
 `temperature=` and `humidity=` arguments. All limits are inclusive, finite and
-nonnegative, in C or RH percentage points; decimal arithmetic preserves decimal
-point/mean boundary comparisons. Mean-step error subtracts the reference's
+nonnegative, in C or RH percentage points. Decimal point comparisons and
+cross-multiplied reference-adjusted sums preserve inclusive boundaries; the
+mean-step check compares sums against the scaled limit before dividing, so
+recurring means cannot reject an exact-limit handover. Division is used only
+to report the mean-step error. Mean-step error subtracts the reference's
 expected step, while point and per-side standard-deviation errors prevent
 offset/variance cancellation. This detects ingestion discontinuity without
 calling legitimate weather or dated works a seam. A numeric failure sets

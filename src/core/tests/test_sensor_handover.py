@@ -3,6 +3,7 @@
 import unittest
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
+from decimal import Decimal
 
 from zava_forward.core.synthetic import retrofit_effects, sensor_stock
 from zava_forward.core.synthetic.sensor_consistency import Tolerance, report
@@ -208,6 +209,48 @@ class HandoverTests(unittest.TestCase):
                 )
                 with self.subTest(channel=channel, stddev_delta=delta):
                     self.assertEqual(result["passed"], passed)
+
+    def test_nonconstant_reference_mean_step_inclusive_boundary(self) -> None:
+        home_rows = [row for row in rows() if row["home_id"] == "ZF-1"][:6]
+        boundary = home_rows[3]["observed_at"]
+        for channel in ("temperature_c", "humidity_pct"):
+            for before_count in (3, 2):
+                reference = [
+                    {**row, channel: "9.99" if index == before_count else "10.00"}
+                    for index, row in enumerate(home_rows[3 - before_count :])
+                ]
+                offset = Decimal("0.02") if before_count == 2 else Decimal("0.00")
+                for sign in (-1, 1):
+                    for delta, passed in (("0.09", True), ("0.10", True), ("0.11", False)):
+                        step = sign * Decimal(delta)
+                        changed = []
+                        for index, row in enumerate(reference):
+                            adjustment = offset + (step if index >= before_count else Decimal(0))
+                            changed.append(
+                                {**row, channel: f"{Decimal(row[channel]) + adjustment:.2f}"}
+                            )
+                        tolerance = Tolerance(point=1, mean_step=0.1, stddev=1)
+                        result = report(
+                            changed,
+                            reference,
+                            handover=boundary,
+                            temperature=tolerance if channel == "temperature_c" else Tolerance(),
+                            humidity=tolerance if channel == "humidity_pct" else Tolerance(),
+                        )
+                        series = result["series"]
+                        assert isinstance(series, list)
+                        metrics = series[0]["metrics"][channel]
+                        with self.subTest(
+                            channel=channel, before_count=before_count, sign=sign, delta=delta
+                        ):
+                            self.assertEqual(series[0]["before_count"], before_count)
+                            self.assertEqual(series[0]["after_count"], 3)
+                            self.assertEqual(result["passed"], passed)
+                            self.assertEqual(
+                                metrics["checks"],
+                                {"point": True, "mean_step": passed, "stddev": True},
+                            )
+                            self.assertEqual(metrics["mean_step_error"], float(delta))
 
     def test_invalid_tolerances_and_configuration(self) -> None:
         for value in (-1, float("nan"), float("inf"), True):

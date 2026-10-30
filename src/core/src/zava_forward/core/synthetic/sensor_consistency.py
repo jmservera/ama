@@ -116,13 +116,19 @@ def report(
             deviations = [pstdev(part) for part in (values[:split], values[split:])]
             ref_deviations = [pstdev(part) for part in (baseline[:split], baseline[split:])]
             point_error = max(abs(a - b) for a, b in zip(values, baseline, strict=True))
-            step_error = abs((means[1] - means[0]) - (ref_means[1] - ref_means[0]))
+            step_numerator = abs(
+                (sum(values[split:], Decimal(0)) - sum(baseline[split:], Decimal(0))) * split
+                - (sum(values[:split], Decimal(0)) - sum(baseline[:split], Decimal(0)))
+                * (len(keys) - split)
+            )
+            step_scale = split * (len(keys) - split)
             stddev_error = max(abs(a - b) for a, b in zip(deviations, ref_deviations, strict=True))
             checks = {
                 "point": point_error <= Decimal(str(tolerance.point)),
-                "mean_step": step_error <= Decimal(str(tolerance.mean_step)),
+                "mean_step": step_numerator <= Decimal(str(tolerance.mean_step)) * step_scale,
                 "stddev": stddev_error <= Decimal(str(tolerance.stddev)),
             }
+            step_error = step_numerator / step_scale
             passed = passed and all(checks.values())
             metrics[channel] = {
                 "mean_before": float(means[0]),
