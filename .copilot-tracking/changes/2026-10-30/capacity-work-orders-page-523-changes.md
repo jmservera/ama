@@ -9,8 +9,9 @@ ms.date: 2026-10-30
 Full plan execution: capacity-work-orders-page-523, base
 5634f9a077d175a931c15e3400114665d8c071ee. Research and Plan completed in
 order. Single critique Revise PC-001 applied: sanitize external runner exactly
-like main. P01 implementation and P02 local validation complete; original Review
-and local commit/gate remain. Preserve merged #528 runtime repair.
+like main. P01 implementation, P02 scoped local validation, original Review,
+local commit and complete-gate attempts are complete. Full publication remains
+blocked; live verification remains owner-pending. Preserve merged #528 repair.
 
 ## P01: Acceptance coverage
 
@@ -132,6 +133,39 @@ Review artifact:
 .copilot-tracking/reviews/logs/2026-10-30/capacity-work-orders-page-523-review.md.
 No code change or second Review follows it.
 
-Full publication gate, coordinator push/PR/hosted approval and live owner
-verification are not yet completed. Local commit and a post-commit full-gate
-attempt are next. The supplied main base still matches fetched origin/main.
+## P02-T03: Commit and Complete-Gate Disposition
+
+Implementation plus original RPI evidence committed locally as
+774be1549ad78eac144d659e8e957a238607bc3f:
+`test(api): verify capacity SQL accessibility (Refs #523)`.
+Author/committer use the authenticated account's repository-local noreply
+address. Required Copilot coauthor trailer included. No push or PR created.
+
+Post-commit full-gate command:
+`python3 tools/rpi-checks.py --all --base 5634f9a077d175a931c15e3400114665d8c071ee --out <new-external-directory> --lock-timeout 0`.
+Initial attempt: exit 1, refused ignored validation inputs. Those were this
+run's bytecode, editable-package metadata and Ruff/mypy caches, all dated after
+the task's start. No historical/private/source data was selected.
+
+Before removing those exact files, the finite manifest, entire tracking
+snapshot and selected scratch were archived externally; archive readback and
+restoration of every selected member were hash-verified. Protected 4,130
+tracking files remained identical. Removed only 246 individually enumerated
+task-owned files, with a pending/removed journal, not recursive historical
+cleanup. The archive and restored bytes remain under external
+scratch-preservation523/. Archive SHA-256:
+7e9d26016e7aba59c7dbf2ab34f508b4e33f44e8c1d6411b6b242565f697dc64.
+No ignored candidate inputs remained and reviewed source hashes stayed equal.
+
+Second full-gate attempt, fresh external final-gate523-attempt2 destination:
+exit 1, `BLOCKED: Global heavy-resource lock timeout`. No gates started and no
+passing receipt exists. Nonqueued admission preserves the shared-host policy;
+no foreign owner was interrupted and no busy-lock loop followed. Full-gate
+completion and exact-final-head assessment remain coordinator-owned prerequisites
+before publication. The later bookkeeping commit does not claim either failed
+attempt as an exact-final-head pass.
+
+The original Review remains Complete / Residual work. Full publication gate,
+coordinator push/PR/hosted/human approval and live owner verification are not
+completed. The supplied main base still matched the fetched origin/main.
+No Azure command, deployment, live sign-in, credential file or secret was used.

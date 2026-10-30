@@ -84,7 +84,7 @@ handling and keyboard recovery. No generated test artifacts in git.
   retry and up to four focused helper tests. Update the existing API guide.
 
 <!-- rpi:phase id=P02 -->
-### P02: Validation and review
+### [x] P02: Validation and review
 
 <!-- rpi:task id=P02-T01 -->
 * [x] P02-T01: Install source distributions in an owned external venv if needed.
@@ -93,7 +93,7 @@ handling and keyboard recovery. No generated test artifacts in git.
 * [x] P02-T02: Run the enhanced local SQL browser check with pinned axe; retain
   exact manager route and error/empty results. No SQLite substitution.
 <!-- rpi:task id=P02-T03 -->
-* [ ] P02-T03: Reconcile changes, invoke one independent Review, record outcome,
+* [x] P02-T03: Reconcile changes, invoke one independent Review, record outcome,
   commit implementation and original evidence; attempt complete local gate.
 
 ## Critique Disposition
@@ -109,6 +109,9 @@ decision and no second critique. Original artifact:
 
 Owner-authorized post-deployment verification remains pending and outside this
 local task. Human/hosted approval and coordinator publication are not local proof.
+The complete exact-head gate remains blocked by shared heavy-lock admission.
+Coordinator must run it on the final committed head before publication; no
+passing receipt exists. This is separate from completed scoped local checks.
 
 ## Handoff
 
@@ -117,8 +120,12 @@ P02-T01 passed: 1374 API tests, 318 optional skips, Ruff, formatting and mypy.
 First full unittest admission timed out after 600 seconds; the second completed
 after the owned SQL/browser gate released the lock. P02-T02 SQL/browser passed,
 including twelve actual manager destinations and four clean axe scans.
-P02-T03's remaining actions are the one original independent Review, local
-commit and post-commit complete-gate attempt; no source work remains.
+P02-T03 completed its actions: one original independent Review (Complete /
+Residual work, no source defects), local implementation/evidence commit
+774be1549ad78eac144d659e8e957a238607bc3f, and post-commit complete-gate attempts.
+The first refused ignored validation scratch; after archive/restore-verified
+cleanup, the second refused shared-lock admission. Neither is a passing gate.
+Final bookkeeping is committed separately without changing reviewed source.
 Independent Review will assess this boundary honestly, not establish runtime
 acceptance from static results. Details:
 .copilot-tracking/details/2026-10-30/capacity-work-orders-page-523-phase-details.md.

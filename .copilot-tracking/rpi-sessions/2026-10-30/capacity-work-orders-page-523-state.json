@@ -34,8 +34,8 @@
   "blockers": [
     {
       "id": "publication",
-      "summary": "Complete exact-head local gate and coordinator publication are pending.",
-      "resolution": "Commit locally and attempt the complete local gate; coordinator retains push/PR, hosted and human approval."
+      "summary": "Full local gate blocked by global heavy-resource lock timeout after archive-backed scratch correction; no passing receipt.",
+      "resolution": "Coordinator runs the complete gate on final committed HEAD after shared-lock coordination, then verifies a current-main receipt and obtains exact-head/hosted/human approval before any push."
     },
     {
       "id": "live",
@@ -45,7 +45,7 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Commit reviewed source and original RPI evidence locally; attempt post-commit local gate. Automatic session remains at the finite task's follow-up boundary; no child work selected."
+    "action": "Coordinator resumes RV-001 complete exact-head local gate after shared-lock coordination; RV-002 live verification remains owner-pending. No push or automatic child work authorized."
   },
   "prioritized_follow_ups": [
     {
