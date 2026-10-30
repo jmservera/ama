@@ -1,0 +1,32 @@
+{
+  "task_id": "533",
+  "task_slug": "employee-progress-dashboard-533",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/employee-progress-dashboard-533-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/employee-progress-dashboard-533-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/employee-progress-dashboard-533-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/employee-progress-dashboard-533-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/employee-progress-dashboard-533-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/employee-progress-dashboard-533-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Run the full ordered RPI loop autonomously; commit locally only; Refs #533 only.", "status": "confirmed", "evidence": "User request 2026-10-30"},
+    {"decision": "Critique executed once; original Revise verdict preserved. PC-001 rejected: asserted temporary-path prohibition is absent in parent context and conflicts with explicit user shared-lock direction.", "status": "disposed; plan Ready", "evidence": ".copilot-tracking/reviews/plans/2026-10-30/employee-progress-dashboard-533-plan-critique.md; plan Critique Disposition; successful locked research baseline"},
+    {"decision": "Independent Review executed once; outcome Residual work. No implementation defects; RV-001 deployed-site acceptance and RV-002 finalization/human/hosted evidence retained.", "status": "Complete execution; Residual work outcome", "evidence": ".copilot-tracking/reviews/logs/2026-10-30/employee-progress-dashboard-533-review.md"},
+    {"decision": "P02-T02 executed: local implementation/evidence commit with trailer; full gate attempted and blocked by newer origin/main after archive/restore-backed generated-cache cleanup. No receipt or passing full gate.", "status": "Local commit complete; publication blocked", "evidence": "01c0e9405228686278dea36349397322c39cc45f; external validation-533/final-gate-base.log and cache-preservation/receipt.json; changes final administrative results"}
+  ],
+  "blockers": [
+    {"id": "RV-001", "summary": "Owner's deployed-site check is outside local-only scope and remains unproven.", "resolution": "Coordinator/owner obtains separately authorized deployed dashboard/archive evidence."},
+    {"id": "RV-002", "summary": "Complete gate BLOCKED: assigned reviewed base differs from freshly fetched origin/main; no receipt. Human/hosted approvals also remain unavailable.", "resolution": "Coordinator reconciles assigned lineage with newer main without unauthorized history rewrite, reruns and verifies full exact-head gate, and retains required human/hosted approvals."}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator resolves newer-main/base blocker and runs fresh complete exact-head gate. Inspect external validation-533/final-gate-base.log and cache-preservation/receipt.json; no full receipt exists. Retain deployed/human/hosted acceptance. No new source work, push or second Review in this task."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Coordinator assesses exact committed head and external full-gate evidence against current main.", "rationale": "Required before publication; origin/main advanced beyond assigned base.", "evidence": "RV-002; origin/main 9ee48592a2e80e3a9f9e3c90ef039b9fa1987d19; changes finalization boundary"},
+    {"rank": 2, "task": "Owner/coordinator performs separately authorized deployed employee-site dashboard/archive checks.", "rationale": "Remaining explicit owner acceptance gap; local success is not deployed evidence.", "evidence": "RV-001; issue 533 owner comment"}
+  ]
+}

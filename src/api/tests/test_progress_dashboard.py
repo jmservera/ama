@@ -958,6 +958,64 @@ class ProgressDashboard(unittest.TestCase):
                 self.assertEqual(len(last["items"]), max(0, count - (pages - 1) * 20))
                 self.assertEqual(self.archive(q="no match", page="2")["page"], 1)
 
+    def test_filtered_custom_limit_pages_partition_the_matching_cohort(self) -> None:
+        with self.store.lock:
+            template = copy.deepcopy(self.store.cases["ZF-1"])
+            template.update(stage="Completed", owner_role="Quality Inspector")
+            template["resident"]["name"] = "Fictional paging cohort"
+            self.store.cases.clear()
+            expected = [f"SYN-PAGE-{index:03}" for index in range(7)]
+            for identifier in reversed(expected):
+                case = copy.deepcopy(template)
+                case["id"] = identifier
+                self.store.cases[identifier] = case
+            for index, mismatch in enumerate(
+                ("status", "team", "before", "after", "unknown", "text")
+            ):
+                case = copy.deepcopy(template)
+                case["id"] = f"SYN-DISTRACTOR-{index:03}"
+                if mismatch == "status":
+                    case["stage"] = "Withdrawn"
+                elif mismatch == "team":
+                    case["owner_role"] = "Resident Liaison Officer"
+                elif mismatch in ("before", "after"):
+                    closure = "2026-10-06" if mismatch == "before" else "2026-10-08"
+                    case["history"][-1] = event(closure, "Accepted handover")
+                elif mismatch == "unknown":
+                    case.update(is_synthetic=True, history=[])
+                else:
+                    case["resident"]["name"] = "Other fictional resident"
+                self.store.cases[case["id"]] = case
+
+            filters = dict(
+                status="Completed",
+                team="Quality Inspector",
+                start="2026-10-07",
+                end="2026-10-07",
+                q="PAGING COHORT",
+                limit="3",
+            )
+            seen = []
+            for page in range(1, 4):
+                result = self.archive(**filters, page=str(page))
+                self.assertEqual(
+                    (result["total"], result["pages"], result["page"], result["limit"]),
+                    (7, 3, page, 3),
+                )
+                identifiers = [row["id"] for row in result["items"]]
+                self.assertEqual(identifiers, expected[(page - 1) * 3 : page * 3])
+                seen.extend(identifiers)
+            self.assertEqual(seen, expected)
+            self.assertEqual(len(set(seen)), 7)
+            beyond = self.archive(**filters, page="999999")
+            self.assertEqual(beyond["page"], 3)
+            self.assertEqual([row["id"] for row in beyond["items"]], expected[-1:])
+            empty = self.archive(**(filters | {"q": "No matching fictional resident"}), page="3")
+            self.assertEqual(
+                (empty["total"], empty["pages"], empty["page"], empty["limit"], empty["items"]),
+                (0, 1, 1, 3, []),
+            )
+
     def test_invalid_queries_and_roles_are_explicit(self) -> None:
         for values in (
             {"start": ["2026-02-30"]},

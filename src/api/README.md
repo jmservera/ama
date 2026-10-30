@@ -377,8 +377,12 @@ PYTHONPATH=tests:../core/tests:../agents/tests python -m checks.progress_browser
 ```
 
 Take `/tmp/ama-rpi-heavy.lock` with nonblocking `flock -n` admission before
-heavy checks, retrying for at most 40 minutes. The browser check owns a fictional
+heavy checks, retrying for at most 40 minutes. The unit checks also partition a
+combined-filter cohort across custom-size pages on JSON and SQLite, including
+nonmatching cases, empty results and beyond-final-page clamping.
+The browser check owns a fictional
 loopback server and checks table/chart/API equality, keyboard, URL/paging,
+first/final/empty paging controls and empty-page URL correction with filters retained,
 failure/retry, cancellation, reflow and pinned axe. It never uses the working
 dataset, Azure or a live model. These are engineering checks, not human
 screen-reader/usability acceptance, full Fluent runtime adoption or WCAG
