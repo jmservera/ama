@@ -3581,8 +3581,14 @@ ZF_BROWSER_TESTS=1 PYTHONPATH=tests:../core/tests:../agents/tests \
   python3 -m unittest test_chat_panel.PanelTests.test_browser_warning_failure_keyboard_refusal_and_live_log -q
 ```
 
-Default unit discovery skips this optional browser method; explicit execution
-requires installed Chromium. This is not a named human screen-reader test or
+Default unit discovery skips this opt-in browser method; explicit execution
+requires installed Chromium. The complete local RPI gate owns this exact case
+in its required `browser` group with `ZF_BROWSER_TESTS=1`, verbose unittest
+execution counts and a retained external log. Its exact ID/reason skip is
+accepted only in API general discovery, never in the required browser stage.
+The trusted command inventory and receipt verification enforce the selector,
+flag and shared-fixture paths; unexpected skips still fail closed (Refs #572).
+This is not a named human screen-reader test or
 complete WCAG acceptance. DPO/Legal/provider/retention/access decisions,
 independent held-out/serving-model/human evaluation, approved thresholds and
 finite role budgets remain blockers. All five issues remain Refs, including

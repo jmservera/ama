@@ -132,6 +132,17 @@ required integration skips fail. Existing private-data, real AI, Azure/OIDC,
 reviewer protection, privileged what-if and deployment acceptance remain
 separate controls, not local successes.
 
+The required local `browser` group also runs
+`test_chat_panel.PanelTests.test_browser_warning_failure_keyboard_refusal_and_live_log`
+with `ZF_BROWSER_TESTS=1` and the API/core/agents test paths. Its verbose unittest
+log and executed/skipped counts are required receipt evidence. Only that exact
+test ID with reason `opt-in local Chromium` is accepted during non-integration
+`project-api` discovery; its skip remains recorded, not counted as execution.
+The dedicated browser command must actually execute: missing/changed command
+identity, zero execution, dependency failures and unexpected skips block the
+gate and receipt verification. This local coverage adds to, not changes, the
+hosted workflow coverage inventory.
+
 ShellCheck is a required preflight dependency, not an optional actionlint
 enhancement: native workflow lint must analyze shell scripts as hosted lint
 does. Its version is logged and its binary identity is receipt-bound; a missing

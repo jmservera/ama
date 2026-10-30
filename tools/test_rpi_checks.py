@@ -26,6 +26,151 @@ SPEC.loader.exec_module(gate)
 
 
 class GateTests(unittest.TestCase):
+    def test_chat_panel_browser_command_is_required_and_dispatched_with_opt_in(self) -> None:
+        checks = gate.required_checks(
+            self.root,
+            {
+                "owner": "a" * 24,
+                "sql": {},
+                "images": {},
+                "extras": [],
+                "executed_groups": ["browser"],
+            },
+        )
+        selected = [row for row in checks if gate.CHAT_PANEL_BROWSER_SELECTOR in row["argv"]]
+        self.assertEqual(len(selected), 1)
+        contract = selected[0]
+        self.assertEqual(
+            contract["argv"],
+            [
+                "<output>/venvs/api/bin/python",
+                "-m",
+                "unittest",
+                "-v",
+                gate.CHAT_PANEL_BROWSER_SELECTOR,
+            ],
+        )
+        self.assertEqual(contract["cwd"], "src/api")
+        self.assertEqual(
+            contract["env"],
+            {
+                "PYTHONPATH": "<checkout>/src/api/tests:<checkout>/src/core/tests:"
+                "<checkout>/src/agents/tests",
+                "ZF_BROWSER_TESTS": "1",
+            },
+        )
+        self.assertTrue(contract["suite"])
+        self.assertTrue(contract["integration"])
+        runner = self.runner()
+        runner.snapshot = self.root
+
+        def command(argv: list[str], cwd: str = ".", **kwargs: Any) -> str:
+            if gate.CHAT_PANEL_BROWSER_SELECTOR in argv:
+                self.assertEqual(argv, [runner.python("api"), *contract["argv"][1:]])
+                self.assertEqual(cwd, contract["cwd"])
+                self.assertEqual(
+                    kwargs,
+                    {
+                        "env": {
+                            **runner.tests_env("api", True),
+                            "ZF_BROWSER_TESTS": "1",
+                        },
+                        "suite": True,
+                        "integration": True,
+                    },
+                )
+                raise gate.GateError("fixture stops after exact dispatch")
+            return ""
+
+        with patch.object(runner, "lint"), patch.object(runner, "command", side_effect=command):
+            runner.browser()
+        self.assertEqual(runner.failures, ["browser: fixture stops after exact dispatch"])
+
+    def test_chat_panel_discovery_skip_is_exact_and_integration_fails_closed(self) -> None:
+        test, reason = gate.CHAT_PANEL_DISCOVERY_SKIP
+        text = f"{test} ... skipped '{reason}'\nRan 1 test in 0.1s\n\nOK (skipped=1)\n"
+        self.assertNotIn(reason, gate.EXPECTED_SKIP_REASONS)
+        self.assertEqual(
+            gate.check_skips(text, group="project-api"),
+            {"tests": 1, "executed": 0, "skips": [{"test": test, "reason": reason}]},
+        )
+        for value, group, integration in (
+            (text, "", False),
+            (text, "project-core", False),
+            (text, "browser", True),
+            (text, "project-api", True),
+            (text.replace("PanelTests", "OtherTests"), "project-api", False),
+            (text.replace(reason, "missing Chromium"), "project-api", False),
+        ):
+            with self.subTest(value=value, group=group, integration=integration):
+                with self.assertRaises(gate.GateError):
+                    gate.check_skips(value, group=group, integration=integration)
+        runner = self.runner()
+        runner.snapshot = self.root
+        runner.group = "project-api"
+        runner.command([sys.executable, "-c", f"print({text!r})"], suite=True)
+        self.assertEqual(runner.rows[-1]["skips"], [{"test": test, "reason": reason}])
+        runner.group = "browser"
+        with self.assertRaises(gate.GateError):
+            runner.command([sys.executable, "-c", f"print({text!r})"], suite=True, integration=True)
+
+    def test_chat_panel_required_receipt_rejects_missing_flag_selector_or_execution(self) -> None:
+        original = self.scoped_receipt(["browser"])
+        gate.verify_commands(self.root, self.out, original)
+        for mutation in ("missing", "flag", "selector", "skip", "zero", "unexpected-skip"):
+            with self.subTest(mutation=mutation):
+                receipt = copy.deepcopy(original)
+                row = next(
+                    row
+                    for row in receipt["commands"]
+                    if gate.CHAT_PANEL_BROWSER_SELECTOR in row["argv"]
+                )
+                path = self.out / row["log"]
+                saved = path.read_text()
+                if mutation == "missing":
+                    receipt["commands"].remove(row)
+                elif mutation == "flag":
+                    row["env"].pop("ZF_BROWSER_TESTS")
+                elif mutation == "selector":
+                    row["argv"][-1] = "test_chat_panel.PanelTests"
+                else:
+                    test, reason = gate.CHAT_PANEL_DISCOVERY_SKIP
+                    if mutation == "unexpected-skip":
+                        reason = "missing dependency"
+                    text = f"{test} ... skipped '{reason}'\nRan 1 test in 0.1s\n\nOK (skipped=1)\n"
+                    if mutation == "zero":
+                        text = "Ran 0 tests in 0.1s\n\nOK\n"
+                    path.write_text(text)
+                    row["sha256"] = gate.digest(path)
+                    receipt["files"][row["log"]] = row["sha256"]
+                    row.update(
+                        tests=0 if mutation == "zero" else 1,
+                        executed=0,
+                        skips=[] if mutation == "zero" else [{"test": test, "reason": reason}],
+                    )
+                try:
+                    with self.assertRaises(gate.GateError):
+                        gate.verify_commands(self.root, self.out, receipt)
+                finally:
+                    path.write_text(saved)
+
+    def test_chat_panel_discovery_receipt_recomputes_scoped_skip_evidence(self) -> None:
+        receipt = self.scoped_receipt(["project-api"])
+        row = next(row for row in receipt["commands"] if row["suite"])
+        test, reason = gate.CHAT_PANEL_DISCOVERY_SKIP
+        text = (
+            "test_x (test_x.Fixture.test_x) ... ok\n"
+            f"{test} ... skipped '{reason}'\nRan 2 tests in 0.1s\n\nOK (skipped=1)\n"
+        )
+        path = self.out / row["log"]
+        path.write_text(text)
+        row.update(gate.check_skips(text, group="project-api"), sha256=gate.digest(path))
+        receipt["files"][row["log"]] = row["sha256"]
+        gate.verify_commands(self.root, self.out, receipt)
+        row["skips"] = []
+        with self.assertRaises(gate.GateError):
+            gate.verify_commands(self.root, self.out, receipt)
+
     def test_journey_import_paths_keep_safety_and_shared_fixtures(self) -> None:
         checks = gate.required_checks(
             Path("."),
@@ -550,7 +695,7 @@ class GateTests(unittest.TestCase):
             for row in suites:
                 changed["commands"].remove(row)
                 changed["files"].pop(row["log"])
-            self.assertEqual(len(suites), 8)
+            self.assertEqual(len(suites), 9)
             gate.atomic_json(path, changed)
             (self.out / "receipt.sha256").write_text(real_digest(path))
             with self.assertRaises(gate.GateError):
