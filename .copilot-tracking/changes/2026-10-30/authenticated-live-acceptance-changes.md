@@ -225,3 +225,24 @@ finished with an unaccepted/blocked outcome, not a conformant result.
    Include actual
    AI labels, 200ms loading, rat fallback and map/case desktop/narrow behavior.
    Acceptance executor; matrix missing-proof cells. No source fixes inferred.
+
+## 2026-10-30 11:55Z: Employee attempt 3 continuation
+
+New dated evidence extends, and does not replace, the original run above.
+See .copilot-tracking/changes/2026-10-30/employee-acceptance-attempt-3-changes.md
+and its exact two-source/two-evidence manifest. Exactly TWO counted sign-in
+attempts were used after the owner reported removing the passkey requirement.
+The first failed on initial /app navigation before username/secret actions.
+The final allowed attempt used the existing normal /.auth/login/aad entry,
+reached the real password step, submitted once, reached Stay signed in and
+subsequently had the app origin. No passkey challenge was seen in this run.
+
+A browser/API transition failed before verified /api/me employee admission;
+binding is UNKNOWN, not absent. Chat/map/case were not executed. Earlier
+no-route evidence remains preserved, but no-password-route is no longer the
+current blocker. No TAP submission or offered TAP option was observed; no
+claim is made about file line-2 presence. The attempt cap now stops live work.
+One source-only criterion (551-04) remains proven; eighteen remain unmet.
+No whole-issue, Fluent/WCAG, human or deployed-parity acceptance is implied.
+No screenshots, secret capture, video/HAR/trace, resident execution,
+Azure/resource/role/policy change or push. Refs #550, Refs #551, Refs #552 only.

@@ -269,3 +269,30 @@ closeout outside git at the session's `files/employee-password-acceptance-closeo
 no further evidence edit merely to include that final result. If main is no
 longer an ancestor or admission/prerequisites fail, record blocked without
 rebase, merge, skip, push or approval claim.
+
+## 2026-10-30 11:55Z: Attempt 3 after owner tenant update
+
+This is a new bounded continuation, not a replacement of any earlier result.
+Full current evidence and nineteen-criterion decisions:
+.copilot-tracking/changes/2026-10-30/employee-acceptance-attempt-3-changes.md.
+
+Exactly TWO of TWO allowed sign-in slots consumed. First initial /app
+navigation failed before username/credential actions; separate public checks
+returned /healthz 200 and /app 401. Final slot used the source-backed normal
+/.auth/login/aad entry, reached Enter password, filled/submitted once and
+displayed Stay signed in. Exception handling then observed the app origin,
+but no authoritative /api/me binding projection returned and no employee
+feature checks ran. Both browsers closed; no secret/pixel/video/HAR/trace
+capture, resource, role or policy change.
+
+The earlier no-password-route observation remains historically valid; it is
+not the current blocker. Current outcome is callback/API admission unconfirmed,
+not invalid password, missing roster or a diagnosed app defect. TAP was not
+submitted or observed offered on this route; file line-2 presence was not
+recorded. The two-attempt cap requires stopping, with eighteen compound
+criteria unmet and only inherited source-coverage 551-04 proven. No whole
+issue accepted. Refs #550, Refs #551, Refs #552 only.
+
+Both executed source versions and evidence byte hashes are preserved in the
+new task manifest; first evidence is unchanged. Original independent Review
+for this continuation and local commit/full gate result follow separately.

@@ -1,0 +1,78 @@
+{
+  "task_id": "employee-acceptance-attempt-3-2026-10-30",
+  "task_slug": "employee-acceptance-attempt-3",
+  "parent_task": {
+    "task_id": "employee-password-acceptance-2026-10-30",
+    "task_slug": "employee-password-acceptance"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/employee-acceptance-attempt-3-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/employee-acceptance-attempt-3-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/employee-acceptance-attempt-3-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/employee-acceptance-attempt-3-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/employee-acceptance-attempt-3-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/employee-acceptance-attempt-3-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "One independent Review executed Complete; outcome Not accepted, task execution Partial, findings 2 High/2 Medium. RV-001 later research; RV-002..004 later runner implementation. No fixes or repeated Review.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-30/employee-acceptance-attempt-3-review.md"
+    },
+    {
+      "decision": "Exactly two counted sign-in attempts consumed. Second reached password, one completed keypress, Stay signed in and app-origin progression, but no verified /api/me projection or employee checks. Stop all live work; password route no longer the current blocker. P01/P02-T01 complete as bounded investigation/inventory.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/changes/2026-10-30/employee-acceptance-attempt-3-changes.md"
+    },
+    {
+      "decision": "Research Complete/Ready. One independent critique executed Complete, original Revise verdict; PC-001..003 directly applied (boolean predicates, pinned identity/schema, durable exclusive run guard). Plan Ready.",
+      "status": "disposed",
+      "evidence": ".copilot-tracking/plans/2026-10-30/employee-acceptance-attempt-3-plan.md#critique-disposition"
+    },
+    {
+      "decision": "Owner selected attempt 3 full finite RPI loop at 11:45Z; at most two sign-in attempts, line 2 is TAP when present; local Refs-only commit, no push.",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-30T11:45Z"
+    },
+    {
+      "decision": "No Azure, role, policy or private-data edits; no secret captures or output. Original Reviews read and preserved.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-10-30/employee-acceptance-attempt-3-research.md"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "B1",
+      "summary": "Attempt cap exhausted; authoritative employee session/binding and feature acceptance remain unverified after callback/API transition failure.",
+      "resolution": "No more sign-ins in this task. Preserve evidence and route later runner/session investigation separately without tenant/resource/role changes."
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Complete post-Review P02-T02 privacy-safe local Refs-only commit and complete external gate attempt. Then await explicitly selected follow-up; no new work, push or live sign-in."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Correct capture race, callback readiness/stage accounting and literal trim-only parser before runner reuse",
+      "rationale": "RV-002 High plus RV-003/004 Medium; bounded offline safety/correctness fixes have highest leverage before further authorized live evidence.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-30/employee-acceptance-attempt-3-review.md"
+    },
+    {
+      "rank": 2,
+      "task": "Separately authorize callback/binding and employee chat/map/case acceptance after runner prerequisites",
+      "rationale": "Password route now observed, but two-attempt cap exhausted and RV-001 leaves authoritative admission and eighteen compound criteria unproven.",
+      "evidence": ".copilot-tracking/changes/2026-10-30/employee-acceptance-attempt-3-changes.md#criterion-acceptance-matrix-attempt-3"
+    },
+    {
+      "rank": 3,
+      "task": "Resolve distinct resident access, consent and answer evidence with the resident operator",
+      "rationale": "Inherited independent resident blocker; employee-only evidence cannot prove resident obligations in issue 550.",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-30/authenticated-live-acceptance-review.md"
+    }
+  ]
+}

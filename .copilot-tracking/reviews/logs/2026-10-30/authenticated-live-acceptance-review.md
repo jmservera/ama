@@ -410,3 +410,28 @@ attempt/report the full external local gate without push. Route RV-001/RV-002
 to later research, RV-003 to later implementation before runner reuse, and
 RV-004/RV-005 to the two distinct owner follow-ups. Do not repair findings or
 request another Review. No further action is performed by this reviewer.
+
+## 2026-10-30 11:55Z: Attempt 3 continuation and separate original Review
+
+This dated continuation preserves every original section, finding and outcome
+above; it is not a repeated Review or retroactive change to the original run.
+New task record:
+.copilot-tracking/reviews/logs/2026-10-30/employee-acceptance-attempt-3-review.md.
+Current changes:
+.copilot-tracking/changes/2026-10-30/employee-acceptance-attempt-3-changes.md.
+
+After the owner reported removing the passkey requirement, exactly two
+counted attempts were used. The final slot reached Enter password, one
+completed submission keypress, Stay signed in and catch-time app-origin
+progression. No authoritative /api/me binding or employee features returned.
+No-password-route is no longer the current blocker, but binding remains
+UNKNOWN and acceptance remains Not accepted: one source-only criterion,
+eighteen unmet. No further sign-in is authorized by this exhausted attempt cap.
+
+Separate original Review: Complete, task Partial, outcome Not accepted;
+two High/two Medium findings. RV-001 routes missing evidence to later research;
+RV-002..004 route capture/navigation/parser runner defects to later
+implementation before reuse. No actual retained secret/private-data disclosure
+or product/tenant defect is established, and no fix or repeat Review follows.
+No screenshots/video/HAR/trace, Azure/policy/resource/role mutation, issue
+update or push. Local Refs-only persistence/full gate remains parent work.

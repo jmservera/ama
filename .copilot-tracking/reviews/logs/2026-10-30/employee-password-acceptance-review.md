@@ -267,3 +267,21 @@ Capture flags, empty screenshot manifests and zero screenshot calls corroborate 
 ## Next Steps
 
 Return Complete / Not accepted to the active parent. Preserve this original finding set; record its disposition and routes without repairs or another Review in this child. Parent completes the privacy-safe local Refs #550, Refs #551, Refs #552 commit and complete external local gate attempt against the fetched reviewed base, honestly retaining blocked/failed results and verifying any exact-head receipt as planned. No push, live retry, issue closure or user action is required by this Review.
+
+## 2026-10-30 11:55Z: Attempt 3 continuation, original result preserved
+
+All earlier sections and findings above remain the original outcome.
+The owner's 11:45Z tenant-change update authorized a new finite loop with
+at most two counted sign-in attempts, not repairs or more retries here.
+See .copilot-tracking/reviews/logs/2026-10-30/employee-acceptance-attempt-3-review.md
+and .copilot-tracking/changes/2026-10-30/employee-acceptance-attempt-3-changes.md.
+
+Both slots consumed. First initial navigation failed pre-username/secret;
+final slot reached actual password, a completed keypress, Stay signed in and
+app-origin progression, then stopped without verified /api/me or feature
+proof. No-password-route is superseded as the current blocker, not erased
+as an earlier observation. Binding UNKNOWN; eighteen criteria unmet and
+one inherited source-only criterion proven. Separate Review Complete /
+Not accepted, two High/two Medium findings routed later; no repairs or
+repeat Review. No further live attempt, secret capture, tenant/resource/role
+change or push. Parent owns local Refs-only persistence and full-gate attempt.
