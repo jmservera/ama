@@ -1,0 +1,64 @@
+{
+  "task_id": "523",
+  "task_slug": "capacity-work-orders-page-523",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/capacity-work-orders-page-523-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/capacity-work-orders-page-523-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/capacity-work-orders-page-523-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/capacity-work-orders-page-523-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/capacity-work-orders-page-523-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/capacity-work-orders-page-523-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the full ordered RPI loop on the explicit existing branch; commit locally, never push, use Refs #523 only.",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-30."
+    },
+    {
+      "decision": "Research executed, Ready; single critique executed Revise with PC-001 applied to sanitized external runner boundary.",
+      "status": "resolved",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-30/capacity-work-orders-page-523-plan-critique.md"
+    },
+    {
+      "decision": "One original independent Review executed: Complete / Residual work; no source defects; two Low publication/live residuals.",
+      "status": "executed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-30/capacity-work-orders-page-523-review.md"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "publication",
+      "summary": "Complete exact-head local gate and coordinator publication are pending.",
+      "resolution": "Commit locally and attempt the complete local gate; coordinator retains push/PR, hosted and human approval."
+    },
+    {
+      "id": "live",
+      "summary": "Live verification is pending the owner.",
+      "resolution": "Owner verifies after a separately authorized deployment; this task has no Azure or live sign-in authority."
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Commit reviewed source and original RPI evidence locally; attempt post-commit local gate. Automatic session remains at the finite task's follow-up boundary; no child work selected."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Complete exact-head publication gates",
+      "rationale": "Prerequisite for any coordinator publication; local tests and original Review are not full publication evidence.",
+      "evidence": "RV-001 in the original Review."
+    },
+    {
+      "rank": 2,
+      "task": "Record owner live verification after authorized deployment",
+      "rationale": "Only remaining live acceptance evidence; local SQL does not prove deployed behavior.",
+      "evidence": "RV-002 and issue #523 final acceptance criterion."
+    }
+  ]
+}

@@ -2,7 +2,9 @@
 
 import argparse
 import fcntl
+import hashlib
 import importlib
+import json
 import os
 import secrets
 import subprocess
@@ -17,13 +19,14 @@ from typing import Any
 from unittest.mock import patch
 from urllib.parse import parse_qs, urlsplit
 
-from playwright.sync_api import Request, Response, Route, expect, sync_playwright
+from playwright.sync_api import Page, Request, Response, Route, expect, sync_playwright
 from zava_forward.core.sqlstore import SqlStore
 
 from zava_forward.api import server
 
 generated = importlib.import_module("test_generated_dataset")
 fixtures = importlib.import_module("dataset")
+AXE_SHA256 = "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb"
 
 MANAGER_ROUTES = {
     "#/": ("My cases today", ("/api/facets", "/api/cases?view=mine"), "#app .layout"),
@@ -47,6 +50,34 @@ MANAGER_ROUTES = {
     "#/time": ("Staff time capture", ("/api/time/status",), "#app ul"),
     "#/screens": ("Specialist screens", (), "#app > a[href='#/']"),
 }
+
+
+def load_axe(path: Path) -> str:
+    raw = path.read_bytes()
+    if hashlib.sha256(raw).hexdigest() != AXE_SHA256:
+        raise ValueError("Expected pinned axe-core 4.10.3")
+    return raw.decode()
+
+
+def scan_capacity(page: Page, axe: str | None, state: str) -> None:
+    if axe is None:
+        print(f"Capacity axe {state}: NOT RUN (--axe not supplied)", flush=True)
+        return
+    page.evaluate(axe)
+    result: dict[str, Any] = page.evaluate(
+        """async () => await axe.run(document.querySelector('#app'), {
+          runOnly: {type: 'tag', values: [
+            'wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'
+          ]}
+        })"""
+    )
+    print(
+        json.dumps(
+            dict(state=state, violations=result["violations"], incomplete=result["incomplete"])
+        ),
+        flush=True,
+    )
+    assert not result["violations"], (state, result["violations"])
 
 
 @contextmanager
@@ -135,7 +166,7 @@ def owned_store(seed: Path, mssql: bool) -> Any:
             subprocess.run(["docker", "rm", "--force", name], check=True, stdout=subprocess.DEVNULL)
 
 
-def check(store: Any) -> None:
+def check(store: Any, axe: str | None = None) -> None:
     manager = next(
         user for user in store.staff.values() if user["role"] == "Retrofit Programme Manager"
     )
@@ -404,6 +435,7 @@ def check(store: Any) -> None:
                     )
 
                 capacity()
+                scan_capacity(page, axe, "seeded capacity")
                 expect(
                     page.get_by_role(
                         "heading", name="Synthetic year-one delivery (PKG-SYN-001)", exact=True
@@ -436,9 +468,13 @@ def check(store: Any) -> None:
                     )
                     expect(page.get_by_role("alert")).not_to_contain_text("Something went wrong")
                     page.wait_for_load_state("networkidle")
+                    scan_capacity(page, axe, f"{endpoint} unavailable")
                     page.unroute(pattern)
                     reads.clear()
-                    page.get_by_role("button", name="Try again", exact=True).click()
+                    retry = page.get_by_role("button", name="Try again", exact=True)
+                    retry.focus()
+                    expect(retry).to_be_focused()
+                    page.keyboard.press("Enter")
                     expect(
                         page.get_by_role("heading", name="Capacity and work orders", exact=True)
                     ).to_be_visible()
@@ -743,6 +779,7 @@ def check(store: Any) -> None:
                 page.wait_for_load_state("networkidle")
                 expect(page.get_by_text("No packages yet.", exact=True)).to_be_visible()
                 expect(page.get_by_text("No work orders yet.", exact=True)).to_be_visible()
+                scan_capacity(page, axe, "empty capacity")
                 page.route(pattern, lambda route: inject(route, status=401))
                 page.reload()
                 expect(page.locator("#email")).to_be_visible()
@@ -762,7 +799,9 @@ def check(store: Any) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--mssql", action="store_true", help="Create an owned local SQL container")
+    parser.add_argument("--axe", type=Path, help="Pinned axe-core 4.10.3 asset for capacity scans")
     args = parser.parse_args()
+    axe = load_axe(args.axe) if args.axe is not None else None
     safe_env = {
         key: os.environ[key]
         for key in ("PATH", "HOME", "TMPDIR", "LANG", "LD_LIBRARY_PATH")
@@ -787,7 +826,7 @@ def main() -> None:
                 with patch("sys.argv", argv):
                     generated.builder.main()
             with owned_store(seed, args.mssql) as store:
-                check(store)
+                check(store, axe)
 
 
 if __name__ == "__main__":
