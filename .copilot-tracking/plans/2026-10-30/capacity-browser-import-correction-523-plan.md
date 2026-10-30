@@ -6,7 +6,7 @@ ms.date: 2026-10-30
 
 ## Task Metadata
 
-Task ID: 523-correction-1. Readiness: validated and reviewed; local commit pending.
+Task ID: 523-correction-1. Status: complete, validated, reviewed and committed locally.
 
 ## Executive Summary
 
@@ -82,7 +82,7 @@ Use existing regression prior art and installed validation tools.
 #### [x] P01-T03: Clarify README's browser-free contract for capacity.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Validate and review
+### [x] P02: Validate and review
 
 <!-- rpi:task id=P02-T01 -->
 #### [x] P02-T01: Run targeted regression and all requested API checks under flock.
@@ -91,7 +91,7 @@ Use existing regression prior art and installed validation tools.
 #### [x] P02-T02: Reconcile changes/details and obtain one independent Review.
 
 <!-- rpi:task id=P02-T03 -->
-#### [ ] P02-T03: Commit locally with required identity and trailer; do not push.
+#### [x] P02-T03: Commit locally with required identity and trailer; do not push.
 
 ## Test Ownership and Coverage Lock
 
@@ -137,7 +137,9 @@ remain unmet; this bounded correction does not satisfy all issue criteria.
 
 Changes record:
 `.copilot-tracking/changes/2026-10-30/capacity-browser-import-correction-523-changes.md`.
-P01, P02-T01 and P02-T02 are complete. One independent Review executed Complete /
+All plan markers are complete. One independent Review executed Complete /
 Conformant, with no source defects and RV-001 retaining inherited publication/live
-residuals. P02-T03 remains the authorized local commit. No further source change,
-critique or Review is required.
+residuals. Implementation and original RPI evidence were committed locally as
+`7cc45330c7e768c0a5c955644ae4dac577e35a03`, with verified privacy-safe author and
+committer and the required trailer. No push. This tracking-only closeout does
+not change the validated/reviewed source or claim exact-head publication gates.

@@ -6,8 +6,8 @@
     "task_slug": "capacity-work-orders-page-523"
   },
   "mode": "automatic",
-  "active_phase": "Review",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-30/capacity-browser-import-correction-523-research.md",
@@ -42,12 +42,17 @@
       "decision": "Single independent post-implementation Review executed Complete / Conformant on the three-file source diff against 1613df21; no source defects. Low RV-001 retains inherited publication/live residuals.",
       "status": "executed",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-30/capacity-browser-import-correction-523-review.md"
+    },
+    {
+      "decision": "Implementation and original RPI evidence committed locally as 7cc45330c7e768c0a5c955644ae4dac577e35a03, with verified privacy-safe author/committer and required Copilot trailer. No push.",
+      "status": "completed",
+      "evidence": ".copilot-tracking/changes/2026-10-30/capacity-browser-import-correction-523-changes.md"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Create authorized local implementation/evidence commit, then persist completed correction state and closeout evidence; never push."
+    "action": "Correction complete; no child selected. Preserve no-push boundary and await separately authorized ranked publication/live follow-up, Stop or manual mode selection. No further automatic work starts."
   },
   "prioritized_follow_ups": [
     {

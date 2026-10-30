@@ -35,7 +35,7 @@ P01 evidence: the new subprocess regression failed before the harness fix;
 imports, mocks and README are now corrected. One new test added, none removed.
 
 <!-- rpi:phase id=P02 -->
-## [ ] P02: Validate and review
+## [x] P02: Validate and review
 
 <!-- rpi:task id=P02-T01 -->
 ### [x] P02-T01
@@ -65,8 +65,12 @@ defects; Low RV-001 retains inherited publication/live gates outside this
 correction. Original critique and first failed environment run remain intact.
 
 <!-- rpi:task id=P02-T03 -->
-### [ ] P02-T03
+### [x] P02-T03
 
 Use authenticated account's local noreply identity, requested Copilot trailer,
 and Refs #523 only. Commit all correction artifacts and source locally.
 Do not run cloud/sign-in/push or claim complete publication acceptance.
+Completed: local implementation/original-evidence commit
+`7cc45330c7e768c0a5c955644ae4dac577e35a03`. Both author and committer use the
+authenticated account's derived noreply address; the requested Copilot trailer
+was verified in the commit. No push. Remaining edits only record this closeout.

@@ -6,8 +6,8 @@ ms.date: 2026-10-30
 
 ## Scope and Current State
 
-Task 523-correction-1; full approved correction plan. P01 implementation and
-P02-T01 validation complete after one critique and parent disposition.
+Task 523-correction-1; full approved correction plan complete, including local
+commit after one critique, parent disposition and one independent Review.
 Prior RPI outcomes and publication/live blockers remain unchanged.
 
 ## P01: Dependency Boundary
@@ -94,8 +94,8 @@ No live Azure, sign-in, secret, uv or remote-write action was used.
 
 ## Remaining Work and Follow-ups
 
-Implementation, required checks and independent Review are complete. Only local
-commit administration remains. Source remains frozen as reviewed.
+Implementation, required checks, independent Review and local commit are complete.
+Source remains frozen as reviewed. Only tracking closeout is recorded afterward.
 No push. Full exact-head publication gates and owner live verification stay
 outside this correction and are not claimed satisfied.
 
@@ -106,3 +106,21 @@ The single independent Review executed Complete / Conformant at
 No source defects were found. Low RV-001 routes inherited publication/live
 acceptance to separate follow-up work. No implementation or repeat Review was
 started. Only parent marker/state and local commit administration follow.
+
+## P02-T03: Local Commit and Final Administration
+
+Committed implementation and original dated RPI evidence locally as
+`7cc45330c7e768c0a5c955644ae4dac577e35a03`
+(`fix(api): keep capacity unit discovery browser-free (Refs #523)`).
+Before committing, `gh api user` returned the authenticated account ID/login.
+Repository-local identity was configured and the actual commit verified with
+author and committer `8036360+jmservera@users.noreply.github.com`, plus:
+
+```text
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+```
+
+The implementation commit left a clean worktree. This tracking-only follow-up
+records completed markers/state without amending the implementation commit or
+changing source after Review. No push or remote update was performed. Original
+critique and Review remain unchanged; full publication/live gates are still open.
