@@ -198,3 +198,13 @@ No further source/cloud work or second Review. Requested manual full loop and
 deployment complete; session stopped with AI intentionally off. RF-002..004
 remain owner-selected later work. No full publication gate or remote/human
 approval is claimed and no push is authorised.
+
+## Fresh Main Redeployment Continuation (15:12Z Owner Request)
+
+The original records and Review outcome above remain unchanged. The owner
+requested a fresh redeployment from252a498e including PR #568 in worktree
+chore/ops-redeploy-1030c, rather than replaying the old source. New dated task:
+.copilot-tracking/changes/2026-10-30/demo-sites-redeploy-1030c-changes.md.
+Both fresh images are published/deployed, private initializer Succeeded,
+ACR exact restoration and warm anonymous checks complete; one independent
+Review/local persistence follow under the new task identity. AI remains off.
