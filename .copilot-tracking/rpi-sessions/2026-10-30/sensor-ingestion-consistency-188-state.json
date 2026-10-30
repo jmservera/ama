@@ -29,6 +29,11 @@
       "decision": "One independent original Review executed: Complete, outcome Residual work. No implementation defects; RV-001 live evidence and RV-002 subsequent candidate/publication validation routed separately.",
       "status": "review-complete",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-30/sensor-ingestion-consistency-188-review.md"
+    },
+    {
+      "decision": "Post-Review complete gate attempted at implementation commit 74f7252c6cb069533a49acd112ebbc0e3b433deb; exit 1, advanced-main mismatch before admission, no receipt. Supplied ancestry preserved.",
+      "status": "blocked",
+      "evidence": ".copilot-tracking/changes/2026-10-30/sensor-ingestion-consistency-188-changes.md"
     }
   ],
   "blockers": [
@@ -39,16 +44,16 @@
     },
     {
       "id": "RV-002",
-      "summary": "Publication remains coordinator-owned and requires committed-candidate full gate, current-base exact-head assessment and hosted/human approval.",
-      "resolution": "Inspect external final gate result and verify its receipt against fetched current main before any separately authorized push."
+      "summary": "Complete gate blocked before heavy admission: supplied reviewed base a31048f15fa3120c58bacd22a375d86ae5ab7431 differs from fetched origin/main ae8d3d166215fdd1935d2d2322d6ff236d2f65b5. No passing receipt.",
+      "resolution": "Coordinator reconciles base without unauthorized history rewrite, reruns the complete gate and verifies current-main/exact-head plus hosted/human prerequisites before separately authorized publication."
     }
   ],
-  "next_action": {"phase": "Follow-up", "action": "Local commit and full gate continuation; preserve sealed candidate and inspect external result at /home/azureuser/.copilot/session-state/b669b987-2355-43d4-99ca-bf7c5c0215a9/files/rpi-188-final. Coordinator verifies receipt/current main/exact head and owns publication. No push or child task."},
+  "next_action": {"phase": "Follow-up", "action": "Coordinator must reconcile advanced main with the supplied base and rerun/verify the exact-candidate full gate. Inspect external validation-188/final-gate.log and final-evidence-gate.log under session b669b987-2355-43d4-99ca-bf7c5c0215a9/files. Preserve original Review; no push, rebase or child task performed."},
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Coordinator verifies committed-candidate gate and exact-head/publication prerequisites.",
-      "rationale": "Required before publication; preserves exact candidate and original evidence.",
+      "task": "Coordinator reconciles advanced main, then runs/verifies complete exact-candidate gate and publication prerequisites.",
+      "rationale": "Actual gate exit 1 shows a current-base mismatch; explicit caller ancestry is preserved and publication remains blocked.",
       "evidence": "RV-002"
     },
     {

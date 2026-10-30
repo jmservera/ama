@@ -137,3 +137,33 @@ and hash-verified before exact-file removal. Protected source/RPI hashes were
 unchanged and no ignored candidate input remained. Selection, archive, restored
 copies and prune journal are external under
 /home/azureuser/.copilot/session-state/b669b987-2355-43d4-99ca-bf7c5c0215a9/files/owned-cache-preservation.
+
+## Post-Commit Complete Gate Blocker
+
+Implementation and original evidence were committed locally as
+74f7252c6cb069533a49acd112ebbc0e3b433deb with the requested trailer and
+Refs #188. No push occurred.
+
+After fetching main immediately before the complete gate, origin/main resolved
+to ae8d3d166215fdd1935d2d2322d6ff236d2f65b5 instead of the explicitly supplied
+reviewed base a31048f15fa3120c58bacd22a375d86ae5ab7431. The actual command
+`PYTHONDONTWRITEBYTECODE=1 python3 tools/rpi-checks.py --all --jobs 3
+--base a31048f15fa3120c58bacd22a375d86ae5ab7431 --out
+/home/azureuser/.copilot/session-state/b669b987-2355-43d4-99ca-bf7c5c0215a9/files/rpi-188-final
+--lock-timeout 600` exited 1 before heavy admission:
+`BLOCKED: Reviewed base differs from current origin/main; reconcile before validation`.
+No complete receipt was produced. The exact output is retained externally in
+validation-188/final-gate.log under the same session files directory.
+
+The explicit caller base is preserved: no rebase, merge, history rewrite,
+fallback base, protection change or publication was attempted. Coordinator must
+reconcile the base under the approved branch direction and rerun the complete
+gate on the resulting exact clean candidate, then verify against freshly
+fetched main before independent exact-head assessment/publication. Targeted
+API/static/owned-SQL evidence remains evidence of the original implementation,
+not a full gate. Original Review remains Complete / Residual work unchanged.
+
+This evidence-only local follow-up commit changes no implementation. Its own
+gate attempt uses a new external rpi-188-final-evidence output path and
+validation-188/final-evidence-gate.log; the same unresolved base prerequisite
+must remain a blocker rather than a passing or skipped check.
