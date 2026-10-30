@@ -36,8 +36,11 @@
       "evidence": ".copilot-tracking/reviews/logs/2026-10-30/setup-entra-expiry-358-review.md"
     }
   ],
-  "blockers": [{"id":"AC2","summary":"Originally populated deployed-app/full-setup live preservation remains unproven; Azure and credential access prohibited.","resolution":"Coordinator separately authorizes and scopes live target validation outside this run."}],
-  "next_action": {"phase": "Follow-up", "action": "After final local reconciliation commit, execute external full-gate attempt; coordinator inspects final-full-gate.log, then owns current-main receipt/publication gates and separately authorized FU1. No child or remote publication."},
+  "blockers": [
+    {"id":"AC2","summary":"Originally populated deployed-app/full-setup live preservation remains unproven; Azure and credential access prohibited.","resolution":"Coordinator separately authorizes and scopes live target validation outside this run."},
+    {"id":"GATE-BASE","summary":"Full local gate preflight exited 1: reviewed base differs from current origin/main a31048f15fa3120c58bacd22a375d86ae5ab7431. No receipt or heavy execution.","resolution":"Coordinator reconciles supplied-base branch with current main and runs fresh exact-head gate; no silent rebase or guard bypass."}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator owns base reconciliation/full-gate publication blockers and separately authorized FU1. External final-full-gate.log preserves original failed preflight; final-full-gate-exact-head.log records any final administrative-head attempt. No child, push or PR."},
   "prioritized_follow_ups": [
     {"rank":1,"task":"FU1: separately authorized originally populated existing-app/full-setup preservation exercise","rationale":"Only remaining substantive issue criterion; offline tests and prior synthetic component proof cannot substitute.","evidence":"Review RV-001; issue 358 comments; plan AC2"}
   ]

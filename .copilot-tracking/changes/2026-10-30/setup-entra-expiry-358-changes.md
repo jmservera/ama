@@ -83,7 +83,7 @@ infra/tests and src is empty against the supplied base.
 | Mypy | Pass, 116 source files | api-mypy.log |
 | Whitespace / source preservation | Pass | git diff --check; empty source/test diff |
 | Browser/axe | Not applicable to this delta | No web files changed; general-discovery skips are not browser acceptance |
-| Full local gate | Pending post-commit attempt | No receipt claimed |
+| Full local gate | Blocked in postcommit preflight, exit 1 | Supplied base differs from current origin/main; no receipt |
 
 ## Acceptance Evidence
 
@@ -137,6 +137,26 @@ and any receipt stays external. This pre-gate snapshot makes no result claim.
 The user supplied the reviewed base; current-main reconciliation, fresh final
 receipt verification immediately before push and independent exact-head/
 human/hosted approval remain coordinator-owned. No fetch/rebase/push occurs here.
+
+### Actual Postcommit Full-Gate Preflight
+
+The command above was attempted against local reconciliation commit
+`1bcea2d00ce86277383948e9439179fd07b801db`. It exited 1 before heavy execution:
+`BLOCKED: Reviewed base differs from current origin/main; reconcile before validation`.
+At inspection, current `origin/main` is
+`a31048f15fa3120c58bacd22a375d86ae5ab7431`, not the caller-supplied reviewed base.
+No receipt was produced. Original failure is retained in external
+`final-full-gate.log`; it is not passing or partial gate evidence.
+
+This is a publication/base-reconciliation blocker, not a local test failure.
+Do not silently rebase, replace the reviewed base or change the runner guard.
+The requested topic/base stays unchanged. Coordinator owns reconciliation and
+a fresh final-candidate full gate. This administrative blocker record requires
+its own local commit; a new exact-head preflight log, if attempted, is
+`final-full-gate-exact-head.log` with separate new output directory
+`final-full-gate-exact-head`. Its original result must not overwrite this one.
+The independent original Review remains Complete / Residual work and is not
+repeated or retrospectively changed.
 
 ## Follow-Up Items
 
