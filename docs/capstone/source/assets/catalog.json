@@ -10,7 +10,9 @@
       "source_sha256": "ef80d2edbfc1b045241d2e9550b7930b648d8018e0274116a3df6d6ccf3adbf9",
       "pixel_width": 512,
       "pixel_height": 512,
-      "slides": [14, 23],
+      "slides": [
+        23
+      ],
       "source_page": "https://learn.microsoft.com/en-us/fabric/fundamentals/icons",
       "download_url": "https://raw.githubusercontent.com/microsoft/fabric-samples/main/docs-samples/Icons.zip",
       "archive_sha256": "fc22e71b0545ed15e22c53f16bf4fb06ffe72daabd3c90a947a6e481c9675e6b",
@@ -28,7 +30,9 @@
       "source_sha256": "264abad01f50acaffb697b3ede22215b7d87f387c1af92f0a0b14117d2c2e4f1",
       "pixel_width": 512,
       "pixel_height": 512,
-      "slides": [14],
+      "slides": [
+        23
+      ],
       "source_page": "https://learn.microsoft.com/en-us/fabric/fundamentals/icons",
       "download_url": "https://raw.githubusercontent.com/microsoft/fabric-samples/main/docs-samples/Icons.zip",
       "archive_sha256": "fc22e71b0545ed15e22c53f16bf4fb06ffe72daabd3c90a947a6e481c9675e6b",
@@ -36,6 +40,23 @@
       "retrieved": "2026-10-30",
       "terms": "Microsoft permits architectural diagrams, training, slide decks and documentation; retain labels and unchanged icon appearance. Other rights reserved.",
       "derivation": "Official SVG rasterized by native PowerPoint Shape.Export; no crop, recolour, flip or rotation."
+    },
+    {
+      "path": "diagrams/discovery-journey/resident-journey.png",
+      "sha256": "147dd8724f526c28d45035679e0e764a431b4ac31ed778689954e8de13e3b045",
+      "pixel_width": 2133,
+      "pixel_height": 1201,
+      "source_svg": "diagrams/discovery-journey/resident-journey.svg",
+      "source_sha256": "2a97157f5dcb8a946e6b5ac4425bb7916d6f3ee8dc2a0fc462f2c4cacd2d89b6",
+      "source_native": "diagrams/discovery-journey/resident-journey.excalidraw",
+      "source_native_sha256": "b95cd4f6a8867a35a612efff67c388594aa487e356dddd7ad50cdc09250997ea",
+      "derivation": "Native PowerPoint rasterization of the same-geometry SVG preview; not a native Excalidraw export. Approved viewer sign-in unavailable; no diagram uploaded.",
+      "id": "resident-journey",
+      "part": "ppt/media/journey-resident.png",
+      "slides": [
+        13
+      ],
+      "provenance": "DT Coach bounded synthesis from retained public repository evidence; pain/gain hypotheses, not direct resident research. Editable Excalidraw, SVG, PNG, generator and text equivalent retained together."
     }
   ],
   "media": [

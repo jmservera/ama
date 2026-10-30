@@ -1,20 +1,26 @@
 {
   "source_as_of": "2026-10-30",
+  "revision": "Product-first / DT journey / future-only Fabric ontology",
   "package": {
     "status": "pass",
     "slides": 54,
     "nonempty_notes": 54,
     "navigation_actions": 108,
-    "package_members": 295,
+    "package_members": 296,
     "baseline_members": 293,
     "added_media_parts": [
+      "ppt/media/journey-resident.png",
       "ppt/media/roadmap-fabric.png",
       "ppt/media/roadmap-power-bi.png"
     ],
     "changed_members": [
+      "ppt/media/journey-resident.png",
       "ppt/media/roadmap-fabric.png",
       "ppt/media/roadmap-power-bi.png",
       "ppt/notesSlides/notesSlide1.xml",
+      "ppt/notesSlides/notesSlide10.xml",
+      "ppt/notesSlides/notesSlide12.xml",
+      "ppt/notesSlides/notesSlide13.xml",
       "ppt/notesSlides/notesSlide14.xml",
       "ppt/notesSlides/notesSlide15.xml",
       "ppt/notesSlides/notesSlide16.xml",
@@ -40,7 +46,9 @@
       "ppt/notesSlides/notesSlide36.xml",
       "ppt/notesSlides/notesSlide37.xml",
       "ppt/notesSlides/notesSlide38.xml",
+      "ppt/notesSlides/notesSlide39.xml",
       "ppt/notesSlides/notesSlide4.xml",
+      "ppt/notesSlides/notesSlide40.xml",
       "ppt/notesSlides/notesSlide41.xml",
       "ppt/notesSlides/notesSlide42.xml",
       "ppt/notesSlides/notesSlide43.xml",
@@ -56,9 +64,13 @@
       "ppt/notesSlides/notesSlide52.xml",
       "ppt/notesSlides/notesSlide53.xml",
       "ppt/notesSlides/notesSlide54.xml",
-      "ppt/slides/_rels/slide14.xml.rels",
+      "ppt/notesSlides/notesSlide7.xml",
+      "ppt/notesSlides/notesSlide8.xml",
+      "ppt/notesSlides/notesSlide9.xml",
+      "ppt/slides/_rels/slide13.xml.rels",
       "ppt/slides/_rels/slide23.xml.rels",
       "ppt/slides/slide1.xml",
+      "ppt/slides/slide13.xml",
       "ppt/slides/slide14.xml",
       "ppt/slides/slide15.xml",
       "ppt/slides/slide16.xml",
@@ -71,7 +83,9 @@
       "ppt/slides/slide31.xml",
       "ppt/slides/slide37.xml",
       "ppt/slides/slide46.xml",
-      "ppt/slides/slide47.xml"
+      "ppt/slides/slide47.xml",
+      "ppt/slides/slide8.xml",
+      "ppt/slides/slide9.xml"
     ],
     "timing_preserved": true,
     "native_navigation_preserved": true,
@@ -83,62 +97,61 @@
       52
     ],
     "full_manifest_and_media_verified": true,
-    "candidate_sha256": "0da44c8a679a8ffab0c0d7fd97ec2fe5079e1595c593ad1f321e38d403aa027b",
+    "candidate_sha256": "f8fc59568ff6d8221e55dd77bf87734144732fae851d6e46eec92b6443a519fd",
     "baseline_sha256": "2bab9b79de4352a1915dab04d1846a4c4be90f6889a2b9b6af4807e48a33d5f8",
-    "manifest_sha256": "c0457a6769a03b960000c3a858fabc4da86401f1cc3e936339b7dfee7ccb6128",
-    "asset_catalog_sha256": "b967979ff22213c3e4ae2a7d4958663e86550a63f16fafad9f8bb943ead5fcc3",
-    "builder_sha256": "8e32b418d69f0c6ffb72c29e480bdfcce4ee7da449f165bbf38db278567fc154",
+    "manifest_sha256": "4c5eb91f4766cd57ea97110035cea92840d1a7bcf85d014047e07b5e29e2935f",
+    "asset_catalog_sha256": "b9683f35905ac79f7a3d2ea284f8bf681b8d78abf8f7a8fb68cc5c5f15fdfad9",
+    "builder_sha256": "9bd5c13167c116009be24735f47782304b3c00ea3cdc958c3613aea089a38ea5",
     "native_helper_sha256": "b4ff97279c094ecc120b4736ec9b3a7b37bc0f2d01e6e5896fca47a9cc16d002"
   },
   "native": {
     "renderer": "Microsoft PowerPoint 16.0 COM",
     "slides": 54,
-    "pdf_sha256": "9646f2d7ff54770d5fbf017d0f496f8e6ec5e16d19b77425e18b0fea73d3cf95",
+    "pdf_sha256": "11926cc3b0936d8905979295414bf9e7841af78676cfc276046d6ec671b84f50",
     "revised_text_overflow": 0,
-    "inherited_bound_warnings": 234,
+    "inherited_bound_warnings": 231,
     "independently_inspected_pages": [
-      1,
-      14,
-      15,
-      23,
-      24,
-      25,
-      26,
-      27
-    ],
-    "human_acceptance": false
-  },
-  "review": {
-    "main_roadmap_pages": [
+      8,
+      9,
+      13,
       14,
       15,
       23,
       24
     ],
-    "close_and_label_pages": [
-      1,
-      25,
-      26,
-      27
+    "human_acceptance": false
+  },
+  "review": {
+    "current_product_pages": [
+      12,
+      14,
+      15,
+      16
     ],
-    "proposal_families_crosswalk": 25,
-    "grouped_dispositions": 22,
-    "independent_visual_followup": "No material visible issue in final corrected close/index; earlier roadmap corrections retained in dated review.",
-    "independent_story_followup": "No remaining material roadmap omission or approval-order contradiction within reviewed scope.",
-    "note_page_ownership_guard": true,
-    "actual_scorer_fixture": "Pass: 54 slides/notes, exact current deck/pitch/demo, baseline/history excluded, main-route Fabric value/wait/unlock and four lanes present, both official packaged PNG hashes verified; isolated fixture index only."
+    "discovery_pages": [
+      8,
+      13
+    ],
+    "future_roadmap_pages": [
+      23,
+      24
+    ],
+    "logo_pages": [
+      23
+    ],
+    "dt_coach": "Created editable source and source-linked decision trace; final method/readability follow-up found no material issue.",
+    "product_manager": "Original five findings closed in candidate; no material issue in reviewed scope.",
+    "visual": "Zero revised overflow; no material visible issue in final reviewed pages.",
+    "ontology": "Official Learn preview overview retrieved 30 Oct; future context proposal, no integration or quality benefit proven.",
+    "viewer_export": "Approved Excalidraw page required sign-in; no native browser export or diagram upload. PNG is PowerPoint-rasterized same-geometry SVG.",
+    "actual_scorer_fixture": "Pass: 54 slides/notes, current Workbench/adoption on 14-15 without Fabric/PBI branding, future-only logos on 23, source-bound journey on 13, preview ontology and independent context test; exact current deck/pitch/demo selected, history/baseline excluded; isolated fixture index only."
   },
   "tests": {
     "focused_scorer_regressions_passed": 22,
-    "negative_checks_passed": [
-      "mismatched_note_owner_refused",
-      "altered_official_image_hash_refused",
-      "tampered_packaged_logo_refused"
-    ],
-    "earlier_broad_suite": "2026-10-29:149 passed,23 failed,1 skipped;7 unchanged score fixtures and16 missing-jq preflights; not rerun or relabelled as current pass."
+    "dt_source_check": "Pass:49 elements,15 single-line cells,22 source locators,31 links; deterministic native/SVG regeneration.",
+    "earlier_broad_suite": "Prior 29 Oct result remains historical, not rerun or relabelled."
   },
-  "local_evidence_directory": "~/AppData/Local/ama/capstone-runs/2026-10-30-roadmap-final",
-  "negative_evidence_directory": "~/AppData/Local/ama/capstone-runs/2026-10-30-roadmap-negative-checks",
+  "local_evidence_directory": "~/AppData/Local/ama/capstone-runs/2026-10-30-now-future-v2",
   "hosted_rubric_run": false,
   "publication_gate_run": false
 }

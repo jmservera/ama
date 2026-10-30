@@ -138,6 +138,68 @@ categorically.
 This is proposed platform-fit advice. It changes no accepted ADR, requirements,
 budget, data authority, operational control or release decision.
 
+## Future Agent Context Option (2026-10-30)
+
+This dated follow-up clarifies the future opportunity requested for the
+capstone. It does not replace the 29 October component assessment or adopt
+Fabric, Power BI or Fabric IQ into the current product. Today the shared API,
+SQL/Blob, deterministic controls, bounded AI and existing read-model reports
+provide the foundation. The future proposal belongs after that product story.
+
+The official [Fabric IQ overview](https://learn.microsoft.com/en-us/fabric/iq/overview)
+and [ontology overview](https://learn.microsoft.com/en-us/fabric/iq/ontology/overview)
+were retrieved on 2026-10-30. The former reports a 2026-07-08 source date
+and 2026-09-29 update; the latter a 2026-10-16 source/update date. Ontology
+is explicitly preview. These are product-documentation facts, not an exercised
+integration, processing/region approval, price quote or qualified production
+acceptance. The fetched ontology page identifies source commit
+`0835e1657760af99f601ba03a0d82fba9808c7a1`.
+
+Ontology defines business entities, properties, relationships and source
+bindings, with contextual rules and metrics; it is not itself a general
+data-query engine or a replacement operational store. Supported consumers
+can use those definitions and bindings as context. Power BI semantic models
+can supply reusable definitions and source-owned measures. Optional graph
+execution and agent experiences have their own supported scope; no direct
+compatibility with the current Zava assistants has been demonstrated here.
+
+For Zava, an illustrative future vocabulary could link Home, Building,
+Assessment, Measure, Evidence and Quality Review, with explicit identifiers,
+versions, observation/effective times and source ownership. An agent could
+be given permitted context about which assessment and evidence support a
+measure, rather than reconstructing joins and definitions for each question.
+Natural-language ontology rules provide context, not a substitute for the
+application's deterministic permissions, workflow or professional decisions.
+
+| Future capability | Potential increment / test | Boundary |
+| --- | --- | --- |
+| Governed portfolio history | Reuse cross-source facts, time windows and measures for a recurring question | 60,000 fictional stock homes, 980 retained programme cases and 43.8M generated daily observations over 730 days are different cohorts, not one joined production dataset |
+| Semantic definitions / ontology | Consistent business vocabulary and source-linked relationships for people and agents | Missing stock-to-case links, stale or disputed facts remain unknown; a graph edge does not establish truth or authority |
+| Relationship-aware agent context | Better relevance and grounded answers with less repeated preparation | Compare the existing scoped context, a curated SQL/read-model context and the optional ontology path on checked answers, unsupported claims, abstention and complete human effort |
+| Optional graph / analytical Q&A | Explore a justified multi-hop or portfolio question | Consumer support, source bindings, privacy, access across every read path, correction/retention, latency, operating cost and recovery need separate verification |
+
+The reason to postpone is product discipline, not dismissal of the opportunity:
+prove the connected current journey and its value, define the historical
+question and governed fields, then compare the least complex reporting and
+context options. Stock size and generated row volume make the question
+credible, but prove neither SQL inadequacy nor a need for a particular capacity.
+Power BI Import over approved views is itself a possible future comparator,
+not an already installed product component.
+
+Test stale, forbidden, ambiguous and missing relationships as well as useful
+ones. Count contextual relevance, factual support, critical errors, checking/
+correction effort, latency and full cost. Do not equate "more context" with
+better answers. Source permissions, resident/representative rights, works
+choice and financial/professional authority remain separately enforced.
+Ontology definitions and discovered links do not grant any of them. The
+earlier mirroring/OneLake warnings remain; this follow-up does not establish
+that application projections automatically propagate to another platform.
+
+This is a future option and proposed comparison, not a new requirement,
+approved architecture, funded experiment, tenant action or data export.
+Preview maturity, actual consumer integration, data rights, named owners,
+complete economics and separate execution approval remain adoption gates.
+
 ## Scope and Method
 
 The review covers all five source distributions, staff and resident interfaces,
