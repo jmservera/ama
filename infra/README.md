@@ -3680,6 +3680,17 @@ residents or change the original principal/grant/deny design. The allowlist
 remains synthetic, approved, provenance-bearing and capped at 1000 in the app.
 The independent model tariff and SQL inference admission cutoff are unchanged.
 
+Local source validation on 2026-10-30 passed the 78 domain/rendering tests
+(27 SQL opt-in skips), all 27 separately executed disposable SQL Server tests
+(zero skips), the 32 fake-CLI helper tests, and the 1380-test API discovery
+(320 opt-in integration skips). API/core Ruff, formatting and mypy passed.
+SQL evidence includes migration from the old November constraint, trusted
+reapplication, preserved rows/rights and failed-migration rollback. Targeted
+infra static checks retain independently reproduced pre-existing lint,
+formatting and typing findings; they are not reported as passing.
+These local results do not prove live renewal, actual cost headroom,
+operational approval or a complete exact-head publication gate.
+
 #### Credential and SQL access rotation plan
 
 Status: source plan only; independent technical review and owner operational

@@ -8310,3 +8310,18 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * No Azure, secrets or .env access. Live apply remains Pending separate
   exact owner confirmation and verification. No inference tariff extension,
   new resource, role, network path or replica minimum change is authorized.
+
+## [2026-10-30] validation | January resident authority local evidence (Refs #521)
+
+* Updated the [knowledge index](./README.md) and
+  [resident operations guide](../../infra/README.md#january-authority-source-renewal-2026-10-28-refs-521)
+  with fresh domain/HTTP/helper and disposable local SQL results. The 27
+  real-SQL tests passed without skips, including legacy constraint migration,
+  trusted reapply, rollback and narrow-rights preservation.
+* API discovery passed 1380 tests with 320 opt-in integration skips; API/core
+  Ruff, formatting and mypy passed. Targeted infra static findings reproduce
+  on the reviewed main baseline and remain separate residual work.
+* No Azure resource operation, deployment, actual credential access, paid
+  action, inference extension or live verification occurred. Owner operational
+  approval, January funding/headroom and exact-head publication gates remain
+  separate; the USD700 cap and source guards are unchanged.

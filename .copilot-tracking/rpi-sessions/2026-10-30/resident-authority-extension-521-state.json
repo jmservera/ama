@@ -1,0 +1,72 @@
+{
+  "task_id": "521",
+  "task_slug": "resident-authority-extension-521",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/resident-authority-extension-521-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/resident-authority-extension-521-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/resident-authority-extension-521-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/resident-authority-extension-521-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/resident-authority-extension-521-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/resident-authority-extension-521-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute the explicitly requested full ordered RPI loop locally, rebase first, no push or Azure",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-30; rebase completed to 92b66933 on a02984e8d71d312f089ad75713d7a98e59aee420"
+    },
+    {
+      "decision": "Research executed, Planning Readiness Ready; one critique Complete/Revise, PC-002/003/005/006 applied, PC-001 unsupported here, PC-004 conflicting wait advice rejected per caller",
+      "status": "resolved",
+      "evidence": ".copilot-tracking/plans/2026-10-30/resident-authority-extension-521-plan.md#critique-disposition"
+    },
+    {
+      "decision": "Original independent Review executed once: Complete / Residual work, no new source defect; AC1 locally proven, AC2/3 partially proven, AC4 unproven",
+      "status": "executed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-30/resident-authority-extension-521-review.md"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "current-base-drift",
+      "summary": "origin/main advanced from reviewed a02984e8 to 4b37c2c9 during validation; full exact-head gate cannot pass on this base",
+      "resolution": "Coordinator reconciles current main and reruns full gate; no silent rebase in this continuation"
+    },
+    {
+      "id": "infra-static-baseline",
+      "summary": "Targeted infra lint/format/mypy failures reproduce on reviewed main",
+      "resolution": "Separate infra maintenance; do not claim these checks passed"
+    },
+    {
+      "id": "live-acceptance",
+      "summary": "Exact owner operational approval, actual headroom and live apply/verification are unavailable and prohibited here",
+      "resolution": "Owner-approved separate live operation, not this local source-only run"
+    }
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator clears RV-001 current-base gate blocker; ranked later work, Stop or manual mode require selection; no automatic child work or push"},
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator current-main reconciliation and full exact-head gate",
+      "rationale": "Highest delivery leverage: clears RV-001 publication blocker without cloud authority",
+      "evidence": "Review RV-001; origin/main 4b37c2c9 differs from reviewed a02984e8"
+    },
+    {
+      "rank": 2,
+      "task": "Separately scoped infra static-debt cleanup",
+      "rationale": "Small local maintenance improves reliability; not an authority regression",
+      "evidence": "Review RV-003; targeted failures reproduced on a02984e8"
+    },
+    {
+      "rank": 3,
+      "task": "Owner-approved funded live renewal and exact operational review",
+      "rationale": "Necessary for live acceptance but requires separate approval, real headroom and prohibited actions",
+      "evidence": "Review RV-002; issue AC2-AC4 residuals"
+    }
+  ]
+}
