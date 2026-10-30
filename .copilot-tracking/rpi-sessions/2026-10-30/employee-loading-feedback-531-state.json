@@ -18,15 +18,16 @@
     {"decision": "Run the full ordered RPI loop autonomously; commit locally, never push", "status": "confirmed", "evidence": "Explicit user request 2026-10-30"},
     {"decision": "Research executed; Planning Readiness Ready", "status": "complete", "evidence": "Research C1-C7"},
     {"decision": "Critique executed once, original verdict Revise; PC-001 rejected as worker-local restriction conflicts with explicit caller /tmp lock; PC-002 timing attribution corrected", "status": "resolved", "evidence": "Plan Critique Disposition"},
-    {"decision": "Review executed once; Complete / Conformant with justified divergence; no RV findings; two-file diff with inherited behavior and disclosed local test adjustment", "status": "complete", "evidence": ".copilot-tracking/reviews/logs/2026-10-30/employee-loading-feedback-531-review.md"}
+    {"decision": "Review executed once; Complete / Conformant with justified divergence; no RV findings; two-file diff with inherited behavior and disclosed local test adjustment", "status": "complete", "evidence": ".copilot-tracking/reviews/logs/2026-10-30/employee-loading-feedback-531-review.md"},
+    {"decision": "Local implementation/original evidence commit 4da8be46; full gate failed on 318 rejected API opt-in skips, dependent browser/mssql blocked; verification rejects receipt", "status": "publication-blocked", "evidence": "/tmp/ama-issue-531-20261030-final-gate/receipt.json and canonical changes Post-Review Commit and Complete-Gate Outcome"}
   ],
   "blockers": [
     {"id": "live-ac7", "summary": "Live employee verification is not authorized or proven", "resolution": "Coordinator obtains separate live authorization and records AC7 evidence"},
-    {"id": "publication", "summary": "Publication remains coordinator-owned; local checks and original Review are not an exact-head gate receipt or push permission", "resolution": "Read external /tmp/ama-issue-531-20261030-final-gate.log and receipt outcome, clear failures and verify against freshly fetched main immediately before coordinator publication"}
+    {"id": "publication", "summary": "Full gate failed: API opt-in skips rejected; dependent browser/mssql blocked. Failed receipt is historical after final evidence-only commit, not a passing gate or push permission", "resolution": "Coordinator resolves required integration/skip-policy prerequisites separately, then runs fresh complete exact-head gate and verifies against freshly fetched main before any separately authorized publication"}
   ],
-  "next_action": {"phase": "Follow-up", "action": "Original ordered loop complete; commit locally and attempt exact-head gate with result external at /tmp/ama-issue-531-20261030-final-gate.log and /tmp/ama-issue-531-20261030-final-gate/receipt.json. Coordinator owns verification and any push; no child work selected"},
+  "next_action": {"phase": "Follow-up", "action": "Await coordinator: resolve full-gate integration/skip-policy prerequisite in separately scoped work, run fresh complete gate at final head, verify against freshly fetched main, and obtain separate AC7 live authorization. No push or child task selected"},
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Coordinator exact-head publication gates", "rationale": "Required before any publication; no push authorized here", "evidence": "Repository local-RPI gate and original Review"},
+    {"rank": 1, "task": "Coordinator resolves full-gate integration/skip prerequisite and reruns exact-head gates", "rationale": "Current full gate failed and dependent browser/SQL groups did not run; required before publication", "evidence": "/tmp/ama-issue-531-20261030-final-gate/receipt.json"},
     {"rank": 2, "task": "Separately authorized live employee verification", "rationale": "Only outstanding issue acceptance criterion; cannot be proven by loopback simulation", "evidence": "Issue AC7 and owner merge comment"},
     {"rank": 3, "task": "Human AT and staff usability acceptance in existing workstreams", "rationale": "Automated axe is not screen-reader, voice-control or usability acceptance", "evidence": "Original Review acceptance boundaries"}
   ]

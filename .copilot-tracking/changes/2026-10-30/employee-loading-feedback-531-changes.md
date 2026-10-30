@@ -110,6 +110,53 @@ unchanged. No amendment requiring new user decisions. One original Review
 is now eligible. Preserve the first test failure and original critique;
 do not repeat critique or Review to erase adverse evidence.
 
+## Post-Review Commit and Complete-Gate Outcome
+
+Independent original Review executed once: Complete / Conformant with justified
+divergence, no RV findings. It independently inspected the diff and source;
+local execution results are explicitly parent-reported in that Review.
+No further implementation or Review followed.
+
+Implementation and original evidence committed locally as
+4da8be46b0aa68678960718202ed676f897a0808, using the authenticated account's
+privacy-safe author/committer address and required Copilot trailer. No push.
+Fetched main remained the owner-selected
+5634f9a077d175a931c15e3400114665d8c071ee.
+
+Executed the complete gate:
+PYTHONDONTWRITEBYTECODE=1 python3 tools/rpi-checks.py --all
+--base 5634f9a077d175a931c15e3400114665d8c071ee
+--out /tmp/ama-issue-531-20261030-final-gate --lock-timeout 600.
+The runner itself acquired the identical shared flock with a 600-second
+timeout; nesting a second flock around it would deadlock. No cloud operation,
+deployment, live sign-in or credential file was used.
+
+Result: FAILED, not publication-ready. The API project discovery returned
+successful unittest status with its 318 opt-in skips, but the complete gate
+rejected all 318 as unexpected required integration/dependency skips. Dependent
+browser and mssql groups were blocked. No failed assertion in the new browser
+scenario caused this result, and the runner/test skip policy is unchanged by
+this branch. Do not waive these controls or modify unrelated tooling here.
+Fourteen groups completed: preflight, core, agents, orchestrator, importer,
+namespace, static, infra, migration, all four image groups and logo-0600.
+Those completed groups do not make a failed full receipt a pass.
+
+Retained immutable receipt:
+/tmp/ama-issue-531-20261030-final-gate/receipt.json.
+SHA256: 1262de4524047e596e4c7d8eb3a6db9de54a2863228ced1ea45bf6a37864f055.
+Full output: /tmp/ama-issue-531-20261030-final-gate.log.
+Explicit receipt verification rejected it with
+"Receipt does not establish an eligible run" (exit 1), retained at
+/tmp/ama-issue-531-20261030-receipt-verification.log.
+
+This final evidence-only update records the blocker without altering the
+original Review or runtime/check implementation. Its commit necessarily makes
+the failed receipt historical at 4da8be46, not a gate for the later head.
+Coordinator must resolve the required integration/skip-policy prerequisite in
+separately scoped work and run a fresh complete exact-head gate before any
+publication. No repeated identical heavy attempt or passing receipt is claimed.
+AC1-AC6 retain their bounded local evidence; AC7 remains unproven.
+
 ## Remaining Work and Limits
 
 No Azure, deployment, live sign-in, secrets or private datasets.
