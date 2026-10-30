@@ -1,0 +1,29 @@
+{
+  "task_id": "resident-live-acceptance-2026-10-30",
+  "started_at": "2026-10-30T10:30:33.205101+00:00",
+  "origin": "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io",
+  "script_sha256_before": "a2dbc137f1c8e6cec40f77a189f378f0695a7a08afe3de5a77b8dbb52422b3e7",
+  "recording": {
+    "screenshots": false,
+    "trace": false,
+    "video": false,
+    "har": false,
+    "storage_state_export": false
+  },
+  "login_attempts": 0,
+  "login_status": null,
+  "authenticated": false,
+  "stage": "load_signin",
+  "checks": {},
+  "browser": "156.0.8078.4",
+  "context_closed": true,
+  "browser_closed": true,
+  "failure": {
+    "stage": "load_signin",
+    "category": "TimeoutError",
+    "detail": "Exception text suppressed to protect filled credentials"
+  },
+  "finished_at": "2026-10-30T10:30:53.705872+00:00",
+  "script_sha256_after": "a2dbc137f1c8e6cec40f77a189f378f0695a7a08afe3de5a77b8dbb52422b3e7",
+  "credential_literal_exclusion": true
+}

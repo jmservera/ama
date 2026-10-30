@@ -1,0 +1,124 @@
+{
+  "task_id": "resident-live-acceptance-2026-10-30",
+  "started_at": "2026-10-30T10:31:45.056767+00:00",
+  "origin": "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io",
+  "script_sha256_before": "f90d23e0bc05df7871be88da6d0354a7880b311402ed238c8c0a2c74205131ad",
+  "recording": {
+    "screenshots": false,
+    "trace": false,
+    "video": false,
+    "har": false,
+    "storage_state_export": false
+  },
+  "login_attempts": 1,
+  "login_status": 200,
+  "authenticated": true,
+  "stage": "resident_checks_complete",
+  "checks": {
+    "launcher": {
+      "role": "BUTTON",
+      "name": "Chat",
+      "right_gap": 16,
+      "bottom_gap": 16,
+      "expanded": "false"
+    },
+    "dialog_role": "dialog",
+    "initial_consent": "unconsented",
+    "preconsent_error": "Agree to use your own record for this question first.",
+    "preconsent_no_assistant_request": true,
+    "permission_before_question": true,
+    "permission_at": "2026-10-30T10:31:50.800466+00:00",
+    "selector": {
+      "label": "Assistant",
+      "value": "resident",
+      "options": [
+        "Resident assistant"
+      ]
+    },
+    "capabilities": {
+      "Attach": true,
+      "Voice": true
+    },
+    "unsupported_reason": "Attachments and voice input are not supported in this chat. Use the existing document or contact routes.",
+    "send_present": true,
+    "shift_enter_newline": true,
+    "shift_enter_no_request": true,
+    "rat_answer": {
+      "honest_inability_and_contact": true,
+      "home_summary_marker": false,
+      "text": "I cannot answer that or act on instructions in a message. Ask about your case, home, documents, forms, consent, appointments or rules. I cannot approve, decide, diagnose, give consent, book from chat text or access anyone else's record. A person can help through your housing officer.",
+      "label": "Summary by rules - workflow only, no AI used",
+      "sources_initially_collapsed": true
+    },
+    "enter_sent": true,
+    "open_after_enter": true,
+    "open_after_send_button": true,
+    "thread": {
+      "roles": [
+        "chat-widget-message chat-widget-user",
+        "chat-widget-message chat-widget-assistant",
+        "chat-widget-message chat-widget-user",
+        "chat-widget-message chat-widget-assistant"
+      ],
+      "role": "log",
+      "live": "polite",
+      "overflow": "auto",
+      "scroll_top": 479,
+      "client_height": 269,
+      "scroll_height": 748
+    },
+    "answer_labels": [
+      "Summary by rules - workflow only, no AI used",
+      "Summary by rules"
+    ],
+    "viewports": [
+      {
+        "width": 1280,
+        "popup_width": 448,
+        "document_overflow": false,
+        "popup_in_view": true,
+        "composer_below_log": true,
+        "focus_outline_width": "3px",
+        "focus_outline_style": "solid"
+      },
+      {
+        "width": 390,
+        "popup_width": 358,
+        "document_overflow": false,
+        "popup_in_view": true,
+        "composer_below_log": true,
+        "focus_outline_width": "3px",
+        "focus_outline_style": "solid"
+      },
+      {
+        "width": 320,
+        "popup_width": 288,
+        "document_overflow": false,
+        "popup_in_view": true,
+        "composer_below_log": true,
+        "focus_outline_width": "3px",
+        "focus_outline_style": "solid"
+      }
+    ],
+    "motion": {
+      "no-preference": "150ms",
+      "reduce": "0s"
+    },
+    "escape_closed": true,
+    "escape_focus_return": true,
+    "reopen_retains_four_messages": true,
+    "assistant_post_times": [
+      "2026-10-30T10:31:50.872767+00:00",
+      "2026-10-30T10:31:55.233480+00:00"
+    ],
+    "exact_200ms_loading_threshold": "Not measured; no delayed/injected response",
+    "human_screen_reader_conformance": "Not performed"
+  },
+  "browser": "156.0.8078.4",
+  "masked_fields": true,
+  "context_closed": true,
+  "browser_closed": true,
+  "finished_at": "2026-10-30T10:31:59.375722+00:00",
+  "script_sha256_after": "f90d23e0bc05df7871be88da6d0354a7880b311402ed238c8c0a2c74205131ad",
+  "credential_literal_exclusion": true
+}
