@@ -912,12 +912,17 @@ that permission. Sign-in is not consent to assistant use or works.
 `POST /demo/assistant` accepts exactly either `{"topic":"status","use_record":true}`
 or `{"question":"Where is my case?","use_record":true}`. Supported topics:
 status, documents, forms, home, consents, appointments, regulations and safety.
-Typed questions are bounded to 500 characters and routed by host-owned rules;
-they never enter model prompts or durable conversation memory. Unsupported
+Typed questions are bounded to 500 characters and routed by host-owned rules.
+Eligible non-document questions can enter the bounded generated-answer prompt;
+document questions use fixed-topic guidance selection instead. Neither is kept
+in durable conversation memory. Unsupported
 questions abstain. No client case/home/email selector is accepted.
 
-Status/documents/forms retain the bounded Azure route below; other answers are
-labelled workflow-only rules. Home answers use only the signed-in projection.
+Document questions retain the mandatory own-case facts and source references
+under the bounded Azure guidance selector below. Unlike other eligible typed
+questions, document replies do not use free-form generated prose. Status/forms
+retain their existing Azure route; other protected answers are labelled
+workflow-only rules. Home answers use only the signed-in projection.
 Operational appointment history and works-consent records are not projected:
 answers state Unknown, never infer consent. Safety questions give direct
 human/emergency routes and explicitly state that no report was sent.
@@ -1079,11 +1084,14 @@ live-service acceptance remain pending. Automated checks are not WCAG
 conformance or whole-issue acceptance.
 
 The standalone assistant check uses complete supported questions, such as
-"Which documents are missing from my case?", "How do I fill in my form?" and
-"What is wrong with my document warning or error?". The older check inputs
-"documents help", "forms help" and "What does my document warning or error
-mean?" are outside the current finite grammar and receive a task-limit refusal.
-This is not general language understanding. The check asserts each newly
+"Which documents are missing from my case?", "Which documents do I still need
+to provide?", "How do I upload my documents?", "How do I fill in my form?" and
+"What does my document warning or error mean?". Document wording also accepts
+provide/send/upload questions and singular or plural warning/error meanings.
+This asks how to provide a file; it does not upload one. "documents help",
+"forms help", upload commands, approval requests and questions combined with
+unrelated requests still receive a task-limit refusal. This finite grammar
+is not general language understanding. The check asserts each newly
 added reply, not earlier chat history, retaining missing-document facts,
 warnings, sources, truthful rules labels, own-case isolation and the limits on
 sending or making decisions. API tests cover both supported questions and
@@ -1098,6 +1106,8 @@ checks and fetches/re-authorizes the resident's own case for every request.
 It never accepts a case selector, writes a case, submits a form or records consent.
 Document replies use the current own-case request facts when available.
 Missing or unrecognised facts stay explicitly unknown, not "nothing to send".
+Document requests may be unknown in the projection; the answer says so rather
+than invent a checklist.
 
 The [design note](../../docs/architecture/resident-assistant-prototype.md)
 records the 2026-10-27 owner decision: managed identity and USD20 model ceiling.
@@ -1105,7 +1115,9 @@ Default `FakeProvider` is deterministic local rules: no model connection or cost
 The legacy `AzureTopicProvider` remains available for compatibility.
 The startup-wired `AzureAdvisor` calls regional Standard `gpt-4.1-mini`
 2025-04-14. Explicit `topic` requests retain approved explanatory-sentence
-selection. In-scope `question` requests now ask for short generated prose using
+selection. Document `question` requests use that same selector so missing-file,
+provision and warning/error facts, references and no-approval wording cannot be
+replaced by model text. Other in-scope `question` requests ask for short generated prose using
 only host-supplied own-case grounding and repair-reporting guidance. Strict
 output validation requires bounded nonempty text and known, unique source IDs;
 source descriptions come from the host, never model-provided URLs. Text renders
