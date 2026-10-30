@@ -11,7 +11,7 @@ ms.date: 2026-10-30
 
 * Task ID: 563
 * Task slug: resident-ai-diagnosis-563
-* Planning status: Ready for evidence/handoff only; single critique Pass; causal correction blocked
+* Planning status: Evidence/handoff plan executed and locally persisted; single critique Pass; causal correction blocked
 * Plan date: 2026-10-30
 * Phase details: .copilot-tracking/details/2026-10-30/resident-ai-diagnosis-563-phase-details.md
 * Plan critique: .copilot-tracking/reviews/plans/2026-10-30/resident-ai-diagnosis-563-plan-critique.md
@@ -25,8 +25,8 @@ to a particular stage because the stopped replica is unavailable and both
 historical telemetry queries are denied. Current "AI not enabled" is explained
 by the verified deliberate rollback, not the enabled attempt's failure.
 
-The caller's exact root-cause goal remains unmet. Finish the requested local
-validation, one independent Review and a local-only commit, preserving B1 and
+The caller's exact root-cause goal remains unmet. The requested local
+validation, one independent Review and local-only persistence completed, preserving B1 and
 the precise next diagnostic query for the coordinator. No source defect is
 proved, so the conditional source-fix/test authority is not triggered. No
 corrective configuration is justified; the two activation settings were already
@@ -94,7 +94,7 @@ correct. Never silently substitute evidence packaging for root-cause success.
 | Details | .copilot-tracking/details/2026-10-30/resident-ai-diagnosis-563-phase-details.md |
 | Critique | .copilot-tracking/reviews/plans/2026-10-30/resident-ai-diagnosis-563-plan-critique.md, Complete / Pass for evidence packaging only |
 | Changes record | .copilot-tracking/changes/2026-10-30/resident-ai-diagnosis-563-changes.md, implementation-owned |
-| Readiness | Ready for evidence/handoff only; B1 blocks causal correction |
+| Readiness | Evidence/handoff execution complete; B1 blocks causal correction; Review Complete / Not accepted |
 | Continuation | Explicit full-loop parent, automatic within caller scope |
 
 ## Sources
@@ -136,7 +136,7 @@ correct. Never silently substitute evidence packaging for root-cause success.
 * Detail section: P01-T02 in phase details.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Independent Review and local persistence
+### [x] P02: Independent Review and local persistence
 
 * Intent: assess the evidence boundary once and preserve it locally.
 * Dependencies: P01 finished and plan/details/changes reconciled.
@@ -149,7 +149,7 @@ correct. Never silently substitute evidence packaging for root-cause success.
 * Detail section: P02-T01 in phase details.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Commit artifacts locally and verify boundaries
+#### [x] P02-T02: Commit artifacts locally and verify boundaries
 
 * Requirement and evidence: AC5/NFR4, no push.
 * Expected result: seven artifacts committed with privacy-safe identity and trailer, clean worktree, no source/infra/original-evidence changes.
@@ -175,5 +175,6 @@ correct. Never silently substitute evidence packaging for root-cause success.
 ## Handoff
 
 * Implementation artifact: .copilot-tracking/changes/2026-10-30/resident-ai-diagnosis-563-changes.md.
-* Ready task: P02-T02 scheduled local persistence. One original Review executed Complete / Not accepted as causal diagnosis; B1 remains open. P01 and all four local commands complete; original dependency failure preserved, restored rerun passed with318 skips.
+* Remaining active-plan tasks: none. Original seven-artifact candidate committed as d3fa9b9e2f10dfd0b8890c4756a1a7b2543f6c7c; clean status, identity/trailer and source/infra/docs unchanged were verified. This final evidence-only closeout records that completed persistence.
+* One original Review executed Complete / Not accepted as causal diagnosis; B1 remains open. P01 and all four local commands complete; original dependency failure preserved, restored rerun passed with318 skips. No new child work, cloud action or publication is authorized.
 * B1 remains an explicit unmet root-cause goal. Do not retry inference or change config to "test" a guess.

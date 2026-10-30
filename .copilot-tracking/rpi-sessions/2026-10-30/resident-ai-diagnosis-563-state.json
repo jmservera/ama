@@ -3,8 +3,8 @@
   "task_slug": "resident-ai-diagnosis-563",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Review",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-30/resident-ai-diagnosis-563-research.md",
@@ -39,6 +39,11 @@
       "decision": "One independent Review executed Complete / Not accepted as causal diagnosis. RV-001/B1 routes to later research; RV-002 is scheduled local persistence. RV-003 original lock-conflict assertion preserved but not adopted: exact shared lock was explicitly prescribed by caller; no conflicting restriction evidenced in this execution context.",
       "status": "confirmed",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-30/resident-ai-diagnosis-563-review.md and parent disposition in changes."
+    },
+    {
+      "decision": "Bounded evidence/handoff plan complete and locally persistent, not an accepted causal diagnosis. Candidate d3fa9b9e2f10dfd0b8890c4756a1a7b2543f6c7c has seven task artifacts, expected author/committer/trailer, clean verified status and no src/infra/docs changes. Final evidence-only closeout records actual persistence without rewriting original Review.",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-10-30/resident-ai-diagnosis-563-changes.md Actual Local Persistence and Final Closeout; local git history."
     }
   ],
   "blockers": [
@@ -50,7 +55,7 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Complete scheduled local-only P02-T02 persistence, preserve original Review and B1, then hand off historical telemetry retrieval to coordinator."
+    "action": "Coordinator clears B1 using existing authorized private historical telemetry for recover-ai-180649, 2026-10-30 18:07:45Z-18:08:20Z. No child work or cloud action starts without separately authorized direction; exact query in changes."
   },
   "prioritized_follow_ups": [
     {

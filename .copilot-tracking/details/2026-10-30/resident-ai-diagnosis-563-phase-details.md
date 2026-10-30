@@ -19,7 +19,7 @@ ms.date: 2026-10-30
 | Phase ID | Name | Status | Detail sections |
 |---|---|---|---|
 | P01 | Preserve diagnosis and validate | Complete; all four commands passed after dependency restoration | P01-T01,P01-T02 |
-| P02 | Review and local persistence | P02-T01 complete; P02-T02 active | P02-T01,P02-T02 |
+| P02 | Review and local persistence | Complete, original candidate locally committed and verified | P02-T01,P02-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Preserve bounded diagnosis and validate locally
@@ -86,3 +86,4 @@ ms.date: 2026-10-30
 * Validation: `git diff --check`, exact staged paths, commit message/identity, clean final status.
 * Publication: no push authorized, so no publication gate/receipt claimed. A later coordinator publication needs a fresh complete exact-head gate.
 * Completion: local commit hash exists and seven-path boundary is verified; root-cause blocker retained.
+* Actual evidence: candidate d3fa9b9e2f10dfd0b8890c4756a1a7b2543f6c7c committed all seven task artifacts with freshly resolved privacy-safe author/committer identity and requested trailer. Post-commit status clean; src/infra/docs unchanged against requested base. This evidence-only closeout preserves original Review and records completion; no push, second Review or publication gate.
