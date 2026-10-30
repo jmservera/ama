@@ -83,7 +83,7 @@ Close context and clean the exact owned profile only.
 ### P02: Evidence, Review and local persistence
 
 * [x] P02-T01: Reconcile criterion decisions, run checks and independent Review.
-* [ ] P02-T02: Commit locally with privacy-safe identity and attempt external gate.
+* [x] P02-T02: Commit locally with privacy-safe identity and attempt external gate.
 
 ## Validation Ownership
 
@@ -124,6 +124,13 @@ Final P01 outcome: normal passkey Back and Sign-in options were exercised;
 only passkey and GitHub were offered. No supported password route, no actual
 password authentication or employee callback. Live work stopped as required.
 All authenticated feature observations are unmet/blocked, not product defects.
+
+P02 completed locally: original evidence commit `6d29aa27`, Refs-only, no push.
+Full external gate attempted; failed on unexpected required SQL integration
+skips in project-api. Receipt is historical at that candidate/base, not a pass.
+Main advanced during execution. Final bookkeeping candidate requires a fresh
+exact-head attempt against the fetched current main; keep its result external.
+No lineage repair or publication is authorized.
 
 ## Handoff
 

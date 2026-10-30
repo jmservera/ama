@@ -130,3 +130,15 @@ only this task's new evidence and state with required coauthor trailer and Refs.
 Fetch main; inspect lock ownership read-only; run complete external local gate
 with nonqueued admission. Do not repair lineage, push, close issues, change
 protection or claim gate success without verified exact-head receipt.
+
+Completion: privacy-safe local original-evidence commit `6d29aa27` and full
+nonqueued external gate executed against base
+`63422cdf9fd477dd8892a27ac8b11487bc3a2429`. Initial admission rejected only the
+task-created Ruff cache; archived/restored/byte-compared that exact cache and
+moved it externally, touching no original tracking evidence. Full gate then
+ran and failed on unexpected required API SQL integration skips. Browser/
+MSSQL groups did not complete; no receipt pass. Original failed receipt stays
+external at `/tmp/ama-employee-accept-6d309f30-gate-clean/receipt.json`.
+Main advanced during this run; no source or lineage repairs. Final metadata
+commit will receive its own fresh exact-head attempt with results external,
+so no receipt is invalidated merely to commit that final result. No push.

@@ -20,7 +20,8 @@ No application, Azure resource/policy/role/roster change or resident retry.
 P01-T01 complete: separate employee-only runner and 11 constructed offline
 tests pass; Ruff check and formatting pass. P01-T02 complete as a bounded
 blocked attempt. P02-T01 matrix/checks and one independent Review complete.
-P02-T02 local commit and external gate attempt remain pending.
+P02-T02 local original-evidence commit and full external gate attempt complete;
+gate failed, not accepted or publication-ready.
 Default Python lacked Playwright; restored in task-owned external virtual
 environment `/tmp/ama-employee-accept-6d309f30-venv`, Chromium install succeeded.
 No credential file was read during research, planning or critique.
@@ -219,3 +220,52 @@ Fetched main: `63422cdf9fd477dd8892a27ac8b11487bc3a2429`.
 No heavy-gate lock holder was listed at the pre-commit read-only inspection.
 Candidate commit and full external gate remain pending here; final result
 will be retained externally without invalidating a successful receipt.
+
+## Post-Review Local Commit and Gate Results
+
+Original evidence committed locally as
+`6d29aa27f02ae02b000c2eff8cc2eb8106969a2f`, with Refs #550, Refs #551,
+Refs #552 and required coauthor trailer. No push or issue mutation.
+The preparation section above records its earlier pending state.
+
+First full-gate admission against reviewed main
+`63422cdf9fd477dd8892a27ac8b11487bc3a2429` returned exit 1:
+"Candidate has ignored inputs; move all scratch outside the checkout".
+The only ignored inputs were this task's newly generated Ruff cache:
+`.ruff_cache/.gitignore`, `.ruff_cache/CACHEDIR.TAG` and
+`.ruff_cache/0.17.3/7364889783481536748`, created during this task's lint run.
+Archived those exact files, restored to new external scratch, compared every
+byte, recorded SHA-256 values, then moved the original cache outside the
+checkout. No historical/tracking artifact was pruned or moved. Preservation:
+`/tmp/ama-employee-accept-6d309f30-ruff-cache.tar.gz`, sibling
+`ruff-cache-sha256.txt`, `ruff-restore/` and `ruff-cache-archived/`.
+
+Fresh full gate:
+
+```bash
+python3 tools/rpi-checks.py --all --base 63422cdf9fd477dd8892a27ac8b11487bc3a2429 --out /tmp/ama-employee-accept-6d309f30-gate-clean --lock-timeout 0
+```
+
+Nonqueued lock admitted immediately. Completed with exit 1, receipt status
+`failed`: project-api "Unexpected required integration/dependency skip",
+including tests requiring disposable SQL Server (`ZF_TEST_MSSQL=1`).
+Successful groups recorded by the runner: preflight, core, agents,
+orchestrator, importer, namespace, static, infra, migration, four image
+contracts and logo-0600. Project-api failed; browser/MSSQL acceptance groups
+are not completed. No skipped required test was converted into a pass.
+No unrelated repair, tenant action or cloud fallback.
+
+Original failed receipt:
+`/tmp/ama-employee-accept-6d309f30-gate-clean/receipt.json`.
+It binds original candidate `6d29aa27` and base `63422cdf`, not final metadata.
+Receipt verification returned exit 1, "Receipt does not establish an eligible
+run." Main advanced during execution; latest fetch then reported
+`f7482602` at origin/main. No successful exact-current-base receipt exists.
+
+This bookkeeping commit preserves the original review and failed result;
+it does not repair RV findings or repeat Review. A fresh exact-final-head
+gate is required against current fetched main. Retain its final output and
+closeout outside git at the session's `files/employee-password-acceptance-closeout.json`;
+no further evidence edit merely to include that final result. If main is no
+longer an ancestor or admission/prerequisites fail, record blocked without
+rebase, merge, skip, push or approval claim.
