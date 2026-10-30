@@ -39,12 +39,28 @@
       "decision": "One independent original Review executed; outcome Residual work. Findings RV-001 Medium, RV-002/003/004 Low; routed later, no current-task repair or repeat Review.",
       "status": "complete",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-30/resident-live-acceptance-review.md"
+    },
+    {
+      "decision": "Original dated evidence committed locally as bb74275c; full gate attempted without queue or bypass. No push.",
+      "status": "complete_with_blocked_publication",
+      "evidence": ".copilot-tracking/changes/2026-10-30/resident-live-acceptance-changes.md; external resident-gate-original.log and resident-gate-clean.log."
     }
   ],
-  "blockers": [],
+  "blockers": [
+    {
+      "id": "publication-main-ancestry",
+      "summary": "Full local gate blocked: fetched origin/main 7c13115631a163061038d69754a8feb2732daca6 is not an ancestor of this candidate. No passing receipt.",
+      "resolution": "A later separately authorized ancestry reconciliation and clean exact-head full gate are required before publication. No rebase or push was performed."
+    },
+    {
+      "id": "publication-heavy-lock",
+      "summary": "Shared heavy lock was held by foreign python3 PID 1623817; no interference or queued run. Ancestry guard stopped the actual retry earlier.",
+      "resolution": "A later authorized gate must use nonqueued admission after prerequisites and ancestry are resolved."
+    }
+  ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Finalize local-only commit and nonqueued full gate attempt; then await explicit later-work selection, Stop or manual mode."
+    "action": "Await explicit ranked follow-up selection, Stop or manual mode; no child selected. Parent final exact-head nonqueued gate output is external and cannot authorize publication while ancestry is blocked."
   },
   "prioritized_follow_ups": [
     {

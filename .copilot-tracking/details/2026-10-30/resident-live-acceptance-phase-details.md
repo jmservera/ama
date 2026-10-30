@@ -117,3 +117,16 @@ with a new external directory. Retain external receipt/log even if blocked.
 No Azure fallback, parallel duplicate gate, foreign lock inspection/output
 reuse, remediation or push. Verify any successful final receipt; a blocked
 gate is not publication permission. Any later commit invalidates a prior gate.
+
+Execution: original evidence committed locally as bb74275c with authenticated
+GitHub ID+login noreply author/committer email and Copilot trailer. First full
+gate attempt refused an ignored public-only MCP console log created during
+this run. That exact owned transient file was preserved externally with
+matching SHA-256, leaving no ignored inputs. The clean-input full-gate retry
+refused ancestry: origin/main had advanced to
+7c13115631a163061038d69754a8feb2732daca6, while the candidate's reviewed
+baseline/merge-base remained 63422cdf9fd477dd8892a27ac8b11487bc3a2429.
+No history rewrite is authorized; no passing receipt exists. A foreign
+Python process PID 1623817 also held the heavy lock when inspected; it was
+not disturbed. Parent closeout is committed separately and a final exact-head
+nonqueued attempt retains external output. No push or issue-state update.

@@ -3,7 +3,7 @@
 
 Task ID: resident-live-acceptance-2026-10-30. Date: 2026-10-30.
 Declared scope: full bounded evidence plan, no application changes.
-Execution: full RPI loop complete; parent local persistence pending.
+Execution: full RPI loop and bounded local persistence complete; gate blocked.
 Critique: executed once, original Revise,
 PC-001 rejected with parent-context rationale; PC-002/003 applied.
 
@@ -136,7 +136,7 @@ Web Interface Guidelines were fetched afresh before Review. No changed web
 application files exist; browser basics are scoped observations, not a fresh
 whole-source guidelines audit or axe/conformance result.
 P01 and P02-T01 completed. Independent original Review is Complete with
-outcome Residual work. Local commit/external full gate remain. Human approval
+outcome Residual work. Local commit and external full gate attempt are recorded below. Human approval
 remains unchecked and unclaimed.
 
 ## P02-T02: Original Independent Review
@@ -151,7 +151,49 @@ The Review's publication/commit-pending statements describe its assessed
 boundary and will not be rewritten after parent closeout.
 
 Parent transition: task completed at Follow-up, automatic session running,
-no child started. Local-only persistence is parent-owned remaining work.
+no child started. Review findings remain later work, not product repairs.
+
+## P02-T03: Local Persistence and Blocked Full Gate
+
+Original implementation and dated original critique/Review were committed
+locally as bb74275c1c547ccccde558aa6c9a7d4413681964, with message
+"test(resident): record authenticated live acceptance (Refs #550, Refs #551,
+Refs #552)", privacy-safe authenticated GitHub ID+login noreply email for both
+author and committer, and Copilot trailer. No push, PR, issue edit or closing
+keyword was used.
+
+Full gate command: python3 tools/rpi-checks.py --all --base current-origin-main
+--lock-timeout 0 --out new-external-directory. Original external output roots:
+
+* /home/azureuser/.copilot/session-state/1b96c3f3-ccca-4548-9de0-0b49b74e18c7/files/resident-gate-original
+* /home/azureuser/.copilot/session-state/1b96c3f3-ccca-4548-9de0-0b49b74e18c7/files/resident-gate-clean
+
+Their sibling .log files preserve exact runner output. The first attempt
+returned "BLOCKED: Candidate has ignored inputs; move all scratch outside
+the checkout". The only ignored file was this run's public-only MCP console
+log. It was moved intact to external session files/resident-public-console.log;
+before/after SHA-256 was
+5249c18e489dcd9a6eee4673e5b332d3726321606efc6aae774286a01e5cc839.
+No historical artifacts or foreign files were removed.
+
+The clean-input retry returned "BLOCKED: Candidate does not descend from the
+reviewed main base". A fresh read-only fetch confirmed current origin/main
+7c13115631a163061038d69754a8feb2732daca6; candidate merge-base remains
+63422cdf9fd477dd8892a27ac8b11487bc3a2429. Main advanced concurrently with
+the demo-redeployment PR #561. This run's evidence is its dated live snapshot,
+not proof of parity or behavior after a later deployment.
+
+The actual shared heavy-lock holder was separately observed as PID 1623817
+(python3); no duplicate queued gate or interference occurred. The runner
+stopped at earlier guards, so no successful full receipt or completed scanner,
+SQL, browser, image or full-suite result is claimed.
+
+This parent closeout is a second local commit and therefore invalidates
+any earlier exact-head gate evidence. A final same-command nonqueued attempt
+uses the new external files/resident-gate-final output root and sibling .log.
+No passing receipt can be verified; publication remains blocked pending
+separately authorized ancestry reconciliation and a clean exact-head full gate.
+No rebase, merge, force-push, Azure fallback or protection change was performed.
 
 ## Follow-Up Items
 
