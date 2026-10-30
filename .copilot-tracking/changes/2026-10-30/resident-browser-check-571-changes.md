@@ -135,5 +135,15 @@ acceptance) and RV-002 (future publication gates) remain with relevant owners.
 No material findings or current correction blockers. No source changes after
 the assessed boundary; only parent-owned tracking reconciliation.
 
-P02-T02 local Refs-only commit pending. Full publication gate, human acceptance
-and hosted approval not claimed. No remote writes performed.
+P02-T02 completed by local implementation/evidence commit `b8b958ef`
+(`fix(checks): reconcile resident browser prompts (Refs #571)`).
+Author and committer use the authenticated account's public-ID noreply address;
+required Copilot trailer included. The frozen three-file diff hash matched
+Review immediately before staging/commit. Working tree was clean after this
+commit. Final state/plan/details/changes reconciliation is a separate
+metadata-only closeout commit, with no executable or test changes.
+
+Full publication gate, human acceptance and hosted approval not claimed.
+No push, issue closing/change, PR creation, Azure, deployment, live sign-in or
+credential use performed. Public GitHub account lookup was used only for the
+repository-required privacy-safe commit identity. No follow-up work started.

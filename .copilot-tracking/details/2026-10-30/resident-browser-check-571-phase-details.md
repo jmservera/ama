@@ -4,8 +4,8 @@ description: Bounded correction, test ownership and evidence requirements
 ms.date: 2026-10-30
 ---
 
-Task 571 / resident-browser-check-571. P01 and P02-T01 complete; local commit
-pending; no correction blockers.
+Task 571 / resident-browser-check-571. P01 and P02 complete, locally committed;
+no correction blockers.
 
 <!-- rpi:phase id=P01 -->
 ## P01: Correct and protect the resident check
@@ -88,3 +88,9 @@ trailer. Commit message uses `Refs #571`, never closing syntax. No push,
 PR creation, Azure or deployment. Local gate/publication evidence not claimed.
 Preserve all original RPI evidence. Final state distinguishes completed task
 from session lifecycle and records outstanding gates.
+
+Completed: implementation and original dated evidence committed as `b8b958ef`
+with Refs-only message, required trailer and identical privacy-safe author/
+committer. Reviewed source diff SHA-256 verified immediately before commit.
+Final parent-owned status reconciliation is metadata only. No push, issue
+change, PR, Azure, deployment or publication-gate claim.

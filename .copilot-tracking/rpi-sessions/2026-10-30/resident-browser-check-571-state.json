@@ -3,8 +3,8 @@
   "task_slug": "resident-browser-check-571",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Review",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-30/resident-browser-check-571-research.md",
@@ -37,12 +37,17 @@
     },
     {
       "decision": "Single independent Review executed; Conformant within frozen scoped correction. No implementation defects. RV-001 human/live acceptance and RV-002 publication remain distinct residual gates.",
-      "status": "Review complete; local delivery pending",
+      "status": "Review complete; local delivery completed",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-30/resident-browser-check-571-review.md"
+    },
+    {
+      "decision": "Implementation and original dated RPI evidence committed locally as b8b958ef with Refs-only message, required trailer and privacy-safe author/committer. No push.",
+      "status": "completed",
+      "evidence": "Local git commit b8b958ef; parent-owned metadata-only closeout persists this final state. Reviewed three-file diff hash unchanged."
     }
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Commit reviewed implementation and original dated RPI evidence locally, then persist completed delivery and residual boundaries. No push."},
+  "next_action": {"phase": "Follow-up", "action": "No further work authorized in this non-interactive run. Await separately authorized follow-up selection; do not push, publish or start acceptance work."},
   "prioritized_follow_ups": [
     {
       "rank": 1,

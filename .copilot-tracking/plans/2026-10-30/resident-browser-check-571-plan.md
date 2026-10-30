@@ -4,7 +4,7 @@ description: Reconcile stale check inputs without changing bounded resident auth
 ms.date: 2026-10-30
 ---
 
-Task ID: 571. Slug: resident-browser-check-571. Status: Review complete; local commit pending.
+Task ID: 571. Slug: resident-browser-check-571. Status: completed, locally committed.
 
 ## Executive Summary
 
@@ -96,12 +96,12 @@ first document response succeeds; require assertion failure. Preserve probe log.
 * [x] Document rationale and run positive/negative browser and unit/static checks.
 
 <!-- rpi:phase id=P02 -->
-### P02: Independent review and local delivery
+### [x] P02: Independent review and local delivery
 
 <!-- rpi:task id=P02-T01 -->
 * [x] Reconcile evidence; obtain one independent Review; route residual work.
 <!-- rpi:task id=P02-T02 -->
-* [ ] Commit implementation and original dated RPI evidence locally, Refs-only.
+* [x] Commit implementation and original dated RPI evidence locally, Refs-only.
 
 ## Critique Disposition
 
@@ -131,7 +131,10 @@ correction or authorizes additional live/remote action.
 
 P01 implemented and validated after explicit disposition of the single
 critique. P02 single Review executed, outcome Conformant within scoped
-correction, no implementation defects; local commit remains. Review:
+correction, no implementation defects; local implementation/evidence commit
+`b8b958ef` completed with Refs-only message and required trailer. Final tracking
+closeout is a separate metadata-only commit; no reviewed source changes.
+Review:
 `.copilot-tracking/reviews/logs/2026-10-30/resident-browser-check-571-review.md`.
 Changes record:
 `.copilot-tracking/changes/2026-10-30/resident-browser-check-571-changes.md`.
