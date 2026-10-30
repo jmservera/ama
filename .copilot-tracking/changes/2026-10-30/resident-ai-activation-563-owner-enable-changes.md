@@ -309,9 +309,60 @@ After gate, inspect actual external receipt and run verify-receipt if present.
 No receipt copy or raw command output is committed; no push is authorized.
 Any evidence-only follow-on commit makes an earlier receipt historical.
 
-## Remaining Work
+## Actual Local Persistence and Gate Outcome
 
-P01 and P02-T01 operations complete via mandatory rollback, Review executed
-Not accepted. Local commit/full-gate closeout pending. Future finer browser
-diagnostics/sign-in allowance remain separate; no child or additional login.
-Activation/issue criteria remain unmet; owner monitors any possible cost.
+The planned local identity/config/staging/commit command succeeded, exit0.
+Candidate433daef98afe46f54b960a8d27a9269e158ec0ac has exactly seven continuation
+RPI artifacts, privacy-safe authenticated noreply author and committer, required
+Copilot trailer and Refs #563. Worktree clean after commit.
+`git diff --name-only 4f61a9cb HEAD` confirms only those seven additions;
+original seven predecessor artifacts unchanged. No source/infra/UI edits.
+
+Full gate ran exactly as recorded above, with stdout/stderr redirected under
+umask077 to the external local-closeout.log (not console/provider logs).
+Exit1: `BLOCKED: Global heavy-resource lock timeout`.
+Existing native lock waited600s and did not acquire the foreign-held heavy
+slot. No validation group executed, full-gate output directory is empty and
+receipt.json does not exist. This is Blocked, not a failed SQL test or passed
+full run. No duplicate gate or foreign-holder interruption.
+External local-closeout.log SHA256:
+a61e364435be7c6fffd44ae8f8a2a7359d918b0b5754b4b3f1bb6bf7f802039b.
+verify-receipt not run because no receipt exists; no eligibility inferred.
+
+Post-gate read-only commands:
+`python3 <receipt existence/log hash/output names>; gh api user --jq
+'{id,login}'; git status --short; git diff --check; date -u`: exit0,
+no receipt, empty output, clean worktree before this evidence closeout,
+same privacy-safe identity,2026-10-30T17:50:05Z.
+Earlier own-log tail and lock-holder inspection commands exit0; only own output
+read, foreign processes untouched. read_bash waited for the original gate
+session; no rerun. No claim of an exact-head or historical passing receipt.
+
+Final evidence-only closeout stages only this changes file, plan, details and
+state, reuses freshly resolved local noreply identity, and commits:
+
+```bash
+git commit -m "docs(ops): record resident activation closeout (Refs #563)" -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"
+```
+
+Final commit result is available in local git history; no amend, push, PR,
+issue checkbox edit, closing keyword, issue closure or merge. This records
+scheduled RV-002 closeout, not implementation of RV-001 or another Review.
+No eligible local gate receipt exists for this or the previous candidate.
+
+## Final Outcome and Remaining Work
+
+Ordered Research, Plan, Implement and one independent Review executed, with
+dated original evidence locally persistent. Actual activation Not accepted:
+post-deployment browser timeout, no generated response proof. Both AI settings
+absent after verified mandatory rollback; exact effective original configuration
+restored in ready owner-safe-173404 revision100%, health200, min0/max1,
+eight Manual jobs and employee configuration unchanged.
+Two sign-ins exhausted. No further login/model attempt or child task started.
+Owner monitors any possible cost; live ledger pre-read remains waived, cap/
+expiry unchanged. Actual dispatch/spend and timeout root cause remain Unknown.
+Local full gate Blocked by shared-lock timeout; no receipt/publication pass.
+Automatic session running at Follow-up, completed execution with activation
+unmet. Later owner-selected timeout diagnostics and renewed sign-in allowance,
+then actual-model/content acceptance; separate coordinated exact-head local
+gate. Stop/manual-mode remain available without initiating any follow-up.
