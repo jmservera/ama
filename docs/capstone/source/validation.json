@@ -98,22 +98,23 @@
       52
     ],
     "full_manifest_and_media_verified": true,
-    "candidate_sha256": "d7e2eba9e2bd3b6e503a4731f5d49d5702c4c4a725ff1f11c4b818d039a1a86b",
+    "candidate_sha256": "4c57e17a8b71e30df787d2fa06e769c45be24f1645a2b5d26dc9e36effdfd8a3",
     "baseline_sha256": "2bab9b79de4352a1915dab04d1846a4c4be90f6889a2b9b6af4807e48a33d5f8",
-    "manifest_sha256": "45e959b323a5acc6d60aad76c77de37ab8cedd1f73ef7f949ac1448219f712bf",
-    "asset_catalog_sha256": "833c28d4cabeb49ea18f073200102604c6af38004da9677bb41ca5148fbd97b7",
+    "manifest_sha256": "d50151ae3784c185f7340539c11ff067ba9638129145c9621e936efe99f9104a",
+    "asset_catalog_sha256": "de34d2eba585eab470ebe7438b40695e0b239f6b2c8183a3cd4236ca5a1dc901",
     "builder_sha256": "9e744184cc3016664bd8f4e260b54e40825039700144c178659e53a01ce72568",
     "native_helper_sha256": "631c97549708bf4a50c06cf5ac091d46550a12bf5a60f8df56392d5851a42bf6"
   },
   "preview": {
     "renderer": "LibreOffice 24.2.7.2 420(Build:2)",
     "native_powerpoint_validation": false,
-    "source_sha256": "d7e2eba9e2bd3b6e503a4731f5d49d5702c4c4a725ff1f11c4b818d039a1a86b",
-    "pdf_sha256": "6778011723fe3bbfa93c7d07a4262091143ffb15d0bad56a941300121e316270",
+    "source_sha256": "4c57e17a8b71e30df787d2fa06e769c45be24f1645a2b5d26dc9e36effdfd8a3",
+    "pdf_sha256": "f2532e9401a926821cd24d0adb34b7f795c5ba9e1695283b3233d185d2a18036",
     "navigation": {
       "slides": 54,
       "fixed_slide_jumps": 108,
-      "all_destinations_and_hit_regions_verified": true
+      "all_destinations_and_hit_regions_verified": true,
+      "unambiguous_hit_regions": true
     },
     "rendered_images": 54,
     "text_bound_metrics": "Not native PowerPoint metrics; inspect rendered images and measure source frames separately.",
@@ -130,16 +131,23 @@
       16,
       23,
       24,
+      27,
       31,
       37,
       39,
       46,
       47
     ],
-    "native_text_frames_checked": 213,
+    "native_text_frames_checked": 215,
     "source_text_frames_missing_words": [],
     "unchanged_pages_pixel_differences": [],
+    "previous_review_pages_pixel_differences": [
+      27
+    ],
     "fixed_pdf_links": 108,
+    "qanda_index_answers": 27,
+    "qanda_fixed_returns": 27,
+    "overlapping_different_target_regions": [],
     "journey_cell_projected_points": 20.227,
     "journey_role_projected_points": 15.436
   },
@@ -171,6 +179,7 @@
     "illustrated_timeline": 3,
     "resident_journey": 13,
     "editable_value_canvas": 39,
+    "corrected_index_hit_regions": 27,
     "revised_pages": [
       3,
       8,
@@ -180,13 +189,14 @@
       16,
       23,
       24,
+      27,
       31,
       37,
       39,
       46,
       47
     ],
-    "unchanged_same_renderer_pages": 41,
+    "unchanged_same_renderer_pages": 40,
     "current_product_pages": [
       12,
       14,
@@ -202,19 +212,19 @@
     ],
     "visual": "Actual rendered images inspected; curved-sector, heading-connector and hidden-arrow findings corrected.",
     "evidence": "Desk-research hypotheses and proposed gains remain distinct from resident validation and measured outcomes.",
-    "pdf_navigation": "All 108 fixed jumps reconstructed from actual PPTX shape bounds and targets, then verified after saving. No dynamic caller history.",
+    "pdf_navigation": "All 108 fixed jumps verified before/after saving, with 27 index-to-answer paths and index returns, no differing-target overlap and no invented caller history.",
     "direct_viewer_keyboard_at_acceptance": false
   },
   "tests": {
-    "focused_pdf_and_rubric_regressions_passed": 27,
+    "focused_pdf_and_rubric_regressions_passed": 29,
     "native_shape_checks_passed": 21,
     "ruff_lint_and_format": "pass",
     "dt_source_check": "Pass: 68 editable elements, 15 two-line cells, five illustrated touchpoints, 22 source locators, 31 local links, deterministic native/SVG regeneration.",
     "earlier_broad_suites": "Historical results in the dated reviews remain unchanged; not a new whole-repository pass."
   },
   "tools": {
-    "tools/capstone/render_preview.py": "bc0edde8e56522d02ea27ee337e8e5e06f696b84f01989fc51be95f1670222c7",
-    "tools/capstone/test_render_preview.py": "48ddc3693efa42b09a64e668c2b9b4d2b0e0c3f7da722f4792682790f6e0e384",
+    "tools/capstone/render_preview.py": "75ea6696b929a52ba6765285260d90052fb1248e52914d5e75048ffff33e2368",
+    "tools/capstone/test_render_preview.py": "b5e340e16c0aef6f7b90593375dc848539e6ea6139a94f6a679f73d70beab605",
     "tools/capstone/requirements.txt": "31923004463ebf2784222992795839819f4ab6451797401cbe5860e94bdeadad",
     "tools/capstone/Test-NativeShapes.ps1": "d92c01a3cd6bc746ded5c5085fc620fea433981b8c61bbb007186b024dfae7c4",
     "docs/capstone/source/diagrams/discovery-journey/build-resident-journey.mjs": "fea0d2dccd1e11cab382d21b5f0f05259f93ecd1ec81d0f38d5b55fe2c57ccf8"
