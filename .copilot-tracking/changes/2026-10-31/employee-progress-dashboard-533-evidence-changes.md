@@ -111,3 +111,15 @@ errors or automated axe violations. Primary focused-post-metering.log,
 browser-post-metering.log and bounded post-metering-provenance.json are
 preserved in the committed evidence root; full reports remain external.
 Full gate still must run on the final committed current-base candidate.
+
+Commit 8baee011 completed metering integration. While its evidence was copied,
+shared origin/main advanced to reviewed capacity-check #605,
+7136be9778b17e495b1941e6eb93f50d32de8a2b (tests/guide only, no progress runtime
+change). Corrected the derived metering provenance base header to its actual
+integrated/tested 45121932, retaining 7136be97 separately as the observed
+concurrent origin reference. Original 8baee011 preserves the earlier header;
+no measured log bytes, source hashes, scan results or Review outcomes changed.
+A normal conflict-free merge incorporates reviewed capacity tests/guide.
+Fresh metering-baseline progress execution still covers identical progress
+runtime; current-base full gate remains pending. No force push or source
+Review repetition.
