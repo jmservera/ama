@@ -269,10 +269,10 @@ ms.date: 2026-10-31
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-research.md](.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-research.md) | Supplied focused evidence and limits |
-| [.copilot-tracking/plans/2026-10-31/employee-progress-dashboard-533-plan.md](.copilot-tracking/plans/2026-10-31/employee-progress-dashboard-533-plan.md) | Assessed candidate plan, unchanged |
-| [.copilot-tracking/details/2026-10-31/employee-progress-dashboard-533-phase-details.md](.copilot-tracking/details/2026-10-31/employee-progress-dashboard-533-phase-details.md) | Assessed candidate details, unchanged |
-| [.copilot-tracking/reviews/plans/2026-10-31/employee-progress-dashboard-533-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/employee-progress-dashboard-533-plan-critique.md) | Original complete critique and finding set |
+| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-research.md](../../../research/2026-10-31/employee-progress-dashboard-533-research.md) | Supplied focused evidence and limits |
+| [.copilot-tracking/plans/2026-10-31/employee-progress-dashboard-533-plan.md](../../../plans/2026-10-31/employee-progress-dashboard-533-plan.md) | Assessed candidate plan, unchanged |
+| [.copilot-tracking/details/2026-10-31/employee-progress-dashboard-533-phase-details.md](../../../details/2026-10-31/employee-progress-dashboard-533-phase-details.md) | Assessed candidate details, unchanged |
+| [.copilot-tracking/reviews/plans/2026-10-31/employee-progress-dashboard-533-plan-critique.md](employee-progress-dashboard-533-plan-critique.md) | Original complete critique and finding set |
 
 ## Next Steps
 

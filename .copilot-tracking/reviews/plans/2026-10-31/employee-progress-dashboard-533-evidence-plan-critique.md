@@ -125,18 +125,18 @@ prerequisite; neither this verdict nor local portable pass markers authorizes it
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/plans/2026-10-31/employee-progress-dashboard-533-evidence-plan.md](.copilot-tracking/plans/2026-10-31/employee-progress-dashboard-533-evidence-plan.md) | Assessed evidence-access plan |
-| [.copilot-tracking/details/2026-10-31/employee-progress-dashboard-533-evidence-phase-details.md](.copilot-tracking/details/2026-10-31/employee-progress-dashboard-533-evidence-phase-details.md) | Evidence-only tasks and publication prerequisites |
-| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence-research.md](.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence-research.md) | Supplied access research and limits |
-| [.copilot-tracking/reviews/logs/2026-10-31/employee-progress-dashboard-533-correction-review.md](.copilot-tracking/reviews/logs/2026-10-31/employee-progress-dashboard-533-correction-review.md) | Preserved blocked parent Review |
-| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/provenance.json](.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/provenance.json) | Hashes, browser summaries and axe arrays |
-| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/focused.log](.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/focused.log) | Two backend passes |
-| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/api-unit.log](.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/api-unit.log) | Owning full-unit result |
-| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/static.log](.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/static.log) | Static-check primary output |
-| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/browser.log](.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/browser.log) | Small/scale browser primary output |
-| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/skip-audit.log](.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/skip-audit.log) | Skip-only raw identity audit |
-| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/skip-audit.json](.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/skip-audit.json) | All 320 unique skipped IDs/reasons |
-| [.copilot-tracking/reviews/plans/2026-10-31/employee-progress-dashboard-533-evidence-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/employee-progress-dashboard-533-evidence-plan-critique.md) | This single complete critique |
+| [.copilot-tracking/plans/2026-10-31/employee-progress-dashboard-533-evidence-plan.md](../../../plans/2026-10-31/employee-progress-dashboard-533-evidence-plan.md) | Assessed evidence-access plan |
+| [.copilot-tracking/details/2026-10-31/employee-progress-dashboard-533-evidence-phase-details.md](../../../details/2026-10-31/employee-progress-dashboard-533-evidence-phase-details.md) | Evidence-only tasks and publication prerequisites |
+| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence-research.md](../../../research/2026-10-31/employee-progress-dashboard-533-evidence-research.md) | Supplied access research and limits |
+| [.copilot-tracking/reviews/logs/2026-10-31/employee-progress-dashboard-533-correction-review.md](../../logs/2026-10-31/employee-progress-dashboard-533-correction-review.md) | Preserved blocked parent Review |
+| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/provenance.json](../../../research/2026-10-31/employee-progress-dashboard-533-evidence/provenance.json) | Hashes, browser summaries and axe arrays |
+| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/focused.log](../../../research/2026-10-31/employee-progress-dashboard-533-evidence/focused.log) | Two backend passes |
+| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/api-unit.log](../../../research/2026-10-31/employee-progress-dashboard-533-evidence/api-unit.log) | Owning full-unit result |
+| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/static.log](../../../research/2026-10-31/employee-progress-dashboard-533-evidence/static.log) | Static-check primary output |
+| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/browser.log](../../../research/2026-10-31/employee-progress-dashboard-533-evidence/browser.log) | Small/scale browser primary output |
+| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/skip-audit.log](../../../research/2026-10-31/employee-progress-dashboard-533-evidence/skip-audit.log) | Skip-only raw identity audit |
+| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/skip-audit.json](../../../research/2026-10-31/employee-progress-dashboard-533-evidence/skip-audit.json) | All 320 unique skipped IDs/reasons |
+| [.copilot-tracking/reviews/plans/2026-10-31/employee-progress-dashboard-533-evidence-plan-critique.md](employee-progress-dashboard-533-evidence-plan-critique.md) | This single complete critique |
 
 ## Next Steps
 

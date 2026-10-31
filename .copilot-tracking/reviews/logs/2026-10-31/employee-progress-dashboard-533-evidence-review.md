@@ -214,20 +214,20 @@ No rpi-implement, rpi-plan or rpi-research handoff is needed for this boundary. 
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/reviews/logs/2026-10-31/employee-progress-dashboard-533-evidence-review.md](.copilot-tracking/reviews/logs/2026-10-31/employee-progress-dashboard-533-evidence-review.md) | This one independent evidence-only Review |
-| [.copilot-tracking/plans/2026-10-31/employee-progress-dashboard-533-evidence-plan.md](.copilot-tracking/plans/2026-10-31/employee-progress-dashboard-533-evidence-plan.md) | Assessed plan |
-| [.copilot-tracking/details/2026-10-31/employee-progress-dashboard-533-evidence-phase-details.md](.copilot-tracking/details/2026-10-31/employee-progress-dashboard-533-evidence-phase-details.md) | Task markers and publication ordering |
-| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence-research.md](.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence-research.md) | Access research and provenance limits |
-| [.copilot-tracking/changes/2026-10-31/employee-progress-dashboard-533-evidence-changes.md](.copilot-tracking/changes/2026-10-31/employee-progress-dashboard-533-evidence-changes.md) | Frozen evidence and pending administration |
-| [.copilot-tracking/reviews/plans/2026-10-31/employee-progress-dashboard-533-evidence-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/employee-progress-dashboard-533-evidence-plan-critique.md) | Complete / Pass, zero PC findings |
-| [.copilot-tracking/reviews/logs/2026-10-31/employee-progress-dashboard-533-correction-review.md](.copilot-tracking/reviews/logs/2026-10-31/employee-progress-dashboard-533-correction-review.md) | Inherited source assessment; adverse verdict preserved |
-| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/focused.log](.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/focused.log) | Primary two-test result |
-| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/api-unit.log](.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/api-unit.log) | Primary full requested suite result |
-| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/static.log](.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/static.log) | Primary Ruff/format/mypy result |
-| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/browser.log](.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/browser.log) | Actual small/scale browser PASS output |
-| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/skip-audit.log](.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/skip-audit.log) | All individual raw skip records |
-| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/skip-audit.json](.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/skip-audit.json) | All unique skip IDs/reasons and zero execution |
-| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/provenance.json](.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/provenance.json) | Copy/source hashes and bounded browser/axe metadata |
+| [.copilot-tracking/reviews/logs/2026-10-31/employee-progress-dashboard-533-evidence-review.md](employee-progress-dashboard-533-evidence-review.md) | This one independent evidence-only Review |
+| [.copilot-tracking/plans/2026-10-31/employee-progress-dashboard-533-evidence-plan.md](../../../plans/2026-10-31/employee-progress-dashboard-533-evidence-plan.md) | Assessed plan |
+| [.copilot-tracking/details/2026-10-31/employee-progress-dashboard-533-evidence-phase-details.md](../../../details/2026-10-31/employee-progress-dashboard-533-evidence-phase-details.md) | Task markers and publication ordering |
+| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence-research.md](../../../research/2026-10-31/employee-progress-dashboard-533-evidence-research.md) | Access research and provenance limits |
+| [.copilot-tracking/changes/2026-10-31/employee-progress-dashboard-533-evidence-changes.md](../../../changes/2026-10-31/employee-progress-dashboard-533-evidence-changes.md) | Frozen evidence and pending administration |
+| [.copilot-tracking/reviews/plans/2026-10-31/employee-progress-dashboard-533-evidence-plan-critique.md](../../plans/2026-10-31/employee-progress-dashboard-533-evidence-plan-critique.md) | Complete / Pass, zero PC findings |
+| [.copilot-tracking/reviews/logs/2026-10-31/employee-progress-dashboard-533-correction-review.md](employee-progress-dashboard-533-correction-review.md) | Inherited source assessment; adverse verdict preserved |
+| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/focused.log](../../../research/2026-10-31/employee-progress-dashboard-533-evidence/focused.log) | Primary two-test result |
+| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/api-unit.log](../../../research/2026-10-31/employee-progress-dashboard-533-evidence/api-unit.log) | Primary full requested suite result |
+| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/static.log](../../../research/2026-10-31/employee-progress-dashboard-533-evidence/static.log) | Primary Ruff/format/mypy result |
+| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/browser.log](../../../research/2026-10-31/employee-progress-dashboard-533-evidence/browser.log) | Actual small/scale browser PASS output |
+| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/skip-audit.log](../../../research/2026-10-31/employee-progress-dashboard-533-evidence/skip-audit.log) | All individual raw skip records |
+| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/skip-audit.json](../../../research/2026-10-31/employee-progress-dashboard-533-evidence/skip-audit.json) | All unique skip IDs/reasons and zero execution |
+| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-evidence/provenance.json](../../../research/2026-10-31/employee-progress-dashboard-533-evidence/provenance.json) | Copy/source hashes and bounded browser/axe metadata |
 
 ## Next Steps
 

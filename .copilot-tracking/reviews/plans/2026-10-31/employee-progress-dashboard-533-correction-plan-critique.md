@@ -88,11 +88,11 @@ ms.date: 2026-10-31
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-correction-research.md](.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-correction-research.md) | Supplied bounded successor evidence |
-| [.copilot-tracking/plans/2026-10-31/employee-progress-dashboard-533-correction-plan.md](.copilot-tracking/plans/2026-10-31/employee-progress-dashboard-533-correction-plan.md) | Candidate requiring direct PC-001 disposition |
-| [.copilot-tracking/details/2026-10-31/employee-progress-dashboard-533-correction-phase-details.md](.copilot-tracking/details/2026-10-31/employee-progress-dashboard-533-correction-phase-details.md) | Matching execution and publication boundaries |
-| [.copilot-tracking/reviews/logs/2026-10-31/employee-progress-dashboard-533-review.md](.copilot-tracking/reviews/logs/2026-10-31/employee-progress-dashboard-533-review.md) | Preserved rejected original Review |
-| [.copilot-tracking/reviews/plans/2026-10-31/employee-progress-dashboard-533-correction-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/employee-progress-dashboard-533-correction-plan-critique.md) | This complete independent critique |
+| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-correction-research.md](../../../research/2026-10-31/employee-progress-dashboard-533-correction-research.md) | Supplied bounded successor evidence |
+| [.copilot-tracking/plans/2026-10-31/employee-progress-dashboard-533-correction-plan.md](../../../plans/2026-10-31/employee-progress-dashboard-533-correction-plan.md) | Candidate requiring direct PC-001 disposition |
+| [.copilot-tracking/details/2026-10-31/employee-progress-dashboard-533-correction-phase-details.md](../../../details/2026-10-31/employee-progress-dashboard-533-correction-phase-details.md) | Matching execution and publication boundaries |
+| [.copilot-tracking/reviews/logs/2026-10-31/employee-progress-dashboard-533-review.md](../../logs/2026-10-31/employee-progress-dashboard-533-review.md) | Preserved rejected original Review |
+| [.copilot-tracking/reviews/plans/2026-10-31/employee-progress-dashboard-533-correction-plan-critique.md](employee-progress-dashboard-533-correction-plan-critique.md) | This complete independent critique |
 
 ## Next Steps
 

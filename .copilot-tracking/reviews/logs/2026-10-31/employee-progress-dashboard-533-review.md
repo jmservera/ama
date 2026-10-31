@@ -190,15 +190,15 @@ No new web runtime guideline defect identified in changed documentation. Claims 
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-research.md](.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-research.md) | Compared research, issue and partial official-source evidence |
-| [.copilot-tracking/plans/2026-10-31/employee-progress-dashboard-533-plan.md](.copilot-tracking/plans/2026-10-31/employee-progress-dashboard-533-plan.md) | Compared requirements, markers, critique dispositions and follow-ups |
-| [.copilot-tracking/details/2026-10-31/employee-progress-dashboard-533-phase-details.md](.copilot-tracking/details/2026-10-31/employee-progress-dashboard-533-phase-details.md) | Compared exact task and publication boundaries |
-| [.copilot-tracking/changes/2026-10-31/employee-progress-dashboard-533-changes.md](.copilot-tracking/changes/2026-10-31/employee-progress-dashboard-533-changes.md) | Original baseline/static/admission/NOT RUN evidence |
-| [.copilot-tracking/reviews/plans/2026-10-31/employee-progress-dashboard-533-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/employee-progress-dashboard-533-plan-critique.md) | Original Complete / Revise critique, preserved |
-| [src/api/tests/test_progress_dashboard.py](src/api/tests/test_progress_dashboard.py) | Shared overlay, inherited method and retained small tests |
-| [src/api/checks/progress_browser_check.py](src/api/checks/progress_browser_check.py) | Opt-in scale and retained real small-browser checker |
-| [src/api/README.md](src/api/README.md) | Changed scale/lock guidance and acceptance limits |
-| [.copilot-tracking/reviews/logs/2026-10-31/employee-progress-dashboard-533-review.md](.copilot-tracking/reviews/logs/2026-10-31/employee-progress-dashboard-533-review.md) | This single complete finding set and adverse outcome |
+| [.copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-research.md](../../../research/2026-10-31/employee-progress-dashboard-533-research.md) | Compared research, issue and partial official-source evidence |
+| [.copilot-tracking/plans/2026-10-31/employee-progress-dashboard-533-plan.md](../../../plans/2026-10-31/employee-progress-dashboard-533-plan.md) | Compared requirements, markers, critique dispositions and follow-ups |
+| [.copilot-tracking/details/2026-10-31/employee-progress-dashboard-533-phase-details.md](../../../details/2026-10-31/employee-progress-dashboard-533-phase-details.md) | Compared exact task and publication boundaries |
+| [.copilot-tracking/changes/2026-10-31/employee-progress-dashboard-533-changes.md](../../../changes/2026-10-31/employee-progress-dashboard-533-changes.md) | Original baseline/static/admission/NOT RUN evidence |
+| [.copilot-tracking/reviews/plans/2026-10-31/employee-progress-dashboard-533-plan-critique.md](../../plans/2026-10-31/employee-progress-dashboard-533-plan-critique.md) | Original Complete / Revise critique, preserved |
+| [src/api/tests/test_progress_dashboard.py](../../../../src/api/tests/test_progress_dashboard.py) | Shared overlay, inherited method and retained small tests |
+| [src/api/checks/progress_browser_check.py](../../../../src/api/checks/progress_browser_check.py) | Opt-in scale and retained real small-browser checker |
+| [src/api/README.md](../../../../src/api/README.md) | Changed scale/lock guidance and acceptance limits |
+| [.copilot-tracking/reviews/logs/2026-10-31/employee-progress-dashboard-533-review.md](employee-progress-dashboard-533-review.md) | This single complete finding set and adverse outcome |
 
 ## Next Steps
 
