@@ -135,7 +135,19 @@ class GateTests(unittest.TestCase):
     def test_chat_panel_required_receipt_rejects_missing_flag_selector_or_execution(self) -> None:
         original = self.scoped_receipt(["browser"])
         gate.verify_commands(self.root, self.out, original)
-        for mutation in ("missing", "flag", "selector", "skip", "zero", "unexpected-skip"):
+        for mutation in (
+            "missing",
+            "flag",
+            "selector",
+            "skip",
+            "zero",
+            "unexpected-skip",
+            "wrong-success",
+            "missing-success",
+            "duplicate-success",
+            "extra-success",
+            "wrong-count",
+        ):
             with self.subTest(mutation=mutation):
                 receipt = copy.deepcopy(original)
                 row = next(
@@ -151,6 +163,25 @@ class GateTests(unittest.TestCase):
                     row["env"].pop("ZF_BROWSER_TESTS")
                 elif mutation == "selector":
                     row["argv"][-1] = "test_chat_panel.PanelTests"
+                elif mutation.endswith("success") or mutation == "wrong-count":
+                    test = gate.CHAT_PANEL_DISCOVERY_SKIP[0]
+                    result = f"{test} ... ok\n"
+                    if mutation == "wrong-success":
+                        result = result.replace("PanelTests", "OtherTests")
+                    elif mutation == "missing-success":
+                        result = ""
+                    elif mutation == "duplicate-success":
+                        result *= 2
+                    elif mutation == "extra-success":
+                        result += "test_x (test_x.Fixture.test_x) ... ok\n"
+                    count = 2 if mutation == "wrong-count" else 1
+                    text = f"{result}Ran {count} tests in 0.1s\n\nOK\n"
+                    path.write_text(text)
+                    row.update(
+                        gate.check_skips(text),
+                        sha256=gate.digest(path),
+                    )
+                    receipt["files"][row["log"]] = row["sha256"]
                 else:
                     test, reason = gate.CHAT_PANEL_DISCOVERY_SKIP
                     if mutation == "unexpected-skip":
@@ -171,6 +202,45 @@ class GateTests(unittest.TestCase):
                         gate.verify_commands(self.root, self.out, receipt)
                 finally:
                     path.write_text(saved)
+
+    def test_chat_panel_exact_success_parser_preserves_other_suite_contracts(self) -> None:
+        test = gate.CHAT_PANEL_DISCOVERY_SKIP[0]
+        text = f"{test} ... ok\nRan 1 test in 0.1s\n\nOK\n"
+        self.assertEqual(
+            gate.check_skips(text, integration=True, group="browser", expected_test=test),
+            {"tests": 1, "executed": 1, "skips": []},
+        )
+        unrelated = text.replace("PanelTests", "OtherTests")
+        self.assertEqual(
+            gate.check_skips(unrelated, integration=True, group="browser"),
+            {"tests": 1, "executed": 1, "skips": []},
+        )
+        for output in (unrelated, text.replace(" ... ok", " ... expected failure")):
+            with self.subTest(output=output):
+                with self.assertRaises(gate.GateError):
+                    gate.check_skips(output, integration=True, group="browser", expected_test=test)
+
+    def test_chat_panel_runtime_requires_exact_success_evidence(self) -> None:
+        runner = self.runner()
+        runner.snapshot = self.root
+        runner.group = "browser"
+        test = gate.CHAT_PANEL_DISCOVERY_SKIP[0]
+        text = f"{test} ... ok\nRan 1 test in 0.1s\n\nOK\n"
+        for output, valid in ((text, True), (text.replace("PanelTests", "OtherTests"), False)):
+            with self.subTest(valid=valid):
+                argv = [
+                    sys.executable,
+                    "-c",
+                    f"print({output!r})",
+                    gate.CHAT_PANEL_BROWSER_SELECTOR,
+                ]
+                if valid:
+                    runner.command(argv, suite=True, integration=True)
+                    self.assertEqual(runner.rows[-1]["executed"], 1)
+                    self.assertEqual(runner.rows[-1]["skips"], [])
+                else:
+                    with self.assertRaises(gate.GateError):
+                        runner.command(argv, suite=True, integration=True)
 
     def test_chat_panel_discovery_receipt_recomputes_scoped_skip_evidence(self) -> None:
         receipt = self.scoped_receipt(["project-api"])
@@ -335,6 +405,8 @@ class GateTests(unittest.TestCase):
             text = ""
             if check["suite"]:
                 text = "test_x ... ok\nRan 1 test in 0.1s\n\nOK\n"
+                if gate.CHAT_PANEL_BROWSER_SELECTOR in check["argv"]:
+                    text = f"{gate.CHAT_PANEL_DISCOVERY_SKIP[0]} ... ok\nRan 1 test in 0.1s\n\nOK\n"
                 row.update(gate.check_skips(text))
             (self.out / name).write_text(text)
             row.update(exit_code=0, log=name, sha256=gate.digest(self.out / name))
@@ -673,6 +745,8 @@ class GateTests(unittest.TestCase):
             text = "fixture success\n"
             if check["suite"]:
                 text = "test_x (test_x.Fixture.test_x) ... ok\nRan 1 test in 0.1s\n\nOK\n"
+                if gate.CHAT_PANEL_BROWSER_SELECTOR in check["argv"]:
+                    text = f"{gate.CHAT_PANEL_DISCOVERY_SKIP[0]} ... ok\nRan 1 test in 0.1s\n\nOK\n"
                 row.update(gate.check_skips(text, integration=check["integration"]))
             if check["argv"][0] == "git":
                 text = ""
