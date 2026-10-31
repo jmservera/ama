@@ -16,7 +16,7 @@ Current state: Ready after one Complete / Revise critique and direct disposition
 | --- | --- | --- | --- |
 | P01 | Regression-only implementation | Implemented | P01-T01 |
 | P02 | Validation/freeze | Passed | P02-T01 |
-| P03 | Review/publication | Not started | P03-T01, P03-T02, P03-T03 |
+| P03 | Review/publication | Review complete, publication pending | P03-T01, P03-T02, P03-T03 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Regression-only implementation
@@ -70,6 +70,11 @@ validation logs. Reviewer writes only
 .copilot-tracking/reviews/logs/2026-10-31/capacity-page-523-review.md.
 Preserve original adverse findings and route later work. No second critique/Review.
 Parent reconciles completed markers and state before local commit.
+
+One original independent Review executed Complete / Residual work. Scoped
+regression Conformant; no defects. RV-001 routes the planned complete gate and
+publication qualification to coordinator; RV-002/003 preserve live and
+hosted/human follow-ups. Do not rerun implementation Review.
 
 <!-- rpi:task id=P03-T02 -->
 ### P03-T02: Commit and complete gate

@@ -7,7 +7,7 @@ ms.date: 2026-10-31
 
 * Task ID: 523
 * Task slug: capacity-page-523
-* Planning status: Implementation validated; independent Review pending
+* Planning status: Implementation and one independent Review complete; publication pending
 * Plan date: 2026-10-31
 * Phase details: .copilot-tracking/details/2026-10-31/capacity-page-523-phase-details.md
 * Plan critique: .copilot-tracking/reviews/plans/2026-10-31/capacity-page-523-plan-critique.md
@@ -126,7 +126,7 @@ venv restores missing distribution metadata. Preserve all failed attempts.
 Dependency: P02.
 
 <!-- rpi:task id=P03-T01 -->
-#### [ ] P03-T01: Execute one independent Review
+#### [x] P03-T01: Execute one independent Review
 
 Review frozen test/evidence diff against synchronized current origin/main.
 Initial research/critique base 5666bd33e1827670e5c07e3e3063bbbe989b59d3 stays historical.
@@ -180,6 +180,9 @@ No significant/divergent user decision remains. Critique is not repeated.
 
 ## Handoff
 
-P01/P02 complete, source frozen. Parent synchronizes topic ancestry and proceeds
-to one independent Review, then original evidence commit and complete gate.
+P01/P02/P03-T01 complete, source frozen. Original independent Review executed
+Complete / Residual work, scoped regression Conformant, no source defect.
+RV-001 publication qualification is remaining P03-T02/P03-T03 work; RV-002 live
+owner verification and RV-003 hosted/human approval remain distinct follow-ups.
+Parent commits original Review and current evidence, then runs the complete gate.
 No runtime changes authorized because current local evidence confirms the repair.

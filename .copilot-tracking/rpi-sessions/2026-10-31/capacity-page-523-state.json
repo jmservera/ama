@@ -3,8 +3,8 @@
   "task_slug": "capacity-page-523",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-31/capacity-page-523-research.md",
@@ -12,7 +12,7 @@
     "details": ".copilot-tracking/details/2026-10-31/capacity-page-523-phase-details.md",
     "critique": ".copilot-tracking/reviews/plans/2026-10-31/capacity-page-523-plan-critique.md",
     "changes": ".copilot-tracking/changes/2026-10-31/capacity-page-523-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/logs/2026-10-31/capacity-page-523-review.md"
   },
   "confirmed_decisions": [
     {
@@ -39,12 +39,36 @@
       "decision": "Synchronize advancing main ancestry by non-rewriting merge into current topic only before Review/publication gate.",
       "status": "accepted",
       "evidence": "Current origin/main 1330869ea675ff019958846330108b4f45e163ce; tools/rpi-checks.py clean_identity requires candidate descent; unrelated infra/workflow/tooling/docs only."
+    },
+    {
+      "decision": "One original independent Review executed Complete / Residual work; scoped regression Conformant, no source defects.",
+      "status": "accepted",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-31/capacity-page-523-review.md; RV-001 publication qualification, RV-002 live owner verification, RV-003 hosted/human approval."
     }
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Implement",
-    "action": "Add one backend-preserving persisted legacy read regression and run exact validation."
+    "phase": "Follow-up",
+    "action": "Complete already-authorized original-evidence commit, full gate, verified exact-head assessment and topic publication; do not start new source work."
   },
-  "prioritized_follow_ups": null
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Complete gated publication qualification and topic PR",
+      "rationale": "Required remaining caller-authorized delivery step, before any remote publication.",
+      "evidence": "Review RV-001; plan P03-T02/P03-T03."
+    },
+    {
+      "rank": 2,
+      "task": "Owner live employee capacity verification",
+      "rationale": "Local SQL/browser evidence does not establish live acceptance; owner observation remains pending.",
+      "evidence": "Review RV-002; issue #523 live criterion."
+    },
+    {
+      "rank": 3,
+      "task": "Hosted checks and human approval",
+      "rationale": "Separate approval boundary after qualified publication, not satisfied by local checks.",
+      "evidence": "Review RV-003."
+    }
+  ]
 }
