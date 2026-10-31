@@ -8420,6 +8420,405 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   action, inference extension or live verification occurred. Owner operational
   approval, January funding/headroom and exact-head publication gates remain
   separate; the USD700 cap and source guards are unchanged.
+
+## [2026-10-29] query | Project-wide Microsoft Fabric fit assessment
+
+* Added the [component review and Fabric assessment](./research/microsoft-fabric-fit-assessment.md)
+  and its knowledge-base index entries. Source baseline is
+  `9b74ac8daaec2a880172e43161b37ac7f2c3f801`; current official product/pricing
+  sources were retrieved on 2026-10-29, with three independent component
+  investigations and a separate contrarian challenge.
+* Proposed retaining API/core/Azure SQL operational authority and deferring
+  mandatory dedicated Fabric, while preserving a selective read-only analytics
+  option for explicit portfolio/history requirements. Compared SQL/read models
+  and Power BI; recorded decision-changing capacity, workload, governance and
+  comparative-measurement evidence rather than asserting no analytics need.
+* Distinguished ledger history from current tables, JSON text and BIGINT from
+  native SQL type exclusions, private/keyless options, data-agent feature status,
+  OneLake/SQL security, route-specific gateway consumption, F2/F64 licensing,
+  illustrative non-regional pricing and expired earlier spending authority.
+  Preserved later canonical sensor-key integration and distinct synthetic
+  43.8M-row history versus declared three/day scale arithmetic.
+* Research/documents only: no application/infrastructure change, private data,
+  tenant/cloud operation, deployment, paid inference, benchmark, approval,
+  commit, push or PR. Existing adverse reviews and operational/human gates
+  remain unchanged; artifact/arithmetic/diff checks are not a complete local
+  publication gate or product acceptance.
+
+## [2026-10-30] query | Fabric assessment branch reconciliation (Refs #558)
+
+* Reconciled the [Fabric assessment](./research/microsoft-fabric-fit-assessment.md)
+  branch with main, preserving both sets of knowledge-base navigation and all
+  append-only log entries. Retained the original dated assessment and research
+  unchanged; this is not a new product or regulatory-currentness assessment.
+* Retained main's rubric records and scenario manifest. No application,
+  infrastructure, Azure resource, operational approval or issue closure is
+  introduced. Local reconciliation does not establish hosted CI or authorize
+  publication; the coordinator owns the subsequent push and checks.
+
+## [2026-10-29] query | Project-wide Microsoft Fabric fit assessment
+
+* Added the [component review and Fabric assessment](./research/microsoft-fabric-fit-assessment.md)
+  and its knowledge-base index entries. Source baseline is
+  `9b74ac8daaec2a880172e43161b37ac7f2c3f801`; current official product/pricing
+  sources were retrieved on 2026-10-29, with three independent component
+  investigations and a separate contrarian challenge.
+* Proposed retaining API/core/Azure SQL operational authority and deferring
+  mandatory dedicated Fabric, while preserving a selective read-only analytics
+  option for explicit portfolio/history requirements. Compared SQL/read models
+  and Power BI; recorded decision-changing capacity, workload, governance and
+  comparative-measurement evidence rather than asserting no analytics need.
+* Distinguished ledger history from current tables, JSON text and BIGINT from
+  native SQL type exclusions, private/keyless options, data-agent feature status,
+  OneLake/SQL security, route-specific gateway consumption, F2/F64 licensing,
+  illustrative non-regional pricing and expired earlier spending authority.
+  Preserved later canonical sensor-key integration and distinct synthetic
+  43.8M-row history versus declared three/day scale arithmetic.
+* Research/documents only: no application/infrastructure change, private data,
+  tenant/cloud operation, deployment, paid inference, benchmark, approval,
+  commit, push or PR. Existing adverse reviews and operational/human gates
+  remain unchanged; artifact/arithmetic/diff checks are not a complete local
+  publication gate or product acceptance.
+
+## [2026-10-30] query | Fabric review evidence corrections (Refs #558)
+
+* Corrected the maintained [Fabric assessment](./research/microsoft-fabric-fit-assessment.md)
+  and index to distinguish the 27 October renewed overall USD700 funding through
+  2026-12-31 from unknown remaining headroom, resident/inference sublimits and
+  unestablished Fabric-specific purchase permission. The earlier October25
+  exercise expiry is not the latest overall funding authority.
+* Added the configured serverless SQL 60-minute auto-pause/0.5-vCore baseline,
+  potential loss of idle compute savings, conservative no-auto-pause comparison
+  and post-trial cleanup/settings/actual-pause verification. Current W2/W8 do
+  not establish an automatic setting change; fresh SQL serverless sources
+  support the billing/idle conditions without conflating geo-replication.
+* Original research receives dated qualifications rather than rewritten
+  findings, including the 480-minute, three/day 131.025M dropout estimate,
+  not hourly sizing. The retained recommendation is conditional advice,
+  not a renewed purchase, deployment, benchmark or operational approval.
+
+## [2026-10-29] restructure | Capstone working set and technology rationale
+
+* Replaced the long capstone entry point with the
+  [current working set](../capstone/README.md): one 54-slide PPTX/native PDF,
+  [native/JSON authoring source](../capstone/source/README.md), 36 retained
+  media inputs with usage/hashes, synchronized pitch notes/Q&A and a separate
+  demo runbook. The older 18-slide brief, editable diagrams, icon/evidence
+  sources and dated reviews remain under history, not current scoring inputs.
+* The owner selected the existing Fabric research branch and approved exactly
+  15 obsolete generated exports for archive-backed removal. Full readback of
+  4,411 capstone/tracking entries and selected-file restore/hash checks preceded
+  removal; protected bytes were checked after the initial moves. The
+  [restore map and finite receipt](../capstone/history/README.md) record local
+  custody and portability limits. No original RPI evidence or thought-leadership
+  file was pruned; no broader cleanup authority is inferred.
+* Five existing technology pages explain rules/Decision 1/generation, shared
+  API/Entra/SQL/Blob, deferred workers and the private Event Hub route. Fabric
+  is a conditional read-only history/reporting option compared with SQL/read
+  models plus Power BI, not a mandatory dependency, purchase or SQL-ledger
+  replacement. Existing dated research, unknown benefits/current cost headroom
+  and expired authority remain explicit; no fresh provider/legal check occurred.
+* Independent image review raised seven original issues; corrections and
+  rerenders are retained in the [dated review](../capstone/source/review-2026-10-29.md).
+  Reader review exposed inherited legal/forecast claims, obsolete dynamic-return
+  instructions and a recording/fallback contradiction. Legal-status page 3 and
+  opening/scenario/demo notes were reconciled; current notes describe actual
+  fixed jumps. All six protected cost-slide bytes and calculations remain;
+  cost-note exceptions 32/36/52 change navigation sentences only.
+* Actual native rendering covers all 54 slides with zero revised-text overflow;
+  264 inherited bound warnings are not accessibility acceptance. The actual
+  scorer's isolated indexed fixture extracts 54 slides/54 notes, finds the
+  current deck and pitch/demo, and excludes source/history. Registry now pins
+  the exact deck and includes the demo folder; trusted-base integration remains
+  necessary for hosted scope. No score file was changed.
+* Existing rubric/authoring suites report 149 passed, 23 failed and one skip.
+  Seven score-fixture failures reproduce on unchanged HEAD; sixteen need
+  missing `jq`. Native/source/link/editor checks do not replace rehearsal,
+  fresh legal review, direct accessibility/human acceptance, current live-demo
+  authority, the complete RPI publication gate, hosted scoring or owner merge.
+  No commit, push, deployment, paid inference or new operational approval.
+
+## [2026-10-30] refine | Promote roadmap recommendations into the main story
+
+* Reviewed the retained proposals and added the
+  [roadmap register and explicit crosswalk](../capstone/source/roadmap-recommendations.md):
+  25 families through 22 grouped dispositions, with value hypotheses, reasons
+  to wait, simpler comparators and evidence-led adoption conditions. Existing
+  source work and required readiness are not presented as optional new features.
+* Promoted selective Fabric/Power BI into main page 14, source connectors,
+  Document Intelligence and M365 into page 15, and four improvement lanes into
+  page 23. Page 24 now asks for bounded scope/owners and a costed plan before
+  separately authorized execution, with results reviewed before expansion.
+  Opening, demo, close and appendix labels follow the same bounded argument.
+* Retrieved official Fabric and Power BI icons from the Microsoft Learn-linked
+  archive. Retained unchanged SVGs, native PNG derivatives, hashes, member/URL
+  provenance and permitted-use guidance. Two declared PNG package members
+  augment the 293-member captured baseline; all original media remain intact.
+  The rebuild verifies source/derived hashes, exact usage, aspect and native
+  action preservation. No dependency or paid platform was introduced.
+* Independent visual/story reviews and corrections are preserved in the
+  [dated review](../capstone/source/review-2026-10-30.md). Fixed wrapping,
+  presumed-benefit wording, mismatched visible calls to action, approval-order
+  ambiguity and an overlong paper detour. The architecture/IoT notes now
+  distinguish historical/source work, the actual bounded 29 October hub
+  reconciliation, and unmet live-to-SQL/full-route acceptance. The paper
+  remains unchanged and is not new causal or product evidence.
+* Native render preserves 54 slides/notes, all 108 existing navigation actions,
+  original timing and cost graphics/calculations. Final revised overflow is
+  zero; 234 inherited bound warnings are not accessibility acceptance.
+  Focused existing scorer regressions pass 22 tests. Actual isolated-index
+  extraction discovers the exact current deck/pitch/demo, excludes history/
+  baselines, reads all 54 note blocks and verifies main-route roadmap content
+  and both embedded official PNGs. Three negative preservation checks pass.
+* Updated the current deck/PDF, generated notes/Q&A, working guides and index;
+  previous delivery and heavy outputs remain in external working evidence.
+  The 29 October broad-suite failures retain their original scope; no new
+  full-suite pass, rehearsal, current legal/provider-cost review, live-service,
+  resident, human/accessibility or production acceptance is inferred. No score
+  file, application, infrastructure or original RPI evidence was changed.
+  No hosted score, complete publication gate, commit, push, cloud/tenant action,
+  paid inference or spending approval was performed by this task.
+
+## [2026-10-30] refine | Product-first story, DT journey and future context
+
+* Applied the owner's correction that Fabric and Power BI are not current
+  product components. Current pages 14-15 now explain the built Workbench,
+  owned/versioned controls, bounded AI, read-model reporting and actual file/CLI
+  adoption limits. Only closing pages 23-24 propose future history/semantics
+  and separately evaluated agent context. The prior roadmap/review above is
+  retained as the earlier candidate, not rewritten into the current outcome.
+* Worked with the DT Coach and Product Manager Advisor. The
+  [editable resident journey](../capstone/source/diagrams/discovery-journey/text-equivalent.md)
+  retains Excalidraw/SVG/PNG, deterministic generator, provision-level sources
+  and five pain -> design -> test traces. Page 8 shows the discovery method;
+  page 13 shows five resident moments with actions/needs, pain hypotheses and
+  proposed gains. Eight earlier challenge instruments and nine later atlas
+  instruments are not interviews; the 27+1 maps are hypotheses, not validation.
+* Added a [dated ontology follow-up](./research/microsoft-fabric-fit-assessment.md#future-agent-context-option-2026-10-30)
+  using official Fabric IQ/ontology pages retrieved 30 October. Ontology is
+  preview and a future context option, not current integration or automatic
+  quality/authority. The 60,000 fictional homes, 980 cases and 43.8M synthetic
+  readings remain separate cohorts. A curated SQL context can win without
+  adopting managed analytics; analytics and context comparisons are independent.
+* Independent product, visual and DT follow-ups found no material remaining
+  issue in their reviewed scopes after exact layout/narration corrections.
+  [Original findings and owner correction](../capstone/source/review-2026-10-30.md)
+  remain visible. Native render preserves 54 slides/notes, 108 action targets,
+  all timing and protected cost evidence; zero revised overflow and 231 inherited
+  bounds warnings do not establish accessibility or human acceptance.
+* Focused scorer regressions pass 22 tests; actual isolated-index extraction
+  verifies current product without early future logos, future-only page 23,
+  preview/independent context statements, image hashes and registered pitch/demo.
+  DT source checks pass 49 elements, 15 cells, 22 locators, 31 links and exact
+  regeneration. The approved Excalidraw viewer required sign-in; no diagram was
+  uploaded and no native browser export is claimed. The PNG is rasterized by
+  PowerPoint from the same-geometry SVG. Previous delivery is preserved externally.
+* No original RPI evidence, application/infrastructure, thought-leadership files,
+  scorecard or prior staged selection was discarded. No deployment, tenant
+  mutation, paid inference, spending approval, commit, push, hosted rubric run,
+  full RPI publication gate, rehearsal or direct user/AT acceptance was performed.
+
+## [2026-10-30] restructure | Restore illustrated capstone visuals on Linux
+
+* Refined 13 current slide layouts while preserving the product-first story.
+  Page 3 restores the original illustrated timeline; page 13 uses a locally
+  exported editable resident touchpoint map; page 39 adds a native pain/gain
+  value canvas. Hypotheses, proposed gains, assisted routes and separate human
+  authority remain explicit. No sentiment measurements or interviews are invented.
+* Updated the [source contract](../capstone/source/README.md#linux-preview),
+  [text equivalent](../capstone/source/diagrams/discovery-journey/text-equivalent.md),
+  [dated render findings](../capstone/source/review-2026-10-30.md#illustrated-visual-refresh-on-linux),
+  media hashes, delivery files, pitch notes and compact validation receipt.
+  The new Linux preview reconstructs all 108 fixed PDF jumps from the actual
+  candidate after LibreOffice drops them, then verifies their destinations
+  and hit regions. It does not invent Last Slide Viewed behaviour.
+* Build/Verify preserve 54 slides/notes, timing, protected costs and all 36
+  original media inputs. The 41 untouched same-renderer page images are
+  pixel-identical; 213 revised native text frames contain all source words.
+  Actual image inspection remains separate from that rectangular-frame check.
+* Focused checks: 27 PDF/rubric regressions, 21 native-shape checks, Ruff and
+  deterministic 68-element journey/source checks pass. Earlier curved-sector,
+  connector and PDF-navigation findings are preserved with their corrections.
+  Linux preview is not native Windows PowerPoint, human/AT acceptance, rehearsal,
+  hosted scoring or a publication-gate pass. Earlier adverse evidence is retained.
+
+## [2026-10-27] query | Rubric src counting and migration score reconciliation
+
+* Refs #198. Added the
+  [dated rubric reconciliation](../architecture/cutover-evidence-pack.md#rubric-src-counting-reconciliation-2026-10-27)
+  and updated the index and rubric guide. Preserved original sign-off outcomes
+  and every earlier log entry.
+* Verified src package/tests/manifest/Dockerfile coverage and excluded
+  vendor/private/build paths. #295/#300/#302 already removed legacy includes;
+  no production registry, rubric_version, score or workflow/check name changed.
+* Recorded 47/100 original baseline and carried migration snapshots separately
+  from #499's actual 77/100 vs 77/100 retirement comparison. No attributable
+  migration gain, fresh per-migration assessment or retroactive ordering is
+  claimed. Re-evidence routes identify seven criteria and their source PRs.
+* Re-assessed historical 19 failures: current baseline 18 failed/355 passed/
+  seven skipped; after migration-related test repairs, one unrelated
+  deck-selection failure/374 passed/seven missing-runtime skips remain.
+  Thirty-one migration-targeted checks pass. No full gate, cloud, private data
+  or scorer dispatch. Missing historic comparisons and prescribed sequence
+  remain explicit acceptance gaps; this delivery references rather than closes.
+
+## [2026-10-29] update | PR #507 main integration, Refs #198
+
+* Rebased onto main `5653547507f3056f09a726a18516237728da5e5b`,
+  retaining both sides of the cut-over evidence pack, KB index and this
+  append-only log. Earlier entries and original RPI outcomes remain unchanged.
+* Kept main's complete rubric tree and scenario manifest at the owner's
+  direction. Qualified the reconciliation and index so original rubric
+  repairs and test counts are not presented as the rebased candidate's delta.
+* Corrected the index's duplicate date metadata while retaining its current
+  date. No application source, workflow, score, Azure resource or private
+  dataset changed; no push, issue acceptance or hosted-CI result is claimed.
+
+## [2026-10-29] update | PR #507 conflict rebase, Refs #198
+
+* Rebased onto main `356a3cfbaa2cd63a6fbf80e87e11a29cacaaf4c7`.
+  Preserved main's entire log prefix, both original #198 append entries,
+  independent index updates and all fourteen prior RPI artifacts unchanged.
+* Updated the existing
+  [integration qualification](../architecture/cutover-evidence-pack.md#main-integration-qualification-2026-10-29)
+  with the later base and fresh local outcomes. Main's entire rubric tree and
+  scenario manifest are retained byte-for-byte; no application, workflow,
+  Azure resource or private-data change was made.
+* Core/API lint, format, typing and twelve focused tests passed, including
+  scenario source-pin validation. The inherited rubric suite still has
+  18 failures and seven missing-runtime skips; this is not CI-green evidence.
+  No full API suite, full publication gate, push or hosted run was performed.
+
+## [2026-10-30] update | PR #507 current-main synchronization, Refs #198
+
+* Rebased onto main `91e890e07af036263316c153cbc7ceff780cdaa2`, then onto
+  concurrently updated `ffd8f35e63b24905b9aeb937dbf2a7fe9968747f`, retaining
+  main's complete log prefix, every original topic entry and independent index
+  additions, including monitoring, finance and existing-hub reconciliation.
+* Added the [current synchronization qualification](../architecture/cutover-evidence-pack.md#current-main-synchronization-2026-10-30)
+  and indexed it without rewriting earlier dated results or acceptance gaps.
+  Main's rubric and scenario manifest remain authoritative and unchanged.
+* No application, workflow, infrastructure or legacy code changed. No Azure
+  resource operation, push, fresh hosted result or issue acceptance is claimed.
+  Dated RPI artifacts retain the local commands, results and independent Review;
+  publication and hosted checks remain coordinator-owned.
+* Fresh core/API lint, format, typing and twelve focused tests pass, as do
+  twenty-five migration tests. Unchanged main rubric inputs still yield
+  18 failures, 355 passes and seven runtime skips. Prepare reports no scored
+  artifact change; no full API suite or publication gate was run.
+
+## [2026-10-30] update | PR #507 review evidence correction, Refs #198
+
+* Corrected the existing
+  [rubric reconciliation](../architecture/cutover-evidence-pack.md#pr-507-review-correction-2026-10-30)
+  and indexed the distinction between the original candidate and integrated
+  documentation-only delta, including their different historical frozen diffs.
+* Qualified discarded fixture/guide claims and acceptance rows in place.
+  Original 374/1/7 and 31 fixture passes remain historical; integrated results
+  are 355 passed, 18 failed and seven runtime skips, not a green suite.
+* Replaced the unregistered rubric-guide B6 route with scored `src/README.md`
+  in proposed later PR `docs(src): strengthen B6 navigation and evidence`,
+  only when that PR actually changes the artifact. No score gain, new scored
+  evidence, historical acceptance or remote metadata update is claimed.
+* Prepared the replacement PR description separately for owner application.
+  No rubric, test, source, workflow or score edits; local-only commit, no push.
+
+## [2026-10-30] restructure | Integrate main into the illustrated capstone topic
+
+* Owner selected merging main, not rewriting the topic's history. Integrated
+  reviewed base `29eab2e50dd7f958ea2f8d385411562e5573e8e9`; resolved only the
+  index and append-only log conflicts. Kept current capstone/archive routes,
+  main's separate dated-claim review and every original log-entry line from
+  both sides in order. Obsolete asset paths were not reintroduced.
+* Refreshed the journey's source-policy evidence pin after main changed the
+  regulatory register. Excalidraw/SVG metadata and catalog are synchronized;
+  the native PNG remains byte-identical. No fresh legal/currentness or resident
+  acceptance claim follows. Cache-free focused-test commands keep temporary
+  inputs outside the publication checkout.
+* Preserved the independent pre-integration scoped PASS at
+  `37cb87eb6b04549158ed47d534c2e6344aa28408` in the
+  [dated review](../capstone/source/review-2026-10-30.md#owner-authorized-main-integration).
+  Integrated exact-head assessment and publication remain separate gates;
+  no prior outcome is relabelled as approval of the merge.
+
+## [2026-10-30] restructure | Remove ambiguous Q&A index click regions
+
+* An additional interaction-specific check found the inherited B04/B05 index
+  overlap that target/bounds equivalence alone did not exclude. Moved only
+  B04 up 0.07 inch, retaining text, font, frame height and destination.
+* The Linux preview now refuses differing-target overlap before and after
+  saving. Both synthetic overlap regressions and refusal of the actual
+  pre-fix deck pass. All 27 answers and fixed index returns are reachable,
+  with 108 links and zero ambiguous overlaps in the corrected PDF.
+* Fresh focused results: 29 PDF/rubric tests, 21 native-shape checks, 215
+  text frames and 40 unchanged page renders. Only the index differs from the
+  prior reviewed render; all 13 illustrated redesigns remain pixel-identical.
+* Preserved earlier scoped reviews and the superseded full-gate run. The latter
+  was stopped, not presented as passed. Corrected exact-head publication checks
+  and independent follow-up remain required; no stale receipt is reused.
+
+## [2026-10-30] restructure | Pair chat-panel discovery with enforced browser coverage
+
+* Resumed the capstone publication workflow at the owner's direction and
+  integrated latest main without rewriting history or changing deck artifacts.
+* For #572, registered only the exact chat-panel test identity/reason as a
+  general-discovery opt-in. The shared declaration also requires real browser
+  execution in both the runner inventory and runtime; the existing API browser
+  CI step executes the same selector with `ZF_BROWSER_TESTS=1`.
+* Preserved strict integration-skip rejection, required-command verification,
+  workflow/check names and all other gates. The broad skip-reason allowlist is
+  unchanged. Error output now isolates unexpected skips instead of repeating
+  all declared SQL opt-outs.
+* Focused evidence: 34 gate/receipt regressions, strict typing, pinned Ruff and
+  actionlint pass. The named test ran in local Chromium with one test, zero
+  skips and no real account, cloud/model call or private dataset.
+* Original failed full-gate evidence and earlier reviews remain unchanged.
+  New source/workflow changes require a fresh exact-head gate and independent
+  assessment; this entry is not issue acceptance, hosted success or a waiver.
+
+## [2026-10-31] update | Local Fabric conflict recovery and review corrections, Refs #558
+
+* The owner selected a local rebase, without force-push. Replayed the existing
+  Fabric/capstone topic onto execution main `18602ae7`, preserving main's exact
+  log prefix, every original branch log entry and all six reviewed Fabric
+  research files. The recovery branch retains the original published tip.
+* Retained upstream gate logic, regression tests, scenario manifest and recorded
+  rubric scores rather than replaying obsolete duplicates. Preserved the
+  branch's intentional capstone registry changes and hosted chat-panel browser
+  command, updating its workflow binding without weakening skip enforcement.
+* The [source-binding correction](../capstone/source/review-2026-10-30.md#source-binding-and-guard-compatibility-2026-10-31)
+  documents exact LF hashing and reruns the real deck verifier. All 54 slides,
+  108 actions and 296 members verify; delivered PPTX/PDF bytes are unchanged.
+  Windows-compatible NaN/infinity guards pass all 32 local shape checks.
+* Core/API lint, format, typing and 12 focused units pass; 35 gate regressions,
+  25 migration regressions, nine PDF checks and the actual named Chromium case
+  pass. The broader rubric run has 17 failures, all also present on unchanged
+  main; that baseline has one additional registry failure. No score or
+  unrelated test expectation was altered to hide those results.
+* Main advanced to `ec2d7842` during validation. Its integration and affected
+  revalidation are tracked separately in the existing recovery plan. Original
+  adverse evidence remains intact. No push, thread resolution, Azure/model
+  operation, full publication gate, native Windows execution or human
+  acceptance is claimed.
+
+## [2026-10-31] validation | Local Fabric recovery closeout, Refs #558
+
+* Completed the second local rebase onto observed main `ec2d7842` without
+  conflicts, retaining implementation `aedc6713`. Fresh preservation checks
+  confirm main ancestry, upstream scores/manifest/gate ownership, unchanged
+  Fabric research and delivery, and the verified source-to-deck receipt.
+* Repeated core/API static checks pass on the new base. Ten core units and
+  three API units, including actual Chromium execution, pass without skips.
+  The earlier 17 rubric failures remain explicitly dated inherited failures,
+  not a current full-suite pass or a fresh rubric grade.
+* The [independent continuation Review](../../.copilot-tracking/reviews/logs/2026-10-30/fabric-rebase-558-review.md#2026-10-31-independent-continuation-review)
+  is Conformant within its bounded scope with zero correctness findings.
+  Its original response and read-only persistence limitation are preserved;
+  parent persistence does not turn it into final-publication approval.
+* Final closeout is metadata/logs only. The remote PR branch and both review
+  threads remain unchanged pending authorized publication. No force-push,
+  full publication gate, native Windows execution, hosted approval or owner
+  merge approval is implied.
 ## [2026-10-30] query | Composed local sensor handover contract, Refs #188
 
 * Updated the existing IoT synthesis and index for optional composed replay,
@@ -8430,3 +8829,77 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   physical calibration, OD-43 and whole-issue acceptance remain unproven.
 * No Azure, deployment, live sign-in, private dataset, consent/approval change
   or issue-status change is performed.
+
+## [2026-10-31] query | Canonical capstone source hashing, Refs #558
+
+* Updated the source guide, owning verifier and compact receipt to normalize
+  CRLF and lone CR to LF for four textual source hashes. BOM, whitespace and
+  all other bytes remain significant; invalid UTF-8 fails. Existing global
+  LF attributes already cover these files; binary/media hashes remain exact.
+* Actual Verify on the unchanged delivered deck passes in an isolated Microsoft
+  PowerShell 7.4.6 Linux container: 54 slides/notes, all media, native navigation,
+  timing and protected cost evidence. Receipt fields come from that successful
+  report, not digest substitution. Source semantics and existing 32 native
+  shape assertions pass; all four guards already use IsNaN/IsInfinity.
+* Added the source-hash regression and index clarification. Windows PowerShell
+  5.1/Office and human acceptance remain unperformed. This local source
+  verification is not the complete publication gate or hosted approval.
+
+## [2026-10-31] query | Employee loading and briefing assurance correction, Refs #531
+
+* Merged current main into the existing employee topic without rewriting
+  history; retained main's rubric, matching workflow hashes and both log histories.
+* Executed the existing local loading/briefing browser check after waiting
+  for shared capacity. Static no-script/cold-start/retry and all three real
+  draft-review outcomes passed, with same-ID manager-export persistence,
+  repeat refusal and unchanged permitted case projections.
+* Four pinned axe-core 4.10.3 scans had zero violations; three viewport
+  scans retain incomplete colour-contrast checks for human assessment.
+  API discovery ran 1,430 tests with 320 recorded opt-in/nonapplicable skips;
+  configured Ruff lint/format checks passed.
+* Updated the API guide and index with observed local results. Original
+  blocked Review remains historical; no live site/model/identity, Azure,
+  specialist-note, assistive-technology or operational acceptance is claimed.
+  Complete exact-head publication gating remains separate from these checks.
+
+## [2026-10-31] query | Employee identity acceptance correction, Refs #570
+
+* Updated the [API acceptance guide](../../src/api/README.md#employee-acceptance-identity-check-570)
+  and knowledge index with fresh navigation/action admission and correlated
+  rendered-map acceptance. Original adverse Review and gate attempts retained.
+* Integrated main's rubric unchanged and preserved both knowledge histories
+  without rewriting previous entries. New local regression evidence remains
+  synthetic; independent Aadi object attestation and live chat/map/case
+  verification are unmet. No credential read, sign-in or Azure change.
+
+## [2026-10-31] query | Employee acceptance review-thread repairs, Refs #570
+
+* Updated the [API acceptance guide](../../src/api/README.md#employee-acceptance-identity-check-570)
+  and index with cluster-only absolute centroid tolerance and post-install
+  hosted Chromium enforcement. Points/geographic validation and qualified
+  discovery remain strict; the workflow hash pin changes with the workflow.
+* The producer-derived 501-home regression reproduces roundoff before the fix.
+  Synthetic local checks do not establish live employee acceptance or hosted
+  CI success. Current owner direction uses CI as the publication gate without
+  waiting for the full local gate; original adverse evidence stays intact.
+
+## [2026-10-31] query | Mandatory employee acceptance local browser gate, Refs #570
+
+* Updated the [local gate guide](../../src/README.md#local-rpi-gate) and knowledge
+  index: default browser dispatch and trusted receipt verification require the
+  post-install employee acceptance CLI with pinned source-CI test import paths.
+* Three reported tests and zero skips are mandatory for this CLI; qualified
+  discovery skips and the SQL-only non-applicability exception cannot substitute
+  for execution. Synthetic tooling evidence does not establish live employee
+  acceptance, hosted CI success or human approval.
+## [2026-10-31] query | Resident scope and current AI contract, Refs #466
+
+* Updated the resident assistant design, API acceptance map and knowledge index
+  with the owner's explicit sensor/history/advisory-AI scope and standing IoT
+  priority. Earlier merged runtime is reused, not duplicated.
+* Preserved the dated 2026-10-27 model/cap/managed-identity decision and historical
+  selector description; added the current generated-question/protected-document
+  distinction. The old unproven scope statement is superseded prospectively.
+* Deployment AI remains off behind existing settings. No Azure, credential
+  lookup, paid inference, tariff/budget renewal, live/human acceptance or issue
+  closure is authorized by this reconciliation.

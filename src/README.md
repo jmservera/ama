@@ -173,6 +173,18 @@ reviewer protection, privileged what-if and deployment acceptance remain
 separate controls, not local successes.
 
 The required local `browser` group also runs
+`python -m checks.employee_acceptance_check` immediately after installing
+Chromium, without requiring `--extra-test`. It uses the pinned source-CI
+`PYTHONPATH=.:src:tests:../core/src:../agents/src:../core/tests:../agents/tests`
+from `src/api`. The CLI runs the three maintained employee acceptance Chromium
+regressions; both runtime and receipt verification require three reported tests
+and zero skips. Its exact command, cwd, import paths, suite/integration flags
+and successful exit are mandatory evidence. Qualified discovery skips cannot
+replace that execution, and the SQL-only non-applicability exception does not
+apply to this CLI. Synthetic Chromium results do not establish live employee
+identity or case acceptance.
+
+The same group runs
 `test_chat_panel.PanelTests.test_browser_warning_failure_keyboard_refusal_and_live_log`
 with `ZF_BROWSER_TESTS=1` and the API/core/agents test paths. Its verbose unittest
 log and executed/skipped counts are required receipt evidence. Only that exact
@@ -180,7 +192,11 @@ test ID with reason `opt-in local Chromium` is accepted during non-integration
 `project-api` discovery; its skip remains recorded, not counted as execution.
 The dedicated browser command must actually execute: missing/changed command
 identity, zero execution, dependency failures and unexpected skips block the
-gate and receipt verification. This local coverage adds to, not changes, the
+gate and receipt verification. Execution and verification also require exactly
+one verbose successful result for that test ID, one reported test and zero skips.
+An unrelated, missing, duplicated or additional result cannot substitute for the
+named case, even when aggregate counts and log hashes match.
+This local coverage adds to, not changes, the
 hosted workflow coverage inventory.
 
 General discovery also recognises the exact reason
@@ -191,6 +207,12 @@ and `project-api` boundary above. Recognised skips remain visible in receipt
 counts, never count as execution and still fail in required integration commands.
 Unknown or changed reasons fail closed. Recognising the asset discovery skip
 does not prove that its browser regression subsequently executes.
+
+Gate-parser unit fixtures capture their synthetic command transcripts locally.
+The outer tooling suite must report only its actually executed tests, not
+fixture skip lines; the regression checks that transcript with the unchanged
+skip parser. Browser callbacks bind iteration-specific route state, and the
+required isolated browser lint/format checks remain enabled.
 
 ShellCheck is a required preflight dependency, not an optional actionlint
 enhancement: native workflow lint must analyze shell scripts as hosted lint

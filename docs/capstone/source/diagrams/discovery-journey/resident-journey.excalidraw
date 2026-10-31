@@ -1,0 +1,4842 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "GitHub Copilot / bounded DT presentation collaboration",
+  "elements": [
+    {
+      "id": "journey-canvas",
+      "type": "rectangle",
+      "x": 0,
+      "y": 0,
+      "width": 1600,
+      "height": 560,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "#FAF9F6",
+      "fillStyle": "solid",
+      "strokeWidth": 0,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 101,
+      "version": 1,
+      "versionNonce": 201,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "role": "canvas",
+        "title": "Zava Forward: a resident's retrofit journey",
+        "date": "2026-10-30",
+        "canvas": {
+          "width": 1600,
+          "height": 560
+        },
+        "status": "Desk-research hypothesis; direct resident validation pending",
+        "method": "Case brief and official-sector research -> nine role RESEARCH INSTRUMENTS -> 28 journey HYPOTHESES -> pain/gain synthesis -> bounded design choices and tests",
+        "counting": "The 2026-09-26 agent-request challenge used eight instruments; the 2026-10-14 atlas used nine, including the Executive Reviewer. The 28 maps are 27 companion maps plus one leasehold-service staff map; two subjourneys and six later synthetic portal scripts are not additional stage maps.",
+        "geometrySource": "build-resident-journey.mjs",
+        "svgBoundary": "Same-geometry SVG from the editable Excalidraw elements; no observed or quantified sentiment curve",
+        "authority": "Human roles are proposed responsibilities, not verified postholder appointments. Gains are proposed responses, not delivered resident benefits. Independent QA, assisted routes, works choice and the separate human safety route remain mandatory design boundaries.",
+        "sources": {
+          "brief": {
+            "path": "docs/case_study_48_original.md",
+            "line": 15,
+            "section": "Business Challenge",
+            "sha256": "bf8f4462c41b58c8c92c40dd3ebeeba49eacae59b379daa67ee465ee51fcaadd",
+            "classification": "Case-study fact; requested autonomy and outcomes are not results",
+            "localLink": "../../../../case_study_48_original.md#L15"
+          },
+          "profile": {
+            "path": "docs/reference/research/company/company-profile-research.md",
+            "line": 261,
+            "section": "Resident Trust, Consent, and Accessibility",
+            "sha256": "872e88138440024f438d22ec9d2268a9ddcae205009b18729eb6630ba4e729e5",
+            "classification": "Sector synthesis and unknown company details",
+            "localLink": "../../../../reference/research/company/company-profile-research.md#L261"
+          },
+          "challenge": {
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 21,
+            "section": "Purpose and Method",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Eight role research instruments; not interviews",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L21"
+          },
+          "coordination": {
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 241,
+            "section": "Contractor and Resident Coordination Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis and bounded design proposal",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+          },
+          "quality": {
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 315,
+            "section": "Quality Verification Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis; no AI quality acceptance",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L315"
+          },
+          "atlas": {
+            "path": "docs/reference/research/ux/customer-journeys/customer-journey-atlas.md",
+            "line": 23,
+            "section": "Evidence and scope",
+            "sha256": "ecca463203727675871236e057ddcd9f461eaf7c03f246962ba0cfcc6ffca3f8",
+            "classification": "Nine role research instruments; 27 companion maps plus one atlas map",
+            "localLink": "../../../../reference/research/ux/customer-journeys/customer-journey-atlas.md#L23"
+          },
+          "themes": {
+            "path": "docs/reference/research/ux/customer-journeys/customer-journey-atlas.md",
+            "line": 222,
+            "section": "Five design themes and tensions",
+            "sha256": "ecca463203727675871236e057ddcd9f461eaf7c03f246962ba0cfcc6ffca3f8",
+            "classification": "Cross-role synthesis hypotheses, not independent resident evidence",
+            "localLink": "../../../../reference/research/ux/customer-journeys/customer-journey-atlas.md#L222"
+          },
+          "resident": {
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          "assisted": {
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          },
+          "programme": {
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          "finance": {
+            "path": "docs/reference/research/ux/customer-journeys/finance.md",
+            "line": 16,
+            "section": "Evidence boundary and financial tensions",
+            "sha256": "98efd4cb9656a36d78b34decb0b2b9271380591e5cd408bcab4c45892d519f0e",
+            "classification": "Finance hypotheses; award, claim and cash remain distinct",
+            "localLink": "../../../../reference/research/ux/customer-journeys/finance.md#L16"
+          },
+          "addendum": {
+            "path": "docs/case_study_48_addendum.md",
+            "line": 1131,
+            "section": "Regulatory Evidence and Service Design",
+            "sha256": "24003266c4e2fb9c4b72e029366f333ddda1b67049ec75970d3bca527e6c0285",
+            "classification": "Maintained proposal; resident rights and bounded assistance",
+            "localLink": "../../../../case_study_48_addendum.md#L1131"
+          },
+          "delivery": {
+            "path": "docs/reference/research/ux/customer-journeys/customer-journey-atlas.md",
+            "line": 295,
+            "section": "Publication reconciliation",
+            "sha256": "ecca463203727675871236e057ddcd9f461eaf7c03f246962ba0cfcc6ffca3f8",
+            "classification": "Historical operator evidence; not human acceptance or measured benefit",
+            "localLink": "../../../../reference/research/ux/customer-journeys/customer-journey-atlas.md#L295"
+          },
+          "appointments": {
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 464,
+            "section": "Appointment control engineering boundary (2026-10-18, #87)",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Bounded synthetic engineering evidence; no live service acceptance",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L464"
+          },
+          "independent-qa": {
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 193,
+            "section": "Quality control engineering continuation (2026-10-17, #91)",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Bounded synthetic engineering evidence; professional authority unverified",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L193"
+          },
+          "commitments": {
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 527,
+            "section": "Resident commitment and remedy criterion audit (2026-10-17, #88)",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Bounded record and local engineering evidence; no delivered message or human acceptance",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L527"
+          },
+          "sector-research": {
+            "path": "docs/reference/research/sector/housing-association-primer.md",
+            "line": 21,
+            "section": "Source and Evidence Status",
+            "sha256": "7ec04becd4c46cb22019d4840b3d890399a97d67a9fb9895ee57514db6e7e6ea",
+            "classification": "Official statistics and regulator publications are sector context; secondary sources remain separately classified",
+            "localLink": "../../../../reference/research/sector/housing-association-primer.md#L21"
+          },
+          "safety-standard": {
+            "path": "docs/reference/regulatory/social-housing-regulation/social-housing-safety-and-quality-standard-2024.md",
+            "line": 109,
+            "section": "2.3.1  Registered providers must enable repairs and maintenance issues to be",
+            "sha256": "11bd029d903fce295585cb59f3bab24b95e0492a934f8144066a478d6c899d32",
+            "classification": "Regulatory standard, effective 2024-04-01; local snapshot 2026-09-19, not a fresh currentness check",
+            "localLink": "../../../../reference/regulatory/social-housing-regulation/social-housing-safety-and-quality-standard-2024.md#L109"
+          },
+          "hazard-guidance": {
+            "path": "docs/reference/regulatory/social-housing-regulation/awaabs-law-phase-1-guidance-2025.md",
+            "line": 206,
+            "section": "3 Awareness, triage and categorisation of hazards",
+            "sha256": "857feb1750b41fbed5c9b1186ce476bc54f710a08f91397277dde1d33c8fbefb",
+            "classification": "Official non-statutory guidance; local snapshot 2026-09-19; no clock interpretation or activation",
+            "localLink": "../../../../reference/regulatory/social-housing-regulation/awaabs-law-phase-1-guidance-2025.md#L206"
+          },
+          "resident-adjustments": {
+            "path": "docs/reference/regulatory/social-housing-regulation/awaabs-law-phase-1-guidance-2025.md",
+            "line": 313,
+            "section": "3.5     Information about the tenant",
+            "sha256": "857feb1750b41fbed5c9b1186ce476bc54f710a08f91397277dde1d33c8fbefb",
+            "classification": "Official non-statutory guidance on contact preferences and adjustments; not observed resident preferences",
+            "localLink": "../../../../reference/regulatory/social-housing-regulation/awaabs-law-phase-1-guidance-2025.md#L313"
+          },
+          "pas-overview": {
+            "path": "docs/reference/regulatory/retrofit-standards-and-funding/pas-2035-2023-bsi-overview.md",
+            "line": 13,
+            "section": "Conduct effective retrofits with PAS 2035",
+            "sha256": "90297bb179ec18ca276ced7102e59851ae4319e2d072c259e68e24f6601ecf36",
+            "classification": "Standards-body overview only, snapshot 2026-09-19; not the licensed standard or evidence of compliance",
+            "localLink": "../../../../reference/regulatory/retrofit-standards-and-funding/pas-2035-2023-bsi-overview.md#L13"
+          },
+          "source-policy": {
+            "path": "docs/reference/regulatory/README.md",
+            "line": 35,
+            "section": "Authority and Use",
+            "sha256": "c77b5041c4df71e53a79c703590e93a40717f7365d25cf8e6a055081c978ed4c",
+            "classification": "Dated source hierarchy; no fresh legal-currentness check",
+            "localLink": "../../../../reference/regulatory/README.md#L35"
+          }
+        }
+      }
+    },
+    {
+      "id": "touchpoint-rail",
+      "type": "line",
+      "x": 353,
+      "y": 40,
+      "width": 1080,
+      "height": 0,
+      "angle": 0,
+      "strokeColor": "#C7D8CF",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 3.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 102,
+      "version": 1,
+      "versionNonce": 202,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          1080,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": null
+    },
+    {
+      "id": "human-label",
+      "type": "text",
+      "x": 0,
+      "y": 131,
+      "width": 204,
+      "height": 33.059999999999995,
+      "angle": 0,
+      "strokeColor": "#50655E",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 103,
+      "version": 1,
+      "versionNonce": 203,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/company/company-profile-research.md#L261",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "profile",
+            "path": "docs/reference/research/company/company-profile-research.md",
+            "line": 261,
+            "section": "Resident Trust, Consent, and Accessibility",
+            "sha256": "872e88138440024f438d22ec9d2268a9ddcae205009b18729eb6630ba4e729e5",
+            "classification": "Sector synthesis and unknown company details",
+            "localLink": "../../../../reference/research/company/company-profile-research.md#L261"
+          }
+        ]
+      },
+      "text": "Human role",
+      "originalText": "Human role",
+      "fontSize": 29,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "middle",
+      "containerId": null,
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "contact-icon-disc",
+      "type": "ellipse",
+      "x": 317,
+      "y": 4,
+      "width": 72,
+      "height": 72,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "#E8F1ED",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 104,
+      "version": 1,
+      "versionNonce": 204,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "role": "touchpoint-icon",
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "assisted",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          },
+          {
+            "key": "coordination",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 241,
+            "section": "Contractor and Resident Coordination Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis and bounded design proposal",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+          }
+        ]
+      }
+    },
+    {
+      "id": "contact-icon-bubble",
+      "type": "line",
+      "x": 332,
+      "y": 21,
+      "width": 42,
+      "height": 38,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2.8,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 105,
+      "version": 1,
+      "versionNonce": 205,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "assisted",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          },
+          {
+            "key": "coordination",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 241,
+            "section": "Contractor and Resident Coordination Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis and bounded design proposal",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          42,
+          0
+        ],
+        [
+          42,
+          28
+        ],
+        [
+          16,
+          28
+        ],
+        [
+          5,
+          38
+        ],
+        [
+          9,
+          28
+        ],
+        [
+          0,
+          28
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": null
+    },
+    {
+      "id": "contact-icon-message-one",
+      "type": "line",
+      "x": 341,
+      "y": 31,
+      "width": 24,
+      "height": 0,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2.8,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 106,
+      "version": 1,
+      "versionNonce": 206,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "assisted",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          },
+          {
+            "key": "coordination",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 241,
+            "section": "Contractor and Resident Coordination Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis and bounded design proposal",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          24,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": null
+    },
+    {
+      "id": "contact-icon-message-two",
+      "type": "line",
+      "x": 341,
+      "y": 39,
+      "width": 17,
+      "height": 0,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2.8,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 107,
+      "version": 1,
+      "versionNonce": 207,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "assisted",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          },
+          {
+            "key": "coordination",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 241,
+            "section": "Contractor and Resident Coordination Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis and bounded design proposal",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          17,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": null
+    },
+    {
+      "id": "contact-title",
+      "type": "text",
+      "x": 226,
+      "y": 86,
+      "width": 254,
+      "height": 38.76,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 108,
+      "version": 1,
+      "versionNonce": 208,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "assisted",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          },
+          {
+            "key": "coordination",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 241,
+            "section": "Contractor and Resident Coordination Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis and bounded design proposal",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+          }
+        ]
+      },
+      "text": "01 Contact",
+      "originalText": "01 Contact",
+      "fontSize": 34,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": null,
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "contact-owner",
+      "type": "text",
+      "x": 226,
+      "y": 131,
+      "width": 254,
+      "height": 33.059999999999995,
+      "angle": 0,
+      "strokeColor": "#50655E",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 109,
+      "version": 1,
+      "versionNonce": 209,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "assisted",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          },
+          {
+            "key": "coordination",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 241,
+            "section": "Contractor and Resident Coordination Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis and bounded design proposal",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+          }
+        ]
+      },
+      "text": "Housing",
+      "originalText": "Housing",
+      "fontSize": 29,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": null,
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "contact-action",
+      "type": "rectangle",
+      "x": 226,
+      "y": 180,
+      "width": 254,
+      "height": 104,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "#FAF9F6",
+      "fillStyle": "solid",
+      "strokeWidth": 0,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 110,
+      "version": 1,
+      "versionNonce": 210,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "contact-action-text",
+          "type": "text"
+        }
+      ],
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "role": "leaf",
+        "moment": "contact",
+        "row": "action",
+        "traceId": "D01",
+        "classification": "Desk-research journey hypothesis",
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "assisted",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          },
+          {
+            "key": "coordination",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 241,
+            "section": "Contractor and Resident Coordination Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis and bounded design proposal",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+          }
+        ]
+      }
+    },
+    {
+      "id": "contact-action-text",
+      "type": "text",
+      "x": 234,
+      "y": 188.5,
+      "width": 238,
+      "height": 86.63999999999999,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 111,
+      "version": 1,
+      "versionNonce": 211,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "assisted",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          },
+          {
+            "key": "coordination",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 241,
+            "section": "Contractor and Resident Coordination Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis and bounded design proposal",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+          }
+        ]
+      },
+      "text": "Call /\nbe heard",
+      "originalText": "Call /\nbe heard",
+      "fontSize": 38,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "contact-action",
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "contact-pain",
+      "type": "rectangle",
+      "x": 226,
+      "y": 302,
+      "width": 254,
+      "height": 104,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "#FFF1D6",
+      "fillStyle": "solid",
+      "strokeWidth": 0,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 112,
+      "version": 1,
+      "versionNonce": 212,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "contact-pain-text",
+          "type": "text"
+        }
+      ],
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "role": "leaf",
+        "moment": "contact",
+        "row": "pain",
+        "traceId": "D01",
+        "classification": "Desk-research journey hypothesis",
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "assisted",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          },
+          {
+            "key": "coordination",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 241,
+            "section": "Contractor and Resident Coordination Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis and bounded design proposal",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+          }
+        ]
+      }
+    },
+    {
+      "id": "contact-pain-text",
+      "type": "text",
+      "x": 234,
+      "y": 310.5,
+      "width": 238,
+      "height": 86.63999999999999,
+      "angle": 0,
+      "strokeColor": "#885500",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 113,
+      "version": 1,
+      "versionNonce": 213,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "assisted",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          },
+          {
+            "key": "coordination",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 241,
+            "section": "Contractor and Resident Coordination Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis and bounded design proposal",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+          }
+        ]
+      },
+      "text": "Story\nrepeated",
+      "originalText": "Story\nrepeated",
+      "fontSize": 38,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "contact-pain",
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "contact-gain",
+      "type": "rectangle",
+      "x": 226,
+      "y": 424,
+      "width": 254,
+      "height": 104,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "#E8F1ED",
+      "fillStyle": "solid",
+      "strokeWidth": 0,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 114,
+      "version": 1,
+      "versionNonce": 214,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "contact-gain-text",
+          "type": "text"
+        }
+      ],
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "role": "leaf",
+        "moment": "contact",
+        "row": "gain",
+        "traceId": "D01",
+        "classification": "Proposed design response; gain unmeasured",
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "assisted",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          },
+          {
+            "key": "coordination",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 241,
+            "section": "Contractor and Resident Coordination Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis and bounded design proposal",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+          }
+        ]
+      }
+    },
+    {
+      "id": "contact-gain-text",
+      "type": "text",
+      "x": 234,
+      "y": 432.5,
+      "width": 238,
+      "height": 86.63999999999999,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 115,
+      "version": 1,
+      "versionNonce": 215,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "assisted",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          },
+          {
+            "key": "coordination",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 241,
+            "section": "Contractor and Resident Coordination Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis and bounded design proposal",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+          }
+        ]
+      },
+      "text": "Clear\ncontact",
+      "originalText": "Clear\ncontact",
+      "fontSize": 38,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "contact-gain",
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "survey-icon-disc",
+      "type": "ellipse",
+      "x": 587,
+      "y": 4,
+      "width": 72,
+      "height": 72,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "#E8F1ED",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 116,
+      "version": 1,
+      "versionNonce": 216,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "role": "touchpoint-icon",
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "programme",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          {
+            "key": "assisted",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          }
+        ]
+      }
+    },
+    {
+      "id": "survey-icon-clipboard",
+      "type": "line",
+      "x": 605,
+      "y": 19,
+      "width": 36,
+      "height": 41,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2.8,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 117,
+      "version": 1,
+      "versionNonce": 217,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "programme",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          {
+            "key": "assisted",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          36,
+          0
+        ],
+        [
+          36,
+          41
+        ],
+        [
+          0,
+          41
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": null
+    },
+    {
+      "id": "survey-icon-clip",
+      "type": "line",
+      "x": 615,
+      "y": 15,
+      "width": 16,
+      "height": 9,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2.8,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 118,
+      "version": 1,
+      "versionNonce": 218,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "programme",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          {
+            "key": "assisted",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          9
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          16,
+          0
+        ],
+        [
+          16,
+          9
+        ],
+        [
+          0,
+          9
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": null
+    },
+    {
+      "id": "survey-icon-row-0",
+      "type": "line",
+      "x": 614,
+      "y": 35,
+      "width": 19,
+      "height": 0,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2.8,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 119,
+      "version": 1,
+      "versionNonce": 219,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "programme",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          {
+            "key": "assisted",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          19,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": null
+    },
+    {
+      "id": "survey-icon-row-1",
+      "type": "line",
+      "x": 614,
+      "y": 44,
+      "width": 19,
+      "height": 0,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2.8,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 120,
+      "version": 1,
+      "versionNonce": 220,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "programme",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          {
+            "key": "assisted",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          19,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": null
+    },
+    {
+      "id": "survey-icon-row-2",
+      "type": "line",
+      "x": 614,
+      "y": 53,
+      "width": 19,
+      "height": 0,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2.8,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 121,
+      "version": 1,
+      "versionNonce": 221,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "programme",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          {
+            "key": "assisted",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          19,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": null
+    },
+    {
+      "id": "survey-title",
+      "type": "text",
+      "x": 496,
+      "y": 86,
+      "width": 254,
+      "height": 38.76,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 122,
+      "version": 1,
+      "versionNonce": 222,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "programme",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          {
+            "key": "assisted",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          }
+        ]
+      },
+      "text": "02 Survey",
+      "originalText": "02 Survey",
+      "fontSize": 34,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": null,
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "survey-owner",
+      "type": "text",
+      "x": 496,
+      "y": 131,
+      "width": 254,
+      "height": 33.059999999999995,
+      "angle": 0,
+      "strokeColor": "#50655E",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 123,
+      "version": 1,
+      "versionNonce": 223,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "programme",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          {
+            "key": "assisted",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          }
+        ]
+      },
+      "text": "Assessor",
+      "originalText": "Assessor",
+      "fontSize": 29,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": null,
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "survey-action",
+      "type": "rectangle",
+      "x": 496,
+      "y": 180,
+      "width": 254,
+      "height": 104,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "#FAF9F6",
+      "fillStyle": "solid",
+      "strokeWidth": 0,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 124,
+      "version": 1,
+      "versionNonce": 224,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "survey-action-text",
+          "type": "text"
+        }
+      ],
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "role": "leaf",
+        "moment": "survey",
+        "row": "action",
+        "traceId": "D02",
+        "classification": "Desk-research journey hypothesis",
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "programme",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          {
+            "key": "assisted",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          }
+        ]
+      }
+    },
+    {
+      "id": "survey-action-text",
+      "type": "text",
+      "x": 504,
+      "y": 188.5,
+      "width": 238,
+      "height": 86.63999999999999,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 125,
+      "version": 1,
+      "versionNonce": 225,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "programme",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          {
+            "key": "assisted",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          }
+        ]
+      },
+      "text": "Plan\nvisit",
+      "originalText": "Plan\nvisit",
+      "fontSize": 38,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "survey-action",
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "survey-pain",
+      "type": "rectangle",
+      "x": 496,
+      "y": 302,
+      "width": 254,
+      "height": 104,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "#FFF1D6",
+      "fillStyle": "solid",
+      "strokeWidth": 0,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 126,
+      "version": 1,
+      "versionNonce": 226,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "survey-pain-text",
+          "type": "text"
+        }
+      ],
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "role": "leaf",
+        "moment": "survey",
+        "row": "pain",
+        "traceId": "D02",
+        "classification": "Desk-research journey hypothesis",
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "programme",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          {
+            "key": "assisted",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          }
+        ]
+      }
+    },
+    {
+      "id": "survey-pain-text",
+      "type": "text",
+      "x": 504,
+      "y": 310.5,
+      "width": 238,
+      "height": 86.63999999999999,
+      "angle": 0,
+      "strokeColor": "#885500",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 127,
+      "version": 1,
+      "versionNonce": 227,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "programme",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          {
+            "key": "assisted",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          }
+        ]
+      },
+      "text": "Needs\nmissed",
+      "originalText": "Needs\nmissed",
+      "fontSize": 38,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "survey-pain",
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "survey-gain",
+      "type": "rectangle",
+      "x": 496,
+      "y": 424,
+      "width": 254,
+      "height": 104,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "#E8F1ED",
+      "fillStyle": "solid",
+      "strokeWidth": 0,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 128,
+      "version": 1,
+      "versionNonce": 228,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "survey-gain-text",
+          "type": "text"
+        }
+      ],
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "role": "leaf",
+        "moment": "survey",
+        "row": "gain",
+        "traceId": "D02",
+        "classification": "Proposed design response; gain unmeasured",
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "programme",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          {
+            "key": "assisted",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          }
+        ]
+      }
+    },
+    {
+      "id": "survey-gain-text",
+      "type": "text",
+      "x": 504,
+      "y": 432.5,
+      "width": 238,
+      "height": 86.63999999999999,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 129,
+      "version": 1,
+      "versionNonce": 229,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "programme",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          {
+            "key": "assisted",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 111,
+            "section": "Shared frame and assisted service",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Proposed accessible service; not completed usability or AT validation",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L111"
+          }
+        ]
+      },
+      "text": "Visit\nsupport",
+      "originalText": "Visit\nsupport",
+      "fontSize": 38,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "survey-gain",
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "choice-icon-disc",
+      "type": "ellipse",
+      "x": 857,
+      "y": 4,
+      "width": 72,
+      "height": 72,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "#E8F1ED",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 130,
+      "version": 1,
+      "versionNonce": 230,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "role": "touchpoint-icon",
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "coordination",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 241,
+            "section": "Contractor and Resident Coordination Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis and bounded design proposal",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+          },
+          {
+            "key": "addendum",
+            "path": "docs/case_study_48_addendum.md",
+            "line": 1131,
+            "section": "Regulatory Evidence and Service Design",
+            "sha256": "24003266c4e2fb9c4b72e029366f333ddda1b67049ec75970d3bca527e6c0285",
+            "classification": "Maintained proposal; resident rights and bounded assistance",
+            "localLink": "../../../../case_study_48_addendum.md#L1131"
+          }
+        ]
+      }
+    },
+    {
+      "id": "choice-icon-shield",
+      "type": "line",
+      "x": 872,
+      "y": 15,
+      "width": 42,
+      "height": 48,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2.8,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 131,
+      "version": 1,
+      "versionNonce": 231,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "coordination",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 241,
+            "section": "Contractor and Resident Coordination Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis and bounded design proposal",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+          },
+          {
+            "key": "addendum",
+            "path": "docs/case_study_48_addendum.md",
+            "line": 1131,
+            "section": "Regulatory Evidence and Service Design",
+            "sha256": "24003266c4e2fb9c4b72e029366f333ddda1b67049ec75970d3bca527e6c0285",
+            "classification": "Maintained proposal; resident rights and bounded assistance",
+            "localLink": "../../../../case_study_48_addendum.md#L1131"
+          }
+        ]
+      },
+      "points": [
+        [
+          21,
+          0
+        ],
+        [
+          42,
+          8
+        ],
+        [
+          39,
+          29
+        ],
+        [
+          31,
+          40
+        ],
+        [
+          21,
+          48
+        ],
+        [
+          11,
+          40
+        ],
+        [
+          3,
+          29
+        ],
+        [
+          0,
+          8
+        ],
+        [
+          21,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": null
+    },
+    {
+      "id": "choice-icon-check",
+      "type": "line",
+      "x": 883,
+      "y": 30,
+      "width": 23,
+      "height": 16,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2.8,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 132,
+      "version": 1,
+      "versionNonce": 232,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "coordination",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 241,
+            "section": "Contractor and Resident Coordination Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis and bounded design proposal",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+          },
+          {
+            "key": "addendum",
+            "path": "docs/case_study_48_addendum.md",
+            "line": 1131,
+            "section": "Regulatory Evidence and Service Design",
+            "sha256": "24003266c4e2fb9c4b72e029366f333ddda1b67049ec75970d3bca527e6c0285",
+            "classification": "Maintained proposal; resident rights and bounded assistance",
+            "localLink": "../../../../case_study_48_addendum.md#L1131"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          8
+        ],
+        [
+          8,
+          16
+        ],
+        [
+          23,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": null
+    },
+    {
+      "id": "choice-title",
+      "type": "text",
+      "x": 766,
+      "y": 86,
+      "width": 254,
+      "height": 38.76,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 133,
+      "version": 1,
+      "versionNonce": 233,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "coordination",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 241,
+            "section": "Contractor and Resident Coordination Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis and bounded design proposal",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+          },
+          {
+            "key": "addendum",
+            "path": "docs/case_study_48_addendum.md",
+            "line": 1131,
+            "section": "Regulatory Evidence and Service Design",
+            "sha256": "24003266c4e2fb9c4b72e029366f333ddda1b67049ec75970d3bca527e6c0285",
+            "classification": "Maintained proposal; resident rights and bounded assistance",
+            "localLink": "../../../../case_study_48_addendum.md#L1131"
+          }
+        ]
+      },
+      "text": "03 Decide",
+      "originalText": "03 Decide",
+      "fontSize": 34,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": null,
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "choice-owner",
+      "type": "text",
+      "x": 766,
+      "y": 131,
+      "width": 254,
+      "height": 33.059999999999995,
+      "angle": 0,
+      "strokeColor": "#50655E",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 134,
+      "version": 1,
+      "versionNonce": 234,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "coordination",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 241,
+            "section": "Contractor and Resident Coordination Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis and bounded design proposal",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+          },
+          {
+            "key": "addendum",
+            "path": "docs/case_study_48_addendum.md",
+            "line": 1131,
+            "section": "Regulatory Evidence and Service Design",
+            "sha256": "24003266c4e2fb9c4b72e029366f333ddda1b67049ec75970d3bca527e6c0285",
+            "classification": "Maintained proposal; resident rights and bounded assistance",
+            "localLink": "../../../../case_study_48_addendum.md#L1131"
+          }
+        ]
+      },
+      "text": "Resident",
+      "originalText": "Resident",
+      "fontSize": 29,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": null,
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "choice-action",
+      "type": "rectangle",
+      "x": 766,
+      "y": 180,
+      "width": 254,
+      "height": 104,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "#FAF9F6",
+      "fillStyle": "solid",
+      "strokeWidth": 0,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 135,
+      "version": 1,
+      "versionNonce": 235,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "choice-action-text",
+          "type": "text"
+        }
+      ],
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "role": "leaf",
+        "moment": "choice",
+        "row": "action",
+        "traceId": "D03",
+        "classification": "Desk-research journey hypothesis",
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "coordination",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 241,
+            "section": "Contractor and Resident Coordination Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis and bounded design proposal",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+          },
+          {
+            "key": "addendum",
+            "path": "docs/case_study_48_addendum.md",
+            "line": 1131,
+            "section": "Regulatory Evidence and Service Design",
+            "sha256": "24003266c4e2fb9c4b72e029366f333ddda1b67049ec75970d3bca527e6c0285",
+            "classification": "Maintained proposal; resident rights and bounded assistance",
+            "localLink": "../../../../case_study_48_addendum.md#L1131"
+          }
+        ]
+      }
+    },
+    {
+      "id": "choice-action-text",
+      "type": "text",
+      "x": 774,
+      "y": 188.5,
+      "width": 238,
+      "height": 86.63999999999999,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 136,
+      "version": 1,
+      "versionNonce": 236,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "coordination",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 241,
+            "section": "Contractor and Resident Coordination Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis and bounded design proposal",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+          },
+          {
+            "key": "addendum",
+            "path": "docs/case_study_48_addendum.md",
+            "line": 1131,
+            "section": "Regulatory Evidence and Service Design",
+            "sha256": "24003266c4e2fb9c4b72e029366f333ddda1b67049ec75970d3bca527e6c0285",
+            "classification": "Maintained proposal; resident rights and bounded assistance",
+            "localLink": "../../../../case_study_48_addendum.md#L1131"
+          }
+        ]
+      },
+      "text": "Choose\nworks",
+      "originalText": "Choose\nworks",
+      "fontSize": 38,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "choice-action",
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "choice-pain",
+      "type": "rectangle",
+      "x": 766,
+      "y": 302,
+      "width": 254,
+      "height": 104,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "#FFF1D6",
+      "fillStyle": "solid",
+      "strokeWidth": 0,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 137,
+      "version": 1,
+      "versionNonce": 237,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "choice-pain-text",
+          "type": "text"
+        }
+      ],
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "role": "leaf",
+        "moment": "choice",
+        "row": "pain",
+        "traceId": "D03",
+        "classification": "Desk-research journey hypothesis",
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "coordination",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 241,
+            "section": "Contractor and Resident Coordination Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis and bounded design proposal",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+          },
+          {
+            "key": "addendum",
+            "path": "docs/case_study_48_addendum.md",
+            "line": 1131,
+            "section": "Regulatory Evidence and Service Design",
+            "sha256": "24003266c4e2fb9c4b72e029366f333ddda1b67049ec75970d3bca527e6c0285",
+            "classification": "Maintained proposal; resident rights and bounded assistance",
+            "localLink": "../../../../case_study_48_addendum.md#L1131"
+          }
+        ]
+      }
+    },
+    {
+      "id": "choice-pain-text",
+      "type": "text",
+      "x": 774,
+      "y": 310.5,
+      "width": 238,
+      "height": 86.63999999999999,
+      "angle": 0,
+      "strokeColor": "#885500",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 138,
+      "version": 1,
+      "versionNonce": 238,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "coordination",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 241,
+            "section": "Contractor and Resident Coordination Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis and bounded design proposal",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+          },
+          {
+            "key": "addendum",
+            "path": "docs/case_study_48_addendum.md",
+            "line": 1131,
+            "section": "Regulatory Evidence and Service Design",
+            "sha256": "24003266c4e2fb9c4b72e029366f333ddda1b67049ec75970d3bca527e6c0285",
+            "classification": "Maintained proposal; resident rights and bounded assistance",
+            "localLink": "../../../../case_study_48_addendum.md#L1131"
+          }
+        ]
+      },
+      "text": "Rushed\nchoice",
+      "originalText": "Rushed\nchoice",
+      "fontSize": 38,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "choice-pain",
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "choice-gain",
+      "type": "rectangle",
+      "x": 766,
+      "y": 424,
+      "width": 254,
+      "height": 104,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "#E8F1ED",
+      "fillStyle": "solid",
+      "strokeWidth": 0,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 139,
+      "version": 1,
+      "versionNonce": 239,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "choice-gain-text",
+          "type": "text"
+        }
+      ],
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "role": "leaf",
+        "moment": "choice",
+        "row": "gain",
+        "traceId": "D03",
+        "classification": "Proposed design response; gain unmeasured",
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "coordination",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 241,
+            "section": "Contractor and Resident Coordination Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis and bounded design proposal",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+          },
+          {
+            "key": "addendum",
+            "path": "docs/case_study_48_addendum.md",
+            "line": 1131,
+            "section": "Regulatory Evidence and Service Design",
+            "sha256": "24003266c4e2fb9c4b72e029366f333ddda1b67049ec75970d3bca527e6c0285",
+            "classification": "Maintained proposal; resident rights and bounded assistance",
+            "localLink": "../../../../case_study_48_addendum.md#L1131"
+          }
+        ]
+      }
+    },
+    {
+      "id": "choice-gain-text",
+      "type": "text",
+      "x": 774,
+      "y": 432.5,
+      "width": 238,
+      "height": 86.63999999999999,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 140,
+      "version": 1,
+      "versionNonce": 240,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "coordination",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 241,
+            "section": "Contractor and Resident Coordination Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis and bounded design proposal",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+          },
+          {
+            "key": "addendum",
+            "path": "docs/case_study_48_addendum.md",
+            "line": 1131,
+            "section": "Regulatory Evidence and Service Design",
+            "sha256": "24003266c4e2fb9c4b72e029366f333ddda1b67049ec75970d3bca527e6c0285",
+            "classification": "Maintained proposal; resident rights and bounded assistance",
+            "localLink": "../../../../case_study_48_addendum.md#L1131"
+          }
+        ]
+      },
+      "text": "Pause /\ndefer",
+      "originalText": "Pause /\ndefer",
+      "fontSize": 38,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "choice-gain",
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "works-icon-disc",
+      "type": "ellipse",
+      "x": 1127,
+      "y": 4,
+      "width": 72,
+      "height": 72,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "#E8F1ED",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 141,
+      "version": 1,
+      "versionNonce": 241,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "role": "touchpoint-icon",
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "programme",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          {
+            "key": "appointments",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 464,
+            "section": "Appointment control engineering boundary (2026-10-18, #87)",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Bounded synthetic engineering evidence; no live service acceptance",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L464"
+          }
+        ]
+      }
+    },
+    {
+      "id": "works-icon-roof",
+      "type": "line",
+      "x": 1138,
+      "y": 15,
+      "width": 50,
+      "height": 20,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2.8,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 142,
+      "version": 1,
+      "versionNonce": 242,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "programme",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          {
+            "key": "appointments",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 464,
+            "section": "Appointment control engineering boundary (2026-10-18, #87)",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Bounded synthetic engineering evidence; no live service acceptance",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L464"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          20
+        ],
+        [
+          25,
+          0
+        ],
+        [
+          50,
+          20
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": null
+    },
+    {
+      "id": "works-icon-home",
+      "type": "line",
+      "x": 1145,
+      "y": 30,
+      "width": 36,
+      "height": 31,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2.8,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 143,
+      "version": 1,
+      "versionNonce": 243,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "programme",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          {
+            "key": "appointments",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 464,
+            "section": "Appointment control engineering boundary (2026-10-18, #87)",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Bounded synthetic engineering evidence; no live service acceptance",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L464"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          31
+        ],
+        [
+          36,
+          31
+        ],
+        [
+          36,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": null
+    },
+    {
+      "id": "works-icon-door",
+      "type": "line",
+      "x": 1158,
+      "y": 44,
+      "width": 11,
+      "height": 17,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2.8,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 144,
+      "version": 1,
+      "versionNonce": 244,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "programme",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          {
+            "key": "appointments",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 464,
+            "section": "Appointment control engineering boundary (2026-10-18, #87)",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Bounded synthetic engineering evidence; no live service acceptance",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L464"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          17
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          11,
+          0
+        ],
+        [
+          11,
+          17
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": null
+    },
+    {
+      "id": "works-title",
+      "type": "text",
+      "x": 1036,
+      "y": 86,
+      "width": 254,
+      "height": 38.76,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 145,
+      "version": 1,
+      "versionNonce": 245,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "programme",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          {
+            "key": "appointments",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 464,
+            "section": "Appointment control engineering boundary (2026-10-18, #87)",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Bounded synthetic engineering evidence; no live service acceptance",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L464"
+          }
+        ]
+      },
+      "text": "04 Installation",
+      "originalText": "04 Installation",
+      "fontSize": 34,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": null,
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "works-owner",
+      "type": "text",
+      "x": 1036,
+      "y": 131,
+      "width": 254,
+      "height": 33.059999999999995,
+      "angle": 0,
+      "strokeColor": "#50655E",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 146,
+      "version": 1,
+      "versionNonce": 246,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "programme",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          {
+            "key": "appointments",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 464,
+            "section": "Appointment control engineering boundary (2026-10-18, #87)",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Bounded synthetic engineering evidence; no live service acceptance",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L464"
+          }
+        ]
+      },
+      "text": "Programme",
+      "originalText": "Programme",
+      "fontSize": 29,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": null,
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "works-action",
+      "type": "rectangle",
+      "x": 1036,
+      "y": 180,
+      "width": 254,
+      "height": 104,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "#FAF9F6",
+      "fillStyle": "solid",
+      "strokeWidth": 0,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 147,
+      "version": 1,
+      "versionNonce": 247,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "works-action-text",
+          "type": "text"
+        }
+      ],
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "role": "leaf",
+        "moment": "works",
+        "row": "action",
+        "traceId": "D04",
+        "classification": "Desk-research journey hypothesis",
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "programme",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          {
+            "key": "appointments",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 464,
+            "section": "Appointment control engineering boundary (2026-10-18, #87)",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Bounded synthetic engineering evidence; no live service acceptance",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L464"
+          }
+        ]
+      }
+    },
+    {
+      "id": "works-action-text",
+      "type": "text",
+      "x": 1044,
+      "y": 188.5,
+      "width": 238,
+      "height": 86.63999999999999,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 148,
+      "version": 1,
+      "versionNonce": 248,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "programme",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          {
+            "key": "appointments",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 464,
+            "section": "Appointment control engineering boundary (2026-10-18, #87)",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Bounded synthetic engineering evidence; no live service acceptance",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L464"
+          }
+        ]
+      },
+      "text": "Keep\nroutines",
+      "originalText": "Keep\nroutines",
+      "fontSize": 38,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "works-action",
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "works-pain",
+      "type": "rectangle",
+      "x": 1036,
+      "y": 302,
+      "width": 254,
+      "height": 104,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "#FFF1D6",
+      "fillStyle": "solid",
+      "strokeWidth": 0,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 149,
+      "version": 1,
+      "versionNonce": 249,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "works-pain-text",
+          "type": "text"
+        }
+      ],
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "role": "leaf",
+        "moment": "works",
+        "row": "pain",
+        "traceId": "D04",
+        "classification": "Desk-research journey hypothesis",
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "programme",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          {
+            "key": "appointments",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 464,
+            "section": "Appointment control engineering boundary (2026-10-18, #87)",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Bounded synthetic engineering evidence; no live service acceptance",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L464"
+          }
+        ]
+      }
+    },
+    {
+      "id": "works-pain-text",
+      "type": "text",
+      "x": 1044,
+      "y": 310.5,
+      "width": 238,
+      "height": 86.63999999999999,
+      "angle": 0,
+      "strokeColor": "#885500",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 150,
+      "version": 1,
+      "versionNonce": 250,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "programme",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          {
+            "key": "appointments",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 464,
+            "section": "Appointment control engineering boundary (2026-10-18, #87)",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Bounded synthetic engineering evidence; no live service acceptance",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L464"
+          }
+        ]
+      },
+      "text": "Disrupted\nday",
+      "originalText": "Disrupted\nday",
+      "fontSize": 38,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "works-pain",
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "works-gain",
+      "type": "rectangle",
+      "x": 1036,
+      "y": 424,
+      "width": 254,
+      "height": 104,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "#E8F1ED",
+      "fillStyle": "solid",
+      "strokeWidth": 0,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 151,
+      "version": 1,
+      "versionNonce": 251,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "works-gain-text",
+          "type": "text"
+        }
+      ],
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "role": "leaf",
+        "moment": "works",
+        "row": "gain",
+        "traceId": "D04",
+        "classification": "Proposed design response; gain unmeasured",
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "programme",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          {
+            "key": "appointments",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 464,
+            "section": "Appointment control engineering boundary (2026-10-18, #87)",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Bounded synthetic engineering evidence; no live service acceptance",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L464"
+          }
+        ]
+      }
+    },
+    {
+      "id": "works-gain-text",
+      "type": "text",
+      "x": 1044,
+      "y": 432.5,
+      "width": 238,
+      "height": 86.63999999999999,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 152,
+      "version": 1,
+      "versionNonce": 252,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "programme",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 50,
+            "section": "Current-state journey hypotheses",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Professional-role hypotheses; distinct technical and QA decisions",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
+          },
+          {
+            "key": "appointments",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 464,
+            "section": "Appointment control engineering boundary (2026-10-18, #87)",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "Bounded synthetic engineering evidence; no live service acceptance",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L464"
+          }
+        ]
+      },
+      "text": "Agreed\nvisit",
+      "originalText": "Agreed\nvisit",
+      "fontSize": 38,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "works-gain",
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "aftercare-icon-disc",
+      "type": "ellipse",
+      "x": 1397,
+      "y": 4,
+      "width": 72,
+      "height": 72,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "#E8F1ED",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 153,
+      "version": 1,
+      "versionNonce": 253,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "role": "touchpoint-icon",
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "quality",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 315,
+            "section": "Quality Verification Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis; no AI quality acceptance",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L315"
+          },
+          {
+            "key": "independent-qa",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 193,
+            "section": "Quality control engineering continuation (2026-10-17, #91)",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Bounded synthetic engineering evidence; professional authority unverified",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L193"
+          },
+          {
+            "key": "finance",
+            "path": "docs/reference/research/ux/customer-journeys/finance.md",
+            "line": 16,
+            "section": "Evidence boundary and financial tensions",
+            "sha256": "98efd4cb9656a36d78b34decb0b2b9271380591e5cd408bcab4c45892d519f0e",
+            "classification": "Finance hypotheses; award, claim and cash remain distinct",
+            "localLink": "../../../../reference/research/ux/customer-journeys/finance.md#L16"
+          }
+        ]
+      }
+    },
+    {
+      "id": "aftercare-icon-care",
+      "type": "line",
+      "x": 1411,
+      "y": 19,
+      "width": 44,
+      "height": 39,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2.8,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 154,
+      "version": 1,
+      "versionNonce": 254,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "quality",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 315,
+            "section": "Quality Verification Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis; no AI quality acceptance",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L315"
+          },
+          {
+            "key": "independent-qa",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 193,
+            "section": "Quality control engineering continuation (2026-10-17, #91)",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Bounded synthetic engineering evidence; professional authority unverified",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L193"
+          },
+          {
+            "key": "finance",
+            "path": "docs/reference/research/ux/customer-journeys/finance.md",
+            "line": 16,
+            "section": "Evidence boundary and financial tensions",
+            "sha256": "98efd4cb9656a36d78b34decb0b2b9271380591e5cd408bcab4c45892d519f0e",
+            "classification": "Finance hypotheses; award, claim and cash remain distinct",
+            "localLink": "../../../../reference/research/ux/customer-journeys/finance.md#L16"
+          }
+        ]
+      },
+      "points": [
+        [
+          22,
+          39
+        ],
+        [
+          0,
+          19
+        ],
+        [
+          0,
+          8
+        ],
+        [
+          8,
+          0
+        ],
+        [
+          17,
+          0
+        ],
+        [
+          22,
+          7
+        ],
+        [
+          27,
+          0
+        ],
+        [
+          36,
+          0
+        ],
+        [
+          44,
+          8
+        ],
+        [
+          44,
+          19
+        ],
+        [
+          22,
+          39
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": null
+    },
+    {
+      "id": "aftercare-title",
+      "type": "text",
+      "x": 1306,
+      "y": 86,
+      "width": 254,
+      "height": 38.76,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 155,
+      "version": 1,
+      "versionNonce": 255,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "quality",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 315,
+            "section": "Quality Verification Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis; no AI quality acceptance",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L315"
+          },
+          {
+            "key": "independent-qa",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 193,
+            "section": "Quality control engineering continuation (2026-10-17, #91)",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Bounded synthetic engineering evidence; professional authority unverified",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L193"
+          },
+          {
+            "key": "finance",
+            "path": "docs/reference/research/ux/customer-journeys/finance.md",
+            "line": 16,
+            "section": "Evidence boundary and financial tensions",
+            "sha256": "98efd4cb9656a36d78b34decb0b2b9271380591e5cd408bcab4c45892d519f0e",
+            "classification": "Finance hypotheses; award, claim and cash remain distinct",
+            "localLink": "../../../../reference/research/ux/customer-journeys/finance.md#L16"
+          }
+        ]
+      },
+      "text": "05 Live with it",
+      "originalText": "05 Live with it",
+      "fontSize": 34,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": null,
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "aftercare-owner",
+      "type": "text",
+      "x": 1306,
+      "y": 131,
+      "width": 254,
+      "height": 33.059999999999995,
+      "angle": 0,
+      "strokeColor": "#50655E",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 156,
+      "version": 1,
+      "versionNonce": 256,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "quality",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 315,
+            "section": "Quality Verification Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis; no AI quality acceptance",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L315"
+          },
+          {
+            "key": "independent-qa",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 193,
+            "section": "Quality control engineering continuation (2026-10-17, #91)",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Bounded synthetic engineering evidence; professional authority unverified",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L193"
+          },
+          {
+            "key": "finance",
+            "path": "docs/reference/research/ux/customer-journeys/finance.md",
+            "line": 16,
+            "section": "Evidence boundary and financial tensions",
+            "sha256": "98efd4cb9656a36d78b34decb0b2b9271380591e5cd408bcab4c45892d519f0e",
+            "classification": "Finance hypotheses; award, claim and cash remain distinct",
+            "localLink": "../../../../reference/research/ux/customer-journeys/finance.md#L16"
+          }
+        ]
+      },
+      "text": "QA / Housing",
+      "originalText": "QA / Housing",
+      "fontSize": 29,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": null,
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "aftercare-action",
+      "type": "rectangle",
+      "x": 1306,
+      "y": 180,
+      "width": 254,
+      "height": 104,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "#FAF9F6",
+      "fillStyle": "solid",
+      "strokeWidth": 0,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 157,
+      "version": 1,
+      "versionNonce": 257,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "aftercare-action-text",
+          "type": "text"
+        }
+      ],
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "role": "leaf",
+        "moment": "aftercare",
+        "row": "action",
+        "traceId": "D05",
+        "classification": "Desk-research journey hypothesis",
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "quality",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 315,
+            "section": "Quality Verification Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis; no AI quality acceptance",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L315"
+          },
+          {
+            "key": "independent-qa",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 193,
+            "section": "Quality control engineering continuation (2026-10-17, #91)",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Bounded synthetic engineering evidence; professional authority unverified",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L193"
+          },
+          {
+            "key": "finance",
+            "path": "docs/reference/research/ux/customer-journeys/finance.md",
+            "line": 16,
+            "section": "Evidence boundary and financial tensions",
+            "sha256": "98efd4cb9656a36d78b34decb0b2b9271380591e5cd408bcab4c45892d519f0e",
+            "classification": "Finance hypotheses; award, claim and cash remain distinct",
+            "localLink": "../../../../reference/research/ux/customer-journeys/finance.md#L16"
+          }
+        ]
+      }
+    },
+    {
+      "id": "aftercare-action-text",
+      "type": "text",
+      "x": 1314,
+      "y": 188.5,
+      "width": 238,
+      "height": 86.63999999999999,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 158,
+      "version": 1,
+      "versionNonce": 258,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "quality",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 315,
+            "section": "Quality Verification Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis; no AI quality acceptance",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L315"
+          },
+          {
+            "key": "independent-qa",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 193,
+            "section": "Quality control engineering continuation (2026-10-17, #91)",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Bounded synthetic engineering evidence; professional authority unverified",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L193"
+          },
+          {
+            "key": "finance",
+            "path": "docs/reference/research/ux/customer-journeys/finance.md",
+            "line": 16,
+            "section": "Evidence boundary and financial tensions",
+            "sha256": "98efd4cb9656a36d78b34decb0b2b9271380591e5cd408bcab4c45892d519f0e",
+            "classification": "Finance hypotheses; award, claim and cash remain distinct",
+            "localLink": "../../../../reference/research/ux/customer-journeys/finance.md#L16"
+          }
+        ]
+      },
+      "text": "Use /\nquery",
+      "originalText": "Use /\nquery",
+      "fontSize": 38,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "aftercare-action",
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "aftercare-pain",
+      "type": "rectangle",
+      "x": 1306,
+      "y": 302,
+      "width": 254,
+      "height": 104,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "#FFF1D6",
+      "fillStyle": "solid",
+      "strokeWidth": 0,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 159,
+      "version": 1,
+      "versionNonce": 259,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "aftercare-pain-text",
+          "type": "text"
+        }
+      ],
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "role": "leaf",
+        "moment": "aftercare",
+        "row": "pain",
+        "traceId": "D05",
+        "classification": "Desk-research journey hypothesis",
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "quality",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 315,
+            "section": "Quality Verification Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis; no AI quality acceptance",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L315"
+          },
+          {
+            "key": "independent-qa",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 193,
+            "section": "Quality control engineering continuation (2026-10-17, #91)",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Bounded synthetic engineering evidence; professional authority unverified",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L193"
+          },
+          {
+            "key": "finance",
+            "path": "docs/reference/research/ux/customer-journeys/finance.md",
+            "line": 16,
+            "section": "Evidence boundary and financial tensions",
+            "sha256": "98efd4cb9656a36d78b34decb0b2b9271380591e5cd408bcab4c45892d519f0e",
+            "classification": "Finance hypotheses; award, claim and cash remain distinct",
+            "localLink": "../../../../reference/research/ux/customer-journeys/finance.md#L16"
+          }
+        ]
+      }
+    },
+    {
+      "id": "aftercare-pain-text",
+      "type": "text",
+      "x": 1314,
+      "y": 310.5,
+      "width": 238,
+      "height": 86.63999999999999,
+      "angle": 0,
+      "strokeColor": "#885500",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 160,
+      "version": 1,
+      "versionNonce": 260,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "quality",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 315,
+            "section": "Quality Verification Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis; no AI quality acceptance",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L315"
+          },
+          {
+            "key": "independent-qa",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 193,
+            "section": "Quality control engineering continuation (2026-10-17, #91)",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Bounded synthetic engineering evidence; professional authority unverified",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L193"
+          },
+          {
+            "key": "finance",
+            "path": "docs/reference/research/ux/customer-journeys/finance.md",
+            "line": 16,
+            "section": "Evidence boundary and financial tensions",
+            "sha256": "98efd4cb9656a36d78b34decb0b2b9271380591e5cd408bcab4c45892d519f0e",
+            "classification": "Finance hypotheses; award, claim and cash remain distinct",
+            "localLink": "../../../../reference/research/ux/customer-journeys/finance.md#L16"
+          }
+        ]
+      },
+      "text": "Concern\nlost",
+      "originalText": "Concern\nlost",
+      "fontSize": 38,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "aftercare-pain",
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "aftercare-gain",
+      "type": "rectangle",
+      "x": 1306,
+      "y": 424,
+      "width": 254,
+      "height": 104,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "#E8F1ED",
+      "fillStyle": "solid",
+      "strokeWidth": 0,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 161,
+      "version": 1,
+      "versionNonce": 261,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "aftercare-gain-text",
+          "type": "text"
+        }
+      ],
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "role": "leaf",
+        "moment": "aftercare",
+        "row": "gain",
+        "traceId": "D05",
+        "classification": "Proposed design response; gain unmeasured",
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "quality",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 315,
+            "section": "Quality Verification Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis; no AI quality acceptance",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L315"
+          },
+          {
+            "key": "independent-qa",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 193,
+            "section": "Quality control engineering continuation (2026-10-17, #91)",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Bounded synthetic engineering evidence; professional authority unverified",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L193"
+          },
+          {
+            "key": "finance",
+            "path": "docs/reference/research/ux/customer-journeys/finance.md",
+            "line": 16,
+            "section": "Evidence boundary and financial tensions",
+            "sha256": "98efd4cb9656a36d78b34decb0b2b9271380591e5cd408bcab4c45892d519f0e",
+            "classification": "Finance hypotheses; award, claim and cash remain distinct",
+            "localLink": "../../../../reference/research/ux/customer-journeys/finance.md#L16"
+          }
+        ]
+      }
+    },
+    {
+      "id": "aftercare-gain-text",
+      "type": "text",
+      "x": 1314,
+      "y": 432.5,
+      "width": 238,
+      "height": 86.63999999999999,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 162,
+      "version": 1,
+      "versionNonce": 262,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          },
+          {
+            "key": "quality",
+            "path": "docs/reference/research/company/agent-request-challenge.md",
+            "line": 315,
+            "section": "Quality Verification Agent",
+            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "classification": "Sector-informed hypothesis; no AI quality acceptance",
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L315"
+          },
+          {
+            "key": "independent-qa",
+            "path": "docs/reference/research/ux/customer-journeys/programme.md",
+            "line": 193,
+            "section": "Quality control engineering continuation (2026-10-17, #91)",
+            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "classification": "Bounded synthetic engineering evidence; professional authority unverified",
+            "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L193"
+          },
+          {
+            "key": "finance",
+            "path": "docs/reference/research/ux/customer-journeys/finance.md",
+            "line": 16,
+            "section": "Evidence boundary and financial tensions",
+            "sha256": "98efd4cb9656a36d78b34decb0b2b9271380591e5cd408bcab4c45892d519f0e",
+            "classification": "Finance hypotheses; award, claim and cash remain distinct",
+            "localLink": "../../../../reference/research/ux/customer-journeys/finance.md#L16"
+          }
+        ]
+      },
+      "text": "Owned\nhelp",
+      "originalText": "Owned\nhelp",
+      "fontSize": 38,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "aftercare-gain",
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "action-accent",
+      "type": "rectangle",
+      "x": 0,
+      "y": 189,
+      "width": 5,
+      "height": 86,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "#173F35",
+      "fillStyle": "solid",
+      "strokeWidth": 0,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 163,
+      "version": 1,
+      "versionNonce": 263,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          }
+        ]
+      }
+    },
+    {
+      "id": "action-label",
+      "type": "text",
+      "x": 20,
+      "y": 195,
+      "width": 184,
+      "height": 68.39999999999999,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 164,
+      "version": 1,
+      "versionNonce": 264,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          }
+        ]
+      },
+      "text": "ACTION /\nNEED",
+      "originalText": "ACTION /\nNEED",
+      "fontSize": 30,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "middle",
+      "containerId": null,
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "pain-accent",
+      "type": "rectangle",
+      "x": 0,
+      "y": 311,
+      "width": 5,
+      "height": 86,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "#885500",
+      "fillStyle": "solid",
+      "strokeWidth": 0,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 165,
+      "version": 1,
+      "versionNonce": 265,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          }
+        ]
+      }
+    },
+    {
+      "id": "pain-label",
+      "type": "text",
+      "x": 20,
+      "y": 317,
+      "width": 184,
+      "height": 68.39999999999999,
+      "angle": 0,
+      "strokeColor": "#885500",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 166,
+      "version": 1,
+      "versionNonce": 266,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          }
+        ]
+      },
+      "text": "PAIN\nTO TEST",
+      "originalText": "PAIN\nTO TEST",
+      "fontSize": 30,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "middle",
+      "containerId": null,
+      "lineHeight": 1.14,
+      "autoResize": false
+    },
+    {
+      "id": "gain-accent",
+      "type": "rectangle",
+      "x": 0,
+      "y": 433,
+      "width": 5,
+      "height": 86,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "#173F35",
+      "fillStyle": "solid",
+      "strokeWidth": 0,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 167,
+      "version": 1,
+      "versionNonce": 267,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          }
+        ]
+      }
+    },
+    {
+      "id": "gain-label",
+      "type": "text",
+      "x": 20,
+      "y": 439,
+      "width": 184,
+      "height": 68.39999999999999,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 168,
+      "version": 1,
+      "versionNonce": 268,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1793318400000,
+      "link": "../../../../reference/research/ux/customer-journeys/residents.md#L37",
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "docs/reference/research/ux/customer-journeys/residents.md",
+            "line": 37,
+            "section": "Current journey A: rented resident household",
+            "sha256": "2731bcd09386b8dd9639b55660d8c72d5f5e87621023d5dbe84ed94157b91843",
+            "classification": "All five moments, actions, pains and gains are hypotheses",
+            "localLink": "../../../../reference/research/ux/customer-journeys/residents.md#L37"
+          }
+        ]
+      },
+      "text": "GAIN\nSOUGHT",
+      "originalText": "GAIN\nSOUGHT",
+      "fontSize": 30,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "middle",
+      "containerId": null,
+      "lineHeight": 1.14,
+      "autoResize": false
+    }
+  ],
+  "appState": {
+    "viewBackgroundColor": "#FAF9F6",
+    "gridSize": null,
+    "name": "Zava Forward resident journey hypotheses"
+  },
+  "files": {}
+}

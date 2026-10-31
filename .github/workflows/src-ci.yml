@@ -95,6 +95,8 @@ jobs:
         if: matrix.project == 'api'
         run: |
           python -m playwright install --with-deps chromium
+          PYTHONPATH=.:src:tests:../core/src:../agents/src:../core/tests:../agents/tests \
+            python -m checks.employee_acceptance_check
           python -m checks.design_system_browser_check
           curl --fail --silent --show-error --location --retry 2 \
             --connect-timeout 10 --max-time 30 \
@@ -104,6 +106,8 @@ jobs:
             python -m checks.regulatory_ux_check --axe "$RUNNER_TEMP/axe-4.10.3.min.js" --out "$RUNNER_TEMP/regulatory-ux-results.json"
           PYTHONPATH="$GITHUB_WORKSPACE/src/api/tests:$GITHUB_WORKSPACE/src/core/tests:$GITHUB_WORKSPACE/src/agents/tests" \
             python -m checks.case_journey_browser_check --axe "$RUNNER_TEMP/axe-4.10.3.min.js" --out "$RUNNER_TEMP/case-journey-results"
+          PYTHONPATH="$GITHUB_WORKSPACE/src/api/tests:$GITHUB_WORKSPACE/src/core/tests:$GITHUB_WORKSPACE/src/agents/tests" \
+            ZF_BROWSER_TESTS=1 python -m unittest -v test_chat_panel.PanelTests.test_browser_warning_failure_keyboard_refusal_and_live_log
       - name: Retain case journey UX evidence
         if: always() && matrix.project == 'api'
         uses: actions/upload-artifact@v4

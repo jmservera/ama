@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-10-30
+ms.date: 2026-10-31
 ms.topic: overview
 ---
 
@@ -21,6 +21,49 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+For #570, the [employee acceptance adapter](../../src/api/README.md#employee-acceptance-identity-check-570)
+uses immutable expected identity and fresh navigation/action admission, with
+correlated actual map rendering rather than HTTP/selection-only acceptance.
+Cluster containment allows only 1e-9 degrees of centroid roundoff; points and
+geographic limits stay exact. Source CI enforces all three maintained Chromium
+regressions after browser installation, retaining qualified early discovery.
+Local constructed Chromium evidence is not live Aadi chat/map/case acceptance;
+independent expected-object attestation remains unavailable.
+The [local browser gate](../../src/README.md#local-rpi-gate) also requires the
+post-install employee CLI without extra selectors, with pinned test import paths
+and three-test, zero-skip evidence in both execution and receipt verification.
+
+For capstone work, start with the [current working set](../capstone/README.md),
+[complete native/JSON source guide](../capstone/source/README.md),
+[pitch preparation](../capstone/pitch/README.md) and
+[demo runbook](../capstone/demo/runbook.md). The 2026-10-29 reorganization
+preserves one 54-slide deck, all 36 media inputs and the historical sources;
+15 approved obsolete exports are [archive-backed](../capstone/history/README.md).
+The [owner-corrected product-first story](../capstone/source/review-2026-10-30.md#current-revision-product-first-future-later)
+explains discovery on page 8, shows the [DT Coach's editable resident journey](../capstone/source/diagrams/discovery-journey/text-equivalent.md)
+on page 13, and establishes the current product/adoption on pages 14-15.
+Fabric and Power BI are not current components: only closing pages 23-24
+propose future portfolio history and semantic/preview ontology agent context.
+Original media and editable diagram sources are retained; the broader proposal
+crosswalk remains reference depth, not the current-product architecture.
+The [illustrated visual refresh](../capstone/source/review-2026-10-30.md#illustrated-visual-refresh-on-linux)
+restores page 3's timeline, improves page 13's native-exported resident map
+and adds page 39's editable pain/gain value canvas. The explicit Linux preview
+preserves 108 PDF slide jumps; it does not replace native PowerPoint or human
+acceptance. The additional index hit-region fix leaves 40 untouched slide
+renders unchanged in the same renderer, with no overlapping PDF destinations.
+Page 16 and the appendices retain deeper comparisons. Native links remain
+fixed jumps, not dynamic caller return.
+No fresh rubric score, rehearsal, deployment or business benefit is inferred.
+
+The [31 October source-binding and guard check](../capstone/source/review-2026-10-30.md#source-binding-and-guard-compatibility-2026-10-31)
+re-verifies the unchanged delivered PPTX against LF authoring inputs and tests
+NaN/infinity refusal in all four native-shape guards. Windows PowerShell 5.1
+execution remains unperformed; local recovery is not hosted publication.
+The source guide now defines CRLF/lone-CR-to-LF normalization for its four
+textual source hashes, preserving BOM/whitespace and exact binary hashes;
+source-hash regressions distinguish semantics from post-verification receipt binding.
+
 For Refs #360, the
 [transport integration qualification](../architecture/cutover-evidence-pack.md#transport-integration-qualification-2026-10-30-refs-360)
 retains main's `src/` retirement and current infrastructure alongside DN1-DN5
@@ -37,6 +80,29 @@ record annual offline backfill/replay checks, unchanged isolated scenario
 results and the corrected both-stage dictionary. Per-check engineering evidence
 is not composed-climate/live acceptance, downstream #111/#133 test use or an
 owner-accepted deferral of open children.
+
+Publication blocker [#572](https://github.com/jmservera/ama/issues/572) has a
+[source candidate and focused evidence](../capstone/source/review-2026-10-30.md#publication-gate-unblock-for-572):
+exact chat-panel discovery matching is paired with enforced Chromium execution
+in the local gate and API CI. Focused checks and the actual browser case pass;
+complete exact-head validation and independent assessment remain required.
+The original failed receipt is not relabelled as successful.
+
+The [Microsoft Fabric fit assessment](./research/microsoft-fabric-fit-assessment.md)
+preserves the 2026-10-29 component assessment, scoped evidence corrections on
+2026-10-30 and a separately labelled
+[30 October future-context follow-up](./research/microsoft-fabric-fit-assessment.md#future-agent-context-option-2026-10-30).
+Official documentation identifies ontology as preview; semantic relationships
+could support permitted agent context, but no integration or quality gain is
+demonstrated. The recommendation retains API/core/Azure SQL and defers
+mandatory dedicated Fabric, while preserving a conditional read-only analytics
+option for explicit portfolio/history needs. Ledger, permission/history,
+private connectivity and CU/licensing are qualified. The 27 October overall
+USD700 renewal through 2026-12-31 is distinct from unknown remaining headroom
+and unestablished Fabric purchase permission; the source-cost comparison
+includes potential loss of serverless idle-pause savings and post-trial
+restoration verification. Source/contrarian research is not live validation or
+adoption approval.
 
 For #530, the [employee chat design and API guide](../../src/api/README.md#employee-chat-with-bounded-skills-530)
 records one read-only chat agent, five repository-defined advisory skills,
@@ -59,6 +125,10 @@ sources and preparation time, explicit AI/rules labels, conditional draft
 review and reversible local dismissal. These native Fluent-derived patterns
 do not establish full Fluent adoption, staff usability, screen-reader/voice
 acceptance or live employee-site cold-start verification.
+The 2026-10-31 local correction executed successful draft reviews and
+loading/recovery browser scenarios with zero violations in four pinned-axe
+scans; three incomplete contrast checks remain human-assessment work.
+The specialist note and live verification remain unmet, not issue closure.
 
 For #110/#184, the [bounded streaming engineering and child dispositions](./research/iot-sensor-analytics-research-plan.md#bounded-streaming-engineering-2026-10-27-refs-110-184)
 describe opt-in API SDK adapters, synthetic-only seeded replay, exact device
@@ -197,12 +267,17 @@ fallback, managed identity and permanent SQL-backed USD20 reservation ceiling.
 The 2026-10-27 owner approval supersedes the historical USD5 proposal.
 Dedicated Standard mini resources were provisioned in ama; SQL/runtime/live
 activation evidence remains distinct from resource creation.
+Its [2026-10-31 scope and AI contract](../architecture/resident-assistant-prototype.md#current-scope-and-ai-contract-2026-10-31)
+records explicit owner scope/IoT priority, the newer bounded generated-answer
+route and protected document facts. Existing model/cap/identity, deployment-off
+settings and tariff expiry remain unchanged; local scripted checks do not
+establish actual-model, live, manual accessibility or resident acceptance.
 
 For tracking cleanup and native deck reproduction, use the
 [retention policy](./method/tracking-retention-policy.md),
 [exact archive restore map](./resources/tracking-retention-manifest.json),
 [promotion receipt](./resources/tracking-retention-promotion.json) and
-[native recovery guide](../capstone/pitch/cowork-main-presentation/native-recovery/README.md).
+[native recovery guide](../capstone/history/cowork-main-presentation/native-recovery/README.md).
 The 12 byte-preserved assurance files under [reports](./research/reports/)
 retain original outcomes and siblings, including
 [v0.7.0](./research/reports/2026-10-06/proper-warm-prd-v0-7-0/challenge-disposition.md),
@@ -536,7 +611,7 @@ or infra acceptance claimed.
 | Start or resume any project work | [Original Case Study 48](../case_study_48_original.md) and [Case Study 48 Addendum](../case_study_48_addendum.md) | [Project Memory](./memory.md) |
 | Answer as a Zava North Homes role | [Company Profile Research](./research/company/company-profile-research.md) | The matching `company-*` agent in [.github/agents/](../../.github/agents/) |
 | Estimate Zava North Homes' tenure, leasehold, resident or financial scale | [Modelled Customer Profile](./research/company/company-profile-research.md#modelled-customer-profile) in Company Profile Research | [Housing Association Primer](./research/sector/housing-association-primer.md) |
-| Quote a benchmark, cost or sector statistic | [UK Social Housing Baseline Research](./research/sector/uk-social-housing-baseline-research.md) and [Retrofit, Damp and Mould Statistics Report](./research/sector/uk-social-housing-retrofit-damp-stats-report.md) (as at 2026-10-23) | [UK Social Housing Baseline Source Register](./research/sector/uk-social-housing-baseline-source-register.md); [recovered council cost workings](../capstone/pitch/cowork-main-presentation/evidence/ai-cost-evidence.md#recovered-council-comparison-2026-10-24) retain USD 0.44 planned-home inference, GBP 6,082 works and conditional GBP 3,041 grant with assumptions, not verified pricing, full TCO or an award |
+| Quote a benchmark, cost or sector statistic | [UK Social Housing Baseline Research](./research/sector/uk-social-housing-baseline-research.md) and [Retrofit, Damp and Mould Statistics Report](./research/sector/uk-social-housing-retrofit-damp-stats-report.md) (as at 2026-10-23) | [UK Social Housing Baseline Source Register](./research/sector/uk-social-housing-baseline-source-register.md); [recovered council cost workings](../capstone/history/cowork-main-presentation/evidence/ai-cost-evidence.md#recovered-council-comparison-2026-10-24) retain USD 0.44 planned-home inference, GBP 6,082 works and conditional GBP 3,041 grant with assumptions, not verified pricing, full TCO or an award |
 | Make a regulatory, legal or funding claim | [Regulatory Source Register](./regulatory/README.md) | The snapshot for the topic under [regulatory/](./regulatory/) |
 | Understand the regulatory assistant owner decision (Refs #209) | [ADR 0005 acceptance and authority](../adrs/0005-regulatory-compliance-assistant.md#owner-decision-acceptance-and-authority-2026-10-16) | Accepted for synthetic development only on 2026-10-16; Juan Manuel Servera is the exercise Legal, Compliance and DPO owner. Real owners and binding grant/contract/lease sources remain unverified; chat must prove value over deterministic cards with provision links. Search and monitoring costs remain unknown |
 | Inspect regulatory evaluation gates (#216) | [Per-check results and acceptance audit](../../src/agents/README.md#regulatory-evaluation-gates-216) | Provisional citation/refusal targets, critical hazard omissions, generated 60,000-home stateless baseline and [read-only cadence labels](../../src/core/README.md#read-only-source-cadence-labels-216). [Integrated whole-suite evidence](../../src/agents/README.md#integrated-full-suite-correction-evidence-2026-10-16) separates passes/skips and empty/unavailable-law-store unknown states. No overall pass; no staff comparison means cards-only ship recommendation. Owner agreement, held-out grading, staff precision/acknowledgement/comprehension and continuing-stock/Azure evidence remain unmet |
@@ -590,12 +665,12 @@ or infra acceptance claimed.
 | Test whether richer inputs (phone photos, geotagging, structured invoices) change any agent verdict | [Agent What-If Study](./research/company/agent-what-if-study.md) | [Agent Request Challenge](./research/company/agent-request-challenge.md) |
 | Design pilot measurement, baselines, comparison cohorts or a benefits dashboard | [Pilot Measurement Challenge](./research/company/pilot-measurement-challenge.md) | [Retrofit Flow and Constraint Discovery Brief](../brds/retrofit-flow-discovery-brief.md) |
 | Practise constraint discovery, or test workflow and agent concepts on realistic records | [Retrofit Operating-Data Exercise Pack](./research/retrofit-synthetic-data/README.md) and its [data dictionary](./research/retrofit-synthetic-data/data-dictionary.md) | [Retrofit Flow and Constraint Discovery Brief](../brds/retrofit-flow-discovery-brief.md); do not open the owner's answer key until blind findings are recorded |
-| Explain agents in the retrofit process or their proactive use | [Process map and text equivalent](../capstone/README.md#agents-in-the-retrofit-process-2026-10-13) | [Five PRD contracts](../prds/zava-forward-retrofit-programme-demonstrator.md#five-reactive-and-proactive-assistants-2026-10-13), [runtime/config/API](../../src/agents/README.md#five-retrofit-assistants-2026-10-13-implementation) and [ledger/source evidence](../adrs/0002-pilot-readiness-architecture.md#fresh-ledger-and-synthetic-coverage-learning-2026-10-13). Image05/enriched ledger baseline serves in revision12; five real operator model paths and SQL content survive restart, with no human/browser/semantic/value acceptance claim. Normal assistant authority remains off after bounded QA |
+| Explain agents in the retrofit process or their proactive use | [Process map and text equivalent](../capstone/history/storage-map-before-reorganization.md#agents-in-the-retrofit-process-2026-10-13) | [Five PRD contracts](../prds/zava-forward-retrofit-programme-demonstrator.md#five-reactive-and-proactive-assistants-2026-10-13), [runtime/config/API](../../src/agents/README.md#five-retrofit-assistants-2026-10-13-implementation) and [ledger/source evidence](../adrs/0002-pilot-readiness-architecture.md#fresh-ledger-and-synthetic-coverage-learning-2026-10-13). Image05/enriched ledger baseline serves in revision12; five real operator model paths and SQL content survive restart, with no human/browser/semantic/value acceptance claim. Normal assistant authority remains off after bounded QA |
 | Populate or rebuild the synthetic MVP operating baseline | [Dated generator recipe and coverage](./research/retrofit-synthetic-data/README.md#mvp-operational-coverage-2026-10-13); [needs inventory and phase gate](./research/retrofit-synthetic-data/README.md#synthetic-data-needs-inventory-and-phase-gate-2026-10-15); [versioned scenario/inventory review](./research/retrofit-synthetic-data/scenario-manifest.json); seeds, manifests and [refresh policy](./research/retrofit-synthetic-data/README.md#determinism-manifests-and-refresh-policy-2026-10-15) | [Provenance register](./research/retrofit-synthetic-data/provenance-register.json) and [dataset coverage](./research/retrofit-synthetic-data/data-dictionary.md#dataset-coverage-and-provenance), [Private JSON schema](./research/retrofit-synthetic-data/data-dictionary.md#separate-private-mvp-json-extension), 60000 stock versus 980 cases; [src scale/sensor recipes](../../src/core/README.md#datasets-fixtures-and-synthetic-tools) record date/revision and refuse nonempty refresh targets. The [coverage baseline CLI](../../src/core/README.md#generator-coverage-baseline-167) checks all 13 route shapes and covered/delivered consistency; issue existence is not assessed. Missing/deferred needs are open gaps with exit 1; partial child routes retain exit 0, not generated-output conformity or owner approval. Per-record synthetic labels remain a gap. Private stock generator and policy approval, full #103 profile/workflow evidence and owner ratification remain open; retain private tenant staff bindings and require effective reset authority before changing Azure SQL |
 | Resolve stock references and generate fabric assumptions (#168) | [Stock-to-case synthesis](./research/retrofit-synthetic-data/README.md#stock-to-case-link-and-fabric-attributes-2026-10-15) and [core CLI/schema](../../src/core/README.md#stock-fabric-and-case-references-168) | SN-01 stays partial: installed core reuses v1 seeded draws, diagnoses missing/ambiguous references, labels shared anchors as non-unit evidence and writes fresh private ZF_DATA snapshots. Connected fictional 60000/980 and SQLite evidence does not validate private stock reproduction, owner field/unit reconciliation or AI/SQL Server/Azure/human acceptance |
 | Generate historical synthetic sensor series (#177) | [Register-backed sensor recipe](../../src/core/README.md#register-backed-sensor-history-177) and [determinism synthesis](./research/retrofit-synthetic-data/README.md#determinism-manifests-and-refresh-policy-2026-10-15) | Explicit sorted register subset, merged v1 fabric, synthetic granted/declined/unknown choices, coverage and portable stock-mode DDL; legacy fixture bytes retained. [Opt-in #182 fault packets](../../src/core/README.md#opt-in-sensor-fault-packets-182) add seeded configurable classes and separate evaluator truth, with no embedded analysis labels. Packet-rate exercise semantics, 15 detected mutants and tiny synthetic replay are not scientific/live acceptance; climate/licence, dated measures, behaviour, #183/#110 integration and real-platform/human evidence remain open |
 | Prepare or challenge the final presentation, architecture or pitch | [Capstone Assessment Guide](./method/ama-capstone-assessment-guide.md) | [Project Memory](./memory.md), [Case Study 48 Addendum](../case_study_48_addendum.md), [AMA mentor progress review](../presentations/ama-mentor-progress-review.pptx) and [85-day roadmap](../case-study-85-day-roadmap.svg) |
-| Build the 30-minute executive capstone presentation plus 10-minute demo | [PR #438 corrections](../capstone/deck/cowork-generated/review-corrections-2026-10-24.md), [IoT/portal refinement](../capstone/deck/cowork-generated/refinement-2026-10-23/README.md) and [authoring package](../capstone/pitch/cowork-main-presentation/README.md) | Current v2 retains 54 slides/notes, main-route IoT and optional portal assessment #441. Review fixes remove unsupported inference prices, qualify deployed-access status, preserve edited drawings and return interruptions to their caller. Registry selects the exact v2 deck; publication, rehearsal and human/live acceptance remain separate |
+| Build or rehearse the current capstone presentation and demo | [Working set](../capstone/README.md), [DT journey/method](../capstone/source/diagrams/discovery-journey/text-equivalent.md), [future register](../capstone/source/roadmap-recommendations.md), [pitch](../capstone/pitch/README.md) and [demo](../capstone/demo/runbook.md) | Product-first 54-slide deck: discovery 8, resident journey 13, built Workbench/adoption 14-15, future-only history/ontology proposal 23-24. Editable Excalidraw/SVG/PNG and all media retained; original actions, timing and protected costs preserved. Rehearsal, hosted grade, direct user validation and live acceptance remain separate |
 | Explain the solution architecture to executives or technical architects | [Executive and technical Excalidraw views](../architecture/README.md) | Source-linked interactions, official Azure icons, current single-API assistants versus deferred workers, development network exceptions and conditional M365; [ADR 0001](../adrs/0001-azure-architecture.md) and [ADR 0002](../adrs/0002-pilot-readiness-architecture.md) retain decision history |
 | Understand the case conversation panel (cited, labelled, proposal-only chat) | [src/api README, Conversation panel](../../src/api/README.md) | Issue #159 slice in `src/` (core `chat_panel`, agents `chat`, web `chat.js`); screen-reader test, live model run and real chat data are not evidenced; issue #164 adds lexical refusal and [offline evaluation](../../src/agents/README.md#ai-evaluation-harness); open critical gaps block success and enablement, unsupported cited claims remain a gap, and model refusal is unmeasured; thresholds, reviewer and enablement are owner decisions |
 | Return, reopen or hand off a case (#83) | [Workflow API and boundaries](../../src/api/README.md#return-and-handoff-api-83) | [Core accountability contract](../../src/core/README.md#return-reopen-and-handoff-accountability-83): authenticated provenance, distinct receipt/acceptance/escalation/completion, sender chase responsibility and resident-update continuity; approved operational timing (BG-010/OD-09), live Azure/model and human acceptance remain unmet |
@@ -617,7 +692,7 @@ or infra acceptance claimed.
 | Trace the broader motivation for the paper's steering hypothesis | [Repository-context revision](../capstone/thought-leadership/everything-but-the-software/README.md#repository-context-and-hypothesis-revision-25-october) | Pinned Aithena, Squad and PhotoCraft observations, dated tracker counts, menu-versus-behaviour distinction and retained counter-evidence; purposive context, not comparative framework results, measured decay or proof of human necessity |
 | [Loop Goal Designer Prompt](./method/loop-goal-designer-prompt.md) | [Project Memory](./memory.md) |
 | Find proven use cases, customer evidence or reusable solutions | [Microsoft Industry Hub](./resources/microsoft-industry-hub.md) | [Case Study 48 Addendum](../case_study_48_addendum.md) |
-| Prepare for questions on AI cost, Tokenomics or cost per outcome | [AI Tokenomics](./resources/ai-tokenomics.md) | [Tokenomics pitch brief](../capstone/pitch/tokenomics-pitch-brief.md), [BRD AI economics](../brds/agentic-retrofit-programme-brd.md#ai-consumption-economics-tokenomics) (NFR-012, FR-052, OD-51), PRD NFR-017 and FR-061, [ADR 0001 cost model](../adrs/0001-azure-architecture.md#operational-targets-and-cost-model) and the [Capstone Assessment Guide](./method/ama-capstone-assessment-guide.md) criteria A5, A6, B7 |
+| Prepare for questions on AI cost, Tokenomics or cost per outcome | [AI Tokenomics](./resources/ai-tokenomics.md) | [Tokenomics pitch brief](../capstone/history/tokenomics-pitch-brief.md), [BRD AI economics](../brds/agentic-retrofit-programme-brd.md#ai-consumption-economics-tokenomics) (NFR-012, FR-052, OD-51), PRD NFR-017 and FR-061, [ADR 0001 cost model](../adrs/0001-azure-architecture.md#operational-targets-and-cost-model) and the [Capstone Assessment Guide](./method/ama-capstone-assessment-guide.md) criteria A5, A6, B7 |
 
 ## Catalog
 
@@ -648,16 +723,17 @@ or infra acceptance claimed.
 | [Idea Register](../ideas/idea-register.md) | Research ideas that are not yet validated requirements | 2026-09-24 |
 | [System One Decision Models for Retrofit Agents](../ideas/typesafe-system-one-agent-fit.md) | Dated #58 selection/generation feasibility and parallel experiment boundaries retained; historical revision ca-properwarm-mvp--0000018 restored exactly, not renamed into a fictitious deployment. No calibrated benefit, production selection or blanket spending authority | 2026-10-13 |
 | [AMA mentor progress review](../presentations/ama-mentor-progress-review.pptx) | Published 15-slide deck, including the knowledge-organisation appendix, with Zava branding. Covers research, value challenge, governance, learning and mentor questions. #65 migration validation is recorded; 2026-10-13 audit confirms delivery bytes equal the working PPTX, superseding the earlier publish-blocked note. Existing narrative/layouts were not freshly redesigned. Maintained with `ama-mentor-deck`; working files remain under `.copilot-tracking/ppt/2026-09-26/ama-mentor-progress-review/` | Publication equality checked, 2026-10-13 |
-| [Native agent process map](../capstone/deck/draft/zava-forward-executive-draft.pptx) | Editable PowerPoint slide 13 in the historical 24-slide deck, retaining five native capability cards, human owners, on-request help, OFF-labelled proactive triggers and aligned deterministic workflow. [Retained preview](../capstone/deck/draft/agents-in-retrofit-process-native.png) and [text equivalent/value tests](../capstone/README.md#agents-in-the-retrofit-process-2026-10-13); original [SVG](../capstone/deck/draft/agents-in-retrofit-process.svg)/[PNG](../capstone/deck/draft/agents-in-retrofit-process.png) remain reference illustrations. Benefits hypotheses, not autonomous authority | 2026-10-24 |
-| [Cowork v2 capstone outputs](../capstone/deck/cowork-generated/README.md) | Owner-designated 54-slide v2 with [25 October paper/journey story review](../capstone/deck/cowork-generated/presentation-review-2026-10-25.md), graphical journey maps and seven corrected findings. The [29 October dated-claim review](./regulatory/reviewed-updates/2026-10-29-presentation-paper-claim-review.md) records unresolved source currentness, EPC/EHS discrepancies and the human legal-review boundary; presentation binaries remain unchanged | 2026-10-29 |
 | [Dated evidence review for the paper and Cowork v2 story](./regulatory/reviewed-updates/2026-10-29-presentation-paper-claim-review.md) | Claim table maps all regulatory, funding and sector rows in the source report; preserves source dates and report-level retrieval limits, flags known discrepancies, and routes legal interpretation to human review. Live official-source rechecks failed, so currentness is `unknown` | 2026-10-29 |
-| [Historical Zava Forward executive capstone deck](../capstone/deck/draft/zava-forward-executive-draft.pptx) | Superseded as the scoring candidate by the owner-selected Cowork v2 on 2026-10-23. Retained under draft with its process/architecture previews as historical evidence, not a v2 fallback or a fresh rehearsal, acceptance or score | 2026-10-24 |
+| [Historical native agent process map](../capstone/history/README.md#archive-and-restore) | The superseded 24-slide deck and process/architecture exports are in the exact verified archive selection, not the current authoring route. [Original text equivalent and value tests](../capstone/history/storage-map-before-reorganization.md#agents-in-the-retrofit-process-2026-10-13) remain preserved. Current page 16 retains five bounded capabilities and human authority | 2026-10-29 |
+| [Current Cowork v2 capstone working set](../capstone/README.md) | Product/discovery-first deck with [DT Coach journey and decision trace](../capstone/source/diagrams/discovery-journey/text-equivalent.md); current Workbench/read models separated from future-only Fabric/PBI/history/preview ontology. [Owner-correction review](../capstone/source/review-2026-10-30.md#current-revision-product-first-future-later) preserves prior outcomes and new findings. All 54 notes/actions/timing/cost contracts remain; zero revised overflow is not user/accessibility or service acceptance | 2026-10-30 |
+| [Historical Zava Forward executive capstone deck](../capstone/history/README.md#archive-and-restore) | Superseded by Cowork v2 on 2026-10-23; restored and hash-checked before the owner-approved archive-backed removal of its redundant checkout exports. Restore map and original findings remain; no fallback scoring or acceptance claim | 2026-10-29 |
 | [85-day roadmap](../case-study-85-day-roadmap.svg) | C-suite solution roadmap diagram, with its [Excalidraw source](../case-study-85-day-roadmap.excalidraw) | Binary file |
 
 ### Research Syntheses
 
 | Document | Summary | Updated |
 | --- | --- | --- |
+| [Microsoft Fabric Fit Assessment](./research/microsoft-fabric-fit-assessment.md) | Component-level project review and current official Fabric research with independent contrarian challenge. Retain operational API/core/Azure SQL, defer mandatory dedicated Fabric, and conditionally compare selective analytics with SQL/read models plus Power BI. Distinguishes actual generated history, scenario rate, ledger/history/types, private/keyless options, access paths, capacity/licensing and expired spending authority. No implementation, private-data, live benchmark or approval | 2026-10-29 |
 | [Housing Association Primer](./research/sector/housing-association-primer.md) | What a UK housing association is, sector scale and archetypes, tenure types, lease responsibility rules for retrofit, resident needs, board capital patterns, funding model and implications for Zava North Homes | 2026-09-25 |
 | [UK Social Housing Baseline Research](./research/sector/uk-social-housing-baseline-research.md) | Provisional sector benchmarks for energy, repairs, safety, grants, finance, delivery and quality | 2026-09-11 |
 | [UK Social Housing Baseline Source Register](./research/sector/uk-social-housing-baseline-source-register.md) | Official publications and datasets behind each baseline benchmark | 2026-09-11 |
