@@ -765,6 +765,7 @@ or infra acceptance claimed.
 
 | Document | Summary | Updated |
 | --- | --- | --- |
+| [Delivery Bottleneck Analysis](./research/delivery-bottleneck-analysis-2026-10-31.md) | Measured delivery bottlenecks (merge rate, PR size, CI cancels, rubric bot pushes, review loops, heavy gate lock), ranked fixes with estimated savings, separated owner decisions D1-D7 and a seven-day demo plan. Sample-limited CI data; no workflow or setting changed | 2026-10-31 |
 | [Microsoft Fabric Fit Assessment](./research/microsoft-fabric-fit-assessment.md) | Component-level project review and current official Fabric research with independent contrarian challenge. Retain operational API/core/Azure SQL, defer mandatory dedicated Fabric, and conditionally compare selective analytics with SQL/read models plus Power BI. Distinguishes actual generated history, scenario rate, ledger/history/types, private/keyless options, access paths, capacity/licensing and expired spending authority. No implementation, private-data, live benchmark or approval | 2026-10-29 |
 | [Housing Association Primer](./research/sector/housing-association-primer.md) | What a UK housing association is, sector scale and archetypes, tenure types, lease responsibility rules for retrofit, resident needs, board capital patterns, funding model and implications for Zava North Homes | 2026-09-25 |
 | [UK Social Housing Baseline Research](./research/sector/uk-social-housing-baseline-research.md) | Provisional sector benchmarks for energy, repairs, safety, grants, finance, delivery and quality | 2026-09-11 |
