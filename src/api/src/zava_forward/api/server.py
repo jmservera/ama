@@ -271,8 +271,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                             print("auth flow: workbench-entered", flush=True)
                         raw = raw.replace(b"__AUTH_PROVIDER__", app.provider.name.encode())
                     if asset.not_modified(self.headers.get("If-None-Match")):
-                        return self._send(304, b"", asset.content_type, asset.headers())
-                    return self._send(200, raw, asset.content_type, asset.headers())
+                        return self._send(304, b"", asset.content_type, asset.headers(url.query))
+                    return self._send(200, raw, asset.content_type, asset.headers(url.query))
                 return self._send(404, "Not found", "text/plain")
             u = self._user()
             if not u:
