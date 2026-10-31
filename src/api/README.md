@@ -44,6 +44,40 @@ immutable runners or reuse historical sessions. Only after strict identity
 admission should the runner exercise employee chat/skill switching, map
 filters and the case view. These live criteria remain unverified here.
 
+Maintained authenticated-session integration now lives in
+`checks.employee_acceptance_check.verify_employee`. For a caller-owned,
+already authenticated Playwright `Page`, invoke
+`verify_employee(page, {"tid": independently_verified_tid, "oid": independently_verified_oid})`.
+It validates the exact boolean predicate projection, checks the authorized
+origin and rechecks identity before and after each chat, map and case stage.
+Only strict `authenticated=true` admits observations; email/roster diagnostics
+cannot substitute for it. Each stage returns `passed`, `failed` or `blocked`,
+and the overall `passed` flag is true only when every stage passes.
+Output contains fixed status and boolean fields, never response bodies,
+exception text, identity values or case text. The adapter has no sign-in or
+credential entry point, saves no sessions and consumes zero sign-in attempts.
+The authorized caller still owns independent ID attestation, credential/debug/
+capture safety, finite attempt accounting and browser lifecycle/watchdog.
+
+From `src/api`, run the changed local Chromium check with the existing test
+paths (installed Chromium required; no live identity or credential access):
+
+```bash
+PYTHONPATH=.:src:tests:../core/src:../agents/src:../core/tests:../agents/tests \
+  python3 -m checks.employee_acceptance_check
+```
+
+This executes two real loopback Chromium regressions with constructed
+trusted-proxy `/api/me` HTTP responses: a rosterless expected account with
+no display email is admitted, and a different immutable account is denied
+before any downstream callback. The positive test also runs the actual local
+chat/map/case observers against the synthetic server, with explicitly synthetic
+privacy references, workflow-only chat and no external network. This does not
+prove deployed behavior or operational privacy approval. On 2026-10-31 the authorized
+demo health check returned 200, but independent directory resolution was
+denied. No sign-in occurred; all live employee criteria remain blocked pending
+independently verified expected tenant/object IDs.
+
 ## Compact case journey (#552)
 
 The six workflow steps retain text labels and status words alongside the exact
