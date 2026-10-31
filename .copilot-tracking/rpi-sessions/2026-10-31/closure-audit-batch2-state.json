@@ -1,0 +1,61 @@
+{
+  "task_id": "closure-audit-batch2-2026-10-31",
+  "task_slug": "closure-audit-batch2",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-31/closure-audit-batch2-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-31/closure-audit-batch2-plan.md",
+    "details": ".copilot-tracking/details/2026-10-31/closure-audit-batch2-phase-details.md",
+    "critique": ".copilot-tracking/reviews/2026-10-31/closure-audit-batch2-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-31/closure-audit-batch2-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-31/closure-audit-batch2-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Owner explicitly requested the complete compact RPI loop and authorized scoped GitHub mutations, commit, push and Refs-only PR.",
+      "status": "confirmed",
+      "evidence": "2026-10-31 task instruction; focused tier, docs only, CI gate"
+    },
+    {
+      "decision": "Research executed; Ready for guarded procedure. One independent critique executed with original Revise verdict; PC-001 through PC-004 directly applied.",
+      "status": "resolved",
+      "evidence": ".copilot-tracking/plans/2026-10-31/closure-audit-batch2-plan.md#critique-disposition"
+    },
+    {
+      "decision": "Original independent Review executed once: Complete / Conformant with justified divergence; no current-audit publication blocker. RV-001 is non-blocking original-issue residual work.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-31/closure-audit-batch2-review.md"
+    },
+    {
+      "decision": "Verified seven closures, 56 new ticks and 55 unmet comments; global open count observed 139 to 132. Main revalidated at 9ecb159bd843411c2e17dc2785ab59f5e837040f without branch rewrite.",
+      "status": "verified",
+      "evidence": ".copilot-tracking/changes/2026-10-31/closure-audit-batch2-receipts.json"
+    }
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Publish the independently reviewed audit artifacts with ordinary push and a Refs-only PR"},
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Complete the remaining #608/#572 local browser/SQL publication-gate evidence when authorized",
+      "rationale": "Source fixes and regression coverage are already present; remaining exact gate evidence has broad engineering-quality leverage and does not require new product functionality.",
+      "evidence": "RV-001 and the #608/#572 unmet criteria in the changes matrix"
+    },
+    {
+      "rank": 2,
+      "task": "Obtain independent employee identity attestation and live acceptance for #570",
+      "rationale": "Unblocks several employee live-acceptance qualifications; tenant/identity authority is a concrete external dependency, not another source-code tick.",
+      "evidence": "RV-001 and #570 unmet criterion 3 in the changes matrix"
+    },
+    {
+      "rank": 3,
+      "task": "Resolve actual financial joins, approved price applicability and held-out reporting evidence for #432",
+      "rationale": "High business/control value, but more approvals and external financial evidence than the preceding follow-ups.",
+      "evidence": "RV-001 and #432 unmet criteria in the changes matrix"
+    }
+  ]
+}
