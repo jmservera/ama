@@ -6,6 +6,47 @@ ms.date: 2026-10-31
 ms.topic: reference
 ---
 
+## AI consumption report (#432)
+
+Manager-only `GET /api/ai/report` preserves evaluation/live/registry fields and
+adds `consumption`. Optional `start`, `end`, `as_of` are timezone-aware ISO
+timestamps with exclusive `[start,end)` call-time bounds. Defaults are today's
+UTC start through now. Invalid, empty, repeated or unknown parameters return an
+explicit error. The JSON report adds no UI or deployment changes.
+Timestamp, range and as-of validation also apply when the JSON store or
+unavailable assistant schema prevents durable consumption reporting.
+Backend meter-capacity/evidence holds return HTTP 200 with the ordinary
+evaluation/live/registry sections and unavailable consumption, Unknown costs
+and a safe hold reason. Invalid reporting parameters still return HTTP 400.
+
+See the [core ledger contract](../core/README.md#ai-consumption-ledger-432) for
+price/spend/billing evidence inputs, monetary limits, quality and accepted-output
+semantics. Real core `Ai` calls without financial admission now stop before the
+network and keep the template/manual route. No spend authority, deployment
+configuration or release is created here. Existing activation, continuity,
+role, human approval, resident consent and statutory controls remain unchanged.
+Unknown image liability prevents AI reading but not document storage.
+
+The report exposes Unknown prices/costs, incomplete joins, retry/failure counts,
+owned alert references and tokens-per-proposal minimum/maximum/mean. Those
+observations are not an owner-authorised held-out batch. The separate resident
+advisor's existing SQL currency reservations remain unchanged and unjoined;
+whole #432 coverage and actual Azure financial reconciliation are not claimed.
+No raw case, prompt or output text is returned in `consumption`.
+`unjoined_reviews` exposes interrupted legacy financial review links and keeps
+money ratios Unknown until a matching authoritative disposition is recovered.
+Missing legacy output links do not prevent human rejection; their original
+root association keeps output/review gaps visible until linkage is repaired.
+Meter-capacity-held assistant withdrawal persists as financially unresolved
+and invalidates stale accepted economics, including after reads recover.
+Post-call financial publication holds return persistent workflow-only
+legacy/priority/chat fallbacks with unresolved attribution rather than failing
+the request or calling the model again. Returned-model mismatches instead
+quarantine assistant tasks without retry and suspend the released record;
+bounded model evidence and financial settlement survive worker serialization.
+Append-only review revisions preserve withdrawal and historical as-of state;
+replaying a pending link never reapplies domain/content edits.
+
 ## Employee acceptance identity check (#570)
 
 For Entra staff, `/api/me.user.tid` and `oid` identify the person. The assigned

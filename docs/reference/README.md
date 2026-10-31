@@ -21,6 +21,24 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+For #432, the [dated Tokenomics engineering/gap matrix](./resources/ai-tokenomics.md#source-only-metering-extension-2026-10-31-refs-432)
+and [official price-source metadata](./resources/azure-ai-price-source-2026-10-31.json)
+record the existing-ledger extension, request/financial admission and billing-led
+accepted-output reporting. Applicable prices, actual Azure reconciliation,
+OD-51, complete resident/historical joins and an authorised held-out batch
+remain missing. The [pitch drafting insert](./resources/ai-tokenomics.md#pitch-drafting-insert-2026-10-31)
+carries the source-only result and stated gap for the current authoring route,
+not changed/generated slide notes, a question bank or a rehearsed deck.
+PR #602's 31 October source corrections retain shared document-call limits
+and store-independent report validation; human rejection persists despite
+missing/held financial joins, which remain visibly incomplete and Unknown.
+The final three-thread correction retains bounded model mismatches for
+non-retryable quarantine/release suspension, preserves reports during backend
+meter holds, and returns consistent saved/manual responses at the exact
+9,999-to-10,001 event boundary without redispatch.
+Hosted follow-up also preserves terminal revocation and capacity-held assistant
+completion without rolling back mismatch quarantine or financial settlement.
+
 For #570, the [employee acceptance adapter](../../src/api/README.md#employee-acceptance-identity-check-570)
 uses immutable expected identity and fresh navigation/action admission, with
 correlated actual map rendering rather than HTTP/selection-only acceptance.

@@ -2,9 +2,23 @@
 title: Zava Forward agents
 description: Five retrofit assistants, the offline AI evaluation harness and their dated validation record for the agents project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-27
+ms.date: 2026-10-31
 ms.topic: reference
 ---
+
+## Consumption provenance (#432)
+
+The worker installs an immutable root/attempt context inside the physical model
+thread. Fenced retries share the task root and cannot reset request call/depth
+bounds. Assistant result shaping retains the consumption IDs and separately
+validated cached-token count. Chat keeps cached usage and successful meter IDs;
+chat answers are not human-accepted proposal denominators.
+
+Financial admission and immutable recording remain with core/API, not a second
+worker database. See the [core ledger](../core/README.md#ai-consumption-ledger-432).
+An absent price, authority or known maximum liability keeps workflow-only.
+The independent resident SQL adapter remains outside this financial join.
+No paid batch, actual price, invoice or live authority is established here.
 
 ## Generated chat provenance (#175)
 
