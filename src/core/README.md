@@ -31,11 +31,13 @@ has unavailable numerical rates; it is not an applicable price table.
 period and task budget IDs with finite calls/tokens/decimal currency amounts,
 UTC start/end and maximum request calls/depth. A reused budget ID keeps all
 previous liability; overlapping configuration authorities and changed limits
-are rejected, including reuse across currencies. Default authority is absent. Named live owners and OD-51 approval
+are rejected, including unresolved/cross-currency reuse at authority, price and
+admission boundaries. Default authority is absent. Named live owners and OD-51 approval
 are still missing; the unassigned-owner reference is a gap, not an appointment.
 
 Reservations commit before physical dispatch, with expiry checked again after
-credential acquisition and immediately before the network. Synthetic prices
+credential acquisition and immediately before the network. This also rechecks
+all intersecting budgets for intervening unknown/held liabilities. Synthetic prices
 cannot admit production transport; only an explicit HTTP loopback fake provider
 is nonbillable test transport. Root calls and depth (starting at
 one) share durable bounds; duplicate attempts cannot dispatch again. Complete
@@ -52,7 +54,12 @@ review state as of the cutoff. All attempts, including retries/failures, belong
 to the numerator; only eligible, human accept/edit-accept output records count
 once. Verification, templates, chat replies and rejected/quarantined outputs
 are not accepted proposals. Legacy output/review saves and financial links are
-not cross-store atomic: missing joins remain visible and prohibit a money ratio.
+not cross-store atomic: pending review intents commit before domain review
+saves, and an interrupted financial link leaves `unjoined_reviews` nonzero and
+prohibits a money ratio. A matching authoritative review can retry its pending
+link without reapplying content edits. Missing output links also block review
+attribution until linked. Events remain immutable, but monotonically ordered
+review revisions preserve human acceptance withdrawal and latest/as-of state.
 
 Billing imports need the exact exclusive period, currency, shared budget scope,
 source/allocation evidence, complete coverage and an explicit owner tolerance

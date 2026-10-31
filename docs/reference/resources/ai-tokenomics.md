@@ -70,6 +70,9 @@ The rubric already asks for this, in different words.
 
 Evidence class: repository observation, not a benchmark.
 
+This inventory is pre-extension evidence. The dated 2026-10-31 source-only
+section below supersedes its code-path descriptions, not operational acceptance.
+
 * The five-assistant path validates prompt, completion and total tokens and keeps
   them with the append-only ledger event when the provider supplies them
   ([assistants](../../../src/core/src/zava_forward/core/assistants.py)). This is
@@ -224,7 +227,26 @@ The issue's nine criteria retain this boundary:
 | Accepted cost/quality/TCA | Billing-led denominator and quality regression failure mechanism | OD-51, real quality/effort and complete approved TCA inventory |
 | Released time | Capacity-not-cash classification | Measured effort; Finance booked destination if cash is claimed |
 | Held-out batch/spread | Recorded token min/max/mean mechanism | Finite owner-authorised held-out batch and accepted results |
-| Pitch | Brief carries engineering result and stated gaps below | Owner slide placement, deck rebuild/rehearsal and final challenge |
+| Pitch | Drafting insert below carries the engineering result and gaps | Current source-manifest placement, regenerated notes/question bank, deck/rehearsal and final challenge |
+
+### Pitch Drafting Insert (2026-10-31)
+
+After merged #558, the old brief is historical. Feed this proposal through the
+[current source guide](../../capstone/source/README.md#ai-consumption-evidence-432),
+not by editing generated question-bank or speaker-script files. The delivered
+deck and generated notes are unchanged by this task. Fixture prices must not
+appear as financial evidence.
+
+| Use | Draft copy | Evidence label |
+| --- | --- | --- |
+| Tokenomics slide | Source-only core calls have durable call/depth and token/money admission. Unknown price or liability stops that AI dispatch and retains the manual path. Human acceptance can be withdrawn; interrupted review joins keep the ratio Unknown. | Local engineered mechanism, not live financial acceptance |
+| CFO Q&A card | Billing, not a token projection, is the financial source. Cost per human-accepted proposal is assessed beside critical misses, unsupported claims, overrides and reopened cases. No attributable bill, approved floor or authorised held-out batch is supplied, so no cost or cash benefit is claimed. | Mechanism and stated gap; no invoice, measured value or owner approval |
+| Price/source note | Official public source retrieved 2026-10-31; numerical rates were unavailable. No applicable rate or estimate is substituted. | Dated retrieval metadata, not quote or invoice |
+
+The earlier 6,884 tokens/five runs remain historical observation without a
+human-accepted denominator. Complete resident/historical joins, OD-51, named
+owners and Finance validation remain open. Capacity is not cash. Actual slide
+placement, rebuilt notes/deck and rehearsed Q&A remain owner-controlled work.
 
 ## Gaps
 
@@ -246,9 +268,10 @@ existing criterion was changed or ticked.
 
 ## Pitch Use
 
-See the [Tokenomics pitch brief](../../capstone/pitch/tokenomics-pitch-brief.md)
-for the slide option, speaker notes, executive questions and the claims that
-must stay out of the pitch.
+Use the current drafting insert above and
+[current capstone authoring source](../../capstone/source/README.md) for new
+placement. The [historical Tokenomics pitch brief](../../capstone/history/tokenomics-pitch-brief.md)
+preserves earlier options, not the current deck or a rehearsed script.
 
 ## Review Triggers
 
