@@ -64,3 +64,53 @@ and test-method boundaries. Prior correction Review remains unchanged.
 Task's bounded implementation/Review complete; explicit parent publication
 still requires new committed-head full gate, verified receipt and exact-head
 assessment. Original live criterion is unmet; Refs #570 only.
+
+## Final-source Validation and Actual Publication Blockers
+
+Final bootstrap implementation committed as
+09d98bb46b40dc42a7d103db5b84e5a2f0056310 with the requested trailer and
+GitHub-derived local noreply author/committer. Fresh final-source API discovery
+passed: 1439 tests in 562.435 seconds, 320 existing opt-in skips retained, not
+executed integration acceptance. Installed-browser focused checks/CLI actually
+executed; Ruff/format/mypy and 37 gate-tool tests passed as recorded above.
+
+Actual gate attempts, all --all with the three explicit Chromium extra selectors,
+base a75bbdffa51ae34b1fcf779250f1f553d566ee93 and clean exact-head worktrees:
+
+* aa531930, external rpi-570-final.log: exit 1 at shared lock after 600 seconds;
+  no check groups ran, no receipt created.
+* aa531930, external rpi-570-retry/receipt.json: full attempt executed and
+  failed. Project-api encountered the three absent-Chromium errors fixed by
+  this child. Independently, static rejected two nested synthetic
+  test_chat_panel skip lines printed by the existing gate-tool unit fixture.
+  Browser/SQL/extras and infrastructure/images remained blocked.
+* 09d98bb4, external rpi-570-bootstrap-final.log: exit 1 at shared lock after
+  600 seconds; no check groups ran, no receipt created.
+
+The static failure is the gate-tool unit method
+test_chat_panel_discovery_skip_is_exact_and_integration_fails_closed printing
+synthetic skip evidence while testing the skip parser. Its 37-test suite
+succeeds, but the outer static command misclassifies those nested lines as
+real unapproved integration skips. See failed output 0065-static.log, lines
+11-21. tools/rpi-checks.py and tools/test_rpi_checks.py are byte-identical to
+reviewed current main; this pre-existing tooling issue was not changed to
+weaken publication rules or expand the bounded identity repair.
+
+No successful complete receipt exists. Receipt verification and independent
+exact-head publication assessment cannot proceed; push and PR were not
+performed. Shared lock was never bypassed and other processes were untouched.
+Failed original logs/receipt/environments and clean validation worktrees are
+retained externally for evidence, not rewritten or deleted.
+This final evidence-only commit is not a sealed final publication candidate;
+any later gate-tool correction or new commit/base requires a fresh complete
+gate. Both original independent Reviews and their outcomes remain unchanged.
+
+## Current Follow-Up and Handoff
+
+Local correction and bounded bootstrap are complete; publication is BLOCKED.
+Separate gate-tool fixture-output isolation/assessment and shared-lock
+availability must precede a fresh complete current-base gate, full receipt
+verification and independent exact-head assessment, then authorized non-force
+push and main PR. Independent expected Aadi identity and actual live employee
+chat/map/case remain UNMET; zero credential reads/sign-ins, two authorized
+attempts unused. Do not use an issue-closing keyword.

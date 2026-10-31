@@ -130,3 +130,16 @@ with --all and the three reviewed Chromium extras, new external output,
 default full receipt verification against freshly fetched main, separate
 independent exact-head assessment, then authorized non-force push/main PR.
 No complete receipt or publication success is claimed by this as-of commit.
+
+## Publication Handoff After Bounded Bootstrap
+
+A distinct directly coupled child
+employee-identity-check-570-gate-bootstrap corrected absent-browser discovery
+without weakening mandatory CLI/integration execution. Its own original
+critique/Review remain separate; this correction Review is not repeated.
+Current blocker evidence and final-source validation are in
+.copilot-tracking/changes/2026-10-31/employee-identity-check-570-gate-bootstrap-changes.md.
+Final API discovery passed 1439 tests in 562.435 seconds with 320 opt-in skips.
+No passing full receipt, exact-head assessment, push or PR exists: actual
+shared-lock timeouts and the unchanged baseline gate-tool nested-fixture skip
+misclassification block publication. Original live criterion remains unmet.
