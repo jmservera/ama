@@ -487,9 +487,11 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
             if url.path in ("/api/packages", "/api/workorders"):
                 try:
                     limit = offset = None
-                    if "limit" in q:
+                    paging = parse_qs(url.query, keep_blank_values=True)
+                    if "limit" in paging or "offset" in paging:
                         try:
-                            limit, offset = int(q["limit"][0]), int(q.get("offset", ["0"])[0])
+                            limit = int(paging["limit"][0]) if "limit" in paging else 50
+                            offset = int(paging["offset"][0]) if "offset" in paging else 0
                         except ValueError:
                             return self._json(400, {"error": "limit and offset must be whole numbers."})
                         if not 1 <= limit <= 100 or offset < 0:

@@ -46,10 +46,41 @@ class WorkspacePaging(ProcurementApiFixture):
         self.assertEqual(self.call("/api/packages?limit=5", actor="kim")[0], 403)
 
     def test_bad_paging_values_are_rejected(self) -> None:
-        for query in ("limit=0", "limit=101", "limit=x", "limit=5&offset=-1", "limit=5&offset=y"):
+        for query in (
+            "limit=0",
+            "limit=101",
+            "limit=x",
+            "limit=5&offset=-1",
+            "limit=5&offset=y",
+            "limit=",
+            "limit=5&offset=",
+            "offset=",
+        ):
             code, error = self.call(f"/api/workorders?{query}")
             self.assertEqual(code, 400, query)
             self.assertIn("error", error)
+
+    def test_blank_paging_values_are_rejected_for_packages(self) -> None:
+        for query in ("limit=", "limit=5&offset=", "offset="):
+            self.assertEqual(self.call(f"/api/packages?{query}")[0], 400, query)
+
+
+class OpsPagerSourceTests(unittest.TestCase):
+    """Source guards for the capacity pager; the browser check covers behaviour."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        from pathlib import Path
+
+        cls.js = (Path(__file__).parents[1] / "src/zava_forward/api/web/ops.js").read_text()
+
+    def test_page_change_confirms_unsaved_drafts(self) -> None:
+        self.assertIn("appointmentDrafts().length && !window.confirm(", self.js)
+
+    def test_superseded_loads_are_rejected_before_render(self) -> None:
+        self.assertIn("if (loadSeq !== capacityLoadSeq) return;", self.js)
+        guard = self.js.index("loadSeq !== capacityLoadSeq")
+        self.assertLess(guard, self.js.index("const pkgs = pkgPage.items"))
 
 
 if __name__ == "__main__":

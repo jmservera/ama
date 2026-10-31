@@ -5,3 +5,5 @@ Execution: executed once. Outcome: conformant for the delivered scope; open item
 * Proven: paged API tests, keyboard-reachable native buttons, status text that does not rely on colour, unpaged shape preserved, no animation added.
 * Not proven (PR uses Refs): initial load time on the 60,000-home dataset; live check with the test user.
 * Follow-ups: state filter for work orders; pager assertions in `capacity_browser_check.py`.
+
+Correction cycle 1: four Copilot review findings (blank paging values, draft loss on page change, stale overlapping pager loads, capacity browser check envelope) were fixed with regression tests; the original Review outcome above is preserved. The browser check update remains unexecuted locally and relies on CI/human review.
