@@ -94,6 +94,14 @@ demo health check returned 200, but independent directory resolution was
 denied. No sign-in occurred; all live employee criteria remain blocked pending
 independently verified expected tenant/object IDs.
 
+Fresh non-integration discovery records the existing approved
+`Chromium is installed by the later browser-check step` skip only when the
+browser executable is absent; other launch failures propagate. That skip is
+not executed acceptance. The maintained CLI requires exactly three successful
+tests and zero skips, so missing Chromium exits nonzero. Complete-gate browser
+setup and all three reviewed integration extras must actually execute; no
+missing-browser fallback or passing skipped integration is permitted.
+
 ## Compact case journey (#552)
 
 The six workflow steps retain text labels and status words alongside the exact

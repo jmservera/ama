@@ -243,7 +243,12 @@ class AcceptanceTests(unittest.TestCase):
             )
             self.assertEqual(payload["user"]["oid"], oid)
             with sync_playwright() as driver, ExitStack() as cleanup:
-                browser = driver.chromium.launch()
+                try:
+                    browser = driver.chromium.launch()
+                except BrowserError as error:
+                    if "Executable doesn't exist" in str(error):
+                        self.skipTest("Chromium is installed by the later browser-check step")
+                    raise
                 cleanup.callback(browser.close)
                 make_principal: Any = principal
                 context = browser.new_context(

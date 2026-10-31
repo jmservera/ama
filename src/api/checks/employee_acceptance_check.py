@@ -476,4 +476,7 @@ if __name__ == "__main__":
             "test_employee_acceptance_check.AcceptanceTests.test_chromium_map_contract",
         ]
     )
-    raise SystemExit(not unittest.TextTestRunner(verbosity=2).run(suite).wasSuccessful())
+    execution = unittest.TextTestRunner(verbosity=2).run(suite)
+    raise SystemExit(
+        not (execution.wasSuccessful() and execution.testsRun == 3 and not execution.skipped)
+    )
