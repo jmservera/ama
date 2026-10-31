@@ -1,8 +1,47 @@
 ---
 title: Resident advisory assistant prototype
 description: Managed-identity bounded model assistance, permanent spend controls and activation limits
-ms.date: 2026-10-27
+ms.date: 2026-10-31
 ---
+
+## Current scope and AI contract (2026-10-31)
+
+Refs #466. The owner explicitly confirms own-home sensor gauges/history and an
+advisory resident assistant with AI in scope, using the existing synthetic data.
+IoT remains a standing priority. Resident AI stays off in deployment behind the
+existing activation settings; this direction does not authorize Azure changes,
+paid inference, tariff renewal or live acceptance.
+
+Earlier merged #474 already supplies synthetic temperature/humidity gauges,
+history charts and equivalent text/table information for the signed-in home.
+CO2 was an illustrative issue example, not an available generated channel.
+The assistant explains own-case status, requested documents and form completion
+with an advisory notice. It cannot submit forms, give consent or decide.
+
+The current [API contract](../../src/api/README.md#preserved-bounded-azure-advisor-469)
+extends the dated sentence-selection implementation below. Eligible typed
+status, form, home and repair questions can receive short AI-generated answers
+grounded only in the authorized case's plain-language update and host guidance.
+Document questions retain locally rendered facts and references; AI may select
+approved explanatory guidance but cannot replace those facts. Protected safety
+and other workflow-only questions retain explicit human routes and rules labels.
+Record-use permission is separate from sign-in, works consent and submission;
+authorization is checked again before returning an answer.
+
+The model/cap/credential decision remains the 2026-10-27 choice below: regional
+Standard `gpt-4.1-mini` 2025-04-14, permanent USD20 inference reservation ceiling
+inside USD30, managed identity only. No new choice or allocation is made here.
+Default-off behavior, SQL accounting prerequisites and the existing
+2026-11-01T00:00:00Z inference/tariff expiry are unchanged. The only assistant
+settings remain `ZF_DEMO_ASSISTANT_ENABLED` and `ZF_DEMO_ASSISTANT_ENDPOINT`,
+using the existing SQL managed-identity settings. No key or developer credential
+chain is introduced.
+
+Local synthetic/scripted-transport tests can exercise AI routing, text
+rendering, isolation and honest off/outage fallback without credentials or model
+calls. They cannot establish actual-model answer quality, current billing
+headroom, authenticated live readiness, human accessibility or full WCAG
+acceptance. Preserve those separate approval and verification gates.
 
 ## Current owner decision and implementation (2026-10-27)
 
