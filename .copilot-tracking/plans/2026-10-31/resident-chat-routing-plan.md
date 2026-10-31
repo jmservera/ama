@@ -4,7 +4,7 @@ description: Bounded natural own-record routing with unchanged authority
 ms.date: 2026-10-31
 ---
 
-Task ID and slug: resident-chat-routing. Status: Ready for implementation.
+Task ID and slug: resident-chat-routing. Status: Complete; published as PR #611.
 
 ## Executive Summary
 
@@ -100,7 +100,7 @@ Focused tier follows dated `src/README.md:63,309` policy; CI remains required.
 ### P03: Independent Review and publication
 
 * [x] P03-T01: Execute one independent post-implementation Review.
-* [ ] P03-T02: Commit original evidence, recheck committed candidate, push and open PR.
+* [x] P03-T02: Commit original evidence, recheck committed candidate, push and open PR.
 
 ## Dependencies and Evidence
 
@@ -133,5 +133,8 @@ owner-gated. They are not acceptance claims for this source-only fix.
 
 P01/P02 complete; independent Review executed once, outcome Conformant, no
 material blockers. Original critique Revise remains preserved. RV-001 is a
-nonblocking human-copy/live-acceptance follow-up. Parent prepares the clean
-committed candidate and performs P03-T02 publication with focused checks.
+nonblocking human-copy/live-acceptance follow-up. P03-T02 completed: implementation
+commit `29b96698d3b5d4550de5f8cf86732aa50e44ce6f` passed focused checks, was pushed
+without force and published as PR #611 targeting main. This evidence-only
+closeout does not change reviewed application/test content. Hosted checks and
+owner merge approval remain outstanding.

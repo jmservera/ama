@@ -7,8 +7,9 @@ ms.date: 2026-10-31
 Task ID and slug: resident-chat-routing.
 Plan: `.copilot-tracking/plans/2026-10-31/resident-chat-routing-plan.md`.
 Readiness: Ready after direct PC-001/PC-002 disposition; original Revise retained.
-Execution: P01/P02 complete; three added methods, 90 focused tests and pinned
-Ruff/mypy pass. P03 remains parent-owned independent Review/publication.
+Execution: P01/P02/P03 complete; three added methods, 90 focused tests and pinned
+Ruff/mypy pass. One independent Review is Complete / Conformant. Source candidate
+pushed and PR #611 opened to main. Hosted/human gates remain uncompleted.
 
 <!-- phase:P01 -->
 ## P01: Routing and copy

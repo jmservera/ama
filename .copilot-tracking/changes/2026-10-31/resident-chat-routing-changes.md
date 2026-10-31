@@ -91,3 +91,32 @@ Commit the source, documentation and original dated artifacts with the
 GitHub-resolved local noreply identity and requested co-author trailer.
 Focused checks must pass again on the clean committed candidate before push.
 PR scope uses Refs #520 and Refs #563; no deployment or activation is authorized.
+
+## P03: Publication outcome
+
+Implementation and original RPI evidence committed as
+`29b96698d3b5d4550de5f8cf86732aa50e44ce6f`, with authenticated repository-local
+noreply author/committer and the requested Copilot trailer.
+On that clean committed candidate, repeated the exact four-module focused
+unittest command: exit 0, 90 tests, zero skips, 62.758 seconds. Repeated pinned
+Ruff lint/format and mypy: all exit 0, 67 formatted files, 126 typed files.
+`git diff --check` passed and worktree remained clean.
+
+Fresh fetch advanced origin/main from the original reviewed base to
+`9c67a399c62eb42f99ac46e1861b55526552c112` through PR #609. The initial
+base-equality guard stopped before any push (exit 1). Read-only changed-path
+inspection established browser-check, README, tooling and evidence changes;
+chat routing, core answers and the selected unit modules were untouched.
+Retained topic ancestry without rebasing, merging or rewriting history.
+
+`git push -u origin HEAD` exited 0 without force.
+`gh pr create --base main --head fix/resident-chat-routing` exited 0:
+https://github.com/jmservera/ama/pull/611. Body includes all RPI artifact pointers,
+focused-check evidence, unchanged AI/deployment boundaries, RV-001 qualification
+and Refs #520 / Refs #563, with no issue-closing keyword.
+
+This final evidence-only closeout updates current plan/state/publication facts
+without modifying original critique, original Review or reviewed source/tests.
+Repeat focused checks on its committed HEAD before the final ordinary push.
+Hosted CI, owner merge approval and named resident-copy/live acceptance remain
+pending; no deployment or AI activation was attempted.
