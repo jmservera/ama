@@ -145,6 +145,23 @@ Exact src/api working-directory strict lint and formatter now pass on all
 three gate browser files. Current tooling suite passes 42 tests in 12.727
 seconds: /tmp/ama-gate-baseline-tooling-current-a81da11b.log.
 
+### Concurrent baseline fix landed on main
+
+Main advanced to 28fbe6b6 (#604) during the final gate. That independently
+published work includes the same nine keyword-only closure bindings, strict
+formatting and fixture-output isolation, plus its own outer-suite regression.
+Ordinary merge preserves all incoming changes and resolves the only overlapping
+test block by retaining both incoming outer-suite coverage and separate
+per-command captured transcript assertions.
+
+The net current-main source delta is therefore only two stronger regression
+lines: assert the first captured transcript independently and reset the
+capture before asserting the second. Case-journey source is byte-identical to
+current main. API documentation and dated original RPI evidence remain this
+PR's other net changes. Do not claim sole delivery of baseline fixes now
+published by #604; still validate the exact final candidate and publish the
+requested Refs #572 evidence/regression PR without rewriting prior history.
+
 ## Follow-Up Items
 
 Canonical plan Follow-Up Items: #572 acceptance remains owner-owned; unrelated

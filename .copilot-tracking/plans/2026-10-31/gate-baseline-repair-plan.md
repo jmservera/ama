@@ -17,7 +17,10 @@ browser check and isolate intentional synthetic skip output in a gate regression
 test. No application behavior, selector wiring, skip policy or workflow changes.
 Preserve original failures, validate the failing groups and API suite, obtain
 one independent Review, then commit and pass a fresh complete exact-head gate
-before publishing a PR to main.
+before publishing a PR to main. During validation #604 independently published
+the same baseline fixes on main. The reconciled net delta now strengthens
+each captured fixture transcript independently and preserves this task's
+original evidence/documentation; no duplicate journey source delta remains.
 
 ### What You May Not Know
 
@@ -25,6 +28,8 @@ The unchanged exact chat-panel Chromium selector passes locally. The full
 baseline instead fails before reaching it, plus its tooling regression leaks
 two artificial skip transcripts into the outer static-suite parser.
 The gate owns its heavy-resource lock; a valid outer flock would deadlock.
+Current-main reconciliation incorporates #600/#601/#603/#604 without rewriting
+history, preserves incoming regression coverage and requires fresh final gating.
 
 ### Unresolved Decisions or Blockers
 

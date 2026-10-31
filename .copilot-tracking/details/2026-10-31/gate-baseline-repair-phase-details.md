@@ -104,3 +104,8 @@ repair. Preserve the historical a75bbdff failed reproduction. A later main
 advance to 5198a1ff overlaps the API README; commit the current assessed work
 first, then ordinary merge current main without stashing or rewriting history.
 Final assessment will evaluate that committed candidate and current base.
+Current main later advanced to 28fbe6b6 (#604), independently publishing the
+same closure/fixture repairs. Preserve all incoming source and its added
+outer-suite regression. Net source difference is two lines independently
+asserting each captured command transcript; no case-journey source delta
+remains. Original research, critique and Review remain unchanged history.
