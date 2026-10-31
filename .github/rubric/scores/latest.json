@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-30T23:24:03+00:00",
-  "commit": "f0f4cf38db21ad84f62090b49ec2f74862bbb35f",
+  "scored_at": "2026-10-31T00:37:01+00:00",
+  "commit": "964adc1f946318060e4cbeb079ef2e325561dc70",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41143641333",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41149925995",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
     "solution-code": "fe877e06fc0c60e603d742644d199ba7e92ae57536bd4a19e7874fa4dc1f0cf2",
-    "infrastructure": "c6a7f41eec75b0ecff8fe5b0c7391c9d006370556ff65b3dcf3bc2419621a53d",
+    "infrastructure": "61ed8eadcd8e631c2a2e13b0853b7a96efd716806d947ef318843f0dd05f7d63",
     "capstone-deck": "c5ae9ab5ec15788dd255b786adaf07ee716806bef375e01c066ad1c26701d74e",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
     "thought-leadership": "592719a5da0d19d4d4c81dd5779faa45a9039c4777e3749cbc055d241aed8970"
@@ -29,10 +29,10 @@
     "A1": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/resident_demo/agenda.py:1-60",
-        "src/api/src/zava_forward/api/resident_demo/app.py:32-40"
+        "infra/scripts/staff_blob.py:1-20",
+        "infra/scripts/staff_azure.py:1-11"
       ],
-      "rationale": "Adds cleanly separated local SQLite agenda module and chat router module with explicit boundaries, consistent with existing modular pattern. No new scaling pattern; already at ceiling."
+      "rationale": "New staff_blob.py cleanly separates paging/encryption/transport from ARM orchestration in staff_azure.py, replacing the prior tag-relay coupling. Already at ceiling; reinforces, does not exceed."
     },
     "A2": {
       "score": 5,
@@ -44,10 +44,10 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/api/checks/employee_identity_check.py:1-53",
-        "src/api/README.md:9-21"
+        "infra/staff-initializer-rbac.bicep:71-98",
+        "infra/scripts/staff_azure.py:238-256"
       ],
-      "rationale": "New employee identity predicate is fail-closed, requires independently verified tenant/object GUIDs, excludes display email/roster from admission, and is exercised by exhaustive offline tests. Reinforces already-ceiling security posture; no basis to exceed 5."
+      "rationale": "RBAC narrowed from resourceGroup tags/read+write to container-scoped blobs/write+add/action only; discover() now verifies public network access, shared-key access and anonymous blob access are disabled before use. Reinforces already-ceiling posture; no basis to exceed 5."
     },
     "A4": {
       "score": 5,
