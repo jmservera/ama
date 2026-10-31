@@ -1,0 +1,34 @@
+{
+  "task_id": "570-review-threads",
+  "task_slug": "employee-review-threads-570",
+  "parent_task": {"task_id": "570", "task_slug": "employee-identity-check-570"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-31/employee-review-threads-570-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-31/employee-review-threads-570-plan.md",
+    "details": ".copilot-tracking/details/2026-10-31/employee-review-threads-570-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-31/employee-review-threads-570-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-31/employee-review-threads-570-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-31/employee-review-threads-570-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Run selected follow-up through Research, Plan, Implement and Review; then commit, push and resolve both threads", "status": "confirmed", "evidence": "Explicit caller direction 2026-10-31; resumed running automatic #570 parent"},
+    {"decision": "Use CI as publication gate; do not wait for the full local gate", "status": "confirmed", "evidence": "Current caller instruction supersedes older follow-up publication blockers, without changing their history"},
+    {"decision": "Merge current origin/main before corrections", "status": "complete", "evidence": "git merge --no-edit origin/main: Already up to date; main e64c6e6c9da407682de59b926944424f94f50671"},
+    {"decision": "Research executed and Ready", "status": "complete", "evidence": "Research C1-C7/W1-W2; real 501-home producer repro; all three waves completed"},
+    {"decision": "Exactly one final-candidate critique executed; verdict Pass, zero findings", "status": "complete-accepted", "evidence": ".copilot-tracking/reviews/plans/2026-10-31/employee-review-threads-570-plan-critique.md"},
+    {"decision": "P01 and P02-T01 complete; pre-Review reconciliation Ready", "status": "complete", "evidence": "Changes validation table: 18 focused tests, three CLI Chromium tests with zero skips, 1441 API discovery tests with 320 skips, 39 tool tests, configured Ruff/mypy and workflow pin/order/env verified"},
+    {"decision": "Exactly one independent Review executed; outcome Conformant, zero findings; bounded uncommitted source assessed, not exact-head approval", "status": "complete", "evidence": ".copilot-tracking/reviews/logs/2026-10-31/employee-review-threads-570-review.md"},
+    {"decision": "Repair/evidence committed and pushed non-force; paired workflow/hash pin in repair commit", "status": "complete", "evidence": "Repair 2e288c2b; initial rejection followed by git pull --no-rebase and successful git push -u origin HEAD; local/remote 419adec170216651c2a6e447dd676b6b0ac0f316 matched; reviewed source hashes unchanged"},
+    {"decision": "Both selected review threads replied to and resolved after push", "status": "complete", "evidence": "Replies discussion_r4431840461/discussion_r4431840462 on PR601; GraphQL returned isResolved=true for PRRT_kwDOUU8JX86yQ7KW and PRRT_kwDOUU8JX86yQ7Kg"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Hosted CI and owner approval are the remaining gate; original live #570 acceptance remains separate; no new child work selected"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Hosted CI gate and owner PR approval", "rationale": "Required publication gate for the selected repairs; owner retains merge decision", "evidence": "Explicit caller CI-only direction and independent Review residual work"},
+    {"rank": 2, "task": "Independent employee identity attestation and live acceptance", "rationale": "Original #570 live criterion cannot be proved by synthetic regressions", "evidence": "Original #570 artifacts and current independent Review follow-up assessment"}
+  ]
+}
