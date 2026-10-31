@@ -183,6 +183,27 @@ function appointmentDrafts() {
   }));
 }
 
+const CAPACITY_PAGE = { packages: { size: 5, offset: 0 }, orders: { size: 20, offset: 0 } };
+let capacityPagerFocus = null;
+
+function pagedPath(base, page) {
+  return `${base}${base.includes("?") ? "&" : "?"}limit=${page.size}&offset=${page.offset}`;
+}
+
+function pagerControls(kind, label, page, total, count, go) {
+  const first = total ? page.offset + 1 : 0, last = page.offset + count;
+  const pages = Math.max(1, Math.ceil(total / page.size));
+  const status = h("p", { class: "muted", id: `capacity-pager-${kind}`, role: "status", "aria-live": "polite", tabindex: -1 },
+    total ? `Showing ${label} ${first} to ${last} of ${total}. Page ${Math.floor(page.offset / page.size) + 1} of ${pages}.` : `No ${label}.`);
+  if (capacityPagerFocus === kind) { capacityPagerFocus = null; queueMicrotask(() => status.focus()); }
+  const step = (delta) => { page.offset = Math.max(0, page.offset + delta * page.size); capacityPagerFocus = kind; return go(); };
+  const prev = h("button", { type: "button", class: "alt", onclick: () => step(-1) }, `Previous ${label}`);
+  const next = h("button", { type: "button", class: "alt", onclick: () => step(1) }, `Next ${label}`);
+  prev.disabled = page.offset <= 0;
+  next.disabled = last >= total;
+  return h("nav", { "aria-label": `${label} pages` }, status, h("p", {}, prev, " ", next));
+}
+
 async function capacityView() {
   if (!isManager()) return show(h("p", {}, "Only a manager sees capacity and work orders."));
   const signal = routeController.signal;
@@ -222,7 +243,16 @@ async function capacityView() {
       throw error;
     }
   };
-  const [pkgs, orders] = await Promise.all([load("/api/packages", "packages"), load("/api/workorders", "work orders")]);
+  const [pkgPage, orderPage] = await Promise.all([
+    load(pagedPath("/api/packages", CAPACITY_PAGE.packages), "packages"),
+    load(pagedPath("/api/workorders", CAPACITY_PAGE.orders), "work orders")]);
+  for (const [page, result] of [[CAPACITY_PAGE.packages, pkgPage], [CAPACITY_PAGE.orders, orderPage]]) {
+    if (!result.items.length && result.total && page.offset >= result.total) {
+      page.offset = Math.max(0, Math.floor((result.total - 1) / page.size) * page.size);
+      return await capacityView();
+    }
+  }
+  const pkgs = pkgPage.items, orders = orderPage.items;
   signal.throwIfAborted();
   if (!me) return;
   if (capacityHistoryGeneration !== recoveryGeneration) return;
@@ -302,8 +332,11 @@ async function capacityView() {
   const drafts = appointmentDrafts();
   show(h("h1", {}, "Capacity and work orders"),
     h("p", { class: "muted" }, "Work orders are controlled: every change is a new version with who issued it, and nothing is issued beyond a contractor's evidenced commitment."),
-    msg, create, ...(cards.length ? cards : [h("p", {}, "No packages yet.")]),
-    h("section", { class: "card" }, h("h2", {}, "Work orders"), orders.length ? h("ul", { class: "list" }, actions) : h("p", {}, "No work orders yet.")));
+    msg, create, h("h2", {}, "Packages"), pagerControls("packages", "packages", CAPACITY_PAGE.packages, pkgPage.total, pkgs.length, () => go()),
+    ...(cards.length ? cards : [h("p", {}, "No packages yet.")]),
+    h("section", { class: "card" }, h("h2", {}, "Work orders"),
+      pagerControls("orders", "work orders", CAPACITY_PAGE.orders, orderPage.total, orders.length, () => go()),
+      orders.length ? h("ul", { class: "list" }, actions) : h("p", {}, "No work orders yet.")));
   for (const draft of drafts) {
     const form = [...document.querySelectorAll("form[data-appointment-form]")].find((el) => el.dataset.appointmentForm === draft.key);
     if (!form) continue;
