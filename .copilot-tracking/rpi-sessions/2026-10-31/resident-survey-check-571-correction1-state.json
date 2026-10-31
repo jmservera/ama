@@ -1,0 +1,49 @@
+{
+  "task_id": "571-correction1",
+  "task_slug": "resident-survey-check-571-correction1",
+  "parent_task": {"task_id": "571", "task_slug": "resident-survey-check-571"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-31/resident-survey-check-571-correction1-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-31/resident-survey-check-571-correction1-plan.md",
+    "details": ".copilot-tracking/details/2026-10-31/resident-survey-check-571-correction1-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-31/resident-survey-check-571-correction1-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-31/resident-survey-check-571-correction1-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-31/resident-survey-check-571-correction1-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "One correction Review executed Complete / Residual work; bounded source/merge approved; three issue criteria supported; no publication blocker from findings",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-31/resident-survey-check-571-correction1-review.md; Low RV-001 routed to existing direct-acceptance follow-up"
+    },
+    {
+      "decision": "Research executed Ready; one critique executed Complete / Revise, PC-001 directly resolved; Plan Ready",
+      "status": "complete",
+      "evidence": "Correction research, critique and plan/details explicit material-Review/exact-head publication blockers"
+    },
+    {
+      "decision": "Owner authorizes merging latest origin/main, preserving history and original review; take main rubric score and both knowledge-log entries",
+      "status": "confirmed",
+      "evidence": "User continuation 2026-10-31; branch fix/resident-survey-check-571; no force push, Azure or secrets"
+    },
+    {
+      "decision": "Continue recorded automatic loop through correction and publication; heavy lock wait 1800 seconds, retry admission once",
+      "status": "confirmed",
+      "evidence": "Original automatic state and explicit current ordered RPI/validation/push/PR request"
+    }
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Review executed Complete / Residual work; no material defect. Continue explicitly authorized P02-T02 commit/full gate/exact-head assessment/push/PR"},
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Separate human/AT/live acceptance",
+      "rationale": "Retain original RV-002 limits; automation does not establish those approvals",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-31/resident-survey-check-571-review.md"
+    }
+  ]
+}
