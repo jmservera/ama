@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import importlib.util
+import io
 import json
 import os
 import subprocess
@@ -12,6 +13,7 @@ import tempfile
 import threading
 import unittest
 import venv
+from contextlib import redirect_stdout
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -108,11 +110,16 @@ class GateTests(unittest.TestCase):
         runner = self.runner()
         runner.snapshot = self.root
         runner.group = "project-api"
-        runner.command([sys.executable, "-c", f"print({text!r})"], suite=True)
+        transcript = io.StringIO()
+        with redirect_stdout(transcript):
+            runner.command([sys.executable, "-c", f"print({text!r})"], suite=True)
+        self.assertIn(text, transcript.getvalue())
         self.assertEqual(runner.rows[-1]["skips"], [{"test": test, "reason": reason}])
         runner.group = "browser"
-        with self.assertRaises(gate.GateError):
+        transcript = io.StringIO()
+        with redirect_stdout(transcript), self.assertRaises(gate.GateError):
             runner.command([sys.executable, "-c", f"print({text!r})"], suite=True, integration=True)
+        self.assertIn(text, transcript.getvalue())
 
     def test_chat_panel_required_receipt_rejects_missing_flag_selector_or_execution(self) -> None:
         original = self.scoped_receipt(["browser"])

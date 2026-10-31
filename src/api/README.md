@@ -6,6 +6,21 @@ ms.date: 2026-10-31
 ms.topic: reference
 ---
 
+## Complete local gate baseline repair (2026-10-31, Refs #572)
+
+The strict case-journey browser check binds iteration-specific route callback
+state without copying its pending-request lists or changing journey behavior.
+The gate's exact chat-panel skip regression captures its intentional synthetic
+transcripts internally, so outer unittest discovery does not mistake them for
+real integration skips. Production skip detection and the existing dedicated
+Chromium selector remain unchanged; no workflow or application code changes.
+
+The unchanged chat-panel Chromium case executes locally with
+`ZF_BROWSER_TESTS=1`. This is synthetic local engineering evidence, not hosted,
+live-site or human acceptance, and does not establish all of #572's criteria.
+Use the complete clean exact-head gate documented in the
+[source guide](../README.md#local-rpi-gate) before publication.
+
 ## Employee acceptance identity check (#570)
 
 For Entra staff, `/api/me.user.tid` and `oid` identify the person. The assigned
