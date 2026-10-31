@@ -125,3 +125,34 @@ a rubric-score commit; inspected divergence is one remote commit affecting
 only .github/rubric/scores/latest.json. Source Review boundary unaffected.
 Non-force push recovery will follow caller's `git pull --no-rebase` direction
 if rejected. No branch rewrite, full local gate, PR merge or issue closure.
+
+## P03-T01: Verified Publication and Thread Disposition
+
+* Repair and original RPI evidence commit:
+  2e288c2b, `fix(api): tolerate cluster roundoff and enforce acceptance browser CI`.
+  src-ci.yml and tools/rpi-checks.py pin are in that same commit.
+  Required Copilot trailer and privacy-safe author/committer used.
+* Initial `git push -u origin HEAD` rejected non-fast-forward. Executed
+  `git pull --no-rebase`, merging only the remote rubric commit without
+  changing any of the seven independently reviewed source hashes.
+* Retried `git push -u origin HEAD` successfully. Local and remote HEAD both
+  419adec170216651c2a6e447dd676b6b0ac0f316 at publication verification.
+  No force, rebase, amend, main write or PR merge.
+* First thread reply:
+  https://github.com/jmservera/ama/pull/601#discussion_r4431840461.
+  PRRT_kwDOUU8JX86yQ7KW resolution returned isResolved=true.
+* Second thread reply:
+  https://github.com/jmservera/ama/pull/601#discussion_r4431840462.
+  PRRT_kwDOUU8JX86yQ7Kg resolution returned isResolved=true.
+* Replies distinguish real local Chromium execution from quiet discovery
+  skips and pending hosted/original live acceptance. Original #570 not closed.
+
+## Final Execution State
+
+P01, P02 and P03 tasks complete. Single critique Complete / Pass and single
+Review Complete / Conformant retained unchanged. Publication bookkeeping
+updates only this changes record, plan, details and state; original Review
+remains the uncommitted bounded source assessment, not exact-head approval.
+The completed selected task leaves its automatic parent session running.
+Ranked distinct follow-ups: hosted CI/owner approval first, independent
+identity/live original acceptance second. No new child work selected.

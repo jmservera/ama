@@ -17,7 +17,7 @@ Research: .copilot-tracking/research/2026-10-31/employee-review-threads-570-rese
 | --- | --- | --- |
 | P01 | Complete | P01-T01, P01-T02 |
 | P02 | Complete | P02-T01, P02-T02 |
-| P03 | Publication active | P03-T01 |
+| P03 | Complete | P03-T01 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Correct acceptance contracts
@@ -105,5 +105,9 @@ index/log updated with the
 owning API guide; no old evidence or unrelated source issue changed.
 P02-T02 independent Review Complete / Conformant, zero findings; reviewer
 independently reran three map tests, checked producer old/new sensitivity and
-workflow order/env/digest. P03-T01 publication remains. Bounded source Review
+workflow order/env/digest. P03-T01 complete: repair commit 2e288c2b and
+published merge HEAD 419adec170216651c2a6e447dd676b6b0ac0f316 matched remote.
+Initial push rejected the rubric-only advancement; git pull --no-rebase
+preserved it, source hashes remained unchanged, retry succeeded. Both thread
+replies and resolutions succeeded. Bounded source Review
 has no blockers; hosted CI/live acceptance remain unclaimed.

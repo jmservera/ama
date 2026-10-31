@@ -9,7 +9,7 @@ ms.date: 2026-10-31
 
 * Task ID: 570-review-threads
 * Task slug: employee-review-threads-570
-* Status: implementation/validation and independent Review complete; publication pending
+* Status: complete, committed and published; both selected threads resolved
 * Details: .copilot-tracking/details/2026-10-31/employee-review-threads-570-phase-details.md
 
 ## Executive Summary
@@ -126,12 +126,12 @@ and findings against both threads; original outcomes stay intact. Later work
 owns any routed finding, not a repeated Review of this task.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Publish and resolve threads
+### [x] P03: Publish and resolve threads
 
 Dependencies: P02 complete and no material publication defect.
 
 <!-- rpi:task id=P03-T01 -->
-#### [ ] P03-T01: Commit, non-force push, thread replies/resolution
+#### [x] P03-T01: Commit, non-force push, thread replies/resolution
 
 Commit implementation, same-commit workflow/hash pin and original RPI evidence
 with authenticated privacy-safe author/committer and requested trailer.
@@ -160,10 +160,13 @@ Disposition: accepted; no changes or user decisions required.
 ## Handoff
 
 Changes record: .copilot-tracking/changes/2026-10-31/employee-review-threads-570-changes.md.
-Parent continues to authorized P03 publication. No ordinary unresolved choice.
+All selected plan work is complete. Hosted CI and original live acceptance
+remain separate follow-ups, with no new child work selected.
 P01 and P02-T01 complete: 18 focused tests, three CLI browser executions,
 1441 API discovery tests (320 skipped), 39 gate-tool tests, configured static
-checks and workflow structure/pin verification. P03-T01
-publication remains unchecked pending execution. One independent Review
+checks and workflow structure/pin verification. P03-T01 completed: repair
+commit 2e288c2b, non-force publication via 419adec1 after the requested
+pull --no-rebase recovery, and both exact threads replied to/resolved.
+One independent Review
 Complete / Conformant, zero findings, at
 .copilot-tracking/reviews/logs/2026-10-31/employee-review-threads-570-review.md.
