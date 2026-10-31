@@ -356,6 +356,15 @@ def run_browser(base: str) -> None:
                 assert response.headers["etag"] == f'"{hashlib.sha256(response.body()).hexdigest()}"'
                 assert int(response.headers["content-length"]) == len(response.body()) == 147552
                 print("PASS local Leaflet HTTP 200, 147552 bytes, MIME, length and revalidation/ETag")
+                page = context.new_page()
+                page.goto(base + "/app")
+                versioned = page.locator('script[src^="/vendor/leaflet.js?"]').get_attribute("src")
+                assert versioned and asset_url(LEAFLET).search(versioned)
+                fresh = context.request.get(base + versioned)
+                assert fresh.status == 200 and fresh.body() == response.body()
+                assert fresh.headers["cache-control"] == "public, max-age=31536000, immutable"
+                assert fresh.headers["etag"] == response.headers["etag"]
+                print("PASS rendered versioned Leaflet: identical bytes/ETag and one-year immutable policy")
             finally:
                 context.close()
         finally:

@@ -146,16 +146,32 @@ def exercise(browser: Browser, site: str, out: Path) -> dict[str, Any]:
             widget_url = next(url for url in urls if asset_url("/chat-widget.js").search(url))
             assert failures == [widget_url], failures
             assert sum(row["url"] == widget_url for row in records) == 2, records
-            page.reload()
+            counts = {url: sum(row["url"] == url for row in records) for url in urls}
+            page.goto(base + entry)
             page.wait_for_function("() => window.cacheRelease === 'B' && window.cacheShared === 'B'")
-            assert any(row["status"] == 304 and row["validator"] for row in records), records
+            assert all(sum(row["url"] == url for row in records) == count
+                       for url, count in counts.items()), "Fresh versioned assets were not reused"
+            response = context.request.get(base + widget_url)
+            assert response.status == 200
+            assert response.headers["cache-control"] == "public, max-age=31536000, immutable"
+            etag = response.headers["etag"]
+            cached = context.request.get(base + widget_url, headers={"If-None-Match": etag})
+            assert cached.status == 304 and cached.body() == b""
+            assert cached.headers["etag"] == etag
+            assert cached.headers["cache-control"] == "public, max-age=31536000, immutable"
+            for url in (urlsplit(widget_url).path, urlsplit(widget_url).path + "?v=old"):
+                response = context.request.get(base + url)
+                assert response.status == 200
+                assert response.headers["cache-control"] == "no-cache, must-revalidate"
+                assert response.headers["etag"] == etag
             page.screenshot(path=str(out / f"{site}-release-B.png"))
             result = {"site": site, "origin": base, "same_context": True,
                       "legacy_cache_reused": True, "executed_release": "B", "applied_css": "B",
+                      "immutable_cache_reused": True, "explicit_etag_revalidation": True,
                       "shared_widget": "B", "vendor": "B" if site == "employee" else None,
                       "failed_initial_widget_url": widget_url, "initial_and_recovery_requests": 2,
                       "requests": records}
-            print(f"PASS {site}: warm legacy cache, same-origin release B, JS/CSS/shared/vendor and ETags")
+            print(f"PASS {site}: legacy turnover, immutable reuse, release B, JS/CSS/shared/vendor and ETags")
             return result
     finally:
         context.close()

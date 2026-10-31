@@ -5,6 +5,7 @@ import re
 from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
+from urllib.parse import parse_qs
 
 _ATTRIBUTE = re.compile(rb'(?P<prefix>\b(?:src|href)=["\'])(?P<url>/[^"\']+)(?P<quote>["\'])')
 
@@ -14,11 +15,18 @@ class Asset:
     body: bytes
     content_type: str
     etag: str
+    version: str
 
-    def headers(self) -> dict[str, str]:
+    def headers(self, query: str = "") -> dict[str, str]:
         if self.content_type.startswith("text/html"):
             return {"Cache-Control": "no-store"}
-        return {"Cache-Control": "no-cache, must-revalidate", "ETag": self.etag}
+        versioned = parse_qs(query, keep_blank_values=True).get("v") == [self.version]
+        return {
+            "Cache-Control": (
+                "public, max-age=31536000, immutable" if versioned else "no-cache, must-revalidate"
+            ),
+            "ETag": self.etag,
+        }
 
     def not_modified(self, validator: str | None) -> bool:
         if not validator or self.content_type.startswith("text/html"):
@@ -49,7 +57,9 @@ class StaticAssets:
                     ),
                     body,
                 )
-            self._assets[url] = Asset(body, ctype, f'"{hashlib.sha256(body).hexdigest()}"')
+            self._assets[url] = Asset(
+                body, ctype, f'"{hashlib.sha256(body).hexdigest()}"', self.version
+            )
 
     def url(self, path: str) -> str:
         return f"{path}?v={self.version}"

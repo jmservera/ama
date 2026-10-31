@@ -2,7 +2,7 @@
 title: Zava Forward API and web workbench
 description: Staff features, configuration, local run, honest limits and container checks for the api project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-30
+ms.date: 2026-10-31
 ms.topic: reference
 ---
 
@@ -108,10 +108,13 @@ packaged files. A normal new page load selects the new release without repeated
 hard refreshes. An already open page is not hot-reloaded.
 
 HTML, API responses and access denials remain `Cache-Control: no-store`.
-Static files use `Cache-Control: no-cache, must-revalidate` and byte-derived
-ETags, with conditional GET/HEAD support. Bare and previous-version URLs also
-revalidate and return current snapshot bytes; they are not immutable historical
-artifacts. Employee dependency retries reuse the exact versioned URL from the
+Static files carrying exactly one `v` query value matching the current release
+use `Cache-Control: public, max-age=31536000, immutable`. All static files retain
+byte-derived ETags and conditional GET/HEAD support, with the same cache policy
+on 200 and 304 responses. Bare, blank, duplicate and previous-version URLs use
+`Cache-Control: no-cache, must-revalidate` and return current snapshot bytes;
+they are not immutable historical artifacts. HTML remains no-store even with a
+matching version query. Employee dependency retries reuse the exact versioned URL from the
 initial script element, including shared chat and libraries. No service worker
 or browser-storage asset cache is introduced.
 
@@ -136,7 +139,8 @@ flock -w 600 /tmp/ama-rpi-heavy.lock python3 -m checks.chat_submit_browser_check
 The cache browser check keeps the origin and browser context unchanged, proves
 reuse of fresh legacy unversioned script/style cache entries, then selects a
 new handler snapshot. Executed JavaScript, computed CSS, shared chat, Leaflet,
-versioned recovery and ETag revalidation are observed with browser cache enabled.
+versioned recovery, fresh immutable reuse without another origin asset request,
+exact cache headers and explicit ETag revalidation are observed with browser cache enabled.
 It uses constructed local data, no live sign-in, model or external requests.
 
 Browser asset instrumentation uses `checks.asset_urls.asset_url` to match the

@@ -320,7 +320,7 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                     status,
                     b"" if status == 304 else asset.body,
                     asset.content_type,
-                    extra=asset.headers(),
+                    extra=asset.headers(urlsplit(self.path).query),
                 )
             elif self.command in ("GET", "HEAD") and path == "/demo/session":
                 token, cookie = self._csrf_cookie()

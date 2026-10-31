@@ -11,6 +11,7 @@ from collections.abc import Mapping
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 from zava_forward.core import resident_preview as rp
 
@@ -126,7 +127,7 @@ def make_handler(app: ResidentPreview) -> type[BaseHTTPRequestHandler]:
                     status,
                     b"" if status == 304 else asset.body,
                     asset.content_type,
-                    extra=asset.headers(),
+                    extra=asset.headers(urlsplit(self.path).query),
                 )
             elif path == "/healthz":
                 self._json(200, dict(status="ok", synthetic=True, banner=rp.BANNER))

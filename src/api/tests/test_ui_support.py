@@ -109,7 +109,7 @@ class ScreensApi(Base):
                 self.assertIn("text/javascript", response.headers["Content-Type"])
                 self.assertEqual(response.read(), (WEB / urlsplit(path).path.lstrip("/")).read_bytes())
                 self.assertTrue(urlsplit(path).query.startswith("v="))
-                self.assertEqual(response.headers["Cache-Control"], "no-cache, must-revalidate")
+                self.assertEqual(response.headers["Cache-Control"], "public, max-age=31536000, immutable")
                 self.assertEqual(response.headers["X-Content-Type-Options"], "nosniff")
                 self.assertTrue(response.headers["Content-Security-Policy"].startswith("default-src 'self';"))
         with self.assertRaises(urllib.error.HTTPError) as missing:
