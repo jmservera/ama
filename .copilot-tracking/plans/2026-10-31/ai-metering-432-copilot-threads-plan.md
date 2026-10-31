@@ -81,7 +81,7 @@ five resolved threads are verified.
 
 * [x] P02-T01: Run focused then core/API unit tests and Ruff/mypy.
 * [x] P02-T02: One independent post-implementation Review; preserve outcome.
-* [ ] P02-T03: Commit and non-force push; reply/resolve and verify five threads.
+* [x] P02-T03: Commit and non-force push; reply/resolve and verify five threads.
 
 ## Test Ownership and Candidate Lock
 
@@ -127,6 +127,8 @@ Details: .copilot-tracking/details/2026-10-31/ai-metering-432-copilot-threads-ph
 Changes record (implementation-owned):
 .copilot-tracking/changes/2026-10-31/ai-metering-432-copilot-threads-changes.md.
 
-P01 source/testing/documentation and P02-T01 validation complete. Review-ready
-boundary is those completed tasks; P02-T02 independent Review and P02-T03
-publication remain pending, not inferred from local checks.
+P01/P02 complete. Independent Review Complete / Conformant is the preserved
+precommit assessment, not hosted/human acceptance. Fixes committed c90d82fa,
+main 5198a1ff merged as 82f86c94 with executable source/test bytes unchanged.
+Non-force branch push completed; all five original threads have replies and
+GraphQL resolution confirmations. CI and owner approval remain follow-up gates.

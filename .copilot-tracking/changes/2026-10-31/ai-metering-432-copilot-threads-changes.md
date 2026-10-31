@@ -65,7 +65,7 @@ precommit source snapshot. No implementation defects found. Reviewer ran
 RV-001/002 preserve non-blocking Finance/human and historical/resident gaps.
 Review artifact:
 .copilot-tracking/reviews/logs/2026-10-31/ai-metering-432-copilot-threads-review.md.
-Publication, five thread replies/resolutions and remote verification pending.
+Publication and five thread replies/resolutions completed as recorded below.
 
 Final fetch found main advanced by 5198a1ff (#603), affecting only documentation,
 tracking and rubric files, not executable sources/tests. Commit the reviewed
@@ -82,9 +82,28 @@ c90d82fa passes for src/core/src, src/core/tests, src/api/src and src/api/tests.
 This main advance changes no executable input, so recorded component validation
 continues covering the identical source/test batch. CI assesses the final merge.
 
+`git push -u origin HEAD` published 82f86c94 without force, following
+implementation c90d82fa. Both commits use locally configured gh account
+8036360/jmservera privacy-safe author/committer email and requested Copilot
+trailer. Refs #432 retained; no closing keyword or issue closure.
+
+Five original review comments received fix/regression replies via gh API, then
+their GraphQL resolveReviewThread responses confirmed isResolved=true:
+
+| Thread | Reply comment | Source criterion |
+| --- | --- | --- |
+| PRRT_kwDOUU8JX86yRMZf | 4432003392 | Document shared context |
+| PRRT_kwDOUU8JX86yRMZo | 4432003395 | Report validation before SQL |
+| PRRT_kwDOUU8JX86yRMZy | 4432003399 | Legacy/priority missing join rejection |
+| PRRT_kwDOUU8JX86yRMZ- | 4432003410 | Failed-provider pending rejection |
+| PRRT_kwDOUU8JX86yRMaJ | 4432003409 | Capacity-held withdrawal |
+
+Final tracking closeout commit/push preserves this completed evidence. CI and
+owner approval remain required; no merge or final hosted acceptance is claimed.
+
 ## Review Readiness and Remaining Work
 
 P01-T01..T03 and P02-T01 complete, artifacts/checklists reconciled.
 No implementation-time material divergence or blockers. Independent Review
-complete; publication remains pending. Historical/resident joins, OD-51/Finance and
+complete; publication and thread resolution complete. Historical/resident joins, OD-51/Finance and
 paid held-out evidence remain distinct follow-ups outside this source scope.
