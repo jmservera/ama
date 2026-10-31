@@ -200,15 +200,15 @@ research stage, and it does not substitute for final exact-head verification.
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/research/2026-10-31/gate-baseline-repair-research.md](.copilot-tracking/research/2026-10-31/gate-baseline-repair-research.md) | Original research and adverse baseline pointers. |
-| [.copilot-tracking/plans/2026-10-31/gate-baseline-repair-plan.md](.copilot-tracking/plans/2026-10-31/gate-baseline-repair-plan.md) | Current plan and separately owned follow-ups. |
-| [.copilot-tracking/details/2026-10-31/gate-baseline-repair-phase-details.md](.copilot-tracking/details/2026-10-31/gate-baseline-repair-phase-details.md) | Completed P01 and pending P02 detail. |
-| [.copilot-tracking/reviews/plans/2026-10-31/gate-baseline-repair-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/gate-baseline-repair-plan-critique.md) | Preserved original Revise critique. |
-| [.copilot-tracking/changes/2026-10-31/gate-baseline-repair-changes.md](.copilot-tracking/changes/2026-10-31/gate-baseline-repair-changes.md) | Reconciled implementation and supplied validation. |
-| [.copilot-tracking/reviews/logs/2026-10-31/gate-baseline-repair-review.md](.copilot-tracking/reviews/logs/2026-10-31/gate-baseline-repair-review.md) | This one original independent Review. |
-| [src/api/checks/case_journey_browser_check.py](src/api/checks/case_journey_browser_check.py) | Nine keyword-only closure captures and formatting. |
-| [tools/test_rpi_checks.py](tools/test_rpi_checks.py) | Two fixture-local transcript captures. |
-| [src/api/README.md](src/api/README.md) | Bounded repair documentation. |
+| [.copilot-tracking/research/2026-10-31/gate-baseline-repair-research.md](../../../research/2026-10-31/gate-baseline-repair-research.md) | Original research and adverse baseline pointers. |
+| [.copilot-tracking/plans/2026-10-31/gate-baseline-repair-plan.md](../../../plans/2026-10-31/gate-baseline-repair-plan.md) | Current plan and separately owned follow-ups. |
+| [.copilot-tracking/details/2026-10-31/gate-baseline-repair-phase-details.md](../../../details/2026-10-31/gate-baseline-repair-phase-details.md) | Completed P01 and pending P02 detail. |
+| [.copilot-tracking/reviews/plans/2026-10-31/gate-baseline-repair-plan-critique.md](../../plans/2026-10-31/gate-baseline-repair-plan-critique.md) | Preserved original Revise critique. |
+| [.copilot-tracking/changes/2026-10-31/gate-baseline-repair-changes.md](../../../changes/2026-10-31/gate-baseline-repair-changes.md) | Reconciled implementation and supplied validation. |
+| [.copilot-tracking/reviews/logs/2026-10-31/gate-baseline-repair-review.md](gate-baseline-repair-review.md) | This one original independent Review. |
+| [src/api/checks/case_journey_browser_check.py](../../../../src/api/checks/case_journey_browser_check.py) | Nine keyword-only closure captures and formatting. |
+| [tools/test_rpi_checks.py](../../../../tools/test_rpi_checks.py) | Two fixture-local transcript captures. |
+| [src/api/README.md](../../../../src/api/README.md) | Bounded repair documentation. |
 
 ## Next Steps
 

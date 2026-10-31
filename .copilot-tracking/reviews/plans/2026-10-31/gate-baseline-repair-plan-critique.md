@@ -178,10 +178,10 @@
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/plans/2026-10-31/gate-baseline-repair-plan.md](.copilot-tracking/plans/2026-10-31/gate-baseline-repair-plan.md) | Final-candidate plan assessed, unchanged. |
-| [.copilot-tracking/details/2026-10-31/gate-baseline-repair-phase-details.md](.copilot-tracking/details/2026-10-31/gate-baseline-repair-phase-details.md) | Phase details assessed, unchanged. |
-| [.copilot-tracking/research/2026-10-31/gate-baseline-repair-research.md](.copilot-tracking/research/2026-10-31/gate-baseline-repair-research.md) | Supplied research and historical evidence pointers. |
-| [.copilot-tracking/reviews/plans/2026-10-31/gate-baseline-repair-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/gate-baseline-repair-plan-critique.md) | This original single critique and complete PC finding set. |
+| [.copilot-tracking/plans/2026-10-31/gate-baseline-repair-plan.md](../../../plans/2026-10-31/gate-baseline-repair-plan.md) | Final-candidate plan assessed, unchanged. |
+| [.copilot-tracking/details/2026-10-31/gate-baseline-repair-phase-details.md](../../../details/2026-10-31/gate-baseline-repair-phase-details.md) | Phase details assessed, unchanged. |
+| [.copilot-tracking/research/2026-10-31/gate-baseline-repair-research.md](../../../research/2026-10-31/gate-baseline-repair-research.md) | Supplied research and historical evidence pointers. |
+| [.copilot-tracking/reviews/plans/2026-10-31/gate-baseline-repair-plan-critique.md](gate-baseline-repair-plan-critique.md) | This original single critique and complete PC finding set. |
 
 ## Next Steps
 
