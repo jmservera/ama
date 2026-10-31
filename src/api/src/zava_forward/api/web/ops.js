@@ -191,7 +191,7 @@ function pagedPath(base, page) {
   return `${base}${base.includes("?") ? "&" : "?"}limit=${page.size}&offset=${page.offset}`;
 }
 
-function pagerControls(kind, label, page, total, count, go) {
+function pagerControls(kind, label, page, total, count, go, busy) {
   const live = CAPACITY_PAGE[kind];
   const first = total ? page.offset + 1 : 0, last = page.offset + count;
   const pages = Math.max(1, Math.ceil(total / page.size));
@@ -199,6 +199,7 @@ function pagerControls(kind, label, page, total, count, go) {
     total ? `Showing ${label} ${first} to ${last} of ${total}. Page ${Math.floor(page.offset / page.size) + 1} of ${pages}.` : `No ${label}.`);
   if (capacityPagerFocus === kind) { capacityPagerFocus = null; queueMicrotask(() => status.focus()); }
   const step = (delta) => {
+    if (busy()) return;
     if (kind === "orders" && appointmentDrafts().length && !window.confirm("Changing the work order page discards unsaved appointment drafts. Continue?")) return;
     live.offset = Math.max(0, page.offset + delta * page.size); capacityPagerFocus = kind; return go();
   };
@@ -255,6 +256,8 @@ async function capacityView() {
     load(pagedPath("/api/workorders", shown.orders), "work orders")]);
   if (loadSeq !== capacityLoadSeq) return;
   for (const [kind, result] of [["packages", pkgPage], ["orders", orderPage]]) {
+    signal.throwIfAborted();
+    if (!me || capacityHistoryGeneration !== recoveryGeneration) return;
     const page = shown[kind];
     if (!result.items.length && result.total && page.offset >= result.total) {
       CAPACITY_PAGE[kind].offset = Math.max(0, Math.floor((result.total - 1) / page.size) * page.size);
@@ -341,10 +344,10 @@ async function capacityView() {
   const drafts = appointmentDrafts();
   show(h("h1", {}, "Capacity and work orders"),
     h("p", { class: "muted" }, "Work orders are controlled: every change is a new version with who issued it, and nothing is issued beyond a contractor's evidenced commitment."),
-    msg, create, h("h2", {}, "Packages"), pagerControls("packages", "packages", shown.packages, pkgPage.total, pkgs.length, () => go()),
+    msg, create, h("h2", {}, "Packages"), pagerControls("packages", "packages", shown.packages, pkgPage.total, pkgs.length, () => go(), () => saving || Boolean(capacityHistoryBarrier)),
     ...(cards.length ? cards : [h("p", {}, "No packages yet.")]),
     h("section", { class: "card" }, h("h2", {}, "Work orders"),
-      pagerControls("orders", "work orders", shown.orders, orderPage.total, orders.length, () => go()),
+      pagerControls("orders", "work orders", shown.orders, orderPage.total, orders.length, () => go(), () => saving || Boolean(capacityHistoryBarrier)),
       orders.length ? h("ul", { class: "list" }, actions) : h("p", {}, "No work orders yet.")));
   for (const draft of drafts) {
     const form = [...document.querySelectorAll("form[data-appointment-form]")].find((el) => el.dataset.appointmentForm === draft.key);

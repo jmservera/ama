@@ -82,6 +82,26 @@ class OpsPagerSourceTests(unittest.TestCase):
         guard = self.js.index("loadSeq !== capacityLoadSeq")
         self.assertLess(guard, self.js.index("const pkgs = pkgPage.items"))
 
+    def test_paging_is_serialized_while_a_refresh_is_running(self) -> None:
+        step = self.js.index("const step = (delta)")
+        guard = self.js.index("if (busy()) return;", step)
+        self.assertLess(guard, self.js.index("live.offset =", step))
+        self.assertIn("() => saving || Boolean(capacityHistoryBarrier)", self.js)
+
+    def test_out_of_range_retry_checks_guards_before_changing_offsets(self) -> None:
+        loop = self.js.index('for (const [kind, result] of [["packages", pkgPage]')
+        end = self.js.index("CAPACITY_PAGE[kind].offset =", loop)
+        window = self.js[loop:end]
+        self.assertIn("signal.throwIfAborted();", window)
+        self.assertIn("capacityHistoryGeneration !== recoveryGeneration", window)
+
+    def test_browser_check_reads_paged_envelopes(self) -> None:
+        from pathlib import Path
+
+        check = (Path(__file__).parents[1] / "checks/capacity_browser_check.py").read_text()
+        self.assertNotIn('"/api/workorders").json()[0]', check)
+        self.assertIn("/api/workorders?limit=1&offset=0", check)
+
 
 if __name__ == "__main__":
     unittest.main()

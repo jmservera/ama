@@ -7,3 +7,5 @@ Execution: executed once. Outcome: conformant for the delivered scope; open item
 * Follow-ups: state filter for work orders; pager assertions in `capacity_browser_check.py`.
 
 Correction cycle 1: four Copilot review findings (blank paging values, draft loss on page change, stale overlapping pager loads, capacity browser check envelope) were fixed with regression tests; the original Review outcome above is preserved. The browser check update remains unexecuted locally and relies on CI/human review.
+
+Correction cycle 2: three further Copilot findings (overlapping pager refreshes, browser check paged envelopes, stale out-of-range retry guard) were fixed with regression tests; the original Review outcome above is preserved. The browser check remains unexecuted locally and relies on CI/human review.

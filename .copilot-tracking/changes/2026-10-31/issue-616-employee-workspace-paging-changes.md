@@ -15,3 +15,5 @@ Validation: unittest test_workspace_paging, test_procurement_api, test_case_jour
 * `test_workspace_paging.py`: blank-value 400 regressions and source guards for the pager.
 
 Validation: test_workspace_paging and test_capacity_browser_check pass; `node --check`, `ruff check`, `ruff format --check` pass; mypy shows only the 4 pre-existing errors. The Playwright capacity check was updated but not executed (no browser/SQL prerequisites here). Heavy gate not run.
+
+Correction cycle 2: pager buttons are ignored while a capacity refresh or history barrier is active, so a stale page cannot overwrite a newer one; the out-of-range retry checks abort, session and history-generation guards before changing offsets; `capacity_browser_check.py` now reads the paged `items` envelope for the work order lookup (other matchers were already paging-aware). Regression source tests added in `test_workspace_paging.py`; focused tests, `node --check`, `ruff check` pass; mypy unchanged (3 pre-existing import errors). Browser check not executed locally. Heavy gate not run.

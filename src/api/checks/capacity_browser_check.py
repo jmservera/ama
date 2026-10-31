@@ -535,7 +535,9 @@ def check(store: Any, axe: str | None = None) -> None:
                 verify_route("#/time")
                 expect(page.locator("#app")).not_to_contain_text("We could not load packages")
 
-                order = context.request.get(base + "/api/workorders").json()[0]
+                order = context.request.get(base + "/api/workorders?limit=1&offset=0").json()[
+                    "items"
+                ][0]
                 fixtures.supplied_contract_fixture(
                     store, order["package"], manager, order["contractor"]
                 )
@@ -649,7 +651,9 @@ def check(store: Any, axe: str | None = None) -> None:
                     page.wait_for_function("() => window.capacityHeldReads === 2")
                     assert len(held) == 2, held
                     failed = next(
-                        route for route in held if urlsplit(route.request.url).path == "/api/" + endpoint
+                        route
+                        for route in held
+                        if urlsplit(route.request.url).path == "/api/" + endpoint
                     )
                     sibling = next(route for route in held if route is not failed)
                     failed.fulfill(status=503, body="Unavailable")
