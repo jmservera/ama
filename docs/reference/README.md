@@ -54,6 +54,10 @@ bindings, retained-history/SQL recovery and finite cost/rate/time controls.
 Local fake-network/actual-constructed-SQLite evidence is not actual Hub,
 credential lifecycle, Azure SQL handover, active budget alerts or whole AC-066.
 Outstanding #185/#187/#188/#189 live criteria and OD-43 remain explicit.
+The [2026-10-30 composed local handover contract](./research/iot-sensor-analytics-research-plan.md#composed-local-handover-evidence-2026-10-30-refs-188)
+adds same-model replay, strict reference-adjusted statistical tolerances and
+whole-window SQL replay checks. It does not establish actual Hub-to-Azure SQL
+or whole #188 acceptance.
 The same synthesis records the bounded correction: actual global send-attempt
 admission after setup, partial-construction cleanup and selected-snapshot
 descriptor/frame provenance. Local regressions do not close live criteria.

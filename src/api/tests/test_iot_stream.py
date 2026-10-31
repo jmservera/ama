@@ -11,6 +11,7 @@ from dataclasses import replace
 from datetime import UTC, datetime
 from unittest.mock import AsyncMock, Mock, patch
 
+import test_sensor_handover as handover_fixture
 from azure.eventhub import EventData
 from azure.eventhub.aio import PartitionContext
 from azure.iot.device import X509
@@ -330,7 +331,11 @@ class ReceiverTests(unittest.IsolatedAsyncioTestCase):
             ],
             1,
         )
-        frames = replay(selected, Replay(days=1, cadence_minutes=60, end_slot=2))
+        frames = replay(
+            selected,
+            Replay(days=1, cadence_minutes=60, end_slot=2),
+            climate=handover_fixture.ConstructedClimate(),
+        )
         sensor = frames[0].row["sensor_id"]
         binding = Binding(frames[0].device_id, sensor, "ZF-1")
         self.consumer.configure(POLICY, [replace(CONTROL, sensor_id=sensor)])

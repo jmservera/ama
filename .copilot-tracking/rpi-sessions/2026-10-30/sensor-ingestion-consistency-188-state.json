@@ -1,0 +1,66 @@
+{
+  "task_id": "188",
+  "task_slug": "sensor-ingestion-consistency-188",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/sensor-ingestion-consistency-188-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/sensor-ingestion-consistency-188-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/sensor-ingestion-consistency-188-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/sensor-ingestion-consistency-188-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/sensor-ingestion-consistency-188-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/sensor-ingestion-consistency-188-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute research, plan, implement, review in order; commit locally only.",
+      "status": "confirmed",
+      "evidence": "Explicit caller request 2026-10-30"
+    },
+    {
+      "decision": "Research executed/Ready; one critique executed with original Revise verdict. PC-001/003 applied, PC-002 rejected against explicit caller lock/external evidence direction.",
+      "status": "implementation-ready",
+      "evidence": ".copilot-tracking/plans/2026-10-30/sensor-ingestion-consistency-188-plan.md"
+    },
+    {
+      "decision": "One independent original Review executed: Complete, outcome Residual work. No implementation defects; RV-001 live evidence and RV-002 subsequent candidate/publication validation routed separately.",
+      "status": "review-complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-30/sensor-ingestion-consistency-188-review.md"
+    },
+    {
+      "decision": "Post-Review complete gate attempted at implementation commit 74f7252c6cb069533a49acd112ebbc0e3b433deb; exit 1, advanced-main mismatch before admission, no receipt. Supplied ancestry preserved.",
+      "status": "blocked",
+      "evidence": ".copilot-tracking/changes/2026-10-30/sensor-ingestion-consistency-188-changes.md"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "RV-001",
+      "summary": "Actual Hub/Azure SQL evidence remains unproven under explicit no-Azure authority.",
+      "resolution": "Coordinator/owner separately establishes #110 readiness, authority, budget and live evidence."
+    },
+    {
+      "id": "RV-002",
+      "summary": "Complete gate blocked before heavy admission: supplied reviewed base a31048f15fa3120c58bacd22a375d86ae5ab7431 differs from fetched origin/main ae8d3d166215fdd1935d2d2322d6ff236d2f65b5. No passing receipt.",
+      "resolution": "Coordinator reconciles base without unauthorized history rewrite, reruns the complete gate and verifies current-main/exact-head plus hosted/human prerequisites before separately authorized publication."
+    }
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator must reconcile advanced main with the supplied base and rerun/verify the exact-candidate full gate. Inspect external validation-188/final-gate.log and final-evidence-gate.log under session b669b987-2355-43d4-99ca-bf7c5c0215a9/files. Preserve original Review; no push, rebase or child task performed."},
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator reconciles advanced main, then runs/verifies complete exact-candidate gate and publication prerequisites.",
+      "rationale": "Actual gate exit 1 shows a current-base mismatch; explicit caller ancestry is preserved and publication remains blocked.",
+      "evidence": "RV-002"
+    },
+    {
+      "rank": 2,
+      "task": "Separately authorized live Hub-to-Azure SQL handover exercise after #110 readiness.",
+      "rationale": "Only actual live evidence can substantiate remaining whole-issue criteria; forbidden in this local task.",
+      "evidence": "RV-001"
+    }
+  ]
+}
