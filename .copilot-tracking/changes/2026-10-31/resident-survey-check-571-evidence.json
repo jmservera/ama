@@ -1,0 +1,72 @@
+{
+  "issue": 571,
+  "date": "2026-10-31",
+  "base": "5666bd33e1827670e5c07e3e3063bbbe989b59d3",
+  "already_merged_correction": "a0670b58a171255284b005ad281b26fd50ea89c7",
+  "historical_reproduction": {
+    "environment": "actual loopback resident demo, own-case constructed document facts, consent, installed Chromium",
+    "obsolete_question": "documents help",
+    "observed": "Explicit host refusal; Locator expected to contain text 'Survey: Missing'",
+    "recognized_question": "Which documents are missing from my case?",
+    "recognized_observed": "Survey: Missing in its fresh reply",
+    "source_mutation": false,
+    "paid_inference": false
+  },
+  "browser": {
+    "command": "python3 -m checks.resident_assistant_browser_check --axe /tmp/ama-571-axe-4.10.3.min.js --out /tmp/ama-571-browser-20261031",
+    "cwd": "src/api",
+    "pythonpath": ".:src:tests:../core/src:../agents/src:../core/tests:../agents/tests",
+    "result": "Passed",
+    "chromium": "156.0.8078.4",
+    "axe": "4.10.3, executed",
+    "axe_sha256": "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb",
+    "scans": 32,
+    "violations": 0,
+    "incomplete_rule_occurrences": 42,
+    "states_with_incomplete_checks": 31,
+    "page_errors": 0,
+    "external_requests": 0,
+    "report": "/tmp/ama-571-browser-20261031/report.json",
+    "report_sha256": "9503e463bd668a7e554abf9e2e998b53724a62a180f21df5ee547d8cd27e9974",
+    "stdout_sha256": "879832b6d8940c1cee6d2a6824c46b0134abf62aa3d2c706aa258fcf952fe64a",
+    "stdout": "PASS resident chat and callback flows; axe executed; evidence /tmp/ama-571-browser-20261031"
+  },
+  "focused_http": {
+    "selectors": [
+      "test_resident_chat_api.ChatApiTests.test_documents_own_case_typed_routing_and_no_cross_case_data",
+      "test_resident_chat_api.ChatApiTests.test_browser_form_question_retains_rules_and_no_submission_advice",
+      "test_resident_chat_api.ChatApiTests.test_obsolete_browser_prompts_stay_host_owned_refusals"
+    ],
+    "result": "Passed",
+    "tests": 3,
+    "seconds": 2.223
+  },
+  "ruff": {
+    "check": "All checks passed!",
+    "format_check": "65 files already formatted"
+  },
+  "full_api_discovery": {
+    "result": "Passed",
+    "tests": 1430,
+    "seconds": 515.446,
+    "skipped": 320,
+    "stdout_tail": "Ran 1430 tests in 515.446s\n\nOK (skipped=320)",
+    "log": "/tmp/ama-571-api-units-20261031-final.log",
+    "log_sha256": "ccacba6463ba7fa8461f390f61d0070b41be25933233f19be191beaa67edd015",
+    "prior_attempts": [
+      "600-second shared-lock admission timeout; tests not executed",
+      "1368 tests in 569.618s, 2 missing azure.eventhub import errors, 320 skips; manifest dependencies restored with pip"
+    ]
+  },
+  "reviewed_inputs": {
+    "src/api/checks/resident_assistant_browser_check.py": "d122c04850e6bdabe031f2c6e07a464be31d3ac3ac62f8887e55ee306ee071ad",
+    "src/api/README.md": "0494f6248310d6ded347e60d6afef22c60927a7aaff2b713bb8708814349e755"
+  },
+  "limits": [
+    "Current-base browser was already passing; the original correction is not new work here",
+    "Full axe incompletes remain in the external report and require human assessment",
+    "No native browser zoom, screen-reader, human resident or full WCAG acceptance established",
+    "No live service, actual model call, Azure change or private dataset",
+    "Full API discovery and final publication gate recorded separately in the changes record"
+  ]
+}

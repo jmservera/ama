@@ -631,8 +631,12 @@ PYTHONPATH=tests:../core/tests:../agents/tests python -m checks.progress_browser
   --axe /path/to/axe-4.10.3.min.js --out /new/external/progress-results
 ```
 
-Take `/tmp/ama-rpi-heavy.lock` with nonblocking `flock -n` admission before
-heavy checks, retrying for at most 40 minutes. The unit checks also partition a
+Inspect actual ownership of `/tmp/ama-rpi-heavy.lock` and take nonblocking
+`flock -n` admission before standalone heavy checks. If busy, record blocked
+validation and continue independent lightweight work; resume after explicit
+coordination, without queuing, polling or interrupting the owner. The complete
+runner owns its lock: use `--lock-timeout 0`, never an outer `flock`.
+The unit checks also partition a
 combined-filter cohort across custom-size pages on JSON and SQLite, including
 nonmatching cases, empty results and beyond-final-page clamping.
 The browser check owns a fictional
@@ -642,6 +646,23 @@ failure/retry, cancellation, reflow and pinned axe. It never uses the working
 dataset, Azure or a live model. These are engineering checks, not human
 screen-reader/usability acceptance, full Fluent runtime adoption or WCAG
 conformance.
+
+Add `--scale` to the browser command to also exercise the existing seed-174,
+version-1.2.0 wholly fictional 60,000-home fixture. The shared test overlay
+maps those existing home IDs/attributes onto four explicit known lifecycle
+templates, not random stock events: 15,000 open cases, 45,000 archived cases,
+45,000 usable lifecycles and 15,000 unknown closure dates. The inherited
+JSON/SQLite unit overlay clones each reader's initialized case templates so
+archive summaries retain the complete store defaults; browser fixtures still
+pass through normal store initialization. The unit check asserts exact flow,
+duration, current workload and combined-filter page IDs at that scale.
+Browser checks compare all six charts
+and tables to the real API, retain all filters/page through reload and verify
+first/final/empty/beyond boundaries with at most 20 rendered archive rows.
+Recorded AI reviews stay separate and are not multiplied with the home cohort.
+This constructed overlay is not the private geography register, original
+980-case lineage, a performance SLA or a deployed employee-site check. No
+fixture bytes are committed; browser/axe reports go to the external output.
 
 ## Employee chat with bounded skills (#530)
 
@@ -1342,6 +1363,11 @@ added reply, not earlier chat history, retaining missing-document facts,
 warnings, sources, truthful rules labels, own-case isolation and the limits on
 sending or making decisions. API tests cover both supported questions and
 those refused inputs without enabling AI or changing resident authority.
+The stale-prompt correction was delivered in #573 (Refs #571). The browser
+check also sends "documents help" and "forms help" after successful document
+answers: each fresh reply must refuse explicitly, retain rules metadata and
+human help, and contain no Survey fact, document IDs or AI-suggestion label
+borrowed from earlier replies. Positive document assertions remain unchanged.
 
 ### Preserved bounded Azure advisor (#469)
 

@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from playwright.sync_api import Route, expect, sync_playwright
-from test_progress_dashboard import synthetic_data
+from test_progress_dashboard import scale_data, synthetic_data
 
 from checks.design_system_browser_check import check, main
 from checks.regulatory_ux_check import AXE_SHA256
@@ -26,7 +26,7 @@ def data_factory() -> dict[str, Any]:
     return data
 
 
-def run(axe: Path, out: Path) -> None:
+def run(axe: Path, out: Path, *, scale: bool = False) -> None:
     if hashlib.sha256(axe.read_bytes()).hexdigest() != AXE_SHA256:
         raise ValueError("Use the existing pinned axe-core 4.10.3 asset.")
     reports: list[dict[str, Any]] = []
@@ -307,12 +307,123 @@ def run(axe: Path, out: Path) -> None:
                 browser.close()
 
     main(browser_check, data_factory)
+    if scale:
+        run_scale(axe, out)
+
+
+def run_scale(axe: Path, out: Path) -> None:
+    """Exercise the existing 60,000 fictional homes through the real employee views."""
+    def browser_check(base: str) -> None:
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch()
+            try:
+                page = browser.new_page(viewport={"width": 1280, "height": 900})
+                errors: list[str] = []
+                page.on("pageerror", lambda error: errors.append(str(error)))
+                page.goto(base + "/app#/progress?start=2026-09-28&end=2026-10-07")
+                page.locator("#email").fill("pam@example.test")
+                page.locator("#pw").fill("synthetic-check")
+                page.get_by_role("button", name="Sign in", exact=True).click()
+                page.get_by_role("heading", name="Progress summary").wait_for()
+                report = page.request.get(
+                    base + "/api/progress?start=2026-09-28&end=2026-10-07"
+                ).json()
+                check("scale cohort has 60,000 existing fictional homes",
+                      report["coverage"]["synthetic_cases"] == 60000)
+                expect(page.locator(".progress-page")).to_contain_text("Demonstration data")
+                expected_series = [
+                    [[r[k] for k in ("opened", "closed", "reopened")] for r in report["daily"]],
+                    [[r[k] for k in ("opened", "closed", "reopened")] for r in report["weekly"]],
+                    [[r["backlog"]] for r in report["daily"]],
+                    [[r["count"]] for r in report["current"]["journey"]],
+                    [[r["count"]] for r in report["current"]["teams"]],
+                    [[r["count"]] for r in report["ai"]["outcomes"]],
+                ]
+                charts = page.locator(".progress-chart")
+                expect(charts).to_have_count(6)
+                for index, expected in enumerate(expected_series):
+                    chart = charts.nth(index)
+                    chart.locator("summary").press("Enter")
+                    expect(chart.locator("table")).to_be_visible()
+                    actual = chart.locator("tbody tr").evaluate_all(
+                        "rows => rows.map(row => [...row.querySelectorAll('td')]"
+                        ".map(cell => Number(cell.textContent.replaceAll(',', ''))))"
+                    )
+                    bars = chart.locator("meter").evaluate_all("els => els.map(el => el.value)")
+                    check(f"scale chart {index} table and bars match API",
+                          actual == expected and bars == [v for row in expected for v in row])
+                page.evaluate(axe.read_text())
+                dashboard_axe = page.evaluate(
+                    "async () => await axe.run(document.querySelector('main'), "
+                    "{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}})"
+                )
+                (out / "scale-dashboard-axe.json").write_text(json.dumps(dashboard_axe))
+                check("scale dashboard axe has no violations", not dashboard_axe["violations"])
+                page.get_by_role("link", name="Closed cases", exact=True).click()
+                expect(page.locator("#closed-results")).to_have_text(
+                    "45,000 matching closed cases. Page 1 of 2,250."
+                )
+                expect(page.locator("tbody tr")).to_have_count(20)
+                page.locator("#progress-status").select_option("Completed")
+                page.locator("#progress-team").select_option("Resident Liaison Officer")
+                page.locator("#progress-start").fill("2026-10-07")
+                page.locator("#progress-end").fill("2026-10-07")
+                page.locator("#progress-q").fill("ZF-000")
+                page.get_by_role("button", name="Apply filters").click()
+                expect(page.locator("#closed-results")).to_have_text(
+                    "25 matching closed cases. Page 1 of 2."
+                )
+                page.get_by_role("link", name="Next page", exact=True).click()
+                expect(page.locator("#closed-results")).to_contain_text("Page 2 of 2")
+                expect(page.locator("tbody tr")).to_have_count(5)
+                check("scale final page has exact stable case IDs",
+                      page.locator("tbody th a").evaluate_all(
+                          "links => links.map(link => link.textContent.split(':')[0])"
+                      ) == [f"ZF-{index:05d}" for index in range(80, 100, 4)])
+                filtered_url = page.url
+                page.reload()
+                expect(page.locator("#closed-results")).to_contain_text("Page 2 of 2")
+                check("scale filters and page survive reload", page.url == filtered_url)
+                for field, value in (("status", "Completed"), ("team", "Resident Liaison Officer"),
+                                     ("start", "2026-10-07"), ("end", "2026-10-07"), ("q", "ZF-000")):
+                    expect(page.locator(f"#progress-{field}")).to_have_value(value)
+                page.goto(filtered_url.replace("page=2", "page=999999"))
+                page.wait_for_url(filtered_url)
+                expect(page.locator("tbody tr")).to_have_count(5)
+                expect(page.get_by_text("Next page (unavailable)", exact=True)).to_be_visible()
+                page.locator("#progress-q").fill("No fictional match")
+                page.get_by_role("button", name="Apply filters").click()
+                expect(page.locator("#closed-results")).to_have_text(
+                    "0 matching closed cases. Page 1 of 1."
+                )
+                expect(page.get_by_role("navigation", name="Closed case pages").get_by_role("link")).to_have_count(0)
+                page.evaluate(axe.read_text())
+                archive_axe = page.evaluate(
+                    "async () => await axe.run(document.querySelector('main'), "
+                    "{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}})"
+                )
+                (out / "scale-archive-axe.json").write_text(json.dumps(archive_axe))
+                check("scale archive axe has no violations", not archive_axe["violations"])
+                check(f"scale has no uncaught JavaScript errors ({errors})", not errors)
+                (out / "scale-browser.json").write_text(json.dumps(dict(
+                    browser=browser.version, homes=60000, fixture_seed=174,
+                    fixture_version="1.2.0", lifecycle="Explicit test-only overlay",
+                    coverage=report["coverage"], time_to_close=report["time_to_close"],
+                    archive_total=45000, filtered_total=25, filtered_final_page=5,
+                    axe_sha256=AXE_SHA256,
+                )))
+                page.screenshot(path=str(out / "scale-closed-cases.png"), full_page=True)
+            finally:
+                browser.close()
+
+    main(browser_check, scale_data)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--axe", required=True, type=Path)
     parser.add_argument("--out", required=True, type=Path)
+    parser.add_argument("--scale", action="store_true", help="Also exercise the existing 60,000-home fixture")
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=False)
-    run(args.axe, args.out)
+    run(args.axe, args.out, scale=args.scale)

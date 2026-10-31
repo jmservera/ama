@@ -1,0 +1,75 @@
+{
+  "task_id": "533",
+  "task_slug": "employee-progress-dashboard-533",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-31/employee-progress-dashboard-533-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-31/employee-progress-dashboard-533-plan.md",
+    "details": ".copilot-tracking/details/2026-10-31/employee-progress-dashboard-533-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-31/employee-progress-dashboard-533-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-31/employee-progress-dashboard-533-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-31/employee-progress-dashboard-533-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run all four RPI phases and publish the named topic branch with Refs #533",
+      "status": "confirmed",
+      "evidence": "Explicit caller request on 2026-10-31"
+    },
+    {
+      "decision": "Research executed / Ready; independent critique executed once / Revise; PC-001 parent-context blocker rejected with actual passing baseline, PC-002 publication stop accepted but same-task rework rejected, PC-003 and PC-004 accepted",
+      "status": "dispositioned",
+      "evidence": ".copilot-tracking/plans/2026-10-31/employee-progress-dashboard-533-plan.md"
+    },
+    {
+      "decision": "Original independent Review executed once / Complete / Not accepted; source/evidence boundary at 5666bd33e1827670e5c07e3e3063bbbe989b59d3 plus three-file working diff; RV-001 and RV-002 block publication",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-31/employee-progress-dashboard-533-review.md"
+    },
+    {
+      "decision": "Local WIP/source/original-evidence commit succeeded as 235c3731 with authenticated noreply author/committer and required trailer; publication not attempted",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/changes/2026-10-31/employee-progress-dashboard-533-changes.md"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "RV-001",
+      "summary": "New inherited scale unit fixture inserts raw cases lacking initialized funding defaults required by archive summary; original Review Not accepted.",
+      "resolution": "Later bounded implementation invocation must restore the initialized fixture contract and validate both backends; preserve original Review."
+    },
+    {
+      "id": "shared-heavy-lock",
+      "summary": "Nonblocking focused unit admission exited 1 before tests; shared lock lists foreign flock processes 2666859, 2664050 and 2663022. Required full API discovery and actual Playwright have not run on changed candidate.",
+      "resolution": "Resume affected validation only after explicit coordination establishes free shared ownership; no queue, polling, foreign interruption or unlocked workaround."
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Preserve authorized local WIP commit; ranked fixture correction and blocked validation require later selected work; no push or PR"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Correct initialized scale unit fixture contract",
+      "rationale": "Small bounded test-only correction removes the source-supported archive failure path without runtime changes.",
+      "evidence": "RV-001 in .copilot-tracking/reviews/logs/2026-10-31/employee-progress-dashboard-533-review.md"
+    },
+    {
+      "rank": 2,
+      "task": "Collect actual candidate validation and complete-gate evidence after lock coordination",
+      "rationale": "Required unit/browser/receipt evidence blocks publication; baseline and static checks cannot substitute.",
+      "evidence": "RV-002 and shared-heavy-lock blocker"
+    },
+    {
+      "rank": 3,
+      "task": "Separately authorized live and human acceptance with hosted gates",
+      "rationale": "Local synthetic engineering evidence cannot close owner-required deployed-site or human/hosted approval.",
+      "evidence": "RV-003 and issue 533 owner comment"
+    }
+  ]
+}
