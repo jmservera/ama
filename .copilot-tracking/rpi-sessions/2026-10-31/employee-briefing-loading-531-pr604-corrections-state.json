@@ -4,7 +4,7 @@
   "parent_task": {"task_id": "531", "task_slug": "employee-briefing-loading-531"},
   "mode": "automatic",
   "active_phase": "Follow-up",
-  "status": "active",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-31/employee-briefing-loading-531-pr604-corrections-research.md",
@@ -21,11 +21,15 @@
     {"decision": "Research executed; all seven findings valid, 53 broken links and CLI typography defects. Planning Readiness Ready.", "status": "recorded", "evidence": ".copilot-tracking/research/2026-10-31/employee-briefing-loading-531-pr604-corrections-research.md"},
     {"decision": "One critique Complete / Revise; PC-001 recovery validation and PC-002 per-node mutation ledger applied directly. Plan ready.", "status": "disposed", "evidence": ".copilot-tracking/plans/2026-10-31/employee-briefing-loading-531-pr604-corrections-plan.md#critique-disposition"},
     {"decision": "P01-T01/T02 complete: 53 exact destinations and preserved historical prose, CLI-only edits, 145 API tests, Ruff/format and mypy all passed.", "status": "executed", "evidence": ".copilot-tracking/changes/2026-10-31/employee-briefing-loading-531-pr604-corrections-changes.md"},
-    {"decision": "One independent Review executed Complete; outcome Conformant, no substantive findings, assessed eight Markdown repairs and actual validation. P01 complete.", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-31/employee-briefing-loading-531-pr604-corrections-review.md"}
+    {"decision": "One independent Review executed Complete; outcome Conformant, no substantive findings, assessed eight Markdown repairs and actual validation. P01 complete.", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-31/employee-briefing-loading-531-pr604-corrections-review.md"},
+    {"decision": "P02 completed: repairs 6b2f3522 published as 844d77c3 after rejected push, non-rebase pull and rubric-only recovery. Identical Git trees preserve validation and single Review applicability.", "status": "executed", "evidence": ".copilot-tracking/changes/2026-10-31/employee-briefing-loading-531-pr604-corrections-changes.md#p02-publication-and-recovery"},
+    {"decision": "Seven successful GraphQL replies preceded seven resolutions; fresh metadata verified exact original nodes/reply IDs, PR OPEN / MERGEABLE and Refs #531. Final accounting is metadata only.", "status": "verified", "evidence": ".copilot-tracking/changes/2026-10-31/employee-briefing-loading-531-pr604-corrections-changes.md#exact-original-thread-ledger"}
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Complete already-authorized P02: commit, non-force push, then successful reply and resolution for each original thread."},
+  "next_action": {"phase": "Follow-up", "action": "Await hosted CI and owner approval; later selected live/manual acceptance work is separate. No further child task started."},
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Separate live employee-site verification", "rationale": "Remaining unchecked issue acceptance criterion; synthetic checks do not establish live acceptance.", "evidence": "Issue 531 AC7; preserved original parent Review."}
+    {"rank": 1, "task": "Hosted CI and human approval", "rationale": "Current caller-selected publication gate must produce actual results; no merge authorization is inferred.", "evidence": "PR 604; explicit caller direction and completed correction Review."},
+    {"rank": 2, "task": "Separate live employee-site verification", "rationale": "Remaining unchecked issue acceptance criterion; synthetic checks do not establish live acceptance.", "evidence": "Issue 531 AC7; preserved original parent Review."},
+    {"rank": 3, "task": "Specialist/manual accessibility acceptance", "rationale": "Historical UX/manual accessibility residuals cannot be closed by documentation navigation repairs.", "evidence": "Preserved original and capacity-correction Reviews; current plan Follow-Up Items."}
   ]
 }

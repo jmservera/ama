@@ -5,7 +5,7 @@ ms.date: 2026-10-31
 ---
 
 Task ID: 531. Slug: employee-briefing-loading-531-pr604-corrections.
-Status: P01 complete; one Complete / Conformant Review; P02 publication pending.
+Status: P01/P02 complete; one Complete / Conformant Review; CI/human gates pending.
 
 ## Executive Summary
 
@@ -83,8 +83,8 @@ and configured API tooling; link/CLI shape checked separately.
 <!-- P02 -->
 ### P02: Publish and Disposition
 
-* [ ] P02-T01: Commit implementation/evidence and non-force push PR #604.
-* [ ] P02-T02: Reply and resolve seven threads; record verified remote outcome.
+* [x] P02-T01: Commit implementation/evidence and non-force push PR #604.
+* [x] P02-T02: Reply and resolve seven threads; record verified remote outcome.
 
 Dependencies: P01-T02 follows T01, T03 follows T02; P02-T01 follows Review,
 P02-T02 follows successful push. No complete local gate dependency under the
@@ -113,7 +113,11 @@ critique. Evidence:
 
 P01 complete with exact 53-link/CLI/historical-preservation checks,
 145 API tests and configured Ruff/format/mypy passing. P01-T03 executed
-one independent Complete / Conformant Review with no substantive findings;
-P02 remains pending. Changes evidence:
+one independent Complete / Conformant Review with no substantive findings.
+P02 completed: fixing commit 6b2f3522, rejected push recovered through
+non-rebase merge 844d77c3 with identical Git tree, non-force push succeeded,
+seven successful replies followed by seven verified resolutions. PR is OPEN /
+MERGEABLE and retains Refs #531; hosted CI/live/manual/human approval remain
+separate. This final accounting updates metadata only. Changes evidence:
 .copilot-tracking/changes/2026-10-31/employee-briefing-loading-531-pr604-corrections-changes.md.
 Review findings route later; do not repeat critique or Review.

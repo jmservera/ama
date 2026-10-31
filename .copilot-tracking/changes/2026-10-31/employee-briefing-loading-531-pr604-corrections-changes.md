@@ -7,8 +7,8 @@ ms.date: 2026-10-31
 ## Execution Status
 
 Task 531 / employee-briefing-loading-531-pr604-corrections, automatic mode.
-P01 implementation/validation and one independent Review complete;
-P02 publication follows Review.
+P01 implementation/validation, one independent Review and P02 publication/
+thread disposition complete. Hosted CI/live/manual/human gates remain separate.
 Main merge 6f3f0bf2 preserves both log entries and main's rubric score.
 Research Complete / Ready; one critique Complete / Revise with PC-001/002
 applied directly in current plan/details. No second critique.
@@ -56,18 +56,47 @@ hosted CI remains pending, not passed by inference.
 
 Source: PR #604 gh api graphql reviewThreads capture, 2026-10-31.
 All original comments authored by copilot-pull-request-reviewer.
-Reply IDs, fixing commit and verified resolved states will be recorded after
-successful publication. Require successful reply identity before resolution.
+Fixing commit: 6b2f3522. First successful published head:
+844d77c3bb43f2c98dafdb3f29c3cee46b048c3a. Each reply response supplied an ID before
+resolveReviewThread was called; all seven mutation responses confirmed resolved.
+Fresh reviewThreads read verified all seven reply IDs and resolved states.
 
 | Thread ID | Original comment ID | Target and repair | Reply / resolved |
 | --- | --- | --- | --- |
-| PRRT_kwDOUU8JX86yRWHr | PRRC_kwDOUU8JX88AAAABCCoJDg | Publication-harness phase details: separate CLI option values | Pending |
-| PRRT_kwDOUU8JX86yRWIJ | PRRC_kwDOUU8JX88AAAABCCoJQg | Capacity-correction Review: 18 destinations | Pending |
-| PRRT_kwDOUU8JX86yRWId | PRRC_kwDOUU8JX88AAAABCCoJYw | Publication-harness Review: 10 destinations | Pending |
-| PRRT_kwDOUU8JX86yRWIu | PRRC_kwDOUU8JX88AAAABCCoJhg | Original Review: 9 destinations | Pending |
-| PRRT_kwDOUU8JX86yRWJG | PRRC_kwDOUU8JX88AAAABCCoJrg | Capacity-correction critique: 7 destinations | Pending |
-| PRRT_kwDOUU8JX86yRWJT | PRRC_kwDOUU8JX88AAAABCCoJyg | Original critique: 4 destinations | Pending |
-| PRRT_kwDOUU8JX86yRWJj | PRRC_kwDOUU8JX88AAAABCCoJ6A | Publication-harness critique: 5 destinations | Pending |
+| PRRT_kwDOUU8JX86yRWHr | PRRC_kwDOUU8JX88AAAABCCoJDg | Publication-harness phase details: separate CLI option values | PRRC_kwDOUU8JX88AAAABCCrrlw / true |
+| PRRT_kwDOUU8JX86yRWIJ | PRRC_kwDOUU8JX88AAAABCCoJQg | Capacity-correction Review: 18 destinations | PRRC_kwDOUU8JX88AAAABCCrr7Q / true |
+| PRRT_kwDOUU8JX86yRWId | PRRC_kwDOUU8JX88AAAABCCoJYw | Publication-harness Review: 10 destinations | PRRC_kwDOUU8JX88AAAABCCrsSg / true |
+| PRRT_kwDOUU8JX86yRWIu | PRRC_kwDOUU8JX88AAAABCCoJhg | Original Review: 9 destinations | PRRC_kwDOUU8JX88AAAABCCrs5w / true |
+| PRRT_kwDOUU8JX86yRWJG | PRRC_kwDOUU8JX88AAAABCCoJrg | Capacity-correction critique: 7 destinations | PRRC_kwDOUU8JX88AAAABCCrtrw / true |
+| PRRT_kwDOUU8JX86yRWJT | PRRC_kwDOUU8JX88AAAABCCoJyg | Original critique: 4 destinations | PRRC_kwDOUU8JX88AAAABCCrujQ / true |
+| PRRT_kwDOUU8JX86yRWJj | PRRC_kwDOUU8JX88AAAABCCoJ6A | Publication-harness critique: 5 destinations | PRRC_kwDOUU8JX88AAAABCCru9Q / true |
+
+## P02: Publication and Recovery
+
+Committed repairs and dated original RPI evidence as 6b2f3522 with privacy-safe
+author/committer identity and requested Copilot trailer. Initial
+git push -u origin HEAD rejected non-fast-forward. Executed
+git pull --no-rebase --no-commit origin feat/employee-briefing-loading-531.
+Only rubric conflicted; restored origin/main's side and committed merge
+844d77c3 with trailer, retaining remote score history without rewriting it.
+
+PC-001 recovery checkpoint passed: 844d77c3 and 6b2f3522 have identical Git
+trees. Rechecked all 53 exact links, CLI edits, historical-prose preservation,
+main ancestry/rubric/both log entries and whitespace. API and repair inputs
+unchanged, so successful validation and single Review remain content-applicable;
+no rerun or second Review needed. git push -u origin HEAD then succeeded.
+git ls-remote and fresh PR headRefOid matched 844d77c3.
+
+Refreshed exact seven nodes before mutation and matched original path/comment
+identities. Executed seven addPullRequestReviewThreadReply mutations, each
+confirmed before its resolveReviewThread mutation. Fresh PR metadata confirmed
+all original reply IDs and resolved states, OPEN / MERGEABLE, Refs #531.
+Updated PR body prospectively with current evidence and caller-directed CI gate.
+Full local gate remains unrun; earlier adverse outcomes/waits remain unchanged.
+
+This subsequent accounting changes only the current plan, changes and state;
+repair/API inputs and original Review are retained. Final accounting commit/
+remote identity is verified externally to avoid self-referential SHA churn.
 
 ## Amendments and Divergences
 
@@ -81,8 +110,8 @@ publication, prospectively; earlier gate evidence remains historical.
 P01 complete; one independent Review executed Complete / Conformant, zero
 substantive findings, at
 .copilot-tracking/reviews/logs/2026-10-31/employee-briefing-loading-531-pr604-corrections-review.md.
-All P02 work remains pending. Plan markers, details, changes, blockers and
-validation agree. Review assessed only this correction and executed validation,
+P02 is complete with the verified thread ledger above. Plan markers, details,
+changes, blockers and validation agree. Review assessed only this correction and executed validation,
 not earlier adverse outcomes or live acceptance. No implementation blocker,
 source change or test addition.
 
