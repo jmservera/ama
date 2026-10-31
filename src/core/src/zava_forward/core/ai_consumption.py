@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import re
 import uuid
 from collections.abc import Iterator, Mapping
@@ -169,6 +170,10 @@ class LedgerPort(Protocol):
 
 class DispatchHeld(RuntimeError):
     """Safe code only; never provider content."""
+
+
+def bounded_model(value: object) -> str | None:
+    return value if isinstance(value, str) and len(value) <= 512 else None
 
 
 class Consumption:
@@ -566,6 +571,7 @@ class Consumption:
                 r for r in records if r["kind"] == "price" and r["id"] == reservation["price"]
             )
             used = usage(value)
+            safe_model = bounded_model(model)
             charge = self._charge(price, used) if used else None
             reason = None
             if (
@@ -590,9 +596,7 @@ class Consumption:
                 charge=format(charge, "f") if charge is not None else None,
                 outcome=outcome,
                 held=reason is not None,
-                returned_model=reference(model)
-                if isinstance(model, str) and len(model) <= 512
-                else None,
+                returned_model=reference(safe_model) if safe_model is not None else None,
             )
             if reason:
                 self._event(
@@ -604,6 +608,17 @@ class Consumption:
                     reason=reason,
                     route="workflow-only",
                 )
+
+    def publish_output(
+        self, root: str, output: str, *, eligible: bool, db: Any = None
+    ) -> dict[str, str] | None:
+        """A financial hold cannot invalidate the caller's manual delivery route."""
+        try:
+            self.output(root, output, eligible=eligible, db=db)
+        except DispatchHeld as error:
+            logging.getLogger(__name__).warning("AI output attribution held (%s)", error)
+            return dict(status="unresolved", reason=str(error), cost=UNKNOWN)
+        return None
 
     def output(self, root: str, output: str, *, eligible: bool, db: Any = None) -> None:
         opaque(root)

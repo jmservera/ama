@@ -863,8 +863,14 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             self.audit(user["email"], "ai_run_end", "-", f"priority_recommendation {rec['id']} source={r['source']} model={r['model']} validated={r['validated']}")
             self.save()
             if r.get("meter_root"):
-                self.ai.consumption.output(r["meter_root"], rec["id"],
-                                           eligible=not late and r["source"] == "ai" and r["validated"])
+                held = self.ai.consumption.publish_output(r["meter_root"], rec["id"],
+                                                         eligible=not late and r["source"] == "ai" and r["validated"])
+                if held:
+                    rec.update(source="template", model=None, mode="workflow-only", items=tmpl_items,
+                               fallback_reason=f"Financial attribution held ({held['reason']}); use the manual route.",
+                               financial_attribution=held,
+                               overlap=len({i["case_id"] for i in tmpl_items} & set(det)))
+                    self.save()
             return self._rec_view(rec, user)
         return self.continuity_publish("priority", epoch0, r["source"], publish)
 

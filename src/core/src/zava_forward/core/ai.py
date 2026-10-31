@@ -20,6 +20,12 @@ SCOPE = "https://cognitiveservices.azure.com"
 FORBIDDEN = re.compile(r"\b(i have sent|has been sent|we have sent|i've sent|email sent|message sent)\b", re.I)
 
 
+class ModelMismatch(ValueError):
+    def __init__(self, model):
+        super().__init__("Returned model differs from the released model version.")
+        self.model = ai_consumption.bounded_model(model)
+
+
 class Ai:
     def __init__(self):
         self.endpoint = os.environ.get("AI_ENDPOINT", "").rstrip("/")
@@ -94,13 +100,14 @@ class Ai:
                 if len(raw) > 256000:
                     raise ValueError("Oversized provider envelope.")
                 result = json.loads(raw)
-            receipt.update(usage=ai_consumption.usage(result.get("usage")), returned_model=result.get("model"))
+            receipt.update(usage=ai_consumption.usage(result.get("usage")),
+                           returned_model=ai_consumption.bounded_model(result.get("model")))
             self.consumption.complete(rid, result.get("usage"), result.get("model"), "returned")
         except Exception as error:
             self.consumption.complete(rid, None, None, "timeout" if isinstance(error, TimeoutError) else "provider-unavailable")
             raise
         if model != "unattested" and result.get("model") != model:
-            raise ValueError("Returned model differs from the released model version.")
+            raise ModelMismatch(result.get("model"))
         return result
 
     def _chat(self, deployment, system, user, max_tokens=700, receipt=None):
@@ -118,6 +125,8 @@ class Ai:
             result = self._request(self.fast, system, user, max_tokens, timeout, 0, envelope)
             envelope.update(model=result.get("model"), outcome="returned", source="ai",
                             text=result["choices"][0]["message"]["content"])
+        except ModelMismatch as error:
+            envelope.update(model=error.model, outcome="model-mismatch")
         except ai_consumption.DispatchHeld as error:
             envelope.update(outcome="financial-held", reason=str(error))
         except TimeoutError:

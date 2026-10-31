@@ -314,7 +314,7 @@ class ChatMixin:
         self._chat_event(user, "chat.thread.created", t, task=t["task"], task_version=t["task_version"], model=t["model"])
         return t
 
-    def chat_add_message(self, user, tid, role, content, evidence=(), model="", expected_version=None):
+    def chat_add_message(self, user, tid, role, content, evidence=(), model="", expected_version=None, _finalize=None):
         from .store import ConflictError
         if role not in ROLES:
             raise ValueError("Role must be user or assistant.")
@@ -335,6 +335,8 @@ class ChatMixin:
                      model=str(model or t["model"])[:100] if role == "assistant" else "", task_version=t["task_version"] if role == "assistant" else "")
             if not repo.update(tid, owner, t["rowversion"], message_count=seq, updated_at=now):
                 raise ConflictError(f"chat thread {tid}")
+            if _finalize is not None:
+                _finalize(m, self.db)
             repo.add_message(m)
             repo.commit()
         t = repo.get(tid, owner)

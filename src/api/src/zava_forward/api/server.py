@@ -523,15 +523,17 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     end = q.get("end", [now.isoformat()])[0]
                     as_of = q.get("as_of", [now.isoformat()])[0]
                     ai_consumption.report_period(start, end, as_of)
+                    consumption = dict(coverage="unavailable", token_cost="Unknown",
+                                       cost_per_accepted_proposal="Unknown",
+                                       reason="Durable SQL consumption ledger unavailable.")
                     if app.assistants.sql:
-                        consumption = app.assistants.consumption.report(start=start, end=end, as_of=as_of)
-                    else:
-                        consumption = dict(coverage="unavailable", token_cost="Unknown",
-                                           cost_per_accepted_proposal="Unknown",
-                                           reason="Durable SQL consumption ledger unavailable.")
+                        try:
+                            consumption = app.assistants.consumption.report(start=start, end=end, as_of=as_of)
+                        except ai_consumption.DispatchHeld as error:
+                            consumption["reason"] = str(error)
                     return self._json(200, {"evaluation": ai_eval.run_eval(), "live": s.ai_live_report(),
                                             "registry": ai_registry.registry(), "consumption": consumption})
-                except (ValueError, ai_consumption.DispatchHeld) as error:
+                except ValueError as error:
                     return self._json(400, {"error": str(error)})
             if url.path.startswith("/api/docs/"):
                 try:

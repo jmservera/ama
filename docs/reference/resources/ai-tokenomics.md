@@ -210,6 +210,13 @@ provider rejection creates an ineligible link atomically. Meter-capacity-held
 withdrawal remains explicitly financially unresolved and excludes stale
 accepted economics after read recovery. These are source-only controls, not
 Finance reconciliation, human acceptance, or expanded issue coverage.
+The subsequent three-thread correction preserves bounded returned-model
+mismatch evidence through worker shaping to non-retryable quarantine and
+release suspension. Valid backend-held reports retain evaluation/live/registry
+with unavailable/Unknown consumption instead of HTTP 400. An admitted call's
+9,999-to-10,001 event transition returns persistent manual draft/priority/chat
+fallbacks with unresolved attribution, keeping subsequent dispatch held and
+recovered economics incomplete. These remain synthetic source-contract results.
 
 This corrects the older inventory above prospectively: merged #480/#593 already
 provide independent resident currency reservations. They are not joined into the

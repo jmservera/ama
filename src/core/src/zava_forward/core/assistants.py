@@ -327,7 +327,8 @@ def shape_result(task, result, limits):
     envelope["usage"] = result.get("usage")
     envelope.update(task=task["capability"], task_version=task["version"], case_id=task["case_id"],
                     source_signature=task["source_signature"], approved=False)
-    for key in ("provider", "deployment", "model", "outcome", "source"):
+    envelope["model"] = ai_consumption.bounded_model(envelope.get("model"))
+    for key in ("provider", "deployment", "outcome", "source"):
         envelope[key] = envelope[key][:120] if isinstance(envelope[key], str) else None
     usage = envelope["usage"]
     valid = ai_consumption.usage(usage)
@@ -883,12 +884,12 @@ class Assistants:
             quarantined = not continuity.epoch_current(current, self.continuity(db)) or not continuity.epoch_current(
                 dict(capability=current["capability"], continuity_epoch=current.get("claim_epoch")), self.continuity(db)) or bool(self.suspended(db, current["capability"])) or bool(
                 denied) or binding != current.get("claim_binding", binding) or current.get("release") != self.release_reference(db, current["capability"])
-            if not quarantined and envelope.get("outcome") == "returned":
+            if envelope.get("outcome") in ("returned", "model-mismatch"):
                 # A deployment alias is not immutable. This only compares the model name the provider returned with the released one;
                 # it is a returned-model check, not authoritative attestation of what served the call.
                 released = [r for r in rel.releases(db, current["capability"])
                             if r["id"] == current["release"]["id"]]
-                if not any(r.get("serving_model") == envelope.get("model") for r in released):
+                if envelope.get("outcome") == "model-mismatch" or not any(r.get("serving_model") == envelope.get("model") for r in released):
                     quarantined = True
                     for r in released:
                         rel.change(db, now, None, r["id"], "suspended",

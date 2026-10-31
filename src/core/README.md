@@ -48,6 +48,21 @@ unknown cached usage, malformed usage or actual overruns stop subsequent
 budget dispatch. Explicit cached zero differs from absent cached usage.
 There is no automatic timeout refund or hold-clearing operation.
 Financial completion survives proposal fencing/quarantine independently.
+Returned-model mismatches retain a closed `model-mismatch` outcome and at most
+512 characters of model evidence through worker serialization. Oversized or
+non-string names become null, not provider-unavailable; completion quarantines
+the task without retry, suspends its release and withholds provider output.
+Financial usage remains recorded, with uncertain liability held.
+
+A call admitted at 9,999 events can reach 10,001 on reservation/completion.
+Publication-only `DispatchHeld` handling retains saved legacy/priority drafts
+but shows and returns the manual fallback with explicit unresolved
+`financial_attribution` and Unknown cost. Chat saves the same workflow-only
+fallback it returns: SQL finalizes the actual message and financial join in
+one transaction; JSON uses the actual saved message and persists its fallback.
+No redispatch occurs. Subsequent dispatch remains held, and missing output
+joins keep reporting incomplete/Unknown after read recovery. Other financial
+link or persistence errors still propagate; strict `output()` remains unchanged.
 
 `report(start=..., end=..., as_of=...)` uses UTC `[start,end)` call cohorts and
 review state as of the cutoff. All attempts, including retries/failures, belong

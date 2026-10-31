@@ -8901,3 +8901,16 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Deployment AI remains off behind existing settings. No Azure, credential
   lookup, paid inference, tariff/budget renewal, live/human acceptance or issue
   closure is authorized by this reconciliation.
+
+## [2026-10-31] implementation | Final AI metering review threads, Refs #432
+
+* Updated core/API guides, Tokenomics synthesis and reference index for
+  PR #602's bounded returned-model mismatch quarantine, backend-held report
+  preservation and consistent legacy/priority/chat manual publication routes.
+* External composed tests cover real 9,999-to-10,001 event admission, SQL/JSON
+  persistence, worker serialization, safe model bounds, actual HTTP holds,
+  subsequent dispatch refusal and chat transaction/fault/other-writer joins.
+* Original dated RPI critique and Review are preserved. CI is the explicitly
+  selected publication gate, not the complete local gate or human acceptance.
+  No real Azure price/billing, OD-51, resident/historical join, live approval,
+  paid inference, deployment or whole-issue closure is claimed.

@@ -401,14 +401,39 @@ class ChatPanel:
             question_seq = store.chat_add_message(user, tid, "user", masked)["seq"]
 
         def finish(kind: str, text: str, cites: list[str], model_name: str) -> dict[str, Any]:
-            with store.lock:
-                message = store.chat_add_message(
-                    user, tid, "assistant", text, evidence=cites, model=model_name
+            def finalize(message: dict[str, Any], db: Any = None) -> None:
+                nonlocal kind, text, cites, model_name
+                if not receipt.get("meter_root"):
+                    return
+                held = store.ai.consumption.publish_output(
+                    receipt["meter_root"], f"chat:{tid}:{message['seq']}", eligible=False, db=db
                 )
-                if receipt.get("meter_root"):
-                    store.ai.consumption.output(
-                        receipt["meter_root"], f"chat:{tid}:{message['seq']}", eligible=False
-                    )
+                if held:
+                    receipt["financial_attribution"] = held
+                    kind, text, cites, model_name = "fallback", FALLBACK, [], "workflow-only"
+                    message.update(content=text, evidence=[], model=model_name)
+
+            with store.lock:
+                sql = hasattr(store, "assistant_connection")
+                message = store.chat_add_message(
+                    user,
+                    tid,
+                    "assistant",
+                    text,
+                    evidence=cites,
+                    model=model_name,
+                    _finalize=finalize if sql else None,
+                )
+                if not sql:
+                    finalize(message)
+                    if receipt.get("financial_attribution"):
+                        saved = next(
+                            m
+                            for m in store.chat_repo.doc[tid]["messages"]
+                            if m["seq"] == message["seq"]
+                        )
+                        saved.update(content=text, evidence=[], model=model_name)
+                        store.save()
                 store.audit(
                     user_key(user),
                     "chat.answer",

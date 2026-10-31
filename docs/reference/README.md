@@ -32,6 +32,10 @@ not changed/generated slide notes, a question bank or a rehearsed deck.
 PR #602's 31 October source corrections retain shared document-call limits
 and store-independent report validation; human rejection persists despite
 missing/held financial joins, which remain visibly incomplete and Unknown.
+The final three-thread correction retains bounded model mismatches for
+non-retryable quarantine/release suspension, preserves reports during backend
+meter holds, and returns consistent saved/manual responses at the exact
+9,999-to-10,001 event boundary without redispatch.
 
 For capstone work, start with the [current working set](../capstone/README.md),
 [complete native/JSON source guide](../capstone/source/README.md),

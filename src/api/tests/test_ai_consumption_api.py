@@ -37,7 +37,7 @@ from zava_forward.core.ai_consumption import (
 )
 from zava_forward.core.assistants import REGISTRY, build_request, canonical, runtime_binding
 from zava_forward.core.chat_isolation import ChatIsolation
-from zava_forward.core.chat_panel import SYSTEM, TASK, ChatPanel
+from zava_forward.core.chat_panel import FALLBACK, SYSTEM, TASK, ChatPanel
 from zava_forward.core.store import ConflictError, Store
 
 from test_assistants import Base, proposal
@@ -67,6 +67,7 @@ class ConsumptionApi(unittest.TestCase):
         self.requests: list[dict[str, Any]] = []
         self.response_text: str | None = None
         self.response_status = 200
+        self.response_model: object = "test-model"
         test = self
 
         class Handler(BaseHTTPRequestHandler):
@@ -81,7 +82,7 @@ class ConsumptionApi(unittest.TestCase):
                 text = test.response_text or canonical(proposal(snapshot))
                 body = json.dumps(
                     dict(
-                        model="test-model",
+                        model=test.response_model,
                         usage=dict(
                             prompt_tokens=100,
                             completion_tokens=20,
@@ -152,6 +153,69 @@ class ConsumptionApi(unittest.TestCase):
     def records(self) -> list[dict[str, Any]]:
         with self.service.transaction() as db:
             return [dict(r) for r in self.service.consumption._read(db)]
+
+    def fresh(self) -> ConsumptionApi:
+        fixture = ConsumptionApi()
+        fixture.setUp()
+        self.addCleanup(fixture.doCleanups)
+        return fixture
+
+    def publication_store(self, backend: str) -> Any:
+        store = self.store
+        if backend == "json":
+            store = Store(
+                str(self.fixture.seed),
+                str(self.fixture.root / "publication-live.json"),
+                str(self.fixture.root / "publication-audit.jsonl"),
+            )
+        store.ai = self.inner
+        self.inner.gate = lambda task, deployment=None: (
+            store.continuity_block(task) or store.release_block(task, deployment)
+        )
+        release_support.install(store)
+        with store.lock:
+            store._case("ZF-1")["owner_code"] = self.pm["code"]
+            store.save()
+        return store
+
+    def chat_panel(self, store: Any) -> ChatPanel:
+        iso = ChatIsolation(
+            store,
+            env=dict(
+                CHAT_DPIA_REF="SYNTH-DPIA",
+                CHAT_LAWFUL_BASIS_REF="SYNTH-LAWFUL-BASIS",
+                CHAT_NOTICE_REF="SYNTH-NOTICE",
+            ),
+        )
+        return ChatPanel(
+            iso, ChatModel(AgentWorker(foundry_provider(self.inner)), admission=lambda: None)
+        )
+
+    def fill_partition(self, target: int = 9999) -> None:
+        with self.service.transaction() as db:
+            rows = self.service.consumption._read(db)
+            price = next(r for r in rows if r["kind"] == "price")
+            for _ in range(target - len(rows)):
+                self.service.event(db, "ai-consumption", **price)
+            actual = db.execute(
+                "SELECT COUNT(*) FROM assistant_events WHERE task_id='ai-consumption'"
+            ).fetchone()[0]
+        self.assertEqual(actual, target)
+
+    def saved_recommendation(self, store: Any, backend: str, rid: str) -> dict[str, Any]:
+        if backend == "sql":
+            value = json.loads(
+                store.db.execute("SELECT body FROM recommendations WHERE id=?", (rid,)).fetchone()[
+                    0
+                ]
+            )
+        else:
+            value = next(
+                r
+                for r in json.loads(Path(store.live_path).read_text())["recommendations"]
+                if r["id"] == rid
+            )
+        return dict(value)
 
     def provenance(
         self,
@@ -958,6 +1022,264 @@ class ConsumptionApi(unittest.TestCase):
         self.assertIsNone(CURRENT.get())
         self.assertEqual(len(self.requests), 2)
 
+    def test_model_mismatch_survives_worker_roundtrip_and_suspends_release(self) -> None:
+        for returned in ("other-model", "m" * 121, "m" * 512, "m" * 513, {"private": "canary"}):
+            with self.subTest(model=type(returned).__name__, length=len(returned)):
+                fixture = self.fresh()
+                fixture.authority("assessment-preparation")
+                fixture.response_model = returned
+                task = fixture.service.invoke(fixture.pm, "assessment-preparation", "ZF-1")
+                task = fixture.service.claim(task["id"], "mismatch-worker")
+                worker = AgentWorker(foundry_provider(fixture.inner))
+                result = worker.handle(
+                    TaskMessage.from_task(task, fixture.service.limits), fixture.service.limits
+                )
+                assert result is not None
+                result = ResultMessage.from_json(result.to_json())
+                expected = returned if isinstance(returned, str) and len(returned) <= 512 else None
+                self.assertEqual(result.envelope["outcome"], "model-mismatch")
+                self.assertEqual(result.envelope["model"], expected)
+                self.assertEqual(result.envelope["usage"]["total_tokens"], 120)
+                self.assertIsNone(result.output)
+                self.assertNotIn("text", result.envelope)
+                self.assertTrue(
+                    fixture.service.complete(task, result.envelope, result.output, result.failure)
+                )
+                detail = fixture.service.detail(fixture.pm, task["id"])
+                self.assertEqual(detail["state"], "quarantined")
+                self.assertIsNone(detail["output"])
+                self.assertEqual(
+                    detail["serving_attestation"], dict(returned=expected, outcome="mismatch")
+                )
+                with fixture.service.transaction() as db:
+                    release = db.execute(
+                        "SELECT status FROM assistant_releases WHERE id='fx-assessment-preparation'"
+                    ).fetchone()[0]
+                    attempt = db.execute(
+                        "SELECT actual,outcome FROM assistant_attempts WHERE id=?",
+                        (f"{task['id']}:{task['fence']}",),
+                    ).fetchone()
+                    durable = json.dumps(db.execute("SELECT body FROM assistant_events").fetchall())
+                self.assertEqual(release, "suspended")
+                self.assertEqual(tuple(attempt), (120, "model-mismatch"))
+                completed = next(r for r in fixture.records() if r["kind"] == "completed")
+                self.assertEqual(completed["outcome"], "returned")
+                self.assertEqual(completed["tokens"]["total_tokens"], 120)
+                self.assertTrue(completed["held"])
+                self.assertFalse(
+                    next(r for r in fixture.records() if r["kind"] == "output")["eligible"]
+                )
+                if expected is None:
+                    self.assertIsNone(completed["returned_model"])
+                    self.assertNotIn("canary", durable)
+                    self.assertNotIn("m" * 513, durable)
+                self.assertFalse(fixture.service.execute(task["id"]))
+                self.assertIsNone(fixture.service.claim(task["id"], "retry-worker"))
+                self.assertEqual(len(fixture.requests), 1)
+
+    def test_exact_capacity_publication_returns_persisted_manual_routes(self) -> None:
+        for backend in ("sql", "json"):
+            for path in ("legacy", "priority", "chat"):
+                with self.subTest(backend=backend, path=path):
+                    fixture = self.fresh()
+                    store = fixture.publication_store(backend)
+                    label = next(
+                        s
+                        for s in ai_tasks.source_labels(store._case("ZF-1"), True)
+                        if s.startswith("Stage:")
+                    )
+                    panel = None
+                    thread = None
+                    if path == "chat":
+                        fixture.authority(TASK)
+                        fixture.response_text = json.dumps(
+                            dict(answer="Check the case stage.", citations=["ZF-1/stage"])
+                        )
+                        panel = fixture.chat_panel(store)
+                        thread = store.chat_create_thread(fixture.pm, "ZF-1")
+
+                    elif path == "priority":
+                        fixture.authority(
+                            "priority", deployment="capable", temperature=0.3, output=700
+                        )
+                        fixture.response_text = json.dumps(
+                            [dict(case_id="ZF-1", reason="Constructed AI priority.", cites=[label])]
+                        )
+
+                    else:
+                        fixture.authority("briefing", temperature=0.3, output=700)
+                        fixture.response_text = f"Constructed AI draft [[ZF-1: {label}]]."
+
+                    def produce(
+                        path: str = path,
+                        panel: ChatPanel | None = panel,
+                        fixture: ConsumptionApi = fixture,
+                        thread: Any = thread,
+                        store: Any = store,
+                        label: str = label,
+                    ) -> dict[str, Any]:
+                        if path == "chat":
+                            assert panel is not None and thread is not None
+                            return dict(
+                                panel.ask(fixture.pm, thread["id"], "What stage is this case?")
+                            )
+                        if path == "priority":
+                            return dict(store.ai_priority(fixture.pm, n=1))
+                        return dict(
+                            ai_tasks.run_text_task(
+                                store,
+                                fixture.pm,
+                                "briefing",
+                                [store._case("ZF-1")],
+                                "Constructed system",
+                                "Constructed input",
+                                "Manual text",
+                                [f"ZF-1: {label}"],
+                            )
+                        )
+
+                    fixture.fill_partition()
+                    with self.assertLogs("zava_forward.core.ai_consumption", level="WARNING"):
+                        answer = produce()
+                    expected = dict(
+                        status="unresolved", reason="meter-capacity-reached", cost="Unknown"
+                    )
+                    if path == "chat":
+                        assert thread is not None
+                        self.assertEqual(answer["kind"], "fallback")
+                        self.assertEqual(answer["reply"], FALLBACK)
+                        self.assertTrue(answer["workflow_only"])
+                        self.assertEqual(answer["model"], "workflow-only")
+                        self.assertEqual(answer["citations"], [])
+                        self.assertEqual(answer["consumption"]["financial_attribution"], expected)
+                        saved = store.chat_resume(fixture.pm, thread["id"])["messages"][-1]
+                        self.assertEqual(saved["content"], answer["reply"])
+                        self.assertEqual(saved["evidence"], [])
+                        self.assertEqual(saved["model"], "workflow-only")
+                        if backend == "json":
+                            disk = json.loads(Path(store.live_path).read_text())
+                            self.assertEqual(
+                                disk["chat_threads"][thread["id"]]["messages"][-1], saved
+                            )
+                    else:
+                        rid = answer["record_id"] if path == "legacy" else answer["id"]
+                        saved = fixture.saved_recommendation(store, backend, rid)
+                        self.assertEqual(answer["source"], "template")
+                        self.assertIsNone(answer["model"])
+                        self.assertEqual(answer["mode"], "workflow-only")
+                        self.assertEqual(answer["financial_attribution"], expected)
+                        self.assertEqual(saved["financial_attribution"], expected)
+                        self.assertEqual(saved["source"], "template")
+                        self.assertEqual(saved["mode"], "workflow-only")
+                        self.assertIsNone(saved["model"])
+                        self.assertTrue(saved["ai_output"])
+                        if path == "legacy":
+                            self.assertEqual(answer["text"], "Manual text")
+                            self.assertEqual(saved["shown_output"], answer["text"])
+                            self.assertEqual(answer["citations"], [])
+                            self.assertEqual(saved["citations"], [])
+                            self.assertEqual(
+                                saved["envelope"]["model"], answer["envelope"]["model"]
+                            )
+                            self.assertIsNone(saved["envelope"]["provider"])
+                        else:
+                            self.assertEqual(saved["items"], saved["workflow_items"])
+                    with patch("zava_forward.core.ai_consumption.MAX_EVENTS", 20000):
+                        rows = fixture.records()
+                        self.assertEqual(len(rows), 10001)
+                        self.assertEqual(sum(r["kind"] == "reserved" for r in rows), 1)
+                        self.assertEqual(sum(r["kind"] == "completed" for r in rows), 1)
+                        self.assertFalse(any(r["kind"] == "output" for r in rows))
+                        report = fixture.service.consumption.report(start=START, end=END, as_of=END)
+                        self.assertEqual(report["unjoined_outputs"], 1)
+                        self.assertEqual(report["coverage"], "incomplete")
+                        self.assertEqual(report["token_cost"], "Unknown")
+                        self.assertEqual(report["cost_per_accepted_proposal"], "Unknown")
+                    second = produce()
+                    self.assertEqual(
+                        second["kind"] if path == "chat" else second["source"],
+                        "fallback" if path == "chat" else "template",
+                    )
+                    self.assertEqual(len(fixture.requests), 1)
+
+    def test_chat_finalization_has_no_phantom_join_on_fault_or_other_writer(self) -> None:
+        for backend in ("sql", "json"):
+            for fault in ("output", "message-save", "other-writer"):
+                if backend == "json" and fault == "other-writer":
+                    continue
+                with self.subTest(backend=backend, fault=fault):
+                    fixture = self.fresh()
+                    store = fixture.publication_store(backend)
+                    fixture.authority(TASK)
+                    fixture.response_text = json.dumps(
+                        dict(answer="Check the case stage.", citations=["ZF-1/stage"])
+                    )
+                    panel = fixture.chat_panel(store)
+                    thread = store.chat_create_thread(fixture.pm, "ZF-1")
+                    original = store.chat_add_message
+                    other = fixture.fixture.open_store() if fault == "other-writer" else None
+                    if other is not None:
+                        self.addCleanup(other.db.close)
+
+                    def add_message(
+                        *args: Any,
+                        original: Any = original,
+                        other: Any = other,
+                        fixture: ConsumptionApi = fixture,
+                        thread: Any = thread,
+                        fault: str = fault,
+                        store: Any = store,
+                        backend: str = backend,
+                        **kwargs: Any,
+                    ) -> Any:
+                        if args[2] != "assistant":
+                            return original(*args, **kwargs)
+                        if other is not None:
+                            other.chat_add_message(
+                                fixture.pm, thread["id"], "user", "Other writer."
+                            )
+                        if fault == "message-save":
+                            with patch.object(
+                                store.chat_repo,
+                                "add_message" if backend == "sql" else "commit",
+                                side_effect=RuntimeError("message-save"),
+                            ):
+                                return original(*args, **kwargs)
+                        return original(*args, **kwargs)
+
+                    with (
+                        patch.object(store, "chat_add_message", side_effect=add_message),
+                        patch.object(
+                            fixture.service.consumption,
+                            "output",
+                            side_effect=RuntimeError("output"),
+                        )
+                        if fault == "output"
+                        else nullcontext(),
+                    ):
+                        if fault == "other-writer":
+                            answer = panel.ask(fixture.pm, thread["id"], "What stage is this case?")
+                            self.assertEqual(answer["kind"], "answer")
+                        else:
+                            with self.assertRaisesRegex(RuntimeError, fault):
+                                panel.ask(fixture.pm, thread["id"], "What stage is this case?")
+                    messages = store.chat_resume(fixture.pm, thread["id"])["messages"]
+                    outputs = [r for r in fixture.records() if r["kind"] == "output"]
+                    if fault == "other-writer":
+                        self.assertEqual([m["seq"] for m in messages], [1, 2, 3])
+                        self.assertEqual(messages[-1]["role"], "assistant")
+                        self.assertEqual(outputs[0]["output"], reference(f"chat:{thread['id']}:3"))
+                        self.assertFalse(outputs[0]["eligible"])
+                    else:
+                        self.assertEqual(outputs, [])
+                        if backend == "json" and fault == "message-save":
+                            messages = json.loads(Path(store.live_path).read_text())[
+                                "chat_threads"
+                            ][thread["id"]]["messages"]
+                        if backend == "sql" or fault == "message-save":
+                            self.assertEqual([m["role"] for m in messages], ["user"])
+                    self.assertEqual(len(fixture.requests), 1)
+
     def test_failed_metered_provider_pending_task_can_be_rejected_without_redispatch(self) -> None:
         self.authority("assessment-preparation")
         self.response_status = 500
@@ -1122,6 +1444,7 @@ class ConsumptionApi(unittest.TestCase):
 
     def test_manager_report_local_http_and_bad_period(self) -> None:
         test = self
+        self.authority("assessment-preparation")
 
         class Identity:
             name = "password"
@@ -1143,6 +1466,35 @@ class ConsumptionApi(unittest.TestCase):
         self.assertEqual(result["consumption"]["cost_per_accepted_proposal"], "Unknown")
         self.assertEqual(result["consumption"]["accepted_proposals"], 0)
         self.assertNotIn("PRIVATE-VULNERABILITY-REASON", json.dumps(result["consumption"]))
+        for hold in ("meter-capacity-reached", "meter-evidence-invalid"):
+            if hold == "meter-evidence-invalid":
+                with app.assistants.transaction() as db:
+                    app.assistants.event(db, "ai-consumption", schema="invalid", kind="invalid")
+            with (
+                self.subTest(hold=hold),
+                patch("zava_forward.core.ai_consumption.MAX_EVENTS", 0)
+                if hold == "meter-capacity-reached"
+                else nullcontext(),
+            ):
+                with urllib.request.urlopen(base) as response:
+                    held = json.load(response)
+                    self.assertEqual(response.status, 200)
+                self.assertEqual(set(held), {"evaluation", "live", "registry", "consumption"})
+                self.assertEqual(set(held["evaluation"]), set(result["evaluation"]))
+                self.assertEqual(held["evaluation"]["version"], result["evaluation"]["version"])
+                self.assertEqual(held["registry"], result["registry"])
+                self.assertEqual(
+                    held["consumption"],
+                    dict(
+                        coverage="unavailable",
+                        token_cost="Unknown",
+                        cost_per_accepted_proposal="Unknown",
+                        reason=hold,
+                    ),
+                )
+                with self.assertRaises(urllib.error.HTTPError) as error:
+                    urllib.request.urlopen(base + "?start=invalid")
+                self.assertEqual(error.exception.code, 400)
         invalid_periods = (
             "?start=invalid",
             "?start=2026-10-31T00:00:00",
