@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-31T15:37:55+00:00",
-  "commit": "f6ee762b9c507987413586b64c36ac262a847953",
+  "scored_at": "2026-10-31T16:15:58+00:00",
+  "commit": "0b6d72974789e23e28966e285103531dd0ac04ad",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41215296034",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41218366883",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "b707624408fbb21ebed6a7cf8a27b837066df3b967bb8f61d6b0b329768c25fd",
+    "solution-code": "bb036dd02500e408cf0d4070f47eae72eaa503bcb514ad64df3c58357a74004e",
     "infrastructure": "61ed8eadcd8e631c2a2e13b0853b7a96efd716806d947ef318843f0dd05f7d63",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -66,7 +66,7 @@
         "src/core/README.md:5-123",
         "src/api/src/zava_forward/api/server.py:514-540"
       ],
-      "rationale": "New token/charge metering, budget/money-limit enforcement, and a manager-only /api/ai/report endpoint with reconciliation, variance and cost-per-accepted-proposal is a genuine cost-per-unit model, not just qualitative discussion. New evidence for already-maximal baseline; 5 (ceiling) retained."
+      "rationale": "New token/charge metering, budget/money-limit enforcement, and a manager-only /api/ai/report endpoint with reconciliation, variance and cost-per-accepted-proposal is a genuine cost-per-unit model. New evidence for already-maximal baseline; 5 (ceiling) retained."
     },
     "A6": {
       "score": 5,
@@ -79,7 +79,7 @@
         "src/agents/src/zava_forward/agents/dispatch.py:186-220",
         "src/core/src/zava_forward/core/ai_consumption.py:155-185"
       ],
-      "rationale": "CallContext/call_context threads root/attempt/depth/retry metadata through existing agent dispatch and retries for financial attribution; this is bookkeeping around the existing scripted dispatch loop, not a new handoff, reflection or state-graph coordination pattern. Baseline 4 (Good) retained."
+      "rationale": "CallContext/call_context threads root/attempt/depth/retry metadata through existing agent dispatch and retries for financial attribution; bookkeeping around the existing scripted dispatch loop, not a new coordination pattern. Baseline 4 (Good) retained."
     },
     "B1": {
       "score": 3,
@@ -120,7 +120,7 @@
         "src/core/README.md:5-123",
         "src/api/README.md:9-47"
       ],
-      "rationale": "Substantial new engineering documentation (ai_consumption ledger contract, report semantics, test commands) is clear and navigable, but it is project README reference material, not capstone deck/pitch documentation. Baseline ceiling 5 retained; does not touch deck completeness."
+      "rationale": "Substantial engineering documentation (ai_consumption ledger contract, report semantics, test commands) is clear and navigable, but is project README reference material, not capstone deck/pitch documentation. The new README section (src/api/README.md:9-25) is a brief test-gate note, immaterial to..."
     },
     "B7": {
       "score": 5,
