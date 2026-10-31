@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-31T22:00:17+00:00",
-  "commit": "17e0e74c4c5cbbdda80c7361cfc1a5cab0ee6427",
+  "scored_at": "2026-10-31T22:10:45+00:00",
+  "commit": "c282df57a49c5ecc05661b3e98edcf60d0844e99",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41245618027",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41246482584",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "9b7f7b6bc0cbd6d0cc9f1b37874b1575af6ef755261971dc11d7ce9583d94a1e",
+    "solution-code": "4dff0891a0a5bfa2cd87fa3d146a3b639d513ea945fd40bcddba12ab538b7b85",
     "infrastructure": "61ed8eadcd8e631c2a2e13b0853b7a96efd716806d947ef318843f0dd05f7d63",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -29,10 +29,10 @@
     "A1": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/server.py:486-502",
-        "src/core/src/zava_forward/core/procurement.py:540-591"
+        "src/core/src/zava_forward/core/procurement.py:540-559",
+        "src/api/src/zava_forward/api/server.py:486-500"
       ],
-      "rationale": "Diff adds clean, scoped server-side pagination (API validation + core slicing) to packages/workorders; sound modular design but does not exceed already-maximal ceiling."
+      "rationale": "Diff adds limit/offset paging to work-order/package reads, filtering visibility before slicing; confirms modular, scalable list contracts. Already-maximal baseline 5 retained."
     },
     "A2": {
       "score": 5,
@@ -48,23 +48,23 @@
         "src/core/src/zava_forward/core/ai.py:67-100",
         "src/core/src/zava_forward/core/assistants.py:884-900"
       ],
-      "rationale": "Diff only adds an RPI-gate path-length note to src/README.md; no security/compliance/responsible-AI evidence changed. Baseline 5 retained."
+      "rationale": "Diff adds paging input validation (400s on malformed limit/offset) but no security/compliance/responsible-AI evidence changed. Baseline 5 retained."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/procurement.py:540-591",
-        "src/api/tests/test_workspace_paging.py:1-56"
+        "src/api/tests/test_workspace_paging.py:1-87",
+        "src/core/src/zava_forward/core/procurement.py:537-589"
       ],
-      "rationale": "Diff implements paging end-to-end (API, core, UI) with backward-compatible unpaged path and 5 new tests covering paging, bad-input, visibility. Already-maximal baseline 5 retained."
+      "rationale": "New paged list_work_orders/list_packages implementation is exercised end to end by workspace paging tests including hidden-order totals and bad-value rejection. Already-maximal baseline 5 retained."
     },
     "A5": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/server.py:489-497",
-        "src/core/src/zava_forward/core/procurement.py:540-591"
+        "src/api/src/zava_forward/api/server.py:486-500",
+        "src/api/src/zava_forward/api/web/ops.js:186-212"
       ],
-      "rationale": "Paging bounds page size (1-100) and validates input with 400s, a reliability/performance improvement for list endpoints; already-maximal baseline 5 retained."
+      "rationale": "Diff bounds capacity-workspace list responses with limit/offset paging and client-side pager UI, a real performance-relevant change; still no measured cost model alongside it. Baseline 5 retained."
     },
     "A6": {
       "score": 5,
@@ -77,7 +77,7 @@
         "src/agents/src/zava_forward/agents/dispatch.py:186-220",
         "src/core/src/zava_forward/core/ai_consumption.py:155-185"
       ],
-      "rationale": "Diff is a tooling/gate documentation note unrelated to agent dispatch/orchestration. Baseline 4 (Good) retained."
+      "rationale": "Diff is a capacity-workspace pagination change unrelated to agent dispatch/orchestration. Baseline 4 (Good) retained."
     },
     "B1": {
       "score": 3,
@@ -118,7 +118,7 @@
         "src/core/README.md:5-123",
         "src/api/README.md:9-47"
       ],
-      "rationale": "src/README.md RPI-gate path-length note is project engineering documentation, not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
+      "rationale": "This PR touches only src/api and src/core solution code (pagination feature), not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
     },
     "B7": {
       "score": 5,
