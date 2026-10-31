@@ -1,0 +1,3226 @@
+{
+  "base": "84035ae9605f7ab42744a3d6e9f620bb65126d99",
+  "retrieved": "2026-10-31",
+  "pull_requests": [
+    {
+      "pr": 15,
+      "title": "feat: build the Proper Warm local prototype",
+      "merged_at": "2026-10-05T20:27:13Z",
+      "merge_sha": "544f78fa31b1823fdd1db633029461087387d4bb",
+      "body_sha256": "88ddd66ff281c50a40c3a3475fc8f7391a130810b4f23c8a0e985d53f1afa5b4",
+      "file_count": 29,
+      "file_paths_sha256": "f8bf2e8d20541d83bef56b5c22e52e0012a01076b6eafe3eb85daf446d51c186",
+      "review_states": {
+        "CHANGES_REQUESTED": 4,
+        "APPROVED": 1
+      },
+      "check_results": {
+        "CANCELLED": 2,
+        "SKIPPED": 7,
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": [
+        {
+          "name": "pre_activation",
+          "result": "CANCELLED"
+        },
+        {
+          "name": "validate",
+          "result": "CANCELLED"
+        }
+      ]
+    },
+    {
+      "pr": 39,
+      "title": "docs: review MVP against PRD and ADRs, rank pending work",
+      "merged_at": "2026-10-09T08:12:28Z",
+      "merge_sha": "d2d37025a120acab886e13159f086a65c5b1f697",
+      "body_sha256": "3f95b72124104f3ab1e47933af3f00507c857f68f85a80c4f6cb1fbdcde2ca84",
+      "file_count": 3,
+      "file_paths_sha256": "d14feb4863d274d7dced75bfbb785544359f55f2da875d0356370b07261bf275",
+      "review_states": {
+        "APPROVED": 1,
+        "CHANGES_REQUESTED": 1
+      },
+      "check_results": {
+        "SUCCESS": 8,
+        "FAILURE": 2
+      },
+      "nonpassing_checks": [
+        {
+          "name": "record_rubric_score",
+          "result": "FAILURE"
+        },
+        {
+          "name": "rubric/score",
+          "result": "FAILURE"
+        }
+      ]
+    },
+    {
+      "pr": 59,
+      "title": "docs: require real AI SQL and Azure for subsequent AMA builds",
+      "merged_at": "2026-10-11T17:47:41Z",
+      "merge_sha": "5018eb9f50ee3e6c0f59154c89d6d588facdeb50",
+      "body_sha256": "548ab10c7fb5de60e45141761416cc45fb8ba8d2faedd73a36cdb0de13bd1a62",
+      "file_count": 16,
+      "file_paths_sha256": "6dcd9c8b48e136d0de962e57012d956f7914905f7ad5ab0a156541bcdf3f1ac0",
+      "review_states": {
+        "CHANGES_REQUESTED": 1,
+        "APPROVED": 1
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 61,
+      "title": "docs: explain the case for measurable, accountable agent-led retrofit",
+      "merged_at": "2026-10-11T22:36:41Z",
+      "merge_sha": "f9447aab3ea814f068acb7f1432e8b5bbff0966c",
+      "body_sha256": "6e076cff92895df36d730657226e09f06935c2f94dd7aa76c4093b8ff63bca64",
+      "file_count": 49,
+      "file_paths_sha256": "62cf0873258e0850433ce82c226aeef8a4f419a5b36bd9af3c233f4b6e953132",
+      "review_states": {
+        "APPROVED": 5
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 70,
+      "title": "docs: design sensor data capture and prioritisation",
+      "merged_at": "2026-10-14T21:07:34Z",
+      "merge_sha": "1cb398c7b90bec05a5700008a97d0cfac494144a",
+      "body_sha256": "da1d2bb58992723133995ad15deac0488aca45f286938e5fd2f93bf9850e7bc2",
+      "file_count": 6,
+      "file_paths_sha256": "1c008f3d2865672b3f5c6d0ff358f30ff227c9f9186b304e2ca79cd9299f6c5a",
+      "review_states": {
+        "APPROVED": 1
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 72,
+      "title": "docs(docs): assess Responsible AI and plan gated remediation",
+      "merged_at": "2026-10-15T06:29:46Z",
+      "merge_sha": "7a8b1fe65475752fcf242ed52acab8e7e43b58d3",
+      "body_sha256": "fefc1db9da0660feeea2301b74e22149ba2445a58f3ff29de33f0766f873286f",
+      "file_count": 12,
+      "file_paths_sha256": "3a13573b46788e8ef5e2bbf0d4eb609129433a9485426153bdae1de3257d85f9",
+      "review_states": {
+        "APPROVED": 2
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 205,
+      "title": "docs(docs): record RAI coverage and approved issue updates",
+      "merged_at": "2026-10-15T07:35:47Z",
+      "merge_sha": "f6a6c0d1760c308aa1c245bab21675b1e41022c6",
+      "body_sha256": "2a14a8eccde334a6cea472f71fdc735b98fc4c30f1672c8616eb1300f3a64e58",
+      "file_count": 7,
+      "file_paths_sha256": "e9c385252b94b5eff3b8a0a54e5e90fd05a0d6a45fcff9e0147097b78adcc04c",
+      "review_states": {
+        "APPROVED": 1
+      },
+      "check_results": {
+        "SUCCESS": 5,
+        "SKIPPED": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 235,
+      "title": "feat(synthetic-data): document, form and field-candidate fixtures",
+      "merged_at": "2026-10-15T08:55:40Z",
+      "merge_sha": "97666863c8b74062b98e84c3b7c4e398f7b20bf6",
+      "body_sha256": "60a10c89f03e8c2ab03e90955509b77e1b5a8e90b8502a64fd80140833f04c01",
+      "file_count": 6,
+      "file_paths_sha256": "6e922ec009de34b65ca40efc82424804d2c9213b72d443a83820106d2c6858b0",
+      "review_states": {
+        "APPROVED": 2
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 242,
+      "title": "feat(ux): content standard and plain-language copy audit (#153)",
+      "merged_at": "2026-10-15T09:45:52Z",
+      "merge_sha": "1748c5a70e82e06982438ee5264f750ff5836ace",
+      "body_sha256": "631297ad45a5f5df075c50d71b074aadac5475e2d77fdf1ea2903e1c7af46661",
+      "file_count": 12,
+      "file_paths_sha256": "0c429a52184e76d621e7bead67e0b564fc4f35851e9c626f87bf372cb619272d",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 243,
+      "title": "feat(synthetic-data): generator coverage baseline and gap closure",
+      "merged_at": "2026-10-15T09:58:47Z",
+      "merge_sha": "8f9dc3d5dabe12730b7801a548d74f331f9fa71d",
+      "body_sha256": "65be83fdddba0c3692ed58bf4cf2fee6231bafd4b349105f32a5853051b1bf95",
+      "file_count": 4,
+      "file_paths_sha256": "3f81d641e248a0e7e4e05be3fa0face50bef495c2adc795329436033309dc294",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 244,
+      "title": "feat(ux): WCAG 2.2 conformance baseline for the workbench",
+      "merged_at": "2026-10-15T10:02:47Z",
+      "merge_sha": "08848ac187e11b9a14673ffa7ff14237c469053e",
+      "body_sha256": "ae8ad09d93ecaef77af2badde77f252be48cfc5fc3c30f68157ae26f7286928e",
+      "file_count": 7,
+      "file_paths_sha256": "3b72142680a8c332476cc2f728521a69f505da58a27676c1e0928f624c76b7ec",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 250,
+      "title": "feat(regulatory): rule cards and approval workflow",
+      "merged_at": "2026-10-15T11:01:55Z",
+      "merge_sha": "0b2898f188457d10fe40f5e184e2798f42286e04",
+      "body_sha256": "369ff928908809f46bb8b9291985e464aefca3dddfcc331284b104814307452f",
+      "file_count": 3,
+      "file_paths_sha256": "03c22a5a0a0f8fba5174132da8fcdc5e3e46cf15a457f2508404e07691811e6e",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 252,
+      "title": "feat(synthetic-data): lifecycle coverage for contractor, finance, grant and consent records (#173)",
+      "merged_at": "2026-10-15T11:32:10Z",
+      "merge_sha": "a2138bf7eea28c1fc048d0e1353ec0d9e7ad06f6",
+      "body_sha256": "faeef07a6d83d046e33e39c326b1b7092fc4515ce359725df1edab52764b3efd",
+      "file_count": 9,
+      "file_paths_sha256": "83b533aff34e942d4140487d89674537ed4305e952d0d1d7044a58f5ddfd9d7a",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 258,
+      "title": "feat(mvp): AI eval harness evidence gate (#108)",
+      "merged_at": "2026-10-15T11:54:45Z",
+      "merge_sha": "941e5267e13bb613a24facea2a3a34e6b8a97136",
+      "body_sha256": "027f21b9e4b03dd60793c17a673ad769e995925cd3b93e7d10086b026595fa0e",
+      "file_count": 8,
+      "file_paths_sha256": "a010cdec6170d7bb64136f60ed94cedda22c6d164921bf5c37b85b21dfe6ef0c",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 259,
+      "title": "feat(regulatory): regulatory change review workflow (#127)",
+      "merged_at": "2026-10-15T11:50:52Z",
+      "merge_sha": "dd802f267c6fefe8a23ef2561088aa60f5c5cdb9",
+      "body_sha256": "0839ee31a51000494d0fe4a3394e5eb0720f3425e45d3f0e7b366fdff49ba291",
+      "file_count": 7,
+      "file_paths_sha256": "88d19b843a3942c2d12c28890fd104ddda6295f4d035483df4056fffcf73c25d",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 261,
+      "title": "feat(mvp): frozen protocol, benefits register and phase release gates (#126)",
+      "merged_at": "2026-10-15T12:15:18Z",
+      "merge_sha": "b4375c094f75ed1b24f1bfad3c83e463f7e9274c",
+      "body_sha256": "a395a621dba72d121378e292e2b05e0e83b0a113e7922f49669d2599e6435935",
+      "file_count": 13,
+      "file_paths_sha256": "2c9b260e69565afcc51d8453d836cf543c59f91f2b91513ff31d63eda33d4e39",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 4,
+        "FAILURE": 1
+      },
+      "nonpassing_checks": [
+        {
+          "name": "mssql",
+          "result": "FAILURE"
+        }
+      ]
+    },
+    {
+      "pr": 262,
+      "title": "feat(mvp): per-year ledger digests, load check and restore deletion re-application",
+      "merged_at": "2026-10-15T12:10:33Z",
+      "merge_sha": "0eb4d7075d2b87c349896000cd0fc6cae0c2a157",
+      "body_sha256": "9eefe2d8e0ca54df4e025eeec853d53424419cb7321e3a8e5adf7f79000d33d3",
+      "file_count": 18,
+      "file_paths_sha256": "f85b7a050dacaa42c03e3e0292242c346927cbfabd531dad6fdb208c7f575484",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 265,
+      "title": "feat(infra): Key Vault secret lifecycle",
+      "merged_at": "2026-10-15T12:31:35Z",
+      "merge_sha": "c32bf7790dd6b99aa6ed7051cebe3cdc85e0b5e2",
+      "body_sha256": "dda74e926c6dc19f4e6deca9d15aa1b7633b58dc7e4d00d50b2e3e420c02c270",
+      "file_count": 12,
+      "file_paths_sha256": "12e62d38ee7c095f38af61ca01aba566bd736a0ddf289b5a30a745c4380330ff",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 2
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 267,
+      "title": "feat(mvp): staff time capture gated on DPIA, notice approval and audited enabling",
+      "merged_at": "2026-10-15T13:03:37Z",
+      "merge_sha": "7ca73b56633b4b00bcac5fcd78e1ec2def37a53a",
+      "body_sha256": "0dfe10cf34fc5c49e3fd5b5c359fe0b5adbb8290eb1adeb34a9d260a6e9e23c0",
+      "file_count": 19,
+      "file_paths_sha256": "38a5032350dd8f82728bb1f0aafac25f614210e4b13eb300145f311cdc9199ad",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 268,
+      "title": "feat(mvp): immutable Blob ledger digests and scheduled verification",
+      "merged_at": "2026-10-15T12:46:31Z",
+      "merge_sha": "4e9ac655be4f11feca7d1469a6b8cf508d6e983a",
+      "body_sha256": "e8456ebb04346dfa60129cc094425c6bd5d5310ade07c013150fbe53fe2b7ec1",
+      "file_count": 13,
+      "file_paths_sha256": "871c52c2a20077ece75249d3b60d73fd7ac5ecb9d26827c235da97a3dab9e439",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 269,
+      "title": "feat(mvp): service continuity, versioning and supplier-independent export",
+      "merged_at": "2026-10-15T13:09:25Z",
+      "merge_sha": "59236636cc29708301bbcf78c68dba10559cd514",
+      "body_sha256": "7967798d9aa592ee6516f841ee0e9456da22fcdfc4ec3c5c670a42e440a866c0",
+      "file_count": 16,
+      "file_paths_sha256": "f4a20a4e0ec3ec635684bb00ac1b200445e4d713264ba8644b747cd75ecc996a",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 270,
+      "title": "feat(mvp): document malware scanning, retention and legal hold",
+      "merged_at": "2026-10-15T12:58:39Z",
+      "merge_sha": "e6df6b701abaf73bde9e089e264baf8c119e5298",
+      "body_sha256": "1d22955afc94621accbc461a9230f30c5ee38aec7c2017875607e0272d1e3a07",
+      "file_count": 18,
+      "file_paths_sha256": "1ebdd18071c0fb9f78a2bf8383d1ddaefb24cbc0df06f9710f0f642c9e1fec79",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 272,
+      "title": "feat(mvp): deterministic sensor backfill generator (#183)",
+      "merged_at": "2026-10-15T13:51:48Z",
+      "merge_sha": "2ae95240f4cde44f2a6493e902cb690b126e8363",
+      "body_sha256": "8d4cf45468a0e0bfd035d653a3f9b5aef336d36b55a979c1c7d249414ce2964b",
+      "file_count": 9,
+      "file_paths_sha256": "54055dd8e1b57abbe7be303386d4e49b4b4a57bdebd89d1b3d90a64a79793580",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 273,
+      "title": "feat(infra): Azure IoT Hub Bicep module (#140)",
+      "merged_at": "2026-10-15T13:32:31Z",
+      "merge_sha": "f0c9133cafb2cb27c89f4933e51f940443c480e9",
+      "body_sha256": "75b7a5236398c75875d60b9f34fc58dd44c3721b05704c7b2842e864ad74a563",
+      "file_count": 11,
+      "file_paths_sha256": "8589b92d08b4980b5f9bd6e37d539452d0666d413154d7e82ec3af2c3370abef",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 2
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 274,
+      "title": "feat(infra): Azure Policy, Defender plans, locks and tagging as code",
+      "merged_at": "2026-10-15T13:38:06Z",
+      "merge_sha": "ce9f07916a3ad3a15a679d06ef8dfe69a17d013c",
+      "body_sha256": "a675ad61d939047e4411ed8afbd3abc3f9b342f74bec707895855f98e262b32e",
+      "file_count": 14,
+      "file_paths_sha256": "b71aa9be8354dcc94a2636aea8103ba93ebb2631f775336b575a22667dc65022",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 2
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 275,
+      "title": "feat(mvp): role endpoint inventory and free-text note holding (#116)",
+      "merged_at": "2026-10-15T13:51:41Z",
+      "merge_sha": "1b3b15edbe6bfe4d41b21c92a0fde86068602f85",
+      "body_sha256": "aa8da5f6a1812d730566d058a3cbfc926673549ca00869648946c2a23c45929a",
+      "file_count": 18,
+      "file_paths_sha256": "6e3017c688a4e88dba9e28bc81a7f2b73d6ca2d385e1611eb7178e793ca6dc6d",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 277,
+      "title": "feat(infra): identity, RBAC and Entra registration as code (#141)",
+      "merged_at": "2026-10-15T14:13:13Z",
+      "merge_sha": "2b8ac1d12783a51cd409045d47001446059b853d",
+      "body_sha256": "7b0291f20213bac84c1e96b5e420e981a65ec4c9d635dc22af98f1420f7fa417",
+      "file_count": 10,
+      "file_paths_sha256": "4d61e011b66ed89bd931d7753697988d70281be5284358c2c6ffde5c9ae178be",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 2
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 278,
+      "title": "feat(infra): private networking coverage and Front Door Premium edge (#143)",
+      "merged_at": "2026-10-15T14:18:48Z",
+      "merge_sha": "0bcfea2a63b3aad844b73a8776e19b56e1e08126",
+      "body_sha256": "345d4e852d1b9b589cde87b8f2fec832ee7d5734cb9eb48e985f6ed52f4d8178",
+      "file_count": 11,
+      "file_paths_sha256": "23bf6e9b5ad027367f825ba23e3fad2248defab503dfd63295ec3cbeb2f854cb",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 2
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 281,
+      "title": "docs: chat and memory DPIA working record and privacy controls, not wired and provider terms not recorded (#163)",
+      "merged_at": "2026-10-15T14:56:01Z",
+      "merge_sha": "c39f5a5cea2f1507dea5fd6f0387ce8b1bed7f80",
+      "body_sha256": "b7486d6978bbc1a7253e6008cc006e58b3e56f23330ef5b23f68c5435fd04d27",
+      "file_count": 18,
+      "file_paths_sha256": "5ffb15c36103288ef8780463616bcec6824fecac4534877ce1abf3d991f5b371",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 282,
+      "title": "feat(mvp): per-user chat thread storage and lifecycle (#160)",
+      "merged_at": "2026-10-15T14:45:14Z",
+      "merge_sha": "9cd755bf9f99c43209bb4820e870a6e1db98fe57",
+      "body_sha256": "0a2cffa13f8b4e6d078629c554e000da4649a30be570aac144e28b196c753485",
+      "file_count": 16,
+      "file_paths_sha256": "f05afd058ddbfc63422bf91fa75b3326c86aedaa0720ebc8580d85ee8318b0f6",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 285,
+      "title": "feat(mvp): per-user memory lifecycle (#161)",
+      "merged_at": "2026-10-15T15:18:19Z",
+      "merge_sha": "5fad29e08a8f0e8ea5c13c6f460ca570bb168a76",
+      "body_sha256": "fc8650046710e4935f8f443f20fd06ce4729e27f8d7c9bb74fe49096a152a65a",
+      "file_count": 19,
+      "file_paths_sha256": "995fe4689128e996b71f18309ad28a7d332f7da6e48299967c635fb8e4ef7ad7",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 286,
+      "title": "feat(mvp): chat and memory user isolation (#162)",
+      "merged_at": "2026-10-15T15:34:07Z",
+      "merge_sha": "1ffcfbce72efda11893435f9ba5d79f82354987e",
+      "body_sha256": "6a89b7281f0457565686a1d99d7fc9ec40b176bbcb9eb5edfafd700c0b38e043",
+      "file_count": 16,
+      "file_paths_sha256": "8f030ea3d0f139ce5f445312fc059fd2fcc146a32896bdefa1070a375c1edcfe",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 287,
+      "title": "feat(mvp): release admission for the five assistants (#107)",
+      "merged_at": "2026-10-15T16:10:21Z",
+      "merge_sha": "07cf69ebdd970012bd37ff28ca356118c9c24b76",
+      "body_sha256": "0de48b5209c306ea252c52978545408dfaf09a162a0cea1232cacda3b1a58451",
+      "file_count": 472,
+      "file_paths_sha256": "ff218537431b1c9b29db6a58831da32b9f3d0a5d17950b511051f47a6a924b29",
+      "review_states": {
+        "APPROVED": 1
+      },
+      "check_results": {
+        "SUCCESS": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 291,
+      "title": "docs(architecture): mvp and prototype to src parity matrix (#197)",
+      "merged_at": "2026-10-15T16:43:08Z",
+      "merge_sha": "80cd56b294d02ba853a47241e5a727802d64231a",
+      "body_sha256": "bf16d5e484bdbbbb66b6b33b190eb943609dde40a2a2869dc54c4a36c98fd8ea",
+      "file_count": 8,
+      "file_paths_sha256": "c416f3e952dc612528dfc7817fd20832246ad65377771fb22a04190b604d096d",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 292,
+      "title": "feat(rubric): exclude vendor, data and build paths under src (#198)",
+      "merged_at": "2026-10-15T16:31:12Z",
+      "merge_sha": "ef4656a188f5ebd3648a963c4cb8ddf50da1ebcd",
+      "body_sha256": "bf606fec8a06b87c26cb25eee48ea9ef6c82d7af8f96006e8af0edc54164dd2a",
+      "file_count": 10,
+      "file_paths_sha256": "036ad1ad8eee438c88658d73982c87440514d05a1d9851c95cde8f58154a6c2d",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 293,
+      "title": "fix(mvp): remove committed assistant test sandboxes (Refs #107)",
+      "merged_at": "2026-10-15T16:37:41Z",
+      "merge_sha": "f2d9228a974ee54313b7488054723771f8eedfb5",
+      "body_sha256": "42fefbea70c6d03b62872cc5cacdb395c6b6eaccc7512a6cd1130a6a438b77bc",
+      "file_count": 457,
+      "file_paths_sha256": "3e0cd62334ece0e3ba25aba691a59fd3bfcd9b6a9f8975df0e3af7139fa81c93",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 294,
+      "title": "feat(src): add isolated project skeletons, images and per-project CI (#290)",
+      "merged_at": "2026-10-15T16:52:07Z",
+      "merge_sha": "b50d8a89671556ab69be70505186f1ff1e94b216",
+      "body_sha256": "ada42007b2364513e96e50c9f6ab4cde4e8c8dc1369e745d37e9cfb6bdc51636",
+      "file_count": 52,
+      "file_paths_sha256": "c806f7488ed4e43f504df815b0d49b1c639757bd47410ce04d0ffcc1397af37c",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 8
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 295,
+      "title": "chore: retire prototype/ (#202 step 1)",
+      "merged_at": "2026-10-15T17:00:43Z",
+      "merge_sha": "a7e300465be140fc861a490eec74e6375b278f0c",
+      "body_sha256": "4af4ebfc90cbcb0b2f9314e0b2c8a2de7732b5a1267defb1c0d46bbc23e2a239",
+      "file_count": 26,
+      "file_paths_sha256": "c3123d34b08a40fdbafe884a40b4c71c9368ddef9b2e00f5c46086fdedb35726",
+      "review_states": {},
+      "check_results": {},
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 296,
+      "title": "refactor(src): move profile, rulecards and ai into core (M1 of #199)",
+      "merged_at": "2026-10-15T17:19:25Z",
+      "merge_sha": "5c717d9ea8c17ade5f58664bffaf055a89c8ce7e",
+      "body_sha256": "ddfaf50ef8a388daffc0a87e560001c595532289764df349bf1dda6705484dcb",
+      "file_count": 34,
+      "file_paths_sha256": "384968f1a91b6c27b6f49ea4c61c8bab2eb1cd9137d7a31b19b927e92d27419a",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 297,
+      "title": "refactor(src): move core hub into core (M2 of #199)",
+      "merged_at": "2026-10-15T17:49:08Z",
+      "merge_sha": "14b776c0fc39b68e8142b60731453b9f7952ec7d",
+      "body_sha256": "2ec8ca421210451bcd467146f02c0f198ad88dfed035b3f98fa2fbe5e979eea6",
+      "file_count": 92,
+      "file_paths_sha256": "76ef185a9f419bba55c19dae638decd522597be2d71a5c69dc439c05d423af0e",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 298,
+      "title": "refactor(src): move synthetic tools, eval fixtures and data governance (M3 of #199)",
+      "merged_at": "2026-10-15T18:12:58Z",
+      "merge_sha": "55462829fc753ef68b25a4dbc99834445a4cacb0",
+      "body_sha256": "b9f2afbce2db1c2fa3ff0bc775b5f8e2b024e21d14d2239db0f65916d9978ff8",
+      "file_count": 44,
+      "file_paths_sha256": "aec076261cd01b94b25791ed66ed661d9bdf650ef3dad6ddc6cb1d7abbe69a9e",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 299,
+      "title": "refactor(src): move chat privacy, isolation, recovery and ai eval (M4 of #199)",
+      "merged_at": "2026-10-15T18:33:08Z",
+      "merge_sha": "74a84dcfa5ba1d22f1090a2c15bfd50284ad62f8",
+      "body_sha256": "59e2c02f926cea115a4e093d6766220be0096061d60e5328910ed9fcaf28ada4",
+      "file_count": 37,
+      "file_paths_sha256": "76f1b08c76cb3b0c8919e05cf1eb89d658a7311bee4300af6adb8be58d6a5753",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 300,
+      "title": "refactor(src): move api, orchestrator, web and image (M5 of #199)",
+      "merged_at": "2026-10-15T19:02:50Z",
+      "merge_sha": "e019293446ba9de0f2169c92dfa3fd1211fbbe37",
+      "body_sha256": "4a2752519882ee7d06325ea36735c18b876c3b06b06093e9124281c866a49192",
+      "file_count": 92,
+      "file_paths_sha256": "44adf7bc7106222790f58ef5266daeb56e3749793f640573851d739f39702d1f",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 301,
+      "title": "feat(agents): rebuild assistants dispatch worker (R1 of #199)",
+      "merged_at": "2026-10-15T19:19:49Z",
+      "merge_sha": "a99e38e998d388ac8b870098c8fe8a4e4ffd57df",
+      "body_sha256": "cb38d3fbdc62774f076771d58c46aad2f2004cf1037f906f80a7cb20a43cbeab",
+      "file_count": 17,
+      "file_paths_sha256": "f5e77c2fd09c85f731b85fbca8f0c5dec02a0f9fada9b561fa4d64478180ffb3",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 302,
+      "title": "docs(src): split mvp readme and repoint docs (M6 of #199)",
+      "merged_at": "2026-10-15T19:27:15Z",
+      "merge_sha": "a381532dd914353e7e75bc59f6255535abb2b3b4",
+      "body_sha256": "a3a46e27fcc172eb33a10adfa11c5b48250963f3434130be1394ce8c44fccb34",
+      "file_count": 34,
+      "file_paths_sha256": "495464ee733a7ee8e90427ddb1597fca22c4e9eb7ae7497bf35ec61284f099a6",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 303,
+      "title": "feat(importer): Excel import preview, quarantine, export and comparison",
+      "merged_at": "2026-10-15T19:48:14Z",
+      "merge_sha": "0c6e05e1e9f0126cd65adecd760c6360cffe67ce",
+      "body_sha256": "66a29c013fb62a7c19ccb2a803dbe6e1472f3f2f78ad4b416f7fcd58afc305aa",
+      "file_count": 15,
+      "file_paths_sha256": "1ee132efc9629d8718e5dad2abcafee1828ccd4f50b8c566bbfe66e5a117db45",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 7
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 305,
+      "title": "feat(api): case conversation panel with cited, labelled answers (#159)",
+      "merged_at": "2026-10-15T20:04:10Z",
+      "merge_sha": "c37c28a2592f8566de4fd6cfb1bcca9b38fdd4b1",
+      "body_sha256": "7bcde9d98c8c47b5c7af862112df96b75d8ae7895b1dd277a8508ad241941cb5",
+      "file_count": 21,
+      "file_paths_sha256": "ddbee7093fa84ff827ef25f5cdb0f92e7849536d224052e1e5044409638fbb99",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 306,
+      "title": "feat(infra): environment parameter sets for dev, test and pilot (#137)",
+      "merged_at": "2026-10-15T19:55:19Z",
+      "merge_sha": "391be11c09b376c9907042350002b6c7ec093ba4",
+      "body_sha256": "ef139c2b49cefcc1ef036973b6e8ea6e6c0d3c86d45a562ae7d73a509a8d8bca",
+      "file_count": 13,
+      "file_paths_sha256": "7be28bef0ddab1d2f9842f4458717865dccc1e76c58f96e18512fa4332f7f93c",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 307,
+      "title": "feat(agents): chat grounding, evaluation and refusal boundaries (#164)",
+      "merged_at": "2026-10-15T20:36:59Z",
+      "merge_sha": "f593555251f4d467854113e050d50aa10c078329",
+      "body_sha256": "664f34d489e5cda5855debe051403da541c135b63000a54ad27c7d280bfe9ec7",
+      "file_count": 18,
+      "file_paths_sha256": "8092bfdd61e48d15322d774a7fdeaa64aaf6fda701b8f2859e86c7db66373f44",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 308,
+      "title": "feat(core): version synthetic needs inventory and iteration gate",
+      "merged_at": "2026-10-15T21:00:25Z",
+      "merge_sha": "a63351fa5630556c09b7b7bf58adc0f2adf2b380",
+      "body_sha256": "9749bc4538f55aa627eebfc9d3edff914e15ab18da1ba3c7bb1a906f993f312d",
+      "file_count": 15,
+      "file_paths_sha256": "a06c73cde27ddfafaf7f9def3cdde4ce3b3c4febc940ccd748417dc8fa51f1cd",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 309,
+      "title": "feat(core): deterministic synthetic snapshots and protected refresh (Refs #176)",
+      "merged_at": "2026-10-15T21:08:50Z",
+      "merge_sha": "4c1a8ee3b22f1b92162b0dc36d699e2e33acafbb",
+      "body_sha256": "2561ce83f4fad58cd32f4d427ce42915881cd087ce1973cb1ac533cb75c7329b",
+      "file_count": 17,
+      "file_paths_sha256": "38eff62f8354b7d601630e050470baaffcd887a6c71c0b1691b12a3c22040a45",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 310,
+      "title": "feat(core): model building shared systems and scoped costs",
+      "merged_at": "2026-10-15T21:19:27Z",
+      "merge_sha": "d3c748f7bc107283af337a8ca47118c24eb98674",
+      "body_sha256": "0d7ebcfc9fa425db158d9f336c38788e49a845bbec42da952be4f82aa46b9e23",
+      "file_count": 25,
+      "file_paths_sha256": "20994c6c6415afbe67b08e85a758e051276c1db2c4e79a9a3928265043923378",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 311,
+      "title": "feat(core): add accountable return and handoff lifecycle",
+      "merged_at": "2026-10-15T21:30:56Z",
+      "merge_sha": "a2253a7c727a122d4d51eb2783fe14ead4ca4605",
+      "body_sha256": "1857920b66a3e9c9a0f904ccb3896cb6ef3d69c27e06b6e6eaf0370c9f9b787d",
+      "file_count": 26,
+      "file_paths_sha256": "9b19985a2aec84015721216c27de217d0210fd68b5be779284135d8f50c6d1a3",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 313,
+      "title": "feat(api): add Fluent-derived workbench foundations",
+      "merged_at": "2026-10-15T22:14:44Z",
+      "merge_sha": "a6e26fef42f7bea08ec763fc83facd16dc0302d6",
+      "body_sha256": "7f0a28d0725ffc310edd64ab5fb6f189c8e8695acb61ef066ca14a107fa7fc3b",
+      "file_count": 18,
+      "file_paths_sha256": "693b061c2e01e533c618c029a55ac8f22e5237b4e8de8ce11cca380ac624cb08",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 315,
+      "title": "feat(core): add task-bound RAI release records",
+      "merged_at": "2026-10-15T22:41:15Z",
+      "merge_sha": "c7b9dc9b59eb8bb6566e20ec7224196ef2e65464",
+      "body_sha256": "7dc1113ed0c37898f90db0d766198b3678c183bcdbfbc53ba65cd3a15f01733b",
+      "file_count": 37,
+      "file_paths_sha256": "e39d0dc0e235ea898369f8b4787861879eeeed1a3f28b0d439e65a4eac2193f2",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 316,
+      "title": "feat(core): migrate stock fabric and make case links explicit (Refs #168)",
+      "merged_at": "2026-10-15T23:05:13Z",
+      "merge_sha": "64f6b3cef9ec45080ed45548a5a6d149999b481a",
+      "body_sha256": "e67b210263c85c9290c862a592e8155e8b5ccbc999572b26eed6789a1461d648",
+      "file_count": 19,
+      "file_paths_sha256": "a334327b6274b87eaccfbbb1ed97f538d7eb1ba6bb83d15d026935e57269a5d0",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 317,
+      "title": "feat(api): add shared role workbench IA and responsive layout",
+      "merged_at": "2026-10-15T23:36:08Z",
+      "merge_sha": "8e1cf25775b01ac7c3b52a7afcc13ca750a16286",
+      "body_sha256": "ac06d1de6e5be472ced54cc86e3848b5b32664d253acadbfbf1ce43ae22919ed",
+      "file_count": 24,
+      "file_paths_sha256": "c470a2f7361d85eacce3424d7e46258e5858088b6878f18a18a6898e3f2da5d4",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 318,
+      "title": "feat(core): reconcile stock sources and preserve human technical decisions",
+      "merged_at": "2026-10-15T23:44:12Z",
+      "merge_sha": "06d8aeda66f1c4100e09c4291deb645841f638c7",
+      "body_sha256": "5f969b8ef91fa4f7e6f6235bb92bfc33c84952f79f7db5a1d63ec2d85d1d8388",
+      "file_count": 28,
+      "file_paths_sha256": "8297e5cd4eb5ccf80488d44372b15c97abbc8c3ed5e85edcd4783c1a05f05773",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 319,
+      "title": "feat(src): enforce scoped resident decisions and representative authority",
+      "merged_at": "2026-10-16T06:42:36Z",
+      "merge_sha": "8f006239f4ddb7feebf68254bbd04ba69b0baa37",
+      "body_sha256": "f4d937cf49a2980012ae86416803af93dee538dd6b95d6327d10c98e9d711cba",
+      "file_count": 38,
+      "file_paths_sha256": "ae5c03af55c2bffe5843b72ee2c1ac5e6cb989ba55ddbf9c36149cacce4c786f",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 320,
+      "title": "feat(core): add register-backed sensor history (Refs #177)",
+      "merged_at": "2026-10-15T23:31:00Z",
+      "merge_sha": "c2ee748f6e3303b1c8e05d6667c8a56dd9bda535",
+      "body_sha256": "7a26de723f0ec14bbdc36a6177262c01ae99491eff6e6036121f3876dc232d77",
+      "file_count": 16,
+      "file_paths_sha256": "d29fc4eda1471a9169fdb21f531ee3b75c4bbbe1f3c8a0f7e1513606e0c8b0f5",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 325,
+      "title": "feat(api): add role task queues and shared case context (Refs #76)",
+      "merged_at": "2026-10-16T07:45:55Z",
+      "merge_sha": "0e3b6bf525c1666416a27faefc2f75b2f70689ec",
+      "body_sha256": "a5e4e0db9e400e4ce6012878050b6f2517caaaad2a885b42997e908f81b4ba0f",
+      "file_count": 25,
+      "file_paths_sha256": "aa7751177dd1d3337647be7a24c9f26b14220e8079dc61f0dfa0625e7dbd89fd",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 326,
+      "title": "feat(src): resident first-contact retention and field permissions",
+      "merged_at": "2026-10-16T08:09:05Z",
+      "merge_sha": "bbb160f72e9d2518100dff074dc73b7df36642b9",
+      "body_sha256": "1ae6bf68d8dafaccd0777fb52130ffc66094271ca8582e3fafc003d3706911d6",
+      "file_count": 21,
+      "file_paths_sha256": "b16c1bf5237b31a3c1165789d1c92829053a202c1768d6dda2a2204d12b0b0d3",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 328,
+      "title": "feat(core): deterministic rule engine and scoped step alerts (Refs #212)",
+      "merged_at": "2026-10-16T08:22:11Z",
+      "merge_sha": "0f9ba373a7f1b4cab31224cd73bf7d47056da87c",
+      "body_sha256": "4b382414c7113dfb76d51f73949404e8fb5817dfd448eeb02fd8897cfb419333",
+      "file_count": 19,
+      "file_paths_sha256": "963ccf6185855b9aa2654a20dc51dff1b5b7e45b88188896a7ab05318d655e66",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 330,
+      "title": "docs: guard coordinator merges against accidental issue closing",
+      "merged_at": "2026-10-16T08:39:37Z",
+      "merge_sha": "85426b1556bd9479bf35afcecd9175ec1e0cf62c",
+      "body_sha256": "95a8306e1de366d861b349a89b9b15556e1b94801c2c3b84f766a8715af7564b",
+      "file_count": 2,
+      "file_paths_sha256": "64f2883feaef7e0b0ea0054167db87738c3f53e36892f86d35d1082ba948c99a",
+      "review_states": {},
+      "check_results": {},
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 333,
+      "title": "test(infra): enforce offline Bicep quality gates",
+      "merged_at": "2026-10-16T09:21:16Z",
+      "merge_sha": "736a2e84d0e3caba75155b1244da07cbd71a26b9",
+      "body_sha256": "28e4a6a191d90a37b4410c749eb63119f0ad71357d7cfb120e619726df2e62b9",
+      "file_count": 15,
+      "file_paths_sha256": "cc61921dc25db19258ec0dce3c54fb231b0d374c95d061e4117dec569f515e84",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 8
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 338,
+      "title": "fix(core): restart resident retention after approved deletion",
+      "merged_at": "2026-10-16T12:18:31Z",
+      "merge_sha": "79b153b2ddafc2e876c6c10225810d88fe2faa77",
+      "body_sha256": "c60cf93149b55a3f9c844f21a6cfa5ee7e4b319f4533807662a6efad41224477",
+      "file_count": 12,
+      "file_paths_sha256": "3a91e83d64ce65ced346245478a6c2d5a84c960aca070fcddfe660fc6bbdd0b0",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 340,
+      "title": "perf(core): persist indexed task queue membership",
+      "merged_at": "2026-10-16T12:43:22Z",
+      "merge_sha": "3c2d9e9a12a5b330daf466a87ee62a733b4b808f",
+      "body_sha256": "06d202ef453a0de396ddd02927a148d2d530dbcc32b84bafe6c141f940bf1fa8",
+      "file_count": 19,
+      "file_paths_sha256": "8b3b8e6ade239e11ffac15b766b8c131567778e6f39253070454cccb2cfdae85",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 341,
+      "title": "docs: prepare source cut-over evidence for owner review",
+      "merged_at": "2026-10-16T12:39:00Z",
+      "merge_sha": "544dab9cac5440c7b2e93364af5f5d4ff1a9a9a5",
+      "body_sha256": "f468e3f4092c996039893c7e42dc698cc7e83dc567b0e09c3efe917fb184c3c0",
+      "file_count": 21,
+      "file_paths_sha256": "b8493f69f6e18b2f519bb0ebefedfbaad65ed8360133dd3c0f9fcf58aa1c81d5",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 342,
+      "title": "feat(infra): prove private src deployment in ama",
+      "merged_at": "2026-10-16T14:55:57Z",
+      "merge_sha": "cc780d068d61caac4be835464bb55f0817179dbd",
+      "body_sha256": "011069acda614d1beb6b1435ae5cdba171d19f17b6a7b49542f724f5880ace76",
+      "file_count": 23,
+      "file_paths_sha256": "ff0cbf4cd416c009e6ce7f9730a75114898125cafdfea3284e534bb078f505a1",
+      "review_states": {
+        "APPROVED": 1
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 343,
+      "title": "chore: reconcile backlog board and keep it in sync",
+      "merged_at": "2026-10-16T15:02:38Z",
+      "merge_sha": "73f5148b8e91ff28d66112e417a2ff17ade1ed6c",
+      "body_sha256": "5c9c0a2c931960ede382927a33bc9a9c8f89a3a4f57e29d19eb33ff9042617dc",
+      "file_count": 3,
+      "file_paths_sha256": "ea45ffd31896202bedf9756967d6980fdaab2c3fc2ed122244f892d099e1de21",
+      "review_states": {
+        "APPROVED": 1
+      },
+      "check_results": {},
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 346,
+      "title": "feat(infra): define checked dev, test and pilot parameter strategy",
+      "merged_at": "2026-10-16T16:24:54Z",
+      "merge_sha": "1ac9b25095c117ac1e85cd89b23f308612675a83",
+      "body_sha256": "b44fc87d7517670b1eea692365137ddae9645e271d293aabeb4b3a2182737b1e",
+      "file_count": 21,
+      "file_paths_sha256": "bd3250b319c67297a7cecb4316575910cd3c6b8874a11eb48578de74d8ad23ab",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 8
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 347,
+      "title": "feat: harden source images, CI scans and IaC controls",
+      "merged_at": "2026-10-16T17:37:57Z",
+      "merge_sha": "3698de8d96f55c64b3dca974b37ca7a005162c71",
+      "body_sha256": "b34a5cfe2d2542bd1f027583ba63ea93b958bebb3ee26ee3e042de6b74cb8aa6",
+      "file_count": 24,
+      "file_paths_sha256": "0952a7caa9ba9eaf1faa922e763a6356d0504e6bc03da7450d86f54eb5a0e318",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 348,
+      "title": "feat(chat): add bounded synthetic home-specific cited lookup",
+      "merged_at": "2026-10-16T16:51:47Z",
+      "merge_sha": "c1deba46b46b0156a6ab21bd4dd1b4f59082c614",
+      "body_sha256": "c6334c585fc1987342d8ea69dd86e181d0d9c7c9cff9b5d7af91814a21867c85",
+      "file_count": 25,
+      "file_paths_sha256": "ac8288f7caf4610cd5e3a2f1ab78c13313229d7d6cc8b325697a95caad76c262",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 352,
+      "title": "feat(infra): restore public src edge and browser auth configuration",
+      "merged_at": "2026-10-16T18:47:59Z",
+      "merge_sha": "a0f9f30568f7ed71eea42455b8d5e19504f6e19c",
+      "body_sha256": "eece383f6fcc20f45f3d855f5978ce1f1714b7f2201b0e942c7216cd63259767",
+      "file_count": 25,
+      "file_paths_sha256": "3fc6979bf3ccfd62803bf26f884d11e2b3dcef7af4a7e15376d981d0ffd15ea7",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 353,
+      "title": "feat(regulatory): synthetic security, privacy and audit (Refs #217)",
+      "merged_at": "2026-10-16T17:48:40Z",
+      "merge_sha": "2d788bc5ee61e2cbdb456fd0364e42108d285449",
+      "body_sha256": "18d41399cf127249d57aa39ee561d144f14c24bbb6da542678fca8ec045eca96",
+      "file_count": 27,
+      "file_paths_sha256": "715bfe300b8e117bd7abc0571a2fe40814ab526a37b89e5f715a888d629d3ab2",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 354,
+      "title": "feat(api): regulatory alert and home chat UX",
+      "merged_at": "2026-10-16T18:32:51Z",
+      "merge_sha": "ae99282accc80243afac96291b01312038b67127",
+      "body_sha256": "73322cbdc720c74c38738cd188c0676147c3aa215b2c536af03eedda78f74574",
+      "file_count": 26,
+      "file_paths_sha256": "4f05495eed41ff0d42cfd71933bfc5c769175bb8274b7e0ee705f2476e38a827",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 11
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 355,
+      "title": "feat: synthetic regulatory evaluation gates (Refs #216)",
+      "merged_at": "2026-10-16T19:04:48Z",
+      "merge_sha": "e7e69b8bc13d31de1c0c70821c3ed1c03f1e3cdf",
+      "body_sha256": "71a9a4cb66bfbe731492aed7d347f1178e283acaa90b0781a8f2253ae5890ca8",
+      "file_count": 31,
+      "file_paths_sha256": "0575f11f5e51eb236b578dfaa3176d07bcf2ad5bc4b1616630294a646f53b3cb",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 356,
+      "title": "feat(infra): add one-command Entra setup (Refs #351)",
+      "merged_at": "2026-10-16T18:24:48Z",
+      "merge_sha": "204b43440caa4777fee4c16f7438783517bf4bcc",
+      "body_sha256": "3fb8806dd696c83a7dd1f20ada3b7aa44f22704f717cd242cde34fb40622ee75",
+      "file_count": 19,
+      "file_paths_sha256": "8579dbe04cee01aca349097bc34d0c05346cafc8a6c8a440e61bb116b75b97a9",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 8
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 357,
+      "title": "feat(ci): add guarded source image release and deployment",
+      "merged_at": "2026-10-16T18:53:21Z",
+      "merge_sha": "ce91aa91db7fe382a0b081dc6ec2f5971622f02b",
+      "body_sha256": "e4e1334d81ec68374c19ba72b52c8e2eecf92982f1854cb8ab9fc788e1fbeec5",
+      "file_count": 25,
+      "file_paths_sha256": "d009421430f91819155d55dad9a51f963069582759bf715c599c1567e13f7450",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 362,
+      "title": "feat(infra): automate direct demo entry and Entra setup (Refs #360)",
+      "merged_at": "2026-10-16T21:17:01Z",
+      "merge_sha": "d2c7fa3e405f38b20624d5645569be55433a5e01",
+      "body_sha256": "98dc98a1ce642738a9b7a014f223af3ae8aaa917034c9ae37c37ae3ebbd7d778",
+      "file_count": 32,
+      "file_paths_sha256": "f67bab29ae377684894bbaf2ed76b69b501e27dd80a1858bd96c148d3f5d7389",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 9
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 369,
+      "title": "feat: audit synthetic data dictionary and provenance (Refs #175)",
+      "merged_at": "2026-10-16T23:45:34Z",
+      "merge_sha": "4ca6c7318ee4be35cef8c5ea6eee3425bf1421c4",
+      "body_sha256": "a47896de2f7cac178c5645a806cf206a475ae846c3c35934a250a52ba33bb06c",
+      "file_count": 17,
+      "file_paths_sha256": "043c56aaf03145982251a3d4773427e9b81ff392b07727be534f1b4bb4b10c74",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 372,
+      "title": "fix(workflows): preserve scored SHA across deleted PR heads (Refs #206)",
+      "merged_at": "2026-10-17T08:51:26Z",
+      "merge_sha": "abaca7881e2a4a77eacf865fe235d4af9196643f",
+      "body_sha256": "b92fedc0d63e42493c5408957b6d69065d8e1d39bba3b924a596767ae04790b4",
+      "file_count": 12,
+      "file_paths_sha256": "c3ce8d7302bc0f505f8e3cc644c53c55ebe892d76986e40748bfb94fb8228f7f",
+      "review_states": {},
+      "check_results": {},
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 373,
+      "title": "feat(core): add seeded sensor fault injection and separate truth (Refs #182)",
+      "merged_at": "2026-10-17T11:21:07Z",
+      "merge_sha": "8bdef3400f3d30349ffbd39238f32c8eb1617f02",
+      "body_sha256": "680f5916242ce6343b34cc4d777cb4fedfa42fd63dcab37ca43840cc5be87901",
+      "file_count": 16,
+      "file_paths_sha256": "7b8fce36cec568dd7cfe7d1912cb3f3f85e6d69b0c05581d563471363a441ba0",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 375,
+      "title": "fix: make demo setup laptop-safe and stage restricted migration",
+      "merged_at": "2026-10-17T12:13:15Z",
+      "merge_sha": "e065ecd2c5b09b0f4bc22bfbfdb343e41910189b",
+      "body_sha256": "c0afea6ff92a5b3947fee263883291b501389d883736ce1b99347733ad7a6e51",
+      "file_count": 23,
+      "file_paths_sha256": "948137e4651e79eb3f92200b5a5b3913bfa57c3689cf9d051bfc40d6bfba4f00",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 9
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 376,
+      "title": "feat(api): complete queue signals and reset scope (Refs #77)",
+      "merged_at": "2026-10-17T12:01:27Z",
+      "merge_sha": "0bdcb2f0e55aedf28445bac1fc6f1bbae5b68134",
+      "body_sha256": "51bb57d3e92dcfa59b5b4f7eb395f0cc47f6105c694059e33495773e23796ff3",
+      "file_count": 19,
+      "file_paths_sha256": "173973ce325037f088c1a93524b916b2812fc28f648aca1bd395de4ced97ac39",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 377,
+      "title": "feat(core): add unapproved form schemas and candidate staging (Refs #97)",
+      "merged_at": "2026-10-17T12:42:56Z",
+      "merge_sha": "92d4f89dd718befbde8bef00dd5cd6db2d99af39",
+      "body_sha256": "f947992c7fb278395e9c02959ea0819502b581c3c03ea821cefded85faf810ad",
+      "file_count": 22,
+      "file_paths_sha256": "c592b8fd8e76f014acaf636227299a5c67eeddcbe3293fb56634169c1d4a560b",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 378,
+      "title": "feat(core): add controlled bulk preview and provenance (Refs #78)",
+      "merged_at": "2026-10-17T14:31:04Z",
+      "merge_sha": "bf98977ed6b30176b1f2d0a0a1e91a80d273a742",
+      "body_sha256": "7708a39392b97f3ff03608372ac229f2064991186966469200c8c41b3eaa8f2e",
+      "file_count": 41,
+      "file_paths_sha256": "56b327b6c342e67f4e5f6f8b5a0df420ea3c1d46ed3cf87622daf455aeceede8",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 380,
+      "title": "feat(core): enforce constructed iteration manifest (Refs #103)",
+      "merged_at": "2026-10-17T17:00:51Z",
+      "merge_sha": "adedf1f232e567d3a22a623d9c871513fa6b7cdc",
+      "body_sha256": "7eb7a4a17e13c6ef0e98e489ee5b687dd57a531d37c2c5cf8358fdd75331bc30",
+      "file_count": 17,
+      "file_paths_sha256": "a9365c9d4d49dcf9bdb825746afce07aafc65b9d569417418402f793c0aed822",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 381,
+      "title": "fix(infra): constrain initializer context; record private publication blocker",
+      "merged_at": "2026-10-17T17:13:39Z",
+      "merge_sha": "bab4bf3a2ac9ec030d78d27063d1390f800c5c7c",
+      "body_sha256": "3503da20c0fc17f60f836f9f6025bb59ee4ce92aad0316650ac483b94d3fbe3a",
+      "file_count": 14,
+      "file_paths_sha256": "bd4ca18fcff530879104672ac87a85fd7ed6fc14fddb2b51dab4aada63924ccf",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 9
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 382,
+      "title": "fix(core): close assessment decision recovery gaps (Refs #84)",
+      "merged_at": "2026-10-17T18:04:14Z",
+      "merge_sha": "bbbc9243505b606550327c64bf5429243f457f2e",
+      "body_sha256": "f38b74ebbf7ec5923d40fbb63c48a1b5542c1dbebe5ec95bcf213351a7556242",
+      "file_count": 20,
+      "file_paths_sha256": "0743b98c0d170f6faa2e4882d84335a11d325691d7dcc7f4626a2482b3b9f59b",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 383,
+      "title": "fix(core): enforce record-only finance matching and independent approval",
+      "merged_at": "2026-10-17T18:24:53Z",
+      "merge_sha": "d400eb8d1d0d6567445b0fc11803260eab897a65",
+      "body_sha256": "c54b108f928b324d554bc1ba1b66336a397a3d0d645584052972fb34e8126695",
+      "file_count": 21,
+      "file_paths_sha256": "9d3365db0948a0f35485d427531703bad587b1185fdee091b4da12be88724d87",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 384,
+      "title": "fix(core): enforce evidenced provider capacity and controlled orders",
+      "merged_at": "2026-10-17T18:41:59Z",
+      "merge_sha": "b5d4c8402692758bd929a7ff9bf1832770738346",
+      "body_sha256": "cf0e81c60dc77a45bc2d6b2ce5f374d98be0f2712c25cf8477ef9d9288d3d267",
+      "file_count": 36,
+      "file_paths_sha256": "7668b7dc5704bdf6c7d2cc833421a65d9c7a6dfe5dfdd7febc290da3e93c7ad5",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 385,
+      "title": "fix(infra): select configured demo API and retain ACR publication evidence",
+      "merged_at": "2026-10-17T18:51:27Z",
+      "merge_sha": "1fc7325b93ea845b9cb2e827efbea624f7d20d30",
+      "body_sha256": "026e621389d4217cbd7e22bfb5ebaa479ceea7ecb30ab47e02a0b12898cbd403",
+      "file_count": 24,
+      "file_paths_sha256": "dfb2756c0aba7a6db8480148f31fe799e9f594f73b7b5199f2026deac5939fce",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 9
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 386,
+      "title": "fix: enforce grant lifecycle evidence and scoped human authority (#95)",
+      "merged_at": "2026-10-17T19:19:15Z",
+      "merge_sha": "2b24456863c0a8f39d47a73e22daeff3875cc825",
+      "body_sha256": "fef8b9e1c0c39233c89fb7282c9d51b31dbbaee5cd24f80f75abd83d491661be",
+      "file_count": 23,
+      "file_paths_sha256": "aab3932c61b8451a04421b44924254c9287ed7cd24667a90fbcfc1912e6d8695",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 387,
+      "title": "fix: enforce per-measure quality and handover controls",
+      "merged_at": "2026-10-17T20:17:47Z",
+      "merge_sha": "3f544fb9cda2c51b219db2cc8368c7525bbe0c86",
+      "body_sha256": "0c1fb874824dee85a82bb36b50b5eae735cf015fef8bfaad72e4ef6f1978d51f",
+      "file_count": 21,
+      "file_paths_sha256": "83d11d563554bba4e8d3e70fb790ccd6cc7041be380112cb008655334128ca08",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 389,
+      "title": "feat: record consultation evidence and hold unverified work confirmation (#92)",
+      "merged_at": "2026-10-18T09:58:29Z",
+      "merge_sha": "9403dc6a8f52f1f04c5ad910faab11a57c29ee78",
+      "body_sha256": "dbfc91a2fdcfc141f4b3d71586fc9a6b800efdb05df26a41cb8555ec5e47c5ee",
+      "file_count": 35,
+      "file_paths_sha256": "e4575ed69c1370d6c05ed151067c0a9e0a86df8dd040b9887784646028d70923",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 390,
+      "title": "feat: add event-derived progress evidence and declared forecasts",
+      "merged_at": "2026-10-17T20:49:38Z",
+      "merge_sha": "226702779e57e490cb10dc06ab014760c7d8a761",
+      "body_sha256": "7e44d7dbfd36c9310cf7816c33610e48b9752e911ebc82f7699df4259b1d7b2b",
+      "file_count": 19,
+      "file_paths_sha256": "f6871c84e65f481b29758befd78f304a690ca3790da409362819c62b7a8549c1",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 391,
+      "title": "fix(infra): distinguish neutral setup patches from production defaults",
+      "merged_at": "2026-10-17T21:06:59Z",
+      "merge_sha": "74617981b71bc3f10bd21d0b78691bc3cf36c473",
+      "body_sha256": "4b846909e1fd76dcf679b948d6e3a1270ca8312f1b080da1481a495f65d0fc15",
+      "file_count": 13,
+      "file_paths_sha256": "5d865d47ba6325ce3a8d1937588cff9e915099963c44be5fb95256afbdf06aeb",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 9
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 392,
+      "title": "fix: resident commitments and independent remedy closure (#88)",
+      "merged_at": "2026-10-17T22:58:13Z",
+      "merge_sha": "bcb4871b19c2abd56e1ff536a77c15e52b544321",
+      "body_sha256": "53191e92159f0c1ffbf250f7555b0ce9851e75d26afcbd51c43546353c491332",
+      "file_count": 31,
+      "file_paths_sha256": "e281838c98724a7152070054ad104d5c3debd4a55997f0f31dd777b1bc610aca",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 393,
+      "title": "fix(core): verify synthetic sensor admission and close export boundaries",
+      "merged_at": "2026-10-17T22:26:23Z",
+      "merge_sha": "943febc23e99e397724cb81d2580f781b91e13f7",
+      "body_sha256": "f9d4056b69fc9bc50352d7cfe83daafcb218799a512a76dbde3e94545925636c",
+      "file_count": 24,
+      "file_paths_sha256": "cfcbd40f8e54b719e8fd8fe46b87f9bdb8d5fb58688a25cd1acc43c72cc8162c",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 394,
+      "title": "feat(core): capture prospective versioned progress events",
+      "merged_at": "2026-10-17T23:17:40Z",
+      "merge_sha": "ebc8dab87ae9bd6a33380b85e86f38be5ed9f213",
+      "body_sha256": "2b46f2266ea51c13ed3258d1fc6e642c19956214b3313ba1439eb77facb2294e",
+      "file_count": 25,
+      "file_paths_sha256": "f9a5ce41309987744db826f3151d2b1645ee6a2970fcdb71347594259640d097",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 395,
+      "title": "feat(orchestrator): add bounded pending-document rescan job",
+      "merged_at": "2026-10-18T00:32:45Z",
+      "merge_sha": "99056cae7bc679d2ace3e42c75f28577cfce8887",
+      "body_sha256": "e9a344206449f223000259efe03b8985c2441b2d26dc7397dae9cb0371a11204",
+      "file_count": 19,
+      "file_paths_sha256": "d4e38beaa10f7ef71c7c9010f57e1b6bc96063334c7497b0eaea4c2f98eda7a0",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 397,
+      "title": "fix: offer-versus-commitment appointment controls and correction ONE",
+      "merged_at": "2026-10-18T02:49:35Z",
+      "merge_sha": "3104bb69ddc26c81e0e9d2f57000dac1d99a419a",
+      "body_sha256": "a021a87c4e4adf54d32fe5b1122f3d9c6acdf9c474d0c34576f7651472ed2428",
+      "file_count": 35,
+      "file_paths_sha256": "0913f8025106369b87b30e942eda1ca93a33d9738baf6e9262bb239355635e51",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 398,
+      "title": "fix(continuity): bind proposal epochs and retain audience-safe offline evidence",
+      "merged_at": "2026-10-18T10:52:29Z",
+      "merge_sha": "9d625a09e34491ecf9fd27ffc7d59e67c2373b29",
+      "body_sha256": "564c9e30e8bf233c290ff7425452f08cdeaf8c5f01f507dd8a8643a6dee9cbd2",
+      "file_count": 93,
+      "file_paths_sha256": "b7f02242b18d070eb8ce0a79407d0b8ddb115150b7cfceb7a5c765f56c864a01",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 399,
+      "title": "test(agents): strengthen synthetic chat fixture isolation",
+      "merged_at": "2026-10-18T03:41:21Z",
+      "merge_sha": "3bc46912684cb4d865572023a6d16da14b9b8463",
+      "body_sha256": "8d638da34af88c553f99f4cb91e07a06bfac7a0d8ab2a3c5133625d3a151e6c9",
+      "file_count": 13,
+      "file_paths_sha256": "2278ebc11d78304aee9d494bcb5f679afc7e4fc24e69900fbf4af270a207d4b2",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 400,
+      "title": "docs(ux): record finite design traceability and blocked review gate",
+      "merged_at": "2026-10-18T04:10:28Z",
+      "merge_sha": "2ca6d1c48bb95b65e6c349fe508e99c00a74efbe",
+      "body_sha256": "d95317b8028a1674155e965c8948c83f5776d98826605894b6c796bd7f3a317c",
+      "file_count": 11,
+      "file_paths_sha256": "9a413ba51d69875bdf790cd307354c1f0d164d395ddea96004d627cb12148938",
+      "review_states": {},
+      "check_results": {},
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 401,
+      "title": "docs: complete bounded screen backlog inventory (Refs #156)",
+      "merged_at": "2026-10-18T04:51:42Z",
+      "merge_sha": "f91353169756dc41ebbcca944bdd3f44f7c04b89",
+      "body_sha256": "6c53a9b2f74e580575980054bffba64abf8146ff826854784e811e0a7ac6c39c",
+      "file_count": 10,
+      "file_paths_sha256": "9dd74c5745d161fbe60eea02530831234059a1e89cf9b75b13ebbec84dd6a9b9",
+      "review_states": {},
+      "check_results": {},
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 402,
+      "title": "Plain-language case chat and alert copy audit",
+      "merged_at": "2026-10-18T05:30:59Z",
+      "merge_sha": "2975c4fdd7bf7d78e97b703aa2bef8bc97f56c3b",
+      "body_sha256": "5da971faecac8e73e44843eff8e75735d01d04efe18b968ee6fd17ebf6232db0",
+      "file_count": 28,
+      "file_paths_sha256": "6ddde90f6aa99a6449a718084a5be45672ac84f35db6f3be3c59b6af581e9f0f",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 403,
+      "title": "fix(core): harden bounded loadcheck evidence",
+      "merged_at": "2026-10-18T05:44:21Z",
+      "merge_sha": "c803614e8ca7c604e509f1c088f8b8f90f3063ef",
+      "body_sha256": "83a242d65821626900cb69803c8fac3555ac5e807595b2a9011fc0c02d1bcc1b",
+      "file_count": 12,
+      "file_paths_sha256": "a5476db168c882df0f3e94b08aafa7b914b4fe642b405c52204060380e9684f1",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 404,
+      "title": "fix(orchestrator): require recognized remote digest anchors",
+      "merged_at": "2026-10-18T06:43:23Z",
+      "merge_sha": "69091f4149f2fd217fc33a8c965ebcb6d5064956",
+      "body_sha256": "c7cf765a22c8e7401e781c6e690aedf4769721293f1db2cefdb44d1e31ba3f64",
+      "file_count": 28,
+      "file_paths_sha256": "bea84c8df30ecaec0a19818143c953d07c9abb74abb9bf11c6102f5de19d7d8c",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 405,
+      "title": "fix(agents): reconcile repeated evaluation run evidence",
+      "merged_at": "2026-10-18T07:20:01Z",
+      "merge_sha": "6c1e376ff1241316272df22a5a3a6853aae9f87b",
+      "body_sha256": "2bf99b3c180c64cb96dea975ba188d23731be55b6ac4c8ffbaad0e52bdd98351",
+      "file_count": 24,
+      "file_paths_sha256": "90fef565d49ae5df555d414eda7f41172b3d27e835784d7efc790e2021a9b3b7",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 406,
+      "title": "fix: preserve historical recorder identity for independent review",
+      "merged_at": "2026-10-18T08:20:25Z",
+      "merge_sha": "9c648b2006e8b2e563823ea7d5aabdf7f1ac7096",
+      "body_sha256": "0b521713140bf58bb3d51c2463d67c8efb534f901bb2bd1fc278797148c30f30",
+      "file_count": 30,
+      "file_paths_sha256": "e78be8f4e14c8485aae535d27e85039601e1f1f8f0904717f8e71b748a398ca9",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 407,
+      "title": "Keep blocked queues aligned with the current stage",
+      "merged_at": "2026-10-18T08:58:24Z",
+      "merge_sha": "a86282c4badebc58eabbf9e441410d930a201ac2",
+      "body_sha256": "e9d1c91cf554f7d46512f025bc489151a4000ec87b1d2afd533c850f289ea842",
+      "file_count": 43,
+      "file_paths_sha256": "613f14cbfcb6708058216671f33fb8eace5819a43a3dfe4bbe50fad0d2d33258",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 408,
+      "title": "Reject bare DPIA feature flags in time capture",
+      "merged_at": "2026-10-18T09:32:14Z",
+      "merge_sha": "ab0613f3336109ff9b96560a16758ee842232715",
+      "body_sha256": "4db46eeaa3225c5e69a5efde2f44a52fd6252f564b870b34119b3791225db1db",
+      "file_count": 23,
+      "file_paths_sha256": "93840ea50af4b7556e88aab70cfadef221ca4b21ed178255affaaad570f9b8d8",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 409,
+      "title": "feat(governance): record constructed RAI evidence claims",
+      "merged_at": "2026-10-18T10:33:24Z",
+      "merge_sha": "578631ac75cc8c6a7af53922c6aaae4435e7761c",
+      "body_sha256": "210115b7fca720dd96562071f014c0b4324e5b717e0d115d81df2f1fb7bf0a86",
+      "file_count": 57,
+      "file_paths_sha256": "b32890c7de1511f734a57689fe5ed45595446e86e74dddb5c8aeffce07d0b91f",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 410,
+      "title": "test(api): add building SQL Server conformance",
+      "merged_at": "2026-10-18T11:22:20Z",
+      "merge_sha": "6fbdcee18413e9f7366e5f9ec53f68f053681096",
+      "body_sha256": "726ea4929df9deb0773cc622d7662ee34a0c76a48864b6ce26c134c1a3406623",
+      "file_count": 19,
+      "file_paths_sha256": "e37d0ce44f51a8e3d7f08bc1f2b72a378e3989ab0626d78e6bf0fd0d784d9873",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 411,
+      "title": "feat(core): bounded offline sensor consumer processing",
+      "merged_at": "2026-10-18T12:32:15Z",
+      "merge_sha": "100ead1bacdb72a8ea7ce5867233db30b22b2f50",
+      "body_sha256": "8f346fa51b0a5e35ad186d40d927f2d998c9ce1575fb4feca727a02e1811c80c",
+      "file_count": 83,
+      "file_paths_sha256": "b679a6025fb28134f6189be9c8452223b1e1146b6b3f2ccfe330a3c88fabf05f",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 412,
+      "title": "docs: shared sensor observation contract and volume",
+      "merged_at": "2026-10-18T13:16:59Z",
+      "merge_sha": "612cbed78a35a4ab426571aa7d2aeb0ae6d691dd",
+      "body_sha256": "ba4915784e360a6dd2e311e55c14bb52b00f421276fe9f1314db7bc2fa55b9c7",
+      "file_count": 20,
+      "file_paths_sha256": "0ea8f04b3aa55dcf742ab1d8918d0351458e81ba007b31f4260a1b98d0b6bd7f",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 414,
+      "title": "ci(validation): add canonical local RPI gate and consolidate CI",
+      "merged_at": "2026-10-18T22:21:53Z",
+      "merge_sha": "fa659cfd021100f7c64f8ec73bbff76c03adf234",
+      "body_sha256": "bb4d937457b733bc5ee4234ecabc5241fa1eb78b105add9f53be471a935d5e36",
+      "file_count": 17,
+      "file_paths_sha256": "c8e03623abedd398e788fe02736677c32a38f999d93751ffeb9ac15353729d4f",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 9
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 415,
+      "title": "docs(infra): record bounded pilot capability and quota evidence",
+      "merged_at": "2026-10-19T07:46:55Z",
+      "merge_sha": "634a024d97d2da7168b8a7d5f343ab26e6108cf3",
+      "body_sha256": "cac328e833e65b5fc74e58ee128bf8404b135224210c4fb7a095b0842bfa0cac",
+      "file_count": 11,
+      "file_paths_sha256": "ebc7c9737af05c6b6a35d52cb6e06b8f5e730fb5fbd3af97e4dc9655c53f9736",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 9
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 418,
+      "title": "feat(resident): add retained-priority challenge and correction route",
+      "merged_at": "2026-10-20T02:25:56Z",
+      "merge_sha": "7e95f0224bfb7a8a62990a1de162fbcfa68db539",
+      "body_sha256": "5a4c738ef8d0ad363dd04744b960826cf5135c8c4acd0e70c08ba57995b03dcb",
+      "file_count": 33,
+      "file_paths_sha256": "ffc6607b43426e597f1430411145892d153749f3529c1158c6b68b07ed406db0",
+      "review_states": {
+        "APPROVED": 4,
+        "COMMENTED": 14
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 419,
+      "title": "feat(core): add bounded operator incident and restart controls",
+      "merged_at": "2026-10-20T08:33:42Z",
+      "merge_sha": "993a7b88c03f5240f1e7a4c7c7afa7c064281622",
+      "body_sha256": "93fa3a66b57b843a473c3878ec1b9c37e00213de1abc9836c3a72033ae854c54",
+      "file_count": 32,
+      "file_paths_sha256": "9478631bfcefed64c8e4b637bfc976739a3337224a4a4dce8f71168595898801",
+      "review_states": {
+        "APPROVED": 2,
+        "COMMENTED": 11,
+        "CHANGES_REQUESTED": 1
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 420,
+      "title": "docs(agents): pin launched RPI sessions to Sonnet 5.5",
+      "merged_at": "2026-10-21T08:26:10Z",
+      "merge_sha": "ca4baf75837de57c99718f7423716d5dc0b0e244",
+      "body_sha256": "e9bf9bb7e7a0a7aef4c4e1844abd1128233c83e08fc0873d07961744f13898be",
+      "file_count": 18,
+      "file_paths_sha256": "492e778ccd3f39d764542a375361d9366eed28f5b1ecc252ad781522108e432d",
+      "review_states": {
+        "COMMENTED": 3,
+        "APPROVED": 1
+      },
+      "check_results": {
+        "SUCCESS": 11,
+        "SKIPPED": 7
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 421,
+      "title": "docs(agents): prepare synthetic cohort manifest for review",
+      "merged_at": "2026-10-28T15:25:09Z",
+      "merge_sha": "413ccaf253fce4566e855bae9d0a924b2a82b506",
+      "body_sha256": "8872485146eab039e5a58c4c472f75f67c19f4c43e7e32947e3e8062e961561f",
+      "file_count": 17,
+      "file_paths_sha256": "530b27f1eee3270c66a5ec946ca2628e38fce02f621390555f742a64722724e0",
+      "review_states": {
+        "COMMENTED": 8,
+        "APPROVED": 5
+      },
+      "check_results": {
+        "SUCCESS": 11,
+        "SKIPPED": 7
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 422,
+      "title": "docs: propose finite costed Azure demo execution options",
+      "merged_at": "2026-10-22T18:39:19Z",
+      "merge_sha": "b4d467cad84535ed106cffa1ae9aa303db7bfed2",
+      "body_sha256": "dfb97b4e201ebda130df762a343cf66b683b312639ad5d01ec31789afeab13e9",
+      "file_count": 28,
+      "file_paths_sha256": "66d587e379c1135b5142bf835c1b7a3eceaf253d829f9f1c65011a55619564b1",
+      "review_states": {
+        "COMMENTED": 1
+      },
+      "check_results": {
+        "SUCCESS": 7,
+        "SKIPPED": 10
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 423,
+      "title": "docs(infra): propose private roster transport and tenant readiness checks",
+      "merged_at": "2026-10-31T10:01:37Z",
+      "merge_sha": "368d3bb8d0a9ad2dc221be6cf108b5cf2a8fa7cd",
+      "body_sha256": "0cc5f7873d51f7e580e5d23fa7bc25e5f2d60658d77c8f4da0251d147aab0e38",
+      "file_count": 71,
+      "file_paths_sha256": "8f7b014f9ff6847f0372145821d7381b394b26e3c0c5ea67cc37b128d086d311",
+      "review_states": {
+        "APPROVED": 7,
+        "COMMENTED": 13,
+        "CHANGES_REQUESTED": 1
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 424,
+      "title": "docs(forms): prepare fictional Finance schema review pack",
+      "merged_at": "2026-10-28T13:57:53Z",
+      "merge_sha": "e5f5eb51a7b3a84da7d052c82b802850ee2544d1",
+      "body_sha256": "d5bca320cbf530a6a6fcf6668c3da114312cf0ce1a3afc4c26dca7826fd0f986",
+      "file_count": 35,
+      "file_paths_sha256": "9a1970bc107a1be901d461032462dfeccff2b63fc780da54c883a6fa3a128eb7",
+      "review_states": {
+        "CHANGES_REQUESTED": 1,
+        "APPROVED": 5,
+        "COMMENTED": 5
+      },
+      "check_results": {
+        "SUCCESS": 11,
+        "SKIPPED": 7
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 426,
+      "title": "docs(maps): compare provider terms and constrained cost options",
+      "merged_at": "2026-10-28T13:13:21Z",
+      "merge_sha": "ebb327c60f12788fdc842e2239af5cd50587eca8",
+      "body_sha256": "62f3b2f5906d6c5f7ac366d83e199880ea016f58a5de943a8f3278447e8ec426",
+      "file_count": 28,
+      "file_paths_sha256": "bce2e5d01da5a88c63d356de3d6412ebb32ff90e7ef699c5e6ed9d0cdafb8759",
+      "review_states": {
+        "APPROVED": 5,
+        "COMMENTED": 5
+      },
+      "check_results": {
+        "SUCCESS": 11,
+        "SKIPPED": 7
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 427,
+      "title": "fix(web): prevent transient cited-source button contrast failure",
+      "merged_at": "2026-10-21T15:39:42Z",
+      "merge_sha": "9e55a392b95c90730c6410b9a4db4ad3a5ae70ce",
+      "body_sha256": "0ef8fe64454cbd28257a83e17d0193750a1447b5b2c04599d6999db598475f9a",
+      "file_count": 12,
+      "file_paths_sha256": "27031c94957682ae1ea7dd7dace09dc103f5abc1681df2d48e36cf8a78f40fe8",
+      "review_states": {
+        "COMMENTED": 2,
+        "APPROVED": 1
+      },
+      "check_results": {
+        "SUCCESS": 11,
+        "SKIPPED": 7
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 428,
+      "title": "docs(agents): prepare meaningful human-review protocol (#223)",
+      "merged_at": "2026-10-28T12:46:09Z",
+      "merge_sha": "c70ef5aeee6845cdab94adcfbcccbe7fa4ff0dcb",
+      "body_sha256": "5be3be5e3a1765259fbcf38bd265bd45e4664361540929e81c58fe200f4bbc13",
+      "file_count": 11,
+      "file_paths_sha256": "f57071162595f53f8c6cf3ae02d0e950c03f3891abedfc8cc04e5b4d36da2ea3",
+      "review_states": {
+        "APPROVED": 4,
+        "COMMENTED": 5
+      },
+      "check_results": {
+        "SUCCESS": 11,
+        "SKIPPED": 7
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 431,
+      "title": "docs(continuity): prepare custody and recovery proposal (#122)",
+      "merged_at": "2026-10-22T16:37:15Z",
+      "merge_sha": "3deb179d57b6520e114a27862f79ca95399f833e",
+      "body_sha256": "011df5701b53de45cbda79682e8b68d11e4121974ceff5de7a7fc17d8a856bfc",
+      "file_count": 15,
+      "file_paths_sha256": "2bc416f9307aae8a651234aa437f0b2284b46d0211878976f13c528430eb9ae1",
+      "review_states": {
+        "APPROVED": 1,
+        "COMMENTED": 1
+      },
+      "check_results": {
+        "SUCCESS": 14,
+        "SKIPPED": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 433,
+      "title": "docs(requirements): add AI Tokenomics requirements and pitch brief",
+      "merged_at": "2026-10-23T07:07:05Z",
+      "merge_sha": "140d8f494482c78e84d15f3d46b9223d3c487af0",
+      "body_sha256": "2b2b14b3b9a4c1080bc4a1a8e20a17b527b84ca8f4372b04f63e190358d2edd1",
+      "file_count": 10,
+      "file_paths_sha256": "27af298964e2d4a28e156b6e718e13a8cf2bfe6f913682b858e72948bd9ade64",
+      "review_states": {
+        "COMMENTED": 9,
+        "APPROVED": 3
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 436,
+      "title": "test(tools): add offline demo feedback evidence checker (Refs #350)",
+      "merged_at": "2026-10-26T20:30:49Z",
+      "merge_sha": "20f115084673ad2e7d1c82d27693ac01369cbb70",
+      "body_sha256": "942680c018e602a421158fd0f4f03611774314f38ed6fbcbf2272bb7ea172d27",
+      "file_count": 119,
+      "file_paths_sha256": "7d4850cbbab5a34a76ae920f9c1731472b56cd818491e478755ffc537ad714b4",
+      "review_states": {
+        "COMMENTED": 1
+      },
+      "check_results": {
+        "SUCCESS": 7,
+        "SKIPPED": 10
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 438,
+      "title": "docs(capstone): executive-first Cowork presentation package",
+      "merged_at": "2026-10-24T16:41:58Z",
+      "merge_sha": "0f657342661d0291bbd9750d6fe3c6e5404e7ece",
+      "body_sha256": "556b2cb73eb0af5078014bc4604cdce208e1d23242cadbe9cb9922d4812ec6df",
+      "file_count": 343,
+      "file_paths_sha256": "e52f325162818c9e3ea84e9e65af0437ed4ae45b9cad6141acc174cb2253fb0d",
+      "review_states": {
+        "COMMENTED": 14,
+        "APPROVED": 3,
+        "CHANGES_REQUESTED": 4
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 439,
+      "title": "docs: refresh October cost scope and minimal demo plan",
+      "merged_at": "2026-10-27T10:39:10Z",
+      "merge_sha": "49c942b33b89100c084d48a91215989e22de5887",
+      "body_sha256": "3d0002b6c64e25208751c31c3751fea2715fafdaf89fe2f41d1e3e1dfb59de44",
+      "file_count": 25,
+      "file_paths_sha256": "cb959b82a66e1ac1287c35e6af14a4a94862d60badac2c47229985a4fe68814f",
+      "review_states": {
+        "COMMENTED": 1
+      },
+      "check_results": {
+        "CANCELLED": 6,
+        "SUCCESS": 6,
+        "SKIPPED": 5
+      },
+      "nonpassing_checks": [
+        {
+          "name": "pre_activation",
+          "result": "CANCELLED"
+        },
+        {
+          "name": "activation",
+          "result": "CANCELLED"
+        },
+        {
+          "name": "rubric_prepare",
+          "result": "CANCELLED"
+        },
+        {
+          "name": "agent",
+          "result": "CANCELLED"
+        },
+        {
+          "name": "record_rubric_score",
+          "result": "CANCELLED"
+        },
+        {
+          "name": "safe_outputs",
+          "result": "CANCELLED"
+        }
+      ]
+    },
+    {
+      "pr": 442,
+      "title": "docs(resident): integrate requirements and unregistered proposal",
+      "merged_at": "2026-10-24T21:37:09Z",
+      "merge_sha": "df3e9643c1cf20b2fe143ad73819b3b8b393b003",
+      "body_sha256": "9a0a1040ee6b21cde0f61fd194206b90ebdf2201612f85aa9a99f2a577200e2b",
+      "file_count": 110,
+      "file_paths_sha256": "bca3c93b51e5e5409dbf708fd2d20e1d2daad03b5cd5be821bcf26f2ea7483e3",
+      "review_states": {
+        "APPROVED": 5,
+        "COMMENTED": 15,
+        "CHANGES_REQUESTED": 1
+      },
+      "check_results": {},
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 445,
+      "title": "fix(rubric): honor per-artifact file size limits",
+      "merged_at": "2026-10-24T16:19:39Z",
+      "merge_sha": "29c6b512f5e68733bb2cc1882343db39f5eb2cad",
+      "body_sha256": "5af6efd5ef990fbd94d1872f360d6d35a7ab8a78c5c67ed67c7d1cf35be21553",
+      "file_count": 4,
+      "file_paths_sha256": "9db6b1fd4cb5319fd06f6d71cede3c2017e183d0c42c844c78af519a3783fe66",
+      "review_states": {
+        "COMMENTED": 4,
+        "APPROVED": 1
+      },
+      "check_results": {},
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 448,
+      "title": "Add thought leadership paper draft: Everything but the Software",
+      "merged_at": "2026-10-25T08:54:50Z",
+      "merge_sha": "f16d3163c9ba1b5f90e8c21c1a23d6a55fb21224",
+      "body_sha256": "5aeaa1af7869463ddd22f5972148e0effb15260fb86ae1d2960c1a5b7c77de9b",
+      "file_count": 26,
+      "file_paths_sha256": "726633b5c575215a8ec01f2283404608ff671806e41e98933a11ac3ef97c78f5",
+      "review_states": {
+        "COMMENTED": 25,
+        "APPROVED": 12
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 449,
+      "title": "feat(auth): Entra-authoritative staff access with ApplicationAdmin role (#360)",
+      "merged_at": "2026-10-24T20:40:10Z",
+      "merge_sha": "7d4e89bbdd86967cdc6369d0b79e561f8b700640",
+      "body_sha256": "752839cf63eaf6241b08e7db9d082d3b1fc205c95a4d14d2eb5258b2402609d4",
+      "file_count": 45,
+      "file_paths_sha256": "f04bbbc2b7087bee848ee2883ad041d52e44e2d5ee583d7043f5020137646f9d",
+      "review_states": {
+        "COMMENTED": 2,
+        "APPROVED": 1
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 450,
+      "title": "fix(core): ledger-safe column migrations for Azure SQL (related to #360)",
+      "merged_at": "2026-10-25T01:01:20Z",
+      "merge_sha": "5d79aaee52cb7087319df9dcc153f264fa846cfc",
+      "body_sha256": "d4b862bfe1cb68ec10b4dcb741c947edb9b654fa40a449e60176d5aeb04907b4",
+      "file_count": 13,
+      "file_paths_sha256": "7127d31d075a2ca87f39edfce38a236d9429a7e2704e3bcd1a601f3470ad8a14",
+      "review_states": {
+        "COMMENTED": 5,
+        "APPROVED": 2,
+        "CHANGES_REQUESTED": 1
+      },
+      "check_results": {
+        "SUCCESS": 10
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 453,
+      "title": "fix(infra): grant-application-admin --apply body directory (refs #360)",
+      "merged_at": "2026-10-25T04:14:14Z",
+      "merge_sha": "36996d70a3f6dbee9df4d16400afd07c3614e69e",
+      "body_sha256": "9b47e576f99f377d92b1d56d34a204c38b3da7ebab37e33ca5f941dab10502ba",
+      "file_count": 13,
+      "file_paths_sha256": "9b1492a8fba9138536b55476ee3dd6c0f1584b3dceaab9b011a8aba300161c87",
+      "review_states": {
+        "COMMENTED": 2,
+        "APPROVED": 2
+      },
+      "check_results": {
+        "SUCCESS": 14,
+        "SKIPPED": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 454,
+      "title": "docs(prd): resident target precedence and draft backlog for owner acceptance (Refs #441)",
+      "merged_at": "2026-10-27T16:07:08Z",
+      "merge_sha": "ffde36315d23c885b3d2f0cfb2957c5bc69f1aa9",
+      "body_sha256": "7583cd99b87d7596671bfb7e6872a8998709eacf3a37d39ab69a911b8e5469dd",
+      "file_count": 50,
+      "file_paths_sha256": "88d8400feefed64f2d0651f38088f0c658794636c0031a303dbe75a14f08de0d",
+      "review_states": {
+        "COMMENTED": 23,
+        "APPROVED": 9
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 456,
+      "title": "docs: update AI Software Factory reference and related work review",
+      "merged_at": "2026-10-25T09:41:15Z",
+      "merge_sha": "28310fd2bf9936d8b386bb0279db45f022f59375",
+      "body_sha256": "ac4182a81fd22524d2a9bb46cb17a4c975584d321782dcab748780911cd03d1a",
+      "file_count": 8,
+      "file_paths_sha256": "e56501dc8741b41882fd0809adea491e688b887db85d06013548bb1490a3fd7f",
+      "review_states": {
+        "COMMENTED": 3,
+        "APPROVED": 1
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 457,
+      "title": "feat(core): non-destructive seed merge for the demo SQL store (Refs #360)",
+      "merged_at": "2026-10-25T11:17:26Z",
+      "merge_sha": "0245944a04d44444de9c9f1af765121e961a075c",
+      "body_sha256": "002a2bfa875de1b93b4b784928287c099454b62b7a704c0ccf5a309b83c92998",
+      "file_count": 18,
+      "file_paths_sha256": "b2ad533546da00837f239d0e1d08fcd5aec4c223e0d10718303de631c9b74bf1",
+      "review_states": {
+        "COMMENTED": 2,
+        "APPROVED": 1
+      },
+      "check_results": {
+        "SUCCESS": 11,
+        "SKIPPED": 7
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 458,
+      "title": "docs(infra): record OSM demo basemap configuration (Refs #119)",
+      "merged_at": "2026-10-25T14:20:13Z",
+      "merge_sha": "ea5577b2ed0e051161a83813daa63d86e4613c7a",
+      "body_sha256": "4d125b05e41ed71bda9d4e96fa6db374b7bb3f06104a67281c2528068978f67b",
+      "file_count": 9,
+      "file_paths_sha256": "98e18d43217b143067e1411e92353877d6d601b18e252948e19dd18c9b7bf426",
+      "review_states": {
+        "APPROVED": 1,
+        "COMMENTED": 1
+      },
+      "check_results": {
+        "SUCCESS": 4,
+        "SKIPPED": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 460,
+      "title": "add paper pdf",
+      "merged_at": "2026-10-26T08:22:20Z",
+      "merge_sha": "acafc6ee04e3612cd62349ab9e4a0af3b24e8109",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "file_count": 42,
+      "file_paths_sha256": "0e91cd468c3599cd92b18fd9f5f8583c0fe5fdfcdecf6261ec488f755368ae53",
+      "review_states": {
+        "COMMENTED": 25,
+        "APPROVED": 5
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 461,
+      "title": "docs(stabilization): recurring stabilization checkpoints and first local checkpoint (Refs #440)",
+      "merged_at": "2026-10-28T08:25:34Z",
+      "merge_sha": "d783b63acb0e2e59ad52f1c8f999e093c149297b",
+      "body_sha256": "2e64114bd4b0c6e852970c9108e7a339766809d47629bc8fa07f1d57f74f39d7",
+      "file_count": 32,
+      "file_paths_sha256": "a9c1632b03839add80b67c9bb22eaa8108cf3753c170c2f4a26e6be59f3c506b",
+      "review_states": {
+        "APPROVED": 4,
+        "COMMENTED": 11
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 463,
+      "title": "feat(resident): prepare isolated synthetic showcase (local validation only)",
+      "merged_at": "2026-10-26T22:50:09Z",
+      "merge_sha": "55c239d90dabec1e974eb60330e224c3a0fc6190",
+      "body_sha256": "d16fd8eb02b52271587a69c8f2ef3ac4436fc9d3f236360d6ace302fa1de1860",
+      "file_count": 97,
+      "file_paths_sha256": "82dd91d1353f6ac354fff78fe71bd30c1d1941cf8432fe6e8a2e1282da0f2d53",
+      "review_states": {
+        "APPROVED": 8,
+        "COMMENTED": 25
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 464,
+      "title": "fix(resident): keep focus and announce loading in synthetic preview retry (refs #444)",
+      "merged_at": "2026-10-26T18:47:52Z",
+      "merge_sha": "49d49fa082293de3cdb0b1cd729bf7e4397d8467",
+      "body_sha256": "da39e57a192fb97736c68bd12906f2dffb837daad3a76000f42037800bb6aa63",
+      "file_count": 14,
+      "file_paths_sha256": "8bfaa70fdf70978cad6afb37fa9824fc944fd1d499be5deff715a1cfede4a795",
+      "review_states": {
+        "COMMENTED": 5,
+        "APPROVED": 2
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 472,
+      "title": "feat(resident): own-home synthetic sensor gauges and history",
+      "merged_at": "2026-10-27T01:03:58Z",
+      "merge_sha": "350aa822681de930d53d1bce2651c199f3b2c46d",
+      "body_sha256": "6bbce079d7c804c23f08d236afc9b07e86cbd6815a2d5e08e0302e8402f1b9c0",
+      "file_count": 17,
+      "file_paths_sha256": "fff96decf4c4dbee67e8dbf4e80a5417ec9852893b411e964368040b359e684d",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 9
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 475,
+      "title": "feat(gate): faster scoped local validation and safe resume",
+      "merged_at": "2026-10-27T03:48:19Z",
+      "merge_sha": "4bd06495651e58e9957ace590880006eedb8047a",
+      "body_sha256": "c8f5a05d1d2c045c4d4ac1528f805f1318b6bfe01f4ccc3a9d0a956cb93e4b0d",
+      "file_count": 22,
+      "file_paths_sha256": "8b1d8e66802d8835bba079a3470ac48dbccc339fba01c7ca5c933e6f8724fd96",
+      "review_states": {
+        "APPROVED": 1,
+        "COMMENTED": 2
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 477,
+      "title": "Rewrite and review paper storytelling to make it industry-led and less personal",
+      "merged_at": "2026-10-27T19:47:27Z",
+      "merge_sha": "58bd3bbb9e5f5189e046911aa47e87b9c97cc983",
+      "body_sha256": "550ee6027cf5c521578074285ad81efdd3afb85888599261290423f15e5f8faf",
+      "file_count": 14,
+      "file_paths_sha256": "db94284f38252268afad24b0ef7fd5c033b836a11a7479a890f987303116704b",
+      "review_states": {
+        "COMMENTED": 7,
+        "APPROVED": 1
+      },
+      "check_results": {
+        "SUCCESS": 8,
+        "PENDING": 1
+      },
+      "nonpassing_checks": [
+        {
+          "name": "rubric/score",
+          "result": "PENDING"
+        }
+      ]
+    },
+    {
+      "pr": 478,
+      "title": "chore: record resident deployment and partial live acceptance",
+      "merged_at": "2026-10-27T22:48:52Z",
+      "merge_sha": "ed5f40c2454c04d01d06db5fc9ae17bb428b6ead",
+      "body_sha256": "b1c56e81e5a1d86d7d7bfee401bc3923f2be5ff96e1df6c3b85382bcf44131e7",
+      "file_count": 24,
+      "file_paths_sha256": "29e050927dee14856decdb96dc525de603af55c9f1a6bf33e7b4cd9c6db4ef5a",
+      "review_states": {
+        "APPROVED": 2,
+        "COMMENTED": 4
+      },
+      "check_results": {
+        "SUCCESS": 4,
+        "SKIPPED": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 479,
+      "title": "chore(resident): keep feedback site reachable with December expiry",
+      "merged_at": "2026-10-27T15:07:26Z",
+      "merge_sha": "2e031c89a18ce1ceb3de4fda014fddcb90231fda",
+      "body_sha256": "8d5393dcb5113488551080a93d9d88176a657676dc4ae04d51f4f5e649d4735d",
+      "file_count": 53,
+      "file_paths_sha256": "089bc8ec7ba34c4350c4557b25048d69493f5ac08b0d6be4845397278d15a4f3",
+      "review_states": {
+        "APPROVED": 3,
+        "COMMENTED": 5
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 480,
+      "title": "feat(resident): capped managed-identity advisory assistant",
+      "merged_at": "2026-10-27T13:05:35Z",
+      "merge_sha": "864a502126ee0dfedf13eaf54f08a10f2339279c",
+      "body_sha256": "3065b5ad039e8827942f32279307c85008f2e246c8ec61e1932f87fd64277de5",
+      "file_count": 44,
+      "file_paths_sha256": "774b26e178a23a54220815e87f3c7701f33589a7032a7d3493051b7ce684c95c",
+      "review_states": {
+        "COMMENTED": 2,
+        "APPROVED": 1
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 481,
+      "title": "docs(climate): source reuse decision for backfill stack",
+      "merged_at": "2026-10-27T15:56:16Z",
+      "merge_sha": "d39739244e3855a8317e0d08f60aade196c0ad78",
+      "body_sha256": "1185d3f6ca985fe5a1092ab00869e80f0702afbd71afa61b34907c6343ee607e",
+      "file_count": 8,
+      "file_paths_sha256": "2178600f63a0697a998679e9d3e08a1b1fdb223ba124b5a10a19eeabd69d452f",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 9
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 482,
+      "title": "refactor(sensor): version indoor exercise projection",
+      "merged_at": "2026-10-27T15:56:16Z",
+      "merge_sha": "9445645d1b108cdcb88a101584d9b264e12fd92a",
+      "body_sha256": "74654ad2b3f83dc0668a111a445fe0a94510c4b2bf83485f476bb0c37487462b",
+      "file_count": 6,
+      "file_paths_sha256": "080ee9953a9c886ae312eef65e4998bbdb9007085127ad50dedfead66441dc06",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 9
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 483,
+      "title": "feat(sensor): dated synthetic retrofit effect component",
+      "merged_at": "2026-10-27T15:56:16Z",
+      "merge_sha": "ace3f507f404b37b742f9ef43b345bb0ff11985d",
+      "body_sha256": "e7263838321c1275c8550a336aa58b4a72c63040f591f1ce517fecc2ce00f50c",
+      "file_count": 4,
+      "file_paths_sha256": "94ec87bf4ee6c045ce5bc71e0078ddc155b33447b372eb9b50893d381f64e2a7",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 9
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 484,
+      "title": "feat(sensor): neutral seeded household condition component",
+      "merged_at": "2026-10-27T15:56:16Z",
+      "merge_sha": "472346bcb42c9e9e1eb6feed60edf46d11fbb588",
+      "body_sha256": "72bd2f6b9a06cbb8a92ef36ccbd677d03ec12d96ef031fe44b051eb10357a245",
+      "file_count": 4,
+      "file_paths_sha256": "4a29e3435b20b54ec554cfb5ac401c093782f41a72cb91edcd04da9955302287",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 9
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 485,
+      "title": "docs(sensor): stock writer consumer compatibility blocker",
+      "merged_at": "2026-10-27T15:56:16Z",
+      "merge_sha": "c2a554dbe74098f52f33ba0b14fa1d9d9cf48871",
+      "body_sha256": "224ede61c439680e931b73cb661dbf5d169ec55829dffe6e8277f2625ab38c23",
+      "file_count": 8,
+      "file_paths_sha256": "3c1acf36a2235e101a809453b06a59633e00fa666d7026401c8d99699e10616e",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 8,
+        "FAILURE": 1
+      },
+      "nonpassing_checks": [
+        {
+          "name": "src-core",
+          "result": "FAILURE"
+        }
+      ]
+    },
+    {
+      "pr": 486,
+      "title": "docs(sensor): stacked backfill components and owner decision gates",
+      "merged_at": "2026-10-27T16:40:12Z",
+      "merge_sha": "ad34164a8ab01fdca96776a62c536a3bfc4ec88d",
+      "body_sha256": "aafd6d41f55d3963597ba731db6610ed9510fee0a1824e39fe4519f94ca004d0",
+      "file_count": 48,
+      "file_paths_sha256": "23cdb3d2f57d6a306bee0af0a80825ad86b30a8a41e8b42eb6f20632a65f6b5c",
+      "review_states": {
+        "APPROVED": 2,
+        "COMMENTED": 1
+      },
+      "check_results": {
+        "SUCCESS": 14,
+        "SKIPPED": 12
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 496,
+      "title": "feat(workbench): scoped specialist screen foundation and role stack (Refs #149)",
+      "merged_at": "2026-10-27T17:39:04Z",
+      "merge_sha": "65a514ed20e97816dbf47e9fb981ab4cfe40597d",
+      "body_sha256": "e373c3f32c1eb64c1945c40de79299cfb573ed453eb7828ee31a934f3bfd5186",
+      "file_count": 31,
+      "file_paths_sha256": "fc21f0ec35718a1724e87be387d86a1da2953442534aa2aae4370825397923af",
+      "review_states": {
+        "APPROVED": 3,
+        "COMMENTED": 3
+      },
+      "check_results": {
+        "SUCCESS": 12,
+        "FAILURE": 1,
+        "SKIPPED": 13
+      },
+      "nonpassing_checks": [
+        {
+          "name": "activation",
+          "result": "FAILURE"
+        }
+      ]
+    },
+    {
+      "pr": 498,
+      "title": "feat(infra): define private keyless IoT transport (Refs #140)",
+      "merged_at": "2026-10-27T20:11:24Z",
+      "merge_sha": "09099ecd1a66ee9d37ad993707d1f2eda07cdfd4",
+      "body_sha256": "a54cbcaa4192b1c320715f9096e0ba2061c910bf8ea871ab3a63a8d4f5b77ea0",
+      "file_count": 22,
+      "file_paths_sha256": "46d21e4a6a96c4b07b1f1fee4857326304fc1d9ded3d117d0e5ee9073e550cdb",
+      "review_states": {
+        "APPROVED": 2,
+        "CHANGES_REQUESTED": 1,
+        "COMMENTED": 1
+      },
+      "check_results": {
+        "SUCCESS": 18,
+        "SKIPPED": 7,
+        "PENDING": 1
+      },
+      "nonpassing_checks": [
+        {
+          "name": "rubric/score",
+          "result": "PENDING"
+        }
+      ]
+    },
+    {
+      "pr": 500,
+      "title": "fix(infra): enforce pilot locks and source-validated image releases",
+      "merged_at": "2026-10-27T20:52:44Z",
+      "merge_sha": "f183ba391de10fb7bcfc6157cbcbb2290b9cf4fc",
+      "body_sha256": "af214d33526a18fb8c207318620d4108b90d3617701564250b0562c8798696e0",
+      "file_count": 15,
+      "file_paths_sha256": "b8806a77213593d77b59749e72550df68edfb52f5d487756433ca0249a6a27fc",
+      "review_states": {
+        "COMMENTED": 4,
+        "CHANGES_REQUESTED": 1,
+        "APPROVED": 2
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 501,
+      "title": "docs(ux): audit content and design resident journeys (#153, #154)",
+      "merged_at": "2026-10-29T21:26:07Z",
+      "merge_sha": "7fb58c4b7fe425408731537e3f213c97a7317937",
+      "body_sha256": "e32e8fcbc69d0e3b7460cc626d86ec5f1f9359b1967a9530d06312e5f75635bd",
+      "file_count": 25,
+      "file_paths_sha256": "eff8b48561f036bf4e233625f4a7d8bbbb23492cdebcce9903f42bdecc95bd60",
+      "review_states": {
+        "APPROVED": 4,
+        "COMMENTED": 3
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 502,
+      "title": "fix(synthetic): derive indoor bounds from outdoor records (#179)",
+      "merged_at": "2026-10-27T23:00:05Z",
+      "merge_sha": "e39166da5b989f15afefc9013c6fa5ec5e22d4c6",
+      "body_sha256": "65c0fb013c9ca223a985e0f85eee9779d702cd5a3133c08e351d1ec4d89f5dec",
+      "file_count": 23,
+      "file_paths_sha256": "18c897ed7b3bae89ccc558896355430a583c10f57e9ea9bd91bb2216ede027cf",
+      "review_states": {
+        "COMMENTED": 14,
+        "APPROVED": 4
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 503,
+      "title": "fix(chat): harden isolated turns and record blocked acceptance",
+      "merged_at": "2026-10-29T17:26:01Z",
+      "merge_sha": "9b74ac8daaec2a880172e43161b37ac7f2c3f801",
+      "body_sha256": "45f433ac03fde766830dc04b84bd2c212b69cf85c7d81fb7c06290deb4bab6a0",
+      "file_count": 78,
+      "file_paths_sha256": "6b35cfb8aa7c63c2ca74846a88f0ee80006bd3f11f618a8ec6c10fd70e4ea2df",
+      "review_states": {
+        "APPROVED": 8,
+        "COMMENTED": 19
+      },
+      "check_results": {
+        "SUCCESS": 11,
+        "SKIPPED": 7
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 504,
+      "title": "fix(rai): bind AI release records to dependent policies (Refs #218)",
+      "merged_at": "2026-10-29T13:49:50Z",
+      "merge_sha": "7583f2271259b7804c004486e861bb6837880c85",
+      "body_sha256": "3b6576dfab93d2174de5a63359bd5363ae9d8ed0bd35ea8700a155ba85eca455",
+      "file_count": 23,
+      "file_paths_sha256": "63590d3e86b2000f36cfede88670ab7e127b15d23ad4a37647a4b294ed909501",
+      "review_states": {
+        "APPROVED": 2,
+        "COMMENTED": 2
+      },
+      "check_results": {
+        "SUCCESS": 11,
+        "SKIPPED": 7
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 505,
+      "title": "feat(sensors): isolated validation scenarios and simulator documentation",
+      "merged_at": "2026-10-29T12:22:19Z",
+      "merge_sha": "5653547507f3056f09a726a18516237728da5e5b",
+      "body_sha256": "180b31241e97dcde9f2020bc95cf58af659fd2591e030c340e955a3b03facdd0",
+      "file_count": 22,
+      "file_paths_sha256": "a410c8af4d1148643a57a2f0bb417381d68529e0d15d8b718028acba0ed8640b",
+      "review_states": {
+        "APPROVED": 3,
+        "COMMENTED": 5
+      },
+      "check_results": {
+        "SUCCESS": 11,
+        "SKIPPED": 7
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 507,
+      "title": "test(rubric): verify src cut-over and reconcile migration evidence",
+      "merged_at": "2026-10-30T09:56:42Z",
+      "merge_sha": "f7da489bcca146c9c02d878ac1808655c40be052",
+      "body_sha256": "bcd8e350ba2ded0eb912d35aaba4ebe145194ac1fdc72ac93c2293309eca221e",
+      "file_count": 38,
+      "file_paths_sha256": "8b329090eea05d621577ef16728a85d71c5eaa08a3367db53831deb65aa5fb1e",
+      "review_states": {
+        "APPROVED": 1,
+        "COMMENTED": 5
+      },
+      "check_results": {
+        "SUCCESS": 4,
+        "SKIPPED": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 508,
+      "title": "feat(iot): bounded IoT streaming candidate (Refs #110, #184)",
+      "merged_at": "2026-10-29T14:24:05Z",
+      "merge_sha": "768c006e493b7b9afa95c7bf9da962862a0424ee",
+      "body_sha256": "8eee82dfc497b9bfbbbccc185ad5c22193b1bc5b77019fd44f8962e58921b038",
+      "file_count": 53,
+      "file_paths_sha256": "42b53abb5ec0c3f6ac405c97f05c17b7b0619a2f3d9958204bf10ede752eaf34",
+      "review_states": {
+        "APPROVED": 5,
+        "COMMENTED": 12
+      },
+      "check_results": {
+        "SUCCESS": 11,
+        "SKIPPED": 7
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 509,
+      "title": "feat(safety-consent): unverified referral and tenure intake (Refs #130, #131)",
+      "merged_at": "2026-10-29T22:18:13Z",
+      "merge_sha": "129808b3d0a2a5ab88bdcf631d2722362de9e857",
+      "body_sha256": "9e79891a852136238402f637648c269a20137600b7b397706b8122375ad101dc",
+      "file_count": 29,
+      "file_paths_sha256": "cbe53b7e6e0815ba4cedf7cb77785925c6d63a702bc305452a589e8ea660df0c",
+      "review_states": {
+        "APPROVED": 4,
+        "COMMENTED": 9
+      },
+      "check_results": {
+        "SUCCESS": 11,
+        "SKIPPED": 7
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 510,
+      "title": "feat(finance): working reviews with held authority (Refs #96, #98, #99)",
+      "merged_at": "2026-10-29T23:46:38Z",
+      "merge_sha": "91e890e07af036263316c153cbc7ceff780cdaa2",
+      "body_sha256": "34abb1165d442da34e6b29ad6eacc96857cd45656ec49841af2f42deacf26691",
+      "file_count": 68,
+      "file_paths_sha256": "f71e0d0d87eaafaf9b984cbcb1aa044b425a9a16e7f4ec305a3ae0441e19c96b",
+      "review_states": {
+        "APPROVED": 7,
+        "COMMENTED": 19
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 511,
+      "title": "feat(orchestrator): author synthetic rebuild rehearsal (Refs #148)",
+      "merged_at": "2026-10-30T10:02:19Z",
+      "merge_sha": "63422cdf9fd477dd8892a27ac8b11487bc3a2429",
+      "body_sha256": "c186b4dff94b7e31d0a6f85e1fa2cea216ac1cecb5fe93a6cc95f1d7870ab43b",
+      "file_count": 26,
+      "file_paths_sha256": "c06728aa574028fe45aba8e5016a72a6bab66b195e38e1e65a9a538523b64b17",
+      "review_states": {
+        "APPROVED": 3,
+        "COMMENTED": 5
+      },
+      "check_results": {
+        "SUCCESS": 11,
+        "SKIPPED": 7
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 512,
+      "title": "feat(infra): author monitoring candidates and runbooks (Refs #146)",
+      "merged_at": "2026-10-29T21:56:15Z",
+      "merge_sha": "8ee1b77f8983ddf39216da07ae60c63ef66431d6",
+      "body_sha256": "dabdedc0e0f495516fa6a0f6e893b9005801459cf8f9b53d8bed6b060a0f03d0",
+      "file_count": 30,
+      "file_paths_sha256": "efc7052b4c30306e97995f9bae19101c0665145531c32cef0704dc54ced8f83d",
+      "review_states": {
+        "APPROVED": 3,
+        "COMMENTED": 4
+      },
+      "check_results": {
+        "SUCCESS": 11,
+        "SKIPPED": 7
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 514,
+      "title": "fix(api): recover employee workspace assets and clarify briefing scope",
+      "merged_at": "2026-10-28T08:36:17Z",
+      "merge_sha": "98b0bb98f2424dd23c00e386378f44892a7a79e0",
+      "body_sha256": "7ec412551464ebea943f2ed5bdc701d69695bb3a5d5b20d4a3df425ba3853175",
+      "file_count": 15,
+      "file_paths_sha256": "91419d58e4d6b9e43b5ae9e57d0b9ff834eb02cdc78134528a9123264d1ebf8f",
+      "review_states": {
+        "COMMENTED": 4,
+        "APPROVED": 2
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 515,
+      "title": "feat(infra): add minimal employee AI deployment and derived app settings",
+      "merged_at": "2026-10-28T09:20:02Z",
+      "merge_sha": "5abc6c6b32c536ad933cd926850eb8a3d8220a77",
+      "body_sha256": "eef6f5b0b95c07a6bcd710059dda543331b4d296809f96d6873e26c931db4a43",
+      "file_count": 13,
+      "file_paths_sha256": "ca09d271aaeecc1d155352ea5928be3bf2ec9071e17145215b52c42cba5ed931",
+      "review_states": {
+        "COMMENTED": 6,
+        "APPROVED": 2
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 516,
+      "title": "fix(api): show programme-wide briefing for existing manager roles",
+      "merged_at": "2026-10-28T09:57:51Z",
+      "merge_sha": "bb6df04cef68cc3694a97238d002c732c3406d81",
+      "body_sha256": "73d30c3878ec5f186b98a08f1478b0c3666f27a3eb1744be9fe790867402bddc",
+      "file_count": 14,
+      "file_paths_sha256": "a5fc0e70e12a6ba24ab1ccf6d85dee356350f7a152024b7ec5f5dcba37a62abe",
+      "review_states": {
+        "COMMENTED": 10,
+        "APPROVED": 3,
+        "CHANGES_REQUESTED": 1
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 518,
+      "title": "docs(ops): record healthy employee re-apply (Refs #514, #515, #516)",
+      "merged_at": "2026-10-28T12:12:59Z",
+      "merge_sha": "420f0374d53efc8fa57714ced1f99c03df3d786f",
+      "body_sha256": "321bdc213dcf6a9e781486c918da39a5767400ce118808ccb88f777d12ee4cf5",
+      "file_count": 7,
+      "file_paths_sha256": "49f309f6d90ff72785dc7710e2616d1c38612351b223e1de5ef1c3b1df8eb496",
+      "review_states": {
+        "COMMENTED": 7
+      },
+      "check_results": {},
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 519,
+      "title": "fix(api): repair stale briefing browser loading check",
+      "merged_at": "2026-10-28T11:39:27Z",
+      "merge_sha": "037f43272b2a503c0673b09802da95fe056ece67",
+      "body_sha256": "61063136ca5cf888d78af21009ceaaecc800f2cb2e1aab45795e518395b2ce19",
+      "file_count": 13,
+      "file_paths_sha256": "d0f5ef360c9aee7f90379a4b2d0df6d9f617bd044a2a9abfc8caa1ee10cf41f0",
+      "review_states": {
+        "COMMENTED": 5,
+        "APPROVED": 2
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 525,
+      "title": "feat(resident): grounded chat and confirmed synthetic callbacks",
+      "merged_at": "2026-10-28T23:12:33Z",
+      "merge_sha": "9bfed51863b05a25e9939d82504c576524688e14",
+      "body_sha256": "9b3edb16701bb92790f8d8f9d7a81cb0aa5bf28340fe95860d12079dd9f624ff",
+      "file_count": 78,
+      "file_paths_sha256": "9f68f6f6182601a8b687d02655e920cd19449acbe7aaf51ab62c59ba7094fe79",
+      "review_states": {
+        "COMMENTED": 22,
+        "APPROVED": 6
+      },
+      "check_results": {
+        "SUCCESS": 11,
+        "SKIPPED": 7
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 527,
+      "title": "fix(api): retry missing workspace scripts safely",
+      "merged_at": "2026-10-28T20:12:17Z",
+      "merge_sha": "f41ecbc37bf12670d53ad7b03364b0c3b530d521",
+      "body_sha256": "151fdea4c3318640c5892d10bd4e601ccd1adc33f703b77506fd726ee65db610",
+      "file_count": 23,
+      "file_paths_sha256": "30deb7c459f306315cf2352da522004e19f3eb0dab98e4e2d42c114302f11b2d",
+      "review_states": {
+        "COMMENTED": 2,
+        "APPROVED": 1
+      },
+      "check_results": {
+        "SUCCESS": 11,
+        "SKIPPED": 7
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 528,
+      "title": "fix(api): recover capacity reads without losing drafts",
+      "merged_at": "2026-10-28T21:56:47Z",
+      "merge_sha": "1dde6a908c20358dbb3067dcdd674e5ad0bd246d",
+      "body_sha256": "43c285ff2a013b35a7d8cce21ecbb53944ca894c4df0cd752dfa4cb2705d19cd",
+      "file_count": 27,
+      "file_paths_sha256": "f0b848809630d82397a95cb45dd5b607bc7cecb276bbcff92f2c84738497c382",
+      "review_states": {
+        "COMMENTED": 6,
+        "APPROVED": 2
+      },
+      "check_results": {
+        "SUCCESS": 11,
+        "SKIPPED": 7
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 529,
+      "title": "feat(web): add evidence-based case journey workspace",
+      "merged_at": "2026-10-29T02:37:11Z",
+      "merge_sha": "6b9e13f98de399fff3b8e3350cb9144f1f0e0ba8",
+      "body_sha256": "0e22f478000497f807c1364eb77e575640b866d899a978a662b95aff9ea64da9",
+      "file_count": 97,
+      "file_paths_sha256": "0e3faf87bc2cd3d35db773897baf36dc2a0829ece5b074ec2844bdd3660c00b2",
+      "review_states": {
+        "APPROVED": 6,
+        "COMMENTED": 39,
+        "CHANGES_REQUESTED": 2
+      },
+      "check_results": {
+        "SUCCESS": 11,
+        "SKIPPED": 7
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 534,
+      "title": "docs(rai): whole-project responsible AI review",
+      "merged_at": "2026-10-29T00:05:40Z",
+      "merge_sha": "86d93e6d0e5bf9966953b1f87d751770cfc0c076",
+      "body_sha256": "be833760190a73cc2a1ddd9f3ea9fdded5a75fb04397801847e43c967d78593d",
+      "file_count": 13,
+      "file_paths_sha256": "47b1516b2ff8292fbe47893c0ce516db3464881ee217a099b96bc100cfedcf14",
+      "review_states": {
+        "COMMENTED": 4
+      },
+      "check_results": {
+        "SUCCESS": 4,
+        "SKIPPED": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 539,
+      "title": "feat(web): near-full-screen map with home summary card",
+      "merged_at": "2026-10-29T04:57:26Z",
+      "merge_sha": "6228cdeca6ca4f773d9b26d14241a45da915b58e",
+      "body_sha256": "e446781fdfc45f7f19e63f7140b9f5e40b65f733ab6cd387a8aa37ca28995372",
+      "file_count": 35,
+      "file_paths_sha256": "4a4b534ea17b16a4bf7b57ae9d033b29cfa75ba3688899c97e35b0f947a8e929",
+      "review_states": {
+        "COMMENTED": 13,
+        "APPROVED": 4
+      },
+      "check_results": {
+        "SUCCESS": 11,
+        "SKIPPED": 7
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 540,
+      "title": "feat(api): progress dashboard and paged closed cases",
+      "merged_at": "2026-10-29T05:36:32Z",
+      "merge_sha": "cf9459dc9d351b6ceb141812ce65359cdd346f25",
+      "body_sha256": "51b2e607b8a6c3e38c25a6aae9dd2de3e3c7ac908cf2c85146badee0d240985b",
+      "file_count": 58,
+      "file_paths_sha256": "06ef4ddc8767ca9fc64c6dfc8d5027e368428af2518fef8bb448d3b219d3d96a",
+      "review_states": {
+        "APPROVED": 6,
+        "COMMENTED": 19
+      },
+      "check_results": {
+        "SUCCESS": 11,
+        "SKIPPED": 7
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 546,
+      "title": "docs(process): closing keywords and issue closure audit",
+      "merged_at": "2026-10-29T14:50:48Z",
+      "merge_sha": "3e67f7db7e7b34147a97dcf068b3367c55d56fbe",
+      "body_sha256": "b21da10861efe631fa775524b4e71951504647827523e350bb7a2e7be1b25078",
+      "file_count": 2,
+      "file_paths_sha256": "4fde374ebf7dc1387ba5b10be3ac1aaa4fc308ab80c29e79d6bbfbaf46fbc65c",
+      "review_states": {
+        "COMMENTED": 6
+      },
+      "check_results": {
+        "SUCCESS": 4,
+        "SKIPPED": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 547,
+      "title": "Refresh dated evidence for the paper and Cowork v2 story",
+      "merged_at": "2026-10-30T09:49:04Z",
+      "merge_sha": "80a7606bf0f8131df39f93b54ed5ac1fd479f467",
+      "body_sha256": "761f22b066916ad169c08b0f8c74db2cd23c93838105b6022ab516a6c973c1c0",
+      "file_count": 7,
+      "file_paths_sha256": "6186e9ee5f70ddc99b76d9d17f291dd81254c2f6a4174bacec9b5ef092daf5a0",
+      "review_states": {
+        "COMMENTED": 10,
+        "APPROVED": 3,
+        "DISMISSED": 1
+      },
+      "check_results": {},
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 548,
+      "title": "Jmservera/feat presentation qa navigation",
+      "merged_at": "2026-10-29T14:45:16Z",
+      "merge_sha": "c6bbbd0790090da884c30a710672a4fa675c44ec",
+      "body_sha256": "1bd8314ecd6bc8bdeaa822c99b76b74169aff3e414bb1c964b5e267ee0b53121",
+      "file_count": 5,
+      "file_paths_sha256": "ef7ea66010c281648089e023ae5898dcea026ca26c4f26dd749cdaffb5e036d0",
+      "review_states": {
+        "COMMENTED": 4,
+        "APPROVED": 1
+      },
+      "check_results": {
+        "SUCCESS": 4,
+        "SKIPPED": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 554,
+      "title": "feat(ux): thinner case journey, icons, blocker popover, attached tabs (Refs #552)",
+      "merged_at": "2026-10-29T18:16:22Z",
+      "merge_sha": "ecbb5a80470292c885764c28d6833c0e5ef63dfa",
+      "body_sha256": "5e6243575c935b00d899fc9a36802a18c7b473a8283080cd60c3c4b06f7c8670",
+      "file_count": 29,
+      "file_paths_sha256": "a19c086cf19e2ed492165f01f2560cf3ce11b0b819172df90d4dd689f74044fe",
+      "review_states": {
+        "COMMENTED": 10,
+        "APPROVED": 4
+      },
+      "check_results": {
+        "SUCCESS": 11,
+        "SKIPPED": 7
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 555,
+      "title": "Paper review 2610129",
+      "merged_at": "2026-10-29T22:38:02Z",
+      "merge_sha": "719e76e50b9f54b71514ee7b90833005f9bb4be8",
+      "body_sha256": "b9aada1cd5f59dcbda6be97b122ea8e3f0f46819e098702c01d6581613104164",
+      "file_count": 29,
+      "file_paths_sha256": "012332b24f8fee75a1910ad37ea095ba8e77e332879d9f6553443d67eff361f3",
+      "review_states": {
+        "COMMENTED": 9,
+        "APPROVED": 1,
+        "DISMISSED": 1
+      },
+      "check_results": {
+        "SUCCESS": 17,
+        "PENDING": 1
+      },
+      "nonpassing_checks": [
+        {
+          "name": "rubric/score",
+          "result": "PENDING"
+        }
+      ]
+    },
+    {
+      "pr": 556,
+      "title": "feat(ux): shared chat widget for resident and employee sites (Refs #550)",
+      "merged_at": "2026-10-29T20:14:22Z",
+      "merge_sha": "356a3cfbaa2cd63a6fbf80e87e11a29cacaaf4c7",
+      "body_sha256": "e24995498116274c33f5907191956b0d3efdd8852124f376ad40e86936965ca6",
+      "file_count": 55,
+      "file_paths_sha256": "98c1e530a2043b4201e3029151d5a037701853083646d24800c73af1d159325f",
+      "review_states": {
+        "COMMENTED": 9,
+        "APPROVED": 3
+      },
+      "check_results": {
+        "SUCCESS": 11,
+        "SKIPPED": 7
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 557,
+      "title": "feat(iot): reconcile approved B1 IoT Hub and gate publisher activation (Refs #140, #184)",
+      "merged_at": "2026-10-29T23:26:29Z",
+      "merge_sha": "c764a0120b0c9c0b7f5cd608ce50ff54667192f8",
+      "body_sha256": "a0b98531baa6007998588eeab055a9a7efc3a21d419656ea185c3101caa7d8f6",
+      "file_count": 62,
+      "file_paths_sha256": "8f16c0cec28ae750da50e19fc460b18946310348dc1d7e5048cc8d1f0a261c78",
+      "review_states": {
+        "COMMENTED": 34,
+        "APPROVED": 10
+      },
+      "check_results": {
+        "SUCCESS": 11,
+        "SKIPPED": 7
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 558,
+      "title": "Add Microsoft Fabric Fit Assessment documentation",
+      "merged_at": "2026-10-31T10:43:53Z",
+      "merge_sha": "a75bbdffa51ae34b1fcf779250f1f553d566ee93",
+      "body_sha256": "1b138ec880b0f2595299e69ea3f410827fd766d6dddc5700008eaf3bb8955b02",
+      "file_count": 184,
+      "file_paths_sha256": "5f1a75f6ab04c55d7d7b3cbd200561b5852c0eb5c29c906e04843499dbccfa67",
+      "review_states": {
+        "COMMENTED": 25,
+        "CHANGES_REQUESTED": 1,
+        "APPROVED": 3
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 560,
+      "title": "chore(deps-dev): bump source-map-js from 1.2.1 to 1.2.2 in /docs/capstone/thought-leadership/everything-but-the-software/anc",
+      "merged_at": "2026-10-30T08:20:02Z",
+      "merge_sha": "ffd8f35e63b24905b9aeb937dbf2a7fe9968747f",
+      "body_sha256": "50d0115fb6197da7bddf7a5032911a72ad1ed9ca022b2667a8675e9cdc71cbb9",
+      "file_count": 1,
+      "file_paths_sha256": "995e9aa65d7c9059c7004386fa0773298eff2097077486616c928021b6ff4395",
+      "review_states": {},
+      "check_results": {
+        "SUCCESS": 1,
+        "SKIPPED": 7
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 585,
+      "title": "docs(ops): resident AI fallback diagnosis (Refs #563)",
+      "merged_at": "2026-10-31T01:19:21Z",
+      "merge_sha": "293f5a72fcd89f6b743ef828681167c59703f127",
+      "body_sha256": "effe59f6bf0c74df36d3119e339d997ae5f327c8c9d5dd472fdbd285c0f32d06",
+      "file_count": 14,
+      "file_paths_sha256": "672b9f1d8c24b47c1e727f10278785a1b69bea6d10d3b6d44beb6b9b99aebe63",
+      "review_states": {
+        "COMMENTED": 5
+      },
+      "check_results": {},
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 587,
+      "title": "feat(sensors): ingestion consistency with backfill (Refs #188)",
+      "merged_at": "2026-10-31T00:40:56Z",
+      "merge_sha": "42ee85857f5b8cbaf9a8d357976eb14e2bf92d59",
+      "body_sha256": "a72c2475852e94e814fea436fd31837f39713db1c7a8b541beb6f4852f00ece4",
+      "file_count": 35,
+      "file_paths_sha256": "60c695b5815373338480c57bf6473fd45a986baf4952bc1d8d740309bcf5ec08",
+      "review_states": {
+        "COMMENTED": 10,
+        "APPROVED": 4
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 594,
+      "title": "fix(web): version shared assets and apply chat fix on employee site (Refs #568)",
+      "merged_at": "2026-10-31T00:58:22Z",
+      "merge_sha": "4cb5964f7acce89668a37b5a56c3e125e26f6d21",
+      "body_sha256": "9758916f8235bdcee45b2baaa83cff1a934731f90e057639104979a0bdb8cf05",
+      "file_count": 39,
+      "file_paths_sha256": "ade42237f0b3b2834d29d599626765fd741f33932aa5ea60deed5fdd06024abf",
+      "review_states": {
+        "COMMENTED": 11,
+        "APPROVED": 3
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 599,
+      "title": "docs(agents): coordinator never stops while unblocked work remains",
+      "merged_at": "2026-10-31T10:20:43Z",
+      "merge_sha": "1330869ea675ff019958846330108b4f45e163ce",
+      "body_sha256": "2cc8fd2afceb03a1b9924531eb5c799e110468b9f1d72f1439b9abfa4d894d4e",
+      "file_count": 1,
+      "file_paths_sha256": "513c2791ce48ec61c46569b227fd66edef0bc37e3a8b0068fa41f00f192735a8",
+      "review_states": {
+        "COMMENTED": 7,
+        "APPROVED": 1
+      },
+      "check_results": {
+        "SUCCESS": 4,
+        "SKIPPED": 5
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 602,
+      "title": "feat: add source-only AI metering and publish reviewed evidence (#432)",
+      "merged_at": "2026-10-31T15:29:29Z",
+      "merge_sha": "4512193276f18c474af42e37a3cc27357eeef017",
+      "body_sha256": "633f89cf4ee82bdc5783f647c4680a58e76a9aae98b6261b1fc0d70ea6af43a3",
+      "file_count": 70,
+      "file_paths_sha256": "29e7e107c525d196c452f1130cb7c12d96eaf3bfa654a504ce5e294d88702e76",
+      "review_states": {
+        "COMMENTED": 20,
+        "APPROVED": 3,
+        "CHANGES_REQUESTED": 1
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 604,
+      "title": "feat(employee): briefing loading state (Refs #531)",
+      "merged_at": "2026-10-31T14:54:56Z",
+      "merge_sha": "28fbe6b6111c5aae4fc2c4f55f8ffca2876ab589",
+      "body_sha256": "ca5a7bf9022c141e3f8a6f512325ab5d6aa28dc0ad34d8224e44fcba7298cc94",
+      "file_count": 36,
+      "file_paths_sha256": "53a3866c45789e12bc6ae3aed603ebd709aba16c06891002e601206934d15b98",
+      "review_states": {
+        "COMMENTED": 14,
+        "APPROVED": 3
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 607,
+      "title": "feat: employee progress dashboard",
+      "merged_at": "2026-10-31T16:35:26Z",
+      "merge_sha": "87bf629c630314f5be086697e322e1b0ec22277d",
+      "body_sha256": "6b9e6a2e26c525d2bef6d2690ee77fe7e27f4f76bfb17885b37a00b916b1969f",
+      "file_count": 37,
+      "file_paths_sha256": "070cd5114f6ceca14785f621843090c1508667244e664ca53c13aa50740d0591",
+      "review_states": {
+        "COMMENTED": 11,
+        "APPROVED": 3
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    },
+    {
+      "pr": 610,
+      "title": "fix(tools): reject oversized Chromium scratch paths before gate execution",
+      "merged_at": "2026-10-31T17:22:10Z",
+      "merge_sha": "84035ae9605f7ab42744a3d6e9f620bb65126d99",
+      "body_sha256": "638566ec3d9de09d3c6034b144007823762fe47f47141ecef00a842a5f284534",
+      "file_count": 11,
+      "file_paths_sha256": "8813314d4fd4fce083807785938059ee9fdb85e16daeaaed8641c811f194dc03",
+      "review_states": {
+        "APPROVED": 2,
+        "COMMENTED": 6
+      },
+      "check_results": {
+        "SUCCESS": 1
+      },
+      "nonpassing_checks": []
+    }
+  ]
+}
