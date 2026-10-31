@@ -1,7 +1,7 @@
 ---
 title: AI Tokenomics (Total Cost of AI and Value Realised)
 description: What the mentor clue on Tokenomics points to, the public Tokenomics Foundation framing, how it maps to the capstone rubric and the Zava Forward evidence, and what remains unmeasured
-ms.date: 2026-10-24
+ms.date: 2026-10-31
 ms.topic: reference
 ---
 
@@ -69,6 +69,9 @@ The rubric already asks for this, in different words.
 ## What Zava Forward Can Already Show
 
 Evidence class: repository observation, not a benchmark.
+
+This inventory is pre-extension evidence. The dated 2026-10-31 source-only
+section below supersedes its code-path descriptions, not operational acceptance.
 
 * The five-assistant path validates prompt, completion and total tokens and keeps
   them with the append-only ledger event when the provider supplies them
@@ -187,6 +190,83 @@ Sonnet pinned pending repeated native-path comparisons, an independent
 criterion-level reference assessment and threshold-adjacent decision checks.
 Do not select the highest-scoring model as the most accurate one.
 
+## Source-only Metering Extension (2026-10-31, Refs #432)
+
+Evidence class: local engineering, not a measured financial result.
+The [core consumption ledger](../../../src/core/README.md#ai-consumption-ledger-432)
+extends immutable assistant events with content-free call/configuration/prompt/
+cached-token attribution, intersecting task/period budgets, root call/depth bounds,
+owned alerts, output/review links and billing-led reporting. The
+[manager JSON report](../../../src/api/README.md#ai-consumption-report-432)
+keeps cost Unknown without applicable evidence and reports quality and capacity
+separately. Current report components/floors are supplied, unverified observations;
+engineering defaults do not approve OD-51.
+
+The 31 October PR #602 review corrections preserve enclosing document request
+call/depth bounds and validate reporting periods even without SQL. Missing
+financial output links no longer prevent legacy/priority rejection; opaque
+original-root associations retain visible incomplete joins. Assistant failed-
+provider rejection creates an ineligible link atomically. Meter-capacity-held
+withdrawal remains explicitly financially unresolved and excludes stale
+accepted economics after read recovery. These are source-only controls, not
+Finance reconciliation, human acceptance, or expanded issue coverage.
+The subsequent three-thread correction preserves bounded returned-model
+mismatch evidence through worker shaping to non-retryable quarantine and
+release suspension. Valid backend-held reports retain evaluation/live/registry
+with unavailable/Unknown consumption instead of HTTP 400. An admitted call's
+9,999-to-10,001 event transition returns persistent manual draft/priority/chat
+fallbacks with unresolved attribution, keeping subsequent dispatch held and
+recovered economics incomplete. These remain synthetic source-contract results.
+Later hosted review corrections retain revoked releases as terminal and persist
+capacity-held assistant completion before task/event serialization, so financial
+linkage cannot roll back mismatch quarantine or its safety evidence.
+
+This corrects the older inventory above prospectively: merged #480/#593 already
+provide independent resident currency reservations. They are not joined into the
+new financial cohort; complete per-call and accepted-outcome coverage remains
+unmet. No deployment or stored procedure change is made by this extension.
+
+The [dated official pricing-source retrieval](./azure-ai-price-source-2026-10-31.json)
+records the public URL, content hash and unavailable numerical price cells.
+The official page distinguishes token deployment types and states that public
+prices are estimates, not actual quotes. No applicable region/model/currency
+rates or billing record are supplied, so **cost remains Unknown**.
+
+Local constructed ledger and loopback HTTP tests establish engineering
+behaviour, not paid inference, human-witnessed acceptance or Azure reconciliation.
+The issue's nine criteria retain this boundary:
+
+| Criterion | Source-only position | Remaining evidence |
+| --- | --- | --- |
+| Per-call attribution | Core calls retain consumption joins and cached usage | Historical/resident joins and complete real provider usage |
+| Request calls/depth | Atomic root bounds and looping/fan-out stop are engineered | Live governed activation/acceptance |
+| Limits/alerts | Token/money/expiry/unknown-price/liability deny with owner reference | Named owner and approved budgets |
+| Dated price | Official source metadata/version stored; unavailable rates explicit | Applicable approved rate source |
+| Azure billing reconciliation | Exact-period, scope, allocation and tolerance mechanism | Actual attributable Azure cost records and Finance validation |
+| Accepted cost/quality/TCA | Billing-led denominator and quality regression failure mechanism | OD-51, real quality/effort and complete approved TCA inventory |
+| Released time | Capacity-not-cash classification | Measured effort; Finance booked destination if cash is claimed |
+| Held-out batch/spread | Recorded token min/max/mean mechanism | Finite owner-authorised held-out batch and accepted results |
+| Pitch | Drafting insert below carries the engineering result and gaps | Current source-manifest placement, regenerated notes/question bank, deck/rehearsal and final challenge |
+
+### Pitch Drafting Insert (2026-10-31)
+
+After merged #558, the old brief is historical. Feed this proposal through the
+[current source guide](../../capstone/source/README.md#ai-consumption-evidence-432),
+not by editing generated question-bank or speaker-script files. The delivered
+deck and generated notes are unchanged by this task. Fixture prices must not
+appear as financial evidence.
+
+| Use | Draft copy | Evidence label |
+| --- | --- | --- |
+| Tokenomics slide | Source-only core calls have durable call/depth and token/money admission. Unknown price or liability stops that AI dispatch and retains the manual path. Human acceptance can be withdrawn; interrupted review joins keep the ratio Unknown. | Local engineered mechanism, not live financial acceptance |
+| CFO Q&A card | Billing, not a token projection, is the financial source. Cost per human-accepted proposal is assessed beside critical misses, unsupported claims, overrides and reopened cases. No attributable bill, approved floor or authorised held-out batch is supplied, so no cost or cash benefit is claimed. | Mechanism and stated gap; no invoice, measured value or owner approval |
+| Price/source note | Official public source retrieved 2026-10-31; numerical rates were unavailable. No applicable rate or estimate is substituted. | Dated retrieval metadata, not quote or invoice |
+
+The earlier 6,884 tokens/five runs remain historical observation without a
+human-accepted denominator. Complete resident/historical joins, OD-51, named
+owners and Finance validation remain open. Capacity is not cash. Actual slide
+placement, rebuilt notes/deck and rehearsed Q&A remain owner-controlled work.
+
 ## Gaps
 
 | Gap | Why it matters | Where it is tracked |
@@ -207,9 +287,10 @@ existing criterion was changed or ticked.
 
 ## Pitch Use
 
-See the [Tokenomics pitch brief](../../capstone/pitch/tokenomics-pitch-brief.md)
-for the slide option, speaker notes, executive questions and the claims that
-must stay out of the pitch.
+Use the current drafting insert above and
+[current capstone authoring source](../../capstone/source/README.md) for new
+placement. The [historical Tokenomics pitch brief](../../capstone/history/tokenomics-pitch-brief.md)
+preserves earlier options, not the current deck or a rehearsed script.
 
 ## Review Triggers
 

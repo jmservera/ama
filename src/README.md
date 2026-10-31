@@ -112,8 +112,25 @@ Compare the existing serial baseline (`--all --jobs 1`) with parallel scheduling
 (`--all --jobs 3`) at the same clean committed HEAD and reviewed main base.
 Use a new external output directory for each run, with no `--changed`, resume
 or differing extra selectors. The runner already owns
-`/tmp/ama-rpi-heavy.lock`; use its `--lock-timeout 600`, not an outer `flock`
-around this self-locking command. Other heavy validation must use the same lock.
+`/tmp/ama-rpi-heavy.lock`; normally use its `--lock-timeout 600`, not an outer
+`flock` around this self-locking command. Other heavy validation must use the
+same lock. When the owner explicitly authorises outer queued admission, pass
+the inherited util-linux lock descriptor so the runner does not reopen and
+deadlock against that same lock:
+
+```bash
+flock -w 1800 /tmp/ama-rpi-heavy.lock python3 tools/rpi-checks.py \
+  --all --jobs 3 --heavy-lock-fd 3 --base "$BASE_SHA" --out /tmp/rpi-ISSUE-queued
+```
+
+`--heavy-lock-fd` checks the regular-file descriptor against the non-symlink
+shared path, duplicates it and asserts exclusive nonblocking ownership. It
+does not prove historical acquisition or release/close the caller's original
+descriptor. The runner closes only its non-inheritable duplicate; its ordinary
+subprocesses exclude inherited handles. Continuous exclusion covers execution
+and verification, and default standalone admission is unchanged. A wrong,
+invalid or independently contended descriptor fails closed. The caller owns
+outer-lock release; this interface grants no queueing or publication authority.
 
 ```bash
 python3 tools/rpi-checks.py --all --jobs 1 --lock-timeout 600 \

@@ -95,3 +95,19 @@ checker SHA256 remain unchanged; no new progress runtime change or repeated
 source Review. Prior post-main progress browser evidence remains the same
 code/runtime boundary. New gate will use the current committed base.
 All busy/preflight outcomes are retained externally, not relabelled execution.
+
+Commit cdb147d1 completed that integration. Admission attempts through gate-417
+then remained busy until current main advanced to reviewed #602:
+4512193276f18c474af42e37a3cc27357eeef017, source-only AI metering.
+Again the gate stopped before checks on base mismatch. A normal conflict-free
+local merge incorporates the reviewed store/server baseline; correction
+test/checker source hashes remain unchanged. This is upstream integration,
+not additional issue implementation or any Azure/model execution.
+
+Fresh nonblocking locked validation against that integrated runtime passes both
+inherited scale regressions (2 executed/0 skipped, 18.808s) and original
+small plus actual 60,000-home progress Playwright/axe checks. No JavaScript
+errors or automated axe violations. Primary focused-post-metering.log,
+browser-post-metering.log and bounded post-metering-provenance.json are
+preserved in the committed evidence root; full reports remain external.
+Full gate still must run on the final committed current-base candidate.

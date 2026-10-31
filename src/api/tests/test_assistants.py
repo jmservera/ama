@@ -14,6 +14,7 @@ import uuid
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 from unittest.mock import patch
+from unittest.mock import Mock
 
 import release_support
 import test_mvp
@@ -1110,6 +1111,8 @@ class ConfigurationTests(unittest.TestCase):
                               usage=dict(prompt_tokens=10, completion_tokens=5, total_tokens=15))
         ai = Ai()
         ai.endpoint = "https://nonbillable.invalid"
+        ai.consumption = Mock()
+        ai.consumption.reserve.return_value = "a" * 64
         with patch.object(ai, "_token", return_value="test-only"), patch("urllib.request.urlopen", return_value=response):
             result = ai.evidence("system", "evidence")
             self.assertEqual(result["usage"]["total_tokens"], 15)
