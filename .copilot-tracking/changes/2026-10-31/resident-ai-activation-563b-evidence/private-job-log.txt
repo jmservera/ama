@@ -1,0 +1,6 @@
+Execution job-cutover-test-init-f9vcmzo (Succeeded), one-off start of the existing Manual job with a command override.
+before {"schema": false, "reserve": false, "complete": false, "budget": false, "db": "retrofit"}
+principal_sid_match True
+applied
+after {"schema": true, "reserve": true, "complete": true, "budget": true, "db": "retrofit"}
+reserved_cents 0

@@ -1,0 +1,17 @@
+{
+ "signin_attempts": 1,
+ "questions": [
+  {
+   "question": "My home smells like a dead rat",
+   "status": 200,
+   "label": "Summary by rules - AI unavailable: the AI usage check is unavailable",
+   "answer": "I cannot confirm the cause of the problem from chat or tell you that your home is safe. Contact your housing officer using your usual contact details. Explain what you have noticed, where it is and when it started. Ask how to report a repair and what happens next. This chat has not sent a report or alerted anyone. If someone may be in immediate danger, do not wait for chat; call 999.",
+   "sources": [
+    "General repair-reporting guidance, not a diagnosis or repair history"
+   ],
+   "sources_collapsed": true
+  }
+ ],
+ "signin_status": 200,
+ "done": true
+}
