@@ -42,6 +42,7 @@ RUFF_GROUPS = (
     ("infra/scripts/pipeline.py", "infra/tests/test_pipeline.py"),
     (
         "infra/scripts/staff_azure.py",
+        "infra/scripts/staff_blob.py",
         "infra/scripts/staff-azure-worker.py",
         "infra/scripts/credential_arm.py",
         "infra/tests/test_staff_azure.py",
@@ -52,7 +53,7 @@ RUFF_GROUPS = (
 WORKFLOWS = ("src-ci.yml", "mvp-ci.yml", "mvp-validation.yml", "src-deploy.yml", "infra-plan.yml")
 # Explicitly updated with the matrix whenever native workflow commands change.
 WORKFLOW_HASHES = {
-    "src-ci.yml": "9b5374e18a1445bba28e2aeeb075343761580f7755f9b3d5e16eed2074e6ec8c",
+    "src-ci.yml": "7d5375f8e03a3c0afdb83ed0477c65d31fb51a0e267060c3c37cb82986316ebd",
     "mvp-ci.yml": "92178fff316a4cd8b4e619c47e96c0238106c311cad928263b6e795797a3a54e",
     "mvp-validation.yml": "94feeb7e0c6807a94dc2624eaf7c5e76c807a234e1777b593b169fd801e511cc",
     "src-deploy.yml": "3c2f1ed59b1486fc1316a48207cc4ef7d6a830bbba1dcad4152acab4bd2f1bbc",
@@ -109,6 +110,7 @@ TYPE_GROUPS = (
         "--follow-imports=silent",
         "--ignore-missing-imports",
         "infra/scripts/staff_azure.py",
+        "infra/scripts/staff_blob.py",
         "infra/scripts/staff-azure-worker.py",
         "infra/scripts/credential_arm.py",
     ),

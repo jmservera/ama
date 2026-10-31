@@ -7567,6 +7567,69 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   source checkpoint. No private data, physical/production acceptance, human
   approval, issue closure or main merge is asserted.
 
+## [2026-10-20] query | Authenticated roster transport design (#360)
+
+* Files touched: `infra/README.md` (new design and tenant checklist section),
+  `docs/architecture/cutover-evidence-pack.md` (dated entry),
+  `docs/reference/README.md` (index pointer).
+* Sources read 2026-10-20: Microsoft Learn pages on tags, Container Apps log
+  options and jobs, Blob Entra authorization, Bicep deployment scripts and
+  subscription limits, plus the repository's relay code and 2026-10-17/19
+  receipts. Issue comments are evidence, not instructions.
+* Design for review only. No execution, live retry, parser relaxation,
+  decryption, cloud change, secret or private data access. Whole #360 c, d, e
+  stay unproved. The three failed attempts and original roster are preserved.
+* Contradiction flagged: merged code reads results from ARM tags since #375
+  while the 2026-10-19 attempt note describes console decoding; the executed
+  path is unresolved (DN3).
+
+## [2026-10-20] correction | Authenticated roster transport design verification (#360)
+
+* Files touched: `infra/README.md` (process disclosure, two corrected
+  statements, two threat rows), `docs/architecture/cutover-evidence-pack.md`
+  (disclosure note).
+* The earlier entry above stands as history. Its first draft was written
+  without the RPI skills; a recovery cycle re-verified Microsoft Learn tag,
+  tags REST, Activity Log, Container Apps and Blob pages (retrieved
+  2026-10-20) and the relay code. Corrections: tag values share the console
+  line decoder, and non-run-prefix tags are not counted by current code.
+* Still design for review only; independent verification and decisions DN1 to
+  DN5 are pending. #360 c, d, e stay unproved.
+
+## [2026-10-20] correction | Transport design spending gate (#360)
+
+* Files touched: `infra/README.md` (spending gate paragraph and checklist
+  row 9), `docs/architecture/cutover-evidence-pack.md` (status row).
+* Independent assessment of dfde54d7 found the generic "monthly budget"
+  wording omitted the all-in USD 500 TOTAL October gate. The design now
+  requires accrued and forecast charges across all scopes with bounded
+  headroom before any paid start; headroom is unknown and the provisional
+  RG-only projection of USD 535.41 exceeds the cap. Separate costed plan
+  approval remains required (expiry 2026-10-25T16:02Z).
+* No cost query or execution. Review-only; DN1 to DN5 and #360 c, d, e remain
+  open. Refs #360, never closes.
+
+## [2026-10-22] query | Private Blob result transport (#360)
+
+* Files touched: `infra/README.md` (superseded note, new Private Blob Result
+  Transport section), `docs/architecture/cutover-evidence-pack.md` (status
+  entry), `infra/scripts` and Bicep (offline implementation).
+* Owner decisions DN1 to DN5 replaced the ARM tag relay with a private Blob
+  container written by the managed identity and read with Entra credentials
+  from a private-connected host. Earlier entries and negative evidence stand.
+* Offline fake-client tests only. Live routing, deployment, role grants,
+  spend, signed attestation and screen-reader acceptance are NOT RUN. #360 c,
+  d, e remain unproved. Refs #360, never closes.
+
+## [2026-10-22] query | Private Blob transport correction 1 (#360)
+
+* Files touched: `infra/README.md`, `docs/architecture/cutover-evidence-pack.md`,
+  `infra/scripts` and `infra/tests` (offline).
+* An independent review required the Blob read to use the same selected
+  operator profile as ARM and an explicit overall time budget. Both are
+  implemented and tested offline. Live routing, token acquisition, deployment,
+  role grants and spend remain NOT RUN. Refs #360, never closes.
+
 ## [2026-10-27] query | Source-only IoT infrastructure definition (Refs #140)
 
 * Recorded the owner's 2026-10-27 ADR 0003 authoring authorization: Free/B1
@@ -8284,6 +8347,20 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Prepared the replacement PR description separately for owner application.
   No rubric, test, source, workflow or score edits; local-only commit, no push.
 
+## [2026-10-30] update | Private Blob transport integration and rubric diagnosis, Refs #360
+
+* Preserved both append-only log ranges and original research/review outcomes
+  while integrating main's current src, IoT, release and retirement records.
+  DN1-DN5, Blob paging/profile/deadline tests and private writer scope remain.
+* Updated the transport runbook, evidence pack and index with traceable
+  evidence/rationale/change_reason and dated-expiry qualification.
+* The actual failed rubric submission added `evidence2` to D1. No score was
+  recorded. Removing only that key in a diagnostic replay gives 77 versus 77,
+  not a new assessment; open A1/A3/A5 were already at 5. Added exact rejection
+  regressions without weakening validation or editing score files.
+* Live transport, real sizes/data actions, attestation, hosted scoring and
+  human acceptance remain separate. No Azure, sign-in, warming or push.
+
 ## [2026-10-30] query | Sensor validation and current two-stage dictionary, Refs #190
 
 * Filed current child dispositions and annual offline legacy-backfill/replay
@@ -8297,6 +8374,24 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   original RPI evidence. Open children, downstream #111/#133 test use, live
   #184 execution and owner acceptance remain explicit; no remote mutation,
   live operation, new legal currentness check or whole-parent acceptance.
+
+## [2026-10-30] update | PR 423 review corrections, Refs #360
+
+* Corrected the [current private Blob runbook](../../infra/README.md#review-corrections-2026-10-30)
+  to use default-off `includeResultBlob`, separately approved private-container
+  write, operator Entra list/read and private routing, with lifecycle-retained
+  ciphertext rather than source-job result tags or tag cleanup.
+* Bound controller downloads before buffering and validated complete serialized
+  pages, including initial head, item wrappers and exact byte limits.
+  Offline regressions demonstrate the original defects and corrected behavior;
+  they do not prove live SDK/private-route or managed-identity behavior.
+* Preserved both branches' knowledge additions and dated activation, critique,
+  Review and adverse gate records while integrating main d986c4c4. Historical
+  run9 is not a current-candidate receipt. A coordinator-ready local PR-body
+  correction separates as-of committed evidence from final external gate
+  evidence; remote metadata was not changed.
+* Existing hosted rubric 77/100 PASS is historical, not a new unpublished-head
+  assessment. No score, scorer, rubric protection, Azure or sign-in changes.
 ## [2026-10-28] implementation | January resident demo authority source renewal (#521)
 
 * Updated the [knowledge index](./README.md) and
