@@ -184,6 +184,17 @@ blank EOF lines in capstone questions/script. Those unchanged main files are
 outside this task. Validate our diff against current origin/main instead of
 modifying inherited capstone content; preserve that pre-commit failure.
 
+Second full gate at 815255aa/base a75bbdff acquired the shared lock after
+97m23.735s (queued 11:44:47.650809Z, acquired 13:22:11.385810Z), admitted one
+worker and then refused execution because current origin/main had advanced.
+Exit 1, no check or passing receipt. `rpi-466-retry.log` SHA256
+2e721a567661d630231279ee26bd048f2976cdeda680d5d40817c798e27a13a8.
+Fresh main is e64c6e6c9da407682de59b926944424f94f50671, merged #600
+gate-only stabilization; resident runtime remains unchanged.
+Integrate normally, preserve this original Review and attempt a current-base
+full gate with immediate lock admission (`--lock-timeout 0`) to avoid another
+stale queued candidate. No partial receipt, cloud fallback or gate bypass.
+
 ## Pre-Review Reconciliation
 
 Implementation/local checks and sole original Review complete; main integrated
