@@ -8865,3 +8865,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   Synthetic local checks do not establish live employee acceptance or hosted
   CI success. Current owner direction uses CI as the publication gate without
   waiting for the full local gate; original adverse evidence stays intact.
+
+## [2026-10-31] query | Mandatory employee acceptance local browser gate, Refs #570
+
+* Updated the [local gate guide](../../src/README.md#local-rpi-gate) and knowledge
+  index: default browser dispatch and trusted receipt verification require the
+  post-install employee acceptance CLI with pinned source-CI test import paths.
+* Three reported tests and zero skips are mandatory for this CLI; qualified
+  discovery skips and the SQL-only non-applicability exception cannot substitute
+  for execution. Synthetic tooling evidence does not establish live employee
+  acceptance, hosted CI success or human approval.
