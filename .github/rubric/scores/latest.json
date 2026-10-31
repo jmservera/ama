@@ -2,18 +2,18 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-30T23:24:03+00:00",
-  "commit": "f0f4cf38db21ad84f62090b49ec2f74862bbb35f",
+  "scored_at": "2026-10-31T00:26:23+00:00",
+  "commit": "8c169fb74add5a544ace7579dbcb03ec51b84e24",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41143641333",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41148483572",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
     "solution-code": "fe877e06fc0c60e603d742644d199ba7e92ae57536bd4a19e7874fa4dc1f0cf2",
     "infrastructure": "c6a7f41eec75b0ecff8fe5b0c7391c9d006370556ff65b3dcf3bc2419621a53d",
-    "capstone-deck": "c5ae9ab5ec15788dd255b786adaf07ee716806bef375e01c066ad1c26701d74e",
-    "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
+    "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
+    "pitch": "4c0b241f35c31a2b7fa7b9536f03f3e2e2e54f320b8ffb17d2210a294c9b8127",
     "thought-leadership": "592719a5da0d19d4d4c81dd5779faa45a9039c4777e3749cbc055d241aed8970"
   },
   "total": 77,
@@ -86,31 +86,31 @@
     "B2": {
       "score": 4,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:18-29"
+        "docs/capstone/history/cowork-main-presentation/audience-and-delivery.md:18-29"
       ],
-      "rationale": "Pitch package unchanged in this PR; baseline Audience Map evidence retained. Still unrehearsed."
+      "rationale": "Pitch package reorganized in this PR (old cowork-main-presentation moved to history/); Audience Map content preserved verbatim at the new path. Still unrehearsed."
     },
     "B3": {
       "score": 2,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/demo-runbook.md:63-77"
+        "docs/capstone/history/cowork-main-presentation/demo-runbook.md:63-77"
       ],
-      "rationale": "Demo runbook unchanged in this PR; validation.md still records no rehearsal. Needs Improvement retained."
+      "rationale": "Demo runbook content preserved (moved to history/); new docs/capstone/demo/runbook.md covers the same ground. validation.md/json still record no rehearsal. Needs Improvement retained."
     },
     "B4": {
       "score": 2,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/demo-runbook.md:142-150",
-        "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:66-73"
+        "docs/capstone/history/cowork-main-presentation/demo-runbook.md:142-150",
+        "docs/capstone/history/cowork-main-presentation/audience-and-delivery.md:66-73"
       ],
-      "rationale": "New recovery table and bridge answer stems show deliberate prepared depth for pressure questions, an improvement over the baseline's single list. No transcript or rehearsal exists, so still short of demonstrated composure under challenge."
+      "rationale": "Recovery table and bridge answer stems content preserved under history/ path; equivalent recover-once content retained in docs/capstone/demo/runbook.md. No transcript or rehearsal exists, so still short of demonstrated composure under challenge."
     },
     "B5": {
       "score": 2,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:33-46"
+        "docs/capstone/history/cowork-main-presentation/audience-and-delivery.md:33-46"
       ],
-      "rationale": "Timing contract unchanged in this PR; deck timing lines confirmed byte-identical. Unrehearsed pacing retained."
+      "rationale": "Timing contract content preserved under history/ path; new README.md timing table is consistent. Unrehearsed pacing retained."
     },
     "B6": {
       "score": 5,
@@ -125,49 +125,47 @@
         "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx:slide22",
         "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx:slide40"
       ],
-      "rationale": "Slides 22/40 now interpret retrospective activity counts (183 PRs, 36,755 words) instead of implying value/causation, closing a prior inherited storytelling gap; meets Excellent descriptor."
+      "rationale": "Slides 22/40 retain the retrospective-activity interpretation (183 merged PRs, 36,755 log words, non-causal framing) per extracted deck text; this PR's deck edits are visual/media refresh and reorganization, not a storytelling regression. Baseline Excellent retained."
     },
     "C1": {
       "score": 5,
       "evidence": [],
-      "rationale": "No new BRD stakeholder-framing change; PRD edit only clarifies NFR-002 vs NFR-021 applicability boundaries and identity wording, not stakeholder/value framing already at ceiling. Unchanged."
+      "rationale": "No new BRD stakeholder-framing change; PRD edit only clarifies NFR applicability boundaries and identity wording, not stakeholder/value framing already at ceiling. Unchanged."
     },
     "C2": {
       "score": 2,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:77-83"
+        "docs/capstone/history/cowork-main-presentation/audience-and-delivery.md:77-83"
       ],
-      "rationale": "New Interruption Protocol instructs restating the challenge in the customer's terms before answering, directly rehearsing the C2 behavior. A concrete written improvement over the baseline's bare answer stems, but no transcript or live exchange exists, so readiness remains Needs Improvement."
+      "rationale": "Interruption Protocol content preserved under history/ path; docs/capstone/demo/runbook.md 'Recover Once' restates similar guidance. No transcript or live exchange exists, so readiness remains Needs Improvement."
     },
     "C3": {
       "score": 4,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/evidence/ai-cost-evidence.md:258-266"
+        "docs/capstone/history/cowork-main-presentation/evidence/ai-cost-evidence.md:258-266"
       ],
-      "rationale": "New Strong CXO Answer Stems explicitly surface unresolved cost/risk gaps unprompted ('Unknown. We must agree the denominator...') and make a clear recommendation while naming limits. Stronger written intellectual honesty and unprompted risk disclosure than baseline."
+      "rationale": "Strong CXO Answer Stems (unprompted cost/risk gap disclosure) preserved verbatim under history/ path; new questions-and-answers.md retains equivalent unprompted-gap framing (e.g. accepted-outcome TCA denominator). Baseline retained."
     },
     "D1": {
       "score": 4,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:927-985",
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:3097-3280"
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:927-985"
       ],
-      "rationale": "Added Jiang/Herdagdelen citations qualify existing claims but remain incremental synthesis, not new empirical contribution. Unchanged at 4."
+      "rationale": "No changes to thought-leadership artifact in this PR (changed_artifacts: capstone-deck, pitch only). Unchanged at 4."
     },
     "D2": {
       "score": 3,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:9",
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:8-19"
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:9"
       ],
-      "rationale": "main.tex still has unresolved TODO(author) items (26 remain, e.g. lines 9,43,55,601,663,717); revision not recompiled by this reviewer. Unchanged at 3."
+      "rationale": "No changes to thought-leadership artifact in this PR. Unresolved TODO(author) items remain. Unchanged at 3."
     },
     "D3": {
       "score": 2,
       "evidence": [
         "docs/capstone/thought-leadership/everything-but-the-software/README.md:39"
       ],
-      "rationale": "README records owner-committed work in PR #\u200b555 while distinguishing the assistant's local-only delivery from external manuscript publication. Submission, registration and publication approval remain pending. Unchanged at 2."
+      "rationale": "No changes to thought-leadership artifact in this PR. Submission/registration/publication approval remain pending. Unchanged at 2."
     }
   }
 }
