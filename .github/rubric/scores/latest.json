@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-31T17:32:07+00:00",
-  "commit": "a614fb4b1087ba96d60a3ceae5ecfb9a0c7c0c52",
+  "scored_at": "2026-10-31T22:00:17+00:00",
+  "commit": "17e0e74c4c5cbbdda80c7361cfc1a5cab0ee6427",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41224281946",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41245618027",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "68a9163e304f7fcf2848849d87a26a10d99e4717e65c0de9482ef9147882c2b6",
+    "solution-code": "9b7f7b6bc0cbd6d0cc9f1b37874b1575af6ef755261971dc11d7ce9583d94a1e",
     "infrastructure": "61ed8eadcd8e631c2a2e13b0853b7a96efd716806d947ef318843f0dd05f7d63",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -29,10 +29,10 @@
     "A1": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/static_assets.py:1-58",
-        "src/api/src/zava_forward/api/server.py:193-197"
+        "src/api/src/zava_forward/api/server.py:486-502",
+        "src/core/src/zava_forward/core/procurement.py:540-591"
       ],
-      "rationale": "Not touched by this PR (src/README.md tooling-doc change only). Baseline ceiling unchanged."
+      "rationale": "Diff adds clean, scoped server-side pagination (API validation + core slicing) to packages/workorders; sound modular design but does not exceed already-maximal ceiling."
     },
     "A2": {
       "score": 5,
@@ -53,20 +53,18 @@
     "A4": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/ai_consumption.py:1-1073",
-        "src/api/tests/test_ai_consumption_api.py:1-1633",
-        "src/core/tests/test_ai_consumption.py:1-691"
+        "src/core/src/zava_forward/core/procurement.py:540-591",
+        "src/api/tests/test_workspace_paging.py:1-56"
       ],
-      "rationale": "Diff is tooling documentation only, not implementation. Already-maximal baseline 5 retained."
+      "rationale": "Diff implements paging end-to-end (API, core, UI) with backward-compatible unpaged path and 5 new tests covering paging, bad-input, visibility. Already-maximal baseline 5 retained."
     },
     "A5": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/ai_consumption.py:360-420,920-1073",
-        "src/core/README.md:5-123",
-        "src/api/src/zava_forward/api/server.py:514-540"
+        "src/api/src/zava_forward/api/server.py:489-497",
+        "src/core/src/zava_forward/core/procurement.py:540-591"
       ],
-      "rationale": "Diff adds an RPI-gate browser-check path-length constraint note; no new cost/observability model evidence. Baseline 5 retained."
+      "rationale": "Paging bounds page size (1-100) and validates input with 400s, a reliability/performance improvement for list endpoints; already-maximal baseline 5 retained."
     },
     "A6": {
       "score": 5,
