@@ -41,7 +41,7 @@
     {"id": "live-ac7", "summary": "Live employee-site verification remains unavailable; UX agent produced no note.", "resolution": "Separately authorized live identity/site verification and discovery-backed specialist note."},
     {"id": "publication-base", "summary": "After local commit, current origin/main moved to 1330869ea675ff019958846330108b4f45e163ce, including gate-tool/CI/infra changes. Complete gate blocks because candidate does not descend from that base; no passing receipt or publication.", "resolution": "Explicitly reconcile branch/base under repository safeguards, execute missing validation and a new full exact-head gate. No silent rebase or merge."}
   ],
-  "next_action": {"phase": "Follow-up", "action": "Blocked handoff: execute routed validation when shared capacity is available and explicitly reconcile current-base lineage; then obtain new full gate and exact-head assessment before push/PR."},
+  "next_action": {"phase": "Research", "action": "User-selected correction child employee-briefing-loading-531-capacity-correction: main merged as 18c1531f; recover evidence, execute validation with 1800-second lock waits, review and publish."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Execute blocked API/browser validation", "rationale": "Highest value: verify new successful-review scenario and existing issue criteria when shared lock is available.", "evidence": "RV-001; P01-T02"},
     {"rank": 2, "task": "Discovery-backed UX specialist design note", "rationale": "Bounded missing issue-requested contribution; current invocation produced no deliverable.", "evidence": "RV-002"},
