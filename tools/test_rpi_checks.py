@@ -279,6 +279,7 @@ class GateTests(unittest.TestCase):
         with redirect_stdout(captured), self.assertRaises(gate.GateError):
             runner.command([sys.executable, "-c", f"print({text!r})"], suite=True, integration=True)
         self.assertIn(text, captured.getvalue())
+        self.assertEqual(captured.getvalue().count(text), 1)
 
     def test_synthetic_skip_fixture_does_not_contaminate_outer_suite(self) -> None:
         transcript = io.StringIO()
