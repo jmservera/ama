@@ -1376,6 +1376,11 @@ added reply, not earlier chat history, retaining missing-document facts,
 warnings, sources, truthful rules labels, own-case isolation and the limits on
 sending or making decisions. API tests cover both supported questions and
 those refused inputs without enabling AI or changing resident authority.
+The stale-prompt correction was delivered in #573 (Refs #571). The browser
+check also sends "documents help" and "forms help" after successful document
+answers: each fresh reply must refuse explicitly, retain rules metadata and
+human help, and contain no Survey fact, document IDs or AI-suggestion label
+borrowed from earlier replies. Positive document assertions remain unchanged.
 
 ### Preserved bounded Azure advisor (#469)
 
