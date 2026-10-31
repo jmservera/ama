@@ -2,11 +2,20 @@
 title: Gap Analysis and Next Build
 description: Review of the BRD, PRD, ADR, use case and addendum against the research and the working MVP, with the missing items ranked for the next build
 author: AMA programme
-ms.date: 2026-10-13
+ms.date: 2026-10-29
 ms.topic: reference
 ---
 
 ## Scope and evidence
+
+For the current presentation, pitch and demo inventory, use the
+[capstone working set](../../capstone/README.md) and
+[source/technology register](../../capstone/source/README.md).
+The 2026-10-29 reorganization preserves the 54-slide deck, full editable
+dependencies, pitch notes and demo route; older generated exports are
+archive-backed. The ranked gaps and zero-score statements below are dated
+reviews, not today's artifact inventory or a fresh score. The existing paper
+package is distinct from verified submission, dissemination or panel acceptance.
 
 The later #65 [current handover](../../../infra/README.md#current-exercise-handover-2026-10-13)
 and [ADR delivery delta](../../adrs/0002-pilot-readiness-architecture.md#current-exercise-delivery-delta-2026-10-13)
