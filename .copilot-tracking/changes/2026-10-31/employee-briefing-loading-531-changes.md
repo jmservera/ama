@@ -87,3 +87,41 @@ Implementation Partial / validation blocked. User explicitly requested all four
 phases; parent requests one independent assessment of this incomplete candidate,
 with outcome necessarily qualified by unexecuted mandatory validation. Local
 commit may preserve evidence; publication still requires a passing full gate.
+
+## Post-Review Local Commit and Publication Gate
+
+* Original independent Review: execution Partial, outcome Not accepted.
+  RV-001 mandatory execution gap; RV-002 missing specialist note; RV-003 live AC7.
+  No introduced code defect established by contract inspection; not proof of
+  runtime correctness. Review findings remain routed; no second Review or fix
+  loop occurred.
+* Local candidate commit: 9bacc21af6f334ca5c65b7e030bd895805ff13db, privacy-safe
+  authenticated account author/committer and requested Copilot trailer.
+* Fetch before full gate found origin/main moved from reviewed
+  5666bd33e1827670e5c07e3e3063bbbe989b59d3 to
+  1330869ea675ff019958846330108b4f45e163ce. New #423/#599 changes include
+  infra, CI and tools/rpi-checks.py, not just documentation. No silent merge,
+  rebase, history rewrite, main change or other worktree operation performed.
+* First full --all --lock-timeout 600 attempt against current main: blocked
+  before execution by ignored task-generated pip metadata/Ruff/mypy caches.
+* Exact cleanup selection: src/api/.mypy_cache, src/api/.ruff_cache,
+  src/core/src/zava_forward_core.egg-info,
+  src/agents/src/zava_forward_agents.egg-info and
+  src/api/src/zava_forward_api.egg-info. Birth timestamps confirmed creation
+  during this task. No historical tracking artifact was selected or removed.
+* Archived all five selected directories into external validation-scratch.tar,
+  restored them into fresh external scratch, compared every directory with
+  diff -qr, then relocated originals outside Git. No recursive deletion.
+  Archive SHA-256:
+  fcba9d616cf3c20191867cfa284705ad561ea20dcb8b0dfc8ef3952fe4258e62.
+* Second full attempt after clean-input verification: exit 1,
+  "Candidate does not descend from the reviewed main base".
+  This is a base-preflight failure, not executed gate groups or a receipt.
+* External evidence directory:
+  /home/azureuser/.copilot/session-state/fc23a959-09c9-47ee-ad4e-ef1100848f7d/files/.
+  Logs: api-tests.log, browser-1.log, validation-2.log, full-gate-1.log,
+  full-gate-2.log. First three are zero-byte lock-timeout evidence.
+* No passing receipt exists; receipt verification, independent gated exact-head
+  assessment, push and PR creation were not performed. Publication is blocked.
+  Any future PR must use Refs #531 and name current unproved criteria, unless
+  new reviewed evidence actually proves them all.

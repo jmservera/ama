@@ -3,7 +3,7 @@
   "task_slug": "employee-briefing-loading-531",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Review",
+  "active_phase": "Follow-up",
   "status": "blocked",
   "session_status": "running",
   "artifact_paths": {
@@ -38,9 +38,10 @@
   ],
   "blockers": [
     {"id": "heavy-lock", "summary": "Mandatory API and browser commands timed out on the shared lock, including a second serial attempt; neither executed.", "resolution": "Run the existing commands when shared capacity is available; no bypass or stopping unrelated processes."},
-    {"id": "live-ac7", "summary": "Live employee-site verification remains unavailable; UX agent produced no note.", "resolution": "Separately authorized live identity/site verification and discovery-backed specialist note."}
+    {"id": "live-ac7", "summary": "Live employee-site verification remains unavailable; UX agent produced no note.", "resolution": "Separately authorized live identity/site verification and discovery-backed specialist note."},
+    {"id": "publication-base", "summary": "After local commit, current origin/main moved to 1330869ea675ff019958846330108b4f45e163ce, including gate-tool/CI/infra changes. Complete gate blocks because candidate does not descend from that base; no passing receipt or publication.", "resolution": "Explicitly reconcile branch/base under repository safeguards, execute missing validation and a new full exact-head gate. No silent rebase or merge."}
   ],
-  "next_action": {"phase": "Follow-up", "action": "Preserve candidate and original evidence in local commit; attempt required full local gate. No publication without validation and gate."},
+  "next_action": {"phase": "Follow-up", "action": "Blocked handoff: execute routed validation when shared capacity is available and explicitly reconcile current-base lineage; then obtain new full gate and exact-head assessment before push/PR."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Execute blocked API/browser validation", "rationale": "Highest value: verify new successful-review scenario and existing issue criteria when shared lock is available.", "evidence": "RV-001; P01-T02"},
     {"rank": 2, "task": "Discovery-backed UX specialist design note", "rationale": "Bounded missing issue-requested contribution; current invocation produced no deliverable.", "evidence": "RV-002"},
