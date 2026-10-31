@@ -63,13 +63,16 @@ away and cannot unblock; the run keeps working without waiting.
   and start it in the same turn: open issues not blocked by a human, review
   findings and follow-ups on merged PRs, failing or flaky checks, live
   verification, documentation drift, backlog reconciliation and cleanup.
-* Fill free capacity up to the session limit (8) with independent issues, each
-  as its own RPI session in its own worktree. Do not leave sessions idle while
-  independent issues exist.
+* Fill free capacity up to the session limit with independent issues, each as
+  its own RPI session in its own worktree. The limit is the owner's current
+  value (8 as of 2026-10-31) and, when set, overrides the Inputs default of
+  three parallel loops. Do not leave slots idle while independent issues exist.
 * Do not call a turn complete with "waiting on the owner" while any
   non-blocked, unstarted or unfinished work remains. Idle ticks are a defect.
 * A status of "nothing changed" is acceptable only after confirming that every
-  remaining open issue is merged, human-blocked or dependent on one that is.
+  remaining open issue is merged, human-blocked, dependent on one that is, or
+  already running in a session that fills the limit. Report that state
+  truthfully; do not start unneeded work to avoid saying it.
 * Ask the owner questions in the same turn as the report, then continue
   independent work instead of pausing for the answer.
 
