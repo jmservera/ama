@@ -192,6 +192,10 @@ counts, never count as execution and still fail in required integration commands
 Unknown or changed reasons fail closed. Recognising the asset discovery skip
 does not prove that its browser regression subsequently executes.
 
+Runner contract tests capture only their synthetic skip transcripts so enclosing
+static-suite counts remain truthful. Journey route callbacks bind iteration
+fixtures explicitly; neither repair relaxes browser or skip acceptance.
+
 ShellCheck is a required preflight dependency, not an optional actionlint
 enhancement: native workflow lint must analyze shell scripts as hosted lint
 does. Its version is logged and its binary identity is receipt-bound; a missing

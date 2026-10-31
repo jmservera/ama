@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import importlib.util
+import io
 import json
 import os
 import subprocess
@@ -108,11 +109,15 @@ class GateTests(unittest.TestCase):
         runner = self.runner()
         runner.snapshot = self.root
         runner.group = "project-api"
-        runner.command([sys.executable, "-c", f"print({text!r})"], suite=True)
-        self.assertEqual(runner.rows[-1]["skips"], [{"test": test, "reason": reason}])
-        runner.group = "browser"
-        with self.assertRaises(gate.GateError):
-            runner.command([sys.executable, "-c", f"print({text!r})"], suite=True, integration=True)
+        with patch("sys.stdout", new_callable=io.StringIO) as output:
+            runner.command([sys.executable, "-c", f"print({text!r})"], suite=True)
+            self.assertEqual(runner.rows[-1]["skips"], [{"test": test, "reason": reason}])
+            runner.group = "browser"
+            with self.assertRaises(gate.GateError):
+                runner.command(
+                    [sys.executable, "-c", f"print({text!r})"], suite=True, integration=True
+                )
+        self.assertEqual(output.getvalue().count(text), 2)
 
     def test_chat_panel_required_receipt_rejects_missing_flag_selector_or_execution(self) -> None:
         original = self.scoped_receipt(["browser"])
