@@ -109,8 +109,9 @@ def probe(page: Page, expected: Mapping[str, object], origin: str = APP) -> dict
 
 def chat(page: Page, admit: Admission) -> Observation:
     admit()
-    page.locator("#employee-chat-launcher").press("Enter")
     panel = page.locator("#employee-chat")
+    if not panel.is_visible():
+        page.locator("#employee-chat-launcher").press("Enter")
     panel.wait_for(state="visible", timeout=120000)
     skill = panel.locator("form select")
     page.wait_for_function(
