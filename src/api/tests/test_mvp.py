@@ -130,7 +130,7 @@ class ApiTests(unittest.TestCase):
     def test_header_logo_is_served_as_the_packaged_png(self):
         code, html, _ = self.call("/")
         self.assertEqual(code, 200)
-        self.assertIn(b'src="/zava-logo.png"', html)
+        self.assertRegex(html, rb'src="/zava-logo\.png\?v=[0-9a-f]{64}"')
         code, body, headers = self.call("/zava-logo.png")
         self.assertEqual(code, 200)
         self.assertEqual(headers["Content-Type"], "image/png")

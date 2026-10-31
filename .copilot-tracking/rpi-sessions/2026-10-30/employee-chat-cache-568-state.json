@@ -1,0 +1,45 @@
+{
+  "task_id": "568",
+  "task_slug": "employee-chat-cache-568",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/employee-chat-cache-568-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/employee-chat-cache-568-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/employee-chat-cache-568-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/employee-chat-cache-568-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/employee-chat-cache-568-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/employee-chat-cache-568-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute research, plan, implement, review sequentially; local commit only, no push.",
+      "status": "user-directed",
+      "evidence": "User request 2026-10-30; branch fix/employee-chat-cache-568, base d986c4c4."
+    },
+    {
+      "decision": "Research executed, Ready; critique executed once with original Revise verdict. PC-001 rejected as contrary to caller and parent host; PC-002/003 applied to details.",
+      "status": "implementation-ready",
+      "evidence": ".copilot-tracking/plans/2026-10-30/employee-chat-cache-568-plan.md"
+    },
+    {
+      "decision": "One independent Review executed; outcome Conformant for local working-tree AC1-AC5, no substantive findings. Publication/exact-head/live/human acceptance remains unestablished.",
+      "status": "review-complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-30/employee-chat-cache-568-review.md"
+    },
+    {
+      "decision": "The finite user-directed loop and local implementation/evidence commit are complete; no child work or push was requested. Stop this non-interactive session after administrative handoff.",
+      "status": "completed",
+      "evidence": "8228821c; requested API/static/browser checks and the one independent Review are recorded in dated artifacts."
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Coordinator must obtain required clean exact-head full local publication receipt, current-main verification and applicable independent/hosted/human gates before any push. No publication receipt or live acceptance is claimed here."
+  },
+  "prioritized_follow_ups": []
+}

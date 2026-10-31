@@ -98,7 +98,10 @@ class ResidentHttp(unittest.TestCase):
         for path in ("/", "/index.html", "/resident.css", "/resident.js"):
             status, headers, content = live.call("GET", path)
             self.assertEqual(status, 200, path)
-            self.assertEqual(headers["Cache-Control"], "no-store")
+            self.assertEqual(
+                headers["Cache-Control"],
+                "no-cache, must-revalidate" if path.endswith((".css", ".js")) else "no-store",
+            )
             self.assertIn("default-src 'none'", headers["Content-Security-Policy"])
             self.assertNotIn(CANARY.encode(), content)
         page = live.call("GET", "/")[2].decode()

@@ -12,6 +12,7 @@ from typing import Any
 
 from playwright.sync_api import Browser, Page, Route, expect, sync_playwright
 
+from checks.asset_urls import asset_url
 from checks.case_journey_browser_check import journey_data, scan, sign_in
 from checks.design_system_browser_check import check, main
 from checks.regulatory_ux_check import AXE_SHA256
@@ -153,7 +154,7 @@ def fallback_cases(browser: Browser, base: str) -> list[dict[str, Any]]:
                 """,
                 )
 
-        page.route("**/case-workspace.js", workspace_script)
+        page.route(asset_url("/case-workspace.js", base), workspace_script)
         try:
             page.goto(base + "/app#/case/ZF-1?tab=overview")
             page.locator("#email").fill("sam@example.test")

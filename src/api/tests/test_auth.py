@@ -411,7 +411,8 @@ class ProxyHttpTests(Base):
                 req = urllib.request.Request(self.base + path, headers={"X-MS-CLIENT-PRINCIPAL": principal()})
                 with opener.open(req) as response:
                     self.assertEqual(response.status, 200)
-                    self.assertEqual(response.headers["Cache-Control"], "no-store")
+                    self.assertEqual(response.headers["Cache-Control"],
+                                     "no-cache, must-revalidate" if path.endswith(".js") else "no-store")
                     self.assertIn("text/javascript" if path.endswith(".js") else "text/html",
                                   response.headers["Content-Type"])
 

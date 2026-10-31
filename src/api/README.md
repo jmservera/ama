@@ -98,6 +98,83 @@ These are focused local engineering checks, not publication or WCAG acceptance.
 
 ## Shared resident and employee chat widget (#550)
 
+### Release-safe assets (Refs #568)
+
+Employee welcome/workspace/law pages and both resident entry points render
+packaged asset URLs with a deterministic SHA-256 release version. The version
+includes file names and bytes, including shared chat and vendored Leaflet.
+Each handler snapshots the release once: restart the process after changing
+packaged files. A normal new page load selects the new release without repeated
+hard refreshes. An already open page is not hot-reloaded.
+
+HTML, API responses and access denials remain `Cache-Control: no-store`.
+Static files use `Cache-Control: no-cache, must-revalidate` and byte-derived
+ETags, with conditional GET/HEAD support. Bare and previous-version URLs also
+revalidate and return current snapshot bytes; they are not immutable historical
+artifacts. Employee dependency retries reuse the exact versioned URL from the
+initial script element, including shared chat and libraries. No service worker
+or browser-storage asset cache is introduced.
+
+Both sites already used the same widget and the employee focus fix in this
+source baseline. Ordinary-launcher browser regressions now also submit Enter
+and mouse Send through real local employee endpoints, without resetting or
+reinstalling the widget. This does not identify which assets a historical
+deployment served or establish live-site acceptance.
+
+From `src/api`, with the existing pip environment on PATH:
+
+```bash
+export PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests
+flock -w 600 /tmp/ama-rpi-heavy.lock python3 -m unittest \
+  test_static_assets test_workspace_scripts test_chat_widget_focus -q
+flock -w 600 /tmp/ama-rpi-heavy.lock python3 -m checks.asset_cache_browser_check \
+  --out /new/external/asset-cache-results
+flock -w 600 /tmp/ama-rpi-heavy.lock python3 -m checks.chat_submit_browser_check \
+  --out /new/external/chat-submit-results
+```
+
+The cache browser check keeps the origin and browser context unchanged, proves
+reuse of fresh legacy unversioned script/style cache entries, then selects a
+new handler snapshot. Executed JavaScript, computed CSS, shared chat, Leaflet,
+versioned recovery and ETag revalidation are observed with browser cache enabled.
+It uses constructed local data, no live sign-in, model or external requests.
+
+Browser asset instrumentation uses `checks.asset_urls.asset_url` to match the
+complete canonical asset suffix independently of release queries or leading
+version directories. Routes, waits, DOM script observation and CDP coverage
+use that same pattern; page routes and coverage are bound to the owned origin.
+Bare HTTP requests and warm-cache priming still deliberately exercise bare URLs.
+The application currently emits query versions; directory-version tests prove
+matcher compatibility, not an additional HTTP serving contract.
+
+The synthetic design-system CI step runs these checks from `src/api`, with
+pip-installed src projects and the existing Playwright/Chromium prerequisite:
+
+```bash
+export PYTHONPATH=tests:../core/tests:../agents/tests
+flock -w 600 /tmp/ama-rpi-heavy.lock bash -c '
+  set -e
+  python -m checks.design_system_browser_check
+  curl --fail --silent --show-error --location --retry 2 \
+    --connect-timeout 10 --max-time 30 \
+    https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.3/axe.min.js \
+    --output "$RUNNER_TEMP/axe-4.10.3.min.js"
+  python -m checks.regulatory_ux_check --axe "$RUNNER_TEMP/axe-4.10.3.min.js" \
+    --out "$RUNNER_TEMP/regulatory-ux-results.json"
+  python -m checks.case_journey_browser_check --axe "$RUNNER_TEMP/axe-4.10.3.min.js" \
+    --out "$RUNNER_TEMP/case-journey-results"
+'
+flock -w 600 /tmp/ama-rpi-heavy.lock python -m unittest \
+  test_browser_asset_urls test_static_assets test_workspace_scripts -q
+```
+
+Set `RUNNER_TEMP` to a fresh external output directory for local use. The same
+matcher also covers workspace recovery, loading/briefing, employee workspace,
+chat widget, focused case-view UX and asset-cache checks. These constructed
+loopback checks do not establish hosted CI, live-site or WCAG acceptance.
+
+### Shared interaction contract
+
 Both applications serve the same `web/chat-widget.js` and `web/chat-widget.css`.
 A bottom-right icon opens a nonmodal popup: the thread scrolls independently,
 the composer stays below it, Enter sends and Shift+Enter inserts a newline.

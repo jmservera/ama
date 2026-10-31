@@ -14,6 +14,8 @@ from typing import Any
 
 from zava_forward.core import resident_preview as rp
 
+from zava_forward.api.static_assets import StaticAssets
+
 WEB = Path(__file__).parent / "web"
 ASSETS = {
     "/": ("index.html", "text/html; charset=utf-8"),
@@ -79,20 +81,25 @@ class ResidentPreview:
 
 
 def make_handler(app: ResidentPreview) -> type[BaseHTTPRequestHandler]:
+    assets = StaticAssets({url: (WEB / name, ctype) for url, (name, ctype) in ASSETS.items()})
+
     class Handler(BaseHTTPRequestHandler):
         server_version = "ZavaResidentPreview"
 
         def log_message(self, format: str, *args: Any) -> None:
             return
 
-        def _send(self, status: int, body: bytes, ctype: str) -> None:
+        def _send(
+            self, status: int, body: bytes, ctype: str, extra: Mapping[str, str] | None = None
+        ) -> None:
             self.send_response(status)
             self.send_header("Content-Type", ctype)
-            self.send_header("Content-Length", str(len(body)))
-            for key, value in HEADERS.items():
+            if status != 304:
+                self.send_header("Content-Length", str(len(body)))
+            for key, value in {**HEADERS, **(extra or {})}.items():
                 self.send_header(key, value)
             self.end_headers()
-            if self.command != "HEAD":
+            if self.command != "HEAD" and status != 304:
                 self.wfile.write(body)
 
         def _json(self, status: int, payload: Mapping[str, Any]) -> None:
@@ -112,8 +119,15 @@ def make_handler(app: ResidentPreview) -> type[BaseHTTPRequestHandler]:
                 self._json(405 if known else 404, dict(error="This preview is read-only."))
                 return
             if path in ASSETS:
-                name, ctype = ASSETS[path]
-                self._send(200, (WEB / name).read_bytes(), ctype)
+                asset = assets.get(path)
+                assert asset is not None
+                status = 304 if asset.not_modified(self.headers.get("If-None-Match")) else 200
+                self._send(
+                    status,
+                    b"" if status == 304 else asset.body,
+                    asset.content_type,
+                    extra=asset.headers(),
+                )
             elif path == "/healthz":
                 self._json(200, dict(status="ok", synthetic=True, banner=rp.BANNER))
             elif path == "/resident/about":
