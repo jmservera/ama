@@ -11,3 +11,8 @@
 * Added HTTP regression tests in src/api/tests/test_chat_panel.py: storage_approved in both states, unstored-ask rules-only with no storage or model call, rejections (approved, 403, 401, invalid fields, unknown case).
 * Widget test now asserts the chat-widget-resizable class and 35/70 default range controls; verified it fails without resizable: true.
 * Focused tests, ruff and node --check pass; mypy reports only pre-existing import-not-found errors. Heavy gate not run.
+
+## Correction cycle 2 (PR 620 CI)
+
+* CI failure: test_both_chat_submissions_clear_only_successful_unchanged_raw_questions raised "root.insertBefore is not a function". The widget legitimately calls root.insertBefore (resize controls); the test's fake Node lacked it. Added Node.prototype.insertBefore to the fake in src/api/tests/test_case_journey.py; assertions unchanged.
+* test_case_journey and test_chat_widget_focus pass (36 tests); ruff and node --check pass; mypy reports only pre-existing missing-stub errors. Heavy gate not run.

@@ -1052,6 +1052,12 @@ const tick = () => new Promise(resolve => setImmediate(resolve));
 Node.prototype.replaceChildren = function(...children) {
   this.children = []; this.append(...children);
 };
+Node.prototype.insertBefore = function(node, before) {
+  const at = this.children.indexOf(before);
+  this.children.splice(at < 0 ? this.children.length : at, 0, node);
+  if (node.nodeType) node.parentElement = this;
+  return node;
+};
 Node.prototype.contains = function(target) {return target === this || this.all().includes(target);};
 document.body = new Node("body");
 document.createElementNS = (_, tag) => new Node(tag);
