@@ -192,6 +192,12 @@ counts, never count as execution and still fail in required integration commands
 Unknown or changed reasons fail closed. Recognising the asset discovery skip
 does not prove that its browser regression subsequently executes.
 
+Gate-parser unit fixtures capture their synthetic command transcripts locally.
+The outer tooling suite must report only its actually executed tests, not
+fixture skip lines; the regression checks that transcript with the unchanged
+skip parser. Browser callbacks bind iteration-specific route state, and the
+required isolated browser lint/format checks remain enabled.
+
 ShellCheck is a required preflight dependency, not an optional actionlint
 enhancement: native workflow lint must analyze shell scripts as hosted lint
 does. Its version is logged and its binary identity is receipt-bound; a missing

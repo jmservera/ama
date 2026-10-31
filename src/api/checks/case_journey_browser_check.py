@@ -74,7 +74,8 @@ def quality_pending_cleanup(page: Page, base: str) -> None:
         page.locator("#q-i0").wait_for()
         original = page.locator("#q-measure").input_value()
         other = next(
-            name for name in page.locator("#q-measure option").all_text_contents()
+            name
+            for name in page.locator("#q-measure option").all_text_contents()
             if name != original
         )
         for field in page.locator("#quality [data-label]").all():
@@ -82,7 +83,10 @@ def quality_pending_cleanup(page: Page, base: str) -> None:
         page.locator("#q-by").fill("Synthetic installer")
         page.locator("#q-revision").fill("1")
         pending: list[Route] = []
-        page.route("**/api/cases/ZF-1/quality-submit", lambda route: pending.append(route))
+        page.route(
+            "**/api/cases/ZF-1/quality-submit",
+            lambda route, *, pending=pending: pending.append(route),
+        )
         button = page.locator("[data-quality-save]")
         with page.expect_request("**/api/cases/ZF-1/quality-submit"):
             button.click()
@@ -96,7 +100,7 @@ def quality_pending_cleanup(page: Page, base: str) -> None:
             page.locator("#q-i0").fill("Unsubmitted other measure evidence")
         loads: list[Route] = []
         if change == "cache-only":
-            page.route("**/api/checklists", lambda route: loads.append(route))
+            page.route("**/api/checklists", lambda route, *, loads=loads: loads.append(route))
             tab(page, "AI assistance")
             refresh_proposals(page)
             tab(page, "Quality and handover")
@@ -114,7 +118,8 @@ def quality_pending_cleanup(page: Page, base: str) -> None:
         page.unroute("**/api/cases/ZF-1/quality-submit")
         if change in ("refusal", "reload-failure"):
             page.locator("#app").get_by_text(
-                "Synthetic quality refusal" if change == "refusal"
+                "Synthetic quality refusal"
+                if change == "refusal"
                 else re.compile("Your change was recorded, but the case could not reload")
             ).wait_for()
         else:
@@ -143,13 +148,17 @@ def quality_pending_cleanup(page: Page, base: str) -> None:
             page.evaluate("""() => {
               const event = new Event('beforeunload', {cancelable: true});
               window.dispatchEvent(event); return event.defaultPrevented;
-            }""") == expected_dirty,
+            }""")
+            == expected_dirty,
         )
         if change != "reload-failure":
             page.locator("#q-measure").select_option(original)
             expect(page.locator("#q-i0")).to_have_value(
-                "Submitted synthetic quality evidence " if change == "later"
-                else "Submitted synthetic quality evidence" if change == "refusal" else ""
+                "Submitted synthetic quality evidence "
+                if change == "later"
+                else "Submitted synthetic quality evidence"
+                if change == "refusal"
+                else ""
             )
             check(f"quality consumed cache cannot resurrect/{change}", True)
         if change == "other-measure":
@@ -158,9 +167,7 @@ def quality_pending_cleanup(page: Page, base: str) -> None:
             check("quality retains later other-measure evidence", True)
 
 
-def quality_outcome_history(
-    page: Page, base: str, axe: str, reports: list[dict[str, Any]]
-) -> None:
+def quality_outcome_history(page: Page, base: str, axe: str, reports: list[dict[str, Any]]) -> None:
     for status in (409, 503):
         for outcome in ("committed", "uncertain"):
             page.goto(base + f"/app?round7={status}-{outcome}#/case/ZF-1?tab=quality")
@@ -170,11 +177,14 @@ def quality_outcome_history(
             page.locator("#q-revision").fill("1")
             pending: list[Route] = []
             reads: list[Route] = []
-            page.route("**/api/cases/ZF-1/quality-submit", lambda route: pending.append(route))
+            page.route(
+                "**/api/cases/ZF-1/quality-submit",
+                lambda route, *, pending=pending: pending.append(route),
+            )
             button = page.locator("[data-quality-save]")
             button.click()
             expect(button).to_be_disabled()
-            page.route("**/api/cases/ZF-1", lambda route: reads.append(route))
+            page.route("**/api/cases/ZF-1", lambda route, *, reads=reads: reads.append(route))
             # Start a case read before the outcome, then deliver that old snapshot late.
             tab(page, "AI assistance")
             with page.expect_request("**/api/cases/ZF-1"):
@@ -185,9 +195,10 @@ def quality_outcome_history(
                     status=status, json={"error": "Synthetic recorded outcome", "outcome": outcome}
                 )
             expect(page.locator("#app")).to_contain_text("Refresh and check the history")
-            check(f"quality API preserves outcome/{status}/{outcome}", page.evaluate(
-                "Boolean(caseSession.historyBarrier)"
-            ))
+            check(
+                f"quality API preserves outcome/{status}/{outcome}",
+                page.evaluate("Boolean(caseSession.historyBarrier)"),
+            )
             page.wait_for_function("() => document.querySelector('[data-quality-save]').disabled")
             check(f"quality old read was dispatched/{status}/{outcome}", len(reads) == 1)
             workspace = page.locator("[data-case-workspace]").element_handle()
@@ -196,8 +207,10 @@ def quality_outcome_history(
                 old.fulfill(response=old.fetch())
             tab(page, "Quality and handover")
             expect(button).to_be_disabled()
-            check(f"quality pre-outcome read cannot unlock/{status}/{outcome}",
-                  workspace is not None and workspace.evaluate("el => el.isConnected"))
+            check(
+                f"quality pre-outcome read cannot unlock/{status}/{outcome}",
+                workspace is not None and workspace.evaluate("el => el.isConnected"),
+            )
             page.locator("#q-measure").select_option(index=1)
             button.evaluate("el => el.click()")
             check(f"quality changed measure cannot resubmit/{status}/{outcome}", len(pending) == 1)
@@ -252,7 +265,7 @@ def chat_cleanup(page: Page, base: str) -> None:
             thread_path = f"**{prefix}/threads"
             ask_path = f"**{prefix}/threads/SYN-ROUND5/ask"
 
-            def threads(route: Route) -> None:
+            def threads(route: Route, *, change: str = change, held: list[Route] = held) -> None:
                 if route.request.method == "GET":
                     route.fulfill(json=[])
                 elif change == "thread-failure":
@@ -260,14 +273,12 @@ def chat_cleanup(page: Page, base: str) -> None:
                 else:
                     route.fulfill(json={"id": "SYN-ROUND5"})
 
-            def hold(route: Route) -> None:
+            def hold(route: Route, *, held: list[Route] = held) -> None:
                 held.append(route)
 
             page.route(thread_path, threads)
             page.route(ask_path, hold)
-            page.goto(
-                base + f"/app?chat-check={int(regulatory)}-{change}#/case/ZF-1?tab=ai"
-            )
+            page.goto(base + f"/app?chat-check={int(regulatory)}-{change}#/case/ZF-1?tab=ai")
             page.locator("#chat-panel > summary").click()
             if regulatory:
                 page.locator("#regulatory-chat > summary").click()
@@ -355,23 +366,26 @@ def chat_cleanup(page: Page, base: str) -> None:
     page.get_by_role("tab", name="Overview", exact=True).wait_for()
 
 
-def mutation_reconstruction(
-    page: Page, base: str, axe: str, reports: list[dict[str, Any]]
-) -> None:
+def mutation_reconstruction(page: Page, base: str, axe: str, reports: list[dict[str, Any]]) -> None:
     for family in ("advance", "resident", "challenge", "challenge-rebuilt"):
         for outcome in (
-            "refusal", "committed", "uncertain", "malformed-200", "malformed-409", "malformed-503",
+            "refusal",
+            "committed",
+            "uncertain",
+            "malformed-200",
+            "malformed-409",
+            "malformed-503",
             "reload-failure",
         ):
             case_id = "SYN-526-FINAL" if family == "advance" else "ZF-1"
             case_path = f"**/api/cases/{case_id}"
             snapshot = page.request.get(base + f"/api/cases/{case_id}").json()
             snapshot["challenge_targets"] = [{"proposal_id": "SYN-PENDING", "source": "workflow"}]
-            page.route(case_path, lambda route: route.fulfill(json=snapshot))
+            page.route(case_path, lambda route, *, snapshot=snapshot: route.fulfill(json=snapshot))
             page.goto(base + f"/app?round8={family}-{outcome}#/case/{case_id}?tab=overview")
             pending: list[Route] = []
             path = f"**/api/cases/{case_id}/{'advance' if family == 'advance' else 'resident'}"
-            page.route(path, lambda route: pending.append(route))
+            page.route(path, lambda route, *, pending=pending: pending.append(route))
             if family == "advance":
                 button = page.get_by_role("button", name="Ready to book the installation")
             else:
@@ -395,7 +409,8 @@ def mutation_reconstruction(
                   }
                 }""")
                 label = (
-                    "Record or reassign update commitment" if family == "resident"
+                    "Record or reassign update commitment"
+                    if family == "resident"
                     else "Record supplied challenge"
                 )
                 button = form.get_by_role(
@@ -412,13 +427,16 @@ def mutation_reconstruction(
                 tab(page, "Resident")
                 if family == "challenge-rebuilt":
                     # Exercise fresh shipped handlers even when draft retention reused the form.
-                    page.evaluate("""snapshot => {
+                    page.evaluate(
+                        """snapshot => {
                       const old = document.querySelector('#affected-challenges');
                       const replacement = affectedChallengePanel(snapshot, snapshot.id,
                         () => caseView(snapshot.id));
                       old.replaceWith(replacement);
                       replacement.querySelector('#challenge-open').parentElement.open = true;
-                    }""", snapshot)
+                    }""",
+                        snapshot,
+                    )
                     form = page.locator("#challenge-open")
                     form.evaluate("""form => {
                       for (const field of form.querySelectorAll('input, select')) {
@@ -435,8 +453,10 @@ def mutation_reconstruction(
                     page.locator("#challenge-open-request").fill("Later evidence")
             if family == "advance":
                 button.evaluate("el => el.click()")
-                page.wait_for_function("() => document.querySelector('#app').textContent"
-                                       ".includes('This action is still pending')")
+                page.wait_for_function(
+                    "() => document.querySelector('#app').textContent"
+                    ".includes('This action is still pending')"
+                )
             else:
                 expect(button).to_be_disabled()
                 feedback = page.locator(
@@ -444,8 +464,11 @@ def mutation_reconstruction(
                 )
                 expect(feedback).to_contain_text("Recording the supplied evidence")
             check(f"rebuilt pending entry dispatches once/{family}/{outcome}", len(pending) == 1)
-            check(f"pending duplicate is not an outcome barrier/{family}/{outcome}",
-                  not page.evaluate("Boolean(caseSession.historyBarrier)"))
+            check(
+                f"pending duplicate is not an outcome barrier/{family}/{outcome}",
+                not page.evaluate("Boolean(caseSession.historyBarrier)"),
+            )
+
             def failed_recovery(route: Route) -> None:
                 route.fulfill(status=503, json={"error": "Synthetic raw recovery failed"})
 
@@ -457,10 +480,13 @@ def mutation_reconstruction(
                     status=int(outcome.split("-")[1]), content_type="application/json", body="{"
                 )
             else:
-                pending[0].fulfill(status=409 if outcome == "refusal" else 503, json={
-                    "error": "Synthetic mutation result",
-                    **({"outcome": outcome} if outcome in ("committed", "uncertain") else {}),
-                })
+                pending[0].fulfill(
+                    status=409 if outcome == "refusal" else 503,
+                    json={
+                        "error": "Synthetic mutation result",
+                        **({"outcome": outcome} if outcome in ("committed", "uncertain") else {}),
+                    },
+                )
             page.wait_for_function("() => pendingMutations.size === 0")
             page.wait_for_function(
                 "expected => Boolean(caseSession.historyBarrier) === expected",
@@ -474,7 +500,8 @@ def mutation_reconstruction(
                     "Later changed update purpose" if family == "resident" else "Later evidence"
                 )
                 expect(feedback).to_contain_text(
-                    "Synthetic mutation result" if outcome == "refusal"
+                    "Synthetic mutation result"
+                    if outcome == "refusal"
                     else "Reload and check the history"
                 )
                 if outcome != "refusal":
@@ -509,8 +536,10 @@ def mutation_reconstruction(
                     expect(button).to_be_disabled()
                     expect(feedback).to_contain_text("Only the submitted values were recorded")
                     button.evaluate("el => el.click()")
-                    check("acknowledged challenge draft never repeats its submitted action",
-                          len(pending) == 1)
+                    check(
+                        "acknowledged challenge draft never repeats its submitted action",
+                        len(pending) == 1,
+                    )
                     page.unroute(path)
                     page.unroute(case_path)
                     continue
@@ -519,8 +548,10 @@ def mutation_reconstruction(
                 with page.expect_request(path):
                     button.click()
                 page.wait_for_function("() => pendingMutations.size === 1")
-                check(f"fresh history permits retained draft retry/{family}/{outcome}",
-                      len(pending) == 2)
+                check(
+                    f"fresh history permits retained draft retry/{family}/{outcome}",
+                    len(pending) == 2,
+                )
                 pending[1].fulfill(status=409, json={"error": "Synthetic corrected retry refusal"})
                 expect(button).to_be_enabled()
                 scan(page, axe, reports, f"raw-history-recovered-{family}-{outcome}")
@@ -1174,7 +1205,8 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             page.get_by_role("textbox", name="Draft", exact=True).wait_for()
             card = page.locator("#resident-draft-output .ai-suggestion")
             draft_label = (
-                "AI suggestion, not approved" if draft_response.value.json()["source"] == "ai"
+                "AI suggestion, not approved"
+                if draft_response.value.json()["source"] == "ai"
                 else "Template draft, not approved"
             )
             check(
@@ -1215,7 +1247,8 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                 "not an approval, consent or safety" in card.inner_text(),
             )
             for action, reviewed in (
-                ("Use this draft", "Accepted"), ("Do not use this draft", "Rejected")
+                ("Use this draft", "Accepted"),
+                ("Do not use this draft", "Rejected"),
             ):
                 page.get_by_role("button", name="Draft with AI", exact=True).focus()
                 with page.expect_response("**/api/cases/ZF-1/ai"):
@@ -1236,8 +1269,9 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                     )
                     page.keyboard.type("Checked synthetic rejection")
                 card.get_by_role(
-                    "button", name="Record rejection" if reviewed == "Rejected" else action,
-                    exact=True
+                    "button",
+                    name="Record rejection" if reviewed == "Rejected" else action,
+                    exact=True,
                 ).focus()
                 page.keyboard.press("Enter")
                 page.wait_for_function(
