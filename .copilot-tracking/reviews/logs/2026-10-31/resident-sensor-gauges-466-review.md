@@ -292,15 +292,15 @@ recorded in changes. All evidence was read/hash-verified, not rerun.
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/research/2026-10-31/resident-sensor-gauges-466-research.md](.copilot-tracking/research/2026-10-31/resident-sensor-gauges-466-research.md) | Complete current research. |
-| [.copilot-tracking/plans/2026-10-31/resident-sensor-gauges-466-plan.md](.copilot-tracking/plans/2026-10-31/resident-sensor-gauges-466-plan.md) | Seven ACs, markers and follow-ups. |
-| [.copilot-tracking/details/2026-10-31/resident-sensor-gauges-466-phase-details.md](.copilot-tracking/details/2026-10-31/resident-sensor-gauges-466-phase-details.md) | Exact commands and publication sequence. |
-| [.copilot-tracking/reviews/plans/2026-10-31/resident-sensor-gauges-466-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/resident-sensor-gauges-466-plan-critique.md) | Original Complete / Revise critique preserved. |
-| [.copilot-tracking/changes/2026-10-31/resident-sensor-gauges-466-changes.md](.copilot-tracking/changes/2026-10-31/resident-sensor-gauges-466-changes.md) | Current implementation and exact external evidence. |
-| [.copilot-tracking/rpi-sessions/2026-10-31/resident-sensor-gauges-466-state.json](.copilot-tracking/rpi-sessions/2026-10-31/resident-sensor-gauges-466-state.json) | Caller-owned Review intake state. |
-| [.copilot-tracking/reviews/logs/2026-10-31/resident-sensor-gauges-466-review.md](.copilot-tracking/reviews/logs/2026-10-31/resident-sensor-gauges-466-review.md) | This sole original Review. |
-| [.copilot-tracking/reviews/logs/2026-10-30/resident-sensor-gauges-466-review.md](.copilot-tracking/reviews/logs/2026-10-30/resident-sensor-gauges-466-review.md) | Byte-preserved historical outcome. |
-| [.copilot-tracking/documentation/2026-10-31-session.md](.copilot-tracking/documentation/2026-10-31-session.md) | Supporting scoped author record. |
+| [.copilot-tracking/research/2026-10-31/resident-sensor-gauges-466-research.md](../../../research/2026-10-31/resident-sensor-gauges-466-research.md) | Complete current research. |
+| [.copilot-tracking/plans/2026-10-31/resident-sensor-gauges-466-plan.md](../../../plans/2026-10-31/resident-sensor-gauges-466-plan.md) | Seven ACs, markers and follow-ups. |
+| [.copilot-tracking/details/2026-10-31/resident-sensor-gauges-466-phase-details.md](../../../details/2026-10-31/resident-sensor-gauges-466-phase-details.md) | Exact commands and publication sequence. |
+| [.copilot-tracking/reviews/plans/2026-10-31/resident-sensor-gauges-466-plan-critique.md](../../plans/2026-10-31/resident-sensor-gauges-466-plan-critique.md) | Original Complete / Revise critique preserved. |
+| [.copilot-tracking/changes/2026-10-31/resident-sensor-gauges-466-changes.md](../../../changes/2026-10-31/resident-sensor-gauges-466-changes.md) | Current implementation and exact external evidence. |
+| [.copilot-tracking/rpi-sessions/2026-10-31/resident-sensor-gauges-466-state.json](../../../rpi-sessions/2026-10-31/resident-sensor-gauges-466-state.json) | Caller-owned Review intake state. |
+| [.copilot-tracking/reviews/logs/2026-10-31/resident-sensor-gauges-466-review.md](resident-sensor-gauges-466-review.md) | This sole original Review. |
+| [.copilot-tracking/reviews/logs/2026-10-30/resident-sensor-gauges-466-review.md](../2026-10-30/resident-sensor-gauges-466-review.md) | Byte-preserved historical outcome. |
+| [.copilot-tracking/documentation/2026-10-31-session.md](../../../documentation/2026-10-31-session.md) | Supporting scoped author record. |
 | [src/api/README.md](src/api/README.md) | Current six-criterion map and API contract. |
 | [docs/architecture/resident-assistant-prototype.md](docs/architecture/resident-assistant-prototype.md) | Current contract and retained dated decisions. |
 | [docs/reference/README.md](docs/reference/README.md) | Updated knowledge routing. |
