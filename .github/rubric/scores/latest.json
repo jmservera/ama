@@ -2,23 +2,23 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-31T14:34:27+00:00",
-  "commit": "2df64b57d7f603d6534efeced99fb06d00785992",
+  "scored_at": "2026-10-31T15:02:07+00:00",
+  "commit": "34cefd516e5f668b8e1710fa0198e413f252e86e",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41210211814",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41212264566",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "5d6a0ab9de20d2d9f45c57a5a56066e7c81c6980eb035b14adafa86fe8c3b829",
+    "solution-code": "3c3ef51684547e3cc7c65090b023b4be17d75075feb446db45219dded706e4fe",
     "infrastructure": "61ed8eadcd8e631c2a2e13b0853b7a96efd716806d947ef318843f0dd05f7d63",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
     "thought-leadership": "592719a5da0d19d4d4c81dd5779faa45a9039c4777e3749cbc055d241aed8970"
   },
-  "total": 77,
+  "total": 76,
   "sections": {
-    "A": 34,
+    "A": 33,
     "B": 23,
     "C": 11,
     "D": 9
@@ -58,9 +58,13 @@
       "rationale": "Not touched by this PR. Baseline ceiling unchanged."
     },
     "A5": {
-      "score": 5,
-      "evidence": [],
-      "rationale": "This PR only reorganizes pitch/deck materials; no operational instrumentation change. Baseline unchanged."
+      "score": 4,
+      "evidence": [
+        "src/core/src/zava_forward/core/ai_consumption.py:879-1073",
+        "src/api/src/zava_forward/api/server.py:511-535",
+        "src/core/src/zava_forward/core/ai.py:95-130"
+      ],
+      "rationale": "New immutable per-call metering (reserve/complete), a manager-only /api/ai/report cost section (token_cost, cost_per_accepted_proposal, variance), and quality-gated TCA reporting. Cost now partially measured per accepted proposal."
     },
     "A6": {
       "score": 5,
