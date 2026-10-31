@@ -19,7 +19,7 @@ function harness() {
     removeEventListener(type, fn) { assert.equal(type, "focusin"); listeners.delete(fn); },
     getElementById(id) { return elements.get(id); },
     createElement(tag) {
-      return {tag, children: [], attrs: {}, dataset: {}, hidden: false, value: "",
+      const el = {tag, children: [], attrs: {}, dataset: {}, hidden: false, value: "",
         scrollTop: 0, scrollHeight: 0, clientHeight: 0,
         setAttribute(name, value) {
           this.attrs[name] = value;
@@ -30,7 +30,8 @@ function harness() {
           const at = this.children.indexOf(before);
           this.children.splice(at < 0 ? this.children.length : at, 0, node);
         },
-        classList: {add() {}, toggle() {}},
+        classes: new Set(),
+        classList: {add(name) { this.owner.classes.add(name); }, toggle() {}},
         style: {setProperty() {}},
         getBoundingClientRect() { return {top: 0, bottom: 0, height: 0}; },
         replaceChildren(...nodes) { this.children = nodes; },
@@ -44,6 +45,8 @@ function harness() {
         },
         remove() { this.removed = true; }
       };
+      el.classList.owner = el;
+      return el;
     },
     createElementNS(namespace, tag) { return this.createElement(tag); }
   };
@@ -275,7 +278,12 @@ ui.dispose();
   await opening;
   const ui = h.nodes();
   assert.equal(ui.root.hidden, false);
-  assert.ok(ui.root.classList, "Employee chat uses the resizable resident layout");
+  assert.ok(ui.root.classes.has("chat-widget-resizable"),
+    "Employee chat uses the resizable resident layout");
+  const width = h.document.getElementById("employee-chat-width");
+  const height = h.document.getElementById("employee-chat-height");
+  assert.equal(width.attrs.value, "35", "Resident default width");
+  assert.equal(height.attrs.value, "70", "Resident default height");
   ui.input.value = "Question";
   const submitted = ui.form.onsubmit({preventDefault() {}});
   await turn();
