@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-31T13:30:47+00:00",
-  "commit": "8bb313de14dd2bae784b833d97a942b6bdba2593",
+  "scored_at": "2026-10-31T13:40:49+00:00",
+  "commit": "e66a564572966383e0ecc4870f83e037e5d4d932",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41205346781",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41206293032",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "c0490cb3ea5365d7c199bd90447fb6f4988560057717998b224b43247234eeaa",
+    "solution-code": "32cd03af532e4c6857c241ac9591fcffcb34b203a03564fa6d159377d15bdd81",
     "infrastructure": "61ed8eadcd8e631c2a2e13b0853b7a96efd716806d947ef318843f0dd05f7d63",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -32,7 +32,7 @@
         "src/api/src/zava_forward/api/static_assets.py:1-58",
         "src/api/src/zava_forward/api/server.py:193-197"
       ],
-      "rationale": "Not touched by this PR (adds a Playwright acceptance check script, not architecture). Baseline ceiling unchanged."
+      "rationale": "Not touched by this PR (pitch/deck reorg only). Baseline ceiling unchanged."
     },
     "A2": {
       "score": 5,
@@ -47,7 +47,7 @@
         "src/api/checks/employee_identity_check.py:1-53",
         "src/api/README.md:9-21"
       ],
-      "rationale": "New employee_acceptance_check.py reuses the existing strict identity predicate and adds origin/debug guards and re-verification at action boundaries, but this is test tooling around an already-Excellent-rated security control; baseline ceiling unchanged."
+      "rationale": "Not touched by this PR. Baseline ceiling unchanged."
     },
     "A4": {
       "score": 5,
@@ -55,12 +55,12 @@
         "src/api/src/zava_forward/api/static_assets.py:1-58",
         "src/api/tests/test_static_assets.py:1-40"
       ],
-      "rationale": "New acceptance tests add coverage but are test automation, not application capability; README still discloses live-identity gaps proactively, consistent with existing Excellent baseline. Unchanged."
+      "rationale": "Not touched by this PR. Baseline ceiling unchanged."
     },
     "A5": {
       "score": 5,
       "evidence": [],
-      "rationale": "No logging/metrics/tracing/cost instrumentation added by this PR. Baseline unchanged."
+      "rationale": "This PR only reorganizes pitch/deck materials; no operational instrumentation change. Baseline unchanged."
     },
     "A6": {
       "score": 5,
@@ -70,7 +70,7 @@
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "New code is deterministic Playwright test automation (chat/map/case observers), not agent orchestration or autonomous handoff. Baseline unchanged (Good, not Excellent)."
+      "rationale": "This PR is a pitch/deck content reorganization, not agentic orchestration. Baseline unchanged (Good, not Excellent)."
     },
     "B1": {
       "score": 3,
@@ -110,7 +110,7 @@
       "evidence": [
         "src/api/README.md:101-178"
       ],
-      "rationale": "README.md gained new engineering test/CLI documentation in this PR, but B6 scores capstone deck/documentation, not engineering README content; baseline ceiling unchanged."
+      "rationale": "Not touched by this PR (engineering documentation, not the capstone deck). Baseline ceiling unchanged."
     },
     "B7": {
       "score": 5,

@@ -1303,27 +1303,32 @@ automatic retries/refunds. The complete request is <=4096 bytes with <=256
 output tokens. Reviewed inference tariff expires 2026-11-01T00:00:00Z; the
 December funding horizon does not extend resident access.
 
-#### Issue #466 acceptance evidence reconciliation (2026-10-30)
+#### Issue #466 acceptance evidence reconciliation (2026-10-31)
 
 The gauges/history and advisory assistant already exist in the source baseline.
 This reconciliation adds no new runtime, model activation or resident authority.
-The issue's current checkboxes and its older USD5 proposal are not silently
-updated by this guide.
+The owner request on 2026-10-31 confirms gauges/history and an advisory assistant
+with AI in scope, with IoT a standing priority and resident AI staying off in
+deployment behind the existing activation settings. The issue checkboxes are
+not changed by this guide; the older USD5 proposal is superseded by the recorded
+2026-10-27 decision below, not a fresh spending authorization.
 
 | Issue criterion | Source evidence and boundary |
 | --- | --- |
-| Owner confirms scope and priority | Unproven. The implementation request does not establish a separate owner scope/priority decision. |
+| Owner confirms scope and priority | Confirmed by the explicit 2026-10-31 owner direction: sensor gauges/history and advisory AI, IoT a standing priority, existing synthetic data and deployment AI off. This does not establish live or human acceptance. |
 | Own-home gauges and history labelled synthetic | Implemented: temperature/humidity meters, static histories and equivalent table use only the signed-session home's generated readings. `test_resident_sensors.py` and `checks.resident_sensors_browser_check` cover isolation, missing/fault/empty states and text alternatives. CO2 was an issue example, not an available generated channel. |
 | Grounded case status, required documents and form help with advisory notice | Implemented: own-case status and document facts, honest unknowns and general form guidance; `test_resident_assistant_api.py`, `test_resident_chat_api.py` and `checks.resident_assistant_browser_check` cover these paths. The assistant does not submit, consent or decide. |
 | No other resident's data | Tested by separate synthetic sessions, forged selectors, revocation and shared-browser session changes in the resident API and browser checks. These are local engineering checks, not live identity acceptance. |
 | Accessible gauges, charts and chat, with text alternatives | Existing native meters, static named SVGs, equivalent table, labelled chat controls, keyboard focus, non-colour statuses and reduced motion have automated engineering checks. Screen-reader, real-resident and full WCAG acceptance remain separate; passing axe alone does not establish conformance. |
-| Model, cost cap and credential route decided and recorded | The [2026-10-27 decision](../../docs/architecture/resident-assistant-prototype.md#current-owner-decision-and-implementation-2026-10-27), delivered in merged #480, records regional Standard `gpt-4.1-mini` 2025-04-14, a permanent USD20 inference ceiling inside the resident USD30 allocation and managed identity only. The issue checkbox remains unticked pending owner/coordinator reconciliation; this is evidence of a recorded decision, not a new approval or live activation. |
+| Model, cost cap and credential route decided and recorded | The [2026-10-27 decision](../../docs/architecture/resident-assistant-prototype.md#current-owner-decision-and-implementation-2026-10-27), delivered in merged #480, records regional Standard `gpt-4.1-mini` 2025-04-14, a permanent USD20 inference ceiling inside the resident USD30 allocation and managed identity only. Retain that existing decision; no replacement model, cap or credential route is needed. Issue-state reconciliation remains separate from this recorded decision, new spending authority or live activation. |
 
 Default-off AI, SQL accounting prerequisites and the 2026-11-01T00:00:00Z tariff
 expiry remain unchanged. No deployment, current budget headroom, authenticated
 live model call or renewed cost/authority window is established by local tests.
-The historical fixed-topic design note must be read with the newer generated
-answer contract and its separate acceptance gaps below. Refs #466 only.
+The [current scope and AI contract](../../docs/architecture/resident-assistant-prototype.md#current-scope-and-ai-contract-2026-10-31)
+distinguishes eligible generated answers from protected document guidance and
+the historical fixed-topic design. Actual-model relevance, manual accessibility
+and live acceptance remain separate from local scripted checks. Refs #466 only.
 
 #### Owner deployment prerequisite for resident generated answers (#563)
 
