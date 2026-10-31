@@ -1,0 +1,30 @@
+{
+ "signin_attempts": 1,
+ "questions": [
+  {
+   "question": "My home smells like a dead rat",
+   "status": 200,
+   "label": "AI-generated",
+   "answer": "I understand your home smells like a dead rat, but I can't confirm the cause or safety from here. Please contact your housing officer using your usual contact details. Tell them what you have noticed, where the smell is, and when it started. Ask how to report a repair and what will happen next. If you think there is an immediate danger, call 999 right away.",
+   "sources": [
+    "General repair-reporting guidance, not a diagnosis or repair history",
+    "Your case: Where things are",
+    "Your case: What happens next"
+   ],
+   "sources_collapsed": true
+  },
+  {
+   "question": "How's my case going",
+   "status": 200,
+   "label": "AI-generated",
+   "answer": "Your case is currently on pause, so there is no active progress or contact happening right now. You will not be contacted until this pause is lifted. If you need help or have questions, you should reach out to your housing officer for assistance.",
+   "sources": [
+    "Your case: Where things are",
+    "Your case: What happens next"
+   ],
+   "sources_collapsed": true
+  }
+ ],
+ "signin_status": 200,
+ "done": true
+}
