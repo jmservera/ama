@@ -19,6 +19,11 @@ the already-fixed 5.1 guards. Update the PR description with runtime and authori
 history, including changes now inherited from main. Publish only after an
 external complete exact-head gate and independent assessment.
 
+Current publication is blocked by required main ancestry. Source candidate
+`3c280313` is committed locally; PR disclosure was independently authorized
+and applied with explicit unpushed/blocker status. No source push or thread
+reply/resolution occurred.
+
 ### What You May Not Know
 
 Current HEAD already contains the finite fixes and LF digests from `aedc6713`.
@@ -112,7 +117,7 @@ HOME and caches use only an owned external mount.
 ### [ ] P02: Review and gated remote publication
 
 <!-- rpi:task id=P02-T01 -->
-#### [ ] P02-T01: Prepare disclosure, original Review and commit
+#### [x] P02-T01: Prepare disclosure, original Review and commit
 
 Depends on P01. Prepare PR body externally, including runtime ancestry and
 actual evidence. Run one independent rpi-review; route any findings without
@@ -127,6 +132,10 @@ waiting on a foreign shared lock. Verify receipt against current main immediatel
 before independent exact-head assessment and normal push. Update PR body with
 `gh pr edit 558 --body-file`, reply to each thread with exact evidence and resolve
 via GraphQL. Any failed prerequisite blocks remote publication and resolution.
+
+Actual full gate preflight refuses `3c280313` because it does not descend from
+main `368d3bb8`. No check matrix or receipt completed. P02-T02 remains unchecked.
+Normal-push permission does not authorize main integration by merge/rebase.
 
 ## Dependencies
 
@@ -154,5 +163,6 @@ No unresolved significant/divergent decision. Do not repeat critique.
 ## Handoff
 
 Changes: .copilot-tracking/changes/2026-10-31/pr-558-unresolved-threads-changes.md.
-Next: P02-T01 commit after the completed original Review. Publication blocked until all actual
-verification and exact-head gate conditions pass.
+Next: owner-authorized main integration path for P02-T02, then a fresh complete
+gate/receipt verification and independent exact-head assessment. No second
+original Review or unauthorized merge/rebase. Publication remains blocked.

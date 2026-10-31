@@ -13,7 +13,9 @@ Scope: full plan; source changes start at P01-T01.
 
 ## Execution Status
 
-P01 complete; original Review and publication pending.
+P01 and P02-T01 complete; original Review Complete / Conformant with justified
+divergence. P02-T02 blocked on required current-main ancestry. No source push
+or thread reply/resolution performed. PR disclosure independently applied.
 Approved scope: four text-source hash calls/helper, one focused test script,
 source receipt/guide, related index/log and dated evidence. Preserve deck bytes,
 binary/media hashes and existing 5.1-compatible native helper.
@@ -37,8 +39,8 @@ the runner's /tmp lock. Original critique retained; no second critique.
 
 ## Blockers and Remaining Work
 
-P02-T01/T02 pending. No original Review, complete gate, remote body edit, push
-or thread resolution claimed yet.
+P02-T02 blocked on main ancestry; no complete gate, exact-head assessment, push
+or thread resolution. Original Review, local commit and PR body edit completed.
 
 ## Completed Work
 
@@ -103,7 +105,44 @@ RV-001 routes native acceptance separately. RV-002 routes parent handoff
 synchronization: next marker is P02-T01 and obsolete future prose is reconciled
 in this normal pre-commit update. No source repair or repeated Review.
 
-Commit original candidate/evidence next, then run unchanged full external gate
-against actual fetched main and perform independent exact-head assessment.
-PR body is prepared externally, not applied; normal push/body/thread operations
-are still pending. Any gate failure blocks publication.
+Original candidate/evidence committed. Full gate attempted and refused main
+ancestry; PR body independently applied with explicit blocker/unpushed status.
+Normal push/thread operations remain blocked. Original Review is not repeated.
+
+## Parent Publication Results and Blocker
+
+Source implementation and original dated RPI evidence committed as
+`3c2803131109474db68a61561c31df3c154e66df`, authenticated author/committer email
+`8036360+jmservera@users.noreply.github.com` and required Copilot trailer.
+Exact two ignored cache files were copied to external
+`pr558-validation-zurEhA/pre-gate-cache-backup` and compared byte-for-byte before
+removing only those checkout cache files and their empty folder. Original bytes
+remain available for restore; no broad cleanup or historical deletion.
+
+First gate invocation incorrectly supplied an already-created output directory;
+runner refused it with exit 1. Preserved external
+`pr558-full-gate-hW6EiC.execution.log`. Corrected invocation used new child
+`pr558-full-gate-hW6EiC/run`; runner then refused with exit 1:
+`Candidate does not descend from the reviewed main base`.
+Preserved `pr558-full-gate-hW6EiC/run.execution.log`. No matrix ran or full
+receipt exists. Source commit `3c280313` does not contain main `368d3bb8`;
+merge base `5666bd33`. Missing main commit:
+`368d3bb8 docs(infra): propose private roster transport and tenant readiness checks (#423)`.
+REST and git both confirm current main. No merge/rebase/force push, cloud
+fallback, skip/protection change or fabricated full status.
+
+Applied authorized `gh pr edit 558 --body-file` with explicit local-candidate,
+unpushed and main-ancestry blocker notice. Read-back body has all required
+January/SQL/assistant/UI/hosted categories and no closing keywords. CLI output
+adds exactly one newline; body content otherwise matches prepared file.
+Remote head remains `ed888a91`, all three target threads unresolved.
+No GraphQL reply/resolution because required push did not occur.
+
+Original RPI correction loop completed with original Review preserved; requested
+remote delivery remains blocked. This metadata update reconciles actual results,
+without source repair or repeated Review. Native acceptance remains separately
+open; RV-002 handoff action was the ordinary parent update.
+Next: owner-authorized current-main integration path, then fresh clean committed
+exact-head full gate and independent assessment before normal push.
+This evidence update changes HEAD; it does not claim the failed gate assessed
+the later metadata commit.

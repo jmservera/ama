@@ -16,7 +16,7 @@ Research: .copilot-tracking/research/2026-10-31/pr-558-unresolved-threads-resear
 | Phase | Status | Tasks |
 | --- | --- | --- |
 | P01 | Complete; actual verification and regressions passed | P01-T01, P01-T02 |
-| P02 | Depends on P01 | P02-T01, P02-T02 |
+| P02 | P02-T01 complete; P02-T02 blocked on main ancestry | P02-T01, P02-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Source and compatibility
@@ -56,7 +56,9 @@ retain original critique, unchanged runner lock and actual gate requirement.
 
 Current implementation/validation evidence:
 .copilot-tracking/changes/2026-10-31/pr-558-unresolved-threads-changes.md.
-Original Review, commit and complete external gate remain pending.
+Original Review and commit completed. Complete external gate and normal push
+remain blocked on required ancestry; PR disclosure independently applied with
+explicit unpushed status.
 
 <!-- rpi:task id=P02-T01 -->
 ### P02-T01: Disclosure and Review
@@ -80,3 +82,9 @@ independent exact-head assessment; no post-gate source/evidence commit.
 Normal push `git push origin HEAD:jmservera/fabric-research`, then body edit and
 GraphQL replies/resolutions. Re-read thread state to confirm all three resolved.
 Never resolve a thread with unverified claimed fixes or bypass publication gate.
+
+Actual gate at source commit `3c280313` failed before matrix execution:
+`Candidate does not descend from the reviewed main base`. Main `368d3bb8`
+is one new main commit beyond merge base `5666bd33`. Normal-push authorization
+does not authorize a merge/rebase/history rewrite. No full gate receipt or
+exact-head assessment exists. Source/body validation cannot substitute.
