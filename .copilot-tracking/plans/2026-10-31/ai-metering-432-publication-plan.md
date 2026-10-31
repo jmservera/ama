@@ -87,7 +87,7 @@ Review and subsequent correction evidence remain immutable.
 ## Phase Checklist
 
 <!-- rpi:phase id=P01 -->
-### [ ] P01: Compose lock safely and prepare candidate
+### [x] P01: Compose lock safely and prepare candidate
 
 <!-- rpi:task id=P01-T01 -->
 #### [x] P01-T01: Implement validated inherited lock and ownership tests
@@ -96,7 +96,7 @@ Review and subsequent correction evidence remain immutable.
 * Targets: runner/test file and directly related gate README.
 
 <!-- rpi:task id=P01-T02 -->
-#### [ ] P01-T02: Reconcile main, original evidence and committed candidate
+#### [x] P01-T02: Reconcile main, original evidence and committed candidate
 
 * Dependency: P01-T01 targeted validation.
 * Fetch/merge main; preserve original parent files and record exact identities.

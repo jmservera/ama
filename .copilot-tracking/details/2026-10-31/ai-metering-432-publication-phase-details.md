@@ -13,7 +13,7 @@
 
 | Phase | Name | Status | Tasks |
 | --- | --- | --- | --- |
-| P01 | Compose lock / candidate | P01-T01 complete; candidate commit pending | P01-T01, P01-T02 |
+| P01 | Compose lock / candidate | Complete, source/evidence commit cae4bba1 | P01-T01, P01-T02 |
 | P02 | Queued integration validation | Pending P01 | P02-T01 |
 
 <!-- rpi:phase id=P01 -->
@@ -102,3 +102,15 @@ Completion evidence: actual full receipt and counts/status, current-base
 verification if passing, or precise allowed baseline exception. Publication
 after child Review must normal-push HEAD and open main PR with sources/evidence,
 validation and Refs #432; hosted/human approval remains open.
+
+## Frozen Candidate Handoff
+
+P01-T01/P01-T02 complete at source/evidence commit
+cae4bba18d1800b571a2016638ef972e72d14559. This later preparation commit freezes
+the in-tree evidence before P02 gate/Review; its actual HEAD is resolved outside
+the tree. P02 remains pending in this historical snapshot. The external mirror
+records actual final completion, failures/exceptions and Review, not unchecked
+work mislabeled as complete.
+
+Final mirror root:
+/home/azureuser/.copilot/session-state/78bc570d-9a9a-4914-a18c-763026950ae0/files/ai432-publication/.copilot-tracking/

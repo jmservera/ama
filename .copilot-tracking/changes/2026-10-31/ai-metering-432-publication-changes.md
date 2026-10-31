@@ -6,7 +6,7 @@
 * Task ID 432-publication; slug ai-metering-432-publication; date 2026-10-31.
 * Plan: .copilot-tracking/plans/2026-10-31/ai-metering-432-publication-plan.md
 * Details: .copilot-tracking/details/2026-10-31/ai-metering-432-publication-phase-details.md
-* Scope: full child plan; status Partial, P01-T01 complete; P01-T02/P02 pending.
+* Scope: full child plan; status Partial, P01 complete; P02 pending.
 * Approved targets: runner, runner tests (five methods maximum, removals none),
   related gate README and dated child evidence.
 * Source-only boundary: no metering redesign, private data, paid calls or Azure.
@@ -29,7 +29,7 @@ output/clean committed candidate/current main; per-group exception matrix.
 
 ## Remaining Work and Follow-ups
 
-P01-T01/P01-T02/P02-T01, sole child Review and authorised push/main PR remain.
+P02-T01, sole child Review and authorised push/main PR remain.
 OD-51/prices/billing/batch, resident/historical joins and real pitch delivery
 remain distinct parent RV-006 follow-ups. Hosted/human approval remains open.
 
@@ -69,3 +69,19 @@ external clean clone of the final committed candidate. No private dataset or
 foreign output is read/reused. Freeze committed preparation evidence, then
 retain final gate/Review/state in an external dated tracking mirror and the PR
 body to preserve matching exact candidate identity.
+
+## Frozen Gate and Review Preparation
+
+P01-T02 implementation/evidence commit:
+cae4bba18d1800b571a2016638ef972e72d14559; all P01 tasks complete.
+This subsequent preparation commit freezes in-tree evidence; final HEAD is
+resolved externally to avoid self-reference. P02 is not yet complete and no
+receipt or child Review outcome is claimed.
+
+Owned clean clone: /tmp/ama-ai432-publication-clean-2026-10-31.
+Full gate output: /tmp/ama-ai432-publication-gate-2026-10-31-a.
+Gate log: /tmp/ama-ai432-publication-gate-2026-10-31-a.log.
+Final Review/state/result root:
+/home/azureuser/.copilot/session-state/78bc570d-9a9a-4914-a18c-763026950ae0/files/ai432-publication/.copilot-tracking/
+The PR body retains final identities, per-group evidence and review outcome;
+final local files remain immutable/external, not unreviewed post-gate commits.
