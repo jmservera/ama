@@ -31,6 +31,8 @@ Whole issue acceptance remains unmet for live AC7 and the specialist note.
 Research: .copilot-tracking/research/2026-10-31/employee-briefing-loading-531-capacity-correction-research.md.
 Original changes and Review use employee-briefing-loading-531 dated 2026-10-31.
 Base 1330869ea675ff019958846330108b4f45e163ce; merge 18c1531f.
+Those are intake identities. Current reviewed base is
+a75bbdffa51ae34b1fcf779250f1f553d566ee93, merged as d05a7c24.
 
 ## Goals
 
@@ -80,8 +82,12 @@ Full gate is additional publication evidence, not a substitute for the focused r
 ### P01: Execute and reconcile assurance
 
 * [x] P01-T01: Merge latest main with required preservation.
-* [ ] P01-T02: Execute requested API/Ruff and serialized pinned-axe browser.
-* [ ] P01-T03: Reconcile changes/details and obtain original correction Review.
+* [x] P01-T02: Execute requested API/Ruff and serialized pinned-axe browser.
+* [x] P01-T03: Reconcile changes/details and obtain original correction Review.
+
+P01 complete. Original independent Review execution Complete / outcome Residual
+work. No introduced substantive defect; missing UX note, live AC7 and manual
+contrast assessment route distinct follow-ups, not another correction Review.
 
 <!-- rpi:phase id=P02 -->
 ### P02: Publish exact committed candidate
@@ -102,11 +108,15 @@ Final planning readiness Ready.
 
 * Prior RV-002: discovery-backed UX specialist note remains absent.
 * Prior RV-003 / AC7: separately authorized live employee-site verification.
+* Manual contrast assessment: three viewport reason-control checks incomplete.
 * Staff, screen-reader/voice-control and full Fluent acceptance remain separate.
 
 ## Handoff
 
 Implementation changes record:
 .copilot-tracking/changes/2026-10-31/employee-briefing-loading-531-capacity-correction-changes.md.
-Ready candidate for critique; no implementation redesign. Full gate tool identity
-and no ignored inputs are publication requirements after all evidence commits.
+P01 assurance and original Review complete; P02 publication remains. No
+implementation redesign or second critique/Review. Full gate tool identity and
+no ignored inputs are publication requirements after all evidence commits.
+Final publication results/state will be recorded externally to preserve the
+exact committed candidate and authoritative receipt.

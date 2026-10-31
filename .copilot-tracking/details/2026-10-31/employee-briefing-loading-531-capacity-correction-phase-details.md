@@ -20,6 +20,8 @@ allows API/Ruff without lock and requires queued heavy validation.
 Completed merge 18c1531f; main 1330869ea675ff019958846330108b4f45e163ce is ancestor.
 Rubric, workflow and gate tool match main byte-for-byte; log merged naturally.
 No conflict resolution discarded either history.
+Later main advanced to a75bbdffa51ae34b1fcf779250f1f553d566ee93 and was merged
+as d05a7c24; API/Ruff were repeated and loading/axe executed at that boundary.
 
 <!-- rpi:task id=P01-T02 -->
 ### P01-T02: Requested local validation
@@ -40,6 +42,8 @@ checks.loading_briefing_browser_check --axe <existing-pinned-axe>
 exit 75 means the lock was not acquired. Never retry an assertion failure as
 capacity failure. Runner creates/stops constructed loopback server; use existing
 external-scratch TemporaryDirectory hook if needed, not a new production helper.
+Browser launch requires PYTHONPATH=.:tests:../core/tests:../agents/tests because
+the pinned axe helper imports the API's test_regulatory_chat_api fixture.
 PC-001 disposition: the mandatory external bootstrap is
 /home/azureuser/.copilot/session-state/150adff8-0bdd-4492-abae-8a03af70abcf/files/run-loading-browser.py.
 It overrides tempfile.TemporaryDirectory's explicit dir argument with its own
@@ -59,6 +63,8 @@ Fresh independent reviewer activates rpi-review, reads entire branch diff vs
 current main plus correction/prior artifacts, writes only original correction
 Review. Retain original parent's adverse outcome; do not relabel it conformant.
 Review findings route later work rather than a second Review.
+Completed: original correction Review execution Complete / Residual work.
+P01 markers and current handoff reconciled before evidence commit.
 
 <!-- rpi:phase id=P02 -->
 ## P02: Publish exact committed candidate

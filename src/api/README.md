@@ -421,6 +421,16 @@ Constructed loopback data only; no Azure or live model is needed.
 Live employee-site cold-start verification, screen-reader, voice-control and
 staff usability acceptance remain separate owner checks, not local passes.
 
+The 2026-10-31 correction executed this runner on constructed loopback data:
+all three successful review outcomes and retained-record checks passed.
+Four axe-core 4.10.3 scans reported zero violations; the three viewport scans
+each retained one incomplete colour-contrast check for human assessment.
+The static no-JavaScript shell, cold-start/retry, failure recovery, pending
+review barriers and reduced-motion scenarios passed. Full API discovery ran
+1,430 tests with 320 opt-in/nonapplicable skips; configured Ruff lint and
+format checks passed. These results do not satisfy live employee verification,
+the undelivered specialist note, assistive-technology or full WCAG acceptance.
+
 
 ## Progress dashboard and closed case archive (#533)
 
