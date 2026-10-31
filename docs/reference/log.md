@@ -8845,6 +8845,53 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   5.1/Office and human acceptance remain unperformed. This local source
   verification is not the complete publication gate or hosted approval.
 
+## [2026-10-31] query | Employee loading and briefing assurance correction, Refs #531
+
+* Merged current main into the existing employee topic without rewriting
+  history; retained main's rubric, matching workflow hashes and both log histories.
+* Executed the existing local loading/briefing browser check after waiting
+  for shared capacity. Static no-script/cold-start/retry and all three real
+  draft-review outcomes passed, with same-ID manager-export persistence,
+  repeat refusal and unchanged permitted case projections.
+* Four pinned axe-core 4.10.3 scans had zero violations; three viewport
+  scans retain incomplete colour-contrast checks for human assessment.
+  API discovery ran 1,430 tests with 320 recorded opt-in/nonapplicable skips;
+  configured Ruff lint/format checks passed.
+* Updated the API guide and index with observed local results. Original
+  blocked Review remains historical; no live site/model/identity, Azure,
+  specialist-note, assistive-technology or operational acceptance is claimed.
+  Complete exact-head publication gating remains separate from these checks.
+
+## [2026-10-31] query | Employee identity acceptance correction, Refs #570
+
+* Updated the [API acceptance guide](../../src/api/README.md#employee-acceptance-identity-check-570)
+  and knowledge index with fresh navigation/action admission and correlated
+  rendered-map acceptance. Original adverse Review and gate attempts retained.
+* Integrated main's rubric unchanged and preserved both knowledge histories
+  without rewriting previous entries. New local regression evidence remains
+  synthetic; independent Aadi object attestation and live chat/map/case
+  verification are unmet. No credential read, sign-in or Azure change.
+
+## [2026-10-31] query | Employee acceptance review-thread repairs, Refs #570
+
+* Updated the [API acceptance guide](../../src/api/README.md#employee-acceptance-identity-check-570)
+  and index with cluster-only absolute centroid tolerance and post-install
+  hosted Chromium enforcement. Points/geographic validation and qualified
+  discovery remain strict; the workflow hash pin changes with the workflow.
+* The producer-derived 501-home regression reproduces roundoff before the fix.
+  Synthetic local checks do not establish live employee acceptance or hosted
+  CI success. Current owner direction uses CI as the publication gate without
+  waiting for the full local gate; original adverse evidence stays intact.
+
+## [2026-10-31] query | Mandatory employee acceptance local browser gate, Refs #570
+
+* Updated the [local gate guide](../../src/README.md#local-rpi-gate) and knowledge
+  index: default browser dispatch and trusted receipt verification require the
+  post-install employee acceptance CLI with pinned source-CI test import paths.
+* Three reported tests and zero skips are mandatory for this CLI; qualified
+  discovery skips and the SQL-only non-applicability exception cannot substitute
+  for execution. Synthetic tooling evidence does not establish live employee
+  acceptance, hosted CI success or human approval.
 ## [2026-10-31] query | Resident scope and current AI contract, Refs #466
 
 * Updated the resident assistant design, API acceptance map and knowledge index

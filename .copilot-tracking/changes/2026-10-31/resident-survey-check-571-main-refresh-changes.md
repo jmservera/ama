@@ -100,3 +100,41 @@ Commit merge plus this dated original refresh evidence, then fresh complete gate
 at the resulting clean exact HEAD/base, fresh verification and approving independent
 exact-head assessment. No weakened identity, partial tier, force, cloud or premature
 PR publication. Final authoritative receipt/status remain external/PR-bound.
+
+## Third Main Advance and Equivalent Upstream Harness Repairs
+
+Publication gate for `74f50fc9` / `5198a1ff` again passed all seventeen required
+groups, then failed current-main identity at sealing (14:51:18.033722Z). Preserve
+failed receipt `/tmp/ama-571-publication-full-gate/receipt.json`, SHA-256
+`c99c2c95df3ff3fff3f26f8a58067eda89fb25557a5b72719bf32a47e828aa30`,
+and log SHA-256 `30121008c30d46357b9bb9aedfec2ca413e620d9ff5064eb9284e847196a0d44`.
+No stale receipt verification/approval, push or PR followed.
+
+Fresh main `28fbe6b6111c5aae4fc2c4f55f8ffca2876ab589` contains merged #601/#604
+employee checks/evidence and independently delivered equivalent mandatory
+harness repairs. Main's case journey now equals our bound/formatted harness.
+Resolve two overlaps by keeping main's gate guide and capture implementation/
+outer-transcript regression; retain our stronger two-complete-occurrence capture
+assertion in addition to main's existing inclusion assertion. Main-added tests
+are preserved. Final tooling diff against main is one additive assertion only.
+Main's added workflow command and matching runner WORKFLOW_HASHES are retained
+unchanged; no locally recalculated hash or workflow change. Main score and both
+knowledge-log histories remain intact. Resident seven-line regression and guide
+remain additive-only and unaffected.
+
+Fresh local validation after resolution: tooling 43 tests pass, unchanged static
+parser tests43/executed43/skips[]; exact isolated Ruff/format and strict tooling
+mypy pass. Tool log `/tmp/ama-571-third-refresh-tooling.log`, SHA-256
+`e3a94fc5f0b53e4bb7976386f9b56c590ba02d53aae2bbbaa17044c07ef1a0d9`.
+Requested API unit discovery: 1442 tests in 652.499s, OK (skipped=320);
+API Ruff check passes and 66 files formatted. Log
+`/tmp/ama-571-third-refresh-api.log`. Existing source-matching resident browser
+evidence remains valid as historical focused execution; the new full gate must
+execute all newly merged required employee/browser/SQL/image contracts.
+Documented jobs3 preflight admits one worker; no capacity override/lock bypass.
+Original and child Review outcomes remain immutable; final exact-head assessment
+must compare equivalent merge resolutions and the final verified receipt.
+
+Commit original refresh evidence and merge, then fresh full current-main gate,
+fresh fetch/verification and approving exact-head assessment before publication.
+No passing current receipt exists at this handoff; no partial/stale-base shortcut.

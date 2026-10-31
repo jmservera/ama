@@ -44,6 +44,69 @@ immutable runners or reuse historical sessions. Only after strict identity
 admission should the runner exercise employee chat/skill switching, map
 filters and the case view. These live criteria remain unverified here.
 
+Maintained authenticated-session integration now lives in
+`checks.employee_acceptance_check.verify_employee`. For a caller-owned,
+already authenticated Playwright `Page`, invoke
+`verify_employee(page, {"tid": independently_verified_tid, "oid": independently_verified_oid})`.
+It validates the exact boolean predicate projection, checks the authorized
+origin and rechecks identity before and after each chat, map and case stage,
+after hash/link navigation and before subsequent offered-control actions
+(including chat draft/send). Observer callbacks take `(page, admit)` and must
+invoke the supplied fresh-admission function at navigation/action boundaries.
+Admission loss leaves the current and later stages blocked without executing
+the next action. Probes are not an atomic guarantee against concurrent session
+changes; the application still enforces authorization on every request.
+Only strict `authenticated=true` admits observations; email/roster diagnostics
+cannot substitute for it. Each stage returns `passed`, `failed` or `blocked`,
+and the overall `passed` flag is true only when every stage passes.
+Output contains fixed status and boolean fields, never response bodies,
+exception text, identity values or case text. The adapter has no sign-in or
+credential entry point, saves no sessions and consumes zero sign-in attempts.
+The authorized caller still owns independent ID attestation, credential/debug/
+capture safety, finite attempt accounting and browser lifecycle/watchdog.
+
+Map acceptance excludes requests initiated before filter activation, matches
+the selected flag/area and observes fit/viewport follow-ups until request/render
+settlement. It validates points/clusters/empty payloads and compares the latest
+response's actual list links/labels, marker labels/count and status. Malformed
+data, map alerts, page errors and mismatched rendering fail; HTTP 200, selected
+state or a cleared busy indicator alone cannot pass. Temporary listeners are
+removed on success, failure and admission loss. Payloads remain in memory only.
+Cluster containment permits 1e-9 degrees of absolute centroid roundoff against
+the original-coordinate bounds. Point containment, finite coordinates and
+geographic limits remain exact.
+
+From `src/api`, run the changed local Chromium check with the existing test
+paths (installed Chromium required; no live identity or credential access):
+
+```bash
+PYTHONPATH=.:src:tests:../core/src:../agents/src:../core/tests:../agents/tests \
+  python3 -m checks.employee_acceptance_check
+```
+
+This executes three real loopback Chromium regressions with constructed
+trusted-proxy `/api/me` HTTP responses: a rosterless expected account with
+no display email is admitted, and a different immutable account is denied
+before any downstream callback; the third covers valid and malformed map
+rendering, pre-activation stale responses and fit/viewport replacements.
+The positive test also runs the actual local
+chat/map/case observers against the synthetic server, with explicitly synthetic
+privacy references, workflow-only chat and no external network. This does not
+prove deployed behavior or operational privacy approval. On 2026-10-31 the authorized
+demo health check returned 200, but independent directory resolution was
+denied. No sign-in occurred; all live employee criteria remain blocked pending
+independently verified expected tenant/object IDs.
+
+Fresh non-integration discovery records the existing approved
+`Chromium is installed by the later browser-check step` skip only when the
+browser executable is absent; other launch failures propagate. That skip is
+not executed acceptance. The maintained CLI requires exactly three successful
+tests and zero skips, so missing Chromium exits nonzero. Complete-gate browser
+setup and source CI invoke this CLI after installing Chromium with the test
+import paths above. The discovery qualification remains unchanged; all three
+reviewed integration extras must actually execute; no
+missing-browser fallback or passing skipped integration is permitted.
+
 ## Compact case journey (#552)
 
 The six workflow steps retain text labels and status words alongside the exact
@@ -390,6 +453,10 @@ Spinner guidance inform native loading/button/field patterns only. No React
 dependency or framework adoption is added. This bounded mapping uses the cited
 guidelines and owner feedback; it is not staff user research.
 
+The 2026-10-31 UX-specialist invocation returned discovery questions rather
+than a design note. The mapping above remains maintainer-authored source/design
+evidence, not a specialist contribution, approval or usability result.
+
 From `src/api`, with installed source distributions and dev dependencies:
 
 ```bash
@@ -405,9 +472,27 @@ The browser check also disables page JavaScript to verify the static startup
 message at 320 and 1280 CSS px, without script requests.
 This is separate from the held-script slow-start and retry scenarios and the
 script-enabled axe scans.
+The same runner also submits each of the three draft-review outcomes through
+the real local UI and API. It compares the successful response with the
+same-ID retained record read through the existing evidence export by a
+separately authenticated synthetic Programme Manager. Exact reasons, edited
+text and draft-only disclaimers are checked; a repeated review is refused and
+the retained record and permitted case detail projections stay unchanged.
+`review-roundtrip-results.json` records these outcomes separately from axe
+results. This is not a complete export/continuity acceptance test.
 Constructed loopback data only; no Azure or live model is needed.
 Live employee-site cold-start verification, screen-reader, voice-control and
 staff usability acceptance remain separate owner checks, not local passes.
+
+The 2026-10-31 correction executed this runner on constructed loopback data:
+all three successful review outcomes and retained-record checks passed.
+Four axe-core 4.10.3 scans reported zero violations; the three viewport scans
+each retained one incomplete colour-contrast check for human assessment.
+The static no-JavaScript shell, cold-start/retry, failure recovery, pending
+review barriers and reduced-motion scenarios passed. Full API discovery ran
+1,430 tests with 320 opt-in/nonapplicable skips; configured Ruff lint and
+format checks passed. These results do not satisfy live employee verification,
+the undelivered specialist note, assistive-technology or full WCAG acceptance.
 
 
 ## Progress dashboard and closed case archive (#533)

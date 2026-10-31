@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-31T13:40:49+00:00",
-  "commit": "e66a564572966383e0ecc4870f83e037e5d4d932",
+  "scored_at": "2026-10-31T14:53:40+00:00",
+  "commit": "13d65cbe7f44fb7543ab361ada888a9c8c109a76",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41206293032",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41211526268",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "32cd03af532e4c6857c241ac9591fcffcb34b203a03564fa6d159377d15bdd81",
+    "solution-code": "ff1461dae4455b1ff0b99cd197d4691abc9c84961d36e6e06aed9574180a7565",
     "infrastructure": "61ed8eadcd8e631c2a2e13b0853b7a96efd716806d947ef318843f0dd05f7d63",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -44,23 +44,24 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/api/checks/employee_identity_check.py:1-53",
-        "src/api/README.md:9-21"
+        "src/api/checks/loading_briefing_browser_check.py:27-139"
       ],
-      "rationale": "Not touched by this PR. Baseline ceiling unchanged."
+      "rationale": "New successful_review_check test asserts provenance.human_reviewed, rejects repeat review (400) and verifies unchanged case projections. Strengthens evidence of existing AI-risk controls but adds no new threat-model statement. Baseline 5 retained."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/static_assets.py:1-58",
-        "src/api/tests/test_static_assets.py:1-40"
+        "src/api/checks/loading_briefing_browser_check.py:27-139",
+        "src/api/README.md:472-492"
       ],
-      "rationale": "Not touched by this PR. Baseline ceiling unchanged."
+      "rationale": "The new successful_review_check runs all three review outcomes through the real local UI and API and confirms retained records and unchanged case data. Completes end-to-end verification of a previously implemented capability. Baseline 5 retained."
     },
     "A5": {
       "score": 5,
-      "evidence": [],
-      "rationale": "This PR only reorganizes pitch/deck materials; no operational instrumentation change. Baseline unchanged."
+      "evidence": [
+        "src/api/README.md:487-492"
+      ],
+      "rationale": "Added README text reports test-run results (axe scans, lint/format pass) rather than new observability, reliability or cost instrumentation in the running system. No change to logging, metrics, tracing or cost modelling. Baseline 5 retained."
     },
     "A6": {
       "score": 5,
@@ -70,7 +71,7 @@
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "This PR is a pitch/deck content reorganization, not agentic orchestration. Baseline unchanged (Good, not Excellent)."
+      "rationale": "This PR adds test/documentation content and reformatting; no agentic orchestration, handoff or state-graph pattern is touched. Baseline unchanged (Good, not Excellent)."
     },
     "B1": {
       "score": 3,
@@ -108,9 +109,9 @@
     "B6": {
       "score": 5,
       "evidence": [
-        "src/api/README.md:101-178"
+        "src/api/README.md:453-492"
       ],
-      "rationale": "Not touched by this PR (engineering documentation, not the capstone deck). Baseline ceiling unchanged."
+      "rationale": "Changed README content is engineering/test documentation, not the capstone deck or its documentation. Baseline ceiling unchanged."
     },
     "B7": {
       "score": 5,

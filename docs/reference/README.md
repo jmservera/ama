@@ -21,6 +21,18 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+For #570, the [employee acceptance adapter](../../src/api/README.md#employee-acceptance-identity-check-570)
+uses immutable expected identity and fresh navigation/action admission, with
+correlated actual map rendering rather than HTTP/selection-only acceptance.
+Cluster containment allows only 1e-9 degrees of centroid roundoff; points and
+geographic limits stay exact. Source CI enforces all three maintained Chromium
+regressions after browser installation, retaining qualified early discovery.
+Local constructed Chromium evidence is not live Aadi chat/map/case acceptance;
+independent expected-object attestation remains unavailable.
+The [local browser gate](../../src/README.md#local-rpi-gate) also requires the
+post-install employee CLI without extra selectors, with pinned test import paths
+and three-test, zero-skip evidence in both execution and receipt verification.
+
 For capstone work, start with the [current working set](../capstone/README.md),
 [complete native/JSON source guide](../capstone/source/README.md),
 [pitch preparation](../capstone/pitch/README.md) and
@@ -113,6 +125,10 @@ sources and preparation time, explicit AI/rules labels, conditional draft
 review and reversible local dismissal. These native Fluent-derived patterns
 do not establish full Fluent adoption, staff usability, screen-reader/voice
 acceptance or live employee-site cold-start verification.
+The 2026-10-31 local correction executed successful draft reviews and
+loading/recovery browser scenarios with zero violations in four pinned-axe
+scans; three incomplete contrast checks remain human-assessment work.
+The specialist note and live verification remain unmet, not issue closure.
 
 For #110/#184, the [bounded streaming engineering and child dispositions](./research/iot-sensor-analytics-research-plan.md#bounded-streaming-engineering-2026-10-27-refs-110-184)
 describe opt-in API SDK adapters, synthetic-only seeded replay, exact device

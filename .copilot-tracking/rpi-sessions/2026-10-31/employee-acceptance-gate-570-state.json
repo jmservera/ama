@@ -1,0 +1,36 @@
+{
+  "task_id": "570-employee-acceptance-gate",
+  "task_slug": "employee-acceptance-gate-570",
+  "parent_task": {"task_id": "570-gate-bootstrap", "task_slug": "employee-identity-check-570-gate-bootstrap"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-31/employee-acceptance-gate-570-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-31/employee-acceptance-gate-570-plan.md",
+    "details": ".copilot-tracking/details/2026-10-31/employee-acceptance-gate-570-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-31/employee-acceptance-gate-570-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-31/employee-acceptance-gate-570-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-31/employee-acceptance-gate-570-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Continue the confirmed automatic parent with the owner-selected unresolved PR #601 browser-gate thread", "status": "confirmed", "evidence": "Owner request 2026-10-31; parent automatic state"},
+    {"decision": "Pull topic branch then merge origin/main; prefer main rubric score if conflicted", "status": "complete", "evidence": "Pull fast-forward to dd33d1bd; merge reports already up to date"},
+    {"decision": "Research executed Complete/Ready; one independent critique Complete/Pass with zero findings", "status": "ready", "evidence": "Research C1-C6/W1 and original critique artifact"},
+    {"decision": "Implementation complete; 42 requested tools tests pass, focused lint/format/mypy pass, regression rejects original gate", "status": "complete", "evidence": "Original changes Validation Record; reconciled plan/details"},
+    {"decision": "One independent Review executed Complete; Conformant within tooling boundary, no implementation defects; RV-001 publication blocker and RV-002 live attestation remain outside that boundary", "status": "complete-with-routed-gates", "evidence": ".copilot-tracking/reviews/logs/2026-10-31/employee-acceptance-gate-570-review.md"},
+    {"decision": "Publication cannot substitute CI for mandatory repository complete local evidence; preserve owner CI-only request as unresolved conflict", "status": "blocked-publication-until-gate", "evidence": "Repository guidance; independent Review RV-001"},
+    {"decision": "Implementation and original RPI evidence committed as 2e7708a2 with privacy-safe identity and required Copilot trailer", "status": "complete", "evidence": "Commit 2e7708a2"},
+    {"decision": "First full-gate attempt refused existing ignored inputs; retry from clean exact-commit local clone failed at global heavy-resource lock timeout; no passing receipt, no push or thread mutation", "status": "blocked", "evidence": "External session files/employee-acceptance-gate-full.log and files/employee-acceptance-gate-clean-full.log; clean clone files/publication-candidate at 2e7708a2"}
+  ],
+  "blockers": [
+    {"id": "publication-gate", "summary": "Complete gate blocked: existing ignored inputs in owner worktree; clean exact-commit clone retry exhausted the global heavy-resource lock timeout. No passing receipt exists.", "resolution": "Restore shared gate availability without terminating other users' processes; run complete gate in a clean exact-candidate checkout with a new external output, verify against freshly fetched main, obtain independent exact-head assessment, then non-force push and reply/resolve PRRT_kwDOUU8JX86yRJOA. CI-only request cannot waive mandatory repository publication guidance."},
+    {"id": "live-attestation", "summary": "Original live employee acceptance remains unmet", "resolution": "Independent private expected-ID attestation before a bounded live campaign"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Publication blocked. Restore shared gate availability, run a fresh complete clean exact-candidate gate and verify receipt against current main before independent exact-head assessment and authorized git push -u origin HEAD, then addPullRequestReviewThreadReply and resolveReviewThread. Do not repeat the completed task's Review or alter historical adverse evidence."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Clear publication gate", "rationale": "Prerequisite to requested remote actions, not an implementation defect", "evidence": "Independent Review RV-001"},
+    {"rank": 2, "task": "Independent identity and live employee verification", "rationale": "Original issue criterion remains unproven outside synthetic tooling scope", "evidence": "Independent Review RV-002 and parent evidence"}
+  ]
+}
