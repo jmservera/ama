@@ -8335,3 +8335,17 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   physical calibration, OD-43 and whole-issue acceptance remain unproven.
 * No Azure, deployment, live sign-in, private dataset, consent/approval change
   or issue-status change is performed.
+
+## [2026-10-31] query | Source-only AI consumption economics, Refs #432
+
+* Extended the existing Tokenomics synthesis and pitch brief with the source-only
+  consumption ledger, finite request/financial admission, accepted-output/
+  quality reporting and exact acceptance/gap matrix; updated the index.
+* Stored dated official Azure public pricing-source metadata/version/hash.
+  Retrieved rate cells were unavailable; no applicable price or financial
+  estimate is invented.
+* Corrected the earlier inventory prospectively: merged resident SQL currency
+  reservations exist, but their complete financial attribution is still unjoined.
+* Actual Azure billing, OD-51, named owners, Finance approval and a finite
+  authorised held-out batch remain unmet. No deployment, credentials/private
+  data, Azure change, paid inference, cash saving or whole-issue closure follows.

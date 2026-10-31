@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-10-30
+ms.date: 2026-10-31
 ---
 
 ## Purpose
@@ -19,6 +19,14 @@ Topic hubs work like the Maps of Content used in personal knowledge
 management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
+
+For #432, the [dated Tokenomics engineering/gap matrix](./resources/ai-tokenomics.md#source-only-metering-extension-2026-10-31-refs-432)
+and [official price-source metadata](./resources/azure-ai-price-source-2026-10-31.json)
+record the existing-ledger extension, request/financial admission and billing-led
+accepted-output reporting. Applicable prices, actual Azure reconciliation,
+OD-51, complete resident/historical joins and an authorised held-out batch
+remain missing. The [pitch brief](../capstone/pitch/tokenomics-pitch-brief.md#source-only-slide-and-qa-update-2026-10-31-refs-432)
+carries the source-only result and stated gap, not a changed/rehearsed deck.
 
 For #190, the [current sensor validation and child dispositions](./research/iot-sensor-analytics-research-plan.md#current-validation-and-child-dispositions-2026-10-30-refs-190)
 record annual offline backfill/replay checks, unchanged isolated scenario

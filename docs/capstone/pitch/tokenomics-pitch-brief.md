@@ -2,7 +2,7 @@
 title: Tokenomics Pitch Brief for the Capstone Presentation
 description: "How to carry AI Tokenomics into the 15-minute capstone pitch - placement options, draft slide copy and notes, evidence to bring, executive questions and claims to keep out"
 author: AMA programme
-ms.date: 2026-10-22
+ms.date: 2026-10-31
 ms.topic: reference
 ---
 
@@ -128,6 +128,24 @@ savings.
 * Rehearse the 20 seconds and the CFO answer aloud, then record timing and the
   rehearsal in this folder.
 * Challenge the revised deck against the complete Capstone Assessment Guide.
+
+## Source-only Slide and Q&A Update (2026-10-31, Refs #432)
+
+This prospective insert updates the earlier draft copy, not the unchanged deck.
+Use the source label on the slide and the Q&A card; none of the numerical fixture
+rates used in engineering tests belongs in the pitch.
+
+| Use | Draft copy | Source and evidence label |
+| --- | --- | --- |
+| Tokenomics slide | Metered core calls now have durable request call/depth and token/money admission. Unknown price or liability stops that AI dispatch and keeps the manual workflow. Cost per accepted proposal is still Unknown. | [Core ledger](../../../src/core/README.md#ai-consumption-ledger-432); source-only local engineering, not live financial acceptance |
+| CFO Q&A card | Billing, not a token projection, is the financial source. The report can show cost per human-accepted proposal beside critical misses, unsupported claims, overrides and reopened cases. We have not supplied an attributable bill, approved floor or authorised held-out batch, so no cost or cash benefit is claimed. | [Tokenomics evidence matrix](../../reference/resources/ai-tokenomics.md#source-only-metering-extension-2026-10-31-refs-432); mechanism and stated gap |
+| Price/source note | Official public source retrieved 2026-10-31; numerical rates were unavailable. No applicable price or estimate is substituted. | [Dated source metadata](../../reference/resources/azure-ai-price-source-2026-10-31.json); retrieval observation, not quote or invoice |
+
+Historical 6,884 tokens/five runs remain only the earlier operator observation
+with no human-accepted denominator. No new paid figure is added. Resident
+accounting and historical calls remain unjoined; OD-51, named owners and Finance
+validation remain open. Capacity is not cash. The final Tokenomics slide,
+placement, rebuilt deck and rehearsed Q&A remain owner-controlled work.
 
 ## Evidence Boundary
 

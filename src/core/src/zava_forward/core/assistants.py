@@ -16,7 +16,7 @@ from contextlib import contextmanager
 from datetime import datetime, timezone
 
 from . import assistant_release as rel
-from . import continuity, projection, quality, ranking, rai_release
+from . import ai_consumption, continuity, projection, quality, ranking, rai_release
 from zava_forward.core.ai import FORBIDDEN, Ai
 from .store import ConflictError
 
@@ -330,10 +330,12 @@ def shape_result(task, result, limits):
     for key in ("provider", "deployment", "model", "outcome", "source"):
         envelope[key] = envelope[key][:120] if isinstance(envelope[key], str) else None
     usage = envelope["usage"]
-    envelope["usage"] = {k: usage[k] for k in ("prompt_tokens", "completion_tokens", "total_tokens")} if (
-        isinstance(usage, dict) and all(type(usage.get(k)) is int and usage[k] >= 0
-                                       for k in ("prompt_tokens", "completion_tokens", "total_tokens")) and
-        usage["prompt_tokens"] > 0 and usage["total_tokens"] == usage["prompt_tokens"] + usage["completion_tokens"]) else None
+    valid = ai_consumption.usage(usage)
+    envelope["usage"] = valid if valid and valid["prompt_tokens"] > 0 else None
+    for key in ("meter_id", "meter_root", "configuration", "prompt_hash"):
+        value = result.get(key)
+        if isinstance(value, str) and len(value) == 64 and all(c in "0123456789abcdef" for c in value):
+            envelope[key] = value
     output, failure = None, None
     try:
         if result.get("source") != "ai" or result.get("outcome") != "returned":
@@ -393,6 +395,9 @@ class Assistants:
             except Exception:
                 self.sql = False
                 self.schema_error = "Assistant schema unavailable; operator migration required. Continue ordinary case work manually."
+        self.consumption = ai_consumption.Consumption(self)
+        if isinstance(store.ai, Ai) and self.sql:
+            store.ai.consumption = self.consumption
 
     def migrate(self):
         with self.transaction() as db:
@@ -922,6 +927,9 @@ class Assistants:
                        actual_tokens=actual, reservation_liability=attempt[1] if actual is None else actual,
                        output=output, source_signature=task["source_signature"],
                        capability=task["capability"], version=task["version"])
+            if envelope.get("meter_root") and state != "pending":
+                self.consumption.output(envelope["meter_root"], task["id"],
+                                        eligible=state == "ready", db=db)
             return True
 
     def execute(self, tid):
@@ -955,7 +963,15 @@ class Assistants:
 
         def call():
             try:
-                values.append(self.provider(system, prompt, self.limits.output_tokens, self.limits.timeout))
+                context = ai_consumption.CallContext(
+                    ai_consumption.reference(task["id"]),
+                    ai_consumption.reference(f"{task['id']}:{task['fence']}"),
+                    task["capability"], "retrofit-case", task["claim_binding"],
+                    ai_consumption.reference(runtime_binding(task["capability"], self.store.ai)["prompt_version"]),
+                    retry=task["attempts"] - 1,
+                )
+                with ai_consumption.call_context(context):
+                    values.append(self.provider(system, prompt, self.limits.output_tokens, self.limits.timeout))
             except Exception:
                 values.append(dict(outcome="provider-unavailable", usage=None, source="unverified", text=None))
             finally:
@@ -1048,6 +1064,8 @@ class Assistants:
             self.event(db, tid, kind="review", action=action, reviewer=user["email"], note=note,
                        source_verified=action == "verify", source_signature=task["source_signature"],
                        edited_output=task["output"] if action == "edit-accept" else None)
+            if action != "verify" and (task.get("envelope") or {}).get("meter_root"):
+                self.consumption.review(tid, action, db=db)
         return self.detail(user, tid)
 
     def _worker(self):

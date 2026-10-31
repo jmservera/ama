@@ -280,6 +280,9 @@ def finish(store, user, task, case_ids, r, workflow_text, sources, template_cite
                          continuity_epoch=epoch0, quarantine=dict(reason=why, at=_now()) if late else None,
                          provenance=dict(citation_resolved=checked, source_verified=False, human_reviewed=False,
                                          source_hashes=env["source_versions"], case_version=store.version, hold=None), citations=citations, unresolved=bad, dropped_uncited=dropped)
+        if r.get("meter_root"):
+            store.ai.consumption.output(r["meter_root"], rec["id"],
+                                        eligible=not late and r["source"] == "ai" and checked)
         result = dict(r, source="template", model=None, reason=why) if late else r
         return dict(result, text=shown, citations=citations, unresolved=bad, dropped_uncited=dropped, verified=checked,
                     approval=rec["status"], instruction_status="Not an instruction", envelope=env, record_id=rec["id"],
@@ -375,6 +378,8 @@ def review(store, user, rec_id, action, reason="", text=None):
         store.audit(user["email"], f"ai_review_{action}", rec["case_ids"][0] if len(rec["case_ids"]) == 1 else "-",
                     f"{rec['task']} {rec_id} {reason}".strip())
         store.save()
+        if rec.get("envelope", {}).get("meter_root"):
+            store.ai.consumption.review(rec_id, "edit-accept" if action == "edit" else action)
         return dict(rec)
 
 

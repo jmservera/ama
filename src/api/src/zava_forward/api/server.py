@@ -13,7 +13,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
-from zava_forward.core import ai_registry, controls, form_review, forms, profile
+from zava_forward.core import ai_consumption, ai_registry, controls, form_review, forms, profile
 
 from zava_forward.core import identity, projection, quality, ranking, taskqueues
 
@@ -514,7 +514,24 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 from zava_forward.core import ai_registry
 
                 from zava_forward.agents import ai_eval
-                return self._json(200, {"evaluation": ai_eval.run_eval(), "live": s.ai_live_report(), "registry": ai_registry.registry()})
+                try:
+                    q = parse_qs(url.query, keep_blank_values=True)
+                    if set(q) - {"start", "end", "as_of"} or any(len(v) != 1 or not v[0] for v in q.values()):
+                        raise ValueError("Invalid consumption reporting period.")
+                    now = datetime.now(UTC)
+                    start = q.get("start", [now.replace(hour=0, minute=0, second=0, microsecond=0).isoformat()])[0]
+                    end = q.get("end", [now.isoformat()])[0]
+                    as_of = q.get("as_of", [now.isoformat()])[0]
+                    if app.assistants.sql:
+                        consumption = app.assistants.consumption.report(start=start, end=end, as_of=as_of)
+                    else:
+                        consumption = dict(coverage="unavailable", token_cost="Unknown",
+                                           cost_per_accepted_proposal="Unknown",
+                                           reason="Durable SQL consumption ledger unavailable.")
+                    return self._json(200, {"evaluation": ai_eval.run_eval(), "live": s.ai_live_report(),
+                                            "registry": ai_registry.registry(), "consumption": consumption})
+                except (ValueError, ai_consumption.DispatchHeld) as error:
+                    return self._json(400, {"error": str(error)})
             if url.path.startswith("/api/docs/"):
                 try:
                     _, _, _, cid, did = url.path.split("/")

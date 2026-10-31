@@ -851,6 +851,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                        resolved_by=None, resolved_at=None, reason="", workflow_items=tmpl_items, ai_output=r.get("ai_text") or (r["text"] if r["source"] == "ai" else None),
                        fallback_reason=r.get("reason"), latency_ms=r.get("latency_ms"), prompt_version=ai_prompts.version("priority"),
                        release=r.get("release"), continuity_epoch=epoch0,
+                       meter_root=r.get("meter_root"), usage=r.get("usage"), meter_id=r.get("meter_id"),
                        quarantine=dict(reason="Late priority result after epoch change") if late else None,
                        mode="workflow-only" if r.get("reason") == "workflow-only mode selected" else "ai", dropped_uncited=dropped,
                        case_ids=list(captured_sources), source_versions=captured_sources, hazard_ids=hazard_ids,
@@ -861,6 +862,9 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             self.data["recommendations"].append(rec)
             self.audit(user["email"], "ai_run_end", "-", f"priority_recommendation {rec['id']} source={r['source']} model={r['model']} validated={r['validated']}")
             self.save()
+            if r.get("meter_root"):
+                self.ai.consumption.output(r["meter_root"], rec["id"],
+                                           eligible=not late and r["source"] == "ai" and r["validated"])
             return self._rec_view(rec, user)
         return self.continuity_publish("priority", epoch0, r["source"], publish)
 
@@ -935,6 +939,8 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 self.audit(user["email"], f"ai_priority_{action}", "-", f"{rec_id} {reason} cases={ids}".strip())
                 self.save()
                 mark_priority_committed(self)
+                if rec.get("meter_root"):
+                    self.ai.consumption.review(rec_id, "edit-accept" if action == "edit" else action)
                 return self._rec_view(rec, user)
 
     # ---- funding: a person approves and submits; the system never does

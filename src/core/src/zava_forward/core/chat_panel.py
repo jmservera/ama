@@ -27,10 +27,12 @@ import json
 import logging
 import re
 import unicodedata
+import uuid
 from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
+from zava_forward.core.ai_consumption import CallContext, call_context, reference, usage
 from zava_forward.core.assistants import REGISTRY
 from zava_forward.core.chat_isolation import CONTEXT_MESSAGES, ChatIsolation, block, neutralise
 from zava_forward.core.chat_privacy import redact
@@ -203,6 +205,8 @@ class ModelReply:
     usage: dict[str, int] | None = None
     calls: int = 1
     outcome: str = "returned"
+    meter_id: str | None = None
+    meter_root: str | None = None
 
 
 Model = Callable[[str, str], str | ModelReply]
@@ -264,7 +268,13 @@ def valid_usage(value: object) -> dict[str, int] | None:
         return None
     if value["total_tokens"] != value["prompt_tokens"] + value["completion_tokens"]:
         return None
-    return {k: value[k] for k in keys}
+    normalized = usage(value)
+    if normalized is None:
+        return None
+    result = {k: value[k] for k in keys}
+    if normalized["cached_tokens"] is not None:
+        result["cached_tokens"] = normalized["cached_tokens"]
+    return result
 
 
 def out_of_scope(question: str) -> tuple[str, str] | None:
@@ -392,9 +402,13 @@ class ChatPanel:
 
         def finish(kind: str, text: str, cites: list[str], model_name: str) -> dict[str, Any]:
             with store.lock:
-                store.chat_add_message(
+                message = store.chat_add_message(
                     user, tid, "assistant", text, evidence=cites, model=model_name
                 )
+                if receipt.get("meter_root"):
+                    store.ai.consumption.output(
+                        receipt["meter_root"], f"chat:{tid}:{message['seq']}", eligible=False
+                    )
                 store.audit(
                     user_key(user),
                     "chat.answer",
@@ -450,13 +464,20 @@ class ChatPanel:
                 return finish("fallback", LIMIT_REACHED, [], model_name)
             try:
                 receipt["model_calls"] = 1
-                result = self.model(system, prompt)
+                root = reference(uuid.uuid4().hex)
+                context = CallContext(
+                    root, root, TASK, "retrofit-case", reference(TASK), reference(system)
+                )
+                with call_context(context):
+                    result = self.model(system, prompt)
                 if isinstance(result, ModelReply):
                     raw = result.text
                     receipt.update(
                         model_calls=result.calls,
                         tokens=valid_usage(result.usage),
                         provider_outcome=result.outcome,
+                        meter_id=result.meter_id,
+                        meter_root=result.meter_root,
                     )
                 else:
                     raw = str(result)

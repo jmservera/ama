@@ -2,9 +2,86 @@
 title: Zava Forward core library
 description: Domain, store, ledger, law store, chat storage and synthetic-data documentation for the core project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-30
+ms.date: 2026-10-31
 ms.topic: reference
 ---
+
+## AI consumption ledger (#432)
+
+`ai_consumption.Consumption` extends the existing immutable `assistant_events`
+stream and serializable assistant transaction, without a second database or DDL.
+The dedicated `ai-consumption` partition contains closed, versioned metadata:
+opaque root/attempt/output references, capability/case class, configuration and
+prompt fingerprints, model, input/output/cached tokens, retries, failures and
+owned workflow-only alerts. It does not copy historical proposal text into the
+consumption stream. Historical calls and the separate resident SQL accounting
+remain explicitly unjoined.
+
+An operator can supply `price(...)`, `authorize(...)` and `billing(...)` evidence
+through this Python interface on a constructed/local or separately authorised
+store. These methods do not retrieve prices, grant spend, verify an invoice,
+appoint an owner or approve a quality floor. There is no new HTTP write endpoint
+or automatic authority. `price` requires an official source URL, source SHA-256,
+retrieval/version/effective period, model/currency and exact rates per million
+input/output/cached tokens. The [public-source snapshot](../../docs/reference/resources/azure-ai-price-source-2026-10-31.json)
+has unavailable numerical rates; it is not an applicable price table.
+
+`authorize` binds an immutable operator evidence/owner reference, price and exact
+`Ai.configuration(deployment, temperature, max_tokens)` fingerprint. Supply both
+period and task budget IDs with finite calls/tokens/decimal currency amounts,
+UTC start/end and maximum request calls/depth. A reused budget ID keeps all
+previous liability; overlapping configuration authorities and changed limits
+are rejected, including reuse across currencies. Default authority is absent. Named live owners and OD-51 approval
+are still missing; the unassigned-owner reference is a gap, not an appointment.
+
+Reservations commit before physical dispatch, with expiry checked again after
+credential acquisition and immediately before the network. Synthetic prices
+cannot admit production transport; only an explicit HTTP loopback fake provider
+is nonbillable test transport. Root calls and depth (starting at
+one) share durable bounds; duplicate attempts cannot dispatch again. Complete
+serialized ASCII text request bytes bound input tokens conservatively. Images
+have unknown liability and are not dispatched, while file storage/manual work
+continues. Pending calls retain the upper bound; unresolved calls after 40 seconds,
+unknown cached usage, malformed usage or actual overruns stop subsequent
+budget dispatch. Explicit cached zero differs from absent cached usage.
+There is no automatic timeout refund or hold-clearing operation.
+Financial completion survives proposal fencing/quarantine independently.
+
+`report(start=..., end=..., as_of=...)` uses UTC `[start,end)` call cohorts and
+review state as of the cutoff. All attempts, including retries/failures, belong
+to the numerator; only eligible, human accept/edit-accept output records count
+once. Verification, templates, chat replies and rejected/quarantined outputs
+are not accepted proposals. Legacy output/review saves and financial links are
+not cross-store atomic: missing joins remain visible and prohibit a money ratio.
+
+Billing imports need the exact exclusive period, currency, shared budget scope,
+source/allocation evidence, complete coverage and an explicit owner tolerance
+fraction. Duplicate/overlapping imports fail; immutable corrections need separate
+work. Billing is the financial numerator, projected token charge is a separate
+diagnostic, and variance is `abs(billed - projected) / billed`. Zero billed
+reconciles only with zero projection. No bill, incomplete allocation, uncertain
+liability or zero accepted denominator means Unknown, never an estimate.
+
+Optional report inputs for quality use the returned cohort hash and observed
+counts/denominators plus upper-bound floors and matched baseline rates for
+critical misses, unsupported claims, overrides and reopened cases. Unknown or
+unapproved quality never qualifies a cost. A worse rate is Failure even when
+cost is lower. Hosting, review, correction, assurance and support are separate
+proposed TCA components; missing components leave the total Unknown. Components,
+quality and capacity inputs are supplied observations, not verified Finance
+approval. Capacity hours are never cash; booked destination evidence is not
+implemented or assumed.
+
+Local tests are synthetic ledger and fake-loopback HTTP exercises, not a paid
+held-out batch, reconciled Azure invoice, live authority or whole-issue acceptance:
+
+```bash
+# From src/core after pip installation:
+PYTHONPATH=src:tests python3 -m unittest test_ai_consumption -q
+# From src/api:
+PYTHONPATH=.:src:tests:../core/src:../agents/src:../core/tests:../agents/tests \
+  python3 -m unittest test_ai_consumption_api -q
+```
 
 ## Dependent-policy RAI release binding (#218, #219)
 

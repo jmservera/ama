@@ -6,6 +6,29 @@ ms.date: 2026-10-31
 ms.topic: reference
 ---
 
+## AI consumption report (#432)
+
+Manager-only `GET /api/ai/report` preserves evaluation/live/registry fields and
+adds `consumption`. Optional `start`, `end`, `as_of` are timezone-aware ISO
+timestamps with exclusive `[start,end)` call-time bounds. Defaults are today's
+UTC start through now. Invalid, empty, repeated or unknown parameters return an
+explicit error. The JSON report adds no UI or deployment changes.
+
+See the [core ledger contract](../core/README.md#ai-consumption-ledger-432) for
+price/spend/billing evidence inputs, monetary limits, quality and accepted-output
+semantics. Real core `Ai` calls without financial admission now stop before the
+network and keep the template/manual route. No spend authority, deployment
+configuration or release is created here. Existing activation, continuity,
+role, human approval, resident consent and statutory controls remain unchanged.
+Unknown image liability prevents AI reading but not document storage.
+
+The report exposes Unknown prices/costs, incomplete joins, retry/failure counts,
+owned alert references and tokens-per-proposal minimum/maximum/mean. Those
+observations are not an owner-authorised held-out batch. The separate resident
+advisor's existing SQL currency reservations remain unchanged and unjoined;
+whole #432 coverage and actual Azure financial reconciliation are not claimed.
+No raw case, prompt or output text is returned in `consumption`.
+
 ## Employee acceptance identity check (#570)
 
 For Entra staff, `/api/me.user.tid` and `oid` identify the person. The assigned

@@ -1,7 +1,7 @@
 ---
 title: AI Tokenomics (Total Cost of AI and Value Realised)
 description: What the mentor clue on Tokenomics points to, the public Tokenomics Foundation framing, how it maps to the capstone rubric and the Zava Forward evidence, and what remains unmeasured
-ms.date: 2026-10-24
+ms.date: 2026-10-31
 ms.topic: reference
 ---
 
@@ -186,6 +186,45 @@ surface, but equivalent grading and stable speed are still unproven. Keep
 Sonnet pinned pending repeated native-path comparisons, an independent
 criterion-level reference assessment and threshold-adjacent decision checks.
 Do not select the highest-scoring model as the most accurate one.
+
+## Source-only Metering Extension (2026-10-31, Refs #432)
+
+Evidence class: local engineering, not a measured financial result.
+The [core consumption ledger](../../../src/core/README.md#ai-consumption-ledger-432)
+extends immutable assistant events with content-free call/configuration/prompt/
+cached-token attribution, intersecting task/period budgets, root call/depth bounds,
+owned alerts, output/review links and billing-led reporting. The
+[manager JSON report](../../../src/api/README.md#ai-consumption-report-432)
+keeps cost Unknown without applicable evidence and reports quality and capacity
+separately. Current report components/floors are supplied, unverified observations;
+engineering defaults do not approve OD-51.
+
+This corrects the older inventory above prospectively: merged #480/#593 already
+provide independent resident currency reservations. They are not joined into the
+new financial cohort; complete per-call and accepted-outcome coverage remains
+unmet. No deployment or stored procedure change is made by this extension.
+
+The [dated official pricing-source retrieval](./azure-ai-price-source-2026-10-31.json)
+records the public URL, content hash and unavailable numerical price cells.
+The official page distinguishes token deployment types and states that public
+prices are estimates, not actual quotes. No applicable region/model/currency
+rates or billing record are supplied, so **cost remains Unknown**.
+
+Local constructed ledger and loopback HTTP tests establish engineering
+behaviour, not paid inference, human-witnessed acceptance or Azure reconciliation.
+The issue's nine criteria retain this boundary:
+
+| Criterion | Source-only position | Remaining evidence |
+| --- | --- | --- |
+| Per-call attribution | Core calls retain consumption joins and cached usage | Historical/resident joins and complete real provider usage |
+| Request calls/depth | Atomic root bounds and looping/fan-out stop are engineered | Live governed activation/acceptance |
+| Limits/alerts | Token/money/expiry/unknown-price/liability deny with owner reference | Named owner and approved budgets |
+| Dated price | Official source metadata/version stored; unavailable rates explicit | Applicable approved rate source |
+| Azure billing reconciliation | Exact-period, scope, allocation and tolerance mechanism | Actual attributable Azure cost records and Finance validation |
+| Accepted cost/quality/TCA | Billing-led denominator and quality regression failure mechanism | OD-51, real quality/effort and complete approved TCA inventory |
+| Released time | Capacity-not-cash classification | Measured effort; Finance booked destination if cash is claimed |
+| Held-out batch/spread | Recorded token min/max/mean mechanism | Finite owner-authorised held-out batch and accepted results |
+| Pitch | Brief carries engineering result and stated gaps below | Owner slide placement, deck rebuild/rehearsal and final challenge |
 
 ## Gaps
 
