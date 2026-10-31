@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-31T22:24:42+00:00",
-  "commit": "e83feeddb7ac145dd16c04100fd1e423fee14afe",
+  "scored_at": "2026-10-31T23:41:11+00:00",
+  "commit": "ae0b36d30508055c89a1293a177173c0a16dad6b",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41247300392",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41253231225",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "68a9163e304f7fcf2848849d87a26a10d99e4717e65c0de9482ef9147882c2b6",
+    "solution-code": "60df4e72eecd2020a6c83111b263aee965430af3991c5de10ed3624e4aa23dd6",
     "infrastructure": "71e5509e0895c73f47ba0355770d1f2ff95b16bee128ce5d438c18a826acbc30",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -32,7 +32,7 @@
         "src/api/src/zava_forward/api/static_assets.py:1-58",
         "src/api/src/zava_forward/api/server.py:193-197"
       ],
-      "rationale": "Not touched by this PR (src/README.md tooling-doc change only). Baseline ceiling unchanged."
+      "rationale": "Not touched by this PR (build-requirements pin bump only). Baseline ceiling unchanged."
     },
     "A2": {
       "score": 5,
@@ -48,7 +48,7 @@
         "src/core/src/zava_forward/core/ai.py:67-100",
         "src/core/src/zava_forward/core/assistants.py:884-900"
       ],
-      "rationale": "Diff only adds an RPI-gate path-length note to src/README.md; no security/compliance/responsible-AI evidence changed. Baseline 5 retained."
+      "rationale": "Diff only bumps setuptools pin in src/build-requirements.in/.txt; no security/compliance/responsible-AI evidence changed. Baseline 5 retained."
     },
     "A4": {
       "score": 5,
@@ -57,7 +57,7 @@
         "src/api/tests/test_ai_consumption_api.py:1-1633",
         "src/core/tests/test_ai_consumption.py:1-691"
       ],
-      "rationale": "Diff is tooling documentation only, not implementation. Already-maximal baseline 5 retained."
+      "rationale": "Diff is a build-tooling dependency pin bump only, not implementation. Already-maximal baseline 5 retained."
     },
     "A5": {
       "score": 5,
@@ -66,7 +66,7 @@
         "src/core/README.md:5-123",
         "src/api/src/zava_forward/api/server.py:514-540"
       ],
-      "rationale": "Diff adds an RPI-gate browser-check path-length constraint note; no new cost/observability model evidence. Baseline 5 retained."
+      "rationale": "Diff bumps setuptools==84.1.0 to 84.2.1 in build-requirements files; no new cost/observability model evidence. Baseline 5 retained."
     },
     "A6": {
       "score": 5,
@@ -79,7 +79,7 @@
         "src/agents/src/zava_forward/agents/dispatch.py:186-220",
         "src/core/src/zava_forward/core/ai_consumption.py:155-185"
       ],
-      "rationale": "Diff is a tooling/gate documentation note unrelated to agent dispatch/orchestration. Baseline 4 (Good) retained."
+      "rationale": "Diff is a build dependency pin bump unrelated to agent dispatch/orchestration. Baseline 4 (Good) retained."
     },
     "B1": {
       "score": 3,
@@ -120,7 +120,7 @@
         "src/core/README.md:5-123",
         "src/api/README.md:9-47"
       ],
-      "rationale": "src/README.md RPI-gate path-length note is project engineering documentation, not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
+      "rationale": "Diff touches only src/build-requirements.in/.txt (dependency pin), not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
     },
     "B7": {
       "score": 5,
