@@ -377,6 +377,13 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
     page.screenshot(path=str(out / "document-facts-320-200.png"))
     page.evaluate("document.documentElement.style.fontSize = ''")
     page.set_viewport_size({"width": 1280, "height": 900})
+    for question in ("documents help", "forms help"):
+        reply = ask_chat(page, question)
+        expect(reply).to_contain_text("I cannot answer that")
+        expect(reply).to_contain_text("housing officer")
+        expect(reply.locator(".chat-widget-meta").first).to_contain_text("Summary by rules")
+        for text in ("Survey: Missing", "R-SURVEY", "D-EPC", "AI suggestion"):
+            expect(reply).not_to_contain_text(text)
     page.locator("#assistant-question").fill("my home")
     button.click()
     expect(page.locator("#assistant-result")).to_contain_text("C-1 Test Street")
