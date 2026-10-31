@@ -221,10 +221,10 @@ ms.date: 2026-10-31
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/plans/2026-10-31/closure-audit-batch2-plan.md](.copilot-tracking/plans/2026-10-31/closure-audit-batch2-plan.md) | Assessed final-candidate plan. |
-| [.copilot-tracking/details/2026-10-31/closure-audit-batch2-phase-details.md](.copilot-tracking/details/2026-10-31/closure-audit-batch2-phase-details.md) | Assessed mutation and publication procedure. |
-| [.copilot-tracking/research/2026-10-31/closure-audit-batch2-research.md](.copilot-tracking/research/2026-10-31/closure-audit-batch2-research.md) | Supplied research and readiness boundary. |
-| [.copilot-tracking/reviews/2026-10-31/closure-audit-batch2-critique.md](.copilot-tracking/reviews/2026-10-31/closure-audit-batch2-critique.md) | This single complete critique and verdict. |
+| [.copilot-tracking/plans/2026-10-31/closure-audit-batch2-plan.md](../../plans/2026-10-31/closure-audit-batch2-plan.md) | Assessed final-candidate plan. |
+| [.copilot-tracking/details/2026-10-31/closure-audit-batch2-phase-details.md](../../details/2026-10-31/closure-audit-batch2-phase-details.md) | Assessed mutation and publication procedure. |
+| [.copilot-tracking/research/2026-10-31/closure-audit-batch2-research.md](../../research/2026-10-31/closure-audit-batch2-research.md) | Supplied research and readiness boundary. |
+| [.copilot-tracking/reviews/2026-10-31/closure-audit-batch2-critique.md](closure-audit-batch2-critique.md) | This single complete critique and verdict. |
 
 ## Next Steps
 

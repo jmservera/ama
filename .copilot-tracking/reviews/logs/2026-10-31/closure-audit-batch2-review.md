@@ -176,18 +176,18 @@ Later work does not require another Review of this task. Preserve this original 
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/plans/2026-10-31/closure-audit-batch2-plan.md](.copilot-tracking/plans/2026-10-31/closure-audit-batch2-plan.md) | Current plan and owner decisions. |
-| [.copilot-tracking/details/2026-10-31/closure-audit-batch2-phase-details.md](.copilot-tracking/details/2026-10-31/closure-audit-batch2-phase-details.md) | Guarded procedure and publication continuation. |
-| [.copilot-tracking/reviews/2026-10-31/closure-audit-batch2-critique.md](.copilot-tracking/reviews/2026-10-31/closure-audit-batch2-critique.md) | Preserved original Revise critique. |
-| [.copilot-tracking/changes/2026-10-31/closure-audit-batch2-changes.md](.copilot-tracking/changes/2026-10-31/closure-audit-batch2-changes.md) | Exact final matrix and actions. |
-| [.copilot-tracking/changes/2026-10-31/closure-audit-batch2-receipts.json](.copilot-tracking/changes/2026-10-31/closure-audit-batch2-receipts.json) | Intent/confirmed identities and verification. |
-| [.copilot-tracking/research/2026-10-31/closure-audit-batch2-research.md](.copilot-tracking/research/2026-10-31/closure-audit-batch2-research.md) | Primary synthesis and adverse evidence. |
-| [.copilot-tracking/research/2026-10-31/closure-audit-batch2-lane-1.md](.copilot-tracking/research/2026-10-31/closure-audit-batch2-lane-1.md) | Lane 1 engineering/documentation evidence. |
-| [.copilot-tracking/research/2026-10-31/closure-audit-batch2-lane-2.md](.copilot-tracking/research/2026-10-31/closure-audit-batch2-lane-2.md) | Lane 2 engineering and approval limits. |
-| [.copilot-tracking/research/2026-10-31/closure-audit-batch2-lane-3.md](.copilot-tracking/research/2026-10-31/closure-audit-batch2-lane-3.md) | Lane 3 documentary evidence and residuals. |
-| [.copilot-tracking/research/2026-10-31/closure-audit-batch2-lane-4.md](.copilot-tracking/research/2026-10-31/closure-audit-batch2-lane-4.md) | Lane 4 evidence, corrections and fresh-main comparison. |
-| [.copilot-tracking/rpi-sessions/2026-10-31/closure-audit-batch2-state.json](.copilot-tracking/rpi-sessions/2026-10-31/closure-audit-batch2-state.json) | Parent-owned current Review state. |
-| [.copilot-tracking/reviews/logs/2026-10-31/closure-audit-batch2-review.md](.copilot-tracking/reviews/logs/2026-10-31/closure-audit-batch2-review.md) | This single original final Review. |
+| [.copilot-tracking/plans/2026-10-31/closure-audit-batch2-plan.md](../../../plans/2026-10-31/closure-audit-batch2-plan.md) | Current plan and owner decisions. |
+| [.copilot-tracking/details/2026-10-31/closure-audit-batch2-phase-details.md](../../../details/2026-10-31/closure-audit-batch2-phase-details.md) | Guarded procedure and publication continuation. |
+| [.copilot-tracking/reviews/2026-10-31/closure-audit-batch2-critique.md](../../2026-10-31/closure-audit-batch2-critique.md) | Preserved original Revise critique. |
+| [.copilot-tracking/changes/2026-10-31/closure-audit-batch2-changes.md](../../../changes/2026-10-31/closure-audit-batch2-changes.md) | Exact final matrix and actions. |
+| [.copilot-tracking/changes/2026-10-31/closure-audit-batch2-receipts.json](../../../changes/2026-10-31/closure-audit-batch2-receipts.json) | Intent/confirmed identities and verification. |
+| [.copilot-tracking/research/2026-10-31/closure-audit-batch2-research.md](../../../research/2026-10-31/closure-audit-batch2-research.md) | Primary synthesis and adverse evidence. |
+| [.copilot-tracking/research/2026-10-31/closure-audit-batch2-lane-1.md](../../../research/2026-10-31/closure-audit-batch2-lane-1.md) | Lane 1 engineering/documentation evidence. |
+| [.copilot-tracking/research/2026-10-31/closure-audit-batch2-lane-2.md](../../../research/2026-10-31/closure-audit-batch2-lane-2.md) | Lane 2 engineering and approval limits. |
+| [.copilot-tracking/research/2026-10-31/closure-audit-batch2-lane-3.md](../../../research/2026-10-31/closure-audit-batch2-lane-3.md) | Lane 3 documentary evidence and residuals. |
+| [.copilot-tracking/research/2026-10-31/closure-audit-batch2-lane-4.md](../../../research/2026-10-31/closure-audit-batch2-lane-4.md) | Lane 4 evidence, corrections and fresh-main comparison. |
+| [.copilot-tracking/rpi-sessions/2026-10-31/closure-audit-batch2-state.json](../../../rpi-sessions/2026-10-31/closure-audit-batch2-state.json) | Parent-owned current Review state. |
+| [.copilot-tracking/reviews/logs/2026-10-31/closure-audit-batch2-review.md](closure-audit-batch2-review.md) | This single original final Review. |
 
 ## Next Steps
 
