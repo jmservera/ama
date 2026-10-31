@@ -76,6 +76,9 @@ jobs:
         run: |
           read -r -a dependencies <<< "$DEPS"
           pip install "${dependencies[@]}" -e ".[dev]"
+      - name: Install Chromium for browser asset unit tests
+        if: matrix.project == 'api'
+        run: python -m playwright install --with-deps chromium
       - name: Unit tests and dependency-rule test
         env:
           PYTHONPATH: ${{ matrix.project == 'api' && format('{0}/src/core/tests:{0}/src/agents/tests', github.workspace) || (matrix.project == 'orchestrator' || matrix.project == 'agents') && format('{0}/src/core/tests', github.workspace) || '' }}
