@@ -101,7 +101,7 @@ Record AC1/AC6, add dated current AI contract before historical design material,
 update index and append log. Dependencies: completed research and one critique.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Validate and review
+### [x] P02: Validate and review
 
 <!-- rpi:task id=P02-T01 -->
 #### [x] P02-T01: Execute local engineering checks
@@ -110,7 +110,7 @@ Run caller API discovery, Ruff, existing sensor/assistant/generated browser
 checks with external logs. Lock heavy execution. No new tests/removals.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Reconcile artifacts and run one independent Review
+#### [x] P02-T02: Reconcile artifacts and run one independent Review
 
 Preserve exact outcomes and limitations; Review findings route to distinct
 follow-up, never repeated Review inside this task.
@@ -160,3 +160,7 @@ implementation, not publication or actual-model/human acceptance.
 After critique dispositions, parent continues Implement at P01-T01; changes:
 .copilot-tracking/changes/2026-10-31/resident-sensor-gauges-466-changes.md.
 All current decisions and historical outcome boundaries remain mandatory.
+Current handoff: P01/P02 Complete; one Review Complete / Residual work with no
+implementation defects. P03 final evidence commit/full gate/publication pending.
+Final receipt and publication metadata remain external to avoid self-reference;
+this committed plan is the original pre-gate historical state.

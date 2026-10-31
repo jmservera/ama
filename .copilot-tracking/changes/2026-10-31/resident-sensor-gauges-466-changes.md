@@ -12,7 +12,7 @@ Details: .copilot-tracking/details/2026-10-31/resident-sensor-gauges-466-phase-d
 
 ## Execution Status
 
-Full plan scope. Complete: P01-T01/P01, P02-T01. In progress: P02 Review and P03
+Full plan scope. Complete: P01/P01-T01 and P02/P02-T01/P02-T02. Pending: P03
 committed-candidate publication. Approved writes are four documentation files
 and dated RPI artifacts only. Runtime/UI/tests/infra remain unchanged.
 No implementation blocker currently established.
@@ -114,10 +114,61 @@ Git-commit skill's referenced instruction file/tool are unavailable; use parent
 repository's explicit Conventional Commit/privacy-safe identity/trailer and
 available git staged-diff fallback. Final Review/evidence commit precedes gate.
 
+Integration completed by ordinary merge commit 7580cd57 after preliminary
+084381f5. Only conflict was knowledge-index date/topic: retained 2026-10-31 date
+and upstream ms.topic overview. Both append-only log tails preserved; PR diff
+against 1330869e is still exactly the four planned documentation files plus
+our dated artifacts. No resident runtime/tests/activation diff. Full gate will
+validate current integrated candidate; original targeted logs remain historical
+to pre-integration resident-identical source, not falsely relabelled gate logs.
+
+## Review Handoff
+
+One post-implementation Review requested at integrated HEAD
+7580cd57, base 1330869ea675ff019958846330108b4f45e163ce.
+Scope: full bounded task, seven plan ACs/six issue criteria, four-file production
+diff, current artifacts, original critique dispositions and exact local hashes.
+Review writes only dated Review, does not fix source or rerun tests.
+No actual-model, manual accessibility, live service or publication acceptance
+claimed. Commit/full gate and exact-head eligibility follow this Review.
+
+## Original Review Result and Publication Freeze
+
+Sole Review Complete / Residual work. No implementation defects. RV-001 routes
+42 incomplete axe rule/state results and direct AT/resident acceptance; RV-002
+routes actual-model/live/prerequisite/tariff acceptance. Both are distinct later
+owner-controlled work, not a source correction or repeated Review.
+P01/P02 markers/details are now reconciled. P03 remains pending in this
+original committed evidence; final receipt/eligibility/PR metadata stay external
+and in PR body so no later evidence commit invalidates the gate.
+
+Before final commit/gate, archive and restore-check exactly our generated
+23 ignored editable-metadata/Ruff-cache files, preserving the entire current
+tracking snapshot and per-file hashes externally. Initial checkout had no
+ignored files; these were created by this task's pip/Ruff setup. Remove only
+selected files after proof, never historical artifacts or other worktrees.
+No new source, authority or user decision. Final gate self-locks and any missing
+SQL/browser/scanner dependency or base/input drift blocks push.
+
+Cleanup completed: 23 selected ignored files removed after whole-archive
+readback, exact selected restore/hash checks and 4409 tracking members protected
+before/after. Evidence:
+`/home/azureuser/.copilot/session-state/4ba9f49b-4451-4749-a8ce-6a2089914ba2/files/cleanup-466/`.
+Archive SHA256 0b1d8b1acfb8c5ff3aa43a30222dfea8fb628291d176e936e7d6f0f951ed9b48;
+manifest SHA256 31c5e93842273a9ff6f8dcf86a40b204469d885ed1c006d2d3224b24361d3b90.
+No historical/source/RPI file pruned; ignored-file inventory now empty.
+
+Planned final command after this evidence commit:
+`PYTHONDONTWRITEBYTECODE=1 python3 tools/rpi-checks.py --all --jobs 3 --lock-timeout 3600 --base 1330869ea675ff019958846330108b4f45e163ce --out <new-external-final-directory>`.
+Full receipt/exact-head eligibility and PR URL will be recorded externally and
+in PR body, not fabricated in this pre-execution original record.
+
 ## Pre-Review Reconciliation
 
-Implementation/local checks complete; integrate newly fetched main before the
-one Review, reconcile final artifact markers and preserve original outcomes.
+Implementation/local checks and sole original Review complete; main integrated
+on topic only. P01/P02 complete; P03 final gate/publication pending.
+Details/changes/plan align; follow-ups remain outside completion.
+Review Complete / Residual work, no implementation defect; original preserved.
 
 ## Follow-Up Items
 

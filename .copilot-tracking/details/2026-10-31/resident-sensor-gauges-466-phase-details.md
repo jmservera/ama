@@ -16,7 +16,7 @@ Initial readiness: source coverage verified; candidate ready for one critique.
 | Phase | Intent | Status |
 | --- | --- | --- |
 | P01 | Current decision/contract documentation | Complete |
-| P02 | Fresh local tests and one Review | Local checks Complete; Review pending |
+| P02 | Fresh local tests and one Review | Complete / Review Residual work |
 | P03 | Clean committed-candidate publication | Pending P02 |
 
 <!-- rpi:phase id=P01 -->
@@ -64,6 +64,8 @@ Reconcile completed plan markers, changes, exact logs/hashes and limitations.
 Fresh Review agent reads full bounded diff, original critique and evidence,
 writes only dated Review. Preserve outcome and route findings to later work.
 No second Review or fixing Review findings within this task.
+Completion: sole Review Complete / Residual work, RV-001 manual accessibility
+and RV-002 actual-model/live/tariff routed distinctly; no implementation defects.
 
 <!-- rpi:phase id=P03 -->
 ## P03: Publication
