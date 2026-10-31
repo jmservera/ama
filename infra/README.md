@@ -3983,8 +3983,10 @@ the ledger. Never use developer-token inference as a managed-identity smoke
 substitute or run an unmetered diagnostic request.
 
 If a consented question returns "AI unavailable: the AI usage check is
-unavailable", the ledger is missing or unreachable. On 2026-10-31 it was found
-absent (see `.copilot-tracking/research/2026-10-31/resident-ai-activation-563b-research.md`).
+unavailable", the ledger may be missing or unreachable, or the identity may lack
+permission on its procedures (permission errors map to the same label). Before
+applying any schema, run a read-only check of the ledger objects, connectivity,
+authentication and procedure permissions. On 2026-10-31 it was found absent (see `.copilot-tracking/research/2026-10-31/resident-ai-activation-563b-research.md`).
 The SQL is private, so it was applied by one run of the existing Manual
 `job-cutover-test-init` job (its Entra admin identity) with a command override
 that restates the SQL environment variables; the job template stays unchanged.
