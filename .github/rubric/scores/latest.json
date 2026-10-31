@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-31T12:43:42+00:00",
-  "commit": "1bd6666a29e6a8482e9d9b27092dcec16236ca96",
+  "scored_at": "2026-10-31T14:01:34+00:00",
+  "commit": "62189ac723fa8b50b174d272a30ff5d21f3bb6c0",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41201987814",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41207526313",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "ac1fcbacbef9ca1595ffbdfb110e85b275401dcf5fde25fec8775fc1dc4f640c",
+    "solution-code": "c96595b1c30d08f7d9fc4b13704b85f0074f5ea855fa2d8a20d30534206bb843",
     "infrastructure": "61ed8eadcd8e631c2a2e13b0853b7a96efd716806d947ef318843f0dd05f7d63",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -32,7 +32,7 @@
         "src/api/src/zava_forward/api/static_assets.py:1-58",
         "src/api/src/zava_forward/api/server.py:193-197"
       ],
-      "rationale": "Not touched by this PR (pitch/deck reorg only). Baseline ceiling unchanged."
+      "rationale": "Not touched by this PR (test/doc reorg only). Baseline ceiling unchanged."
     },
     "A2": {
       "score": 5,
@@ -55,12 +55,12 @@
         "src/api/src/zava_forward/api/static_assets.py:1-58",
         "src/api/tests/test_static_assets.py:1-40"
       ],
-      "rationale": "Not touched by this PR. Baseline ceiling unchanged."
+      "rationale": "Diff adds a new browser test for already-implemented review round-trip and reformats existing checks; no new capability shipped. Baseline ceiling unchanged."
     },
     "A5": {
       "score": 5,
       "evidence": [],
-      "rationale": "This PR only reorganizes pitch/deck materials; no operational instrumentation change. Baseline unchanged."
+      "rationale": "This PR only touches tests/README docs; no operational instrumentation change. Baseline unchanged."
     },
     "A6": {
       "score": 5,
@@ -70,7 +70,7 @@
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "This PR is a pitch/deck content reorganization, not agentic orchestration. Baseline unchanged (Good, not Excellent)."
+      "rationale": "This PR is test/documentation work, not agentic orchestration. Baseline unchanged (Good, not Excellent)."
     },
     "B1": {
       "score": 3,
@@ -110,7 +110,7 @@
       "evidence": [
         "src/api/README.md:101-178"
       ],
-      "rationale": "Not touched by this PR (engineering documentation, not the capstone deck). Baseline ceiling unchanged."
+      "rationale": "Changed README.md sections are engineering documentation, not the capstone deck. Baseline ceiling unchanged."
     },
     "B7": {
       "score": 5,
