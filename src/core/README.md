@@ -57,8 +57,18 @@ are not accepted proposals. Legacy output/review saves and financial links are
 not cross-store atomic: pending review intents commit before domain review
 saves, and an interrupted financial link leaves `unjoined_reviews` nonzero and
 prohibits a money ratio. A matching authoritative review can retry its pending
-link without reapplying content edits. Missing output links also block review
-attribution until linked. Events remain immutable, but monotonically ordered
+link without reapplying content edits. Missing output links block accept/edit,
+not rejection: legacy drafts retain an opaque original-root association and
+human disposition, with incomplete output/review joins until the matching
+original output link is repaired. Assistant rejection creates an ineligible
+link for an unlinked metered task in the same transaction as its disposition;
+existing eligibility is never rewritten. Capacity-held or invalid metering
+cannot roll back an authorised assistant withdrawal: an explicit
+`financial_attribution` unresolved flag and immutable withdrawal marker persist.
+As-of reports exclude those outputs from acceptance and keep economics Unknown
+even after ledger reads recover. Equal-time withdrawal markers take precedence;
+repeated reviews or later events do not automatically clear unresolved state.
+Events remain immutable, but monotonically ordered
 review revisions preserve human acceptance withdrawal and latest/as-of state.
 
 Billing imports need the exact exclusive period, currency, shared budget scope,

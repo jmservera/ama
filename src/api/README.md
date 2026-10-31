@@ -13,6 +13,8 @@ adds `consumption`. Optional `start`, `end`, `as_of` are timezone-aware ISO
 timestamps with exclusive `[start,end)` call-time bounds. Defaults are today's
 UTC start through now. Invalid, empty, repeated or unknown parameters return an
 explicit error. The JSON report adds no UI or deployment changes.
+Timestamp, range and as-of validation also apply when the JSON store or
+unavailable assistant schema prevents durable consumption reporting.
 
 See the [core ledger contract](../core/README.md#ai-consumption-ledger-432) for
 price/spend/billing evidence inputs, monetary limits, quality and accepted-output
@@ -30,6 +32,10 @@ whole #432 coverage and actual Azure financial reconciliation are not claimed.
 No raw case, prompt or output text is returned in `consumption`.
 `unjoined_reviews` exposes interrupted legacy financial review links and keeps
 money ratios Unknown until a matching authoritative disposition is recovered.
+Missing legacy output links do not prevent human rejection; their original
+root association keeps output/review gaps visible until linkage is repaired.
+Meter-capacity-held assistant withdrawal persists as financially unresolved
+and invalidates stale accepted economics, including after reads recover.
 Append-only review revisions preserve withdrawal and historical as-of state;
 replaying a pending link never reapplies domain/content edits.
 

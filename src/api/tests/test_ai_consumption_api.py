@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 import json
+import sqlite3
 import threading
 import unittest
 import urllib.error
 import urllib.request
 from contextlib import nullcontext
+from dataclasses import replace
+from datetime import UTC, datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
@@ -26,6 +29,7 @@ from zava_forward.agents.dispatch import (  # type: ignore[import-untyped]
 from zava_forward.core import ai_prompts, ai_tasks
 from zava_forward.core.ai import Ai
 from zava_forward.core.ai_consumption import (
+    CURRENT,
     CallContext,
     DispatchHeld,
     call_context,
@@ -34,7 +38,7 @@ from zava_forward.core.ai_consumption import (
 from zava_forward.core.assistants import REGISTRY, build_request, canonical, runtime_binding
 from zava_forward.core.chat_isolation import ChatIsolation
 from zava_forward.core.chat_panel import SYSTEM, TASK, ChatPanel
-from zava_forward.core.store import Store
+from zava_forward.core.store import ConflictError, Store
 
 from test_assistants import Base, proposal
 from zava_forward.api.server import App, make_handler
@@ -224,6 +228,13 @@ class ConsumptionApi(unittest.TestCase):
         self.assertEqual(len([r for r in self.records() if r["kind"] == "review"]), 2)
         self.assertEqual(rejected["envelope"]["meter_id"], envelope["meter_id"])
         self.assertEqual(rejected["envelope"]["usage"], envelope["usage"])
+        self.assertTrue(
+            next(
+                r
+                for r in self.records()
+                if r["kind"] == "output" and r["output"] == reference(task["id"])
+            )["eligible"]
+        )
         self.fixture.case(lambda c: c["home"].update(address="Constructed changed home"))
         edited_task = self.fixture.run_ready("assessment-preparation")
         edited_task = self.fixture.verify(edited_task)
@@ -471,12 +482,20 @@ class ConsumptionApi(unittest.TestCase):
                                     report["unjoined_outputs"], before["unjoined_outputs"] + 1
                                 )
                                 self.assertEqual(report["coverage"], "incomplete")
-                                with self.assertRaisesRegex(
-                                    ValueError, "Output attribution is missing"
-                                ):
+
+                                def missing_review(
+                                    path: str = path,
+                                    store: Any = store,
+                                    rec: dict[str, Any] = rec,
+                                    action: str = action,
+                                ) -> dict[str, Any]:
                                     if path == "legacy":
-                                        store.review_ai(self.pm, rec["id"], action, "Human review.")
-                                    else:
+                                        return dict(
+                                            store.review_ai(
+                                                self.pm, rec["id"], action, "Human review."
+                                            )
+                                        )
+                                    return dict(
                                         store.resolve_priority(
                                             self.pm,
                                             rec["id"],
@@ -484,6 +503,71 @@ class ConsumptionApi(unittest.TestCase):
                                             "Human review.",
                                             items=[dict(case_id="ZF-1", reason="Human edit.")],
                                         )
+                                    )
+
+                                if action == "reject":
+                                    rejected = missing_review()
+                                    self.assertEqual(rejected["status"], "Rejected")
+                                    if backend == "sql":
+                                        saved = json.loads(
+                                            store.db.execute(
+                                                "SELECT body FROM recommendations WHERE id=?",
+                                                (rec["id"],),
+                                            ).fetchone()[0]
+                                        )
+                                    else:
+                                        saved = next(
+                                            r
+                                            for r in json.loads(Path(store.live_path).read_text())[
+                                                "recommendations"
+                                            ]
+                                            if r["id"] == rec["id"]
+                                        )
+                                    self.assertEqual(saved["status"], "Rejected")
+                                    report = meter.report(start=START, end=END, as_of=END)
+                                    self.assertEqual(
+                                        report["unjoined_reviews"], before["unjoined_reviews"] + 1
+                                    )
+                                    self.assertEqual(report["coverage"], "incomplete")
+                                    self.assertEqual(report["token_cost"], "Unknown")
+                                    self.assertEqual(
+                                        report["cost_per_accepted_proposal"], "Unknown"
+                                    )
+                                    envelope = rec["envelope"] if path == "legacy" else rec
+                                    with (
+                                        patch.object(
+                                            store,
+                                            "audit",
+                                            side_effect=AssertionError("must not rereview"),
+                                        ),
+                                        patch.object(
+                                            store,
+                                            "save",
+                                            side_effect=AssertionError("must not resave"),
+                                        ),
+                                    ):
+                                        meter.output(
+                                            envelope["meter_root"], rec["id"], eligible=True
+                                        )
+                                        with self.assertRaisesRegex(ValueError, "already"):
+                                            missing_review()
+                                    repaired = meter.report(start=START, end=END, as_of=END)
+                                    self.assertEqual(
+                                        repaired["unjoined_outputs"], before["unjoined_outputs"]
+                                    )
+                                    self.assertEqual(
+                                        repaired["unjoined_reviews"], before["unjoined_reviews"]
+                                    )
+                                    self.assertEqual(
+                                        repaired["accepted_proposals"],
+                                        before["accepted_proposals"],
+                                    )
+                                    self.assertEqual(rec, saved)
+                                    continue
+                                with self.assertRaisesRegex(
+                                    ValueError, "Output attribution is missing"
+                                ):
+                                    missing_review()
                                 self.assertEqual(
                                     rec["status"],
                                     "Not reviewed" if path == "legacy" else "Proposed",
@@ -827,6 +911,215 @@ class ConsumptionApi(unittest.TestCase):
                 if mode == "provider-failure":
                     self.assertEqual(report["unknown_liabilities"], 1)
 
+    def test_document_calls_preserve_shared_call_and_depth_limits(self) -> None:
+        self.authority(
+            "read-document", deployment="capable", temperature=0.3, output=500, max_calls=1
+        )
+        self.response_text = "Constructed document description."
+        context = CallContext(
+            reference("document-root"),
+            reference("document-first"),
+            "read-document",
+            "document",
+            self.inner.configuration("capable", 0.3, 500),
+            reference("enclosing-request-prompt"),
+            retry=1,
+        )
+        with call_context(context):
+            first = self.inner.look_at("fixture.txt", b"Constructed evidence.", "text/plain")
+            self.assertIs(CURRENT.get(), context)
+            with call_context(replace(context, attempt=reference("document-second"))):
+                second = self.inner.look_at("fixture.txt", b"Constructed evidence.", "text/plain")
+            self.assertIs(CURRENT.get(), context)
+        self.assertIsNone(CURRENT.get())
+        self.assertEqual(first["source"], "ai")
+        self.assertEqual(first["meter_root"], context.root)
+        reserved = next(r for r in self.records() if r["kind"] == "reserved")
+        self.assertEqual(reserved["attempt"], context.attempt)
+        self.assertEqual(reserved["prompt"], context.prompt)
+        self.assertEqual(reserved["retry"], 1)
+        self.assertEqual(second["source"], "template")
+        self.assertEqual(second["error"], "DispatchHeld")
+        deep = replace(
+            context, root=reference("deep-root"), attempt=reference("deep-attempt"), depth=2
+        )
+        with call_context(deep):
+            held = self.inner.look_at("fixture.txt", b"Constructed evidence.", "text/plain")
+            self.assertIs(CURRENT.get(), deep)
+        self.assertEqual(held["source"], "template")
+        self.assertEqual(len(self.requests), 1)
+        self.assertEqual(
+            {r["reason"] for r in self.records() if r["kind"] == "alert"},
+            {"request-call-limit", "request-depth-limit"},
+        )
+        standalone = self.inner.look_at("fixture.txt", b"Constructed evidence.", "text/plain")
+        self.assertEqual(standalone["source"], "ai")
+        self.assertNotEqual(standalone["meter_root"], context.root)
+        self.assertIsNone(CURRENT.get())
+        self.assertEqual(len(self.requests), 2)
+
+    def test_failed_metered_provider_pending_task_can_be_rejected_without_redispatch(self) -> None:
+        self.authority("assessment-preparation")
+        self.response_status = 500
+        task = self.service.invoke(self.pm, "assessment-preparation", "ZF-1")
+        self.assertTrue(self.service.execute(task["id"]))
+        task = self.service.detail(self.pm, task["id"])
+        self.assertEqual(task["state"], "pending")
+        self.assertIsNone(task["output"])
+        self.assertEqual(task["envelope"]["outcome"], "provider-unavailable")
+        self.assertFalse(any(r["kind"] == "output" for r in self.records()))
+        before = self.fixture.domain()
+        for action in ("verify", "accept", "edit-accept"):
+            with self.assertRaisesRegex(ValueError, "Only current, valid AI proposals"):
+                self.service.review(self.pm, task["id"], action, task["revision"], "Not ready.")
+        rejected = self.service.review(
+            self.pm, task["id"], "reject", task["revision"], "Withdraw failed draft."
+        )
+        self.assertEqual(rejected["state"], "rejected")
+        self.assertEqual(rejected["review"]["action"], "reject")
+        self.assertFalse(rejected["relied_on"])
+        self.assertEqual(rejected["revision"], task["revision"] + 1)
+        records = self.records()
+        linked = next(r for r in records if r["kind"] == "output")
+        self.assertEqual(linked["root"], task["envelope"]["meter_root"])
+        self.assertEqual(linked["output"], reference(task["id"]))
+        self.assertFalse(linked["eligible"])
+        self.assertEqual(next(r for r in records if r["kind"] == "review")["action"], "reject")
+        self.assertFalse(self.service.execute(task["id"]))
+        self.assertEqual(len(self.requests), 1)
+        self.assertEqual(before, self.fixture.domain())
+        report = self.service.consumption.report(start=START, end=END, as_of=END)
+        self.assertEqual(report["unjoined_outputs"], 0)
+        self.assertEqual(report["unknown_liabilities"], 1)
+        self.assertEqual(report["accepted_proposals"], 0)
+        self.assertEqual(report["token_cost"], "Unknown")
+
+    def test_capacity_held_withdrawal_persists_unresolved_economics_after_recovery(self) -> None:
+        self.authority("assessment-preparation")
+        task = self.fixture.verify(self.fixture.run_ready("assessment-preparation"))
+        accepted = self.service.review(
+            self.pm, task["id"], "accept", task["revision"], "Constructed human acceptance."
+        )
+        with self.service.transaction() as db:
+            before_withdrawal = self.service.now(db) + 1
+        end = datetime.fromtimestamp(before_withdrawal, UTC).isoformat()
+        as_of = datetime.fromtimestamp(before_withdrawal + 2, UTC).isoformat()
+        self.service.consumption.billing(
+            source="constructed-complete-bill",
+            allocation="constructed-exact-allocation",
+            budget=reference("period"),
+            start=START,
+            end=end,
+            currency="USD",
+            billed="0.000135",
+            tolerance="0",
+            complete=True,
+            synthetic=True,
+        )
+        original = self.service.consumption.report(start=START, end=end, as_of=end)
+        self.assertEqual(original["reconciliation"], "reconciled")
+        self.assertEqual(original["accepted_proposals"], 1)
+        before = self.fixture.domain()
+        with (
+            patch("zava_forward.core.ai_consumption.MAX_EVENTS", 0),
+            patch.object(self.service, "now", return_value=before_withdrawal + 1),
+        ):
+            rejected = self.service.review(
+                self.pm,
+                task["id"],
+                "reject",
+                accepted["revision"],
+                "Withdraw prior acceptance while metering is held.",
+            )
+            self.assertEqual(rejected["state"], "rejected")
+            self.assertFalse(rejected["relied_on"])
+            self.assertEqual(rejected["financial_attribution"]["status"], "unresolved")
+            self.assertEqual(rejected["financial_attribution"]["reason"], "meter-capacity-reached")
+            repeated = self.service.review(
+                self.pm, task["id"], "reject", rejected["revision"], "Retain withdrawal."
+            )
+            self.assertEqual(repeated["financial_attribution"]["status"], "unresolved")
+            with self.assertRaisesRegex(DispatchHeld, "meter-capacity-reached"):
+                self.service.consumption.report(start=START, end=end, as_of=as_of)
+        self.assertEqual(before, self.fixture.domain())
+        restarted = self.fixture.other()
+        saved = restarted.detail(self.pm, task["id"])
+        self.assertEqual(saved["state"], "rejected")
+        self.assertEqual(saved["review"]["action"], "reject")
+        self.assertTrue(
+            any(
+                r["kind"] == "review" and r["financial_attribution"]["status"] == "unresolved"
+                for r in saved["provenance"]
+                if r.get("financial_attribution")
+            )
+        )
+        historical = restarted.consumption.report(start=START, end=end, as_of=end)
+        self.assertEqual(historical["accepted_proposals"], 1)
+        current = restarted.consumption.report(start=START, end=end, as_of=as_of)
+        self.assertEqual(current["accepted_proposals"], 0)
+        self.assertEqual(current["unjoined_reviews"], 1)
+        self.assertEqual(current["coverage"], "incomplete")
+        self.assertEqual(current["reconciliation"], "unreconciled")
+        for field in ("token_cost", "cost_per_accepted_proposal", "quality_qualified_cost"):
+            self.assertEqual(current[field], "Unknown")
+
+    def test_rejection_link_capacity_boundary_and_sql_failures_are_atomic(self) -> None:
+        self.authority("assessment-preparation")
+        self.response_status = 500
+        task = self.service.invoke(self.pm, "assessment-preparation", "ZF-1")
+        self.assertTrue(self.service.execute(task["id"]))
+        task = self.service.detail(self.pm, task["id"])
+        before = self.records()
+        event = self.service.event
+        for kind in ("output", "review", "review-unresolved"):
+            with self.subTest(failing_event=kind):
+
+                def fail_insert(db: Any, tid: str, failed_kind: str = kind, **body: Any) -> None:
+                    if body["kind"] == failed_kind:
+                        raise sqlite3.OperationalError("constructed-insert-failure")
+                    event(db, tid, **body)
+
+                with (
+                    patch.object(self.service, "event", side_effect=fail_insert),
+                    patch("zava_forward.core.ai_consumption.MAX_EVENTS", 0)
+                    if kind == "review-unresolved"
+                    else nullcontext(),
+                ):
+                    with self.assertRaises(sqlite3.OperationalError):
+                        self.service.review(
+                            self.pm, task["id"], "reject", task["revision"], "Withdraw."
+                        )
+                saved = self.service.detail(self.pm, task["id"])
+                self.assertEqual(saved["state"], "pending")
+                self.assertEqual(saved["revision"], task["revision"])
+                self.assertIsNone(saved["review"])
+                self.assertEqual(self.records(), before)
+        with patch("zava_forward.core.ai_consumption.MAX_EVENTS", 0):
+            with self.assertRaises(ConflictError):
+                self.service.review(
+                    self.pm, task["id"], "reject", task["revision"] - 1, "Stale revision."
+                )
+            with self.assertRaises(PermissionError):
+                self.service.review(
+                    dict(self.pm, role="Contractor"),
+                    task["id"],
+                    "reject",
+                    task["revision"],
+                    "Wrong role.",
+                )
+        self.assertEqual(self.records(), before)
+        # One snapshot stages both writes, even at the exact existing-record boundary.
+        with patch("zava_forward.core.ai_consumption.MAX_EVENTS", len(before)):
+            rejected = self.service.review(
+                self.pm, task["id"], "reject", task["revision"], "Exact-capacity withdrawal."
+            )
+        self.assertEqual(rejected["state"], "rejected")
+        records = self.records()
+        self.assertEqual(len(records), len(before) + 2)
+        self.assertEqual(sum(r["kind"] == "output" for r in records), 1)
+        self.assertEqual(sum(r["kind"] == "review" for r in records), 1)
+        self.assertFalse(any(r["kind"] == "review-unresolved" for r in records))
+
     def test_manager_report_local_http_and_bad_period(self) -> None:
         test = self
 
@@ -850,9 +1143,47 @@ class ConsumptionApi(unittest.TestCase):
         self.assertEqual(result["consumption"]["cost_per_accepted_proposal"], "Unknown")
         self.assertEqual(result["consumption"]["accepted_proposals"], 0)
         self.assertNotIn("PRIVATE-VULNERABILITY-REASON", json.dumps(result["consumption"]))
-        with self.assertRaises(urllib.error.HTTPError) as error:
-            urllib.request.urlopen(base + "?start=invalid")
-        self.assertEqual(error.exception.code, 400)
+        invalid_periods = (
+            "?start=invalid",
+            "?start=2026-10-31T00:00:00",
+            "?end=invalid",
+            "?as_of=2026-10-31T12:00:00",
+            "?start=2099-01-01T00:00:00Z&end=2026-10-31T00:00:00Z",
+            "?start=2026-10-31T00:00:00Z&end=2026-11-01T00:00:00Z&as_of=2026-10-31T12:00:00Z",
+            "?start=&end=invalid",
+            "?start=invalid&start=invalid",
+            "?unknown=1",
+        )
+        json_store = Store(
+            str(self.fixture.seed),
+            str(self.fixture.root / "report-live.json"),
+            str(self.fixture.root / "report-audit.jsonl"),
+        )
+        json_app = App(json_store, provider=Identity())
+        self.addCleanup(json_app.assistants.stop)
+        sql_assistants = app.assistants
+        for backend in ("sql", "json", "schema-unavailable"):
+            assistants = json_app.assistants if backend == "json" else sql_assistants
+            with (
+                patch.object(app, "store", json_store if backend == "json" else self.store),
+                patch.object(app, "assistants", assistants),
+                patch.object(assistants, "sql", backend == "sql"),
+                patch.object(
+                    assistants,
+                    "schema_error",
+                    "Constructed unavailable schema" if backend == "schema-unavailable" else None,
+                ),
+            ):
+                for query in invalid_periods:
+                    with self.subTest(backend=backend, query=query):
+                        with self.assertRaises(urllib.error.HTTPError) as error:
+                            urllib.request.urlopen(base + query)
+                        self.assertEqual(error.exception.code, 400)
+                if backend != "sql":
+                    with urllib.request.urlopen(base) as response:
+                        unavailable = json.load(response)["consumption"]
+                    self.assertEqual(unavailable["coverage"], "unavailable")
+                    self.assertEqual(unavailable["token_cost"], "Unknown")
 
 
 if __name__ == "__main__":

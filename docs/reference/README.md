@@ -29,6 +29,9 @@ OD-51, complete resident/historical joins and an authorised held-out batch
 remain missing. The [pitch drafting insert](./resources/ai-tokenomics.md#pitch-drafting-insert-2026-10-31)
 carries the source-only result and stated gap for the current authoring route,
 not changed/generated slide notes, a question bank or a rehearsed deck.
+PR #602's 31 October source corrections retain shared document-call limits
+and store-independent report validation; human rejection persists despite
+missing/held financial joins, which remain visibly incomplete and Unknown.
 
 For capstone work, start with the [current working set](../capstone/README.md),
 [complete native/JSON source guide](../capstone/source/README.md),

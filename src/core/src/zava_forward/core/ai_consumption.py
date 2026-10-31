@@ -37,6 +37,8 @@ EVENT_FIELDS = {
     "output": "root output eligible at",
     "review": "output action at revision intent",
     "review-intent": "id output action at revision",
+    "review-orphan": "root output at",
+    "review-unresolved": "root output action at reason revision",
     "billing": "id allocation budget start end currency billed tolerance complete synthetic",
 }
 
@@ -70,6 +72,13 @@ def timestamp(value: str) -> float:
     if result.tzinfo is None:
         raise ValueError("Evidence time needs an explicit timezone.")
     return result.timestamp()
+
+
+def report_period(start: str, end: str, as_of: str) -> tuple[float, float, float]:
+    begin, finish, cutoff = timestamp(start), timestamp(end), timestamp(as_of)
+    if begin >= finish or cutoff < finish:
+        raise ValueError("A complete exclusive period and review as-of time are required.")
+    return begin, finish, cutoff
 
 
 def count(value: int, maximum: int = 10**12) -> int:
@@ -601,10 +610,18 @@ class Consumption:
         oid = reference(output)
 
         def write(conn: Any) -> None:
+            records = self._read(conn)
+            if any(
+                r["kind"] == "review-orphan"
+                and (r["root"] == root or r["output"] == oid)
+                and (r["root"] != root or r["output"] != oid)
+                for r in records
+            ):
+                raise ValueError("Output attribution differs from the original review root.")
             previous = next(
                 (
                     r
-                    for r in self._read(conn)
+                    for r in records
                     if r["kind"] == "output" and (r["root"] == root or r["output"] == oid)
                 ),
                 None,
@@ -661,14 +678,32 @@ class Consumption:
         with self.port.transaction() as db:
             return self._pending_review(self._read(db), reference(output), action)
 
-    def review_intent(self, output: str, action: str) -> str:
+    def review_intent(self, output: str, action: str, *, root: str | None = None) -> str:
         if action not in ("accept", "edit-accept", "reject"):
             raise ValueError("Closed review disposition required.")
         oid = reference(output)
+        if root is not None:
+            opaque(root)
         with self.port.transaction() as db:
             records = self._read(db)
-            if not any(r["kind"] == "output" and r["output"] == oid for r in records):
-                raise ValueError("Output attribution is missing; economics remains incomplete.")
+            linked = next(
+                (r for r in records if r["kind"] == "output" and r["output"] == oid), None
+            )
+            if linked is not None and root is not None and linked["root"] != root:
+                raise ValueError("Output attribution differs from the original review root.")
+            if linked is None:
+                if action != "reject" or root is None:
+                    raise ValueError("Output attribution is missing; economics remains incomplete.")
+                associations = [
+                    r
+                    for r in records
+                    if r["kind"] in ("output", "review-orphan")
+                    and (r["root"] == root or r["output"] == oid)
+                ]
+                if any(r["root"] != root or r["output"] != oid for r in associations):
+                    raise ValueError("Output attribution differs from the original review root.")
+                if not associations:
+                    self._event(db, "review-orphan", root=root, output=oid, at=self.port.now(db))
             pending = self._pending_review(records, oid, action)
             if pending:
                 return pending
@@ -685,15 +720,36 @@ class Consumption:
             return iid
 
     def review(
-        self, output: str, action: str, *, db: Any = None, intent: str | None = None
+        self,
+        output: str,
+        action: str,
+        *,
+        db: Any = None,
+        intent: str | None = None,
+        root: str | None = None,
     ) -> None:
         if action not in ("accept", "edit-accept", "reject"):
             raise ValueError("Closed review disposition required.")
         oid = reference(output)
+        if root is not None:
+            opaque(root)
+            if action != "reject":
+                raise ValueError("Only rejection can repair an unlinked assistant output.")
 
         def write(conn: Any) -> None:
             records = self._read(conn)
-            if not any(r["kind"] == "output" and r["output"] == oid for r in records):
+            linked = next(
+                (r for r in records if r["kind"] == "output" and r["output"] == oid), None
+            )
+            if root is not None and any(
+                r["kind"] in ("output", "review-orphan")
+                and (r["root"] == root or r["output"] == oid)
+                and (r["root"] != root or r["output"] != oid)
+                for r in records
+            ):
+                raise ValueError("Output attribution differs from the original review root.")
+            orphan = any(r["kind"] == "review-orphan" and r["output"] == oid for r in records)
+            if linked is None and not (action == "reject" and (root is not None or orphan)):
                 raise ValueError("Output attribution is missing; economics remains incomplete.")
             if intent is not None:
                 opaque(intent)
@@ -721,6 +777,10 @@ class Consumption:
                 and previous["revision"] == revision
             ):
                 return
+            if linked is None and root is not None:
+                self._event(
+                    conn, "output", root=root, output=oid, eligible=False, at=self.port.now(conn)
+                )
             self._event(
                 conn,
                 "review",
@@ -736,6 +796,23 @@ class Consumption:
         else:
             with self.port.transaction() as conn:
                 write(conn)
+
+    def review_unresolved(
+        self, root: str, output: str, reason: str, *, revision: int, db: Any
+    ) -> None:
+        """Persist withdrawal without scanning unavailable metering evidence."""
+        if reason not in ("meter-capacity-reached", "meter-evidence-invalid"):
+            raise ValueError("A closed metering hold reason is required.")
+        self._event(
+            db,
+            "review-unresolved",
+            root=opaque(root),
+            output=reference(output),
+            action="reject",
+            at=self.port.now(db),
+            reason=reason,
+            revision=count(revision),
+        )
 
     def billing(
         self,
@@ -794,9 +871,7 @@ class Consumption:
         components: Mapping[str, str] | None = None,
         capacity_hours: str | None = None,
     ) -> dict[str, Any]:
-        begin, finish, cutoff = timestamp(start), timestamp(end), timestamp(as_of)
-        if begin >= finish or cutoff < finish:
-            raise ValueError("A complete exclusive period and review as-of time are required.")
+        begin, finish, cutoff = report_period(start, end, as_of)
         with self.port.transaction() as db:
             records = self._read(db)
         calls = [r for r in records if r["kind"] == "reserved" and begin <= r["at"] < finish]
@@ -810,24 +885,37 @@ class Consumption:
                 if r["revision"] > reviews.get(r["output"], {}).get("revision", 0):
                     reviews[r["output"]] = r
         roots = {r["root"] for r in calls}
+        unresolved = {
+            r["output"]
+            for r in records
+            if r["kind"] == "review-unresolved" and r["at"] <= cutoff and r["root"] in roots
+        }
         accepted = sum(
             root in outputs
             and outputs[root]["eligible"]
+            and outputs[root]["output"] not in unresolved
             and reviews.get(outputs[root]["output"], {}).get("action") in ("accept", "edit-accept")
             for root in roots
         )
         unknown = sum(r["id"] not in completions or completions[r["id"]]["held"] for r in calls)
         unjoined = len(roots - outputs.keys())
         cohort_outputs = {o["output"] for o in outputs.values() if o["root"] in roots}
+        orphan_outputs = {
+            r["output"]
+            for r in records
+            if r["kind"] == "review-orphan" and r["at"] <= cutoff and r["root"] in roots
+        }
         unjoined_reviews = len(
             {
                 r["output"]
                 for r in records
                 if r["kind"] == "review-intent"
                 and r["at"] <= cutoff
-                and r["output"] in cohort_outputs
+                and r["output"] in cohort_outputs | orphan_outputs
                 and r["revision"] > reviews.get(r["output"], {}).get("revision", 0)
             }
+            | (orphan_outputs - cohort_outputs)
+            | unresolved
         )
         prices = {r["id"]: r for r in records if r["kind"] == "price"}
         currencies = {prices[r["price"]]["currency"] for r in calls}

@@ -938,7 +938,8 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                         raise ValueError("Keep between 1 and 10 cases.")
                 metered = bool(rec.get("meter_root"))
                 disposition = "edit-accept" if action == "edit" else action
-                intent = self.ai.consumption.review_intent(rec_id, disposition) if metered else None
+                intent = self.ai.consumption.review_intent(
+                    rec_id, disposition, root=rec["meter_root"]) if metered else None
                 rec.update(status=self.REC_ACTIONS[action], final_items=final, reason=reason,
                            resolved_by=user["email"], resolved_at=datetime.now().isoformat(timespec="seconds"))
                 ids = ",".join(i["case_id"] for i in final) if final else "-"

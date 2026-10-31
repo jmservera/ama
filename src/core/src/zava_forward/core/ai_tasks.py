@@ -372,7 +372,8 @@ def review(store, user, rec_id, action, reason="", text=None):
             raise ValueError("The source changed since this proposal; it is on hold for a fresh review.")
         metered = bool(rec.get("envelope", {}).get("meter_root"))
         disposition = "edit-accept" if action == "edit" else action
-        intent = store.ai.consumption.review_intent(rec_id, disposition) if metered else None
+        intent = store.ai.consumption.review_intent(
+            rec_id, disposition, root=rec["envelope"]["meter_root"]) if metered else None
         rec.update(status=REVIEW_ACTIONS[action], reviewer_action=action, reviewer_reason=reason,
                    override_text=str(text)[:6000] if action == "edit" and text is not None else None,
                    resolved_by=user["email"], resolved_at=_now())

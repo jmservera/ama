@@ -524,6 +524,130 @@ class ConsumptionTests(unittest.TestCase):
         self.assertEqual(result["token_cost"], "Unknown")
         self.assertEqual(result["accepted_proposals"], 0)
 
+    def test_orphan_rejection_preserves_cohort_gap_until_original_link_repair(self) -> None:
+        self.authorize()
+        ticket = self.ledger.reserve(self.context(), MODEL, 1000, 100)
+        self.complete(ticket)
+        self.bill()
+        for action in ("accept", "edit-accept"):
+            with self.assertRaisesRegex(ValueError, "Output attribution is missing"):
+                self.ledger.review_intent("lost-output", action, root=reference("root"))
+        intent = self.ledger.review_intent("lost-output", "reject", root=reference("root"))
+        self.assertEqual(self.ledger.pending_review("lost-output", "reject"), intent)
+        self.ledger.review_intent("unrelated-output", "reject", root=reference("unrelated"))
+        result = self.report()
+        self.assertEqual(result["unjoined_outputs"], 1)
+        self.assertEqual(result["unjoined_reviews"], 1)
+        self.ledger.review("lost-output", "reject", intent=intent)
+        result = self.report()
+        self.assertEqual(result["unjoined_reviews"], 1)
+        self.assertEqual(result["coverage"], "incomplete")
+        self.assertEqual(result["token_cost"], "Unknown")
+        self.assertIsNone(self.ledger.pending_review("lost-output", "reject"))
+        with self.assertRaisesRegex(ValueError, "original review root"):
+            self.ledger.output(reference("wrong-root"), "lost-output", eligible=True)
+        self.ledger.output(reference("root"), "lost-output", eligible=True)
+        result = self.report()
+        self.assertEqual(result["unjoined_outputs"], 0)
+        self.assertEqual(result["unjoined_reviews"], 0)
+        self.assertEqual(result["accepted_proposals"], 0)
+        self.assertEqual(result["coverage"], "recorded-ledger-only")
+        self.ledger.review("lost-output", "reject", intent=intent)
+        self.assertEqual(len([r for r in self.records() if r["kind"] == "review"]), 1)
+
+    def test_assistant_rejection_repairs_only_missing_immutable_output(self) -> None:
+        self.authorize()
+        ticket = self.ledger.reserve(self.context(), MODEL, 1000, 100)
+        self.complete(ticket)
+        for action in ("accept", "edit-accept"):
+            with self.assertRaisesRegex(ValueError, "Only rejection"):
+                self.ledger.review("failed-task", action, root=reference("root"))
+        before = self.records()
+        event = self.port.event
+
+        def fail_review(db: Any, tid: str, **body: Any) -> None:
+            if body["kind"] == "review":
+                raise sqlite3.OperationalError("constructed-insert-failure")
+            event(db, tid, **body)
+
+        with patch.object(self.port, "event", side_effect=fail_review):
+            with self.assertRaises(sqlite3.OperationalError):
+                self.ledger.review("failed-task", "reject", root=reference("root"))
+        self.assertEqual(self.records(), before)
+        self.ledger.review("failed-task", "reject", root=reference("root"))
+        output = next(r for r in self.records() if r["kind"] == "output")
+        self.assertFalse(output["eligible"])
+        self.assertEqual(output["root"], reference("root"))
+        with self.assertRaisesRegex(ValueError, "immutable"):
+            self.ledger.output(reference("root"), "failed-task", eligible=True)
+        with self.assertRaisesRegex(ValueError, "original review root"):
+            self.ledger.review("failed-task", "reject", root=reference("wrong"))
+        self.ledger.output(reference("ready-root"), "ready-task", eligible=True)
+        self.ledger.review("ready-task", "reject", root=reference("ready-root"))
+        self.assertTrue(
+            next(
+                r
+                for r in self.records()
+                if r["kind"] == "output" and r["output"] == reference("ready-task")
+            )["eligible"]
+        )
+
+    def test_unresolved_withdrawal_is_as_of_scoped_and_sticky_after_restart(self) -> None:
+        self.accepted()
+        self.bill()
+        self.assertEqual(self.report()["reconciliation"], "reconciled")
+        self.port.clock = timestamp(END) + 2
+        with patch("zava_forward.core.ai_consumption.MAX_EVENTS", 0):
+            with self.port.transaction() as db:
+                self.ledger.review_unresolved(
+                    reference("root"),
+                    "output-one",
+                    "meter-capacity-reached",
+                    revision=3,
+                    db=db,
+                )
+        ledger = Consumption(self.port)
+        self.assertEqual(ledger.report(start=START, end=END, as_of=END)["accepted_proposals"], 1)
+        later = "2026-11-01T00:00:03Z"
+        result = ledger.report(start=START, end=END, as_of=later)
+        self.assertEqual(result["accepted_proposals"], 0)
+        self.assertEqual(result["unjoined_reviews"], 1)
+        self.assertEqual(result["coverage"], "incomplete")
+        self.assertEqual(result["reconciliation"], "unreconciled")
+        for field in ("token_cost", "cost_per_accepted_proposal", "quality_qualified_cost"):
+            self.assertEqual(result[field], "Unknown")
+        ledger.review("output-one", "reject")
+        ledger.review("output-one", "accept")
+        self.assertEqual(ledger.report(start=START, end=END, as_of=later)["accepted_proposals"], 0)
+
+    def test_unresolved_withdrawals_are_cohort_isolated_and_deduplicated(self) -> None:
+        self.accepted()
+        self.bill()
+        with self.port.transaction() as db:
+            self.ledger.review_unresolved(
+                reference("unrelated"), "unrelated", "meter-evidence-invalid", revision=1, db=db
+            )
+        self.assertEqual(self.report()["accepted_proposals"], 1)
+        self.assertEqual(self.report()["unjoined_reviews"], 0)
+        for revision in (2, 3):
+            with self.port.transaction() as db:
+                self.ledger.review_unresolved(
+                    reference("root"),
+                    "output-one",
+                    "meter-capacity-reached",
+                    revision=revision,
+                    db=db,
+                )
+        # Equal-time markers dominate acceptance without relying on random event IDs.
+        self.assertEqual(self.report()["accepted_proposals"], 0)
+        self.assertEqual(self.report()["unjoined_reviews"], 1)
+        with self.port.transaction() as db:
+            for reason in ("private-driver-message", "provider-unavailable"):
+                with self.assertRaisesRegex(ValueError, "closed metering hold"):
+                    self.ledger.review_unresolved(
+                        reference("root"), "output-one", reason, revision=4, db=db
+                    )
+
     def test_quality_regression_fails_even_when_cheaper_and_capacity_not_cash(self) -> None:
         self.accepted()
         self.bill()

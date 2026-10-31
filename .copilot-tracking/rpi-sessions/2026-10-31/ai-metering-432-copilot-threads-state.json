@@ -1,0 +1,31 @@
+{
+  "task_id": "432-copilot-threads",
+  "task_slug": "ai-metering-432-copilot-threads",
+  "parent_task": {"task_id": "432", "task_slug": "ai-metering-432"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-31/ai-metering-432-copilot-threads-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-31/ai-metering-432-copilot-threads-plan.md",
+    "details": ".copilot-tracking/details/2026-10-31/ai-metering-432-copilot-threads-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-31/ai-metering-432-copilot-threads-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-31/ai-metering-432-copilot-threads-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-31/ai-metering-432-copilot-threads-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "User explicitly requests full RPI loop, five fixes, focused checks, commit/push and thread replies/resolution.", "status": "confirmed", "evidence": "2026-10-31 current user instruction"},
+    {"decision": "CI is the gate; do not wait for complete local gate.", "status": "confirmed", "evidence": "2026-10-31 current user instruction overrides default publication gate for this candidate"},
+    {"decision": "Research executed / Planning Ready; one critique Complete / Revise; PC-001..004 directly applied and planning Ready.", "status": "executed", "evidence": ".copilot-tracking/plans/2026-10-31/ai-metering-432-copilot-threads-plan.md"},
+    {"decision": "One independent Review Complete / Conformant for precommit source; no implementation defects. RV-001/002 are non-blocking external evidence/attribution follow-ups.", "status": "executed", "evidence": ".copilot-tracking/reviews/logs/2026-10-31/ai-metering-432-copilot-threads-review.md"},
+    {"decision": "Main advanced with docs/rubric-only #603; commit reviewed source first then merge preserving docs and main rubric; do not repeat original Review or claim exact-head CI approval.", "status": "confirmed-direction", "evidence": "Current user merge-main/main-rubric instruction; origin/main 5198a1ff"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "P02-T03 publication pending: commit fixes, merge main docs/rubric, verify unchanged source, push and resolve five threads"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "CI and owner approval of published PR 602", "rationale": "Source review and local tests are not hosted or human approval.", "evidence": "Review publication boundary; user-selected CI gate"},
+    {"rank": 2, "task": "Finance/human authority and actual financial/held-out evidence", "rationale": "Required for operational economics; cannot be inferred from synthetic tests.", "evidence": "Review RV-001"},
+    {"rank": 3, "task": "Separately scope historical/resident financial joins", "rationale": "Broader attribution remains outside the five source corrections.", "evidence": "Review RV-002"}
+  ]
+}

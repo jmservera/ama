@@ -8875,3 +8875,17 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Actual applicable prices/billing, OD-51, authorised held-out measurements,
   complete resident/historical joins and live/human/Finance approval remain
   separate. No Azure/deployment/credential/private-data/paid-model action.
+
+## [2026-10-31] implementation | Copilot AI metering rejection corrections, Refs #432
+
+* Updated core/API guides, the existing Tokenomics synthesis and reference
+  index for PR #602's five source-review corrections: enclosing document-call
+  limits, store-independent timestamp validation, incomplete legacy/priority
+  rejection joins, atomic failed-provider rejection linkage and capacity-held
+  withdrawal with persistent unresolved financial attribution.
+* Eight focused regression methods extend the original ledger/composed API
+  modules; the existing SQL/JSON fault matrix and HTTP validation method remain.
+  Dated RPI evidence preserves the one original critique and independent Review.
+* These source-only controls do not establish real prices/billing, OD-51,
+  complete historical/resident joins, human/Finance approval or issue closure.
+  CI remains the publication gate under the current explicit owner direction.

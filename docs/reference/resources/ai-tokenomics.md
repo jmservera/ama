@@ -202,6 +202,15 @@ keeps cost Unknown without applicable evidence and reports quality and capacity
 separately. Current report components/floors are supplied, unverified observations;
 engineering defaults do not approve OD-51.
 
+The 31 October PR #602 review corrections preserve enclosing document request
+call/depth bounds and validate reporting periods even without SQL. Missing
+financial output links no longer prevent legacy/priority rejection; opaque
+original-root associations retain visible incomplete joins. Assistant failed-
+provider rejection creates an ineligible link atomically. Meter-capacity-held
+withdrawal remains explicitly financially unresolved and excludes stale
+accepted economics after read recovery. These are source-only controls, not
+Finance reconciliation, human acceptance, or expanded issue coverage.
+
 This corrects the older inventory above prospectively: merged #480/#593 already
 provide independent resident currency reservations. They are not joined into the
 new financial cohort; complete per-call and accepted-outcome coverage remains

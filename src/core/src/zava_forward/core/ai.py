@@ -204,11 +204,14 @@ class Ai:
                 return dict(text="The file is stored. Add a short note about what it is.",
                             source="template", model=None, validated=True, task="read_document",
                             reason="Release changed before dispatch; use the manual route.")
-            root = ai_consumption.reference(uuid.uuid4().hex)
-            context = ai_consumption.CallContext(root, root, "read-document", "document",
-                                                 self.configuration(self.strong, 0.3, 500),
-                                                 ai_consumption.reference(ai_prompts.version("read_document")))
-            with ai_consumption.call_context(context):
+            if ai_consumption.CURRENT.get() is None:
+                root = ai_consumption.reference(uuid.uuid4().hex)
+                context = ai_consumption.CallContext(root, root, "read-document", "document",
+                                                     self.configuration(self.strong, 0.3, 500),
+                                                     ai_consumption.reference(ai_prompts.version("read_document")))
+                with ai_consumption.call_context(context):
+                    text = self._chat(self.strong, system, content, 500, receipt=receipt)
+            else:
                 text = self._chat(self.strong, system, content, 500, receipt=receipt)
             held = self.gate("read_document", self.strong) if self.gate else None
             if self.release and selected != self.release("read_document", self.strong):

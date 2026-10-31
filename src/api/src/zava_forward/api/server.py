@@ -522,6 +522,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     start = q.get("start", [now.replace(hour=0, minute=0, second=0, microsecond=0).isoformat()])[0]
                     end = q.get("end", [now.isoformat()])[0]
                     as_of = q.get("as_of", [now.isoformat()])[0]
+                    ai_consumption.report_period(start, end, as_of)
                     if app.assistants.sql:
                         consumption = app.assistants.consumption.report(start=start, end=end, as_of=as_of)
                     else:

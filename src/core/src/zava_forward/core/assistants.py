@@ -1057,15 +1057,27 @@ class Assistants:
             task.pop("provenance", None)
             for key in ("history_next_offset", "history_count", "display_state", "stale", "actionable", "suspension", "release_denial", "epoch_current", "relied_on"):
                 task.pop(key, None)
+            if action != "verify" and (task.get("envelope") or {}).get("meter_root"):
+                try:
+                    self.consumption.review(
+                        tid, action, db=db,
+                        root=task["envelope"]["meter_root"] if action == "reject" else None)
+                except ai_consumption.DispatchHeld as error:
+                    if action != "reject":
+                        raise
+                    self.consumption.review_unresolved(
+                        task["envelope"]["meter_root"], tid, str(error),
+                        revision=revision + 1, db=db)
+                    task["financial_attribution"] = dict(
+                        status="unresolved", reason=str(error), action=action)
             res = db.execute("UPDATE assistant_tasks SET body=?,state=?,revision=revision+1 WHERE id=? AND revision=?",
                              (canonical(task), state, tid, revision))
             if res.rowcount != 1:
                 raise ConflictError(tid)
             self.event(db, tid, kind="review", action=action, reviewer=user["email"], note=note,
                        source_verified=action == "verify", source_signature=task["source_signature"],
-                       edited_output=task["output"] if action == "edit-accept" else None)
-            if action != "verify" and (task.get("envelope") or {}).get("meter_root"):
-                self.consumption.review(tid, action, db=db)
+                       edited_output=task["output"] if action == "edit-accept" else None,
+                       financial_attribution=task.get("financial_attribution"))
         return self.detail(user, tid)
 
     def _worker(self):
