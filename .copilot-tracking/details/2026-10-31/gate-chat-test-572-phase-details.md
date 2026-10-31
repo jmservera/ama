@@ -14,7 +14,7 @@
 | Phase | Name | Status | Tasks |
 | --- | --- | --- | --- |
 | P01 | Exact execution evidence | Complete | P01-T01, P01-T02 |
-| P02 | Validation and Review | Validation active | P02-T01, P02-T02 |
+| P02 | Validation and Review | Actual execution blocked; original Review Complete / Residual work | P02-T01, P02-T02 |
 | P03 | Publication gate | Pending P02 | P03-T01 |
 
 <!-- rpi:phase id=P01 -->
@@ -69,16 +69,26 @@ ZF_BROWSER_TESTS=1 PYTHONPATH=.:src:tests:../core/src:../agents/src:../core/test
 From root: tools unittest as requested, targeted Ruff and strict mypy. The exact
 browser test proves warning/failure/keyboard/refusal/live-log behavior locally,
 not human accessibility or model/live-service acceptance. Retain external logs.
+Current evidence: 39 tooling tests and tooling static checks passed after main
+integration; pinned API Ruff passed. Initial API suite failed only for missing
+dependencies, restored with pip. Both restored API/Chromium attempts timed out
+on the foreign shared lock before execution. Actual browser remains Not run.
 
 <!-- rpi:task id=P02-T02 -->
 ### P02-T02: Original one-pass Review
 
 Independent reader assesses frozen implementation, plan/critique and supplied
 validation once. Review execution is distinct from outcome and final gate.
+Blocked P02-T01 execution remains unchecked and is assessed explicitly; this
+permits credible source review, not acceptance or publication without execution.
 Write .copilot-tracking/reviews/logs/2026-10-31/gate-chat-test-572-review.md.
 Blocking current-task source/acceptance findings stop publication and remain
 preserved. Missing final committed gate evidence may proceed to P03 as planned.
 Nonblocking residuals must be explicitly disposed without relaxing requirements.
+Original Review completed once on integrated head b9a0db45. No blocking source
+defects found; overall outcome Residual work. RV-001 requires actual restored
+API/Chromium and RV-002 requires fresh full committed gate/verification and
+eligible exact-head assessment. Both remain acceptance obligations, not closure.
 
 <!-- rpi:phase id=P03 -->
 ## P03: Publication gate

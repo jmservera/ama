@@ -22,8 +22,10 @@ No runtime, workflow, skip-allowlist or dependency-pin change is intended.
 The full gate is a post-Review publication prerequisite, not a claim made by
 mocked receipt tests. Missing prerequisites or inherited failures block push.
 Initial API discovery exposed missing dependencies, restored with pip; focused
-validation is now waiting for shared-lock admission. Current main has advanced,
-requiring a non-rewriting local topic merge before the final gate.
+validation was blocked by two 600s shared-lock admission timeouts. A clean
+non-rewriting topic merge reconciled current main; all tooling tests/static
+checks were rerun successfully. Original Review will explicitly assess the
+missing actual execution, not treat mock coverage as acceptance.
 
 ## User Decisions and Requirements
 
@@ -108,10 +110,12 @@ existing shared heavy lock, retaining external logs. Missing tools permit only
 pip/pinned trusted prerequisite restoration, not skip tokens or cloud fallback.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Perform one independent original Review
+#### [x] P02-T02: Perform one independent original Review
 
 Activate rpi-review once. Preserve outcome and route residual findings to later
 work, without a current-task implementation/review loop.
+If P02-T01 is blocked after bounded admission attempts, Review may assess the
+frozen source and known missing evidence; the validation marker stays unchecked.
 Blocking current-task source/acceptance findings stop publication. Missing final
 committed gate evidence is intentionally obtained in P03. Nonblocking residuals
 require explicit disposition without relaxing acceptance.
@@ -156,4 +160,7 @@ disposed nonblocking residuals. No second critique or user decision needed.
 
 Implementation changes record:
 .copilot-tracking/changes/2026-10-31/gate-chat-test-572-changes.md.
-No unresolved design choices. P03 remains a real execution obligation.
+Original Review Complete / Residual work: no blocking source defect; RV-001/RV-002
+preserve missing actual execution and final acceptance. P02-T01 remains blocked.
+Parent next commits original evidence and attempts P03; missing execution still
+blocks publication. No second original Review or source correction is authorized.
