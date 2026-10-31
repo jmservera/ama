@@ -1,0 +1,43 @@
+{
+  "task_id": "432-review-findings",
+  "task_slug": "ai-metering-432-review-findings",
+  "parent_task": {"task_id": "432", "task_slug": "ai-metering-432"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-31/ai-metering-432-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-31/ai-metering-432-review-findings-plan.md",
+    "details": ".copilot-tracking/details/2026-10-31/ai-metering-432-review-findings-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-31/ai-metering-432-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-31/ai-metering-432-review-findings-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-31/ai-metering-432-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Routed implementation corrects RV-001..005 in the accepted source-only direction before delivering the user's working-code publication. Original Review remains Complete / Defects found; no new Review is invoked.",
+      "status": "required-correction",
+      "evidence": "Original Review Closeout Routing Record; user requested complete working issue delivery, with no deployment, Azure, paid calls or fabricated financial acceptance."
+    },
+    {
+      "decision": "Routed source corrections and P01/P02/P03 preparation complete; 26 core plus nine API methods, requested discovery 1439 tests/320 opt-in skips, component Ruff/format/mypy pass. This committed snapshot precedes the mandatory external full gate.",
+      "status": "executed",
+      "evidence": ".copilot-tracking/changes/2026-10-31/ai-metering-432-review-findings-changes.md"
+    },
+    {
+      "decision": "Full gate attempted at a9fa353ae798da1712970679c967b73d708f06e4/current main a75bbdff; exit 1, global heavy-resource lock timeout, no Runner groups or receipt. No push/PR. Retry only after explicit coordination and free ownership, with nonqueued admission.",
+      "status": "blocked",
+      "evidence": ".copilot-tracking/changes/2026-10-31/ai-metering-432-review-findings-changes.md; /tmp/ai432-final-gate-run.log"
+    }
+  ],
+  "blockers": [
+    {"id": "publication-validation", "summary": "Full gate blocked by foreign WRITE holder PID 2927070 on /tmp/ama-rpi-heavy.lock; exit 1 after 600-second timeout, no receipt/groups. Source tests/static pass. Push/PR remain unperformed.", "resolution": "A later explicit coordination event must establish free ownership; reconcile current main/final commit, run --all with --lock-timeout 0/new external directory and verify immediately before push. Do not poll, queue another gate, interrupt the holder or bypass publication policy."}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Publication blocked: await later explicit coordination with free shared-gate ownership, then reconcile current main/new evidence commit and run a fresh nonqueued complete gate. Verify before authorised push/Refs #432 PR. Source RPI is completed, original Review remains Defects found; no second Review."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Obtain independent exact-head assessment and required hosted/human approval of the corrected candidate.", "rationale": "Source corrections have regression evidence but cannot erase the original adverse Review or constitute independent approval.", "evidence": "Original Review RV-001..005; routed changes P01..P03."},
+    {"rank": 2, "task": "Obtain OD-51, applicable prices, attributable billing and authorised held-out measurements from owner/Finance.", "rationale": "These inputs determine operational economics and cannot be inferred from synthetic tests.", "evidence": "RV-006 and Tokenomics engineering/gap matrix."},
+    {"rank": 3, "task": "Separately scope resident/historical joins and source-manifest deck/Q&A rehearsal.", "rationale": "These remaining accounting/presentation boundaries are explicit and outside current source-only evidence.", "evidence": "RV-006 and docs/capstone/source/README.md."}
+  ]
+}

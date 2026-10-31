@@ -273,6 +273,8 @@ def finish(store, user, task, case_ids, r, workflow_text, sources, template_cite
     def publish(late):
         why = "late result quarantined after a suspension or restart" if late else reason
         shown, citations, checked = (workflow_text, [], False) if late else (text, cites, verified)
+        result = dict(r, source="template", model=None, reason=why) if late else r
+        shown_mode = mode
         rec = add_record(store, user, task=task, case_ids=list(case_ids), mode=mode, source=r["source"], model=r.get("model"),
                          latency_ms=r.get("latency_ms"), ai_output=ai_output, workflow_output=workflow_text, shown_output=shown,
                          fallback_reason=why, envelope=env, release=r.get("release"), verified=checked, instruction_status="Not an instruction",
@@ -280,14 +282,28 @@ def finish(store, user, task, case_ids, r, workflow_text, sources, template_cite
                          continuity_epoch=epoch0, quarantine=dict(reason=why, at=_now()) if late else None,
                          provenance=dict(citation_resolved=checked, source_verified=False, human_reviewed=False,
                                          source_hashes=env["source_versions"], case_version=store.version, hold=None), citations=citations, unresolved=bad, dropped_uncited=dropped)
-        result = dict(r, source="template", model=None, reason=why) if late else r
+        if r.get("meter_root"):
+            held = store.ai.consumption.publish_output(r["meter_root"], rec["id"],
+                                                       eligible=not late and r["source"] == "ai" and checked)
+            if held:
+                why = f"Financial attribution held ({held['reason']}); use the manual route."
+                shown, citations, checked = workflow_text, [], False
+                shown_mode = "workflow-only"
+                result = dict(r, text=shown, source="template", model=None, reason=why,
+                              financial_attribution=held)
+                env.update(ai_registry.envelope(task, case_ids, env["source_versions"], result, store.version))
+                rec.update(source="template", model=None, mode="workflow-only", shown_output=shown,
+                           fallback_reason=why, verified=False, citations=[], financial_attribution=held)
+                rec["provenance"]["citation_resolved"] = False
+                rec["provenance"]["hold"] = held["reason"]
+                store.save()
         return dict(result, text=shown, citations=citations, unresolved=bad, dropped_uncited=dropped, verified=checked,
                     approval=rec["status"], instruction_status="Not an instruction", envelope=env, record_id=rec["id"],
-                    continuity_epoch=epoch0, mode=mode, prompt_version=ai_prompts.version(task),
+                    continuity_epoch=epoch0, mode=shown_mode, prompt_version=ai_prompts.version(task),
                     generated_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
                     source_case_ids=list(sources),
                     statements=statement_sources(r["text"], sources, bullets)
-                    if not late and r["source"] == "ai" else [
+                    if not late and result["source"] == "ai" else [
                         dict(text=shown, citations=citations, unresolved=[] if late else bad)])
     return store.continuity_publish(task, epoch0, r["source"], publish)
 
@@ -340,6 +356,9 @@ def review(store, user, rec_id, action, reason="", text=None):
         if rec["status"] == QUARANTINED:
             raise PermissionError("This AI output was quarantined after a suspension or restart and cannot be relied on.")
         if rec["status"] != NOT_REVIEWED:
+            repaired = store._repair_ai_review(rec, action, REVIEW_ACTIONS[action])
+            if repaired is not None:
+                return repaired
             raise ValueError("This AI output has already been reviewed.")
         if action != "reject" and store.continuity_suspension(rec["task"]):
             raise PermissionError(store.continuity_block(rec["task"]))
@@ -364,6 +383,10 @@ def review(store, user, rec_id, action, reason="", text=None):
             store.audit(user["email"], "ai_review_hold", "-", f"{rec['task']} {rec_id}")
             store.save()
             raise ValueError("The source changed since this proposal; it is on hold for a fresh review.")
+        metered = bool(rec.get("envelope", {}).get("meter_root"))
+        disposition = "edit-accept" if action == "edit" else action
+        intent = store.ai.consumption.review_intent(
+            rec_id, disposition, root=rec["envelope"]["meter_root"]) if metered else None
         rec.update(status=REVIEW_ACTIONS[action], reviewer_action=action, reviewer_reason=reason,
                    override_text=str(text)[:6000] if action == "edit" and text is not None else None,
                    resolved_by=user["email"], resolved_at=_now())
@@ -375,6 +398,8 @@ def review(store, user, rec_id, action, reason="", text=None):
         store.audit(user["email"], f"ai_review_{action}", rec["case_ids"][0] if len(rec["case_ids"]) == 1 else "-",
                     f"{rec['task']} {rec_id} {reason}".strip())
         store.save()
+        if metered:
+            store.ai.consumption.review(rec_id, disposition, intent=intent)
         return dict(rec)
 
 

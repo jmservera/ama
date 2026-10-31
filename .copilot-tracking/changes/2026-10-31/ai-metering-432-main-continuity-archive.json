@@ -1,0 +1,22 @@
+{
+  "task_id": "432-main-continuity",
+  "parent_task_id": "432-publication",
+  "archived_assessed_head": "61bc9d4abb758b2b8d633757eac2fb5e65d30c5f",
+  "archived_base": "a75bbdffa51ae34b1fcf779250f1f553d566ee93",
+  "review_execution": "Complete",
+  "review_outcome": "Residual work",
+  "artifacts": [
+    {
+      "source": "/home/azureuser/.copilot/session-state/78bc570d-9a9a-4914-a18c-763026950ae0/files/ai432-publication/.copilot-tracking/reviews/logs/2026-10-31/ai-metering-432-publication-review.md",
+      "archive": ".copilot-tracking/reviews/logs/2026-10-31/ai-metering-432-publication-review.md",
+      "source_sha256": "4ee21c9a650df88c7bbd4e7e045f4640117f3aeaa24a020481638fbfb2d0a18b",
+      "archive_sha256": "4ee21c9a650df88c7bbd4e7e045f4640117f3aeaa24a020481638fbfb2d0a18b"
+    },
+    {
+      "source": "/home/azureuser/.copilot/session-state/78bc570d-9a9a-4914-a18c-763026950ae0/files/ai432-publication/.copilot-tracking/rpi-sessions/2026-10-31/ai-metering-432-publication-state.json",
+      "archive": ".copilot-tracking/rpi-sessions/2026-10-31/ai-metering-432-publication-completed-state.json",
+      "source_sha256": "73b3cd4a23941dd6792689f9d64283ec65ac168eb14cbb5180fb380d839fea8b",
+      "archive_sha256": "73b3cd4a23941dd6792689f9d64283ec65ac168eb14cbb5180fb380d839fea8b"
+    }
+  ]
+}
