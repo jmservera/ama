@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-31T13:40:49+00:00",
-  "commit": "e66a564572966383e0ecc4870f83e037e5d4d932",
+  "scored_at": "2026-10-31T14:33:04+00:00",
+  "commit": "3d4a8d324b5324c2cabd1e037bde3dcbf6ba7f6f",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41206293032",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41209638313",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "32cd03af532e4c6857c241ac9591fcffcb34b203a03564fa6d159377d15bdd81",
+    "solution-code": "982ad61fa8824c239c7b478ba2d910d6d27301597136629ebba2fee043a8d92a",
     "infrastructure": "61ed8eadcd8e631c2a2e13b0853b7a96efd716806d947ef318843f0dd05f7d63",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -29,10 +29,9 @@
     "A1": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/static_assets.py:1-58",
-        "src/api/src/zava_forward/api/server.py:193-197"
+        "src/core/src/zava_forward/core/ai_consumption.py:161-215"
       ],
-      "rationale": "Not touched by this PR (pitch/deck reorg only). Baseline ceiling unchanged."
+      "rationale": "Ledger as Protocol-typed port (LedgerPort) atop existing assistant_events stream, cleanly decoupled; reinforces existing modular architecture ceiling."
     },
     "A2": {
       "score": 5,
@@ -44,33 +43,38 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/api/checks/employee_identity_check.py:1-53",
-        "src/api/README.md:9-21"
+        "src/core/src/zava_forward/core/ai_consumption.py:1-20",
+        "src/api/src/zava_forward/api/server.py:511-531"
       ],
-      "rationale": "Not touched by this PR. Baseline ceiling unchanged."
+      "rationale": "Financial/compliance evidence model stores opaque hashed references only (no raw prompt/output text); manager-gated reporting endpoint. Reinforces existing security/compliance ceiling."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/static_assets.py:1-58",
-        "src/api/tests/test_static_assets.py:1-40"
+        "src/core/tests/test_ai_consumption.py",
+        "src/api/tests/test_ai_consumption_api.py"
       ],
-      "rationale": "Not touched by this PR. Baseline ceiling unchanged."
+      "rationale": "Feature is end-to-end wired (Ai, dispatch, chat_panel, ai_tasks, API) with extensive passing-shaped test coverage across both new test files."
     },
     "A5": {
       "score": 5,
-      "evidence": [],
-      "rationale": "This PR only reorganizes pitch/deck materials; no operational instrumentation change. Baseline unchanged."
+      "evidence": [
+        "src/core/src/zava_forward/core/ai_consumption.py:864-920",
+        "src/api/src/zava_forward/api/server.py:511-531"
+      ],
+      "rationale": "Adds explicit per-token cost modelling, budget/call/token limits, billing reconciliation and variance reporting exposed via /api/ai/report. Directly reinforces operations/cost criterion."
     },
     "A6": {
       "score": 5,
       "evidence": [],
-      "rationale": "This PR does not touch model choice, prompts or the evaluation harness. Baseline unchanged."
+      "rationale": "This PR does not change model choice, prompts, or the evaluation harness; it only adds cost/consumption accounting around existing calls. Baseline unchanged."
     },
     "A7": {
       "score": 4,
-      "evidence": [],
-      "rationale": "This PR is a pitch/deck content reorganization, not agentic orchestration. Baseline unchanged (Good, not Excellent)."
+      "evidence": [
+        "src/agents/src/zava_forward/agents/dispatch.py:186-220"
+      ],
+      "rationale": "dispatch.py change only threads a CallContext for metering through the existing bounded worker call; no new autonomy, handoff, or state-graph pattern introduced. Baseline unchanged."
     },
     "B1": {
       "score": 3,
@@ -107,10 +111,8 @@
     },
     "B6": {
       "score": 5,
-      "evidence": [
-        "src/api/README.md:101-178"
-      ],
-      "rationale": "Not touched by this PR (engineering documentation, not the capstone deck). Baseline ceiling unchanged."
+      "evidence": [],
+      "rationale": "This PR touches engineering READMEs (src/core, src/api, src/agents) and code, not the capstone deck or its documentation. Baseline unchanged."
     },
     "B7": {
       "score": 5,
