@@ -937,6 +937,11 @@ Legacy generated packages without a contract version remain readable, with
 the version Unknown. This does not grant contract authority or confirm an
 appointment. Capacity load failures name the unavailable data and offer
 Try again; no failed read is treated as an empty result.
+The external HTTP regression reopens persisted file, SQLite and SQL Server
+stores without the seed, preserving procurement and audit history. SQL test
+setup wipes only before initial creation, never on reopen; its local state
+marker is not a SQLite filename. An unloaded application law store still
+returns explicit unknown rule checks, not legal authority.
 After a save, retry reloads data only, never repeats the saved action. Repeated
 read failures keep the editable screen and unsaved appointment drafts; successful
 recovery restores other unsaved forms, including their original event/context.
