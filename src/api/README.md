@@ -390,6 +390,10 @@ Spinner guidance inform native loading/button/field patterns only. No React
 dependency or framework adoption is added. This bounded mapping uses the cited
 guidelines and owner feedback; it is not staff user research.
 
+The 2026-10-31 UX-specialist invocation returned discovery questions rather
+than a design note. The mapping above remains maintainer-authored source/design
+evidence, not a specialist contribution, approval or usability result.
+
 From `src/api`, with installed source distributions and dev dependencies:
 
 ```bash
@@ -405,6 +409,14 @@ The browser check also disables page JavaScript to verify the static startup
 message at 320 and 1280 CSS px, without script requests.
 This is separate from the held-script slow-start and retry scenarios and the
 script-enabled axe scans.
+The same runner also submits each of the three draft-review outcomes through
+the real local UI and API. It compares the successful response with the
+same-ID retained record read through the existing evidence export by a
+separately authenticated synthetic Programme Manager. Exact reasons, edited
+text and draft-only disclaimers are checked; a repeated review is refused and
+the retained record and permitted case detail projections stay unchanged.
+`review-roundtrip-results.json` records these outcomes separately from axe
+results. This is not a complete export/continuity acceptance test.
 Constructed loopback data only; no Azure or live model is needed.
 Live employee-site cold-start verification, screen-reader, voice-control and
 staff usability acceptance remain separate owner checks, not local passes.

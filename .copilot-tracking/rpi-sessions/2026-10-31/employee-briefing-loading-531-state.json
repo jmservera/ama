@@ -1,0 +1,49 @@
+{
+  "task_id": "531",
+  "task_slug": "employee-briefing-loading-531",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Review",
+  "status": "blocked",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-31/employee-briefing-loading-531-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-31/employee-briefing-loading-531-plan.md",
+    "details": ".copilot-tracking/details/2026-10-31/employee-briefing-loading-531-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-31/employee-briefing-loading-531-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-31/employee-briefing-loading-531-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-31/employee-briefing-loading-531-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run the full ordered RPI loop on the requested branch and publish only after required gates.",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-31; explicit task-scoped automatic execution."
+    },
+    {
+      "decision": "Research executed and Planning Readiness Ready; retain merged UI and add real successful review assurance.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/research/2026-10-31/employee-briefing-loading-531-research.md"
+    },
+    {
+      "decision": "Critique executed once, verdict Revise; PC-001 worker-local restriction rejected with scratch inventory, PC-002/003 applied directly.",
+      "status": "disposed",
+      "evidence": ".copilot-tracking/plans/2026-10-31/employee-briefing-loading-531-plan.md#critique-disposition"
+    },
+    {
+      "decision": "One original independent Review executed Partial, outcome Not accepted; RV-001 missing validation, RV-002 missing specialist note, RV-003 live AC7 unmet.",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-31/employee-briefing-loading-531-review.md"
+    }
+  ],
+  "blockers": [
+    {"id": "heavy-lock", "summary": "Mandatory API and browser commands timed out on the shared lock, including a second serial attempt; neither executed.", "resolution": "Run the existing commands when shared capacity is available; no bypass or stopping unrelated processes."},
+    {"id": "live-ac7", "summary": "Live employee-site verification remains unavailable; UX agent produced no note.", "resolution": "Separately authorized live identity/site verification and discovery-backed specialist note."}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Preserve candidate and original evidence in local commit; attempt required full local gate. No publication without validation and gate."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Execute blocked API/browser validation", "rationale": "Highest value: verify new successful-review scenario and existing issue criteria when shared lock is available.", "evidence": "RV-001; P01-T02"},
+    {"rank": 2, "task": "Discovery-backed UX specialist design note", "rationale": "Bounded missing issue-requested contribution; current invocation produced no deliverable.", "evidence": "RV-002"},
+    {"rank": 3, "task": "Separate live employee-site verification", "rationale": "Required to establish AC7; synthetic checks cannot substitute for deployed identity/cold-start evidence.", "evidence": "RV-003; issue #531"}
+  ]
+}
