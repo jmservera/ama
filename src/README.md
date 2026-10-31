@@ -180,7 +180,11 @@ test ID with reason `opt-in local Chromium` is accepted during non-integration
 `project-api` discovery; its skip remains recorded, not counted as execution.
 The dedicated browser command must actually execute: missing/changed command
 identity, zero execution, dependency failures and unexpected skips block the
-gate and receipt verification. This local coverage adds to, not changes, the
+gate and receipt verification. Execution and verification also require exactly
+one verbose successful result for that test ID, one reported test and zero skips.
+An unrelated, missing, duplicated or additional result cannot substitute for the
+named case, even when aggregate counts and log hashes match.
+This local coverage adds to, not changes, the
 hosted workflow coverage inventory.
 
 General discovery also recognises the exact reason
