@@ -7,6 +7,7 @@ from unittest.mock import Mock, patch
 from checks.asset_urls import asset_url
 from checks.chat_widget_browser_check import recovery_case
 from checks.workspace_scripts_browser_check import companion_coverage, observe_companion
+from playwright.sync_api import Error as PlaywrightError
 from playwright.sync_api import Route, sync_playwright
 
 BASE = "http://127.0.0.1:12345"
@@ -49,7 +50,12 @@ class BrowserAssetUrls(unittest.TestCase):
 
     def test_native_routes_waits_dom_observation_and_actual_coverage(self) -> None:
         with sync_playwright() as playwright:
-            browser = playwright.chromium.launch()
+            try:
+                browser = playwright.chromium.launch()
+            except PlaywrightError as error:
+                if "Executable doesn't exist" in str(error):
+                    self.skipTest("Chromium is installed by the later browser-check step")
+                raise
             try:
                 for path in (
                     "/role-screens.js",
