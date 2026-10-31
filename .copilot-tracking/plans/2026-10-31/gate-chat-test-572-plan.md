@@ -20,7 +20,8 @@ real Chromium and the complete committed gate.
 
 No runtime, workflow, skip-allowlist or dependency-pin change is intended.
 The full gate is a post-Review publication prerequisite, not a claim made by
-mocked receipt tests. Missing prerequisites or inherited failures block push.
+mocked receipt tests. The final committed gate attempt timed out on the shared
+heavy lock after 600s, before any required group executed. Push/PR are blocked.
 Initial API discovery exposed missing dependencies, restored with pip; focused
 validation was blocked by two 600s shared-lock admission timeouts. A clean
 non-rewriting topic merge reconciled current main; all tooling tests/static
@@ -162,5 +163,11 @@ Implementation changes record:
 .copilot-tracking/changes/2026-10-31/gate-chat-test-572-changes.md.
 Original Review Complete / Residual work: no blocking source defect; RV-001/RV-002
 preserve missing actual execution and final acceptance. P02-T01 remains blocked.
-Parent next commits original evidence and attempts P03; missing execution still
-blocks publication. No second original Review or source correction is authorized.
+Original evidence was committed; final --all attempt at dd89a42f against
+1330869e exited 1 on the global heavy-resource lock after 600s. No required group
+ran, no passing receipt exists, and verification/exact-head publication assessment
+could not proceed. P03-T01 stays unchecked; no push or PR was performed.
+Next owner action: obtain normal lock admission and rerun restored requested API/
+Chromium checks plus a fresh complete gate at the new committed head/current
+fetched base. Preserve this adverse attempt; do not reuse it after evidence commit.
+No second original Review or source correction is authorized.

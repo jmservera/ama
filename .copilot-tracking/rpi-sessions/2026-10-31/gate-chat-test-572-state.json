@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "automatic",
   "active_phase": "Follow-up",
-  "status": "completed",
+  "status": "blocked",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-31/gate-chat-test-572-research.md",
@@ -29,22 +29,27 @@
       "decision": "Original independent Review executed Complete; overall outcome Residual work; no blocking source defects on integrated head b9a0db45",
       "status": "recorded",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-31/gate-chat-test-572-review.md; RV-001 and RV-002 remain acceptance evidence obligations"
+    },
+    {
+      "decision": "Fresh full gate attempted at dd89a42f / current fetched base 1330869e; exit 1 after 600s global heavy-resource lock timeout; zero groups executed and no passing receipt",
+      "status": "blocked",
+      "evidence": "External session files/gate-572-final-dd89a42f.log; changes P03 original committed full-gate attempt"
     }
   ],
   "blockers": [
     {
       "id": "heavy-lock-admission",
-      "summary": "Two restored API/Chromium attempts timed out after 600s each on foreign shared heavy lock; actual execution not performed",
+      "summary": "Two restored API/Chromium attempts and final committed complete gate each timed out after 600s on foreign shared heavy lock; actual execution not performed and publication blocked",
       "resolution": "Obtain admission through existing shared lock; rerun restored checks and fresh full committed gate without bypass"
     }
   ],
-  "next_action": {"phase": "Follow-up", "action": "RPI loop complete with Residual work; acceptance/publication pending fresh complete gate, verification and exact-head assessment"},
+  "next_action": {"phase": "Follow-up", "action": "Obtain normal shared-lock admission, rerun restored API/Chromium checks, fetch/reconcile current main, then fresh full exact-head gate and verification before eligible assessment/push/Refs #572 PR"},
   "prioritized_follow_ups": [
     {
       "rank": 1,
       "task": "Complete current issue's real API/Chromium and full exact-head gate evidence",
-      "rationale": "Only known acceptance gap; source and tooling regressions pass but actual execution is unproven",
-      "evidence": "Original Review RV-001/RV-002; P02-T01/P03-T01; two shared-lock timeouts"
+      "rationale": "Only known acceptance gap; source and tooling regressions pass but actual execution and publication remain blocked",
+      "evidence": "Original Review RV-001/RV-002; P02-T01/P03-T01; two focused and one complete-gate shared-lock timeouts"
     }
   ]
 }

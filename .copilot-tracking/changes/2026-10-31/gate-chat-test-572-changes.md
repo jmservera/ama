@@ -11,7 +11,7 @@
 ## Execution Status
 
 Full plan directed by caller. P01 complete; P02 validation blocked; original
-Review Complete / Residual work; P03 next. Approved source
+Review Complete / Residual work; P03 attempted and Blocked. Approved source
 boundary: gate/parser/tests and src guide only; no UI/workflow/dependency edits.
 Single critique Complete / Revise with PC-001 resolved directly; no blockers
 known at source implementation entry.
@@ -91,6 +91,8 @@ pip-generated-preservation directory; no historical evidence was pruned.
 | Restored pinned API Ruff check/format | Passed | 65 files formatted |
 | Restored API/Chromium attempt | Blocked admission | 600s lock timeout; gate-572-api-browser-restored.log empty |
 | Restored API/Chromium retry | Blocked admission | Second 600s lock timeout; gate-572-api-browser-retry.log empty |
+| Fresh complete committed --all gate | Blocked admission, exit 1 | dd89a42f / base 1330869e; 600s shared-lock timeout; no group executed |
+| Final receipt verification and independent publication assessment | Unavailable | No sealed passing receipt; publication not eligible |
 
 ## Pre-Review Reconciliation
 
@@ -106,6 +108,8 @@ independent Review found no blocking source defect. Its outcome remains unchange
 Shared heavy lock contention prevents restored API/browser execution after two
 600s admission timeouts. Original holder PID 2699791 and waiters were observed
 read-only; none were interrupted. Current-main ancestry is now reconciled.
+The complete committed gate subsequently also timed out after 600s. Its observed
+foreign holder was PID 2770814; no process was interrupted and no bypass used.
 
 ## Remaining Work
 
@@ -122,6 +126,32 @@ base and a new external directory. Require actual browser/MSSQL and receipt
 verification before eligible independent exact-head assessment and push/PR.
 No passing receipt is claimed by this pre-gate commit. Final authoritative logs
 and receipt remain external; any later candidate/evidence commit invalidates it.
+
+## P03: Original Committed Full-Gate Attempt
+
+Original Review/evidence committed at 1a481c4f. Main advanced again only through
+agent configuration #599; incorporated it without rewriting via merge dd89a42f.
+No task source changed after original source Review. Fresh attempted candidate:
+dd89a42faa8d35b488711dbce6a3bfe57d7d8931. Reviewed fetched main:
+1330869ea675ff019958846330108b4f45e163ce.
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 tools/rpi-checks.py --all --jobs 3 --lock-timeout 600 --base 1330869ea675ff019958846330108b4f45e163ce --out /home/azureuser/.copilot/session-state/5c131725-48a1-4ff5-b1e9-6b13fd4f57ae/files/gate-572-final-dd89a42f
+```
+
+Exit 1 after 600s admission timeout:
+`BLOCKED: Global heavy-resource lock timeout`. External complete-gate log:
+`/home/azureuser/.copilot/session-state/5c131725-48a1-4ff5-b1e9-6b13fd4f57ae/files/gate-572-final-dd89a42f.log`.
+No required group executed; actual browser and MSSQL remain unproven. No passing
+receipt was sealed, so --verify-receipt and eligible independent publication
+assessment were unavailable. No push or PR was performed, as AC4 forbids
+publication before verified complete evidence. Issue closure is not claimed.
+
+This later evidence preserves, rather than replaces, original Review
+Complete / Residual work and original critique Complete / Revise. Final
+blocker-record commit is not the attempted candidate; retry requires a new output
+directory and its exact new committed head/current fetched main. Do not reuse a
+receipt or erase adverse logs. No source correction or second Review is needed.
 
 ## Follow-Up Items
 

@@ -15,7 +15,7 @@
 | --- | --- | --- | --- |
 | P01 | Exact execution evidence | Complete | P01-T01, P01-T02 |
 | P02 | Validation and Review | Actual execution blocked; original Review Complete / Residual work | P02-T01, P02-T02 |
-| P03 | Publication gate | Pending P02 | P03-T01 |
+| P03 | Publication gate | Attempted; blocked by shared lock | P03-T01 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Exact execution evidence
@@ -111,3 +111,11 @@ eligible independent exact-head assessment. No second original Review is allowed
 Current-main drift may be reconciled by an intermediate implementation checkpoint
 and clean non-rewriting topic merge before original Review. This is not the final
 candidate: original Review/evidence commit still precedes the complete gate.
+Actual attempt: after original evidence commit 1a481c4f, incorporated upstream
+agent-only #599 through non-rewriting merge dd89a42f (no task source changes).
+Ran --all --jobs 3 --lock-timeout 600 against base 1330869e and new external
+gate-572-final-dd89a42f directory. Exit 1: Global heavy-resource lock timeout.
+No required group, including browser or MSSQL, executed; no receipt was sealed.
+Verification, eligible independent publication assessment, push and PR were not
+performed. Keep P03-T01 unchecked. Later retry requires the new committed head
+and freshly fetched base, not reuse of this adverse attempt.
