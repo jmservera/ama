@@ -421,7 +421,7 @@ class ConsumptionTests(unittest.TestCase):
     def test_billing_is_financial_source_not_projection(self) -> None:
         self.accepted()
         self.assertEqual(self.report()["token_cost"], "Unknown")
-        self.bill(billed="0.000200")
+        self.bill(billed="0.000200", synthetic=False)
         result = self.report()
         self.assertEqual(result["token_cost"], "0.000200")
         self.assertEqual(result["projected_token_charge"], "0.000135")

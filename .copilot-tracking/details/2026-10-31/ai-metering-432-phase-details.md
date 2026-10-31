@@ -13,7 +13,7 @@
 | Phase | Intent | Status |
 | --- | --- | --- |
 | P01 | Extend existing ledger and compose dispatch | Complete |
-| P02 | Semantic/regression evidence and documentation | Final API discovery pending |
+| P02 | Semantic/regression evidence and documentation | Complete; publication gate pending after Review |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Financial ledger and source wiring

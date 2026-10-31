@@ -3,7 +3,7 @@
   "task_slug": "ai-metering-432",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Implement",
+  "active_phase": "Review",
   "status": "active",
   "session_status": "running",
   "artifact_paths": {
@@ -24,12 +24,17 @@
       "decision": "Research executed Ready; one critique executed Revise, PC-001..008 direct contracts applied in details.",
       "status": "ready",
       "evidence": ".copilot-tracking/details/2026-10-31/ai-metering-432-phase-details.md"
+    },
+    {
+      "decision": "Implementation reconciled: 24 core and six HTTP tests; API discovery 1436 with 320 opt-in skips; component Ruff/format/types pass. Main integrated without history rewrite.",
+      "status": "executed",
+      "evidence": ".copilot-tracking/changes/2026-10-31/ai-metering-432-changes.md"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Implement",
-    "action": "Preserve implementation, merge current main into topic without rewriting history, finish API discovery and reconcile before original Review."
+    "action": "Execute one independent original Review; preserve outcome and route open work without repeating Review."
   },
   "prioritized_follow_ups": []
 }

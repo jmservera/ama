@@ -10,8 +10,9 @@
 
 ## Execution Status
 
-P01 source wiring is complete. P02 final discovery and original Review remain
-pending. Approved writes are src and directly related evidence/docs only.
+P01/P02 source, documentation and local unit/static validation are complete.
+Original Review and the separate post-Review publication gate remain pending.
+Approved writes are src and directly related evidence/docs only.
 
 ## Execution Summary
 
@@ -40,13 +41,17 @@ Critique addendum supplies deterministic contracts without approving live inputs
 Implementation hardened production rejection of synthetic prices, pre-network
 expiry/stale checks after credential acquisition, cross-currency budget reuse,
 visible zero-dispatch alerts and exact derived charges (up to 30 decimals).
+Synthetic price provenance also remains labelled synthetic when a supplied
+invoice claims otherwise; the existing billing-source test covers that mixture.
 These are compatible corrections, not live authority or new scope.
 
 Main advanced from 5666bd33e1827670e5c07e3e3063bbbe989b59d3 to
 368d3bb8d0a9ad2dc221be6cf108b5cf2a8fa7cd through merged #423 while implementing.
 Its transport/infrastructure work does not change the cost-ledger source.
-The full gate requires current-main ancestry; integrate it by a local merge on
-the topic, preserving history and all original research/critique evidence.
+The full gate requires current-main ancestry. Local merge f8cd4ced integrates
+that base on the topic, preserving history and all original research/critique
+evidence. Its sole index conflict retained both workstreams and the newer date;
+all previous log entries and the new #432 entry are preserved.
 
 ## Validation Record
 
@@ -64,14 +69,30 @@ dev/runtime pins; no uv or global dependency modification.
   preserve this adverse result, not a final-candidate success.
 * Earlier hashing-bound, fixture/type and event-schema failures were corrected;
   focused existing API regression rerun passed 106 tests with one opt-in skip.
-* Exact requested full discovery rerun and complete external gate pending.
+* Exact requested full discovery rerun passed: 1436 tests in 574.076 seconds,
+  320 opt-in integration skips (1116 executed). Command from src/api:
+  `PYTHONPATH=.:src:tests:../core/src:../agents/src:../core/tests:../agents/tests python3 -m unittest discover -s tests -q`.
+  Complete external gate pending after original Review.
+  The synthetic-provenance-only correction was made during discovery and has
+  a fresh passing 24-test core and six-test API exercise; discovery is not an
+  exact-head receipt. The mandatory gate must assess the final committed head.
   No changed UI; new UI Playwright exercise is inapplicable. The full gate still
   requires actual existing Chromium checks and owned local SQL/scanner evidence.
 
+Execution generates ignored Python/tool caches, editable metadata and blinded
+synthetic answer-key files. Preserve them without reading, pruning or moving
+unknown existing inputs. Publication will use a task-owned external clean clone
+of the final commit, with the same topic/base and a fresh external full receipt.
+No existing main/other worktree or historical tracking data is modified by that
+isolation; ignored working data is not copied into the candidate.
+
 ## Pre-Review Reconciliation
 
-Source, docs and semantic/static tests reconcile; final API discovery remains
-pending before original Review. Plan P02 stays open, no review outcome claimed.
+Source, docs, plan markers, details and requested semantic/static/discovery
+results reconcile. P01/P02 are complete; the full gate is explicitly scheduled
+after original Review and final evidence commit, not silently marked passing.
+No source divergence, unknown test failure or generated UI target remains.
+Operational evidence remains unmet; no original review outcome claimed yet.
 
 ## Blockers and Follow-Up Items
 
@@ -80,4 +101,5 @@ acceptance remain unavailable. Resident financial join remains explicitly partia
 
 ## Return-to-Caller State
 
-Automatic full-loop implementation active; no routine phase confirmation required.
+Automatic full-loop implementation complete; independent original Review is
+next, then evidence commit, full gate/verification and authorised Refs #432 PR.

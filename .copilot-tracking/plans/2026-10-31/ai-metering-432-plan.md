@@ -98,17 +98,19 @@ JSON report. Preserve independent resident SQL accounting and report its unjoine
 coverage as explicitly unmet rather than claim a deployed financial migration.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Evidence and validation
+### [x] P02: Evidence and validation
 
 <!-- rpi:task id=P02-T01 -->
-#### [ ] P02-T01: Tests, guides and pitch
+#### [x] P02-T01: Tests, guides and pitch
 
 Core owns new ledger semantic tests, API owns composed fake-network/report tests.
 Exact removals: none. Maximum additions: two test modules, 35 test methods.
 Canonical targets: core ledger, Ai/assistant/ai_tasks/chat usage, API report.
 Generated targets: none in source; external validation output only.
 Preserve existing regression tests, test measurable limits and money shapes.
-Run requested API discovery and Ruff, affected core lint/types/tests, full gate.
+Run requested API discovery and Ruff, affected core lint/types/tests. Prepare
+the full gate for the clean committed candidate after independent Review;
+publication remains blocked until that separate gate passes and is verified.
 No changed UI, so Playwright requirement is not applicable to new UI; browser gate
 still executes existing real Chromium checks.
 

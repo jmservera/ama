@@ -801,7 +801,12 @@ class Consumption:
             variance_fraction=variance,
             currency=next(iter(currencies)) if len(currencies) == 1 else UNKNOWN,
             financial_source=bill["id"] if bill else None,
-            evidence_label="synthetic" if bill and bill["synthetic"] else "supplied-unverified",
+            evidence_label=(
+                "synthetic"
+                if (bill and bill["synthetic"])
+                or any(prices[r["price"]]["synthetic"] for r in calls)
+                else "supplied-unverified"
+            ),
             other_tca_components=other,
             total_cost_of_ai=total,
             quality=measures,
