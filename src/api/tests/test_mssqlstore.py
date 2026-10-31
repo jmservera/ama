@@ -387,6 +387,9 @@ class MssqlProcurementApi(procurementapi.ProcurementApi):
         wipe()
         return factory(str(path), str(path.with_suffix(".sqlite")))
 
+    def reopen_store(self):
+        return factory("nonexistent-seed-is-not-read", self.store.db_path)
+
 
 @unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")
 class MssqlHandoffApi(handofftests.HandoffApi):

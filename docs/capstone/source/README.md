@@ -24,6 +24,19 @@ never an implicit fallback input. A complete rebuild needs the native baseline,
 JSON, catalog, all referenced media and both scripts above. The old 18-slide
 authoring inventory does not recreate the 54-slide deck.
 
+## AI Consumption Evidence (#432)
+
+The [dated source-only Tokenomics drafting insert](../../reference/resources/ai-tokenomics.md#pitch-drafting-insert-2026-10-31)
+provides proposed slide/Q&A wording for the existing ledger extension, finite
+dispatch limits, recoverable human review and billing-led accepted-outcome
+report. It is not an applicable price, bill, measured cash value or live approval.
+OD-51, actual reconciliation and an authorised held-out batch remain missing.
+
+The old brief is now historical. Integrate approved wording through
+`slides.json` and regenerate the deck/notes/question bank under this guide;
+do not hand-edit generated pitch outputs or alter protected cost arithmetic.
+This source-only delivery changes no generated deck, slide notes or rehearsal.
+
 ## Make An Edit
 
 Edit [slides.json](./slides.json), selecting a record by physical `number`

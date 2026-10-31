@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import fcntl
 import importlib.util
 import io
 import json
@@ -753,6 +754,184 @@ class GateTests(unittest.TestCase):
             ):
                 pass
         self.assertEqual(lock_paths, [Path("/tmp/ama-rpi-heavy.lock")] * 2)
+
+    def test_outer_flock_composes_and_descendants_do_not_inherit_lock(self) -> None:
+        lock = self.out / "outer-lock"
+        script = """
+import fcntl, importlib.util, os, subprocess, sys
+from pathlib import Path
+spec = importlib.util.spec_from_file_location("gate", sys.argv[1])
+gate = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(gate)
+gate.HEAVY_LOCK_PATH = Path(sys.argv[2])
+with gate.heavy_lock(0, 3):
+    with open(sys.argv[2], "w") as other:
+        try:
+            fcntl.flock(other, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            pass
+        else:
+            raise AssertionError("outer lock was released")
+    subprocess.run(
+        [sys.executable, "-c",
+         "import os; from pathlib import Path; "
+         "assert not any(os.readlink(p) == " + repr(sys.argv[2]) +
+         " for p in Path('/proc/self/fd').iterdir() if p.exists())"],
+        check=True,
+    )
+os.fstat(3)
+"""
+        subprocess.run(
+            [
+                "flock",
+                "-w",
+                "5",
+                str(lock),
+                sys.executable,
+                "-c",
+                script,
+                str(Path(__file__).with_name("rpi-checks.py")),
+                str(lock),
+            ],
+            check=True,
+            timeout=15,
+            capture_output=True,
+            text=True,
+        )
+        with lock.open("w") as stream:
+            fcntl.flock(stream, fcntl.LOCK_EX | fcntl.LOCK_NB)
+
+    def test_inherited_lock_rejects_invalid_identity(self) -> None:
+        lock = self.out / "inherited-lock"
+        lock.touch()
+        wrong = self.out / "wrong-lock"
+        wrong.touch()
+        link = self.out / "symlink-lock"
+        link.symlink_to(lock)
+        closed = os.open(lock, os.O_RDWR)
+        os.close(closed)
+        with patch.object(gate, "HEAVY_LOCK_PATH", lock):
+            for descriptor in (-1, closed):
+                with (
+                    self.subTest(descriptor=descriptor),
+                    self.assertRaises((gate.GateError, OSError)),
+                    gate.heavy_lock(0, descriptor),
+                ):
+                    self.fail("invalid descriptor admitted")
+            for path in (wrong, self.out):
+                descriptor = os.open(path, os.O_RDONLY)
+                try:
+                    with self.subTest(path=path):
+                        with (
+                            self.assertRaises((gate.GateError, OSError)),
+                            gate.heavy_lock(0, descriptor),
+                        ):
+                            self.fail("wrong or nonregular descriptor admitted")
+                finally:
+                    os.close(descriptor)
+        with lock.open("w") as stream, patch.object(gate, "HEAVY_LOCK_PATH", link):
+            with self.assertRaises(gate.GateError), gate.heavy_lock(0, stream.fileno()):
+                self.fail("symlink lock admitted")
+
+    def test_inherited_lock_contention_closes_duplicate_before_yield(self) -> None:
+        lock = self.out / "contended-lock"
+        with lock.open("w") as owner, lock.open("w") as other:
+            fcntl.flock(owner, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            duplicate = os.dup(other.fileno())
+            with (
+                patch.object(gate, "HEAVY_LOCK_PATH", lock),
+                patch.object(gate.os, "dup", return_value=duplicate),
+                self.assertRaisesRegex(gate.GateError, "another owner"),
+                gate.heavy_lock(1800, other.fileno()),
+            ):
+                self.fail("contended lock admitted")
+            os.fstat(other.fileno())
+            with self.assertRaises(OSError):
+                os.fstat(duplicate)
+            duplicate = os.dup(other.fileno())
+            with (
+                patch.object(gate, "HEAVY_LOCK_PATH", self.out / "missing-lock"),
+                patch.object(gate.os, "dup", return_value=duplicate),
+                self.assertRaises(OSError),
+                gate.heavy_lock(0, other.fileno()),
+            ):
+                self.fail("missing shared path admitted")
+            with self.assertRaises(OSError):
+                os.fstat(duplicate)
+
+    def test_inherited_lock_preserves_caller_and_closes_duplicate_on_all_exits(self) -> None:
+        lock = self.out / "lifetime-lock"
+        with lock.open("w") as owner:
+            fcntl.flock(owner, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            for interrupted in (False, True):
+                with self.subTest(interrupted=interrupted):
+                    duplicate = os.dup(owner.fileno())
+                    with (
+                        patch.object(gate, "HEAVY_LOCK_PATH", lock),
+                        patch.object(gate.os, "dup", return_value=duplicate),
+                    ):
+                        try:
+                            with gate.heavy_lock(0, owner.fileno()):
+                                self.assertFalse(os.get_inheritable(duplicate))
+                                if interrupted:
+                                    raise RuntimeError("fixture interruption")
+                        except RuntimeError as error:
+                            self.assertTrue(interrupted)
+                            self.assertEqual(str(error), "fixture interruption")
+                    os.fstat(owner.fileno())
+                    with self.assertRaises(OSError):
+                        os.fstat(duplicate)
+                    with lock.open("w") as other:
+                        with self.assertRaises(BlockingIOError):
+                            fcntl.flock(other, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        with lock.open("w") as other:
+            fcntl.flock(other, fcntl.LOCK_EX | fcntl.LOCK_NB)
+
+    def test_main_forwards_inherited_fd_and_locks_run_and_verify(self) -> None:
+        lock = self.out / "main-lock"
+        output = self.out / "new-gate"
+        observations = []
+
+        def locked(*args: Any, **kwargs: Any) -> Path:
+            with lock.open("w") as other:
+                with self.assertRaises(BlockingIOError):
+                    fcntl.flock(other, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            observations.append("locked")
+            return output / "receipt.json"
+
+        with lock.open("w") as owner:
+            fcntl.flock(owner, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            with (
+                patch.object(
+                    sys,
+                    "argv",
+                    [
+                        "rpi-checks.py",
+                        "--all",
+                        "--base",
+                        self.base,
+                        "--out",
+                        str(output),
+                        "--heavy-lock-fd",
+                        str(owner.fileno()),
+                    ],
+                ),
+                patch.object(gate, "HEAVY_LOCK_PATH", lock),
+                patch.object(gate, "git", return_value=str(self.root)),
+                patch.object(gate, "clean_identity"),
+                patch.object(gate, "tool_identity"),
+                patch.object(gate, "selection", return_value={"groups": ["project-core"]}),
+                patch.object(gate, "worker_limit", return_value=1),
+                patch.object(gate, "Runner") as runner,
+                patch.object(gate, "verify", side_effect=locked),
+                patch.object(gate.signal, "signal"),
+            ):
+                runner.return_value.run.side_effect = locked
+                self.assertEqual(gate.main(), 0)
+            os.fstat(owner.fileno())
+        self.assertEqual(observations, ["locked", "locked"])
+        with lock.open("w") as other:
+            fcntl.flock(other, fcntl.LOCK_EX | fcntl.LOCK_NB)
 
     def test_interruption_cleanup_only_removes_owned_container(self) -> None:
         runner = self.runner()

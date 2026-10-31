@@ -16,7 +16,7 @@ from contextlib import contextmanager
 from datetime import datetime, timezone
 
 from . import assistant_release as rel
-from . import continuity, projection, quality, ranking, rai_release
+from . import ai_consumption, continuity, projection, quality, ranking, rai_release
 from zava_forward.core.ai import FORBIDDEN, Ai
 from .store import ConflictError
 
@@ -327,13 +327,16 @@ def shape_result(task, result, limits):
     envelope["usage"] = result.get("usage")
     envelope.update(task=task["capability"], task_version=task["version"], case_id=task["case_id"],
                     source_signature=task["source_signature"], approved=False)
-    for key in ("provider", "deployment", "model", "outcome", "source"):
+    envelope["model"] = ai_consumption.bounded_model(envelope.get("model"))
+    for key in ("provider", "deployment", "outcome", "source"):
         envelope[key] = envelope[key][:120] if isinstance(envelope[key], str) else None
     usage = envelope["usage"]
-    envelope["usage"] = {k: usage[k] for k in ("prompt_tokens", "completion_tokens", "total_tokens")} if (
-        isinstance(usage, dict) and all(type(usage.get(k)) is int and usage[k] >= 0
-                                       for k in ("prompt_tokens", "completion_tokens", "total_tokens")) and
-        usage["prompt_tokens"] > 0 and usage["total_tokens"] == usage["prompt_tokens"] + usage["completion_tokens"]) else None
+    valid = ai_consumption.usage(usage)
+    envelope["usage"] = valid if valid and valid["prompt_tokens"] > 0 else None
+    for key in ("meter_id", "meter_root", "configuration", "prompt_hash"):
+        value = result.get(key)
+        if isinstance(value, str) and len(value) == 64 and all(c in "0123456789abcdef" for c in value):
+            envelope[key] = value
     output, failure = None, None
     try:
         if result.get("source") != "ai" or result.get("outcome") != "returned":
@@ -393,6 +396,9 @@ class Assistants:
             except Exception:
                 self.sql = False
                 self.schema_error = "Assistant schema unavailable; operator migration required. Continue ordinary case work manually."
+        self.consumption = ai_consumption.Consumption(self)
+        if isinstance(store.ai, Ai) and self.sql:
+            store.ai.consumption = self.consumption
 
     def migrate(self):
         with self.transaction() as db:
@@ -878,16 +884,17 @@ class Assistants:
             quarantined = not continuity.epoch_current(current, self.continuity(db)) or not continuity.epoch_current(
                 dict(capability=current["capability"], continuity_epoch=current.get("claim_epoch")), self.continuity(db)) or bool(self.suspended(db, current["capability"])) or bool(
                 denied) or binding != current.get("claim_binding", binding) or current.get("release") != self.release_reference(db, current["capability"])
-            if not quarantined and envelope.get("outcome") == "returned":
+            if envelope.get("outcome") in ("returned", "model-mismatch"):
                 # A deployment alias is not immutable. This only compares the model name the provider returned with the released one;
                 # it is a returned-model check, not authoritative attestation of what served the call.
                 released = [r for r in rel.releases(db, current["capability"])
                             if r["id"] == current["release"]["id"]]
-                if not any(r.get("serving_model") == envelope.get("model") for r in released):
+                if envelope.get("outcome") == "model-mismatch" or not any(r.get("serving_model") == envelope.get("model") for r in released):
                     quarantined = True
                     for r in released:
-                        rel.change(db, now, None, r["id"], "suspended",
-                                   "Returned model name differs from the released one (returned-model check, not attestation); results quarantined.", system=True)
+                        if r["status"] == "active":
+                            rel.change(db, now, None, r["id"], "suspended",
+                                       "Returned model name differs from the released one (returned-model check, not attestation); results quarantined.", system=True)
                     current["serving_attestation"] = dict(returned=envelope.get("model"), outcome="mismatch")
             held_output = output
             if quarantined:
@@ -896,11 +903,20 @@ class Assistants:
                 failure = failure or "Late result quarantined after a suspension, restart, release change or serving-version mismatch; use manual work."
                 current["quarantine"] = dict(epoch=epoch, claim_epoch=current.get("claim_epoch"),
                                              output_digest=digest(held_output) if held_output is not None else None)
-            current.update(envelope=envelope, output=output, reason=failure,
-                           verification=None, review=None)
             envelope["release"] = current.get("release")
             state = "quarantined" if quarantined else "ready" if output is not None and not failure else (
                 "pending" if envelope.get("outcome") in ("timeout", "provider-unavailable") and current["attempts"] < self.limits.attempts else "failed")
+            if envelope.get("meter_root") and state != "pending":
+                held = self.consumption.publish_output(envelope["meter_root"], task["id"],
+                                                       eligible=state == "ready", db=db)
+                if held:
+                    current["financial_attribution"] = held
+                    output = None
+                    failure = failure or f"Financial attribution held ({held['reason']}); use manual work."
+                    if not quarantined:
+                        state = "failed"
+            current.update(envelope=envelope, output=output, reason=failure,
+                           verification=None, review=None)
             delay = self.limits.backoff * current["attempts"] if state == "pending" else 0
             result = db.execute("UPDATE assistant_tasks SET body=?,state=?,not_before=?,lease_until=0,revision=revision+1 WHERE id=? AND owner=? AND fence=? AND state='leased' AND lease_until>?",
                                 (canonical(current), state, now + delay, task["id"], task["owner"], task["fence"], now))
@@ -921,7 +937,8 @@ class Assistants:
             self.event(db, task["id"], kind="completed", state=state, fence=task["fence"], envelope=envelope,
                        actual_tokens=actual, reservation_liability=attempt[1] if actual is None else actual,
                        output=output, source_signature=task["source_signature"],
-                       capability=task["capability"], version=task["version"])
+                       capability=task["capability"], version=task["version"],
+                       financial_attribution=current.get("financial_attribution"))
             return True
 
     def execute(self, tid):
@@ -955,7 +972,15 @@ class Assistants:
 
         def call():
             try:
-                values.append(self.provider(system, prompt, self.limits.output_tokens, self.limits.timeout))
+                context = ai_consumption.CallContext(
+                    ai_consumption.reference(task["id"]),
+                    ai_consumption.reference(f"{task['id']}:{task['fence']}"),
+                    task["capability"], "retrofit-case", task["claim_binding"],
+                    ai_consumption.reference(runtime_binding(task["capability"], self.store.ai)["prompt_version"]),
+                    retry=task["attempts"] - 1,
+                )
+                with ai_consumption.call_context(context):
+                    values.append(self.provider(system, prompt, self.limits.output_tokens, self.limits.timeout))
             except Exception:
                 values.append(dict(outcome="provider-unavailable", usage=None, source="unverified", text=None))
             finally:
@@ -1041,13 +1066,27 @@ class Assistants:
             task.pop("provenance", None)
             for key in ("history_next_offset", "history_count", "display_state", "stale", "actionable", "suspension", "release_denial", "epoch_current", "relied_on"):
                 task.pop(key, None)
+            if action != "verify" and (task.get("envelope") or {}).get("meter_root"):
+                try:
+                    self.consumption.review(
+                        tid, action, db=db,
+                        root=task["envelope"]["meter_root"] if action == "reject" else None)
+                except ai_consumption.DispatchHeld as error:
+                    if action != "reject":
+                        raise
+                    self.consumption.review_unresolved(
+                        task["envelope"]["meter_root"], tid, str(error),
+                        revision=revision + 1, db=db)
+                    task["financial_attribution"] = dict(
+                        status="unresolved", reason=str(error), action=action)
             res = db.execute("UPDATE assistant_tasks SET body=?,state=?,revision=revision+1 WHERE id=? AND revision=?",
                              (canonical(task), state, tid, revision))
             if res.rowcount != 1:
                 raise ConflictError(tid)
             self.event(db, tid, kind="review", action=action, reviewer=user["email"], note=note,
                        source_verified=action == "verify", source_signature=task["source_signature"],
-                       edited_output=task["output"] if action == "edit-accept" else None)
+                       edited_output=task["output"] if action == "edit-accept" else None,
+                       financial_attribution=task.get("financial_attribution"))
         return self.detail(user, tid)
 
     def _worker(self):

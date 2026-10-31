@@ -148,4 +148,7 @@ def envelope(task_id, case_ids, source_versions, result, case_version=None):
         failure=result.get("reason") if abstained else None,
         approval="Not reviewed", approved=False, reviewer_function=t["accountable_function"] if t else None,
         release=result.get("release"),
+        usage=result.get("usage"), meter_id=result.get("meter_id"),
+        meter_root=result.get("meter_root"), configuration=result.get("configuration"),
+        prompt_hash=result.get("prompt_hash"),
     )
