@@ -83,7 +83,13 @@ login jmservera, ID 8036360; repository-local privacy-safe email
 8036360+jmservera@users.noreply.github.com for author and committer.
 Commit message will explicitly describe stock-scale regression evidence, not
 successful acceptance. Required Copilot trailer retained. No secret/private
-dataset files included. Actual local commit outcome will be recorded afterward.
+dataset files included.
+
+Actual local WIP commit succeeded: 235c3731, including all ten selected source/
+dated evidence files. This subsequent administration-only record preserves
+the original source commit and adverse outcomes; it changes no source or
+acceptance verdict. Complete gate, receipt, push and PR remain NOT RUN/blocked
+by RV-001/RV-002. No other branch/worktree or main was touched.
 
 ## Amendments, Divergences and Follow-Up
 
