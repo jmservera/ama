@@ -155,6 +155,53 @@ class ProcurementApi(ProcurementApiFixture):
         self.assertIn("current authority", error["error"])
         self.assertEqual(self.store.data["procurement"], before)
 
+    def test_legacy_capacity_reads_survive_store_reopen_without_inventing_authority(self) -> None:
+        self.store.set_capacity(self.manager, self.pid, **self.capacity())
+        wid = self.store.issue_work_order(
+            self.manager, self.pid, "ZF-1", resident_bindings=RESIDENT_BINDINGS
+        )
+        with self.store.lock:
+            del self.store.data["procurement"]["packages"][0]["contract_version"]
+            self.store.save()
+            persisted = copy.deepcopy(self.store.data["procurement"])
+
+        original_type = type(self.store)
+        reopened = self.make_store(self.path)
+        if self.sql:
+            self.addCleanup(reopened.db.close)
+            self.assertEqual(reopened.db_path, str(self.path.with_suffix(".sqlite")))
+        self.assertIsInstance(reopened, original_type)
+        self.store = reopened
+        self.app.store = reopened
+        with self.store.lock:
+            self.assertEqual(self.store.data["procurement"], persisted)
+        audit = list(self.store.audit_entries())
+
+        for _ in range(2):
+            code, packages = self.call("/api/packages")
+            self.assertEqual(code, 200)
+            self.assertEqual([package["id"] for package in packages], [self.pid])
+            self.assertIsNone(packages[0]["contract_version"])
+            code, orders = self.call("/api/workorders")
+            self.assertEqual(code, 200)
+            self.assertEqual([order["id"] for order in orders], [wid])
+            control = orders[0]["appointment_control"]
+            self.assertIsNone(control["current_binding"]["contract_version"])
+            self.assertEqual(control["current_binding"]["resident_bindings"], RESIDENT_BINDINGS)
+            self.assertEqual(control["status"], "Unknown")
+            with self.store.lock:
+                self.assertEqual(self.store.data["procurement"], persisted)
+            self.assertEqual(list(self.store.audit_entries()), audit)
+
+        code, error = self.call(
+            f"/api/workorders/{wid}/appointment-control",
+            dict(action="offer", event_ref="SYN-LEGACY-REOPEN"),
+        )
+        self.assertEqual(code, 403)
+        self.assertIn("current authority", error["error"])
+        with self.store.lock:
+            self.assertEqual(self.store.data["procurement"], persisted)
+
     def test_empty_procurement_reads_are_known_empty(self) -> None:
         with self.store.lock:
             self.store.data["procurement"] = dict(packages=[], work_orders=[])
