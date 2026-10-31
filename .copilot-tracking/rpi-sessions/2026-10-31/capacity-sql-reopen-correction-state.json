@@ -1,0 +1,45 @@
+{
+  "task_id": "pr-605-capacity-sql-reopen-correction",
+  "task_slug": "capacity-sql-reopen-correction",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Review",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-31/capacity-sql-reopen-correction-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-31/capacity-sql-reopen-correction-plan.md",
+    "details": ".copilot-tracking/details/2026-10-31/capacity-sql-reopen-correction-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-31/capacity-sql-reopen-correction-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-31/capacity-sql-reopen-correction-changes.md",
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute full RPI loop and push on existing PR branch; CI is the gate, no full local gate.",
+      "status": "confirmed",
+      "evidence": "Explicit user request 2026-10-31; clean branch pulled and origin/main already merged."
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready; correct resetting SQL test fixture, not law-store production behavior.",
+      "status": "confirmed",
+      "evidence": "Research C1-C6/W1; real SQL reproduces terminal db_path assertion failure, SQLite/file both pass."
+    },
+    {
+      "decision": "Exactly one critique executed, original Revise preserved; PC-001 accepted for stronger audit oracle, PC-002 rejected as worker-only restriction absent from parent instructions. Plan Ready.",
+      "status": "resolved",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-31/capacity-sql-reopen-correction-plan-critique.md and plan Critique Disposition."
+    },
+    {
+      "decision": "P01-T01 complete; requested API ruff/format/mypy and 40 SQLite/file/law plus 13 real SQL HTTP tests pass. Ready for one Review.",
+      "status": "verified",
+      "evidence": ".copilot-tracking/changes/2026-10-31/capacity-sql-reopen-correction-changes.md validation record."
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Review",
+    "action": "Run exactly one independent Review of implemented source and acceptance evidence."
+  },
+  "prioritized_follow_ups": []
+}

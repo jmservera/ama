@@ -34,6 +34,9 @@ class ProcurementApiFixture(unittest.TestCase):
             factory(str(path), str(path.with_suffix(".sqlite"))) if self.sql else factory(str(path))
         )
 
+    def reopen_store(self) -> Any:
+        return self.make_store(self.path)
+
     def setUp(self) -> None:
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
@@ -165,17 +168,23 @@ class ProcurementApi(ProcurementApiFixture):
             self.store.save()
             persisted = copy.deepcopy(self.store.data["procurement"])
 
-        original_type = type(self.store)
-        reopened = self.make_store(self.path)
+        original = self.store
+        audit = copy.deepcopy(list(original.audit_entries()))
+        self.assertTrue(audit)
+        self.assertIsNone(self.app.law)
+        self.path.unlink()
+        reopened = self.reopen_store()
         if self.sql:
             self.addCleanup(reopened.db.close)
-            self.assertEqual(reopened.db_path, str(self.path.with_suffix(".sqlite")))
-        self.assertIsInstance(reopened, original_type)
+            self.assertEqual(reopened.db_path, original.db_path)
+            self.assertIsNot(reopened.db, original.db)
+        self.assertIs(type(reopened), type(original))
         self.store = reopened
         self.app.store = reopened
         with self.store.lock:
             self.assertEqual(self.store.data["procurement"], persisted)
-        audit = list(self.store.audit_entries())
+        self.assertEqual(list(self.store.audit_entries()), audit)
+        self.assertFalse(self.path.exists())
 
         for _ in range(2):
             code, packages = self.call("/api/packages")
@@ -189,6 +198,11 @@ class ProcurementApi(ProcurementApiFixture):
             self.assertIsNone(control["current_binding"]["contract_version"])
             self.assertEqual(control["current_binding"]["resident_bindings"], RESIDENT_BINDINGS)
             self.assertEqual(control["status"], "Unknown")
+            code, checks = self.call("/api/law/checks/ZF-1", {})
+            self.assertEqual(code, 503)
+            self.assertEqual(checks["status"], "unknown")
+            self.assertIn("law store is not loaded", checks["error"])
+            self.assertIn("human emergency", checks["safe_route"])
             with self.store.lock:
                 self.assertEqual(self.store.data["procurement"], persisted)
             self.assertEqual(list(self.store.audit_entries()), audit)
@@ -201,6 +215,7 @@ class ProcurementApi(ProcurementApiFixture):
         self.assertIn("current authority", error["error"])
         with self.store.lock:
             self.assertEqual(self.store.data["procurement"], persisted)
+        self.assertEqual(list(self.store.audit_entries()), audit)
 
     def test_empty_procurement_reads_are_known_empty(self) -> None:
         with self.store.lock:
