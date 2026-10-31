@@ -1,0 +1,101 @@
+{
+  "reviewed_main": "4512193276f18c474af42e37a3cc27357eeef017",
+  "observed_origin_main_at_copy": "7136be9778b17e495b1941e6eb93f50d32de8a2b",
+  "copies": {
+    "focused-post-metering.log": {
+      "sha256": "2c9efd0024bb38b952de55db5b7753b5eacd94c28cc9a5da277d2419065dcb48",
+      "source": "/tmp/ama-533-correction-e26eb207/focused-post-metering.log"
+    },
+    "browser-post-metering.log": {
+      "sha256": "45c1b681b8daa4f4c1d185a902d2dfda25ad0797bc2e3b8b0d622863aa1b7a34",
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-metering.log"
+    }
+  },
+  "tested_sources": {
+    "src/api/tests/test_progress_dashboard.py": "ed85c9cbb72e172d9afb5d29f28aeef0cd204b3ce8cc4fd3410666f7ada9eab7",
+    "src/api/checks/progress_browser_check.py": "e617e5f7c653a8ff50efdd90533ee3144bbf3ca36d16d4511edb65a7066a82f6",
+    "src/api/src/zava_forward/api/server.py": "388fb40e1e6a2b6cd91e4ed484b2a8d3eeece21ceaeda8416df818de372fd2dd",
+    "src/core/src/zava_forward/core/store.py": "ebfcc121931ce853aff80ce185293b5383bac6d57172c6274ba6cc2a37d8a009",
+    "src/core/src/zava_forward/core/ai_consumption.py": "6457c8d2504327a4a2eb618a822e7e1188ac63207fb2c3407dfab2649b284f3d"
+  },
+  "axe": [
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-metering/archive-reversed-axe.json",
+      "sha256": "98aea04686a7cc3dc428f51f2f1cb8b3873bcd5f482f31deb115afa1e12fe03c",
+      "violations": [],
+      "incomplete_count": 0
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-metering/archive-reversed-recovered-axe.json",
+      "sha256": "f17a0d996b91ef46a21493e6d22a0845d7e04cd6211b9fef469f88ea21f02497",
+      "violations": [],
+      "incomplete_count": 0
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-metering/closed-cases-axe.json",
+      "sha256": "5fb8bf57e0a2f733d865f917b5c20693a96673450a98ca39bb62dcf480def1f4",
+      "violations": [],
+      "incomplete_count": 0
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-metering/dashboard-axe.json",
+      "sha256": "30b44b4a0c8d0dda6ba6d03207fc73cc1d037fe3d0cc7dd266bc4cad9faf3076",
+      "violations": [],
+      "incomplete_count": 1
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-metering/dashboard-default-end-axe.json",
+      "sha256": "7a3d7bfdf4ae5b4acda5a5b6cbabb15396a3376edcdd002f4db64ceb7508abb3",
+      "violations": [],
+      "incomplete_count": 0
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-metering/dashboard-default-end-recovered-axe.json",
+      "sha256": "9059921c53f56c93b16036684d3e5e44ce489f64ac0e5b40ecff69acffc10335",
+      "violations": [],
+      "incomplete_count": 1
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-metering/dashboard-oversized-axe.json",
+      "sha256": "48539be2f894e48ed6f2906efae2da1c4fab1f472577c5a2cd859d4bdad101fb",
+      "violations": [],
+      "incomplete_count": 0
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-metering/dashboard-oversized-recovered-axe.json",
+      "sha256": "ccf17989085b4f783b5fa03ac9a45c64b95e71384fc7fdbce07ce180d878694c",
+      "violations": [],
+      "incomplete_count": 1
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-metering/dashboard-reversed-axe.json",
+      "sha256": "8a71e591da227d0adc360b600a1b352ac120fef3063c0c378056064ac85e441f",
+      "violations": [],
+      "incomplete_count": 0
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-metering/dashboard-reversed-recovered-axe.json",
+      "sha256": "bda57a3fe9d9733edd6f53eec3216c08bbbe31deff8a04a9e24b122324439167",
+      "violations": [],
+      "incomplete_count": 1
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-metering/progress-read-failure-axe.json",
+      "sha256": "dc0088d1d64a4a43d4a91137aebe6481cd57f829f5fecb5f10b3acdd327ca390",
+      "violations": [],
+      "incomplete_count": 0
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-metering/scale-archive-axe.json",
+      "sha256": "86eebc4394a3318faa9b18d48f9c67e09d1f345d3a04117d94454ead488b4a4a",
+      "violations": [],
+      "incomplete_count": 0
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-metering/scale-dashboard-axe.json",
+      "sha256": "c65b91035ab35c664e1d7c5833fb7535cb48180109cbaad91f0e99a1b16d4f24",
+      "violations": [],
+      "incomplete_count": 1
+    }
+  ]
+}
