@@ -68,6 +68,8 @@ class WorkspacePaging(ProcurementApiFixture):
 class OpsPagerSourceTests(unittest.TestCase):
     """Source guards for the capacity pager; the browser check covers behaviour."""
 
+    js: str
+
     @classmethod
     def setUpClass(cls) -> None:
         from pathlib import Path
