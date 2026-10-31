@@ -75,3 +75,35 @@ All implementation and original evidence reconciled for commit. Current reviewed
 main remains a75bbdff after fresh fetch. P02 exact-head full gate, receipt
 verification, independent assessment and non-force PR publication remain.
 Final completion accounting is external to preserve receipt identity.
+
+## Post-Review Publication Attempts
+
+Original bounded Review remains Complete/Conformant; publication did not complete.
+Implementation/evidence committed3d87eaa6. First final gate preflight refused
+because main advanced after the fetch. No gate execution/receipt was claimed.
+Fetched current main e64c6e6c9da407682de59b926944424f94f50671 (#600 gate
+stabilization) and merged it without conflict as b43c4512, preserving main's
+rubric, workflow/hash/tool identities and both knowledge-base log histories.
+The merged tools-test changes retain the local fixture-output regression.
+
+At exact b43c4512446d7d85f389b912355c86d95f125c55/base e64c6e6c:
+
+* current-main-full-gate-1: queued2026-10-31T12:48:53Z; exit1at13:18:55Z,
+  Global heavy-resource lock timeout after1800seconds. No groups executed.
+* Authorized single retry current-main-full-gate-2: queued13:18:55Z;
+  exit1at13:48:56Z, same1800-second lock timeout. No groups executed.
+* Actual shared-lock holder observed PID3154696 during retry. No other
+  process was stopped, no other worktree read and no unlocked fallback used.
+
+Both attempts used the gate's internal shared flock with --lock-timeout1800,
+not a self-deadlocking outer flock. Standalone UI checks used explicit
+flock -w1800 and actually passed as recorded above.
+External files root remains
+/home/azureuser/.copilot/session-state/150adff8-0bdd-4492-abae-8a03af70abcf/files/.
+current-main-full-gate-1.log and current-main-full-gate-2.log preserve timeouts;
+full-gate-2/receipt.json preserves the earlier actually executed failed gate.
+No passing current-head full receipt, receipt verification, post-gate exact-head
+assessment, push or PR exists. P02 remains blocked, not complete. A later evidence
+commit invalidates historical candidate identities but does not erase attempts.
+Resume needs a new full gate at the final clean committed HEAD/current main;
+no third capacity retry or weaker partial/cloud publication is substituted.

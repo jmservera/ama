@@ -19,8 +19,10 @@
     {"decision": "Research reused/Ready from executed two exact failures; no weakening parser/lint/workflow/hash changes.", "status": "recorded", "evidence": ".copilot-tracking/research/2026-10-31/employee-briefing-loading-531-publication-harness-research.md"},
     {"decision": "One critique Complete/Pass; one original Review Complete/Conformant for bounded correction, no defects; inherited live/specialist/manual acceptance separate.", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-31/employee-briefing-loading-531-publication-harness-review.md"}
   ],
-  "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "One original Review Complete/Conformant for bounded harness correction. Commit reconciled evidence; execute fresh full gate and exact-head publication; no new child."},
+  "blockers": [
+    {"id": "publication-heavy-capacity", "summary": "Final full gate at b43c4512/current-main e64c6e6c exhausted1800-second wait and the single1800-second retry. Neither executed; no passing receipt, exact-head assessment or PR.", "resolution": "A new authorized full gate when shared capacity is available, at clean final HEAD/fresh current main, then receipt verification, independent exact-head assessment and non-force PR publication."}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Bounded harness correction complete, original Review Complete/Conformant; P02 publication blocked after both authorized30-minute waits. Preserve adverse attempts locally; no push/PR without required full gate and exact-head evidence."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "UX specialist note", "rationale": "Unmet issue contribution, no runtime redesign in this correction.", "evidence": "Prior correction RV-001"},
     {"rank": 2, "task": "Manual contrast assessment", "rationale": "Three actual incomplete checks, no failing ratio established.", "evidence": "Prior correction RV-003"},
