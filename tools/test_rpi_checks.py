@@ -26,6 +26,163 @@ SPEC.loader.exec_module(gate)
 
 
 class GateTests(unittest.TestCase):
+    def test_employee_acceptance_cli_is_required_without_extras_and_dispatched(self) -> None:
+        module = "checks.employee_acceptance_check"
+        self.assertIn("browser", gate.required_groups([]))
+        checks = gate.required_checks(
+            self.root,
+            {
+                "owner": "a" * 24,
+                "sql": {},
+                "images": {},
+                "extras": [],
+                "executed_groups": ["browser"],
+            },
+        )
+        selected = [row for row in checks if module in row["argv"]]
+        self.assertEqual(len(selected), 1)
+        contract = selected[0]
+        self.assertEqual(contract["argv"], ["<output>/venvs/api/bin/python", "-m", module])
+        self.assertEqual(contract["cwd"], "src/api")
+        self.assertEqual(
+            contract["env"],
+            {"PYTHONPATH": ".:src:tests:../core/src:../agents/src:../core/tests:../agents/tests"},
+        )
+        self.assertTrue(contract["suite"])
+        self.assertTrue(contract["integration"])
+        self.assertEqual(
+            checks[checks.index(contract) - 1]["argv"],
+            ["<output>/venvs/api/bin/python", "-m", "playwright", "install", "chromium"],
+        )
+        runner = self.runner()
+        runner.snapshot = self.root
+        commands = []
+
+        def command(argv: list[str], cwd: str = ".", **kwargs: Any) -> str:
+            commands.append(argv)
+            if module in argv:
+                self.assertEqual(argv, [runner.python("api"), *contract["argv"][1:]])
+                self.assertEqual(cwd, contract["cwd"])
+                self.assertEqual(
+                    kwargs,
+                    {"env": contract["env"], "suite": True, "integration": True},
+                )
+                self.assertEqual(
+                    commands[-2],
+                    [runner.python("api"), "-m", "playwright", "install", "chromium"],
+                )
+                raise gate.GateError("fixture stops after employee acceptance dispatch")
+            return ""
+
+        with patch.object(runner, "lint"), patch.object(runner, "command", side_effect=command):
+            runner.browser()
+        self.assertEqual(
+            runner.failures, ["browser: fixture stops after employee acceptance dispatch"]
+        )
+
+    def test_employee_acceptance_receipt_requires_cli_paths_flags_and_zero_skips(self) -> None:
+        original = self.scoped_receipt(["browser"])
+        gate.verify_commands(self.root, self.out, original)
+        for mutation in (
+            "missing",
+            "module",
+            "paths",
+            "suite",
+            "integration",
+            "exit",
+            "zero",
+            "count",
+            "discovery-skip",
+            "sql-skip",
+        ):
+            with self.subTest(mutation=mutation):
+                receipt = copy.deepcopy(original)
+                row = next(
+                    row
+                    for row in receipt["commands"]
+                    if "checks.employee_acceptance_check" in row["argv"]
+                )
+                path = self.out / row["log"]
+                saved = path.read_text()
+                if mutation == "missing":
+                    receipt["commands"].remove(row)
+                elif mutation == "module":
+                    row["argv"][-1] = "checks.design_system_browser_check"
+                elif mutation == "paths":
+                    row["env"]["PYTHONPATH"] = ".:src"
+                elif mutation in ("suite", "integration"):
+                    row[mutation] = False
+                elif mutation == "exit":
+                    row["exit_code"] = 1
+                else:
+                    count = 0 if mutation == "zero" else 2 if mutation == "count" else 3
+                    results = "test_x ... ok\n" * count
+                    skips = []
+                    if mutation.endswith("skip"):
+                        test, reason = (
+                            next(iter(gate.SQL_NOT_APPLICABLE))
+                            if mutation == "sql-skip"
+                            else ("test_x", "Chromium is installed by the later browser-check step")
+                        )
+                        results = "test_x ... ok\n" * 2 + f"{test} ... skipped '{reason}'\n"
+                        skips = [{"test": test, "reason": reason}]
+                    text = (
+                        f"{results}Ran {count} tests in 0.1s\n\nOK"
+                        + (" (skipped=1)" if skips else "")
+                        + "\n"
+                    )
+                    path.write_text(text)
+                    row.update(
+                        tests=count,
+                        executed=count - len(skips),
+                        skips=skips,
+                        sha256=gate.digest(path),
+                    )
+                    receipt["files"][row["log"]] = row["sha256"]
+                try:
+                    with self.assertRaises(gate.GateError):
+                        gate.verify_commands(self.root, self.out, receipt)
+                finally:
+                    path.write_text(saved)
+
+    def test_employee_acceptance_runtime_requires_three_tests_and_zero_skips(self) -> None:
+        runner = self.runner()
+        runner.snapshot = self.root
+        runner.group = "browser"
+        sql_test, sql_reason = next(iter(gate.SQL_NOT_APPLICABLE))
+        success = "test_x ... ok\n" * 3 + "Ran 3 tests in 0.1s\n\nOK\n"
+        discovery = (
+            "test_x ... skipped 'Chromium is installed by the later browser-check step'\n" * 3
+            + "Ran 3 tests in 0.1s\n\nOK (skipped=3)\n"
+        )
+        sql_skip = (
+            "test_x ... ok\n" * 2
+            + f"{sql_test} ... skipped '{sql_reason}'\n"
+            + "Ran 3 tests in 0.1s\n\nOK (skipped=1)\n"
+        )
+        for output, valid in (
+            (success, True),
+            (success.replace("Ran 3", "Ran 0"), False),
+            (success.replace("Ran 3", "Ran 2"), False),
+            (discovery, False),
+            (sql_skip, False),
+        ):
+            with self.subTest(output=output), patch("builtins.print"):
+                argv = [
+                    sys.executable,
+                    "-c",
+                    f"print({output!r})",
+                    "checks.employee_acceptance_check",
+                ]
+                if valid:
+                    runner.command(argv, suite=True, integration=True)
+                    self.assertEqual(runner.rows[-1]["tests"], 3)
+                    self.assertEqual(runner.rows[-1]["executed"], 3)
+                    self.assertEqual(runner.rows[-1]["skips"], [])
+                else:
+                    with self.assertRaises(gate.GateError):
+                        runner.command(argv, suite=True, integration=True)
+
     def test_chat_panel_browser_command_is_required_and_dispatched_with_opt_in(self) -> None:
         checks = gate.required_checks(
             self.root,
@@ -389,6 +546,8 @@ class GateTests(unittest.TestCase):
                 text = "test_x ... ok\nRan 1 test in 0.1s\n\nOK\n"
                 if gate.CHAT_PANEL_BROWSER_SELECTOR in check["argv"]:
                     text = f"{gate.CHAT_PANEL_DISCOVERY_SKIP[0]} ... ok\nRan 1 test in 0.1s\n\nOK\n"
+                if gate.EMPLOYEE_ACCEPTANCE_BROWSER_MODULE in check["argv"]:
+                    text = "test_x ... ok\n" * 3 + "Ran 3 tests in 0.1s\n\nOK\n"
                 row.update(gate.check_skips(text))
             (self.out / name).write_text(text)
             row.update(exit_code=0, log=name, sha256=gate.digest(self.out / name))
@@ -721,6 +880,10 @@ class GateTests(unittest.TestCase):
             },
         }
         checks = gate.required_checks(self.root, receipt)
+        self.assertEqual(
+            sum(gate.EMPLOYEE_ACCEPTANCE_BROWSER_MODULE in check["argv"] for check in checks),
+            1,
+        )
         for index, check in enumerate(checks):
             row = {key: value for key, value in check.items() if key not in ("probe", "attempts")}
             logfile = f"{index:04d}-{check['group']}.log"
@@ -729,6 +892,8 @@ class GateTests(unittest.TestCase):
                 text = "test_x (test_x.Fixture.test_x) ... ok\nRan 1 test in 0.1s\n\nOK\n"
                 if gate.CHAT_PANEL_BROWSER_SELECTOR in check["argv"]:
                     text = f"{gate.CHAT_PANEL_DISCOVERY_SKIP[0]} ... ok\nRan 1 test in 0.1s\n\nOK\n"
+                if gate.EMPLOYEE_ACCEPTANCE_BROWSER_MODULE in check["argv"]:
+                    text = "test_x ... ok\n" * 3 + "Ran 3 tests in 0.1s\n\nOK\n"
                 row.update(gate.check_skips(text, integration=check["integration"]))
             if check["argv"][0] == "git":
                 text = ""
@@ -826,7 +991,7 @@ class GateTests(unittest.TestCase):
             for row in suites:
                 changed["commands"].remove(row)
                 changed["files"].pop(row["log"])
-            self.assertEqual(len(suites), 9)
+            self.assertEqual(len(suites), 10)
             gate.atomic_json(path, changed)
             (self.out / "receipt.sha256").write_text(real_digest(path))
             with self.assertRaises(gate.GateError):

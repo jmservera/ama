@@ -95,6 +95,8 @@ jobs:
         if: matrix.project == 'api'
         run: |
           python -m playwright install --with-deps chromium
+          PYTHONPATH=.:src:tests:../core/src:../agents/src:../core/tests:../agents/tests \
+            python -m checks.employee_acceptance_check
           python -m checks.design_system_browser_check
           curl --fail --silent --show-error --location --retry 2 \
             --connect-timeout 10 --max-time 30 \
