@@ -19,18 +19,46 @@ Evidence column says it was measured.
 
 ## Evidence and Limits
 
-* Merged PR metrics: `/tmp/prs-bottleneck.json` (381 merged PRs, merged
-  2026-09-26 to 2026-10-31; fields are open-to-merge time, files and added
-  lines) and `gh pr list --state merged`.
-* CI timings: `gh run list` over the latest 300 runs, which span only
-  2026-10-31 13:28Z to 23:30Z (about 10 hours). They are a sample of one busy
-  day, not a two-week average. Job timings come from the latest successful
-  Source projects CI run.
-* Review loop: `gh pr view` commits and reviews for the 40 most recently
-  merged PRs.
-* Gate analysis: the 2026-10-27 local gate speed analysis (serial `--all`
-  gate of 23 to 26 minutes on a 4 vCPU, 15 GiB VM), `tools/rpi-checks.py`,
-  `.github/workflows/src-ci.yml` and `.github/workflows/rubric-score.lock.yml`.
+* Merged PR metrics: 381 merged PRs, PR numbers 1 to 621, merged 2026-09-26 to
+  2026-10-31 (cutoff 2026-10-31T23:30Z). Extraction (run from the repository
+  root; the working copy was `/tmp/prs-bottleneck.json`, which is not
+  retained, so this command is the durable record):
+
+  ```bash
+  gh pr list --state merged --limit 400 \
+    --json number,createdAt,mergedAt,additions,changedFiles > prs.json
+  ```
+
+  Open-to-merge is `mergedAt - createdAt`; the 17 to 31 October and 27 to 31
+  October rows filter on `mergedAt`. Percentiles use the nearest-rank method.
+  Re-running later returns more PRs, so apply the cutoff above.
+* CI timings: the latest 300 workflow runs (run IDs 41207526347 to
+  41253940923, 2026-10-31 13:28Z to 23:30Z, about 10 hours), of which 74 are
+  Source projects CI runs in the table below:
+
+  ```bash
+  gh run list --limit 300 \
+    --json databaseId,workflowName,conclusion,event,headSha,createdAt,startedAt,updatedAt
+  ```
+
+  Counts are by `workflowName` and `conclusion`; duration is
+  `updatedAt - startedAt`. This is a sample of one busy day, not a two-week
+  average. Job timings come from `gh run view <id> --json jobs` for the latest
+  successful Source projects CI run in that window.
+* Review loop: `gh pr view <n> --json commits,reviews` for the 40 PRs with the
+  most recent merge times at the cutoff (PR 621 is the highest number; PRs 611
+  and 618 are examples), counting reviews by author `copilot-pull-request-reviewer`
+  and commits by the rubric bot author.
+* Dataset summary kept in this page (sanitised, aggregate only): 381 PRs;
+  median open-to-merge 1.2 h and mean 14.8 h for 17 to 31 October; median 19
+  files and +2286 lines; 300 runs of which 74 Source projects CI (23 success,
+  29 cancelled); 40 PRs with 193 Copilot reviews. These are the values the
+  tables below use.
+* Gate analysis: the 2026-10-27 local gate speed analysis (23 to 26 minutes is
+  a sum of command durations, not a controlled serial wall-time baseline,
+  reported on a 4 vCPU, 15 GiB VM), `tools/rpi-checks.py` (which supports
+  parallel groups with `--jobs`, see #470), `.github/workflows/src-ci.yml` and
+  `.github/workflows/rubric-score.lock.yml`.
 * Open issues counted with `gh issue list --state open`: 132 on 2026-10-31.
 * Not measured: the share of PR lines that are RPI artifacts (owner
   observation only), Playwright failure rates, the cause of the 19 to 24
@@ -58,20 +86,26 @@ Impact is the evidence-backed cost, not a forecast of what a fix saves.
 
 | # | Bottleneck | Measured evidence | Impact | Confidence |
 | --- | --- | --- | --- | --- |
-| 1 | Copilot Code Review cancels Source projects CI | 29 of 75 Source projects CI runs (39 percent) were cancelled, median 5.5 min each, about 160 runner minutes wasted in 10 h. Only 23 runs succeeded (median 10.8 min). Workflow concurrency is `cancel-in-progress: true` per PR; 87 Copilot runs (median 3.9 min) fired in the same window | Each cancel adds a full 11 min rerun to the critical path | Medium: cause per cancel not traced individually |
-| 2 | Rubric bot commits `latest.json` to PR branches | Workflow step "Record score on the pull request branch" commits and pushes `latest.json` and `badge.svg`. Rubric Scorer: 12 cancelled, 12 failed, 64 succeeded runs; 12 push-event runs. 33 of the last 40 PRs carry a bot commit (55 in total). 112 of about 203 merge commits since 17 October changed `latest.json` | Every bot push makes a new head SHA, restarts CI and review, and invalidates the exact-head gate; the file is a guaranteed conflict hot spot | High for pushes; conflict mechanism inferred, not replayed |
+| 1 | Source projects CI cancellations coincide with Copilot Code Review activity | 29 of 75 Source projects CI runs (39 percent) were cancelled, median 5.5 min each, about 160 runner minutes wasted in 10 h. Only 23 runs succeeded (median 10.8 min). `src-ci.yml` has its own per-PR concurrency group (`src-ci-<PR number>`, `cancel-in-progress: true`), so a newer push to the same PR cancels the older run. 87 Copilot runs (median 3.9 min) fired in the same window. The sample shows cancellations and concurrent Copilot activity, not that Copilot caused them | Hypothesis: a push triggers both a review and a replacement CI run, and the replacement cancels the earlier run. Each cancel adds a full 11 min rerun | Low: cancelled runs are not yet traced to replacement events and head SHAs |
+| 2 | Rubric bot commits `latest.json` to PR branches | Workflow step "Record score on the pull request branch" commits and pushes `latest.json` and `badge.svg`. Rubric Scorer: 12 cancelled, 12 failed, 64 succeeded runs; 12 push-event runs. 33 of the last 40 PRs carry a bot commit (55 in total). 112 of about 203 merge commits since 17 October changed `latest.json` | Every bot push makes a new head SHA and invalidates exact-head evidence. Pushes made with `github.token` are normally suppressed from triggering new workflow runs (`.github/rubric/README.md`, recursive-trigger note), so Source projects CI on the new head may need a manual dispatch or a later human push; observed reruns versus automatic triggers are not yet separated. The file is a likely conflict hot spot | High for pushes and head invalidation; CI restart and conflict mechanisms are inferred, not replayed |
 | 3 | Copilot review raises fresh threads after each push | Last 40 PRs: 193 Copilot reviews (mean 4.8, max 14 per PR), mean 7.2 commits per PR, max 39 | Correction cycles dominate the long tail; each cycle costs a push, a CI run (11 min) and a review (4 min) | Medium: review count includes automatic re-reviews, not only distinct threads |
 | 4 | Very large PRs | 191 of 381 PRs touch 16 or more files: mean open-to-merge 15.1 h against 3.8 h for the 50 PRs of 5 or fewer files (median 0.9 h against 0.3 h) | Review surface and thread count grow with size; large PRs fail more rounds | High for correlation; the cause is not isolated and the RPI artifact share is unmeasured |
-| 5 | Single heavy lock serialises local full gates | `HEAVY_LOCK_PATH=/tmp/ama-rpi-heavy.lock`, default wait 600 s; one `--all` gate takes 23 to 26 min, 17 of 17 completed runs | With 8 parallel loops the last gate waits up to 7 x 26 = 182 min; more than one gate per 26 min is impossible on this VM | High for serialisation; queueing is arithmetic, not observed |
+| 5 | Single heavy lock serialises local full gates | `HEAVY_LOCK_PATH=/tmp/ama-rpi-heavy.lock`, default wait 600 s; the 2026-10-27 analysis reports 23 to 26 min for `--all` as a historical command-duration sum, not a controlled wall-time baseline, and the runner now supports parallel groups with `--jobs` | Admission times out after 600 s and `src/README.md` requires nonqueued admission (`--lock-timeout 0`), so a long queue is not a supported mode. Current lock-held wall time is unmeasured | High for serialisation; duration is historical and unmeasured now |
 | 6 | Hosted mssql and src-api jobs are long | Latest successful run: src-api 670 s (11.2 min), mssql 358 s (6.0 min), src-namespace 267 s, src-core 187 s, others under 75 s | CI wall time is set by src-api; every cancel or correction round pays it again | High |
 | 7 | Unreliable browser checks | Local browser group is only 39 s when it works; #608 recorded a Chromium SIGABRT from a long socket path and blocked the SQL group; the earlier Playwright timeouts were reported by the owner | A false browser failure invalidates a 26 min gate run | Low to Medium: failure rate not measured |
 | 8 | Human-gated issues | The cutover evidence pack records #523, #524, #570 and #432 as open with human attestation or pricing inputs missing | Not reducible by tooling; blocks demo claims regardless of speed | Medium: ageing not measured |
 
 Local gate cost structure from the 2026-10-27 analysis: tests are 75 percent
 of the 26 minutes (mssql 26 percent, project-api 22 percent, infra 16
-percent, project-core 11 percent). Everything runs serially and a hosted CI
-run already covers the same checks, so local repetition is the largest
-avoidable duplicate.
+percent, project-core 11 percent). The 23 to 26 minute total is a historical
+command-duration sum, not a controlled baseline. Hosted CI overlaps only part
+of the full local gate: `src-ci.yml` is path-filtered (it does not run for a
+documentation-only PR such as this one) and builds or scans only changed
+images, whereas `--all` covers all four images. Local repetition is therefore
+a candidate duplicate, not a proven one; compare the checks and exact-head CI
+runs actually available per PR before treating hosted CI as a replacement.
+Measure serial against `--jobs` lock-held wall time (#470) before using any
+gate duration in the plan.
 
 ## Ranked Fixes
 
@@ -81,14 +115,14 @@ the rest need an owner decision in the next section.
 
 | Rank | Fix | Addresses | Expected saving (estimate) | Effort | Status |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Stop the rubric bot committing `latest.json` and `badge.svg` to PR branches; publish the score as a PR check or comment and refresh the file on main only | 2 | Removes about 1.4 bot commits and one CI plus review restart per PR; removes the post-merge conflict on every open PR. Estimated 15 to 25 min per PR | Small workflow change | Owner decision D1 |
-| 2 | Make Copilot Code Review non-cancelling: remove it from the CI concurrency group, run it as an advisory non-required review, or stop it triggering on every push | 1, 3 | Removes the 39 percent cancel rate; about 11 min per avoided rerun. About 160 runner minutes per busy day | Small | Owner decision D2 |
+| 1 | Stop the rubric bot committing `latest.json` and `badge.svg` to PR branches; publish the score as a PR check or comment and refresh the file on main only | 2 | Removes about 1.4 bot commits and head invalidations per PR, and the post-merge conflict on open PRs. CI restart saving is unverified (see bottleneck 2). Estimated 15 to 25 min per PR, hypothesis | Small workflow change | Owner decision D1 |
+| 2 | Make Copilot Code Review non-cancelling: remove it from the CI concurrency group, run it as an advisory non-required review, or stop it triggering on every push | 1, 3 | Cancellations arise from `src-ci.yml` concurrency on new pushes, so this may not remove the 39 percent rate; cause unverified. Trace cancels first. Up to about 11 min per avoided rerun if the hypothesis holds | Small | Owner decision D2; trace first |
 | 3 | Cap PR size: split RPI artifacts into a docs PR separate from the code PR, target 10 files or fewer and about 600 added lines | 4, 3 | The 5 or fewer file PRs merge in a mean 3.8 h against 15.1 h; fewer threads per review. Estimated halving of the long tail | Process change | Owner decision D3 |
-| 4 | Make the focused (`--changed`) tier the default local gate for source-only changes; docs-only changes need no heavy gate; full `--all` only for the final release candidate | 5, 7 | 26 min to 3 to 8 min per iteration (gate analysis estimate); frees the lock for other loops | Tool exists; policy change | Owner decision D4 |
+| 4 | Make the focused (`--changed`) tier the default local gate for source-only changes; full `--all` only for the final release candidate. A docs-only exception applies only after owner approval of D4 | 5, 7 | Historical 23 to 26 min sum versus 3 to 8 min focused (gate analysis estimate, not a controlled baseline); measure first | Tool exists; policy change | Owner decision D4 |
 | 5 | Relax the two-cycle Copilot review rule: after two cycles, further new threads become follow-up issues unless they are blocking defects | 3 | Caps correction rounds; the mean PR has 7.2 commits and 4.8 reviews. Estimated 20 to 60 min per looped PR | Policy change | Owner decision D5 |
 | 6 | Split src-api hosted tests into two parallel jobs and cache pip; start mssql in parallel (already a separate job) | 6 | src-api 11 min to about 6 min; CI wall time then limited by mssql at 6 min. Estimate only | Medium; touches workflows | Agent-ready after D1 and D2 |
-| 7 | Cap concurrent heavy local gates at the lock and let every loop use hosted CI as the exact-head evidence for docs-only and small PRs; schedule full gates only at merge candidates | 5 | Removes up to 182 min of queueing with 8 loops | Process | Owner decision D4 |
-| 8 | Make browser checks retry once on infrastructure errors only (socket path, launch timeout), never on assertion failures, and keep the short scratch path guard from #610 | 7 | Avoids losing a 26 min run to a launch error; failure rate unknown, so saving unquantified | Small; fix #608 follow-up | Agent-ready |
+| 7 | Coordinate admissions to the heavy lock (`--lock-timeout 0`, one owner at a time) and schedule full gates only at merge candidates against the current reviewed main base. Hosted CI counts as exact-head evidence only where it runs and covers the same checks | 5 | Unquantified until the lock-held wall time is measured; the earlier 182 min queue figure is withdrawn | Process | Owner decision D4 |
+| 8 | Make browser checks retry once on infrastructure errors only (socket path, launch timeout), never on assertion failures, and keep the #610 guard, which rejects an overlong output path before browser launch. For #608 (a long socket path) a retry of the same path cannot succeed: use a new, admitted, shorter external scratch output, keep the original failure evidence, and reserve retries for transient launch failures | 7 | Avoids losing a long gate run to a launch error; failure rate unknown, so saving unquantified | Small; fix #608 follow-up | Agent-ready |
 | 9 | Triage the 132 open issues into demo-critical (resident and employee demo paths), human-gated and deferred; park the rest until after the demo | 8 | Removes decision load; no minutes saved but protects the week | Small | Agent-ready |
 
 Combined, fixes 1, 2 and 4 together are expected to remove most of the
@@ -104,9 +138,12 @@ PR and none should be assumed.
 * D1 Rubric score recording: stop the rubric bot pushing `latest.json` and
   `badge.svg` to PR branches. Options: post the score as a PR comment or
   check only; refresh the file on main by a separate scheduled or post-merge
-  job. Consequence: the committed score file lags merges; the rubric gate
-  must read the check result instead of the file. Needs a decision because the
-  rubric workflow is a governance control.
+  job. Consequence: the committed score file lags merges. A check verdict cannot
+  replace the baseline: `prepare.py` reads artifact fingerprints and `gate.py`
+  carries forward per-criterion scores from `latest.json`, and a main-only
+  refresh lets concurrent PRs score against an outdated baseline. D1 must
+  preserve a trusted full scorecard and define freshness handling. Needs a
+  decision because the rubric workflow is a governance control.
 * D2 Copilot Code Review trigger: make it non-cancelling and advisory, or
   trigger only on ready-for-review and on request rather than every push.
   Consequence: some review comments arrive later; branch protection must not
@@ -116,9 +153,10 @@ PR and none should be assumed.
   surfaces.
 * D4 Gate tier default: make the focused tier the default local gate and
   reserve the complete local gate for the final merge candidate. The current
-  repository instructions require the complete gate for every final RPI
-  candidate, including documentation-only work, so this needs an explicit
-  owner amendment. Consequence: lower local assurance per iteration, with
+  repository instructions (`.github/copilot-instructions.md`) require the
+  complete exact-head gate for every final RPI candidate, including
+  documentation-only work, so relaxing it, including any docs-only exception,
+  needs an explicit owner amendment and applies only after that approval. Consequence: lower local assurance per iteration, with
   hosted CI as the per-push evidence.
 * D5 Two-cycle review rule: after two review correction cycles, convert new
   non-blocking threads to follow-up issues. Consequence: some edge cases ship
@@ -137,19 +175,22 @@ made, the dependent step is skipped and the fix is not applied.
 
 | Day | Work | Exit evidence |
 | --- | --- | --- |
-| 1 (1 Nov) | Owner decides D1 to D6. Triage the 132 open issues into demo-critical, human-gated and deferred. Freeze new scope outside the demo paths | Decision record in the issue or PR; labelled issue list |
+| 1 (1 Nov) | Owner decides D1 to D6. Triage the 132 open issues into demo-critical, human-gated and deferred. Freeze new scope outside the demo paths. Verify live access to the selected demo, cost headroom and approvals: the resident AI authority in `infra/README.md` expires 2026-11-01T00:00Z and that page records live renewal as Pending, so obtain separate inference authority for any AI journey or mark it blocked | Decision record in the issue or PR; labelled issue list; recorded access, expiry and cost check |
 | 2 | Apply D1 and D2 as one reviewed workflow PR. Start a daily metric: cancelled CI share, rubric bot commits per PR, merges per day | CI cancel share below 10 percent on the next 20 runs (target, to verify) |
 | 3 | Apply D3 and D4 as policy text. Fix the browser launch retry (fix 8). Split src-api hosted CI (fix 6) if the owner agrees | New PRs of 10 files or fewer; mean CI wall time near 6 to 7 min |
-| 4 | Resident demo path: close the demo-critical resident issues using small PRs. Run at most two parallel loops per heavy-lock slot | Resident demo journey passing in hosted CI |
-| 5 | Employee demo path: same method. Do not start new human-gated work; record pending attestations | Employee demo journey passing in hosted CI; #523/#524/#570 shown as pending where unproven |
-| 6 | Stabilise: fix regressions only; no new features. One complete local gate on the merge candidate | Exact-head receipt verified; hosted CI green |
+| 4 | Resident demo path: close the demo-critical resident issues using small PRs. Run at most two parallel loops per heavy-lock slot | Resident demo journey passing authorized live checks of the reviewed deployment (hosted CI is synthetic only) |
+| 5 | Employee demo path: same method. Do not start new human-gated work; record pending attestations | Employee demo journey passing authorized live checks; the evidence pack records it blocked by missing independent identity expectations, so keep it blocked until those prerequisites exist; #523/#524/#570 shown as pending where unproven |
+| 6 | Stabilise: fix regressions only; no new features. One complete local gate on the merge candidate | Exact-head receipt verified against the current main base; hosted CI green where it applies |
 | 7 | Demo-ready release candidate, owner review, remaining issues parked with rationale | Owner acceptance recorded; open-issue list reconciled |
 
-Eight parallel loops: the 4 vCPU VM supports one full gate every 26 minutes,
-so run the eight loops on source work and documentation, and let hosted CI
-(not the local lock) be the per-push evidence. Queue full local gates only for
-merge candidates: eight candidates then wait about three hours in total, which
-fits the day-6 stabilisation window but not a daily cycle.
+Eight parallel loops: the VM has one heavy lock and its current wall time is
+unmeasured, so run the eight loops on source work and documentation and use
+hosted CI as per-push evidence only where it runs. Admit full local gates one
+at a time with `--lock-timeout 0` (admission times out after 600 s; no
+queued waiting), coordinated against each current reviewed main base. Each
+merge advances that base and makes the other candidates' receipts stale, so
+budget revalidation per candidate; do not promise a three-hour batch. Measure
+serial against `--jobs` first (#470) and size the day-6 window from that.
 
 ## Risks and Open Questions
 
