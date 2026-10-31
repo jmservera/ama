@@ -27,3 +27,9 @@
 
 * Finding: a same-route refresh called employeeChat.install(), which unhid the launcher beneath a docked widget. install() now hides the launcher for unauthorised users and unhides it only when no widget exists (chat.js).
 * Regression: test_reinstall_preserves_widget_toggle_and_launcher_state asserts a hidden (docked) launcher stays hidden after install(). test_chat_widget_focus passes; ruff check, ruff format --check and node --check pass; mypy shows only pre-existing missing-stub errors. Other test_chat* modules need the installed package, not available here. Heavy gate not run.
+
+## Correction cycle 5 (PR 620 CI, Synthetic design-system browser checks)
+
+* CI failure: case_journey_browser_check chat_cleanup timed out waiting for the stored-thread ask request. Reproduced locally with Chromium. Cause: the product change (kept) sends employee chat to /api/chat/unstored-ask while storage is not approved, and the check relied on the old always-stored behaviour.
+* Fix (check only): chat_cleanup now routes /api/chat/status to add storage_approved true, so it still exercises the stored-thread lifecycle. Product behaviour unchanged.
+* case_journey_browser_check passes in full; test_chat_panel and test_chat_widget_focus pass, plus the CI browser unit test; ruff check, ruff format --check and mypy pass. Heavy gate not run.

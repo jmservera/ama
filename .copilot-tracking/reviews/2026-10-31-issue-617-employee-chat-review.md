@@ -16,3 +16,7 @@
 
 * CI failure: test_both_chat_submissions_clear_only_successful_unchanged_raw_questions raised "root.insertBefore is not a function". The widget legitimately calls root.insertBefore (resize controls); the test's fake Node lacked it. Added Node.prototype.insertBefore to the fake in src/api/tests/test_case_journey.py; assertions unchanged.
 * test_case_journey and test_chat_widget_focus pass (36 tests); ruff and node --check pass; mypy reports only pre-existing missing-stub errors. Heavy gate not run.
+
+## Correction cycle 5 note (2026-10-31)
+
+* The CI browser-check failure was an obsolete check assumption (stored threads only), not a product defect. The unstored fallback remains covered by the chat unit tests. No new Review run; original outcome preserved.

@@ -255,8 +255,13 @@ def chat_cleanup(page: Page, base: str) -> None:
     def usage_response(route: Route) -> None:
         route.fulfill(json=usage)
 
+    def employee_status(route: Route) -> None:
+        body = route.fetch().json()
+        route.fulfill(json={**body, "storage_approved": True})
+
     page.route("**/api/chat/regulatory/status", admission)
     page.route("**/api/chat/regulatory/usage", usage_response)
+    page.route("**/api/chat/status", employee_status)
     for regulatory in (False, True):
         prefix = "/api/chat/regulatory" if regulatory else "/api/chat"
         question_id = "#regulatory-question" if regulatory else "#employee-chat-question"
@@ -362,6 +367,7 @@ def chat_cleanup(page: Page, base: str) -> None:
             page.unroute(ask_path, hold)
     page.unroute("**/api/chat/regulatory/status", admission)
     page.unroute("**/api/chat/regulatory/usage", usage_response)
+    page.unroute("**/api/chat/status", employee_status)
     page.goto(base + "/app#/case/ZF-1?tab=overview")
     page.get_by_role("tab", name="Overview", exact=True).wait_for()
 
