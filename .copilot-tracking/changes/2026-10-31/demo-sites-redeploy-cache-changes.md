@@ -197,3 +197,41 @@ Git-commit skill referenced instruction file absent and get_changed_files
 unavailable. Apply higher repository exact-path staging and explicit diff/
 readback/privacy-safe identity/Refs/trailer safeguards, not broad staging.
 No full publication gate, push, PR, merge, amend or history rewrite.
+
+## Local Evidence Persistence and Closeout
+
+`chmod 600 ROOT/commit.py && PYTHONDONTWRITEBYTECODE=1
+python3 ROOT/commit.py` exit0. Eight original dated artifacts, including the
+single Review, locally committed as ae9d26da04e7289e5daf1ddaf56f7c1ef607b971,
+`chore(ops): redeploy immutable asset cache on both demos`.
+Fresh gh api user-derived repository-local noreply author/committer, explicit
+eight-path staging, JSON/sensitive-marker/whitespace and exact message/paths/
+identity/clean-tree readback pass. Refs #568,#520,#570 and exact Copilot trailer.
+Actual private local-commit-proof.json retained; no push/PR/merge/amend/rebase.
+
+All P01/P02/P03 tasks executed; finite manual full RPI loop complete/stopped.
+Review original Complete / Residual work remains unchanged. Administrative
+RV-002 local persistence performed; RV-001 signed-in/widget/cache acceptance,
+RV-003 optional console diagnosis and separate AI decision remain later work.
+No source/operational correction, repeated Review or closure assessment.
+Original export/Review pending-at-assessment statements are historical, not
+altered to predeclare a commit.
+
+This final plan/details/state/changes administrative status reconciliation
+is persisted separately via `PYTHONDONTWRITEBYTECODE=1 python3 ROOT/commit.py
+--closure`, with identical exact-path identity/Refs/trailer/readback safeguards.
+Actual final commit proof stays external in closure-commit-proof.json/events,
+not self-referentially predeclared here. No further work or push selected.
+
+## Proven and Unproven
+
+Exact d20bc50c cache8 images live, both health200, versioned public asset200/
+source-equal with max-age31536000 AND immutable, HTML no-store. Resident
+anonymous dock open/dock/undock/Escape desktop/mobile proven. Exact prior
+private ACR restored after both windows; old manifests/history protected;
+min0/eight full Manual definitions/AI OFF retained. SQL correctly not run.
+Protected employee widget200/cache and signed-in resident/employee/identity/
+model acceptance unproven. No live rollback, propagation retry or ACR-build
+fallback exercised/certified. Console causes and full publication/hosted/human
+approvals unproven. Raw backups/executors retained privately; no .env/secrets/
+private data, new RBAC/endpoints/public SQL or RG deletion.

@@ -8,7 +8,8 @@ ms.date: 2026-10-31
 Task 2c99fa13-81cb-4fd2-af53-81ad16cb565a; demo-sites-redeploy-cache.
 Plan: .copilot-tracking/plans/2026-10-31/demo-sites-redeploy-cache-plan.md.
 Research: .copilot-tracking/research/2026-10-31/demo-sites-redeploy-cache-research.md.
-Status: P01/P02/P03-T01 complete; export/Review complete, local commit pending.
+Status: all P01/P02/P03 tasks executed; original evidence and Review committed
+locally as ae9d26da. Review Complete / Residual work unchanged.
 
 ## Phase Index
 
@@ -16,7 +17,7 @@ Status: P01/P02/P03-T01 complete; export/Review complete, local commit pending.
 | --- | --- | --- |
 | P01 | Complete | P01-T01, P01-T02 |
 | P02 | Complete | P02-T01 |
-| P03 | P03-T01 complete; P03-T02 local commit pending | P03-T01, P03-T02 |
+| P03 | Complete | P03-T01, P03-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Preserve, build and publish
@@ -119,6 +120,10 @@ trailer. Readback identity/message/paths/clean tree. Local only, no push/PR/merg
 amend/rebase. Full publication gate and hosted/human approvals not claimed.
 Actual export exit0:194 command records,20 outer command bindings, one actual
 browser receipt; archive/output/executor/protected-source checks pass.
-One original Review Complete / Residual work; local persistence remains unchecked.
+One original Review Complete / Residual work; local persistence complete.
 RV-001 protected/signed-in acceptance and RV-003 optional console diagnosis
-routed separately; RV-002 administrative local persistence next, no repeat Review.
+routed separately; RV-002 administrative local persistence performed, no repeat Review.
+Actual commit.py exit0, eight explicit original paths, Refs/trailer/noreply
+identity/message/clean-tree readback verified. No push. Administrative final
+markers and state reconciled separately, not an operational correction or
+new Review. Original export/Review's pending-at-assessment statements preserved.

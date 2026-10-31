@@ -6,7 +6,8 @@ ms.date: 2026-10-31
 ## Task Metadata
 
 Task 2c99fa13-81cb-4fd2-af53-81ad16cb565a; demo-sites-redeploy-cache.
-Planning status: Ready; operational implementation complete, one Review Complete / Residual work.
+Planning status: full requested loop executed and local original evidence persisted;
+one Review Complete / Residual work unchanged.
 Details: .copilot-tracking/details/2026-10-31/demo-sites-redeploy-cache-phase-details.md.
 Critique: .copilot-tracking/reviews/plans/2026-10-31/demo-sites-redeploy-cache-plan-critique.md.
 
@@ -109,13 +110,13 @@ Dependencies: P01, image proof and private ACR restoration.
 #### [x] P02-T01: Record SQL skip, roll resident then employee and protected readbacks
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Live verification and persistence
+### [x] P03: Live verification and persistence
 
 Dependencies: P02.
 <!-- rpi:task id=P03-T01 -->
 #### [x] P03-T01: Warm curl/cache/browser/dock verification and full invariants
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: Sanitized export, one independent Review and local evidence commit
+#### [x] P03-T02: Sanitized export, one independent Review and local evidence commit
 
 ## Dependencies
 
@@ -143,9 +144,12 @@ a unique or unverifiable substitute. No second critique or unresolved decision.
 ## Handoff
 
 Implementation changes path: .copilot-tracking/changes/2026-10-31/demo-sites-redeploy-cache-changes.md.
-P01/P02/P03-T01 complete. AC1-6 scoped anonymous evidence passed; AC7 export
-complete, original independent Review Complete / Residual work, local commit pending. Both public
+P01/P02/P03 complete. AC1-6 scoped anonymous evidence passed; AC7 export,
+original independent Review and local original evidence commit complete. Both public
 versioned asset sets exact-year immutable and HTML no-store. Employee
 protected widget live200/cache and signed-in/model acceptance unproven.
 No operational blocker. RV-001/RV-003 routed separately; RV-002 local
-administrative persistence next. No repeat Review or operational implementation.
+administrative persistence performed as ae9d26da. Original Review verdict
+remains Residual work, no repeat Review or closure assessment. Finite manual
+loop stopped; no automatic follow-up selected. Administrative reconciliation
+is committed separately; final commit readback remains external.
