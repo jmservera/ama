@@ -1,0 +1,70 @@
+{
+  "task_id": "pr423-review-corrections-2026-10-30",
+  "task_slug": "pr423-review-corrections",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/pr423-review-corrections-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/pr423-review-corrections-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/pr423-review-corrections-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/pr423-review-corrections-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/pr423-review-corrections-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/pr423-review-corrections-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute research, plan, implement, review in order; commit locally only",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-30; no remote writes, Azure, live sign-in or secrets"
+    },
+    {
+      "decision": "Research executed Ready; one critique Complete / Revise, PC-001 and PC-002 directly applied",
+      "status": "resolved",
+      "evidence": ".copilot-tracking/plans/2026-10-30/pr423-review-corrections-plan.md#critique-disposition"
+    },
+    {
+      "decision": "One independent Review executed Complete; outcome Residual work; no source defect",
+      "status": "recorded",
+      "evidence": "Reviewed e8d29686 plus working correction before final commit; RV-001 High base/gate, RV-002 Medium publication/score, RV-003 Low live/human acceptance"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "current-main-moved",
+      "summary": "Requested main d986c4c4 integrated; origin/main advanced to f168d079 during local validation",
+      "resolution": "Coordinator reconciles later main and runs new exact-head full gate; local merge-tree is clean, no base relabelling"
+    },
+    {
+      "id": "hosted-and-human",
+      "summary": "Unpublished correction has no new hosted score or publication assessment",
+      "resolution": "Coordinator applies proposed PR body and obtains final hosted/human/exact-head gates; no push authorized here"
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "RPI phases complete with Residual work. Final commit/gate pending at committed snapshot; authoritative later status goes to external pr423-final-handoff.json. Coordinator owns ranked follow-ups; no child selected and no push."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Reconcile later main and obtain current-main exact-head full receipt",
+      "rationale": "Highest value publication dependency; deterministic clean merge calculation is not gate approval",
+      "evidence": "RV-001; origin/main advanced from requested d986c4c4 to f168d079"
+    },
+    {
+      "rank": 2,
+      "task": "Apply corrected PR body and obtain hosted score and publication assessment",
+      "rationale": "Low-effort remote evidence correction prevents reuse of historical run9; user reserves remote actions to coordinator",
+      "evidence": "RV-002; proposed local PR body and historical 77/100 PASS"
+    },
+    {
+      "rank": 3,
+      "task": "Separately authorize live private Blob and human acceptance",
+      "rationale": "Larger operational uncertainty outside synthetic test authority; no local engineering cleanup justified",
+      "evidence": "RV-003; DN1-DN5 and retained unproven live criteria"
+    }
+  ]
+}
