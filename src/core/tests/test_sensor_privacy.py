@@ -146,11 +146,17 @@ class SensorPrivacyTests(unittest.TestCase):
         store.ai.endpoint = "https://offline.invalid"
         store.ai.gate = store.ai.release = None
         body = json.dumps({"choices": [{"message": {"content": "Not a cited proposal."}}]}).encode()
+        meter = Mock()
+        meter.reserve.return_value = "a" * 64
         with (
+            patch.object(store.ai, "consumption", meter),
             patch.object(store.ai, "_token", return_value="offline-test"),
             patch("urllib.request.urlopen", return_value=io.BytesIO(body)) as transport,
         ):
             store.ai_run(store.staff["sam@example.test"], "ZF-1", "summary")
+        meter.reserve.assert_called_once()
+        meter.dispatch_check.assert_called_once_with("a" * 64)
+        transport.assert_called_once()
         request = transport.call_args.args[0]
         assembled = json.loads(request.data)
         self.assert_clean(assembled)

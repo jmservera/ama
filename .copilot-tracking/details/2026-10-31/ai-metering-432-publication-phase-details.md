@@ -13,7 +13,7 @@
 
 | Phase | Name | Status | Tasks |
 | --- | --- | --- | --- |
-| P01 | Compose lock / candidate | Complete, source/evidence commit cae4bba1 | P01-T01, P01-T02 |
+| P01 | Compose lock / candidate | Complete, including coupled fixture correction; fresh P02 run required | P01-T01, P01-T02 |
 | P02 | Queued integration validation | Pending P01 | P02-T01 |
 
 <!-- rpi:phase id=P01 -->
@@ -62,6 +62,22 @@ Preserve originals with task-owned external hashes. Git identity obtained from
 gh api user; repository-local noreply author/committer, required trailer.
 Record P01 completion and P02 candidate/gate-pending boundary before commit.
 No broad cleanup or existing work movement.
+
+First complete gate at frozen candidate 2106ee22 found
+test_sensor_privacy.SensorPrivacyTests.test_actual_legacy_transport_body_is_closed
+never reached its mocked urlopen because it lacked financial admission.
+Correct only its test fixture using the existing assistant-envelope Mock-meter
+pattern. Keep privacy assertions, explicitly assert reserve/dispatch_check and
+transport invocation. No production fallback or actual live price/authority;
+no new method and original metering test cap unaffected. Targeted existing
+privacy suite, core static checks and fresh complete gate must cover this
+correction before the sole child Review.
+
+Fixture correction validation: all 17 sensor privacy methods pass with one
+existing opt-in SQL skip; core Ruff/format (117 applicable files) and strict
+mypy (170 files) pass. Missing local zava_forward import was resolved by
+pip-installing core[dev] into a new owned external venv, not PYTHONPATH source
+workarounds or mutation of the failed receipt's environments.
 
 <!-- rpi:phase id=P02 -->
 ## P02: Complete queued integration validation

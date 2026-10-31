@@ -42,7 +42,8 @@ Review and subsequent correction evidence remain immutable.
 
 ## Scope and Non-Goals
 
-* In scope: tools/rpi-checks.py, tools/test_rpi_checks.py, src/README.md and dated
+* In scope: tools/rpi-checks.py, tools/test_rpi_checks.py, the existing
+  src/core/tests/test_sensor_privacy.py transport fixture, src/README.md and dated
   child evidence; authorised ancestry merge and publication.
 * Out of scope: metering redesign, unrelated baseline fixes, generated pitch,
   raw telemetry content, private data, spend or human/hosted acceptance.
@@ -101,6 +102,11 @@ Review and subsequent correction evidence remain immutable.
 * Dependency: P01-T01 targeted validation.
 * Fetch/merge main; preserve original parent files and record exact identities.
   Commit implementation and original child evidence with privacy-safe identity.
+* First full gate revealed a coupled existing privacy test needs an explicit
+  mocked financial admission fixture. Correct that existing method, retain all
+  privacy assertions, and rerun a fresh committed candidate; no new method/module
+  or production admission exception. P01-T02 is reopened for this in-scope
+  validation correction before the sole child Review.
 
 <!-- rpi:phase id=P02 -->
 ### [ ] P02: Complete queued integration validation

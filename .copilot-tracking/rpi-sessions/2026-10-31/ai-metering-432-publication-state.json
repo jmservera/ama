@@ -20,7 +20,7 @@
     {"decision": "Child critique execution Complete, verdict Revise; PC-001/002/003 directly applied as compatible sequence, exception-evidence and five-method ownership refinements; no second critique.", "status": "disposed", "evidence": ".copilot-tracking/reviews/plans/2026-10-31/ai-metering-432-publication-plan-critique.md; child plan Critique Disposition"}
   ],
   "blockers": [],
-  "next_action": {"phase": "Implement", "action": "P01 complete at cae4bba1; frozen pre-gate snapshot. Run queued full gate in owned clean clone, reconcile P02 externally, then sole exact-head child Review. Final state at session files/ai432-publication/.copilot-tracking/rpi-sessions/2026-10-31/ai-metering-432-publication-state.json and durable PR body."},
+  "next_action": {"phase": "Implement", "action": "Attempt a failed: known main B023/chat skip plus coupled core privacy-fixture failure. Existing fixture corrected: 17 tests and core static pass; freeze new candidate and run fresh full gate b. No child Review yet. Final state in external session tracking mirror and PR body."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Obtain operational OD-51, applicable prices, billing and held-out authority.", "rationale": "Required human/financial evidence remains unavailable.", "evidence": "Parent Review RV-006 and issue #432"},
     {"rank": 2, "task": "Scope resident/historical joins and actual pitch/Q&A delivery.", "rationale": "Explicitly outside completed source-only corrections.", "evidence": "Parent Review RV-006"}

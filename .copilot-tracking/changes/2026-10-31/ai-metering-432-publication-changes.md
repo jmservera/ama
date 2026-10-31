@@ -85,3 +85,54 @@ Final Review/state/result root:
 /home/azureuser/.copilot/session-state/78bc570d-9a9a-4914-a18c-763026950ae0/files/ai432-publication/.copilot-tracking/
 The PR body retains final identities, per-group evidence and review outcome;
 final local files remain immutable/external, not unreviewed post-gate commits.
+
+## First Full Gate: Preserved Adverse Result and Coupled Fixture Correction
+
+At 2106ee22/base a75bbdff, outer flock acquired successfully and the runner
+held continuous ownership; admitted jobs=1. Receipt sealed 2026-10-31T12:04:07Z
+is full-selection / failed, not passing or verified. External output/log above
+are preserved, never overwritten.
+
+Known main B023: nine findings in unchanged
+src/api/checks/case_journey_browser_check.py, 0070-browser.log; source SHA-256
+ae5e2cf0998a2d439b73ec419333daa970d2f394774cac7221215337f1a17abd
+matches main. Known chat-panel discovery: unchanged runner regression prints
+two synthetic opt-in Chromium skip lines, so the outer static suite parser
+fails despite all 42 runner tests passing; 0065-static.log. No actual browser
+acceptance is inferred from those fixture lines.
+
+Independent coupled failure: core discovery ran 1,634 tests/206 opt-in skips
+but test_sensor_privacy.SensorPrivacyTests.test_actual_legacy_transport_body_is_closed
+errored because financial admission prevented its mocked transport call;
+0043-project-core.log. This is not covered by the baseline exception.
+P01-T02 reopens for a surgical existing-test fixture correction, not a
+production bypass; no new methods/modules or weakened privacy assertions.
+Fresh full gate required after committing corrected source and evidence.
+
+Agents 123, API 1,439 (321 enumerated skips), orchestrator 69 and importer 39
+completed; namespace completed. Infra/migration/images/logo/SQL did not execute,
+causally blocked by failed prerequisites. Pre-install namespace absence probes
+were expected and followed by successful installations, not failure roots.
+Main refetched after failure remains a75bbdff; no baseline-fix PR observed.
+The final matrix must reflect the fresh run, not reuse this failed receipt.
+
+## Coupled Privacy Fixture Validation and Fresh Candidate
+
+The existing transport privacy method now supplies an explicit Mock financial
+meter with an opaque reservation ID, preserving every request-body privacy
+assertion and adding reserve, pre-network dispatch-check and exact transport
+invocation assertions. It still mocks provider/token; no real call or applicable
+price/authority is created. Exactly zero test methods/modules added or removed.
+Production code and its fail-closed admission are unchanged.
+
+All 17 sensor privacy tests pass in 2.008 seconds with one inherited SQL opt-in
+skip; core Ruff/format (117 files) and strict mypy (170 files) pass. An initial
+local namespace import failure was fixed by pip-installing core[dev] into the
+new owned /tmp/ai432-publication-fixture-venv; failed gate environments remain
+unchanged. This is an immediately relevant test-fixture reconciliation under
+P01-T02, not a new significant decision or repeated critique/Review.
+
+Fresh output /tmp/ama-ai432-publication-gate-2026-10-31-b and corresponding .log
+will validate the new committed exact candidate. Preserve attempt a and its
+4abc54f87e938ee8cd1174a53dbaecab4de143a7e9ccc2f2ab793480768ed1b7
+receipt hash. All in-tree artifacts freeze again before the sole child Review.
