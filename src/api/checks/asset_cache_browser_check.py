@@ -18,6 +18,7 @@ from test_ui_support import Base
 
 from zava_forward.api import server as employee
 from zava_forward.api.resident_demo import app as resident
+from checks.asset_urls import asset_url
 
 
 def exercise(browser: Browser, site: str, out: Path) -> dict[str, Any]:
@@ -67,7 +68,7 @@ def exercise(browser: Browser, site: str, out: Path) -> dict[str, Any]:
                     self.end_headers()
                     self.wfile.write(body)
                     return
-                if (not old and urlsplit(self.path).path == "/chat-widget.js"
+                if (not old and asset_url("/chat-widget.js").search(self.path)
                         and not failures):
                     failures.append(self.path)
                     self.send_response(503)
@@ -142,7 +143,7 @@ def exercise(browser: Browser, site: str, out: Path) -> dict[str, Any]:
                 "nodes => nodes.map(node => node.getAttribute('src') || node.getAttribute('href'))")
             assert all(urlsplit(url).query.startswith("v=") for url in urls), urls
             assert all(url not in old_links for url in urls), "Release URLs did not change"
-            widget_url = next(url for url in urls if urlsplit(url).path == "/chat-widget.js")
+            widget_url = next(url for url in urls if asset_url("/chat-widget.js").search(url))
             assert failures == [widget_url], failures
             assert sum(row["url"] == widget_url for row in records) == 2, records
             page.reload()
