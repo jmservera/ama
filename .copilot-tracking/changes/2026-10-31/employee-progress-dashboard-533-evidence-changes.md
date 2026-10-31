@@ -84,3 +84,14 @@ root. Full heavy reports remain external at browser-post-main/.
 This supplemental execution verifies upstream authentication integration,
 not a repeat source Review. A new merge/evidence commit and complete current-base
 gate are required; all original source/evidence Review outcomes remain preserved.
+
+Merge/evidence commit 1bb5db02 succeeded. Subsequent nonblocking full-gate
+admission attempts stayed busy; gate-059 then stopped before checks because
+reviewed base differed from current origin/main. Main had advanced to
+28fbe6b6111c5aae4fc2c4f55f8ffca2876ab589, reviewed #604 briefing/browser-check
+and guide changes only. A second normal conflict-free local merge incorporates
+that base without rewriting history. Correction test and progress browser
+checker SHA256 remain unchanged; no new progress runtime change or repeated
+source Review. Prior post-main progress browser evidence remains the same
+code/runtime boundary. New gate will use the current committed base.
+All busy/preflight outcomes are retained externally, not relabelled execution.
