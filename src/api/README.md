@@ -72,6 +72,9 @@ response's actual list links/labels, marker labels/count and status. Malformed
 data, map alerts, page errors and mismatched rendering fail; HTTP 200, selected
 state or a cleared busy indicator alone cannot pass. Temporary listeners are
 removed on success, failure and admission loss. Payloads remain in memory only.
+Cluster containment permits 1e-9 degrees of absolute centroid roundoff against
+the original-coordinate bounds. Point containment, finite coordinates and
+geographic limits remain exact.
 
 From `src/api`, run the changed local Chromium check with the existing test
 paths (installed Chromium required; no live identity or credential access):
@@ -99,7 +102,9 @@ Fresh non-integration discovery records the existing approved
 browser executable is absent; other launch failures propagate. That skip is
 not executed acceptance. The maintained CLI requires exactly three successful
 tests and zero skips, so missing Chromium exits nonzero. Complete-gate browser
-setup and all three reviewed integration extras must actually execute; no
+setup and source CI invoke this CLI after installing Chromium with the test
+import paths above. The discovery qualification remains unchanged; all three
+reviewed integration extras must actually execute; no
 missing-browser fallback or passing skipped integration is permitted.
 
 ## Compact case journey (#552)

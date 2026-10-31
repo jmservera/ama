@@ -24,6 +24,9 @@ management: short pages that point to clusters of related material.
 For #570, the [employee acceptance adapter](../../src/api/README.md#employee-acceptance-identity-check-570)
 uses immutable expected identity and fresh navigation/action admission, with
 correlated actual map rendering rather than HTTP/selection-only acceptance.
+Cluster containment allows only 1e-9 degrees of centroid roundoff; points and
+geographic limits stay exact. Source CI enforces all three maintained Chromium
+regressions after browser installation, retaining qualified early discovery.
 Local constructed Chromium evidence is not live Aadi chat/map/case acceptance;
 independent expected-object attestation remains unavailable.
 

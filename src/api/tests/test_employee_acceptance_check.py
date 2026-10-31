@@ -13,6 +13,7 @@ from checks import employee_acceptance_check as check
 from checks.employee_identity_check import BINDING
 from playwright.sync_api import Error as BrowserError
 from playwright.sync_api import Page, Request, Route, sync_playwright
+from zava_forward.core import insights
 
 import test_employee_identity_check as identity_fixture
 from test_auth import OID_NEW, OID_SAM, TENANT, principal
@@ -219,6 +220,74 @@ class AcceptanceTests(unittest.TestCase):
         for index, invalid_payload in enumerate(invalid):
             with self.subTest(index=index):
                 self.assertIsNone(check.map_projection(invalid_payload))
+
+    def test_map_producer_cluster_roundoff(self) -> None:
+        cases = [
+            {
+                "id": f"SYNTH-MAP-{index}",
+                "closed": False,
+                "stage": "Home identified",
+                "days_in_stage": 0,
+                "hazards": [],
+                "resident": {"name": "Synthetic resident"},
+                "home": {
+                    "lat": 54.9,
+                    "lon": -1.6,
+                    "address": "Synthetic home",
+                    "postcode": "SYNTHETIC",
+                },
+            }
+            for index in range(501)
+        ]
+        payload = insights.map_view(cases, {})
+        self.assertEqual(payload["mode"], "clusters")
+        self.assertEqual(payload["total"], 501)
+        self.assertEqual(payload["shown"], 1)
+        self.assertEqual(payload["items"][0]["count"], 501)
+        self.assertGreater(payload["items"][0]["lat"], payload["bounds"][2])
+        self.assertLess(payload["items"][0]["lon"], payload["bounds"][1])
+        self.assertIsNotNone(check.map_projection(payload))
+
+    def test_map_containment_and_geographic_limits(self) -> None:
+        for mode, template, item in (("points", POINTS, POINT), ("clusters", CLUSTERS, CLUSTER)):
+            for axis in ("lat", "lon"):
+                for side in (-1, 1):
+                    for overshoot in (0, 5e-10, 2e-9):
+                        with self.subTest(mode=mode, axis=axis, side=side, overshoot=overshoot):
+                            marker = dict(item, lat=0, lon=0)
+                            marker[axis] = side * (1 + overshoot)
+                            payload = dict(template, bounds=[-1, -1, 1, 1], items=[marker])
+                            accepted = overshoot == 0 or (mode == "clusters" and overshoot < 1e-9)
+                            self.assertEqual(check.map_projection(payload) is not None, accepted)
+                limit = 90 if axis == "lat" else 180
+                for invalid in (True, float("nan"), float("inf"), -float("inf")):
+                    with self.subTest(mode=mode, axis=axis, invalid=invalid):
+                        marker = dict(item, lat=0, lon=0)
+                        marker[axis] = invalid
+                        self.assertIsNone(
+                            check.map_projection(
+                                dict(template, bounds=[-90, -180, 90, 180], items=[marker])
+                            )
+                        )
+                for side in (-1, 1):
+                    for overshoot in (0, 5e-10):
+                        marker = dict(item, lat=0, lon=0)
+                        marker[axis] = side * (limit + overshoot)
+                        payload = dict(template, bounds=[-90, -180, 90, 180], items=[marker])
+                        with self.subTest(mode=mode, axis=axis, side=side, geographic=overshoot):
+                            self.assertEqual(
+                                check.map_projection(payload) is not None, overshoot == 0
+                            )
+            for index in range(4):
+                limit = 90 if index % 2 == 0 else 180
+                side = -1 if index < 2 else 1
+                for invalid in (True, float("nan"), side * float("inf"), side * (limit + 5e-10)):
+                    with self.subTest(mode=mode, bound=index, invalid=invalid):
+                        bounds = [-90.0, -180.0, 90.0, 180.0]
+                        bounds[index] = invalid
+                        self.assertIsNone(
+                            check.map_projection(dict(template, bounds=bounds, items=[item]))
+                        )
 
     def chromium(self, oid: str, admitted: bool, map_contract: bool = False) -> None:
         privacy = patch.dict(

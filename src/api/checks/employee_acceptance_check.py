@@ -206,6 +206,8 @@ def map_projection(payload: object) -> dict[str, object] | None:
     links: list[str] = []
     marker_labels: list[str] = []
     counts = 0
+    # Cluster centroids accumulate roundoff; original point coordinates do not.
+    tolerance = 1e-9 if mode == "clusters" else 0
     for item in items:
         if (
             not isinstance(item, dict)
@@ -214,7 +216,8 @@ def map_projection(payload: object) -> dict[str, object] | None:
             or (
                 bounds is not None
                 and not (
-                    bounds[0] <= item["lat"] <= bounds[2] and bounds[1] <= item["lon"] <= bounds[3]
+                    bounds[0] - tolerance <= item["lat"] <= bounds[2] + tolerance
+                    and bounds[1] - tolerance <= item["lon"] <= bounds[3] + tolerance
                 )
             )
         ):

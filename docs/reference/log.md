@@ -8854,3 +8854,14 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   without rewriting previous entries. New local regression evidence remains
   synthetic; independent Aadi object attestation and live chat/map/case
   verification are unmet. No credential read, sign-in or Azure change.
+
+## [2026-10-31] query | Employee acceptance review-thread repairs, Refs #570
+
+* Updated the [API acceptance guide](../../src/api/README.md#employee-acceptance-identity-check-570)
+  and index with cluster-only absolute centroid tolerance and post-install
+  hosted Chromium enforcement. Points/geographic validation and qualified
+  discovery remain strict; the workflow hash pin changes with the workflow.
+* The producer-derived 501-home regression reproduces roundoff before the fix.
+  Synthetic local checks do not establish live employee acceptance or hosted
+  CI success. Current owner direction uses CI as the publication gate without
+  waiting for the full local gate; original adverse evidence stays intact.
