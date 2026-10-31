@@ -184,7 +184,13 @@ function appointmentDrafts() {
 }
 
 const CAPACITY_PAGE = { packages: { size: 5, offset: 0 }, orders: { size: 20, offset: 0 } };
+const RENDERED_OFFSETS = { packages: 0, orders: 0 };
 let capacityPagerFocus = null;
+
+function capacityDirty() {
+  return appointmentDrafts().length > 0
+    || [...document.querySelectorAll("[data-capacity-draft]")].some((el) => el.value && el.value.trim());
+}
 let capacityLoadSeq = 0;
 
 function pagedPath(base, page) {
@@ -200,7 +206,7 @@ function pagerControls(kind, label, page, total, count, go, busy) {
   if (capacityPagerFocus === kind) { capacityPagerFocus = null; queueMicrotask(() => status.focus()); }
   const step = (delta) => {
     if (busy()) return;
-    if (kind === "orders" && appointmentDrafts().length && !window.confirm("Changing the work order page discards unsaved appointment drafts. Continue?")) return;
+    if (capacityDirty() && !window.confirm("Changing the page discards unsaved entries in this workspace. Continue?")) return;
     live.offset = Math.max(0, page.offset + delta * page.size); capacityPagerFocus = kind; return go();
   };
   const prev = h("button", { type: "button", class: "alt", onclick: () => step(-1) }, `Previous ${label}`);
@@ -230,6 +236,7 @@ async function capacityView() {
     }
     catch (e) {
       if (signal.aborted || !me) return;
+      if (e.capacityLoadFailure) { CAPACITY_PAGE.packages.offset = RENDERED_OFFSETS.packages; CAPACITY_PAGE.orders.offset = RENDERED_OFFSETS.orders; }
       checkHistory ||= recorded || Boolean(fn && mutationNeedsHistory(e));
       if (checkHistory) capacityHistoryBarrier = capacityHistoryGeneration = {};
       msg.replaceChildren(h("p", { class: "err" }, checkHistory
@@ -272,7 +279,7 @@ async function capacityView() {
   let field = 0;
   const inp = (label, attrs) => {
     const id = `capacity-field-${++field}`;
-    return [h("label", { for: id }, label), h("input", Object.assign({ id, name: label.toLowerCase().replace(/[^a-z0-9]+/g, "-"), autocomplete: "off", type: "text" }, attrs))];
+    return [h("label", { for: id }, label), h("input", Object.assign({ id, name: label.toLowerCase().replace(/[^a-z0-9]+/g, "-"), autocomplete: "off", type: "text", "data-capacity-draft": "true" }, attrs))];
   };
   const name = inp("Package name", { maxlength: 80 }), from = inp("Starts", { type: "date" }), to = inp("Ends", { type: "date" });
   const scope = inp("What it covers", { maxlength: 400 }), ref = inp("Contract or call-off reference", { maxlength: 60 });
@@ -326,7 +333,7 @@ async function capacityView() {
       h("p", {}, h("button", { onclick: () => go(() => api("/api/workorders", { package: p.id, case_id: cid[1].value, scope: wsc[1].value, resident_bindings: residentBindings(bindings[1].value) })) }, "Issue work order")));
   });
   const actions = orders.map((w) => {
-    const note = h("input", { type: "text", name: `order-note-${w.id}`, autocomplete: "off", maxlength: 300, "aria-label": `Note or date for ${w.id}` });
+    const note = h("input", { type: "text", name: `order-note-${w.id}`, autocomplete: "off", maxlength: 300, "data-capacity-draft": "true", "aria-label": `Note or date for ${w.id}` });
     const out = h("select", { name: `legacy-outcome-${w.id}`, "aria-label": `Appointment outcome for ${w.id}` }, WO_OUTCOMES.map((x) => h("option", {}, x)));
     const call = (a, body, savedForm) => go(() => api(`/api/workorders/${w.id}/${a}`, body), savedForm);
     const open = w.state === "Issued" || w.state === "Appointed";
@@ -349,6 +356,7 @@ async function capacityView() {
     h("section", { class: "card" }, h("h2", {}, "Work orders"),
       pagerControls("orders", "work orders", shown.orders, orderPage.total, orders.length, () => go(), () => saving || Boolean(capacityHistoryBarrier)),
       orders.length ? h("ul", { class: "list" }, actions) : h("p", {}, "No work orders yet.")));
+  RENDERED_OFFSETS.packages = shown.packages.offset; RENDERED_OFFSETS.orders = shown.orders.offset;
   for (const draft of drafts) {
     const form = [...document.querySelectorAll("form[data-appointment-form]")].find((el) => el.dataset.appointmentForm === draft.key);
     if (!form) continue;

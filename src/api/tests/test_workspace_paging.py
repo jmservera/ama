@@ -77,7 +77,16 @@ class OpsPagerSourceTests(unittest.TestCase):
         cls.js = (Path(__file__).parents[1] / "src/zava_forward/api/web/ops.js").read_text()
 
     def test_page_change_confirms_unsaved_drafts(self) -> None:
-        self.assertIn("appointmentDrafts().length && !window.confirm(", self.js)
+        self.assertIn("capacityDirty() && !window.confirm(", self.js)
+        self.assertIn("appointmentDrafts().length > 0", self.js)
+        self.assertIn('"data-capacity-draft": "true"', self.js)
+
+    def test_failed_load_restores_last_rendered_offsets(self) -> None:
+        self.assertIn(
+            "CAPACITY_PAGE.packages.offset = RENDERED_OFFSETS.packages;",
+            self.js,
+        )
+        self.assertIn("RENDERED_OFFSETS.packages = shown.packages.offset;", self.js)
 
     def test_superseded_loads_are_rejected_before_render(self) -> None:
         self.assertIn("if (loadSeq !== capacityLoadSeq) return;", self.js)
