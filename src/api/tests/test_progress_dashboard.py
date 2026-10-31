@@ -20,6 +20,7 @@ from building_fixture import fixture, hold
 from dataset import DATA
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import Store
+from zava_forward.core.synthetic import scale_fixture
 
 from zava_forward.api import progress
 from zava_forward.api.server import App, make_handler
@@ -95,6 +96,30 @@ def synthetic_data() -> dict[str, Any]:
         ("TEMPLATE", dict(source="template")),
     ):
         data["recommendations"].append(dict(base, id=identifier, **extra))
+    return data
+
+
+def scale_data(*, case_templates: list[dict[str, Any]] | None = None) -> dict[str, Any]:
+    """Existing fictional homes with explicit test lifecycles, not inferred stock events."""
+    data = synthetic_data()
+    templates = data["cases"][:4] if case_templates is None else case_templates
+    cases = []
+    for index, home in enumerate(scale_fixture.homes()):
+        case = copy.deepcopy(templates[index % len(templates)])
+        case.update(id=home["id"], is_synthetic=True)
+        case["resident"]["name"] = home["resident"]
+        case["home"].update(
+            address=home["address"],
+            postcode=home["postcode"],
+            area=home["area"],
+            lat=home["lat"],
+            lon=home["lon"],
+        )
+        cases.append(case)
+    links = {case["id"]: cases[index]["id"] for index, case in enumerate(templates)}
+    for record in data["recommendations"]:
+        record["case_ids"] = [links.get(cid, cid) for cid in record["case_ids"]]
+    data["cases"] = cases
     return data
 
 
@@ -1014,6 +1039,76 @@ class ProgressDashboard(unittest.TestCase):
             self.assertEqual(
                 (empty["total"], empty["pages"], empty["page"], empty["limit"], empty["items"]),
                 (0, 1, 1, 3, []),
+            )
+
+    def test_existing_60000_home_fixture_progress_and_filtered_page_boundaries(self) -> None:
+        data = scale_data(case_templates=[self.store.cases[f"ZF-{index}"] for index in range(1, 5)])
+        self.assertEqual(len(data["cases"]), 60000)
+        with self.store.lock:
+            self.store.cases.clear()
+            self.store.cases.update({case["id"]: case for case in data["cases"]})
+            self.store.data["recommendations"] = data["recommendations"]
+            report = self.report(start="2026-09-28", end="2026-10-07")
+            self.assertEqual(report["label"], "Demonstration data")
+            self.assertEqual(
+                report["coverage"],
+                dict(
+                    synthetic_cases=60000,
+                    excluded_unmarked=0,
+                    known_lifecycle=45000,
+                    unknown_lifecycle=15000,
+                ),
+            )
+            for series in ("daily", "weekly"):
+                self.assertEqual(sum(row["opened"] for row in report[series]), 60000)
+                self.assertEqual(sum(row["closed"] for row in report[series]), 45000)
+                self.assertEqual(sum(row["reopened"] for row in report[series]), 15000)
+                self.assertEqual(report[series][-1]["backlog"], 15000)
+            self.assertEqual(
+                report["time_to_close"], dict(median_days=2.0, p90_days=4, samples=45000)
+            )
+            current = report["current"]
+            self.assertEqual(
+                (current["open"], current["stalled"], current["overdue"]), (15000, 15000, 15000)
+            )
+            self.assertEqual(
+                [row for row in current["journey"] if row["count"]],
+                [dict(label="Funding", count=15000)],
+            )
+            self.assertEqual(
+                current["teams"], [dict(label="Resident Liaison Officer", count=15000)]
+            )
+            self.assertEqual([row["count"] for row in report["ai"]["outcomes"]], [1, 1, 1])
+            self.assertEqual(report["ai"]["eligible_records"], 6)
+            self.assertNotIn("PRIVATE", json.dumps(report))
+            archive = self.archive()
+            self.assertEqual(
+                (archive["total"], archive["pages"], archive["unknown_closure_dates"]),
+                (45000, 2250, 15000),
+            )
+            filters = dict(
+                status="Completed",
+                team="Resident Liaison Officer",
+                start="2026-10-07",
+                end="2026-10-07",
+                q="TEST ROAD",
+                limit="100",
+            )
+            expected = [f"ZF-{index:05d}" for index in range(0, 60000, 4)]
+            for page in (1, 75, 150, 999999):
+                result = self.archive(**filters, page=str(page))
+                actual_page = min(page, 150)
+                self.assertEqual(
+                    (result["total"], result["pages"], result["page"], result["limit"]),
+                    (15000, 150, actual_page, 100),
+                )
+                self.assertEqual(
+                    [row["id"] for row in result["items"]],
+                    expected[(actual_page - 1) * 100 : actual_page * 100],
+                )
+            empty = self.archive(**(filters | {"q": "No fictional match"}), page="999999")
+            self.assertEqual(
+                (empty["total"], empty["page"], empty["pages"], empty["items"]), (0, 1, 1, [])
             )
 
     def test_invalid_queries_and_roles_are_explicit(self) -> None:

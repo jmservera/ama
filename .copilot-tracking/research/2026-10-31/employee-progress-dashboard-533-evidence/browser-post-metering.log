@@ -1,0 +1,54 @@
+PASS owned server is running and responsive on loopback
+PASS all six charts have table alternatives
+PASS chart 0 table and bars match real API
+PASS chart 1 table and bars match real API
+PASS chart 2 table and bars match real API
+PASS chart 3 table and bars match real API
+PASS chart 4 table and bars match real API
+PASS chart 5 table and bars match real API
+PASS dashboard reflows at 320
+PASS dashboard reflows at 390
+PASS dashboard reflows at 1280
+PASS dashboard axe has no violations
+PASS last page has four cases
+PASS filters reset page and persist in URL
+PASS archive reflows at 320
+PASS archive reflows at 390
+PASS archive reflows at 1280
+PASS keyboard focus visible
+PASS closed-cases axe has no violations
+PASS dashboard-reversed axe has no violations
+PASS dashboard-reversed clears start error association after correction
+PASS dashboard-reversed clears end error association after correction
+PASS dashboard-reversed-recovered axe has no violations
+PASS dashboard-oversized axe has no violations
+PASS dashboard-oversized clears start error association after correction
+PASS dashboard-oversized clears end error association after correction
+PASS dashboard-oversized-recovered axe has no violations
+PASS archive-reversed axe has no violations
+PASS archive-reversed clears start error association after correction
+PASS archive-reversed clears end error association after correction
+PASS archive-reversed-recovered axe has no violations
+PASS dashboard-default-end axe has no violations
+PASS dashboard-default-end clears start error association after correction
+PASS dashboard-default-end clears end error association after correction
+PASS dashboard-default-end-recovered axe has no violations
+PASS inclusive 366-day dashboard range remains valid
+PASS archive has no dashboard duration cap
+PASS progress-read-failure axe has no violations
+PASS unrelated validation failure does not invalidate date fields
+PASS late progress response cannot overwrite another route
+PASS no uncaught JavaScript errors ([])
+PASS owned server is running and responsive on loopback
+PASS scale cohort has 60,000 existing fictional homes
+PASS scale chart 0 table and bars match API
+PASS scale chart 1 table and bars match API
+PASS scale chart 2 table and bars match API
+PASS scale chart 3 table and bars match API
+PASS scale chart 4 table and bars match API
+PASS scale chart 5 table and bars match API
+PASS scale dashboard axe has no violations
+PASS scale final page has exact stable case IDs
+PASS scale filters and page survive reload
+PASS scale archive axe has no violations
+PASS scale has no uncaught JavaScript errors ([])

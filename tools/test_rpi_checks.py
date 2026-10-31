@@ -271,8 +271,10 @@ class GateTests(unittest.TestCase):
         captured = io.StringIO()
         with redirect_stdout(captured):
             runner.command([sys.executable, "-c", f"print({text!r})"], suite=True)
+        self.assertIn(text, captured.getvalue())
         self.assertEqual(runner.rows[-1]["skips"], [{"test": test, "reason": reason}])
         runner.group = "browser"
+        captured = io.StringIO()
         with redirect_stdout(captured), self.assertRaises(gate.GateError):
             runner.command([sys.executable, "-c", f"print({text!r})"], suite=True, integration=True)
         self.assertIn(text, captured.getvalue())

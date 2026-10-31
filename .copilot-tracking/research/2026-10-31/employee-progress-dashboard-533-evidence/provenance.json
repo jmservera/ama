@@ -1,0 +1,233 @@
+{
+  "source_head": "d84bfe3604db991651ea648732a642759ffcbbf3",
+  "copies": {
+    "focused.log": {
+      "source": "/tmp/ama-533-correction-e26eb207/focused.log",
+      "sha256": "4509148fb356c68dda5f3e22a6249016bb3930cff93e372caaf611cd0402d093",
+      "bytes": 491
+    },
+    "api-unit.log": {
+      "source": "/tmp/ama-533-correction-e26eb207/api-unit.log",
+      "sha256": "bb08c15e8ab3e69752295e6aa3d057c77496311130bc4c3c0cb395dbe59a4fe4",
+      "bytes": 98888
+    },
+    "browser.log": {
+      "source": "/tmp/ama-533-correction-e26eb207/browser.log",
+      "sha256": "45c1b681b8daa4f4c1d185a902d2dfda25ad0797bc2e3b8b0d622863aa1b7a34",
+      "bytes": 2605
+    },
+    "static.log": {
+      "source": "/tmp/ama-533-correction-e26eb207/static.log",
+      "sha256": "e42cf45a47f63ff6fa510024a66d5ce1bc949b15af113c55f0bc127e0f63bce0",
+      "bytes": 91
+    },
+    "skip-audit.log": {
+      "source": "/tmp/ama-533-correction-e26eb207/skip-audit.log",
+      "sha256": "5ccae7b993950fe412a445a27f26c1b185b95cc722a5ecb0de16102b49ebc7c0",
+      "bytes": 63922
+    },
+    "skip-audit.json": {
+      "source": "/tmp/ama-533-correction-e26eb207/skip-audit.json",
+      "sha256": "a42c12faebfd796bc025955dee6f917d9ef77ce95c74a7700514334bab746b7c",
+      "bytes": 56298
+    }
+  },
+  "tested_sources": {
+    "src/api/tests/test_progress_dashboard.py": "ed85c9cbb72e172d9afb5d29f28aeef0cd204b3ce8cc4fd3410666f7ada9eab7",
+    "src/api/checks/progress_browser_check.py": "e617e5f7c653a8ff50efdd90533ee3144bbf3ca36d16d4511edb65a7066a82f6",
+    "src/api/README.md": "143720f5661c7d665e54a25970ab65351b75aee87ee1a6e8efa40b56f37836dd"
+  },
+  "browser": {
+    "browser.json": {
+      "source": "/tmp/ama-533-correction-e26eb207/browser/browser.json",
+      "sha256": "31f75fd9497bb7fc48c8ca5a2bc3e472affd75178ec6d673903ebf6a31b4d067",
+      "summary": {
+        "browser": "156.0.8078.4",
+        "axe_sha256": "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb"
+      }
+    },
+    "scale-browser.json": {
+      "source": "/tmp/ama-533-correction-e26eb207/browser/scale-browser.json",
+      "sha256": "558456f44d84f6d1b2a1903666e9b17e2e529d2c5cd887fe7da9b66719598fbd",
+      "summary": {
+        "browser": "156.0.8078.4",
+        "homes": 60000,
+        "fixture_seed": 174,
+        "fixture_version": "1.2.0",
+        "coverage": {
+          "synthetic_cases": 60000,
+          "excluded_unmarked": 0,
+          "known_lifecycle": 45000,
+          "unknown_lifecycle": 15000
+        },
+        "time_to_close": {
+          "median_days": 2.0,
+          "p90_days": 4,
+          "samples": 45000
+        },
+        "archive_total": 45000,
+        "filtered_total": 25,
+        "filtered_final_page": 5,
+        "axe_sha256": "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb"
+      }
+    }
+  },
+  "axe": [
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser/archive-reversed-axe.json",
+      "sha256": "02d08aeb0b78147020ab0c53b41705a3209c557fc1bba69f9c98abc81ac3bc3b",
+      "testEngine": {
+        "name": "axe-core",
+        "version": "4.10.3"
+      },
+      "timestamp": "2026-10-31T14:13:39.976Z",
+      "violations": [],
+      "passes_count": 18,
+      "incomplete_count": 0
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser/archive-reversed-recovered-axe.json",
+      "sha256": "35d93e13153a8522c9f317e4f4765d1bf6a74f38871772966987ddf0c254fd6d",
+      "testEngine": {
+        "name": "axe-core",
+        "version": "4.10.3"
+      },
+      "timestamp": "2026-10-31T14:13:40.243Z",
+      "violations": [],
+      "passes_count": 20,
+      "incomplete_count": 0
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser/closed-cases-axe.json",
+      "sha256": "7724fe92e068ab92675582b93a377e746b17cb5207a39e74072e0ffbf9e91c29",
+      "testEngine": {
+        "name": "axe-core",
+        "version": "4.10.3"
+      },
+      "timestamp": "2026-10-31T14:13:38.613Z",
+      "violations": [],
+      "passes_count": 20,
+      "incomplete_count": 0
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser/dashboard-axe.json",
+      "sha256": "01dcdfe2f68232574f84a650731270a634f95b8801f679a5f35bd937c5ed029e",
+      "testEngine": {
+        "name": "axe-core",
+        "version": "4.10.3"
+      },
+      "timestamp": "2026-10-31T14:13:37.511Z",
+      "violations": [],
+      "passes_count": 23,
+      "incomplete_count": 1
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser/dashboard-default-end-axe.json",
+      "sha256": "81017653f4b1b6dc3b9a0b72d9efcaae27c40bb6350a70abdecc8912b2dd6d16",
+      "testEngine": {
+        "name": "axe-core",
+        "version": "4.10.3"
+      },
+      "timestamp": "2026-10-31T14:13:40.395Z",
+      "violations": [],
+      "passes_count": 17,
+      "incomplete_count": 0
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser/dashboard-default-end-recovered-axe.json",
+      "sha256": "37dd218adec0747969eba7a21f64afece9914c4363c18574f9be06554bf41851",
+      "testEngine": {
+        "name": "axe-core",
+        "version": "4.10.3"
+      },
+      "timestamp": "2026-10-31T14:13:40.695Z",
+      "violations": [],
+      "passes_count": 16,
+      "incomplete_count": 1
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser/dashboard-oversized-axe.json",
+      "sha256": "fd89b031f3644a6a5cc73289a2b09456a9783e4b7902b213a326f5cb7b4377fd",
+      "testEngine": {
+        "name": "axe-core",
+        "version": "4.10.3"
+      },
+      "timestamp": "2026-10-31T14:13:39.447Z",
+      "violations": [],
+      "passes_count": 17,
+      "incomplete_count": 0
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser/dashboard-oversized-recovered-axe.json",
+      "sha256": "36c1f5fd99a25abd43b66bfd9a33118f6098dd92e7a4d5d9bea7104aa3240b7d",
+      "testEngine": {
+        "name": "axe-core",
+        "version": "4.10.3"
+      },
+      "timestamp": "2026-10-31T14:13:39.755Z",
+      "violations": [],
+      "passes_count": 16,
+      "incomplete_count": 1
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser/dashboard-reversed-axe.json",
+      "sha256": "c701deca6301e66cd1dc7d9add467ba56e419f7e6a96a83d1d805f547f2fbb25",
+      "testEngine": {
+        "name": "axe-core",
+        "version": "4.10.3"
+      },
+      "timestamp": "2026-10-31T14:13:38.885Z",
+      "violations": [],
+      "passes_count": 17,
+      "incomplete_count": 0
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser/dashboard-reversed-recovered-axe.json",
+      "sha256": "9d116956af4ce9cc9dfc4709522a5a5e96cacfba44b805fd6274240b52f76e14",
+      "testEngine": {
+        "name": "axe-core",
+        "version": "4.10.3"
+      },
+      "timestamp": "2026-10-31T14:13:39.196Z",
+      "violations": [],
+      "passes_count": 16,
+      "incomplete_count": 1
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser/progress-read-failure-axe.json",
+      "sha256": "66b4abd492e9eedc96e11c30c0cb15c7215775a9252f5459898b3c026384fa7d",
+      "testEngine": {
+        "name": "axe-core",
+        "version": "4.10.3"
+      },
+      "timestamp": "2026-10-31T14:13:41.205Z",
+      "violations": [],
+      "passes_count": 12,
+      "incomplete_count": 0
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser/scale-archive-axe.json",
+      "sha256": "f5e4eb601f4802084a80a1d398f3efffd79473855add11963f16620d4bbe762f",
+      "testEngine": {
+        "name": "axe-core",
+        "version": "4.10.3"
+      },
+      "timestamp": "2026-10-31T14:13:56.878Z",
+      "violations": [],
+      "passes_count": 20,
+      "incomplete_count": 0
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser/scale-dashboard-axe.json",
+      "sha256": "bccb4b36597beba31f4c38bcef7b5524e89b46261b9ea8062c84cff73919a04b",
+      "testEngine": {
+        "name": "axe-core",
+        "version": "4.10.3"
+      },
+      "timestamp": "2026-10-31T14:13:51.177Z",
+      "violations": [],
+      "passes_count": 23,
+      "incomplete_count": 1
+    }
+  ]
+}

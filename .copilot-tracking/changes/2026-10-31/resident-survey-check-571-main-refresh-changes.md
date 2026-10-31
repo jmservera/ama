@@ -181,3 +181,13 @@ Main advanced again during admission to `87bf629c630314f5be086697e322e1b0ec22277
 current authorized merge, reconcile that final advance preserving both histories,
 then new complete receipt. Earlier complete executions remain immutable adverse
 identity evidence; no premature publication or silent skip/approval follows.
+
+The `87bf629c` merge also completed automatically without conflicts. Main score,
+runner/workflow/hash inputs and both log histories are retained. Main now carries
+equivalent harness repairs; only our stronger two-occurrence capture assertion
+remains beyond the seven resident check lines and five guide lines. No resident
+runtime/check changes in this last advance invalidate its source-matching focused
+browser execution; the final complete gate must still bind the new HEAD/base.
+Original and both child one-pass critique/Review outcomes remain preserved, with
+no material source finding. The final independent exact-head assessment owns
+publication eligibility after current full receipt verification.
