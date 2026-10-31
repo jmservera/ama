@@ -196,24 +196,24 @@ Later work does not require this Review to run again.
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/reviews/logs/2026-10-31/closure-audit-batch1-review.md](.copilot-tracking/reviews/logs/2026-10-31/closure-audit-batch1-review.md) | This one original Review. |
-| [.copilot-tracking/rpi-sessions/2026-10-31/closure-audit-batch1-state.json](.copilot-tracking/rpi-sessions/2026-10-31/closure-audit-batch1-state.json) | Canonical intake state; unchanged by reviewer. |
-| [.copilot-tracking/plans/2026-10-31/closure-audit-batch1-plan.md](.copilot-tracking/plans/2026-10-31/closure-audit-batch1-plan.md) | Current approved scope and remaining publication. |
-| [.copilot-tracking/details/2026-10-31/closure-audit-batch1-phase-details.md](.copilot-tracking/details/2026-10-31/closure-audit-batch1-phase-details.md) | Exact sequencing and safeguards. |
-| [.copilot-tracking/reviews/plans/2026-10-31/closure-audit-batch1-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/closure-audit-batch1-plan-critique.md) | Original Complete / Revise critique. |
-| [.copilot-tracking/research/2026-10-31/closure-audit-batch1-research.md](.copilot-tracking/research/2026-10-31/closure-audit-batch1-research.md) | Research and preserved conservative dispositions. |
-| [.copilot-tracking/research/2026-10-31/closure-audit-batch1-decisions.json](.copilot-tracking/research/2026-10-31/closure-audit-batch1-decisions.json) | Exact final 30/75/192/0 authority. |
-| [.copilot-tracking/research/2026-10-31/closure-audit-batch1-main-applicability.json](.copilot-tracking/research/2026-10-31/closure-audit-batch1-main-applicability.json) | Two main pins and unchanged anchors. |
-| [.copilot-tracking/research/2026-10-31/closure-audit-pr-manifest.json](.copilot-tracking/research/2026-10-31/closure-audit-pr-manifest.json) | Original public PR provenance. |
-| [.copilot-tracking/research/2026-10-31/subagents/closure-audit-parent.json](.copilot-tracking/research/2026-10-31/subagents/closure-audit-parent.json) | Original 11-issue/70-criterion parent lane. |
-| [.copilot-tracking/research/2026-10-31/subagents/closure-audit-a.json](.copilot-tracking/research/2026-10-31/subagents/closure-audit-a.json) | Original 14-issue/90-criterion lane A. |
-| [.copilot-tracking/research/2026-10-31/subagents/closure-audit-a.md](.copilot-tracking/research/2026-10-31/subagents/closure-audit-a.md) | Lane A narrative and exclusions. |
-| [.copilot-tracking/research/2026-10-31/subagents/closure-audit-b.json](.copilot-tracking/research/2026-10-31/subagents/closure-audit-b.json) | Original 12-issue/92-criterion lane B. |
-| [.copilot-tracking/research/2026-10-31/subagents/closure-audit-b.md](.copilot-tracking/research/2026-10-31/subagents/closure-audit-b.md) | Original B narrative plus separate stricter amendment. |
-| [.copilot-tracking/research/2026-10-31/subagents/closure-audit-c.json](.copilot-tracking/research/2026-10-31/subagents/closure-audit-c.json) | Original nine-issue/45-criterion lane C. |
-| [.copilot-tracking/research/2026-10-31/subagents/closure-audit-c.md](.copilot-tracking/research/2026-10-31/subagents/closure-audit-c.md) | C narrative and design-test clarification. |
-| [.copilot-tracking/changes/2026-10-31/closure-audit-batch1-changes.md](.copilot-tracking/changes/2026-10-31/closure-audit-batch1-changes.md) | Complete verified 46-row action table. |
-| [.copilot-tracking/changes/2026-10-31/closure-audit-batch1-receipts.json](.copilot-tracking/changes/2026-10-31/closure-audit-batch1-receipts.json) | Actual operations, hashes and interval counts. |
+| [.copilot-tracking/reviews/logs/2026-10-31/closure-audit-batch1-review.md](closure-audit-batch1-review.md) | This one original Review. |
+| [.copilot-tracking/rpi-sessions/2026-10-31/closure-audit-batch1-state.json](../../../rpi-sessions/2026-10-31/closure-audit-batch1-state.json) | Canonical intake state; unchanged by reviewer. |
+| [.copilot-tracking/plans/2026-10-31/closure-audit-batch1-plan.md](../../../plans/2026-10-31/closure-audit-batch1-plan.md) | Current approved scope and remaining publication. |
+| [.copilot-tracking/details/2026-10-31/closure-audit-batch1-phase-details.md](../../../details/2026-10-31/closure-audit-batch1-phase-details.md) | Exact sequencing and safeguards. |
+| [.copilot-tracking/reviews/plans/2026-10-31/closure-audit-batch1-plan-critique.md](../../plans/2026-10-31/closure-audit-batch1-plan-critique.md) | Original Complete / Revise critique. |
+| [.copilot-tracking/research/2026-10-31/closure-audit-batch1-research.md](../../../research/2026-10-31/closure-audit-batch1-research.md) | Research and preserved conservative dispositions. |
+| [.copilot-tracking/research/2026-10-31/closure-audit-batch1-decisions.json](../../../research/2026-10-31/closure-audit-batch1-decisions.json) | Exact final 30/75/192/0 authority. |
+| [.copilot-tracking/research/2026-10-31/closure-audit-batch1-main-applicability.json](../../../research/2026-10-31/closure-audit-batch1-main-applicability.json) | Two main pins and unchanged anchors. |
+| [.copilot-tracking/research/2026-10-31/closure-audit-pr-manifest.json](../../../research/2026-10-31/closure-audit-pr-manifest.json) | Original public PR provenance. |
+| [.copilot-tracking/research/2026-10-31/subagents/closure-audit-parent.json](../../../research/2026-10-31/subagents/closure-audit-parent.json) | Original 11-issue/70-criterion parent lane. |
+| [.copilot-tracking/research/2026-10-31/subagents/closure-audit-a.json](../../../research/2026-10-31/subagents/closure-audit-a.json) | Original 14-issue/90-criterion lane A. |
+| [.copilot-tracking/research/2026-10-31/subagents/closure-audit-a.md](../../../research/2026-10-31/subagents/closure-audit-a.md) | Lane A narrative and exclusions. |
+| [.copilot-tracking/research/2026-10-31/subagents/closure-audit-b.json](../../../research/2026-10-31/subagents/closure-audit-b.json) | Original 12-issue/92-criterion lane B. |
+| [.copilot-tracking/research/2026-10-31/subagents/closure-audit-b.md](../../../research/2026-10-31/subagents/closure-audit-b.md) | Original B narrative plus separate stricter amendment. |
+| [.copilot-tracking/research/2026-10-31/subagents/closure-audit-c.json](../../../research/2026-10-31/subagents/closure-audit-c.json) | Original nine-issue/45-criterion lane C. |
+| [.copilot-tracking/research/2026-10-31/subagents/closure-audit-c.md](../../../research/2026-10-31/subagents/closure-audit-c.md) | C narrative and design-test clarification. |
+| [.copilot-tracking/changes/2026-10-31/closure-audit-batch1-changes.md](../../../changes/2026-10-31/closure-audit-batch1-changes.md) | Complete verified 46-row action table. |
+| [.copilot-tracking/changes/2026-10-31/closure-audit-batch1-receipts.json](../../../changes/2026-10-31/closure-audit-batch1-receipts.json) | Actual operations, hashes and interval counts. |
 
 ## Next Steps
 

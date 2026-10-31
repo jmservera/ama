@@ -232,13 +232,13 @@ This is a candidate-disposition table, not an executed remote receipt. All issue
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/reviews/plans/2026-10-31/closure-audit-batch1-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/closure-audit-batch1-plan-critique.md) | This one original final-candidate critique. |
-| [.copilot-tracking/plans/2026-10-31/closure-audit-batch1-plan.md](.copilot-tracking/plans/2026-10-31/closure-audit-batch1-plan.md) | Supplied plan; unchanged by this critique. |
-| [.copilot-tracking/details/2026-10-31/closure-audit-batch1-phase-details.md](.copilot-tracking/details/2026-10-31/closure-audit-batch1-phase-details.md) | Supplied phase details; parent owns compatible corrections. |
-| [.copilot-tracking/research/2026-10-31/closure-audit-batch1-research.md](.copilot-tracking/research/2026-10-31/closure-audit-batch1-research.md) | Supplied synthesis and original parent rejections. |
-| [.copilot-tracking/research/2026-10-31/closure-audit-batch1-decisions.json](.copilot-tracking/research/2026-10-31/closure-audit-batch1-decisions.json) | Authoritative candidate dispositions. |
-| [.copilot-tracking/research/2026-10-31/closure-audit-pr-manifest.json](.copilot-tracking/research/2026-10-31/closure-audit-pr-manifest.json) | Original public provenance manifest. |
-| [.copilot-tracking/rpi-sessions/2026-10-31/closure-audit-batch1-state.json](.copilot-tracking/rpi-sessions/2026-10-31/closure-audit-batch1-state.json) | Supplied Plan-phase state; unchanged by this critique. |
+| [.copilot-tracking/reviews/plans/2026-10-31/closure-audit-batch1-plan-critique.md](closure-audit-batch1-plan-critique.md) | This one original final-candidate critique. |
+| [.copilot-tracking/plans/2026-10-31/closure-audit-batch1-plan.md](../../../plans/2026-10-31/closure-audit-batch1-plan.md) | Supplied plan; unchanged by this critique. |
+| [.copilot-tracking/details/2026-10-31/closure-audit-batch1-phase-details.md](../../../details/2026-10-31/closure-audit-batch1-phase-details.md) | Supplied phase details; parent owns compatible corrections. |
+| [.copilot-tracking/research/2026-10-31/closure-audit-batch1-research.md](../../../research/2026-10-31/closure-audit-batch1-research.md) | Supplied synthesis and original parent rejections. |
+| [.copilot-tracking/research/2026-10-31/closure-audit-batch1-decisions.json](../../../research/2026-10-31/closure-audit-batch1-decisions.json) | Authoritative candidate dispositions. |
+| [.copilot-tracking/research/2026-10-31/closure-audit-pr-manifest.json](../../../research/2026-10-31/closure-audit-pr-manifest.json) | Original public provenance manifest. |
+| [.copilot-tracking/rpi-sessions/2026-10-31/closure-audit-batch1-state.json](../../../rpi-sessions/2026-10-31/closure-audit-batch1-state.json) | Supplied Plan-phase state; unchanged by this critique. |
 
 ## Next Steps
 
