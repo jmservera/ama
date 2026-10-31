@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "automatic",
   "active_phase": "Follow-up",
-  "status": "active",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-31/pr423-review-fix2-research.md",
@@ -39,6 +39,11 @@
       "decision": "One independent Review executed Complete / Residual work; zero scoped source defects; assessed staged pre-commit integrated candidate.",
       "status": "complete",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-31/pr423-review-fix2-review.md; RV-001 owner PR body, RV-002 publication gate, RV-003 live acceptance, RV-004 local commit."
+    },
+    {
+      "decision": "Local merge and original evidence committed; both parents, privacy-safe identity, trailer and unchanged PR head verified; RV-004 parent delivery complete.",
+      "status": "complete",
+      "evidence": "3ad8afc909d5fb120e4d75c8a15dd2085aefda7f; .copilot-tracking/changes/2026-10-31/pr423-review-fix2-changes.md. No successful full-gate receipt."
     }
   ],
   "blockers": [
@@ -50,7 +55,7 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Finish explicitly authorized local merge commit and completion evidence; select no new source task."
+    "action": "Await later owner direction; no child selected. Ranked owner PR-body correction, complete gate and live acceptance remain distinct later work; no push."
   },
   "prioritized_follow_ups": [
     {
