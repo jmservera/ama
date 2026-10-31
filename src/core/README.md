@@ -276,7 +276,11 @@ nonnegative, in C or RH percentage points. Decimal point comparisons and
 cross-multiplied reference-adjusted sums preserve inclusive boundaries; the
 mean-step check compares sums against the scaled limit before dividing, so
 recurring means cannot reject an exact-limit handover. Division is used only
-to report the mean-step error. Mean-step error subtracts the reference's
+to report the mean-step error. The standard-deviation check compares exact
+rational population variances through a guarded squared inequality, preserving
+inclusive limits without subtracting rounded square roots. Standard deviations
+and their error remain rounded diagnostic metrics, not acceptance inputs.
+Mean-step error subtracts the reference's
 expected step, while point and per-side standard-deviation errors prevent
 offset/variance cancellation. This detects ingestion discontinuity without
 calling legitimate weather or dated works a seam. A numeric failure sets

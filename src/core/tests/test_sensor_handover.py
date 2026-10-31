@@ -1,5 +1,6 @@
 """Statistical seam contracts with constructed weather, never private inputs."""
 
+import math
 import unittest
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
@@ -251,6 +252,62 @@ class HandoverTests(unittest.TestCase):
                                 {"point": True, "mean_step": passed, "stddev": True},
                             )
                             self.assertEqual(metrics["mean_step_error"], float(delta))
+
+    def test_nonconstant_reference_stddev_inclusive_boundary(self) -> None:
+        home_rows = [row for row in rows() if row["home_id"] == "ZF-1"]
+        offsets = [Decimal(value) for value in ("-1.45",) * 2 + ("1.45",) * 2 + ("0",) * 5]
+        for channel, centre in (("temperature_c", Decimal(20)), ("humidity_pct", Decimal(50))):
+            for split in (3, 9):
+                start = 3 if split == 3 else 0
+                reference = [
+                    {**row, "temperature_c": "20.00", "humidity_pct": "50.00"} for row in home_rows
+                ]
+                for row, offset in zip(reference[start : start + 9], offsets, strict=True):
+                    row[channel] = f"{centre + offset:.2f}"
+                for direction in (-1, 1):
+                    for delta, limit, passed in (
+                        ("0.14", 0.1, True),
+                        ("0.15", 0.1, True),
+                        ("0.16", 0.1, False),
+                        ("0.15", math.nextafter(0.1, 0.0), False),
+                    ):
+                        changed = [dict(row) for row in reference]
+                        for row, offset in zip(changed[start : start + 9], offsets, strict=True):
+                            adjustment = (
+                                direction * Decimal(delta) * (1 if offset > 0 else -1)
+                                if offset
+                                else Decimal(0)
+                            )
+                            row[channel] = f"{centre + offset + adjustment:.2f}"
+                        tolerance = Tolerance(point=1, mean_step=0, stddev=limit)
+                        result = report(
+                            changed,
+                            reference,
+                            handover=reference[split]["observed_at"],
+                            temperature=tolerance if channel == "temperature_c" else Tolerance(),
+                            humidity=tolerance if channel == "humidity_pct" else Tolerance(),
+                        )
+                        series = result["series"]
+                        assert isinstance(series, list)
+                        with self.subTest(
+                            channel=channel,
+                            split=split,
+                            direction=direction,
+                            delta=delta,
+                            limit=limit,
+                        ):
+                            self.assertEqual(result["passed"], passed)
+                            self.assertEqual(
+                                series[0]["metrics"][channel]["checks"],
+                                {"point": True, "mean_step": True, "stddev": passed},
+                            )
+                            sibling = (
+                                "humidity_pct" if channel == "temperature_c" else "temperature_c"
+                            )
+                            self.assertEqual(
+                                series[0]["metrics"][sibling]["checks"],
+                                {"point": True, "mean_step": True, "stddev": True},
+                            )
 
     def test_invalid_tolerances_and_configuration(self) -> None:
         for value in (-1, float("nan"), float("inf"), True):

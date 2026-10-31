@@ -5,7 +5,8 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from datetime import timedelta
 from decimal import Decimal
-from statistics import mean, pstdev
+from fractions import Fraction
+from statistics import mean, pstdev, pvariance
 
 from ..sensor_consumer import SensorConsumer, utc
 from .sensor_faults import READING_FIELDS
@@ -28,6 +29,17 @@ class Tolerance:
 
 
 ZERO_TOLERANCE = Tolerance()
+
+
+def _stddev_within_limit(
+    values: Sequence[Decimal], baseline: Sequence[Decimal], limit: float
+) -> bool:
+    variance = pvariance([Fraction(value) for value in values])
+    ref_variance = pvariance([Fraction(value) for value in baseline])
+    residual = variance + ref_variance - Fraction(str(limit)) ** 2
+    # |sqrt(a) - sqrt(b)| <= t iff a+b-t*t <= 2*sqrt(a*b).
+    # Only square a positive residual, so the comparison remains equivalent.
+    return residual <= 0 or residual**2 <= 4 * variance * ref_variance
 
 
 def _index(
@@ -126,7 +138,14 @@ def report(
             checks = {
                 "point": point_error <= Decimal(str(tolerance.point)),
                 "mean_step": step_numerator <= Decimal(str(tolerance.mean_step)) * step_scale,
-                "stddev": stddev_error <= Decimal(str(tolerance.stddev)),
+                "stddev": all(
+                    _stddev_within_limit(part, ref_part, tolerance.stddev)
+                    for part, ref_part in zip(
+                        (values[:split], values[split:]),
+                        (baseline[:split], baseline[split:]),
+                        strict=True,
+                    )
+                ),
             }
             step_error = step_numerator / step_scale
             passed = passed and all(checks.values())

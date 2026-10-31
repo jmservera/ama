@@ -1,0 +1,31 @@
+{
+  "task_id": "188-pr-587-second-correction",
+  "task_slug": "sensor-stddev-boundary-188",
+  "parent_task": {"task_id": "188", "task_slug": "sensor-ingestion-consistency-188"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-31/sensor-stddev-boundary-188-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-31/sensor-stddev-boundary-188-plan.md",
+    "details": ".copilot-tracking/details/2026-10-31/sensor-stddev-boundary-188-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-31/sensor-stddev-boundary-188-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-31/sensor-stddev-boundary-188-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-31/sensor-stddev-boundary-188-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Execute the full ordered RPI loop and commit locally without push", "status": "confirmed", "evidence": "Explicit caller instruction 2026-10-31"},
+    {"decision": "Reuse clean branch feat/sensor-ingestion-consistency-188", "status": "confirmed", "evidence": "Branch and open PR #587 inspected at HEAD 2f5685ce"},
+    {"decision": "Research executed; Planning Readiness Ready; guarded exact rational variance comparison selected", "status": "ready", "evidence": ".copilot-tracking/research/2026-10-31/sensor-stddev-boundary-188-research.md"},
+    {"decision": "One independent final-candidate critique Complete / Pass, zero findings, no revisions required", "status": "implementation-ready", "evidence": ".copilot-tracking/reviews/plans/2026-10-31/sensor-stddev-boundary-188-plan-critique.md"},
+    {"decision": "P01 complete; original four boundary failures corrected, all 32 regression subcases passed, 134 sensor tests with one existing SQL skip; full core ruff lint/format and changed-file mypy passed", "status": "review-ready", "evidence": ".copilot-tracking/changes/2026-10-31/sensor-stddev-boundary-188-changes.md"},
+    {"decision": "One independent original Review Complete / Conformant; no implementation defects; RV-004 publication and RV-005 live criteria deferred; RV-003 local persistence is authorized parent continuation", "status": "review-complete", "evidence": ".copilot-tracking/reviews/logs/2026-10-31/sensor-stddev-boundary-188-review.md"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Local completion established by containing commit and clean-tree verification; no push or child work authorized. Coordinator owns any later separately authorized publication/live follow-up"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Coordinator establishes current exact-candidate full publication receipt and hosted/human prerequisites before any separately authorized push", "rationale": "Highest delivery leverage and prerequisite to publication; focused local checks are not the complete gate", "evidence": "RV-004, .copilot-tracking/reviews/logs/2026-10-31/sensor-stddev-boundary-188-review.md"},
+    {"rank": 2, "task": "Separately authorized live handover evidence", "rationale": "Needed for whole #188 acceptance, but explicitly outside this local correction and blocked on separate authorization", "evidence": "RV-005, .copilot-tracking/reviews/logs/2026-10-31/sensor-stddev-boundary-188-review.md"}
+  ]
+}
