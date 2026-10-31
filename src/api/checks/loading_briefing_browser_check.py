@@ -24,6 +24,118 @@ def sign_in(page: Page, base: str) -> None:
     expect(page.locator(".briefing [data-record-id]")).to_be_visible()
 
 
+def successful_review_check(browser: Browser, base: str, output: Path) -> None:
+    context = browser.new_context()
+    observer = browser.new_context()
+    context.route("**/*", lambda route: route.continue_()
+                  if route.request.url.startswith(base + "/") else route.abort())
+    observer.route("**/*", lambda route: route.continue_()
+                   if route.request.url.startswith(base + "/") else route.abort())
+    results: list[dict[str, Any]] = []
+    try:
+        page = context.new_page()
+        errors: list[str] = []
+        review_requests: list[str] = []
+        page.on("pageerror", lambda error: errors.append(str(error)))
+        page.on("request", lambda request: review_requests.append(request.url)
+                if "/api/ai/review/" in request.url else None)
+        page.goto(base + "/app")
+        sign_in(page, base)
+        login = observer.request.post(base + "/api/login", data={
+            "email": "pam@example.test", "password": "synthetic-check"})
+        assert login.status == 200, login.text()
+        case_ids = [case["id"] for case in briefing_data()["cases"]]
+        before: dict[str, Any] = {}
+        for case_id in case_ids:
+            response = context.request.get(base + f"/api/cases/{case_id}")
+            assert response.status == 200, response.text()
+            before[case_id] = response.json()
+        briefing = page.locator(".briefing")
+        record_ids: set[str] = set()
+        for action, outcome in (("accept", "Accepted"), ("edit", "Edited"),
+                                ("reject", "Rejected")):
+            if record_ids:
+                with page.expect_response(
+                    lambda response: "/api/briefing" in response.url
+                ) as refreshed:
+                    briefing.get_by_role("button", name="Refresh briefing", exact=True).click()
+                assert refreshed.value.status == 200, refreshed.value.text()
+                expect(briefing.locator("[data-review-state='Not reviewed']")).to_be_visible()
+            meta = briefing.locator("[data-record-id]")
+            record_id = meta.get_attribute("data-record-id")
+            assert record_id and record_id not in record_ids
+            record_ids.add(record_id)
+            reason = "" if action == "accept" else f"Synthetic {action}: checked case sources"
+            edited_text = "Synthetic corrected briefing. Check the case before any action."
+            if action == "accept":
+                expect(briefing.get_by_role("textbox")).to_have_count(0)
+                button = briefing.get_by_role("button", name="Use this draft", exact=True)
+            else:
+                briefing.get_by_role("button", name=(
+                    "Edit this draft" if action == "edit" else "Do not use this draft"
+                ), exact=True).click()
+                reason_input = briefing.get_by_label("Reason", exact=True)
+                button = briefing.get_by_role("button", name=(
+                    "Save edited draft review" if action == "edit" else "Record rejection"
+                ), exact=True)
+                request_count = len(review_requests)
+                button.click()
+                expect(reason_input).to_have_attribute("aria-invalid", "true")
+                expect(reason_input).to_be_focused()
+                assert len(review_requests) == request_count, "a missing reason must not be submitted"
+                reason_input.fill(reason)
+                if action == "edit":
+                    briefing.get_by_label("Edited draft", exact=True).fill(edited_text)
+                else:
+                    expect(briefing.get_by_label("Edited draft", exact=True)).to_be_hidden()
+            endpoint = base + f"/api/ai/review/{record_id}/{action}"
+            with page.expect_response(endpoint) as reviewed:
+                button.click()
+            review_response = reviewed.value
+            assert review_response.status == 200, review_response.text()
+            record = review_response.json()
+            assert record["id"] == record_id and record["task"] == "briefing"
+            assert record["status"] == outcome and record["reviewer_action"] == action
+            assert record["reviewer_reason"] == reason
+            assert record["override_text"] == (edited_text if action == "edit" else None)
+            assert record["resolved_by"] == "sam@example.test"
+            assert record["review_evidence"]["disposition"] == action
+            assert record["review_evidence"]["reason"] == reason
+            assert record["provenance"]["human_reviewed"] is True
+            expect(meta).to_have_attribute("data-review-state", outcome)
+            expect(meta).to_contain_text(
+                f"{outcome} as a draft by a person. This is not an approval, consent or safety decision.")
+            expect(meta.get_by_role("group", name="Review this draft")).to_be_hidden()
+            exported = observer.request.get(base + "/api/continuity/export")
+            assert exported.status == 200, exported.text()
+            matches = [item for item in exported.json()["ai_records"] if item["id"] == record_id]
+            assert len(matches) == 1, matches
+            retained = matches[0]
+            for field in ("status", "reviewer_action", "reviewer_reason", "override_text",
+                          "resolved_by", "resolved_at", "review_evidence", "provenance"):
+                assert retained[field] == record[field], field
+            repeated = context.request.post(endpoint, data={"reason": "Do not replace this review"})
+            assert repeated.status == 400, repeated.text()
+            assert "already been reviewed" in repeated.json()["error"]
+            exported = observer.request.get(base + "/api/continuity/export")
+            assert exported.status == 200, exported.text()
+            matches = [item for item in exported.json()["ai_records"] if item["id"] == record_id]
+            assert matches == [retained], "a refused repeat must not replace the retained review"
+            for case_id in case_ids:
+                response = context.request.get(base + f"/api/cases/{case_id}")
+                assert response.status == 200, response.text()
+                assert response.json() == before[case_id], case_id
+            results.append(dict(action=action, status=outcome, record_id=record_id,
+                                retained_record_matches=True, repeat_status=repeated.status,
+                                case_projections_unchanged=True))
+        assert not errors, errors
+        print("PASS real accept/edit/reject, exact retained records, immutable review and unchanged case projections")
+    finally:
+        context.close()
+        observer.close()
+        (output / "review-roundtrip-results.json").write_text(json.dumps(results, indent=2))
+
+
 def static_shell_check(browser: Browser, base: str, output: Path) -> None:
     context = browser.new_context(java_script_enabled=False)
     context.route("**/*", lambda route: route.continue_()
@@ -435,6 +547,7 @@ def run_browser(base: str, axe: str, output: Path) -> None:
         try:
             static_shell_check(browser, base, output)
             shell_check(browser, base)
+            successful_review_check(browser, base, output)
             for outcome in ("signed-out", "authenticated", "error"):
                 watchdog_failure_check(browser, base, outcome)
             for path, hash_ in (

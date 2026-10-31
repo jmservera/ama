@@ -8890,6 +8890,23 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   complete historical/resident joins, human/Finance approval or issue closure.
   CI remains the publication gate under the current explicit owner direction.
 
+## [2026-10-31] query | Employee loading and briefing assurance correction, Refs #531
+
+* Merged current main into the existing employee topic without rewriting
+  history; retained main's rubric, matching workflow hashes and both log histories.
+* Executed the existing local loading/briefing browser check after waiting
+  for shared capacity. Static no-script/cold-start/retry and all three real
+  draft-review outcomes passed, with same-ID manager-export persistence,
+  repeat refusal and unchanged permitted case projections.
+* Four pinned axe-core 4.10.3 scans had zero violations; three viewport
+  scans retain incomplete colour-contrast checks for human assessment.
+  API discovery ran 1,430 tests with 320 recorded opt-in/nonapplicable skips;
+  configured Ruff lint/format checks passed.
+* Updated the API guide and index with observed local results. Original
+  blocked Review remains historical; no live site/model/identity, Azure,
+  specialist-note, assistive-technology or operational acceptance is claimed.
+  Complete exact-head publication gating remains separate from these checks.
+
 ## [2026-10-31] query | Employee identity acceptance correction, Refs #570
 
 * Updated the [API acceptance guide](../../src/api/README.md#employee-acceptance-identity-check-570)

@@ -136,3 +136,10 @@ Final relevant API-run command additionally includes test_sensor_privacy:
 344 tests, OK, 52 existing optional skips. Full core suite is also running to
 verify the previously failing CI scope rather than only its individual case.
 No further critique or Review is run; original local/hosted outcomes retained.
+
+Full core suite completed: 1,638 tests, OK, 206 existing optional skips.
+Correction c74e891c was ordinarily pushed. New main #604 advanced while tests
+ran; PR became conflicting, so pull_request source/rubric CI did not schedule.
+Merged origin/main 28fbe6b6, selecting main rubric exactly and retaining all
+knowledge log entries. No correction source/test bytes changed during this
+merge. Revalidate merged API static checks and push merge to restore CI.
