@@ -2,6 +2,7 @@
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
 ms.date: 2026-10-30
+ms.topic: overview
 ---
 
 ## Purpose
@@ -19,6 +20,17 @@ Topic hubs work like the Maps of Content used in personal knowledge
 management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
+
+For Refs #360, the
+[transport integration qualification](../architecture/cutover-evidence-pack.md#transport-integration-qualification-2026-10-30-refs-360)
+retains main's `src/` retirement and current infrastructure alongside DN1-DN5
+and the offline private Blob implementation. The linked rubric diagnosis
+distinguishes invalid D1 model output from a numerical regression; it claims
+neither a fresh score nor live transport acceptance. The
+[2026-10-30 review corrections](../../infra/README.md#review-corrections-2026-10-30)
+bound download allocation and every serialized page and correct the active
+Blob runbook without rewriting historical tag receipts. Prior exact-head
+receipts remain historical; fresh local and hosted evidence is separate.
 
 For #190, the [current sensor validation and child dispositions](./research/iot-sensor-analytics-research-plan.md#current-validation-and-child-dispositions-2026-10-30-refs-190)
 record annual offline backfill/replay checks, unchanged isolated scenario
@@ -419,6 +431,17 @@ remain403 and all backing private. The tested VM allocation template is
 capacity-blocked, not a working publisher. #349 tenant/browser/role/SQL/AI and
 #358 live secret round-trip remain separate; #360d/e and retirement stay unmet.
 Prior adverse/historical evidence is preserved, not re-adjudicated.
+
+For issue #360, the [authenticated roster result transport design](../../infra/README.md#authenticated-roster-result-transport-design-2026-10-20-refs-360)
+and [evidence-pack entry](../architecture/cutover-evidence-pack.md#authenticated-roster-transport-design-2026-10-20)
+propose a documented ARM tag relay with five decisions needed and a tenant-administrator
+checklist. Design for review only: no execution, retry, parser relaxation or
+cloud change; whole #360 c, d, e stay unproved.
+
+The 2026-10-22 [private Blob result transport](../../infra/README.md#private-blob-result-transport-2026-10-22-refs-360)
+supersedes that tag relay under owner decisions DN1 to DN5: offline
+implementation and fake-client tests only; live routing, deployment, role
+grants and spend are NOT RUN, and whole #360 c, d, e stay unproved.
 
 The #360 profile-evidence continuation integrates merged quality #387 on main
 3f544fb9 with the exact original infra source/test patch and original critique/

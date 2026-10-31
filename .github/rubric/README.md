@@ -1,7 +1,7 @@
 ---
 title: Capstone Rubric Gate
 description: How the rubric-score agentic workflow scores the capstone against the FY27 AMA rubric and blocks pull requests that lower the score
-ms.date: 2026-10-24
+ms.date: 2026-10-30
 ms.topic: how-to
 ---
 
@@ -86,6 +86,26 @@ repair alone does not automatically replace PR #61's score.
 Scores are readiness estimates from repository evidence. Live-scored criteria (B1 to B5 and C2) are informed only by the capstone deck and pitch artifacts. They keep their baseline until one of those changes, except in bootstrap and calibration runs, which score every criterion from scratch, and in pull requests that change the rubric, registry, prompt or scripts, which reopen every criterion (moves still need a cited changed artifact file).
 
 ## Scorecard Submission Preflight
+
+### PR #423 invalid D1 details (2026-10-30, Refs #360)
+
+[Run 40556907743](https://github.com/jmservera/ama/actions/runs/40556907743)
+recorded no score: its actual submitted D1 object contained an extra
+`evidence2` field alongside `evidence`, `rationale` and `change_reason`.
+The strict adapter rejects extra keys even on unchanged, closed criteria.
+This was a malformed model tool submission, not missing fields in the
+transport documentation and not a measured numerical score regression.
+The existing jq preflight already rejects this shape; the adapter and
+actual prompt-filter regressions now cover the exact extra-key case.
+Strict validation and the generated workflow are unchanged.
+
+A diagnostic replay removing only that extra field yields 77 against the
+77 baseline. It is not a new assessment or a recorded score. Only A1/A3/A5
+were open, each already 5; infrastructure evidence cannot raise closed
+pitch or thought-leadership criteria. The
+[transport evidence map](../../infra/README.md#transport-evidence-and-integration-2026-10-30-refs-360)
+distinguishes offline proof from live gaps. A fresh hosted submission after
+publication remains necessary; no local test guarantees model compliance.
 
 [Run 40025652570](https://github.com/jmservera/ama/actions/runs/40025652570)
 was rejected because D3 omitted `change_reason`, not because its total fell

@@ -3,6 +3,7 @@
 !scripts/private-cutover-proof.py
 !scripts/staff_roster.py
 !scripts/staff_azure.py
+!scripts/staff_blob.py
 !scripts/staff-azure-worker.py
 !scripts/initialize-workbench-staff.py
 !entra/app-registration.json

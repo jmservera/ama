@@ -85,7 +85,7 @@ def test_malformed_inputs_fail_explicitly(mutation):
 
 @pytest.mark.parametrize("mutation", [
     "invalid-json", "array", "missing-id", "extra-id", "entry-type",
-    "missing-field", "extra-field", "evidence-object", "evidence-number",
+    "missing-field", "extra-field", "d1-evidence2", "evidence-object", "evidence-number",
     "rationale-number", "reason-null", "duplicate-id", "duplicate-field",
 ])
 def test_malformed_details_fail_without_defaults(mutation):
@@ -110,6 +110,8 @@ def test_malformed_details_fail_without_defaults(mutation):
             del details["A2"]["change_reason"]
         elif mutation == "extra-field":
             details["A2"]["score"] = 3
+        elif mutation == "d1-evidence2":
+            details["D1"]["evidence2"] = []
         else:
             field, value = {
                 "evidence-object": ("evidence", {}),
@@ -120,8 +122,13 @@ def test_malformed_details_fail_without_defaults(mutation):
             details["A2"][field] = value
         raw = json.dumps(details)
     inputs["details"] = raw
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError) as raised:
         adapter.from_inputs(inputs, IDS)
+    if mutation == "d1-evidence2":
+        assert str(raised.value) == "D1 details must contain exactly evidence, rationale, change_reason"
+        parsed, error = gate.parse_scorecard([{"type": gate.TOOL_TYPE, **inputs}], IDS)
+        assert parsed is None
+        assert error == str(raised.value)
 
 
 @pytest.mark.parametrize(("bootstrap", "calibration"), [(True, False), (False, True)])
@@ -178,7 +185,7 @@ def test_prompt_example_is_complete_and_accepted_by_adapter():
 
 
 @pytest.mark.parametrize("mutation", [
-    None, "missing-d3-reason", "missing-id", "extra-id", "extra-field",
+    None, "missing-d3-reason", "missing-id", "extra-id", "extra-field", "d1-evidence2",
     "numeric-score", "invalid-score", "newline-score", "invalid-json", "evidence-type",
     "rationale-type", "long-rationale", "unscored-rationale", "reason-type",
     "blank-summary", "extra-input",
@@ -196,6 +203,8 @@ def test_given_candidate_when_prompt_preflight_runs_then_invalid_details_are_rej
         details["D4"] = details["D3"]
     elif mutation == "extra-field":
         details["D3"]["score"] = 1
+    elif mutation == "d1-evidence2":
+        details["D1"]["evidence2"] = []
     elif mutation in {"evidence-type", "rationale-type", "long-rationale", "unscored-rationale", "reason-type"}:
         field, value = {
             "evidence-type": ("evidence", [1]),

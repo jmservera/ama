@@ -221,7 +221,7 @@ class BicepPolicyTests(unittest.TestCase):
             self.assertIsNotNone(shutil.which("az"), "az is required (REQUIRE_AZ_BICEP=1)")
 
     def assert_staff_initializer_relay_selection(self, template: dict) -> None:
-        self.assertEqual(template["parameters"]["includeResultRelay"]["defaultValue"], True)
+        self.assertEqual(template["parameters"]["includeResultBlob"]["defaultValue"], False)
         items = list(resources(template))
         self.assertEqual(len(items), 4)
         self.assertEqual(
@@ -248,7 +248,7 @@ class BicepPolicyTests(unittest.TestCase):
                     {
                         "actions": role["actions"],
                         "notActions": [],
-                        "dataActions": [],
+                        "dataActions": role.get("dataActions", []),
                         "notDataActions": [],
                     }
                 ],
@@ -260,14 +260,10 @@ class BicepPolicyTests(unittest.TestCase):
                 "parameters('initializerIdentityName')), '2023-01-31').principalId]",
             )
             self.assertEqual(assignment["properties"]["principalType"], "ServicePrincipal")
-            if role["name"] == "staff-initializer-result-tags":
-                self.assertEqual(definition.get("condition"), "[parameters('includeResultRelay')]")
-                self.assertEqual(assignment.get("condition"), "[parameters('includeResultRelay')]")
-                self.assertEqual(
-                    assignment["scope"],
-                    "[resourceId('Microsoft.App/jobs', format('job-{0}', "
-                    "substring(parameters('initializerIdentityName'), 3)))]",
-                )
+            if role["name"] == "staff-initializer-result-blob-write":
+                self.assertEqual(definition.get("condition"), "[parameters('includeResultBlob')]")
+                self.assertEqual(assignment.get("condition"), "[parameters('includeResultBlob')]")
+                self.assertIn("staff-results", json.dumps(assignment["scope"]))
             else:
                 self.assertNotIn("condition", definition)
                 self.assertNotIn("condition", assignment)
@@ -279,7 +275,7 @@ class BicepPolicyTests(unittest.TestCase):
             active = [
                 item
                 for item in items
-                if evaluate(item.get("condition", True), {"includeResultRelay": enabled}, {})
+                if evaluate(item.get("condition", True), {"includeResultBlob": enabled}, {})
             ]
             self.assertEqual(len(active), count)
             if not enabled:
@@ -302,7 +298,7 @@ class BicepPolicyTests(unittest.TestCase):
                     self.assert_staff_initializer_relay_selection, mutated
                 )
         mutated = deepcopy(template)
-        mutated["parameters"]["includeResultRelay"]["defaultValue"] = False
+        mutated["parameters"]["includeResultBlob"]["defaultValue"] = True
         self.assert_mutation_rejected(self.assert_staff_initializer_relay_selection, mutated)
 
     def test_every_deployed_resource_waits_for_the_guard(self) -> None:
