@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-31T14:21:54+00:00",
-  "commit": "4d130ebfdf05d2e0ed4644853bc8e20e79d39794",
+  "scored_at": "2026-10-31T14:34:27+00:00",
+  "commit": "2df64b57d7f603d6534efeced99fb06d00785992",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41209325506",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41210211814",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "496dc83beceaa39841966e7e771b7753b63a854811cdc13400fff19b3dee8865",
+    "solution-code": "5d6a0ab9de20d2d9f45c57a5a56066e7c81c6980eb035b14adafa86fe8c3b829",
     "infrastructure": "61ed8eadcd8e631c2a2e13b0853b7a96efd716806d947ef318843f0dd05f7d63",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -47,7 +47,7 @@
         "src/api/checks/employee_identity_check.py:1-53",
         "src/api/README.md:9-21"
       ],
-      "rationale": "New acceptance check reinforces identity/origin/debug controls but baseline was already at ceiling (5); no score change."
+      "rationale": "Not touched by this PR. Baseline ceiling unchanged."
     },
     "A4": {
       "score": 5,
@@ -60,7 +60,7 @@
     "A5": {
       "score": 5,
       "evidence": [],
-      "rationale": "This PR adds a Chromium acceptance check, not operational instrumentation. Baseline unchanged."
+      "rationale": "This PR only reorganizes pitch/deck materials; no operational instrumentation change. Baseline unchanged."
     },
     "A6": {
       "score": 5,
@@ -70,7 +70,7 @@
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "This PR is test tooling, not agentic orchestration. Baseline unchanged (Good, not Excellent)."
+      "rationale": "This PR is a pitch/deck content reorganization, not agentic orchestration. Baseline unchanged (Good, not Excellent)."
     },
     "B1": {
       "score": 3,
@@ -110,7 +110,7 @@
       "evidence": [
         "src/api/README.md:101-178"
       ],
-      "rationale": "New README sections document the check thoroughly but target engineering docs, not the capstone deck. Baseline ceiling unchanged."
+      "rationale": "Not touched by this PR (engineering documentation, not the capstone deck). Baseline ceiling unchanged."
     },
     "B7": {
       "score": 5,
