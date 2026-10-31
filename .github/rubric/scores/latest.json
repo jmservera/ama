@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-31T16:31:00+00:00",
-  "commit": "1c94e49edb707a4ef988c38c1e6dede63f130659",
+  "scored_at": "2026-10-31T16:54:46+00:00",
+  "commit": "d8782e6fae69ee8280840ae9e42970857489dfa7",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41219371555",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41221571546",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "244602d51959eb5e2ee889ea0e049b7c8d7b370ad9c76dda8150649b8c4991a4",
+    "solution-code": "6078e8a28953a0021127bc7cd22cc9faa88d74afd054bbcab5d365f8c368e224",
     "infrastructure": "61ed8eadcd8e631c2a2e13b0853b7a96efd716806d947ef318843f0dd05f7d63",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -120,7 +120,7 @@
         "src/core/README.md:5-123",
         "src/api/README.md:9-47"
       ],
-      "rationale": "Substantial engineering documentation (ai_consumption ledger contract, report semantics, test commands) is clear and navigable, but is project README reference material, not capstone deck/pitch documentation. Immaterial to B6 deck scoring."
+      "rationale": "Substantial engineering documentation is project README reference material, not capstone deck/pitch documentation. Immaterial to B6 deck scoring. src/README.md change in this PR is likewise engineering tooling docs, not deck material."
     },
     "B7": {
       "score": 5,
