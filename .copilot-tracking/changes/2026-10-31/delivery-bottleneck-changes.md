@@ -13,7 +13,7 @@ ms.date: 2026-10-31
 ## Divergences
 
 * Eight parallel loops were run as eight analysis lanes in one agent, not eight sub-agents.
-* Complete local gate not run: docs-only, per task direction. This conflicts with `.github/copilot-instructions.md`; hosted CI does not run for these paths and is not a substitute, so merge readiness is blocked pending the receipt or an explicit owner amendment (D4).
+* Complete local gate not run. The owner-selected Local validation tiers policy in `.github/agents/ama-backlog-delivery-coordinator.agent.md` applies to this coordinator's work: tier Focused, because this is a documentation-only change outside the Full categories (big features, releases, infrastructure, deployment, SQL, security-sensitive). Rationale: no executable, workflow, infrastructure or setting file changed. Focused tier requires relevant checks only (link and ASCII review, Git diff) and no full receipt; the heavy gate is intentionally not run. Complete RPI evidence, independent exact-head review, hosted CI where it triggers and human approvals are retained. Reassess the tier if scope changes.
 
 ## Validation
 
