@@ -116,3 +116,35 @@ Even a passing gate cannot approve this Not accepted candidate for publication.
 
 Loop execution is finished, delivery is partial. P02-T01 Review portion ran;
 commit/gate remain next, push/PR blocked by material original Review findings.
+
+## Commit and Actual Publication-Gate Attempts
+
+Implementation and original dated evidence committed as 4b4b55ec on the
+requested branch with GitHub-derived repository-local author/committer email
+and requested Copilot trailer. Refs #570 only; no issue criteria ticked.
+
+Attempted the required full gate with both actual Chromium methods included:
+`python3 tools/rpi-checks.py --all --jobs 3 --base 5666bd33
+--extra-test api:test_employee_acceptance_check.AcceptanceTests.test_chromium_rosterless
+--extra-test api:test_employee_acceptance_check.AcceptanceTests.test_chromium_wrong_account
+--out <external-session-directory>/rpi-570-final`.
+Exit 1 at preflight: candidate has ignored generated test/install/cache inputs.
+No gate groups ran, no passing receipt.
+
+Instead of deleting or moving existing ignored inputs, created a clean external
+detached worktree at exact candidate 4b4b55ec and attempted the same full gate
+with a fresh external output. Exit 1 at preflight: reviewed base differs from
+current origin/main. Fetch revealed main advanced to
+368d3bb8d0a9ad2dc221be6cf108b5cf2a8fa7cd (#423), including infrastructure,
+workflow and gate-tool changes. The caller specified base 5666bd33; no silent
+rebase, base substitution, source correction or gate-tool update was performed.
+The temporary clean validation worktree is removed after inspection; original
+candidate, evidence and ignored generated inputs remain untouched.
+
+No complete receipt exists to verify. Local test successes are not full-gate
+coverage. Push and PR not performed: original Review remains Not accepted,
+independent live identity unavailable and complete current-base gate blocked.
+This evidence-only follow-up commit does not pretend to seal a final candidate.
+Next work: later implementation for RV-002/RV-001, independently verified
+identity for live acceptance, and explicit current-base reconciliation before
+a fresh clean complete gate and publication assessment.
