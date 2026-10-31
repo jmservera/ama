@@ -148,6 +148,7 @@ class SensorPrivacyTests(unittest.TestCase):
         body = json.dumps({"choices": [{"message": {"content": "Not a cited proposal."}}]}).encode()
         meter = Mock()
         meter.reserve.return_value = "a" * 64
+        meter.publish_output.return_value = None
         with (
             patch.object(store.ai, "consumption", meter),
             patch.object(store.ai, "_token", return_value="offline-test"),

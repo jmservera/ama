@@ -119,3 +119,8 @@ Planning readiness: Ready; implementation P01 and P02-T01 complete.
 P02-T02 complete: independent Review execution Complete, source Conformant,
 no material findings. Original Review retained.
 P02-T03 remains publication work after Review.
+Later hosted correction evidence extends P02-T03 to the discovered coupled
+assistant terminal-release/capacity safety defects and the existing sensor
+transport mock contract. Fourth external API test method is within the cap;
+an existing core fixture update is necessary, no test removal. Original local
+Review remains unchanged; current hosted blockers are not falsely closed.

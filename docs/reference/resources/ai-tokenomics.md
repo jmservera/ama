@@ -217,6 +217,9 @@ with unavailable/Unknown consumption instead of HTTP 400. An admitted call's
 9,999-to-10,001 event transition returns persistent manual draft/priority/chat
 fallbacks with unresolved attribution, keeping subsequent dispatch held and
 recovered economics incomplete. These remain synthetic source-contract results.
+Later hosted review corrections retain revoked releases as terminal and persist
+capacity-held assistant completion before task/event serialization, so financial
+linkage cannot roll back mismatch quarantine or its safety evidence.
 
 This corrects the older inventory above prospectively: merged #480/#593 already
 provide independent resident currency reservations. They are not joined into the

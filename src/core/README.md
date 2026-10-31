@@ -53,6 +53,7 @@ Returned-model mismatches retain a closed `model-mismatch` outcome and at most
 non-string names become null, not provider-unavailable; completion quarantines
 the task without retry, suspends its release and withholds provider output.
 Financial usage remains recorded, with uncertain liability held.
+An already-revoked release stays revoked; mismatch quarantine is still saved.
 
 A call admitted at 9,999 events can reach 10,001 on reservation/completion.
 Publication-only `DispatchHeld` handling retains saved legacy/priority drafts
@@ -63,6 +64,9 @@ one transaction; JSON uses the actual saved message and persists its fallback.
 No redispatch occurs. Subsequent dispatch remains held, and missing output
 joins keep reporting incomplete/Unknown after read recovery. Other financial
 link or persistence errors still propagate; strict `output()` remains unchanged.
+Assistant completion also stages financial publication before serializing its
+task/event: a hold saves unresolved attribution and withholds actionable output
+without rolling back quarantine, release safety state or token settlement.
 
 `report(start=..., end=..., as_of=...)` uses UTC `[start,end)` call cohorts and
 review state as of the cutoff. All attempts, including retries/failures, belong

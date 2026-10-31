@@ -892,8 +892,9 @@ class Assistants:
                 if envelope.get("outcome") == "model-mismatch" or not any(r.get("serving_model") == envelope.get("model") for r in released):
                     quarantined = True
                     for r in released:
-                        rel.change(db, now, None, r["id"], "suspended",
-                                   "Returned model name differs from the released one (returned-model check, not attestation); results quarantined.", system=True)
+                        if r["status"] == "active":
+                            rel.change(db, now, None, r["id"], "suspended",
+                                       "Returned model name differs from the released one (returned-model check, not attestation); results quarantined.", system=True)
                     current["serving_attestation"] = dict(returned=envelope.get("model"), outcome="mismatch")
             held_output = output
             if quarantined:
@@ -902,11 +903,20 @@ class Assistants:
                 failure = failure or "Late result quarantined after a suspension, restart, release change or serving-version mismatch; use manual work."
                 current["quarantine"] = dict(epoch=epoch, claim_epoch=current.get("claim_epoch"),
                                              output_digest=digest(held_output) if held_output is not None else None)
-            current.update(envelope=envelope, output=output, reason=failure,
-                           verification=None, review=None)
             envelope["release"] = current.get("release")
             state = "quarantined" if quarantined else "ready" if output is not None and not failure else (
                 "pending" if envelope.get("outcome") in ("timeout", "provider-unavailable") and current["attempts"] < self.limits.attempts else "failed")
+            if envelope.get("meter_root") and state != "pending":
+                held = self.consumption.publish_output(envelope["meter_root"], task["id"],
+                                                       eligible=state == "ready", db=db)
+                if held:
+                    current["financial_attribution"] = held
+                    output = None
+                    failure = failure or f"Financial attribution held ({held['reason']}); use manual work."
+                    if not quarantined:
+                        state = "failed"
+            current.update(envelope=envelope, output=output, reason=failure,
+                           verification=None, review=None)
             delay = self.limits.backoff * current["attempts"] if state == "pending" else 0
             result = db.execute("UPDATE assistant_tasks SET body=?,state=?,not_before=?,lease_until=0,revision=revision+1 WHERE id=? AND owner=? AND fence=? AND state='leased' AND lease_until>?",
                                 (canonical(current), state, now + delay, task["id"], task["owner"], task["fence"], now))
@@ -927,10 +937,8 @@ class Assistants:
             self.event(db, task["id"], kind="completed", state=state, fence=task["fence"], envelope=envelope,
                        actual_tokens=actual, reservation_liability=attempt[1] if actual is None else actual,
                        output=output, source_signature=task["source_signature"],
-                       capability=task["capability"], version=task["version"])
-            if envelope.get("meter_root") and state != "pending":
-                self.consumption.output(envelope["meter_root"], task["id"],
-                                        eligible=state == "ready", db=db)
+                       capability=task["capability"], version=task["version"],
+                       financial_attribution=current.get("financial_attribution"))
             return True
 
     def execute(self, tid):

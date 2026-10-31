@@ -8945,3 +8945,17 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   selected publication gate, not the complete local gate or human acceptance.
   No real Azure price/billing, OD-51, resident/historical join, live approval,
   paid inference, deployment or whole-issue closure is claimed.
+
+## [2026-10-31] implementation | Hosted AI completion correction, Refs #432
+
+* Retained terminal release revocation while saving bounded mismatch quarantine.
+  Assistant completion now records financial publication holds before serializing
+  task/completion evidence, withholding actionable output without losing safety
+  state or independently settled usage.
+* Extended the external API regressions to the fourth permitted method, covering
+  eight model/capacity/revocation combinations. Updated the existing core sensor
+  transport mock for the publication helper's explicit return contract.
+* Preserved the original local Review, failed first source-CI run and rubric
+  76/100 result as historical evidence; neither is relabelled as successful.
+  Core guide and Tokenomics synthesis carry these later corrections. Fresh
+  hosted success remains separate from local validation and live approval.

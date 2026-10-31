@@ -84,3 +84,9 @@ thread resolution; a pending reply may disclose pending validation.
 Reply to each precise thread with commit/test evidence and resolve via GraphQL.
 CI is the explicitly selected publication gate; report pending/failing hosted
 checks accurately and leave #432 referenced rather than closed.
+
+Later concrete hosted findings add completion hold staging before task/event
+serialization and terminal-release suspension guards, plus the existing sensor
+Mock's explicit publication return. Fourth external API method covers eight
+model/capacity/revocation combinations. Full core tests verify the failed CI
+scope. Preserve original Review; no repeated assessment or false closure.

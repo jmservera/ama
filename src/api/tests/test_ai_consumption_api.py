@@ -1202,6 +1202,97 @@ class ConsumptionApi(unittest.TestCase):
                     )
                     self.assertEqual(len(fixture.requests), 1)
 
+    def test_assistant_completion_preserves_capacity_quarantine_and_terminal_release(self) -> None:
+        for model in ("test-model", "other-model"):
+            for capacity in (False, True):
+                for revoked in (False, True):
+                    with self.subTest(model=model, capacity=capacity, revoked=revoked):
+                        fixture = self.fresh()
+                        fixture.authority("assessment-preparation")
+                        fixture.response_model = model
+                        task = fixture.service.invoke(fixture.pm, "assessment-preparation", "ZF-1")
+                        task = fixture.service.claim(task["id"], "capacity-worker")
+                        if capacity:
+                            fixture.fill_partition()
+                        result = AgentWorker(foundry_provider(fixture.inner)).handle(
+                            TaskMessage.from_task(task, fixture.service.limits),
+                            fixture.service.limits,
+                        )
+                        assert result is not None
+                        result = ResultMessage.from_json(result.to_json())
+                        if revoked:
+                            with fixture.service.transaction() as db:
+                                db.execute(
+                                    "UPDATE assistant_releases SET status='revoked' "
+                                    "WHERE id='fx-assessment-preparation'"
+                                )
+                        with (
+                            self.assertLogs("zava_forward.core.ai_consumption", level="WARNING")
+                            if capacity
+                            else nullcontext()
+                        ):
+                            self.assertTrue(
+                                fixture.service.complete(
+                                    task, result.envelope, result.output, result.failure
+                                )
+                            )
+                        detail = fixture.service.detail(fixture.pm, task["id"])
+                        mismatch = model != "test-model"
+                        expected_state = (
+                            "quarantined"
+                            if mismatch or revoked
+                            else "failed"
+                            if capacity
+                            else "ready"
+                        )
+                        self.assertEqual(detail["state"], expected_state)
+                        self.assertEqual(detail["envelope"]["usage"]["total_tokens"], 120)
+                        if expected_state != "ready":
+                            self.assertIsNone(detail["output"])
+                        if mismatch:
+                            self.assertEqual(
+                                detail["serving_attestation"],
+                                dict(returned=model, outcome="mismatch"),
+                            )
+                        with fixture.service.transaction() as db:
+                            status = db.execute(
+                                "SELECT status FROM assistant_releases "
+                                "WHERE id='fx-assessment-preparation'"
+                            ).fetchone()[0]
+                            event = json.loads(
+                                db.execute(
+                                    "SELECT body FROM assistant_events WHERE task_id=? "
+                                    "AND json_extract(body,'$.kind')='completed'",
+                                    (task["id"],),
+                                ).fetchone()[0]
+                            )
+                            attempt = db.execute(
+                                "SELECT actual,active_until FROM assistant_attempts WHERE id=?",
+                                (f"{task['id']}:{task['fence']}",),
+                            ).fetchone()
+                        self.assertEqual(
+                            status, "revoked" if revoked else "suspended" if mismatch else "active"
+                        )
+                        self.assertEqual(tuple(attempt), (120, 0))
+                        self.assertEqual(event["state"], expected_state)
+                        if capacity:
+                            attribution = dict(
+                                status="unresolved", reason="meter-capacity-reached", cost="Unknown"
+                            )
+                            self.assertEqual(detail["financial_attribution"], attribution)
+                            self.assertEqual(event["financial_attribution"], attribution)
+                            with patch("zava_forward.core.ai_consumption.MAX_EVENTS", 20000):
+                                rows = fixture.records()
+                                self.assertEqual(len(rows), 10002 if mismatch else 10001)
+                                self.assertFalse(any(r["kind"] == "output" for r in rows))
+                                report = fixture.service.consumption.report(
+                                    start=START, end=END, as_of=END
+                                )
+                                self.assertEqual(report["unjoined_outputs"], 1)
+                                self.assertEqual(report["token_cost"], "Unknown")
+                        self.assertFalse(fixture.service.execute(task["id"]))
+                        self.assertEqual(len(fixture.requests), 1)
+
     def test_chat_finalization_has_no_phantom_join_on_fault_or_other_writer(self) -> None:
         for backend in ("sql", "json"):
             for fault in ("output", "message-save", "other-writer"):

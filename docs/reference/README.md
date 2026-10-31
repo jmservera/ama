@@ -36,6 +36,8 @@ The final three-thread correction retains bounded model mismatches for
 non-retryable quarantine/release suspension, preserves reports during backend
 meter holds, and returns consistent saved/manual responses at the exact
 9,999-to-10,001 event boundary without redispatch.
+Hosted follow-up also preserves terminal revocation and capacity-held assistant
+completion without rolling back mismatch quarantine or financial settlement.
 
 For #570, the [employee acceptance adapter](../../src/api/README.md#employee-acceptance-identity-check-570)
 uses immutable expected identity and fresh navigation/action admission, with

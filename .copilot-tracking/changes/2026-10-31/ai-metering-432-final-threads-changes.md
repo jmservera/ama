@@ -97,3 +97,42 @@ Correction source/tests remain byte-for-byte unchanged from 77c58553.
 Merged API lint/format/mypy pass (67 formatted files, 126 typed source files);
 all four correction methods pass again, no skips. Original independent Review
 is unchanged, not repeated. Ready for ordinary merge commit/push and CI.
+
+## Hosted Correction Evidence
+
+Pushed merge candidate 34cefd51. Source CI 41212264506 failed only core's
+existing sensor-privacy transport test: its unrestricted Mock returns a Mock
+for the new publication helper rather than None. Update that existing external
+fixture explicitly; do not weaken the production status contract.
+Rubric run 41212264566 completed but its status is 76/100 versus 77/100, a
+publication blocker rather than a success. Automation advanced only rubric
+outputs to 34b3259c; safely fast-forwarded.
+
+Hosted source review found two tightly coupled completion defects: a revoked
+release cannot be suspended, and transactional assistant output linkage can
+roll back the very mismatch quarantine at capacity. Preserve the original local
+Conformant-for-source Review unchanged; these later concrete findings are
+additional correction evidence, not a repeated Review or relabelled verdict.
+P02-T03 now includes skipping suspension for already terminal releases and
+staging publication hold handling before task/event serialization, retaining
+quarantine/settlement and withholding actionable output with unresolved state.
+Add the fourth permitted external method for revocation/capacity combinations;
+update the existing sensor mock only. Required checks and CI must pass before
+claiming/closing these findings.
+
+Implemented the later hosted findings directly: only active releases are
+suspended; revoked/suspended records retain terminal state while completion
+saves mismatch evidence. Assistant publish_output runs in the authoritative
+transaction before task/event serialization. A hold saves unresolved/Unknown
+attribution, withholds actionable output, retains quarantine (or fails the
+otherwise ready proposal to the manual route), and closes attempt settlement.
+Fourth external method proves eight matching/mismatched-model, capacity and
+revocation combinations, including actual 10,001/10,002 event partitions.
+The existing sensor-privacy Mock explicitly returns None from publish_output.
+
+API/core ruff, format and mypy all pass after this source correction. New
+completion-combination and former CI-failing sensor test pass (2 methods).
+Final relevant API-run command additionally includes test_sensor_privacy:
+344 tests, OK, 52 existing optional skips. Full core suite is also running to
+verify the previously failing CI scope rather than only its individual case.
+No further critique or Review is run; original local/hosted outcomes retained.
