@@ -939,7 +939,16 @@ def verify_commands(root: Path, out: Path, receipt: dict[str, Any]) -> None:
             elif row.get("expected_probe_failure"):
                 raise GateError("Successful command mislabeled as a failed probe")
             if check["suite"]:
-                counts = check_skips(output, integration=check["integration"], group=check["group"])
+                counts = check_skips(
+                    output,
+                    integration=check["integration"],
+                    group=check["group"],
+                    expected_test=(
+                        CHAT_PANEL_DISCOVERY_SKIP[0]
+                        if CHAT_PANEL_BROWSER_SELECTOR in check["argv"]
+                        else None
+                    ),
+                )
                 if counts["executed"] <= 0 or any(row.get(k) != v for k, v in counts.items()):
                     raise GateError("Required suite result evidence missing/mismatched")
             if check["group"] == "static" and check["argv"][0] == "git" and output.strip():
@@ -1023,7 +1032,13 @@ def extra_selector(value: str) -> tuple[str, str]:
     return project, selector
 
 
-def check_skips(text: str, *, integration: bool = False, group: str = "") -> dict[str, Any]:
+def check_skips(
+    text: str,
+    *,
+    integration: bool = False,
+    group: str = "",
+    expected_test: str | None = None,
+) -> dict[str, Any]:
     counts = re.findall(r"Ran (\d+) tests? in ", text)
     skips = [
         {"test": match[0], "reason": match[1]}
@@ -1048,6 +1063,14 @@ def check_skips(text: str, *, integration: bool = False, group: str = "") -> dic
     declared = re.search(r"skipped=(\d+)", summary[-1])
     if (int(declared[1]) if declared else 0) != len(skips):
         raise GateError("Skip count does not match enumerated test/reason evidence")
+    if expected_test is not None and (
+        int(counts[-1]) != 1
+        or skips
+        or re.findall(r"(?m)^(.+?) \.\.\. (.+)$", text) != [(expected_test, "ok")]
+    ):
+        raise GateError(
+            f"Required exact test execution evidence missing/mismatched: {expected_test}"
+        )
     return {"tests": int(counts[-1]), "executed": int(counts[-1]) - len(skips), "skips": skips}
 
 
@@ -1283,7 +1306,18 @@ class Runner:
                 return output
             raise GateError(f"{self.group} failed ({code}); see {logfile}")
         if suite:
-            entry.update(check_skips(output, integration=integration, group=self.group))
+            entry.update(
+                check_skips(
+                    output,
+                    integration=integration,
+                    group=self.group,
+                    expected_test=(
+                        CHAT_PANEL_DISCOVERY_SKIP[0]
+                        if CHAT_PANEL_BROWSER_SELECTOR in argv
+                        else None
+                    ),
+                )
+            )
         return output
 
     def stop_command(self) -> str:
