@@ -62,6 +62,9 @@ WORKFLOW_HASHES = {
 AXE_SHA256 = "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb"
 TOOLS = ("python3", "node", "docker", "az", "bicep", "actionlint", "shellcheck", "trivy")
 HEAVY_LOCK_PATH = Path("/tmp/ama-rpi-heavy.lock")
+# Linux sun_path[108] includes NUL; Chromium adds this mkdtemp/socket suffix to TMPDIR.
+CHROMIUM_SOCKET_PATH_BYTES = 107
+CHROMIUM_SOCKET_SUFFIX = "/org.chromium.Chromium.XXXXXX/SingletonSocket"
 EXPECTED_SKIP_REASONS = {
     "needs a SQL Server (ZF_TEST_MSSQL=1)",
     "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
@@ -153,6 +156,23 @@ SQL_QUERY = (
 
 class GateError(RuntimeError):
     """Required evidence is absent or invalid."""
+
+
+def admit_browser_output(out: Path, groups: list[str]) -> None:
+    if "browser" not in groups:
+        return
+    tmp = out / "tmp"
+    tmp_bytes = len(os.fsencode(tmp))
+    tmp_limit = CHROMIUM_SOCKET_PATH_BYTES - len(os.fsencode(CHROMIUM_SOCKET_SUFFIX))
+    out_limit = tmp_limit - len(os.fsencode("/tmp"))
+    if tmp_bytes > tmp_limit:
+        raise GateError(
+            f"Chromium singleton socket path would exceed {CHROMIUM_SOCKET_PATH_BYTES} bytes: "
+            f"resolved --out is {len(os.fsencode(out))} bytes (maximum {out_limit}), "
+            f"owned TMPDIR is {tmp_bytes} bytes (maximum {tmp_limit}). "
+            "Use a shorter new external --out, for example /tmp/rpi-608-final; "
+            "the runner sets TMPDIR to <output>/tmp, overriding caller TMPDIR."
+        )
 
 
 def digest(path: Path) -> str:
@@ -1150,6 +1170,7 @@ class Runner:
     ) -> None:
         self.root, self.out, self.base, self.extras = root, out, base, extras
         self.selection = selected or selection(root, base, "all", extras)
+        admit_browser_output(out, self.selection["groups"])
         self.jobs, self.resume = jobs, resume
         self.reused: list[str] = []
         self.local = threading.local()
@@ -2213,7 +2234,13 @@ class Runner:
 
 
 def validate_receipt(
-    root: Path, path: Path, base: str, *, passing: bool = True, depth: int = 0
+    root: Path,
+    path: Path,
+    base: str,
+    *,
+    passing: bool = True,
+    depth: int = 0,
+    new_output: Path | None = None,
 ) -> dict[str, Any]:
     if depth > 16:
         raise GateError("Resume provenance depth exceeded")
@@ -2235,6 +2262,8 @@ def validate_receipt(
         raise GateError("Receipt scope/selection mismatch")
     if receipt["identity"] != clean_identity(root, base):
         raise GateError("Receipt source/base/matrix/helper identity mismatch")
+    if new_output is not None:
+        admit_browser_output(new_output, selected["groups"])
     if receipt["tools"] != tool_identity():
         raise GateError("Receipt tool identity mismatch")
     executed = receipt["executed_groups"]
@@ -2406,12 +2435,11 @@ def main() -> int:
                     "--out must be a new external directory; prior receipts are immutable"
                 )
             clean_identity(root, args.base)
-            tool_identity()
             if args.jobs < 1:
                 raise GateError("--jobs must be positive")
             resume = args.resume.resolve() if args.resume else None
             if resume:
-                parent = validate_receipt(root, resume, args.base, passing=False)
+                parent = validate_receipt(root, resume, args.base, passing=False, new_output=out)
                 if parent["status"] != "failed" or args.extra_test:
                     raise GateError("--resume needs a failed receipt and no --extra-test override")
                 extras = parent["extras"]
@@ -2419,6 +2447,8 @@ def main() -> int:
             else:
                 extras = args.extra_test
                 selected = selection(root, args.base, "changed" if args.changed else "all", extras)
+            admit_browser_output(out, selected["groups"])
+            tool_identity()
             out.mkdir(mode=0o700, parents=True)
 
             def interrupted(signum: int, frame: Any) -> None:

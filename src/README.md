@@ -75,6 +75,18 @@ python3 tools/rpi-checks.py --all --jobs 3 --base "$BASE_SHA" --out /tmp/rpi-ISS
 python3 tools/rpi-checks.py --verify-receipt /tmp/rpi-ISSUE-final/receipt.json --base "$BASE_SHA"
 ```
 
+Selections containing browser checks require the resolved absolute `--out`
+pathname to be at most 58 filesystem-encoded bytes on Linux. The runner sets
+`TMPDIR` to `<output>/tmp` (at most 62 bytes), and Chromium appends
+`/org.chromium.Chromium.XXXXXX/SingletonSocket` (45 bytes) within the 107-byte
+Unix socket pathname limit. Overlong paths are rejected before tool probes,
+output creation or heavy-lock admission, including resume. Use a short new
+external directory such as `/tmp/rpi-608-final`; changing the caller's `TMPDIR`
+does not help because the runner overrides it. Symlink aliases are resolved
+before measuring and non-ASCII characters may use multiple filesystem bytes.
+Browser-free changed selections do not impose this bound. Existing external
+output ownership, cleanup and receipt verification requirements still apply.
+
 For small issues, the conservative changed-path tier maps the committed
 `base...HEAD` diff to checks and transitive prerequisites. Unknown paths fall
 back to the full matrix; inspect the selection before execution when full work
