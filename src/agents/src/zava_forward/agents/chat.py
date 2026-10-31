@@ -65,7 +65,13 @@ class ChatModel:
             outcome = envelope.get("outcome")
             safe = outcome if outcome in ("timeout", "disabled") else "provider-unavailable"
             raise ModelUnavailable(safe, calls=calls, usage=usage)
-        return ModelReply(text, usage, calls)
+        return ModelReply(
+            text,
+            usage,
+            calls,
+            meter_id=envelope.get("meter_id"),
+            meter_root=envelope.get("meter_root"),
+        )
 
 
 __all__ = ["ChatModel"]

@@ -61,6 +61,7 @@ WORKFLOW_HASHES = {
 }
 AXE_SHA256 = "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb"
 TOOLS = ("python3", "node", "docker", "az", "bicep", "actionlint", "shellcheck", "trivy")
+HEAVY_LOCK_PATH = Path("/tmp/ama-rpi-heavy.lock")
 EXPECTED_SKIP_REASONS = {
     "needs a SQL Server (ZF_TEST_MSSQL=1)",
     "needs disposable SQL Server (ZF_TEST_MSSQL=1)",
@@ -2333,16 +2334,33 @@ def verify(root: Path, path: Path, base: str, *, required_scope: str = "full") -
 
 
 @contextlib.contextmanager
-def heavy_lock(timeout: int) -> Iterator[None]:
-    path = Path("/tmp/ama-rpi-heavy.lock")
-    fd = os.open(path, os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600)
+def heavy_lock(timeout: int, inherited_fd: int | None = None) -> Iterator[None]:
+    if inherited_fd is not None:
+        if inherited_fd < 0:
+            raise GateError("Inherited heavy-resource lock descriptor must be nonnegative")
+        fd = os.dup(inherited_fd)
+    else:
+        fd = os.open(HEAVY_LOCK_PATH, os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600)
     with os.fdopen(fd, "w") as stream:
+        if inherited_fd is not None:
+            actual = os.fstat(stream.fileno())
+            expected = HEAVY_LOCK_PATH.stat(follow_symlinks=False)
+            if (
+                not stat.S_ISREG(actual.st_mode)
+                or not stat.S_ISREG(expected.st_mode)
+                or (actual.st_dev, actual.st_ino) != (expected.st_dev, expected.st_ino)
+            ):
+                raise GateError("Inherited descriptor is not the shared heavy-resource lock")
         deadline = time.monotonic() + timeout
         while True:
             try:
                 fcntl.flock(stream, fcntl.LOCK_EX | fcntl.LOCK_NB)
                 break
             except BlockingIOError:
+                if inherited_fd is not None:
+                    raise GateError(
+                        "Inherited heavy-resource lock is held by another owner"
+                    ) from None
                 if time.monotonic() >= deadline:
                     raise GateError("Global heavy-resource lock timeout") from None
                 time.sleep(1)
@@ -2360,6 +2378,11 @@ def main() -> int:
     parser.add_argument("--out", type=Path)
     parser.add_argument("--extra-test", action="append", default=[])
     parser.add_argument("--lock-timeout", type=int, default=600)
+    parser.add_argument(
+        "--heavy-lock-fd",
+        type=int,
+        help="Borrow the shared lock's inherited descriptor without releasing caller ownership",
+    )
     parser.add_argument("--jobs", type=int, default=1)
     parser.add_argument("--required-scope", choices=("full", "partial"), default="full")
     args = parser.parse_args()
@@ -2404,7 +2427,7 @@ def main() -> int:
             signal.signal(signal.SIGTERM, interrupted)
             signal.signal(signal.SIGINT, interrupted)
             queued = datetime.now(UTC).isoformat()
-            with heavy_lock(args.lock_timeout):
+            with heavy_lock(args.lock_timeout, args.heavy_lock_fd):
                 jobs = worker_limit(args.jobs)
                 print(
                     f"Lock queued {queued}; acquired {datetime.now(UTC).isoformat()}; "

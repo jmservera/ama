@@ -851,6 +851,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                        resolved_by=None, resolved_at=None, reason="", workflow_items=tmpl_items, ai_output=r.get("ai_text") or (r["text"] if r["source"] == "ai" else None),
                        fallback_reason=r.get("reason"), latency_ms=r.get("latency_ms"), prompt_version=ai_prompts.version("priority"),
                        release=r.get("release"), continuity_epoch=epoch0,
+                       meter_root=r.get("meter_root"), usage=r.get("usage"), meter_id=r.get("meter_id"),
                        quarantine=dict(reason="Late priority result after epoch change") if late else None,
                        mode="workflow-only" if r.get("reason") == "workflow-only mode selected" else "ai", dropped_uncited=dropped,
                        case_ids=list(captured_sources), source_versions=captured_sources, hazard_ids=hazard_ids,
@@ -861,6 +862,15 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             self.data["recommendations"].append(rec)
             self.audit(user["email"], "ai_run_end", "-", f"priority_recommendation {rec['id']} source={r['source']} model={r['model']} validated={r['validated']}")
             self.save()
+            if r.get("meter_root"):
+                held = self.ai.consumption.publish_output(r["meter_root"], rec["id"],
+                                                         eligible=not late and r["source"] == "ai" and r["validated"])
+                if held:
+                    rec.update(source="template", model=None, mode="workflow-only", items=tmpl_items,
+                               fallback_reason=f"Financial attribution held ({held['reason']}); use the manual route.",
+                               financial_attribution=held,
+                               overlap=len({i["case_id"] for i in tmpl_items} & set(det)))
+                    self.save()
             return self._rec_view(rec, user)
         return self.continuity_publish("priority", epoch0, r["source"], publish)
 
@@ -906,6 +916,9 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             if rec["user"] != user["email"]:
                 raise PermissionError("This suggestion was made for someone else.")
             if rec["status"] != "Proposed":
+                repaired = self._repair_ai_review(rec, action, self.REC_ACTIONS[action])
+                if repaired is not None:
+                    return self._rec_view(repaired, user)
                 raise ValueError("This suggestion has already been answered.")
             if action != "reject" and rec["source"] == "ai":
                 if not self.ai_epoch_current(rec) or self.continuity_suspension("priority"):
@@ -929,13 +942,43 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                         final.append(dict(case_id=cid, reason=str(i.get("reason", ""))[:300]))
                     if not final or len(final) > 10:
                         raise ValueError("Keep between 1 and 10 cases.")
+                metered = bool(rec.get("meter_root"))
+                disposition = "edit-accept" if action == "edit" else action
+                intent = self.ai.consumption.review_intent(
+                    rec_id, disposition, root=rec["meter_root"]) if metered else None
                 rec.update(status=self.REC_ACTIONS[action], final_items=final, reason=reason,
                            resolved_by=user["email"], resolved_at=datetime.now().isoformat(timespec="seconds"))
                 ids = ",".join(i["case_id"] for i in final) if final else "-"
                 self.audit(user["email"], f"ai_priority_{action}", "-", f"{rec_id} {reason} cases={ids}".strip())
                 self.save()
                 mark_priority_committed(self)
+                if metered:
+                    self.ai.consumption.review(rec_id, disposition, intent=intent)
                 return self._rec_view(rec, user)
+
+    def _repair_ai_review(self, rec, action, status):
+        """Repair only financial attribution confirmed by the persisted human disposition."""
+        root = rec.get("meter_root") or rec.get("envelope", {}).get("meter_root")
+        if not root or rec["status"] != status:
+            return None
+        if hasattr(self, "db"):
+            with self.dblock:
+                row = self.db.execute("SELECT body FROM recommendations WHERE id=?", (rec["id"],)).fetchone()
+            saved = json.loads(row[0]) if row else None
+        else:
+            with open(self.live_path, encoding="utf-8") as source:
+                saved = next((r for r in json.load(source)["recommendations"] if r["id"] == rec["id"]), None)
+        if not saved or saved["status"] != status or saved["user"] != rec["user"]:
+            return None
+        saved_root = saved.get("meter_root") or saved.get("envelope", {}).get("meter_root")
+        if saved_root != root or (saved.get("kind") == "ai_task" and saved.get("reviewer_action") != action):
+            return None
+        disposition = "edit-accept" if action == "edit" else action
+        intent = self.ai.consumption.pending_review(rec["id"], disposition)
+        if intent is None:
+            return None
+        self.ai.consumption.review(rec["id"], disposition, intent=intent)
+        return saved
 
     # ---- funding: a person approves and submits; the system never does
     FUND_FLOW = ("Not started", "To prepare", "Draft ready", "Approved", "Submitted", "Confirmed")

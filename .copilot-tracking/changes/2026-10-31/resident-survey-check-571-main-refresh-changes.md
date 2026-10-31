@@ -138,3 +138,46 @@ must compare equivalent merge resolutions and the final verified receipt.
 Commit original refresh evidence and merge, then fresh full current-main gate,
 fresh fetch/verification and approving exact-head assessment before publication.
 No passing current receipt exists at this handoff; no partial/stale-base shortcut.
+
+## Fourth Advance: Final Main Batch
+
+Full gate for `24941741` / `28fbe6b6` passed all seventeen groups, including the
+new three-test employee browser contract, then rejected current-main identity
+at sealing after merged #602/#605. Preserve failed receipt
+`/tmp/ama-571-current-publication-gate/receipt.json`, SHA-256
+`71c355889ab9ab906f2891b515ac5eba9331269e3c1c77682177c545eec83ab2`,
+and full log SHA-256
+`2ed34158199f2eab72ee9f6694025273e07e37f9ab6ec0a9fcbf46a3911666d2`.
+Again this is complete historical execution, not eligible current evidence.
+
+Fresh main `7136be9778b17e495b1941e6eb93f50d32de8a2b` adds source-only AI
+metering and capacity contracts. No open main PR was returned at this fetch.
+Owner-authorized merge completed automatically without conflicts; main score,
+workflow/runner/hash inputs and both log histories remain intact. Final source
+diff remains only resident check7/guide5 and one capture assertion. No branch
+AI/Azure/approval change is introduced by reconciliation.
+
+Local complete tooling suite and unchanged static parser pass:
+tests48/executed48/skips[]. Exact isolated runner/tooling Ruff/format and strict
+mypy pass; normal API Ruff passes and 67 files formatted. Capacity preflight
+still admits only one worker for documented jobs3. Refresh source-matching
+resident browser on this runtime base, commit original reconciliation evidence,
+then run complete fresh gate including final API/SQL/image contracts.
+All prior original/child Review outcomes and adverse receipt identities remain
+immutable; final assessment must bind the current verified HEAD/base/receipt.
+
+Resident browser first admission timed out after 1800s (exit75, no execution,
+empty original log). The single allowed retry passed complete resident flows
+against merged `7136be97`: Chromium156.0.8078.4, pinned axe executed32scans,
+zero violations/42 incompletes, no errors/external requests. Report
+`/tmp/ama-571-last-resident-retry/report.json`, SHA-256
+`9503e463bd668a7e554abf9e2e998b53724a62a180f21df5ee547d8cd27e9974`;
+retry log SHA-256
+`ee40fa95aa4a7fcbc9cdc83e338f0f6c9ef6887c3f91565f7e2b6d0f68eb992d`.
+Tooling48 tests completed in14.027s; log SHA-256
+`0008dbda8e08f0dfd4e82b58820075ab615de468689ea661b089f529dd39f485`.
+Main advanced again during admission to `87bf629c630314f5be086697e322e1b0ec22277d`
+(#606/#607 equivalent gate-baseline and employee progress evidence). Commit the
+current authorized merge, reconcile that final advance preserving both histories,
+then new complete receipt. Earlier complete executions remain immutable adverse
+identity evidence; no premature publication or silent skip/approval follows.

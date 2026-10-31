@@ -8845,6 +8845,51 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   5.1/Office and human acceptance remain unperformed. This local source
   verification is not the complete publication gate or hosted approval.
 
+## [2026-10-31] query | Source-only AI consumption economics, Refs #432
+
+* Extended the existing Tokenomics synthesis and pitch brief with the source-only
+  consumption ledger, finite request/financial admission, accepted-output/
+  quality reporting and exact acceptance/gap matrix; updated the index.
+* Stored dated official Azure public pricing-source metadata/version/hash.
+  Retrieved rate cells were unavailable; no applicable price or financial
+  estimate is invented.
+* Corrected the earlier inventory prospectively: merged resident SQL currency
+  reservations exist, but their complete financial attribution is still unjoined.
+* Actual Azure billing, OD-51, named owners, Finance approval and a finite
+  authorised held-out batch remain unmet. No deployment, credentials/private
+  data, Azure change, paid inference, cash saving or whole-issue closure follows.
+
+## [2026-10-31] implementation | Routed AI metering safeguards, Refs #432
+
+* Preserved the original independent Review Complete / Defects found and its
+  adverse reproductions. Later source implementation adds append-only review
+  revisions, shared pre-network holds, deferred-price currency refusal and
+  durable recoverable legacy/priority review intents.
+* Updated core/API guides and the existing Tokenomics synthesis with the
+  corrected mechanism and composed local evidence. The original two new
+  modules contain 26 core and nine API methods, within the 35-method cap.
+* Current main #558 archived the older pitch brief. Its baseline bytes remain
+  unchanged; current source-only slide/Q&A drafting now lives in the Tokenomics
+  synthesis and is linked from the current authoring guide/index. No generated
+  question bank, protected cost arithmetic, native deck or rehearsal is changed.
+* Actual applicable prices/billing, OD-51, authorised held-out measurements,
+  complete resident/historical joins and live/human/Finance approval remain
+  separate. No Azure/deployment/credential/private-data/paid-model action.
+
+## [2026-10-31] implementation | Copilot AI metering rejection corrections, Refs #432
+
+* Updated core/API guides, the existing Tokenomics synthesis and reference
+  index for PR #602's five source-review corrections: enclosing document-call
+  limits, store-independent timestamp validation, incomplete legacy/priority
+  rejection joins, atomic failed-provider rejection linkage and capacity-held
+  withdrawal with persistent unresolved financial attribution.
+* Eight focused regression methods extend the original ledger/composed API
+  modules; the existing SQL/JSON fault matrix and HTTP validation method remain.
+  Dated RPI evidence preserves the one original critique and independent Review.
+* These source-only controls do not establish real prices/billing, OD-51,
+  complete historical/resident joins, human/Finance approval or issue closure.
+  CI remains the publication gate under the current explicit owner direction.
+
 ## [2026-10-31] query | Employee loading and briefing assurance correction, Refs #531
 
 * Merged current main into the existing employee topic without rewriting
@@ -8892,6 +8937,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   discovery skips and the SQL-only non-applicability exception cannot substitute
   for execution. Synthetic tooling evidence does not establish live employee
   acceptance, hosted CI success or human approval.
+
 ## [2026-10-31] query | Resident scope and current AI contract, Refs #466
 
 * Updated the resident assistant design, API acceptance map and knowledge index
@@ -8903,3 +8949,30 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Deployment AI remains off behind existing settings. No Azure, credential
   lookup, paid inference, tariff/budget renewal, live/human acceptance or issue
   closure is authorized by this reconciliation.
+
+## [2026-10-31] implementation | Final AI metering review threads, Refs #432
+
+* Updated core/API guides, Tokenomics synthesis and reference index for
+  PR #602's bounded returned-model mismatch quarantine, backend-held report
+  preservation and consistent legacy/priority/chat manual publication routes.
+* External composed tests cover real 9,999-to-10,001 event admission, SQL/JSON
+  persistence, worker serialization, safe model bounds, actual HTTP holds,
+  subsequent dispatch refusal and chat transaction/fault/other-writer joins.
+* Original dated RPI critique and Review are preserved. CI is the explicitly
+  selected publication gate, not the complete local gate or human acceptance.
+  No real Azure price/billing, OD-51, resident/historical join, live approval,
+  paid inference, deployment or whole-issue closure is claimed.
+
+## [2026-10-31] implementation | Hosted AI completion correction, Refs #432
+
+* Retained terminal release revocation while saving bounded mismatch quarantine.
+  Assistant completion now records financial publication holds before serializing
+  task/completion evidence, withholding actionable output without losing safety
+  state or independently settled usage.
+* Extended the external API regressions to the fourth permitted method, covering
+  eight model/capacity/revocation combinations. Updated the existing core sensor
+  transport mock for the publication helper's explicit return contract.
+* Preserved the original local Review, failed first source-CI run and rubric
+  76/100 result as historical evidence; neither is relabelled as successful.
+  Core guide and Tokenomics synthesis carry these later corrections. Fresh
+  hosted success remains separate from local validation and live approval.

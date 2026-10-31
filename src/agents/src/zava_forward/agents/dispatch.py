@@ -18,6 +18,7 @@ from dataclasses import dataclass
 from typing import Any, Protocol
 
 from zava_forward.core import assistants
+from zava_forward.core.ai_consumption import CallContext, call_context, reference
 
 MAX_MESSAGE_CHARS = 64000
 TASK_KEYS = (
@@ -182,12 +183,37 @@ class AgentWorker:
             return dict(FAILED_ENVELOPE, outcome="malformed-provider-envelope")
         return result
 
-    def _bounded(self, system: str, prompt: str, max_tokens: int, timeout: int) -> dict[str, Any]:
+    def _bounded(
+        self,
+        system: str,
+        prompt: str,
+        max_tokens: int,
+        timeout: int,
+        task: dict[str, Any],
+    ) -> dict[str, Any]:
         returned, values = threading.Event(), []
 
         def call() -> None:
             try:
-                values.append(self.provider_call(system, prompt, max_tokens, timeout))
+                context = CallContext(
+                    reference(task["id"]),
+                    reference(f"{task['id']}:{task['fence']}"),
+                    task["capability"],
+                    "retrofit-case",
+                    reference(task["version"]),
+                    reference(
+                        assistants.canonical(
+                            [
+                                system,
+                                assistants.REGISTRY[task["capability"]]["purpose"],
+                                task["version"],
+                            ]
+                        )
+                    ),
+                    retry=max(0, task["fence"] - 1),
+                )
+                with call_context(context):
+                    values.append(self.provider_call(system, prompt, max_tokens, timeout))
             finally:
                 # A timed-out physical call keeps its slot until it returns.
                 self.slots.release()
@@ -215,7 +241,7 @@ class AgentWorker:
             )
             failure: str | None = "Input exceeds limit; manual review required."
         else:
-            raw = self._bounded(system, prompt, message.max_tokens, message.timeout)
+            raw = self._bounded(system, prompt, message.max_tokens, message.timeout, task)
             envelope, output, failure = assistants.shape_result(task, raw, limits)
         return ResultMessage(task["id"], task["fence"], task["owner"], envelope, output, failure)
 
