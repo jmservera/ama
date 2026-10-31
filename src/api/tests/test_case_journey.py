@@ -438,7 +438,7 @@ const api = async (path, body) => {
     if (path === "/api/assistants") return {assistants: [{id: "quality-evidence"}]};
     if (path.startsWith("/api/assistants/proposals")) return {proposals: []};
     if (deferProcurement) return new Promise(resolve => oldReads.push(resolve));
-    return [];
+    return {items: [], total: 0, offset: 0, limit: 20};
   }
   pathCalls.push(path);
   await new Promise(resolve => {finish = resolve;});
@@ -502,7 +502,7 @@ const api = async (path, body) => {
         finish(); await retry;
       }
       if (family === "procurement") {
-        oldReads.slice(0, 2).forEach(resolve => resolve([])); await oldView;
+        oldReads.slice(0, 2).forEach(resolve => resolve({items: [], total: 0})); await oldView;
         if (blocked) {
           assert.equal(app.children[0], oldHeading, "older procurement GET cannot repaint");
           assert.ok(capacityHistoryBarrier);
@@ -510,7 +510,7 @@ const api = async (path, body) => {
           assert.equal(capacityHistoryBarrier, null, "fresh resource reads recover procurement");
         }
         const recoveredHeading = app.children[0];
-        oldReads.slice(2).forEach(resolve => resolve([])); await laterOldView;
+        oldReads.slice(2).forEach(resolve => resolve({items: [], total: 0})); await laterOldView;
         if (blocked) assert.equal(app.children[0], recoveredHeading,
           "stale procurement read stays stale after recovery");
       }

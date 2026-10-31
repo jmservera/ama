@@ -537,11 +537,16 @@ class ProcurementMixin(AppointmentMixin):
         else:
             _actor(self, user)
 
-    def list_work_orders(self, user, case_id=None):
+    def list_work_orders(self, user, case_id=None, limit=None, offset=0):
+        """Return all visible orders, or a page envelope when limit is given.
+
+        Visibility is filtered before slicing so a page never reveals or counts hidden orders,
+        and only the requested slice is projected.
+        """
         with self.lock:
             contractor_view = projection.is_contractor(user)
             self._work_order_reader(user)
-            out = []
+            visible = []
             for w in self._proc()["work_orders"]:
                 if contractor_view and w["contractor"] != user.get("contractor"):
                     continue
@@ -549,14 +554,21 @@ class ProcurementMixin(AppointmentMixin):
                     continue
                 c = self.cases.get(w["case_id"])
                 if c:
-                    out.append(self._wo_view(w, c, user))
-            return out
+                    visible.append((w, c))
+            if limit is None:
+                return [self._wo_view(w, c, user) for w, c in visible]
+            offset = max(0, offset)
+            return dict(items=[self._wo_view(w, c, user) for w, c in visible[offset:offset + limit]],
+                        total=len(visible), offset=offset, limit=limit)
 
-    def list_packages(self, user):
+    def list_packages(self, user, limit=None, offset=0):
         with self.lock:
             _actor(self, user)
             out = []
-            for p in self._proc()["packages"]:
+            everything = self._proc()["packages"]
+            total = len(everything)
+            offset = max(0, offset)
+            for p in everything if limit is None else everything[offset:offset + limit]:
                 cap = [dict(contractor=k, offered=v["offered"], committed=v["committed"], evidence=v["evidence"], recorded_by=v["by"], recorded_at=v["at"],
                             in_use=self._committed_used(p, k), headroom=v["committed"] - self._committed_used(p, k),
                             unevidenced=v["offered"] - v["committed"]) for k, v in sorted(p["capacity"].items())]
@@ -574,6 +586,8 @@ class ProcurementMixin(AppointmentMixin):
                                 scope=p["scope"], scope_version=p["scope_version"], scope_history=p["scope_history"], capacity=cap,
                                 consultation_status="unknown", consultation_authority="Unverified",
                                 consultation_history=p.get("consultation_history", [])))
+            if limit is not None:
+                return deepcopy(dict(items=out, total=total, offset=offset, limit=limit))
             return deepcopy(out)
 
     def require_booked_capacity(self, c):

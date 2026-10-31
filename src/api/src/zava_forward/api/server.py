@@ -486,7 +486,21 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 return self._json(200, s.pending_handoffs(u))
             if url.path in ("/api/packages", "/api/workorders"):
                 try:
-                    rows = s.list_packages(u) if url.path == "/api/packages" else s.list_work_orders(u, q.get("case", [None])[0])
+                    limit = offset = None
+                    paging = parse_qs(url.query, keep_blank_values=True)
+                    if "limit" in paging or "offset" in paging:
+                        try:
+                            limit = int(paging["limit"][0]) if "limit" in paging else 50
+                            offset = int(paging["offset"][0]) if "offset" in paging else 0
+                        except ValueError:
+                            return self._json(400, {"error": "limit and offset must be whole numbers."})
+                        if not 1 <= limit <= 100 or offset < 0:
+                            return self._json(400, {"error": "limit must be 1 to 100 and offset 0 or more."})
+                    if url.path == "/api/packages":
+                        rows = s.list_packages(u) if limit is None else s.list_packages(u, limit, offset)
+                    else:
+                        case = q.get("case", [None])[0]
+                        rows = s.list_work_orders(u, case) if limit is None else s.list_work_orders(u, case, limit, offset)
                     return self._json(200, rows)
                 except PermissionError as e:
                     return self._json(403, {"error": str(e)})
