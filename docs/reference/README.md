@@ -21,6 +21,18 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+For #570, the [employee acceptance adapter](../../src/api/README.md#employee-acceptance-identity-check-570)
+uses immutable expected identity and fresh navigation/action admission, with
+correlated actual map rendering rather than HTTP/selection-only acceptance.
+Cluster containment allows only 1e-9 degrees of centroid roundoff; points and
+geographic limits stay exact. Source CI enforces all three maintained Chromium
+regressions after browser installation, retaining qualified early discovery.
+Local constructed Chromium evidence is not live Aadi chat/map/case acceptance;
+independent expected-object attestation remains unavailable.
+The [local browser gate](../../src/README.md#local-rpi-gate) also requires the
+post-install employee CLI without extra selectors, with pinned test import paths
+and three-test, zero-skip evidence in both execution and receipt verification.
+
 For capstone work, start with the [current working set](../capstone/README.md),
 [complete native/JSON source guide](../capstone/source/README.md),
 [pitch preparation](../capstone/pitch/README.md) and
