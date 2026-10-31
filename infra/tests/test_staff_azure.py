@@ -65,6 +65,7 @@ class FakeContainer:
         self.timeouts = []
         self.downloads = []
         self.read_sizes = []
+        self.read_limits = []
 
     def list_blobs(self, name_starts_with="", timeout=None):
         self.timeouts.append(timeout)
@@ -86,13 +87,18 @@ class FakeContainer:
         if self.unreachable:
             raise OSError("unreachable")
 
-        def readall():
+        def read(size):
+            self.read_limits.append(size)
+            assert type(size) is int and 0 < size <= BLOB.MAX_BLOB + 1
             end = None if length is None else offset + length
-            data = self.blobs[name][offset:end]
+            data = self.blobs[name][offset:end][:size]
             self.read_sizes.append(len(data))
             return data
 
-        return Mock(readall=readall)
+        return Mock(
+            read=read,
+            readall=Mock(side_effect=AssertionError("Unbounded readall is forbidden.")),
+        )
 
     def upload_blob(self, name, body, overwrite=False, length=None):
         if self.unreachable:
@@ -728,6 +734,7 @@ class TransportTests(unittest.TestCase):
         with self.assertRaises(JOB.StaffJobError):
             self.execute()
         self.assertEqual(self.fake.container.downloads[0][1:], (0, BLOB.MAX_BLOB + 1))
+        self.assertEqual(self.fake.container.read_limits, [BLOB.MAX_BLOB + 1])
         self.assertEqual(self.fake.container.read_sizes, [BLOB.MAX_BLOB + 1])
         self.assertEqual(len(self.fake.deleted), 1)
         self.assert_private()
@@ -782,10 +789,49 @@ class BlobCodecTests(unittest.TestCase):
         self.assertEqual(BLOB.read_result(container, request), self.result(1000))
         self.assertTrue(all(offset == 0 for _, offset, _ in container.downloads))
         self.assertTrue(all(length == BLOB.MAX_BLOB + 1 for _, _, length in container.downloads))
+        self.assertEqual(container.read_limits, [BLOB.MAX_BLOB + 1] * len(container.blobs))
 
     def test_oversized_intermediate_page_includes_wrapper_in_bound(self):
+        result = {"candidates": ["x" * (BLOB.PAGE_BYTES - 3), "y"]}
         with self.assertRaises(JOB.StaffJobError):
-            BLOB.split_pages({"candidates": ["x" * (BLOB.PAGE_BYTES - 3), "y"]})
+            BLOB.split_pages(result)
+        container = FakeContainer()
+        with self.assertRaises(JOB.StaffJobError):
+            BLOB.write_result(container, self.request(), result)
+        self.assertFalse(container.uploads)
+
+    def test_download_read_limit_applies_even_if_downloader_ignores_range(self):
+        container, request = self.written(0)
+        requested_sizes = []
+
+        def read(size):
+            requested_sizes.append(size)
+            return b"x" * size
+
+        downloader = Mock(
+            read=read,
+            readall=Mock(side_effect=AssertionError("Unbounded readall is forbidden.")),
+        )
+        with patch.object(container, "download_blob", return_value=downloader) as download:
+            with self.assertRaisesRegex(JOB.StaffJobError, "authenticated"):
+                BLOB.read_result(container, request)
+        self.assertEqual(requested_sizes, [BLOB.MAX_BLOB + 1])
+        downloader.readall.assert_not_called()
+        self.assertEqual(download.call_args.kwargs["length"], BLOB.MAX_BLOB + 1)
+
+    def test_replacement_size_change_within_blob_bound_is_refused(self):
+        container, request = self.written(0)
+        original = container.download_blob
+
+        def replaced(name, timeout=None, *, offset=0, length=None):
+            container.blobs[name] += b" "
+            return original(name, timeout, offset=offset, length=length)
+
+        with patch.object(container, "download_blob", side_effect=replaced):
+            with self.assertRaisesRegex(JOB.StaffJobError, "authenticated"):
+                BLOB.read_result(container, request)
+        self.assertLess(container.read_sizes[0], BLOB.MAX_BLOB)
+        self.assertEqual(container.read_limits, [BLOB.MAX_BLOB + 1])
 
     def test_oversized_initial_head_is_refused_even_when_final_page_fits(self):
         for candidates in ([], ["y"]):

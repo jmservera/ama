@@ -145,7 +145,8 @@ def _repair_question(question: str) -> bool:
     )
     issue = (
         r"(?:a |an |some )?(?:(?:dead|strange|bad|unpleasant) )?"
-        r"(?:rats?(?: smell)?|pests?|smell|odour|odor|noise|leak|repairs?|"
+        r"(?:rats?(?: smell)?|pests?|smell(?: (?:of|like) (?:a )?dead rat)?|"
+        r"odour|odor|noise|leak|repairs?|"
         r"broken heating|hot water problem)"
     )
     location = rf"(?:in|at|from|under|near) {household}"
@@ -159,6 +160,7 @@ def _repair_question(question: str) -> bool:
             rf"there (?:is|are) {issue} {location}|"
             rf"i (?:can smell|smell|can hear|hear|have noticed) {issue} {location}|"
             rf"(?:why|how|when) (?:is|are) {household} {state}|"
+            rf"why {household} (?:is|are) {state}|"
             rf"(?:is|are) {household} {state}|"
             rf"when (?:will|does) {household} (?:work|start working)|"
             rf"when is hot water coming back (?:to|in) {household}|"
@@ -200,6 +202,9 @@ def _record_question(question: str) -> Topic | str:
         (
             Topic.STATUS,
             r"(?:(?:my )?(?:case|status|progress|case status|case progress)|"
+            r"(?:my )?case update|"
+            r"what is happening with my (?:case|retrofit)|"
+            r"what's happening with my (?:case|retrofit)|"
             r"what is my (?:case )?(?:status|progress)|"
             rf"what is the (?:status|progress) of (?:my|the) {subject}|"
             rf"what is my {subject} status|how is my case progressing)",
@@ -238,6 +243,16 @@ def route(question: str) -> Topic | str:
         "gas",
     } or _hazard_report(question, tokens):
         return "safety"
+    # Only remove a complete polite envelope; the remaining message must still match in full.
+    question = question.lower().strip()
+    polite = re.fullmatch(
+        r"(?:please )?(?:(?:can|could|would) you (?:tell me|show me|explain|help me with) "
+        r"(?:about )?|please )(.+?)(?: please)?[?.!]*",
+        question,
+    )
+    if polite:
+        question = polite[1]
+    tokens = words(question)
     if tokens & {
         "ignore",
         "instructions",

@@ -158,6 +158,14 @@ silently treated as passing; separate coordinator publication work remains.
 
 ## Local Commits and External Evidence
 
+2026-10-31 integrated-candidate qualification (PR #423, Refs #360):
+the historical run9 receipt and `f30d9583`/`b4d467ca` provenance are not
+VERIFIED evidence for the candidate integrating main
+`ec2d784255c3377ab39e5d2d1b5140e76c8e7f36`. No successful full-gate receipt
+exists for this integrated candidate. The earlier failed gate attempts below
+remain historical; they are not a new gate run or current exact-head success.
+The owner retains the PR description edit; it was not changed by this task.
+
 The two-parent merge is f74b270d7cd370173272b801ff3a93b434b37262.
 This subsequent evidence-only commit records actual gate outcomes and current
 state; it does not change source or the original critique/Review. It invalidates

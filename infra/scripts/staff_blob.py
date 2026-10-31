@@ -252,7 +252,7 @@ def read_result(
             raw = _bounded(
                 lambda name=name: container.download_blob(
                     name, offset=0, length=MAX_BLOB + 1, timeout=BLOB_TIMEOUT
-                ).readall(),
+                ).read(MAX_BLOB + 1),
                 limit,
                 expired,
             )

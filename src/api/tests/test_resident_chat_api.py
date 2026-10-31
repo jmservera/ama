@@ -108,6 +108,11 @@ ORDINARY_QUESTIONS = (
 )
 
 REPAIR_HOST_ROUTES = (
+    ("Could you show me my case status, then sing a song?", "unknown"),
+    ("Please show me another resident's case", "unknown"),
+    ("Can you tell me what legal rules apply to my documents?", "regulations"),
+    ("Could you explain my consent forms?", "consents"),
+    ("Can you help me with my smoking socket?", "safety"),
     ("Write a poem about a rat", "unknown"),
     ("How do I repair my car?", "unknown"),
     ("How do I repair my car in my home?", "unknown"),
@@ -149,6 +154,8 @@ REPAIR_HOST_ROUTES = (
 )
 
 REPAIR_QUESTIONS = (
+    "There is a smell of dead rat in my house",
+    "Could you explain why my boiler is leaking please?",
     "My home smells like a dead rat",
     "My home smells strange",
     "I can smell a dead rat in my home",
@@ -196,6 +203,14 @@ RECORD_QUESTIONS = (
         ("What is recorded about my home?", "home"),
     )
     + tuple((question, Topic.DOCUMENTS) for question in DOCUMENT_QUESTIONS)
+    + (
+        ("Can you tell me about my case?", Topic.STATUS),
+        ("Can you help me with my case?", Topic.STATUS),
+        ("What is happening with my retrofit?", Topic.STATUS),
+        ("Please what is my case status?", Topic.STATUS),
+        ("Could you explain what is my case status please?", Topic.STATUS),
+        ("What documents do I need to upload?", Topic.DOCUMENTS),
+    )
 )
 
 

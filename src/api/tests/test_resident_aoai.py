@@ -4,7 +4,7 @@ import json
 import unittest
 from unittest.mock import Mock, patch
 
-from zava_forward.core.resident_assistant import CaseProgress, Topic
+from zava_forward.core.resident_assistant import AssistantUnavailable, CaseProgress, Topic
 
 from zava_forward.api.resident_demo import chat
 from zava_forward.api.resident_demo.aoai import (
@@ -316,3 +316,38 @@ class AzureAdvisorTests(unittest.TestCase):
         result = self.advisor.answer_question("A smell", CASE, resident_key("C-1"), base)
         self.assertIn("AI unavailable", result.label)
         self.assertEqual(result.answer, base.answer)
+
+    def test_fallback_reasons_are_specific_allowlisted_and_private_for_both_paths(self) -> None:
+        base = chat.answer("repair", {})
+        for error, code, detail in (
+            (AssistantUnavailable("expired"), "expired", "exercise has ended"),
+            (AssistantUnavailable("usage_limit"), "usage_limit", "usage limit was reached"),
+            (AssistantUnavailable("request_limit"), "request_limit", "AI request limit"),
+            (AssistantUnavailable("incomplete"), "incomplete", "reply was incomplete"),
+            (AssistantUnavailable("invalid_answer"), "invalid_answer", "sources"),
+            (AssistantUnavailable("PRIVATE-CANARY"), "unavailable", "verified reply"),
+            (AssistantUnavailable({"private": "PRIVATE-CANARY"}), "unavailable", "verified reply"),
+            (OSError("PRIVATE-CANARY"), "unavailable", "verified reply"),
+            (ValueError("PRIVATE-CANARY"), "unavailable", "verified reply"),
+        ):
+            for typed in (True, False):
+                with self.subTest(error=type(error), code=code, typed=typed):
+                    with (
+                        patch.object(self.advisor, "_request", side_effect=error),
+                        self.assertLogs("zava_forward.api.resident_demo.aoai") as logs,
+                    ):
+                        result = (
+                            self.advisor.answer_question(
+                                "My home smells strange", CASE, resident_key("C-1"), base
+                            )
+                            if typed
+                            else self.advisor.answer(Topic.STATUS, CASE, resident_key("C-1"))
+                        )
+                    self.assertIn(detail, result.label)
+                    self.assertIn(f"reason={code}", str(logs.output))
+                    self.assertNotIn("PRIVATE-CANARY", result.label + str(logs.output))
+                    self.assertEqual(result.help, base.help)
+                    self.assertEqual(
+                        result.answer,
+                        base.answer if typed else CASE.progress + " " + CASE.next_step,
+                    )

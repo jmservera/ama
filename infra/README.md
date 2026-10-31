@@ -2220,6 +2220,8 @@ Prerequisites (not executed or deployed by setup):
 * The existing initializer identity needs its existing SQL-admin and AcrPull
   permissions plus the narrowly scoped API restart and private-container write
   roles below. These definitions are **not activated by setup or this delivery**.
+  The current template's `includeResultBlob` defaults to `false`; it does not
+  accept the removed `includeResultRelay` parameter from historical receipts.
   The Blob role grants only `blobs/write` and `blobs/add/action` on
   `staff-results`, not read, list, delete, jobs/write, listSecrets or
   resource-group access. Its activation needs separate explicit approval.
@@ -2285,7 +2287,12 @@ Approval for temporary staff-job lifecycle does not authorize the Blob grant.
 Temporary-job operations belong to the operator, not this
 template or the initializer MI; do not add a general jobs/Contributor role.
 Incremental deployment with Blob disabled does not revoke a pre-existing
-Blob assignment or historical tag assignment. The dated
+Blob assignment, its role definition or a historical tag assignment.
+`includeResultBlob=false` selects API-only deployment; it is not a cleanup
+command. An authorized IAM operator must separately approve and retire the
+exact obsolete assignment/role after checking other consumers. Setup does not
+delete result grants or the container; ciphertext follows the configured
+lifecycle and soft-delete retention. The dated
 [scoped activation receipt](#scoped-initializer-iam-activation-2026-10-17-360)
 records historical grants, not approval of the replacement Blob transport;
 any grant retirement needs separately authorized IAM review.
@@ -2667,8 +2674,11 @@ az deployment group create -g ama --name staff-iam-360-api-20261017 \
   initializerIdentityName=id-cutover-test-init includeResultRelay=false -o none
 ```
 
-These commands record the performed API-only operation, not authorization to
-rerun or activate the default relay grants. The fresh what-if Succeeded with
+These commands record the performed API-only operation using the 2026-10-17
+template, not current deployment instructions or authorization to rerun or
+activate relay grants. The current template uses `includeResultBlob=false` by
+default and no longer accepts `includeResultRelay`.
+The fresh what-if Succeeded with
 exactly two Creates (role definition and API child assignment), plus 94
 same-group Ignore rows. Deployment `staff-iam-360-api-20261017` **Succeeded**;
 correlation ID `2177965b-1d42-4709-962b-3475e2186264`.
@@ -2714,8 +2724,11 @@ result tags on the existing initializer job only. No plaintext secrets, job
 configuration rights, new resources or broader scope. May I activate that
 reviewed grant too?" This resolves the relay approval boundary only.
 
-The reviewed source was unchanged. Its actual parameter name is
-`includeResultRelay`, not `includeResultTagRelay`. Both preview and apply used:
+The reviewed source was unchanged on 2026-10-17. Its parameter name then was
+`includeResultRelay`, not `includeResultTagRelay`. The following commands are
+historical receipts; the current template no longer accepts either parameter.
+Current Blob grants are default-off and need separate approval as described in
+the current prerequisites above. Both historical preview and apply used:
 
 ```bash
 az deployment group what-if -g ama --name staff-iam-360-relay-20261017 \
@@ -3102,7 +3115,9 @@ authenticated encryption turns that into a refusal, not a false success.
 
 The controller requests at most 128 KiB + 1 byte from offset zero for each
 download, rather than buffering an unrestricted replacement before checking
-the listed size. Overflow and listing/download length changes are refused
+the listed size. The 2026-10-31 hardening also passes that hard byte limit to
+the downloader's `read`, never an unbounded `readall`.
+Overflow and listing/download length changes are refused
 before decoding; the extra byte detects growth beyond the Blob bound.
 The existing overall deadline and temporary-job/roster-secret cleanup remain.
 
