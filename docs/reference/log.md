@@ -8844,3 +8844,15 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Added the source-hash regression and index clarification. Windows PowerShell
   5.1/Office and human acceptance remain unperformed. This local source
   verification is not the complete publication gate or hosted approval.
+
+## [2026-10-31] query | Resident scope and current AI contract, Refs #466
+
+* Updated the resident assistant design, API acceptance map and knowledge index
+  with the owner's explicit sensor/history/advisory-AI scope and standing IoT
+  priority. Earlier merged runtime is reused, not duplicated.
+* Preserved the dated 2026-10-27 model/cap/managed-identity decision and historical
+  selector description; added the current generated-question/protected-document
+  distinction. The old unproven scope statement is superseded prospectively.
+* Deployment AI remains off behind existing settings. No Azure, credential
+  lookup, paid inference, tariff/budget renewal, live/human acceptance or issue
+  closure is authorized by this reconciliation.

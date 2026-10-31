@@ -68,3 +68,35 @@ remain external/PR to avoid post-gate self-invalidation.
 Closing issue language remains conditional on all three reviewed criteria and
 final eligibility. Direct human/AT/live approval and hosted/owner gates remain
 separate, no source correction or repeated Review follows this refresh.
+
+## Second Main Advance After Complete Gate Execution
+
+Full gate for `0631436fbf6ed2ee970f8aa954d33673e22173f3` / base `e64c6e6c`
+admitted 2026-10-31T13:22:12.181442Z after queue starting 13:09:47.090191Z,
+one worker. All seventeen required groups passed, including all five project
+suites, static, infra, migration, actual browser, disposable SQL, four image
+contracts/scans and logo-mode stress. 200 commands were recorded.
+Full gate API: 1430 tests, 1109 executed/321 enumerated opt-in skips; the
+additional asset browser skip occurs before the later required browser install.
+Core: 1608 tests, 1402 executed/206 enumerated opt-in skips. Required dedicated
+chat browser executed exactly one successful named test, zero skips; disposable
+SQL 268 tests/267 executed/one explicitly JSON-only non-applicability.
+No skip or axe incomplete was converted to executed acceptance.
+
+At final sealing, main had advanced to `5198a1ff4bdf416249b64d5f4d832e88f3f7040b`
+(merged #603 documentation-only resident gauge evidence). Current-main identity
+rejected publication despite completed checks; receipt status failed, exit1.
+It is historical complete execution, not a current verified publication receipt:
+`/tmp/ama-571-final-full-gate/receipt.json`, SHA-256
+`ff74040819a74ee6dba08b550f77951d4957eab3c5338ea35ff67cb0d6436954`;
+log SHA-256 `4d837759c38821c4dbc2f13a7d3ed69782479e6155d493ac78c4b8ed4ab9aa06`.
+Both remain unchanged. No resume across changed base/HEAD is allowed.
+
+Latest main merged automatically under the same explicit authorization, retaining
+main rubric/workflows/runner/log, and both knowledge-log histories. No merge
+delta to browser harnesses, tooling capture or any runtime source. New main changes
+only documentation/evidence; original and child Review outcomes remain unchanged.
+Commit merge plus this dated original refresh evidence, then fresh complete gate
+at the resulting clean exact HEAD/base, fresh verification and approving independent
+exact-head assessment. No weakened identity, partial tier, force, cloud or premature
+PR publication. Final authoritative receipt/status remain external/PR-bound.
