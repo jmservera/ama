@@ -19,10 +19,10 @@
     {"decision": "CI is the gate; do not wait for complete local gate.", "status": "confirmed", "evidence": "2026-10-31 current user instruction overrides default publication gate for this candidate"},
     {"decision": "Research executed / Planning Ready; one critique Complete / Revise; PC-001..004 directly applied and planning Ready.", "status": "executed", "evidence": ".copilot-tracking/plans/2026-10-31/ai-metering-432-copilot-threads-plan.md"},
     {"decision": "One independent Review Complete / Conformant for precommit source; no implementation defects. RV-001/002 are non-blocking external evidence/attribution follow-ups.", "status": "executed", "evidence": ".copilot-tracking/reviews/logs/2026-10-31/ai-metering-432-copilot-threads-review.md"},
-    {"decision": "Main advanced with docs/rubric-only #603; commit reviewed source first then merge preserving docs and main rubric; do not repeat original Review or claim exact-head CI approval.", "status": "confirmed-direction", "evidence": "Current user merge-main/main-rubric instruction; origin/main 5198a1ff"}
+    {"decision": "Main advanced with docs/rubric-only #603; commit reviewed source first then merge preserving docs and main rubric; do not repeat original Review or claim exact-head CI approval.", "status": "executed", "evidence": "Implementation c90d82fa; main 5198a1ff merge; source/test byte comparison unchanged"}
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "P02-T03 publication pending: commit fixes, merge main docs/rubric, verify unchanged source, push and resolve five threads"},
+  "next_action": {"phase": "Follow-up", "action": "Commit main merge/evidence, push without force, then reply to and resolve five satisfied threads"},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "CI and owner approval of published PR 602", "rationale": "Source review and local tests are not hosted or human approval.", "evidence": "Review publication boundary; user-selected CI gate"},
     {"rank": 2, "task": "Finance/human authority and actual financial/held-out evidence", "rationale": "Required for operational economics; cannot be inferred from synthetic tests.", "evidence": "Review RV-001"},

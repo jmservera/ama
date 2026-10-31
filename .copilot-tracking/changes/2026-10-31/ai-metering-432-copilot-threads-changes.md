@@ -75,6 +75,13 @@ executable source/test bytes remain identical to the reviewed candidate.
 The original precommit Review remains unchanged and is not exact-head/CI
 approval of the later merge.
 
+Reviewed implementation committed as c90d82fa. Merged main 5198a1ff; resolved
+rubric conflict using main's exact file, retained both documentation-session
+accounts and all append-only log entries. Source/test byte comparison against
+c90d82fa passes for src/core/src, src/core/tests, src/api/src and src/api/tests.
+This main advance changes no executable input, so recorded component validation
+continues covering the identical source/test batch. CI assesses the final merge.
+
 ## Review Readiness and Remaining Work
 
 P01-T01..T03 and P02-T01 complete, artifacts/checklists reconciled.
