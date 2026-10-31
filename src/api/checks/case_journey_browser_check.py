@@ -14,6 +14,7 @@ from typing import Any
 
 from playwright.sync_api import Dialog, Page, Route, expect, sync_playwright
 
+from checks.asset_urls import asset_url
 from checks.design_system_browser_check import check, main
 from checks.regulatory_ux_check import AXE_SHA256
 from checks.workbench_browser_check import synthetic_data
@@ -1480,7 +1481,7 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             page.screenshot(path=str(out / "forced-colours.png"), full_page=True)
             page.emulate_media(forced_colors="none")
             page.route(
-                "**/case-workspace.js",
+                asset_url("/case-workspace.js", base),
                 lambda route: route.fulfill(
                     status=404, content_type="text/plain", body="Synthetic missing enhancement"
                 ),
@@ -1493,7 +1494,7 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                 and page.locator("#case-panel-funding").is_visible()
                 and page.locator("#hz-source").is_visible(),
             )
-            page.unroute("**/case-workspace.js")
+            page.unroute(asset_url("/case-workspace.js", base))
             check("no uncaught page errors", not errors)
 
             # chrome.tabs.setZoom changes real browser zoom, not device scale or CSS.

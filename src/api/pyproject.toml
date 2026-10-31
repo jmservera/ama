@@ -140,7 +140,9 @@ module = ["sensor_consumer_fixture", "test_sensor_consumer"]
 disallow_untyped_calls = false
 
 [[tool.mypy.overrides]]
-module = ["test_sensor_ingestion", "tests.test_sensor_ingestion"]
+module = ["test_sensor_ingestion", "tests.test_sensor_ingestion",
+          "test_sensor_consistency", "tests.test_sensor_consistency",
+          "test_sensor_handover", "tests.test_sensor_handover"]
 disallow_untyped_calls = false
 
 # The IoT SDK and migrated SQL fixtures expose untyped constructors.

@@ -1,0 +1,55 @@
+{
+  "task_id": "572",
+  "task_slug": "gate-chromium-skip-572",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-31/gate-chromium-skip-572-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-31/gate-chromium-skip-572-plan.md",
+    "details": ".copilot-tracking/details/2026-10-31/gate-chromium-skip-572-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-31/gate-chromium-skip-572-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-31/gate-chromium-skip-572-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-31/gate-chromium-skip-572-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Caller explicitly authorises the ordered full RPI loop and local commit on the named branch; no full gate or push.",
+      "status": "confirmed",
+      "evidence": "2026-10-31 user request; clean branch at 4cb5964f7acce89668a37b5a56c3e125e26f6d21"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready; enumerate both exact reasons and retain merged chat identity/group scope.",
+      "status": "accepted",
+      "evidence": ".copilot-tracking/research/2026-10-31/gate-chromium-skip-572-research.md C1-C7"
+    },
+    {
+      "decision": "One critique executed, original verdict Revise. PC-001 rejected: claimed worker-local /tmp restriction conflicts with explicit caller shared-lock direction and is absent from parent execution constraints.",
+      "status": "disposed; plan Ready; no repeat critique",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-31/gate-chromium-skip-572-plan-critique.md; plan Critique Disposition"
+    },
+    {
+      "decision": "One independent Review executed Complete; outcome Conformant within bounded correction; no source defects, two Low residual follow-ups. Assessed uncommitted source diff, not a publication exact-head receipt.",
+      "status": "recorded; original review preserved",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-31/gate-chromium-skip-572-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Commit locally as authorised; no push/full gate. No child work starts without later selection of RV-001 or RV-002."},
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Establish owned actual chat/asset Chromium execution evidence",
+      "rationale": "Smallest coverage gap; existing chat command is wired but actual execution and later asset ownership remain unproven.",
+      "evidence": "Review RV-001; research C2-C5"
+    },
+    {
+      "rank": 2,
+      "task": "Run and verify fresh complete exact-head gate before publication",
+      "rationale": "Required high-impact publication evidence after browser coverage and final candidate; prohibited in the current task.",
+      "evidence": "Review RV-002; issue #572 complete gate acceptance"
+    }
+  ]
+}

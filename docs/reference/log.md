@@ -8724,3 +8724,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   threads remain unchanged pending authorized publication. No force-push,
   full publication gate, native Windows execution, hosted approval or owner
   merge approval is implied.
+## [2026-10-30] query | Composed local sensor handover contract, Refs #188
+
+* Updated the existing IoT synthesis and index for optional composed replay,
+  continuous-reference statistics, declared inclusive exercise tolerances and
+  common per-home SQL queries with durable whole-window replay.
+* Linked owning core/API guides and explicit task-owned SQL Server selector.
+  Earlier seasonal-only deferrals remain historical; actual live Hub/Azure SQL,
+  physical calibration, OD-43 and whole-issue acceptance remain unproven.
+* No Azure, deployment, live sign-in, private dataset, consent/approval change
+  or issue-status change is performed.

@@ -139,6 +139,34 @@ retention, threshold or human-review decision is made here. Synthetic tests
 cannot close those gates. Required hosted checks, independent exact-head
 assessment, owner merge and applicable publication gates remain separate.
 
+## Composed local handover evidence (2026-10-30, Refs #188)
+
+The earlier #188 deferral above describes the 2026-10-27 baseline. The additive
+[composed replay and statistical report](../../../src/core/README.md#synthetic-handover-consistency-188)
+now share the backfill writer's climate, household and dated-works projection,
+retaining full-origin model state before selecting a stream suffix. The default
+seasonal path remains unchanged. This is a local model/ingestion contract, not
+a new operational threshold or physical model validation.
+
+The [API proof](../../../src/api/README.md#synthetic-handover-sql-proof-188)
+uses constructed four-day weather, two granted stock homes (one long ID), three
+paired observations/day and a dated retrofit at handover. Actual backfill CSV
+prefix and SDK-decoded suffix enter the same #110 consumer and query together.
+The continuous reference permits legitimate modelled weather/works changes;
+per-channel maximum point error, reference-adjusted mean-step error and per-side
+population-standard-deviation error must all meet the declared inclusive
+tolerances (default zero C and zero RH percentage points). Missing/duplicate
+slots, identity/time/unit/schema changes and numeric drift have negative controls;
+nonzero inclusive tolerance boundaries have independent channel/metric checks.
+Full-window replay after reopening must preserve all 24 rows and delivery/DQ
+counts. Explicit local SQL Server execution uses the existing task-owned helper;
+ordinary discovery alone is SQLite evidence.
+
+Actual live Hub transport, actual Azure SQL joint-query/restart and actual live
+handover remain unproven under the no-Azure execution boundary. Local SQL/SDK
+checks do not establish whole #188, #110 or AC-066 acceptance or alter OD-43,
+resident consent, calibration or human approval. No issue checkbox changes.
+
 ## Shared observation contract and volume (2026-10-18, Refs #186)
 
 This documents the unchanged finite consumer merged in

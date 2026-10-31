@@ -89,7 +89,7 @@ class GateTests(unittest.TestCase):
     def test_chat_panel_discovery_skip_is_exact_and_integration_fails_closed(self) -> None:
         test, reason = gate.CHAT_PANEL_DISCOVERY_SKIP
         text = f"{test} ... skipped '{reason}'\nRan 1 test in 0.1s\n\nOK (skipped=1)\n"
-        self.assertNotIn(reason, gate.EXPECTED_SKIP_REASONS)
+        self.assertIn(reason, gate.EXPECTED_SKIP_REASONS)
         self.assertEqual(
             gate.check_skips(text, group="project-api"),
             {"tests": 1, "executed": 0, "skips": [{"test": test, "reason": reason}]},
@@ -158,6 +158,63 @@ class GateTests(unittest.TestCase):
         receipt = self.scoped_receipt(["project-api"])
         row = next(row for row in receipt["commands"] if row["suite"])
         test, reason = gate.CHAT_PANEL_DISCOVERY_SKIP
+        text = (
+            "test_x (test_x.Fixture.test_x) ... ok\n"
+            f"{test} ... skipped '{reason}'\nRan 2 tests in 0.1s\n\nOK (skipped=1)\n"
+        )
+        path = self.out / row["log"]
+        path.write_text(text)
+        row.update(gate.check_skips(text, group="project-api"), sha256=gate.digest(path))
+        receipt["files"][row["log"]] = row["sha256"]
+        gate.verify_commands(self.root, self.out, receipt)
+        row["skips"] = []
+        with self.assertRaises(gate.GateError):
+            gate.verify_commands(self.root, self.out, receipt)
+
+    def test_browser_asset_discovery_skip_is_exact_and_integration_fails_closed(self) -> None:
+        test = (
+            "test_native_routes_waits_dom_observation_and_actual_coverage "
+            "(test_browser_asset_urls.BrowserAssetUrls."
+            "test_native_routes_waits_dom_observation_and_actual_coverage)"
+        )
+        reason = "Chromium is installed by the later browser-check step"
+        text = (
+            "test_x (test_x.Fixture.test_x) ... ok\n"
+            f"{test} ... skipped '{reason}'\nRan 2 tests in 0.1s\n\nOK (skipped=1)\n"
+        )
+        self.assertIn(reason, gate.EXPECTED_SKIP_REASONS)
+        expected = {"tests": 2, "executed": 1, "skips": [{"test": test, "reason": reason}]}
+        self.assertEqual(gate.check_skips(text), expected)
+        self.assertEqual(gate.check_skips(text, group="project-api"), expected)
+        for value, group, integration in (
+            (text, "browser", True),
+            (text, "project-api", True),
+            (text.replace(reason, reason + " (missing dependency)"), "project-api", False),
+            (text.replace(reason, "needs " + reason), "project-api", False),
+            (text.replace(reason, reason.lower()), "project-api", False),
+            (text.replace(reason, "missing Chromium"), "project-api", False),
+            (text.replace("skipped=1", "skipped=2"), "project-api", False),
+            (
+                text.replace(
+                    "... ok", "... skipped 'unrecognised integration/dependency reason'"
+                ).replace("skipped=1", "skipped=2"),
+                "project-api",
+                False,
+            ),
+        ):
+            with self.subTest(value=value, group=group, integration=integration):
+                with self.assertRaises(gate.GateError):
+                    gate.check_skips(value, group=group, integration=integration)
+
+    def test_browser_asset_discovery_receipt_recomputes_skip_evidence(self) -> None:
+        receipt = self.scoped_receipt(["project-api"])
+        row = next(row for row in receipt["commands"] if row["suite"])
+        test = (
+            "test_native_routes_waits_dom_observation_and_actual_coverage "
+            "(test_browser_asset_urls.BrowserAssetUrls."
+            "test_native_routes_waits_dom_observation_and_actual_coverage)"
+        )
+        reason = "Chromium is installed by the later browser-check step"
         text = (
             "test_x (test_x.Fixture.test_x) ... ok\n"
             f"{test} ... skipped '{reason}'\nRan 2 tests in 0.1s\n\nOK (skipped=1)\n"

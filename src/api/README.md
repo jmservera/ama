@@ -2,7 +2,7 @@
 title: Zava Forward API and web workbench
 description: Staff features, configuration, local run, honest limits and container checks for the api project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-10-30
+ms.date: 2026-10-31
 ms.topic: reference
 ---
 
@@ -97,6 +97,87 @@ run is not a new before/after redesign.
 These are focused local engineering checks, not publication or WCAG acceptance.
 
 ## Shared resident and employee chat widget (#550)
+
+### Release-safe assets (Refs #568)
+
+Employee welcome/workspace/law pages and both resident entry points render
+packaged asset URLs with a deterministic SHA-256 release version. The version
+includes file names and bytes, including shared chat and vendored Leaflet.
+Each handler snapshots the release once: restart the process after changing
+packaged files. A normal new page load selects the new release without repeated
+hard refreshes. An already open page is not hot-reloaded.
+
+HTML, API responses and access denials remain `Cache-Control: no-store`.
+Static files carrying exactly one `v` query value matching the current release
+use `Cache-Control: public, max-age=31536000, immutable`. All static files retain
+byte-derived ETags and conditional GET/HEAD support, with the same cache policy
+on 200 and 304 responses. Bare, blank, duplicate and previous-version URLs use
+`Cache-Control: no-cache, must-revalidate` and return current snapshot bytes;
+they are not immutable historical artifacts. HTML remains no-store even with a
+matching version query. Employee dependency retries reuse the exact versioned URL from the
+initial script element, including shared chat and libraries. No service worker
+or browser-storage asset cache is introduced.
+
+Both sites already used the same widget and the employee focus fix in this
+source baseline. Ordinary-launcher browser regressions now also submit Enter
+and mouse Send through real local employee endpoints, without resetting or
+reinstalling the widget. This does not identify which assets a historical
+deployment served or establish live-site acceptance.
+
+From `src/api`, with the existing pip environment on PATH:
+
+```bash
+export PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests
+flock -w 600 /tmp/ama-rpi-heavy.lock python3 -m unittest \
+  test_static_assets test_workspace_scripts test_chat_widget_focus -q
+flock -w 600 /tmp/ama-rpi-heavy.lock python3 -m checks.asset_cache_browser_check \
+  --out /new/external/asset-cache-results
+flock -w 600 /tmp/ama-rpi-heavy.lock python3 -m checks.chat_submit_browser_check \
+  --out /new/external/chat-submit-results
+```
+
+The cache browser check keeps the origin and browser context unchanged, proves
+reuse of fresh legacy unversioned script/style cache entries, then selects a
+new handler snapshot. Executed JavaScript, computed CSS, shared chat, Leaflet,
+versioned recovery, fresh immutable reuse without another origin asset request,
+exact cache headers and explicit ETag revalidation are observed with browser cache enabled.
+It uses constructed local data, no live sign-in, model or external requests.
+
+Browser asset instrumentation uses `checks.asset_urls.asset_url` to match the
+complete canonical asset suffix independently of release queries or leading
+version directories. Routes, waits, DOM script observation and CDP coverage
+use that same pattern; page routes and coverage are bound to the owned origin.
+Bare HTTP requests and warm-cache priming still deliberately exercise bare URLs.
+The application currently emits query versions; directory-version tests prove
+matcher compatibility, not an additional HTTP serving contract.
+
+The synthetic design-system CI step runs these checks from `src/api`, with
+pip-installed src projects and the existing Playwright/Chromium prerequisite:
+
+```bash
+export PYTHONPATH=tests:../core/tests:../agents/tests
+flock -w 600 /tmp/ama-rpi-heavy.lock bash -c '
+  set -e
+  python -m checks.design_system_browser_check
+  curl --fail --silent --show-error --location --retry 2 \
+    --connect-timeout 10 --max-time 30 \
+    https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.3/axe.min.js \
+    --output "$RUNNER_TEMP/axe-4.10.3.min.js"
+  python -m checks.regulatory_ux_check --axe "$RUNNER_TEMP/axe-4.10.3.min.js" \
+    --out "$RUNNER_TEMP/regulatory-ux-results.json"
+  python -m checks.case_journey_browser_check --axe "$RUNNER_TEMP/axe-4.10.3.min.js" \
+    --out "$RUNNER_TEMP/case-journey-results"
+'
+flock -w 600 /tmp/ama-rpi-heavy.lock python -m unittest \
+  test_browser_asset_urls test_static_assets test_workspace_scripts -q
+```
+
+Set `RUNNER_TEMP` to a fresh external output directory for local use. The same
+matcher also covers workspace recovery, loading/briefing, employee workspace,
+chat widget, focused case-view UX and asset-cache checks. These constructed
+loopback checks do not establish hosted CI, live-site or WCAG acceptance.
+
+### Shared interaction contract
 
 Both applications serve the same `web/chat-widget.js` and `web/chat-widget.css`.
 A bottom-right icon opens a nonmodal popup: the thread scrolls independently,
@@ -1415,6 +1496,36 @@ transport, actual credentials/alerts, Azure SQL restart or whole PRD AC-066.
 The [issue evidence and deferrals](../../docs/reference/research/iot-sensor-analytics-research-plan.md#bounded-streaming-engineering-2026-10-27-refs-110-184)
 keep every child and live gate visible.
 
+### Synthetic handover SQL proof (#188)
+
+`tests/test_sensor_consistency.py` writes composed backfill CSV, admits its
+prefix through #110, then decodes the replay suffix using actual SDK `EventData`
+and exact device bindings before the same SQL append. Ordered queries return
+both phases per canonical home. The strict core report checks all 24 values
+against the continuous writer reference with zero C/RH point, mean-step and
+population-standard-deviation error tolerance. After reopening, whole-window
+replay must return accepted replay receipts without changing readings,
+deliveries, DQ, cases or audit. The existing fake-receiver seam test now also
+uses the composed climate path.
+
+```bash
+cd src/api
+PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests \
+  python -m unittest \
+  test_sensor_consistency.SqlHandoverTests.test_composed_joint_query_statistics_and_reopened_window_replay -v
+cd ../..
+flock -w 600 /tmp/ama-rpi-heavy.lock python src/api/checks/sensor_sql_check.py
+```
+
+Ordinary discovery exercises SQLite. The second command explicitly selects this
+same handover test alongside the existing ingestion suite on its own local SQL
+Server; the test asserts the actual selected backend. The standard complete
+gate does not implicitly include this sensor-specific SQL selector.
+Constructed SDK origin properties and local SQL Server do not prove actual
+authenticated IoT Hub delivery, Azure SQL query/restart or live handover.
+Those criteria and #110 prerequisites remain unmet; no cloud execution or
+issue status change is authorized by this source.
+
 ## Finite offline sensor ingestion (#110)
 
 `sensor_ingestion.SensorIngestion(store).consume(observations, received_at=...)`
@@ -1463,7 +1574,7 @@ python src/api/checks/sensor_sql_check.py
 
 The second command owns a uniquely named, memory/CPU-bounded SQL Server container
 and loopback port with random process-only credentials and finally cleanup.
-It exercises the same actual API suite, including concurrent independent
+It exercises the same actual API suite plus the #188 handover selector, including concurrent independent
 connections, reopen, real engine-trigger rollback and accepted/rejected
 postcommit reconciliation. It never connects to Azure or uses private datasets.
 Local SQLite/MSSQL/nonroot read-only image evidence does not meet whole AC-066:

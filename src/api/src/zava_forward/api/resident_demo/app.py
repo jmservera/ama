@@ -33,6 +33,8 @@ from zava_forward.core.resident_assistant import (
     advise,
 )
 
+from zava_forward.api.static_assets import StaticAssets
+
 from . import chat
 from .agenda import MANUAL, ZONE, Agenda, AgendaConflict
 from .agenda import NOTICE as AGENDA_NOTICE
@@ -194,6 +196,13 @@ def _set_cookie(name: str, value: str, max_age: int, http_only: bool) -> str:
 
 
 def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
+    assets = StaticAssets(
+        {
+            **{url: (WEB / name, ctype) for url, (name, ctype) in ASSETS.items()},
+            **{url: (SHARED_WEB / name, ctype) for url, (name, ctype) in SHARED_ASSETS.items()},
+        }
+    )
+
     class Handler(BaseHTTPRequestHandler):
         server_version = "ZavaResidentDemo"
         timeout = SOCKET_TIMEOUT
@@ -202,17 +211,23 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
             return
 
         def _send(
-            self, status: int, body: bytes, ctype: str, cookies: tuple[str, ...] = ()
+            self,
+            status: int,
+            body: bytes,
+            ctype: str,
+            cookies: tuple[str, ...] = (),
+            extra: Mapping[str, str] | None = None,
         ) -> None:
             self.send_response(status)
             self.send_header("Content-Type", ctype)
-            self.send_header("Content-Length", str(len(body)))
-            for key, value in HEADERS.items():
+            if status != 304:
+                self.send_header("Content-Length", str(len(body)))
+            for key, value in {**HEADERS, **(extra or {})}.items():
                 self.send_header(key, value)
             for cookie in cookies:
                 self.send_header("Set-Cookie", cookie)
             self.end_headers()
-            if self.command != "HEAD":
+            if self.command != "HEAD" and status != 304:
                 self.wfile.write(body)
 
         def _json(
@@ -298,12 +313,15 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
             if app.expired:
                 self._json(503, dict(error="This synthetic showcase has ended.", banner=rs.BANNER))
                 return
-            if self.command in ("GET", "HEAD") and path in SHARED_ASSETS:
-                name, ctype = SHARED_ASSETS[path]
-                self._send(200, (SHARED_WEB / name).read_bytes(), ctype)
-            elif self.command in ("GET", "HEAD") and path in ASSETS:
-                name, ctype = ASSETS[path]
-                self._send(200, (WEB / name).read_bytes(), ctype)
+            asset = assets.get(path)
+            if self.command in ("GET", "HEAD") and asset is not None:
+                status = 304 if asset.not_modified(self.headers.get("If-None-Match")) else 200
+                self._send(
+                    status,
+                    b"" if status == 304 else asset.body,
+                    asset.content_type,
+                    extra=asset.headers(urlsplit(self.path).query),
+                )
             elif self.command in ("GET", "HEAD") and path == "/demo/session":
                 token, cookie = self._csrf_cookie()
                 signed = app.codec.verify(_cookies(self.headers.get("Cookie")).get(SESSION_COOKIE))

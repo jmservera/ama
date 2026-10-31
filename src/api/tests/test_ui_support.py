@@ -10,6 +10,7 @@ import urllib.request
 from html.parser import HTMLParser
 from http.server import ThreadingHTTPServer
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import test_mvp
 from zava_forward.api import auth
@@ -37,9 +38,11 @@ def data():
 
 class Base(unittest.TestCase):
     ENV = {}
+    app: App
+    httpd: ThreadingHTTPServer
 
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.tmp = tempfile.TemporaryDirectory()
         p = Path(cls.tmp.name) / "zavaforward.json"
         p.write_text(json.dumps(data()))
@@ -57,7 +60,7 @@ class Base(unittest.TestCase):
         cls.base = f"http://127.0.0.1:{cls.httpd.server_address[1]}"
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDownClass(cls) -> None:
         cls.httpd.shutdown()
         cls.httpd.server_close()
         cls.tmp.cleanup()
@@ -97,14 +100,16 @@ class ScreensApi(Base):
         self.assertEqual(shells, [shells[0]] * 3)
         scripts = Scripts()
         scripts.feed(shells[0].decode())
-        self.assertIn("/ops.js", scripts.paths)
-        self.assertLess(scripts.paths.index("/ops.js"), scripts.paths.index("/app.js"))
+        names = [urlsplit(path).path for path in scripts.paths]
+        self.assertIn("/ops.js", names)
+        self.assertLess(names.index("/ops.js"), names.index("/app.js"))
         for path in scripts.paths:
             with self.subTest(path=path), urllib.request.urlopen(self.base + path) as response:
                 self.assertEqual(response.status, 200)
                 self.assertIn("text/javascript", response.headers["Content-Type"])
-                self.assertEqual(response.read(), (WEB / path.lstrip("/")).read_bytes())
-                self.assertEqual(response.headers["Cache-Control"], "no-store")
+                self.assertEqual(response.read(), (WEB / urlsplit(path).path.lstrip("/")).read_bytes())
+                self.assertTrue(urlsplit(path).query.startswith("v="))
+                self.assertEqual(response.headers["Cache-Control"], "public, max-age=31536000, immutable")
                 self.assertEqual(response.headers["X-Content-Type-Options"], "nosniff")
                 self.assertTrue(response.headers["Content-Security-Policy"].startswith("default-src 'self';"))
         with self.assertRaises(urllib.error.HTTPError) as missing:

@@ -1,0 +1,34 @@
+{
+  "task_id": "975bbf93-de84-47b4-ad5d-b55583f970c9",
+  "task_slug": "demo-sites-redeploy-1031",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-31/demo-sites-redeploy-1031-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-31/demo-sites-redeploy-1031-plan.md",
+    "details": ".copilot-tracking/details/2026-10-31/demo-sites-redeploy-1031-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-10-31/demo-sites-redeploy-1031-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-31/demo-sites-redeploy-1031-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-31/demo-sites-redeploy-1031-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Owner explicitly requests all four RPI phases and local commit, no push", "status": "confirmed", "evidence": "2026-10-31 task"},
+    {"decision": "Standing redeployment authority through 2026-11-15; short IP-restricted ACR window, az acr build if unavailable", "status": "confirmed", "evidence": "2026-10-31 task"},
+    {"decision": "Resident AI stays OFF; no new RBAC/endpoints/public SQL or RG deletion", "status": "confirmed", "evidence": "2026-10-31 task"},
+    {"decision": "Research executed Complete / Ready; exact-main cache/auth limitations preserved", "status": "recorded", "evidence": ".copilot-tracking/research/2026-10-31/demo-sites-redeploy-1031-research.md"},
+    {"decision": "One critique executed Complete / Revise; PC001 rejected unsupported restriction, PC002/003/005/006 applied, PC004 prose reconciled to original procedure", "status": "disposed", "evidence": ".copilot-tracking/plans/2026-10-31/demo-sites-redeploy-1031-plan.md"},
+    {"decision": "Review executed Complete / Not accepted against whole request; exact-main deployment proven, RV001 cache/RV002 employee widget acceptance unmet/RV003 undock observation routed later", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-31/demo-sites-redeploy-1031-review.md"},
+    {"decision": "Original evidence/Review committed locally as 524c1fa892a1e913e3413e24f50c0f24b42a7140, Refs/trailer/noreply/clean-tree verified, no push", "status": "completed", "evidence": ".copilot-tracking/changes/2026-10-31/demo-sites-redeploy-1031-changes.md"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Manual full loop stopped; no push or new work authorized. Later owner-selected cache/auth/observation/AI follow-ups retain original Review outcome"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Repair long-lived versioned-asset caching in a separate source workstream", "rationale": "Small source-focused change; requested live header check is unmet", "evidence": ".copilot-tracking/changes/2026-10-31/demo-sites-redeploy-1031-evidence.json"},
+    {"rank": 2, "task": "Owner-run signed-in employee/resident feature acceptance", "rationale": "High acceptance value; anonymous scope cannot exercise protected chat/identity", "evidence": ".copilot-tracking/changes/2026-10-31/demo-sites-redeploy-1031-changes.md"},
+    {"rank": 3, "task": "Qualify browser undock action versus observed state", "rationale": "Small evidence reconciliation; RV003 no post-click assertion, no UI defect established", "evidence": ".copilot-tracking/reviews/logs/2026-10-31/demo-sites-redeploy-1031-review.md"},
+    {"rank": 4, "task": "Resolve resident AI activation authority and prerequisite evidence", "rationale": "Separate decision and live gates; AI must remain OFF", "evidence": "Owner task and prior 1030c changes"}
+  ]
+}

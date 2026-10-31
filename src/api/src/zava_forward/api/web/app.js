@@ -235,7 +235,9 @@ function retryWorkspaceScript(path) {
           const timer = setTimeout(() => finish("timeout"), 5000);
           script.onload = () => finish("load");
           script.onerror = () => finish("error");
-          script.src = path;
+          const original = [...document.querySelectorAll("script[src]")].find(
+            element => element.getAttribute("src").split("?")[0] === path);
+          script.src = original ? original.getAttribute("src") : path;
           document.head.append(script);
         });
         // A timed-out or evaluated script may still install lexical declarations.

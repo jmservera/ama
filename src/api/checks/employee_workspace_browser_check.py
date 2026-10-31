@@ -8,6 +8,7 @@ from urllib.parse import urlparse
 from playwright.sync_api import Browser, Page, Route, sync_playwright
 
 from checks.design_system_browser_check import check, main
+from checks.asset_urls import asset_url
 from checks.workbench_browser_check import synthetic_data
 
 CASE = "ZF-2026-0597"
@@ -64,7 +65,8 @@ def healthy_and_api_retry(browser: Browser, base: str) -> None:
         check("all actual shell scripts return JavaScript 200",
               all(scripts[path][0] == 200 and "text/javascript" in scripts[path][1] for path in paths))
         check("ops executes before app with no service worker",
-              paths.index("/ops.js") < paths.index("/app.js")
+              next(i for i, path in enumerate(paths) if asset_url("/ops.js").search(path))
+              < next(i for i, path in enumerate(paths) if asset_url("/app.js").search(path))
               and page.evaluate("typeof qualityPanel === 'function' && !navigator.serviceWorker.controller"))
         original_documents = list(documents)
         case_api = f"**/api/cases/{CASE}"
@@ -92,7 +94,7 @@ def missing_ops_recovery(browser: Browser, base: str) -> None:
     def missing(route: Route) -> None:
         route.fulfill(status=404, content_type="text/plain", body="Synthetic missing ops.js")
 
-    page.route("**/ops.js", missing)
+    page.route(asset_url("/ops.js", base), missing)
     try:
         sign_in(page, base)
         page.get_by_role("heading", name="Workspace unavailable", exact=True).wait_for()
@@ -105,7 +107,9 @@ def missing_ops_recovery(browser: Browser, base: str) -> None:
             check(f"asset error reflows at {width}px",
                   page.evaluate("document.documentElement.scrollWidth <= innerWidth"))
         original_url, original_count = page.url, len(documents)
-        page.unroute("**/ops.js", missing)
+        original_ops = sum(bool(asset_url("/ops.js", base).search(url)) for url in documents)
+        check("missing ops exhausts the bounded initial/retry attempts", original_ops == 3)
+        page.unroute(asset_url("/ops.js", base), missing)
         reload_button = page.get_by_role("button", name="Reload workspace", exact=True)
         reload_button.focus()
         reload_button.press("Enter")
@@ -114,7 +118,8 @@ def missing_ops_recovery(browser: Browser, base: str) -> None:
               page.url == original_url and page.locator("#email").count() == 0)
         check("reload refetches the previously failed ops file",
               len(documents) > original_count
-              and sum(urlparse(url).path == "/ops.js" for url in documents) == 2)
+              and sum(bool(asset_url("/ops.js", base).search(url)) for url in documents)
+              == original_ops + 1)
         check("missing dependency uses handled feedback, not ReferenceError", not errors)
     finally:
         page.context.close()
@@ -122,7 +127,7 @@ def missing_ops_recovery(browser: Browser, base: str) -> None:
 
 def unrelated_script_failure(browser: Browser, base: str) -> None:
     page, errors, _ = new_page(browser, base)
-    page.route("**/role-screens.js", lambda route: route.fulfill(
+    page.route(asset_url("/role-screens.js", base), lambda route: route.fulfill(
         status=404, content_type="text/plain", body="Synthetic missing specialist module"
     ))
     try:
