@@ -234,14 +234,14 @@ exported and was not independently reread or rehashed by this reviewer.
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/research/2026-10-31/demo-sites-redeploy-routing-research.md](.copilot-tracking/research/2026-10-31/demo-sites-redeploy-routing-research.md) | Internal source/authority/SQL-touch research |
-| [.copilot-tracking/plans/2026-10-31/demo-sites-redeploy-routing-plan.md](.copilot-tracking/plans/2026-10-31/demo-sites-redeploy-routing-plan.md) | Current partial whole-request plan and follow-ups |
-| [.copilot-tracking/details/2026-10-31/demo-sites-redeploy-routing-phase-details.md](.copilot-tracking/details/2026-10-31/demo-sites-redeploy-routing-phase-details.md) | Current task procedures and explicit limits |
-| [.copilot-tracking/reviews/plans/2026-10-31/demo-sites-redeploy-routing-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/demo-sites-redeploy-routing-plan-critique.md) | Preserved single original Complete/Revise critique |
-| [.copilot-tracking/changes/2026-10-31/demo-sites-redeploy-routing-changes.md](.copilot-tracking/changes/2026-10-31/demo-sites-redeploy-routing-changes.md) | Operational execution, failures, decisions and handoff |
-| [.copilot-tracking/changes/2026-10-31/demo-sites-redeploy-routing-evidence.json](.copilot-tracking/changes/2026-10-31/demo-sites-redeploy-routing-evidence.json) | Sanitized original command/hash/proof export |
-| [.copilot-tracking/rpi-sessions/2026-10-31/demo-sites-redeploy-routing-state.json](.copilot-tracking/rpi-sessions/2026-10-31/demo-sites-redeploy-routing-state.json) | Pre-Review parent state and blockers |
-| [.copilot-tracking/reviews/logs/2026-10-31/demo-sites-redeploy-routing-review.md](.copilot-tracking/reviews/logs/2026-10-31/demo-sites-redeploy-routing-review.md) | This one independent original Review |
+| [.copilot-tracking/research/2026-10-31/demo-sites-redeploy-routing-research.md](../../../research/2026-10-31/demo-sites-redeploy-routing-research.md) | Internal source/authority/SQL-touch research |
+| [.copilot-tracking/plans/2026-10-31/demo-sites-redeploy-routing-plan.md](../../../plans/2026-10-31/demo-sites-redeploy-routing-plan.md) | Current partial whole-request plan and follow-ups |
+| [.copilot-tracking/details/2026-10-31/demo-sites-redeploy-routing-phase-details.md](../../../details/2026-10-31/demo-sites-redeploy-routing-phase-details.md) | Current task procedures and explicit limits |
+| [.copilot-tracking/reviews/plans/2026-10-31/demo-sites-redeploy-routing-plan-critique.md](../../plans/2026-10-31/demo-sites-redeploy-routing-plan-critique.md) | Preserved single original Complete/Revise critique |
+| [.copilot-tracking/changes/2026-10-31/demo-sites-redeploy-routing-changes.md](../../../changes/2026-10-31/demo-sites-redeploy-routing-changes.md) | Operational execution, failures, decisions and handoff |
+| [.copilot-tracking/changes/2026-10-31/demo-sites-redeploy-routing-evidence.json](../../../changes/2026-10-31/demo-sites-redeploy-routing-evidence.json) | Sanitized original command/hash/proof export |
+| [.copilot-tracking/rpi-sessions/2026-10-31/demo-sites-redeploy-routing-state.json](../../../rpi-sessions/2026-10-31/demo-sites-redeploy-routing-state.json) | Pre-Review parent state and blockers |
+| [.copilot-tracking/reviews/logs/2026-10-31/demo-sites-redeploy-routing-review.md](demo-sites-redeploy-routing-review.md) | This one independent original Review |
 
 ## Next Steps
 

@@ -113,10 +113,10 @@ ms.date: 2026-10-31
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/plans/2026-10-31/demo-sites-redeploy-routing-plan.md](.copilot-tracking/plans/2026-10-31/demo-sites-redeploy-routing-plan.md) | Assessed final-candidate plan |
-| [.copilot-tracking/details/2026-10-31/demo-sites-redeploy-routing-phase-details.md](.copilot-tracking/details/2026-10-31/demo-sites-redeploy-routing-phase-details.md) | Assessed phase details |
-| [.copilot-tracking/research/2026-10-31/demo-sites-redeploy-routing-research.md](.copilot-tracking/research/2026-10-31/demo-sites-redeploy-routing-research.md) | Supplied evidence pointer |
-| [.copilot-tracking/reviews/plans/2026-10-31/demo-sites-redeploy-routing-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/demo-sites-redeploy-routing-plan-critique.md) | This single original critique |
+| [.copilot-tracking/plans/2026-10-31/demo-sites-redeploy-routing-plan.md](../../../plans/2026-10-31/demo-sites-redeploy-routing-plan.md) | Assessed final-candidate plan |
+| [.copilot-tracking/details/2026-10-31/demo-sites-redeploy-routing-phase-details.md](../../../details/2026-10-31/demo-sites-redeploy-routing-phase-details.md) | Assessed phase details |
+| [.copilot-tracking/research/2026-10-31/demo-sites-redeploy-routing-research.md](../../../research/2026-10-31/demo-sites-redeploy-routing-research.md) | Supplied evidence pointer |
+| [.copilot-tracking/reviews/plans/2026-10-31/demo-sites-redeploy-routing-plan-critique.md](demo-sites-redeploy-routing-plan-critique.md) | This single original critique |
 
 ## Next Steps
 
