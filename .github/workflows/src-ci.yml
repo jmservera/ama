@@ -104,6 +104,8 @@ jobs:
             python -m checks.regulatory_ux_check --axe "$RUNNER_TEMP/axe-4.10.3.min.js" --out "$RUNNER_TEMP/regulatory-ux-results.json"
           PYTHONPATH="$GITHUB_WORKSPACE/src/api/tests:$GITHUB_WORKSPACE/src/core/tests:$GITHUB_WORKSPACE/src/agents/tests" \
             python -m checks.case_journey_browser_check --axe "$RUNNER_TEMP/axe-4.10.3.min.js" --out "$RUNNER_TEMP/case-journey-results"
+          PYTHONPATH="$GITHUB_WORKSPACE/src/api/tests:$GITHUB_WORKSPACE/src/core/tests:$GITHUB_WORKSPACE/src/agents/tests" \
+            ZF_BROWSER_TESTS=1 python -m unittest -v test_chat_panel.PanelTests.test_browser_warning_failure_keyboard_refusal_and_live_log
       - name: Retain case journey UX evidence
         if: always() && matrix.project == 'api'
         uses: actions/upload-artifact@v4
@@ -230,8 +232,8 @@ jobs:
           ruff format --isolated --line-length 100 --check infra/tests/test_bicep_policy.py infra/tests/test_deploy.py infra/scripts/deploy.py
           ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 infra/scripts/pipeline.py infra/tests/test_pipeline.py
           ruff format --isolated --line-length 100 --check infra/scripts/pipeline.py infra/tests/test_pipeline.py
-          ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 infra/scripts/staff_azure.py infra/scripts/staff-azure-worker.py infra/scripts/credential_arm.py infra/tests/test_staff_azure.py
-          ruff format --isolated --line-length 100 --check infra/scripts/staff_azure.py infra/scripts/staff-azure-worker.py infra/scripts/credential_arm.py infra/tests/test_staff_azure.py
+          ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 infra/scripts/staff_azure.py infra/scripts/staff_blob.py infra/scripts/staff-azure-worker.py infra/scripts/credential_arm.py infra/tests/test_staff_azure.py
+          ruff format --isolated --line-length 100 --check infra/scripts/staff_azure.py infra/scripts/staff_blob.py infra/scripts/staff-azure-worker.py infra/scripts/credential_arm.py infra/tests/test_staff_azure.py
       - name: Check container tooling
         run: |
           ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 src/check-container.py infra/tests/test_container_contract.py
@@ -239,7 +241,7 @@ jobs:
           pip install 'mypy==2.4.0'
           mypy --strict src/check-container.py
           mypy --strict infra/scripts/pipeline.py
-          mypy --follow-imports=silent --ignore-missing-imports infra/scripts/staff_azure.py infra/scripts/staff-azure-worker.py infra/scripts/credential_arm.py
+          mypy --follow-imports=silent --ignore-missing-imports infra/scripts/staff_azure.py infra/scripts/staff_blob.py infra/scripts/staff-azure-worker.py infra/scripts/credential_arm.py
       - name: Local gate orchestration contracts and strict checks
         run: |
           python -m unittest discover -s tools -p test_rpi_checks.py -v

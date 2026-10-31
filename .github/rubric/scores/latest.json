@@ -2,18 +2,18 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-31T02:19:47+00:00",
-  "commit": "7dbbc860bf7361ad9dc6efaf82e8e9ca48019f9c",
+  "scored_at": "2026-10-31T10:40:17+00:00",
+  "commit": "99ea6601ada8e3f5a5092d087b90f6f31a0438b5",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41158966083",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41192465279",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
     "solution-code": "d182892a623ed0ad56d6993f00a88c3f3b933754103f81d1d1f7a4fc8e8e8074",
-    "infrastructure": "c6a7f41eec75b0ecff8fe5b0c7391c9d006370556ff65b3dcf3bc2419621a53d",
-    "capstone-deck": "c5ae9ab5ec15788dd255b786adaf07ee716806bef375e01c066ad1c26701d74e",
-    "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
+    "infrastructure": "61ed8eadcd8e631c2a2e13b0853b7a96efd716806d947ef318843f0dd05f7d63",
+    "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
+    "pitch": "4c0b241f35c31a2b7fa7b9536f03f3e2e2e54f320b8ffb17d2210a294c9b8127",
     "thought-leadership": "592719a5da0d19d4d4c81dd5779faa45a9039c4777e3749cbc055d241aed8970"
   },
   "total": 77,
@@ -32,14 +32,14 @@
         "src/api/src/zava_forward/api/static_assets.py:1-58",
         "src/api/src/zava_forward/api/server.py:193-197"
       ],
-      "rationale": "New StaticAssets module is a single reusable content-versioning abstraction shared cleanly by three independent handlers (server, resident_demo, resident_preview). Strengthens existing modular pattern; already at ceiling."
+      "rationale": "Not touched by this PR (pitch/deck reorg only). Baseline ceiling unchanged."
     },
     "A2": {
       "score": 5,
       "evidence": [
         "docs/adrs/0003-journey-derived-capabilities-runtime-fit.md:35-62"
       ],
-      "rationale": "ADR amendment adds careful trade-off reasoning (keyless routing, tier/scope constraints, cost scenario) but was already at ceiling; no basis to exceed it. Unchanged."
+      "rationale": "Not touched by this PR. Baseline ceiling unchanged."
     },
     "A3": {
       "score": 5,
@@ -47,7 +47,7 @@
         "src/api/checks/employee_identity_check.py:1-53",
         "src/api/README.md:9-21"
       ],
-      "rationale": "New employee identity predicate is fail-closed, requires independently verified tenant/object GUIDs, excludes display email/roster from admission, and is exercised by exhaustive offline tests. Reinforces already-ceiling security posture; no basis to exceed 5."
+      "rationale": "Not touched by this PR. Baseline ceiling unchanged."
     },
     "A4": {
       "score": 5,
@@ -55,63 +55,62 @@
         "src/api/src/zava_forward/api/static_assets.py:1-58",
         "src/api/tests/test_static_assets.py:1-40"
       ],
-      "rationale": "Production release-safe asset caching (content-versioned URLs, ETag/304 revalidation) is implemented end-to-end across all three handlers with matching test coverage. Consistent with prior completeness; unchanged ceiling score."
+      "rationale": "Not touched by this PR. Baseline ceiling unchanged."
     },
     "A5": {
       "score": 5,
       "evidence": [],
-      "rationale": "This PR adds asset caching/versioning and browser checks, not production logging, metrics, tracing or measured cost-per-value. No operational instrumentation change; baseline unchanged."
+      "rationale": "This PR only reorganizes pitch/deck materials; no operational instrumentation change. Baseline unchanged."
     },
     "A6": {
       "score": 5,
       "evidence": [],
-      "rationale": "This PR only changes static asset caching/versioning and browser checks; it does not touch model choice, prompts or the evaluation harness. Baseline unchanged."
+      "rationale": "This PR does not touch model choice, prompts or the evaluation harness. Baseline unchanged."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "Asset caching/versioning changes are deterministic HTTP serving logic, not agentic orchestration, planning or handoff. Baseline unchanged (Good, not Excellent)."
+      "rationale": "This PR is a pitch/deck content reorganization, not agentic orchestration. Baseline unchanged (Good, not Excellent)."
     },
     "B1": {
       "score": 3,
       "evidence": [],
-      "rationale": "Live-scored; no rehearsal or delivered-session evidence exists in this PR either. The new pitch brief/deck notes remain prepared material, not a demonstrated narrative delivery. Baseline readiness retained."
+      "rationale": "Live-scored; no rehearsal or delivered-session evidence exists. New pitch/README.md and speaker-script.md remain prepared, unrehearsed material. Baseline readiness retained."
     },
     "B2": {
       "score": 4,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:18-29"
+        "docs/capstone/pitch/README.md:27-33"
       ],
-      "rationale": "Pitch package unchanged in this PR; baseline Audience Map evidence retained. Still unrehearsed."
+      "rationale": "New README's archetype table (Sergeant/Therapist/Scientist/Evangelist) replaces the deleted audience-and-delivery.md role map with equivalent register-calibration guidance, though more condensed. Still unrehearsed, so readiness score retained."
     },
     "B3": {
       "score": 2,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/demo-runbook.md:63-77"
+        "docs/capstone/pitch/README.md:41-45"
       ],
-      "rationale": "Demo runbook unchanged in this PR; validation.md still records no rehearsal. Needs Improvement retained."
+      "rationale": "Demo hook/timing guidance persists (now summarized in pitch README; the untouched docs/capstone/demo/runbook.md still carries the full hook/recovery script). No rehearsal or delivered-session evidence exists. Needs Improvement retained."
     },
     "B4": {
       "score": 2,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/demo-runbook.md:142-150",
-        "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:66-73"
+        "docs/capstone/pitch/questions-and-answers.md:17-38"
       ],
-      "rationale": "New recovery table and bridge answer stems show deliberate prepared depth for pressure questions, an improvement over the baseline's single list. No transcript or rehearsal exists, so still short of demonstrated composure under challenge."
+      "rationale": "The deleted bridge-stem file is replaced by a 26-entry appendix Q&A bank (answer+evidence+limit per entry), comparable prepared depth. No transcript/rehearsal of composure under live challenge, readiness stays Needs Improvement."
     },
     "B5": {
       "score": 2,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:33-46"
+        "docs/capstone/pitch/speaker-script.md:24-34"
       ],
-      "rationale": "Timing contract unchanged in this PR; deck timing lines confirmed byte-identical. Unrehearsed pacing retained."
+      "rationale": "New speaker-script.md carries precise per-slide second-level timing (replacing the deleted audience-and-delivery.md timing contract) but this is still a written plan, not an observed, paced delivery. Unrehearsed pacing retained."
     },
     "B6": {
       "score": 5,
       "evidence": [
         "src/api/README.md:101-178"
       ],
-      "rationale": "README adds a clear, detailed section documenting release-safe asset versioning, caching headers, and verification commands, consistent with existing strong engineering documentation. Not the capstone deck itself; ceiling unchanged."
+      "rationale": "Not touched by this PR (engineering documentation, not the capstone deck). Baseline ceiling unchanged."
     },
     "B7": {
       "score": 5,
@@ -119,26 +118,26 @@
         "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx:slide22",
         "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx:slide40"
       ],
-      "rationale": "Slides 22/40 now interpret retrospective activity counts (183 PRs, 36,755 words) instead of implying value/causation, closing a prior inherited storytelling gap; meets Excellent descriptor."
+      "rationale": "Updated deck confirms slides 22/40 still interpret retrospective activity counts (183 merged PRs, 36,755 log words) as output volume rather than value/causation, preserving the prior Excellent-level storytelling discipline."
     },
     "C1": {
       "score": 5,
       "evidence": [],
-      "rationale": "No new BRD stakeholder-framing change; PRD edit only clarifies NFR-002 vs NFR-021 applicability boundaries and identity wording, not stakeholder/value framing already at ceiling. Unchanged."
+      "rationale": "No new BRD/stakeholder-framing change in this PR; unrelated to pitch/deck reorg. Baseline ceiling unchanged."
     },
     "C2": {
       "score": 2,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:77-83"
+        "docs/capstone/pitch/README.md:79-83"
       ],
-      "rationale": "New Interruption Protocol instructs restating the challenge in the customer's terms before answering, directly rehearsing the C2 behavior. A concrete written improvement over the baseline's bare answer stems, but no transcript or live exchange exists, so readiness remains Needs Improvement."
+      "rationale": "Deleted Interruption Protocol's bridge phrases are gone, but the new README retains the core restate-before-answering instruction; untouched docs/capstone/demo/runbook.md also has a restate-first line. No transcript/live exchange exists, readiness unchanged."
     },
     "C3": {
       "score": 4,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/evidence/ai-cost-evidence.md:258-266"
+        "docs/capstone/pitch/questions-and-answers.md:817"
       ],
-      "rationale": "New Strong CXO Answer Stems explicitly surface unresolved cost/risk gaps unprompted ('Unknown. We must agree the denominator...') and make a clear recommendation while naming limits. Stronger written intellectual honesty and unprompted risk disclosure than baseline."
+      "rationale": "Deleted ai-cost-evidence.md's unprompted risk disclosure is replaced by equivalent unprompted-limit framing in the new Q&A bank (e.g. 'Zero/unknown denominator = not measurable'). Written honesty evidence persists at same strength; score retained."
     },
     "D1": {
       "score": 4,
@@ -146,7 +145,7 @@
         "docs/capstone/thought-leadership/everything-but-the-software/main.tex:927-985",
         "docs/capstone/thought-leadership/everything-but-the-software/main.tex:3097-3280"
       ],
-      "rationale": "Added Jiang/Herdagdelen citations qualify existing claims but remain incremental synthesis, not new empirical contribution. Unchanged at 4."
+      "rationale": "Not touched by this PR. Baseline unchanged at 4."
     },
     "D2": {
       "score": 3,
@@ -154,14 +153,14 @@
         "docs/capstone/thought-leadership/everything-but-the-software/main.tex:9",
         "docs/capstone/thought-leadership/everything-but-the-software/README.md:8-19"
       ],
-      "rationale": "main.tex still has unresolved TODO(author) items (26 remain, e.g. lines 9,43,55,601,663,717); revision not recompiled by this reviewer. Unchanged at 3."
+      "rationale": "Not touched by this PR; unresolved TODOs remain unverified. Baseline unchanged at 3."
     },
     "D3": {
       "score": 2,
       "evidence": [
         "docs/capstone/thought-leadership/everything-but-the-software/README.md:39"
       ],
-      "rationale": "README records owner-committed work in PR #\u200b555 while distinguishing the assistant's local-only delivery from external manuscript publication. Submission, registration and publication approval remain pending. Unchanged at 2."
+      "rationale": "Not touched by this PR. Submission/registration/publication approval remain pending. Baseline unchanged at 2."
     }
   }
 }

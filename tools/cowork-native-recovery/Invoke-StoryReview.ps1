@@ -1,4 +1,6 @@
 #!/usr/bin/env pwsh
+# Copyright (c) Microsoft Corporation.
+# SPDX-License-Identifier: MIT
 <#
 .SYNOPSIS
 Inspect, revise and natively render the owner-selected capstone deck.
@@ -161,7 +163,8 @@ function Add-TextParagraph {
 function Add-NativeShape {
     param([xml]$Document, $Tree, $Element, [int]$Id, [int]$SlideNumber)
     $Box = @($Element.box)
-    if ($Box.Count -ne 4 -or $Box[0] -lt 0.5 -or $Box[1] -lt 0.5 -or
+    if ($Box.Count -ne 4 -or @($Box | Where-Object { [double]::IsNaN([double]$_) -or [double]::IsInfinity([double]$_) }).Count -or
+        $Box[2] -le 0 -or $Box[3] -le 0 -or $Box[0] -lt 0.5 -or $Box[1] -lt 0.5 -or
         $Box[0] + $Box[2] -gt 12.834 -or $Box[1] + $Box[3] -gt 7.0) { throw "Invalid margins: $($Element.key)" }
     if ($Element.text -and $Element.size -lt 12) { throw "Text below 12pt: $($Element.key)" }
     $Fragment = [xml]'<p:sp xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><p:nvSpPr><p:cNvPr id="1" name="Story"/><p:cNvSpPr txBox="1"/><p:nvPr/></p:nvSpPr><p:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:noFill/><a:ln><a:noFill/></a:ln></p:spPr><p:txBody><a:bodyPr wrap="square" lIns="18288" rIns="18288" tIns="9144" bIns="9144" anchor="t"><a:noAutofit/></a:bodyPr><a:lstStyle/></p:txBody></p:sp>'
@@ -172,13 +175,60 @@ function Add-NativeShape {
     $Properties.SetAttribute('name', "Story-$SlideNumber-$($Element.key)")
     $Properties.SetAttribute('descr', [string]$Element.text)
     if ($Element.geometry) {
-        if ($Element.geometry -notin @('rect', 'chevron', 'downArrow', 'rightArrow')) { throw "Unsupported native geometry: $($Element.geometry)" }
-        $Shape.SelectSingleNode('p:spPr/a:prstGeom', $Namespaces).SetAttribute('prst', $Element.geometry)
+        if ($Element.geometry -notin @('rect', 'chevron', 'downArrow', 'rightArrow', 'ellipse', 'roundRect', 'line', 'pie', 'can', 'polygon')) { throw "Unsupported native geometry: $($Element.geometry)" }
+        $Geometry = $Shape.SelectSingleNode('p:spPr/a:prstGeom', $Namespaces)
+        $Geometry.SetAttribute('prst', $Element.geometry)
         if ($Element.geometry -eq 'chevron') {
             $Adjustment = $Document.CreateElement('a', 'gd', $Namespaces.LookupNamespace('a'))
             $Adjustment.SetAttribute('name', 'adj')
             $Adjustment.SetAttribute('fmla', 'val 10000')
             [void]$Shape.SelectSingleNode('p:spPr/a:prstGeom/a:avLst', $Namespaces).AppendChild($Adjustment)
+        }
+        if ($Element.geometry -eq 'pie') {
+            $Angles = @($Element.angles)
+            if ($Angles.Count -ne 2 -or $Angles[0] -eq $Angles[1] -or
+                @($Angles | Where-Object { [double]::IsNaN([double]$_) -or [double]::IsInfinity([double]$_) -or $_ -lt 0 -or $_ -ge 360 }).Count) {
+                throw "Invalid pie angles: $($Element.key)"
+            }
+            foreach ($Index in 0..1) {
+                $Adjustment = $Document.CreateElement('a', 'gd', $Namespaces.LookupNamespace('a'))
+                $Adjustment.SetAttribute('name', "adj$($Index + 1)")
+                $Adjustment.SetAttribute('fmla', "val $([int][Math]::Round($Angles[$Index] * 60000))")
+                [void]$Geometry.SelectSingleNode('a:avLst', $Namespaces).AppendChild($Adjustment)
+            }
+        }
+        if ($Element.geometry -eq 'polygon') {
+            $Points = @($Element.points)
+            if ($Points.Count -lt 3) { throw "A polygon needs three points: $($Element.key)" }
+            $Custom = $Document.CreateElement('a', 'custGeom', $Namespaces.LookupNamespace('a'))
+            foreach ($Name in @('avLst', 'gdLst', 'ahLst', 'cxnLst')) {
+                [void]$Custom.AppendChild($Document.CreateElement('a', $Name, $Namespaces.LookupNamespace('a')))
+            }
+            $Rectangle = $Document.CreateElement('a', 'rect', $Namespaces.LookupNamespace('a'))
+            foreach ($Pair in @(@('l', '0'), @('t', '0'), @('r', 'w'), @('b', 'h'))) { $Rectangle.SetAttribute($Pair[0], $Pair[1]) }
+            [void]$Custom.AppendChild($Rectangle)
+            $Paths = $Document.CreateElement('a', 'pathLst', $Namespaces.LookupNamespace('a'))
+            $Path = $Document.CreateElement('a', 'path', $Namespaces.LookupNamespace('a'))
+            $Path.SetAttribute('w', '100000')
+            $Path.SetAttribute('h', '100000')
+            for ($Index = 0; $Index -lt $Points.Count; $Index++) {
+                $Point = @($Points[$Index])
+                if ($Point.Count -ne 2 -or @($Point | Where-Object { [double]::IsNaN([double]$_) -or [double]::IsInfinity([double]$_) -or $_ -lt 0 -or $_ -gt 100 }).Count) {
+                    throw "Invalid polygon point: $($Element.key)"
+                }
+                $Command = 'lnTo'
+                if ($Index -eq 0) { $Command = 'moveTo' }
+                $Step = $Document.CreateElement('a', $Command, $Namespaces.LookupNamespace('a'))
+                $Coordinate = $Document.CreateElement('a', 'pt', $Namespaces.LookupNamespace('a'))
+                $Coordinate.SetAttribute('x', [string][int][Math]::Round($Point[0] * 1000))
+                $Coordinate.SetAttribute('y', [string][int][Math]::Round($Point[1] * 1000))
+                [void]$Step.AppendChild($Coordinate)
+                [void]$Path.AppendChild($Step)
+            }
+            [void]$Path.AppendChild($Document.CreateElement('a', 'close', $Namespaces.LookupNamespace('a')))
+            [void]$Paths.AppendChild($Path)
+            [void]$Custom.AppendChild($Paths)
+            [void]$Geometry.ParentNode.ReplaceChild($Custom, $Geometry)
         }
     }
     $Offset = $Shape.SelectSingleNode('p:spPr/a:xfrm/a:off', $Namespaces)
@@ -195,7 +245,26 @@ function Add-NativeShape {
         [void]$Solid.AppendChild($Rgb)
         [void]$Fill.ParentNode.ReplaceChild($Solid, $Fill)
     }
+    if ($Element.stroke) {
+        $Width = 1.25
+        if ($null -ne $Element.stroke_width) { $Width = [double]$Element.stroke_width }
+        if ($Element.stroke -cnotmatch '^[0-9A-Fa-f]{6}$' -or [double]::IsNaN($Width) -or [double]::IsInfinity($Width) -or $Width -le 0 -or $Width -gt 12) {
+            throw "Invalid native outline: $($Element.key)"
+        }
+        $Line = $Shape.SelectSingleNode('p:spPr/a:ln', $Namespaces)
+        $Line.RemoveAll()
+        $Line.SetAttribute('w', [string][int][Math]::Round($Width * 12700))
+        $Solid = $Document.CreateElement('a', 'solidFill', $Namespaces.LookupNamespace('a'))
+        $Rgb = $Document.CreateElement('a', 'srgbClr', $Namespaces.LookupNamespace('a'))
+        $Rgb.SetAttribute('val', $Element.stroke)
+        [void]$Solid.AppendChild($Rgb)
+        [void]$Line.AppendChild($Solid)
+    }
     $Body = $Shape.SelectSingleNode('p:txBody', $Namespaces)
+    if ($Element.valign) {
+        if ($Element.valign -notin @('t', 'ctr', 'b')) { throw "Invalid vertical anchor: $($Element.key)" }
+        $Body.SelectSingleNode('a:bodyPr', $Namespaces).SetAttribute('anchor', $Element.valign)
+    }
     if ($Element.text) {
         $Color = '173F35'
         if ($Element.color) { $Color = $Element.color }

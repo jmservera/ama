@@ -86,11 +86,17 @@ a bypass or a false claim that this historical check still passes.
 
 ## Durable Reproduction and Evidence
 
-Use the [native recovery guide](../../capstone/pitch/cowork-main-presentation/native-recovery/README.md)
-for the promoted builder, pinned original PPTX and external-output commands.
-The [dated build narrative](../../capstone/deck/cowork-generated/native-recovery-build-2026-10-24.md)
+Use the [current capstone source guide](../../capstone/source/README.md)
+for the complete 54-slide native/JSON build, retained media and external-output
+commands. The [historical native recovery guide](../../capstone/history/cowork-main-presentation/native-recovery/README.md)
+describes the earlier six-slide recovery, not the current authoring route.
+The [29 October restore map](../../capstone/history/README.md#archive-and-restore)
+records the owner's separate finite selection of 15 obsolete capstone exports,
+full snapshot readback, selected restoration and protected-byte checks. It does
+not expand deletion authority or change the prior PR 438 archive contract.
+The [dated build narrative](../../capstone/history/cowork-generated/native-recovery-build-2026-10-24.md)
 is a byte-preserved historical copy, including its original paths and commands;
-the guide supplies current reproduction commands. The original remains for
+the current source guide supplies the new reproduction commands. The original remains for
 append-only log compatibility.
 
 Exactly 12 byte-preserved assurance/PRD files are grouped under
