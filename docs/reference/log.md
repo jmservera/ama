@@ -8976,3 +8976,31 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   76/100 result as historical evidence; neither is relabelled as successful.
   Core guide and Tokenomics synthesis carry these later corrections. Fresh
   hosted success remains separate from local validation and live approval.
+
+## [2026-10-31] observation | Bounded live Azure app verification, Refs #523 #524 #570 #432
+
+* Updated the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#live-app-verification-2026-10-31-refs-523-524-570-432)
+  and knowledge index with actual 15:42:51-15:45:41Z browser observations:
+  resident sign-in, chat open/close, resize, dock/undock, containment and five
+  first-navigation asset hashes passed.
+* Employee health passed; independent directory lookup was denied. Zero
+  employee sign-ins; employee chat/map/case, tabs/assets, capacity, other
+  manager pages and metering remain blocked rather than inferred from source.
+* #523/#524's literal pending-record criteria are ticked without live-success
+  claims; issues remain open. #570/#432 have no new ticks. No new deployed
+  product bug was observed. Original automation failures and checkpoints are
+  retained with sanitized evidence.
+* No Azure configuration, replica, job or deployment change, real-resident
+  enrolment, AI question/batch, callback booking or consent change occurred.
+  Live observations do not replace full local, hosted or human gates.
+
+## [2026-10-31] observation | Local full-gate path failure, Refs #608
+
+* Extended the [live evidence pack](../architecture/cutover-evidence-pack.md#later-local-publication-gate-failure-2026-10-31-refs-608)
+  and index with the separate 16:26:24-16:27:48Z persistent Chromium SIGABRT:
+  the accepted long external output root exceeded the process-singleton socket
+  pathname limit. Browser failed and SQL was blocked; other passing groups are
+  not a full receipt.
+* Filed deduplicated local-tooling bug #608 with exact reproduction/log hash.
+  No deployed app defect, source fix, skip, full passing retry or gate bypass
+  is inferred. Original Review and failed receipt remain preserved.

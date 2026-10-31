@@ -1,9 +1,122 @@
 ---
 title: Source cut-over evidence pack
 description: Dated parity, private SQL and public edge proof with remaining owner gates
-ms.date: 2026-10-30
+ms.date: 2026-10-31
 ms.topic: reference
 ---
+
+## Live app verification (2026-10-31, Refs #523 #524 #570 #432)
+
+Observed UTC window: 15:42:51.045838 to 15:45:41.433264 on 2026-10-31.
+Owner authorized live checks using the supplied test accounts, at most two
+sign-in attempts per account, with no Azure configuration, replica, job or
+deployment changes. No such Azure changes occurred. Health warming allowed
+idle-start delay; replica state was not inspected or changed, so this is not
+a controlled scale-from-zero test.
+
+| Target | Exact deployed origin |
+| --- | --- |
+| Employee | https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io |
+| Resident | https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io |
+
+The [sanitized live result](../../.copilot-tracking/changes/2026-10-31/live-azure-verification-results.json)
+preserves each original checkpoint and later employee-only continuations;
+the [sole driver](../../.copilot-tracking/changes/2026-10-31/live-azure-verification.py)
+contains the exact controls and assertions. Source comparison pin:
+`4512193276f18c474af42e37a3cc27357eeef017`. Actual loaded asset hashes below
+prove those resident assets match that pin, not that every deployment component
+matches it. No credentials, identity claims, cookies, case text, screenshots,
+HAR, video or persisted browser sessions were recorded.
+
+| Observation | Result | Exact evidence and limit |
+| --- | --- | --- |
+| Employee health | Observed pass | Initial `/healthz` HTTP200 in 24.016s; later 200 in 0.153s and 0.157s |
+| Resident health | Observed pass | `/healthz` HTTP200 in 38.623s |
+| Employee independent identity (#570) | Observed blocked | Captured `az account show --query tenantId -o json` exit0; `az ad user list --filter "startswith(displayName,'Aadi')" --query "[].{oid:id,upn:userPrincipalName}" -o json` exit1 with directory-access-denied predicate true. No raw directory output retained |
+| Employee chat, map filters, case (#570) | Blocked, not run | Independent tenant/object expectation unavailable; maintained `verify_employee` not invoked live. Zero employee sign-in attempts; no weakened admission or expectation derived from `/api/me` |
+| Employee first-time tabbed case layout/assets (#524) | Blocked, not run | Fresh unauthenticated `/app` navigation did not load workspace assets. No authenticated case/tab navigation, Leaflet delivery or stale-cache recovery proved; no manual reload |
+| Capacity and other manager pages (#523) | Blocked, not run | Identity admission prevented authenticated `/api/packages`, `/api/workorders` and manager page checks. Historical local SQL/browser results remain historical |
+| AI metering (#432) | Blocked, not run | Manager-only `/api/ai/report` not read without employee admission. No live call joins, limits, prices, billing reconciliation, quality denominator or held-out batch observed |
+| Resident sign-in | Observed pass | One submission to `/demo/login`, HTTP200; account and own-content regions visible. Shared synthetic showcase, not real resident identity/enrolment |
+| Resident chat open/close | Observed pass | Existing `checks.resident_assistant_browser_check.open_chat` executed: title focused; close hides panel and launcher reopens it |
+| Resident chat resize | Observed pass | At 1280x900: panel changed from 448x630 at (816,182) to 1248x630 at (16,182), then 1248x448 at (16,364) using offered width/height range controls |
+| Resident dock/undock | Observed pass | Dock pressed=true; 1254x900 panel at (26,0), right edge=1280, height control disabled. Undock pressed=false and height enabled |
+| Resident narrow/wide containment | Observed pass | 390x844: 358x448 at (16,308); 1280x900: 1248x448 at (16,364). All measured states contained, no document horizontal overflow |
+| Resident first-navigation assets | Observed pass | All five actual first-navigation JS/CSS responses HTTP200 and source-matching; zero script/stylesheet request failures and zero page errors |
+| Resident chat answers/AI | Not run | Geometry did not require own-case AI consent or a question. No answer generation, callback booking, consent change or model call was performed |
+
+Resident first-navigation responses, observed at 15:43:55Z on 2026-10-31:
+
+| Asset | Bytes | SHA-256 |
+| --- | --- | --- |
+| `/demo.css` | 8775 | `7a1e73a926f230cc61ec3398ee135bf8370a875b44cb54783faa6c8ec2891b09` |
+| `/chat-widget.css` | 5300 | `e9be468cb6119a5997cceee8630887973150b5e0f4c755f9491e73de82e20dfd` |
+| `/assistant.js` | 15297 | `9493a357fe93ba29da27c6dcbedf65fe02e01901e25b3188c50223dfd7ff8477` |
+| `/chat-widget.js` | 9866 | `6c37bd91b51134ebb1aebbe1e9fe1c7c688bba09601e44dacb9cd683275d1960` |
+| `/demo.js` | 17305 | `9801816f1609d39d73e4ddd5640433d42fdbfa108a9584ae6d50235cf47eb429` |
+
+Reproduction uses an external Python 3.12 venv, pip-installed `src/core`,
+`src/agents`, `src/api[dev]` and installed Chromium. Credential files are read
+only inside automation. From the repository root, with that venv on PATH:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 \
+PYTHONPATH=src/api:src/api/tests:src/core/tests:src/agents/tests \
+timeout 1200 python .copilot-tracking/changes/2026-10-31/live-azure-verification.py --run
+```
+
+The committed result prevents replay/reset: do not delete or overwrite it to
+get new sign-in slots. Two employee-only continuations repaired the local
+credential parser (the employee file contained only a password) and established
+the directory denial without consuming an employee attempt; resident's one
+attempt and original observations were preserved. The initial writer used
+append-mode checkpoint output; the corrected driver uses locked read/write
+output with fsync and retains the original checkpoint stream as nested
+evidence. These were automation defects, not deployed product bugs.
+Credential-free self-tests check persisted count==2 refusal and overwrite
+validity; they do not constitute live acceptance.
+
+Issues #523 and #524 explicitly allow their final live-record criterion to be
+marked pending the owner. Only that record criterion is ticked, with
+authenticated verification still pending independently verified expected
+tenant/object IDs. Both remain open; a tick is not a claim their live page
+works. #570 and #432 receive blocked live-evidence comments and no new criterion
+ticks. No new deployed product failure was observed, so no fabricated or
+duplicate bug issue is filed. The identity dependency is retained on #570.
+Resident geometry evidence is also recorded on related #550 without claiming
+its bundled employee/chat criteria.
+
+Fresh-context resident success does not prove all historical caches,
+employee assets, whole WCAG conformance, real-resident acceptance, production
+capacity, AI activation, economics, legal compliance or human release approval.
+Full local gate and hosted/human publication checks are separate from this
+live observation and are not implied by it.
+
+### Later local publication-gate failure (2026-10-31, Refs #608)
+
+The full local gate at candidate
+`37cc1fed15a95f1bc84e82135b0c496862867e85`, base
+`7136be9778b17e495b1941e6eb93f50d32de8a2b`, failed separately from the
+live app observations. Project/static/infra/migration and image groups passed;
+browser failed and SQL was blocked by its prerequisite. This is not a full
+passing receipt or a deployed Azure application defect.
+
+At 16:26:24.224183 to 16:27:48.426292Z, the persistent Chromium launch in
+`checks.case_journey_browser_check` aborted with
+`chrome/browser/process_singleton_posix.cc:315: Socket path too long`,
+SIGABRT. The accepted long external output root made the Chromium
+`TMPDIR/.../SingletonSocket` pathname too long. Exact external evidence:
+`rpi-live-full-main-integrated/receipt.json`, log `0157-browser.log`,
+SHA256 `24620a9b6a4c69b8e8c6bc68ece24d7d6fa876a3f35095a4ebb17fbbef9e5a2e`
+under this task's session files.
+
+The deduplicated [local tooling bug #608](https://github.com/jmservera/ama/issues/608)
+records reproduction and open criteria. A short external output retry is
+required; no source patch, browser/SQL skip, partial-gate substitution or
+successful retry is inferred here. Main advanced twice during publication;
+integration uses additive topic merges, not rebases, force pushes or main
+mutation. A changed base/candidate invalidates resume eligibility and requires
+a fresh full run. The original Review and failed receipt remain preserved.
 
 ## Transport integration qualification (2026-10-30, Refs #360)
 

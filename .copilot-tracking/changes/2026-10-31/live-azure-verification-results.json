@@ -1,0 +1,856 @@
+{
+  "apps": {
+    "employee": {
+      "acceptance": {
+        "reason": "independent_identity_unavailable",
+        "status": "blocked"
+      },
+      "capacity": {
+        "status": "blocked"
+      },
+      "first_navigation": {
+        "assets": [],
+        "page_errors": 0,
+        "request_failures": 0
+      },
+      "health": {
+        "requests": [
+          {
+            "elapsed_seconds": 0.157,
+            "status": 200
+          }
+        ],
+        "status": "passed"
+      },
+      "independent_identity": {
+        "directory_access_denied": true,
+        "directory_lookup_exit": 1,
+        "reason": "independent_directory_attestation_unavailable",
+        "status": "blocked",
+        "tenant_lookup_exit": 0
+      },
+      "metering": {
+        "status": "blocked"
+      },
+      "observed_at": "2026-10-31T15:45:38.730515+00:00",
+      "origin": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io",
+      "other_manager_pages": {
+        "status": "blocked"
+      },
+      "stage": "independent_directory_attestation",
+      "tabs": {
+        "status": "blocked"
+      }
+    },
+    "resident": {
+      "chat_geometry": {
+        "after_height": {
+          "contained": true,
+          "height": 448,
+          "page_overflow": false,
+          "width": 1248,
+          "x": 16,
+          "y": 364
+        },
+        "after_width": {
+          "contained": true,
+          "height": 630,
+          "page_overflow": false,
+          "width": 1248,
+          "x": 16,
+          "y": 182
+        },
+        "before": {
+          "contained": true,
+          "height": 630,
+          "page_overflow": false,
+          "width": 448,
+          "x": 816,
+          "y": 182
+        },
+        "close_reopen_passed": true,
+        "contained_no_overflow": true,
+        "dock_passed": true,
+        "docked": {
+          "contained": true,
+          "height": 900,
+          "page_overflow": false,
+          "width": 1254,
+          "x": 26,
+          "y": 0
+        },
+        "resident_acceptance_helper": "checks.resident_assistant_browser_check.open_chat",
+        "resize_changed": true,
+        "status": "passed",
+        "undock_passed": true,
+        "viewports": [
+          {
+            "contained": true,
+            "height": 448,
+            "page_overflow": false,
+            "viewport": [
+              390,
+              844
+            ],
+            "width": 358,
+            "x": 16,
+            "y": 308
+          },
+          {
+            "contained": true,
+            "height": 448,
+            "page_overflow": false,
+            "viewport": [
+              1280,
+              900
+            ],
+            "width": 1248,
+            "x": 16,
+            "y": 364
+          }
+        ]
+      },
+      "chat_send": {
+        "reason": "geometry_only_no_own_case_ai_consent",
+        "status": "not_run"
+      },
+      "first_navigation": {
+        "assets": [
+          {
+            "bytes": 8775,
+            "observed_at": "2026-10-31T15:43:55.887920+00:00",
+            "path": "/demo.css",
+            "sha256": "7a1e73a926f230cc61ec3398ee135bf8370a875b44cb54783faa6c8ec2891b09",
+            "source_match": true,
+            "status": 200
+          },
+          {
+            "bytes": 5300,
+            "observed_at": "2026-10-31T15:43:55.917898+00:00",
+            "path": "/chat-widget.css",
+            "sha256": "e9be468cb6119a5997cceee8630887973150b5e0f4c755f9491e73de82e20dfd",
+            "source_match": true,
+            "status": 200
+          },
+          {
+            "bytes": 15297,
+            "observed_at": "2026-10-31T15:43:55.930334+00:00",
+            "path": "/assistant.js",
+            "sha256": "9493a357fe93ba29da27c6dcbedf65fe02e01901e25b3188c50223dfd7ff8477",
+            "source_match": true,
+            "status": 200
+          },
+          {
+            "bytes": 9866,
+            "observed_at": "2026-10-31T15:43:55.942351+00:00",
+            "path": "/chat-widget.js",
+            "sha256": "6c37bd91b51134ebb1aebbe1e9fe1c7c688bba09601e44dacb9cd683275d1960",
+            "source_match": true,
+            "status": 200
+          },
+          {
+            "bytes": 17305,
+            "observed_at": "2026-10-31T15:43:55.946281+00:00",
+            "path": "/demo.js",
+            "sha256": "9801816f1609d39d73e4ddd5640433d42fdbfa108a9584ae6d50235cf47eb429",
+            "source_match": true,
+            "status": 200
+          }
+        ],
+        "page_errors": 0,
+        "request_failures": 0
+      },
+      "health": {
+        "requests": [
+          {
+            "elapsed_seconds": 38.623,
+            "status": 200
+          }
+        ],
+        "status": "passed"
+      },
+      "observed_at": "2026-10-31T15:43:17.031679+00:00",
+      "origin": "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io",
+      "sign_in": {
+        "account_visible": true,
+        "own_content_visible": true,
+        "status": "passed"
+      },
+      "sign_in_http_status": 200
+    }
+  },
+  "attempts": {
+    "employee": 0,
+    "resident": 1
+  },
+  "continuation_reason": "credential_format_repaired_zero_employee_attempts_preserved",
+  "continued_at": "2026-10-31T15:45:38.307152+00:00",
+  "execution": "completed",
+  "finished_at": "2026-10-31T15:45:41.433264+00:00",
+  "original_execution_checkpoints": [
+    {
+      "apps": {
+        "employee": {
+          "error_type": "ValueError",
+          "first_navigation": {
+            "assets": [],
+            "page_errors": 0,
+            "request_failures": 0
+          },
+          "health": {
+            "requests": [
+              {
+                "elapsed_seconds": 0.153,
+                "status": 200
+              }
+            ],
+            "status": "passed"
+          },
+          "observed_at": "2026-10-31T15:44:51.824323+00:00",
+          "origin": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io",
+          "reason": "bounded_check_error",
+          "stage": "credential_format",
+          "status": "failed"
+        },
+        "resident": {
+          "chat_geometry": {
+            "after_height": {
+              "contained": true,
+              "height": 448,
+              "page_overflow": false,
+              "width": 1248,
+              "x": 16,
+              "y": 364
+            },
+            "after_width": {
+              "contained": true,
+              "height": 630,
+              "page_overflow": false,
+              "width": 1248,
+              "x": 16,
+              "y": 182
+            },
+            "before": {
+              "contained": true,
+              "height": 630,
+              "page_overflow": false,
+              "width": 448,
+              "x": 816,
+              "y": 182
+            },
+            "close_reopen_passed": true,
+            "contained_no_overflow": true,
+            "dock_passed": true,
+            "docked": {
+              "contained": true,
+              "height": 900,
+              "page_overflow": false,
+              "width": 1254,
+              "x": 26,
+              "y": 0
+            },
+            "resident_acceptance_helper": "checks.resident_assistant_browser_check.open_chat",
+            "resize_changed": true,
+            "status": "passed",
+            "undock_passed": true,
+            "viewports": [
+              {
+                "contained": true,
+                "height": 448,
+                "page_overflow": false,
+                "viewport": [
+                  390,
+                  844
+                ],
+                "width": 358,
+                "x": 16,
+                "y": 308
+              },
+              {
+                "contained": true,
+                "height": 448,
+                "page_overflow": false,
+                "viewport": [
+                  1280,
+                  900
+                ],
+                "width": 1248,
+                "x": 16,
+                "y": 364
+              }
+            ]
+          },
+          "chat_send": {
+            "reason": "geometry_only_no_own_case_ai_consent",
+            "status": "not_run"
+          },
+          "first_navigation": {
+            "assets": [
+              {
+                "bytes": 8775,
+                "observed_at": "2026-10-31T15:43:55.887920+00:00",
+                "path": "/demo.css",
+                "sha256": "7a1e73a926f230cc61ec3398ee135bf8370a875b44cb54783faa6c8ec2891b09",
+                "source_match": true,
+                "status": 200
+              },
+              {
+                "bytes": 5300,
+                "observed_at": "2026-10-31T15:43:55.917898+00:00",
+                "path": "/chat-widget.css",
+                "sha256": "e9be468cb6119a5997cceee8630887973150b5e0f4c755f9491e73de82e20dfd",
+                "source_match": true,
+                "status": 200
+              },
+              {
+                "bytes": 15297,
+                "observed_at": "2026-10-31T15:43:55.930334+00:00",
+                "path": "/assistant.js",
+                "sha256": "9493a357fe93ba29da27c6dcbedf65fe02e01901e25b3188c50223dfd7ff8477",
+                "source_match": true,
+                "status": 200
+              },
+              {
+                "bytes": 9866,
+                "observed_at": "2026-10-31T15:43:55.942351+00:00",
+                "path": "/chat-widget.js",
+                "sha256": "6c37bd91b51134ebb1aebbe1e9fe1c7c688bba09601e44dacb9cd683275d1960",
+                "source_match": true,
+                "status": 200
+              },
+              {
+                "bytes": 17305,
+                "observed_at": "2026-10-31T15:43:55.946281+00:00",
+                "path": "/demo.js",
+                "sha256": "9801816f1609d39d73e4ddd5640433d42fdbfa108a9584ae6d50235cf47eb429",
+                "source_match": true,
+                "status": 200
+              }
+            ],
+            "page_errors": 0,
+            "request_failures": 0
+          },
+          "health": {
+            "requests": [
+              {
+                "elapsed_seconds": 38.623,
+                "status": 200
+              }
+            ],
+            "status": "passed"
+          },
+          "observed_at": "2026-10-31T15:43:17.031679+00:00",
+          "origin": "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io",
+          "sign_in": {
+            "account_visible": true,
+            "own_content_visible": true,
+            "status": "passed"
+          },
+          "sign_in_http_status": 200
+        }
+      },
+      "attempts": {
+        "employee": 0,
+        "resident": 1
+      },
+      "continuation_reason": "credential_format_repaired_zero_employee_attempts_preserved",
+      "continued_at": "2026-10-31T15:44:51.309319+00:00",
+      "execution": "completed",
+      "finished_at": "2026-10-31T15:44:52.654350+00:00",
+      "original_execution_checkpoints": [
+        {
+          "apps": {},
+          "attempts": {
+            "employee": 0,
+            "resident": 0
+          },
+          "execution": "prepared",
+          "source_head": "4512193276f18c474af42e37a3cc27357eeef017",
+          "started_at": "2026-10-31T15:42:51.045838+00:00",
+          "task_id": "3a44be57-db3a-46d1-b9e4-fe82bd7c74e7"
+        },
+        {
+          "apps": {},
+          "attempts": {
+            "employee": 0,
+            "resident": 0
+          },
+          "execution": "running",
+          "source_head": "4512193276f18c474af42e37a3cc27357eeef017",
+          "started_at": "2026-10-31T15:42:51.045838+00:00",
+          "task_id": "3a44be57-db3a-46d1-b9e4-fe82bd7c74e7"
+        },
+        {
+          "apps": {
+            "employee": {
+              "error_type": "ValueError",
+              "first_navigation": {
+                "assets": [],
+                "page_errors": 0,
+                "request_failures": 0
+              },
+              "health": {
+                "requests": [
+                  {
+                    "elapsed_seconds": 24.016,
+                    "status": 200
+                  }
+                ],
+                "status": "passed"
+              },
+              "observed_at": "2026-10-31T15:42:51.499956+00:00",
+              "origin": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io",
+              "reason": "bounded_check_error",
+              "status": "failed"
+            }
+          },
+          "attempts": {
+            "employee": 0,
+            "resident": 0
+          },
+          "execution": "running",
+          "source_head": "4512193276f18c474af42e37a3cc27357eeef017",
+          "started_at": "2026-10-31T15:42:51.045838+00:00",
+          "task_id": "3a44be57-db3a-46d1-b9e4-fe82bd7c74e7"
+        },
+        {
+          "apps": {
+            "employee": {
+              "error_type": "ValueError",
+              "first_navigation": {
+                "assets": [],
+                "page_errors": 0,
+                "request_failures": 0
+              },
+              "health": {
+                "requests": [
+                  {
+                    "elapsed_seconds": 24.016,
+                    "status": 200
+                  }
+                ],
+                "status": "passed"
+              },
+              "observed_at": "2026-10-31T15:42:51.499956+00:00",
+              "origin": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io",
+              "reason": "bounded_check_error",
+              "status": "failed"
+            },
+            "resident": {
+              "first_navigation": {
+                "assets": [
+                  {
+                    "bytes": 8775,
+                    "observed_at": "2026-10-31T15:43:55.887920+00:00",
+                    "path": "/demo.css",
+                    "sha256": "7a1e73a926f230cc61ec3398ee135bf8370a875b44cb54783faa6c8ec2891b09",
+                    "source_match": true,
+                    "status": 200
+                  },
+                  {
+                    "bytes": 5300,
+                    "observed_at": "2026-10-31T15:43:55.917898+00:00",
+                    "path": "/chat-widget.css",
+                    "sha256": "e9be468cb6119a5997cceee8630887973150b5e0f4c755f9491e73de82e20dfd",
+                    "source_match": true,
+                    "status": 200
+                  },
+                  {
+                    "bytes": 15297,
+                    "observed_at": "2026-10-31T15:43:55.930334+00:00",
+                    "path": "/assistant.js",
+                    "sha256": "9493a357fe93ba29da27c6dcbedf65fe02e01901e25b3188c50223dfd7ff8477",
+                    "source_match": true,
+                    "status": 200
+                  },
+                  {
+                    "bytes": 9866,
+                    "observed_at": "2026-10-31T15:43:55.942351+00:00",
+                    "path": "/chat-widget.js",
+                    "sha256": "6c37bd91b51134ebb1aebbe1e9fe1c7c688bba09601e44dacb9cd683275d1960",
+                    "source_match": true,
+                    "status": 200
+                  },
+                  {
+                    "bytes": 17305,
+                    "observed_at": "2026-10-31T15:43:55.946281+00:00",
+                    "path": "/demo.js",
+                    "sha256": "9801816f1609d39d73e4ddd5640433d42fdbfa108a9584ae6d50235cf47eb429",
+                    "source_match": true,
+                    "status": 200
+                  }
+                ],
+                "page_errors": 0,
+                "request_failures": 0
+              },
+              "health": {
+                "requests": [
+                  {
+                    "elapsed_seconds": 38.623,
+                    "status": 200
+                  }
+                ],
+                "status": "passed"
+              },
+              "observed_at": "2026-10-31T15:43:17.031679+00:00",
+              "origin": "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io"
+            }
+          },
+          "attempts": {
+            "employee": 0,
+            "resident": 1
+          },
+          "execution": "running",
+          "source_head": "4512193276f18c474af42e37a3cc27357eeef017",
+          "started_at": "2026-10-31T15:42:51.045838+00:00",
+          "task_id": "3a44be57-db3a-46d1-b9e4-fe82bd7c74e7"
+        },
+        {
+          "apps": {
+            "employee": {
+              "error_type": "ValueError",
+              "first_navigation": {
+                "assets": [],
+                "page_errors": 0,
+                "request_failures": 0
+              },
+              "health": {
+                "requests": [
+                  {
+                    "elapsed_seconds": 24.016,
+                    "status": 200
+                  }
+                ],
+                "status": "passed"
+              },
+              "observed_at": "2026-10-31T15:42:51.499956+00:00",
+              "origin": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io",
+              "reason": "bounded_check_error",
+              "status": "failed"
+            },
+            "resident": {
+              "chat_geometry": {
+                "after_height": {
+                  "contained": true,
+                  "height": 448,
+                  "page_overflow": false,
+                  "width": 1248,
+                  "x": 16,
+                  "y": 364
+                },
+                "after_width": {
+                  "contained": true,
+                  "height": 630,
+                  "page_overflow": false,
+                  "width": 1248,
+                  "x": 16,
+                  "y": 182
+                },
+                "before": {
+                  "contained": true,
+                  "height": 630,
+                  "page_overflow": false,
+                  "width": 448,
+                  "x": 816,
+                  "y": 182
+                },
+                "close_reopen_passed": true,
+                "contained_no_overflow": true,
+                "dock_passed": true,
+                "docked": {
+                  "contained": true,
+                  "height": 900,
+                  "page_overflow": false,
+                  "width": 1254,
+                  "x": 26,
+                  "y": 0
+                },
+                "resident_acceptance_helper": "checks.resident_assistant_browser_check.open_chat",
+                "resize_changed": true,
+                "status": "passed",
+                "undock_passed": true,
+                "viewports": [
+                  {
+                    "contained": true,
+                    "height": 448,
+                    "page_overflow": false,
+                    "viewport": [
+                      390,
+                      844
+                    ],
+                    "width": 358,
+                    "x": 16,
+                    "y": 308
+                  },
+                  {
+                    "contained": true,
+                    "height": 448,
+                    "page_overflow": false,
+                    "viewport": [
+                      1280,
+                      900
+                    ],
+                    "width": 1248,
+                    "x": 16,
+                    "y": 364
+                  }
+                ]
+              },
+              "chat_send": {
+                "reason": "geometry_only_no_own_case_ai_consent",
+                "status": "not_run"
+              },
+              "first_navigation": {
+                "assets": [
+                  {
+                    "bytes": 8775,
+                    "observed_at": "2026-10-31T15:43:55.887920+00:00",
+                    "path": "/demo.css",
+                    "sha256": "7a1e73a926f230cc61ec3398ee135bf8370a875b44cb54783faa6c8ec2891b09",
+                    "source_match": true,
+                    "status": 200
+                  },
+                  {
+                    "bytes": 5300,
+                    "observed_at": "2026-10-31T15:43:55.917898+00:00",
+                    "path": "/chat-widget.css",
+                    "sha256": "e9be468cb6119a5997cceee8630887973150b5e0f4c755f9491e73de82e20dfd",
+                    "source_match": true,
+                    "status": 200
+                  },
+                  {
+                    "bytes": 15297,
+                    "observed_at": "2026-10-31T15:43:55.930334+00:00",
+                    "path": "/assistant.js",
+                    "sha256": "9493a357fe93ba29da27c6dcbedf65fe02e01901e25b3188c50223dfd7ff8477",
+                    "source_match": true,
+                    "status": 200
+                  },
+                  {
+                    "bytes": 9866,
+                    "observed_at": "2026-10-31T15:43:55.942351+00:00",
+                    "path": "/chat-widget.js",
+                    "sha256": "6c37bd91b51134ebb1aebbe1e9fe1c7c688bba09601e44dacb9cd683275d1960",
+                    "source_match": true,
+                    "status": 200
+                  },
+                  {
+                    "bytes": 17305,
+                    "observed_at": "2026-10-31T15:43:55.946281+00:00",
+                    "path": "/demo.js",
+                    "sha256": "9801816f1609d39d73e4ddd5640433d42fdbfa108a9584ae6d50235cf47eb429",
+                    "source_match": true,
+                    "status": 200
+                  }
+                ],
+                "page_errors": 0,
+                "request_failures": 0
+              },
+              "health": {
+                "requests": [
+                  {
+                    "elapsed_seconds": 38.623,
+                    "status": 200
+                  }
+                ],
+                "status": "passed"
+              },
+              "observed_at": "2026-10-31T15:43:17.031679+00:00",
+              "origin": "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io",
+              "sign_in": {
+                "account_visible": true,
+                "own_content_visible": true,
+                "status": "passed"
+              },
+              "sign_in_http_status": 200
+            }
+          },
+          "attempts": {
+            "employee": 0,
+            "resident": 1
+          },
+          "execution": "running",
+          "source_head": "4512193276f18c474af42e37a3cc27357eeef017",
+          "started_at": "2026-10-31T15:42:51.045838+00:00",
+          "task_id": "3a44be57-db3a-46d1-b9e4-fe82bd7c74e7"
+        },
+        {
+          "apps": {
+            "employee": {
+              "error_type": "ValueError",
+              "first_navigation": {
+                "assets": [],
+                "page_errors": 0,
+                "request_failures": 0
+              },
+              "health": {
+                "requests": [
+                  {
+                    "elapsed_seconds": 24.016,
+                    "status": 200
+                  }
+                ],
+                "status": "passed"
+              },
+              "observed_at": "2026-10-31T15:42:51.499956+00:00",
+              "origin": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io",
+              "reason": "bounded_check_error",
+              "status": "failed"
+            },
+            "resident": {
+              "chat_geometry": {
+                "after_height": {
+                  "contained": true,
+                  "height": 448,
+                  "page_overflow": false,
+                  "width": 1248,
+                  "x": 16,
+                  "y": 364
+                },
+                "after_width": {
+                  "contained": true,
+                  "height": 630,
+                  "page_overflow": false,
+                  "width": 1248,
+                  "x": 16,
+                  "y": 182
+                },
+                "before": {
+                  "contained": true,
+                  "height": 630,
+                  "page_overflow": false,
+                  "width": 448,
+                  "x": 816,
+                  "y": 182
+                },
+                "close_reopen_passed": true,
+                "contained_no_overflow": true,
+                "dock_passed": true,
+                "docked": {
+                  "contained": true,
+                  "height": 900,
+                  "page_overflow": false,
+                  "width": 1254,
+                  "x": 26,
+                  "y": 0
+                },
+                "resident_acceptance_helper": "checks.resident_assistant_browser_check.open_chat",
+                "resize_changed": true,
+                "status": "passed",
+                "undock_passed": true,
+                "viewports": [
+                  {
+                    "contained": true,
+                    "height": 448,
+                    "page_overflow": false,
+                    "viewport": [
+                      390,
+                      844
+                    ],
+                    "width": 358,
+                    "x": 16,
+                    "y": 308
+                  },
+                  {
+                    "contained": true,
+                    "height": 448,
+                    "page_overflow": false,
+                    "viewport": [
+                      1280,
+                      900
+                    ],
+                    "width": 1248,
+                    "x": 16,
+                    "y": 364
+                  }
+                ]
+              },
+              "chat_send": {
+                "reason": "geometry_only_no_own_case_ai_consent",
+                "status": "not_run"
+              },
+              "first_navigation": {
+                "assets": [
+                  {
+                    "bytes": 8775,
+                    "observed_at": "2026-10-31T15:43:55.887920+00:00",
+                    "path": "/demo.css",
+                    "sha256": "7a1e73a926f230cc61ec3398ee135bf8370a875b44cb54783faa6c8ec2891b09",
+                    "source_match": true,
+                    "status": 200
+                  },
+                  {
+                    "bytes": 5300,
+                    "observed_at": "2026-10-31T15:43:55.917898+00:00",
+                    "path": "/chat-widget.css",
+                    "sha256": "e9be468cb6119a5997cceee8630887973150b5e0f4c755f9491e73de82e20dfd",
+                    "source_match": true,
+                    "status": 200
+                  },
+                  {
+                    "bytes": 15297,
+                    "observed_at": "2026-10-31T15:43:55.930334+00:00",
+                    "path": "/assistant.js",
+                    "sha256": "9493a357fe93ba29da27c6dcbedf65fe02e01901e25b3188c50223dfd7ff8477",
+                    "source_match": true,
+                    "status": 200
+                  },
+                  {
+                    "bytes": 9866,
+                    "observed_at": "2026-10-31T15:43:55.942351+00:00",
+                    "path": "/chat-widget.js",
+                    "sha256": "6c37bd91b51134ebb1aebbe1e9fe1c7c688bba09601e44dacb9cd683275d1960",
+                    "source_match": true,
+                    "status": 200
+                  },
+                  {
+                    "bytes": 17305,
+                    "observed_at": "2026-10-31T15:43:55.946281+00:00",
+                    "path": "/demo.js",
+                    "sha256": "9801816f1609d39d73e4ddd5640433d42fdbfa108a9584ae6d50235cf47eb429",
+                    "source_match": true,
+                    "status": 200
+                  }
+                ],
+                "page_errors": 0,
+                "request_failures": 0
+              },
+              "health": {
+                "requests": [
+                  {
+                    "elapsed_seconds": 38.623,
+                    "status": 200
+                  }
+                ],
+                "status": "passed"
+              },
+              "observed_at": "2026-10-31T15:43:17.031679+00:00",
+              "origin": "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io",
+              "sign_in": {
+                "account_visible": true,
+                "own_content_visible": true,
+                "status": "passed"
+              },
+              "sign_in_http_status": 200
+            }
+          },
+          "attempts": {
+            "employee": 0,
+            "resident": 1
+          },
+          "execution": "completed",
+          "finished_at": "2026-10-31T15:44:00.925125+00:00",
+          "source_head": "4512193276f18c474af42e37a3cc27357eeef017",
+          "started_at": "2026-10-31T15:42:51.045838+00:00",
+          "task_id": "3a44be57-db3a-46d1-b9e4-fe82bd7c74e7"
+        }
+      ],
+      "source_head": "4512193276f18c474af42e37a3cc27357eeef017",
+      "started_at": "2026-10-31T15:42:51.045838+00:00",
+      "task_id": "3a44be57-db3a-46d1-b9e4-fe82bd7c74e7"
+    }
+  ],
+  "source_head": "4512193276f18c474af42e37a3cc27357eeef017",
+  "started_at": "2026-10-31T15:42:51.045838+00:00",
+  "task_id": "3a44be57-db3a-46d1-b9e4-fe82bd7c74e7"
+}

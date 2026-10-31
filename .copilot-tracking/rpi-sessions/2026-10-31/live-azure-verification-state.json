@@ -1,0 +1,47 @@
+{
+  "task_id": "3a44be57-db3a-46d1-b9e4-fe82bd7c74e7",
+  "task_slug": "live-azure-verification",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-31/live-azure-verification-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-31/live-azure-verification-plan.md",
+    "details": ".copilot-tracking/details/2026-10-31/live-azure-verification-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-31/live-azure-verification-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-31/live-azure-verification-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-31/live-azure-verification-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Execute full RPI loop, bounded live checks and issue/PR publication",
+      "status": "confirmed",
+      "evidence": "Explicit user request 2026-10-31; no Azure mutations; maximum two sign-in attempts per account"
+    },
+    {
+      "decision": "Critique executed once; verdict Revise; PC-002/003/004 directly applied; PC-001 rejected as unsupported runtime prohibition",
+      "status": "disposed",
+      "evidence": ".copilot-tracking/plans/2026-10-31/live-azure-verification-plan.md#critique-disposition"
+    },
+    {
+      "decision": "Original independent Review executed once: Complete / Residual work; no unresolved implementation defect",
+      "status": "completed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-31/live-azure-verification-review.md; RV-001 employee identity, RV-002 economics, RV-003 publication"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "employee-independent-identity",
+      "summary": "Independent directory lookup exit1/access denied; zero employee attempts and authenticated surfaces blocked",
+      "resolution": "Authorized independent tenant/object attestation before guarded employee verification; tracked on #570"
+    }
+  ],
+  "next_action": {"phase": "Follow-up", "action": "P03 publication: final commit/full gate/receipt, independent exact-head assessment, non-forced push and main Refs PR; then await selected follow-up. Frozen pre-publication snapshot; final receipt and publication state external."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Independent employee identity and authenticated live verification", "rationale": "Unblocks chat/map/case/tabs/capacity/metering without weakening admission", "evidence": "#570; live results directory exit1/access denied"},
+    {"rank": 2, "task": "Local full-gate Chromium pathname admission or owned short scratch", "rationale": "Reproducible bounded tooling fix avoids late expensive full-gate failures", "evidence": "#608; failed external full receipt and 0157-browser.log"},
+    {"rank": 3, "task": "Live AI financial/quality evidence", "rationale": "Distinct #432 criteria cannot be established from UI or source-only tests", "evidence": "#432; current metering live observation blocked"}
+  ]
+}
