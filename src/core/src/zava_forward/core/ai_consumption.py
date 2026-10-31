@@ -35,7 +35,8 @@ EVENT_FIELDS = {
     "completed": "id at tokens charge outcome held returned_model",
     "alert": "owner root attempt reason route at",
     "output": "root output eligible at",
-    "review": "output action at",
+    "review": "output action at revision intent",
+    "review-intent": "id output action at revision",
     "billing": "id allocation budget start end currency billed tolerance complete synthetic",
 }
 
@@ -186,6 +187,24 @@ class Consumption:
             fields["at"] = self.port.now(db)
         self.port.event(db, PARTITION, schema=SCHEMA, kind=kind, **fields)
 
+    @staticmethod
+    def _currency_hold(
+        records: list[dict[str, Any]], budgets: set[str], pid: str, currency: str | None
+    ) -> str | None:
+        prices = {r["id"]: r for r in records if r["kind"] == "price"}
+        for r in records:
+            if (
+                r["kind"] == "authority"
+                and r["price"] != pid
+                and budgets.intersection(b["id"] for b in r["budgets"])
+            ):
+                other = prices.get(r["price"])
+                if currency is None or other is None:
+                    return "budget-currency-unknown"
+                if currency != other["currency"]:
+                    return "budget-currency-mismatch"
+        return None
+
     def price(
         self,
         *,
@@ -230,7 +249,16 @@ class Consumption:
             raise ValueError("Cached rate must not exceed the conservative input rate.")
         pid = reference(json.dumps(body, sort_keys=True))
         with self.port.transaction() as db:
-            if not any(r.get("id") == pid for r in self._read(db)):
+            records = self._read(db)
+            budgets = {
+                b["id"]
+                for r in records
+                if r["kind"] == "authority" and r["price"] == pid
+                for b in r["budgets"]
+            }
+            if self._currency_hold(records, budgets, pid, currency):
+                raise ValueError("Shared budget currencies are conflicting or unresolved.")
+            if not any(r.get("id") == pid for r in records):
                 self._event(db, "price", id=pid, **body)
         return pid
 
@@ -257,7 +285,7 @@ class Consumption:
             raise ValueError("Finite request limits and period required.")
         if not 1 <= len(budgets) <= 8:
             raise ValueError("Finite period and task budgets are required.")
-        selected = []
+        selected: list[dict[str, Any]] = []
         for b in budgets:
             if set(b) != {"id", "calls", "tokens", "amount"}:
                 raise ValueError("Unexpected budget fields.")
@@ -293,19 +321,16 @@ class Consumption:
                     raise ValueError("Authority is immutable; budget identities cannot reset.")
                 return aid
             prices = {r["id"]: r for r in records if r["kind"] == "price"}
+            if self._currency_hold(
+                records, {b["id"] for b in selected}, price, prices.get(price, {}).get("currency")
+            ):
+                raise ValueError("Shared budget currencies are conflicting or unresolved.")
             for b in selected:
                 for r in records:
                     if r["kind"] == "authority":
                         old = next((v for v in r["budgets"] if v["id"] == b["id"]), None)
                         if old is not None and old != b:
                             raise ValueError("Existing budget limits are immutable.")
-                        if (
-                            old is not None
-                            and price in prices
-                            and r["price"] in prices
-                            and prices[price]["currency"] != prices[r["price"]]["currency"]
-                        ):
-                            raise ValueError("A shared budget cannot mix currencies.")
             if any(
                 r["kind"] == "authority"
                 and r["capability"] == capability
@@ -397,6 +422,10 @@ class Consumption:
                 if price and input_bound is not None
                 else None
             )
+            if authority and price is not None and not held:
+                held = self._currency_hold(
+                    records, {b["id"] for b in authority["budgets"]}, price["id"], price["currency"]
+                )
             if authority and not held:
                 completions = {r["id"]: r for r in records if r["kind"] == "completed"}
                 for budget in authority["budgets"]:
@@ -481,6 +510,23 @@ class Consumption:
                 if now >= reserved["at"] + 40
                 else None
             )
+            completions = {r["id"]: r for r in records if r["kind"] == "completed"}
+            if not held and any(
+                r["kind"] == "reserved"
+                and set(reserved["budgets"]).intersection(r["budgets"])
+                and (
+                    (r["id"] in completions and completions[r["id"]]["held"])
+                    or (r["id"] not in completions and now >= r["at"] + 40)
+                )
+                for r in records
+            ):
+                held = "liability-unknown"
+            if not held:
+                held = self._currency_hold(
+                    records, set(reserved["budgets"]), price["id"], price["currency"]
+                )
+            if not held and rid in completions:
+                held = "duplicate-attempt"
             if held:
                 self._event(
                     db,
@@ -582,7 +628,65 @@ class Consumption:
             with self.port.transaction() as conn:
                 write(conn)
 
-    def review(self, output: str, action: str, *, db: Any = None) -> None:
+    @staticmethod
+    def _review_revision(records: list[dict[str, Any]], oid: str) -> int:
+        return count(
+            max(
+                (
+                    r["revision"]
+                    for r in records
+                    if r["kind"] in ("review", "review-intent") and r["output"] == oid
+                ),
+                default=0,
+            )
+        )
+
+    @staticmethod
+    def _pending_review(records: list[dict[str, Any]], oid: str, action: str) -> str | None:
+        intents = [r for r in records if r["kind"] == "review-intent" and r["output"] == oid]
+        latest = max(intents, key=lambda r: r["revision"], default=None)
+        reviewed = max(
+            (r["revision"] for r in records if r["kind"] == "review" and r["output"] == oid),
+            default=0,
+        )
+        return (
+            opaque(latest["id"])
+            if latest and latest["revision"] > reviewed and latest["action"] == action
+            else None
+        )
+
+    def pending_review(self, output: str, action: str) -> str | None:
+        if action not in ("accept", "edit-accept", "reject"):
+            raise ValueError("Closed review disposition required.")
+        with self.port.transaction() as db:
+            return self._pending_review(self._read(db), reference(output), action)
+
+    def review_intent(self, output: str, action: str) -> str:
+        if action not in ("accept", "edit-accept", "reject"):
+            raise ValueError("Closed review disposition required.")
+        oid = reference(output)
+        with self.port.transaction() as db:
+            records = self._read(db)
+            if not any(r["kind"] == "output" and r["output"] == oid for r in records):
+                raise ValueError("Output attribution is missing; economics remains incomplete.")
+            pending = self._pending_review(records, oid, action)
+            if pending:
+                return pending
+            iid = reference(uuid.uuid4().hex)
+            self._event(
+                db,
+                "review-intent",
+                id=iid,
+                output=oid,
+                action=action,
+                at=self.port.now(db),
+                revision=count(self._review_revision(records, oid) + 1),
+            )
+            return iid
+
+    def review(
+        self, output: str, action: str, *, db: Any = None, intent: str | None = None
+    ) -> None:
         if action not in ("accept", "edit-accept", "reject"):
             raise ValueError("Closed review disposition required.")
         oid = reference(output)
@@ -591,13 +695,41 @@ class Consumption:
             records = self._read(conn)
             if not any(r["kind"] == "output" and r["output"] == oid for r in records):
                 raise ValueError("Output attribution is missing; economics remains incomplete.")
-            previous = next(
-                (r for r in records if r["kind"] == "review" and r["output"] == oid), None
+            if intent is not None:
+                opaque(intent)
+                pending = self._pending_review(records, oid, action)
+                if pending != intent:
+                    if any(
+                        r["kind"] == "review"
+                        and r["intent"] == intent
+                        and r["output"] == oid
+                        and r["action"] == action
+                        for r in records
+                    ):
+                        return
+                    raise ValueError("Review intent does not match the pending attribution.")
+            previous = max(
+                (r for r in records if r["kind"] == "review" and r["output"] == oid),
+                key=lambda r: r["revision"],
+                default=None,
             )
-            if previous and previous["action"] != action:
-                raise ValueError("Review attribution is immutable.")
-            if previous is None:
-                self._event(conn, "review", output=oid, action=action, at=self.port.now(conn))
+            revision = self._review_revision(records, oid)
+            if (
+                intent is None
+                and previous
+                and previous["action"] == action
+                and previous["revision"] == revision
+            ):
+                return
+            self._event(
+                conn,
+                "review",
+                output=oid,
+                action=action,
+                at=self.port.now(conn),
+                revision=count(revision + 1),
+                intent=intent,
+            )
 
         if db is not None:
             write(db)
@@ -672,7 +804,11 @@ class Consumption:
             r["id"]: r for r in records if r["kind"] == "completed" and r["at"] <= cutoff
         }
         outputs = {r["root"]: r for r in records if r["kind"] == "output" and r["at"] <= cutoff}
-        reviews = {r["output"]: r for r in records if r["kind"] == "review" and r["at"] <= cutoff}
+        reviews: dict[str, Any] = {}
+        for r in records:
+            if r["kind"] == "review" and r["at"] <= cutoff:
+                if r["revision"] > reviews.get(r["output"], {}).get("revision", 0):
+                    reviews[r["output"]] = r
         roots = {r["root"] for r in calls}
         accepted = sum(
             root in outputs
@@ -682,6 +818,17 @@ class Consumption:
         )
         unknown = sum(r["id"] not in completions or completions[r["id"]]["held"] for r in calls)
         unjoined = len(roots - outputs.keys())
+        cohort_outputs = {o["output"] for o in outputs.values() if o["root"] in roots}
+        unjoined_reviews = len(
+            {
+                r["output"]
+                for r in records
+                if r["kind"] == "review-intent"
+                and r["at"] <= cutoff
+                and r["output"] in cohort_outputs
+                and r["revision"] > reviews.get(r["output"], {}).get("revision", 0)
+            }
+        )
         prices = {r["id"]: r for r in records if r["kind"] == "price"}
         currencies = {prices[r["price"]]["currency"] for r in calls}
         projected = (
@@ -702,7 +849,7 @@ class Consumption:
         ]
         bill = bills[0] if len(bills) == 1 else None
         cost, ratio, variance, status = UNKNOWN, UNKNOWN, UNKNOWN, "unreconciled"
-        if bill and projected is not None and not unjoined:
+        if bill and projected is not None and not unjoined and not unjoined_reviews:
             billed = amount(bill["billed"])
             cost = format(billed, "f")
             if accepted:
@@ -770,7 +917,9 @@ class Consumption:
         return dict(
             schema=SCHEMA,
             period=dict(start=start, end=end, as_of=as_of, basis="call-time UTC [start,end)"),
-            coverage="incomplete" if unknown or unjoined else "recorded-ledger-only",
+            coverage="incomplete"
+            if unknown or unjoined or unjoined_reviews
+            else "recorded-ledger-only",
             coverage_gaps=[
                 "Historical calls and independent resident accounting are not financially joined.",
                 "Supplied price/billing/quality evidence is not verified by this software.",
@@ -792,6 +941,7 @@ class Consumption:
                 evidence_label="recorded usage; not an authorised held-out batch",
             ),
             unjoined_outputs=unjoined,
+            unjoined_reviews=unjoined_reviews,
             accepted_proposals=accepted,
             denominator="human-accepted eligible proposal outputs in call-time cohort",
             token_cost=cost,

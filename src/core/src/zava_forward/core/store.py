@@ -910,6 +910,9 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             if rec["user"] != user["email"]:
                 raise PermissionError("This suggestion was made for someone else.")
             if rec["status"] != "Proposed":
+                repaired = self._repair_ai_review(rec, action, self.REC_ACTIONS[action])
+                if repaired is not None:
+                    return self._rec_view(repaired, user)
                 raise ValueError("This suggestion has already been answered.")
             if action != "reject" and rec["source"] == "ai":
                 if not self.ai_epoch_current(rec) or self.continuity_suspension("priority"):
@@ -933,15 +936,42 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                         final.append(dict(case_id=cid, reason=str(i.get("reason", ""))[:300]))
                     if not final or len(final) > 10:
                         raise ValueError("Keep between 1 and 10 cases.")
+                metered = bool(rec.get("meter_root"))
+                disposition = "edit-accept" if action == "edit" else action
+                intent = self.ai.consumption.review_intent(rec_id, disposition) if metered else None
                 rec.update(status=self.REC_ACTIONS[action], final_items=final, reason=reason,
                            resolved_by=user["email"], resolved_at=datetime.now().isoformat(timespec="seconds"))
                 ids = ",".join(i["case_id"] for i in final) if final else "-"
                 self.audit(user["email"], f"ai_priority_{action}", "-", f"{rec_id} {reason} cases={ids}".strip())
                 self.save()
                 mark_priority_committed(self)
-                if rec.get("meter_root"):
-                    self.ai.consumption.review(rec_id, "edit-accept" if action == "edit" else action)
+                if metered:
+                    self.ai.consumption.review(rec_id, disposition, intent=intent)
                 return self._rec_view(rec, user)
+
+    def _repair_ai_review(self, rec, action, status):
+        """Repair only financial attribution confirmed by the persisted human disposition."""
+        root = rec.get("meter_root") or rec.get("envelope", {}).get("meter_root")
+        if not root or rec["status"] != status:
+            return None
+        if hasattr(self, "db"):
+            with self.dblock:
+                row = self.db.execute("SELECT body FROM recommendations WHERE id=?", (rec["id"],)).fetchone()
+            saved = json.loads(row[0]) if row else None
+        else:
+            with open(self.live_path, encoding="utf-8") as source:
+                saved = next((r for r in json.load(source)["recommendations"] if r["id"] == rec["id"]), None)
+        if not saved or saved["status"] != status or saved["user"] != rec["user"]:
+            return None
+        saved_root = saved.get("meter_root") or saved.get("envelope", {}).get("meter_root")
+        if saved_root != root or (saved.get("kind") == "ai_task" and saved.get("reviewer_action") != action):
+            return None
+        disposition = "edit-accept" if action == "edit" else action
+        intent = self.ai.consumption.pending_review(rec["id"], disposition)
+        if intent is None:
+            return None
+        self.ai.consumption.review(rec["id"], disposition, intent=intent)
+        return saved
 
     # ---- funding: a person approves and submits; the system never does
     FUND_FLOW = ("Not started", "To prepare", "Draft ready", "Approved", "Submitted", "Confirmed")

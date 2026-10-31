@@ -343,6 +343,9 @@ def review(store, user, rec_id, action, reason="", text=None):
         if rec["status"] == QUARANTINED:
             raise PermissionError("This AI output was quarantined after a suspension or restart and cannot be relied on.")
         if rec["status"] != NOT_REVIEWED:
+            repaired = store._repair_ai_review(rec, action, REVIEW_ACTIONS[action])
+            if repaired is not None:
+                return repaired
             raise ValueError("This AI output has already been reviewed.")
         if action != "reject" and store.continuity_suspension(rec["task"]):
             raise PermissionError(store.continuity_block(rec["task"]))
@@ -367,6 +370,9 @@ def review(store, user, rec_id, action, reason="", text=None):
             store.audit(user["email"], "ai_review_hold", "-", f"{rec['task']} {rec_id}")
             store.save()
             raise ValueError("The source changed since this proposal; it is on hold for a fresh review.")
+        metered = bool(rec.get("envelope", {}).get("meter_root"))
+        disposition = "edit-accept" if action == "edit" else action
+        intent = store.ai.consumption.review_intent(rec_id, disposition) if metered else None
         rec.update(status=REVIEW_ACTIONS[action], reviewer_action=action, reviewer_reason=reason,
                    override_text=str(text)[:6000] if action == "edit" and text is not None else None,
                    resolved_by=user["email"], resolved_at=_now())
@@ -378,8 +384,8 @@ def review(store, user, rec_id, action, reason="", text=None):
         store.audit(user["email"], f"ai_review_{action}", rec["case_ids"][0] if len(rec["case_ids"]) == 1 else "-",
                     f"{rec['task']} {rec_id} {reason}".strip())
         store.save()
-        if rec.get("envelope", {}).get("meter_root"):
-            store.ai.consumption.review(rec_id, "edit-accept" if action == "edit" else action)
+        if metered:
+            store.ai.consumption.review(rec_id, disposition, intent=intent)
         return dict(rec)
 
 

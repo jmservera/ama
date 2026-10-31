@@ -292,6 +292,30 @@ class ConsumptionTests(unittest.TestCase):
                 configuration=reference("other-config"),
                 price=self.add_price(currency="GBP"),
             )
+        with patch.object(self.ledger, "_event"):
+            deferred = self.add_price(input_rate="3")
+        budgets = [dict(id=reference("deferred-budget"), calls=10, tokens=1000, amount="1")]
+        self.authorize(
+            authority="deferred",
+            configuration=reference("deferred-config"),
+            price=deferred,
+            budgets=budgets,
+        )
+        with self.assertRaisesRegex(ValueError, "unresolved"):
+            self.authorize(
+                authority="deferred-gbp",
+                configuration=reference("deferred-gbp-config"),
+                price=self.add_price(currency="GBP"),
+                budgets=budgets,
+            )
+        self.assertEqual(self.add_price(input_rate="3"), deferred)
+        with self.assertRaisesRegex(ValueError, "currencies"):
+            self.authorize(
+                authority="deferred-gbp",
+                configuration=reference("deferred-gbp-config"),
+                price=self.add_price(currency="GBP"),
+                budgets=budgets,
+            )
 
     def test_exact_budget_comparison_and_thirty_decimal_charge(self) -> None:
         budget = "10000000000000000000000000000000"
@@ -370,6 +394,36 @@ class ConsumptionTests(unittest.TestCase):
         self.assertTrue(next(r for r in self.records() if r["kind"] == "completed")["held"])
         with self.assertRaisesRegex(DispatchHeld, "liability-unknown"):
             self.ledger.reserve(self.context("late-retry"), MODEL, 1000, 100)
+
+    def test_pre_network_check_observes_intersecting_budget_hold(self) -> None:
+        self.authorize()
+        waiting = self.ledger.reserve(self.context("waiting"), MODEL, 1000, 100)
+        other = self.ledger.reserve(self.context("other"), MODEL, 1000, 100)
+        self.complete(other, cached_tokens=None)
+        with self.assertRaisesRegex(DispatchHeld, "liability-unknown"):
+            self.ledger.dispatch_check(waiting)
+        self.assertEqual(self.report()["owned_alerts"][-1]["reason"], "liability-unknown")
+
+    def test_pending_legacy_review_blocks_ratio_until_recoverable_ack(self) -> None:
+        self.accepted()
+        ticket = self.ledger.reserve(
+            self.context("legacy", root=reference("legacy")), MODEL, 1000, 100
+        )
+        self.complete(ticket)
+        self.ledger.output(reference("legacy"), "legacy-output", eligible=True)
+        self.bill(billed="0.000270")
+        intent = self.ledger.review_intent("legacy-output", "accept")
+        self.assertEqual(self.ledger.review_intent("legacy-output", "accept"), intent)
+        self.assertEqual(self.ledger.pending_review("legacy-output", "accept"), intent)
+        self.assertEqual(self.report()["unjoined_reviews"], 1)
+        self.assertEqual(self.report()["coverage"], "incomplete")
+        self.assertEqual(self.report()["cost_per_accepted_proposal"], "Unknown")
+        self.ledger.review("legacy-output", "accept", intent=intent)
+        self.ledger.review("legacy-output", "accept", intent=intent)
+        self.assertIsNone(self.ledger.pending_review("legacy-output", "accept"))
+        self.assertEqual(self.report()["unjoined_reviews"], 0)
+        self.assertEqual(self.report()["accepted_proposals"], 2)
+        self.assertEqual(self.report()["cost_per_accepted_proposal"], "0.000135")
 
     def test_known_overrun_records_actual_charge_and_alert(self) -> None:
         self.authorize()
@@ -450,6 +504,13 @@ class ConsumptionTests(unittest.TestCase):
         self.assertEqual(result["retries"], 1)
         self.assertEqual(result["accepted_proposals"], 1)
         self.assertEqual(result["projected_token_charge"], "0.000270")
+        historical_end = "2026-10-31T12:00:01Z"
+        self.port.clock += 2
+        self.ledger.review("one", "reject")
+        self.assertEqual(self.report()["accepted_proposals"], 0)
+        historical = self.ledger.report(start=START, end=historical_end, as_of=historical_end)
+        self.assertEqual(historical["accepted_proposals"], 1)
+        self.assertEqual(len([r for r in self.records() if r["kind"] == "review"]), 2)
 
     def test_unjoined_and_failed_review_are_not_accepted(self) -> None:
         self.authorize()
