@@ -206,6 +206,31 @@ tool unavailable; higher repository explicit-path safety/staged diff and
 privacy-safe identity/Refs/trailer readback apply instead.
 No push/PR/merge/amend/rebase planned or authorized.
 
+## Local Evidence Persistence and Closeout
+
+`PYTHONDONTWRITEBYTECODE=1 python3 ROOT/commit.py` exit0. Eight original
+dated artifacts, including the single Review, committed locally as
+524c1fa892a1e913e3413e24f50c0f24b42a7140,
+`chore(ops): redeploy demo sites from main 4cb5964f`.
+Fresh gh api user, computed repository-local noreply author/committer,
+explicit eight-path staging, JSON/sensitive-marker/whitespace checks and exact
+message/Refs #568,#520,#570/Copilot trailer/email/clean-tree readback passed.
+External local-commit-proof.json retained. No push/PR/merge/amend/history rewrite.
+
+All P01/P02/P03 executed; manual requested full loop ends after administrative
+persistence. Review's original Complete / Not accepted remains unchanged:
+live exact-main deployment/preservation is proved, whole requested cache/
+employee-widget acceptance is not. Signed-in/model/identity/human acceptance,
+resident AI activation and full publication gates remain unclaimed.
+Resident AI OFF; no new RBAC/endpoints/public SQL, .env/private dataset,
+secret disclosure or RG deletion. Backups/attempt history remain private/local.
+
+This final plan/details/state/changes administrative status reconciliation is
+persisted by `PYTHONDONTWRITEBYTECODE=1 python3 ROOT/commit.py --closure`
+with the same exact-path identity/Refs/trailer/readback safeguards. Actual final
+commit proof stays external in closure-commit-proof.json and session events,
+not predeclared here. No later operational correction or second Review.
+
 ## Known Acceptance Limits
 
 Exact current main versions rendered asset URLs but returns no-cache,

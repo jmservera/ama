@@ -5,7 +5,7 @@ ms.date: 2026-10-31
 
 Task 975bbf93-de84-47b4-ad5d-b55583f970c9; demo-sites-redeploy-1031.
 Status: operational implementation complete; one independent Review Complete /
-Not accepted against whole requested acceptance. Local persistence pending.
+Not accepted against whole requested acceptance. Local persistence complete.
 
 ## Executive Summary
 
@@ -106,7 +106,7 @@ rollback/fallback branches as unproven. No complete local publication gate claim
 ### P03 Anonymous verification and persistence
 
 * [x] P03-T01 Warm curl/browser, cache/version/dock checks and final invariants.
-* [ ] P03-T02 Export, one independent Review, dispositions and local commit.
+* [x] P03-T02 Export, one independent Review, dispositions and local commit.
 
 ## Critique Disposition
 
@@ -149,4 +149,8 @@ Changes: .copilot-tracking/changes/2026-10-31/demo-sites-redeploy-1031-changes.m
 RV001 cache and RV002 signed-in employee widget routed to distinct follow-ups;
 RV003 undock action lacks state assertion, later evidence reconciliation.
 Archive corrected-helper and registry raw-body limitations retained. No repeat
-Review or current-task implementation; P03-T02 local administrative commit next.
+Review or current-task implementation; P03-T02 local administrative commit verified.
+Original eight evidence artifacts and Review committed locally as524c1fa8.
+All P01/P02/P03 tasks executed; requested manual loop stopped with acceptance
+gaps retained. Administrative final status is persisted separately, not a new
+implementation/Review or a changed original verdict. No push.
