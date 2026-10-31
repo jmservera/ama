@@ -22,8 +22,10 @@ const employeeChat = (() => {
   }
   function install() {
     const button = launcher();
-    button.hidden = !me || me.user.role === "Contractor";
-    if (button.hidden) return;
+    const unauthorised = !me || me.user.role === "Contractor";
+    if (unauthorised) button.hidden = true;
+    else if (!widget) button.hidden = false;
+    if (unauthorised) return;
     if (typeof window.ChatWidget?.create !== "function") {
       button.hidden = true;
       const session = me;

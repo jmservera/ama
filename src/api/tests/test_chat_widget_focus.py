@@ -259,6 +259,9 @@ ui.dispose();
     assert.equal(h.nodes().root, ui.root, "Refresh must retain conversation identity");
     assert.equal(ui.input.value, "Retained draft");
   }
+  h.launcher.hidden = true;
+  h.employee.install();
+  assert.equal(h.launcher.hidden, true, "Install must keep a docked launcher hidden");
   h.employee.reset();
 })().catch(error => { console.error(error); process.exitCode = 1; });
 """

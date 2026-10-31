@@ -22,3 +22,8 @@
 
 * CI failure: ruff format --check in src-api flagged src/api/tests/test_chat_panel.py (one long assertEqual line). Reformatted with ruff format; no behaviour change.
 * ruff check and ruff format --check pass in src/api and src/core; test_chat* tests pass (80); node --check passes for app.js, assistants.js and chat.js; mypy reports only pre-existing missing-stub errors in untouched files. Heavy gate not run.
+
+## Correction cycle 4 (PR 620 Copilot review)
+
+* Finding: a same-route refresh called employeeChat.install(), which unhid the launcher beneath a docked widget. install() now hides the launcher for unauthorised users and unhides it only when no widget exists (chat.js).
+* Regression: test_reinstall_preserves_widget_toggle_and_launcher_state asserts a hidden (docked) launcher stays hidden after install(). test_chat_widget_focus passes; ruff check, ruff format --check and node --check pass; mypy shows only pre-existing missing-stub errors. Other test_chat* modules need the installed package, not available here. Heavy gate not run.
