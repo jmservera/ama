@@ -12,10 +12,10 @@
 
 ## Executive Summary
 
-Correct the external SQL HTTP test fixture to reopen persisted capacity without
-wiping or reseeding. Keep production law-store ownership and unknown-law
-responses unchanged. Strengthen the shared regression across SQLite, file
-and real SQL Server.
+The external SQL HTTP test fixture now reopens persisted capacity without
+wiping or reseeding. Production law-store ownership and unknown-law responses
+are unchanged. The shared regression passes SQLite, file and real SQL Server;
+one independent Review is Complete / Conformant with no substantive findings.
 
 ### User Decisions and Requirements Highlights
 
@@ -88,8 +88,8 @@ None for implementation. Hosted checks and human merge approval are not local ev
 | Details | .copilot-tracking/details/2026-10-31/capacity-sql-reopen-correction-phase-details.md |
 | Critique | .copilot-tracking/reviews/plans/2026-10-31/capacity-sql-reopen-correction-plan-critique.md; executed, original Revise, findings disposed |
 | Changes | .copilot-tracking/changes/2026-10-31/capacity-sql-reopen-correction-changes.md; implementation-owned |
-| Readiness | Ready after one critique and direct dispositions |
-| Continuation | Automatic parent proceeds once critique dispositions are complete |
+| Readiness | Implementation and one independent Review complete; evidence publication remains authorized parent action |
+| Continuation | Automatic parent publishes unchanged assessed source, then awaits CI and human merge approval |
 
 ## Sources
 
@@ -99,7 +99,7 @@ None for implementation. Hosted checks and human merge approval are not local ev
 ## Phase Checklist
 
 <!-- rpi:phase id=P01 -->
-### [ ] P01: Correct fixture and verify
+### [x] P01: Correct fixture and verify
 
 * Intent: establish genuine reopening and preserved unknown authority.
 * Dependencies: completed research and final-candidate critique.
@@ -114,11 +114,11 @@ None for implementation. Hosted checks and human merge approval are not local ev
 * Details: P01-T01 in the phase-details artifact.
 
 <!-- rpi:task id=P01-T02 -->
-#### [ ] P01-T02: Run requested checks and independent Review
+#### [x] P01-T02: Run requested checks and independent Review
 
 * Run API-wide lint/format/mypy and focused SQLite/file/real-SQL procurement suites plus missing-law tests.
 * Preserve all results, update plan/details/changes, then run one independent Review.
-* Validation complete: API ruff check/format and mypy pass, 40 SQLite/file/law tests pass, 13 real SQL HTTP tests pass. Review remains pending.
+* Validation complete: API ruff check/format and mypy pass, 40 SQLite/file/law tests pass, 13 real SQL HTTP tests pass. Independent Review Complete / Conformant, zero substantive findings, at implementation HEAD 183c4ca3df7e39d6f7c83b617ca680883bd049e7.
 * Details: P01-T02 in the phase-details artifact.
 
 ## Test Ownership and Change Budget
@@ -152,5 +152,6 @@ None for implementation. Hosted checks and human merge approval are not local ev
 ## Handoff
 
 * Implementation artifact: .copilot-tracking/changes/2026-10-31/capacity-sql-reopen-correction-changes.md
-* Ready task after critique: P01-T01.
-* No ordinary user decision needed; CI and human merge approval remain separate.
+* All P01 tasks complete. Review: .copilot-tracking/reviews/logs/2026-10-31/capacity-sql-reopen-correction-review.md.
+* Implementation committed at 183c4ca3df7e39d6f7c83b617ca680883bd049e7; final evidence-only commit and non-force push remain authorized parent actions.
+* No ordinary user decision or additional source work needed; await CI and human merge approval, retain Refs #523.

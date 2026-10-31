@@ -12,7 +12,7 @@
 
 | Phase ID | Name | Status | Detail sections |
 | --- | --- | --- | --- |
-| P01 | Correct fixture and verify | P01-T01 complete; validation complete; Review pending | P01-T01, P01-T02 |
+| P01 | Correct fixture and verify | Complete; one Review Complete / Conformant | P01-T01, P01-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Correct fixture and verify
@@ -48,4 +48,5 @@
 * Completion evidence: exact exit codes/test counts, one independent rpi-review artifact and unmodified protected resource identity.
 * CI publication boundary: do not run or claim the complete local gate, per explicit caller direction; push reviewed correction, no merge.
 * Unresolved items: hosted/human approval pending; no fabricated receipt.
-* Validation complete: API-wide ruff check and format pass (66 formatted files), mypy passes (125 source files), 40 SQLite/file/law tests and 13 SQL HTTP tests pass with zero skips. Independent Review is the remaining task boundary.
+* Validation complete: API-wide ruff check and format pass (66 formatted files), mypy passes (125 source files), 40 SQLite/file/law tests and 13 SQL HTTP tests pass with zero skips. Independent Review Complete / Conformant, zero substantive findings, recorded at .copilot-tracking/reviews/logs/2026-10-31/capacity-sql-reopen-correction-review.md.
+* Assessed implementation HEAD: 183c4ca3df7e39d6f7c83b617ca680883bd049e7. Subsequent closeout is evidence-only; reviewed source hashes must match before final non-force publication.

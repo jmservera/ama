@@ -11,11 +11,11 @@
 
 ## Execution Status
 
-* Status: In progress.
+* Status: Complete (implementation and one independent Review).
 * Declared scope: Full plan implementation.
-* Completed markers: P01-T01.
-* Remaining: P01-T02 (independent Review only), P01.
-* Validation complete; source boundary ready for Review.
+* Completed markers: P01-T01, P01-T02, P01.
+* Remaining active implementation markers: none.
+* Publication: final evidence-only commit and explicitly authorized non-force push follow this closeout.
 
 ## Execution Summary
 
@@ -41,9 +41,9 @@ as a worker-only execution restriction not applicable to this parent.
 ## Implementation-Time Plan and Detail Updates
 
 No implementation divergence. Plan Ready after direct critique dispositions.
-P01-T01 checked immediately after focused validation; P01-T02 records passed
-validation and remains open only for the one independent Review. Plan/details
-and changes agree on the assessed source boundary and outstanding hosted gates.
+P01-T01 checked immediately after focused validation; P01-T02 and P01 checked
+after the single independent Review completed. Plan/details and changes agree
+on the assessed source boundary and outstanding hosted/human gates.
 
 ## Validation Record
 
@@ -61,6 +61,7 @@ installed, so no pip install or dependency change was necessary.
 | Runtime SQL runner, test_mssqlstore.MssqlProcurementApi -q | Real SQL HTTP procurement, including exact failed regression | Passed | 13 tests, 33.305s, zero skips; exit 0 |
 | git diff --check | Changed files | Passed | exit 0 |
 | Complete local gate | Publication | Not run | Explicit caller says CI is the gate |
+| Independent rpi-review | Implementation HEAD 183c4ca3df7e39d6f7c83b617ca680883bd049e7 | Complete / Conformant | Zero substantive findings; original canonical Review preserved |
 
 SQL runner uses only session-created ama_605_reopen_20261031_0845339f database
 on protected ama-350-feedback-sql. No secret is stored in evidence.
@@ -69,14 +70,16 @@ Protected container identity after validation:
 running the protected 2022-latest image. No image/container removal or restart.
 The original adverse SQL baseline and corrected file-selector invocation are
 preserved in research, not rewritten as successful runs.
+After Review, removed only session-created database
+ama_605_reopen_20261031_0845339f. Protected container/image remain untouched.
 
 ## Pre-Review Reconciliation
 
-* Plan/details/changes: current; P01-T01 completed, P01-T02 validation complete and Review remaining.
+* Plan/details/changes: current; P01-T01 completed and P01-T02 validation complete before Review; all markers now checked after the original Review.
 * Completed-work evidence: three-file test/documentation correction and tool counts above.
 * Blockers: none for bounded Review; hosted/human approval remains pending.
 * Follow-ups: none invented.
-* Review readiness: ready for exactly one independent assessment of the implemented source boundary and AC1-AC6; AC7 push remains a subsequent authorized publication action.
+* Original Review: .copilot-tracking/reviews/logs/2026-10-31/capacity-sql-reopen-correction-review.md, Complete / Conformant; AC7 final evidence commit/push remain subsequent authorized publication actions.
 
 ## Blockers
 
@@ -84,7 +87,8 @@ None for implementation.
 
 ## Remaining Work
 
-P01-T02 independent Review, then commit and push; no remaining source implementation.
+No remaining source implementation or routed findings. Commit final dated
+evidence and push; corrected hosted CI and human merge approval remain pending.
 
 ## Follow-Up Items
 
@@ -92,6 +96,10 @@ None.
 
 ## Return-to-Caller State
 
-Automatic parent continues to one Review. No source changes are planned after
-Review; findings, if any, route to later work. Then commit dated evidence and
-push the requested branch with CI/human approval explicitly separate.
+Automatic RPI task's Research, Plan, Implement and single Review are complete.
+No source changes after assessed implementation HEAD
+183c4ca3df7e39d6f7c83b617ca680883bd049e7; only closeout evidence follows.
+Review source hashes are checked immediately before non-force push. No
+complete local-gate receipt, hosted success, rubric score, issue closure or
+merge approval is claimed. Automatic session remains running at Follow-up,
+with CI/human approval as the supported next action and no new child task.
