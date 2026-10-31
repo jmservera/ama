@@ -1,0 +1,1028 @@
+[
+  {
+    "issue": 76,
+    "title": "Role-based task queues, case card and shared work queue",
+    "state": "OPEN",
+    "prs": [
+      325,
+      560,
+      438,
+      407,
+      401,
+      414,
+      478,
+      316,
+      406,
+      376,
+      369,
+      479,
+      347,
+      384,
+      602,
+      390,
+      554,
+      395,
+      433,
+      529
+    ],
+    "referencing_prs": [
+      325,
+      376,
+      401,
+      406,
+      407,
+      438
+    ],
+    "criteria": [
+      {
+        "index": 1,
+        "text": "Default view is a single list of the signed-in user's cases with one plain status and one next action",
+        "was_checked": true,
+        "proven": false,
+        "reason": "Previously checked engineering criterion preserved without a new tick. Parent does not close this issue because independent unchecked obligations remain.",
+        "evidence": []
+      },
+      {
+        "index": 2,
+        "text": "No perspective picker or role simulator in user views",
+        "was_checked": true,
+        "proven": false,
+        "reason": "Previously checked engineering criterion preserved without a new tick. Parent does not close this issue because independent unchecked obligations remain.",
+        "evidence": []
+      },
+      {
+        "index": 3,
+        "text": "Queue shows newly arrived work, approved priority, stale evidence, blockers, overdue tasks and unowned handoffs with visible definitions",
+        "was_checked": true,
+        "proven": false,
+        "reason": "Previously checked engineering criterion preserved without a new tick. Parent does not close this issue because independent unchecked obligations remain.",
+        "evidence": []
+      },
+      {
+        "index": 4,
+        "text": "Blocked steps show reason, named owner and next action in plain words",
+        "was_checked": true,
+        "proven": false,
+        "reason": "Previously checked engineering criterion preserved without a new tick. Parent does not close this issue because independent unchecked obligations remain.",
+        "evidence": []
+      },
+      {
+        "index": 5,
+        "text": "Hazard and safeguarding items show a clock and named owner",
+        "was_checked": false,
+        "proven": false,
+        "reason": "Recorded hazard snapshot clocks exist, but missing owners/awareness stay Unknown; complete hazard AND safeguarding clock/named-owner coverage is not demonstrated. PR325 explicitly disclaims a live statutory clock.",
+        "evidence": []
+      },
+      {
+        "index": 6,
+        "text": "Queue, case, history and suggestion views agree on ownership, reason and unknowns (FR-034)",
+        "was_checked": true,
+        "proven": false,
+        "reason": "Previously checked engineering criterion preserved without a new tick. Parent does not close this issue because independent unchecked obligations remain.",
+        "evidence": []
+      },
+      {
+        "index": 7,
+        "text": "A single reset returns to the versioned default result set (FR-032)",
+        "was_checked": true,
+        "proven": false,
+        "reason": "Previously checked engineering criterion preserved without a new tick. Parent does not close this issue because independent unchecked obligations remain.",
+        "evidence": []
+      }
+    ],
+    "close_supported": false
+  },
+  {
+    "issue": 79,
+    "title": "Deterministic home ranking with versioned policy",
+    "state": "OPEN",
+    "prs": [
+      560,
+      594,
+      438
+    ],
+    "referencing_prs": [
+      438
+    ],
+    "criteria": [
+      {
+        "index": 1,
+        "text": "Same data and policy version give the same order",
+        "was_checked": false,
+        "proven": true,
+        "reason": "Pure ranking and fixed ID tie-break produce the exact golden order and byte-identical reruns, including shuffled inputs. This is engineering determinism, not signed policy or scheduled publication.",
+        "evidence": [
+          {
+            "pr": 297,
+            "path": "src/core/src/zava_forward/core/ranking.py",
+            "line": 76,
+            "detail": "_rule_keys appends case_id and rank uses supplied policy/data."
+          },
+          {
+            "pr": 300,
+            "path": "src/api/tests/test_ranking_policy.py",
+            "line": 79,
+            "detail": "SnapshotTests.test_golden_snapshot_order_and_byte_identical_rerun asserts exact order and repeated canonical equality."
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "text": "Policy file changes are versioned and hash-verified",
+        "was_checked": false,
+        "proven": true,
+        "reason": "Versioned policy loader recomputes SHA-256 and refuses altered content; old and new versions remain independently reproducible.",
+        "evidence": [
+          {
+            "pr": 297,
+            "path": "src/core/src/zava_forward/core/ranking.py",
+            "line": 24,
+            "detail": "policy_hash/load_policy/load_registry validate content and reject duplicate versions."
+          },
+          {
+            "pr": 300,
+            "path": "src/api/tests/test_ranking_policy.py",
+            "line": 39,
+            "detail": "test_tampered_policy_is_refused and test_old_version_stays_loadable_and_reruns_identically cover tampering and retained versions."
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "text": "Named policy owner signs the first rule order",
+        "was_checked": false,
+        "proven": false,
+        "reason": "Policy remains Draft with owner 'to be named'; actual named-owner signature is absent.",
+        "evidence": []
+      },
+      {
+        "index": 4,
+        "text": "Ranking snapshot publication is scheduled and retained (ADR 0002 deviation)",
+        "was_checked": false,
+        "proven": false,
+        "reason": "On-demand retained snapshots exist, but no scheduled publication/retention operation is demonstrated.",
+        "evidence": []
+      }
+    ],
+    "close_supported": false
+  },
+  {
+    "issue": 80,
+    "title": "Excel transition: import, export and read-only comparison",
+    "state": "OPEN",
+    "prs": [
+      436,
+      547,
+      303,
+      412,
+      503,
+      512,
+      377,
+      599,
+      464
+    ],
+    "referencing_prs": [
+      303
+    ],
+    "criteria": [
+      {
+        "index": 1,
+        "text": "Import shows mapping, conflicts and a row-level preview and never changes the source file",
+        "was_checked": true,
+        "proven": false,
+        "reason": "Previously checked engineering criterion preserved without a new tick. Parent does not close this issue because independent unchecked obligations remain.",
+        "evidence": []
+      },
+      {
+        "index": 2,
+        "text": "Every list offers an Excel or CSV export; Excel stays one-way read-only",
+        "was_checked": false,
+        "proven": false,
+        "reason": "CSV/list primitives exist, but every-list export is not demonstrated; PR303 explicitly leaves web wiring open. New resident/chat/form surfaces are not all export-enabled.",
+        "evidence": []
+      },
+      {
+        "index": 3,
+        "text": "Export retains version, source, approval and supersession history independently of the AI provider",
+        "was_checked": true,
+        "proven": false,
+        "reason": "Previously checked engineering criterion preserved without a new tick. Parent does not close this issue because independent unchecked obligations remain.",
+        "evidence": []
+      },
+      {
+        "index": 4,
+        "text": "Owners set the staged transition thresholds (ADR 0001 open item)",
+        "was_checked": false,
+        "proven": false,
+        "reason": "Actual owner-approved staged-transition thresholds remain absent.",
+        "evidence": []
+      }
+    ],
+    "close_supported": false
+  },
+  {
+    "issue": 83,
+    "title": "Return, reopen and role-owned handoffs",
+    "state": "OPEN",
+    "prs": [
+      311,
+      411,
+      325,
+      319,
+      381,
+      385,
+      387
+    ],
+    "referencing_prs": [
+      311,
+      319
+    ],
+    "criteria": [
+      {
+        "index": 1,
+        "text": "Return and reopen record reason, source, initiating authority, receiving owner and next action",
+        "was_checked": true,
+        "proven": false,
+        "reason": "Previously checked engineering criterion preserved without a new tick. Parent does not close this issue because independent unchecked obligations remain.",
+        "evidence": []
+      },
+      {
+        "index": 2,
+        "text": "Handoff states are distinct and show the current accountable owner",
+        "was_checked": true,
+        "proven": false,
+        "reason": "Previously checked engineering criterion preserved without a new tick. Parent does not close this issue because independent unchecked obligations remain.",
+        "evidence": []
+      },
+      {
+        "index": 3,
+        "text": "Unaccepted handoffs are visible and escalated within approved times (BG-010)",
+        "was_checked": false,
+        "proven": false,
+        "reason": "Unaccepted handoffs are visible and manually escalatable, but OD-09 approved timing is unresolved; PR311 explicitly leaves operational approved-time escalation unmet.",
+        "evidence": []
+      }
+    ],
+    "close_supported": false
+  },
+  {
+    "issue": 86,
+    "title": "Resident decisions, representatives and pause or withdrawal",
+    "state": "OPEN",
+    "prs": [
+      406,
+      330,
+      326,
+      252,
+      319,
+      338,
+      401,
+      59,
+      393,
+      333,
+      328,
+      407,
+      419,
+      411,
+      354,
+      508,
+      309,
+      418
+    ],
+    "referencing_prs": [
+      252,
+      319,
+      326,
+      330,
+      338,
+      406
+    ],
+    "criteria": [
+      {
+        "index": 1,
+        "text": "Resident decision is a separate field, never inferred or pre-filled, and starts as Not recorded",
+        "was_checked": true,
+        "proven": false,
+        "reason": "Previously checked engineering criterion preserved without a new tick. Parent does not close this issue because independent unchecked obligations remain.",
+        "evidence": []
+      },
+      {
+        "index": 2,
+        "text": "Expired, unclear or disputed representative authority holds disclosure and consent steps",
+        "was_checked": true,
+        "proven": false,
+        "reason": "Previously checked engineering criterion preserved without a new tick. Parent does not close this issue because independent unchecked obligations remain.",
+        "evidence": []
+      },
+      {
+        "index": 3,
+        "text": "A pause or withdrawal affects only its measure and flags dependent readiness for human review",
+        "was_checked": true,
+        "proven": false,
+        "reason": "Previously checked engineering criterion preserved without a new tick. Parent does not close this issue because independent unchecked obligations remain.",
+        "evidence": []
+      },
+      {
+        "index": 4,
+        "text": "Residents can reach independent human review and the formal complaints route without detriment",
+        "was_checked": false,
+        "proven": false,
+        "reason": "Recording/assignment and independent recorder safeguards are implemented, but actual independent human/formal complaints access and accessible without-detriment resident acceptance remain unproved (PR319/326/406).",
+        "evidence": []
+      }
+    ],
+    "close_supported": false
+  },
+  {
+    "issue": 92,
+    "title": "Leaseholder consultation check before contract let or renewal",
+    "state": "OPEN",
+    "prs": [
+      389,
+      297,
+      296,
+      293,
+      298,
+      302,
+      286,
+      282,
+      307,
+      291,
+      305,
+      285,
+      295,
+      287,
+      299,
+      294,
+      397,
+      527,
+      516,
+      311,
+      308,
+      406,
+      408,
+      310,
+      394,
+      390,
+      309,
+      392,
+      547,
+      525
+    ],
+    "referencing_prs": [
+      389,
+      390,
+      392,
+      397,
+      406,
+      408
+    ],
+    "criteria": [
+      {
+        "index": 1,
+        "text": "A contract record carries a Legal consultation status of applies, complete, not applicable or unknown",
+        "was_checked": false,
+        "proven": false,
+        "reason": "PR389 records supplied four-state evidence with authority Unverified and effective status unknown; no verified Legal contract-consultation status or authorized Legal decision is established.",
+        "evidence": []
+      },
+      {
+        "index": 2,
+        "text": "Unknown blocks letting or renewal in the workflow",
+        "was_checked": false,
+        "proven": false,
+        "reason": "The scoped guard is fail-closed, but a genuine contract/framework/call-off let/renew transition does not exist. Ordinary service/work confirmation is not contractual letting or renewal.",
+        "evidence": []
+      }
+    ],
+    "close_supported": false
+  },
+  {
+    "issue": 96,
+    "title": "Assisted form workspace and funding or claim pack assembly",
+    "state": "OPEN",
+    "prs": [
+      510,
+      377,
+      519,
+      70,
+      502,
+      395
+    ],
+    "referencing_prs": [
+      377,
+      510
+    ],
+    "criteria": [
+      {
+        "index": 1,
+        "text": "Each assisted form has an approved versioned schema",
+        "was_checked": false,
+        "proven": false,
+        "reason": "Schemas remain explicitly Unapproved; no actual approved versioned template/source/rule authority (FD-01..14/OQ-015).",
+        "evidence": []
+      },
+      {
+        "index": 2,
+        "text": "Candidate values carry raw value, source ID, document hash and locator",
+        "was_checked": true,
+        "proven": false,
+        "reason": "Previously checked engineering criterion preserved without a new tick. Parent does not close this issue because independent unchecked obligations remain.",
+        "evidence": []
+      },
+      {
+        "index": 3,
+        "text": "Accept, correct or reject per field preserves prior values and reviewer",
+        "was_checked": false,
+        "proven": true,
+        "reason": "Working field accept/correct/reject retains prior/new values and the registered reviewer without altering sibling fields; no actual approval is asserted.",
+        "evidence": [
+          {
+            "pr": 510,
+            "path": "src/core/tests/test_form_review.py",
+            "line": 679,
+            "detail": "test_isolated_accept_correct_reject_history_and_held_inputs_survive_reopen asserts D/C/None history, prior C, reviewer email and restart equality."
+          }
+        ]
+      },
+      {
+        "index": 4,
+        "text": "Validation reports field-specific unknown, conflict or fail",
+        "was_checked": false,
+        "proven": true,
+        "reason": "Structural draft diagnostics report field-specific Unknown, Conflict and Fail. They remain Held, with approved-rule validation Not evaluated; this tick does not establish criterion 1 or approved preparation.",
+        "evidence": [
+          {
+            "pr": 510,
+            "path": "src/core/tests/test_form_review.py",
+            "line": 106,
+            "detail": "Blank required strings persist field-specific Unknown diagnostics."
+          },
+          {
+            "pr": 510,
+            "path": "src/core/tests/test_form_review.py",
+            "line": 787,
+            "detail": "Type and conditional/conflict tests assert Fail/Conflict and reviewer-confirmed missing inputs; reviewed source corrections are present on main."
+          }
+        ]
+      },
+      {
+        "index": 5,
+        "text": "A reviewed export never submits or implies eligibility",
+        "was_checked": false,
+        "proven": false,
+        "reason": "Only Held diagnostic manifests exist, explicitly not reviewed application/claim exports. No reviewed export is established.",
+        "evidence": []
+      },
+      {
+        "index": 6,
+        "text": "A source, schema or rule change marks only the dependent proposals and approvals stale",
+        "was_checked": false,
+        "proven": false,
+        "reason": "Exact source/schema draft freshness exists, but complete rule/calculation/pack-review/approval dependency propagation remains unimplemented.",
+        "evidence": []
+      }
+    ],
+    "close_supported": false
+  },
+  {
+    "issue": 98,
+    "title": "Field review, deterministic validation and stale propagation",
+    "state": "OPEN",
+    "prs": [
+      510,
+      377,
+      315,
+      414,
+      502,
+      424,
+      348,
+      399,
+      325,
+      320,
+      386,
+      317,
+      387
+    ],
+    "referencing_prs": [
+      377,
+      424,
+      510
+    ],
+    "criteria": [
+      {
+        "index": 1,
+        "text": "Field review changes only its own field",
+        "was_checked": false,
+        "proven": true,
+        "reason": "Actual working review changes only the chosen field; sibling state/history is unchanged.",
+        "evidence": [
+          {
+            "pr": 510,
+            "path": "src/core/tests/test_form_review.py",
+            "line": 679,
+            "detail": "After area correction, repeated epc accept/correct/reject leaves the complete area field equal to its snapshot."
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "text": "Validation uses approved rules and reviewer-confirmed inputs only",
+        "was_checked": false,
+        "proven": false,
+        "reason": "Validation is structural draft-only; approved rules and source authority are absent and approved_rule_validation remains Not evaluated.",
+        "evidence": []
+      },
+      {
+        "index": 3,
+        "text": "Pack links fields, evidence and attachments with template and input versions",
+        "was_checked": false,
+        "proven": false,
+        "reason": "Evidence-linked Held diagnostic manifests exist, explicitly not reviewed application/claim packs. Approved template and full pack assembly remain blocked.",
+        "evidence": []
+      },
+      {
+        "index": 4,
+        "text": "Finance review history is kept",
+        "was_checked": false,
+        "proven": true,
+        "reason": "Finance working-review history retains reviewer/prior/new values and survives store reopen. This is storage behavior, not approved Finance acceptance.",
+        "evidence": [
+          {
+            "pr": 510,
+            "path": "src/core/tests/test_form_review.py",
+            "line": 679,
+            "detail": "The test asserts reviewer identity and exact history equality after JSON/SQLite reopen."
+          }
+        ]
+      }
+    ],
+    "close_supported": false
+  },
+  {
+    "issue": 99,
+    "title": "Investment envelope, liquidity and downside tolerance controls",
+    "state": "OPEN",
+    "prs": [
+      510,
+      508,
+      319,
+      353,
+      318,
+      326,
+      387,
+      587,
+      539,
+      424
+    ],
+    "referencing_prs": [
+      510
+    ],
+    "criteria": [
+      {
+        "index": 1,
+        "text": "Envelope and tolerances are recorded as human-approved inputs, not invented",
+        "was_checked": false,
+        "proven": false,
+        "reason": "OD-12/15 ledger holds contain null approved inputs and null approval evidence; actual Board investment envelope/liquidity/tolerances are absent.",
+        "evidence": []
+      },
+      {
+        "index": 2,
+        "text": "A breach produces a pause signal for a human decision",
+        "was_checked": false,
+        "proven": false,
+        "reason": "Diagnostic Held/Not evaluated output is not an evaluated envelope breach or programme-wide acceleration pause; no approved limits or tested actual breach control.",
+        "evidence": []
+      }
+    ],
+    "close_supported": false
+  },
+  {
+    "issue": 107,
+    "title": "Five reactive and proactive assistants on one proposal service",
+    "state": "OPEN",
+    "prs": [
+      293,
+      287,
+      433,
+      610,
+      301,
+      291,
+      409,
+      205,
+      460,
+      384,
+      461,
+      448
+    ],
+    "referencing_prs": [
+      205,
+      287,
+      291,
+      293,
+      301,
+      433
+    ],
+    "criteria": [
+      {
+        "index": 1,
+        "text": "Each capability has an ID, registry version, source allowlist and deterministic trigger",
+        "was_checked": true,
+        "proven": false,
+        "reason": "Previously checked engineering criterion preserved without a new tick. Parent does not close this issue because independent unchecked obligations remain.",
+        "evidence": []
+      },
+      {
+        "index": 2,
+        "text": "Contractors and unknown roles cannot invoke, scan, read or review",
+        "was_checked": true,
+        "proven": false,
+        "reason": "Previously checked engineering criterion preserved without a new tick. Parent does not close this issue because independent unchecked obligations remain.",
+        "evidence": []
+      },
+      {
+        "index": 3,
+        "text": "Proactive scans use a separate purpose principal and are off by default",
+        "was_checked": true,
+        "proven": false,
+        "reason": "Previously checked engineering criterion preserved without a new tick. Parent does not close this issue because independent unchecked obligations remain.",
+        "evidence": []
+      },
+      {
+        "index": 4,
+        "text": "Proposal identity, deduplication and leases are owned by SQL",
+        "was_checked": true,
+        "proven": false,
+        "reason": "Previously checked engineering criterion preserved without a new tick. Parent does not close this issue because independent unchecked obligations remain.",
+        "evidence": []
+      },
+      {
+        "index": 5,
+        "text": "No controlled-domain mutation or approval is possible",
+        "was_checked": true,
+        "proven": false,
+        "reason": "Previously checked engineering criterion preserved without a new tick. Parent does not close this issue because independent unchecked obligations remain.",
+        "evidence": []
+      },
+      {
+        "index": 6,
+        "text": "Persist a release record binding task/purpose, provider/endpoint/deployment/actual serving-model version, prompt/policy/data/provenance/permission versions, evidence, authorized approver, residual-risk decision and expiry.",
+        "was_checked": false,
+        "proven": false,
+        "reason": "Release persistence schema and synthetic record tests exist, but actual authoritative serving-model version, authorized appointee and actual approved release evidence are not demonstrated.",
+        "evidence": []
+      },
+      {
+        "index": 7,
+        "text": "Absent, expired, suspended, revoked or materially mismatched releases deny reactive/proactive and retained legacy dispatch with zero unauthorized provider calls; expose missing evidence, owner and manual route and retain the denial.",
+        "was_checked": false,
+        "proven": true,
+        "reason": "Missing/expired/suspended/revoked/mismatched releases deny reactive/proactive and retained legacy dispatch with zero calls, explicit missing evidence, owner/manual route and retained denials.",
+        "evidence": [
+          {
+            "pr": 287,
+            "path": "src/api/tests/test_assistant_release.py",
+            "line": 236,
+            "detail": "Absent release/scan/expired/revoked tests assert zero calls and retained denial."
+          },
+          {
+            "pr": 315,
+            "path": "src/api/tests/test_assistant_release.py",
+            "line": 622,
+            "detail": "JSON/provider bypass and unavailable release-table paths deny, log and use manual/template route."
+          },
+          {
+            "pr": 504,
+            "path": "src/api/tests/test_assistant_release.py",
+            "line": 95,
+            "detail": "Changed policy denies fresh proactive/queued dispatch with zero calls."
+          }
+        ]
+      },
+      {
+        "index": 8,
+        "text": "Obtain authoritative serving-version attestation rather than treating a deployment alias as immutable. Unexpected returned versions quarantine results and suspend the release.",
+        "was_checked": false,
+        "proven": false,
+        "reason": "Unexpected returned-model quarantine/suspension is tested, but authoritative serving-version attestation remains absent; response.model is not attestation.",
+        "evidence": []
+      },
+      {
+        "index": 9,
+        "text": "Recheck admission and dependent versions through claim, retry, dispatch, completion, list/detail, review and export reliance.",
+        "was_checked": false,
+        "proven": true,
+        "reason": "Existing SQL-owned admission/reference checks revalidate at claim/retry/dispatch/completion and retained view/review/export reliance; exact versions and references are checked, not aliases alone.",
+        "evidence": [
+          {
+            "pr": 287,
+            "path": "src/api/tests/test_assistant_release.py",
+            "line": 317,
+            "detail": "Independent connection revocation blocks dispatch, restart and export reliance; claim-to-completion revocation quarantines."
+          },
+          {
+            "pr": 315,
+            "path": "src/api/tests/test_assistant_release.py",
+            "line": 588,
+            "detail": "Legacy replacement during call and cached/ordinary/document/priority review paths recheck admission."
+          },
+          {
+            "pr": 504,
+            "path": "src/api/tests/test_assistant_release.py",
+            "line": 112,
+            "detail": "In-flight, ready, verified and accepted policy changes deny reliance."
+          }
+        ]
+      },
+      {
+        "index": 10,
+        "text": "Independent SQL connection/worker and race tests cover material mismatches, revocation and restart. Old images/restarts cannot restore revoked approval or replenish finite allowances.",
+        "was_checked": false,
+        "proven": false,
+        "reason": "Independent SQLite/SQL regressions and restart denial exist, but the complete old-image rollback/restart/finite-allowance and authoritative material-mismatch bundle is not demonstrated by the referencing reviewed evidence.",
+        "evidence": []
+      },
+      {
+        "index": 11,
+        "text": "Distinguish routine case edits, which stale exactly dependent proposals, from material purpose/model/prompt/policy/schema/provenance/permission changes requiring renewed release evidence.",
+        "was_checked": false,
+        "proven": true,
+        "reason": "Routine case changes stale dependent proposals without invalidating their release; actual bound policy/prompt/permission changes require a new matching release.",
+        "evidence": [
+          {
+            "pr": 287,
+            "path": "src/api/tests/test_assistant_release.py",
+            "line": 298,
+            "detail": "test_material_mismatch_denies_but_routine_case_edit_only_stales distinguishes release denial from routine stale state."
+          },
+          {
+            "pr": 504,
+            "path": "src/api/tests/test_assistant_release.py",
+            "line": 30,
+            "detail": "Policy-content tests invalidate only dependent task bindings; renewal does not revive prior history."
+          }
+        ]
+      },
+      {
+        "index": 12,
+        "text": "Preserve default-off authority, purpose principal restrictions, SQL deduplication/leases, source permissions and no controlled-domain writes.",
+        "was_checked": false,
+        "proven": true,
+        "reason": "Default-off scans, purpose-principal restrictions, SQL deduplication/leases, source permissions and no domain writes are preserved by the shared service and regression contracts.",
+        "evidence": [
+          {
+            "pr": 287,
+            "path": "src/api/tests/test_assistants.py",
+            "line": 1,
+            "detail": "Existing assistants Base contracts cover registered capabilities, scans, authorization, finite allowance, leases/dedup and source projection."
+          },
+          {
+            "pr": 287,
+            "path": "src/api/tests/test_assistant_release.py",
+            "line": 373,
+            "detail": "test_no_controlled_domain_write_from_release_or_proposal asserts entire domain unchanged."
+          }
+        ]
+      },
+      {
+        "index": 13,
+        "text": "A matching approved exercise record permits bounded proposals only. Delivered-build acceptance still requires version-linked real AI, actual SQL and Azure evidence under CON-009/AC-057.",
+        "was_checked": false,
+        "proven": false,
+        "reason": "Constructed matching records permit bounded proposals; the bundled version-linked real AI/actual SQL/Azure CON-009/AC-057 delivered-build acceptance remains absent.",
+        "evidence": []
+      },
+      {
+        "index": 14,
+        "text": "Metadata access is not paid-inference authorization; missing serving proof or scoped approval keeps actual activation denied.",
+        "was_checked": false,
+        "proven": true,
+        "reason": "Configured live providers require actual authorization and serving-version proof; constructed fixtures and metadata are insufficient and therefore deny activation. No real serving attestation is claimed.",
+        "evidence": [
+          {
+            "pr": 287,
+            "path": "src/api/tests/test_assistant_release.py",
+            "line": 360,
+            "detail": "test_live_provider_needs_actual_release_with_serving_proof rejects constructed fixture for live=True, admitting only supplied actual-class matching record in the synthetic test."
+          }
+        ]
+      },
+      {
+        "index": 15,
+        "text": "Each of the five assistants has a stated maximum of model calls per request and agent depth, and the bound is tested (see #432)",
+        "was_checked": false,
+        "proven": false,
+        "reason": "Shared request-call/depth admission and finite worker bounds exist, but an explicit tested maximum per each of all five assistants is not established by the issue's merged reviewed evidence.",
+        "evidence": []
+      },
+      {
+        "index": 16,
+        "text": "Usage per assistant and per accepted proposal is attributable from the existing usage envelope and ledger events without raw case content in telemetry",
+        "was_checked": false,
+        "proven": false,
+        "reason": "Source-only metering joins exist for constructed assistant proposals; complete per-assistant/per-accepted-proposal attribution and historical/resident joins remain gaps, not actual accepted-output evidence.",
+        "evidence": []
+      },
+      {
+        "index": 17,
+        "text": "Each proactive predicate reports the calls it would trigger per period before it is enabled, so consumption growth is visible before release",
+        "was_checked": false,
+        "proven": false,
+        "reason": "No pre-enable per-period report of calls triggered by each proactive predicate is demonstrated.",
+        "evidence": []
+      }
+    ],
+    "close_supported": false
+  },
+  {
+    "issue": 108,
+    "title": "AI evaluation harness and model selection",
+    "state": "OPEN",
+    "prs": [
+      258,
+      405,
+      548,
+      307,
+      433,
+      428,
+      610,
+      205,
+      348,
+      456,
+      445,
+      458,
+      457,
+      453,
+      479,
+      450,
+      436,
+      449,
+      442,
+      438,
+      558,
+      448
+    ],
+    "referencing_prs": [
+      205,
+      258,
+      307,
+      405,
+      428,
+      433
+    ],
+    "criteria": [
+      {
+        "index": 1,
+        "text": "Critical misses fail the run",
+        "was_checked": true,
+        "proven": false,
+        "reason": "Previously checked engineering criterion preserved without a new tick. Parent does not close this issue because independent unchecked obligations remain.",
+        "evidence": []
+      },
+      {
+        "index": 2,
+        "text": "Model, prompt version, latency and reviewer outcomes are reported",
+        "was_checked": true,
+        "proven": false,
+        "reason": "Previously checked engineering criterion preserved without a new tick. Parent does not close this issue because independent unchecked obligations remain.",
+        "evidence": []
+      },
+      {
+        "index": 3,
+        "text": "Model names, versions and quotas are confirmed in the chosen region",
+        "was_checked": false,
+        "proven": false,
+        "reason": "Chosen-region actual serving model names/versions/quotas remain unconfirmed.",
+        "evidence": []
+      },
+      {
+        "index": 4,
+        "text": "Benefit is not claimed without calibrated results",
+        "was_checked": true,
+        "proven": false,
+        "reason": "Previously checked engineering criterion preserved without a new tick. Parent does not close this issue because independent unchecked obligations remain.",
+        "evidence": []
+      },
+      {
+        "index": 5,
+        "text": "Freeze task/model/prompt/policy/source versions, an independently labelled held-out split, expected outcomes, critical errors, cohorts, sufficient samples and approved thresholds before evaluation. Held-out answers never enter prompts or tuning.",
+        "was_checked": false,
+        "proven": false,
+        "reason": "Independent held-out labels/cohorts/sample sufficiency and approved thresholds are not supplied; reusable synthetic golden cases are not held-out proof.",
+        "evidence": []
+      },
+      {
+        "index": 6,
+        "text": "Cover all five assistants and each retained legacy family, correct controls, ambiguity, abstention, source integrity and factual support.",
+        "was_checked": false,
+        "proven": false,
+        "reason": "Golden priority/chat paths cover subsets, not a completed held-out evaluation of all five assistants and every retained legacy family.",
+        "evidence": []
+      },
+      {
+        "index": 7,
+        "text": "Record critical errors/misses, usable coverage, subgroup results and applicable calibration. If meaningful scored predictions are absent, document calibration as not applicable rather than inventing it.",
+        "was_checked": false,
+        "proven": false,
+        "reason": "Priority critical/citation metrics and calibration N/A exist, but usable coverage/subgroup/calibration reporting for the required full task/cohort evaluation remains absent.",
+        "evidence": []
+      },
+      {
+        "index": 8,
+        "text": "Authorized competent human participants detect and block every seeded critical wrong/stale/unsupported/incomplete proposal, including valid-citation errors.",
+        "was_checked": false,
+        "proven": false,
+        "reason": "No authorized competent human-participant seeded-error detection exercise has run.",
+        "evidence": []
+      },
+      {
+        "index": 9,
+        "text": "Compare full preparation, checking, correction, re-review, coordination, resident and support effort and cost against manual/template and parser/rules alternatives. Finance validates any incremental-benefit interpretation; saved minutes alone are capacity, not cash savings.",
+        "was_checked": false,
+        "proven": false,
+        "reason": "No complete paired effort/cost evaluation or Finance-validated incremental benefit exists.",
+        "evidence": []
+      },
+      {
+        "index": 10,
+        "text": "Record hashes, split/seed, denominators, actual serving version, usage, unknown liabilities, reviewer protocol and pass/fail/insufficient outcomes. Retain negative/inconclusive results.",
+        "was_checked": false,
+        "proven": false,
+        "reason": "Per-run scripted hashes/latency/model/prompt/reviewer data exist, but independent split/cohorts, actual serving version/usage/liabilities and sufficient/pass/fail evaluation bundle is incomplete.",
+        "evidence": []
+      },
+      {
+        "index": 11,
+        "text": "Actual calls require separate finite call/token/budget/expiry authorization, approved payload/provider handling and serving attestation. Human participation requires appropriate consent, accessibility and privacy authorization.",
+        "was_checked": false,
+        "proven": false,
+        "reason": "Finite controls do not supply actual approved calls/payload/provider/serving authority or participant privacy/accessibility/consent authorization.",
+        "evidence": []
+      },
+      {
+        "index": 12,
+        "text": "Dry runs and scripted providers remain not evaluated for actual-model and human effectiveness. Role agents are not participant substitutes.",
+        "was_checked": false,
+        "proven": true,
+        "reason": "Scripted/dry-run reports explicitly retain actual-model and human effectiveness as Not evaluated, calibration N/A and benefit Not permitted; no role agent substitutes for a participant.",
+        "evidence": [
+          {
+            "pr": 258,
+            "path": "src/agents/tests/test_ai_eval.py",
+            "line": 202,
+            "detail": "test_evidence_gate_refuses_benefit_and_records_open_items checks not evaluated/not applicable/not permitted."
+          },
+          {
+            "pr": 405,
+            "path": "src/agents/src/zava_forward/agents/ai_eval.py",
+            "line": 1,
+            "detail": "Per-run scripted source/model/prompt/latency/reviewer accounting preserves these evidence limitations."
+          }
+        ]
+      },
+      {
+        "index": 13,
+        "text": "Delivered builds retain real AI/SQL/Azure proof under CON-009/AC-057 without treating a successful inference as semantic accuracy, fairness or net benefit.",
+        "was_checked": false,
+        "proven": false,
+        "reason": "Full version-linked real AI/SQL/Azure delivered-build evidence remains absent.",
+        "evidence": []
+      },
+      {
+        "index": 14,
+        "text": "Each candidate comparison reports cost per accepted proposal, not only per invocation, beside quality, latency and refusal rate, using a dated price source; with no price source cost is Unknown",
+        "was_checked": false,
+        "proven": false,
+        "reason": "No completed candidate comparison of cost per accepted proposal against quality/latency/refusal with a dated applicable price source.",
+        "evidence": []
+      },
+      {
+        "index": 15,
+        "text": "A cheaper candidate that raises critical misses, unsupported claims, overrides or reopened cases on the same held-out cases is reported as a failure, not a saving",
+        "was_checked": false,
+        "proven": false,
+        "reason": "No same-held-out-case cheaper-model negative-benefit comparison exists.",
+        "evidence": []
+      },
+      {
+        "index": 16,
+        "text": "Any routing or caching option evaluated changes one lever at a time and is measured against the same held-out cases and a recorded baseline",
+        "was_checked": false,
+        "proven": false,
+        "reason": "No measured one-lever routing/caching candidate comparison against the same held-out baseline.",
+        "evidence": []
+      },
+      {
+        "index": 17,
+        "text": "Tokens per proposal and their spread are recorded for each candidate (see #432)",
+        "was_checked": false,
+        "proven": false,
+        "reason": "No per-candidate tokens/proposal distribution from an authorized held-out evaluation.",
+        "evidence": []
+      }
+    ],
+    "close_supported": false
+  }
+]
