@@ -6,13 +6,13 @@ import hashlib
 import importlib.util
 import json
 import os
-import re
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 from urllib.request import Request, urlopen
 
-from staff_azure import ARM, MAX_CHUNKS, MAX_INPUT, TAG_VERSION, VERSION, result_tags
+from staff_azure import ARM, MAX_INPUT, VERSION
+from staff_blob import CONTAINER, account_url, write_result
 from staff_roster import staff_candidates
 
 SPEC = importlib.util.spec_from_file_location(
@@ -36,11 +36,8 @@ class Management:
         self, suffix: str = "", *, method: str = "GET", body: dict[str, Any] | None = None
     ) -> dict[str, Any]:
         token = self.credential.get_token(ARM + "/.default").token
-        version = (
-            TAG_VERSION if suffix == "/providers/Microsoft.Resources/tags/default" else VERSION
-        )
         request = Request(
-            ARM + self.target + suffix + "?api-version=" + version,
+            ARM + self.target + suffix + "?api-version=" + VERSION,
             method=method,
             headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"},
             data=json.dumps(body).encode()
@@ -70,27 +67,22 @@ class Management:
         raise ValueError("Unsupported management operation.")
 
 
-def publish_result(request: dict[str, Any], result: dict[str, Any]) -> None:
-    relay = request["payload"]["relay"]
-    if relay != os.environ["ZF_STAFF_RELAY"] or not re.fullmatch(
-        r"/subscriptions/[0-9a-f-]+/resourceGroups/ama/providers/Microsoft.App/"
-        r"jobs/job-[a-z0-9-]+-init",
-        relay,
-        re.IGNORECASE,
-    ):
-        raise ValueError("Invalid result relay.")
-    management = Management(relay)
+def publish_result(request: dict[str, Any], result: dict[str, Any], container: Any = None) -> None:
+    blob = account_url(request["payload"]["blob"])
+    if blob != os.environ["ZF_STAFF_BLOB"]:
+        raise ValueError("Invalid result Blob account.")
+    credential = None
+    if container is None:
+        from azure.identity import ManagedIdentityCredential
+        from azure.storage.blob import ContainerClient
+
+        credential = ManagedIdentityCredential(client_id=os.environ["AZURE_CLIENT_ID"])
+        container = ContainerClient(blob, CONTAINER, credential=credential)
     try:
-        suffix = "/providers/Microsoft.Resources/tags/default"
-        existing = management.request(suffix)["properties"].get("tags") or {}
-        tags = result_tags(request, result)
-        if len(tags) > MAX_CHUNKS or len(existing) + len(tags) > 50 or set(tags) & set(existing):
-            raise ValueError("Result relay capacity/collision.")
-        management.request(
-            suffix, method="PATCH", body={"operation": "Merge", "properties": {"tags": tags}}
-        )
+        write_result(container, request, result)
     finally:
-        management.credential.close()
+        if credential is not None:
+            credential.close()
 
 
 def run_sql(request: dict[str, Any], db: Any, management: Any = None) -> dict[str, Any]:
@@ -149,7 +141,7 @@ def main() -> int:
             or len(payload.encode()) > MAX_INPUT
             or hashlib.sha256(payload.encode()).hexdigest() != request["digest"]
             or request["payload"]["target"] != os.environ["ZF_STAFF_TARGET"]
-            or request["payload"]["relay"] != os.environ["ZF_STAFF_RELAY"]
+            or request["payload"]["blob"] != os.environ["ZF_STAFF_BLOB"]
             or os.environ["ZF_SQL_AUTH"] != "msi"
             or os.environ["ZF_SQL_CLIENT_ID"] != os.environ["AZURE_CLIENT_ID"]
         ):
