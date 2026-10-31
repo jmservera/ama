@@ -1,0 +1,1864 @@
+{
+  "task_id": "closure-audit-batch1-2026-10-31",
+  "base": "84035ae9605f7ab42744a3d6e9f620bb65126d99",
+  "issues": [
+    {
+      "issue": 76,
+      "lane": "parent",
+      "criterion_count": 7,
+      "original_body_sha256": "4cd9968e3545db7fefef05c63449531660d2694e6cebdce7be548f1d89f59bcd",
+      "new_ticks": [],
+      "preserved_ticks": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        7
+      ],
+      "unmet": [
+        5
+      ],
+      "closed": false,
+      "prs": [
+        325,
+        376,
+        401,
+        406,
+        407,
+        438
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 79,
+      "lane": "parent",
+      "criterion_count": 4,
+      "original_body_sha256": "a5744a47c35c4bd5100adca8f116266d55609663233966fab261beaf3c6d831b",
+      "new_ticks": [
+        1,
+        2
+      ],
+      "preserved_ticks": [],
+      "unmet": [
+        3,
+        4
+      ],
+      "closed": false,
+      "prs": [
+        297,
+        300,
+        438
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": [
+        {
+          "index": 1,
+          "text": "Same data and policy version give the same order",
+          "reason": "Pure ranking and fixed ID tie-break produce the exact golden order and byte-identical reruns, including shuffled inputs. This is engineering determinism, not signed policy or scheduled publication.",
+          "anchors": [
+            {
+              "pr": 297,
+              "path": "src/core/src/zava_forward/core/ranking.py",
+              "line": 76,
+              "detail": "_rule_keys appends case_id and rank uses supplied policy/data."
+            },
+            {
+              "pr": 300,
+              "path": "src/api/tests/test_ranking_policy.py",
+              "line": 79,
+              "detail": "SnapshotTests.test_golden_snapshot_order_and_byte_identical_rerun asserts exact order and repeated canonical equality."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "text": "Policy file changes are versioned and hash-verified",
+          "reason": "Versioned policy loader recomputes SHA-256 and refuses altered content; old and new versions remain independently reproducible.",
+          "anchors": [
+            {
+              "pr": 297,
+              "path": "src/core/src/zava_forward/core/ranking.py",
+              "line": 24,
+              "detail": "policy_hash/load_policy/load_registry validate content and reject duplicate versions."
+            },
+            {
+              "pr": 300,
+              "path": "src/api/tests/test_ranking_policy.py",
+              "line": 39,
+              "detail": "test_tampered_policy_is_refused and test_old_version_stays_loadable_and_reruns_identically cover tampering and retained versions."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue": 80,
+      "lane": "parent",
+      "criterion_count": 4,
+      "original_body_sha256": "50526ecae09f1ba0fd04279aff153292799ad96683d30a234a1b9c6bf13d224b",
+      "new_ticks": [],
+      "preserved_ticks": [
+        1,
+        3
+      ],
+      "unmet": [
+        2,
+        4
+      ],
+      "closed": false,
+      "prs": [
+        303
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 83,
+      "lane": "parent",
+      "criterion_count": 3,
+      "original_body_sha256": "700280e8f00185bd9579413bc309d02108f26ccb75582df6afbaaaa0c7903ed9",
+      "new_ticks": [],
+      "preserved_ticks": [
+        1,
+        2
+      ],
+      "unmet": [
+        3
+      ],
+      "closed": false,
+      "prs": [
+        311,
+        319
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 86,
+      "lane": "parent",
+      "criterion_count": 4,
+      "original_body_sha256": "0b06e77b806fa2be10873abf0add1b235336cb7b762a19856e3ecdc1a630a02c",
+      "new_ticks": [],
+      "preserved_ticks": [
+        1,
+        2,
+        3
+      ],
+      "unmet": [
+        4
+      ],
+      "closed": false,
+      "prs": [
+        252,
+        319,
+        326,
+        330,
+        338,
+        406
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 92,
+      "lane": "parent",
+      "criterion_count": 2,
+      "original_body_sha256": "de859a15426011d3092256165708d13b6451882b4faea36397aaf19c8b7a3564",
+      "new_ticks": [],
+      "preserved_ticks": [],
+      "unmet": [
+        1,
+        2
+      ],
+      "closed": false,
+      "prs": [
+        389,
+        390,
+        392,
+        397,
+        406,
+        408
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 96,
+      "lane": "parent",
+      "criterion_count": 6,
+      "original_body_sha256": "ada269e941c9014f8f296ea838e72503efc7930507c6609085ac39748d38c63d",
+      "new_ticks": [
+        3,
+        4
+      ],
+      "preserved_ticks": [
+        2
+      ],
+      "unmet": [
+        1,
+        5,
+        6
+      ],
+      "closed": false,
+      "prs": [
+        377,
+        510
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": [
+        {
+          "index": 3,
+          "text": "Accept, correct or reject per field preserves prior values and reviewer",
+          "reason": "Working field accept/correct/reject retains prior/new values and the registered reviewer without altering sibling fields; no actual approval is asserted.",
+          "anchors": [
+            {
+              "pr": 510,
+              "path": "src/core/tests/test_form_review.py",
+              "line": 679,
+              "detail": "test_isolated_accept_correct_reject_history_and_held_inputs_survive_reopen asserts D/C/None history, prior C, reviewer email and restart equality."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "text": "Validation reports field-specific unknown, conflict or fail",
+          "reason": "Structural draft diagnostics report field-specific Unknown, Conflict and Fail. They remain Held, with approved-rule validation Not evaluated; this tick does not establish criterion 1 or approved preparation.",
+          "anchors": [
+            {
+              "pr": 510,
+              "path": "src/core/tests/test_form_review.py",
+              "line": 106,
+              "detail": "Blank required strings persist field-specific Unknown diagnostics."
+            },
+            {
+              "pr": 510,
+              "path": "src/core/tests/test_form_review.py",
+              "line": 787,
+              "detail": "Type and conditional/conflict tests assert Fail/Conflict and reviewer-confirmed missing inputs; reviewed source corrections are present on main."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue": 98,
+      "lane": "parent",
+      "criterion_count": 4,
+      "original_body_sha256": "2abcd032d9a6cee85d595a5a67845f8a82ab665b9b14fe4aa4aa48b9b6651107",
+      "new_ticks": [
+        1,
+        4
+      ],
+      "preserved_ticks": [],
+      "unmet": [
+        2,
+        3
+      ],
+      "closed": false,
+      "prs": [
+        377,
+        424,
+        510
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": [
+        {
+          "index": 1,
+          "text": "Field review changes only its own field",
+          "reason": "Actual working review changes only the chosen field; sibling state/history is unchanged.",
+          "anchors": [
+            {
+              "pr": 510,
+              "path": "src/core/tests/test_form_review.py",
+              "line": 679,
+              "detail": "After area correction, repeated epc accept/correct/reject leaves the complete area field equal to its snapshot."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "text": "Finance review history is kept",
+          "reason": "Finance working-review history retains reviewer/prior/new values and survives store reopen. This is storage behavior, not approved Finance acceptance.",
+          "anchors": [
+            {
+              "pr": 510,
+              "path": "src/core/tests/test_form_review.py",
+              "line": 679,
+              "detail": "The test asserts reviewer identity and exact history equality after JSON/SQLite reopen."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue": 99,
+      "lane": "parent",
+      "criterion_count": 2,
+      "original_body_sha256": "26a035a8a4386777a599a6eda7ebbc761f5cf2726e7f7a59c0c9f6d4b6f07154",
+      "new_ticks": [],
+      "preserved_ticks": [],
+      "unmet": [
+        1,
+        2
+      ],
+      "closed": false,
+      "prs": [
+        510
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 107,
+      "lane": "parent",
+      "criterion_count": 17,
+      "original_body_sha256": "747fa4d92ec092730903583f897efb6aa913704ea27d7ed060e94ab7b0d1a56f",
+      "new_ticks": [
+        7,
+        9,
+        11,
+        12,
+        14
+      ],
+      "preserved_ticks": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "unmet": [
+        6,
+        8,
+        10,
+        13,
+        15,
+        16,
+        17
+      ],
+      "closed": false,
+      "prs": [
+        205,
+        287,
+        291,
+        293,
+        301,
+        315,
+        433,
+        504
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": [
+        {
+          "index": 7,
+          "text": "Absent, expired, suspended, revoked or materially mismatched releases deny reactive/proactive and retained legacy dispatch with zero unauthorized provider calls; expose missing evidence, owner and manual route and retain the denial.",
+          "reason": "Missing/expired/suspended/revoked/mismatched releases deny reactive/proactive and retained legacy dispatch with zero calls, explicit missing evidence, owner/manual route and retained denials.",
+          "anchors": [
+            {
+              "pr": 287,
+              "path": "src/api/tests/test_assistant_release.py",
+              "line": 236,
+              "detail": "Absent release/scan/expired/revoked tests assert zero calls and retained denial."
+            },
+            {
+              "pr": 315,
+              "path": "src/api/tests/test_assistant_release.py",
+              "line": 622,
+              "detail": "JSON/provider bypass and unavailable release-table paths deny, log and use manual/template route."
+            },
+            {
+              "pr": 504,
+              "path": "src/api/tests/test_assistant_release.py",
+              "line": 95,
+              "detail": "Changed policy denies fresh proactive/queued dispatch with zero calls."
+            }
+          ]
+        },
+        {
+          "index": 9,
+          "text": "Recheck admission and dependent versions through claim, retry, dispatch, completion, list/detail, review and export reliance.",
+          "reason": "Existing SQL-owned admission/reference checks revalidate at claim/retry/dispatch/completion and retained view/review/export reliance; exact versions and references are checked, not aliases alone.",
+          "anchors": [
+            {
+              "pr": 287,
+              "path": "src/api/tests/test_assistant_release.py",
+              "line": 317,
+              "detail": "Independent connection revocation blocks dispatch, restart and export reliance; claim-to-completion revocation quarantines."
+            },
+            {
+              "pr": 315,
+              "path": "src/api/tests/test_assistant_release.py",
+              "line": 588,
+              "detail": "Legacy replacement during call and cached/ordinary/document/priority review paths recheck admission."
+            },
+            {
+              "pr": 504,
+              "path": "src/api/tests/test_assistant_release.py",
+              "line": 112,
+              "detail": "In-flight, ready, verified and accepted policy changes deny reliance."
+            }
+          ]
+        },
+        {
+          "index": 11,
+          "text": "Distinguish routine case edits, which stale exactly dependent proposals, from material purpose/model/prompt/policy/schema/provenance/permission changes requiring renewed release evidence.",
+          "reason": "Routine case changes stale dependent proposals without invalidating their release; actual bound policy/prompt/permission changes require a new matching release.",
+          "anchors": [
+            {
+              "pr": 287,
+              "path": "src/api/tests/test_assistant_release.py",
+              "line": 298,
+              "detail": "test_material_mismatch_denies_but_routine_case_edit_only_stales distinguishes release denial from routine stale state."
+            },
+            {
+              "pr": 504,
+              "path": "src/api/tests/test_assistant_release.py",
+              "line": 30,
+              "detail": "Policy-content tests invalidate only dependent task bindings; renewal does not revive prior history."
+            }
+          ]
+        },
+        {
+          "index": 12,
+          "text": "Preserve default-off authority, purpose principal restrictions, SQL deduplication/leases, source permissions and no controlled-domain writes.",
+          "reason": "Default-off scans, purpose-principal restrictions, SQL deduplication/leases, source permissions and no domain writes are preserved by the shared service and regression contracts.",
+          "anchors": [
+            {
+              "pr": 287,
+              "path": "src/api/tests/test_assistants.py",
+              "line": 1,
+              "detail": "Existing assistants Base contracts cover registered capabilities, scans, authorization, finite allowance, leases/dedup and source projection."
+            },
+            {
+              "pr": 287,
+              "path": "src/api/tests/test_assistant_release.py",
+              "line": 373,
+              "detail": "test_no_controlled_domain_write_from_release_or_proposal asserts entire domain unchanged."
+            }
+          ]
+        },
+        {
+          "index": 14,
+          "text": "Metadata access is not paid-inference authorization; missing serving proof or scoped approval keeps actual activation denied.",
+          "reason": "Configured live providers require actual authorization and serving-version proof; constructed fixtures and metadata are insufficient and therefore deny activation. No real serving attestation is claimed.",
+          "anchors": [
+            {
+              "pr": 287,
+              "path": "src/api/tests/test_assistant_release.py",
+              "line": 360,
+              "detail": "test_live_provider_needs_actual_release_with_serving_proof rejects constructed fixture for live=True, admitting only supplied actual-class matching record in the synthetic test."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue": 108,
+      "lane": "parent",
+      "criterion_count": 17,
+      "original_body_sha256": "0eba8cf137652c013de223783843a4d68067dea3481db61bddab1bfdf88233cd",
+      "new_ticks": [
+        12
+      ],
+      "preserved_ticks": [
+        1,
+        2,
+        4
+      ],
+      "unmet": [
+        3,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "closed": false,
+      "prs": [
+        205,
+        258,
+        307,
+        405,
+        428,
+        433
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": [
+        {
+          "index": 12,
+          "text": "Dry runs and scripted providers remain not evaluated for actual-model and human effectiveness. Role agents are not participant substitutes.",
+          "reason": "Scripted/dry-run reports explicitly retain actual-model and human effectiveness as Not evaluated, calibration N/A and benefit Not permitted; no role agent substitutes for a participant.",
+          "anchors": [
+            {
+              "pr": 258,
+              "path": "src/agents/tests/test_ai_eval.py",
+              "line": 202,
+              "detail": "test_evidence_gate_refuses_benefit_and_records_open_items checks not evaluated/not applicable/not permitted."
+            },
+            {
+              "pr": 405,
+              "path": "src/agents/src/zava_forward/agents/ai_eval.py",
+              "line": 1,
+              "detail": "Per-run scripted source/model/prompt/latency/reviewer accounting preserves these evidence limitations."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue": 110,
+      "lane": "a",
+      "criterion_count": 5,
+      "original_body_sha256": "205b6c1fe860b17e26e7733044daefba7cbea1519024826bbeafa1ae7c599343",
+      "new_ticks": [
+        3
+      ],
+      "preserved_ticks": [
+        2,
+        4,
+        5
+      ],
+      "unmet": [
+        1
+      ],
+      "closed": false,
+      "prs": [
+        411,
+        508
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": [
+        {
+          "index": 3,
+          "text": "Duplicate, out-of-order, unmapped, wrong-unit, clock-skewed and uncalibrated input is handled and visible",
+          "reason": "Whole software handling/visibility criterion is asserted for all six input classes by durable SQL receipts and inspectable owned DQ exceptions. This does not establish actual authenticated routed Hub input or live end-to-end application acceptance.",
+          "anchors": [
+            {
+              "pr": 411,
+              "path": "src/core/tests/test_sensor_consumer.py",
+              "line": 192,
+              "detail": "Asserts UNMAPPED, UNIT, CALIBRATION rejection counts; lines 203-219 assert duplicate replay, OUT_OF_ORDER and inspectable exception timestamps; clock boundaries are asserted at line 306."
+            },
+            {
+              "pr": 508,
+              "path": "docs/reference/research/iot-sensor-analytics-research-plan.md",
+              "line": 130,
+              "detail": "Reviewed synthesis distinguishes existing SQL append/replay/DQ from still-unverified authenticated live input."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue": 111,
+      "lane": "a",
+      "criterion_count": 3,
+      "original_body_sha256": "13d5faba55f0339f5cd3a9b31b88ed1fb7e2e2407bb9f3028b1860528cf22d4b",
+      "new_ticks": [],
+      "preserved_ticks": [],
+      "unmet": [
+        1,
+        2,
+        3
+      ],
+      "closed": false,
+      "prs": [],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 114,
+      "lane": "a",
+      "criterion_count": 3,
+      "original_body_sha256": "0c126446b89717bff8581179c7a96baa91e596adad4b5cc9dab4c2d4e2f43b45",
+      "new_ticks": [],
+      "preserved_ticks": [],
+      "unmet": [
+        1,
+        2,
+        3
+      ],
+      "closed": false,
+      "prs": [
+        262,
+        403
+      ],
+      "parent_rejections": [
+        {
+          "index": 1,
+          "reason": "Actual annual Azure ledger reliance remains unproved."
+        }
+      ],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 115,
+      "lane": "a",
+      "criterion_count": 2,
+      "original_body_sha256": "a614141ffc404ac1a65b9e1d8834a0ed2e89de42c54854c066b9abdfeb3f9542",
+      "new_ticks": [],
+      "preserved_ticks": [],
+      "unmet": [
+        1,
+        2
+      ],
+      "closed": false,
+      "prs": [
+        268,
+        404
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 116,
+      "lane": "a",
+      "criterion_count": 11,
+      "original_body_sha256": "a1bc559f9a46b98d02e73b673c5615be8c959f6a77c925809217765e7b0d4352",
+      "new_ticks": [
+        11
+      ],
+      "preserved_ticks": [
+        1,
+        2,
+        3
+      ],
+      "unmet": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "closed": false,
+      "prs": [
+        205,
+        275
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": [
+        {
+          "index": 11,
+          "text": "Reuse the current capture/projection/provider wrappers rather than create a parallel serializer or inference service.",
+          "reason": "Reviewed original delivery modifies/reuses the current projection, assistant capture and provider wrappers. No parallel serialization or inference service is introduced by that bounded field-visibility work.",
+          "anchors": [
+            {
+              "pr": 275,
+              "path": "src/api/tests/test_role_endpoint_inventory.py",
+              "line": 136,
+              "detail": "Tests call existing ai_tasks.cites_for and assistants.capture."
+            },
+            {
+              "pr": 275,
+              "path": "src/api/tests/test_role_endpoint_inventory.py",
+              "line": 145,
+              "detail": "Spies wrap the existing Store AI _chat/evidence methods."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue": 117,
+      "lane": "a",
+      "criterion_count": 2,
+      "original_body_sha256": "a43a8bd29f4ddf3077c2786023ccc9517fd4b63e0b0233e4d7b4e72d13f0b0c5",
+      "new_ticks": [],
+      "preserved_ticks": [
+        2
+      ],
+      "unmet": [
+        1
+      ],
+      "closed": false,
+      "prs": [
+        270,
+        395
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 118,
+      "lane": "a",
+      "criterion_count": 5,
+      "original_body_sha256": "7d882646fb1fe00bddfa02cbe746864eb62c38acf37fc5a694d4cf7741d3b731",
+      "new_ticks": [],
+      "preserved_ticks": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "unmet": [
+        5
+      ],
+      "closed": false,
+      "prs": [
+        347
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 119,
+      "lane": "a",
+      "criterion_count": 2,
+      "original_body_sha256": "3e75ac97724f9927fddc32d97d8012c323c5f4b557ec2cd36b20c8f2ee03ac4c",
+      "new_ticks": [],
+      "preserved_ticks": [],
+      "unmet": [
+        1,
+        2
+      ],
+      "closed": false,
+      "prs": [
+        426,
+        458
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 120,
+      "lane": "a",
+      "criterion_count": 3,
+      "original_body_sha256": "5d6d8cda49a04f0e0ac4dc8f9442b560db083f7c4383b79cc9b5154e75e5e2d9",
+      "new_ticks": [],
+      "preserved_ticks": [
+        1,
+        2
+      ],
+      "unmet": [
+        3
+      ],
+      "closed": false,
+      "prs": [
+        267,
+        408
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 121,
+      "lane": "a",
+      "criterion_count": 12,
+      "original_body_sha256": "055dbe12e6a92fd7652cb89196857ee4c02518957e51daacc3f679f1c1ef7a57",
+      "new_ticks": [
+        12
+      ],
+      "preserved_ticks": [],
+      "unmet": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "closed": false,
+      "prs": [
+        205,
+        281
+      ],
+      "parent_rejections": [
+        {
+          "index": 10,
+          "reason": "PC-002: descriptive current DPIA text lacks matching merged provenance and whole-boundary assertions."
+        }
+      ],
+      "new_tick_evidence": [
+        {
+          "index": 12,
+          "text": "Entirely constructed fixtures remain the development path where actual-processing approval is absent.",
+          "reason": "Reviewed development evidence uses constructed isolated privacy/control fixtures without claiming actual-processing authority. This does not mean all existing live staff/tenant application data is synthetic.",
+          "anchors": [
+            {
+              "pr": 281,
+              "path": "src/core/tests/test_chat_privacy.py",
+              "line": 1,
+              "detail": "Constructed chat privacy tests validate reference gates and local rights controls, not actual personal-data processing approval."
+            },
+            {
+              "pr": 205,
+              "path": ".copilot-tracking/github-issues/prds/rai-remediation/artifact-analysis.md",
+              "line": 1,
+              "detail": "Planning backlog changes preserve constructed-development and separate qualified acceptance boundaries."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue": 122,
+      "lane": "a",
+      "criterion_count": 11,
+      "original_body_sha256": "fcfaa08e7cd2d51a0c8c7809c6aa80e22214b0dc6161e86e4f808476183ac7ee",
+      "new_ticks": [
+        4,
+        5,
+        7,
+        9
+      ],
+      "preserved_ticks": [
+        1,
+        2,
+        3
+      ],
+      "unmet": [
+        6,
+        8,
+        10,
+        11
+      ],
+      "closed": false,
+      "prs": [
+        205,
+        269,
+        398,
+        431
+      ],
+      "parent_rejections": [
+        {
+          "index": 10,
+          "reason": "Bundled accessible challenge needs actual accessibility acceptance, not merely an available route."
+        }
+      ],
+      "new_tick_evidence": [
+        {
+          "index": 4,
+          "text": "Persist task/release suspension, incident owner, affected proposal/version set, containment, communication owner/audience and restart decision.",
+          "reason": "Whole software persistence obligation is source/test proven for required suspension, affected-version, owner/containment/communication and restart records. Stored owner references are not authenticated appointment or operational approval; the witnessed/authorized drill remains separate.",
+          "anchors": [
+            {
+              "pr": 269,
+              "path": "src/core/src/zava_forward/core/continuity.py",
+              "line": 414,
+              "detail": "Persists incident_owner, containment, communication owner/audience, affected tasks/version state and restart record in existing document."
+            },
+            {
+              "pr": 269,
+              "path": "src/api/tests/test_continuity.py",
+              "line": 182,
+              "detail": "Serialized offline export retains suspension/version records and verifies; restart replay/authority persistence assertions at line 111."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "text": "Recheck suspension epoch at invoke/scan/claim/dispatch/complete and list/detail/review/export reliance; server enforcement does not depend on disabled buttons.",
+          "reason": "Reviewed epoch remediation and retained regression suites demonstrate server-side checks across queued work, provider dispatch/completion, historical display/review and export. No live drill is inferred.",
+          "anchors": [
+            {
+              "pr": 398,
+              "path": "src/api/tests/test_continuity_epoch_export.py",
+              "line": 63,
+              "detail": "Ready/accepted historical proposals never revive; claim/missing epoch guards at line 100, dispatch race at line 159, proactive scan at line 173."
+            },
+            {
+              "pr": 398,
+              "path": "src/api/tests/test_continuity_epoch_export.py",
+              "line": 1268,
+              "detail": "HTTP read/review/export reliance remains nonactionable after suspension/restart."
+            }
+          ]
+        },
+        {
+          "index": 7,
+          "text": "In-flight calls may complete and remain charged/unknown; late results are quarantined and cannot become actionable. Do not claim remote cancellation or exactly-once billing.",
+          "reason": "Reviewed tests explicitly preserve in-flight unknown liability and quarantine late results. Claim is bounded to local state handling, not remote cancellation or verified billing settlement.",
+          "anchors": [
+            {
+              "pr": 398,
+              "path": "src/api/tests/test_continuity_epoch_export.py",
+              "line": 231,
+              "detail": "Overlapping provider completion/suspend/restart test retains unknown liability and nonactionable late output."
+            },
+            {
+              "pr": 269,
+              "path": "src/api/tests/test_continuity.py",
+              "line": 102,
+              "detail": "Late completed result is not ready/actionable."
+            }
+          ]
+        },
+        {
+          "index": 9,
+          "text": "Preserve reconstructable permitted history without current reliance.",
+          "reason": "Reviewed audience-safe offline export retains release/proposal lifecycle after revocation while current reliance remains blocked; malformed/incomplete bundles fail verification.",
+          "anchors": [
+            {
+              "pr": 398,
+              "path": "src/api/tests/test_continuity_epoch_export.py",
+              "line": 533,
+              "detail": "Release snapshot/lifecycle remains verifiable offline after revocation."
+            },
+            {
+              "pr": 398,
+              "path": "src/api/tests/test_continuity_epoch_export.py",
+              "line": 1145,
+              "detail": "Exports preserve reason redaction; nested audience-safe evidence at line 1161."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue": 125,
+      "lane": "a",
+      "criterion_count": 3,
+      "original_body_sha256": "61386265ba920173dad2ac881d7263dcf49841db13b487f6911d48b96fd19e76",
+      "new_ticks": [],
+      "preserved_ticks": [],
+      "unmet": [
+        1,
+        2,
+        3
+      ],
+      "closed": false,
+      "prs": [],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 126,
+      "lane": "a",
+      "criterion_count": 17,
+      "original_body_sha256": "958c1756de6053f41154bc085c59a62b59b48ddb623591b7427857a9c0d1e12c",
+      "new_ticks": [
+        6,
+        7,
+        9
+      ],
+      "preserved_ticks": [
+        2,
+        3,
+        4
+      ],
+      "unmet": [
+        1,
+        5,
+        8,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "closed": false,
+      "prs": [
+        205,
+        261,
+        409,
+        422,
+        433,
+        439
+      ],
+      "parent_rejections": [
+        {
+          "index": 11,
+          "reason": "PC-002: historical documentary Review is not a merged assertion preserving current PRD acceptance independently."
+        },
+        {
+          "index": 12,
+          "reason": "PC-002: claim inventory tests do not assert all document/index/log updates and retained adverse outcomes."
+        }
+      ],
+      "new_tick_evidence": [
+        {
+          "index": 6,
+          "text": "Residual register includes T-RAI-001/002, MEASURE-01, GOVERN-AUDIT-01/02, MAP-01/02/04 and MN-3.2/4.1/4.3.",
+          "reason": "Whole literal inventory criterion is fulfilled by reviewed residual constants and detached register-read tests, not by closing any residual.",
+          "anchors": [
+            {
+              "pr": 409,
+              "path": "src/core/src/zava_forward/core/governance.py",
+              "line": 56,
+              "detail": "RAI_RESIDUALS contains exactly all eleven required residual IDs."
+            },
+            {
+              "pr": 409,
+              "path": "src/core/tests/test_governance.py",
+              "line": 257,
+              "detail": "Asserts exact finding inventory and 22 unique IDs, all Open/Unknown/insufficient."
+            }
+          ]
+        },
+        {
+          "index": 7,
+          "text": "Unassessed register includes GOVERN-AUDIT-04/05, MAP-05, MEASURE-02/03/04, MN-2.3, T-RAI-005 and EU-COND-01/02/04.",
+          "reason": "Whole literal inventory criterion is fulfilled by reviewed unassessed constants and exact inventory tests, without claiming assessment or applicability approval.",
+          "anchors": [
+            {
+              "pr": 409,
+              "path": "src/core/src/zava_forward/core/governance.py",
+              "line": 60,
+              "detail": "RAI_UNASSESSED contains all eleven enumerated checks."
+            },
+            {
+              "pr": 409,
+              "path": "src/core/tests/test_governance.py",
+              "line": 257,
+              "detail": "Asserts exact register membership and Unknown acceptance."
+            }
+          ]
+        },
+        {
+          "index": 9,
+          "text": "Preserve the original baseline and dated report acceptance. Code-only passes cannot close human, privacy/legal, actual-model, recovery or operational gates.",
+          "reason": "Reviewed register binds immutable original baseline and treats every supplied acceptance reference as unverified; complete source-test claims leave human/live findings Open/Unknown. Original adverse records remain preserved.",
+          "anchors": [
+            {
+              "pr": 409,
+              "path": "src/core/src/zava_forward/core/governance.py",
+              "line": 55,
+              "detail": "Fixed original RAI_BASELINE; claim validation at line 108 rejects changed baseline."
+            },
+            {
+              "pr": 409,
+              "path": "src/core/tests/test_governance.py",
+              "line": 308,
+              "detail": "All 22 complete fixture claims remain Open/Unknown, not accepted."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue": 128,
+      "lane": "a",
+      "criterion_count": 11,
+      "original_body_sha256": "17de9ad36f6fe0df556698a6b1bb7897d6726bae403a6a385be7ddb0fd951499",
+      "new_ticks": [],
+      "preserved_ticks": [],
+      "unmet": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "closed": false,
+      "prs": [
+        205
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 130,
+      "lane": "b",
+      "criterion_count": 15,
+      "original_body_sha256": "2dc447560de617b40bf350d76a5cbb9ef6cfdab80db1c3766a2b5afc4dba8cb5",
+      "new_ticks": [
+        1,
+        6,
+        12,
+        13,
+        15
+      ],
+      "preserved_ticks": [],
+      "unmet": [
+        2,
+        3,
+        4,
+        5,
+        7,
+        8,
+        9,
+        10,
+        11,
+        14
+      ],
+      "closed": false,
+      "prs": [
+        205,
+        318,
+        382,
+        406,
+        418,
+        509
+      ],
+      "parent_rejections": [
+        {
+          "index": 2,
+          "reason": "Staff-supplied acknowledgement with delivery Not verified does not prove an acknowledged route."
+        },
+        {
+          "index": 7,
+          "reason": "PC-001: existing tests preserve a different representative task grant, not nomination-stage limited authority."
+        },
+        {
+          "index": 8,
+          "reason": "PC-001: copied generic challenge snapshot lacks nomination-specific decision/version/resolution binding."
+        },
+        {
+          "index": 10,
+          "reason": "PC-001: generic priority keyboard tests do not exercise the nomination/correction UI route."
+        },
+        {
+          "index": 11,
+          "reason": "PC-001: nomination correction lacks exact dependent nomination-decision invalidation; generic staleness is not equivalent."
+        }
+      ],
+      "new_tick_evidence": [
+        {
+          "index": 1,
+          "text": "Nomination and self-referral create a record that keeps the original account, source and channel",
+          "reason": "Reviewed PR509 implements both intake kinds and immutable original account/source/channel; current reopened-store and HTTP regressions assert preservation. This proves the constructed recording contract, not eligibility or identity verification.",
+          "anchors": [
+            {
+              "pr": 509,
+              "path": "src/core/src/zava_forward/core/resident_decisions.py",
+              "line": 661,
+              "detail": "Closed intake contract accepts Officer nomination/Self-referral and stores original account, source, channel and recorder."
+            },
+            {
+              "pr": 509,
+              "path": "src/core/tests/test_resident_decisions.py",
+              "line": 167,
+              "detail": "test_intake_original_subject_correction_and_manual_history reopens store, asserts exact whitespace/original unchanged and all five channels."
+            },
+            {
+              "pr": 509,
+              "path": "src/api/tests/test_resident_api.py",
+              "line": 131,
+              "detail": "HTTP test records all five channels and asserts correction retains original subject and unrelated state."
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "text": "Non-response and support needs never lower priority; unknown is never recorded as none",
+          "reason": "Reviewed intake preserves ranking/other case state and explicitly stores Unknown support/risk/identity. Current regression also proves tenure holds do not turn accepted cases into false no-decision priority. Scope is the delivered intake, not a whole-cohort human study.",
+          "anchors": [
+            {
+              "pr": 509,
+              "path": "src/core/src/zava_forward/core/resident_decisions.py",
+              "line": 676,
+              "detail": "Intake identity_status, support_needs and risk_flags are Unknown."
+            },
+            {
+              "pr": 509,
+              "path": "src/core/tests/test_resident_decisions.py",
+              "line": 203,
+              "detail": "Asserts Unknown values, full unrelated state equality and unchanged ranking."
+            },
+            {
+              "pr": 509,
+              "path": "src/core/tests/test_resident_decisions.py",
+              "line": 314,
+              "detail": "Accepted status and complete heuristic ordering/reasons survive tenure intake and reopen."
+            }
+          ]
+        },
+        {
+          "index": 12,
+          "text": "No challenge, silence, sensor absence or correction infers consent/refusal, vulnerability, sanction, complaint closure or hazard-clock change.",
+          "reason": "Reviewed nomination intake/correction mutates only its record; full-case equality after removing that record proves all unrelated consent/support/remedy/hazard state unchanged. Generic challenge negative-boundary regression likewise retains unrelated state. This is constructed no-side-effect evidence, not real consent.",
+          "anchors": [
+            {
+              "pr": 509,
+              "path": "src/core/tests/test_resident_decisions.py",
+              "line": 211,
+              "detail": "After intake and correction, reopened case minus nomination_records equals pre-action full case, and ranking is unchanged."
+            },
+            {
+              "pr": 418,
+              "path": "src/core/tests/test_resident_decisions.py",
+              "line": 570,
+              "detail": "Generic challenge channel/explanation and negative-boundary regression retains unrelated case state."
+            },
+            {
+              "pr": 509,
+              "path": "src/core/src/zava_forward/core/resident_decisions.py",
+              "line": 676,
+              "detail": "Unknown risk/support fields and no consent/sanction/clock writes in intake/correction."
+            }
+          ]
+        },
+        {
+          "index": 13,
+          "text": "Preserve representative task limits and open-remedy protections in AC-063/064. Generic AI challenge does not resolve nomination-specific FR-037/OD-41/OD-42.",
+          "reason": "Preservation/boundary criterion is evidenced: representative task limits and unrelated remedies/decisions remain unchanged; generic challenge is explicitly not nomination-specific FR-037/OD-41/42 resolution. Original nomination policy and authorized participant gates remain open, so generic RAI ticks cannot close the issue.",
+          "anchors": [
+            {
+              "pr": 509,
+              "path": "src/core/tests/test_resident_decisions.py",
+              "line": 432,
+              "detail": "Communicate-only representative authority unchanged."
+            },
+            {
+              "pr": 418,
+              "path": "src/api/checks/challenge_browser_check.py",
+              "line": 145,
+              "detail": "decision, measure_decisions, hazards, closed and service_requests equal pre-correction values."
+            },
+            {
+              "pr": 509,
+              "path": ".copilot-tracking/reviews/logs/2026-10-29/safety-consent-130-fix-cycle-1-review.md",
+              "line": 96,
+              "detail": "Issue-wide authority/participant/professional acceptance remains separate."
+            }
+          ]
+        },
+        {
+          "index": 15,
+          "text": "Nothing is sent, booked or approved automatically.",
+          "reason": "Reviewed recording operations append evidence and unresolved holds only. Tests assert full unrelated-state equality and unchanged representative authority; no dispatch, booking, consent or approval is performed by intake.",
+          "anchors": [
+            {
+              "pr": 509,
+              "path": "src/core/src/zava_forward/core/resident_decisions.py",
+              "line": 661,
+              "detail": "Three intake methods contain only validation, record append and unresolved review status/hold."
+            },
+            {
+              "pr": 509,
+              "path": "src/api/tests/test_resident_api.py",
+              "line": 156,
+              "detail": "Current case minus nomination_records equals pre-action case."
+            },
+            {
+              "pr": 509,
+              "path": "src/core/tests/test_resident_decisions.py",
+              "line": 450,
+              "detail": "Representative authority unchanged; no measure_decisions introduced."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue": 131,
+      "lane": "b",
+      "criterion_count": 7,
+      "original_body_sha256": "862017925c48121596a27206ea207744cd4ff58583b397046a1c856fd1664142",
+      "new_ticks": [
+        7
+      ],
+      "preserved_ticks": [],
+      "unmet": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "closed": false,
+      "prs": [
+        318,
+        509
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": [
+        {
+          "index": 7,
+          "text": "Role projection hides lease detail from roles that do not need it",
+          "reason": "Reviewed core/API tests assert unauthorized current roles cannot read or mutate intake, including after cached reader downgrade/removal. Lease/account/source canaries are absent from unauthorized output, export/model facts.",
+          "anchors": [
+            {
+              "pr": 509,
+              "path": "src/core/tests/test_resident_decisions.py",
+              "line": 432,
+              "detail": "Rex/Kim details and all assistant captures omit private canaries; denied actors cannot nominate."
+            },
+            {
+              "pr": 509,
+              "path": "src/api/tests/test_resident_api.py",
+              "line": 193,
+              "detail": "403 mutation controls, absence of tenure fields for unauthorized readers, cached-registry downgrade/removal denial."
+            },
+            {
+              "pr": 509,
+              "path": "src/core/src/zava_forward/core/resident_decisions.py",
+              "line": 617,
+              "detail": "Registered named human recorder and role checks underpin intake transactions."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue": 133,
+      "lane": "b",
+      "criterion_count": 6,
+      "original_body_sha256": "ffb2f86d85491fa2e48509ee1226ce866d890df3d68042eb12044ed785411aea",
+      "new_ticks": [],
+      "preserved_ticks": [],
+      "unmet": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "closed": false,
+      "prs": [
+        505
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 137,
+      "lane": "b",
+      "criterion_count": 5,
+      "original_body_sha256": "daa110b8c75bdcfd3b53fd5470a7e85bdad87e21a01f9388b3e37ef584d16113",
+      "new_ticks": [],
+      "preserved_ticks": [
+        1,
+        2,
+        3,
+        5
+      ],
+      "unmet": [
+        4
+      ],
+      "closed": false,
+      "prs": [
+        306,
+        346,
+        415
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 138,
+      "lane": "b",
+      "criterion_count": 6,
+      "original_body_sha256": "a0ace70d47d7e59d7c4e6c3d7834a6b6700e0cc6f442137fa2b0a7612a16fe1f",
+      "new_ticks": [],
+      "preserved_ticks": [],
+      "unmet": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "closed": false,
+      "prs": [
+        333,
+        357,
+        500,
+        511
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 140,
+      "lane": "b",
+      "criterion_count": 6,
+      "original_body_sha256": "5c0d92733d9013c457b0d81772f1a08248ef84b9ad3b886520fa2014ab840694",
+      "new_ticks": [
+        6
+      ],
+      "preserved_ticks": [
+        2,
+        3,
+        4
+      ],
+      "unmet": [
+        1,
+        5
+      ],
+      "closed": false,
+      "prs": [
+        273,
+        357,
+        498,
+        557
+      ],
+      "parent_rejections": [
+        {
+          "index": 5,
+          "reason": "Exercise owner selection is not complete operational credential-owner decision/test coverage."
+        }
+      ],
+      "new_tick_evidence": [
+        {
+          "index": 6,
+          "text": "Module is covered by build, lint and what-if gates and by a cost entry in the budget",
+          "reason": "Coverage-as-code criterion is met: reviewed compiler/lint/mutation tests cover the module, trusted infra-change what-if workflow covers candidate infra, and budget tests assert exact transport filters/amount/thresholds. Actual production workflow execution, prices/headroom and transport approval remain unproven; gate definition is not a successful live-run claim.",
+          "anchors": [
+            {
+              "pr": 498,
+              "path": "infra/README.md",
+              "line": 3817,
+              "detail": "Build/lint/what-if wiring and explicit no-live-run boundary."
+            },
+            {
+              "pr": 498,
+              "path": "infra/tests/test_iothub_module.py",
+              "line": 696,
+              "detail": "Budget resource filters and amount constraints tested."
+            },
+            {
+              "pr": 357,
+              "path": ".github/workflows/infra-plan.yml",
+              "line": 37,
+              "detail": "Trusted candidate infra filter and same-SHA what-if artifact cover module changes."
+            },
+            {
+              "pr": 557,
+              "path": "infra/README.md",
+              "line": 3667,
+              "detail": "Narrow existing-hub child-only reconciliation is not production adapter deployment."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue": 141,
+      "lane": "b",
+      "criterion_count": 5,
+      "original_body_sha256": "61be3149ac1da535d3be49f8b4b265017112dafe71ed19255f0a617691f0d179",
+      "new_ticks": [],
+      "preserved_ticks": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "unmet": [
+        5
+      ],
+      "closed": false,
+      "prs": [
+        277
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 142,
+      "lane": "b",
+      "criterion_count": 4,
+      "original_body_sha256": "98247040c32d33faf9e631a257dc75770758e41ccdf6a796214e88e62d9e5a36",
+      "new_ticks": [],
+      "preserved_ticks": [
+        4
+      ],
+      "unmet": [
+        1,
+        2,
+        3
+      ],
+      "closed": false,
+      "prs": [
+        265
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 143,
+      "lane": "b",
+      "criterion_count": 5,
+      "original_body_sha256": "8b129139a3b0aae57ebe647e012102065740f3758a1bba466f5fcbb968b70a40",
+      "new_ticks": [],
+      "preserved_ticks": [
+        1,
+        2,
+        4
+      ],
+      "unmet": [
+        3,
+        5
+      ],
+      "closed": false,
+      "prs": [
+        278,
+        352
+      ],
+      "parent_rejections": [
+        {
+          "index": 3,
+          "reason": "PC-003: fragment tests do not assert the whole selected-host/TLS/callback consistency contract."
+        }
+      ],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 144,
+      "lane": "b",
+      "criterion_count": 6,
+      "original_body_sha256": "208f5a1738a0d02817cd48581fb9816151b2d554d067639e36f10c2464a49737",
+      "new_ticks": [],
+      "preserved_ticks": [],
+      "unmet": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "closed": false,
+      "prs": [
+        243,
+        294,
+        301,
+        303,
+        433
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 145,
+      "lane": "b",
+      "criterion_count": 12,
+      "original_body_sha256": "333b53d3a88f7b45769412c9ed2ed02ed5b96eb6c65fc4b6e6338af574c506ec",
+      "new_ticks": [],
+      "preserved_ticks": [],
+      "unmet": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "closed": false,
+      "prs": [
+        205
+      ],
+      "parent_rejections": [
+        {
+          "index": 11,
+          "reason": "Positive recovery anchors lack merged-review provenance; PR205 changed issue bodies, not recovery delivery."
+        }
+      ],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 146,
+      "lane": "b",
+      "criterion_count": 15,
+      "original_body_sha256": "745364eba76e5a85978577f1d58c0b177c22832e79d2f9918a6e4f590d179e39",
+      "new_ticks": [
+        12
+      ],
+      "preserved_ticks": [
+        15
+      ],
+      "unmet": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14
+      ],
+      "closed": false,
+      "prs": [
+        205,
+        433,
+        512,
+        602
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": [
+        {
+          "index": 12,
+          "text": "Implement through existing audit/report/UI surfaces without adding an observability platform or requiring unrelated future IoT delivery.",
+          "reason": "Implementation-placement constraint is met for delivered slices: PR512 reuses existing Monitor workspace/Insights and independent optional IoT rules; indirect PR602 implements reports in existing assistant-events ledger/API. No new observability platform or future IoT activation requirement. This does not complete still-missing harm indicators/incident/runtime integration.",
+          "anchors": [
+            {
+              "pr": 512,
+              "path": "infra/modules/operationalMonitoring.bicep",
+              "line": 87,
+              "detail": "Existing workspace/Insights binding, no new platform."
+            },
+            {
+              "pr": 512,
+              "path": "infra/monitoring-runbooks.md",
+              "line": 377,
+              "detail": "Existing audit/continuity placement; broader runtime integration remains open."
+            },
+            {
+              "pr": 602,
+              "path": "src/core/src/zava_forward/core/ai_consumption.py",
+              "line": 945,
+              "detail": "Existing-ledger report implementation, not a new platform."
+            },
+            {
+              "pr": 602,
+              "path": "src/core/tests/test_ai_consumption.py",
+              "line": 475,
+              "detail": "Constructed billing/report tests assert financial source and fail-closed joins."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue": 147,
+      "lane": "c",
+      "criterion_count": 4,
+      "original_body_sha256": "069e0054b6a2967f551497ba5f6304930eb8fafd5929f13e558071f823a4a63b",
+      "new_ticks": [],
+      "preserved_ticks": [
+        2,
+        3,
+        4
+      ],
+      "unmet": [
+        1
+      ],
+      "closed": false,
+      "prs": [
+        274,
+        500
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 148,
+      "lane": "c",
+      "criterion_count": 4,
+      "original_body_sha256": "de976d3c82fbc1a7648cba68e6bcc681b28b37cd5ad0ee27e4465fff99d9b686",
+      "new_ticks": [],
+      "preserved_ticks": [],
+      "unmet": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "closed": false,
+      "prs": [
+        511
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 151,
+      "lane": "c",
+      "criterion_count": 6,
+      "original_body_sha256": "157e1e1a0d2f0aeade301509524d11ba4c7cba0ee6e4a4143c3bcacaea56df37",
+      "new_ticks": [],
+      "preserved_ticks": [
+        3,
+        6
+      ],
+      "unmet": [
+        1,
+        2,
+        4,
+        5
+      ],
+      "closed": false,
+      "prs": [
+        244,
+        291,
+        427
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 152,
+      "lane": "c",
+      "criterion_count": 5,
+      "original_body_sha256": "3d810c8e4cb0c9a4637059cc919a1d15481a5cbe1579489cc13efa9e8ae96566",
+      "new_ticks": [],
+      "preserved_ticks": [
+        2,
+        3,
+        4
+      ],
+      "unmet": [
+        1,
+        5
+      ],
+      "closed": false,
+      "prs": [
+        317,
+        401
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 153,
+      "lane": "c",
+      "criterion_count": 5,
+      "original_body_sha256": "8453431edacd56ec64a4dcc171b77ac0b25e0806f3e9b60b6149f4b42eb156a4",
+      "new_ticks": [],
+      "preserved_ticks": [
+        1,
+        4
+      ],
+      "unmet": [
+        2,
+        3,
+        5
+      ],
+      "closed": false,
+      "prs": [
+        242,
+        402,
+        501
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 154,
+      "lane": "c",
+      "criterion_count": 5,
+      "original_body_sha256": "13d73501b0b5f89222291724431aa42475e6a5fcf6e2b80a2dbe5fbb8f762eed",
+      "new_ticks": [],
+      "preserved_ticks": [],
+      "unmet": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "closed": false,
+      "prs": [
+        501
+      ],
+      "parent_rejections": [
+        {
+          "index": 1,
+          "reason": "Reviewed designs lack extant tests asserting complete named topic coverage."
+        },
+        {
+          "index": 4,
+          "reason": "Reviewed design lacks extant test asserting all three offered/waiting/confirmed distinctions."
+        }
+      ],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 155,
+      "lane": "c",
+      "criterion_count": 5,
+      "original_body_sha256": "a1f2a3c9537761fa93ea9c0c4b4d13f7ba085d958ab4b2843fab120be48b63c3",
+      "new_ticks": [],
+      "preserved_ticks": [],
+      "unmet": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "closed": false,
+      "prs": [],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 156,
+      "lane": "c",
+      "criterion_count": 4,
+      "original_body_sha256": "af435b60348e71d5b39ef4211f439677786cdc3938c11b803bf0b87aef040724",
+      "new_ticks": [],
+      "preserved_ticks": [
+        2,
+        3,
+        4
+      ],
+      "unmet": [
+        1
+      ],
+      "closed": false,
+      "prs": [
+        400,
+        401
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    },
+    {
+      "issue": 159,
+      "lane": "c",
+      "criterion_count": 7,
+      "original_body_sha256": "5fe40b3c01170579b6120236d351594cfff7862eb64ea1bd5b48f45dd6eed914",
+      "new_ticks": [],
+      "preserved_ticks": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "unmet": [
+        6,
+        7
+      ],
+      "closed": false,
+      "prs": [
+        305,
+        307,
+        433,
+        503,
+        556
+      ],
+      "parent_rejections": [],
+      "new_tick_evidence": []
+    }
+  ],
+  "summary": {
+    "issues": 46,
+    "criteria": 297,
+    "new_ticks": 30,
+    "preserved_ticks": 75,
+    "unmet_unchecked": 192,
+    "closures": 0
+  }
+}
