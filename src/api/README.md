@@ -49,7 +49,13 @@ Maintained authenticated-session integration now lives in
 already authenticated Playwright `Page`, invoke
 `verify_employee(page, {"tid": independently_verified_tid, "oid": independently_verified_oid})`.
 It validates the exact boolean predicate projection, checks the authorized
-origin and rechecks identity before and after each chat, map and case stage.
+origin and rechecks identity before and after each chat, map and case stage,
+after hash/link navigation and before subsequent offered-control actions
+(including chat draft/send). Observer callbacks take `(page, admit)` and must
+invoke the supplied fresh-admission function at navigation/action boundaries.
+Admission loss leaves the current and later stages blocked without executing
+the next action. Probes are not an atomic guarantee against concurrent session
+changes; the application still enforces authorization on every request.
 Only strict `authenticated=true` admits observations; email/roster diagnostics
 cannot substitute for it. Each stage returns `passed`, `failed` or `blocked`,
 and the overall `passed` flag is true only when every stage passes.
@@ -59,6 +65,14 @@ credential entry point, saves no sessions and consumes zero sign-in attempts.
 The authorized caller still owns independent ID attestation, credential/debug/
 capture safety, finite attempt accounting and browser lifecycle/watchdog.
 
+Map acceptance excludes requests initiated before filter activation, matches
+the selected flag/area and observes fit/viewport follow-ups until request/render
+settlement. It validates points/clusters/empty payloads and compares the latest
+response's actual list links/labels, marker labels/count and status. Malformed
+data, map alerts, page errors and mismatched rendering fail; HTTP 200, selected
+state or a cleared busy indicator alone cannot pass. Temporary listeners are
+removed on success, failure and admission loss. Payloads remain in memory only.
+
 From `src/api`, run the changed local Chromium check with the existing test
 paths (installed Chromium required; no live identity or credential access):
 
@@ -67,10 +81,12 @@ PYTHONPATH=.:src:tests:../core/src:../agents/src:../core/tests:../agents/tests \
   python3 -m checks.employee_acceptance_check
 ```
 
-This executes two real loopback Chromium regressions with constructed
+This executes three real loopback Chromium regressions with constructed
 trusted-proxy `/api/me` HTTP responses: a rosterless expected account with
 no display email is admitted, and a different immutable account is denied
-before any downstream callback. The positive test also runs the actual local
+before any downstream callback; the third covers valid and malformed map
+rendering, pre-activation stale responses and fit/viewport replacements.
+The positive test also runs the actual local
 chat/map/case observers against the synthetic server, with explicitly synthetic
 privacy references, workflow-only chat and no external network. This does not
 prove deployed behavior or operational privacy approval. On 2026-10-31 the authorized

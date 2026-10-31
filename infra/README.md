@@ -2,7 +2,7 @@
 title: Azure Infrastructure (Bicep)
 description: Bicep deployment of the proposed Zava Forward demonstrator Azure architecture
 author: AMA programme
-ms.date: 2026-10-28
+ms.date: 2026-10-30
 ms.topic: how-to
 ---
 
@@ -2207,21 +2207,32 @@ Prerequisites (not executed or deployed by setup):
   `python /app/scripts/staff-azure-worker.py`. No Azure CLI is needed in the image.
 * Operator management permissions to read the API/environment, SQL
   server/database/admin and identity, create/start/read/stop/delete temporary
-  jobs, and read/merge/delete result tags on the source initializer. Results
-  use ARM only, not console streaming or a Log Analytics query. Private
-  environment log-endpoint reachability is no longer required. The operator
+  jobs, and read the private storage account/container configuration.
+  Result reads use operator-profile Entra list/read data-plane permissions
+  on the `staff-results` container and a private-connected host that resolves
+  and reaches its private endpoint. ARM job control alone is insufficient.
+  There is no console streaming, Log Analytics, public Blob, SAS, shared-key
+  or tag fallback. Private environment log-endpoint reachability is not
+  required. The operator
   also needs existing vault metadata/secret-deployment and group deployment/
   what-if permissions; no role is created by setup. Local cryptography comes from
   `python3 -m pip install -r src/api/requirements.txt`.
 * The existing initializer identity needs its existing SQL-admin and AcrPull
-  permissions plus the narrowly scoped API restart and source-job-only tags
+  permissions plus the narrowly scoped API restart and private-container write
   roles below. These definitions are **not activated by setup or this delivery**.
-  The tag role grants only Microsoft.Resources/tags/read and tags/write on the
-  existing initializer, not jobs/write, listSecrets or resource-group access.
+  The current template's `includeResultBlob` defaults to `false`; it does not
+  accept the removed `includeResultRelay` parameter from historical receipts.
+  The Blob role grants only `blobs/write` and `blobs/add/action` on
+  `staff-results`, not read, list, delete, jobs/write, listSecrets or
+  resource-group access. Its activation needs separate explicit approval.
   No new identity,
   Graph permission or general Contributor role is introduced. SQL remains
-  Entra-only with public access Disabled; private DNS/subnet and the actual
+  Entra-only with public access Disabled; Blob public network, anonymous
+  access and shared keys remain disabled. Private DNS/subnet and the actual
   SQL administrator principal are verified before a roster is transferred.
+  Provision the private `staff-results` container and lifecycle policy through
+  the reviewed storage module before an authorized Blob writer grant. Set
+  `ZF_BLOB_ACCOUNT_URL` on the API and use a rebuilt digest-pinned proof image.
 
 Required later, authorized image build (shown only; not run for this change):
 
@@ -2232,10 +2243,12 @@ Required later, authorized image build (shown only; not run for this change):
 az containerapp job update -g ama -n <existing-init-job> \
   --image <registry-server>/zava-forward-cutover-proof@sha256:<proof-digest> -o none
 az deployment group what-if -g ama --template-file infra/staff-initializer-rbac.bicep \
-  --parameters apiName=<api-name> initializerIdentityName=<existing-init-identity-name>
+  --parameters apiName=<api-name> initializerIdentityName=<existing-init-identity-name> \
+  includeResultBlob=false
 # Requires explicit role-creation/assignment authorization, not merely RG Owner:
 az deployment group create -g ama --template-file infra/staff-initializer-rbac.bicep \
-  --parameters apiName=<api-name> initializerIdentityName=<existing-init-identity-name> -o none
+  --parameters apiName=<api-name> initializerIdentityName=<existing-init-identity-name> \
+  includeResultBlob=false -o none
 ```
 
 Build context is only `infra/`; API image context remains `src/`. The displayed
@@ -2248,23 +2261,41 @@ unreachable. Publication remains **Blocked**, not permission to run public ACR
 Tasks, add a paid pool, change routing or open the registry. An authorized
 existing private publisher must supply the immutable proof digest.
 The standalone Bicep template refuses non-ama scope and assigns app/revision/
-replica reads/restart only to the selected API, plus tags read/write only to
-the existing initializer. It changes neither SQL admin nor network configuration.
+replica reads/restart only to the selected API. A separately approved opt-in
+adds container-scoped Blob write for the initializer identity. It changes
+neither SQL admin nor network configuration.
 Role activation is an explicit IAM-operator action after authorization and
 what-if review, never inferred from the owner asking to continue the demo.
 
-For approval limited to API read/restart, pass `includeResultRelay=false` to
-both what-if and create. This omits both the result-tag role definition and
-its assignment; the four API actions and API-only assignment stay unchanged.
-The default remains `true` for compatibility, so omitting the parameter still
-requires explicit approval for existing-initializer-job
-`Microsoft.Resources/tags/read` and `Microsoft.Resources/tags/write`.
-Approval for temporary staff-job lifecycle does not authorize those existing
-job tag grants. Temporary-job operations belong to the operator, not this
+For approval limited to API read/restart, pass `includeResultBlob=false` to
+both what-if and create (also the default). This omits the Blob role definition
+and assignment; the four API actions and API-only assignment stay unchanged.
+After separate explicit approval and container provisioning, preview and
+apply the writer grant with the same exact parameters:
+
+```bash
+az deployment group what-if -g ama --template-file infra/staff-initializer-rbac.bicep \
+  --parameters apiName=<api-name> initializerIdentityName=<existing-init-identity-name> \
+  storageAccountName=<private-storage-account> includeResultBlob=true
+az deployment group create -g ama --template-file infra/staff-initializer-rbac.bicep \
+  --parameters apiName=<api-name> initializerIdentityName=<existing-init-identity-name> \
+  storageAccountName=<private-storage-account> includeResultBlob=true -o none
+```
+
+These are conditional runbook examples, not current execution authority.
+Approval for temporary staff-job lifecycle does not authorize the Blob grant.
+Temporary-job operations belong to the operator, not this
 template or the initializer MI; do not add a general jobs/Contributor role.
-Incremental deployment with relay disabled does not revoke any pre-existing
-relay assignment. See the [scoped activation receipt](#scoped-initializer-iam-activation-2026-10-17-360)
-for the exact live outcome and remaining gates.
+Incremental deployment with Blob disabled does not revoke a pre-existing
+Blob assignment, its role definition or a historical tag assignment.
+`includeResultBlob=false` selects API-only deployment; it is not a cleanup
+command. An authorized IAM operator must separately approve and retire the
+exact obsolete assignment/role after checking other consumers. Setup does not
+delete result grants or the container; ciphertext follows the configured
+lifecycle and soft-delete retention. The dated
+[scoped activation receipt](#scoped-initializer-iam-activation-2026-10-17-360)
+records historical grants, not approval of the replacement Blob transport;
+any grant retirement needs separately authorized IAM review.
 
 Each operation clones only the verified source image/registry/identity into a
 unique `job-staff-<random>` manual job, with one replica, no retries and a
@@ -2272,8 +2303,9 @@ unique `job-staff-<random>` manual job, with one replica, no retries and a
 (maximum 12 KiB of payload) and a fresh result-encryption key as a Container Apps
 secret, via a private mode-0600 ARM body file outside Git. CLI logging and
 telemetry are disabled; body files are removed even on failure. No identities
-or secret values occur in CLI arguments. No blob/Key Vault data-plane path
-is required. The job never receives an operator access token.
+or secret values occur in CLI arguments. Private Blob data-plane access is
+required for worker writes and operator reads; no Key Vault data-plane path
+is used for result transport. The job never receives an operator access token.
 
 The job reads the existing SQL positions, uses the canonical protected-profile
 and atomic installation rules, rereads to verify zero remaining drift, then
@@ -2284,21 +2316,21 @@ After SQL success but restart failure, the result remains incomplete.
 
 Job logs contain only generic failure messages, never candidates, people,
 codes, roster, keys, credentials or SQL exceptions. Results are authenticated
-AES-GCM ciphertext bound to this run/operation/input. The existing initializer's
-tags carry at most 40 frames of 200 ciphertext characters, each complete tag
-value below 256 characters (roughly 5.7 KiB of clear result capacity, depending
-on envelope size). The key remains in the temporary request secret/operator
-memory, never in tags. More than ten existing relay tags blocks transfer;
-oversized candidate results fail explicitly. No larger fallback store is made.
-Only per-run names are merged; unrelated tags and source configuration remain.
-The client polls ARM tags and job status, decrypts only in memory, and requires
-both authenticated output and terminal Succeeded. Missing/tampered/oversized
-results or a deadline failure cannot be mistaken for success; no live replica
-hold or private console endpoint is needed.
+AES-GCM ciphertext bound to this run, operation, input and image digest.
+(Superseded 2026-10-22: the ARM tag frames described in earlier revisions are
+retired.) The worker writes complete, bounded pages to the private
+`staff-results` Blob container with its managed identity, and the client reads
+them with Entra credentials from a private-connected host after terminal
+Succeeded; see [Private Blob result transport](#private-blob-result-transport-2026-10-22-refs-360).
+The key remains in the temporary request secret and operator memory. Missing,
+extra, tampered, oversized, expired or mismatched pages, an unreachable Blob,
+or a deadline failure cannot be mistaken for success, and there is no tag,
+console or local fallback.
 
 Setup stops uncertain/failed executions and deletes only its owned temporary
-job, including the roster secret; it polls for confirmed absence and then
-selectively deletes only this run's encrypted result tags and confirms absence.
+job, including the roster secret; it polls for confirmed absence. Encrypted
+result Blobs are retained for the configured one-day lifecycle deletion,
+with 30-day soft-delete retention, not immediately deleted by setup.
 It never deletes the source initializer or changes its configuration. A cleanup failure blocks success
 and prints only the owned temporary job name. Hard termination/power loss
 cannot guarantee cleanup: in a serialized operator window, inspect the
@@ -2310,9 +2342,10 @@ az containerapp job delete -g ama -n <owned-job-staff-name> --yes -o none
 ```
 
 After confirming that the worker has stopped and the exact job is absent,
-remove only the source initializer tags whose `zfstaff-<full-run-id>-` prefix
-matches that request. Never remove other tags, infer ownership from a short
-prefix, or delete the source initializer. Interrupted hard-kill recovery
+leave encrypted result Blobs to the configured lifecycle; setup has no
+Blob-delete grant and does not mutate source initializer tags. Never infer
+ownership from a short prefix or delete the source initializer.
+Interrupted hard-kill recovery
 requires the serialized operator window; retained ciphertext is not a clear
 roster and cannot be decrypted after losing the request key.
 Never delete `ama` or an unowned job. SQL may already have committed; first use
@@ -2622,8 +2655,8 @@ is superseded only by the [subsequent explicit relay delta](#approved-existing-j
 The owner explicitly approved only reviewed API read/restart and temporary
 staff-job lifecycle permissions in `ama` on 2026-10-17 (boolean true).
 The existing-job tag relay is not temporary-job lifecycle: its
-`Microsoft.Resources/tags/read` and `Microsoft.Resources/tags/write` remain
-**unapproved and unapplied**. The template does not grant temporary-job
+tag read/write permissions remain **unapproved and unapplied**, and the relay
+itself was retired on 2026-10-22 (see the Private Blob result transport). The template does not grant temporary-job
 lifecycle to the initializer MI. Those operations belong to the setup
 operator; no new operator role or temporary job was created.
 
@@ -2641,8 +2674,11 @@ az deployment group create -g ama --name staff-iam-360-api-20261017 \
   initializerIdentityName=id-cutover-test-init includeResultRelay=false -o none
 ```
 
-These commands record the performed API-only operation, not authorization to
-rerun or activate the default relay grants. The fresh what-if Succeeded with
+These commands record the performed API-only operation using the 2026-10-17
+template, not current deployment instructions or authorization to rerun or
+activate relay grants. The current template uses `includeResultBlob=false` by
+default and no longer accepts `includeResultRelay`.
+The fresh what-if Succeeded with
 exactly two Creates (role definition and API child assignment), plus 94
 same-group Ignore rows. Deployment `staff-iam-360-api-20261017` **Succeeded**;
 correlation ID `2177965b-1d42-4709-962b-3475e2186264`.
@@ -2688,8 +2724,11 @@ result tags on the existing initializer job only. No plaintext secrets, job
 configuration rights, new resources or broader scope. May I activate that
 reviewed grant too?" This resolves the relay approval boundary only.
 
-The reviewed source was unchanged. Its actual parameter name is
-`includeResultRelay`, not `includeResultTagRelay`. Both preview and apply used:
+The reviewed source was unchanged on 2026-10-17. Its parameter name then was
+`includeResultRelay`, not `includeResultTagRelay`. The following commands are
+historical receipts; the current template no longer accepts either parameter.
+Current Blob grants are default-off and need separate approval as described in
+the current prerequisites above. Both historical preview and apply used:
 
 ```bash
 az deployment group what-if -g ama --name staff-iam-360-relay-20261017 \
@@ -2830,6 +2869,342 @@ incomplete runtime convergence. If SQL commits but restart fails, retry the
 same command: no duplicate role grant or audit event is created. Do not reseed
 or weaken authentication to repair onboarding. New role assignments may
 require the person to sign out and sign in again for fresh role claims.
+
+### Authenticated Roster Result Transport Design (2026-10-20, Refs #360)
+
+> **Superseded for the result path (2026-10-22):** owner decision DN1 rejected
+> the ARM-tag relay proposed below. See
+> [Private Blob result transport](#private-blob-result-transport-2026-10-22-refs-360).
+> The text below is preserved as dated history, including its negative evidence.
+
+**Status: design for review only. Nothing here was executed.** The owner
+directed a documented authenticated alternative transport and a
+tenant-administrator checklist ([#360 comment](https://github.com/jmservera/ama/issues/360#issuecomment-6290697080),
+[#126 comment](https://github.com/jmservera/ama/issues/126#issuecomment-6290697705)).
+No cloud allocation, deployment, Graph write, secret access, private dataset
+access, billing run, live retry, parser relaxation or decryption occurred.
+Whole #360 criteria c, d and e remain **unproved**; a design is not
+acceptance.
+
+**Process disclosure (2026-10-20).** The first version of this section was
+written without activating the research, plan, implement and review skills.
+That version's critique and review were not genuine RPI outcomes. A recovery
+cycle re-ran research, planning with one critique, implementation and one
+review, re-verified the evidence and corrected two statements below (the shared
+decoder and the unverified prefix counting). Independent verification by the
+coordinator and human reviewers is still pending; this section is not an
+accepted outcome.
+
+#### Preserved evidence (unchanged)
+
+* Three bounded temporary-job recovery attempts (2026-10-19, [#360 comment](https://github.com/jmservera/ama/issues/360#issuecomment-6277108234)) are
+  preserved. All temporary recovery resources were confirmed removed. The
+  latest attempt passed registry checks, then the console decoder refused the
+  provider's framing. No authenticated SQL projection or replacement candidate
+  exists. The original private roster is unchanged.
+* Public-source research then found an official Azure CLI HTTP recording of
+  connection-control messages and application lines, but no exhaustive,
+  versioned provider contract for control-message origin, partial versus full
+  mapping, completeness or truncation. Sampled output is not authorization to
+  discard unknown plaintext. The strict parser stays as is.
+* **Unresolved contradiction.** Merged `staff_azure.py` has read results from
+  ARM tags since #375 (2026-10-17), while the comment above describes console
+  decoding. Repository evidence cannot show which code path the attempts ran.
+  Reconcile this from the preserved private run record before any retry
+  (decision DN3). No tag value was ever written or read live: the 2026-10-17
+  relay grant was verified by role readback only.
+
+#### Requirements and current mechanism
+
+| Required property | Current mechanism | Gap the design must close |
+| --- | --- | --- |
+| Run binding | Per-run random `run`, per-run key, per-run tag prefix, run in AEAD associated data | None found |
+| Query/operation binding | `operation` in associated data (`candidates`, `check`, `apply`) | No projection or schema version |
+| Input binding | SHA-256 of payload plus target and relay in associated data | None found |
+| Worker, manifest, image binding | Not in associated data; image only validated by the controller before start | Add as controller-held acceptance inputs, see below |
+| Authorization | Entra and Azure RBAC on ARM; initializer identity limited to tags read/write on the existing initializer job | RBAC cannot filter tag content; effective-writer inventory needed |
+| Confidentiality | AES-GCM ciphertext only in tags | Tags are plain text (official warning below); metadata exposure remains |
+| Integrity and completeness | Contiguous index and count, AEAD over the whole value, frame and length bounds, terminal Succeeded required | Single accepted snapshot rule and concurrent-mutation tests |
+| Freshness | Fresh per-run key and run, bounded deadline | No explicit not-after value in associated data |
+| Fail-closed parsing | Tag values are rebuilt as log-style lines and read by the same console-line decoder; invalid frame, duplicate or tamper refuses, but a non-frame value under the run prefix is skipped | Strict tag-name grammar and extra-key refusal tests (S2) |
+
+#### Options considered
+
+Official sources were read on 2026-10-20; samples are not treated as
+exhaustive guarantees.
+
+| Option | Why | Verdict |
+| --- | --- | --- |
+| T1 ARM tag relay of AEAD frames, plus binding extension | Documented ARM tags API; Entra/RBAC; reachable from the operator without a private route; named records that need a strict grammar (see S2); no new resource; grant already activated on the existing job | **Proposed minimal option** |
+| T2 Blob result written by the worker identity | [Blob data access uses Entra RBAC](https://learn.microsoft.com/en-us/azure/storage/blobs/authorize-access-azure-active-directory), but needs a private-endpoint route the operator lacks, the same route that is capacity blocked | Decision-needed fallback if T1 capacity is exceeded |
+| T3 Log Analytics query | [Records arrive after several minutes' delay](https://learn.microsoft.com/en-us/azure/container-apps/log-options); query access is Disabled in the private profile; no completeness contract | Not suitable as primary |
+| T4 Deployment script outputs | [Creates and bills a storage account and container instance](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deployment-script-bicep); outputs live in deployment history | Rejected |
+| T5 Azure support clarification of console framing | Would give a contract for the failed path | Parallel owner action, not a dependency |
+| T6 Console stream or exec | Failed three times, no exhaustive contract | Excluded; do not relax the parser |
+| T7 Do not return candidates; derive positions from a versioned synthetic manifest | Removes the return payload | Decision-needed (DN4) |
+| T8 Approved private-connected controller reading a private data-plane store | Avoids management-plane tag exposure and the frame bound | Out of current scope; needs a working private route and a costed plan; compare later, not rejected as unviable |
+
+#### Proposed minimal design (T1)
+
+The official [tags guidance](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources)
+(ms.date 2025-09-15) gives a 50 name-value maximum and a 256-character value
+maximum per resource, and warns that tags are plain text that can surface in
+cost reports, tag-returning commands, deployment histories, exported templates
+and monitoring logs. Therefore only AES-GCM ciphertext may be stored, and the
+relay is a bounded, temporary carrier of position metadata, never of names,
+UPNs, object IDs or the roster.
+
+Synthetic size evidence (local arithmetic on the existing encoder and
+`staff_candidates` shape, no private data): 25 positions need about 12 to 16
+of 40 frames; 80 Programme-Manager-shaped or 60 Contractor-shaped positions
+need 36 to 37 frames; 100 positions exceed the bound. The real position count
+was not read and is unknown (DN2).
+
+Proposed binding extension, subject to review and not implemented here:
+
+* Associated data version 2 covers: version, run, operation, input digest,
+  query identifier, result schema version, expected immutable image digest,
+  SHA-256 of the worker script and of the manifest, and a not-after time.
+* The controller, not the worker, holds the acceptance inputs: the exact
+  temporary job resource ID, the returned execution ID, the expected image
+  digest read through ARM, and its own file hashes. A result is accepted only
+  if the decrypted claims equal those controller-held values.
+* **Trust assumption.** The worker holds the per-run key. A valid AEAD result
+  therefore proves possession of that key and agreement with the bound
+  inputs, not independent proof that a particular image or script ran. Matching
+  repository file hashes does not prove image contents. Independent
+  image-to-source provenance (for example signed build provenance verified
+  against the digest) does not exist yet. Record worker and image binding as
+  an unresolved gap until it does (DN5); do not describe it as achieved.
+
+Threat model for tag-capable principals:
+
+| Principal or event | Possible effect | Control |
+| --- | --- | --- |
+| Holder of tags/write or write on the relay job | Delete, replace, collide with or exhaust frames: denial of service; cannot forge valid ciphertext without the key | Fail closed; effective-writer inventory before and after; stop on an unexpected writer; keep tag and Activity Log evidence; never treat as generic transport failure |
+| Reader of tags, cost, history, export or logs | Sees run identifier, frame count and ciphertext length, timing and retained ciphertext | Privacy/security approval gate DN1; delete owned tags after the run and confirm |
+| Eventual-consistency delay | Late frame looks like a withheld result | Bounded deadline, then refuse as ambiguous; a longer wait is a new, separately authorized run, never a hidden retry |
+| Another tag writer overwrites or deletes an owned frame name | The worker refuses name collisions when it writes, but the [tags API Merge operation](https://learn.microsoft.com/en-us/rest/api/resources/tags/update-at-scope?view=rest-resources-2021-04-01) updates existing names, so a later overwrite is detected only by AEAD and causes refusal, never a repaired result | Fail closed; effective-writer inventory; treat as denial of service |
+| Activity Log or other audit surface records the write | [Activity Log keeps management events for 90 days](https://learn.microsoft.com/en-us/azure/azure-monitor/platform/activity-log); whether tag values are recorded was not verified | Assume possible exposure of ciphertext until the DN1 review checks it |
+| Stale frames from another run | Misread as current | Run-prefixed names plus per-run key; other prefixes are not read; a check that counts and reports them is proposed for S2 |
+
+Fail-closed acceptance rules (all must hold, evaluated on one snapshot):
+exact named execution terminally Succeeded; expected image digest unchanged;
+tag names match one strict grammar; contiguous indexes with one consistent
+count within the bound; no duplicate, extra or oversized frame; AEAD
+authenticates; decrypted claims equal controller-held values; not-after not
+passed. Any other state is Refused, Ambiguous or Failed, never a partial
+result, and no unknown field is silently dropped. Compression, if later
+permitted (DN2), needs a hard decompressed-size bound before decryption output
+is parsed.
+
+#### Script-oriented implementation plan (later, separately authorized)
+
+| Step | Work | Offline exit evidence (synthetic only) |
+| --- | --- | --- |
+| S0 | Reconcile which path ran in the three attempts; capture the private run record outside Git | Written reconciliation, DN3 closed |
+| S1 | Add associated data v2 and controller acceptance inputs in `staff_azure.py` and the worker; keep v1 refused after cut-over | Unit tests for each altered binding failing closed |
+| S2 | Strict tag grammar and single-snapshot read; ambiguous-outcome states | Tests: replace, add, remove between reads, full capacity, stale same-prefix set, late frame, cleanup failure |
+| S3 | Size guard and DN2 decision (compression or paging by role) | Boundary tests at 39, 40 and 41 frames; decompression bound |
+| S4 | Image digest and job identity check before and after execution | Fake-ARM tests for digest drift and execution mismatch |
+| S5 | Runbook and evidence updates; no private sample | Doc and link review |
+| S6 | Operator dry run with fake ARM client only | Full local RPI gate |
+| S7 | One live run only after the approvals below | Not planned until approved |
+
+Preconditions before any live use: reviewer decisions DN1 to DN5; an approved
+finite cost and execution plan (the #126 plan, which this design deliberately
+does not depend on to be complete); fresh read-only inventory of the job,
+identity, role assignments and tag count; explicit authorization for one run
+of at most one temporary job, one replica, 600 seconds, with owned-only
+cleanup. T1 adds no new Azure resource, so its additional cost is the existing
+temporary job and ARM calls; no price is asserted here and the current
+official pricing must be cited in the approved plan.
+
+**Spending gate (correction 2026-10-20, from independent assessment).** Before
+ANY paid start the owner-approved limit is an all-in USD 500 TOTAL for the
+October calendar month, not a generic monthly budget. A start requires accrued
+AND forecast charges and liabilities across the `ama` resource group and all
+other scopes, each recorded with timestamp, scope and source, without double
+counting, and a known, bounded headroom. Current headroom is unknown, and the
+provisional unchanged RG-only projection of USD 535.41 is above the cap. Unknown
+other spend must not be assumed zero, and estimated savings or retirements are
+not authorized. A separate finite costed execution-plan approval remains
+required (expiry 2026-10-25T16:02Z). No cost query was made for this design.
+
+Decisions needed (not resolved here): DN1 privacy/security approval of
+ciphertext and metadata in tags, covering classification, leakage, retention,
+export and log surfaces, readers and policy compliance; DN2 real position count
+and whether compression or per-role paging is allowed; DN3 attempt path
+reconciliation; DN4 whether manifest-derived positions (T7) are acceptable;
+DN5 independent attestation or an explicit trusted-endpoint acceptance.
+
+#### Tenant-administrator and operator checklist (for review, nothing run)
+
+Resource management inside `ama` does not imply tenant authority. Read-only
+metadata may establish what exists, never permission to change a tenant
+object. Do not use another application's client, a random user, an invented
+staff binding or an old private dataset. Record evidence as names, counts and
+pass/fail only, outside Git where private. Stop at the first failed row and
+make no success claim.
+
+| # | Check | Owner and evidence | Stop condition |
+| --- | --- | --- | --- |
+| 1 | Written authority: tenant administrator names the allowed app registration, enterprise app, roles and assignments; RG authority is not accepted | Tenant administrator, dated record | Missing or RG-only authority |
+| 2 | Real application and enterprise app exist for this workbench; roles are in the manifest; assignment required is on | Tenant administrator, read-only Graph/portal record | Wrong app or reused client |
+| 3 | Credential created in the tenant; value reaches the private vault path only through the supported handoff; no value printed or committed | Operator, secret reference name and version metadata only | Value seen in logs, args or Git |
+| 4 | Private vault path verified: vault public access Disabled, API identity can read only the reference, no new identity | Operator, ARM metadata | Public access on, bypass, new identity |
+| 5 | Private roster exists outside Git with owner-only permissions, built from real people with written approval; none invented | Roster owner, file mode check and counts | Fabricated or unapproved person, wrong mode |
+| 6 | Relay RBAC evidence: effective read, write and delete paths on the relay job at RG, resource, inherited and privileged levels, exported before and after a run | Tenant administrator and IAM operator | Unexpected writer, unreviewed grant |
+| 7 | Relay identifiers recorded privately: exact job resource ID, worker identity, expected immutable image digest with verified provenance, tag count below capacity | Operator | Digest unpinned, provenance missing, capacity short |
+| 8 | DN1 privacy/security approval recorded, including Activity Log, diagnostic, cost and export surfaces assessed | Security reviewer | Not approved |
+| 9 | Finite cost and execution plan approved separately (resources, runtime, expiry, cleanup) with accrued AND forecast charges and liabilities across `ama` and other scopes recorded (timestamp, scope, source), known bounded headroom under the all-in USD 500 TOTAL October gate, no assumed-zero unknowns, no double counting; expiry 2026-10-25T16:02Z | Owner | No approval, headroom unknown or over cap |
+| 10 | SQL: private-only access verified, apply and verified serving-replica restart on every traffic-serving revision, then a fresh `--check` exits 0 | Operator on a private-connected host | Public SQL, no restart evidence, check not 0 |
+| 11 | Direct HTTPS: welcome and health 200, anonymous protected API denied, native 401, browser sign-in redirect, production profile and the six private backing-service settings unchanged | Operator, probe JSON lines | Any mismatch, setting changed |
+| 12 | Browser role tests with real people: one staff role each, Contractor cannot read staff-wide statistics, unknown or wrong role denied, sign out and in for fresh claims | Real users, screenshots without claims | Role not enforced |
+| 13 | Preserve identities and Front Door; never delete `ama`; retire Front Door only after checks 10 to 12 pass and the owner explicitly authorizes | Owner | Any deletion without both |
+
+Non-claims: this design does not show that the relay carries a result, that
+the roster can be recovered, that sign-in, Graph authority, deployed SQL or AI
+work, or that #360 criteria c, d or e are met. No cloud state was read for this
+design; the 2026-10-17 and 2026-10-19 receipts above remain dated evidence and
+need a fresh read-only recheck before use.
+
+### Private Blob Result Transport (2026-10-22, Refs #360)
+
+**Status: implemented and tested offline with fake clients only. Nothing was
+deployed, no role was granted and no Azure resource or tenant was touched.**
+Whole #360 criteria c, d and e remain unproved. This section supersedes the
+tag relay of the 2026-10-20 design above and records owner decisions DN1 to DN5
+(2026-10-22).
+
+| Decision | Effect in the design |
+| --- | --- |
+| DN1 | Results travel through a private Blob container with managed identity. No resource tags, public Blob, SAS or shared key. Backing services stay private. |
+| DN2 | Complete results, measured size, bounded paging. Over-bound results are refused, never truncated or reduced. |
+| DN3 | The three earlier failures stay unknown historical transport failures. Old tag/console result code is retired; the Blob path is validated independently. Root-cause analysis is production follow-up, not claimed solved. This is not permission to delete Front Door or any Azure resource. |
+| DN4 | Production roles are assigned manually through the Entra Enterprise App. The demo may match roles from available evidence, else random demo assignment. The admin-prefixed account stays Zava Forward administrator (ProgrammeManager). No directory roles are granted and immutable staff bindings or history are never overwritten. App roles remain the authorization source; a role is not professional competence or real authority. No roster contents are recorded in this repository. Existing role-assignment behaviour (#363) is unchanged by this work. |
+| DN5 | A controlled demo worker with expected image, run identity, integrity and completeness checks is accepted. Independent signed source or image attestation is **unverified and deferred**, not established. |
+
+#### Design
+
+1. The worker runs in the private VNet with the existing user-assigned identity. It writes AES-GCM pages to the `staff-results` container (`<run>/page-NNN.json`, no overwrite). The header (run, operation, payload digest, image digest, schema, index, count, item and byte totals, creation and expiry) is the authenticated associated data.
+2. The per-run key exists only in the job secret and the controller's memory. Blobs left behind cannot be decrypted later.
+3. The controller needs ARM for job control (works from anywhere) and Entra data-plane access to the private Blob endpoint (needs private-connected routing: Bastion/jump host, VPN or an equivalent). There is no operator IP firewall exception.
+4. Before any job is created the controller calls `preflight`: the route must work and the run prefix must be empty. If the Blob cannot be reached it refuses and creates nothing.
+5. The result is read only after the execution reports `Succeeded` and the job image digest still matches discovery. Anything else is refused: a missing, extra, duplicated, swapped, tampered, oversized, expired, future-dated or mismatched page; a total mismatch; a wrong run, operation, digest or image. There is no console, tag or local fallback and no parser relaxation.
+6. If the read fails after the job ran, the outcome is **unverified** (SQL and restart may have happened). Recovery is a new, separately authorized run after reading the live state; never a blind reapply.
+7. Discovery verifies through ARM that the storage account named by `ZF_BLOB_ACCOUNT_URL` has public network access Disabled, shared key and anonymous Blob access off, and that the `staff-results` container has no public access. The URL must be an exact public-cloud `*.blob.core.windows.net` account.
+8. Bounds: 48 KiB plaintext per page, 128 KiB per blob, 64 pages, 900 s validity with 60 s skew. A result over the bound fails with an explicit error. The real result size has not been measured; that is a live prerequisite.
+
+#### Code and infrastructure
+
+| Area | Change |
+| --- | --- |
+| `scripts/staff_blob.py` | New codec, `preflight`, write and read validation, shared `StaffJobError` |
+| `scripts/staff_azure.py` | Tag and chunk transport removed; Blob discovery checks, preflight, post-success read, image-drift check |
+| `scripts/staff-azure-worker.py` | Writes pages with `ManagedIdentityCredential`; never logs detail |
+| `modules/storage.bicep` | `staff-results` container appended last (existing index references stay valid) and a lifecycle rule that deletes blobs and versions after one day. Soft delete keeps 30 days |
+| `staff-initializer-rbac.bicep` | `includeResultBlob` (default false). Custom role with only `blobs/write` and `blobs/add/action` at the container scope; no read, list or delete |
+| Image and checks | `staff_blob.py` added to the Dockerfile, `.dockerignore`, `tools/rpi-checks.py` and CI lint lists |
+
+Residual risk: principals with account-wide data or management rights, such as
+subscription Contributors or Owners, can overwrite or delete blobs. The
+authenticated encryption turns that into a refusal, not a false success.
+
+#### Review corrections (2026-10-30)
+
+The controller requests at most 128 KiB + 1 byte from offset zero for each
+download, rather than buffering an unrestricted replacement before checking
+the listed size. The 2026-10-31 hardening also passes that hard byte limit to
+the downloader's `read`, never an unbounded `readall`.
+Overflow and listing/download length changes are refused
+before decoding; the extra byte detects growth beyond the Blob bound.
+The existing overall deadline and temporary-job/roster-secret cleanup remain.
+
+Paging measures the complete serialized head and each items wrapper, including
+comma/escaping overhead. Exact 48 KiB pages are accepted; oversized heads,
+items or intermediate pages and a 65th page are refused before any upload.
+The offline regressions include the reviewer's near-boundary counterexample,
+exact limits, escaped/Unicode content and replacement between list/download
+with confirmed controller cleanup. Fake clients do not establish live SDK,
+private-route or managed-identity behavior.
+
+The current setup prerequisites, RBAC examples and cleanup above now describe
+the default-off Blob grant and lifecycle-retained ciphertext. Explicitly dated
+tag activation receipts below remain historical; their removed parameters are
+not current deployment instructions. The older run9 receipt predates current
+main integration and is not exact-head validation. Fresh local gate evidence
+and hosted scoring must be bound to the final published candidate separately.
+
+#### Correction 1 (2026-10-22): operator context and operation budget
+
+* The controller reads Blob with a credential bound to the selected operator
+  profile: `az account get-access-token --resource https://storage.azure.com/`
+  runs through the same `Azure` wrapper and `AZURE_CONFIG_DIR` as every ARM
+  call, including the isolated tenant-profile fallback. There is no ambient
+  `DefaultAzureCredential` chain. The token is primed under a bounded deadline
+  before preflight, cached in memory and never printed.
+* The Blob client sets explicit socket and retry limits (connect 5 s, read
+  15 s, two retries) and every list or download carries a server timeout. An
+  overall budget (45 s for preflight, 45 s per read, capped by the job
+  deadline) is enforced by abandoning the read-only call on expiry, because a
+  per-socket timeout alone is not an overall deadline. Preflight expiry means
+  no job was created; read expiry means the outcome is unverified, and the
+  job and roster secret are still cleaned up. Offline tests only; live
+  behaviour stays NOT RUN.
+
+#### Live prerequisites (all NOT RUN)
+
+These are the dated 2026-10-22 prerequisites, not current execution authority.
+The October expiry in item 1 has passed. Main's later dated budget/identity/
+handover records are preserved; they do not prove this Blob path was deployed
+or tested live. A new finite plan and the relevant approvals are still needed.
+
+1. Coordinator release of a verified affordable finite execution plan within the USD 700 replacement all-in October forecast ceiling (expiry 2026-10-25T16:02Z). No Azure charge, deployment or role write before that.
+2. Deploy the storage change so the `staff-results` container and lifecycle rule exist, then deploy the RBAC template with `includeResultBlob=true` and `storageAccountName`, container first, role second. A deployer with `Microsoft.Authorization/roleAssignments/write` and role definition write at the resource group is needed; resource group ownership does not prove Microsoft Graph permissions.
+3. Operator identity: `Storage Blob Data Reader` (or an equivalent list/read data role) on the `staff-results` container, ARM read on the job, storage account, containers and the API app, and a private-connected host that resolves and reaches the Blob private endpoint.
+4. Microsoft Graph application permissions required by the existing setup are separate and must be named by the tenant administrator; they are not inferred from resource group ownership.
+5. `ZF_BLOB_ACCOUNT_URL` set on the API app (already wired in `containerapps.bicep`) and the cutover-proof image rebuilt with `staff_blob.py` and pinned by digest.
+6. Measure the real position count and result size on a dry or check run, then confirm it fits the page bound. Over-bound is a design change, not a silent reduction.
+7. Prove private routing, the managed-identity write and the Entra read in a controlled run. Record receipts without names, UPNs, object IDs, roster contents or secrets.
+
+#### Not run and not claimed
+
+Live private routing, managed-identity Blob write, operator Entra read, a real
+job, deployment of the Bicep, Entra or browser acceptance, role acceptance with
+real users, AI behaviour, signed source or image attestation (DN5, deferred),
+and demo screen-reader acceptance (documented unverified production follow-up).
+Local tests use fake clients and prove only the offline contract.
+
+#### Transport evidence and integration (2026-10-30, Refs #360)
+
+The current-main integration keeps the installed `src/` namespace,
+main's IoT sender/receiver scopes and release controls, and the private Blob
+transport from this branch. Helpers remain in `infra/scripts`; the worker
+imports `zava_forward.core.mssqlstore` from the installed core distribution.
+No retired `mvp/` code or old tag permission is restored. The preceding
+DN1-DN5 decisions and historical failures remain unchanged.
+
+| Claim | evidence | rationale | change_reason |
+| --- | --- | --- | --- |
+| Private result channel, DN1 | [Blob codec](./scripts/staff_blob.py), [controller](./scripts/staff_azure.py), [RBAC](./staff-initializer-rbac.bicep), [role matrix tests](./tests/test_identity_rbac.py) | Managed-identity write and operator-profile Entra read avoid tags, SAS, shared keys and public access; fake clients do not prove a live private route | Replaces the historical tag relay; main's unrelated IoT roles are retained |
+| Complete bounded results, DN2 | `BlobCodecTests`, `StorageContractTests` and controller cases in [transport tests](./tests/test_staff_azure.py) | Authenticated run/image/input binding, page totals, expiry and fail-closed checks refuse ambiguity rather than truncate | Preserves paging and profile/deadline correction; real position count and size remain unmeasured |
+| Historical failures and role authority, DN3/DN4 | Decision table above, [worker](./scripts/staff-azure-worker.py), [staff initializer](./scripts/initialize-workbench-staff.py) | Unknown earlier failures are not retroactively explained; transport changes do not confer tenant roles, professional authority or permission to delete resources | Retains decisions while main's later identity and directory-retirement evidence remains authoritative for its own dated scope |
+| Controlled worker, DN5 | `ProfileCredentialTests`, `StorageContractTests`, `BuildContextTests` and image-drift cases in [transport tests](./tests/test_staff_azure.py) | Source tests establish local refusal and packaging contracts, not independent image-to-source provenance | No attestation or live-success claim added; signed provenance remains deferred |
+
+These columns describe engineering provenance, not a scorecard or instructions
+to the scorer. For the capstone, this is narrow A1/A3/A5 infrastructure evidence.
+It supplies no new AI evaluation, autonomous behavior, measured live latency/
+cost, pitch rehearsal or thought-leadership publication. Local tests must be
+reported with their actual results; prior counts are dated, not a current pass.
+
+The rejected alternatives remain explicit: tags expose management metadata
+and imposed a small result bound; console output was historically ambiguous;
+public Blob/SAS/shared keys violate DN1; silently shrinking results violates
+DN2. Private Blob instead requires a genuinely private-connected controller,
+separate data-plane RBAC, retained ciphertext lifecycle and a newly approved
+finite run. Those operational costs and live prerequisites are not removed
+by offline success.
 
 ### Public welcome and Microsoft account photos
 

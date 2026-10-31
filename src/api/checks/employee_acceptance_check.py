@@ -4,12 +4,14 @@ from __future__ import annotations
 
 import os
 import re
+import time
 from collections.abc import Callable, Mapping
+from math import isfinite
 from typing import Literal, TypedDict
-from urllib.parse import urlsplit
+from urllib.parse import parse_qs, quote, urlsplit
 
 from playwright.sync_api import Error as BrowserError
-from playwright.sync_api import Page
+from playwright.sync_api import Page, Request, Response
 
 from checks.employee_identity_check import BINDING
 
@@ -20,7 +22,15 @@ FLAGS = frozenset(
 )
 ADMISSION = FLAGS - {"displayEmailMatches", "rosterBound", "transportFailed", "jsonFailed"}
 GUID = re.compile(r"[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}", re.IGNORECASE)
+MAP_TIMEOUT = 120000
+MAP_FLAGS = ("", "hazard", "long", "nodecision", "fundingprog", "support")
+MAP_LABELS = {"normal": "Normal", "long": "Waiting 60+ days", "hazard": "Safety issue open"}
 Observation = dict[str, bool | int]
+Admission = Callable[[], None]
+
+
+class AdmissionLost(Exception):
+    """A fresh identity/origin check refused the next observer action."""
 
 
 class Stage(TypedDict):
@@ -97,7 +107,8 @@ def probe(page: Page, expected: Mapping[str, object], origin: str = APP) -> dict
     return {key: result[key] for key in FLAGS}
 
 
-def chat(page: Page) -> Observation:
+def chat(page: Page, admit: Admission) -> Observation:
+    admit()
     page.locator("#employee-chat-launcher").press("Enter")
     panel = page.locator("#employee-chat")
     panel.wait_for(state="visible", timeout=120000)
@@ -112,11 +123,14 @@ def chat(page: Page) -> Observation:
     selected = options.nth(1).get_attribute("value")
     if not selected:
         return {"passed": False}
+    admit()
     skill.select_option(selected)
     previous = panel.locator(".chat-widget-assistant").count()
+    admit()
     panel.locator("textarea").fill(
         "What can this advisory skill help me do? Do not include resident or case details."
     )
+    admit()
     panel.get_by_role("button", name="Send", exact=True).click()
     page.wait_for_function(
         """before => {
@@ -130,6 +144,7 @@ def chat(page: Page) -> Observation:
         arg=previous,
         timeout=120000,
     )
+    admit()
     result: Observation = panel.evaluate(
         """(e, skill) => {
           const reply = [...e.querySelectorAll('.chat-widget-assistant')].at(-1);
@@ -145,14 +160,133 @@ def chat(page: Page) -> Observation:
         }""",
         selected,
     )
+    admit()
     page.keyboard.press("Escape")
     return result
 
 
-def map_filters(page: Page) -> Observation:
+def map_projection(payload: object) -> dict[str, object] | None:
+    if not isinstance(payload, dict):
+        return None
+    mode, total, shown, items = (payload.get(key) for key in ("mode", "total", "shown", "items"))
+    if (
+        mode not in ("points", "clusters")
+        or type(total) is not int
+        or total < 0
+        or type(shown) is not int
+        or not isinstance(items, list)
+        or shown != len(items)
+        or (mode == "points" and total != shown)
+    ):
+        return None
+
+    def coordinate(value: object, limit: int) -> bool:
+        return (
+            isinstance(value, (int, float))
+            and not isinstance(value, bool)
+            and -limit <= value <= limit
+            and isfinite(value)
+        )
+
+    bounds = payload.get("bounds")
+    if total == 0:
+        if mode != "points" or bounds is not None:
+            return None
+    elif (
+        not isinstance(bounds, list)
+        or len(bounds) != 4
+        or not all(
+            coordinate(value, 90 if index % 2 == 0 else 180) for index, value in enumerate(bounds)
+        )
+        or bounds[0] > bounds[2]
+        or bounds[1] > bounds[3]
+    ):
+        return None
+    labels: list[str] = []
+    links: list[str] = []
+    marker_labels: list[str] = []
+    counts = 0
+    for item in items:
+        if (
+            not isinstance(item, dict)
+            or not coordinate(item.get("lat"), 90)
+            or not coordinate(item.get("lon"), 180)
+            or (
+                bounds is not None
+                and not (
+                    bounds[0] <= item["lat"] <= bounds[2] and bounds[1] <= item["lon"] <= bounds[3]
+                )
+            )
+        ):
+            return None
+        if mode == "points":
+            identifier, name, kind = (item.get(key) for key in ("id", "name", "kind"))
+            if (
+                not isinstance(identifier, str)
+                or not identifier.strip()
+                or not isinstance(name, str)
+                or not name.strip()
+                or not isinstance(kind, str)
+                or kind not in MAP_LABELS
+            ):
+                return None
+            label = f"{name}, {MAP_LABELS[kind]}"
+            labels.append(label)
+            links.append("#/case/" + quote(identifier, safe="~()*!.'-"))
+            marker_labels.append(label)
+        else:
+            count, hazards, long = (item.get(key) for key in ("count", "hazards", "long"))
+            if (
+                type(count) is not int
+                or count <= 0
+                or type(hazards) is not int
+                or not 0 <= hazards <= count
+                or type(long) is not int
+                or not 0 <= long <= count
+            ):
+                return None
+            counts += count
+            label = f"{count} homes, {hazards} with a safety issue open"
+            labels.append(label)
+            marker_labels.append(label + ". Zoom in to this area")
+    if (mode == "clusters" and counts != total) or len(links) != len(set(links)):
+        return None
+    return {
+        "labels": labels,
+        "links": links,
+        "markers": marker_labels,
+        "status": (
+            f"{total} homes in this view, grouped into {shown} areas. Zoom in to see each home."
+            if mode == "clusters"
+            else f"{total} {'home' if total == 1 else 'homes'} shown"
+        ),
+    }
+
+
+MAP_RENDERED = """expected => {
+  const panel = document.querySelector('.map-dialog[open] .map-panel');
+  const map = panel?.querySelector('#leaflet');
+  if (!map || map.getAttribute('aria-busy') === 'true'
+      || panel.querySelector('[role=alert]')) return false;
+  const list = [...panel.querySelectorAll('.maplist li')];
+  const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+  return panel.querySelector('.map-info [role=status]')?.textContent === expected.status
+    && same(list.map(e => e.textContent), expected.labels)
+    && same(list.flatMap(e => [...e.querySelectorAll('a')].map(a => a.getAttribute('href'))),
+            expected.links)
+    && same([...map.querySelectorAll('.leaflet-marker-icon')].map(e => e.title).sort(),
+            [...expected.markers].sort());
+}"""
+
+
+def map_filters(page: Page, admit: Admission) -> Observation:
+    admit()
     page.evaluate("location.hash = '#/overview'")
-    page.locator(".overview-map-filters").wait_for(state="visible", timeout=120000)
+    admit()
+    page.locator(".overview-map-filters").wait_for(state="visible", timeout=MAP_TIMEOUT)
+    admit()
     page.get_by_role("button", name="Expand map", exact=True).press("Enter")
+    admit()
     buttons = page.locator(".map-dialog[open] .overview-map-filters button[aria-pressed]")
     candidates = [
         index
@@ -161,34 +295,104 @@ def map_filters(page: Page) -> Observation:
     ]
     if not candidates:
         return {"passed": False}
-    button = buttons.nth(candidates[0])
-    with page.expect_response(
-        lambda response: (
-            urlsplit(response.url).path == "/api/map" and allowed_response(response.url, page.url)
-        ),
-        timeout=120000,
-    ) as response:
-        button.press("Space")
-    if response.value.status != 200:
+    index = candidates[0]
+    if index >= len(MAP_FLAGS):
         return {"passed": False}
-    payload = response.value.json()
-    total = payload.get("total") if isinstance(payload, dict) else None
-    page.wait_for_function(
-        """() => {
-          const map = document.querySelector('#leaflet');
-          return !!map && map.getAttribute('aria-busy') !== 'true';
-        }""",
-        timeout=120000,
-    )
-    passed = (
-        type(total) is int
-        and total >= 0
-        and button.get_attribute("aria-pressed") == "true"
-        and button.locator(".tile-selection").inner_text() == "Selected"
-        and button.evaluate("e => document.activeElement === e")
-    )
-    page.keyboard.press("Escape")
-    return {"passed": passed}
+    button = buttons.nth(index)
+    area = page.locator("#mapArea").input_value()
+    origin_url = page.url
+    requests: list[Request] = []
+    pending: set[Request] = set()
+    responses: dict[Request, Response] = {}
+    errors = 0
+    active = False
+
+    def requested(request: Request) -> None:
+        query = parse_qs(urlsplit(request.url).query, keep_blank_values=True)
+        if (
+            active
+            and urlsplit(request.url).path == "/api/map"
+            and allowed_response(request.url, origin_url)
+            and query.get("flag", [""]) == [MAP_FLAGS[index]]
+            and query.get("area", [""]) == [area]
+        ):
+            requests.append(request)
+            pending.add(request)
+
+    def responded(response: Response) -> None:
+        if response.request in pending:
+            responses[response.request] = response
+
+    def finished(request: Request) -> None:
+        pending.discard(request)
+
+    def failed(request: Request) -> None:
+        nonlocal errors
+        if request in pending:
+            errors += 1
+            pending.discard(request)
+
+    def page_error(error: BrowserError) -> None:
+        nonlocal errors
+        errors += 1
+
+    listeners = {
+        "request": requested,
+        "response": responded,
+        "requestfinished": finished,
+        "requestfailed": failed,
+        "pageerror": page_error,
+    }
+    page.on("request", requested)
+    page.on("response", responded)
+    page.on("requestfinished", finished)
+    page.on("requestfailed", failed)
+    page.on("pageerror", page_error)
+    try:
+        admit()
+        active = True
+        button.press("Space")
+        deadline = time.monotonic() + MAP_TIMEOUT / 1000
+        while time.monotonic() < deadline:
+            admit()
+            generation = len(requests)
+            # Fit rendering starts its viewport refresh in the same JS task.
+            page.evaluate(
+                "() => new Promise(resolve => requestAnimationFrame("
+                "() => requestAnimationFrame(resolve)))"
+            )
+            admit()
+            if errors or page.locator(".map-dialog[open] [role=alert]").count():
+                return {"passed": False}
+            if requests and not pending and generation == len(requests):
+                projections = []
+                for request in requests:
+                    response = responses.get(request)
+                    if response is None or response.status != 200:
+                        return {"passed": False}
+                    projection = map_projection(response.json())
+                    if projection is None:
+                        return {"passed": False}
+                    projections.append(projection)
+                if page.evaluate(MAP_RENDERED, projections[-1]):
+                    admit()
+                    passed = (
+                        not errors
+                        and not pending
+                        and generation == len(requests)
+                        and button.get_attribute("aria-pressed") == "true"
+                        and button.locator(".tile-selection").inner_text() == "Selected"
+                        and button.evaluate("e => document.activeElement === e")
+                    )
+                    if passed:
+                        admit()
+                        page.keyboard.press("Escape")
+                    return {"passed": passed}
+            page.wait_for_timeout(25)
+        return {"passed": False}
+    finally:
+        for event, listener in listeners.items():
+            page.remove_listener(event, listener)
 
 
 def allowed_response(url: str, page_url: str) -> bool:
@@ -196,19 +400,24 @@ def allowed_response(url: str, page_url: str) -> bool:
     return (response.scheme, response.netloc) == (current.scheme, current.netloc)
 
 
-def case_view(page: Page) -> Observation:
+def case_view(page: Page, admit: Admission) -> Observation:
+    admit()
     page.evaluate("location.hash = '#/all'")
+    admit()
     link = page.locator('a.item[href^="#/case/"]').first
     link.wait_for(state="visible", timeout=120000)
+    admit()
     link.click()
+    admit()
     page.locator(".case-journey").wait_for(state="visible", timeout=120000)
+    admit()
     return {
         "passed": page.locator(".step").count() > 0
         and page.locator("#app [role=alert]:visible").count() == 0
     }
 
 
-OBSERVERS: dict[str, Callable[[Page], Observation]] = {
+OBSERVERS: dict[str, Callable[[Page, Admission], Observation]] = {
     "chat": chat,
     "map": map_filters,
     "case": case_view,
@@ -216,6 +425,10 @@ OBSERVERS: dict[str, Callable[[Page], Observation]] = {
 
 
 def verify_employee(page: Page, expected: Mapping[str, object], origin: str = APP) -> Acceptance:
+    def admit() -> None:
+        if probe(page, expected, origin)["authenticated"] is not True:
+            raise AdmissionLost()
+
     result: Acceptance = {
         "identity": probe(page, expected, origin),
         "stages": {key: {"status": "blocked", "observations": {}} for key in OBSERVERS},
@@ -227,7 +440,9 @@ def verify_employee(page: Page, expected: Mapping[str, object], origin: str = AP
         if probe(page, expected, origin)["authenticated"] is not True:
             return result
         try:
-            values = observe(page)
+            values = observe(page, admit)
+        except AdmissionLost:
+            return result
         except (BrowserError, ValueError):
             result["stages"][name]["status"] = "failed"
             return result
@@ -258,6 +473,7 @@ if __name__ == "__main__":
         [
             "test_employee_acceptance_check.AcceptanceTests.test_chromium_rosterless",
             "test_employee_acceptance_check.AcceptanceTests.test_chromium_wrong_account",
+            "test_employee_acceptance_check.AcceptanceTests.test_chromium_map_contract",
         ]
     )
     raise SystemExit(not unittest.TextTestRunner(verbosity=2).run(suite).wasSuccessful())
