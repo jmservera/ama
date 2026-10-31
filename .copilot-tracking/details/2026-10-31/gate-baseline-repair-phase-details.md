@@ -31,7 +31,10 @@ held=held), and hold(route, *, held=held) with proper Route/list types. Playwrig
 passes route and request positionally; keyword-only binding prevents the request
 from overwriting the captured default. Bind snapshot in route
 fulfillment. Preserve later unroute using the same callback function identity.
-Use pinned Ruff isolated check E,F,I,B,UP, py312, line length 100, and formatter.
+Use pinned Ruff isolated check E,F,I,B,UP, py312, line length 100, and formatter
+from src/api with checks/... paths, exactly matching the gate. Running isolated
+Ruff from root changes inferred first-party import ordering and is not an
+equivalent proxy. Retain the original playwright-before-checks import order.
 Completed: zero nine original B023 findings, strict formatter/lint and real
 journey execution with 87 axe scans and zero violations.
 

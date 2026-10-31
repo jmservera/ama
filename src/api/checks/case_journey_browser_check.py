@@ -12,11 +12,12 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
+from playwright.sync_api import Dialog, Page, Route, expect, sync_playwright
+
 from checks.asset_urls import asset_url
 from checks.design_system_browser_check import check, main
 from checks.regulatory_ux_check import AXE_SHA256
 from checks.workbench_browser_check import synthetic_data
-from playwright.sync_api import Dialog, Page, Route, expect, sync_playwright
 
 
 def journey_data() -> dict[str, Any]:

@@ -64,7 +64,8 @@ real accounts/data/cloud/models, automatic merge or history rewrite.
 
 ## Non-Functional Requirements
 
-* Strict isolated E,F,I,B,UP browser lint and isolated formatter pass.
+* Strict isolated E,F,I,B,UP browser lint and isolated formatter pass from the
+  exact gate working directory src/api, not root-based import inference.
 * No changes to WORKFLOW_HASHES, workflow commands, skip parser or allowances.
 * Complete final receipt remains external, is bound to a clean committed candidate and current origin/main, and is verified before push.
 

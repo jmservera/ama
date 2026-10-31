@@ -124,6 +124,27 @@ The final complete gate, exact-head assessment and publication evidence will
 remain external; this committed original record intentionally does not claim
 that post-commit work already passed.
 
+### Exact command-context validation correction
+
+Final candidate 1ee35aa3641480b654389eea5f7dbce27d979339 against main
+f11d29e41cd40c1be2b81b111f6189340df84bdd failed its browser lint at
+0151-browser.log with I001 only. Original failure retained:
+/tmp/ama-gate-baseline-20261031-final-1ee35aa3-a81da11b/receipt.json.
+Fifteen other required groups passed; browser and dependent MSSQL did not.
+
+The earlier strict lint ran from repository root, causing Ruff's isolated
+first-party import inference to put checks before playwright. The actual gate
+runs inside src/api and requires the original playwright-before-checks order.
+Restore that original order, then validate from the exact gate working directory.
+This is an immediately relevant command-context/formatter correction in P02,
+not a runtime change, new Review or disposition rewrite. Original Review and
+failed receipts remain unchanged. Fresh full committed gate required.
+Main f11d29e4 was incorporated by ordinary merge with the Copilot trailer;
+this repair still changes no workflow or gate production code relative to main.
+Exact src/api working-directory strict lint and formatter now pass on all
+three gate browser files. Current tooling suite passes 42 tests in 12.727
+seconds: /tmp/ama-gate-baseline-tooling-current-a81da11b.log.
+
 ## Follow-Up Items
 
 Canonical plan Follow-Up Items: #572 acceptance remains owner-owned; unrelated
