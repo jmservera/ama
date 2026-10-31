@@ -203,3 +203,17 @@ No new web runtime guideline defect identified in changed documentation. Claims 
 ## Next Steps
 
 Return this one Review to the active parent and stop. Parent may preserve it in the authorized local evidence commit, but must not push/open the topic PR while RV-001/RV-002 remain material and open. Route RV-001 to later rpi-implement and RV-002 to rpi-research evidence collection after explicit lock coordination; retain RV-003 as distinct follow-ups. Do not invoke another Review, edit the supplied artifacts/source, or interpret this record as acceptance.
+
+## Owner-Selected Later Disposition (2026-10-31)
+
+Original Complete / Not accepted verdict and findings above are preserved.
+The owner's selected correction restores initialized unit fixture templates
+and passes both scale backends, requested API unit/Ruff and local small/scale
+Playwright checks. Later correction source assessment finds no source defect:
+.copilot-tracking/reviews/logs/2026-10-31/employee-progress-dashboard-533-correction-review.md.
+That assessment's external-log access blocker is resolved by a distinct
+portable-evidence task whose independent Review is Complete / Conformant:
+.copilot-tracking/reviews/logs/2026-10-31/employee-progress-dashboard-533-evidence-review.md.
+This is a qualified later local source/evidence disposition, not a rewrite of
+this Review, full publication gate or owner live/human acceptance. Refs #533
+remains required while deployed dashboard/archive acceptance is unmet.

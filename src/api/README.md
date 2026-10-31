@@ -511,8 +511,11 @@ version-1.2.0 wholly fictional 60,000-home fixture. The shared test overlay
 maps those existing home IDs/attributes onto four explicit known lifecycle
 templates, not random stock events: 15,000 open cases, 45,000 archived cases,
 45,000 usable lifecycles and 15,000 unknown closure dates. The inherited
-JSON/SQLite unit check asserts exact flow, duration, current workload and
-combined-filter page IDs at that scale. Browser checks compare all six charts
+JSON/SQLite unit overlay clones each reader's initialized case templates so
+archive summaries retain the complete store defaults; browser fixtures still
+pass through normal store initialization. The unit check asserts exact flow,
+duration, current workload and combined-filter page IDs at that scale.
+Browser checks compare all six charts
 and tables to the real API, retain all filters/page through reload and verify
 first/final/empty/beyond boundaries with at most 20 rendered archive rows.
 Recorded AI reviews stay separate and are not multiplied with the home cohort.

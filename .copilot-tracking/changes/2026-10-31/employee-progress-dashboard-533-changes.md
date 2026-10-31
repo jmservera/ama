@@ -98,3 +98,20 @@ native Fluent-derived runtime unchanged. Live employee-site acceptance,
 direct human accessibility/usability, full Fluent adoption and hosted/owner
 approvals remain separate unmet boundaries. Material open Review findings
 block publication and route to later work; no second Review.
+
+## Owner-Selected Successor Correction (2026-10-31)
+
+The owner explicitly selected a new correction loop for RV-001 and RV-002,
+including later nonblocking heavy-lock retries within this session. Original
+Complete / Not accepted evidence and unrun checks above remain unchanged.
+Successor changes:
+.copilot-tracking/changes/2026-10-31/employee-progress-dashboard-533-correction-changes.md.
+Successor state:
+.copilot-tracking/rpi-sessions/2026-10-31/employee-progress-dashboard-533-correction-state.json.
+RV-001 fixture correction now has passing JSON/SQLite scale, requested unit,
+Ruff and local small/scale Playwright evidence. The correction source Review
+accepted its source trace but preserved a blocked external-evidence access
+outcome; distinct evidence-only Review is Complete / Conformant:
+.copilot-tracking/reviews/logs/2026-10-31/employee-progress-dashboard-533-evidence-review.md.
+All original adverse outcomes above remain unchanged; full publication and
+owner live acceptance remain separately gated.

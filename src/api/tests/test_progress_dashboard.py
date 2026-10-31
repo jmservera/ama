@@ -99,10 +99,10 @@ def synthetic_data() -> dict[str, Any]:
     return data
 
 
-def scale_data() -> dict[str, Any]:
+def scale_data(*, case_templates: list[dict[str, Any]] | None = None) -> dict[str, Any]:
     """Existing fictional homes with explicit test lifecycles, not inferred stock events."""
     data = synthetic_data()
-    templates = data["cases"][:4]
+    templates = data["cases"][:4] if case_templates is None else case_templates
     cases = []
     for index, home in enumerate(scale_fixture.homes()):
         case = copy.deepcopy(templates[index % len(templates)])
@@ -1042,7 +1042,7 @@ class ProgressDashboard(unittest.TestCase):
             )
 
     def test_existing_60000_home_fixture_progress_and_filtered_page_boundaries(self) -> None:
-        data = scale_data()
+        data = scale_data(case_templates=[self.store.cases[f"ZF-{index}"] for index in range(1, 5)])
         self.assertEqual(len(data["cases"]), 60000)
         with self.store.lock:
             self.store.cases.clear()
