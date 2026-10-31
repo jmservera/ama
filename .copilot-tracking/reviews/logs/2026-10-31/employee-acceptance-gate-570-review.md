@@ -173,19 +173,19 @@ browser-system prerequisite or hosted check was bypassed or fabricated.
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/research/2026-10-31/employee-acceptance-gate-570-research.md](.copilot-tracking/research/2026-10-31/employee-acceptance-gate-570-research.md) | Compared focused evidence and exclusions |
-| [.copilot-tracking/plans/2026-10-31/employee-acceptance-gate-570-plan.md](.copilot-tracking/plans/2026-10-31/employee-acceptance-gate-570-plan.md) | Compared requirements, markers and follow-up |
-| [.copilot-tracking/details/2026-10-31/employee-acceptance-gate-570-phase-details.md](.copilot-tracking/details/2026-10-31/employee-acceptance-gate-570-phase-details.md) | Compared task contracts and completion evidence |
-| [.copilot-tracking/reviews/plans/2026-10-31/employee-acceptance-gate-570-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/employee-acceptance-gate-570-plan-critique.md) | Preserved original Complete/Pass critique |
-| [.copilot-tracking/changes/2026-10-31/employee-acceptance-gate-570-changes.md](.copilot-tracking/changes/2026-10-31/employee-acceptance-gate-570-changes.md) | Compared implementation updates and original validation |
-| [.copilot-tracking/reviews/logs/2026-10-31/employee-acceptance-gate-570-review.md](.copilot-tracking/reviews/logs/2026-10-31/employee-acceptance-gate-570-review.md) | This single independent Review result |
-| [tools/rpi-checks.py](tools/rpi-checks.py) | Assessed dispatch, parser and trusted matrix |
-| [tools/test_rpi_checks.py](tools/test_rpi_checks.py) | Assessed regression methods and fixture updates |
-| [src/README.md](src/README.md) | Assessed local gate documentation |
-| [docs/reference/README.md](docs/reference/README.md) | Assessed knowledge-base routing |
-| [docs/reference/log.md](docs/reference/log.md) | Assessed append-only documentation evidence |
-| [.github/workflows/src-ci.yml](.github/workflows/src-ci.yml) | Existing pinned CLI import-path reference |
-| [src/api/checks/employee_acceptance_check.py](src/api/checks/employee_acceptance_check.py) | Existing maintained three-test CLI contract |
+| [.copilot-tracking/research/2026-10-31/employee-acceptance-gate-570-research.md](../../../research/2026-10-31/employee-acceptance-gate-570-research.md) | Compared focused evidence and exclusions |
+| [.copilot-tracking/plans/2026-10-31/employee-acceptance-gate-570-plan.md](../../../plans/2026-10-31/employee-acceptance-gate-570-plan.md) | Compared requirements, markers and follow-up |
+| [.copilot-tracking/details/2026-10-31/employee-acceptance-gate-570-phase-details.md](../../../details/2026-10-31/employee-acceptance-gate-570-phase-details.md) | Compared task contracts and completion evidence |
+| [.copilot-tracking/reviews/plans/2026-10-31/employee-acceptance-gate-570-plan-critique.md](../../plans/2026-10-31/employee-acceptance-gate-570-plan-critique.md) | Preserved original Complete/Pass critique |
+| [.copilot-tracking/changes/2026-10-31/employee-acceptance-gate-570-changes.md](../../../changes/2026-10-31/employee-acceptance-gate-570-changes.md) | Compared implementation updates and original validation |
+| [.copilot-tracking/reviews/logs/2026-10-31/employee-acceptance-gate-570-review.md](employee-acceptance-gate-570-review.md) | This single independent Review result |
+| [tools/rpi-checks.py](../../../../tools/rpi-checks.py) | Assessed dispatch, parser and trusted matrix |
+| [tools/test_rpi_checks.py](../../../../tools/test_rpi_checks.py) | Assessed regression methods and fixture updates |
+| [src/README.md](../../../../src/README.md) | Assessed local gate documentation |
+| [docs/reference/README.md](../../../../docs/reference/README.md) | Assessed knowledge-base routing |
+| [docs/reference/log.md](../../../../docs/reference/log.md) | Assessed append-only documentation evidence |
+| [.github/workflows/src-ci.yml](../../../../.github/workflows/src-ci.yml) | Existing pinned CLI import-path reference |
+| [src/api/checks/employee_acceptance_check.py](../../../../src/api/checks/employee_acceptance_check.py) | Existing maintained three-test CLI contract |
 
 ## Next Steps
 

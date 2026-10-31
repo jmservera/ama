@@ -181,12 +181,12 @@ confirmed with git merge-base --is-ancestor origin/main HEAD.
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/research/2026-10-31/employee-review-threads-570-research.md](.copilot-tracking/research/2026-10-31/employee-review-threads-570-research.md) | Bounded producer and hosted-execution research |
-| [.copilot-tracking/plans/2026-10-31/employee-review-threads-570-plan.md](.copilot-tracking/plans/2026-10-31/employee-review-threads-570-plan.md) | Current markers, requirements and follow-ups |
-| [.copilot-tracking/details/2026-10-31/employee-review-threads-570-phase-details.md](.copilot-tracking/details/2026-10-31/employee-review-threads-570-phase-details.md) | Task boundaries and completion evidence |
-| [.copilot-tracking/reviews/plans/2026-10-31/employee-review-threads-570-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/employee-review-threads-570-plan-critique.md) | Complete / Pass critique, zero findings |
-| [.copilot-tracking/changes/2026-10-31/employee-review-threads-570-changes.md](.copilot-tracking/changes/2026-10-31/employee-review-threads-570-changes.md) | Implementation, validation and descriptive amendments |
-| [.copilot-tracking/reviews/logs/2026-10-31/employee-review-threads-570-review.md](.copilot-tracking/reviews/logs/2026-10-31/employee-review-threads-570-review.md) | This single completed Review |
+| [.copilot-tracking/research/2026-10-31/employee-review-threads-570-research.md](../../../research/2026-10-31/employee-review-threads-570-research.md) | Bounded producer and hosted-execution research |
+| [.copilot-tracking/plans/2026-10-31/employee-review-threads-570-plan.md](../../../plans/2026-10-31/employee-review-threads-570-plan.md) | Current markers, requirements and follow-ups |
+| [.copilot-tracking/details/2026-10-31/employee-review-threads-570-phase-details.md](../../../details/2026-10-31/employee-review-threads-570-phase-details.md) | Task boundaries and completion evidence |
+| [.copilot-tracking/reviews/plans/2026-10-31/employee-review-threads-570-plan-critique.md](../../plans/2026-10-31/employee-review-threads-570-plan-critique.md) | Complete / Pass critique, zero findings |
+| [.copilot-tracking/changes/2026-10-31/employee-review-threads-570-changes.md](../../../changes/2026-10-31/employee-review-threads-570-changes.md) | Implementation, validation and descriptive amendments |
+| [.copilot-tracking/reviews/logs/2026-10-31/employee-review-threads-570-review.md](employee-review-threads-570-review.md) | This single completed Review |
 
 ## Next Steps
 

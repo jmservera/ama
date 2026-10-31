@@ -163,16 +163,16 @@ The runpy simulation emitted the standard already-imported-module warning; all a
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/research/2026-10-31/employee-identity-check-570-gate-bootstrap-research.md](.copilot-tracking/research/2026-10-31/employee-identity-check-570-gate-bootstrap-research.md) | Child evidence and bootstrap rationale |
-| [.copilot-tracking/plans/2026-10-31/employee-identity-check-570-gate-bootstrap-plan.md](.copilot-tracking/plans/2026-10-31/employee-identity-check-570-gate-bootstrap-plan.md) | Accepted bounded plan |
-| [.copilot-tracking/details/2026-10-31/employee-identity-check-570-gate-bootstrap-phase-details.md](.copilot-tracking/details/2026-10-31/employee-identity-check-570-gate-bootstrap-phase-details.md) | Phase implementation and validation contract |
-| [.copilot-tracking/reviews/plans/2026-10-31/employee-identity-check-570-gate-bootstrap-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/employee-identity-check-570-gate-bootstrap-plan-critique.md) | Original Complete / Pass child critique |
-| [.copilot-tracking/changes/2026-10-31/employee-identity-check-570-gate-bootstrap-changes.md](.copilot-tracking/changes/2026-10-31/employee-identity-check-570-gate-bootstrap-changes.md) | Completed work and parent validation |
-| [.copilot-tracking/rpi-sessions/2026-10-31/employee-identity-check-570-gate-bootstrap-state.json](.copilot-tracking/rpi-sessions/2026-10-31/employee-identity-check-570-gate-bootstrap-state.json) | Review-phase state and live blocker |
-| [src/api/tests/test_employee_acceptance_check.py](src/api/tests/test_employee_acceptance_check.py) | Shared launch qualification and unchanged existing tests |
-| [src/api/checks/employee_acceptance_check.py](src/api/checks/employee_acceptance_check.py) | Strict three-test zero-skip CLI |
-| [src/api/README.md](src/api/README.md) | Owning discovery/acceptance distinction |
-| [.copilot-tracking/reviews/logs/2026-10-31/employee-identity-check-570-gate-bootstrap-review.md](.copilot-tracking/reviews/logs/2026-10-31/employee-identity-check-570-gate-bootstrap-review.md) | This one independent child Review |
+| [.copilot-tracking/research/2026-10-31/employee-identity-check-570-gate-bootstrap-research.md](../../../research/2026-10-31/employee-identity-check-570-gate-bootstrap-research.md) | Child evidence and bootstrap rationale |
+| [.copilot-tracking/plans/2026-10-31/employee-identity-check-570-gate-bootstrap-plan.md](../../../plans/2026-10-31/employee-identity-check-570-gate-bootstrap-plan.md) | Accepted bounded plan |
+| [.copilot-tracking/details/2026-10-31/employee-identity-check-570-gate-bootstrap-phase-details.md](../../../details/2026-10-31/employee-identity-check-570-gate-bootstrap-phase-details.md) | Phase implementation and validation contract |
+| [.copilot-tracking/reviews/plans/2026-10-31/employee-identity-check-570-gate-bootstrap-plan-critique.md](../../plans/2026-10-31/employee-identity-check-570-gate-bootstrap-plan-critique.md) | Original Complete / Pass child critique |
+| [.copilot-tracking/changes/2026-10-31/employee-identity-check-570-gate-bootstrap-changes.md](../../../changes/2026-10-31/employee-identity-check-570-gate-bootstrap-changes.md) | Completed work and parent validation |
+| [.copilot-tracking/rpi-sessions/2026-10-31/employee-identity-check-570-gate-bootstrap-state.json](../../../rpi-sessions/2026-10-31/employee-identity-check-570-gate-bootstrap-state.json) | Review-phase state and live blocker |
+| [src/api/tests/test_employee_acceptance_check.py](../../../../src/api/tests/test_employee_acceptance_check.py) | Shared launch qualification and unchanged existing tests |
+| [src/api/checks/employee_acceptance_check.py](../../../../src/api/checks/employee_acceptance_check.py) | Strict three-test zero-skip CLI |
+| [src/api/README.md](../../../../src/api/README.md) | Owning discovery/acceptance distinction |
+| [.copilot-tracking/reviews/logs/2026-10-31/employee-identity-check-570-gate-bootstrap-review.md](employee-identity-check-570-gate-bootstrap-review.md) | This one independent child Review |
 
 ## Next Steps
 

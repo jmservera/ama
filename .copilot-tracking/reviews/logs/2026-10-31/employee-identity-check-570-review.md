@@ -192,22 +192,22 @@ All independent Python commands used the supplied external venv from src/api wit
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/research/2026-10-31/employee-identity-check-570-research.md](.copilot-tracking/research/2026-10-31/employee-identity-check-570-research.md) | Dated research, cause evidence and live identity blocker |
-| [.copilot-tracking/plans/2026-10-31/employee-identity-check-570-plan.md](.copilot-tracking/plans/2026-10-31/employee-identity-check-570-plan.md) | Current narrowed scope, markers, dispositions and follow-up |
-| [.copilot-tracking/details/2026-10-31/employee-identity-check-570-phase-details.md](.copilot-tracking/details/2026-10-31/employee-identity-check-570-phase-details.md) | Current implementation and validation contracts |
-| [.copilot-tracking/reviews/plans/2026-10-31/employee-identity-check-570-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/employee-identity-check-570-plan-critique.md) | Original Complete / Revise critique preserved |
-| [.copilot-tracking/changes/2026-10-31/employee-identity-check-570-changes.md](.copilot-tracking/changes/2026-10-31/employee-identity-check-570-changes.md) | Implementation, original coupled failures and qualified validation |
-| [.copilot-tracking/rpi-sessions/2026-10-31/employee-identity-check-570-state.json](.copilot-tracking/rpi-sessions/2026-10-31/employee-identity-check-570-state.json) | Pre-Review parent state, left unchanged |
-| [src/api/checks/employee_acceptance_check.py](src/api/checks/employee_acceptance_check.py) | Reviewed maintained Page adapter and observers |
-| [src/api/tests/test_employee_acceptance_check.py](src/api/tests/test_employee_acceptance_check.py) | Six new contracts and actual Chromium fixture |
-| [src/api/checks/employee_identity_check.py](src/api/checks/employee_identity_check.py) | Unchanged immutable identity predicate |
-| [src/api/tests/test_employee_identity_check.py](src/api/tests/test_employee_identity_check.py) | Existing constructed HTTP identity coverage |
-| [src/api/README.md](src/api/README.md) | Integration contract and local/live limits |
-| [src/api/src/zava_forward/api/web/app.js](src/api/src/zava_forward/api/web/app.js) | Existing map response/render/error ordering |
-| [src/api/src/zava_forward/api/web/chat.js](src/api/src/zava_forward/api/web/chat.js) | Existing chat response and workflow labels |
-| [src/api/src/zava_forward/api/web/chat-widget.js](src/api/src/zava_forward/api/web/chat-widget.js) | Existing rendered reply and busy semantics |
-| [tools/rpi-checks.py](tools/rpi-checks.py) | Existing prohibited complete-gate lock contract, read-only |
-| [.copilot-tracking/reviews/logs/2026-10-31/employee-identity-check-570-review.md](.copilot-tracking/reviews/logs/2026-10-31/employee-identity-check-570-review.md) | This single complete original Review |
+| [.copilot-tracking/research/2026-10-31/employee-identity-check-570-research.md](../../../research/2026-10-31/employee-identity-check-570-research.md) | Dated research, cause evidence and live identity blocker |
+| [.copilot-tracking/plans/2026-10-31/employee-identity-check-570-plan.md](../../../plans/2026-10-31/employee-identity-check-570-plan.md) | Current narrowed scope, markers, dispositions and follow-up |
+| [.copilot-tracking/details/2026-10-31/employee-identity-check-570-phase-details.md](../../../details/2026-10-31/employee-identity-check-570-phase-details.md) | Current implementation and validation contracts |
+| [.copilot-tracking/reviews/plans/2026-10-31/employee-identity-check-570-plan-critique.md](../../plans/2026-10-31/employee-identity-check-570-plan-critique.md) | Original Complete / Revise critique preserved |
+| [.copilot-tracking/changes/2026-10-31/employee-identity-check-570-changes.md](../../../changes/2026-10-31/employee-identity-check-570-changes.md) | Implementation, original coupled failures and qualified validation |
+| [.copilot-tracking/rpi-sessions/2026-10-31/employee-identity-check-570-state.json](../../../rpi-sessions/2026-10-31/employee-identity-check-570-state.json) | Pre-Review parent state, left unchanged |
+| [src/api/checks/employee_acceptance_check.py](../../../../src/api/checks/employee_acceptance_check.py) | Reviewed maintained Page adapter and observers |
+| [src/api/tests/test_employee_acceptance_check.py](../../../../src/api/tests/test_employee_acceptance_check.py) | Six new contracts and actual Chromium fixture |
+| [src/api/checks/employee_identity_check.py](../../../../src/api/checks/employee_identity_check.py) | Unchanged immutable identity predicate |
+| [src/api/tests/test_employee_identity_check.py](../../../../src/api/tests/test_employee_identity_check.py) | Existing constructed HTTP identity coverage |
+| [src/api/README.md](../../../../src/api/README.md) | Integration contract and local/live limits |
+| [src/api/src/zava_forward/api/web/app.js](../../../../src/api/src/zava_forward/api/web/app.js) | Existing map response/render/error ordering |
+| [src/api/src/zava_forward/api/web/chat.js](../../../../src/api/src/zava_forward/api/web/chat.js) | Existing chat response and workflow labels |
+| [src/api/src/zava_forward/api/web/chat-widget.js](../../../../src/api/src/zava_forward/api/web/chat-widget.js) | Existing rendered reply and busy semantics |
+| [tools/rpi-checks.py](../../../../tools/rpi-checks.py) | Existing prohibited complete-gate lock contract, read-only |
+| [.copilot-tracking/reviews/logs/2026-10-31/employee-identity-check-570-review.md](employee-identity-check-570-review.md) | This single complete original Review |
 
 ## Next Steps
 

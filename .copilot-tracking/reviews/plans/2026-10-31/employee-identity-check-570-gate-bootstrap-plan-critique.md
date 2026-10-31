@@ -78,10 +78,10 @@ None for this bounded planning decision. Current caller direction resolves the d
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/research/2026-10-31/employee-identity-check-570-gate-bootstrap-research.md](.copilot-tracking/research/2026-10-31/employee-identity-check-570-gate-bootstrap-research.md) | Bootstrap evidence and decisions |
-| [.copilot-tracking/plans/2026-10-31/employee-identity-check-570-gate-bootstrap-plan.md](.copilot-tracking/plans/2026-10-31/employee-identity-check-570-gate-bootstrap-plan.md) | Assessed final candidate |
-| [.copilot-tracking/details/2026-10-31/employee-identity-check-570-gate-bootstrap-phase-details.md](.copilot-tracking/details/2026-10-31/employee-identity-check-570-gate-bootstrap-phase-details.md) | Assessed phase details |
-| [.copilot-tracking/reviews/plans/2026-10-31/employee-identity-check-570-gate-bootstrap-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/employee-identity-check-570-gate-bootstrap-plan-critique.md) | Canonical complete Pass critique |
+| [.copilot-tracking/research/2026-10-31/employee-identity-check-570-gate-bootstrap-research.md](../../../research/2026-10-31/employee-identity-check-570-gate-bootstrap-research.md) | Bootstrap evidence and decisions |
+| [.copilot-tracking/plans/2026-10-31/employee-identity-check-570-gate-bootstrap-plan.md](../../../plans/2026-10-31/employee-identity-check-570-gate-bootstrap-plan.md) | Assessed final candidate |
+| [.copilot-tracking/details/2026-10-31/employee-identity-check-570-gate-bootstrap-phase-details.md](../../../details/2026-10-31/employee-identity-check-570-gate-bootstrap-phase-details.md) | Assessed phase details |
+| [.copilot-tracking/reviews/plans/2026-10-31/employee-identity-check-570-gate-bootstrap-plan-critique.md](employee-identity-check-570-gate-bootstrap-plan-critique.md) | Canonical complete Pass critique |
 
 ## Next Steps
 

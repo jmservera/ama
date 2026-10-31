@@ -165,20 +165,20 @@ All independent API commands used the caller-supplied session files/venv, from s
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/research/2026-10-31/employee-identity-check-570-correction-research.md](.copilot-tracking/research/2026-10-31/employee-identity-check-570-correction-research.md) | Correction research. |
-| [.copilot-tracking/plans/2026-10-31/employee-identity-check-570-correction-plan.md](.copilot-tracking/plans/2026-10-31/employee-identity-check-570-correction-plan.md) | Current plan and follow-ups. |
-| [.copilot-tracking/details/2026-10-31/employee-identity-check-570-correction-phase-details.md](.copilot-tracking/details/2026-10-31/employee-identity-check-570-correction-phase-details.md) | Direct PC-001 through PC-003 dispositions. |
-| [.copilot-tracking/reviews/plans/2026-10-31/employee-identity-check-570-correction-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/employee-identity-check-570-correction-plan-critique.md) | Original correction critique. |
-| [.copilot-tracking/changes/2026-10-31/employee-identity-check-570-correction-changes.md](.copilot-tracking/changes/2026-10-31/employee-identity-check-570-correction-changes.md) | Implementation and parent validation. |
-| [.copilot-tracking/rpi-sessions/2026-10-31/employee-identity-check-570-correction-state.json](.copilot-tracking/rpi-sessions/2026-10-31/employee-identity-check-570-correction-state.json) | Parent opening state. |
-| [.copilot-tracking/reviews/logs/2026-10-31/employee-identity-check-570-review.md](.copilot-tracking/reviews/logs/2026-10-31/employee-identity-check-570-review.md) | Unchanged original adverse Review. |
-| [.copilot-tracking/changes/2026-10-31/employee-identity-check-570-changes.md](.copilot-tracking/changes/2026-10-31/employee-identity-check-570-changes.md) | Unchanged original changes and failed preflights. |
-| [src/api/checks/employee_acceptance_check.py](src/api/checks/employee_acceptance_check.py) | Reviewed complete runner. |
-| [src/api/tests/test_employee_acceptance_check.py](src/api/tests/test_employee_acceptance_check.py) | Reviewed complete owning tests. |
-| [src/api/README.md](src/api/README.md) | Reviewed owning guide section. |
-| [docs/reference/README.md](docs/reference/README.md) | Reviewed owned knowledge index update. |
-| [docs/reference/log.md](docs/reference/log.md) | Reviewed append-only knowledge update. |
-| [.copilot-tracking/reviews/logs/2026-10-31/employee-identity-check-570-correction-review.md](.copilot-tracking/reviews/logs/2026-10-31/employee-identity-check-570-correction-review.md) | This one complete independent Review. |
+| [.copilot-tracking/research/2026-10-31/employee-identity-check-570-correction-research.md](../../../research/2026-10-31/employee-identity-check-570-correction-research.md) | Correction research. |
+| [.copilot-tracking/plans/2026-10-31/employee-identity-check-570-correction-plan.md](../../../plans/2026-10-31/employee-identity-check-570-correction-plan.md) | Current plan and follow-ups. |
+| [.copilot-tracking/details/2026-10-31/employee-identity-check-570-correction-phase-details.md](../../../details/2026-10-31/employee-identity-check-570-correction-phase-details.md) | Direct PC-001 through PC-003 dispositions. |
+| [.copilot-tracking/reviews/plans/2026-10-31/employee-identity-check-570-correction-plan-critique.md](../../plans/2026-10-31/employee-identity-check-570-correction-plan-critique.md) | Original correction critique. |
+| [.copilot-tracking/changes/2026-10-31/employee-identity-check-570-correction-changes.md](../../../changes/2026-10-31/employee-identity-check-570-correction-changes.md) | Implementation and parent validation. |
+| [.copilot-tracking/rpi-sessions/2026-10-31/employee-identity-check-570-correction-state.json](../../../rpi-sessions/2026-10-31/employee-identity-check-570-correction-state.json) | Parent opening state. |
+| [.copilot-tracking/reviews/logs/2026-10-31/employee-identity-check-570-review.md](employee-identity-check-570-review.md) | Unchanged original adverse Review. |
+| [.copilot-tracking/changes/2026-10-31/employee-identity-check-570-changes.md](../../../changes/2026-10-31/employee-identity-check-570-changes.md) | Unchanged original changes and failed preflights. |
+| [src/api/checks/employee_acceptance_check.py](../../../../src/api/checks/employee_acceptance_check.py) | Reviewed complete runner. |
+| [src/api/tests/test_employee_acceptance_check.py](../../../../src/api/tests/test_employee_acceptance_check.py) | Reviewed complete owning tests. |
+| [src/api/README.md](../../../../src/api/README.md) | Reviewed owning guide section. |
+| [docs/reference/README.md](../../../../docs/reference/README.md) | Reviewed owned knowledge index update. |
+| [docs/reference/log.md](../../../../docs/reference/log.md) | Reviewed append-only knowledge update. |
+| [.copilot-tracking/reviews/logs/2026-10-31/employee-identity-check-570-correction-review.md](employee-identity-check-570-correction-review.md) | This one complete independent Review. |
 
 ## Next Steps
 

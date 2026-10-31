@@ -79,10 +79,10 @@ discoverable concerns are withheld for another critique.
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/research/2026-10-31/employee-acceptance-gate-570-research.md](.copilot-tracking/research/2026-10-31/employee-acceptance-gate-570-research.md) | Supplied focused research and evidence map |
-| [.copilot-tracking/plans/2026-10-31/employee-acceptance-gate-570-plan.md](.copilot-tracking/plans/2026-10-31/employee-acceptance-gate-570-plan.md) | Assessed final-candidate plan |
-| [.copilot-tracking/details/2026-10-31/employee-acceptance-gate-570-phase-details.md](.copilot-tracking/details/2026-10-31/employee-acceptance-gate-570-phase-details.md) | Assessed implementation and validation details |
-| [.copilot-tracking/reviews/plans/2026-10-31/employee-acceptance-gate-570-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/employee-acceptance-gate-570-plan-critique.md) | Complete independent Pass critique |
+| [.copilot-tracking/research/2026-10-31/employee-acceptance-gate-570-research.md](../../../research/2026-10-31/employee-acceptance-gate-570-research.md) | Supplied focused research and evidence map |
+| [.copilot-tracking/plans/2026-10-31/employee-acceptance-gate-570-plan.md](../../../plans/2026-10-31/employee-acceptance-gate-570-plan.md) | Assessed final-candidate plan |
+| [.copilot-tracking/details/2026-10-31/employee-acceptance-gate-570-phase-details.md](../../../details/2026-10-31/employee-acceptance-gate-570-phase-details.md) | Assessed implementation and validation details |
+| [.copilot-tracking/reviews/plans/2026-10-31/employee-acceptance-gate-570-plan-critique.md](employee-acceptance-gate-570-plan-critique.md) | Complete independent Pass critique |
 
 ## Next Steps
 

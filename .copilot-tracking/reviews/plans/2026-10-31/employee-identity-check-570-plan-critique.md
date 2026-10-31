@@ -210,10 +210,10 @@ ms.date: 2026-10-31
 * Smallest next action: revise P01-T01's authorization-scoped durable two-slot admission contract and allocate its regression within the six-test inventory, then incorporate all remaining findings directly.
 * User response required: not for planner-owned corrections. Missing independent evidence blocks live execution; a new out-of-scope gate/environment route requires owner authorization if no approved route exists.
 
-| [.copilot-tracking/plans/2026-10-31/employee-identity-check-570-plan.md](.copilot-tracking/plans/2026-10-31/employee-identity-check-570-plan.md) | Assessed final candidate plan |
-| [.copilot-tracking/details/2026-10-31/employee-identity-check-570-phase-details.md](.copilot-tracking/details/2026-10-31/employee-identity-check-570-phase-details.md) | Assessed task details |
-| [.copilot-tracking/research/2026-10-31/employee-identity-check-570-research.md](.copilot-tracking/research/2026-10-31/employee-identity-check-570-research.md) | Supplied bounded evidence |
-| [.copilot-tracking/reviews/plans/2026-10-31/employee-identity-check-570-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/employee-identity-check-570-plan-critique.md) | Complete one-pass critique; Revise |
+| [.copilot-tracking/plans/2026-10-31/employee-identity-check-570-plan.md](../../../plans/2026-10-31/employee-identity-check-570-plan.md) | Assessed final candidate plan |
+| [.copilot-tracking/details/2026-10-31/employee-identity-check-570-phase-details.md](../../../details/2026-10-31/employee-identity-check-570-phase-details.md) | Assessed task details |
+| [.copilot-tracking/research/2026-10-31/employee-identity-check-570-research.md](../../../research/2026-10-31/employee-identity-check-570-research.md) | Supplied bounded evidence |
+| [.copilot-tracking/reviews/plans/2026-10-31/employee-identity-check-570-plan-critique.md](employee-identity-check-570-plan-critique.md) | Complete one-pass critique; Revise |
 
 ## Next Steps
 

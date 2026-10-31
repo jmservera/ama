@@ -115,12 +115,12 @@ ms.date: 2026-10-31
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/research/2026-10-31/employee-identity-check-570-correction-research.md](.copilot-tracking/research/2026-10-31/employee-identity-check-570-correction-research.md) | Supplied bounded correction research. |
-| [.copilot-tracking/plans/2026-10-31/employee-identity-check-570-correction-plan.md](.copilot-tracking/plans/2026-10-31/employee-identity-check-570-correction-plan.md) | Assessed final-candidate plan. |
-| [.copilot-tracking/details/2026-10-31/employee-identity-check-570-correction-phase-details.md](.copilot-tracking/details/2026-10-31/employee-identity-check-570-correction-phase-details.md) | Assessed phase contracts. |
-| [.copilot-tracking/reviews/logs/2026-10-31/employee-identity-check-570-review.md](.copilot-tracking/reviews/logs/2026-10-31/employee-identity-check-570-review.md) | Immutable original adverse Review. |
-| [.copilot-tracking/changes/2026-10-31/employee-identity-check-570-changes.md](.copilot-tracking/changes/2026-10-31/employee-identity-check-570-changes.md) | Original dispositions and actual failed gate evidence. |
-| [.copilot-tracking/reviews/plans/2026-10-31/employee-identity-check-570-correction-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/employee-identity-check-570-correction-plan-critique.md) | This complete independent critique. |
+| [.copilot-tracking/research/2026-10-31/employee-identity-check-570-correction-research.md](../../../research/2026-10-31/employee-identity-check-570-correction-research.md) | Supplied bounded correction research. |
+| [.copilot-tracking/plans/2026-10-31/employee-identity-check-570-correction-plan.md](../../../plans/2026-10-31/employee-identity-check-570-correction-plan.md) | Assessed final-candidate plan. |
+| [.copilot-tracking/details/2026-10-31/employee-identity-check-570-correction-phase-details.md](../../../details/2026-10-31/employee-identity-check-570-correction-phase-details.md) | Assessed phase contracts. |
+| [.copilot-tracking/reviews/logs/2026-10-31/employee-identity-check-570-review.md](../../logs/2026-10-31/employee-identity-check-570-review.md) | Immutable original adverse Review. |
+| [.copilot-tracking/changes/2026-10-31/employee-identity-check-570-changes.md](../../../changes/2026-10-31/employee-identity-check-570-changes.md) | Original dispositions and actual failed gate evidence. |
+| [.copilot-tracking/reviews/plans/2026-10-31/employee-identity-check-570-correction-plan-critique.md](employee-identity-check-570-correction-plan-critique.md) | This complete independent critique. |
 
 ## Next Steps
 

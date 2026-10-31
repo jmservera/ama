@@ -165,7 +165,7 @@ def chat(page: Page, admit: Admission) -> Observation:
     return result
 
 
-def map_projection(payload: object) -> dict[str, object] | None:
+def map_projection(payload: object, flag: str = "") -> dict[str, object] | None:
     if not isinstance(payload, dict):
         return None
     mode, total, shown, items = (payload.get(key) for key in ("mode", "total", "shown", "items"))
@@ -231,6 +231,7 @@ def map_projection(payload: object) -> dict[str, object] | None:
                 or not name.strip()
                 or not isinstance(kind, str)
                 or kind not in MAP_LABELS
+                or (flag == "hazard" and kind != "hazard")
             ):
                 return None
             label = f"{name}, {MAP_LABELS[kind]}"
@@ -246,6 +247,8 @@ def map_projection(payload: object) -> dict[str, object] | None:
                 or not 0 <= hazards <= count
                 or type(long) is not int
                 or not 0 <= long <= count
+                or (flag == "hazard" and hazards != count)
+                or (flag == "long" and long != count)
             ):
                 return None
             counts += count
@@ -373,7 +376,7 @@ def map_filters(page: Page, admit: Admission) -> Observation:
                     response = responses.get(request)
                     if response is None or response.status != 200:
                         return {"passed": False}
-                    projection = map_projection(response.json())
+                    projection = map_projection(response.json(), MAP_FLAGS[index])
                     if projection is None:
                         return {"passed": False}
                     projections.append(projection)

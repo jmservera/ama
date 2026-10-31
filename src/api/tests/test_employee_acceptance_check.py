@@ -30,7 +30,7 @@ POINT = {
     "lon": -1.6,
     "kind": "hazard",
 }
-CLUSTER = {"lat": 54.9, "lon": -1.6, "count": 3, "hazards": 1, "long": 2}
+CLUSTER = {"lat": 54.9, "lon": -1.6, "count": 3, "hazards": 3, "long": 2}
 POINTS = {
     "mode": "points",
     "total": 1,
@@ -220,6 +220,18 @@ class AcceptanceTests(unittest.TestCase):
         for index, invalid_payload in enumerate(invalid):
             with self.subTest(index=index):
                 self.assertIsNone(check.map_projection(invalid_payload))
+
+    def test_map_filter_semantics(self) -> None:
+        self.assertIsNone(
+            check.map_projection(dict(POINTS, items=[dict(POINT, kind="normal")]), "hazard")
+        )
+        self.assertIsNone(
+            check.map_projection(dict(CLUSTERS, items=[dict(CLUSTER, hazards=1)]), "hazard")
+        )
+        self.assertIsNone(
+            check.map_projection(dict(CLUSTERS, items=[dict(CLUSTER, long=1)]), "long")
+        )
+        self.assertIsNotNone(check.map_projection(CLUSTERS, "hazard"))
 
     def test_map_producer_cluster_roundoff(self) -> None:
         cases = [

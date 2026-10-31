@@ -133,10 +133,10 @@ owner, resolving-evidence request or direct/decision disposition to assign.
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/research/2026-10-31/employee-review-threads-570-research.md](.copilot-tracking/research/2026-10-31/employee-review-threads-570-research.md) | Supplied bounded research and evidence |
-| [.copilot-tracking/plans/2026-10-31/employee-review-threads-570-plan.md](.copilot-tracking/plans/2026-10-31/employee-review-threads-570-plan.md) | Assessed final-candidate plan |
-| [.copilot-tracking/details/2026-10-31/employee-review-threads-570-phase-details.md](.copilot-tracking/details/2026-10-31/employee-review-threads-570-phase-details.md) | Assessed task-level details |
-| [.copilot-tracking/reviews/plans/2026-10-31/employee-review-threads-570-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/employee-review-threads-570-plan-critique.md) | This single completed critique |
+| [.copilot-tracking/research/2026-10-31/employee-review-threads-570-research.md](../../../research/2026-10-31/employee-review-threads-570-research.md) | Supplied bounded research and evidence |
+| [.copilot-tracking/plans/2026-10-31/employee-review-threads-570-plan.md](../../../plans/2026-10-31/employee-review-threads-570-plan.md) | Assessed final-candidate plan |
+| [.copilot-tracking/details/2026-10-31/employee-review-threads-570-phase-details.md](../../../details/2026-10-31/employee-review-threads-570-phase-details.md) | Assessed task-level details |
+| [.copilot-tracking/reviews/plans/2026-10-31/employee-review-threads-570-plan-critique.md](employee-review-threads-570-plan-critique.md) | This single completed critique |
 
 ## Next Steps
 
