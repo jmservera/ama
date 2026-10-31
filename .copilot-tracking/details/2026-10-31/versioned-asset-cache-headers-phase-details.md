@@ -21,7 +21,7 @@ ms.date: 2026-10-31
 | --- | --- | --- | --- |
 | P01 | Shared cache policy and regressions | Complete | P01-T01, P01-T02 |
 | P02 | Validation and reconciliation | Complete | P02-T01, P02-T02 |
-| P03 | Review and local persistence | Review complete; persistence pending | P03-T01, P03-T02 |
+| P03 | Review and local persistence | Complete | P03-T01, P03-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Shared cache policy and regressions
@@ -116,3 +116,4 @@ ruff format --check
 * Verify local commit content/author/committer/trailer and status. No push.
 * Full publication gate and exact-head/human/hosted approval remain unperformed because publication is excluded.
 * Completion: local candidate and original dated RPI evidence committed, clean worktree.
+* Actual completion: b516db894c3e7d02e11ccd726a9b1a7ec73f5c83 committed the nine-file source change and all seven original RPI/state artifacts; privacy-safe author/committer and required trailer verified, clean status afterward. Parent closeout is persisted separately without modifying source or original Review.

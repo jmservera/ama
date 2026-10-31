@@ -4,7 +4,7 @@
   "parent_task": {"task_id": "975bbf93-de84-47b4-ad5d-b55583f970c9", "task_slug": "demo-sites-redeploy-1031"},
   "mode": "automatic",
   "active_phase": "Follow-up",
-  "status": "active",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-31/versioned-asset-cache-headers-research.md",
@@ -20,10 +20,11 @@
     {"decision": "Reuse clean fix/versioned-asset-cache-headers topic", "status": "confirmed", "evidence": "Clean initial git status; no open PR for this branch; HEAD f1a87593"},
     {"decision": "Research executed; Planning Readiness Ready", "status": "complete", "evidence": "Research C1-C9; Wider, Deeper and Contrarian complete"},
     {"decision": "Single critique executed; original verdict Revise; PC-001 rejected", "status": "disposed", "evidence": "Plan Critique Disposition: alleged /tmp prohibition absent from parent context; repository shared lock explicitly required; no significant unresolved decision"},
-    {"decision": "One independent Review executed; outcome Conformant with justified divergence; zero actionable findings", "status": "complete", "evidence": ".copilot-tracking/reviews/logs/2026-10-31/versioned-asset-cache-headers-review.md; nine-file source diff and validation hashes verified; local persistence remains parent-owned"}
+    {"decision": "One independent Review executed; outcome Conformant with justified divergence; zero actionable findings", "status": "complete", "evidence": ".copilot-tracking/reviews/logs/2026-10-31/versioned-asset-cache-headers-review.md; nine-file source diff and validation hashes verified"},
+    {"decision": "Local implementation and original RPI evidence committed; required author/committer/trailer verified; no push", "status": "complete", "evidence": "b516db894c3e7d02e11ccd726a9b1a7ec73f5c83; git show metadata and clean status; source unchanged after Review"}
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "P03-T02: commit reviewed source and original RPI evidence locally, then record actual commit completion; no push"},
+  "next_action": {"phase": "Follow-up", "action": "Await separately authorized ranked follow-up, Stop automatic session or Switch to manual mode; no further source/cloud/push action in current local-only task"},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Complete publication prerequisites before any later push", "rationale": "Required gate and exact-head/hosted/human approval protect publication; no source change needed, prerequisite to deployment", "evidence": "Review Plan Follow-Up Assessment; src/README.md local gate; current no-push scope"},
     {"rank": 2, "task": "Owner-authorized deployed cache and signed-in acceptance", "rationale": "Confirms headers and runtime on actual paired apps, but requires separate deployment and identity authority", "evidence": "Original PR #596 RV-001/RV-002; current Review Residual Work"}

@@ -15,9 +15,9 @@ ms.date: 2026-10-31
 
 ## Execution Status
 
-* Status: Partial for full plan; source implementation, validation and independent Review complete, local commit pending.
-* Completed markers: P01, P01-T01, P01-T02, P02, P02-T01, P02-T02, P03-T01.
-* Remaining: P03 and P03-T02 local commit.
+* Status: Complete for full plan; source, validation, independent Review and local persistence complete.
+* Completed markers: P01, P01-T01, P01-T02, P02, P02-T01, P02-T02, P03, P03-T01, P03-T02.
+* Remaining active-plan markers: none.
 * First boundary: P01-T01 shared headers and three callers; source writes only after Ready critique disposition.
 
 ## Execution Summary
@@ -57,6 +57,16 @@ Implement exact-current-version immutable static caching, preserving existing fr
 * Execution Complete; outcome Conformant with justified divergence; zero actionable findings.
 * The existing UI-support assertion amendment and isolated dependency restoration were assessed as justified. Source diff and final external validation hashes independently verified.
 * No source repairs, repeat critique or repeat Review. Original Review remains immutable at its pre-local-commit boundary; P03-T02 persistence follows.
+
+### Verified local persistence
+
+* P03-T02: local implementation/original-evidence commit b516db894c3e7d02e11ccd726a9b1a7ec73f5c83 on fix/versioned-asset-cache-headers.
+* Sixteen committed files: nine tracked source/test/check/doc changes and seven dated RPI/state artifacts. No workflow changes.
+* Authenticated gh api user returned id8036360/loginjmservera; configured repository-local privacy-safe email 8036360+jmservera@users.noreply.github.com and explicitly used it for both author and committer.
+* Commit subject: fix(api): cache current versioned assets immutably (Refs #568).
+* Trailer verified: Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>.
+* Git commit succeeded, actual author/committer/body read back and status clean. This subsequent artifact-only closeout records those observed facts; source and original critique/Review unchanged.
+* No push, Azure, secret access, issue closure or publication gate claimed.
 
 ## Implementation-Time Plan and Detail Updates
 
@@ -131,7 +141,7 @@ None for implementation.
 
 ## Remaining Work
 
-P03-T02 parent local commit and durable closeout evidence.
+None in the requested local source task. Publication and live acceptance remain distinct deferred work.
 
 ## Follow-Up Items
 
@@ -140,7 +150,8 @@ P03-T02 parent local commit and durable closeout evidence.
 
 ## Return-to-Caller State
 
-* Automatic parent: P01/P02/P03-T01 complete; independent Review Complete / Conformant with justified divergence.
+* Automatic parent: full requested local task complete; independent Review Complete / Conformant with justified divergence.
 * Requested validation and selected browser checks passed; existing 320 skips disclosed.
 * Critique: Complete / original Revise, PC-001 rejected with parent-context evidence.
-* No implementation blocker or actionable Review findings. Remaining local persistence; no publication or live acceptance.
+* No implementation blocker or actionable Review findings. Local source/original evidence persisted; no publication or live acceptance.
+* Automatic-session status remains running at the Follow-up checkpoint; no child work is selected or authorized in this non-interactive no-push task.

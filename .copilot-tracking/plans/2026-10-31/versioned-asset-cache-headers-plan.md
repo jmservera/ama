@@ -133,7 +133,7 @@ Give static URLs containing exactly the current release version a one-year publi
 * Detail section: P02-T02.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Independent Review and local persistence
+### [x] P03: Independent Review and local persistence
 
 * Dependencies: P02.
 
@@ -145,7 +145,7 @@ Give static URLs containing exactly the current release version a one-year publi
 * Detail section: P03-T01.
 
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: Record outcome and commit locally
+#### [x] P03-T02: Record outcome and commit locally
 
 * Resolve gh api user to privacy-safe repository-local email; no secrets.
 * Commit exact local work with Refs #568 and required trailer, verify resulting metadata and clean status.
@@ -186,6 +186,7 @@ Give static URLs containing exactly the current release version a one-year publi
 
 * Ready for implementation after single critique disposition.
 * Changes artifact: .copilot-tracking/changes/2026-10-31/versioned-asset-cache-headers-changes.md.
-* P01/P02 and P03-T01 complete. Independent Review execution Complete, outcome Conformant with justified divergence, no actionable findings. P03-T02 local commit remains parent-owned.
+* All P01-P03 tasks complete. Independent Review execution Complete, outcome Conformant with justified divergence, no actionable findings.
+* Local implementation/original-evidence commit b516db894c3e7d02e11ccd726a9b1a7ec73f5c83 verified, including privacy-safe author/committer, Refs #568 and exact Copilot trailer. This closeout records completion after the actual commit; no source change or repeat Review.
 * Final API discovery passed: 1430 tests, 320 existing skips; Ruff check and format passed; all three selected browsers passed after isolated dependency restoration.
 * No unresolved source requirement decision; publication/live/human gates are not established.
