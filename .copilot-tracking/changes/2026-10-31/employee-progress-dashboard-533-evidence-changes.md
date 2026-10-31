@@ -53,3 +53,34 @@ secrets, model use, force push or owner/hosted approval claimed.
 ## Amendments and Divergences
 
 None: portable evidence access replaces no required validation or source Review.
+
+## Post-Review Publication Integration
+
+Source/evidence commit succeeded as 86126d0b with authenticated account
+jmservera / 8036360, repository-local noreply identity for author/committer and
+required Copilot trailer. All small primary evidence is committed; heavy
+reports and final receipt remain external.
+
+First full-gate preflight exited 1 before checks: "Candidate does not descend
+from the reviewed main base". It used current origin/main
+f11d29e4 (full identity in external publication-base.txt). Preserve external
+/tmp/ama-533-correction-e26eb207/gate-001.log. No receipt or passing gate claimed.
+
+Normal local merge of reviewed origin/main succeeded without conflicts and
+without rebase, force push or remote merge. This integrates required reviewed
+gate/identity/sensor changes and makes current-base validation possible;
+it is not a bypass or change to branch protection. Correction test and browser
+checker hashes remain exactly the independently assessed values. The guide also
+incorporates unrelated reviewed upstream sections, with the progress overlay
+explanation retained. Incoming main-only trailing EOF whitespace in two
+capstone files is pre-existing; topic delta checked against origin/main is clean.
+
+Fresh post-integration `flock -n` progress_browser_check --scale completed exit 0
+with original small and 60,000-home journeys, six chart/table/API comparisons,
+stable filtered final page/reload, zero uncaught JavaScript errors and zero
+automated axe violations. Exact raw log and bounded provenance are committed
+as browser-post-main.log and post-main-provenance.json in the existing evidence
+root. Full heavy reports remain external at browser-post-main/.
+This supplemental execution verifies upstream authentication integration,
+not a repeat source Review. A new merge/evidence commit and complete current-base
+gate are required; all original source/evidence Review outcomes remain preserved.

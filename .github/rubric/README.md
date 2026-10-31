@@ -1,7 +1,7 @@
 ---
 title: Capstone Rubric Gate
 description: How the rubric-score agentic workflow scores the capstone against the FY27 AMA rubric and blocks pull requests that lower the score
-ms.date: 2026-10-24
+ms.date: 2026-10-30
 ms.topic: how-to
 ---
 
@@ -29,7 +29,7 @@ A criterion can only move when an artifact that informs it changes, and every mo
 The registry selects only
 `docs/capstone/deck/zava-forward-cowork-v2-draft.pptx` for `capstone-deck`.
 The older executive deck and the
-[imported Cowork source and historical exports](../../docs/capstone/deck/cowork-generated/README.md)
+[imported Cowork source and historical exports](../../docs/capstone/history/cowork-generated/README.md)
 are not alternate scored decks. The imported source PPTX is encrypted;
 the later owner-supplied public v2 export is installed at the selected path.
 Local verification with the actual extractor reads 54 slides and 54
@@ -49,6 +49,24 @@ loads its trusted registry and tooling from base `main`. They must reach
 that trusted base before a fresh v2 assessment can use the new selection
 and allowance. Do not edit `scores/latest.json`, fall back to the historical
 deck, or claim a v2 pass while readable slide-and-notes evidence is missing.
+
+### Capstone Reorganization (2026-10-29)
+
+The [current capstone index](../../docs/capstone/README.md) separates delivery,
+complete native/JSON/image sources, pitch, demo and preserved history. The
+scoring PPTX stays at the same exact path with the same 20 MB allowance.
+The `pitch` artifact now includes `.md`, `.txt` and `.vtt` files in both
+`docs/capstone/pitch/` and `docs/capstone/demo/`. Historical packages and
+the source baseline are outside those scopes; they are not current rehearsal
+evidence. Thought-leadership registration and recorded scores are unchanged.
+
+The actual supplied deck has 108 fixed slide-jump actions, not the older
+review's 27 dynamic caller returns. The new builder preserves its actual
+navigation and all 54 notes; original findings and counts remain dated history.
+Local registry/extraction tests do not dispatch the scoring agent or establish
+a fresh grade. Hosted PR preparation still uses trusted base-`main`
+configuration, so the new demo-folder scope is active there only after this
+registry update is integrated. Preserve the normal publication and review gates.
 
 ### PPTX Slide Citation Repair
 
@@ -86,6 +104,26 @@ repair alone does not automatically replace PR #61's score.
 Scores are readiness estimates from repository evidence. Live-scored criteria (B1 to B5 and C2) are informed only by the capstone deck and pitch artifacts. They keep their baseline until one of those changes, except in bootstrap and calibration runs, which score every criterion from scratch, and in pull requests that change the rubric, registry, prompt or scripts, which reopen every criterion (moves still need a cited changed artifact file).
 
 ## Scorecard Submission Preflight
+
+### PR #423 invalid D1 details (2026-10-30, Refs #360)
+
+[Run 40556907743](https://github.com/jmservera/ama/actions/runs/40556907743)
+recorded no score: its actual submitted D1 object contained an extra
+`evidence2` field alongside `evidence`, `rationale` and `change_reason`.
+The strict adapter rejects extra keys even on unchanged, closed criteria.
+This was a malformed model tool submission, not missing fields in the
+transport documentation and not a measured numerical score regression.
+The existing jq preflight already rejects this shape; the adapter and
+actual prompt-filter regressions now cover the exact extra-key case.
+Strict validation and the generated workflow are unchanged.
+
+A diagnostic replay removing only that extra field yields 77 against the
+77 baseline. It is not a new assessment or a recorded score. Only A1/A3/A5
+were open, each already 5; infrastructure evidence cannot raise closed
+pitch or thought-leadership criteria. The
+[transport evidence map](../../infra/README.md#transport-evidence-and-integration-2026-10-30-refs-360)
+distinguishes offline proof from live gaps. A fresh hosted submission after
+publication remains necessary; no local test guarantees model compliance.
 
 [Run 40025652570](https://github.com/jmservera/ama/actions/runs/40025652570)
 was rejected because D3 omitted `change_reason`, not because its total fell

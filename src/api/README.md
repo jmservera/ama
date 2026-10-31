@@ -44,6 +44,69 @@ immutable runners or reuse historical sessions. Only after strict identity
 admission should the runner exercise employee chat/skill switching, map
 filters and the case view. These live criteria remain unverified here.
 
+Maintained authenticated-session integration now lives in
+`checks.employee_acceptance_check.verify_employee`. For a caller-owned,
+already authenticated Playwright `Page`, invoke
+`verify_employee(page, {"tid": independently_verified_tid, "oid": independently_verified_oid})`.
+It validates the exact boolean predicate projection, checks the authorized
+origin and rechecks identity before and after each chat, map and case stage,
+after hash/link navigation and before subsequent offered-control actions
+(including chat draft/send). Observer callbacks take `(page, admit)` and must
+invoke the supplied fresh-admission function at navigation/action boundaries.
+Admission loss leaves the current and later stages blocked without executing
+the next action. Probes are not an atomic guarantee against concurrent session
+changes; the application still enforces authorization on every request.
+Only strict `authenticated=true` admits observations; email/roster diagnostics
+cannot substitute for it. Each stage returns `passed`, `failed` or `blocked`,
+and the overall `passed` flag is true only when every stage passes.
+Output contains fixed status and boolean fields, never response bodies,
+exception text, identity values or case text. The adapter has no sign-in or
+credential entry point, saves no sessions and consumes zero sign-in attempts.
+The authorized caller still owns independent ID attestation, credential/debug/
+capture safety, finite attempt accounting and browser lifecycle/watchdog.
+
+Map acceptance excludes requests initiated before filter activation, matches
+the selected flag/area and observes fit/viewport follow-ups until request/render
+settlement. It validates points/clusters/empty payloads and compares the latest
+response's actual list links/labels, marker labels/count and status. Malformed
+data, map alerts, page errors and mismatched rendering fail; HTTP 200, selected
+state or a cleared busy indicator alone cannot pass. Temporary listeners are
+removed on success, failure and admission loss. Payloads remain in memory only.
+Cluster containment permits 1e-9 degrees of absolute centroid roundoff against
+the original-coordinate bounds. Point containment, finite coordinates and
+geographic limits remain exact.
+
+From `src/api`, run the changed local Chromium check with the existing test
+paths (installed Chromium required; no live identity or credential access):
+
+```bash
+PYTHONPATH=.:src:tests:../core/src:../agents/src:../core/tests:../agents/tests \
+  python3 -m checks.employee_acceptance_check
+```
+
+This executes three real loopback Chromium regressions with constructed
+trusted-proxy `/api/me` HTTP responses: a rosterless expected account with
+no display email is admitted, and a different immutable account is denied
+before any downstream callback; the third covers valid and malformed map
+rendering, pre-activation stale responses and fit/viewport replacements.
+The positive test also runs the actual local
+chat/map/case observers against the synthetic server, with explicitly synthetic
+privacy references, workflow-only chat and no external network. This does not
+prove deployed behavior or operational privacy approval. On 2026-10-31 the authorized
+demo health check returned 200, but independent directory resolution was
+denied. No sign-in occurred; all live employee criteria remain blocked pending
+independently verified expected tenant/object IDs.
+
+Fresh non-integration discovery records the existing approved
+`Chromium is installed by the later browser-check step` skip only when the
+browser executable is absent; other launch failures propagate. That skip is
+not executed acceptance. The maintained CLI requires exactly three successful
+tests and zero skips, so missing Chromium exits nonzero. Complete-gate browser
+setup and source CI invoke this CLI after installing Chromium with the test
+import paths above. The discovery qualification remains unchanged; all three
+reviewed integration extras must actually execute; no
+missing-browser fallback or passing skipped integration is permitted.
+
 ## Compact case journey (#552)
 
 The six workflow steps retain text labels and status words alongside the exact
@@ -1261,27 +1324,32 @@ automatic retries/refunds. The complete request is <=4096 bytes with <=256
 output tokens. Reviewed inference tariff expires 2026-11-01T00:00:00Z; the
 December funding horizon does not extend resident access.
 
-#### Issue #466 acceptance evidence reconciliation (2026-10-30)
+#### Issue #466 acceptance evidence reconciliation (2026-10-31)
 
 The gauges/history and advisory assistant already exist in the source baseline.
 This reconciliation adds no new runtime, model activation or resident authority.
-The issue's current checkboxes and its older USD5 proposal are not silently
-updated by this guide.
+The owner request on 2026-10-31 confirms gauges/history and an advisory assistant
+with AI in scope, with IoT a standing priority and resident AI staying off in
+deployment behind the existing activation settings. The issue checkboxes are
+not changed by this guide; the older USD5 proposal is superseded by the recorded
+2026-10-27 decision below, not a fresh spending authorization.
 
 | Issue criterion | Source evidence and boundary |
 | --- | --- |
-| Owner confirms scope and priority | Unproven. The implementation request does not establish a separate owner scope/priority decision. |
+| Owner confirms scope and priority | Confirmed by the explicit 2026-10-31 owner direction: sensor gauges/history and advisory AI, IoT a standing priority, existing synthetic data and deployment AI off. This does not establish live or human acceptance. |
 | Own-home gauges and history labelled synthetic | Implemented: temperature/humidity meters, static histories and equivalent table use only the signed-session home's generated readings. `test_resident_sensors.py` and `checks.resident_sensors_browser_check` cover isolation, missing/fault/empty states and text alternatives. CO2 was an issue example, not an available generated channel. |
 | Grounded case status, required documents and form help with advisory notice | Implemented: own-case status and document facts, honest unknowns and general form guidance; `test_resident_assistant_api.py`, `test_resident_chat_api.py` and `checks.resident_assistant_browser_check` cover these paths. The assistant does not submit, consent or decide. |
 | No other resident's data | Tested by separate synthetic sessions, forged selectors, revocation and shared-browser session changes in the resident API and browser checks. These are local engineering checks, not live identity acceptance. |
 | Accessible gauges, charts and chat, with text alternatives | Existing native meters, static named SVGs, equivalent table, labelled chat controls, keyboard focus, non-colour statuses and reduced motion have automated engineering checks. Screen-reader, real-resident and full WCAG acceptance remain separate; passing axe alone does not establish conformance. |
-| Model, cost cap and credential route decided and recorded | The [2026-10-27 decision](../../docs/architecture/resident-assistant-prototype.md#current-owner-decision-and-implementation-2026-10-27), delivered in merged #480, records regional Standard `gpt-4.1-mini` 2025-04-14, a permanent USD20 inference ceiling inside the resident USD30 allocation and managed identity only. The issue checkbox remains unticked pending owner/coordinator reconciliation; this is evidence of a recorded decision, not a new approval or live activation. |
+| Model, cost cap and credential route decided and recorded | The [2026-10-27 decision](../../docs/architecture/resident-assistant-prototype.md#current-owner-decision-and-implementation-2026-10-27), delivered in merged #480, records regional Standard `gpt-4.1-mini` 2025-04-14, a permanent USD20 inference ceiling inside the resident USD30 allocation and managed identity only. Retain that existing decision; no replacement model, cap or credential route is needed. Issue-state reconciliation remains separate from this recorded decision, new spending authority or live activation. |
 
 Default-off AI, SQL accounting prerequisites and the 2026-11-01T00:00:00Z tariff
 expiry remain unchanged. No deployment, current budget headroom, authenticated
 live model call or renewed cost/authority window is established by local tests.
-The historical fixed-topic design note must be read with the newer generated
-answer contract and its separate acceptance gaps below. Refs #466 only.
+The [current scope and AI contract](../../docs/architecture/resident-assistant-prototype.md#current-scope-and-ai-contract-2026-10-31)
+distinguishes eligible generated answers from protected document guidance and
+the historical fixed-topic design. Actual-model relevance, manual accessibility
+and live acceptance remain separate from local scripted checks. Refs #466 only.
 
 #### Owner deployment prerequisite for resident generated answers (#563)
 

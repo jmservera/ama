@@ -1,0 +1,94 @@
+{
+  "reviewed_main": "f11d29e41cd40c1be2b81b111f6189340df84bdd",
+  "pre_merge_head": "86126d0b0a802bb43c5cc09c622ce25b435abe54",
+  "browser_log_sha256": "45c1b681b8daa4f4c1d185a902d2dfda25ad0797bc2e3b8b0d622863aa1b7a34",
+  "tested_sources": {
+    "src/api/tests/test_progress_dashboard.py": "ed85c9cbb72e172d9afb5d29f28aeef0cd204b3ce8cc4fd3410666f7ada9eab7",
+    "src/api/checks/progress_browser_check.py": "e617e5f7c653a8ff50efdd90533ee3144bbf3ca36d16d4511edb65a7066a82f6",
+    "src/api/README.md": "abb5a7cbe790ed6b0b1ebd42dab22c18795843070a10c15df35023352d621342",
+    "src/api/src/zava_forward/api/auth.py": "8fc34cc65775d051fd2d0aed56f34f308ea6bf933ac0f7aa0a6812da0f613870",
+    "src/api/src/zava_forward/api/server.py": "336e48f81324d0471adb0a0d946211d70447561d082f8e25d07426dc2821a406",
+    "src/api/src/zava_forward/api/progress.py": "2cea36ca3307edea99f786a39cb4299974b5378f8d06da315a47dfa0a9891734",
+    "src/api/src/zava_forward/api/web/progress.js": "bf0e4823652d18810b755eea029825bdfb0f4febbf25a81358dc4aaca387d49a"
+  },
+  "axe": [
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-main/archive-reversed-axe.json",
+      "sha256": "5628c78f4cc50d2c2c8224357a66dc3dae0add488bddc41d5971f9f2efddece7",
+      "violations": [],
+      "incomplete_count": 0
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-main/archive-reversed-recovered-axe.json",
+      "sha256": "3a21eba06d71412ff44b95b53f9cd0d46573382c2f7fc43c18773350ffced670",
+      "violations": [],
+      "incomplete_count": 0
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-main/closed-cases-axe.json",
+      "sha256": "92296f495c8151e1d621e59a60ea684d30044e26ea3dbdd632b5fa15e3602971",
+      "violations": [],
+      "incomplete_count": 0
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-main/dashboard-axe.json",
+      "sha256": "aaad39906314386247275aa290b39d00d9f15a5a2a0a3bedf2dfa7e26f40bf12",
+      "violations": [],
+      "incomplete_count": 1
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-main/dashboard-default-end-axe.json",
+      "sha256": "01e3b5b14f0c6dc3ed91803f729543626b033f1df487b312a3f19cb102b95c74",
+      "violations": [],
+      "incomplete_count": 0
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-main/dashboard-default-end-recovered-axe.json",
+      "sha256": "aeaeae76fe3c9033beb3f7d6093c2d447548786f09f50d0c7e097a68e27390af",
+      "violations": [],
+      "incomplete_count": 1
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-main/dashboard-oversized-axe.json",
+      "sha256": "c7df03c87f7d692465857f53a630f3a6ed9b805f44d81d4676ef30cc03cb04fb",
+      "violations": [],
+      "incomplete_count": 0
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-main/dashboard-oversized-recovered-axe.json",
+      "sha256": "1569d3c4c40130fb0e4211f26f344f1e1dd46fd02d718f0d8979ee9d708de722",
+      "violations": [],
+      "incomplete_count": 1
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-main/dashboard-reversed-axe.json",
+      "sha256": "a8e84fca403549584da7d699b6794b6a1138809e342a0208e60923df395083b2",
+      "violations": [],
+      "incomplete_count": 0
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-main/dashboard-reversed-recovered-axe.json",
+      "sha256": "5622fa388acff26ad08cbf04ab19cf223a05bc9237711e4e2a2c8e7941f674d8",
+      "violations": [],
+      "incomplete_count": 1
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-main/progress-read-failure-axe.json",
+      "sha256": "d9de13595cd9ce3723de7f7a7366a1d0eb970903402f31800a177a235e5040d5",
+      "violations": [],
+      "incomplete_count": 0
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-main/scale-archive-axe.json",
+      "sha256": "1d315a51c6841cbe8413253bd0aaeff17255144480f88ac34c4c32d848a78171",
+      "violations": [],
+      "incomplete_count": 0
+    },
+    {
+      "source": "/tmp/ama-533-correction-e26eb207/browser-post-main/scale-dashboard-axe.json",
+      "sha256": "0386336f382c735d5e4689f9a854be9667f46626f18d48f748a83b6054c4b997",
+      "violations": [],
+      "incomplete_count": 1
+    }
+  ]
+}

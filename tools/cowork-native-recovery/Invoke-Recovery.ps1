@@ -32,7 +32,7 @@ while ($Ancestor) {
     }
     $Ancestor = [IO.Path]::GetDirectoryName($Ancestor)
 }
-$Original = Join-Path $RepoRoot 'docs/capstone/pitch/cowork-main-presentation/native-recovery/baseline/original.pptx'
+$Original = Join-Path $RepoRoot 'docs/capstone/history/cowork-main-presentation/native-recovery/baseline/original.pptx'
 $OriginalHash = 'd41acc969efb1687cfdd0103b753a62ea697005652760b1579a8e6de955cf447'
 if (-not (Test-Path -LiteralPath $Original -PathType Leaf)) { throw "Missing pinned baseline: $Original" }
 if ((Get-FileHash -LiteralPath $Original -Algorithm SHA256).Hash -ne $OriginalHash) {

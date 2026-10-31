@@ -1,0 +1,121 @@
+{
+  "date": "2026-10-29T22:37:04.0898645Z",
+  "approved_selection_count": 15,
+  "approval": "Owner approved this exact finite selection in the capstone reorganization session.",
+  "archive": "C:\\Users\\juanserv\\AppData\\Local\\ama\\capstone-archives\\2026-10-29-reorganization\\snapshot.zip",
+  "archive_sha256": "ab7e423d22df5fba3847d3d25a9704ee4728fda26501f5845902a3bd9860d025",
+  "inventory_members": 4411,
+  "full_archive_readback": true,
+  "selected_restore_verified": true,
+  "protected_bytes_before_and_after": true,
+  "selected_removed": [
+    {
+      "path": "docs/capstone/deck/draft/zava-forward-executive-draft.pptx",
+      "type": "file",
+      "size": 607754,
+      "sha256": "f14ee526ef93e9412b7b3409245307a8fd5cd3b7b3e52a21b6082d99527eb603"
+    },
+    {
+      "path": "docs/capstone/deck/draft/architecture-runtime-native.png",
+      "type": "file",
+      "size": 1132428,
+      "sha256": "498a3c63ad5482aed3927ba549f85c1a37e03a5541dec476a2abc3fb2e2808c5"
+    },
+    {
+      "path": "docs/capstone/deck/draft/architecture-operations-native.png",
+      "type": "file",
+      "size": 1217229,
+      "sha256": "c40c0fe106141af4090f4f288d9fbf600105fedb1e6861078618a076e4586439"
+    },
+    {
+      "path": "docs/capstone/deck/draft/architecture-executive-native.png",
+      "type": "file",
+      "size": 941420,
+      "sha256": "d925e2e94d55d474dd07c3e733b6664bd8bc3b96f5cead27a195837b3b14f2f3"
+    },
+    {
+      "path": "docs/capstone/deck/draft/architecture-deferred-native.png",
+      "type": "file",
+      "size": 1191856,
+      "sha256": "3fade90251a63922436d26ee968051dee39ee70512a766b0c50d01fbe447a8a9"
+    },
+    {
+      "path": "docs/capstone/deck/draft/agents-in-retrofit-process.svg",
+      "type": "file",
+      "size": 17484,
+      "sha256": "340d661a6daf15ab97e81daf5f37ca2a417bf5edc9e770d4ab9f3658c2962e60"
+    },
+    {
+      "path": "docs/capstone/deck/draft/agents-in-retrofit-process.png",
+      "type": "file",
+      "size": 293135,
+      "sha256": "8e4d3ebe2b976e14f3a35c8daa9d6d4460ef372faa4926cbb6ca343285dfd010"
+    },
+    {
+      "path": "docs/capstone/deck/draft/agents-in-retrofit-process-native.png",
+      "type": "file",
+      "size": 1088446,
+      "sha256": "74a2d1470799b6e4d21c3116a8cb7738cb2ae028b510b982734a2cbd39076ae2"
+    },
+    {
+      "path": "docs/capstone/deck/cowork-generated/Zava Forward v2 - More homes ready with control intact.pdf",
+      "type": "file",
+      "size": 15796158,
+      "sha256": "29778c0324eb58444bc515ae80206af8730c813e511f000c2194923928d87d21"
+    },
+    {
+      "path": "docs/capstone/deck/cowork-generated/Zava Forward v2 - contact sheet.png",
+      "type": "file",
+      "size": 3762521,
+      "sha256": "f20ab736d7d27a57ef9af4be2f3a855c97c38d6c5612eb780c7c9f647eec8ba3"
+    },
+    {
+      "path": "docs/capstone/deck/cowork-generated/refinement-2026-10-23/slide-9.png",
+      "type": "file",
+      "size": 89949,
+      "sha256": "6a340a1e52e5df8018c3730fd92b5a05c5114639adde725cb7bcae7bbaeed95e"
+    },
+    {
+      "path": "docs/capstone/deck/cowork-generated/refinement-2026-10-23/slide-46.png",
+      "type": "file",
+      "size": 92561,
+      "sha256": "8da69915d5f46f29b461e563f2e4fbf9b34855c66af3acaeb4d38a8548bea7e0"
+    },
+    {
+      "path": "docs/capstone/deck/cowork-generated/refinement-2026-10-23/slide-33.png",
+      "type": "file",
+      "size": 76145,
+      "sha256": "709333c3c1ed3367020b9bd397f0742fea947daa9fc4151163633269ad156774"
+    },
+    {
+      "path": "docs/capstone/deck/cowork-generated/refinement-2026-10-23/slide-19.png",
+      "type": "file",
+      "size": 146850,
+      "sha256": "447a9cf9bf913578812353276461bbfc295a827dd0795f0c0fbef62bdeedf085"
+    },
+    {
+      "path": "docs/capstone/deck/cowork-generated/refinement-2026-10-23/slide-13.png",
+      "type": "file",
+      "size": 1065470,
+      "sha256": "58d81d748ff22bf8b754ef650996e87d4e4695842befc9676dbb72a3e7222a6c"
+    }
+  ],
+  "moves": [
+    {
+      "from": "docs/capstone/pitch/cowork-main-presentation",
+      "to": "docs/capstone/history/cowork-main-presentation"
+    },
+    {
+      "from": "docs/capstone/pitch/tokenomics-pitch-brief.md",
+      "to": "docs/capstone/history/tokenomics-pitch-brief.md"
+    },
+    {
+      "from": "docs/capstone/deck/cowork-generated",
+      "to": "docs/capstone/history/cowork-generated"
+    }
+  ],
+  "active_baseline": "docs/capstone/source/baseline.pptx",
+  "baseline_sha256": "2bab9b79de4352a1915dab04d1846a4c4be90f6889a2b9b6af4807e48a33d5f8",
+  "local_custody_only": true,
+  "git_history_rewritten": false
+}

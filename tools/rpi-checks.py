@@ -42,6 +42,7 @@ RUFF_GROUPS = (
     ("infra/scripts/pipeline.py", "infra/tests/test_pipeline.py"),
     (
         "infra/scripts/staff_azure.py",
+        "infra/scripts/staff_blob.py",
         "infra/scripts/staff-azure-worker.py",
         "infra/scripts/credential_arm.py",
         "infra/tests/test_staff_azure.py",
@@ -52,7 +53,7 @@ RUFF_GROUPS = (
 WORKFLOWS = ("src-ci.yml", "mvp-ci.yml", "mvp-validation.yml", "src-deploy.yml", "infra-plan.yml")
 # Explicitly updated with the matrix whenever native workflow commands change.
 WORKFLOW_HASHES = {
-    "src-ci.yml": "94730d9a7c926613827fcbda312185720e80c51f304815f00d8f9ef17c89f076",
+    "src-ci.yml": "9964408b3a69e4bbc01955dcab15612e8794280f1170e6b2d67ec75672224262",
     "mvp-ci.yml": "92178fff316a4cd8b4e619c47e96c0238106c311cad928263b6e795797a3a54e",
     "mvp-validation.yml": "94feeb7e0c6807a94dc2624eaf7c5e76c807a234e1777b593b169fd801e511cc",
     "src-deploy.yml": "3c2f1ed59b1486fc1316a48207cc4ef7d6a830bbba1dcad4152acab4bd2f1bbc",
@@ -93,6 +94,10 @@ CHAT_PANEL_DISCOVERY_SKIP = (
     f"{CHAT_PANEL_BROWSER_SELECTOR.rsplit('.', 1)[1]} ({CHAT_PANEL_BROWSER_SELECTOR})",
     "opt-in local Chromium",
 )
+EMPLOYEE_ACCEPTANCE_BROWSER_MODULE = "checks.employee_acceptance_check"
+EMPLOYEE_ACCEPTANCE_BROWSER_PATHS = (
+    ".:src:tests:../core/src:../agents/src:../core/tests:../agents/tests"
+)
 SQL_NOT_APPLICABLE = {
     (
         "test_json_postsave_audit_failure_reports_persisted_uncertainty "
@@ -109,6 +114,7 @@ TYPE_GROUPS = (
         "--follow-imports=silent",
         "--ignore-missing-imports",
         "infra/scripts/staff_azure.py",
+        "infra/scripts/staff_blob.py",
         "infra/scripts/staff-azure-worker.py",
         "infra/scripts/credential_arm.py",
     ),
@@ -703,6 +709,13 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
         lint(python, (f"checks/{name}.py",), "src/api")
     add([python, "-m", "playwright", "install", "chromium"])
     add(
+        [python, "-m", EMPLOYEE_ACCEPTANCE_BROWSER_MODULE],
+        "src/api",
+        env={"PYTHONPATH": EMPLOYEE_ACCEPTANCE_BROWSER_PATHS},
+        suite=True,
+        integration=True,
+    )
+    add(
         [python, "-m", "unittest", "-v", CHAT_PANEL_BROWSER_SELECTOR],
         "src/api",
         env={"PYTHONPATH": test_paths("api", True), "ZF_BROWSER_TESTS": "1"},
@@ -936,7 +949,19 @@ def verify_commands(root: Path, out: Path, receipt: dict[str, Any]) -> None:
             elif row.get("expected_probe_failure"):
                 raise GateError("Successful command mislabeled as a failed probe")
             if check["suite"]:
-                counts = check_skips(output, integration=check["integration"], group=check["group"])
+                counts = check_skips(
+                    output,
+                    integration=check["integration"],
+                    group=check["group"],
+                    expected_count=(
+                        3 if EMPLOYEE_ACCEPTANCE_BROWSER_MODULE in check["argv"] else None
+                    ),
+                    expected_test=(
+                        CHAT_PANEL_DISCOVERY_SKIP[0]
+                        if CHAT_PANEL_BROWSER_SELECTOR in check["argv"]
+                        else None
+                    ),
+                )
                 if counts["executed"] <= 0 or any(row.get(k) != v for k, v in counts.items()):
                     raise GateError("Required suite result evidence missing/mismatched")
             if check["group"] == "static" and check["argv"][0] == "git" and output.strip():
@@ -1020,7 +1045,14 @@ def extra_selector(value: str) -> tuple[str, str]:
     return project, selector
 
 
-def check_skips(text: str, *, integration: bool = False, group: str = "") -> dict[str, Any]:
+def check_skips(
+    text: str,
+    *,
+    integration: bool = False,
+    group: str = "",
+    expected_test: str | None = None,
+    expected_count: int | None = None,
+) -> dict[str, Any]:
     counts = re.findall(r"Ran (\d+) tests? in ", text)
     skips = [
         {"test": match[0], "reason": match[1]}
@@ -1045,6 +1077,18 @@ def check_skips(text: str, *, integration: bool = False, group: str = "") -> dic
     declared = re.search(r"skipped=(\d+)", summary[-1])
     if (int(declared[1]) if declared else 0) != len(skips):
         raise GateError("Skip count does not match enumerated test/reason evidence")
+    if expected_count is not None and (int(counts[-1]) != expected_count or skips):
+        raise GateError(
+            f"Required {expected_count}-test zero-skip execution evidence missing/mismatched"
+        )
+    if expected_test is not None and (
+        int(counts[-1]) != 1
+        or skips
+        or re.findall(r"(?m)^(.+?) \.\.\. (.+)$", text) != [(expected_test, "ok")]
+    ):
+        raise GateError(
+            f"Required exact test execution evidence missing/mismatched: {expected_test}"
+        )
     return {"tests": int(counts[-1]), "executed": int(counts[-1]) - len(skips), "skips": skips}
 
 
@@ -1280,7 +1324,19 @@ class Runner:
                 return output
             raise GateError(f"{self.group} failed ({code}); see {logfile}")
         if suite:
-            entry.update(check_skips(output, integration=integration, group=self.group))
+            entry.update(
+                check_skips(
+                    output,
+                    integration=integration,
+                    group=self.group,
+                    expected_count=(3 if EMPLOYEE_ACCEPTANCE_BROWSER_MODULE in argv else None),
+                    expected_test=(
+                        CHAT_PANEL_DISCOVERY_SKIP[0]
+                        if CHAT_PANEL_BROWSER_SELECTOR in argv
+                        else None
+                    ),
+                )
+            )
         return output
 
     def stop_command(self) -> str:
@@ -1600,6 +1656,13 @@ class Runner:
             ):
                 self.lint(py, (f"checks/{name}.py",), "src/api")
             self.command([py, "-m", "playwright", "install", "chromium"], timeout=900)
+            self.command(
+                [py, "-m", EMPLOYEE_ACCEPTANCE_BROWSER_MODULE],
+                "src/api",
+                env={"PYTHONPATH": EMPLOYEE_ACCEPTANCE_BROWSER_PATHS},
+                suite=True,
+                integration=True,
+            )
             self.command(
                 [py, "-m", "unittest", "-v", CHAT_PANEL_BROWSER_SELECTOR],
                 "src/api",
