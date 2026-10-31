@@ -16,7 +16,7 @@ ms.date: 2026-10-31
 | Phase | Status | Tasks |
 | --- | --- | --- |
 | P01 | Complete: dated appendix added | P01-T01 |
-| P02 | P02-T01 complete; local persistence pending | P02-T01, P02-T02 |
+| P02 | Complete: Review and local persistence verified | P02-T01, P02-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Append schema correction
@@ -69,6 +69,9 @@ Hash is available in Git history, not a self-referential committed receipt.
 
 P01-T01 completed: controlling dated appendix and both schema variants added.
 P02-T01 completed: documentary assertions and independent original Review
-Complete/Conformant, zero findings. P02-T02 local commit remains.
+Complete/Conformant, zero findings. P02-T02 completed: candidate
+2fcf2f0985ee9be8ae5502ebb510bb0c94b54495, clean state, exact trailer,
+privacy-safe identities and eight-path documentation scope verified.
+Parent's second local evidence-only commit persists this factual closeout.
 Original adverse records preserved; later full
 publication gate, hosted checks and human approval remain coordinator-owned.

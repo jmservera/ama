@@ -91,7 +91,7 @@ Dependency: completed Research and one critique.
 FR1-FR3, AC1-AC3; target original changes record; detail P01-T01.
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Validate, review and persist
+### [x] P02: Validate, review and persist
 
 Dependency: P01.
 
@@ -102,7 +102,7 @@ AC1-AC4; exact snippet comparison, seven-path preservation, diff and Markdown
 review. One independent reviewer, original outcome preserved.
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: Commit locally and verify persistence
+#### [x] P02-T02: Commit locally and verify persistence
 
 AC5; dependency P02-T01. Explicitly stage only intended documentation artifacts.
 
@@ -135,5 +135,8 @@ prefix and all six other original files unchanged.
 
 P01 and P02-T01 complete. Independent Review executed once Complete /
 Conformant, zero findings, for the working-tree documentary boundary.
-Parent performs P02-T02 local persistence; no source/content correction,
-additional scope or repeated critique/Review.
+P02-T02 complete: candidate 2fcf2f0985ee9be8ae5502ebb510bb0c94b54495
+committed locally and verified clean, identity/trailer and exact scope passed.
+This parent closeout records the actual result in a second local evidence-only
+commit; no source/content correction, additional scope or repeated
+critique/Review. No push; this caller-bounded loop ends, no child task started.

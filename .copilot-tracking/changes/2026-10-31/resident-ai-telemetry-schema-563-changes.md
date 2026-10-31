@@ -13,9 +13,9 @@ ms.date: 2026-10-31
 
 ## Execution Status
 
-In progress, full plan. P01/P01-T01 complete: dated correction appended.
+Complete, full plan. P01/P01-T01 complete: dated correction appended.
 P02-T01 complete: documentary validation and one independent original Review.
-P02-T02 local commit remains.
+P02/P02-T02 complete: local candidate commit and persistence verified.
 No implementation blocker. Critique executed once Complete/Pass, zero findings.
 
 ## Execution Summary
@@ -64,9 +64,43 @@ new Review of documentary content AC1-AC4, not AC5's future commit/publication.
 Original Review executed once Complete / Conformant, zero findings, at
 .copilot-tracking/reviews/logs/2026-10-31/resident-ai-telemetry-schema-563-review.md.
 It independently confirmed the documentary invariants against bbbd969b and
-recorded assessed input hashes. P02-T02 persistence is expressly not complete.
+recorded assessed input hashes. P02-T02 was pending at that assessed boundary
+and subsequently completed as recorded below.
 No source/content changes are routed; no second Review will run. Subsequent
 parent status/persistence records do not expand that assessed boundary.
+
+## P02-T02: Actual Local Persistence and Closeout
+
+Immediately before commit, `gh api user` resolved id 8036360 / login jmservera.
+Repository-local name/email and author/committer environment were set to the
+derived `8036360+jmservera@users.noreply.github.com`. No global Git config changed.
+Eight intended artifact paths were explicitly staged; staged diff check passed.
+
+Candidate commit, exit 0:
+
+```text
+2fcf2f0985ee9be8ae5502ebb510bb0c94b54495
+docs(ops): correct resident telemetry query schema (Refs #563)
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+```
+
+Post-commit assertions, exit 0: clean porcelain including untracked files,
+expected author/committer emails, required trailer, Refs #563, exactly eight
+documentation artifact paths against bbbd969b, zero src/infra/docs diff.
+
+This final parent closeout updates only current plan/details/changes/state
+to persist actual task completion. A second local evidence-only commit records
+these facts; its hash is available in Git history rather than self-referential
+evidence. Original critique/Review artifacts and query appendix are unchanged.
+No amend, push, PR/issue edit, Azure/model/SQL operation, source change,
+repeated Review or child task occurred.
+
+Research, Plan, Implement and Review ran in order, with one critique and one
+independent original Review. Proven: documentary schema mapping, exact query
+semantics, history preservation and local persistence. Not proven: actual
+query success/access/ingestion, runtime cause/corrective config, model
+dispatch/spend, whole #563 acceptance, human/live approval or publication.
 
 ## Blockers and Follow-Up Items
 
