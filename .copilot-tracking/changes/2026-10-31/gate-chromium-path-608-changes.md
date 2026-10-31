@@ -156,3 +156,23 @@ The entire suite was launched in fresh child processes with
   admission assertions remain active, as do no-write/no-probe and cleanup checks.
 * No additional independent critique or Review was executed or claimed.
 * Refs #608 only; actual full browser/SQL, CI and owner approval remain unmet.
+
+### P03 publication and hosted resolution
+
+* Correction committed as de0aa9aa with the requested Co-authored-by trailer
+  and privacy-safe authenticated author/committer email.
+* Initial push rejected because origin had e33f98cf. Executed exactly
+  `git pull --no-rebase origin fix/gate-chromium-path-608`; only the rubric
+  score conflicted. Kept `--ours` because this later pull's ours was fetched
+  main's score, whereas theirs was the stale remote topic score. Verified the
+  resolved score matches origin/main. The initial main merge needed no conflict
+  resolution, and docs/reference/log.md remains unchanged from main.
+* Remote integration committed as 7fb024e2 with requested trailer. Non-force
+  `git push origin HEAD` succeeded; ls-remote and PR GraphQL headRefOid both
+  verified 7fb024e263245f0566629061894db77609a28693.
+* Posted reply PRRC_kwDOUU8JX88AAAABCDNZ5g to PRRT_kwDOUU8JX86yStiP, then
+  resolved it via GraphQL. Both mutation and fresh query returned isResolved=true.
+* P03, P03-T01 and P03-T02 complete. Current correction has no blockers or
+  remaining source work; final evidence-only commit/push follows on this branch.
+* Automatic state returns to Follow-up, task completed/session running.
+  Original independent Review execution/outcome and RV-001 remain preserved.

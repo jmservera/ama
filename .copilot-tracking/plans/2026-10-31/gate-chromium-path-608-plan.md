@@ -134,7 +134,7 @@ No implementation blocker. Independent critique and Review are required.
 * Expected result: durable exact commands, exit codes and evidence; reconcile markers.
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Apply user-selected hosted fixture correction
+### [x] P03: Apply user-selected hosted fixture correction
 
 * Dependencies: original P01-P02 and later hosted thread.
 * Scope: tooling fixtures and dated changes/review evidence, no production guard edit.
@@ -147,12 +147,15 @@ No implementation blocker. Independent critique and Review are required.
   TMPDIR. Mock-only Runner construction declares browser-free selections.
 
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: Validate, record evidence and publish the correction
+#### [x] P03-T02: Validate, record evidence and publish the correction
 
 * Dependencies: P03-T01.
 * Run focused unittest, including gate-owned TMPDIR at 18/58/100-byte outer output.
 * Commit with requested trailer, non-force push (pull/merge if rejected), then
   reply to and resolve the hosted thread. CI remains the gate.
+* Complete: correction de0aa9aa published through 7fb024e2; non-rebase pull
+  reconciled the remote score update while retaining main's score. GraphQL
+  reply PRRC_kwDOUU8JX88AAAABCDNZ5g posted and thread verified resolved.
 
 ## Dependencies
 
@@ -175,6 +178,8 @@ Independent final-candidate critique and post-implementation Review run once eac
 
 * Changes artifact: .copilot-tracking/changes/2026-10-31/gate-chromium-path-608-changes.md
 * Original P01-P02 and one independent Review complete, preserved historically.
-* P03 fixture correction implemented; focused validation passes in ordinary and
-  gate-owned TMPDIR contexts. Commit/push/thread resolution pending.
+* P03 complete: focused validation passes in ordinary and gate-owned TMPDIR
+  contexts; correction committed/pushed and hosted thread replied to/resolved.
+* Final evidence publication stays on this same branch. CI and actual full
+  browser/SQL evidence remain outstanding; Refs #608 only.
 * Automatic RPI parent owns continuation; no routine confirmation required.

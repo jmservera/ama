@@ -14,7 +14,7 @@
 | --- | --- | --- | --- |
 | P01 | Implement bounded admission | Complete | P01-T01, P01-T02 |
 | P02 | Validate and hand off | Complete | P02-T01 |
-| P03 | Hosted fixture correction | In progress | P03-T01, P03-T02 |
+| P03 | Hosted fixture correction | Complete | P03-T01, P03-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Implement bounded admission
@@ -103,6 +103,8 @@ reset so ambient TMPDIR is actually exercised.
 Focused unittest and existing isolated lint/format passed: 55 tests ordinarily
 and the complete suite under gate-owned TMPDIR at 18/58/100-byte outer outputs.
 Current changes/review addenda retain the hosted finding and bounded assessment.
-Remaining: commit with requested trailer, non-force push and GraphQL thread
-reply/resolution.
+Complete: correction committed at de0aa9aa, published through 7fb024e2 after
+the required non-rebase pull/merge retry, retaining main's rubric score.
+GraphQL reply PRRC_kwDOUU8JX88AAAABCDNZ5g posted; thread isResolved verified true.
+Final evidence publication remains on this branch; no source changes follow.
 No heavy/full gate required by the user; no issue-closing claim.

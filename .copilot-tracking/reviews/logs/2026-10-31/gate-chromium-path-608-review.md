@@ -171,3 +171,17 @@ Real 107/108-byte Unix socket and 58/59-byte output assertions remain intact.
 * Original Review: execution Complete / outcome Residual work, unchanged.
 * Later hosted finding: source correction validated; publish then reply/resolve.
 * Issue relationship: Refs #608 only; RV-001 remains outstanding.
+
+### Hosted disposition verification
+
+Correction de0aa9aa is published through merge 7fb024e2; both remote branch
+and PR head were verified at that SHA. The rejected push was recovered with
+the required non-rebase pull and non-force push. Main's rubric score and both
+knowledge histories remain intact.
+
+Reply PRRC_kwDOUU8JX88AAAABCDNZ5g records the owned-fixture changes, all focused
+validation contexts and CI-only gate boundary. GraphQL resolveReviewThread and
+a fresh PR query both verify PRRT_kwDOUU8JX86yStiP isResolved=true.
+P03 correction is complete; final evidence-only publication follows. This hosted
+disposition does not change original Review RV-001, establish full browser/SQL
+execution, supply CI/human approval or close #608.
