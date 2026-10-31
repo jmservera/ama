@@ -99,3 +99,33 @@ external receipt at that exact HEAD/current main base. Committed state is this
 pre-publication snapshot; the final external receipt and PR are the publication
 evidence. No passing receipt, hosted approval or independent correction closure
 is claimed here. Original adverse evidence and operational RV-006 gaps remain.
+
+## Publication Gate Attempt: Blocked
+
+Final committed candidate a9fa353ae798da1712970679c967b73d708f06e4 was
+fast-forwarded into the clean task-owned external clone
+/tmp/ama-ai-metering-432-publish-2026-10-31-a. Its tracked/untracked/ignored
+input checks were empty; fetched main remained
+a75bbdffa51ae34b1fcf779250f1f553d566ee93.
+
+Command: `PYTHONDONTWRITEBYTECODE=1 python3 tools/rpi-checks.py --all --jobs 3 --lock-timeout 600 --base a75bbdffa51ae34b1fcf779250f1f553d566ee93 --out /tmp/ama-ai-metering-432-final-gate-2026-10-31-a`.
+It exited 1 with `BLOCKED: Global heavy-resource lock timeout`. No Runner
+group started and no receipt was produced. The failed attempt's external
+directory/log are preserved; log /tmp/ai432-final-gate-run.log.
+
+Read-only lock metadata identifies python3 PID 2927070 as the WRITE holder of
+/tmp/ama-rpi-heavy.lock; flock PIDs 2931030 and 2953505 were waiting on that
+holder. No foreign process, output, container, dataset or worktree was touched.
+The attempt used a 600-second wait; the current src/README.md shared-resource
+policy requires nonqueued admission, no duplicate/waiting gates or release
+polling, and a later explicit coordination event before retry. No further
+gate is queued or launched.
+
+Publication is blocked, not passed: actual full SQL/browser/container/scanner
+groups and exact-head receipt verification remain unexecuted. Push/PR have
+not occurred. On a later explicit coordination event with ownership free,
+reconcile freshly fetched main, fast-forward the clean clone to the new final
+evidence commit, run the full gate with --lock-timeout 0 and a new external
+directory, then fetch/verify immediately before authorised push/Refs #432 PR.
+This failure record changes candidate identity and requires a new gate; the
+earlier requested source tests/static checks are unchanged-source evidence.

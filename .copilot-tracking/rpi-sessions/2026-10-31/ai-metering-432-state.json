@@ -34,18 +34,23 @@
       "decision": "One independent original Review executed Complete, outcome Defects found, source 9cce5c23545678d46821613b8df0a53a7c00762c. RV-001..005 route to later implementation; RV-006 remains operational.",
       "status": "executed",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-31/ai-metering-432-review.md"
+    },
+    {
+      "decision": "Routed source corrections and requested checks completed. Final full gate exited 1 at shared-resource lock admission; no receipt or executed groups, push or PR.",
+      "status": "blocked",
+      "evidence": ".copilot-tracking/changes/2026-10-31/ai-metering-432-review-findings-changes.md"
     }
   ],
   "blockers": [
     {
       "id": "publication-validation",
-      "summary": "Routed RV-001..005 source corrections and requested tests are recorded; fresh full gate and independent exact-head/hosted/human approval remain separate.",
-      "resolution": "Use the routed changes and pre-publication state; verify the final external receipt before authorised push. Preserve original Defects found outcome."
+      "summary": "Foreign shared-gate WRITE holder PID 2927070 caused admission timeout; no full groups/receipt. Source correction/tests completed; push/PR blocked.",
+      "resolution": "Resume only after later explicit coordination confirms free ownership; reconcile new final commit/current main, run nonqueued --all and verify fresh receipt before push. Do not poll, queue or interrupt foreign owners. Preserve original Defects found outcome."
     }
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Routed source task completed with tests; after the final commit, verify the full external gate before authorised Refs #432 PR. Committed state is the pre-publication snapshot; receipt/PR supply later publication evidence. Do not repeat Review."
+    "action": "Source RPI completed; publication blocked at the shared heavy-resource lock. Later explicit coordination/free ownership permits a fresh exact-head nonqueued full gate, verification and authorised Refs #432 PR. No push/PR or second Review has occurred."
   },
   "prioritized_follow_ups": [
     {

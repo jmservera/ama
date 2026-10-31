@@ -24,12 +24,17 @@
       "decision": "Routed source corrections and P01/P02/P03 preparation complete; 26 core plus nine API methods, requested discovery 1439 tests/320 opt-in skips, component Ruff/format/mypy pass. This committed snapshot precedes the mandatory external full gate.",
       "status": "executed",
       "evidence": ".copilot-tracking/changes/2026-10-31/ai-metering-432-review-findings-changes.md"
+    },
+    {
+      "decision": "Full gate attempted at a9fa353ae798da1712970679c967b73d708f06e4/current main a75bbdff; exit 1, global heavy-resource lock timeout, no Runner groups or receipt. No push/PR. Retry only after explicit coordination and free ownership, with nonqueued admission.",
+      "status": "blocked",
+      "evidence": ".copilot-tracking/changes/2026-10-31/ai-metering-432-review-findings-changes.md; /tmp/ai432-final-gate-run.log"
     }
   ],
   "blockers": [
-    {"id": "publication-validation", "summary": "Source corrections/docs and requested discovery pass: 1439 tests, 320 opt-in skips. Complete exact-head publication gate remains pending after the final candidate commit.", "resolution": "Verify a fresh full external receipt at current main before any push; preserve original Defects found verdict and require independent exact-head assessment."}
+    {"id": "publication-validation", "summary": "Full gate blocked by foreign WRITE holder PID 2927070 on /tmp/ama-rpi-heavy.lock; exit 1 after 600-second timeout, no receipt/groups. Source tests/static pass. Push/PR remain unperformed.", "resolution": "A later explicit coordination event must establish free ownership; reconcile current main/final commit, run --all with --lock-timeout 0/new external directory and verify immediately before push. Do not poll, queue another gate, interrupt the holder or bypass publication policy."}
   ],
-  "next_action": {"phase": "Follow-up", "action": "Pre-publication snapshot: execute and verify the full external gate after committing, then authorised push/Refs #432 PR; hosted/human and independent exact-head assessment remain separate. Do not repeat original Review."},
+  "next_action": {"phase": "Follow-up", "action": "Publication blocked: await later explicit coordination with free shared-gate ownership, then reconcile current main/new evidence commit and run a fresh nonqueued complete gate. Verify before authorised push/Refs #432 PR. Source RPI is completed, original Review remains Defects found; no second Review."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Obtain independent exact-head assessment and required hosted/human approval of the corrected candidate.", "rationale": "Source corrections have regression evidence but cannot erase the original adverse Review or constitute independent approval.", "evidence": "Original Review RV-001..005; routed changes P01..P03."},
     {"rank": 2, "task": "Obtain OD-51, applicable prices, attributable billing and authorised held-out measurements from owner/Finance.", "rationale": "These inputs determine operational economics and cannot be inferred from synthetic tests.", "evidence": "RV-006 and Tokenomics engineering/gap matrix."},
