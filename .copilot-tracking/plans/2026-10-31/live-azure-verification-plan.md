@@ -161,6 +161,9 @@ is not supported by this parent's actual instructions.
   unlimited reruns or historical-session reuse.
 * #432: live billing/price/quality/batch evidence and owner decisions remain
   separate; no model calls or financial evidence collected.
+* #608: post-Review full-gate persistent Chromium socket path failure. Local
+  tooling follow-up for early path admission/owned short scratch; no source
+  remediation or original Review repetition in this task.
 
 ## Handoff
 

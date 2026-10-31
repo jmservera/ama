@@ -92,6 +92,32 @@ capacity, AI activation, economics, legal compliance or human release approval.
 Full local gate and hosted/human publication checks are separate from this
 live observation and are not implied by it.
 
+### Later local publication-gate failure (2026-10-31, Refs #608)
+
+The full local gate at candidate
+`37cc1fed15a95f1bc84e82135b0c496862867e85`, base
+`7136be9778b17e495b1941e6eb93f50d32de8a2b`, failed separately from the
+live app observations. Project/static/infra/migration and image groups passed;
+browser failed and SQL was blocked by its prerequisite. This is not a full
+passing receipt or a deployed Azure application defect.
+
+At 16:26:24.224183 to 16:27:48.426292Z, the persistent Chromium launch in
+`checks.case_journey_browser_check` aborted with
+`chrome/browser/process_singleton_posix.cc:315: Socket path too long`,
+SIGABRT. The accepted long external output root made the Chromium
+`TMPDIR/.../SingletonSocket` pathname too long. Exact external evidence:
+`rpi-live-full-main-integrated/receipt.json`, log `0157-browser.log`,
+SHA256 `24620a9b6a4c69b8e8c6bc68ece24d7d6fa876a3f35095a4ebb17fbbef9e5a2e`
+under this task's session files.
+
+The deduplicated [local tooling bug #608](https://github.com/jmservera/ama/issues/608)
+records reproduction and open criteria. A short external output retry is
+required; no source patch, browser/SQL skip, partial-gate substitution or
+successful retry is inferred here. Main advanced twice during publication;
+integration uses additive topic merges, not rebases, force pushes or main
+mutation. A changed base/candidate invalidates resume eligibility and requires
+a fresh full run. The original Review and failed receipt remain preserved.
+
 ## Transport integration qualification (2026-10-30, Refs #360)
 
 Current main and the private Blob transport branch are integrated without

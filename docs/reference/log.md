@@ -8993,3 +8993,14 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * No Azure configuration, replica, job or deployment change, real-resident
   enrolment, AI question/batch, callback booking or consent change occurred.
   Live observations do not replace full local, hosted or human gates.
+
+## [2026-10-31] observation | Local full-gate path failure, Refs #608
+
+* Extended the [live evidence pack](../architecture/cutover-evidence-pack.md#later-local-publication-gate-failure-2026-10-31-refs-608)
+  and index with the separate 16:26:24-16:27:48Z persistent Chromium SIGABRT:
+  the accepted long external output root exceeded the process-singleton socket
+  pathname limit. Browser failed and SQL was blocked; other passing groups are
+  not a full receipt.
+* Filed deduplicated local-tooling bug #608 with exact reproduction/log hash.
+  No deployed app defect, source fix, skip, full passing retry or gate bypass
+  is inferred. Original Review and failed receipt remain preserved.

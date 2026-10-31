@@ -41,6 +41,7 @@
   "next_action": {"phase": "Follow-up", "action": "P03 publication: final commit/full gate/receipt, independent exact-head assessment, non-forced push and main Refs PR; then await selected follow-up. Frozen pre-publication snapshot; final receipt and publication state external."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Independent employee identity and authenticated live verification", "rationale": "Unblocks chat/map/case/tabs/capacity/metering without weakening admission", "evidence": "#570; live results directory exit1/access denied"},
-    {"rank": 2, "task": "Live AI financial/quality evidence", "rationale": "Distinct #432 criteria cannot be established from UI or source-only tests", "evidence": "#432; current metering live observation blocked"}
+    {"rank": 2, "task": "Local full-gate Chromium pathname admission or owned short scratch", "rationale": "Reproducible bounded tooling fix avoids late expensive full-gate failures", "evidence": "#608; failed external full receipt and 0157-browser.log"},
+    {"rank": 3, "task": "Live AI financial/quality evidence", "rationale": "Distinct #432 criteria cannot be established from UI or source-only tests", "evidence": "#432; current metering live observation blocked"}
   ]
 }

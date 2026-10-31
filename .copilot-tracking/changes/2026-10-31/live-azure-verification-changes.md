@@ -77,6 +77,24 @@ changes, Azure configuration, scaling, jobs or deployment.
 | AST, JSON/hash, new links, diff and GitHub readbacks | Evidence integrity | Passed | Result SHA256 4f8091aa304bae20d07e9135430135351c9bdf88f3dcec6df9cd91bbe8c50db7 |
 | Full exact-HEAD gate | P03 | Pending | External receipt after final commit |
 
+### Later full-gate attempt and base movements
+
+* First candidate 8914fe7c was rejected before execution because origin/main
+  advanced to #605/base 7136be97. Additive topic merge produced 37cc1fed.
+* Full run on 37cc1fed/base 7136be97 failed browser command
+  checks.case_journey_browser_check: persistent Chromium SIGABRT, socket path
+  too long under the long external session-files output. SQL was blocked;
+  project/static/infra/migration/images passed but do not establish full gate.
+* Exact failed receipt and 0157-browser.log remain external; log SHA256
+  24620a9b6a4c69b8e8c6bc68ece24d7d6fa876a3f35095a4ebb17fbbef9e5a2e.
+* A short-output resume was then refused before execution because current main
+  advanced to #606/base 3ffea4dd. Additive integration preserved original
+  evidence/history; a fresh full run, not invalid-base resume, is required.
+* New deduplicated local-tooling bug #608 and its tracking record preserve the
+  failure and reproduction. No source fix or original Review rerun.
+* These are post-Review publication observations; the original Complete /
+  Residual work outcome is not retrospectively rewritten.
+
 ### Original independent Review
 
 * Execution Complete; outcome Residual work. One original record:
@@ -124,6 +142,8 @@ changes, Azure configuration, scaling, jobs or deployment.
 
 * #570 independent identity then authenticated employee surfaces.
 * #432 financial/quality/held-out batch gates are outside this live UI check.
+* #608 short owned Chromium scratch/early pathname admission: independent local
+  tooling follow-up, not a new deployed product defect.
 
 ## Return-to-Caller State
 

@@ -30,6 +30,10 @@ metering blocked. #523/#524's explicitly permitted pending-record rows are
 ticked, not successful live acceptance; both remain open. #570/#432 remain
 unproven, with no new ticks. No Azure configuration/deployment or AI/booking/
 consent changes occurred, and no new deployed defect was demonstrated.
+The later full local gate failed on a too-long persistent Chromium socket
+pathname, blocking SQL; [#608](https://github.com/jmservera/ama/issues/608)
+records this separate local-tooling bug. Partial group passes do not authorize
+publication or establish live employee acceptance.
 
 For #432, the [dated Tokenomics engineering/gap matrix](./resources/ai-tokenomics.md#source-only-metering-extension-2026-10-31-refs-432)
 and [official price-source metadata](./resources/azure-ai-price-source-2026-10-31.json)
