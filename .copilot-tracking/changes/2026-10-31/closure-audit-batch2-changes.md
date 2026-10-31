@@ -943,3 +943,15 @@ issues. The original Review is preserved at
 .copilot-tracking/reviews/logs/2026-10-31/closure-audit-batch2-review.md.
 No second Review or source correction occurred. Publication metadata is a
 subsequent administrative continuation, not a claim of fresh product acceptance.
+
+## Publication
+
+Audit commit 51aba296 was pushed with `git push -u origin HEAD`.
+Refs-only PR #613 opened to main:
+https://github.com/jmservera/ama/pull/613.
+Publication fetch confirmed revalidated main
+9ecb159bd843411c2e17dc2785ab59f5e837040f; branch ancestry was unchanged.
+The required privacy-safe author/committer identity and Copilot trailer were
+used. Hosted CI and owner approval remain pending, not passed. This final
+administrative evidence is recorded after the original independent Review,
+without another Review, executable change or full-gate claim.

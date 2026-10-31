@@ -81,3 +81,14 @@ revalidated the three changed resident API/docs/test paths without weakening
 any accepted evidence. Final remote-verification main is the same SHA.
 No branch rewrite or source fix occurred. Independent Review is the next gate;
 P02-T02 publication remains intentionally pending that one Review.
+
+## Publication continuation
+
+The original independent Review completed with Conformant with justified
+divergence and no publication blocker. Audit artifacts were committed as
+51aba296 using the authenticated account's privacy-safe author/committer email
+and required Copilot trailer. `git push -u origin HEAD` succeeded; Refs-only
+PR #613 opened to main. Publication fetch confirmed unchanged revalidated main
+9ecb159bd843411c2e17dc2785ab59f5e837040f. No rebase, force push or merge.
+P02-T02 is complete. Hosted CI/owner approval are pending, not successful
+acceptance. This administrative record does not repeat the original Review.
