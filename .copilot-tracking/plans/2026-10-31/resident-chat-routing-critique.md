@@ -100,10 +100,10 @@ ms.date: 2026-10-31
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/research/2026-10-31/resident-chat-routing-research.md](.copilot-tracking/research/2026-10-31/resident-chat-routing-research.md) | Supplied C1-C7 evidence and scope decisions |
-| [.copilot-tracking/plans/2026-10-31/resident-chat-routing-plan.md](.copilot-tracking/plans/2026-10-31/resident-chat-routing-plan.md) | Assessed final-candidate plan |
-| [.copilot-tracking/details/2026-10-31/resident-chat-routing-phase-details.md](.copilot-tracking/details/2026-10-31/resident-chat-routing-phase-details.md) | Assessed completion contracts |
-| [.copilot-tracking/plans/2026-10-31/resident-chat-routing-critique.md](.copilot-tracking/plans/2026-10-31/resident-chat-routing-critique.md) | Original Complete / Revise critique |
+| [.copilot-tracking/research/2026-10-31/resident-chat-routing-research.md](../../research/2026-10-31/resident-chat-routing-research.md) | Supplied C1-C7 evidence and scope decisions |
+| [.copilot-tracking/plans/2026-10-31/resident-chat-routing-plan.md](resident-chat-routing-plan.md) | Assessed final-candidate plan |
+| [.copilot-tracking/details/2026-10-31/resident-chat-routing-phase-details.md](../../details/2026-10-31/resident-chat-routing-phase-details.md) | Assessed completion contracts |
+| [.copilot-tracking/plans/2026-10-31/resident-chat-routing-critique.md](resident-chat-routing-critique.md) | Original Complete / Revise critique |
 
 ## Next Steps
 

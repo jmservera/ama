@@ -169,24 +169,24 @@ The independent inline run imported fixture definitions without calling setUp or
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/reviews/logs/2026-10-31/resident-chat-routing-review.md](.copilot-tracking/reviews/logs/2026-10-31/resident-chat-routing-review.md) | Canonical single independent Review. |
-| [.copilot-tracking/plans/2026-10-31/resident-chat-routing-plan.md](.copilot-tracking/plans/2026-10-31/resident-chat-routing-plan.md) | Current requirements, markers and dispositions. |
-| [.copilot-tracking/details/2026-10-31/resident-chat-routing-phase-details.md](.copilot-tracking/details/2026-10-31/resident-chat-routing-phase-details.md) | Completion and parent continuation contracts. |
-| [.copilot-tracking/plans/2026-10-31/resident-chat-routing-critique.md](.copilot-tracking/plans/2026-10-31/resident-chat-routing-critique.md) | Unchanged original Complete / Revise critique. |
-| [.copilot-tracking/research/2026-10-31/resident-chat-routing-research.md](.copilot-tracking/research/2026-10-31/resident-chat-routing-research.md) | C1-C7 scope and evidence. |
-| [.copilot-tracking/changes/2026-10-31/resident-chat-routing-changes.md](.copilot-tracking/changes/2026-10-31/resident-chat-routing-changes.md) | Original implementation and validation evidence. |
-| [src/api/src/zava_forward/api/resident_demo/chat.py](src/api/src/zava_forward/api/resident_demo/chat.py) | Full routing and fixed host response boundary. |
-| [src/api/tests/test_resident_chat_api.py](src/api/tests/test_resident_chat_api.py) | Changed matrices and preserved legacy tests. |
-| [src/api/README.md](src/api/README.md) | Finite routing and authority documentation. |
-| [src/api/src/zava_forward/api/resident_demo/app.py](src/api/src/zava_forward/api/resident_demo/app.py) | Consent, own-case and optional advisor boundary. |
-| [src/core/src/zava_forward/core/resident_assistant.py](src/core/src/zava_forward/core/resident_assistant.py) | Existing rules-answer contracts. |
-| [src/README.md](src/README.md) | Dated focused-tier and publication policy. |
-| [docs/case_study_48_original.md](docs/case_study_48_original.md) | Preserved project context. |
-| [docs/case_study_48_addendum.md](docs/case_study_48_addendum.md) | Optional resident service and approval boundaries. |
-| [docs/reference/README.md](docs/reference/README.md) | Knowledge-base index. |
-| [docs/reference/memory.md](docs/reference/memory.md) | Owner context, not evidence. |
-| [docs/reference/research/sector/housing-association-primer.md](docs/reference/research/sector/housing-association-primer.md) | Customer-sector context, not invented company facts. |
-| [docs/reference/research/ux/content-standard.md](docs/reference/research/ux/content-standard.md) | Plain-language and human acceptance limits. |
+| [.copilot-tracking/reviews/logs/2026-10-31/resident-chat-routing-review.md](resident-chat-routing-review.md) | Canonical single independent Review. |
+| [.copilot-tracking/plans/2026-10-31/resident-chat-routing-plan.md](../../../plans/2026-10-31/resident-chat-routing-plan.md) | Current requirements, markers and dispositions. |
+| [.copilot-tracking/details/2026-10-31/resident-chat-routing-phase-details.md](../../../details/2026-10-31/resident-chat-routing-phase-details.md) | Completion and parent continuation contracts. |
+| [.copilot-tracking/plans/2026-10-31/resident-chat-routing-critique.md](../../../plans/2026-10-31/resident-chat-routing-critique.md) | Unchanged original Complete / Revise critique. |
+| [.copilot-tracking/research/2026-10-31/resident-chat-routing-research.md](../../../research/2026-10-31/resident-chat-routing-research.md) | C1-C7 scope and evidence. |
+| [.copilot-tracking/changes/2026-10-31/resident-chat-routing-changes.md](../../../changes/2026-10-31/resident-chat-routing-changes.md) | Original implementation and validation evidence. |
+| [src/api/src/zava_forward/api/resident_demo/chat.py](../../../../src/api/src/zava_forward/api/resident_demo/chat.py) | Full routing and fixed host response boundary. |
+| [src/api/tests/test_resident_chat_api.py](../../../../src/api/tests/test_resident_chat_api.py) | Changed matrices and preserved legacy tests. |
+| [src/api/README.md](../../../../src/api/README.md) | Finite routing and authority documentation. |
+| [src/api/src/zava_forward/api/resident_demo/app.py](../../../../src/api/src/zava_forward/api/resident_demo/app.py) | Consent, own-case and optional advisor boundary. |
+| [src/core/src/zava_forward/core/resident_assistant.py](../../../../src/core/src/zava_forward/core/resident_assistant.py) | Existing rules-answer contracts. |
+| [src/README.md](../../../../src/README.md) | Dated focused-tier and publication policy. |
+| [docs/case_study_48_original.md](../../../../docs/case_study_48_original.md) | Preserved project context. |
+| [docs/case_study_48_addendum.md](../../../../docs/case_study_48_addendum.md) | Optional resident service and approval boundaries. |
+| [docs/reference/README.md](../../../../docs/reference/README.md) | Knowledge-base index. |
+| [docs/reference/memory.md](../../../../docs/reference/memory.md) | Owner context, not evidence. |
+| [docs/reference/research/sector/housing-association-primer.md](../../../../docs/reference/research/sector/housing-association-primer.md) | Customer-sector context, not invented company facts. |
+| [docs/reference/research/ux/content-standard.md](../../../../docs/reference/research/ux/content-standard.md) | Plain-language and human acceptance limits. |
 
 ## Next Steps
 
