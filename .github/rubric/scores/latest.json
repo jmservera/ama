@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-31T14:53:40+00:00",
-  "commit": "13d65cbe7f44fb7543ab361ada888a9c8c109a76",
+  "scored_at": "2026-10-31T15:27:40+00:00",
+  "commit": "d5d14441ca1c5ad47de9897a55cc43052c644240",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41211526268",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41214009879",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "ff1461dae4455b1ff0b99cd197d4691abc9c84961d36e6e06aed9574180a7565",
+    "solution-code": "363fbfb39d4e46b59b6f5cecd1a6eebb97e4859b7988f1048c6d6ea18f5da610",
     "infrastructure": "61ed8eadcd8e631c2a2e13b0853b7a96efd716806d947ef318843f0dd05f7d63",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -44,24 +44,29 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/api/checks/loading_briefing_browser_check.py:27-139"
+        "src/core/src/zava_forward/core/ai_consumption.py:1,58-85",
+        "src/core/src/zava_forward/core/ai.py:67-100",
+        "src/core/src/zava_forward/core/assistants.py:884-900"
       ],
-      "rationale": "New successful_review_check test asserts provenance.human_reviewed, rejects repeat review (400) and verifies unchanged case projections. Strengthens evidence of existing AI-risk controls but adds no new threat-model statement. Baseline 5 retained."
+      "rationale": "New financial-admission gate (reserve/dispatch_check/complete) stops a real Ai call before the network without a durable meter, bounds loopback vs production transport, and quarantines returned-model mismatches. Strengthens controls; no explicit threat model. Baseline 5 retained."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/api/checks/loading_briefing_browser_check.py:27-139",
-        "src/api/README.md:472-492"
+        "src/core/src/zava_forward/core/ai_consumption.py:1-1073",
+        "src/api/tests/test_ai_consumption_api.py:1-1633",
+        "src/core/tests/test_ai_consumption.py:1-691"
       ],
-      "rationale": "The new successful_review_check runs all three review outcomes through the real local UI and API and confirms retained records and unchanged case data. Completes end-to-end verification of a previously implemented capability. Baseline 5 retained."
+      "rationale": "A complete new consumption/financial ledger (price, authorize, reserve, dispatch_check, complete, output, review, billing, report) is wired end to end through core/agents/api with 1600+ and 690+ line test suites exercising real dispatch paths. Already-maximal baseline 5 retained."
     },
     "A5": {
       "score": 5,
       "evidence": [
-        "src/api/README.md:487-492"
+        "src/core/src/zava_forward/core/ai_consumption.py:360-420,920-1073",
+        "src/core/README.md:5-123",
+        "src/api/src/zava_forward/api/server.py:514-540"
       ],
-      "rationale": "Added README text reports test-run results (axe scans, lint/format pass) rather than new observability, reliability or cost instrumentation in the running system. No change to logging, metrics, tracing or cost modelling. Baseline 5 retained."
+      "rationale": "New token/charge metering, budget/money-limit enforcement, and a manager-only /api/ai/report endpoint with reconciliation, variance and cost-per-accepted-proposal is a genuine cost-per-unit model, not just qualitative discussion. New evidence for already-maximal baseline; 5 (ceiling) retained."
     },
     "A6": {
       "score": 5,
@@ -70,8 +75,11 @@
     },
     "A7": {
       "score": 4,
-      "evidence": [],
-      "rationale": "This PR adds test/documentation content and reformatting; no agentic orchestration, handoff or state-graph pattern is touched. Baseline unchanged (Good, not Excellent)."
+      "evidence": [
+        "src/agents/src/zava_forward/agents/dispatch.py:186-220",
+        "src/core/src/zava_forward/core/ai_consumption.py:155-185"
+      ],
+      "rationale": "CallContext/call_context threads root/attempt/depth/retry metadata through existing agent dispatch and retries for financial attribution; this is bookkeeping around the existing scripted dispatch loop, not a new handoff, reflection or state-graph coordination pattern. Baseline 4 (Good) retained."
     },
     "B1": {
       "score": 3,
@@ -109,9 +117,10 @@
     "B6": {
       "score": 5,
       "evidence": [
-        "src/api/README.md:453-492"
+        "src/core/README.md:5-123",
+        "src/api/README.md:9-47"
       ],
-      "rationale": "Changed README content is engineering/test documentation, not the capstone deck or its documentation. Baseline ceiling unchanged."
+      "rationale": "Substantial new engineering documentation (ai_consumption ledger contract, report semantics, test commands) is clear and navigable, but it is project README reference material, not capstone deck/pitch documentation. Baseline ceiling 5 retained; does not touch deck completeness."
     },
     "B7": {
       "score": 5,
