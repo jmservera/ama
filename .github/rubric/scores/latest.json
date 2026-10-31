@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-31T22:03:07+00:00",
-  "commit": "4c1b48356d42e8fd317fdea0e35d76da5c9f162a",
+  "scored_at": "2026-10-31T22:10:34+00:00",
+  "commit": "d7a7772c1e5827a39d8c56cd7e3c232aa50dedc5",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41245893117",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41246449885",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "160757a1ec3803782b2bd3eaae9395a17bb96873b2ff6d86d722733605e3b4a2",
+    "solution-code": "c971b7b65d049a8133d0b9d11deed0bd9a0ed46272850c3043dc2939e22ad64e",
     "infrastructure": "61ed8eadcd8e631c2a2e13b0853b7a96efd716806d947ef318843f0dd05f7d63",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -32,7 +32,7 @@
         "src/api/src/zava_forward/api/static_assets.py:1-58",
         "src/api/src/zava_forward/api/server.py:193-197"
       ],
-      "rationale": "Not touched by this PR (chat storage-approval fallback route only). Baseline ceiling unchanged."
+      "rationale": "Not touched by this PR (src/README.md tooling-doc change only). Baseline ceiling unchanged."
     },
     "A2": {
       "score": 5,
@@ -44,11 +44,11 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/chat_privacy.py:122-130",
-        "src/core/src/zava_forward/core/chat_panel.py:377-419",
-        "src/api/src/zava_forward/api/server.py:733-741"
+        "src/core/src/zava_forward/core/ai_consumption.py:1,58-85",
+        "src/core/src/zava_forward/core/ai.py:67-100",
+        "src/core/src/zava_forward/core/assistants.py:884-900"
       ],
-      "rationale": "PR reinforces (not raises) existing responsible-AI control: ask_unstored enforces ChatPrivacy.decision()['approved'] before any model call/storage, with tests proving zero model calls and no persisted content. Already-maximal baseline 5 retained."
+      "rationale": "Diff only adds an RPI-gate path-length note to src/README.md; no security/compliance/responsible-AI evidence changed. Baseline 5 retained."
     },
     "A4": {
       "score": 5,
@@ -57,7 +57,7 @@
         "src/api/tests/test_ai_consumption_api.py:1-1633",
         "src/core/tests/test_ai_consumption.py:1-691"
       ],
-      "rationale": "New unstored-ask path is a minor completeness addition to an already end-to-end-working chat feature; already-maximal baseline 5 retained."
+      "rationale": "Diff is tooling documentation only, not implementation. Already-maximal baseline 5 retained."
     },
     "A5": {
       "score": 5,
@@ -66,7 +66,7 @@
         "src/core/README.md:5-123",
         "src/api/src/zava_forward/api/server.py:514-540"
       ],
-      "rationale": "No new cost/observability model evidence in this diff. Baseline 5 retained."
+      "rationale": "Diff adds an RPI-gate browser-check path-length constraint note; no new cost/observability model evidence. Baseline 5 retained."
     },
     "A6": {
       "score": 5,
@@ -79,7 +79,7 @@
         "src/agents/src/zava_forward/agents/dispatch.py:186-220",
         "src/core/src/zava_forward/core/ai_consumption.py:155-185"
       ],
-      "rationale": "Diff adds a privacy-gated rules-only chat fallback unrelated to agent dispatch/orchestration. Baseline 4 (Good) retained."
+      "rationale": "Diff is a tooling/gate documentation note unrelated to agent dispatch/orchestration. Baseline 4 (Good) retained."
     },
     "B1": {
       "score": 3,
@@ -120,7 +120,7 @@
         "src/core/README.md:5-123",
         "src/api/README.md:9-47"
       ],
-      "rationale": "This PR's changed files are code (server.py, chat.js, chat_panel.py) and tests, not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
+      "rationale": "src/README.md RPI-gate path-length note is project engineering documentation, not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
     },
     "B7": {
       "score": 5,
