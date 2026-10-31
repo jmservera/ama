@@ -110,17 +110,17 @@
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/plans/2026-10-31/gate-chat-test-572-validation-correction-plan.md](.copilot-tracking/plans/2026-10-31/gate-chat-test-572-validation-correction-plan.md) | Assessed final-candidate correction plan |
-| [.copilot-tracking/details/2026-10-31/gate-chat-test-572-validation-correction-phase-details.md](.copilot-tracking/details/2026-10-31/gate-chat-test-572-validation-correction-phase-details.md) | Assessed correction tasks |
-| [.copilot-tracking/research/2026-10-31/gate-chat-test-572-validation-correction-research.md](.copilot-tracking/research/2026-10-31/gate-chat-test-572-validation-correction-research.md) | Bounded correction research |
-| [.copilot-tracking/plans/2026-10-31/gate-chat-test-572-plan.md](.copilot-tracking/plans/2026-10-31/gate-chat-test-572-plan.md) | Parent acceptance and publication contract |
-| [.copilot-tracking/details/2026-10-31/gate-chat-test-572-phase-details.md](.copilot-tracking/details/2026-10-31/gate-chat-test-572-phase-details.md) | Parent implementation/Review sequencing |
-| [.copilot-tracking/research/2026-10-31/gate-chat-test-572-research.md](.copilot-tracking/research/2026-10-31/gate-chat-test-572-research.md) | Parent exact-case research |
-| [.copilot-tracking/changes/2026-10-31/gate-chat-test-572-changes.md](.copilot-tracking/changes/2026-10-31/gate-chat-test-572-changes.md) | Preserved historical validation and adverse gate |
-| [.copilot-tracking/reviews/logs/2026-10-31/gate-chat-test-572-review.md](.copilot-tracking/reviews/logs/2026-10-31/gate-chat-test-572-review.md) | Preserved original Review and RV-001/RV-002 |
-| [tools/rpi-checks.py](tools/rpi-checks.py) | Shared heavy_lock/main contract |
-| [src/README.md](src/README.md) | Local gate, lock and publication guidance |
-| [.copilot-tracking/reviews/plans/2026-10-31/gate-chat-test-572-validation-correction-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/gate-chat-test-572-validation-correction-plan-critique.md) | This single Complete / Revise critique |
+| [.copilot-tracking/plans/2026-10-31/gate-chat-test-572-validation-correction-plan.md](../../../plans/2026-10-31/gate-chat-test-572-validation-correction-plan.md) | Assessed final-candidate correction plan |
+| [.copilot-tracking/details/2026-10-31/gate-chat-test-572-validation-correction-phase-details.md](../../../details/2026-10-31/gate-chat-test-572-validation-correction-phase-details.md) | Assessed correction tasks |
+| [.copilot-tracking/research/2026-10-31/gate-chat-test-572-validation-correction-research.md](../../../research/2026-10-31/gate-chat-test-572-validation-correction-research.md) | Bounded correction research |
+| [.copilot-tracking/plans/2026-10-31/gate-chat-test-572-plan.md](../../../plans/2026-10-31/gate-chat-test-572-plan.md) | Parent acceptance and publication contract |
+| [.copilot-tracking/details/2026-10-31/gate-chat-test-572-phase-details.md](../../../details/2026-10-31/gate-chat-test-572-phase-details.md) | Parent implementation/Review sequencing |
+| [.copilot-tracking/research/2026-10-31/gate-chat-test-572-research.md](../../../research/2026-10-31/gate-chat-test-572-research.md) | Parent exact-case research |
+| [.copilot-tracking/changes/2026-10-31/gate-chat-test-572-changes.md](../../../changes/2026-10-31/gate-chat-test-572-changes.md) | Preserved historical validation and adverse gate |
+| [.copilot-tracking/reviews/logs/2026-10-31/gate-chat-test-572-review.md](../../logs/2026-10-31/gate-chat-test-572-review.md) | Preserved original Review and RV-001/RV-002 |
+| [tools/rpi-checks.py](../../../../tools/rpi-checks.py) | Shared heavy_lock/main contract |
+| [src/README.md](../../../../src/README.md) | Local gate, lock and publication guidance |
+| [.copilot-tracking/reviews/plans/2026-10-31/gate-chat-test-572-validation-correction-plan-critique.md](gate-chat-test-572-validation-correction-plan-critique.md) | This single Complete / Revise critique |
 
 ## Next Steps
 

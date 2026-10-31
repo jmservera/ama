@@ -82,10 +82,10 @@
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/plans/2026-10-31/gate-chat-test-572-plan.md](.copilot-tracking/plans/2026-10-31/gate-chat-test-572-plan.md) | Assessed final-candidate plan |
-| [.copilot-tracking/details/2026-10-31/gate-chat-test-572-phase-details.md](.copilot-tracking/details/2026-10-31/gate-chat-test-572-phase-details.md) | Assessed phase details |
-| [.copilot-tracking/research/2026-10-31/gate-chat-test-572-research.md](.copilot-tracking/research/2026-10-31/gate-chat-test-572-research.md) | Supplied bounded evidence |
-| [.copilot-tracking/reviews/plans/2026-10-31/gate-chat-test-572-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/gate-chat-test-572-plan-critique.md) | This single complete critique |
+| [.copilot-tracking/plans/2026-10-31/gate-chat-test-572-plan.md](../../../plans/2026-10-31/gate-chat-test-572-plan.md) | Assessed final-candidate plan |
+| [.copilot-tracking/details/2026-10-31/gate-chat-test-572-phase-details.md](../../../details/2026-10-31/gate-chat-test-572-phase-details.md) | Assessed phase details |
+| [.copilot-tracking/research/2026-10-31/gate-chat-test-572-research.md](../../../research/2026-10-31/gate-chat-test-572-research.md) | Supplied bounded evidence |
+| [.copilot-tracking/reviews/plans/2026-10-31/gate-chat-test-572-plan-critique.md](gate-chat-test-572-plan-critique.md) | This single complete critique |
 
 ## Next Steps
 

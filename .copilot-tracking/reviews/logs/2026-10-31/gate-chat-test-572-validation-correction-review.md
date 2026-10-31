@@ -230,25 +230,25 @@ require another original Review. Preserve this original outcome.
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/research/2026-10-31/gate-chat-test-572-validation-correction-research.md](.copilot-tracking/research/2026-10-31/gate-chat-test-572-validation-correction-research.md) | Correction research and lock rationale |
-| [.copilot-tracking/plans/2026-10-31/gate-chat-test-572-validation-correction-plan.md](.copilot-tracking/plans/2026-10-31/gate-chat-test-572-validation-correction-plan.md) | Current correction phases and AC1-4 |
-| [.copilot-tracking/details/2026-10-31/gate-chat-test-572-validation-correction-phase-details.md](.copilot-tracking/details/2026-10-31/gate-chat-test-572-validation-correction-phase-details.md) | Task evidence and publication safeguards |
-| [.copilot-tracking/reviews/plans/2026-10-31/gate-chat-test-572-validation-correction-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/gate-chat-test-572-validation-correction-plan-critique.md) | Preserved Complete / Revise critique |
-| [.copilot-tracking/changes/2026-10-31/gate-chat-test-572-validation-correction-changes.md](.copilot-tracking/changes/2026-10-31/gate-chat-test-572-validation-correction-changes.md) | Preserved actual failed/passed validation and merge evidence |
-| [.copilot-tracking/rpi-sessions/2026-10-31/gate-chat-test-572-validation-correction-state.json](.copilot-tracking/rpi-sessions/2026-10-31/gate-chat-test-572-validation-correction-state.json) | Parent-owned current Review state |
-| [.copilot-tracking/reviews/logs/2026-10-31/gate-chat-test-572-validation-correction-review.md](.copilot-tracking/reviews/logs/2026-10-31/gate-chat-test-572-validation-correction-review.md) | This sole independent original child Review |
-| [.copilot-tracking/reviews/logs/2026-10-31/gate-chat-test-572-review.md](.copilot-tracking/reviews/logs/2026-10-31/gate-chat-test-572-review.md) | Historical parent original Review unchanged |
-| [.copilot-tracking/changes/2026-10-31/gate-chat-test-572-changes.md](.copilot-tracking/changes/2026-10-31/gate-chat-test-572-changes.md) | Historical parent validation and adverse full-gate attempt |
-| [.copilot-tracking/plans/2026-10-31/gate-chat-test-572-plan.md](.copilot-tracking/plans/2026-10-31/gate-chat-test-572-plan.md) | Parent acceptance contract |
-| [.copilot-tracking/details/2026-10-31/gate-chat-test-572-phase-details.md](.copilot-tracking/details/2026-10-31/gate-chat-test-572-phase-details.md) | Parent historical phase reconciliation |
-| [.copilot-tracking/research/2026-10-31/gate-chat-test-572-research.md](.copilot-tracking/research/2026-10-31/gate-chat-test-572-research.md) | Parent exact-case evidence |
-| [.copilot-tracking/reviews/plans/2026-10-31/gate-chat-test-572-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/gate-chat-test-572-plan-critique.md) | Parent historical critique |
-| [.copilot-tracking/rpi-sessions/2026-10-31/gate-chat-test-572-state.json](.copilot-tracking/rpi-sessions/2026-10-31/gate-chat-test-572-state.json) | Parent historical blocked state |
-| [tools/rpi-checks.py](tools/rpi-checks.py) | Runtime, parser, inventory, receipt and lock ownership |
-| [tools/test_rpi_checks.py](tools/test_rpi_checks.py) | Owned regression and positive receipt fixtures |
-| [src/api/tests/test_chat_panel.py](src/api/tests/test_chat_panel.py) | Unchanged actual named Chromium semantic owner |
-| [src/api/tests/test_role_matrix.py](src/api/tests/test_role_matrix.py) | Unchanged synthetic loopback fixture |
-| [src/README.md](src/README.md) | Exact evidence and local publication contract |
+| [.copilot-tracking/research/2026-10-31/gate-chat-test-572-validation-correction-research.md](../../../research/2026-10-31/gate-chat-test-572-validation-correction-research.md) | Correction research and lock rationale |
+| [.copilot-tracking/plans/2026-10-31/gate-chat-test-572-validation-correction-plan.md](../../../plans/2026-10-31/gate-chat-test-572-validation-correction-plan.md) | Current correction phases and AC1-4 |
+| [.copilot-tracking/details/2026-10-31/gate-chat-test-572-validation-correction-phase-details.md](../../../details/2026-10-31/gate-chat-test-572-validation-correction-phase-details.md) | Task evidence and publication safeguards |
+| [.copilot-tracking/reviews/plans/2026-10-31/gate-chat-test-572-validation-correction-plan-critique.md](../../plans/2026-10-31/gate-chat-test-572-validation-correction-plan-critique.md) | Preserved Complete / Revise critique |
+| [.copilot-tracking/changes/2026-10-31/gate-chat-test-572-validation-correction-changes.md](../../../changes/2026-10-31/gate-chat-test-572-validation-correction-changes.md) | Preserved actual failed/passed validation and merge evidence |
+| [.copilot-tracking/rpi-sessions/2026-10-31/gate-chat-test-572-validation-correction-state.json](../../../rpi-sessions/2026-10-31/gate-chat-test-572-validation-correction-state.json) | Parent-owned current Review state |
+| [.copilot-tracking/reviews/logs/2026-10-31/gate-chat-test-572-validation-correction-review.md](gate-chat-test-572-validation-correction-review.md) | This sole independent original child Review |
+| [.copilot-tracking/reviews/logs/2026-10-31/gate-chat-test-572-review.md](gate-chat-test-572-review.md) | Historical parent original Review unchanged |
+| [.copilot-tracking/changes/2026-10-31/gate-chat-test-572-changes.md](../../../changes/2026-10-31/gate-chat-test-572-changes.md) | Historical parent validation and adverse full-gate attempt |
+| [.copilot-tracking/plans/2026-10-31/gate-chat-test-572-plan.md](../../../plans/2026-10-31/gate-chat-test-572-plan.md) | Parent acceptance contract |
+| [.copilot-tracking/details/2026-10-31/gate-chat-test-572-phase-details.md](../../../details/2026-10-31/gate-chat-test-572-phase-details.md) | Parent historical phase reconciliation |
+| [.copilot-tracking/research/2026-10-31/gate-chat-test-572-research.md](../../../research/2026-10-31/gate-chat-test-572-research.md) | Parent exact-case evidence |
+| [.copilot-tracking/reviews/plans/2026-10-31/gate-chat-test-572-plan-critique.md](../../plans/2026-10-31/gate-chat-test-572-plan-critique.md) | Parent historical critique |
+| [.copilot-tracking/rpi-sessions/2026-10-31/gate-chat-test-572-state.json](../../../rpi-sessions/2026-10-31/gate-chat-test-572-state.json) | Parent historical blocked state |
+| [tools/rpi-checks.py](../../../../tools/rpi-checks.py) | Runtime, parser, inventory, receipt and lock ownership |
+| [tools/test_rpi_checks.py](../../../../tools/test_rpi_checks.py) | Owned regression and positive receipt fixtures |
+| [src/api/tests/test_chat_panel.py](../../../../src/api/tests/test_chat_panel.py) | Unchanged actual named Chromium semantic owner |
+| [src/api/tests/test_role_matrix.py](../../../../src/api/tests/test_role_matrix.py) | Unchanged synthetic loopback fixture |
+| [src/README.md](../../../../src/README.md) | Exact evidence and local publication contract |
 | [.github/workflows/src-ci.yml](.github/workflows/src-ci.yml) | Retained upstream hosted command/hash boundary |
 
 ## Next Steps

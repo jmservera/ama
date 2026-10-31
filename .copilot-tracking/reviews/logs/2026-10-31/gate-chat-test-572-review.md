@@ -211,19 +211,19 @@ of successful restored API or Chromium is made.
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/plans/2026-10-31/gate-chat-test-572-plan.md](.copilot-tracking/plans/2026-10-31/gate-chat-test-572-plan.md) | Current plan and acceptance obligations |
-| [.copilot-tracking/details/2026-10-31/gate-chat-test-572-phase-details.md](.copilot-tracking/details/2026-10-31/gate-chat-test-572-phase-details.md) | Current phase evidence and sequencing |
-| [.copilot-tracking/research/2026-10-31/gate-chat-test-572-research.md](.copilot-tracking/research/2026-10-31/gate-chat-test-572-research.md) | Bounded original research |
-| [.copilot-tracking/reviews/plans/2026-10-31/gate-chat-test-572-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/gate-chat-test-572-plan-critique.md) | Immutable original Complete / Revise critique |
-| [.copilot-tracking/changes/2026-10-31/gate-chat-test-572-changes.md](.copilot-tracking/changes/2026-10-31/gate-chat-test-572-changes.md) | Implementation and supplied adverse/passing validation |
-| [.copilot-tracking/rpi-sessions/2026-10-31/gate-chat-test-572-state.json](.copilot-tracking/rpi-sessions/2026-10-31/gate-chat-test-572-state.json) | Current parent-owned Review handoff state |
-| [.copilot-tracking/reviews/logs/2026-10-31/gate-chat-test-572-review.md](.copilot-tracking/reviews/logs/2026-10-31/gate-chat-test-572-review.md) | This single original independent Review |
-| [.copilot-tracking/reviews/logs/2026-10-30/chat-panel-test-in-gate-572-review.md](.copilot-tracking/reviews/logs/2026-10-30/chat-panel-test-in-gate-572-review.md) | Preserved prior original adverse execution/acceptance findings |
-| [tools/rpi-checks.py](tools/rpi-checks.py) | Runtime, trusted inventory and receipt verification |
-| [tools/test_rpi_checks.py](tools/test_rpi_checks.py) | Owned regressions and corrected receipt fixtures |
-| [src/api/tests/test_chat_panel.py](src/api/tests/test_chat_panel.py) | Unchanged exact Chromium semantic owner |
-| [src/api/tests/test_role_matrix.py](src/api/tests/test_role_matrix.py) | Unchanged synthetic loopback fixture |
-| [src/README.md](src/README.md) | Gate guide and exact evidence contract |
+| [.copilot-tracking/plans/2026-10-31/gate-chat-test-572-plan.md](../../../plans/2026-10-31/gate-chat-test-572-plan.md) | Current plan and acceptance obligations |
+| [.copilot-tracking/details/2026-10-31/gate-chat-test-572-phase-details.md](../../../details/2026-10-31/gate-chat-test-572-phase-details.md) | Current phase evidence and sequencing |
+| [.copilot-tracking/research/2026-10-31/gate-chat-test-572-research.md](../../../research/2026-10-31/gate-chat-test-572-research.md) | Bounded original research |
+| [.copilot-tracking/reviews/plans/2026-10-31/gate-chat-test-572-plan-critique.md](../../plans/2026-10-31/gate-chat-test-572-plan-critique.md) | Immutable original Complete / Revise critique |
+| [.copilot-tracking/changes/2026-10-31/gate-chat-test-572-changes.md](../../../changes/2026-10-31/gate-chat-test-572-changes.md) | Implementation and supplied adverse/passing validation |
+| [.copilot-tracking/rpi-sessions/2026-10-31/gate-chat-test-572-state.json](../../../rpi-sessions/2026-10-31/gate-chat-test-572-state.json) | Current parent-owned Review handoff state |
+| [.copilot-tracking/reviews/logs/2026-10-31/gate-chat-test-572-review.md](gate-chat-test-572-review.md) | This single original independent Review |
+| [.copilot-tracking/reviews/logs/2026-10-30/chat-panel-test-in-gate-572-review.md](../2026-10-30/chat-panel-test-in-gate-572-review.md) | Preserved prior original adverse execution/acceptance findings |
+| [tools/rpi-checks.py](../../../../tools/rpi-checks.py) | Runtime, trusted inventory and receipt verification |
+| [tools/test_rpi_checks.py](../../../../tools/test_rpi_checks.py) | Owned regressions and corrected receipt fixtures |
+| [src/api/tests/test_chat_panel.py](../../../../src/api/tests/test_chat_panel.py) | Unchanged exact Chromium semantic owner |
+| [src/api/tests/test_role_matrix.py](../../../../src/api/tests/test_role_matrix.py) | Unchanged synthetic loopback fixture |
+| [src/README.md](../../../../src/README.md) | Gate guide and exact evidence contract |
 
 ## Next Steps
 
