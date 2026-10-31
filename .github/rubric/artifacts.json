@@ -47,15 +47,15 @@
       "status": "active",
       "extractor": "pptx",
       "max_file_bytes": 20000000,
-      "include": ["docs/capstone/deck/*.pptx"],
+      "include": ["docs/capstone/deck/zava-forward-cowork-v2-draft.pptx"],
       "exclude": [],
       "criteria": ["B1", "B2", "B3", "B5", "B6", "B7"]
     },
     {"id": "pitch",
-      "title": "Pitch rehearsal transcripts and notes",
+      "title": "Pitch and demo preparation, rehearsal transcripts and notes",
       "status": "active",
       "extractor": "text",
-      "include": ["docs/capstone/pitch/**/*.md", "docs/capstone/pitch/**/*.vtt", "docs/capstone/pitch/**/*.txt"],
+      "include": ["docs/capstone/pitch/**/*.md", "docs/capstone/pitch/**/*.vtt", "docs/capstone/pitch/**/*.txt", "docs/capstone/demo/**/*.md", "docs/capstone/demo/**/*.vtt", "docs/capstone/demo/**/*.txt"],
       "exclude": [],
       "criteria": ["B1", "B2", "B3", "B4", "B5", "B7", "C2", "C3"]
     },
