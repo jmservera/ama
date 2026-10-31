@@ -26,6 +26,13 @@ function harness() {
           if (name === "id") { this.id = value; elements.set(value, this); }
         },
         append(...nodes) { this.children.push(...nodes); },
+        insertBefore(node, before) {
+          const at = this.children.indexOf(before);
+          this.children.splice(at < 0 ? this.children.length : at, 0, node);
+        },
+        classList: {add() {}, toggle() {}},
+        style: {setProperty() {}},
+        getBoundingClientRect() { return {top: 0, bottom: 0, height: 0}; },
         replaceChildren(...nodes) { this.children = nodes; },
         addEventListener(type, fn) { this["on" + type] = fn; },
         contains(target) {
@@ -78,12 +85,14 @@ function harness() {
       log: root.children.find(el => el.attrs.role === "log"),
       error: document.getElementById("employee-chat-error")};
   }
-  return {context, document, listeners, launcher, employee, nodes, resolve, reject};
+  const pendingPaths = () => pending.map(item => item.path);
+  return {context, document, listeners, launcher, employee, nodes, resolve, reject, pendingPaths};
 }
 const turn = () => new Promise(resolve => setImmediate(resolve));
 async function admit(h) {
   h.resolve("/api/chat/skills", {skills: []});
-  h.resolve("/api/chat/status", {warning: "Synthetic only.", retention: "Local."});
+  h.resolve("/api/chat/status", {warning: "Synthetic only.",
+    retention: "Local.", storage_approved: true});
   await turn();
 }
 """
@@ -247,6 +256,37 @@ ui.dispose();
     assert.equal(h.nodes().root, ui.root, "Refresh must retain conversation identity");
     assert.equal(ui.input.value, "Retained draft");
   }
+  h.employee.reset();
+})().catch(error => { console.error(error); process.exitCode = 1; });
+"""
+        )
+
+    def test_unapproved_storage_uses_unstored_route_and_stays_open(self) -> None:
+        self.run_node(
+            r"""
+(async () => {
+  const h = harness();
+  h.employee.install();
+  const opening = h.launcher.onclick();
+  h.resolve("/api/chat/skills", {skills: []});
+  h.resolve("/api/chat/status", {warning: "Synthetic only.",
+    retention: "Unknown", storage_approved: false});
+  await turn();
+  await opening;
+  const ui = h.nodes();
+  assert.equal(ui.root.hidden, false);
+  assert.ok(ui.root.classList, "Employee chat uses the resizable resident layout");
+  ui.input.value = "Question";
+  const submitted = ui.form.onsubmit({preventDefault() {}});
+  await turn();
+  assert.equal(h.pendingPaths().includes("/api/chat/threads"), false,
+    "No stored thread is requested");
+  h.resolve("/api/chat/unstored-ask", {reply: "Rules reply", skill: "general", kind: "fallback",
+    label: "Workflow-only", workflow_only: true, citations: []});
+  await submitted;
+  assert.equal(ui.root.hidden, false, "Chat stays open");
+  assert.equal(ui.log.children.length, 2);
+  assert.equal(ui.input.value, "");
   h.employee.reset();
 })().catch(error => { console.error(error); process.exitCode = 1; });
 """

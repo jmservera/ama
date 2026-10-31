@@ -374,6 +374,48 @@ class ChatPanel:
                     user_key(user), "chat.turn", "", json.dumps(receipt, sort_keys=True)
                 )
 
+    def ask_unstored(
+        self, user: dict[str, Any], case_id: str, question: object, *, skill: object = None
+    ) -> dict[str, Any]:
+        """Rules-only reply while chat storage is unapproved; stores nothing, calls no model."""
+        user = self.iso.current_user(user)
+        if skill is None:
+            skill = GENERAL
+        if not isinstance(skill, str) or skill not in (GENERAL, *REGISTRY):
+            raise ValueError("Choose general help or one of the five listed skills.")
+        if not isinstance(question, str) or not question.strip():
+            raise ValueError("Type a question first.")
+        if len(question) > MAX_CONTENT:
+            raise ValueError(f"A question needs 1 to {MAX_CONTENT} characters.")
+        if case_id:
+            ctx = self.iso.case_context(user, case_id)
+            if ctx is None:
+                raise ChatNotFound(case_id)
+        sources = skill_sources(skill, {})
+        guidance = {key: value for key, value in sources.items() if key != "workflow/visibility"}
+        refusal = out_of_scope(question[:MAX_CONTENT])
+        if refusal:
+            kind, text, cites = "refused", REFUSED + refusal[1], []
+        else:
+            kind, cites = "fallback", list(guidance)
+            text = (
+                "Chat storage is not approved yet, so this reply is rules-only and "
+                "nothing you typed was saved. " + FALLBACK
+            )
+        store = self.iso.store
+        with store.lock:
+            store.audit(
+                user_key(user),
+                "chat.turn.unstored",
+                case_id,
+                json.dumps(dict(skill=skill, outcome=kind, model_calls=0), sort_keys=True),
+            )
+        return dict(
+            self._reply(kind, text, cites, "workflow-only", guidance),
+            skill=skill,
+            context=case_id or "general",
+        )
+
     def _ask(
         self,
         user: dict[str, Any],
