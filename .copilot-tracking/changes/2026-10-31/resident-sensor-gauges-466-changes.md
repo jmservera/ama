@@ -195,6 +195,23 @@ Integrate normally, preserve this original Review and attempt a current-base
 full gate with immediate lock admission (`--lock-timeout 0`) to avoid another
 stale queued candidate. No partial receipt, cloud fallback or gate bypass.
 
+## Final Publication Blocker
+
+Third full-gate attempt on a267e5ee/current base e64c6e6c used immediate shared
+lock admission and failed with `BLOCKED: Global heavy-resource lock timeout`,
+exit 1. No checks executed and no passing receipt exists across the three
+attempts. Push, independent exact-head eligibility and PR creation were not
+performed, because publication without the mandatory gate would violate the
+repository's retained safety policy. No other processes/worktrees were altered.
+
+The ordered Research/Plan/Implement/Review loop and all requested targeted
+engineering checks are complete and locally committed. Full-plan P03 remains
+blocked on a shared gate becoming available with a stable freshly fetched main.
+Next action is to fetch/reconcile main, run the complete gate on a new external
+directory at the resulting clean committed head, verify the receipt and obtain
+independent exact-head eligibility before the authorized branch push/main PR.
+Do not substitute local targeted successes or an old/partial receipt.
+
 ## Pre-Review Reconciliation
 
 Implementation/local checks and sole original Review complete; main integrated

@@ -17,7 +17,7 @@ Initial readiness: source coverage verified; candidate ready for one critique.
 | --- | --- | --- |
 | P01 | Current decision/contract documentation | Complete |
 | P02 | Fresh local tests and one Review | Complete / Review Residual work |
-| P03 | Clean committed-candidate publication | Pending P02 |
+| P03 | Clean committed-candidate publication | Blocked on full-gate admission/stable base |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Reconcile current decisions

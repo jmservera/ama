@@ -39,13 +39,13 @@
   "blockers": [
     {
       "id": "publication-lock",
-      "summary": "First gate lock timeout; second acquired after 97m23.735s then refused stale origin/main. Neither executed checks or produced a passing receipt",
-      "resolution": "Integrate e64c6e6c and attempt current-base full gate with immediate shared-lock admission; no bypass. Publication requires actual complete receipt"
+      "summary": "Three full-gate attempts blocked: 3600-second lock timeout; 97m23.735s queue then stale main refusal; immediate current-base lock timeout. No checks/passing receipt, push or PR",
+      "resolution": "Shared gate must be available with stable freshly fetched main; reconcile normally, commit, run complete gate in new external output, verify receipt and independent exact-head eligibility before authorized push/PR. No bypass"
     }
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "P03: preserve failed attempts, integrate e64c6e6c, attempt full gate with lock-timeout 0, verify current receipt/exact-head eligibility then topic push/main PR only if all gates pass. Live publication status external"
+    "action": "P03 blocked: wait for available shared gate/stable main, then fresh fetch/reconciliation/complete receipt verification/independent exact-head eligibility before branch push and Refs #466 PR. Ordered RPI loop completed; publication not delivered"
   },
   "prioritized_follow_ups": [
     {

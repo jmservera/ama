@@ -118,6 +118,10 @@ follow-up, never repeated Review inside this task.
 <!-- rpi:phase id=P03 -->
 ### [ ] P03: Publish exact committed candidate
 
+Blocked: three full-gate admission attempts failed (lock timeout, acquired
+stale main, immediate lock timeout); no checks/passing receipt, push or PR.
+Preserved in changes. Need available shared gate and stable fetched main.
+
 <!-- rpi:task id=P03-T01 -->
 #### [ ] P03-T01: Commit, full gate, verify, push and PR
 
