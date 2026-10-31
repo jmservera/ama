@@ -36,10 +36,16 @@
       "evidence": "Explicit owner request 2026-10-31"
     }
   ],
-  "blockers": [],
+  "blockers": [
+    {
+      "id": "publication-lock",
+      "summary": "First full gate timed out waiting 3600 seconds; no checks or receipt",
+      "resolution": "Retry required full gate on current integrated main with a fresh external output and same shared lock; no bypass"
+    }
+  ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "P03 authorized publication: final evidence commit, full gate, fresh receipt/exact-head eligibility, topic push/main PR; final metadata external to avoid invalidating receipt"
+    "action": "P03: preserve timeout and integrate a75bbdff; retry full gate with 7200-second shared-lock wait, verify current receipt/exact-head eligibility, topic push/main PR. Live gate state remains external to avoid receipt self-reference"
   },
   "prioritized_follow_ups": [
     {

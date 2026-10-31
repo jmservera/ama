@@ -163,6 +163,27 @@ Planned final command after this evidence commit:
 Full receipt/exact-head eligibility and PR URL will be recorded externally and
 in PR body, not fabricated in this pre-execution original record.
 
+## Publication contention and base reconciliation (P03-T01)
+
+First full-gate attempt on 8afad167/base 1330869e waited 3600 seconds and failed
+before checks: `BLOCKED: Global heavy-resource lock timeout`, exit 1.
+External `rpi-466-final.log` SHA256
+a61e364435be7c6fffd44ae8f8a2a7359d918b0b5754b4b3f1bb6bf7f802039b.
+No full receipt or successful gate exists for that attempt.
+Fresh fetch then found main a75bbdffa51ae34b1fcf779250f1f553d566ee93
+(merged #558). Ordinary topic integration retains both histories and both log
+tails, with our entry appended after upstream's new source-hashing entry.
+Resident runtime/tests remain unchanged; original Review is preserved, not
+rerun or promoted to an exact-head gate. Retry uses current main/tool identity,
+new external output and the same required lock with a longer 7200-second wait.
+No other process is disturbed and no locking/approval gate is bypassed.
+
+The first integration-commit command stopped before committing or starting the
+retry gate because whole merge-index whitespace review detected upstream-only
+blank EOF lines in capstone questions/script. Those unchanged main files are
+outside this task. Validate our diff against current origin/main instead of
+modifying inherited capstone content; preserve that pre-commit failure.
+
 ## Pre-Review Reconciliation
 
 Implementation/local checks and sole original Review complete; main integrated
