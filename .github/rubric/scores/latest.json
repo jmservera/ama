@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-31T00:37:01+00:00",
-  "commit": "964adc1f946318060e4cbeb079ef2e325561dc70",
+  "scored_at": "2026-10-31T02:19:47+00:00",
+  "commit": "7dbbc860bf7361ad9dc6efaf82e8e9ca48019f9c",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41149925995",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41158966083",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "fe877e06fc0c60e603d742644d199ba7e92ae57536bd4a19e7874fa4dc1f0cf2",
-    "infrastructure": "61ed8eadcd8e631c2a2e13b0853b7a96efd716806d947ef318843f0dd05f7d63",
+    "solution-code": "d182892a623ed0ad56d6993f00a88c3f3b933754103f81d1d1f7a4fc8e8e8074",
+    "infrastructure": "c6a7f41eec75b0ecff8fe5b0c7391c9d006370556ff65b3dcf3bc2419621a53d",
     "capstone-deck": "c5ae9ab5ec15788dd255b786adaf07ee716806bef375e01c066ad1c26701d74e",
     "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
     "thought-leadership": "592719a5da0d19d4d4c81dd5779faa45a9039c4777e3749cbc055d241aed8970"
@@ -29,10 +29,10 @@
     "A1": {
       "score": 5,
       "evidence": [
-        "infra/scripts/staff_blob.py:1-20",
-        "infra/scripts/staff_azure.py:1-11"
+        "src/api/src/zava_forward/api/static_assets.py:1-58",
+        "src/api/src/zava_forward/api/server.py:193-197"
       ],
-      "rationale": "New staff_blob.py cleanly separates paging/encryption/transport from ARM orchestration in staff_azure.py, replacing the prior tag-relay coupling. Already at ceiling; reinforces, does not exceed."
+      "rationale": "New StaticAssets module is a single reusable content-versioning abstraction shared cleanly by three independent handlers (server, resident_demo, resident_preview). Strengthens existing modular pattern; already at ceiling."
     },
     "A2": {
       "score": 5,
@@ -44,39 +44,33 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "infra/staff-initializer-rbac.bicep:71-98",
-        "infra/scripts/staff_azure.py:238-256"
+        "src/api/checks/employee_identity_check.py:1-53",
+        "src/api/README.md:9-21"
       ],
-      "rationale": "RBAC narrowed from resourceGroup tags/read+write to container-scoped blobs/write+add/action only; discover() now verifies public network access, shared-key access and anonymous blob access are disabled before use. Reinforces already-ceiling posture; no basis to exceed 5."
+      "rationale": "New employee identity predicate is fail-closed, requires independently verified tenant/object GUIDs, excludes display email/roster from admission, and is exercised by exhaustive offline tests. Reinforces already-ceiling security posture; no basis to exceed 5."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/api/checks/employee_identity_check.py:1-53",
-        "src/api/tests/test_employee_identity_check.py:1-50"
+        "src/api/src/zava_forward/api/static_assets.py:1-58",
+        "src/api/tests/test_static_assets.py:1-40"
       ],
-      "rationale": "The new files are acceptance-test tooling (a predicate plus its offline harness), not a required production capability; core end-to-end implementation evidence is unchanged by this PR. Baseline unchanged."
+      "rationale": "Production release-safe asset caching (content-versioned URLs, ETag/304 revalidation) is implemented end-to-end across all three handlers with matching test coverage. Consistent with prior completeness; unchanged ceiling score."
     },
     "A5": {
       "score": 5,
-      "evidence": [
-        "src/core/src/zava_forward/core/chat_panel.py:337-365",
-        "src/agents/src/zava_forward/agents/chat_eval.py:389-408"
-      ],
-      "rationale": "Per-turn consumption receipts and evaluator economics summary are audit/evidence records, not production logging/metrics/tracing or measured cost-per-value. This PR adds no instrumentation; qualitative baseline unchanged."
+      "evidence": [],
+      "rationale": "This PR adds asset caching/versioning and browser checks, not production logging, metrics, tracing or measured cost-per-value. No operational instrumentation change; baseline unchanged."
     },
     "A6": {
       "score": 5,
-      "evidence": [
-        "src/api/src/zava_forward/api/resident_demo/chat.py:120-225",
-        "src/api/README.md:117-140"
-      ],
-      "rationale": "This PR touches only the document-question routing grammar and guidance-selector reuse, not model choice or evaluation harness. Baseline unchanged."
+      "evidence": [],
+      "rationale": "This PR only changes static asset caching/versioning and browser checks; it does not touch model choice, prompts or the evaluation harness. Baseline unchanged."
     },
     "A7": {
       "score": 4,
       "evidence": [],
-      "rationale": "Identity check predicate is deterministic schema/claim validation, not agentic orchestration, planning or handoff. Unchanged baseline (Good, not Excellent)."
+      "rationale": "Asset caching/versioning changes are deterministic HTTP serving logic, not agentic orchestration, planning or handoff. Baseline unchanged (Good, not Excellent)."
     },
     "B1": {
       "score": 3,
@@ -115,9 +109,9 @@
     "B6": {
       "score": 5,
       "evidence": [
-        "src/api/README.md:9-45"
+        "src/api/README.md:101-178"
       ],
-      "rationale": "README documents the new document-question grammar, routing and guidance-selector reuse clearly, consistent with existing strong engineering documentation. Not the capstone deck itself; ceiling unchanged."
+      "rationale": "README adds a clear, detailed section documenting release-safe asset versioning, caching headers, and verification commands, consistent with existing strong engineering documentation. Not the capstone deck itself; ceiling unchanged."
     },
     "B7": {
       "score": 5,

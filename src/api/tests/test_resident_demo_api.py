@@ -598,12 +598,17 @@ class AbuseAndHardeningTests(DemoTestCase):
         port = f"{HOST}:{self.app.port}"
         self.assertEqual(Client(self.app.port, port).call("GET", "/demo/session")[0], 200)
 
-    def test_security_headers_and_no_store_on_every_response(self) -> None:
+    def test_security_headers_and_static_revalidation_policy(self) -> None:
         c = self.client()
         for path in ("/", "/demo.js", "/demo.css", "/demo/session", "/demo/view", "/nope"):
             _, _, response = c.call("GET", path)
             for key, value in demo.HEADERS.items():
-                self.assertEqual(response.headers.get(key), value, (path, key))
+                expected = (
+                    "no-cache, must-revalidate"
+                    if key == "Cache-Control" and path in ("/demo.js", "/demo.css")
+                    else value
+                )
+                self.assertEqual(response.headers.get(key), expected, (path, key))
 
     def test_sign_in_moves_focus_to_content_heading_and_announces(self) -> None:
         script = (demo.WEB / "demo.js").read_text()

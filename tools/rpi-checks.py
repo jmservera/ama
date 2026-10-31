@@ -76,6 +76,8 @@ EXPECTED_SKIP_REASONS = {
     "opt-in owned loopback SQL Server",
     "opt-in local Playwright",
     "opt-in Chromium journey",
+    "opt-in local Chromium",
+    "Chromium is installed by the later browser-check step",
     "opt-in local browser",
     "JSON-only separate-file audit ordering",
     "SQL writer dependency checks",
@@ -1032,10 +1034,9 @@ def check_skips(text: str, *, integration: bool = False, group: str = "") -> dic
         integration and any((s["test"], s["reason"]) not in SQL_NOT_APPLICABLE for s in skips)
     ) or any(
         s["reason"] not in EXPECTED_SKIP_REASONS
-        and not (
-            group == "project-api"
-            and not integration
-            and (s["test"], s["reason"]) == CHAT_PANEL_DISCOVERY_SKIP
+        or (
+            s["reason"] == CHAT_PANEL_DISCOVERY_SKIP[1]
+            and (group != "project-api" or (s["test"], s["reason"]) != CHAT_PANEL_DISCOVERY_SKIP)
         )
         for s in skips
     ):

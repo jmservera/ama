@@ -12,6 +12,7 @@ from typing import Any
 from playwright.sync_api import Browser, Page, Route, expect, sync_playwright
 from test_resident_demo_api import FAKE_PASSWORD, DemoTestCase
 
+from checks.asset_urls import asset_url
 from checks.chat_submit_browser_check import employee as submit_employee
 from checks.design_system_browser_check import main as employee_server
 from checks.design_system_browser_check import synthetic_data
@@ -906,6 +907,8 @@ def recovery(browser: Browser, base: str) -> None:
 
 def recovery_case(browser: Browser, base: str, failures: int) -> None:
     context = browser.new_context()
+    context.route("**/*", lambda route: route.continue_()
+                  if route.request.url.startswith(base + "/") else route.abort())
     try:
         page = context.new_page()
         errors: list[str] = []
@@ -916,7 +919,7 @@ def recovery_case(browser: Browser, base: str, failures: int) -> None:
             attempts.append(route.request.url)
             route.abort() if len(attempts) <= failures else route.continue_()
 
-        page.route("**/chat-widget.js", asset)
+        page.route(asset_url("/chat-widget.js", base), asset)
         page.goto(base + "/app")
         page.get_by_label("Work email", exact=True).fill("sam@example.test")
         page.get_by_label("Password", exact=True).fill("synthetic-check")

@@ -1,0 +1,74 @@
+{
+  "task_id": "2c99fa13-81cb-4fd2-af53-81ad16cb565a",
+  "task_slug": "demo-sites-redeploy-cache",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-31/demo-sites-redeploy-cache-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-31/demo-sites-redeploy-cache-plan.md",
+    "details": ".copilot-tracking/details/2026-10-31/demo-sites-redeploy-cache-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-31/demo-sites-redeploy-cache-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-31/demo-sites-redeploy-cache-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-31/demo-sites-redeploy-cache-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Original eight evidence artifacts and single Review committed locally as ae9d26da04e7289e5daf1ddaf56f7c1ef607b971 with exact paths, derived noreply author/committer, Refs and Copilot trailer; clean tree verified. Administrative RV-002 persistence performed, original Review unchanged.",
+      "status": "local_persistence_complete",
+      "evidence": "Private local-commit-proof.json and actual commit.py command/readback; no push."
+    },
+    {
+      "decision": "One independent Review executed Complete / Residual work; operational deployment/cache/preservation passed, no defects. RV-001 signed-in/widget and RV-003 console diagnosis are distinct follow-ups; RV-002 local commit administrative continuation.",
+      "status": "review_complete_original_preserved",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-31/demo-sites-redeploy-cache-review.md"
+    },
+    {
+      "decision": "Research executed Complete / Ready; one critique Complete / Revise. PC-001 applied build-proof pre-push input; PC-002 rejected unsupported /tmp prohibition, preserve actual required shared lock.",
+      "status": "resolved",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-31/demo-sites-redeploy-cache-plan-critique.md and plan Critique Disposition"
+    },
+    {
+      "decision": "Owner explicitly requests the full Research, Plan, Implement, Review loop in the current worktree and local commits only.",
+      "status": "confirmed",
+      "evidence": "Current request; no automatic follow-up session requested."
+    },
+    {
+      "decision": "Always allow a short public-access window on the ACR, but if not possible, use `az acr build` command",
+      "status": "confirmed",
+      "evidence": "Owner verbatim current request; redeployment authority through 2026-11-15."
+    },
+    {
+      "decision": "Skip SQL init unless source delta from 4cb5964f touches SQL; resident AI remains OFF; preserve private config and live digests.",
+      "status": "confirmed",
+      "evidence": "Redeploy 8 addendum."
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Review",
+    "action": "No next task selected; manual full-loop request completed. Persist administrative closure locally only; original Review Residual work and follow-ups unchanged."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Owner-run signed-in employee/resident identity/widget acceptance",
+      "rationale": "Highest acceptance value; protected live200/cache and identity behavior cannot be proven anonymously.",
+      "evidence": "RV-001 and actual employee401/browser302 evidence."
+    },
+    {
+      "rank": 2,
+      "task": "Optional anonymous console-error diagnosis",
+      "rationale": "Small bounded diagnostic task; distinguish expected resource/auth errors from real defects before repairs.",
+      "evidence": "RV-003; resident desktop1/mobile0, employee1 per viewport, pageerrors0."
+    },
+    {
+      "rank": 3,
+      "task": "Separate resident AI activation decision",
+      "rationale": "Owner decision and approvals required; no activation authority inferred from redeployment.",
+      "evidence": "Owner explicitly keeps AI OFF and pending; unchanged absent assistant settings."
+    }
+  ]
+}

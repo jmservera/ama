@@ -1,0 +1,63 @@
+{
+  "task_id": "188-pr587-mean-step-boundary",
+  "task_slug": "sensor-mean-step-boundary-188",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-30/sensor-mean-step-boundary-188-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-30/sensor-mean-step-boundary-188-plan.md",
+    "details": ".copilot-tracking/details/2026-10-30/sensor-mean-step-boundary-188-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-30/sensor-mean-step-boundary-188-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-30/sensor-mean-step-boundary-188-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-30/sensor-mean-step-boundary-188-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Run the explicitly requested ordered full RPI loop autonomously; commit locally on the existing branch; never push.",
+      "status": "confirmed",
+      "evidence": "User request 2026-10-30; clean branch and open PR #587 verified."
+    },
+    {
+      "decision": "Research executed with Wider, Deeper and Contrarian waves; Planning Readiness Ready. Cross-multiplied fixed-point sums match exact signed/unequal-side oracle cases.",
+      "status": "ready",
+      "evidence": ".copilot-tracking/research/2026-10-30/sensor-mean-step-boundary-188-research.md"
+    },
+    {
+      "decision": "One independent final-candidate critique executed; original verdict Pass, no PC findings. Plan and details are implementation-ready.",
+      "status": "ready",
+      "evidence": ".copilot-tracking/reviews/plans/2026-10-30/sensor-mean-step-boundary-188-plan-critique.md"
+    },
+    {
+      "decision": "P01 implementation complete; red-to-green boundary regression and full requested core checks passed. Sensor suite 142 tests, 141 passed, one existing opt-in local SQL skip.",
+      "status": "review-ready",
+      "evidence": ".copilot-tracking/changes/2026-10-30/sensor-mean-step-boundary-188-changes.md"
+    },
+    {
+      "decision": "One independent original Review executed: Complete / Conformant for bounded correction. No implementation defects. RV-001 publication and RV-002 live-evidence follow-ups remain separately unproven.",
+      "status": "review-complete",
+      "evidence": ".copilot-tracking/reviews/logs/2026-10-30/sensor-mean-step-boundary-188-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "No push or child work authorized. Local correction and original dated evidence are persisted in the commit containing this state. Coordinator owns any later publication gate or separately authorized live evidence."
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator establishes current exact-candidate full publication gate and hosted/human prerequisites before any separately authorized push.",
+      "rationale": "Highest delivery leverage; requested local checks are not a complete publication receipt.",
+      "evidence": "RV-001, .copilot-tracking/reviews/logs/2026-10-30/sensor-mean-step-boundary-188-review.md"
+    },
+    {
+      "rank": 2,
+      "task": "Separately authorized actual Hub/Azure SQL handover exercise after prerequisite readiness.",
+      "rationale": "Only live evidence can substantiate remaining issue criteria; excluded from this local correction.",
+      "evidence": "RV-002, .copilot-tracking/reviews/logs/2026-10-30/sensor-mean-step-boundary-188-review.md"
+    }
+  ]
+}

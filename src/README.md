@@ -183,6 +183,15 @@ identity, zero execution, dependency failures and unexpected skips block the
 gate and receipt verification. This local coverage adds to, not changes, the
 hosted workflow coverage inventory.
 
+General discovery also recognises the exact reason
+`Chromium is installed by the later browser-check step` from the browser asset
+URL regression when the executable is not yet installed. Both Chromium reasons
+are enumerated explicitly; the chat-panel reason retains its narrower test-ID
+and `project-api` boundary above. Recognised skips remain visible in receipt
+counts, never count as execution and still fail in required integration commands.
+Unknown or changed reasons fail closed. Recognising the asset discovery skip
+does not prove that its browser regression subsequently executes.
+
 ShellCheck is a required preflight dependency, not an optional actionlint
 enhancement: native workflow lint must analyze shell scripts as hosted lint
 does. Its version is logged and its binary identity is receipt-bound; a missing

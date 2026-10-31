@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 from urllib.parse import urlsplit
 
 from playwright.sync_api import (
     Browser, BrowserContext, CDPSession, Page, Route, expect, sync_playwright,
 )
 
+from checks.asset_urls import asset_url
 from checks.design_system_browser_check import main
 from checks.workbench_browser_check import synthetic_data
 
@@ -69,7 +72,7 @@ def recovery(browser: Browser, base: str, path: str, failures: int, hash_: str) 
         page.on(
             "requestfailed",
             lambda request: failed.append(request.failure or "")
-            if urlsplit(request.url).path == path else None,
+            if asset_url(path, base).search(request.url) else None,
         )
         page.on(
             "request",
@@ -88,7 +91,7 @@ def recovery(browser: Browser, base: str, path: str, failures: int, hash_: str) 
                 pending.append(route)
                 page.evaluate("() => { window.workspaceRetryPending = true; }")
 
-        page.route("**" + path, intercept)
+        page.route(asset_url(path, base), intercept)
         page.goto(base + "/app" + hash_)
         assert len(requests) == 1, "The initial HTML load must fail before recovery"
         assert len(failed) == 1 and failed[0], failed
@@ -103,7 +106,7 @@ def recovery(browser: Browser, base: str, path: str, failures: int, hash_: str) 
         page.wait_for_function("() => window.workspaceRetryPending === true")
         assert len(requests) == failures + 1 and len(pending) == 1, requests
         assert page.evaluate("() => !(" + readiness + ")"), "Retry must still be pending"
-        with page.expect_response(base + path) as response:
+        with page.expect_response(asset_url(path, base)) as response:
             pending[0].continue_()
         assert response.value.status == 200
         page.wait_for_function("() => " + readiness)
@@ -138,7 +141,7 @@ def exhaustion(browser: Browser, base: str, missing_global: bool = False) -> Non
             else:
                 route.abort()
 
-        page.route("**" + LEAFLET, intercept)
+        page.route(asset_url(LEAFLET, base), intercept)
         sign_in(page, base, "#/overview")
         expect_failure(page, LEAFLET)
         count = 2 if missing_global else 3
@@ -154,7 +157,7 @@ def exhaustion(browser: Browser, base: str, missing_global: bool = False) -> Non
         page.keyboard.press("Tab")
         expect(reload_button).to_be_focused()
         assert reload_button.evaluate("el => getComputedStyle(el).outlineStyle === 'solid'")
-        page.unroute("**" + LEAFLET)
+        page.unroute(asset_url(LEAFLET, base))
         reload_button.press("Enter")
         expect(page.locator(".leaflet-container")).to_be_visible()
         assert not errors, errors
@@ -164,16 +167,18 @@ def exhaustion(browser: Browser, base: str, missing_global: bool = False) -> Non
         context.close()
 
 
-def observe_companion(page: Page) -> CDPSession:
+def observe_companion(page: Page, base: str) -> CDPSession:
     session = page.context.new_cdp_session(page)
     session.send("Profiler.enable")
     session.send("Profiler.startPreciseCoverage", {"callCount": True, "detailed": True})
-    page.add_init_script("""
+    page.add_init_script(
+        "const companionAssetPattern = new RegExp("
+        + json.dumps(asset_url("/role-screens.js", base).pattern) + ");" + """
       window.workspaceScriptEvents = [];
       new MutationObserver(records => {
         for (const record of records) for (const script of record.addedNodes) {
           if (script.tagName !== 'SCRIPT'
-              || new URL(script.src, location.href).pathname !== '/role-screens.js') continue;
+              || !companionAssetPattern.test(script.src)) continue;
           script.addEventListener('load', () => {
             const ready = typeof roleScreensView === 'function';
             window.workspaceScriptEvents.push({outcome: 'load', ready});
@@ -189,7 +194,10 @@ def observe_companion(page: Page) -> CDPSession:
 
 def companion_coverage(session: CDPSession, base: str) -> tuple[int, int]:
     coverage = session.send("Profiler.takePreciseCoverage")["result"]
-    scripts = [script for script in coverage if script["url"] == base + "/role-screens.js"]
+    scripts = [
+        script for script in coverage
+        if asset_url("/role-screens.js", base).search(script["url"])
+    ]
     assert len(scripts) <= 1, "The actual lexical companion must not be evaluated twice"
     if not scripts:
         return 0, 0
@@ -210,7 +218,7 @@ def delayed_companion(
         pending: list[Route] = []
         requests: list[str] = []
         documents: list[str] = []
-        session = observe_companion(page)
+        session = observe_companion(page, base)
         page.on("pageerror", lambda error: errors.append(str(error)))
         page.on(
             "request",
@@ -225,13 +233,15 @@ def delayed_companion(
             else:
                 pending.append(route)
 
-        page.route("**/role-screens.js", intercept)
+        page.route(asset_url("/role-screens.js", base), intercept)
         sign_in(page, base, "#/screens")
         expect(page.locator("#workspace-status")).to_have_text(
             "Loading workspace files. Please wait."
         )
         page.wait_for_function(
-            "() => document.querySelectorAll('head script[src=\"/role-screens.js\"]').length === 1"
+            """pattern => [...document.querySelectorAll('head script[src]')].filter(
+                script => new RegExp(pattern).test(script.src)).length === 1""",
+            arg=asset_url("/role-screens.js", base).pattern,
         )
         assert len(pending) == 1
         if sign_out:
@@ -342,9 +352,19 @@ def run_browser(base: str) -> None:
                 response = context.request.get(base + LEAFLET)
                 assert response.status == 200
                 assert response.headers["content-type"] == "text/javascript; charset=utf-8"
-                assert response.headers["cache-control"] == "no-store"
+                assert response.headers["cache-control"] == "no-cache, must-revalidate"
+                assert response.headers["etag"] == f'"{hashlib.sha256(response.body()).hexdigest()}"'
                 assert int(response.headers["content-length"]) == len(response.body()) == 147552
-                print("PASS local Leaflet HTTP 200, 147552 bytes, MIME, length and no-store")
+                print("PASS local Leaflet HTTP 200, 147552 bytes, MIME, length and revalidation/ETag")
+                page = context.new_page()
+                page.goto(base + "/app")
+                versioned = page.locator('script[src^="/vendor/leaflet.js?"]').get_attribute("src")
+                assert versioned and asset_url(LEAFLET).search(versioned)
+                fresh = context.request.get(base + versioned)
+                assert fresh.status == 200 and fresh.body() == response.body()
+                assert fresh.headers["cache-control"] == "public, max-age=31536000, immutable"
+                assert fresh.headers["etag"] == response.headers["etag"]
+                print("PASS rendered versioned Leaflet: identical bytes/ETag and one-year immutable policy")
             finally:
                 context.close()
         finally:

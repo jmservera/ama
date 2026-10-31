@@ -10,6 +10,7 @@ from typing import Any
 
 from playwright.sync_api import Browser, Page, Route, expect, sync_playwright
 
+from checks.asset_urls import asset_url
 from checks.design_system_browser_check import main
 from checks.employee_briefing_browser_check import briefing_data
 from checks.regulatory_ux_check import AXE_SHA256
@@ -56,12 +57,14 @@ def static_shell_check(browser: Browser, base: str, output: Path) -> None:
 
 def shell_check(browser: Browser, base: str) -> None:
     context = browser.new_context()
+    context.route("**/*", lambda route: route.continue_()
+                  if route.request.url.startswith(base + "/") else route.abort())
     try:
         page = context.new_page()
         page.clock.install()
         held: list[Route] = []
-        page.route("**/app.js", lambda route: held.append(route))
-        with page.expect_request("**/app.js"):
+        page.route(asset_url("/app.js", base), lambda route: held.append(route))
+        with page.expect_request(asset_url("/app.js", base)):
             page.goto(base + "/app", wait_until="commit")
         expect(page.locator("#startup-status")).to_contain_text("up to a minute")
         expect(page.locator("#app")).to_be_empty()
@@ -74,7 +77,7 @@ def shell_check(browser: Browser, base: str) -> None:
         held[0].continue_()
         expect(page.get_by_label("Work email", exact=True)).to_be_visible()
         expect(page.locator("#startup")).to_be_hidden()
-        page.unroute("**/app.js")
+        page.unroute(asset_url("/app.js", base))
         page.route("**/api/me", lambda route: route.fulfill(
             status=503, json={"error": "Synthetic service is unavailable"}))
         page.reload()
@@ -84,11 +87,11 @@ def shell_check(browser: Browser, base: str) -> None:
         page.unroute("**/api/me")
         page.get_by_role("button", name="Try again", exact=True).click()
         expect(page.get_by_label("Work email", exact=True)).to_be_visible()
-        page.route("**/app.js", lambda route: route.abort())
+        page.route(asset_url("/app.js", base), lambda route: route.abort())
         page.reload()
         page.clock.fast_forward(16000)
         expect(page.locator("#startup-retry")).to_be_visible()
-        page.unroute("**/app.js")
+        page.unroute(asset_url("/app.js", base))
         page.locator("#startup-retry").click()
         expect(page.get_by_label("Work email", exact=True)).to_be_visible()
         print("PASS static shell, held/failed script, slow/deadline and service retry")
@@ -107,8 +110,8 @@ def watchdog_failure_check(browser: Browser, base: str, outcome: str) -> None:
         failures: list[str] = []
         page.on("pageerror", lambda error: errors.append(str(error)))
         page.on("requestfailed", lambda request: failures.append(request.url)
-                if request.url == base + "/workspace-shell.js" else None)
-        page.route("**/workspace-shell.js", lambda route: route.abort())
+                if asset_url("/workspace-shell.js", base).search(request.url) else None)
+        page.route(asset_url("/workspace-shell.js", base), lambda route: route.abort())
         if outcome == "error":
             page.route("**/api/me", lambda route: route.fulfill(
                 status=503, json={"error": "Synthetic startup failure without watchdog"}))
@@ -150,7 +153,7 @@ def companion_failure_check(browser: Browser, base: str, path: str, hash_: str) 
             requests.append(route.request.url)
             route.abort()
 
-        page.route("**" + path, intercept)
+        page.route(asset_url(path, base), intercept)
         page.goto(base + "/app" + hash_)
         expect(page.get_by_label("Work email", exact=True)).to_be_visible()
         expect(page.locator("#startup")).to_have_count(0)
@@ -194,7 +197,7 @@ def law_startup_check(
         page.on("pageerror", lambda error: errors.append(str(error)))
         page.on("requestfailed", lambda request: failures.append(request.url))
         if blocked_script:
-            page.route("**" + blocked_script, lambda route: route.abort())
+            page.route(asset_url(blocked_script, base), lambda route: route.abort())
 
         def sources(route: Route) -> None:
             reads.append(route.request.url)
@@ -215,7 +218,7 @@ def law_startup_check(
             expect(page.locator("#startup-status")).to_contain_text("longer than expected")
             expect(page.locator("#startup-retry")).to_be_visible()
             assert not reads, reads
-            page.unroute("**/law.js")
+            page.unroute(asset_url("/law.js", base))
             page.locator("#law-out").focus()
             page.keyboard.press("Tab")
             expect(page.locator("#startup-retry")).to_be_focused()
@@ -235,7 +238,7 @@ def law_startup_check(
         page.clock.fast_forward(16000)
         expect(page.locator("#law-status")).to_have_text("0 sources and 0 gaps shown.")
         if blocked_script:
-            assert base + blocked_script in failures, failures
+            assert any(asset_url(blocked_script, base).search(url) for url in failures), failures
         assert not errors, errors
         print(f"PASS law startup: blocked={blocked_script}, reads={len(reads)}, terminal cleanup")
     finally:
@@ -276,7 +279,7 @@ def helper_bootstrap_check(
             else:
                 route.continue_()
 
-        page.route("**/async-action.js", intercept)
+        page.route(asset_url("/async-action.js", base), intercept)
         page.goto(base + "/app#/case/ZF-1?tab=resident")
         terminal = failures == 3 or missing_global or unready_helper or bool(unready_method)
         if terminal:
@@ -301,7 +304,7 @@ def helper_bootstrap_check(
             page.wait_for_timeout(800)
             assert len(requests) == expected_requests, requests
             assert not errors, errors
-            page.unroute("**/async-action.js")
+            page.unroute(asset_url("/async-action.js", base))
             reload = page.get_by_role("button", name="Reload workspace", exact=True)
             page.locator("#app").focus()
             page.keyboard.press("Tab")
@@ -366,7 +369,7 @@ def law_helper_check(browser: Browser, base: str, failure: str) -> None:
                 }
                 route.fulfill(content_type="text/javascript", body=scripts[failure])
 
-        page.route("**/async-action.js", intercept)
+        page.route(asset_url("/async-action.js", base), intercept)
         meta: dict[str, Any] = dict(
             status="Synthetic reference", completeness="Complete",
             effective=None, retrieved="2026-10-29", version="1", caveats=[])
@@ -399,7 +402,7 @@ def law_helper_check(browser: Browser, base: str, failure: str) -> None:
         assert not errors, errors
         assert len(documents) == 1, documents
         assert len(helper_reads) == 1, helper_reads
-        page.unroute("**/async-action.js")
+        page.unroute(asset_url("/async-action.js", base))
         reload = page.get_by_role("button", name="Reload law viewer", exact=True)
         expect(page.locator("#law-out")).to_be_focused()
         page.keyboard.press("Tab")
