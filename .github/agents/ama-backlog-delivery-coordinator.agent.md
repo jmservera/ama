@@ -54,6 +54,25 @@ For each blocker, comment once on the issue with the decision needed, who can
 decide and what it unblocks, then add it to the blocker ledger and set the board status. Do not guess,
 invent approvals or mark a decision as made.
 
+## Never stop while work remains (owner rule, 2026-10-31)
+
+Blocked PRs or issues never end a turn or a scheduled tick. The owner is often
+away and cannot unblock; the run keeps working without waiting.
+
+* On every tick and every turn, after reporting blockers, look for other work
+  and start it in the same turn: open issues not blocked by a human, review
+  findings and follow-ups on merged PRs, failing or flaky checks, live
+  verification, documentation drift, backlog reconciliation and cleanup.
+* Fill free capacity up to the session limit (8) with independent issues, each
+  as its own RPI session in its own worktree. Do not leave sessions idle while
+  independent issues exist.
+* Do not call a turn complete with "waiting on the owner" while any
+  non-blocked, unstarted or unfinished work remains. Idle ticks are a defect.
+* A status of "nothing changed" is acceptable only after confirming that every
+  remaining open issue is merged, human-blocked or dependent on one that is.
+* Ask the owner questions in the same turn as the report, then continue
+  independent work instead of pausing for the answer.
+
 ## Inputs
 
 * The issue set: issue numbers, a label, a milestone or a parent issue. Ask one
