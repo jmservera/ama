@@ -94,7 +94,7 @@ Preserve reviewer/human/hosted approval boundaries; no force or Azure action.
 ### [ ] P02: Review and publish proven work
 
 <!-- rpi:task id=P02-T01 -->
-#### [ ] P02-T01: Independent Review and candidate/evidence commit
+#### [x] P02-T01: Independent Review and candidate/evidence commit
 
 <!-- rpi:task id=P02-T02 -->
 #### [ ] P02-T02: Complete clean current-base gate, exact-head assessment, push/PR

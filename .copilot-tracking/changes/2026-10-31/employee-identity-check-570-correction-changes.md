@@ -106,3 +106,27 @@ The two newer upstream commits are coordinator guidance and Fabric documentation
 not adapter/runtime/test changes. Commit current pending merge and original
 correction evidence, then non-rewriting merge a75bbdff preserving both log
 entries and main rubric before a fresh current-base complete gate.
+
+## Candidate Commit and Latest-main Merge
+
+Committed correction, original dated evidence and the pending 1330869e merge
+as 00df3740 with GitHub-derived repository-local noreply identity and required
+Copilot trailer. Then merged explicit latest-main a75bbdff non-rewriting.
+Index/log conflicts resolved by keeping both #570 and upstream capstone
+entries intact; main's rubric retained byte-for-byte.
+Upstream includes capstone reorganization/tooling and CI workflow changes,
+not merely prose. The gate-tool change is the expected src-ci workflow hash.
+No upstream deletion/reorganization is newly performed outside that merge.
+
+Runner/test/API guide SHA-256 values still exactly match independent Review.
+Latest-base runner CLI passed: three actual Chromium selectors, 20.674 seconds,
+zero skips. Ruff passed; current-base gate-tool tests passed, 37 tests in
+22.419 seconds. Earlier full API discovery is exact unchanged owned source;
+complete gate will additionally validate the whole integrated current base.
+Original correction Review is not repeated or overwritten.
+
+P02-T01 complete. P02-T02 remains pending: clean detached exact-head gate
+with --all and the three reviewed Chromium extras, new external output,
+default full receipt verification against freshly fetched main, separate
+independent exact-head assessment, then authorized non-force push/main PR.
+No complete receipt or publication success is claimed by this as-of commit.

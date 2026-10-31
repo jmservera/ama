@@ -21,12 +21,13 @@
     {"decision": "At most two live sign-in attempts authorized through 2027-01-31; pip only, no secrets or Azure changes", "status": "confirmed", "evidence": "Explicit owner request; zero attempts in correction"},
     {"decision": "One critique Complete/Revise; PC-001 through PC-003 directly applied, original retained", "status": "ready", "evidence": "Correction plan Critique Disposition and details Direct Critique Dispositions"},
     {"decision": "One independent Review Complete, outcome Residual work; bounded correction conforms, no new defects; not exact-head publication approval", "status": "complete", "evidence": "Correction Review; independent 16 tests/three Chromium selectors and original finding reproductions"},
-    {"decision": "Remote refs advanced; actual pending merge is 1330869e, fetched current main a75bbdff; integrate documentation-only newer main before complete gate", "status": "confirmed-current-base-reconciliation", "evidence": "Reviewer snapshot and parent git fetch 2026-10-31"}
+    {"decision": "Remote refs advanced; actual pending merge was 1330869e, fetched current main a75bbdff; latest main integrated without rewriting history", "status": "confirmed-current-base-reconciliation", "evidence": "00df3740 committed correction and first merge; current pending a75bbdff merge preserves both log/index entries and main rubric"},
+    {"decision": "P01 and original Review/candidate commit complete; latest-main source hashes match independent Review and CLI/tool tests rerun successfully", "status": "complete-publication-pending", "evidence": "Correction changes Candidate Commit and Latest-main Merge; P02-T02 still requires complete gate and separate exact-head assessment"}
   ],
   "blockers": [
     {"id": "independent-identity-live", "summary": "Independently attested Aadi object identity unavailable; original live chat/map/case criterion unmet", "resolution": "Owner/identity administrator supplies private independent tenant/object attestation before bounded live campaign"}
   ],
-  "next_action": {"phase": "Follow-up", "action": "Explicit authorized P02 publication: commit original candidate/evidence, reconcile latest main, complete gate and exact-head assessment; then push/PR. Live remains unmet."},
+  "next_action": {"phase": "Follow-up", "action": "Finish current-main merge/evidence commit; P02-T02 complete clean current-base gate, verify receipt, independent exact-head assessment, then explicit authorized non-force push/main PR. Live remains unmet. Final receipt/publication evidence stays external to prevent self-reference."},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Obtain independent identity and verify employee features live", "rationale": "Original issue criterion needs external attestation, not inferred identity", "evidence": "Original Review RV-004"}
   ]
