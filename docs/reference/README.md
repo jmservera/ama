@@ -21,6 +21,16 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+For the [31 October live app observations](../architecture/cutover-evidence-pack.md#live-app-verification-2026-10-31-refs-523-524-570-432),
+resident sign-in and chat open/close, resize, dock/undock and narrow/wide
+containment passed; five actually loaded resident assets match source pin
+`45121932`. Employee health passed, but independent directory attestation was
+denied: zero employee sign-ins, with chat/map/case, tabs/assets, capacity and
+metering blocked. #523/#524's explicitly permitted pending-record rows are
+ticked, not successful live acceptance; both remain open. #570/#432 remain
+unproven, with no new ticks. No Azure configuration/deployment or AI/booking/
+consent changes occurred, and no new deployed defect was demonstrated.
+
 For #432, the [dated Tokenomics engineering/gap matrix](./resources/ai-tokenomics.md#source-only-metering-extension-2026-10-31-refs-432)
 and [official price-source metadata](./resources/azure-ai-price-source-2026-10-31.json)
 record the existing-ledger extension, request/financial admission and billing-led
