@@ -44,19 +44,35 @@
       "decision": "One original independent Review executed Complete / Residual work; scoped regression Conformant, no source defects.",
       "status": "accepted",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-31/capacity-page-523-review.md; RV-001 publication qualification, RV-002 live owner verification, RV-003 hosted/human approval."
+    },
+    {
+      "decision": "Complete --all gate for d4c4e040/base1330869e failed; full receipt verification rejected. No push or PR; preserve original evidence and regression-only scope.",
+      "status": "blocked",
+      "evidence": ".copilot-tracking/changes/2026-10-31/capacity-page-523-changes.md Complete Publication Gate; external failed receipt SHA-256 801dc67fb871c208c03455d13e0173003eee94a22ea93a06cb21da690b70586f."
     }
   ],
-  "blockers": [],
+  "blockers": [
+    {
+      "id": "publication-gate-baseline",
+      "summary": "Static rejects required chat-panel opt-in skips; browser strict lint has nine pre-existing B023 errors. Complete gate and verification failed.",
+      "resolution": "Repair baseline checks in separately scoped work, then new complete gate and independent exact-head assessment. Do not push this unqualified candidate."
+    },
+    {
+      "id": "publication-base-advanced",
+      "summary": "origin/main advanced from reviewed1330869e to a75bbdff during gate; new main does not resolve baseline failures.",
+      "resolution": "After baseline repair, synchronize latest main without rewriting, commit candidate and run a fresh full gate against the current reviewed base."
+    }
+  ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Complete already-authorized original-evidence commit, full gate, verified exact-head assessment and topic publication; do not start new source work."
+    "action": "Blocked publication: preserve gate-failure evidence locally; separately resolve baseline gate failures before new qualification and topic push/PR. No additional source work selected."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Complete gated publication qualification and topic PR",
-      "rationale": "Required remaining caller-authorized delivery step, before any remote publication.",
-      "evidence": "Review RV-001; plan P03-T02/P03-T03."
+      "task": "Resolve baseline gate blockers before fresh publication qualification",
+      "rationale": "Actual full gate failed on unrelated static/browser checks; highest-priority prerequisite for pending caller publication.",
+      "evidence": "Review RV-001; changes Complete Publication Gate; plan P03-T02/P03-T03."
     },
     {
       "rank": 2,

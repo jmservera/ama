@@ -12,7 +12,7 @@ Task ID 523, slug capacity-page-523. Plan:
 ## Execution Status
 
 Full plan in scope; P01/P01-T01, P02/P02-T01 and P03-T01 complete.
-P03-T02/P03-T03 publication qualification and publication remain pending.
+P03-T02 attempted and Blocked; P03-T03 not performed. Publication is incomplete.
 Approved writes: one owning regression method and dated RPI evidence only.
 Current runtime source stays unchanged; no dependency-manifest or web edits.
 
@@ -97,12 +97,73 @@ still pending; no final receipt or push claimed.
 
 ## Blockers
 
-No implementation blocker. Complete post-commit gate, receipt verification and
-independent exact-head publication assessment remain required before push/PR.
+No implementation blocker. Publication is blocked by the actual complete gate:
+static required-skip rejection and nine pre-existing browser-check B023 errors.
+Current main also advanced during the gate. No eligible full receipt exists.
 
 ## Remaining Work
 
 P03-T02, P03-T03.
+
+## Complete Publication Gate: Failed, Preserved
+
+Original Review/evidence were committed as
+d4c4e040abcee00b136ccb4485d5c9b4ec293a72 before the complete gate.
+Command from repository root:
+
+```bash
+python3 tools/rpi-checks.py --all --jobs 3 --lock-timeout 1800 \
+  --base 1330869ea675ff019958846330108b4f45e163ce \
+  --out /tmp/ama-523-20261031-c70d35f2-final
+```
+
+Exit 1. Lock queued 2026-10-31T10:33:30.564751+00:00, acquired
+2026-10-31T10:36:12.591607+00:00. Host admission capped workers at one.
+All 17 required groups selected; only preflight, namespace and the five
+project suites passed. Static and browser failed; infra, migration, MSSQL,
+all four consumer images and logo stress were blocked by prerequisites.
+
+* Static rejects two reported opt-in skips for
+  test_chat_panel.PanelTests.test_browser_warning_failure_keyboard_refusal_and_live_log,
+  reason "opt-in local Chromium", in required tooling integration/dependency
+  evidence. This is not a failure of the added procurement regression.
+* Browser strict lint fails with nine B023 loop-variable closure errors in
+  unchanged src/api/checks/case_journey_browser_check.py. Required browser
+  integration therefore did not complete.
+* No cloud, partial gate, skip override, protection change, scanner bypass,
+  source correction or second Review was substituted.
+* Main advanced during execution to a75bbdffa51ae34b1fcf779250f1f553d566ee93.
+  Read-only comparison shows no case_journey_browser_check change and only a
+  workflow hash update in rpi-checks.py, so the newer merged main does not repair
+  these failures. It also invalidates the historical candidate/base for current
+  publication. No unnecessary merge or second doomed full run was started.
+
+Immutable failed receipt:
+/tmp/ama-523-20261031-c70d35f2-final/receipt.json.
+Receipt SHA-256:
+801dc67fb871c208c03455d13e0173003eee94a22ea93a06cb21da690b70586f.
+Full-gate log SHA-256:
+4aafb1bfdcb33138024182bfb1c57911bbb52692f653629e0de79bbb1fa49186.
+Both remain external; no receipt content was changed.
+
+Default full-scope verification against current origin/main was attempted:
+
+```bash
+python3 tools/rpi-checks.py --verify-receipt \
+  /tmp/ama-523-20261031-c70d35f2-final/receipt.json \
+  --base a75bbdffa51ae34b1fcf779250f1f553d566ee93
+```
+
+Exit 1, "Receipt does not establish an eligible run". This failed receipt is
+historical evidence only; this subsequent tracking-only blocker commit is not
+claimed gated. Independent exact-head publication assessment, push and PR
+creation were not performed because the mandatory gate cannot qualify this
+candidate. The draft PR body is external and was not published.
+
+Repair the baseline gate in separately scoped work, then synchronize current
+main, commit the candidate and original evidence and run a new full gate plus
+fresh-main verification/independent exact-head assessment before publication.
+The caller's regression-only scope does not authorize fixing unrelated checks.
 
 ## Follow-Up Items
 

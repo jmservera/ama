@@ -7,13 +7,14 @@ ms.date: 2026-10-31
 
 * Task ID: 523
 * Task slug: capacity-page-523
-* Planning status: Implementation and one independent Review complete; publication pending
+* Planning status: Implementation and one independent Review complete; publication Blocked
 * Plan date: 2026-10-31
 * Phase details: .copilot-tracking/details/2026-10-31/capacity-page-523-phase-details.md
 * Plan critique: .copilot-tracking/reviews/plans/2026-10-31/capacity-page-523-plan-critique.md
 
 ## Executive Summary
 
+Publication is blocked by actual complete-gate baseline failures; no push or PR.
 The runtime defect is already repaired in merged work. Current local SQL Server
 and Chromium confirm capacity, all twelve manager destinations and recovery.
 Add one persisted-reopen HTTP regression instead of changing runtime behavior.
@@ -135,6 +136,12 @@ Findings route to later work, not another Review or source correction in this ta
 <!-- rpi:task id=P03-T02 -->
 #### [ ] P03-T02: Commit and complete publication gate
 
+Attempted, Blocked. Original evidence commit d4c4e040 received a failed complete
+receipt: static rejected required opt-in skips and browser strict lint found
+nine B023 errors in unchanged case_journey_browser_check.py. Current main also
+advanced during the gate. Failed receipt verification explicitly refused
+eligibility. Preserve evidence; no unrelated fix or substitute gate.
+
 Resolve gh api user identity, configure repository-local noreply email and commit
 test plus dated original evidence with required coauthor trailer. Fetch main, run
 tools/rpi-checks.py --all with new external output, verify immediately before push
@@ -142,6 +149,9 @@ and independent exact-head assessment. No branch/base rewrites.
 
 <!-- rpi:task id=P03-T03 -->
 #### [ ] P03-T03: Push and open PR
+
+Not performed: P03-T02 is blocked. No independent exact-head publication
+assessment can accept a failed receipt.
 
 Only if complete gate and required independent assessment pass. PR main target,
 Refs #523 only, current evidence and validation, live verification pending owner.
@@ -175,6 +185,10 @@ No significant/divergent user decision remains. Critique is not repeated.
 
 ## Follow-Up Items
 
+* Repair baseline static skip classification and browser B023 failures in
+  separately scoped repository-gate work, owner/coordinator; unrelated to the
+  approved regression-only change. Then synchronize latest main and perform a
+  fresh complete gate and independent exact-head assessment before publication.
 * Live employee-site verification after separately authorized deployment, owner.
 * Hosted checks and human approval after gated publication, owner/reviewer.
 
@@ -184,5 +198,7 @@ P01/P02/P03-T01 complete, source frozen. Original independent Review executed
 Complete / Residual work, scoped regression Conformant, no source defect.
 RV-001 publication qualification is remaining P03-T02/P03-T03 work; RV-002 live
 owner verification and RV-003 hosted/human approval remain distinct follow-ups.
-Parent commits original Review and current evidence, then runs the complete gate.
+Original Review/evidence committed before complete gate; gate and verification
+failed. Parent preserves blocker evidence in one tracking-only local commit.
+P03-T02/P03-T03 remain blocked/unperformed; no push, PR or source correction.
 No runtime changes authorized because current local evidence confirms the repair.

@@ -16,7 +16,7 @@ Current state: Ready after one Complete / Revise critique and direct disposition
 | --- | --- | --- | --- |
 | P01 | Regression-only implementation | Implemented | P01-T01 |
 | P02 | Validation/freeze | Passed | P02-T01 |
-| P03 | Review/publication | Review complete, publication pending | P03-T01, P03-T02, P03-T03 |
+| P03 | Review/publication | Review complete, publication Blocked | P03-T01, P03-T02, P03-T03 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Regression-only implementation
@@ -91,6 +91,13 @@ parent context; retain mandated serialization and external directories.
 Any bookkeeping commit after gate
 invalidates it and requires a new complete run.
 
+Actual full gate for d4c4e040/base1330869e exited 1. Static required-skip
+rejection and unchanged case-journey check's nine B023 errors prevent completion.
+Seven prerequisite/project groups passed; remaining required groups did not.
+Current main advanced to a75bbdff during execution; newer main does not fix
+these blockers. Default receipt verification rejects eligibility. Preserve
+failed external receipt/log; no source repair or second Review in this task.
+
 <!-- rpi:task id=P03-T03 -->
 ### P03-T03: Authorized branch publication
 
@@ -98,3 +105,6 @@ Fetch main and verify receipt against current origin/main immediately before
 push and exact-head assessment. Push only fix/capacity-page-523 without force.
 Open PR to main with Refs #523 and evidence/validation/live-pending distinction.
 Do not tick issue acceptance, merge, deploy or sign in.
+
+Not performed: no passing complete gate or eligible receipt. Final tracking
+blocker evidence is a local-only commit, not a qualified publication candidate.
