@@ -7,8 +7,8 @@ ms.date: 2026-10-31
 
 Task 439ddfed-247a-4d5a-85ce-c60e9b939be3; demo-sites-redeploy-routing.
 Planning status: Ready after direct critique dispositions. Implementation P01/P02
-complete; P03-T01 partial (resident passed, employee blocked), P03-T02 export
-complete, single Review/local administrative persistence pending.
+complete; P03-T01 partial (resident passed, employee blocked), P03-T02 export,
+single Review and original local evidence persistence complete.
 Finite manual full-loop progression requested.
 
 ## Executive Summary
@@ -110,7 +110,7 @@ bodies and exact source diff. Current state is controlling, not historical statu
 <!-- rpi:task id=P03-T01 -->
 #### [ ] P03-T01: Curl/browser anonymous and bounded signed-in acceptance
 <!-- rpi:task id=P03-T02 -->
-#### [ ] P03-T02: Export sanitized evidence, one Review, local commit, publication assessment
+#### [x] P03-T02: Export sanitized evidence, one Review, local commit, publication assessment
 
 ## Dependencies and Failure Routing
 
@@ -147,5 +147,8 @@ Blocked identity leaves those checks unproven. No second critique.
 
 Changes: .copilot-tracking/changes/2026-10-31/demo-sites-redeploy-routing-changes.md.
 Details: .copilot-tracking/details/2026-10-31/demo-sites-redeploy-routing-phase-details.md.
-Ready for one Review of partial whole-request implementation, preserving
-original critique/failures. No further operational or source change planned.
+One Review Complete / Residual work, original unchanged. Finite requested RPI
+loop finished; implementation Partial against employee acceptance/publication.
+Original evidence committed locally00005a3972248dfbc7ecba5cbf823dc357960a67.
+Administrative closeout persistence follows; no further operational/source
+change or repeated Review. Publication assessment: blocked, no push/PR.

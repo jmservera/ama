@@ -260,3 +260,42 @@ unavailable and get_changed_files tool absent; higher repository exact-path
 staging/staged diff/privacy-safe identity/Refs/trailer safeguards apply.
 No private/global email change, broad staging, push, PR, merge or rewrite.
 Original eight-artifact local commit next; actual receipt remains private.
+
+## Local Evidence Persistence and Closeout
+
+`chmod600 ROOT/commit.py && python3 ROOT/commit.py` exit0. Eight original dated
+RPI artifacts, including the single Review, committed locally as
+00005a3972248dfbc7ecba5cbf823dc357960a67,
+`chore(ops): redeploy both demos with resident routing`.
+Fresh gh-derived repository-local noreply author/committer, exact eight-path
+staging, JSON/sensitive-marker/whitespace and exact commit identity/message/
+content/clean-tree readback pass. Refs #568,#520,#570 and exact Copilot trailer.
+No push/PR/merge/amend/rebase. Actual private local-commit-proof.json retained.
+
+Finite manual full RPI loop finished; task implementation Partial with
+employee/publication blockers, session stopped in Review. Original Review
+Complete / Residual work unchanged. Administrative RV-003 persistence performed;
+RV-001/RV-002 remain later work, not closed or reassessed. P03-T01/P03 unchecked
+because employee signed-in scope is unproven; P03-T02 executed and checked.
+This plan/details/state/changes administrative reconciliation is persisted
+separately by `python3 ROOT/commit.py --closure` with identical four-exact-path
+identity/Refs/trailer/readback safeguards. Actual final receipt stays external,
+not self-referentially predeclared. No second critique/Review or live replay.
+
+## Proven and Unproven
+
+Release main-20261031-9ecb159bd843-routing9, resident/employee suffixes.
+Exact published digests above live; both health200, public versioned assets200/
+source-equal with max-age31536000 AND immutable, HTML no-store. Resident
+anonymous desktop/mobile dock poststates and bounded signed-in own-case
+rules/questions/unknown refusal proven. Counts-only init Succeeded once,
+no row content. Original protected configs/auth/history, min0/eight Manual
+jobs/private exact ACR/admin/export policies and resident AI OFF preserved.
+Employee signed-in chat/capacity/protected widget200/cache unproven (identity
+attestation unavailable, zero attempts). Real resident identity, broader
+signed-in acceptance, AI/model/human/legal/safety/operational approvals not
+claimed. No live rollback, classified push retry or ACR-build fallback
+exercised/certified. First window failed/restored, original harness failures
+retained. Full local publication/hosted/human gates unperformed; PR blocked
+by explicit no-push versus final open-PR conflict, not silently published.
+No .env, secret output, new RBAC/private endpoints/public SQL or RG deletion.

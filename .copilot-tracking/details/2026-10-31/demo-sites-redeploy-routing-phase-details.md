@@ -20,9 +20,12 @@ P03-T01 partial against whole request: curl/anonymous browser/resident
 signed-in rules passed; employee blocked before sign-in. Resident attempts2,
 employee0, no further credential action. Original three browser attempts and
 first failed registry window retained privately.
-P03-T02 export/protected final readback complete; original single Review and
-local evidence commit pending. PR blocked by no-push conflict; complete local
+P03-T02 export/protected final readback, original single Review and
+local evidence commit complete. Review Complete / Residual work unchanged.
+PR blocked by no-push conflict; complete local
 publication/hosted/human gates not run/claimed. No app/source correction pending.
+Original local evidence commit00005a3972248dfbc7ecba5cbf823dc357960a67;
+administrative closeout commit next, no second Review or closure assessment.
 
 <!-- rpi:phase id=P01 -->
 ## P01: Preserve, build and publish
