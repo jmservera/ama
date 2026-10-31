@@ -38,21 +38,21 @@
   ],
   "blockers": [
     {
-      "id": "review-defects",
-      "summary": "Four High source defects and one Medium composition gap block publication.",
-      "resolution": "Correct RV-001..005 as routed later implementation, preserve original Review outcome, then run the final complete gate."
+      "id": "publication-validation",
+      "summary": "Routed RV-001..005 source corrections and requested tests are recorded; fresh full gate and independent exact-head/hosted/human approval remain separate.",
+      "resolution": "Use the routed changes and pre-publication state; verify the final external receipt before authorised push. Preserve original Defects found outcome."
     }
   ],
   "next_action": {
-    "phase": "Implement",
-    "action": "Routed corrective delivery: repair RV-001..005 under the existing source direction before fulfilling the requested working-code publication. Do not repeat Review."
+    "phase": "Follow-up",
+    "action": "Routed source task completed with tests; after the final commit, verify the full external gate before authorised Refs #432 PR. Committed state is the pre-publication snapshot; receipt/PR supply later publication evidence. Do not repeat Review."
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Correct RV-001..005 before delivering the requested working source candidate.",
-      "rationale": "Verified High defects and missing composed coverage are introduced by this implementation and block safe publication.",
-      "evidence": ".copilot-tracking/reviews/logs/2026-10-31/ai-metering-432-review.md"
+      "task": "Independently assess and approve the exact corrected candidate after its full gate.",
+      "rationale": "Routed source regression evidence cannot replace the original adverse Review or human/hosted approval.",
+      "evidence": ".copilot-tracking/changes/2026-10-31/ai-metering-432-review-findings-changes.md"
     },
     {
       "rank": 2,

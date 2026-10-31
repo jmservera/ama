@@ -8858,3 +8858,20 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Actual Azure billing, OD-51, named owners, Finance approval and a finite
   authorised held-out batch remain unmet. No deployment, credentials/private
   data, Azure change, paid inference, cash saving or whole-issue closure follows.
+
+## [2026-10-31] implementation | Routed AI metering safeguards, Refs #432
+
+* Preserved the original independent Review Complete / Defects found and its
+  adverse reproductions. Later source implementation adds append-only review
+  revisions, shared pre-network holds, deferred-price currency refusal and
+  durable recoverable legacy/priority review intents.
+* Updated core/API guides and the existing Tokenomics synthesis with the
+  corrected mechanism and composed local evidence. The original two new
+  modules contain 26 core and nine API methods, within the 35-method cap.
+* Current main #558 archived the older pitch brief. Its baseline bytes remain
+  unchanged; current source-only slide/Q&A drafting now lives in the Tokenomics
+  synthesis and is linked from the current authoring guide/index. No generated
+  question bank, protected cost arithmetic, native deck or rehearsal is changed.
+* Actual applicable prices/billing, OD-51, authorised held-out measurements,
+  complete resident/historical joins and live/human/Finance approval remain
+  separate. No Azure/deployment/credential/private-data/paid-model action.

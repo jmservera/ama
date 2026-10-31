@@ -32,14 +32,15 @@ compositions. Total new test methods across the original two modules <=35.
 No additional source/test module, DDL, deployment or approval.
 
 <!-- rpi:phase id=P03 -->
-## [ ] P03: Evidence, requested checks and publication
+## [x] P03: Evidence, requested checks and publication preparation
 
 <!-- rpi:task id=P03-T01 -->
-### [ ] P03-T01: Reconcile corrections and final candidate
+### [x] P03-T01: Reconcile corrections and final candidate
 
 Depends on P02. Update directly related guidance and append knowledge log;
 record exact observed tests/static checks, preserve original adverse outcomes.
-Run requested API discovery/Ruff and the complete exact-head local gate in
-external clean task-owned isolation. Fetch main and verify before authorised
-push/Refs #432 PR. Do not repeat Review, close the issue, approve live economics
-or merge the PR.
+Run requested API discovery/Ruff and prepare the final committed candidate
+with external clean task-owned isolation. The complete exact-head local gate
+is a separate mandatory post-commit publication prerequisite: fetch main and
+verify its external receipt before authorised push/Refs #432 PR. Do not repeat
+Review, close the issue, approve live economics or merge the PR.

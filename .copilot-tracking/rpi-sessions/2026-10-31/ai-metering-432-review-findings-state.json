@@ -3,8 +3,8 @@
   "task_slug": "ai-metering-432-review-findings",
   "parent_task": {"task_id": "432", "task_slug": "ai-metering-432"},
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-31/ai-metering-432-research.md",
@@ -19,11 +19,20 @@
       "decision": "Routed implementation corrects RV-001..005 in the accepted source-only direction before delivering the user's working-code publication. Original Review remains Complete / Defects found; no new Review is invoked.",
       "status": "required-correction",
       "evidence": "Original Review Closeout Routing Record; user requested complete working issue delivery, with no deployment, Azure, paid calls or fabricated financial acceptance."
+    },
+    {
+      "decision": "Routed source corrections and P01/P02/P03 preparation complete; 26 core plus nine API methods, requested discovery 1439 tests/320 opt-in skips, component Ruff/format/mypy pass. This committed snapshot precedes the mandatory external full gate.",
+      "status": "executed",
+      "evidence": ".copilot-tracking/changes/2026-10-31/ai-metering-432-review-findings-changes.md"
     }
   ],
   "blockers": [
-    {"id": "publication-validation", "summary": "P01/P02 corrections and composed regressions pass; final requested discovery, current-base docs and exact-head gate remain pending.", "resolution": "Complete P03 and verify a fresh full receipt before any push; preserve original Defects found verdict."}
+    {"id": "publication-validation", "summary": "Source corrections/docs and requested discovery pass: 1439 tests, 320 opt-in skips. Complete exact-head publication gate remains pending after the final candidate commit.", "resolution": "Verify a fresh full external receipt at current main before any push; preserve original Defects found verdict and require independent exact-head assessment."}
   ],
-  "next_action": {"phase": "Implement", "action": "Complete P03 requested validation, documentation/current-main reconciliation, final commit and fresh full publication gate."},
-  "prioritized_follow_ups": null
+  "next_action": {"phase": "Follow-up", "action": "Pre-publication snapshot: execute and verify the full external gate after committing, then authorised push/Refs #432 PR; hosted/human and independent exact-head assessment remain separate. Do not repeat original Review."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Obtain independent exact-head assessment and required hosted/human approval of the corrected candidate.", "rationale": "Source corrections have regression evidence but cannot erase the original adverse Review or constitute independent approval.", "evidence": "Original Review RV-001..005; routed changes P01..P03."},
+    {"rank": 2, "task": "Obtain OD-51, applicable prices, attributable billing and authorised held-out measurements from owner/Finance.", "rationale": "These inputs determine operational economics and cannot be inferred from synthetic tests.", "evidence": "RV-006 and Tokenomics engineering/gap matrix."},
+    {"rank": 3, "task": "Separately scope resident/historical joins and source-manifest deck/Q&A rehearsal.", "rationale": "These remaining accounting/presentation boundaries are explicit and outside current source-only evidence.", "evidence": "RV-006 and docs/capstone/source/README.md."}
+  ]
 }

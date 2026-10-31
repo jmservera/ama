@@ -47,9 +47,55 @@ API run; complete core/API Ruff/format and standard API mypy passed. Two narrow
 import suppressions document the agents package's missing py.typed boundary.
 The original two-module limit remains: 26 core + nine API = 35 new methods.
 
-P03 final requested discovery, documentation reconciliation and publication
-gate remain pending. These are correction/test observations, not independent
-closure or a replacement Review verdict.
-Original discovery/static successes do not resolve these findings.
-Final requested checks and the complete external publication gate remain required.
-Original adverse evidence and all operational RV-006 gaps are preserved.
+P03 source validation, documentation reconciliation and final-candidate
+preparation are complete. The full exact-head publication gate must execute
+after this evidence is committed. These are correction/test observations,
+not independent closure or a replacement Review verdict.
+
+## Current-Base and Documentation Reconciliation
+
+Main advanced to a75bbdffa51ae34b1fcf779250f1f553d566ee93 through #558
+without changing cost/runtime source. Its capstone move makes the older brief
+historical and generated Q&A source-manifest-owned. Non-rewriting topic merge
+3c15ebfb retained both index entries and log histories, restored the archived
+brief to byte-identical main, and routes source-only drafting through the
+existing Tokenomics synthesis/current source guide. No historical source,
+generated deck/question bank, actual financial figure or approval is rewritten.
+
+Core/API guidance now explains latest/as-of withdrawal, shared dispatch holds,
+deferred currencies, durable pending review joins and matching retry recovery.
+An append-only knowledge log entry records the prospective correction. Original
+research, critique, implementation changes and independent Review hashes remain
+unchanged, verified with an external preservation manifest.
+
+## Final Local Validation
+
+* Core: 26 tests; complete Ruff check/format and mypy (170 files) pass.
+* Agents: 21 existing dispatch/chat tests; complete Ruff check/format and mypy
+  (24 files) pass.
+* API: complete Ruff check/format and mypy (124 files) pass. From src/api,
+  the exact requested PYTHONPATH discovery passes 1,439 tests in 731.668s,
+  with 320 opt-in skips; log /tmp/ai432-api-corrected-final.log. The required
+  full gate must independently exercise its actual SQL/browser groups.
+* Local SQL driver libraries and Chromium headless startup/evaluation were
+  checked successfully. These prerequisite probes are not actual SQL semantics
+  or application UI acceptance; the mandatory full gate still owns those checks.
+
+Git publication identity was checked on task-owned first-parent commits. An
+initial identity probe incorrectly included upstream commits; corrected task-only
+selection confirms privacy-safe author/committer values without displaying emails.
+No existing commit was amended.
+Changed documentation introduces no missing relative file targets. A whole-file
+check also found 19 inherited missing occurrences in the index/append-only log;
+comparison with current main distinguishes these from the new links, and does
+not rewrite historical log entries or unrelated presentation content.
+
+## Candidate and Publication Boundary
+
+P03 is reconciled to final source/evidence preparation, not a claim that an
+uncommitted candidate passed the full gate. The repository requires committing
+implementation and original evidence first, then running and verifying a fresh
+external receipt at that exact HEAD/current main base. Committed state is this
+pre-publication snapshot; the final external receipt and PR are the publication
+evidence. No passing receipt, hosted approval or independent correction closure
+is claimed here. Original adverse evidence and operational RV-006 gaps remain.

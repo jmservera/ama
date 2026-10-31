@@ -28,6 +28,10 @@ observations are not an owner-authorised held-out batch. The separate resident
 advisor's existing SQL currency reservations remain unchanged and unjoined;
 whole #432 coverage and actual Azure financial reconciliation are not claimed.
 No raw case, prompt or output text is returned in `consumption`.
+`unjoined_reviews` exposes interrupted legacy financial review links and keeps
+money ratios Unknown until a matching authoritative disposition is recovered.
+Append-only review revisions preserve withdrawal and historical as-of state;
+replaying a pending link never reapplies domain/content edits.
 
 ## Employee acceptance identity check (#570)
 

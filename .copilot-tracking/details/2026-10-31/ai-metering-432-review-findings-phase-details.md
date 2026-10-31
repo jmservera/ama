@@ -30,3 +30,9 @@ Original Review remains Complete / Defects found. Corrections/tests are later
 implementation evidence, not independent closure or human approval. A fresh
 full gate/receipt is required for the final source/evidence commit and current
 main base; unresolved prerequisite failures block publication.
+
+Source preparation is complete: 26 core and nine API composition methods;
+requested full API discovery passes 1,439 tests with 320 opt-in skips, and
+component Ruff/format/types pass. P03 completion means preparing the committed
+candidate, not executing a gate against dirty evidence. Its fresh external
+receipt and PR remain the authoritative subsequent publication evidence.
