@@ -8861,3 +8861,15 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   blocked Review remains historical; no live site/model/identity, Azure,
   specialist-note, assistive-technology or operational acceptance is claimed.
   Complete exact-head publication gating remains separate from these checks.
+
+## [2026-10-31] query | Resident scope and current AI contract, Refs #466
+
+* Updated the resident assistant design, API acceptance map and knowledge index
+  with the owner's explicit sensor/history/advisory-AI scope and standing IoT
+  priority. Earlier merged runtime is reused, not duplicated.
+* Preserved the dated 2026-10-27 model/cap/managed-identity decision and historical
+  selector description; added the current generated-question/protected-document
+  distinction. The old unproven scope statement is superseded prospectively.
+* Deployment AI remains off behind existing settings. No Azure, credential
+  lookup, paid inference, tariff/budget renewal, live/human acceptance or issue
+  closure is authorized by this reconciliation.
