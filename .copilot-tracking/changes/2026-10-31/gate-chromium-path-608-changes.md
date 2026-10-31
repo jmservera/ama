@@ -95,3 +95,64 @@ Automatic RPI parent continues to independent Review. No implementation blocker.
 
 Actual zero-skip full browser/SQL execution for #608 criterion 3 remains outside
 the focused tier and requires CI/full-run evidence. No partial receipt created.
+
+## PR #610 Fixture Correction Intake (2026-10-31)
+
+* User-authorized bounded correction: merge origin/main, retain main's rubric
+  score and both knowledge-base log entries, correct tools/test_rpi_checks.py
+  fixtures, validate, commit, non-force push, reply to and resolve the thread.
+* Review input: PRRT_kwDOUU8JX86yStiP identifies ambient gate-owned TMPDIR
+  inflation of real pathname fixtures and mock-only Runner selections.
+* Approved writes: merge resolutions, tooling tests and current RPI artifacts.
+* Validation: focused unittest, including gate-owned TMPDIR at ordinary,
+  admitted 58-byte and browser-free long outer outputs. Heavy lock/full gate
+  excluded by explicit user direction; CI remains the gate, Refs #608 only.
+* Existing critique and original Review remain historical; this invocation
+  implements the later hosted finding without repeating either assessment.
+* Execution status: in progress; first boundary is the authorized main merge.
+
+### P03-T01: Main integration and owned fixture repair
+
+* Merged origin/main 9c67a399c62eb42f99ac46e1861b55526552c112 in
+  9ac5b484. No conflicts occurred, so no `--theirs` resolution was necessary.
+  The rubric score and docs/reference/log.md exactly match main; both existing
+  knowledge histories are preserved.
+* Real socket/Unicode/CLI byte-bound and admitted-resume tests now create
+  length-controlled owned `/tmp` roots with registered cleanup, independent
+  of ambient TMPDIR. The helper verifies its encoded prefix fits the boundary.
+* Individual-method/mock-only Runner fixtures explicitly select no browser
+  groups. Cancellation selects preflight only; its child/container cleanup
+  assertions remain unchanged. Resource and scheduler fixtures use the same
+  browser-free helper; no production guard or dispatch changed.
+* Added one regression running ten affected fixture methods beneath actual
+  Runner-owned TMPDIR at 18/58/100-byte outer outputs, resetting tempfile's
+  cached root and verifying the effective directory.
+* Local implementation judgment only; original critique and Review preserved.
+
+### P03-T02: Focused correction validation
+
+| Check | Status | Evidence |
+| --- | --- | --- |
+| python3 -m unittest tools.test_rpi_checks -q | Passed | 55 tests, 20.484s, exit 0 |
+| Full focused suite with gate-owned TMPDIR, 18-byte outer output | Passed after formatting | 55 tests, 21.446s, exit 0 |
+| Full focused suite with gate-owned TMPDIR, 58-byte outer output | Passed after formatting | 55 tests, 20.082s, exit 0 |
+| Full focused suite with gate-owned TMPDIR, 100-byte outer output | Passed after formatting | 55 tests, 20.609s, exit 0 |
+| Existing isolated Ruff E,F,I,B,UP / py312 / 100-column check | Passed | tools/test_rpi_checks.py, exit 0 |
+| Existing isolated Ruff format check / 100 columns | Passed after format | Initial one-helper wrapping mismatch recorded; final exit 0 |
+| git diff --check | Passed | Exit 0 |
+| Heavy lock/full browser/SQL gate | Not run | Explicit user-selected focused tier; CI remains the gate |
+
+Full focused TMPDIR logs are external session artifacts
+`files/608-correction-tmpdir-{18,58,100}.log`, not gate receipts.
+The entire suite was launched in fresh child processes with
+`TMPDIR=<owned-output>/tmp` and `PYTHONDONTWRITEBYTECODE=1`.
+
+### Correction reconciliation and publication handoff
+
+* P03-T01 complete; P03-T02 validation complete, commit/push/thread actions pending.
+* Plan and details describe the current bounded correction. Original P01-P02
+  evidence and adverse/limited outcomes remain unchanged.
+* Direct bounded diff assessment confirms real 107/108-byte sockets and 58/59-byte
+  admission assertions remain active, as do no-write/no-probe and cleanup checks.
+* No additional independent critique or Review was executed or claimed.
+* Refs #608 only; actual full browser/SQL, CI and owner approval remain unmet.

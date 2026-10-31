@@ -38,6 +38,9 @@ No implementation blocker. Independent critique and Review are required.
 * Use tools/test_rpi_checks.py, focused unittest and ruff; no heavy-lock full run.
 * Use requested branch, commit trailer, non-force push, PR to main, Refs #608.
 * WORKFLOW_HASHES changes only accompany workflow changes.
+* Later PR #610 correction: merge main, correct gate-owned TMPDIR fixtures,
+  run focused unittest only (no heavy lock), commit and non-force push, then
+  reply to and resolve PRRT_kwDOUU8JX86yStiP. Retain Refs #608.
 
 ## Goals
 
@@ -89,6 +92,8 @@ No implementation blocker. Independent critique and Review are required.
 * Canonical tests: tools/test_rpi_checks.py, outside installable packages.
 * Exact removals: none.
 * Maximum additions: six focused test methods plus necessary imports.
+* Later hosted correction adds one bounded gate-owned TMPDIR regression method
+  and a short owned pathname helper; production admission remains unchanged.
 * Canonical source: tools/rpi-checks.py; documentation: src/README.md.
 * Generated targets: none.
 * Semantic coverage: byte calculation and actual AF_UNIX boundary binding.
@@ -128,6 +133,27 @@ No implementation blocker. Independent critique and Review are required.
 
 * Expected result: durable exact commands, exit codes and evidence; reconcile markers.
 
+<!-- rpi:phase id=P03 -->
+### [ ] P03: Apply user-selected hosted fixture correction
+
+* Dependencies: original P01-P02 and later hosted thread.
+* Scope: tooling fixtures and dated changes/review evidence, no production guard edit.
+
+<!-- rpi:task id=P03-T01 -->
+#### [x] P03-T01: Merge main and correct fixture ownership and selections
+
+* Main merged at 9c67a399; no conflicts, main's score and both log histories retained.
+* Real pathname tests allocate short owned `/tmp` roots independently of ambient
+  TMPDIR. Mock-only Runner construction declares browser-free selections.
+
+<!-- rpi:task id=P03-T02 -->
+#### [ ] P03-T02: Validate, record evidence and publish the correction
+
+* Dependencies: P03-T01.
+* Run focused unittest, including gate-owned TMPDIR at 18/58/100-byte outer output.
+* Commit with requested trailer, non-force push (pull/merge if rejected), then
+  reply to and resolve the hosted thread. CI remains the gate.
+
 ## Dependencies
 
 Python and existing ruff; install with pip only after missing-dependency failure.
@@ -148,5 +174,7 @@ Independent final-candidate critique and post-implementation Review run once eac
 ## Handoff
 
 * Changes artifact: .copilot-tracking/changes/2026-10-31/gate-chromium-path-608-changes.md
-* All P01-P02 tasks complete; independent post-implementation Review next.
+* Original P01-P02 and one independent Review complete, preserved historically.
+* P03 fixture correction implemented; focused validation passes in ordinary and
+  gate-owned TMPDIR contexts. Commit/push/thread resolution pending.
 * Automatic RPI parent owns continuation; no routine confirmation required.

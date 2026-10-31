@@ -3,8 +3,8 @@
   "task_slug": "gate-chromium-path-608",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Follow-up",
-  "status": "completed",
+  "active_phase": "Implement",
+  "status": "active",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-31/gate-chromium-path-608-research.md",
@@ -34,12 +34,17 @@
       "decision": "One independent Review executed; no focused-boundary defects; outcome Residual work for actual full browser/SQL evidence",
       "status": "complete",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-31/gate-chromium-path-608-review.md RV-001"
+    },
+    {
+      "decision": "User-selected PR #610 hosted fixture correction; preserve original one-pass critique/Review, use focused tier, merge main, non-force push and GraphQL thread resolution",
+      "status": "implementation and validation complete; publication pending",
+      "evidence": "Explicit user request 2026-10-31; P03 changes/review addenda; 55 tests pass ordinarily and under 18/58/100-byte outer gate-owned TMPDIR; production admission unchanged"
     }
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Follow-up",
-    "action": "Await CI and actual full browser/SQL evidence after explicitly authorized commit/push/PR; do not begin a child task without owner selection"
+    "phase": "Implement",
+    "action": "Commit validated P03 correction with requested trailer, push origin HEAD (pull --no-rebase on rejection), then reply to and resolve PRRT_kwDOUU8JX86yStiP"
   },
   "prioritized_follow_ups": [
     {

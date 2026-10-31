@@ -532,8 +532,16 @@ class GateTests(unittest.TestCase):
             ["git", "-C", str(self.root), *args], text=True, stderr=subprocess.PIPE
         ).strip()
 
-    def runner(self) -> Any:
-        return gate.Runner(self.root, self.out, self.base, [])
+    def runner(self, output: Path | None = None) -> Any:
+        # Individual methods and mocked dispatch do not launch a browser suite.
+        return gate.Runner(self.root, output or self.out, self.base, [], selected={"groups": []})
+
+    def pathname_root(self) -> Path:
+        temporary = tempfile.TemporaryDirectory(prefix="r-", dir="/tmp")
+        self.addCleanup(temporary.cleanup)
+        root = Path(temporary.name).resolve()
+        self.assertLess(len(os.fsencode(str(root) + "/")), 58)
+        return root
 
     def scoped_receipt(self, groups: list[str], *, passed: bool = False) -> dict[str, Any]:
         selected = gate.selection(self.root, self.base, "changed", [])
@@ -592,7 +600,7 @@ class GateTests(unittest.TestCase):
         return path
 
     def test_chromium_output_byte_boundary_matches_linux_socket(self) -> None:
-        prefix = str(self.out) + "/"
+        prefix = str(self.pathname_root()) + "/"
         output = Path(prefix + "x" * (58 - len(os.fsencode(prefix))))
         self.assertEqual(len(os.fsencode(output)), 58)
         gate.admit_browser_output(output, ["browser"])
@@ -610,7 +618,7 @@ class GateTests(unittest.TestCase):
             server.bind(socket_path + "x")
 
     def test_chromium_output_counts_filesystem_bytes_not_characters(self) -> None:
-        prefix = str(self.out) + "/"
+        prefix = str(self.pathname_root()) + "/"
         output = Path(prefix + "x" * (57 - len(os.fsencode(prefix))) + "\u00e9")
         self.assertLessEqual(len(str(output)), 58)
         self.assertEqual(len(os.fsencode(output)), 59)
@@ -634,7 +642,7 @@ class GateTests(unittest.TestCase):
         parent = self.scoped_receipt([])
         self.assertIn("browser", parent["selection"]["groups"])
         receipt_path = self.out / "receipt.json"
-        prefix = str(self.out) + "/"
+        prefix = str(self.pathname_root()) + "/"
         for mode in (["--all"], ["--changed"], ["--resume", str(receipt_path)]):
             for size in (59, 130):
                 output = Path(prefix + "x" * (size - len(os.fsencode(prefix))))
@@ -732,7 +740,7 @@ class GateTests(unittest.TestCase):
         receipt["selection"] = gate.selection(self.root, self.base, "all", [])
         receipt["scope"] = "full"
         path = self.seal(receipt)
-        output = self.out / "retry"
+        output = self.pathname_root() / "retry"
         with (
             patch.object(
                 gate, "tool_identity", side_effect=gate.GateError("fixture tool probe")
@@ -756,6 +764,40 @@ class GateTests(unittest.TestCase):
                 gate.validate_receipt(self.root, path, self.base, passing=False, new_output=output)
             tools.assert_not_called()
         self.assertFalse(output.exists())
+
+    def test_fixtures_under_gate_owned_tmpdir(self) -> None:
+        prefix = str(self.pathname_root()) + "/"
+        methods = (
+            "test_chromium_output_byte_boundary_matches_linux_socket",
+            "test_chromium_output_counts_filesystem_bytes_not_characters",
+            "test_main_rejects_long_browser_output_before_probes_writes_or_lock",
+            "test_runner_rejects_before_scratch_but_browser_free_long_output_is_allowed",
+            "test_resume_admitted_path_still_checks_tools_source_and_receipt_integrity",
+            "test_employee_acceptance_cli_is_required_without_extras_and_dispatched",
+            "test_unique_resources_and_sql_ownership",
+            "test_interruption_cleanup_only_removes_owned_container",
+            "test_api_extra_suites_wait_for_shared_environment_writers",
+            "test_resume_reuses_successes_without_replaying_commands",
+        )
+        for size in (len(os.fsencode("/tmp/rpi-608-final")), 58, 100):
+            with self.subTest(output_bytes=size):
+                output = Path(prefix + "x" * (size - len(os.fsencode(prefix))))
+                self.assertEqual(len(os.fsencode(output)), size)
+                outer = gate.Runner(
+                    self.root, output, self.base, [], selected={"groups": ["static"]}
+                )
+                self.assertEqual(outer.env["TMPDIR"], str(output / "tmp"))
+                transcript = io.StringIO()
+                suite = unittest.TestSuite(GateTests(method) for method in methods)
+                with (
+                    patch.dict(os.environ, {"TMPDIR": outer.env["TMPDIR"]}),
+                    patch.object(tempfile, "tempdir", None),
+                    redirect_stdout(transcript),
+                    redirect_stderr(transcript),
+                ):
+                    self.assertEqual(tempfile.gettempdir(), outer.env["TMPDIR"])
+                    result = unittest.TextTestRunner(stream=transcript).run(suite)
+                self.assertTrue(result.wasSuccessful(), transcript.getvalue())
 
     def test_nonzero_command_blocks(self) -> None:
         runner = self.runner()
@@ -890,7 +932,7 @@ class GateTests(unittest.TestCase):
         first = self.runner()
         other = self.out / "other"
         other.mkdir()
-        second = gate.Runner(self.root, other, self.base, [])
+        second = self.runner(other)
         self.assertNotEqual(first.token, second.token)
         document: dict[str, Any] = {
             "Id": "a" * 64,
@@ -1120,7 +1162,9 @@ os.fstat(3)
             with self.subTest(retry=retry):
                 output = self.out / f"cancel-{retry}"
                 output.mkdir()
-                cancelled = gate.Runner(self.root, output, self.base, [])
+                cancelled = gate.Runner(
+                    self.root, output, self.base, [], selected={"groups": ["preflight"]}
+                )
                 child = Mock(pid=987654321)
                 child.communicate.side_effect = [
                     KeyboardInterrupt("Interrupted by signal 15"),
@@ -1804,7 +1848,7 @@ os.fstat(3)
         for completed in (["namespace", "project-api"], ["namespace", "project-api", "setup-api"]):
             output = self.out / str(len(completed))
             output.mkdir()
-            runner = gate.Runner(self.root, output, self.base, [])
+            runner = self.runner(output)
             runner.groups = completed
             runner.jobs = 3
             seen: list[str] = []

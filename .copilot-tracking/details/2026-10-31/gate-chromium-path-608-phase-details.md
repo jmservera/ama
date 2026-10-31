@@ -14,6 +14,7 @@
 | --- | --- | --- | --- |
 | P01 | Implement bounded admission | Complete | P01-T01, P01-T02 |
 | P02 | Validate and hand off | Complete | P02-T01 |
+| P03 | Hosted fixture correction | In progress | P03-T01, P03-T02 |
 
 <!-- rpi:phase id=P01 -->
 ## P01: Implement bounded admission
@@ -78,3 +79,30 @@ Completion evidence: all six planned tooling methods added, no removals.
 Focused suite passed all 54 tests after formatting. Existing isolated Ruff
 selectors passed. Changes record carries exact commands and initial lint-selector
 correction; full browser/SQL and hosted approval remain unproven.
+
+<!-- rpi:phase id=P03 -->
+## P03: Hosted fixture correction
+
+User-selected later hosted work; the original critique and Review are unchanged.
+Merge main, preserve its rubric score and both log histories. Real socket,
+Unicode, CLI byte-bound and admitted-resume fixtures own short `/tmp` roots
+with cleanup. Mock-only runners declare no browser selection; cancellation
+selects preflight only. Production byte admission remains unchanged.
+
+<!-- rpi:task id=P03-T01 -->
+### P03-T01: Merge and correct fixtures
+
+Complete: main 9c67a399 merged without conflicts; fixture correction implemented.
+Added one nested regression using actual Runner-owned TMPDIR at 18/58/100-byte
+outer output. It runs ten affected fixture cases with tempfile's cached root
+reset so ambient TMPDIR is actually exercised.
+
+<!-- rpi:task id=P03-T02 -->
+### P03-T02: Validate and publish
+
+Focused unittest and existing isolated lint/format passed: 55 tests ordinarily
+and the complete suite under gate-owned TMPDIR at 18/58/100-byte outer outputs.
+Current changes/review addenda retain the hosted finding and bounded assessment.
+Remaining: commit with requested trailer, non-force push and GraphQL thread
+reply/resolution.
+No heavy/full gate required by the user; no issue-closing claim.

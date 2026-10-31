@@ -140,3 +140,34 @@ focused-tier user authorization with Refs #608, not a closing keyword.
 
 Review execution Complete; outcome Residual work. Automatic parent may commit,
 push and open PR as explicitly requested; no merge, live gate or approval inferred.
+
+## Later Hosted Fixture Finding and Correction (2026-10-31, PR #610)
+
+The original one-pass independent Review and its outcome above are historical.
+Copilot thread PRRT_kwDOUU8JX86yStiP later identified an uncovered environment:
+Runner.static uses owned TMPDIR, inflating nested fixture paths. Its 61-byte
+cancel-False output and 88-byte self.out at a 58-byte outer output invalidate
+the earlier ordinary-TMPDIR coverage claim. The defect is in tooling fixtures,
+not evidence that the production guard should be weakened.
+
+User-selected P03 implements that hosted finding. Real pathname tests now own
+short temporary roots independently of the outer TMPDIR. Mock-only constructors
+use explicit browser-free selections; cancellation retains preflight execution
+and owned child/container cleanup. Production admission is unchanged.
+
+### Bounded correction assessment and evidence
+
+Direct assessment of the changed test diff found no remaining defect within
+this fixture correction. This is not a repeated independent Review or closure
+of RV-001. One new regression runs ten affected methods under Runner-owned
+TMPDIR at 18/58/100-byte outer outputs. The complete 55-test focused suite also
+passed independently in each of those three ambient contexts, in fresh child
+processes, after formatting. Existing isolated lint/format and diff checks pass.
+Real 107/108-byte Unix socket and 58/59-byte output assertions remain intact.
+
+* Correction execution: implementation and focused validation complete.
+* Publication/thread resolution: pending commit and non-force push.
+* Full browser/SQL, CI and human acceptance: not performed or inferred.
+* Original Review: execution Complete / outcome Residual work, unchanged.
+* Later hosted finding: source correction validated; publish then reply/resolve.
+* Issue relationship: Refs #608 only; RV-001 remains outstanding.
