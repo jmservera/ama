@@ -1,0 +1,40 @@
+{
+  "task_id": "466",
+  "task_slug": "resident-sensor-gauges-466",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-31/resident-sensor-gauges-466-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-31/resident-sensor-gauges-466-plan.md",
+    "details": ".copilot-tracking/details/2026-10-31/resident-sensor-gauges-466-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-31/resident-sensor-gauges-466-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-31/resident-sensor-gauges-466-changes.md",
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Full ordered RPI loop, named branch push and Refs #466 PR",
+      "status": "confirmed",
+      "evidence": "Explicit owner request 2026-10-31"
+    },
+    {
+      "decision": "Research executed Complete / Ready; critique executed once Complete / Revise",
+      "status": "resolved",
+      "evidence": "2026-10-31 research and plan Critique Disposition: PC-001 rejected unsupported parent constraint, PC-002 exact command applied"
+    },
+    {
+      "decision": "IoT standing priority, resident gauges/history and advisory AI; deployment AI remains off",
+      "status": "confirmed",
+      "evidence": "Explicit owner request 2026-10-31"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Implement",
+    "action": "Execute P01-T01, then fresh local validation before Review"
+  },
+  "prioritized_follow_ups": null
+}

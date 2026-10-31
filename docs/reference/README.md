@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-10-30
+ms.date: 2026-10-31
 ---
 
 ## Purpose
@@ -185,6 +185,11 @@ fallback, managed identity and permanent SQL-backed USD20 reservation ceiling.
 The 2026-10-27 owner approval supersedes the historical USD5 proposal.
 Dedicated Standard mini resources were provisioned in ama; SQL/runtime/live
 activation evidence remains distinct from resource creation.
+Its [2026-10-31 scope and AI contract](../architecture/resident-assistant-prototype.md#current-scope-and-ai-contract-2026-10-31)
+records explicit owner scope/IoT priority, the newer bounded generated-answer
+route and protected document facts. Existing model/cap/identity, deployment-off
+settings and tariff expiry remain unchanged; local scripted checks do not
+establish actual-model, live, manual accessibility or resident acceptance.
 
 For tracking cleanup and native deck reproduction, use the
 [retention policy](./method/tracking-retention-policy.md),
