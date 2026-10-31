@@ -87,3 +87,13 @@ uncommitted documentation; no stash, discard or partial merge occurred.
 Commit the reviewed correction/evidence first, then merge main with main's
 rubric and both knowledge histories retained, and revalidate relevant checks.
 This is ordinary ancestry preservation, not history rewriting.
+
+Implementation and original RPI evidence committed as 77c58553 with the
+required privacy-safe identity and co-author trailer. Main f11d29e4 merge
+required three documentation/rubric conflict resolutions: main rubric bytes
+selected exactly; both complete knowledge log histories and both index entries
+retained. A subsequence check proves neither full log history lost any line.
+Correction source/tests remain byte-for-byte unchanged from 77c58553.
+Merged API lint/format/mypy pass (67 formatted files, 126 typed source files);
+all four correction methods pass again, no skips. Original independent Review
+is unchanged, not repeated. Ready for ordinary merge commit/push and CI.

@@ -190,6 +190,18 @@ reviewer protection, privileged what-if and deployment acceptance remain
 separate controls, not local successes.
 
 The required local `browser` group also runs
+`python -m checks.employee_acceptance_check` immediately after installing
+Chromium, without requiring `--extra-test`. It uses the pinned source-CI
+`PYTHONPATH=.:src:tests:../core/src:../agents/src:../core/tests:../agents/tests`
+from `src/api`. The CLI runs the three maintained employee acceptance Chromium
+regressions; both runtime and receipt verification require three reported tests
+and zero skips. Its exact command, cwd, import paths, suite/integration flags
+and successful exit are mandatory evidence. Qualified discovery skips cannot
+replace that execution, and the SQL-only non-applicability exception does not
+apply to this CLI. Synthetic Chromium results do not establish live employee
+identity or case acceptance.
+
+The same group runs
 `test_chat_panel.PanelTests.test_browser_warning_failure_keyboard_refusal_and_live_log`
 with `ZF_BROWSER_TESTS=1` and the API/core/agents test paths. Its verbose unittest
 log and executed/skipped counts are required receipt evidence. Only that exact
