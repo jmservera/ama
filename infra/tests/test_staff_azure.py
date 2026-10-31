@@ -12,9 +12,11 @@ import os
 import subprocess
 import sys
 import tempfile
+import threading
+import time
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from unittest.mock import Mock, patch
 
@@ -24,6 +26,7 @@ import test_setup_entra as setup_fixture
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import credential_arm as CREDENTIAL
 import staff_azure as JOB
+import staff_blob as BLOB
 
 SETUP = setup_fixture.SETUP
 ROOT = Path(__file__).resolve().parents[2]
@@ -46,6 +49,67 @@ PERSON = "Private Candidate"
 EMAIL = "private-candidate@example.invalid"
 
 
+BLOB_URL = "https://fictionalstaff.blob.core.windows.net"
+STORAGE = ROOT_ID + "/providers/Microsoft.Storage/storageAccounts/fictionalstaff"
+
+
+class FakeContainer:
+    """In-memory stand-in for a private ContainerClient; no network or tenant is touched."""
+
+    def __init__(self):
+        self.blobs = {}
+        self.unreachable = False
+        self.uploads = []
+        self.stall_list = None
+        self.stall_download = None
+        self.timeouts = []
+        self.downloads = []
+        self.read_sizes = []
+        self.read_limits = []
+
+    def list_blobs(self, name_starts_with="", timeout=None):
+        self.timeouts.append(timeout)
+        if self.stall_list is not None:
+            self.stall_list.wait(10)
+        if self.unreachable:
+            raise OSError("unreachable")
+        return [
+            {"name": name, "size": len(body)}
+            for name, body in sorted(self.blobs.items())
+            if name.startswith(name_starts_with)
+        ]
+
+    def download_blob(self, name, timeout=None, *, offset=0, length=None):
+        self.timeouts.append(timeout)
+        self.downloads.append((name, offset, length))
+        if self.stall_download is not None:
+            self.stall_download.wait(10)
+        if self.unreachable:
+            raise OSError("unreachable")
+
+        def read(size):
+            self.read_limits.append(size)
+            assert type(size) is int and 0 < size <= BLOB.MAX_BLOB + 1
+            end = None if length is None else offset + length
+            data = self.blobs[name][offset:end][:size]
+            self.read_sizes.append(len(data))
+            return data
+
+        return Mock(
+            read=read,
+            readall=Mock(side_effect=AssertionError("Unbounded readall is forbidden.")),
+        )
+
+    def upload_blob(self, name, body, overwrite=False, length=None):
+        if self.unreachable:
+            raise OSError("unreachable")
+        assert overwrite is False and length == len(body)
+        if name in self.blobs:
+            raise FileExistsError(name)
+        self.blobs[name] = body
+        self.uploads.append(name)
+
+
 class FakeJobs(setup_fixture.FakeAzure):
     def __init__(self):
         super().__init__()
@@ -53,6 +117,7 @@ class FakeJobs(setup_fixture.FakeAzure):
         self.app["properties"]["template"]["containers"][0]["env"] += [
             {"name": "ZF_SQL_SERVER", "value": "fictional-sql.database.windows.net"},
             {"name": "ZF_SQL_DATABASE", "value": "fixture"},
+            {"name": "ZF_BLOB_ACCOUNT_URL", "value": BLOB_URL},
         ]
         self.environment["id"] = setup_fixture.ENV_ID
         self.environment["properties"]["vnetConfiguration"]["infrastructureSubnetId"] = (
@@ -95,6 +160,17 @@ class FakeJobs(setup_fixture.FakeAzure):
                 }
             },
             SQL + "/databases/fixture": {"id": SQL + "/databases/fixture"},
+            STORAGE: {
+                "id": STORAGE,
+                "properties": {
+                    "publicNetworkAccess": "Disabled",
+                    "allowSharedKeyAccess": False,
+                    "allowBlobPublicAccess": False,
+                },
+            },
+            STORAGE + "/blobServices/default/containers/staff-results": {
+                "properties": {"publicAccess": "None"}
+            },
             SQL + "/administrators/ActiveDirectory": {
                 "properties": {
                     "sid": PRINCIPAL,
@@ -115,7 +191,8 @@ class FakeJobs(setup_fixture.FakeAzure):
         self.polls = 0
         self.log_mutation = lambda value: value
         self.collision = False
-        self.relay_tags = {"preserved": "original"}
+        self.container = FakeContainer()
+        self.mutate_blob = None
         self.published = False
         self.credential_template = None
         self.whatif_mutation = lambda value: value
@@ -197,48 +274,11 @@ class FakeJobs(setup_fixture.FakeAzure):
                     },
                 }
             )
-        if url == JOB.tags_url(SOURCE):
-            if method == "PATCH":
-                self.assert_tag_delete(body)
-                return {"properties": {"tags": self.relay_tags}}
-            if self.requests and self.polls and not self.published:
-                if self.fail_at == "logs":
-                    raise SETUP.AzureError("permission")
-                request = self.requests[-1]
-                summary = (
-                    {"candidates": self.candidates}
-                    if request["operation"] == "candidates"
-                    else {
-                        "positions": len(request["payload"].get("wanted", [])),
-                        "staff_changes": 0,
-                        "owner_labels": 0,
-                        "sql_verified": True,
-                        "restart_required": request["operation"] != "apply",
-                    }
-                )
-                result = {
-                    "version": 1,
-                    "run": request["run"],
-                    "operation": request["operation"],
-                    "ok": True,
-                    **summary,
-                }
-                frames = self.log_mutation(
-                    "\n".join(
-                        json.dumps({"Log": frame}) for frame in JOB.encode_result(request, result)
-                    )
-                )
-                self.relay_tags.update(
-                    {
-                        JOB.result_prefix(request) + str(i): json.loads(frame)["Log"]
-                        for i, frame in enumerate(frames.splitlines())
-                    }
-                )
-                self.published = True
-            return {"properties": {"tags": copy.deepcopy(self.relay_tags)}}
         if "/jobs/job-staff-" in resource:
             if "/executions/" in resource:
                 self.polls += 1
+                if self.polls > 1 and not self.published and self.requests:
+                    self.publish()
                 return {"properties": {"status": "Running" if self.polls == 1 else self.status}}
             if method == "PUT":
                 self.published = False
@@ -276,12 +316,33 @@ class FakeJobs(setup_fixture.FakeAzure):
             }
         return super().rest(method, url, body)
 
-    def assert_tag_delete(self, body):
-        assert body["operation"] == "Delete"
-        for key, value in body["properties"]["tags"].items():
-            assert key.startswith(JOB.result_prefix(self.requests[-1]))
-            assert self.relay_tags[key] == value
-            del self.relay_tags[key]
+    def publish(self):
+        request = self.requests[-1]
+        if self.fail_at == "logs":
+            self.container.unreachable = True
+            return
+        summary = (
+            {"candidates": self.candidates}
+            if request["operation"] == "candidates"
+            else {
+                "positions": len(request["payload"].get("wanted", [])),
+                "staff_changes": 0,
+                "owner_labels": 0,
+                "sql_verified": True,
+                "restart_required": request["operation"] != "apply",
+            }
+        )
+        result = {
+            "version": 1,
+            "run": request["run"],
+            "operation": request["operation"],
+            "ok": True,
+            **summary,
+        }
+        BLOB.write_result(self.container, request, result)
+        if self.mutate_blob:
+            self.mutate_blob(self.container, request)
+        self.published = True
 
 
 class TransportTests(unittest.TestCase):
@@ -301,6 +362,7 @@ class TransportTests(unittest.TestCase):
 
     def execute(self, operation="candidates", payload=None, **kwargs):
         with redirect_stdout(self.output), redirect_stderr(self.output):
+            kwargs.setdefault("container", self.fake.container)
             return JOB.execute(self.cli, self.fake.app, operation, payload or {}, **kwargs)
 
     def assert_private(self):
@@ -314,7 +376,7 @@ class TransportTests(unittest.TestCase):
         self.assertEqual(list(self.profile.glob("request-*.json")), [])
         self.assertIn(SOURCE, self.fake.resources)
         self.assertFalse(self.fake.jobs)
-        self.assertEqual(self.fake.relay_tags, {"preserved": "original"})
+        self.assertFalse(any("tags" in url for _, url, _ in self.fake.writes))
         self.assertFalse(
             any(c[:4] == ["az", "containerapp", "job", "logs"] for c, _ in self.fake.calls)
         )
@@ -342,8 +404,7 @@ class TransportTests(unittest.TestCase):
         self.assertIn({"name": "ZF_STAFF_REQUEST", "secretRef": "request"}, worker["env"])
         self.assertTrue(
             all(
-                (method in {"PUT", "DELETE"} and "/jobs/job-staff-" in url)
-                or (method == "PATCH" and url == JOB.tags_url(SOURCE))
+                method in {"PUT", "DELETE"} and "/jobs/job-staff-" in url
                 for method, url, _ in self.fake.writes
             )
         )
@@ -365,7 +426,7 @@ class TransportTests(unittest.TestCase):
         self.fake = FakeJobs()
         SETUP.subprocess.run.side_effect = self.fake.run
         with (
-            patch.object(JOB, "read_result", side_effect=KeyboardInterrupt),
+            patch.object(BLOB, "read_result", side_effect=KeyboardInterrupt),
             self.assertRaises(KeyboardInterrupt),
         ):
             self.execute()
@@ -463,7 +524,7 @@ class TransportTests(unittest.TestCase):
         with self.assertRaises(JOB.StaffJobError):
             self.execute()
 
-    def test_same_vnet_parent_environment_allowed_but_other_vnet_and_tag_exhaustion_block(self):
+    def test_same_vnet_parent_environment_allowed_but_other_vnet_blocks(self):
         other = setup_fixture.ENV_ID + "-parent"
         self.fake.resources[SOURCE]["properties"]["environmentId"] = other
         environment = copy.deepcopy(self.fake.environment)
@@ -479,9 +540,6 @@ class TransportTests(unittest.TestCase):
         with self.assertRaises(JOB.StaffJobError):
             self.execute()
         self.fake.resources[SOURCE]["properties"]["environmentId"] = setup_fixture.ENV_ID
-        self.fake.relay_tags.update({f"other-{i}": "preserved" for i in range(10)})
-        with self.assertRaisesRegex(JOB.StaffJobError, "tag capacity"):
-            self.execute()
 
     def test_direct_demo_automatically_discovers_only_its_verified_parent_initializer(self):
         self.fake.app["id"] = setup_fixture.APP_ID.replace("-test-api", "-test-demo-api")
@@ -489,37 +547,106 @@ class TransportTests(unittest.TestCase):
         result = self.execute()
         self.assertTrue(result["ok"])
         self.assertEqual(self.fake.requests[-1]["payload"]["target"], self.fake.app["id"])
-        self.assertEqual(self.fake.requests[-1]["payload"]["relay"], SOURCE)
+        self.assertEqual(self.fake.requests[-1]["payload"]["blob"], BLOB_URL)
 
-    def test_tag_tamper_oversize_and_failed_cleanup_block_success(self):
-        for mutation in (
-            lambda text: text.replace("ZFSTAFF:", "ZFSTAFF:wrong"),
-            lambda text: json.dumps({"Log": "x" * 257}),
-            lambda text: "",
+    def run_with_clock(self):
+        clock = [0]
+        with (
+            patch.object(JOB.time, "monotonic", side_effect=lambda: clock[0]),
+            patch.object(
+                JOB.time, "sleep", side_effect=lambda _: clock.__setitem__(0, clock[0] + 250)
+            ),
         ):
-            self.fake = FakeJobs()
-            SETUP.subprocess.run.side_effect = self.fake.run
-            self.fake.log_mutation = mutation
-            # A missing result is bounded by the execution deadline, even at Succeeded.
-            clock = [0]
-            with (
-                patch.object(JOB.time, "monotonic", side_effect=lambda clock=clock: clock[0]),
-                patch.object(
-                    JOB.time,
-                    "sleep",
-                    side_effect=lambda _, clock=clock: clock.__setitem__(0, clock[0] + 250),
-                ),
-                self.assertRaises(JOB.StaffJobError),
-            ):
-                self.execute()
-            self.assertFalse(self.fake.jobs)
+            return self.execute()
+
+    def test_blob_corruption_missing_extra_and_unreachable_block_success(self):
+        def tamper(container, request):
+            name = BLOB.blob_name(request["run"], 0)
+            record = json.loads(container.blobs[name])
+            record["ct"] = record["ct"][:-4] + "AAAA"
+            container.blobs[name] = json.dumps(record).encode()
+
+        def extra(container, request):
+            container.blobs[request["run"] + "/page-009.json"] = b"{}"
+
+        def stray(container, request):
+            container.blobs[request["run"] + "/other.json"] = b"{}"
+
+        def vanish(container, request):
+            container.blobs.clear()
+
+        for mutation in (tamper, extra, stray, vanish):
+            with self.subTest(mutation=mutation.__name__):
+                self.fake = FakeJobs()
+                SETUP.subprocess.run.side_effect = self.fake.run
+                self.fake.mutate_blob = mutation
+                with self.assertRaises(JOB.StaffJobError):
+                    self.run_with_clock()
+                self.assertFalse(self.fake.jobs)
         self.fake = FakeJobs()
         SETUP.subprocess.run.side_effect = self.fake.run
+        self.fake.fail_at = "logs"
+        with self.assertRaises(JOB.StaffJobError):
+            self.run_with_clock()
+        self.assertFalse(self.fake.jobs)
+
+    def test_preflight_refuses_unreachable_or_dirty_prefix_before_any_job(self):
+        self.fake.container.unreachable = True
+        with self.assertRaisesRegex(JOB.StaffJobError, "no job was created"):
+            self.execute()
+        self.assertFalse(self.fake.requests)
+        self.assertFalse(self.fake.writes)
+        self.fake.container.unreachable = False
+        self.fake.container.blobs["f" * 32 + "/page-000.json"] = b"{}"
         with (
-            patch.object(JOB, "clear_result", side_effect=SETUP.AzureError("permission")),
-            self.assertRaisesRegex(JOB.StaffJobError, "cleanup NOT confirmed"),
+            patch.object(JOB.uuid, "uuid4", return_value=Mock(hex="f" * 32)),
+            self.assertRaisesRegex(JOB.StaffJobError, "not empty"),
         ):
             self.execute()
+        self.assertFalse(self.fake.requests)
+
+    def test_failed_job_never_reads_blob_and_image_drift_is_refused(self):
+        self.fake.status = "Failed"
+        with patch.object(BLOB, "read_result") as read, self.assertRaises(JOB.StaffJobError):
+            self.execute()
+        read.assert_not_called()
+        self.fake = FakeJobs()
+        SETUP.subprocess.run.side_effect = self.fake.run
+        original = self.fake.rest
+
+        def drift(method, url, body):
+            value = original(method, url, body)
+            if method == "GET" and "/jobs/job-staff-" in url and "/executions/" not in url:
+                value = copy.deepcopy(value)
+                value["properties"]["template"]["containers"][0]["image"] += "x"
+            return value
+
+        self.fake.rest = drift
+        with self.assertRaises(JOB.StaffJobError):
+            self.execute()
+
+    def test_storage_must_be_private_keyless_and_account_url_exact(self):
+        for key, value in (
+            ("publicNetworkAccess", "Enabled"),
+            ("allowSharedKeyAccess", True),
+            ("allowBlobPublicAccess", True),
+        ):
+            with self.subTest(key=key):
+                self.fake = FakeJobs()
+                SETUP.subprocess.run.side_effect = self.fake.run
+                self.fake.resources[STORAGE]["properties"][key] = value
+                with self.assertRaises(JOB.StaffJobError):
+                    self.execute()
+                self.assertFalse(self.fake.requests)
+        for url in ("http://fictionalstaff.blob.core.windows.net", BLOB_URL + ".evil.example"):
+            with self.subTest(url=url):
+                self.fake = FakeJobs()
+                SETUP.subprocess.run.side_effect = self.fake.run
+                env = self.fake.app["properties"]["template"]["containers"][0]["env"]
+                next(i for i in env if i["name"] == "ZF_BLOB_ACCOUNT_URL")["value"] = url
+                with self.assertRaises(JOB.StaffJobError):
+                    self.execute()
+                self.assertFalse(self.fake.requests)
 
     def test_secret_person_data_never_in_command_line_logs_or_leftover_body_files(self):
         payload = {
@@ -530,39 +657,303 @@ class TransportTests(unittest.TestCase):
         self.assertEqual(self.fake.requests[-1]["payload"]["people"], payload["people"])
         self.assert_private()
 
-    def test_wire_authentication_framing_and_total_limits(self):
-        request = {
-            "version": 1,
-            "run": "fictional-run",
-            "operation": "check",
-            "digest": "digest",
-            "key": base64.b64encode(b"a" * 32).decode(),
-        }
-        result = {
-            "version": 1,
-            "run": request["run"],
-            "operation": "check",
-            "ok": True,
-            "padding": "x" * 3000,
-        }
-        frames = JOB.encode_result(request, result)
-        output = "\n".join(json.dumps({"Log": line}) for line in frames)
-        self.assertEqual(JOB.decode_result(request, output), result)
-        self.assertIsNone(JOB.decode_result(request, "\n".join(output.splitlines()[:-1])))
-        for bad in (
-            output + "\n" + output,
-            output.replace("fictional-run", "wrong"),
-            output.replace(frames[0][-8:], "aaaaaaaa"),
-        ):
-            with self.subTest(bad=bad[:30]), self.assertRaises(JOB.StaffJobError):
-                JOB.decode_result(request, bad)
-        with self.assertRaises(JOB.StaffJobError):
-            JOB.decode_result(dict(request, operation="apply"), output)
-        with self.assertRaises(JOB.StaffJobError):
-            JOB.decode_result(dict(request, key=base64.b64encode(b"b" * 32).decode()), output)
+    def test_oversize_payload_is_refused_before_any_job(self):
         with self.assertRaises(JOB.StaffJobError):
             self.execute(payload={"oversize": "x" * JOB.MAX_INPUT})
         self.assertFalse(self.fake.requests)
+
+    def release(self):
+        for event in (self.fake.container.stall_list, self.fake.container.stall_download):
+            if event is not None:
+                event.set()
+
+    def test_stalled_preflight_list_stops_before_any_job(self):
+        self.fake.container.stall_list = threading.Event()
+        self.addCleanup(self.release)
+        started = time.monotonic()
+        with (
+            patch.object(BLOB, "PREFLIGHT_BUDGET", 0.2),
+            self.assertRaisesRegex(JOB.StaffJobError, "no job was created"),
+        ):
+            self.execute()
+        self.assertLess(time.monotonic() - started, 5)
+        self.assertFalse(self.fake.requests)
+        self.assertFalse(self.fake.jobs)
+
+    def test_stalled_download_is_unverified_and_job_secret_is_cleaned_up(self):
+        self.fake.container.stall_download = threading.Event()
+        self.addCleanup(self.release)
+        started = time.monotonic()
+        with (
+            patch.object(BLOB, "READ_BUDGET", 0.2),
+            self.assertRaisesRegex(JOB.StaffJobError, "unverified"),
+        ):
+            self.execute()
+        self.assertLess(time.monotonic() - started, 30)
+        self.assertFalse(self.fake.jobs)
+
+    def test_stalled_list_during_read_is_unverified_and_cleaned_up(self):
+        self.addCleanup(self.release)
+        original = self.fake.container.list_blobs
+        calls = []
+
+        def list_blobs(name_starts_with="", timeout=None):
+            calls.append(1)
+            if len(calls) > 1:
+                self.fake.container.stall_list = threading.Event()
+            return original(name_starts_with, timeout)
+
+        self.fake.container.list_blobs = list_blobs
+        with (
+            patch.object(BLOB, "READ_BUDGET", 0.2),
+            self.assertRaisesRegex(JOB.StaffJobError, "unverified"),
+        ):
+            self.execute()
+        self.assertFalse(self.fake.jobs)
+
+    def test_failing_download_is_unverified_and_cleaned_up(self):
+        original = self.fake.container.download_blob
+
+        def failing(name, timeout=None, *, offset=0, length=None):
+            raise OSError("reset")
+
+        self.fake.container.download_blob = failing
+        with self.assertRaisesRegex(JOB.StaffJobError, "unverified"):
+            self.execute()
+        self.fake.container.download_blob = original
+        self.assertFalse(self.fake.jobs)
+
+    def test_replaced_oversized_download_is_bounded_and_job_secret_is_cleaned_up(self):
+        original = self.fake.container.download_blob
+
+        def replaced(name, timeout=None, *, offset=0, length=None):
+            self.fake.container.blobs[name] = b"x" * (BLOB.MAX_BLOB + 1024)
+            return original(name, timeout, offset=offset, length=length)
+
+        self.fake.container.download_blob = replaced
+        with self.assertRaises(JOB.StaffJobError):
+            self.execute()
+        self.assertEqual(self.fake.container.downloads[0][1:], (0, BLOB.MAX_BLOB + 1))
+        self.assertEqual(self.fake.container.read_limits, [BLOB.MAX_BLOB + 1])
+        self.assertEqual(self.fake.container.read_sizes, [BLOB.MAX_BLOB + 1])
+        self.assertEqual(len(self.fake.deleted), 1)
+        self.assert_private()
+
+    def test_exhausted_deadline_refuses_without_calling_the_sdk(self):
+        self.fake.container.blobs.clear()
+        request = {"run": "a" * 32}
+        with self.assertRaisesRegex(JOB.StaffJobError, "time budget"):
+            BLOB.read_result(self.fake.container, request, deadline=time.monotonic() - 1)
+        self.assertEqual(self.fake.container.timeouts, [])
+
+    def test_sdk_calls_carry_explicit_server_timeouts(self):
+        self.execute()
+        self.assertTrue(self.fake.container.timeouts)
+        self.assertTrue(all(isinstance(t, int) and t > 0 for t in self.fake.container.timeouts))
+
+    def test_execute_binds_blob_client_to_the_transport(self):
+        with patch.object(JOB, "default_container", return_value=self.fake.container) as make:
+            JOB.execute(self.cli, self.fake.app, "candidates", {})
+        self.assertIs(make.call_args.args[1], self.cli)
+
+
+class BlobCodecTests(unittest.TestCase):
+    def request(self):
+        return {
+            "version": 1,
+            "run": "a" * 32,
+            "operation": "candidates",
+            "digest": "d" * 64,
+            "image": "b" * 64,
+            "key": base64.b64encode(b"k" * 32).decode(),
+        }
+
+    def result(self, count):
+        return {
+            "version": 1,
+            "run": "a" * 32,
+            "operation": "candidates",
+            "ok": True,
+            "candidates": [{"n": i, "pad": "x" * 200} for i in range(count)],
+        }
+
+    def written(self, count):
+        request, container = self.request(), FakeContainer()
+        BLOB.write_result(container, request, self.result(count))
+        return container, request
+
+    def test_round_trip_pages_a_large_complete_result_without_truncation(self):
+        container, request = self.written(1000)
+        self.assertGreater(len(container.blobs), 1)
+        self.assertTrue(all(len(b) <= BLOB.MAX_BLOB for b in container.blobs.values()))
+        self.assertEqual(BLOB.read_result(container, request), self.result(1000))
+        self.assertTrue(all(offset == 0 for _, offset, _ in container.downloads))
+        self.assertTrue(all(length == BLOB.MAX_BLOB + 1 for _, _, length in container.downloads))
+        self.assertEqual(container.read_limits, [BLOB.MAX_BLOB + 1] * len(container.blobs))
+
+    def test_oversized_intermediate_page_includes_wrapper_in_bound(self):
+        result = {"candidates": ["x" * (BLOB.PAGE_BYTES - 3), "y"]}
+        with self.assertRaises(JOB.StaffJobError):
+            BLOB.split_pages(result)
+        container = FakeContainer()
+        with self.assertRaises(JOB.StaffJobError):
+            BLOB.write_result(container, self.request(), result)
+        self.assertFalse(container.uploads)
+
+    def test_download_read_limit_applies_even_if_downloader_ignores_range(self):
+        container, request = self.written(0)
+        requested_sizes = []
+
+        def read(size):
+            requested_sizes.append(size)
+            return b"x" * size
+
+        downloader = Mock(
+            read=read,
+            readall=Mock(side_effect=AssertionError("Unbounded readall is forbidden.")),
+        )
+        with patch.object(container, "download_blob", return_value=downloader) as download:
+            with self.assertRaisesRegex(JOB.StaffJobError, "authenticated"):
+                BLOB.read_result(container, request)
+        self.assertEqual(requested_sizes, [BLOB.MAX_BLOB + 1])
+        downloader.readall.assert_not_called()
+        self.assertEqual(download.call_args.kwargs["length"], BLOB.MAX_BLOB + 1)
+
+    def test_replacement_size_change_within_blob_bound_is_refused(self):
+        container, request = self.written(0)
+        original = container.download_blob
+
+        def replaced(name, timeout=None, *, offset=0, length=None):
+            container.blobs[name] += b" "
+            return original(name, timeout, offset=offset, length=length)
+
+        with patch.object(container, "download_blob", side_effect=replaced):
+            with self.assertRaisesRegex(JOB.StaffJobError, "authenticated"):
+                BLOB.read_result(container, request)
+        self.assertLess(container.read_sizes[0], BLOB.MAX_BLOB)
+        self.assertEqual(container.read_limits, [BLOB.MAX_BLOB + 1])
+
+    def test_oversized_initial_head_is_refused_even_when_final_page_fits(self):
+        for candidates in ([], ["y"]):
+            with self.subTest(candidates=candidates), self.assertRaises(JOB.StaffJobError):
+                BLOB.split_pages({"metadata": "x" * BLOB.PAGE_BYTES, "candidates": candidates})
+
+    def test_exact_page_limit_and_near_boundary_multiple_pages(self):
+        head = {"metadata": "h" * 100}
+        first_overhead = len(BLOB._compact({"head": head, "items": [""]}))
+        later_overhead = len(BLOB._compact({"items": [""]}))
+        items = [
+            "x" * (BLOB.PAGE_BYTES - first_overhead),
+            "y" * (BLOB.PAGE_BYTES - later_overhead),
+            "z",
+        ]
+        pages, count, size = BLOB.split_pages({**head, "candidates": items})
+        sizes = [len(BLOB._compact(page)) for page in pages]
+        self.assertEqual(sizes[:2], [BLOB.PAGE_BYTES, BLOB.PAGE_BYTES])
+        self.assertTrue(all(length <= BLOB.PAGE_BYTES for length in sizes))
+        self.assertEqual(pages[0]["head"], head)
+        self.assertEqual([item for page in pages for item in page["items"]], items)
+        self.assertEqual(count, len(items))
+        self.assertEqual(size, sum(sizes))
+
+    def test_one_byte_over_complete_item_wrapper_is_refused_before_upload(self):
+        container = FakeContainer()
+        overhead = len(BLOB._compact({"items": [""]}))
+        result = dict(self.result(0), candidates=["x" * (BLOB.PAGE_BYTES - overhead + 1)])
+        with self.assertRaises(JOB.StaffJobError):
+            BLOB.write_result(container, self.request(), result)
+        self.assertFalse(container.uploads)
+
+    def test_escaped_unicode_items_preserve_exact_serialized_byte_totals(self):
+        items = ['"\\\n\u00e9' * 1000 for _ in range(20)]
+        pages, count, size = BLOB.split_pages({"candidates": items})
+        self.assertGreater(len(pages), 1)
+        self.assertTrue(all(len(BLOB._compact(page)) <= BLOB.PAGE_BYTES for page in pages))
+        self.assertEqual(count, len(items))
+        self.assertEqual(size, sum(len(BLOB._compact(page)) for page in pages))
+        self.assertEqual([item for page in pages for item in page["items"]], items)
+
+    def test_exact_max_page_count_and_one_more_page_refusal(self):
+        overhead = len(BLOB._compact({"items": [""]}))
+        item = "x" * (BLOB.PAGE_BYTES - overhead)
+        pages, count, _ = BLOB.split_pages({"candidates": [item] * (BLOB.MAX_PAGES - 1)})
+        self.assertEqual(len(pages), BLOB.MAX_PAGES)
+        self.assertEqual(count, BLOB.MAX_PAGES - 1)
+        with self.assertRaisesRegex(JOB.StaffJobError, "bounded page set"):
+            BLOB.split_pages({"candidates": [item] * BLOB.MAX_PAGES})
+
+    def test_empty_prefix_reads_none_and_unpageable_results_are_refused(self):
+        self.assertIsNone(BLOB.read_result(FakeContainer(), self.request()))
+        with self.assertRaisesRegex(JOB.StaffJobError, "bounded page set"):
+            BLOB.split_pages(self.result(BLOB.MAX_PAGES * 300))
+        with self.assertRaisesRegex(JOB.StaffJobError, "exceeds one page"):
+            BLOB.split_pages({"candidates": ["x" * BLOB.PAGE_BYTES]})
+
+    def test_binding_failures_are_refused(self):
+        container, request = self.written(300)
+        for field, value in (
+            ("operation", "apply"),
+            ("digest", "e" * 64),
+            ("image", "f" * 64),
+            ("key", base64.b64encode(b"z" * 32).decode()),
+        ):
+            with self.subTest(field=field), self.assertRaises(JOB.StaffJobError):
+                BLOB.read_result(container, dict(request, **{field: value}))
+        other = dict(request, run="c" * 32)
+        moved = FakeContainer()
+        moved.blobs = {
+            n.replace(request["run"], other["run"]): b for n, b in container.blobs.items()
+        }
+        with self.assertRaises(JOB.StaffJobError):
+            BLOB.read_result(moved, other)
+
+    def test_expiry_future_gap_swap_and_overwrite_are_refused(self):
+        container, request = self.written(600)
+        names = sorted(container.blobs)
+        self.assertGreater(len(names), 2)
+        now = BLOB.time.time()
+        with self.assertRaisesRegex(JOB.StaffJobError, "expired"):
+            BLOB.read_result(container, request, now=now + BLOB.TTL + 5)
+        with self.assertRaises(JOB.StaffJobError):
+            BLOB.read_result(container, request, now=now - 10 * BLOB.SKEW)
+        gap = FakeContainer()
+        gap.blobs = {n: b for n, b in container.blobs.items() if n != names[1]}
+        with self.assertRaisesRegex(JOB.StaffJobError, "incomplete"):
+            BLOB.read_result(gap, request)
+        swapped = FakeContainer()
+        swapped.blobs = dict(container.blobs)
+        swapped.blobs[names[0]] = container.blobs[names[1]]
+        swapped.blobs[names[1]] = container.blobs[names[0]]
+        with self.assertRaises(JOB.StaffJobError):
+            BLOB.read_result(swapped, request)
+        with self.assertRaises(FileExistsError):
+            BLOB.write_result(container, request, self.result(1))
+
+    def test_account_url_grammar_and_import_graph(self):
+        self.assertEqual(BLOB.account_url(BLOB_URL + "/"), BLOB_URL)
+        for bad in (
+            None,
+            "http://fictionalstaff.blob.core.windows.net",
+            BLOB_URL + "/x",
+            BLOB_URL + "@evil.example",
+            "https://fictionalstaff.blob.core.windows.net.evil.example",
+        ):
+            with self.subTest(bad=bad), self.assertRaises(JOB.StaffJobError):
+                BLOB.account_url(bad)
+        self.assertIs(JOB.StaffJobError, BLOB.StaffJobError)
+        self.assertIs(WORKER.write_result, BLOB.write_result)
+
+    def test_worker_publishes_without_overwrite_and_rejects_foreign_account(self):
+        request = dict(self.request(), payload={"blob": BLOB_URL})
+        container = FakeContainer()
+        with patch.dict(os.environ, {"ZF_STAFF_BLOB": BLOB_URL}):
+            WORKER.publish_result(request, self.result(5), container)
+            self.assertEqual(BLOB.read_result(container, request), self.result(5))
+            with self.assertRaises(FileExistsError):
+                WORKER.publish_result(request, self.result(5), container)
+        with patch.dict(os.environ, {"ZF_STAFF_BLOB": "https://other.blob.core.windows.net"}):
+            with self.assertRaises(ValueError):
+                WORKER.publish_result(request, self.result(5), FakeContainer())
 
 
 class SetupAzureTests(unittest.TestCase):
@@ -579,6 +970,9 @@ class SetupAzureTests(unittest.TestCase):
         setup_fixture.SetupTests.setUp(self)
         self.fake = FakeJobs()
         SETUP.subprocess.run.side_effect = self.fake.run
+        patch.object(
+            JOB, "default_container", side_effect=lambda url, cli: self.fake.container
+        ).start()
 
     def test_explicit_azure_and_automatic_sql_preflight_fallback_finish_restart(self):
         for explicit in (True, False):
@@ -1164,7 +1558,7 @@ class WorkerTests(unittest.TestCase):
             "operation": "apply",
             "payload": {
                 "target": setup_fixture.APP_ID,
-                "relay": SOURCE,
+                "blob": BLOB_URL,
                 "wanted": [{"code": "RC-01", "role": "Coordinator", "userId": sql_fixture.ONE}],
                 "people": {sql_fixture.ONE: person},
             },
@@ -1229,7 +1623,7 @@ class WorkerTests(unittest.TestCase):
         env = {
             "ZF_STAFF_REQUEST": json.dumps(request),
             "ZF_STAFF_TARGET": setup_fixture.APP_ID,
-            "ZF_STAFF_RELAY": SOURCE,
+            "ZF_STAFF_BLOB": BLOB_URL,
             "ZF_SQL_AUTH": "msi",
             "ZF_SQL_CLIENT_ID": MI,
             "AZURE_CLIENT_ID": MI,
@@ -1256,6 +1650,7 @@ class WorkerTests(unittest.TestCase):
         for asset in (
             "staff-azure-worker.py",
             "staff_azure.py",
+            "staff_blob.py",
             "staff_roster.py",
             "initialize-workbench-staff.py",
             "entra/app-registration.json",
@@ -1268,28 +1663,112 @@ class WorkerTests(unittest.TestCase):
         self.assertNotIn("Contributor", role)
         self.assertIn("Microsoft.App/containerApps/revisions/restart/action", role)
 
-    def test_worker_publishes_only_bounded_ciphertext_and_preserves_other_tags(self):
-        request = {
-            "payload": {"relay": SOURCE},
-            "run": "a" * 32,
-            "operation": "candidates",
-            "digest": "digest",
-            "key": base64.b64encode(b"a" * 32).decode(),
-        }
-        management = Mock()
-        management.request.return_value = {"properties": {"tags": {"preserved": "tag"}}}
-        with (
-            patch.dict(os.environ, {"ZF_STAFF_RELAY": SOURCE}),
-            patch.object(WORKER, "Management", return_value=management),
+
+class ProfileCredentialTests(unittest.TestCase):
+    URL = "https://zavastorage.blob.core.windows.net"
+
+    def cli(self, stdout, code=0):
+        self.profile = Path(tempfile.mkdtemp()) / "fallback-profile"
+        self.addCleanup(lambda: __import__("shutil").rmtree(self.profile.parent, True))
+        run = patch.object(
+            SETUP.subprocess,
+            "run",
+            return_value=subprocess.CompletedProcess([], code, stdout, "AADSTS tok-secret"),
+        )
+        self.run = run.start()
+        self.addCleanup(run.stop)
+        return SETUP.Azure(self.profile)
+
+    def token_json(self, **extra):
+        return json.dumps(
+            {"accessToken": "tok-secret", "expires_on": int(time.time()) + 3600, **extra}
+        )
+
+    def test_real_client_uses_selected_fallback_profile_not_ambient_chain(self):
+        cli = self.cli(self.token_json())
+        with patch("azure.identity.DefaultAzureCredential", side_effect=AssertionError("ambient")):
+            client = JOB.default_container(self.URL, cli)
+        self.assertIsInstance(client.credential, JOB.ProfileCredential)
+        args, kwargs = next(c for c in self.run.call_args_list if "get-access-token" in c.args[0])
+        self.assertEqual(
+            args[0][:5], ["az", "account", "get-access-token", "--resource", JOB.STORAGE_RESOURCE]
+        )
+        self.assertEqual(kwargs["env"]["AZURE_CONFIG_DIR"], str(self.profile))
+        token = client.credential.get_token(JOB.STORAGE_RESOURCE + ".default")
+        self.assertEqual(token.token, "tok-secret")
+        self.assertEqual(self.run.call_count, 1)
+
+    def test_client_has_explicit_socket_and_retry_limits(self):
+        cli = self.cli(self.token_json())
+        with patch("azure.storage.blob.ContainerClient") as client:
+            JOB.default_container(self.URL, cli)
+        limits = client.call_args.kwargs
+        self.assertEqual(
+            (limits["connection_timeout"], limits["read_timeout"], limits["retry_total"]),
+            (5, 15, 2),
+        )
+
+    def test_token_failures_fail_closed_without_leaking_detail(self):
+        for stdout, code in (
+            ("", 1),
+            ("not json", 0),
+            (json.dumps({"accessToken": "", "expires_on": int(time.time()) + 99}), 0),
+            (json.dumps({"accessToken": "tok-secret", "expires_on": 1}), 0),
+            (json.dumps({"accessToken": "tok-secret", "expiresOn": "garbage"}), 0),
+            (json.dumps({"accessToken": "tok-secret"}), 0),
         ):
-            WORKER.publish_result(request, {"private": PERSON})
-        body = management.request.call_args.kwargs["body"]
-        self.assertEqual(body["operation"], "Merge")
-        self.assertNotIn(PERSON, json.dumps(body))
-        self.assertNotIn(request["key"], json.dumps(body))
-        self.assertTrue(all(len(v) <= 256 for v in body["properties"]["tags"].values()))
-        self.assertNotIn("preserved", body["properties"]["tags"])
-        management.credential.close.assert_called_once()
+            with self.subTest(stdout=stdout[:20], code=code):
+                cli = self.cli(stdout, code)
+                with self.assertRaises(JOB.StaffJobError) as raised:
+                    JOB.ProfileCredential(cli).get_token(JOB.STORAGE_RESOURCE + ".default")
+                self.assertNotIn("tok-secret", str(raised.exception))
+                self.assertNotIn("AADSTS", str(raised.exception))
+                self.assertIsNone(raised.exception.__cause__)
+
+    def test_naive_local_expires_on_and_unexpected_scope(self):
+        later = datetime.now() + timedelta(hours=1)
+        cli = self.cli(json.dumps({"accessToken": "tok-secret", "expiresOn": later.isoformat()}))
+        credential = JOB.ProfileCredential(cli)
+        self.assertAlmostEqual(
+            credential.get_token(JOB.STORAGE_RESOURCE + ".default").expires_on,
+            later.timestamp(),
+            delta=2,
+        )
+        with self.assertRaises(JOB.StaffJobError):
+            credential.get_token("https://management.azure.com/.default")
+
+    def test_priming_is_bounded_and_restores_the_shared_deadline(self):
+        cli = self.cli(self.token_json())
+        cli.deadline = None
+        JOB.default_container(self.URL, cli)
+        self.assertIsNone(cli.deadline)
+        token_call = next(c for c in self.run.call_args_list if "get-access-token" in c.args[0])
+        timeout = token_call.kwargs["timeout"]
+        self.assertLessEqual(timeout, BLOB.PREFLIGHT_BUDGET)
+
+
+class StorageContractTests(unittest.TestCase):
+    def test_staff_results_container_is_last_private_and_expires(self):
+        text = (ROOT / "infra/modules/storage.bicep").read_text()
+        self.assertIn("'ledger-digests', 'staff-results']", text)
+        self.assertIn("parent: blobContainers[4]", text)
+        self.assertIn("parent: blobContainers[5]", text)
+        self.assertIn("publicAccess: 'None'", text)
+        lifecycle = text[text.index("staffResultsLifecycle") :]
+        self.assertIn("prefixMatch: ['staff-results/']", lifecycle)
+        self.assertIn("version: { delete:", lifecycle)
+        self.assertIn("allowSharedKeyAccess: false", text)
+
+    def test_retired_tag_relay_is_absent_from_scripts_and_bicep(self):
+        import re
+
+        pattern = re.compile(
+            "tags_url|result_tags|ZFSTAFF|ZF_STAFF_" + "RELAY|TAG_VERSION|Microsoft.Resources/tags"
+        )
+        files = [*(ROOT / "infra/scripts").glob("staff*"), *ROOT.glob("infra/**/*.bicep")]
+        self.assertTrue(files)
+        for file in files:
+            self.assertIsNone(pattern.search(file.read_text()), str(file))
 
 
 class BuildContextTests(unittest.TestCase):

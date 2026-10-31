@@ -5,8 +5,10 @@ param apiName string
 @description('Existing SQL administrator user-assigned identity name, id-<prefix>-init.')
 param initializerIdentityName string
 
-@description('Include existing-initializer result-tag grants only with separate explicit approval. False deploys API read/restart grants only.')
-param includeResultRelay bool = true
+@description('Existing private storage account that holds the staff-results container.')
+param storageAccountName string = ''
+@description('Include the container-scoped result-write grant only with separate explicit approval. False (default) deploys API read/restart grants only.')
+param includeResultBlob bool = false
 
 module guard './modules/staff-initializer-guard.bicep' = {
   name: 'staff-initializer-scope'
@@ -22,8 +24,16 @@ resource initializer 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-3
   name: initializerIdentityName
 }
 
-resource relay 'Microsoft.App/jobs@2025-07-01' existing = {
-  name: 'job-${substring(initializerIdentityName, 3)}'
+resource storage 'Microsoft.Storage/storageAccounts@2024-01-01' existing = if (includeResultBlob) {
+  name: storageAccountName
+}
+resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2024-01-01' existing = if (includeResultBlob) {
+  parent: storage
+  name: 'default'
+}
+resource resultContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2024-01-01' existing = if (includeResultBlob) {
+  parent: blobService
+  name: 'staff-results'
 }
 
 resource restartRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' = {
@@ -58,31 +68,31 @@ resource restartAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' 
   }
 }
 
-resource relayRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' = if (includeResultRelay) {
-  name: guid(resourceGroup().id, 'staff-initializer-result-tags')
+resource resultRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' = if (includeResultBlob) {
+  name: guid(resourceGroup().id, 'staff-initializer-result-blob-write')
   properties: {
-    roleName: 'Staff initializer result tags (${resourceGroup().name})'
-    description: 'Read/merge encrypted result tags on the existing initializer only; no job settings, secrets or Graph access.'
+    roleName: 'Staff initializer result write (${resourceGroup().name})'
+    description: 'Create result blobs in one private container; no read, list, delete, overwrite of other scopes, keys, SAS or Graph access.'
     type: 'CustomRole'
     assignableScopes: [resourceGroup().id]
     permissions: [{
-      actions: [
-        'Microsoft.Resources/tags/read'
-        'Microsoft.Resources/tags/write'
-      ]
+      actions: []
       notActions: []
-      dataActions: []
+      dataActions: [
+        'Microsoft.Storage/storageAccounts/blobServices/containers/blobs/write'
+        'Microsoft.Storage/storageAccounts/blobServices/containers/blobs/add/action'
+      ]
       notDataActions: []
     }]
   }
   dependsOn: [guard]
 }
 
-resource relayAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = if (includeResultRelay) {
-  scope: relay
-  name: guid(relay.id, initializer.id, relayRole.id)
+resource resultAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = if (includeResultBlob) {
+  scope: resultContainer
+  name: guid(resultContainer.id, initializer.id, resultRole.id)
   properties: {
-    roleDefinitionId: relayRole.id
+    roleDefinitionId: resultRole.id
     principalId: initializer.properties.principalId
     principalType: 'ServicePrincipal'
   }
