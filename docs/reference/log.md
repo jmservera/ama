@@ -8734,3 +8734,18 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   physical calibration, OD-43 and whole-issue acceptance remain unproven.
 * No Azure, deployment, live sign-in, private dataset, consent/approval change
   or issue-status change is performed.
+
+## [2026-10-31] query | Canonical capstone source hashing, Refs #558
+
+* Updated the source guide, owning verifier and compact receipt to normalize
+  CRLF and lone CR to LF for four textual source hashes. BOM, whitespace and
+  all other bytes remain significant; invalid UTF-8 fails. Existing global
+  LF attributes already cover these files; binary/media hashes remain exact.
+* Actual Verify on the unchanged delivered deck passes in an isolated Microsoft
+  PowerShell 7.4.6 Linux container: 54 slides/notes, all media, native navigation,
+  timing and protected cost evidence. Receipt fields come from that successful
+  report, not digest substitution. Source semantics and existing 32 native
+  shape assertions pass; all four guards already use IsNaN/IsInfinity.
+* Added the source-hash regression and index clarification. Windows PowerShell
+  5.1/Office and human acceptance remain unperformed. This local source
+  verification is not the complete publication gate or hosted approval.

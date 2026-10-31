@@ -31,6 +31,14 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 
+function Get-CanonicalSourceHash {
+    param([string]$Path)
+    $Encoding = [Text.UTF8Encoding]::new($false, $true)
+    $Text = $Encoding.GetString([IO.File]::ReadAllBytes($Path))
+    $Text = $Text.Replace("`r`n", "`n").Replace("`r", "`n")
+    return Get-ByteHash $Encoding.GetBytes($Text)
+}
+
 function Resolve-LocalInput {
     param([string]$Root, [string]$Relative)
     if ([IO.Path]::IsPathRooted($Relative) -or $Relative -match '(^|[\\/])\.\.([\\/]|$)') { throw 'Input path must be relative without traversal' }
@@ -458,10 +466,11 @@ if ($MyInvocation.InvocationName -ne '.') {
         }
         $Report = Test-DeckCandidate $BaselineArchive $CandidatePath $Parts $Definition
         $Report.baseline_sha256 = $Definition.baseline_sha256
-        $Report.manifest_sha256 = (Get-FileHash (Join-Path $SourceRoot 'slides.json') -Algorithm SHA256).Hash.ToLowerInvariant()
-        $Report.asset_catalog_sha256 = (Get-FileHash (Join-Path $SourceRoot $Definition.assets) -Algorithm SHA256).Hash.ToLowerInvariant()
-        $Report.builder_sha256 = (Get-FileHash $PSCommandPath -Algorithm SHA256).Hash.ToLowerInvariant()
-        $Report.native_helper_sha256 = (Get-FileHash (Join-Path $PSScriptRoot '../cowork-native-recovery/Invoke-StoryReview.ps1') -Algorithm SHA256).Hash.ToLowerInvariant()
+        $Report.source_hash_convention = 'SHA-256 of UTF-8 bytes with CRLF and CR normalized to LF; BOM and all other bytes preserved.'
+        $Report.manifest_sha256 = Get-CanonicalSourceHash (Join-Path $SourceRoot 'slides.json')
+        $Report.asset_catalog_sha256 = Get-CanonicalSourceHash (Join-Path $SourceRoot $Definition.assets)
+        $Report.builder_sha256 = Get-CanonicalSourceHash $PSCommandPath
+        $Report.native_helper_sha256 = Get-CanonicalSourceHash (Join-Path $PSScriptRoot '../cowork-native-recovery/Invoke-StoryReview.ps1')
         Export-PitchMaterials $CandidatePath $OutputDir $Definition $Report
         $Report | ConvertTo-Json -Depth 12 | Set-Content (Join-Path $OutputDir 'verification.json') -Encoding utf8NoBOM
         Write-Output "${RequestedAction}: 54 slides and notes; all assets, navigation, timing and protected cost evidence verified."

@@ -47,6 +47,9 @@ The [31 October source-binding and guard check](../capstone/source/review-2026-1
 re-verifies the unchanged delivered PPTX against LF authoring inputs and tests
 NaN/infinity refusal in all four native-shape guards. Windows PowerShell 5.1
 execution remains unperformed; local recovery is not hosted publication.
+The source guide now defines CRLF/lone-CR-to-LF normalization for its four
+textual source hashes, preserving BOM/whitespace and exact binary hashes;
+source-hash regressions distinguish semantics from post-verification receipt binding.
 
 For #190, the [current sensor validation and child dispositions](./research/iot-sensor-analytics-research-plan.md#current-validation-and-child-dispositions-2026-10-30-refs-190)
 record annual offline backfill/replay checks, unchanged isolated scenario

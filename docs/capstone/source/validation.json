@@ -102,16 +102,17 @@
     "baseline_sha256": "2bab9b79de4352a1915dab04d1846a4c4be90f6889a2b9b6af4807e48a33d5f8",
     "manifest_sha256": "d50151ae3784c185f7340539c11ff067ba9638129145c9621e936efe99f9104a",
     "asset_catalog_sha256": "de34d2eba585eab470ebe7438b40695e0b239f6b2c8183a3cd4236ca5a1dc901",
-    "builder_sha256": "9e744184cc3016664bd8f4e260b54e40825039700144c178659e53a01ce72568",
+    "builder_sha256": "4c168289a7352017e6c9cb9456fe9fe1436e8ad38ca3721268366c85492829d4",
     "native_helper_sha256": "956d56cf4032d33deca9f61c606899927e3a3ae431878811bfe84aefba742c94"
   },
   "source_verification": {
     "verified_on": "2026-10-31",
     "action": "Verify",
-    "source_hash_convention": "SHA-256 of exact UTF-8 LF-only bytes; no whitespace or line-ending normalization.",
-    "verification_report_sha256": "1c5b265a4fd84ac32a5ec8ba976d2c84bcd3718adc236f4bb24f2f17a08aec72",
+    "source_hash_convention": "SHA-256 of UTF-8 bytes with CRLF and CR normalized to LF; BOM and all other bytes preserved.",
+    "verification_report_sha256": "f5f2e2b19e727d91267de273d7d781a8ad89a0dafcc044be3333177881f3e0d3",
     "delivery_unchanged": true,
-    "native_shape_runtime": "PowerShell 7.6.4 on Linux; Windows PowerShell 5.1 execution remains unperformed."
+    "native_shape_runtime": "PowerShell 7.4.6 in an isolated Linux Microsoft container; Windows PowerShell 5.1 execution remains unperformed.",
+    "runtime_image": "mcr.microsoft.com/powershell@sha256:62300a213a9293916333df2b014cd3a8f22fb0b0b65f2bb446aaf436bcf8c868"
   },
   "preview": {
     "renderer": "LibreOffice 24.2.7.2 420(Build:2)",
@@ -226,6 +227,7 @@
   "tests": {
     "focused_pdf_and_rubric_regressions_passed": 29,
     "native_shape_checks_passed": 32,
+    "canonical_source_semantics_and_receipt_bindings": "pass",
     "ruff_lint_and_format": "pass",
     "dt_source_check": "Pass: 68 editable elements, 15 two-line cells, five illustrated touchpoints, 22 source locators, 31 local links, deterministic native/SVG regeneration.",
     "earlier_broad_suites": "Historical results in the dated reviews remain unchanged; not a new whole-repository pass."
@@ -235,6 +237,7 @@
     "tools/capstone/test_render_preview.py": "b5e340e16c0aef6f7b90593375dc848539e6ea6139a94f6a679f73d70beab605",
     "tools/capstone/requirements.txt": "31923004463ebf2784222992795839819f4ab6451797401cbe5860e94bdeadad",
     "tools/capstone/Test-NativeShapes.ps1": "d9570012702b217458bf8155a4efd4ebfd32eba8300d7e72c986369c5e9dba42",
+    "tools/capstone/Test-SourceHashes.ps1": "fca6d38f2f5e8bd2e244b4c2518719b83dd920ec019f0feac51f74015e8929eb",
     "docs/capstone/source/diagrams/discovery-journey/build-resident-journey.mjs": "fea0d2dccd1e11cab382d21b5f0f05259f93ecd1ec81d0f38d5b55fe2c57ccf8"
   },
   "local_evidence_directory": "/home/jmservera/.copilot/session-state/aee50f3c-b57c-4ce1-89b4-86de6c6f8e4e/files/capstone-visual-refresh-linux",

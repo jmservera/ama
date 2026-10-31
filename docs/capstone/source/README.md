@@ -135,11 +135,12 @@ two Markdown outputs together after review. Retain dated review evidence;
 do not commit all temporary renders. The compact receipt binds the candidate
 to the baseline, manifest, media catalog, builder and shared native helper.
 
-The four text-source hashes use the exact UTF-8, LF-only bytes of the manifest,
-media catalog and two scripts, consistent with the root `.gitattributes` policy.
-Hashing does not normalize whitespace or convert line endings. Check those
-inputs with `git ls-files --eol` before verification; both index and working
-tree must report `lf`. Run Verify against the actual candidate and regenerate
+The four text-source hashes use UTF-8 bytes of the manifest, media catalog and
+two scripts with CRLF and lone CR normalized to LF. BOM and every other byte,
+including significant whitespace and final newlines, are preserved; invalid
+UTF-8 fails explicitly. The root `.gitattributes` already requires LF text
+checkouts, so no additional rule is needed. Binary delivery, template and media
+hashes remain exact, without normalization. Run Verify against the actual candidate and regenerate
 the receipt from its successful report after any source change. Substituting
 digests without verifying the source-to-delivery binding is not validation.
 
@@ -172,9 +173,14 @@ Focused regressions:
 
 ```bash
 pwsh -NoLogo -NoProfile -File tools/capstone/Test-NativeShapes.ps1 -RepoRoot "$PWD"
+pwsh -NoLogo -NoProfile -File tools/capstone/Test-SourceHashes.ps1 -RepoRoot "$PWD"
 PYTHONDONTWRITEBYTECODE=1 "$Run/venv/bin/python" -m pytest -p no:cacheprovider -q tools/capstone/test_render_preview.py
 node docs/capstone/source/diagrams/discovery-journey/build-resident-journey.mjs --check
 ```
+
+Use `Test-SourceHashes.ps1 -SemanticOnly` before regenerating the receipt.
+Run its default mode afterward to check all four canonical source bindings and
+the exact delivered PPTX hash against the verified receipt.
 
 To regenerate a journey derivative, run the generator without `--check`, then
 use `excalidraw render` locally with `--padding 0 --scale 1.5 --max-width 2400
