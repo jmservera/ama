@@ -124,11 +124,11 @@ not a reservation of discoverable concerns for another critique.
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/research/2026-10-31/employee-briefing-loading-531-publication-harness-research.md](.copilot-tracking/research/2026-10-31/employee-briefing-loading-531-publication-harness-research.md) | Bounded failure diagnosis and rejected weakening alternatives |
-| [.copilot-tracking/plans/2026-10-31/employee-briefing-loading-531-publication-harness-plan.md](.copilot-tracking/plans/2026-10-31/employee-briefing-loading-531-publication-harness-plan.md) | Assessed correction and publication plan |
-| [.copilot-tracking/details/2026-10-31/employee-briefing-loading-531-publication-harness-phase-details.md](.copilot-tracking/details/2026-10-31/employee-briefing-loading-531-publication-harness-phase-details.md) | Exact repair, validation and publication boundaries |
-| [.copilot-tracking/rpi-sessions/2026-10-31/employee-briefing-loading-531-publication-harness-state.json](.copilot-tracking/rpi-sessions/2026-10-31/employee-briefing-loading-531-publication-harness-state.json) | Active parent state and retained follow-ups |
-| [.copilot-tracking/reviews/plans/2026-10-31/employee-briefing-loading-531-publication-harness-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/employee-briefing-loading-531-publication-harness-plan-critique.md) | Complete single critique; Pass with zero actionable findings |
+| [.copilot-tracking/research/2026-10-31/employee-briefing-loading-531-publication-harness-research.md](../../../research/2026-10-31/employee-briefing-loading-531-publication-harness-research.md) | Bounded failure diagnosis and rejected weakening alternatives |
+| [.copilot-tracking/plans/2026-10-31/employee-briefing-loading-531-publication-harness-plan.md](../../../plans/2026-10-31/employee-briefing-loading-531-publication-harness-plan.md) | Assessed correction and publication plan |
+| [.copilot-tracking/details/2026-10-31/employee-briefing-loading-531-publication-harness-phase-details.md](../../../details/2026-10-31/employee-briefing-loading-531-publication-harness-phase-details.md) | Exact repair, validation and publication boundaries |
+| [.copilot-tracking/rpi-sessions/2026-10-31/employee-briefing-loading-531-publication-harness-state.json](../../../rpi-sessions/2026-10-31/employee-briefing-loading-531-publication-harness-state.json) | Active parent state and retained follow-ups |
+| [.copilot-tracking/reviews/plans/2026-10-31/employee-briefing-loading-531-publication-harness-plan-critique.md](employee-briefing-loading-531-publication-harness-plan-critique.md) | Complete single critique; Pass with zero actionable findings |
 
 ## Next Steps
 

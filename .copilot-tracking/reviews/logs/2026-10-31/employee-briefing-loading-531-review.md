@@ -180,15 +180,15 @@ Later implementation of RV-001 does not require this original Review to run agai
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/research/2026-10-31/employee-briefing-loading-531-research.md](.copilot-tracking/research/2026-10-31/employee-briefing-loading-531-research.md) | Compared research and acceptance boundaries |
-| [.copilot-tracking/plans/2026-10-31/employee-briefing-loading-531-plan.md](.copilot-tracking/plans/2026-10-31/employee-briefing-loading-531-plan.md) | Current partial plan and critique dispositions |
-| [.copilot-tracking/details/2026-10-31/employee-briefing-loading-531-phase-details.md](.copilot-tracking/details/2026-10-31/employee-briefing-loading-531-phase-details.md) | Current contracts, validation and publication sequence |
-| [.copilot-tracking/reviews/plans/2026-10-31/employee-briefing-loading-531-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/employee-briefing-loading-531-plan-critique.md) | Preserved original Complete/Revise critique |
-| [.copilot-tracking/changes/2026-10-31/employee-briefing-loading-531-changes.md](.copilot-tracking/changes/2026-10-31/employee-briefing-loading-531-changes.md) | Source batch and attributed validation outcomes |
-| [.copilot-tracking/rpi-sessions/2026-10-31/employee-briefing-loading-531-state.json](.copilot-tracking/rpi-sessions/2026-10-31/employee-briefing-loading-531-state.json) | Read-only blocked workflow state |
-| [.copilot-tracking/reviews/logs/2026-10-31/employee-briefing-loading-531-review.md](.copilot-tracking/reviews/logs/2026-10-31/employee-briefing-loading-531-review.md) | This one original independent Review |
-| [src/api/checks/loading_briefing_browser_check.py](src/api/checks/loading_briefing_browser_check.py) | Complete assessed browser source diff |
-| [src/api/README.md](src/api/README.md) | Assessed API guide changes |
+| [.copilot-tracking/research/2026-10-31/employee-briefing-loading-531-research.md](../../../research/2026-10-31/employee-briefing-loading-531-research.md) | Compared research and acceptance boundaries |
+| [.copilot-tracking/plans/2026-10-31/employee-briefing-loading-531-plan.md](../../../plans/2026-10-31/employee-briefing-loading-531-plan.md) | Current partial plan and critique dispositions |
+| [.copilot-tracking/details/2026-10-31/employee-briefing-loading-531-phase-details.md](../../../details/2026-10-31/employee-briefing-loading-531-phase-details.md) | Current contracts, validation and publication sequence |
+| [.copilot-tracking/reviews/plans/2026-10-31/employee-briefing-loading-531-plan-critique.md](../../plans/2026-10-31/employee-briefing-loading-531-plan-critique.md) | Preserved original Complete/Revise critique |
+| [.copilot-tracking/changes/2026-10-31/employee-briefing-loading-531-changes.md](../../../changes/2026-10-31/employee-briefing-loading-531-changes.md) | Source batch and attributed validation outcomes |
+| [.copilot-tracking/rpi-sessions/2026-10-31/employee-briefing-loading-531-state.json](../../../rpi-sessions/2026-10-31/employee-briefing-loading-531-state.json) | Read-only blocked workflow state |
+| [.copilot-tracking/reviews/logs/2026-10-31/employee-briefing-loading-531-review.md](employee-briefing-loading-531-review.md) | This one original independent Review |
+| [src/api/checks/loading_briefing_browser_check.py](../../../../src/api/checks/loading_briefing_browser_check.py) | Complete assessed browser source diff |
+| [src/api/README.md](../../../../src/api/README.md) | Assessed API guide changes |
 
 ## Next Steps
 

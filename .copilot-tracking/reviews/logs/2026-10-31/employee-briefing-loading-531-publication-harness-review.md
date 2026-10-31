@@ -262,16 +262,16 @@ original Review to run again.
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/research/2026-10-31/employee-briefing-loading-531-publication-harness-research.md](.copilot-tracking/research/2026-10-31/employee-briefing-loading-531-publication-harness-research.md) | Exact failure diagnosis and bounded repair decision |
-| [.copilot-tracking/plans/2026-10-31/employee-briefing-loading-531-publication-harness-plan.md](.copilot-tracking/plans/2026-10-31/employee-briefing-loading-531-publication-harness-plan.md) | P01 completion and pending P02 publication |
-| [.copilot-tracking/details/2026-10-31/employee-briefing-loading-531-publication-harness-phase-details.md](.copilot-tracking/details/2026-10-31/employee-briefing-loading-531-publication-harness-phase-details.md) | Exact repair, execution and publication contracts |
-| [.copilot-tracking/reviews/plans/2026-10-31/employee-briefing-loading-531-publication-harness-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/employee-briefing-loading-531-publication-harness-plan-critique.md) | One Complete/Pass critique |
-| [.copilot-tracking/changes/2026-10-31/employee-briefing-loading-531-publication-harness-changes.md](.copilot-tracking/changes/2026-10-31/employee-briefing-loading-531-publication-harness-changes.md) | Reconciled implementation and actual validation |
-| [.copilot-tracking/rpi-sessions/2026-10-31/employee-briefing-loading-531-publication-harness-state.json](.copilot-tracking/rpi-sessions/2026-10-31/employee-briefing-loading-531-publication-harness-state.json) | Active parent Review state and distinct follow-ups |
-| [tools/test_rpi_checks.py](tools/test_rpi_checks.py) | Reviewed complete tooling fixture/regression boundary |
-| [src/api/checks/case_journey_browser_check.py](src/api/checks/case_journey_browser_check.py) | Reviewed complete callback/formatter boundary |
-| [src/README.md](src/README.md) | Directly related gate guidance |
-| [.copilot-tracking/reviews/logs/2026-10-31/employee-briefing-loading-531-publication-harness-review.md](.copilot-tracking/reviews/logs/2026-10-31/employee-briefing-loading-531-publication-harness-review.md) | This one original independent Complete/Conformant Review |
+| [.copilot-tracking/research/2026-10-31/employee-briefing-loading-531-publication-harness-research.md](../../../research/2026-10-31/employee-briefing-loading-531-publication-harness-research.md) | Exact failure diagnosis and bounded repair decision |
+| [.copilot-tracking/plans/2026-10-31/employee-briefing-loading-531-publication-harness-plan.md](../../../plans/2026-10-31/employee-briefing-loading-531-publication-harness-plan.md) | P01 completion and pending P02 publication |
+| [.copilot-tracking/details/2026-10-31/employee-briefing-loading-531-publication-harness-phase-details.md](../../../details/2026-10-31/employee-briefing-loading-531-publication-harness-phase-details.md) | Exact repair, execution and publication contracts |
+| [.copilot-tracking/reviews/plans/2026-10-31/employee-briefing-loading-531-publication-harness-plan-critique.md](../../plans/2026-10-31/employee-briefing-loading-531-publication-harness-plan-critique.md) | One Complete/Pass critique |
+| [.copilot-tracking/changes/2026-10-31/employee-briefing-loading-531-publication-harness-changes.md](../../../changes/2026-10-31/employee-briefing-loading-531-publication-harness-changes.md) | Reconciled implementation and actual validation |
+| [.copilot-tracking/rpi-sessions/2026-10-31/employee-briefing-loading-531-publication-harness-state.json](../../../rpi-sessions/2026-10-31/employee-briefing-loading-531-publication-harness-state.json) | Active parent Review state and distinct follow-ups |
+| [tools/test_rpi_checks.py](../../../../tools/test_rpi_checks.py) | Reviewed complete tooling fixture/regression boundary |
+| [src/api/checks/case_journey_browser_check.py](../../../../src/api/checks/case_journey_browser_check.py) | Reviewed complete callback/formatter boundary |
+| [src/README.md](../../../../src/README.md) | Directly related gate guidance |
+| [.copilot-tracking/reviews/logs/2026-10-31/employee-briefing-loading-531-publication-harness-review.md](employee-briefing-loading-531-publication-harness-review.md) | This one original independent Complete/Conformant Review |
 
 ## Next Steps
 

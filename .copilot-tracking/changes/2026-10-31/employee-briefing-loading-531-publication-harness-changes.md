@@ -95,7 +95,7 @@ At exact b43c4512446d7d85f389b912355c86d95f125c55/base e64c6e6c:
 * Actual shared-lock holder observed PID3154696 during retry. No other
   process was stopped, no other worktree read and no unlocked fallback used.
 
-Both attempts used the gate's internal shared flock with --lock-timeout1800,
+Both attempts used the gate's internal shared flock with --lock-timeout 1800,
 not a self-deadlocking outer flock. Standalone UI checks used explicit
 flock -w1800 and actually passed as recorded above.
 External files root remains

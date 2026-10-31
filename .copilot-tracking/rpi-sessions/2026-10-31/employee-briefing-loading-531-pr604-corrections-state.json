@@ -1,0 +1,31 @@
+{
+  "task_id": "531",
+  "task_slug": "employee-briefing-loading-531-pr604-corrections",
+  "parent_task": {"task_id": "531", "task_slug": "employee-briefing-loading-531"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-10-31/employee-briefing-loading-531-pr604-corrections-research.md",
+    "plan": ".copilot-tracking/plans/2026-10-31/employee-briefing-loading-531-pr604-corrections-plan.md",
+    "details": ".copilot-tracking/details/2026-10-31/employee-briefing-loading-531-pr604-corrections-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-10-31/employee-briefing-loading-531-pr604-corrections-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-10-31/employee-briefing-loading-531-pr604-corrections-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-10-31/employee-briefing-loading-531-pr604-corrections-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Execute the ordered RPI loop, merge main, correct seven threads, validate, commit and non-force push PR 604, then reply and resolve.", "status": "confirmed", "evidence": "Explicit user request 2026-10-31."},
+    {"decision": "Use relevant API tests, Ruff and mypy; do not wait for the complete local gate. CI is the gate for this publication.", "status": "confirmed", "evidence": "Explicit task-specific user override 2026-10-31; no hosted or human approval inferred."},
+    {"decision": "Merged origin/main as 6f3f0bf2, retained both log entries, restored main's rubric score.", "status": "executed", "evidence": "Clean requested branch; merge commit 6f3f0bf2."},
+    {"decision": "Research executed; all seven findings valid, 53 broken links and CLI typography defects. Planning Readiness Ready.", "status": "recorded", "evidence": ".copilot-tracking/research/2026-10-31/employee-briefing-loading-531-pr604-corrections-research.md"},
+    {"decision": "One critique Complete / Revise; PC-001 recovery validation and PC-002 per-node mutation ledger applied directly. Plan ready.", "status": "disposed", "evidence": ".copilot-tracking/plans/2026-10-31/employee-briefing-loading-531-pr604-corrections-plan.md#critique-disposition"},
+    {"decision": "P01-T01/T02 complete: 53 exact destinations and preserved historical prose, CLI-only edits, 145 API tests, Ruff/format and mypy all passed.", "status": "executed", "evidence": ".copilot-tracking/changes/2026-10-31/employee-briefing-loading-531-pr604-corrections-changes.md"},
+    {"decision": "One independent Review executed Complete; outcome Conformant, no substantive findings, assessed eight Markdown repairs and actual validation. P01 complete.", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-10-31/employee-briefing-loading-531-pr604-corrections-review.md"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Complete already-authorized P02: commit, non-force push, then successful reply and resolution for each original thread."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Separate live employee-site verification", "rationale": "Remaining unchecked issue acceptance criterion; synthetic checks do not establish live acceptance.", "evidence": "Issue 531 AC7; preserved original parent Review."}
+  ]
+}

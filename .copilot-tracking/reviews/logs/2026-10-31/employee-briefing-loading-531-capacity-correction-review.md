@@ -211,24 +211,24 @@ These hashes bind retained local evidence files, not a full-gate receipt or fina
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/plans/2026-10-31/employee-briefing-loading-531-capacity-correction-plan.md](.copilot-tracking/plans/2026-10-31/employee-briefing-loading-531-capacity-correction-plan.md) | Compared current correction plan |
-| [.copilot-tracking/details/2026-10-31/employee-briefing-loading-531-capacity-correction-phase-details.md](.copilot-tracking/details/2026-10-31/employee-briefing-loading-531-capacity-correction-phase-details.md) | Compared execution/publication details |
-| [.copilot-tracking/research/2026-10-31/employee-briefing-loading-531-capacity-correction-research.md](.copilot-tracking/research/2026-10-31/employee-briefing-loading-531-capacity-correction-research.md) | Compared recovery research |
-| [.copilot-tracking/reviews/plans/2026-10-31/employee-briefing-loading-531-capacity-correction-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/employee-briefing-loading-531-capacity-correction-plan-critique.md) | Preserved original correction critique |
-| [.copilot-tracking/changes/2026-10-31/employee-briefing-loading-531-capacity-correction-changes.md](.copilot-tracking/changes/2026-10-31/employee-briefing-loading-531-capacity-correction-changes.md) | Compared completed assurance evidence |
-| [.copilot-tracking/rpi-sessions/2026-10-31/employee-briefing-loading-531-capacity-correction-state.json](.copilot-tracking/rpi-sessions/2026-10-31/employee-briefing-loading-531-capacity-correction-state.json) | Read-only current parent continuation state |
-| [.copilot-tracking/plans/2026-10-31/employee-briefing-loading-531-plan.md](.copilot-tracking/plans/2026-10-31/employee-briefing-loading-531-plan.md) | Preserved parent plan |
-| [.copilot-tracking/details/2026-10-31/employee-briefing-loading-531-phase-details.md](.copilot-tracking/details/2026-10-31/employee-briefing-loading-531-phase-details.md) | Preserved parent details |
-| [.copilot-tracking/research/2026-10-31/employee-briefing-loading-531-research.md](.copilot-tracking/research/2026-10-31/employee-briefing-loading-531-research.md) | Preserved parent research |
-| [.copilot-tracking/reviews/plans/2026-10-31/employee-briefing-loading-531-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/employee-briefing-loading-531-plan-critique.md) | Preserved parent critique |
-| [.copilot-tracking/changes/2026-10-31/employee-briefing-loading-531-changes.md](.copilot-tracking/changes/2026-10-31/employee-briefing-loading-531-changes.md) | Preserved failures and original publication attempts |
-| [.copilot-tracking/reviews/logs/2026-10-31/employee-briefing-loading-531-review.md](.copilot-tracking/reviews/logs/2026-10-31/employee-briefing-loading-531-review.md) | Preserved original adverse parent Review |
-| [.copilot-tracking/rpi-sessions/2026-10-31/employee-briefing-loading-531-state.json](.copilot-tracking/rpi-sessions/2026-10-31/employee-briefing-loading-531-state.json) | Preserved parent workflow history |
-| [src/api/checks/loading_briefing_browser_check.py](src/api/checks/loading_briefing_browser_check.py) | Assessed additive browser harness |
-| [src/api/README.md](src/api/README.md) | Assessed local-results guide |
-| [docs/reference/README.md](docs/reference/README.md) | Assessed knowledge-base index addition |
-| [docs/reference/log.md](docs/reference/log.md) | Assessed append-only log addition |
-| [.copilot-tracking/reviews/logs/2026-10-31/employee-briefing-loading-531-capacity-correction-review.md](.copilot-tracking/reviews/logs/2026-10-31/employee-briefing-loading-531-capacity-correction-review.md) | This one original independent Review |
+| [.copilot-tracking/plans/2026-10-31/employee-briefing-loading-531-capacity-correction-plan.md](../../../plans/2026-10-31/employee-briefing-loading-531-capacity-correction-plan.md) | Compared current correction plan |
+| [.copilot-tracking/details/2026-10-31/employee-briefing-loading-531-capacity-correction-phase-details.md](../../../details/2026-10-31/employee-briefing-loading-531-capacity-correction-phase-details.md) | Compared execution/publication details |
+| [.copilot-tracking/research/2026-10-31/employee-briefing-loading-531-capacity-correction-research.md](../../../research/2026-10-31/employee-briefing-loading-531-capacity-correction-research.md) | Compared recovery research |
+| [.copilot-tracking/reviews/plans/2026-10-31/employee-briefing-loading-531-capacity-correction-plan-critique.md](../../plans/2026-10-31/employee-briefing-loading-531-capacity-correction-plan-critique.md) | Preserved original correction critique |
+| [.copilot-tracking/changes/2026-10-31/employee-briefing-loading-531-capacity-correction-changes.md](../../../changes/2026-10-31/employee-briefing-loading-531-capacity-correction-changes.md) | Compared completed assurance evidence |
+| [.copilot-tracking/rpi-sessions/2026-10-31/employee-briefing-loading-531-capacity-correction-state.json](../../../rpi-sessions/2026-10-31/employee-briefing-loading-531-capacity-correction-state.json) | Read-only current parent continuation state |
+| [.copilot-tracking/plans/2026-10-31/employee-briefing-loading-531-plan.md](../../../plans/2026-10-31/employee-briefing-loading-531-plan.md) | Preserved parent plan |
+| [.copilot-tracking/details/2026-10-31/employee-briefing-loading-531-phase-details.md](../../../details/2026-10-31/employee-briefing-loading-531-phase-details.md) | Preserved parent details |
+| [.copilot-tracking/research/2026-10-31/employee-briefing-loading-531-research.md](../../../research/2026-10-31/employee-briefing-loading-531-research.md) | Preserved parent research |
+| [.copilot-tracking/reviews/plans/2026-10-31/employee-briefing-loading-531-plan-critique.md](../../plans/2026-10-31/employee-briefing-loading-531-plan-critique.md) | Preserved parent critique |
+| [.copilot-tracking/changes/2026-10-31/employee-briefing-loading-531-changes.md](../../../changes/2026-10-31/employee-briefing-loading-531-changes.md) | Preserved failures and original publication attempts |
+| [.copilot-tracking/reviews/logs/2026-10-31/employee-briefing-loading-531-review.md](employee-briefing-loading-531-review.md) | Preserved original adverse parent Review |
+| [.copilot-tracking/rpi-sessions/2026-10-31/employee-briefing-loading-531-state.json](../../../rpi-sessions/2026-10-31/employee-briefing-loading-531-state.json) | Preserved parent workflow history |
+| [src/api/checks/loading_briefing_browser_check.py](../../../../src/api/checks/loading_briefing_browser_check.py) | Assessed additive browser harness |
+| [src/api/README.md](../../../../src/api/README.md) | Assessed local-results guide |
+| [docs/reference/README.md](../../../../docs/reference/README.md) | Assessed knowledge-base index addition |
+| [docs/reference/log.md](../../../../docs/reference/log.md) | Assessed append-only log addition |
+| [.copilot-tracking/reviews/logs/2026-10-31/employee-briefing-loading-531-capacity-correction-review.md](employee-briefing-loading-531-capacity-correction-review.md) | This one original independent Review |
 
 ## Next Steps
 

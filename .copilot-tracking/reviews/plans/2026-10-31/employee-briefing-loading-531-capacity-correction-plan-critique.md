@@ -96,13 +96,13 @@ ms.date: 2026-10-31
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/plans/2026-10-31/employee-briefing-loading-531-capacity-correction-plan.md](.copilot-tracking/plans/2026-10-31/employee-briefing-loading-531-capacity-correction-plan.md) | Assessed correction plan |
-| [.copilot-tracking/details/2026-10-31/employee-briefing-loading-531-capacity-correction-phase-details.md](.copilot-tracking/details/2026-10-31/employee-briefing-loading-531-capacity-correction-phase-details.md) | Assessed execution and publication details |
-| [.copilot-tracking/research/2026-10-31/employee-briefing-loading-531-capacity-correction-research.md](.copilot-tracking/research/2026-10-31/employee-briefing-loading-531-capacity-correction-research.md) | Supplied recovery research |
-| [.copilot-tracking/changes/2026-10-31/employee-briefing-loading-531-changes.md](.copilot-tracking/changes/2026-10-31/employee-briefing-loading-531-changes.md) | Preserved execution and preflight failures |
-| [.copilot-tracking/reviews/logs/2026-10-31/employee-briefing-loading-531-review.md](.copilot-tracking/reviews/logs/2026-10-31/employee-briefing-loading-531-review.md) | Preserved original adverse Review |
-| [.copilot-tracking/reviews/plans/2026-10-31/employee-briefing-loading-531-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/employee-briefing-loading-531-plan-critique.md) | Preserved prior critique and disposition context |
-| [.copilot-tracking/reviews/plans/2026-10-31/employee-briefing-loading-531-capacity-correction-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/employee-briefing-loading-531-capacity-correction-plan-critique.md) | This complete single critique |
+| [.copilot-tracking/plans/2026-10-31/employee-briefing-loading-531-capacity-correction-plan.md](../../../plans/2026-10-31/employee-briefing-loading-531-capacity-correction-plan.md) | Assessed correction plan |
+| [.copilot-tracking/details/2026-10-31/employee-briefing-loading-531-capacity-correction-phase-details.md](../../../details/2026-10-31/employee-briefing-loading-531-capacity-correction-phase-details.md) | Assessed execution and publication details |
+| [.copilot-tracking/research/2026-10-31/employee-briefing-loading-531-capacity-correction-research.md](../../../research/2026-10-31/employee-briefing-loading-531-capacity-correction-research.md) | Supplied recovery research |
+| [.copilot-tracking/changes/2026-10-31/employee-briefing-loading-531-changes.md](../../../changes/2026-10-31/employee-briefing-loading-531-changes.md) | Preserved execution and preflight failures |
+| [.copilot-tracking/reviews/logs/2026-10-31/employee-briefing-loading-531-review.md](../../logs/2026-10-31/employee-briefing-loading-531-review.md) | Preserved original adverse Review |
+| [.copilot-tracking/reviews/plans/2026-10-31/employee-briefing-loading-531-plan-critique.md](employee-briefing-loading-531-plan-critique.md) | Preserved prior critique and disposition context |
+| [.copilot-tracking/reviews/plans/2026-10-31/employee-briefing-loading-531-capacity-correction-plan-critique.md](employee-briefing-loading-531-capacity-correction-plan-critique.md) | This complete single critique |
 
 ## Next Steps
 

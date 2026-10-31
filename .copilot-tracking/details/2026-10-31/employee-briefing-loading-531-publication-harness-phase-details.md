@@ -38,7 +38,7 @@ preserved failed receipt, no nested agent or fixes. Route residual findings.
 Resolve privacy-safe identity/trailer, commit implementation and original evidence.
 Fetch current main, merge if drifted under existing authorization and preservation
 rules. No workflow/hash edit independently. New full --all gate at exact HEAD,
---jobs3 --lock-timeout1800 and new external output; retry once on capacity only.
+--jobs 3 --lock-timeout 1800 and new external output; retry once on capacity only.
 No failed-receipt resume across source changes. Verify fresh current base and
 independent exact-head assessment before non-force push and main PR Refs #531.
 Final completion state/receipt/PR accounting external to avoid self-invalidating

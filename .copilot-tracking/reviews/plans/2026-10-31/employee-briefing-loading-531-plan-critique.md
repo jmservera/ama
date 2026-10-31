@@ -116,10 +116,10 @@ ms.date: 2026-10-31
 
 | Artifact | Description |
 | --- | --- |
-| [.copilot-tracking/plans/2026-10-31/employee-briefing-loading-531-plan.md](.copilot-tracking/plans/2026-10-31/employee-briefing-loading-531-plan.md) | Assessed candidate plan |
-| [.copilot-tracking/details/2026-10-31/employee-briefing-loading-531-phase-details.md](.copilot-tracking/details/2026-10-31/employee-briefing-loading-531-phase-details.md) | Assessed implementation details |
-| [.copilot-tracking/research/2026-10-31/employee-briefing-loading-531-research.md](.copilot-tracking/research/2026-10-31/employee-briefing-loading-531-research.md) | Supplied research and limitations |
-| [.copilot-tracking/reviews/plans/2026-10-31/employee-briefing-loading-531-plan-critique.md](.copilot-tracking/reviews/plans/2026-10-31/employee-briefing-loading-531-plan-critique.md) | Complete independent critique |
+| [.copilot-tracking/plans/2026-10-31/employee-briefing-loading-531-plan.md](../../../plans/2026-10-31/employee-briefing-loading-531-plan.md) | Assessed candidate plan |
+| [.copilot-tracking/details/2026-10-31/employee-briefing-loading-531-phase-details.md](../../../details/2026-10-31/employee-briefing-loading-531-phase-details.md) | Assessed implementation details |
+| [.copilot-tracking/research/2026-10-31/employee-briefing-loading-531-research.md](../../../research/2026-10-31/employee-briefing-loading-531-research.md) | Supplied research and limitations |
+| [.copilot-tracking/reviews/plans/2026-10-31/employee-briefing-loading-531-plan-critique.md](employee-briefing-loading-531-plan-critique.md) | Complete independent critique |
 
 ## Next Steps
 
