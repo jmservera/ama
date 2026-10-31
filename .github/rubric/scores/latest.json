@@ -2,18 +2,18 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-10-31T02:19:47+00:00",
-  "commit": "7dbbc860bf7361ad9dc6efaf82e8e9ca48019f9c",
+  "scored_at": "2026-10-31T09:55:00+00:00",
+  "commit": "3e2a751958699cb422fc787adecad948b2f38728",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41158966083",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41189834369",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
     "solution-code": "d182892a623ed0ad56d6993f00a88c3f3b933754103f81d1d1f7a4fc8e8e8074",
     "infrastructure": "c6a7f41eec75b0ecff8fe5b0c7391c9d006370556ff65b3dcf3bc2419621a53d",
-    "capstone-deck": "c5ae9ab5ec15788dd255b786adaf07ee716806bef375e01c066ad1c26701d74e",
-    "pitch": "ab6983bdd81dcfa7a4497cd2f83e2fdf7dd6d6598733e3c4ca89829ef428f402",
+    "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
+    "pitch": "4c0b241f35c31a2b7fa7b9536f03f3e2e2e54f320b8ffb17d2210a294c9b8127",
     "thought-leadership": "592719a5da0d19d4d4c81dd5779faa45a9039c4777e3749cbc055d241aed8970"
   },
   "total": 77,
@@ -80,31 +80,31 @@
     "B2": {
       "score": 4,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:18-29"
+        "docs/capstone/pitch/README.md:24-34"
       ],
-      "rationale": "Pitch package unchanged in this PR; baseline Audience Map evidence retained. Still unrehearsed."
+      "rationale": "Pitch package restructured (cowork-main-presentation moved to history, new README added) but Audience Map content preserved in equivalent form. Still unrehearsed; baseline retained."
     },
     "B3": {
       "score": 2,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/demo-runbook.md:63-77"
+        "docs/capstone/demo/runbook.md:63-77"
       ],
-      "rationale": "Demo runbook unchanged in this PR; validation.md still records no rehearsal. Needs Improvement retained."
+      "rationale": "Demo guidance now lives in docs/capstone/demo/runbook.md with route table and hook timing; no rehearsal or validation record exists anywhere in the PR. Needs Improvement retained."
     },
     "B4": {
       "score": 2,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/demo-runbook.md:142-150",
-        "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:66-73"
+        "docs/capstone/demo/runbook.md:95-106",
+        "docs/capstone/pitch/README.md:77-84"
       ],
-      "rationale": "New recovery table and bridge answer stems show deliberate prepared depth for pressure questions, an improvement over the baseline's single list. No transcript or rehearsal exists, so still short of demonstrated composure under challenge."
+      "rationale": "Recovery table and bridge answer-stem content from the removed cowork-main-presentation files is preserved under demo/runbook.md and pitch/README.md. No transcript or rehearsal exists, so still short of demonstrated composure; baseline retained."
     },
     "B5": {
       "score": 2,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:33-46"
+        "docs/capstone/pitch/README.md:38-46"
       ],
-      "rationale": "Timing contract unchanged in this PR; deck timing lines confirmed byte-identical. Unrehearsed pacing retained."
+      "rationale": "Timing contract moved into pitch/README.md (23:45 narration clock, 6:15 reserve) but content is unchanged; still unrehearsed pacing. Baseline retained."
     },
     "B6": {
       "score": 5,
@@ -129,16 +129,16 @@
     "C2": {
       "score": 2,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/audience-and-delivery.md:77-83"
+        "docs/capstone/demo/runbook.md:105-107"
       ],
-      "rationale": "New Interruption Protocol instructs restating the challenge in the customer's terms before answering, directly rehearsing the C2 behavior. A concrete written improvement over the baseline's bare answer stems, but no transcript or live exchange exists, so readiness remains Needs Improvement."
+      "rationale": "Interruption-restatement guidance is preserved under demo/runbook.md rather than the removed audience-and-delivery.md. Still no transcript or live exchange exists; readiness remains Needs Improvement. Baseline retained."
     },
     "C3": {
       "score": 4,
       "evidence": [
-        "docs/capstone/pitch/cowork-main-presentation/evidence/ai-cost-evidence.md:258-266"
+        "docs/capstone/pitch/questions-and-answers.md:817"
       ],
-      "rationale": "New Strong CXO Answer Stems explicitly surface unresolved cost/risk gaps unprompted ('Unknown. We must agree the denominator...') and make a clear recommendation while naming limits. Stronger written intellectual honesty and unprompted risk disclosure than baseline."
+      "rationale": "Unprompted denominator and quality-floor cost-gap disclosure is preserved in the new questions-and-answers.md, continuing prior CXO answer-stem substance under different wording. Baseline retained."
     },
     "D1": {
       "score": 4,
