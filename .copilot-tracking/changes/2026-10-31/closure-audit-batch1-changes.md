@@ -110,9 +110,14 @@ retained, with a separate publication applicability disposition. PR #613
 reports the seven external closures already observed during this audit's
 collection/write interval; this batch does not claim them.
 
-Publication will commit task evidence with account-derived privacy-safe local
-identity and the required trailer, then fetch/assess main drift, push normally
-and open a Refs-only main PR. Hosted CI and owner merge remain pending.
+Publication: original evidence commit `08516b1ac17e8fa0a636887f8c42fe2455905a86`
+used authenticated account-derived local noreply author/committer and the
+required trailer. `git push -u origin HEAD` succeeded without force; [PR #614](https://github.com/jmservera/ama/pull/614)
+is open against main with exact 46 Refs-only issue scope. Pushed/PR heads
+matched and the worktree was clean. Final refresh retained main `2733e84a`.
+Documentary closeout records these performed actions; original decisions,
+receipts, adverse findings and assessed source are unchanged. Hosted CI and
+owner merge remain pending; no merge or second Review occurs.
 
 ## Complete issue outcome table
 

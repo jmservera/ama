@@ -72,7 +72,7 @@ milestone and existing comments. Add no unrelated metadata.
   details, state, evidence and validation markers.
 * [x] P03-T02: Obtain one independent post-implementation Review. Preserve
   findings and route later work without a same-task re-review loop.
-* [ ] P03-T03: Run focused audit/Markdown/diff checks, commit with API-derived
+* [x] P03-T03: Run focused audit/Markdown/diff checks, commit with API-derived
   local privacy-safe identity/trailer, fetch main, assess drift, push and open
   a Refs-only PR. Leave merge and hosted/human approval to the owner.
 
@@ -114,3 +114,13 @@ Original worker dispositions remain unchanged. Details:
 `../../details/2026-10-31/closure-audit-batch1-phase-details.md`.
 Supported later work is resolving named owner/live/AT dependencies and reviewing
 unsupported historical ticks; neither is implemented by this audit.
+
+## Publication closeout
+
+Original evidence committed as `08516b1a`, pushed with
+`git push -u origin HEAD`, and published in [PR #614](https://github.com/jmservera/ama/pull/614)
+to main with exact 46 Refs-only issue scope. The API-derived local noreply
+address was used for both author/committer with the required trailer.
+Final fetch retained main `2733e84a`; all 29 positive blobs remain applicable.
+This closeout changes documentary status only, not decisions/receipts/source.
+Hosted CI and owner merge are pending; no approval or second Review is claimed.

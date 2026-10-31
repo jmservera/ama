@@ -4,8 +4,8 @@
   "parent_task": null,
   "mode": "manual",
   "active_phase": "Review",
-  "status": "active",
-  "session_status": "running",
+  "status": "completed",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-10-31/closure-audit-batch1-research.md",
     "plan": ".copilot-tracking/plans/2026-10-31/closure-audit-batch1-plan.md",
@@ -44,12 +44,17 @@
       "decision": "Exactly one independent post-implementation Review executed Complete / Residual work against 17 staged artifacts, final decisions and all46 remote readbacks. No audit defects/blockers; RV-001/002/003 routed later.",
       "status": "recorded",
       "evidence": ".copilot-tracking/reviews/logs/2026-10-31/closure-audit-batch1-review.md; no source repair, historical unticking or repeated Review."
+    },
+    {
+      "decision": "Owner-authorized bounded manual loop publication performed: original evidence08516b1a committed with API-derived local noreply identity/trailer, ordinary push succeeded, Refs-only PR614 open to main; remote/PR head matched.",
+      "status": "verified",
+      "evidence": "https://github.com/jmservera/ama/pull/614; final fetched main2733e84a keeps all29 positive blobs unchanged; documentary closeout does not alter original Review or issue decisions."
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Review",
-    "action": "Perform authorized documentary publication: focused final checks, account-derived identity, commit original RPI evidence, fetch/applicability, ordinary push and Refs-only PR."
+    "action": "Hosted CI and owner merge gate for PR614 remain pending. Any owner-selected RV-001/RV-002 delivery follow-up starts a distinct rpi-research task; no automatic child session or merge is authorized."
   },
   "prioritized_follow_ups": [
     {

@@ -73,7 +73,7 @@ scoped issues. Verify push/PR and leave merge/CI/human approval pending.
 
 ## Execution status
 
-P01 and P02 complete; P03-T01/T02 complete; P03-T03 pending. Research
+P01, P02 and P03 complete for the authorized audit/publication. Research
 executed/Ready; one critique Complete/Revise with all five findings disposed.
 Remote 30 ticks/46 exact comments verified, zero closures; 132 global open
 before/after writes, 46 scoped before/after. Final no-op remote preflight found
@@ -86,3 +86,9 @@ Residual work. No audit defect or Review blocker was found. RV-001 retains
 the unmet count priority, RV-002 routes historical unsupported ticks and
 RV-003 retains the non-atomic platform limitation as distinct follow-ups.
 No source repair, unticking, child work or second Review is performed.
+
+Evidence commit `08516b1a` was normally pushed and [PR #614](https://github.com/jmservera/ama/pull/614)
+opened to main with Refs-only scope. Push/PR head matched; fetched main remained
+`2733e84a`. The closeout records those performed actions without changing
+criterion decisions, receipts or the original Review. No hosted CI/owner
+approval or merge is claimed.
