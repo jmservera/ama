@@ -55,7 +55,8 @@ resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2024-01-01'
   }
 }
 
-var containers = ['evidence', 'imports', 'quarantine', 'exports', 'audit-archive', 'ledger-digests']
+var containers = ['evidence', 'imports', 'quarantine', 'exports', 'audit-archive', 'ledger-digests', 'staff-results']
+// Keep staff-results last: blobContainers[4] and [5] below are addressed by index.
 
 resource blobContainers 'Microsoft.Storage/storageAccounts/blobServices/containers@2024-01-01' = [for container in containers: {
   parent: blobService
@@ -79,6 +80,28 @@ resource digestRetention 'Microsoft.Storage/storageAccounts/blobServices/contain
     immutabilityPeriodSinceCreationInDays: ledgerDigestImmutabilityDays
     allowProtectedAppendWrites: false
   }
+}
+
+resource staffResultsLifecycle 'Microsoft.Storage/storageAccounts/managementPolicies@2024-01-01' = {
+  parent: account
+  name: 'default'
+  properties: {
+    policy: {
+      rules: [{
+        enabled: true
+        name: 'expire-staff-results'
+        type: 'Lifecycle'
+        definition: {
+          filters: { blobTypes: ['blockBlob'], prefixMatch: ['staff-results/'] }
+          actions: {
+            baseBlob: { delete: { daysAfterCreationGreaterThan: 1 } }
+            version: { delete: { daysAfterCreationGreaterThan: 1 } }
+          }
+        }
+      }]
+    }
+  }
+  dependsOn: [blobContainers]
 }
 
 resource queueService 'Microsoft.Storage/storageAccounts/queueServices@2024-01-01' = {
