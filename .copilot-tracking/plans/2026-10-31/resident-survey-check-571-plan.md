@@ -152,3 +152,7 @@ Current handoff: P01 and P02-T01 complete. One Review executed, outcome
 Residual work: RV-001 publication/base decision, RV-002 separate human/live
 acceptance. Commit original evidence; P02-T02 remains blocked pending a valid
 fresh current-main full receipt. No second Review or source correction.
+Original candidate/evidence committed as `437965cb`. Full gate from clean
+exact-commit validation worktree against `1330869e` exited 1:
+`Candidate does not descend from the reviewed main base`. No receipt, push or
+PR. P02-T02 remains unchecked because publication is unproven.

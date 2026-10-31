@@ -87,3 +87,8 @@ the user-supplied base remains `5666bd33`. Publication ancestry reconciliation
 is outside current explicit base direction. Preserve branch history, run one
 Review, commit original evidence and record actual full-gate rejection if it
 cannot validate this candidate; no push without a valid receipt.
+P02-T01 executed exactly once, Complete / Residual work. Original implementation
+and RPI evidence committed as `437965cb`. Actual `--all` attempt on a clean
+detached exact-commit candidate was refused on current-main ancestry (exit 1),
+before checks/receipt creation. P02-T02 local-commit portion complete; full gate,
+verification, exact-head publication assessment and push/PR remain blocked.

@@ -34,11 +34,11 @@
   "blockers": [
     {
       "id": "publication-base-drift",
-      "summary": "Fresh origin/main 1330869ea675ff019958846330108b4f45e163ce differs from owner-supplied base 5666bd33",
+      "summary": "Full --all gate rejected committed candidate 437965cb: Candidate does not descend from reviewed origin/main 1330869ea675ff019958846330108b4f45e163ce",
       "resolution": "Owner/coordinator authorizes base reconciliation; preserve history and rerun full exact-head gate before push"
     }
   ],
-  "next_action": {"phase": "Follow-up", "action": "Commit original evidence and attempt required full gate; do not publish without valid receipt"},
+  "next_action": {"phase": "Follow-up", "action": "Publication blocked: owner/coordinator authorizes base reconciliation, then fresh full gate and exact-head assessment; no push/PR performed"},
   "prioritized_follow_ups": [
     {
       "rank": 1,

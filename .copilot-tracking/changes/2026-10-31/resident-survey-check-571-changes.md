@@ -123,6 +123,36 @@ local test bytecode/Ruff/editable metadata stay untouched, with no deletion
 of unknown ignored inputs. This is an explicit clean validation candidate,
 not a waiver of the clean-input or current-main ancestry rules.
 
+## Committed Candidate and Full-Gate Attempt
+
+Original source, guide and dated Research/Plan/critique/changes/Review/state
+committed as `437965cb`, with authenticated GitHub privacy-safe author/committer
+email and required Copilot trailer. Branch remains
+`fix/resident-survey-check-571`, descending from supplied `5666bd33`.
+
+Fresh detached validation worktree:
+`/tmp/ama-571-final-candidate-20261031`, exact `437965cb`, clean tracked,
+untracked and ignored inputs. Fetched current main:
+`1330869ea675ff019958846330108b4f45e163ce`.
+Executed from that candidate:
+`PYTHONDONTWRITEBYTECODE=1 python3 tools/rpi-checks.py --all --base
+1330869ea675ff019958846330108b4f45e163ce --out
+/tmp/ama-571-full-gate-20261031`.
+
+Exit 1, exact output:
+`BLOCKED: Candidate does not descend from the reviewed main base`.
+External log: `/tmp/ama-571-full-gate-20261031.log`. No checks or receipt were
+produced: ancestry admission failed before full execution. Receipt verification
+and independent exact-head publication assessment are therefore unavailable.
+No alternate stale-base gate, skip, rebase, force-push, protection change,
+Azure operation, push, PR or issue-criteria mutation was performed.
+
+This final evidence-only update records the actual rejection and preserves the
+original independent Review outcome. It does not fix RV-001 or establish a valid
+receipt for either commit. P02-T02 is partial: local commit achieved;
+publication blocked. Owner/coordinator must authorize base reconciliation,
+then run a fresh complete gate for the resulting exact candidate before push.
+
 ## Follow-Up Items
 
 Human/AT/live/model acceptance remains outside the synthetic check's evidence.
