@@ -1185,6 +1185,19 @@ document questions use fixed-topic guidance selection instead. Neither is kept
 in durable conversation memory. Unsupported
 questions abstain. No client case/home/email selector is accepted.
 
+Rules mode recognizes bounded natural own-record questions, including "How's my
+case going?", "Is my case blocked?", "What is blocking my case?", "Where is my
+retrofit up to?", "What paperwork have you got?", "Do you have my documents?",
+"What forms am I missing?" and "What address do you have for me?". These reuse
+the existing recorded answers; they do not infer why a case is waiting beyond
+the available record. Legacy question matches remain supported. The fallback
+uses an ordered keyword/intent grammar that consumes one complete question
+after existing safety, exclusion and specialist checks, not keyword presence
+alone. Unknown wording, mixed requests and appended instructions still refuse.
+Unsupported replies give four example questions and a housing-officer help path.
+This finite routing is not universal language understanding or approved
+resident-facing copy. No AI activation or deployment changes are made.
+
 Document questions retain the mandatory own-case facts and source references
 under the bounded Azure guidance selector below. Unlike other eligible typed
 questions, document replies do not use free-form generated prose. Status/forms

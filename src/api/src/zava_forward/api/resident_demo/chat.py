@@ -173,6 +173,60 @@ def _repair_question(question: str) -> bool:
     )
 
 
+def _natural_record_question(question: str) -> Topic | str:
+    question = question.lower().strip().replace("\u2019", "'")
+    if not re.fullmatch(r"[a-z]+(?:[ ']+[a-z]+)*[?.!]*", question):
+        return "unknown"
+    # Keep token order and consume one whole intent; keyword presence alone admits extra requests.
+    sentence = " ".join(re.findall(r"[a-z]+", question))
+    case = r"my (?:case|retrofit(?: case)?)"
+    status = (
+        rf"(?:how (?:is|s) {case} (?:going|doing|progressing)|"
+        rf"is {case} (?:blocked|stuck|waiting|on hold)"
+        r"(?: (?:on|for) (?:anything|something))?|"
+        rf"(?:any|is there (?:any|an)|are there any) updates? (?:on|about|for) {case}|"
+        rf"(?:what (?:is|s) (?:blocking|holding up|delaying) {case}|"
+        rf"what (?:is|s) {case} waiting (?:on|for)|"
+        rf"why is {case} (?:blocked|stuck|waiting|on hold))|"
+        rf"where (?:is|s) {case}(?: (?:up to|at))?|"
+        rf"where {case} is (?:up to|at))"
+    )
+    for topic, noun in (
+        (Topic.DOCUMENTS, r"(?:documents?|paperwork)"),
+        (Topic.FORMS, r"forms?"),
+    ):
+        record = rf"(?:(?:my|the) )?{noun}"
+        intent = (
+            rf"(?:(?:what|which) {record} (?:am i (?:still )?missing|"
+            rf"(?:do you have|have you (?:got|received))(?: (?:from|for) me)?)|"
+            rf"(?:do you have|have you (?:got|received)) my {noun}|"
+            rf"(?:is|are) my {noun} (?:missing|received)|"
+            rf"(?:has|have) my {noun} arrived|"
+            rf"(?:what|which) {record} (?:are|is) (?:still )?missing(?: from {case})?"
+            rf"|(?:what|which) {record} (?:do i|am i going to) need(?: for {case})?"
+            + (
+                rf"|(?:can i get |i need )?help (?:with|filling in|filling out) my {noun}"
+                rf"|how (?:do|can|should) i (?:fill in|fill out|complete) {record}"
+                if topic is Topic.FORMS
+                else ""
+            )
+            + ")"
+        )
+        if re.fullmatch(intent, sentence):
+            return topic
+    if re.fullmatch(status, sentence):
+        return Topic.STATUS
+    if re.fullmatch(
+        r"(?:where (?:is|s) my (?:home|house|flat)|"
+        r"what (?:is|s) my (?:home )?address|"
+        r"(?:what|which) address (?:do you have|have you got|is recorded)(?: for me)?|"
+        r"what (?:do you know|is recorded) about my (?:home|house|flat))",
+        sentence,
+    ):
+        return "home"
+    return "unknown"
+
+
 def _record_question(question: str) -> Topic | str:
     subject = (
         r"(?:(?:electric |electrical )?"
@@ -226,7 +280,7 @@ def _record_question(question: str) -> Topic | str:
     for topic, pattern in patterns:
         if re.fullmatch(pattern + r"[?.!]*", question.lower().strip()):
             return topic
-    return "unknown"
+    return _natural_record_question(question)
 
 
 def route(question: str) -> Topic | str:
@@ -368,7 +422,8 @@ def answer(topic: str, view: dict[str, Any]) -> Advice:
     else:
         answer = (
             "I cannot answer that or act on instructions in a message. "
-            "Ask about your case, home, documents, forms, consent, appointments or rules. "
+            'Try asking: "How is my case going?", "What documents am I missing?", '
+            '"What forms do I need?" or "What is my address?" '
             "I cannot approve, decide, diagnose, give consent, book from chat text or "
             "access anyone else's record. A person can help through your housing officer."
         )
