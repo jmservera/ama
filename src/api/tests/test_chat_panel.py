@@ -413,7 +413,9 @@ class PanelTests(roles.Matrix):
             self.assertEqual((code, reply["kind"]), (200, "fallback"))
             self.assertEqual(reply["context"], "ZF-1")
             self.assertEqual(self.prompts, [])
-            self.assertEqual(json.dumps(self.store.data.get("chat_threads"), sort_keys=True), before)
+            self.assertEqual(
+                json.dumps(self.store.data.get("chat_threads"), sort_keys=True), before
+            )
             self.assertNotIn("Stage?", json.dumps(self.store.data))
             self.assertEqual(
                 self.api(ROLE, "/api/chat/unstored-ask", {"content": "Stage?"})[1]["context"],

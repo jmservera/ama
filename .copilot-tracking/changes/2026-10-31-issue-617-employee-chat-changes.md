@@ -17,3 +17,8 @@
 
 * CI failure: test_both_chat_submissions_clear_only_successful_unchanged_raw_questions raised "root.insertBefore is not a function". The widget legitimately calls root.insertBefore (resize controls); the test's fake Node lacked it. Added Node.prototype.insertBefore to the fake in src/api/tests/test_case_journey.py; assertions unchanged.
 * test_case_journey and test_chat_widget_focus pass (36 tests); ruff and node --check pass; mypy reports only pre-existing missing-stub errors. Heavy gate not run.
+
+## Correction cycle 3 (PR 620 CI)
+
+* CI failure: ruff format --check in src-api flagged src/api/tests/test_chat_panel.py (one long assertEqual line). Reformatted with ruff format; no behaviour change.
+* ruff check and ruff format --check pass in src/api and src/core; test_chat* tests pass (80); node --check passes for app.js, assistants.js and chat.js; mypy reports only pre-existing missing-stub errors in untouched files. Heavy gate not run.
