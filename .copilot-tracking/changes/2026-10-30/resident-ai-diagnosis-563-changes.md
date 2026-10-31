@@ -371,3 +371,83 @@ once, Review once; local checks passed after actual dependency restoration.
 Evidence packaging is complete, but the requested exact enabled-runtime
 root cause and corrective configuration are NOT established. The exact next
 coordinator step remains the bounded private historical-query handoff above.
+
+## Telemetry Schema Correction (2026-10-31, PR #585, Refs #563)
+
+This dated correction supersedes the query in "Exact Next Coordinator Action"
+and later references to that future handoff. Earlier records, including the
+actually attempted denied query and original critique/Review outcomes, remain
+unchanged as historical evidence; their legacy snippets are not current
+instructions.
+
+The recorded environment destination is `azure-monitor`. The canonical
+[resource-specific console query guidance](../../../infra/README.md#account-selection-and-safe-flow-diagnostics)
+uses `ContainerAppConsoleLogs` with `ContainerAppName`, `RevisionName` and
+`Log`, not the legacy table and suffixed columns. `TimeGenerated` and the
+query's derived aliases remain unchanged.
+
+### Corrected Future Coordinator Handoff
+
+Use only an EXISTING authorized private telemetry route to the existing
+log-cutover-test workspace. Do not change networking/RBAC, enable AI or perform
+a reproduction to obtain access. The current query for fixed classified events
+in the actual failed revision and interval is:
+
+```kusto
+ContainerAppConsoleLogs
+| where TimeGenerated between (datetime(2026-10-30T18:07:45Z) .. datetime(2026-10-30T18:08:20Z))
+| where ContainerAppName == 'ca-resident-demo'
+    and RevisionName == 'ca-resident-demo--recover-ai-180649'
+| extend event=case(
+    Log has 'resident_assistant outcome=rules_fallback', 'rules_fallback',
+    Log has 'resident_assistant prompt_tokens=', 'usage_counts',
+    Log has 'ManagedIdentityCredential.get_token succeeded', 'managed_identity_success',
+    Log has 'ManagedIdentityCredential.get_token failed', 'managed_identity_failed',
+    Log has 'Response status:', 'sdk_response_status', '')
+| where event != ''
+| extend sdk_status=extract(@"Response status:\s*(\d{3})", 1, Log)
+| project TimeGenerated, RevisionName, event, sdk_status
+| order by TimeGenerated asc
+```
+
+This replacement was not executed. Allow ingestion delay; absent rows or
+generic-only fallback do not identify a cause. SDK status and identity success
+can concern SQL or managed-identity HTTP, not OpenAI inference; correlate the
+stage before attribution. Preserve the existing privacy boundary: no prompts,
+case/resident identifiers, tokens, headers, raw exception text or model output
+in telemetry or handoff. If richer historical evidence is unavailable, any
+privacy-safe stage/reason diagnostics or reproduction need separate scope and
+authorization, not a deployment or access workaround under this correction.
+
+### Resource-Specific Equivalent of the Historical Aggregate
+
+The earlier denied Log Analytics query remains the exact historical command
+record. For a separately authorized future use of that aggregate, its
+resource-specific equivalent is below. This equivalent was not executed and
+does not replace the recorded denial with a success:
+
+```kusto
+ContainerAppConsoleLogs
+| where TimeGenerated between (datetime(2026-10-30T18:06:30Z) .. datetime(2026-10-30T18:10:00Z))
+| where ContainerAppName == 'ca-resident-demo'
+| extend event=case(
+    Log has 'outcome=rules_fallback', 'rules_fallback',
+    Log has 'prompt_tokens=', 'usage_counts',
+    Log has 'ManagedIdentityCredential.get_token succeeded', 'managed_identity_success',
+    Log has 'ManagedIdentityCredential.get_token failed', 'managed_identity_failed',
+    Log has 'Synthetic resident showcase', 'startup',
+    Log has 'Traceback', 'traceback', 'other')
+| summarize count() by RevisionName, event
+```
+
+Only the table/column schema is corrected; windows, app/revision filters,
+classification, status extraction and output shapes are preserved. The App
+Insights aggregate is unchanged; it is a different query contract.
+
+Proven locally: the documented handoff now matches the repository's
+resource-specific schema contract, and the PR-scoped sweep found these two
+legacy console-query blocks only in this changes artifact. No Azure query or
+source change occurred in this correction. Live ingestion/access, enabled
+runtime cause, model dispatch/spend, corrective configuration and whole #563
+acceptance remain unproven. This is Refs #563 only, not issue closure,
+operational approval or publication evidence.
