@@ -8,6 +8,7 @@ import importlib.util
 import io
 import json
 import os
+import socket
 import subprocess
 import sys
 import tempfile
@@ -588,6 +589,172 @@ class GateTests(unittest.TestCase):
         gate.atomic_json(path, receipt)
         (self.out / "receipt.sha256").write_text(gate.digest(path))
         return path
+
+    def test_chromium_output_byte_boundary_matches_linux_socket(self) -> None:
+        prefix = str(self.out) + "/"
+        output = Path(prefix + "x" * (58 - len(os.fsencode(prefix))))
+        self.assertEqual(len(os.fsencode(output)), 58)
+        gate.admit_browser_output(output, ["browser"])
+        socket_path = str(output / "tmp") + gate.CHROMIUM_SOCKET_SUFFIX
+        self.assertEqual(len(os.fsencode(socket_path)), 107)
+        Path(socket_path).parent.mkdir(parents=True)
+        with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as server:
+            server.bind(socket_path)
+        with self.assertRaisesRegex(gate.GateError, "maximum 58"):
+            gate.admit_browser_output(Path(str(output) + "x"), ["browser"])
+        with (
+            socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as server,
+            self.assertRaises(OSError),
+        ):
+            server.bind(socket_path + "x")
+
+    def test_chromium_output_counts_filesystem_bytes_not_characters(self) -> None:
+        prefix = str(self.out) + "/"
+        output = Path(prefix + "x" * (57 - len(os.fsencode(prefix))) + "\u00e9")
+        self.assertLessEqual(len(str(output)), 58)
+        self.assertEqual(len(os.fsencode(output)), 59)
+        with self.assertRaisesRegex(gate.GateError, "is 59 bytes"):
+            gate.admit_browser_output(output, ["browser"])
+
+    def test_main_rejects_long_browser_output_before_probes_writes_or_lock(self) -> None:
+        browser = self.root / "src/api/checks/fixture.py"
+        browser.parent.mkdir(parents=True)
+        browser.write_text("# browser selection fixture\n")
+        self.git("add", ".")
+        self.git(
+            "-c",
+            "user.name=Fixture",
+            "-c",
+            "user.email=fixture@example.test",
+            "commit",
+            "-qm",
+            "browser fixture",
+        )
+        parent = self.scoped_receipt([])
+        self.assertIn("browser", parent["selection"]["groups"])
+        receipt_path = self.out / "receipt.json"
+        prefix = str(self.out) + "/"
+        for mode in (["--all"], ["--changed"], ["--resume", str(receipt_path)]):
+            for size in (59, 130):
+                output = Path(prefix + "x" * (size - len(os.fsencode(prefix))))
+                with (
+                    self.subTest(mode=mode, size=size),
+                    patch.object(gate.Path, "cwd", return_value=self.root),
+                    patch.object(
+                        sys,
+                        "argv",
+                        [
+                            "rpi-checks.py",
+                            *mode,
+                            "--base",
+                            self.base,
+                            "--out",
+                            str(output),
+                        ],
+                    ),
+                    patch.object(gate, "tool_identity") as tools,
+                    patch.object(
+                        gate.subprocess, "check_output", wraps=gate.subprocess.check_output
+                    ) as probes,
+                    patch.object(gate, "heavy_lock") as lock,
+                    patch.object(gate, "Runner") as runner,
+                    patch.object(gate, "verify") as verify,
+                    redirect_stderr(io.StringIO()) as stderr,
+                ):
+                    self.assertEqual(gate.main(), 1)
+                    self.assertIn("Chromium singleton socket path", stderr.getvalue())
+                    self.assertIn("maximum 58", stderr.getvalue())
+                    self.assertIn("maximum 62", stderr.getvalue())
+                    self.assertIn("/tmp/rpi-608-final", stderr.getvalue())
+                    tools.assert_not_called()
+                    self.assertTrue(all(call.args[0][0] == "git" for call in probes.call_args_list))
+                    lock.assert_not_called()
+                    runner.assert_not_called()
+                    verify.assert_not_called()
+                    self.assertFalse(output.exists())
+                    self.assertFalse((output / "receipt.json").exists())
+        self.assertEqual(json.loads(receipt_path.read_text()), parent)
+
+    def test_main_resolves_alias_and_preserves_external_new_output_boundary(self) -> None:
+        target = self.out / ("x" * 90)
+        target.mkdir()
+        alias = Path(self.temp.name) / "alias"
+        alias.symlink_to(target, target_is_directory=True)
+        for output, expected in (
+            (alias / "new", "Chromium singleton socket path"),
+            (self.root / ("x" * 90), "new external directory"),
+            (target, "new external directory"),
+        ):
+            with (
+                self.subTest(output=output),
+                patch.object(gate.Path, "cwd", return_value=self.root),
+                patch.object(
+                    sys,
+                    "argv",
+                    [
+                        "rpi-checks.py",
+                        "--all",
+                        "--base",
+                        self.base,
+                        "--out",
+                        str(output),
+                    ],
+                ),
+                patch.object(gate, "tool_identity") as tools,
+                patch.object(gate, "heavy_lock") as lock,
+                redirect_stderr(io.StringIO()) as stderr,
+            ):
+                self.assertEqual(gate.main(), 1)
+                self.assertIn(expected, stderr.getvalue())
+                tools.assert_not_called()
+                lock.assert_not_called()
+        self.assertTrue(alias.is_symlink())
+        self.assertEqual(list(target.iterdir()), [])
+
+    def test_runner_rejects_before_scratch_but_browser_free_long_output_is_allowed(self) -> None:
+        output = self.out / ("x" * 100)
+        output.mkdir(mode=0o700)
+        with self.assertRaisesRegex(gate.GateError, "Chromium singleton socket path"):
+            gate.Runner(self.root, output, self.base, [], selected={"groups": ["browser"]})
+        self.assertEqual(list(output.iterdir()), [])
+        gate.admit_browser_output(output, ["preflight", "static"])
+        runner = gate.Runner(
+            self.root, output, self.base, [], selected={"groups": ["preflight", "static"]}
+        )
+        self.assertEqual(runner.env["TMPDIR"], str(output / "tmp"))
+        self.assertTrue((output / "tmp").is_dir())
+        self.assertEqual(output.stat().st_mode & 0o777, 0o700)
+        self.assertFalse((output / "receipt.json").exists())
+
+    def test_resume_admitted_path_still_checks_tools_source_and_receipt_integrity(self) -> None:
+        receipt = self.scoped_receipt([])
+        receipt["selection"] = gate.selection(self.root, self.base, "all", [])
+        receipt["scope"] = "full"
+        path = self.seal(receipt)
+        output = self.out / "retry"
+        with (
+            patch.object(
+                gate, "tool_identity", side_effect=gate.GateError("fixture tool probe")
+            ) as tools,
+            self.assertRaisesRegex(gate.GateError, "fixture tool probe"),
+        ):
+            gate.validate_receipt(self.root, path, self.base, passing=False, new_output=output)
+        tools.assert_called_once()
+        for tamper in ("source", "integrity"):
+            self.seal(receipt)
+            if tamper == "source":
+                changed = dict(receipt, identity=dict(receipt["identity"], head="0" * 40))
+                self.seal(changed)
+            else:
+                path.write_text(path.read_text() + " ")
+            with (
+                self.subTest(tamper=tamper),
+                patch.object(gate, "tool_identity") as tools,
+                self.assertRaisesRegex(gate.GateError, "identity mismatch|integrity mismatch"),
+            ):
+                gate.validate_receipt(self.root, path, self.base, passing=False, new_output=output)
+            tools.assert_not_called()
+        self.assertFalse(output.exists())
 
     def test_nonzero_command_blocks(self) -> None:
         runner = self.runner()
