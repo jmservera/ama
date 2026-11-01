@@ -33,3 +33,4 @@ Add `sensor_handover_demo.py` in `src/api/checks/`: builds a temporary SQLite st
 
 * Azure SQL or Hub execution: owner-gated, not authorised here.
 * Changing the verifier or core report: already reviewed and merged.
+* Correction research: `store_at()` switches to `MssqlStore` when `ZF_SENSOR_MSSQL=1`, and `Tolerance` raises `ValueError` for negative or non-finite limits; both reproduced before the fix.

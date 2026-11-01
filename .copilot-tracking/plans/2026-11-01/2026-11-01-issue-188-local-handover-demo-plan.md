@@ -17,3 +17,5 @@ ms.date: 2026-11-01
 
 * Verdict: proceed. Findings: the demo must not claim live or Azure proof (applied in output field `evidence` and README); use ephemeral temp store and delete it on exit (applied); no secrets or network (applied).
 * Review expectation: one post-implementation review; findings route to follow-ups.
+
+* Correction cycle: reject SQL mode and invalid tolerance in the demo, add tests, rerun checks. Done.

@@ -10,6 +10,8 @@ fixtures on PYTHONPATH (see src/api/README.md).
 import argparse
 import csv
 import json
+import math
+import os
 import sys
 import tempfile
 from collections.abc import Sequence
@@ -36,6 +38,10 @@ EVIDENCE = "constructed local SQLite; not live Hub, Azure SQL or sensor accuracy
 
 def demo(seam: float = 0.0, tolerance: float = 0.0) -> dict[str, object]:
     selected, climate, measures = fixture.selection(), fixture.ConstructedClimate(), fixture.measures()
+    if os.environ.get("ZF_SENSOR_MSSQL") == "1":
+        raise ValueError("the demo is SQLite-only; unset ZF_SENSOR_MSSQL")
+    if not math.isfinite(tolerance) or tolerance < 0:
+        raise ValueError("tolerance must be a finite, non-negative number")
     spec = Replay(days=4)
     with tempfile.TemporaryDirectory(prefix="zf-handover-demo-") as tmp:
         store = store_at(tmp)
@@ -115,7 +121,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--seam", type=float, default=0.0, help="shift live temperature (C)")
     parser.add_argument("--tolerance", type=float, default=0.0, help="temperature limit (C)")
     args = parser.parse_args(argv)
-    result = demo(args.seam, args.tolerance)
+    try:
+        result = demo(args.seam, args.tolerance)
+    except ValueError as error:
+        print(json.dumps({"passed": False, "refusal": str(error), "evidence": EVIDENCE}, indent=2))
+        return 2
     print(json.dumps(result, indent=2))
     return 0 if result["passed"] else 1
 

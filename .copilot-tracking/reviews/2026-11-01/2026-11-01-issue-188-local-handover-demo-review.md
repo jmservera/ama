@@ -11,3 +11,4 @@ ms.date: 2026-11-01
   2. Replace the constructed climate with the pinned real climate history for a demo with realistic weather.
   3. The demo imports test fixtures through PYTHONPATH; promote fixtures into a package module if the demo is reused.
 * Unmet #188 criteria for the PR: Azure SQL joint query, live-stream handover statistics and Azure SQL re-run idempotence. PR uses a non-closing reference.
+* Correction review (PR 698): both Copilot threads confirmed valid and fixed; outcome conformant for the demo scope; no new follow-ups.
