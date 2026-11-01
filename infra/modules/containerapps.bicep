@@ -55,6 +55,13 @@ param behindPublicEdge bool = false
 param tileUrl string = ''
 @description('Attribution text shown with the map tiles.')
 param tileAttribution string = ''
+@description('Owner-recorded chat privacy references (docs/reference/research/chat-demo-storage-approval-2026-11-01.md). All four refs must be set to send the settings; empty keeps chat storage refused.')
+param chatDpiaRef string = ''
+param chatLawfulBasisRef string = ''
+param chatNoticeRef string = ''
+param chatRetentionRef string = ''
+@minValue(0)
+param chatRetentionDays int = 0
 
 var externalEnvironment = demoDirectIngress || allowPublicNetworkAccess
 
@@ -99,6 +106,7 @@ module dns 'envDns.bicep' = if (!externalEnvironment) {
 }
 
 var authEnabled = !empty(entraClientId)
+var chatEnabled = !empty(trim(chatDpiaRef)) && !empty(trim(chatLawfulBasisRef)) && !empty(trim(chatNoticeRef)) && !empty(trim(chatRetentionRef)) && chatRetentionDays > 0
 
 var commonEnv = [
   { name: 'APPLICATIONINSIGHTS_CONNECTION_STRING', value: appInsightsConnectionString }
@@ -174,7 +182,13 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads) {
             { name: 'ZF_TRUSTED_PROXY', value: '1' }
             { name: 'ZF_ENTRA_TENANT_ID', value: tenant().tenantId }
             { name: 'ZF_ENV', value: 'production' }
-          ] : [], empty(entraRoleMap) ? [] : [
+          ] : [], !chatEnabled ? [] : [
+            { name: 'CHAT_DPIA_REF', value: chatDpiaRef }
+            { name: 'CHAT_LAWFUL_BASIS_REF', value: chatLawfulBasisRef }
+            { name: 'CHAT_NOTICE_REF', value: chatNoticeRef }
+            { name: 'CHAT_RETENTION_REF', value: chatRetentionRef }
+            { name: 'CHAT_RETENTION_DAYS', value: string(chatRetentionDays) }
+          ], empty(entraRoleMap) ? [] : [
             { name: 'ZF_ROLE_MAP', value: string(entraRoleMap) }
           ])
           probes: [

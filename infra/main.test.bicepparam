@@ -20,3 +20,9 @@ param deploymentProfile = 'production'
 param allowPublicNetworkAccess = false
 param keyVaultPurgeProtection = true
 param registryQuarantineEnabled = true
+// Synthetic-data demo only; owner decision 2026-11-01. Not a production approval.
+param chatDpiaRef = 'docs/reference/research/chat-memory-dpia.md'
+param chatLawfulBasisRef = 'docs/reference/research/chat-demo-storage-approval-2026-11-01.md#lawful-basis'
+param chatNoticeRef = 'docs/reference/research/chat-demo-storage-approval-2026-11-01.md#notice'
+param chatRetentionRef = 'docs/reference/research/chat-demo-storage-approval-2026-11-01.md#retention'
+param chatRetentionDays = 30
