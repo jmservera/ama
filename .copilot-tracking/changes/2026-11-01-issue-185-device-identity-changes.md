@@ -12,3 +12,9 @@
 * Provision tracks created devices separately from issued credentials and rolls back only those, running cleanup outside the exception handler so the original error is not chained.
 * Teardown converts adapter exceptions to fixed `TEARDOWN_FAILED:<n>` codes, continues remaining cleanup, and verifies the same references it revoked.
 * Added 6 regression tests (device identity + sensor stock run: 30 OK); ruff and mypy pass.
+
+## Review round 2 (Copilot threads on PR 647)
+
+* CredentialStore protocol: `issue(device_id, run_id)` returns an immutable per-issuance reference owned by the run; `references()` replaced by `run_references(run_id)`.
+* Teardown revokes explicit references plus every `run_references(run_id)` entry, so a credential stored before `issue()` raised is revoked on rollback, and a teardown never touches a newer run's credentials.
+* Added 2 regression tests (failure after storage; overlapping provision/teardown); 16 device identity tests OK, ruff clean.

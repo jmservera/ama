@@ -24,3 +24,7 @@ Decision: PR uses Refs, not a closing keyword.
 ## Addendum: Copilot PR review round 1
 
 Four valid findings (rollback scope, stale-manifest ownership, secret-bearing adapter errors, rollback verification references) were fixed in code with regression tests. The original Review outcome above is unchanged; the Registry adapter contract now requires `run_of` and run-conditional atomic `delete`.
+
+## Addendum: Copilot PR review round 2
+
+Two valid findings (credential stored before `issue()` raised; overlapping provision/teardown revoking a newer run's credential) were fixed with run-scoped immutable credential references and regression tests. The original Review outcome is unchanged; the CredentialStore adapter contract now requires per-issuance references and `run_references(run_id)`.

@@ -36,13 +36,18 @@ class Registry(Protocol):
 
 
 class CredentialStore(Protocol):
-    def issue(self, device_id: str) -> str:
-        """Issue and store a credential; return only its non-secret reference."""
+    def issue(self, device_id: str, run_id: str) -> str:
+        """Store a credential under a new immutable per-issuance reference owned by `run_id`.
+
+        Return only the non-secret reference; a later issuance never reuses it.
+        """
         ...
 
     def revoke(self, reference: str) -> None: ...
 
-    def references(self) -> Sequence[str]: ...
+    def run_references(self, run_id: str) -> Sequence[str]:
+        """Return every reference stored for `run_id`, including after an uncertain write."""
+        ...
 
 
 @dataclass(frozen=True)
@@ -103,7 +108,7 @@ def provision(manifest: Manifest, registry: Registry, store: CredentialStore) ->
         for identity in manifest.identities:
             registry.create(identity.device_id, manifest.run_id)
             created.append(identity)
-            reference = store.issue(identity.device_id)
+            reference = store.issue(identity.device_id, manifest.run_id)
             issued.append(
                 DeviceIdentity(identity.device_id, identity.sensor_id, identity.home_id, reference)
             )
@@ -129,7 +134,7 @@ def teardown(
     remaining cleanup still runs.
     """
     owned = {i.device_id for i in manifest.identities}
-    references = [r for r in (refs if refs is not None else _refs(manifest)) if r]
+    explicit = [r for r in (refs if refs is not None else _refs(manifest)) if r]
     run_id = manifest.run_id
     try:
         foreign = any(registry.run_of(d) not in (None, run_id) for d in sorted(owned))
@@ -140,6 +145,12 @@ def teardown(
     if foreign:
         raise DeviceIdentityError("TEARDOWN_OWNERSHIP_MISMATCH")
     errors = 0
+    try:
+        discovered = list(store.run_references(run_id))
+    except Exception:
+        discovered = []
+        errors += 1
+    references = list(dict.fromkeys([*explicit, *discovered]))
     for device_id in sorted(owned):
         try:
             registry.delete(device_id, run_id)
@@ -154,7 +165,7 @@ def teardown(
     leftover: list[str] = []
     try:
         remaining = sorted(owned.intersection(registry.list_run(run_id)))
-        leftover = sorted(set(references).intersection(store.references()))
+        leftover = sorted(set(references).intersection(store.run_references(run_id)))
     except Exception:
         errors += 1
     if errors:
