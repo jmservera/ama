@@ -16,7 +16,14 @@ class DeterminismAuditTests(unittest.TestCase):
         assert isinstance(results, list)
         self.assertEqual(
             {r["generator"] for r in results},
-            {"scale-fixture", "sensor-backfill", "sensor-scenarios", "stock-fabric"},
+            {
+                "scale-fixture",
+                "sensor-backfill",
+                "sensor-scenarios",
+                "stock-fabric",
+                "public-pack",
+                "stock-epc",
+            },
         )
         for r in results:
             self.assertEqual(r["status"], "PASS", r)
@@ -55,6 +62,25 @@ class DeterminismAuditTests(unittest.TestCase):
             result = da._check("fixed", fixed)
             self.assertEqual(result["status"], "FAIL", revision)
             self.assertEqual(result["manifest_missing"], ["generator_revision"])
+
+    def test_support_generators_are_reported_unavailable_when_directory_missing(self) -> None:
+        with patch.object(da, "SUPPORT_GENERATOR", Path("/nonexistent")):
+            report = da.audit()
+        results: list[dict[str, Any]] = report["results"]  # type: ignore[assignment]
+        self.assertNotIn("public-pack", {r["generator"] for r in results})
+        unavailable = report["unavailable"]
+        assert isinstance(unavailable, dict)
+        self.assertIn("public-pack", unavailable)
+        self.assertIn("stock-epc", unavailable)
+
+    def test_sixteen_hex_revision_passes(self) -> None:
+        def fixed(out: Path) -> Path:
+            out.mkdir(parents=True)
+            manifest = {"seed": 7, "version": "v", "generator_revision": "sha256:" + "a" * 16}
+            (out / "manifest.json").write_text(json.dumps(manifest))
+            return out / "manifest.json"
+
+        self.assertEqual(da._check("fixed", fixed)["status"], "PASS")
 
     def test_valid_revision_passes(self) -> None:
         def fixed(out: Path) -> Path:

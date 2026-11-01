@@ -254,6 +254,15 @@ original private stock register generator as unavailable, so it does not
 prove that part of the criteria. The sensor scenarios manifest now also
 records `version`. Test: `src/core/tests/test_determinism_audit.py`.
 
+The audit also replays the public pack generator (`generate_pack.py`, seed
+1341953496) and the stock EPC generator (`zf_stock_epc.py`) from
+`support/synthetic-data/retrofit-flow/zava-forward-year-one/generator`, using a
+fictional eight-home register in a temporary directory. Their manifests carry
+16 hex character source-hash revisions, which the audit accepts alongside the
+64 character form. When the support directory is absent they are listed as
+unavailable rather than passed. The original stock register generator is still
+absent, so criteria 1 and 2 remain unmet overall.
+
 ### Offline acceptance audit (2026-10-16, Refs #176)
 
 | Acceptance criterion | Result | Evidence and remaining boundary |
