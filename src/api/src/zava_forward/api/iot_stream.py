@@ -428,17 +428,22 @@ class HubPublisher:
         previous: datetime | None = None
         home_order: list[object] = []
 
-        async def send(client: IoTHubDeviceClient, message: Message) -> None:
+        def removed(home: object) -> bool:
+            return active_homes is not None and home_order.index(home) >= active_homes()
+
+        async def send(client: IoTHubDeviceClient, message: Message, home: object) -> bool:
             await control.admit_send()
+            if removed(home):
+                return False
             await client.send_message(message)
+            return True
 
         try:
             for frame in frames:
                 home = frame.row.get("home_id")
                 if home not in home_order:
                     home_order.append(home)
-                if active_homes is not None and home_order.index(home) >= active_homes():
-                    previous = frame.nominal_at
+                if removed(home):
                     continue
                 stamp = frame.nominal_at
                 interval = max(0.0, (stamp - previous).total_seconds()) if previous else 0.0
@@ -481,7 +486,10 @@ class HubPublisher:
                         "status": "attempt",
                     }
                 )
-                await _bounded(send(client, message), deadline, lambda: control.stopped)
+                if not await _bounded(
+                    send(client, message, home), deadline, lambda: control.stopped
+                ):
+                    continue
                 sent += 1
                 truth(
                     {

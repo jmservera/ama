@@ -545,6 +545,28 @@ class PublisherTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(sent, 2)
         self.assertEqual(created, [frames[0].device_id])
 
+    async def test_scale_down_during_connection_skips_removed_frame(self) -> None:
+        publisher, frames, controller = self._two_home_publisher(2)
+
+        async def connect() -> None:
+            if self.client.connect.await_count == 2:
+                controller.scale_down(0.5)
+
+        self.client.connect = AsyncMock(side_effect=connect)
+        with (
+            tempfile.TemporaryDirectory() as tmp,
+            patch(
+                "zava_forward.api.iot_stream.IoTHubDeviceClient.create_from_x509_certificate",
+                return_value=self.client,
+            ),
+        ):
+            path = Path(tmp) / "estimate.json"
+            record(controller.plan, path)
+            sent = await publisher.run_controlled(frames, controller, path, truth=self.truth.append)
+        self.assertEqual(sent, 2)
+        self.assertEqual(self.client.send_message.await_count, 2)
+        self.assertEqual(sum(1 for t in self.truth if t.get("status") == "sent"), 2)
+
     async def test_device_only_activation_publishes_without_asserting_routed_receiver(self) -> None:
         active = DeviceActivation(ACTIVE.hub_hostname, "owner-approved finite hub exercise")
         publisher = HubPublisher(

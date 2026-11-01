@@ -35,3 +35,7 @@ task_slug: simulator-cost-run-controls
 
 * Research: `run_controlled` passed only budget and pacer, so `RunController.active_homes` was ignored, and distinct homes were not bounded by `plan.homes`.
 * Plan: add `active_homes` callable to `HubPublisher.run`; reject frame sets with more distinct homes than the plan before creating SDK clients.
+
+## Correction cycle 2026-11-01 (PR 707 review threads)
+
+Research/plan/change/review note: two Copilot threads on iot_stream.py were valid. Active-home eligibility is now rechecked after admit_send and before send_message, skipping removed frames without sent counts or sent truth events. Skipped frames no longer advance the replay clock. Regression: scale down during connection (test_iot_stream). Validation: ruff check and format clean; mypy clean on touched files; tests.test_iot_stream 33 OK. Wider api suite and mypy show environment failures that are identical on the base commit.
