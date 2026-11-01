@@ -2,7 +2,7 @@ name: Source projects CI
 
 on:
   pull_request:
-    paths: ["src/**", "infra/**", "tools/rpi-checks.py", "tools/test_rpi_checks.py", "tools/rename-zava*", "docs/reference/research/retrofit-synthetic-data/**", "support/synthetic-data/**", ".github/workflows/src-ci.yml", ".github/workflows/mvp-ci.yml", ".github/workflows/mvp-validation.yml", ".github/workflows/src-deploy.yml", ".github/workflows/infra-plan.yml"]
+    paths: ["src/**", "infra/**", "tools/rpi-checks.py", "tools/test_rpi_checks.py", "tools/rename-zava*", "docs/reference/research/retrofit-synthetic-data/**", "docs/reference/research/chat-memory-dpia.md", "docs/reference/research/ux/customer-journeys/residents.md", "support/synthetic-data/**", ".github/workflows/src-ci.yml", ".github/workflows/mvp-ci.yml", ".github/workflows/mvp-validation.yml", ".github/workflows/src-deploy.yml", ".github/workflows/infra-plan.yml"]
   workflow_dispatch:
 
 permissions:

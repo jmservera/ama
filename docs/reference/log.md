@@ -9027,3 +9027,151 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   measurement/report tests pass with configured dependencies. A separate
   assisted scoped critique found only stale status wording, now corrected;
   this is not independent human peer review or full runtime acceptance.
+
+## [2026-10-31] synthesis | Delivery bottleneck analysis and seven-day plan
+
+* Added the [delivery bottleneck analysis](./research/delivery-bottleneck-analysis-2026-10-31.md)
+  and catalog row: 381 merged PRs (about 14 per day since 17 October), a
+  measured bottleneck table, ranked fixes with estimated savings, owner
+  decisions D1-D7 kept separate, and a seven-day plan to a working resident
+  and employee demo.
+* CI figures come from a one-day sample of 300 runs; the RPI artifact share
+  of PR size and the 19-24 October slowdown cause are unmeasured. No
+  workflow, setting, gate or source change was made.
+
+## [2026-11-01] update | Synthetic determinism replay audit (Refs #176)
+
+* Added a one-command replay audit for the in-repo synthetic generators and a
+  `version` field in the sensor scenarios manifest; documented in the
+  [retrofit synthetic data README](./research/retrofit-synthetic-data/README.md).
+* The original private stock register generator remains absent, so the
+  byte-identical and manifest criteria stay partially met. No index change.
+## [2026-11-01] refine | Briefing feedback guidance, Refs #531
+
+* Added a plain-language paragraph to Today's briefing saying how to correct
+  it, how a reason becomes audit-logged feedback and how to refresh, with a
+  unit test and an updated G15 row in the
+  [API guide](../../src/api/README.md#loading-feedback-and-todays-briefing-531).
+* Local pinned-axe browser check and unit tests passed. Live employee-site
+  verification (criterion 7) remains unmet; no assistive-technology claim.
+## [2026-11-01] observation | Regulatory evaluation gates re-verified, Refs #216
+
+* Re-ran the [#216 gates](../../src/agents/README.md#re-verification-2026-11-01) at
+  `80673b0d`: 32 tests passed and the regenerated 60,000-home report matched the
+  committed report exactly. Lint and type checks were clean for `src/agents`.
+* No new gate code, threshold, model call or spend authority was added. AI cost
+  per accepted check stays Unknown with its missing inputs named; cards alone
+  remain the recommendation.
+* Unmet: owner agreement, independently graded or held-out sets, staff paired
+  trial, alert precision and acknowledgement time, continuing-stock baseline.
+## [2026-11-01] observation | Intermittent workspace script load, Refs #524
+
+* Recorded a working hypothesis for the intermittent `/vendor/leaflet.js` failure:
+  replica cold start (default `apiMinReplicas` 0; live probe on
+  2026-11-01 timed out at 30 s; an initial `/healthz` took 24.016 s on
+  2026-10-31, a health-response latency, not a measured cold start). Local asset serving is
+  byte-complete with ETag and cache headers. Unconfirmed for the 2026-10-28
+  incident; no platform logs retrieved.
+* The retry was delivered by #527; release-URL reuse and the expanded tests came from #594 and #538. The authenticated live check
+  stays pending deploy of #616 and #617. Retry timeout (5 s) is shorter than
+  the observed latencies, logged as a follow-up. No source change.
+
+## [2026-11-01] query | Employee chat local verification (#530)
+
+* Recorded a local focused-tier run for the employee chat with bounded
+  skills: API (1485), agents (123) and core chat (99) unit tests, ruff,
+  mypy, the employee chat browser and pinned axe check, and 271 SQL
+  contract tests on a disposable local SQL Server. Evidence is in
+  `.copilot-tracking/changes/2026-11-01/employee-chat-skills-530-verification-changes.md`.
+* Live employee-site verification, screen-reader and voice-control
+  acceptance and owner confirmation of agent names remain unproven; no
+  source change was made.
+
+## 2026-11-01
+
+* Added `research/ux/supported-devices-proposal.md`, a proposal for owner
+  ratification of supported device classes and widths (#152). The manifest
+  records it as `proposed`; the decision, browsers, assistive tools, field or
+  mobile use and complete AC-034/AC-043 acceptance remain open.
+## [2026-11-01] update | AI consumption demo walk-through (Refs #432)
+
+* Added a credential-free synthetic walk-through
+  (`zava_forward.core.ai_consumption_demo`, documented in the core README) that
+  shows the held dispatch without authority, the looping request stopping at the
+  call limit, cost Unknown without billing and a synthetic-labelled report.
+* No price, bill, owner approval, spend or held-out batch was added; the
+  remaining evidence gaps in `docs/reference/resources/ai-tokenomics.md` stand.
+## [2026-11-01] update | Operator handover verifier (#188)
+
+* Added the operator handover check to the
+  [sensor research plan](research/iot-sensor-analytics-research-plan.md#operator-handover-verifier-2026-11-01-refs-188)
+  and the API README. It reuses the local strict report on any `ZF_STORE`
+  SQL store and re-runs a window. Actual Hub, Azure SQL and live handover
+  remain unproven; no issue checkbox changes.
+## [2026-11-01] update | Break-glass audit purpose and OD-46 options (#162)
+
+* Refused break-glass attempts now audit the redacted purpose as well as the
+  target and reason; the test asserts purpose, target and policy reference on
+  every entry. Added a proposed administrator and break-glass policy options
+  table to `research/chat-memory-dpia.md`.
+* The policy is not decided (BRD OD-46, owner with DPO); issue #162 criterion 6
+  stays open. No regulatory snapshot changed.
+
+## [2026-11-01] update | Executable design traceability gate (#156)
+
+* Added `tools/check-design-trace.py` and tests. It validates the 74-row screen
+  register and reports the design gate as blocked while designs are NOT SUPPLIED.
+  Usage is under "Run the design gate" in the prototype profile review.
+* Issue #156 criterion 1 stays unmet: no designs, human review, accessibility or
+  content evidence were supplied. No regulatory snapshot changed.
+
+## [2026-11-01] ingest | Atlas findings traced to role screens (#233)
+
+* Added `research/ux/atlas-screen-trace.md` (eleven perspectives, five atlas
+  themes, two tensions and a same-home walkthrough on constructed EX-HOME-901)
+  and an offline completeness checker with tests in `src/core`. Updated the
+  index and the #233 row of the prototype profile review.
+* Findings stay hypotheses until #155. Screens in open pull requests are not
+  delivered. Accessibility and design-system criteria remain unproven.
+## [2026-11-01] add | Today's briefing HAX design note (#531)
+
+* Added `research/ux/briefing-hax-design-note.md`, a dated mapping of HAX
+  guidelines G1, G2, G7 to G11 and G15 to G17 to the shipped briefing and loading
+  feedback, with the source-inspection evidence boundary. No UI behaviour changed.
+* Maintainer-authored; not a UX specialist output. Criterion 7 (live employee
+  verification) and assistive-technology acceptance stay unmet. No regulatory
+  snapshot changed.
+## [2026-11-01] update | Key Vault secret lifecycle slice (#142)
+
+* Extended `infra/secret-inventory.json` to the two resident demo secrets, with the
+  repository-recorded owner pending confirmation. Added `rotation-simulate` and
+  `review-status` to `infra/scripts/secret_lifecycle.py` with offline tests.
+* Issue #142 criteria 1 to 3 stay unmet: no live rotation exercise, executed signed
+  review or Azure Monitor alert evaluation. No regulatory snapshot changed.
+## [2026-11-01] verify | Resident sensor gauges and assistant re-verified on main (Refs #466)
+
+* Re-ran the resident core and api suites (99 tests, 1 opt-in skip), ruff and mypy
+  against main efebfc6d. Own-home synthetic gauges and history, the advisory
+  own-case assistant, cross-resident tests and the recorded model, cap and
+  credential decision in `docs/architecture/resident-assistant-prototype.md` hold.
+* The 2026-11-01 inference expiry has passed, so the assistant uses its labelled
+  rules fallback. No source change was needed.
+* Issue #466 criterion 1 (owner confirms scope and priority) stays unmet; manual
+  assistive-technology acceptance and live checks remain owner-run. No regulatory
+  snapshot changed.
+## [2026-11-01] query | Employee chat re-verification on current main (#530)
+
+* Re-ran the focused tier on main efebfc6d: core chat (99), agents chat
+  model (7), API chat panel (41) and widget focus (6) tests, ruff, mypy and
+  the employee chat browser and pinned axe check. All passed. Evidence is in
+  `.copilot-tracking/changes/2026-11-01/employee-chat-skills-530-reverify-changes.md`.
+* Live employee-site verification, screen-reader and voice-control
+  acceptance and owner confirmation of agent names remain unproven; no
+  source change was made.
+
+## [2026-11-01] update | Second stabilization checkpoint (#440)
+
+* Appended a focused-tier checkpoint on main 36a1d0da to the cut-over evidence
+  pack: five package suites, Ruff and mypy passed locally; SQL, container and
+  browser groups not run. The PERF-440 benchmark outlier was not reproduced
+  and is filed as #687. No regulatory snapshot changed; no criterion ticked.

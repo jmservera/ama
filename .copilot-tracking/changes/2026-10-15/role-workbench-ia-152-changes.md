@@ -298,3 +298,8 @@ RV-001 is no longer an open implementation blocker. RV-002 supported-device
 decision, RV-003 complete AC-034/043/recovery acceptance and RV-004 live/human
 evidence remain open. Preserve all related unchecked acceptance gates, draft
 status and Refs #152. No second Review, full acceptance or main write.
+
+## Review follow-up 2026-11-01 (PR 659 Copilot threads)
+
+* Refreshed stale `workbench` and `navigation-tests` SHA-256 pins in `docs/reference/research/retrofit-synthetic-data/scenario-manifest.json`; `test_scenario_manifest` and `test_needs_inventory` pass, ruff clean.
+* `activation` check failure is a GitHub API rate-limit in the daily AIC cache restore (infrastructure, not code); not fixable here.

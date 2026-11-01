@@ -340,7 +340,7 @@ The last column adds the domain-specific missing evidence/action.
 | [#230](https://github.com/jmservera/ama/issues/230#acceptance-criteria) O: Programme queues, handoffs and lifecycle/funnel | [Programme planner][bc-programme] / [connected journey][bc-connected] | [Profile flow][bc-profile] T02/03; [lifecycle][bc-lifecycle] C03 | NOT SUPPLIED; [H][design-h]/[E][design-e] partial, separate homes not one lifecycle | Programme + design / supply return/sender/current-owner states, separate chase/update and connected-home evidence |
 | [#231](https://github.com/jmservera/ama/issues/231#acceptance-criteria) O: assessor/designer/QA evidence, sign-off and returns | [Assessor][bc-assessor] / [designer][bc-technical] / [QA][bc-quality] | [Technical/Quality flows][bc-eleven] T04/09 | NOT SUPPLIED; [H][design-h]/[E][design-e] partial, technical script deferred | Technical/Quality + design / supply separate competent returns, per-measure pack and independent reinspection |
 | [#232](https://github.com/jmservera/ama/issues/232#acceptance-criteria) O: housing/contact-centre/engagement staff screens | [Housing officer](./customer-journeys/frontline.md#1-neighbourhood-housing-officer), [contact centre](./customer-journeys/frontline.md#2-contact-centre--assisted-intake-staff-proxy), [engagement][bc-engagement] | [Profile flow][bc-profile], Housing T05 | NOT SUPPLIED; [H][design-h]/[E][design-e] T05 partial, not #154 direct designs | Housing + design / supply measure/version choice, purpose/owner/safe-route update; access never consent |
-| [#233](https://github.com/jmservera/ama/issues/233#acceptance-criteria) O: cross-role atlas-to-screen design pass, not an epic | [Atlas themes](./customer-journeys/customer-journey-atlas.md#five-design-themes-and-tensions) / [connected journey][bc-connected] | [All eleven flows][bc-eleven] / [profile contract][bc-profile]; theme-to-state task-flow resolutions NOT SUPPLIED | NOT SUPPLIED; [H][design-h]/[E][design-e] fifteen prior rows are not all atlas designs | Atlas/design owners / record every theme/perspective resolution or explicit deferral and actual same-home walkthrough |
+| [#233](https://github.com/jmservera/ama/issues/233#acceptance-criteria) O: cross-role atlas-to-screen design pass, not an epic | [Atlas themes](./customer-journeys/customer-journey-atlas.md#five-design-themes-and-tensions) / [connected journey][bc-connected] | [All eleven flows][bc-eleven] / [profile contract][bc-profile]; theme-to-state trace now in [atlas-screen-trace](./atlas-screen-trace.md) (2026-11-01, hypotheses; screens in open PRs) | NOT SUPPLIED; [H][design-h]/[E][design-e] fifteen prior rows are not all atlas designs | Atlas/design owners / record every theme/perspective resolution or explicit deferral and actual same-home walkthrough |
 | [#327](https://github.com/jmservera/ama/issues/327) C: queue filter latency and CSV behavior under scale | [Programme planner][bc-programme] | [IA filter/reset][bc-ia] C01; no new flow prescribed | NOT SUPPLIED; [E][design-e] queue fixture, not 60k performance/design acceptance | Workbench + design / retain filter/count/status behavior while assessing slow/loading recovery |
 | [#344](https://github.com/jmservera/ama/issues/344#acceptance-criteria) O: public welcome, browser sign-in and deployed workbench access | NOT SUPPLIED for entry/account journey; [operator context][bc-operator] | NOT SUPPLIED for public entry -> Entra -> role workbench -> failure recovery | NOT SUPPLIED | Identity/deployment + design / supply entry/denial/callback states; redirect is not successful role access |
 | [#349](https://github.com/jmservera/ama/issues/349#acceptance-criteria) O: sign-in callback/session, logout/account switch and denial | NOT SUPPLIED for authenticated account journey | NOT SUPPLIED for account switching and unknown/wrong-role recovery | NOT SUPPLIED | Tenant/identity + design / supply user-facing recovery designs; actual tenant authority remains separate |
@@ -443,6 +443,17 @@ No new UI validation, conformance, real benefit or whole-issue acceptance is
 claimed. Manual/non-digital paths, resident consent/withdrawal, independent
 safety intake, professional judgment and all human financial/legal/release
 approval boundaries remain unchanged.
+
+### Run the design gate (2026-11-01, #156)
+
+From the repository root, run `python3 tools/check-design-trace.py` (add
+`--json` for machine output). It reads the screen register above, checks that
+every screen issue has a resolvable journey link or explicit gap, a task flow
+cell and a design cell, and counts designs not yet supplied. Current result:
+74 screen issues, 0 supplied designs, verdict `blocked` (exit 1; exit 2 means a
+malformed register). The gate reports state only. It records no human design
+review, accessibility or content acceptance, so criterion 1 stays unmet until
+the design owner supplies versions and a named reviewer records results.
 
 [bc-prd]: ../../../prds/zava-forward-retrofit-programme-demonstrator.md
 [bc-connected]: ./customer-journeys/customer-journey-atlas.md#one-connected-service-journey

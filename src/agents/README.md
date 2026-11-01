@@ -135,6 +135,11 @@ entailment of generated prose or independently adjudicated legal questions.
 | Stale-source label | 1/1 deliberately overdue source labelled in actual chat retrieval | Provisional 1.0; boundary, missing/failed observations and HTTP views covered separately |
 | Paired staff comparison | Not evaluated; same-role/source-version card/provision links recorded alongside structural chat facts | No agreed benefit threshold or measured task completion, comprehension, elapsed/review time or service cost; recommend `cards_only` |
 
+`authorise_model_run` denies any model-calling evaluation unless a named owner
+authority carries finite positive call, token and budget limits and an unexpired
+timezone-aware expiry that covers the request. It is a guard only; no spend
+authority is assumed or implied and the shipped runs remain offline.
+
 All numeric targets are labelled **provisional, not owner-agreed**. Juan Manuel
 Servera is the exercise Legal, Compliance and DPO owner, not an invented real
 company approver. Rule recall has no fixed threshold: the baseline precedes
@@ -251,6 +256,24 @@ the existing explicitly enabled, synthetic-development-only lookup is unchanged.
 No report grants an operational release or activates a rule. Issue checkboxes
 remain untouched for the coordinator's merge-time evidence review.
 
+### Re-verification (2026-11-01)
+
+At `80673b0d` the gate, answer and registry tests passed (32 tests) and the
+regenerated 60,000-home report was byte-identical to the committed report. Ruff
+check, ruff format --check and mypy were clean for this project. Reproduce with:
+
+```bash
+PYTHONPATH="$PWD/src/core/tests:$PWD/src/agents/tests" \
+  python3 src/agents/evals/run_regulatory_gates.py --record /tmp/report.json
+diff /tmp/report.json src/agents/evals/regulatory_gates_results.json
+```
+
+The report keeps AI cost per accepted check Unknown with four missing inputs
+named, and zero model-call, token and budget limits with no spend authority.
+Still unmet: owner agreement and independently graded or held-out sets, a staff
+paired trial, alert precision and acknowledgement time, and a continuing-stock
+baseline. Cards alone remain the recommendation.
+
 ## Offline cited-answer evaluation (#214)
 
 `regulatory_chat` renders exact server-selected source excerpts and structured
@@ -312,6 +335,7 @@ them that start with `cd src/api` run from the api project.
 ## AI evaluation harness
 
 * AI evaluation harness, offline: `python3 -m zava_forward.agents.ai_eval`
+* Human-review effectiveness test (AC-070), offline and scripted: `python3 -m zava_forward.agents.review_effectiveness [--json]`. Seeded wrong, stale, unsupported and incomplete proposals with valid citations, plus correct controls, go through the real review path; a competent panel must detect all defects while default-accept and automation-bias panels must fail the gate. Reports detection, corrections and effort against the workflow-only run of the same case. Scripted panels are not human evidence: authorised reviewers and OQ-017 reviewer authority remain open. Golden file `evals/review_effectiveness_golden.json`
 * Chat multi-turn evaluation, offline and synthetic (grounding, out-of-scope refusal, prompt injection, memory poisoning, non-AI comparison, recorded failures; never enables chat): `python3 -m zava_forward.agents.chat_eval [--json] [--record PATH]`. Golden file `evals/chat_golden.json`; thresholds, accountable reviewer and enablement remain owner decisions
 
   Open known gaps never count as passes. Grounding, out-of-scope, injection,

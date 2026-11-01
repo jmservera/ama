@@ -399,6 +399,48 @@ class PanelTests(roles.Matrix):
         self.assertIn("if (send.disabled) return;", js)
         self.assertIn('api("/api/chat/status", undefined, signal)', js)
 
+    def test_status_reports_storage_approval_in_both_states(self) -> None:
+        self.assertIs(self.api(ROLE, "/api/chat/status")[1]["storage_approved"], True)
+        with patch.dict(os.environ, {k: "" for k in APPROVED}):
+            self.assertIs(self.api(ROLE, "/api/chat/status")[1]["storage_approved"], False)
+
+    def test_unstored_ask_is_rules_only_without_storage_or_model(self) -> None:
+        with patch.dict(os.environ, {k: "" for k in APPROVED}):
+            before = json.dumps(self.store.data.get("chat_threads"), sort_keys=True)
+            code, reply = self.api(
+                ROLE, "/api/chat/unstored-ask", {"content": "Stage?", "case_id": "ZF-1"}
+            )
+            self.assertEqual((code, reply["kind"]), (200, "fallback"))
+            self.assertEqual(reply["context"], "ZF-1")
+            self.assertEqual(self.prompts, [])
+            self.assertEqual(
+                json.dumps(self.store.data.get("chat_threads"), sort_keys=True), before
+            )
+            self.assertNotIn("Stage?", json.dumps(self.store.data))
+            self.assertEqual(
+                self.api(ROLE, "/api/chat/unstored-ask", {"content": "Stage?"})[1]["context"],
+                "general",
+            )
+
+    def test_unstored_ask_rejections(self) -> None:
+        path = "/api/chat/unstored-ask"
+        self.assertEqual(self.api(ROLE, path, {"content": "Stage?"})[0], 400)
+        with patch.dict(os.environ, {k: "" for k in APPROVED}):
+            self.assertEqual(self.api("Contractor", path, {"content": "Stage?"})[0], 403)
+            self.assertEqual(self.call("", path, {"content": "Stage?"})[0], 401)
+            for bad in (
+                {"content": "Stage?", "extra": 1},
+                {"content": ""},
+                {"content": 5},
+                {"content": "x" * (MAX_CONTENT + 1)},
+                {"content": "Stage?", "skill": "nope"},
+            ):
+                self.assertEqual(self.api(ROLE, path, bad)[0], 400, bad)
+            self.assertEqual(
+                self.api(ROLE, path, {"content": "Stage?", "case_id": "ZF-NOPE"})[0], 404
+            )
+        self.assertEqual(self.prompts, [])
+
     def test_both_turn_routes_deny_unapproved_model_without_calling_provider(self) -> None:
         with patch("zava_forward.api.server.chat_admission", wraps=chat_admission):
             for route in ("ask", "messages"):

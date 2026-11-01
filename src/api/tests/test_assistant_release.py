@@ -33,6 +33,7 @@ class DependentPolicyRelease(Base):
         legacy = {task: ai_registry.legacy_binding(task, ai, ai_registry.legacy_deployment(task, ai))
                   for task in ai_registry.LEGACY}
         for kind, affected in (("ranking", CAP), ("quality", "quality-evidence")):
+            release_support.install(self.store)
             with self.subTest(kind=kind), dependent_policy(kind):
                 for cap, binding in before.items():
                     current = assistants.runtime_binding(cap, self.provider)
@@ -95,6 +96,7 @@ class DependentPolicyRelease(Base):
     def test_changed_policy_denies_fresh_proactive_and_queued_dispatch(self):
         self.case(lambda c: c["home"].update(epc="Unknown"))
         for kind, cap in (("ranking", CAP), ("quality", "quality-evidence")):
+            release_support.install(self.store)
             queued = self.service.invoke(self.pm, cap, "ZF-1")
             with self.subTest(kind=kind), dependent_policy(kind):
                 fresh = self.service.invoke(self.pm, cap, "ZF-1")
@@ -113,6 +115,7 @@ class DependentPolicyRelease(Base):
         for kind, cap in (("ranking", CAP), ("quality", "quality-evidence")):
             for state in ("leased", "ready", "verified", "accepted"):
                 with self.subTest(kind=kind, state=state):
+                    release_support.install(self.store)
                     self.case(lambda c: c["home"].update(built=c["home"]["built"] + 1))
                     if state == "leased":
                         queued = self.service.invoke(self.pm, cap, "ZF-1")
@@ -245,6 +248,13 @@ class Release(Base):
         self.assertEqual(self.service.registry(self.pm)["assistants"][0]["release"]["missing"],
                          ["approved, unexpired release record"])
 
+    def test_disabled_chat_task_is_listed_without_binding_or_release(self):
+        chat = next(t for t in self.service.registry(self.pm)["registered_tasks"] if t["id"] == "chat-case-conversation")
+        self.assertFalse(chat["enabled"])
+        self.assertIsNone(chat["binding"])
+        self.assertIsNone(chat["release"])
+        self.assertTrue(chat["release_denial"]["missing"])
+
     def test_scan_is_denied_without_release(self):
         self.drop()
         self.service.scan()
@@ -306,13 +316,35 @@ class Release(Base):
                     self.verify(p)
                 with self.service.transaction() as db:
                     self.assertIn("no approved release matches", self.service.admission(db, CAP)["reason"])
+                self.assertNotEqual(self.service.detail(self.pm, p["id"])["release_denial"]["missing"],
+                                    ["approved, unexpired release record"])
+            # Restoring the binding alone does not revive the revoked record.
+            self.assertIsNotNone(self.service.detail(self.pm, p["id"])["release_denial"])
+            release_support.install(self.store)
         with patch.dict(assistants.REGISTRY[CAP], {"roles": (assistants.RC,)}):
             with self.service.transaction() as db:
                 self.assertIn("permission_version", self.service.admission(db, CAP)["missing"])
+        release_support.install(self.store)
+        p = self.run_ready(CAP)
         self.case(lambda c: c["home"].update(epc="G"))
         detail = self.service.detail(self.pm, p["id"])
         self.assertIsNone(detail["release_denial"])
         self.assertTrue(detail["stale"])
+
+    def test_invalidation_first_seen_by_denied_review_persists_and_is_not_revived(self):
+        p = self.run_ready(CAP)
+        with patch.object(assistants, "RULE_VERSION", "changed-rule"):
+            with self.assertRaises(PermissionError):
+                self.verify(p)
+        with self.service.transaction() as db:
+            rows = rel.releases(db, CAP)
+            events = [json.loads(b) for (b,) in db.execute(
+                "SELECT body FROM assistant_events WHERE task_id=?", (rows[0]["id"],)).fetchall()]
+        self.assertEqual([r["status"] for r in rows], ["revoked"])
+        self.assertTrue(any(e.get("kind") == "release-revoked" for e in events))
+        denied = self.service.detail(self.pm, p["id"])["release_denial"]
+        self.assertIsNotNone(denied)
+        self.assertIn("policy_version", denied["missing"])
 
     def test_revocation_on_independent_connection_blocks_dispatch_and_reliance(self):
         p = self.service.invoke(self.pm, CAP, "ZF-1")

@@ -486,7 +486,21 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 return self._json(200, s.pending_handoffs(u))
             if url.path in ("/api/packages", "/api/workorders"):
                 try:
-                    rows = s.list_packages(u) if url.path == "/api/packages" else s.list_work_orders(u, q.get("case", [None])[0])
+                    limit = offset = None
+                    paging = parse_qs(url.query, keep_blank_values=True)
+                    if "limit" in paging or "offset" in paging:
+                        try:
+                            limit = int(paging["limit"][0]) if "limit" in paging else 50
+                            offset = int(paging["offset"][0]) if "offset" in paging else 0
+                        except ValueError:
+                            return self._json(400, {"error": "limit and offset must be whole numbers."})
+                        if not 1 <= limit <= 100 or offset < 0:
+                            return self._json(400, {"error": "limit must be 1 to 100 and offset 0 or more."})
+                    if url.path == "/api/packages":
+                        rows = s.list_packages(u) if limit is None else s.list_packages(u, limit, offset)
+                    else:
+                        case = q.get("case", [None])[0]
+                        rows = s.list_work_orders(u, case) if limit is None else s.list_work_orders(u, case, limit, offset)
                     return self._json(200, rows)
                 except PermissionError as e:
                     return self._json(403, {"error": str(e)})
@@ -684,6 +698,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     c.current_user(user)
                     return self._json(200, {
                         "warning": CHAT_WARNING, "retention": c.privacy.decision()["retention"],
+                        "storage_approved": c.privacy.decision()["approved"],
                         "activation": "disabled; approval evidence required",
                         "limits": {"calls_per_turn": 1, "retries": 0, "output_tokens": 600,
                                    "context_chars": MAX_INPUT_CHARS, "history_chars": MAX_HISTORY_CHARS,
@@ -732,6 +747,14 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(200, c.privacy.list_memory(c.current_user(user)))
                 if not post and parts == ["memory", "status"]:
                     return self._json(200, c.privacy.memory_status(c.current_user(user), (parse_qs(urlparse(self.path).query).get("task") or [""])[0]))
+                if post and parts == ["unstored-ask"]:
+                    if set(body) - {"content", "skill", "case_id"}:
+                        raise ValueError("Only content, skill and case_id are accepted.")
+                    u = c.current_user(user)
+                    if c.privacy.decision()["approved"]:
+                        raise ValueError("Chat storage is approved. Use a chat thread.")
+                    return self._json(200, app.panel.ask_unstored(
+                        u, str(body.get("case_id") or ""), body.get("content"), skill=body.get("skill")))
                 if post and parts == ["threads"]:
                     u = c.current_user(user)
                     if body.get("case_id") and s.detail(body["case_id"], u) is None:

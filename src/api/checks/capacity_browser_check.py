@@ -8,6 +8,7 @@ import hashlib
 import importlib
 import json
 import os
+import re
 import secrets
 import subprocess
 import tempfile
@@ -213,6 +214,11 @@ def check(store: Any, axe: str | None = None) -> None:
                 held: list[Route] = []
                 scenario = "sign-in"
 
+                def paged(endpoint: str) -> re.Pattern[str]:
+                    return re.compile(
+                        re.escape(f"{base}/api/{endpoint}") + r"\?limit=\d+&offset=\d+$"
+                    )
+
                 def inject(route: Route, *, status: int | None = 503) -> None:
                     expected_failures.add(route.request)
                     if status is None:
@@ -411,12 +417,12 @@ def check(store: Any, axe: str | None = None) -> None:
                     page.goto(base + f"/app?check={uuid.uuid4().hex}#/capacity")
                     verify_route("#/capacity")
                     packages = next(
-                        response.json()
+                        response.json()["items"]
                         for response in reads
                         if urlsplit(response.url).path == "/api/packages"
                     )
                     orders = next(
-                        response.json()
+                        response.json()["items"]
                         for response in reads
                         if urlsplit(response.url).path == "/api/workorders"
                     )
@@ -466,7 +472,7 @@ def check(store: Any, axe: str | None = None) -> None:
 
                 for endpoint, label in (("packages", "packages"), ("workorders", "work orders")):
                     scenario = f"initial {endpoint} 503/retry"
-                    pattern = base + "/api/" + endpoint
+                    pattern = paged(endpoint)
                     page.route(pattern, inject)
                     page.goto(base + f"/app?check={uuid.uuid4().hex}#/capacity")
                     expect(page.get_by_role("alert")).to_contain_text(
@@ -487,7 +493,7 @@ def check(store: Any, axe: str | None = None) -> None:
                     verify_route("#/capacity")
 
                 scenario = "initial transport/403"
-                pattern = base + "/api/workorders"
+                pattern = paged("workorders")
                 page.route(pattern, lambda route: inject(route, status=0))
                 page.goto(base + f"/app?check={uuid.uuid4().hex}#/capacity")
                 expect(page.get_by_role("alert")).to_contain_text(
@@ -504,11 +510,11 @@ def check(store: Any, axe: str | None = None) -> None:
 
                 scenario = "initial cancellation"
                 reads.clear()
-                package_pattern = base + "/api/packages"
+                package_pattern = paged("packages")
                 page.route(package_pattern, lambda route: inject(route, status=None))
                 with (
                     page.expect_request(package_pattern),
-                    page.expect_request(base + "/api/workorders"),
+                    page.expect_request(paged("workorders")),
                 ):
                     page.goto(
                         base + f"/app?check={uuid.uuid4().hex}#/capacity",
@@ -529,7 +535,9 @@ def check(store: Any, axe: str | None = None) -> None:
                 verify_route("#/time")
                 expect(page.locator("#app")).not_to_contain_text("We could not load packages")
 
-                order = context.request.get(base + "/api/workorders").json()[0]
+                order = context.request.get(base + "/api/workorders?limit=1&offset=0").json()[
+                    "items"
+                ][0]
                 fixtures.supplied_contract_fixture(
                     store, order["package"], manager, order["contractor"]
                 )
@@ -555,7 +563,7 @@ def check(store: Any, axe: str | None = None) -> None:
                     configurations = len(
                         store.data["procurement"].get("appointment_configurations", [])
                     )
-                    pattern = base + "/api/" + endpoint
+                    pattern = paged(endpoint)
                     page.route(pattern, inject)
                     saved.get_by_role(
                         "button", name="Record provisional threshold", exact=True
@@ -576,8 +584,8 @@ def check(store: Any, axe: str | None = None) -> None:
                     reads.clear()
                     old_form = draft.element_handle()
                     with (
-                        page.expect_response(base + "/api/packages") as recovered_packages,
-                        page.expect_response(base + "/api/workorders") as recovered_orders,
+                        page.expect_response(paged("packages")) as recovered_packages,
+                        page.expect_response(paged("workorders")) as recovered_orders,
                     ):
                         status.get_by_role("button", name="Try again", exact=True).click()
                     assert recovered_packages.value.status == 200
@@ -630,7 +638,7 @@ def check(store: Any, axe: str | None = None) -> None:
                         inject(route, status=None)
                         page.evaluate("window.capacityHeldReads += 1")
 
-                    order_pattern = base + "/api/workorders"
+                    order_pattern = paged("workorders")
                     page.route(package_pattern, hold_capacity_read)
                     page.route(order_pattern, hold_capacity_read)
                     with (
@@ -643,7 +651,9 @@ def check(store: Any, axe: str | None = None) -> None:
                     page.wait_for_function("() => window.capacityHeldReads === 2")
                     assert len(held) == 2, held
                     failed = next(
-                        route for route in held if route.request.url == base + "/api/" + endpoint
+                        route
+                        for route in held
+                        if urlsplit(route.request.url).path == "/api/" + endpoint
                     )
                     sibling = next(route for route in held if route is not failed)
                     failed.fulfill(status=503, body="Unavailable")
@@ -721,7 +731,7 @@ def check(store: Any, axe: str | None = None) -> None:
                     page.route(package_pattern, lambda route: inject(route, status=None))
                     with (
                         page.expect_request(package_pattern),
-                        page.expect_request(base + "/api/workorders"),
+                        page.expect_request(paged("workorders")),
                     ):
                         saved.get_by_role(
                             "button", name="Record provisional threshold", exact=True

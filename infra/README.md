@@ -1348,7 +1348,7 @@ not establish tenant administrator authority or operational approval.
 Open items:
 
 * Owner sign-off of the matrix review (reviewer line is pending).
-* Contractor B2B guest model (ADR 0002, #116) is proposed, not confirmed; tenant guest and cross-tenant policy are manual tenant steps.
+* Contractor B2B guest model (ADR 0002, #116) is proposed, not confirmed; tenant guest and cross-tenant policy are manual tenant steps. The design is recorded in `entra/app-registration.json` (`contractorIdentity`): guests may hold only the `Contractor` app role, assignment is required, and the staff, roster and application-admin initializers accept enabled `Member` users only. `test_identity_rbac` checks these properties; the tenant owner's confirmation remains open.
 * Drop `db_ddladmin` from the api identity after schema migration moves out of app start.
 * Live `az role assignment list` comparison against a deployed group was not run here.
 
@@ -1378,22 +1378,26 @@ Secrets are listed in [secret-inventory.json](secret-inventory.json) with an own
 
 | Secret | Rotation interval | Expiry alert | Owner |
 | --- | --- | --- | --- |
-| `entra-client-secret` | 180 days | 30 days | Platform operator, named person open |
-| `entra-token-store-sas` | 1 day (renewal job) | 3 days | Platform operator, named person open |
+| `entra-client-secret` | 180 days | 30 days | Juan Manuel Servera (repository-recorded owner; confirm or delegate) |
+| `entra-token-store-sas` | 1 day (renewal job) | 3 days | Juan Manuel Servera (as above) |
+| `resident-demo-password-verifier` | 30 days | 7 days | Juan Manuel Servera (as above) |
+| `resident-demo-session-key` | 30 days | 7 days | Juan Manuel Servera (as above) |
+
+A test requires every vault secret declared in `resident-demo.bicep` and `containerapps.bicep` to appear in the inventory with an owner.
 
 Expiry alerting: the vault diagnostic setting sends all logs to Log Analytics, and `modules/keyvault.bicep` adds a scheduled query alert on `SecretNearExpiryEventGridNotification` and `SecretExpiredEventGridNotification` (logged whether or not an Event Grid subscription exists) routed to the operations action group. A second alert fires on repeated 401/403 data-plane results. Every secret must carry an `--expires` date or the alert cannot fire; `check` reports secrets with no expiry.
 
 ### Rotate the Entra client secret
 
-Run `secret_lifecycle.py rotation-plan --vault <vault> --app-id <id>`. The order gives no downtime: append a new app credential (the old stays valid), write it as a new version of `entra-client-secret` with an expiry, let the versionless Container Apps reference refresh (up to 30 minutes) or restart the active revision, verify sign-in, then delete the old credential. Do not delete first. The repeatable scripted step is `create-api-app-registration.sh -v <vault>`; add an `--end-date` when setting the secret.
+Run `secret_lifecycle.py rotation-plan --vault <vault> --app-id <id>`; `secret_lifecycle.py rotation-simulate` runs an offline model of the same order and exits non-zero if sign-in would fail at any step (tests also show that deleting the old credential first, or before the app refreshes, fails). The model proves the ordering only, not a live outage-free exercise. The order gives no downtime: append a new app credential (the old stays valid), write it as a new version of `entra-client-secret` with an expiry, let the versionless Container Apps reference refresh (up to 30 minutes) or restart the active revision, verify sign-in, then delete the old credential. Do not delete first. The repeatable scripted step is `create-api-app-registration.sh -v <vault>`; add an `--end-date` when setting the secret.
 
 ### Access review
 
-Quarterly (`reviewIntervalDays` 90), export `az role assignment list --scope <vault id> --include-inherited -o json` and run `secret_lifecycle.py review --assignments roles.json --reviewer <name>`. A named human sets each pending decision to keep or remove and the signed record is kept with the operations evidence. Owner alone gives no data-plane access.
+Quarterly (`reviewIntervalDays` 90), export `az role assignment list --scope <vault id> --include-inherited -o json` and run `secret_lifecycle.py review --assignments roles.json --reviewer <name>`. A named human sets each pending decision to keep or remove and the signed record is kept with the operations evidence. `secret_lifecycle.py review-status --record review.json` exits non-zero while any decision is pending, no reviewer is named or `nextReviewDue` has passed, so a scheduled run can flag a missing or stale review. Owner alone gives no data-plane access.
 
 ### Open items
 
-* Named owners for each secret and for the review.
+* Owner confirmation (or delegation) for each secret and for the review.
 * A live no-downtime rotation exercise in the test environment; only the ordering and checks are tested offline.
 * Confirmation after deployment that the alert rules evaluate in Azure Monitor (not verified here; the template builds with `az bicep build`).
 * Scheduling the review and `check` runs (for example a calendar task or pipeline) is an owner choice.
@@ -3873,6 +3877,19 @@ Open items (not verified here):
 * Evidence for private-network claims must come from a production-profile deployment (uksouth, Azure only). This change was validated by `az bicep build`, lint and static tests only; no deployment ran. Record the deployment evidence before any claim.
 * Confirm Front Door Premium Private Link support for Container Apps environments in uksouth and its current pricing at deployment time.
 * Custom domain name and DNS ownership, and the pilot edge go/no-go, are owner decisions (ADR 0002 open: pilot network design).
+
+## Resident AI accounting expiry (issue 624)
+
+The resident AI exercise expiry is data: `resident_ai.budget.expires_at` (UTC, `DATETIME2(7)`),
+read under the same lock as the cap by `resident_ai.reserve`, which refuses at or after it.
+[`sql/resident-assistant.sql`](sql/resident-assistant.sql) adds the column idempotently with
+default `2026-11-01T00:00:00`, so an already-deployed ledger keeps its counts and its live expiry.
+Read it with `SELECT reserved_cents, expires_at FROM resident_ai.budget;`. Extending it, like
+raising the 2000 cent cap, is an owner decision applied as one reviewed data change, for example
+`UPDATE resident_ai.budget SET expires_at = '<new UTC instant>' WHERE id = 1;`; re-applying the
+script never resets it. No extension is made by the code. The Python `EXPIRES` constant in
+`resident_demo/assistant.py` is a second, independent gate and still ends the exercise at
+`2026-11-01T00:00:00Z`; extend it in the same reviewed change.
 
 ## Synthetic resident showcase SQL boundary (issue 462)
 
