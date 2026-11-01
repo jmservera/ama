@@ -98,6 +98,7 @@ h2{font-size:var(--fs-lg);line-height:var(--lineHeightBase500);margin:var(--sp-5
 input,select,textarea{font:inherit;padding:var(--sp-2) var(--sp-3);border:1px solid var(--field-line);border-radius:var(--radius);max-width:100%}
 label{display:block;font-weight:600;margin:.6rem 0 .2rem}
 textarea{width:100%;min-height:5rem}
+.regulatory textarea{overflow-x:hidden}
 .regulatory{overflow-wrap:anywhere;min-width:0}
 .regulatory .plain-explanation{display:none}
 .regulatory.plain-language .plain-explanation{display:block}

@@ -2452,6 +2452,11 @@ python3 -m zava_forward.core.synthetic.coverage \
   docs/reference/research/retrofit-synthetic-data/needs-inventory.json
 ```
 
+Add `--register PATH` to check a CSV register for per-row `is_synthetic=true`.
+The report adds aggregate `register_label_conformance` counts only (no row
+content); a missing column, empty file or unlabelled row exits 1 with
+`register-is_synthetic` in `open_gaps`.
+
 ### Stock fabric and case references (#168)
 
 Inventory row SN-01 remains partial. This iteration reuses PR 246's

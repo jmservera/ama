@@ -9016,6 +9016,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   of PR size and the 19-24 October slowdown cause are unmeasured. No
   workflow, setting, gate or source change was made.
 
+## [2026-11-01] implementation | Regulatory UX contrast incompletes resolved (Refs #215)
+
+* Updated the [API UX guide](../../src/api/README.md#regulatory-alert-and-home-chat-ux-215):
+  the eight axe `color-contrast` incompletes were a textarea border-box
+  artefact; fixed in CSS and now asserted by the browser harness (21 states,
+  zero violations, zero incompletes). No manual or assistive-technology
+  assessment and no staff comprehension study was run; those criteria stay unmet.
 ## [2026-11-01] update | Synthetic determinism replay audit (Refs #176)
 
 * Added a one-command replay audit for the in-repo synthetic generators and a
@@ -9296,6 +9303,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   `.copilot-tracking/changes/2026-11-01/employee-chat-skills-530-recheck-changes.md`.
 * SQL, live employee-site verification, screen-reader and voice-control
   acceptance remain unproven; no source change was made.
+## [2026-11-01] update | Register is_synthetic conformance check (Refs #167)
+
+* Added `coverage --register` to the core coverage tool and noted the result in the
+  retrofit-synthetic-data README: 60,000 of 60,000 SN-01 register rows carry
+  `is_synthetic=true` (aggregate counts only). Owner confirmation of the mapping and
+  deferrals remains open.
+
 
 ## [2026-11-01] query | Resident portal requirements recheck on main 81cf0c9e (Refs #441)
 
@@ -9325,3 +9339,22 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   marked as registered on main; three remain in unmerged pull requests. Updated
   the index row and made the checker apply each status to its own screen group.
 * Findings stay hypotheses until #155. No accessibility acceptance is claimed.
+
+## 2026-11-01 coverage baseline register check indexed
+
+* Updated the synthetic MVP baseline index row to mention the opt-in
+  `--register` check and its SN-01-only evidence boundary.
+
+## 2026-11-01 (atlas trace labels after merge of main)
+
+* Updated `research/ux/atlas-screen-trace.md` so `programme-queue`,
+  `technical-queue` and `quality-queue` are labelled as registered on main
+  (PR 662 and PR 656), restoring the atlas trace check that main's merges broke.
+* No accessibility acceptance is claimed.
+
+## [2026-11-01] update | Issue 466 remaining-criteria check (r4)
+
+* Re-ran focused resident sensor and assistant tests, ruff and mypy on main;
+  criteria 2 to 6 still hold. Criterion 1 (owner confirms scope and priority)
+  stays unmet. Evidence is under `.copilot-tracking/` (r4 artifacts). No
+  accessibility acceptance is claimed.
