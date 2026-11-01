@@ -14,10 +14,9 @@ and walkthrough content below are **hypotheses** from the desk-based
 observed behaviour, until validated in [#155](https://github.com/jmservera/ama/issues/155).
 Screen identifiers are `registerRoleScreen` ids in
 `src/api/src/zava_forward/api/web/role-screens.js`. At the 2026-11-01 snapshot
-nine of the twelve screens are registered on main (marked "main" with the
+all twelve screens are registered on main (marked "main" with the
 delivering pull request); `programme-queue`, `technical-queue` and
-`quality-queue` are in open pull requests (marked "unmerged") and are not
-delivered until merged. The checker compares these labels with the registered
+`quality-queue` merged after the first snapshot. The checker compares these labels with the registered
 ids. This trace does not assess their rendered behaviour, accessibility or design-system conformance.
 
 Run `python3 -m zava_forward.core.atlas_screen_trace` from `src/core` (after
@@ -35,14 +34,14 @@ role simulator.
 | Perspective | Screen and status | Confirms | Changes | Remains hypothesis |
 | --- | --- | --- | --- | --- |
 | Asset and investment | `asset-board` (main, #226) | Conflict, source age and unknown investment inputs shown with a resolution owner | Portfolio scope shown separately from stock total | Which inputs asset staff need; no asset role exists in fixtures |
-| Programme coordinator | `programme-queue` (unmerged, PR 662) | Returned work, sender, current owner and receiver shown | Chase and update responsibility kept apart from return reason | Whether visible reset suffices as recovery |
-| Retrofit case team | `programme-queue` connected home view (unmerged, PR 662) | Independent technical, resident, delivery, quality and finance states per home | One linked fixture home first, separate homes never merged | Whether a read-only lifecycle is enough for case teams |
-| Retrofit Assessor, designer and Coordinator | `technical-queue` (unmerged, PR 656) | Missing design reference blocks readiness | Return routed to a named competent reviewer, not a generic approval | Separate sign-off wording |
+| Programme coordinator | `programme-queue` (main, PR 662) | Returned work, sender, current owner and receiver shown | Chase and update responsibility kept apart from return reason | Whether visible reset suffices as recovery |
+| Retrofit case team | `programme-queue` connected home view (main, PR 662) | Independent technical, resident, delivery, quality and finance states per home | One linked fixture home first, separate homes never merged | Whether a read-only lifecycle is enough for case teams |
+| Retrofit Assessor, designer and Coordinator | `technical-queue` (main, PR 656) | Missing design reference blocks readiness | Return routed to a named competent reviewer, not a generic approval | Separate sign-off wording |
 | Housing and Resident Engagement | `resident-choice` (main, #652) | Measure-specific choice, pause and withdrawal distinct from contact and access | Update commitment shows purpose, owner and safe-route reference | Resident-facing wording; no resident contact |
 | Repairs and Building Safety | `safety-lead` and `hazard-triage` (main, #653) | Sent, received and accepted states with a scoped hold | Pending receipt has an owned follow-up | Referral timing expectations; no hazard classification by the UI |
 | Procurement and contract manager | `procurement-packages` (main, #655) | Offered and committed capacity separated | Unmet prerequisites and next reviewer shown | Period and call-off conventions |
 | Provider / contractor contact | `contractor-job-pack` (main, #655; Contractor role, "Your job pack") | Contractor-facing job pack, not the staff-mediated constructed intake in the PRD contract; no provider identity claim | Submission kept separate from independent acceptance | Staff-facing constructed intake is deferred until a supporting screen design exists; whether a provider portal is wanted at all |
-| Quality and assurance | `quality-queue` (unmerged, PR 656) | Incomplete evidence blocks handover | Positive per-measure evidence, defect owner and reinspection shown | Reinspection thresholds |
+| Quality and assurance | `quality-queue` (main, PR 656) | Incomplete evidence blocks handover | Positive per-measure evidence, defect owner and reinspection shown | Reinspection thresholds |
 | Finance and Grants | `finance-invoices` and `finance-funding` (main, #657) | Invoice, award, claim and cash kept as separate states | Exceptions explained before any export or readiness block | Funding route and schema; no payment or submission control |
 | Digital operator and auditor | `data-operator` (main, #654) | Both source values and provenance shown, original preserved | Illustrative event metadata labelled as not an operational audit trail | Operator recovery context |
 
@@ -62,8 +61,8 @@ Source: [five design themes](./customer-journeys/customer-journey-atlas.md#five-
 
 | Tension | Where resolved | Resolution | Status |
 | --- | --- | --- | --- |
-| Continuity versus disclosure | `programme-queue` and `resident-choice` | Each screen shows the minimum fields its role needs; withheld items are listed as text "Not shown for this role" rather than silently omitted; contact and access appear as a route reference, not sensitive history | Proposed rule; conformance of the pull-request screens not assessed |
-| Utilisation versus choice | `resident-choice` and `procurement-packages` | Resident options and withdrawal render first; capacity is labelled offered or committed and never ordered by utilisation; an offered slot is never worded as a promise | Proposed rule; conformance of the pull-request screens not assessed |
+| Continuity versus disclosure | `programme-queue` and `resident-choice` | Each screen shows the minimum fields its role needs; withheld items are listed as text "Not shown for this role" rather than silently omitted; contact and access appear as a route reference, not sensitive history | Proposed rule; conformance of these screens not assessed |
+| Utilisation versus choice | `resident-choice` and `procurement-packages` | Resident options and withdrawal render first; capacity is labelled offered or committed and never ordered by utilisation; an offered slot is never worded as a promise | Proposed rule; conformance of these screens not assessed |
 
 ## Same-home walkthrough
 

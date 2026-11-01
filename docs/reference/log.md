@@ -9322,3 +9322,8 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   lifecycle for simulated homes in the IoT research plan and indexed it. The
   implementation is fake-only; owner confirmation and live Azure gates remain
   pending and no live resource was touched.
+
+## [2026-11-01] update | Atlas screen trace status refreshed
+
+* Marked `programme-queue`, `technical-queue` and `quality-queue` as merged on
+  main in the atlas screen trace so the status drift check passes.

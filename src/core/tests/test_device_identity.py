@@ -337,6 +337,23 @@ class DeviceIdentityTests(unittest.TestCase):
         self.assertEqual(len(captured), 1)
         self.assertNotIn(SECRET, "".join(traceback.format_exception(captured[0])))
 
+    def test_provision_inside_except_does_not_chain_caller_secret(self) -> None:
+        registry, store = FakeRegistry(), FakeStore()
+        manifest = di.plan("run-001", "owner-role", sensors())
+        di.provision(manifest, registry, store)
+        invalid = di.Manifest("run-001", "owner-role", ())
+        for target in (manifest, invalid):
+            captured: list[di.DeviceIdentityError] = []
+            try:
+                raise RuntimeError(SECRET)
+            except RuntimeError:
+                try:
+                    di.provision(target, registry, store)
+                except di.DeviceIdentityError as error:
+                    captured.append(error)
+            self.assertEqual(len(captured), 1)
+            self.assertNotIn(SECRET, "".join(traceback.format_exception(captured[0])))
+
     def test_explicit_foreign_reference_is_not_revoked(self) -> None:
         registry, store = FakeRegistry(), FakeStore()
         one = di.provision(di.plan("run-001", "owner-role", sensors()), registry, store)

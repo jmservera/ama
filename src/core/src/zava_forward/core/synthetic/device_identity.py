@@ -108,10 +108,20 @@ def plan(run_id: str, credential_owner: str, sensors: Sequence[Mapping[str, obje
 
 
 def provision(manifest: Manifest, registry: Registry, store: CredentialStore) -> Manifest:
-    manifest.validate()
-    # Serialise attempts per run so an overlapping attempt cannot roll back another's devices.
-    with _run_lock(manifest.run_id):
-        return _provision_locked(manifest, registry, store)
+    failure: DeviceIdentityError | None = None
+    result: Manifest | None = None
+    try:
+        manifest.validate()
+        # Serialise attempts per run so an overlapping attempt cannot roll back another's devices.
+        with _run_lock(manifest.run_id):
+            result = _provision_locked(manifest, registry, store)
+    except DeviceIdentityError as error:
+        failure = error
+    if failure is not None:
+        # Raised outside the handler so a caller's secret-bearing exception is never chained.
+        raise DeviceIdentityError(str(failure)) from None
+    assert result is not None
+    return result
 
 
 def _provision_locked(manifest: Manifest, registry: Registry, store: CredentialStore) -> Manifest:
