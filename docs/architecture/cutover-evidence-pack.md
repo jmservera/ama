@@ -2366,6 +2366,76 @@ claims that cite a complete passing benchmark receipt, not feature expansion. Th
 next full gate for this head is CI and the owner's release cadence. A pivot,
 requirement relaxation or deliberate deferral is neither approved nor proposed.
 
+## Third local stabilization checkpoint (2026-11-01)
+
+Refs #440. Bounded engineering checkpoint after a 40-commit wave, not broad
+product acceptance. Focused tier, documentation and evidence only; no source,
+coordinator, threshold, Azure or private-data change.
+
+### Source and document identities
+
+| Item | Value |
+| --- | --- |
+| Pinned `origin/main` (freshly fetched) | `b18f7f98e4c890b99187bda9eebd2c7b810e3b91`, tree `e78c8e9885cf8e17b1d80af943351f16e7b07263` |
+| Range since second checkpoint | `36a1d0da..b18f7f98` (40 commits: role-screen web slices, core exception queues, regulatory/RAI gates, scale harness and infra scripts, PERF-440 diagnostics #689) |
+| [BRD](../brds/agentic-retrofit-programme-brd.md) | 0.21.0, draft, blob `34d88395de861e9799eb9e24121a21c92c7a5adc` |
+| [PRD](../prds/zava-forward-retrofit-programme-demonstrator.md) | 0.21.0, in-review, blob `c788b917bafaede215f326f0efc71e071a687f1c` |
+| ADR 0001 to 0006 | Unchanged since the second checkpoint |
+| Coordinator agent | Unchanged, blob `0c66ef19b329d7a5b0364b78dd8fc7caf6dfede1` |
+
+Draft and in-review documents are not approved by this record. Merged-PR
+coverage is bounded to the range above.
+
+### Actual local commands and outcomes
+
+Environment: `/tmp/ama-440-ckpt3`, pip only, five `src/` distributions
+installed editable, plus `ruff`, `mypy` and the `playwright` package (no
+browsers). Suites ran concurrently on a 4-CPU host while a foreign complete gate
+(issue 233) held the heavy lock, so timings are under contention.
+
+| Check | Actual result |
+| --- | --- |
+| Core suite | 1791 tests, 999.4s, OK, 206 skipped, exit 0 |
+| Agents suite | 142 tests, 77.9s, OK, exit 0 |
+| API suite | 1547 tests, 1220.3s, OK, 323 skipped, exit 0 |
+| Orchestrator suite | 100 tests, 39.9s, OK, exit 0 |
+| Importer suite | 39 tests, 0.4s, OK, exit 0 |
+| Ruff check, ruff format --check | All five projects passed |
+| mypy | Clean: core 190, agents 26, API 139, orchestrator 16, importer 10 source files |
+| PERF-440 selector x3 | OK x3; first page 115-194 ms and keyset page 70-153 ms at load1 4.7-6.0 against the unchanged 1500 ms |
+
+Skipped tests (529) are not passes. Logs stay in `/tmp/ama-440-ckpt3` and are
+not retained.
+
+Not run: disposable SQL Server parity, Docker/non-root contracts, Chromium
+harnesses and the complete native gate (foreign heavy lock; focused tier). They
+remain `implemented-unverified` for this head. No `Azure observed` row exists.
+
+### Reconciliation delta
+
+Classification is unchanged from the second checkpoint: `local observed` for
+scripted failure paths, auth boundaries, store, import and orchestration
+behavior at package level; `blocked` or `unknown` for real Entra sessions
+(#349), deployed parity (#350), real AI (#360), actual resident consent, named
+professional approval and OD-35 thresholds. The 40-commit wave was not re-traced
+requirement by requirement; that stays `unknown`. The new role-screen web slices
+are covered only by their merged per-PR tests and are `implemented-unverified`
+here. No behavior bug was reproduced and no refactoring need confirmed; ADR 0006
+dependency-rule tests passed in each project, so no regression test was required.
+
+### Findings, triage and recommendation
+
+| Priority / severity | Finding | Owner |
+| --- | --- | --- |
+| 1 / High delivery risk | PERF-440 one-off 17,383 ms (2026-10-23) still not reproduced; #689 added diagnostics, #720 (reproduction under IO contention) is open | #687, independent lane, threshold unchanged |
+| Validation | Native discovery coordinator-attested, seven HVE scenarios simulated; no coordinator edit here | #440 criterion 8 unmet; owner-supplied host evidence needed |
+| Existing gates | #349, #350, #360, #432, #570 | Existing owners; no duplicates filed |
+
+Recommendation: **continue**. Independent local lanes proceed; #687 gates only
+claims citing a complete passing benchmark receipt. Criteria 7 (until #687 is
+resolved) and 8 stay unmet. A pivot, requirement relaxation or deliberate
+deferral is neither approved nor proposed.
+
 ## Rubric src counting reconciliation (2026-10-27)
 
 Refs #198. This additive reconciliation preserves the original UNMET rubric
