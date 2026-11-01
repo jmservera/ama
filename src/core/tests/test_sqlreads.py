@@ -1,4 +1,5 @@
 """SqlStore list reads answered by SQL: parity with the in-memory store, keyset paging, migration, query plans, 60,000 timing."""
+import contextlib
 import copy
 import json
 import os
@@ -292,7 +293,7 @@ class Scale(unittest.TestCase):
                     self.assertLess(ms, 1500)
 
     def test_sql_reads_at_60000(self):
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory() as tmp, contextlib.ExitStack() as stack:
             p = Path(tmp) / "zavaforward.json"
             p.write_text(json.dumps(dataset(make_cases(self.N, seed=5))))
             s = SqlStore(str(p), os.path.join(tmp, "pw.sqlite"))
@@ -307,7 +308,7 @@ class Scale(unittest.TestCase):
                 for _ in range(burners):
                     pr = multiprocessing.Process(target=_burn, args=(stop_at,), daemon=True)
                     pr.start()
-                    self.addCleanup(lambda pr=pr: (pr.terminate(), pr.join()))
+                    stack.callback(lambda pr=pr: (pr.terminate(), pr.join()))
                 print(f"[timing] contention: {burners} CPU burner processes", flush=True)
 
             io_writers = int(os.environ.get("ZF_BENCH_IO_CONTENTION", "0"))
@@ -317,7 +318,7 @@ class Scale(unittest.TestCase):
                 for _ in range(io_writers):
                     pr = multiprocessing.Process(target=_churn_io, args=(tmp, stop_at), daemon=True)
                     pr.start()
-                    self.addCleanup(lambda pr=pr: (pr.terminate(), pr.join()))
+                    stack.callback(lambda pr=pr: (pr.terminate(), pr.join()))
                 print(f"[timing] contention: {io_writers} fsync writer processes", flush=True)
 
             def timed(label, **kw):
