@@ -47,6 +47,12 @@ class LiveAcceptanceTests(unittest.TestCase):
         for url in ("http://example.test:9222", "http://u:p@127.0.0.1:9222", "http://127.0.0.1"):
             self.assertEqual(run(["--cdp-url", url], ENV, [object()])[0], 2)
 
+    def test_refuses_malformed_arguments_and_debug_env(self) -> None:
+        for argv in (["--origin"], ["--cdp-url"], ["--help"], ["--origin", "--cdp-url"], ["x"]):
+            self.assertEqual(run(argv, ENV, [object()])[0], 2)
+        for key in ("DEBUG", "PWDEBUG", "PLAYWRIGHT_DEBUG", "DEBUG_FILE"):
+            self.assertEqual(run([], {**ENV, key: "pw:protocol"}, [object()])[0], 2)
+
     def test_no_matching_page(self) -> None:
         code, body = run([], ENV, [])
         self.assertEqual((code, body["status"]), (2, "no-page"))

@@ -7,3 +7,9 @@ Date: 2026-11-01. Plan: ../../plans/2026-11-01/employee-live-acceptance-570-plan
 * Updated `src/api/README.md` with the operator entry point.
 * Validation: employee unit tests 22 OK (venv, pip); ruff check, ruff format --check, mypy clean for touched files. No heavy local gate (CI is the evidence).
 * No divergences from plan. No sign-in, credential or live run performed.
+
+## PR #644 review follow-up
+
+* Strict option parsing: unknown, trailing, duplicate or valueless arguments now refuse (exit 2) before Playwright starts.
+* Debug variables (DEBUG, PWDEBUG, PLAYWRIGHT_DEBUG, DEBUG_FILE) are refused before Playwright initialises.
+* Added a test for both; focused tests and ruff rerun.

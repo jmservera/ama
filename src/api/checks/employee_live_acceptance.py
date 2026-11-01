@@ -34,11 +34,21 @@ def loopback_cdp(url: str) -> bool:
         return False
 
 
-def option(argv: Sequence[str], name: str, default: str = "") -> str:
-    for index, arg in enumerate(argv[:-1]):
-        if arg == name:
-            return argv[index + 1]
-    return default
+DEBUG_VARS = ("DEBUG", "PWDEBUG", "PLAYWRIGHT_DEBUG", "DEBUG_FILE")
+
+
+def parse_options(argv: Sequence[str]) -> dict[str, str] | None:
+    options: dict[str, str] = {}
+    items = list(argv)
+    while items:
+        name = items.pop(0)
+        if name not in {"--cdp-url", "--origin"} or name in options or not items:
+            return None
+        value = items.pop(0)
+        if value.startswith("--"):
+            return None
+        options[name] = value
+    return options
 
 
 def find_page(pages: Sequence[Page], origin: str) -> Page | None:
@@ -47,8 +57,12 @@ def find_page(pages: Sequence[Page], origin: str) -> Page | None:
 
 def main(argv: Sequence[str], env: Mapping[str, str]) -> int:
     expected = {"tid": env.get("ZF_EXPECTED_TID", ""), "oid": env.get("ZF_EXPECTED_OID", "")}
-    cdp = option(argv, "--cdp-url", "http://127.0.0.1:9222")
-    origin = option(argv, "--origin", APP)
+    options = parse_options(argv)
+    if options is None or any(env.get(key) for key in DEBUG_VARS):
+        print(json.dumps({"status": "refused", "passed": False}))
+        return 2
+    cdp = options.get("--cdp-url", "http://127.0.0.1:9222")
+    origin = options.get("--origin", APP)
     if not valid_expected(expected) or not loopback_cdp(cdp):
         print(json.dumps({"status": "refused", "passed": False}))
         return 2
