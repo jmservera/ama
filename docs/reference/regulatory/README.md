@@ -1,7 +1,7 @@
 ---
 title: Regulatory Context Reference Documents
 description: Authoritative reference documents for the Case Study 48 regulatory context
-ms.date: 2026-10-29
+ms.date: 2026-11-01
 ms.topic: reference
 ---
 
@@ -90,6 +90,14 @@ Official-page retrieval failed on 2026-10-29, so unverified currentness remains
 `unknown`; earlier source snapshots and the 2026-10-23 sector report were not
 rewritten. No legal or funding interpretation is approved.
 
+## Reviewed Update: Automated-Decision and EU AI Act Applicability (2026-11-01)
+
+The [applicability review pack](./reviewed-updates/2026-11-01-adm-ai-act-applicability-review.md)
+records the 2026-11-01 official-source check of UK GDPR Articles 22A to 22C
+(in force 2026-02-05 per S.I. 2026/82) and a failed EUR-Lex retrieval for the
+EU AI Act. The Legal and DPO decision record is `Pending`; no jurisdiction,
+risk tier or compliance is inferred.
+
 ## Managed Update Workflow
 
 The production solution should maintain a regulatory source register separate
@@ -105,7 +113,7 @@ from the searchable document index. Each source record needs:
 
 The MVP implements the first step of this register as a versioned law store
 (`src/core/src/zava_forward/core/lawstore.py`) seeded from the snapshots in this folder,
-with seed metadata in `mvp/law/law-source-register.json`. Missing sources
+with seed metadata in `src/core/src/zava_forward/core/law/law-source-register.json`. Missing sources
 (leasehold, complaints handling, TrustMark, licensed PAS 2035) are recorded as
 gaps and answered as "no source held". Seeded versions carry review status
 `not_reviewed` and owner "to be named"; this is not an approval (ADR 0005, #209).

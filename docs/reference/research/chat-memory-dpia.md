@@ -2,7 +2,7 @@
 title: Chat and Memory Data Protection Analysis Record
 description: Draft DPIA for DPO review covering chat, memory and the synthetic regulatory assistant, with unresolved lawful basis, retention, rights and provider terms
 author: AMA programme
-ms.date: 2026-10-27
+ms.date: 2026-11-01
 ms.topic: reference
 ---
 
@@ -19,7 +19,7 @@ tests completes this DPIA or authorizes actual staff/resident processing.
 
 Limits of this change, stated plainly:
 
-* The model provider data handling position is not recorded. The Azure OpenAI terms were not retrieved, so nothing here says what the provider retains or monitors.
+* The model provider data handling position is documented from vendor terms (see Model provider and region) but not accepted by the DPO or Legal.
 * The regulatory and general staff panels display `WARNING` beside their question fields and
   reports unknown or simulated retention. This does not establish comprehension
   or consent, and masking remains best effort.
@@ -70,9 +70,23 @@ any performance measure.
 ## Model provider and region
 
 Direct Azure OpenAI calls through the existing Foundry deployments in uksouth
-(owner decision 2026-10-15). Zava stores no prompts. Provider processing terms,
-abuse-monitoring retention and any transfer position were not retrieved and are
-not verified here.
+(owner decision 2026-10-15). Zava stores no prompts.
+
+Documented provider position (2026-11-01, Refs #163). Source: Microsoft Learn,
+[Data, privacy, and security for Foundry Models sold by Azure](https://learn.microsoft.com/en-us/azure/foundry/responsible-ai/openai/data-privacy),
+page dated 2026-06-05, retrieved 2026-11-01. This is vendor documentation, not
+legal advice, not a verified property of the deployed resource and not DPO
+acceptance. Mirrored in `chat_privacy.MODEL_PROVIDER_POSITION["documented_terms"]`.
+
+| Topic | Documented position | Remaining check |
+| --- | --- | --- |
+| Use of prompts and completions | Not available to other customers or OpenAI; not used to train or improve models without permission | DPO and Legal accept the processor terms in the Microsoft Data Protection Addendum (not retrieved here) |
+| Statefulness | Models are stateless. Stateful features (Responses API, Assistants threads, stored completions) persist data in the customer resource, encrypted at rest and customer-deletable | Confirm none of these features is enabled; Zava stores chat in its own SQL |
+| Location of processing | Standard deployments process in the resource geography, possibly across regions within it. Global and DataZone deployments may process outside it; data at rest stays in the designated geography | Confirm deployment type and that uksouth meets the DPO transfer position |
+| Abuse monitoring and retention | Flagged samples of prompts and completions may be stored in the resource geography and human-reviewed by authorised Microsoft staff, unless modified monitoring is approved. The documented reviewer-location guarantee covers EEA resources only; reviewer location for uksouth is unverified. Whether abuse monitoring or content logging is active can be confirmed from the resource `ContentLogging` capability setting; not verified here | DPO confirms reviewer location for uksouth, decides whether to request modified monitoring and records the stored-sample retention exposure |
+| Previews | Preview models may use different practices | Confirm the deployed model is generally available |
+
+Transfer position outside the geography stays Unknown until the DPO records it.
 
 ## Free text warning and redaction
 
@@ -94,6 +108,23 @@ retention period stays Unknown until `CHAT_RETENTION_REF` and `CHAT_RETENTION_DA
 Memory enters a prompt only as non-authoritative, non-evidence preferences, and ids with prefix `CM-` are rejected as evidence
 references. An administrator can switch memory off globally or per task (`chat_memory_control`); items stay visible and deletable.
 
+## Decision pack for the DPO and Legal (2026-11-01, Refs #163)
+
+Questions the DPO and Legal must answer before any actual use. Every decision
+cell is deliberately blank: this pack records evidence and options, selects
+none, and sets no retention period. Options are not legal advice.
+
+| # | Decision | Evidence in this repository | Options to consider | Decision, owner, date, reference |
+| --- | --- | --- | --- | --- |
+| D1 | Lawful basis for staff chat messages | Purpose in ADR 0004; data map above; UK GDPR snapshot under `../regulatory/data-protection/` | Article 6 bases as the DPO assesses them; staff-facing necessity and alternatives | Not recorded |
+| D2 | Lawful basis and condition if resident data is typed | Warning and masking best effort; memory refuses special-category cues | Prohibit by notice and control, or record a resident Article 6 basis, plus an Article 9 condition only where special-category data is involved | Not recorded |
+| D3 | Staff notice wording and delivery | `chat_privacy.WARNING`; `CHAT_NOTICE_REF` empty | Approve notice text, placement and acknowledgement record | Not recorded |
+| D4 | DPIA outcome | This record; `CHAT_DPIA_REF` empty | Approve, approve with conditions, or require prior consultation | Not recorded |
+| D5 | Retention per class (messages, memory, ledger metadata) | Data map; `CHAT_RETENTION_REF` and `CHAT_RETENTION_DAYS` empty | Set per-class periods after D1 to D4; none is proposed here | Not recorded |
+| D6 | Provider terms acceptance, deployment type, abuse monitoring, transfers | Documented position above | Accept, request modified abuse monitoring, restrict to Standard uksouth deployment | Not recorded |
+| D7 | Performance and monitoring use | RULE-026 prohibits without a separate decision | Keep prohibited; any change needs its own DPIA update, HR and staff consultation | Not recorded |
+| D8 | Rights request intake, identity check, deadlines | `ChatPrivacy.locate/export/erase` | Name the intake owner and response process | Not recorded |
+
 ## Open items
 
 * Owner decision (open): which Entra app role is the memory administrator. `MEMORY_ADMIN_ROLES` uses Retrofit Programme Manager as a placeholder. The role is read from the staff register record, not from the caller's session data.
@@ -102,6 +133,7 @@ references. An administrator can switch memory off globally or per task (`chat_m
 * Schema: `chat_memory` gains `item_class`, `source`, `updated_at` through an idempotent ALTER on SQLite and Azure SQL start-up, so a #163-era table is upgraded. `add_memory` requires a known task so the per-task switch always applies.
 
 * DPO and Legal: lawful basis, staff notice, DPIA decision, retention per class, access and break-glass policy (BRD OD-45, OD-46).
+* Provider terms are documented above (2026-11-01); DPO and Legal acceptance, deployment type, abuse-monitoring choice and transfer position remain open.
 
 ## Proposed administrator and break-glass policy (BRD OD-46, not decided)
 
@@ -117,9 +149,7 @@ approved. Retrieved 2026-11-01 from the implemented behaviour in `chat_isolation
 Open questions for the decision: which Entra app role is the administrator, whether affected users are told after access,
 the audit retention period, and whether content access (option B) is ever permitted. Until a policy reference is recorded
 the endpoint refuses every request and audits the refusal with its stated purpose.
-* Retrieve and record current Microsoft Azure OpenAI data handling, abuse-monitoring and region terms.
 * Rights request intake process and deadlines.
-* Model provider data handling is not recorded; retrieval of the terms stays open.
 * Verify warning comprehension and other chat/memory surfaces. General staff
   panel warning/failure/keyboard DOM behavior is covered locally, not through
   a human screen-reader or comprehension exercise.
