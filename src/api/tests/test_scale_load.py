@@ -1,4 +1,5 @@
 import json
+import time
 import unittest
 from typing import Any
 from unittest.mock import patch
@@ -57,6 +58,28 @@ class ScaleLoadReport(unittest.TestCase):
         with patch.object(scale_load, "call", flaky):
             report = scale_load.run(homes=10, sessions=2, rate=8, duration=1)
         self.assertGreater(sum(r["errors"] for r in report["routes"].values()), 0)
+
+    def test_resources_are_released_when_login_fails(self) -> None:
+        with patch.object(scale_load, "call", return_value=(500, {}, b"")):
+            with patch.object(scale_load.ThreadingHTTPServer, "server_close") as closed:
+                with self.assertRaises(RuntimeError):
+                    scale_load.run(homes=10, sessions=1, rate=1, duration=1)
+        closed.assert_called_once()
+
+    def test_slow_responses_stop_at_deadline_and_count_backlog(self) -> None:
+        real = scale_load.call
+
+        def slow(*args: Any, **kwargs: Any) -> Any:
+            if len(args) > 2:
+                time.sleep(0.6)
+            return real(*args, **kwargs)
+
+        with patch.object(scale_load, "call", slow):
+            report = scale_load.run(homes=10, sessions=1, rate=4, duration=1)
+        executed = report["executed_workload"]
+        self.assertLess(executed["duration_seconds"], 2.5)
+        worst = max(r["p99_ms"] for r in report["routes"].values())
+        self.assertGreater(worst, 650)
 
 
 if __name__ == "__main__":

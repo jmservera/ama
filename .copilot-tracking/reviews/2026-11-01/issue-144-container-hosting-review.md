@@ -21,3 +21,5 @@ Review execution: executed once, self-review of the diff against the plan. Outco
 | Tokenomics cost drivers recorded | Yes (cost Unknown) |
 
 PR uses `Refs #144`.
+
+Second PR review (2026-11-01): four Copilot findings on `scale_load.py` (deadline overrun, latency from dispatch, cleanup on failure, workload claim ignoring achieved rate) were valid and fixed; see the changes record. Original review outcome unchanged.

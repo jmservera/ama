@@ -12,6 +12,7 @@ From src/api with installed distributions:
 from __future__ import annotations
 
 import argparse
+import contextlib
 import itertools
 import json
 import platform
@@ -90,15 +91,18 @@ def call(
 
 
 def run(homes: int, sessions: int, rate: float, duration: float) -> dict[str, Any]:
-    with tempfile.TemporaryDirectory(prefix="zf-scale-") as tmp:
+    with tempfile.TemporaryDirectory(prefix="zf-scale-") as tmp, contextlib.ExitStack() as stack:
         started = time.perf_counter()
         store, events = build_store(Path(tmp), homes)
+        stack.callback(store.db.close)
         setup_seconds = time.perf_counter() - started
         statements = itertools.count()
         store.db.set_trace_callback(lambda _: next(statements))
         app = App(store, PASSWORD)
         httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(app))
+        stack.callback(httpd.server_close)
         threading.Thread(target=httpd.serve_forever, daemon=True).start()
+        stack.callback(httpd.shutdown)
         base = f"http://127.0.0.1:{httpd.server_address[1]}"
         status, headers, _ = call(
             base, "/api/login", body={"email": STAFF[1]["email"], "password": PASSWORD}
@@ -143,6 +147,8 @@ def run(homes: int, sessions: int, rate: float, duration: float) -> dict[str, An
             next_at = time.perf_counter() + rnd.random() * interval
             while next_at < deadline:
                 time.sleep(max(0.0, next_at - time.perf_counter()))
+                if time.perf_counter() >= deadline:
+                    break
                 name = rnd.choice(names)
                 if name == "list":
                     offset = rnd.randrange(0, max(1, homes - 49), 50)
@@ -151,12 +157,11 @@ def run(homes: int, sessions: int, rate: float, duration: float) -> dict[str, An
                     path = f"/api/cases/ZF-{rnd.randrange(homes):05d}"
                 else:
                     path = "/api/progress"
-                begin = time.perf_counter()
                 try:
                     code, _, _ = call(base, path, cookie)
                 except OSError:
                     code = 0
-                elapsed = (time.perf_counter() - begin) * 1000
+                elapsed = (time.perf_counter() - next_at) * 1000
                 with lock:
                     samples[name].append(elapsed)
                     errors[name] += code != 200
@@ -176,9 +181,6 @@ def run(homes: int, sessions: int, rate: float, duration: float) -> dict[str, An
             int(Path("/proc/self/statm").read_text().split()[1]) * 4096 / 2**20, 1
         )
         sql_statements = next(statements) - statements_before - 1
-        httpd.shutdown()
-        httpd.server_close()
-        store.db.close()
     total = sum(len(v) for v in samples.values())
     cpu_seconds = (cpu_after.ru_utime + cpu_after.ru_stime) - (
         cpu_before.ru_utime + cpu_before.ru_stime
@@ -214,7 +216,10 @@ def run(homes: int, sessions: int, rate: float, duration: float) -> dict[str, An
             and events >= DECLARED["events"]
             and sessions >= DECLARED["sessions"]
             and rate >= DECLARED["requests_per_second"]
-            and elapsed >= DECLARED["duration_seconds"],
+            and duration >= DECLARED["duration_seconds"]
+            and elapsed >= DECLARED["duration_seconds"]
+            and bool(elapsed)
+            and total / elapsed >= DECLARED["requests_per_second"],
         },
         "fixture_setup_seconds": round(setup_seconds, 1),
         "cold_first_request_ms": warmup_ms,
