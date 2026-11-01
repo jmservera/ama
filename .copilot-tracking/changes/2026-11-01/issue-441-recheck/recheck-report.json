@@ -1,0 +1,99 @@
+{
+  "freshness": {
+    "head": "81cf0c9e2b34affbe98cb75eb13734529700c369",
+    "origin_main": "81cf0c9e2b34affbe98cb75eb13734529700c369",
+    "descends_from_origin_main": true,
+    "dirty_docs_or_src": [
+      "M docs/reference/log.md"
+    ],
+    "ok": true
+  },
+  "custody": {
+    "base": "140d8f494482c78e84d15f3d46b9223d3c487af0",
+    "files": 30,
+    "missing": [],
+    "mismatch": [],
+    "ok": true
+  },
+  "registries": {
+    "brd": {
+      "fr_rows": 64,
+      "fr_duplicates": [],
+      "fr_max": "FR-064",
+      "ac_defs": 132,
+      "ac_duplicates": [],
+      "ac_max": "AC-132"
+    },
+    "prd": {
+      "fr_rows": 73,
+      "fr_duplicates": [],
+      "fr_max": "FR-073",
+      "ac_defs": 1,
+      "ac_duplicates": [],
+      "ac_max": "AC-139"
+    },
+    "brd_base_fr_preserved": true,
+    "prd_base_fr_preserved": true,
+    "brd_required_ids": true,
+    "prd_required_ids": true,
+    "ok": true
+  },
+  "policy": {
+    "fr044_names_per_output_review": true,
+    "fr044_exception_conditional_on_rule028": true,
+    "rule028_requires_od53": true,
+    "rule028_absent_gate_means_per_message_review": true,
+    "prd_mentions_per_message_default": true,
+    "brd_od52_55_visible": true,
+    "prd_od52_55_visible": true,
+    "ok": true
+  },
+  "formulas": {
+    "values_present": {
+      "-1.594": true,
+      "14.74": true,
+      "94.333": true
+    },
+    "ok": true
+  },
+  "links": {
+    "checked": [
+      "docs/brds/agentic-retrofit-programme-brd.md",
+      "docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+      ".copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md",
+      "docs/case_study_48_addendum.md",
+      "docs/reference/README.md"
+    ],
+    "broken_resident_related": [],
+    "broken_inherited_unrelated": [
+      "docs/case_study_48_addendum.md -> ./capstone/deck/agents-in-retrofit-process.svg",
+      "docs/case_study_48_addendum.md -> ./capstone/pitch/tokenomics-pitch-brief.md",
+      "docs/reference/README.md -> ../presentations/ama-mentor-progress-review.pptx",
+      "docs/reference/README.md -> ../presentations/ama-mentor-progress-review.pptx"
+    ],
+    "ok": true
+  },
+  "adr": {
+    "registry_is_0001_to_0006": true,
+    "no_adr_change_on_branch": true,
+    "no_adr_config_or_competing_registry": true,
+    "proposal_marked_proposed_unregistered": true,
+    "figures_present": true,
+    "png_chrome_wording": true,
+    "ok": true,
+    "figure_files": [
+      "resident-service-boundary.excalidraw",
+      "resident-service-boundary.png",
+      "resident-service-boundary.svg"
+    ]
+  },
+  "log": {
+    "append_only": true,
+    "new_entry_is_last": true,
+    "entry_refs_not_closes": true,
+    "entry_keeps_gates_visible": true,
+    "entry_count": 451,
+    "ok": true
+  },
+  "overall_ok": true
+}
