@@ -22,8 +22,10 @@ const employeeChat = (() => {
   }
   function install() {
     const button = launcher();
-    button.hidden = !me || me.user.role === "Contractor";
-    if (button.hidden) return;
+    const unauthorised = !me || me.user.role === "Contractor";
+    if (unauthorised) button.hidden = true;
+    else if (!widget) button.hidden = false;
+    if (unauthorised) return;
     if (typeof window.ChatWidget?.create !== "function") {
       button.hidden = true;
       const session = me;
@@ -49,10 +51,10 @@ const employeeChat = (() => {
     const signal = controller.signal;
     const match = location.hash.match(/^#\/case\/([^?]+)/);
     const caseId = match ? decodeURIComponent(match[1]) : "";
-    let tid = null;
+    let tid = null, stored = true;
     const ui = window.ChatWidget.create({
       id: "employee-chat", title: "Employee assistant", launcher: launcher(),
-      questionLabel: "Your work question", skillLabel: "Agent skill",
+      questionLabel: "Your work question", skillLabel: "Agent skill", resizable: true,
     });
     widget = ui;
     const { input, select, send } = ui;
@@ -93,12 +95,17 @@ const employeeChat = (() => {
       ui.setStatus("Asking the assistant.");
       ui.message("user", question);
       try {
-        if (!tid) {
-          const thread = await api("/api/chat/threads", { case_id: caseId }, signal);
-          if (!current()) return;
-          tid = thread.id;
+        let answer;
+        if (stored) {
+          if (!tid) {
+            const thread = await api("/api/chat/threads", { case_id: caseId }, signal);
+            if (!current()) return;
+            tid = thread.id;
+          }
+          answer = await api(`/api/chat/threads/${encodeURIComponent(tid)}/ask`, { content: question, skill }, signal);
+        } else {
+          answer = await api("/api/chat/unstored-ask", { content: question, skill, case_id: caseId }, signal);
         }
-        const answer = await api(`/api/chat/threads/${encodeURIComponent(tid)}/ask`, { content: question, skill }, signal);
         if (!current()) return;
         ui.message("assistant", answer.reply, {
           label: answer.workflow_only ? "Workflow-only help, no record changed" : answer.label,
@@ -134,6 +141,9 @@ const employeeChat = (() => {
       ui.intro.append(h("p", { id: "chat-privacy" },
         `${admission.warning} Retention: ${admission.retention}. Synthetic data only. Model activation requires separate approval.`));
       input.setAttribute("aria-describedby", "employee-chat-entry-warning chat-privacy employee-chat-error");
+      stored = admission.storage_approved !== false;
+      if (!stored) ui.intro.append(h("p", { id: "chat-unstored" },
+        "Chat storage is not approved yet. Replies are rules-only workflow help, nothing you type is saved and no AI model is used."));
       for (const skill of data.skills) select.append(h("option", { value: skill.id }, `${skill.id}: ${skill.purpose}`));
       input.disabled = false;
       ui.busy(false);

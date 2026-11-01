@@ -473,6 +473,44 @@ class StoredQuestionTests(unittest.TestCase):
                         self.assertEqual([m["seq"] for m in messages], [1, 2])
 
 
+class UnstoredAskTests(unittest.TestCase):
+    def setUp(self) -> None:
+        work = tempfile.TemporaryDirectory()
+        self.addCleanup(work.cleanup)
+        path = Path(work.name) / "synthetic.json"
+        path.write_text(json.dumps(dataset.DATA))
+        self.store = Store(str(path))
+        self.user = self.store.data["staff"][0]
+        self.calls: list[str] = []
+
+        def model(system: str, prompt: str) -> str:
+            self.calls.append(prompt)
+            return "{}"
+
+        self.panel = ChatPanel(ChatIsolation(self.store, env={}), model)
+
+    def test_unapproved_storage_gives_rules_reply_without_storing_or_model(self) -> None:
+        threads = len(self.store.data.get("chat_threads", {}))
+        reply = self.panel.ask_unstored(self.user, "", "UNSTORED-CANARY help me", skill="general")
+        self.assertEqual(reply["kind"], "fallback")
+        self.assertTrue(reply["workflow_only"])
+        self.assertEqual(reply["model"], "workflow-only")
+        self.assertEqual(self.calls, [])
+        self.assertEqual(len(self.store.data.get("chat_threads", {})), threads)
+        audit = json.dumps(list(self.store.audit_entries()))
+        self.assertNotIn("UNSTORED-CANARY", audit)
+        self.assertIn("chat.turn.unstored", audit)
+
+    def test_decisions_are_refused_and_bad_input_rejected(self) -> None:
+        reply = self.panel.ask_unstored(self.user, "", "Approve the funding claim for them")
+        self.assertEqual(reply["kind"], "refused")
+        for question, skill in (("", None), ("hi", "nope"), (3, None)):
+            with self.assertRaises(ValueError):
+                self.panel.ask_unstored(self.user, "", question, skill=skill)
+        with self.assertRaises(ChatNotFound):
+            self.panel.ask_unstored(self.user, "ZF-MISSING", "status?")
+
+
 class SqlRosterTests(unittest.TestCase):
     def setUp(self) -> None:
         work = tempfile.TemporaryDirectory()

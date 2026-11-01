@@ -698,6 +698,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     c.current_user(user)
                     return self._json(200, {
                         "warning": CHAT_WARNING, "retention": c.privacy.decision()["retention"],
+                        "storage_approved": c.privacy.decision()["approved"],
                         "activation": "disabled; approval evidence required",
                         "limits": {"calls_per_turn": 1, "retries": 0, "output_tokens": 600,
                                    "context_chars": MAX_INPUT_CHARS, "history_chars": MAX_HISTORY_CHARS,
@@ -746,6 +747,14 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(200, c.privacy.list_memory(c.current_user(user)))
                 if not post and parts == ["memory", "status"]:
                     return self._json(200, c.privacy.memory_status(c.current_user(user), (parse_qs(urlparse(self.path).query).get("task") or [""])[0]))
+                if post and parts == ["unstored-ask"]:
+                    if set(body) - {"content", "skill", "case_id"}:
+                        raise ValueError("Only content, skill and case_id are accepted.")
+                    u = c.current_user(user)
+                    if c.privacy.decision()["approved"]:
+                        raise ValueError("Chat storage is approved. Use a chat thread.")
+                    return self._json(200, app.panel.ask_unstored(
+                        u, str(body.get("case_id") or ""), body.get("content"), skill=body.get("skill")))
                 if post and parts == ["threads"]:
                     u = c.current_user(user)
                     if body.get("case_id") and s.detail(body["case_id"], u) is None:
