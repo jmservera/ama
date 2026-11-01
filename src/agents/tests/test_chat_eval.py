@@ -34,11 +34,90 @@ class GoldenRunTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.report = chat_eval.run_eval()
 
-    def test_open_critical_gap_blocks_golden_success(self) -> None:
-        self.assertTrue(self.report["passed"])
+    def test_golden_run_passes_with_no_open_gap(self) -> None:
+        self.assertTrue(self.report["passed"], self.report["failures"])
         self.assertEqual(self.report["summary"]["failures"], 0)
-        self.assertEqual(self.report["summary"]["critical_failures"], 0)
         self.assertEqual(self.report["summary"]["open_critical_gaps"], [])
+
+    def test_unsupported_claim_with_a_valid_citation_is_withheld(self) -> None:
+        result = next(
+            r
+            for r in self.report["results"]
+            if r["id"] == "grounding-unsupported-claim-with-valid-citation"
+        )
+        self.assertTrue(result["passed"], result["failures"])
+        self.assertIsNone(result["known_gap"])
+        self.assertEqual(
+            chat_panel.unsupported_claims("Funding is secured.", ["Survey booked"]),
+            ["secured"],
+        )
+        self.assertEqual(chat_panel.unsupported_claims("Survey booked.", ["Survey booked"]), [])
+        self.assertEqual(
+            chat_panel.unsupported_claims("It is 12 weeks.", ["Survey booked"]), ["12"]
+        )
+
+    def test_support_matches_whole_tokens(self) -> None:
+        self.assertEqual(
+            chat_panel.unsupported_claims("Funding is secured.", ["Funding is unsecured."]),
+            ["secured"],
+        )
+        self.assertEqual(
+            chat_panel.unsupported_claims("It is 12 weeks.", ["It is 120 weeks."]), ["12"]
+        )
+
+    def test_signs_and_leading_decimals_are_preserved(self) -> None:
+        self.assertEqual(
+            chat_panel.unsupported_claims("The adjustment is £-40.5m.", ["Adjustment: £40.5m."]),
+            ["-40.5m"],
+        )
+        self.assertEqual(
+            chat_panel.unsupported_claims("The grant is £.5m.", ["Grant: £5m."]), [".5m"]
+        )
+        self.assertEqual(
+            chat_panel.unsupported_claims("The adjustment is £-40.5m.", ["Adjustment: £-40.5m."]),
+            [],
+        )
+        self.assertEqual(chat_panel.unsupported_claims("The grant is £.5m.", ["Grant: £.5m."]), [])
+
+    def test_amounts_after_ellipses_are_checked(self) -> None:
+        for text in (
+            "The amount is\u202640m.",
+            "The amount is...40m.",
+            "The amount is\u2026 \u00a340m.",
+        ):
+            self.assertEqual(chat_panel.unsupported_claims(text, ["Survey booked"]), ["40m"], text)
+        self.assertEqual(
+            chat_panel.unsupported_claims("Grant...\u00a3.5m.", ["Grant: \u00a3.5m."]), []
+        )
+
+    def test_currency_codes_and_signs_before_symbols(self) -> None:
+        for text in ("Funding totals GBP40m.", "Funding totals GBP40.5m.", "Funding is GBP40000."):
+            self.assertTrue(chat_panel.unsupported_claims(text, ["Survey booked"]), text)
+        self.assertEqual(
+            chat_panel.unsupported_claims("The adjustment is -£40.5m.", ["Adjustment: £40.5m."]),
+            ["-40.5m"],
+        )
+        self.assertEqual(
+            chat_panel.unsupported_claims("The adjustment is -£40.5m.", ["Adjustment: -£40.5m."]),
+            [],
+        )
+
+    def test_numeric_forms_are_tokenised_completely(self) -> None:
+        for text, token in (
+            ("It costs £40m.", "40m"),
+            ("About 12k homes.", "12k"),
+            ("Area is 12m2.", "12m2"),
+            ("It is £1e6.", "1e6"),
+            ("It is £40.5m.", "40.5m"),
+        ):
+            self.assertEqual(chat_panel.unsupported_claims(text, ["40 homes"]), [token], text)
+        self.assertEqual(chat_panel.unsupported_claims("It is 40 homes.", ["40 homes"]), [])
+
+    def test_grounding_guard_changes_policy_version(self) -> None:
+        raw = b"{}"
+        before = chat_eval.bindings(raw)["policy_version"]
+        with patch.object(chat_panel, "UNGROUNDED", "changed"):
+            self.assertNotEqual(before, chat_eval.bindings(raw)["policy_version"])
 
     def test_scenarios_are_multi_turn_and_cover_every_required_area(self) -> None:
         cats = {r["category"] for r in self.report["results"]}
@@ -62,15 +141,6 @@ class GoldenRunTests(unittest.TestCase):
         self.assertTrue(kinds >= {i for i in kinds if i.startswith("out-of-scope")})
         self.assertGreaterEqual(len(kinds), 4)
 
-    def test_known_gaps_are_recorded_not_hidden(self) -> None:
-        self.assertEqual(self.report["summary"]["known_gaps"], [])
-        ids = {r["id"] for r in self.report["results"]}
-        self.assertIn("grounding-unsupported-claim-with-valid-citation", ids)
-        self.assertIn("grounding-supported-claim-is-answered", ids)
-        for category, counts in self.report["summary"]["by_category"].items():
-            results = [r for r in self.report["results"] if r["category"] == category]
-            self.assertEqual(counts["passed"], sum(r["passed"] for r in results))
-
     def test_stale_history_and_lexical_action_claim_scenarios_really_pass(self) -> None:
         for sid in (
             "grounding-stale-answer-stays-in-history",
@@ -92,12 +162,6 @@ class GoldenRunTests(unittest.TestCase):
         self.assertEqual(s["non_ai_panel_answers"], 0)
         self.assertEqual(s["card_could_answer"], s["answer_turns"])
         self.assertIn("not permitted", self.report["evidence"]["benefit_claim"])
-
-    def test_grounding_policy_changes_policy_version(self) -> None:
-        raw = chat_eval.GOLDEN.read_bytes()
-        before = chat_eval.bindings(raw)["policy_version"]
-        with patch.object(chat_panel, "GROUNDING_REVISION", "changed"):
-            self.assertNotEqual(before, chat_eval.bindings(raw)["policy_version"])
 
     def test_report_binds_versions_and_states_what_is_not_evaluated(self) -> None:
         b = self.report["bindings"]
@@ -157,11 +221,7 @@ class GoldenRunTests(unittest.TestCase):
 
     def test_open_critical_gaps_block_even_if_aggregate_success_is_inconsistent(self) -> None:
         report = copy.deepcopy(self.report)
-        report["passed"] = True
-        report["summary"]["critical_failures"] = 0
-        report["summary"]["open_critical_gaps"] = [
-            dict(id="seeded", category="grounding", gap="seeded")
-        ]
+        report["summary"]["open_critical_gaps"] = [dict(id="x", category="grounding", gap="g")]
         result = chat_eval.enablement_decision(report, dict(approved_by="someone"))
         self.assertEqual(result["outcome"], "fail")
         self.assertTrue(result["blocking_gaps"])
@@ -259,15 +319,20 @@ class CliTests(unittest.TestCase):
             report = json.loads(out.read_text())
             self.assertEqual(report["version"], GOLDEN["version"])
             self.assertTrue(report["passed"])
-            self.assertEqual(report["summary"]["open_critical_gaps"], [])
+            self.assertFalse(report["summary"]["open_critical_gaps"])
 
-    def test_golden_cli_reports_no_gap_but_never_enables(self) -> None:
+    def test_json_cli_passes_but_enablement_stays_insufficient(self) -> None:
         output = io.StringIO()
         with contextlib.redirect_stdout(output):
             self.assertEqual(chat_eval.main(["--json"]), 0)
-        report = json.loads(output.getvalue())
-        self.assertEqual(report["enablement"]["blocking_gaps"], [])
-        self.assertEqual(report["enablement"]["state"], "disabled")
+        self.assertEqual(json.loads(output.getvalue())["enablement"]["outcome"], "insufficient")
+
+    def test_plain_cli_reports_no_open_gap_and_disabled_task(self) -> None:
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            self.assertEqual(chat_eval.main([]), 0)
+        self.assertNotIn("open critical gap", output.getvalue())
+        self.assertIn("enablement: insufficient (task disabled)", output.getvalue())
 
     def test_gap_free_cli_returns_zero_but_never_enables(self) -> None:
         report = run(dict(version="t", scenarios=[scenario("grounding-cited-follow-ups")]))

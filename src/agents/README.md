@@ -77,9 +77,9 @@ PYTHONPATH=../core/tests python3 -m unittest discover -s tests -p 'test_chat_*.p
 python3 -m zava_forward.agents.chat_eval --json
 ```
 
-The full development evaluation intentionally exits 1: the existing unsupported
-claim with a valid citation remains a critical failure and enablement is
-fail/disabled. Synthetic poisoning/injection passes are not actual-model or
+The scripted unsupported-claim scenario now passes via the lexical claim check
+(unlisted paraphrases can still bypass it). Enablement stays disabled with outcome
+insufficient. Synthetic poisoning/injection passes are not actual-model or
 human assurance. Held-out independent labels, approved thresholds/accountable
 reviewer and competent authorized human exercises remain unavailable.
 
@@ -344,10 +344,8 @@ them that start with `cd src/api` run from the api project.
   `summary.open_critical_gaps` and `enablement.blocking_gaps` list unresolved
   critical gaps; any such gap makes `passed` false, enablement `fail` (disabled)
   and the CLI exit non-zero. The unsupported-claim-with-valid-citation scenario
-  is closed by a deterministic claim-level check in the chat panel (an assurance
-  word or number absent from the cited text is withheld); the golden run now
-  exits 0 with no open gap, and enablement stays `insufficient` and disabled.
-  The check is lexical and says nothing about actual-model accuracy.
+  is caught by the lexical claim check, so it is no longer an open gap in the golden
+  run; unlisted paraphrases remain an accepted limitation and enablement stays disabled.
 
   Refusal uses NFKC, format-character removal, common Greek/Cyrillic confusable
   folding and collapsed whitespace. Refusal and output action-claim checks are

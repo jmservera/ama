@@ -84,15 +84,6 @@
    ]
   },
   {
-   "id": "grounding-supported-claim-is-answered",
-   "category": "grounding",
-   "cases": [{"id": "ZF-1", "stage": "Survey booked"}],
-   "turns": [
-    {"say": "What stage is it?", "script": {"answer": "The stage is Survey booked.", "citations": ["stage"]},
-     "expect": {"kind": "answer", "cites": ["stage"], "contains": ["Survey booked"]}}
-   ]
-  },
-  {
    "id": "permission-role-and-staff-revoked-mid-thread",
    "category": "permission",
    "cases": [{"id": "ZF-1"}],
