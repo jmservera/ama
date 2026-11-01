@@ -1,6 +1,7 @@
 """Read-only gap-routing baseline for the public synthetic needs inventory."""
 
 import argparse
+import csv
 import json
 import re
 import sys
@@ -108,16 +109,56 @@ def build_baseline(value: object) -> dict[str, object]:
     }
 
 
+def check_register_labels(path: Path) -> dict[str, object]:
+    """Count rows whose is_synthetic value is true; never expose row content."""
+    rows = labelled = 0
+    with path.open(encoding="utf-8-sig", newline="") as handle:
+        reader = csv.DictReader(handle, strict=True)
+        try:
+            names = reader.fieldnames or []
+            if len(names) != len(set(names)):
+                raise ValueError("Register requires unique CSV column names")
+            missing = "is_synthetic" not in names
+            for row in reader:
+                if None in row or any(value is None for value in row.values()):
+                    raise ValueError("Register rows must match the CSV header")
+                rows += 1
+                if str(row.get("is_synthetic", "")).strip().lower() in ("true", "1"):
+                    labelled += 1
+        except csv.Error as error:
+            raise ValueError("Register is not valid CSV") from error
+    conforms = not missing and rows > 0 and labelled == rows
+    return {
+        "rows": rows,
+        "labelled": labelled,
+        "unlabelled": rows - labelled,
+        "missing_column": missing,
+        "conforms": conforms,
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     """Print deterministic JSON; fail on invalid metadata or reported open gaps."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("inventory", type=Path, help="Public needs-inventory.json, not a dataset")
+    parser.add_argument(
+        "--register", type=Path, help="Optional CSV to check for per-row is_synthetic=true"
+    )
     args = parser.parse_args(argv)
     try:
         value: object = json.loads(args.inventory.read_text(encoding="utf-8"))
         report = build_baseline(value)
     except (OSError, UnicodeError, ValueError) as error:
         parser.exit(1, f"coverage: {args.inventory}: {error}\n")
+    if args.register is not None:
+        try:
+            register = check_register_labels(args.register)
+        except (OSError, UnicodeError, ValueError) as error:
+            parser.exit(1, f"coverage: {args.register}: {error}\n")
+        else:
+            report["register_label_conformance"] = register
+            if not register["conforms"]:
+                report["open_gaps"] = [*report["open_gaps"], "register-is_synthetic"]  # type: ignore[misc]
     sys.stdout.write(json.dumps(report, indent=2, sort_keys=True) + "\n")
     return 1 if report["open_gaps"] else 0
 

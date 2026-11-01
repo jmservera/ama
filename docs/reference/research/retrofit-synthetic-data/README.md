@@ -681,6 +681,11 @@ bytes and pinned goldens changed. Records in the private SN-01 register and
 other child-story outputs are not assessed here.
 No second generator, private output or owner deferral is introduced.
 
+Register check (2026-11-01): `coverage --register` counts per-row `is_synthetic=true`.
+A local read-only run on the committed SN-01 register reported 60,000 of 60,000
+rows labelled, none unlabelled. This proves the label convention for that
+register only; other child outputs are not assessed.
+
 Open items: owner confirmation of the mapping and deferrals, and whether regenerating the
 private SN-01 register from a committed generator sits in #168 or is deferred.
 No deferral is recorded yet.
