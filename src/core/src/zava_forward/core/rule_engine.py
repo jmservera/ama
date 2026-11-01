@@ -19,7 +19,7 @@ AUDIENCES = {
 }
 SAFE_ROUTE = "Use the existing human emergency or hazard service now; do not wait for checks."
 TABLES = ("reg_check", "reg_alert", "reg_alert_event", "reg_checkpoint")
-ENGINE_VERSION = 2
+ENGINE_VERSION = 3
 SQLITE_DDL = (
     "CREATE TABLE IF NOT EXISTS reg_check (id TEXT PRIMARY KEY, case_id TEXT NOT NULL, "
     "at TEXT NOT NULL, check_seq INTEGER NOT NULL, body TEXT NOT NULL)",
@@ -505,6 +505,8 @@ class RuleEngine:
                 check = current.get((a["case_id"], a["card_id"], a["item"]))
                 a["latest_result"] = check["result"] if check else "unknown"
                 a["latest_evaluated_at"] = check["at"] if check else None
+                if check:
+                    a["home_id"], a["home_scope"] = check["home_id"], check["home_scope"]
                 if not can_see_reason(user):
                     for event in a["events"]:
                         event["note"] = NOTE_HELD

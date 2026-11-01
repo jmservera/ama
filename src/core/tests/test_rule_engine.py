@@ -523,6 +523,31 @@ class EngineTests(unittest.TestCase):
         }
         self.assertEqual(sorted(map(sorted, grouped.values())), [["SYN-1", "SYN-2"], ["SYN-3"]])
 
+    def test_upgrade_regroups_open_case_only_alerts_and_invalidates_checkpoint(self) -> None:
+        del self.facts["home_id"]
+        self.facts["hazards"] = [self.hazard(hours_ago=60)]
+        self.write("SYN-1")
+        self.write("SYN-2")
+        with patch.object(rule_engine, "ENGINE_VERSION", 2):
+            for case_id in ("SYN-1", "SYN-2"):
+                self.run_engine(case_id=case_id)
+        self.assertEqual(len(self.engine.alerts(OWNER)["homes"]), 2)
+        first = self.engine.alerts(OWNER)["homes"][0]["alerts"][0]
+        self.engine.disposition(OWNER, first["id"], "acknowledge", "SYN", now=NOW)
+        ids = {a["id"] for h in self.engine.alerts(OWNER)["homes"] for a in h["alerts"]}
+        self.facts["home"] = dict(address="1 Test Road", postcode="TE1 1ST")
+        for case_id in ("SYN-1", "SYN-2"):
+            self.db.execute("UPDATE cases SET body=? WHERE id=?", (json.dumps(self.facts), case_id))
+        self.db.commit()
+        for case_id in ("SYN-1", "SYN-2"):
+            check = self.checks(case_id=case_id)[0]
+            self.assertEqual(check["home_scope"], "address_key")
+        homes = self.engine.alerts(OWNER)["homes"]
+        self.assertEqual(len(homes), 1)
+        self.assertEqual({a["id"] for a in homes[0]["alerts"]}, ids)
+        acknowledged = [a for a in homes[0]["alerts"] if a["id"] == first["id"]][0]
+        self.assertEqual([e["action"] for e in acknowledged["events"]], ["acknowledge"])
+
     def test_home_key_falls_back_to_case_only_without_recorded_home(self) -> None:
         del self.facts["home_id"]
         for home in (None, dict(address="1 Test Road"), dict(address="", postcode="TE1 1ST")):
