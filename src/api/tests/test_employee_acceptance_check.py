@@ -132,7 +132,9 @@ class AcceptanceTests(unittest.TestCase):
             page = self.page()
             page.evaluate.side_effect = responses
             observer = Mock(return_value={"passed": True})
-            with patch.dict(check.OBSERVERS, chat=observer, map=observer, case=observer):
+            with patch.dict(
+                check.OBSERVERS, chat=observer, map=observer, case=observer, briefing=observer
+            ):
                 result = check.verify_employee(page, EXPECTED)
             self.assertFalse(result["passed"])
             self.assertEqual(observer.call_count, 1 if len(responses) == 3 else 0)
@@ -354,12 +356,14 @@ class AcceptanceTests(unittest.TestCase):
                 page = context.new_page()
                 page.goto(fixture.url)
                 observer = Mock(return_value={"passed": True})
-                with patch.dict(check.OBSERVERS, chat=observer, map=observer, case=observer):
+                with patch.dict(
+                    check.OBSERVERS, chat=observer, map=observer, case=observer, briefing=observer
+                ):
                     result = check.verify_employee(page, EXPECTED, base)
                 self.assertEqual(result["passed"], admitted)
                 self.assertEqual(result["identity"]["expectedIdentity"], admitted)
                 self.assertEqual(result["identity"]["displayEmailMatches"], not admitted)
-                self.assertEqual(observer.call_count, 3 if admitted else 0)
+                self.assertEqual(observer.call_count, 4 if admitted else 0)
                 if admitted:
                     self.assertFalse(result["identity"]["rosterBound"])
                     page.goto(base + "/app")

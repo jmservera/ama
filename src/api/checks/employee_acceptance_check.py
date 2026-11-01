@@ -424,10 +424,27 @@ def case_view(page: Page, admit: Admission) -> Observation:
     }
 
 
+def briefing(page: Page, admit: Admission) -> Observation:
+    admit()
+    page.evaluate("location.hash = '#/'")
+    admit()
+    box = page.locator(".briefing")
+    box.locator(".ai-label").wait_for(state="visible", timeout=120000)
+    admit()
+    label = box.locator(".ai-label").inner_text()
+    return {
+        "passed": "Not an instruction" in label
+        and box.locator("details summary").count() > 0
+        and box.locator("time").count() > 0
+        and page.locator("#app [role=alert]:visible").count() == 0
+    }
+
+
 OBSERVERS: dict[str, Callable[[Page, Admission], Observation]] = {
     "chat": chat,
     "map": map_filters,
     "case": case_view,
+    "briefing": briefing,
 }
 
 
