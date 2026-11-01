@@ -16,3 +16,5 @@ Routed follow-ups: browser keyboard and axe check for both screens, validation i
 Addendum (PR review, original outcome preserved): five Copilot findings were valid and fixed as above; handover readiness now consumes a server-provided blocker list rather than client inference.
 
 Addendum (second PR review round): the Copilot finding on unbound accepted quality evidence was valid. `handover_blockers` now passes an empty binding list to `resident_gate` when a record has no `resident_binding`, matching `hand_over_quality`, so the reader reports "Resident scope is unknown." Regression: `HandoverBlockersTest.test_accepted_record_without_binding_is_blocked_as_unknown_scope`.
+
+Addendum (third PR review round): four findings were valid and all one root cause, an earlier merge resolution that reverted unrelated main content. Fixed by restoring those files from origin/main; original outcome preserved.

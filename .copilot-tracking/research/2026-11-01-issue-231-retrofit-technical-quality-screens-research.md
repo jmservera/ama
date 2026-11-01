@@ -21,3 +21,5 @@ Task: issue-231-retrofit-technical-quality-screens. Disposition: executed (focus
 ## Not in scope
 
 Server changes, write actions, observed validation (#155), browser/axe run (CI).
+
+Correction cycle 3: diffing against origin/main shows the branch must change only role-screens.js, its test, quality.py, store.py and test_quality_procurement.py in code.

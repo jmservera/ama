@@ -37,6 +37,13 @@ class ChatPrivacyBehaviour:
         self.assertFalse(cp.MODEL_PROVIDER_POSITION["zava_stores_prompts"])
         self.assertIn("uksouth", cp.MODEL_PROVIDER_POSITION["region"])
 
+    def test_provider_position_is_documented_but_not_accepted(self):
+        terms = cp.MODEL_PROVIDER_POSITION["documented_terms"]
+        self.assertEqual(terms["status"], "vendor_documentation_not_dpo_accepted")
+        self.assertEqual(terms["source"], "https://learn.microsoft.com/en-us/azure/foundry/responsible-ai/openai/data-privacy")
+        self.assertRegex(terms["retrieved"], r"^\d{4}-\d{2}-\d{2}$")
+        self.assertTrue(any("DPO and Legal" in i for i in cp.MODEL_PROVIDER_POSITION["open_items"]))
+
     def test_storage_refused_without_dpo_legal_references(self):
         c = self.cp(CHAT_DPIA_REF="SYNTH-DPIA-1")
         self.assertEqual(c.decision()["missing"], ["lawful_basis_ref", "notice_ref"])

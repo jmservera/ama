@@ -6,3 +6,5 @@
 4. Commit, push, PR (Refs #231 unless every criterion proven).
 
 Critique (single pass, self): keep read-only; do not compute approvals; treat absent data as Unknown; do not add roles; compatible findings applied. Accepted.
+
+Correction cycle 3: merge main, restore unrelated files reverted by an earlier merge, re-run validation, push, reply and resolve threads.

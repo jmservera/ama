@@ -17,3 +17,9 @@
 * origin/main had unclosed `registerRoleScreen` blocks (a syntax error from earlier overlapping merges); closing `});` added so `node --check` passes.
 * `.github/rubric/scores/latest.json` kept the branch side; `docs/reference/log.md` kept both entries.
 * Validation: node --check, ruff check/format clean, API unittest 1490 run, only 2 import errors (azure.eventhub not installed locally); mypy only reports pre-existing azure.iot stub errors.
+
+## Correction cycle 3 (PR #656)
+
+* Merged origin/main again; `role-screens.js` conflicts were blank-line only, `node --check` passes.
+* Four Copilot threads showed an earlier merge had reverted main content outside this issue. Restored from origin/main: `determinism_audit.py` and its test (six generators, per-generator exception boundary), `generate_pack.py` (`version`, `generator_revision`), `chat-memory-dpia.md`, `chat_privacy.py` and its test, `docs/reference/log.md`, both README indexes and the issue 163 and 176 tracking files. The PR diff now carries only issue 231 work.
+* Validation: ruff check and format clean, mypy src/core clean, core tests for determinism, chat privacy and quality procurement pass (149), API suite 1490 run with only the 2 known azure.eventhub import errors.
