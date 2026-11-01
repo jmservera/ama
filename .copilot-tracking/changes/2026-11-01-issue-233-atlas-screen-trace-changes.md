@@ -7,3 +7,5 @@
 * Divergence: none from plan. No browser or AT checks run; CI is the evidence.
 * Review-feedback update: checker now validates screen ids against a known inventory (registered and proposed), requires the walkthrough description cell, builds existing home ids from the PRD fixture manifest, and checks the hypothesis label in the scope section only; tests grew from 6 to 10. Trace doc: `contractor-job-pack` recorded as contractor-facing with staff-facing intake deferred; walkthrough stage 1 recorded as a deferred proposed addition because PR 652 has no source-account or recipient-link design.
 * Review-feedback update 2: the unknown-screen check now filters rows with fewer than two cells before reading the screen cell, so truncated rows no longer raise IndexError; one test added (11 total).
+
+* Follow-up (PR 713 Copilot threads): checker now reads role-screens.js unconditionally so a missing registry exits 2; the drift regression test uses a synthetic unregistered screen so merging quality-queue cannot invalidate it; added a missing-registry test. Review outcome unchanged.
