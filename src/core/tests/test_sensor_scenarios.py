@@ -262,7 +262,10 @@ class SensorScenarioTests(unittest.TestCase):
                 rows = scenario["rows"]
                 assert isinstance(rows, tuple)
                 self.assertNotIn("expected_direction", rows[0])
-                result = ss.retrofit_comparison(rows, ss.START + timedelta(days=14))
+                self.assertEqual(scenario["measure_at"], "2024-01-15T00:00:00Z")
+                measure_at = ss._time(scenario["measure_at"])
+                self.assertEqual(measure_at, ss.START + timedelta(days=14))
+                result = ss.retrofit_comparison(rows, measure_at)
                 deltas = result["deltas"]
                 assert isinstance(deltas, dict)
                 self.assertAlmostEqual(
