@@ -88,6 +88,10 @@ param appCredentialRequiresDirectDemo string
 @description('Must not be empty. Empty means app-local credentials would be overwritten by an application deployment; choose deployApplications=false or perform an authorized migration to Key Vault first.')
 param appCredentialBlocksApplicationDeployment string
 
+@minLength(1)
+@description('Must not be empty. Empty means sqlTier=serverless with an auto-pause delay other than -1 or 15 to 10080 minutes, which Azure SQL General Purpose serverless rejects at database deployment.')
+param serverlessAutoPauseDelayMustBeSupported string
+
 output checked array = [
   resourceGroupMustBeAma
   primaryLocationMustBeUKSouth
@@ -111,4 +115,5 @@ output checked array = [
   demoRequiresBrowserAuthentication
   appCredentialRequiresDirectDemo
   appCredentialBlocksApplicationDeployment
+  serverlessAutoPauseDelayMustBeSupported
 ]
