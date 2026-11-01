@@ -16,7 +16,7 @@ DOC_MARKERS = {
     "diagnostic_log": "Diagnostic logs",
     "audit_ledger": "Audit ledger",
 }
-RECORDED = re.compile(r"\d{4}-\d{2}-\d{2}.*\bref:", re.I)
+RECORDED = re.compile(r"\d{4}-\d{2}-\d{2}.*\bref:\s*\S", re.I)
 
 
 def section(text: str, heading: str) -> str:
@@ -62,7 +62,17 @@ class ChatDpiaRecordGuard(unittest.TestCase):
         for row in cp.DATA_MAP:
             if row["id"] in {"message", "thread", "memory"}:
                 self.assertIn("Unknown", row["retention"])
-        self.assertIn("Unknown until DPO approval", section(self.text, "Data map"))
+        rows = {
+            marker: line
+            for line in section(self.text, "Data map").splitlines()
+            for marker in ("chat_message", "chat_memory")
+            if line.startswith("|") and marker in line
+        }
+        for marker, line in rows.items():
+            self.assertTrue(
+                line.rstrip().rstrip("|").rsplit("|", 1)[1].strip().startswith("Unknown"), marker
+            )
+        self.assertEqual(set(rows), {"chat_message", "chat_memory"})
 
 
 if __name__ == "__main__":
