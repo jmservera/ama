@@ -22,3 +22,7 @@ Executed once after implementation. Outcome: conformant for the slice; one crite
 2. Persist the record and surface it in the release gate.
 
 PR uses Refs, not a closing keyword.
+
+## Post-review corrections
+
+Eight Copilot review findings on PR 636 (threshold validation, missing-observation counting, duplicate IDs, missing outcomes, empty cohorts, rounded comparisons, human rejection, input digests) were valid and fixed; see the changes artifact. The original review outcome is unchanged.

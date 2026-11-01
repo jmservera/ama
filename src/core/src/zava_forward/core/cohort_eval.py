@@ -37,19 +37,37 @@ def _rate(count: int, n: int) -> float | None:
     return round(count / n, 4) if n else None
 
 
+def _limit(value: Any) -> bool:
+    return (
+        isinstance(value, int | float)
+        and not isinstance(value, bool)
+        and math.isfinite(value)
+        and 0 <= value <= 1
+    )
+
+
 def _thresholds_approved(manifest: Mapping[str, Any]) -> bool:
     approval = manifest.get("approval")
     thresholds = manifest.get("thresholds")
-    return (
+    if not (
         isinstance(approval, Mapping)
         and named(approval.get("cohorts_owner"))
         and named(approval.get("thresholds_owner"))
         and isinstance(thresholds, Mapping)
-        and all(isinstance(thresholds.get(k), int | float) for k in THRESHOLD_KEYS)
+    ):
+        return False
+    sample = thresholds.get("min_sample")
+    return (
+        isinstance(sample, int)
+        and not isinstance(sample, bool)
+        and sample > 0
+        and all(_limit(thresholds.get(k)) for k in THRESHOLD_KEYS[1:])
     )
 
 
 def _cohort_row(cases: Sequence[Mapping[str, Any]], min_sample: int) -> dict[str, Any]:
+    missing = sum(1 for c in cases if c["actual"] is None)
+    cases = [c for c in cases if c["actual"] is not None]
     n = len(cases)
     errors = sum(1 for c in cases if c["actual"] != c["expected"])
     excluded = sum(1 for c in cases if c["actual"] == "excluded")
@@ -57,6 +75,7 @@ def _cohort_row(cases: Sequence[Mapping[str, Any]], min_sample: int) -> dict[str
     review = sum(1 for c in cases if c["actual"] == "review")
     return {
         "n": n,
+        "missing": missing,
         "errors": errors,
         "excluded": excluded,
         "deprioritised": deprioritised,
@@ -65,14 +84,19 @@ def _cohort_row(cases: Sequence[Mapping[str, Any]], min_sample: int) -> dict[str
         "error_rate": _rate(errors, n),
         "exclusion_rate": _rate(excluded + deprioritised, n),
         "review_burden": _rate(review, n),
+        "_raw": {
+            "error_rate": errors / n if n else None,
+            "exclusion_rate": (excluded + deprioritised) / n if n else None,
+            "review_burden": review / n if n else None,
+        },
         "error_interval": wilson(errors, n),
         "sufficient": n >= min_sample > 0,
     }
 
 
 def _gap(rows: Mapping[str, Mapping[str, Any]], key: str) -> float | None:
-    values = [r[key] for r in rows.values() if r["sufficient"] and r[key] is not None]
-    return round(max(values) - min(values), 4) if len(values) >= 2 else None
+    values = [r["_raw"][key] for r in rows.values() if r["sufficient"] and r[key] is not None]
+    return max(values) - min(values) if len(values) >= 2 else None
 
 
 def evaluate(
@@ -90,8 +114,13 @@ def evaluate(
     declared: Mapping[str, Sequence[str]] = manifest.get("cohorts", {})
     thresholds: Mapping[str, Any] = manifest.get("thresholds", {})
     justified = set(manifest.get("justified_reasons", []))
-    seen = {o["id"]: o for o in observed}
-    manifest_ids = {c["id"] for c in cases}
+    obs_ids = [o.get("id") for o in observed]
+    case_ids = [c["id"] for c in cases]
+    for label, ids in (("observed", obs_ids), ("manifest", case_ids)):
+        for dup in sorted({str(i) for i in ids if ids.count(i) > 1}):
+            block("invalid_input", f"duplicate {label} case id {dup}")
+    seen = {o.get("id"): o for o in observed}
+    manifest_ids = set(case_ids)
 
     for extra in sorted(set(seen) - manifest_ids):
         block("reconciliation", f"observed case {extra} is not in the manifest")
@@ -101,7 +130,10 @@ def evaluate(
     joined: list[dict[str, Any]] = []
     for c in cases:
         obs = seen.get(c["id"], {})
-        actual = obs.get("outcome", "unobserved")
+        actual = obs.get("outcome") if obs else None
+        if obs and actual not in OUTCOMES:
+            block("invalid_input", f"observed case {c['id']} has missing or unsupported outcome")
+            actual = None
         defect = (
             actual in ("excluded", "deprioritised")
             and actual != c["expected"]
@@ -111,12 +143,14 @@ def evaluate(
 
     min_sample = int(thresholds.get("min_sample", 0)) if _thresholds_approved(manifest) else 0
     dimensions: dict[str, Any] = {}
+    if not declared or not cases or any(not labels for labels in declared.values()):
+        block("insufficient_sample", "no cohort dimensions, labels or cases to evaluate")
     for dim, labels in declared.items():
         rows = {
             label: _cohort_row([c for c in joined if c["cohorts"].get(dim) == label], min_sample)
             for label in labels
         }
-        total = sum(r["n"] for r in rows.values())
+        total = sum(r["n"] + r["missing"] for r in rows.values())
         in_dim = sum(1 for c in joined if c["cohorts"].get(dim) in labels)
         if total != in_dim or total != len(joined):
             block(
@@ -126,12 +160,16 @@ def evaluate(
             "exclusion": _gap(rows, "exclusion_rate"),
             "review_burden": _gap(rows, "review_burden"),
         }
-        dimensions[dim] = {"cohorts": rows, "gaps": gaps}
+        raw = {label: row.pop("_raw") for label, row in rows.items()}
+        dimensions[dim] = {
+            "cohorts": rows,
+            "gaps": {k: None if v is None else round(v, 4) for k, v in gaps.items()},
+        }
         for label, row in rows.items():
             if not row["sufficient"]:
                 block("insufficient_sample", f"{dim}/{label}: n={row['n']} below minimum sample")
             elif _thresholds_approved(manifest):
-                if row["error_rate"] > thresholds["max_error_rate"]:
+                if raw[label]["error_rate"] > thresholds["max_error_rate"]:
                     block("threshold_exceeded", f"{dim}/{label}: error rate {row['error_rate']}")
         if _thresholds_approved(manifest):
             for name, limit in (
@@ -175,6 +213,9 @@ def evaluate(
             and b["code"] in DISPOSABLE
         )
     ]
+    if human and disposition and disposition["decision"] == "reject":
+        open_blockers.append({"code": "rejected", "detail": "human reviewer rejected activation"})
+        blockers.append(open_blockers[-1])
     activation_allowed = not open_blockers
     body = {
         "record_version": RECORD_VERSION,
@@ -185,6 +226,7 @@ def evaluate(
         if manifest.get("synthetic", True)
         else bool(_thresholds_approved(manifest)),
         "missing_data_treatment": manifest.get("missing_data_treatment"),
+        "input_digests": {"manifest": digest(manifest), "observed": digest(list(observed))},
         "thresholds": dict(thresholds),
         "approval": dict(manifest.get("approval") or {}),
         "total_cases": len(joined),

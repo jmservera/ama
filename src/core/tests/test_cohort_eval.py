@@ -119,6 +119,82 @@ class CohortEvalTests(unittest.TestCase):
         self.assertFalse(cohort_eval.evaluate(m, clean_observed(m))["fairness_evidence"])
         self.assertIn("OQ-018", cohort_eval.evaluate(m, clean_observed(m))["authority_gap"])
 
+    def test_non_finite_or_boolean_thresholds_are_unapproved(self) -> None:
+        for key, bad in (
+            ("max_error_rate", float("nan")),
+            ("max_error_rate", True),
+            ("max_exclusion_gap", 1.5),
+            ("min_sample", float("inf")),
+            ("min_sample", True),
+        ):
+            m = manifest()
+            m["thresholds"][key] = bad
+            rec = cohort_eval.evaluate(m, clean_observed(m))
+            self.assertIn("unapproved_thresholds", codes(rec), (key, bad))
+            self.assertFalse(rec["activation_allowed"])
+
+    def test_missing_observations_do_not_count_as_samples(self) -> None:
+        m = manifest()
+        rec = cohort_eval.evaluate(m, [])
+        for dim in rec["dimensions"].values():
+            for row in dim["cohorts"].values():
+                self.assertEqual(row["n"], 0)
+                self.assertGreater(row["missing"], 0)
+                self.assertFalse(row["sufficient"])
+                self.assertIsNone(row["error_interval"])
+        self.assertFalse(rec["activation_allowed"])
+
+    def test_duplicate_ids_block(self) -> None:
+        m = manifest()
+        obs = clean_observed(m)
+        rec = cohort_eval.evaluate(m, [{**obs[0], "outcome": "excluded"}, *obs])
+        self.assertIn("invalid_input", codes(rec))
+        self.assertFalse(rec["activation_allowed"])
+        m["cases"].append(dict(m["cases"][0]))
+        self.assertIn("invalid_input", codes(cohort_eval.evaluate(m, obs)))
+
+    def test_missing_outcome_blocks_without_disposition_path(self) -> None:
+        m = manifest()
+        obs = clean_observed(m)
+        del obs[0]["outcome"]
+        ok = {"by": "Reviewer", "rationale": "reviewed", "decision": "accept"}
+        rec = cohort_eval.evaluate(m, obs, ok)
+        self.assertIn("invalid_input", codes(rec))
+        self.assertFalse(rec["activation_allowed"])
+
+    def test_empty_cohorts_block(self) -> None:
+        m = manifest()
+        m["cohorts"] = {}
+        rec = cohort_eval.evaluate(m, clean_observed(m))
+        self.assertIn("insufficient_sample", codes(rec))
+        self.assertFalse(rec["activation_allowed"])
+
+    def test_threshold_uses_unrounded_rates(self) -> None:
+        m = manifest()
+        m["thresholds"]["max_error_rate"] = 0.08331
+        obs = clean_observed(m)
+        obs[0]["outcome"] = "review" if m["cases"][0]["expected"] != "review" else "ranked"
+        rec = cohort_eval.evaluate(m, obs)
+        self.assertIn("threshold_exceeded", codes(rec))
+
+    def test_rejection_blocks_a_clean_run(self) -> None:
+        m = manifest()
+        rec = cohort_eval.evaluate(
+            m, clean_observed(m), {"by": "Reviewer", "rationale": "no", "decision": "reject"}
+        )
+        self.assertFalse(rec["activation_allowed"])
+        self.assertEqual(rec["status"], "blocked")
+
+    def test_record_hash_binds_input_identity(self) -> None:
+        m = manifest()
+        obs = clean_observed(m)
+        base = cohort_eval.evaluate(m, obs)
+        m2 = copy.deepcopy(m)
+        obs2 = copy.deepcopy(obs)
+        m2["cases"][0]["id"] = "renamed"
+        obs2[0]["id"] = "renamed"
+        self.assertNotEqual(base["record_hash"], cohort_eval.evaluate(m2, obs2)["record_hash"])
+
 
 if __name__ == "__main__":
     unittest.main()
