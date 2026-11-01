@@ -200,10 +200,10 @@ function financeLineRows(f, inv) {
     const quantity = !com ? "Unknown. No matched commitment."
       : ln.quantity > com.quantity ? `Above authorised (${financeQty(ln.quantity)} of ${financeQty(com.quantity)})`
         : `Within authorised (${financeQty(ln.quantity)} of ${financeQty(com.quantity)})`;
-    return [`Line ${i + 1}: ${screenValue(ln.measure)}`, `${financeQty(ln.quantity)} at ${financeMoney(ln.amount)}`,
+    return [`Line ${i + 1}: ${screenValue(ln.measure)}`, `Quantity ${financeQty(ln.quantity)}, line total ${financeMoney(ln.amount)}`,
       com ? `${com.id} (${screenValue(com.status)}), ${financeMoney(com.amount)}` : "Unknown. Not matched.",
       scope, quantity, budgetText,
-      ln.milestone_ref ? `Reference ${ln.milestone_ref}` : "Unknown. No accepted milestone evidence.",
+      ln.milestone_ref ? `Supplied reference ${ln.milestone_ref} (unverified). Acceptance is Unknown.` : "Unknown. No milestone reference supplied.",
       !checked ? "Not checked yet. Exceptions are unknown."
         : found.length ? found.map((e) => e.message).join(" ") : "No exception found by the match. This is not a payment decision."];
   });
@@ -220,11 +220,11 @@ function financeInvoicePanel(c) {
       ["Finance decision", inv.disposition ? `${inv.disposition}, recorded by ${screenValue(inv.disposition_by)}` : "No Finance decision recorded"],
       ["Payment status (a note of what Finance did elsewhere)", `${screenValue(inv.payment_status)}. This system never makes or releases a payment.`]]),
     screenTable(`Line comparison for ${inv.id}`,
-      ["Invoice line", "Quantity and amount", "Commitment", "Scope", "Quantity check", "Budget", "Accepted milestone evidence", "Exception or unknown"],
+      ["Invoice line", "Quantity and line total", "Commitment", "Scope", "Quantity check", "Budget", "Supplied milestone reference", "Exception or unknown"],
       financeLineRows(f, inv)))));
 }
 const financeQueueRows = (queue) => queue.map((q) => [q.case_id, q.invoice, `${screenValue(q.supplier)}, ref ${screenValue(q.ref)}`,
-  screenValue(q.status), `${q.exceptions ?? "Unknown"} exceptions`, q.on_hold ? "On hold" : "No hold", financeMoney(q.total)]);
+  screenValue(q.status), financeChecked(q) ? `${q.exceptions ?? "Unknown"} exceptions` : "Unknown. Not checked yet", q.on_hold ? "On hold" : "No hold", financeMoney(q.total)]);
 registerRoleScreen({
   id: "finance-invoices",
   title: "Invoice queue",
@@ -291,7 +291,8 @@ registerRoleScreen({
     const funding = c.funding || {};
     const grants = c.grants || [];
     const drafts = Array.isArray(extra?.review?.drafts) ? extra.review.drafts : null;
-    const holds = extra?.review?.decision_holds || [];
+    const holds = Array.isArray(extra?.review?.decision_holds) ? extra.review.decision_holds : null;
+    const readable = Boolean(extra?.review);
     return h("div", {},
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only reader view for the capital and grant preparer. It is a reviewed export or readiness view only. No submission, award, eligibility decision or payment is made or inferred. Source: desk research, not observed behaviour."),
@@ -309,8 +310,8 @@ registerRoleScreen({
         : screenPanel("Constructed field draft", h("p", { class: "empty" }, "No field draft recorded for this home. Template, fields and evidence are Unknown.")))
         : screenPanel("Constructed field draft", h("p", { class: "empty" }, "Unknown. The field review could not be read for your role.")),
       screenPanel("Readiness export",
-        screenFields([["Claim pack readiness", drafts && drafts.some((d) => d.reviewed_ready) ? "A reviewer recorded ready on at least one draft. A person must still check and submit it outside this system." : "Not ready. No reviewed export exists."],
-          ["Open decision holds", holds.length ? `${holds.length} recorded` : "None recorded"],
+        screenFields([["Claim pack readiness", !readable ? "Unknown. The field review could not be read." : drafts && drafts.some((d) => d.reviewed_ready) ? "A reviewer recorded ready on at least one draft. A person must still check and submit it outside this system." : "Not ready. No reviewed export exists."],
+          ["Open decision holds", !holds ? "Unknown. The field review could not be read." : holds.length ? `${holds.length} recorded` : "None recorded"],
           ["Submission, award and payment", "Not recorded here. This screen never infers them."]])),
       screenPanel("AI economics (ledger-wide, all homes)", assetCost(extra?.report)));
   }

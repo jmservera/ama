@@ -189,7 +189,8 @@ class FinanceGrantsScreens(unittest.TestCase):
             "Above authorised (2 of 1)",
             "Quantity 2 is above the 1 authorised.",
             "Proposed",
-            "Unknown. No accepted milestone evidence.",
+            "Unknown. No milestone reference supplied.",
+            "line total",
             "INV-1",
             "COM-1",
             "Not checked yet. Exceptions are unknown.",
@@ -226,6 +227,16 @@ class FinanceGrantsScreens(unittest.TestCase):
         ):
             self.assertIn(expected, text)
         self.assertNotIn("Submitted", text)
+
+    def test_unchecked_queue_row_and_unreadable_review_stay_unknown(self) -> None:
+        unchecked = [{**QUEUE[0], "status": "Received", "exceptions": 0}]
+        text = json.dumps(run(queue=unchecked)["finance-invoices"]["tree"])
+        self.assertIn("Unknown. Not checked yet", text)
+        self.assertNotIn("0 exceptions", text)
+        funding = json.dumps(run(review=None)["finance-funding"]["tree"])
+        self.assertIn("Unknown. The field review could not be read.", funding)
+        self.assertNotIn("None recorded", funding)
+        self.assertNotIn("No reviewed export exists", funding)
 
     def test_missing_records_are_unknown_not_empty_success(self) -> None:
         bare: dict[str, object] = {"id": "C-2"}

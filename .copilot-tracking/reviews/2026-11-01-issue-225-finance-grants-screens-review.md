@@ -11,6 +11,10 @@ Execution: once, post-implementation, self-review of the diff against the accept
 | Design system components (#150), no role simulator | Partly | reuses host panel/table patterns; no simulator; Fluent 2 conformance not assessed |
 | Tokenomics: AI economics section | Proven (design only) | usage-to-billing, Total Cost of AI components, booked-value status, Unknown defaults |
 
+## Copilot review round 2
+
+All four threads valid and fixed (line total wording, unverified milestone reference, unchecked queue exceptions Unknown, unreadable form review keeps readiness and holds Unknown). Original Review outcome preserved; focused tests and ruff pass.
+
 ## Routed follow-ups
 
 1. Browser keyboard and axe check for both screens (criterion 4).
