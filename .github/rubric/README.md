@@ -290,7 +290,11 @@ read by `prepare.py` and `gate.py`. Only the post-merge refresh writes them:
   the PR scorecard is a deferred follow-up.
 
 Owner actions (not applied by this change): confirm the refresh pull request can
-merge under ruleset `mainprotect`; ask open pull requests to drop old bot score
+merge under ruleset `mainprotect`. The refresh pull request is made with
+`GITHUB_TOKEN`, so it triggers no workflows and gets no `rubric/score` status;
+this works only while the ruleset requires zero approvals and no status checks
+(the state on 2026-11-01), or lets `github-actions[bot]` bypass. Otherwise the
+merge warns and the baseline stays stale until merged by hand. Also ask open pull requests to drop old bot score
 commits; and, for Copilot Code Review, set `review_on_push` to `false` in the
 ruleset so it runs on ready-for-review and on request, and keep it out of
 required status checks. Copilot Code Review is advisory and is not part of any
