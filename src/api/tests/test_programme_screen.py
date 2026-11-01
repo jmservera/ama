@@ -245,7 +245,7 @@ class ProgrammeScreen(unittest.TestCase):
             self.assertIn(gate, blocked)
         self.assertIn("Blocked: evidence missing", blocked)
         self.assertIn("Funding has not been confirmed.", blocked)
-        self.assertIn("5 of 5 gates are blocked", blocked)
+        self.assertIn("5 of 5 steps are blocked", blocked)
         clear = json.dumps(out["clear"])
         self.assertIn("No recorded blocker", clear)
         self.assertIn("not a pass", clear)
