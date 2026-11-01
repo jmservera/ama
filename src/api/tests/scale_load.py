@@ -54,6 +54,19 @@ def percentile(values: list[float], fraction: float) -> float:
 
 def build_store(directory: Path, homes: int) -> tuple[SqlStore, int]:
     cases = make_cases(homes, seed=SEED)
+    for index, case in enumerate(cases):
+        # Explicit synthetic marker and a deterministic lifecycle so the dashboard does real work.
+        opened = f"2026-0{index % 9 + 1}-1{index % 9}T09:00:00Z"
+        case["is_synthetic"] = True
+        case["history"] = [dict(action="Identified", at=opened, is_synthetic=True)]
+        if case["closed"]:
+            case["history"].append(
+                dict(
+                    action="Withdrawn",
+                    at=f"2026-1{index % 3}-2{index % 8}T09:00:00Z",
+                    is_synthetic=True,
+                )
+            )
     events = sum(len(c.get("contacts", [])) + len(c.get("appointments", [])) for c in cases)
     seed = directory / "zavaforward.json"
     seed.write_text(json.dumps(dataset(cases)))
@@ -62,7 +75,7 @@ def build_store(directory: Path, homes: int) -> tuple[SqlStore, int]:
 
 def call(
     base: str, path: str, cookie: str | None = None, body: Any = None
-) -> tuple[int, dict[str, str]]:
+) -> tuple[int, dict[str, str], bytes]:
     request = urllib.request.Request(
         base + path,
         data=json.dumps(body).encode() if body is not None else None,
@@ -70,9 +83,10 @@ def call(
     )
     try:
         with urllib.request.urlopen(request, timeout=30) as response:
-            return response.status, dict(response.headers)
+            payload = response.read()
+            return response.status, dict(response.headers), payload
     except urllib.error.HTTPError as error:
-        return error.code, dict(error.headers)
+        return error.code, dict(error.headers), error.read()
 
 
 def run(homes: int, sessions: int, rate: float, duration: float) -> dict[str, Any]:
@@ -86,7 +100,7 @@ def run(homes: int, sessions: int, rate: float, duration: float) -> dict[str, An
         httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(app))
         threading.Thread(target=httpd.serve_forever, daemon=True).start()
         base = f"http://127.0.0.1:{httpd.server_address[1]}"
-        status, headers = call(
+        status, headers, _ = call(
             base, "/api/login", body={"email": STAFF[1]["email"], "password": PASSWORD}
         )
         if status != 200:
@@ -99,31 +113,49 @@ def run(homes: int, sessions: int, rate: float, duration: float) -> dict[str, An
             ("dashboard", "/api/progress"),
         ):
             begin = time.perf_counter()
-            call(base, path, cookie)
+            status, _, payload = call(base, path, cookie)
+            if status != 200:
+                raise RuntimeError(f"Warm-up {name} failed with {status}.")
+            if name == "dashboard":
+                coverage = json.loads(payload)["coverage"]
+                if coverage["synthetic_cases"] != homes or coverage["known_lifecycle"] != homes:
+                    raise RuntimeError(f"Dashboard did not cover the requested homes: {coverage}.")
             warmup_ms[name] = round((time.perf_counter() - begin) * 1000, 1)
         statements_before = next(statements)
         cpu_before = resource.getrusage(resource.RUSAGE_SELF)
         samples: dict[str, list[float]] = {name: [] for name, _ in MIX}
         errors: dict[str, int] = {name: 0 for name, _ in MIX}
         lock = threading.Lock()
+        failures: list[BaseException] = []
         interval = sessions / rate
         deadline = time.perf_counter() + duration
 
         def session(index: int) -> None:
+            try:
+                session_body(index)
+            except BaseException as error:
+                with lock:
+                    failures.append(error)
+
+        def session_body(index: int) -> None:
             rnd = random.Random(index)
             names = [name for name, weight in MIX for _ in range(weight)]
             next_at = time.perf_counter() + rnd.random() * interval
             while next_at < deadline:
                 time.sleep(max(0.0, next_at - time.perf_counter()))
                 name = rnd.choice(names)
-                path = {
-                    "list": "/api/cases?view=all&limit=50&offset="
-                    + str(rnd.randrange(0, homes - 50, 50)),
-                    "detail": f"/api/cases/ZF-{rnd.randrange(homes):05d}",
-                    "dashboard": "/api/progress",
-                }[name]
+                if name == "list":
+                    offset = rnd.randrange(0, max(1, homes - 49), 50)
+                    path = f"/api/cases?view=all&limit=50&offset={offset}"
+                elif name == "detail":
+                    path = f"/api/cases/ZF-{rnd.randrange(homes):05d}"
+                else:
+                    path = "/api/progress"
                 begin = time.perf_counter()
-                code, _ = call(base, path, cookie)
+                try:
+                    code, _, _ = call(base, path, cookie)
+                except OSError:
+                    code = 0
                 elapsed = (time.perf_counter() - begin) * 1000
                 with lock:
                     samples[name].append(elapsed)
@@ -137,6 +169,8 @@ def run(homes: int, sessions: int, rate: float, duration: float) -> dict[str, An
         for thread in threads:
             thread.join()
         elapsed = time.perf_counter() - run_started
+        if failures:
+            raise RuntimeError(f"{len(failures)} load session(s) failed.") from failures[0]
         cpu_after = resource.getrusage(resource.RUSAGE_SELF)
         rss_after_mib = round(
             int(Path("/proc/self/statm").read_text().split()[1]) * 4096 / 2**20, 1

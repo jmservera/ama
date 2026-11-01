@@ -15,4 +15,4 @@ Agents queue transport, API post-back, orchestrator real job, hosted hardening (
 
 ## Validation (focused tier)
 
-Relevant unittest modules, `ruff check`, `ruff format --check`, `mypy` for touched projects, bicep compile via the existing infra test. No heavy local gate; CI is the evidence.
+Relevant unittest modules, `ruff check`, `ruff format --check`, `mypy` for touched projects, bicep compile via the existing infra test. Focused-test evidence is retained, but this slice changes `containerapps.bicep`, so the complete local gate (`python3 tools/rpi-checks.py --all --base <reviewed-main-sha> --out <external-dir>`), fresh `--verify-receipt` against the current origin/main and independent exact-head assessment are required before publication. A missing prerequisite blocks publication; CI does not substitute.

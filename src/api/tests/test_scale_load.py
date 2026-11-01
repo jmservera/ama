@@ -1,6 +1,7 @@
 import json
 import unittest
 from typing import Any
+from unittest.mock import patch
 
 import scale_load
 
@@ -36,6 +37,26 @@ class ScaleLoadReport(unittest.TestCase):
         self.assertEqual(drivers["replicas"], 1)
         self.assertEqual(drivers["cost"], "Unknown")
         json.dumps(self.report)
+
+    def test_small_fixture_and_dashboard_coverage(self) -> None:
+        report = scale_load.run(homes=10, sessions=2, rate=8, duration=1)
+        self.assertEqual(report["executed_workload"]["homes"], 10)
+        for route in report["routes"].values():
+            self.assertEqual(route["errors"], 0)
+
+    def test_transport_failure_is_counted_as_error(self) -> None:
+        real = scale_load.call
+        seen = {"n": 0}
+
+        def flaky(*args: Any, **kwargs: Any) -> Any:
+            seen["n"] += 1
+            if seen["n"] > 4:
+                raise ConnectionResetError("dropped")
+            return real(*args, **kwargs)
+
+        with patch.object(scale_load, "call", flaky):
+            report = scale_load.run(homes=10, sessions=2, rate=8, duration=1)
+        self.assertGreater(sum(r["errors"] for r in report["routes"].values()), 0)
 
 
 if __name__ == "__main__":

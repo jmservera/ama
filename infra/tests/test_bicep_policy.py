@@ -698,7 +698,7 @@ class BicepPolicyTests(unittest.TestCase):
             with self.subTest(app=name):
                 limits = by_name[name]["template"]["containers"][0]["resources"]
                 self.assertEqual(limits, {"cpu": f"[json('{cpu}')]", "memory": memory})
-                # Single mode: the previous digest is restored by redeploying it, not by traffic split.
+                # Single mode: rollback is a reviewed revert and release, not a traffic split.
                 self.assertEqual(by_name[name]["configuration"]["activeRevisionsMode"], "Single")
         rule = by_name["agents"]["template"]["scale"]["rules"][0]
         self.assertEqual(rule["name"], "agent-task-queue")

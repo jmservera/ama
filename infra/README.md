@@ -1323,28 +1323,41 @@ or deployment approval is inferred.
 | Load test on the declared fixture | Run locally, not at declared scale | [`scale-load-2026-11-01.json`](../docs/architecture/scale-load-2026-11-01.json) |
 | Single-replica restart with audit persistence | Verified on the SQL store | `src/api/tests/test_restart_audit.py` reopens the store; ledger entries, chain and digest persist. No Azure restore proof |
 
-Revision rollback: apps use `activeRevisionsMode: Single`, so a bad revision is
-rolled back by redeploying the previous run-versioned image digest through
-`pipeline.py deploy` (what-if first), then confirming `/healthz` and the
-ledger-verify job. A failed Startup or Readiness probe keeps the previous
-revision serving. No traffic splitting is used.
+Revision rollback: apps use `activeRevisionsMode: Single`, and a failed Startup
+or Readiness probe keeps the previous revision serving. There is no historical
+digest redeploy path: `pipeline.py` accepts only digests built, scanned and
+pushed by the current run for the current `RELEASE_SHA`, and `src-deploy.yml`
+releases only the head of `main` after a successful manual Source projects CI
+run for that exact SHA. To roll back an applied release, revert the change
+through a reviewed pull request, run Source projects CI manually on the
+resulting `main` head, then dispatch `src-deploy.yml` for the target environment
+so the rebuilt images pass scanning and admission, the environment approvals
+apply and what-if runs first. Confirm `/healthz` and the ledger-verify job
+afterwards. No traffic splitting is used, and a guarded redeploy of an earlier
+release identity would be a separate, tested change.
 
 Load run, from `src/api` with installed distributions and
 `PYTHONPATH=../core/tests:../agents/tests`:
 `python3 tests/scale_load.py --duration 120 --out report.json`. The recorded run
 used 60,000 fictional homes (53,821 contact and appointment events, not the
 declared 600,000), 20 sessions and 5 requests/s for 120 s of the declared 1,800 s,
-one in-process API replica on a SQL store (SQLite), no inference. Warm p95 was
-379 ms list, 270 ms detail and 237 ms dashboard with no errors; the first cold
-list request took about 1.0 s. These are observations against the NFR-002 staff
-thresholds, not a pass: the declared duration and event volume were not run. It
-makes no production, autoscaling or availability claim and is not an Azure
-measurement. Usage and cost drivers per unit of load (600 requests, 3.98 SQL
-statements per request, 0 assistant calls, 1 replica, 45 process CPU-seconds,
-657 MiB resident after the run, 0.5 vCPU/1 GiB billable at limit) are in the
-report; cost is Unknown because no price source is set (BRD OD-51). The 657 MiB
-resident figure includes the fixture and the load client sharing the process, and
-approaches the 1 GiB limit, so size the memory limit against a hosted run.
+one in-process API replica on a SQL store (SQLite), no inference. Homes carry an
+explicit synthetic marker and a deterministic lifecycle, and the run fails unless
+the dashboard covers all 60,000 homes. Latency includes reading the full response
+body. Warm p95 was 7,076 ms list, 7,512 ms detail and 7,698 ms dashboard with no
+errors, so all three routes exceeded the NFR-002 staff thresholds (1 s, 1 s and 3 s)
+in this run; the first cold dashboard request took about 1.5 s. The dashboard
+recomputes every lifecycle under the store lock, and the single process, load
+client and dashboard share one interpreter, so the figures are a local upper bound
+that needs a hosted run before any capacity decision. The declared duration and
+event volume were not run, and the run makes no production, autoscaling or
+availability claim and is not an Azure measurement. Usage and cost drivers per unit
+of load (600 requests, 3.99 SQL statements per request, 0 assistant calls,
+1 replica, 105 process CPU-seconds, 708 MiB resident after the run, 0.5 vCPU/1 GiB
+billable at limit) are in the report; cost is Unknown because no price source is
+set (BRD OD-51). The 708 MiB resident figure includes the fixture and the load
+client sharing the process, and approaches the 1 GiB limit, so size the memory
+limit against a hosted run.
 
 Front Door Premium, WAF and origin Private Link remain infra-only gated
 definitions: `enablePublicEdge=false` by default, production/private profile
