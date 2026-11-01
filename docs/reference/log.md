@@ -9184,6 +9184,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   browser groups not run. The PERF-440 benchmark outlier was not reproduced
   and is filed as #687. No regulatory snapshot changed; no criterion ticked.
 
+## [2026-11-01] update | Replay audit covers pack and EPC generators (#176)
+
+* Extended the one-command determinism audit in
+  `docs/reference/research/retrofit-synthetic-data/README.md` to replay the
+  public pack and stock EPC generators and accept 16 or 64 hex revisions. The
+  original stock register generator remains absent; no criterion ticked.
+
 ## [2026-11-01] verify | Post-cleanup reference audit and link check (Refs #203)
 
 * Re-ran a repository-wide search for `mvp/` and `prototype/` on main 77b55415. Both
