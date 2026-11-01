@@ -289,14 +289,13 @@ class Scale(unittest.TestCase):
 
             timings = []
             burners = int(os.environ.get("ZF_BENCH_CONTENTION", "0"))
-            procs = []
             if burners:
                 import multiprocessing
                 stop_at = time.time() + 120
-                procs = [multiprocessing.Process(target=_burn, args=(stop_at,), daemon=True) for _ in range(burners)]
-                for pr in procs:
+                for _ in range(burners):
+                    pr = multiprocessing.Process(target=_burn, args=(stop_at,), daemon=True)
                     pr.start()
-                self.addCleanup(lambda: [(pr.terminate(), pr.join()) for pr in procs])
+                    self.addCleanup(lambda pr=pr: (pr.terminate(), pr.join()))
                 print(f"[timing] contention: {burners} CPU burner processes", flush=True)
 
             def timed(label, **kw):
