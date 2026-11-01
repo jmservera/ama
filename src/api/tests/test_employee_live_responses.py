@@ -95,7 +95,7 @@ class VendorAssets(unittest.TestCase):
             def authenticate(self, headers: Any) -> dict[str, Any]:
                 return {"identity_source": identity.SOURCE, "email": "x@example.test"}
 
-        app = App(self.store, "SYN-691", provider=Provider())
+        app = App(self.store, "SYN-691", provider=Provider())  # type: ignore[no-untyped-call]
         httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(app))
         thread = threading.Thread(target=httpd.serve_forever, daemon=True)
         thread.start()
