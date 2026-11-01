@@ -17,9 +17,9 @@ DOC_MARKERS = {
     "audit_ledger": "Audit ledger",
 }
 RECORDED_PARTS = (
-    re.compile(r"\bowner:\s*[A-Za-z]", re.I),
+    re.compile(r"\bowner:\s*(?!(?:owner|ref|date):)[A-Za-z0-9]", re.I),
     re.compile(r"\bdate:\s*\d{4}-\d{2}-\d{2}\b", re.I),
-    re.compile(r"\bref:\s*\S", re.I),
+    re.compile(r"\bref:\s*(?!(?:owner|ref|date):)[A-Za-z0-9]", re.I),
 )
 
 
