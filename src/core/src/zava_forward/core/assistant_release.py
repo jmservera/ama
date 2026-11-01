@@ -66,6 +66,19 @@ def releases(db, task):
     return [dict(release_body(b), id=i, status=s) for i, s, b in rows]
 
 
+def invalidate_changed(db, now, task, spec, binding, found):
+    """Revoke active records whose bound versions or intended use changed; return the records still held."""
+    kept = []
+    for rec in found:
+        triggers = rai_release.changed_triggers(rec, spec, binding) if rec["status"] == "active" else []
+        if triggers:
+            change(db, now, None, rec["id"], "revoked", "Material change invalidated release: " + ", ".join(triggers),
+                   system=True)
+        else:
+            kept.append(rec)
+    return kept
+
+
 def assessment(db, task, binding, now, live=False):
     """Return the selected record and no denial, or no record and an explicit denial."""
     from . import ai_registry
@@ -81,6 +94,12 @@ def assessment(db, task, binding, now, live=False):
     except (ValueError, TypeError):
         logging.getLogger(__name__).warning("Malformed release record; dispatch denied.")
         return None, denial("malformed release record", ["valid release record"], task)
+    if not task.startswith("legacy:"):
+        try:
+            found = invalidate_changed(db, now, task, spec, binding, found)
+        except (store_error, ValueError):
+            logging.getLogger(__name__).warning("Release invalidation not recorded; dispatch denied.")
+            return None, denial("release invalidation could not be recorded", ["release record store"], task)
     selected, missing = rai_release.select(found, spec, binding, BOUND, now, live)
     return (selected, None) if selected else (
         None, denial("no approved release matches (" + ", ".join(missing) + ")", missing, task))
