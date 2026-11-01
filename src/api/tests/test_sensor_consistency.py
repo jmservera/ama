@@ -1,12 +1,15 @@
 """Composed CSV/SDK/SQL handover; no live Hub or Azure acceptance."""
 
+import contextlib
 import csv
+import io
 import json
 import os
 import sqlite3
 from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
+from unittest import mock
 
 import test_sensor_consumer as consumer_tests
 import test_sensor_handover as fixture
@@ -215,6 +218,14 @@ class SqlHandoverTests(consumer_tests.SensorConsumerTests):
         )
         truncated = Path(self.tmp.name) / "truncated.csv"
         truncated.write_text("home_id,observed_at\nZF-1\n")
-        self.assertEqual(
-            verify_main(["--reference", str(truncated), "--handover", fixture.HANDOVER]), 2
-        )
+        out = io.StringIO()
+        with (
+            mock.patch(
+                "zava_forward.api.sensor_handover_verify.open_existing_store",
+                return_value=reopened,
+            ),
+            contextlib.redirect_stdout(out),
+        ):
+            code = verify_main(["--reference", str(truncated), "--handover", fixture.HANDOVER])
+        self.assertEqual(code, 2)
+        self.assertEqual(json.loads(out.getvalue())["refused"], "REFERENCE_ROW_INCOMPLETE")

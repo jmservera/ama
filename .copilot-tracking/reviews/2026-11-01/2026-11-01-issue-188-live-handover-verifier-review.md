@@ -16,3 +16,7 @@ ms.date: 2026-11-01
 ## PR #645 Copilot review follow-up (2026-11-01)
 
 Two valid findings fixed: retained accepted payload and accepted calibration returned for consumer-managed readings, and reference rows validated before window bounds. Focused sensor tests (core 37, api 85) and ruff pass. Independent exact-head review and the complete local gate remain required before merge.
+
+## PR #645 second Copilot review follow-up (2026-11-01)
+
+Two valid findings fixed: batched witness lookup limited to selected readings, and a truncated-reference regression that now reaches `_windows` validation. Focused tests and ruff pass. Independent exact-head review and the complete local gate remain required before merge.

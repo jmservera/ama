@@ -15,3 +15,9 @@ ms.date: 2026-11-01
 * `SensorConsumer.observed_series` now returns the retained `sensor_delivery.observation_body` witness for consumer-managed readings, validated with `_accepted_witness` and `_retained_reading`, so accepted strings (for example `"20"`, seed `"-0"`) and the accepted calibration flag survive normalization and later calibration withdrawal. Witness loading is shared via `_witnesses`. A stored row that departs from its witness is refused as `SENSOR_OUTCOME_MALFORMED`.
 * The verifier validates each reference row in `_windows`, so truncated CSV records give the JSON refusal and status 2 instead of a `TypeError`.
 * Tests: retained-payload and withdrawn-calibration case in the core consumer tests; truncated CSV and witness-mismatch refusal in the API consistency tests. The mssql `src-namespace` CI failure was still in progress and its log unavailable at the time of this change.
+
+## PR #645 second Copilot review follow-up
+
+* `_witnesses` accepts an optional reading-ID list and `observed_series` now loads retained witnesses per sensor in one batched lookup (chunks of 500 IDs) limited to the selected readings, instead of caching a sensor's whole accepted history. `_latest_observed` still reads the full history for its integrity check.
+* The truncated-reference regression now mocks `open_existing_store` to return the constructed store and asserts the JSON refusal `REFERENCE_ROW_INCOMPLETE`.
+* Validation: core and api focused sensor tests (82) and ruff pass.
