@@ -1,6 +1,6 @@
 % !TEX program = pdflatex
 % ---------------------------------------------------------------------------
-% Everything but the Software -- LaTeX source (draft v7)
+% Everything but the Software -- LaTeX source (draft v8)
 % Figures use PNG for LaTeX; conceptual editing authority is .excalidraw.
 % anc/make_figures.py regenerates only case and published-evidence figures.
 % anc/export_diagrams.mjs exports native Excalidraw sources to SVG and PNG.
@@ -51,7 +51,7 @@ author's own and do not necessarily reflect those of Microsoft. The case
 organisation, Zava North Homes, is fictional.}\\[4pt]
 \small Senior Partner Solution Architect, Microsoft Schweiz, Zurich}
 
-\date{Draft of 29 October 2026}
+\date{Draft of 1 November 2026}
 % TODO(author): replace with the submission date.
 
 \begin{document}
@@ -73,12 +73,13 @@ record: specification inflation, proxy capture, learning
 evaporation, process-gate inflation and feedback starvation. The case centres
 on a migration with missing deployment dependencies; it exposes a break in
 usable behaviour rather than measuring a decay rate. A prospective protocol specifies an
-exploratory, registration-pending twelve-trajectory pilot comparing
+exploratory eighteen-trajectory pilot across three selected models, comparing
 feature-only delivery, scheduled consolidation and read-only review.
 Its principal outcomes are final behavioural coverage, retained-contract
 loss, an unforeseen change request and resource cost. The consolidation arm
 includes additional resources, tests and a different handover note.
-The pilot has not started; no experimental results are reported. The pilot
+The v4 source is frozen; prospective registration amendments and collection
+authorization remain pending. No pilot results are reported. The pilot
 asks whether consolidation improves the system inherited by later feature work.
 \end{abstract}
 
@@ -179,7 +180,7 @@ loop, and an integrated account of five mechanisms. Descriptive measures,
 within-case contrasts and an evidence audit connect the observed interruption
 of usability to competing explanations
 (Sections~\ref{sec:method}--\ref{sec:mechanisms}).
-\item A consolidation harness and a twelve-trajectory pilot protocol to
+\item A consolidation harness and an eighteen-trajectory pilot protocol to
 estimate retained behaviour, future changeability and resource cost. It follows the
 registered-report example of Lulla et~al.~\cite{lulla2026protocol} and HVE
 Core's Minimum Viable Experiment method
@@ -1637,25 +1638,38 @@ results~\cite{lulla2026protocol}.
 The author designed the experiment with HVE Core's Experiment Designer as a Minimum
 Viable Experiment~\cite{hvecore}, informed by empirical-study
 guidance~\cite{baltes2026guidelines,wohlin2012experimentation}.
-The choices below incorporate the author's decisions of 25~October 2026.
+The choices below reconcile the manuscript with the frozen v4 kit and its
+recorded author decisions through 31~October 2026.
 
-\emph{Study status and provenance.} The planned S1 first pass has not started.
-It is a twelve-trajectory pilot/estimation study, four runs per arm, intended
-to assess harness feasibility, endpoint behaviour, variation and failure
-modes before a larger study. No experimental results are reported.
-The reported private-kit tag is not yet a verified or registered protocol.
-This prospective manuscript amendment simplifies the endpoint hierarchy
-without changing the arms, sample or resource ceilings; it does not rewrite
-that tag. Any earlier smoke, calibration or pre-registration attempts must
-retain their actual labels, timestamps and exposure history and remain
-separate from this pilot. Their existence, completion and data seen must be
-checked rather than inferred from the current manuscript. The earlier
-ancillary proposals are historical records. Launch remains blocked by
-Section~\ref{sec:prerun}; no registration, precision exercise, independent
-review or execution is claimed complete here.
-% TODO(author): record and verify the protocol tag, full commit SHA, suite and analysis checksums, prior-run chronology and data already seen; do not infer a pre-run freeze from a later upload.
-% TODO(author): reconcile the pilot/estimation amendment, endpoint hierarchy and analysis with the tagged snapshot before registration and launch; preserve the original seven-hypothesis proposal and any actual earlier exposure.
-% TODO(author): supply the actual registration date and URL after registration is complete; do not backdate it or confuse a draft or Git tag with registration.
+\emph{Study status and provenance.} The S1 estimation pilot has not started.
+The author amended the earlier single-model, twelve-trajectory proposal to
+three models with two trajectories per arm/model: eighteen in total.
+The public kit's \texttt{protocol-frozen-v4} release pins execution source
+\texttt{e8707ecc8965d3f81f5142a2603042bfca1aab15}; the separate
+manifest-only commit is
+\texttt{03c50856838b539780d57216af2a4cf6744187d7}.
+The release attachment \nolinkurl{osf-v4-2026-10-31.tar.gz}, not GitHub's
+automatic source archive, is the complete prospective OSF packet.
+Its SHA-256 is
+\nolinkurl{1a42fac40a4f1aa82df59c8c3f7f8d6dce37d22502c5952c398362ac63d6bd65}.
+The kit still identifies manuscript commit
+\texttt{196b97644bb9bffa43d41a9921d6a06a93b2699e} as its historical
+paper input; this explanatory revision does not amend the frozen source,
+registration attachments or analysis.
+
+The original OSF registration at \url{https://osf.io/ywsrv/} is
+owner-reported approved following submission on 28~October. The v4 manifest
+explicitly leaves its prospective amendment date unset and
+\texttt{prospective\_osf\_update\_recorded=false}. A source freeze is not
+registration or permission to collect. The author accepted the scientific
+and runtime/access scopes under an explicitly owner-reviewed exploratory
+policy; independent scientific review was not completed. A separate
+researcher will operate the experiment, providing operational separation,
+not retrospective independent validation of its design. These statuses are
+inspected repository records, not a live verification of OSF or a new
+runtime audit. Earlier paid diagnostics and calibration remain excluded;
+no pilot results are reported. Section~\ref{sec:prerun} distinguishes
+recorded resolutions from the remaining collection gates.
 The related work reviewed here does not isolate consolidation steps interleaved
 between successive feature additions. Darwin evaluates optimisation against
 measurable objectives~\cite{pavlenko2026factory}; SlopCodeBench shows that
@@ -1668,33 +1682,39 @@ structural intervention and subsequent changeability instead.
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{fig-pilot-design.png}
-\caption{Prospective pilot design, not results. Each arm has four complete
-ten-feature trajectories and a final 45-minute change request (CR1).
+\caption{Frozen v4 pilot design, not results. Each of three models supplies
+two complete ten-feature trajectories per arm: eighteen repositories.
+Every trajectory ends with a 45-minute change request (CR1).
 B and C add at most 15 minutes after each 30-minute feature step; A does not.
+Robot characters denote builder, consolidator and reviewer roles; within a
+trajectory these roles use the same assigned model in fresh sessions.
 B--A includes extra resources, while B--C also differs in code/test editing
 and handover content. Planned external evaluation does not establish access
-isolation; hidden-output visibility and failed-feature continuation must be
-resolved before launch.}\label{fig:pilotdesign}
+isolation. The owner-reviewed kit specifies hidden-output withholding and
+failed-feature continuation; prospective OSF recording and actual collection
+authorization remain pending.}\label{fig:pilotdesign}
 \end{figure}
 
-Table~\ref{tab:protocolsummary} summarises the pilot. Its unchanged arms and
+Table~\ref{tab:protocolsummary} summarises the pilot. Its arms and
 budgets support package comparisons, not a pure-refactoring or
-equal-total-resource estimand. The prospective endpoint amendment still needs
-reconciliation with the actual runner and analysis snapshot.
+equal-total-resource estimand. The frozen endpoint hierarchy is implemented
+in the kit; this revision explains it without introducing new study endpoints.
 
 \begin{table}[!htbp]
 \centering\small
-\caption{Summary of the twelve-trajectory, registration-pending pilot.
-Planned safeguards are not completed checks.}\label{tab:protocolsummary}
+\caption{Summary of the eighteen-trajectory v4 estimation pilot.
+Owner-reviewed records are not independent acceptance.}\label{tab:protocolsummary}
 \begin{tabularx}{\textwidth}{@{}L{3.0cm}Y@{}}
 \toprule
 Item & Design and interpretation boundary \\
 \midrule
-Study unit & One complete S1 repository--feature-sequence trajectory; four
-independent runs per arm. Feature steps and CR1 within a run are not new
+Study unit & One complete S1 repository--feature-sequence trajectory; two
+independent runs per arm/model, six per arm across three models. Feature
+steps and CR1 within a run are not new
 independent replicates. \\
-Allocation & Planned randomised interleaving of arm runs on the same machine;
-one fixed ten-feature suite, not random assignment of repositories or scenarios. \\
+Allocation & GPT~6.1 Sol, Sonnet~5.5 and Gemini~4 Argon each run every arm.
+Interleave arms within model/replicate blocks, seed 2027, on one machine.
+One fixed ten-feature suite, not randomly sampled repositories or scenarios. \\
 B--A estimand & Effect of adding the complete consolidation package at equal
 feature-step budgets, with up to 50\% extra agent time. Not an equal-total-budget
 or refactoring-only effect. \\
@@ -1709,25 +1729,40 @@ Changeability & CR1 success and cost under 45 minutes; success also preserves
 every feature test passing before CR1. One fixed request is a task-specific
 probe, not a general maintainability measure. \\
 Budgets & 30 minutes per feature; 15 per B/C post-feature step; 45 for CR1.
-Credits and monetary cost remain distinct; final calibrated caps need checking. \\
-Analysis & Pilot run-level estimates and endpoint/measurement feasibility.
+Nominal 300 credits/session and 300,000 combined credits; operational soft
+limits 270/session and 270,000 local admission. No guaranteed billing cap. \\
+Analysis & Pilot run-level estimates and endpoint/measurement feasibility,
+separately by model.
 No seven-hypothesis verdicts, mixed-model significance claims or completed
 power simulation. All run outcomes and non-estimable measures remain visible. \\
 Integrity & Fresh sessions, fixed prompts/tests/configuration and checksum
-checks are planned. Local execution does not guarantee hidden-test or reference
-inaccessibility; independent suite/access checks remain pending. \\
-Human help & Primary runs unassisted; HIR/IDR descriptive. Corrective help is a
-retained, labelled deviation, not grounds for a replacement run. Telemetry
-coverage and annotation reliability remain unverified. \\
-Status & Not running; no results. Runner/analysis reconciliation,
-independent suite/access review and registration remain launch blockers.
-Calibration data cannot be pooled into the twelve pilot trajectories. \\
+checks; host SDK with bounded tools in isolated containers. Hidden results,
+reference code and pre-CR1 request text are withheld under owner-reviewed
+finite checks, not guaranteed inaccessible under every possible attack. \\
+Human help & Primary runs unassisted. Assistance and attempts remain logged;
+assisted runs are retained without replacement and make the affected
+unassisted model contrast unavailable. HIR/IDR outcomes excluded;
+comprehension deferred. \\
+Status & Source frozen; no pilot results. Original registration
+owner-reported approved; v4 prospective OSF amendment and collection
+authorization pending. Nine calibration trajectories are excluded, never pooled. \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 \FloatBarrier
 \subsection{Pilot questions and endpoint hierarchy}
+
+The working hypothesis is that scheduled consolidation leaves later feature
+work a more reliable and changeable repository, at an explicit additional
+cost. The comparison holds the feature sequence and feature-step budget
+constant within each model, then checks what remains at successive
+checkpoints and after an unforeseen change. Lower inherited loss, better
+final coverage or better CR1 outcomes would be evidence in favour of the
+package; unchanged or worse outcomes, or unrecovered added cost, count
+against adopting it under this workload. These are directional questions,
+not new numerical success thresholds: the frozen pilot estimates outcomes
+and uncertainty without a formal validated/invalidated verdict.
 
 The pilot concentrates on retained behaviour, future changeability and the
 resources they require. Table~\ref{tab:hypotheses} retains H1, H2 and H6 as
@@ -1760,14 +1795,15 @@ change probe, not general or longitudinal maintainability \\
 \end{table}
 
 Resource cost is reported alongside all three outcomes, with AI credits as
-the primary consumption measure. Structural metrics, code size,
-comprehension and HIR/IDR are secondary descriptive analyses, not additional
-success tests. The former H3/H5 slope and cost rules are not pilot verdicts.
+the primary consumption measure. Structural metrics and code size are
+secondary descriptive proxies, not additional success tests.
+Comprehension is deferred and HIR/IDR outcomes are excluded from this pilot,
+not silently estimated as zero. The former H3/H5 slope and cost rules are not pilot verdicts.
 H4's joint size/accuracy/time claim and H7's dependent half-gap rule are
 removed from the formal first-pass hypothesis set: their endpoint and
 non-inferiority requirements are not defined. No replacement margin or
 half-gap threshold is invented. Earlier thresholds remain historical
-proposal material, not seven pass/fail criteria for these twelve runs.
+proposal material, not seven pass/fail criteria for these eighteen runs.
 
 \subsection{Design}
 
@@ -1782,7 +1818,8 @@ review-only. B may add behaviour-pinning tests and writes an architectural
 \texttt{DESIGN.md}; C cannot change tests and writes issue-oriented
 \texttt{REVIEW.md}. Subsequent sessions read those different notes, so this
 comparison cannot isolate refactoring. Everything outside the post-feature
-intervention is identical: model and version, agent runtime, feature prompts,
+intervention is identical within each model stratum: model and exposed
+version, agent runtime, feature prompts,
 starting skeleton, tools and per-feature budgets.
 
 \emph{Estimands and control limits.} B--A estimates the incremental
@@ -1802,16 +1839,25 @@ conclusions still require verification. Its value
 must be demonstrated by behavioural and changeability outcomes, not inferred
 from the existence of another review role.
 
-\emph{Runtime and budgets.} The author selected \texttt{claude-sonnet-5.5}, medium
-reasoning effort and Copilot CLI~1.0.103, with automatic updates disabled.
+\emph{Runtime and budgets.} The frozen roster is \texttt{gpt-6.1-sol},
+\texttt{claude-sonnet-5.5} and \texttt{gemini-4-argon}, with medium
+reasoning effort, Copilot CLI~1.0.105 and SDK~1.0.28.
 The wall-clock limits are 30 minutes per feature, 15 per consolidation or
-review, and 45 for CR1. The calibration-stage limit is 300 AI credits per session; any
-calibration-informed adjustment must be frozen and included in the registered
-configuration before the fresh study runs. The total calibration-and-pilot
-ceiling is 2,500 AI credits, raised from an initial 1,000-credit proposal.
-A separate \$500 monetary budget was stated. Credit consumption and currency cost
-are not interchangeable without a verified billing conversion.
-% TODO(author): verify the final post-calibration credit cap, runtime/version evidence and the relation between the 2,500-credit ceiling and the separate monetary budget before fresh runs.
+review, and 45 for CR1. The nominal calibration-and-pilot envelope is
+300,000 AI credits, including prior spending, with 300 per original session.
+Operational settings use a 10\% buffer: 270 credits per session and a
+270,000-credit local admission stop. These are soft limits: an in-flight
+response may overshoot, and an infrastructure retry shares the original
+allowance rather than receiving a new one. The owner accepted the residual
+financial risk; the reported company limit is not an independently verified
+study-specific hard cap.
+The ledger records 21.79019 known prior credits and four separate 300-credit
+unknown provisions (1,200 reserved credits), not 1,200 known spending.
+The author's approximate \$3,000 equivalent is unverified; there is no
+verified credit--currency conversion or separate exact dollar ceiling.
+The earlier 2,500-credit/\$500 proposal is superseded, not the current budget.
+A cost-only calibration affordability check must admit the complete unchanged
+design or halt for a prospective amendment; it cannot silently reduce runs.
 
 \emph{Suites.} Suite S1 is a ten-feature retrofit case workbench drawn from
 the case domain, whose features deliberately interact: lifecycle, handoffs,
@@ -1820,60 +1866,66 @@ role-based visibility, deterministic ranking and a hash-chained audit trail.
 The selected study uses all ten features and the full CR1, including the
 ranking and export prerequisites in F9--F10. Each feature has visible example
 tests and hidden acceptance tests, including interactions with earlier
-features. Tests and reference solutions are intended to remain outside the
+features. Hidden tests and reference solutions remain outside the
 agent's working repository. S2 is a library-lending suite reserved for a
 separately authorised main study; benchmark adaptation is deferred.
 
-\emph{Isolation.} The planned pilot uses local execution rather than
-containers. The CLI access rules and separation of working directories
-provide a weaker boundary than container isolation. They do not establish
-that hidden tests, references or outside resources are unreachable. Residual
-access risk limits validity and must accompany any results; an absence of
-leak flags is not proof of isolation.
-CR1 is intended to remain unavailable to feature, consolidation and review
-sessions until its dedicated change-request session. The tagged packaging and
-actual non-exposure of its request text, as well as its tests, remain to be
-verified. Calling CR1 ``unforeseen'' depends on keeping it hidden until its
-dedicated session; that access boundary still needs verification.
-% TODO(author): independently check hidden tests and cumulative reference solutions against the stated APIs and feature rules; this review is not yet complete.
-% TODO(author): retain and assess the actual local access-probe evidence and any observed exposure; do not claim a successful container-isolation probe or guaranteed hidden-test inaccessibility.
+\emph{Isolation.} The frozen kit uses a host SDK with custom bounded tools
+executing in isolated containers, not unrestricted local CLI execution.
+The v4 manifest pins runtime image
+\nolinkurl{sha256:090220b0b172ec205f1ea473d7c3a223eec5d7d619eb21acdcf15c9289287fa3}.
+Only the current task specification and approved visible examples reach the
+agent. Hidden scores, identities, messages and reference solutions remain
+external; CR1 text is withheld until its dedicated session.
+Owner-reviewed runtime records include finite access probes and updated
+canaries. Those records are not a new independent security audit or proof
+against all leakage. Actual permissions, image availability and exact-source
+readiness remain operational requirements. Prior excluded paid diagnostics
+do not establish uninterrupted paid v4 launcher acceptance.
 
-\emph{Procedure and information flow.} The procedure describes the intended
-design. Whether the private runner implements it remains to be verified.
-Repository context
-is passed between fresh sessions; the evaluator is outside the working
-repository. Access separation and result visibility still require verification.
+\emph{Procedure and information flow.} Repository context passes between
+fresh sessions; external measurements do not become agent feedback.
+The frozen runner implements the following owner-selected policies.
 \begin{enumerate}[leftmargin=*]
 \item A feature session receives its fixed prompt, visible example tests and
 the repository left by the previous step, including the arm-specific note.
 It may commit only when the visible tests pass.
 \item If no green increment is committed, the runner resets it, removes that
 feature's example tests and records the feature as missing. Hidden tests for
-that feature remain in the cumulative denominator. Continuation when later
-features depend on it is an unresolved runner-policy decision.
+that feature remain in the cumulative denominator. Later scheduled features
+and CR1 continue from retained state; incidental recovery is allowed only
+within normal prompts and budgets, without dedicated make-up attempts.
 \item The external evaluator records cumulative hidden-test results and code
-metrics after the step. Whether any score, failure message, test identifier or
-report becomes visible to subsequent agent sessions is unresolved; hidden test
-files being outside the repository does not settle this information boundary.
+metrics after the step. Hidden scores, messages, test identifiers and
+reference solutions are not fed back to subsequent agent sessions.
 \item In B or C the assigned consolidation or review session precedes the next
-feature, with another external measurement afterwards. Whether it runs after
-a failed feature is unresolved. A has no post-feature session.
+feature, with another external measurement afterwards. After a completed
+unsuccessful feature, B/C still run their scheduled post-step on the last
+retained green state, without replaying the failed request. A has no
+post-feature session; its end-of-cycle state equals its feature checkpoint.
 \item After the final scheduled post-feature step, preserve H1's end state;
 then start the dedicated CR1 session with the previously withheld request and
 its fixed budget. Score change success against the pre-CR1 passing tests.
 \end{enumerate}
-All unresolved branches belong in the frozen runner and divergence rules
-before fresh runs, not in retrospective choices after inspecting outcomes.
-A separate budget-calibration stage is planned with one run per arm over
+At most one documented infrastructure-only retry is allowed per step within
+its original aggregate time/credit allowance; poor outcomes are not retried.
+An infrastructure-failed measurement may be retried once on the same
+immutable snapshot. Contradictory valid outcomes halt for investigation;
+unresolved measurements remain unknown. Established candidate-caused
+nonpasses remain failures, not infrastructure missingness.
+A separate budget-calibration stage is planned with one run per arm/model over
 ten features, without CR1; its data will not be pooled into the pilot.
-The selected pilot uses S1, arms A, B and C, with four independent runs per
-arm, ten features and CR1. The twelve trajectories will assess feasibility and
+The selected pilot uses S1, arms A, B and C, with two independent runs per
+arm/model, ten features and CR1. The eighteen trajectories assess feasibility and
 variation. Stable estimates for all seven original hypotheses would require a
 larger study. The pilot has
-120 feature, 40 consolidation, 40 review and twelve change-request sessions:
-212 sessions and an upper bound of 89 agent-hours. The separate calibration stage adds fifty
-sessions and twenty agent-hours, making 262 sessions and 109 agent-hours
-combined. These bounds exclude measurement and scheduling overhead and do
+180 feature, 60 consolidation, 60 review and eighteen change-request sessions:
+318 planned sessions and an upper bound of 133.5 agent-hours. The separate
+nine-trajectory calibration stage adds 150 sessions and 60 agent-hours,
+making 468 sessions and 193.5 agent-hours
+combined. Planned sessions are not a maximum call count: allowed
+infrastructure retries share the original step allowance.
+These agent-time bounds exclude measurement and scheduling overhead and do
 not establish affordability under the credit ceiling. The sample and stopping
 rules must be versioned before launch; favourable or unfavourable pilot
 effects will not trigger extra runs. Later suites or increased replication
@@ -1895,24 +1947,34 @@ they survive; mean cyclomatic complexity, the share of functions above
 complexity 10, duplicated lines and lint warnings per thousand lines;
 non-test lines, diff lines per step and documentation words generated; AI
 credits as the primary consumption measure, with tokens and elapsed time
-secondary; change-request success and cost; and,
-for S1, a proposed secondary comprehension assessment using five fixed
-questions about each final code base. Test integrity, through checksums of the
+secondary; and change-request success and cost. Comprehension is deferred.
+Test integrity, through checksums of the
 example tests and counts of tests and assertions, is checked after every
 step. The planned code-metric settings are the runbook's isolated lint rules
 E, F, W, C90, B and SIM, duplication detection at fifty tokens and five lines,
-and complexity measured by lizard. Tool versions and settings must be fixed
-in the registration. Two independent comprehension reviewers are proposed;
-their agreement, scoring rules and effective blinding remain pending.
-This assessment will be descriptive, with no accuracy non-inferiority or
-twenty-percent time-saving verdict.
+and complexity measured by Lizard~1.24.3, Ruff~0.17.3 and jscpd~5.4.1.
+No accuracy non-inferiority, comprehension-time or twenty-percent saving
+verdict is part of this pilot.
 Code size and structural metrics must be interpreted alongside functional
 coverage: an incomplete implementation can be small without being better.
 For H2, a newly introduced failing test alone is not an observed loss of
-previously passing behaviour. Section~\ref{sec:decaymeasurement} proposes
-regression eligibility, measurement points and reporting denominators for
-prospective reconciliation with the private kit.
-% TODO(author): obtain the two prospective reviewers' agreement, freeze the blinded questions, scoring and timing rules, and report actual participation without implying acceptance or endorsement.
+previously passing behaviour. Section~\ref{sec:decaymeasurement} explains
+the frozen regression eligibility, checkpoints and reporting denominators.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\linewidth]{fig-experiment-measures.png}
+\caption{Quality and resource measurement in the v4 pilot, not results.
+H1 evaluates all 127 scheduled feature contracts at $P_{10}$, including
+never-acquired features. H2 follows previously passing unchanged contracts
+at feature and post-feature checkpoints, retaining losses, recovery and
+the at-risk denominator. H6 requires all 15 CR1 contracts and retention of
+every feature contract passing before CR1. All-attempt AI credits are
+reported separately for delivery and CR1, alongside success and missingness.
+Structural proxies do not establish comprehension or general maintainability.
+Primary contrasts are within model, two trajectories per arm/model.}
+\label{fig:experimentmeasures}
+\end{figure}
 
 \emph{Intervention measures in prior work.} These are cross-domain
 measurement precedents from robotic imitation learning, not studies of
@@ -1921,13 +1983,15 @@ control~\cite{kelly2019hgdagger}; ThriftyDAgger separates intervention
 counts, human actions and supervisor switching
 costs~\cite{hoque2022thriftydagger}. They motivate separating incidence and
 effort, not a software-decay claim or coding-harness effectiveness.
-Here HIR is cycle-level incidence, not events per hour or a
+In the deferred measurement proposal, HIR is cycle-level incidence, not events per hour or a
 human-control time share. Failed cycles remain included, and event counts and
 active human minutes are separate measures; fewer events need not mean less
 human work or monitoring burden.
 
-\emph{Human intervention rate (HIR).} As a secondary measure of harness
-quality, observed HIR records the proportion of attempted feature cycles
+\emph{Deferred human intervention rate (HIR).} The frozen pilot explicitly
+excludes HIR and IDR outcomes; the definitions retained here explain the
+earlier proposal, not a promised pilot analysis. HIR would record the
+proportion of attempted feature cycles
 receiving unplanned corrective human help. A cycle includes the feature and
 its assigned post-feature step, so B's additional sessions do not enlarge
 its denominator. Failed cycles remain included; repeated interventions in a
@@ -1962,7 +2026,8 @@ need not follow a recorded request; the two are coded separately. Zero observed
 HIR under this policy is not evidence of autonomy. A timeout or automatic
 reset alone does not establish demand.
 
-The intended sources are the session telemetry and retained logs. The proposed
+For a separately authorized future assessment, the intended sources would
+be session telemetry and retained logs. The earlier proposed
 procedure uses Cowork to extract requests, blocks and actual interventions,
 followed by author checking against source records and adjudication of ambiguous cases.
 The extraction must link each event to its cycle, phase, reason, action and
@@ -1980,7 +2045,9 @@ Change-request interventions are reported separately, alongside completion,
 missing features, early termination and unattempted cycles. Lower HIR alone
 is not better: it must not reward silent failure or discourage necessary
 human judgement.
-% TODO(author): verify intervention-event coverage in the actual telemetry schema, freeze extraction/adjudication rules and retain traceable event evidence before claiming HIR is measurable.
+The current pilot still logs assistance, requests and administrative actions
+for trajectory disposition and all-attempt cost accounting. It does not
+calculate these deferred rates or treat their unavailable fields as zero.
 
 Author checking of an automated extraction is not independent annotation.
 No inter-rater agreement, stable severity coding or construct-validation
@@ -1989,10 +2056,12 @@ reliability must not be inferred from a complete-looking event table.
 
 \subsection{Measuring decay prospectively}\label{sec:decaymeasurement}
 
-\emph{Proposed measurement amendment.} The panel below makes H2's
+\emph{Frozen measurement definitions.} The panel below makes H2's
 retention-specific outcome distinct from H1's final coverage and the
-secondary structural metrics. Its eligibility map and checkpoint rules must
-be reconciled with the actual runner and analysis plan before launch.
+secondary structural metrics. The kit's source-hashed contract panel maps
+127 feature contracts and 15 CR1 contracts to their fixed eligibility and
+oracle versions; assertions are correlated test-weighted observations,
+not 142 independent capabilities.
 
 \begin{figure}[!htbp]
 \centering
@@ -2020,7 +2089,7 @@ outputs outside agent context under the agreed information policy.
 For run $r$, let $\mathcal{R}_{r,t}$ contain eligible unchanged contracts that
 passed at least one earlier end-of-cycle checkpoint $P_u$, $u<t$. Let
 $S^p_{r,t}(q)$ be the recorded binary result for contract $q$ at phase
-$p\in\{F,P\}$. Proposed open-loss count and density are
+$p\in\{F,P\}$. Open-loss count and density are
 \begin{equation}
 L^p_{r,t}=\sum_{q\in\mathcal{R}_{r,t}}
 \mathbf{1}\{S^p_{r,t}(q)=0\},\qquad
@@ -2039,7 +2108,7 @@ this is same-cycle loss during the post-feature step, even though it is not
 yet in the inherited cohort. Unobserved results remain missing, not passes or
 failures; apply the prospectively fixed outage and missing-measurement policy.
 
-The proposed H2 reading uses $L^P_{r,t}$ for the longitudinal open-regression
+The frozen H2 reading uses $L^P_{r,t}$ for the longitudinal open-regression
 series and $L^P_{r,10}$ for its final count comparison. Keep densities and
 accumulated test-cycle losses as descriptive companions, not substitute
 thresholds. Show the eligible, ever-passed, never-passed and currently passing
@@ -2075,7 +2144,7 @@ affected interpretation unavailable.
 Final CR1 success and cost compare the arms' final repositories; one final
 task cannot establish longitudinal changeability decay. Early/late probes
 and additional change requests are deferred to the ancillary research
-agenda and are outside the 212-session pilot.
+agenda and are outside the 318-session pilot.
 
 \paragraph{Make the hypothesis capable of failing.}
 First repeat oracle checks on unchanged snapshots and reference versions to
@@ -2099,23 +2168,26 @@ run-level differences in mean coverage and resource use, with the H2
 checkpoint histories and their risk-set denominators shown separately.
 Code generation is nondeterministic~\cite{ouyang2025nondeterminism};
 repetition estimates variation but does not make feature steps independent.
-Structural metrics, comprehension and HIR/IDR use descriptive trajectories,
-counts and ranges. Mixed-effects significance tests are not a primary pilot
+Structural metrics use descriptive trajectories, counts and ranges.
+Comprehension and HIR/IDR are not collected as pilot outcomes.
+Mixed-effects significance tests are not a primary pilot
 analysis.
 
-\emph{CR1 estimands.} The proposed binary endpoint concerns all four allocated
-trajectories per arm. Agent-caused inability to reach or complete CR1 is
+\emph{CR1 estimands.} The binary endpoint concerns both allocated
+trajectories per arm/model. Explicitly adjudicated terminal agent-caused
+inability to reach or complete CR1 is
 unsuccessful, not a removable expensive failure. An infrastructure-caused,
 unobserved outcome remains missing under the prospectively fixed event rules.
 For complete outcomes, report the success fraction and absolute B--A and
-B--C risk differences. The proposed conservative interval uses equal-tailed
+B--C risk differences within each model. The conservative interval uses equal-tailed
 97.5\% Clopper--Pearson intervals $[l_X,u_X]$ for each arm's success
 probability, giving $[l_B-u_A,u_B-l_A]$ for B--A and the analogous B--C
 interval. The two component intervals give at least 95\% joint coverage
 under the binomial model; this does not supply family-wide coverage for all
 comparisons. Missing outcomes require explicit lower/upper outcome bounds,
-not a complete-case success rate. The implementation and boundary cases
-still need pre-run checks.
+not a complete-case success rate. The kit implements these rules; this
+review does not independently establish their statistical calibration
+with two runs per arm/model.
 
 \emph{Resource estimands.} Report actual AI credits through the final
 post-feature step and CR1 consumption separately, including failed, stopped
@@ -2128,10 +2200,42 @@ it is undefined in a zero-success arm. Do not select only successful runs
 for the primary cost comparison or interpret cheap failure as improvement.
 Credits, tokens, elapsed time and currency remain separate.
 
-Show all run values and ranges alongside any pointwise, run-resampled
-intervals for coverage or cost. Their implementation, diagnostics and
-not-estimable rules must be frozen before launch; with four runs per arm,
-such intervals are feasibility outputs, not stable precision claims.
+The analyzer reads billed \texttt{totalNanoAiu}/$10^9$ as AI credits; it does
+not substitute token counts or the configured credit cap for consumption.
+For each run, sum every attempt assigned to delivery through $P_{10}$
+separately from every CR1 attempt. The matching controller journal is
+required to establish all-attempt coverage; measured successful checkpoints
+alone cannot establish the total. Missing attempt billing leaves the
+affected total unavailable. Reference evaluation, host overhead and human
+review are not included in these agent-credit totals.
+
+\begin{table}[!htbp]
+\centering\small
+\caption{Planned pilot resources, not expenditure or elapsed study time.
+Each arm has six trajectories across three models. An allowed retry adds
+a call within the original allowance. Excluded calibration is additional.}
+\label{tab:pilotresources}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Arm & Trajectories & Planned sessions & Maximum agent-hours \\
+\midrule
+A: features + CR1 & 6 & 66 & 34.5 \\
+B: features + consolidation + CR1 & 6 & 126 & 49.5 \\
+C: features + review + CR1 & 6 & 126 & 49.5 \\
+Pilot total & 18 & 318 & 133.5 \\
+Excluded calibration, no CR1 & 9 & 150 & 60 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Show all eighteen run values and ranges before model-specific B--A/B--C
+estimates. Coverage/cost intervals use 10,000 whole-run resamples within
+arm within model, seed 2027, and pointwise 95\% percentile bounds.
+Fewer than two observations per arm, or any undefined draw, makes the
+affected interval unavailable; undefined draws are never discarded.
+With two runs per arm/model these are feasibility outputs, not stable
+precision claims. Any overall summary has equal model weights and is
+explicitly exploratory, not a pooled primary contrast.
 The planned controls are randomised interleaving, fixed prompts and
 evaluator information boundaries, checksum checks, a divergence log and
 reporting every allocated run. Calibration data remain separate. No
@@ -2139,10 +2243,13 @@ interval or observed effect triggers replacement or additional pilot runs.
 
 \subsection{Identification and precision limits}\label{sec:protocollimits}
 
-With four trajectories per arm, the 120 feature steps are repeated observations
-within twelve independent trajectories. They support pilot estimation and
-measurement checks, not seven stable effect claims. One suite, one proprietary
-model and one binary change request restrict transfer; a single final CR1
+With two trajectories per arm/model, the 180 feature steps are repeated
+observations within eighteen independent trajectories, not 180 replicates.
+Each model-specific contrast has only two observations per arm; six pooled
+observations per arm would conceal that design.
+They support pilot estimation and measurement checks, not seven stable effect
+claims. One suite, three selected proprietary models and one binary change
+request restrict transfer; a single final CR1
 cannot establish general or longitudinal maintainability. No power or
 interval-coverage simulation has been completed. This sample is retained
 as pilot/estimation work, not justified by attainable $p$-values.
@@ -2150,60 +2257,62 @@ as pilot/estimation work, not justified by attainable $p$-values.
 The pilot will inform a later precision exercise and replication decision,
 not be retrospectively promoted to a confirmatory study. Any later study
 needs its own pre-data contrast, endpoint hierarchy, multiplicity policy
-and simulation-based sample justification. Twelve clusters and pointwise
+and simulation-based sample justification. Eighteen clusters and pointwise
 intervals cannot supply those guarantees.
 
 B--A includes extra resources; B--C also changes permission to edit, added
 tests and handover content. Neither identifies pure refactoring, and neither
-manipulates the five case mechanisms separately. The intended local access
-boundary, version pinning, suite/oracle stability and blinded review remain
-unverified. A provider service can change despite an exposed version
+manipulates the five case mechanisms separately. Owner-reviewed suite,
+oracle and runtime evidence is recorded, but independent scientific review
+and a full v4 paid execution are absent; comprehension is deferred.
+A provider service can change despite an exposed version
 pin~\cite{baltes2026guidelines}; note content can reveal treatment. Missing
 telemetry is not zero intervention. The specific launch requirements below
 must be resolved before these planned safeguards can be described as controls.
 
 \subsection{Pre-run decisions and status}\label{sec:prerun}
 
-The pilot is \textbf{not running; launch is blocked}. Table~\ref{tab:prerun}
-lists unresolved decisions and unperformed checks. Each requires an
-author-approved, versioned resolution reconciled with the actual runner and
-analysis plan before launch. The manuscript alone does not freeze the private
-kit or establish independent acceptance.
+The pilot is \textbf{not running; collection authorization remains blocked}.
+Table~\ref{tab:prerun} separates the v4 manifest's recorded resolutions from
+the remaining gates. Inspecting a manifest establishes what was recorded,
+not that this review reran its tests or verified live OSF settings.
+The researcher must use the complete release packet and the pinned runtime,
+not silently substitute the current branch, an automatic source archive or
+a later manuscript. The release excludes runtime image bytes; availability
+and exact digest must be established on the execution machine.
 
 \begin{table}[!htbp]
 \centering\footnotesize
-\caption{Outstanding launch blockers, not completed safeguards. Arms, sample
-and resource ceilings remain unchanged; the pilot endpoint amendment still
-requires runner/analysis reconciliation.}\label{tab:prerun}
+\caption{Recorded v4 resolutions and remaining collection gates as inspected
+on 1 November 2026. Independent acceptance is not claimed.}\label{tab:prerun}
 \begin{tabularx}{\textwidth}{@{}L{3.0cm}Y@{}}
 \toprule
-Boundary & Resolution and evidence required \\
+Boundary & Recorded state and remaining requirement \\
 \midrule
-Provenance & Record the private tag/SHA, checksums, pilot amendment, any earlier
-data seen, registration and authorised archive; preserve actual earlier labels. \\
-Suite and access & Obtain independent suite/oracle review, test repeatability
-and actual hidden-test/reference/CR1 access probes before agent exposure. \\
-Evaluator information & Freeze whether hidden scores, messages, identifiers
-or reports reach subsequent sessions; verify the runner enforces that policy. \\
-Missing features & Specify B/C after a failed feature, prerequisite-dependent
-continuation, later recovery and test eligibility; retain missing features
-in the stated cumulative denominator. \\
-Outages and deviations & Distinguish agent failure from infrastructure/service
-failure; fix retry, stopping, missing-measurement and assisted-run disposition. \\
-Endpoint implementation & Reconcile H2 eligibility, feature/post-feature
-checkpoints and reference-gap analysis with the actual tagged runner.
-Check the proposed CR1 success/missingness and all-attempt cost estimands,
-interval boundary cases and any resampling diagnostics before registration. \\
-Secondary scope & Decide before data collection whether comprehension will
-be collected; if so, freeze questions, scoring, timing, reviewer agreement
-and allocation/order. H4/H7 formal claims are deferred, not silently tested. \\
-Precision & Record the twelve-cluster pilot purpose and interval limitations;
-no power simulation is claimed. A larger confirmatory study requires a
-separate simulation-based precision and replication plan. \\
-Resources and versions & Verify calibrated credit caps against the separate
-currency budget; freeze exposed runtime, model, prompts and metric settings. \\
-Human-help telemetry & Verify requests and outside-CLI actions are observable;
-freeze event extraction/adjudication; missing records are not zero help. \\
+Provenance & v4 execution SHA, separate manifest SHA, image digest and
+attached-packet checksum recorded. Packet checksum freshly verified in this
+review; no freeze bytes changed. Preserve excluded diagnostic history. \\
+Registration & Original registration owner-reported approved. Prospective
+v4 OSF update is explicitly false, amendment date null. Record its actual
+completion before affected collection; no backdating. \\
+Suite and access & Owner acceptance, source-hashed contract panel and finite
+access/oracle checks recorded. v4 reports 805 harness tests, 16 SDK tests,
+25 canaries and 33 protected reference evaluations. Not newly rerun here,
+not independent scientific/security acceptance or hosted CI evidence. \\
+Information and failure & Hidden outputs withheld; CR1 withheld until its
+session. Green-only rollback, scheduled B/C post-step, later continuation,
+one bounded infrastructure retry and unknown-measurement rules recorded. \\
+Endpoints and scope & H1/H2/H6 and model-specific all-attempt cost analysis
+reconciled in kit records. Comprehension deferred, HIR/IDR excluded;
+assistance still logged. No seven-hypothesis verdict or power calculation. \\
+Resources and execution & Pinned source/image and exposed tool versions;
+soft buffers and prior spending/provisions recorded. Actual prospective
+update, owner launch permission, runtime availability and cost-only
+calibration affordability admission remain required. No new model calls
+are authorized by a freeze or this manuscript. \\
+Independent researcher & Separate executor planned; operational separation
+only. Scientific and runtime acceptance were owner review, not independent
+peer review. Preserve all allocated trajectories, costs and deviations. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -2216,7 +2325,7 @@ freeze event extraction/adjudication; missing records are not zero help. \\
 Results are reported in this section.
 \else
 The pilot has not started. No first-pass results are reported.
-The launch blockers above and registration remain outstanding; future
+The prospective v4 registration update and collection gates remain outstanding; future
 reporting must retain null, negative and inconclusive findings and distinguish
 any earlier calibration or smoke attempts from this study.
 
@@ -2225,7 +2334,7 @@ The following figure briefs are prospective TODOs, not reported findings.
 No illustrative results, fabricated trajectories or predicted effect sizes
 are substituted for the missing measurements.
 \begin{itemize}[leftmargin=*]
-\item \textbf{PF1: coverage and retention.} Plot all twelve trajectories
+\item \textbf{PF1: coverage and retention.} Plot all eighteen trajectories
 across F1--F10, distinguishing feature and post-feature checkpoints.
 Show cumulative hidden coverage, open retained-contract losses and their
 at-risk denominators; mark unavailable evaluations rather than connecting
@@ -2238,7 +2347,8 @@ assisted runs. Required inputs are the frozen success/missingness rules,
 pre/post-CR1 pass vectors and traceable consumption records.
 \item \textbf{PF3: coverage--cost trade-off.} Plot final hidden coverage
 against actual pre-CR1 credits for every trajectory, distinguishing arms
-and deviations. Show run values before summaries; four runs per arm do not
+and deviations, with separate model panels. Show run values before
+summaries; two runs per arm/model do not
 justify a smooth performance frontier or stable precision claims.
 \end{itemize}
 % TODO(author): PF1 requires actual F/P checkpoint results, eligibility/risk sets and missingness records for all allocated pilot runs; do not generate example curves.
@@ -2249,6 +2359,82 @@ justify a smooth performance frontier or stable precision claims.
 % ===========================================================================
 \FloatBarrier
 \section{Discussion}\label{sec:discussion}
+
+\subsection{Projected cost of omitting consolidation}\label{sec:costprojection}
+
+The experiment measures costs over ten features and one final change. It
+does not yet estimate the price of maintaining a larger system without
+refactoring. Figure~\ref{fig:refactoringeconomics} and
+Table~\ref{tab:costscenario} therefore give an explanatory sensitivity
+scenario, not results, an empirical forecast or an addition to the frozen
+analysis. The economic hypothesis is that early investment can reduce the
+implementation and repair burden inherited by later features. It can fail:
+refactoring may consume credits without reducing that burden or may damage
+behaviour. Cost must always be read beside H1, H2 and H6.
+
+Let $N$ be successive feature cycles, $k$ the assumed average consolidation
+investment in AI credits per cycle, and $\delta(t-1)$ the assumed excess
+feature-implementation cost in A relative to B at cycle $t$, excluding
+B's consolidation session. Shared baseline implementation costs cancel.
+Under the explicit simplifying assumptions of constant $k$, a linearly
+growing relative premium $\delta\geq0$, and comparable delivered behaviour,
+the cumulative net difference is
+\begin{equation}
+\Delta C(N)=C_A(N)-C_B(N)
+=\delta\frac{N(N-1)}{2}-kN.
+\label{eq:costprojection}
+\end{equation}
+The first term is the assumed gross avoidable burden of omitting
+consolidation; the second is the investment to avoid it. A positive
+difference means A costs more under these assumptions, not measured savings.
+For $k>0$ and $\delta>0$, break-even is the smallest integer
+$N\geq1+2k/\delta$; when $\delta=0$, the investment never pays back in
+this credit-only model. Real trajectories need not follow a linear premium,
+and B can retain debt too: $\delta$ is a relative gap, not A's absolute
+debt or a claim that B is debt-free.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\linewidth]{fig-refactoring-economics.png}
+\caption{Assumed cost-of-inaction mechanism and break-even sensitivity, not
+pilot results or an empirical projection. A linearly increasing relative
+implementation premium accumulates across feature boundaries; recurring
+consolidation has an explicit cost. With assumed $k=5$ credits/cycle,
+$\delta=0$ gives no payback, $\delta=0.5$ breaks even at 21 cycles and
+$\delta=1$ at 11. Parameters are invented for transparent sensitivity,
+not fitted to study data. No dollar conversion or human-work estimate is
+implied.}\label{fig:refactoringeconomics}
+\end{figure}
+
+\begin{table}[!htbp]
+\centering\small
+\caption{Illustrative net A--B cost in AI credits from
+Equation~\ref{eq:costprojection}, with assumed $k=5$ credits/cycle.
+Negative values mean B's investment has not paid back; zero and positive
+values mean break-even and a conditional credit advantage.
+None of the scenarios is an observed or preferred estimate.}
+\label{tab:costscenario}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Assumed premium increase $\delta$ & 10 cycles & 20 cycles & 40 cycles \\
+\midrule
+0 credits per successive cycle & -50 & -100 & -200 \\
+0.5 credits per successive cycle & -27.5 & -5 & 190 \\
+1 credit per successive cycle & -5 & 90 & 580 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The pilot can report actual B consolidation consumption, later-feature
+implementation costs and all-attempt CR1 cost separately by model, with
+quality and missingness. Two trajectories per arm/model and a ten-feature
+window do not identify a stable long-run $\delta$ or justify extrapolation
+to 40 features. A future forecast would require longer replicated sequences,
+matched delivered quality, measured residual repair work and independently
+checked billing. Human review, operational failures, opportunity costs and
+currency prices are not measured by this kit and cannot be monetized from
+its credits or code-size proxies. Thus the current projected cost of
+inaction is conditional and unestimated, not a claimed business saving.
 
 \subsection{What worked}
 
@@ -2337,12 +2523,14 @@ The separately dated repository follow-up records 262 merged pull requests
 since 15~October but no fresh deployed-journey acceptance
 (Section~\ref{sec:currentstatus}).
 
-The planned twelve-trajectory pilot asks what scheduled consolidation leaves
+The frozen eighteen-trajectory pilot asks what scheduled consolidation leaves
 for later work. It separates final behavioural coverage from retained-contract
 loss, probes an unforeseen change and reports the resources consumed.
 Secondary metrics provide descriptive evidence; testing the proposed mechanisms
 would require further work.
-The pilot has not started; launch checks and registration remain pending.
+The pilot has not started; the prospective v4 registration update and
+collection gates remain pending. The cost-of-inaction scenario exposes
+break-even assumptions, not observed savings.
 What matters is whether the agents' combined work preserves the behaviour and
 options needed by subsequent features.
 
@@ -2372,6 +2560,11 @@ For the subsequent editorial and visual revision, Gemini~4 Argon proposed
 infographic concepts. Those suggestions were checked against the manuscript
 and adapted into editable Excalidraw conceptual diagrams; they are not
 experimental outputs or independent validation.
+The 1~November revision reconciled the experiment description with v4,
+added the measurement and conditional cost-of-inaction explanation, and
+used Gemini~4 Argon for editable infographic design and implementation.
+AI-generated conceptual graphics and assumed economics are explicitly
+separate from experimental data; human author approval remains required.
 
 The author supplied the observations, selected the case and made the analytical
 judgements, and reports checking the repository figures and Azure expenditure
@@ -2406,10 +2599,16 @@ boundary and claim locators without reporter identities or attachments.
 Live issue states can change independently of the pinned source commits.
 The ancillary
 experiment notes in HVE Core's Minimum Viable Experiment format are earlier
-proposals, not the tagged study record. The separate study kit is held
-in a private repository; it is not yet a public replication archive. The
-registered snapshot, sanitised data and exact run provenance will need an
-authorised deposit before a reproducibility claim can be made.
+proposals, not the tagged study record. The separate public kit is
+\url{https://github.com/jmservera/ama-thought-mve}; use its
+\href{https://github.com/jmservera/ama-thought-mve/releases/tag/protocol-frozen-v4}
+{frozen v4 release} and complete attached OSF packet, with the execution
+and manifest provenance given in Section~\ref{sec:experiment}.
+Private paid diagnostic code, results and transcripts and runtime image
+bytes are excluded from that packet. The author-reported original OSF
+registration does not establish prospective v4 registration.
+Sanitized pilot data and exact execution provenance still require a later
+authorized deposit; no completed independent replication is claimed.
 % TODO(author): archive the exact registered protocol and study materials at an authorised destination, preserving prior proposals and excluding credentials, partner identifiers, DLP sidecars and unapproved internal material.
 
 % ===========================================================================

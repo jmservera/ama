@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-10-31
+ms.date: 2026-11-01
 ms.topic: overview
 ---
 
@@ -20,6 +20,16 @@ Topic hubs work like the Maps of Content used in personal knowledge
 management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
+
+For the paper's [frozen experiment review and revision](../capstone/thought-leadership/everything-but-the-software/README.md#frozen-experiment-review-and-revision-1-november),
+the 1 November source reconciles v4's eighteen trajectories across three
+models, quality/retention/CR1 outcomes, all-attempt costs and soft credit
+buffers. Editable conceptual robot-role infographics explain the design and
+measurement; conditional break-even scenarios are explicitly assumptions,
+not observed savings or a long-run forecast. The release-packet checksum
+matches; owner review is not independent scientific acceptance. No pilot
+results, prospective v4 OSF completion or collection authorization is claimed.
+Frozen experiment assets and historical critiques are unchanged.
 
 For the [31 October live app observations](../architecture/cutover-evidence-pack.md#live-app-verification-2026-10-31-refs-523-524-570-432),
 resident sign-in and chat open/close, resize, dock/undock and narrow/wide

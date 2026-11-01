@@ -9004,3 +9004,26 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Filed deduplicated local-tooling bug #608 with exact reproduction/log hash.
   No deployed app defect, source fix, skip, full passing retry or gate bypass
   is inferred. Original Review and failed receipt remain preserved.
+
+## [2026-11-01] review | Reconcile paper with frozen v4 experiment
+
+* Reviewed the paper's experiment explanation against the public
+  `ama-thought-mve` v4 source, canonical protocol, contract panel, budget and
+  active model/retention/cost analysis. The attached prospective OSF packet
+  checksum matches; no private paid transcripts or runtime image were inspected.
+* Updated the [paper source package](../capstone/thought-leadership/everything-but-the-software/README.md#frozen-experiment-review-and-revision-1-november)
+  with eighteen three-model trajectories, actual endpoint scope, owner-reviewed
+  decisions, per-model uncertainty and remaining prospective collection gates.
+  The frozen kit and registration assets are unchanged.
+* Added quality/cost and assumed break-even conceptual infographics and
+  refreshed the design figure, with editable robot task-role metaphors.
+  Conditional economics are not experimental data, dollar savings or a forecast;
+  PF1-PF3 still require actual pilot results.
+* Original critiques and historical evidence remain. Separate execution is
+  operational separation, not independent scientific acceptance; no model
+  experiment, OSF update, external submission or scientific approval occurred.
+* The 51-page PDF compiles; all-page text bounds and three changed infographic
+  pages were inspected. Eleven paper/diagram tests and 593 frozen endpoint/
+  measurement/report tests pass with configured dependencies. A separate
+  assisted scoped critique found only stale status wording, now corrected;
+  this is not independent human peer review or full runtime acceptance.

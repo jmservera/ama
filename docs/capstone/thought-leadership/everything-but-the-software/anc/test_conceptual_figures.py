@@ -12,7 +12,14 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 
 PACKAGE = Path(__file__).resolve().parent.parent
-STEMS = ("fig-state-inheritance", "fig-pilot-design", "fig-contract-states")
+STEMS = (
+    "fig-state-inheritance",
+    "fig-pilot-design",
+    "fig-contract-states",
+    "fig-experiment-measures",
+    "fig-refactoring-economics",
+)
+MANUSCRIPT_STEMS = ("fig-state-inheritance", "fig-pilot-design", "fig-contract-states")
 
 
 class ConceptualFigureTests(unittest.TestCase):
@@ -87,7 +94,7 @@ class ConceptualFigureTests(unittest.TestCase):
         narrative = narrative.replace("[Our study's limitations]", "")
 
         self.assertNotRegex(narrative, r"\b(?:I|my|My|mine|myself|we|We|our|Our|me)\b")
-        for stem in STEMS:
+        for stem in MANUSCRIPT_STEMS:
             self.assertIn(f"{{{stem}.png}}", narrative)
         for identifier in ("PF1", "PF2", "PF3"):
             self.assertIn(f"TODO(author): {identifier}", source)

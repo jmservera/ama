@@ -1,54 +1,150 @@
 ---
-title: Everything but the Software - source package (draft v7)
-description: Industry-led maintenance argument, inherited-error and instruction-debt evidence, and prospective consolidation protocol
-ms.date: 2026-10-29
+title: Everything but the Software - source package (draft v8)
+description: Frozen v4 experiment explanation, quality and cost measurement, and conditional refactoring economics
+ms.date: 2026-11-01
 ---
 
 Working title: *Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop. An Exploratory Case Study and an Experiment Protocol.*
 
 ## Current Status
 
-The editorial/visual revision and dated repository-metrics refresh of
-29 October are the latest source record.
-The owner selected the existing twelve trajectories as pilot/estimation work,
-not seven stable hypothesis tests. The pilot has not started, no experimental
-results are reported, and launch remains blocked by the documented runner,
-suite/access, analysis and registration requirements.
+The 1 November revision reconciles the paper with
+[the public kit's frozen v4 release](https://github.com/jmservera/ama-thought-mve/releases/tag/protocol-frozen-v4).
+The active design is eighteen ten-feature trajectories: GPT 6.1 Sol,
+Sonnet 5.5 and Gemini 4 Argon each run A/B/C twice, followed by CR1.
+The earlier twelve-run allocation and 2,500-credit ceiling are superseded
+proposals, not the current study. No estimation pilot results are reported.
+The title, motivating case evidence and 96-reference bibliographies are
+unchanged.
 
-The title, case observations, three arms, four runs per arm, ten-feature
-suite and resource ceilings are retained. AMA now supplies the motivating
-testbed rather than the paper's personal narrative. Impersonal wording does
-not conceal the sole author's participant-observer role or independently
-corroborate that account. The engineering lineage connects Beck, Erich Gamma
-and colleagues, Robert C. Martin and Fowler to specific design choices,
-not to a claimed intervention effect.
+The frozen source is owner-reviewed exploratory work. A separate researcher
+will operate it; operational separation is not independent scientific
+acceptance. The original OSF registration is owner-reported approved, while
+the inspected v4 manifest leaves prospective amendment completion false
+and its date null. The source freeze does not authorize collection.
+Actual prospective recording, launch permission, runtime availability and
+calibration affordability remain gates.
 
-The main and reusable bibliographies contain the same 96 references.
-Three new conceptual figures have native `.excalidraw` editing sources,
-vector SVG exports and PNG copies for LaTeX. Existing empirical charts and their input data are
-unchanged. PF1-PF3 are explicit, data-dependent figure TODOs, not mock results.
-Gemini 4 Argon supplied concepts; the implementation corrects its proposed
-twelve-feature sequence to the actual ten-feature suite and does not adopt
-its unsupported guarantee of hidden-test inaccessibility.
+The revision adds an explicit quality/cost measurement infographic, refreshes
+the experiment design and adds conditional refactoring economics. Editable
+Excalidraw sources are the authority, with native SVG and PNG exports.
+Robot motifs represent task roles, not different assigned models or claims
+of autonomous judgment. Gemini 4 Argon supplies the visual implementation;
+all three models serve each experimental arm. PF1-PF3 still await actual
+data and are not replaced by invented results. Existing empirical charts,
+inputs, original critiques and historical revision records are retained.
 
-The revised source compiles with session-local Tectonic 0.17.0. The delivered
-47-page PDF includes the metrics refresh; its log, all-page text bounds and
-new metrics page were checked. The unchanged conceptual figures retain the
-earlier full-size visual inspection and source/export validation. These are
-engineering and layout checks, not independent scientific or author approval.
-No experiment was run, private study material amended or external submission
-made. The arXiv bundle has not been refreshed.
-The owner selected local-only delivery pending publication clearance; no
-commit, push or pull request was made by the assistant for the editorial
-revision. The owner subsequently committed that work and opened
-[PR #555](https://github.com/jmservera/ama/pull/555). This metrics follow-up
-continues on its existing branch and remains local; it does not authorize
-external manuscript publication.
+The revised 51-page PDF and completed focused validation are recorded below.
+No frozen kit, OSF asset, experimental collection, external submission or
+publication approval is changed by the manuscript revision. The arXiv
+bundle is not refreshed.
 
 The [dated review and complete pending checklist](./anc/review-2026-10-29.md)
-records findings, evidence coverage, applied changes, launch blockers and
-deferred work. It supersedes earlier readiness summaries, not the historical
+records the earlier findings, evidence coverage, applied changes, launch
+blockers and deferred work. The v4 reconciliation below supersedes its
+experiment-readiness statements, not the historical
 evidence or original [editorial critique](./critique.md).
+
+## Frozen Experiment Review and Revision 1 November
+
+Work execution: Complete for the manuscript revision and conceptual figures.
+Assessment: scoped assisted review, not independent human peer review,
+statistical certification or venue acceptance. No venue policy was supplied.
+
+### Evidence Inspected
+
+* Current [manuscript](./main.tex), its experiment/discussion/data-availability
+  sections, previous review, bibliography consistency and authoring tools.
+* The kit at execution source
+  `e8707ecc8965d3f81f5142a2603042bfca1aab15` plus manifest-only commit
+  `03c50856838b539780d57216af2a4cf6744187d7`:
+  [canonical protocol](https://github.com/jmservera/ama-thought-mve/blob/03c50856838b539780d57216af2a4cf6744187d7/protocol/pilot-estimation.md),
+  [machine-readable decisions](https://github.com/jmservera/ama-thought-mve/blob/03c50856838b539780d57216af2a4cf6744187d7/protocol/pilot-estimation.json),
+  [freeze manifest](https://github.com/jmservera/ama-thought-mve/blob/03c50856838b539780d57216af2a4cf6744187d7/protocol/freeze.json),
+  contract panel, configured budget, active retention/model/cost analyzer
+  and focused regressions. Historical root design/hypothesis pages explicitly
+  defer to this canonical protocol.
+* Complete attached `osf-v4-2026-10-31.tar.gz`: freshly downloaded checksum
+  matches `1a42fac40a4f1aa82df59c8c3f7f8d6dce37d22502c5952c398362ac63d6bd65`.
+  Archive member listing inspected; this is not an exhaustive readback of
+  every internal evidence file or live OSF verification.
+
+Full-text support here means inspected protocol/code support for the stated
+design, not that its experiments occurred. Historical test totals and
+owner acceptance are inspected records, not freshly reproduced runtime
+acceptance. Private paid datasets/transcripts and the runtime image were
+not inspected. Earlier case claims and all 96 external publications were
+not independently reverified.
+
+### Findings and Applied Remedies
+
+| ID | Priority and manuscript locator | Finding and impact | Applied remedy and remaining limitation |
+| --- | --- | --- | --- |
+| V4-1 | Major: Abstract; experiment status; Design | Paper described twelve single-model runs, CLI 1.0.103 and 2,500 credits, conflicting with frozen v4. | Reconciled eighteen runs, three models, CLI 1.0.105/SDK 1.0.28, 300,000 nominal envelope and operational soft buffers. No frozen source changed. |
+| V4-2 | Major: Design; Pre-run decisions; Data availability | Local execution, missing-feature/evaluator decisions and independent review were incorrectly described as wholly pending; the kit was called private. | Described public packet, bounded container tools, withholding, rollback/continuation and owner-reviewed resolutions. Preserved missing prospective OSF update, operational gates and absence of independent scientific acceptance. |
+| V4-3 | Major: Measures; Analysis; precision limits | Paper promised comprehension and HIR/IDR outcomes excluded or deferred in v4 and obscured per-model sample size. | Marked scope accurately, retained assistance logging, explained per-model primary frames and two-run uncertainty. Eighteen trajectories are not eighteen observations in each model contrast. |
+| V4-4 | Moderate: Protocol/measurement figures | Quality and cost were buried in dense prose; final correctness could be mistaken for decay control. | Separate H1 coverage, H2 prior-contract loss/recovery and H6 retained-behaviour CR1; show all-attempt delivery/CR1 cost and missingness. Test-weighted scores remain correlated proxies. |
+| V4-5 | Major: Discussion, Projected cost of omitting consolidation | No measured long-run cost of inaction exists; predicting a dollar saving would fabricate evidence. | Added explicit assumed sensitivity equation, null/no-payback alternative, break-even and credit-only table. This is not a registered endpoint, fitted forecast, dollar conversion or observed saving. |
+| V4-6 | Remaining scientific limitation: Design/precision | B-A buys more resources; B-C changes editing/tests/notes, not only refactoring. Two runs/arm/model, one suite and one CR1 cannot establish general maintainability. | Limitations retained and made visual. A matched-resource/mechanism-isolating or larger study needs separate prospective authorization. |
+
+### Quality and Cost Interpretation
+
+H1 uses final `P10` coverage of all 127 scheduled feature contracts.
+H2 follows unchanged contracts passing at an earlier `P`, with feature/post
+checkpoints, at-risk denominators and retained loss episodes. Never-passing
+contracts are acquisition failures; repair does not erase recurrence.
+H6 needs all 15 CR1 contracts and every feature contract passing before CR1.
+Unknown observations are not automatically failed contracts.
+
+Actual AI credits from all attempts are separate for delivery through `P10`
+and CR1, including failed sessions and infrastructure retries. Missing billing
+is unknown, not zero; low-cost failure is not efficiency. Tokens and elapsed
+seconds are distinct measures. Compatible reference gaps, complexity,
+duplication and lint are descriptive structural proxies, not comprehension.
+
+The explanatory scenario assumes consolidation investment `k=5` credits per
+feature cycle and a relative later-feature premium increasing by `delta`.
+Net A-B cost is `delta*N*(N-1)/2 - k*N`: `delta=0` never pays back;
+`delta=0.5` breaks even at 21 cycles; `delta=1` at 11. These arbitrary
+parameters expose assumptions and counterexamples, not preferred estimates.
+At ten cycles even the last scenario has not paid back. No empirical
+40-feature forecast, human-work saving or dollar conversion is supported.
+
+### Validation
+
+At the frozen source plus separate manifest, the four focused modules
+`test_pilot_analysis.py`, `test_analysis.py`, `test_measurement_integrity.py`
+and `test_study_report.py` passed: 593 tests, zero reported skips, no model
+sessions. This checks constructed endpoint, missingness and cost behavior,
+not a collected study or full runtime/access audit.
+The initial global-Python run failed because isolated child Python could
+not import user-installed pytest. Restoring the kit's configured dependencies
+with pip in an external virtual environment resolved that environment failure;
+no frozen source was patched.
+
+The final source compiles with Tectonic 0.17.0 to a 51-page PDF. All-page
+text bounds pass; the three changed infographic pages (26, 31 and 38) were
+rendered and visually inspected at page scale without clipping. No overfull
+boxes or undefined references were reported. The engine's standard
+UTF-8/inputenc warning is retained, not treated as a scientific defect.
+The structural checker passes, including 96 matching bibliography entries
+and explicit deferred-results switches. All eleven existing paper-tooling
+and conceptual-figure tests pass, including native regeneration,
+editable bindings and source/export hashes for five figures. Exact
+allocation/panel, planned-resource arithmetic and all nine sensitivity-table
+cells were separately checked against the frozen inputs.
+
+A separate read-only scientific-agent critique of the revised experiment,
+economics and figures found no high-confidence substantive protocol mismatch;
+its one minor finding was stale work-in-progress status, corrected here.
+That critique is assisted checking, not independent human peer review.
+The original historical critiques remain unchanged. The capstone Section D
+criteria were consulted for reusable substance, craft and dissemination;
+no rubric score or dissemination/publication acceptance is inferred.
+The user authorized a repository PR for the revised paper, not external
+scientific submission, OSF mutation or collection.
+
+No paid experiment or full container/runtime audit is performed by this review.
 
 ## Repository Metrics Refresh 29 October
 
@@ -143,7 +239,18 @@ override avoids an upstream dependency requesting unavailable
 
 Compile from this package directory with `pdflatex main.tex` twice, or
 `tectonic main.tex --keep-logs --keep-intermediates --untrusted`. Tectonic
-resolves cross-references automatically. The existing
+resolves cross-references automatically. From the repository root, you can
+also run the Bash helper:
+
+```bash
+./tools/update-pdf.sh
+```
+
+The helper calls `tectonic` from `PATH` and writes the PDF, logs and
+intermediate files into this package directory. It resolves the package path
+relative to the script, so it does not depend on the current working directory.
+
+The existing
 `check_paper.py --check-latex-log` expects a pdflatex-style output marker;
 this revision instead checks the actual Tectonic log and rendered PDF.
 The four new tests cover native shape/text bindings, exact source/export
