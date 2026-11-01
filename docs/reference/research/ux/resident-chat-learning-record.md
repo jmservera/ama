@@ -25,10 +25,12 @@ Leave the setting unset and nothing is saved.
 | Session id | One-way hash of the sign-in session id. It is not the resident, case id or email, and a new sign-in gets a new id |
 | Topic | The topic that answered (status, documents, forms, home, pause, contact, repair, consents, appointments, regulations, safety), `unrouted` for a harmless question the chat did not recognise, or `refused` for an instruction injection or a request outside the advisory boundary |
 | AI enabled | Whether an AI advisor was configured for that turn |
-| Question text | Saved only because every demo resident is synthetic. Empty when the resident chose a listed topic. Limited to 200 characters. Emails, UK postcodes and long numbers are masked before saving |
+| Question text | Saved only because every demo resident is synthetic. Empty when the resident chose a listed topic. Limited to 200 characters. Emails, UK postcodes, case references and long numbers are masked on the full text before the 200-character limit is applied. Names and street addresses typed into a question are not masked |
 
-Never saved: the answer text, the resident or case identity, email, address,
-case facts and the model prompt.
+Never saved by the system: the answer text, the resident or case identity, email,
+address, case facts and the model prompt. Free text a resident types is only
+partly masked (see above), so the visible notice tells residents not to type
+names, addresses or other real personal details.
 
 ## Consent and visible flag
 
@@ -36,8 +38,9 @@ case facts and the model prompt.
   "Use my question and limited own-case details for this chat". Requests
   without it are rejected before anything is saved.
 * The chat page says: "Synthetic demo only: questions you type may be saved,
-  without your name or email, to help the team improve this chat. Do not type
-  real personal details."
+  without your name or email, to help the team improve this chat. Only emails,
+  postcodes, case references and long numbers are masked, so do not type names,
+  addresses or other real personal details."
 * Ticking the box is not consent to works. Chat still cannot approve, give
   consent, book or change a case.
 

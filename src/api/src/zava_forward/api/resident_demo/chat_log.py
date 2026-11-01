@@ -25,22 +25,24 @@ MAX_QUESTION = 200
 UNROUTED = ("unrouted", "refused")
 NOTICE = (
     "Synthetic demo only: questions you type may be saved, without your name or email, to "
-    "improve this chat. Do not type real personal details."
+    "improve this chat. Only emails, postcodes and long numbers are masked, so do not type "
+    "names, addresses or other real personal details."
 )
 
 _REDACTIONS = (
     (re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+"), "[email]"),
     (re.compile(r"\b[a-z]{1,2}\d[a-z\d]?\s*\d[a-z]{2}\b", re.I), "[postcode]"),
+    (re.compile(r"\bzf-?\w*\d\w*\b", re.I), "[case]"),
     (re.compile(r"\+?\d[\d\s\-()]{4,}\d"), "[number]"),
 )
 
 
 def clean(question: str) -> str:
     """Bound the text and mask obvious contact details a resident might paste in."""
-    text = " ".join(question.split())[:MAX_QUESTION]
+    text = " ".join(question.split())
     for pattern, mask in _REDACTIONS:
         text = pattern.sub(mask, text)
-    return text
+    return text[:MAX_QUESTION]
 
 
 def pseudonym(session_id: str) -> str:

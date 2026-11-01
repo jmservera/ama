@@ -711,6 +711,17 @@ class ChatApiTests(DemoTestCase):
             "Call [number] or write to [postcode], [email]",
         )
 
+    def test_learning_record_masks_before_truncating_and_masks_case_references(self) -> None:
+        for tail in (" jo@example.com", " A1 1AA"):
+            saved = chat_log.clean("x" * 191 + tail)
+            self.assertLessEqual(len(saved), chat_log.MAX_QUESTION)
+            self.assertNotIn("jo@", saved)
+        self.assertEqual(chat_log.clean("what is in case ZF-1234?"), "what is in case [case]?")
+
+    def test_pause_route_rejects_digits_and_allows_write_to(self) -> None:
+        self.assertNotEqual(chat.route("Is my case 7 paused?"), "pause")
+        self.assertEqual(chat.route("Who should I write to about my case?"), "contact")
+
     def test_learning_record_marks_ai_and_is_not_written_without_consent_or_on_failure(
         self,
     ) -> None:

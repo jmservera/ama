@@ -461,6 +461,8 @@ CONTACT_INTENTS = (
 
 def _pause_question(question: str) -> str | None:
     """Return "pause" or "contact" only when every sentence is a whole pause or contact intent."""
+    if re.search(r"\d", question):
+        return None
     text = re.sub(r"[^a-z' \-.?!;,]", " ", question.lower().replace("\u2019", "'"))
     text = re.sub(r"\b(?:please|pls|thanks|thank you)\b", " ", text)
     parts = [
@@ -523,10 +525,10 @@ def route(question: str) -> Topic | str:
     if polite:
         question = polite[1]
     tokens = words(question)
-    if tokens & BLOCKED_WORDS:
+    pause = _pause_question(question)
+    if tokens & BLOCKED_WORDS and not pause:
         return "unknown"
     repair = _repair_question(question)
-    pause = _pause_question(question)
     if pause and not repair:
         return pause
     if tokens & ACTION_WORDS and not repair:
