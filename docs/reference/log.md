@@ -9298,3 +9298,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## 2026-11-01 - Chat grounding review corrections (Refs #164)
 
 * Numeric claims are now tokenised as complete expressions (`40.5m`, `12k`, `12m2`, `1e6`); the DPIA, chat panel docstring, agents README and index state that unlisted paraphrases can bypass the lexical check and that the golden run now passes with enablement still disabled.
+
+## [2026-11-01] update | Atlas screen trace status refresh (#233)
+
+* Refreshed `research/ux/atlas-screen-trace.md` so nine of twelve screens are
+  marked as registered on main; three remain in unmerged pull requests. Updated
+  the index row and made the checker apply each status to its own screen group.
+* Findings stay hypotheses until #155. No accessibility acceptance is claimed.
