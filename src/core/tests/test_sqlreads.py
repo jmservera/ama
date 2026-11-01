@@ -231,6 +231,18 @@ def _burn(stop_at):
         pass
 
 
+def _churn_io(directory, stop_at):
+    """Write and fsync 8 MiB blocks until stop_at, to load the disk the benchmark shares."""
+    block = os.urandom(8 << 20)
+    path = os.path.join(directory, f"io-{os.getpid()}.bin")
+    while time.time() < stop_at:
+        with open(path, "wb") as f:
+            f.write(block)
+            f.flush()
+            os.fsync(f.fileno())
+    os.unlink(path)
+
+
 class Scale(unittest.TestCase):
     N = 60000
 
@@ -297,6 +309,16 @@ class Scale(unittest.TestCase):
                     pr.start()
                     self.addCleanup(lambda pr=pr: (pr.terminate(), pr.join()))
                 print(f"[timing] contention: {burners} CPU burner processes", flush=True)
+
+            io_writers = int(os.environ.get("ZF_BENCH_IO_CONTENTION", "0"))
+            if io_writers:
+                import multiprocessing
+                stop_at = time.time() + 120
+                for _ in range(io_writers):
+                    pr = multiprocessing.Process(target=_churn_io, args=(tmp, stop_at), daemon=True)
+                    pr.start()
+                    self.addCleanup(lambda pr=pr: (pr.terminate(), pr.join()))
+                print(f"[timing] contention: {io_writers} fsync writer processes", flush=True)
 
             def timed(label, **kw):
                 before = load_sample()
