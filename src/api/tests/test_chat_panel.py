@@ -167,9 +167,9 @@ class PanelTests(roles.Matrix):
         for outcome in ("provider-unavailable", "timeout", "disabled"):
             self.model = lambda _p, o=outcome: envelope(None, o)
             code, d = self.ask(tid)
-            self.assertEqual(
-                (code, d["kind"], d["reply"], d["workflow_only"]), (200, "fallback", FALLBACK, True)
-            )
+            self.assertEqual((code, d["kind"], d["model"]), (200, "answer", "workflow-only"))
+            self.assertNotEqual(d["reply"], FALLBACK)
+            self.assertTrue(d["citations"])
         self.assertEqual(self.api(ROLE, "/api/cases/ZF-1")[0], 200)
 
     def test_every_turn_rechecks_role_and_case(self) -> None:
@@ -457,7 +457,8 @@ class PanelTests(roles.Matrix):
                 code, reply = self.api(
                     ROLE, f"/api/chat/threads/{tid}/{route}", {"content": "Stage?"}
                 )
-                self.assertEqual((code, reply["kind"]), (200, "fallback"))
+                self.assertEqual((code, reply["kind"]), (200, "answer"))
+                self.assertEqual(reply["model"], "workflow-only")
                 self.assertEqual(reply["consumption"]["model_calls"], 0)
                 self.assertEqual(
                     reply["consumption"]["provider_outcome"], "activation-not-approved"
