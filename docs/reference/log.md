@@ -9315,3 +9315,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   marked as registered on main; three remain in unmerged pull requests. Updated
   the index row and made the checker apply each status to its own screen group.
 * Findings stay hypotheses until #155. No accessibility acceptance is claimed.
+
+## [2026-11-01] update | Issue 466 remaining-criteria check (r4)
+
+* Re-ran focused resident sensor and assistant tests, ruff and mypy on main;
+  criteria 2 to 6 still hold. Criterion 1 (owner confirms scope and priority)
+  stays unmet. Evidence is under `.copilot-tracking/` (r4 artifacts). No
+  accessibility acceptance is claimed.
