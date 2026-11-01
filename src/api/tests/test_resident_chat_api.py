@@ -8,6 +8,7 @@ import tempfile
 from dataclasses import replace
 from datetime import datetime, timedelta
 from pathlib import Path
+from typing import Any, cast
 from unittest.mock import Mock, patch
 
 from zava_forward.core.resident_assistant import AssistantUnavailable, Topic
@@ -711,7 +712,7 @@ class ChatApiTests(DemoTestCase):
         self.assertNotEqual(rows[0][3], self.client_one.session_id)
         summary = ChatLog(log_path).summary()
         self.assertEqual((summary["turns"], summary["unrouted"], summary["refused"]), (5, 2, 1))
-        self.assertIn(("what is the weather", 1), summary["top_unrouted"])  # type: ignore[operator]
+        self.assertIn(("what is the weather", 1), cast(list[Any], summary["top_unrouted"]))
         self.assertIn("Not understood (unrouted): 2", render(summary))
 
     def test_learning_record_masks_contact_details(self) -> None:
