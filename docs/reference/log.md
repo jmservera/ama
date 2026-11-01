@@ -9291,3 +9291,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   final head) stay unmet; the per-message review exception stays OFF pending
   OD-53. Evidence is in
   `.copilot-tracking/changes/2026-11-01/issue-441-recheck-changes.md`.
+
+## [2026-11-01] update | Atlas screen trace status refresh (#233)
+
+* Refreshed `research/ux/atlas-screen-trace.md` so nine of twelve screens are
+  marked as registered on main; three remain in unmerged pull requests. Updated
+  the index row and made the checker apply each status to its own screen group.
+* Findings stay hypotheses until #155. No accessibility acceptance is claimed.

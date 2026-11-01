@@ -17,3 +17,5 @@ Verdict on closing: criteria 5 and 6 unproven, so the PR uses Refs #233.
 Copilot review feedback (PR 671) addressed after the single Review: six threads valid; trace doc and checker corrected with regression tests. The conformance outcome is unchanged and criteria 5 and 6 remain unproven.
 
 * Follow-up (Copilot thread on atlas_screen_trace.py): row-length guard moved before the screen lookup; resolved with a regression test. No change to the review outcome.
+
+* Follow-up (PR 713 Copilot threads): checker now reads role-screens.js unconditionally so a missing registry exits 2; the drift regression test uses a synthetic unregistered screen so merging quality-queue cannot invalidate it; added a missing-registry test. Review outcome unchanged.
