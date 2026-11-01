@@ -76,3 +76,75 @@ def retention_report(threads: list[dict[str, Any]], env: Any, now: datetime) -> 
         action="DPO must set periods, triggers, holds, rights and disposal approval. "
         "No records are deleted or marked lawfully retained by this report.",
     )
+
+
+GATE_REFS = (
+    ("REG_DPIA_REF", "DPIA completed with the DPO"),
+    ("REG_RETENTION_REF", "DPO-set retention periods for chat, check, alert and usage records"),
+    ("REG_ENTRA_ROLES_REF", "Tenant evidence for separate author, approver and chat-user roles"),
+    ("REG_ART22_REF", "Art 22A to 22C human authority and recorded reasons"),
+)
+
+CRITERIA = (
+    ("dpia", "DPIA with the DPO before live data", "human-gate-unmet", "REG_DPIA_REF"),
+    (
+        "retention",
+        "Chat and check retention periods set by DPO review",
+        "human-gate-unmet",
+        "REG_RETENTION_REF",
+    ),
+    ("foundry_minimisation", "Foundry queries exclude unneeded fields", "partial", None),
+    (
+        "entra_roles",
+        "Authors, approvers and chat users are separate Entra roles",
+        "human-gate-unmet",
+        "REG_ENTRA_ROLES_REF",
+    ),
+    ("audit", "Rule, approval, check, alert and chat events audit-logged", "automated-pass", None),
+    (
+        "injection_cross_role",
+        "Prompt-injection and cross-role disclosure tests",
+        "automated-pass",
+        None,
+    ),
+    (
+        "art22",
+        "Art 22A to 22C named human with recorded reasons",
+        "human-gate-unmet",
+        "REG_ART22_REF",
+    ),
+    (
+        "metering",
+        "Metering holds identifiers, counts and versions only",
+        "partial",
+        "REG_RETENTION_REF",
+    ),
+)
+
+
+def readiness_report(env: Any) -> dict[str, Any]:
+    """Reference-only live-data gate; recorded references are not verified DPO or Legal approval."""
+    refs = {name: str(env.get(name) or "").strip() for name, _ in GATE_REFS}
+    missing = [name for name, ref in refs.items() if not ref]
+    synthetic = [name for name, ref in refs.items() if ref.startswith("SYNTH-")]
+    permitted = not missing and not synthetic
+    return dict(
+        label="synthetic-demo",
+        owner=OWNER,
+        live_data_permitted=permitted,
+        dpo_reviewed=False,
+        missing_refs=missing,
+        synthetic_refs=synthetic,
+        statement="References recorded, human approval not verified by this report."
+        if permitted
+        else "Live data refused until every reference is recorded and none is synthetic.",
+        criteria=[
+            dict(
+                id=cid,
+                criterion=text,
+                status=status,
+                ref_recorded=bool(ref and refs.get(ref)) if ref else None,
+            )
+            for cid, text, status, ref in CRITERIA
+        ],
+    )
