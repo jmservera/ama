@@ -9096,6 +9096,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Issue #156 criterion 1 stays unmet: no designs, human review, accessibility or
   content evidence were supplied. No regulatory snapshot changed.
 
+## [2026-11-01] update | Key Vault secret lifecycle slice (#142)
+
+* Extended `infra/secret-inventory.json` to the two resident demo secrets, with the
+  repository-recorded owner pending confirmation. Added `rotation-simulate` and
+  `review-status` to `infra/scripts/secret_lifecycle.py` with offline tests.
+* Issue #142 criteria 1 to 3 stay unmet: no live rotation exercise, executed signed
+  review or Azure Monitor alert evaluation. No regulatory snapshot changed.
 ## [2026-11-01] verify | Resident sensor gauges and assistant re-verified on main (Refs #466)
 
 * Re-ran the resident core and api suites (99 tests, 1 opt-in skip), ruff and mypy

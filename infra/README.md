@@ -1378,22 +1378,26 @@ Secrets are listed in [secret-inventory.json](secret-inventory.json) with an own
 
 | Secret | Rotation interval | Expiry alert | Owner |
 | --- | --- | --- | --- |
-| `entra-client-secret` | 180 days | 30 days | Platform operator, named person open |
-| `entra-token-store-sas` | 1 day (renewal job) | 3 days | Platform operator, named person open |
+| `entra-client-secret` | 180 days | 30 days | Juan Manuel Servera (repository-recorded owner; confirm or delegate) |
+| `entra-token-store-sas` | 1 day (renewal job) | 3 days | Juan Manuel Servera (as above) |
+| `resident-demo-password-verifier` | 30 days | 7 days | Juan Manuel Servera (as above) |
+| `resident-demo-session-key` | 30 days | 7 days | Juan Manuel Servera (as above) |
+
+A test requires every vault secret declared in `resident-demo.bicep` and `containerapps.bicep` to appear in the inventory with an owner.
 
 Expiry alerting: the vault diagnostic setting sends all logs to Log Analytics, and `modules/keyvault.bicep` adds a scheduled query alert on `SecretNearExpiryEventGridNotification` and `SecretExpiredEventGridNotification` (logged whether or not an Event Grid subscription exists) routed to the operations action group. A second alert fires on repeated 401/403 data-plane results. Every secret must carry an `--expires` date or the alert cannot fire; `check` reports secrets with no expiry.
 
 ### Rotate the Entra client secret
 
-Run `secret_lifecycle.py rotation-plan --vault <vault> --app-id <id>`. The order gives no downtime: append a new app credential (the old stays valid), write it as a new version of `entra-client-secret` with an expiry, let the versionless Container Apps reference refresh (up to 30 minutes) or restart the active revision, verify sign-in, then delete the old credential. Do not delete first. The repeatable scripted step is `create-api-app-registration.sh -v <vault>`; add an `--end-date` when setting the secret.
+Run `secret_lifecycle.py rotation-plan --vault <vault> --app-id <id>`; `secret_lifecycle.py rotation-simulate` runs an offline model of the same order and exits non-zero if sign-in would fail at any step (tests also show that deleting the old credential first, or before the app refreshes, fails). The model proves the ordering only, not a live outage-free exercise. The order gives no downtime: append a new app credential (the old stays valid), write it as a new version of `entra-client-secret` with an expiry, let the versionless Container Apps reference refresh (up to 30 minutes) or restart the active revision, verify sign-in, then delete the old credential. Do not delete first. The repeatable scripted step is `create-api-app-registration.sh -v <vault>`; add an `--end-date` when setting the secret.
 
 ### Access review
 
-Quarterly (`reviewIntervalDays` 90), export `az role assignment list --scope <vault id> --include-inherited -o json` and run `secret_lifecycle.py review --assignments roles.json --reviewer <name>`. A named human sets each pending decision to keep or remove and the signed record is kept with the operations evidence. Owner alone gives no data-plane access.
+Quarterly (`reviewIntervalDays` 90), export `az role assignment list --scope <vault id> --include-inherited -o json` and run `secret_lifecycle.py review --assignments roles.json --reviewer <name>`. A named human sets each pending decision to keep or remove and the signed record is kept with the operations evidence. `secret_lifecycle.py review-status --record review.json` exits non-zero while any decision is pending, no reviewer is named or `nextReviewDue` has passed, so a scheduled run can flag a missing or stale review. Owner alone gives no data-plane access.
 
 ### Open items
 
-* Named owners for each secret and for the review.
+* Owner confirmation (or delegation) for each secret and for the review.
 * A live no-downtime rotation exercise in the test environment; only the ordering and checks are tested offline.
 * Confirmation after deployment that the alert rules evaluate in Azure Monitor (not verified here; the template builds with `az bicep build`).
 * Scheduling the review and `check` runs (for example a calendar task or pipeline) is an owner choice.
