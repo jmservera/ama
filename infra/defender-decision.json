@@ -12,12 +12,14 @@
     "enableDefenderPlans": false,
     "plans": ["StorageAccounts", "SqlServers", "KeyVaults", "Containers"],
     "billableInventory": {
-      "StorageAccounts": 2,
+      "StorageAccounts": 1,
+      "StorageAccountsOptionalTokenStore": 1,
       "SqlServers": 1,
       "KeyVaults": 1,
       "ContainerRegistries": 1,
       "ContainerAppsEnvironments": 1
     },
+    "inventoryProfile": "Default profile: enableEntraTokenStore=false (infra/main.bicep), so one storage account is deployed. The optional token-store account (authTokenStore.bicep) adds one only when enableEntraTokenStore=true. Quantities are the default-profile deployment count, not an approved billable quantity.",
     "inventorySource": "infra/modules/storage.bicep, authTokenStore.bicep, sql.bicep, keyvault.bicep, registry.bicep, containerapps.bicep",
     "unitPrices": "Not retrieved: the Azure pricing page renders prices dynamically on 2026-11-01. Confirm in the Azure pricing calculator for the subscription offer.",
     "monthlyCost": "Not estimated, not approved, not zero",
