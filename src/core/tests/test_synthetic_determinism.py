@@ -93,11 +93,20 @@ class SyntheticDeterminismTests(unittest.TestCase):
                         count += 1
             self.assertEqual(manifest["rows"], count)
 
+    def test_every_scale_record_is_labelled_synthetic(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            sf.write(Path(tmp), n=12, per_home=3)
+            expected_counts = (("homes.jsonl", 12), ("households.jsonl", 12), ("events.jsonl", 36))
+            for name, expected in expected_counts:
+                rows = [json.loads(line) for line in (Path(tmp) / name).read_text().splitlines()]
+                self.assertEqual(len(rows), expected, name)
+                self.assertTrue(all(row["is_synthetic"] is True for row in rows), name)
+
     def test_versioned_payload_goldens(self) -> None:
         expected = {
             "scale": {
-                "events.jsonl": "32157fc81abf5c9d6a12dfe564283ec1f067736ea6cf1f1f5864e5cf64e70e60",
-                "homes.jsonl": "7a40714ae50da64be9733c4fa0a39e1c8db71acdac31996b449f42feb907763f",
+                "events.jsonl": "7e088bd0f583667169dff5712c38fc0469c66de611ee739b38e696b8dbd1b658",
+                "homes.jsonl": "7167ce517ffac495d7f2457d11e787e395ba79051df8f77ec33a0859e8f478d4",
                 "households.jsonl": (
                     "12ccc7a2ad73f235748ee7f005547e9a7fc684f604a1b1b319776ad47e02cfea"
                 ),
