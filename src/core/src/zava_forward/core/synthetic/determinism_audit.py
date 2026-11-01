@@ -9,9 +9,11 @@ import contextlib
 import csv
 import io
 import json
+import re
 import sys
 import tempfile
 from collections.abc import Callable, Sequence
+from datetime import timedelta
 from pathlib import Path
 
 from zava_forward.core.synthetic import (
@@ -23,6 +25,7 @@ from zava_forward.core.synthetic import (
 
 SEED = 7
 AS_OF = "2026-10-15"
+REVISION = re.compile(r"^sha256:[0-9a-f]{64}$")
 UNAVAILABLE = {
     "stock-register": (
         "Original private stock register generator and pinned OSM inputs are not in the "
@@ -74,6 +77,18 @@ def _snapshot(root: Path) -> dict[str, bytes]:
     }
 
 
+def _window(name: str) -> dict[str, str]:
+    if name == "sensor-scenarios":
+        start = sensor_scenarios.START
+        end = start + timedelta(days=sensor_scenarios.DAYS)
+        return {
+            "basis": "intrinsic",
+            "start": start.date().isoformat(),
+            "end": end.date().isoformat(),
+        }
+    return {"basis": "as_of", "as_of": AS_OF}
+
+
 def _check(name: str, run: Callable[[Path], Path]) -> dict[str, object]:
     with tempfile.TemporaryDirectory() as tmp:
         roots = [Path(tmp) / "one", Path(tmp) / "two"]
@@ -86,12 +101,16 @@ def _check(name: str, run: Callable[[Path], Path]) -> dict[str, object]:
         for key, ok in (
             ("seed", manifest.get("seed") == SEED),
             ("version", bool(manifest.get("version"))),
-            ("generator_revision", isinstance(revision, str) and revision.startswith("sha256:")),
+            (
+                "generator_revision",
+                isinstance(revision, str) and bool(REVISION.fullmatch(revision)),
+            ),
         )
         if not ok
     ]
     return {
         "generator": name,
+        "window": _window(name),
         "status": "PASS" if identical and not missing else "FAIL",
         "byte_identical": identical,
         "manifest_missing": missing,
@@ -105,6 +124,7 @@ def audit() -> dict[str, object]:
     return {
         "seed": SEED,
         "as_of": AS_OF,
+        "as_of_applies_to": "results with window.basis as_of; others report their own window",
         "results": results,
         "unavailable": dict(UNAVAILABLE),
         "all_available_pass": all(r["status"] == "PASS" for r in results),
