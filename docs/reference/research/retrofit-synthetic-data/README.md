@@ -125,7 +125,7 @@ under accepted ADR 0006. New executable work belongs in `src/`, not `mvp/`.
 | `generate_pack.py` (public CSV pack) | `--seed` (omitted draws a random seed, so always pass it) and `--as-of` (defaults to the extract date 2026-09-30; sets `generated_at`, never the clock) | `seed`, `version`, `generated_at`, `as_of`, `generator_revision`, per-file `file_sha256` in `manifest.json` | `test_pack_generator_is_byte_deterministic_with_manifest` |
 | Stock fabric (`zava_forward.core.synthetic.stock_fabric`, seed 4820260930) and EPC (`zf_stock_epc.py`, seed 4820261015) | `--seed` and register CSV; fabric CLI also takes optional `--cases` and strict `--as-of` label (unknown when omitted); neither uses the clock | `seed`, `version`, `generator_revision` in each summary JSON; core CLI adds payload hashes, nullable `as_of` and exact consumed `input_sha256` for register/optional cases; full source SHA-256, support retains 16-hex revisions covering moved dependencies | `test_stock_fabric.py` and `test_stock_fabric_and_epc_generators_are_byte_deterministic_with_revision` |
 | Stock register (seed 4820260930, 60000 homes) | Seed recorded in `private-stock-manifest.json` | Seed, version, generated date only | None: the register generator is not in the repository (it samples real OpenStreetMap anchors) |
-| Wholly fictional stock-scale fixture (not the private stock register) | `--seed`, `--as-of` snapshot label, `--homes`, `--events-per-home`; events remain calendar-year 2026 | `seed`, `version` 1.2.0, `as_of`, dependency-aware `generator_revision`, per-file `file_sha256` | `src/core/tests/test_synthetic_determinism.py`: all files, changed seed, historical payload hashes |
+| Wholly fictional stock-scale fixture (not the private stock register) | `--seed`, `--as-of` snapshot label, `--homes`, `--events-per-home`; events remain calendar-year 2026 | `seed`, `version` 1.3.0, `as_of`, dependency-aware `generator_revision`, per-file `file_sha256` | `src/core/tests/test_synthetic_determinism.py`: all files, changed seed, historical payload hashes |
 | Sensor backfill (labelled synthetic climate, not device evidence) | `--seed`, `--as-of` exclusive UTC end, `--days`, `--cadence`, `--homes`; fixed recorded stock seed | `seed`, `version` sensor-backfill-v3, `as_of`, UTC start/end, dependency-aware `generator_revision`, per-file `file_sha256` including estimate and register | Same src test file: all files/multiple shards, changed seed/date, exact window, estimate propagation, versioned payload goldens |
 
 On 2026-10-27, #179's intentional indoor projection v2 correction advances
@@ -253,6 +253,15 @@ byte identity and that each manifest records `seed`, `version` and a
 original private stock register generator as unavailable, so it does not
 prove that part of the criteria. The sensor scenarios manifest now also
 records `version`. Test: `src/core/tests/test_determinism_audit.py`.
+
+The audit also replays the public pack generator (`generate_pack.py`, seed
+1341953496) and the stock EPC generator (`zf_stock_epc.py`) from
+`support/synthetic-data/retrofit-flow/zava-forward-year-one/generator`, using a
+fictional eight-home register in a temporary directory. Their manifests carry
+16 hex character source-hash revisions, which the audit accepts alongside the
+64 character form. When the support directory is absent they are listed as
+unavailable rather than passed. The original stock register generator is still
+absent, so criteria 1 and 2 remain unmet overall.
 
 ### Offline acceptance audit (2026-10-16, Refs #176)
 
@@ -664,12 +673,15 @@ The unchanged merged v1.2.0 baseline has 13 routed needs: two covered, eleven
 partial, none missing. This checks route shape, coverage/closure consistency
 and declaration presence, not issue existence, child delivery, owner scope
 decisions or generated-record conformity.
-The scale fixture's homes/events carry a manifest-level synthetic label,
-not per-record `is_synthetic=true`; the universal convention above is therefore
-an intended rule with an unevidenced existing-output gap, not a proven result.
+The scale fixture (v1.3.0, 2026-11-01) now sets `is_synthetic=true` on every
+home, household and event record, in addition to the manifest-level
+`source_type="SYNTHETIC"`; `test_every_scale_record_is_labelled_synthetic`
+checks all three files. v1.2.0 homes and events lacked the field, so their
+bytes and pinned goldens changed. Records in the private SN-01 register and
+other child-story outputs are not assessed here.
 No second generator, private output or owner deferral is introduced.
 
-Open items: owner confirmation of the mapping, and whether regenerating the
+Open items: owner confirmation of the mapping and deferrals, and whether regenerating the
 private SN-01 register from a committed generator sits in #168 or is deferred.
 No deferral is recorded yet.
 
