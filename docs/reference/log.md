@@ -9235,3 +9235,12 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   listing the merged M1 to M6 and retirement pull requests and the current
   tree check. The migration-order criterion stays unmet pending an owner
   decision.
+
+## [2026-11-01] verify | Resident sensors and assistant focused re-check (Refs #466)
+
+* Re-ran resident core (355 tests) and api (167 tests) suites, sensor tests (144),
+  ruff, ruff format, mypy and node --check on main 51657d30: all passed, skips are
+  opt-in SQL and browser groups. No source change was needed.
+* Issue #466 criterion 1 (owner confirms scope and priority) stays unmet; manual
+  assistive-technology acceptance and live checks remain owner-run. No regulatory
+  snapshot changed.
