@@ -64,6 +64,7 @@ class ChallengeRegister:
         next_update: str,
         explanations: Iterable[Mapping[str, Any]],
         extra: Mapping[str, Any],
+        hazard_concern: bool = False,
     ) -> Record:
         kind = subject.get("kind")
         if kind not in SUBJECT_KINDS:
@@ -99,6 +100,9 @@ class ChallengeRegister:
             "history": [{"status": "received", "note": "Challenge recorded."}],
             **extra,
         }
+        if hazard_concern:
+            # Immediate human referral; the existing hazard process and its clock stay untouched.
+            rec["hazard_referral"] = {"to": rec["owner"], "status": "referred_on_receipt"}
         self.challenges[cid] = rec
         return deepcopy(rec)
 
@@ -110,9 +114,18 @@ class ChallengeRegister:
         owner: str,
         next_update: str,
         explanations: Iterable[Mapping[str, Any]] = (),
+        hazard_concern: bool = False,
     ) -> Record:
         return self._record(
-            "digital", subject, decision_ref, statement, owner, next_update, explanations, {}
+            "digital",
+            subject,
+            decision_ref,
+            statement,
+            owner,
+            next_update,
+            explanations,
+            {},
+            hazard_concern,
         )
 
     def record_staff(
@@ -125,6 +138,7 @@ class ChallengeRegister:
         owner: str,
         next_update: str,
         explanations: Iterable[Mapping[str, Any]] = (),
+        hazard_concern: bool = False,
     ) -> Record:
         if channel not in NON_DIGITAL_CHANNELS:
             raise ValueError("Channel must be phone, in_person, paper or assisted_visit.")
@@ -138,6 +152,7 @@ class ChallengeRegister:
             next_update,
             explanations,
             extra,
+            hazard_concern,
         )
 
     def _get(self, cid: str) -> Record:
@@ -179,6 +194,14 @@ class ChallengeRegister:
                     "prior_version_preserved": True,
                 }
         return deepcopy(rec)
+
+    def hazard_referrals(self) -> list[Record]:
+        """Open challenges flagged as a hazard concern, for same-day human attention."""
+        return [
+            deepcopy(r)
+            for r in self.challenges.values()
+            if "hazard_referral" in r and r["status"] not in RESOLVED
+        ]
 
     def view(self, cid: str) -> Record:
         """Person-facing view: only permitted explanations, plus owner, next update, resolution."""

@@ -171,5 +171,34 @@ class Robustness(unittest.TestCase):
         self.assertEqual({k: reg.challenges[k] for k in keep}, keep)
 
 
+class HazardConcern(unittest.TestCase):
+    def test_hazard_concern_is_referred_on_receipt_without_clock_or_sanction(self) -> None:
+        reg = ChallengeRegister(GRAPH)
+        args = (SUBJECT, "DEC-1", "Mould is making us ill.", "Pat Owner", "2026-11-10")
+        urgent = reg.record_digital(*args, hazard_concern=True)
+        routine = reg.record_digital(*args)
+        self.assertEqual(urgent["hazard_referral"]["to"], "Pat Owner")
+        self.assertNotIn("hazard_referral", routine)
+        self.assertEqual([r["id"] for r in reg.hazard_referrals()], [urgent["id"]])
+        for key in ("hazard_clock", "sanction", "refusal", "consent"):
+            self.assertNotIn(key, urgent)
+
+    def test_staff_route_and_resolution_close_referral_listing(self) -> None:
+        reg = ChallengeRegister(GRAPH)
+        rec = reg.record_staff(
+            "Sam Staff",
+            "phone",
+            SUBJECT,
+            "DEC-1",
+            "Gas smell.",
+            "Pat Owner",
+            "2026-11-10",
+            hazard_concern=True,
+        )
+        self.assertEqual(len(reg.hazard_referrals()), 1)
+        reg.resolve(rec["id"], "Pat Owner", "upheld", "Referred and checked.")
+        self.assertEqual(reg.hazard_referrals(), [])
+
+
 if __name__ == "__main__":
     unittest.main()
