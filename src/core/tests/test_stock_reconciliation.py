@@ -155,6 +155,29 @@ class StockReconciliation(unittest.TestCase):
             with self.assertRaises(PermissionError):
                 store.stock_queue(self.users["rc1"])
 
+    def test_queue_orders_mixed_iso_date_formats_chronologically(self) -> None:
+        def home(case_id: str, *dates: str) -> dict[str, Any]:
+            return dict(
+                id=case_id,
+                home=dict(address="1 Test Road", town="Testville"),
+                stock_reconciliation=[
+                    dict(
+                        id="SQ-1",
+                        field="epc",
+                        query_owner=dict(name="Sam"),
+                        left=dict(date=dates[0]),
+                        right=dict(date=dates[1]),
+                    )
+                ],
+            )
+
+        cases = [home("ZF-A", "20260101", "2026-03-01"), home("ZF-B", "2026-02-01", "2026-04-01")]
+        rows = stock.queue_rows(cases)
+        self.assertEqual([r["id"] for r in rows], ["ZF-A", "ZF-B"])
+        self.assertEqual(rows[0]["oldest_source_date"], "2026-01-01")
+        self.assertEqual(stock.queue_rows(cases[::-1])[0]["id"], "ZF-A")
+        self.assertEqual(cases[0]["stock_reconciliation"][0]["left"]["date"], "20260101")
+
     def test_invalid_comparisons_are_atomic_and_cannot_bind_forged_identity(self) -> None:
         mutations: list[dict[str, Any]] = [
             {"field": "priority_support"},

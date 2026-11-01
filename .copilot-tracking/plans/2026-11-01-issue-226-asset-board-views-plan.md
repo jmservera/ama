@@ -6,3 +6,7 @@
 4. Commit, push, PR (Refs #226 unless all criteria proven).
 
 Critique (single pass, self): keep read-only; do not infer eligibility; cost shows Unknown unless server supplies ratio with evidence label and quality Pass. Accepted. Reject adding a new role (not required).
+
+## Correction cycle 2 (PR 710)
+
+Parse dates in `queue_rows` only, normalise output, add cross-home mixed-format regression. Critique (single pass, self): compatible, applied directly.

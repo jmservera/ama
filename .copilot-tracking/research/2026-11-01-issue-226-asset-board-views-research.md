@@ -20,3 +20,7 @@ Task: issue-226-asset-board-views. Disposition: executed (focused). Planning Rea
 ## Not in scope
 
 Server changes, observed validation (#155), investment approval, real budgets.
+
+## Correction cycle 2 (PR 710)
+
+Evidence: `_assertion` validates but preserves the spelling of basic and extended ISO dates, so string sorting in `queue_rows` misorders them. Other research reused.

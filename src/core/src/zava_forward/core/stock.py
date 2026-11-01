@@ -192,7 +192,11 @@ def queue_rows(cases: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
         ]
         if not open_queries:
             continue
-        dates = sorted(str(side["date"]) for q in open_queries for side in (q["left"], q["right"]))
+        dates = sorted(
+            date.fromisoformat(str(side["date"]))
+            for q in open_queries
+            for side in (q["left"], q["right"])
+        )
         owners = sorted(
             {str(q["query_owner"]["name"]) for q in open_queries if q.get("query_owner")}
         )
@@ -203,7 +207,7 @@ def queue_rows(cases: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
                 town=case["home"]["town"],
                 open_queries=len(open_queries),
                 fields=sorted({str(q["field"]) for q in open_queries}),
-                oldest_source_date=dates[0],
+                oldest_source_date=dates[0].isoformat(),
                 owners=owners,
             )
         )
