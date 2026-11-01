@@ -5,8 +5,7 @@ import sqlite3
 import unittest
 from typing import Any
 
-from tests.release_support import fixture
-
+from release_support import fixture
 from zava_forward.core import ai_registry, assistants, rai_release
 from zava_forward.core import assistant_release as rel
 
