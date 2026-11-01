@@ -24,7 +24,7 @@ page ms.date 2026-05-18, updated 2026-06-05). First 20,000 characters read; the 
 * Prompts, completions and embeddings are not available to other customers or OpenAI, and are not used to improve models without permission.
 * Models are stateless. Inference is processed in the customer-specified geography, possibly across regions within it; Global and DataZone deployment types may process outside it, while data at rest stays in the designated geography.
 * Stateful features (Responses API, Assistants threads, stored completions) persist data in the customer's resource, encrypted at rest, customer-deletable.
-* Abuse monitoring: samples of prompts and completions may be stored and human-reviewed by authorised Microsoft staff (EEA staff for EEA deployments) within the resource geography; only approved customers may modify it. Verifiable through the `ContentLogging` capability.
+* Abuse monitoring: samples of prompts and completions may be stored and stored within the resource geography and human-reviewed by authorised Microsoft staff (documented EEA-staff guarantee applies to EEA resources only; reviewer location for uksouth unverified); only approved customers may modify it. Verifiable through the `ContentLogging` capability.
 * Processing is governed by the Microsoft Products and Services Data Protection Addendum.
 * Previews may differ.
 
