@@ -9016,6 +9016,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   of PR size and the 19-24 October slowdown cause are unmeasured. No
   workflow, setting, gate or source change was made.
 
+## [2026-11-01] implementation | Regulatory UX contrast incompletes resolved (Refs #215)
+
+* Updated the [API UX guide](../../src/api/README.md#regulatory-alert-and-home-chat-ux-215):
+  the eight axe `color-contrast` incompletes were a textarea border-box
+  artefact; fixed in CSS and now asserted by the browser harness (21 states,
+  zero violations, zero incompletes). No manual or assistive-technology
+  assessment and no staff comprehension study was run; those criteria stay unmet.
 ## [2026-11-01] update | Synthetic determinism replay audit (Refs #176)
 
 * Added a one-command replay audit for the in-repo synthetic generators and a
@@ -9203,6 +9210,17 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   browser groups not run. The PERF-440 benchmark outlier was not reproduced
   and is filed as #687. No regulatory snapshot changed; no criterion ticked.
 
+## [2026-11-01] update | Resident authority end (#521)
+
+* Documented coordinator steps for the live resident authority extension in infra/README.md and moved the browser-check fixture to the shared authority end (Refs #521). No live apply.
+## [2026-11-01] update | IoT publisher credential hygiene tests (#184)
+
+* Added constructed local tests (repository text scan, fake-SDK log, truth
+  record, payload and failure leak checks) and updated the #184 row in the
+  IoT research plan. Criterion 1 and actual credential, Hub telemetry and
+  live evidence remain unmet and owner or Azure gated. No regulatory snapshot
+  changed.
+
 ## [2026-11-01] update | Local handover demo (#188)
 
 * Added a runnable local demo and test for the live-versus-backfill handover
@@ -9283,3 +9301,31 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   final head) stay unmet; the per-message review exception stays OFF pending
   OD-53. Evidence is in
   `.copilot-tracking/changes/2026-11-01/issue-441-recheck-changes.md`.
+
+## [2026-11-01] update | Third stabilization checkpoint on main b18f7f98 (Refs #440)
+
+* Appended a focused-tier checkpoint to `docs/architecture/cutover-evidence-pack.md`:
+  five package suites, ruff, format and mypy passed on the pinned head; heavy
+  groups stay implemented-unverified; recommendation continue.
+* #440 criteria 7 (open #687/#720) and 8 (host and behavior evidence) remain unmet.
+
+## [2026-11-01] update | Atlas screen trace status refresh (#233)
+
+* Refreshed `research/ux/atlas-screen-trace.md` so nine of twelve screens are
+  marked as registered on main; three remain in unmerged pull requests. Updated
+  the index row and made the checker apply each status to its own screen group.
+* Findings stay hypotheses until #155. No accessibility acceptance is claimed.
+
+## 2026-11-01 (atlas trace labels after merge of main)
+
+* Updated `research/ux/atlas-screen-trace.md` so `programme-queue`,
+  `technical-queue` and `quality-queue` are labelled as registered on main
+  (PR 662 and PR 656), restoring the atlas trace check that main's merges broke.
+* No accessibility acceptance is claimed.
+
+## [2026-11-01] update | Issue 466 remaining-criteria check (r4)
+
+* Re-ran focused resident sensor and assistant tests, ruff and mypy on main;
+  criteria 2 to 6 still hold. Criterion 1 (owner confirms scope and priority)
+  stays unmet. Evidence is under `.copilot-tracking/` (r4 artifacts). No
+  accessibility acceptance is claimed.

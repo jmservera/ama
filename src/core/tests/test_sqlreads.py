@@ -1,4 +1,5 @@
 """SqlStore list reads answered by SQL: parity with the in-memory store, keyset paging, migration, query plans, 60,000 timing."""
+import contextlib
 import copy
 import json
 import os
@@ -231,6 +232,22 @@ def _burn(stop_at):
         pass
 
 
+def _churn_io(directory, stop_at, ready):
+    """Write and fsync 8 MiB blocks until stop_at, to load the disk the benchmark shares.
+
+    Sets ready after the first successful fsync; any IO error exits non-zero.
+    """
+    block = os.urandom(8 << 20)
+    path = os.path.join(directory, f"io-{os.getpid()}.bin")
+    while time.time() < stop_at:
+        with open(path, "wb") as f:
+            f.write(block)
+            f.flush()
+            os.fsync(f.fileno())
+        ready.set()
+    os.unlink(path)
+
+
 class Scale(unittest.TestCase):
     N = 60000
 
@@ -280,7 +297,7 @@ class Scale(unittest.TestCase):
                     self.assertLess(ms, 1500)
 
     def test_sql_reads_at_60000(self):
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory() as tmp, contextlib.ExitStack() as stack:
             p = Path(tmp) / "zavaforward.json"
             p.write_text(json.dumps(dataset(make_cases(self.N, seed=5))))
             s = SqlStore(str(p), os.path.join(tmp, "pw.sqlite"))
@@ -295,14 +312,46 @@ class Scale(unittest.TestCase):
                 for _ in range(burners):
                     pr = multiprocessing.Process(target=_burn, args=(stop_at,), daemon=True)
                     pr.start()
-                    self.addCleanup(lambda pr=pr: (pr.terminate(), pr.join()))
+                    stack.callback(lambda pr=pr: (pr.terminate(), pr.join()))
                 print(f"[timing] contention: {burners} CPU burner processes", flush=True)
+
+            io_writers = int(os.environ.get("ZF_BENCH_IO_CONTENTION", "0"))
+            writers = []
+
+            writer_failures = []
+
+            def check_writers():
+                for pr in writers:
+                    if not pr.is_alive():
+                        writer_failures.append(f"IO writer exited early (exitcode {pr.exitcode}); "
+                                               "contention run is not valid evidence")
+
+            def fail_on_writers(context):
+                if writer_failures:
+                    self.fail(f"{writer_failures[0]}; timings: {context}")
+
+            if io_writers:
+                import multiprocessing
+                stop_at = time.time() + 120
+                for _ in range(io_writers):
+                    ready = multiprocessing.Event()
+                    pr = multiprocessing.Process(target=_churn_io, args=(tmp, stop_at, ready), daemon=True)
+                    pr.start()
+                    stack.callback(lambda pr=pr: (pr.terminate(), pr.join()))
+                    writers.append(pr)
+                    deadline = time.time() + 60
+                    while not ready.wait(0.1):
+                        if not pr.is_alive() or time.time() > deadline:
+                            self.fail("IO writer did not complete a successful fsync "
+                                      f"(exitcode {pr.exitcode}); contention run is not valid")
+                print(f"[timing] contention: {io_writers} fsync writer processes", flush=True)
 
             def timed(label, **kw):
                 before = load_sample()
                 t = time.perf_counter()
                 d = s.page_cases(**kw)
                 ms = (time.perf_counter() - t) * 1000
+                check_writers()
                 timings.append(f"{label}: {ms:.0f} ms ({before})")
                 print(f"[timing] SQL {label}, {self.N:,} cases: {ms:.0f} ms ({d['total']} matches; {before})")
                 return d, ms
@@ -317,10 +366,12 @@ class Scale(unittest.TestCase):
             t = time.perf_counter()
             s.counts(pam)
             print(f"[timing] SQL header counts, {self.N:,} cases: {(time.perf_counter() - t) * 1000:.0f} ms")
+            check_writers()
+            context = "; ".join(timings) + f"; after: {load_sample()}"
+            fail_on_writers(context)
             self.assertEqual(first["ranked_total"], sum(not c["closed"] for c in s.cases.values()))
             self.assertEqual(first["items"][0]["rank"], 1)
             self.assertEqual(deep["items"][0]["rank"], 51)
-            context = "; ".join(timings) + f"; after: {load_sample()}"
             for ms in (ms1, ms2, ms3, ms4, ms5, ms6, ms7):
                 self.assertLess(ms, 1500, f"timings: {context}")
             order = [e["id"] for e in ranking.rank([c for c in s.cases.values() if not c["closed"]])]

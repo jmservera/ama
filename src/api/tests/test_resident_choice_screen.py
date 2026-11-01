@@ -79,6 +79,39 @@ CASE = {
 }
 
 
+QUEUE_SCRIPT = r"""
+const fs = require("node:fs");
+const vm = require("node:vm");
+const host = fs.readFileSync(process.argv[1] + "/role-screens.js", "utf8");
+const cases = JSON.parse(process.argv[2]);
+const context = vm.createContext({
+  URLSearchParams, Intl, AbortController, Date,
+  routeController: new AbortController(), me: {user: {role: "Resident Liaison Officer"}},
+  api: async (url) => {
+    const id = decodeURIComponent(url.split("/").pop());
+    if (!cases[id]) throw new Error("denied");
+    return cases[id];
+  },
+  h: (tag, attrs, ...kids) => ({tag, attrs, kids: kids.flat(Infinity).filter(
+    kid => kid !== false && kid !== null && kid !== undefined)})
+});
+vm.runInContext(host + "\n;globalThis.__s = roleScreens.get('resident-choice');", context);
+context.__s.summarise([{id: "C-1"}, {id: "C-X"}], new AbortController().signal)
+  .then(tree => console.log(JSON.stringify(tree)));
+"""
+
+
+def run_queue(cases: Mapping[str, object]) -> object:
+    result = subprocess.run(
+        ["node", "-e", QUEUE_SCRIPT, str(WEB), json.dumps(cases)],
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    return json.loads(result.stdout)
+
+
 def run(case: Mapping[str, object]) -> dict[str, object]:
     result = subprocess.run(
         ["node", "-e", SCRIPT, str(WEB), json.dumps(case)],
@@ -193,6 +226,70 @@ class ResidentChoiceScreen(unittest.TestCase):
         self.assertIn("Paused (current answer Waiting), scope S-9, revision 2, design 3", text)
         self.assertIn("Not before spring", text)
 
+    def test_queue_shows_stop_state_scope_and_review_for_stale_and_waiting(self) -> None:
+        stale = {
+            "id": "C-3",
+            "measure_decisions": [
+                {
+                    "measure": "Solar PV",
+                    "status": "Not recorded",
+                    "readiness": "Needs human review",
+                    "review": {"status": "Needs human review", "decision_version": 1},
+                    "versions": [
+                        {
+                            "version": 1,
+                            "status": "Withdrawn",
+                            "scope": "S-9",
+                            "context_revision": 2,
+                            "design_version": 3,
+                        }
+                    ],
+                }
+            ],
+        }
+        waiting = {
+            "id": "C-4",
+            "measure_decisions": [
+                {
+                    "measure": "Solar PV",
+                    "status": "Waiting",
+                    "readiness": "Needs human review",
+                    "review": {"status": "Needs human review", "decision_version": 1},
+                    "versions": [
+                        {
+                            "version": 1,
+                            "status": "Paused",
+                            "scope": "S-9",
+                            "context_revision": 2,
+                            "design_version": 3,
+                        },
+                        {
+                            "version": 2,
+                            "status": "Waiting",
+                            "scope": "S-11",
+                            "context_revision": 4,
+                            "design_version": 5,
+                        },
+                    ],
+                }
+            ],
+        }
+        stale_text = json.dumps(run_queue({"C-1": stale}))
+        waiting_text = json.dumps(run_queue({"C-1": waiting}))
+        self.assertIn(
+            "Solar PV: current Not recorded; latest recorded v1 Withdrawn (scope S-9", stale_text
+        )
+        self.assertIn(
+            "Solar PV: Withdrawn (current answer Not recorded) "
+            "(v1, scope S-9, revision 2, design 3), needs human review",
+            stale_text,
+        )
+        self.assertIn(
+            "Solar PV: Paused (current answer Waiting) "
+            "(v1, scope S-9, revision 2, design 3), needs human review",
+            waiting_text,
+        )
+
     def test_no_controls_and_no_contact(self) -> None:
         tree = run(CASE)["tree"]
         for control in ("button", "form", "input", "select", "textarea"):
@@ -204,6 +301,24 @@ class ResidentChoiceScreen(unittest.TestCase):
         self.assertIn("No records supplied", text)
         self.assertIn("No measure is currently paused or withdrawn", text)
         self.assertIn("No update commitment is recorded", text)
+
+    def test_queue_summary_is_read_only_and_marks_unavailable_homes(self) -> None:
+        tree = run_queue({"C-1": CASE})
+        text = json.dumps(tree)
+        for expected in (
+            "Choice and update commitments across this page of homes",
+            "Loft insulation: current Paused; latest recorded v2 Paused "
+            "(scope S-9, revision 2, design 3)",
+            "Solar PV: current Not recorded",
+            "Explain damp query",
+            "Owner One",
+            "SC-77",
+            "Unavailable. Open the home to check.",
+            "not a portfolio total",
+        ):
+            self.assertIn(expected, text)
+        for control in ("button", "form", "input", "select", "textarea", "a"):
+            self.assertNotIn(control, tags(tree))
 
 
 if __name__ == "__main__":

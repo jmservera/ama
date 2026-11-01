@@ -262,6 +262,41 @@ class QueueDefinitions(unittest.TestCase):
             ):
                 taskqueues.overdue_tasks(self.case, as_of=as_of, handoff=None)
 
+    def test_returned_work_exposes_sender_and_stays_held_for_restricted_roles(self) -> None:
+        self.case["returns"] = [
+            dict(
+                to_stage=self.case["stage"],
+                from_stage="Quality check",
+                reason="SENTINEL-REASON",
+                next_action="Fix it",
+                actor=dict(name="Quinn Inspector"),
+                at="2026-10-01T09:00:00+00:00",
+            )
+        ]
+        returned = evaluate(self.case)["returned"]
+        self.assertEqual(returned["sender"], "Quinn Inspector")
+        self.assertEqual(returned["reason"], "SENTINEL-REASON")
+        self.assertEqual(returned["from_stage"], "Quality check")
+        restricted = evaluate(self.case, reason_ok=False)
+        self.assertNotIn("SENTINEL", json.dumps(restricted))
+        self.assertEqual(restricted["returned"]["sender"], taskqueues.HELD)
+        pending = evaluate(self.case, handoff=dict(state="Offered"))
+        self.assertEqual(pending["returned"]["sender"], "Quinn Inspector")
+        self.assertIn("unowned", pending["queues"])
+        self.case["returns"][0].pop("actor")
+        self.case["returns"][0]["by"] = "Legacy Sender"
+        self.assertEqual(evaluate(self.case)["returned"]["sender"], "Legacy Sender")
+        self.case["returns"][0]["event_type"] = "advance"
+        self.assertIsNone(evaluate(self.case)["returned"])
+        self.case["returns"][0]["event_type"] = "reopen"
+        self.assertIsNone(evaluate(self.case)["returned"])
+        self.case["returns"][0].pop("event_type")
+        self.case["returns"][0]["reopened"] = True
+        self.assertIsNone(evaluate(self.case)["returned"])
+        self.case["returns"][0].pop("reopened")
+        handoff = evaluate(self.case, handoff=dict(state="Offered", from_name="Sam"))["handoff"]
+        self.assertEqual(handoff["sender"], "Sam")
+
     def test_projection_for_human_context_and_per_case_sources(self) -> None:
         self.case["returns"] = [
             dict(

@@ -5,7 +5,7 @@ loopback SQL Server whose sa password is in ZF_SQL_PASSWORD (port in ZF_SQL_PORT
 ZF_SQL_PORT=... ZF_SQL_PASSWORD=... python -m checks.resident_demo_browser_check
 
 It creates and drops its own database, uses a fake test password only and never reaches Azure.
-The SQL fixture authorization ends on November 1 independently of the application ceiling.
+The SQL fixture authorization shares the application authority end (February 1, 2027).
 The server runs with the real SQL view, the real HTTP app and the real __Host- cookies on the
 loopback origin, so a browser that refused those cookies would fail this check.
 """
@@ -34,7 +34,6 @@ if TYPE_CHECKING:
     from playwright.sync_api import BrowserContext, Page
 
 FAKE_PASSWORD = "FAKE-TEST-FIXTURE-ONLY-not-a-real-demo-password"
-SQL_AUTHORIZATION_END = datetime(2026, 11, 1, tzinfo=UTC)
 RESIDENTS = {
     "alice.demo@example.com": ("1 Alder Close", "Loft insulation"),
     "bob.demo@example.com": ("2 Birch Close", "Cavity wall insulation"),
@@ -111,7 +110,7 @@ def database() -> Iterator[str]:
                 " valid_to, revoked) VALUES (?, 'browser-check synthetic fixture', ?, ?, 0)",
                 f"SYN-{n}",
                 (datetime.now(UTC) - timedelta(days=1)).replace(tzinfo=None),
-                SQL_AUTHORIZATION_END.replace(tzinfo=None),
+                rs.AUTHORITY_END.replace(tzinfo=None),
             )
         yield name
     finally:
