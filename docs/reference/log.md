@@ -9385,3 +9385,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   criteria 2 to 6 still hold. Criterion 1 (owner confirms scope and priority)
   stays unmet. Evidence is under `.copilot-tracking/` (r4 artifacts). No
   accessibility acceptance is claimed.
+
+## [2026-11-01] update | Owner decisions D1 to D7 recorded
+
+* Recorded the owner's 2026-11-01 decisions on
+  `research/delivery-bottleneck-analysis-2026-10-31.md`: D1, D2, D4, D5 and D6
+  approved (D6 with change), D3 rejected, D7 unchanged. Recorded the #466 and
+  #163 owner-approved deferrals, which are not met criteria.
+* Applied D4 and D5 policy text in `.github/copilot-instructions.md` and the
+  backlog delivery coordinator agent. Workflow changes for D1 and D2 are in a
+  separate PR. No accessibility acceptance is claimed.

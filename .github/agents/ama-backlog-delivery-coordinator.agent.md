@@ -45,9 +45,12 @@ it. Independent issues continue. Blockers are:
   legal interpretation, resident consent, a financial commitment, or production
   access.
 * A missing credential, permission or tool the run cannot obtain.
-* A review finding still open after two correction cycles, a check that keeps
+* A blocking review finding (including a safety, privacy or accessibility
+  defect) still open after two correction cycles, a check that keeps
   failing for a reason the loop cannot fix, or a conflict whose intent cannot
-  be reconciled.
+  be reconciled. Non-blocking Copilot threads raised after two correction
+  cycles are not blockers; they become follow-up issues (step 6, owner
+  decision D5, 2026-11-01).
 * An issue that stays unclear after one backlog-manager refinement.
 
 For each blocker, comment once on the issue with the decision needed, who can
@@ -447,6 +450,9 @@ remains subject to the tracking retention policy.
    original RPI Review, and also review the open PRs of a wave
    together for contradictions between them. Send findings back to that
    issue's loop as commits on the same branch, up to two correction cycles.
+   After two correction cycles, new non-blocking Copilot threads become
+   follow-up issues and do not hold the PR; a blocking safety, privacy or
+   accessibility defect still stops the PR (owner decision D5, 2026-11-01).
    Do not mark review checkboxes.
 7. **Automerge through the gate.** Merge a PR only when all of these hold,
    verified by commands run now: every implementation dependency is merged
