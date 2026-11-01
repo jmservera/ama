@@ -126,7 +126,7 @@ const assetInputs = [
   ["Investment priority", "Asset owner to name the priority basis"],
   ["Cost forecast", "Finance owner to supply a dated forecast"],
   ["Benefit baseline", "Programme owner to supply a measured baseline"],
-  ["Phase gate evidence", "Programme manager to name the gate evidence"]
+  ["Phase check evidence", "Programme manager to name the evidence for the phase check"]
 ];
 function assetCost(report) {
   const m = report?.consumption;
@@ -151,7 +151,8 @@ registerRoleScreen({
     const signal = routeController.signal;
     const portfolio = await api("/api/cases?view=all&limit=1&offset=0", undefined, signal);
     const report = await api("/api/ai/report", undefined, signal).catch(() => null);
-    return { portfolio, report };
+    const queue = await api("/api/asset/stock-queue", undefined, signal).catch(() => null);
+    return { portfolio, report, queue };
   },
   render(c, extra) {
     const queries = c.stock_reconciliation || [];
@@ -160,6 +161,13 @@ registerRoleScreen({
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only reader view. It records no investment approval and changes no record. Budgets, priorities, forecasts and eligibility are Unknown unless a constructed fixture says so, and this page cannot confirm them. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only.`)),
+      screenPanel("Stock conflict queue across homes (portfolio scope, not this home)",
+        h("p", {}, "Homes with an open stock conflict, oldest source first. The order is source age only. It is not an investment priority, and no source is chosen as correct."),
+        extra?.queue
+          ? screenTable("Open stock conflicts by home", ["Home", "Open conflicts", "Fields in conflict", "Oldest source date", "Resolution owners", "Investment inputs"],
+            extra.queue.items.map((r) => [`${r.id}, ${r.address}, ${r.town}`, r.open_queries, (r.fields || []).join(", "), `${r.oldest_source_date}, ${assetAgeDays(r.oldest_source_date)}`,
+              (r.owners || []).join(", ") || "Unassigned", "Unknown. See missing investment inputs."]), 100)
+          : screenUnknown("The cross-home queue could not be loaded.", "Programme manager", "Reload, or open each home from the case queue")),
       screenPanel("Stock conflict comparison",
         screenTable("Stock source conflicts and source age",
           ["Query", "Field", "First source (value, ID, version, age)", "Compared source (value, ID, version, age)", "Status", "Resolution owner"],
@@ -174,8 +182,8 @@ registerRoleScreen({
       screenPanel("Missing investment inputs",
         screenTable("Investment inputs", ["Input", "State", "Resolution owner and action"],
           assetInputs.map(([name, action]) => [name, "Unknown", action]))),
-      screenPanel("Benefits and phase gate",
-        screenUnknown("No measured benefit or gate evidence is supplied for this home.", "Programme manager to name an owner", "Supply dated evidence before any gate is read as passed")),
+      screenPanel("Benefits and phase check",
+        screenUnknown("No measured benefit or phase check evidence is supplied for this home.", "Programme manager to name an owner", "Supply dated evidence before any phase check is read as passed")),
       screenPanel("Portfolio scope (separate from this home)",
         screenFields([["Cases permitted to your role", extra?.portfolio?.total],
           ["Meaning", "A role-scoped count, not a stock, budget or programme total"]])),
@@ -183,6 +191,64 @@ registerRoleScreen({
   }
 });
 
+const choiceRoles = ["Resident Liaison Officer", "Retrofit Coordinator", "Retrofit Programme Manager", "Programme Support Officer"];
+const choiceStop = new Set(["Paused", "Withdrawn"]);
+const choiceLatest = (m) => (m.versions || []).at(-1);
+const choiceBinding = (v) => `scope ${screenValue(v.scope)}, revision ${screenValue(v.context_revision)}, design ${screenValue(v.design_version)}`;
+const choiceStopVersion = (m) => {
+  if (m.review?.status !== "Needs human review") return null;
+  const v = (m.versions || []).find((x) => x.version === m.review.decision_version);
+  return v && choiceStop.has(v.status) ? v : null;
+};
+const choiceStopped = (m) => choiceStop.has(m.status) || choiceStopVersion(m) !== null;
+function choiceMeasure(m) {
+  const v = choiceLatest(m);
+  const ctx = m.context ? `scope ${screenValue(m.context.scope)}, revision ${screenValue(m.context.revision)}, design ${screenValue(m.context.design_version)}` : "Current scope not recorded";
+  return [m.measure, ctx, m.status,
+    v ? `v${v.version} ${v.status} (${choiceBinding(v)}), answered by ${screenValue(v.answered_by)}, recorded ${screenStamp(v.at)}${v.note ? `: ${v.note}` : ""}` : "None recorded",
+    screenValue(m.readiness)];
+}
+registerRoleScreen({
+  id: "resident-choice",
+  title: "Resident choice and update queue",
+  roles: choiceRoles,
+  render(c) {
+    const measures = c.measure_decisions || [];
+    const stopped = measures.filter(choiceStopped);
+    const update = c.resident_update;
+    const requests = c.service_requests || [];
+    return h("div", {},
+      screenPanel("Evidence boundary",
+        h("p", {}, "Read-only view. No message, call or letter is sent and no record changes here. Record supplied answers in the case workspace. Resident-facing screens are designed separately. Source: desk research, not observed behaviour."),
+        h("p", {}, `Home scope: ${c.id} only.`)),
+      screenPanel("Choice for each measure",
+        h("p", {}, "Each answer belongs to one measure and one scope version. Not recorded means no answer is known. Contact or access is never read as a yes."),
+        screenTable("Measure choices by version",
+          ["Measure", "Scope version", "Current answer", "Latest recorded answer", "Readiness"],
+          measures.map(choiceMeasure))),
+      screenPanel("Paused or withdrawn by the resident",
+        h("p", {}, "A pause or withdrawal is the resident's decision about one measure. It is not a contact attempt, a missed visit or an access need."),
+        stopped.length ? screenTable("Measures paused or withdrawn",
+          ["Measure", "State and scope answered", "In their words", "Restart needs"],
+          stopped.map((m) => {
+            const v = choiceStopVersion(m) || choiceLatest(m);
+            const state = choiceStop.has(m.status) && v === choiceLatest(m) ? m.status : `${v.status} (current answer ${m.status})`;
+            return [m.measure, v ? `${state}, ${choiceBinding(v)}` : state, v?.note, "Human review before any restart"];
+          }))
+          : h("p", { class: "empty" }, "No measure is currently paused or withdrawn in the recorded answers.")),
+      screenPanel("Linked update commitment",
+        update ? screenFields([
+          ["Status", update.status], ["Purpose or linked issue", update.purpose],
+          ["Owner", screenPerson(update.owner_identity || update.owner)], ["Due", screenStamp(update.due_at)],
+          ["Basis for due date", update.basis], ["Safe route reference", update.safe_contact_ref],
+          ["Version", update.version], ["Meaning", "A commitment is not a message. Nothing is sent or marked received here."]])
+          : screenUnknown("No update commitment is recorded for this home.", "Case owner or resident-workflow manager", "Record a commitment in the case workspace")),
+      screenPanel("Service requests and access needs (separate from choice)",
+        screenTable("Service requests and contact needs",
+          ["Request", "Route", "Status", "Contact needs", "Next update"],
+          requests.map((r) => [r.id, r.route, r.status, (r.accessibility || ["Unknown"]).join(", "), r.next_update]))));
+  }
+});
 const hazardTriageRoles = ["Retrofit Coordinator", "Resident Liaison Officer", "Quality Inspector"];
 const hazardActor = (value) => value && (value.name || value.role)
   ? [value.name, value.role].filter(Boolean).join(", ") : "Unknown";
@@ -195,10 +261,10 @@ function hazardFollowUp(h) {
   return `No referral sent. Owner: ${screenValue(h.owner)} to send or record a manual route`;
 }
 function hazardHold(h) {
-  const hold = h.hold || {};
-  const decision = hold.decision;
-  const scope = `${screenValue(hold.scope)} ${screenValue(hold.case_id)} only`;
-  if (hold.status !== "Released") return `${screenValue(hold.status)}. Scope: ${scope}. Release needs an authorised human decision.`;
+  const pause = h.hold || {};
+  const decision = pause.decision;
+  const scope = `${screenValue(pause.scope)} ${screenValue(pause.case_id)} only`;
+  if (pause.status !== "Released") return `${screenValue(pause.status)}. Scope: ${scope}. Release needs an authorised human decision.`;
   return decision
     ? `Released. Scope: ${scope}. Decided by ${hazardActor(decision.actor)} at ${screenStamp(decision.at)}. Reason: ${screenValue(decision.reason)}. Evidence: ${screenValue(decision.evidence)}`
     : `Released. Scope: ${scope}. No authoritative decision evidence is recorded; do not rely on this release.`;
@@ -218,9 +284,9 @@ function hazardScreen(intro) {
             screenStamp(x.aware_at), x.source, hazardActor(x.destination),
             hazardStep(x.sent_at), hazardStep(x.received_at), hazardStep(x.accepted_at),
             x.state, hazardFollowUp(x)]), Infinity)),
-      screenPanel("Retrofit hold and release decision",
-        screenTable("Scoped hold and release evidence",
-          ["Item", "Hold and release evidence", "Service response due", "Service responded"],
+      screenPanel("Retrofit pause and release decision",
+        screenTable("Scoped pause and release evidence",
+          ["Item", "Pause and release evidence", "Service response due", "Service responded"],
           items.map((x, i) => [`H-${i + 1}`, hazardHold(x), hazardStep(x.response_due_at), hazardStep(x.responded_at)]), Infinity)),
       screenPanel("Where to act",
         h("p", {}, "Referral, receipt, acceptance and release are recorded in the existing case workspace by the named authorised person. Emergency concerns follow the existing human emergency procedure now, not this screen.")));
@@ -230,13 +296,14 @@ registerRoleScreen({
   id: "safety-lead",
   title: "Building safety referral queue",
   roles: ["Building Safety Liaison", ...screenManagers],
-  render: hazardScreen("Read-only view for the Building Safety lead: where each referral stands, who must follow up and what evidence supports any hold release.")
+  render: hazardScreen("Read-only view for the Building Safety lead: where each referral stands, who must follow up and what evidence supports any pause release.")
 });
 registerRoleScreen({
   id: "hazard-triage",
   title: "Repairs and hazard triage",
   roles: hazardTriageRoles,
   render: hazardScreen("Read-only view for repairs and hazard triage: awareness time and source, referral progress and the person who chases an unanswered referral.")
+});
 const operatorSide = (a) => a ? `${screenValue(a.value)}; source ${screenValue(a.source_id)} v${screenValue(a.version)}; dated ${screenValue(a.date)}; ${screenValue(a.validation_state)}` : "Unknown";
 const operatorStatus = (c, q) => (c.stock_reconciliation_events || []).filter((e) => e.query_id === q.id).at(-1)?.status || "Unresolved";
 registerRoleScreen({
@@ -255,7 +322,7 @@ registerRoleScreen({
         h("p", {}, "Read-only view for data stewards, performance analysts and digital operators. It does not replay, correct, resolve or retry anything, and it keeps the original source values. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only.`)),
       screenPanel("Conflict queue: both source values",
-        screenTable("Source conflicts with both values and provenance",
+        screenTable("Source conflicts with both values and source details",
           ["Query", "Field", "First source (value, source, version, date, validation)", "Compared source (value, source, version, date, validation)", "State", "Resolution owner"],
           queries.map((q) => [q.id, q.field, operatorSide(q.left), operatorSide(q.right),
             operatorStatus(c, q), screenPerson(q.query_owner)]))),
@@ -284,6 +351,8 @@ registerRoleScreen({
           events.map((e) => [e.id, e.query_id, e.status, screenStamp(e.at), screenPerson(e.recorded_by), e.reason, e.evidence])),
         screenFields([["Recovery context", work ? `Next action: ${screenValue(work.next_action)}. Owner: ${screenValue(work.owner)}. Recorded as of ${screenValue(work.as_of)}.` : "Unknown. No recovery context is recorded."],
           ["Integration run and queue state", "Unknown. No interface run record is supplied to this screen."]])));
+  }
+});
 const reviewerRole = "Contracts manager, independent of the person who issued or submitted the pack";
 const wording = (value, fallback = "Unknown") => value === null || value === undefined || value === "" ? fallback : String(value);
 const reference = (order) => `${wording(order.id)} v${wording(order.version)}`;
@@ -382,6 +451,8 @@ registerRoleScreen({
           ["Acknowledgement", "Not recorded. An acknowledgement is not acceptance."],
           ["Independent review and acceptance", "Unknown. Review data is not available here. Done by someone other than you."],
           ["Next reviewer", reviewerRole]])));
+  }
+});
 const financeRoles = ["Grants and Evidence Officer", ...screenManagers];
 const financeCurrency = new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" });
 const financeMoney = (value) => typeof value === "number" && Number.isFinite(value) ? financeCurrency.format(value) : "Unknown";
@@ -416,7 +487,7 @@ function financeInvoicePanel(c) {
   return screenPanel("Invoice line comparison", ...invoices.map((inv) => h("div", {},
     h("h3", {}, `${inv.id}: ${screenValue(inv.kind)} ${screenValue(inv.ref)} from ${screenValue(inv.supplier)}`),
     screenFields([["Version and record", `${inv.id}, work order ${screenValue(inv.work_order)}, match status: ${screenValue(inv.status)}`],
-      ["Payment hold", inv.hold ? `Paused by ${screenValue(inv.hold.name)}: ${screenValue(inv.hold.reason)}` : "No hold recorded"],
+      ["Payment pause", inv.hold ? `Paused by ${screenValue(inv.hold.name)}: ${screenValue(inv.hold.reason)}` : "No pause recorded"],
       ["Finance decision", inv.disposition ? `${inv.disposition}, recorded by ${screenValue(inv.disposition_by)}` : "No Finance decision recorded"],
       ["Payment status (a note of what Finance did elsewhere)", `${screenValue(inv.payment_status)}. This system never makes or releases a payment.`]]),
     screenTable(`Line comparison for ${inv.id}`,
@@ -424,7 +495,7 @@ function financeInvoicePanel(c) {
       financeLineRows(f, inv)))));
 }
 const financeQueueRows = (queue) => queue.map((q) => [q.case_id, q.invoice, `${screenValue(q.supplier)}, ref ${screenValue(q.ref)}`,
-  screenValue(q.status), financeChecked(q) ? `${q.exceptions ?? "Unknown"} exceptions` : "Unknown. Not checked yet", q.on_hold ? "On hold" : "No hold", financeMoney(q.total)]);
+  screenValue(q.status), financeChecked(q) ? `${q.exceptions ?? "Unknown"} exceptions` : "Unknown. Not checked yet", q.on_hold ? "Paused" : "Not paused", financeMoney(q.total)]);
 registerRoleScreen({
   id: "finance-invoices",
   title: "Invoice queue",
@@ -442,8 +513,8 @@ registerRoleScreen({
         h("p", {}, "Read-only reader view for the approver and payment officer. It makes no payment, approval or decision and changes no record. Use the existing case workspace to act. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only, except the queue below.`)),
       screenPanel("Invoices waiting for Finance (all homes your role can see)",
-        queue ? screenTable("Invoices with exceptions, holds or not yet checked",
-          ["Home", "Invoice", "Supplier and reference", "Status", "Exceptions", "Hold", "Invoice total"], financeQueueRows(queue))
+        queue ? screenTable("Invoices with exceptions, pauses or not yet checked",
+          ["Home", "Invoice", "Supplier and reference", "Status", "Exceptions", "Pause", "Invoice total"], financeQueueRows(queue))
           : h("p", { class: "empty" }, "Unknown. The queue could not be read for your role.")),
       financeInvoicePanel(c),
       screenPanel("AI economics (ledger-wide, all homes)", h("p", {}, "Design only. Usage must be reconciled to billing before any cost is read. Total Cost of AI is the sum of components, and any missing component keeps it Unknown. Booked-value status stays Unknown until Finance records a defensible value. No price, budget or target is set here (BRD OD-51 open)."),
@@ -491,8 +562,8 @@ registerRoleScreen({
     const funding = c.funding || {};
     const grants = c.grants || [];
     const drafts = Array.isArray(extra?.review?.drafts) ? extra.review.drafts : null;
-    const holds = Array.isArray(extra?.review?.decision_holds) ? extra.review.decision_holds : null;
-    const readable = drafts !== null && holds !== null;
+    const pauses = Array.isArray(extra?.review?.decision_holds) ? extra.review.decision_holds : null;
+    const readable = drafts !== null && pauses !== null;
     return h("div", {},
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only reader view for the capital and grant preparer. It is a reviewed export or readiness view only. No submission, award, eligibility decision or payment is made or inferred. Source: desk research, not observed behaviour."),
@@ -511,7 +582,7 @@ registerRoleScreen({
         : screenPanel("Constructed field draft", h("p", { class: "empty" }, "Unknown. The field review could not be read for your role.")),
       screenPanel("Readiness export",
         screenFields([["Claim pack readiness", !readable ? "Unknown. The field review could not be read." : drafts && drafts.some((d) => d.reviewed_ready) ? "A reviewer recorded ready on at least one draft. A person must still check and submit it outside this system." : "Not ready. No reviewed export exists."],
-          ["Open decision holds", !holds ? "Unknown. The field review could not be read." : holds.length ? `${holds.length} recorded` : "None recorded"],
+          ["Open decision pauses", !pauses ? "Unknown. The field review could not be read." : pauses.length ? `${pauses.length} recorded` : "None recorded"],
           ["Submission, award and payment", "Not recorded here. This screen never infers them."]])),
       screenPanel("AI economics (ledger-wide, all homes)", assetCost(extra?.report)));
   }

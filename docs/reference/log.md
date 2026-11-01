@@ -9087,6 +9087,24 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   acceptance and owner confirmation of agent names remain unproven; no
   source change was made.
 
+## [2026-11-01] update | Chat and memory provider position and DPO decision pack (Refs #163)
+
+* Retrieved the Microsoft Learn Foundry data, privacy and security page
+  (page dated 2026-06-05) and recorded the documented provider position in
+  `research/chat-memory-dpia.md` and `chat_privacy.MODEL_PROVIDER_POSITION`,
+  marked as vendor documentation, not DPO-accepted. Added a blank decision pack
+  (D1 to D8) for the DPO and Legal.
+* Unmet: lawful basis, staff notice, DPIA decision and retention (no period
+  set), provider terms acceptance, deployment type and transfer position. No
+  legal advice or approval is implied.
+
+
+## [2026-11-01] update | Scale fixture per-record is_synthetic (#167)
+
+* `scale_fixture` v1.3.0 adds `is_synthetic=true` to every home and event
+  record (households already had it); goldens re-pinned and a per-record
+  test added. Updated the retrofit synthetic data README coverage section.
+  Owner confirmation of the mapping and deferrals remains open.
 ## 2026-11-01
 
 * Added `research/ux/supported-devices-proposal.md`, a proposal for owner
@@ -9117,6 +9135,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * The policy is not decided (BRD OD-46, owner with DPO); issue #162 criterion 6
   stays open. No regulatory snapshot changed.
 
+## 2026-11-01 - Core-flow copy and error contract slice (#153)
+
+* Updated `research/ux/content-standard.md` with a dated slice: phase check
+  wording in role screens, a generic error fallback that states reason, owner
+  and next action, and three more files in the lexical guard.
+* Issue #153 criteria for universal error coverage, named resident wording
+  review and comprehension testing stay open. No regulatory snapshot changed.
 ## [2026-11-01] update | Executable design traceability gate (#156)
 
 * Added `tools/check-design-trace.py` and tests. It validates the 74-row screen
@@ -9200,3 +9225,84 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   pack: five package suites, Ruff and mypy passed locally; SQL, container and
   browser groups not run. The PERF-440 benchmark outlier was not reproduced
   and is filed as #687. No regulatory snapshot changed; no criterion ticked.
+
+## [2026-11-01] update | Local handover demo (#188)
+
+* Added a runnable local demo and test for the live-versus-backfill handover
+  on a constructed SQLite store, documented in the
+  [API README](../../src/api/README.md#local-handover-demo-188). Constructed
+  evidence only: Azure SQL and live Hub criteria of #188 stay owner-gated and
+  unproven; no criterion ticked.
+
+## [2026-11-01] update | Replay audit covers pack and EPC generators (#176)
+
+* Extended the one-command determinism audit in
+  `docs/reference/research/retrofit-synthetic-data/README.md` to replay the
+  public pack and stock EPC generators and accept 16 or 64 hex revisions. The
+  original stock register generator remains absent; no criterion ticked.
+
+## [2026-11-01] verify | Post-cleanup reference audit and link check (Refs #203)
+
+* Re-ran a repository-wide search for `mvp/` and `prototype/` on main 77b55415. Both
+  directories are absent. Remaining tokens fall into dated historical records
+  (log, ADRs 0001, 0002, 0006, PRD/BRD baselines, parity and cut-over evidence,
+  rubric README history), intentional defensive checks for `mvp/data`
+  (workflows, `tools/rpi-checks.py`, tests, `.gitignore`) and generic
+  "prototype/PoC/MVP" wording. One live pointer was repaired: the law register
+  path in `regulatory/README.md` now names `src/core/src/zava_forward/core/law/`.
+* A fresh relative-link audit of all tracked Markdown found 102 unresolved links
+  that predate and are unrelated to the cleanup (capstone reorganisation, dated
+  log entries, one workflow template placeholder). They are recorded, not
+  repaired here. Criteria 1, 2, 4 and 5 of #203 stay unmet; main rubric scoring
+  was skipped by the daily AIC guardrail and no Azure check was run. Evidence is in
+  `.copilot-tracking/reviews/2026-11-01/issue-203-verify-references-review.md`.
+
+## [2026-11-01] update | Automated-decision and EU AI Act applicability pack (#224)
+
+* Added the applicability review pack under `regulatory/reviewed-updates/`: official
+  check of DUAA 2025 s.80 and S.I. 2026/82 (retrieved 2026-11-01), failed EUR-Lex
+  retrieval, a `Pending` Legal/DPO decision record, review items RI-1 to RI-7 and
+  non-inference rules.
+* Flagged that seed card `automated-decision-safeguard` cites Article 22, not
+  Articles 22A to 22C. No snapshot, card or rule changed; criteria 1 and 5 of #224
+  stay unmet pending the Legal/DPO decision.
+
+## [2026-11-01] update | Closure record for the src migration (Refs #199)
+
+* Added a closure record to `docs/architecture/mvp-to-src-parity-matrix.md`
+  listing the merged M1 to M6 and retirement pull requests and the current
+  tree check. The migration-order criterion stays unmet pending an owner
+  decision.
+
+## [2026-11-01] verify | Resident sensors and assistant focused re-check (Refs #466)
+
+* Re-ran resident core (355 tests) and api (167 tests) suites, sensor tests (144),
+  ruff, ruff format, mypy and node --check on main 51657d30: all passed, skips are
+  opt-in SQL and browser groups. No source change was needed.
+* Issue #466 criterion 1 (owner confirms scope and priority) stays unmet; manual
+  assistive-technology acceptance and live checks remain owner-run. No regulatory
+  snapshot changed.
+
+## [2026-11-01] query | Employee chat recheck on main 51657d30 (#530)
+
+* Re-ran the focused tier: core chat (101), agents chat model (7), API chat
+  panel (41) and widget focus (6) tests, ruff, mypy and the employee chat
+  browser and pinned axe check. All passed. Evidence is in
+  `.copilot-tracking/changes/2026-11-01/employee-chat-skills-530-recheck-changes.md`.
+* SQL, live employee-site verification, screen-reader and voice-control
+  acceptance remain unproven; no source change was made.
+
+## [2026-11-01] query | Resident portal requirements recheck on main 81cf0c9e (Refs #441)
+
+* Re-verified the merged resident integration (#442, #454) with a read-only
+  script: 30 draft custody hashes, unique BRD FR-053 to FR-064 and PRD FR-062
+  to FR-073 identifiers with base IDs preserved, FR-044 and RULE-028
+  per-message review default, OD-52 to OD-55 visible, the three author-judgement
+  workload figures, resident-related links and the unregistered ADR proposal
+  (registry stays 0001 to 0006). Four inherited unrelated broken links in the
+  addendum and index are recorded, not repaired.
+* No BRD, PRD, ADR, addendum or memory change was made. Criterion 5 (requirements
+  owner disposition of FR-044/AC-084) and criterion 9 (hosted gate evidence on the
+  final head) stay unmet; the per-message review exception stays OFF pending
+  OD-53. Evidence is in
+  `.copilot-tracking/changes/2026-11-01/issue-441-recheck-changes.md`.

@@ -126,7 +126,9 @@ started with `--remote-debugging-port=9222`, export independently verified
 `ZF_EXPECTED_TID` and `ZF_EXPECTED_OID`, then run
 `python3 -m checks.employee_live_acceptance [--cdp-url http://127.0.0.1:9222]
 [--origin <app origin>]` from this directory. Only loopback CDP is accepted.
-It prints fixed boolean JSON and exits 0 only when chat, map and case all pass
+It prints fixed boolean JSON and exits 0 only when chat, map, case and Today's briefing (read-only: label,
+sources and prepared-at time visible, no review action taken; #531 criterion 7
+evidence) all pass
 (1 on a failed stage, 2 when refused or no matching page). A passing live run
 is the evidence for criterion 3; the offline tests are not.
 
@@ -659,7 +661,7 @@ screen-reader/usability acceptance, full Fluent runtime adoption or WCAG
 conformance.
 
 Add `--scale` to the browser command to also exercise the existing seed-174,
-version-1.2.0 wholly fictional 60,000-home fixture. The shared test overlay
+version-1.3.0 wholly fictional 60,000-home fixture. The shared test overlay
 maps those existing home IDs/attributes onto four explicit known lifecycle
 templates, not random stock events: 15,000 open cases, 45,000 archived cases,
 45,000 usable lifecycles and 15,000 unknown closure dates. The inherited
@@ -1748,6 +1750,26 @@ python -m zava_forward.api.sensor_handover_verify --reference history/readings-0
 
 The check is ready-to-run tooling; running it against Azure SQL after a live
 Hub stream is the remaining owner-gated evidence for #188.
+
+### Local handover demo (#188)
+
+`checks/sensor_handover_demo.py` runs the whole flow on a throwaway SQLite store
+with constructed climate: backfill CSV, #110 admission of the prefix, SDK-decoded
+streamed suffix, joint per-home query, the verifier report and a window replay.
+It prints JSON (`passed`, `idempotent`, `evidence`) and exits 0 only on a pass.
+`--seam C` shifts the live temperature to show a discontinuity failing at zero
+tolerance; `--tolerance C` declares a temperature limit.
+
+```bash
+cd src/api
+PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests \
+  python checks/sensor_handover_demo.py
+PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests \
+  python -m unittest test_sensor_handover_demo -v
+```
+
+This is constructed local evidence, not a live Hub run, Azure SQL proof or
+sensor accuracy approval.
 
 ## Finite offline sensor ingestion (#110)
 
