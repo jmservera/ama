@@ -203,6 +203,9 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
 
         def _send(self, code, body, ctype="application/json", extra=None):
             raw = body if isinstance(body, bytes) else body.encode()
+            path = urlparse(self.path).path
+            if code >= 500 or (path.startswith("/vendor/") and code not in (200, 304)):
+                logging.getLogger(__name__).warning("http-response %s %s status=%s", self.command, path, code)
             self.send_response(code)
             self.send_header("Content-Type", ctype)
             if code != 304:

@@ -9,6 +9,14 @@ const chatProposalNames = {
   "quality-evidence": "Quality evidence",
 };
 
+const chatAdministratorRole = "Application Administrator";
+
+function unavailableNote(feature, error, manual) {
+  if (error && error.status === 403) return `${feature} is not available for your role. ${manual}`;
+  if (error && error.status === 503) return `${feature} is not switched on in this environment. ${manual}`;
+  return `${feature} unavailable: ${error.message} ${manual}`;
+}
+
 const employeeChat = (() => {
   let widget = null, controller = null;
   const launcher = () => document.getElementById("employee-chat-launcher");
@@ -186,12 +194,17 @@ function chatCasePanel(id) {
       say("Proposal requested. Find it in the proposals panel and the review queue.");
     } catch (e) { say(`Proposal not requested: ${e.message}`); }
   };
-  api("/api/assistants").then((registry) => {
-    for (const a of registry.assistants || []) {
-      proposals.append(h("button", { type: "button", class: "alt", onclick: () => requestProposal(a.id) },
-        `Request proposal: ${chatProposalNames[a.id] || a.id}`));
-    }
-  }).catch(error => say(`Proposal requests unavailable: ${error.message} Continue ordinary case work manually.`));
+  const manualNote = "Continue ordinary case work manually.";
+  if (me.user.role === chatAdministratorRole) {
+    say(`Proposal requests are not available for your role. ${manualNote}`);
+  } else {
+    api("/api/assistants").then((registry) => {
+      for (const a of registry.assistants || []) {
+        proposals.append(h("button", { type: "button", class: "alt", onclick: () => requestProposal(a.id) },
+          `Request proposal: ${chatProposalNames[a.id] || a.id}`));
+      }
+    }).catch(error => say(unavailableNote("Proposal requests", error, manualNote)));
+  }
   return h("details", { class: "card", id: "chat-panel" },
     h("summary", {}, "Ask the assistant about this case (optional)"),
     h("p", { class: "muted" }, `${chatLabel}. Answers cite only sources your role may see. The assistant cannot change a record, approve, send or book anything; it can only request a proposal that someone else reviews. Do not type personal details about residents.`),
@@ -275,7 +288,8 @@ function regulatoryAlertsPanel(caseId) {
       status.textContent = `${alerts.length} visible alerts. Coverage: ${data.coverage_status || "unknown"}. ${alerts.length ? "Only alerts permitted for your role are shown." : "No visible alerts does not mean no risk, complete coverage or compliance."}`;
     } catch (e) {
       list.replaceChildren();
-      status.textContent = `Alert coverage unknown: ${e.message} Use the existing human emergency or hazard service; do not wait for checks.`;
+      const reason = e.status === 503 ? "Rule alerts are not switched on in this environment." : e.message;
+      status.textContent = `Alert coverage unknown: ${reason} Use the existing human emergency or hazard service; do not wait for checks.`;
     } finally { refresh.disabled = false; }
   }
   root.append(h("h2", { id: "regulatory-alerts-title" }, "Regulatory alerts for this home"),
@@ -390,7 +404,10 @@ function regulatoryChatPanel(caseId) {
         status.textContent = `${here.length} synthetic-demo referrals for this home. No decision recorded.`;
       } catch (e) { status.textContent = `Exercise inbox unavailable: ${e.message}`; }
     } }, "Open my exercise doubt inbox (named owner only)"), status);
-  api("/api/chat/regulatory/status").then(async (admission) => {
+  const admissionRequest = me.user.role === chatAdministratorRole
+    ? Promise.reject(Object.assign(new Error("Not available for your role."), { status: 403 }))
+    : api("/api/chat/regulatory/status");
+  admissionRequest.then(async (admission) => {
     status.textContent = "Synthetic source lookup available. No legal approval is implied.";
     const schedule = admission.privacy.chat;
     privacy.textContent = `${admission.warning} DPIA: draft for DPO review. Retention: ${schedule.status === "simulated" ? `${schedule.days} days (simulated only)` : "unknown, DPO period not set"}. No automatic deletion or operational approval.`;
@@ -417,7 +434,7 @@ function regulatoryChatPanel(caseId) {
   }).catch((e) => {
     input.disabled = true;
     button.disabled = true;
-    status.textContent = `Cited lookup unavailable: ${e.message} Continue with the human owner route; safety and alerts do not depend on chat.`;
+    status.textContent = unavailableNote("Cited lookup", e, "Continue with the human owner route; safety and alerts do not depend on chat.");
   });
   return root;
 }
