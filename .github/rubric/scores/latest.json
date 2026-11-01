@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-01T14:30:42+00:00",
-  "commit": "9f6a1a13baf87adf16b5f166c087231a10fef145",
+  "scored_at": "2026-11-01T15:44:55+00:00",
+  "commit": "144d9719cd0cd013f85e056dd24eb9ef68c71a07",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41315577164",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41321725106",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "379c55eb66fa4f004be51345af48b0b0621ac7b98ecc1a1ad5d65c781ec83b87",
+    "solution-code": "b9a02ce4a43f6048ef3978e8b8c9e8e8de156e329262b6b7efafccee44a09191",
     "infrastructure": "b101de0ca1a75ce128f45fbd37309bc5dc49805b14bd65cce45c7b0ed9faa591",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -44,19 +44,17 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/core/tests/test_chat_dpia_record.py:1-84",
-        "src/core/src/zava_forward/core/chat_privacy.py:1-60"
+        "src/core/src/zava_forward/core/chat_panel.py:195-198,321-335,631-636"
       ],
-      "rationale": "New test ties chat_privacy.py DATA_MAP/decision() to the DPIA doc, verifying unrecorded refs fail closed and retention stays Unknown. Reinforces existing evidence but was already at ceiling 5; baseline retained."
+      "rationale": "New lexical grounding guard (STATUS_CLAIM/unsupported_claims) withholds status/number claims unsupported by cited sources, mitigating an AI risk (ungrounded claims) beyond prior citation-only check. Baseline 5 retained: guard is lexical, not semantic grounding, so ceiling evidence unchanged."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/procurement.py:540-562",
-        "src/api/src/zava_forward/api/server.py:486-505",
-        "src/api/tests/test_workspace_paging.py:1-30"
+        "src/agents/evals/chat_golden.json:77-82",
+        "src/agents/tests/test_chat_eval.py:38-90"
       ],
-      "rationale": "Capability implemented end to end with edge cases and dedicated passing tests. Baseline 5 retained as it was already at ceiling."
+      "rationale": "The previously disclosed known gap (unsupported claim with valid citation) is now actually fixed and covered by new passing tests; golden run passes with zero open critical gaps. Strengthens completeness; baseline 5 retained (already ceiling)."
     },
     "A5": {
       "score": 5,
@@ -65,12 +63,15 @@
         "src/core/README.md:5-123",
         "src/api/src/zava_forward/api/server.py:514-540"
       ],
-      "rationale": "Pagination improves reliability/scalability but adds no new observability/cost evidence. Baseline 5 retained."
+      "rationale": "Pagination improves reliability/scalability of list reads but adds no new observability/cost-measurement evidence. Baseline 5 retained."
     },
     "A6": {
       "score": 5,
-      "evidence": [],
-      "rationale": "This PR does not touch model choice, prompts or the evaluation harness. Baseline unchanged."
+      "evidence": [
+        "src/agents/src/zava_forward/agents/chat_eval.py:337-349",
+        "src/agents/tests/test_chat_eval.py:38-100"
+      ],
+      "rationale": "Eval harness extended: STATUS_CLAIM/UNGROUNDED now bound into eval digest; new golden scenario behaviour and tests cover tokenisation, sign/decimal handling, whole-token matching for the grounding guard. Narrow harness strengthening; model-choice/cost justification still absent, ceiling retained."
     },
     "A7": {
       "score": 4,
@@ -119,7 +120,7 @@
         "src/core/README.md:5-123",
         "src/api/README.md:9-47"
       ],
-      "rationale": "Pagination/test code change is engineering, not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
+      "rationale": "Pagination code change is engineering, not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
     },
     "B7": {
       "score": 5,
