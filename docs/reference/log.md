@@ -9064,6 +9064,18 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   acceptance and owner confirmation of agent names remain unproven; no
   source change was made.
 
+## [2026-11-01] update | Chat and memory provider position and DPO decision pack (Refs #163)
+
+* Retrieved the Microsoft Learn Foundry data, privacy and security page
+  (page dated 2026-06-05) and recorded the documented provider position in
+  `research/chat-memory-dpia.md` and `chat_privacy.MODEL_PROVIDER_POSITION`,
+  marked as vendor documentation, not DPO-accepted. Added a blank decision pack
+  (D1 to D8) for the DPO and Legal.
+* Unmet: lawful basis, staff notice, DPIA decision and retention (no period
+  set), provider terms acceptance, deployment type and transfer position. No
+  legal advice or approval is implied.
+
+
 ## [2026-11-01] update | Scale fixture per-record is_synthetic (#167)
 
 * `scale_fixture` v1.3.0 adds `is_synthetic=true` to every home and event
@@ -9184,6 +9196,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   browser groups not run. The PERF-440 benchmark outlier was not reproduced
   and is filed as #687. No regulatory snapshot changed; no criterion ticked.
 
+## [2026-11-01] update | Replay audit covers pack and EPC generators (#176)
+
+* Extended the one-command determinism audit in
+  `docs/reference/research/retrofit-synthetic-data/README.md` to replay the
+  public pack and stock EPC generators and accept 16 or 64 hex revisions. The
+  original stock register generator remains absent; no criterion ticked.
+
 ## [2026-11-01] verify | Post-cleanup reference audit and link check (Refs #203)
 
 * Re-ran a repository-wide search for `mvp/` and `prototype/` on main 77b55415. Both
@@ -9209,3 +9228,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Flagged that seed card `automated-decision-safeguard` cites Article 22, not
   Articles 22A to 22C. No snapshot, card or rule changed; criteria 1 and 5 of #224
   stay unmet pending the Legal/DPO decision.
+
+## [2026-11-01] update | Closure record for the src migration (Refs #199)
+
+* Added a closure record to `docs/architecture/mvp-to-src-parity-matrix.md`
+  listing the merged M1 to M6 and retirement pull requests and the current
+  tree check. The migration-order criterion stays unmet pending an owner
+  decision.
