@@ -4,10 +4,12 @@ import copy
 import json
 import tempfile
 import unittest
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
+from unittest import mock
 
+from zava_forward.core import controls
 from zava_forward.core import resident_preview as rp
 from zava_forward.core.synthetic.resident_preview_fixture import build
 
@@ -204,6 +206,48 @@ class Representative(Base):
                 self.view("SYN-REP-B")
         finally:
             case["representative_authorities"] = saved
+
+
+class RepresentativeAuthorityBoundary(Base):
+    """R1 in residents.md: authority ends on its review date and only Confirmed counts."""
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.today = date.today()
+        patcher = mock.patch.object(controls, "today", return_value=self.today.isoformat())
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def edit_authority(self, **changes: Any) -> Any:
+        case = self.store.cases["SYN-C2"]
+        saved = copy.deepcopy(case["representative_authorities"])
+        case["representative_authorities"]["SYN-REP-B"][-1].update(changes)
+        self.addCleanup(case.__setitem__, "representative_authorities", saved)
+
+    def test_authority_is_unavailable_on_the_review_date(self) -> None:
+        self.edit_authority(review_date=self.today.isoformat())
+        with self.assertRaises(rp.GrantDenied) as raised:
+            self.view("SYN-REP-B")
+        self.assertEqual(raised.exception.code, "no_current_authority")
+
+    def test_authority_is_available_until_the_day_before_review(self) -> None:
+        self.edit_authority(review_date=(self.today + timedelta(days=1)).isoformat())
+        self.assertIn("appointments", self.view("SYN-REP-B"))
+
+    def test_unconfirmed_authority_denies_without_case_detail(self) -> None:
+        for status in ("Unclear", "Disputed", "Revoked"):
+            with self.subTest(status=status):
+                self.edit_authority(status=status)
+                with self.assertRaises(rp.GrantDenied) as raised:
+                    self.view("SYN-REP-B")
+                self.assertEqual(str(raised.exception), "You cannot see this page.")
+                for text in (CANARY, *OTHER_PEOPLE):
+                    self.assertNotIn(text, str(raised.exception))
+
+    def test_representative_view_is_not_the_household_record(self) -> None:
+        view = self.view("SYN-REP-B")
+        self.assertNotIn("home", view)
+        self.assertNotIn("2 Synthetic Row", json.dumps(view))
 
 
 class DefaultDeny(Base):
