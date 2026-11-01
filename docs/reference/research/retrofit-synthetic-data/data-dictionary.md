@@ -244,10 +244,13 @@ regressions enforce the bounded contracts, without reading private working data.
 External sources are inventoried, not all verified. The local source README
 records OpenStreetMap ODbL 1.0, retrieval 2026-09-30 and contributor attribution.
 Census 2021 TS054, IMD 2025 and ONS boundaries still lack historic retrieval
-dates and verified licence/attribution terms. Null dates and provisional wording
-remain explicit; a Git commit date is not a retrieval date. The strict source
-audit returns nonzero for these three entries. No official-source recheck was
-performed in this offline task. Exercise Legal, Compliance and DPO owner
+dates. Their licences and the Census and IMD attributions were confirmed
+against the official pages on 2026-11-01; the boundaries entry also needs the
+OS copyright/database-right acknowledgement, whose year stays provisional. Null
+dates and provisional wording remain explicit; a Git commit date is not a
+retrieval date. The strict source audit returns nonzero for these three entries
+until the owner supplies all three retrieval dates and confirms the OS
+acknowledgement year for the boundaries entry. Exercise Legal, Compliance and DPO owner
 Juan Manuel Servera retains interpretation/approval; real owners and sources
 remain a gap before operational reliance.
 
@@ -581,7 +584,7 @@ snapshots; this is not an attestation of existing private data or runtime chat.
 | Criterion | Status | Evidence and limit |
 | --- | --- | --- |
 | Dictionary covers every dataset including sensor/chat | Met for known dataset families | Register covers public CSV/manifests/evals, private seed/geography, scale/fabric, sensor and generated/runtime chat. Core coverage test checks IDs/anchors and every public JSON/CSV payload |
-| Every external source has licence, retrieval date and attribution | Unmet | Three historic source entries lack verified dates/terms; strict `--sources` audit rejects them. Offline work cannot invent or refresh that evidence |
+| Every external source has licence, retrieval date and attribution | Unmet (partly resolved 2026-11-01) | Licences for the three historic ONS/MHCLG sources are confirmed against the official pages, and the Census and IMD attributions are confirmed. The boundaries source needs both the ONS source statement and the OS copyright/database-right acknowledgement; its OS copyright year stays provisional until checked against the named product notices. Retrieval dates are still unrecorded for all three, so the strict `--sources` audit rejects them; the owner must supply the dates, which cannot be invented |
 | Automated check rejects real-person patterns or unlabelled records | Met for specified bounded contract | Production checker/CLI mutation tests cover four patterns, required labels, inherited/exempt content and independently rehashed fixtures; not universal PII certification |
 | Private/public separation is tested | Met locally | Public-only inventory/scan, ignored-path checks and fresh scale/sensor/chat fixtures; no private corpus read or publish approval |
 
