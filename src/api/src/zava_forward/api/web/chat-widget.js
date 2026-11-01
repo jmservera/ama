@@ -67,7 +67,7 @@ window.ChatWidget = (() => {
       sizes.append(node("p", "Adjust the width and height. Docking uses the full screen height. Sizes stay within the screen and keep a minimum reading area."));
       sizes.append(dock);
       const controls = {};
-      for (const [dimension, value] of [["width", 35], ["height", 70]]) {
+      for (const [dimension, value] of [["width", 40], ["height", 80]]) {
         const label = node("label", `Preferred ${dimension} (% of screen)`, { for: `${id}-${dimension}` });
         const range = node("input", "", { type: "range", id: `${id}-${dimension}`, name: dimension, autocomplete: "off", min: "20", max: "100", step: "1", value: String(value) });
         const output = node("output", `${value}%`, { for: range.id, "aria-hidden": "true" });
@@ -169,7 +169,7 @@ window.ChatWidget = (() => {
       if (event.key === "Escape") { event.preventDefault(); hide(); }
     });
     function externalFocus(event) {
-      if (!root.hidden && !root.contains(event.target) && !launcher.contains(event.target)) hide(false);
+      if (!resizable && !root.hidden && !root.contains(event.target) && !launcher.contains(event.target)) hide(false);
     }
     document.addEventListener("focusin", externalFocus);
     input.addEventListener("keydown", event => {

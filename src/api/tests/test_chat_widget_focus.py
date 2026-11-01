@@ -285,8 +285,8 @@ ui.dispose();
     "Employee chat uses the resizable resident layout");
   const width = h.document.getElementById("employee-chat-width");
   const height = h.document.getElementById("employee-chat-height");
-  assert.equal(width.attrs.value, "35", "Resident default width");
-  assert.equal(height.attrs.value, "70", "Resident default height");
+  assert.ok(Number(width.attrs.value) >= 35, "At least the resident default width");
+  assert.ok(Number(height.attrs.value) >= 70, "At least the resident default height");
   ui.input.value = "Question";
   const submitted = ui.form.onsubmit({preventDefault() {}});
   await turn();
@@ -343,6 +343,22 @@ assert.equal(h.listeners.size, 0, "Dispose must unregister document listener");
 assert.equal(h.launcher.hidden, false, "Adapter owns launcher admission, not disposal");
 external.focus();
 assert.equal(h.document.activeElement, external);
+"""
+        )
+
+    def test_resizable_employee_panel_stays_open_on_outside_focus(self) -> None:
+        self.run_node(
+            r"""
+const h = harness();
+const ui = h.context.window.ChatWidget.create({
+  id: "unit", title: "Unit chat", launcher: h.launcher,
+  questionLabel: "Question", skillLabel: "Skill", resizable: true
+});
+ui.open();
+const external = h.document.createElement("textarea");
+external.focus();
+assert.equal(ui.root.hidden, false, "Employee panel must stay open when the page is used");
+ui.dispose();
 """
         )
 

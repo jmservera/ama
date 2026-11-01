@@ -114,9 +114,10 @@ const employeeChat = (() => {
           answer = await api("/api/chat/unstored-ask", { content: question, skill, case_id: caseId }, signal);
         }
         if (!current()) return;
+        const byRules = answer.model === "workflow-only" && answer.kind === "answer";
         ui.message("assistant", answer.reply, {
-          label: answer.workflow_only ? "Workflow-only help, no record changed" : answer.label,
-          detail: `Skill: ${answer.skill}. ${answer.kind === "answer" ? "AI-generated content may be incorrect. Check the sources." : "Workflow-only or unverified help. No record changed."}`,
+          label: byRules ? "Summary by rules, no record changed" : answer.workflow_only ? "Workflow-only help, no record changed" : answer.label,
+          detail: `Skill: ${answer.skill}. ${byRules ? "Built from recorded case facts, not by an AI model. Check the sources." : answer.kind === "answer" ? "AI-generated content may be incorrect. Check the sources." : "Workflow-only or unverified help. No record changed."}`,
           sources: (answer.citations || []).map(source => `${source.id}: ${source.text}`),
         });
         if (input.value === draft) {
@@ -150,7 +151,7 @@ const employeeChat = (() => {
       input.setAttribute("aria-describedby", "employee-chat-entry-warning chat-privacy employee-chat-error");
       stored = admission.storage_approved !== false;
       if (!stored) ui.intro.append(h("p", { id: "chat-unstored" },
-        "Chat storage is not approved yet. Replies are rules-only workflow help, nothing you type is saved and no AI model is used."));
+        "Chat storage is not approved yet. Replies use rules only on the case you have open, nothing you type is saved and no AI model is used."));
       for (const skill of data.skills) select.append(h("option", { value: skill.id }, `${skill.id}: ${skill.purpose}`));
       input.disabled = false;
       ui.busy(false);
