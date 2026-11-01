@@ -17,6 +17,7 @@ from unittest.mock import patch
 from zava_forward.core.ai_consumption import (
     COMPONENTS,
     QUALITY,
+    UNKNOWN,
     CallContext,
     Consumption,
     DispatchHeld,
@@ -260,6 +261,34 @@ class ConsumptionTests(unittest.TestCase):
         self.port.clock = timestamp(END)
         with self.assertRaisesRegex(DispatchHeld, "authority-expired"):
             self.ledger.reserve(self.context(), MODEL, 1000, 100)
+
+    def test_report_batch_spread_merges_authority_and_counts_missing_roots(self) -> None:
+        self.authorize()
+        done = self.ledger.reserve(self.context(), MODEL, 1000, 100)
+        self.complete(done)
+        self.ledger.reserve(self.context("other", root=reference("other")), MODEL, 1000, 100)
+        batch = dict(
+            authority="auth-text", evidence="evidence-text", held_out=True, max_proposals=2
+        )
+        usage = self.report(batch=batch)["tokens_per_proposal"]
+        self.assertEqual((usage["measured"], usage["missing"]), (1, 1))
+        self.assertEqual(usage["median"], "120")
+        self.assertEqual(usage["standard_deviation"], "0")
+        self.assertEqual(
+            usage["spend_authority"],
+            dict(
+                authority=reference("auth-text"),
+                evidence=reference("evidence-text"),
+                max_proposals=2,
+            ),
+        )
+        self.assertIn("owner-authorised held-out batch", usage["evidence_label"])
+        self.assertNotIn("auth-text", json.dumps(usage))
+        over = self.report(batch=dict(batch, max_proposals=1))["tokens_per_proposal"]
+        self.assertEqual(over["median"], UNKNOWN)
+        self.assertIsNone(over["spend_authority"])
+        self.assertIn("not an authorised", over["evidence_label"])
+        self.assertIn("not an authorised", self.report()["tokens_per_proposal"]["evidence_label"])
 
     def test_token_and_money_limits_exact_boundary(self) -> None:
         self.authorize(
