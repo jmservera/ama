@@ -7,7 +7,9 @@ import unittest
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
+from unittest import mock
 
+from zava_forward.core import controls
 from zava_forward.core import resident_preview as rp
 from zava_forward.core.synthetic.resident_preview_fixture import build
 
@@ -209,6 +211,13 @@ class Representative(Base):
 class RepresentativeAuthorityBoundary(Base):
     """R1 in residents.md: authority ends on its review date and only Confirmed counts."""
 
+    def setUp(self) -> None:
+        super().setUp()
+        self.today = date.today()
+        patcher = mock.patch.object(controls, "today", return_value=self.today.isoformat())
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
     def edit_authority(self, **changes: Any) -> Any:
         case = self.store.cases["SYN-C2"]
         saved = copy.deepcopy(case["representative_authorities"])
@@ -216,13 +225,13 @@ class RepresentativeAuthorityBoundary(Base):
         self.addCleanup(case.__setitem__, "representative_authorities", saved)
 
     def test_authority_is_unavailable_on_the_review_date(self) -> None:
-        self.edit_authority(review_date=date.today().isoformat())
+        self.edit_authority(review_date=self.today.isoformat())
         with self.assertRaises(rp.GrantDenied) as raised:
             self.view("SYN-REP-B")
         self.assertEqual(raised.exception.code, "no_current_authority")
 
     def test_authority_is_available_until_the_day_before_review(self) -> None:
-        self.edit_authority(review_date=(date.today() + timedelta(days=1)).isoformat())
+        self.edit_authority(review_date=(self.today + timedelta(days=1)).isoformat())
         self.assertIn("appointments", self.view("SYN-REP-B"))
 
     def test_unconfirmed_authority_denies_without_case_detail(self) -> None:
