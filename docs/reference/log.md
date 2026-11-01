@@ -9330,3 +9330,11 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   `technical-queue` and `quality-queue` are labelled as registered on main
   (PR 662 and PR 656), restoring the atlas trace check that main's merges broke.
 * No accessibility acceptance is claimed.
+
+
+## [2026-11-01] update | Issue 466 remaining-criteria check (r4)
+
+* Re-ran focused resident sensor and assistant tests, ruff and mypy on main;
+  criteria 2 to 6 still hold. Criterion 1 (owner confirms scope and priority)
+  stays unmet. Evidence is under `.copilot-tracking/` (r4 artifacts). No
+  accessibility acceptance is claimed.
