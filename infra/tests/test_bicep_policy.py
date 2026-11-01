@@ -137,6 +137,8 @@ def evaluate(expression, parameters: dict, variables: dict, context: dict | None
         "and_": lambda *a: all(a),
         "not_": lambda a: not a,
         "equals": lambda a, b: a == b,
+        "greaterOrEquals": lambda a, b: a >= b,
+        "lessOrEquals": lambda a, b: a <= b,
         "empty": lambda a: not a,
         "coalesce": lambda *values: next(value for value in values if value is not None),
         "length": len,
@@ -2065,6 +2067,14 @@ class BicepPolicyTests(unittest.TestCase):
             failures(enablePublicEdge=True, deployApplications=False),
             {"publicEdgeRequiresApplications"},
         )
+        guard = "serverlessAutoPauseDelayMustBeSupported"
+        for tier, delay in product(("serverless", "provisioned"), (-1, 0, 14, 15, 10080, 10081)):
+            valid = tier == "provisioned" or delay in (-1, 15, 10080)
+            self.assertEqual(
+                failures(sqlTier=tier, sqlAutoPauseDelayMinutes=delay),
+                set() if valid else {guard},
+                f"{tier} {delay}",
+            )
 
     def assert_mutation_rejected(self, assertion, mutated: dict) -> None:
         with self.assertRaises(AssertionError):
@@ -2244,6 +2254,7 @@ class BicepPolicyTests(unittest.TestCase):
             "quotaCheckMustBeRecorded",
             "deploymentLocationsMustBeSelected",
             "pilotRequiresLocks",
+            "serverlessAutoPauseDelayMustBeSupported",
         ):
             with self.subTest(guard=name):
                 mutated = deepcopy(self.main)

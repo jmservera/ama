@@ -104,8 +104,11 @@ def run_browser(base: str) -> None:
             page.get_by_role("link", name="Specialist screens", exact=True).click()
             page.get_by_role("heading", name="Specialist screens", exact=True).wait_for()
             if not selected:
-                check("parent empty registry is explicit, not delivered screens",
-                      "No specialist screens are installed" in page.locator("main").inner_text())
+                main_text = page.locator("main").inner_text()
+                check("Resident Liaison Officer sees only the registered triage screen",
+                      "Repairs and hazard triage" in main_text
+                      and "Building safety referral queue" not in main_text
+                      and "No specialist screens are installed" not in main_text)
                 check_projected_queue(browser, base)
             else:
                 _, screen, expected = SCENARIOS[selected]

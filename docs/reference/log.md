@@ -9125,6 +9125,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Issue #156 criterion 1 stays unmet: no designs, human review, accessibility or
   content evidence were supplied. No regulatory snapshot changed.
 
+## [2026-11-01] update | SQL pilot tier parameters and recovery runbook (#145)
+
+* Added SQL tier, auto-pause, vCores, backup redundancy and retention parameters to
+  `infra/main.bicep` and `modules/sql.bicep`, and `infra/sql-recovery-runbook.md`.
+* RTO and RPO are recorded as undecided with owners; no point-in-time restore was
+  performed (no authorized disposable infrastructure). Issue #145 criteria 2 to 4
+  stay open. No regulatory snapshot changed.
 ## [2026-11-01] update | Container hosting status and local scale load run (#144)
 
 * Added an API startup probe, compiled scale, probe, limit and Single-revision
