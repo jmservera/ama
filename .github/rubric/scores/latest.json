@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-01T03:38:30+00:00",
-  "commit": "15774634f7dec630e883b1e30cfd864fe10af90f",
+  "scored_at": "2026-11-01T04:51:49+00:00",
+  "commit": "3811c8617c4240bd2064d829734dc67a1deb393f",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41269581716",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41272842489",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "1de5bf25a4e537abb8131afc467deb0b752cb0d204ea652ccd203a1fd71a0684",
+    "solution-code": "4e900aeac0bc827558bff698733bf74b541c90b4bdca852bc95aac7076db5148",
     "infrastructure": "0172b75e258abc5d97ce173fa595146da2d6f807386ec74e992482b7524f7aad",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -48,7 +48,7 @@
         "src/core/src/zava_forward/core/ai.py:67-100",
         "src/core/src/zava_forward/core/assistants.py:884-900"
       ],
-      "rationale": "Diff is pagination for capacity workspace, not security/compliance/responsible-AI. Baseline 5 retained."
+      "rationale": "Diff adds is_synthetic labelling to scale_fixture.py and a test asserting it, strengthening synthetic-data provenance, but is not primarily security/compliance/responsible-AI work. Baseline 5 retained."
     },
     "A4": {
       "score": 5,
@@ -57,7 +57,7 @@
         "src/api/src/zava_forward/api/server.py:486-505",
         "src/api/tests/test_workspace_paging.py:1-30"
       ],
-      "rationale": "Capability is implemented end to end (API, core, UI) with edge cases (invalid input, hidden-order totals, offset overrun) and dedicated passing tests. Strengthens completeness evidence; baseline 5 retained as it was already at ceiling."
+      "rationale": "Capability is implemented end to end (API, core, UI) with edge cases and dedicated passing tests. Baseline 5 retained at ceiling."
     },
     "A5": {
       "score": 5,
@@ -79,7 +79,7 @@
         "src/agents/src/zava_forward/agents/dispatch.py:186-220",
         "src/core/src/zava_forward/core/ai_consumption.py:155-185"
       ],
-      "rationale": "Diff is a UI/API pagination feature unrelated to agent dispatch/orchestration. Baseline 4 (Good) retained."
+      "rationale": "Diff is a data-labelling/version-bump change unrelated to agent dispatch/orchestration. Baseline 4 (Good) retained."
     },
     "B1": {
       "score": 3,
@@ -120,7 +120,7 @@
         "src/core/README.md:5-123",
         "src/api/README.md:9-47"
       ],
-      "rationale": "Pagination code change is engineering, not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
+      "rationale": "Diff touches engineering READMEs (version numbers) and tests, not capstone deck/documentation content. Immaterial to B6; baseline retained."
     },
     "B7": {
       "score": 5,
