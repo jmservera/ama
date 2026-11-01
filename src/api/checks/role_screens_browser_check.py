@@ -120,6 +120,11 @@ def run_browser(base: str) -> None:
                 installed = page.locator("nav[aria-label='Specialist screens'] a").count()
                 check("parent registry is explicit: empty message or installed screen links",
                       installed > 0 or "No specialist screens are installed" in page.locator("main").inner_text())
+                main_text = page.locator("main").inner_text()
+                check("Resident Liaison Officer sees only the registered triage screen",
+                      "Repairs and hazard triage" in main_text
+                      and "Building safety referral queue" not in main_text
+                      and "No specialist screens are installed" not in main_text)
                 check_projected_queue(browser, base)
             else:
                 _, screen, expected = SCENARIOS[selected]
