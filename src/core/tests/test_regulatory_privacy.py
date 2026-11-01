@@ -6,11 +6,13 @@ import copy
 import json
 import unittest
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 from typing import Any
 
-from zava_forward.core.regulatory_privacy import retention_report
+from zava_forward.core.regulatory_privacy import CLASSES, retention_report
 
 NOW = datetime(2026, 10, 16, 12, tzinfo=UTC)
+DPIA = Path(__file__).resolve().parents[3] / "docs/reference/research/chat-memory-dpia.md"
 
 
 class RetentionReview(unittest.TestCase):
@@ -68,6 +70,35 @@ class RetentionReview(unittest.TestCase):
                 )
         with self.assertRaises(ValueError):
             retention_report(self.threads, {}, NOW.replace(tzinfo=None))
+
+
+class DpiaScope(unittest.TestCase):
+    def setUp(self) -> None:
+        self.dpia = DPIA.read_text(encoding="utf-8")
+
+    def test_every_retention_class_is_in_the_dpia_draft(self) -> None:
+        terms = dict(
+            law_source="Source store",
+            rule_card="Rule-card lifecycle",
+            check="Checks and checkpoints",
+            alert="Alerts and dispositions",
+            audit="Chat metadata audit",
+            usage="Offline usage metadata",
+        )
+        self.assertEqual(set(terms), {name for name, _ in CLASSES})
+        for name, term in terms.items():
+            with self.subTest(record_class=name):
+                self.assertIn(term, self.dpia)
+
+    def test_chat_turn_and_usage_scope_are_explicit_and_unapproved(self) -> None:
+        self.assertIn("reg_chat_turn", self.dpia)
+        self.assertIn("Offline usage metadata", self.dpia)
+        self.assertIn("Inherits parent records' access", self.dpia)
+        usage = dict(CLASSES)["usage"]
+        self.assertIn("inherits parent record access, retention and audit", usage)
+        result = retention_report([], {}, NOW)
+        self.assertFalse(result["dpo_reviewed"])
+        self.assertTrue(result["dpia_status"].startswith("Draft"))
 
 
 if __name__ == "__main__":
