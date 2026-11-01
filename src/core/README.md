@@ -3707,7 +3707,7 @@ usage summary do not load these message bodies.
   connection while leaving both staff caches unchanged; they do not establish
   SQL Server, live-model or operational acceptance.
 * The prompt holds only the caller's own thread, own unexpired memory and the projected case, each inside `UNTRUSTED` blocks with the block delimiters neutralised. The channel has no tools; replies are text only, labelled as unapproved, and a reply carrying tool-call or record-change syntax or a withheld reason is replaced by a refusal.
-* Break-glass is refused until `CHAT_BREAKGLASS_REF` (owner policy reference) is recorded and the caller role is named in `CHAT_BREAKGLASS_ROLES`. When allowed it needs a purpose, expires within 60 minutes, returns counts and ids only (never content) and writes granted and refused attempts to the audit ledger.
+* Break-glass is refused until `CHAT_BREAKGLASS_REF` (owner policy reference) is recorded and the caller role is named in `CHAT_BREAKGLASS_ROLES`. When allowed it needs a purpose, expires within 60 minutes, returns counts and ids only (never content) and writes granted and refused attempts, each with actor, target and redacted purpose, to the audit ledger. Policy options for the owner and DPO are in `docs/reference/research/chat-memory-dpia.md`.
 * Open items: the break-glass and administrator content-access policy is an owner decision (BRD OD-46) and is not decided here; whether contractors may use chat is undecided (denied); the injection set in `src/api/tests/test_chat_isolation.py` is a recorded regression set, not evidence of complete coverage; real-model behaviour was not exercised.
 
 Tests: `src/api/tests/test_chat_isolation.py` (extends the role matrix; replays the synthetic isolation fixture cases).

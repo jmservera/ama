@@ -9063,3 +9063,12 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Live employee-site verification, screen-reader and voice-control
   acceptance and owner confirmation of agent names remain unproven; no
   source change was made.
+
+## [2026-11-01] update | Break-glass audit purpose and OD-46 options (#162)
+
+* Refused break-glass attempts now audit the redacted purpose as well as the
+  target and reason; the test asserts purpose, target and policy reference on
+  every entry. Added a proposed administrator and break-glass policy options
+  table to `research/chat-memory-dpia.md`.
+* The policy is not decided (BRD OD-46, owner with DPO); issue #162 criterion 6
+  stays open. No regulatory snapshot changed.
