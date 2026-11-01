@@ -9064,6 +9064,14 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   acceptance and owner confirmation of agent names remain unproven; no
   source change was made.
 
+## [2026-11-01] update | AI consumption demo walk-through (Refs #432)
+
+* Added a credential-free synthetic walk-through
+  (`zava_forward.core.ai_consumption_demo`, documented in the core README) that
+  shows the held dispatch without authority, the looping request stopping at the
+  call limit, cost Unknown without billing and a synthetic-labelled report.
+* No price, bill, owner approval, spend or held-out batch was added; the
+  remaining evidence gaps in `docs/reference/resources/ai-tokenomics.md` stand.
 ## [2026-11-01] update | Operator handover verifier (#188)
 
 * Added the operator handover check to the
@@ -9106,3 +9114,23 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   the 60,000-home run: warm p95 above the NFR-002 thresholds on all routes.
 * Rewrote the rollback text to match the pipeline, which accepts only current-run
   digests. Issue #144 stays open. No regulatory snapshot changed.
+## [2026-11-01] verify | Resident sensor gauges and assistant re-verified on main (Refs #466)
+
+* Re-ran the resident core and api suites (99 tests, 1 opt-in skip), ruff and mypy
+  against main efebfc6d. Own-home synthetic gauges and history, the advisory
+  own-case assistant, cross-resident tests and the recorded model, cap and
+  credential decision in `docs/architecture/resident-assistant-prototype.md` hold.
+* The 2026-11-01 inference expiry has passed, so the assistant uses its labelled
+  rules fallback. No source change was needed.
+* Issue #466 criterion 1 (owner confirms scope and priority) stays unmet; manual
+  assistive-technology acceptance and live checks remain owner-run. No regulatory
+  snapshot changed.
+## [2026-11-01] query | Employee chat re-verification on current main (#530)
+
+* Re-ran the focused tier on main efebfc6d: core chat (99), agents chat
+  model (7), API chat panel (41) and widget focus (6) tests, ruff, mypy and
+  the employee chat browser and pinned axe check. All passed. Evidence is in
+  `.copilot-tracking/changes/2026-11-01/employee-chat-skills-530-reverify-changes.md`.
+* Live employee-site verification, screen-reader and voice-control
+  acceptance and owner confirmation of agent names remain unproven; no
+  source change was made.
