@@ -1,0 +1,85 @@
+{
+  "cold_first_request_ms": {
+    "dashboard": 43.4,
+    "detail": 60.4,
+    "list": 999.6
+  },
+  "cost_drivers": {
+    "achieved_requests_per_second": 5.0,
+    "assistant_calls": 0,
+    "billed_gib_seconds_at_limit": 119.9,
+    "billed_vcpu_seconds_at_limit": 60.0,
+    "cost": "Unknown",
+    "cost_note": "No price source or budget is set (BRD OD-51); model cost from these drivers once a price source exists.",
+    "declared_limits": {
+      "max_replicas": 4,
+      "memory_gib": 1.0,
+      "vcpu": 0.5
+    },
+    "peak_rss_mib_including_fixture_build": 981.5,
+    "process_cpu_seconds": 44.82,
+    "replicas": 1,
+    "requests": 600,
+    "rss_after_run_mib": 657.0,
+    "sql_statements": 2386,
+    "sql_statements_per_request": 3.98
+  },
+  "declared_workload": {
+    "duration_seconds": 1800,
+    "events": 600000,
+    "homes": 60000,
+    "inference_per_home": false,
+    "requests_per_second": 5.0,
+    "sessions": 20
+  },
+  "environment": {
+    "machine": "x86_64",
+    "python": "3.12.3"
+  },
+  "executed_workload": {
+    "duration_seconds": 119.9,
+    "events_in_fixture": 53821,
+    "fixture_seed": 11,
+    "homes": 60000,
+    "inference_per_home": false,
+    "meets_declared_workload": false,
+    "request_mix": {
+      "dashboard": 1,
+      "detail": 3,
+      "list": 6
+    },
+    "sessions": 20,
+    "target_requests_per_second": 5.0
+  },
+  "fixture_setup_seconds": 28.0,
+  "routes": {
+    "dashboard": {
+      "errors": 0,
+      "nfr_002_threshold_ms": 3000,
+      "p50_ms": 37.5,
+      "p95_ms": 236.8,
+      "p95_within_threshold": true,
+      "p99_ms": 664.5,
+      "requests": 60
+    },
+    "detail": {
+      "errors": 0,
+      "nfr_002_threshold_ms": 1000,
+      "p50_ms": 60.5,
+      "p95_ms": 269.9,
+      "p95_within_threshold": true,
+      "p99_ms": 439.4,
+      "requests": 182
+    },
+    "list": {
+      "errors": 0,
+      "nfr_002_threshold_ms": 1000,
+      "p50_ms": 121.2,
+      "p95_ms": 378.7,
+      "p95_within_threshold": true,
+      "p99_ms": 723.7,
+      "requests": 358
+    }
+  },
+  "scope": "Local single-process run over fictional data. Not production scale, not autoscaling or availability evidence, not an Azure measurement."
+}

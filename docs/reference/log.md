@@ -9087,3 +9087,14 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   Usage is under "Run the design gate" in the prototype profile review.
 * Issue #156 criterion 1 stays unmet: no designs, human review, accessibility or
   content evidence were supplied. No regulatory snapshot changed.
+
+## [2026-11-01] update | Container hosting status and local scale load run (#144)
+
+* Added an API startup probe, compiled scale, probe, limit and Single-revision
+  contract tests, a restart audit persistence test and a scale load harness
+  (`src/api/tests/scale_load.py`). Recorded a 120 s local run over 60,000
+  fictional homes in `docs/architecture/scale-load-2026-11-01.json`, with cost
+  drivers per unit of load and cost Unknown.
+* Issue #144 stays open: worker queue transport, hosted hardening and Azure
+  restore proof are unmet. The run is not a production-scale claim. No regulatory
+  snapshot changed.

@@ -1297,7 +1297,7 @@ orchestrator, import, token renewal and ledger verification. Compiled tests
 verify each image parameter, API health probes and 2-4 replicas, plus the
 default-off Premium Front Door/WAF/Private Link edge. Maintenance jobs retain
 their direct Python module commands; no guard-bearing image path is required.
-Worker transport remains #144; a Bicep resource is not worker acceptance.
+Worker transport remains #144 (see the hosting status table below); a Bicep resource is not worker acceptance.
 
 Hosted hardening acceptance is **Partial**: the
 [Container Apps 2025-07-01 schema](https://learn.microsoft.com/azure/templates/microsoft.app/2025-07-01/containerapps)
@@ -1312,6 +1312,39 @@ non-root startup for compatibility; this is not evidence of an Azure rollout.
 A future supported hosted configuration and private runtime proof are still
 required to meet the full hardening criterion. No hosting architecture change
 or deployment approval is inferred.
+
+### Hosting completeness status (issue 144, 2026-11-01)
+
+| Criterion | Status | Evidence |
+| --- | --- | --- |
+| Worker and job images real, versioned, deployed through the pipeline | Unmet | Images and the `src-deploy.yml` digest pipeline are real. The agents and orchestrator entrypoints still only print a version; queue transport and API post-back are not built |
+| Scale rules, probes, limits, rollback | Defined and compile-tested | `test_api_replicas_probes_and_private_edge_contract` asserts the API http rule (50 concurrent, 0 to 4 replicas), Startup, Liveness and Readiness probes, 0.5 vCPU/1 GiB limits, Single revision mode, the agents queue rule and job limits. No live rollout was run |
+| Hardening enforced in the deployed app | Partial, platform-blocked | See the hosted hardening note above; CI Docker checks only |
+| Load test on the declared fixture | Run locally, not at declared scale | [`scale-load-2026-11-01.json`](../docs/architecture/scale-load-2026-11-01.json) |
+| Single-replica restart with audit persistence | Verified on the SQL store | `src/api/tests/test_restart_audit.py` reopens the store; ledger entries, chain and digest persist. No Azure restore proof |
+
+Revision rollback: apps use `activeRevisionsMode: Single`, so a bad revision is
+rolled back by redeploying the previous run-versioned image digest through
+`pipeline.py deploy` (what-if first), then confirming `/healthz` and the
+ledger-verify job. A failed Startup or Readiness probe keeps the previous
+revision serving. No traffic splitting is used.
+
+Load run, from `src/api` with installed distributions and
+`PYTHONPATH=../core/tests:../agents/tests`:
+`python3 tests/scale_load.py --duration 120 --out report.json`. The recorded run
+used 60,000 fictional homes (53,821 contact and appointment events, not the
+declared 600,000), 20 sessions and 5 requests/s for 120 s of the declared 1,800 s,
+one in-process API replica on a SQL store (SQLite), no inference. Warm p95 was
+379 ms list, 270 ms detail and 237 ms dashboard with no errors; the first cold
+list request took about 1.0 s. These are observations against the NFR-002 staff
+thresholds, not a pass: the declared duration and event volume were not run. It
+makes no production, autoscaling or availability claim and is not an Azure
+measurement. Usage and cost drivers per unit of load (600 requests, 3.98 SQL
+statements per request, 0 assistant calls, 1 replica, 45 process CPU-seconds,
+657 MiB resident after the run, 0.5 vCPU/1 GiB billable at limit) are in the
+report; cost is Unknown because no price source is set (BRD OD-51). The 657 MiB
+resident figure includes the fixture and the load client sharing the process, and
+approaches the 1 GiB limit, so size the memory limit against a hosted run.
 
 Front Door Premium, WAF and origin Private Link remain infra-only gated
 definitions: `enablePublicEdge=false` by default, production/private profile
