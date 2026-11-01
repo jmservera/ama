@@ -250,7 +250,7 @@ async function capacityView() {
     try { return await api(path, undefined, signal); }
     catch (error) {
       if (signal.aborted || !me) throw error;
-      const detail = error instanceof TypeError || error.message === "Something went wrong." ? "" : ` ${error.message}`;
+      const detail = error instanceof TypeError || error.generic ? "" : ` ${error.message}`;
       error.message = `We could not load ${label}. Try again. If this continues, contact application support.${detail}`;
       error.capacityLoadFailure = true;
       throw error;

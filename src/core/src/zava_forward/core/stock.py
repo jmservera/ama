@@ -1,7 +1,7 @@
 """Owned stock comparisons and explicit support uncertainty, never source authority."""
 
 import logging
-from collections.abc import Iterator, Mapping
+from collections.abc import Iterable, Iterator, Mapping
 from contextlib import contextmanager
 from copy import deepcopy
 from datetime import UTC, date, datetime
@@ -177,3 +177,39 @@ def blockers(case: Mapping[str, object]) -> list[str]:
         for row in rows
         if query_status(case, row["id"]) == "Unresolved"
     ]
+
+
+def queue_rows(cases: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    """Summarise open stock conflicts per open home, oldest source first. Picks no source."""
+    rows: list[dict[str, Any]] = []
+    for case in cases:
+        if case.get("closed"):
+            continue
+        open_queries = [
+            q
+            for q in case.get("stock_reconciliation", [])
+            if query_status(case, q["id"]) == "Unresolved"
+        ]
+        if not open_queries:
+            continue
+        dates = sorted(
+            date.fromisoformat(str(side["date"]))
+            for q in open_queries
+            for side in (q["left"], q["right"])
+        )
+        owners = sorted(
+            {str(q["query_owner"]["name"]) for q in open_queries if q.get("query_owner")}
+        )
+        rows.append(
+            dict(
+                id=case["id"],
+                address=case["home"]["address"],
+                town=case["home"]["town"],
+                open_queries=len(open_queries),
+                fields=sorted({str(q["field"]) for q in open_queries}),
+                oldest_source_date=dates[0].isoformat(),
+                owners=owners,
+            )
+        )
+    rows.sort(key=lambda r: (r["oldest_source_date"], r["id"]))
+    return rows
