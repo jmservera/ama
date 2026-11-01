@@ -9,9 +9,9 @@ ROOT = Path(__file__).resolve().parents[3]
 WEB = ROOT / "src" / "api" / "src" / "zava_forward" / "api" / "web"
 DOC = (ROOT / "docs" / "reference" / "research" / "ux" / "content-standard.md").read_text()
 BANNED = re.compile(r"\b(gates?|holds?|provenance|traces?|snapshots?|envelopes?)\b", re.I)
-AUDITED_FILES = ("app.js", "assistants.js", "panels.js", "ops.js", "chat.js", "timecapture.js", "index.html", "welcome.html")
+AUDITED_FILES = ("app.js", "assistants.js", "panels.js", "ops.js", "chat.js", "timecapture.js", "role-screens.js", "law.js", "law.html", "index.html", "welcome.html")
 # Exact identifiers, raw technical JSON key and legacy stored finance value only.
-ALLOWED = ("c.gate", "p.provenance", "earlier.provenance", "i.hold", "x.hold", "Keep on hold", 'category("holds",', "envelope: p.envelope", "p.snapshot")
+ALLOWED = ("c.gate", "p.provenance", "earlier.provenance", "i.hold", "x.hold", "h.hold", "inv.hold", "Keep on hold", 'category("holds",', "envelope: p.envelope", "p.snapshot")
 
 
 def copy_violations(text):
@@ -108,6 +108,26 @@ class CopyAudit(unittest.TestCase):
         self.assertIn('onclick: () => act("edit-accept") }, "Save edited proposal"', js)
         self.assertIn("as a draft by a person. This is not an approval, consent or safety decision.", js)
         self.assertIn("Confidence: not provided. Confidence is not accuracy.", js)
+
+    def test_generic_error_and_ranking_error_state_reason_owner_next_action(self):
+        js = (WEB / "app.js").read_text()
+        self.assertNotIn("Something went wrong", js)
+        self.assertIn("e.generic = !data.error", js)
+        self.assertIn("check the recorded history before repeating a change", js)
+        self.assertIn("body === undefined ? GENERIC_READ_ERROR : GENERIC_CHANGE_ERROR", js)
+        self.assertIn("refresh to try again", js)
+        self.assertNotIn("This did not complete", js)
+        self.assertIn("Owner: application support. Next action: try All sources", (WEB / "law.js").read_text())
+        with self.assertRaises(PermissionError) as ctx:
+            Store.ranking_snapshot(object(), {"role": "Resident"})
+        for part in ("Only a manager", "Owner:", "Next action:"):
+            self.assertIn(part, str(ctx.exception))
+        self.assertNotIn("snapshot", str(ctx.exception).lower())
+
+    def test_role_screens_use_phase_check_wording(self):
+        js = (WEB / "role-screens.js").read_text()
+        self.assertIn("Benefits and phase check", js)
+        self.assertTrue(list(copy_violations(js.replace("phase check evidence", "gate evidence", 1))))
 
     def test_time_capture_copy_is_guarded(self):
         self.assertIn("timecapture.js", AUDITED_FILES)

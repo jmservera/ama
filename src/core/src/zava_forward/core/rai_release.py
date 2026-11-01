@@ -24,6 +24,22 @@ AUTHORITY_GAP = (
 )
 
 
+AUTHORITY_ROLES = (
+    "release",
+    "residual-risk acceptance",
+    "suspension",
+    "restart",
+)
+
+
+def authority_register() -> list[dict[str, Any]]:
+    """Itemise each OQ-017 authority; every holder stays unset until a human names one."""
+    return [
+        {"authority": role, "holder": None, "status": "gap", "reference": "OQ-017"}
+        for role in AUTHORITY_ROLES
+    ]
+
+
 def digest(value: object) -> str:
     return hashlib.sha256(
         json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode()
