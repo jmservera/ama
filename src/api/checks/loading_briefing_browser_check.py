@@ -337,7 +337,7 @@ def law_startup_check(
             page.keyboard.press("Enter")
         if service_failure:
             status = page.locator("#law-status")
-            expect(status).to_contain_text("Try All sources or search again")
+            expect(status).to_contain_text("try All sources or search again")
             error_text = status.inner_text()
             expect(page.locator("#startup")).to_have_count(0)
             page.clock.fast_forward(16000)
@@ -787,6 +787,10 @@ def run_browser(base: str, axe: str, output: Path) -> None:
                 rejection = briefing.get_by_role("button", name="Record rejection", exact=True)
                 with page.expect_request("**/api/ai/review/*/reject"):
                     rejection.click()
+                for _ in range(100):
+                    if held:
+                        break
+                    page.wait_for_timeout(50)
                 held[0].fulfill(status=http_status, json={
                     "error": "Synthetic confirmation needs checking", "outcome": outcome})
                 expect(briefing).to_contain_text("Confirmation needs checking")

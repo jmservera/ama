@@ -248,6 +248,13 @@ class Release(Base):
         self.assertEqual(self.service.registry(self.pm)["assistants"][0]["release"]["missing"],
                          ["approved, unexpired release record"])
 
+    def test_disabled_chat_task_is_listed_without_binding_or_release(self):
+        chat = next(t for t in self.service.registry(self.pm)["registered_tasks"] if t["id"] == "chat-case-conversation")
+        self.assertFalse(chat["enabled"])
+        self.assertIsNone(chat["binding"])
+        self.assertIsNone(chat["release"])
+        self.assertTrue(chat["release_denial"]["missing"])
+
     def test_scan_is_denied_without_release(self):
         self.drop()
         self.service.scan()
@@ -536,6 +543,9 @@ class TaskReleaseRecord(Base):
             with self.subTest(field=key), self.assertRaises(ValueError):
                 self.service.record_release(self.pm, b)
         self.assertIn("OQ-017", rel.denial("missing", ["evidence"], CAP)["authority_gap"])
+        self.assertEqual(
+            {r["authority"] for r in rel.denial("missing", [], CAP)["authority_holders"]},
+            {"release", "residual-risk acceptance", "suspension", "restart"})
 
     def test_each_binding_mismatch_denies_reactive_and_proactive_with_no_calls(self):
         for key in rel.BOUND:

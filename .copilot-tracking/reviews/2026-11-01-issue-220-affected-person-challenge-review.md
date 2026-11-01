@@ -10,3 +10,7 @@
 * PR wording: `Refs #220`, naming criterion 5 as unmet.
 * PR #641 Copilot review (3 threads) routed as later work and fixed: generator-backed dependencies, atomic `review` validation, atomic `resolve` validation. Original outcome unchanged.
 * PR #641 second Copilot review (3 threads: ID collision, version-blind staleness, misplaced test entry point) routed as later work and fixed with regression tests. Original outcome unchanged.
+
+## Correction cycle 2 (2026-11-01)
+
+Copilot thread on challenges.py: resolving a challenge dropped a pending hazard referral from the listing. Fix: `hazard_referrals()` lists referrals with status `referred_on_receipt` regardless of challenge status; new `confirm_hazard_handoff()` (named owner, non-empty evidence) marks `handed_off`. Test and README contract updated. Validation: ruff check, ruff format --check, mypy clean; tests.test_challenges 14 pass. Human review remains required.

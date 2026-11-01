@@ -9,6 +9,10 @@ Reads Azure CLI JSON from files so it can be tested offline. Never reads or prin
       roles.json is `az role assignment list --scope <vault id> --include-inherited -o json`.
   secret_lifecycle.py rotation-plan --vault V --app-id ID
       prints the ordered, zero-downtime rotation steps (no secret is created).
+  secret_lifecycle.py rotation-simulate
+      offline model of the rotation order; exits 1 if sign-in would fail at any step.
+  secret_lifecycle.py review-status --record review.json [--now ISO]
+      exits 1 unless every decision is keep or remove, a reviewer is named and the next review is not overdue.
 """
 import argparse
 import datetime as dt
@@ -106,12 +110,59 @@ def rotation_plan(vault, app_id):
     ]
 
 
+def rotation_timeline(order):
+    """Model the Entra credential/vault/app states for a rotation order.
+
+    `order` is a sequence of: append, store, refresh, verify, delete_old.
+    Returns one entry per step with whether sign-in works (the secret the app
+    presents is still a valid credential on the app registration).
+    """
+    valid = {"old"}
+    vault = "old"
+    presented = "old"
+    timeline = []
+    for step in order:
+        if step == "append":
+            valid.add("new")
+        elif step == "store":
+            vault = "new"
+        elif step == "refresh":
+            presented = vault
+        elif step == "delete_old":
+            valid.discard("old")
+        timeline.append({"step": step, "presented": presented, "valid": sorted(valid), "signInOk": presented in valid})
+    return timeline
+
+
+SAFE_ORDER = ("append", "store", "refresh", "verify", "delete_old")
+
+
+def review_status(record, now):
+    """Problems that stop an access review record counting as completed and current."""
+    problems = []
+    if not str(record.get("reviewer") or "").strip():
+        problems.append("no reviewer recorded")
+    rows = record.get("assignments", [])
+    if not rows:
+        problems.append("no assignments recorded")
+    for row in rows:
+        if row.get("decision") not in ("keep", "remove"):
+            problems.append(f"{row.get('principalId')}: decision is {row.get('decision')!r}, needs keep or remove")
+    due = record.get("nextReviewDue")
+    if not due:
+        problems.append("no nextReviewDue date")
+    elif parse_time(due + "T00:00:00Z") < now:
+        problems.append(f"review overdue since {due}")
+    return problems
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("command", choices=["check", "review", "rotation-plan"])
+    parser.add_argument("command", choices=["check", "review", "rotation-plan", "rotation-simulate", "review-status"])
     parser.add_argument("--inventory", default="infra/secret-inventory.json")
     parser.add_argument("--secrets")
     parser.add_argument("--assignments")
+    parser.add_argument("--record")
     parser.add_argument("--reviewer", default="")
     parser.add_argument("--vault", default="<vault>")
     parser.add_argument("--app-id", default="<app id>")
@@ -121,6 +172,18 @@ def main(argv=None):
     if args.command == "rotation-plan":
         print("\n".join(rotation_plan(args.vault, args.app_id)))
         return 0
+    if args.command == "rotation-simulate":
+        timeline = rotation_timeline(SAFE_ORDER)
+        for row in timeline:
+            print(f"{row['step']}: presented={row['presented']} valid={row['valid']} signInOk={row['signInOk']}")
+        return 0 if all(row["signInOk"] for row in timeline) else 1
+    if args.command == "review-status":
+        if not args.record:
+            print("--record is required", file=sys.stderr)
+            return 2
+        problems = review_status(load(args.record), now)
+        print("\n".join(problems) if problems else "review record complete and current")
+        return 1 if problems else 0
     inventory = load(args.inventory)
     problems = validate_inventory(inventory)
     if problems:

@@ -84,8 +84,9 @@ The regression coverage adds 12 cases. Run the 19 targeted cases with:
 python -m pytest .github/rubric/scripts/test_gate.py -q -k 'evidence_reference or changed_deck or unchanged_deck or unsupported_slide or pptx_slide or no_pitch_or_thought'
 ```
 
-The wider gate/prepare/adapter suites have 19 confirmed pre-existing failures
-coupled to the historical 66-point seed and retired prototype registry.
+The wider gate/prepare/adapter suites had 19 confirmed pre-existing failures
+coupled to the historical 66-point seed and retired prototype registry; see
+the 2026-11-01 reassessment in [Zava Forward MVP](#zava-forward-mvp).
 This repair does not change those fixtures, rubric defaults or `latest.json`.
 The recorded PR score was 35; replaying its saved assessment with the repaired
 parser yielded 47, a reproduction rather than a fresh assessment. The separate
@@ -343,10 +344,11 @@ Local source/compiled lifecycle regressions include transient and persistent
 old-head visibility, true concurrent movement/deletion before and after Git
 advertisement, actual remote score-push rejection, and the real deterministic
 nondecreasing comparison. These tests simulate API responses, not hosted API
-latency or product acceptance. The wider rubric suite retains 21 pre-existing
-failures (seed/adapter assumptions and retired trigger expectations), reproduced
-unchanged at the pre-recovery head; they are not silently suppressed or repaired
-by this bounded lifecycle change.
+latency or product acceptance. The wider rubric suite retained 21 pre-existing
+failures (seed/adapter assumptions and retired trigger expectations) at the
+pre-recovery head; they were not silently suppressed or repaired by this bounded
+lifecycle change. The 2026-11-01 count is 17 (see
+[Zava Forward MVP](#zava-forward-mvp)).
 
 ## Adding an Artifact Type
 
@@ -406,6 +408,24 @@ On 2026-10-15 (#199 M6) `mvp/README.md` was split into the per-project READMEs
 `src/**/*` already counts, so the `mvp/README.md` glob was removed. The dated
 evidence sections moved unchanged; only the `mvp/` pointer README is left, and
 it is not scored.
+
+On 2026-11-01 (#198) the registry state was re-checked. `artifacts.json` has no
+`mvp/` include glob and no `prototype/` or `prototype/deploy/**/*.bicep` glob;
+only the defensive `mvp/data/**` and `mvp/web/vendor/**` excludes remain, and
+`rubric_version` is still 2. The migration baseline was 47 of 100 (commit
+9261c5c); `scores/latest.json` now records 77 (A34, B23, C11, D9) at commit
+051f6a3. The recovery came through later per-criterion re-evidencing from
+`src/**/*`, not through a registry or version change. The historical per-pull-
+request dip records and cut-over sequence are documented in
+`docs/architecture/cutover-evidence-pack.md` and are not reconstructed here.
+
+The same day the 19 recorded pre-existing test failures were re-assessed by
+running `python -m pytest .github/rubric/scripts -q`: 17 failed, 358 passed, 7
+skipped. Seven failures assert the retired 66-point seed (six in `test_gate.py`,
+one in `test_prepare.py`) and ten are tracking-only trigger cases for
+`infra-plan`, `mvp-ci`, `mvp-validation`, `src-ci` and `src-deploy`. None
+touches the registry or `src/` counting, and they remain unrepaired follow-up
+work.
 
 ### Solution code and infrastructure
 

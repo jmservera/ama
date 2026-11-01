@@ -37,6 +37,10 @@ private production profile. They do not authorize deployment.
 
 Optional parameters: `teamsWebhookUrl`, `evidenceStore`, `sharePointSiteId`, `monthlyBudget`. See the M365 section of the ADR.
 
+## SQL tier and recovery (Refs #145)
+
+SQL tier, auto-pause, vCores, backup redundancy and retention are `sql*` parameters; the pilot example records the provisioned tier. The restore and ledger verification procedure, undecided objectives and unperformed evidence are in [sql-recovery-runbook.md](sql-recovery-runbook.md).
+
 ## Monitoring Authoring Candidate (Refs #146)
 
 The [operator runbooks and issue gap matrix](./monitoring-runbooks.md) catalogue
@@ -1264,6 +1268,8 @@ az deployment sub what-if -l uksouth -f infra/governance.bicep
 az deployment sub create -l uksouth -f infra/governance.bicep
 ```
 
+The policy and Defender decisions, owner, billable inventory and pending cost approval are recorded in [`defender-decision.json`](./defender-decision.json); unit prices were not retrievable on 2026-11-01 and are not invented.
+
 Open items: Defender cost estimate and the decision to enable; renewal of EX-001 after 2026-12-31 (never on a pilot group); whether to switch any policy from audit to Deny; the group must carry the required tags before Deny is considered. The platform-wide MCAPS policy itself is managed outside this repository.
 
 The synthetic-development decision is to audit the selected public-access,
@@ -1297,7 +1303,7 @@ orchestrator, import, token renewal and ledger verification. Compiled tests
 verify each image parameter, API health probes and 2-4 replicas, plus the
 default-off Premium Front Door/WAF/Private Link edge. Maintenance jobs retain
 their direct Python module commands; no guard-bearing image path is required.
-Worker transport remains #144; a Bicep resource is not worker acceptance.
+Worker transport remains #144 (see the hosting status table below); a Bicep resource is not worker acceptance.
 
 Hosted hardening acceptance is **Partial**: the
 [Container Apps 2025-07-01 schema](https://learn.microsoft.com/azure/templates/microsoft.app/2025-07-01/containerapps)
@@ -1312,6 +1318,56 @@ non-root startup for compatibility; this is not evidence of an Azure rollout.
 A future supported hosted configuration and private runtime proof are still
 required to meet the full hardening criterion. No hosting architecture change
 or deployment approval is inferred.
+
+### Hosting completeness status (issue 144, 2026-11-01)
+
+| Criterion | Status | Evidence |
+| --- | --- | --- |
+| Worker and job images real, versioned, deployed through the pipeline | Unmet | Images and the `src-deploy.yml` digest pipeline are real. The agents and orchestrator entrypoints still only print a version; queue transport and API post-back are not built |
+| Scale rules, probes, limits, rollback | Defined and compile-tested | `test_api_replicas_probes_and_private_edge_contract` asserts the API http rule (50 concurrent, 0 to 4 replicas), Startup, Liveness and Readiness probes, 0.5 vCPU/1 GiB limits, Single revision mode, the agents queue rule and job limits. No live rollout was run |
+| Hardening enforced in the deployed app | Partial, platform-blocked | See the hosted hardening note above; CI Docker checks only |
+| Load test on the declared fixture | Run locally, not at declared scale | [`scale-load-2026-11-01.json`](../docs/architecture/scale-load-2026-11-01.json) |
+| Single-replica restart with audit persistence | Verified on the SQL store | `src/api/tests/test_restart_audit.py` reopens the store; ledger entries, chain and digest persist. No Azure restore proof |
+
+Revision rollback: apps use `activeRevisionsMode: Single`, and a failed Startup
+or Readiness probe keeps the previous revision serving. There is no historical
+digest redeploy path: `pipeline.py` accepts only digests built, scanned and
+pushed by the current run for the current `RELEASE_SHA`, and `src-deploy.yml`
+releases only the head of `main` after a successful manual Source projects CI
+run for that exact SHA. To roll back an applied release, revert the change
+through a reviewed pull request, run Source projects CI manually on the
+resulting `main` head, then dispatch `src-deploy.yml` for the target environment
+so the rebuilt images pass scanning and admission, the environment approvals
+apply and what-if runs first. Confirm `/healthz` and the ledger-verify job
+afterwards. No traffic splitting is used, and a guarded redeploy of an earlier
+release identity would be a separate, tested change.
+
+Load run, from `src/api` with installed distributions and
+`PYTHONPATH=../core/tests:../agents/tests`:
+`python3 tests/scale_load.py --duration 120 --out report.json`. The recorded run
+used 60,000 fictional homes (53,821 contact and appointment events, not the
+declared 600,000), 20 sessions and 5 requests/s for 120 s of the declared 1,800 s,
+one in-process API replica on a SQL store (SQLite), no inference. Homes carry an
+explicit synthetic marker and a deterministic lifecycle, and the run fails unless
+the dashboard covers all 60,000 homes. Latency includes reading the full response
+body. Warm p95 was 7,076 ms list, 7,512 ms detail and 7,698 ms dashboard with no
+errors, so all three routes exceeded the NFR-002 staff thresholds (1 s, 1 s and 3 s)
+in this run; the first cold dashboard request took about 1.5 s. The dashboard
+recomputes every lifecycle under the store lock, and the single process, load
+client and dashboard share one interpreter, so the figures are local measurements
+that need a hosted run before any capacity decision. The stored report timed each
+request from dispatch to completion, so it omits scheduling backlog and is a lower
+bound for that metric; newer runs time from scheduled arrival, and later runs
+report the fixed observation window, in-window throughput (5% tolerance) and drain
+time separately. The declared duration and
+event volume were not run, and the run makes no production, autoscaling or
+availability claim and is not an Azure measurement. Usage and cost drivers per unit
+of load (600 requests, 3.99 SQL statements per request, 0 assistant calls,
+1 replica, 105 process CPU-seconds, 708 MiB resident after the run, 0.5 vCPU/1 GiB
+billable at limit) are in the report; cost is Unknown because no price source is
+set (BRD OD-51). The 708 MiB resident figure includes the fixture and the load
+client sharing the process, and approaches the 1 GiB limit, so size the memory
+limit against a hosted run.
 
 Front Door Premium, WAF and origin Private Link remain infra-only gated
 definitions: `enablePublicEdge=false` by default, production/private profile
@@ -1348,7 +1404,7 @@ not establish tenant administrator authority or operational approval.
 Open items:
 
 * Owner sign-off of the matrix review (reviewer line is pending).
-* Contractor B2B guest model (ADR 0002, #116) is proposed, not confirmed; tenant guest and cross-tenant policy are manual tenant steps.
+* Contractor B2B guest model (ADR 0002, #116) is proposed, not confirmed; tenant guest and cross-tenant policy are manual tenant steps. The design is recorded in `entra/app-registration.json` (`contractorIdentity`): guests may hold only the `Contractor` app role, assignment is required, and the staff, roster and application-admin initializers accept enabled `Member` users only. `test_identity_rbac` checks these properties; the tenant owner's confirmation remains open.
 * Drop `db_ddladmin` from the api identity after schema migration moves out of app start.
 * Live `az role assignment list` comparison against a deployed group was not run here.
 
@@ -1378,22 +1434,26 @@ Secrets are listed in [secret-inventory.json](secret-inventory.json) with an own
 
 | Secret | Rotation interval | Expiry alert | Owner |
 | --- | --- | --- | --- |
-| `entra-client-secret` | 180 days | 30 days | Platform operator, named person open |
-| `entra-token-store-sas` | 1 day (renewal job) | 3 days | Platform operator, named person open |
+| `entra-client-secret` | 180 days | 30 days | Juan Manuel Servera (repository-recorded owner; confirm or delegate) |
+| `entra-token-store-sas` | 1 day (renewal job) | 3 days | Juan Manuel Servera (as above) |
+| `resident-demo-password-verifier` | 30 days | 7 days | Juan Manuel Servera (as above) |
+| `resident-demo-session-key` | 30 days | 7 days | Juan Manuel Servera (as above) |
+
+A test requires every vault secret declared in `resident-demo.bicep` and `containerapps.bicep` to appear in the inventory with an owner.
 
 Expiry alerting: the vault diagnostic setting sends all logs to Log Analytics, and `modules/keyvault.bicep` adds a scheduled query alert on `SecretNearExpiryEventGridNotification` and `SecretExpiredEventGridNotification` (logged whether or not an Event Grid subscription exists) routed to the operations action group. A second alert fires on repeated 401/403 data-plane results. Every secret must carry an `--expires` date or the alert cannot fire; `check` reports secrets with no expiry.
 
 ### Rotate the Entra client secret
 
-Run `secret_lifecycle.py rotation-plan --vault <vault> --app-id <id>`. The order gives no downtime: append a new app credential (the old stays valid), write it as a new version of `entra-client-secret` with an expiry, let the versionless Container Apps reference refresh (up to 30 minutes) or restart the active revision, verify sign-in, then delete the old credential. Do not delete first. The repeatable scripted step is `create-api-app-registration.sh -v <vault>`; add an `--end-date` when setting the secret.
+Run `secret_lifecycle.py rotation-plan --vault <vault> --app-id <id>`; `secret_lifecycle.py rotation-simulate` runs an offline model of the same order and exits non-zero if sign-in would fail at any step (tests also show that deleting the old credential first, or before the app refreshes, fails). The model proves the ordering only, not a live outage-free exercise. The order gives no downtime: append a new app credential (the old stays valid), write it as a new version of `entra-client-secret` with an expiry, let the versionless Container Apps reference refresh (up to 30 minutes) or restart the active revision, verify sign-in, then delete the old credential. Do not delete first. The repeatable scripted step is `create-api-app-registration.sh -v <vault>`; add an `--end-date` when setting the secret.
 
 ### Access review
 
-Quarterly (`reviewIntervalDays` 90), export `az role assignment list --scope <vault id> --include-inherited -o json` and run `secret_lifecycle.py review --assignments roles.json --reviewer <name>`. A named human sets each pending decision to keep or remove and the signed record is kept with the operations evidence. Owner alone gives no data-plane access.
+Quarterly (`reviewIntervalDays` 90), export `az role assignment list --scope <vault id> --include-inherited -o json` and run `secret_lifecycle.py review --assignments roles.json --reviewer <name>`. A named human sets each pending decision to keep or remove and the signed record is kept with the operations evidence. `secret_lifecycle.py review-status --record review.json` exits non-zero while any decision is pending, no reviewer is named or `nextReviewDue` has passed, so a scheduled run can flag a missing or stale review. Owner alone gives no data-plane access.
 
 ### Open items
 
-* Named owners for each secret and for the review.
+* Owner confirmation (or delegation) for each secret and for the review.
 * A live no-downtime rotation exercise in the test environment; only the ordering and checks are tested offline.
 * Confirmation after deployment that the alert rules evaluate in Azure Monitor (not verified here; the template builds with `az bicep build`).
 * Scheduling the review and `check` runs (for example a calendar task or pipeline) is an owner choice.
@@ -3524,11 +3584,44 @@ be substituted with a Graph token or forged proxy claims.
 
 ## Rebuild authoring and local rehearsal (Refs #148)
 
-The installed module below authors the ordered rebuild/check contracts and runs
-a **synthetic local SQLite control-plane simulation only**. It is not an Azure
-deployment/teardown script, does not invoke the infrastructure helpers, and
-cannot complete issue #148. There is deliberately no cloud adapter or `--apply`
-option. The historical observed rebuild below remains unchanged.
+The installed `zava_forward.orchestrator.rebuild` module authors the ordered
+rebuild/check contracts and runs a **synthetic local SQLite control-plane
+simulation only**. The historical observed rebuild below remains unchanged.
+
+### Scripted Azure rebuild and teardown (Refs #148)
+
+`python3 -m zava_forward.orchestrator.rebuild_azure {rebuild|teardown}` drives
+the same stages against the `ama` group. It is a **dry run by default** (prints
+the plan, makes no `az` or network call); `--apply` executes. Every command is
+an argv list with no shell. A guard refuses any argument that looks like a
+secret or token; the SQL token goes only in a child process environment, and
+the Key Vault credential is checked by name, never read or passed. The seed and
+roster files are scanned and rejected if they hold an email-like value outside
+`*.test` or `example.com/org/net`.
+
+```bash
+python3 -m zava_forward.orchestrator.rebuild_azure rebuild \
+  --subscription <id> --registry <acr> --image-tag <tag> \
+  --parameters <private.bicepparam> --seed <synthetic-seed.json> \
+  --roster <synthetic-roster.json> --container-app <api-app>   # dry run
+# add --apply to execute; --from-stage <name> resumes after a stop
+```
+
+Rebuild requires empty resource and budget inventories, then runs deploy
+(`deployApplications=false`), discovery, image build, credential check, SQL users,
+synthetic seed, application deploy, Entra `--check`, staff reconcile and
+`--check`, health/401/redirect probes and a revision restart with health recheck,
+verifying after each step. `workload-sql`, `model-standard` and `model-capable`
+have no scripted probe: the run stops with exit status 2 and records them as
+`operator-gated`, never as passed. Teardown reuses the dependency order
+(apps/jobs, private endpoints, environment, network, identities), waits for each
+delete, rechecks the exact inventory before and after each delete, deletes
+budgets last, and verifies both inventories are empty. A resource-group lock, a
+`retain=true` tag, an unmodeled type or inventory drift stops it before the next
+deletion; the group, locks and soft-deleted services are never touched.
+Tests (`src/orchestrator/tests/test_rebuild_azure.py`) use a stateful fake `az`
+as the disposable environment. A real disposable Azure rebuild/teardown has not
+been run or authorised, so that part of the fourth criterion remains open.
 
 After installing the [source packages](../src/README.md#commands):
 
@@ -3560,14 +3653,14 @@ unsupported inventory must stop, not be skipped. It never removes locks,
 purges soft-deleted services or weakens retention to obtain an empty result.
 Budgets are separate and last. These checks do not eliminate cloud races.
 
-Actual #148 acceptance still needs integration with the existing #138
-deployment/release helpers and SQL/auth/staff setup, authorized preservation of
+The remaining #148 acceptance needs authorized preservation of
 the continuing synthetic stock/programme lineage, private credential/tenant
 operations and a separately authorized disposable Azure rebuild/teardown.
 An owner must approve the exact deletion/preservation inventory; Legal/Compliance
 must resolve any applicable retained-data/hold disposal decision before a later
 live adapter may act. No such decision, authority, deployment or cloud test is
-inferred from this rehearsal. All four issue criteria remain partial.
+inferred from this rehearsal. The first three criteria are implemented and unit-tested
+against a fake `az`; the fourth is partial until a disposable Azure run is authorised.
 
 ## From-empty rebuild observed on 2026-10-12
 

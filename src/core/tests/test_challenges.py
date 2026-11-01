@@ -171,5 +171,48 @@ class Robustness(unittest.TestCase):
         self.assertEqual({k: reg.challenges[k] for k in keep}, keep)
 
 
+class HazardConcern(unittest.TestCase):
+    def test_hazard_concern_is_referred_on_receipt_without_clock_or_sanction(self) -> None:
+        reg = ChallengeRegister(GRAPH)
+        args = (SUBJECT, "DEC-1", "Mould is making us ill.", "Pat Owner", "2026-11-10")
+        urgent = reg.record_digital(*args, hazard_concern=True)
+        routine = reg.record_digital(*args)
+        self.assertEqual(urgent["hazard_referral"]["to"], "Pat Owner")
+        self.assertNotIn("hazard_referral", routine)
+        self.assertEqual([r["id"] for r in reg.hazard_referrals()], [urgent["id"]])
+        for key in ("hazard_clock", "sanction", "refusal", "consent"):
+            self.assertNotIn(key, urgent)
+
+    def test_resolution_keeps_referral_listed_until_evidenced_handoff(self) -> None:
+        reg = ChallengeRegister(GRAPH)
+        rec = reg.record_staff(
+            "Sam Staff",
+            "phone",
+            SUBJECT,
+            "DEC-1",
+            "Gas smell.",
+            "Pat Owner",
+            "2026-11-10",
+            hazard_concern=True,
+        )
+        self.assertEqual(len(reg.hazard_referrals()), 1)
+        reg.resolve(rec["id"], "Pat Owner", "upheld", "Checked.")
+        self.assertEqual(len(reg.hazard_referrals()), 1)
+        with self.assertRaises(PermissionError):
+            reg.confirm_hazard_handoff(rec["id"], "Other", "Called out.")
+        with self.assertRaises(ValueError):
+            reg.confirm_hazard_handoff(rec["id"], "Pat Owner", " ")
+        self.assertEqual(len(reg.hazard_referrals()), 1)
+        self.assertEqual(reg.view(rec["id"])["hazard_referral"]["status"], "referred_on_receipt")
+        reg.confirm_hazard_handoff(rec["id"], "Pat Owner", "Engineer called out 09:10.")
+        self.assertEqual(reg.hazard_referrals(), [])
+        before = reg.view(rec["id"])
+        with self.assertRaises(ValueError):
+            reg.confirm_hazard_handoff(rec["id"], "Pat Owner", "Second call.")
+        after = reg.view(rec["id"])
+        self.assertEqual(after["hazard_referral"]["handoff_evidence"], "Engineer called out 09:10.")
+        self.assertEqual(after["history"], before["history"])
+
+
 if __name__ == "__main__":
     unittest.main()

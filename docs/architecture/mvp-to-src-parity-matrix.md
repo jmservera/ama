@@ -602,6 +602,30 @@ Recorded from the owner; they close the open questions of the earlier draft.
 * Whether `mvp/README.md` evidence sections are preserved verbatim in the split
   READMEs (recommended).
 
+## Closure Record for #199
+
+Recorded 2026-11-01 from merged pull request metadata (`gh pr view`) and the
+tracked tree. This is a delivery record, not an owner approval.
+
+| Step | Pull request | Merged (UTC) |
+| --- | --- | --- |
+| M1 | #296 | 2026-10-15 17:19 |
+| M2 | #297 | 2026-10-15 17:49 |
+| M3 | #298 | 2026-10-15 18:12 |
+| M4 | #299 | 2026-10-15 18:33 |
+| M5 | #300 | 2026-10-15 19:02 |
+| M6 | #302 | 2026-10-15 19:27 |
+| Retirement of `mvp/` and `prototype/` | #499 | 2026-10-27 18:51 |
+
+* `git ls-files` on 2026-11-01 shows no `mvp/` or `prototype/` paths and no
+  `zavaforward_mvp` name, so no module exists in both places.
+* Seven of the eight acceptance criteria are ticked on the issue. The
+  remaining criterion, that the migration order avoids files edited by open
+  pull requests in dependent epics, is not proven by recorded evidence: no
+  per-step overlap check against open pull requests was kept, and those
+  branches are now merged. It needs an owner decision to accept the recorded
+  order and the sequencing rules above as sufficient.
+
 ## Related Documents
 
 * [ADR 0001 Azure architecture](../adrs/0001-azure-architecture.md)

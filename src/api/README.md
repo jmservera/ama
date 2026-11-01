@@ -126,7 +126,9 @@ started with `--remote-debugging-port=9222`, export independently verified
 `ZF_EXPECTED_TID` and `ZF_EXPECTED_OID`, then run
 `python3 -m checks.employee_live_acceptance [--cdp-url http://127.0.0.1:9222]
 [--origin <app origin>]` from this directory. Only loopback CDP is accepted.
-It prints fixed boolean JSON and exits 0 only when chat, map and case all pass
+It prints fixed boolean JSON and exits 0 only when chat, map, case and Today's briefing (read-only: label,
+sources and prepared-at time visible, no review action taken; #531 criterion 7
+evidence) all pass
 (1 on a failed stage, 2 when refused or no matching page). A passing live run
 is the evidence for criterion 3; the offline tests are not.
 
@@ -504,6 +506,8 @@ control; retry uses the currently selected mode.
 
 HAX design mapping (pattern references, not usability acceptance):
 
+The dated [HAX design note](../../docs/reference/research/ux/briefing-hax-design-note.md) holds the fuller mapping.
+
 | Guideline | Applied pattern |
 | --- | --- |
 | [G1/G2](https://www.microsoft.com/en-us/haxtoolkit/library/) | Source-type label, explicit limits, confidence not inferred |
@@ -657,7 +661,7 @@ screen-reader/usability acceptance, full Fluent runtime adoption or WCAG
 conformance.
 
 Add `--scale` to the browser command to also exercise the existing seed-174,
-version-1.2.0 wholly fictional 60,000-home fixture. The shared test overlay
+version-1.3.0 wholly fictional 60,000-home fixture. The shared test overlay
 maps those existing home IDs/attributes onto four explicit known lifecycle
 templates, not random stock events: 15,000 open cases, 45,000 archived cases,
 45,000 usable lifecycles and 15,000 unknown closure dates. The inherited
