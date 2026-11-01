@@ -126,7 +126,7 @@ const assetInputs = [
   ["Investment priority", "Asset owner to name the priority basis"],
   ["Cost forecast", "Finance owner to supply a dated forecast"],
   ["Benefit baseline", "Programme owner to supply a measured baseline"],
-  ["Phase gate evidence", "Programme manager to name the gate evidence"]
+  ["Phase check evidence", "Programme manager to name the evidence for the phase check"]
 ];
 function assetCost(report) {
   const m = report?.consumption;
@@ -182,8 +182,8 @@ registerRoleScreen({
       screenPanel("Missing investment inputs",
         screenTable("Investment inputs", ["Input", "State", "Resolution owner and action"],
           assetInputs.map(([name, action]) => [name, "Unknown", action]))),
-      screenPanel("Benefits and phase gate",
-        screenUnknown("No measured benefit or gate evidence is supplied for this home.", "Programme manager to name an owner", "Supply dated evidence before any gate is read as passed")),
+      screenPanel("Benefits and phase check",
+        screenUnknown("No measured benefit or phase check evidence is supplied for this home.", "Programme manager to name an owner", "Supply dated evidence before any phase check is read as passed")),
       screenPanel("Portfolio scope (separate from this home)",
         screenFields([["Cases permitted to your role", extra?.portfolio?.total],
           ["Meaning", "A role-scoped count, not a stock, budget or programme total"]])),
