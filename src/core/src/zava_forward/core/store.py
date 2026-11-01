@@ -23,7 +23,7 @@ from .chatthreads import ChatMixin
 from .doc_controls import DocControlsMixin, open_scanner
 from .documents import ACCEPTED, MAX_BYTES, open_document_store
 from .procurement import ProcurementMixin
-from .quality import QualityMixin
+from .quality import QualityMixin, handover_blockers
 from .workflows import MANAGER_ROLES, WorkflowMixin, handoff_view, hazard_view
 
 DECISIONS = ("Not yet asked", "Waiting", "Accepted", "Declined")
@@ -204,7 +204,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
     def ranking_snapshot(self, user, policy=None):
         """Snapshot of the open-case ranking under a policy version, stored beside the data when it changes. Managers only."""
         if user["role"] not in MANAGER_ROLES:
-            raise PermissionError("Only a manager can see the ranking snapshot.")
+            raise PermissionError("Only a manager can see the saved ranking record. Owner: your manager. Next action: ask a manager to open it.")
         pol = ranking.POLICIES.get(policy or ranking.CURRENT["version"])
         if pol is None:
             raise ValueError(f"Unknown ranking policy version. Known: {', '.join(sorted(ranking.POLICIES))}")
@@ -365,6 +365,9 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             if not c or (user is not None and projection.is_contractor(user) and not projection.own_case(user, c)):
                 return None
             d = json.loads(json.dumps(c))
+            d["checklist"] = self.checklist(c)
+            d["technical_missing"] = missing_items(c, usable_only=True)
+            d["quality_handover_blockers"] = handover_blockers(c)
             from .resident_decisions import INTAKE_FIELDS, followup_view, challenge_references_visible
             followup_view(d)
             if user is not None and challenge_references_visible(self, user):
@@ -398,8 +401,6 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 d["status"] = "Waiting on shared building review"
         d["can_advance"] = c["stage"] == READY_STAGE
         d["suggestions"] = insights.recommend_handover(c, list(self.cases.values()), self.data["staff"] + identity.people(self))
-        d["checklist"] = self.checklist(c)
-        d["technical_missing"] = missing_items(c)
         d["measure_decisions"] = measure_decision_view(c)
         d["resident_retention"] = retention_schedule(c)
         d["can_record_resident"] = bool(user and user.get("role") in projection.RESIDENT_RECORD_ROLES)
@@ -421,6 +422,13 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
     def bulk_edit_apply(self, user, body):
         from . import bulk_edits
         return bulk_edits.apply(self, user, body)
+
+    def stock_queue(self, user):
+        """Open stock conflicts across homes for managers. Read-only, not an investment priority."""
+        if user["role"] not in MANAGER_ROLES:
+            raise PermissionError("Only a manager can see the stock conflict queue.")
+        with self.lock:
+            return stock.queue_rows(self.cases.values())
 
     def stock_reconcile(self, user, case_id, body):
         from . import controls

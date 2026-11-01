@@ -12,7 +12,20 @@ from checks.design_system_browser_check import check, main
 from checks.role_screens_fixtures import synthetic_data
 
 # Independent child branches extend only their own installed-screen expectation.
-SCENARIOS: dict[str, tuple[str, str, tuple[str, ...]]] = {}
+SCENARIOS: dict[str, tuple[str, str, tuple[str, ...]]] = {
+    "232": (
+        "sam@example.test",
+        "Resident choice and update queue",
+        (
+            "Loft insulation",
+            "Paused or withdrawn by the resident",
+            "SYN resident requested time",
+            "SYN-SAFE-232",
+            "SYN-REQUEST-232",
+            "Large print",
+        ),
+    ),
+}
 
 
 def check_projected_queue(browser: Browser, base: str) -> None:
@@ -104,6 +117,9 @@ def run_browser(base: str) -> None:
             page.get_by_role("link", name="Specialist screens", exact=True).click()
             page.get_by_role("heading", name="Specialist screens", exact=True).wait_for()
             if not selected:
+                installed = page.locator("nav[aria-label='Specialist screens'] a").count()
+                check("parent registry is explicit: empty message or installed screen links",
+                      installed > 0 or "No specialist screens are installed" in page.locator("main").inner_text())
                 main_text = page.locator("main").inner_text()
                 check("Resident Liaison Officer sees only the registered triage screen",
                       "Repairs and hazard triage" in main_text
@@ -119,6 +135,15 @@ def run_browser(base: str) -> None:
                           "el => getComputedStyle(el).color !== 'rgb(255, 255, 255)'"
                       ))
                 check("no automatic selection or detail fetch", "case=" not in page.url)
+                if selected == "232":
+                    summary = page.get_by_role("region", name="Choice and update commitments by home", exact=True)
+                    summary.wait_for()
+                    summary_text = summary.inner_text()
+                    check("232 queue summary lists ZF-1 choice, pause and update commitment",
+                          "ZF-1" in summary_text and "Loft insulation" in summary_text
+                          and "SYN-SAFE-232" in summary_text)
+                    check("232 queue summary has no contact links",
+                          summary.locator('a[href^="tel:"], a[href^="mailto:"], button').count() == 0)
                 page.locator('a.item[href*="case=ZF-1"]').click()
                 evidence = page.get_by_role("region", name="Evidence for ZF-1", exact=True)
                 evidence.wait_for()

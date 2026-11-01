@@ -77,9 +77,9 @@ PYTHONPATH=../core/tests python3 -m unittest discover -s tests -p 'test_chat_*.p
 python3 -m zava_forward.agents.chat_eval --json
 ```
 
-The full development evaluation intentionally exits 1: the existing unsupported
-claim with a valid citation remains a critical failure and enablement is
-fail/disabled. Synthetic poisoning/injection passes are not actual-model or
+The scripted unsupported-claim scenario now passes via the lexical claim check
+(unlisted paraphrases can still bypass it). Enablement stays disabled with outcome
+insufficient. Synthetic poisoning/injection passes are not actual-model or
 human assurance. Held-out independent labels, approved thresholds/accountable
 reviewer and competent authorized human exercises remain unavailable.
 
@@ -335,7 +335,8 @@ them that start with `cd src/api` run from the api project.
 ## AI evaluation harness
 
 * AI evaluation harness, offline: `python3 -m zava_forward.agents.ai_eval`
-* Human-review effectiveness test (AC-070), offline and scripted: `python3 -m zava_forward.agents.review_effectiveness [--json]`. Seeded wrong, stale, unsupported and incomplete proposals with valid citations, plus correct controls, go through the real review path; a competent panel must detect all defects while default-accept and automation-bias panels must fail the gate. Reports detection, corrections and effort against the workflow-only run of the same case. Scripted panels are not human evidence: authorised reviewers and OQ-017 reviewer authority remain open. Golden file `evals/review_effectiveness_golden.json`
+* Human-review effectiveness test (AC-070), offline and scripted: `python3 -m zava_forward.agents.review_effectiveness [--json]`. Seeded wrong, stale, unsupported and incomplete proposals with valid citations, plus correct controls, go through the real review path; a competent panel must detect all defects while default-accept and automation-bias panels must fail the gate. Reports detection, corrections and effort against the workflow-only run of the same case. A provisional reviewer-authority record (authorised reviewers and required evidence, in the golden file) is enforced by the gate, and an unauthorised-reviewer control must fail it. Scripted panels are not human evidence: authorised reviewers and OQ-017 reviewer authority remain open. Golden file `evals/review_effectiveness_golden.json`
+* Cohort and missing-data evaluation of the ranking policy (FR-054, AC-073, #222), offline: `python3 -m zava_forward.agents.cohort_ranking_eval [--json] [--defects]`. Forty-eight paired constructed cases (sensor completeness, accessibility need, source completeness, appointment history) go through the real ranker and `core.cohort_eval` against a hand-stated expected-rank manifest. `--defects` drops or demotes four cases, all of which must be detected; results are per cohort, never averaged. The manifest is an unapproved developer fixture: the runner never supplies approval, so the record always stays blocked on unapproved thresholds (only tests add a fictional approval to exercise mechanics). Cases carry the sensor, source and appointment fields, and negative controls (a ranker that excludes missing data, penalises appointments or ignores support) must each be detected. OQ-018 owner approval of cohorts, lawful fields and thresholds is open, and synthetic results are not fairness evidence. Tests: `tests/test_cohort_ranking_eval.py`.
 * Chat multi-turn evaluation, offline and synthetic (grounding, out-of-scope refusal, prompt injection, memory poisoning, non-AI comparison, recorded failures; never enables chat): `python3 -m zava_forward.agents.chat_eval [--json] [--record PATH]`. Golden file `evals/chat_golden.json`; thresholds, accountable reviewer and enablement remain owner decisions
 
   Open known gaps never count as passes. Grounding, out-of-scope, injection,
@@ -343,7 +344,8 @@ them that start with `cd src/api` run from the api project.
   `summary.open_critical_gaps` and `enablement.blocking_gaps` list unresolved
   critical gaps; any such gap makes `passed` false, enablement `fail` (disabled)
   and the CLI exit non-zero. The unsupported-claim-with-valid-citation scenario
-  remains an open critical gap, so the current golden run intentionally exits 1.
+  is caught by the lexical claim check, so it is no longer an open gap in the golden
+  run; unlisted paraphrases remain an accepted limitation and enablement stays disabled.
 
   Refusal uses NFKC, format-character removal, common Greek/Cyrillic confusable
   folding and collapsed whitespace. Refusal and output action-claim checks are

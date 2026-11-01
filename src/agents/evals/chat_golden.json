@@ -77,7 +77,6 @@
   {
    "id": "grounding-unsupported-claim-with-valid-citation",
    "category": "grounding",
-   "known_gap": "A claim the cited source does not support is accepted when the citation id is permitted. Citation resolution alone does not establish accuracy; claim-level grounding and human review remain unmeasured blockers.",
    "cases": [{"id": "ZF-1", "stage": "Survey booked"}],
    "turns": [
     {"say": "Is funding secured?", "script": {"answer": "Funding is secured.", "citations": ["stage"]},

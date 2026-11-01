@@ -72,6 +72,19 @@ role propagation, private resolution and routing remain unverified. Missing,
 ambiguous or mismatched bindings stop before SQL. A deliberately unmapped exact
 binding can produce SQL UNMAPPED DQ without weakening normal-device fencing.
 
+Issue #185 decision (2026-11-01, proposed pending owner confirmation): individual
+enrolment (no DPS) with one per-device X.509 identity per simulated home, named
+`SYN-<sensor key>`. The exercise credential owner is Juan Manuel Servera, who issues
+credentials into Key Vault; only Key Vault references, never key material, appear in
+manifests, source, logs and telemetry. Expiry and rotation are owner-run and a rotation
+replaces the credential for the same device identity. Teardown is whole-run: it requires the manifest to cover every active run device,
+deletes the run-tagged identities, revokes every credential reference recorded for the
+run (including rotated or uncertain-issuance credentials absent from the manifest),
+then verifies none remain.
+`zava_forward.core.synthetic.device_identity` implements plan, provision and teardown
+behind registry and credential-store protocols, tested with in-memory fakes only. No
+Azure identity was created and no live teardown is claimed.
+
 Fresh receivers always replay the retained beginning and use SQL outcomes as
 their durable state. They install no checkpoint store and call no misleading
 no-store checkpoint no-op. Retention expiry is a recovery limit, and multiple
@@ -127,7 +140,7 @@ No issue checkbox or status is changed by this source-only work.
 | Issue | Locally evidenced scope | Explicit remaining / deferred criteria |
 | --- | --- | --- |
 | #110 | Existing SQL append/replay/DQ reused; SDK/identity fencing; no public ingestion route or source credential; constructed actual SQLite receipts and property non-mutation | Actual distinct Hub identities, authenticated routed input classes, Azure SQL/restart, actual source/telemetry secret assurance and whole AC-066 registered-AI/build acceptance |
-| #184 | Synthetic-only selection/no discovery; per-device send path; all five child dispositions recorded here | Owner acceptance of outstanding child deferrals; actual credential/log/telemetry and live exercise evidence |
+| #184 | Synthetic-only selection/no discovery; per-device send path; all five child dispositions recorded here; constructed repository scan and fake-SDK log, truth, payload and failure leak tests (`src/api/tests/test_iot_credential_hygiene.py`, 2026-11-01) | Owner acceptance of outstanding child deferrals; actual credential/log/telemetry (Hub-side, Azure) and live exercise evidence |
 | #185 | Individual X.509 approach and existing named owner; one device/sensor/home mapping in code | Actual approved issue/storage/access/expiry/rotation/revocation and teardown of all simulated identities; no teardown success claimed because none were created |
 | #186 | Previously closed by #412; unchanged imported schema and stable identities; three/day default | No reopening or new whole-live claim; explicit cadence overrides remain run declarations |
 | #187 | Exact legacy-backfill seeded replay, odd/nonzero suffixes, speed/pause/stop, labelled separate truth, duplicate/order/unit/skew/calibration and transport disconnect/burst tests | Live Hub replay; composed-climate replay; injected normal-device UNMAPPED is a transport refusal, separately configured unmapped binding supplies local SQL DQ only |

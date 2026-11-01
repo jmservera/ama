@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-01T05:20:05+00:00",
-  "commit": "051f6a3eedf63d4ab1ab64c408cfaf8b77cfadc8",
+  "scored_at": "2026-11-01T14:41:22+00:00",
+  "commit": "518695ad2ddc0181d2c80e5eab5b04c9d9dc2d16",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41274941452",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41315898705",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "5176102c7b976d625a5186dca93c57b038a0e0560f866f18689adb904f3d0147",
-    "infrastructure": "0172b75e258abc5d97ce173fa595146da2d6f807386ec74e992482b7524f7aad",
+    "solution-code": "537475a5fed796abbfca84773a4c74309f8462ff3fdf7fa4795eaec2632d5192",
+    "infrastructure": "b101de0ca1a75ce128f45fbd37309bc5dc49805b14bd65cce45c7b0ed9faa591",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
     "thought-leadership": "592719a5da0d19d4d4c81dd5779faa45a9039c4777e3749cbc055d241aed8970"
@@ -44,20 +44,17 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/ai_consumption.py:1,58-85",
-        "src/core/src/zava_forward/core/ai.py:67-100",
-        "src/core/src/zava_forward/core/assistants.py:884-900"
+        "src/core/src/zava_forward/core/chat_panel.py:195-198,321-335,631-636"
       ],
-      "rationale": "Diff is pagination for capacity workspace, not security/compliance/responsible-AI. Baseline 5 retained."
+      "rationale": "New lexical grounding guard (STATUS_CLAIM/unsupported_claims) withholds status/number claims unsupported by cited sources, mitigating an AI risk (ungrounded claims) beyond prior citation-only check. Baseline 5 retained: guard is lexical, not semantic grounding, so ceiling evidence unchanged."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/procurement.py:540-562",
-        "src/api/src/zava_forward/api/server.py:486-505",
-        "src/api/tests/test_workspace_paging.py:1-30"
+        "src/agents/evals/chat_golden.json:77-82",
+        "src/agents/tests/test_chat_eval.py:38-90"
       ],
-      "rationale": "Capability is implemented end to end (API, core, UI) with edge cases (invalid input, hidden-order totals, offset overrun) and dedicated passing tests. Strengthens completeness evidence; baseline 5 retained as it was already at ceiling."
+      "rationale": "The previously disclosed known gap (unsupported claim with valid citation) is now actually fixed and covered by new passing tests; golden run passes with zero open critical gaps. Strengthens completeness; baseline 5 retained (already ceiling)."
     },
     "A5": {
       "score": 5,
@@ -70,8 +67,11 @@
     },
     "A6": {
       "score": 5,
-      "evidence": [],
-      "rationale": "This PR does not touch model choice, prompts or the evaluation harness. Baseline unchanged."
+      "evidence": [
+        "src/agents/src/zava_forward/agents/chat_eval.py:337-349",
+        "src/agents/tests/test_chat_eval.py:38-100"
+      ],
+      "rationale": "Eval harness extended: STATUS_CLAIM/UNGROUNDED now bound into eval digest; new golden scenario behaviour and tests cover tokenisation, sign/decimal handling, whole-token matching for the grounding guard. Narrow harness strengthening; model-choice/cost justification still absent, ceiling retained."
     },
     "A7": {
       "score": 4,

@@ -325,6 +325,7 @@ def context(
     version: object = selected["version"] if selected else UNKNOWN
     evidence = UNKNOWN
     recorded_at = case.get("stage_since") or UNKNOWN
+    returned_view: dict[str, Any] | None = None
     if not selected and pending and handoff:
         next_action = (
             text(handoff.get("next_action"))
@@ -333,13 +334,26 @@ def context(
         )
         source = origin("handoff")["source"]
         recorded_at = handoff.get("offered_at") or UNKNOWN
-    elif not selected and case.get("returns"):
-        returned = case["returns"][-1]
-        if returned.get("to_stage") == case["stage"]:
-            reason, next_action = text(returned.get("reason")), text(returned.get("next_action"))
+    returned = (case.get("returns") or [None])[-1]
+    if (
+        returned
+        and returned.get("event_type") in (None, "return")
+        and not returned.get("reopened")
+        and returned.get("to_stage") == case["stage"]
+    ):
+        returned_view = dict(
+            reason=text(returned.get("reason")),
+            sender=text((returned.get("actor") or {}).get("name") or returned.get("by")),
+            from_stage=returned.get("from_stage") or UNKNOWN,
+            to_stage=returned.get("to_stage") or UNKNOWN,
+            at=returned.get("at") or UNKNOWN,
+            next_action=text(returned.get("next_action")),
+        )
+        if not selected and not pending:
+            reason, next_action = returned_view["reason"], returned_view["next_action"]
             source, version = origin("returns")["source"], returned.get("version") or UNKNOWN
             evidence = text(returned.get("source"))
-            recorded_at = returned.get("at") or UNKNOWN
+            recorded_at = returned_view["at"]
     if not next_action:
         next_action = f"Ask {owner} to record the next action."
     matched = [
@@ -366,6 +380,7 @@ def context(
         evidence=evidence,
         recorded_at=recorded_at,
         queues=matched,
+        returned=returned_view,
         blockers=blockers,
         hazard_clocks=clocks,
         overdue=overdue,
@@ -374,6 +389,7 @@ def context(
         handoff=dict(
             state=handoff.get("state") or UNKNOWN,
             destination=handoff.get("destination") or UNKNOWN,
+            sender=handoff.get("from_name") or UNKNOWN,
             proposed_receiver=handoff.get("proposed_receiver") or UNKNOWN,
             confirmed_receiver=handoff.get("confirmed_receiver") or UNKNOWN,
             chase_owner=handoff.get("chase_owner") or UNKNOWN,
@@ -381,4 +397,5 @@ def context(
         )
         if handoff
         else None,
+        resident_update_owner=(case.get("resident_update") or {}).get("owner") or UNKNOWN,
     )

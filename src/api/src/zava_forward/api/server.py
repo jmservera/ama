@@ -138,7 +138,7 @@ def get_kind(path):
     return {"/api/ranking/policy": "ranking", "/api/ranking/snapshot": "ranking", "/api/ai/priority": "ai_priority", "/api/facets": "facets", "/api/stats": "stats",
             "/api/map": "map", "/api/visits": "visits", "/api/funding": "funding", "/api/briefing": "briefing",
             "/api/audit-check": "audit", "/api/handoffs": "handoffs", "/api/packages": "packages",
-            "/api/workorders": "workorders", "/api/checklists": "checklists", "/api/ai/report": "ai_report", "/api/finance": "finance_queue", "/api/governance": "governance", "/api/continuity": "continuity", "/api/continuity/export": "continuity_export", "/api/retention": "retention"}.get(path, "unknown")
+            "/api/workorders": "workorders", "/api/checklists": "checklists", "/api/ai/report": "ai_report", "/api/asset/stock-queue": "stock_queue", "/api/finance": "finance_queue", "/api/governance": "governance", "/api/continuity": "continuity", "/api/continuity/export": "continuity_export", "/api/retention": "retention"}.get(path, "unknown")
 
 
 GOVERNANCE_ACTIONS = {"protocol-freeze": "protocol_freeze", "protocol-approve": "protocol_approve", "benefits-record": "benefits_record",
@@ -190,6 +190,10 @@ def bbox(q):
     return (min(s, n), min(w, e), max(s, n), max(w, e))
 
 
+def _printable(value) -> str:
+    return "".join(c if c.isprintable() else f"\\x{ord(c):02x}" for c in str(value))
+
+
 def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
     assets = StaticAssets({
         "/" + path.relative_to(WEB).as_posix(): (path, TYPES.get(path.suffix, "application/octet-stream"))
@@ -200,6 +204,15 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
 
         def log_message(self, *a):
             pass
+
+        def send_response(self, code, message=None):
+            try:
+                path = urlparse(getattr(self, "path", "")).path
+            except ValueError:
+                path = ""
+            if code >= 500 or (path.startswith("/vendor/") and code not in (200, 304)):
+                logging.getLogger(__name__).warning("http-response %s %s status=%s", _printable(getattr(self, "command", None)), _printable(path), code)
+            super().send_response(code, message)
 
         def _send(self, code, body, ctype="application/json", extra=None):
             raw = body if isinstance(body, bytes) else body.encode()
@@ -522,6 +535,12 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 return self._json(200, s.funding_list(u))
             if url.path == "/api/briefing":
                 return self._json(200, s.briefing(u, q.get("mode", [None])[0]))
+            if url.path == "/api/asset/stock-queue":
+                try:
+                    rows = s.stock_queue(u)
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
+                return self._json(200, {"items": rows, "total": len(rows)})
             if url.path == "/api/ai/report":
                 if u["role"] not in MANAGER_ROLES:
                     return self._json(403, {"error": "Only a manager can see the AI evaluation report."})
@@ -761,8 +780,14 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         raise ChatNotFound("case")
                     return self._json(200, {"id": c.privacy.start_thread(u, body.get("case_id", ""), body.get("task", ""))})
                 if post and len(parts) == 3 and parts[0] == "threads":
-                    u, tid = c.current_user(user), parts[1]
-                    thread = s.chat_resume(u, tid)
+                    tid = parts[1]
+                    try:
+                        u = c.current_user(user)
+                        thread = s.chat_resume(u, tid)
+                    except (PermissionError, LookupError):
+                        if parts[2] in ("messages", "ask"):
+                            app.panel.record_rejected(user, tid)
+                        raise
                     if thread["title"].startswith(REGULATORY_TASK + ":"):
                         self._regulatory_access(user)
                         u, _ = app.regulatory.thread(user, tid)

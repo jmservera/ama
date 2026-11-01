@@ -9039,6 +9039,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   of PR size and the 19-24 October slowdown cause are unmeasured. No
   workflow, setting, gate or source change was made.
 
+## [2026-11-01] implementation | Regulatory UX contrast incompletes resolved (Refs #215)
+
+* Updated the [API UX guide](../../src/api/README.md#regulatory-alert-and-home-chat-ux-215):
+  the eight axe `color-contrast` incompletes were a textarea border-box
+  artefact; fixed in CSS and now asserted by the browser harness (21 states,
+  zero violations, zero incompletes). No manual or assistive-technology
+  assessment and no staff comprehension study was run; those criteria stay unmet.
 ## [2026-11-01] update | Synthetic determinism replay audit (Refs #176)
 
 * Added a one-command replay audit for the in-repo synthetic generators and a
@@ -9087,6 +9094,34 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   acceptance and owner confirmation of agent names remain unproven; no
   source change was made.
 
+## [2026-11-01] update | Source licence and attribution confirmed (#175)
+
+* Replaced provisional licence and attribution wording for SRC-CENSUS-TS054,
+  SRC-IMD-2025 and SRC-ONS-BOUNDARIES in the provenance register after
+  checking the gov.uk IMD page and the ONS terms page (OGL v3.0).
+* Retrieval dates for those three sources remain unrecorded and are an owner
+  open item, so the acceptance criterion stays unmet. Evidence is in
+  `.copilot-tracking/research/2026-11-01-issue-175-source-provenance-research.md`.
+
+
+## [2026-11-01] update | Chat and memory provider position and DPO decision pack (Refs #163)
+
+* Retrieved the Microsoft Learn Foundry data, privacy and security page
+  (page dated 2026-06-05) and recorded the documented provider position in
+  `research/chat-memory-dpia.md` and `chat_privacy.MODEL_PROVIDER_POSITION`,
+  marked as vendor documentation, not DPO-accepted. Added a blank decision pack
+  (D1 to D8) for the DPO and Legal.
+* Unmet: lawful basis, staff notice, DPIA decision and retention (no period
+  set), provider terms acceptance, deployment type and transfer position. No
+  legal advice or approval is implied.
+
+
+## [2026-11-01] update | Scale fixture per-record is_synthetic (#167)
+
+* `scale_fixture` v1.3.0 adds `is_synthetic=true` to every home and event
+  record (households already had it); goldens re-pinned and a per-record
+  test added. Updated the retrofit synthetic data README coverage section.
+  Owner confirmation of the mapping and deferrals remains open.
 ## 2026-11-01
 
 * Added `research/ux/supported-devices-proposal.md`, a proposal for owner
@@ -9101,6 +9136,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   call limit, cost Unknown without billing and a synthetic-labelled report.
 * No price, bill, owner approval, spend or held-out batch was added; the
   remaining evidence gaps in `docs/reference/resources/ai-tokenomics.md` stand.
+
 ## [2026-11-01] update | Operator handover verifier (#188)
 
 * Added the operator handover check to the
@@ -9117,6 +9153,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * The policy is not decided (BRD OD-46, owner with DPO); issue #162 criterion 6
   stays open. No regulatory snapshot changed.
 
+## 2026-11-01 - Core-flow copy and error contract slice (#153)
+
+* Updated `research/ux/content-standard.md` with a dated slice: phase check
+  wording in role screens, a generic error fallback that states reason, owner
+  and next action, and three more files in the lexical guard.
+* Issue #153 criteria for universal error coverage, named resident wording
+  review and comprehension testing stay open. No regulatory snapshot changed.
 ## [2026-11-01] update | Executable design traceability gate (#156)
 
 * Added `tools/check-design-trace.py` and tests. It validates the 74-row screen
@@ -9124,6 +9167,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   Usage is under "Run the design gate" in the prototype profile review.
 * Issue #156 criterion 1 stays unmet: no designs, human review, accessibility or
   content evidence were supplied. No regulatory snapshot changed.
+
+## 2026-11-01 - Boundaries attribution and index reconciliation (Refs #175)
+
+* Recorded both ONS-required acknowledgements for SRC-ONS-BOUNDARIES with the OS copyright year left provisional; reconciled the data dictionary criterion row and the README index row. Retrieval dates remain unrecorded.
 
 ## [2026-11-01] update | SQL pilot tier parameters and recovery runbook (#145)
 
@@ -9200,6 +9247,167 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   pack: five package suites, Ruff and mypy passed locally; SQL, container and
   browser groups not run. The PERF-440 benchmark outlier was not reproduced
   and is filed as #687. No regulatory snapshot changed; no criterion ticked.
+
+
+
+## [2026-11-01] update | Resident authority end (#521)
+
+* Documented coordinator steps for the live resident authority extension in infra/README.md and moved the browser-check fixture to the shared authority end (Refs #521). No live apply.
+## [2026-11-01] update | IoT publisher credential hygiene tests (#184)
+
+* Added constructed local tests (repository text scan, fake-SDK log, truth
+  record, payload and failure leak checks) and updated the #184 row in the
+  IoT research plan. Criterion 1 and actual credential, Hub telemetry and
+  live evidence remain unmet and owner or Azure gated. No regulatory snapshot
+  changed.
+
+## [2026-11-01] update | Local handover demo (#188)
+
+* Added a runnable local demo and test for the live-versus-backfill handover
+  on a constructed SQLite store, documented in the
+  [API README](../../src/api/README.md#local-handover-demo-188). Constructed
+  evidence only: Azure SQL and live Hub criteria of #188 stay owner-gated and
+  unproven; no criterion ticked.
+
+## [2026-11-01] update | Replay audit covers pack and EPC generators (#176)
+
+* Extended the one-command determinism audit in
+  `docs/reference/research/retrofit-synthetic-data/README.md` to replay the
+  public pack and stock EPC generators and accept 16 or 64 hex revisions. The
+  original stock register generator remains absent; no criterion ticked.
+
+## [2026-11-01] verify | Post-cleanup reference audit and link check (Refs #203)
+
+* Re-ran a repository-wide search for `mvp/` and `prototype/` on main 77b55415. Both
+  directories are absent. Remaining tokens fall into dated historical records
+  (log, ADRs 0001, 0002, 0006, PRD/BRD baselines, parity and cut-over evidence,
+  rubric README history), intentional defensive checks for `mvp/data`
+  (workflows, `tools/rpi-checks.py`, tests, `.gitignore`) and generic
+  "prototype/PoC/MVP" wording. One live pointer was repaired: the law register
+  path in `regulatory/README.md` now names `src/core/src/zava_forward/core/law/`.
+* A fresh relative-link audit of all tracked Markdown found 102 unresolved links
+  that predate and are unrelated to the cleanup (capstone reorganisation, dated
+  log entries, one workflow template placeholder). They are recorded, not
+  repaired here. Criteria 1, 2, 4 and 5 of #203 stay unmet; main rubric scoring
+  was skipped by the daily AIC guardrail and no Azure check was run. Evidence is in
+  `.copilot-tracking/reviews/2026-11-01/issue-203-verify-references-review.md`.
+
+## [2026-11-01] update | Automated-decision and EU AI Act applicability pack (#224)
+
+* Added the applicability review pack under `regulatory/reviewed-updates/`: official
+  check of DUAA 2025 s.80 and S.I. 2026/82 (retrieved 2026-11-01), failed EUR-Lex
+  retrieval, a `Pending` Legal/DPO decision record, review items RI-1 to RI-7 and
+  non-inference rules.
+* Flagged that seed card `automated-decision-safeguard` cites Article 22, not
+  Articles 22A to 22C. No snapshot, card or rule changed; criteria 1 and 5 of #224
+  stay unmet pending the Legal/DPO decision.
+
+## [2026-11-01] update | Closure record for the src migration (Refs #199)
+
+* Added a closure record to `docs/architecture/mvp-to-src-parity-matrix.md`
+  listing the merged M1 to M6 and retirement pull requests and the current
+  tree check. The migration-order criterion stays unmet pending an owner
+  decision.
+
+## [2026-11-01] verify | Resident sensors and assistant focused re-check (Refs #466)
+
+* Re-ran resident core (355 tests) and api (167 tests) suites, sensor tests (144),
+  ruff, ruff format, mypy and node --check on main 51657d30: all passed, skips are
+  opt-in SQL and browser groups. No source change was needed.
+* Issue #466 criterion 1 (owner confirms scope and priority) stays unmet; manual
+  assistive-technology acceptance and live checks remain owner-run. No regulatory
+  snapshot changed.
+
+## [2026-11-01] query | Employee chat recheck on main 51657d30 (#530)
+
+* Re-ran the focused tier: core chat (101), agents chat model (7), API chat
+  panel (41) and widget focus (6) tests, ruff, mypy and the employee chat
+  browser and pinned axe check. All passed. Evidence is in
+  `.copilot-tracking/changes/2026-11-01/employee-chat-skills-530-recheck-changes.md`.
+* SQL, live employee-site verification, screen-reader and voice-control
+  acceptance remain unproven; no source change was made.
+## [2026-11-01] update | Register is_synthetic conformance check (Refs #167)
+
+* Added `coverage --register` to the core coverage tool and noted the result in the
+  retrofit-synthetic-data README: 60,000 of 60,000 SN-01 register rows carry
+  `is_synthetic=true` (aggregate counts only). Owner confirmation of the mapping and
+  deferrals remains open.
+
+
+## 2026-11-01 - Chat claim-level support check (Refs #164)
+
+* Added a lexical claim-support check to the chat panel: status words and
+  numbers absent from every cited source are withheld. The scripted
+  unsupported-claim scenario now passes and the chat enablement outcome moves
+  from fail to insufficient; the task stays disabled.
+* Updated `research/chat-memory-dpia.md`. Evidence is in
+  `.copilot-tracking/changes/2026-11-01/issue-164-chat-claim-support-changes.md`.
+* Thresholds, accountable reviewer, held-out set, actual-model and human
+  evidence remain open owner decisions; no criterion is newly ticked.
+
+## [2026-11-01] query | Resident portal requirements recheck on main 81cf0c9e (Refs #441)
+
+* Re-verified the merged resident integration (#442, #454) with a read-only
+  script: 30 draft custody hashes, unique BRD FR-053 to FR-064 and PRD FR-062
+  to FR-073 identifiers with base IDs preserved, FR-044 and RULE-028
+  per-message review default, OD-52 to OD-55 visible, the three author-judgement
+  workload figures, resident-related links and the unregistered ADR proposal
+  (registry stays 0001 to 0006). Four inherited unrelated broken links in the
+  addendum and index are recorded, not repaired.
+* No BRD, PRD, ADR, addendum or memory change was made. Criterion 5 (requirements
+  owner disposition of FR-044/AC-084) and criterion 9 (hosted gate evidence on the
+  final head) stay unmet; the per-message review exception stays OFF pending
+  OD-53. Evidence is in
+  `.copilot-tracking/changes/2026-11-01/issue-441-recheck-changes.md`.
+
+## 2026-11-01 - Chat grounding review corrections (Refs #164)
+
+* Numeric claims are now tokenised as complete expressions (`40.5m`, `12k`, `12m2`, `1e6`); the DPIA, chat panel docstring, agents README and index state that unlisted paraphrases can bypass the lexical check and that the golden run now passes with enablement still disabled.
+
+## [2026-11-01] update | Third stabilization checkpoint on main b18f7f98 (Refs #440)
+
+* Appended a focused-tier checkpoint to `docs/architecture/cutover-evidence-pack.md`:
+  five package suites, ruff, format and mypy passed on the pinned head; heavy
+  groups stay implemented-unverified; recommendation continue.
+* #440 criteria 7 (open #687/#720) and 8 (host and behavior evidence) remain unmet.
+
+## [2026-11-01] update | Atlas screen trace status refresh (#233)
+
+* Refreshed `research/ux/atlas-screen-trace.md` so nine of twelve screens are
+  marked as registered on main; three remain in unmerged pull requests. Updated
+  the index row and made the checker apply each status to its own screen group.
+* Findings stay hypotheses until #155. No accessibility acceptance is claimed.
+
+## [2026-11-01] update | Simulated device identity decision (#185)
+
+* Recorded the proposed individual-enrolment, per-device X.509 credential
+  lifecycle for simulated homes in the IoT research plan and indexed it. The
+  implementation is fake-only; owner confirmation and live Azure gates remain
+  pending and no live resource was touched.
+
+## [2026-11-01] update | Atlas screen trace status refreshed
+
+* Marked `programme-queue`, `technical-queue` and `quality-queue` as merged on
+  main in the atlas screen trace so the status drift check passes.
+
+## 2026-11-01 coverage baseline register check indexed
+
+* Updated the synthetic MVP baseline index row to mention the opt-in
+  `--register` check and its SN-01-only evidence boundary.
+
+## 2026-11-01 (atlas trace labels after merge of main)
+
+* Updated `research/ux/atlas-screen-trace.md` so `programme-queue`,
+  `technical-queue` and `quality-queue` are labelled as registered on main
+  (PR 662 and PR 656), restoring the atlas trace check that main's merges broke.
+* No accessibility acceptance is claimed.
+
+## [2026-11-01] update | Issue 466 remaining-criteria check (r4)
+
+* Re-ran focused resident sensor and assistant tests, ruff and mypy on main;
+  criteria 2 to 6 still hold. Criterion 1 (owner confirms scope and priority)
+  stays unmet. Evidence is under `.copilot-tracking/` (r4 artifacts). No
+  accessibility acceptance is claimed.
 
 ## [2026-11-01] query | Paper critique revision and prospective five-arm design
 

@@ -65,6 +65,7 @@ def scan(
     reports: list[dict[str, Any]],
     state: str,
     selector: str = "#regulatory-alerts, #chat-panel",
+    strict_contrast: bool = False,
 ) -> None:
     sizes = target_sizes(page, selector)
     if axe is None:
@@ -97,6 +98,10 @@ def scan(
         )
     )
     assert not result["violations"], json.dumps(result["violations"], indent=2)
+    unresolved = [item for item in result["incomplete"] if item["id"] == "color-contrast"]
+    assert not (strict_contrast and unresolved), (
+        f"Unresolved colour contrast in {state}: {json.dumps(unresolved)}"
+    )
 
 
 def scan_mid_fade(page: Page, axe: str | None, reports: list[dict[str, Any]], state: str) -> None:
@@ -131,7 +136,7 @@ def scan_mid_fade(page: Page, axe: str | None, reports: list[dict[str, Any]], st
                 f"(animated: {frozen['properties']})"
             )
             assert "background-color" not in frozen["properties"], frozen["properties"]
-            scan(page, axe, reports, f"{state}-{percent}pct")
+            scan(page, axe, reports, f"{state}-{percent}pct", strict_contrast=True)
         finally:
             page.evaluate(
                 """selector => {
@@ -283,7 +288,7 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             # The safety route is visible while optional chat is collapsed.
             expect(page.locator("#chat-panel")).not_to_have_attribute("open", "")
             expect(alerts.locator(".notice")).to_be_visible()
-            scan(page, axe, reports, "alert-collapsed-chat")
+            scan(page, axe, reports, "alert-collapsed-chat", strict_contrast=True)
 
             keyboard_activate(page, "#alerts-plain-mode", "Space")
             expect(alerts.locator(".plain-explanation")).not_to_be_visible()
@@ -357,7 +362,7 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             expect(chat.locator("a").first).to_have_attribute(
                 "href", "/api/law/provisions/synthetic%40v2%230001"
             )
-            scan(page, axe, reports, "cited-answer")
+            scan(page, axe, reports, "cited-answer", strict_contrast=True)
             scan_mid_fade(page, axe, reports, "cited-answer-fade")
             doubt = chat.locator(".regulatory-turn button").first
             doubt.focus()
@@ -379,7 +384,7 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             page.keyboard.press("Enter")
             expect(chat.locator(".regulatory-turn")).to_have_count(2)
             expect(chat.locator(".regulatory-turn").last).to_contain_text("No source held")
-            scan(page, axe, reports, "no-source-refused")
+            scan(page, axe, reports, "no-source-refused", strict_contrast=True)
             for width in (320, 390, 1280):
                 page.set_viewport_size({"width": width, "height": 900})
                 for selector in ("#regulatory-alerts", "#regulatory-chat"):
@@ -392,7 +397,7 @@ def run(axe_path: Path | None) -> dict[str, Any]:
                     assert page.locator(selector).evaluate(
                         "el => el.scrollWidth <= el.clientWidth + 1"
                     ), f"Horizontal overflow at {width}px: {selector}"
-                scan(page, axe, reports, f"{width}px-reflow")
+                scan(page, axe, reports, f"{width}px-reflow", strict_contrast=True)
             page.locator("#regulatory-alerts, #regulatory-chat").evaluate_all(
                 "nodes => nodes.forEach(el => el.style.fontSize = '200%')"
             )
@@ -405,7 +410,7 @@ def run(axe_path: Path | None) -> dict[str, Any]:
                 assert page.locator(selector).evaluate(
                     "el => el.scrollWidth <= el.clientWidth + 1"
                 ), f"200% text overflow: {selector}"
-            scan(page, axe, reports, "200-percent-text-320px")
+            scan(page, axe, reports, "200-percent-text-320px", strict_contrast=True)
             page.set_viewport_size({"width": 1280, "height": 900})
             page.reload()
             page.get_by_role("tab", name="Blockers and safety", exact=False).press("Enter")
@@ -427,7 +432,7 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             page.get_by_role("button", name="Refresh alerts", exact=True).click()
             expect(alerts).to_contain_text("Not active or source uncertain")
             expect(alerts).to_contain_text("Status: breach risk")
-            scan(page, axe, reports, "source-changed-retained-risk")
+            scan(page, axe, reports, "source-changed-retained-risk", strict_contrast=True)
             page.get_by_role("tab", name="AI assistance", exact=False).press("Enter")
             question.fill("What do the hazard sources say for this home?")
             question.press("Tab")
@@ -443,7 +448,7 @@ def run(axe_path: Path | None) -> dict[str, Any]:
                 1
             ]
             assert len(inbox["threads"]) == 2
-            scan(page, axe, reports, "conflict-auto-referral")
+            scan(page, axe, reports, "conflict-auto-referral", strict_contrast=True)
             page.reload()
             page.locator("#chat-panel > summary").click()
             page.locator("#regulatory-chat > summary").click()
@@ -451,7 +456,7 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             expect(chat.locator(".regulatory-turn").last).to_contain_text(
                 "Turn sent to Juan Manuel Servera's exercise inbox"
             )
-            scan(page, axe, reports, "conflict-referral-restored")
+            scan(page, axe, reports, "conflict-referral-restored", strict_contrast=True)
 
             # Actual service outage and disabled capability, not fake successful responses.
             law = fixture.app.law
@@ -470,9 +475,9 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             page.locator("#regulatory-chat > summary").click()
             expect(question).to_be_disabled()
             expect(chat.locator(":scope > p[role=status]")).to_contain_text(
-                "Cited lookup unavailable"
+                "Cited lookup is not available right now"
             )
-            scan(page, axe, reports, "disabled-chat")
+            scan(page, axe, reports, "disabled-chat", strict_contrast=True)
             fixture.app.regulatory.env = fixture.app.chat.env
 
             # Every existing account mapping is checked independently of audience designs.
@@ -497,7 +502,7 @@ def run(axe_path: Path | None) -> dict[str, Any]:
                     )
                 if role == "Quality Inspector":
                     expect(alerts).to_contain_text("No visible alerts does not mean no risk")
-                scan(page, axe, reports, role)
+                scan(page, axe, reports, role, strict_contrast=True)
             context.clear_cookies()
             response = context.request.post(
                 fixture.base + "/api/login",
@@ -508,7 +513,14 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             page.reload()
             expect(page.get_by_role("heading", name="Requirements and doubt route")).to_be_visible()
             expect(page.locator("#regulatory-alerts, #chat-panel")).to_have_count(0)
-            scan(page, axe, reports, "supplier-human-route", "#regulatory-supplier")
+            scan(
+                page,
+                axe,
+                reports,
+                "supplier-human-route",
+                "#regulatory-supplier",
+                strict_contrast=True,
+            )
             assert context.request.get(fixture.base + "/api/law/alerts?case=ZF-1").status == 403
             assert context.request.get(fixture.base + "/api/chat/regulatory/status").status == 403
             assert not errors, errors

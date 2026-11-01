@@ -126,7 +126,9 @@ started with `--remote-debugging-port=9222`, export independently verified
 `ZF_EXPECTED_TID` and `ZF_EXPECTED_OID`, then run
 `python3 -m checks.employee_live_acceptance [--cdp-url http://127.0.0.1:9222]
 [--origin <app origin>]` from this directory. Only loopback CDP is accepted.
-It prints fixed boolean JSON and exits 0 only when chat, map and case all pass
+It prints fixed boolean JSON and exits 0 only when chat, map, case and Today's briefing (read-only: label,
+sources and prepared-at time visible, no review action taken; #531 criterion 7
+evidence) all pass
 (1 on a failed stage, 2 when refused or no matching page). A passing live run
 is the evidence for criterion 3; the offline tests are not.
 
@@ -659,7 +661,7 @@ screen-reader/usability acceptance, full Fluent runtime adoption or WCAG
 conformance.
 
 Add `--scale` to the browser command to also exercise the existing seed-174,
-version-1.2.0 wholly fictional 60,000-home fixture. The shared test overlay
+version-1.3.0 wholly fictional 60,000-home fixture. The shared test overlay
 maps those existing home IDs/attributes onto four explicit known lifecycle
 templates, not random stock events: 15,000 open cases, 45,000 archived cases,
 45,000 usable lifecycles and 15,000 unknown closure dates. The inherited
@@ -1748,6 +1750,26 @@ python -m zava_forward.api.sensor_handover_verify --reference history/readings-0
 
 The check is ready-to-run tooling; running it against Azure SQL after a live
 Hub stream is the remaining owner-gated evidence for #188.
+
+### Local handover demo (#188)
+
+`checks/sensor_handover_demo.py` runs the whole flow on a throwaway SQLite store
+with constructed climate: backfill CSV, #110 admission of the prefix, SDK-decoded
+streamed suffix, joint per-home query, the verifier report and a window replay.
+It prints JSON (`passed`, `idempotent`, `evidence`) and exits 0 only on a pass.
+`--seam C` shifts the live temperature to show a discontinuity failing at zero
+tolerance; `--tolerance C` declares a temperature limit.
+
+```bash
+cd src/api
+PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests \
+  python checks/sensor_handover_demo.py
+PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests \
+  python -m unittest test_sensor_handover_demo -v
+```
+
+This is constructed local evidence, not a live Hub run, Azure SQL proof or
+sensor accuracy approval.
 
 ## Finite offline sensor ingestion (#110)
 
@@ -4530,6 +4552,17 @@ focus and reflow assertions passed. The 86 targeted API and 33 core regression
 tests, API ruff/format and strict mypy passed. These observations do not satisfy
 the full WCAG criterion or the staff comprehension criterion.
 
+Update 2026-11-01 (#215): the eight `color-contrast` incompletes (ten scanned
+states in the current 21-state run) came from axe measuring the question
+textarea against its own border-box: a textarea defaults to `overflow:auto`, and
+axe then compares the box to `scrollHeight`, which excludes the border, so it
+reports the field as partially obscured. `.regulatory textarea{overflow-x:hidden}`
+keeps vertical scrolling and removes the false incomplete. The harness now fails
+any scanned state that reports an unresolved `color-contrast` result. Local run
+with pinned axe 4.10.3: 21 states, zero violations, zero incompletes. This closes
+the automated contrast gap only; manual screen-reader and keyboard assessment by
+role is still unperformed, so the WCAG criterion stays unmet.
+
 The `src-api` job in [source CI](../../.github/workflows/src-ci.yml) now runs
 this UX regression check next to `checks.design_system_browser_check`, using
 the same installed Chromium and an absolute API/core/agents test path.
@@ -4605,7 +4638,7 @@ claimed.
 | --- | --- | --- |
 | Patterns defined per role with know-at-least content | Met as synthetic design/implemented existing-role guidance | Seven-audience matrix above, real role-loop browser assertions and supplier human-route/denial check. Separate repairs, Finance, resident and supplier-chat journeys are not delivered or user-validated. |
 | Each alert states noticed/source/status/safe action/owner/clock | Met for the existing scoped alert contracts | Browser asserts required fields against a real SQL-backed breach-risk alert; current-control state, empty visibility and outage are explicit. No new rule coverage is claimed. |
-| WCAG 2.2 AA, no colour-only status, keyboard, plain language | Partial; full criterion unmet | Automated axe and keyboard checks cover changed surfaces, textual statuses, focus, toggles and reflow. Comprehensive manual/assistive-technology conformance remains unassessed. |
+| WCAG 2.2 AA, no colour-only status, keyboard, plain language | Partial; full criterion unmet | Automated axe (zero violations and zero incompletes in 21 states as of 2026-11-01) and keyboard checks cover changed surfaces, textual statuses, focus, toggles and reflow. Comprehensive manual/assistive-technology conformance remains unassessed. |
 | Doubt and no-source states explicitly designed | Met in bounded synthetic slice | Persisted exercise inbox receipt, visible unsupported/missing-source state, disabled/outage text and manual owner route. No real owner notification or approval claimed. |
 | Comprehension tested with repairs, housing and grants staff | Unmet / Not run | Protocol only. Actual staff testing is unavailable and remains required before use. |
 

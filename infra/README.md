@@ -1268,6 +1268,8 @@ az deployment sub what-if -l uksouth -f infra/governance.bicep
 az deployment sub create -l uksouth -f infra/governance.bicep
 ```
 
+The policy and Defender decisions, owner, billable inventory and pending cost approval are recorded in [`defender-decision.json`](./defender-decision.json); unit prices were not retrievable on 2026-11-01 and are not invented.
+
 Open items: Defender cost estimate and the decision to enable; renewal of EX-001 after 2026-12-31 (never on a pilot group); whether to switch any policy from audit to Deny; the group must carry the required tags before Deny is considered. The platform-wide MCAPS policy itself is managed outside this repository.
 
 The synthetic-development decision is to audit the selected public-access,
@@ -1509,9 +1511,11 @@ not themselves evidence of deployment. See the dated private continuation for
 actual source-image rollout/health results and its synthetic-only boundary.
 Private data copy/encrypted backup and #201 owner sign-off remain unmet.
 
-Existing `MVP CI` / `MVP validation` names and job/check IDs remain unchanged.
-The issue #200 owner decision (2026-10-15) retains them through cut-over; later
-naming and branch-protection changes remain one deliberate owner-directed PR.
+After cut-over (2026-10-27) the workflow display names were renamed in one change
+(issue #200 owner decision, 2026-10-15): `MVP CI` is now `Source CI` and
+`MVP validation` is now `Source validation`. File names and job IDs are
+unchanged. Branch protection on `main` was absent when checked (2026-11-01), so
+no required check was dropped; add any future required checks under the new names.
 The retired prototype workflow is already absent; do not recreate it.
 
 ### Historical deployment recipe
@@ -4224,6 +4228,34 @@ No secret or private dataset was read, generated, printed or stored for #521.
    approved row windows and secrets expire, and no active revision serves
    resident traffic. Any network/permission change, min replica above zero,
    scope mismatch, unknown cost or failed isolation check stops the operation.
+
+#### Coordinator steps after the 2026-11-01 expiry (Refs #521)
+
+Nothing here is applied by the repository change. The resident app refuses to
+start once the live allowlist view admits no row, because rows and the live
+`ck_allowed_case_window` still carry the earlier 2026-11-01 end. After the
+owner confirms the exact change and the cost check above passes:
+
+1. Re-render and apply the boundary so the check constraint moves to
+   `2027-02-01T00:00:00` (leaves row windows unchanged, but the script executes every rendered batch, so it also recreates the view and reapplies the existing narrow GRANT/DENY statements in `infra/sql/resident-showcase.sql`; this is a live permission-touching operation needing owner approval, and a permission-free change needs a separately reviewed constraint-only migration):
+   `python3 infra/scripts/resident_showcase_sql.py <principal> --client-id <existing resident managed identity client id> --apply <server> <database>`
+   (without `--create-principal`; the script exits with code 2 if neither is given).
+2. Renew only individually approved synthetic rows, one reviewed statement each,
+   with `valid_to` no later than `2027-02-01T00:00:00`:
+   `UPDATE resident_showcase.allowed_case SET valid_to = '2027-02-01T00:00:00' WHERE case_id = '<approved id>' AND revoked = 0;`
+3. Redeploy only a validated image digest built after #590, whose packaged
+   `resident-demo.json` carries the January 2027 policy (an older image still
+   caps authority at November and the app rejects the later expiry). Rebuild
+   through the approved image path if necessary and record the digest check.
+   Use the extended expiry (what-if first, then
+   `--apply`): `python3 infra/scripts/resident_demo_deploy.py --subscription <id>
+   --expires 2027-01-31T23:59:59Z --image <repo>@sha256:<digest> --sql-server <fqdn>
+   --sql-database <db> [--apply]`. Rotate credentials per step 2 above first.
+4. Verify startup, sign-in, cross-case denial and min replicas 0; record
+   metadata only, no secret values.
+
+The AI tariff/budget expiry (`assistant.py` `EXPIRES`, `resident_ai.budget`)
+is a separate owner approval and is deliberately unchanged here.
 
 #### Added-cost estimate and USD700 cap
 

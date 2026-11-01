@@ -7,11 +7,13 @@ import re
 import subprocess
 import sys
 import unittest
+import unittest.mock
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from typing import Any
 from unittest.mock import Mock
 
-from checks.regulatory_ux_check import run, target_sizes
+from checks.regulatory_ux_check import run, scan, target_sizes
 
 
 class RegulatoryUxCheckTests(unittest.TestCase):
@@ -85,6 +87,31 @@ assert callable(run) and callable(target_sizes)
             [],
             "Buttons must not fade their background while text colour changes instantly",
         )
+
+    def _scan(self, incomplete: list[dict[str, Any]], strict: bool) -> list[dict[str, Any]]:
+        page = Mock()
+        page.evaluate.side_effect = [
+            None,
+            {"violations": [], "incomplete": incomplete, "passes": []},
+        ]
+        reports: list[dict[str, Any]] = []
+        with unittest.mock.patch("checks.regulatory_ux_check.target_sizes", return_value=[]):
+            scan(page, "axe", reports, "state", strict_contrast=strict)
+        return reports
+
+    def test_strict_scan_rejects_unresolved_contrast(self) -> None:
+        item = {"id": "color-contrast", "nodes": [{"target": ["#a"]}]}
+        with self.assertRaises(AssertionError):
+            self._scan([item], True)
+
+    def test_other_incompletes_and_clean_scans_pass(self) -> None:
+        other = {"id": "aria-valid-attr-value", "nodes": [{"target": ["#a"]}]}
+        self.assertEqual(self._scan([other], True)[0]["incomplete"][0]["id"], other["id"])
+        self.assertEqual(self._scan([], True)[0]["incomplete"], [])
+
+    def test_contrast_incomplete_is_reported_when_not_strict(self) -> None:
+        item = {"id": "color-contrast", "nodes": [{"target": ["#a"]}]}
+        self.assertEqual(self._scan([item], False)[0]["incomplete"][0]["id"], "color-contrast")
 
     def test_untrusted_axe_fails_before_application_start(self) -> None:
         with TemporaryDirectory() as folder:
