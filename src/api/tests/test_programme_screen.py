@@ -68,6 +68,11 @@ vm.runInContext(host + "\n;globalThis.__s = roleScreens.get('programme-queue');"
         {id: "INV-3", hold: null, disposition: "Accept for payment", exceptions: [{}]}]}}, done),
     proposed: gates({id: "C-2", work: {blockers: []}, technical: {}, funding_ok: true, measures: "Loft",
       quality: [{state: "Accepted", measure: "Loft"}], finance: {budget: {status: "Proposed"}}}, done),
+    unmatched: gates({id: "C-10", work: {blockers: []}, technical: {}, measures: "Loft",
+      quality: [{state: "Accepted", measure: "Loft"}], finance: {budget: {status: "Approved"}, invoices: [
+        {id: "INV-9", status: "Received", hold: null, disposition: null, exceptions: []}]}}, done),
+    withheld: gates({id: "C-11", work: {blockers: []}, technical: {}, funding_ok: true, measures: "Loft",
+      quality: [{state: "Accepted", measure: "Loft"}]}, done),
     submitted: gates({id: "C-7", work: {blockers: []}, measures: "Loft", quality: [{state: "Submitted", measure: "Loft"}]}),
     fixed: gates({id: "C-6", work: {blockers: []}, measures: "Loft", quality: [{state: "Fixed, awaiting reinspection", measure: "Loft"}]}),
     partial: gates({id: "C-5", work: {blockers: []}, measures: "Loft, Heat pump",
@@ -153,6 +158,10 @@ class ProgrammeScreen(unittest.TestCase):
         self.assertNotIn("INV-3", finance)
         proposed = json.dumps(out["proposed"])
         self.assertIn("Proposed, not Approved", proposed[proposed.index('"Finance"') :])
+        unmatched = json.dumps(out["unmatched"])
+        self.assertIn("not been matched", unmatched[unmatched.index('"Finance"') :])
+        withheld = json.dumps(out["withheld"])
+        self.assertIn("Blocked: evidence missing", withheld[withheld.index('"Finance"') :])
 
     def test_funnel_unknown_when_coordinator_unavailable(self) -> None:
         self.assertIn("Unknown", str(run(coordinator="down")["before"]))

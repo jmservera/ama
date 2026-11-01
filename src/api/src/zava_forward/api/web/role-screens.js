@@ -275,6 +275,8 @@ const programmeFinanceBlockers = (c) => {
     if (inv.hold) found.push({ reason: `Invoice ${screenValue(inv.id)} is on payment hold: ${screenValue(inv.hold.reason)}.`,
       owner: screenValue(inv.hold.name), next_action: "Release the hold through the permitted Finance review" });
     const decided = inv.disposition && inv.disposition !== "Keep on hold";
+    if (!decided && inv.status === "Received") found.push({ reason: `Invoice ${screenValue(inv.id)} has not been matched yet; no match evidence is recorded.`,
+      owner: "Unknown", next_action: "Run the invoice match through the permitted Finance review" });
     if (!decided && (inv.exceptions || []).length) found.push({ reason: `Invoice ${screenValue(inv.id)} has ${inv.exceptions.length} unresolved match exception(s).`,
       owner: "Unknown", next_action: "Resolve each line exception and run the match again" });
   }
@@ -302,7 +304,7 @@ function programmeGates(c, orders) {
     programmeQualityRow(c),
     programmeGateRow("Finance", programmeGate(blockers, /funding/i).concat(programmeFinanceBlockers(c)),
       budget ? `Budget status: ${screenValue(budget.status)}.` : "",
-      budget || c.funding_ok ? null : "No confirmed funding or budget is visible to your role.")
+      budget ? null : "No confirmed funding or budget is visible to your role.")
   ];
 }
 registerRoleScreen({

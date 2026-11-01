@@ -10,3 +10,4 @@
 4. Validate: unit tests plus ruff check, ruff format --check, mypy for src/api and src/core.
 
 Critique (inline, once): keep the slice read-only and reuse existing helpers; do not add a planner role that the codebase lacks (record as an assumption). Accepted.
+* Correction cycle 2: restore main-side files; fix two finance gate cases with tests.
