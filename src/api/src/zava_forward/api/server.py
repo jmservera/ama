@@ -271,7 +271,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 name = "welcome.html" if url.path in ("/", "") else "index.html" if url.path == "/app" else url.path.lstrip("/")
                 f = (WEB / name).resolve()
                 if WEB in f.parents and f.is_file():
-                    if app.provider.name == "trusted-proxy" and url.path not in ("/", "/welcome.html", "/style.css", "/zava-logo.png") and not self._user():
+                    if app.provider.name == "trusted-proxy" and url.path not in ("/", "/welcome.html", "/style.css", "/zava-logo.png") and not (self._user() if name.endswith(".html") else app.provider.authenticate(self.headers)):
                         if self.headers.get("X-MS-CLIENT-PRINCIPAL"):
                             return self._send(403, '<h1>Account not authorised</h1><p>Your account needs a provisioned workbench role.</p><a href="/.auth/logout?post_logout_redirect_uri=%2F">Sign out</a>', "text/html; charset=utf-8")
                         return self._send(302, "", extra={"Location": "/sign-in"})

@@ -2,19 +2,19 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-01T16:41:16+00:00",
-  "commit": "faf035f678d73cfbf08b6abc31e270163c9e64f0",
+  "scored_at": "2026-11-01T17:33:48+00:00",
+  "commit": "80656f3281afe9003777f83ca793f52950f5c21b",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41326520410",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41331536298",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "c2f66e502d73aa8b01984da0720abcf6386e69b3b98c15c86d6fcfff35d16ab5",
+    "solution-code": "d6d3eae5cbf1a6600358e889c0839a754b65332547e6c0ae3319eacbe234752e",
     "infrastructure": "b101de0ca1a75ce128f45fbd37309bc5dc49805b14bd65cce45c7b0ed9faa591",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
-    "thought-leadership": "592719a5da0d19d4d4c81dd5779faa45a9039c4777e3749cbc055d241aed8970"
+    "thought-leadership": "abdc93ebe1c8fbf7b088ac84fe3fff06c0e7b37f8513ac56df24229e6a1b689e"
   },
   "total": 77,
   "sections": {
@@ -152,25 +152,25 @@
     "D1": {
       "score": 4,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:927-985",
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:3097-3280"
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:17-32",
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:79-82"
       ],
-      "rationale": "Not touched by this PR. Baseline unchanged at 4."
+      "rationale": "Critique-driven revision to a five-arm/33-cell design fixes prior CR1-powering, loss-density and cost-arithmetic flaws; still a prospective protocol with no results. Score retained at 4."
     },
     "D2": {
       "score": 3,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:9",
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:8-19"
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1-16",
+        "docs/capstone/thought-leadership/everything-but-the-software/supplement.tex:1-30"
       ],
-      "rationale": "Not touched by this PR; unresolved TODOs remain unverified. Baseline unchanged at 3."
+      "rationale": "Split into 35-page main.tex plus separate supplement.tex addresses prior critique and improves structure. 13 TODO(author) items, incl. pending Microsoft publication approval, remain. Score retained at 3."
     },
     "D3": {
       "score": 2,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:39"
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:38-42"
       ],
-      "rationale": "Not touched by this PR. Submission/registration/publication approval remain pending. Baseline unchanged at 2."
+      "rationale": "README states explicitly: no archive, OSF upload, visibility change or scientific submission occurred; publication/registration approval remain pending. Baseline unchanged at 2."
     }
   }
 }

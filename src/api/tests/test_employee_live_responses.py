@@ -86,6 +86,29 @@ class VendorAssets(unittest.TestCase):
         self.assertEqual(len(logs.output), 1)
         self.assertIn("OPTIONS /vendor/leaflet.js status=501", logs.output[0])
 
+    def test_vendor_asset_does_not_depend_on_the_identity_store(self) -> None:
+        from zava_forward.core import identity
+
+        class Provider:
+            name = "trusted-proxy"
+
+            def authenticate(self, headers: Any) -> dict[str, Any]:
+                return {"identity_source": identity.SOURCE, "email": "x@example.test"}
+
+        app = App(self.store, "SYN-691", provider=Provider())  # type: ignore[no-untyped-call]
+        httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(app))
+        thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+        thread.start()
+        self.addCleanup(thread.join, 5)
+        self.addCleanup(httpd.server_close)
+        self.addCleanup(httpd.shutdown)
+        with patch.object(identity, "bind", side_effect=RuntimeError("database is locked")):
+            request = urllib.request.Request(
+                f"http://127.0.0.1:{httpd.server_port}/vendor/leaflet.js"
+            )
+            with urllib.request.urlopen(request) as response:
+                self.assertEqual((response.status, response.read()), (200, self.expected))
+
     def raw(self, request: bytes) -> bytes:
         import socket
 
