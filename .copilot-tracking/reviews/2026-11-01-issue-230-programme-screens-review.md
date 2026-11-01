@@ -13,3 +13,7 @@ Review executed once. Outcome: slice conformant for desk-verifiable criteria; tw
 Findings routed to follow-up: browser keyboard and axe check; planner role undefined in code; queue is a 50-row page, not a portfolio query.
 
 Post-review amendment: five Copilot review threads on PR 662 were validated and fixed (handoff state, resident-update owner, Quality gate, funnel scope, return metadata). The original review outcome above is unchanged; no second review was run.
+
+## Addendum: PR 662 round 3 review threads
+
+Four Copilot findings (Delivery from legacy appointments, Finance holds/exceptions, Finance budget status, legacy return sender) were valid and fixed with tests; see the changes record. No new open findings from this addendum. The original review outcome is unchanged.

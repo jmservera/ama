@@ -266,19 +266,41 @@ function programmeQualityRow(c) {
   if (reasons.length) return ["Quality", "Blocked", reasons.join(" "), "Unknown", "Record the missing check or independent acceptance"];
   return ["Quality", "No recorded blocker", "Every measure has an accepted check. This is not a pass; a named person decides readiness.", "Unknown", "Unknown"];
 }
-function programmeGates(c) {
+const programmeFinanceBlockers = (c) => {
+  const budget = c.finance?.budget;
+  const found = [];
+  if (budget && budget.status !== "Approved") found.push({ reason: `Budget status is ${screenValue(budget.status)}, not Approved; commitments are refused until it is approved.`,
+    owner: "Unknown", next_action: "Ask the budget approver to decide the budget" });
+  for (const inv of c.finance?.invoices || []) {
+    if (inv.hold) found.push({ reason: `Invoice ${screenValue(inv.id)} is on payment hold: ${screenValue(inv.hold.reason)}.`,
+      owner: screenValue(inv.hold.name), next_action: "Release the hold through the permitted Finance review" });
+    const decided = inv.disposition && inv.disposition !== "Keep on hold";
+    if (!decided && (inv.exceptions || []).length) found.push({ reason: `Invoice ${screenValue(inv.id)} has ${inv.exceptions.length} unresolved match exception(s).`,
+      owner: "Unknown", next_action: "Resolve each line exception and run the match again" });
+  }
+  return found;
+};
+function programmeDeliveryRow(c, orders, blockers) {
+  const gate = programmeGate(blockers, /Safety review|Shared building/i);
+  if (!Array.isArray(orders)) return programmeGateRow("Delivery", gate, "", "Work orders could not be loaded for your role.");
+  const live = orders.filter((w) => w.state !== "Withdrawn");
+  const open = live.filter((w) => w.appointment_control?.status !== "Committed")
+    .map((w) => ({ reason: `${screenValue(w.id)}: appointment ${screenValue(w.appointment_control?.status)}${(w.appointment_control?.missing || []).length ? ` (${w.appointment_control.missing.join("; ")})` : ""}.`,
+      owner: "Unknown", next_action: "Agree and confirm the appointment" }));
+  return programmeGateRow("Delivery", gate.concat(open), `${live.length} work order(s) with a committed appointment.`,
+    live.length ? null : "No active work order is recorded.");
+}
+function programmeGates(c, orders) {
   const blockers = c.work?.blockers || [];
-  const booked = (c.appointments || []).find((a) => a.outcome === "Booked");
   const budget = c.finance?.budget;
   return [
     programmeGateRow("Technical", programmeGate(blockers, /technical|Stock review/i),
       "No technical blocker is recorded.", c.technical ? null : "No technical record is supplied."),
     programmeGateRow("Resident", programmeGate(blockers, /resident/i),
       "No resident decision blocker is recorded.", null),
-    programmeGateRow("Delivery", programmeGate(blockers, /Safety review|Shared building/i),
-      booked ? `Visit booked for ${screenValue(booked.date)}.` : "", booked ? null : "No booked visit is recorded."),
+    programmeDeliveryRow(c, orders, blockers),
     programmeQualityRow(c),
-    programmeGateRow("Finance", programmeGate(blockers, /funding/i),
+    programmeGateRow("Finance", programmeGate(blockers, /funding/i).concat(programmeFinanceBlockers(c)),
       budget ? `Budget status: ${screenValue(budget.status)}.` : "",
       budget || c.funding_ok ? null : "No confirmed funding or budget is visible to your role.")
   ];
@@ -296,8 +318,12 @@ registerRoleScreen({
       screenPanel("Shared queue", programmeQueue(page.items || [], page.total)),
       screenPanel("Lifecycle and funnel", programmeFunnel(report)));
   },
-  render(c) {
-    const rows = programmeGates(c);
+  async load(c) {
+    const orders = await api(`/api/workorders?case=${encodeURIComponent(c.id)}`, undefined, routeController.signal).catch(() => null);
+    return { orders };
+  },
+  render(c, extra) {
+    const rows = programmeGates(c, extra?.orders);
     const blocked = rows.filter((r) => r[1].startsWith("Blocked"));
     return screenPanel(`Connected view for ${c.id}`,
       h("p", {}, "Technical, resident, delivery, quality and finance states are shown independently. One clear state never clears another."),

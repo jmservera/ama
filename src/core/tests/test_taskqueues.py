@@ -283,6 +283,9 @@ class QueueDefinitions(unittest.TestCase):
         pending = evaluate(self.case, handoff=dict(state="Offered"))
         self.assertEqual(pending["returned"]["sender"], "Quinn Inspector")
         self.assertIn("unowned", pending["queues"])
+        self.case["returns"][0].pop("actor")
+        self.case["returns"][0]["by"] = "Legacy Sender"
+        self.assertEqual(evaluate(self.case)["returned"]["sender"], "Legacy Sender")
         self.case["returns"][0]["event_type"] = "advance"
         self.assertIsNone(evaluate(self.case)["returned"])
         self.case["returns"][0].pop("event_type")

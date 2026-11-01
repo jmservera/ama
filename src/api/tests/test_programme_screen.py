@@ -50,14 +50,24 @@ vm.runInContext(host + "\n;globalThis.__s = roleScreens.get('programme-queue');"
   const reset = buttons.find(b => b.attrs.type === "button");
   reset.attrs.onclick();
   const resetRows = queueRows();
-  const gates = (c) => s.render(c);
+  const gates = (c, orders) => s.render(c, {orders});
+  const done = [{id: "WO-1", state: "Appointed", appointment_control: {status: "Committed", missing: []}}];
   console.log(JSON.stringify({roles: s.roles, before, filteredRows, resetRows, defaultRows: 2,
     blocked: gates({id: "C-9", work: {blockers: [
       {step: "Final checks: funding", reason: "Funding has not been confirmed.", owner: "Owen", next_action: "Check funding"},
       {step: "Final checks: resident decision", reason: "No decision.", owner: "Rae", next_action: "Ask resident"}]},
       technical: null, quality: [{state: "Returned", measure: "Loft"}]}),
-    clear: gates({id: "C-8", work: {blockers: []}, technical: {}, appointments: [{outcome: "Booked", date: "2026-11-02"}],
-      measures: "Loft", quality: [{state: "Accepted", measure: "Loft"}], funding_ok: true, finance: {budget: {status: "Approved"}}}),
+    clear: gates({id: "C-8", work: {blockers: []}, technical: {},
+      measures: "Loft", quality: [{state: "Accepted", measure: "Loft"}], funding_ok: true, finance: {budget: {status: "Approved"}}}, done),
+    legacyOnly: gates({id: "C-4", work: {blockers: []}, technical: {}, appointments: [{outcome: "Booked", date: "2026-11-02"}],
+      measures: "Loft", quality: [{state: "Accepted", measure: "Loft"}], finance: {budget: {status: "Approved"}}}, []),
+    held: gates({id: "C-3", work: {blockers: []}, technical: {}, funding_ok: true, measures: "Loft",
+      quality: [{state: "Accepted", measure: "Loft"}], finance: {budget: {status: "Approved"}, invoices: [
+        {id: "INV-1", hold: {name: "Fin Officer", reason: "Query"}, exceptions: []},
+        {id: "INV-2", hold: null, disposition: null, exceptions: [{}]},
+        {id: "INV-3", hold: null, disposition: "Accept for payment", exceptions: [{}]}]}}, done),
+    proposed: gates({id: "C-2", work: {blockers: []}, technical: {}, funding_ok: true, measures: "Loft",
+      quality: [{state: "Accepted", measure: "Loft"}], finance: {budget: {status: "Proposed"}}}, done),
     submitted: gates({id: "C-7", work: {blockers: []}, measures: "Loft", quality: [{state: "Submitted", measure: "Loft"}]}),
     fixed: gates({id: "C-6", work: {blockers: []}, measures: "Loft", quality: [{state: "Fixed, awaiting reinspection", measure: "Loft"}]}),
     partial: gates({id: "C-5", work: {blockers: []}, measures: "Loft, Heat pump",
@@ -129,6 +139,20 @@ class ProgrammeScreen(unittest.TestCase):
             row = node[node.index('"Quality"') :]
             self.assertIn(text, row)
             self.assertIn("Blocked", row)
+
+    def test_delivery_and_finance_use_current_orders_holds_and_budget_status(self) -> None:
+        out = run()
+        for key in ("legacyOnly",):
+            node = json.dumps(out[key])
+            self.assertIn("No active work order is recorded", node[node.index('"Delivery"') :])
+        held = json.dumps(out["held"])
+        finance = held[held.index('"Finance"') :]
+        self.assertIn("INV-1 is on payment hold", finance)
+        self.assertIn("Fin Officer", finance)
+        self.assertIn("INV-2 has 1 unresolved match exception", finance)
+        self.assertNotIn("INV-3", finance)
+        proposed = json.dumps(out["proposed"])
+        self.assertIn("Proposed, not Approved", proposed[proposed.index('"Finance"') :])
 
     def test_funnel_unknown_when_coordinator_unavailable(self) -> None:
         self.assertIn("Unknown", str(run(coordinator="down")["before"]))

@@ -342,7 +342,7 @@ def context(
     ):
         returned_view = dict(
             reason=text(returned.get("reason")),
-            sender=text((returned.get("actor") or {}).get("name")),
+            sender=text((returned.get("actor") or {}).get("name") or returned.get("by")),
             from_stage=returned.get("from_stage") or UNKNOWN,
             to_stage=returned.get("to_stage") or UNKNOWN,
             at=returned.get("at") or UNKNOWN,
