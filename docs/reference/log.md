@@ -9056,3 +9056,11 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Live employee-site verification, screen-reader and voice-control
   acceptance and owner confirmation of agent names remain unproven; no
   source change was made.
+
+## [2026-11-01] update | Operator handover verifier (#188)
+
+* Added the operator handover check to the
+  [sensor research plan](research/iot-sensor-analytics-research-plan.md#operator-handover-verifier-2026-11-01-refs-188)
+  and the API README. It reuses the local strict report on any `ZF_STORE`
+  SQL store and re-runs a window. Actual Hub, Azure SQL and live handover
+  remain unproven; no issue checkbox changes.

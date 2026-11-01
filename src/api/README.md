@@ -1716,6 +1716,25 @@ authenticated IoT Hub delivery, Azure SQL query/restart or live handover.
 Those criteria and #110 prerequisites remain unmet; no cloud execution or
 issue status change is authorized by this source.
 
+### Operator handover check for a live store (#188)
+
+`zava_forward.api.sensor_handover_verify` runs the same strict report against
+the SQL store selected by `ZF_STORE` (`sqlite` or `mssql`, so Azure SQL once an
+owner provides it), using `SensorConsumer.observed_series(home_ids)` for a
+read-only joint per-home query with trusted control units. Tolerances default to
+zero and are declared per channel and metric. `--replay-check` re-feeds the
+reference window through the #110 consumer and requires replay receipts and an
+unchanged series. Exit codes: 0 pass, 1 numeric failure, 2 refusal.
+
+```bash
+cd src/api
+python -m zava_forward.api.sensor_handover_verify --reference history/readings-0000.csv \
+  --handover 2024-10-04T00:00:00Z --temperature-point 0.5 --replay-check
+```
+
+The check is ready-to-run tooling; running it against Azure SQL after a live
+Hub stream is the remaining owner-gated evidence for #188.
+
 ## Finite offline sensor ingestion (#110)
 
 `sensor_ingestion.SensorIngestion(store).consume(observations, received_at=...)`

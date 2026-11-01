@@ -11,13 +11,15 @@ import test_sensor_consumer as consumer_tests
 import test_sensor_handover as fixture
 from azure.eventhub import EventData
 from sensor_consumer_fixture import CONTROL, POLICY, store_at
-from zava_forward.core.sensor_consumer import READING_COLUMNS, SensorConsumer
+from zava_forward.core.sensor_consumer import READING_COLUMNS, ConsumerError, SensorConsumer
 from zava_forward.core.sqlstore import CASE_COLS
 from zava_forward.core.synthetic import sensor_backfill
-from zava_forward.core.synthetic.sensor_consistency import report
+from zava_forward.core.synthetic.sensor_consistency import Tolerance, report
 from zava_forward.core.synthetic.sensor_stream import Replay, descriptor, replay, wire
 
 from zava_forward.api.iot_stream import AUTH, DEVICE, Binding, decode
+from zava_forward.api.sensor_handover_verify import main as verify_main
+from zava_forward.api.sensor_handover_verify import run as verify
 from zava_forward.api.sensor_ingestion import SensorIngestion
 
 
@@ -135,6 +137,10 @@ class SqlHandoverTests(consumer_tests.SensorConsumerTests):
             return observed
 
         observed = queried()
+        homes = ("ZF-1", "stock-home-0000000000002")
+        self.assertEqual(self.consumer.observed_series(homes), observed)
+        with self.assertRaises(ConsumerError):
+            self.consumer.observed_series([])
         result = report(observed, reference, handover=fixture.HANDOVER)
         self.assertTrue(result["passed"], result)
         before = self.counts()
@@ -152,3 +158,27 @@ class SqlHandoverTests(consumer_tests.SensorConsumerTests):
         self.assertEqual(self.counts(), before)
         self.assertEqual(queried(), observed)
         self.assertEqual(self.snapshot(), properties_before)
+        # The operator verifier gives the same verdict, and re-running writes nothing new.
+        verdict = verify(
+            reopened,
+            reference,
+            handover=fixture.HANDOVER,
+            replay_check=True,
+            received_at="2024-10-04T16:00:00Z",
+        )
+        self.assertTrue(verdict["passed"] and verdict["idempotent"], verdict)
+        self.assertEqual(self.counts(), before)
+        # A perturbed stored value fails at zero tolerance and passes within a wide one.
+        reopened.db.execute(
+            "UPDATE sensor_reading SET temperature_c='40' WHERE home_id=? AND observed_at=?",
+            ("ZF-1", reference[-1]["observed_at"]),
+        )
+        self.assertFalse(verify(reopened, reference, handover=fixture.HANDOVER)["passed"])
+        wide = Tolerance(point=100, mean_step=100, stddev=100)
+        self.assertTrue(
+            verify(reopened, reference, handover=fixture.HANDOVER, temperature=wide)["passed"]
+        )
+        missing = Path(self.tmp.name) / "absent.csv"
+        self.assertEqual(
+            verify_main(["--reference", str(missing), "--handover", fixture.HANDOVER]), 2
+        )

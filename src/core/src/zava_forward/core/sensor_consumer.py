@@ -647,6 +647,53 @@ class SensorConsumer:
             raise ConsumerError("SENSOR_COMMIT_UNCERTAIN", reference) from None
         return receipt
 
+    def observed_series(self, home_ids: Sequence[str]) -> list[dict[str, str]]:
+        """Read stored readings per home as canonical rows with trusted control units."""
+        if not home_ids or any(not _text(home, 64) for home in home_ids):
+            raise ConsumerError("INVALID_HOME_SELECTION")
+        db = self._connect()
+        try:
+            units: dict[str, Mapping[str, object]] = {}
+            rows: list[dict[str, str]] = []
+            for home in home_ids:
+                stored = db.execute(
+                    f"SELECT {', '.join(READING_COLUMNS)} FROM sensor_reading"
+                    " WHERE home_id=? ORDER BY observed_at, sensor_id",
+                    (home,),
+                ).fetchall()
+                for record in stored:
+                    row = {
+                        key: str(value)
+                        for key, value in zip(READING_COLUMNS, record, strict=True)
+                        if key != "injected_fault"
+                    }
+                    stamp = record[3]
+                    if isinstance(stamp, datetime):
+                        row["observed_at"] = stamp.replace(tzinfo=UTC).strftime(
+                            "%Y-%m-%dT%H:%M:%SZ"
+                        )
+                    sensor = row["sensor_id"]
+                    if sensor not in units:
+                        control = db.execute(
+                            "SELECT body FROM sensor_consumer_control WHERE sensor_id=?",
+                            (sensor,),
+                        ).fetchone()
+                        if control is None:
+                            raise ConsumerError("SENSOR_OUTCOME_MALFORMED")
+                        units[sensor] = json.loads(str(control[0]))
+                    control_units = units[sensor]
+                    row.update(
+                        temperature_unit=str(control_units["temperature_unit"]),
+                        humidity_unit=str(control_units["humidity_unit"]),
+                        calibrated=str(control_units["calibration_confirmed"]).lower(),
+                    )
+                    rows.append(row)
+            return rows
+        except (self.store.dberror, ValueError, KeyError):
+            raise ConsumerError("SENSOR_SQL_UNAVAILABLE") from None
+        finally:
+            db.close()
+
     def acknowledge(self, receipt: Receipt) -> None:
         """Post-COMMIT seam: a caller must reconcile any lost acknowledgement."""
 
