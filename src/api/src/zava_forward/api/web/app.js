@@ -47,6 +47,8 @@ function mutationKey(path, body) {
       .map(key => body[key] ?? null)]);
 }
 
+const GENERIC_CHANGE_ERROR = "We cannot show whether this change was saved. Owner: application support. Next action: check the recorded history before repeating a change, then contact application support if it continues.";
+const GENERIC_READ_ERROR = "This could not load and the cause is not known. Owner: application support. Next action: refresh to try again, then contact application support if it continues.";
 async function api(path, body, signal) {
   const progress = typeof AsyncAction !== "undefined"
     ? AsyncAction.feedback("Loading workspace data") : null;
@@ -72,7 +74,7 @@ async function api(path, body, signal) {
       me = null; login("Your session has ended. Sign in again.");
       const error = new Error("Your session has ended. Sign in again."); error.status = 401; throw error;
     }
-    if (!res.ok) { const e = new Error(data.error || "Something went wrong."); e.reasons = data.reasons; e.status = res.status; e.outcome = data.outcome; throw e; }
+    if (!res.ok) { const e = new Error(data.error || (body === undefined ? GENERIC_READ_ERROR : GENERIC_CHANGE_ERROR)); e.generic = !data.error; e.reasons = data.reasons; e.status = res.status; e.outcome = data.outcome; throw e; }
     return data;
   } finally {
     if (key) pendingMutations.delete(key);
