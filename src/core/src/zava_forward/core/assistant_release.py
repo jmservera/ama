@@ -66,6 +66,30 @@ def releases(db, task):
     return [dict(release_body(b), id=i, status=s) for i, s, b in rows]
 
 
+def invalidate_changed(db, now, spec, binding, found, live):
+    """Revoke active records whose bound versions or intended use changed; return the records still held."""
+    kept = []
+    for rec in found:
+        triggers = rai_release.changed_triggers(rec, spec, binding) if rec["status"] == "active" else []
+        if triggers:
+            fields = rai_release.missing_contract(rec, spec) + rai_release.missing_binding(rec, binding, BOUND, now, live)
+            cause = dict(at=now, triggers=triggers, fields=fields or triggers)
+            change(db, now, None, rec["id"], "revoked", "Material change invalidated release: " + ", ".join(triggers),
+                   system=True, invalidated=cause)
+            rec.update(status="revoked", invalidated=cause)
+        else:
+            kept.append(rec)
+    return kept
+
+
+def invalidation_cause(found):
+    """Mismatched fields of the newest record when it was revoked by a material change."""
+    latest = max(found, key=lambda r: r.get("recorded_at") or 0, default=None)
+    cause = latest.get("invalidated") if latest and latest.get("status") == "revoked" else None
+    fields = cause.get("fields") if isinstance(cause, dict) else None
+    return [f for f in fields if isinstance(f, str)] if isinstance(fields, list) else []
+
+
 def assessment(db, task, binding, now, live=False):
     """Return the selected record and no denial, or no record and an explicit denial."""
     from . import ai_registry
@@ -81,7 +105,16 @@ def assessment(db, task, binding, now, live=False):
     except (ValueError, TypeError):
         logging.getLogger(__name__).warning("Malformed release record; dispatch denied.")
         return None, denial("malformed release record", ["valid release record"], task)
+    held = found
+    if not task.startswith("legacy:"):
+        try:
+            found = invalidate_changed(db, now, spec, binding, found, live)
+        except (store_error, ValueError):
+            logging.getLogger(__name__).warning("Release invalidation not recorded; dispatch denied.")
+            return None, denial("release invalidation could not be recorded", ["release record store"], task)
     selected, missing = rai_release.select(found, spec, binding, BOUND, now, live)
+    if not selected and not any(r["status"] == "active" for r in found):
+        missing = invalidation_cause(held) or missing
     return (selected, None) if selected else (
         None, denial("no approved release matches (" + ", ".join(missing) + ")", missing, task))
 
@@ -134,16 +167,32 @@ def record(db, now, user, body, approvers, task_ids):
     return rid
 
 
-def change(db, now, user, rid, status, reason, system=False):
+def change(db, now, user, rid, status, reason, system=False, invalidated=None):
     if not system and user.get("role") != "Retrofit Programme Manager":
         raise PermissionError("Only a Retrofit Programme Manager can change a release.")
     if status not in ("suspended", "revoked"):
         raise ValueError("Choose suspended or revoked.")
-    res = db.execute("UPDATE assistant_releases SET status=?,revision=revision+1 WHERE id=? AND status IN ('active','suspended')",
-                     (status, rid))
-    if res.rowcount != 1:
-        raise ValueError("Release is unknown or already revoked.")
-    event(db, now, rid, kind=f"release-{status}", by=user["email"] if user else "system", reason=text(reason, "a reason", 400))
+    reason = text(reason, "a reason", 400)
+    mssql = hasattr(db, "driver")
+    db.execute("SAVE TRANSACTION release_change" if mssql else "SAVEPOINT release_change")
+    try:
+        res = db.execute("UPDATE assistant_releases SET status=?,revision=revision+1 WHERE id=? AND status IN ('active','suspended')",
+                         (status, rid))
+        if res.rowcount != 1:
+            raise ValueError("Release is unknown or already revoked.")
+        if invalidated:
+            raw = db.execute("SELECT body FROM assistant_releases WHERE id=?", (rid,)).fetchone()[0]
+            body = release_body(raw)
+            if body:
+                db.execute("UPDATE assistant_releases SET body=? WHERE id=?",
+                           (canonical(dict(body, invalidated=invalidated)), rid))
+        event(db, now, rid, kind=f"release-{status}", by=user["email"] if user else "system", reason=reason)
+    except BaseException:
+        db.execute("ROLLBACK TRANSACTION release_change" if mssql else "ROLLBACK TO release_change")
+        raise
+    finally:
+        if not mssql:
+            db.execute("RELEASE release_change")
 
 
 def event(db, now, rid, **body):

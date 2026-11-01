@@ -464,23 +464,41 @@ class SensorConsumer:
             raise ConsumerError("SENSOR_OUTCOME_MALFORMED")
         return cast(Observation, parsed)
 
-    def _latest_observed(self, db: Connection, sensor_id: Primitive) -> datetime | None:
+    def _witnesses(
+        self, db: Connection, sensor_id: Primitive, reading_ids: Sequence[str] | None = None
+    ) -> dict[str, Observation]:
         extract = "JSON_VALUE" if self.mssql else "json_extract"
         valid = "ISJSON" if self.mssql else "json_valid"
         safe_body = f"CASE WHEN {valid}(observation_body)=1 THEN observation_body ELSE NULL END"
-        retained = db.execute(
-            "SELECT reference, observation_body FROM sensor_delivery"
-            " WHERE status='accepted' AND reason='ACCEPTED'"
-            f" AND {extract}({safe_body}, '$.sensor_id')=?",
-            (sensor_id,),
-        ).fetchall()
+        # Chunked so a batched lookup stays under the SQL Server parameter limit.
+        chunks: list[Sequence[str] | None] = [None]
+        if reading_ids is not None:
+            chunks = [reading_ids[i : i + 500] for i in range(0, len(reading_ids), 500)]
         witnesses: dict[str, Observation] = {}
-        for reference, body in retained:
-            witness = self._accepted_witness(body, str(reference))
-            reading_id = str(witness["reading_id"])
-            if witness["sensor_id"] != sensor_id or reading_id in witnesses:
-                raise ConsumerError("SENSOR_OUTCOME_MALFORMED")
-            witnesses[reading_id] = witness
+        for chunk in chunks:
+            narrow = ""
+            params: tuple[object, ...] = (sensor_id,)
+            if chunk is not None:
+                narrow = (
+                    f" AND {extract}({safe_body}, '$.reading_id') IN ({','.join('?' * len(chunk))})"
+                )
+                params += tuple(chunk)
+            retained = db.execute(
+                "SELECT reference, observation_body FROM sensor_delivery"
+                " WHERE status='accepted' AND reason='ACCEPTED'"
+                f" AND {extract}({safe_body}, '$.sensor_id')=?{narrow}",
+                params,
+            ).fetchall()
+            for reference, body in retained:
+                witness = self._accepted_witness(body, str(reference))
+                reading_id = str(witness["reading_id"])
+                if witness["sensor_id"] != sensor_id or reading_id in witnesses:
+                    raise ConsumerError("SENSOR_OUTCOME_MALFORMED")
+                witnesses[reading_id] = witness
+        return witnesses
+
+    def _latest_observed(self, db: Connection, sensor_id: Primitive) -> datetime | None:
+        witnesses = self._witnesses(db, sensor_id)
         readings = db.execute(
             f"SELECT {', '.join(READING_COLUMNS)} FROM sensor_reading WHERE sensor_id=?",
             (sensor_id,),
@@ -646,6 +664,94 @@ class SensorConsumer:
         except Exception:
             raise ConsumerError("SENSOR_COMMIT_UNCERTAIN", reference) from None
         return receipt
+
+    def observed_series(
+        self,
+        home_ids: Sequence[str],
+        windows: Mapping[str, tuple[str, str]] | None = None,
+    ) -> list[dict[str, str]]:
+        """Read stored readings per home as canonical rows with trusted control units.
+
+        windows optionally bounds each home to an inclusive (first, last) UTC slot range.
+        """
+        if (
+            not home_ids
+            or any(
+                not home_key(home) or len(home.encode("utf-16-le")) // 2 > 64 for home in home_ids
+            )
+            or (windows is not None and set(windows) != set(home_ids))
+        ):
+            raise ConsumerError("INVALID_HOME_SELECTION")
+        bounds: dict[str, tuple[object, ...]] = {}
+        try:
+            for home in home_ids if windows is not None else ():
+                stamps = [utc(stamp) for stamp in windows[home]]  # type: ignore[index]
+                # SQLite stores the canonical text; SQL Server stores datetime2.
+                bounds[home] = (
+                    tuple(stamp.replace(tzinfo=None) for stamp in stamps)
+                    if self.mssql
+                    else tuple(windows[home])  # type: ignore[index]
+                )
+        except (ValueError, TypeError):
+            raise ConsumerError("INVALID_HOME_SELECTION") from None
+        db = self._connect()
+        try:
+            units: dict[str, Mapping[str, object]] = {}
+            retained: dict[str, dict[str, Observation]] = {}
+            rows: list[dict[str, str]] = []
+            fetched: list[Sequence[object]] = []
+            for home in home_ids:
+                window = " AND observed_at BETWEEN ? AND ?" if bounds else ""
+                stored = db.execute(
+                    f"SELECT {', '.join(READING_COLUMNS)} FROM sensor_reading"
+                    f" WHERE home_id=?{window} ORDER BY observed_at, sensor_id",
+                    (home, *bounds.get(home, ())),
+                ).fetchall()
+                fetched.extend(stored)
+            wanted: dict[str, list[str]] = {}
+            for record in fetched:
+                if record[READING_COLUMNS.index("schema_version")] != "reading-v1":
+                    wanted.setdefault(str(record[0]), []).append(str(record[1]))
+            for sensor, ids in wanted.items():
+                retained[sensor] = self._witnesses(db, sensor, ids)
+            for record in fetched:
+                row = {
+                    key: str(value)
+                    for key, value in zip(READING_COLUMNS, record, strict=True)
+                    if key != "injected_fault"
+                }
+                stamp = record[3]
+                if isinstance(stamp, datetime):
+                    row["observed_at"] = stamp.replace(tzinfo=UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+                sensor = row["sensor_id"]
+                managed = record[READING_COLUMNS.index("schema_version")] != "reading-v1"
+                if managed:
+                    witness = retained[sensor].get(row["reading_id"])
+                    if witness is None:
+                        raise ConsumerError("SENSOR_OUTCOME_MALFORMED")
+                    self._retained_reading(record, witness)
+                    rows.append({key: str(witness[key]) for key in READING_FIELDS})
+                    continue
+                if sensor not in units:
+                    control = db.execute(
+                        "SELECT body FROM sensor_consumer_control WHERE sensor_id=?",
+                        (sensor,),
+                    ).fetchone()
+                    if control is None:
+                        raise ConsumerError("SENSOR_OUTCOME_MALFORMED")
+                    units[sensor] = json.loads(str(control[0]))
+                control_units = units[sensor]
+                row.update(
+                    temperature_unit=str(control_units["temperature_unit"]),
+                    humidity_unit=str(control_units["humidity_unit"]),
+                    calibrated=str(control_units["calibration_confirmed"]).lower(),
+                )
+                rows.append(row)
+            return rows
+        except (self.store.dberror, ValueError, KeyError):
+            raise ConsumerError("SENSOR_SQL_UNAVAILABLE") from None
+        finally:
+            db.close()
 
     def acknowledge(self, receipt: Receipt) -> None:
         """Post-COMMIT seam: a caller must reconcile any lost acknowledgement."""

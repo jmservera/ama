@@ -167,6 +167,14 @@ handover remain unproven under the no-Azure execution boundary. Local SQL/SDK
 checks do not establish whole #188, #110 or AC-066 acceptance or alter OD-43,
 resident consent, calibration or human approval. No issue checkbox changes.
 
+## Operator handover verifier (2026-11-01, Refs #188)
+
+The [operator check](../../../src/api/README.md#operator-handover-check-for-a-live-store-188)
+applies the same report and a window re-run to any SQL store selected by
+`ZF_STORE`. Local SQLite/SQL Server tests cover pass, tolerance failure and
+refusal. It does not supply the actual Hub, Azure SQL or live-handover run,
+which remain unproven. No issue checkbox changes.
+
 ## Shared observation contract and volume (2026-10-18, Refs #186)
 
 This documents the unchanged finite consumer merged in

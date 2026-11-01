@@ -134,6 +134,21 @@ none, and sets no retention period. Options are not legal advice.
 
 * DPO and Legal: lawful basis, staff notice, DPIA decision, retention per class, access and break-glass policy (BRD OD-45, OD-46).
 * Provider terms are documented above (2026-11-01); DPO and Legal acceptance, deployment type, abuse-monitoring choice and transfer position remain open.
+
+## Proposed administrator and break-glass policy (BRD OD-46, not decided)
+
+Status: proposal for the owner and DPO to accept, amend or reject. Nothing here is approved, and no control reads it as
+approved. Retrieved 2026-11-01 from the implemented behaviour in `chat_isolation.py`.
+
+| Option | Administrator can see | Evidence needed | Assessment |
+| --- | --- | --- | --- |
+| A. Metadata only (recommended starting point) | Thread, message and memory counts for a named user (a count snapshot, no ids), with an advisory expiry timestamp of 1 to 60 minutes | Written purpose of 10 or more characters, named role in `CHAT_BREAKGLASS_ROLES`, policy reference in `CHAT_BREAKGLASS_REF`; granted and refused attempts audited with actor, target and purpose | Implemented as counts only. The expiry is returned and audited but no expiring access grant is created or enforced. Content stays unavailable. |
+| B. Content access under dual approval | Message text for a named thread | Option A plus a second approver, DPO notice and a user notification rule | Not implemented. Needs a DPO and Legal decision first. |
+| C. No break-glass | Nothing | None | Simplest, but leaves no route to investigate misuse. |
+
+Open questions for the decision: which Entra app role is the administrator, whether affected users are told after access,
+the audit retention period, and whether content access (option B) is ever permitted. Until a policy reference is recorded
+the endpoint refuses every request and audits the refusal with its stated purpose.
 * Rights request intake process and deadlines.
 * Verify warning comprehension and other chat/memory surfaces. General staff
   panel warning/failure/keyboard DOM behavior is covered locally, not through
