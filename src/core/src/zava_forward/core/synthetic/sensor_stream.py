@@ -305,13 +305,23 @@ class Pacer:
         self.paused = False
         self.stopped = False
         self.next_send = clock()
+        self.last_send: float | None = None
 
     async def wait(self, nominal_seconds: float) -> None:
         await self._wait_until(self.clock() + nominal_seconds / self.speed)
 
     async def admit_send(self) -> None:
-        await self._wait_until(self.next_send)
-        self.next_send = self.clock() + 1 / self.max_per_second
+        while True:
+            await self._wait_until(self.next_send)
+            if self.clock() >= self.next_send:
+                break
+        self.last_send = self.clock()
+        self.next_send = self.last_send + 1 / self.max_per_second
+
+    def set_max_per_second(self, rate: float) -> None:
+        self.max_per_second = rate
+        if self.last_send is not None:
+            self.next_send = self.last_send + 1 / rate
 
     async def _wait_until(self, target: float) -> None:
         while True:
