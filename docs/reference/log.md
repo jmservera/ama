@@ -9236,6 +9236,15 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   tree check. The migration-order criterion stays unmet pending an owner
   decision.
 
+## [2026-11-01] verify | Resident sensors and assistant focused re-check (Refs #466)
+
+* Re-ran resident core (355 tests) and api (167 tests) suites, sensor tests (144),
+  ruff, ruff format, mypy and node --check on main 51657d30: all passed, skips are
+  opt-in SQL and browser groups. No source change was needed.
+* Issue #466 criterion 1 (owner confirms scope and priority) stays unmet; manual
+  assistive-technology acceptance and live checks remain owner-run. No regulatory
+  snapshot changed.
+
 ## [2026-11-01] query | Employee chat recheck on main 51657d30 (#530)
 
 * Re-ran the focused tier: core chat (101), agents chat model (7), API chat
@@ -9244,3 +9253,18 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   `.copilot-tracking/changes/2026-11-01/employee-chat-skills-530-recheck-changes.md`.
 * SQL, live employee-site verification, screen-reader and voice-control
   acceptance remain unproven; no source change was made.
+
+## [2026-11-01] query | Resident portal requirements recheck on main 81cf0c9e (Refs #441)
+
+* Re-verified the merged resident integration (#442, #454) with a read-only
+  script: 30 draft custody hashes, unique BRD FR-053 to FR-064 and PRD FR-062
+  to FR-073 identifiers with base IDs preserved, FR-044 and RULE-028
+  per-message review default, OD-52 to OD-55 visible, the three author-judgement
+  workload figures, resident-related links and the unregistered ADR proposal
+  (registry stays 0001 to 0006). Four inherited unrelated broken links in the
+  addendum and index are recorded, not repaired.
+* No BRD, PRD, ADR, addendum or memory change was made. Criterion 5 (requirements
+  owner disposition of FR-044/AC-084) and criterion 9 (hosted gate evidence on the
+  final head) stay unmet; the per-message review exception stays OFF pending
+  OD-53. Evidence is in
+  `.copilot-tracking/changes/2026-11-01/issue-441-recheck-changes.md`.
