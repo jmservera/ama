@@ -77,7 +77,13 @@ class ProvenanceRegisterTests(unittest.TestCase):
         )
         for sid in {item.split(":")[0] for item in issues}:
             self.assertIn(f"{sid}:missing_or_invalid_retrieval_date", issues)
-            self.assertIn(f"{sid}:provisional_licence", issues)
+        self.assertEqual(
+            sorted(issues),
+            sorted(
+                f"{sid}:missing_or_invalid_retrieval_date"
+                for sid in ("SRC-CENSUS-TS054", "SRC-IMD-2025", "SRC-ONS-BOUNDARIES")
+            ),
+        )
         valid = [
             {
                 "id": "SYN-SOURCE",

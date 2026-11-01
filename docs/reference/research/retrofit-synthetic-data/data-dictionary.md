@@ -581,7 +581,7 @@ snapshots; this is not an attestation of existing private data or runtime chat.
 | Criterion | Status | Evidence and limit |
 | --- | --- | --- |
 | Dictionary covers every dataset including sensor/chat | Met for known dataset families | Register covers public CSV/manifests/evals, private seed/geography, scale/fabric, sensor and generated/runtime chat. Core coverage test checks IDs/anchors and every public JSON/CSV payload |
-| Every external source has licence, retrieval date and attribution | Unmet | Three historic source entries lack verified dates/terms; strict `--sources` audit rejects them. Offline work cannot invent or refresh that evidence |
+| Every external source has licence, retrieval date and attribution | Unmet (partly resolved 2026-11-01) | Licence and attribution for the three historic ONS/MHCLG sources are now confirmed against the official pages. Their retrieval dates are still unrecorded, so the strict `--sources` audit rejects them; the owner must supply the dates, which cannot be invented |
 | Automated check rejects real-person patterns or unlabelled records | Met for specified bounded contract | Production checker/CLI mutation tests cover four patterns, required labels, inherited/exempt content and independently rehashed fixtures; not universal PII certification |
 | Private/public separation is tested | Met locally | Public-only inventory/scan, ignored-path checks and fresh scale/sensor/chat fixtures; no private corpus read or publish approval |
 

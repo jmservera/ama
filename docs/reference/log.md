@@ -9063,3 +9063,12 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Live employee-site verification, screen-reader and voice-control
   acceptance and owner confirmation of agent names remain unproven; no
   source change was made.
+
+## [2026-11-01] update | Source licence and attribution confirmed (#175)
+
+* Replaced provisional licence and attribution wording for SRC-CENSUS-TS054,
+  SRC-IMD-2025 and SRC-ONS-BOUNDARIES in the provenance register after
+  checking the gov.uk IMD page and the ONS terms page (OGL v3.0).
+* Retrieval dates for those three sources remain unrecorded and are an owner
+  open item, so the acceptance criterion stays unmet. Evidence is in
+  `.copilot-tracking/research/2026-11-01-issue-175-source-provenance-research.md`.
