@@ -132,7 +132,9 @@ class AcceptanceTests(unittest.TestCase):
             page = self.page()
             page.evaluate.side_effect = responses
             observer = Mock(return_value={"passed": True})
-            with patch.dict(check.OBSERVERS, chat=observer, map=observer, case=observer):
+            with patch.dict(
+                check.OBSERVERS, chat=observer, map=observer, case=observer, briefing=observer
+            ):
                 result = check.verify_employee(page, EXPECTED)
             self.assertFalse(result["passed"])
             self.assertEqual(observer.call_count, 1 if len(responses) == 3 else 0)
@@ -196,6 +198,34 @@ class AcceptanceTests(unittest.TestCase):
         self.assertEqual(result["stages"]["chat"]["status"], "blocked")
         later.assert_not_called()
         self.assertNotIn("PRIVATE_CANARY", str(result))
+
+    def test_briefing_requires_visible_disclosures(self) -> None:
+        def run(
+            visible: set[str], text: str = "AI suggestion, not approved. Not an instruction."
+        ) -> object:
+            page = self.page()
+            box = Mock()
+            box.locator.return_value.inner_text.return_value = text
+
+            def inner(selector: str) -> Mock:
+                found = Mock()
+                found.inner_text.return_value = text
+                found.count.return_value = 1 if selector in visible else 0
+                return found
+
+            box.locator.side_effect = inner
+            alerts = Mock()
+            alerts.count.return_value = 0
+            page.locator.side_effect = lambda selector: box if selector == ".briefing" else alerts
+            return check.briefing(page, lambda: None)["passed"]
+
+        self.assertTrue(run({"details summary:visible", "time:visible"}))
+        self.assertFalse(run({"details summary", "time"}))
+        self.assertFalse(run({"details summary:visible"}))
+        both = {"details summary:visible", "time:visible"}
+        self.assertTrue(run(both, "Summary by rules. Not an instruction."))
+        self.assertFalse(run(both, "Not an instruction"))
+        self.assertFalse(run(both | {'[role=status]:has-text("Briefing unavailable")'}))
 
     def test_map_payload(self) -> None:
         for payload in (POINTS, CLUSTERS, EMPTY):
@@ -354,12 +384,14 @@ class AcceptanceTests(unittest.TestCase):
                 page = context.new_page()
                 page.goto(fixture.url)
                 observer = Mock(return_value={"passed": True})
-                with patch.dict(check.OBSERVERS, chat=observer, map=observer, case=observer):
+                with patch.dict(
+                    check.OBSERVERS, chat=observer, map=observer, case=observer, briefing=observer
+                ):
                     result = check.verify_employee(page, EXPECTED, base)
                 self.assertEqual(result["passed"], admitted)
                 self.assertEqual(result["identity"]["expectedIdentity"], admitted)
                 self.assertEqual(result["identity"]["displayEmailMatches"], not admitted)
-                self.assertEqual(observer.call_count, 3 if admitted else 0)
+                self.assertEqual(observer.call_count, 4 if admitted else 0)
                 if admitted:
                     self.assertFalse(result["identity"]["rosterBound"])
                     page.goto(base + "/app")
