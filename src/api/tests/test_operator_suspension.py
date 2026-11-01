@@ -879,6 +879,26 @@ class OperatorIncident(Base):
         self.assertTrue(reopened.cases["ZF-1"]["hazards"])
         self.assertIn("Synthetic manual fallback", json.dumps(reopened.cases["ZF-1"]))
 
+    def test_breach_record_names_authority_and_drill_sequence(self) -> None:
+        body = incident("all")
+        self.store.suspend(self.people["Quality Inspector"], body)
+        s = self.store.continuity_view(self.pm)["suspensions"][0]
+        self.assertEqual(s["restart_authority"], AUTHORITY)
+        self.assertIn("OD-35", s["actual_authority"])
+        self.assertEqual(s["trigger"], "guardrail breach")
+        self.store.log_call(self.pm, "ZF-1", "Spoke", "Synthetic drill call")
+        with self.assertRaises(PermissionError):
+            self.store.restart_decide(provision(self), dict(id=s["id"], decision="Restart"))
+        self.assertEqual(
+            self.store.continuity_view(self.pm)["suspensions"][0]["status"], "Suspended"
+        )
+        unnamed = dict(incident("quality-evidence"))
+        unnamed.pop("restart_authority")
+        self.store.suspend(self.people["Quality Inspector"], unnamed)
+        held = self.store.continuity_view(self.pm)["suspensions"]
+        self.assertTrue(any(x["restart_authority"].startswith("Unavailable") for x in held))
+        self.assertIn("Synthetic drill call", json.dumps(self.store.cases["ZF-1"]))
+
     def test_trusted_capability(self) -> None:
         from test_auth import ENV, principal
         from zava_forward.api.auth import PasswordProvider, TrustedProxyProvider

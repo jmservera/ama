@@ -137,6 +137,8 @@ def evaluate(expression, parameters: dict, variables: dict, context: dict | None
         "and_": lambda *a: all(a),
         "not_": lambda a: not a,
         "equals": lambda a, b: a == b,
+        "greaterOrEquals": lambda a, b: a >= b,
+        "lessOrEquals": lambda a, b: a <= b,
         "empty": lambda a: not a,
         "coalesce": lambda *values: next(value for value in values if value is not None),
         "length": len,
@@ -648,10 +650,17 @@ class BicepPolicyTests(unittest.TestCase):
         self.assertEqual(
             template["containers"][0]["probes"],
             [
+                {
+                    "type": "Startup",
+                    "httpGet": {"path": "/healthz", "port": 8088},
+                    "periodSeconds": 5,
+                    "failureThreshold": 24,
+                },
                 {"type": "Liveness", "httpGet": {"path": "/healthz", "port": 8088}},
                 {"type": "Readiness", "httpGet": {"path": "/healthz", "port": 8088}},
             ],
         )
+        self.assert_hosting_limits_and_rollout(apps)
         self.assertFalse(self.defaults["enablePublicEdge"])
         edge = module(self.main, "edge")
         self.assertEqual(edge["condition"], "[parameters('enablePublicEdge')]")
@@ -679,6 +688,36 @@ class BicepPolicyTests(unittest.TestCase):
         route = resource(compiled, "Microsoft.Cdn/profiles/afdEndpoints/routes")
         self.assertEqual(route["properties"]["supportedProtocols"], ["Https"])
         self.assertEqual(route["properties"]["forwardingProtocol"], "HttpsOnly")
+
+    def assert_hosting_limits_and_rollout(self, apps: dict) -> None:
+        """Resource limits, single active revision and queue scale rules for every app."""
+        by_name = {
+            r["properties"]["template"]["containers"][0]["name"]: r["properties"]
+            for r in resources(apps)
+            if r["type"] == "Microsoft.App/containerApps"
+        }
+        for name, cpu, memory in (("api", "0.5", "1Gi"), ("agents", "0.5", "1Gi")):
+            with self.subTest(app=name):
+                limits = by_name[name]["template"]["containers"][0]["resources"]
+                self.assertEqual(limits, {"cpu": f"[json('{cpu}')]", "memory": memory})
+                # Single mode: rollback is a reviewed revert and release, not a traffic split.
+                self.assertEqual(by_name[name]["configuration"]["activeRevisionsMode"], "Single")
+        rule = by_name["agents"]["template"]["scale"]["rules"][0]
+        self.assertEqual(rule["name"], "agent-task-queue")
+        self.assertEqual(rule["custom"]["type"], "azure-queue")
+        self.assertEqual(rule["custom"]["metadata"]["queueName"], "agent-tasks")
+        self.assertEqual(rule["custom"]["metadata"]["queueLength"], "5")
+        jobs = {
+            r["properties"]["template"]["containers"][0]["name"]: r["properties"]["configuration"]
+            for r in resources(apps)
+            if r["type"] == "Microsoft.App/jobs"
+        }
+        self.assertEqual(jobs["import"]["eventTriggerConfig"]["scale"]["maxExecutions"], 2)
+        self.assertEqual(jobs["import"]["eventTriggerConfig"]["scale"]["minExecutions"], 0)
+        for name in ("orchestrator", "ledger-verify", "auth-renewal"):
+            with self.subTest(job=name):
+                self.assertEqual(jobs[name]["scheduleTriggerConfig"]["parallelism"], 1)
+                self.assertGreater(jobs[name]["replicaTimeout"], 0)
 
     def test_defender_opt_in_does_not_downgrade_existing_subscription_plans(self) -> None:
         governance = compile_bicep("governance.bicep")
@@ -2028,6 +2067,14 @@ class BicepPolicyTests(unittest.TestCase):
             failures(enablePublicEdge=True, deployApplications=False),
             {"publicEdgeRequiresApplications"},
         )
+        guard = "serverlessAutoPauseDelayMustBeSupported"
+        for tier, delay in product(("serverless", "provisioned"), (-1, 0, 14, 15, 10080, 10081)):
+            valid = tier == "provisioned" or delay in (-1, 15, 10080)
+            self.assertEqual(
+                failures(sqlTier=tier, sqlAutoPauseDelayMinutes=delay),
+                set() if valid else {guard},
+                f"{tier} {delay}",
+            )
 
     def assert_mutation_rejected(self, assertion, mutated: dict) -> None:
         with self.assertRaises(AssertionError):
@@ -2207,6 +2254,7 @@ class BicepPolicyTests(unittest.TestCase):
             "quotaCheckMustBeRecorded",
             "deploymentLocationsMustBeSelected",
             "pilotRequiresLocks",
+            "serverlessAutoPauseDelayMustBeSupported",
         ):
             with self.subTest(guard=name):
                 mutated = deepcopy(self.main)
