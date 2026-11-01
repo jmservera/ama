@@ -557,6 +557,7 @@ def write(
     )
     manifest = {
         "schema_version": VERSION,
+        "version": VERSION,
         "method_version": METHOD_VERSION,
         "source_type": "SYNTHETIC",
         "classification": CLASSIFICATION,
