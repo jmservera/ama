@@ -16,3 +16,7 @@ Research: `.copilot-tracking/research/2026-11-01-issue-220-affected-person-chall
 ## Critique (single pass, final candidate)
 
 * Verdict: proceed. Risk: scope creep into stores; rejected. Risk: criterion 5 over-claim; resolved by Refs, not Closes.
+
+## Correction cycle 2 (2026-11-01)
+
+Copilot thread on challenges.py: resolving a challenge dropped a pending hazard referral from the listing. Fix: `hazard_referrals()` lists referrals with status `referred_on_receipt` regardless of challenge status; new `confirm_hazard_handoff()` (named owner, non-empty evidence) marks `handed_off`. Test and README contract updated. Validation: ruff check, ruff format --check, mypy clean; tests.test_challenges 14 pass. Human review remains required.
