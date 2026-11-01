@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 from collections import defaultdict
 from datetime import UTC, datetime, timedelta
 from typing import Any
@@ -65,6 +66,20 @@ def _json(value: object) -> str:
 
 def _hash(value: object) -> str:
     return hashlib.sha256(_json(value).encode()).hexdigest()
+
+
+def _home_key(facts: dict[str, Any], case_id: str) -> tuple[str, str]:
+    """Return a home grouping key; an address key is derived, not a registered home identifier."""
+    if facts.get("home_id"):
+        return str(facts["home_id"]), "recorded_home"
+    home = facts.get("home")
+    if isinstance(home, dict):
+        postcode = re.sub(r"[^a-z0-9]+", "", str(home.get("postcode") or "").lower())
+        address = re.sub(r"[^a-z0-9]+", " ", str(home.get("address") or "").lower()).strip()
+        parts = [postcode, address]
+        if all(parts):
+            return "home-" + _hash(parts)[:16], "address_key"
+    return case_id, "case_only"
 
 
 def _time(value: object) -> datetime | None:
@@ -317,6 +332,7 @@ class RuleEngine:
                     return checkpoint
                 sequence = (self.sql.all("SELECT MAX(check_seq) n FROM reg_check")[0]["n"] or 0) + 1
                 checks = []
+                home_id, home_scope = _home_key(facts, case_id)
                 for card, citations, source_state in contract:
                     spec = card["check"]
                     eligible = (
@@ -347,8 +363,8 @@ class RuleEngine:
                             **r,
                             id=_hash([key, card["card_id"], r["item"]]),
                             case_id=case_id,
-                            home_id=facts.get("home_id", case_id),
-                            home_scope="recorded_home" if facts.get("home_id") else "case_only",
+                            home_id=home_id,
+                            home_scope=home_scope,
                             step=facts["stage"],
                             card_id=card["card_id"],
                             card_version=card["version"],

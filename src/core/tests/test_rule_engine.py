@@ -504,6 +504,43 @@ class EngineTests(unittest.TestCase):
             ]["false_positive_rate"]
         )
 
+    def test_home_key_derived_from_recorded_address_when_no_home_id(self) -> None:
+        del self.facts["home_id"]
+        self.facts["hazards"] = [self.hazard(hours_ago=60)]
+        cases = {
+            "SYN-1": dict(address="1 Test Road", postcode="TE1 1ST"),
+            "SYN-2": dict(address=" 1  TEST road. ", postcode="te11st"),
+            "SYN-3": dict(address="2 Test Road", postcode="TE1 1ST"),
+        }
+        for case_id, home in cases.items():
+            self.facts["home"] = home | dict(town="Testville", area="A")
+            self.write(case_id)
+            check = self.checks(case_id=case_id)[0]
+            self.assertEqual(check["home_scope"], "address_key")
+        grouped = {
+            h["home_id"]: {a["case_id"] for a in h["alerts"]}
+            for h in self.engine.alerts(OWNER)["homes"]
+        }
+        self.assertEqual(sorted(map(sorted, grouped.values())), [["SYN-1", "SYN-2"], ["SYN-3"]])
+
+    def test_home_key_falls_back_to_case_only_without_recorded_home(self) -> None:
+        del self.facts["home_id"]
+        for home in (None, dict(address="1 Test Road"), dict(address="", postcode="TE1 1ST")):
+            with self.subTest(home=home):
+                if home is None:
+                    self.facts.pop("home", None)
+                else:
+                    self.facts["home"] = home
+                self.write()
+                check = self.checks(now=NOW + timedelta(minutes=len(str(home))))[0]
+                self.assertEqual((check["home_scope"], check["home_id"]), ("case_only", "SYN-1"))
+
+    def test_recorded_home_id_wins_over_address(self) -> None:
+        self.facts["home"] = dict(address="1 Test Road", postcode="TE1 1ST")
+        self.write()
+        check = self.checks()[0]
+        self.assertEqual((check["home_scope"], check["home_id"]), ("recorded_home", "SYN-HOME"))
+
     def test_significant_decision_missing_evidence_pending_and_human_record(self) -> None:
         self.card(check=dict(kind="automated-decision-safeguard"))
         self.assertEqual(self.checks()[0]["result"], "unknown")
