@@ -31,3 +31,9 @@ Criterion 1 (owner acceptance of child deferrals); real credential lifecycle and
 * Research: one unresolved Copilot thread: the scan suffix allowlist omitted `.pem` and `.key`, so the private-key detector never read them. Valid.
 * Plan/Changes: added `.pem` and `.key` to `SUFFIXES` and a `test_private_key_files_are_scanned` temp-directory regression test. Merged `origin/main` (log.md kept both sides; `role-screens.js` passes `node --check`).
 * Review: ruff check and format clean; `test_iot_credential_hygiene` and `test_iot_stream` (36 tests) pass in a venv with the src projects installed; mypy shows only third-party stub errors (azure, playwright), none new. No Azure access.
+
+## Correction cycle 3 (PR 704, 2026-11-01)
+
+* Research: three unresolved Copilot threads on `src/api/tests/test_iot_credential_hygiene.py`, all valid: `.sh` and `.bicepparam` not scanned; fake SDK captured only `message.data`; failure test omitted formatted tracebacks (exception chaining).
+* Plan/Changes: added `.sh` and `.bicepparam` to `SUFFIXES` with a temp-directory regression test; the fake SDK now records body, `message_id` and `custom_properties`; failure and timeout tests also check `traceback.format_exception` output. `origin/main` already merged (no changes).
+* Review: ruff check and format clean; 37 `test_iot_credential_hygiene` and `test_iot_stream` tests pass in a venv; mypy shows only pre-existing errors in files this change does not touch. No Azure access.

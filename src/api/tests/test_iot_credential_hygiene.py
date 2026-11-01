@@ -10,6 +10,7 @@ import json
 import logging
 import re
 import tempfile
+import traceback
 import unittest
 from pathlib import Path
 from unittest.mock import AsyncMock, Mock, patch
@@ -34,6 +35,8 @@ SUFFIXES = {
     ".env",
     ".pem",
     ".key",
+    ".sh",
+    ".bicepparam",
 }
 SKIPPED_PARTS = {"node_modules", ".git", ".venv", "__pycache__"}
 PATTERNS = {
@@ -97,6 +100,15 @@ class SourceScanTests(unittest.TestCase):
             findings = scan_directory(base)
         self.assertEqual({f.split(":")[0] for f in findings}, {"device.pem", "device.key"})
 
+    def test_shell_and_bicepparam_files_are_scanned(self) -> None:
+        secret = "HostName=h.azure-devices.net;DeviceId=d;SharedAccessKey=" + "A" * 24 + "=="
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            (base / "create.sh").write_text(f'CS="{secret}"\n', encoding="utf-8")
+            (base / "live.bicepparam").write_text(f"param cs = '{secret}'\n", encoding="utf-8")
+            findings = scan_directory(base)
+        self.assertEqual({f.split(":")[0] for f in findings}, {"create.sh", "live.bicepparam"})
+
     def test_no_device_key_or_connection_string_in_repository_text(self) -> None:
         this = Path(__file__).resolve()
         findings: list[str] = []
@@ -155,7 +167,12 @@ class RuntimeLeakTests(unittest.IsolatedAsyncioTestCase):
         async def capture(message: object) -> None:
             if failure is not None:
                 raise failure
-            self.sent.append(str(getattr(message, "data", "")))
+            meta = [
+                str(getattr(message, "data", "")),
+                str(getattr(message, "message_id", "")),
+                repr(getattr(message, "custom_properties", "")),
+            ]
+            self.sent.append("\n".join(meta))
 
         return Mock(connect=AsyncMock(), send_message=capture, shutdown=AsyncMock())
 
@@ -174,7 +191,7 @@ class RuntimeLeakTests(unittest.IsolatedAsyncioTestCase):
             except StreamError as error:
                 if failure is None:
                     raise
-                outcome = str(error) + repr(error)
+                outcome = str(error) + repr(error) + "".join(traceback.format_exception(error))
         return "\n".join(logs.output) + outcome
 
     def assert_clean(self, captured: str) -> None:
@@ -206,4 +223,5 @@ class RuntimeLeakTests(unittest.IsolatedAsyncioTestCase):
         ):
             with self.assertRaises(StreamError) as caught:
                 await self.publisher.run(self.frames, self.budget, truth=self.truth.append)
-        self.assert_clean(repr(caught.exception))
+        formatted = "".join(traceback.format_exception(caught.exception))
+        self.assert_clean(repr(caught.exception) + formatted)
