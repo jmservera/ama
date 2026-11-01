@@ -182,3 +182,51 @@ registerRoleScreen({
       screenPanel("Ledger-wide AI cohort (all homes, not this home)", assetCost(extra?.report)));
   }
 });
+
+const choiceRoles = ["Resident Liaison Officer", "Retrofit Coordinator", "Retrofit Programme Manager", "Programme Support Officer"];
+const choiceStop = new Set(["Paused", "Withdrawn"]);
+const choiceLatest = (m) => (m.versions || []).at(-1);
+function choiceMeasure(m) {
+  const v = choiceLatest(m);
+  const ctx = m.context ? `scope ${screenValue(m.context.scope)}, revision ${screenValue(m.context.revision)}, design ${screenValue(m.context.design_version)}` : "Current scope not recorded";
+  return [m.measure, ctx, m.status,
+    v ? `v${v.version} ${v.status}, answered by ${screenValue(v.answered_by)}, recorded ${screenStamp(v.at)}${v.note ? `: ${v.note}` : ""}` : "None recorded",
+    screenValue(m.readiness)];
+}
+registerRoleScreen({
+  id: "resident-choice",
+  title: "Resident choice and update queue",
+  roles: choiceRoles,
+  render(c) {
+    const measures = c.measure_decisions || [];
+    const stopped = measures.filter((m) => choiceStop.has(m.status));
+    const update = c.resident_update;
+    const requests = c.service_requests || [];
+    return h("div", {},
+      screenPanel("Evidence boundary",
+        h("p", {}, "Read-only view. No message, call or letter is sent and no record changes here. Record supplied answers in the case workspace. Resident-facing screens are designed separately. Source: desk research, not observed behaviour."),
+        h("p", {}, `Home scope: ${c.id} only.`)),
+      screenPanel("Choice for each measure",
+        h("p", {}, "Each answer belongs to one measure and one scope version. Not recorded means no answer is known. Contact or access is never read as a yes."),
+        screenTable("Measure choices by version",
+          ["Measure", "Scope version", "Current answer", "Latest recorded answer", "Readiness"],
+          measures.map(choiceMeasure))),
+      screenPanel("Paused or withdrawn by the resident",
+        h("p", {}, "A pause or withdrawal is the resident's decision about one measure. It is not a contact attempt, a missed visit or an access need."),
+        stopped.length ? screenTable("Measures paused or withdrawn",
+          ["Measure", "State", "In their words", "Restart needs"],
+          stopped.map((m) => [m.measure, m.status, choiceLatest(m)?.note, "Human review before any restart"]))
+          : h("p", { class: "empty" }, "No measure is currently paused or withdrawn in the recorded answers.")),
+      screenPanel("Linked update commitment",
+        update ? screenFields([
+          ["Status", update.status], ["Purpose or linked issue", update.purpose],
+          ["Owner", screenPerson(update.owner_identity || update.owner)], ["Due", screenStamp(update.due_at)],
+          ["Basis for due date", update.basis], ["Safe route reference", update.safe_contact_ref],
+          ["Version", update.version], ["Meaning", "A commitment is not a message. Nothing is sent or marked received here."]])
+          : screenUnknown("No update commitment is recorded for this home.", "Case owner or resident-workflow manager", "Record a commitment in the case workspace")),
+      screenPanel("Service requests and access needs (separate from choice)",
+        screenTable("Service requests and contact needs",
+          ["Request", "Route", "Status", "Contact needs", "Next update"],
+          requests.map((r) => [r.id, r.route, r.status, (r.accessibility || ["Unknown"]).join(", "), r.next_update]))));
+  }
+});
