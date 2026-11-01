@@ -21,6 +21,35 @@
     "new_research_scope": "Owner explicitly authorized context-appropriate incorporation of the two named video caption checks and verified reflection/Ng research in this same branch/PR."
   },
   "execution_evidence": {
+    "single_document_consolidation": {
+      "owner_request": "Merge all supplement document content into a Supplement section in main; explicitly delete the old standalone TeX/PDF/bibliography.",
+      "current_delivery": "main.pdf",
+      "pages": 52,
+      "Supplement_start_page": 37,
+      "cited_bibliography_entries": 104,
+      "reusable_bibliography_entries": 105,
+      "preservation_manifest": "supplement-integration.json",
+      "original_standalone_source_commit": "80656f3281afe9003777f83ca793f52950f5c21b",
+      "removed_files": ["supplement.tex", "supplement.pdf", "supplement.bbl"],
+      "exact_backup_readback_and_restore_verified_before_removal": true,
+      "all_original_body_inputs_preserved": true,
+      "internal_heading_label_link_and_bibliography_alignment": "Verified",
+      "PDF_outline_and_all_page_text_bounds": "Verified; no external standalone PDF link",
+      "focused_authoring_tests": {"passed": 32, "skipped": 0},
+      "experiment_or_registration_changed": false
+    },
+    "late_Ruff_density_review": {
+      "thread": "PRRT_kwDOUU8JX86ycwpi",
+      "original_finding": "All-language source lines diluted a Python-only lint density.",
+      "remedy": "Submit and count only selected Python paths for Ruff; preserve all-language source lines separately.",
+      "corrected_evidence": "revision-metrics-2026-11-01-python-lint.json",
+      "original_evidence_retained": "revision-metrics-2026-11-01.json",
+      "python_line_denominators": [6365, 25756, 33618],
+      "lint_findings": [1198, 3665, 4230],
+      "findings_per_1000_python_lines": [188.21681068342497, 142.29694051871408, 125.82545065143673],
+      "source_hashes_lint_counts_and_other_structural_metrics_unchanged": true,
+      "regressions": "Frontend-only growth leaves lint density unchanged; absent/empty Python denominators are explicitly rejected."
+    },
     "PR692_inline_review_corrections": {
       "original_review_head": "08fda81a1ae42af1148814dfeb02c94c384725b1",
       "findings": [

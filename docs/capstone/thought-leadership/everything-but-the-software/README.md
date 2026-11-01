@@ -1,6 +1,6 @@
 ---
-title: Everything but the Software - source package (draft v9)
-description: Critique-driven paper revision and prospective five-arm study, with source and collection limits
+title: Everything but the Software - source package (draft v10)
+description: Single-document paper with integrated Supplement, verified source corrections and prospective study limits
 ms.date: 2026-11-01
 ---
 
@@ -8,12 +8,14 @@ Working title: *Everything but the Software: Feature-Driven Decay in an Agentic 
 
 ## Current Status
 
-The title is unchanged at the owner's request. The v9
-[article](./main.pdf), [source](./main.tex) and
-[evidence supplement](./supplement.pdf) address the supplied automatic critique.
-The main article is reduced from 51 to 35 pages; extended
-literature, case audits, deferred intervention rates and historical freeze
-hashes remain in the separate supplement, not deleted.
+The title is unchanged at the owner's request. The complete
+[paper](./main.pdf) and [source](./main.tex) now include a
+[Supplement section](./main.pdf#page=37) in the same document.
+Extended literature, case audits, deferred intervention rates and historical
+freeze provenance are preserved in full, with one shared bibliography.
+The standalone supplement PDF/TeX/bibliography were removed at the owner's
+request after exact archive readback and restore checks; their original
+committed versions remain in Git at `80656f32`. No source evidence was discarded.
 
 The prospective candidate uses five arms and three selected models, with
 33 trajectories per arm/model: 495 total. A is feature-only, B consolidation,
@@ -108,7 +110,7 @@ is a draft and does not authorize collection, freeze or OSF actions.
 
 ### PR Review Corrections
 
-All five 1 November inline review findings are addressed:
+All five initial 1 November inline review findings are addressed:
 
 * Manuscript integration checks every delivered conceptual figure; removing
   any one of the five includes now fails its regression.
@@ -129,6 +131,31 @@ changed-Python syntax lint pass. The 35-page article and 22-page supplement
 rebuild with the selected title, without undefined references or overfull
 text. No full unchanged-application gate, new experiment, registration or
 scientific acceptance is claimed.
+
+The later lint-denominator finding is also corrected. Ruff receives only the
+counted Python files; frontend growth cannot dilute its density.
+The [regenerated evidence](./anc/revision-metrics-2026-11-01-python-lint.json)
+reports 6,365/25,756/33,618 submitted Python lines and
+188.22/142.30/125.83 findings per 1,000 Python lines.
+Original all-language figures remain in the historical record with a correction
+notice; source hashes, lint counts, complexity and duplication are unchanged.
+
+### Single-document Delivery
+
+The sole current deliverable is the 52-page [main.pdf](./main.pdf). Its Supplement starts
+on page 37 and contains every original standalone source body plus the earlier
+compact appendix. Heading levels and labels were reconciled, all links are
+internal, and fifteen missing cited entries were restored into the shared
+104-entry bibliography. The reusable source bibliography retains 105 entries.
+The [integration manifest](./anc/supplement-integration.json) binds preserved
+body digests to the original source revision and approved removal selection.
+
+Thirty-two focused authoring tests pass, including complete body preservation,
+one-document delivery, all five figure-removal cases, exclusive report writes,
+comment-aware inputs and Python lint denominators. The full PDF builds with
+the selected title. The outline contains the Supplement and all its sections;
+all-page text bounds pass and no link targets the deleted standalone PDF.
+No full application gate, experiment or new approval is implied.
 
 | Recommendation | Applied change and evidence limit |
 | --- | --- |
@@ -170,8 +197,9 @@ usability. The [case index](./anc/case-evidence-matrix.json) retains null
 release/journey links and the original 27 October record separately.
 No private dataset, historic tenant-wide logs or paid experiment was read/run.
 
-The [35-page article](./main.pdf) and [22-page supplement](./supplement.pdf)
-compile with Tectonic. All-page text bounds pass; warnings are underfull boxes
+The earlier 35-page article and 22-page standalone supplement compiled with
+Tectonic before consolidation. They are historical validation records, not
+separate current deliverables. All-page text bounds pass; warnings are underfull boxes
 and the bundled lineno UTF-8 warning, not undefined references or overfull text.
 The first PDF attempt raced case-image generation; completed PNGs were verified
 and the sequential rebuild succeeded. Nineteen focused authoring tests pass.
@@ -208,7 +236,6 @@ node anc/export_diagrams.mjs
 python3 -B -m unittest discover -s anc -p 'test_*.py' -q
 python3 -B anc/check_paper.py --normalise-bibliography
 tectonic main.tex --keep-logs --keep-intermediates --untrusted
-tectonic supplement.tex --keep-logs --keep-intermediates --untrusted
 ```
 
 Run case-image regeneration to completion before compiling, not concurrently.

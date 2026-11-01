@@ -21,9 +21,9 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
-For the paper's [v9 critique disposition](../capstone/thought-leadership/everything-but-the-software/README.md#critique-disposition-1-november-v9),
-the owner-selected title is preserved, with a shorter main article and
-separate evidence supplement. The prospective five-arm candidate has
+For the paper's [single-document delivery](../capstone/thought-leadership/everything-but-the-software/README.md#single-document-delivery),
+the owner-selected title is preserved and all former supplement content is
+integrated in the main PDF, with reconciled labels and one bibliography. The prospective five-arm candidate has
 33 trajectories per arm/model (495), a conditional 10-point coverage target,
 matched-resource delivery, visible repair and a blocked primary comparison.
 Three pinned static snapshots, source/access limits, lexical validation and
@@ -42,10 +42,13 @@ verified coauthored interactive-evaluation paper. Source-limited integration
 changes neither the experiment nor registration. The owner confirmed focused
 documentation checks and topic-only publication in PR #692.
 The [PR review corrections](../capstone/thought-leadership/everything-but-the-software/README.md#pr-review-corrections)
-cover all five inline findings: complete figure integration, exclusive
+cover the five initial inline findings: complete figure integration, exclusive
 evidence writes, comment-aware TeX input handling and two broken protocol
 sentences. Twenty-seven focused authoring tests and the affected builds pass;
-the experiment, title and approval boundaries are unchanged.
+the experiment, title and approval boundaries are unchanged. The later Ruff
+denominator correction uses only submitted Python lines, with regenerated
+evidence and original figures retained as superseded. Thirty-two focused
+authoring regressions cover the completed corrections and unified delivery.
 
 For the [31 October live app observations](../architecture/cutover-evidence-pack.md#live-app-verification-2026-10-31-refs-523-524-570-432),
 resident sign-in and chat open/close, resize, dock/undock and narrow/wide

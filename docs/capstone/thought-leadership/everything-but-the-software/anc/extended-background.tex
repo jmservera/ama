@@ -1,6 +1,6 @@
-\section{Background}\label{sec:background}
+\subsection{Background}\label{sup:sec:background}
 
-\subsection{Software that only grows}\label{sec:decay}
+\subsubsection{Software that only grows}\label{sup:sec:decay}
 
 That software decays when it only accumulates features is one of the oldest
 observations in software engineering. Lehman's laws of software evolution hold that a
@@ -37,7 +37,7 @@ simply because time passes, and thermodynamic entropy supplies no measure of
 its quality. Here the measurable quantities are losses of required behaviour,
 excess structural burden and the effort needed for a later change.
 
-\subsection{What carries from one feature to the next?}\label{sec:inheritance}
+\subsubsection{What carries from one feature to the next?}\label{sup:sec:inheritance}
 
 Feature accumulation is the addition of capabilities and interactions; churn
 is the editing activity that implements, replaces or removes them. Neither
@@ -65,14 +65,14 @@ from that state.
 conversation does not reset inherited software or instruction state.
 Solid arrows denote possible read/write paths, not measured error
 propagation. Both channels can carry correct decisions as well as faults;
-their presence alone is not evidence of decay.}\label{fig:stateinheritance}
+their presence alone is not evidence of decay.}\label{sup:fig:stateinheritance}
 \end{figure}
 
-Figure~\ref{fig:stateinheritance} separates the two persistent channels from
+Figure~\ref{sup:fig:stateinheritance} separates the two persistent channels from
 conversation history. It is an explanatory model, not an observed trajectory
 or a claim that every tool retains the same material.
 
-\subsection{Compounding within and between features}\label{sec:empirical}
+\subsubsection{Compounding within and between features}\label{sup:sec:empirical}
 
 \paragraph{Errors carried in conversation.}
 An earlier answer changes the context from which a model produces the next
@@ -147,7 +147,7 @@ maintainability under all changes. It points more directly to inherited
 behavioural failures than to structural complexity as the main observed
 channel~\cite[Sec.~4.2, Table~3; Sec.~5.1, Fig.~5]{pan2026swemaintain}.
 
-Figure~\ref{fig:inheritedhistory} shows the published event-resolution
+Figure~\ref{sup:fig:inheritedhistory} shows the published event-resolution
 contrasts, including the clean-history cohorts. Event resolution requires
 the new task and all earlier non-superseded tests to pass. Its larger gap
 therefore includes retained failures as well as difficulty solving the new
@@ -166,7 +166,7 @@ developer history. The 1,996 paired events come from 100 three-event episodes
 in 50 Python repositories, evaluated with five systems and two models.
 Subgroups overlap and are selected by the agent-history starting state;
 the last excludes pre-solved and unevaluable tasks. They are not randomised
-repair conditions.}\label{fig:inheritedhistory}
+repair conditions.}\label{sup:fig:inheritedhistory}
 \end{figure}
 
 The conversation and repository studies therefore locate two different
@@ -190,7 +190,7 @@ Faster feature delivery also shortens the time available to discover that an
 earlier assumption has become the foundation of another change. Further
 empirical and practitioner context is retained in the ancillary supplement.
 
-\subsection{Corrective instructions as maintenance debt}\label{sec:instructiondebt}
+\subsubsection{Corrective instructions as maintenance debt}\label{sup:sec:instructiondebt}
 
 A failed agent action often invites a new instruction: run this check, never
 edit that file, remember this exception. GitHub's account of more than
@@ -212,7 +212,7 @@ categories, with 242 assignments in total, rather than a partition of the
 169 commits~\cite[Sec.~4.3, Table~2]{mohsenimofidi2026context}.
 Chatlatanagulchai et~al.'s manual analysis of 100 post-adoption commits
 produced 78 addition, 32 modification and 19 deletion labels; addition labels
-occurred across 66 distinct commits. Figure~\ref{fig:instructionmaintenance}
+occurred across 66 distinct commits. Figure~\ref{sup:fig:instructionmaintenance}
 replots the label counts~\cite[Secs.~4.2.2--4.2.3]{chatlatanagulchai2026readmes}.
 These histories contain accumulation and pruning, rather than a uniform
 march towards longer files. The authors associate their day-scale edit
@@ -228,7 +228,7 @@ commits, from Chatlatanagulchai et~al., Sections~4.2.2--4.2.3
 line-level and section-level add/delete labels are combined. The ten
 non-directive maintenance labels are the remainder of 139 total assignments.
 The chart counts edit types, not net token growth or effects on agent
-performance.}\label{fig:instructionmaintenance}
+performance.}\label{sup:fig:instructionmaintenance}
 \end{figure}
 
 Gloaguen et~al. test the effect of supplying such context. Across four
@@ -276,7 +276,7 @@ separately from task execution, this comparison does not isolate the effect
 of reduced skill access. Neither result measures the effects of
 accumulating repository instructions across feature changes.
 
-\subsection{Refactoring, review and evaluation boundaries}\label{sec:evaluationwork}
+\subsubsection{Refactoring, review and evaluation boundaries}\label{sup:sec:evaluationwork}
 
 Agentic refactoring, review and human correction are already studied.
 RefactorBench evaluates 100 handcrafted multi-file refactoring tasks across
@@ -314,7 +314,7 @@ trajectory's first critical failure~\cite{microsoft2026agentrx}. It motivates
 traceable failure localisation. An independent diagnosis of the AMA mechanisms
 remains outstanding.
 
-\subsection{Optimisation with behavioural feedback}\label{sec:factory}
+\subsubsection{Optimisation with behavioural feedback}\label{sup:sec:factory}
 
 Pavlenko et~al.'s \emph{Towards an AI Software Factory for Data Systems}
 offers a complementary case~\cite{pavlenko2026factory}. Hotspan packages
@@ -329,7 +329,7 @@ infrastructure and onboarding time, and output enters engineering review.
 The work establishes a precedent for bounded agent-led correction; it does
 not isolate consolidation between feature additions or product-goal selection.
 
-\subsection{The practitioner conversation}\label{sec:practitioners}
+\subsubsection{The practitioner conversation}\label{sup:sec:practitioners}
 
 Waseem et~al. describe rapid generation alongside architectural inconsistency,
 security concerns and maintenance overhead~\cite{waseem2025vibe}. That trade-off
@@ -351,7 +351,7 @@ B\"ockeler describes both ignored and over-followed instructions; and a study
 of practice reports reliability benefits alongside planning and review
 costs~\cite{delimarsky2025speckit,boeckeler2025sdd,agarwal2026sdd}.
 
-\subsection{Engineering principles behind consolidation}\label{sec:theory}
+\subsubsection{Engineering principles behind consolidation}\label{sup:sec:theory}
 
 The engineering lineage is more specific than a general call for better
 code. Beck links small structural changes to test feedback
@@ -384,7 +384,7 @@ Associations between confidence in AI and reduced scrutiny do not establish
 causation~\cite{lee2025critical}. Goodhart and Strathern motivate checking
 completion proxies against their intended outcomes~\cite{goodhart1975,strathern1997improving}.
 
-\subsection{Hypervelocity Engineering (HVE Core)}\label{sec:hve}
+\subsubsection{Hypervelocity Engineering (HVE Core)}\label{sup:sec:hve}
 
 HVE Core is an open-source framework from Microsoft that supplies workflow
 structure for GitHub Copilot; the author's coordinator provided autonomous worker dispatch.

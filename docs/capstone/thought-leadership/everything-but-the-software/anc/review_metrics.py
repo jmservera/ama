@@ -60,9 +60,12 @@ def snapshot(revision: str, jscpd: Path) -> dict:
                and Path(name).suffix in SOURCE_SUFFIXES]
     if not sources:
         raise ValueError(f"No classified Python/JavaScript/TypeScript source at {revision}")
+    python_sources = sorted(name for name in sources if Path(name).suffix == ".py")
+    if not python_sources:
+        raise ValueError(f"No classified Python source for Ruff at {revision}")
     functions = []
     digest = hashlib.sha256()
-    lines = suppressions = 0
+    lines = python_lines = suppressions = 0
     with tempfile.TemporaryDirectory(prefix="paper-static-") as temporary:
         work = Path(temporary) / "source"
         work.mkdir()
@@ -75,9 +78,14 @@ def snapshot(revision: str, jscpd: Path) -> dict:
             target.write_bytes(data)
             functions.extend(lizard.analyze_file.analyze_source_code(name, text).function_list)
             lines += len(text.splitlines())
+            if name in python_sources:
+                python_lines += len(text.splitlines())
             suppressions += sum(bool(SUPPRESSION.search(line)) for line in text.splitlines())
+        if python_lines == 0:
+            raise ValueError(f"Python source has no lines for Ruff density at {revision}")
         lint = run_json([sys.executable, "-m", "ruff", "check", "--isolated", "--ignore-noqa",
-                         "--select", "E,F,W,C90,B,SIM", "--output-format=json", str(work)],
+                         "--select", "E,F,W,C90,B,SIM", "--output-format=json",
+                         *(str(work / name) for name in python_sources)],
                         cwd=work, diagnostic_exit=1)
         if not isinstance(lint, list):
             raise ValueError("Ruff did not return the expected diagnostic array")
@@ -95,12 +103,13 @@ def snapshot(revision: str, jscpd: Path) -> dict:
         return {
             "commit": revision, "source_sha256": digest.hexdigest(),
             "source_files": len(sources), "source_lines": lines, "functions": len(functions),
+            "python_source_files": len(python_sources), "python_source_lines": python_lines,
             "mean_cyclomatic_complexity": statistics.mean(
                 function.cyclomatic_complexity for function in functions) if functions else None,
             "share_functions_above_10": (
                 sum(function.cyclomatic_complexity > 10 for function in functions) / len(functions)
                 if functions else None),
-            "lint_findings": len(lint), "lint_per_1000_source_lines": 1000 * len(lint) / lines,
+            "lint_findings": len(lint), "lint_per_1000_python_lines": 1000 * len(lint) / python_lines,
             "suppression_lines": suppressions,
             "duplication": {key: total[key] for key in ("lines", "duplicatedLines", "percentage")},
         }

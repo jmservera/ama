@@ -1,6 +1,14 @@
 {
   "created_at": "2026-11-01T10:20:35.968611+00:00",
   "scope": "Post-hoc static and metadata review, no product execution, private dataset or paid inference",
+  "lint_density_correction": {
+    "date": "2026-11-01",
+    "replacement": "revision-metrics-2026-11-01-python-lint.json",
+    "original_values_preserved": true,
+    "status": "Superseded lint density: its denominator includes unlinted JavaScript/TypeScript source.",
+    "corrected_metric": "Ruff findings per 1000 Python lines explicitly submitted to Ruff",
+    "other_source_and_structural_metrics": "Unchanged; all-language source-line counts remain separate."
+  },
   "tools": {
     "lizard": "1.24.3",
     "ruff": "0.17.3",

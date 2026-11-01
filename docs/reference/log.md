@@ -9491,3 +9491,23 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   section in the main paper. That consolidation follows these fixes and
   preserves the original standalone evidence; no experiment or registration
   change is authorized.
+
+## [2026-11-01] restructure | One complete paper and Python lint correction
+
+* Integrated all existing supplement source bodies and the compact appendix
+  into an internal Supplement section in the main paper. Reconciled heading
+  levels, labels, links and one shared bibliography; the body-preservation
+  manifest binds the original content to source commit `80656f32`.
+* At the owner's explicit request, removed only the old standalone
+  supplement TeX, PDF and generated bibliography after exact three-file
+  backup/readback/restore checks. Original versions remain in Git.
+  The single current PDF has 52 pages; Supplement begins on page 37.
+* Addressed the late PR review finding on lint density: Ruff now receives
+  and counts only Python source. Regenerated all three pinned snapshots
+  into a new evidence file; rates are 188.22/142.30/125.83 per 1,000 Python
+  lines. Source hashes, lint counts, complexity and duplication are unchanged.
+  Original all-language density values remain as superseded evidence.
+* Thirty-two focused authoring tests and source/bibliography checks pass.
+  The actual PDF outline, internal supplement navigation and all-page text
+  bounds were checked. The title, study allocation and registration are
+  unchanged; no full application gate or new experiment was run.

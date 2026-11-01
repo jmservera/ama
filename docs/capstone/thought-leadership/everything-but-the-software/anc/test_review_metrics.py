@@ -7,6 +7,7 @@ import tempfile
 import unittest
 from collections.abc import Callable
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import patch
 
 import review_metrics
@@ -90,6 +91,65 @@ class ReviewMetricsTests(unittest.TestCase):
 
             self.assertEqual(measured, [])
             self.assertFalse(target.exists())
+
+    def snapshot_fixture(self, sources: dict[str, str]) -> dict:
+        submitted = []
+
+        def git(*args: str) -> bytes:
+            if args[0] == "rev-parse":
+                return b"fixture-commit\n"
+            if args[0] == "ls-tree":
+                return ("\n".join(sources) + "\n").encode()
+            if args[0] == "show":
+                return sources[args[1].split(":", 1)[1]].encode()
+            raise AssertionError(f"Unexpected source command: {args}")
+
+        def command(args: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
+            if "ruff" in args:
+                paths = args[args.index("--output-format=json") + 1:]
+                submitted.extend(paths)
+                self.assertEqual([Path(path).suffix for path in paths], [".py"])
+                return subprocess.CompletedProcess(args, 1, stdout='[{"code":"F401"}]', stderr="")
+            self.assertEqual(args[0], "/fixture-jscpd")
+            output = Path(args[args.index("--output") + 1])
+            output.mkdir()
+            (output / "jscpd-report.json").write_text(json.dumps({
+                "statistics": {"total": {"lines": 1, "duplicatedLines": 0, "percentage": 0}}
+            }), encoding="utf-8")
+            return subprocess.CompletedProcess(args, 0, stdout="", stderr="")
+
+        analyzer = SimpleNamespace(analyze_source_code=lambda *_args: SimpleNamespace(function_list=[]))
+        with (
+            patch.dict(sys.modules, {"lizard": SimpleNamespace(analyze_file=analyzer)}),
+            patch.object(review_metrics, "git", side_effect=git),
+            patch.object(review_metrics.subprocess, "run", side_effect=command),
+        ):
+            result = review_metrics.snapshot("fixture", Path("/fixture-jscpd"))
+        self.assertEqual(len(submitted), 1)
+        return result
+
+    def test_given_frontend_growth_when_lint_density_measured_then_python_denominator_is_unchanged(self) -> None:
+        python = "import unused\n\ndef function():\n    return 1\n"
+        before = self.snapshot_fixture({"mvp/code.py": python, "mvp/code.js": "const value = 1;\n"})
+        after = self.snapshot_fixture({"mvp/code.py": python, "mvp/code.js": "const value = 1;\n" * 200})
+
+        self.assertGreater(after["source_lines"], before["source_lines"])
+        self.assertEqual(after["python_source_lines"], len(python.splitlines()))
+        self.assertEqual(after["lint_findings"], before["lint_findings"])
+        self.assertEqual(after["lint_per_1000_python_lines"], 250)
+        self.assertEqual(after["lint_per_1000_python_lines"], before["lint_per_1000_python_lines"])
+        self.assertNotIn("lint_per_1000_source_lines", after)
+
+    def test_given_no_python_source_when_snapshot_measured_then_lint_scope_is_explicitly_rejected(self) -> None:
+        with patch.dict(sys.modules, {"lizard": SimpleNamespace()}), patch.object(
+            review_metrics, "git", side_effect=[b"fixture\n", b"mvp/code.js\n"]
+        ):
+            with self.assertRaisesRegex(ValueError, "No classified Python source for Ruff"):
+                review_metrics.snapshot("fixture", Path("/fixture-jscpd"))
+
+    def test_given_empty_python_source_when_snapshot_measured_then_density_is_not_zero(self) -> None:
+        with self.assertRaisesRegex(ValueError, "Python source has no lines for Ruff density"):
+            self.snapshot_fixture({"mvp/code.py": ""})
 
     def test_given_report_keywords_when_screened_then_generic_callbacks_are_excluded(self) -> None:
         for line in ("ms.date: 2026-10-12", "typed callback for map rendering"):

@@ -1,6 +1,6 @@
 % !TEX program = pdflatex
 % ---------------------------------------------------------------------------
-% Everything but the Software -- LaTeX source (draft v9)
+% Everything but the Software -- LaTeX source (draft v10, integrated Supplement)
 % Figures use PNG for LaTeX; conceptual editing authority is .excalidraw.
 % anc/make_figures.py regenerates only case and published-evidence figures.
 % anc/export_diagrams.mjs exports native Excalidraw sources to SVG and PNG.
@@ -28,6 +28,7 @@
 \usepackage[numbers,sort&compress]{natbib}
 \usepackage{xurl}
 \usepackage{caption}
+\usepackage{fvextra}
 \usepackage[colorlinks=true,linkcolor={blue!50!black},citecolor={blue!50!black},urlcolor={blue!50!black}]{hyperref}
 
 \hypersetup{pdftitle={Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop},pdfauthor={Juan Manuel Servera Bondroit}}
@@ -614,11 +615,16 @@ Snapshot & Functions & Mean CC & Above CC 10 & Duplication \\
 \bottomrule
 \end{tabular}
 \end{table}
-Lint findings per 1,000 source lines fall from 159.39 to 129.21 to
-108.57, while suppression-line counts rise from zero to four to eight.
+Ruff findings per 1,000 Python lines fall from 188.22 to 142.30 to
+125.83. Its submitted Python denominators are 6,365, 25,756 and 33,618
+lines; JavaScript and TypeScript lines do not dilute this metric.
+Suppression-line counts across all selected source rise from zero to four to eight.
 These mixed proxies do not identify a causal decay rate or comprehension.
 The same source filter, exact commits, source hashes and commands are
 retained in \nolinkurl{anc/revision-metrics-2026-11-01.json}.
+The corrected Python-only lint record is
+\nolinkurl{anc/revision-metrics-2026-11-01-python-lint.json}; the original
+all-language density is retained as historical, superseded evidence.
 PR \#445's complete diff is 116 additions and six removals across four
 files: production $+2/-1$, tests $+33/-2$, evidence $+78/0$ and score
 snapshot $+3/-3$. The small-fix comparison concerns production additions,
@@ -874,7 +880,7 @@ and score provenance are retained in
 Five mechanisms organise the gap between a pull request merged roughly every
 eighty minutes and the absence of a usable replacement.
 Table~\ref{tab:mechanisms} summarises them; the
-\href{supplement.pdf}{supplementary case audits}
+\hyperref[sec:supplement]{supplementary case audits}
 sets out a definition, indicators, counter-evidence, rivals and testable
 implication for each. Together they connect the inherited-state problem to
 the way this delivery loop selected work, carried lessons and checked outcomes.
@@ -987,7 +993,7 @@ The source-layout migration, owner-selected priorities and delegated merging
 changed alongside coordination. Scope additions, budget constraints, model/tool
 changes and deployment conditions also differ between periods. These are
 direct rivals to an autonomy-only account. The
-\href{supplement.pdf}{supplementary rival-explanation register} retains the full
+\hyperref[sec:supplement]{supplementary rival-explanation register} retains the full
 register, separating recorded circumstances from plausible but untested
 alternatives. Bird et~al.'s study of co-installed applications on Windows
 machines supplies a methodological analogy for checking environmental
@@ -1397,12 +1403,19 @@ authorized deposit; no completed independent replication is claimed.
 % ===========================================================================
 \begingroup
 \small
-\begin{thebibliography}{99}
+\begin{thebibliography}{999}
 
 \bibitem{agarwal2026sdd}
 S.~Agarwal, A.~Singhal, A.~Macvean, B.~Vasilescu, and T.~Breaux.
 \newblock Spec-driven development as prescribed and as practiced.
 \newblock arXiv:2608.25202, 2026.
+
+\bibitem{bacchelli2013review}
+Alberto Bacchelli and Christian Bird.
+\newblock Expectations, outcomes, and challenges of modern code review.
+\newblock In \emph{Proceedings of the 35th International Conference on Software
+  Engineering (ICSE)}, pages 712--721. IEEE, 2013.
+\newblock doi:10.1109/ICSE.2013.6606617.
 
 \bibitem{bainbridge1983ironies}
 L.~Bainbridge.
@@ -1500,6 +1513,11 @@ K.~Beck.
 \url{https://www.rise8.us/videos/kent-beck-software-engineering-in-the-age-of-ai}.
 \newblock Transcript accessed 1 November 2026; video-page HTML only, video not inspected.
 
+\bibitem{becker2025metr}
+Joel Becker, Nate Rush, Elizabeth Barnes, and David Rein.
+\newblock Measuring the impact of early-2025 {AI} on experienced open-source
+  developer productivity, 2025.
+
 \bibitem{besker2018cripples}
 T.~Besker, A.~Martini, and J.~Bosch.
 \newblock Technical debt cripples software developer productivity: A
@@ -1536,6 +1554,14 @@ F.~P. Brooks,~Jr.
 \newblock No silver bullet: Essence and accidents of software engineering.
 \newblock \emph{Computer}, 20(4):10--19, 1987.
 \newblock doi:10.1109/MC.1987.1663532.
+
+\bibitem{cemri2025multiagent}
+Mert Cemri, Melissa~Z. Pan, Shuyi Yang, Lakshya~A. Agrawal, Bhavya Chopra,
+  Rishabh Tiwari, Kurt Keutzer, Aditya Parameswaran, Dan Klein, Kannan
+  Ramchandran, Matei Zaharia, Joseph~E. Gonzalez, and Ion Stoica.
+\newblock Why do multi-agent {LLM} systems fail?
+\newblock In \emph{Advances in Neural Information Processing Systems 38
+  (NeurIPS 2025), Datasets and Benchmarks Track}, 2025.
 
 \bibitem{chatlatanagulchai2026readmes}
 W.~Chatlatanagulchai, H.~Li, Y.~Kashiwa, B.~Reid, K.~Thonglek,
@@ -1589,6 +1615,19 @@ P.~Devanbu, T.~Zimmermann, and C.~Bird.
 \newblock In \emph{Proceedings of the 38th International Conference on Software
 Engineering (ICSE)}. ACM, 2016.
 \newblock doi:10.1145/2884781.2884812.
+
+\bibitem{ding2025nl2repo}
+Jingzhe Ding, Shengda Long, Changxin Pu, et~al.
+\newblock {NL2Repo-Bench}: Towards long-horizon repository generation
+  evaluation of coding agents, 2025.
+
+\bibitem{dora2025}
+{DORA}.
+\newblock State of {AI}-assisted software development 2025.
+\newblock Technical report, Google Cloud, 2025.
+\newblock URL \url{https://dora.dev/dora-report-2025}.
+\newblock Accessed 1 November 2026; landing-page metadata, not the report's
+  full text.
 
 \bibitem{eick2001decay}
 S.~G. Eick, T.~L. Graves, A.~F. Karr, J.~S. Marron, and A.~Mockus.
@@ -1647,6 +1686,11 @@ for coding agents?
 \newblock arXiv:2602.11988v3, 29 September 2026.
 \newblock \url{https://arxiv.org/abs/2602.11988v3}.
 
+\bibitem{goldratt1984goal}
+Eliyahu~M. Goldratt and Jeff Cox.
+\newblock \emph{The Goal: A Process of Ongoing Improvement}.
+\newblock North River Press, 1984.
+
 \bibitem{goodhart1975}
 C.~A.~E. Goodhart.
 \newblock Problems of monetary management: The {U.K.} experience.
@@ -1674,6 +1718,23 @@ on a systematic literature review.
 \newblock \emph{ACM Computing Surveys}, 46(2):28, 2013.
 \newblock doi:10.1145/2543581.2543595.
 
+\bibitem{hong2025contextrot}
+Kelly Hong, Anton Troynikov, and Jeff Huber.
+\newblock Context rot: How increasing input tokens impacts {LLM} performance.
+\newblock Technical report, Chroma, 2025.
+\newblock URL \url{https://trychroma.com/research/context-rot}.
+\newblock Accessed 1 November 2026; brief excerpt.
+
+\bibitem{hoque2022thriftydagger}
+Ryan Hoque, Ashwin Balakrishna, Ellen Novoseller, Albert Wilcox, Daniel~S.
+  Brown, and Ken Goldberg.
+\newblock {ThriftyDAgger}: Budget-aware novelty and risk gating for interactive
+  imitation learning.
+\newblock In \emph{Proceedings of the 5th Conference on Robot Learning}, volume
+  164 of \emph{Proceedings of Machine Learning Research}, pages 598--608. PMLR,
+  2022.
+\newblock URL \url{https://proceedings.mlr.press/v164/hoque22a.html}.
+
 \bibitem{hunt1999pragmatic}
 A.~Hunt and D.~Thomas.
 \newblock \emph{The Pragmatic Programmer: From Journeyman to Master}.
@@ -1700,6 +1761,14 @@ T.~Kassis, V.~Agarwal, Y.~He, D.~Patel, and A.~M.~Brueckner.
 research agents.
 \newblock arXiv:2609.00065, 2026.
 \newblock doi:10.48550/arXiv.2609.00065.
+
+\bibitem{kelly2019hgdagger}
+Michael Kelly, Chelsea Sidrane, Katherine Driggs-Campbell, and Mykel~J.
+  Kochenderfer.
+\newblock {HG-DAgger}: Interactive imitation learning with human experts.
+\newblock In \emph{IEEE International Conference on Robotics and Automation
+  (ICRA)}, pages 8077--8083, 2019.
+\newblock First posted 2018.
 
 \bibitem{kim2014refactoring}
 \begingroup
@@ -1749,6 +1818,21 @@ M.~M. Lehman, J.~F. Ramil, P.~D. Wernick, D.~E. Perry, and W.~M. Turski.
 \newblock In \emph{Proceedings of the 4th International Software Metrics
 Symposium (METRICS '97)}. IEEE, 1997.
 \newblock doi:10.1109/METRIC.1997.637156.
+
+\bibitem{li2026aidev}
+Hao Li, Haoxiang Zhang, and Ahmed~E. Hassan.
+\newblock {AIDev}: Studying {AI} coding agents on {GitHub}.
+\newblock In \emph{Proceedings of the International Conference on Mining
+  Software Repositories (MSR)}, 2026.
+\newblock doi:10.1145/3793302.3797249.
+
+\bibitem{liu2024lost}
+Nelson~F. Liu, Kevin Lin, John Hewitt, Ashwin Paranjape, Michele Bevilacqua,
+  Fabio Petroni, and Percy Liang.
+\newblock Lost in the middle: How language models use long contexts.
+\newblock \emph{Transactions of the Association for Computational Linguistics},
+  12:\penalty0 157--173, 2024.
+\newblock \url{https://doi.org/10.1162/tacl_a_00638}.
 
 \bibitem{openai2026harness}
 R.~Lopopolo.
@@ -1820,6 +1904,21 @@ S.~Mohsenimofidi, M.~Galster, C.~Treude, and S.~Baltes.
 doi:10.1145/3793302.3793350. Inspected text: arXiv:2510.21413v4.
 \newblock \url{https://arxiv.org/abs/2510.21413v4}.
 
+\bibitem{murphy2026speed}
+Andrew Murphy.
+\newblock If you thought the speed of writing code was your problem -- you have
+  bigger problems.
+\newblock Blog post, 17 March 2026,
+  \url{https://andrewmurphy.io/blog/if-you-thought-the-speed-of-writing-code-was-your-problem-you-have-bigger-problems},
+  2026.
+\newblock Accessed 1 November 2026; page metadata/brief excerpt.
+
+\bibitem{murphyhill2026agents}
+Emerson Murphy-Hill, Jenna Butler, and Alexandra Savelieva.
+\newblock Adoption and impact of command-line {AI} coding agents: A study of
+  {Microsoft}'s early 2026 rollout of {Claude Code} and {GitHub Copilot CLI},
+  2026.
+
 \bibitem{naur1985theory}
 P.~Naur.
 \newblock Programming as theory building.
@@ -1878,6 +1977,15 @@ T.~Bang, V.~Emani, X.~Zhao, and Y.~Zhu.
 \newblock Towards an {AI} software factory for data systems.
 \newblock arXiv:2609.36323v1, 28 September 2026.
 \newblock \url{https://arxiv.org/abs/2609.36323v1}.
+
+\bibitem{peralta2026merged}
+Sien Reeve~O. Peralta, Fumika Hoshi, Hironori Washizaki, Naoyasu Ubayashi,
+  Inase Kondo, Yoshiki Higo, Hiroki Mukai, Norihiro Yoshida, Kazuki Kusama,
+  Hidetake Tanaka, and Youmei Fan.
+\newblock Why are agentic pull requests merged or rejected? an empirical study.
+\newblock In \emph{Proceedings of the 23rd International Conference on Mining
+  Software Repositories}, pages 787--791, 2026.
+\newblock doi:10.1145/3793302.3793575.
 
 \bibitem{philia2026ngmoroney}
 {philia (uploader)}.
@@ -1998,6 +2106,14 @@ A.~Wessl\'en.
 \newblock Springer, 2012.
 \newblock doi:10.1007/978-3-642-29044-2.
 
+\bibitem{yan2025multiagents}
+Walden Yan.
+\newblock Don't build multi-agents.
+\newblock Cognition blog, 12 June 2025,
+  \url{https://cognition.com/blog/dont-build-multi-agents}, 2025.
+\newblock Accessed 1 November 2026; context-sharing principles within the
+  argument against multi-agent designs.
+
 \bibitem{yang2026crbugbench}
 C.~Yang, H.~He, T.-C. Cheng, J.~Butler, E.~Murphy-Hill, C.~Badea, and C.~Bird.
 \newblock (When) should a software factory be lights-off? Benchmarking code
@@ -2039,6 +2155,6 @@ cases.
 
 % ===========================================================================
 \appendix
-\input{anc/compact-appendix.tex}
+\input{anc/supplement-section.tex}
 
 \end{document}

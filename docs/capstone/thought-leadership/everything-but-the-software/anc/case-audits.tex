@@ -1,5 +1,5 @@
-\section{Expanded case interpretations}
-\subsection{Specification inflation}\label{sec:m1}
+\subsection{Expanded case interpretations}
+\subsubsection{Specification inflation}\label{sec:m1}
 
 \emph{Interpretation: specification growth outpaced the behaviour validated
 through product use.} By 22~October the BRD had reached version~0.19 and
@@ -35,7 +35,7 @@ same period. No replacement journey was reported complete during the loop,
 but a systematic count of validated behaviours was not collected; this ratio
 cannot be estimated from the document counts alone.
 
-\subsection{Proxy capture}\label{sec:m2}
+\subsubsection{Proxy capture}\label{sec:m2}
 
 \emph{In this case, artefacts made into gates appeared to displace outcomes.}
 Three patterns motivate this interpretation.
@@ -71,7 +71,7 @@ rated implementation completeness at five out of five, citing a README
 and a check script, at a
 time when the author could not sign in to the replacement. The score and blocked
 sign-in occurred during the same period. It remains necessary to check whether the
-score covered that release and journey (Section~\ref{M-sec:audittrail}).
+score covered that release and journey (Section~\ref{sec:audittrail}).
 The judge read repository text rather
 than executing the intended journey. Neither its repeatability nor its
 agreement with observed product behaviour was measured; its score cannot
@@ -96,7 +96,7 @@ early-warning signals are the ratio of evidence artefacts to behaviour
 changes, the share of merged pull requests that change what a user can do,
 boundary-phrase density, and any divergence between automated scores and a live demo.
 
-\subsection{Learning evaporation}\label{sec:m3}
+\subsubsection{Learning evaporation}\label{sec:m3}
 
 \emph{Some recorded lessons appeared to fall off the loop's read path, while
 important design decisions survived.} Maintaining the structured log and
@@ -162,7 +162,7 @@ not mean discarding history. This architecture offers another way to retrieve
 accumulated lessons. Its effect on learning evaporation in this case remains
 untested.
 
-\subsection{Process-gate inflation}\label{sec:m4}
+\subsubsection{Process-gate inflation}\label{sec:m4}
 
 \emph{Interpretation: repeated gates appeared disproportionately burdensome;
 comparative effort was not measured.} Each new gate required execution and
@@ -200,7 +200,7 @@ have prevented this failure. The early-warning signals are gate time per change,
 human review minutes per merged pull request, work in progress, and cost per
 merged pull request compared with cost per accepted outcome.
 
-\subsection{Feedback starvation}\label{sec:m5}
+\subsubsection{Feedback starvation}\label{sec:m5}
 
 \emph{Candidate mechanism: insufficient independent, outcome-level feedback
 even though artefact-level validation is abundant.} This differs from merely having
@@ -223,7 +223,7 @@ requested, the request was absorbed by the same
 machinery: a label, new issues, thirteen acceptance criteria and the full set
 of gates.
 
-Several older practices in Section~\ref{sec:theory} make feedback and working
+Several older practices in Section~\ref{sup:sec:theory} make feedback and working
 behaviour explicit: short releases and test-first development~\cite{beck2004xp,beck2002tdd},
 incremental delivery in Crystal Clear~\cite{cockburn2004crystal},
 tracer bullets~\cite{hunt1999pragmatic}, and working software
@@ -238,12 +238,12 @@ human use of a running increment, and the age of the last increment a human
 has verified as usable. The case records no completed replacement journey
 during the ten-day loop; the exact last-use timestamp remains unverified.
 
-\section{Case rival-explanation register}\label{app:rivals}
+\subsection{Case rival-explanation register}\label{app:rivals}
 
-The main interpretation is in Section~\ref{M-sec:threats}. The register preserves
+The main interpretation is in Section~\ref{sec:threats}. The register preserves
 recorded rivals separately from untested alternatives. A limit is not grounds
 for ruling an explanation out. Score/deployment correspondence remains
-unverified (Section~\ref{M-sec:audittrail}).
+unverified (Section~\ref{sec:audittrail}).
 
 \begin{table}[!htbp]
 \centering\footnotesize
@@ -304,15 +304,15 @@ analysis distinguishing inherited debt from introduced faults. \\
 \end{table}
 \FloatBarrier
 
-\section{Candidate-mechanism evidence audits}\label{app:mechanismaudit}
+\subsection{Candidate-mechanism evidence audits}\label{app:mechanismaudit}
 
 These are operational boundaries for this paper, not validated necessary and
 sufficient conditions for all agentic development. The indicators refer to
-Table~\ref{M-tab:audittrail} and the case chronology. Experimental implications
+Table~\ref{tab:audittrail} and the case chronology. Experimental implications
 state what evidence would discriminate an explanation; the tagged experiment
 does not manipulate the five candidates separately.
 
-\subsection{Specification inflation}
+\subsubsection{Specification inflation}
 
 {\small
 \noindent
@@ -338,7 +338,7 @@ mechanism, even if consolidation helps. \\
 \par
 }
 
-\subsection{Proxy capture}
+\subsubsection{Proxy capture}
 
 {\small
 \noindent
@@ -364,7 +364,7 @@ intentional test gaming or explain why a gate was chosen. \\
 \par
 }
 
-\subsection{Learning evaporation}
+\subsubsection{Learning evaporation}
 
 {\small
 \noindent
@@ -390,7 +390,7 @@ permissions differ. A matched-context study would be needed. \\
 \par
 }
 
-\subsection{Process-gate inflation}
+\subsubsection{Process-gate inflation}
 
 {\small
 \noindent
@@ -415,7 +415,7 @@ removing this repository's required gates. \\
 \par
 }
 
-\subsection{Feedback starvation}
+\subsubsection{Feedback starvation}
 
 {\small
 \noindent
@@ -440,7 +440,7 @@ recovery, product selection or a human-use checkpoint cadence. \\
 \par
 }
 
-\section{Measures and lexicon}\label{app:measures}
+\subsection{Measures and lexicon}\label{app:measures}
 
 \paragraph{Log entries.} The knowledge-base log
 (\texttt{docs/reference/log.md}) was split into entries at each second-level
@@ -475,7 +475,7 @@ requests that change what a user can observe in the running increment.
 \emph{Cost per accepted outcome}: total model, tool and cloud cost divided by
 the number of outcomes a human accepted in the same period.
 
-\section{Consolidation step prompt}\label{app:prompt}
+\subsection{Consolidation step prompt}\label{app:prompt}
 
 Verbatim frozen v4 prompt from execution source
 \nolinkurl{e8707ecc8965d3f81f5142a2603042bfca1aab15}, not the amended
