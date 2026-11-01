@@ -182,3 +182,58 @@ registerRoleScreen({
       screenPanel("Ledger-wide AI cohort (all homes, not this home)", assetCost(extra?.report)));
   }
 });
+
+const hazardTriageRoles = ["Retrofit Coordinator", "Resident Liaison Officer", "Quality Inspector"];
+const hazardActor = (value) => value && (value.name || value.role)
+  ? [value.name, value.role].filter(Boolean).join(", ") : "Unknown";
+const hazardStep = (stamp) => stamp ? `Recorded ${screenStamp(stamp)}` : "Not recorded";
+function hazardFollowUp(h) {
+  if (h.accepted_at) return `${hazardActor(h.accepted_by || h.destination)} owns the accepted scope`;
+  if (h.received_at) return `Pending acceptance. Follow-up owner: ${hazardActor(h.destination)}`;
+  if (h.sent_at) return `Pending receipt. Follow-up owner: ${hazardActor(h.sender)} chases until acceptance`;
+  return `No referral sent. Owner: ${screenValue(h.owner)} to send or record a manual route`;
+}
+function hazardHold(h) {
+  const hold = h.hold || {};
+  const decision = hold.decision;
+  const scope = `${screenValue(hold.scope)} ${screenValue(hold.case_id)} only`;
+  if (hold.status !== "Released") return `${screenValue(hold.status)}. Scope: ${scope}. Release needs an authorised human decision.`;
+  return decision
+    ? `Released. Scope: ${scope}. Decided by ${hazardActor(decision.actor)} at ${screenStamp(decision.at)}. Reason: ${screenValue(decision.reason)}. Evidence: ${screenValue(decision.evidence)}`
+    : `Released. Scope: ${scope}. No authoritative decision evidence is recorded; do not rely on this release.`;
+}
+function hazardScreen(intro) {
+  return (c) => {
+    const items = c.hazards || [];
+    return h("div", {},
+      screenPanel("Evidence boundary",
+        h("p", {}, intro),
+        h("p", {}, "This screen does not classify hazards, set clocks, close hazards or authorise work. Categories and priorities are the recorded report, not a service categorisation. Sent, received and accepted are separate: a sent referral is not receipt, and receipt is not ownership. Source: desk research, not observed behaviour."),
+        h("p", {}, `Home scope: ${c.id} only. Every recorded hazard and safeguarding item is listed, including released ones.`)),
+      screenPanel("Referral queue",
+        screenTable("Hazard referrals for this home",
+          ["Item", "Reported observation and urgency", "Aware at", "Source", "Destination", "Sent", "Received", "Accepted", "State", "Follow-up"],
+          items.map((x, i) => [`H-${i + 1}`, `${screenValue(x.category)}, ${screenValue(x.priority)}`,
+            screenStamp(x.aware_at), x.source, hazardActor(x.destination),
+            hazardStep(x.sent_at), hazardStep(x.received_at), hazardStep(x.accepted_at),
+            x.state, hazardFollowUp(x)]))),
+      screenPanel("Retrofit hold and release decision",
+        screenTable("Scoped hold and release evidence",
+          ["Item", "Hold and release evidence", "Service response due", "Service responded"],
+          items.map((x, i) => [`H-${i + 1}`, hazardHold(x), hazardStep(x.response_due_at), hazardStep(x.responded_at)]))),
+      screenPanel("Where to act",
+        h("p", {}, "Referral, receipt, acceptance and release are recorded in the existing case workspace by the named authorised person. Emergency concerns follow the existing human emergency procedure now, not this screen.")));
+  };
+}
+registerRoleScreen({
+  id: "safety-lead",
+  title: "Building safety referral queue",
+  roles: ["Building Safety Liaison", ...screenManagers],
+  render: hazardScreen("Read-only view for the Building Safety lead: where each referral stands, who must follow up and what evidence supports any hold release.")
+});
+registerRoleScreen({
+  id: "hazard-triage",
+  title: "Repairs and hazard triage",
+  roles: hazardTriageRoles,
+  render: hazardScreen("Read-only view for repairs and hazard triage: awareness time and source, referral progress and the person who chases an unanswered referral.")
+});
