@@ -41,10 +41,16 @@
       "evidence": ".copilot-tracking/reviews/2026-11-01-rubric-pr-record-and-review-advisory-review.md"
     }
   ],
-  "blockers": [],
+  "blockers": [
+    {
+      "id": "local-gate-browser",
+      "summary": "Complete local gate blocked twice at exact head: browser group reports missing/mismatched exact execution evidence for test_chat_panel.PanelTests.test_browser_warning_failure_keyboard_refusal_and_live_log (the test passed but its result line was interleaved with log output); mssql blocked as dependent. Unrelated to the diff. Receipts failed and retained externally at /tmp/rpi-gate-d1d2.",
+      "resolution": "Owner or maintainer to resolve the browser evidence matcher or confirm; then rerun the gate at the final head, verify the receipt, push and open the PR (Refs only)."
+    }
+  ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Push branch and open PR; owner selects follow-up"
+    "action": "Resolve gate blocker, rerun complete local gate, then push ci/rubric-and-review-triggers and open PR to main"
   },
   "prioritized_follow_ups": [
     {
