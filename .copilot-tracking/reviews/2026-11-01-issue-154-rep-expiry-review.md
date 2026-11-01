@@ -12,3 +12,7 @@ Review execution: executed once, self-review of the diff. Outcome: conformant fo
 
 * Criterion 3 is evidenced for the synthetic preview only, not a resident session.
 * Criterion 5 (usability programme validation, #155) and accessibility acceptance remain Not run; OD-41 and OD-42 remain open. Criteria 1, 2 and 4 stay without human or AT acceptance. The PR therefore uses Refs.
+
+## Correction cycle (PR 712, 2026-11-01)
+
+* The self-review above is preserved as the original outcome. Independent Review is pending: a separate reviewer must assess the exact head and record the result. Lifecycle state records this.

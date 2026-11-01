@@ -24,3 +24,7 @@ Criterion 3 (task-limited, expiring representative views) is specified in R1 and
 ## Out of scope and still unproven
 
 Usability programme (#155) validation, assistive-technology acceptance, OD-41 and OD-42, live contact. Azure-live work is not authorised.
+
+## Correction cycle (PR 712, 2026-11-01)
+
+Evidence: `AUTHORITY_STATUSES` in `resident_decisions.py` lists Confirmed, Unclear, Disputed, Revoked; the fixture builds addresses as `{case id suffix} Synthetic Row`, so SYN-C2 is `2 Synthetic Row`. No plan change.

@@ -226,17 +226,19 @@ class RepresentativeAuthorityBoundary(Base):
         self.assertIn("appointments", self.view("SYN-REP-B"))
 
     def test_unconfirmed_authority_denies_without_case_detail(self) -> None:
-        self.edit_authority(status="Pending")
-        with self.assertRaises(rp.GrantDenied) as raised:
-            self.view("SYN-REP-B")
-        self.assertEqual(str(raised.exception), "You cannot see this page.")
-        for text in (CANARY, *OTHER_PEOPLE):
-            self.assertNotIn(text, str(raised.exception))
+        for status in ("Unclear", "Disputed", "Revoked"):
+            with self.subTest(status=status):
+                self.edit_authority(status=status)
+                with self.assertRaises(rp.GrantDenied) as raised:
+                    self.view("SYN-REP-B")
+                self.assertEqual(str(raised.exception), "You cannot see this page.")
+                for text in (CANARY, *OTHER_PEOPLE):
+                    self.assertNotIn(text, str(raised.exception))
 
     def test_representative_view_is_not_the_household_record(self) -> None:
         view = self.view("SYN-REP-B")
         self.assertNotIn("home", view)
-        self.assertNotIn("1 Synthetic Row", json.dumps(view))
+        self.assertNotIn("2 Synthetic Row", json.dumps(view))
 
 
 class DefaultDeny(Base):
