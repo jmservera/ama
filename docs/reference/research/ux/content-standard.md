@@ -184,13 +184,21 @@ check recorded history before repeating a change. The existing resident-update
 form already uses this distinction. Adding a generic role name to every raw
 error would not establish real accountability.
 
+#### Core-flow copy and error contract slice (2026-11-01, #153)
+
+* The lexical guard now names eleven files, adding `role-screens.js`, `law.js` and `law.html`.
+* `role-screens.js`: "phase gate" and "gate" became "phase check" in the asset-owner and programme panels.
+* `app.js` `api()`: the unknown-error fallback now states the reason (cause not known), owner (application support) and next action (check recorded history before repeating a change, then contact support).
+* `law.js` failure status and the manager-only ranking error in `store.py` now name an owner and next action; the ranking error no longer says "snapshot".
+* Still open: typed server errors, `signoffs.py` refusals, the stored "Keep on hold" finance value, actual named review of resident wording and comprehension/accessibility testing.
+
 #### Issue #153 acceptance evidence
 
 | Criterion | Evidence and disposition |
 | --- | --- |
 | Standard and glossary | Exists in this document; previously checked issue criterion preserved |
 | Core-flow audit removes internal terms | Expanded inventory delivered; partial, because dynamic messages and visible stored finance wording above remain |
-| Errors/blocked steps give reason, owner, next action | Existing final-check reasons tested; partial, residuals above prevent universal acceptance |
+| Errors/blocked steps give reason, owner, next action | Final-check reasons and the generic fallback tested; partial, residuals above prevent universal acceptance |
 | Exact AI label and reviewed-draft authority | Exact label retained; draft/proposal disclaimer strengthened. Partial, not a global certification of every reviewed/error state |
 | Named human resident wording review before use | Reviewer appointed below; actual review of exact copy Not run. No use authorized |
 

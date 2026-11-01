@@ -8,3 +8,7 @@
 * Constraints: tests outside package, no mvp/prototype code, pip only, synthetic data only, no secrets.
 * Unmet by design: criterion 5 (no retaliation, inferred refusal or delayed hazard response) needs live workflow and hazard-referral integration and human review; this slice only proves the record cannot alter hazard clocks, consent or sanctions.
 * Planning Readiness: Ready.
+
+## Correction cycle 2 (2026-11-01)
+
+Review thread: pending hazard referrals must stay visible after challenge resolution until an evidenced human handoff. Valid; no new external evidence needed. Planning Readiness: Ready.
