@@ -6,3 +6,5 @@
 4. Validate: new unit tests, ruff check, ruff format --check, mypy for src/core. Commit, push, PR (Refs #233: criteria 5 and 6 unproven).
 
 Critique (single pass, self): do not claim unmerged screens as delivered; do not tick accessibility; walkthrough must not reuse existing example ids as stages; checker must fail on missing perspective/theme or missing hypothesis label. Accepted.
+
+* Correction cycle 2026-11-01: two PR 713 review threads accepted as valid; no research change.

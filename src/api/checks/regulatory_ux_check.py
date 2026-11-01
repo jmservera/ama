@@ -470,7 +470,7 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             page.locator("#regulatory-chat > summary").click()
             expect(question).to_be_disabled()
             expect(chat.locator(":scope > p[role=status]")).to_contain_text(
-                "Cited lookup unavailable"
+                "Cited lookup is not available right now"
             )
             scan(page, axe, reports, "disabled-chat")
             fixture.app.regulatory.env = fixture.app.chat.env
