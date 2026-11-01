@@ -138,7 +138,7 @@ def reference(record: Mapping[str, Any]) -> dict[str, str]:
     return {
         "id": str(record["id"]),
         "version": str(record["release_version"]),
-        "digest": digest(record),
+        "digest": digest({k: v for k, v in record.items() if k != "invalidated"}),
     }
 
 
