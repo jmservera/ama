@@ -250,6 +250,15 @@ class RegisterLabelTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             check_register_labels(path)
 
+    def test_malformed_header_and_row_width_are_rejected(self) -> None:
+        for text in (
+            'id,"is_synthetic\nA,True\n',
+            "id,note,is_synthetic\nSYN-1,unquoted,True,False\n",
+            "id,note,is_synthetic\nSYN-1,True\n",
+        ):
+            with self.subTest(text=text), self.assertRaises(ValueError):
+                check_register_labels(self._csv(text))
+
     def test_cli_reports_aggregate_only_and_fails_on_nonconforming(self) -> None:
         command = [sys.executable, "-m", "zava_forward.core.synthetic.coverage", str(INVENTORY)]
         good = self._csv("id,is_synthetic\nSECRET-A,True\n")
