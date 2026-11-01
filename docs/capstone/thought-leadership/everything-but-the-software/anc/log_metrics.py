@@ -7,7 +7,7 @@ Usage:
     git checkout 29c6b512f5e68733bb2cc1882343db39f5eb2cad
     python3 log_metrics.py docs/reference/log.md [--split 2026-10-15] [--json log_daily.json]
 
-The optional --json file holds {date: [entries, words, hedges]} per day and is
+The optional --json file holds {date: [entries, words, boundary_phrases]} and is
 the input of make_figures.py.
 """
 import argparse
@@ -17,7 +17,7 @@ from collections import defaultdict
 
 ENTRY_SPLIT = re.compile(r"\n(?=## \[?\d{4}-\d{2}-\d{2})")
 ENTRY_DATE = re.compile(r"## \[?(\d{4}-\d{2}-\d{2})")
-HEDGE = re.compile(
+EVIDENCE_BOUNDARY = re.compile(
     r"\b(unmet|not accepted|not inferred|is inferred|remains? open|remains? unproved|"
     r"remains? unverified|not claimed|no [a-z ,/-]{0,40}(is|was) (claimed|inferred)|not established)\b",
     re.I,
@@ -37,21 +37,21 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("log")
     ap.add_argument("--split", default="2026-10-15", help="first day of the loop period")
-    ap.add_argument("--json", help="write per-day [entries, words, hedges] to this file")
+    ap.add_argument("--json", help="write per-day [entries, words, boundary_phrases]")
     args = ap.parse_args()
     text = open(args.log, encoding="utf-8").read()
-    daily = defaultdict(lambda: [0, 0, 0])  # entries, words, hedges
+    daily = defaultdict(lambda: [0, 0, 0])
     simplicity, dev = [], []
     for day, body in entries(text):
         d = daily[day]
         d[0] += 1
         d[1] += len(body.split())
-        d[2] += len(HEDGE.findall(body))
+        d[2] += len(EVIDENCE_BOUNDARY.findall(body))
         if SIMPLICITY.search(body):
             simplicity.append(day)
         if DEV_PROFILE.search(body):
             dev.append(day)
-    print("date        entries  words  hedges")
+    print("date        entries  words  boundary_phrases")
     for day in sorted(daily):
         e, w, h = daily[day]
         print(f"{day}  {e:7d} {w:6d} {h:7d}")
@@ -59,7 +59,7 @@ def main():
         e = sum(v[0] for k, v in daily.items() if sel(k))
         w = sum(v[1] for k, v in daily.items() if sel(k))
         h = sum(v[2] for k, v in daily.items() if sel(k))
-        print(f"{label}: entries={e} words={w} hedges={h} per1000={1000 * h / w:.2f}" if w else f"{label}: no entries")
+        print(f"{label}: entries={e} words={w} boundary_phrases={h} per1000={1000 * h / w:.2f}" if w else f"{label}: no entries")
     print("entries citing simplicity requirements:", len(simplicity), simplicity)
     print("entries citing the development profile:", len(dev), dev)
     if args.json:

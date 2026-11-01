@@ -2,7 +2,7 @@
 """Regenerate the case and published-evidence figures as PNG files.
 
 Usage: python3 anc/make_figures.py [--dpi 400] [--out .] [--only published]
-Reads anc/log_daily.json (daily entries, words, hedging phrases), produced from
+Reads anc/log_daily.json (daily entries, words, evidence-boundary phrases), from
 docs/reference/log.md with `log_metrics.py ... --json log_daily.json`, and writes
 case figures and replots anc/published-evidence.json. The --only option can
 regenerate either group without changing the other. Output defaults to the
@@ -23,10 +23,10 @@ rcParams.update({"font.family": "serif"})
 
 def log_growth(dpi):
     d = json.load(open(os.path.join(HERE, "log_daily.json")))
-    start, end = dt.date(2026, 9, 25), dt.date(2026, 10, 22)
+    start, end = dt.date(2026, 9, 11), dt.date(2026, 10, 22)
     days = [start + dt.timedelta(i) for i in range((end - start).days + 1)]
     words = [d.get(x.isoformat(), [0, 0, 0])[1] / 1000 for x in days]
-    hedge_density = [
+    boundary_density = [
         1000 * daily[2] / daily[1] if daily[1] else math.nan
         for daily in (d.get(day.isoformat(), [0, 0, 0]) for day in days)
     ]
@@ -37,8 +37,15 @@ def log_growth(dpi):
     loop = days.index(dt.date(2026, 10, 15))
     ax1.bar(x, words, color=["#9aa5b1" if i < loop else "#1f4e79" for i in x], width=0.8)
     ax1.set_ylabel("Words appended\n(thousands)")
-    ax2.bar(x, hedge_density, color=["#c9a227" if i < loop else "#8b1e1e" for i in x], width=0.8)
-    ax2.set_ylabel("Hedge matches\nper 1,000 words")
+    ax2.bar(x, boundary_density, color=["#c9a227" if i < loop else "#8b1e1e" for i in x], width=0.8)
+    zeros = [i for i, value in enumerate(boundary_density) if value == 0]
+    undefined = [i for i, value in enumerate(boundary_density) if math.isnan(value)]
+    ax2.scatter(zeros, [0] * len(zeros), marker="o", facecolors="none",
+                edgecolors="black", s=12, label="observed zero", zorder=3)
+    ax2.scatter(undefined, [0] * len(undefined), marker="x", color="black",
+                s=12, label="no words: undefined", zorder=3)
+    ax2.set_ylabel("Boundary phrases\nper 1,000 words")
+    ax2.legend(loc="upper left", fontsize=6, ncol=2)
     for ax in (ax1, ax2):
         ax.spines["top"].set_visible(False)
         ax.spines["right"].set_visible(False)
@@ -49,7 +56,11 @@ def log_growth(dpi):
     i = days.index(dt.date(2026, 10, 16)); ax1.annotate("cut-over to new\nsource layout", xy=(i, words[i]), xytext=(i + 3.0, 11.6), fontsize=7, arrowprops=arrow)
     i = days.index(dt.date(2026, 10, 22)); ax1.annotate("feedback-first label", xy=(i, words[i]), xytext=(i - 4.6, 4.0), fontsize=7, arrowprops=arrow)
     ax1.set_ylim(0, 15.5)
-    ticks = [i for i, dd in enumerate(days) if dd.weekday() == 0 or dd in (start, end)]
+    ticks = list(range(0, len(days), 7))
+    if len(days) - 1 - ticks[-1] >= 4:
+        ticks.append(len(days) - 1)
+    else:
+        ticks[-1] = len(days) - 1
     ax2.set_xticks(ticks)
     ax2.set_xticklabels([days[i].strftime("%d %b") for i in ticks])
     ax2.set_xlabel("Date of knowledge-base log entry (2026)")
@@ -59,13 +70,13 @@ def log_growth(dpi):
 
 def causal_loop(dpi):
     rcParams.update({"font.size": 7.2})
-    nodes = ["Large up-front\nspecification\n(BRD, PRD, ADRs)",
+    nodes = ["Specification inflation\nLarge up-front\nBRD, PRD, ADRs",
              "Large backlog and\nmany parallel\nagent loops",
              "Artefacts and gates\nstand in for \u201cdone\u201d\n(proxy capture)",
              "Long read path\nmay impair retrieval\n(unmeasured)",
              "Lessons may drop off\nthe effective read path\n(learning evaporation)",
              "Replacement unusable\nby the owner\n(feedback starvation)",
-             "Owner answers gaps\nwith more rules,\ncriteria and gates"]
+             "Process-gate inflation\nMore rules, criteria\nand repeated gates"]
     angles = [90, 28, -17, -66, -114, -163, 152]
     rx, ry, w, h = 2.35, 1.32, 1.55, 0.52
     pos = [(rx * math.cos(math.radians(a)), ry * math.sin(math.radians(a))) for a in angles]
