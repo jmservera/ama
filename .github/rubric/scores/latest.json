@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-01T16:41:16+00:00",
-  "commit": "faf035f678d73cfbf08b6abc31e270163c9e64f0",
+  "scored_at": "2026-11-01T17:13:15+00:00",
+  "commit": "7ad20eee0b24ae9adcc798cf16c1c6748a8ce40c",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41326520410",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41329543817",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
@@ -14,7 +14,7 @@
     "infrastructure": "b101de0ca1a75ce128f45fbd37309bc5dc49805b14bd65cce45c7b0ed9faa591",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
-    "thought-leadership": "592719a5da0d19d4d4c81dd5779faa45a9039c4777e3749cbc055d241aed8970"
+    "thought-leadership": "ff48fde380103587145d811685c4a116c5b3e22925be285ea4aa8cb459b74423"
   },
   "total": 77,
   "sections": {
@@ -152,25 +152,25 @@
     "D1": {
       "score": 4,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:927-985",
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:3097-3280"
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:70-85",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/background.tex:1-40"
       ],
-      "rationale": "Not touched by this PR. Baseline unchanged at 4."
+      "rationale": "v9 expands background synthesis and five-arm (495-trajectory) prospective protocol with added reflection/memory literature; still synthesis-plus-protocol with no reported experimental results. Consistent with baseline good/useful tier; no upgrade to 5 since no empirical findings yet."
     },
     "D2": {
       "score": 3,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:9",
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:8-19"
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:10,222,1299",
+        "docs/capstone/thought-leadership/everything-but-the-software/supplement.tex:1-35"
       ],
-      "rationale": "Not touched by this PR; unresolved TODOs remain unverified. Baseline unchanged at 3."
+      "rationale": "Main.tex restructured to 35pp with new supplement.tex (22pp) splitting extended background/case-audits/deferred-measures; craft improved, but 13 TODO(author) markers remain including pending external-publication approval and submission date. Baseline 3 (solid draft, light editing needed) retained."
     },
     "D3": {
       "score": 2,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:39"
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:95-107"
       ],
-      "rationale": "Not touched by this PR. Submission/registration/publication approval remain pending. Baseline unchanged at 2."
+      "rationale": "README confirms PR #\u200b692 still open, no OSF recording, no arXiv upload, no submission or registration occurred; dissemination remains fully pending. Baseline 2 retained."
     }
   }
 }
