@@ -1,0 +1,70 @@
+{
+ "employee_capacity_workorders_page": {
+  "api_status": {
+   "/api/packages": 200,
+   "/api/workorders": 200
+  },
+  "at": "2026-11-01T20:41:08.216820+00:00",
+  "next_page_status": null,
+  "pager": [
+   "Showing packages 1 to 1 of 1. Page 1 of 1. Previous packages Next packages",
+   "Showing work orders 1 to 20 of 601. Page 1 of 31. Previous work orders Next work orders"
+  ],
+  "status": "pass",
+  "stuck_loading": false,
+  "visible_alerts": 0
+ },
+ "employee_chat_grounded_and_stays_open": {
+  "answers": {
+   "case_going": {
+    "question": "How is this case going?",
+    "reply_excerpt": "You How is this case going? Assistant Workflow-only help, no record changed The assistant is not available right now. Continue with the ordinary case workflow; nothing is lost and nothing has been changed. Skill: general. Workflow-only or unverified help. No record changed. Sources (0)",
+    "status": "Answer added. Check the sources before relying on it.",
+    "still_open": true
+   },
+   "next_step": {
+    "question": "What is the next step for this case?",
+    "reply_excerpt": "You What is the next step for this case? Assistant Workflow-only help, no record changed The assistant is not available right now. Continue with the ordinary case workflow; nothing is lost and nothing has been changed. Skill: general. Workflow-only or unverified help. No record changed. Sources (0)",
+    "status": "Answer added. Check the sources before relying on it.",
+    "still_open": true
+   }
+  },
+  "at": "2026-11-01T20:41:05.740758+00:00",
+  "case_link_kind": "case route",
+  "status": "pass"
+ },
+ "employee_chat_storage_notice": {
+  "at": "2026-11-01T20:41:00.616751+00:00",
+  "retention_excerpt": "",
+  "status": "pass",
+  "storage_not_approved_notice": false
+ },
+ "employee_chat_storage_works": {
+  "at": "2026-11-01T20:41:05.741288+00:00",
+  "matched_saved_or_stored": false,
+  "status": "fail"
+ },
+ "employee_chat_window_size": {
+  "at": "2026-11-01T20:41:00.612585+00:00",
+  "box": {
+   "height": 720,
+   "width": 512,
+   "x": 752,
+   "y": 92
+  },
+  "status": "pass",
+  "viewport": {
+   "height": 900,
+   "width": 1280
+  }
+ },
+ "employee_health": {
+  "at": "2026-11-01T20:39:21.119874+00:00",
+  "http": 200,
+  "status": "pass"
+ },
+ "employee_sign_in": {
+  "at": "2026-11-01T20:39:44.362019+00:00",
+  "status": "pass"
+ }
+}

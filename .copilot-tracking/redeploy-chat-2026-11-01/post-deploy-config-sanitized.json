@@ -1,0 +1,240 @@
+{
+ "ca-cutover-test-agents": {
+  "env": {
+   "API_AUDIENCE": "api://systemAssignedIdentity",
+   "API_BASE_URL": "https://ca-cutover-test-api.jollytree-20e6e99e.uksouth.azurecontainerapps.io",
+   "APPLICATIONINSIGHTS_CONNECTION_STRING": "InstrumentationKey=8e3114a8-2aad-487f-b16d-797ac1bd21d7;IngestionEndpoint=https://uksouth-1.in.applicationinsights.azure.com/;LiveEndpoint=https://uksouth.livediagnostics.monitor.azure.com/;ApplicationId=ebe710dc-ee27-493e-af25-b694a53a1e13",
+   "AZURE_CLIENT_ID": "90356998-49da-417d-9230-34e801e7b44f",
+   "FOUNDRY_ENDPOINT": "https://aif-cutover-test-rzsrg.cognitiveservices.azure.com/",
+   "FOUNDRY_PROJECT": "zava-forward-agents",
+   "MODEL_DEPLOYMENT_CAPABLE": "capable",
+   "MODEL_DEPLOYMENT_DEFAULT": "standard",
+   "OTEL_SERVICE_NAMESPACE": "zava-forward",
+   "POISON_QUEUE": "agent-tasks-poison",
+   "QUEUE_ENDPOINT": "https://stcutovertestrzsrg.queue.core.windows.net",
+   "TASK_QUEUE": "agent-tasks"
+  },
+  "identity": [
+   "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-agents"
+  ],
+  "image": "crcutovertestrzsrg.azurecr.io/zava-forward-agents@sha256:2217d94d1c23e0e076d22d09896781a0c64581fe2eb4de547bf7fe919d56ebae",
+  "ingress": {},
+  "resources": {
+   "cpu": 0.5,
+   "ephemeralStorage": "2Gi",
+   "memory": "1Gi"
+  },
+  "rev": "ca-cutover-test-agents--0000001",
+  "scale": {
+   "cooldownPeriod": 300,
+   "maxReplicas": 5,
+   "minReplicas": 0,
+   "pollingInterval": 30,
+   "rules": [
+    {
+     "custom": {
+      "identity": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-agents",
+      "metadata": {
+       "accountName": "stcutovertestrzsrg",
+       "cloud": "AzurePublicCloud",
+       "queueLength": "5",
+       "queueName": "agent-tasks"
+      },
+      "type": "azure-queue"
+     },
+     "name": "agent-task-queue"
+    }
+   ]
+  },
+  "secretNames": []
+ },
+ "ca-cutover-test-api": {
+  "env": {
+   "APPLICATIONINSIGHTS_CONNECTION_STRING": "InstrumentationKey=8e3114a8-2aad-487f-b16d-797ac1bd21d7;IngestionEndpoint=https://uksouth-1.in.applicationinsights.azure.com/;LiveEndpoint=https://uksouth.livediagnostics.monitor.azure.com/;ApplicationId=ebe710dc-ee27-493e-af25-b694a53a1e13",
+   "AZURE_CLIENT_ID": "1b1fe44e-f4cf-4aae-98d0-b30c7927a5e3",
+   "BLOB_ENDPOINT": "https://stcutovertestrzsrg.blob.core.windows.net",
+   "CHAT_DPIA_REF": "docs/reference/research/chat-memory-dpia.md",
+   "CHAT_LAWFUL_BASIS_REF": "docs/reference/research/chat-demo-storage-approval-2026-11-01.md#lawful-basis",
+   "CHAT_NOTICE_REF": "docs/reference/research/chat-demo-storage-approval-2026-11-01.md#notice",
+   "CHAT_RETENTION_DAYS": "30",
+   "CHAT_RETENTION_REF": "docs/reference/research/chat-demo-storage-approval-2026-11-01.md#retention",
+   "ENTRA_CLIENT_ID": "systemAssignedIdentity",
+   "ENTRA_TENANT_ID": "bccd6ad2-b77b-461c-bbc5-5b032e7930ba",
+   "EVIDENCE_STORE": "blob",
+   "KEY_VAULT_URI": "https://kv-cutovertest-rzsrg.vault.azure.net",
+   "OTEL_SERVICE_NAMESPACE": "zava-forward",
+   "QUEUE_ENDPOINT": "https://stcutovertestrzsrg.queue.core.windows.net",
+   "SHAREPOINT_SITE_ID": "",
+   "SQL_DATABASE": "retrofit",
+   "SQL_SERVER": "sql-cutover-test-rzsrg.database.windows.net",
+   "ZF_AUTH": "trusted-proxy",
+   "ZF_BLOB_ACCOUNT_URL": "https://stcutovertestrzsrg.blob.core.windows.net",
+   "ZF_BLOB_CLIENT_ID": "1b1fe44e-f4cf-4aae-98d0-b30c7927a5e3",
+   "ZF_BLOB_CONTAINER": "evidence",
+   "ZF_DOC_STORE": "azure-blob",
+   "ZF_ENTRA_TENANT_ID": "bccd6ad2-b77b-461c-bbc5-5b032e7930ba",
+   "ZF_ENV": "production",
+   "ZF_SQL_AUTH": "msi",
+   "ZF_SQL_CLIENT_ID": "1b1fe44e-f4cf-4aae-98d0-b30c7927a5e3",
+   "ZF_SQL_DATABASE": "retrofit",
+   "ZF_SQL_SERVER": "sql-cutover-test-rzsrg.database.windows.net",
+   "ZF_STORE": "mssql",
+   "ZF_TILE_ATTRIBUTION": "",
+   "ZF_TILE_URL": "",
+   "ZF_TRUSTED_PROXY": "1"
+  },
+  "identity": [
+   "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-api"
+  ],
+  "image": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:7aa2a317a1fe52ddb22ee72a6489ed7addaab245728f99dc047c8c2ab7b25289",
+  "ingress": {
+   "allowInsecure": false,
+   "external": true,
+   "fqdn": "ca-cutover-test-api.jollytree-20e6e99e.uksouth.azurecontainerapps.io",
+   "targetPort": 8088
+  },
+  "resources": {
+   "cpu": 0.5,
+   "ephemeralStorage": "2Gi",
+   "memory": "1Gi"
+  },
+  "rev": "ca-cutover-test-api--0000002",
+  "scale": {
+   "cooldownPeriod": 300,
+   "maxReplicas": 4,
+   "minReplicas": 0,
+   "pollingInterval": 30,
+   "rules": [
+    {
+     "http": {
+      "metadata": {
+       "concurrentRequests": "50"
+      }
+     },
+     "name": "http"
+    }
+   ]
+  },
+  "secretNames": []
+ },
+ "ca-cutover-test-demo-api": {
+  "env": {
+   "AI_DEPLOYMENT": "standard",
+   "AI_DEPLOYMENT_STRONG": "standard",
+   "AI_ENDPOINT": "https://aif-cutover-test-rzsrg.openai.azure.com/",
+   "APPLICATIONINSIGHTS_CONNECTION_STRING": "InstrumentationKey=8e3114a8-2aad-487f-b16d-797ac1bd21d7;IngestionEndpoint=https://uksouth-1.in.applicationinsights.azure.com/;LiveEndpoint=https://uksouth.livediagnostics.monitor.azure.com/;ApplicationId=ebe710dc-ee27-493e-af25-b694a53a1e13",
+   "AZURE_CLIENT_ID": "1b1fe44e-f4cf-4aae-98d0-b30c7927a5e3",
+   "BLOB_ENDPOINT": "https://stcutovertestrzsrg.blob.core.windows.net",
+   "CHAT_DPIA_REF": "docs/reference/research/chat-memory-dpia.md",
+   "CHAT_LAWFUL_BASIS_REF": "docs/reference/research/chat-demo-storage-approval-2026-11-01.md#lawful-basis",
+   "CHAT_NOTICE_REF": "docs/reference/research/chat-demo-storage-approval-2026-11-01.md#notice",
+   "CHAT_RETENTION_DAYS": "30",
+   "CHAT_RETENTION_REF": "docs/reference/research/chat-demo-storage-approval-2026-11-01.md#retention",
+   "ENTRA_CLIENT_ID": "0dbb6baf-c8af-414f-ad0b-5daa7695cbc9",
+   "ENTRA_TENANT_ID": "bccd6ad2-b77b-461c-bbc5-5b032e7930ba",
+   "EVIDENCE_STORE": "blob",
+   "KEY_VAULT_URI": "https://kv-cutovertest-rzsrg.vault.azure.net",
+   "OTEL_SERVICE_NAMESPACE": "zava-forward",
+   "QUEUE_ENDPOINT": "https://stcutovertestrzsrg.queue.core.windows.net",
+   "SHAREPOINT_SITE_ID": "",
+   "SQL_DATABASE": "retrofit",
+   "SQL_SERVER": "sql-cutover-test-rzsrg.database.windows.net",
+   "ZF_AUTH": "trusted-proxy",
+   "ZF_BLOB_ACCOUNT_URL": "https://stcutovertestrzsrg.blob.core.windows.net",
+   "ZF_BLOB_CLIENT_ID": "1b1fe44e-f4cf-4aae-98d0-b30c7927a5e3",
+   "ZF_BLOB_CONTAINER": "evidence",
+   "ZF_DOC_STORE": "azure-blob",
+   "ZF_ENTRA_TENANT_ID": "bccd6ad2-b77b-461c-bbc5-5b032e7930ba",
+   "ZF_ENV": "production",
+   "ZF_SQL_AUTH": "msi",
+   "ZF_SQL_CLIENT_ID": "1b1fe44e-f4cf-4aae-98d0-b30c7927a5e3",
+   "ZF_SQL_DATABASE": "retrofit",
+   "ZF_SQL_SERVER": "sql-cutover-test-rzsrg.database.windows.net",
+   "ZF_STORE": "mssql",
+   "ZF_TILE_ATTRIBUTION": "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
+   "ZF_TILE_URL": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+   "ZF_TRUSTED_PROXY": "1"
+  },
+  "identity": [
+   "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-api"
+  ],
+  "image": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:7aa2a317a1fe52ddb22ee72a6489ed7addaab245728f99dc047c8c2ab7b25289",
+  "ingress": {
+   "allowInsecure": false,
+   "external": true,
+   "fqdn": "ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io",
+   "targetPort": 8088
+  },
+  "resources": {
+   "cpu": 0.5,
+   "ephemeralStorage": "2Gi",
+   "memory": "1Gi"
+  },
+  "rev": "ca-cutover-test-demo-api--0000008",
+  "scale": {
+   "cooldownPeriod": 300,
+   "maxReplicas": 4,
+   "minReplicas": 0,
+   "pollingInterval": 30,
+   "rules": [
+    {
+     "http": {
+      "metadata": {
+       "concurrentRequests": "50"
+      }
+     },
+     "name": "http"
+    }
+   ]
+  },
+  "secretNames": [
+   "entra-0dbb6bafc8af414fad0b5daa7695cbc9-7a8a02692e5a"
+  ]
+ },
+ "ca-resident-demo": {
+  "env": {
+   "CHAT_DPIA_REF": "docs/reference/research/chat-memory-dpia.md",
+   "CHAT_LAWFUL_BASIS_REF": "docs/reference/research/chat-demo-storage-approval-2026-11-01.md#lawful-basis",
+   "CHAT_NOTICE_REF": "docs/reference/research/chat-demo-storage-approval-2026-11-01.md#notice",
+   "CHAT_RETENTION_DAYS": "30",
+   "CHAT_RETENTION_REF": "docs/reference/research/chat-demo-storage-approval-2026-11-01.md#retention",
+   "PORT": "8089",
+   "ZF_DEMO_ALLOWED_HOSTS": "ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io",
+   "ZF_DEMO_CLIENT_ADDRESS": "ingress-rightmost",
+   "ZF_DEMO_EXPIRES_AT": "2027-01-31T23:59:59Z",
+   "ZF_DEMO_PASSWORD_VERIFIER": "<secretRef:demo-password-verifier>",
+   "ZF_DEMO_SESSION_KEY": "<secretRef:demo-session-key>",
+   "ZF_SQL_AUTH": "msi",
+   "ZF_SQL_CLIENT_ID": "ba252cc4-6059-4248-9f21-f6ae7f0cd4d1",
+   "ZF_SQL_DATABASE": "retrofit",
+   "ZF_SQL_SERVER": "sql-cutover-test-rzsrg.database.windows.net"
+  },
+  "identity": [
+   "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-resident-demo"
+  ],
+  "image": "crcutovertestrzsrg.azurecr.io/zava-resident-demo@sha256:706b9db4e49a9c6b196758aa7cfd3d8f901b5842260635339bdd9b31019d6d5f",
+  "ingress": {
+   "allowInsecure": false,
+   "external": true,
+   "fqdn": "ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io",
+   "targetPort": 8089
+  },
+  "resources": {
+   "cpu": 0.25,
+   "ephemeralStorage": "1Gi",
+   "memory": "0.5Gi"
+  },
+  "rev": "ca-resident-demo--0000007",
+  "scale": {
+   "cooldownPeriod": 300,
+   "maxReplicas": 1,
+   "minReplicas": 0,
+   "pollingInterval": 30,
+   "rules": null
+  },
+  "secretNames": [
+   "demo-password-verifier",
+   "demo-session-key"
+  ]
+ }
+}
