@@ -219,5 +219,10 @@ class BriefingFeedbackGuidance(unittest.TestCase):
         self.assertIn("data-briefing-feedback", source)
         self.assertIn("If review controls are shown, choose Edit this draft", source)
         self.assertIn("is unavailable, or the review is already recorded", source)
-        self.assertIn("request a fresh briefing", source)
+        self.assertIn(
+            "may reuse the cached draft for an unverified briefing with unchanged records", source
+        )
+        self.assertIn(
+            "Use rules and templates, without AI, or continue with ordinary case work", source
+        )
         self.assertIn("kept in the audit log as feedback", source)
