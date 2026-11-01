@@ -407,7 +407,7 @@ def run_scale(axe: Path, out: Path) -> None:
                 check(f"scale has no uncaught JavaScript errors ({errors})", not errors)
                 (out / "scale-browser.json").write_text(json.dumps(dict(
                     browser=browser.version, homes=60000, fixture_seed=174,
-                    fixture_version="1.2.0", lifecycle="Explicit test-only overlay",
+                    fixture_version="1.3.0", lifecycle="Explicit test-only overlay",
                     coverage=report["coverage"], time_to_close=report["time_to_close"],
                     archive_total=45000, filtered_total=25, filtered_final_page=5,
                     axe_sha256=AXE_SHA256,
