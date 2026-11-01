@@ -1124,7 +1124,10 @@ def check_skips(
             f"Required {expected_count}-test zero-skip execution evidence missing/mismatched"
         )
     if expected_test is not None and (
-        int(counts[-1]) != 1 or skips or not _single_test_passed(text, expected_test)
+        int(counts[-1]) != 1
+        or skips
+        or re.search(r"(?m)^OK$", text) is None
+        or not _single_test_passed(text, expected_test)
     ):
         raise GateError(
             f"Required exact test execution evidence missing/mismatched: {expected_test}"

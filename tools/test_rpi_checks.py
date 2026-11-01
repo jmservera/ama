@@ -407,6 +407,8 @@ class GateTests(unittest.TestCase):
             f"{test} ... {noise}\n" + tail,
             f"{test} ... {noise}expected failure\n{noise}ok"
             + tail.replace("OK\n", "OK (expected failures=1)\n"),
+            f"{test} ... expected failurehttp-response status=503\n{noise}status=503ok"
+            + tail.replace("OK\n", "OK (expected failures=1)\n"),
             f"{test} ... debug: processing webhook" + tail,
             f"{test} ... skipped '{skip}'" + tail.replace("OK\n", "OK (skipped=1)\n"),
             f"{test} ... ok\n{test} ... ok" + tail,
