@@ -4101,3 +4101,20 @@ reads or writes them.
 Not delivered: persistence in the JSON, SQL and MSSQL stores, API and UI wiring, and the
 no-retaliation and no-delayed-hazard-response criterion, which needs live workflow evidence and
 human review. Tests: `src/core/tests/test_challenges.py`.
+
+## Data steward and digital operator exception queue (#135)
+
+`zava_forward.core.exception_queue.ExceptionQueue` is a store-independent register (FR-012, FR-029,
+AC-040) for identity and source conflicts, failed imports, failed AI or integration runs and stranded
+tasks. A named `data_steward` owns conflicts and imports; a named `digital_operator` owns AI,
+integration and stranded-task items. `raise_conflict` needs two different values, each with source,
+date and version, and shows them with the resolution owner in `conflict_view`. `queue` is scoped to
+the caller's role and every view, denial and action is appended to the audit log shown by
+`access_report`. `request_recovery` (hold, request_rerun, resolve_by_owner) needs a reason and records
+`replayed` and `released` as False; nothing is replayed, corrected or released automatically. The
+original source is deep-copied and kept, and eligibility stays `Unknown`. `outage_banner` reports an
+unchecked state as Unknown, never healthy.
+
+Not delivered: persistence in the JSON, SQL and MSSQL stores, API and UI wiring, importer and AI-run
+producers, and owner approval of the role names and runbooks (open). Tests:
+`src/core/tests/test_exception_queue.py`.
