@@ -9064,6 +9064,14 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   acceptance and owner confirmation of agent names remain unproven; no
   source change was made.
 
+## [2026-11-01] update | AI consumption demo walk-through (Refs #432)
+
+* Added a credential-free synthetic walk-through
+  (`zava_forward.core.ai_consumption_demo`, documented in the core README) that
+  shows the held dispatch without authority, the looping request stopping at the
+  call limit, cost Unknown without billing and a synthetic-labelled report.
+* No price, bill, owner approval, spend or held-out batch was added; the
+  remaining evidence gaps in `docs/reference/resources/ai-tokenomics.md` stand.
 ## [2026-11-01] update | Operator handover verifier (#188)
 
 * Added the operator handover check to the
