@@ -11,3 +11,5 @@ date: 2026-11-01
 * Docs: `content-standard.md`, `log.md`.
 
 Validation: content-standard tests 13/13 pass; api ruff check, format, mypy clean. Full api suite and core ruff/mypy are blocked by a pre-existing IndentationError in `core/assistant_release.py` line 184 on main (from #658), not touched here. Playwright checks not run.
+
+Post-review amendment (2026-11-01): Copilot threads on `app.js` generic fallback. The shared fallback no longer asserts that a change did not complete. Reads use a load/refresh message; changes use "We cannot show whether this change was saved" with a history check. Test guard extended.

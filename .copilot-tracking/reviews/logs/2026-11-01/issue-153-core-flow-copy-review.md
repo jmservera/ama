@@ -8,3 +8,5 @@ Review execution: executed once, self-review of the diff. Outcome: conformant fo
 * Stored values, safety and approval logic unchanged. AI label unchanged.
 * Findings routed to follow-up: fix `assistant_release.py` syntax error on main; run browser checks in CI; typed server errors and `signoffs.py` refusals; named human review of resident wording; comprehension testing.
 * Unmet criteria: AC2 (partial), AC3 (partial), AC5 (review not run). PR uses Refs.
+
+Post-review finding (2026-11-01, PR review threads): generic error wording contradicted committed or uncertain outcomes and misdirected read failures. Fixed in `app.js` with separate read and change fallbacks; original outcome preserved.

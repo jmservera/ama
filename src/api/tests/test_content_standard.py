@@ -114,6 +114,9 @@ class CopyAudit(unittest.TestCase):
         self.assertNotIn("Something went wrong", js)
         self.assertIn("e.generic = !data.error", js)
         self.assertIn("check the recorded history before repeating a change", js)
+        self.assertIn("body === undefined ? GENERIC_READ_ERROR : GENERIC_CHANGE_ERROR", js)
+        self.assertIn("refresh to try again", js)
+        self.assertNotIn("This did not complete", js)
         self.assertIn("Owner: application support. Next action: try All sources", (WEB / "law.js").read_text())
         with self.assertRaises(PermissionError) as ctx:
             Store.ranking_snapshot(object(), {"role": "Resident"})
