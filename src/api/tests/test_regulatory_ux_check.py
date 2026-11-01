@@ -10,6 +10,7 @@ import unittest
 import unittest.mock
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from typing import Any
 from unittest.mock import Mock
 
 from checks.regulatory_ux_check import run, scan, target_sizes
@@ -87,13 +88,13 @@ assert callable(run) and callable(target_sizes)
             "Buttons must not fade their background while text colour changes instantly",
         )
 
-    def _scan(self, incomplete: list[dict], strict: bool) -> list[dict]:
+    def _scan(self, incomplete: list[dict[str, Any]], strict: bool) -> list[dict[str, Any]]:
         page = Mock()
         page.evaluate.side_effect = [
             None,
             {"violations": [], "incomplete": incomplete, "passes": []},
         ]
-        reports: list[dict] = []
+        reports: list[dict[str, Any]] = []
         with unittest.mock.patch("checks.regulatory_ux_check.target_sizes", return_value=[]):
             scan(page, "axe", reports, "state", strict_contrast=strict)
         return reports
