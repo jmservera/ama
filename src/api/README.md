@@ -504,6 +504,8 @@ control; retry uses the currently selected mode.
 
 HAX design mapping (pattern references, not usability acceptance):
 
+The dated [HAX design note](../../docs/reference/research/ux/briefing-hax-design-note.md) holds the fuller mapping.
+
 | Guideline | Applied pattern |
 | --- | --- |
 | [G1/G2](https://www.microsoft.com/en-us/haxtoolkit/library/) | Source-type label, explicit limits, confidence not inferred |

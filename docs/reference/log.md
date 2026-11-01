@@ -9070,6 +9070,14 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   ratification of supported device classes and widths (#152). The manifest
   records it as `proposed`; the decision, browsers, assistive tools, field or
   mobile use and complete AC-034/AC-043 acceptance remain open.
+## [2026-11-01] update | AI consumption demo walk-through (Refs #432)
+
+* Added a credential-free synthetic walk-through
+  (`zava_forward.core.ai_consumption_demo`, documented in the core README) that
+  shows the held dispatch without authority, the looping request stopping at the
+  call limit, cost Unknown without billing and a synthetic-labelled report.
+* No price, bill, owner approval, spend or held-out batch was added; the
+  remaining evidence gaps in `docs/reference/resources/ai-tokenomics.md` stand.
 ## [2026-11-01] update | Operator handover verifier (#188)
 
 * Added the operator handover check to the
@@ -9093,3 +9101,39 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   Usage is under "Run the design gate" in the prototype profile review.
 * Issue #156 criterion 1 stays unmet: no designs, human review, accessibility or
   content evidence were supplied. No regulatory snapshot changed.
+
+## [2026-11-01] add | Today's briefing HAX design note (#531)
+
+* Added `research/ux/briefing-hax-design-note.md`, a dated mapping of HAX
+  guidelines G1, G2, G7 to G11 and G15 to G17 to the shipped briefing and loading
+  feedback, with the source-inspection evidence boundary. No UI behaviour changed.
+* Maintainer-authored; not a UX specialist output. Criterion 7 (live employee
+  verification) and assistive-technology acceptance stay unmet. No regulatory
+  snapshot changed.
+## [2026-11-01] update | Key Vault secret lifecycle slice (#142)
+
+* Extended `infra/secret-inventory.json` to the two resident demo secrets, with the
+  repository-recorded owner pending confirmation. Added `rotation-simulate` and
+  `review-status` to `infra/scripts/secret_lifecycle.py` with offline tests.
+* Issue #142 criteria 1 to 3 stay unmet: no live rotation exercise, executed signed
+  review or Azure Monitor alert evaluation. No regulatory snapshot changed.
+## [2026-11-01] verify | Resident sensor gauges and assistant re-verified on main (Refs #466)
+
+* Re-ran the resident core and api suites (99 tests, 1 opt-in skip), ruff and mypy
+  against main efebfc6d. Own-home synthetic gauges and history, the advisory
+  own-case assistant, cross-resident tests and the recorded model, cap and
+  credential decision in `docs/architecture/resident-assistant-prototype.md` hold.
+* The 2026-11-01 inference expiry has passed, so the assistant uses its labelled
+  rules fallback. No source change was needed.
+* Issue #466 criterion 1 (owner confirms scope and priority) stays unmet; manual
+  assistive-technology acceptance and live checks remain owner-run. No regulatory
+  snapshot changed.
+## [2026-11-01] query | Employee chat re-verification on current main (#530)
+
+* Re-ran the focused tier on main efebfc6d: core chat (99), agents chat
+  model (7), API chat panel (41) and widget focus (6) tests, ruff, mypy and
+  the employee chat browser and pinned axe check. All passed. Evidence is in
+  `.copilot-tracking/changes/2026-11-01/employee-chat-skills-530-reverify-changes.md`.
+* Live employee-site verification, screen-reader and voice-control
+  acceptance and owner confirmation of agent names remain unproven; no
+  source change was made.
