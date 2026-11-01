@@ -8,6 +8,8 @@ from pathlib import Path
 from typing import Any
 from unittest.mock import patch
 
+from zava_forward.core import chat_panel
+
 from zava_forward.agents import chat_eval
 
 GOLDEN = json.loads(chat_eval.GOLDEN.read_text(encoding="utf-8"))
@@ -94,7 +96,7 @@ class GoldenRunTests(unittest.TestCase):
     def test_grounding_policy_changes_policy_version(self) -> None:
         raw = chat_eval.GOLDEN.read_bytes()
         before = chat_eval.bindings(raw)["policy_version"]
-        with patch.object(chat_eval.chat_panel, "GROUNDING_REVISION", "changed"):
+        with patch.object(chat_panel, "GROUNDING_REVISION", "changed"):
             self.assertNotEqual(before, chat_eval.bindings(raw)["policy_version"])
 
     def test_report_binds_versions_and_states_what_is_not_evaluated(self) -> None:
