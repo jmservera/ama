@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 from collections import defaultdict
 from datetime import UTC, datetime, timedelta
 from typing import Any
@@ -18,7 +19,7 @@ AUDIENCES = {
 }
 SAFE_ROUTE = "Use the existing human emergency or hazard service now; do not wait for checks."
 TABLES = ("reg_check", "reg_alert", "reg_alert_event", "reg_checkpoint")
-ENGINE_VERSION = 2
+ENGINE_VERSION = 3
 SQLITE_DDL = (
     "CREATE TABLE IF NOT EXISTS reg_check (id TEXT PRIMARY KEY, case_id TEXT NOT NULL, "
     "at TEXT NOT NULL, check_seq INTEGER NOT NULL, body TEXT NOT NULL)",
@@ -65,6 +66,20 @@ def _json(value: object) -> str:
 
 def _hash(value: object) -> str:
     return hashlib.sha256(_json(value).encode()).hexdigest()
+
+
+def _home_key(facts: dict[str, Any], case_id: str) -> tuple[str, str]:
+    """Return a home grouping key; an address key is derived, not a registered home identifier."""
+    if facts.get("home_id"):
+        return str(facts["home_id"]), "recorded_home"
+    home = facts.get("home")
+    if isinstance(home, dict):
+        postcode = re.sub(r"[^a-z0-9]+", "", str(home.get("postcode") or "").lower())
+        address = re.sub(r"[^a-z0-9]+", " ", str(home.get("address") or "").lower()).strip()
+        parts = [postcode, address]
+        if all(parts):
+            return "home-" + _hash(parts)[:16], "address_key"
+    return case_id, "case_only"
 
 
 def _time(value: object) -> datetime | None:
@@ -317,6 +332,7 @@ class RuleEngine:
                     return checkpoint
                 sequence = (self.sql.all("SELECT MAX(check_seq) n FROM reg_check")[0]["n"] or 0) + 1
                 checks = []
+                home_id, home_scope = _home_key(facts, case_id)
                 for card, citations, source_state in contract:
                     spec = card["check"]
                     eligible = (
@@ -347,8 +363,8 @@ class RuleEngine:
                             **r,
                             id=_hash([key, card["card_id"], r["item"]]),
                             case_id=case_id,
-                            home_id=facts.get("home_id", case_id),
-                            home_scope="recorded_home" if facts.get("home_id") else "case_only",
+                            home_id=home_id,
+                            home_scope=home_scope,
                             step=facts["stage"],
                             card_id=card["card_id"],
                             card_version=card["version"],
@@ -388,7 +404,7 @@ class RuleEngine:
                             and source_state == "active"
                             and check["result"] in ("attention", "breach risk", "unknown")
                         ):
-                            self._publish(check, now)
+                            self._publish(check, now, store)
                 checkpoint = dict(
                     id=key, case_id=case_id, revision=revision, at=now.isoformat(), checks=checks
                 )
@@ -406,16 +422,42 @@ class RuleEngine:
             )
         )
 
-    def _publish(self, check: dict[str, Any], now: datetime) -> None:
+    def _homes(self) -> dict[str, tuple[str, str]]:
+        """Map each case to the home grouping of its latest check, whatever its item."""
+        latest: dict[str, tuple[int, tuple[str, str]]] = {}
+        for row in self.sql.all("SELECT case_id, check_seq, body FROM reg_check"):
+            if row["case_id"] not in latest or row["check_seq"] > latest[row["case_id"]][0]:
+                check = json.loads(row["body"])
+                latest[row["case_id"]] = (row["check_seq"], (check["home_id"], check["home_scope"]))
+        return {case: home for case, (_, home) in latest.items()}
+
+    @staticmethod
+    def _current_home(store: Any, case_id: str, fallback: str) -> str:
+        """Resolve a case's home from its persisted facts, not from an earlier check."""
+        row = store.db.execute("SELECT body FROM cases WHERE id=?", (case_id,)).fetchone()
+        return _home_key(json.loads(row[0]), case_id)[0] if row else fallback
+
+    def _publish(self, check: dict[str, Any], now: datetime, store: Any) -> None:
         throttle = _hash([check["home_id"], check["card_id"], check["step"], check["item"]])
         if check["result"] == "attention":
+            window = (now - timedelta(hours=24, minutes=1)).isoformat()
+            homes: dict[str, str] = {}
             for row in self.sql.all(
-                "SELECT created, body FROM reg_alert WHERE throttle=?", (throttle,)
+                "SELECT case_id, created, body FROM reg_alert WHERE created>?", (window,)
             ):
-                if json.loads(row["body"])["result"] == "attention" and now < (
-                    datetime.fromisoformat(row["created"]) + timedelta(hours=24)
+                old = json.loads(row["body"])
+                if (
+                    old["result"] == "attention"
+                    and (old["card_id"], old["step"], old["item"])
+                    == (check["card_id"], check["step"], check["item"])
+                    and now < datetime.fromisoformat(row["created"]) + timedelta(hours=24)
                 ):
-                    return
+                    if row["case_id"] not in homes:
+                        homes[row["case_id"]] = self._current_home(
+                            store, row["case_id"], old["home_id"]
+                        )
+                    if homes[row["case_id"]] == check["home_id"]:
+                        return
         episode = _hash(
             [
                 check["case_id"],
@@ -472,6 +514,7 @@ class RuleEngine:
                     snapshots[identity] = [check]
                 elif check["sequence"] == prior_checks[0]["sequence"]:
                     prior_checks.append(check)
+            homes = self._homes()
             for snapshot in snapshots.values():
                 for check in snapshot:
                     current[(check["case_id"], check["card_id"], check["item"])] = check
@@ -489,6 +532,8 @@ class RuleEngine:
                 check = current.get((a["case_id"], a["card_id"], a["item"]))
                 a["latest_result"] = check["result"] if check else "unknown"
                 a["latest_evaluated_at"] = check["at"] if check else None
+                if a["case_id"] in homes:
+                    a["home_id"], a["home_scope"] = homes[a["case_id"]]
                 if not can_see_reason(user):
                     for event in a["events"]:
                         event["note"] = NOTE_HELD

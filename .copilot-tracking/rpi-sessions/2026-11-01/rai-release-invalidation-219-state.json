@@ -1,0 +1,6 @@
+{"task_id":"219","task_slug":"rai-release-invalidation-219","parent_task":null,"mode":"automatic","active_phase":"Follow-up","status":"completed","session_status":"running",
+"artifact_paths":{"research":".copilot-tracking/research/2026-11-01/rai-release-invalidation-219-research.md","plan":".copilot-tracking/plans/2026-11-01/rai-release-invalidation-219-plan.md","details":null,"critique":".copilot-tracking/plans/2026-11-01/rai-release-invalidation-219-plan.md","changes":".copilot-tracking/changes/2026-11-01/rai-release-invalidation-219-changes.md","review":".copilot-tracking/reviews/logs/2026-11-01/rai-release-invalidation-219-review.md"},
+"confirmed_decisions":[{"decision":"Critique executed once, no blocking findings; Review executed once, Accepted for code slice","status":"confirmed","evidence":"plan and review artifacts"}],
+"blockers":[{"id":"OQ-017","summary":"Named release, residual-risk, suspension and restart holders and actual evaluation evidence unavailable","resolution":"Human designation"}],
+"next_action":{"phase":"Follow-up","action":"Owner reviews PR; PR uses Refs #219"},
+"prioritized_follow_ups":[{"rank":1,"task":"Name OQ-017 holders","rationale":"Unblocks criterion 5","evidence":"review artifact"},{"rank":2,"task":"Sweep legacy per-deployment records","rationale":"Completes criterion 4 for legacy tasks","evidence":"review artifact"}]}

@@ -127,6 +127,17 @@
    ],
    "seed": 20260901,
    "contains_real_data": false
+  },
+  {
+   "id": "review-effectiveness-golden",
+   "path": "src/agents/evals/review_effectiveness_golden.json",
+   "version": "2026-11-01",
+   "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
+   "purpose": "Seeded wrong, stale, unsupported and incomplete proposals plus correct controls for the offline human-review effectiveness test (AC-070); no real data.",
+   "used_by": [
+    "src/agents/tests/test_review_effectiveness.py"
+   ],
+   "contains_real_data": false
   }
  ],
  "open_items": [
