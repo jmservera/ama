@@ -9024,3 +9024,14 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   [API guide](../../src/api/README.md#loading-feedback-and-todays-briefing-531).
 * Local pinned-axe browser check and unit tests passed. Live employee-site
   verification (criterion 7) remains unmet; no assistive-technology claim.
+## [2026-11-01] observation | Intermittent workspace script load, Refs #524
+
+* Recorded a working hypothesis for the intermittent `/vendor/leaflet.js` failure:
+  replica cold start (default `apiMinReplicas` 0; live probe on
+  2026-11-01 timed out at 30 s; an initial `/healthz` took 24.016 s on
+  2026-10-31, a health-response latency, not a measured cold start). Local asset serving is
+  byte-complete with ETag and cache headers. Unconfirmed for the 2026-10-28
+  incident; no platform logs retrieved.
+* The retry was delivered by #527; release-URL reuse and the expanded tests came from #594 and #538. The authenticated live check
+  stays pending deploy of #616 and #617. Retry timeout (5 s) is shorter than
+  the observed latencies, logged as a follow-up. No source change.
