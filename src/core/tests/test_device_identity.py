@@ -337,6 +337,33 @@ class DeviceIdentityTests(unittest.TestCase):
         self.assertEqual(len(captured), 1)
         self.assertNotIn(SECRET, "".join(traceback.format_exception(captured[0])))
 
+    def test_plan_inside_except_does_not_chain_caller_secret(self) -> None:
+        captured: list[di.DeviceIdentityError] = []
+        try:
+            raise RuntimeError(SECRET)
+        except RuntimeError:
+            try:
+                di.plan("X", "owner-role", sensors())
+            except di.DeviceIdentityError as error:
+                captured.append(error)
+        self.assertEqual(len(captured), 1)
+        self.assertEqual(str(captured[0]), "INVALID_MANIFEST")
+        self.assertNotIn(SECRET, "".join(traceback.format_exception(captured[0])))
+
+    def test_credential_issued_during_cleanup_is_reported(self) -> None:
+        registry, store = FakeRegistry(), FakeStore()
+        done = di.provision(di.plan("run-001", "owner-role", sensors()), registry, store)
+        original = store.revoke
+
+        def revoke_and_reissue(reference: str) -> None:
+            original(reference)
+            store.issue("SYN-LATE", "run-001")
+
+        store.revoke = revoke_and_reissue  # type: ignore[method-assign]
+        with self.assertRaises(di.DeviceIdentityError) as ctx:
+            di.teardown(done, registry, store)
+        self.assertEqual(str(ctx.exception), "TEARDOWN_CREDENTIALS_REMAIN")
+
     def test_provision_inside_except_does_not_chain_caller_secret(self) -> None:
         registry, store = FakeRegistry(), FakeStore()
         manifest = di.plan("run-001", "owner-role", sensors())

@@ -98,12 +98,23 @@ class Manifest:
 
 def plan(run_id: str, credential_owner: str, sensors: Sequence[Mapping[str, object]]) -> Manifest:
     """Map `Selection.sensors()` output to one identity per stock home; no credentials yet."""
-    identities = tuple(
-        DeviceIdentity("SYN-" + str(s["sensor_id"]), str(s["sensor_id"]), str(s["home_id"]))
-        for s in sensors
-    )
-    manifest = Manifest(run_id, credential_owner, identities)
-    manifest.validate()
+    failure: DeviceIdentityError | None = None
+    manifest: Manifest | None = None
+    try:
+        identities = tuple(
+            DeviceIdentity("SYN-" + str(s["sensor_id"]), str(s["sensor_id"]), str(s["home_id"]))
+            for s in sensors
+        )
+        manifest = Manifest(run_id, credential_owner, identities)
+        manifest.validate()
+    except DeviceIdentityError as error:
+        failure = error
+    except Exception:
+        failure = DeviceIdentityError("INVALID_MANIFEST")
+    if failure is not None:
+        # Raised outside the handler so a caller's secret-bearing exception is never chained.
+        raise DeviceIdentityError(str(failure)) from None
+    assert manifest is not None
     return manifest
 
 
@@ -251,7 +262,7 @@ def _teardown_locked(
     leftover: list[str] = []
     try:
         remaining = sorted(owned.intersection(registry.list_run(run_id)))
-        leftover = sorted(set(references).intersection(store.run_references(run_id)))
+        leftover = sorted(store.run_references(run_id))
     except Exception:
         errors += 1
     if errors:
