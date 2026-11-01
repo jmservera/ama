@@ -61,8 +61,10 @@ class ScaleLoadReport(unittest.TestCase):
 
     def test_resources_are_released_when_login_fails(self) -> None:
         with patch.object(scale_load, "call", return_value=(500, {}, b"")):
-            with patch.object(scale_load.ThreadingHTTPServer,  # type: ignore[attr-defined]
-                               "server_close") as closed:
+            with patch.object(
+                scale_load.ThreadingHTTPServer,  # type: ignore[attr-defined]
+                "server_close",
+            ) as closed:
                 with self.assertRaises(RuntimeError):
                     scale_load.run(homes=10, sessions=1, rate=1, duration=1)
         closed.assert_called_once()
