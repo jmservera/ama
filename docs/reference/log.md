@@ -9315,3 +9315,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   marked as registered on main; three remain in unmerged pull requests. Updated
   the index row and made the checker apply each status to its own screen group.
 * Findings stay hypotheses until #155. No accessibility acceptance is claimed.
+
+## 2026-11-01 (atlas trace labels after merge of main)
+
+* Updated `research/ux/atlas-screen-trace.md` so `programme-queue`,
+  `technical-queue` and `quality-queue` are labelled as registered on main
+  (PR 662 and PR 656), restoring the atlas trace check that main's merges broke.
+* No accessibility acceptance is claimed.
