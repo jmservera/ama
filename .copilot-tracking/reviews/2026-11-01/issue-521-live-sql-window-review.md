@@ -24,3 +24,11 @@ Outcome: live scope satisfied; no authorisation exceeded; no blocker hit.
 * No billing/headroom was queried; the owner's explicit authorisation was relied on for the cost precondition.
 * Issue #521 criteria: criterion 4 (live apply and verification) is evidenced here; other criteria are not re-proven, so this PR uses `Refs #521` only.
 * The signed-in screenshot contains a synthetic address and was not retained.
+
+## Local RPI gate
+
+`python3 tools/rpi-checks.py --all` ran (receipt retained outside the checkout, failed). Result: BLOCKED on the
+`browser` group (required exact browser test execution evidence missing; the opt-in Chromium tests were skipped
+on this host) and the dependent `mssql` group. This is a host prerequisite gap on a documentation-only
+candidate, not a code failure. No fallback, skip token or protection change was used. The PR is therefore opened
+as a draft; the gate must be rerun on a host with the browser/SQL prerequisites before any merge decision.
