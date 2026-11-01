@@ -9016,6 +9016,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   of PR size and the 19-24 October slowdown cause are unmeasured. No
   workflow, setting, gate or source change was made.
 
+<<<<<<< HEAD
 ## [2026-11-01] update | Synthetic determinism replay audit (Refs #176)
 
 * Added a one-command replay audit for the in-repo synthetic generators and a
@@ -9023,6 +9024,16 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   [retrofit synthetic data README](./research/retrofit-synthetic-data/README.md).
 * The original private stock register generator remains absent, so the
   byte-identical and manifest criteria stay partially met. No index change.
+=======
+## [2026-11-01] refine | Briefing feedback guidance, Refs #531
+
+* Added a plain-language paragraph to Today's briefing saying how to correct
+  it, how a reason becomes audit-logged feedback and how to refresh, with a
+  unit test and an updated G15 row in the
+  [API guide](../../src/api/README.md#loading-feedback-and-todays-briefing-531).
+* Local pinned-axe browser check and unit tests passed. Live employee-site
+  verification (criterion 7) remains unmet; no assistive-technology claim.
+>>>>>>> origin/main
 ## [2026-11-01] observation | Regulatory evaluation gates re-verified, Refs #216
 
 * Re-ran the [#216 gates](../../src/agents/README.md#re-verification-2026-11-01) at
