@@ -340,10 +340,10 @@ const programmeFinanceBlockers = (c) => {
     return out;
   };
   for (const inv of invoices) {
-    if (inv.hold) found.push({ reason: `Invoice ${screenValue(inv.id)} is on payment hold: ${screenValue(inv.hold.reason)}.`,
-      owner: screenValue(inv.hold.name), next_action: "Release the hold through the permitted Finance review" });
-    if (inv.disposition === "Keep on hold" && !inv.hold) found.push({ reason: `Invoice ${screenValue(inv.id)} has a Finance decision to keep on hold.`,
-      owner: screenValue(inv.disposition_by), next_action: "Ask the Finance reviewer to revisit the hold decision" });
+    if (inv.hold) found.push({ reason: `Invoice ${screenValue(inv.id)} is on payment pause: ${screenValue(inv.hold.reason)}.`,
+      owner: screenValue(inv.hold.name), next_action: "Release the pause through the permitted Finance review" });
+    if (inv.disposition === "Keep on hold" && !inv.hold) found.push({ reason: `Invoice ${screenValue(inv.id)} has a Finance decision to keep the pause.`,
+      owner: screenValue(inv.disposition_by), next_action: "Ask the Finance reviewer to revisit the pause decision" });
     const decided = inv.disposition && inv.disposition !== "Keep on hold";
     if (!decided && inv.status === "Received") found.push({ reason: `Invoice ${screenValue(inv.id)} has not been matched yet; no match evidence is recorded.`,
       owner: "Unknown", next_action: "Run the invoice match through the permitted Finance review" });
@@ -356,8 +356,8 @@ const programmeFinanceBlockers = (c) => {
   return found;
 };
 function programmeDeliveryRow(c, orders, blockers) {
-  const gate = programmeGate(blockers, /Safety review|Shared building/i);
-  if (!Array.isArray(orders)) return programmeGateRow("Delivery", gate, "", "Work orders could not be loaded for your role.");
+  const steps = programmeGate(blockers, /Safety review|Shared building/i);
+  if (!Array.isArray(orders)) return programmeGateRow("Delivery", steps, "", "Work orders could not be loaded for your role.");
   const live = orders.filter((w) => w.state !== "Withdrawn");
   const revisions = programmeCurrentRevisions(c);
   const stale = live.filter((w) => {
@@ -370,7 +370,7 @@ function programmeDeliveryRow(c, orders, blockers) {
   const open = live.filter((w) => w.appointment_control?.status !== "Committed")
     .map((w) => ({ reason: `${screenValue(w.id)}: appointment ${screenValue(w.appointment_control?.status)}${(w.appointment_control?.missing || []).length ? ` (${w.appointment_control.missing.join("; ")})` : ""}.`,
       owner: "Unknown", next_action: "Agree and confirm the appointment" }));
-  return programmeGateRow("Delivery", gate.concat(stale, open), `${live.length} work order(s) with a committed appointment.`,
+  return programmeGateRow("Delivery", steps.concat(stale, open), `${live.length} work order(s) with a committed appointment.`,
     live.length ? null : "No active work order is recorded.");
 }
 function programmeGates(c, orders) {
@@ -410,9 +410,9 @@ registerRoleScreen({
     const blocked = rows.filter((r) => r[1].startsWith("Blocked"));
     return screenPanel(`Connected view for ${c.id}`,
       h("p", {}, "Technical, resident, delivery, quality and finance states are shown independently. One clear state never clears another."),
-      blocked.length ? screenUnknown(`${blocked.length} of 5 gates are blocked: ${blocked.map((r) => r[0]).join(", ")}.`,
+      blocked.length ? screenUnknown(`${blocked.length} of 5 steps are blocked: ${blocked.map((r) => r[0]).join(", ")}.`,
         blocked[0][3], blocked[0][4]) : h("p", {}, "No blocker is recorded, which does not confirm readiness."),
-      screenTable("Same-home gate states", ["Gate", "State", "Meaning", "Owner", "Next action"], rows));
+      screenTable("Same-home step states", ["Step", "State", "Meaning", "Owner", "Next action"], rows));
   }
 });
 const technicalRoles = ["Retrofit Coordinator", "Quality Inspector", "Building Safety Liaison", ...screenManagers];
