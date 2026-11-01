@@ -5,7 +5,8 @@ stored, no record changed. Each reply cites the recorded facts it used.
 """
 
 import re
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
+from functools import partial
 from typing import Any
 
 VALUE_LIMIT = 240
@@ -117,18 +118,34 @@ class Reply:
         self.cites: list[str] = []
         self.groups: list[tuple[str, list[str]]] = []
         self._seen = 0
+        self._capture: list[str] | None = None
 
     def fact(self, path: str) -> str:
         if path in self.facts:
             cite = f"{self.case_id}/{path}"
-            if cite not in self.cites:
+            if self._capture is not None:
+                if cite not in self._capture:
+                    self._capture.append(cite)
+            elif cite not in self.cites:
                 self.cites.append(cite)
         return self.facts.get(path, "")
 
-    def say(self, line: str) -> None:
+    def say(self, line: str, cites: list[str] | None = None) -> None:
         self.lines.append(line)
-        self.groups.append((line, self.cites[self._seen :]))
+        if cites is None:
+            cites = self.cites[self._seen :]
+        else:
+            self.cites.extend(c for c in cites if c not in self.cites)
+        self.groups.append((line, cites))
         self._seen = len(self.cites)
+
+    def cited(self, build: Callable[[], str]) -> tuple[str, list[str]]:
+        """Run build and return its text with only the facts it used."""
+        self._capture = []
+        try:
+            return build(), self._capture
+        finally:
+            self._capture = None
 
     def render(self) -> tuple[str, list[str]]:
         """Text and citations bounded together so every shown line keeps its support."""
@@ -231,8 +248,8 @@ def _blocked(r: Reply) -> None:
         r.say("The case record does not say why this case is stopped. " + _who_to_ask(r))
 
 
-def _funding_missing(r: Reply) -> list[str]:
-    missing = []
+def _funding_missing(r: Reply) -> list[tuple[str, list[str]]]:
+    missing: list[tuple[str, list[str]]] = []
     blockers = [
         i
         for i in _indexes(r.facts, "work.blockers")
@@ -240,20 +257,27 @@ def _funding_missing(r: Reply) -> list[str]:
         or "funding" in r.facts.get(f"work.blockers.{i}.step", "").casefold()
     ]
     if r.facts.get("funding_ok") == "not confirmed" and not blockers:
-        r.fact("funding_ok")
-        missing.append("Funding has not been confirmed on the record.")
+        missing.append(
+            r.cited(
+                partial(
+                    _fact_line, r, "funding_ok", "Funding has not been confirmed on the record."
+                )
+            )
+        )
     docs = r.facts.get("documents", "none recorded")
     recorded = {d.strip() for d in docs.split(",")}
     absent = [kind for kind in FUNDING_DOCUMENTS if kind not in recorded]
+    cites: list[str] = []
     for k in sorted(r.facts):
         kind = r.facts[k]
         if k.endswith(".missing") and k.startswith("checklist.") and kind not in absent:
-            r.fact(k)
+            _, used = r.cited(partial(r.fact, k))
+            cites.extend(used)
             absent.append(kind)
     if absent:
-        r.fact("documents")
-        missing.append("No recorded document for: " + ", ".join(absent) + ".")
-    missing.extend(_blocker_line(r, i) for i in blockers)
+        _, used = r.cited(partial(r.fact, "documents"))
+        missing.append(("No recorded document for: " + ", ".join(absent) + ".", cites + used))
+    missing.extend(r.cited(partial(_blocker_line, r, i)) for i in blockers)
     return missing
 
 
@@ -275,21 +299,24 @@ def _funding(r: Reply) -> None:
     missing = _funding_missing(r)
     if missing:
         r.say("What is missing:")
-        for line in missing:
-            r.say(f"* {line}")
+        for line, cites in missing:
+            r.say(f"* {line}", cites)
     r.say("A person confirms funding. This chat cannot start, approve or record it.")
 
 
+def _fact_line(r: Reply, path: str, template: str) -> str:
+    return r.fact(path) and template.format(r.fact(path))
+
+
 def _missing(r: Reply) -> None:
-    lines = [r.fact(f"gate.{i}") for i in range(8) if f"gate.{i}" in r.facts]
-    lines += [
-        f"{r.fact(k)} is not on the checklist." for k in sorted(r.facts) if k.endswith(".missing")
-    ]
-    lines += [r.fact(k) for k in sorted(r.facts) if k.startswith("technical_missing.")]
-    if lines:
+    items = [(f"gate.{i}", "{}") for i in range(8) if f"gate.{i}" in r.facts]
+    items += [(k, "{} is not on the checklist.") for k in sorted(r.facts) if k.endswith(".missing")]
+    items += [(k, "{}") for k in sorted(r.facts) if k.startswith("technical_missing.")]
+    if items:
         r.say("Recorded as missing or still open:")
-        for line in lines:
-            r.say(f"* {line}")
+        for path, template in items:
+            line, cites = r.cited(partial(_fact_line, r, path, template))
+            r.say(f"* {line}", cites)
     else:
         r.say("No missing item is recorded on this case card.")
     r.say("Items not shown on the card are not known to this chat. " + _who_to_ask(r))
