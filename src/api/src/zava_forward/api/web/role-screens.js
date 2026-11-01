@@ -195,7 +195,7 @@ registerRoleScreen({
     const work = c.work;
     const blockers = work?.blockers || [];
     const handoff = work?.handoff;
-    const returns = c.returns || [];
+    const returns = (c.returns || []).filter((r) => r.event_type !== "advance");
     return h("div", {},
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only view for data stewards, performance analysts and digital operators. It does not replay, correct, resolve or retry anything, and it keeps the original source values. Source: desk research, not observed behaviour."),

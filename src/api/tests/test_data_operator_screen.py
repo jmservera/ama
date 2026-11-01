@@ -40,7 +40,12 @@ const s = context.__s;
 const noHandoff = {...c, returns: [ret], work: {...c.work, handoff: undefined}};
 const noReturn = {...c, returns: [], work: {...c.work, reason: "Handoff reason Z"}};
 const reopen = {...c, returns: [{...ret, reopened: true, reason: "Reopen reason"}]};
-console.log(JSON.stringify({roles: s.roles, tree: s.render(c), empty: s.render({id: "C-2"}),
+const adv = {...ret, event_type: "advance", reason: "Forward reason",
+  receiving_owner: {name: "Forward Owner"}};
+const forwardOnly = {...c, returns: [adv]};
+const mixed = {...c, returns: [adv, ret]};
+console.log(JSON.stringify({forwardOnly: s.render(forwardOnly), mixed: s.render(mixed),
+  roles: s.roles, tree: s.render(c), empty: s.render({id: "C-2"}),
   noHandoff: s.render(noHandoff), noReturn: s.render(noReturn), reopen: s.render(reopen)}));
 """
 
@@ -107,6 +112,16 @@ class DataOperatorScreen(unittest.TestCase):
             self.assertIn(phrase, handed)
         self.assertNotIn("Returned to", handed)
         self.assertIn("Reopened", json.dumps(out["reopen"]))
+
+    def test_advance_events_are_not_returns(self) -> None:
+        out = run()
+        forward = json.dumps(out["forwardOnly"])
+        self.assertIn("No return or reopen is recorded", forward)
+        self.assertNotIn("Forward Owner", forward)
+        mixed = json.dumps(out["mixed"])
+        self.assertIn("Receiver Y", mixed)
+        self.assertNotIn("Forward Owner", mixed)
+        self.assertNotIn("Recorded returns and reopens", forward)
 
 
 if __name__ == "__main__":

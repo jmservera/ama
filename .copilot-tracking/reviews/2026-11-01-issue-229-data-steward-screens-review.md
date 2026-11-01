@@ -18,3 +18,5 @@ Execution: executed once, self-review against acceptance criteria. Outcome: Part
 ## PR review amendment (2026-11-01)
 
 The Copilot review finding that returns and handoffs were conflated was valid and is fixed with tests; no criterion status above changes. The review was not repeated.
+
+A second Copilot finding was valid: `Store.advance()` writes `event_type: "advance"` records into `returns`, so forward moves showed as "Returned". The screen now filters advance events and keeps return and reopen records; forward-only and mixed-history regression tests were added. No criterion status changes and the review was not repeated.

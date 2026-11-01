@@ -5,3 +5,8 @@
 * Divergence: none. No server, role or endpoint change; integration run state shown as Unknown because no source exists.
 * Validation: unittest (data operator, asset board, role screens, accessibility baseline, design system, workspace scripts) pass; ruff check and format pass; mypy reports no errors in touched files (remaining errors are pre-existing missing optional stubs/playwright). `test_static_assets` needs a different test path and was not run.
 * Amendment (PR review thread on `role-screens.js`): the return queue no longer treats a handoff as a return. The screen now has a "Returns and reopens" panel from `c.returns` (type, stages, reason, source and version, next action, receiving owner) and a separate "Handoff and exception queue" panel with handoff state. Tests added for a return without a handoff, a handoff without a return, and a reopen.
+
+## PR review amendment 2 (2026-11-01)
+
+* `role-screens.js`: the returns table excludes `event_type: "advance"` records.
+* `test_data_operator_screen.py`: added forward-only and mixed-history cases.
