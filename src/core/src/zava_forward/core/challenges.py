@@ -203,8 +203,9 @@ class ChallengeRegister:
             raise ValueError("This challenge has no hazard referral.")
         if _text(owner, "Handing-off owner") != rec["owner"]:
             raise PermissionError("Only the named human owner can confirm a hazard handoff.")
+        proof = _text(evidence, "Hazard handoff evidence")
         referral["status"] = "handed_off"
-        referral["handoff_evidence"] = _text(evidence, "Hazard handoff evidence")
+        referral["handoff_evidence"] = proof
         rec["history"].append({"status": rec["status"], "note": "Hazard handoff evidenced."})
         return deepcopy(rec)
 

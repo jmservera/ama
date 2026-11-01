@@ -6,3 +6,7 @@
 * Critique: executed once, self-critique; compatible finding applied (referral must not depend on review status). Verdict: proceed.
 * Validation: unittest `test_challenges`, ruff check, ruff format --check, mypy. CI is the evidence.
 * PR wording: `Refs #220`, naming criterion 5 as unmet.
+
+## Correction cycle (PR 693)
+
+* Validate handoff evidence before mutating the referral; extend the rejection test to assert the referral stays listed and `referred_on_receipt`.
