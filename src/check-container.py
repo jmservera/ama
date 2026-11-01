@@ -36,7 +36,9 @@ assert not Path('/data/zavaforward.json').exists()
 
 
 def docker(*args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
-    result = subprocess.run(["docker", *args], check=False, capture_output=True, text=True)
+    result = subprocess.run(
+        ["docker", *args], check=False, capture_output=True, text=True
+    )
     if check and result.returncode:
         raise RuntimeError(f"docker {args}: {result.stdout}\n{result.stderr}")
     return result
@@ -46,7 +48,9 @@ def check_image(image: str, project: str) -> None:
     metadata = json.loads(docker("image", "inspect", image).stdout)[0]["Config"]
     assert metadata["User"] == "10001:10001", metadata["User"]
     assert not metadata.get("Entrypoint"), metadata.get("Entrypoint")
-    assert metadata["Cmd"] == ["python", "-m", f"zava_forward.{project}"], metadata["Cmd"]
+    assert metadata["Cmd"] == ["python", "-m", f"zava_forward.{project}"], metadata[
+        "Cmd"
+    ]
     writable = [
         "--tmpfs=/tmp:rw,nosuid,nodev",
         "--tmpfs=/state:rw,nosuid,nodev,uid=10001,gid=10001",
@@ -59,10 +63,14 @@ def check_image(image: str, project: str) -> None:
         ([*CONTROLS, "--user=0:0"], "UID and GID must both be 10001"),
         ([*CONTROLS, "--user=10001:0"], "UID and GID must both be 10001"),
     ):
-        result = docker("run", "--rm", *flags, *writable, image, "python", "-c", PROBE, check=False)
+        result = docker(
+            "run", "--rm", *flags, *writable, image, "python", "-c", PROBE, check=False
+        )
         assert result.returncode != 0, (flags, result.returncode, result.stderr)
         assert expected in result.stderr, result
-    docker("run", "--rm", image, "python", "-c", "import os; assert os.getuid() == 10001")
+    docker(
+        "run", "--rm", image, "python", "-c", "import os; assert os.getuid() == 10001"
+    )
     if project == "agents":
         docker(
             "run",
@@ -83,7 +91,9 @@ def check_image(image: str, project: str) -> None:
     with TemporaryDirectory(prefix="zf-container-") as directory:
         seed = Path(directory)
         seed.chmod(0o755)
-        (seed / "zavaforward.json").write_text('{"cases":[],"staff":[]}', encoding="utf-8")
+        (seed / "zavaforward.json").write_text(
+            '{"cases":[],"staff":[]}', encoding="utf-8"
+        )
         (seed / "zavaforward.json").chmod(0o644)
         for flags in (CONTROLS, []):
             check_api(image, flags, writable, seed)
@@ -111,12 +121,17 @@ def check_api(image: str, flags: list[str], writable: list[str], seed: Path) -> 
                     assert response.status == 200
                 break
             except (URLError, ConnectionError, TimeoutError) as error:
-                if docker("inspect", "--format={{.State.Running}}", container).stdout != "true\n":
+                if (
+                    docker("inspect", "--format={{.State.Running}}", container).stdout
+                    != "true\n"
+                ):
                     logs = docker("logs", container)
                     raise AssertionError(f"{logs.stdout}\n{logs.stderr}") from error
                 time.sleep(0.5)
         else:
-            raise AssertionError(f"API health timeout: {docker('logs', container).stdout}")
+            raise AssertionError(
+                f"API health timeout: {docker('logs', container).stdout}"
+            )
         with urlopen(f"{url}/zava-logo.png", timeout=3) as response:
             assert response.headers["Content-Type"] == "image/png"
             assert (
@@ -138,8 +153,12 @@ def check_api(image: str, flags: list[str], writable: list[str], seed: Path) -> 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("project", choices=("api", "agents", "orchestrator", "importer"))
+    parser.add_argument(
+        "project", choices=("api", "agents", "orchestrator", "importer")
+    )
     parser.add_argument("image")
     arguments = parser.parse_args()
     check_image(arguments.image, arguments.project)
-    print(f"{arguments.project}: Docker controls, negative probes and compatible startup PASS")
+    print(
+        f"{arguments.project}: Docker controls, negative probes and compatible startup PASS"
+    )
