@@ -117,6 +117,26 @@ class TemplateTests(unittest.TestCase):
             self.assertNotIn("value", secret)
             self.assertNotRegex(secret["keyVaultUrl"], r"/secrets/[^/]+/[0-9a-f]{32}")
 
+    def test_demo_chat_privacy_refs_are_set_without_changing_the_contract(self):
+        env = {e["name"]: e for e in self.app["properties"]["template"]["containers"][0]["env"]}
+        params = self.template["parameters"]
+        record = "docs/reference/research/chat-demo-storage-approval-2026-11-01.md#"
+        expected = {
+            "CHAT_DPIA_REF": ("chatDpiaRef", "docs/reference/research/chat-memory-dpia.md"),
+            "CHAT_LAWFUL_BASIS_REF": ("chatLawfulBasisRef", record + "lawful-basis"),
+            "CHAT_NOTICE_REF": ("chatNoticeRef", record + "notice"),
+            "CHAT_RETENTION_REF": ("chatRetentionRef", record + "retention"),
+        }
+        for name, (param, value) in expected.items():
+            self.assertEqual(env[name]["value"], f"[parameters('{param}')]")
+            self.assertEqual(params[param]["defaultValue"], value)
+        self.assertEqual(env["CHAT_RETENTION_DAYS"]["value"], "[string(parameters('chatRetentionDays'))]")
+        self.assertEqual(params["chatRetentionDays"]["defaultValue"], 30)
+        self.assertEqual(
+            self.app["properties"]["template"]["scale"], {"minReplicas": 0, "maxReplicas": 1}
+        )
+        self.assertEqual(len(self.app["properties"]["configuration"]["secrets"]), 2)
+
     def test_roles_are_secret_scoped_and_image_is_digest_guarded(self):
         text = json.dumps(self.template)
         self.assertEqual(text.count("4633458b-17de-408a-b874-0445c86b69e6"), 1)

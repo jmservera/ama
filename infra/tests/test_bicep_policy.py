@@ -629,6 +629,60 @@ class BicepPolicyTests(unittest.TestCase):
                 compiled = json.loads(json.loads(result.stdout)["parametersJson"])
                 self.assertEqual(compiled["parameters"]["apiMinReplicas"]["value"], 0)
 
+    def test_chat_privacy_env_wiring_is_conditional_and_api_only(self) -> None:
+        apps = module_template(self.main, "containerapps")
+        for template in (apps, self.main):
+            for name in ("chatDpiaRef", "chatLawfulBasisRef", "chatNoticeRef", "chatRetentionRef"):
+                self.assertEqual(template["parameters"][name]["defaultValue"], "")
+            self.assertEqual(template["parameters"]["chatRetentionDays"]["defaultValue"], 0)
+        containers = {
+            r["properties"]["template"]["containers"][0]["name"]: r
+            for r in resources(apps)
+            if r["type"] == "Microsoft.App/containerApps"
+        }
+        api_env = json.dumps(containers["api"]["properties"]["template"]["containers"][0]["env"])
+        self.assertIn("if(not(variables('chatEnabled')), createArray(), createArray(", api_env)
+        for name in (
+            "CHAT_DPIA_REF",
+            "CHAT_LAWFUL_BASIS_REF",
+            "CHAT_NOTICE_REF",
+            "CHAT_RETENTION_REF",
+            "CHAT_RETENTION_DAYS",
+        ):
+            self.assertEqual(api_env.count(f"createObject('name', '{name}'"), 1)
+        self.assertNotIn("CHAT_", json.dumps(containers["agents"]["properties"]["template"]))
+        self.assertEqual(
+            containers["api"]["properties"]["template"]["scale"]["minReplicas"],
+            "[parameters('apiMinReplicas')]",
+        )
+
+    def test_test_parameters_record_demo_chat_privacy_refs(self) -> None:
+        result = subprocess.run(
+            ["az", "bicep", "build-params", "--file", str(INFRA / "main.test.bicepparam"), "--stdout"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        compiled = json.loads(json.loads(result.stdout)["parametersJson"])
+        chat = {k: v["value"] for k, v in compiled["parameters"].items() if k.startswith("chat")}
+        self.assertEqual(chat["chatRetentionDays"], 30)
+        record = INFRA.parent / "docs/reference/research/chat-demo-storage-approval-2026-11-01.md"
+        text = record.read_text()
+        for key, heading in (
+            ("chatLawfulBasisRef", "Lawful basis"),
+            ("chatNoticeRef", "Notice"),
+            ("chatRetentionRef", "Retention"),
+        ):
+            path, _, anchor = chat[key].partition("#")
+            self.assertEqual(path, "docs/reference/research/" + record.name)
+            self.assertEqual(anchor, heading.lower().replace(" ", "-"))
+            self.assertIn(f"\n## {heading}\n", text)
+        self.assertTrue((INFRA.parent / chat["chatDpiaRef"]).is_file())
+        self.assertEqual(compiled["parameters"]["apiMinReplicas"]["value"], 0)
+        for name in ("main.bicepparam", "main.pilot.example.bicepparam"):
+            self.assertNotIn("chat", (INFRA / name).read_text().lower())
+
     def test_api_replicas_probes_and_private_edge_contract(self) -> None:
         apps = module_template(self.main, "containerapps")
         api = next(r for r in resources(apps) if r["type"] == "Microsoft.App/containerApps")
