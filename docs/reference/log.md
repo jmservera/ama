@@ -9064,6 +9064,18 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   acceptance and owner confirmation of agent names remain unproven; no
   source change was made.
 
+## [2026-11-01] update | Chat and memory provider position and DPO decision pack (Refs #163)
+
+* Retrieved the Microsoft Learn Foundry data, privacy and security page
+  (page dated 2026-06-05) and recorded the documented provider position in
+  `research/chat-memory-dpia.md` and `chat_privacy.MODEL_PROVIDER_POSITION`,
+  marked as vendor documentation, not DPO-accepted. Added a blank decision pack
+  (D1 to D8) for the DPO and Legal.
+* Unmet: lawful basis, staff notice, DPIA decision and retention (no period
+  set), provider terms acceptance, deployment type and transfer position. No
+  legal advice or approval is implied.
+
+
 ## [2026-11-01] update | Scale fixture per-record is_synthetic (#167)
 
 * `scale_fixture` v1.3.0 adds `is_synthetic=true` to every home and event
