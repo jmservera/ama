@@ -114,7 +114,10 @@ def check_register_labels(path: Path) -> dict[str, object]:
     rows = labelled = 0
     with path.open(encoding="utf-8-sig", newline="") as handle:
         reader = csv.DictReader(handle)
-        missing = "is_synthetic" not in (reader.fieldnames or [])
+        names = reader.fieldnames or []
+        if len(names) != len(set(names)):
+            raise ValueError("Register requires unique CSV column names")
+        missing = "is_synthetic" not in names
         for row in reader:
             rows += 1
             if str(row.get("is_synthetic", "")).strip().lower() in ("true", "1"):
