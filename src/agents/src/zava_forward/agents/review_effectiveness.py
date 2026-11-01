@@ -301,8 +301,19 @@ def workflow_only(spec: dict[str, Any], workdir: str) -> dict[str, Any]:
     )
 
 
+def load_spec(golden: Path = GOLDEN) -> dict[str, Any]:
+    """Load the golden spec; reviewer codes resolve to staff emails (none stored publicly)."""
+    spec: dict[str, Any] = json.loads(golden.read_text(encoding="utf-8"))
+    staff = {OWNER["code"]: OWNER["email"], OTHER["code"]: OTHER["email"]}
+    authority = spec["reviewer_authority"]
+    authority["authorised_reviewers"] = [
+        staff[code] for code in authority.pop("authorised_reviewer_codes")
+    ]
+    return spec
+
+
 def run_review_test(golden: Path = GOLDEN) -> dict[str, Any]:
-    spec = json.loads(golden.read_text(encoding="utf-8"))
+    spec = load_spec(golden)
     panels = {}
     for name, panel in PANELS.items():
         with tempfile.TemporaryDirectory() as tmp:

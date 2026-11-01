@@ -7,7 +7,7 @@
   "reviewer_authority": {
     "status": "provisional, pending OQ-017 owner decision",
     "task": "summary",
-    "authorised_reviewers": ["owner@eval.example"],
+    "authorised_reviewer_codes": ["EV-01"],
     "required_evidence": ["reviewer", "source_hashes", "source_reason"],
     "note": "Constructed for the offline test. Real competent-review authority is an OQ-017 decision by Sponsor, Programme, Safety, DPO/Legal and Assurance."
   },

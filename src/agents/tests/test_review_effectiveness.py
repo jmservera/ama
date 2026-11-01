@@ -100,7 +100,7 @@ class ReviewEffectivenessTests(unittest.TestCase):
         import tempfile
         from unittest import mock
 
-        spec = json.loads(re_.GOLDEN.read_text())
+        spec = re_.load_spec()
         with mock.patch.dict(os.environ, {"ZF_AI": "off"}), tempfile.TemporaryDirectory() as tmp:
             with self.assertRaises(RuntimeError):
                 re_.run_panel("competent", re_.competent, spec, tmp)
@@ -111,7 +111,7 @@ class ReviewEffectivenessTests(unittest.TestCase):
         self.assertEqual(facts["Extra support detail"], "Large print")
 
     def test_unsourced_rejection_of_defect_is_not_credited(self) -> None:
-        spec = json.loads(re_.GOLDEN.read_text())
+        spec = re_.load_spec()
 
         def sloppy(prop, facts, rec, required):  # type: ignore[no-untyped-def]
             return (
@@ -126,7 +126,7 @@ class ReviewEffectivenessTests(unittest.TestCase):
         self.assertEqual(r["uncorrected_defects"], r["defects"])
 
     def test_unrelated_resolving_citation_does_not_credit_rejection(self) -> None:
-        spec = json.loads(re_.GOLDEN.read_text())
+        spec = re_.load_spec()
 
         def sloppy(prop, facts, rec, required):  # type: ignore[no-untyped-def]
             if prop["defect"]:
