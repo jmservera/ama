@@ -209,6 +209,16 @@ class EntraRegistrationTests(unittest.TestCase):
         self.assertIn("open", ENTRA["contractorIdentity"]["status"])
         self.assertTrue(all(s["owner"] for s in ENTRA["manualSteps"]))
 
+    def test_contractor_guest_design_is_enforced_by_code(self) -> None:
+        design = ENTRA["contractorIdentity"]
+        self.assertEqual(design["guestAssignableRoles"], ["Contractor"])
+        self.assertTrue(ENTRA["appRoleAssignmentRequired"])
+        self.assertNotIn("Contractor", {r["key"] for r in ENTRA["capabilityRoles"]})
+        self.assertTrue(design["decisionOwner"])
+        for name in design["memberOnlyInitializers"]:
+            text = (ROOT / "scripts" / name).read_text(encoding="utf-8")
+            self.assertIn('"Member"', text, name)
+
 
 if __name__ == "__main__":
     unittest.main()

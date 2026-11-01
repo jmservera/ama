@@ -1348,7 +1348,7 @@ not establish tenant administrator authority or operational approval.
 Open items:
 
 * Owner sign-off of the matrix review (reviewer line is pending).
-* Contractor B2B guest model (ADR 0002, #116) is proposed, not confirmed; tenant guest and cross-tenant policy are manual tenant steps.
+* Contractor B2B guest model (ADR 0002, #116) is proposed, not confirmed; tenant guest and cross-tenant policy are manual tenant steps. The design is recorded in `entra/app-registration.json` (`contractorIdentity`): guests may hold only the `Contractor` app role, assignment is required, and the staff, roster and application-admin initializers accept enabled `Member` users only. `test_identity_rbac` checks these properties; the tenant owner's confirmation remains open.
 * Drop `db_ddladmin` from the api identity after schema migration moves out of app start.
 * Live `az role assignment list` comparison against a deployed group was not run here.
 
