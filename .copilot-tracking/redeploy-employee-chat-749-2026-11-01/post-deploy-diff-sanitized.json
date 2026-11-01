@@ -1,0 +1,24 @@
+{
+ "ca-cutover-test-demo-api": {
+  "revision": {
+   "before": "ca-cutover-test-demo-api--0000008",
+   "after": "ca-cutover-test-demo-api--0000009"
+  },
+  "image": {
+   "before": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:7aa2a317a1fe52ddb22ee72a6489ed7addaab245728f99dc047c8c2ab7b25289",
+   "after": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:72dfb10326dc1e8c9c0eefe2970b6e11490847bb028d1fd6ddfbb699795e57bc"
+  }
+ },
+ "ca-cutover-test-api": {
+  "revision": {
+   "before": "ca-cutover-test-api--0000002",
+   "after": "ca-cutover-test-api--0000003"
+  },
+  "image": {
+   "before": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:7aa2a317a1fe52ddb22ee72a6489ed7addaab245728f99dc047c8c2ab7b25289",
+   "after": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:72dfb10326dc1e8c9c0eefe2970b6e11490847bb028d1fd6ddfbb699795e57bc"
+  }
+ },
+ "ca-resident-demo": {},
+ "ca-cutover-test-agents": {}
+}
