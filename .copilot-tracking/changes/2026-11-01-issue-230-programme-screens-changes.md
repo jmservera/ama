@@ -21,3 +21,9 @@ Review-thread amendments (PR 662, round 3):
 * `taskqueues.py`: returned sender falls back to the legacy `by` field, still through `text()`.
 * Tests: `test_programme_screen.py` and `test_taskqueues.py` extended; pass, ruff clean.
 * CI: `activation` failure is the daily AIC guardrail stopping to preserve API quota (transient, not code); rerun requested.
+
+Round 4 review-thread amendments (PR 662):
+
+* `role-screens.js`: gate rows now list every blocker owner and next action, using `responsible_role` when no named owner is recorded; Quality shows the returned defect reason, description and named owner with a fix-and-reinspect action; a matched invoice with disposition Keep on hold and no hold flag is a Finance blocker owned by `disposition_by`.
+* `test_programme_screen.py`: new test covers all three; passes. ruff clean; mypy shows only the pre-existing missing-stub errors; full api suite has 3 unrelated law-store errors.
+* `git merge origin/main`: already up to date.

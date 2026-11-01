@@ -19,3 +19,4 @@ Research disposition: executed (repository inspection). Planning Readiness: Read
 
 * WCAG 2.2 conformance is not proven by node tests; browser keyboard and axe validation is follow-up (#151/#155).
 * Correction cycle 2: see merge-main changes; finance evidence-missing rules.
+* Correction cycle 3: preserve blocker roles, returned-quality defect detail, kept-hold disposition.

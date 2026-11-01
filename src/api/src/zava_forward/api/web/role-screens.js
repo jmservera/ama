@@ -248,9 +248,16 @@ const programmeFunnel = (report) => {
       rows.map((r) => [r.stage, r.entries, r.exits, r.returns, r.reopens, r.denominator])));
 };
 const programmeGate = (blockers, pattern) => blockers.filter((b) => pattern.test(b.step));
+const programmeJoin = (values) => [...new Set(values.filter(Boolean))].join("; ") || "Unknown";
+const programmeOwner = (b) => {
+  const named = b.owner && b.owner !== "Unknown" ? b.owner : null;
+  const role = b.responsible_role && b.responsible_role !== "Unknown" ? b.responsible_role : null;
+  return named && role && named !== role ? `${named} (${role})` : named || role || "Unknown";
+};
 const programmeGateRow = (name, blocked, clear, unknown) => {
   if (blocked.length) return [name, "Blocked",
-    blocked.map((b) => b.reason).join(" "), blocked[0].owner, blocked[0].next_action];
+    blocked.map((b) => b.reason).join(" "), programmeJoin(blocked.map(programmeOwner)),
+    programmeJoin(blocked.map((b) => b.next_action))];
   if (unknown) return [name, "Blocked: evidence missing", unknown, "Unknown", "Record the missing evidence through the permitted review"];
   return [name, "No recorded blocker", `${clear} This is not a pass; a named person decides readiness.`, "Unknown", "Unknown"];
 };
@@ -260,10 +267,20 @@ function programmeQualityRow(c) {
   const wanted = measures.map((m) => m.trim()).filter(Boolean);
   const open = live.filter((r) => r.state !== "Accepted" && r.state !== "Handed over");
   const missing = wanted.filter((m) => !live.some((r) => r.measure === m));
-  const reasons = open.map((r) => `${r.measure}: ${r.state}, not yet independently accepted.`)
+  const returned = open.filter((r) => r.state === "Returned");
+  const reasons = open.map((r) => r.state === "Returned"
+    ? `${r.measure}: Returned${r.defect ? ` for ${screenValue(r.defect.reason)}${r.defect.description ? ` (${screenValue(r.defect.description)})` : ""}` : ""}; not accepted until the defect is fixed and reinspected.`
+    : `${r.measure}: ${r.state}, not yet independently accepted.`)
     .concat(missing.map((m) => `${m}: no quality check recorded.`));
   if (!live.length && !wanted.length) reasons.push("No quality check is recorded.");
-  if (reasons.length) return ["Quality", "Blocked", reasons.join(" "), "Unknown", "Record the missing check or independent acceptance"];
+  if (reasons.length) {
+    const owners = returned.map((r) => r.defect?.owner).filter(Boolean);
+    const actions = [];
+    if (returned.length) actions.push("Fix the returned defect, then record the fix for independent reinspection");
+    if (open.length > returned.length) actions.push("Complete the independent inspection or acceptance");
+    if (missing.length || (!live.length && !wanted.length)) actions.push("Record the missing quality check");
+    return ["Quality", "Blocked", reasons.join(" "), programmeJoin(owners), programmeJoin(actions)];
+  }
   return ["Quality", "No recorded blocker", "Every measure has an accepted check. This is not a pass; a named person decides readiness.", "Unknown", "Unknown"];
 }
 const programmeFinanceBlockers = (c) => {
@@ -274,6 +291,8 @@ const programmeFinanceBlockers = (c) => {
   for (const inv of c.finance?.invoices || []) {
     if (inv.hold) found.push({ reason: `Invoice ${screenValue(inv.id)} is on payment hold: ${screenValue(inv.hold.reason)}.`,
       owner: screenValue(inv.hold.name), next_action: "Release the hold through the permitted Finance review" });
+    if (inv.disposition === "Keep on hold" && !inv.hold) found.push({ reason: `Invoice ${screenValue(inv.id)} has a Finance decision to keep on hold.`,
+      owner: screenValue(inv.disposition_by), next_action: "Ask the Finance reviewer to revisit the hold decision" });
     const decided = inv.disposition && inv.disposition !== "Keep on hold";
     if (!decided && inv.status === "Received") found.push({ reason: `Invoice ${screenValue(inv.id)} has not been matched yet; no match evidence is recorded.`,
       owner: "Unknown", next_action: "Run the invoice match through the permitted Finance review" });

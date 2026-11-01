@@ -55,8 +55,10 @@ vm.runInContext(host + "\n;globalThis.__s = roleScreens.get('programme-queue');"
   console.log(JSON.stringify({roles: s.roles, before, filteredRows, resetRows, defaultRows: 2,
     blocked: gates({id: "C-9", work: {blockers: [
       {step: "Final checks: funding", reason: "Funding has not been confirmed.", owner: "Owen", next_action: "Check funding"},
+      {step: "Technical review", reason: "Survey missing.", owner: "Unknown", responsible_role: "Retrofit Coordinator", next_action: "Complete survey"},
+      {step: "Stock review", reason: "Stock unchecked.", owner: "Unknown", responsible_role: "Quality Inspector", next_action: "Check stock"},
       {step: "Final checks: resident decision", reason: "No decision.", owner: "Rae", next_action: "Ask resident"}]},
-      technical: null, quality: [{state: "Returned", measure: "Loft"}]}),
+      technical: null, quality: [{state: "Returned", measure: "Loft", defect: {reason: "Gaps in insulation", owner: "Ivy Installer"}}]}),
     clear: gates({id: "C-8", work: {blockers: []}, technical: {},
       measures: "Loft", quality: [{state: "Accepted", measure: "Loft"}], funding_ok: true, finance: {budget: {status: "Approved"}}}, done),
     legacyOnly: gates({id: "C-4", work: {blockers: []}, technical: {}, appointments: [{outcome: "Booked", date: "2026-11-02"}],
@@ -65,7 +67,8 @@ vm.runInContext(host + "\n;globalThis.__s = roleScreens.get('programme-queue');"
       quality: [{state: "Accepted", measure: "Loft"}], finance: {budget: {status: "Approved"}, invoices: [
         {id: "INV-1", hold: {name: "Fin Officer", reason: "Query"}, exceptions: []},
         {id: "INV-2", hold: null, disposition: null, exceptions: [{}]},
-        {id: "INV-3", hold: null, disposition: "Accept for payment", exceptions: [{}]}]}}, done),
+        {id: "INV-3", hold: null, disposition: "Accept for payment", exceptions: [{}]},
+        {id: "INV-4", hold: null, disposition: "Keep on hold", disposition_by: "Fiona Finance", exceptions: []}]}}, done),
     proposed: gates({id: "C-2", work: {blockers: []}, technical: {}, funding_ok: true, measures: "Loft",
       quality: [{state: "Accepted", measure: "Loft"}], finance: {budget: {status: "Proposed"}}}, done),
     unmatched: gates({id: "C-10", work: {blockers: []}, technical: {}, measures: "Loft",
@@ -162,6 +165,22 @@ class ProgrammeScreen(unittest.TestCase):
         self.assertIn("not been matched", unmatched[unmatched.index('"Finance"') :])
         withheld = json.dumps(out["withheld"])
         self.assertIn("Blocked: evidence missing", withheld[withheld.index('"Finance"') :])
+
+    def test_blocker_roles_returned_quality_and_kept_hold_are_preserved(self) -> None:
+        out = run()
+        blocked = json.dumps(out["blocked"])
+        self.assertIn("Retrofit Coordinator", blocked)
+        self.assertIn("Quality Inspector", blocked)
+        self.assertIn("Complete survey", blocked)
+        self.assertIn("Check stock", blocked)
+        quality = blocked[blocked.index('"Quality"') :]
+        self.assertIn("Gaps in insulation", quality)
+        self.assertIn("Ivy Installer", quality)
+        self.assertIn("fixed and reinspected", quality)
+        finance = json.dumps(out["held"])
+        finance = finance[finance.index('"Finance"') :]
+        self.assertIn("INV-4 has a Finance decision to keep on hold", finance)
+        self.assertIn("Fiona Finance", finance)
 
     def test_funnel_unknown_when_coordinator_unavailable(self) -> None:
         self.assertIn("Unknown", str(run(coordinator="down")["before"]))

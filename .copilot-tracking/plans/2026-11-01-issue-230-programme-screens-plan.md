@@ -11,3 +11,4 @@
 
 Critique (inline, once): keep the slice read-only and reuse existing helpers; do not add a planner role that the codebase lacks (record as an assumption). Accepted.
 * Correction cycle 2: restore main-side files; fix two finance gate cases with tests.
+* Correction cycle 3: three further thread fixes with tests.

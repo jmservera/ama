@@ -18,3 +18,7 @@ Post-review amendment: five Copilot review threads on PR 662 were validated and 
 
 Four Copilot findings (Delivery from legacy appointments, Finance holds/exceptions, Finance budget status, legacy return sender) were valid and fixed with tests; see the changes record. No new open findings from this addendum. The original review outcome is unchanged.
 * Correction cycle 2 (review threads): restored main-side files; finance gate fixes (unmatched invoice, withheld budget).
+
+## Addendum: PR 662 round 4 review threads
+
+Three Copilot findings (blocker owners/roles, returned quality detail, kept-hold disposition) were valid and fixed with tests. The original review outcome is unchanged; no second review was run.
