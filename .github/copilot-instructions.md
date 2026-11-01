@@ -69,9 +69,13 @@ also require the relevant existing tests: for example, from `src/api`,
 use `python3 tools/rename-zava-tests.py` from the repository root. Use the
 component guides and existing workflows rather than infer that no tests exist.
 
-Every final RPI candidate, including documentation-only work, also requires the
-[complete local gate](../src/README.md#local-rpi-gate) before publication:
-commit the implementation and dated original RPI evidence, then run
+Every final RPI candidate, including documentation-only work, requires a local
+gate before publication. The focused tier (`python3 tools/rpi-checks.py
+--changed`) is the default. The [complete local gate](../src/README.md#local-rpi-gate)
+is required only for big features, releases, infrastructure, deployment, SQL
+and security-sensitive changes (owner decision D4, 2026-11-01). Independent
+exact-head review, hosted CI and human approvals remain required for every tier.
+For the complete gate: commit the implementation and dated original RPI evidence, then run
 `python3 tools/rpi-checks.py --all --base <reviewed-main-sha>
 --out <new-external-directory>`. Keep the final receipt external and verify it
 with `--verify-receipt <receipt.json> --base <current-origin-main-sha>` immediately
