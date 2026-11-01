@@ -5,7 +5,7 @@ loopback SQL Server whose sa password is in ZF_SQL_PASSWORD (port in ZF_SQL_PORT
 ZF_SQL_PORT=... ZF_SQL_PASSWORD=... python -m checks.resident_demo_browser_check
 
 It creates and drops its own database, uses a fake test password only and never reaches Azure.
-The SQL fixture authorization ends on November 1 independently of the application ceiling.
+The SQL fixture authorization shares the application authority end (February 1, 2027).
 The server runs with the real SQL view, the real HTTP app and the real __Host- cookies on the
 loopback origin, so a browser that refused those cookies would fail this check.
 """
