@@ -8,3 +8,9 @@
 Divergence: none from plan. No planner role exists, so none was added.
 
 Validation: new and touched tests pass; ruff check, ruff format --check pass for touched files; mypy passes for touched files. Full `src/api` discovery shows 4 failures in untouched areas (missing playwright module, operator suspension); not caused by this change.
+
+Review-thread amendments (PR 662):
+
+* `taskqueues.py`: `returned` is built independently of the primary reason, so a blocker or pending handoff keeps the return metadata; `advance` events are excluded; the current `case.resident_update.owner` is projected as `resident_update_owner`.
+* `role-screens.js`: queue shows the recorded handoff state, not an inferred pending label; resident-update owner reads the current commitment; Quality gate derives from non-superseded records per measure (submitted, awaiting reinspection and unchecked measures stay Blocked); funnel requests `view=all`.
+* Tests: overlap, advance exclusion and the new gate and state cases added to `test_taskqueues.py` and `test_programme_screen.py`; both pass, ruff clean.

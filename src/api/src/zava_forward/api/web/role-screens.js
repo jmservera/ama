@@ -205,12 +205,12 @@ const programmeRow = (row) => {
   const sent = work.handoff?.sender;
   return [
     `${row.id}: ${row.address || "Address unknown"}`,
-    work.returned ? work.returned.reason : work.handoff ? "Not returned. Pending handoff." : "Not returned",
+    work.returned ? work.returned.reason : work.handoff ? `Not returned. Handoff state: ${screenValue(work.handoff.state)}.` : "Not returned",
     work.returned ? work.returned.sender : sent,
     work.owner,
     work.handoff ? work.handoff.proposed_receiver : "No handoff proposed",
     work.handoff ? work.handoff.chase_owner : "No handoff recorded",
-    work.handoff ? work.handoff.resident_update_owner : "No handoff recorded"
+    work.resident_update_owner || "Unknown"
   ];
 };
 const programmeHeadings = ["Home", "Return reason", "Sender", "Current owner",
@@ -254,11 +254,21 @@ const programmeGateRow = (name, blocked, clear, unknown) => {
   if (unknown) return [name, "Blocked: evidence missing", unknown, "Unknown", "Record the missing evidence through the permitted review"];
   return [name, "No recorded blocker", `${clear} This is not a pass; a named person decides readiness.`, "Unknown", "Unknown"];
 };
+function programmeQualityRow(c) {
+  const live = (c.quality || []).filter((r) => r.state !== "Superseded");
+  const measures = Array.isArray(c.measures) ? c.measures : String(c.measures || "").split(",");
+  const wanted = measures.map((m) => m.trim()).filter(Boolean);
+  const open = live.filter((r) => r.state !== "Accepted" && r.state !== "Handed over");
+  const missing = wanted.filter((m) => !live.some((r) => r.measure === m));
+  const reasons = open.map((r) => `${r.measure}: ${r.state}, not yet independently accepted.`)
+    .concat(missing.map((m) => `${m}: no quality check recorded.`));
+  if (!live.length && !wanted.length) reasons.push("No quality check is recorded.");
+  if (reasons.length) return ["Quality", "Blocked", reasons.join(" "), "Unknown", "Record the missing check or independent acceptance"];
+  return ["Quality", "No recorded blocker", "Every measure has an accepted check. This is not a pass; a named person decides readiness.", "Unknown", "Unknown"];
+}
 function programmeGates(c) {
   const blockers = c.work?.blockers || [];
   const booked = (c.appointments || []).find((a) => a.outcome === "Booked");
-  const quality = c.quality || [];
-  const returnedQuality = quality.filter((r) => r.state === "Returned");
   const budget = c.finance?.budget;
   return [
     programmeGateRow("Technical", programmeGate(blockers, /technical|Stock review/i),
@@ -267,10 +277,7 @@ function programmeGates(c) {
       "No resident decision blocker is recorded.", null),
     programmeGateRow("Delivery", programmeGate(blockers, /Safety review|Shared building/i),
       booked ? `Visit booked for ${screenValue(booked.date)}.` : "", booked ? null : "No booked visit is recorded."),
-    returnedQuality.length
-      ? ["Quality", "Blocked", returnedQuality.map((r) => `${r.measure} returned for remediation.`).join(" "), "Unknown", "Record remediation evidence"]
-      : programmeGateRow("Quality", [], quality.length ? "Quality checks are recorded." : "",
-        quality.length ? null : "No quality check is recorded."),
+    programmeQualityRow(c),
     programmeGateRow("Finance", programmeGate(blockers, /funding/i),
       budget ? `Budget status: ${screenValue(budget.status)}.` : "",
       budget || c.funding_ok ? null : "No confirmed funding or budget is visible to your role.")
@@ -282,7 +289,7 @@ registerRoleScreen({
   roles: [...screenManagers, "Retrofit Coordinator"],
   async overview(signal) {
     const page = await api("/api/cases?view=all&limit=50&offset=0", undefined, signal);
-    const report = await api("/api/coordinator", undefined, signal).catch(() => null);
+    const report = await api("/api/coordinator?view=all", undefined, signal).catch(() => null);
     return h("div", {},
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only view of recorded work. Chase and update responsibility are shown separately. Nothing here sends, assigns or changes a record. Source: desk research, not observed behaviour; validation remains open.")),

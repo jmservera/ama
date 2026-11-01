@@ -334,21 +334,25 @@ def context(
         )
         source = origin("handoff")["source"]
         recorded_at = handoff.get("offered_at") or UNKNOWN
-    elif not selected and case.get("returns"):
-        returned = case["returns"][-1]
-        if returned.get("to_stage") == case["stage"]:
-            reason, next_action = text(returned.get("reason")), text(returned.get("next_action"))
+    returned = (case.get("returns") or [None])[-1]
+    if (
+        returned
+        and returned.get("event_type") != "advance"
+        and returned.get("to_stage") == case["stage"]
+    ):
+        returned_view = dict(
+            reason=text(returned.get("reason")),
+            sender=text((returned.get("actor") or {}).get("name")),
+            from_stage=returned.get("from_stage") or UNKNOWN,
+            to_stage=returned.get("to_stage") or UNKNOWN,
+            at=returned.get("at") or UNKNOWN,
+            next_action=text(returned.get("next_action")),
+        )
+        if not selected and not pending:
+            reason, next_action = returned_view["reason"], returned_view["next_action"]
             source, version = origin("returns")["source"], returned.get("version") or UNKNOWN
             evidence = text(returned.get("source"))
-            recorded_at = returned.get("at") or UNKNOWN
-            returned_view = dict(
-                reason=reason,
-                sender=text((returned.get("actor") or {}).get("name")),
-                from_stage=returned.get("from_stage") or UNKNOWN,
-                to_stage=returned.get("to_stage") or UNKNOWN,
-                at=recorded_at,
-                next_action=next_action,
-            )
+            recorded_at = returned_view["at"]
     if not next_action:
         next_action = f"Ask {owner} to record the next action."
     matched = [
@@ -392,4 +396,5 @@ def context(
         )
         if handoff
         else None,
+        resident_update_owner=(case.get("resident_update") or {}).get("owner") or UNKNOWN,
     )

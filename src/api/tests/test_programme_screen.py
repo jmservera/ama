@@ -15,14 +15,14 @@ const role = process.argv[2];
 const returned = {id: "C-1", address: "1 Test Street", work: {owner: "Owen Owner", queues: [],
   returned: {reason: "Missing survey", sender: "Quinn Sender"}, handoff: null}};
 const pending = {id: "C-2", address: "2 Test Street", work: {owner: "Owen Owner", queues: ["unowned"],
-  returned: null, handoff: {sender: "Sam Sender", proposed_receiver: "Rae Receiver",
+  resident_update_owner: "Una Updater", returned: null, handoff: {state: "Offered", sender: "Sam Sender", proposed_receiver: "Rae Receiver",
   chase_owner: "Sam Sender", resident_update_owner: "Una Updater"}}};
 const plain = {id: "C-3", address: "3 Test Street", work: {owner: "Owen Owner", queues: [], returned: null, handoff: null}};
 const context = vm.createContext({
   URLSearchParams, Intl, AbortController, Date,
   routeController: new AbortController(), me: {user: {role}},
   api: async (path) => path.startsWith("/api/coordinator")
-    ? (process.argv[3] === "down" ? Promise.reject(new Error("down"))
+    ? (!path.includes("view=all") ? Promise.reject(new Error("scope")) : process.argv[3] === "down" ? Promise.reject(new Error("down"))
       : {as_of: "2026-10-01", audit_integrity: "Intact",
         funnel: [{stage: "Funding check", entries: 3, exits: 2, returns: 1, reopens: 0, denominator: 9}]})
     : {total: 3, items: [returned, pending, plain]},
@@ -57,7 +57,11 @@ vm.runInContext(host + "\n;globalThis.__s = roleScreens.get('programme-queue');"
       {step: "Final checks: resident decision", reason: "No decision.", owner: "Rae", next_action: "Ask resident"}]},
       technical: null, quality: [{state: "Returned", measure: "Loft"}]}),
     clear: gates({id: "C-8", work: {blockers: []}, technical: {}, appointments: [{outcome: "Booked", date: "2026-11-02"}],
-      quality: [{state: "Accepted", measure: "Loft"}], funding_ok: true, finance: {budget: {status: "Approved"}}})}));
+      measures: "Loft", quality: [{state: "Accepted", measure: "Loft"}], funding_ok: true, finance: {budget: {status: "Approved"}}}),
+    submitted: gates({id: "C-7", work: {blockers: []}, measures: "Loft", quality: [{state: "Submitted", measure: "Loft"}]}),
+    fixed: gates({id: "C-6", work: {blockers: []}, measures: "Loft", quality: [{state: "Fixed, awaiting reinspection", measure: "Loft"}]}),
+    partial: gates({id: "C-5", work: {blockers: []}, measures: "Loft, Heat pump",
+      quality: [{state: "Accepted", measure: "Loft"}, {state: "Superseded", measure: "Heat pump"}]})}));
 })().catch(e => {console.error(e); process.exitCode = 1;});
 """  # noqa: E501
 
@@ -111,6 +115,20 @@ class ProgrammeScreen(unittest.TestCase):
         self.assertEqual(out["filteredRows"], 1)
         self.assertEqual(out["resetRows"], 2)
         self.assertIn("no record is changed", str(out["before"]))
+
+    def test_quality_gate_stays_blocked_until_every_measure_is_accepted(self) -> None:
+        out = run()
+        self.assertIn("Offered", str(out["before"]))
+        self.assertNotIn("Not returned. Pending handoff", str(out["before"]))
+        for key, text in (
+            ("submitted", "Submitted"),
+            ("fixed", "Fixed, awaiting reinspection"),
+            ("partial", "Heat pump: no quality check recorded"),
+        ):
+            node = json.dumps(out[key])
+            row = node[node.index('"Quality"') :]
+            self.assertIn(text, row)
+            self.assertIn("Blocked", row)
 
     def test_funnel_unknown_when_coordinator_unavailable(self) -> None:
         self.assertIn("Unknown", str(run(coordinator="down")["before"]))

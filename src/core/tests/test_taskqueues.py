@@ -280,7 +280,12 @@ class QueueDefinitions(unittest.TestCase):
         restricted = evaluate(self.case, reason_ok=False)
         self.assertNotIn("SENTINEL", json.dumps(restricted))
         self.assertEqual(restricted["returned"]["sender"], taskqueues.HELD)
-        self.assertIsNone(evaluate(self.case, handoff=dict(state="Offered"))["returned"])
+        pending = evaluate(self.case, handoff=dict(state="Offered"))
+        self.assertEqual(pending["returned"]["sender"], "Quinn Inspector")
+        self.assertIn("unowned", pending["queues"])
+        self.case["returns"][0]["event_type"] = "advance"
+        self.assertIsNone(evaluate(self.case)["returned"])
+        self.case["returns"][0].pop("event_type")
         handoff = evaluate(self.case, handoff=dict(state="Offered", from_name="Sam"))["handoff"]
         self.assertEqual(handoff["sender"], "Sam")
 
