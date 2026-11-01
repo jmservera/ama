@@ -55,6 +55,10 @@ UNSTORED_NOTE = (
     "This reply uses rules only. Nothing you typed was saved and no record was changed. "
     "A person decides next steps. Chat storage is not approved yet."
 )
+RULES_NOTE = (
+    "This reply uses rules only because the assistant is not available. "
+    "No record was changed. A person decides next steps."
+)
 WITHHELD = (
     "That reply was withheld because it asked for an action or exposed content "
     "this role cannot see. Ask a case question instead."
@@ -649,6 +653,13 @@ class ChatPanel:
                             kind, (text, cites) = "answer", (redact(parsed[0])[0], parsed[1])
         elif sources:
             kind, text = "fallback", FALLBACK
+        if kind == "fallback" and text == FALLBACK and case_id:
+            facts = iso.case_facts(iso.current_user(user), case_id)
+            if facts:
+                grounded = {f"{case_id}/{path}": value for path, value in facts.items()}
+                kind, body, cites = grounded_answer(case_id, normalise_policy_text(masked), facts)
+                text = redact(body)[0] + "\n" + RULES_NOTE
+                sources = {key: value for key, value in grounded.items() if key in cites}
         return finish(kind, text, cites, model_name)
 
 

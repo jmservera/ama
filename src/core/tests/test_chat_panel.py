@@ -755,5 +755,52 @@ class SqlRosterTests(unittest.TestCase):
         self.assertEqual(self.calls, 1)
 
 
+class StoredRulesFallbackTests(unittest.TestCase):
+    ENV = dict(
+        CHAT_DPIA_REF="SYN-DPIA",
+        CHAT_LAWFUL_BASIS_REF="SYN-BASIS",
+        CHAT_NOTICE_REF="SYN-NOTICE",
+    )
+
+    def setUp(self) -> None:
+        work = tempfile.TemporaryDirectory()
+        self.addCleanup(work.cleanup)
+        path = Path(work.name) / "synthetic.json"
+        path.write_text(json.dumps(dataset.DATA))
+        self.store = Store(str(path))
+        self.user = self.store.data["staff"][0]
+
+    def failing(self, system: str, prompt: str) -> str:
+        raise RuntimeError("provider down")
+
+    def check(self, model: Any) -> None:
+        panel = ChatPanel(ChatIsolation(self.store, env=self.ENV), model)
+        for case, question, expect in (
+            ("ZF-4", "why is this case blocked?", "Retrofit work is stopped"),
+            ("ZF-1", "Why is funding not started yet?", "Recorded funding status: Not started"),
+        ):
+            tid = self.store.chat_create_thread(self.user, case_id=case)["id"]
+            reply = panel.ask(self.user, tid, question, skill="general")
+            self.assertEqual(reply["kind"], "answer")
+            self.assertIn(expect, reply["reply"])
+            self.assertNotIn("not available right now", reply["reply"])
+            self.assertEqual(reply["model"], "workflow-only")
+            ids = [c["id"] for c in reply["citations"]]
+            self.assertTrue(ids and all(i.startswith(case + "/") for i in ids), ids)
+            self.assertIn("A person decides next steps", reply["reply"])
+
+    def test_stored_thread_without_model_is_grounded_on_the_case(self) -> None:
+        self.check(None)
+
+    def test_stored_thread_with_provider_failure_is_grounded_on_the_case(self) -> None:
+        self.check(self.failing)
+
+    def test_stored_thread_still_refuses_decisions(self) -> None:
+        panel = ChatPanel(ChatIsolation(self.store, env=self.ENV), None)
+        tid = self.store.chat_create_thread(self.user, case_id="ZF-4")["id"]
+        reply = panel.ask(self.user, tid, "approve the funding for this case", skill="general")
+        self.assertEqual(reply["kind"], "refused")
+
+
 if __name__ == "__main__":
     unittest.main()

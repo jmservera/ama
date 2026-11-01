@@ -803,7 +803,7 @@ class ConsumptionApi(unittest.TestCase):
                     self.response_status = 500 if mode == "provider-failure" else 200
                     calls = len(self.requests)
                     report_before = self.service.consumption.report(start=START, end=END, as_of=END)
-                    answer = panel.ask(self.pm, thread["id"], "What stage is this case?")
+                    answer = panel.ask(self.pm, thread["id"], "Tell me a story.")
                 self.assertEqual(len(self.requests), calls + 1)
                 receipt = answer["consumption"]
                 latest = [r for r in self.records() if r["kind"] == "reserved"][-1]
@@ -1120,9 +1120,7 @@ class ConsumptionApi(unittest.TestCase):
                     ) -> dict[str, Any]:
                         if path == "chat":
                             assert panel is not None and thread is not None
-                            return dict(
-                                panel.ask(fixture.pm, thread["id"], "What stage is this case?")
-                            )
+                            return dict(panel.ask(fixture.pm, thread["id"], "Tell me a story."))
                         if path == "priority":
                             return dict(store.ai_priority(fixture.pm, n=1))
                         return dict(
@@ -1349,11 +1347,11 @@ class ConsumptionApi(unittest.TestCase):
                         else nullcontext(),
                     ):
                         if fault == "other-writer":
-                            answer = panel.ask(fixture.pm, thread["id"], "What stage is this case?")
+                            answer = panel.ask(fixture.pm, thread["id"], "Tell me a story.")
                             self.assertEqual(answer["kind"], "answer")
                         else:
                             with self.assertRaisesRegex(RuntimeError, fault):
-                                panel.ask(fixture.pm, thread["id"], "What stage is this case?")
+                                panel.ask(fixture.pm, thread["id"], "Tell me a story.")
                     messages = store.chat_resume(fixture.pm, thread["id"])["messages"]
                     outputs = [r for r in fixture.records() if r["kind"] == "output"]
                     if fault == "other-writer":

@@ -159,7 +159,8 @@ class GoldenRunTests(unittest.TestCase):
     def test_comparison_with_the_non_ai_path_is_recorded(self) -> None:
         s = self.report["summary"]
         self.assertGreater(s["answer_turns"], 0)
-        self.assertEqual(s["non_ai_panel_answers"], 0)
+        # Stored threads fall back to the rules-based case answer when AI is unavailable (#749).
+        self.assertGreater(s["non_ai_panel_answers"], 0)
         self.assertEqual(s["card_could_answer"], s["answer_turns"])
         self.assertIn("not permitted", self.report["evidence"]["benefit_claim"])
 
