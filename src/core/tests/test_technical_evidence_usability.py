@@ -14,7 +14,8 @@ def doc(kind: str, **extra: object) -> dict[str, object]:
 
 class TechnicalEvidenceUsability(unittest.TestCase):
     def evidence(self, c: dict[str, object]) -> set[str]:
-        return {m["item"] for m in missing_items(c, usable_only=True) if m["item"].startswith("Evidence:")}
+        items = missing_items(c, usable_only=True)
+        return {m["item"] for m in items if m["item"].startswith("Evidence:")}
 
     def test_pending_scan_does_not_satisfy_evidence(self) -> None:
         c = case(*(doc(k, scan=dict(status="pending")) for k in Store.EVIDENCE))

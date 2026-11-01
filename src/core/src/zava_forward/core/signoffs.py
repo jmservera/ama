@@ -5,6 +5,8 @@ person. A changed design version marks only the affected downstream sign-offs
 "Needs reassessment" so a person looks again; it never re-signs or clears
 anything for them. The role mapping is a proposal for the programme to confirm.
 """
+from typing import Any
+
 from . import controls as k, stock
 
 SIGNOFFS = {
@@ -18,7 +20,7 @@ TECH_ACTIONS = ("design_submit", "design_change", "signoff_give", "signoff_retur
 EVIDENCE_OWNER = "Grants and Evidence Officer"
 
 
-def _missing_evidence(c, usable_only=False):
+def _missing_evidence(c: dict[str, Any], usable_only: bool = False) -> list[str]:
     from .store import Store
     if usable_only:
         # Uploads count only once they have passed the content scan; generated documents are exempt.
@@ -26,7 +28,7 @@ def _missing_evidence(c, usable_only=False):
     return [x["kind"] for x in Store.checklist(c) if not x["present"]]
 
 
-def missing_items(c, usable_only=False):
+def missing_items(c: dict[str, Any], usable_only: bool = False) -> list[dict[str, str]]:
     """What stops the technical stage passing, each item assigned to a competent role."""
     t = c.get("technical")
     queries = [dict(item=reason, assigned_to="Stock query owner") for reason in stock.blockers(c)]

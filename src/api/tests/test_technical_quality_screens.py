@@ -186,7 +186,7 @@ class QualityQueue(unittest.TestCase):
             self.assertNotIn(control, tags(out["tree"]))
 
     def test_incomplete_evidence_blocks_handover(self) -> None:
-        cases = {
+        cases: dict[str, dict[str, Any]] = {
             "unrecorded": {
                 "id": "C",
                 "measures": ["Loft insulation", "Heat pump"],
