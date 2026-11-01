@@ -2402,10 +2402,19 @@ browsers). Suites ran concurrently on a 4-CPU host while a foreign complete gate
 | Importer suite | 39 tests, 0.4s, OK, exit 0 |
 | Ruff check, ruff format --check | All five projects passed |
 | mypy | Clean: core 190, agents 26, API 139, orchestrator 16, importer 10 source files |
-| PERF-440 selector x3 | OK x3; first page 115-194 ms and keyset page 70-153 ms at load1 4.7-6.0 against the unchanged 1500 ms |
+| PERF-440 selector x3 | OK x3; first page 115-194 ms and keyset page 70-153 ms at load1 4.7-6.0 against the unchanged 1500 ms. The original per-repeat filtered-page timings were not captured; the retained full core run logged filtered page 157 ms (8577 matches, load1 8.21). A same-head re-measure (not the original repeats; load1 9.5-10.0, 4 CPUs) gave filtered page 113/282/123 ms, first page 96/92/68 ms, keyset 72/109/76 ms, all OK against 1500 ms |
 
-Skipped tests (529) are not passes. Logs stay in `/tmp/ama-440-ckpt3` and are
-not retained.
+Command record (no raw logs committed). Working directories are relative to the
+repository root; no benchmark-specific environment variables were set, only the
+venv `/tmp/ama-440-ckpt3` (Python, pip only, editable installs):
+
+* Suites per project: `cd src/<project> && python -m unittest discover -s tests -q`, with `PYTHONPATH=tests:../core/tests` for agents, orchestrator and importer and `PYTHONPATH=../core/tests:../agents/tests` for API (core needs no extra path).
+* Static checks per project: `ruff check .`, `ruff format --check .`, `mypy`.
+* PERF-440 selector: `cd src/core/tests && python -m unittest -v test_sqlreads.Scale.test_sql_reads_at_60000`, three sequential runs.
+* Load context: host of 4 CPUs, load1 reported by the test's own timing line.
+
+Skipped tests (529) are not passes. Raw logs stay in `/tmp/ama-440-ckpt3` and
+are not retained.
 
 Not run: disposable SQL Server parity, Docker/non-root contracts, Chromium
 harnesses and the complete native gate (foreign heavy lock; focused tier). They
