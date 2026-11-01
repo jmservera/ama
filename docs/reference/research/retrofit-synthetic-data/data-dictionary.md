@@ -249,7 +249,8 @@ against the official pages on 2026-11-01; the boundaries entry also needs the
 OS copyright/database-right acknowledgement, whose year stays provisional. Null
 dates and provisional wording remain explicit; a Git commit date is not a
 retrieval date. The strict source audit returns nonzero for these three entries
-until the owner supplies retrieval dates. Exercise Legal, Compliance and DPO owner
+until the owner supplies all three retrieval dates and confirms the OS
+acknowledgement year for the boundaries entry. Exercise Legal, Compliance and DPO owner
 Juan Manuel Servera retains interpretation/approval; real owners and sources
 remain a gap before operational reliance.
 
