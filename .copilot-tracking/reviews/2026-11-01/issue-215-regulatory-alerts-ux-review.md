@@ -17,3 +17,7 @@ Review executed once, self-review of the diff (no independent reviewer available
 ## PR wording
 
 `Refs #215`, naming unmet criteria 3 (manual and assistive-technology assessment) and 5 (staff comprehension).
+
+## Copilot review follow-up
+
+Both threads valid and fixed: strict colour-contrast assertion is now opt-in (regulatory scans only), with mocked scan tests. No further Review executed; hosted CI and human review remain pending.

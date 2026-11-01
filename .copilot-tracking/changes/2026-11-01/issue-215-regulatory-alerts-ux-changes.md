@@ -20,3 +20,8 @@ ms.date: 2026-11-01
 ## Divergence
 
 An initial scroll-into-view change was tried and removed; it did not address the cause.
+
+## Review feedback (PR 640 Copilot threads)
+
+* `scan()` in `src/api/checks/regulatory_ux_check.py` gained an opt-in `strict_contrast` parameter (default off) so other harnesses importing it, such as the resident assistant check with recorded `color-contrast` incompletes, are not aborted. All regulatory scans pass `strict_contrast=True`.
+* Added mocked scan tests in `test_regulatory_ux_check.py`: contrast incomplete raises when strict, other incompletes and clean results pass, and contrast incompletes are only reported when not strict. 8 tests OK; ruff check and format pass.
