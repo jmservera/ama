@@ -14,11 +14,23 @@ from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import Store
 from zava_forward.core.store import ConflictError, GateError
 
-STAFF = [dict(code="RLO-01", name="Sam Example", email="sam@example.test", role="Resident Liaison Officer"),
-         dict(code="PM-01", name="Pam Lead", email="pam@example.test", role="Retrofit Programme Manager"),
-         dict(code="QI-01", name="Quin Inspect", email="quin@example.test", role="Quality Inspector"),
-         dict(code="QI-02", name="Quil Other", email="quil@example.test", role="Quality Inspector"),
-         dict(code="CON-01", name="Kim Builder", email="kim@example.test", role="Contractor", contractor="Test Ltd")]
+STAFF = [
+    dict(
+        code="RLO-01", name="Sam Example", email="sam@example.test", role="Resident Liaison Officer"
+    ),
+    dict(
+        code="PM-01", name="Pam Lead", email="pam@example.test", role="Retrofit Programme Manager"
+    ),
+    dict(code="QI-01", name="Quin Inspect", email="quin@example.test", role="Quality Inspector"),
+    dict(code="QI-02", name="Quil Other", email="quil@example.test", role="Quality Inspector"),
+    dict(
+        code="CON-01",
+        name="Kim Builder",
+        email="kim@example.test",
+        role="Contractor",
+        contractor="Test Ltd",
+    ),
+]
 SAM, PAM, QUIN, QUIL = STAFF[:4]
 EVIDENCE = {lab: "seen and photographed" for lab in checklist_for("Loft insulation")["items"]}
 
@@ -45,21 +57,32 @@ class Flows:
         return self.store.detail(cid)["quality"][0]
 
     def submit(self, user=SAM, cid="ZF-1", by="Install Team"):
-        return self.store.submit_quality(user, cid, "Loft insulation", by, "Installer", EVIDENCE, context_revision=1)
+        return self.store.submit_quality(
+            user, cid, "Loft insulation", by, "Installer", EVIDENCE, context_revision=1
+        )
 
     # ---- quality acceptance
     def test_submit_needs_positive_evidence_for_every_check(self):
         partial = dict(EVIDENCE)
         partial.pop(next(iter(partial)))
         with self.assertRaises(ValueError):
-            self.store.submit_quality(SAM, "ZF-1", "Loft insulation", "Install Team", "Installer", partial)
+            self.store.submit_quality(
+                SAM, "ZF-1", "Loft insulation", "Install Team", "Installer", partial
+            )
         with self.assertRaises(ValueError):
-            self.store.submit_quality(SAM, "ZF-1", "Not a measure", "Install Team", "Installer", EVIDENCE)
+            self.store.submit_quality(
+                SAM, "ZF-1", "Not a measure", "Install Team", "Installer", EVIDENCE
+            )
         with self.assertRaises(ValueError):
-            self.store.submit_quality(SAM, "ZF-1", "Loft insulation", "Install Team", "Made up", EVIDENCE)
+            self.store.submit_quality(
+                SAM, "ZF-1", "Loft insulation", "Install Team", "Made up", EVIDENCE
+            )
         self.submit()
         r = self.rec()
-        self.assertEqual((r["state"], r["checklist_version"]), ("Submitted", CHECKLISTS["Loft insulation"]["version"]))
+        self.assertEqual(
+            (r["state"], r["checklist_version"]),
+            ("Submitted", CHECKLISTS["Loft insulation"]["version"]),
+        )
         with self.assertRaises(ValueError):
             self.submit()
         self.assertIn("quality_submitted", self.actions())
@@ -71,7 +94,15 @@ class Flows:
             self.store.accept_quality(QUIN, "ZF-1", 0)
         with self.assertRaises(PermissionError):
             self.store.accept_quality(SAM, "ZF-1", 0)
-        self.store.submit_quality(QUIL, "ZF-2", "Loft insulation", "Quil Other", "Our own inspection", EVIDENCE, context_revision=1)
+        self.store.submit_quality(
+            QUIL,
+            "ZF-2",
+            "Loft insulation",
+            "Quil Other",
+            "Our own inspection",
+            EVIDENCE,
+            context_revision=1,
+        )
         with self.assertRaises(PermissionError):
             self.store.accept_quality(QUIL, "ZF-2", 0)
         self.store.accept_quality(PAM, "ZF-2", 0)
@@ -91,10 +122,15 @@ class Flows:
             self.store.return_quality(QUIN, "ZF-1", 0, "Gap at eaves", "", "")
         with self.assertRaises(PermissionError):
             self.store.return_quality(SAM, "ZF-1", 0, "Gap", "Gap", "Test Ltd")
-        self.store.return_quality(QUIN, "ZF-1", 0, "Gap at eaves", "Insulation blocks vent", "Test Ltd")
+        self.store.return_quality(
+            QUIN, "ZF-1", 0, "Gap at eaves", "Insulation blocks vent", "Test Ltd"
+        )
         self.assertEqual(self.rec()["defect"]["owner"], "Test Ltd")
-        for bad in (lambda: self.store.accept_quality(QUIN, "ZF-1", 0), lambda: self.store.hand_over_quality(SAM, "ZF-1", 0, "x", True),
-                    lambda: self.store.reinspect_quality(QUIN, "ZF-1", 0, "pass")):
+        for bad in (
+            lambda: self.store.accept_quality(QUIN, "ZF-1", 0),
+            lambda: self.store.hand_over_quality(SAM, "ZF-1", 0, "x", True),
+            lambda: self.store.reinspect_quality(QUIN, "ZF-1", 0, "pass"),
+        ):
             with self.assertRaises(ValueError):
                 bad()
         self.store.record_fix(SAM, "ZF-1", 0, "Test Ltd fitter", "SYN eaves photo 1")
@@ -112,8 +148,14 @@ class Flows:
         self.store.hand_over_quality(SAM, "ZF-1", 0, "Guarantee and guide given", True)
         self.store.add_aftercare(SAM, "ZF-1", 0, "Resident called: all fine")
         r = self.rec()
-        self.assertEqual((r["state"], len(r["aftercare"]), r["handover"]["resident_told"]), ("Handed over", 1, True))
-        self.assertEqual([h["to_state"] for h in r["history"]][:3], ["Submitted", "Returned", "Fixed, awaiting reinspection"])
+        self.assertEqual(
+            (r["state"], len(r["aftercare"]), r["handover"]["resident_told"]),
+            ("Handed over", 1, True),
+        )
+        self.assertEqual(
+            [h["to_state"] for h in r["history"]][:3],
+            ["Submitted", "Returned", "Fixed, awaiting reinspection"],
+        )
         for a in ("quality_returned", "quality_fixed", "quality_handover", "quality_aftercare"):
             self.assertIn(a, self.actions())
         self.assertTrue(self.store.verify_audit())
@@ -142,16 +184,22 @@ class Flows:
     def test_quality_current_actor_all_writes(self):
         self.submit()
         before, audit = copy.deepcopy(self.store.cases["ZF-1"]), list(self.store.audit_entries())
-        for actor in (dict(QUIN, email="unknown@example.test"), dict(QUIN, code="forged"),
-                      dict(QUIN, role="Retrofit Programme Manager"), STAFF[4]):
+        for actor in (
+            dict(QUIN, email="unknown@example.test"),
+            dict(QUIN, code="forged"),
+            dict(QUIN, role="Retrofit Programme Manager"),
+            STAFF[4],
+        ):
             for call in self.quality_calls(actor):
                 with self.assertRaises(PermissionError):
                     call()
                 self.assertEqual(self.store.cases["ZF-1"], before)
                 self.assertEqual(list(self.store.audit_entries()), audit)
         if hasattr(self.store, "db"):
-            self.store.db.execute("UPDATE staff SET body=? WHERE email=?",
-                                 (json.dumps(dict(QUIN, role="Contractor")), QUIN["email"]))
+            self.store.db.execute(
+                "UPDATE staff SET body=? WHERE email=?",
+                (json.dumps(dict(QUIN, role="Contractor")), QUIN["email"]),
+            )
         else:
             self.store.staff[QUIN["email"]] = dict(QUIN, role="Contractor")
         for call in self.quality_calls(QUIN):
@@ -161,13 +209,17 @@ class Flows:
 
     def register(self, actor):
         if hasattr(self.store, "db"):
-            self.store.db.execute("INSERT INTO staff (email, body) VALUES (?,?)", (actor["email"], json.dumps(actor)))
+            self.store.db.execute(
+                "INSERT INTO staff (email, body) VALUES (?,?)", (actor["email"], json.dumps(actor))
+            )
         self.store.staff[actor["email"]] = actor
 
     def test_quality_identity_history(self):
         submitter = dict(QUIN, oid="SYN-original")
         if hasattr(self.store, "db"):
-            self.store.db.execute("UPDATE staff SET body=? WHERE email=?", (json.dumps(submitter), QUIN["email"]))
+            self.store.db.execute(
+                "UPDATE staff SET body=? WHERE email=?", (json.dumps(submitter), QUIN["email"])
+            )
         self.store.staff[QUIN["email"]] = submitter
         self.submit(submitter)
         for key in ("name", "code", "oid"):
@@ -177,12 +229,17 @@ class Flows:
                 self.store.accept_quality(alias, "ZF-1", 0)
         email_alias = dict(submitter, name="SYN renamed", code="SYN recoded", oid="SYN changed")
         if hasattr(self.store, "db"):
-            self.store.db.execute("UPDATE staff SET body=? WHERE email=?", (json.dumps(email_alias), submitter["email"]))
+            self.store.db.execute(
+                "UPDATE staff SET body=? WHERE email=?",
+                (json.dumps(email_alias), submitter["email"]),
+            )
         self.store.staff[submitter["email"]] = email_alias
         with self.assertRaises(PermissionError):
             self.store.accept_quality(email_alias, "ZF-1", 0)
         if hasattr(self.store, "db"):
-            self.store.db.execute("UPDATE staff SET body=? WHERE email=?", (json.dumps(submitter), submitter["email"]))
+            self.store.db.execute(
+                "UPDATE staff SET body=? WHERE email=?", (json.dumps(submitter), submitter["email"])
+            )
         self.store.staff[submitter["email"]] = submitter
         self.store.return_quality(QUIL, "ZF-1", 0, "SYN", "SYN gap", "SYN team")
         self.store.record_fix(QUIL, "ZF-1", 0, "SYN first fitter", "SYN photo 1")
@@ -221,7 +278,9 @@ class Flows:
             self.assertEqual(self.rec(), before)
             self.assertEqual(list(self.store.audit_entries()), audit)
         self.store.record_fix(SAM, "ZF-1", 0, "SYN fitter", "SYN corrected vent/photo v2")
-        self.assertEqual(self.rec()["defect"]["remediation_evidence"], "SYN corrected vent/photo v2")
+        self.assertEqual(
+            self.rec()["defect"]["remediation_evidence"], "SYN corrected vent/photo v2"
+        )
         with self.store.lock:
             self.store._case("ZF-1")["quality"][0]["defect"].pop("remediation_evidence")
             self.store.save()
@@ -237,7 +296,12 @@ class Flows:
         with self.store.lock:
             self.store._case("ZF-1")["quality"][0].pop("participants", None)
             self.store.save()
-        alias = dict(QUIL, name="SYN earlier recorder alias", email="syn-earlier@example.test", code=QUIN["code"])
+        alias = dict(
+            QUIL,
+            name="SYN earlier recorder alias",
+            email="syn-earlier@example.test",
+            code=QUIN["code"],
+        )
         self.register(alias)
         with self.assertRaisesRegex(PermissionError, "Someone independent"):
             self.store.accept_quality(alias, "ZF-1", 0)
@@ -275,7 +339,9 @@ class Flows:
                         c["quality"].append(copy.deepcopy(c["quality"][0]))
                         if not handed:
                             c["quality"][0]["state"] = "Handed over"
-                            c["quality"][0]["handover"] = dict(by="SYN", note="SYN legacy guide", resident_told=True)
+                            c["quality"][0]["handover"] = dict(
+                                by="SYN", note="SYN legacy guide", resident_told=True
+                            )
                     sibling = copy.deepcopy(c["quality"][0])
                     sibling["measure"] = "Wall insulation"
                     c["quality"].append(sibling)
@@ -290,7 +356,9 @@ class Flows:
                     self.assertNotIn("accepted_by", records[old])
                     self.assertEqual(records[old]["items"], before["quality"][old]["items"])
                     self.assertEqual(records[old]["aftercare"], before["quality"][old]["aftercare"])
-                    self.assertEqual(records[old]["history"][:-1], before["quality"][old]["history"])
+                    self.assertEqual(
+                        records[old]["history"][:-1], before["quality"][old]["history"]
+                    )
                     self.assertEqual(records[old]["superseded_by"], idx)
                     for call in (
                         lambda: self.store.accept_quality(QUIL, "ZF-1", old),
@@ -337,16 +405,36 @@ class Flows:
         for kwargs in ({}, {"contract_version": ""}, {"contract_version": " \t "}):
             with self.subTest(kwargs=kwargs):
                 with self.assertRaisesRegex(ValueError, "contract or call-off version"):
-                    self.store.create_package(PAM, "SYN", "2026-01-01", "2099-12-31", "Loft", "SYN", **kwargs)
+                    self.store.create_package(
+                        PAM, "SYN", "2026-01-01", "2099-12-31", "Loft", "SYN", **kwargs
+                    )
                 self.assertEqual(self.store.data.get("procurement"), before)
                 self.assertEqual(list(self.store.audit_entries()), audit)
-        pid = self.store.create_package(PAM, "SYN", "2026-01-01", "2099-12-31", "Loft", "SYN", " SYN-1 ")
+        pid = self.store.create_package(
+            PAM, "SYN", "2026-01-01", "2099-12-31", "Loft", "SYN", " SYN-1 "
+        )
         self.assertEqual(self.store._package(pid)["contract_version"], "SYN-1")
 
     def package(self, committed=1, offered=3):
-        pid = self.store.create_package(PAM, "Wave 1 install", "2026-01-01", "2099-12-31", "Loft and wall measures", "CALL-OFF-7", "SYN-1")
+        pid = self.store.create_package(
+            PAM,
+            "Wave 1 install",
+            "2026-01-01",
+            "2099-12-31",
+            "Loft and wall measures",
+            "CALL-OFF-7",
+            "SYN-1",
+        )
         self.details = dataset.supplied_contract_fixture(self.store, pid, PAM)
-        self.store.set_capacity(PAM, pid, "Test Ltd", offered, committed, "SYN signed commitment RP-1" if committed else "", self.details)
+        self.store.set_capacity(
+            PAM,
+            pid,
+            "Test Ltd",
+            offered,
+            committed,
+            "SYN signed commitment RP-1" if committed else "",
+            self.details,
+        )
         return pid
 
     def book(self, wid, when="2099-01-01"):
@@ -365,7 +453,9 @@ class Flows:
         pid = self.package()
         self.store.rescope_package(PAM, pid, "Loft only", "Wall measures moved")
         p = self.store.list_packages(PAM)[0]
-        self.assertEqual((p["scope_version"], len(p["scope_history"]), p["contract_ref"]), (2, 2, "CALL-OFF-7"))
+        self.assertEqual(
+            (p["scope_version"], len(p["scope_history"]), p["contract_ref"]), (2, 2, "CALL-OFF-7")
+        )
 
     def test_committed_capacity_needs_evidence_and_limits_work_orders(self):
         pid = self.store.create_package(PAM, "P", "2026-01-01", "2099-12-31", "s", "R", "SYN-1")
@@ -378,50 +468,83 @@ class Flows:
             self.store.set_capacity(PAM, pid, "Nobody Ltd", 1, 1, "x")
         self.store.set_capacity(PAM, pid, "Test Ltd", 3, 0)
         with self.assertRaises(ValueError):
-            self.store.issue_work_order(PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS)
+            self.store.issue_work_order(
+                PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS
+            )
         self.store.set_capacity(PAM, pid, "Test Ltd", 3, 1, "Signed plan", details)
         self.store.issue_work_order(PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS)
         with self.assertRaises(ValueError):
-            self.store.issue_work_order(PAM, pid, "ZF-2", resident_bindings=dataset.RESIDENT_BINDINGS)
+            self.store.issue_work_order(
+                PAM, pid, "ZF-2", resident_bindings=dataset.RESIDENT_BINDINGS
+            )
         row = self.store.list_packages(PAM)[0]["capacity"][0]
-        self.assertEqual((row["offered"], row["committed"], row["in_use"], row["headroom"], row["unevidenced"]), (3, 1, 1, 0, 2))
+        self.assertEqual(
+            (row["offered"], row["committed"], row["in_use"], row["headroom"], row["unevidenced"]),
+            (3, 1, 1, 0, 2),
+        )
         self.store.set_capacity(PAM, pid, "Test Ltd", 3, 0, "")
         self.assertEqual(self.store.list_packages(PAM)[0]["capacity"][0]["headroom"], -1)
 
     def test_work_order_lifecycle_versions_and_audit(self):
         pid = self.package(committed=2)
-        wid = self.store.issue_work_order(PAM, pid, "ZF-1", "Loft to 270mm", resident_bindings=dataset.RESIDENT_BINDINGS)
+        wid = self.store.issue_work_order(
+            PAM, pid, "ZF-1", "Loft to 270mm", resident_bindings=dataset.RESIDENT_BINDINGS
+        )
         with self.assertRaises(PermissionError):
             self.store.issue_work_order(SAM, pid, "ZF-2")
         with self.assertRaises(ValueError):
-            self.store.issue_work_order(PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS)
-        for bad in (lambda: self.store.complete_work_order(PAM, wid), lambda: self.store.correct_work_order(PAM, wid, "x", resident_bindings=dataset.RESIDENT_BINDINGS),
-                    lambda: self.store.record_wo_appointment(PAM, wid, "Weird")):
+            self.store.issue_work_order(
+                PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS
+            )
+        for bad in (
+            lambda: self.store.complete_work_order(PAM, wid),
+            lambda: self.store.correct_work_order(
+                PAM, wid, "x", resident_bindings=dataset.RESIDENT_BINDINGS
+            ),
+            lambda: self.store.record_wo_appointment(PAM, wid, "Weird"),
+        ):
             with self.assertRaises(ValueError):
                 bad()
         self.book(wid, "2099-02-02")
         self.store.record_wo_appointment(PAM, wid, "No access")
         self.book(wid, "2099-02-03")
-        self.store.reissue_work_order(PAM, wid, "Loft to 300mm", "Design changed", resident_bindings=dataset.RESIDENT_BINDINGS)
+        self.store.reissue_work_order(
+            PAM, wid, "Loft to 300mm", "Design changed", resident_bindings=dataset.RESIDENT_BINDINGS
+        )
         dataset.supplied_appointment_fixture(self.store, PAM, wid, "2099-02-03")
         self.store.complete_work_order(PAM, wid, "Done")
         with self.assertRaises(ValueError):
             self.store.reissue_work_order(PAM, wid, "x", "y")
-        self.store.correct_work_order(PAM, wid, "Hatch not sealed", resident_bindings=dataset.RESIDENT_BINDINGS)
+        self.store.correct_work_order(
+            PAM, wid, "Hatch not sealed", resident_bindings=dataset.RESIDENT_BINDINGS
+        )
         w = self.store.list_work_orders(PAM)[0]
-        self.assertEqual((w["state"], w["version"], w["scope"], len(w["corrections"])), ("Issued", 7, "Loft to 300mm", 1))
+        self.assertEqual(
+            (w["state"], w["version"], w["scope"], len(w["corrections"])),
+            ("Issued", 7, "Loft to 300mm", 1),
+        )
         self.assertTrue(all(v["issued_by"] == "Pam Lead" for v in w["versions"]))
         self.store.withdraw_work_order(PAM, wid, "Resident declined")
         with self.assertRaises(ValueError):
             self.store.record_wo_appointment(PAM, wid, "Booked", "2099-03-03")
-        for a in ("package_created", "capacity_recorded", "workorder_issued", "workorder_appointment", "workorder_reissued",
-                  "workorder_completed", "workorder_corrected", "workorder_withdrawn"):
+        for a in (
+            "package_created",
+            "capacity_recorded",
+            "workorder_issued",
+            "workorder_appointment",
+            "workorder_reissued",
+            "workorder_completed",
+            "workorder_corrected",
+            "workorder_withdrawn",
+        ):
             self.assertIn(a, self.actions())
         self.assertTrue(self.store.verify_audit())
 
     def test_contractor_sees_only_own_work_orders_without_reason(self):
         pid = self.package(committed=2)
-        self.store.cases["ZF-1"]["resident"].update(adjustment="SEEDED-REASON", priority_support=True)
+        self.store.cases["ZF-1"]["resident"].update(
+            adjustment="SEEDED-REASON", priority_support=True
+        )
         self.store.issue_work_order(PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS)
         mine = self.store.list_work_orders(STAFF[4])
         self.assertEqual(len(mine), 1)
@@ -445,21 +568,29 @@ class Flows:
             self.store._package(pid)["capacity"]["Test Ltd"]["evidence"] = ""
             self.store.save()
         with self.assertRaises(ValueError):
-            self.store.issue_work_order(PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS)
+            self.store.issue_work_order(
+                PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS
+            )
 
     def test_booking_outside_package_period_is_refused(self):
         pid = self.package()
-        wid = self.store.issue_work_order(PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS)
+        wid = self.store.issue_work_order(
+            PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS
+        )
         with self.assertRaises(ValueError):
             self.store.record_wo_appointment(PAM, wid, "Booked", "2100-01-01")
 
     def test_every_order_change_has_a_version(self):
         pid = self.package()
-        wid = self.store.issue_work_order(PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS)
+        wid = self.store.issue_work_order(
+            PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS
+        )
         self.book(wid, "2099-02-02")
         self.store.record_wo_appointment(PAM, wid, "No access")
         self.store.withdraw_work_order(PAM, wid, "Synthetic withdrawal")
-        self.assertEqual([v["version"] for v in self.store.list_work_orders(PAM)[0]["versions"]], [1, 2, 3, 4])
+        self.assertEqual(
+            [v["version"] for v in self.store.list_work_orders(PAM)[0]["versions"]], [1, 2, 3, 4]
+        )
 
     def test_advance_without_evidenced_booked_order_is_refused(self):
         with self.assertRaises(ValueError):
@@ -468,17 +599,25 @@ class Flows:
     def test_evidence_matrix_fails_closed_without_success_events(self):
         pid = self.package()
         mutations = [
-            {"unit": "crew-days"}, {"status": "Offered"}, {"source_version": "missing"},
-            {"document_id": "missing"}, {"case_ids": ["MISSING"]}, {"source_date": "2099-01-01"},
-            {"reviewed_on": "2099-01-01"}, {"reviewed_on": (date.today() - timedelta(days=8)).isoformat()},
-            {"valid_from": "2025-01-01"}, {"valid_to": "2100-01-01"},
+            {"unit": "crew-days"},
+            {"status": "Offered"},
+            {"source_version": "missing"},
+            {"document_id": "missing"},
+            {"case_ids": ["MISSING"]},
+            {"source_date": "2099-01-01"},
+            {"reviewed_on": "2099-01-01"},
+            {"reviewed_on": (date.today() - timedelta(days=8)).isoformat()},
+            {"valid_from": "2025-01-01"},
+            {"valid_to": "2100-01-01"},
         ]
         for delta in mutations:
             with self.subTest(delta=delta):
                 before = copy.deepcopy(self.store.data["procurement"])
                 audit = list(self.store.audit_entries())
                 with self.assertRaises(ValueError):
-                    self.store.set_capacity(PAM, pid, "Test Ltd", 3, 1, "SYN", dict(self.details, **delta))
+                    self.store.set_capacity(
+                        PAM, pid, "Test Ltd", 3, 1, "SYN", dict(self.details, **delta)
+                    )
                 self.assertEqual(self.store.data["procurement"], before)
                 self.assertEqual(list(self.store.audit_entries()), audit)
         for bad in (True, 1.5, "1.5", None):
@@ -489,40 +628,71 @@ class Flows:
         pid = self.package()
         actor = self.store.staff[PAM["email"]]
         original = copy.deepcopy(actor)
-        for delta in ({"revoked": True}, {"actions": ["withdraw"]}, {"suppliers": ["Other Ltd"]},
-                      {"contract_version": "wrong"}, {"contract_ref": "WRONG"}, {"reference": ""},
-                      {"scope_versions": [99]}, {"scope_versions": [True]}, {"valid_from": "2099-01-01"},
-                      {"valid_to": "2026-01-01"}):
+        for delta in (
+            {"revoked": True},
+            {"actions": ["withdraw"]},
+            {"suppliers": ["Other Ltd"]},
+            {"contract_version": "wrong"},
+            {"contract_ref": "WRONG"},
+            {"reference": ""},
+            {"scope_versions": [99]},
+            {"scope_versions": [True]},
+            {"valid_from": "2099-01-01"},
+            {"valid_to": "2026-01-01"},
+        ):
             with self.subTest(delta=delta):
                 actor["contract_authorities"] = [dict(original["contract_authorities"][0], **delta)]
                 if hasattr(self.store, "db"):
-                    self.store.db.execute("UPDATE staff SET body=? WHERE email=?", (json.dumps(actor), actor["email"]))
+                    self.store.db.execute(
+                        "UPDATE staff SET body=? WHERE email=?", (json.dumps(actor), actor["email"])
+                    )
                 with self.assertRaises((PermissionError, ValueError)):
-                    self.store.issue_work_order(PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS)
+                    self.store.issue_work_order(
+                        PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS
+                    )
         actor.update(original)
         if hasattr(self.store, "db"):
-            self.store.db.execute("UPDATE staff SET body=? WHERE email=?", (json.dumps(actor), actor["email"]))
+            self.store.db.execute(
+                "UPDATE staff SET body=? WHERE email=?", (json.dumps(actor), actor["email"])
+            )
         for spoof in (dict(PAM, name="Unregistered"), dict(PAM, email="system@example.test")):
             with self.assertRaises(PermissionError):
-                self.store.issue_work_order(spoof, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS)
+                self.store.issue_work_order(
+                    spoof, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS
+                )
 
     def test_full_quota_progression_snapshots_and_detached_reads(self):
         pid = self.package()
-        wid = self.store.issue_work_order(PAM, pid, "ZF-3", resident_bindings=dataset.RESIDENT_BINDINGS)
+        wid = self.store.issue_work_order(
+            PAM, pid, "ZF-3", resident_bindings=dataset.RESIDENT_BINDINGS
+        )
         with self.assertRaises(ValueError):
             self.store.advance(PAM, "ZF-3")
         self.book(wid)
         self.store.advance(PAM, "ZF-3")
-        self.store.reissue_work_order(PAM, wid, "SYN revised wording", "SYN reason", dataset.RESIDENT_BINDINGS)
+        self.store.reissue_work_order(
+            PAM, wid, "SYN revised wording", "SYN reason", dataset.RESIDENT_BINDINGS
+        )
         dataset.supplied_appointment_fixture(self.store, PAM, wid)
         self.store.complete_work_order(PAM, wid)
-        self.store.correct_work_order(PAM, wid, "SYN correction", resident_bindings=dataset.RESIDENT_BINDINGS)
+        self.store.correct_work_order(
+            PAM, wid, "SYN correction", resident_bindings=dataset.RESIDENT_BINDINGS
+        )
         rows = self.store.list_work_orders(PAM)
         versions = rows[0]["versions"]
         self.assertEqual([v["version"] for v in versions], [1, 2, 3, 4, 5])
-        self.assertEqual([v["state"] for v in versions], ["Issued", "Appointed", "Appointed", "Completed", "Issued"])
+        self.assertEqual(
+            [v["state"] for v in versions],
+            ["Issued", "Appointed", "Appointed", "Completed", "Issued"],
+        )
         self.assertEqual(versions[0]["appointments"], [])
-        self.assertTrue(all(v["issuer_email"] == PAM["email"] and v["authority"]["reference"] == "SYN-DELEGATION" for v in versions))
+        self.assertTrue(
+            all(
+                v["issuer_email"] == PAM["email"]
+                and v["authority"]["reference"] == "SYN-DELEGATION"
+                for v in versions
+            )
+        )
         versions[0]["scope"] = "MUTATION"
         self.assertNotEqual(self.store.list_work_orders(PAM)[0]["versions"][0]["scope"], "MUTATION")
         self.assertEqual(self.store.list_packages(PAM)[0]["capacity"][0]["in_use"], 1)
@@ -531,7 +701,9 @@ class Flows:
 
     def test_capacity_dates_scope_source_and_deficit_invalidate_progression(self):
         pid = self.package()
-        wid = self.store.issue_work_order(PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS)
+        wid = self.store.issue_work_order(
+            PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS
+        )
         self.store.set_capacity(PAM, pid, "Test Ltd", 3, 0)
         with self.assertRaises(ValueError):
             self.book(wid)
@@ -540,13 +712,17 @@ class Flows:
         with self.assertRaises(ValueError):
             self.store.reissue_work_order(PAM, wid, "", "SYN", dataset.RESIDENT_BINDINGS)
         self.store.set_capacity(PAM, pid, "Test Ltd", 3, 1, "SYN", self.details)
-        self.store.docstore.put(self.details["source_case_id"], self.details["document_id"], b"changed", "text/plain")
+        self.store.docstore.put(
+            self.details["source_case_id"], self.details["document_id"], b"changed", "text/plain"
+        )
         with self.assertRaises(ValueError):
             self.store.reissue_work_order(PAM, wid, "", "SYN", dataset.RESIDENT_BINDINGS)
 
     def test_failed_save_restores_order_versions_and_no_success_audit(self):
         pid = self.package()
-        wid = self.store.issue_work_order(PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS)
+        wid = self.store.issue_work_order(
+            PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS
+        )
         before = self.store.list_work_orders(PAM)
         audit = list(self.store.audit_entries())
         with patch.object(self.store, "save", side_effect=OSError("SYN save failure")):
@@ -581,7 +757,9 @@ class Flows:
         old = (date.today() - timedelta(days=7)).isoformat()
         details = dict(self.details, source_date=old, reviewed_on=old)
         self.store.set_capacity(PAM, pid, "Test Ltd", 3, 1, "SYN", details)
-        wid = self.store.issue_work_order(PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS)
+        wid = self.store.issue_work_order(
+            PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS
+        )
         for when in (details["valid_from"], details["valid_to"]):
             dataset.supplied_appointment_fixture(self.store, PAM, wid, when)
             self.store.record_wo_appointment(PAM, wid, "Booked", when)
@@ -593,52 +771,98 @@ class Flows:
             self.store.reissue_work_order(PAM, wid, "", "SYN", dataset.RESIDENT_BINDINGS)
         self.book(wid)
 
-
     def appointment_order(self):
         pid = self.package()
-        return self.store.issue_work_order(PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS)
+        return self.store.issue_work_order(
+            PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS
+        )
 
     def test_appointment_separate_confirmations_legacy_and_server_status(self):
         wid = self.appointment_order()
         w = self.store._work_order(wid)
         self.assertEqual(self.store.appointment_status(w)["status"], "Unknown")
-        for call in (lambda: self.store.record_wo_appointment(PAM, wid, "Booked", "2099-01-01"),
-                     lambda: self.store.complete_work_order(PAM, wid)):
+        for call in (
+            lambda: self.store.record_wo_appointment(PAM, wid, "Booked", "2099-01-01"),
+            lambda: self.store.complete_work_order(PAM, wid),
+        ):
             with self.assertRaises(ValueError):
                 call()
         ref = dataset.supplied_appointment_fixture(self.store, PAM, wid, confirmations=False)
-        for kind, person in (("resident", "Pat Test"), ("staff", PAM["name"]), ("capacity", "SYN provider")):
+        for kind, person in (
+            ("resident", "Pat Test"),
+            ("staff", PAM["name"]),
+            ("capacity", "SYN provider"),
+        ):
             w = self.store._work_order(wid)
             self.assertEqual(self.store.appointment_status(w)["status"], "Offer")
-            self.store.appointment_control(PAM, wid, dict(
-                action="confirm", event_ref=ref + kind, offer_id=ref, kind=kind,
-                person=person, channel="In person, manual", source="SYN explicit agreement"))
+            self.store.appointment_control(
+                PAM,
+                wid,
+                dict(
+                    action="confirm",
+                    event_ref=ref + kind,
+                    offer_id=ref,
+                    kind=kind,
+                    person=person,
+                    channel="In person, manual",
+                    source="SYN explicit agreement",
+                ),
+            )
         self.assertEqual(self.store.appointment_status(w)["status"], "Committed")
         self.store.complete_work_order(PAM, wid)
         with self.assertRaises(ValueError):
-            self.store.appointment_control(PAM, wid, dict(action="confirm", event_ref="FORGED", status="Committed"))
+            self.store.appointment_control(
+                PAM, wid, dict(action="confirm", event_ref="FORGED", status="Committed")
+            )
 
     def test_appointment_representative_is_explicit_bounded_and_revocable(self):
         wid = self.appointment_order()
         ref = dataset.supplied_appointment_fixture(self.store, PAM, wid, confirmations=False)
-        body = dict(action="confirm", event_ref="REP-CONFIRM", offer_id=ref, kind="resident",
-                    person="SYN trusted helper", representative_ref="REP", source="SYN telephone agreement", channel="Phone")
+        body = dict(
+            action="confirm",
+            event_ref="REP-CONFIRM",
+            offer_id=ref,
+            kind="resident",
+            person="SYN trusted helper",
+            representative_ref="REP",
+            source="SYN telephone agreement",
+            channel="Phone",
+        )
         with self.assertRaises(ValueError):
             self.store.appointment_control(PAM, wid, body)
-        grant = dict(action="authority", event_ref="GRANT", representative_ref="REP",
-                     offer_id=ref,
-                     person="SYN trusted helper", source="SYN appointment-specific permission",
-                     valid_from="2026-01-01", valid_to="2099-12-31", revoked=False)
+        grant = dict(
+            action="authority",
+            event_ref="GRANT",
+            representative_ref="REP",
+            offer_id=ref,
+            person="SYN trusted helper",
+            source="SYN appointment-specific permission",
+            valid_from="2026-01-01",
+            valid_to="2099-12-31",
+            revoked=False,
+        )
         self.store.appointment_control(PAM, wid, grant)
         self.store.appointment_control(PAM, wid, body)
         self.store.appointment_control(PAM, wid, dict(grant, event_ref="REVOKE", revoked=True))
-        self.assertIn("Current appointment-specific representative authority is required.",
-                      self.store.appointment_status(self.store._work_order(wid))["missing"])
+        self.assertIn(
+            "Current appointment-specific representative authority is required.",
+            self.store.appointment_status(self.store._work_order(wid))["missing"],
+        )
 
     def outcome(self, wid, ref, cause="Resident", **changes):
         offer = self.store._work_order(wid)["appointment_offer"]["id"]
-        body = dict(action="outcome", event_ref=ref, offer_id=offer, cause=cause, owner="SYN human",
-                    verified=True, no_access=True, preference_breach=False, abortive=False, source="SYN verified visit evidence")
+        body = dict(
+            action="outcome",
+            event_ref=ref,
+            offer_id=offer,
+            cause=cause,
+            owner="SYN human",
+            verified=True,
+            no_access=True,
+            preference_breach=False,
+            abortive=False,
+            source="SYN verified visit evidence",
+        )
         body.update(changes)
         self.store.appointment_control(PAM, wid, body)
         return body
@@ -654,11 +878,32 @@ class Flows:
             self.assertEqual(bool(result["investigation"]), number > 5)
         with self.assertRaises(ValueError):
             self.store.appointment_control(PAM, wid, dict(body, source="conflicting source"))
-        self.store.appointment_control(PAM, wid, dict(
-            action="investigation", event_ref="HUMAN-CHECK", disposition="Task reviewed, not case closed",
-            checks={key: "Unknown" for key in ("confirmation", "notice", "attendance", "adjustments", "contact", "circumstances")},
-            corrective_action="Human contact and accessibility review", next_update="SYN owner to call tomorrow"))
-        self.assertEqual(self.store.appointment_summary(self.store._work_order(wid), PAM)["eligible_no_access"], 6)
+        self.store.appointment_control(
+            PAM,
+            wid,
+            dict(
+                action="investigation",
+                event_ref="HUMAN-CHECK",
+                disposition="Task reviewed, not case closed",
+                checks={
+                    key: "Unknown"
+                    for key in (
+                        "confirmation",
+                        "notice",
+                        "attendance",
+                        "adjustments",
+                        "contact",
+                        "circumstances",
+                    )
+                },
+                corrective_action="Human contact and accessibility review",
+                next_update="SYN owner to call tomorrow",
+            ),
+        )
+        self.assertEqual(
+            self.store.appointment_summary(self.store._work_order(wid), PAM)["eligible_no_access"],
+            6,
+        )
         again = self.reopen()
         if hasattr(again, "db"):
             self.addCleanup(again.db.close)
@@ -670,10 +915,16 @@ class Flows:
 
     def closure_body(self, wid, ref="HUMAN-CLOSE"):
         state = self.store.appointment_summary(self.store._work_order(wid), PAM)
-        return dict(action="close_case", event_ref=ref, case_id=state["case_id"],
-                    expected_case_version=state["case_version"], confirmed=True,
-                    source="SYN supplied human closure decision", source_version="SYN-1",
-                    reason="SYN human decision to close this underlying home case")
+        return dict(
+            action="close_case",
+            event_ref=ref,
+            case_id=state["case_id"],
+            expected_case_version=state["case_version"],
+            confirmed=True,
+            source="SYN supplied human closure decision",
+            source_version="SYN-1",
+            reason="SYN human decision to close this underlying home case",
+        )
 
     def test_human_home_case_closure_requires_current_actor_evidence_and_version(self):
         wid = self.appointment_order()
@@ -684,10 +935,17 @@ class Flows:
         for actor in (STAFF[4], dict(PAM, email="unknown@example.test"), dict(PAM, name="Spoof")):
             with self.assertRaises(PermissionError):
                 self.store.appointment_control(actor, wid, body)
-        for delta in ({"source": ""}, {"reason": ""}, {"source_version": ""},
-                      {"confirmed": False}, {"case_id": "ZF-2"}, {"at": "2000-01-01"},
-                      {"actor": PAM}, {"expected_case_version": None},
-                      {"expected_case_version": "stale"}):
+        for delta in (
+            {"source": ""},
+            {"reason": ""},
+            {"source_version": ""},
+            {"confirmed": False},
+            {"case_id": "ZF-2"},
+            {"at": "2000-01-01"},
+            {"actor": PAM},
+            {"expected_case_version": None},
+            {"expected_case_version": "stale"},
+        ):
             with self.subTest(delta=delta), self.assertRaises((ValueError, ConflictError)):
                 self.store.appointment_control(PAM, wid, dict(body, **delta))
             self.assertEqual(self.store.cases["ZF-1"], before)
@@ -698,19 +956,28 @@ class Flows:
         self.store.appointment_control(PAM, wid, body)
         self.assertEqual(self.store.cases["ZF-1"], closed)
         with self.assertRaises(ValueError):
-            self.store.appointment_control(PAM, wid, dict(self.closure_body(wid), event_ref="SECOND"))
+            self.store.appointment_control(
+                PAM, wid, dict(self.closure_body(wid), event_ref="SECOND")
+            )
         event = closed["home_case_closures"][0]
-        self.assertEqual((event["schema"], event["actor"]["email"], event["case_id"]),
-                         ("controlled-event/v1", PAM["email"], "ZF-1"))
-        self.assertEqual((event["source"], event["source_version"], event["reason"]),
-                         (body["source"], "SYN-1", body["reason"]))
+        self.assertEqual(
+            (event["schema"], event["actor"]["email"], event["case_id"]),
+            ("controlled-event/v1", PAM["email"], "ZF-1"),
+        )
+        self.assertEqual(
+            (event["source"], event["source_version"], event["reason"]),
+            (body["source"], "SYN-1", body["reason"]),
+        )
         self.assertTrue(event["at"])
         self.assertTrue(self.store.verify_audit())
 
     def test_human_closure_resets_only_active_count_preserves_history_and_reopen_replay(self):
         wid = self.appointment_order()
-        self.store.appointment_control(PAM, wid, dict(
-            action="configure", event_ref="CONFIG-CLOSE", threshold=0, basis="SYN exercise"))
+        self.store.appointment_control(
+            PAM,
+            wid,
+            dict(action="configure", event_ref="CONFIG-CLOSE", threshold=0, basis="SYN exercise"),
+        )
         dataset.supplied_appointment_fixture(self.store, PAM, wid)
         old = self.outcome(wid, "BEFORE-CLOSE", preference_breach=True, abortive=True)
         before_case = copy.deepcopy(self.store.cases["ZF-1"])
@@ -720,19 +987,37 @@ class Flows:
         state = self.store.appointment_summary(self.store._work_order(wid), PAM)
         self.assertEqual(state["eligible_no_access"], 0)
         self.assertIsNone(state["investigation"])
-        for key in ("appointment_outcomes", "appointment_configurations", "appointment_investigations"):
+        for key in (
+            "appointment_outcomes",
+            "appointment_configurations",
+            "appointment_investigations",
+        ):
             self.assertEqual(self.store._proc()[key], before_proc[key])
-        self.assertEqual(state["closure_history"][0]["investigation"],
-                         before_proc["appointment_investigations"]["ZF-1"])
-        self.assertEqual({k: v for k, v in self.store.cases["ZF-1"].items()
-                          if k not in ("closed", "home_case_closures")},
-                         {k: v for k, v in before_case.items() if k != "closed"})
+        self.assertEqual(
+            state["closure_history"][0]["investigation"],
+            before_proc["appointment_investigations"]["ZF-1"],
+        )
+        self.assertEqual(
+            {
+                k: v
+                for k, v in self.store.cases["ZF-1"].items()
+                if k not in ("closed", "home_case_closures")
+            },
+            {k: v for k, v in before_case.items() if k != "closed"},
+        )
         self.assertEqual(sum(state["counts"]["abortive"].values()), 1)
         self.store.appointment_control(PAM, wid, old)
-        self.store.reopen_case(PAM, "ZF-1", "SYN human reopen",
-                               metadata=dict(source="SYN supplied human review", next_action="Human review"))
+        self.store.reopen_case(
+            PAM,
+            "ZF-1",
+            "SYN human reopen",
+            metadata=dict(source="SYN supplied human review", next_action="Human review"),
+        )
         self.store.appointment_control(PAM, wid, old)
-        self.assertEqual(self.store.appointment_summary(self.store._work_order(wid), PAM)["eligible_no_access"], 0)
+        self.assertEqual(
+            self.store.appointment_summary(self.store._work_order(wid), PAM)["eligible_no_access"],
+            0,
+        )
         with self.assertRaises(ConflictError):
             self.store.appointment_control(PAM, wid, dict(body, event_ref="REPLAY-CLOSE"))
         dataset.supplied_appointment_fixture(self.store, PAM, wid)
@@ -793,20 +1078,47 @@ class Flows:
         dataset.supplied_appointment_fixture(self.store, PAM, wid)
         before = copy.deepcopy(self.store._work_order(wid)["appointment_offer"])
         update = copy.deepcopy(self.store.cases["ZF-1"]["resident_update"])
-        self.store.set_capacity(PAM, self.store._work_order(wid)["package"], "Test Ltd", 3, 1, "SYN renewed", self.details)
+        self.store.set_capacity(
+            PAM,
+            self.store._work_order(wid)["package"],
+            "Test Ltd",
+            3,
+            1,
+            "SYN renewed",
+            self.details,
+        )
         current = self.store._work_order(wid)
-        self.assertEqual(current["appointment_offer"]["confirmations"]["resident"], before["confirmations"]["resident"])
-        self.assertIn("Contractor capacity confirmation changed", self.store.appointment_status(current)["missing"])
-        self.store.reissue_work_order(PAM, wid, "SYN changed scope", "SYN resident design", dataset.RESIDENT_BINDINGS)
-        self.assertIn("Home, scope, order or period changed", self.store.appointment_status(current)["missing"])
+        self.assertEqual(
+            current["appointment_offer"]["confirmations"]["resident"],
+            before["confirmations"]["resident"],
+        )
+        self.assertIn(
+            "Contractor capacity confirmation changed",
+            self.store.appointment_status(current)["missing"],
+        )
+        self.store.reissue_work_order(
+            PAM, wid, "SYN changed scope", "SYN resident design", dataset.RESIDENT_BINDINGS
+        )
+        self.assertIn(
+            "Home, scope, order or period changed",
+            self.store.appointment_status(current)["missing"],
+        )
         self.assertEqual(self.store.cases["ZF-1"]["resident_update"], update)
 
     def test_appointment_configuration_and_inactive_case_never_reset_or_replay(self):
         wid = self.appointment_order()
         dataset.supplied_appointment_fixture(self.store, PAM, wid)
         body = self.outcome(wid, "ACTIVE")
-        self.store.appointment_control(PAM, wid, dict(
-            action="configure", event_ref="CONFIG", threshold=0, basis="SYN provisional exercise"))
+        self.store.appointment_control(
+            PAM,
+            wid,
+            dict(
+                action="configure",
+                event_ref="CONFIG",
+                threshold=0,
+                basis="SYN provisional exercise",
+            ),
+        )
         self.store.appointment_control(PAM, wid, body)
         self.assertEqual(len(self.store._proc()["appointment_outcomes"]), 1)
         dataset.supplied_appointment_fixture(self.store, PAM, wid)
@@ -821,8 +1133,13 @@ class Flows:
         self.assertEqual(len(self.store._proc()["appointment_outcomes"]), 2)
         for bad in (True, -1, 1.5, "5"):
             with self.assertRaises(ValueError):
-                self.store.appointment_control(PAM, wid, dict(
-                    action="configure", event_ref="INVALID-CONFIG", threshold=bad, basis="SYN"))
+                self.store.appointment_control(
+                    PAM,
+                    wid,
+                    dict(
+                        action="configure", event_ref="INVALID-CONFIG", threshold=bad, basis="SYN"
+                    ),
+                )
 
     def test_bundle_needs_explicit_agreement_and_scoped_competence(self):
         wid = self.appointment_order()
@@ -831,17 +1148,35 @@ class Flows:
         body = copy.deepcopy(w["appointment_events"][0]["body"])
         body.update(event_ref="BUNDLE", bundle=True)
         body["expected_offer_id"] = w["appointment_offer"]["id"]
-        for change in ({}, {"bundle_agreed": True},
-                       {"bundle_agreed": True, "competence": {"scope": {}, "source": "SYN"}},
-                       *[dict(bundle_agreed=True, competence=dict(
-                           scope=self.store._appointment_binding(w), source=bad))
-                         for bad in ("", " \t ", None, 42, True, [], {}, "x" * 501)]):
+        for change in (
+            {},
+            {"bundle_agreed": True},
+            {"bundle_agreed": True, "competence": {"scope": {}, "source": "SYN"}},
+            *[
+                dict(
+                    bundle_agreed=True,
+                    competence=dict(scope=self.store._appointment_binding(w), source=bad),
+                )
+                for bad in ("", " \t ", None, 42, True, [], {}, "x" * 501)
+            ],
+        ):
             with self.assertRaises(ValueError):
                 self.store.appointment_control(PAM, wid, dict(body, **change))
-        self.store.appointment_control(PAM, wid, dict(
-            body, bundle_agreed=True,
-            competence=dict(scope=self.store._appointment_binding(w), source="SYN scoped competence register")))
-        self.assertEqual(self.store.appointment_status(self.store._work_order(wid))["status"], "Offer")
+        self.store.appointment_control(
+            PAM,
+            wid,
+            dict(
+                body,
+                bundle_agreed=True,
+                competence=dict(
+                    scope=self.store._appointment_binding(w),
+                    source="SYN scoped competence register",
+                ),
+            ),
+        )
+        self.assertEqual(
+            self.store.appointment_status(self.store._work_order(wid))["status"], "Offer"
+        )
 
     def test_configuration_evaluates_existing_active_counts_once(self):
         wid = self.appointment_order()
@@ -850,7 +1185,8 @@ class Flows:
             self.outcome(wid, f"CONFIG-VISIT-{number}")
         before = copy.deepcopy(self.store._proc()["appointment_outcomes"])
         config_wid = self.store.issue_work_order(
-            PAM, self.package(), "ZF-2", resident_bindings=dataset.RESIDENT_BINDINGS)
+            PAM, self.package(), "ZF-2", resident_bindings=dataset.RESIDENT_BINDINGS
+        )
         body = dict(action="configure", event_ref="LOWER", threshold=4, basis="SYN human rule")
         self.store.appointment_control(PAM, config_wid, body)
         task = copy.deepcopy(self.store._proc().get("appointment_investigations", {}).get("ZF-1"))
@@ -858,18 +1194,26 @@ class Flows:
         self.assertEqual(task["events"], [e["ref"] for e in before])
         self.assertEqual(task["configuration"]["version"], 1)
         for ref, threshold in (("RAISE", 10), ("LOWER-AGAIN", 0)):
-            self.store.appointment_control(PAM, config_wid, dict(body, event_ref=ref, threshold=threshold))
+            self.store.appointment_control(
+                PAM, config_wid, dict(body, event_ref=ref, threshold=threshold)
+            )
         self.store.appointment_control(PAM, config_wid, body)
         self.assertEqual(len(self.store._proc()["appointment_configurations"]), 3)
         self.assertEqual(self.store._proc()["appointment_investigations"]["ZF-1"], task)
         self.assertEqual(self.store._proc()["appointment_outcomes"], before)
         self.store.appointment_control(PAM, wid, self.closure_body(wid))
         self.store.appointment_control(PAM, config_wid, dict(body, event_ref="CLOSED", threshold=0))
-        self.assertEqual(self.store.appointment_summary(self.store._work_order(wid), PAM)["eligible_no_access"], 0)
-        self.store.reopen_case(PAM, "ZF-1", "SYN reopen",
-                               metadata=dict(source="SYN human", next_action="Human review"))
+        self.assertEqual(
+            self.store.appointment_summary(self.store._work_order(wid), PAM)["eligible_no_access"],
+            0,
+        )
+        self.store.reopen_case(
+            PAM, "ZF-1", "SYN reopen", metadata=dict(source="SYN human", next_action="Human review")
+        )
         self.store.appointment_control(PAM, config_wid, dict(body, event_ref="REOPEN", threshold=0))
-        self.assertIsNone(self.store.appointment_summary(self.store._work_order(wid), PAM)["investigation"])
+        self.assertIsNone(
+            self.store.appointment_summary(self.store._work_order(wid), PAM)["investigation"]
+        )
         self.assertEqual(self.store._proc()["appointment_outcomes"], before)
 
     def test_withdrawn_appointment_is_ended_and_history_retained(self):
@@ -877,13 +1221,19 @@ class Flows:
         dataset.supplied_appointment_fixture(self.store, PAM, wid)
         before = copy.deepcopy(self.store._work_order(wid)["appointment_offer"])
         self.store.withdraw_work_order(PAM, wid, "SYN withdrawn")
-        self.assertEqual(self.store.appointment_status(self.store._work_order(wid))["status"], "Ended")
+        self.assertEqual(
+            self.store.appointment_status(self.store._work_order(wid))["status"], "Ended"
+        )
         self.assertEqual(self.store._work_order(wid)["appointment_offer"], before)
         for actor in (PAM, STAFF[4]):
-            self.assertEqual(self.store.list_work_orders(actor)[0]["appointment_control"]["status"], "Ended")
-        for call in (lambda: self.store.record_wo_appointment(PAM, wid, "Booked", "2099-01-01"),
-                     lambda: self.store.complete_work_order(PAM, wid),
-                     lambda: self.store.advance(PAM, "ZF-1")):
+            self.assertEqual(
+                self.store.list_work_orders(actor)[0]["appointment_control"]["status"], "Ended"
+            )
+        for call in (
+            lambda: self.store.record_wo_appointment(PAM, wid, "Booked", "2099-01-01"),
+            lambda: self.store.complete_work_order(PAM, wid),
+            lambda: self.store.advance(PAM, "ZF-1"),
+        ):
             with self.assertRaises(ValueError):
                 call()
 
@@ -891,15 +1241,39 @@ class Flows:
         wid = self.appointment_order()
         dataset.supplied_appointment_fixture(self.store, PAM, wid)
         w = self.store._work_order(wid)
-        self.store.appointment_control(PAM, wid, dict(
-            action="configure", event_ref="PRIVATE-CONFIG", threshold=0, basis="SYN private rule"))
+        self.store.appointment_control(
+            PAM,
+            wid,
+            dict(
+                action="configure",
+                event_ref="PRIVATE-CONFIG",
+                threshold=0,
+                basis="SYN private rule",
+            ),
+        )
         self.outcome(wid, "PRIVATE-VISIT")
-        self.store.appointment_control(PAM, wid, dict(
-            action="investigation", event_ref="PRIVATE-CHECK",
-            checks={k: "PRIVATE-CIRCUMSTANCES" for k in
-                    ("confirmation", "notice", "attendance", "adjustments", "contact", "circumstances")},
-            corrective_action="PRIVATE-CIRCUMSTANCES", next_update="SYN human",
-            disposition="SYN reviewed"))
+        self.store.appointment_control(
+            PAM,
+            wid,
+            dict(
+                action="investigation",
+                event_ref="PRIVATE-CHECK",
+                checks={
+                    k: "PRIVATE-CIRCUMSTANCES"
+                    for k in (
+                        "confirmation",
+                        "notice",
+                        "attendance",
+                        "adjustments",
+                        "contact",
+                        "circumstances",
+                    )
+                },
+                corrective_action="PRIVATE-CIRCUMSTANCES",
+                next_update="SYN human",
+                disposition="SYN reviewed",
+            ),
+        )
         body = self.closure_body(wid)
         body["reason"] = "PRIVATE-CLOSURE"
         self.store.appointment_control(PAM, wid, body)
@@ -907,8 +1281,12 @@ class Flows:
         self.assertIn("PRIVATE-CLOSURE", json.dumps(self.store.list_work_orders(PAM)))
         for actor in (QUIL, STAFF[4]):
             payload = json.dumps(self.store.list_work_orders(actor))
-            for marker in ("PRIVATE-CLOSURE", "PRIVATE-CIRCUMSTANCES", "SYN agreed morning only",
-                           "SYN explicit supplied resident agreement"):
+            for marker in (
+                "PRIVATE-CLOSURE",
+                "PRIVATE-CIRCUMSTANCES",
+                "SYN agreed morning only",
+                "SYN explicit supplied resident agreement",
+            ):
                 self.assertNotIn(marker, payload)
             self.assertIn("Knock and wait", payload)
         self.assertNotIn("PRIVATE-CLOSURE", json.dumps(self.store.detail("ZF-1", QUIL)))
@@ -984,7 +1362,11 @@ class SqlFlows(Flows, unittest.TestCase):
                             self.db = db
 
                         def execute(self, sql, args=()):
-                            if self.committed and sql.startswith("SELECT value FROM meta") and (persistent or not self.failed):
+                            if (
+                                self.committed
+                                and sql.startswith("SELECT value FROM meta")
+                                and (persistent or not self.failed)
+                            ):
                                 self.failed = True
                                 raise OSError("SYN post-commit refresh read")
                             result = self.db.execute(sql, args)
@@ -1006,16 +1388,21 @@ class SqlFlows(Flows, unittest.TestCase):
                     with store.lock:
                         if prefix:
                             store.audit(SAM["email"], "SYN_committed_prefix", "ZF-1", "SYN once")
-                        with patch.object(store, "db", fault), patch.object(store, "save", side_effect=concurrent_save):
+                        with (
+                            patch.object(store, "db", fault),
+                            patch.object(store, "save", side_effect=concurrent_save),
+                        ):
                             with self.assertLogs("zava_forward.core.quality", level="ERROR"):
                                 with self.assertRaisesRegex(RuntimeError, "committed") as caught:
                                     store.accept_quality(QUIL, "ZF-1", 0)
                             self.assertIsInstance(caught.exception.__cause__, OSError)
                             self.assertFalse(store.local.pending)
                             self.assertFalse(store.local.touched)
-                    events = list(store.audit_entries())[len(audit):]
-                    self.assertEqual([e["action"] for e in events],
-                                     (["SYN_committed_prefix"] if prefix else []) + ["quality_accepted"])
+                    events = list(store.audit_entries())[len(audit) :]
+                    self.assertEqual(
+                        [e["action"] for e in events],
+                        (["SYN_committed_prefix"] if prefix else []) + ["quality_accepted"],
+                    )
                     again = self.reopen()
                     self.addCleanup(again.db.close)
                     self.assertEqual(again.detail("ZF-1")["quality"][0]["state"], "Accepted")
@@ -1035,9 +1422,12 @@ class SqlFlows(Flows, unittest.TestCase):
         validate = self.store._validate_safety_clear
 
         def revoke_in_transaction():
-            self.store.db.execute("UPDATE staff SET body=? WHERE email=?",
-                                 (json.dumps(dict(QUIL, role="Contractor")), QUIL["email"]))
+            self.store.db.execute(
+                "UPDATE staff SET body=? WHERE email=?",
+                (json.dumps(dict(QUIL, role="Contractor")), QUIL["email"]),
+            )
             from zava_forward.core import stock
+
             stock.validate_sql(self.store)
             validate()
 
@@ -1083,12 +1473,20 @@ class SqlFlows(Flows, unittest.TestCase):
                             self.db = db
 
                         def execute(self, sql, args=()):
-                            if self.armed and sql.startswith(("SELECT rowversion, body FROM cases", "SELECT value FROM meta")):
-                                if recovery == "persistent" or recovery == "early" and self.reads == 0:
+                            if self.armed and sql.startswith(
+                                ("SELECT rowversion, body FROM cases", "SELECT value FROM meta")
+                            ):
+                                if (
+                                    recovery == "persistent"
+                                    or recovery == "early"
+                                    and self.reads == 0
+                                ):
                                     self.reads += 1
                                     raise OSError("SYN recovery read")
                             result = self.db.execute(sql, args)
-                            if failure == "case-write" and sql.startswith("UPDATE cases SET rowversion"):
+                            if failure == "case-write" and sql.startswith(
+                                "UPDATE cases SET rowversion"
+                            ):
                                 self.armed = True
                                 raise original
                             return result
@@ -1110,20 +1508,32 @@ class SqlFlows(Flows, unittest.TestCase):
 
                     with store.lock:
                         store.audit(SAM["email"], "SYN_legitimate_prefix", "ZF-1", "SYN keep")
-                        with patch.object(store, "db", fault), \
-                                patch.object(store, "save", side_effect=fail_save) if failure == "pre-save" else patch.object(store, "_append_audit", side_effect=fail_audit):
-                            with self.assertLogs("zava_forward.core.stock", level="ERROR") if recovery != "healthy" else nullcontext():
+                        with (
+                            patch.object(store, "db", fault),
+                            patch.object(store, "save", side_effect=fail_save)
+                            if failure == "pre-save"
+                            else patch.object(store, "_append_audit", side_effect=fail_audit),
+                        ):
+                            with (
+                                self.assertLogs("zava_forward.core.stock", level="ERROR")
+                                if recovery != "healthy"
+                                else nullcontext()
+                            ):
                                 with self.assertRaises(OSError) as caught:
                                     store.accept_quality(QUIL, "ZF-1", 0)
                             self.assertIs(caught.exception, original)
                             self.assertEqual(store.cases["ZF-1"]["quality"][0], before)
                             self.assertFalse(store.local.touched)
-                            self.assertEqual([e[1] for e in store.local.pending], ["SYN_legitimate_prefix"])
+                            self.assertEqual(
+                                [e[1] for e in store.local.pending], ["SYN_legitimate_prefix"]
+                            )
                             if recovery != "healthy":
                                 self.assertTrue(fault.reads)
                                 self.assertTrue(getattr(original, "__notes__", []))
-                    self.assertEqual([e["action"] for e in store.audit_entries()],
-                                     [e["action"] for e in audit] + ["SYN_legitimate_prefix"])
+                    self.assertEqual(
+                        [e["action"] for e in store.audit_entries()],
+                        [e["action"] for e in audit] + ["SYN_legitimate_prefix"],
+                    )
                     self.assertEqual(self.rec(), before)
                     self.assertEqual(store.lock.depth, 0)
                     self.assertTrue(store.verify_audit())
@@ -1133,7 +1543,9 @@ class SqlFlows(Flows, unittest.TestCase):
 
     def test_recovery_read_failure_keeps_original_error_and_disarms_failed_work(self):
         pid = self.package()
-        wid = self.store.issue_work_order(PAM, pid, "ZF-3", resident_bindings=dataset.RESIDENT_BINDINGS)
+        wid = self.store.issue_work_order(
+            PAM, pid, "ZF-3", resident_bindings=dataset.RESIDENT_BINDINGS
+        )
         self.book(wid)
         store = self.store
         for operation in ("withdraw", "advance"):
@@ -1143,9 +1555,13 @@ class SqlFlows(Flows, unittest.TestCase):
                         before = copy.deepcopy(store.data["procurement"])
                         cases = copy.deepcopy(store.cases)
                         audit = list(store.audit_entries())
-                        original = (GateError(["SYN refusal"]) if failure == "transaction"
-                                    else KeyboardInterrupt("SYN cancellation") if failure == "cancellation"
-                                    else OSError("SYN original save failure"))
+                        original = (
+                            GateError(["SYN refusal"])
+                            if failure == "transaction"
+                            else KeyboardInterrupt("SYN cancellation")
+                            if failure == "cancellation"
+                            else OSError("SYN original save failure")
+                        )
 
                         class RecoveryReadFault:
                             armed = False
@@ -1155,7 +1571,16 @@ class SqlFlows(Flows, unittest.TestCase):
                                 self.db = db
 
                             def execute(self, sql, args=()):
-                                if self.armed and sql.startswith(("SELECT rowversion, body FROM cases", "SELECT value FROM meta")) and (persistent or not self.failures):
+                                if (
+                                    self.armed
+                                    and sql.startswith(
+                                        (
+                                            "SELECT rowversion, body FROM cases",
+                                            "SELECT value FROM meta",
+                                        )
+                                    )
+                                    and (persistent or not self.failures)
+                                ):
                                     self.failures += 1
                                     raise OSError("SYN recovery read failure")
                                 return self.db.execute(sql, args)
@@ -1170,9 +1595,19 @@ class SqlFlows(Flows, unittest.TestCase):
                             raise original
 
                         target = "save" if failure == "pre-save" else "_validate_safety_clear"
-                        logger = "zava_forward.core.procurement" if operation == "withdraw" else "zava_forward.core.change_provenance"
-                        with patch.object(store, "db", fault), patch.object(store, target, side_effect=fail):
-                            with self.assertLogs(logger, level="ERROR"), self.assertRaises(type(original)) as caught:
+                        logger = (
+                            "zava_forward.core.procurement"
+                            if operation == "withdraw"
+                            else "zava_forward.core.change_provenance"
+                        )
+                        with (
+                            patch.object(store, "db", fault),
+                            patch.object(store, target, side_effect=fail),
+                        ):
+                            with (
+                                self.assertLogs(logger, level="ERROR"),
+                                self.assertRaises(type(original)) as caught,
+                            ):
                                 if operation == "withdraw":
                                     store.withdraw_work_order(PAM, wid, "SYN refused withdrawal")
                                 else:
@@ -1192,8 +1627,12 @@ class SqlFlows(Flows, unittest.TestCase):
                                     store.detail("ZF-3")
                         store.save()
                         self.assertEqual(list(store.audit_entries()), audit)
-                        self.assertEqual(store.list_work_orders(PAM), self.reopen().list_work_orders(PAM))
-                        self.assertEqual(store.detail("ZF-3")["stage"], "Final checks before ordering")
+                        self.assertEqual(
+                            store.list_work_orders(PAM), self.reopen().list_work_orders(PAM)
+                        )
+                        self.assertEqual(
+                            store.detail("ZF-3")["stage"], "Final checks before ordering"
+                        )
                         self.assertTrue(store.verify_audit())
         store.withdraw_work_order(PAM, wid, "SYN legitimate retry after recovery")
         order = next(w for w in self.reopen().list_work_orders(PAM) if w["id"] == wid)
@@ -1233,16 +1672,31 @@ class SqlFlows(Flows, unittest.TestCase):
         self.outcome(wid, "CONFIG-RACE-OLD")
         dataset.supplied_appointment_fixture(self.store, PAM, wid)
         offer = self.store._work_order(wid)["appointment_offer"]["id"]
-        config = dict(action="configure", event_ref="CONFIG-RACE", threshold=0, basis="SYN human rule")
-        event = dict(action="outcome", event_ref="CONFIG-RACE-NEW", offer_id=offer,
-                     cause="Resident", owner="SYN human", source="SYN checked",
-                     verified=True, no_access=True, preference_breach=False, abortive=False)
+        config = dict(
+            action="configure", event_ref="CONFIG-RACE", threshold=0, basis="SYN human rule"
+        )
+        event = dict(
+            action="outcome",
+            event_ref="CONFIG-RACE-NEW",
+            offer_id=offer,
+            cause="Resident",
+            owner="SYN human",
+            source="SYN checked",
+            verified=True,
+            no_access=True,
+            preference_breach=False,
+            abortive=False,
+        )
         body = self.closure_body(wid) if competing == "closure" else event
         first, second = (body, config) if configuration_wins else (config, body)
-        self.race(lambda: self.store.appointment_control(PAM, wid, first),
-                  lambda other: other.appointment_control(PAM, wid, second))
+        self.race(
+            lambda: self.store.appointment_control(PAM, wid, first),
+            lambda other: other.appointment_control(PAM, wid, second),
+        )
         state = self.store.appointment_summary(self.store._work_order(wid), PAM)
-        self.assertEqual(len(self.store._proc().get("appointment_configurations", [])), int(configuration_wins))
+        self.assertEqual(
+            len(self.store._proc().get("appointment_configurations", [])), int(configuration_wins)
+        )
         if configuration_wins:
             self.assertEqual(state["investigation"]["events"], ["CONFIG-RACE-OLD"])
             self.assertEqual(state["investigation"]["configuration"]["version"], 1)
@@ -1259,8 +1713,12 @@ class SqlFlows(Flows, unittest.TestCase):
             self.assertIsNone(state["investigation"])
             self.assertEqual(len(state["closure_history"]), 1)
         else:
-            self.assertEqual(state["investigation"]["events"],
-                             ["CONFIG-RACE-OLD"] if configuration_wins else ["CONFIG-RACE-OLD", "CONFIG-RACE-NEW"])
+            self.assertEqual(
+                state["investigation"]["events"],
+                ["CONFIG-RACE-OLD"]
+                if configuration_wins
+                else ["CONFIG-RACE-OLD", "CONFIG-RACE-NEW"],
+            )
         self.assertTrue(self.store.verify_audit())
 
     def test_configuration_wins_outcome_race(self):
@@ -1280,8 +1738,12 @@ class SqlFlows(Flows, unittest.TestCase):
         dataset.supplied_appointment_fixture(self.store, PAM, wid)
         self.outcome(wid, "OTHER-HOME-VISIT")
         pid = self.package()
-        other_wid = self.store.issue_work_order(PAM, pid, "ZF-2", resident_bindings=dataset.RESIDENT_BINDINGS)
-        config = dict(action="configure", event_ref="OTHER-HOME-CONFIG", threshold=0, basis="SYN human")
+        other_wid = self.store.issue_work_order(
+            PAM, pid, "ZF-2", resident_bindings=dataset.RESIDENT_BINDINGS
+        )
+        config = dict(
+            action="configure", event_ref="OTHER-HOME-CONFIG", threshold=0, basis="SYN human"
+        )
 
         def inactive(other):
             with other.lock:
@@ -1299,10 +1761,14 @@ class SqlFlows(Flows, unittest.TestCase):
         dataset.supplied_appointment_fixture(self.store, PAM, wid)
         self.outcome(wid, "CONFIG-VERSION-VISIT")
         lower = dict(action="configure", event_ref="VERSION-LOWER", threshold=0, basis="SYN human")
-        higher = dict(action="configure", event_ref="VERSION-HIGHER", threshold=4, basis="SYN human")
+        higher = dict(
+            action="configure", event_ref="VERSION-HIGHER", threshold=4, basis="SYN human"
+        )
         first, second = (higher, lower) if lower_wins else (lower, higher)
-        self.race(lambda: self.store.appointment_control(PAM, wid, first),
-                  lambda other: other.appointment_control(PAM, wid, second))
+        self.race(
+            lambda: self.store.appointment_control(PAM, wid, first),
+            lambda other: other.appointment_control(PAM, wid, second),
+        )
         self.assertEqual(len(self.store._proc()["appointment_configurations"]), 1)
         self.store.appointment_control(PAM, wid, first)
         self.store.appointment_control(PAM, wid, second)
@@ -1321,8 +1787,12 @@ class SqlFlows(Flows, unittest.TestCase):
     def test_concurrent_last_slot_keeps_only_winning_order_and_audit(self):
         pid = self.package()
         self.race(
-            lambda: self.store.issue_work_order(PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS),
-            lambda other: other.issue_work_order(PAM, pid, "ZF-2", resident_bindings=dataset.RESIDENT_BINDINGS),
+            lambda: self.store.issue_work_order(
+                PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS
+            ),
+            lambda other: other.issue_work_order(
+                PAM, pid, "ZF-2", resident_bindings=dataset.RESIDENT_BINDINGS
+            ),
         )
         self.assertEqual(len(self.store.list_work_orders(PAM)), 1)
 
@@ -1330,7 +1800,9 @@ class SqlFlows(Flows, unittest.TestCase):
         for change in ("withdraw", "rescope", "loss"):
             with self.subTest(change=change):
                 pid = self.package(offered=3)
-                wid = self.store.issue_work_order(PAM, pid, "ZF-3", resident_bindings=dataset.RESIDENT_BINDINGS)
+                wid = self.store.issue_work_order(
+                    PAM, pid, "ZF-3", resident_bindings=dataset.RESIDENT_BINDINGS
+                )
                 self.book(wid)
                 operations = {
                     "withdraw": lambda other: other.withdraw_work_order(PAM, wid, "SYN"),
@@ -1348,10 +1820,14 @@ class SqlFlows(Flows, unittest.TestCase):
         def revoke(other):
             actor = copy.deepcopy(other.staff[PAM["email"]])
             actor["contract_authorities"] = []
-            other.db.execute("UPDATE staff SET body=? WHERE email=?", (json.dumps(actor), PAM["email"]))
+            other.db.execute(
+                "UPDATE staff SET body=? WHERE email=?", (json.dumps(actor), PAM["email"])
+            )
 
         self.race(
-            lambda: self.store.issue_work_order(PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS),
+            lambda: self.store.issue_work_order(
+                PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS
+            ),
             revoke,
         )
 
@@ -1364,7 +1840,9 @@ class SqlFlows(Flows, unittest.TestCase):
                 other.save()
 
         self.race(
-            lambda: self.store.issue_work_order(PAM, pid, "ZF-2", resident_bindings=dataset.RESIDENT_BINDINGS),
+            lambda: self.store.issue_work_order(
+                PAM, pid, "ZF-2", resident_bindings=dataset.RESIDENT_BINDINGS
+            ),
             replace_source,
         )
         self.details = dataset.supplied_contract_fixture(self.store, pid, PAM)
@@ -1373,7 +1851,9 @@ class SqlFlows(Flows, unittest.TestCase):
         audit = list(self.store.audit_entries())
         with patch.object(self.store, "_append_audit", side_effect=OSError("SYN audit failure")):
             with self.assertRaises(OSError):
-                self.store.issue_work_order(PAM, pid, "ZF-2", resident_bindings=dataset.RESIDENT_BINDINGS)
+                self.store.issue_work_order(
+                    PAM, pid, "ZF-2", resident_bindings=dataset.RESIDENT_BINDINGS
+                )
         self.assertEqual(self.store.list_work_orders(PAM), before)
         self.assertEqual(list(self.store.audit_entries()), audit)
         self.store.issue_work_order(PAM, pid, "ZF-2", resident_bindings=dataset.RESIDENT_BINDINGS)
@@ -1381,20 +1861,41 @@ class SqlFlows(Flows, unittest.TestCase):
     def test_appointment_concurrent_confirmations_and_outcomes_are_not_lost(self):
         wid = self.appointment_order()
         ref = dataset.supplied_appointment_fixture(self.store, PAM, wid, confirmations=False)
-        first = dict(action="confirm", event_ref="FIRST", offer_id=ref, kind="resident",
-                     person="Pat Test", channel="Phone", source="SYN explicit agreement")
+        first = dict(
+            action="confirm",
+            event_ref="FIRST",
+            offer_id=ref,
+            kind="resident",
+            person="Pat Test",
+            channel="Phone",
+            source="SYN explicit agreement",
+        )
         second = dict(first, event_ref="SECOND", kind="staff", person=PAM["name"])
-        self.race(lambda: self.store.appointment_control(PAM, wid, first),
-                  lambda other: other.appointment_control(PAM, wid, second))
+        self.race(
+            lambda: self.store.appointment_control(PAM, wid, first),
+            lambda other: other.appointment_control(PAM, wid, second),
+        )
         self.store.appointment_control(PAM, wid, first)
-        self.store.appointment_control(PAM, wid, dict(
-            first, event_ref="CAPACITY", kind="capacity", person="SYN supplier"))
+        self.store.appointment_control(
+            PAM, wid, dict(first, event_ref="CAPACITY", kind="capacity", person="SYN supplier")
+        )
         offer = self.store._work_order(wid)["appointment_offer"]["id"]
-        outcome = dict(action="outcome", event_ref="VISIT-RACE", offer_id=offer,
-                       cause="Resident", owner="SYN", verified=True, no_access=True,
-                       preference_breach=True, abortive=True, source="SYN attendance evidence")
-        self.race(lambda: self.store.appointment_control(PAM, wid, outcome),
-                  lambda other: other.appointment_control(PAM, wid, outcome))
+        outcome = dict(
+            action="outcome",
+            event_ref="VISIT-RACE",
+            offer_id=offer,
+            cause="Resident",
+            owner="SYN",
+            verified=True,
+            no_access=True,
+            preference_breach=True,
+            abortive=True,
+            source="SYN attendance evidence",
+        )
+        self.race(
+            lambda: self.store.appointment_control(PAM, wid, outcome),
+            lambda other: other.appointment_control(PAM, wid, outcome),
+        )
         self.store.appointment_control(PAM, wid, outcome)
         self.assertEqual(len(self.store._proc()["appointment_outcomes"]), 1)
 
@@ -1402,31 +1903,55 @@ class SqlFlows(Flows, unittest.TestCase):
         for change in ("source", "scope", "authority"):
             with self.subTest(change=change):
                 pid = self.package()
-                wid = self.store.issue_work_order(PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS)
-                ref = dataset.supplied_appointment_fixture(self.store, PAM, wid, confirmations=False)
-                body = dict(action="confirm", event_ref="FINAL-" + change, offer_id=ref,
-                            kind="capacity", person="SYN supplier", channel="Document", source="SYN")
+                wid = self.store.issue_work_order(
+                    PAM, pid, "ZF-1", resident_bindings=dataset.RESIDENT_BINDINGS
+                )
+                ref = dataset.supplied_appointment_fixture(
+                    self.store, PAM, wid, confirmations=False
+                )
+                body = dict(
+                    action="confirm",
+                    event_ref="FINAL-" + change,
+                    offer_id=ref,
+                    kind="capacity",
+                    person="SYN supplier",
+                    channel="Document",
+                    source="SYN",
+                )
 
                 def alter(other):
                     if change == "source":
                         with other.lock:
-                            other._case(self.details["source_case_id"])["documents"][-1]["version"] = "2"
+                            other._case(self.details["source_case_id"])["documents"][-1][
+                                "version"
+                            ] = "2"
                             other.save()
                     elif change == "scope":
                         other.rescope_package(PAM, pid, "SYN changed", "SYN revision")
                     else:
                         actor = copy.deepcopy(other.staff[PAM["email"]])
                         actor["contract_authorities"] = []
-                        other.db.execute("UPDATE staff SET body=? WHERE email=?", (json.dumps(actor), PAM["email"]))
+                        other.db.execute(
+                            "UPDATE staff SET body=? WHERE email=?",
+                            (json.dumps(actor), PAM["email"]),
+                        )
 
                 self.race(lambda: self.store.appointment_control(PAM, wid, body), alter)
 
     def test_appointment_pending_audit_rollback_and_postcommit_truthful_retry(self):
         from zava_forward.core.appointments import AppointmentCommittedError
+
         wid = self.appointment_order()
         ref = dataset.supplied_appointment_fixture(self.store, PAM, wid, confirmations=False)
-        body = dict(action="confirm", event_ref="DURABLE", offer_id=ref, kind="resident",
-                    person="Pat Test", channel="Phone", source="SYN explicit agreement")
+        body = dict(
+            action="confirm",
+            event_ref="DURABLE",
+            offer_id=ref,
+            kind="resident",
+            person="Pat Test",
+            channel="Phone",
+            source="SYN explicit agreement",
+        )
         before = copy.deepcopy(self.store._proc())
         audit = list(self.store.audit_entries())
         with patch.object(self.store, "_append_audit", side_effect=OSError("SYN pending audit")):
@@ -1451,9 +1976,18 @@ class SqlFlows(Flows, unittest.TestCase):
         wid = self.appointment_order()
         dataset.supplied_appointment_fixture(self.store, PAM, wid)
         offer = self.store._work_order(wid)["appointment_offer"]["id"]
-        body = dict(action="outcome", event_ref="CASE-RACE", offer_id=offer,
-                    cause="Resident", owner="SYN human", verified=True, no_access=True,
-                    preference_breach=False, abortive=False, source="SYN verified visit")
+        body = dict(
+            action="outcome",
+            event_ref="CASE-RACE",
+            offer_id=offer,
+            cause="Resident",
+            owner="SYN human",
+            verified=True,
+            no_access=True,
+            preference_breach=False,
+            abortive=False,
+            source="SYN verified visit",
+        )
 
         def import_inactive_fixture(other):
             # Imported lifecycle evidence alone is not a supplied human closure.
@@ -1465,11 +1999,18 @@ class SqlFlows(Flows, unittest.TestCase):
         self.assertFalse(self.store._proc().get("appointment_outcomes"))
         self.store.appointment_control(PAM, wid, body)
         self.assertFalse(self.store._proc()["appointment_outcomes"][0]["eligible"])
-        self.store.reopen_case(PAM, "ZF-1", "SYN reopening", metadata=dict(
-            source="SYN fixture review", next_action="Human appointment review"))
+        self.store.reopen_case(
+            PAM,
+            "ZF-1",
+            "SYN reopening",
+            metadata=dict(source="SYN fixture review", next_action="Human appointment review"),
+        )
         self.store.appointment_control(PAM, wid, body)
         self.assertEqual(len(self.store._proc()["appointment_outcomes"]), 1)
-        self.assertEqual(self.store.appointment_summary(self.store._work_order(wid), PAM)["eligible_no_access"], 0)
+        self.assertEqual(
+            self.store.appointment_summary(self.store._work_order(wid), PAM)["eligible_no_access"],
+            0,
+        )
 
     def test_human_closure_wins_against_stale_event_without_count_or_history_loss(self):
         wid = self.appointment_order()
@@ -1479,38 +2020,68 @@ class SqlFlows(Flows, unittest.TestCase):
         offer = self.store._work_order(wid)["appointment_offer"]["id"]
         event = dict(old, event_ref="CLOSURE-RACE-NEW", offer_id=offer)
         closure = self.closure_body(wid)
-        self.race(lambda: self.store.appointment_control(PAM, wid, event),
-                  lambda other: other.appointment_control(PAM, wid, closure))
+        self.race(
+            lambda: self.store.appointment_control(PAM, wid, event),
+            lambda other: other.appointment_control(PAM, wid, closure),
+        )
         self.assertTrue(self.store.cases["ZF-1"]["closed"])
-        self.assertEqual([e["ref"] for e in self.store._proc()["appointment_outcomes"]], ["CLOSURE-RACE-OLD"])
-        self.assertEqual(self.store.appointment_summary(self.store._work_order(wid), PAM)["eligible_no_access"], 0)
+        self.assertEqual(
+            [e["ref"] for e in self.store._proc()["appointment_outcomes"]], ["CLOSURE-RACE-OLD"]
+        )
+        self.assertEqual(
+            self.store.appointment_summary(self.store._work_order(wid), PAM)["eligible_no_access"],
+            0,
+        )
         self.store.appointment_control(PAM, wid, event)
         self.assertFalse(self.store._proc()["appointment_outcomes"][-1]["eligible"])
-        self.store.reopen_case(PAM, "ZF-1", "SYN reopen", metadata=dict(source="SYN human", next_action="Review"))
+        self.store.reopen_case(
+            PAM, "ZF-1", "SYN reopen", metadata=dict(source="SYN human", next_action="Review")
+        )
         self.store.appointment_control(PAM, wid, old)
         self.store.appointment_control(PAM, wid, event)
-        self.assertEqual(self.store.appointment_summary(self.store._work_order(wid), PAM)["eligible_no_access"], 0)
+        self.assertEqual(
+            self.store.appointment_summary(self.store._work_order(wid), PAM)["eligible_no_access"],
+            0,
+        )
         self.assertEqual(len(self.store._proc()["appointment_outcomes"]), 2)
 
     def test_event_wins_against_stale_human_closure_then_fresh_closure_preserves_event(self):
         wid = self.appointment_order()
         dataset.supplied_appointment_fixture(self.store, PAM, wid)
         offer = self.store._work_order(wid)["appointment_offer"]["id"]
-        event = dict(action="outcome", event_ref="EVENT-WINS", offer_id=offer,
-                     cause="Resident", owner="SYN human", verified=True, no_access=True,
-                     preference_breach=False, abortive=False, source="SYN verified event")
+        event = dict(
+            action="outcome",
+            event_ref="EVENT-WINS",
+            offer_id=offer,
+            cause="Resident",
+            owner="SYN human",
+            verified=True,
+            no_access=True,
+            preference_breach=False,
+            abortive=False,
+            source="SYN verified event",
+        )
         closure = self.closure_body(wid)
-        self.race(lambda: self.store.appointment_control(PAM, wid, closure),
-                  lambda other: other.appointment_control(PAM, wid, event))
+        self.race(
+            lambda: self.store.appointment_control(PAM, wid, closure),
+            lambda other: other.appointment_control(PAM, wid, event),
+        )
         self.assertFalse(self.store.cases["ZF-1"]["closed"])
-        self.assertEqual(self.store.appointment_summary(self.store._work_order(wid), PAM)["eligible_no_access"], 1)
+        self.assertEqual(
+            self.store.appointment_summary(self.store._work_order(wid), PAM)["eligible_no_access"],
+            1,
+        )
         self.store.appointment_control(PAM, wid, closure)
         self.assertEqual(self.store._proc()["appointment_outcomes"][0]["ref"], "EVENT-WINS")
         self.assertEqual(self.store.cases["ZF-1"]["home_case_closures"][0]["outcome_boundary"], 1)
-        self.assertEqual(self.store.appointment_summary(self.store._work_order(wid), PAM)["eligible_no_access"], 0)
+        self.assertEqual(
+            self.store.appointment_summary(self.store._work_order(wid), PAM)["eligible_no_access"],
+            0,
+        )
 
     def test_human_closure_pending_audit_rollback_and_postcommit_truthful_retry(self):
         from zava_forward.core.appointments import AppointmentCommittedError
+
         wid = self.appointment_order()
         dataset.supplied_appointment_fixture(self.store, PAM, wid)
         self.outcome(wid, "AUDIT-BOUNDARY")
@@ -1518,7 +2089,9 @@ class SqlFlows(Flows, unittest.TestCase):
         before = copy.deepcopy(self.store.cases["ZF-1"])
         proc = copy.deepcopy(self.store._proc())
         audit = list(self.store.audit_entries())
-        with patch.object(self.store, "_append_audit", side_effect=OSError("SYN closure pending audit")):
+        with patch.object(
+            self.store, "_append_audit", side_effect=OSError("SYN closure pending audit")
+        ):
             with self.assertRaises(OSError):
                 self.store.appointment_control(PAM, wid, body)
         self.assertEqual(self.store.cases["ZF-1"], before)
@@ -1536,5 +2109,19 @@ class SqlFlows(Flows, unittest.TestCase):
         self.store.appointment_control(PAM, wid, body)
         self.assertTrue(self.store.cases["ZF-1"]["closed"])
         self.assertEqual(len(self.store.cases["ZF-1"]["home_case_closures"]), 1)
-        self.assertEqual(sum(e["action"] == "appointment_close_case" for e in self.store.audit_entries()), 1)
+        self.assertEqual(
+            sum(e["action"] == "appointment_close_case" for e in self.store.audit_entries()), 1
+        )
         self.assertTrue(self.store.verify_audit())
+
+
+class HandoverBlockersTest(unittest.TestCase):
+    def test_empty_and_partial_checklists_block_handed_over_is_exempt_from_gates(self):
+        from zava_forward.core.quality import CHECKLISTS, handover_blockers
+
+        labels = CHECKLISTS["Loft insulation"]["items"]
+        full = [dict(label=x, evidence="seen") for x in labels]
+        base = dict(measure="Loft insulation", checklist="Loft insulation", state="Handed over")
+        for items, blocked in ((full, False), ([], True), (full[:2], True)):
+            case = dict(quality=[dict(base, items=items)], hazards=[dict(released=False)])
+            self.assertEqual(bool(handover_blockers(case)), blocked)

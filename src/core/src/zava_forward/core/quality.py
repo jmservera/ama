@@ -17,7 +17,7 @@ from copy import deepcopy
 from . import change_provenance, rai_release
 from .stock import decision_scope
 from .workflows import MANAGER_ROLES, _now
-from .resident_decisions import require_context
+from .resident_decisions import require_context, resident_gate
 
 QUALITY_ROLES = ("Quality Inspector",) + MANAGER_ROLES
 SOURCES = ("Installer", "Contractor", "Provider submission", "Our own inspection")
@@ -52,6 +52,28 @@ def checklist_for(measure):
     low = (measure or "").lower()
     key = next((name for word, name in _KEYWORDS if word in low), "General")
     return dict(CHECKLISTS[key], name=key)
+
+
+def handover_blockers(c):
+    """Per-measure reasons the quality evidence cannot support handover, using the operations' own gates."""
+    out = []
+    held = any(not h.get("released") for h in c.get("hazards", []))
+    for rec in active_records(c.get("quality", [])):
+        if rec.get("state") not in (ACCEPTED, HANDED):
+            continue
+        measure, why = rec.get("measure"), []
+        have = {i.get("label"): _clean(i.get("evidence")) for i in rec.get("items") or []}
+        required = CHECKLISTS.get(rec.get("checklist")) or checklist_for(measure)
+        gaps = [lab for lab in required["items"] if not have.get(lab)]
+        if gaps:
+            why.append("Checks without evidence: " + "; ".join(gaps) + ".")
+        if rec["state"] == ACCEPTED:
+            if held:
+                why.append("Retrofit work is stopped for safety review.")
+            binding = rec.get("resident_binding")
+            why += resident_gate(c, [binding] if binding else None)
+        out += [dict(measure=measure, reason=r) for r in why]
+    return out
 
 
 def active_records(records):

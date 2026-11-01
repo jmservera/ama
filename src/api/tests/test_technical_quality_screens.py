@@ -100,13 +100,23 @@ class TechnicalQueue(unittest.TestCase):
         self.assertIn("Quality Inspector", out["roles"])
         self.assertNotIn("Resident Liaison Officer", out["roles"])
 
-    def test_stale_signoff_cannot_show_readiness(self) -> None:
+    def test_reassessment_signoff_cannot_show_readiness(self) -> None:
         case = tech_case()
-        case["technical"]["signoffs"]["building"] = signed(1)
+        case["technical"]["signoffs"]["building"] = {
+            "status": "Needs reassessment",
+            "reason": "Design changed",
+            "history": [],
+        }
         text = json.dumps(render("technical-queue", case)["tree"])
         self.assertNotIn("Recorded evidence is complete", text)
         self.assertIn("Cannot confirm readiness", text)
-        self.assertIn("Stale: signed off on design version 1, current is 2", text)
+
+    def test_unaffected_older_signoffs_and_no_conflicts_stay_ready(self) -> None:
+        case = tech_case(stock_reconciliation=[])
+        case["technical"]["signoffs"]["assessment"] = signed(1)
+        text = json.dumps(render("technical-queue", case)["tree"])
+        self.assertIn("Recorded evidence is complete", text)
+        self.assertIn("Signed off on design version 1", text)
 
     def test_missing_references_and_no_design_block(self) -> None:
         case = tech_case(
@@ -162,6 +172,7 @@ class QualityQueue(unittest.TestCase):
             "id": "C-1",
             "measures": "Loft insulation",
             "quality": [record("Accepted", accepted_by="Inspector")],
+            "quality_handover_blockers": [],
         }
         out = render("quality-queue", case)
         text = json.dumps(out["tree"])
@@ -180,6 +191,7 @@ class QualityQueue(unittest.TestCase):
                 "id": "C",
                 "measures": ["Loft insulation", "Heat pump"],
                 "quality": [record("Accepted")],
+                "quality_handover_blockers": [],
             },
             "pending": {"id": "C", "measures": "Loft insulation", "quality": [record("Submitted")]},
             "blank": {
@@ -188,6 +200,27 @@ class QualityQueue(unittest.TestCase):
                 "quality": [record("Accepted", items=[{"label": "Depth", "evidence": " "}])],
             },
             "none": {"id": "C", "measures": ""},
+            "not supplied": {
+                "id": "C",
+                "measures": "Loft insulation",
+                "quality": [record("Accepted")],
+            },
+            "partial checklist": {
+                "id": "C",
+                "measures": "Loft insulation",
+                "quality": [record("Accepted")],
+                "quality_handover_blockers": [
+                    {"measure": "Loft insulation", "reason": "Checks without evidence: Hatch."}
+                ],
+            },
+            "stale scope or safety": {
+                "id": "C",
+                "measures": "Loft insulation",
+                "quality": [record("Accepted")],
+                "quality_handover_blockers": [
+                    {"measure": "Loft insulation", "reason": "Resident scope is unknown."}
+                ],
+            },
         }
         for name, case in cases.items():
             with self.subTest(name):
@@ -219,6 +252,25 @@ class QualityQueue(unittest.TestCase):
         self.assertIn("Independent reinspection by a Quality Inspector not involved", text)
         self.assertNotIn("Every measure has accepted evidence", text)
         self.assertNotIn('"old"', text)
+
+    def test_handed_over_after_fix_keeps_passed_reinspection(self) -> None:
+        defect = {
+            "description": "Gap",
+            "reason": "Why",
+            "owner": "Owner Co",
+            "raised_by": "Inspector",
+        }
+        case = {
+            "id": "C",
+            "measures": "Loft insulation",
+            "quality": [
+                record("Handed over", defect=defect, handover={"by": "Officer", "at": "2026-01-01"})
+            ],
+            "quality_handover_blockers": [],
+        }
+        text = json.dumps(render("quality-queue", case)["tree"])
+        self.assertIn('"Passed"', text)
+        self.assertNotIn("Not yet possible", text)
 
     def test_returned_names_owner_next_action(self) -> None:
         defect = {

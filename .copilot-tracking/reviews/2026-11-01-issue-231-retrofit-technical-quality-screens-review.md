@@ -12,3 +12,5 @@ Execution: executed once, self-review of the diff against the acceptance criteri
 
 Verdict on closing: accessibility criterion unproven, so the PR uses Refs.
 Routed follow-ups: browser keyboard and axe check for both screens, validation in #155, queue-level cross-home technical ordering.
+
+Addendum (PR review, original outcome preserved): five Copilot findings were valid and fixed as above; handover readiness now consumes a server-provided blocker list rather than client inference.

@@ -4,3 +4,4 @@
 * Added: `src/api/tests/test_technical_quality_screens.py` (9 node-vm tests).
 * Validation: new, role_screens, asset_board, workspace_scripts, design_system, accessibility_baseline tests pass (36); ruff check, ruff format --check, mypy src clean for `src/api`. Run in a throwaway venv with pip.
 * Divergence: none from plan. Browser and axe keyboard checks not run locally; CI is the evidence.
+* Review fixes (PR #656 Copilot threads): technical readiness no longer requires a stock conflict register and treats a sign-off as valid unless core moved it to "Needs reassessment" (scoped design changes). Core now supplies `quality_handover_blockers` (`quality.handover_blockers`: checklist coverage by recorded checklist, safety hold, resident scope) and the quality screen blocks readiness on it or when it is not supplied. A handed-over defect record keeps "Passed" reinspection. Tests added for each; ruff clean.
