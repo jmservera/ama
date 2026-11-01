@@ -37,6 +37,9 @@ SUFFIXES = {
     ".key",
     ".sh",
     ".bicepparam",
+    ".js",
+    ".html",
+    ".sql",
 }
 SKIPPED_PARTS = {"node_modules", ".git", ".venv", "__pycache__"}
 PATTERNS = {
@@ -108,6 +111,16 @@ class SourceScanTests(unittest.TestCase):
             (base / "live.bicepparam").write_text(f"param cs = '{secret}'\n", encoding="utf-8")
             findings = scan_directory(base)
         self.assertEqual({f.split(":")[0] for f in findings}, {"create.sh", "live.bicepparam"})
+
+    def test_web_and_sql_files_are_scanned(self) -> None:
+        secret = "HostName=h.azure-devices.net;DeviceId=d;SharedAccessKey=" + "A" * 24 + "=="
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            (base / "app.js").write_text(f'const cs = "{secret}";\n', encoding="utf-8")
+            (base / "page.html").write_text(f"<p>{secret}</p>\n", encoding="utf-8")
+            (base / "users.sql").write_text(f"-- {secret}\n", encoding="utf-8")
+            findings = scan_directory(base)
+        self.assertEqual({f.split(":")[0] for f in findings}, {"app.js", "page.html", "users.sql"})
 
     def test_no_device_key_or_connection_string_in_repository_text(self) -> None:
         this = Path(__file__).resolve()
