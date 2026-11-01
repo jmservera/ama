@@ -101,10 +101,13 @@ def plan(run_id: str, credential_owner: str, sensors: Sequence[Mapping[str, obje
     failure: DeviceIdentityError | None = None
     manifest: Manifest | None = None
     try:
-        identities = tuple(
-            DeviceIdentity("SYN-" + str(s["sensor_id"]), str(s["sensor_id"]), str(s["home_id"]))
-            for s in sensors
-        )
+        raw: list[DeviceIdentity] = []
+        for s in sensors:
+            sensor_id, home_id = s["sensor_id"], s["home_id"]
+            if not isinstance(sensor_id, str) or not isinstance(home_id, str):
+                raise DeviceIdentityError("INVALID_DEVICE_IDENTITY")
+            raw.append(DeviceIdentity("SYN-" + sensor_id, sensor_id, home_id))
+        identities = tuple(raw)
         manifest = Manifest(run_id, credential_owner, identities)
         manifest.validate()
     except DeviceIdentityError as error:
@@ -199,6 +202,7 @@ def teardown(
     """
     failure: DeviceIdentityError | None = None
     try:
+        manifest.validate()
         with _run_lock(manifest.run_id):
             _teardown_locked(manifest, registry, store, refs, full_run=True)
     except DeviceIdentityError as error:

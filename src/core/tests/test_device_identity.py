@@ -5,7 +5,7 @@ import unittest
 from collections.abc import Sequence
 
 from zava_forward.core.synthetic import device_identity as di
-from zava_forward.core.synthetic import sensor_stock
+from zava_forward.core.synthetic import sensor_identity, sensor_stock
 
 SECRET = "PRIVATE-KEY-MATERIAL"
 
@@ -87,6 +87,18 @@ class DeviceIdentityTests(unittest.TestCase):
         bad = [{**sensors(1)[0], "home_id": "another-home"}]
         with self.assertRaisesRegex(di.DeviceIdentityError, "INVALID_DEVICE_IDENTITY"):
             di.plan("run-001", "owner-role", bad)
+
+    def test_non_string_home_rejected_before_stringifying(self) -> None:
+        bad = [{"sensor_id": sensor_identity.sensor_key("None"), "home_id": None}]
+        with self.assertRaisesRegex(di.DeviceIdentityError, "INVALID_DEVICE_IDENTITY"):
+            di.plan("run-001", "owner-role", bad)
+
+    def test_teardown_validates_manifest_before_adapter_calls(self) -> None:
+        registry, store = FakeRegistry(), FakeStore()
+        bad = di.Manifest("run-001", "owner-role", (di.DeviceIdentity("OTHER", "x", "y"),))
+        with self.assertRaisesRegex(di.DeviceIdentityError, "INVALID_DEVICE_IDENTITY"):
+            di.teardown(bad, registry, store)
+        self.assertEqual(registry.devices, {"SYN-OTHER": "other-run"})
 
     def test_owner_and_run_required(self) -> None:
         with self.assertRaisesRegex(di.DeviceIdentityError, "INVALID_MANIFEST"):
