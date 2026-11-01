@@ -13,6 +13,8 @@ ms.date: 2026-11-01
 * CI fixes: registered the golden in `src/agents/evals/registry.json` and `provenance-register.json` (DS-REVIEW-EFFECTIVENESS) and labelled its description as constructed and synthetic.
 * Second PR #638 follow-up: seeded runs fail when `ai_run` does not return AI output (for example `ZF_AI=off`); `replacement_effective` compares complete semicolon-delimited statements, so numeric prefixes such as `120` or `10` no longer pass; edited controls are validated against source facts in the gate; tests added for each.
 
+* PR review round 4: `review_effectiveness.py` gate requires the reason to name the seeded discrepancy topic and its source; `_origin` keeps the original citable label for aliased topics. Two regressions added to `test_review_effectiveness.py`.
+
 ## Validation
 
 * ruff check, ruff format --check and mypy clean in `src/agents`; `test_review_effectiveness`, `test_ai_eval`, `test_chat_eval` pass (44 tests).

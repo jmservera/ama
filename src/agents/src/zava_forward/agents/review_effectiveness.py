@@ -56,6 +56,13 @@ def _facts(labels: list[str]) -> dict[str, str]:
     return facts
 
 
+def _origin(topic: str) -> str:
+    """The citable case label behind a topic alias such as 'Extra support detail'."""
+    while topic.endswith(" detail") and topic != "detail":
+        topic = topic[: -len(" detail")]
+    return topic
+
+
 def _findings(
     prop: Proposal, facts: dict[str, str], required: list[str]
 ) -> list[tuple[str, str, str]]:
@@ -67,9 +74,11 @@ def _findings(
         if topic not in facts:
             found.append(("unsupported", topic, c["cite"]))
         elif facts[topic] != c["asserted"]:
-            found.append(("mismatch", topic, f"{topic}: {facts[topic]}"))
+            found.append(("mismatch", topic, f"{_origin(topic)}: {facts[topic]}"))
     found += [
-        ("incomplete", t, f"{t}: {facts[t]}") for t in required if t not in covered and t in facts
+        ("incomplete", t, f"{_origin(t)}: {facts[t]}")
+        for t in required
+        if t not in covered and t in facts
     ]
     return found
 
@@ -148,6 +157,10 @@ def gate_satisfied(
         source = reason.partition(SOURCE_TAG)[2].rstrip("]")
         if not reason or source not in labels:
             return False, "reason does not name a source that resolves in the case"
+        if facts is not None:
+            found = _findings(prop, facts, required or [])
+            if not any(source == src and t in reason for _, t, src in found):
+                return False, "reason does not identify the seeded discrepancy and its source"
         if action == "edit" and not replacement_effective(prop, rec, facts or {}, required or []):
             return False, "edit does not correct the defect or omits required facts"
         return True, "defect corrected or rejected with source and reason"

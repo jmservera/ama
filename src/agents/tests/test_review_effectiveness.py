@@ -125,6 +125,47 @@ class ReviewEffectivenessTests(unittest.TestCase):
         self.assertEqual(r["detected"], 0)
         self.assertEqual(r["uncorrected_defects"], r["defects"])
 
+    def test_unrelated_resolving_citation_does_not_credit_rejection(self) -> None:
+        spec = json.loads(re_.GOLDEN.read_text())
+
+        def sloppy(prop, facts, rec, required):  # type: ignore[no-untyped-def]
+            if prop["defect"]:
+                return "reject", "Rejected for formatting only [source: Owner: Eval Owner]", None, 1
+            return "accept", "", None, 1
+
+        with mock.patch.dict(os.environ, {"ZF_AI": "on"}), tempfile.TemporaryDirectory() as tmp:
+            r = re_.run_panel("sloppy", sloppy, spec, tmp)
+        wrong = next(x for x in r["rows"] if x["proposal"] == "D-WRONG")
+        self.assertFalse(wrong["defect_corrected"])
+        self.assertFalse(wrong["gate_satisfied"])
+
+    def test_aliased_topic_correction_cites_original_label_and_passes_gate(self) -> None:
+        labels = ["Extra support: needed", "Extra support: Large print"]
+        facts = re_._facts(labels)
+        prop = dict(
+            defect="wrong",
+            claims=[
+                dict(
+                    topic="Extra support detail",
+                    cite="Extra support: Large print",
+                    asserted="Braille",
+                )
+            ],
+        )
+        found = re_._findings(prop, facts, [])
+        self.assertEqual(
+            found, [("mismatch", "Extra support detail", "Extra support: Large print")]
+        )
+        reason = f"mismatch: Extra support detail differs {re_.SOURCE_TAG}{found[0][2]}]"
+        rec = dict(
+            review_evidence=dict(reviewer="a@b"),
+            status="Edited",
+            reviewer_action="edit",
+            reviewer_reason=reason,
+            override_text="Extra support detail is Large print",
+        )
+        self.assertTrue(re_.gate_satisfied(prop, rec, labels, facts, [])[0])
+
     def test_gate_refuses_accepted_defect_and_unresolvable_source(self) -> None:
         labels = ["Owner: Eval Owner"]
         defect = dict(defect="wrong")
