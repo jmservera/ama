@@ -413,6 +413,116 @@ registerRoleScreen({
       blocked.length ? screenUnknown(`${blocked.length} of 5 gates are blocked: ${blocked.map((r) => r[0]).join(", ")}.`,
         blocked[0][3], blocked[0][4]) : h("p", {}, "No blocker is recorded, which does not confirm readiness."),
       screenTable("Same-home gate states", ["Gate", "State", "Meaning", "Owner", "Next action"], rows));
+const technicalRoles = ["Retrofit Coordinator", "Quality Inspector", "Building Safety Liaison", ...screenManagers];
+const qualityRoles = ["Quality Inspector", ...screenManagers];
+// Competent role per sign-off, mirroring core signoffs.SIGNOFFS (a proposal for the programme to confirm).
+const signoffTypes = [
+  ["assessment", "Retrofit assessment", "Quality Inspector"],
+  ["design", "Design", "Retrofit Coordinator"],
+  ["building", "Building and safety dependency", "Building Safety Liaison"],
+  ["coordination", "Coordination", "Retrofit Programme Manager or Programme Support Officer"]
+];
+// A scoped design change invalidates only the sign-offs it names, by moving them to "Needs reassessment".
+function signoffState(s) {
+  if (!s) return { text: "Not given", ok: false };
+  if (s.status === "Signed off") return { text: `Signed off on design version ${screenValue(s.version)}`, ok: true };
+  return { text: s.status === "Returned" ? "Returned" : s.status === "Needs reassessment" ? "Needs reassessment" : screenValue(s.status), ok: false };
+}
+registerRoleScreen({
+  id: "technical-queue",
+  title: "Technical queue",
+  roles: technicalRoles,
+  render(c) {
+    const t = c.technical;
+    const queries = c.stock_reconciliation || [];
+    const missing = Array.isArray(c.technical_missing) ? c.technical_missing : null;
+    const states = signoffTypes.map(([key, label, role]) => ({ key, label, role, s: t?.signoffs?.[key], ...signoffState(t?.signoffs?.[key]) }));
+    const reasons = [];
+    if (!t) reasons.push("No design is recorded.");
+    if (missing === null) reasons.push("Missing references are not supplied.");
+    for (const m of missing || []) reasons.push(`${m.item}. Owner: ${m.assigned_to}.`);
+    for (const x of states) if (t && !x.ok && !(missing || []).some((m) => m.item.startsWith(x.label))) reasons.push(`${x.label}: ${x.text}.`);
+    const returned = states.filter((x) => x.s?.status === "Returned" || x.s?.status === "Needs reassessment");
+    return h("div", {},
+      screenPanel("Evidence boundary",
+        h("p", {}, "Read-only reader view. It gives no sign-off and changes no record. Sign-offs are named human professional decisions; role membership alone does not attest competence. Source: desk research, not observed behaviour."),
+        h("p", {}, `Home scope: ${c.id} only.`)),
+      screenPanel("Technical readiness",
+        reasons.length
+          ? screenUnknown(reasons.join(" "), "See the owner named against each item", "Complete and record each item, then reload this screen")
+          : h("p", { class: "ok", role: "status" }, "Recorded evidence is complete: every sign-off is valid, none is awaiting reassessment, and nothing is missing. This screen does not approve the stage.")),
+      screenPanel("Source facts",
+        screenTable("Source facts and conflicts", ["Query", "Field", "First source (value, ID, version, age)", "Compared source (value, ID, version, age)", "Status", "Owner"],
+          queries.map((q) => [q.id, q.field,
+            `${q.left.value}, ${q.left.source_id} v${q.left.version}, ${assetAgeDays(q.left.date)}, ${q.left.validation_state}`,
+            `${q.right.value}, ${q.right.source_id} v${q.right.version}, ${assetAgeDays(q.right.date)}, ${q.right.validation_state}`,
+            assetStatus(c, q), screenPerson(q.query_owner)]))),
+      screenPanel("Design version",
+        t ? screenFields([["Current design version", t.design_version], ["Recorded by", t.design_name], ["Recorded at", screenStamp(t.design_at)],
+          ["Latest change note", t.versions?.at(-1)?.note]])
+          : screenUnknown("No design is recorded for this home.", "Retrofit Coordinator", "Record the design")),
+      screenPanel("Separate sign-offs",
+        screenTable("Sign-off validity after design changes", ["Sign-off", "Competent role", "State", "By", "Note or reason"],
+          states.map((x) => [x.label, x.role, x.text, x.s?.by || "Nobody yet", x.s?.reason || x.s?.note]))),
+      screenPanel("Returns and routing",
+        returned.length ? screenTable("Returned or reassessment sign-offs", ["Sign-off", "Route to", "Why", "Returned by"],
+          returned.map((x) => {
+            const last = (x.s.history || []).at(-1);
+            return [x.label, `${x.role} (competent reviewer for this sign-off, not a generic approval)`, x.s.reason, last?.by];
+          }))
+          : h("p", { class: "empty" }, "No returned sign-offs recorded. This does not establish readiness.")),
+      screenPanel("Missing references",
+        missing === null ? screenUnknown("Missing references are not supplied for this home.", "Grants and Evidence Officer", "Reload; do not treat as complete")
+          : screenTable("Missing references", ["Missing item", "Owner"], missing.map((m) => [m.item, m.assigned_to]))));
+  }
+});
+
+function qualityMeasures(c) {
+  const m = c.measures;
+  return (Array.isArray(m) ? m : String(m ?? "").split(",")).map((x) => String(x).trim()).filter(Boolean);
+}
+function qualityNext(r) {
+  if (r.state === "Returned") return `Defect owner ${screenValue(r.defect?.owner)} to correct, then record the fix`;
+  if (r.state === "Fixed, awaiting reinspection") return "Independent reinspection by a Quality Inspector not involved in the work or fix";
+  if (r.state === "Submitted") return "Independent inspector to accept or return";
+  if (r.state === "Accepted") return "Handover to be recorded by a person";
+  return "None recorded";
+}
+registerRoleScreen({
+  id: "quality-queue",
+  title: "Quality queue",
+  roles: qualityRoles,
+  render(c) {
+    const records = (c.quality || []).filter((r) => r.state !== "Superseded");
+    const measures = qualityMeasures(c);
+    const server = Array.isArray(c.quality_handover_blockers) ? c.quality_handover_blockers : null;
+    const blockers = measures.flatMap((measure) => {
+      const rs = records.filter((r) => r.measure === measure);
+      if (!rs.length) return [`${measure}: no quality evidence recorded.`];
+      return rs.filter((r) => r.state !== "Accepted" && r.state !== "Handed over").map((r) => `${measure}: ${r.state}.`)
+        .concat(rs.filter((r) => (r.items || []).some((i) => !String(i.evidence || "").trim())).map(() => `${measure}: a check has no evidence note.`));
+    });
+    if (!measures.length) blockers.push("No measures are recorded for this home.");
+    if (server === null) blockers.push("Handover checks (checklist coverage, safety and resident scope) are not supplied.");
+    for (const b of server || []) blockers.push(`${b.measure}: ${b.reason}`);
+    return h("div", {},
+      screenPanel("Evidence boundary",
+        h("p", {}, "Read-only reader view. It accepts, returns and hands over nothing. Acceptance is by a named person independent of the work. Source: desk research, not observed behaviour."),
+        h("p", {}, `Home scope: ${c.id} only.`)),
+      screenPanel("Handover readiness",
+        blockers.length ? screenUnknown(blockers.join(" "), "Quality Inspector or defect owner named per measure", "Record the missing evidence, fix or reinspection; handover stays blocked until then")
+          : h("p", { class: "ok", role: "status" }, "Every measure has accepted evidence and no open defect. This screen does not record the handover.")),
+      ...(records.length ? records.map((r) => screenPanel(`${r.measure}: ${r.state}`,
+        screenFields([["Checklist", `${screenValue(r.checklist)} ${screenValue(r.checklist_version)}`], ["Evidence version", r.evidence_version],
+          ["Evidence source", r.source], ["Submitted by", r.submitted_by], ["Accepted by", r.accepted_by || "Nobody yet"], ["Next action", qualityNext(r)]]),
+        screenTable(`Per-check evidence for ${r.measure}`, ["Check", "Evidence seen", "State"],
+          (r.items || []).map((i) => [i.label, i.evidence, String(i.evidence || "").trim() ? "Evidence noted" : "No evidence"])),
+        r.defect ? screenFields([["Defect", r.defect.description], ["Why returned", r.defect.reason], ["Defect owner", r.defect.owner],
+          ["Raised by", r.defect.raised_by], ["Fixed by", r.defect.fixed_by || "Not yet fixed"], ["Remediation evidence", r.defect.remediation_evidence || "Not supplied"],
+          ["Reinspection", r.state === "Fixed, awaiting reinspection" ? "Awaiting independent reinspection" : r.state === "Accepted" || r.state === "Handed over" ? "Passed" : "Not yet possible"]])
+          : h("p", { class: "empty" }, "No defect recorded."),
+        r.handover ? screenFields([["Handed over by", r.handover.by], ["Handed over at", screenStamp(r.handover.at)]]) : null))
+        : [screenPanel("Quality evidence", h("p", { class: "empty" }, "No quality records supplied. This does not establish readiness."))]));
   }
 });
 

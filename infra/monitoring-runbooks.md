@@ -1,7 +1,7 @@
 ---
 title: Monitoring candidates and operator runbooks
 description: Source-only alert catalogue, proposed routing, safe responses and unresolved monitoring acceptance
-ms.date: 2026-10-27
+ms.date: 2026-11-01
 ms.topic: how-to
 ---
 
@@ -325,6 +325,20 @@ still need visible monitoring ownership/manual-route status. Recovery: qualified
 corrective tests and distinct authorized human restart approval; current actual
 restart remains held as documented in #221. Constructed thresholds/fixtures are
 synthetic offline tests only, never actual human authorization.
+
+## Executable Coverage Check
+
+[monitoring_coverage.py](../src/core/src/zava_forward/core/monitoring_coverage.py)
+holds the alert register (status installed, disabled candidate or gap, proposed
+owner role, runbook anchor). Its test fails when an entry lacks a heading in this
+file or its Bicep marker, or when poison queue, AI limit and harm gaps are
+presented as installed. The same module evaluates harm and AI-limit indicators as
+Insufficient, Blocked, within threshold or breach, never green; constructed
+thresholds are offline only and a live threshold needs a named human approver.
+A breach reports an incident owner but does not suspend a task. It also provides
+an allowlist sanitiser for diagnostic events so prompts, readings, chat content,
+tokens and identities are dropped. It is not wired into platform log collection,
+so the diagnostic-exclusion criterion stays unmet as described below.
 
 ## Workbook and Privacy Boundary
 
