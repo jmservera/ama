@@ -22,7 +22,19 @@ from zava_forward.api.iot_stream import Activation, Binding, HubPublisher
 
 ROOT = Path(__file__).resolve().parents[3]
 SCANNED = ("src", "infra", "docs", ".github")
-SUFFIXES = {".py", ".md", ".bicep", ".json", ".yaml", ".yml", ".toml", ".txt", ".env"}
+SUFFIXES = {
+    ".py",
+    ".md",
+    ".bicep",
+    ".json",
+    ".yaml",
+    ".yml",
+    ".toml",
+    ".txt",
+    ".env",
+    ".pem",
+    ".key",
+}
 SKIPPED_PARTS = {"node_modules", ".git", ".venv", "__pycache__"}
 PATTERNS = {
     "shared access key value": re.compile(r"SharedAccessKey\s*=\s*[A-Za-z0-9+/]{20,}={0,2}"),
@@ -75,6 +87,15 @@ class SourceScanTests(unittest.TestCase):
             findings = scan_directory(base)
         flagged = {f.split(":")[0] for f in findings}
         self.assertEqual(flagged, {".env", ".env.local", "settings.env"})
+
+    def test_private_key_files_are_scanned(self) -> None:
+        block = "-----BEGIN PRIVATE KEY-----\nAAAA\n-----END PRIVATE KEY-----\n"
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            for name in ("device.pem", "device.key"):
+                (base / name).write_text(block, encoding="utf-8")
+            findings = scan_directory(base)
+        self.assertEqual({f.split(":")[0] for f in findings}, {"device.pem", "device.key"})
 
     def test_no_device_key_or_connection_string_in_repository_text(self) -> None:
         this = Path(__file__).resolve()
