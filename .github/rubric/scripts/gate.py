@@ -240,7 +240,40 @@ def evaluate(
     return result
 
 
-def render_report(rubric: dict[str, Any], baseline: dict[str, Any] | None, result: dict[str, Any], run_url: str) -> str:
+def baseline_notes(state: dict[str, Any]) -> list[str]:
+    """Describe baseline freshness and recorded-score edits for the report."""
+    notes: list[str] = []
+    if state.get("recorded_scores_changed"):
+        notes.append(
+            "This pull request edits `latest.json` or `badge.svg`. The workflow no longer records scores on pull request "
+            "branches; the score is refreshed from `main` after merge. Merge `main` and drop those file changes so the "
+            "merge cannot overwrite the trusted baseline."
+        )
+    freshness = state.get("baseline_freshness")
+    if not freshness or state.get("bootstrap") or state.get("force"):
+        return notes
+    commit = freshness.get("commit")
+    short = commit[:7] if isinstance(commit, str) else "unknown"
+    if not freshness.get("known"):
+        notes.append(f"Baseline freshness unavailable: recorded commit `{short}` is missing or not an ancestor of the base branch.")
+    elif freshness["pending"]:
+        count = len(freshness["pending"])
+        notes.append(
+            f"Baseline recorded at `{short}`; {count} scored path{'s' if count != 1 else ''} changed on the base branch since. "
+            "A post-merge refresh is pending, so this comparison uses the last recorded score."
+        )
+    else:
+        notes.append(f"Baseline recorded at `{short}`; no scored path has changed on the base branch since.")
+    return notes
+
+
+def render_report(
+    rubric: dict[str, Any],
+    baseline: dict[str, Any] | None,
+    result: dict[str, Any],
+    run_url: str,
+    notes: list[str] | None = None,
+) -> str:
     """Render the sticky PR comment and job summary."""
     lines = [COMMENT_MARKER]
     baseline_total = result.get("baseline_total")
@@ -279,6 +312,8 @@ def render_report(rubric: dict[str, Any], baseline: dict[str, Any] | None, resul
         entry = result["criteria"][cid]
         live = " (live)" if criterion.get("live") else ""
         lines.append(f"| {cid} {criterion['title']}{live} | {before} | {entry['score']} | {sanitize(entry.get('rationale'))} |")
+    if notes:
+        lines += ["", "### Baseline", ""] + [f"* {item}" for item in notes]
     if result["warnings"]:
         lines += ["", "### Warnings", ""] + [f"* {sanitize(item)}" for item in result["warnings"]]
     if result.get("summary"):
@@ -400,7 +435,7 @@ def main() -> int:
         {key: len(value["files"]) for key, value in state["artifacts"].items()},
     )
     args.out_dir.mkdir(parents=True, exist_ok=True)
-    report = render_report(state["rubric"], state["baseline"], result, args.run_url)
+    report = render_report(state["rubric"], state["baseline"], result, args.run_url, baseline_notes(state))
     (args.out_dir / "report.md").write_text(report, encoding="utf-8")
     if result["valid"] and not args.force:
         scores = build_scores_file(result, state["fingerprints"], args.commit, args.model, args.run_url, state["rubric"].get("rubric_version"))

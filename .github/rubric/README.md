@@ -17,10 +17,11 @@ agent (read-only, sandboxed)     reads the changed artifacts and baseline, retur
                                  20-criterion scorecard through record_rubric_score
 record-rubric-score (gate)       validates, carries forward unaffected criteria,
                                  computes totals, floors and band, compares with main,
-                                 sets rubric/score, comments, reviews, commits latest.json
+                                 sets rubric/score, comments and reviews; on main only,
+                                 refreshes latest.json through a bot pull request
 ```
 
-The pass or fail decision is made by [gate.py](scripts/gate.py), never by the model. A pull request passes when its total is greater than or equal to the baseline total on `main`. Criterion drops are listed as warnings. When the pull request merges, its committed `latest.json` becomes the new baseline on `main`.
+The pass or fail decision is made by [gate.py](scripts/gate.py), never by the model. A pull request passes when its total is greater than or equal to the baseline total on `main`. Criterion drops are listed as warnings. Pull requests never write `latest.json` or `badge.svg`; the full scorecard baseline on `main` is refreshed after merge (see [Baseline refresh and freshness](#baseline-refresh-and-freshness)).
 
 A criterion can only move when an artifact that informs it changes, and every move must cite a changed file. Deleting a scored file, renaming it outside the registry globs or letting it grow past `max_file_bytes` counts as a change: the scorer can lower the affected criteria by citing the removed path, but a removed path never justifies a higher score.
 
@@ -181,8 +182,8 @@ on trusted base `main` remain separate from this submission repair.
 
 1. No repository token secret is required by this workflow. Copilot inference
    uses the automatic Actions token with `copilot-requests: write`. GitHub
-   checkouts, reads and safe outputs explicitly use `secrets.GITHUB_TOKEN`; score commits
-   use the equivalent `github.token`. Both refer to the job-scoped token
+   checkouts, reads and safe outputs explicitly use `secrets.GITHUB_TOKEN`; the
+   post-merge baseline refresh commit uses the equivalent `github.token`. Both refer to the job-scoped token
    minted by GitHub, not a secret an operator creates. The generated lock
    must not be edited independently of the Markdown source.
 
@@ -226,9 +227,9 @@ not used or required. Existing repository secrets are not deleted by this
 change.
 
 GitHub normally suppresses new workflow runs caused by pushes made with
-`GITHUB_TOKEN`, avoiding recursive scoring on score-only commits. The gate
-publishes `rubric/score` on both the scored SHA and the recorded-score SHA;
-that is not a claim that other CI ran on the bot commit. Fork pull requests
+`GITHUB_TOKEN`, avoiding recursive scoring on the refresh commit. The gate
+publishes `rubric/score` on the scored SHA only; the workflow no longer
+commits to pull request branches. Fork pull requests
 and repository policy can restrict token writes independently of requested
 permissions.
 
@@ -243,9 +244,9 @@ permissions.
   latest commit. Required checks on a path-filtered workflow can remain
   pending; do not require unconditional checks for tracking-only PRs while
   also expecting no workflow to run.
-* Open a pull request. The workflow posts a sticky "Rubric score" comment, sets `rubric/score`, submits APPROVE or REQUEST_CHANGES, and commits the new `latest.json` to your branch. Pull that commit before pushing again.
+* Open a pull request. The workflow posts a sticky "Rubric score" comment, sets `rubric/score`, and submits APPROVE or REQUEST_CHANGES. It does not commit to your branch, so there is nothing to pull before pushing again.
 * Pull requests that do not touch a scored artifact or the rubric tooling get an immediate `rubric/score` success without an agent run.
-* If two pull requests both record a score, the second conflicts on `latest.json` after the first merges. Update the branch from `main` and push; the gate rescores against the new baseline.
+* A pull request that still carries an older bot commit editing `latest.json` or `badge.svg` gets a warning in the report. Merge `main` and drop those file changes so the merge cannot overwrite the trusted baseline. Pull requests no longer conflict with each other on `latest.json`.
 * Pushes to `main` outside a pull request are scored for information only. A regression or an invalid scorecard on `main` opens an issue; an agent failure or timeout only shows as a failed run. Runs on other branches never open issues.
 * To measure scorer variance, start the workflow manually with `force` ticked two or three times on an unchanged branch. Each forced run gets its own concurrency slot, so they do not cancel each other. Forced runs score every criterion from scratch with the baseline removed from the agent's context (the prompt also tells it not to read the scores file), report in the job summary, never update `latest.json` and never open issues.
 * To recover from a stuck `pending` status, rerun the workflow from the Actions tab.
@@ -258,26 +259,49 @@ emits a notice and does not record or publish a score. A missing branch alone
 is not proof of closure; PR API errors or invalid responses fail visibly.
 There is no checkout fallback to `main`.
 
-For an open PR, a moved head blocks score recording and a passing verdict.
-State is checked again before recording and publication. Recording uses an
-isolated workflow-owned pre-push hook, not repository hooks, and an ordinary
-non-force push to the explicit existing branch ref. The hook requires exactly
-one update with the advertised remote OID equal to the scored SHA; Git's server
-old-OID check rejects subsequent deletion or movement, including a backward
-move. The workflow never recreates a deleted branch.
+For an open PR, a moved head blocks a passing verdict. State is checked again
+before publication, which requires the current PR head to equal the scored SHA.
+The status, comment and review target only that SHA. PR lifecycle and API calls
+are not a single transaction, and movement after the final API read is not
+claimed to be atomically prevented. Closed obsolete runs are not rubric passes,
+successful reruns or issue closure.
 
-After a successful score commit, publication requires the current PR head to
-equal that bot commit; when recording legitimately creates no commit, it
-requires the original scored SHA. Statuses still target only those exact
-scored/bot SHAs. PR lifecycle and Git writes are not a single transaction, and
-movement after the final API read is not claimed to be atomically prevented.
-Closed obsolete runs are not rubric passes, successful reruns or issue closure.
+### Baseline refresh and freshness
 
-Run the local source/compiled lifecycle and temporary-Git race regressions
-without dispatching the scorer:
+`latest.json` and `badge.svg` on `main` are the trusted full scorecard baseline
+read by `prepare.py` and `gate.py`. Only the post-merge refresh writes them:
+
+* After a successful, non-calibration, non-forced run on `refs/heads/main`
+  (push or manual dispatch), the `Refresh baseline on main` step copies the
+  scorecard and badge to a commit on `rubric/baseline-refresh`, opens or
+  updates one pull request and squash-merges it with `--match-head-commit`.
+  The ruleset requires a pull request, so a direct push to `main` is not used.
+* A refresh is skipped when the decision is invalid, failed or calibration, the
+  checkout is not the scored SHA, or nothing changed. A blocked merge is a
+  warning; the next main run refreshes cumulatively.
+* The refresh commit is made with `GITHUB_TOKEN`, so it triggers no workflow
+  and cannot recurse.
+* Freshness: the baseline records the main commit it scored. The PR report
+  states how many scored paths changed on `main` since that commit. Push and
+  dispatch runs diff from that commit when it is an ancestor, so changes
+  accumulate until a refresh lands. A missing or non-ancestor commit (legacy
+  baselines) is reported as freshness unavailable.
+* Cost: a merge that changes scored artifacts is rescored once on `main`. Reusing
+  the PR scorecard is a deferred follow-up.
+
+Owner actions (not applied by this change): confirm the refresh pull request can
+merge under ruleset `mainprotect`; ask open pull requests to drop old bot score
+commits; and, for Copilot Code Review, set `review_on_push` to `false` in the
+ruleset so it runs on ready-for-review and on request, and keep it out of
+required status checks. Copilot Code Review is advisory and is not part of any
+workflow concurrency group in this repository
+(`test_workflow_policy.py`).
+
+Run the local source/compiled lifecycle, publication and baseline-refresh
+regressions without dispatching the scorer:
 
 ```bash
-python3 -m pytest .github/rubric/scripts/test_record_workflow.py -q
+python3 -m pytest .github/rubric/scripts/test_record_workflow.py .github/rubric/scripts/test_workflow_policy.py -q
 ```
 
 ### Post-Push Visibility and Exact-Head Completion
@@ -363,7 +387,7 @@ speaker-note text before scoring.
 
 ### Score badge
 
-Whenever the gate records `latest.json` it also renders `badge.svg` (rubric score out of 100, coloured by outcome) and the workflow commits both together. The root README embeds it with a relative link, so it renders for anyone who can read the repository. The gate script that renders it loads from `main`, so the first badge update follows the first run after this change merges.
+Whenever the gate records `latest.json` it also renders `badge.svg` (rubric score out of 100, coloured by outcome) and the post-merge baseline refresh commits both together on `main`. The root README embeds it with a relative link, so it renders for anyone who can read the repository. The gate script that renders it loads from `main`, so the first badge update follows the first run after this change merges.
 
 ### Required evidence
 
