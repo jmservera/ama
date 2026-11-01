@@ -4862,6 +4862,11 @@ the missing column.
 There is **no new mandatory app setting** for resident chat.
 `ZF_DEMO_AGENDA_PATH` is optional local synthetic callback inventory, not a
 startup remedy; leave it unset unless explicitly provisioning that inventory.
+`ZF_DEMO_CHAT_LOG_PATH` is an optional absolute local file for the bounded
+synthetic-only chat learning record (14 days, 2,000 rows). Leave it unset
+unless deliberately enabling it; never set it for real residents. See
+[the learning record note](../../docs/reference/research/ux/resident-chat-learning-record.md).
+Read it with `python -m zava_forward.api.resident_demo.chat_log summary PATH`.
 `ZF_DEMO_ASSISTANT_ENABLED` defaults to `false`; an endpoint is needed only
 when deliberately enabling the separately gated AI integration. Keep the
 existing port 8089, image bind `0.0.0.0` and exact Host allowlist. The image's

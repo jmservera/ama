@@ -1,10 +1,12 @@
 """Host-owned housing routes, protected replies and grounding for optional AI."""
 
 import re
+from dataclasses import replace
 from typing import Any
 
 from zava_forward.core.resident_assistant import NOTICE as ADVISORY_NOTICE
 from zava_forward.core.resident_assistant import Advice, Topic
+from zava_forward.core.resident_preview import STAGE_TEXT
 
 from .agenda import MANUAL, NOTICE
 
@@ -192,8 +194,8 @@ def _natural_record_question(question: str) -> Topic | str:
         rf"where {case} is (?:up to|at))"
     )
     for topic, noun in (
-        (Topic.DOCUMENTS, r"(?:documents?|paperwork)"),
-        (Topic.FORMS, r"forms?"),
+        (Topic.DOCUMENTS, r"(?:documents?|docs?|papers|paperwork)"),
+        (Topic.FORMS, r"(?:forms?|paper forms?)"),
     ):
         record = rf"(?:(?:my|the) )?{noun}"
         intent = (
@@ -217,6 +219,25 @@ def _natural_record_question(question: str) -> Topic | str:
     if re.fullmatch(status, sentence):
         return Topic.STATUS
     if re.fullmatch(
+        r"(?:what (?:else )?do you (?:still )?need from me|"
+        r"what (?:else )?(?:do|should) i (?:still )?(?:need to )?"
+        r"(?:send|provide|give|upload|hand in)(?: you)?|"
+        r"what (?:is|s) (?:still )?(?:outstanding|needed)(?: from me)?(?: (?:on|for) my case)?|"
+        r"is there anything (?:else )?(?:you|i) need(?: from me| to send)?)",
+        sentence,
+    ):
+        return Topic.DOCUMENTS
+    if re.fullmatch(
+        r"(?:what (?:is|s) (?:happening|going on) with my (?:case|retrofit)|"
+        r"what (?:happens|is) next(?: for my (?:case|retrofit))?|"
+        r"what (?:is|s) the next step(?: for my (?:case|retrofit))?|"
+        r"what stage is my (?:case|retrofit) (?:at|in)|"
+        r"has anything changed(?: (?:on|with) my (?:case|retrofit))?|"
+        r"any news(?: (?:on|about) my (?:case|retrofit))?)",
+        sentence,
+    ):
+        return Topic.STATUS
+    if re.fullmatch(
         r"(?:where (?:is|s) my (?:home|house|flat)|"
         r"what (?:is|s) my (?:home )?address|"
         r"(?:what|which) address (?:do you have|have you got|is recorded)(?: for me)?|"
@@ -236,7 +257,7 @@ def _record_question(question: str) -> Topic | str:
     )
     documents = (
         r"(?:(?:my|the) )?(?:(?:smoke alarm|smoke-free policy|carbon-monoxide detector) )?"
-        r"(?:documents?|paperwork)"
+        r"(?:documents?|docs?|paperwork)"
     )
     forms = r"(?:(?:my|the) )?forms?"
     patterns = (
@@ -283,31 +304,8 @@ def _record_question(question: str) -> Topic | str:
     return _natural_record_question(question)
 
 
-def route(question: str) -> Topic | str:
-    tokens = words(question)
-    if tokens & {
-        "danger",
-        "unsafe",
-        "hazard",
-        "safety",
-        "mould",
-        "mold",
-        "damp",
-        "fire",
-        "gas",
-    } or _hazard_report(question, tokens):
-        return "safety"
-    # Only remove a complete polite envelope; the remaining message must still match in full.
-    question = question.lower().strip()
-    polite = re.fullmatch(
-        r"(?:please )?(?:(?:can|could|would) you (?:tell me|show me|explain|help me with) "
-        r"(?:about )?|please )(.+?)(?: please)?[?.!]*",
-        question,
-    )
-    if polite:
-        question = polite[1]
-    tokens = words(question)
-    if tokens & {
+BLOCKED_WORDS = frozenset(
+    {
         "ignore",
         "instructions",
         "system",
@@ -336,23 +334,219 @@ def route(question: str) -> Topic | str:
         "compose",
         "play",
         "output",
-    }:
+    }
+)
+ACTION_WORDS = frozenset(
+    {"report", "contact", "notify", "email", "call", "arrange", "schedule", "fix"}
+)
+# Harmless-looking words that still ask the chat to act, impersonate or reach other records.
+BOUNDARY_WORDS = frozenset(
+    {
+        "forget",
+        "disregard",
+        "bypass",
+        "jailbreak",
+        "reveal",
+        "developer",
+        "admin",
+        "sudo",
+        "sign",
+        "agree",
+        "accept",
+        "confirm",
+        "authorise",
+        "authorize",
+        "reschedule",
+        "change",
+        "delete",
+        "withdraw",
+        "send",
+        "forward",
+        "share",
+        "his",
+        "her",
+        "hers",
+        "their",
+        "theirs",
+        "him",
+        "them",
+        "someone",
+        "somebody",
+        "anyone",
+        "anybody",
+        "everyone",
+        "everybody",
+        "resident",
+        "residents",
+        "tenant",
+        "tenants",
+        "customer",
+        "customers",
+        "neighbours",
+        "neighbors",
+        "choose",
+        "pick",
+        "reserve",
+        "approved",
+        "colleague",
+        "colleagues",
+        "mr",
+        "mrs",
+        "ms",
+        "miss",
+        "dr",
+        "all",
+        "every",
+    }
+)
+RECORD_WORDS = frozenset(
+    "case cases record records file files account accounts address addresses home homes".split()
+)
+FIRST_PERSON = frozenset({"my", "me", "i", "our", "we", "mine"})
+QUESTION_WORDS = frozenset(
+    "what whats why how when where who which is are am can could do does did will would should "
+    "have has may".split()
+)
+OTHER_PERSON = re.compile(
+    r"\b(?!(?:what|how|where|there|it|that|who|let|here|when|why|she|he)['\u2019]s\b)"
+    r"[a-z]+['\u2019]s\b|\b(?:act as|you are now|as an? (?:admin|developer))\b"
+)
+
+PAUSE_OBJECT = (
+    r"(?:it|this|that|the pause|the block|the lock|the freeze|my case|my retrofit|the case|"
+    r"contact|my contact|the contact|the contact pause|the pause on (?:my case|contact)|"
+    r"the block on my case|the pause on my case)"
+)
+_STRONG = r"(?:un ?pause|unlock|unblock|unfreeze|unstick|restart|re-?start|resume|reopen)"
+_WEAK = r"(?:lift|remove|end|clear|undo)"
+_ASKER = (
+    r"(?:(?:can|could|may|will|would) (?:i|we|you|someone|somebody|anyone|a person)"
+    r"|how (?:do|can|could|should|would) (?:i|we)|how to|"
+    r"(?:i|we) (?:want|need|would like|'d like) to|i want you to|i'd like to)"
+)
+_AFTER = r"(?: (?:again|now|myself))?"
+_REACH = (
+    r"(?:contact|ask|call|speak to|talk to|write to|go to|visit|get in touch with|email|"
+    r"phone|reach)"
+)
+_ABOUT = r"(?: (?:about (?:this|it|that|the pause|my case|the block)|for help|first|instead))?"
+_PAUSED = r"(?:paused|locked|frozen|stopped|blocked|stuck|on hold)"
+PAUSE_INTENTS = (
+    rf"(?:{_ASKER} )?{_STRONG}(?: {PAUSE_OBJECT})?{_AFTER}",
+    rf"(?:{_ASKER} )?{_WEAK} (?:the )?(?:pause|block|lock|freeze|hold)(?: on (?:my case|contact))?"
+    rf"{_AFTER}",
+    rf"(?:{_ASKER} )?{_WEAK} (?:it|this|that){_AFTER}",
+    rf"what (?:do|should|can) (?:i|we) do to {_STRONG} {PAUSE_OBJECT}",
+    r"(?:when|how long until) (?:will|can|do|does|is) "
+    r"(?:contact|you|we|someone|the pause|it|my case)"
+    r"(?: be)? (?:restart(?:ed)?|resum(?:e|ed)|start|lifted|un ?paused|unblocked|unlocked|"
+    r"contact me)(?: again)?(?: for me)?",
+    rf"(?:why|how come) (?:is|has|was) (?:contact|it|everything)(?: been)? {_PAUSED}",
+    r"(?:why|how come) (?:is|has|was) my (?:case|contact|retrofit)(?: been)? "
+    r"(?:paused|locked|frozen|stopped)",
+    r"(?:is|has) (?:my case|contact|my contact|it)(?: been)? (?:paused|locked|frozen|stopped)",
+    r"(?:why|how come) (?:have|has|did|are) (?:you|we|they|zava|nobody|no one) "
+    r"(?:stopped?|not)(?: (?:contacting|calling|writing to))? me",
+)
+CONTACT_INTENTS = (
+    rf"(?:who|which person|which team|which office|where) (?:should|can|do|could|must|would) "
+    rf"(?:i|we) {_REACH}{_ABOUT}",
+    r"how (?:do|can|could|should) (?:i|we) (?:contact|reach|get in touch with|speak to|talk to) "
+    r"(?:my housing officer|my officer|the housing officer|my local office|the local office|"
+    r"someone|a person|you|the team|the office|them)",
+    r"(?:who is|what is the name of|what is the (?:phone )?number for|where is) "
+    r"(?:my )?(?:housing officer|local office|officer)",
+)
+
+
+def _pause_question(question: str) -> str | None:
+    """Return "pause" or "contact" only when every sentence is a whole pause or contact intent."""
+    if re.search(r"\d", question):
+        return None
+    text = re.sub(r"[^a-z' \-.?!;,]", " ", question.lower().replace("\u2019", "'"))
+    text = re.sub(r"\b(?:please|pls|thanks|thank you)\b", " ", text)
+    parts = [
+        " ".join(p.split()) for p in re.split(r"[.?!;,]+|\b(?:and|then|or)\b", text) if p.strip()
+    ]
+    if not parts or len(parts) > 3:
+        return None
+    pause = False
+    for part in parts:
+        if any(re.fullmatch(pattern, part) for pattern in PAUSE_INTENTS):
+            pause = True
+        elif not any(re.fullmatch(pattern, part) for pattern in CONTACT_INTENTS):
+            return None
+    return "pause" if pause else "contact"
+
+
+# A resident asking how to send a document is not asking chat to send anything.
+HOW_TO_VERBS = frozenset({"send", "share", "forward"})
+DOCUMENT_HOW_TO = re.compile(
+    r"(?:where|how)\s+(?:do|can|should)\s+i\s+(?:send|share|forward|upload)\s+my\s+[a-z ]{1,40}\??"
+)
+
+
+POLITE_ENVELOPE = re.compile(
+    r"(?:please )?(?:(?:can|could|would) you (?:tell me|show me|explain|help me with) "
+    r"(?:about )?|please )(.+?)(?: please)?[?.!]*"
+)
+
+
+def _strip_polite(question: str) -> str:
+    """Remove a complete polite envelope; shared by routing and refusal classification."""
+    text = question.lower().strip()
+    polite = POLITE_ENVELOPE.fullmatch(text)
+    return polite[1] if polite else text
+
+
+def is_refusal(question: str) -> bool:
+    """True for instruction injection and anything beyond the advisory boundary."""
+    question = _strip_polite(question)
+    tokens = words(question)
+    blocked = BLOCKED_WORDS | ACTION_WORDS | BOUNDARY_WORDS
+    if DOCUMENT_HOW_TO.fullmatch(question.strip().lower()):
+        blocked -= HOW_TO_VERBS
+    if tokens & blocked or OTHER_PERSON.search(question.lower()):
+        return True
+    # Digits point at a case id or slot; record nouns without "my" point at someone else's record.
+    if re.search(r"\d", question) or (tokens & RECORD_WORDS and not tokens & FIRST_PERSON):
+        return True
+    # Every part must read as a question or a short topic phrase, so a trailing command is refused.
+    keywords = frozenset().union(*(item[2] for item in TOPIC_EXAMPLES))
+    joined = re.sub(r"(?<=\w)\.(?=\w)", "", question.lower())
+    for part in re.split(r"[.?!;\n\r]+", joined):
+        part_words = re.findall(r"[a-z]+", part)
+        if part_words and not (
+            part_words[0] in QUESTION_WORDS or (len(part_words) <= 4 and set(part_words) & keywords)
+        ):
+            return True
+    return False
+
+
+def route(question: str) -> Topic | str:
+    tokens = words(question)
+    if tokens & {
+        "danger",
+        "unsafe",
+        "hazard",
+        "safety",
+        "mould",
+        "mold",
+        "damp",
+        "fire",
+        "gas",
+    } or _hazard_report(question, tokens):
+        return "safety"
+    # Only remove a complete polite envelope; the remaining message must still match in full.
+    question = _strip_polite(question)
+    tokens = words(question)
+    pause = _pause_question(question)
+    if tokens & BLOCKED_WORDS and not pause:
         return "unknown"
     repair = _repair_question(question)
-    if (
-        tokens
-        & {
-            "report",
-            "contact",
-            "notify",
-            "email",
-            "call",
-            "arrange",
-            "schedule",
-            "fix",
-        }
-        and not repair
-    ):
+    if pause and not repair:
+        return pause
+    if tokens & ACTION_WORDS and not repair:
         return "unknown"
     if tokens & {
         "law",
@@ -375,7 +569,85 @@ def route(question: str) -> Topic | str:
     return _record_question(question)
 
 
-def answer(topic: str, view: dict[str, Any]) -> Advice:
+PAUSED_PROGRESS = STAGE_TEXT["Contact paused"][0]
+PAUSE_NOTE = (
+    "Chat cannot lift a pause, restart contact or change your case. Only a person can do that. "
+    "Speak to your housing officer, or write to or visit your local Zava North Homes office, "
+    "and ask them to lift the pause if you want contact to restart. That is your choice. "
+    "This showcase has no phone numbers or addresses recorded, so use your usual contact "
+    "details. This chat has not sent a request or told anyone."
+)
+CONTACT_NOTE = (
+    "Speak to your housing officer using your usual contact details, or write to or visit your "
+    "local Zava North Homes office. This showcase has no names, phone numbers or addresses "
+    "recorded for them, so I cannot give any. Chat cannot contact anyone for you. "
+    "This chat has not sent a request or told anyone."
+)
+TOPIC_EXAMPLES: tuple[tuple[str, str, frozenset[str]], ...] = (
+    (
+        "status",
+        "How is my case going?",
+        frozenset("case status progress update going happening next stage step wait news".split()),
+    ),
+    (
+        "documents",
+        "What documents am I missing?",
+        frozenset(
+            "document documents doc docs paper papers paperwork upload send missing proof".split()
+        ),
+    ),
+    ("forms", "What forms do I need?", frozenset("form forms fill complete filling".split())),
+    (
+        "home",
+        "What is my address?",
+        frozenset("home house flat address property improvements measures works".split()),
+    ),
+    (
+        "pause",
+        "Can I unpause my case?",
+        frozenset("pause paused unpause block blocked stuck lock unlock restart resume".split()),
+    ),
+    (
+        "appointments",
+        "Can I find a callback time?",
+        frozenset("appointment appointments callback visit time slot slots".split()),
+    ),
+)
+
+
+def _is_paused(view: dict[str, Any]) -> bool:
+    return bool(view.get("progress") == PAUSED_PROGRESS)
+
+
+def suggestions(question: str) -> list[str]:
+    """Up to three example questions closest to the words used; defaults to the common three."""
+    tokens = words(question)
+    ranked = sorted(
+        (item for item in TOPIC_EXAMPLES if tokens & item[2]),
+        key=lambda item: -len(tokens & item[2]),
+    )
+    chosen = [item[1] for item in ranked[:3]]
+    for item in TOPIC_EXAMPLES[:3]:
+        if len(chosen) < 3 and item[1] not in chosen:
+            chosen.append(item[1])
+    return chosen
+
+
+def outcome(question: str, topic: Topic | str) -> str:
+    """Learning label: the routed topic, or refused/unrouted when no topic answered."""
+    if topic == "unknown":
+        return "refused" if is_refusal(question) else "unrouted"
+    return str(topic.value if isinstance(topic, Topic) else topic)
+
+
+def with_pause_note(advice: Advice, topic: Topic | str, view: dict[str, Any]) -> Advice:
+    """A paused case also says who can lift the pause; only the host adds this fixed text."""
+    if topic is Topic.STATUS and _is_paused(view):
+        return replace(advice, answer=f"{advice.answer} {PAUSE_NOTE}")
+    return advice
+
+
+def answer(topic: str, view: dict[str, Any], question: str = "") -> Advice:
     sources: tuple[str, ...]
     notice = ADVISORY_NOTICE
     if topic == "home":
@@ -415,10 +687,34 @@ def answer(topic: str, view: dict[str, Any]) -> Advice:
             "You choose a time and confirm before anything is reserved. " + MANUAL
         )
         sources = ("Local synthetic callback agenda, not operational appointment history",)
+    elif topic == "pause":
+        current = " ".join(p for p in (view.get("progress"), view.get("next_step")) if p)
+        if _is_paused(view):
+            head = f"Your record shows: {view['progress']} "
+        else:
+            head = (
+                "Your record does not show that contact is paused, so I cannot say what is "
+                "stopping your case. " + (current + " " if current else "")
+            )
+        answer = head + PAUSE_NOTE
+        sources = ("Your case: Where things are", "Housing officer and local office route")
+    elif topic == "contact":
+        answer = CONTACT_NOTE
+        sources = ("Housing officer and local office route",)
     elif topic == "regulations":
         answer, sources = REGULATORY_ANSWER, (REGULATORY_SOURCE,)
     elif topic == "safety":
         answer, sources = SAFETY, ("Human emergency and repairs route, not a safety assessment",)
+    elif question and not is_refusal(question):
+        answer = (
+            "I cannot answer that. Closest topics: "
+            + ", ".join(f'"{example}"' for example in suggestions(question))
+            + ". You can ask one of these in the box. "
+            "Speak to your housing officer, or write to or visit your local office, for "
+            "anything else. I cannot approve, decide, diagnose, give consent, book from chat "
+            "text or access anyone else's record."
+        )
+        sources = ("Assistant task limits",)
     else:
         answer = (
             "I cannot answer that or act on instructions in a message. "
