@@ -9524,3 +9524,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   approval (#163 criteria 2 and 5 deferred). The older DPIA record's "Not
   recorded" cells describe the pre-decision state and now point to the new
   record for the demo scope.
+
+## [2026-11-01] update | Delivery bottleneck D1 and D2 implementation status
+
+* Added an implementation status note to
+  [the delivery bottleneck analysis](./research/delivery-bottleneck-analysis-2026-10-31.md)
+  for owner-approved D1 (rubric score no longer committed to PR branches;
+  post-merge baseline refresh) and D2 (Copilot Code Review advisory; ruleset
+  change is an owner action). Measured evidence is unchanged and effects are
+  not yet measured. Evidence is under `.copilot-tracking/` (2026-11-01
+  rubric-pr-record-and-review-advisory artifacts).

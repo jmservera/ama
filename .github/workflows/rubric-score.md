@@ -287,8 +287,8 @@ safe-outputs:
               --run-url "$RUN_URL" \
               $FORCE_FLAG
             cat /tmp/rubric-out/report.md >> "$GITHUB_STEP_SUMMARY"
-        - name: Recheck pull request before recording
-          id: record_head
+        - name: Recheck pull request before publishing
+          id: head_check
           if: github.event_name == 'pull_request' && steps.lifecycle.outputs.state != 'obsolete'
           uses: actions/github-script@v7
           env:
@@ -307,101 +307,100 @@ safe-outputs:
                 throw new Error('Could not verify the current pull request head');
               }
               core.setOutput('state', pr.head.sha === process.env.SCORED_SHA ? 'eligible' : 'moved');
-        - name: Record score on the pull request branch
-          id: record
-          if: github.event_name == 'pull_request' && steps.record_head.outputs.state == 'eligible' && steps.verify.outputs.moved != 'true'
+        # Scores are never committed to pull request branches. After a merge, the push run refreshes the
+        # trusted baseline on main through a pull request because the main ruleset blocks direct pushes.
+        - name: Refresh baseline on main
+          id: refresh
+          if: (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.force != 'true')) && github.ref == 'refs/heads/main' && steps.gate.outcome == 'success'
           env:
-            HEAD_REF: ${{ github.head_ref }}
-            SCORED_SHA: ${{ github.event.pull_request.head.sha }}
-            PUSH_TOKEN: ${{ github.token }}
+            GH_TOKEN: ${{ github.token }}
+            SCORED_SHA: ${{ github.sha }}
+            REFRESH_BRANCH: rubric/baseline-refresh
           run: |
-            if [ ! -f /tmp/rubric-out/latest.json ]; then exit 0; fi
-            cp /tmp/rubric-out/latest.json .github/rubric/scores/latest.json
-            if [ -f /tmp/rubric-out/badge.svg ]; then cp /tmp/rubric-out/badge.svg .github/rubric/scores/badge.svg; fi
+            set -euo pipefail
+            OUT=/tmp/rubric-out
+            SCORES=.github/rubric/scores
+            if ! jq -e '.valid == true and .passed == true and ((.calibration // false) == false)' "$OUT/decision.json" > /dev/null 2>&1 || [ ! -f "$OUT/latest.json" ]; then
+              echo "::notice::No passing score to record; the baseline is unchanged."
+              exit 0
+            fi
+            if [ "$(git rev-parse HEAD)" != "$SCORED_SHA" ]; then
+              echo "::error::Checkout is not the scored commit; refusing to record the score"
+              exit 1
+            fi
+            cp "$OUT/latest.json" "$SCORES/latest.json"
+            if [ -f "$OUT/badge.svg" ]; then cp "$OUT/badge.svg" "$SCORES/badge.svg"; fi
+            git add -- "$SCORES/latest.json"
+            if [ -f "$SCORES/badge.svg" ]; then git add -- "$SCORES/badge.svg"; fi
+            if git diff --cached --quiet; then
+              echo "::notice::The recorded baseline already matches this score."
+              exit 0
+            fi
+            TOTAL="$(jq -r .total "$OUT/latest.json")"
+            TITLE="chore(rubric): record score ${TOTAL}/100"
+            BODY="Machine-generated rubric baseline refresh. Scored commit: ${SCORED_SHA}. Only latest.json and badge.svg change. Opened by the Capstone Rubric Scorer after a merge to main; the scorecard is the trusted baseline that prepare.py and gate.py read."
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add .github/rubric/scores/latest.json
-            if [ -f .github/rubric/scores/badge.svg ]; then git add .github/rubric/scores/badge.svg; fi
-            if git diff --cached --quiet; then exit 0; fi
-            git commit -m "chore(rubric): record score $(jq -r .total /tmp/rubric-out/latest.json)/100"
-            RECORD_SHA="$(git rev-parse HEAD)"
-            export RECORD_SHA
-            HOOK_DIR="$(mktemp -d "$RUNNER_TEMP/rubric-push-hooks.XXXXXX")"
-            cat > "$HOOK_DIR/pre-push" <<'HOOK'
-            #!/bin/sh
-            set -eu
-            if ! read -r local_ref local_oid remote_ref remote_oid ||
-               [ "$local_ref" != "HEAD" ] ||
-               [ "$local_oid" != "$RECORD_SHA" ] ||
-               [ "$remote_ref" != "refs/heads/$HEAD_REF" ] ||
-               [ "$remote_oid" != "$SCORED_SHA" ] ||
-               [ "$remote_oid" = "0000000000000000000000000000000000000000" ]; then
-              echo "::error::Ref no longer matches the scored commit; refusing to record the score" >&2
-              exit 1
-            fi
-            if read -r extra; then
-              echo "::error::Unexpected additional ref update" >&2
-              exit 1
-            fi
-            HOOK
-            chmod 700 "$HOOK_DIR/pre-push"
-            if git -c core.hooksPath="$HOOK_DIR" push "https://x-access-token:${PUSH_TOKEN}@${GITHUB_SERVER_URL#https://}/${GITHUB_REPOSITORY}.git" "HEAD:refs/heads/$HEAD_REF"; then
-              echo "new_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+            git -c core.hooksPath=/dev/null commit -q -m "$TITLE" -m "Scored commit: ${SCORED_SHA}"
+            NEW_SHA="$(git rev-parse HEAD)"
+            REMOTE="https://x-access-token:${GH_TOKEN}@${GITHUB_SERVER_URL#https://}/${GITHUB_REPOSITORY}.git"
+            LEASE="$(git ls-remote "$REMOTE" "refs/heads/${REFRESH_BRANCH}" | cut -f1)"
+            git -c core.hooksPath=/dev/null push --force-with-lease="refs/heads/${REFRESH_BRANCH}:${LEASE}" "$REMOTE" "HEAD:refs/heads/${REFRESH_BRANCH}"
+            PR="$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$REFRESH_BRANCH" --base main --state open --json number --jq '.[0].number // empty')"
+            if [ -z "$PR" ]; then
+              gh pr create --repo "$GITHUB_REPOSITORY" --base main --head "$REFRESH_BRANCH" --title "$TITLE" --body "$BODY"
+              PR="$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$REFRESH_BRANCH" --base main --state open --json number --jq '.[0].number // empty')"
             else
-              echo "push_failed=true" >> "$GITHUB_OUTPUT"
+              gh pr edit "$PR" --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body "$BODY"
             fi
+            # A newer run may have replaced the branch; only the run that owns the current head may merge it.
+            HEAD_OID="$(gh pr view "$PR" --repo "$GITHUB_REPOSITORY" --json headRefOid --jq .headRefOid)"
+            if [ "$HEAD_OID" != "$NEW_SHA" ]; then
+              echo "::notice::Refresh pull request #${PR} head moved to ${HEAD_OID}; a newer run owns the baseline refresh."
+              exit 0
+            fi
+            for attempt in 1 2 3 4 5; do
+              if gh pr merge "$PR" --repo "$GITHUB_REPOSITORY" --squash --delete-branch --match-head-commit "$NEW_SHA" --subject "$TITLE"; then
+                echo "::notice::Merged baseline refresh pull request #${PR}."
+                exit 0
+              fi
+              sleep $((attempt * 3))
+            done
+            echo "::warning::Baseline refresh pull request #${PR} could not be merged by the workflow; merge it or allow github-actions[bot] to merge. The baseline on main stays at the last recorded score until then."
         - name: Publish verdict
           if: (!cancelled()) && steps.lifecycle.outcome == 'success' && steps.lifecycle.outputs.state != 'obsolete'
           uses: actions/github-script@v7
           env:
             SCORED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-            NEW_SHA: ${{ steps.record.outputs.new_sha }}
-            PUSH_FAILED: ${{ steps.record.outputs.push_failed }}
-            RECORD_OUTCOME: ${{ steps.record.outcome }}
             MOVED: ${{ steps.verify.outputs.moved }}
             VERIFY_OUTCOME: ${{ steps.verify.outcome }}
             GATE_OUTCOME: ${{ steps.gate.outcome }}
-            RECORD_HEAD_STATE: ${{ steps.record_head.outputs.state }}
-            RECORD_HEAD_OUTCOME: ${{ steps.record_head.outcome }}
+            HEAD_STATE: ${{ steps.head_check.outputs.state }}
+            HEAD_OUTCOME: ${{ steps.head_check.outcome }}
             PR_NUMBER: ${{ github.event.pull_request.number }}
           with:
             script: |
               const fs = require('fs');
               const { owner, repo } = context.repo;
               const runUrl = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
-              const expectedHead = process.env.NEW_SHA || process.env.SCORED_SHA;
-              const pushFailed = process.env.PUSH_FAILED === 'true' || process.env.RECORD_OUTCOME === 'failure';
-              const selfRecorded = /^[0-9a-f]{40}$/.test(process.env.NEW_SHA || '') &&
-                process.env.NEW_SHA !== process.env.SCORED_SHA && !pushFailed &&
-                process.env.RECORD_OUTCOME === 'success' &&
-                process.env.RECORD_HEAD_OUTCOME === 'success' &&
-                process.env.RECORD_HEAD_STATE === 'eligible' && process.env.MOVED !== 'true' &&
-                process.env.VERIFY_OUTCOME === 'success' && process.env.GATE_OUTCOME === 'success';
               let currentHead;
-              let visibilityPending = false;
               if (process.env.PR_NUMBER) {
-                if (process.env.RECORD_HEAD_STATE === 'obsolete') {
+                if (process.env.HEAD_STATE === 'obsolete') {
                   core.notice('Rubric run is obsolete; no verdict will be published.');
                   return;
                 }
-                const attempts = selfRecorded ? 5 : 1;
-                for (let attempt = 0; attempt < attempts; attempt++) {
-                  const { data: pr } = await github.rest.pulls.get({
-                    owner, repo, pull_number: Number(process.env.PR_NUMBER),
-                  });
-                  if (pr?.state === 'closed') {
-                    core.notice('Rubric run is obsolete: the pull request closed before publication.');
-                    return;
-                  }
-                  if (pr?.state !== 'open' || typeof pr.head?.sha !== 'string' || !/^[0-9a-f]{40}$/.test(pr.head.sha)) {
-                    throw new Error('Could not verify the current pull request head');
-                  }
-                  currentHead = pr.head.sha;
-                  core.info(`Rubric publication head ${currentHead}; expected ${expectedHead}; attempt ${attempt + 1}/${attempts}`);
-                  visibilityPending = selfRecorded && currentHead === process.env.SCORED_SHA;
-                  if (!visibilityPending || attempt === attempts - 1) break;
-                  await new Promise(resolve => setTimeout(resolve, 1000 * 2 ** attempt));
+                const { data: pr } = await github.rest.pulls.get({
+                  owner, repo, pull_number: Number(process.env.PR_NUMBER),
+                });
+                if (pr?.state === 'closed') {
+                  core.notice('Rubric run is obsolete: the pull request closed before publication.');
+                  return;
                 }
+                if (pr?.state !== 'open' || typeof pr.head?.sha !== 'string' || !/^[0-9a-f]{40}$/.test(pr.head.sha)) {
+                  throw new Error('Could not verify the current pull request head');
+                }
+                currentHead = pr.head.sha;
+                core.info(`Rubric publication head ${currentHead}; scored ${process.env.SCORED_SHA}`);
               }
               let decision = { valid: false };
               let report = `<!-- rubric-score -->\n## Rubric score: FAILED\n\nThe gate did not produce a decision. [Workflow run](${runUrl})\n`;
@@ -409,21 +408,18 @@ safe-outputs:
                 decision = JSON.parse(fs.readFileSync('/tmp/rubric-out/decision.json', 'utf8'));
                 report = fs.readFileSync('/tmp/rubric-out/report.md', 'utf8');
               }
-              const moved = process.env.MOVED === 'true' || process.env.RECORD_HEAD_STATE === 'moved' ||
-                (currentHead !== undefined && currentHead !== expectedHead);
+              const moved = process.env.MOVED === 'true' || process.env.HEAD_STATE === 'moved' ||
+                (currentHead !== undefined && currentHead !== process.env.SCORED_SHA);
               const lifecycleFailed = process.env.PR_NUMBER && (
-                process.env.RECORD_HEAD_OUTCOME !== 'success' ||
-                !['eligible', 'moved'].includes(process.env.RECORD_HEAD_STATE) ||
-                (!moved && process.env.RECORD_OUTCOME !== 'success'));
-              const blocked = moved || pushFailed || lifecycleFailed ||
+                process.env.HEAD_OUTCOME !== 'success' ||
+                !['eligible', 'moved'].includes(process.env.HEAD_STATE));
+              const blocked = moved || lifecycleFailed ||
                 process.env.VERIFY_OUTCOME !== 'success' || process.env.GATE_OUTCOME !== 'success';
               const passed = decision.valid && decision.passed && !blocked;
               let description;
               if (!decision.valid) description = 'Scoring failed; see the workflow run';
-              else if (visibilityPending) description = 'Recorded score head not visible on the pull request; see the workflow run';
               else if (moved) description = 'Branch moved during scoring; push again to rescore';
-              else if (pushFailed) description = 'Could not record the score on the branch; see the workflow run';
-              else if (blocked) description = 'Could not verify score recording; see the workflow run';
+              else if (blocked) description = 'Could not verify the scored commit; see the workflow run';
               else if (decision.bootstrap) description = `Bootstrap score ${decision.total}/100 recorded`;
               else description = `${decision.total}/100 vs baseline ${decision.baseline_total}/100`;
 
@@ -442,16 +438,13 @@ safe-outputs:
               }
 
               const issue_number = Number(process.env.PR_NUMBER);
-              const shas = [process.env.SCORED_SHA, process.env.NEW_SHA].filter(Boolean);
-              for (const sha of shas) {
-                await github.rest.repos.createCommitStatus({
-                  owner, repo, sha,
-                  context: 'rubric/score',
-                  state: passed ? 'success' : 'failure',
-                  description: description.slice(0, 140),
-                  target_url: runUrl,
-                });
-              }
+              await github.rest.repos.createCommitStatus({
+                owner, repo, sha: process.env.SCORED_SHA,
+                context: 'rubric/score',
+                state: passed ? 'success' : 'failure',
+                description: description.slice(0, 140),
+                target_url: runUrl,
+              });
 
               const comments = await github.paginate(github.rest.issues.listComments, { owner, repo, issue_number });
               const existing = comments.find((c) => c.user?.login === 'github-actions[bot]' && c.body && c.body.startsWith('<!-- rubric-score -->'));
@@ -463,7 +456,7 @@ safe-outputs:
 
               const event = passed ? 'APPROVE' : 'REQUEST_CHANGES';
               const body = `Rubric gate: ${description}.`;
-              const commit_id = process.env.NEW_SHA || process.env.SCORED_SHA;
+              const commit_id = process.env.SCORED_SHA;
               try {
                 await github.rest.pulls.createReview({ owner, repo, pull_number: issue_number, commit_id, event, body });
               } catch (error) {

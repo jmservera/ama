@@ -166,9 +166,16 @@ separate PR and are not applied here. D4 and D5 policy text is applied in
   trigger only on ready-for-review and on request rather than every push.
   Consequence: some review comments arrive later; branch protection must not
   treat the review run as required.
-  Decision 2026-11-01: APPROVED. Copilot Code Review is advisory and
-  non-cancelling, triggered on ready-for-review and on request, and not
   required by branch protection. Workflow part: separate PR.
+* Implementation status, 2026-11-01: D1 is implemented on branch `ci/rubric-and-review-triggers` (PR
+  pending): the rubric workflow no longer commits to PR branches, posts the
+  score as `rubric/score`, a comment and a review, and refreshes `latest.json`
+  and `badge.svg` on main through a bot pull request after merge, with
+  freshness reported in the PR comment. D2 has no in-repo workflow change
+  because the Copilot review is started by ruleset `mainprotect`; the owner
+  action is to set `review_on_push` to `false` there and keep the review out of
+  required checks. Neither effect is measured yet, and the measured evidence
+  above is unchanged.
 * D3 PR size policy: set a target size. Option for the owner: allow RPI
   evidence in a separate PR from the code. This would require amending the
   coordinator check in `.github/agents/ama-backlog-delivery-coordinator.agent.md`
