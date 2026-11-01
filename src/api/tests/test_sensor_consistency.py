@@ -15,7 +15,7 @@ from sensor_consumer_fixture import CONTROL, POLICY, store_at
 from zava_forward.core.sensor_consumer import READING_COLUMNS, ConsumerError, SensorConsumer
 from zava_forward.core.sqlstore import CASE_COLS
 from zava_forward.core.synthetic import sensor_backfill
-from zava_forward.core.synthetic.sensor_consistency import Tolerance, report
+from zava_forward.core.synthetic.sensor_consistency import report
 from zava_forward.core.synthetic.sensor_stream import Replay, descriptor, replay, wire
 
 from zava_forward.api.iot_stream import AUTH, DEVICE, Binding, decode
@@ -170,15 +170,20 @@ class SqlHandoverTests(consumer_tests.SensorConsumerTests):
         )
         self.assertTrue(verdict["passed"] and verdict["idempotent"], verdict)
         self.assertEqual(self.counts(), before)
-        # A perturbed stored value fails at zero tolerance and passes within a wide one.
+        # A stored value that departs from its retained accepted payload is refused.
+        original = reopened.db.execute(
+            "SELECT temperature_c FROM sensor_reading WHERE home_id=? AND observed_at=?",
+            ("ZF-1", reference[-1]["observed_at"]),
+        ).fetchone()[0]
         reopened.db.execute(
             "UPDATE sensor_reading SET temperature_c='40' WHERE home_id=? AND observed_at=?",
             ("ZF-1", reference[-1]["observed_at"]),
         )
-        self.assertFalse(verify(reopened, reference, handover=fixture.HANDOVER)["passed"])
-        wide = Tolerance(point=100, mean_step=100, stddev=100)
-        self.assertTrue(
-            verify(reopened, reference, handover=fixture.HANDOVER, temperature=wide)["passed"]
+        with self.assertRaises(ConsumerError):
+            verify(reopened, reference, handover=fixture.HANDOVER)
+        reopened.db.execute(
+            "UPDATE sensor_reading SET temperature_c=? WHERE home_id=? AND observed_at=?",
+            (original, "ZF-1", reference[-1]["observed_at"]),
         )
         # Readings outside the reference window are bounded away, not a coverage mismatch.
         subset = [row for row in reference if row["observed_at"] >= reference[2]["observed_at"]]
@@ -207,4 +212,9 @@ class SqlHandoverTests(consumer_tests.SensorConsumerTests):
         missing = Path(self.tmp.name) / "absent.csv"
         self.assertEqual(
             verify_main(["--reference", str(missing), "--handover", fixture.HANDOVER]), 2
+        )
+        truncated = Path(self.tmp.name) / "truncated.csv"
+        truncated.write_text("home_id,observed_at\nZF-1\n")
+        self.assertEqual(
+            verify_main(["--reference", str(truncated), "--handover", fixture.HANDOVER]), 2
         )

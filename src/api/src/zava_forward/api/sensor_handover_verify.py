@@ -69,6 +69,8 @@ def open_existing_store(
 def _windows(reference: Sequence[dict[str, str]]) -> dict[str, tuple[str, str]]:
     spans: dict[str, tuple[str, str]] = {}
     for row in reference:
+        if any(type(row.get(name)) is not str for name in ("home_id", "observed_at")):
+            raise ValueError("REFERENCE_ROW_INCOMPLETE")
         low, high = spans.get(row["home_id"], (row["observed_at"], row["observed_at"]))
         spans[row["home_id"]] = (min(low, row["observed_at"]), max(high, row["observed_at"]))
     return spans

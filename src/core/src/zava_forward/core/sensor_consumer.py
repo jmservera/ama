@@ -464,7 +464,7 @@ class SensorConsumer:
             raise ConsumerError("SENSOR_OUTCOME_MALFORMED")
         return cast(Observation, parsed)
 
-    def _latest_observed(self, db: Connection, sensor_id: Primitive) -> datetime | None:
+    def _witnesses(self, db: Connection, sensor_id: Primitive) -> dict[str, Observation]:
         extract = "JSON_VALUE" if self.mssql else "json_extract"
         valid = "ISJSON" if self.mssql else "json_valid"
         safe_body = f"CASE WHEN {valid}(observation_body)=1 THEN observation_body ELSE NULL END"
@@ -481,6 +481,10 @@ class SensorConsumer:
             if witness["sensor_id"] != sensor_id or reading_id in witnesses:
                 raise ConsumerError("SENSOR_OUTCOME_MALFORMED")
             witnesses[reading_id] = witness
+        return witnesses
+
+    def _latest_observed(self, db: Connection, sensor_id: Primitive) -> datetime | None:
+        witnesses = self._witnesses(db, sensor_id)
         readings = db.execute(
             f"SELECT {', '.join(READING_COLUMNS)} FROM sensor_reading WHERE sensor_id=?",
             (sensor_id,),
@@ -679,6 +683,7 @@ class SensorConsumer:
         db = self._connect()
         try:
             units: dict[str, Mapping[str, object]] = {}
+            retained: dict[str, dict[str, Observation]] = {}
             rows: list[dict[str, str]] = []
             for home in home_ids:
                 window = " AND observed_at BETWEEN ? AND ?" if bounds else ""
@@ -699,6 +704,16 @@ class SensorConsumer:
                             "%Y-%m-%dT%H:%M:%SZ"
                         )
                     sensor = row["sensor_id"]
+                    managed = record[READING_COLUMNS.index("schema_version")] != "reading-v1"
+                    if managed:
+                        if sensor not in retained:
+                            retained[sensor] = self._witnesses(db, sensor)
+                        witness = retained[sensor].get(row["reading_id"])
+                        if witness is None:
+                            raise ConsumerError("SENSOR_OUTCOME_MALFORMED")
+                        self._retained_reading(record, witness)
+                        rows.append({key: str(witness[key]) for key in READING_FIELDS})
+                        continue
                     if sensor not in units:
                         control = db.execute(
                             "SELECT body FROM sensor_consumer_control WHERE sensor_id=?",

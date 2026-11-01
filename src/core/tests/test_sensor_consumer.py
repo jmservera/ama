@@ -98,6 +98,13 @@ class SensorConsumerTests(unittest.TestCase):
         self.assertEqual(stored[0], "sensor-fault-input-v1")
         self.assertEqual(float(stored[1]), float(str(row["temperature_c"])))
 
+    def test_observed_series_returns_retained_accepted_payload(self) -> None:
+        row = {**observations()[0], "temperature_c": "20", "seed": "-0"}
+        self.assertEqual(self.consume([row])[0].status, "accepted")
+        self.consumer.configure(POLICY, [replace(CONTROL, calibration_confirmed=False)])
+        series = self.consumer.observed_series([str(row["home_id"])])
+        self.assertEqual(series, [{key: str(value) for key, value in row.items()}])
+
     def canonical_rows(self, home_id: str, fault: str | None = None) -> list[Observation]:
         stock = sensor_stock.select(
             [dict(synthetic_home_id=home_id, is_synthetic="true", monitoring_consent="granted")],

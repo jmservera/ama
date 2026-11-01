@@ -12,3 +12,7 @@ ms.date: 2026-11-01
 ## Post-review correction (PR 645 Copilot threads)
 
 * Five findings accepted and fixed: non-initializing read-only store open, window-bounded observed series, replay of retained stored payloads, 100-row replay batches, `home_key` home validation with the 64-unit bound. See the changes artifact. Review outcome for the original assessment is unchanged; SQL Server and Azure SQL remain unexecuted.
+
+## PR #645 Copilot review follow-up (2026-11-01)
+
+Two valid findings fixed: retained accepted payload and accepted calibration returned for consumer-managed readings, and reference rows validated before window bounds. Focused sensor tests (core 37, api 85) and ruff pass. Independent exact-head review and the complete local gate remain required before merge.
