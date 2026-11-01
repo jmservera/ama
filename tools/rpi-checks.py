@@ -1066,6 +1066,27 @@ def extra_selector(value: str) -> tuple[str, str]:
     return project, selector
 
 
+def _single_test_passed(text: str, expected_test: str) -> bool:
+    """Accept one verbose result whose "ok" may follow interleaved log lines."""
+    lines = text.splitlines()
+    headers = [i for i, line in enumerate(lines) if re.match(r"(.+?) \.\.\. ", line)]
+    if len(headers) != 1 or not lines[headers[0]].startswith(f"{expected_test} ... "):
+        return False
+    end = next((i for i, line in enumerate(lines) if re.match(r"Ran \d+ tests? in ", line)), None)
+    if end is None or end < headers[0]:
+        return False
+    region = [lines[headers[0]].split(" ... ", 1)[1], *lines[headers[0] + 1 : end]]
+    region = [line.rstrip() for line in region if line.strip() and set(line) != {"-"}]
+    failing = re.compile(
+        r"((?<![A-Za-z])(FAIL|ERROR|skipped\b.*)|expected failure|unexpected success)$"
+    )
+    return (
+        bool(region)
+        and re.search(r"(?<![A-Za-z])ok$", region[-1]) is not None
+        and not any(failing.search(line) for line in region)
+    )
+
+
 def check_skips(
     text: str,
     *,
@@ -1105,7 +1126,8 @@ def check_skips(
     if expected_test is not None and (
         int(counts[-1]) != 1
         or skips
-        or re.findall(r"(?m)^(.+?) \.\.\. (.+)$", text) != [(expected_test, "ok")]
+        or re.search(r"(?m)^OK$", text) is None
+        or not _single_test_passed(text, expected_test)
     ):
         raise GateError(
             f"Required exact test execution evidence missing/mismatched: {expected_test}"
