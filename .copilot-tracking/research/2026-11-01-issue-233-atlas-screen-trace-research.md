@@ -20,3 +20,5 @@ Task: issue-233-atlas-screen-trace. Disposition: executed (focused). Planning Re
 ## Not in scope
 
 New screens, fixtures, observed validation (#155), human acceptance.
+
+* Correction cycle 2026-11-01: two PR 713 review threads accepted as valid; no research change.

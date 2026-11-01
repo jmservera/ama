@@ -73,7 +73,8 @@ async function roleScreensView() {
   const data = await api(`/api/cases?view=all&limit=20&offset=${page * 20}`, undefined, signal);
   const c = caseId ? await api(`/api/cases/${encodeURIComponent(caseId)}`, undefined, signal) : null;
   const extra = c && screen.load ? await screen.load(c) : null;
-  const overview = screen.overview ? await screen.overview(signal) : null;
+  const overview = screen.overview ? await screen.overview(signal)
+    : !c && screen.summarise && data.items.length ? await screen.summarise(data.items, signal) : null;
   signal.throwIfAborted();
   const label = (row) => `${row.id}: ${row.address || "Address unknown"}. ${row.status || row.stage || "State unknown"}`;
   const queue = h("section", { "aria-labelledby": "screen-queue-heading" },
@@ -96,7 +97,7 @@ async function roleScreensView() {
     h("p", {}, "Recorded evidence only. Missing, stale or withheld information cannot establish readiness. No message, approval or record change is made from this screen."),
     await screen.render(c, extra),
     h("p", {}, h("a", { href: `#/case/${encodeURIComponent(c.id)}` }, "Open existing case workspace")))
-    : h("p", { class: "empty" }, "No home selected. Choose a home from this queue.");
+    : h("div", {}, h("p", { class: "empty" }, "No home selected. Choose a home from this queue."), overview);
   signal.throwIfAborted();
   workspaceStatus.textContent = `${me.user.role}. ${screen.title}. ${c ? `Selected home ${c.id}.` : "No home selected."}`;
   show(h("h1", {}, screen.title), menu,
@@ -432,10 +433,41 @@ function choiceMeasure(m) {
     v ? `v${v.version} ${v.status} (${choiceBinding(v)}), answered by ${screenValue(v.answered_by)}, recorded ${screenStamp(v.at)}${v.note ? `: ${v.note}` : ""}` : "None recorded",
     screenValue(m.readiness)];
 }
+function choiceStoppedSummary(m) {
+  const v = choiceStopVersion(m) || choiceLatest(m);
+  const state = v && v.status !== m.status ? `${v.status} (current answer ${m.status})` : m.status;
+  const review = m.review?.status === "Needs human review" ? ", needs human review before any restart" : "";
+  return `${m.measure}: ${state}${v ? ` (v${v.version}, ${choiceBinding(v)})` : ""}${review}`;
+}
+function choiceQueueRow([row, c]) {
+  if (!c) return [row.id, "Unavailable. Open the home to check.", "Unavailable", "Unavailable"];
+  const measures = c.measure_decisions || [];
+  const stopped = measures.filter(choiceStopped).map(choiceStoppedSummary);
+  const u = c.resident_update;
+  return [row.id,
+    measures.length ? measures.map((m) => { const v = choiceLatest(m); return `${m.measure}: current ${m.status}${v ? `; latest recorded v${v.version} ${v.status} (${choiceBinding(v)})` : ""}`; }).join("; ") : "No measure choices recorded",
+    stopped.length ? stopped.join("; ") : "None recorded",
+    u ? `${screenValue(u.status)}: ${screenValue(u.purpose)}. Owner ${screenPerson(u.owner_identity || u.owner)}, due ${screenStamp(u.due_at)}, safe route ${screenValue(u.safe_contact_ref)}` : "No commitment recorded"];
+}
 registerRoleScreen({
   id: "resident-choice",
   title: "Resident choice and update queue",
   roles: choiceRoles,
+  async summarise(rows, signal) {
+    const entries = await Promise.all(rows.map((row) =>
+      api(`/api/cases/${encodeURIComponent(row.id)}`, undefined, signal).then((c) => [row, c], (e) => {
+        signal.throwIfAborted();
+        return [row, null];
+      })));
+    return this.summary(entries);
+  },
+  summary(entries) {
+    return screenPanel("Choice and update commitments across this page of homes",
+      h("p", {}, "Read-only summary of the homes on this page, not a portfolio total. A paused or withdrawn measure is listed separately from contact and access. Open a home for the full version history."),
+      screenTable("Choice and update commitments by home",
+        ["Home", "Measure choices (latest version)", "Paused or withdrawn", "Update commitment"],
+        entries.map(choiceQueueRow), Infinity));
+  },
   render(c) {
     const measures = c.measure_decisions || [];
     const stopped = measures.filter(choiceStopped);
