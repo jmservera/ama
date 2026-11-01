@@ -15,10 +15,18 @@
       "content_sha256": "3193b1b9780098db65501b4c40c2481799bca96015c60edb58ca8c049c598a30"
     },
     "anc/case-audits.tex": {
-      "content_sha256": "7851092f12e56fe9455e93ca2a512f85e12ff62509f9d5073523e5793208e1b1"
+      "content_sha256": "4a7e3ef241d60aa7f85fbbc636e1e40dc3e17ac255f1e8ed0b05e4cf0ba79bc7"
     },
     "anc/deferred-measures.tex": {
-      "content_sha256": "64201296afcad342dd5ca6092e18705abdd6667070d129725fcd296fbf4d45b8"
+      "content_sha256": "119f39c08246042af8a6f1fca6a849553777346f10f614a2ee405e3a5371c43b"
+    }
+  },
+  "author_review_revision": {
+    "date": "2026-11-01",
+    "scope": "Clarified complete-annotation requirements for deferred rates and the undefined zero-outcome cost ratio; removed an unnecessary case calendar date. Frozen prompt unchanged.",
+    "prior_active_content_sha256": {
+      "anc/case-audits.tex": "7851092f12e56fe9455e93ca2a512f85e12ff62509f9d5073523e5793208e1b1",
+      "anc/deferred-measures.tex": "64201296afcad342dd5ca6092e18705abdd6667070d129725fcd296fbf4d45b8"
     }
   },
   "restored_citation_keys": [

@@ -10,7 +10,7 @@
       "y": 0,
       "width": 1200,
       "height": 45,
-      "text": "ASSUMED SCENARIOS / NOT RESULTS | Payback depends on k / delta",
+      "text": "ASSUMED COST SCENARIOS | Payback depends on k / delta",
       "fontSize": 30,
       "fontFamily": 2,
       "lineHeight": 1.25,
@@ -18,7 +18,7 @@
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": null,
-      "originalText": "ASSUMED SCENARIOS / NOT RESULTS | Payback depends on k / delta"
+      "originalText": "ASSUMED COST SCENARIOS | Payback depends on k / delta"
     },
     {
       "id": "subhead",
@@ -1322,7 +1322,7 @@
       "y": 391,
       "width": 350,
       "height": 137,
-      "text": "Ratio k / delta = 5\nBreak-even at 11 cycles\nN >= 1 + 2k / delta\nExample: k = 5, delta = 1\nNot a measured estimate",
+      "text": "Ratio k / delta = 5\nBreak-even at 11 cycles\nN >= 1 + 2k / delta\nExample: k = 5, delta = 1\nIllustrative parameters",
       "fontSize": 22,
       "fontFamily": 2,
       "lineHeight": 1.25,
@@ -1330,7 +1330,7 @@
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": "regime-d05",
-      "originalText": "Ratio k / delta = 5\nBreak-even at 11 cycles\nN >= 1 + 2k / delta\nExample: k = 5, delta = 1\nNot a measured estimate"
+      "originalText": "Ratio k / delta = 5\nBreak-even at 11 cycles\nN >= 1 + 2k / delta\nExample: k = 5, delta = 1\nIllustrative parameters"
     },
     {
       "id": "regime-d1",
@@ -1367,7 +1367,7 @@
       "y": 391,
       "width": 350,
       "height": 137,
-      "text": "Ratio k / delta = 100\nBreak-even at 201 cycles\nN >= 1 + 2k / delta\nExample: k = 100, delta = 1\nNot a measured estimate",
+      "text": "Ratio k / delta = 100\nBreak-even at 201 cycles\nN >= 1 + 2k / delta\nExample: k = 100, delta = 1\nIllustrative parameters",
       "fontSize": 22,
       "fontFamily": 2,
       "lineHeight": 1.25,
@@ -1375,7 +1375,7 @@
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": "regime-d1",
-      "originalText": "Ratio k / delta = 100\nBreak-even at 201 cycles\nN >= 1 + 2k / delta\nExample: k = 100, delta = 1\nNot a measured estimate"
+      "originalText": "Ratio k / delta = 100\nBreak-even at 201 cycles\nN >= 1 + 2k / delta\nExample: k = 100, delta = 1\nIllustrative parameters"
     },
     {
       "id": "net-to-d0",
@@ -1503,8 +1503,8 @@
       "y": 660,
       "width": 1050,
       "height": 60,
-      "text": "Break-even sensitivity: N >= 1 + 2 * (k / delta)\nAssumed line, not measured payback",
-      "originalText": "Break-even sensitivity: N >= 1 + 2 * (k / delta)\nAssumed line, not measured payback",
+      "text": "Break-even sensitivity: N >= 1 + 2 * (k / delta)\nIllustrative boundary; integer cycles round up",
+      "originalText": "Break-even sensitivity: N >= 1 + 2 * (k / delta)\nIllustrative boundary; integer cycles round up",
       "fontSize": 24,
       "fontFamily": 2,
       "lineHeight": 1.25,

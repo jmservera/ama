@@ -1,13 +1,13 @@
 \section{Testing the harness: a prospective experiment}\label{sec:experiment}
 
 The experiment asks whether scheduled correction improves the repository
-inherited by later feature work. RQ3 is prospective: this article reports
-the motivating case, not an answer from collected trajectories.
+inherited by later feature work. RQ3 is addressed by the prospective design
+specified below.
 The 1 November amendment supersedes v4's two runs per arm/model.
 Historical freezes, diagnostics and the original owner-reported OSF
 registration are retained; none approves this new design. The researcher
 kit requires a new source-bound freeze and prospective OSF amendment
-before collection. No experimental results are reported. Agent configuration
+before collection. Agent configuration
 protocols and empirical-study guidance inform this pre-data design
 ~\cite{lulla2026protocol,baltes2026guidelines,wohlin2012experimentation}.
 
@@ -75,14 +75,17 @@ without proving that a model has no prior knowledge.}\label{fig:pilotdesign}
 
 The primary outcome is final behavioural coverage: contracts passed out
 of all 127 scheduled feature contracts at $P_{10}$, before CR1.
-Coverage combines acquisition, retention and repair; it is not itself decay.
+Coverage combines acquisition, retention and repair.
 Retained-contract loss and CR1 adaptation are distinct secondary outcomes,
 with legacy identifiers H2 and H6 retained only for data traceability.
 HIR/IDR definitions are in the supplementary appendices;
 comprehension is not measured.
 
-Let $\mathcal{R}_{r,t}$ be eligible unchanged contracts passing at an
-earlier end-of-cycle checkpoint $P_u$, $u<t$. At $F_t$ and $P_t$, let
+For trajectory $r$, $F_t$ is the retained state after feature step $t$ and
+$P_t$ the state after its assigned post-step; these source states coincide
+in A and D. Let $\mathcal{R}_{r,t}$ contain eligible, unchanged contracts
+that passed at least one earlier end-of-cycle checkpoint $P_u$, $u<t$.
+Superseded contracts leave this risk set. At $F_t$ and $P_t$, let
 $\mathcal{O}^{p}_{r,t}\subseteq\mathcal{R}_{r,t}$ contain contracts with
 observed binary results $S^p_{r,t}(q)$, $p\in\{F,P\}$. Report
 \begin{equation}
@@ -91,10 +94,13 @@ L^p_{r,t}=\sum_{q\in\mathcal{O}^{p}_{r,t}}
 d^p_{r,t}=\frac{L^p_{r,t}}{|\mathcal{O}^{p}_{r,t}|}.
 \label{eq:decayloss}
 \end{equation}
-An empty observed denominator is undefined. Publish the full risk set,
-observed subset and missing count alongside the density; incomplete
-observations do not identify the full-risk loss count.
-Never-acquired contracts are acquisition failures, not losses.
+The density is checkpoint prevalence of failure among observed,
+previously acquired contracts. An empty observed denominator is undefined.
+Publish the full risk set, observed subset and missing count
+$M^p_{r,t}=|\mathcal{R}_{r,t}|-|\mathcal{O}^p_{r,t}|$ alongside it.
+The full-risk loss count lies between $L^p_{r,t}$ and
+$L^p_{r,t}+M^p_{r,t}$; missing evaluations cannot be treated as passes.
+Never-acquired contracts remain acquisition failures.
 Retain onset, recovery, recurrence and uncertainty across missing
 checkpoints. Recovery does not erase an episode. Distinguish same-cycle
 post-step losses and rejected attempts from losses in retained code.
@@ -139,17 +145,28 @@ is not zero.
 \subsection{Replication and uncertainty}\label{sec:protocollimits}
 
 The author selected a minimum useful absolute coverage gain of ten
-percentage points. This is approximately thirteen test-weighted
-contracts, not thirteen independent capabilities or a threshold
-prescribed by Beck. The prospective planning assumption is a within-cell
-standard deviation of 25 points, not an observed estimate.
-For one two-sided B--D comparison, $\alpha=0.05$ and target power 0.80,
-the normal planning approximation is
-\[
+percentage points, approximately thirteen test-weighted contracts.
+Coverage scores $Y$ are expressed on the 0--100 scale. Let
+$\overline{Y}_{ma}$ be mean final coverage for model $m$ and arm $a$.
+The primary estimand is the equal-model-weight difference in mean coverage
+over the $M=3$ selected models. Its estimator is
+\begin{equation}
+\widehat{\Delta}_{BD}=\frac{1}{M}
+\sum_{m=1}^{M}(\overline{Y}_{mB}-\overline{Y}_{mD}).
+\label{eq:primarycontrast}
+\end{equation}
+For balanced cells of $n_{\mathrm{cell}}$ independent trajectories and a
+common within-cell variance $\sigma^2$, its planning variance is
+$2\sigma^2/(M n_{\mathrm{cell}})$. The assumed SD is 25 percentage points.
+For one two-sided comparison with $\alpha=0.05$, target power
+$1-\beta=0.80$ and target difference $\Delta_*=10$ points, the normal
+planning approximation is
+\begin{equation}
 n_{\mathrm{cell}}=
-\left\lceil\frac{2(z_{0.975}+z_{0.80})^2\sigma^2}
-{3(10)^2}\right\rceil=33.
-\]
+\left\lceil\frac{2(z_{1-\alpha/2}+z_{1-\beta})^2\sigma^2}
+{M\Delta_*^2}\right\rceil=33.
+\label{eq:samplesize}
+\end{equation}
 This gives 99 trajectories per arm, 495 overall. The target power is
 conditional on independent trajectories, the assumed variance and the
 blocked estimand; it is not guaranteed. SD assumptions of 15, 20 and
@@ -157,23 +174,25 @@ blocked estimand; it is not guaranteed. SD assumptions of 15, 20 and
 score's worst-case SD is 50; the 25-point assumption needs explicit
 author and prospective registration approval.
 
-The primary estimate equally weights the three within-model B--D mean
-differences. Resample whole trajectories within model and arm, with
-10,000 draws and pointwise percentile intervals; disclose missing
+Resample whole trajectories within model and arm, with
+10,000 draws and pointwise 95\% percentile intervals; disclose missing
 frames rather than silently pool observed models or complete cases.
 Model-specific estimates and other contrasts are secondary, with no
 family-wide coverage claim.
+Retain scheduling-block identifiers. Before collection, source-bound review
+must reconcile this independent-trajectory variance and bootstrap scheme
+with the model/replicate blocking: residual dependence would require a
+block-preserving analysis and revised planning variance.
+% TODO(author): resolve scheduling-block dependence and bind the variance/resampling choice to the new kit freeze and prospective registration.
 Chen, Zaharia and Zou's dated ChatGPT comparison motivates monitoring
 service drift despite exposed names~\cite{chen2023drift}; it does not
 measure drift in this roster or make a version pin an immutability guarantee.
 Report the pooled within-cell SD with its
 degrees of freedom for future planning.
-The old two-run percentile bootstrap cannot justify a nominal 95\%
-coverage claim: show its four pairwise differences instead.
-With v4's extreme CR1 split, 2/2 versus 0/2, the conservative difference
-interval is approximately $[-0.78,1]$; pooling six per arm still gives
-approximately $[-0.04,1]$. The coverage calculation does not power binary
-CR1; report exact binomial component intervals with their assumptions.
+For binary CR1, report per-model success counts and exact binomial
+component intervals under independent runs with a common success
+probability within each cell. Aggregate contrasts must preserve model
+strata. The coverage calculation supplies no power guarantee for CR1.
 
 \subsection{Resources, feasibility and collection gates}\label{sec:prerun}
 
@@ -241,11 +260,8 @@ Assisted and incomplete trajectories and all their costs are retained,
 without replacements or success-conditioned primary analyses.
 
 \ifresults
-Results require prospectively collected trajectories and checked analysis.
+% TODO(author): insert the prospectively collected results and checked analysis.
 \else
-No study results are available. PF1 will show coverage and retention;
-PF2 graded/binary CR1, prerequisites and costs; PF3 coverage against
-all-attempt credits. No illustrative data or fitted frontier is substituted.
 % TODO(author): PF1 requires actual F/P checkpoint vectors, eligibility and missingness.
 % TODO(author): PF2 requires actual CR1 vectors, prerequisites, assistance and all-attempt costs.
 % TODO(author): PF3 requires actual final coverage and attributable delivery credits.

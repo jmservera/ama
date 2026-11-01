@@ -8,10 +8,10 @@ The 1997 formulation states the declining-quality law; it supplies no
 data for or against it. Eick et~al. report mixed evidence from
 fifteen-plus years of change history~\cite{eick2001decay}, and a systematic
 review finds uneven support across systems~\cite{herraiz2013laws}.
-Neither feature count nor churn is itself decay. A regression loses
-still-required, previously working behaviour; an unimplemented capability
-is an acquisition failure. Repeated failure is persistence, not proof
-that an earlier defect caused a distinct later one.
+Feature count and churn describe activity. A regression loses still-required,
+previously working behaviour; an unimplemented capability is an acquisition
+failure. A failure that continues across changes is persistence. Establishing
+that it caused a distinct later defect requires a trace of that dependency.
 
 Cunningham describes shipping first-time code and rewriting it as
 understanding improves~\cite{cunningham1992wycash}. Fowler's design
@@ -26,16 +26,16 @@ These are not universal productivity coefficients.
 Code, tests and deployment assumptions survive through the repository;
 instructions and handovers survive through procedural context.
 Either channel can preserve a sound decision or a mistake.
-Here ``software entropy'' is an engineering analogy, not a
-thermodynamic measure. The proposed outcomes are retained behaviour,
-adaptation and resource use.
+Here ``software entropy'' provides an engineering analogy for the maintenance
+problem. The proposed measurements concern retained behaviour, adaptation
+and resource use.
 
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{fig-state-inheritance.png}
 \caption{Conceptual read/write paths between sessions. A fresh conversation
-does not reset software or instructions. Arrows are possible state transfer,
-not measured error propagation.}\label{fig:stateinheritance}
+inherits software and instructions. Arrows identify state-carrying paths
+whose effects require measurement.}\label{fig:stateinheritance}
 \end{figure}
 
 \subsection{Evidence within and between features}\label{sec:empirical}
@@ -70,9 +70,9 @@ or a randomised repair effect.
 \includegraphics[width=\linewidth]{fig-inherited-history.png}
 \caption{Published event-resolution differences and repository-clustered
 95\% intervals from Pan et~al., Table~3. Current and prior
-non-superseded tests must pass. Selected cohorts overlap; they are
-not independent studies or randomised repair conditions.
-Values and whiskers are transcribed, not fitted here.}
+non-superseded tests must pass. The overlapping selected cohorts apply
+different restrictions to the same benchmark. Points and whiskers reproduce
+the published estimates and intervals.}
 \label{fig:inheritedhistory}
 \end{figure}
 
@@ -83,13 +83,13 @@ it and Section~5.1/Figure~5 supplies the detail
 evaluation~\cite{orlanski2026slopcodebench,chen2026sweci}.
 Borg et~al.'s maintainability study finds no significant downstream
 difference for late-2024 assistants; only phase two was randomised
-~\cite{borg2025echoes}. This is a counterexample, not a test of the
-current autonomous roster.
+~\cite{borg2025echoes}. Its findings provide a useful contrast across tool
+generations and collaboration settings.
 
 \subsection{Instruction maintenance and evaluation}\label{sec:instructiondebt}
 
-Instructions are maintained artifacts, not automatically reliable
-memory~\cite{nigh2025agentsmd,rajasekaran2025context}.
+Instruction files themselves require
+maintenance~\cite{nigh2025agentsmd,rajasekaran2025context}.
 Mohsenimofidi et~al.'s 169 commits have 242 overlapping assignments
 across nine categories; 78 instruction additions, 59 modifications
 and 23 removals are three categories, not a partition
@@ -155,8 +155,8 @@ the present protocol, whose hidden evaluator outputs never reach agents.
 Ng coauthored MedAgentBench, which evaluates task completion in an
 interactive medical-record environment rather than chatbot answers alone
 ~\cite[arXiv v2, Secs.~2.3--2.4]{jiang2025medagentbench}.
-It motivates checking observable action outcomes, not a claim about coding
-consolidation or a controlled self-improvement intervention.
+Its evaluation of observable action outcomes informs the measurement focus
+of this protocol.
 
 The two owner-selected videos illustrate these boundaries rather than
 provide experimental findings. In the Ng/Moroney talk, Ng describes
@@ -183,8 +183,8 @@ hunt1999pragmatic,agile2001manifesto}.
 Monitoring burden and completion proxies qualify the rationale
 ~\cite{bainbridge1983ironies,simkute2024ironies,tankelevitch2024metacognitive,
 lee2025critical,goodhart1975,strathern1997improving,cohen2006review}.
-Spec-driven tools add structure, not an outcome oracle
-~\cite{delimarsky2025speckit,boeckeler2025sdd,agarwal2026sdd,waseem2025vibe}.
+Spec-driven tools structure handoffs; the intended outcomes still need
+execution checks~\cite{delimarsky2025speckit,boeckeler2025sdd,agarwal2026sdd,waseem2025vibe}.
 
 \paragraph{HVE Core.}\label{sec:hve}
 Microsoft's Hypervelocity Engineering Core supplies file-based

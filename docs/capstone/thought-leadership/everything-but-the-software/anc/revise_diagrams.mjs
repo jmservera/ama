@@ -47,7 +47,7 @@ function connect(id, source, target) {
   target.boundElements.push({ type: "arrow", id });
 }
 
-text("title", "PROSPECTIVE V5 / NOT RESULTS\n495 independent trajectories across five arms",
+text("title", "PROSPECTIVE STUDY DESIGN\n495 trajectories across five arms",
   0, 0, 1120, 95, 36);
 text("scope", "Each model runs every arm: GPT 6.1 Sol, Sonnet 5.5, Gemini 4 Argon.\n"
   + "33 trajectories per arm/model; seed 2027; fresh sessions inherit repository state.",
@@ -70,8 +70,8 @@ for (const [index, [arm, feature, post, colour]] of arms.entries()) {
   connect(`arm-${index}-to-post`, f, middle);
   connect(`arm-${index}-to-p`, middle, p);
 }
-text("footer", "CR1: withheld change request, 45 min / 300 nominal credits. Content is not printed here.\n"
-  + "Primary B-D: equal total time and nominal credits; editing, tests and handovers still differ.\n"
+text("footer", "CR1: withheld change request, 45 min / 300 nominal credits.\n"
+  + "Primary B-D: matched time/credit ceilings; session structure, tests and handovers differ.\n"
   + "15 excluded calibration trajectories. New freeze, OSF amendment and launch approval pending.",
   0, 850, 1120, 105);
 await writeFile(resolve(paper, "fig-pilot-design.excalidraw"), JSON.stringify({
@@ -102,6 +102,12 @@ async function replaceLabels(stem, replacements) {
 }
 
 await replaceLabels("fig-experiment-measures", {
+  "Combines acquisition,\nretention and repair\nNot a pure decay rate":
+    "Combines acquisition,\nretention and repair\nFinal behavioural coverage",
+  "Zero risk set = undefined\nUnknown evaluation != failure\nNever-passed != loss":
+    "Empty observed risk: undefined\nMissing stays unobserved\nPrior pass required for loss",
+  "Tokens & seconds distinct\nMissing billing = unknown (!= 0)\nCheap failure != efficiency":
+    "Separate tokens, time, credits\nMissing billing stays unknown\nReport cost alongside success",
   "MEASUREMENT | Pilot endpoints, cost counterbalance & interpretation":
     "MEASUREMENT | Coverage, retention, adaptation and cost",
   "Primary B-A and B-C contrasts reported separately per model (2 runs/arm/model)\nExploratory uncertainty only; no pass/fail hypothesis verdicts":
@@ -121,21 +127,28 @@ await replaceLabels("fig-experiment-measures", {
     "One withheld change probe\nUnobserved stays missing\nwith explicit bounds",
   "Structural proxies\nSecondary checkpoints\nFrozen tool settings":
     "Treatment fidelity\nExternal measurements\nFixed tool settings",
-  "Descriptive structure only\nNot comprehension or\ndirect maintainability":
-    "Targets of B's budget\nNot independent efficacy\nor comprehension",
+  "Targets of B's budget\nNot independent efficacy\nor comprehension":
+    "Structural budget targets\nTreatment fidelity\nComprehension unmeasured",
+});
+
+await replaceLabels("fig-contract-states", {
+  "CONCEPTUAL | Acquisition is not retention":
+    "CONCEPTUAL | Contract acquisition, loss and recovery",
+  "Unobserved results stay missing. No frequencies or effects are implied.":
+    "Unobserved results stay missing. Retain the onset, recovery and recurrence of losses.",
 });
 
 await replaceLabels("fig-refactoring-economics", {
-  "ASSUMED SCENARIOS / NOT RESULTS | Consolidation payback arithmetic":
-    "ASSUMED SCENARIOS / NOT RESULTS | Payback depends on k / delta",
+  "ASSUMED SCENARIOS / NOT RESULTS | Payback depends on k / delta":
+    "ASSUMED COST SCENARIOS | Payback depends on k / delta",
   "Consolidated B investment\nAverage k credits / cycle\nTotal outlay (AI credits):\nk * N  (assumed k = 5)":
     "Consolidation investment\nAverage k credits / cycle\nTotal outlay: k * N\nk awaits calibration",
   "Null slope: delta = 0\nNo break-even (k > 0)\nPure overhead every cycle\nN = 10: -50 credits\nN = 20: -100 | N = 40: -200":
     "No premium: delta = 0\nNo break-even for k > 0\nPure overhead\nCaps do not reveal delta\nComparable quality needed",
-  "Moderate: delta = 0.5\nBreak-even N >= 21 cycles\n(N >= 1 + 2k/delta)\nN = 10: -27.5 | N = 20: -5\nN = 40: +190 credits":
-    "Ratio k / delta = 5\nBreak-even at 11 cycles\nN >= 1 + 2k / delta\nExample: k = 5, delta = 1\nNot a measured estimate",
-  "Steeper: delta = 1.0\nBreak-even N >= 11 cycles\nUnrecovered at N = 10 (-5)\nN = 20: +90 credits\nN = 40: +580 credits":
-    "Ratio k / delta = 100\nBreak-even at 201 cycles\nN >= 1 + 2k / delta\nExample: k = 100, delta = 1\nNot a measured estimate",
+  "Ratio k / delta = 5\nBreak-even at 11 cycles\nN >= 1 + 2k / delta\nExample: k = 5, delta = 1\nNot a measured estimate":
+    "Ratio k / delta = 5\nBreak-even at 11 cycles\nN >= 1 + 2k / delta\nExample: k = 5, delta = 1\nIllustrative parameters",
+  "Ratio k / delta = 100\nBreak-even at 201 cycles\nN >= 1 + 2k / delta\nExample: k = 100, delta = 1\nNot a measured estimate":
+    "Ratio k / delta = 100\nBreak-even at 201 cycles\nN >= 1 + 2k / delta\nExample: k = 100, delta = 1\nIllustrative parameters",
   "All values are algebraic AI credit differences (A minus B) for assumed k = 5 credits/cycle.\nAt pilot horizon N = 10, all three assumed slopes remain negative (-50, -27.5, -5 credits): no payback.":
     "Break-even depends on the ratio k / delta, not the units or a preferred k.\n"
     + "k awaits measured consolidation spend; delta is an uncapped, quality-matched counterfactual.",
@@ -158,7 +171,7 @@ const label = (id, value, x, y, width = 500) => ({
   seed: 2027, isDeleted: false, containerId: null,
 });
 economics.elements.push(
-  label("ratio-plot-title", "Break-even sensitivity: N >= 1 + 2 * (k / delta)\nAssumed line, not measured payback", 90, 660, 1050),
+  label("ratio-plot-title", "Break-even sensitivity: N >= 1 + 2 * (k / delta)\nIllustrative boundary; integer cycles round up", 90, 660, 1050),
   line("ratio-plot-x", 110, 990, [[0, 0], [900, 0]]),
   line("ratio-plot-y", 110, 990, [[0, 0], [0, -220]]),
   line("ratio-plot-function", 110, 990, [[0, 0], [900, -220]], "#0078D4"),

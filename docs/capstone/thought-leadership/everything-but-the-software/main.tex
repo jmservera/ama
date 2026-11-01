@@ -1,6 +1,6 @@
 % !TEX program = pdflatex
 % ---------------------------------------------------------------------------
-% Everything but the Software -- LaTeX source (draft v10, integrated Supplement)
+% Everything but the Software -- LaTeX source (draft v11, integrated Supplement)
 % Figures use PNG for LaTeX; conceptual editing authority is .excalidraw.
 % anc/make_figures.py regenerates only case and published-evidence figures.
 % anc/export_diagrams.mjs exports native Excalidraw sources to SVG and PNG.
@@ -51,8 +51,7 @@
 An Exploratory Case Study and an Experiment Protocol}
 
 \author{Juan Manuel Servera Bondroit\thanks{The views expressed are the
-author's own and do not necessarily reflect those of Microsoft. The case
-organisation, Zava North Homes, is fictional.}\\[4pt]
+author's own and do not necessarily reflect those of Microsoft.}\\[4pt]
 \small Senior Partner Solution Architect, Microsoft Schweiz, Zurich}
 
 \date{Draft of 1 November 2026}
@@ -63,33 +62,31 @@ organisation, Zava North Homes, is fictional.}\\[4pt]
 
 \begin{abstract}
 Each feature changes the starting point for the next. In agentic software
-development, that starting point includes code, tests and the prompts, skills
-and notes directing subsequent work. This paper examines how faults and corrective
-instructions can accumulate across this process. Industrial maintenance
-accounts, recent agent benchmarks and public project records motivate a
-distinction between errors within a conversation and errors inherited through
-a repository. A paired-history benchmark supplies evidence of the latter,
-while its clean-history results qualify an explanation based on structural
-complexity alone. A six-week architectural demonstrator provides a motivating
-testbed: 183 pull requests merged from 15 to 24 October 2026,
-16:19:39 UTC, while the replacement
-remained unusable for the participant. Five candidate mechanisms organise its delivery
-record: specification inflation, proxy capture, learning
-evaporation, process-gate inflation and feedback starvation. The case centres
-on a migration with missing deployment dependencies; it exposes a break in
-usable behaviour rather than measuring a decay rate. A prospective protocol specifies
-495 trajectories across three selected models and five arms: feature-only
-delivery, scheduled consolidation, read-only review, matched-resource
-feature delivery and visible regression repair.
-Its principal outcomes are final behavioural coverage, retained-contract
-loss, an unforeseen change request and resource cost. The consolidation arm
-includes additional resources, tests and a different handover note.
-The sample targets a ten-percentage-point coverage gain under an explicit
-variance assumption. Affordability, a new source freeze, prospective OSF
-recording and collection authorization remain gates. No experiment results
-are reported. The study
-asks whether consolidation improves the system inherited by later feature work.
+development, that starting point includes code, tests and the instructions
+guiding later work. This paper examines how faults and corrective rules
+accumulate in that inherited state. Maintenance literature and agent
+benchmarks distinguish conversational errors from repository-carried failures.
+A practitioner-led demonstrator supplies a motivating case: agent-assisted
+research, business and product requirements, architecture decisions,
+Design Thinking critique and disposable prototypes informed epics and user
+stories. Despite preparation intended to improve delivery speed and quality,
+extended autonomous work left the replacement unusable for the participant
+and prompted renewed feedback and refactoring. Five candidate mechanisms
+organise this transition: specification inflation, proxy capture, learning
+evaporation, process-gate inflation and feedback starvation. Migration and
+deployment dependencies remain central to the observed failure.
+A prospective protocol specifies 495 trajectories across three selected
+models and five arms: feature-only delivery, scheduled consolidation,
+read-only review, matched-resource delivery and visible regression repair.
+The outcomes are final behavioural coverage, retained-contract loss,
+an unforeseen change request and resource cost. The design targets a
+ten-percentage-point coverage gain under an explicit variance assumption;
+consolidation combines structural work, additional tests and a revised
+handover. Source freeze, prospective registration, affordability and collection
+authorization remain gates. The study asks whether consolidation improves
+the system inherited by later feature work.
 \end{abstract}
+% TODO(author): report the prospective experiment results after the runs and checked analysis are complete.
 
 \noindent\textbf{Keywords:} agentic software engineering; coding agents;
 spec-driven development; software evolution; technical debt; refactoring;
@@ -138,19 +135,30 @@ distinction between producing code and learning through working software
 sharpens the research question~\cite{beck2026prodacity,orosz2025beck}:
 what does a feature leave behind for the next one?
 
-The question arose during an Azure Master Architect (AMA) capstone, used here
-as an exploratory testbed rather than the scope of the contribution.
-After intermittent use of an MVP, its sole developer started a coordinator on
-15~October 2026 to deliver more than 180 backlog issues. From 15~October
-through the 24~October integration at 16:19:39~UTC, 183 pull requests
-merged, but the developer could not sign in to the
-replacement. The public repository, pull requests,
-append-only log and versioned coordinator instructions provide a trace of
-that transition~\cite{servera2026ama}. The case motivates hypotheses, not a
-general estimate of agent-caused deterioration. The author's earlier
+The question arose in an architectural demonstrator developed by one
+practitioner with multiple agents. Research documents, business and product
+requirements and architecture decisions were built through sustained
+conversation, challenge and owner decisions. Design Thinking methods,
+including what-if scenarios, persona analysis and journey mapping, helped
+question the proposed solution; disposable pilots and prototypes exposed
+workflow problems before a usable MVP emerged. A backlog agent then converted
+that accumulated context into epics and user stories for a delivery coordinator.
+The intended advantage was faster implementation of better-understood
+features, supported by explicit acceptance criteria and review.
+
+Extended autonomous sessions nevertheless left the replacement unusable for
+the participant. Renewed product-use feedback redirected implementation and
+refactoring. This sequence motivates investigating how preparation and local
+completion checks translate into the behaviour inherited by later work.
+The repository, pull requests, append-only log and versioned coordinator
+instructions retain the evolving delivery record~\cite{servera2026ama};
+the source package pins the evidence used here. The repository may be
+temporarily unavailable during the experiment embargo, after which the
+approved history and context are intended for release.
+The author's earlier
 experience with Aithena, a book-search project with PDF ingestion and
 a browser interface discussed separately in the supplement, and the PhotoCraft
-inspection selected after the AMA analysis have separate provenance in
+inspection selected after the motivating-case analysis have separate provenance in
 the ancillary \nolinkurl{anc/supplementary-context.md}.
 
 The working hypothesis is that feature-driven delivery can carry unresolved
@@ -186,10 +194,10 @@ improve retained behaviour and future changeability, and at what cost?
 \item A focused synthesis distinguishing conversational self-conditioning,
 repository-carried faults and instruction maintenance, with a replot of
 published paired-history data (Section~\ref{sec:background}).
-\item A documented six-week case, including a ten-day autonomous delivery
-loop, and an integrated account of five mechanisms. Descriptive measures,
-within-case contrasts and an evidence audit connect the observed interruption
-of usability to competing explanations
+\item An exploratory account of the transition from agent-assisted discovery
+and challenged requirements to coordinated feature delivery and corrective
+product feedback. Five candidate mechanisms and within-case contrasts connect
+the interruption of usability to competing explanations
 (Sections~\ref{sec:method}--\ref{sec:mechanisms}).
 \item A consolidation harness and a prospectively sized five-arm protocol to
 estimate retained behaviour, future changeability and resource cost. It follows the
@@ -203,8 +211,8 @@ delegated delivery and merge decisions. The case suggests hypotheses whose
 causal relationships remain to be tested. The planned pilot estimates a
 multi-component, extra-resource package comparison; it does not isolate
 refactoring or validate the five
-case mechanisms individually. It is not running, and registration and
-launch checks remain pending. The case's validity and the pilot's
+case mechanisms individually. Registration and launch checks precede
+collection. The case's validity and the pilot's
 identification limits are consolidated in Sections~\ref{sec:threats}
 and~\ref{sec:protocollimits}.
 
@@ -215,175 +223,111 @@ and~\ref{sec:protocollimits}.
 
 \subsection{Setting}
 
-The motivating testbed is a capstone for Microsoft's \emph{Azure Master
-Architect} (AMA) programme. The programme's name is public in the Microsoft Employee Learning
-badge listing.\footnote{\url{https://www.credly.com/org/microsoft-employee-learning/badge/azure-master-architect}}
-That public listing does not authorise publication of internal assessment
-material or this paper.
+The motivating project was an architectural training exercise developed by
+one practitioner acting as architect, developer and product owner.
+Its synthetic, multi-role service workflow combined documentary evidence,
+approvals, identity, data and external-service dependencies. The exercise
+required research, requirements, architecture, a delivery plan and a working
+demonstrator. These interdependencies made preservation of a complete user
+journey consequential even in a non-production system. No operational
+service or real resident data is evaluated here.
 % TODO(author): confirm the applicable Microsoft external-publication process and obtain the required leadership, privacy and other approvals before external submission; approval is pending.
-Case Study~48 supplies a fictional not-for-profit housing association,
-Zava North Homes, with about 60,000 homes. Its retrofit demonstrator combines
-assessment, grants, procurement, resident consent and quality assurance.
-The exercise required research, requirements, architecture, a delivery plan,
-a working demonstrator and an executive presentation. Domain obligations
-provide realistic dependencies; no actual housing service or resident data
-is evaluated here. The assessment concerned implementation completeness.
-Internal rubric wording is not reproduced; its external-release clearance
-has not been established.
 
-The author worked alone, as architect and product owner, from 11~September to
-24~October 2026. Agents did almost all of the research synthesis, writing and
-coding. The repository also contains an automated scorer: a GitHub agentic
-workflow that asks a language model to score each pull request against the
-rubric and records the result~\cite{servera2026ama}.
+Agents performed most research synthesis, drafting and coding, with the
+practitioner steering scope and decisions. Several weeks of discovery and
+requirements work preceded roughly a week of interactive MVP development
+and a ten-day autonomous delivery window. The project continued afterward;
+its current state and detailed chronology belong to the versioned repository
+record~\cite{servera2026ama}. An automated repository scorer supplied an
+additional completion signal. Internal assessment wording is not reproduced.
 
 \subsection{Workflow and tools}
 
-Interactive development used GitHub Copilot in VS Code, mainly
-Opus~5.5 during the first two weeks and then GPT-6.1 Sol through the case
-cut-off. These are recalled interface labels, not verified provider
-build identifiers or an exact switch date.
+GitHub Copilot and HVE Core supported a sequence of connected activities:
 
 \begin{itemize}[leftmargin=*]
-\item \textbf{Research.} Sixteen official legislation, regulator, policy,
-standards and funding snapshots were downloaded on 19~September 2026, converted
-to Markdown and organised, with agent-written sector and company research, into
-a knowledge base: an index, immutable sources, maintained syntheses, an
-owner-curated memory file and an append-only log. Snapshot dates do not
-establish currentness. The 29~October paper and presentation claim review records
-the source dates and unresolved rechecks; no official pages could be retrieved
-in that session.
-\item \textbf{Challenge.} Eight agents role-playing the case organisation's
-stakeholders (asset management, programme delivery, finance, procurement,
-data, building safety, neighbourhood housing and resident engagement) and HVE
-Core's Design Thinking coach challenged each idea. Their first verdict was
-that none of the five end-to-end agents requested in the brief should be
-built as such.
-\item \textbf{Requirements and decisions.} HVE Core's BRD and PRD builders, a
-BRD quality reviewer and the ADR assistant produced and revised the
-requirements and six architecture decision records.
-\item \textbf{Prototypes and MVP.} Several prototypes were built, reviewed by
-the role agents and kept as evidence. An MVP followed and was deployed to
-Azure.
-\item \textbf{Backlog.} HVE Core's backlog manager turned the requirements and
-decisions into GitHub issues with epics, features, acceptance criteria and
-dependencies, labelled by how much of each item already existed in the MVP.
-\item \textbf{Coordinator.} On 15~October the author added a custom coordinator
-to deliver the backlog (Section~\ref{sec:coordinator}).
+\item Research agents assembled a knowledge base of source snapshots,
+maintained syntheses, an index, owner-curated memory and an append-only log.
+\item The Design Thinking coach and stakeholder-role agents challenged
+assumptions through what-if scenarios, persona analysis and journey mapping.
+Their critiques separated bounded AI tasks from deterministic controls and
+accountable human decisions. Role-agent answers were hypotheses for the
+exercise; direct stakeholder research remained a separate requirement.
+\item BRD and PRD builders, quality review and the ADR assistant turned
+successive discussions and owner decisions into revised requirements and
+architecture records. These documents changed as understanding developed.
+\item Disposable pilots and prototypes tested candidate workflows. Their
+critiques and participant feedback informed a deployed MVP that the author
+used intermittently and refined through short feedback loops.
+\item A backlog agent converted the accumulated context into epics, features
+and user stories, with acceptance criteria, dependencies and indications of
+existing MVP coverage. Some stories also exposed scope needing subsequent
+requirements reconciliation.
+\item A custom coordinator then dispatched implementation and review work
+against that backlog (Section~\ref{sec:coordinator}).
 \end{itemize}
+
+The intended benefit was accelerated planning and better-grounded feature
+delivery. Neither a human-only comparator nor a measured speed or quality
+gain was available. The retained documents and conversations matter because
+they shaped what workers were asked to build and reviewers were asked to
+accept.
 
 \subsection{The coordinator}\label{sec:coordinator}
 
-The coordinator ran through Copilot CLI on a VM. It selected waves of issues
-whose dependencies were merged and launched parallel worker CLI sessions
-through \texttt{tmux}, each in an isolated git worktree with HVE Core's RPI
-agent and one issue as its brief. The author reports using Sonnet~5.5 for the workers, including
-before the explicit pin. At the pinned repository commit the worker selector
-is \texttt{claude-sonnet-5.5}; PR \#420 introduced that requirement on
-21~October. Earlier use is recollection; the committed selector
-independently records the later configuration.
-The coordinator used Auto selection with the Intelligence setting. The author
-observed it tending to select GPT-6.1 Sol, but this was not a guaranteed model pin or
-proof of every session's actual model or provider build.
-% Evidence: 29c6b51:.github/agents/ama-backlog-delivery-coordinator.agent.md, lines 167--174; git show ca4baf75837de57c99718f7423716d5dc0b0e244.
+The coordinator ran through Copilot CLI on a VM. It selected dependency-ready
+issues and launched parallel worker sessions in isolated git worktrees.
+Each worker received an issue and HVE Core's research, plan, implement and
+review (RPI) workflow. The coordinator checked the resulting pull request,
+updated the project board and, under owner delegation, merged changes.
+Interactive and CLI model configurations changed during the project;
+recorded selectors and recalled interface labels are distinguished in the
+source package. The delivery record is consequently an evolving workflow.
 % TODO(author): recover historical CLI versions, reviewer models and actual session/provider build identifiers where retained records expose them; distinguish records from author recollection.
-Within its first day the author added four rules, each in response to a reported
-problem. First, it could merge its own pull requests through a gate it
-verified itself, because repository auto-merge was unavailable. Second, the
-full research, plan, implement and review loop became mandatory for every
-issue, and the presence of the loop's \texttt{.copilot-tracking} artefacts in
-the pull request became a merge condition, because the first waves of sessions
-had implemented directly without them. Third, it updated the project board and
-ticked only the acceptance criteria that reviewed evidence proved. Fourth, it
-monitored sessions on a schedule instead of blocking. Later rules required a
-complete local validation gate before every push, including
-documentation-only changes, covering five source projects, infrastructure
-templates, a disposable SQL Server, browser accessibility checks, migrations,
-four container images, vulnerability scans and a software bill of materials,
-to be rerun after every correction or rebase. An issue stopped only on a
-\emph{human blocker}: an owner decision, a named approval, a missing
-credential, or a review finding still open after two correction cycles. On the
-same day an accepted ADR made migrating the working MVP into a new source
-layout the first priority and barred new feature code from the MVP.
+
+Early worker sessions implemented directly, prompting the author to make
+the full RPI sequence and committed tracking artefacts mandatory. Further
+instructions required evidence-backed acceptance ticks, scheduled monitoring
+and increasingly comprehensive local gates. Human decisions, approvals,
+credentials and unresolved review findings could still block work. At the
+same transition, an accepted architecture decision prioritised migration
+to a new source layout and froze feature work in the MVP. Coordination,
+migration and procedural requirements therefore changed together.
 
 \subsection{Data and analysis}
 
-The study uses an exploratory single-case design, with the author as participant-observer.
-The case is the delivery of this repository from 11~September to
-24~October 2026. The unit of analysis is the autonomous loop of
-15--24~October. The loop is compared with the preceding MVP period of
-8--14~October within the same case, acknowledging the uncontrolled differences
-between them. The author used the system intermittently during that period to refine
-ideas and the user experience. The case was selected because
-it is revelatory: a contemporaneous trace of an autonomous agent loop.
-Selection occurred after the outcome was known, not through prospective
-sampling of successful and unsuccessful projects.
+This exploratory single-case study follows the transition from interactive
+discovery and MVP use to backlog-mediated autonomous delivery. The author
+selected the case after encountering the unusable replacement and acts as
+participant-observer. Case-study guidance and the ACM SIGSOFT Empirical
+Standards inform the account~\cite{runeson2009guidelines,sigsoft2021standards}.
 
-The analysis uses the public repository at commit \texttt{29c6b51} (24~October 2026,
-16:19~UTC)~\cite{servera2026ama} with issue and pull-request metadata
-retrieved from the GitHub API on the same day. The main sources are the
-append-only knowledge-base log (368 dated entries and about 57,000 words from
-11~September to 22~October; entries before 25~September were reconstructed
-from history), the knowledge-base index, the BRD (version~0.19), the PRD
-(version~0.18), the coordinator's definition, issue bodies and the rubric
-scorer's latest result. Methods comprise descriptive counts; an evidence-boundary
-lexicon applied to each log entry (Appendix~\ref{app:measures}); reference
-tracing of recorded learning identifiers through the
-log by date; and AI-assisted interpretation of the author's observations.
-These informed the candidate mechanisms, possible amplifiers and consolidation hypothesis.
-GitHub Copilot in VS Code organised those explanations, named the five
-patterns and drafted the account, using Opus~5.5 and then GPT Sol~6 and~6.1
-as reported interface labels. Microsoft 365 Copilot helped summarise material
-and find relevant reference documents; it did not perform the log analysis or
-develop the mechanisms. This was not a systematic entry-by-entry qualitative
-coding study. The author reviewed important specification sections selectively,
-especially the addendum, rather than auditing the full BRD and PRD. Their
-identifiers and cross-references made the overall design difficult to follow.
-The author reports checking the repository figures and Azure expenditure.
-The supplied AI-assisted critique reports checking the cited numbers and
-log-growth chart. This revision independently reruns selected local arithmetic
-and source comparisons, with coverage recorded in the package README.
-Neither check is independent human peer review or an audit of the original
-studies' data.
-% TODO(author): retain the dated GitHub API responses and rubric-score snapshot underlying the case counts, or document any unavailable source evidence.
-The central discrepancy needs a compact, release-linked evidence package:
-the dated score and its assessed capability scope, the deployment revision
-and configuration, and dated evidence of the failed sign-in journey. The
-retained account does not yet establish that the scorer assessed the same
-release and capability claim as the usability observation. Until those links
-are checked, their coexistence is reported in the case chronology, not a
-verified same-release contradiction.
-The report is informed by established guidance for case
-study research in software engineering~\cite{runeson2009guidelines} and the
-ACM SIGSOFT Empirical Standards~\cite{sigsoft2021standards}. As the
-sole developer, the author is a participant-observer;
-Section~\ref{sec:threats} discusses what that implies.
+The original analysis pins repository commit \texttt{29c6b51}; a separately
+pinned follow-up uses \texttt{9b74ac8d}. Sources include the knowledge-base
+log and index, requirements, architecture decisions, coordinator definition,
+issues, pull requests and retained RPI records. The author's review adds
+process clarification and an export of project issue states, retained as
+\nolinkurl{anc/project-insights-2026-11-01.csv}. Source dates, historical
+counts and extraction rules remain in the ancillary records. The main
+account uses them to reconstruct the sequence and handoffs.
 
-The contextual observations in the ancillary supplement
-were added on 25~October after the case analysis. They use purposively
-selected public repositories, pinned source files, GitHub tracker counts,
-and ten newest plus five oldest open \texttt{bug}-labelled PhotoCraft
-reports. They are not a systematically sampled multi-case study and are
-not pooled with AMA's measurements. The ancillary repository-observation
-record states the retrieval boundary, locators and exclusions. No external
-application, original Photoshop installation or reference-parity suite was
-executed.
+Analysis combined descriptive measures, reference tracing of recorded
+lessons and AI-assisted interpretation of selected episodes. It did not
+include systematic entry-by-entry coding. Early log entries were
+reconstructed from history; later entries are contemporaneous project
+accounts. Specification review was selective. Participant recollection,
+committed source and execution evidence remain distinct, including in the
+author's fuller account of renewed feedback. The original source package
+retains missing score-to-release and deployed-journey links.
 
-The literature-led framing was developed on 27~October. Source selection
-followed three questions: how earlier defects affect later changes, how
-agent instructions evolve, and how completion measures relate to usable
-behaviour. Sources comprise the SEC's Knight Capital account, the original
-WyCash report, the dated public repository records and the cited empirical
-studies. Knight Capital provides a documented inherited-fault example;
-PhotoCraft provides a project-authored distinction between command coverage
-and readiness. Their outcomes are not pooled with AMA. The two new figures
-replot published values rather than digitising curves or running the original
-systems. Versioned claims, locators and transcription details are retained
-in the source package README and \nolinkurl{anc/published-evidence.json}.
-The review offers a focused narrative synthesis, with no claim to systematic
-coverage.
-The two sources added on 29~October were selected by the owner for relevance
-to judgment and skill reuse, not through an updated systematic search.
+External repositories and literature were selected for relevance to
+inherited faults, instruction maintenance and outcome verification.
+They supply contextual comparisons and a focused narrative synthesis.
+The published-evidence figures reproduce reported values with source
+locators; the external applications and original studies were not rerun.
+The ancillary observation record preserves its purposive issue sample,
+exclusions and retrieval boundaries. These sources are analysed separately
+from the motivating project.
 
 \subsection{Constructs and evidential boundaries}\label{sec:constructs}
 
@@ -414,471 +358,205 @@ Five measurement categories remain separate. PRs, lines and words describe
 behaviour}; code metrics and the change request probe \emph{internal quality
 and changeability}; and corrective help requested or supplied describes
 \emph{intervention}. The original observations cover the first three.
-November's post-hoc comparison adds structural proxies, not a controlled
+A later post-hoc comparison adds structural proxies, not a controlled
 changeability task or systematically coded intervention dataset. Neither volume nor validation
 activity is used as a direct estimate of decay.
 
 \subsection{Chain of evidence and reflexivity}\label{sec:audittrail}
 
 Table~\ref{tab:audittrail} separates observations, interpretations and
-propositions. The table organises the evidence already presented; it adds no
-newly coded observations. Repository sources refer to the pinned commit unless
-identified as
-author reports. Log entries before 25~September are retrospective
-reconstructions; later dated entries are the project's contemporaneous record,
-not independent corroboration of every statement they contain. The 22 and
-24~October instructions, historical model use and intermittent product use
-remain author reports where original records have not been recovered.
+proposed checks. The relevant evidence concerns how discovery was carried
+into implementation, how completion was judged and how product feedback
+returned. Repository sources refer to the original case pin unless a later
+record or participant account is identified. Detailed locators and unresolved
+execution links remain in \nolinkurl{anc/case-evidence-matrix.json}.
 
 \begin{table}[!htbp]
 \centering\footnotesize
-\caption{Observation--interpretation--proposition audit trail. Interpretations
-are contestable; the proposed tests have not been performed.}\label{tab:audittrail}
-\begin{tabularx}{\textwidth}{@{}L{0.7cm}L{5.1cm}YY@{}}
+\caption{Evidence relevant to the delivery transition and checks that would
+distinguish the candidate explanations.}\label{tab:audittrail}
+\begin{tabularx}{\textwidth}{@{}L{0.7cm}L{4.7cm}YY@{}}
 \toprule
-ID & Observation and provenance & Interpretation & Proposition or discriminating evidence \\
+ID & Observation and provenance & Interpretation & Discriminating evidence \\
 \midrule
-O1 & Log, 8--14 Oct, plus author report: an MVP with sign-in and realistic
-synthetic data was used; 16 Oct record: replacement has one case, no staff
-and no model. & Recorded engineering completion did not preserve the owner's
-usable workflow. & Independently execute the same journey before and after
-migration; separate configuration failure from code regression. \\
-O2 & GitHub metadata: 183 PRs merged, 15--24 Oct; scorer records 5/5
-completeness; author could not sign in. Dated API/scorer captures and their
-release/scope correspondence remain unverified. & Recorded completion and
-usability differed in the chronology; a same-release discrepancy is not yet
-established. & Link score, capability scope, deployment/configuration and
-the failed journey before testing agreement. \\
-O3 & BRD/PRD versions and log: growth before and during the loop; PR
-\#445: two production lines added, one removed, and a 78-line evidence record. & Requirements and
-process records may consume attention without delivering equivalent feedback.
-& Compare review effort and validated behaviour, not word counts alone. \\
-O4 & Log reference tracing: last simplicity citation on 13 Oct; missing
-registration/staff bindings in the replacement. & Some lessons may have
-fallen off the effective read path. Absence of a citation is not proof of
-absence of knowledge. & Inspect actual session inputs and test whether the
-prior lesson was available, understood and executable. \\
-O5 & Coordinator definition and ADR 0006: committed RPI records, full gates,
-delegated merging and migration priority; author still resolved blockers.
-& Reduced product-use feedback coexisted with substantial oversight. &
-Distinguish outcome-level feedback from approval activity; test the
-consolidation package separately from the migration. \\
+O1 & The log and participant account describe a used MVP followed by a
+replacement lacking identity, staff and model prerequisites. & Delivery
+failed to preserve a complete working journey. & Execute the same journey
+against versioned deployments and configurations. \\
+O2 & Pull requests and automated assessments recorded completion while
+participant sign-in remained blocked. & The completion signals covered a
+different or insufficiently linked outcome. & Link the assessed capability
+and release to the failed deployed task. \\
+O3 & Requirements and process records expanded through discovery and delivery;
+even a small source correction carried a substantial evidence record. &
+Documented context may outgrow what a worker or reviewer can use effectively.
+& Compare actual context access and review effort with validated behaviour. \\
+O4 & Simplicity and deployment lessons were recorded, but later replacement
+work omitted previously working prerequisites. & Lesson availability and
+application may diverge. & Trace the relevant session inputs and whether
+the lesson was actionable or deliberately deferred. \\
+O5 & Coordinator rules formalised gates and delegated merging; the author
+continued resolving blockers and later requested stabilization. & Approval
+activity and product-use feedback served different functions. & Compare
+outcome checks, steering decisions and subsequent implementation changes. \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
- The author selected the episodes, designed the coordinator and had an
-interest in successful delivery. Those roles make a coherent retrospective explanation attractive.
-Developers' experience-based beliefs need not correspond with project
-evidence~\cite{devanbu2016belief}; that methodological caution applies to the
-author's account as well as agent-generated claims.
-AI-written records are treated as accounts of project activity, with AI also
-assisting synthesis. Neither provides independent corroboration.
-No independent second coding or empirical peer-debrief pass has
-been completed. The supplied editorial critique prompted stronger boundaries
-and explicit rival explanations, but does not fill that gap. An independent
-check of O1--O5 against retained source and execution records remains necessary
-before presenting the interpretations as independently corroborated.
+The author selected the episodes, designed the coordinator and had an
+interest in successful delivery. Those roles favour a coherent retrospective
+explanation. Experience-based beliefs can differ from project
+evidence~\cite{devanbu2016belief}; the same caution applies to AI-written
+records and AI-assisted synthesis. Independent checking of O1--O5 against
+retained source and execution records remains outstanding.
 Jiang et~al. make mechanism analysis inspectable through matched trajectories,
 evidence-linked labels and a separate human check of taxonomy construction,
 while distinguishing that check from exhaustive human coding
 \cite[Sec.~4, App.~A.2]{jiang2026skills}. Here the five mechanisms organise
-selected episodes; they are not frequencies derived from such a coding
-pipeline or effects isolated by matched executions.
-The machine-readable index \nolinkurl{anc/case-evidence-matrix.json}
-separates reported locators, author accounts and missing execution or
-release identifiers. Each null identifier marks an evidence link that still
-needs checking.
+selected episodes. Their prevalence and causal effects require a different
+design. The evidence index retains null release or execution identifiers
+where a link still needs checking.
 
 % ===========================================================================
 \FloatBarrier
 \section{Exploratory testbed: observations}\label{sec:what}
 
-Table~\ref{tab:timeline} summarises the case and Table~\ref{tab:metrics}
-compares the periods before and during the delivery loop.
+The relevant sequence is the movement from exploratory dialogue to a
+formal backlog, autonomous issue delivery and renewed product feedback.
+Table~\ref{tab:timeline} summarises those phases. The detailed project
+chronology and changing totals remain in the repository and source package.
 
 \begin{table}[!htbp]
 \centering\small
-\caption{Timeline of the case (all dates 2026).}\label{tab:timeline}
-\begin{tabularx}{\textwidth}{@{}L{2.2cm}L{2.9cm}Y@{}}
+\caption{Phases of the motivating case and the state carried forward.}
+\label{tab:timeline}
+\begin{tabularx}{\textwidth}{@{}L{2.8cm}YY@{}}
 \toprule
-Dates & Phase & What happened \\
+Phase & Activity & State inherited by later work \\
 \midrule
-11 Sep -- 7 Oct & Research and requirements & Sixteen regulatory sources
-converted; role agents reject five end-to-end agents (26 Sep); BRD and PRD
-drafted and repeatedly revised; prototypes reviewed; participant usability feedback
-recorded (7 Oct). \\
-8 -- 14 Oct & A usable MVP & MVP built and reshaped through several feedback
-passes in one day (8 Oct); running on Azure with SQL, blob storage and two
-replicas over 980 synthetic cases (9 Oct); rebuilt with Entra ID sign-in,
-used by the participant (12--13 Oct); five assistant paths exercised against a real model
-(14 Oct). \\
-14 -- 15 Oct & Backlog and coordinator & Backlog generated as GitHub issues;
-coordinator created and hardened within a day; an ADR makes migrating the MVP
-to a new source layout the first priority. \\
-15 -- 22 Oct & The loop at scale & Pull requests merged at about eighteen a
-day; the log grows by about 37,000 words; the migrated deployment holds one
-fictional case, no staff and no model deployment (16 Oct); browser sign-in
-blocked; validation moved off hosted CI to save budget (18 Oct); cloud cost
-ceiling raised (22 Oct); new cross-cutting requirements appended to open
-issues (22 Oct). \\
-22 -- 24 Oct & Asking for something that runs & Ten issues labelled
-\emph{feedback-first}; instruction to make employee and resident sites
-available as soon as possible with at most eight parallel items; checkpoint
-and refactoring instruction (24 Oct). \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-\begin{table}[!htbp]
-\centering\small
-\caption{Before and during the delivery loop. Counts from the repository at
-commit \texttt{29c6b51} and the GitHub API on 24 October 2026; evidence-boundary
-phrases as defined in Appendix~\ref{app:measures}.}\label{tab:metrics}
-\begin{tabularx}{\textwidth}{@{}YL{4.3cm}L{4.3cm}@{}}
-\toprule
-Measure & Before the loop & During the loop \\
-\midrule
-Pull requests merged & 52 (26 Sep -- 14 Oct; 2.7 a day) & 183 (15 -- 24 Oct;
-18.3 a day) \\
-Knowledge-base log entries & 126 (to 14 Oct) & 242 (15 -- 22 Oct) \\
-Words appended to the log & 19,967 to 14 Oct (about 1,000 a day from 25 Sep) &
-36,755 (15 -- 22 Oct; about 4,600 a day) \\
-Evidence-boundary phrases per 1,000 log words & 1.2 & 3.8 \\
-Log entries citing the simplicity requirements & 4 (last on 13 Oct) & 0 \\
-Participant-usable deployment & Entra sign-in, 980 synthetic cases, live model calls
-(12 -- 14 Oct) & One fictional case, no staff, no model deployment (16 Oct);
-sign-in blocked \\
+Discovery, several weeks & Research, role-agent and Design Thinking challenge,
+what-if scenarios, persona and journey analysis; iterative BRD, PRD and ADR
+work. & A rich but evolving requirements and decision context. \\
+Interactive probes, about a week & Disposable prototypes, participant
+critique and short implementation/feedback cycles produce a used MVP. &
+Working journeys, simplicity lessons and deployment prerequisites. \\
+Backlog handoff & A backlog agent derives epics and user stories, criteria,
+dependencies and existing-coverage labels. & A formal work hierarchy that
+selects implementation and review tasks. \\
+Autonomous delivery, about ten days & Parallel RPI workers deliver issues
+under a coordinator while migration and gate requirements evolve. & Merged
+changes and validation records; the replacement lacks a complete usable journey. \\
+Renewed steering and follow-up & The participant prioritises usable increments,
+functional checks, refinement and refactoring; stabilization is formalised. &
+Product-use feedback again shapes what subsequent work must establish. \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 \FloatBarrier
-\subsection{Research, requirements and a usable MVP}
+\subsection{From discovery to epics and user stories}
 
-Table~\ref{tab:churn} adds code-level activity from the pinned history.
-The script classifies paths and compares each selected first-parent commit
-with its first parent, detecting renames. The integration view includes
-multi-parent merges and PR-numbered squash commits: 31 before the loop and
-177 during it. These are not the API pull-request counts in
-Table~\ref{tab:metrics}; the literal-merge subset, seven in each period, is
-also reported in \texttt{anc/repo\_history\_metrics.out.txt}. Classification
-rules and commands are printed there. These figures quantify editing activity.
-Net code size, maintainability and delivered value require different measures.
-The original analysis lacked complexity measurements. The post-hoc
-1 November comparison below uses the kit's pinned static tools and
-does not execute historical product code.
+Preparation involved sustained steering rather than a single specification
+prompt. Role-agent challenges questioned the requested end-to-end agents;
+what-if scenarios tested alternative inputs and responsibilities. Persona
+and journey work exposed handoffs, missing information and approval boundaries.
+The resulting BRDs, PRDs and ADRs were critiqued and revised through further
+conversation. These activities changed the proposed solution before and
+during implementation.
 
-\begin{table}[!htbp]
-\centering\small
-\caption{Text lines added and removed in first-parent integrations, including
-PR-numbered squash commits, through \texttt{29c6b51}. Detected pure renames
-add no lines; binary deltas are excluded.}\label{tab:churn}
-\begin{tabularx}{\textwidth}{@{}Yrrrr@{}}
-\toprule
-Path class & \multicolumn{2}{c}{8--14 Oct} & \multicolumn{2}{c}{15--24 Oct} \\
- & Added & Removed & Added & Removed \\
-\midrule
-Product source & 8,136 & 421 & 23,408 & 2,184 \\
-Tests & 6,871 & 537 & 73,478 & 1,416 \\
-Documentation & 12,065 & 1,297 & 25,210 & 2,455 \\
-Tracking artefacts & 238,185 & 2,642 & 240,369 & 1 \\
-Infrastructure & 2,708 & 73 & 6,162 & 485 \\
-CI and workflows & 240 & 64 & 897 & 246 \\
-Other & 25,320 & 1,099 & 72,711 & 1,776 \\
-\bottomrule
-\end{tabularx}
-\end{table}
+Disposable prototypes then made some assumptions tangible. Participant
+critique and an agent-assisted simplicity review produced requirements for
+clear ownership, a visible next action, understandable blockers and manual
+paths that remained usable without AI. Short feedback cycles reshaped an
+MVP around those lessons. The author reports using it intermittently,
+including sign-in, synthetic data and model-backed assistant paths.
 
-The seven-calendar-day MVP and ten-calendar-date loop windows differ
-from the nineteen-day pre-loop API PR window; the loop's last date is partial.
-Normalised by those calendar-date denominators, tracking additions fall
-from 34,026 to 24,037 lines/day, and product additions per integration
-fall from 262.45 to 132.25. The tracking gate formalised existing output,
-not its onset. Of the 72,711 ``Other'' additions, 60,001 belong to one
-CSV data asset; its contents were not inspected. The remainder includes
-evidence JSON, tooling, inventories and dependency manifests.
+The backlog manager drew on this accumulated context to generate the work
+hierarchy, acceptance criteria and dependencies. Existing-coverage labels
+distinguished proposed work from functionality already present in the MVP.
+The supplied project export records a batch expansion around this handoff,
+followed by movement into completed states. It provides a trace of work
+organisation; accepted user journeys require their own evidence.
+Requirements reconciliation continued afterward, including for scope first
+surfaced in backlog stories. Thus preparation and delivery overlapped, and
+the issue hierarchy remained an evolving interpretation of the design.
 
-\begin{table}[!htbp]
-\centering\small
-\caption{Post-hoc static source snapshots, using Lizard 1.24.3,
-Ruff 0.17.3 with isolated settings and ignored suppressions, and
-jscpd 5.4.1. Source acquisition/composition changes alongside time.}
-\label{tab:staticsnapshots}
-\begin{tabular}{@{}lrrrr@{}}
-\toprule
-Snapshot & Functions & Mean CC & Above CC 10 & Duplication \\
-\midrule
-14 Oct, \texttt{9ef7e40f} & 767 & 4.03 & 7.82\% & 0.093\% \\
-24 Oct, \texttt{29c6b51} & 1,895 & 5.24 & 11.82\% & 0.388\% \\
-29 Oct, \texttt{9b74ac8d} & 2,561 & 5.12 & 11.79\% & 0.488\% \\
-\bottomrule
-\end{tabular}
-\end{table}
-Ruff findings per 1,000 Python lines fall from 188.22 to 142.30 to
-125.83. Its submitted Python denominators are 6,365, 25,756 and 33,618
-lines; JavaScript and TypeScript lines do not dilute this metric.
-Suppression-line counts across all selected source rise from zero to four to eight.
-These mixed proxies do not identify a causal decay rate or comprehension.
-The same source filter, exact commits, source hashes and commands are
-retained in \nolinkurl{anc/revision-metrics-2026-11-01.json}.
-The corrected Python-only lint record is
-\nolinkurl{anc/revision-metrics-2026-11-01-python-lint.json}; the original
-all-language density is retained as historical, superseded evidence.
-PR \#445's complete diff is 116 additions and six removals across four
-files: production $+2/-1$, tests $+33/-2$, evidence $+78/0$ and score
-snapshot $+3/-3$. The small-fix comparison concerns production additions,
-not the entire change or an established net process cost.
+\subsection{Local completion and the usable workflow}
 
-The September work was research and requirements preparation, not application
-building or a project-free baseline. The agents assembled a
-regulatory corpus, sector baselines and a modelled customer profile, and the
-role agents produced a genuinely useful early verdict: each requested
-\emph{end-to-end} agent bundled deterministic controls, accountable human
-decisions and a smaller set of tasks suited to bounded AI, so none should be
-built as such. Requirements were written, reviewed by an automated quality
-reviewer and revised many times. Application prototypes followed in October.
+Autonomous delivery changed the feedback path. The coordinator selected
+issues and workers satisfied local implementation and review obligations.
+At the same time, a source-layout migration replaced the used MVP. The
+replacement passed bounded engineering checks, including health, restart
+and unauthenticated-request rejection, but lacked identity, staff and model
+prerequisites needed for the participant's complete workflow. Restoring a
+public entry point left sign-in dependencies unresolved.
 
-On 7~October the author used the latest prototype and recorded usability
-problems. The next day the agents combined those notes with critiques of three
-prototypes by the UX, Design Thinking and role agents into ten simplicity
-requirements (SA-001 to SA-010): a default view listing only the user's cases, each
-with one plain status and one next action; a case that opens full screen;
-blockers explained in plain words with an owner; no role simulator in user
-views; optional AI that never blocks manual work; and so on. On 8~October they built an MVP that
-followed those requirements and then reshaped it through several rounds of participant
-feedback the same day: filters, an overview map, visits, handover suggestions
-and document uploads. On 9~October it ran on Azure with Azure SQL, blob
-storage and two replicas over 980 synthetic cases. On 12~October the stack was
-rebuilt from an empty resource group with Entra ID sign-in; the author reports
-signing in and using it. A missing logo and an account switch that only
-signed the user out were fixed within a day. On 14~October five assistant paths produced cited
-proposals through a real model deployment, using 6,884 tokens across five
-calls. The author tested an initial proof of concept for a couple of days,
-discarded it and used the MVP for a few days to refine ideas and the user
-experience. This was intermittent use, not daily use throughout the week.
-Those ideas informed the requirements, ADRs and hierarchical backlog.
-
-The period 8--14~October supplies a within-case contrast with 15--24~October:
-intermittent use of a usable MVP versus no realistic end-to-end task completed
-in the replacement during the autonomous loop. The author continued handling approvals
-and technical blockers, but could no longer complete realistic tasks in the
-replacement. This contrast is consistent with the importance of feedback, but
-cannot establish that removing product-use feedback caused the outcome:
-the migration, workload, gate rules, models and deployment conditions also
-changed, and the periods were not assigned at random.
+The author continued supplying approvals and resolving technical blockers.
+What diminished was the ability to exercise realistic work in the
+replacement and use that experience to steer the next change. Missing
+prerequisites became further issues, each with research, planning, review
+and correction work. Scope additions and validation costs also changed
+delivery conditions. These observations locate a concrete interruption of
+usable behaviour within a broader process of accumulating obligations.
+The automated score and failed journey still need release-and-scope linkage
+before their disagreement can be assessed as a matched comparison.
 
 \subsection{Bounded within-case contrasts}\label{sec:contrasts}
 
 Table~\ref{tab:contrasts} compares episodes and negative cases already in the
-chronology. It is an analytical contrast, not a new PR-cohort study or an
-exhaustive search for disconfirming cases. In particular, documentation
-expansion preceded autonomy and the tracking/source churn ratio fell during
-the loop. Both limit a story in which autonomous coordination alone created
-the problem. The successful health and restart checks are also real successes;
-they did not exercise the same outcome as the blocked sign-in journey.
+record. Migration, models, workload and gate rules changed alongside
+coordination, so these contrasts motivate explanations for later testing.
 
 \begin{table}[!htbp]
 \centering\footnotesize
-\caption{Within-case contrasts and their limits, using the existing
-chronology and measurements.}\label{tab:contrasts}
+\caption{Contrasts relevant to context, completion and feedback.}
+\label{tab:contrasts}
 \begin{tabularx}{\textwidth}{@{}L{3.1cm}YY@{}}
 \toprule
-Contrast & Recorded difference or negative case & What it can and cannot discriminate \\
+Contrast & Recorded difference & Analytical consequence \\
 \midrule
-Product use, 8--14 versus 15--24 Oct & Intermittent MVP use and same-day
-feedback versus no completed realistic replacement journey. & Consistent
-with feedback starvation; migration, environment, workload and models changed
-at the same time. \\
-Requirements before versus during the loop & Growth and review overhead
-already existed before autonomous coordination. & Weakens an autonomy-onset
-explanation; there is no matched small-specification comparison. \\
-Integration artefacts, 8--14 versus 15--24 Oct & Tracking/product-source
-additions fell from 29.28 to 10.27 while absolute output remained high. &
-Volume is not a monotonic decay measure; churn does not assess understanding
-or usability. \\
-Replacement engineering checks versus user task & Health, restart and
-unauthenticated-request rejection passed; real-user sign-in remained blocked.
-& Shows the boundary of those checks, not that passing checks were fabricated
-or that intrinsic code quality declined. \\
-Domain challenge versus backlog execution & Early role agents rejected the
-five-agent proposal; later sessions delivered the specified issues. &
-Negative case against inevitable agent compliance; role, task and human
-interaction differ, so this is not a treatment comparison. \\
+Interactive MVP versus autonomous replacement & Product use supported short
+feedback cycles; the replacement could not support the same task. & Feedback
+is a candidate explanation alongside the changed migration and environment. \\
+Requirements before versus during autonomy & Expansion and review obligations
+already existed during discovery. & The burden has a longer history than the
+coordinator, and some detail preserves important controls. \\
+Engineering checks versus participant task & Bounded checks passed while
+real-user sign-in remained blocked. & Acceptance needs coverage of the whole
+journey and its deployment dependencies. \\
+Exploratory challenge versus backlog execution & Role agents questioned the
+initial proposal; delivery workers implemented specified stories. & Agent
+behaviour depended on task framing, context and opportunities for challenge. \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-\subsection{The backlog and the coordinator}
+\subsection{Renewed feedback and follow-up}\label{sec:currentstatus}
 
-Late on 14~October the backlog manager generated the backlog from the BRD,
-PRD and ADRs. Many issues carried a label stating that part of the work
-already existed in the MVP. On 15~October the author created the coordinator and, as
-Section~\ref{sec:coordinator} describes, hardened it within the day. The log
-recorded 91 entries that day, against at most 19 on any earlier day. The
-accepted source-layout ADR made the migration of the MVP's code the first
-priority; the MVP itself was to be retired.
+The participant requested a usable increment, prioritised feedback-first
+work and asked the coordinator to pause, exercise the accumulated
+functionality and refactor. The participant's account places this renewed
+feedback at the turning point in making the replacement useful. Subsequent
+source history records implementation refinement and recurring stabilization
+checkpoints. The retained checkpoint review qualifies its local engineering
+evidence and leaves live acceptance separate.
 
-\subsection{The loop at scale}
-
-From 15 to 24~October, 183 pull requests were merged, compared with 52 in the
-nineteen days before. The knowledge-base log grew by 36,755 words between 15
-and 22~October, 31,005 of them in the first three days
-(Figure~\ref{fig:loggrowth}). The density of lexical evidence-boundary matches, such as
-``remains unmet'', ``not inferred'' or ``not accepted'', rose from 1.2 to 3.8
-per thousand words.
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\linewidth]{fig-log-growth.png}
-\caption{Words appended to the knowledge-base log per day (top) and lexical
-evidence-boundary matches per 1,000 words that day (bottom), from the packaged daily data.
-Circles mark observed zero; crosses mark days with no words and undefined
-density. The full plotted window starts on 11 September; pre-25 September
-entries are reconstructed. The dashed
-line marks the coordinator's start on 15 October 2026.}\label{fig:loggrowth}
-\end{figure}
-The pre-loop density rests on 24 matches, nine on 4 October.
-The inspected, seeded twenty-match sample contains twenty explicit
-evidence-status/approval boundaries; this assisted lexical precision check
-is not independent human coding or factual accuracy. The day-one rule
-to tick only proven criteria also changed reporting conventions.
-
-By 16 October the recorded replacement already lacked staff, model and
-registration prerequisites; issue \#349 was opened at 16:34:30 UTC.
-That is a dated blockage record, not the first actual failed-sign-in timestamp,
-which remains unavailable. The migration succeeded on its own terms. A private deployment built from the
-new source layout passed health checks, rejected unauthenticated requests and
-survived restarts. But it held one fictional case, no staff accounts and no
-model deployment, against the 980 cases, eleven staff identities and five
-working assistants of the system it replaced. A public entry point was
-restored through an additional edge service, yet real-user sign-in stayed
-blocked because the new deployment had neither an application registration nor
-staff bindings, the very things set up and verified on 12~October. Recovering
-them became a chain of issues, each with its own research, plans, reviews and
-corrections. To preserve the hosted CI budget, validation moved to a local
-gate on 18~October (issue \#413). The demonstrator's cloud resources accrued
-USD~189.94 between 1 and 20~October, with a forecast above the USD~500
-owner-set ceiling; on 22~October the author raised it to USD~700, deleted a
-test edge profile and scaled a demo service to zero. The same day, after a
-mentor raised the economics of AI consumption, the agents produced new BRD and
-PRD versions and appended a new set of acceptance criteria to fifteen open
-issues.
-
-A Copilot usage dashboard captured on 24~October showed USD~1,809 of
-price-list consumption value, 10,229,625,825 tokens and 100,938 requests in
-the rolling last 28 days. These were account-wide totals across all work,
-not AMA-only measurements or an invoice. The token total included
-10,081,179,684 cached tokens. Surface and model breakdowns described the same
-total and must not be added together; the requests were not established as
-premium requests. The screenshots do not isolate 15--24~October, establish
-exact window boundaries or support an estimate of the loop's incremental cost.
-% TODO(author): retain sanitised dashboard evidence and, if available, obtain project-attributable consumption for 15--24 October; do not infer it from account-wide charts.
-
-\subsection{Asking for something that runs}
-
-On 22~October the author requested a usable increment. A
-\emph{feedback-first} label, described as prioritising ``the bounded usable
-synthetic demo slice'', was applied to the relevant issues, ten of them by
-24~October. On 24~October the author requested employee and resident sites to be
-available as soon as possible, with at most eight items in parallel.
-These instruction dates and the eight-item cap are author-confirmed recollections,
-not quotations recovered from the pinned log.
-% TODO(author): retain the original 22 and 24 October messages if available; exact wording remains unverified, although dates and the eight-item cap are author-confirmed.
-The agents created the smallest independently runnable resident preview they
-could design
-(issue \#444): read-only, synthetic and bound to the local machine, with
-thirteen acceptance criteria. The same day a two-line fix to the rubric
-scorer arrived with a 78-line evidence record and an explicit, one-time owner
-exception to interrupt the full local gate (pull request \#445). Following
-Beck's advice to alternate features with consolidation, the author also instructed the
-coordinator to stop at checkpoints, review what had been built, exercise the
-functionality and refactor. The outcome of that instruction is outside the
-case's evaluation boundary.
-
-\subsection{Dated repository follow-up: 29 October}\label{sec:currentstatus}
-
-The original case ends on 24~October; it is not silently extended by later
-repository activity. A separate refresh on 29~October, captured between
-17:38:52 and 17:39:47~UTC, queries GitHub metadata and measures the default
-branch at \texttt{9b74ac8d}. This is a repository-status observation, not a
-new deployment test or an experimental result.
-Table~\ref{tab:currentmetrics} summarises the snapshot.
-
-\begin{table}[!htbp]
-\centering\small
-\caption{Repository follow-up captured on 29 October 2026. GitHub counts
-cover all repository branches; document and log measures use pinned
-default-branch files. Counts and scores do not establish accepted
-behaviour.}\label{tab:currentmetrics}
-\begin{tabularx}{\textwidth}{@{}L{5.0cm}Y@{}}
-\toprule
-Measure & Current observation \\
-\midrule
-Merged pull requests & 314 overall; 262 since 15 Oct \\
-Post-case merges & 79 after the pinned case integration;
-75 during 25--29 Oct \\
-Issue states & 211 issues: 136 open and 75 closed \\
-Other PR states & 11 open; 19 closed without merging \\
-Current log entries & 458 dated entries; 69,352 entry words;
-207 lexical evidence-boundary matches (2.98 per 1,000 entry words) \\
-Whole-file document sizes & Index 12,535; log 69,465;
-BRD 43,410; PRD 48,094 words \\
-Combined document volume & 173,504 whole-file words across
-the index, log, BRD and PRD \\
-Retained automated rubric score & 77/100; implementation
-completeness remains 5/5, on the scorer's recorded commit \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-The merge boundary matters. The pinned case commit
-\texttt{29c6b51} has a Git timestamp of 24~October at 16:19:38~UTC,
-while GitHub records its pull request, \#445, as merged at 16:19:39.
-Counting from 15~October through that integration reproduces the reported
-183. Stopping at the Git timestamp instead gives 182; including the whole
-24~October UTC calendar day gives 187. The historical count is therefore
-retained with its integration boundary made explicit, rather than replaced
-by the whole-day count. Git commit times, PR merge times and retrieval
-times are different measurements.
-
-Using the original first-parent integration heuristic and path classifier,
-the period after the pinned case commit through \texttt{9b74ac8d} contains
-71 integrations. Product-source lines added/removed are 11,907/844;
-tests 31,126/478; documentation 17,338/558; and tracking artefacts
-181,261/34. Tracking additions are 15.22 times product-source additions in
-this follow-up. These are editing volumes, not a quality trend; the 71
-first-parent integrations are not the 79 GitHub merges across all branches.
-
-The log counts parse the current file using the original entry and lexical
-rules. Entry words exclude its preamble; whole-file counts include it.
-Earlier-dated records in the current file need not match the earlier
-pinned version, so differences are not labelled newly appended entries.
-The combined document volume is not a measurement of material actually
-loaded into any agent session.
-
-The BRD and PRD grow from 37,896/33,852 words at the case pin to
-43,410/48,094, approximately 15\%/42\%; combined index/log/BRD/PRD volume
-rises from 138,806 to 173,504, approximately 25\%.
-The 27 October owner sign-off authorised directory retirement, not new
-soak or deployed-journey acceptance.
-
-The retained score was recorded on 29~October at 17:12:55~UTC for
-\texttt{0717be24}, not freshly recomputed for the current default-branch
-commit. Its 5/5 completeness rating remains an automated repository
-assessment, not acceptance of a deployed user journey.
-No live sign-in or end-to-end task was executed for this refresh;
-neither restored usability nor continued failure on 29~October is established.
-The raw selected metadata, document hashes, daily counts, classified churn
-and score provenance are retained in
-\nolinkurl{anc/repository-metrics-2026-10-29.json}.
+This follow-up matters because the project was steered through interaction:
+the backlog and the worker instructions did not settle the product outcome
+once and for all. A dated, release-linked journey is still needed to measure
+time to restored usability. The original observation window and the later
+repository snapshots remain distinct. The repository supplies the evolving
+history; the ancillary records preserve the exact observations used here,
+including changing issue totals, document volume, lexical counts and static
+source metrics. Those records support reconstruction while the prospective
+experiment supplies a separate test of retained behaviour and changeability.
 
 % ===========================================================================
 \FloatBarrier
 \section{Five candidate mechanisms}\label{sec:mechanisms}
 
-Five mechanisms organise the gap between a pull request merged roughly every
-eighty minutes and the absence of a usable replacement.
+Five candidate mechanisms organise the gap between extensive preparation,
+local completion signals and an interrupted usable workflow.
 Table~\ref{tab:mechanisms} summarises the indicators; the
 \hyperref[app:mechanismaudit]{supplementary operational audits}
 set out definitions, counter-evidence, rivals and discriminating checks.
@@ -893,24 +571,24 @@ and proposed early-warning signals. Indicators are not causal tests.}\label{tab:
 \toprule
 Candidate & Case indicators & Related prior work & Early-warning signal \\
 \midrule
-Specification inflation & BRD $\approx$37,900 and PRD $\approx$33,900 words;
-192 issues; 17 criteria on one issue and 13 on the smallest preview &
+Specification inflation & Expanding requirements and acceptance obligations
+during both discovery and implementation &
 Royce; Gall; Brooks; B\"ockeler; Beck & Specification growth versus
 human-validated behaviour \\
-Proxy capture & Artefacts made a merge gate; 78-line evidence record for a
-two-line fix; score 5/5 while sign-in is blocked (release/scope linkage pending); boundary-phrase
-density tripled & Goodhart; Strathern; Beck's genie; ImpossibleBench; METR &
+Proxy capture & Artefacts became a merge condition; completion assessments
+coexisted with blocked sign-in, with release/scope linkage still pending &
+Goodhart; Strathern; Beck's genie; ImpossibleBench; METR &
 Artefacts per behaviour change; scores that disagree with a live demo \\
-Learning evaporation & Lessons not carried in the described briefs;
-last cited 13 Oct; read path $\approx$139,000 words & Naur; context studies;
+Learning evaporation & Recorded simplicity and deployment lessons were
+followed by missing prerequisites; actual session access remains unknown & Naur; context studies;
 multi-agent failure taxonomy & Lessons that exist only as prose; problems
 solved twice \\
-Process-gate inflation & Full gate on every push; CI minutes rationed;
-exception for a two-line fix; 18 merges a day delegated & Bainbridge;
+Process-gate inflation & Broad per-push gates, constrained validation
+resources and an exception for a small correction & Bainbridge;
 ironies of generative AI; Murphy; Goldratt & Gate time per change; review
 minutes per merge \\
-Feedback starvation & Working MVP frozen; replacement unusable after ten
-days; request for a demo turned into more issues & XP; incremental delivery;
+Feedback starvation & A used MVP was frozen; the participant could not
+exercise the replacement and requested usable increments & XP; incremental delivery;
 tracer bullets; Agile Manifesto; DORA & Time to first human use; age of last
 usable increment \\
 \bottomrule
@@ -925,7 +603,8 @@ and approves work; process-gate inflation and feedback starvation concern
 the capacity to detect and correct cumulative problems. None needs to be
 called error propagation to explain how an inherited fault can survive.
 
-Until 24~October the loop had no scheduled cumulative consolidation step.
+Before the participant's checkpoint request, the loop had no scheduled
+cumulative consolidation step.
 Its large restructuring, the source-layout migration, was planned as backlog
 items; local refactoring could still occur within individual issues.
 The experiment separates retained-contract loss, structural fidelity
@@ -943,7 +622,8 @@ Process & Question & In this case \\
 \midrule
 Accumulation & What obligations and change burden does each feature leave
 behind?~\cite{lehman1980laws,lehman1997metrics} &
-No scheduled cumulative consolidation until 24 Oct; restructuring planned as backlog items \\
+No scheduled cumulative consolidation before the checkpoint request;
+restructuring planned as backlog items \\
 Transmission & Which implementations, rules and lessons shape the next
 change?~\cite{sinha2025illusion,pan2026swemaintain} &
 Growing specifications and read path; previously working identity setup not preserved \\
@@ -955,9 +635,8 @@ Proxy capture; process-gate inflation; feedback starvation \\
 \end{table}
 
 The five categories in Table~\ref{tab:mechanisms} are post-hoc interpretations.
-The supplement organises their operational boundaries and unperformed
-discriminating checks, not further case observations. They are not measured
-frequencies or independently identified causal effects.
+The supplement states their operational boundaries and the checks needed to
+distinguish their effects.
 
 \subsection{A proposed reinforcing relationship}
 
@@ -1009,7 +688,7 @@ missing references do not prove missing knowledge. As coordinator designer,
 participant and analyst, the author selected the episodes and may favour a coherent
 retrospective explanation. AI synthesis is not an independent observer.
 Public records support recomputation but not independent corroboration of
-every statement. The single fictional-domain capstone and purposively selected
+every statement. The single practitioner-designed exercise and purposively selected
 external examples do not establish prevalence or general causal effects.
 The proposed experiment has separate identification limits in
 Section~\ref{sec:protocollimits}.
@@ -1113,7 +792,7 @@ implementation and repair burden inherited by later features. It can fail:
 refactoring may consume credits without reducing that burden or may damage
 behaviour. Cost must always be read beside coverage, retention and adaptation.
 
-Let $N$ be successive feature cycles, $k$ the assumed average consolidation
+Let $N\geq1$ be an integer number of feature cycles, $k$ the assumed average consolidation
 investment in AI credits per cycle, and $\delta\cdot(t-1)$ the assumed excess
 feature-implementation cost in A relative to B at cycle $t$, excluding
 B's consolidation session. Shared baseline implementation costs cancel.
@@ -1122,14 +801,15 @@ growing relative premium $\delta\geq0$, and comparable delivered behaviour,
 the cumulative net difference is
 \begin{equation}
 \Delta C(N)=C_A(N)-C_B(N)
+=\sum_{t=1}^{N}\bigl[\delta(t-1)-k\bigr]
 =\delta\frac{N(N-1)}{2}-kN.
 \label{eq:costprojection}
 \end{equation}
 The first term is the assumed gross avoidable burden of omitting
 consolidation; the second is the investment to avoid it. A positive
 difference means A costs more under these assumptions, not measured savings.
-For $k>0$ and $\delta>0$, break-even is the smallest integer
-$N\geq1+2k/\delta$; when $\delta=0$, the investment never pays back in
+For $k>0$ and $\delta>0$, the first cycle count with $\Delta C(N)\geq0$ is
+$N_{\mathrm{BE}}=\lceil1+2k/\delta\rceil$; when $\delta=0$, the investment never pays back in
 this credit-only model. Real trajectories need not follow a linear premium,
 and B can retain debt too: $\delta$ is a relative gap, not A's absolute
 debt or a claim that B is debt-free.
@@ -1184,8 +864,8 @@ $k$ yet.
 
 \subsection{What worked}
 
-The case is not evidence that agentic delivery is inherently ineffective.
-The research phase assembled a corpus and analysis in days; a human-only
+Agents contributed useful challenge and rapid iteration. The research phase
+assembled a corpus and analysis in days; a human-only
 duration was not measured. The role agents' challenge
 killed a bad idea, five end-to-end agents, before any code was written. The
 agents refused to invent approvals, figures or company facts, and recorded
@@ -1213,7 +893,7 @@ randomised study, 61 analysts were recruited and 50 used the agent. Those
 randomly assigned preference on 86\% of four analytical choices
 \cite[Study design; Results]{herdagdelen2026judgment}. The preferences were
 deliberately strengthened in one farming-analysis task with one model; the
-rate is not an estimate for coding or Zava North Homes
+rate concerns a different task and setting from coding
 \cite[Our study's limitations]{herdagdelen2026judgment}.
 This challenges an assumption that retaining approval alone preserves
 independent judgment, not the case's reported decisions. The article proposes
@@ -1256,7 +936,7 @@ retains the proposed practice checklist and framework-builder suggestions.
 For future product integrations, routine intermediate tracking files should
 stay out of the squash-merged product diff once durable findings and original
 review evidence have been preserved. This is a proposed practice, motivated
-by 478,554 tracking lines added across the two periods, not a tested remedy.
+by the large intermediate evidence trails retained in this case.
 It is not permission to wipe an active or historical tracking tree:
 selection must be finite, archive-backed and restore-verified, with adverse
 reviews retained. Proportionality never overrides mandatory safety, privacy,
@@ -1283,14 +963,15 @@ context-file comparisons show that more guidance can increase work without
 improving task resolution. Code, tests and instructions are all inherited
 state, but they require different measures of correctness and burden.
 
-The exploratory testbed supplies a traceable delivery failure within this wider problem:
-183 merged pull requests did not restore the owner's usable replacement
-within the original observation window.
-The case's five candidate mechanisms frame possible links among accumulated
-obligations, lost lessons, completion proxies and insufficient product-use feedback. Migration and
-deployment dependencies remain central to explaining that particular failure.
-The separately dated repository follow-up records 262 merged pull requests
-since 15~October but no fresh deployed-journey acceptance
+The motivating case traces a fuller process: agent-assisted research and
+challenge shaped requirements, prototypes and a hierarchical backlog;
+autonomous issue delivery then failed to preserve the participant's usable
+workflow. Renewed feedback, refinement and refactoring redirected subsequent
+work. The five candidate mechanisms frame possible links among accumulated
+obligations, lost lessons, completion proxies and insufficient product-use
+feedback. Migration and deployment dependencies remain central to that
+particular failure. The versioned repository retains the evolving record
+and the distinction between local engineering evidence and accepted journeys
 (Section~\ref{sec:currentstatus}).
 
 The prospective five-arm study asks what scheduled consolidation leaves
@@ -1298,9 +979,9 @@ for later work. It separates final behavioural coverage from retained-contract
 loss, probes an unforeseen change and reports the resources consumed.
 Secondary metrics provide descriptive evidence; testing the proposed mechanisms
 would require further work.
-The study has not started; a new freeze, prospective OSF recording and
-collection gates remain pending. The cost-of-inaction scenario exposes
-break-even assumptions, not observed savings.
+A new freeze, prospective OSF recording and collection gates precede the
+planned runs. The cost-of-inaction scenario makes the break-even
+assumptions explicit.
 What matters is whether the agents' combined work preserves the behaviour and
 options needed by subsequent features.
 
@@ -1318,8 +999,10 @@ Microsoft 365 Copilot supported summarisation and reference discovery.
 GitHub Copilot in VS Code assisted log analysis, mechanism naming and
 organisation, manuscript drafting and revision, bibliographic checks, public
 repository inspection, figure preparation and local validation. Scientific
-Agent Skills supplied developmental writing, evaluation and hypothesis
-guidance~\cite{kassis2026skills}. This citation records assistance tooling,
+Agent Skills supplied developmental writing and methodology guidance,
+including the SymPy, statistical-analysis, scientific-critical-thinking
+and experimental-design skills for this equation review~\cite{kassis2026skills}.
+This citation records assistance tooling,
 not evidence for the case findings or consolidation hypothesis.
 AI assistance supplied neither an independent
 empirical coder nor replicated application or study results. The package

@@ -25,8 +25,14 @@ For the paper's [single-document delivery](../capstone/thought-leadership/everyt
 the owner-selected title is preserved and the supplement is part of the
 main PDF, with reconciled labels and one bibliography.
 The owner-requested additive revision removes repeated Background, figures
-and case narratives; the current 41-page paper retains only extra source
+and case narratives; the current 37-page paper retains only extra source
 qualifications and methodological/provenance detail in its Supplement.
+The [nine-point author review](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#author-review-disposition-1-november)
+restores the discovery-to-backlog-to-feedback account, abstracts the case and
+records the supplied project export. Four requested scientific skills support
+the equation audit; risk/annotation domains and discrete break-even are
+explicit. Scheduling-block dependence must still be resolved against the
+variance and bootstrap scheme before the new freeze and collection.
 The prospective five-arm candidate has
 33 trajectories per arm/model (495), a conditional 10-point coverage target,
 matched-resource delivery, visible repair and a blocked primary comparison.

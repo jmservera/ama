@@ -1,5 +1,5 @@
 ---
-title: Everything but the Software - source package (draft v10)
+title: Everything but the Software - source package (draft v11)
 description: Single-document paper with integrated Supplement, verified source corrections and prospective study limits
 ms.date: 2026-11-01
 ---
@@ -10,7 +10,7 @@ Working title: *Everything but the Software: Feature-Driven Decay in an Agentic 
 
 The title is unchanged at the owner's request. The complete
 [paper](./main.pdf) and [source](./main.tex) now include a
-[Supplement section](./main.pdf#page=36) in the same document.
+[Supplement section](./main.pdf#page=32) in the same document.
 The supplement is additive: source-specific qualifications, detailed
 method/rival checks, the frozen prompt, deferred rates and provenance.
 Repeated Background text, figures and case narratives are excluded from
@@ -18,6 +18,30 @@ the current build; their earlier source versions remain in Git.
 The standalone supplement PDF/TeX/bibliography were removed at the owner's
 request after exact archive readback and restore checks; their original
 committed versions remain in Git at `80656f32`. No source evidence was discarded.
+
+The [nine-point author review disposition](./anc/revision-report.md#author-review-disposition-1-november)
+records the current revision. The case now follows agent-assisted research,
+Design Thinking challenge, prototypes, requirements, epics and stories,
+autonomous delivery and renewed participant feedback. Project counts and
+calendar dates no longer lead the argument. The supplied
+[project-insights export](./anc/project-insights-2026-11-01.csv) supports the
+backlog handoff; its provenance and missing export metadata are in the
+[evidence index](./anc/case-evidence-matrix.json).
+
+The four requested scientific skills informed the equation and design audit.
+Exact algebra and planning arithmetic check out under their stated assumptions.
+The new freeze must still reconcile replicate-block scheduling with the
+independent-trajectory variance and bootstrap scheme. This is an explicit
+pre-collection TODO; the kit and its sample allocation were not changed.
+Pending results remain author TODOs. The rebuilt paper has 37 pages, with its
+Supplement starting on page 32. Thirty-four authoring tests pass. Direct
+Tectonic/PDF checks find no unresolved references, overfull text or out-of-page
+text; one inherited `inputenc` compatibility warning remains. The old optional
+log check expects a pdfLaTeX-specific output marker, so its failure and the
+direct verification are recorded separately.
+The focused repository gate was attempted against fetched `origin/main`, but
+preflight blocked on tracked modifications and untracked inputs. No passing
+repository-gate receipt or publication readiness is claimed.
 
 The prospective candidate uses five arms and three selected models, with
 33 trajectories per arm/model: 495 total. A is feature-only, B consolidation,
@@ -144,8 +168,8 @@ notice; source hashes, lint counts, complexity and duplication are unchanged.
 
 ### Single-document Delivery
 
-The sole current deliverable is the 41-page [main.pdf](./main.pdf). Its
-Supplement starts on page 36. The owner-directed additive revision removes
+The sole current deliverable is the 37-page [main.pdf](./main.pdf). Its
+Supplement starts on page 32. The owner-directed additive revision removes
 the repeated Background, three repeated figures, long case narratives and
 five repeated indicator rows. Additional source qualifications and detailed
 operational/rival checks remain, along with reproducibility definitions,
