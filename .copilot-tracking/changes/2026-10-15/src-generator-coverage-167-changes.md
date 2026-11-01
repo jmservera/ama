@@ -317,3 +317,7 @@ gh pr view 312 --json url,state,headRefOid,baseRefName,headRefName,statusCheckRo
 Temporary diagnostics are disposable after results are persisted here; the
 virtual environment remains ignored for reproducibility. Smoke data/process
 was already removed/stopped. The PR body mirrors this complete ledger.
+
+## PR 651 review correction (2026-11-01)
+
+* `docs/reference/README.md`: replaced the incorrect "other generated outputs lack per-record labels" with "are not assessed by this change" (stock fabric already sets `is_synthetic=true`). Docs-only; no code or test change.

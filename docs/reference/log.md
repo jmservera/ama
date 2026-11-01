@@ -9064,6 +9064,12 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   acceptance and owner confirmation of agent names remain unproven; no
   source change was made.
 
+## [2026-11-01] update | Scale fixture per-record is_synthetic (#167)
+
+* `scale_fixture` v1.3.0 adds `is_synthetic=true` to every home and event
+  record (households already had it); goldens re-pinned and a per-record
+  test added. Updated the retrofit synthetic data README coverage section.
+  Owner confirmation of the mapping and deferrals remains open.
 ## 2026-11-01
 
 * Added `research/ux/supported-devices-proposal.md`, a proposal for owner
