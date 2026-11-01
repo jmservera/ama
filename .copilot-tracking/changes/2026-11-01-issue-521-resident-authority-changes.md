@@ -1,4 +1,7 @@
-# Changes: issue 521
+---
+title: "Changes: issue 521"
+ms.date: 2026-11-01
+---
 
 * `src/api/checks/resident_demo_browser_check.py`: removed `SQL_AUTHORIZATION_END`; fixture uses `rs.AUTHORITY_END`.
 * `src/api/tests/test_resident_demo_check.py`: asserts 2027-02-01 window end, not 2026-11-01.

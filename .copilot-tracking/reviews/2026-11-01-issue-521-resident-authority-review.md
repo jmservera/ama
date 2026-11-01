@@ -1,4 +1,7 @@
-# Review: issue 521
+---
+title: "Review: issue 521"
+ms.date: 2026-11-01
+---
 
 * Execution: once, post-implementation. Outcome: conformant for source scope.
 * Criterion 1: met in source (tests prove old cutoff excluded in core/SQL/helpers/browser fixture); CI is evidence.

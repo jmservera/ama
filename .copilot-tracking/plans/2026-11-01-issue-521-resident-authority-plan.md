@@ -1,4 +1,7 @@
-# Plan: issue 521 resident authority end
+---
+title: "Plan: issue 521 resident authority end"
+ms.date: 2026-11-01
+---
 
 1. Replace the browser-check fixture constant with `rs.AUTHORITY_END` (single source).
 2. Update `test_resident_demo_check.py` to prove 2027-02-01 applies and 2026-11-01 does not.
