@@ -9209,3 +9209,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Flagged that seed card `automated-decision-safeguard` cites Article 22, not
   Articles 22A to 22C. No snapshot, card or rule changed; criteria 1 and 5 of #224
   stay unmet pending the Legal/DPO decision.
+
+## [2026-11-01] update | Closure record for the src migration (Refs #199)
+
+* Added a closure record to `docs/architecture/mvp-to-src-parity-matrix.md`
+  listing the merged M1 to M6 and retirement pull requests and the current
+  tree check. The migration-order criterion stays unmet pending an owner
+  decision.
