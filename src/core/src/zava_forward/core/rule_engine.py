@@ -404,7 +404,7 @@ class RuleEngine:
                             and source_state == "active"
                             and check["result"] in ("attention", "breach risk", "unknown")
                         ):
-                            self._publish(check, now)
+                            self._publish(check, now, store)
                 checkpoint = dict(
                     id=key, case_id=case_id, revision=revision, at=now.isoformat(), checks=checks
                 )
@@ -431,20 +431,33 @@ class RuleEngine:
                 latest[row["case_id"]] = (row["check_seq"], (check["home_id"], check["home_scope"]))
         return {case: home for case, (_, home) in latest.items()}
 
-    def _publish(self, check: dict[str, Any], now: datetime) -> None:
+    @staticmethod
+    def _current_home(store: Any, case_id: str, fallback: str) -> str:
+        """Resolve a case's home from its persisted facts, not from an earlier check."""
+        row = store.db.execute("SELECT body FROM cases WHERE id=?", (case_id,)).fetchone()
+        return _home_key(json.loads(row[0]), case_id)[0] if row else fallback
+
+    def _publish(self, check: dict[str, Any], now: datetime, store: Any) -> None:
         throttle = _hash([check["home_id"], check["card_id"], check["step"], check["item"]])
         if check["result"] == "attention":
-            homes = self._homes()
-            for row in self.sql.all("SELECT case_id, created, body FROM reg_alert"):
+            window = (now - timedelta(hours=24, minutes=1)).isoformat()
+            homes: dict[str, str] = {}
+            for row in self.sql.all(
+                "SELECT case_id, created, body FROM reg_alert WHERE created>?", (window,)
+            ):
                 old = json.loads(row["body"])
                 if (
                     old["result"] == "attention"
                     and (old["card_id"], old["step"], old["item"])
                     == (check["card_id"], check["step"], check["item"])
-                    and homes.get(row["case_id"], (old["home_id"],))[0] == check["home_id"]
                     and now < datetime.fromisoformat(row["created"]) + timedelta(hours=24)
                 ):
-                    return
+                    if row["case_id"] not in homes:
+                        homes[row["case_id"]] = self._current_home(
+                            store, row["case_id"], old["home_id"]
+                        )
+                    if homes[row["case_id"]] == check["home_id"]:
+                        return
         episode = _hash(
             [
                 check["case_id"],

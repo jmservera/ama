@@ -50,3 +50,14 @@ Task: 212 / issue-212-home-grouping.
 * `test_rule_engine.py`: cross-case attention upgrade regression and held/missing-evidence regrouping
   regression; both fail without the change.
 * Validation: `test_rule_engine` 26 tests OK; ruff check and format clean.
+
+## Amendment: bounded cooldown lookup and order-independent home (PR #630 Copilot threads)
+
+* `rule_engine.py`: `_publish()` no longer loads all check history through `_homes()`. It queries only
+  alerts created inside the 24-hour window (`created>?`, with a one-minute margin and exact Python check)
+  and resolves each recent publisher's home from its current persisted case facts (`_current_home`), so
+  the cooldown no longer depends on which case is evaluated first. `_homes()` remains for read-time
+  regrouping in `alerts()`.
+* `test_rule_engine.py`: added the reverse-order upgrade regression (B published under v2, A evaluated
+  first under v3 yields one publication).
+* Validation: `test_rule_engine` 27 and `test_rule_alerts` 6 tests OK; ruff check and format clean.

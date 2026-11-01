@@ -564,6 +564,21 @@ class EngineTests(unittest.TestCase):
         self.run_engine(case_id="SYN-2")
         self.assertEqual(len(self.publications()), 1)
 
+    def test_upgrade_attention_throttle_ignores_evaluation_order(self) -> None:
+        del self.facts["home_id"]
+        self.facts["hazards"] = [self.hazard(hours_ago=30)]
+        self.write("SYN-1")
+        self.write("SYN-2")
+        with patch.object(rule_engine, "ENGINE_VERSION", 2):
+            self.run_engine(case_id="SYN-2")
+        self.assertEqual(len(self.publications()), 1)
+        self.facts["home"] = dict(address="1 Test Road", postcode="TE1 1ST")
+        for case_id in ("SYN-1", "SYN-2"):
+            self.db.execute("UPDATE cases SET body=? WHERE id=?", (json.dumps(self.facts), case_id))
+        self.db.commit()
+        self.run_engine(case_id="SYN-1")
+        self.assertEqual(len(self.publications()), 1)
+
     def test_regroup_uses_latest_check_when_card_held_or_evidence_removed(self) -> None:
         del self.facts["home_id"]
         self.facts["hazards"] = [self.hazard(hours_ago=60)]
