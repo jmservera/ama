@@ -9063,3 +9063,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Live employee-site verification, screen-reader and voice-control
   acceptance and owner confirmation of agent names remain unproven; no
   source change was made.
+
+## 2026-11-01
+
+* Added `research/ux/supported-devices-proposal.md`, a proposal for owner
+  ratification of supported device classes and widths (#152). The manifest
+  records it as `proposed`; the decision, browsers, assistive tools, field or
+  mobile use and complete AC-034/AC-043 acceptance remain open.
