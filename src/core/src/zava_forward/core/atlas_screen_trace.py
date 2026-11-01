@@ -16,12 +16,13 @@ from typing import Any
 PRD = "docs/prds/zava-forward-retrofit-programme-demonstrator.md"
 ATLAS = "docs/reference/research/ux/customer-journeys/customer-journey-atlas.md"
 TRACE = "docs/reference/research/ux/atlas-screen-trace.md"
+ROLE_SCREENS = "src/api/src/zava_forward/api/web/role-screens.js"
 STAGES = 8
 TENSIONS = ("Continuity versus disclosure", "Utilisation versus choice")
 SCREEN_RE = re.compile(r"`[a-z][a-z0-9-]+`")
 HOME_RE = re.compile(r"EX-HOME-\d+")
 MANIFEST_RE = re.compile(r"^\| [a-z-]+ \| ([\d, ]+) \| \d+ \|", re.MULTILINE)
-# Registered (asset-board) and proposed role screens; update when a screen is added or renamed.
+# Registered and proposed role screens; update when a screen is added or renamed.
 KNOWN_SCREENS = frozenset(
     {
         "asset-board",
@@ -38,6 +39,25 @@ KNOWN_SCREENS = frozenset(
         "data-operator",
     }
 )
+
+
+def registered_screens(role_screens_js: str) -> set[str]:
+    return set(re.findall(r'^\s*id: "([a-z][a-z0-9-]*)",', role_screens_js, re.MULTILINE))
+
+
+def status_drift(trace: str, registered: set[str]) -> list[str]:
+    """Report screens labelled main but unregistered, or unmerged but registered."""
+    drift: list[str] = []
+    for r in rows(section(trace, "Perspectives to screens")):
+        if len(r) < 2:
+            continue
+        ids = [m.strip("`") for m in SCREEN_RE.findall(r[1])]
+        for ident in ids:
+            if "(main" in r[1] and ident not in registered:
+                drift.append(f"labelled main but not registered: {ident}")
+            if "(unmerged" in r[1] and ident in registered:
+                drift.append(f"labelled unmerged but registered: {ident}")
+    return sorted(set(drift))
 
 
 def section(text: str, heading: str) -> str:
@@ -81,8 +101,10 @@ def existing_homes(prd: str) -> set[str]:
     return homes
 
 
-def check(prd: str, atlas: str, trace: str) -> dict[str, Any]:
+def check(prd: str, atlas: str, trace: str, role_screens_js: str | None = None) -> dict[str, Any]:
     gaps: list[str] = []
+    if role_screens_js is not None:
+        gaps.extend(status_drift(trace, registered_screens(role_screens_js)))
     perspectives = first_column(section(prd, "Profile Journey Contract for the Next Prototype"))
     themes = first_column(section(atlas, "Five design themes and tensions"))
     if len(perspectives) != 11:
@@ -162,10 +184,12 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     root = args.root or default_root()
     try:
+        screens = root / ROLE_SCREENS
         report = check(
             (root / PRD).read_text(encoding="utf-8"),
             (root / ATLAS).read_text(encoding="utf-8"),
             (root / TRACE).read_text(encoding="utf-8"),
+            screens.read_text(encoding="utf-8") if screens.exists() else None,
         )
     except OSError as error:
         print(f"error: {error}", file=sys.stderr)

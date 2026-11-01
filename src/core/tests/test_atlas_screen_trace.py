@@ -76,6 +76,20 @@ class AtlasScreenTraceTests(unittest.TestCase):
         result = trace.check(self.prd, self.atlas, doc)
         self.assertIn("verdict", result)
 
+    def test_status_labels_match_registered_screens(self) -> None:
+        js = read(trace.ROLE_SCREENS)
+        self.assertEqual(trace.check(self.prd, self.atlas, self.doc, js)["gaps"], [])
+        self.assertIn("finance-funding", trace.registered_screens(js))
+
+    def test_status_drift_is_reported(self) -> None:
+        js = read(trace.ROLE_SCREENS)
+        doc = self.doc.replace("`quality-queue` (unmerged", "`quality-queue` (main")
+        gaps = trace.check(self.prd, self.atlas, doc, js)["gaps"]
+        self.assertIn("labelled main but not registered: quality-queue", gaps)
+        doc = self.doc.replace("`data-operator` (main", "`data-operator` (unmerged")
+        gaps = trace.check(self.prd, self.atlas, doc, js)["gaps"]
+        self.assertIn("labelled unmerged but registered: data-operator", gaps)
+
     def test_cli_exit_codes(self) -> None:
         self.assertEqual(trace.main(["--root", str(ROOT)]), 0)
         self.assertEqual(trace.main(["--root", str(ROOT / "missing")]), 2)
