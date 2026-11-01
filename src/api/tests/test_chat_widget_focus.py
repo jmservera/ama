@@ -352,12 +352,31 @@ assert.equal(h.document.activeElement, external);
 const h = harness();
 const ui = h.context.window.ChatWidget.create({
   id: "unit", title: "Unit chat", launcher: h.launcher,
-  questionLabel: "Question", skillLabel: "Skill", resizable: true
+  questionLabel: "Question", skillLabel: "Skill", resizable: true, stayOpen: true
 });
 ui.open();
 const external = h.document.createElement("textarea");
 external.focus();
 assert.equal(ui.root.hidden, false, "Employee panel must stay open when the page is used");
+ui.dispose();
+"""
+        )
+
+    def test_resident_resizable_panel_still_closes_on_outside_focus(self) -> None:
+        self.run_node(
+            r"""
+const h = harness();
+const ui = h.context.window.ChatWidget.create({
+  id: "unit", title: "Unit chat", launcher: h.launcher,
+  questionLabel: "Question", skillLabel: "Skill", resizable: true
+});
+ui.open();
+assert.equal(h.document.getElementById("unit-width").attrs.value, "35");
+assert.equal(h.document.getElementById("unit-height").attrs.value, "70");
+assert.equal(ui.root.classes.has("chat-widget-roomy"), false);
+const external = h.document.createElement("textarea");
+external.focus();
+assert.equal(ui.root.hidden, true, "Resident panel closes when focus moves to the page");
 ui.dispose();
 """
         )

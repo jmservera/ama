@@ -61,7 +61,7 @@ const employeeChat = (() => {
     let tid = null, stored = true;
     const ui = window.ChatWidget.create({
       id: "employee-chat", title: "Employee assistant", launcher: launcher(),
-      questionLabel: "Your work question", skillLabel: "Agent skill", resizable: true,
+      questionLabel: "Your work question", skillLabel: "Agent skill", resizable: true, stayOpen: true, size: { width: 40, height: 80 },
     });
     widget = ui;
     const { input, select, send } = ui;

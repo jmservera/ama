@@ -159,12 +159,25 @@ def _blocked(r: Reply) -> None:
     if status:
         r.say(f"Recorded status: {status}.")
     if blockers:
-        r.say("What is recorded as stopping this case, most important first:")
-        order = sorted(
-            blockers, key=lambda i: r.facts.get(f"work.blockers.{i}.current_stop") != "yes"
-        )
-        for n, i in enumerate(order, 1):
-            r.say(f"{n}. {_blocker_line(r, i)}")
+        stops = [i for i in blockers if r.facts.get(f"work.blockers.{i}.current_stop") == "yes"]
+        later = [i for i in blockers if i not in stops]
+        if stops:
+            r.say("What is recorded as stopping this case now, most important first:")
+            for n, i in enumerate(stops, 1):
+                r.say(f"{n}. {_blocker_line(r, i)}")
+        else:
+            reason = r.fact("work.reason") or r.fact("reason")
+            if reason:
+                r.say(f"Recorded reason: {reason}")
+            waiting = r.fact("waiting_on")
+            if waiting:
+                r.say(f"Waiting on: {waiting}.")
+            if not (reason or waiting):
+                r.say("Nothing is recorded as stopping this case in its current stage.")
+        if later:
+            r.say("Still needed before a later step, but not stopping the case now:")
+            for n, i in enumerate(later, 1):
+                r.say(f"{n}. {_blocker_line(r, i)}")
         return
     gates = [r.fact(f"gate.{i}") for i in range(8) if f"gate.{i}" in r.facts]
     if gates:
@@ -196,6 +209,11 @@ def _funding_missing(r: Reply) -> list[str]:
     docs = r.facts.get("documents", "none recorded")
     recorded = {d.strip() for d in docs.split(",")}
     absent = [kind for kind in FUNDING_DOCUMENTS if kind not in recorded]
+    for k in sorted(r.facts):
+        kind = r.facts[k]
+        if k.endswith(".missing") and k.startswith("checklist.") and kind not in absent:
+            r.fact(k)
+            absent.append(kind)
     if absent:
         r.fact("documents")
         missing.append("No recorded document for: " + ", ".join(absent) + ".")
@@ -242,11 +260,21 @@ def _missing(r: Reply) -> None:
 
 
 def _next(r: Reply) -> None:
-    nxt, owner, src = (
-        r.fact("work.next_action"),
-        r.fact("work.owner") or r.fact("owner"),
-        r.fact("work.source"),
-    )
+    nxt, src = r.fact("work.next_action"), r.fact("work.source")
+    owner = ""
+    if nxt:
+        indexes = _indexes(r.facts, "work.blockers")
+        chosen = next(
+            (i for i in indexes if r.facts.get(f"work.blockers.{i}.next_action") == nxt), None
+        )
+        if chosen is None:
+            chosen = next(
+                (i for i in indexes if r.facts.get(f"work.blockers.{i}.current_stop") == "yes"),
+                None,
+            )
+        if chosen is not None:
+            owner = r.fact(f"work.blockers.{chosen}.owner")
+    owner = owner or r.fact("work.owner") or r.fact("owner")
     if nxt:
         r.say(f"Recorded next step: {nxt}")
         r.say(f"Owner: {owner}." if owner else "No owner is recorded for it.")

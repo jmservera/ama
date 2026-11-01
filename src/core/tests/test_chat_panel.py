@@ -565,11 +565,30 @@ class GroundedUnstoredTests(unittest.TestCase):
         self.assertIn("Ask Sam Example, who owns this case.", text)
         self.assertIn("Funding has not been confirmed. Owner: Sam Example.", text)
         self.assertIn("Recorded source: case:ZF-1/funding.", text)
-        self.assertIn("No recorded document for: EPC, Survey, Design, Funding evidence.", text)
+        self.assertIn(
+            "No recorded document for: EPC, Survey, Design, Funding evidence, Consent.", text
+        )
         self.assertIn("cannot start, approve or record it", text)
         ids = [c["id"] for c in reply["citations"]]
         self.assertIn("ZF-1/funding.status", ids)
         self.assertIn("ZF-1/funding.route", ids)
+
+    def test_future_prerequisites_are_not_described_as_current_stops(self) -> None:
+        text = self.ask("ZF-1", "why is this case blocked?")["reply"]
+        self.assertIn("Waiting on: Sam Example.", text)
+        self.assertIn("not stopping the case now", text)
+        self.assertNotIn("stopping this case now", text)
+
+    def test_next_step_owner_comes_from_the_same_blocker(self) -> None:
+        text = self.ask("ZF-4", "what is the next step?")["reply"]
+        self.assertIn("Owner: Bea Safe.", text)
+        self.assertNotIn("Sam Example", text)
+
+    def test_funding_reply_names_a_consent_only_gap(self) -> None:
+        case = next(c for c in self.store.data["cases"] if c["id"] == "ZF-1")
+        case["documents"] = [{"kind": k} for k in ("EPC", "Survey", "Design", "Funding evidence")]
+        text = self.ask("ZF-1", "Why is funding not started yet?")["reply"]
+        self.assertIn("No recorded document for: Consent.", text)
 
     def test_natural_phrasing_reaches_the_same_answers(self) -> None:
         for question in ("Why is it stuck?", "is it paused? what's stopping this", "BLOCKED??"):

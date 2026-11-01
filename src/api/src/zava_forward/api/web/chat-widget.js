@@ -26,7 +26,7 @@ window.ChatWidget = (() => {
     icon.append(path);
     launcher.append(icon);
   }
-  function create({ id, title, launcher, questionLabel, skillLabel, maxLength = 1000, resizable = false }) {
+  function create({ id, title, launcher, questionLabel, skillLabel, maxLength = 1000, resizable = false, stayOpen = false, size = {} }) {
     let active = true, timer = null;
     launcher ||= node("button", "", { type: "button" });
     decorateLauncher(launcher);
@@ -61,13 +61,14 @@ window.ChatWidget = (() => {
     let docked = false;
     if (resizable) {
       root.classList.add("chat-widget-resizable");
+      if (stayOpen) root.classList.add("chat-widget-roomy");
       const dock = node("button", "Dock to right edge", { type: "button", "aria-pressed": "false", class: "chat-widget-close" });
       const sizes = node("details", "", { class: "chat-widget-size" });
       sizes.append(node("summary", "Chat size"));
       sizes.append(node("p", "Adjust the width and height. Docking uses the full screen height. Sizes stay within the screen and keep a minimum reading area."));
       sizes.append(dock);
       const controls = {};
-      for (const [dimension, value] of [["width", 40], ["height", 80]]) {
+      for (const [dimension, value] of [["width", size.width || 35], ["height", size.height || 70]]) {
         const label = node("label", `Preferred ${dimension} (% of screen)`, { for: `${id}-${dimension}` });
         const range = node("input", "", { type: "range", id: `${id}-${dimension}`, name: dimension, autocomplete: "off", min: "20", max: "100", step: "1", value: String(value) });
         const output = node("output", `${value}%`, { for: range.id, "aria-hidden": "true" });
@@ -169,7 +170,7 @@ window.ChatWidget = (() => {
       if (event.key === "Escape") { event.preventDefault(); hide(); }
     });
     function externalFocus(event) {
-      if (!resizable && !root.hidden && !root.contains(event.target) && !launcher.contains(event.target)) hide(false);
+      if (!stayOpen && !root.hidden && !root.contains(event.target) && !launcher.contains(event.target)) hide(false);
     }
     document.addEventListener("focusin", externalFocus);
     input.addEventListener("keydown", event => {
