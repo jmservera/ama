@@ -207,8 +207,13 @@ class ReviewerAuthorityTests(unittest.TestCase):
         self.assertTrue(self.report["checks"]["unauthorised_reviewer_cannot_pass"])
 
     def test_gate_requires_source_version_evidence_when_authority_is_defined(self) -> None:
-        authority = {"authorised_reviewers": ["owner@eval.example"]}
+        authority = {
+            "task": "summary",
+            "authorised_reviewers": ["owner@eval.example"],
+            "required_evidence": ["reviewer", "source_hashes"],
+        }
         rec = {
+            "task": "summary",
             "status": "Reviewed",
             "reviewer_action": "accept",
             "reviewer_reason": "",
@@ -217,3 +222,37 @@ class ReviewerAuthorityTests(unittest.TestCase):
         ok, why = re_.gate_satisfied({"defect": None}, rec, [], None, None, authority)
         self.assertFalse(ok)
         self.assertIn("source version", why)
+
+    def test_gate_rejects_mismatched_or_missing_task_scope(self) -> None:
+        rec = {
+            "task": "summary",
+            "status": "Reviewed",
+            "reviewer_action": "accept",
+            "reviewer_reason": "",
+            "review_evidence": {"reviewer": "owner@eval.example", "source_hashes": {"a": "1"}},
+        }
+        base = {"authorised_reviewers": ["owner@eval.example"], "required_evidence": ["reviewer"]}
+        scoped = dict(base, task="summary")
+        ok, _ = re_.gate_satisfied({"defect": None}, rec, [], None, None, scoped)
+        self.assertTrue(ok)
+        for authority in (dict(base, task="funding_draft"), dict(base)):
+            ok, why = re_.gate_satisfied({"defect": None}, rec, [], None, None, authority)
+            self.assertFalse(ok)
+            self.assertIn("task", why)
+
+    def test_gate_rejects_unmet_required_source_reason_for_defect(self) -> None:
+        rec = {
+            "task": "summary",
+            "status": "Reviewed",
+            "reviewer_action": "reject",
+            "reviewer_reason": "looks wrong",
+            "review_evidence": {"reviewer": "owner@eval.example", "source_hashes": {"a": "1"}},
+        }
+        authority = {
+            "task": "summary",
+            "authorised_reviewers": ["owner@eval.example"],
+            "required_evidence": ["source_reason"],
+        }
+        ok, why = re_.gate_satisfied({"defect": "wrong"}, rec, [], None, None, authority)
+        self.assertFalse(ok)
+        self.assertIn("source_reason", why)

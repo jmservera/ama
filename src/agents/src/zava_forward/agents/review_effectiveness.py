@@ -154,8 +154,19 @@ def gate_satisfied(
     if authority is not None:
         if ev["reviewer"] not in authority["authorised_reviewers"]:
             return False, "reviewer holds no defined authority for this task"
-        if not ev.get("source_hashes"):
-            return False, "review evidence lacks the source version reviewed"
+        if not authority.get("task") or authority["task"] != rec.get("task"):
+            return False, "authority does not cover the reviewed task"
+        held = {
+            "reviewer": bool(ev.get("reviewer")),
+            "source_hashes": bool(ev.get("source_hashes")),
+            # Correct controls have no discrepancy to cite, so a source reason is exempt for them.
+            "source_reason": not prop["defect"] or SOURCE_TAG in rec["reviewer_reason"],
+        }
+        for need in authority.get("required_evidence", []):
+            if not held.get(need):
+                if need == "source_hashes":
+                    return False, "review evidence lacks the source version reviewed"
+                return False, f"required evidence missing or unsupported: {need}"
     action, reason = rec["reviewer_action"], rec["reviewer_reason"]
     if prop["defect"]:
         if action == "accept":

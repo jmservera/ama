@@ -15,3 +15,5 @@ Remaining deliverable slice (offline, no people needed)
 * AC5 "reviewer authority and evidence defined (OQ-017)": the gate accepts any recorded reviewer. Add a provisional authority definition (scope, authorised reviewers, required evidence) and make the gate refuse a competent-looking review from a reviewer without that authority.
 
 Not deliverable here: real competent participants, measured time, approved thresholds, OQ-017 decision. These keep the issue open (Refs, not Closes).
+
+Correction cycle (2026-11-01): Copilot review on PR 701 found the gate ignored authority task scope and required_evidence. Both valid.

@@ -10,3 +10,5 @@ date: 2026-11-01
 
 Validation (src/agents): unittest review_effectiveness and ai_eval (31 OK), ruff check, ruff format --check, mypy all clean. No heavy gate; CI is the evidence.
 No divergences from plan.
+
+Correction cycle (2026-11-01): review_effectiveness.py gate now rejects missing or mismatched authority task and unmet required_evidence; two regression tests added; agents suite 147 tests OK, ruff and mypy clean.

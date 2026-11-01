@@ -10,3 +10,5 @@ Phases
 4. Validate: unittest, ruff check, ruff format --check, mypy in src/agents.
 
 Critique (single pass, self): keep authority provisional and data-driven; do not claim OQ-017 resolved; no new service. Applied directly.
+
+Correction cycle (2026-11-01): enforce authority task match and required_evidence mapping in gate_satisfied; source_reason is exempt for correct controls (no discrepancy to cite); add negative tests.
