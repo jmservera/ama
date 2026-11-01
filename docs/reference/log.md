@@ -9096,6 +9096,14 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Issue #156 criterion 1 stays unmet: no designs, human review, accessibility or
   content evidence were supplied. No regulatory snapshot changed.
 
+## [2026-11-01] ingest | Atlas findings traced to role screens (#233)
+
+* Added `research/ux/atlas-screen-trace.md` (eleven perspectives, five atlas
+  themes, two tensions and a same-home walkthrough on constructed EX-HOME-901)
+  and an offline completeness checker with tests in `src/core`. Updated the
+  index and the #233 row of the prototype profile review.
+* Findings stay hypotheses until #155. Screens in open pull requests are not
+  delivered. Accessibility and design-system criteria remain unproven.
 ## [2026-11-01] add | Today's briefing HAX design note (#531)
 
 * Added `research/ux/briefing-hax-design-note.md`, a dated mapping of HAX
