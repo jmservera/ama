@@ -69,6 +69,17 @@ def is_scanned(path: Path) -> bool:
     return dotenv or path.suffix in SUFFIXES
 
 
+def read_scannable(path: Path) -> str:
+    data = path.read_bytes()
+    if data.startswith((b"\xff\xfe", b"\xfe\xff")):
+        return data.decode("utf-16")
+    if data.startswith(b"\xef\xbb\xbf"):
+        return data.decode("utf-8-sig")
+    if b"\x00" in data:
+        raise ValueError(f"{path.name}: unsupported encoding, failing closed")
+    return data.decode("utf-8")
+
+
 def scan_directory(base: Path, skip: Path | None = None) -> list[str]:
     findings: list[str] = []
     for path in base.rglob("*"):
@@ -79,7 +90,7 @@ def scan_directory(base: Path, skip: Path | None = None) -> list[str]:
             or (skip is not None and path.resolve() == skip)
         ):
             continue
-        text = path.read_text(encoding="utf-8", errors="ignore")
+        text = read_scannable(path)
         for name, pattern in PATTERNS.items():
             if pattern.search(text):
                 findings.append(f"{path.relative_to(base)}: {name}")
@@ -97,6 +108,18 @@ class SourceScanTests(unittest.TestCase):
             findings = scan_directory(base)
         flagged = {f.split(":")[0] for f in findings}
         self.assertEqual(flagged, {".env", ".env.local", "settings.env"})
+
+    def test_bom_encoded_files_are_scanned_or_rejected(self) -> None:
+        secret = "HostName=h.azure-devices.net;DeviceId=d;SharedAccessKey=" + "A" * 24 + "=="
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            (base / ".env.local").write_text(secret, encoding="utf-16")
+            (base / ".env").write_bytes(b"\xef\xbb\xbf" + secret.encode())
+            findings = scan_directory(base)
+            self.assertEqual({f.split(":")[0] for f in findings}, {".env", ".env.local"})
+            (base / "x.env").write_bytes(secret.encode("utf-16-le"))
+            with self.assertRaises(ValueError):
+                scan_directory(base)
 
     def test_private_key_files_are_scanned(self) -> None:
         block = "-----BEGIN PRIVATE KEY-----\nAAAA\n-----END PRIVATE KEY-----\n"
