@@ -106,7 +106,7 @@ module dns 'envDns.bicep' = if (!externalEnvironment) {
 }
 
 var authEnabled = !empty(entraClientId)
-var chatEnabled = !empty(chatDpiaRef) && !empty(chatLawfulBasisRef) && !empty(chatNoticeRef) && !empty(chatRetentionRef)
+var chatEnabled = !empty(trim(chatDpiaRef)) && !empty(trim(chatLawfulBasisRef)) && !empty(trim(chatNoticeRef)) && !empty(trim(chatRetentionRef)) && chatRetentionDays > 0
 
 var commonEnv = [
   { name: 'APPLICATIONINSIGHTS_CONNECTION_STRING', value: appInsightsConnectionString }

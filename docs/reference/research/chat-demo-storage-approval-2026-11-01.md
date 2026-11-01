@@ -71,8 +71,11 @@ needs the owner's review.
 
 30 days for the demo. Rationale: long enough to review a demo cycle and
 run acceptance checks, short enough that nothing synthetic lingers, and a round
-period that the owner can shorten. It applies to chat messages and memory items
-through `CHAT_RETENTION_DAYS`. Ledger metadata follows the ledger policy. This
+period that the owner can shorten. The approved period is the policy. Implemented
+expiry is narrower: `CHAT_RETENTION_DAYS` assigns an expiry only to memory
+items, and no application caller yet schedules the memory purge. Chat threads
+and messages are not expired automatically, so a scheduled cleanup of threads,
+messages and expired memory remains outstanding. Ledger metadata follows the ledger policy. This
 is a demo period, not a legal retention schedule, and it does not set one for
 real data.
 
