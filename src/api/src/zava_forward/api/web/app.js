@@ -535,7 +535,7 @@ function aiBox() {
           statement.citations.length ? h("ul", {}, statement.citations.map(cite => h("li", {}, source(cite, b.source_case_ids || [])))) : h("p", {}, "No statement references were provided. Check the case record."),
           statement.unresolved?.length ? h("p", { class: "err" }, `These references do not match the record: ${statement.unresolved.join("; ")}. Do not rely on this statement.`) : null)))),
       h("p", {}, "References show what was cited, not whether the statement is correct. Correct the draft or explain why you will not use it below. Recorded reviews cannot be undone."),
-      h("p", { class: "muted", "data-briefing-feedback": "" }, "Something wrong or missing? Choose Edit this draft to correct it, or Do not use this draft and give a reason. Your reason is kept in the audit log as feedback. To see newer records, choose Refresh briefing."),
+      h("p", { class: "muted", "data-briefing-feedback": "" }, "Something wrong or missing? If review controls are shown, choose Edit this draft to correct it, or Do not use this draft and give a reason. Your reason is kept in the audit log as feedback. If Edit this draft is unavailable, or the review is already recorded, choose Refresh briefing to request a fresh briefing."),
       aiNotes(b), h("button", { type: "button", class: "alt", onclick: () => load() }, "Refresh briefing"));
   };
   let sequence = 0, loading = false;

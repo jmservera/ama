@@ -217,5 +217,7 @@ class BriefingFeedbackGuidance(unittest.TestCase):
     def test_briefing_says_how_to_correct_and_give_feedback(self) -> None:
         source = (WEB / "app.js").read_text(encoding="utf-8")
         self.assertIn("data-briefing-feedback", source)
-        self.assertIn("Edit this draft to correct it", source)
+        self.assertIn("If review controls are shown, choose Edit this draft", source)
+        self.assertIn("is unavailable, or the review is already recorded", source)
+        self.assertIn("request a fresh briefing", source)
         self.assertIn("kept in the audit log as feedback", source)
