@@ -162,6 +162,26 @@ class CohortEvalTests(unittest.TestCase):
         self.assertIn("invalid_input", codes(rec))
         self.assertFalse(rec["activation_allowed"])
 
+    def test_malformed_expectation_or_identity_blocks_without_disposition(self) -> None:
+        ok = {"by": "Reviewer", "rationale": "reviewed", "decision": "accept"}
+        for mutate in (
+            lambda m: m["cases"][0].update(expected="unsupported"),
+            lambda m: m["cases"][0].pop("expected"),
+            lambda m: m.pop("task_id"),
+            lambda m: m.pop("subject_version"),
+        ):
+            m = manifest()
+            mutate(m)
+            rec = cohort_eval.evaluate(m, clean_observed(manifest()), ok)
+            self.assertIn("invalid_input", codes(rec))
+            self.assertFalse(rec["activation_allowed"])
+
+    def test_unmeasured_non_synthetic_run_is_not_fairness_evidence(self) -> None:
+        m = manifest()
+        m["synthetic"] = False
+        self.assertFalse(cohort_eval.evaluate(m, [])["fairness_evidence"])
+        self.assertTrue(cohort_eval.evaluate(m, clean_observed(m))["fairness_evidence"])
+
     def test_empty_cohorts_block(self) -> None:
         m = manifest()
         m["cohorts"] = {}

@@ -7,6 +7,7 @@ per cohort and never averaged. Synthetic results are never fairness evidence (OQ
 from __future__ import annotations
 
 import math
+from collections import Counter
 from collections.abc import Mapping, Sequence
 from typing import Any
 
@@ -16,6 +17,7 @@ RECORD_VERSION = "cohort-missing-data-evaluation-v1"
 OUTCOMES = ("ranked", "deprioritised", "excluded", "review")
 THRESHOLD_KEYS = ("min_sample", "max_error_rate", "max_exclusion_gap", "max_review_burden_gap")
 DISPOSABLE = {"seeded_defect_unexpected", "threshold_exceeded", "unjustified_exclusion"}
+MEASUREMENT_BLOCKERS = {"invalid_input", "reconciliation", "insufficient_sample"}
 OQ_018_GAP = (
     "OQ-018: representative cohorts, lawful analysis fields, sample sufficiency and thresholds "
     "need owner approval before live use; synthetic results are not fairness evidence."
@@ -69,7 +71,7 @@ def _cohort_row(cases: Sequence[Mapping[str, Any]], min_sample: int) -> dict[str
     missing = sum(1 for c in cases if c["actual"] is None)
     cases = [c for c in cases if c["actual"] is not None]
     n = len(cases)
-    errors = sum(1 for c in cases if c["actual"] != c["expected"])
+    errors = sum(1 for c in cases if c["actual"] != c.get("expected"))
     excluded = sum(1 for c in cases if c["actual"] == "excluded")
     deprioritised = sum(1 for c in cases if c["actual"] == "deprioritised")
     review = sum(1 for c in cases if c["actual"] == "review")
@@ -117,8 +119,16 @@ def evaluate(
     obs_ids = [o.get("id") for o in observed]
     case_ids = [c["id"] for c in cases]
     for label, ids in (("observed", obs_ids), ("manifest", case_ids)):
-        for dup in sorted({str(i) for i in ids if ids.count(i) > 1}):
+        freq = Counter(ids)
+        for dup in sorted(str(i) for i, count in freq.items() if count > 1):
             block("invalid_input", f"duplicate {label} case id {dup}")
+    for field in ("task_id", "subject_version"):
+        value = manifest.get(field)
+        if not (isinstance(value, str) and value.strip()):
+            block("invalid_input", f"manifest {field} is missing")
+    for c in cases:
+        if c.get("expected") not in OUTCOMES:
+            block("invalid_input", f"manifest case {c['id']} has missing or unsupported expected")
     seen = {o.get("id"): o for o in observed}
     manifest_ids = set(case_ids)
 
@@ -136,7 +146,7 @@ def evaluate(
             actual = None
         defect = (
             actual in ("excluded", "deprioritised")
-            and actual != c["expected"]
+            and actual != c.get("expected")
             and obs.get("reason") not in justified
         )
         joined.append({**c, "actual": actual, "defect": defect})
@@ -222,9 +232,9 @@ def evaluate(
         "task_id": manifest.get("task_id"),
         "policy_or_model_version": manifest.get("subject_version"),
         "synthetic": bool(manifest.get("synthetic", True)),
-        "fairness_evidence": False
-        if manifest.get("synthetic", True)
-        else bool(_thresholds_approved(manifest)),
+        "fairness_evidence": not manifest.get("synthetic", True)
+        and _thresholds_approved(manifest)
+        and not any(b["code"] in MEASUREMENT_BLOCKERS for b in blockers),
         "missing_data_treatment": manifest.get("missing_data_treatment"),
         "input_digests": {"manifest": digest(manifest), "observed": digest(list(observed))},
         "thresholds": dict(thresholds),

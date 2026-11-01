@@ -27,5 +27,8 @@ None.
 * Error-rate and gap threshold comparisons use unrounded rates; rounding applies only to reported values.
 * A valid human `reject` adds a non-disposable `rejected` blocker.
 * The hashed record includes `input_digests` for the manifest and observations.
-* Tests: 19 in `test_cohort_eval.py` (8 added); `ruff check` and `ruff format --check` clean.
+* Second round: expected outcomes are validated against `OUTCOMES`, and missing `task_id` or `subject_version` raises non-disposable `invalid_input` blockers.
+* `fairness_evidence` is false when invalid-input, reconciliation or insufficient-sample blockers exist, so an unmeasured non-synthetic run is not fairness evidence.
+* Duplicate-ID detection uses a single `Counter` pass instead of `list.count` (linear, not quadratic).
+* Tests: 21 in `test_cohort_eval.py` (10 added); `ruff check` and `ruff format --check` clean.
 * CI `rubric/score` failed with "Scoring failed" in the hosted scorer; to be re-run, not a code failure.

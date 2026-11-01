@@ -26,3 +26,5 @@ PR uses Refs, not a closing keyword.
 ## Post-review corrections
 
 Eight Copilot review findings on PR 636 (threshold validation, missing-observation counting, duplicate IDs, missing outcomes, empty cohorts, rounded comparisons, human rejection, input digests) were valid and fixed; see the changes artifact. The original review outcome is unchanged.
+
+A second round of four Copilot findings (expected-outcome validation, required task and version identifiers, fairness evidence only for measured evaluations, linear duplicate-ID detection) was valid and fixed. The original review outcome is unchanged.
