@@ -11,7 +11,7 @@ DOC = (ROOT / "docs" / "reference" / "research" / "ux" / "content-standard.md").
 BANNED = re.compile(r"\b(gates?|holds?|provenance|traces?|snapshots?|envelopes?)\b", re.I)
 AUDITED_FILES = ("app.js", "assistants.js", "panels.js", "ops.js", "chat.js", "timecapture.js", "role-screens.js", "law.js", "law.html", "index.html", "welcome.html")
 # Exact identifiers, raw technical JSON key and legacy stored finance value only.
-ALLOWED = ("c.gate", "p.provenance", "earlier.provenance", "i.hold", "x.hold", "Keep on hold", 'category("holds",', "envelope: p.envelope", "p.snapshot")
+ALLOWED = ("c.gate", "p.provenance", "earlier.provenance", "i.hold", "x.hold", "h.hold", "inv.hold", "Keep on hold", 'category("holds",', "envelope: p.envelope", "p.snapshot")
 
 
 def copy_violations(text):
