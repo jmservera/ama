@@ -12,6 +12,7 @@ import math
 import re
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Any
 
 from zava_forward.core.rai_release import named
@@ -160,7 +161,9 @@ def coverage_gaps(
             problems.append(f"{entry.anchor}: no owner role")
         if entry.anchor not in anchors:
             problems.append(f"{entry.anchor}: no runbook heading")
-        if entry.status in (INSTALLED, CANDIDATE):
+        if entry.status not in (INSTALLED, CANDIDATE, GAP):
+            problems.append(f"{entry.anchor}: unknown status {entry.status!r}")
+        elif entry.status in (INSTALLED, CANDIDATE):
             text = infra_sources.get(entry.source_file or "")
             if text is None or not entry.source_marker or entry.source_marker not in text:
                 problems.append(f"{entry.anchor}: not found in {entry.source_file}")
@@ -246,6 +249,7 @@ ALLOWED_FIELDS = frozenset(
         "denominator",
         "status",
         "owner_role",
+        "offline_only",
     }
 )
 _SENSITIVE = re.compile(
@@ -259,12 +263,23 @@ _TIMESTAMP = re.compile(
 _STATUSES = frozenset({INSTALLED, CANDIDATE, GAP, INSUFFICIENT, BLOCKED, WITHIN, BREACH})
 _SEVERITIES = frozenset({"0", "1", "2", "3", "4", "info", "low", "medium", "high", "critical"})
 MAX_COUNT = 10**9
+MAX_TEXT = 64
+
+
+def _parses(value: str) -> bool:
+    try:
+        datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return False
+    return True
 
 
 def _valid(key: str, value: Any) -> bool:
     if key in ("count", "denominator"):
         return _count(value) and value <= MAX_COUNT
-    if not isinstance(value, str) or _SENSITIVE.search(value):
+    if key == "offline_only":
+        return isinstance(value, bool)
+    if not isinstance(value, str) or len(value) > MAX_TEXT or _SENSITIVE.search(value):
         return False
     if key == "alert":
         return value in {e.anchor for e in ALERTS}
@@ -275,7 +290,7 @@ def _valid(key: str, value: Any) -> bool:
     if key == "severity":
         return value.lower() in _SEVERITIES
     if key in ("window_start", "window_end"):
-        return _TIMESTAMP.fullmatch(value) is not None
+        return _TIMESTAMP.fullmatch(value) is not None and _parses(value)
     return _TOKEN.fullmatch(value) is not None
 
 

@@ -51,6 +51,11 @@ class RegisterTests(unittest.TestCase):
         self.assertIn("y-gap: gap must not claim a source", problems)
         self.assertIn("criterion ledger: no register entry", problems)
 
+    def test_unknown_status_is_a_problem(self) -> None:
+        bad = (mc.AlertEntry("ai-limits", "installled", "Owner", "ai-limits"),)
+        problems = mc.coverage_gaps("### ai-limits", {}, bad)
+        self.assertTrue(any("unknown status" in p for p in problems))
+
     def test_poison_and_ai_limits_stay_explicit_gaps(self) -> None:
         gaps = {e.anchor for e in mc.ALERTS if e.status == mc.GAP}
         self.assertTrue(
@@ -153,6 +158,32 @@ class SanitiserTests(unittest.TestCase):
                 "severity": "high",
             },
         )
+
+    def test_invalid_timestamps_and_oversized_strings_are_dropped(self) -> None:
+        event = {
+            "window_start": "2026-02-30T07:00:00Z",
+            "window_end": "2026-11-01T99:99:99Z",
+            "task": "x" * 4000,
+            "release": "r1",
+        }
+        self.assertEqual(mc.sanitize_diagnostic(event), {"release": "r1"})
+        self.assertEqual(
+            mc.sanitize_diagnostic({"window_end": "2026-11-01T07:00:00Z"}),
+            {"window_end": "2026-11-01T07:00:00Z"},
+        )
+
+    def test_evaluated_result_keeps_offline_provenance(self) -> None:
+        result = mc.evaluate_indicator(
+            events=1,
+            denominator=10,
+            window_complete=True,
+            threshold={"limit": 0.5, "min_sample": 5, "constructed": True},
+            incident_owner=None,
+        )
+        clean = mc.sanitize_diagnostic(result)
+        self.assertIs(clean["offline_only"], True)
+        self.assertEqual(clean["status"], mc.WITHIN)
+        self.assertNotIn("offline_only", mc.sanitize_diagnostic({"offline_only": "yes"}))
 
 
 if __name__ == "__main__":
