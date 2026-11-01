@@ -35,7 +35,7 @@ class DeterminismAuditTests(unittest.TestCase):
         def drift(out: Path) -> Path:
             out.mkdir(parents=True)
             (out / "manifest.json").write_text(
-                '{"seed": 7, "version": "v", "generator_revision": "sha256:ab"}'
+                '{"seed": 7, "version": "v", "generator_revision": "sha256:' + "a" * 64 + '"}'
             )
             (out / "data.txt").write_text(str(next(counter)))
             return out / "manifest.json"

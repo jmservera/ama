@@ -13,3 +13,7 @@ Date: 2026-11-01. Execution: executed once, self-review of the diff against the 
 ## PR review correction (2026-11-01)
 
 * Two Copilot threads addressed (as-of date misreported for sensor-scenarios; revision prefix check too weak). Original review outcome preserved; no new findings. Human and independent review remain unchecked and pending.
+
+## PR review correction 2 (2026-11-01)
+
+* One further Copilot thread addressed (drift test masked by invalid revision). Original review outcome preserved; human and independent review remain pending.
