@@ -1749,6 +1749,26 @@ python -m zava_forward.api.sensor_handover_verify --reference history/readings-0
 The check is ready-to-run tooling; running it against Azure SQL after a live
 Hub stream is the remaining owner-gated evidence for #188.
 
+### Local handover demo (#188)
+
+`checks/sensor_handover_demo.py` runs the whole flow on a throwaway SQLite store
+with constructed climate: backfill CSV, #110 admission of the prefix, SDK-decoded
+streamed suffix, joint per-home query, the verifier report and a window replay.
+It prints JSON (`passed`, `idempotent`, `evidence`) and exits 0 only on a pass.
+`--seam C` shifts the live temperature to show a discontinuity failing at zero
+tolerance; `--tolerance C` declares a temperature limit.
+
+```bash
+cd src/api
+PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests \
+  python checks/sensor_handover_demo.py
+PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests \
+  python -m unittest test_sensor_handover_demo -v
+```
+
+This is constructed local evidence, not a live Hub run, Azure SQL proof or
+sensor accuracy approval.
+
 ## Finite offline sensor ingestion (#110)
 
 `sensor_ingestion.SensorIngestion(store).consume(observations, received_at=...)`

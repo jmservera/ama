@@ -9177,3 +9177,11 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   pack: five package suites, Ruff and mypy passed locally; SQL, container and
   browser groups not run. The PERF-440 benchmark outlier was not reproduced
   and is filed as #687. No regulatory snapshot changed; no criterion ticked.
+
+## [2026-11-01] update | Local handover demo (#188)
+
+* Added a runnable local demo and test for the live-versus-backfill handover
+  on a constructed SQLite store, documented in the
+  [API README](../../src/api/README.md#local-handover-demo-188). Constructed
+  evidence only: Azure SQL and live Hub criteria of #188 stay owner-gated and
+  unproven; no criterion ticked.
