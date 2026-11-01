@@ -74,7 +74,7 @@ def _cohort_row(cases: Sequence[Mapping[str, Any]], min_sample: int) -> dict[str
     errors = sum(1 for c in cases if c["actual"] != c.get("expected"))
     excluded = sum(1 for c in cases if c["actual"] == "excluded")
     deprioritised = sum(1 for c in cases if c["actual"] == "deprioritised")
-    review = sum(1 for c in cases if c["actual"] == "review")
+    review = sum(1 for c in cases if c["review"])
     return {
         "n": n,
         "missing": missing,
@@ -165,7 +165,12 @@ def evaluate(
         if not isinstance(cohort_map, Mapping):
             block("invalid_input", f"manifest case {c.get('id')} has no cohorts mapping")
             cohort_map = {}
-        joined.append({**c, "cohorts": cohort_map, "actual": actual, "defect": defect})
+        needs_review = actual == "review" or (
+            obs.get("review_required") is True and actual is not None
+        )
+        joined.append(
+            {**c, "cohorts": cohort_map, "actual": actual, "defect": defect, "review": needs_review}
+        )
 
     min_sample = int(thresholds.get("min_sample", 0)) if _thresholds_approved(manifest) else 0
     dimensions: dict[str, Any] = {}
