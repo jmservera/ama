@@ -449,6 +449,8 @@ class HubPublisher:
                 interval = max(0.0, (stamp - previous).total_seconds()) if previous else 0.0
                 await _bounded(control.wait(0 if frame.truth == "burst" else interval), deadline)
                 previous = stamp
+                if removed(home):
+                    continue
                 if frame.truth == "disconnect":
                     truth(
                         {

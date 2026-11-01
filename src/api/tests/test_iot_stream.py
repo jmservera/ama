@@ -567,6 +567,33 @@ class PublisherTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.client.send_message.await_count, 2)
         self.assertEqual(sum(1 for t in self.truth if t.get("status") == "sent"), 2)
 
+    async def test_scale_down_during_replay_wait_skips_removed_disconnect(self) -> None:
+        publisher, frames, controller = self._two_home_publisher(2)
+        frames = (frames[0], replace(frames[1], truth="disconnect"), frames[2])
+        original = Pacer.wait
+        calls = 0
+
+        async def wait(pacer: Pacer, seconds: float) -> None:
+            nonlocal calls
+            calls += 1
+            if calls == 2:
+                controller.scale_down(0.5)
+            await original(pacer, seconds)
+
+        with (
+            tempfile.TemporaryDirectory() as tmp,
+            patch.object(Pacer, "wait", wait),
+            patch(
+                "zava_forward.api.iot_stream.IoTHubDeviceClient.create_from_x509_certificate",
+                return_value=self.client,
+            ),
+        ):
+            path = Path(tmp) / "estimate.json"
+            record(controller.plan, path)
+            sent = await publisher.run_controlled(frames, controller, path, truth=self.truth.append)
+        self.assertEqual(sent, 2)
+        self.assertFalse(any(t.get("status") == "injected-stop" for t in self.truth))
+
     async def test_device_only_activation_publishes_without_asserting_routed_receiver(self) -> None:
         active = DeviceActivation(ACTIVE.hub_hostname, "owner-approved finite hub exercise")
         publisher = HubPublisher(
