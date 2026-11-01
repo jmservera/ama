@@ -143,7 +143,8 @@ def _blocker_owner(r: Reply, i: int) -> str:
     owner = r.fact(f"{p}.owner")
     if owner and owner.casefold() != "unknown":
         return owner
-    embedded = re.search(r"\bOwner:\s*(.+)$", r.facts.get(f"{p}.reason", ""))
+    reason = r.facts.get(f"{p}.reason", "")
+    embedded = re.search(r"\bOwner:\s*(.+?)(?=\s*(?:\.\s+)?Next action:|$)", reason)
     if embedded and embedded.group(1).strip().casefold() != "unknown":
         r.fact(f"{p}.reason")
         return embedded.group(1).strip().rstrip(".")

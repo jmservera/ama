@@ -164,11 +164,17 @@ window.ChatWidget = (() => {
       if (follow) bottom();
       return item;
     }
+    let observer = null, reserve = null, disposed = false;
     if (stayOpen && typeof ResizeObserver === "function") {
-      const reserve = () => {
-        document.body.style.paddingBottom = root.hidden ? "" : `${Math.ceil(root.getBoundingClientRect().height + 96)}px`;
+      reserve = () => {
+        if (disposed) return;
+        const style = document.body.style;
+        const rect = root.hidden ? null : root.getBoundingClientRect();
+        style.paddingBottom = rect && !docked ? `${Math.ceil(rect.height + 96)}px` : "";
+        style.paddingRight = rect && docked ? `${Math.ceil(rect.width)}px` : "";
       };
-      new ResizeObserver(reserve).observe(root);
+      observer = new ResizeObserver(reserve);
+      observer.observe(root);
       reserve();
     }
     launcher.onclick = () => root.hidden ? open() : hide();
@@ -181,6 +187,10 @@ window.ChatWidget = (() => {
       const box = target.getBoundingClientRect();
       const margin = 16;
       if (box.right < panel.left - margin || box.left > panel.right + margin || box.bottom < panel.top - margin || box.top > panel.bottom + margin) return;
+      if (docked) {
+        window.scrollBy?.({ left: box.right + margin - panel.left, behavior: "auto" });
+        return;
+      }
       window.scrollBy?.({ top: box.bottom + margin - panel.top, behavior: "auto" });
     }
     function externalFocus(event) {
@@ -211,8 +221,10 @@ window.ChatWidget = (() => {
         active = false;
         clearTimeout(timer);
         document.removeEventListener("focusin", externalFocus);
+        disposed = true;
+        observer?.disconnect();
         root.remove();
-        if (stayOpen) document.body.style.paddingBottom = "";
+        if (observer) { document.body.style.paddingBottom = ""; document.body.style.paddingRight = ""; }
         launcher.hidden = false;
         launcher.setAttribute("aria-expanded", "false");
       },
