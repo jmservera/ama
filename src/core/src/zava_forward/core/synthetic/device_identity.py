@@ -5,6 +5,7 @@ crosses the CredentialStore boundary; manifests, reprs and errors carry referenc
 """
 
 import re
+import threading
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from typing import Protocol
@@ -15,6 +16,13 @@ VERSION = "simulated-device-identity-v1"
 RUN_ID = re.compile(r"[a-z0-9][a-z0-9-]{2,31}")
 SENSOR_ID = re.compile(r"[A-Z0-9][A-Z0-9_-]{0,19}")
 MAX_DEVICES = 100
+_LOCKS: dict[str, threading.RLock] = {}
+_LOCKS_GUARD = threading.Lock()
+
+
+def _run_lock(run_id: str) -> threading.RLock:
+    with _LOCKS_GUARD:
+        return _LOCKS.setdefault(run_id, threading.RLock())
 
 
 class DeviceIdentityError(RuntimeError):
@@ -101,7 +109,20 @@ def plan(run_id: str, credential_owner: str, sensors: Sequence[Mapping[str, obje
 
 def provision(manifest: Manifest, registry: Registry, store: CredentialStore) -> Manifest:
     manifest.validate()
-    if registry.list_run(manifest.run_id) or store.run_references(manifest.run_id):
+    # Serialise attempts per run so an overlapping attempt cannot roll back another's devices.
+    with _run_lock(manifest.run_id):
+        return _provision_locked(manifest, registry, store)
+
+
+def _provision_locked(manifest: Manifest, registry: Registry, store: CredentialStore) -> Manifest:
+    try:
+        active = bool(registry.list_run(manifest.run_id) or store.run_references(manifest.run_id))
+        failed = False
+    except Exception:
+        active, failed = False, True
+    if failed:
+        raise DeviceIdentityError("ACTIVE_RUN_CHECK_FAILED") from None
+    if active:
         raise DeviceIdentityError("RUN_ALREADY_ACTIVE")
     created: list[DeviceIdentity] = []
     attempted: DeviceIdentity | None = None
@@ -121,10 +142,19 @@ def provision(manifest: Manifest, registry: Registry, store: CredentialStore) ->
         failed = True
     if failed:
         # Cleanup runs outside the handler so the original error is never chained.
-        if attempted is not None and _owned_by_run(registry, attempted.device_id, manifest.run_id):
+        owner = _owner_of(registry, attempted.device_id) if attempted is not None else None
+        if attempted is not None and owner == manifest.run_id:
             created.append(attempted)
         rollback = Manifest(manifest.run_id, manifest.credential_owner, tuple(created))
-        teardown(rollback, registry, store, refs=[i.credential_ref for i in issued])
+        try:
+            teardown(rollback, registry, store, refs=[i.credential_ref for i in issued])
+            teardown_error = None
+        except DeviceIdentityError as error:
+            teardown_error = error
+        if teardown_error is not None:
+            raise DeviceIdentityError(str(teardown_error)) from None
+        if owner is _UNKNOWN:
+            raise DeviceIdentityError("PROVISION_ROLLBACK_INCOMPLETE") from None
         raise DeviceIdentityError("PROVISION_FAILED_ROLLED_BACK")
     return Manifest(manifest.run_id, manifest.credential_owner, tuple(issued))
 
@@ -183,11 +213,14 @@ def teardown(
         raise DeviceIdentityError("TEARDOWN_CREDENTIALS_REMAIN")
 
 
-def _owned_by_run(registry: Registry, device_id: str, run_id: str) -> bool:
+_UNKNOWN = object()
+
+
+def _owner_of(registry: Registry, device_id: str) -> object:
     try:
-        return registry.run_of(device_id) == run_id
+        return registry.run_of(device_id)
     except Exception:
-        return False
+        return _UNKNOWN
 
 
 def _refs(manifest: Manifest) -> list[str]:

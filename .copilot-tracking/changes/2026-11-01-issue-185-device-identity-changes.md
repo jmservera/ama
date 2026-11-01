@@ -24,3 +24,10 @@
 * Provision rejects an already-active run (`RUN_ALREADY_ACTIVE`) before any mutation, so a same-run retry cannot trigger rollback of the live run.
 * The device whose `create()` raised is added to rollback when the registry reports it tagged with this run, covering write-then-raise without touching pre-existing devices.
 * Added 2 regression tests (registry write-then-raise; same-run retry); 18 device identity tests OK, ruff clean.
+
+## Review round 4 (Copilot threads on PR 647)
+
+* Provision serialises attempts per run id with a re-entrant lock, so an overlapping attempt is rejected (`RUN_ALREADY_ACTIVE`) instead of rolling back a completed attempt's devices.
+* The active-run preflight is wrapped and raises fixed `ACTIVE_RUN_CHECK_FAILED` with no chained context and no mutation.
+* When `run_of()` fails after a failed `create()`, ownership is unknown: known-owned resources are still torn down and `PROVISION_ROLLBACK_INCOMPLETE` is reported; teardown errors during rollback surface their fixed codes.
+* Added 3 regression tests (overlap, unknown ownership, preflight failure from both adapters).

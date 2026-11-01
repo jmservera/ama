@@ -1,4 +1,5 @@
 import logging
+import threading
 import traceback
 import unittest
 from collections.abc import Sequence
@@ -189,6 +190,79 @@ class DeviceIdentityTests(unittest.TestCase):
         with self.assertRaisesRegex(di.DeviceIdentityError, "RUN_ALREADY_ACTIVE"):
             di.provision(manifest, registry, store)
         self.assertEqual((registry.devices, store.secrets), before)
+
+    def test_overlapping_provision_cannot_roll_back_completed_attempt(self) -> None:
+        registry, store = FakeRegistry(), FakeStore()
+        manifest = di.plan("run-001", "owner-role", sensors())
+        real_create = registry.create
+        outcomes: list[str] = []
+        started = threading.Event()
+
+        def attempt() -> None:
+            try:
+                di.provision(manifest, registry, store)
+            except di.DeviceIdentityError as error:
+                outcomes.append(str(error))
+
+        second = threading.Thread(target=attempt)
+
+        def create(device_id: str, run_id: str) -> None:
+            if not started.is_set():
+                started.set()
+                second.start()
+                second.join(timeout=0.2)
+            real_create(device_id, run_id)
+
+        registry.create = create  # type: ignore[method-assign]
+        first = di.provision(manifest, registry, store)
+        second.join(timeout=5)
+        self.assertEqual(outcomes, ["RUN_ALREADY_ACTIVE"])
+        self.assertEqual(len(registry.list_run("run-001")), len(first.identities))
+        self.assertEqual(len(store.run_references("run-001")), len(first.identities))
+
+    def test_unknown_creation_ownership_reports_incomplete_rollback(self) -> None:
+        registry, store = FakeRegistry(), FakeStore()
+        real_create, real_run_of = registry.create, registry.run_of
+        failing = {"on": False}
+
+        def writes_then_raises(device_id: str, run_id: str) -> None:
+            real_create(device_id, run_id)
+            if len(registry.list_run(run_id)) == 3:
+                failing["on"] = True
+                raise RuntimeError(SECRET)
+
+        def run_of(device_id: str) -> str | None:
+            if failing["on"] and device_id == "SYN-" + sensors()[2]["sensor_id"]:
+                raise RuntimeError(SECRET)
+            return real_run_of(device_id)
+
+        registry.create = writes_then_raises  # type: ignore[method-assign]
+        registry.run_of = run_of  # type: ignore[method-assign]
+        with self.assertRaises(di.DeviceIdentityError) as ctx:
+            di.provision(di.plan("run-001", "owner-role", sensors()), registry, store)
+        self.assertEqual(str(ctx.exception), "PROVISION_ROLLBACK_INCOMPLETE")
+        self.assertNotIn(SECRET, str(ctx.exception))
+        self.assertEqual(len(registry.list_run("run-001")), 1)
+        self.assertEqual(len(store.run_references("run-001")), 0)
+
+    def test_active_run_check_failures_are_sanitised_without_mutation(self) -> None:
+        for broken in ("registry", "store"):
+            registry, store = FakeRegistry(), FakeStore()
+
+            def boom(_run_id: str) -> Sequence[str]:
+                raise RuntimeError(SECRET)
+
+            if broken == "registry":
+                registry.list_run = boom  # type: ignore[method-assign]
+            else:
+                store.run_references = boom  # type: ignore[method-assign]
+            with self.assertRaises(di.DeviceIdentityError) as ctx:
+                di.provision(di.plan("run-001", "owner-role", sensors()), registry, store)
+            self.assertEqual(str(ctx.exception), "ACTIVE_RUN_CHECK_FAILED")
+            self.assertIsNone(ctx.exception.__cause__)
+            self.assertTrue(ctx.exception.__suppress_context__)
+            self.assertEqual(registry.devices, {"SYN-OTHER": "other-run"})
+            self.assertEqual(store.secrets, {})
 
     def test_overlapping_teardown_cannot_revoke_newer_run_credential(self) -> None:
         registry, store = FakeRegistry(), FakeStore()

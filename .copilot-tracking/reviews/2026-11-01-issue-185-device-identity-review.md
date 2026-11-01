@@ -28,3 +28,7 @@ Four valid findings (rollback scope, stale-manifest ownership, secret-bearing ad
 ## Addendum: Copilot PR review round 2
 
 Two valid findings (credential stored before `issue()` raised; overlapping provision/teardown revoking a newer run's credential) were fixed with run-scoped immutable credential references and regression tests. The original Review outcome is unchanged; the CredentialStore adapter contract now requires per-issuance references and `run_references(run_id)`.
+
+## Addendum: Copilot PR review round 4
+
+Three valid findings (overlapping provisioning rollback race, unknown ownership after a failed create, unsanitised preflight adapter errors) were fixed with a per-run lock, an explicit incomplete-rollback outcome and a sanitised preflight, with regression tests. The original Review outcome is unchanged. The per-run lock is process-local; cross-process safety still needs an atomic reservation in the live adapters (follow-up).
