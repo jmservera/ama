@@ -83,7 +83,7 @@ acceptance. Mirrored in `chat_privacy.MODEL_PROVIDER_POSITION["documented_terms"
 | Use of prompts and completions | Not available to other customers or OpenAI; not used to train or improve models without permission | DPO and Legal accept the processor terms in the Microsoft Data Protection Addendum (not retrieved here) |
 | Statefulness | Models are stateless. Stateful features (Responses API, Assistants threads, stored completions) persist data in the customer resource, encrypted at rest and customer-deletable | Confirm none of these features is enabled; Zava stores chat in its own SQL |
 | Location of processing | Standard deployments process in the resource geography, possibly across regions within it. Global and DataZone deployments may process outside it; data at rest stays in the designated geography | Confirm deployment type and that uksouth meets the DPO transfer position |
-| Abuse monitoring and retention | Flagged samples of prompts and completions may be stored and human-reviewed by authorised Microsoft staff in the resource geography, unless modified monitoring is approved. `ContentLogging` false shows it is off | DPO decides whether to request modified monitoring and records the stored-sample retention exposure |
+| Abuse monitoring and retention | Flagged samples of prompts and completions may be stored and human-reviewed by authorised Microsoft staff in the resource geography, unless modified monitoring is approved. Whether abuse monitoring or content logging is active can be confirmed from the resource `ContentLogging` capability setting; not verified here | DPO decides whether to request modified monitoring and records the stored-sample retention exposure |
 | Previews | Preview models may use different practices | Confirm the deployed model is generally available |
 
 Transfer position outside the geography stays Unknown until the DPO records it.
@@ -117,7 +117,7 @@ none, and sets no retention period. Options are not legal advice.
 | # | Decision | Evidence in this repository | Options to consider | Decision, owner, date, reference |
 | --- | --- | --- | --- | --- |
 | D1 | Lawful basis for staff chat messages | Purpose in ADR 0004; data map above; UK GDPR snapshot under `../regulatory/data-protection/` | Article 6 bases as the DPO assesses them; staff-facing necessity and alternatives | Not recorded |
-| D2 | Lawful basis and condition if resident data is typed | Warning and masking best effort; memory refuses special-category cues | Prohibit by notice and control, or assess an Article 9 condition | Not recorded |
+| D2 | Lawful basis and condition if resident data is typed | Warning and masking best effort; memory refuses special-category cues | Prohibit by notice and control, or record a resident Article 6 basis, plus an Article 9 condition only where special-category data is involved | Not recorded |
 | D3 | Staff notice wording and delivery | `chat_privacy.WARNING`; `CHAT_NOTICE_REF` empty | Approve notice text, placement and acknowledgement record | Not recorded |
 | D4 | DPIA outcome | This record; `CHAT_DPIA_REF` empty | Approve, approve with conditions, or require prior consultation | Not recorded |
 | D5 | Retention per class (messages, memory, ledger metadata) | Data map; `CHAT_RETENTION_REF` and `CHAT_RETENTION_DAYS` empty | Set per-class periods after D1 to D4; none is proposed here | Not recorded |

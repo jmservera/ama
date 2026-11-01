@@ -8,3 +8,9 @@ Plan: ../../plans/2026-11-01/issue-163-chat-privacy-provider-position-plan.md
 * `docs/reference/README.md` index row and `docs/reference/log.md` entry.
 * Validation (src/core, venv, pip): 101 chat tests OK; ruff check, ruff format --check and mypy clean. No heavy gate; CI is the evidence.
 * Divergence: none.
+
+## Follow-up 2026-11-01 (review round)
+
+* Summary string now keeps the "without permission" qualification and "train or improve"; DPIA D2 asks for a resident Article 6 basis plus Article 9 only for special-category data; the abuse-monitoring row is a verification instruction; the audit-trail test asserts the exact source URL and an ISO retrieved date.
+* The earlier "No heavy gate; CI is the evidence" line is superseded: the complete local gate (`tools/rpi-checks.py --all`) is required before publication. Result recorded below.
+

@@ -85,7 +85,7 @@ MODEL_PROVIDER_POSITION = dict(
     documented_terms=dict(
         source="https://learn.microsoft.com/en-us/azure/foundry/responsible-ai/openai/data-privacy",
         source_date="2026-06-05", retrieved="2026-11-01", status="vendor_documentation_not_dpo_accepted",
-        summary=("Prompts and completions are not used to train models or shared with other customers; models are stateless; "
+        summary=("Prompts and completions are not shared with other customers or used to train or improve models without permission; models are stateless; "
                  "standard processing stays in the resource geography, Global and DataZone deployments may process elsewhere; "
                  "abuse monitoring may store and human-review flagged samples unless modified monitoring is approved; "
                  "processing is governed by the Microsoft Data Protection Addendum.")),
