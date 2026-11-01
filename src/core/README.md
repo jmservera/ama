@@ -3874,6 +3874,14 @@ provisioning is performed. Ordinary chat and memory gates are unchanged.
 
 ### Regulatory privacy and audit (#217)
 
+`regulatory_privacy.readiness_report(env)` is a reference-only live-data gate
+over the whole regulatory scope. It refuses live data unless `REG_DPIA_REF`,
+`REG_RETENTION_REF`, `REG_ENTRA_ROLES_REF` and `REG_ART22_REF` are all set and
+none starts `SYNTH-`. It lists the eight #217 criteria as automated-pass,
+partial or human-gate-unmet, never echoes reference values, and always reports
+`dpo_reviewed` false: recorded references are not verified DPO or Legal
+approval.
+
 `regulatory_privacy.retention_report` aligns own-thread review metadata with
 the existing `CHAT_RETENTION_REF` and `CHAT_RETENTION_DAYS` settings. Without
 both, periods and due status are unknown. For synthetic reporting, both must
