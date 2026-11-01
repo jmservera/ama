@@ -240,6 +240,7 @@ class ChatIsolationTests(Matrix):
         try:
             self.assertEqual(self.api(admin, "/api/chat/breakglass", dict(body, purpose="short"))[0], 403)
             self.assertEqual(self.api(admin, "/api/chat/breakglass", dict(body, target=self.email(admin)))[0], 403)
+            self.assertEqual(self.api(admin, "/api/chat/breakglass", dict(body, target=self.email(admin), purpose="Check mail from synth.person@example.test now"))[0], 403)
             self.assertEqual(self.api("Quality Inspector", "/api/chat/breakglass", dict(body, target=self.email(admin)))[0], 403)
             code, d = self.api(admin, "/api/chat/breakglass", body)
             self.assertEqual((code, d["threads"]), (200, 1))
@@ -253,10 +254,17 @@ class ChatIsolationTests(Matrix):
         self.assertEqual([e["action"] for e in log].count("chat.breakglass.granted"), 2)
         self.assertGreaterEqual([e["action"] for e in log].count("chat.breakglass.refused"), 4)
         self.assertIn("Investigating a reported misuse", next(e["detail"] for e in log if e["action"].endswith("granted")))
+        masked = [e for e in log if "[email removed]" in e["detail"]]
+        self.assertEqual(len(masked), 1)
+        self.assertNotIn("synth.person@example.test", masked[0]["detail"])
+        self.assertEqual(masked[0]["action"], "chat.breakglass.refused")
+        self.assertEqual(masked[0]["who"], user_key(dict(email=self.email(admin))))
+        self.assertEqual(json.loads(masked[0]["detail"])["purpose"], "Check mail from [email removed] now")
+        self.assertEqual(json.loads(masked[0]["detail"])["target"], user_key(dict(email=self.email(admin))))
         for e in log:
             detail = json.loads(e["detail"])
             self.assertIn("target", detail)
-            self.assertIn("purpose", detail, e)
+            self.assertTrue(detail["purpose"].strip(), e)
             self.assertNotIn("content", detail)
         granted = json.loads(next(e["detail"] for e in log if e["action"].endswith("granted")))
         self.assertEqual(granted["policy_ref"], "SYNTH-POLICY-1")
