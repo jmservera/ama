@@ -37,7 +37,11 @@ EVIDENCE = "constructed local SQLite; not live Hub, Azure SQL or sensor accuracy
 
 
 def demo(seam: float = 0.0, tolerance: float = 0.0) -> dict[str, object]:
-    selected, climate, measures = fixture.selection(), fixture.ConstructedClimate(), fixture.measures()
+    selected, climate, measures = (
+        fixture.selection(),
+        fixture.ConstructedClimate(),
+        fixture.measures(),
+    )
     if os.environ.get("ZF_SENSOR_MSSQL") == "1":
         raise ValueError("the demo is SQLite-only; unset ZF_SENSOR_MSSQL")
     if not math.isfinite(tolerance) or tolerance < 0:
