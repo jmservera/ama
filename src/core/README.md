@@ -4064,8 +4064,9 @@ challenges (FR-052, AC-071, FR-043). `record_digital` and `record_staff` (named 
 in-person, paper or assisted-visit channel) record a challenge against a source, policy or proposal
 version and the human decision, with a human owner, a next-update date and a fixed accessible
 non-digital route statement. `view` shows only permitted explanations. Only the named owner can
-`review` or `resolve` with evidence. A `corrected` outcome marks exactly the transitive dependents
-in the injected dependency graph stale and preserves prior versions; `upheld` and `withdrawn` mark
+`review` or `resolve` with evidence. Graph nodes are `(kind, id, version)` tuples, so a correction
+to `POL-1/v1` does not touch dependents of `POL-1/v2`. A `corrected` outcome marks exactly the
+transitive dependents in the injected dependency graph stale and preserves prior versions; `upheld` and `withdrawn` mark
 nothing. The register has no consent, refusal, sanction, closure or hazard-clock fields and never
 reads or writes them.
 

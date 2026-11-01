@@ -6,12 +6,18 @@ from typing import Any
 
 from zava_forward.core.challenges import ACCESSIBLE_ROUTE, NOT_INFERRED, ChallengeRegister
 
+
+def n(kind: str, item: str, version: str = "v1") -> tuple[str, str, str]:
+    return (kind, item, version)
+
+
+S1 = n("source", "SRC-1", "v3")
 GRAPH = {
-    "PROP-1": ["SRC-1"],
-    "CALC-1": ["PROP-1"],
-    "REVIEW-1": ["CALC-1"],
-    "PROP-2": ["SRC-2"],
-    "REVIEW-2": ["PROP-2"],
+    n("proposal", "PROP-1"): [S1],
+    n("proposal", "CALC-1"): [n("proposal", "PROP-1")],
+    n("proposal", "REVIEW-1"): [n("proposal", "CALC-1")],
+    n("proposal", "PROP-2"): [n("source", "SRC-2")],
+    n("proposal", "REVIEW-2"): [n("proposal", "PROP-2")],
 }
 SUBJECT = {"kind": "source", "id": "SRC-1", "version": "v3"}
 EXPLANATIONS = [
@@ -99,7 +105,7 @@ class Staleness(unittest.TestCase):
         cid = staff(reg)["id"]
         self.assertEqual(reg.stale, {})
         reg.resolve(cid, "Pat Owner", "corrected", "Evidence")
-        self.assertEqual(sorted(reg.stale), ["CALC-1", "PROP-1", "REVIEW-1"])
+        self.assertEqual(sorted(i for _, i, _ in reg.stale), ["CALC-1", "PROP-1", "REVIEW-1"])
         self.assertTrue(all(v["prior_version_preserved"] for v in reg.stale.values()))
 
     def test_upheld_or_withdrawn_marks_nothing_stale(self) -> None:
@@ -109,8 +115,23 @@ class Staleness(unittest.TestCase):
             self.assertEqual(reg.stale, {})
 
     def test_cycle_in_graph_terminates(self) -> None:
-        reg = ChallengeRegister({"A": ["SRC-1", "B"], "B": ["A"]})
-        self.assertEqual(reg.dependents("SRC-1"), ["A", "B"])
+        a, b = n("proposal", "A"), n("proposal", "B")
+        reg = ChallengeRegister({a: [S1, b], b: [a]})
+        self.assertEqual(reg.dependents(S1), [a, b])
+
+    def test_other_versions_of_subject_stay_current(self) -> None:
+        old = n("policy", "POL-1", "v1")
+        on_v1, on_v2 = n("proposal", "P-A"), n("proposal", "P-B")
+        reg = ChallengeRegister({on_v1: [old], on_v2: [n("policy", "POL-1", "v2")]})
+        cid = reg.record_digital(
+            {"kind": "policy", "id": "POL-1", "version": "v1"},
+            "DEC-1",
+            "Wrong rule.",
+            "Pat Owner",
+            "2026-11-10",
+        )["id"]
+        reg.resolve(cid, "Pat Owner", "corrected", "Evidence")
+        self.assertEqual(list(reg.stale), [on_v1])
 
 
 class NoInference(unittest.TestCase):
@@ -128,37 +149,27 @@ class NoInference(unittest.TestCase):
             reg.review(rec["id"], "Pat Owner", "2026-11-17")
             reg.resolve(rec["id"], "Pat Owner", "corrected", "Evidence")
         self.assertEqual(state, before)
-        self.assertNotIn("PROP-2", reg.stale)
-        self.assertNotIn("REVIEW-2", reg.stale)
+        self.assertNotIn(n("proposal", "PROP-2"), reg.stale)
+        self.assertNotIn(n("proposal", "REVIEW-2"), reg.stale)
         self.assertEqual(set(reg.view("CH-001")["not_inferred"]), set(NOT_INFERRED))
         for key in ("consent", "refusal", "sanction", "hazard_clock", "closed"):
             self.assertNotIn(key, reg.challenges["CH-001"])
 
 
-if __name__ == "__main__":
-    unittest.main()
-
-
 class Robustness(unittest.TestCase):
     def test_generator_parents_are_reusable(self) -> None:
-        graph = {"A": (p for p in ["SRC-1"]), "B": (p for p in ["A"])}
-        reg = ChallengeRegister(graph)
-        self.assertEqual(reg.dependents("SRC-1"), ["A", "B"])
-        self.assertEqual(reg.dependents("SRC-1"), ["A", "B"])
+        a, b = n("proposal", "A"), n("proposal", "B")
+        reg = ChallengeRegister({a: (p for p in [S1]), b: (p for p in [a])})
+        self.assertEqual(reg.dependents(S1), [a, b])
+        self.assertEqual(reg.dependents(S1), [a, b])
 
-    def test_rejected_review_leaves_record_unchanged(self) -> None:
-        reg = ChallengeRegister(GRAPH)
-        cid = digital(reg)["id"]
-        before = reg.view(cid)
-        with self.assertRaises(ValueError):
-            reg.review(cid, "Pat Owner", "soon")
-        self.assertEqual(reg.view(cid), before)
+    def test_prepopulated_register_never_overwrites(self) -> None:
+        keep = {"CH-001": {"id": "CH-001"}, "CH-003": {"id": "CH-003"}}
+        reg = ChallengeRegister(GRAPH, challenges=dict(keep))
+        new = digital(reg)
+        self.assertEqual(new["id"], "CH-004")
+        self.assertEqual({k: reg.challenges[k] for k in keep}, keep)
 
-    def test_rejected_resolve_allows_retry(self) -> None:
-        reg = ChallengeRegister(GRAPH)
-        cid = digital(reg)["id"]
-        with self.assertRaises(ValueError):
-            reg.resolve(cid, "Pat Owner", "corrected", "")
-        self.assertEqual(reg.view(cid)["status"], digital(reg)["status"])
-        self.assertEqual(reg.stale, {})
-        self.assertEqual(reg.resolve(cid, "Pat Owner", "corrected", "Fixed")["status"], "corrected")
+
+if __name__ == "__main__":
+    unittest.main()

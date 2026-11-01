@@ -12,6 +12,7 @@ from datetime import date
 from typing import Any
 
 Record = dict[str, Any]
+Node = tuple[str, str, str]
 
 ROUTES = ("digital", "staff_recorded")
 NON_DIGITAL_CHANNELS = ("phone", "in_person", "paper", "assisted_visit")
@@ -33,22 +34,22 @@ def _text(value: object, label: str) -> str:
 
 @dataclass
 class ChallengeRegister:
-    """Challenges plus an injected `{item_id: [upstream item ids]}` dependency graph."""
+    """Challenges plus an injected `{node: [upstream nodes]}` graph; node = (kind, id, version)."""
 
-    dependencies: Mapping[str, Iterable[str]] = field(default_factory=dict)
+    dependencies: Mapping[Node, Iterable[Node]] = field(default_factory=dict)
     challenges: dict[str, Record] = field(default_factory=dict)
-    stale: dict[str, Record] = field(default_factory=dict)
+    stale: dict[Node, Record] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         self.dependencies = {k: tuple(v) for k, v in self.dependencies.items()}
 
-    def dependents(self, item_id: str) -> list[str]:
-        out: set[str] = set()
-        frontier = [item_id]
+    def dependents(self, item: Node) -> list[Node]:
+        out: set[Node] = set()
+        frontier = [item]
         while frontier:
             current = frontier.pop()
             for child, parents in self.dependencies.items():
-                if current in parents and child not in out and child != item_id:
+                if current in parents and child not in out and child != item:
                     out.add(child)
                     frontier.append(child)
         return sorted(out)
@@ -68,7 +69,10 @@ class ChallengeRegister:
         if kind not in SUBJECT_KINDS:
             raise ValueError("Subject kind must be source, policy or proposal.")
         due = date.fromisoformat(next_update).isoformat()
-        cid = f"CH-{len(self.challenges) + 1:03d}"
+        seq = len(self.challenges) + 1
+        while f"CH-{seq:03d}" in self.challenges:
+            seq += 1
+        cid = f"CH-{seq:03d}"
         rec: Record = {
             "id": cid,
             "route": route,
@@ -167,9 +171,11 @@ class ChallengeRegister:
         rec["resolution"] = {"outcome": outcome, "evidence": proof}
         rec["history"].append({"status": outcome, "note": "Resolved with evidence."})
         if outcome == "corrected":
-            for item in self.dependents(rec["subject"]["id"]):
+            subject = rec["subject"]
+            node = (subject["kind"], subject["id"], subject["version"])
+            for item in self.dependents(node):
                 self.stale[item] = {
-                    "reason": f"Upstream {rec['subject']['id']} corrected via {cid}.",
+                    "reason": f"Upstream {subject['id']}/{subject['version']} corrected via {cid}.",
                     "prior_version_preserved": True,
                 }
         return deepcopy(rec)

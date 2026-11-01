@@ -9,3 +9,4 @@
 * Outcome: partially conformant. Open work routed to follow-ups: persist in stores (#130), API/UI, criterion 5 evidence.
 * PR wording: `Refs #220`, naming criterion 5 as unmet.
 * PR #641 Copilot review (3 threads) routed as later work and fixed: generator-backed dependencies, atomic `review` validation, atomic `resolve` validation. Original outcome unchanged.
+* PR #641 second Copilot review (3 threads: ID collision, version-blind staleness, misplaced test entry point) routed as later work and fixed with regression tests. Original outcome unchanged.
