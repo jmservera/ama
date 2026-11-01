@@ -35,3 +35,7 @@ Third addendum: one further Copilot finding (combined replay and send pacing wit
 ## Correction cycle, PR 707
 
 Second-round Copilot threads (2) were valid and fixed. Outcome: conformant for those findings; independent review remains required.
+
+## Correction cycle 2026-11-01 (PR 707 review threads)
+
+Two valid Copilot threads on iot_stream.py fixed: eligibility rechecked after admit_send before send_message, and skipped frames no longer advance the replay clock. Regression added; ruff and touched-file mypy clean; tests.test_iot_stream 33 OK.
