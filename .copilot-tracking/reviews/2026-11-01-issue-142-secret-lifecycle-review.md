@@ -6,3 +6,4 @@ Execution: executed once, self-review of diff against plan P1-P5. Outcome: confo
 * Finding F3 (follow-up): schedule review-status/check in a pipeline (owner choice); confirm alerts evaluate in Azure Monitor.
 * Finding F4 (follow-up): decide whether infra scripts join the ruff format scope.
 Follow-ups ranked: F1, F3, F2, F4.
+Copilot review threads (2): both valid and fixed (whitespace reviewer accepted; creation-only helper advertised as rotation). No new findings routed.

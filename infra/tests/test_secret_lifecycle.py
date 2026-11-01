@@ -125,6 +125,10 @@ class ReviewStatusTests(unittest.TestCase):
         problems = LIFE.review_status(self.record(due="2026-10-01", reviewer=""), NOW)
         self.assertEqual(len(problems), 2)
 
+    def test_whitespace_reviewer_fails(self) -> None:
+        problems = LIFE.review_status(self.record(reviewer="   "), NOW)
+        self.assertEqual(problems, ["no reviewer recorded"])
+
     def test_generated_record_is_not_complete_until_decided(self) -> None:
         record = LIFE.access_review(INVENTORY, [{"principalId": "p1", "roleDefinitionName": "Key Vault Secrets User"}], "R", NOW)
         self.assertTrue(LIFE.review_status(record, NOW))

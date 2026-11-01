@@ -140,7 +140,7 @@ SAFE_ORDER = ("append", "store", "refresh", "verify", "delete_old")
 def review_status(record, now):
     """Problems that stop an access review record counting as completed and current."""
     problems = []
-    if not record.get("reviewer"):
+    if not str(record.get("reviewer") or "").strip():
         problems.append("no reviewer recorded")
     rows = record.get("assignments", [])
     if not rows:
