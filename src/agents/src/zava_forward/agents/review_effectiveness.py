@@ -349,7 +349,7 @@ def run_review_test(golden: Path = GOLDEN) -> dict[str, Any]:
         unauthorised_reviewer_cannot_pass=not unauthorised["gate_passed"]
         and [r["action"] for r in unauthorised["rows"]] == [r["action"] for r in comp["rows"]]
         and all(not r["gate_satisfied"] for r in unauthorised["rows"]),
-        audit_chain_verifies=all(p["audit_verified"] for p in panels.values()),
+        audit_chain_verifies=all(p["audit_verified"] for p in (*panels.values(), unauthorised)),
     )
     return dict(
         version=spec["version"],
