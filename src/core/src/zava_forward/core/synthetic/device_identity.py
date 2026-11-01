@@ -183,6 +183,7 @@ def _teardown_locked(
     """
     owned = {i.device_id for i in manifest.identities}
     explicit = [r for r in (refs if refs is not None else _refs(manifest)) if r]
+    full_run = refs is None
     run_id = manifest.run_id
     try:
         foreign = any(registry.run_of(d) not in (None, run_id) for d in sorted(owned))
@@ -198,7 +199,16 @@ def _teardown_locked(
     except Exception:
         discovered = []
         errors += 1
-    references = list(dict.fromkeys([*explicit, *discovered]))
+    if full_run:
+        try:
+            uncovered = set(registry.list_run(run_id)) - owned
+        except Exception:
+            raise DeviceIdentityError("TEARDOWN_FAILED") from None
+        if uncovered:
+            raise DeviceIdentityError(f"TEARDOWN_MANIFEST_INCOMPLETE:{len(uncovered)}")
+    # Only references the store attributes to this run are revoked; explicit ones cannot widen it.
+    references = list(dict.fromkeys(r for r in explicit if r in set(discovered)))
+    references += [r for r in discovered if r not in references]
     for device_id in sorted(owned):
         try:
             registry.delete(device_id, run_id)

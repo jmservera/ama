@@ -310,6 +310,24 @@ class DeviceIdentityTests(unittest.TestCase):
         self.assertEqual(len(store.run_references("run-002")), 5)
         self.assertEqual(store.run_references("run-001"), [])
 
+    def test_partial_manifest_teardown_is_refused_before_mutation(self) -> None:
+        registry, store = FakeRegistry(), FakeStore()
+        di.provision(di.plan("run-001", "owner-role", sensors()), registry, store)
+        partial = di.plan("run-001", "owner-role", sensors(1))
+        with self.assertRaisesRegex(di.DeviceIdentityError, "MANIFEST_INCOMPLETE"):
+            di.teardown(partial, registry, store)
+        self.assertEqual(len(registry.list_run("run-001")), 5)
+        self.assertEqual(len(store.run_references("run-001")), 5)
+
+    def test_explicit_foreign_reference_is_not_revoked(self) -> None:
+        registry, store = FakeRegistry(), FakeStore()
+        one = di.provision(di.plan("run-001", "owner-role", sensors()), registry, store)
+        registry.devices["SYN-OTHER"] = "run-002"
+        foreign = store.issue("SYN-OTHER", "run-002")
+        di.teardown(one, registry, store, refs=[foreign])
+        self.assertEqual(store.run_references("run-002"), [foreign])
+        self.assertEqual(registry.list_run("run-002"), ["SYN-OTHER"])
+
     def test_stale_manifest_cannot_delete_newer_run(self) -> None:
         registry, store = FakeRegistry(), FakeStore()
         stale = di.provision(di.plan("run-001", "owner-role", sensors()), registry, store)
