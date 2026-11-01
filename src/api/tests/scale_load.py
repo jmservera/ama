@@ -99,7 +99,7 @@ def run(homes: int, sessions: int, rate: float, duration: float) -> dict[str, An
         setup_seconds = time.perf_counter() - started
         statements = itertools.count()
         store.db.set_trace_callback(lambda _: next(statements))
-        app = App(store, PASSWORD)
+        app = App(store, PASSWORD)  # type: ignore[no-untyped-call]
         httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(app))
         stack.callback(httpd.server_close)
         threading.Thread(target=httpd.serve_forever, daemon=True).start()
