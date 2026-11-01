@@ -107,6 +107,11 @@ bound download allocation and every serialized page and correct the active
 Blob runbook without rewriting historical tag receipts. Prior exact-head
 receipts remain historical; fresh local and hosted evidence is separate.
 
+For #185, the proposed (pending owner confirmation) [simulated-device credential lifecycle](./research/iot-sensor-analytics-research-plan.md)
+decision records individual enrolment with one X.509 identity per simulated home,
+Key Vault references only, and owner-run rotation and teardown. Implementation is
+fake-only; live Azure and owner gates remain unmet.
+
 For #190, the [current sensor validation and child dispositions](./research/iot-sensor-analytics-research-plan.md#current-validation-and-child-dispositions-2026-10-30-refs-190)
 record annual offline backfill/replay checks, unchanged isolated scenario
 results and the corrected both-stage dictionary. Per-check engineering evidence

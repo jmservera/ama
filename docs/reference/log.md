@@ -9355,6 +9355,18 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   the index row and made the checker apply each status to its own screen group.
 * Findings stay hypotheses until #155. No accessibility acceptance is claimed.
 
+## [2026-11-01] update | Simulated device identity decision (#185)
+
+* Recorded the proposed individual-enrolment, per-device X.509 credential
+  lifecycle for simulated homes in the IoT research plan and indexed it. The
+  implementation is fake-only; owner confirmation and live Azure gates remain
+  pending and no live resource was touched.
+
+## [2026-11-01] update | Atlas screen trace status refreshed
+
+* Marked `programme-queue`, `technical-queue` and `quality-queue` as merged on
+  main in the atlas screen trace so the status drift check passes.
+
 ## 2026-11-01 coverage baseline register check indexed
 
 * Updated the synthetic MVP baseline index row to mention the opt-in
