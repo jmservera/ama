@@ -1,5 +1,6 @@
 """Atlas-to-screen trace completeness regressions (Refs #233)."""
 
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -83,9 +84,9 @@ class AtlasScreenTraceTests(unittest.TestCase):
 
     def test_status_drift_is_reported(self) -> None:
         js = read(trace.ROLE_SCREENS)
-        doc = self.doc.replace("`quality-queue` (unmerged", "`quality-queue` (main")
+        doc = self.doc.replace("`data-operator` (main", "`ghost-screen` (main")
         gaps = trace.check(self.prd, self.atlas, doc, js)["gaps"]
-        self.assertIn("labelled main but not registered: quality-queue", gaps)
+        self.assertIn("labelled main but not registered: ghost-screen", gaps)
         doc = self.doc.replace("`data-operator` (main", "`data-operator` (unmerged")
         gaps = trace.check(self.prd, self.atlas, doc, js)["gaps"]
         self.assertIn("labelled unmerged but registered: data-operator", gaps)
@@ -93,6 +94,14 @@ class AtlasScreenTraceTests(unittest.TestCase):
     def test_cli_exit_codes(self) -> None:
         self.assertEqual(trace.main(["--root", str(ROOT)]), 0)
         self.assertEqual(trace.main(["--root", str(ROOT / "missing")]), 2)
+
+    def test_missing_registry_is_an_error(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            for rel in (trace.PRD, trace.ATLAS, trace.TRACE):
+                dest = Path(tmp) / rel
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                dest.write_text(read(rel), encoding="utf-8")
+            self.assertEqual(trace.main(["--root", tmp]), 2)
 
 
 if __name__ == "__main__":

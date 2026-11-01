@@ -184,12 +184,11 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     root = args.root or default_root()
     try:
-        screens = root / ROLE_SCREENS
         report = check(
             (root / PRD).read_text(encoding="utf-8"),
             (root / ATLAS).read_text(encoding="utf-8"),
             (root / TRACE).read_text(encoding="utf-8"),
-            screens.read_text(encoding="utf-8") if screens.exists() else None,
+            (root / ROLE_SCREENS).read_text(encoding="utf-8"),
         )
     except OSError as error:
         print(f"error: {error}", file=sys.stderr)
