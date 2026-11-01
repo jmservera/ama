@@ -71,7 +71,7 @@ def handover_blockers(c):
             if held:
                 why.append("Retrofit work is stopped for safety review.")
             binding = rec.get("resident_binding")
-            why += resident_gate(c, [binding] if binding else None)
+            why += resident_gate(c, [binding] if binding else [])
         out += [dict(measure=measure, reason=r) for r in why]
     return out
 

@@ -14,3 +14,5 @@ Verdict on closing: accessibility criterion unproven, so the PR uses Refs.
 Routed follow-ups: browser keyboard and axe check for both screens, validation in #155, queue-level cross-home technical ordering.
 
 Addendum (PR review, original outcome preserved): five Copilot findings were valid and fixed as above; handover readiness now consumes a server-provided blocker list rather than client inference.
+
+Addendum (second PR review round): the Copilot finding on unbound accepted quality evidence was valid. `handover_blockers` now passes an empty binding list to `resident_gate` when a record has no `resident_binding`, matching `hand_over_quality`, so the reader reports "Resident scope is unknown." Regression: `HandoverBlockersTest.test_accepted_record_without_binding_is_blocked_as_unknown_scope`.

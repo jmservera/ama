@@ -2125,3 +2125,16 @@ class HandoverBlockersTest(unittest.TestCase):
         for items, blocked in ((full, False), ([], True), (full[:2], True)):
             case = dict(quality=[dict(base, items=items)], hazards=[dict(released=False)])
             self.assertEqual(bool(handover_blockers(case)), blocked)
+
+    def test_accepted_record_without_binding_is_blocked_as_unknown_scope(self):
+        from zava_forward.core.quality import CHECKLISTS, handover_blockers
+
+        labels = CHECKLISTS["Loft insulation"]["items"]
+        full = [dict(label=x, evidence="seen") for x in labels]
+        case = dict(
+            quality=[dict(measure="Loft insulation", checklist="Loft insulation", state="Accepted", items=full)],
+            hazards=[],
+        )
+        self.assertEqual(
+            [b["reason"].split(".")[0] for b in handover_blockers(case)], ["Resident scope is unknown"]
+        )
