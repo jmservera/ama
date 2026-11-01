@@ -187,10 +187,12 @@ const choiceRoles = ["Resident Liaison Officer", "Retrofit Coordinator", "Retrof
 const choiceStop = new Set(["Paused", "Withdrawn"]);
 const choiceLatest = (m) => (m.versions || []).at(-1);
 const choiceBinding = (v) => `scope ${screenValue(v.scope)}, revision ${screenValue(v.context_revision)}, design ${screenValue(v.design_version)}`;
-const choiceStopped = (m) => {
-  const v = choiceLatest(m);
-  return choiceStop.has(m.status) || (v && choiceStop.has(v.status) && m.review?.status === "Needs human review");
+const choiceStopVersion = (m) => {
+  if (m.review?.status !== "Needs human review") return null;
+  const v = (m.versions || []).find((x) => x.version === m.review.decision_version);
+  return v && choiceStop.has(v.status) ? v : null;
 };
+const choiceStopped = (m) => choiceStop.has(m.status) || choiceStopVersion(m) !== null;
 function choiceMeasure(m) {
   const v = choiceLatest(m);
   const ctx = m.context ? `scope ${screenValue(m.context.scope)}, revision ${screenValue(m.context.revision)}, design ${screenValue(m.context.design_version)}` : "Current scope not recorded";
@@ -221,8 +223,8 @@ registerRoleScreen({
         stopped.length ? screenTable("Measures paused or withdrawn",
           ["Measure", "State and scope answered", "In their words", "Restart needs"],
           stopped.map((m) => {
-            const v = choiceLatest(m);
-            const state = choiceStop.has(m.status) ? m.status : `${v.status} (current answer ${m.status})`;
+            const v = choiceStopVersion(m) || choiceLatest(m);
+            const state = choiceStop.has(m.status) && v === choiceLatest(m) ? m.status : `${v.status} (current answer ${m.status})`;
             return [m.measure, v ? `${state}, ${choiceBinding(v)}` : state, v?.note, "Human review before any restart"];
           }))
           : h("p", { class: "empty" }, "No measure is currently paused or withdrawn in the recorded answers.")),

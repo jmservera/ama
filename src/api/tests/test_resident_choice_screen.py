@@ -133,7 +133,7 @@ class ResidentChoiceScreen(unittest.TestCase):
                     "status": "Not recorded",
                     "readiness": "Needs human review",
                     "context": {"scope": "S-10", "revision": 3, "design_version": 4},
-                    "review": {"status": "Needs human review"},
+                    "review": {"status": "Needs human review", "decision_version": 1},
                     "versions": [
                         {
                             "version": 1,
@@ -154,6 +154,44 @@ class ResidentChoiceScreen(unittest.TestCase):
             "Withdrawn (current answer Not recorded), scope S-9, revision 2, design 3", text
         )
         self.assertIn("Changed my mind", text)
+
+    def test_stop_followed_by_waiting_keeps_stopped_answer_scope_and_note(self) -> None:
+        case = {
+            "id": "C-4",
+            "measure_decisions": [
+                {
+                    "measure": "Solar PV",
+                    "status": "Waiting",
+                    "readiness": "Needs human review",
+                    "context": {"scope": "S-11", "revision": 4, "design_version": 5},
+                    "review": {"status": "Needs human review", "decision_version": 1},
+                    "versions": [
+                        {
+                            "version": 1,
+                            "status": "Paused",
+                            "answered_by": "The resident",
+                            "scope": "S-9",
+                            "context_revision": 2,
+                            "design_version": 3,
+                            "note": "Not before spring",
+                        },
+                        {
+                            "version": 2,
+                            "status": "Waiting",
+                            "answered_by": "The resident",
+                            "scope": "S-11",
+                            "context_revision": 4,
+                            "design_version": 5,
+                            "note": "Still thinking",
+                        },
+                    ],
+                }
+            ],
+        }
+        text = json.dumps(run(case)["tree"])
+        self.assertNotIn("No measure is currently paused or withdrawn", text)
+        self.assertIn("Paused (current answer Waiting), scope S-9, revision 2, design 3", text)
+        self.assertIn("Not before spring", text)
 
     def test_no_controls_and_no_contact(self) -> None:
         tree = run(CASE)["tree"]

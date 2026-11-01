@@ -12,3 +12,9 @@
 * Fixed: latest recorded answer cell shows its own scope, context revision and design version.
 * Tests: two new node-vm assertions (version binding, stale stop with review). Unit, ruff and both browser selectors (parent, 232) pass locally.
 * CI: merged origin/main for drift failures. `assistant_release.py` on main has a syntax error (lines 183-184, from #658); out of scope, so not changed here and verified locally with a temporary uncommitted workaround. The activation check failed on a GitHub API quota guardrail (transient).
+
+## Review-thread corrections, round 2 (PR #652)
+
+* Fixed: the paused or withdrawn panel resolves the stopped answer through `review.decision_version` while the review needs human attention, so a pause or withdrawal followed by a `Waiting` answer stays visible with that answer's scope and note.
+* Tests: new `test_stop_followed_by_waiting_keeps_stopped_answer_scope_and_note`; existing stale-stop fixture now carries `decision_version` as real data does. Unit tests and ruff pass.
+* CI: `conclusion` failure is the rubric workflow lacking permission to comment (`Resource not accessible by integration`) and `rubric/score` is pending; not a code failure, no source change.
