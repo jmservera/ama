@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import json
 import unittest
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 from unittest.mock import patch
@@ -214,6 +215,36 @@ class RegulatoryGates(unittest.TestCase):
             list(rule_rows(11))
         empty = regulatory_gates.evaluate_rules([])
         self.assertEqual(empty["hazard_misses"]["status"], "not_evaluated")
+
+    def test_model_run_requires_finite_unexpired_owner_authority(self) -> None:
+        now = datetime(2026, 11, 1, tzinfo=UTC)
+        auth = dict(
+            owner="Juan Manuel Servera",
+            expires_at="2026-12-01T00:00:00+00:00",
+            model_calls_limit=10,
+            tokens_limit=1000,
+            budget_limit=5,
+        )
+        ask = dict(model_calls=10, tokens=1000, budget=5)
+        self.assertTrue(regulatory_gates.authorise_model_run(auth, ask, now)["allowed"])
+        self.assertFalse(regulatory_gates.authorise_model_run(None, ask, now)["allowed"])
+        for patch_ in (
+            dict(expires_at="2026-10-01T00:00:00+00:00"),
+            dict(expires_at="2026-12-01T00:00:00"),
+            dict(expires_at=None),
+            dict(owner=""),
+            dict(owner="   "),
+            dict(owner=True),
+            dict(owner=["Juan Manuel Servera"]),
+            dict(tokens_limit=0),
+            dict(budget_limit=None),
+            dict(budget_limit=float("inf")),
+            dict(model_calls_limit=True),
+        ):
+            decision = regulatory_gates.authorise_model_run({**auth, **patch_}, ask, now)
+            self.assertFalse(decision["allowed"], patch_)
+        over = regulatory_gates.authorise_model_run(auth, {**ask, "tokens": 1001}, now)
+        self.assertEqual(over["reasons"], ["tokens request outside limit"])
 
     def test_no_comparison_evidence_keeps_cards_only_even_with_perfect_checks(self) -> None:
         variants: tuple[list[dict[str, Any]], ...] = ([], self.paired)

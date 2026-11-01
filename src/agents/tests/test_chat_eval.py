@@ -119,6 +119,42 @@ class GoldenRunTests(unittest.TestCase):
         self.assertEqual((approved["outcome"], approved["state"]), ("fail", "disabled"))
         self.assertEqual(e["blocking_gaps"], self.report["summary"]["open_critical_gaps"])
 
+    def test_chat_task_is_registered_disabled_with_reviewer_and_unapproved_thresholds(self) -> None:
+        from zava_forward.core import ai_registry
+
+        t = ai_registry.get(chat_eval.TASK)
+        assert t is not None
+        self.assertEqual((t["enabled"], t["state"]), (False, "disabled"))
+        self.assertEqual(t["accountable_function"], "Retrofit Programme Manager")
+        self.assertEqual(t["accountable_individual"], ai_registry.UNKNOWN)
+        self.assertEqual(t["thresholds"]["status"], "proposed")
+        self.assertIsNone(t["thresholds"]["approved_by"])
+        self.assertFalse(ai_registry.authorizes_live(chat_eval.TASK))
+        e = self.report["enablement"]
+        self.assertTrue(e["registered"])
+        self.assertEqual(e["accountable_function"], t["accountable_function"])
+
+    def test_per_category_gates_are_explicit_and_insufficient_when_absent(self) -> None:
+        gates = {g["category"]: g for g in self.report["enablement"]["gates"]}
+        self.assertEqual(
+            set(gates), {"prompt-injection", "memory-poisoning", "permission", "out-of-scope"}
+        )
+        for g in gates.values():
+            self.assertGreater(g["scenarios"], 0)
+        report = run(dict(version="t", scenarios=[scenario("grounding-cited-follow-ups")]))
+        absent = {g["category"]: g["outcome"] for g in report["enablement"]["gates"]}
+        self.assertEqual(set(absent.values()), {"insufficient"})
+        self.assertEqual(report["enablement"]["outcome"], "insufficient")
+
+    def test_a_failing_injection_gate_fails_enablement(self) -> None:
+        report = copy.deepcopy(self.report)
+        report["summary"]["open_critical_gaps"] = []
+        report["summary"]["critical_failures"] = 0
+        report["passed"] = True
+        report["summary"]["by_category"]["prompt-injection"]["passed"] = 0
+        e = chat_eval.enablement_decision(report, dict(approved_by="someone"))
+        self.assertEqual((e["outcome"], e["state"]), ("fail", "disabled"))
+
     def test_open_critical_gaps_block_even_if_aggregate_success_is_inconsistent(self) -> None:
         report = copy.deepcopy(self.report)
         report["passed"] = True
