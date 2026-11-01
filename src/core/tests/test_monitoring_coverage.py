@@ -68,7 +68,11 @@ class IndicatorTests(unittest.TestCase):
         result = _evaluate(threshold={"constructed": True, "limit": 0.1})
         self.assertEqual(result["status"], mc.BLOCKED)
         self.assertTrue(result["offline_only"])
-        huge = {"constructed": True, "limit": 10**400, "min_sample": 5}
+        huge: dict[str, float | bool | str] = {
+            "constructed": True,
+            "limit": 10**400,
+            "min_sample": 5,
+        }
         self.assertEqual(_evaluate(threshold=huge)["status"], mc.BLOCKED)
 
     def test_insufficient_samples_and_window(self) -> None:
