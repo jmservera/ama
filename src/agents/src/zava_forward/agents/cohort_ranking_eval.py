@@ -20,6 +20,7 @@ Run: python3 -m zava_forward.agents.cohort_ranking_eval [--json] [--defects]
 import copy
 import json
 import sys
+from collections import Counter
 from collections.abc import Callable
 from typing import Any
 
@@ -159,7 +160,11 @@ def observe(
     cases: list[Case], manifest: dict[str, Any], rank_fn: Ranker | None = None
 ) -> list[dict[str, Any]]:
     """Compare precedence among retained cases, so an exclusion cannot hide a demotion."""
-    ranked = {e["id"]: e for e in (rank_fn or _rank)(cases)}
+    raw = list((rank_fn or _rank)(cases))
+    ranked = {e["id"]: e for e in raw}
+    manifest_ids = {m["id"] for m in manifest["cases"]}
+    stray = [e["id"] for e in raw if e["id"] not in manifest_ids]
+    repeated = [i for i, n in Counter(e["id"] for e in raw).items() if n > 1 and i in manifest_ids]
     retained = [m for m in manifest["cases"] if m["id"] in ranked]
     observed = []
     for m in manifest["cases"]:
@@ -178,7 +183,12 @@ def observe(
                 outcome = "review"
             else:
                 outcome = "ranked"
-        observed.append({"id": m["id"], "outcome": outcome})
+        row = {"id": m["id"], "outcome": outcome}
+        if entry is not None and "support_unknown" in entry["reason_codes"]:
+            row["review_required"] = True
+        observed.append(row)
+    # Malformed ranker output stays visible so the evaluator blocks on it.
+    observed += [{"id": i, "outcome": "ranked"} for i in stray + repeated]
     return observed
 
 

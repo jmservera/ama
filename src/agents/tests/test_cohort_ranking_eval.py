@@ -168,6 +168,38 @@ class CohortRankingEvalTests(unittest.TestCase):
         outcomes = {o["id"]: o["outcome"] for o in cre.observe(out, manifest)}
         self.assertEqual(outcomes["history-2-b"], "deprioritised")
 
+    def test_malformed_ranker_output_fails_closed(self) -> None:
+        def with_extra(extra: str) -> Any:
+            def fn(cases: list[dict[str, Any]]) -> list[dict[str, Any]]:
+                out = list(ranking.rank(cases))
+                return out + [
+                    dict(
+                        out[0] if extra == "dup" else out[0],
+                        id=out[0]["id"] if extra == "dup" else "not-in-manifest",
+                    )
+                ]
+
+            return fn
+
+        for kind, text in (("dup", "duplicate observed"), ("stray", "not in the manifest")):
+            rec = cohort_eval.evaluate(*self._manifest_and_observed(with_extra(kind)))
+            self.assertEqual(rec["status"], "blocked", kind)
+            self.assertTrue(any(text in b["detail"] for b in rec["blockers"]), kind)
+
+    def test_demoted_unknown_support_case_keeps_review_burden(self) -> None:
+        cases, manifest = cre.build()
+        manifest["approval"] = dict(cre.MOCK_APPROVAL)
+        base = cohort_eval.evaluate(manifest, cre.observe(cases, manifest))
+        out = [copy.deepcopy(c) for c in cases]
+        next(c for c in out if c["id"] == "source-0-b")["days_in_stage"] = 1
+        rec = cohort_eval.evaluate(manifest, cre.observe(out, manifest))
+        label = manifest["cohorts"]["source_completeness"][1]
+        row = rec["dimensions"]["source_completeness"]["cohorts"][label]
+        self.assertEqual(
+            row["review"], base["dimensions"]["source_completeness"]["cohorts"][label]["review"]
+        )
+        self.assertGreater(row["errors"], 0)
+
     def test_main_prints_summary(self) -> None:
         with contextlib.redirect_stdout(io.StringIO()) as out:
             self.assertEqual(cre.main(["--defects"]), 0)

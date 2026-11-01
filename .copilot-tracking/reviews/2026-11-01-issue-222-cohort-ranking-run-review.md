@@ -9,3 +9,4 @@
 
 * Execution: five Copilot threads assessed once. Four fixed in code with regression tests (field coverage, paired accessibility days, relative-precedence comparison, no public approval path). One is valid but not self-clearable: owner approval before implementation is missing; recorded as an open blocker needing owner authorization or PR #421 approval. Outcome: partially conformant; PR remains `Refs #222`.
 * Correction cycle 2: review thread on observe precedence rule resolved; no scope change.
+* Correction cycle 3 (PR #697): merged origin/main (restored a syntax-broken role-screens.js); fixed two threads: observe now emits unknown-ID and duplicate-ID ranker rows so the evaluator blocks, and a review_required observation flag keeps review burden accurate when a partial-source case is also demoted. New tests added; ruff, format, mypy and cohort tests pass.
