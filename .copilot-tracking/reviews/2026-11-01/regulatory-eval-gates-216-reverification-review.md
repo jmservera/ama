@@ -18,4 +18,4 @@ Outcome: conformant for the documentation-only scope; the issue itself is not fu
 
 ## PR keyword decision
 
-`Refs #216` only; the first two criteria in the issue and the paired comparison remain unproven.
+`Refs #216` only; the hazard-miss criterion stays met locally; the outstanding criteria are citation/refusal gates with owner agreement and held-out grading, the paired comparison / cards-alone shipment, and the owner-authorised model-run evaluation.

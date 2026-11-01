@@ -20,3 +20,8 @@ None. No source, test, threshold or report change; the committed report was repr
 
 Focused tier: 32 unittest tests OK; `ruff check`, `ruff format --check`, `mypy src` clean in `src/agents`.
 No heavy local gate; CI is the evidence.
+
+## Review thread correction
+
+* Research table: Tokenomics and model-run rows changed from Met to Partial, preserving the verified Unknown-cost and zero-call facts.
+* Review: PR keyword decision no longer calls the hazard-miss criterion unproven; it names the outstanding criteria explicitly.

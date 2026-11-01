@@ -31,8 +31,8 @@ criteria, and what is the smallest demo-ready slice?
 | Paired comparison / cards alone | Unmet: no staff trial; `cards_only` recommended |
 | Out-of-cadence labelled | Met locally |
 | Per check, no overall pass | Met |
-| Tokenomics cost per accepted check or Unknown | Met as Unknown with inputs named; no measured comparison |
-| Finite owner-authorised model-run limits | Met offline (zero limits, no authority); no model run exists |
+| Tokenomics cost per accepted check or Unknown | Partial: Unknown cost recorded with inputs named (verified); paired comparison and cards-alone shipment unproven, no measured comparison |
+| Finite owner-authorised model-run limits | Partial: zero-call offline limits verified (zero limits, no authority); no owner-authorised model evaluation exists |
 
 ## Conclusion
 
