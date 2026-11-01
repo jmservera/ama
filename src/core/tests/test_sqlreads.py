@@ -318,11 +318,17 @@ class Scale(unittest.TestCase):
             io_writers = int(os.environ.get("ZF_BENCH_IO_CONTENTION", "0"))
             writers = []
 
+            writer_failures = []
+
             def check_writers():
                 for pr in writers:
                     if not pr.is_alive():
-                        self.fail(f"IO writer exited early (exitcode {pr.exitcode}); "
-                                  "contention run is not valid evidence")
+                        writer_failures.append(f"IO writer exited early (exitcode {pr.exitcode}); "
+                                               "contention run is not valid evidence")
+
+            def fail_on_writers(context):
+                if writer_failures:
+                    self.fail(f"{writer_failures[0]}; timings: {context}")
 
             if io_writers:
                 import multiprocessing
@@ -360,11 +366,12 @@ class Scale(unittest.TestCase):
             t = time.perf_counter()
             s.counts(pam)
             print(f"[timing] SQL header counts, {self.N:,} cases: {(time.perf_counter() - t) * 1000:.0f} ms")
+            check_writers()
+            context = "; ".join(timings) + f"; after: {load_sample()}"
+            fail_on_writers(context)
             self.assertEqual(first["ranked_total"], sum(not c["closed"] for c in s.cases.values()))
             self.assertEqual(first["items"][0]["rank"], 1)
             self.assertEqual(deep["items"][0]["rank"], 51)
-            check_writers()
-            context = "; ".join(timings) + f"; after: {load_sample()}"
             for ms in (ms1, ms2, ms3, ms4, ms5, ms6, ms7):
                 self.assertLess(ms, 1500, f"timings: {context}")
             order = [e["id"] for e in ranking.rank([c for c in s.cases.values() if not c["closed"]])]
