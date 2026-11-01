@@ -11,6 +11,7 @@ ms.date: 2026-11-01
 
 * PR #638 review follow-up: edits now carry the full corrected statement (supported claims plus required topics); `replacement_effective` validates the final text and feeds the gate, detection, correction and `uncorrected_defects` metrics; reports keep per-case `source_hashes`; the workflow-only baseline runs one review per proposal with the same effort model; added negative tests for ineffective edits.
 * CI fixes: registered the golden in `src/agents/evals/registry.json` and `provenance-register.json` (DS-REVIEW-EFFECTIVENESS) and labelled its description as constructed and synthetic.
+* Second PR #638 follow-up: seeded runs fail when `ai_run` does not return AI output (for example `ZF_AI=off`); `replacement_effective` compares complete semicolon-delimited statements, so numeric prefixes such as `120` or `10` no longer pass; edited controls are validated against source facts in the gate; tests added for each.
 
 ## Validation
 

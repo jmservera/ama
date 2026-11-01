@@ -82,15 +82,12 @@ def replacement_effective(
 ) -> bool:
     """An edit corrects a defect only if the final text states source facts and drops the error."""
     text = rec.get("override_text") or ""
-    topics = {c["topic"] for c in prop["claims"] if c["topic"] in facts} | set(required)
-    if not text or not all(f"{t} is {facts[t]}" in text for t in topics if t in facts):
-        return False
-    for c in prop["claims"]:
-        if c["topic"] not in facts and c["topic"] in text:
-            return False
-        if facts.get(c["topic"]) != c["asserted"] and f"{c['topic']} is {c['asserted']}" in text:
-            return False
-    return True
+    statements = {x.strip() for x in text.split(";") if x.strip()}
+    topics = {c["topic"] for c in prop["claims"] if c["topic"] in facts} | {
+        t for t in required if t in facts
+    }
+    expected = {f"{t} is {facts[t]}" for t in topics}
+    return bool(statements) and statements == expected
 
 
 def competent(
@@ -152,6 +149,8 @@ def gate_satisfied(
         return True, "defect corrected or rejected with source and reason"
     if action == "reject":
         return False, "correct control rejected"
+    if action == "edit" and not replacement_effective(prop, rec, facts or {}, required or []):
+        return False, "edited control no longer matches source facts"
     return True, "control accepted"
 
 
@@ -180,6 +179,11 @@ def run_panel(name: str, panel: Panel, spec: dict[str, Any], workdir: str) -> di
     for prop in spec["proposals"]:
         output[0] = prop["output"]
         rec_view = store.ai_run(OWNER, spec["case"]["id"], spec["task"])
+        if rec_view["source"] != "ai":
+            raise RuntimeError(
+                f"seeded proposal {prop['id']} was not served as AI output "
+                f"(source={rec_view['source']}); check ZF_AI"
+            )
         action, reason, text, units = panel(prop, facts, rec_view, spec["required_topics"])
         store.review_ai(OWNER, rec_view["record_id"], action, reason, text)
         rec = next(r for r in store.data["recommendations"] if r["id"] == rec_view["record_id"])

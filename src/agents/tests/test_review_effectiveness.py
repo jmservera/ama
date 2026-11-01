@@ -72,6 +72,36 @@ class ReviewEffectivenessTests(unittest.TestCase):
         good = dict(rec, override_text="Days in stage is 12; Open safety issues is 1")
         self.assertTrue(re_.gate_satisfied(prop, good, labels, facts, required)[0])
 
+    def test_prefix_collisions_and_edited_controls_fail(self) -> None:
+        props = {p["id"]: p for p in json.loads(re_.GOLDEN.read_text())["proposals"]}
+        facts = {"Days in stage": "12", "Open safety issues": "1", "Owner": "Eval Owner"}
+        base = dict(review_evidence=dict(reviewer="a@b"), status="Edited", reviewer_action="edit")
+        wrong = dict(base, reviewer_reason=f"x {re_.SOURCE_TAG}Days in stage: 12]")
+        wrong["override_text"] = "Days in stage is 120; Open safety issues is 10"
+        req = ["Open safety issues"]
+        self.assertFalse(re_.replacement_effective(props["D-WRONG"], wrong, facts, req))
+        self.assertFalse(
+            re_.gate_satisfied(props["D-WRONG"], wrong, ["Days in stage: 12"], facts, req)[0]
+        )
+        ctl = dict(
+            base,
+            reviewer_reason="",
+            override_text="Owner is Eval Previous; Open safety issues is 0",
+        )
+        self.assertFalse(re_.gate_satisfied(props["C-2"], ctl, [], facts, req)[0])
+        ok = dict(ctl, override_text="Owner is Eval Owner; Open safety issues is 1")
+        self.assertTrue(re_.gate_satisfied(props["C-2"], ok, [], facts, req)[0])
+
+    def test_non_ai_output_fails_seeded_run(self) -> None:
+        import os
+        import tempfile
+        from unittest import mock
+
+        spec = json.loads(re_.GOLDEN.read_text())
+        with mock.patch.dict(os.environ, {"ZF_AI": "off"}), tempfile.TemporaryDirectory() as tmp:
+            with self.assertRaises(RuntimeError):
+                re_.run_panel("competent", re_.competent, spec, tmp)
+
     def test_gate_refuses_accepted_defect_and_unresolvable_source(self) -> None:
         labels = ["Owner: Eval Owner"]
         defect = dict(defect="wrong")

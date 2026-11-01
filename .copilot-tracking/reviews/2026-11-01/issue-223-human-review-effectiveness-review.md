@@ -25,6 +25,8 @@ Partial. AC-070 as written needs competent human reviewers; not evidenced. PR us
 
 Copilot review findings on edit completeness, ineffective-edit validation, source-hash retention and workflow effort comparability were fixed with tests; failing src-agents (eval registry) and src-core (provenance register) checks were fixed. Outcome above is unchanged.
 
+Second follow-up: non-AI seeded runs, numeric-prefix edit collisions and unvalidated edited controls were fixed with tests. Outcome unchanged.
+
 ## Follow-ups
 
 1. Run an authorised human reviewer protocol once OQ-017 authority is decided.
