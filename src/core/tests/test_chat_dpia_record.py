@@ -67,7 +67,7 @@ class ChatDpiaRecordGuard(unittest.TestCase):
     def test_retention_is_unknown_in_the_record(self) -> None:
         for row in cp.DATA_MAP:
             if row["id"] in {"message", "thread", "memory"}:
-                self.assertIn("Unknown", row["retention"])
+                self.assertTrue(row["retention"].startswith("Unknown"), row["id"])
         lines = [
             line for line in section(self.text, "Data map").splitlines() if line.startswith("|")
         ]
