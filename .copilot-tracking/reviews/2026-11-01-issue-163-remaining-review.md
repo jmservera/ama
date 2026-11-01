@@ -1,5 +1,7 @@
-# Issue 163 remaining criteria review (2026-11-01)
-
+---
+title: "Issue 163 remaining criteria review (2026-11-01)"
+ms.date: 2026-11-01
+---
 Review executed once. Outcome: conformant for scope (evidence-only change, no unsupported claims).
 
 * Criteria 2 and 5 stay unmet and are not claimed. Human DPO and Legal approval is not substituted.

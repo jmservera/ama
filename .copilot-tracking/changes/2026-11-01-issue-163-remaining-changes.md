@@ -1,5 +1,7 @@
-# Issue 163 remaining criteria changes (2026-11-01)
-
+---
+title: "Issue 163 remaining criteria changes (2026-11-01)"
+ms.date: 2026-11-01
+---
 * Source, tests and DPIA record: no changes.
 * Added the dated research, plan, changes and review artifacts for this task only.
 * Divergence: none. Amendments: none.

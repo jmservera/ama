@@ -1,5 +1,7 @@
-# Issue 163 remaining criteria plan (2026-11-01)
-
+---
+title: "Issue 163 remaining criteria plan (2026-11-01)"
+ms.date: 2026-11-01
+---
 Research: [research](../research/2026-11-01-issue-163-remaining-research.md)
 
 * [x] Confirm unmet criteria against merged PRs and main artifacts.
