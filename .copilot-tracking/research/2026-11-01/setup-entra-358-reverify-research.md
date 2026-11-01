@@ -1,4 +1,7 @@
-# Issue 358 re-verification research (2026-11-01)
+---
+title: Issue 358 re-verification research
+ms.date: 2026-11-01
+---
 
 Base: origin/main 81cf0c9e2. Task slug: setup-entra-358-reverify. Research disposition: executed. Planning Readiness: Ready.
 

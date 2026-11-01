@@ -1,4 +1,7 @@
-# Issue 358 re-verification changes (2026-11-01)
+---
+title: Issue 358 re-verification changes
+ms.date: 2026-11-01
+---
 
 * Added research, plan, changes, review and state artifacts for setup-entra-358-reverify.
 * No source, test or infra changes; ruff and mypy not applicable (no Python file touched).

@@ -1,4 +1,7 @@
-# Issue 358 re-verification review (2026-11-01)
+---
+title: Issue 358 re-verification review
+ms.date: 2026-11-01
+---
 
 Review executed: once. Outcome: conformant for in-bounds criteria; one criterion routed.
 
