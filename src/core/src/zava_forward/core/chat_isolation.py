@@ -84,6 +84,16 @@ class ChatIsolation:
             export_fields.status_inputs(self.store._case(case_id))
             return export_fields.chat_case(d)
 
+    def case_facts(self, user, case_id):
+        """Recorded facts for the stateless rules reply, from the user's own projection. None when out of scope."""
+        from zava_forward.core.chat_case_answers import case_facts
+        with self.store.lock:
+            d = self.store.detail(case_id, user)
+            if d is None:
+                return None
+            export_fields.status_inputs(self.store._case(case_id))
+            return case_facts(d, reason_visible=projection.can_see_reason(user))
+
     def memory_for(self, user, task=""):
         """Opt-in, switch-gated and labelled non-authoritative items from the #285 lifecycle; empty unless active."""
         return self.privacy.prompt_memory(user, task)
