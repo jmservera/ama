@@ -16,7 +16,7 @@ Date: 2026-11-01. Plan: `.copilot-tracking/plans/2026-11-01-issue-691-employee-l
 
 ## Divergences
 
-Leaflet 500 cause is outside the app process (not reproducible; Log Analytics blocked by network perimeter); not claimed fixed.
+Leaflet 500 producing component is unproven (not reproducible locally; Log Analytics blocked by network perimeter); ingress or auth is a hypothesis and application failure is not excluded; not claimed fixed.
 
 ## Correction cycle 2026-11-01
 

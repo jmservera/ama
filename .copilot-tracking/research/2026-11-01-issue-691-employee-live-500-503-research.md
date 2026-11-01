@@ -15,7 +15,7 @@ Date: 2026-11-01. Task slug: `issue-691-employee-live-500-503`. Disposition: exe
 
 ## Findings
 
-1. `/vendor/leaflet.js` 500: not reproducible in the app; no application code path produces 500 and no traceback exists. The status is produced outside the Python process (Container Apps ingress or built-in auth layer, observed during a scale-from-zero revision swap). Cause remains unresolved with evidence above. The app-side gap is that responses are invisible: there is no request or error log line. Fix scoped here: log every >=500 response and every non-200/304 static asset response with method, path and status, plus a regression test that full-length `leaflet.js` is served for GET, HEAD, `?v=`, conditional and concurrent requests.
+1. `/vendor/leaflet.js` 500: not reproducible in the app; no application code path produces 500 and no traceback exists. The producing component is unproven while ingress and auth logs are unavailable; Container Apps ingress or the built-in auth layer during a scale-from-zero revision swap is a hypothesis only, and an application failure is not excluded. Cause remains unresolved with evidence above. The app-side gap is that responses are invisible: there is no request or error log line. Fix scoped here: log every >=500 response and every non-200/304 static asset response with method, path and status, plus a regression test that full-length `leaflet.js` is served for GET, HEAD, `?v=`, conditional and concurrent requests.
 2. 503 `/api/account/photo`: expected. `profile.own_photo` raises `PhotoError(503)` when `X-MS-TOKEN-AAD-ACCESS-TOKEN` is absent (token store not set up). `loadPhoto` already shows the message; the error was visible only as a browser network line.
 3. 503 `/api/law/alerts`: expected when the law store is not loaded (`server.py` "The law store is not loaded.") or rule alerts are unavailable. `chat.js` shows raw server text prefixed "Alert coverage unknown".
 4. 403 `/api/assistants` and `/api/chat/regulatory/status`: expected denial for the Application Administrator role (shows every option, acts on none; `assistants.registry` raises "Staff assistance only", `_regulatory_access` denies). `chat.js` still calls both and shows raw text prefixed "unavailable".
@@ -29,7 +29,7 @@ Date: 2026-11-01. Task slug: `issue-691-employee-live-500-503`. Disposition: exe
 
 ## Acceptance criteria mapping
 
-* Criterion 1 (cause identified and fixed with regression test): partially met. Cause evidence recorded as outside the app; observability fix and regression test added. Not proven fixed.
+* Criterion 1 (cause identified and fixed with regression test): partially met. Producing component unproven (ingress or auth is a hypothesis, application not excluded); observability fix and regression test added. Not proven fixed.
 * Criterion 2: met by classification above plus UI change and tests.
 * Criterion 3: live re-check marked pending the next deploy.
 
