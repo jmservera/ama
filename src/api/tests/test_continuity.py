@@ -76,6 +76,13 @@ class Suspension(Base):
         self.assertEqual(r["source"], "template")
         self.assertEqual(r["reason"], fresh.continuity_block("priority"))
 
+    def test_all_task_candidate_lists_disabled_chat_without_throwing(self):
+        c = continuity.candidate(self.store, self.store.db, continuity.ALL)
+        chat = next(v for v in c["versions"] if v["task"] == "chat-case-conversation")
+        self.assertIsNone(chat["release"])
+        self.assertTrue(chat["missing"])
+        self.assertTrue(self.suspend()["id"])
+
     def test_invoke_refused_while_suspended_then_allowed_after_restart(self):
         s = self.suspend()
         held = self.service.invoke(self.pm, "stock-prioritisation", "ZF-1")
