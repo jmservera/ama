@@ -183,7 +183,7 @@ class HazardConcern(unittest.TestCase):
         for key in ("hazard_clock", "sanction", "refusal", "consent"):
             self.assertNotIn(key, urgent)
 
-    def test_staff_route_and_resolution_close_referral_listing(self) -> None:
+    def test_resolution_keeps_referral_listed_until_evidenced_handoff(self) -> None:
         reg = ChallengeRegister(GRAPH)
         rec = reg.record_staff(
             "Sam Staff",
@@ -196,7 +196,13 @@ class HazardConcern(unittest.TestCase):
             hazard_concern=True,
         )
         self.assertEqual(len(reg.hazard_referrals()), 1)
-        reg.resolve(rec["id"], "Pat Owner", "upheld", "Referred and checked.")
+        reg.resolve(rec["id"], "Pat Owner", "upheld", "Checked.")
+        self.assertEqual(len(reg.hazard_referrals()), 1)
+        with self.assertRaises(PermissionError):
+            reg.confirm_hazard_handoff(rec["id"], "Other", "Called out.")
+        with self.assertRaises(ValueError):
+            reg.confirm_hazard_handoff(rec["id"], "Pat Owner", " ")
+        reg.confirm_hazard_handoff(rec["id"], "Pat Owner", "Engineer called out 09:10.")
         self.assertEqual(reg.hazard_referrals(), [])
 
 

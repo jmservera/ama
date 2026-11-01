@@ -195,12 +195,25 @@ class ChallengeRegister:
                 }
         return deepcopy(rec)
 
+    def confirm_hazard_handoff(self, cid: str, owner: str, evidence: str) -> Record:
+        """Record the named owner's evidenced human handoff of a hazard concern."""
+        rec = self._get(cid)
+        referral = rec.get("hazard_referral")
+        if referral is None:
+            raise ValueError("This challenge has no hazard referral.")
+        if _text(owner, "Handing-off owner") != rec["owner"]:
+            raise PermissionError("Only the named human owner can confirm a hazard handoff.")
+        referral["status"] = "handed_off"
+        referral["handoff_evidence"] = _text(evidence, "Hazard handoff evidence")
+        rec["history"].append({"status": rec["status"], "note": "Hazard handoff evidenced."})
+        return deepcopy(rec)
+
     def hazard_referrals(self) -> list[Record]:
-        """Open challenges flagged as a hazard concern, for same-day human attention."""
+        """Hazard concerns awaiting an evidenced human handoff, whatever the challenge status."""
         return [
             deepcopy(r)
             for r in self.challenges.values()
-            if "hazard_referral" in r and r["status"] not in RESOLVED
+            if r.get("hazard_referral", {}).get("status") == "referred_on_receipt"
         ]
 
     def view(self, cid: str) -> Record:
