@@ -9015,3 +9015,12 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * CI figures come from a one-day sample of 300 runs; the RPI artifact share
   of PR size and the 19-24 October slowdown cause are unmeasured. No
   workflow, setting, gate or source change was made.
+
+## [2026-11-01] refine | Briefing feedback guidance, Refs #531
+
+* Added a plain-language paragraph to Today's briefing saying how to correct
+  it, how a reason becomes audit-logged feedback and how to refresh, with a
+  unit test and an updated G15 row in the
+  [API guide](../../src/api/README.md#loading-feedback-and-todays-briefing-531).
+* Local pinned-axe browser check and unit tests passed. Live employee-site
+  verification (criterion 7) remains unmet; no assistive-technology claim.
