@@ -563,10 +563,18 @@ class SqlRosterTests(unittest.TestCase):
             with self.subTest(changes=changes):
                 tid = self.store.chat_create_thread(self.user, case_id="ZF-1")["id"]
                 self.change_roster(changes)
+                before = len([e for e in self.store.audit_entries() if e["action"] == "chat.turn"])
                 with self.assertRaises(ChatForbidden):
                     self.panel.ask(self.user, tid, "What stage is it?")
                 self.assertEqual(self.calls, 0)
                 self.assertEqual(self.store.chat_resume(self.user, tid)["messages"], [])
+                turns = [e for e in self.store.audit_entries() if e["action"] == "chat.turn"]
+                self.assertEqual(len(turns), before + 1)
+                receipt = json.loads(turns[-1]["detail"])
+                self.assertEqual(receipt["outcome"], "access-rejected")
+                self.assertEqual(receipt["model_calls"], 0)
+                self.assertIsNone(receipt["tokens"])
+                self.assertNotIn("What stage is it?", turns[-1]["detail"])
 
     def test_sql_revocation_during_inference_denies_without_storing_answer(self) -> None:
         for changes in self.REVOKED:
