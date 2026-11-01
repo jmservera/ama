@@ -53,7 +53,7 @@ RUFF_GROUPS = (
 WORKFLOWS = ("src-ci.yml", "mvp-ci.yml", "mvp-validation.yml", "src-deploy.yml", "infra-plan.yml")
 # Explicitly updated with the matrix whenever native workflow commands change.
 WORKFLOW_HASHES = {
-    "src-ci.yml": "9964408b3a69e4bbc01955dcab15612e8794280f1170e6b2d67ec75672224262",
+    "src-ci.yml": "09254836b5575acfe05efb8f77ced0989dda5c0ae8e63a8f1a3d33d3b1509379",
     "mvp-ci.yml": "92178fff316a4cd8b4e619c47e96c0238106c311cad928263b6e795797a3a54e",
     "mvp-validation.yml": "94feeb7e0c6807a94dc2624eaf7c5e76c807a234e1777b593b169fd801e511cc",
     "src-deploy.yml": "3c2f1ed59b1486fc1316a48207cc4ef7d6a830bbba1dcad4152acab4bd2f1bbc",
