@@ -145,11 +145,17 @@ def gate_satisfied(
     labels: list[str],
     facts: dict[str, str] | None = None,
     required: list[str] | None = None,
+    authority: dict[str, Any] | None = None,
 ) -> tuple[bool, str]:
     """Controlled gate: only an evidenced human answer satisfies it, never over a defect."""
     ev = rec.get("review_evidence")
     if not ev or not ev.get("reviewer") or rec["status"] == "Not reviewed":
         return False, "no recorded human review"
+    if authority is not None:
+        if ev["reviewer"] not in authority["authorised_reviewers"]:
+            return False, "reviewer holds no defined authority for this task"
+        if not ev.get("source_hashes"):
+            return False, "review evidence lacks the source version reviewed"
     action, reason = rec["reviewer_action"], rec["reviewer_reason"]
     if prop["defect"]:
         if action == "accept":
@@ -186,7 +192,13 @@ def _store(workdir: str, spec: dict[str, Any], output: list[str]) -> Store:
     return store
 
 
-def run_panel(name: str, panel: Panel, spec: dict[str, Any], workdir: str) -> dict[str, Any]:
+def run_panel(
+    name: str,
+    panel: Panel,
+    spec: dict[str, Any],
+    workdir: str,
+    actor: dict[str, str] = OWNER,
+) -> dict[str, Any]:
     output = [""]
     store = _store(workdir, spec, output)
     case = store.cases[spec["case"]["id"]]
@@ -195,16 +207,18 @@ def run_panel(name: str, panel: Panel, spec: dict[str, Any], workdir: str) -> di
     rows, effort = [], 0
     for prop in spec["proposals"]:
         output[0] = prop["output"]
-        rec_view = store.ai_run(OWNER, spec["case"]["id"], spec["task"])
+        rec_view = store.ai_run(actor, spec["case"]["id"], spec["task"])
         if rec_view["source"] != "ai":
             raise RuntimeError(
                 f"seeded proposal {prop['id']} was not served as AI output "
                 f"(source={rec_view['source']}); check ZF_AI"
             )
         action, reason, text, units = panel(prop, facts, rec_view, spec["required_topics"])
-        store.review_ai(OWNER, rec_view["record_id"], action, reason, text)
+        store.review_ai(actor, rec_view["record_id"], action, reason, text)
         rec = next(r for r in store.data["recommendations"] if r["id"] == rec_view["record_id"])
-        ok, why = gate_satisfied(prop, rec, labels, facts, spec["required_topics"])
+        ok, why = gate_satisfied(
+            prop, rec, labels, facts, spec["required_topics"], spec.get("reviewer_authority")
+        )
         effective = (
             bool(prop["defect"])
             and ok
@@ -283,7 +297,10 @@ def run_review_test(golden: Path = GOLDEN) -> dict[str, Any]:
         with tempfile.TemporaryDirectory() as tmp:
             panels[name] = run_panel(name, panel, spec, tmp)
     with tempfile.TemporaryDirectory() as tmp:
+        unauthorised = run_panel("unauthorised_competent", competent, spec, tmp, OTHER)
+    with tempfile.TemporaryDirectory() as tmp:
         wf = workflow_only(spec, tmp)
+    authority = spec["reviewer_authority"]
     comp = panels["competent"]
     baselines = [panels["default_accept"], panels["automation_bias"]]
     checks = dict(
@@ -304,11 +321,18 @@ def run_review_test(golden: Path = GOLDEN) -> dict[str, Any]:
             and (r["reason"] or not r["defect"])
             for r in comp["rows"]
         ),
+        reviewer_authority_defined=bool(
+            authority["authorised_reviewers"] and authority["required_evidence"]
+        ),
+        unauthorised_reviewer_cannot_pass=not unauthorised["gate_passed"]
+        and [r["action"] for r in unauthorised["rows"]] == [r["action"] for r in comp["rows"]]
+        and all(not r["gate_satisfied"] for r in unauthorised["rows"]),
         audit_chain_verifies=all(p["audit_verified"] for p in panels.values()),
     )
     return dict(
         version=spec["version"],
         panels=panels,
+        unauthorised_reviewer_control=unauthorised,
         workflow_only=wf,
         checks=checks,
         passed=all(checks.values()),
@@ -317,7 +341,7 @@ def run_review_test(golden: Path = GOLDEN) -> dict[str, Any]:
         evidence=dict(
             provider="scripted",
             human_effectiveness="not evaluated (no authorised competent reviewers)",
-            reviewer_authority="provisional case owner; OQ-017 decides real authority",
+            reviewer_authority=authority,
             open_items=list(OPEN_ITEMS),
         ),
     )

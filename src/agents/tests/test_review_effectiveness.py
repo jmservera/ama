@@ -188,3 +188,32 @@ class ReviewEffectivenessTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ReviewerAuthorityTests(unittest.TestCase):
+    report = re_.run_review_test()
+
+    def test_authority_and_required_evidence_are_defined_and_provisional(self) -> None:
+        a = self.report["evidence"]["reviewer_authority"]
+        self.assertIn("OQ-017", a["status"])
+        self.assertEqual(a["authorised_reviewers"], ["owner@eval.example"])
+        self.assertIn("source_hashes", a["required_evidence"])
+
+    def test_competent_answers_from_an_unauthorised_reviewer_do_not_pass(self) -> None:
+        u = self.report["unauthorised_reviewer_control"]
+        self.assertFalse(u["gate_passed"])
+        self.assertTrue(all(not r["gate_satisfied"] for r in u["rows"]))
+        self.assertTrue(all("no defined authority" in r["gate_note"] for r in u["rows"]), u["rows"])
+        self.assertTrue(self.report["checks"]["unauthorised_reviewer_cannot_pass"])
+
+    def test_gate_requires_source_version_evidence_when_authority_is_defined(self) -> None:
+        authority = {"authorised_reviewers": ["owner@eval.example"]}
+        rec = {
+            "status": "Reviewed",
+            "reviewer_action": "accept",
+            "reviewer_reason": "",
+            "review_evidence": {"reviewer": "owner@eval.example", "source_hashes": {}},
+        }
+        ok, why = re_.gate_satisfied({"defect": None}, rec, [], None, None, authority)
+        self.assertFalse(ok)
+        self.assertIn("source version", why)
