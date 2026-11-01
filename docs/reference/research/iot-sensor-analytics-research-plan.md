@@ -77,8 +77,10 @@ enrolment (no DPS) with one per-device X.509 identity per simulated home, named
 `SYN-<sensor key>`. The exercise credential owner is Juan Manuel Servera, who issues
 credentials into Key Vault; only Key Vault references, never key material, appear in
 manifests, source, logs and telemetry. Expiry and rotation are owner-run and a rotation
-replaces the credential for the same device identity. Teardown deletes exactly the
-run-tagged identities and credentials in the manifest, then verifies none remain.
+replaces the credential for the same device identity. Teardown is whole-run: it requires the manifest to cover every active run device,
+deletes the run-tagged identities, revokes every credential reference recorded for the
+run (including rotated or uncertain-issuance credentials absent from the manifest),
+then verifies none remain.
 `zava_forward.core.synthetic.device_identity` implements plan, provision and teardown
 behind registry and credential-store protocols, tested with in-memory fakes only. No
 Azure identity was created and no live teardown is claimed.
