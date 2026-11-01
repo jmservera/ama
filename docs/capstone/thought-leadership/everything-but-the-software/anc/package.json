@@ -6,7 +6,15 @@
     "export": "node export_diagrams.mjs"
   },
   "overrides": {
-    "@iconify/utils": "3.0.1"
+    "@iconify/utils": "3.0.1",
+    "lodash-es": "4.18.1",
+    "katex": "0.18.2",
+    "@excalidraw/excalidraw": {
+      "nanoid": "3.3.18"
+    },
+    "@excalidraw/mermaid-to-excalidraw": {
+      "nanoid": "5.1.16"
+    }
   },
   "devDependencies": {
     "@excalidraw/excalidraw": "0.18.1",
