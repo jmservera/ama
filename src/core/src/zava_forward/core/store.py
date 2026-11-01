@@ -422,6 +422,13 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         from . import bulk_edits
         return bulk_edits.apply(self, user, body)
 
+    def stock_queue(self, user):
+        """Open stock conflicts across homes for managers. Read-only, not an investment priority."""
+        if user["role"] not in MANAGER_ROLES:
+            raise PermissionError("Only a manager can see the stock conflict queue.")
+        with self.lock:
+            return stock.queue_rows(self.cases.values())
+
     def stock_reconcile(self, user, case_id, body):
         from . import controls
         controls.refuse_bulk(body)
