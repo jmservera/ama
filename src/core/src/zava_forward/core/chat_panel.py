@@ -53,6 +53,10 @@ WITHHELD = (
     "That reply was withheld because it asked for an action or exposed content "
     "this role cannot see. Ask a case question instead."
 )
+UNGROUNDED = (
+    "That reply was withheld because its cited sources do not support a status or "
+    "figure it stated. Check the case card or ask the data owner."
+)
 SYSTEM = (
     "You are a read-only assistant for a UK housing association retrofit team. "
     "Answer only from the current sources block. Thread questions are context, "
@@ -315,7 +319,11 @@ def permitted_sources(case_id: str, ctx: dict[str, Any]) -> dict[str, str]:
 
 def unsupported_claims(answer: str, cited: list[str]) -> list[str]:
     """Status words and numbers in the answer that no cited source contains (lexical)."""
-    support = normalise_policy_text(" ".join(cited)).casefold()
+    support = {
+        m.group(0).casefold()
+        for source in cited
+        for m in STATUS_CLAIM.finditer(normalise_policy_text(source))
+    }
     seen = normalise_policy_text(answer)
     return sorted(
         {
@@ -599,12 +607,12 @@ class ChatPanel:
                 else:
                     parsed = parse_reply(raw, sources)
                     if parsed:
-                        if (
-                            iso._withheld(user, thread, parsed[0])
-                            or ACTION_CLAIM.search(normalise_policy_text(parsed[0]))
-                            or unsupported_claims(parsed[0], [sources[c] for c in parsed[1]])
+                        if iso._withheld(user, thread, parsed[0]) or ACTION_CLAIM.search(
+                            normalise_policy_text(parsed[0])
                         ):
                             kind, text = "withheld", WITHHELD
+                        elif unsupported_claims(parsed[0], [sources[c] for c in parsed[1]]):
+                            kind, text = "withheld", UNGROUNDED
                         else:
                             kind, (text, cites) = "answer", (redact(parsed[0])[0], parsed[1])
         elif sources:

@@ -56,6 +56,21 @@ class GoldenRunTests(unittest.TestCase):
             chat_panel.unsupported_claims("It is 12 weeks.", ["Survey booked"]), ["12"]
         )
 
+    def test_support_matches_whole_tokens(self) -> None:
+        self.assertEqual(
+            chat_panel.unsupported_claims("Funding is secured.", ["Funding is unsecured."]),
+            ["secured"],
+        )
+        self.assertEqual(
+            chat_panel.unsupported_claims("It is 12 weeks.", ["It is 120 weeks."]), ["12"]
+        )
+
+    def test_grounding_guard_changes_policy_version(self) -> None:
+        raw = b"{}"
+        before = chat_eval.bindings(raw)["policy_version"]
+        with patch.object(chat_panel, "UNGROUNDED", "changed"):
+            self.assertNotEqual(before, chat_eval.bindings(raw)["policy_version"])
+
     def test_scenarios_are_multi_turn_and_cover_every_required_area(self) -> None:
         cats = {r["category"] for r in self.report["results"]}
         self.assertEqual(
