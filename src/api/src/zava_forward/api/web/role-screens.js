@@ -151,7 +151,8 @@ registerRoleScreen({
     const signal = routeController.signal;
     const portfolio = await api("/api/cases?view=all&limit=1&offset=0", undefined, signal);
     const report = await api("/api/ai/report", undefined, signal).catch(() => null);
-    return { portfolio, report };
+    const queue = await api("/api/asset/stock-queue", undefined, signal).catch(() => null);
+    return { portfolio, report, queue };
   },
   render(c, extra) {
     const queries = c.stock_reconciliation || [];
@@ -160,6 +161,13 @@ registerRoleScreen({
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only reader view. It records no investment approval and changes no record. Budgets, priorities, forecasts and eligibility are Unknown unless a constructed fixture says so, and this page cannot confirm them. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only.`)),
+      screenPanel("Stock conflict queue across homes (portfolio scope, not this home)",
+        h("p", {}, "Homes with an open stock conflict, oldest source first. The order is source age only. It is not an investment priority, and no source is chosen as correct."),
+        extra?.queue
+          ? screenTable("Open stock conflicts by home", ["Home", "Open conflicts", "Fields in conflict", "Oldest source date", "Resolution owners", "Investment inputs"],
+            extra.queue.items.map((r) => [`${r.id}, ${r.address}, ${r.town}`, r.open_queries, (r.fields || []).join(", "), `${r.oldest_source_date}, ${assetAgeDays(r.oldest_source_date)}`,
+              (r.owners || []).join(", ") || "Unassigned", "Unknown. See missing investment inputs."]), 100)
+          : screenUnknown("The cross-home queue could not be loaded.", "Programme manager", "Reload, or open each home from the case queue")),
       screenPanel("Stock conflict comparison",
         screenTable("Stock source conflicts and source age",
           ["Query", "Field", "First source (value, ID, version, age)", "Compared source (value, ID, version, age)", "Status", "Resolution owner"],
@@ -239,6 +247,8 @@ registerRoleScreen({
         screenTable("Service requests and contact needs",
           ["Request", "Route", "Status", "Contact needs", "Next update"],
           requests.map((r) => [r.id, r.route, r.status, (r.accessibility || ["Unknown"]).join(", "), r.next_update]))));
+  }
+});
 const hazardTriageRoles = ["Retrofit Coordinator", "Resident Liaison Officer", "Quality Inspector"];
 const hazardActor = (value) => value && (value.name || value.role)
   ? [value.name, value.role].filter(Boolean).join(", ") : "Unknown";
@@ -293,6 +303,7 @@ registerRoleScreen({
   title: "Repairs and hazard triage",
   roles: hazardTriageRoles,
   render: hazardScreen("Read-only view for repairs and hazard triage: awareness time and source, referral progress and the person who chases an unanswered referral.")
+});
 const operatorSide = (a) => a ? `${screenValue(a.value)}; source ${screenValue(a.source_id)} v${screenValue(a.version)}; dated ${screenValue(a.date)}; ${screenValue(a.validation_state)}` : "Unknown";
 const operatorStatus = (c, q) => (c.stock_reconciliation_events || []).filter((e) => e.query_id === q.id).at(-1)?.status || "Unresolved";
 registerRoleScreen({
@@ -340,6 +351,8 @@ registerRoleScreen({
           events.map((e) => [e.id, e.query_id, e.status, screenStamp(e.at), screenPerson(e.recorded_by), e.reason, e.evidence])),
         screenFields([["Recovery context", work ? `Next action: ${screenValue(work.next_action)}. Owner: ${screenValue(work.owner)}. Recorded as of ${screenValue(work.as_of)}.` : "Unknown. No recovery context is recorded."],
           ["Integration run and queue state", "Unknown. No interface run record is supplied to this screen."]])));
+  }
+});
 const reviewerRole = "Contracts manager, independent of the person who issued or submitted the pack";
 const wording = (value, fallback = "Unknown") => value === null || value === undefined || value === "" ? fallback : String(value);
 const reference = (order) => `${wording(order.id)} v${wording(order.version)}`;
@@ -438,6 +451,8 @@ registerRoleScreen({
           ["Acknowledgement", "Not recorded. An acknowledgement is not acceptance."],
           ["Independent review and acceptance", "Unknown. Review data is not available here. Done by someone other than you."],
           ["Next reviewer", reviewerRole]])));
+  }
+});
 const financeRoles = ["Grants and Evidence Officer", ...screenManagers];
 const financeCurrency = new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" });
 const financeMoney = (value) => typeof value === "number" && Number.isFinite(value) ? financeCurrency.format(value) : "Unknown";

@@ -126,7 +126,9 @@ started with `--remote-debugging-port=9222`, export independently verified
 `ZF_EXPECTED_TID` and `ZF_EXPECTED_OID`, then run
 `python3 -m checks.employee_live_acceptance [--cdp-url http://127.0.0.1:9222]
 [--origin <app origin>]` from this directory. Only loopback CDP is accepted.
-It prints fixed boolean JSON and exits 0 only when chat, map and case all pass
+It prints fixed boolean JSON and exits 0 only when chat, map, case and Today's briefing (read-only: label,
+sources and prepared-at time visible, no review action taken; #531 criterion 7
+evidence) all pass
 (1 on a failed stage, 2 when refused or no matching page). A passing live run
 is the evidence for criterion 3; the offline tests are not.
 

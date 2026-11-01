@@ -9064,6 +9064,18 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   acceptance and owner confirmation of agent names remain unproven; no
   source change was made.
 
+## [2026-11-01] update | Chat and memory provider position and DPO decision pack (Refs #163)
+
+* Retrieved the Microsoft Learn Foundry data, privacy and security page
+  (page dated 2026-06-05) and recorded the documented provider position in
+  `research/chat-memory-dpia.md` and `chat_privacy.MODEL_PROVIDER_POSITION`,
+  marked as vendor documentation, not DPO-accepted. Added a blank decision pack
+  (D1 to D8) for the DPO and Legal.
+* Unmet: lawful basis, staff notice, DPIA decision and retention (no period
+  set), provider terms acceptance, deployment type and transfer position. No
+  legal advice or approval is implied.
+
+
 ## [2026-11-01] update | Scale fixture per-record is_synthetic (#167)
 
 * `scale_fixture` v1.3.0 adds `is_synthetic=true` to every home and event
@@ -9192,6 +9204,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   evidence only: Azure SQL and live Hub criteria of #188 stay owner-gated and
   unproven; no criterion ticked.
 
+## [2026-11-01] update | Replay audit covers pack and EPC generators (#176)
+
+* Extended the one-command determinism audit in
+  `docs/reference/research/retrofit-synthetic-data/README.md` to replay the
+  public pack and stock EPC generators and accept 16 or 64 hex revisions. The
+  original stock register generator remains absent; no criterion ticked.
+
 ## [2026-11-01] verify | Post-cleanup reference audit and link check (Refs #203)
 
 * Re-ran a repository-wide search for `mvp/` and `prototype/` on main 77b55415. Both
@@ -9224,3 +9243,36 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   listing the merged M1 to M6 and retirement pull requests and the current
   tree check. The migration-order criterion stays unmet pending an owner
   decision.
+
+## [2026-11-01] verify | Resident sensors and assistant focused re-check (Refs #466)
+
+* Re-ran resident core (355 tests) and api (167 tests) suites, sensor tests (144),
+  ruff, ruff format, mypy and node --check on main 51657d30: all passed, skips are
+  opt-in SQL and browser groups. No source change was needed.
+* Issue #466 criterion 1 (owner confirms scope and priority) stays unmet; manual
+  assistive-technology acceptance and live checks remain owner-run. No regulatory
+  snapshot changed.
+
+## [2026-11-01] query | Employee chat recheck on main 51657d30 (#530)
+
+* Re-ran the focused tier: core chat (101), agents chat model (7), API chat
+  panel (41) and widget focus (6) tests, ruff, mypy and the employee chat
+  browser and pinned axe check. All passed. Evidence is in
+  `.copilot-tracking/changes/2026-11-01/employee-chat-skills-530-recheck-changes.md`.
+* SQL, live employee-site verification, screen-reader and voice-control
+  acceptance remain unproven; no source change was made.
+
+## [2026-11-01] query | Resident portal requirements recheck on main 81cf0c9e (Refs #441)
+
+* Re-verified the merged resident integration (#442, #454) with a read-only
+  script: 30 draft custody hashes, unique BRD FR-053 to FR-064 and PRD FR-062
+  to FR-073 identifiers with base IDs preserved, FR-044 and RULE-028
+  per-message review default, OD-52 to OD-55 visible, the three author-judgement
+  workload figures, resident-related links and the unregistered ADR proposal
+  (registry stays 0001 to 0006). Four inherited unrelated broken links in the
+  addendum and index are recorded, not repaired.
+* No BRD, PRD, ADR, addendum or memory change was made. Criterion 5 (requirements
+  owner disposition of FR-044/AC-084) and criterion 9 (hosted gate evidence on the
+  final head) stay unmet; the per-message review exception stays OFF pending
+  OD-53. Evidence is in
+  `.copilot-tracking/changes/2026-11-01/issue-441-recheck-changes.md`.
