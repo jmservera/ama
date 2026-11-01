@@ -1,0 +1,53 @@
+\subsection{Additional source qualifications}\label{app:additionalevidence}
+
+The details below qualify specific uses of the literature in
+Section~\ref{sec:background}; they are not additional results from this study.
+
+\begin{table}[!htbp]
+\centering\footnotesize
+\caption{Source-specific qualifications relevant to the proposed measurements.}
+\label{tab:sourcequalifications}
+\begin{tabularx}{\textwidth}{@{}L{2.2cm}YY@{}}
+\toprule
+Source & Additional detail & Consequence for interpretation \\
+\midrule
+Sinha et al.~\cite[Sec.~3.2, Figs.~5--6]{sinha2025illusion} &
+The artificial-history experiment varies erroneous prior updates.
+Qwen3 with thinking enabled avoids the reported effect in that setup,
+whereas scaling non-thinking models does not remove it. &
+Earlier-error sensitivity depends on configuration; it is not a universal
+property of all models or a measured repository-decay rate. \\
+Pan et al.~\cite[Sec.~5.1, Fig.~4]{pan2026swemaintain} &
+In the \texttt{parse\_crontab} episode, a local Python 3 change satisfies
+current tests but omits module-wide compatibility aliases later code uses. &
+An initially successful patch can leave a latent dependency failure.
+This complements, rather than repeats, the line-terminator example in the main text. \\
+Gloaguen et al.~\cite[Secs.~4.2--4.4]{gloaguen2026agentsmd} &
+File length does not explain success in their analysis, and generated
+context helps when other documentation is removed. &
+Instruction length alone is not an adequate exposure or burden measure;
+available alternative documentation matters. \\
+Jiang et al.~\cite[Secs.~5.2--5.5]{jiang2026skills} &
+Skill misapplication and missing runtime verification remain failure modes.
+The retrieval diagnostic is separate from downstream execution. &
+Lower exact-match access alongside sustained task success does not isolate
+an effect of retrieval; accessed, applied and sufficient guidance differ. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The provenance of merge-outcome studies also matters. Peralta et al.
+start with 9,799 human-reviewed agent PRs and manually inspect 717.
+Their 35.7\% clear-failure share among rejections and 15.4\% explicit
+reviewer-involvement share among merges describe that manual sample
+~\cite{peralta2026merged}. Murphy-Hill et al.'s roughly 24\% higher merge
+count among adopters is an observational rollout estimate, not delivered
+value~\cite{murphyhill2026agents}. AIDev's 932,791 agent-authored PRs from
+five agents across 116,211 repositories provide a population for research,
+not a count of accepted user outcomes~\cite{li2026aidev}.
+
+Pavlenko et al.'s World Model offers an additional context-management
+design: preserve raw evidence, derive rebuildable views and retrieve compact,
+task-specific context with provenance and access controls
+~\cite{pavlenko2026factory}. That architecture is an alternative to relying
+on an expanding read path; its effect on the AMA case is untested.

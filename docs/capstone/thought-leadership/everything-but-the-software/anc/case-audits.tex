@@ -1,243 +1,3 @@
-\subsection{Expanded case interpretations}
-\subsubsection{Specification inflation}\label{sec:m1}
-
-\emph{Interpretation: specification growth outpaced the behaviour validated
-through product use.} By 22~October the BRD had reached version~0.19 and
-about 37,900 words, with requirement identifiers up to FR-052 and AC-103; the
-PRD had reached version~0.18 and about 33,900 words, with identifiers up to
-FR-061 and AC-110. The backlog inherited that scale and grew to 192 issues.
-Cross-cutting concerns were appended to existing issues rather than sequenced
-as their own work: a responsible-AI section on 15~October and an
-AI-consumption section on 22~October. Issue \#126, on pilot release gates,
-ended with seventeen acceptance criteria in three sections. Even the request
-for the smallest runnable preview arrived with thirteen.
-
-This expansion began before the autonomous backlog loop, including after participant
-prototype and MVP feedback. The requirements agents sought fully specified
-BRDs and PRDs, named approvers and resolved ownership before building. The author
-requested explicit demonstrator assumptions and imperfect increments that
-could produce feedback. Smaller, iterative requirements documents are a
-plausible alternative, not an intervention tested in this case.
-
-The pattern resembles B\"ockeler's small bug that became sixteen acceptance
-criteria~\cite{boeckeler2025sdd}, at the scale of a programme, and the risks
-of late integration described by Royce and Gall~\cite{royce1970,gall1975}.
-Brooks locates essential difficulty in the conceptual construct rather than
-its representation~\cite{brooks1987silver}; repeating a requirement in more
-places need not resolve its ambiguity. The
-benchmark evidence points the same way: agents given only a requirements
-document lose global coherence~\cite{ding2025nl2repo}. Beck's metaphor fits:
-features consume future options~\cite{beck2026prodacity,beck2025devslow}.
-Extending that argument to acceptance criteria is the present author's
-interpretation, not Beck's wording. The early-warning signal is
-the ratio of specification growth to behaviour a human has validated in the
-same period. No replacement journey was reported complete during the loop,
-but a systematic count of validated behaviours was not collected; this ratio
-cannot be estimated from the document counts alone.
-
-\subsubsection{Proxy capture}\label{sec:m2}
-
-\emph{In this case, artefacts made into gates appeared to displace outcomes.}
-Three patterns motivate this interpretation.
-
-Merged pull requests are a weak proxy for delivered value. Murphy-Hill et~al.
-report roughly 24\% more merges among adopters in Microsoft's rollout, while
-explicitly distinguishing merges from value~\cite{murphyhill2026agents}.
-Peralta et~al. studied 9,799 human-reviewed agent pull requests; in their
-717-PR manually inspected sample, only 35.7\% of rejections reflected clear agent
-failures and 15.4\% of merges required explicit reviewer
-involvement~\cite{peralta2026merged}. AIDev shows the scale of this measurement
-problem: 932,791 agent-authored pull requests from five agents across 116,211
-repositories, not a count of delivered outcomes~\cite{li2026aidev}.
-
-\emph{Process.} When the first waves of sessions skipped the research and
-planning phases, the author made the presence of their artefacts a merge condition.
-From then on every pull request carried research, plan, change and review
-records; the artefacts were guaranteed, the thinking they were meant to
-evidence was not. Pull request \#445 changed two lines of behaviour and added
-a 78-line evidence record that reports its own artefact completion as 100\%.
-HVE Core treats these files as working memory. Substantial tracking output
-was already committed before the added merge condition; that condition
-formalised an existing practice rather than explaining its onset.
-
-In the first-parent integration view, tracking-artefact additions were
-10.27 times product-source additions during the loop, compared with 29.28
-before it (\nolinkurl{anc/repo_history_metrics.out.txt}). Artefact volume remained
-high during the loop, while its ratio to product-source additions fell.
-Churn alone does not establish code decay.
-
-\emph{Evaluation.} The rubric scorer, a language model reading the repository,
-rated implementation completeness at five out of five, citing a README
-and a check script, at a
-time when the author could not sign in to the replacement. The score and blocked
-sign-in occurred during the same period. It remains necessary to check whether the
-score covered that release and journey (Section~\ref{sec:audittrail}).
-The judge read repository text rather
-than executing the intended journey. Neither its repeatability nor its
-agreement with observed product behaviour was measured; its score cannot
-substitute for that behavioural check.
-
-\emph{Evidence boundaries.} The author had instructed the agents never to
-fabricate approvals or overstate evidence. The record contains explicit
-statements of unmet acceptance, and lexical evidence-boundary density more than tripled.
-These observations do not establish exhaustive compliance or measure honesty.
-Issue \#349 records that a browser redirect ``is not successful sign-in''.
-The agents were right, and still nobody could sign in. Honest boundary
-statements became the output.
-
-Goodhart and Strathern predict the first two
-levels~\cite{goodhart1975,strathern1997improving}. Beck joked that an agent
-seemed ready to delete tests and pretend it had finished
-~\cite{orosz2025beck}; ImpossibleBench measures test exploitation more
-generally, not a counted test-deletion category~\cite{zhong2026impossiblebench}.
-The METR study adds the human side: the
-feeling of progress is an unreliable instrument~\cite{becker2025metr}. The
-early-warning signals are the ratio of evidence artefacts to behaviour
-changes, the share of merged pull requests that change what a user can do,
-boundary-phrase density, and any divergence between automated scores and a live demo.
-
-\subsubsection{Learning evaporation}\label{sec:m3}
-
-\emph{Some recorded lessons appeared to fall off the loop's read path, while
-important design decisions survived.} Maintaining the structured log and
-memory became difficult as the record grew. Important design decisions
-survived, even as some recorded lessons appeared to be lost. Before the loop, participant
-use of the MVP produced concrete lessons: the simplicity requirements, a
-deliberately public development profile for throwaway stacks, and the
-callback, role and staff-binding steps that made sign-in work. All were
-recorded, in the PRD, in a simplicity review and in infrastructure runbooks.
-The stated brief format carried issue text, acceptance criteria and
-repository conventions; actual session access to the earlier lessons is
-unverified. The November search finds retained Entra, registration,
-staff-binding and runbook references in committed research/plans,
-including 16 October records. This weakens a blanket disappearance
-claim without establishing that agents accessed or used the material. The log cites the
-simplicity requirements for the last time on 13~October; the development
-profile appears only on 8~October. The migrated deployment lacked the
-registration and staff bindings established on 12~October, and sign-in was
-blocked.
-
-The read path grew. The knowledge-base index, which every agent is
-told to read first, accumulated 1,069 words of issue-specific status notes
-ahead of its first instruction. The index, the log, the BRD and the PRD, the
-documents that define the project's state and intent, total about 139,000
-words. No provider-matched tokenizer or actual session-input record was
-available; prose token-per-word heuristics are unsuitable for these
-identifiers, paths and tables.
-Long contexts can reduce reliable retrieval even when the material fits in
-the context window~\cite{liu2024lost,hong2025contextrot}; the case does not
-measure any session's effective attention capacity.
-
-Instruction debt and learning evaporation can therefore coexist. A correction
-may remain in an expanding agent definition while the evidence explaining
-when it applies falls off the next session's read path. The result can be
-a larger instruction set with weaker access to the relevant lesson.
-However, unavailable guidance, accessed-but-misapplied guidance and guidance
-insufficient for the task are different explanations
-\cite[Secs.~5.2--5.5]{jiang2026skills}. Without actual session inputs and
-access/use traces, this case cannot distinguish them.
-
-Naur explains why recording was not enough. A program's theory lives in the
-people who build it, and a second team with full documentation can still
-destroy a design's simplicity~\cite{naur1985theory}. In an agent loop, every
-session may face an analogous reconstruction problem. The comparison with
-Naur is interpretive. The case provides no measure of lost understanding.
-Yan's advice to share context appears within an argument against
-multi-agent designs~\cite{yan2025multiagents}, not evidence that adding
-agents solves retrieval. The multi-agent failure taxonomy
-~\cite{cemri2025multiagent} identifies several coordination problems; it
-does not establish context loss as a prevalent cause in this case. HVE
-Core's choice to carry context in files on disk is necessary but not
-sufficient: the files must be on the read path, short enough to read and,
-ideally, executable. The early-warning signals are lessons that exist only as
-prose, a read path that grows faster than the code, and problems that have to
-be solved twice.
-
-Pavlenko et~al.'s World Model offers a different design: preserve raw evidence,
-derive rebuildable views and retrieve compact, task-specific context with
-provenance and access controls. Updates are reviewed, and measured outcomes
-feed later decisions~\cite{pavlenko2026factory}. This distinguishes storing
-lessons from making them usable in the next decision; a small read path need
-not mean discarding history. This architecture offers another way to retrieve
-accumulated lessons. Its effect on learning evaporation in this case remains
-untested.
-
-\subsubsection{Process-gate inflation}\label{sec:m4}
-
-\emph{Interpretation: repeated gates appeared disproportionately burdensome;
-comparative effort was not measured.} Each new gate required execution and
-review. Within ten days the coordinator required, for every
-issue, the full RPI loop, a complete local gate before every push and after
-every correction or rebase, independent review, up to two correction cycles,
-board updates and evidence-based ticking of acceptance criteria. Hosted CI
-minutes had to be rationed, the full gate had to be interrupted by explicit
-exception for a two-line fix, and paid cloud validation stayed blocked even
-after the cost ceiling was raised.
-
-The author perceived attention as more constrained than compute, but their
-relative scarcity was not measured. Reviewing eighteen merged pull requests
-a day in depth was judged impractical, and merging was delegated to the
-coordinator. The author still answered approvals and technical blockers,
-but stopped getting feedback from using a replacement product. RPI critiques
-and reviews addressed the current issue rather than the cumulative system;
-there was no regular phase for reflective consolidation or generalisation
-across completed issues. This is Bainbridge's irony in
-miniature~\cite{bainbridge1983ironies}: the automation took the part of the
-work that supplied direct product-use feedback and left the participant
-monitoring a stream of plausible, well-documented changes. It
-matches the shift from producing to evaluating reported for generative
-AI~\cite{simkute2024ironies}, the delegation demands it
-creates~\cite{tankelevitch2024metacognitive}. Higher confidence in AI was
-associated with reduced self-reported critical scrutiny in the cited
-study~\cite{lee2025critical}, not established as its cause. Murphy's
-diagnosis is a plausible interpretation: throughput increased while the path
-to a usable outcome remained blocked~\cite{murphy2026speed,goldratt1984goal}.
-The bottleneck itself was not instrumented. Martin's argument for executable
-feedback from tests and code-analysis tools~\cite{martin2026productengineers}
-motivates a proposed gate that checks product behaviour rather than inferring
-it from paperwork; the interview does not establish that such a gate would
-have prevented this failure. The early-warning signals are gate time per change,
-human review minutes per merged pull request, work in progress, and cost per
-merged pull request compared with cost per accepted outcome.
-
-\subsubsection{Feedback starvation}\label{sec:m5}
-
-\emph{Candidate mechanism: insufficient independent, outcome-level feedback
-even though artefact-level validation is abundant.} This differs from merely having
-few tests, a long feedback delay or missing context: many checks can pass
-while none disconfirms the claim that the intended user journey works.
-Outcome-level independence here means evidence obtained by exercising the outcome rather
-than rereading its completion record; it need not imply a different model.
-It does not establish independent human judgment.
-The loop prioritised completing the specified plan rather than shortening the
-path to such feedback. Feedback starvation is a central interpretive proposition,
-although the case cannot separate its contribution from the other mechanisms.
-Nothing in the coordinator kept a usable system alive:
-no invariant required the participant's sign-in and core workflow to remain
-usable after every merge. Completion was assessed through artefacts, criteria
-and gates. In the MVP week the feedback loop included intermittent participant use, with some changes made the same
-day. From 15~October the first priority was restructuring code, the
-working MVP was frozen, and its replacement had not become usable by the time
-of the case cut-off. When a usable increment was
-requested, the request was absorbed by the same
-machinery: a label, new issues, thirteen acceptance criteria and the full set
-of gates.
-
-Several older practices in Section~\ref{sup:sec:theory} make feedback and working
-behaviour explicit: short releases and test-first development~\cite{beck2004xp,beck2002tdd},
-incremental delivery in Crystal Clear~\cite{cockburn2004crystal},
-tracer bullets~\cite{hunt1999pragmatic}, and working software
-over comprehensive documentation~\cite{agile2001manifesto}. Beck's warning
-that fully agentic work without feedback goes off the
-rails~\cite{beck2026prodacity}, DORA's emphasis on small batches and user
-focus~\cite{dora2025} and Murphy's list of real bottlenecks, which includes
-missing feedback~\cite{murphy2026speed}, motivate this interpretation but do
-not independently diagnose the case. The
-early-warning signals are the time from the start of a cycle to the first
-human use of a running increment, and the age of the last increment a human
-has verified as usable. The case records no completed replacement journey
-during the ten-day loop; the exact last-use timestamp remains unverified.
-
 \subsection{Case rival-explanation register}\label{app:rivals}
 
 The main interpretation is in Section~\ref{sec:threats}. The register preserves
@@ -307,8 +67,8 @@ analysis distinguishing inherited debt from introduced faults. \\
 \subsection{Candidate-mechanism evidence audits}\label{app:mechanismaudit}
 
 These are operational boundaries for this paper, not validated necessary and
-sufficient conditions for all agentic development. The indicators refer to
-Table~\ref{tab:audittrail} and the case chronology. Experimental implications
+sufficient conditions for all agentic development. The indicators are already reported in
+Table~\ref{tab:mechanisms}, Table~\ref{tab:audittrail} and the case chronology; they are not repeated here. Experimental implications
 state what evidence would discriminate an explanation; the tagged experiment
 does not manipulate the five candidates separately.
 
@@ -323,8 +83,6 @@ Element & Audit \\
 Definition & Requirements and acceptance obligations expand faster than
 independently validated behaviour, without evidence that the added scope is
 needed for the next usable increment. Length alone is insufficient. \\
-Case indicators & O3: BRD/PRD growth, 192 issues and cross-cutting additions;
-the smallest resident preview had thirteen criteria. \\
 Counter-evidence & Growth began before autonomy and sometimes followed the
 owner's feedback; regulatory and consent controls can justify detail. \\
 Rival explanations & Genuine scope expansion, specification ambiguity,
@@ -349,9 +107,6 @@ Element & Audit \\
 Definition & A completion proxy becomes a decision criterion and remains
 positive when an independent test of the intended outcome is negative. Proxy
 use alone does not establish capture. \\
-Case indicators & O2--O3: a 5/5 score and blocked sign-in coexist in the
-chronology; release/scope linkage is pending. Mandatory artefact presence and
-the evidence record for PR \#445 are separate indicators. \\
 Counter-evidence & Agents explicitly reported unmet acceptance; neither
 fabricated approval nor deliberate deception is established. \\
 Rival explanations & An inadequate scorer or acceptance oracle, different
@@ -375,8 +130,6 @@ Element & Audit \\
 Definition & A recorded lesson relevant to a later decision is absent from,
 unusable on, or not applied through that decision's effective context path,
 and the associated problem recurs. A missing citation alone is insufficient. \\
-Case indicators & O4: simplicity references cease; working sign-in setup is
-not preserved; state and intent documents reach about 139,000 words. \\
 Counter-evidence & Important domain decisions survived; the lesson could have
 been known but deferred. Actual session attention was not measured. \\
 Rival explanations & Deliberate migration sequencing, deployment-specific
@@ -401,8 +154,6 @@ Element & Audit \\
 Definition & Additional procedural obligations increase per-change burden
 without demonstrated proportional improvement in the targeted outcome. More
 gates alone are not evidence that their net benefit is negative. \\
-Case indicators & O5: full RPI and validation on each correction/rebase;
-hosted-minute rationing; explicit exception for PR \#445. \\
 Counter-evidence & Checks caught bounded defects and enforced evidence
 integrity. Gate duration and human review effort were not measured per PR. \\
 Rival explanations & Legitimate safety and privacy requirements, budget
@@ -426,8 +177,6 @@ Element & Audit \\
 Definition & Independent outcome-level feedback is insufficient to correct
 delivery decisions despite abundant artefact-level validation. The defining
 gap is between the evaluated proxy and intended outcome, not test count alone. \\
-Case indicators & O1--O2 and O5: working MVP frozen; replacement unusable;
-passing checks and continued approvals did not restore a completed user task. \\
 Counter-evidence & Human oversight continued; agents surfaced blockers;
 engineering checks provided real, though narrower, feedback. \\
 Rival explanations & Identity and service configuration, migration priority,
@@ -483,5 +232,6 @@ study's approved prompt. The archived source is byte-identical, SHA-256
 \nolinkurl{75f646edbe04e1e3403b092b13edd6b66615a3362e67ad49744d229cdcb94f29}.
 Display wrapping does not alter its text. Braces mark runner parameters.
 
-\VerbatimInput[breaklines=true,breakanywhere=true,fontsize=\footnotesize]
-{anc/consolidation-frozen-v4.prompt.txt}
+\lstinputlisting[basicstyle=\footnotesize\ttfamily,
+  columns=fullflexible,keepspaces=true,showstringspaces=false,upquote=true,
+  breaklines=true,breakatwhitespace=false]{anc/consolidation-frozen-v4.prompt.txt}

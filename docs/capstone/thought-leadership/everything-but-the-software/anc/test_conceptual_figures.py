@@ -22,7 +22,7 @@ STEMS = (
 
 
 def supplement_content_digest(text: str) -> str:
-    """Compare body content while allowing heading and internal-link retargeting."""
+    """Compare body content while allowing heading, link and literal-display changes."""
     text = re.sub(r"\\(?:sub)*section\{([^}]+)\}", lambda match: match.group(1), text)
     text = re.sub(r"\\label\{[^}]+\}", "", text)
     text = re.sub(
@@ -32,6 +32,10 @@ def supplement_content_digest(text: str) -> str:
     )
     text = re.sub(r"\\href\{supplement\.pdf\}\{([^}]+)\}", lambda match: match.group(1), text)
     text = re.sub(r"\\hyperref\[sec:supplement\]\{([^}]+)\}", lambda match: match.group(1), text)
+    text = re.sub(
+        r"\\(?:VerbatimInput|lstinputlisting)(?:\[[^]]*\])?\s*\{([^}]+)\}",
+        lambda match: "literal-input{" + match.group(1) + "}", text,
+    )
     return hashlib.sha256(" ".join(text.split()).encode()).hexdigest()
 
 
@@ -134,13 +138,13 @@ class ConceptualFigureTests(unittest.TestCase):
                 with self.assertRaises(AssertionError):
                     self.check_manuscript(without_figure)
 
-    def test_given_integrated_supplement_when_checked_then_every_original_body_is_preserved(self) -> None:
+    def test_given_additive_supplement_when_checked_then_every_active_body_is_included(self) -> None:
         from check_paper import expand_inputs
 
         manifest = json.loads((PACKAGE / "anc/supplement-integration.json").read_text())
         source = expand_inputs((PACKAGE / "main.tex").read_text(encoding="utf-8"))
         expected = {
-            "anc/compact-appendix.tex", "anc/extended-background.tex",
+            "anc/additional-evidence.tex",
             "anc/case-audits.tex", "anc/deferred-measures.tex",
         }
         self.assertEqual(set(manifest["files"]), expected)
@@ -149,6 +153,34 @@ class ConceptualFigureTests(unittest.TestCase):
                 body = (PACKAGE / name).read_text(encoding="utf-8")
                 self.assertIn(body, source)
                 self.assertEqual(supplement_content_digest(body), entry["content_sha256"])
+        for name, expected_hash in manifest["literal_inputs"].items():
+            self.assertIn("{" + name + "}", source)
+            self.assertEqual(hashlib.sha256((PACKAGE / name).read_bytes()).hexdigest(), expected_hash)
+
+    def test_given_additive_supplement_when_checked_then_background_figures_and_case_narratives_do_not_repeat(self) -> None:
+        from check_paper import expand_inputs, strip_comments
+
+        source = strip_comments(expand_inputs((PACKAGE / "main.tex").read_text(encoding="utf-8")))
+        main, supplement = source.split(r"\section{Supplement}", 1)
+        images = r"\\includegraphics(?:\[[^]]*\])?\{([^}]+)\}"
+
+        self.assertFalse(set(re.findall(images, main)) & set(re.findall(images, supplement)))
+        self.assertNotIn(r"\subsection{Background}", supplement)
+        self.assertNotIn(r"\subsection{Expanded case interpretations}", supplement)
+        self.assertNotIn("Case indicators &", supplement)
+        raw = (PACKAGE / "anc/supplement-section.tex").read_text(encoding="utf-8")
+        self.assertNotIn("anc/extended-background.tex", raw)
+        self.assertNotIn("anc/compact-appendix.tex", raw)
+
+    def test_given_literal_renderer_change_when_digest_checked_then_input_path_remains_bound(self) -> None:
+        original = r"\VerbatimInput[breaklines=true]{anc/prompt.txt}"
+        current = r"\lstinputlisting[breaklines=true]{anc/prompt.txt}"
+
+        self.assertEqual(supplement_content_digest(original), supplement_content_digest(current))
+        self.assertNotEqual(
+            supplement_content_digest(original),
+            supplement_content_digest(current.replace("anc/prompt.txt", "anc/different.txt")),
+        )
 
     def test_given_unified_delivery_when_checked_then_one_document_has_internal_supplement_links(self) -> None:
         from check_paper import expand_inputs, strip_comments

@@ -9511,3 +9511,20 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   The actual PDF outline, internal supplement navigation and all-page text
   bounds were checked. The title, study allocation and registration are
   unchanged; no full application gate or new experiment was run.
+
+## [2026-11-01] query | Additive supplement and clean Tectonic build
+
+* Removed repeated Background/figures, long case narratives and duplicate
+  indicator rows from the active Supplement, as requested by the owner.
+  Retained additional source qualifications, detailed method/rival checks,
+  the frozen prompt and deferred definitions/provenance. Historical source
+  hashes and earlier versions remain distinct from active additive content.
+* Diagnosed the UTF-8 warning as a Latin-1 byte in an old `lineno` comment,
+  loaded through `fvextra`. The exact ASCII prompt now uses literal `listings`
+  wrapping; its path and SHA-256 remain bound. No package cache or warning
+  filter was modified. Scoped citation alignment removes justification
+  stretching; the repeated compact paragraph is no longer included.
+* The owner's actual PDF helper now builds without the listed warnings.
+  The single paper has 41 pages, Supplement starts on page 36, and 34 focused
+  tests pass. Actual outline/links/bounds and the citation, supplement opening
+  and prompt renders were checked. The title and experiment are unchanged.

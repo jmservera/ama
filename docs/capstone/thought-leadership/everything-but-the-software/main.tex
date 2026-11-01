@@ -28,7 +28,7 @@
 \usepackage[numbers,sort&compress]{natbib}
 \usepackage{xurl}
 \usepackage{caption}
-\usepackage{fvextra}
+\usepackage{listings}
 \usepackage[colorlinks=true,linkcolor={blue!50!black},citecolor={blue!50!black},urlcolor={blue!50!black}]{hyperref}
 
 \hypersetup{pdftitle={Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop},pdfauthor={Juan Manuel Servera Bondroit}}
@@ -879,10 +879,10 @@ and score provenance are retained in
 
 Five mechanisms organise the gap between a pull request merged roughly every
 eighty minutes and the absence of a usable replacement.
-Table~\ref{tab:mechanisms} summarises them; the
-\hyperref[sec:supplement]{supplementary case audits}
-sets out a definition, indicators, counter-evidence, rivals and testable
-implication for each. Together they connect the inherited-state problem to
+Table~\ref{tab:mechanisms} summarises the indicators; the
+\hyperref[app:mechanismaudit]{supplementary operational audits}
+set out definitions, counter-evidence, rivals and discriminating checks.
+Together they connect the inherited-state problem to
 the way this delivery loop selected work, carried lessons and checked outcomes.
 
 \begin{table}[!htbp]
@@ -954,7 +954,10 @@ Proxy capture; process-gate inflation; feedback starvation \\
 \end{tabularx}
 \end{table}
 
-The five categories in Table~\ref{tab:mechanisms} are post-hoc interpretations. The supplementary case evidence retains their detailed arguments, counter-evidence and discriminating tests. They are not measured frequencies or independently identified causal effects.
+The five categories in Table~\ref{tab:mechanisms} are post-hoc interpretations.
+The supplement organises their operational boundaries and unperformed
+discriminating checks, not further case observations. They are not measured
+frequencies or independently identified causal effects.
 
 \subsection{A proposed reinforcing relationship}
 
@@ -1410,13 +1413,6 @@ S.~Agarwal, A.~Singhal, A.~Macvean, B.~Vasilescu, and T.~Breaux.
 \newblock Spec-driven development as prescribed and as practiced.
 \newblock arXiv:2608.25202, 2026.
 
-\bibitem{bacchelli2013review}
-Alberto Bacchelli and Christian Bird.
-\newblock Expectations, outcomes, and challenges of modern code review.
-\newblock In \emph{Proceedings of the 35th International Conference on Software
-  Engineering (ICSE)}, pages 712--721. IEEE, 2013.
-\newblock doi:10.1109/ICSE.2013.6606617.
-
 \bibitem{bainbridge1983ironies}
 L.~Bainbridge.
 \newblock Ironies of automation.
@@ -1513,11 +1509,6 @@ K.~Beck.
 \url{https://www.rise8.us/videos/kent-beck-software-engineering-in-the-age-of-ai}.
 \newblock Transcript accessed 1 November 2026; video-page HTML only, video not inspected.
 
-\bibitem{becker2025metr}
-Joel Becker, Nate Rush, Elizabeth Barnes, and David Rein.
-\newblock Measuring the impact of early-2025 {AI} on experienced open-source
-  developer productivity, 2025.
-
 \bibitem{besker2018cripples}
 T.~Besker, A.~Martini, and J.~Bosch.
 \newblock Technical debt cripples software developer productivity: A
@@ -1555,14 +1546,6 @@ F.~P. Brooks,~Jr.
 \newblock \emph{Computer}, 20(4):10--19, 1987.
 \newblock doi:10.1109/MC.1987.1663532.
 
-\bibitem{cemri2025multiagent}
-Mert Cemri, Melissa~Z. Pan, Shuyi Yang, Lakshya~A. Agrawal, Bhavya Chopra,
-  Rishabh Tiwari, Kurt Keutzer, Aditya Parameswaran, Dan Klein, Kannan
-  Ramchandran, Matei Zaharia, Joseph~E. Gonzalez, and Ion Stoica.
-\newblock Why do multi-agent {LLM} systems fail?
-\newblock In \emph{Advances in Neural Information Processing Systems 38
-  (NeurIPS 2025), Datasets and Benchmarks Track}, 2025.
-
 \bibitem{chatlatanagulchai2026readmes}
 W.~Chatlatanagulchai, H.~Li, Y.~Kashiwa, B.~Reid, K.~Thonglek,
 P.~Leelaprute, A.~Rungsawang, B.~Manaskasemsak, B.~Adams, A.~E. Hassan,
@@ -1573,10 +1556,14 @@ and H.~Iida.
 \newblock \url{https://arxiv.org/abs/2511.12884v2}.
 
 \bibitem{chen2023drift}
+\begingroup
+\raggedright
 L.~Chen, M.~Zaharia, and J.~Zou.
 \newblock How is ChatGPT's behavior changing over time?
 \newblock arXiv:2307.09009v3, 2023.
 \newblock \url{https://arxiv.org/abs/2307.09009v3}.
+\par
+\endgroup
 
 \bibitem{chen2026sweci}
 J.~Chen, X.~Xu, H.~Wei, C.~Chen, and B.~Zhao.
@@ -1615,19 +1602,6 @@ P.~Devanbu, T.~Zimmermann, and C.~Bird.
 \newblock In \emph{Proceedings of the 38th International Conference on Software
 Engineering (ICSE)}. ACM, 2016.
 \newblock doi:10.1145/2884781.2884812.
-
-\bibitem{ding2025nl2repo}
-Jingzhe Ding, Shengda Long, Changxin Pu, et~al.
-\newblock {NL2Repo-Bench}: Towards long-horizon repository generation
-  evaluation of coding agents, 2025.
-
-\bibitem{dora2025}
-{DORA}.
-\newblock State of {AI}-assisted software development 2025.
-\newblock Technical report, Google Cloud, 2025.
-\newblock URL \url{https://dora.dev/dora-report-2025}.
-\newblock Accessed 1 November 2026; landing-page metadata, not the report's
-  full text.
 
 \bibitem{eick2001decay}
 S.~G. Eick, T.~L. Graves, A.~F. Karr, J.~S. Marron, and A.~Mockus.
@@ -1686,11 +1660,6 @@ for coding agents?
 \newblock arXiv:2602.11988v3, 29 September 2026.
 \newblock \url{https://arxiv.org/abs/2602.11988v3}.
 
-\bibitem{goldratt1984goal}
-Eliyahu~M. Goldratt and Jeff Cox.
-\newblock \emph{The Goal: A Process of Ongoing Improvement}.
-\newblock North River Press, 1984.
-
 \bibitem{goodhart1975}
 C.~A.~E. Goodhart.
 \newblock Problems of monetary management: The {U.K.} experience.
@@ -1717,13 +1686,6 @@ I.~Herraiz, D.~Rodriguez, G.~Robles, and J.~M. Gonzalez-Barahona.
 on a systematic literature review.
 \newblock \emph{ACM Computing Surveys}, 46(2):28, 2013.
 \newblock doi:10.1145/2543581.2543595.
-
-\bibitem{hong2025contextrot}
-Kelly Hong, Anton Troynikov, and Jeff Huber.
-\newblock Context rot: How increasing input tokens impacts {LLM} performance.
-\newblock Technical report, Chroma, 2025.
-\newblock URL \url{https://trychroma.com/research/context-rot}.
-\newblock Accessed 1 November 2026; brief excerpt.
 
 \bibitem{hoque2022thriftydagger}
 Ryan Hoque, Ashwin Balakrishna, Ellen Novoseller, Albert Wilcox, Daniel~S.
@@ -1826,14 +1788,6 @@ Hao Li, Haoxiang Zhang, and Ahmed~E. Hassan.
   Software Repositories (MSR)}, 2026.
 \newblock doi:10.1145/3793302.3797249.
 
-\bibitem{liu2024lost}
-Nelson~F. Liu, Kevin Lin, John Hewitt, Ashwin Paranjape, Michele Bevilacqua,
-  Fabio Petroni, and Percy Liang.
-\newblock Lost in the middle: How language models use long contexts.
-\newblock \emph{Transactions of the Association for Computational Linguistics},
-  12:\penalty0 157--173, 2024.
-\newblock \url{https://doi.org/10.1162/tacl_a_00638}.
-
 \bibitem{openai2026harness}
 R.~Lopopolo.
 \newblock Harness engineering: Leveraging {Codex} in an agent-first world.
@@ -1903,15 +1857,6 @@ S.~Mohsenimofidi, M.~Galster, C.~Treude, and S.~Baltes.
 \newblock In \emph{MSR '26}, pages 194--198, 2026.
 doi:10.1145/3793302.3793350. Inspected text: arXiv:2510.21413v4.
 \newblock \url{https://arxiv.org/abs/2510.21413v4}.
-
-\bibitem{murphy2026speed}
-Andrew Murphy.
-\newblock If you thought the speed of writing code was your problem -- you have
-  bigger problems.
-\newblock Blog post, 17 March 2026,
-  \url{https://andrewmurphy.io/blog/if-you-thought-the-speed-of-writing-code-was-your-problem-you-have-bigger-problems},
-  2026.
-\newblock Accessed 1 November 2026; page metadata/brief excerpt.
 
 \bibitem{murphyhill2026agents}
 Emerson Murphy-Hill, Jenna Butler, and Alexandra Savelieva.
@@ -2105,14 +2050,6 @@ A.~Wessl\'en.
 \newblock \emph{Experimentation in Software Engineering}.
 \newblock Springer, 2012.
 \newblock doi:10.1007/978-3-642-29044-2.
-
-\bibitem{yan2025multiagents}
-Walden Yan.
-\newblock Don't build multi-agents.
-\newblock Cognition blog, 12 June 2025,
-  \url{https://cognition.com/blog/dont-build-multi-agents}, 2025.
-\newblock Accessed 1 November 2026; context-sharing principles within the
-  argument against multi-agent designs.
 
 \bibitem{yang2026crbugbench}
 C.~Yang, H.~He, T.-C. Cheng, J.~Butler, E.~Murphy-Hill, C.~Badea, and C.~Bird.
