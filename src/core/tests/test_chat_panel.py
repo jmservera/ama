@@ -28,6 +28,7 @@ from zava_forward.core.chat_panel import (
     parse_reply,
     permitted_sources,
     skill_sources,
+    unsupported_claim,
 )
 from zava_forward.core.chat_privacy import redact
 from zava_forward.core.chatthreads import MAX_CONTENT, ChatNotFound
@@ -36,6 +37,15 @@ from zava_forward.core.store import Store
 
 
 class PureTests(unittest.TestCase):
+    def test_unsupported_claim_check(self) -> None:
+        src = ["Survey booked", "Budget 1,200"]
+        self.assertTrue(unsupported_claim("Funding is secured.", src))
+        self.assertTrue(unsupported_claim("Budget is 9,000.", src))
+        self.assertFalse(unsupported_claim("The stage is Survey booked.", src))
+        self.assertFalse(unsupported_claim("Budget is 1,200.", src))
+        self.assertFalse(unsupported_claim("Funding is not secured.", src))
+        self.assertFalse(unsupported_claim("Survey is complete.", ["Survey complete"]))
+
     SOURCES = {"ZF-1/stage": "Survey", "ZF-1/status": "Open"}
 
     def test_parse_keeps_only_permitted_citations(self) -> None:

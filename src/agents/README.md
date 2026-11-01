@@ -343,7 +343,10 @@ them that start with `cd src/api` run from the api project.
   `summary.open_critical_gaps` and `enablement.blocking_gaps` list unresolved
   critical gaps; any such gap makes `passed` false, enablement `fail` (disabled)
   and the CLI exit non-zero. The unsupported-claim-with-valid-citation scenario
-  remains an open critical gap, so the current golden run intentionally exits 1.
+  is closed by a deterministic claim-level check in the chat panel (an assurance
+  word or number absent from the cited text is withheld); the golden run now
+  exits 0 with no open gap, and enablement stays `insufficient` and disabled.
+  The check is lexical and says nothing about actual-model accuracy.
 
   Refusal uses NFKC, format-character removal, common Greek/Cyrillic confusable
   folding and collapsed whitespace. Refusal and output action-claim checks are

@@ -1,0 +1,147 @@
+{
+ "version": "2026-10-16",
+ "note": "Every golden and evaluation dataset, with version, owner and purpose. Add an entry here when a dataset is added; tests/test_eval_registry.py fails for an unregistered file in any src/<project>/evals/ folder. This registry lives with the agents project; the files it lists stay with their owning project. All data is constructed or synthetic.",
+ "datasets": [
+  {
+   "id": "regulatory-home-chat-evaluation",
+   "path": "src/agents/evals/regulatory_chat_results.json",
+   "version": "regulatory-home-chat-eval-v2",
+   "owner": "Juan Manuel Servera (synthetic-demo exercise owner; no operational approval)",
+   "purpose": "Frozen implementer-authored offline cited-answer/refusal development evaluation and same-source deterministic-card comparator. No real model, held-out grading or human benefit claim.",
+   "used_by": [
+    "src/agents/src/zava_forward/agents/regulatory_eval.py",
+    "src/agents/tests/test_regulatory_answers.py"
+   ],
+   "contains_real_data": false
+  },
+  {
+   "id": "regulatory-gates-development",
+   "path": "src/agents/evals/regulatory_gates_cases.json",
+   "version": "regulatory-gates-development-v1",
+   "owner": "Juan Manuel Servera (synthetic-demo exercise owner; thresholds not agreed)",
+   "purpose": "Frozen implementer-authored source lookup, refusal and adversarial questions with independent expected outcomes. Not held-out legal grading.",
+   "used_by": ["src/agents/tests/regulatory_gate_fixture.py", "src/agents/tests/test_regulatory_gates.py"],
+   "contains_real_data": false
+  },
+  {
+   "id": "regulatory-gates-results",
+   "path": "src/agents/evals/regulatory_gates_results.json",
+   "version": "regulatory-evaluation-gates-v1",
+   "owner": "Juan Manuel Servera (synthetic-demo exercise owner; no operational approval)",
+   "purpose": "Reproducible per-check development results, generated 60000-home seeded baseline and cards-only recommendation pending actual staff comparison. No overall pass.",
+   "used_by": ["src/agents/evals/run_regulatory_gates.py", "src/agents/tests/test_regulatory_gates.py"],
+   "contains_real_data": false
+  },
+  {
+   "id": "ai-priority-golden",
+   "path": "src/agents/evals/ai_priority_golden.json",
+   "version": "2026-10-09",
+   "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
+   "purpose": "Constructed scenarios for the offline AI priority evaluation harness: ranking and case data never change, output stays Proposed, no critical miss, cited facts exist.",
+   "used_by": [
+    "src/agents/src/zava_forward/agents/ai_eval.py",
+    "src/agents/tests/test_ai_eval.py"
+   ],
+   "contains_real_data": false
+  },
+  {
+   "id": "chat-golden",
+   "path": "src/agents/evals/chat_golden.json",
+   "version": "chat-golden-2026-10-15-pr307",
+   "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
+   "purpose": "Constructed multi-turn conversation scenarios for the offline chat evaluation (#164): grounding, abstention, permission change, out-of-scope refusal, prompt injection and memory poisoning. Development set, not an independently labelled held-out set.",
+   "used_by": [
+    "src/agents/src/zava_forward/agents/chat_eval.py",
+    "src/agents/tests/test_chat_eval.py"
+   ],
+   "contains_real_data": false
+  },
+  {
+   "id": "cohort-manifest-draft",
+   "path": "src/agents/evals/cohort_manifest_draft.json",
+   "version": "cohort-manifest-draft-v0.2.0",
+   "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
+   "purpose": "DRAFT, UNAPPROVED, NOT EXECUTED wholly synthetic paired cohort and missing-data scenario manifest for owner review (#222). Development draft, not held-out: agent-authored proposals, no approved labels, thresholds or fairness evidence. Not read by any evaluator.",
+   "used_by": [
+    "src/agents/tests/test_cohort_manifest_draft.py"
+   ],
+   "contains_real_data": false
+  },
+  {
+   "id": "stock-scale-fixture",
+   "path": "ZF_DATA/scale-fixture/ (generated, not committed, outside the repository)",
+   "generator": "src/core/src/zava_forward/core/synthetic/scale_fixture.py",
+   "version": "1.3.0",
+   "seed": 174,
+   "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
+   "purpose": "Reproducible wholly fictional 60,000-home, 60,000-household (tenancy, consent, representative states) and 600,000-event fixture for the NFR-002 scale dimension. Rebuilt from recorded seed/as-of/source revision into a new or empty directory under ZF_DATA. Not the private OSM stock register.",
+   "used_by": [
+    "src/agents/tests/test_eval_registry.py"
+   ],
+   "contains_real_data": false
+  },
+  {
+   "id": "chat-memory-fixture",
+   "path": "ZF_DATA/chat-fixture/ (generated, not committed, outside the repository)",
+   "generator": "src/agents/tests/chat_fixture.py",
+   "version": "chat-fixture-v1",
+   "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
+   "purpose": "Synthetic personas for the eleven perspectives, chat threads, memory items, consent/opt-in states and expiry, deletion and cross-user isolation cases for ADR 0004 testing. Retention is illustrative.",
+   "used_by": [
+    "src/agents/tests/test_chat_fixture.py"
+   ],
+   "seed": 172,
+   "contains_real_data": false
+  },
+  {
+   "id": "document-form-fixtures",
+   "path": "src/importer/evals/document_form_fixtures.json",
+   "version": "document-form-fixtures-v1",
+   "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
+   "purpose": "Synthetic document, form-schema and seeded-defect fixtures (120 families) with seeded gold labels; gold labels await human adjudication.",
+   "used_by": [
+    "src/importer/tests/test_document_form_fixtures.py"
+   ],
+   "seed": 20260901,
+   "contains_real_data": false
+  },
+  {
+   "id": "fictional-form-review-pack",
+   "path": "src/core/evals/fictional_form_review_pack.json",
+   "version": "fictional-form-review-pack-v1",
+   "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
+   "purpose": "FICTIONAL synthetic form/template review pack for #97: field contract, authority, freshness and stale-trigger proposals, with Finance decision fields FD-01..FD-14 unresolved. Not an approved template; no submission, payment, grant terms or Finance signature.",
+   "used_by": [
+    "src/core/tests/test_form_review_pack.py"
+   ],
+   "contains_real_data": false
+  },
+  {
+   "id": "document-control-fixtures",
+   "path": "src/core/evals/document_control_fixtures.json",
+   "version": "document-control-fixtures-v1",
+   "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
+   "purpose": "Synthetic scan classes, retention triggers and legal holds for 120 homes from the 60,000-home stock register; no real retention decision.",
+   "used_by": [
+    "src/api/tests/test_document_controls.py"
+   ],
+   "seed": 20260901,
+   "contains_real_data": false
+  },
+  {
+   "id": "review-effectiveness-golden",
+   "path": "src/agents/evals/review_effectiveness_golden.json",
+   "version": "2026-11-01",
+   "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
+   "purpose": "Seeded wrong, stale, unsupported and incomplete proposals plus correct controls for the offline human-review effectiveness test (AC-070); no real data.",
+   "used_by": [
+    "src/agents/tests/test_review_effectiveness.py"
+   ],
+   "contains_real_data": false
+  }
+ ],
+ "open_items": [
+  "Name an accountable owner for each dataset.",
+  "In-test 60,000-case builders in tests/test_ranking_scale.py and tests/test_sqlreads.py are not yet migrated to the shared fixture; their data shapes differ (full case records) from the lightweight fixture rows."
+ ]
+}

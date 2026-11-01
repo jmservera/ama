@@ -33,11 +33,10 @@ class GoldenRunTests(unittest.TestCase):
         cls.report = chat_eval.run_eval()
 
     def test_open_critical_gap_blocks_golden_success(self) -> None:
-        self.assertFalse(self.report["passed"])
-        self.assertEqual(self.report["summary"]["failures"], 2)
-        self.assertEqual(self.report["summary"]["critical_failures"], 2)
-        unexpected = [r for r in self.report["results"] if not r["passed"] and not r["known_gap"]]
-        self.assertEqual(unexpected, [])
+        self.assertTrue(self.report["passed"])
+        self.assertEqual(self.report["summary"]["failures"], 0)
+        self.assertEqual(self.report["summary"]["critical_failures"], 0)
+        self.assertEqual(self.report["summary"]["open_critical_gaps"], [])
 
     def test_scenarios_are_multi_turn_and_cover_every_required_area(self) -> None:
         cats = {r["category"] for r in self.report["results"]}
@@ -62,17 +61,10 @@ class GoldenRunTests(unittest.TestCase):
         self.assertGreaterEqual(len(kinds), 4)
 
     def test_known_gaps_are_recorded_not_hidden(self) -> None:
-        gaps = {g["id"] for g in self.report["summary"]["known_gaps"]}
-        self.assertEqual(
-            gaps,
-            {
-                "grounding-unsupported-claim-with-valid-citation",
-            },
-        )
-        recorded = [f for f in self.report["failures"] if f["severity"] == "critical"]
-        self.assertTrue(recorded)
-        self.assertTrue(all(f["scenario"] in gaps for f in recorded))
-        self.assertEqual({g["id"] for g in self.report["summary"]["open_critical_gaps"]}, gaps)
+        self.assertEqual(self.report["summary"]["known_gaps"], [])
+        ids = {r["id"] for r in self.report["results"]}
+        self.assertIn("grounding-unsupported-claim-with-valid-citation", ids)
+        self.assertIn("grounding-supported-claim-is-answered", ids)
         for category, counts in self.report["summary"]["by_category"].items():
             results = [r for r in self.report["results"] if r["category"] == category]
             self.assertEqual(counts["passed"], sum(r["passed"] for r in results))
@@ -112,12 +104,12 @@ class GoldenRunTests(unittest.TestCase):
         e = self.report["enablement"]
         self.assertEqual(
             (e["outcome"], e["state"], e["thresholds"]),
-            ("fail", "disabled", "not approved"),
+            ("insufficient", "disabled", "not approved"),
         )
         self.assertIn("approved thresholds", e["missing_evidence"])
         approved = chat_eval.enablement_decision(self.report, dict(approved_by="someone"))
-        self.assertEqual((approved["outcome"], approved["state"]), ("fail", "disabled"))
-        self.assertEqual(e["blocking_gaps"], self.report["summary"]["open_critical_gaps"])
+        self.assertEqual((approved["outcome"], approved["state"]), ("insufficient", "disabled"))
+        self.assertEqual(e["blocking_gaps"], [])
 
     def test_chat_task_is_registered_disabled_with_reviewer_and_unapproved_thresholds(self) -> None:
         from zava_forward.core import ai_registry
@@ -159,6 +151,9 @@ class GoldenRunTests(unittest.TestCase):
         report = copy.deepcopy(self.report)
         report["passed"] = True
         report["summary"]["critical_failures"] = 0
+        report["summary"]["open_critical_gaps"] = [
+            dict(id="seeded", category="grounding", gap="seeded")
+        ]
         result = chat_eval.enablement_decision(report, dict(approved_by="someone"))
         self.assertEqual(result["outcome"], "fail")
         self.assertTrue(result["blocking_gaps"])
@@ -252,24 +247,19 @@ class CliTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             out = Path(tmp) / "report.json"
             with contextlib.redirect_stdout(io.StringIO()):
-                self.assertEqual(chat_eval.main(["--record", str(out)]), 1)
+                self.assertEqual(chat_eval.main(["--record", str(out)]), 0)
             report = json.loads(out.read_text())
             self.assertEqual(report["version"], GOLDEN["version"])
-            self.assertFalse(report["passed"])
-            self.assertTrue(report["summary"]["open_critical_gaps"])
+            self.assertTrue(report["passed"])
+            self.assertEqual(report["summary"]["open_critical_gaps"], [])
 
-    def test_json_cli_is_nonzero_and_lists_blocking_gaps(self) -> None:
+    def test_golden_cli_reports_no_gap_but_never_enables(self) -> None:
         output = io.StringIO()
         with contextlib.redirect_stdout(output):
-            self.assertEqual(chat_eval.main(["--json"]), 1)
-        self.assertTrue(json.loads(output.getvalue())["enablement"]["blocking_gaps"])
-
-    def test_plain_cli_names_the_critical_gap(self) -> None:
-        output = io.StringIO()
-        with contextlib.redirect_stdout(output):
-            self.assertEqual(chat_eval.main([]), 1)
-        self.assertIn("open critical gap [grounding]", output.getvalue())
-        self.assertIn("grounding-unsupported-claim-with-valid-citation", output.getvalue())
+            self.assertEqual(chat_eval.main(["--json"]), 0)
+        report = json.loads(output.getvalue())
+        self.assertEqual(report["enablement"]["blocking_gaps"], [])
+        self.assertEqual(report["enablement"]["state"], "disabled")
 
     def test_gap_free_cli_returns_zero_but_never_enables(self) -> None:
         report = run(dict(version="t", scenarios=[scenario("grounding-cited-follow-ups")]))

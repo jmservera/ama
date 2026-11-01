@@ -1,0 +1,30 @@
+{
+  "warning": "SYNTHETIC DATA. Fictional records for design and analysis practice. Not Zava North Homes data.",
+  "scenario": "zava-forward-year-one",
+  "version": "2.0.0",
+  "seed": 1341953496,
+  "generated_at": "2026-09-30T22:53:15",
+  "extract_date": "2026-09-30",
+  "baseline_window": [
+    "2025-07-01",
+    "2026-06-30"
+  ],
+  "simulation_start": "2025-07-01",
+  "row_counts": {
+    "property-register.csv": 996,
+    "candidate-lifecycle.csv": 992,
+    "lifecycle-events.csv": 9859,
+    "resident-journey.csv": 980,
+    "resident-contacts.csv": 5905,
+    "appointments.csv": 1530,
+    "safety-holds.csv": 97,
+    "quality-evidence.csv": 1381,
+    "grant-and-finance.csv": 981,
+    "contractor-capacity.csv": 135,
+    "programme-board-snapshots.csv": 480,
+    "edge-case-returns.csv": 172,
+    "delay-code-dictionary.csv": 20
+  },
+  "generator": "Held outside the knowledge base with the answer key so analysis can stay blind",
+  "is_synthetic": true
+}

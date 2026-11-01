@@ -1,0 +1,447 @@
+{
+  "is_synthetic": true,
+  "label": "FICTIONAL SYNTHETIC review pack. NOT an approved template. No submission, no payment, no scheme terms, no Finance signature.",
+  "status": "NOT APPROVED - for Finance and owner review only",
+  "pack_id": "FICT-FORM-REVIEW-97",
+  "version": "fictional-form-review-pack-v1",
+  "pack_version": 1,
+  "pack_date": "2026-10-20",
+  "issue": "#97",
+  "owner_direction": "Owner comment on #126, 2026-10-20: prepare a fictional versioned form/template and Finance authority/binding pack for review, not an approved template.",
+  "statements": [
+    "This template is invented. It is not a real funder, scheme, round, application, award or claim template.",
+    "Registering its schema records Unapproved status; the pack cannot create approved-template status.",
+    "Nothing here is submitted to any funder and no payment, grant value, eligibility or commitment is implied.",
+    "No Finance, Legal or owner signature, approval date, delegation or authority is recorded; every such field is unresolved.",
+    "Stale propagation and preparer/reviewer separation are proposed controls for the later #98 runtime; they are not enforced by the delivered schema registry.",
+    "Actual authority and binding (PRD OQ-015) are absent, so issue #97 criterion 1 remains unmet.",
+    "Source-kind ranks, evidence references, maximum source ages and stale triggers are fictional proposals pending Finance decisions FD-07 and FD-09; they are not an agreed precedence or scheme requirement."
+  ],
+  "template": {
+    "id": "FICT-FUND-FORM",
+    "version": "1",
+    "approval_status": "NOT APPROVED - fictional",
+    "effective_from": null,
+    "effective_from_status": "Unresolved - Finance to supply",
+    "pack_review_by": "2026-11-20",
+    "freshness_policy": "Fictional review default: the pack is re-reviewed by pack_review_by or on any trigger in stale_propagation; no real scheme currency is asserted."
+  },
+  "schema": {
+    "id": "FICT-FUND-FORM",
+    "version": 1,
+    "form_type": "funding",
+    "template": {
+      "id": "FICT-FUND-FORM",
+      "version": "1",
+      "evidence_ref": "FICT-NOT-APPROVED-TEMPLATE-EVIDENCE"
+    },
+    "reviewer": "REGISTERED-REVIEWER-SUBSTITUTED-BY-TEST",
+    "funding": {
+      "status": "Unknown",
+      "scheme_id": null,
+      "route": null,
+      "evidence_ref": null
+    },
+    "rule_refs": [
+      {"id": "FICT-RULES", "version": "1", "evidence_ref": "FICT-RULE-SOURCE-UNRESOLVED"}
+    ],
+    "fields": [
+      {
+        "id": "home_ref",
+        "section_id": "property",
+        "type": "string",
+        "unit": null,
+        "options": [],
+        "required": true,
+        "required_when": [],
+        "source_authority": [
+          {"kind": "Survey", "rank": 1, "evidence_ref": "FICT-POLICY-HOME-SURVEY"},
+          {"kind": "EPC", "rank": 2, "evidence_ref": "FICT-POLICY-HOME-EPC"}
+        ],
+        "evidence_required": ["Survey record carrying the constructed home reference"],
+        "calculation_ref": null,
+        "category": "value"
+      },
+      {
+        "id": "survey_date",
+        "section_id": "property",
+        "type": "date",
+        "unit": null,
+        "options": [],
+        "required": true,
+        "required_when": [],
+        "source_authority": [
+          {"kind": "Survey", "rank": 1, "evidence_ref": "FICT-POLICY-SURVEY-DATE"}
+        ],
+        "evidence_required": ["Dated survey report"],
+        "calculation_ref": null,
+        "category": "value"
+      },
+      {
+        "id": "epc_band",
+        "section_id": "property",
+        "type": "enum",
+        "unit": null,
+        "options": ["A", "B", "C", "D", "E", "F", "G"],
+        "required": true,
+        "required_when": [],
+        "source_authority": [
+          {"kind": "EPC", "rank": 1, "evidence_ref": "FICT-POLICY-EPC-BAND"}
+        ],
+        "evidence_required": ["Energy performance certificate with the band"],
+        "calculation_ref": null,
+        "category": "value"
+      },
+      {
+        "id": "floor_area",
+        "section_id": "property",
+        "type": "number",
+        "unit": "m2",
+        "options": [],
+        "required": true,
+        "required_when": [],
+        "source_authority": [
+          {"kind": "Survey", "rank": 1, "evidence_ref": "FICT-POLICY-AREA-SURVEY"},
+          {"kind": "EPC", "rank": 2, "evidence_ref": "FICT-POLICY-AREA-EPC"}
+        ],
+        "evidence_required": ["Survey or certificate floor area with unit"],
+        "calculation_ref": null,
+        "category": "value"
+      },
+      {
+        "id": "storey_count",
+        "section_id": "property",
+        "type": "integer",
+        "unit": null,
+        "options": [],
+        "required": true,
+        "required_when": [],
+        "source_authority": [
+          {"kind": "Survey", "rank": 1, "evidence_ref": "FICT-POLICY-STOREYS"}
+        ],
+        "evidence_required": ["Survey record stating the number of storeys"],
+        "calculation_ref": null,
+        "category": "value"
+      },
+      {
+        "id": "measure_type",
+        "section_id": "works",
+        "type": "enum",
+        "unit": null,
+        "options": ["fabric", "heating", "ventilation", "solar-pv"],
+        "required": true,
+        "required_when": [],
+        "source_authority": [
+          {"kind": "Design", "rank": 1, "evidence_ref": "FICT-POLICY-MEASURE"}
+        ],
+        "evidence_required": ["Design document naming the measure"],
+        "calculation_ref": null,
+        "category": "value"
+      },
+      {
+        "id": "estimated_energy_saving",
+        "section_id": "works",
+        "type": "number",
+        "unit": "kWh/m2/year",
+        "options": [],
+        "required": false,
+        "required_when": [{"field_id": "measure_type", "equals": "fabric"}],
+        "source_authority": [
+          {"kind": "Design", "rank": 1, "evidence_ref": "FICT-POLICY-SAVING"}
+        ],
+        "evidence_required": ["Design estimate stating basis and unit"],
+        "calculation_ref": {"id": "FICT-CALC-SAVING", "version": "1", "evidence_ref": "FICT-FORMULA-SAVING-UNRESOLVED"},
+        "category": "value"
+      },
+      {
+        "id": "works_cost_net",
+        "section_id": "cost",
+        "type": "number",
+        "unit": "GBP",
+        "options": [],
+        "required": true,
+        "required_when": [],
+        "source_authority": [
+          {"kind": "Funding evidence", "rank": 1, "evidence_ref": "FICT-POLICY-COST-FUNDING"},
+          {"kind": "Other", "rank": 2, "evidence_ref": "FICT-POLICY-COST-OTHER"}
+        ],
+        "evidence_required": ["Quote or invoice net amount in pounds sterling"],
+        "calculation_ref": null,
+        "category": "value"
+      },
+      {
+        "id": "vat_amount",
+        "section_id": "cost",
+        "type": "number",
+        "unit": "GBP",
+        "options": [],
+        "required": true,
+        "required_when": [],
+        "source_authority": [
+          {"kind": "Funding evidence", "rank": 1, "evidence_ref": "FICT-POLICY-VAT-FUNDING"},
+          {"kind": "Other", "rank": 2, "evidence_ref": "FICT-POLICY-VAT-OTHER"}
+        ],
+        "evidence_required": ["Quote or invoice VAT amount in pounds sterling"],
+        "calculation_ref": null,
+        "category": "value"
+      },
+      {
+        "id": "total_cost_gross",
+        "section_id": "cost",
+        "type": "number",
+        "unit": "GBP",
+        "options": [],
+        "required": true,
+        "required_when": [],
+        "source_authority": [
+          {"kind": "Funding evidence", "rank": 1, "evidence_ref": "FICT-POLICY-TOTAL-FUNDING"},
+          {"kind": "Other", "rank": 2, "evidence_ref": "FICT-POLICY-TOTAL-OTHER"}
+        ],
+        "evidence_required": ["Quote or invoice total in pounds sterling"],
+        "calculation_ref": {"id": "FICT-CALC-TOTAL", "version": "1", "evidence_ref": "FICT-FORMULA-TOTAL-UNRESOLVED"},
+        "category": "value"
+      },
+      {
+        "id": "funding_mix",
+        "section_id": "funding",
+        "type": "enum",
+        "unit": null,
+        "options": ["grant-only", "match"],
+        "required": true,
+        "required_when": [],
+        "source_authority": [
+          {"kind": "Funding evidence", "rank": 1, "evidence_ref": "FICT-POLICY-MIX"}
+        ],
+        "evidence_required": ["Supplied funding-route evidence naming the mix"],
+        "calculation_ref": null,
+        "category": "value"
+      },
+      {
+        "id": "match_funding_amount",
+        "section_id": "funding",
+        "type": "number",
+        "unit": "GBP",
+        "options": [],
+        "required": false,
+        "required_when": [{"field_id": "funding_mix", "equals": "match"}],
+        "source_authority": [
+          {"kind": "Funding evidence", "rank": 1, "evidence_ref": "FICT-POLICY-MATCH"}
+        ],
+        "evidence_required": ["Supplied match-funding evidence in pounds sterling"],
+        "calculation_ref": null,
+        "category": "value"
+      },
+      {
+        "id": "resident_consent_recorded",
+        "section_id": "evidence",
+        "type": "boolean",
+        "unit": null,
+        "options": [],
+        "required": true,
+        "required_when": [],
+        "source_authority": [
+          {"kind": "Consent", "rank": 1, "evidence_ref": "FICT-POLICY-CONSENT"}
+        ],
+        "evidence_required": ["Resident consent record reference; the record is not copied"],
+        "calculation_ref": null,
+        "category": "value"
+      },
+      {
+        "id": "applicant_declaration",
+        "section_id": "declarations",
+        "type": "string",
+        "unit": null,
+        "options": [],
+        "required": true,
+        "required_when": [],
+        "source_authority": [
+          {"kind": "Other", "rank": 1, "evidence_ref": "FICT-POLICY-HUMAN-ONLY"}
+        ],
+        "evidence_required": ["Authorised human completes this declaration"],
+        "calculation_ref": null,
+        "category": "declaration"
+      },
+      {
+        "id": "authorised_signature",
+        "section_id": "declarations",
+        "type": "string",
+        "unit": null,
+        "options": [],
+        "required": true,
+        "required_when": [],
+        "source_authority": [
+          {"kind": "Other", "rank": 1, "evidence_ref": "FICT-POLICY-HUMAN-ONLY"}
+        ],
+        "evidence_required": ["Authorised human signature; never staged or inferred"],
+        "calculation_ref": null,
+        "category": "signature"
+      },
+      {
+        "id": "finance_approval",
+        "section_id": "declarations",
+        "type": "string",
+        "unit": null,
+        "options": [],
+        "required": true,
+        "required_when": [],
+        "source_authority": [
+          {"kind": "Other", "rank": 1, "evidence_ref": "FICT-POLICY-HUMAN-ONLY"}
+        ],
+        "evidence_required": ["Named Finance approval recorded by the approver"],
+        "calculation_ref": null,
+        "category": "approval"
+      }
+    ]
+  },
+  "calculations": [
+    {
+      "id": "FICT-CALC-TOTAL",
+      "version": "1",
+      "formula": "works_cost_net + vat_amount = total_cost_gross (data only, never executed)",
+      "inputs": ["works_cost_net", "vat_amount", "total_cost_gross"],
+      "status": "Unresolved - Finance to supply the approved rule"
+    },
+    {
+      "id": "FICT-CALC-SAVING",
+      "version": "1",
+      "formula": "estimated_energy_saving is reported per m2 of floor_area (data only, never executed)",
+      "inputs": ["estimated_energy_saving", "floor_area", "measure_type"],
+      "status": "Unresolved - owner to supply the approved rule"
+    }
+  ],
+  "field_review": [
+    {"field_id": "home_ref", "freshness": {"max_source_age_days": 365, "stale_on": "Survey supersession", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-SURVEY-SUPERSESSION", "ST-SOURCE-AGE-EXPIRY", "ST-EPC-SUPERSESSION"]}},
+    {"field_id": "survey_date", "freshness": {"max_source_age_days": 365, "stale_on": "Survey supersession", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-SURVEY-SUPERSESSION", "ST-SOURCE-AGE-EXPIRY"]}},
+    {"field_id": "epc_band", "freshness": {"max_source_age_days": 3650, "stale_on": "EPC supersession", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-EPC-SUPERSESSION", "ST-SOURCE-AGE-EXPIRY"]}},
+    {"field_id": "floor_area", "freshness": {"max_source_age_days": 365, "stale_on": "Survey or EPC supersession", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-RULE-VERSION", "ST-EPC-SUPERSESSION", "ST-SURVEY-SUPERSESSION", "ST-SOURCE-AGE-EXPIRY"]}},
+    {"field_id": "storey_count", "freshness": {"max_source_age_days": 365, "stale_on": "Survey supersession", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-SURVEY-SUPERSESSION", "ST-SOURCE-AGE-EXPIRY"]}},
+    {"field_id": "measure_type", "freshness": {"max_source_age_days": 180, "stale_on": "Design supersession", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-RULE-VERSION", "ST-DESIGN-SUPERSESSION", "ST-SOURCE-AGE-EXPIRY"]}},
+    {"field_id": "estimated_energy_saving", "freshness": {"max_source_age_days": 180, "stale_on": "Design supersession or rule version change", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-RULE-VERSION", "ST-EPC-SUPERSESSION", "ST-DESIGN-SUPERSESSION", "ST-SOURCE-AGE-EXPIRY", "ST-SURVEY-SUPERSESSION"]}},
+    {"field_id": "works_cost_net", "freshness": {"max_source_age_days": 90, "stale_on": "Cost document supersession", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-RULE-VERSION", "ST-COST-DOCUMENT-CHANGE", "ST-SOURCE-AGE-EXPIRY", "ST-FUNDING-EVIDENCE-CHANGE"]}},
+    {"field_id": "vat_amount", "freshness": {"max_source_age_days": 90, "stale_on": "Cost document supersession", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-RULE-VERSION", "ST-COST-DOCUMENT-CHANGE", "ST-SOURCE-AGE-EXPIRY", "ST-FUNDING-EVIDENCE-CHANGE"]}},
+    {"field_id": "total_cost_gross", "freshness": {"max_source_age_days": 90, "stale_on": "Cost document supersession or rule version change", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-RULE-VERSION", "ST-COST-DOCUMENT-CHANGE", "ST-SOURCE-AGE-EXPIRY", "ST-FUNDING-EVIDENCE-CHANGE"]}},
+    {"field_id": "funding_mix", "freshness": {"max_source_age_days": 90, "stale_on": "Funding evidence supersession", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-FUNDING-EVIDENCE-CHANGE", "ST-SOURCE-AGE-EXPIRY"]}},
+    {"field_id": "match_funding_amount", "freshness": {"max_source_age_days": 90, "stale_on": "Funding evidence supersession", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-COST-DOCUMENT-CHANGE", "ST-FUNDING-EVIDENCE-CHANGE", "ST-SOURCE-AGE-EXPIRY"]}},
+    {"field_id": "resident_consent_recorded", "freshness": {"max_source_age_days": 365, "stale_on": "Consent change or withdrawal", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-CONSENT-CHANGE", "ST-SOURCE-AGE-EXPIRY"]}},
+    {"field_id": "applicant_declaration", "freshness": {"max_source_age_days": null, "stale_on": "Any template change; the human re-completes it", "stale_triggers": ["ST-TEMPLATE-VERSION"]}},
+    {"field_id": "authorised_signature", "freshness": {"max_source_age_days": null, "stale_on": "Any template change; the human re-signs", "stale_triggers": ["ST-TEMPLATE-VERSION"]}},
+    {"field_id": "finance_approval", "freshness": {"max_source_age_days": null, "stale_on": "Any template change; the approver re-decides", "stale_triggers": ["ST-TEMPLATE-VERSION", "ST-RULE-VERSION"]}}
+  ],
+  "freshness_note": "Maximum source ages are fictional proposed review defaults for discussion, not scheme or legal requirements.",
+  "lineage_expectations": {
+    "staging_contract": "Existing form-source-locator-1 staging in src/core README section 'Form schema registry and candidate staging (#97)'.",
+    "text": "Strict UTF-8, zero-based half-open code-point offsets, exact raw-span equality.",
+    "csv": "Strict UTF-8, one-based row and column including the header, exact cell equality.",
+    "ocr": "Supplied import: one-based page and a nonblank region string of at most 300 characters, route evidence and error record required; pixel content and route authority remain Unverified.",
+    "recorded": ["parser", "parser_version", "model_version or null", "route_evidence", "error_record", "source id", "content_sha256", "source version", "source date"],
+    "assertion_status": "Supplied, unverified",
+    "human_only_fields": "Declaration, signature and approval fields cannot receive candidates."
+  },
+  "roles": {
+    "preparer": {
+      "role": "Fictional grants preparer",
+      "may": ["stage candidates", "propose corrections with evidence"],
+      "may_not": ["review own preparation", "approve", "sign", "submit"]
+    },
+    "reviewer": {
+      "role": "Fictional Finance reviewer",
+      "may": ["accept, correct or reject proposed fields with evidence or reason"],
+      "may_not": ["review own preparation", "approve the template", "sign", "submit"]
+    },
+    "approver": {
+      "role": "Fictional Finance authority holder (unassigned)",
+      "may": [],
+      "may_not": [],
+      "status": "Unresolved - Finance to name the authority holder"
+    },
+    "separation_rule": "Proposed control for #98: the preparer and reviewer of a field must be different registered people, and neither may be the approver. Not enforced by the delivered schema registry.",
+    "registered_reviewer": "The schema reviewer must be an existing registered staff member; the public pack carries a placeholder because public payloads may not hold email addresses."
+  },
+  "stale_propagation": {
+    "status": "Proposed control for #98; data only and not run by the delivered registry.",
+    "rule": "A trigger marks only the listed fields and calculations Stale - re-review required, preserving prior values and evidence; unlisted fields keep their review state.",
+    "triggers": [
+      {
+        "id": "ST-TEMPLATE-VERSION",
+        "description": "A new template version is issued",
+        "affected_fields": ["home_ref", "survey_date", "epc_band", "floor_area", "storey_count", "measure_type", "estimated_energy_saving", "works_cost_net", "vat_amount", "total_cost_gross", "funding_mix", "match_funding_amount", "resident_consent_recorded", "applicant_declaration", "authorised_signature", "finance_approval"],
+        "affected_calculations": ["FICT-CALC-TOTAL", "FICT-CALC-SAVING"],
+        "unaffected_fields": []
+      },
+      {
+        "id": "ST-RULE-VERSION",
+        "description": "FICT-RULES or a calculation version changes",
+        "affected_fields": ["estimated_energy_saving", "total_cost_gross", "works_cost_net", "vat_amount", "floor_area", "measure_type", "finance_approval"],
+        "affected_calculations": ["FICT-CALC-TOTAL", "FICT-CALC-SAVING"],
+        "unaffected_fields": ["home_ref", "survey_date", "epc_band", "storey_count", "funding_mix", "match_funding_amount", "resident_consent_recorded", "applicant_declaration", "authorised_signature"]
+      },
+      {
+        "id": "ST-EPC-SUPERSESSION",
+        "description": "An EPC document is superseded",
+        "affected_fields": ["epc_band", "floor_area", "estimated_energy_saving", "home_ref"],
+        "affected_calculations": ["FICT-CALC-SAVING"],
+        "unaffected_fields": ["survey_date", "storey_count", "measure_type", "works_cost_net", "vat_amount", "total_cost_gross", "funding_mix", "match_funding_amount", "resident_consent_recorded", "applicant_declaration", "authorised_signature", "finance_approval"]
+      },
+      {
+        "id": "ST-COST-DOCUMENT-CHANGE",
+        "description": "A quote or invoice changes",
+        "affected_fields": ["works_cost_net", "vat_amount", "total_cost_gross", "match_funding_amount"],
+        "affected_calculations": ["FICT-CALC-TOTAL"],
+        "unaffected_fields": ["home_ref", "survey_date", "epc_band", "floor_area", "storey_count", "measure_type", "estimated_energy_saving", "funding_mix", "resident_consent_recorded", "applicant_declaration", "authorised_signature", "finance_approval"]
+      },
+      {
+        "id": "ST-SURVEY-SUPERSESSION",
+        "description": "A survey document is superseded",
+        "affected_fields": ["home_ref", "survey_date", "floor_area", "storey_count", "estimated_energy_saving"],
+        "affected_calculations": ["FICT-CALC-SAVING"],
+        "unaffected_fields": ["epc_band", "measure_type", "works_cost_net", "vat_amount", "total_cost_gross", "funding_mix", "match_funding_amount", "resident_consent_recorded", "applicant_declaration", "authorised_signature", "finance_approval"]
+      },
+      {
+        "id": "ST-DESIGN-SUPERSESSION",
+        "description": "A design document is superseded",
+        "affected_fields": ["measure_type", "estimated_energy_saving"],
+        "affected_calculations": ["FICT-CALC-SAVING"],
+        "unaffected_fields": ["home_ref", "survey_date", "epc_band", "floor_area", "storey_count", "works_cost_net", "vat_amount", "total_cost_gross", "funding_mix", "match_funding_amount", "resident_consent_recorded", "applicant_declaration", "authorised_signature", "finance_approval"]
+      },
+      {
+        "id": "ST-FUNDING-EVIDENCE-CHANGE",
+        "description": "Funding evidence is superseded or withdrawn",
+        "affected_fields": ["funding_mix", "match_funding_amount", "works_cost_net", "vat_amount", "total_cost_gross"],
+        "affected_calculations": ["FICT-CALC-TOTAL"],
+        "unaffected_fields": ["home_ref", "survey_date", "epc_band", "floor_area", "storey_count", "measure_type", "estimated_energy_saving", "resident_consent_recorded", "applicant_declaration", "authorised_signature", "finance_approval"]
+      },
+      {
+        "id": "ST-CONSENT-CHANGE",
+        "description": "Resident consent is changed or withdrawn",
+        "affected_fields": ["resident_consent_recorded"],
+        "affected_calculations": [],
+        "unaffected_fields": ["home_ref", "survey_date", "epc_band", "floor_area", "storey_count", "measure_type", "estimated_energy_saving", "works_cost_net", "vat_amount", "total_cost_gross", "funding_mix", "match_funding_amount", "applicant_declaration", "authorised_signature", "finance_approval"]
+      },
+      {
+        "id": "ST-SOURCE-AGE-EXPIRY",
+        "description": "Applies per field: when one field's source is older than its fictional max_source_age_days, only that field and the calculations or fields that depend on it are marked stale. The lists below are the maximum set of age-limited fields, not a simultaneous marking",
+        "affected_fields": ["home_ref", "survey_date", "epc_band", "floor_area", "storey_count", "measure_type", "estimated_energy_saving", "works_cost_net", "vat_amount", "total_cost_gross", "funding_mix", "match_funding_amount", "resident_consent_recorded"],
+        "affected_calculations": ["FICT-CALC-TOTAL", "FICT-CALC-SAVING"],
+        "unaffected_fields": ["applicant_declaration", "authorised_signature", "finance_approval"]
+      }
+    ]
+  },
+  "finance_decisions": [
+    {"id": "FD-01", "value": null, "status": "Unresolved - Finance to supply", "field": "authority_holder", "question": "Who holds Finance authority to approve a template version and its field authority?", "owner_role": "Finance and Grants lead", "evidence_needed": "Named role-holder and recorded delegation"},
+    {"id": "FD-02", "value": null, "status": "Unresolved - Finance to supply", "field": "delegation_instrument", "question": "Which recorded delegation or scheme of authority covers this approval?", "owner_role": "Finance and Grants lead with Legal", "evidence_needed": "Dated delegation record"},
+    {"id": "FD-03", "value": null, "status": "Unresolved - Finance to supply", "field": "scheme_and_route", "question": "Which real scheme and evidenced route (competitive, allocation, award-return or claim) does a funding form bind to?", "owner_role": "Finance and Grants lead", "evidence_needed": "Scheme and route evidence"},
+    {"id": "FD-04", "value": null, "status": "Unresolved - Finance to supply", "field": "template_source_and_version", "question": "Which actual template source and version replaces the fictional template?", "owner_role": "Finance and Grants lead", "evidence_needed": "Supplied template with retrieval date"},
+    {"id": "FD-05", "value": null, "status": "Unresolved - Finance to supply", "field": "template_effective_dates", "question": "What are the actual effective-from and supersession dates?", "owner_role": "Finance and Grants lead", "evidence_needed": "Dated funder notice"},
+    {"id": "FD-06", "value": null, "status": "Unresolved - Finance to supply", "field": "scheme_terms_source", "question": "Which actual scheme terms and rules apply, and who approved them?", "owner_role": "Finance and Grants lead with Legal", "evidence_needed": "Terms source, date and approver"},
+    {"id": "FD-07", "value": null, "status": "Unresolved - Finance to supply", "field": "field_source_authority", "question": "Is each field's ranked source-kind policy approved or replaced?", "owner_role": "Finance and Grants lead", "evidence_needed": "Per-field approval record"},
+    {"id": "FD-08", "value": null, "status": "Unresolved - Finance to supply", "field": "calculation_rules", "question": "Are the total and saving rules approved, replaced or removed?", "owner_role": "Finance and Grants lead with a competent technical owner", "evidence_needed": "Approved rule text and version"},
+    {"id": "FD-09", "value": null, "status": "Unresolved - Finance to supply", "field": "attachment_authority", "question": "Which attachments and evidence types are required and from whom?", "owner_role": "Finance and Grants lead", "evidence_needed": "Funder attachment list"},
+    {"id": "FD-10", "value": null, "status": "Unresolved - Finance to supply", "field": "reviewer_assignment", "question": "Which registered people review preparation, separate from preparers?", "owner_role": "Programme Manager with Finance", "evidence_needed": "Named assignment"},
+    {"id": "FD-11", "value": null, "status": "Unresolved - Finance to supply", "field": "approver_decision", "question": "Does the named approver approve this template version?", "owner_role": "Finance authority holder", "evidence_needed": "Recorded decision with reason"},
+    {"id": "FD-12", "value": null, "status": "Unresolved - Finance to supply", "field": "approval_date", "question": "On what date was the decision recorded?", "owner_role": "Finance authority holder", "evidence_needed": "Dated approval record"},
+    {"id": "FD-13", "value": null, "status": "Unresolved - Finance to supply", "field": "signature", "question": "Has the authorised person signed?", "owner_role": "Finance authority holder", "evidence_needed": "Human signature outside this fictional pack"},
+    {"id": "FD-14", "value": null, "status": "Unresolved - Finance to supply", "field": "binding_statement", "question": "What exact statement binds a form draft to the approved template, route and rule versions?", "owner_role": "Finance and Grants lead with Legal", "evidence_needed": "Approved binding wording"}
+  ],
+  "finance_decision_status": "Unresolved - Finance to supply",
+  "unmet_authority": "Actual approved-template authority and binding are absent. Issue #97 criterion 1 stays unmet until a named human authority supplies a version-specific source, version and binding."
+}

@@ -1,0 +1,332 @@
+{
+  "warning": "SYNTHETIC DATA. This inventory describes fictional data needs. It contains no personal data.",
+  "version": "1.3.0",
+  "review_date": "2026-10-17",
+  "status": "draft-awaiting-owner-review",
+  "issue": "#166",
+  "parent": "#165",
+  "scenario_manifest": "scenario-manifest.json",
+  "gate_rule": "A build epic that consumes synthetic data must cite its inventory row id (SN-nn) in its issue or PR before work starts. A consuming row whose coverage is partial or missing needs a recorded owner decision on volume and scope first.",
+  "review_cadence": "Review on every iteration; bump version and review_date, and append to docs/reference/log.md.",
+  "coverage_values": [
+    "covered",
+    "partial",
+    "missing"
+  ],
+  "needs": [
+    {
+      "id": "SN-01",
+      "need": "Housing stock",
+      "source_reference": "docs/prds/zava-forward-retrofit-programme-demonstrator.md NFR-002; docs/reference/research/retrofit-synthetic-data/README.md",
+      "consuming_issues": [
+        "#144",
+        "#109",
+        "#104"
+      ],
+      "volume": "60,000 homes (seed 4820260930); 825 distinct geography anchors",
+      "owner": "owner, via #165",
+      "coverage": "partial",
+      "dataset_ids": [
+        "DS-STOCK-REGISTER"
+      ],
+      "note": "Private register regeneration remains unavailable. Stock-to-case linkage and deterministic fabric extensions are documented in README.md; private output was not revalidated in this inventory review.",
+      "gap_closure": {
+        "kind": "child",
+        "issues": [
+          "#168"
+        ],
+        "note": "Stock-to-case link and fabric attributes; regenerating the private register from a committed generator is part of #168 scope or an owner deferral."
+      }
+    },
+    {
+      "id": "SN-02",
+      "need": "Residents, contacts and tenancy",
+      "source_reference": "docs/reference/research/retrofit-synthetic-data/README.md; data-dictionary.md",
+      "consuming_issues": [
+        "#157",
+        "#104"
+      ],
+      "volume": "5,905 contacts in the public pack; invented residents in the 980-case MVP seed",
+      "owner": "owner, via #165",
+      "coverage": "partial",
+      "dataset_ids": [
+        "DS-OPS-PACK",
+        "DS-MVP-SEED"
+      ],
+      "note": "src/core/src/zava_forward/core/synthetic/scale_fixture.py generates 60,000 fictional home-linked households, residents and tenancies. This separate scale fixture does not prove full private stock/programme linkage or accepted application coverage.",
+      "gap_closure": {
+        "kind": "child",
+        "issues": [
+          "#169"
+        ],
+        "note": "Residents, households and tenancy at stock scale."
+      }
+    },
+    {
+      "id": "SN-03",
+      "need": "Surveys and EPC",
+      "source_reference": "docs/reference/research/retrofit-synthetic-data/data-dictionary.md",
+      "consuming_issues": [
+        "#104",
+        "#109"
+      ],
+      "volume": "Generator target: one EPC per 60,000 stock homes; surveys for about 35%; scope/mix awaiting owner confirmation",
+      "owner": "owner, via #165",
+      "coverage": "partial",
+      "dataset_ids": [
+        "DS-OPS-PACK",
+        "DS-MVP-SEED"
+      ],
+      "note": "README.md documents seeded stock EPC, survey and conflict fixtures. Counts and mix are constructed assumptions, not lodged EPCs or observed surveys; private outputs were not read in this review.",
+      "gap_closure": {
+        "kind": "child",
+        "issues": [
+          "#170"
+        ],
+        "note": "Survey, EPC and assessment fixtures; volume needs an owner decision."
+      }
+    },
+    {
+      "id": "SN-04",
+      "need": "Contractors and work orders",
+      "source_reference": "docs/reference/research/retrofit-synthetic-data/README.md",
+      "consuming_issues": [
+        "#144",
+        "#104"
+      ],
+      "volume": "1,578 appointments; contractor capacity table",
+      "owner": "owner, via #165",
+      "coverage": "partial",
+      "dataset_ids": [
+        "DS-OPS-PACK",
+        "DS-MVP-SEED"
+      ],
+      "note": "Covers 980 cases, not the 60,000 stock.",
+      "gap_closure": {
+        "kind": "child",
+        "issues": [
+          "#173"
+        ],
+        "note": "Contractor records beyond the 980-case snapshot."
+      }
+    },
+    {
+      "id": "SN-05",
+      "need": "Finance and grants",
+      "source_reference": "docs/reference/research/retrofit-synthetic-data/README.md",
+      "consuming_issues": [
+        "#104"
+      ],
+      "volume": "grant-and-finance.csv for 980 cases",
+      "owner": "owner, via #165",
+      "coverage": "partial",
+      "dataset_ids": [
+        "DS-OPS-PACK"
+      ],
+      "note": "Case-level only.",
+      "gap_closure": {
+        "kind": "child",
+        "issues": [
+          "#173"
+        ],
+        "note": "Finance and grant records beyond the 980-case snapshot."
+      }
+    },
+    {
+      "id": "SN-06",
+      "need": "Safety and consent",
+      "source_reference": "docs/reference/research/retrofit-synthetic-data/README.md",
+      "consuming_issues": [
+        "#157",
+        "#104"
+      ],
+      "volume": "97 safety-hold rows in the public pack",
+      "owner": "owner, via #165",
+      "coverage": "partial",
+      "dataset_ids": [
+        "DS-OPS-PACK",
+        "DS-MVP-SEED"
+      ],
+      "note": "Holds exist; resident consent records are not generated for the full stock.",
+      "gap_closure": {
+        "kind": "child",
+        "issues": [
+          "#173"
+        ],
+        "note": "Safety and consent records beyond the 980-case snapshot."
+      }
+    },
+    {
+      "id": "SN-07",
+      "need": "Documents and forms",
+      "source_reference": "src/importer/evals/document_form_fixtures.json",
+      "consuming_issues": [
+        "#104"
+      ],
+      "volume": "fixture file, small constructed set",
+      "owner": "owner, via #165",
+      "coverage": "covered",
+      "dataset_ids": [
+        "DS-DOC-FORM-FIXTURES"
+      ],
+      "note": "Constructed fixtures with a regression test.",
+      "gap_closure": {
+        "kind": "delivered",
+        "issues": [
+          "#171"
+        ],
+        "note": "Closed; fixtures and regression test exist."
+      }
+    },
+    {
+      "id": "SN-08",
+      "need": "Agent chat and memory",
+      "source_reference": "docs/prds/zava-forward-retrofit-programme-demonstrator.md FR-035 (profile paths), FR-057 (memory); assistants runtime",
+      "consuming_issues": [
+        "#157"
+      ],
+      "volume": "Fixture target: 22 personas (two per eleven perspectives), seeded threads and memory probes; approved volume remains open",
+      "owner": "owner, via #157",
+      "coverage": "partial",
+      "dataset_ids": [
+        "DS-ASSISTANT-RUNTIME",
+        "DS-CHAT-MEMORY-FIXTURE"
+      ],
+      "note": "src/agents/tests/chat_fixture.py generates scripted synthetic personas, threads and memory cases. Fixture expectations do not prove runtime privacy, approved retention, real inference or human evaluation; #157 still needs approved volume/scope.",
+      "gap_closure": {
+        "kind": "child",
+        "issues": [
+          "#172"
+        ],
+        "note": "Agent chat and memory test data and personas; volume needs an owner decision."
+      }
+    },
+    {
+      "id": "SN-09",
+      "need": "Sensor data (history and live)",
+      "source_reference": "docs/reference/research/iot-sensor-analytics-research-plan.md phase R3",
+      "consuming_issues": [
+        "#109"
+      ],
+      "volume": "Backfill target: 60,000 homes, 730 days, hourly (1,051,200,000 readings); full-run scope/storage and live cadence need owner decisions",
+      "owner": "owner, via #109",
+      "coverage": "partial",
+      "dataset_ids": [
+        "DS-SENSOR"
+      ],
+      "note": "src/core/src/zava_forward/core/synthetic/sensor_backfill.py provides seeded temperature/humidity backfill and small-fixture tests. Full-stock materialization, verified external climate inputs and accepted live simulator coverage are not evidenced. DS-SENSOR remains not-generated for the canonical dataset.",
+      "gap_closure": {
+        "kind": "child",
+        "issues": [
+          "#177",
+          "#184"
+        ],
+        "note": "Sensor simulator stages 1 and 2 under the same epic; volume needs an owner decision."
+      }
+    },
+    {
+      "id": "SN-10",
+      "need": "Evaluation and golden sets",
+      "source_reference": "src/agents/evals/ai_priority_golden.json",
+      "consuming_issues": [
+        "#104"
+      ],
+      "volume": "10 scenarios",
+      "owner": "owner, via #104",
+      "coverage": "covered",
+      "dataset_ids": [
+        "DS-AI-GOLDEN"
+      ],
+      "note": "Covered by test_ai_eval.py; scale and category coverage reviewed under #104.",
+      "gap_closure": {
+        "kind": "delivered",
+        "issues": [
+          "#174"
+        ],
+        "note": "Closed; registry and stock-scale fixture exist."
+      }
+    },
+    {
+      "id": "SN-11",
+      "need": "Personas and scenario manifest",
+      "source_reference": "docs/prds/zava-forward-retrofit-programme-demonstrator.md FR-035",
+      "consuming_issues": [
+        "#103"
+      ],
+      "volume": "eleven profile paths per FR-035",
+      "owner": "owner, via #103",
+      "coverage": "partial",
+      "dataset_ids": [
+        "DS-OPS-MANIFEST",
+        "DS-SCENARIO-MANIFEST"
+      ],
+      "note": "scenario-manifest.json v0.2.1 binds the public metadata review and existing tiny shared-IA fixture recipe. All eleven full profile paths and nine workflow journeys are unavailable in this offline iteration, not approved deferrals. The inventory uses provisional product roles and PRD-proposed constructed journeys, not customer/owner approval. #103 completes versioned coverage accountability and integrity enforcement, not full FR-035/application/human acceptance. No new data volume or consuming application build is authorized.",
+      "gap_closure": {
+        "kind": "child",
+        "issues": [
+          "#103"
+        ],
+        "note": "Owned by the scenario manifest issue."
+      }
+    },
+    {
+      "id": "SN-12",
+      "need": "Volumes and scale fixture",
+      "source_reference": "docs/prds/zava-forward-retrofit-programme-demonstrator.md NFR-002 scale dimension",
+      "consuming_issues": [
+        "#144"
+      ],
+      "volume": "60,000 homes / 600,000 events",
+      "owner": "owner, via #144",
+      "coverage": "partial",
+      "dataset_ids": [
+        "DS-STOCK-REGISTER"
+      ],
+      "note": "src/core/src/zava_forward/core/synthetic/scale_fixture.py can generate a separate wholly fictional 60,000-home/600,000-event fixture. This does not evidence an executed full-volume SQL load or performance acceptance under #144.",
+      "gap_closure": {
+        "kind": "child",
+        "issues": [
+          "#144",
+          "#174"
+        ],
+        "note": "Stock-scale fixture delivered by #174; the 600,000-event load fixture stays with #144."
+      }
+    },
+    {
+      "id": "SN-13",
+      "need": "Refresh and determinism",
+      "source_reference": "README.md#determinism-manifests-and-refresh-policy-2026-10-15",
+      "consuming_issues": [
+        "#176"
+      ],
+      "volume": "not applicable",
+      "owner": "owner, via #176",
+      "coverage": "partial",
+      "dataset_ids": [
+        "DS-OPS-PACK",
+        "DS-MVP-SEED"
+      ],
+      "note": "Seeds and manifests exist for two generators; refresh policy is proposed and not approved.",
+      "gap_closure": {
+        "kind": "child",
+        "issues": [
+          "#176"
+        ],
+        "note": "Determinism, seeds and refresh policy issue."
+      }
+    }
+  ],
+  "open_items": [
+    "Owner approval of this inventory and of each row owner (all owners are proposed).",
+    "Volumes for SN-03, SN-08 and SN-09 need owner decisions.",
+    "Complete #103 profile/workflow scripts, defaults, safe endpoints and execution evidence; the inventory integration manifest now links this version but does not satisfy full FR-035.",
+    "The first inventory and coverage matrix from the 2026-10-14 backlog handoff was not available in the repository; this inventory was rebuilt from repository evidence and needs reconciling with it.",
+    "Owner to confirm the gap_closure mapping, and whether SN-01 register regeneration is in #168 or deferred (no recorded deferral exists yet)."
+  ],
+  "generator_conventions": {
+    "reuse_rule": "Extensions iterate the existing 60,000-home register and extend the existing generator modules; no second generator.",
+    "seed": "Derive every random stream from the recorded generator seed (stock seed 4820260930); never use unseeded randomness or wall-clock time.",
+    "identifiers": "Reuse the existing stock, case and resident identifier patterns so new records join to existing ones.",
+    "is_synthetic": "Every generated record carries is_synthetic=true."
+  }
+}

@@ -306,6 +306,24 @@ def permitted_sources(case_id: str, ctx: dict[str, Any]) -> dict[str, str]:
     return found
 
 
+ASSURANCE_TERMS = (
+    "secured", "approved", "confirmed", "complete", "completed", "compliant", "certified",
+    "guaranteed", "passed", "cleared", "funded", "consented", "safe", "verified",
+)  # fmt: skip
+_NUMBER = re.compile(r"\d[\d,.]*")
+_NEGATION = re.compile(r"\b(?:not|no|never|n't|without|unconfirmed|incomplete)\b", re.I)
+
+
+def unsupported_claim(answer: str, cited: list[str]) -> bool:
+    """True when the answer asserts an assurance word or number its cited sources do not contain."""
+    evidence = " ".join(cited).casefold()
+    claim = normalise_policy_text(answer).casefold()
+    for term in ASSURANCE_TERMS:
+        if re.search(rf"\b{term}\b", claim) and not re.search(rf"\b{term}\b", evidence):
+            return not _NEGATION.search(claim)
+    return any(n.rstrip(".,") not in evidence for n in _NUMBER.findall(claim))
+
+
 def parse_reply(text: str, allowed: dict[str, str]) -> tuple[str, list[str]] | None:
     """The answer and its permitted citations, or None when the reply is unusable or uncited."""
     try:
@@ -598,8 +616,10 @@ class ChatPanel:
                 else:
                     parsed = parse_reply(raw, sources)
                     if parsed:
-                        if iso._withheld(user, thread, parsed[0]) or ACTION_CLAIM.search(
-                            normalise_policy_text(parsed[0])
+                        if (
+                            iso._withheld(user, thread, parsed[0])
+                            or ACTION_CLAIM.search(normalise_policy_text(parsed[0]))
+                            or unsupported_claim(parsed[0], [sources[c] for c in parsed[1]])
                         ):
                             kind, text = "withheld", WITHHELD
                         else:
@@ -615,5 +635,6 @@ __all__ = [
     "LABEL",
     "out_of_scope",
     "permitted_sources",
+    "unsupported_claim",
     "parse_reply",
 ]
