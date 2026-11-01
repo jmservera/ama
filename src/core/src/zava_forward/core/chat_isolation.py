@@ -156,7 +156,7 @@ class ChatIsolation:
         elif who == owner:
             reason = "not for your own data"
         if reason:
-            self.store.audit(who, "chat.breakglass.refused", "-", json.dumps(dict(target=owner, reason=reason), sort_keys=True))
+            self.store.audit(who, "chat.breakglass.refused", "-", json.dumps(dict(target=owner, reason=reason, purpose=purpose), sort_keys=True))
             raise ChatForbidden("Break-glass access is refused: " + reason + ".")
         minutes = max(1, min(int(minutes), MAX_MINUTES))
         expires = (self.clock() + timedelta(minutes=minutes)).isoformat(timespec="seconds")

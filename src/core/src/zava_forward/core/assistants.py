@@ -22,6 +22,11 @@ from .store import ConflictError
 
 LOG = logging.getLogger(__name__)
 
+
+class ReleaseDenied(PermissionError):
+    """Release admission denial; the transaction commits so a recorded invalidation persists."""
+
+
 PM = "Retrofit Programme Manager"
 RC = "Retrofit Coordinator"
 VERSION = "1.0.0"
@@ -431,6 +436,10 @@ class Assistants:
             db.execute("BEGIN IMMEDIATE")
             yield db
             db.execute("COMMIT")
+        except ReleaseDenied:
+            # Only release invalidation, which must outlive the denied operation, precedes this raise.
+            db.execute("COMMIT")
+            raise
         except BaseException:
             db.execute("ROLLBACK")
             raise
@@ -1040,7 +1049,7 @@ class Assistants:
                 if task["suspension"]:
                     raise PermissionError(self.suspended(db, task["capability"]))
                 if task["release_denial"]:
-                    raise PermissionError(task["release_denial"]["reason"])
+                    raise ReleaseDenied(task["release_denial"]["reason"])
                 if task["stale"] or task["state"] != "ready" or task["output"] is None or task["envelope"].get("source") != "ai":
                     raise ValueError("Only current, valid AI proposals can be verified/accepted. Use manual work or reject.")
                 validate_output(task["output"], task["snapshot"], self.limits.output_chars)
