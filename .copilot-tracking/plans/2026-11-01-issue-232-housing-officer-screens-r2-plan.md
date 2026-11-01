@@ -7,3 +7,10 @@
 * [x] Phase 4: focused validation (api unit tests, ruff check, ruff format --check, mypy).
 
 Plan critique (single pass, self): compatible. Keep per-page fetch bounded at 20; failures show Unknown, never an empty success; no writes. Rejected: core list projection change (out of tight scope).
+
+## Correction cycle
+
+* [x] Merge origin/main, node --check the JS.
+* [x] Add `choiceStoppedSummary` (stop state via `choiceStopVersion`, binding, review need) for the queue column.
+* [x] Show `current <status>; latest recorded vN <status> (binding)` in the queue measure column.
+* [x] Extend queue tests with the stale-scope and stop-then-waiting fixtures.

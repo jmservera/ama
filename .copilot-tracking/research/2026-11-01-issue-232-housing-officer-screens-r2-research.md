@@ -20,3 +20,7 @@ Task: issue-232-housing-officer-screens-r2. Mode: manual-sequenced loop. Disposi
 
 * Browser keyboard/axe evidence is CI only; no Azure-live work.
 * Research is desk-based hypothesis, validation remains #155.
+
+## Correction cycle (PR #715 review threads)
+
+Two unresolved Copilot threads on `role-screens.js` queue rows: (1) the paused or withdrawn column showed only the measure name, dropping state, version, scope and human-review need when a pause is followed by a newer Waiting answer; (2) the measure column attached the current status (for example Not recorded) to the historical answer's version and scope. Planning readiness: Ready. Merge of origin/main was clean; `node --check` passes.

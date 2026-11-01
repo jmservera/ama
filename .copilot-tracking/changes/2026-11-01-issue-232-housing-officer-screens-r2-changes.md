@@ -6,3 +6,8 @@
 * `src/api/checks/role_screens_browser_check.py`: scenario 232 asserts the summary region and no contact links.
 
 Validation: tests for resident choice, role screens, design system, accessibility baseline, asset board, finance, procurement, static assets passed; ruff check, ruff format --check, mypy on touched files passed; local Chromium browser check for scenario 232 passed. axe scan not run (CI evidence).
+
+## Correction cycle changes
+
+* `role-screens.js`: queue paused or withdrawn column now lists state, version, scope binding and human-review requirement per measure; queue measure column separates the current answer from the latest recorded version.
+* `test_resident_choice_screen.py`: updated queue expectations and added a test for the stale-scope and stop-followed-by-waiting fixtures.

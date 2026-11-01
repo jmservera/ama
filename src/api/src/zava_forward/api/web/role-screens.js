@@ -201,14 +201,20 @@ function choiceMeasure(m) {
     v ? `v${v.version} ${v.status} (${choiceBinding(v)}), answered by ${screenValue(v.answered_by)}, recorded ${screenStamp(v.at)}${v.note ? `: ${v.note}` : ""}` : "None recorded",
     screenValue(m.readiness)];
 }
+function choiceStoppedSummary(m) {
+  const v = choiceStopVersion(m) || choiceLatest(m);
+  const state = v && v.status !== m.status ? `${v.status} (current answer ${m.status})` : m.status;
+  const review = m.review?.status === "Needs human review" ? ", needs human review before any restart" : "";
+  return `${m.measure}: ${state}${v ? ` (v${v.version}, ${choiceBinding(v)})` : ""}${review}`;
+}
 function choiceQueueRow([row, c]) {
   if (!c) return [row.id, "Unavailable. Open the home to check.", "Unavailable", "Unavailable"];
   const measures = c.measure_decisions || [];
-  const stopped = measures.filter(choiceStopped).map((m) => m.measure);
+  const stopped = measures.filter(choiceStopped).map(choiceStoppedSummary);
   const u = c.resident_update;
   return [row.id,
-    measures.length ? measures.map((m) => { const v = choiceLatest(m); return `${m.measure}: ${m.status}${v ? ` (v${v.version}, ${choiceBinding(v)})` : ""}`; }).join("; ") : "No measure choices recorded",
-    stopped.length ? stopped.join(", ") : "None recorded",
+    measures.length ? measures.map((m) => { const v = choiceLatest(m); return `${m.measure}: current ${m.status}${v ? `; latest recorded v${v.version} ${v.status} (${choiceBinding(v)})` : ""}`; }).join("; ") : "No measure choices recorded",
+    stopped.length ? stopped.join("; ") : "None recorded",
     u ? `${screenValue(u.status)}: ${screenValue(u.purpose)}. Owner ${screenPerson(u.owner_identity || u.owner)}, due ${screenStamp(u.due_at)}, safe route ${screenValue(u.safe_contact_ref)}` : "No commitment recorded"];
 }
 registerRoleScreen({

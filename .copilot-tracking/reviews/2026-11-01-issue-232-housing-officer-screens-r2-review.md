@@ -12,3 +12,7 @@ Review executed once after implementation. Outcome: conformant for the delivered
 | Design system components, no role simulator | Met for reused screen components; validation by #155/#150 gates remains |
 
 Routed follow-ups: axe/keyboard evidence in CI; server-side list projection for a true cross-home queue; validation in #155. Pre-existing syntax breakage on main fixed as tightly coupled.
+
+## Correction cycle review
+
+Executed once after the correction. Both Copilot threads addressed by code and tests; outcome conformant for those findings. Human review and hosted checks remain open.

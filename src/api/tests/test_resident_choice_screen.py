@@ -226,6 +226,70 @@ class ResidentChoiceScreen(unittest.TestCase):
         self.assertIn("Paused (current answer Waiting), scope S-9, revision 2, design 3", text)
         self.assertIn("Not before spring", text)
 
+    def test_queue_shows_stop_state_scope_and_review_for_stale_and_waiting(self) -> None:
+        stale = {
+            "id": "C-3",
+            "measure_decisions": [
+                {
+                    "measure": "Solar PV",
+                    "status": "Not recorded",
+                    "readiness": "Needs human review",
+                    "review": {"status": "Needs human review", "decision_version": 1},
+                    "versions": [
+                        {
+                            "version": 1,
+                            "status": "Withdrawn",
+                            "scope": "S-9",
+                            "context_revision": 2,
+                            "design_version": 3,
+                        }
+                    ],
+                }
+            ],
+        }
+        waiting = {
+            "id": "C-4",
+            "measure_decisions": [
+                {
+                    "measure": "Solar PV",
+                    "status": "Waiting",
+                    "readiness": "Needs human review",
+                    "review": {"status": "Needs human review", "decision_version": 1},
+                    "versions": [
+                        {
+                            "version": 1,
+                            "status": "Paused",
+                            "scope": "S-9",
+                            "context_revision": 2,
+                            "design_version": 3,
+                        },
+                        {
+                            "version": 2,
+                            "status": "Waiting",
+                            "scope": "S-11",
+                            "context_revision": 4,
+                            "design_version": 5,
+                        },
+                    ],
+                }
+            ],
+        }
+        stale_text = json.dumps(run_queue({"C-1": stale}))
+        waiting_text = json.dumps(run_queue({"C-1": waiting}))
+        self.assertIn(
+            "Solar PV: current Not recorded; latest recorded v1 Withdrawn (scope S-9", stale_text
+        )
+        self.assertIn(
+            "Solar PV: Withdrawn (current answer Not recorded) "
+            "(v1, scope S-9, revision 2, design 3), needs human review",
+            stale_text,
+        )
+        self.assertIn(
+            "Solar PV: Paused (current answer Waiting) "
+            "(v1, scope S-9, revision 2, design 3), needs human review",
+            waiting_text,
+        )
+
     def test_no_controls_and_no_contact(self) -> None:
         tree = run(CASE)["tree"]
         for control in ("button", "form", "input", "select", "textarea"):
@@ -243,8 +307,9 @@ class ResidentChoiceScreen(unittest.TestCase):
         text = json.dumps(tree)
         for expected in (
             "Choice and update commitments across this page of homes",
-            "Loft insulation: Paused (v2, scope S-9, revision 2, design 3)",
-            "Solar PV: Not recorded",
+            "Loft insulation: current Paused; latest recorded v2 Paused "
+            "(scope S-9, revision 2, design 3)",
+            "Solar PV: current Not recorded",
             "Explain damp query",
             "Owner One",
             "SC-77",
