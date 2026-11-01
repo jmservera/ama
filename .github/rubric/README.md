@@ -276,6 +276,15 @@ read by `prepare.py` and `gate.py`. Only the post-merge refresh writes them:
   scorecard and badge to a commit on `rubric/baseline-refresh`, opens or
   updates one pull request and squash-merges it with `--match-head-commit`.
   The ruleset requires a pull request, so a direct push to `main` is not used.
+* Publication is compare-and-swap. The step observes the refresh branch head
+  first, skips when `latest.json` on `main` or the pending refresh commit
+  (`Scored commit:` trailer) records a commit newer than the scored SHA, pushes
+  with a lease on the observed head, and re-checks `main` before merging. An
+  older dispatch therefore cannot replace a newer score, whichever run finishes
+  first.
+* Pull request edits to `latest.json` or `badge.svg` are detected against the
+  merge-base, so a PR forked before a main-only refresh is not flagged. A
+  badge-only edit triggers scoring so the warning is reported.
 * A refresh is skipped when the decision is invalid, failed or calibration, the
   checkout is not the scored SHA, or nothing changed. A blocked merge is a
   warning; the next main run refreshes cumulatively.
