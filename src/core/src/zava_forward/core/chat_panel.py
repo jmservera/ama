@@ -321,7 +321,8 @@ def permitted_sources(case_id: str, ctx: dict[str, Any]) -> dict[str, str]:
 def claim_tokens(text: str) -> set[str]:
     """Status words and numbers; a sign before a currency marker stays with its amount."""
     tokens = set()
-    for m in STATUS_CLAIM.finditer(normalise_policy_text(text)):
+    spaced = re.sub(r"\.{2,}", " ", normalise_policy_text(text))
+    for m in STATUS_CLAIM.finditer(spaced):
         num = m.group("num")
         if num is None:
             tokens.add(m.group(0).casefold())
