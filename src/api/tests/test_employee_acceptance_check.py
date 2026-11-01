@@ -200,14 +200,16 @@ class AcceptanceTests(unittest.TestCase):
         self.assertNotIn("PRIVATE_CANARY", str(result))
 
     def test_briefing_requires_visible_disclosures(self) -> None:
-        def run(visible: set[str]) -> object:
+        def run(
+            visible: set[str], text: str = "AI suggestion, not approved. Not an instruction."
+        ) -> object:
             page = self.page()
             box = Mock()
-            box.locator.return_value.inner_text.return_value = "AI summary. Not an instruction."
+            box.locator.return_value.inner_text.return_value = text
 
             def inner(selector: str) -> Mock:
                 found = Mock()
-                found.inner_text.return_value = "AI summary. Not an instruction."
+                found.inner_text.return_value = text
                 found.count.return_value = 1 if selector in visible else 0
                 return found
 
@@ -220,6 +222,10 @@ class AcceptanceTests(unittest.TestCase):
         self.assertTrue(run({"details summary:visible", "time:visible"}))
         self.assertFalse(run({"details summary", "time"}))
         self.assertFalse(run({"details summary:visible"}))
+        both = {"details summary:visible", "time:visible"}
+        self.assertTrue(run(both, "Summary by rules. Not an instruction."))
+        self.assertFalse(run(both, "Not an instruction"))
+        self.assertFalse(run(both | {'[role=status]:has-text("Briefing unavailable")'}))
 
     def test_map_payload(self) -> None:
         for payload in (POINTS, CLUSTERS, EMPTY):
