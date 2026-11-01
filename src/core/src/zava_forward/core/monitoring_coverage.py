@@ -196,15 +196,15 @@ def evaluate_indicator(
     `threshold` holds `limit` (rate 0..1), `min_sample`, and either `approved_by` (a named human,
     live use) or `constructed: True` (offline tests only). A breach needs a named incident owner.
     """
-    result: dict[str, Any] = {"status": BLOCKED, "reason": "", "offline_only": False}
+    constructed = bool(threshold and threshold.get("constructed") is True)
+    result: dict[str, Any] = {"status": BLOCKED, "reason": "", "offline_only": constructed}
     limit = threshold.get("limit") if threshold else None
     min_sample = threshold.get("min_sample") if threshold else None
-    constructed = bool(threshold and threshold.get("constructed") is True)
     if not (
         isinstance(limit, int | float)
         and not isinstance(limit, bool)
-        and math.isfinite(limit)
         and 0 <= limit <= 1
+        and math.isfinite(limit)
         and _count(min_sample)
     ):
         result["reason"] = "threshold missing or invalid"
@@ -213,7 +213,6 @@ def evaluate_indicator(
     if not constructed and not named(threshold.get("approved_by")):
         result["reason"] = "live threshold needs named human approval"
         return result
-    result["offline_only"] = constructed
     if not (_count(events) and _count(denominator)) or events > denominator:
         result["reason"] = "invalid counts"
         return result
@@ -253,18 +252,36 @@ _SENSITIVE = re.compile(
     r"[\w.+-]+@[\w-]+\.[\w.]+|eyJ[\w-]{8,}\.[\w-]+|bearer\s+\S+|\b\d{1,3}(?:\.\d{1,3}){3}\b",
     re.IGNORECASE,
 )
-MAX_VALUE = 120
+_TOKEN = re.compile(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,63}")
+_TIMESTAMP = re.compile(
+    r"\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})?)?"
+)
+_STATUSES = frozenset({INSTALLED, CANDIDATE, GAP, INSUFFICIENT, BLOCKED, WITHIN, BREACH})
+_SEVERITIES = frozenset({"0", "1", "2", "3", "4", "info", "low", "medium", "high", "critical"})
+MAX_COUNT = 10**9
+
+
+def _valid(key: str, value: Any) -> bool:
+    if key in ("count", "denominator"):
+        return _count(value) and value <= MAX_COUNT
+    if not isinstance(value, str) or _SENSITIVE.search(value):
+        return False
+    if key == "alert":
+        return value in {e.anchor for e in ALERTS}
+    if key == "owner_role":
+        return value in {e.owner_role for e in ALERTS}
+    if key == "status":
+        return value in _STATUSES
+    if key == "severity":
+        return value.lower() in _SEVERITIES
+    if key in ("window_start", "window_end"):
+        return _TIMESTAMP.fullmatch(value) is not None
+    return _TOKEN.fullmatch(value) is not None
 
 
 def sanitize_diagnostic(event: Mapping[str, Any]) -> dict[str, Any]:
-    """Keep only allowlisted aggregate fields; content and identities are dropped."""
-    clean: dict[str, Any] = {}
-    for key, value in event.items():
-        if key not in ALLOWED_FIELDS:
-            continue
-        if isinstance(value, bool) or not isinstance(value, str | int | float):
-            continue
-        if isinstance(value, str) and (len(value) > MAX_VALUE or _SENSITIVE.search(value)):
-            continue
-        clean[key] = value
-    return clean
+    """Keep only allowlisted fields whose values match a field-specific aggregate schema.
+
+    Free text, identities, tokens and unregistered values are dropped, not truncated.
+    """
+    return {k: v for k, v in event.items() if k in ALLOWED_FIELDS and _valid(k, v)}

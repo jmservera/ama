@@ -20,3 +20,9 @@ ms.date: 2026-11-01
 ## Amendment
 
 Ledger alert markers point at `main.bicep` (defined there, not containerapps).
+
+## Amendment: PR #674 review fixes
+
+* `evaluate_indicator`: `offline_only` initialised from `constructed` so blocked results keep provenance; the 0..1 range is checked before `math.isfinite`, so huge integer limits are blocked instead of raising `OverflowError`.
+* `sanitize_diagnostic`: values validated per field (registered alert and owner role, enumerated status and severity, timestamps, bounded counts, identifier-shaped task and release); free text is dropped.
+* Tests: `rai-harm` added to the explicit-gap assertion; new tests for provenance, huge limit and value schemas (12 tests).

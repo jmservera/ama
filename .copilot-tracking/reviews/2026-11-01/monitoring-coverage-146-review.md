@@ -15,3 +15,7 @@ Review executed once, self-review of the diff plus focused validation (new tests
 ## Acceptance criteria
 
 Not ticked: all four infrastructure criteria and RAI/tokenomics rows stay partly unproven. Hence `Refs #146`.
+
+## PR #674 review follow-up
+
+Four Copilot threads were valid and fixed (constructed provenance on blocked results, `OverflowError` on huge integer limits, field-level value schemas in the sanitiser, `rai-harm` in the explicit-gap test). The sanitiser now rejects free-text values instead of trusting allowlisted keys. The `activation` CI failure is a GitHub API quota stop in the AIC cache restore step, not a code failure. The outcome of this review is unchanged, and the findings do not trigger a second Review.

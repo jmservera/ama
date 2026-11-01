@@ -53,7 +53,9 @@ class RegisterTests(unittest.TestCase):
 
     def test_poison_and_ai_limits_stay_explicit_gaps(self) -> None:
         gaps = {e.anchor for e in mc.ALERTS if e.status == mc.GAP}
-        self.assertTrue({"agent-tasks-poison", "import-jobs-poison", "ai-limits"} <= gaps)
+        self.assertTrue(
+            {"agent-tasks-poison", "import-jobs-poison", "ai-limits", "rai-harm"} <= gaps
+        )
 
 
 class IndicatorTests(unittest.TestCase):
@@ -61,6 +63,13 @@ class IndicatorTests(unittest.TestCase):
         self.assertEqual(_evaluate(threshold=None)["status"], mc.BLOCKED)
         self.assertEqual(_evaluate(threshold={"limit": 0.1, "min_sample": 5})["status"], mc.BLOCKED)
         self.assertEqual(_evaluate(threshold={"limit": 2, "min_sample": 5})["status"], mc.BLOCKED)
+
+    def test_blocked_threshold_keeps_constructed_provenance_and_huge_limit_is_blocked(self) -> None:
+        result = _evaluate(threshold={"constructed": True, "limit": 0.1})
+        self.assertEqual(result["status"], mc.BLOCKED)
+        self.assertTrue(result["offline_only"])
+        huge = {"constructed": True, "limit": 10**400, "min_sample": 5}
+        self.assertEqual(_evaluate(threshold=huge)["status"], mc.BLOCKED)
 
     def test_insufficient_samples_and_window(self) -> None:
         self.assertEqual(_evaluate(events=0, denominator=0)["status"], mc.INSUFFICIENT)
@@ -117,6 +126,29 @@ class SanitiserTests(unittest.TestCase):
             "severity": "2",
         }
         self.assertEqual(mc.sanitize_diagnostic(event), {"severity": "2"})
+
+    def test_values_must_match_field_schemas(self) -> None:
+        event = {
+            "alert": "some free text",
+            "status": "customer said the boiler broke",
+            "owner_role": "Jane Smith",
+            "release": "two words",
+            "window_start": "yesterday",
+            "window_end": "2026-11-01T07:00:00Z",
+            "count": 10**12,
+            "denominator": 5,
+            "task": "triage-1",
+            "severity": "high",
+        }
+        self.assertEqual(
+            mc.sanitize_diagnostic(event),
+            {
+                "window_end": "2026-11-01T07:00:00Z",
+                "denominator": 5,
+                "task": "triage-1",
+                "severity": "high",
+            },
+        )
 
 
 if __name__ == "__main__":
