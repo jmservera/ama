@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-01T14:29:23+00:00",
-  "commit": "caffc6a866972a82b10857a5bc808acfa739c0f4",
+  "scored_at": "2026-11-01T14:48:33+00:00",
+  "commit": "7f416380c277b482d1863730c8a65b4bb2024dba",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41315252285",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41317300904",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "95a840f05af8e09d65cb025b70bdd2c28029f4873d2abd8ce193282e279bc4e5",
+    "solution-code": "ac3054569abe20c3fba91c6c80db52266eb7b79242c93835b102b8006a0740cd",
     "infrastructure": "b101de0ca1a75ce128f45fbd37309bc5dc49805b14bd65cce45c7b0ed9faa591",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -29,10 +29,9 @@
     "A1": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/static_assets.py:1-58",
-        "src/api/src/zava_forward/api/server.py:193-197"
+        "src/core/src/zava_forward/core/synthetic/device_identity.py:1,29-45"
       ],
-      "rationale": "Diff adds packages/work-orders pagination (limit/offset) in server.py and core/procurement.py; architecture already modular with defined API contracts. Baseline ceiling 5 retained."
+      "rationale": "New device_identity module adds Protocol-based Registry/CredentialStore contracts decoupled from implementation, consistent with modular architecture. Ceiling 5 retained."
     },
     "A2": {
       "score": 5,
@@ -44,20 +43,18 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/ai_consumption.py:1,58-85",
-        "src/core/src/zava_forward/core/ai.py:67-100",
-        "src/core/src/zava_forward/core/assistants.py:884-900"
+        "src/core/src/zava_forward/core/synthetic/device_identity.py:1,56-77,196-224",
+        "src/core/tests/test_device_identity.py:1,8,98-104"
       ],
-      "rationale": "Diff is pagination for capacity workspace, not security/compliance/responsible-AI. Baseline 5 retained."
+      "rationale": "Module enforces credential isolation: secrets never cross CredentialStore boundary, reprs/errors secret-free, exception chaining scrubbed, ownership checks block cross-run deletion; tests assert no leakage. Ceiling 5 retained."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/procurement.py:540-562",
-        "src/api/src/zava_forward/api/server.py:486-505",
-        "src/api/tests/test_workspace_paging.py:1-30"
+        "src/core/src/zava_forward/core/synthetic/device_identity.py:108-230",
+        "src/core/tests/test_device_identity.py:1-300"
       ],
-      "rationale": "Capability is implemented end to end (API, core, UI) with edge cases (invalid input, hidden-order totals, offset overrun) and dedicated passing tests. Strengthens completeness evidence; baseline 5 retained as it was already at ceiling."
+      "rationale": "Provision/teardown/rollback implemented end to end with concurrency locking; 20+ tests cover failure, partial-manifest and ownership edge cases. Ceiling 5 retained."
     },
     "A5": {
       "score": 5,
@@ -120,7 +117,7 @@
         "src/core/README.md:5-123",
         "src/api/README.md:9-47"
       ],
-      "rationale": "Pagination code change is engineering, not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
+      "rationale": "This PR's device_identity code change is engineering, not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
     },
     "B7": {
       "score": 5,
