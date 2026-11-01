@@ -54,8 +54,8 @@ WORKFLOWS = ("src-ci.yml", "mvp-ci.yml", "mvp-validation.yml", "src-deploy.yml",
 # Explicitly updated with the matrix whenever native workflow commands change.
 WORKFLOW_HASHES = {
     "src-ci.yml": "bf0f84ecaac005c61943da8fd4e49180fb46904491ffce2e7934892373b0c87b",
-    "mvp-ci.yml": "92178fff316a4cd8b4e619c47e96c0238106c311cad928263b6e795797a3a54e",
-    "mvp-validation.yml": "94feeb7e0c6807a94dc2624eaf7c5e76c807a234e1777b593b169fd801e511cc",
+    "mvp-ci.yml": "a0f227717e1d6f675898e2ff6d45f493ce88851ad236c578f2dbcb7921bd0179",
+    "mvp-validation.yml": "841e06bad7856c6cf9102a7f383ee027ec24e88ad27360f8ab7462d0eb76da8d",
     "src-deploy.yml": "3c2f1ed59b1486fc1316a48207cc4ef7d6a830bbba1dcad4152acab4bd2f1bbc",
     "infra-plan.yml": "4240d803e33e68e63e03d201f241fa21101e2e260848c276b32817624cca6056",
 }

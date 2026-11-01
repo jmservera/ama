@@ -8,6 +8,7 @@ import time
 from collections.abc import Awaitable, Callable, Iterable, Mapping
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from pathlib import Path
 
 from azure.eventhub import EventData
 from azure.eventhub.aio import EventHubConsumerClient, PartitionContext
@@ -15,6 +16,7 @@ from azure.identity.aio import ManagedIdentityCredential
 from azure.iot.device import X509, Message
 from azure.iot.device.aio import IoTHubDeviceClient
 from zava_forward.core.sensor_consumer import ConsumerError, Observation, Receipt, preflight
+from zava_forward.core.synthetic.run_plan import RunController
 from zava_forward.core.synthetic.sensor_identity import home_key
 from zava_forward.core.synthetic.sensor_stream import Frame, Pacer, RunBudget, StreamError, wire
 
@@ -351,6 +353,29 @@ class HubPublisher:
         self.activation = activation
         self._certificates = dict(certificates)
 
+    async def run_controlled(
+        self,
+        frames: tuple[Frame, ...],
+        controller: RunController,
+        estimate_path: Path,
+        *,
+        truth: Callable[[dict[str, object]], None],
+    ) -> int:
+        """Publish under a recorded estimate; the controller is always stopped afterwards."""
+        if len({frame.row.get("home_id") for frame in frames}) > controller.plan.homes:
+            raise StreamError("RUN_HOME_LIMIT")
+        pacer = controller.start(estimate_path)
+        try:
+            return await self.run(
+                frames,
+                controller.plan.budget(),
+                pacer=pacer,
+                truth=truth,
+                active_homes=lambda: controller.active_homes,
+            )
+        finally:
+            controller.stop()
+
     async def run(
         self,
         frames: tuple[Frame, ...],
@@ -359,6 +384,7 @@ class HubPublisher:
         speed: float = 1.0,
         pacer: Pacer | None = None,
         truth: Callable[[dict[str, object]], None],
+        active_homes: Callable[[], int] | None = None,
     ) -> int:
         self.activation.validate()
         frames = tuple(
@@ -400,17 +426,31 @@ class HubPublisher:
         clients: dict[str, IoTHubDeviceClient] = {}
         sent = 0
         previous: datetime | None = None
+        home_order: list[object] = []
 
-        async def send(client: IoTHubDeviceClient, message: Message) -> None:
+        def removed(home: object) -> bool:
+            return active_homes is not None and home_order.index(home) >= active_homes()
+
+        async def send(client: IoTHubDeviceClient, message: Message, home: object) -> bool:
             await control.admit_send()
+            if removed(home):
+                return False
             await client.send_message(message)
+            return True
 
         try:
             for frame in frames:
+                home = frame.row.get("home_id")
+                if home not in home_order:
+                    home_order.append(home)
+                if removed(home):
+                    continue
                 stamp = frame.nominal_at
                 interval = max(0.0, (stamp - previous).total_seconds()) if previous else 0.0
                 await _bounded(control.wait(0 if frame.truth == "burst" else interval), deadline)
                 previous = stamp
+                if removed(home):
+                    continue
                 if frame.truth == "disconnect":
                     truth(
                         {
@@ -448,7 +488,10 @@ class HubPublisher:
                         "status": "attempt",
                     }
                 )
-                await _bounded(send(client, message), deadline, lambda: control.stopped)
+                if not await _bounded(
+                    send(client, message, home), deadline, lambda: control.stopped
+                ):
+                    continue
                 sent += 1
                 truth(
                     {

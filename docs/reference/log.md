@@ -9112,6 +9112,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * The policy is not decided (BRD OD-46, owner with DPO); issue #162 criterion 6
   stays open. No regulatory snapshot changed.
 
+## 2026-11-01 - Core-flow copy and error contract slice (#153)
+
+* Updated `research/ux/content-standard.md` with a dated slice: phase check
+  wording in role screens, a generic error fallback that states reason, owner
+  and next action, and three more files in the lexical guard.
+* Issue #153 criteria for universal error coverage, named resident wording
+  review and comprehension testing stay open. No regulatory snapshot changed.
 ## [2026-11-01] update | Executable design traceability gate (#156)
 
 * Added `tools/check-design-trace.py` and tests. It validates the 74-row screen
@@ -9196,6 +9203,14 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   browser groups not run. The PERF-440 benchmark outlier was not reproduced
   and is filed as #687. No regulatory snapshot changed; no criterion ticked.
 
+## [2026-11-01] update | Local handover demo (#188)
+
+* Added a runnable local demo and test for the live-versus-backfill handover
+  on a constructed SQLite store, documented in the
+  [API README](../../src/api/README.md#local-handover-demo-188). Constructed
+  evidence only: Azure SQL and live Hub criteria of #188 stay owner-gated and
+  unproven; no criterion ticked.
+
 ## [2026-11-01] update | Replay audit covers pack and EPC generators (#176)
 
 * Extended the one-command determinism audit in
@@ -9236,6 +9251,15 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   tree check. The migration-order criterion stays unmet pending an owner
   decision.
 
+## [2026-11-01] verify | Resident sensors and assistant focused re-check (Refs #466)
+
+* Re-ran resident core (355 tests) and api (167 tests) suites, sensor tests (144),
+  ruff, ruff format, mypy and node --check on main 51657d30: all passed, skips are
+  opt-in SQL and browser groups. No source change was needed.
+* Issue #466 criterion 1 (owner confirms scope and priority) stays unmet; manual
+  assistive-technology acceptance and live checks remain owner-run. No regulatory
+  snapshot changed.
+
 ## [2026-11-01] query | Employee chat recheck on main 51657d30 (#530)
 
 * Re-ran the focused tier: core chat (101), agents chat model (7), API chat
@@ -9244,3 +9268,18 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   `.copilot-tracking/changes/2026-11-01/employee-chat-skills-530-recheck-changes.md`.
 * SQL, live employee-site verification, screen-reader and voice-control
   acceptance remain unproven; no source change was made.
+
+## [2026-11-01] query | Resident portal requirements recheck on main 81cf0c9e (Refs #441)
+
+* Re-verified the merged resident integration (#442, #454) with a read-only
+  script: 30 draft custody hashes, unique BRD FR-053 to FR-064 and PRD FR-062
+  to FR-073 identifiers with base IDs preserved, FR-044 and RULE-028
+  per-message review default, OD-52 to OD-55 visible, the three author-judgement
+  workload figures, resident-related links and the unregistered ADR proposal
+  (registry stays 0001 to 0006). Four inherited unrelated broken links in the
+  addendum and index are recorded, not repaired.
+* No BRD, PRD, ADR, addendum or memory change was made. Criterion 5 (requirements
+  owner disposition of FR-044/AC-084) and criterion 9 (hosted gate evidence on the
+  final head) stay unmet; the per-message review exception stays OFF pending
+  OD-53. Evidence is in
+  `.copilot-tracking/changes/2026-11-01/issue-441-recheck-changes.md`.

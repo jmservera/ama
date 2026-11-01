@@ -204,7 +204,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
     def ranking_snapshot(self, user, policy=None):
         """Snapshot of the open-case ranking under a policy version, stored beside the data when it changes. Managers only."""
         if user["role"] not in MANAGER_ROLES:
-            raise PermissionError("Only a manager can see the ranking snapshot.")
+            raise PermissionError("Only a manager can see the saved ranking record. Owner: your manager. Next action: ask a manager to open it.")
         pol = ranking.POLICIES.get(policy or ranking.CURRENT["version"])
         if pol is None:
             raise ValueError(f"Unknown ranking policy version. Known: {', '.join(sorted(ranking.POLICIES))}")
@@ -421,6 +421,13 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
     def bulk_edit_apply(self, user, body):
         from . import bulk_edits
         return bulk_edits.apply(self, user, body)
+
+    def stock_queue(self, user):
+        """Open stock conflicts across homes for managers. Read-only, not an investment priority."""
+        if user["role"] not in MANAGER_ROLES:
+            raise PermissionError("Only a manager can see the stock conflict queue.")
+        with self.lock:
+            return stock.queue_rows(self.cases.values())
 
     def stock_reconcile(self, user, case_id, body):
         from . import controls

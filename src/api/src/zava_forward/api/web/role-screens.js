@@ -127,7 +127,7 @@ const assetInputs = [
   ["Investment priority", "Asset owner to name the priority basis"],
   ["Cost forecast", "Finance owner to supply a dated forecast"],
   ["Benefit baseline", "Programme owner to supply a measured baseline"],
-  ["Phase gate evidence", "Programme manager to name the gate evidence"]
+  ["Phase check evidence", "Programme manager to name the evidence for the phase check"]
 ];
 function assetCost(report) {
   const m = report?.consumption;
@@ -152,7 +152,8 @@ registerRoleScreen({
     const signal = routeController.signal;
     const portfolio = await api("/api/cases?view=all&limit=1&offset=0", undefined, signal);
     const report = await api("/api/ai/report", undefined, signal).catch(() => null);
-    return { portfolio, report };
+    const queue = await api("/api/asset/stock-queue", undefined, signal).catch(() => null);
+    return { portfolio, report, queue };
   },
   render(c, extra) {
     const queries = c.stock_reconciliation || [];
@@ -161,6 +162,13 @@ registerRoleScreen({
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only reader view. It records no investment approval and changes no record. Budgets, priorities, forecasts and eligibility are Unknown unless a constructed fixture says so, and this page cannot confirm them. Source: desk research, not observed behaviour."),
         h("p", {}, `Home scope: ${c.id} only.`)),
+      screenPanel("Stock conflict queue across homes (portfolio scope, not this home)",
+        h("p", {}, "Homes with an open stock conflict, oldest source first. The order is source age only. It is not an investment priority, and no source is chosen as correct."),
+        extra?.queue
+          ? screenTable("Open stock conflicts by home", ["Home", "Open conflicts", "Fields in conflict", "Oldest source date", "Resolution owners", "Investment inputs"],
+            extra.queue.items.map((r) => [`${r.id}, ${r.address}, ${r.town}`, r.open_queries, (r.fields || []).join(", "), `${r.oldest_source_date}, ${assetAgeDays(r.oldest_source_date)}`,
+              (r.owners || []).join(", ") || "Unassigned", "Unknown. See missing investment inputs."]), 100)
+          : screenUnknown("The cross-home queue could not be loaded.", "Programme manager", "Reload, or open each home from the case queue")),
       screenPanel("Stock conflict comparison",
         screenTable("Stock source conflicts and source age",
           ["Query", "Field", "First source (value, ID, version, age)", "Compared source (value, ID, version, age)", "Status", "Resolution owner"],
@@ -175,8 +183,8 @@ registerRoleScreen({
       screenPanel("Missing investment inputs",
         screenTable("Investment inputs", ["Input", "State", "Resolution owner and action"],
           assetInputs.map(([name, action]) => [name, "Unknown", action]))),
-      screenPanel("Benefits and phase gate",
-        screenUnknown("No measured benefit or gate evidence is supplied for this home.", "Programme manager to name an owner", "Supply dated evidence before any gate is read as passed")),
+      screenPanel("Benefits and phase check",
+        screenUnknown("No measured benefit or phase check evidence is supplied for this home.", "Programme manager to name an owner", "Supply dated evidence before any phase check is read as passed")),
       screenPanel("Portfolio scope (separate from this home)",
         screenFields([["Cases permitted to your role", extra?.portfolio?.total],
           ["Meaning", "A role-scoped count, not a stock, budget or programme total"]])),
