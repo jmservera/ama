@@ -1,10 +1,13 @@
 """SQL tier, backup and recovery contract (issue 145)."""
 
-import json
+import os
 import shutil
-import subprocess
+import sys
 import unittest
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from test_bicep_policy import compile_bicep, evaluate, resource
 
 ROOT = Path(__file__).resolve().parents[1]
 SQL = (ROOT / "modules" / "sql.bicep").read_text(encoding="utf-8")
@@ -49,7 +52,9 @@ class SqlTierTests(unittest.TestCase):
 
     def test_runbook_records_objectives_and_unperformed_restore(self) -> None:
         for text in (
-            "sp_verify_database_ledger",
+            "sp_verify_database_ledger_from_digest_storage",
+            "last_digest_block_id",
+            "are not native digests",
             "az sql db restore",
             "Undecided",
             "Not performed",
@@ -58,18 +63,36 @@ class SqlTierTests(unittest.TestCase):
         ):
             self.assertIn(text, RUNBOOK)
 
-    @unittest.skipUnless(shutil.which("bicep"), "bicep CLI not installed")
-    def test_provisioned_compiles_without_serverless_properties(self) -> None:
-        out = subprocess.run(
-            ["bicep", "build", str(ROOT / "modules" / "sql.bicep"), "--stdout"],
-            check=True,
-            capture_output=True,
-            text=True,
-        ).stdout
-        params = json.loads(out)["parameters"]
+    @unittest.skipUnless(
+        shutil.which("az") or os.environ.get("REQUIRE_AZ_BICEP") == "1",
+        "Azure CLI with Bicep is needed to compile the templates",
+    )
+    def test_compiled_tiers_select_sku_and_serverless_properties(self) -> None:
+        template = compile_bicep("modules/sql.bicep")
+        params = template["parameters"]
         self.assertEqual(params["sqlTier"]["defaultValue"], "serverless")
         self.assertEqual(params["backupRetentionDays"]["maxValue"], 35)
-        self.assertIn("'GP_Gen5'", out)
+        database = resource(template, "Microsoft.Sql/servers/databases")
+        defaults = {
+            k: v["defaultValue"] for k, v in params.items() if "defaultValue" in v
+        }
+
+        def database_for(**overrides):
+            return evaluate(
+                {"sku": database["sku"], "properties": database["properties"]},
+                defaults | overrides,
+                template["variables"],
+                {"json": float},
+            )
+
+        serverless = database_for(autoPauseDelayMinutes=120)
+        self.assertEqual(serverless["sku"]["name"], "GP_S_Gen5")
+        self.assertEqual(serverless["properties"]["autoPauseDelay"], 120)
+        self.assertEqual(serverless["properties"]["minCapacity"], 0.5)
+        provisioned = database_for(sqlTier="provisioned", autoPauseDelayMinutes=120)
+        self.assertEqual(provisioned["sku"]["name"], "GP_Gen5")
+        self.assertIsNone(provisioned["properties"]["autoPauseDelay"])
+        self.assertIsNone(provisioned["properties"]["minCapacity"])
 
 
 if __name__ == "__main__":

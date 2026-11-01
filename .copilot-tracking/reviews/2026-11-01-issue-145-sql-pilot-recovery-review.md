@@ -12,3 +12,5 @@ Execution: executed once. Outcome: partially conformant; open criteria routed to
 
 Findings: none open in the changed code. Routed follow-ups: authorized disposable-server PITR drill with witness; owner RTO/RPO decision; align retention after #121; size vCores from load result.
 Decision: PR uses `Refs #145` only.
+
+Post-review addendum: three valid Copilot findings (weak compile test, `bicep` vs `az bicep` skip, invalid ledger verification input) fixed; the restore-ledger verification remains Not performed and is now explicitly blocked on native digest capture. Outcome unchanged.

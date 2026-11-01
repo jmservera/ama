@@ -36,10 +36,11 @@ az sql db restore --resource-group <rg> --server <server> --name retrofit \
   --dest-name retrofit-restore-<yyyymmdd> --time <UTC ISO 8601 inside retention>
 ```
 
-Record start and end times, then run as the Entra admin group on the restored copy:
+Record start and end times, then run as the Entra admin group on the restored copy. Native SQL ledger verification needs digests captured from the source database (automatic digest storage or `sys.sp_generate_database_ledger_digest`) and their storage location metadata, not digest contents. Keep this step blocked until native digests exist for the restore point. The application anchors published by the orchestrator (`count`/`head`) are not native digests; verify them separately against the immutable blob container.
 
 ```sql
-EXEC sp_verify_database_ledger_from_digest_storage N'<digest-json-from-immutable-blob>';
+DECLARE @locations NVARCHAR(MAX) = N'[{"path":"<digest-storage-url>","last_digest_block_id":<id>,"is_current":1}]';
+EXEC sp_verify_database_ledger_from_digest_storage @locations;
 SELECT COUNT(*) FROM <audit ledger table>;
 ```
 
