@@ -354,7 +354,6 @@ registerRoleScreen({
           requests.map((r) => [r.id, r.route, r.status, (r.accessibility || ["Unknown"]).join(", "), r.next_update]))));
   }
 });
-
 const hazardTriageRoles = ["Retrofit Coordinator", "Resident Liaison Officer", "Quality Inspector"];
 const hazardActor = (value) => value && (value.name || value.role)
   ? [value.name, value.role].filter(Boolean).join(", ") : "Unknown";
@@ -459,7 +458,6 @@ registerRoleScreen({
           ["Integration run and queue state", "Unknown. No interface run record is supplied to this screen."]])));
   }
 });
-
 const reviewerRole = "Contracts manager, independent of the person who issued or submitted the pack";
 const wording = (value, fallback = "Unknown") => value === null || value === undefined || value === "" ? fallback : String(value);
 const reference = (order) => `${wording(order.id)} v${wording(order.version)}`;
@@ -560,7 +558,6 @@ registerRoleScreen({
           ["Next reviewer", reviewerRole]])));
   }
 });
-
 const financeRoles = ["Grants and Evidence Officer", ...screenManagers];
 const financeCurrency = new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" });
 const financeMoney = (value) => typeof value === "number" && Number.isFinite(value) ? financeCurrency.format(value) : "Unknown";
