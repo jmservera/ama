@@ -140,6 +140,8 @@ def evaluate(expression, parameters: dict, variables: dict, context: dict | None
         "greaterOrEquals": lambda a, b: a >= b,
         "lessOrEquals": lambda a, b: a <= b,
         "empty": lambda a: not a,
+        "trim": str.strip,
+        "greater": lambda a, b: a > b,
         "coalesce": lambda *values: next(value for value in values if value is not None),
         "length": len,
         "split": lambda value, delimiter: value.split(delimiter),
