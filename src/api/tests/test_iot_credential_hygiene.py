@@ -71,6 +71,8 @@ def is_scanned(path: Path) -> bool:
 
 def read_scannable(path: Path) -> str:
     data = path.read_bytes()
+    if data.startswith((b"\xff\xfe\x00\x00", b"\x00\x00\xfe\xff")):
+        raise ValueError(f"{path.name}: unsupported encoding, failing closed")
     if data.startswith((b"\xff\xfe", b"\xfe\xff")):
         return data.decode("utf-16")
     if data.startswith(b"\xef\xbb\xbf"):
@@ -120,6 +122,14 @@ class SourceScanTests(unittest.TestCase):
             (base / "x.env").write_bytes(secret.encode("utf-16-le"))
             with self.assertRaises(ValueError):
                 scan_directory(base)
+            (base / "x.env").unlink()
+            for bom, enc in (
+                (b"\xff\xfe\x00\x00", "utf-32-le"),
+                (b"\x00\x00\xfe\xff", "utf-32-be"),
+            ):
+                (base / ".env.local").write_bytes(bom + secret.encode(enc))
+                with self.assertRaises(ValueError):
+                    scan_directory(base)
 
     def test_private_key_files_are_scanned(self) -> None:
         block = "-----BEGIN PRIVATE KEY-----\nAAAA\n-----END PRIVATE KEY-----\n"
@@ -218,14 +228,14 @@ class RuntimeLeakTests(unittest.IsolatedAsyncioTestCase):
 
     def client(self, failure: Exception | None = None) -> Mock:
         async def capture(message: object) -> None:
-            if failure is not None:
-                raise failure
             meta = [
                 str(getattr(message, "data", "")),
                 str(getattr(message, "message_id", "")),
                 repr(getattr(message, "custom_properties", "")),
             ]
             self.sent.append("\n".join(meta))
+            if failure is not None:
+                raise failure
 
         return Mock(connect=AsyncMock(), send_message=capture, shutdown=AsyncMock())
 
