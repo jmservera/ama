@@ -6,7 +6,7 @@
   },
   "overrides": {
     "@toast-ui/editor": {
-      "dompurify": "3.4.16"
+      "dompurify": "3.4.17"
     }
   },
   "devDependencies": {
