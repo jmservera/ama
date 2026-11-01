@@ -182,3 +182,136 @@ registerRoleScreen({
       screenPanel("Ledger-wide AI cohort (all homes, not this home)", assetCost(extra?.report)));
   }
 });
+
+const financeRoles = ["Grants and Evidence Officer", ...screenManagers];
+const financeMoney = (value) => typeof value === "number" && Number.isFinite(value)
+  ? new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(value) : "Unknown";
+const financeQty = (value) => typeof value === "number" && Number.isFinite(value) ? String(value) : "Unknown";
+const financeChecked = (inv) => inv.status && inv.status !== "Received" && inv.status !== "Not checked";
+function financeLineRows(f, inv) {
+  const com = (f.commitments || []).find((m) => m.id === inv.commitment);
+  const budget = f.budget;
+  const budgetText = budget ? `${financeMoney(budget.amount)}, ${screenValue(budget.status)}` : "Unknown. No budget recorded.";
+  const checked = financeChecked(inv);
+  return (inv.lines || []).map((ln, i) => {
+    const found = (inv.exceptions || []).filter((e) => e.line === i || e.line === null || e.line === undefined);
+    const scope = !com ? "Unknown. No matched commitment."
+      : String(com.measure).trim().toLowerCase() === String(ln.measure).trim().toLowerCase() ? "In scope" : `Not in scope (authorised: ${com.measure})`;
+    const quantity = !com ? "Unknown. No matched commitment."
+      : ln.quantity > com.quantity ? `Above authorised (${financeQty(ln.quantity)} of ${financeQty(com.quantity)})`
+        : `Within authorised (${financeQty(ln.quantity)} of ${financeQty(com.quantity)})`;
+    return [`Line ${i + 1}: ${screenValue(ln.measure)}`, `${financeQty(ln.quantity)} at ${financeMoney(ln.amount)}`,
+      com ? `${com.id} (${screenValue(com.status)}), ${financeMoney(com.amount)}` : "Unknown. Not matched.",
+      scope, quantity, budgetText,
+      ln.milestone_ref ? `Reference ${ln.milestone_ref}` : "Unknown. No accepted milestone evidence.",
+      !checked ? "Not checked yet. Exceptions are unknown."
+        : found.length ? found.map((e) => e.message).join(" ") : "No exception found by the match. This is not a payment decision."];
+  });
+}
+function financeInvoicePanel(c) {
+  const f = c.finance || {};
+  const invoices = f.invoices || [];
+  if (!invoices.length) return screenPanel("Invoice line comparison",
+    h("p", { class: "empty" }, "No invoices recorded for this home. This does not establish that nothing is owed."));
+  return screenPanel("Invoice line comparison", ...invoices.map((inv) => h("div", {},
+    h("h3", {}, `${inv.id}: ${screenValue(inv.kind)} ${screenValue(inv.ref)} from ${screenValue(inv.supplier)}`),
+    screenFields([["Version and record", `${inv.id}, work order ${screenValue(inv.work_order)}, match status: ${screenValue(inv.status)}`],
+      ["Payment hold", inv.hold ? `Paused by ${screenValue(inv.hold.name)}: ${screenValue(inv.hold.reason)}` : "No hold recorded"],
+      ["Finance decision", inv.disposition ? `${inv.disposition}, recorded by ${screenValue(inv.disposition_by)}` : "No Finance decision recorded"],
+      ["Payment status (a note of what Finance did elsewhere)", `${screenValue(inv.payment_status)}. This system never makes or releases a payment.`]]),
+    screenTable(`Line comparison for ${inv.id}`,
+      ["Invoice line", "Quantity and amount", "Commitment", "Scope", "Quantity check", "Budget", "Accepted milestone evidence", "Exception or unknown"],
+      financeLineRows(f, inv)))));
+}
+const financeQueueRows = (queue) => queue.map((q) => [q.case_id, q.invoice, `${screenValue(q.supplier)}, ref ${screenValue(q.ref)}`,
+  screenValue(q.status), `${q.exceptions ?? "Unknown"} exceptions`, q.on_hold ? "On hold" : "No hold", financeMoney(q.total)]);
+registerRoleScreen({
+  id: "finance-invoices",
+  title: "Invoice queue",
+  roles: financeRoles,
+  async load() {
+    const signal = routeController.signal;
+    const queue = await api("/api/finance", undefined, signal).catch(() => null);
+    const report = await api("/api/ai/report", undefined, signal).catch(() => null);
+    return { queue, report };
+  },
+  render(c, extra) {
+    const queue = Array.isArray(extra?.queue) ? extra.queue : null;
+    return h("div", {},
+      screenPanel("Evidence boundary",
+        h("p", {}, "Read-only reader view for the approver and payment officer. It makes no payment, approval or decision and changes no record. Use the existing case workspace to act. Source: desk research, not observed behaviour."),
+        h("p", {}, `Home scope: ${c.id} only, except the queue below.`)),
+      screenPanel("Invoices waiting for Finance (all homes your role can see)",
+        queue ? screenTable("Invoices with exceptions, holds or not yet checked",
+          ["Home", "Invoice", "Supplier and reference", "Status", "Exceptions", "Hold", "Invoice total"], financeQueueRows(queue))
+          : h("p", { class: "empty" }, "Unknown. The queue could not be read for your role.")),
+      financeInvoicePanel(c),
+      screenPanel("AI economics (ledger-wide, all homes)", h("p", {}, "Design only. Usage must be reconciled to billing before any cost is read. Total Cost of AI is the sum of components, and any missing component keeps it Unknown. Booked-value status stays Unknown until Finance records a defensible value. No price, budget or target is set here (BRD OD-51 open)."),
+        screenFields([["Usage reconciled to billing", "Unknown. No billing source is recorded."],
+          ["Total Cost of AI components", "Unknown. Platform, licence, people and rework components are not supplied."]]),
+        assetCost(extra?.report)));
+  }
+});
+
+const fundingFieldRows = (draft) => Object.entries(draft.fields || {}).map(([id, row]) => {
+  const issue = (draft.issues || []).filter((i) => i.field_id === id);
+  const source = row.evidence?.source;
+  return [id, row.effective_state || row.state, row.value === null || row.value === undefined ? "Unknown. No confirmed value." : JSON.stringify(row.value),
+    source ? `${screenValue(source.id)} v${screenValue(source.version)} (${screenValue(source.kind)})` : "Unknown. No reviewed evidence bound.",
+    issue.length ? issue.map((i) => `${i.status}: ${i.reason}`).join(" ") : "None recorded"];
+});
+function fundingDraftPanel(draft) {
+  if (draft.status === "Unavailable") return screenPanel(`Field draft ${screenValue(draft.draft_id)}`,
+    screenUnknown(draft.notice, "Document owner", "Recover the source document before reading this draft"));
+  const conflicts = (draft.issues || []).filter((i) => i.status === "Conflict");
+  return screenPanel(`Constructed field draft ${screenValue(draft.draft_id)}`,
+    screenFields([["Template", `${screenValue(draft.template?.id ?? draft.template?.name ?? draft.schema_id)} (schema ${screenValue(draft.schema_id)} v${screenValue(draft.schema_version)})`],
+      ["Funding route", draft.funding?.route ?? draft.funding?.scheme ?? "Unknown"],
+      ["Rule references", (draft.rule_refs || []).length ? draft.rule_refs.map((r) => (typeof r === "string" ? r : r.id)).join(", ") : "Unknown. None supplied."],
+      ["Conflicting source candidates", conflicts.length ? `${conflicts.length} field${conflicts.length === 1 ? "" : "s"}: ${conflicts.map((i) => i.field_id).join(", ")}. A person must review them. Nothing here picks a winning source.` : "None recorded"],
+      ["Stale fields", (draft.stale_fields || []).length ? draft.stale_fields.join(", ") : "None recorded"],
+      ["Reviewed ready", draft.reviewed_ready ? "Yes, as recorded by the reviewer" : "No. Held until a person reviews the evidence."],
+      ["Approved rule validation", screenValue(draft.approved_rule_validation)],
+      ["Unit and currency verification", screenValue(draft.unit_currency_verification)]]),
+    screenTable(`Fields and reviewed evidence for ${draft.draft_id}`,
+      ["Field", "State", "Value", "Reviewed evidence", "Issues"], fundingFieldRows(draft)),
+    h("p", {}, screenValue(draft.notice)));
+}
+registerRoleScreen({
+  id: "finance-funding",
+  title: "Funding route and claim pack",
+  roles: financeRoles,
+  async load(c) {
+    const signal = routeController.signal;
+    const review = await api(`/api/cases/${encodeURIComponent(c.id)}/form-review`, undefined, signal).catch(() => null);
+    const report = await api("/api/ai/report", undefined, signal).catch(() => null);
+    return { review, report };
+  },
+  render(c, extra) {
+    const funding = c.funding || {};
+    const grants = c.grants || [];
+    const drafts = Array.isArray(extra?.review?.drafts) ? extra.review.drafts : null;
+    const holds = extra?.review?.decision_holds || [];
+    return h("div", {},
+      screenPanel("Evidence boundary",
+        h("p", {}, "Read-only reader view for the capital and grant preparer. It is a reviewed export or readiness view only. No submission, award, eligibility decision or payment is made or inferred. Source: desk research, not observed behaviour."),
+        h("p", {}, `Home scope: ${c.id} only.`)),
+      screenPanel("Funding route",
+        screenFields([["Route", funding.route], ["Status", funding.status], ["Reference", funding.reference],
+          ["Eligibility", "Unknown. This page cannot confirm eligibility."]])),
+      screenPanel("Grant stages",
+        grants.length ? screenTable("Grant stages and approved evidence", ["Grant", "Scheme", "Stage now", "Waiting for approval", "Approved evidence"],
+          grants.map((g) => [g.id, g.scheme, g.state,
+            g.pending ? `${g.pending.to}, proposed by ${screenValue(g.pending.name)}. Evidence: ${screenValue(g.pending.source)}` : "Nothing waiting",
+            (g.history || []).length ? g.history.map((x) => `${x.state}: ${screenValue(x.source)} (approved by ${screenValue(x.approved_by)}, ${screenValue(x.source_status)})`).join("; ") : "Unknown. No approved stage."]))
+          : h("p", { class: "empty" }, "No grant recorded. This does not establish that no funding is available.")),
+      drafts ? (drafts.length ? drafts.map(fundingDraftPanel)
+        : screenPanel("Constructed field draft", h("p", { class: "empty" }, "No field draft recorded for this home. Template, fields and evidence are Unknown.")))
+        : screenPanel("Constructed field draft", h("p", { class: "empty" }, "Unknown. The field review could not be read for your role.")),
+      screenPanel("Readiness export",
+        screenFields([["Claim pack readiness", drafts && drafts.some((d) => d.reviewed_ready) ? "A reviewer recorded ready on at least one draft. A person must still check and submit it outside this system." : "Not ready. No reviewed export exists."],
+          ["Open decision holds", holds.length ? `${holds.length} recorded` : "None recorded"],
+          ["Submission, award and payment", "Not recorded here. This screen never infers them."]])),
+      screenPanel("AI economics (ledger-wide, all homes)", assetCost(extra?.report)));
+  }
+});
