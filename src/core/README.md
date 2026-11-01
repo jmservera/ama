@@ -436,6 +436,23 @@ target passes. Pause continues consuming the run time allowance, not a way to le
 simulator running unattended. See the [API runner](../api/README.md#opt-in-iot-consumer-and-synthetic-publisher-110-184)
 for actual SDK operation bounds, credential handling and activation gates.
 
+#### Cost estimate and run controls (#189)
+
+`synthetic.run_plan` records a pre-run estimate for N homes before any run:
+messages/day (3 per home by default), 4 KiB metered units against the decided
+B1/one-unit quota (400,000/day with a 40,000 reserve), prorated hub cost and
+budget cap, plus the run owner, time limit (at most 3600 s) and budget alert
+reference and threshold. It refuses over-quota, over-budget or too-short runs.
+`RunController` starts only against a recorded, untampered estimate that matches
+the plan, allows one run, stops it, scales homes and rate down (never up) and
+inherits the `Pacer` hard deadline. Prices are public list estimates, not a quote.
+Nothing here sends traffic or verifies the live Azure budget alert (#146).
+
+```bash
+python3 -m zava_forward.core.synthetic.run_plan --homes 60000 --owner "<name>" \
+  --budget-usd 10 --alert-reference "<budget alert name>" --out estimate.json
+```
+
 From `src/core`, with the package installed:
 
 ```bash
