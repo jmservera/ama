@@ -79,6 +79,18 @@ class GoldenRunTests(unittest.TestCase):
         )
         self.assertEqual(chat_panel.unsupported_claims("The grant is £.5m.", ["Grant: £.5m."]), [])
 
+    def test_currency_codes_and_signs_before_symbols(self) -> None:
+        for text in ("Funding totals GBP40m.", "Funding totals GBP40.5m.", "Funding is GBP40000."):
+            self.assertTrue(chat_panel.unsupported_claims(text, ["Survey booked"]), text)
+        self.assertEqual(
+            chat_panel.unsupported_claims("The adjustment is -£40.5m.", ["Adjustment: £40.5m."]),
+            ["-40.5m"],
+        )
+        self.assertEqual(
+            chat_panel.unsupported_claims("The adjustment is -£40.5m.", ["Adjustment: -£40.5m."]),
+            [],
+        )
+
     def test_numeric_forms_are_tokenised_completely(self) -> None:
         for text, token in (
             ("It costs £40m.", "40m"),

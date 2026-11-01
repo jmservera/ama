@@ -194,7 +194,7 @@ ACTION_CLAIM = re.compile(
 )
 STATUS_CLAIM = re.compile(
     r"\b(?:secur(?:ed|e)|funded|approved|complete[d]?|compliant|passed|cleared|verified"
-    r"|certified|safe|signed|consented|resolved|accepted|confirmed|guaranteed)\b|(?<![\w.])(?:[-+\u2212]?\d+(?:[.,]\d+)*|[-+\u2212]?\.\d+)(?:e[+-]\d+)?[^\W_]*",
+    r"|certified|safe|signed|consented|resolved|accepted|confirmed|guaranteed)\b|(?<![\w.])(?P<lead>[-+\u2212])?(?:(?:gbp|usd|eur)\s?|[£$€])?(?P<num>[-+\u2212]?(?:\d+(?:[.,]\d+)*|\.\d+)(?:e[+-]\d+)?[^\W_]*)",
     re.I,
 )
 HISTORY_POLICY = "user-only; assistant claims are not current evidence"
@@ -318,21 +318,25 @@ def permitted_sources(case_id: str, ctx: dict[str, Any]) -> dict[str, str]:
     return found
 
 
+def claim_tokens(text: str) -> set[str]:
+    """Status words and numbers; a sign before a currency marker stays with its amount."""
+    tokens = set()
+    for m in STATUS_CLAIM.finditer(normalise_policy_text(text)):
+        num = m.group("num")
+        if num is None:
+            tokens.add(m.group(0).casefold())
+        else:
+            lead = m.group("lead") or ""
+            tokens.add((num if num[0] in "-+\u2212" else lead + num).casefold())
+    return tokens
+
+
 def unsupported_claims(answer: str, cited: list[str]) -> list[str]:
     """Status words and numbers in the answer that no cited source contains (lexical)."""
-    support = {
-        m.group(0).casefold()
-        for source in cited
-        for m in STATUS_CLAIM.finditer(normalise_policy_text(source))
-    }
-    seen = normalise_policy_text(answer)
-    return sorted(
-        {
-            m.group(0).casefold()
-            for m in STATUS_CLAIM.finditer(seen)
-            if m.group(0).casefold() not in support
-        }
-    )
+    support: set[str] = set()
+    for source in cited:
+        support |= claim_tokens(source)
+    return sorted(claim_tokens(answer) - support)
 
 
 def parse_reply(text: str, allowed: dict[str, str]) -> tuple[str, list[str]] | None:
