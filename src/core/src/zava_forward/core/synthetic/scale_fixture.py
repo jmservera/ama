@@ -17,7 +17,7 @@ from zava_forward.core import insights
 from zava_forward.core.insights import STAGE_ORDER
 from zava_forward.core.synthetic import output_dir, provenance
 
-VERSION = "1.2.0"
+VERSION = "1.3.0"
 AS_OF = "2026-09-30"
 HOMES = 60000
 EVENTS = 600000
@@ -40,7 +40,7 @@ def homes(n=HOMES, seed=SEED):
                    resident=rnd.choice(NAMES), priority_support=rnd.random() < 0.08,
                    address=f"{i} Test Road", postcode=f"TE{i % 9} 1ST",
                    lat=round(50 + (i % 250) * 0.001, 4), lon=round(-1 + (i // 250) * 0.001, 4),
-                   open_safety_issue=rnd.random() < 0.02)
+                   open_safety_issue=rnd.random() < 0.02, is_synthetic=True)
 
 
 def households(n=HOMES, seed=SEED):
@@ -73,7 +73,7 @@ def events(n=HOMES, per_home=EVENTS_PER_HOME, seed=SEED):
     for i in range(n):
         for k in range(per_home):
             yield dict(case=f"ZF-{i:05d}", seq=k, kind=rnd.choice(KINDS),
-                       day=f"2026-{rnd.randint(1, 12):02d}-{rnd.randint(1, 28):02d}")
+                       day=f"2026-{rnd.randint(1, 12):02d}-{rnd.randint(1, 28):02d}", is_synthetic=True)
 
 
 def revision_sources() -> tuple[Path, ...]:
