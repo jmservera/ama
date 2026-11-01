@@ -177,7 +177,7 @@ def observe(
         if entry is None:
             outcome = "excluded"
         else:
-            overtaken = any(
+            overtaken = not bad_ranks and any(
                 r["expected_rank_max"] > m["expected_rank_max"]
                 and ranked[r["id"]]["rank"] < entry["rank"]
                 for r in retained
