@@ -272,6 +272,19 @@ class PacingTests(unittest.IsolatedAsyncioTestCase):
                     await pacer.wait(0.005)
                     self.assertAlmostEqual(now[0] - before, 0.005)
 
+    async def test_rate_change_reschedules_pending_admission(self) -> None:
+        now = [0.0]
+        pacer = Pacer(RunBudget("owner", "cost", "alert", max_per_second=10), clock=lambda: now[0])
+
+        async def advance(seconds: float) -> None:
+            now[0] += seconds
+
+        with patch("zava_forward.core.synthetic.sensor_stream.asyncio.sleep", advance):
+            await pacer.admit_send()
+            pacer.set_max_per_second(5)
+            await pacer.admit_send()
+        self.assertAlmostEqual(now[0], 0.2)
+
     async def test_paused_elapsed_target_uses_positive_bounded_deadline_polling(self) -> None:
         now = [0.0]
         sleeps: list[float] = []
