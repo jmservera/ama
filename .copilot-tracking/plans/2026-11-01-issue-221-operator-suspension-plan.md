@@ -1,4 +1,7 @@
-# Issue 221 plan
+---
+title: Issue 221 plan
+ms.date: 2026-11-01
+---
 
 * Scope: one focused test in `src/api/tests/test_operator_suspension.py`: breach record names restart authority, restart denied without proposal/authority, manual casework continues, unnamed authority recorded as Unavailable.
 * No source change; no mvp/ or prototype/ changes.
