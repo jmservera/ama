@@ -7,8 +7,13 @@ CREATE TABLE resident_ai.budget (
   id INT NOT NULL PRIMARY KEY CHECK (id = 1),
   reserved_cents INT NOT NULL CHECK (reserved_cents BETWEEN 0 AND 2000)
 );
-  INSERT INTO resident_ai.budget VALUES (1, 0);
+  INSERT INTO resident_ai.budget (id, reserved_cents) VALUES (1, 0);
 END;
+GO
+-- Expiry is data. Existing rows take the default, so the live ledger keeps its 2026-11-01 expiry.
+IF COL_LENGTH(N'resident_ai.budget', N'expires_at') IS NULL
+  ALTER TABLE resident_ai.budget ADD expires_at DATETIME2(7) NOT NULL
+    CONSTRAINT df_budget_expires_at DEFAULT '2026-11-01T00:00:00';
 GO
 IF OBJECT_ID(N'resident_ai.attempt', N'U') IS NULL
 CREATE TABLE resident_ai.attempt (
@@ -25,16 +30,16 @@ AS
 BEGIN
   SET NOCOUNT ON;
   SET XACT_ABORT ON;
-  DECLARE @now DATETIME2(7) = SYSUTCDATETIME(), @spent INT, @count INT;
+  DECLARE @now DATETIME2(7) = SYSUTCDATETIME(), @spent INT, @count INT, @expires DATETIME2(7);
   IF DATALENGTH(@resident) <> 64 OR @resident COLLATE Latin1_General_100_BIN2 LIKE '%[^a-f0-9]%'
     THROW 51000, 'Invalid accounting identity', 1;
   BEGIN TRANSACTION;
-  SELECT @spent = reserved_cents FROM resident_ai.budget WITH (UPDLOCK, HOLDLOCK) WHERE id = 1;
+  SELECT @spent = reserved_cents, @expires = expires_at FROM resident_ai.budget WITH (UPDLOCK, HOLDLOCK) WHERE id = 1;
   SET @now = SYSUTCDATETIME();
   SELECT @count = COUNT(*) FROM resident_ai.attempt
     WHERE resident = @resident AND reserved_at > DATEADD(HOUR, -1, @now);
   IF @spent IS NULL OR @spent >= 2000 OR @count >= 5
-     OR @now >= '2026-11-01T00:00:00'
+     OR @now >= @expires
      OR EXISTS (SELECT 1 FROM resident_ai.attempt WHERE reservation = @reservation)
   BEGIN
     COMMIT;

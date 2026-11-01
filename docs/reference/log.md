@@ -9004,3 +9004,14 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Filed deduplicated local-tooling bug #608 with exact reproduction/log hash.
   No deployed app defect, source fix, skip, full passing retry or gate bypass
   is inferred. Original Review and failed receipt remain preserved.
+
+## [2026-10-31] synthesis | Delivery bottleneck analysis and seven-day plan
+
+* Added the [delivery bottleneck analysis](./research/delivery-bottleneck-analysis-2026-10-31.md)
+  and catalog row: 381 merged PRs (about 14 per day since 17 October), a
+  measured bottleneck table, ranked fixes with estimated savings, owner
+  decisions D1-D7 kept separate, and a seven-day plan to a working resident
+  and employee demo.
+* CI figures come from a one-day sample of 300 runs; the RPI artifact share
+  of PR size and the 19-24 October slowdown cause are unmeasured. No
+  workflow, setting, gate or source change was made.
