@@ -9203,6 +9203,14 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   browser groups not run. The PERF-440 benchmark outlier was not reproduced
   and is filed as #687. No regulatory snapshot changed; no criterion ticked.
 
+## [2026-11-01] update | IoT publisher credential hygiene tests (#184)
+
+* Added constructed local tests (repository text scan, fake-SDK log, truth
+  record, payload and failure leak checks) and updated the #184 row in the
+  IoT research plan. Criterion 1 and actual credential, Hub telemetry and
+  live evidence remain unmet and owner or Azure gated. No regulatory snapshot
+  changed.
+
 ## [2026-11-01] update | Local handover demo (#188)
 
 * Added a runnable local demo and test for the live-versus-backfill handover
