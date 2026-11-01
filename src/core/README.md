@@ -4084,3 +4084,20 @@ Tests: `src/core/tests/test_resident_showcase.py` (no SQL) and `test_resident_sh
 (loopback SQL Server only). The live synthetic provenance of the homes database is not established:
 cases have no per-case synthetic flag, so the allowlist table, filled only after named approval,
 is the provenance record. See the [API section](../api/README.md#synthetic-resident-showcase-462).
+
+## Affected-person challenge and correction route (#220)
+
+`zava_forward.core.challenges.ChallengeRegister` is a store-independent register for constructed
+challenges (FR-052, AC-071, FR-043). `record_digital` and `record_staff` (named staff, phone,
+in-person, paper or assisted-visit channel) record a challenge against a source, policy or proposal
+version and the human decision, with a human owner, a next-update date and a fixed accessible
+non-digital route statement. `view` shows only permitted explanations. Only the named owner can
+`review` or `resolve` with evidence. Graph nodes are `(kind, id, version)` tuples, so a correction
+to `POL-1/v1` does not touch dependents of `POL-1/v2`. A `corrected` outcome marks exactly the
+transitive dependents in the injected dependency graph stale and preserves prior versions; `upheld` and `withdrawn` mark
+nothing. The register has no consent, refusal, sanction, closure or hazard-clock fields and never
+reads or writes them.
+
+Not delivered: persistence in the JSON, SQL and MSSQL stores, API and UI wiring, and the
+no-retaliation and no-delayed-hazard-response criterion, which needs live workflow evidence and
+human review. Tests: `src/core/tests/test_challenges.py`.
