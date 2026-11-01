@@ -9290,3 +9290,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   marked as registered on main; three remain in unmerged pull requests. Updated
   the index row and made the checker apply each status to its own screen group.
 * Findings stay hypotheses until #155. No accessibility acceptance is claimed.
+
+## [2026-11-01] update | Simulated device identity decision (#185)
+
+* Recorded the proposed individual-enrolment, per-device X.509 credential
+  lifecycle for simulated homes in the IoT research plan and indexed it. The
+  implementation is fake-only; owner confirmation and live Azure gates remain
+  pending and no live resource was touched.
