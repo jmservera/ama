@@ -1,7 +1,7 @@
 ---
 title: Delivery Bottleneck Analysis and Seven-Day Speed-Up Plan
 description: Measured delivery bottlenecks for the AMA repository on 2026-10-31, ranked fixes with expected savings, separated owner decisions and a seven-day plan to a working resident and employee demo
-ms.date: 2026-10-31
+ms.date: 2026-11-01
 ms.topic: reference
 ---
 
@@ -127,7 +127,7 @@ the rest need an owner decision in the next section.
 | --- | --- | --- | --- | --- | --- |
 | 1 | Stop the rubric bot committing `latest.json` and `badge.svg` to PR branches; publish the score as a PR check or comment and refresh the file on main only | 2 | Removes about 1.4 bot commits and head invalidations per PR, and the post-merge conflict on open PRs. CI restart saving applies only to PRs matching the `src-ci.yml` paths and is unverified (see bottleneck 2). Estimated 15 to 25 min per PR, hypothesis | Small workflow change | Owner decision D1 |
 | 2 | Make Copilot Code Review non-cancelling: remove it from the CI concurrency group, run it as an advisory non-required review, or stop it triggering on every push | 1, 3 | Cancellations arise from `src-ci.yml` concurrency on new pushes, so this may not remove the 39 percent rate; cause unverified. Trace cancels first. Saves the cost of obsolete runs if the hypothesis holds; it does not by itself shorten the per-PR critical path, which depends on CI for the new head | Small | Owner decision D2; trace first |
-| 3 | Cap PR size: target 10 files or fewer and about 600 added lines | 4, 3 | The 5 or fewer file PRs merge in a mean 3.8 h against 15.1 h; fewer threads per review. Estimated halving of the long tail | Process change; separating RPI artifacts would fail the coordinator check unless D3 amends it | Owner decision D3 |
+| 3 | Cap PR size: target 10 files or fewer and about 600 added lines (superseded: owner rejected a size target on 2026-11-01, see D3; retained as the pre-decision analysis) | 4, 3 | The 5 or fewer file PRs merge in a mean 3.8 h against 15.1 h; fewer threads per review. Estimated halving of the long tail | Process change; separating RPI artifacts would fail the coordinator check unless D3 amends it | Owner decision D3 |
 | 4 | Make the focused (`--changed`) tier the default local gate for source-only changes; full `--all` only for the final release candidate. A docs-only exception applies only after owner approval of D4 | 5, 7 | Historical 23 to 26 min sum versus 3 to 8 min focused (gate analysis estimate, not a controlled baseline); measure first | Tool exists; policy change | Owner decision D4 |
 | 5 | Relax the two-cycle Copilot review rule: after two cycles, further new threads become follow-up issues unless they are blocking defects | 3 | Caps correction rounds if the cause in bottleneck 3 is confirmed by measurement; the mean PR has 7.2 commits and 4.8 reviews. Estimated 20 to 60 min per looped PR | Policy change | Owner decision D5 |
 | 6 | Split src-api hosted tests into two parallel jobs and cache pip; start mssql in parallel (already a separate job) | 6 | src-api 11 min to about 6 min; CI wall time then limited by mssql at 6 min. Estimate only | Medium; touches workflows | Agent-ready after D1 and D2 |
@@ -142,8 +142,12 @@ inference and should be re-measured after the first two days.
 
 ## Owner Decisions Required
 
-These change policy, workflow behaviour or settings. None was applied in this
-PR and none should be assumed.
+These change policy, workflow behaviour or settings. The owner decided D1 to
+D7 on 2026-11-01 (chat input to the agent); each outcome is recorded below as
+`Decision 2026-11-01`. Workflow changes for D1 and D2 are delivered in a
+separate PR and are not applied here. D4 and D5 policy text is applied in
+`.github/copilot-instructions.md` and
+`.github/agents/ama-backlog-delivery-coordinator.agent.md`.
 
 * D1 Rubric score recording: stop the rubric bot pushing `latest.json` and
   `badge.svg` to PR branches. Options: post the score as a PR comment or
@@ -154,10 +158,17 @@ PR and none should be assumed.
   refresh lets concurrent PRs score against an outdated baseline. D1 must
   preserve a trusted full scorecard and define freshness handling. Needs a
   decision because the rubric workflow is a governance control.
+  Decision 2026-11-01: APPROVED. The rubric score is posted as a PR check or
+  comment and is not committed to PR branches. `latest.json` is refreshed on
+  main by a post-merge job with freshness handling and a trusted full scorecard
+  baseline. Workflow change: separate PR.
 * D2 Copilot Code Review trigger: make it non-cancelling and advisory, or
   trigger only on ready-for-review and on request rather than every push.
   Consequence: some review comments arrive later; branch protection must not
   treat the review run as required.
+  Decision 2026-11-01: APPROVED. Copilot Code Review is advisory and
+  non-cancelling, triggered on ready-for-review and on request, and not
+  required by branch protection. Workflow part: separate PR.
 * D3 PR size policy: set a target size. Option for the owner: allow RPI
   evidence in a separate PR from the code. This would require amending the
   coordinator check in `.github/agents/ama-backlog-delivery-coordinator.agent.md`
@@ -165,6 +176,9 @@ PR and none should be assumed.
   changes and review files in that PR's diff; until amended, RPI evidence
   stays in the code PR. Consequence: more PRs and links to maintain, but
   smaller code review surfaces.
+  Decision 2026-11-01: size target REJECTED (no PR size cap). Separate
+  RPI-evidence PR option REJECTED: evidence stays in the code PR and the
+  coordinator check is not amended.
 * D4 Gate tier default: make the focused tier the default local gate and
   reserve the complete local gate for the final merge candidate. The current
   repository instructions (`.github/copilot-instructions.md`) require the
@@ -172,15 +186,39 @@ PR and none should be assumed.
   documentation-only work, so relaxing it, including any docs-only exception,
   needs an explicit owner amendment and applies only after that approval. Consequence: lower local assurance per iteration, with
   hosted CI as the per-push evidence.
+  Decision 2026-11-01: APPROVED. The focused tier is the default local gate.
+  The complete gate applies to big features, releases, infrastructure,
+  deployment, SQL and security-sensitive changes. Independent exact-head
+  review, hosted CI and human approvals are kept.
 * D5 Two-cycle review rule: after two review correction cycles, convert new
   non-blocking threads to follow-up issues. Consequence: some edge cases ship
   and are tracked rather than fixed in place; blocking safety, privacy and
   accessibility defects still stop the PR.
+  Decision 2026-11-01: APPROVED. After two correction cycles, new
+  non-blocking Copilot threads become follow-up issues; blocking safety,
+  privacy and accessibility defects still stop the PR.
 * D6 Demo scope: confirm which resident and employee journeys are the
   minimum working version, and accept that human-gated items such as #523,
   #524, #570 and #432 are reported as pending, not accepted.
+  Decision 2026-11-01: APPROVED with change. Minimum demo journeys are
+  resident (sign in, own case status, grounded assistant, consent and
+  appointments) and employee (sign in, capacity and work orders with paging,
+  asset board, chat), plus the SENSORS LIVE VIEW. The human-gated #523, #524,
+  #570 and #432 are reported pending, not accepted. Everything else is frozen
+  outside these paths.
 * D7 Review mode: confirm that human review of the final candidate remains a
   required boundary even when tiers are relaxed. This page does not remove it.
+  Decision 2026-11-01: unchanged. Human review of the final candidate remains
+  a required boundary.
+
+### Owner-approved deferrals (2026-11-01)
+
+These are deferrals, not met criteria.
+
+* #466: scope is automated axe and keyboard checks only. Screen-reader and
+  assistive-technology passes are deferred to before the production build.
+* #163: criteria 2 and 5 (DPO and Legal) are deferred to before production.
+  The demo uses synthetic data only.
 
 ## Seven-Day Plan
 
@@ -191,7 +229,7 @@ made, the dependent step is skipped and the fix is not applied.
 | --- | --- | --- |
 | 1 (1 Nov) | Owner decides D1 to D6. Triage the 132 open issues into demo-critical, human-gated and deferred. Freeze new scope outside the demo paths. Verify live access to the selected demo, cost headroom and approvals: the resident AI authority in `infra/README.md` expires 2026-11-01T00:00Z and that page records live renewal as Pending, so obtain separate inference authority for any AI journey or mark it blocked | Decision record in the issue or PR; labelled issue list; recorded access, expiry and cost check |
 | 2 | Apply D1 and D2 as one reviewed workflow PR. Start a daily metric: cancelled CI share, rubric bot commits per PR, merges per day | CI cancel share below 10 percent on the next 20 runs (target, to verify) |
-| 3 | Apply D3 and D4 as policy text. Fix the browser launch retry (fix 8). Split src-api hosted CI (fix 6) if the owner agrees | New PRs of 10 files or fewer; mean CI wall time near 6 to 7 min |
+| 3 | Apply D4 as policy text (D3 size target rejected 2026-11-01; ignore the pre-decision size exit evidence). Fix the browser launch retry (fix 8). Split src-api hosted CI (fix 6) if the owner agrees | Mean CI wall time near 6 to 7 min (the pre-decision 10-file PR target is superseded by D3) |
 | 4 | Resident demo path: close the demo-critical resident issues using small PRs. Run at most two parallel loops per heavy-lock slot | Resident demo journey passing authorized live checks of the reviewed deployment (hosted CI is synthetic only) |
 | 5 | Employee demo path: same method. Do not start new human-gated work; record pending attestations | Employee demo journey passing authorized live checks; the evidence pack records it blocked by missing independent identity expectations, so keep it blocked until those prerequisites exist; #523/#524/#570 shown as pending where unproven |
 | 6 | Stabilise: fix regressions only; no new features. One complete local gate on the merge candidate | Exact-head receipt verified against the current main base; hosted CI green where it applies. Repeat the authorised live checks for each journey claimed working on the final release candidate, since day-6 fixes can change the deployment checked on days 4 and 5; a journey not rechecked is reported as unverified |

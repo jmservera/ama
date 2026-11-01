@@ -9334,6 +9334,14 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   deferrals remains open.
 
 
+## [2026-11-01] update | Chat and memory DPIA record drift guard (Refs #163)
+
+* Added `src/core/tests/test_chat_dpia_record.py`. It fails if a `DATA_MAP` class
+  is missing from the DPIA record data map, if a decision pack row D1 to D8 is
+  filled without a date and reference, or if retention stops being Unknown.
+* No decision, lawful basis, retention period or provider acceptance was
+  recorded. Criteria 2 and 5 stay with the DPO and Legal.
+
 ## 2026-11-01 - Chat claim-level support check (Refs #164)
 
 * Added a lexical claim-support check to the chat panel: status words and
@@ -9402,6 +9410,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   (PR 662 and PR 656), restoring the atlas trace check that main's merges broke.
 * No accessibility acceptance is claimed.
 
+
 ## [2026-11-01] update | Issue 466 remaining-criteria check (r4)
 
 * Re-ran focused resident sensor and assistant tests, ruff and mypy on main;
@@ -9456,3 +9465,12 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   topic cleanly; the owner selected topic-only publication, leaving PR #692
   open. The isolated experiment candidate is a separate draft PR; no main
   merge, visibility mutation, OSF action or collection is authorized.
+## [2026-11-01] update | Owner decisions D1 to D7 recorded
+
+* Recorded the owner's 2026-11-01 decisions on
+  `research/delivery-bottleneck-analysis-2026-10-31.md`: D1, D2, D4, D5 and D6
+  approved (D6 with change), D3 rejected, D7 unchanged. Recorded the #466 and
+  #163 owner-approved deferrals, which are not met criteria.
+* Applied D4 and D5 policy text in `.github/copilot-instructions.md` and the
+  backlog delivery coordinator agent. Workflow changes for D1 and D2 are in a
+  separate PR. No accessibility acceptance is claimed.
