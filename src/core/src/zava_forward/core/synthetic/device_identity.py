@@ -261,7 +261,8 @@ def _teardown_locked(
     remaining: list[str] = []
     leftover: list[str] = []
     try:
-        remaining = sorted(owned.intersection(registry.list_run(run_id)))
+        listed = set(registry.list_run(run_id))
+        remaining = sorted(listed if full_run else owned.intersection(listed))
         leftover = sorted(store.run_references(run_id))
     except Exception:
         errors += 1

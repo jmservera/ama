@@ -364,6 +364,20 @@ class DeviceIdentityTests(unittest.TestCase):
             di.teardown(done, registry, store)
         self.assertEqual(str(ctx.exception), "TEARDOWN_CREDENTIALS_REMAIN")
 
+    def test_device_added_during_revocation_is_reported(self) -> None:
+        registry, store = FakeRegistry(), FakeStore()
+        done = di.provision(di.plan("run-001", "owner-role", sensors()), registry, store)
+        original = store.revoke
+
+        def revoke_and_add_device(reference: str) -> None:
+            original(reference)
+            registry.devices["SYN-LATE"] = "run-001"
+
+        store.revoke = revoke_and_add_device  # type: ignore[method-assign]
+        with self.assertRaises(di.DeviceIdentityError) as ctx:
+            di.teardown(done, registry, store)
+        self.assertEqual(str(ctx.exception), "TEARDOWN_INCOMPLETE:1")
+
     def test_provision_inside_except_does_not_chain_caller_secret(self) -> None:
         registry, store = FakeRegistry(), FakeStore()
         manifest = di.plan("run-001", "owner-role", sensors())
