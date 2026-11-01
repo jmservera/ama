@@ -12,6 +12,7 @@ from unittest.mock import patch
 from zava_forward.core import projection
 import chat_fixture  # src/agents/tests, on PYTHONPATH until M5
 from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation, neutralise
+from zava_forward.core.chatthreads import user_key
 from test_role_matrix import Matrix, PHONE, REASON, ROLES
 
 APPROVED = dict(CHAT_DPIA_REF="SYNTH-DPIA-1", CHAT_LAWFUL_BASIS_REF="SYNTH-LB-1", CHAT_NOTICE_REF="SYNTH-NOTICE-1")
@@ -239,6 +240,7 @@ class ChatIsolationTests(Matrix):
         try:
             self.assertEqual(self.api(admin, "/api/chat/breakglass", dict(body, purpose="short"))[0], 403)
             self.assertEqual(self.api(admin, "/api/chat/breakglass", dict(body, target=self.email(admin)))[0], 403)
+            self.assertEqual(self.api(admin, "/api/chat/breakglass", dict(body, target=self.email(admin), purpose="Check mail from synth.person@example.test now"))[0], 403)
             self.assertEqual(self.api("Quality Inspector", "/api/chat/breakglass", dict(body, target=self.email(admin)))[0], 403)
             code, d = self.api(admin, "/api/chat/breakglass", body)
             self.assertEqual((code, d["threads"]), (200, 1))
@@ -252,6 +254,21 @@ class ChatIsolationTests(Matrix):
         self.assertEqual([e["action"] for e in log].count("chat.breakglass.granted"), 2)
         self.assertGreaterEqual([e["action"] for e in log].count("chat.breakglass.refused"), 4)
         self.assertIn("Investigating a reported misuse", next(e["detail"] for e in log if e["action"].endswith("granted")))
+        masked = [e for e in log if "[email removed]" in e["detail"]]
+        self.assertEqual(len(masked), 1)
+        self.assertNotIn("synth.person@example.test", masked[0]["detail"])
+        self.assertEqual(masked[0]["action"], "chat.breakglass.refused")
+        self.assertEqual(masked[0]["who"], user_key(dict(email=self.email(admin))))
+        self.assertEqual(json.loads(masked[0]["detail"])["purpose"], "Check mail from [email removed] now")
+        self.assertEqual(json.loads(masked[0]["detail"])["target"], user_key(dict(email=self.email(admin))))
+        for e in log:
+            detail = json.loads(e["detail"])
+            self.assertIn("target", detail)
+            self.assertTrue(detail["purpose"].strip(), e)
+            self.assertNotIn("content", detail)
+        granted = json.loads(next(e["detail"] for e in log if e["action"].endswith("granted")))
+        self.assertEqual(granted["policy_ref"], "SYNTH-POLICY-1")
+        self.assertEqual(granted["target"], user_key(dict(email=target)))
 
     # Synthetic fixture replay: same-role, cross-role and spoofed-key probes from the 60,000-home stock fixture
     def test_fixture_isolation_cases_are_denied(self):
