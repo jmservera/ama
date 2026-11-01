@@ -30,3 +30,8 @@ task_slug: simulator-cost-run-controls
 ## Follow-ups
 
 * Wire the controller into the API publisher (#184) and live budget alert verification (#146): out of scope.
+
+## Correction cycle, PR 707 Copilot threads
+
+* Research: `run_controlled` passed only budget and pacer, so `RunController.active_homes` was ignored, and distinct homes were not bounded by `plan.homes`.
+* Plan: add `active_homes` callable to `HubPublisher.run`; reject frame sets with more distinct homes than the plan before creating SDK clients.

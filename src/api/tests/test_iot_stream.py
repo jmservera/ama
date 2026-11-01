@@ -21,6 +21,7 @@ from zava_forward.core.sensor_consumer import ConsumerError, Receipt, SensorCons
 from zava_forward.core.synthetic import sensor_stock
 from zava_forward.core.synthetic.run_plan import RunController, RunPlan, record
 from zava_forward.core.synthetic.sensor_stream import (
+    Frame,
     Pacer,
     Replay,
     RunBudget,
@@ -474,6 +475,75 @@ class PublisherTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(controller.state, "stopped")
         assert controller.pacer is not None
         self.assertTrue(controller.pacer.stopped)
+
+    def _two_home_publisher(
+        self, homes: int
+    ) -> tuple[HubPublisher, tuple[Frame, ...], RunController]:
+        first = self.frames[0]
+        other_row = dict(first.row, home_id="ZF-2", sensor_id="S2", reading_id="r-2")
+        other = Frame(
+            "SYN-S2", first.slot, other_row, "ok", first.selected_stock_sha256, first.nominal_at
+        )
+        bindings = (
+            Binding(first.device_id, first.row["sensor_id"], "ZF-1"),
+            Binding("SYN-S2", "S2", "ZF-2"),
+        )
+        certs = {b.device_id: X509("not-read.pem", "not-read-key.pem") for b in bindings}
+        publisher = HubPublisher(ACTIVE, bindings, certs)
+        controller = RunController(
+            RunPlan(
+                owner="Fixture Owner",
+                homes=homes,
+                max_seconds=120,
+                max_per_second=10,
+                budget_usd=5,
+                alert_threshold=0.8,
+                alert_reference="budget-iot-hub-80pct",
+            )
+        )
+        frames = (replace(first, truth="ok"), other, replace(first, truth="ok"), other)
+        return publisher, frames, controller
+
+    async def test_controlled_run_rejects_more_homes_than_plan_before_clients(self) -> None:
+        publisher, frames, controller = self._two_home_publisher(1)
+        with (
+            tempfile.TemporaryDirectory() as tmp,
+            patch(
+                "zava_forward.api.iot_stream.IoTHubDeviceClient.create_from_x509_certificate"
+            ) as create,
+            self.assertRaisesRegex(StreamError, "RUN_HOME_LIMIT"),
+        ):
+            path = Path(tmp) / "estimate.json"
+            record(controller.plan, path)
+            await publisher.run_controlled(frames, controller, path, truth=self.truth.append)
+        create.assert_not_called()
+        self.assertEqual(controller.state, "idle")
+
+    async def test_scale_down_stops_removed_homes_publishing(self) -> None:
+        publisher, frames, controller = self._two_home_publisher(2)
+        created: list[str] = []
+
+        def make(*args: object, **kwargs: object) -> Mock:
+            created.append(str(args[2]))
+            return self.client
+
+        async def send(_message: object) -> None:
+            if self.client.send_message.await_count == 1:
+                controller.scale_down(0.5)
+
+        self.client.send_message = AsyncMock(side_effect=send)
+        with (
+            tempfile.TemporaryDirectory() as tmp,
+            patch(
+                "zava_forward.api.iot_stream.IoTHubDeviceClient.create_from_x509_certificate",
+                side_effect=make,
+            ),
+        ):
+            path = Path(tmp) / "estimate.json"
+            record(controller.plan, path)
+            sent = await publisher.run_controlled(frames, controller, path, truth=self.truth.append)
+        self.assertEqual(sent, 2)
+        self.assertEqual(created, [frames[0].device_id])
 
     async def test_device_only_activation_publishes_without_asserting_routed_receiver(self) -> None:
         active = DeviceActivation(ACTIVE.hub_hostname, "owner-approved finite hub exercise")

@@ -362,9 +362,17 @@ class HubPublisher:
         truth: Callable[[dict[str, object]], None],
     ) -> int:
         """Publish under a recorded estimate; the controller is always stopped afterwards."""
+        if len({frame.row.get("home_id") for frame in frames}) > controller.plan.homes:
+            raise StreamError("RUN_HOME_LIMIT")
         pacer = controller.start(estimate_path)
         try:
-            return await self.run(frames, controller.plan.budget(), pacer=pacer, truth=truth)
+            return await self.run(
+                frames,
+                controller.plan.budget(),
+                pacer=pacer,
+                truth=truth,
+                active_homes=lambda: controller.active_homes,
+            )
         finally:
             controller.stop()
 
@@ -376,6 +384,7 @@ class HubPublisher:
         speed: float = 1.0,
         pacer: Pacer | None = None,
         truth: Callable[[dict[str, object]], None],
+        active_homes: Callable[[], int] | None = None,
     ) -> int:
         self.activation.validate()
         frames = tuple(
@@ -417,6 +426,7 @@ class HubPublisher:
         clients: dict[str, IoTHubDeviceClient] = {}
         sent = 0
         previous: datetime | None = None
+        home_order: list[object] = []
 
         async def send(client: IoTHubDeviceClient, message: Message) -> None:
             await control.admit_send()
@@ -424,6 +434,12 @@ class HubPublisher:
 
         try:
             for frame in frames:
+                home = frame.row.get("home_id")
+                if home not in home_order:
+                    home_order.append(home)
+                if active_homes is not None and home_order.index(home) >= active_homes():
+                    previous = frame.nominal_at
+                    continue
                 stamp = frame.nominal_at
                 interval = max(0.0, (stamp - previous).total_seconds()) if previous else 0.0
                 await _bounded(control.wait(0 if frame.truth == "burst" else interval), deadline)

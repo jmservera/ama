@@ -31,3 +31,7 @@ Addendum: four Copilot PR review findings (whole-run quota, full-body estimate c
 Second addendum: four further Copilot findings (prior daily usage, replay speed and spacing, billable duration versus replay span, pacer rescheduling on scale-down) were valid and fixed; see the changes file.
 
 Third addendum: one further Copilot finding (combined replay and send pacing with cleanup reserve) was valid and fixed; see the changes file.
+
+## Correction cycle, PR 707
+
+Second-round Copilot threads (2) were valid and fixed. Outcome: conformant for those findings; independent review remains required.

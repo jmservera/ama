@@ -20,3 +20,7 @@ Add `src/core/src/zava_forward/core/synthetic/run_plan.py` plus `src/core/tests/
 * Units fixed at 1 (B1); more units rejected per #140.
 * Money figures are planning list prices, labelled as such.
 * Critique (single pass, self-run): scope tight; no connection to live publisher; verdict compatible, no conflicts with decisions.
+
+## Correction cycle, PR 707
+
+Plan amended with the two fixes above; no divergence.
