@@ -9016,6 +9016,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   of PR size and the 19-24 October slowdown cause are unmeasured. No
   workflow, setting, gate or source change was made.
 
+## [2026-11-01] implementation | Regulatory UX contrast incompletes resolved (Refs #215)
+
+* Updated the [API UX guide](../../src/api/README.md#regulatory-alert-and-home-chat-ux-215):
+  the eight axe `color-contrast` incompletes were a textarea border-box
+  artefact; fixed in CSS and now asserted by the browser harness (21 states,
+  zero violations, zero incompletes). No manual or assistive-technology
+  assessment and no staff comprehension study was run; those criteria stay unmet.
 ## [2026-11-01] update | Synthetic determinism replay audit (Refs #176)
 
 * Added a one-command replay audit for the in-repo synthetic generators and a
@@ -9203,6 +9210,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   browser groups not run. The PERF-440 benchmark outlier was not reproduced
   and is filed as #687. No regulatory snapshot changed; no criterion ticked.
 
+## [2026-11-01] update | Resident authority end (#521)
+
+* Documented coordinator steps for the live resident authority extension in infra/README.md and moved the browser-check fixture to the shared authority end (Refs #521). No live apply.
 ## [2026-11-01] update | IoT publisher credential hygiene tests (#184)
 
 * Added constructed local tests (repository text scan, fake-SDK log, truth
