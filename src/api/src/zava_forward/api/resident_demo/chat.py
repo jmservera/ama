@@ -486,8 +486,22 @@ DOCUMENT_HOW_TO = re.compile(
 )
 
 
+POLITE_ENVELOPE = re.compile(
+    r"(?:please )?(?:(?:can|could|would) you (?:tell me|show me|explain|help me with) "
+    r"(?:about )?|please )(.+?)(?: please)?[?.!]*"
+)
+
+
+def _strip_polite(question: str) -> str:
+    """Remove a complete polite envelope; shared by routing and refusal classification."""
+    text = question.lower().strip()
+    polite = POLITE_ENVELOPE.fullmatch(text)
+    return polite[1] if polite else text
+
+
 def is_refusal(question: str) -> bool:
     """True for instruction injection and anything beyond the advisory boundary."""
+    question = _strip_polite(question)
     tokens = words(question)
     blocked = BLOCKED_WORDS | ACTION_WORDS | BOUNDARY_WORDS
     if DOCUMENT_HOW_TO.fullmatch(question.strip().lower()):
@@ -524,14 +538,7 @@ def route(question: str) -> Topic | str:
     } or _hazard_report(question, tokens):
         return "safety"
     # Only remove a complete polite envelope; the remaining message must still match in full.
-    question = question.lower().strip()
-    polite = re.fullmatch(
-        r"(?:please )?(?:(?:can|could|would) you (?:tell me|show me|explain|help me with) "
-        r"(?:about )?|please )(.+?)(?: please)?[?.!]*",
-        question,
-    )
-    if polite:
-        question = polite[1]
+    question = _strip_polite(question)
     tokens = words(question)
     pause = _pause_question(question)
     if tokens & BLOCKED_WORDS and not pause:
