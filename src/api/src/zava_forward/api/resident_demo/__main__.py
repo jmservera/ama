@@ -18,6 +18,7 @@ from zava_forward.core import resident_showcase_sql as rsql
 from .agenda import Agenda
 from .aoai import configured_advisor
 from .app import ResidentDemo, serve
+from .chat_log import ChatLog
 
 
 def main() -> int:
@@ -35,6 +36,13 @@ def main() -> int:
         except (ValueError, sqlite3.Error):
             raise rs.ShowcaseConfigError(
                 "The local synthetic callback agenda is invalid."
+            ) from None
+        log_path = os.environ.get("ZF_DEMO_CHAT_LOG_PATH")
+        try:
+            chat_log = ChatLog(Path(log_path)) if log_path else None
+        except (ValueError, sqlite3.Error, OSError):
+            raise rs.ShowcaseConfigError(
+                "The local synthetic chat learning record is invalid."
             ) from None
     except rs.ShowcaseConfigError as error:
         print(f"Refusing to start: {error}", file=sys.stderr)
@@ -55,6 +63,7 @@ def main() -> int:
         client_address=config.client_address,
         assistant_advisor=advisor,
         agenda=agenda,
+        chat_log=chat_log,
     )
     server = serve(app)
     print(

@@ -39,6 +39,7 @@ from . import chat
 from .agenda import MANUAL, ZONE, Agenda, AgendaConflict
 from .agenda import NOTICE as AGENDA_NOTICE
 from .aoai import resident_key
+from .chat_log import ChatLog
 
 WEB = Path(__file__).parent / "web"
 ASSETS = {
@@ -110,6 +111,7 @@ class ResidentDemo:
         assistant_provider: Provider | None = None,
         assistant_advisor: Advisor | None = None,
         agenda: Agenda | None = None,
+        chat_log: ChatLog | None = None,
     ):
         self.client_address = client_address
         self.reader, self.identity, self.verifier = reader, identity, verifier
@@ -123,6 +125,7 @@ class ResidentDemo:
         )
         self.assistant_advisor = assistant_advisor
         self.agenda = agenda
+        self.chat_log = chat_log
 
     @property
     def ready(self) -> bool:
@@ -447,7 +450,7 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                     base = (
                         advise(topic, case, FakeProvider())
                         if isinstance(topic, Topic)
-                        else chat.answer(topic, view)
+                        else chat.answer(topic, view, value)
                     )
                     advice = (
                         app.assistant_advisor.answer_question(
@@ -464,7 +467,7 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                             else advise(topic, case, app.assistant_provider)
                         )
                         if isinstance(topic, Topic)
-                        else chat.answer(topic, view)
+                        else chat.answer(topic, view, value if "question" in body else "")
                     )
                     if (
                         "question" in body
@@ -473,6 +476,7 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                         and not app.assistant_provider.ai
                     ):
                         advice = replace(advice, label="Summary by rules - AI is not enabled")
+                advice = chat.with_pause_note(advice, topic, view)
             except AssistantUnavailable:
                 print("resident assistant unavailable", file=sys.stderr)
                 self._json(
@@ -485,6 +489,17 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
             if app.view_for(session) is None:
                 self._json(401, dict(error="Please sign in again."))
                 return
+            if app.chat_log is not None and signed is not None:
+                try:
+                    app.chat_log.record(
+                        app.now(),
+                        signed[1],
+                        chat.outcome(value, topic) if "question" in body else str(topic),
+                        app.assistant_advisor is not None or app.assistant_provider.ai,
+                        value if "question" in body else "",
+                    )
+                except (sqlite3.Error, OSError, ValueError):
+                    print("chat learning record unavailable", file=sys.stderr)
             self._json(
                 200,
                 dict(

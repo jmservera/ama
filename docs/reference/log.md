@@ -9404,3 +9404,12 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Applied D4 and D5 policy text in `.github/copilot-instructions.md` and the
   backlog delivery coordinator agent. Workflow changes for D1 and D2 are in a
   separate PR. No accessibility acceptance is claimed.
+
+## [2026-11-01] update | Resident chat learning record and router fixes (Refs #466)
+
+* Added `research/ux/resident-chat-learning-record.md` and its index row: the
+  bounded, synthetic-only record of chat turns, the operator summary, and the
+  note that real-resident use needs DPO and Legal approval (#163 deferred).
+* Resident chat router now handles pause, unlock and contact phrasings and
+  offers closest topics instead of a flat refusal. No accessibility acceptance
+  is claimed.

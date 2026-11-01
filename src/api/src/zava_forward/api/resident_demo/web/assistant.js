@@ -222,6 +222,7 @@
     question.id = "assistant-question";
     question.setAttribute("aria-describedby", "assistant-notice resident-chat-error");
     ui.intro.appendChild(node("p", "Ask about your case, documents, forms, planned improvements or a repair concern. Do not enter sensitive or contact details. With your permission, your question and limited own-case details may be sent to AI. Chat is not kept as model conversation memory."));
+    ui.intro.appendChild(node("p", "Synthetic demo only: questions you type may be saved, without your name or email, to help the team improve this chat. Do not type real personal details. This is not used to make decisions about you."));
     ui.intro.appendChild(node("p", "For documents, try: Which documents are missing? How do I upload my documents? What does my document warning or error mean? Chat explains the recorded instructions, but cannot receive files or approve documents."));
     ui.status.id = "assistant-status";
     var result = ui.log;
