@@ -16,7 +16,11 @@ DOC_MARKERS = {
     "diagnostic_log": "Diagnostic logs",
     "audit_ledger": "Audit ledger",
 }
-RECORDED = re.compile(r"\d{4}-\d{2}-\d{2}.*\bref:\s*\S", re.I)
+RECORDED_PARTS = (
+    re.compile(r"\bowner:\s*[A-Za-z]", re.I),
+    re.compile(r"\b\d{4}-\d{2}-\d{2}\b"),
+    re.compile(r"\bref:\s*\S", re.I),
+)
 
 
 def section(text: str, heading: str) -> str:
@@ -49,7 +53,9 @@ class ChatDpiaRecordGuard(unittest.TestCase):
         self.assertEqual([r.split("|")[1].strip() for r in rows], [f"D{n}" for n in range(1, 9)])
         for row in rows:
             cell = row.rstrip().rstrip("|").rsplit("|", 1)[1].strip()
-            self.assertTrue(cell == "Not recorded" or RECORDED.search(cell), row)
+            self.assertTrue(
+                cell == "Not recorded" or all(p.search(cell) for p in RECORDED_PARTS), row
+            )
 
     def test_unrecorded_decisions_match_unset_references(self) -> None:
         decision = cp.ChatPrivacy(SimpleNamespace(chat_repo=None), env={}).decision()  # type: ignore[no-untyped-call]
@@ -62,17 +68,16 @@ class ChatDpiaRecordGuard(unittest.TestCase):
         for row in cp.DATA_MAP:
             if row["id"] in {"message", "thread", "memory"}:
                 self.assertIn("Unknown", row["retention"])
-        rows = {
-            marker: line
-            for line in section(self.text, "Data map").splitlines()
-            for marker in ("chat_message", "chat_memory")
-            if line.startswith("|") and marker in line
-        }
-        for marker, line in rows.items():
-            self.assertTrue(
-                line.rstrip().rstrip("|").rsplit("|", 1)[1].strip().startswith("Unknown"), marker
-            )
-        self.assertEqual(set(rows), {"chat_message", "chat_memory"})
+        lines = [
+            line for line in section(self.text, "Data map").splitlines() if line.startswith("|")
+        ]
+        markers = ("chat_message", "chat_thread", "chat_memory")
+        for marker in markers:
+            found = [line for line in lines if marker in line]
+            self.assertTrue(found, marker)
+            for line in found:
+                cell = line.rstrip().rstrip("|").rsplit("|", 1)[1].strip()
+                self.assertTrue(cell.startswith("Unknown"), marker)
 
 
 if __name__ == "__main__":
