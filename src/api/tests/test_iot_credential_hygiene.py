@@ -43,8 +43,12 @@ SUFFIXES = {
 }
 SKIPPED_PARTS = {"node_modules", ".git", ".venv", "__pycache__"}
 PATTERNS = {
-    "shared access key value": re.compile(r"SharedAccessKey\s*=\s*[A-Za-z0-9+/]{20,}={0,2}"),
-    "shared access signature": re.compile(r"SharedAccessSignature\s+sr=\S+&sig=\S+"),
+    "shared access key value": re.compile(
+        r"""SharedAccessKey["']?\s*[=:]\s*["']?[A-Za-z0-9+/]{20,}={0,2}"""
+    ),
+    "shared access signature": re.compile(
+        r"SharedAccessSignature\s+(?=[^\n]*\bsr=\S)(?=[^\n]*\bsig=\S)\S+"
+    ),
     "device connection string": re.compile(
         r"HostName=[^;\s]+\.azure-devices\.net;[^\n]*(?:SharedAccessKey|x509)\s*=", re.I
     ),
@@ -121,6 +125,19 @@ class SourceScanTests(unittest.TestCase):
             (base / "users.sql").write_text(f"-- {secret}\n", encoding="utf-8")
             findings = scan_directory(base)
         self.assertEqual({f.split(":")[0] for f in findings}, {"app.js", "page.html", "users.sql"})
+
+    def test_standalone_quoted_keys_and_reordered_tokens_are_scanned(self) -> None:
+        key = "A" * 24 + "=="
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            (base / "a.py").write_text(f'SharedAccessKey = "{key}"\n', encoding="utf-8")
+            (base / "b.json").write_text(f'{{"SharedAccessKey": "{key}"}}\n', encoding="utf-8")
+            (base / "c.txt").write_text(
+                "SharedAccessSignature sig=abc123&se=1700000000&sr=h.azure-devices.net\n",
+                encoding="utf-8",
+            )
+            findings = scan_directory(base)
+        self.assertEqual({f.split(":")[0] for f in findings}, {"a.py", "b.json", "c.txt"})
 
     def test_no_device_key_or_connection_string_in_repository_text(self) -> None:
         this = Path(__file__).resolve()
