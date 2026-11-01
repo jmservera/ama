@@ -2924,6 +2924,12 @@ and the shared observation schema. Profiles are explicit fictional overlays,
 not calibrated building physics or the beneficial-only dated fabric-loss model.
 Default backfill bytes and workflow/check names are unchanged.
 
+`sensor_scenarios.retrofit_exercise_scenarios()` gives #111/#133 consumers the
+four before/after retrofit cases (improvement, no change, delayed effect,
+adverse effect) as analysis rows, a measure date and expected direction/size,
+each labelled `EXERCISE VALUE: fictional, not sourced`. Only fixture tests use
+it today; #111/#133 consumer tests remain unproven.
+
 From the repository root, with the core package installed:
 
 ```bash
@@ -3459,7 +3465,7 @@ inventory are in api/tests. No row grants operational or legal approval.
 | Model never sets awareness or suppresses checks | Met locally: no model dependency/write interface; unsupported spec/body fields denied; SQL facts unchanged by checks | No real-model safety evaluation is claimed |
 | Safe action, owner, clock; breach acknowledgement/outcome | Met locally: payload assertions, exact-owner/capability and acknowledgement-before-outcome HTTP tests | Real decision-owner delegation and tenant assignment not evidenced |
 | No alert sends a resident message | Met locally: no send interface or messaging side effect; HTTP lifecycle preserves contact records and holds | Human communication stays in its separate existing workflow |
-| Home grouping, clock/harm ranking, attention limits, false positives | Partial end-to-end: local grouping/ranking, 24-hour publication and retained-classification tests pass | Missing distinct home IDs isolate cases instead of inventing cross-case home identity; no real staff precision/false-positive trial |
+| Home grouping, clock/harm ranking, attention limits, false positives | Partial end-to-end: local grouping/ranking, 24-hour publication and retained-classification tests pass; cases without `home_id` group by a derived `address_key` (normalised postcode and address, `home_scope` shows it) | The address key is not a registered home identifier; cases lacking address or postcode stay `case_only`; no real staff precision/false-positive trial |
 | Safety routes work with engine down | Met locally: absent/evaluation/persistence failure HTTP tests preserve emergency intake/referral and show unknown/manual route | No Azure outage exercise |
 | Idempotent and checkpointed | Met locally: exact retries, later-time retry, restart, concurrent adapters, atomic rollback and scheduled catch-up/page tests | No deployed timer or live SQL Server recovery evidence; unevaluated intermediate revisions are not reconstructed |
 
