@@ -4121,7 +4121,9 @@ non-digital route statement. `view` shows only permitted explanations. Only the 
 to `POL-1/v1` does not touch dependents of `POL-1/v2`. A `corrected` outcome marks exactly the
 transitive dependents in the injected dependency graph stale and preserves prior versions; `upheld` and `withdrawn` mark
 nothing. The register has no consent, refusal, sanction, closure or hazard-clock fields and never
-reads or writes them.
+reads or writes them. Passing `hazard_concern=True` records an immediate `hazard_referral` to the
+named owner on receipt, listed by `hazard_referrals()` until the owner records an evidenced handoff with `confirm_hazard_handoff()`, even after resolution; it neither starts nor changes
+any hazard clock, so the existing hazard process is not delayed by challenge review.
 
 Not delivered: persistence in the JSON, SQL and MSSQL stores, API and UI wiring, and the
 no-retaliation and no-delayed-hazard-response criterion, which needs live workflow evidence and

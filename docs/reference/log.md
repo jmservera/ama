@@ -9112,6 +9112,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * The policy is not decided (BRD OD-46, owner with DPO); issue #162 criterion 6
   stays open. No regulatory snapshot changed.
 
+## 2026-11-01 - Core-flow copy and error contract slice (#153)
+
+* Updated `research/ux/content-standard.md` with a dated slice: phase check
+  wording in role screens, a generic error fallback that states reason, owner
+  and next action, and three more files in the lexical guard.
+* Issue #153 criteria for universal error coverage, named resident wording
+  review and comprehension testing stay open. No regulatory snapshot changed.
 ## [2026-11-01] update | Executable design traceability gate (#156)
 
 * Added `tools/check-design-trace.py` and tests. It validates the 74-row screen
@@ -9195,6 +9202,14 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   pack: five package suites, Ruff and mypy passed locally; SQL, container and
   browser groups not run. The PERF-440 benchmark outlier was not reproduced
   and is filed as #687. No regulatory snapshot changed; no criterion ticked.
+
+## [2026-11-01] update | Local handover demo (#188)
+
+* Added a runnable local demo and test for the live-versus-backfill handover
+  on a constructed SQLite store, documented in the
+  [API README](../../src/api/README.md#local-handover-demo-188). Constructed
+  evidence only: Azure SQL and live Hub criteria of #188 stay owner-gated and
+  unproven; no criterion ticked.
 
 ## [2026-11-01] update | Replay audit covers pack and EPC generators (#176)
 
