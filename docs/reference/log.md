@@ -9015,3 +9015,14 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * CI figures come from a one-day sample of 300 runs; the RPI artifact share
   of PR size and the 19-24 October slowdown cause are unmeasured. No
   workflow, setting, gate or source change was made.
+
+## [2026-11-01] query | Employee chat local verification (#530)
+
+* Recorded a local focused-tier run for the employee chat with bounded
+  skills: API (1485), agents (123) and core chat (99) unit tests, ruff,
+  mypy, the employee chat browser and pinned axe check, and 271 SQL
+  contract tests on a disposable local SQL Server. Evidence is in
+  `.copilot-tracking/changes/2026-11-01/employee-chat-skills-530-verification-changes.md`.
+* Live employee-site verification, screen-reader and voice-control
+  acceptance and owner confirmation of agent names remain unproven; no
+  source change was made.
