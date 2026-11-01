@@ -160,7 +160,15 @@ def observe(
     cases: list[Case], manifest: dict[str, Any], rank_fn: Ranker | None = None
 ) -> list[dict[str, Any]]:
     """Compare precedence among retained cases, so an exclusion cannot hide a demotion."""
-    raw = list((rank_fn or _rank)(cases))
+    rows = list((rank_fn or _rank)(cases))
+    raw = [
+        e
+        for e in rows
+        if isinstance(e, dict)
+        and isinstance(e.get("id"), str)
+        and isinstance(e.get("reason_codes"), (list, tuple))
+    ]
+    bad_rows = [f"malformed-row:{i}" for i, e in enumerate(rows, 1) if e not in raw]
     ranked = {e["id"]: e for e in raw}
     manifest_ids = {m["id"] for m in manifest["cases"]}
     stray = [e["id"] for e in raw if e["id"] not in manifest_ids]
@@ -193,7 +201,7 @@ def observe(
             row["review_required"] = True
         observed.append(row)
     # Malformed ranker output stays visible so the evaluator blocks on it.
-    observed += [{"id": i, "outcome": "ranked"} for i in stray + repeated + bad_ranks]
+    observed += [{"id": i, "outcome": "ranked"} for i in stray + repeated + bad_ranks + bad_rows]
     return observed
 
 
@@ -210,6 +218,7 @@ def _run(
     if defects:
         manifest["seeded_defects"] = sorted(SEEDED_DROPPED + SEEDED_DEMOTED)
         cases = _inject(cases)
+    manifest["inputs"] = copy.deepcopy(cases)
     return dict(cohort_eval.evaluate(manifest, observe(cases, manifest, rank_fn)))
 
 

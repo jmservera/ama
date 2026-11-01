@@ -208,6 +208,41 @@ class CohortRankingEvalTests(unittest.TestCase):
             details = [b["detail"] for b in rec["blockers"]]
             self.assertTrue(any("not in the manifest" in d for d in details), mode)
 
+    def test_malformed_row_shapes_fail_closed(self) -> None:
+        def bad(mode: str) -> Any:
+            def fn(cases: list[dict[str, Any]]) -> list[dict[str, Any]]:
+                out = [dict(e) for e in ranking.rank(cases)]
+                if mode == "no-id":
+                    del out[0]["id"]
+                elif mode == "list-id":
+                    out[0]["id"] = []
+                else:
+                    del out[0]["reason_codes"]
+                return out
+
+            return fn
+
+        for mode in ("no-id", "list-id", "no-reasons"):
+            rec = cre.run(rank_fn=bad(mode))
+            self.assertEqual(rec["status"], "blocked", mode)
+
+    def test_input_only_change_alters_record_hash(self) -> None:
+        base = cre.run()
+        orig = cre.build
+
+        def shifted() -> Any:
+            cases, manifest = orig()
+            for c in cases:
+                c["days_in_stage"] += 200
+            return cases, manifest
+
+        cre.build = shifted
+        try:
+            changed = cre.run()
+        finally:
+            cre.build = orig
+        self.assertNotEqual(base["record_hash"], changed["record_hash"])
+
     def test_demoted_unknown_support_case_keeps_review_burden(self) -> None:
         cases, manifest = cre.build()
         manifest["approval"] = dict(cre.MOCK_APPROVAL)
