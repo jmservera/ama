@@ -42,6 +42,29 @@ class AtlasScreenTraceTests(unittest.TestCase):
         gaps = trace.check(self.prd, self.atlas, doc)["gaps"]
         self.assertTrue(any("one new home id" in g for g in gaps))
 
+    def test_walkthrough_must_not_reuse_manifest_home_suffix(self) -> None:
+        doc = self.doc.replace("EX-HOME-901", "EX-HOME-104")
+        gaps = trace.check(self.prd, self.atlas, doc)["gaps"]
+        self.assertTrue(any("one new home id" in g for g in gaps))
+
+    def test_unknown_screen_id_is_reported(self) -> None:
+        doc = self.doc.replace("`programme-queue`", "`not-a-screen`")
+        gaps = trace.check(self.prd, self.atlas, doc)["gaps"]
+        self.assertTrue(any("unknown screen id" in g and "not-a-screen" in g for g in gaps))
+
+    def test_walkthrough_description_required(self) -> None:
+        doc = self.doc.replace("Offered versus committed capacity", "")
+        gaps = trace.check(self.prd, self.atlas, doc)["gaps"]
+        self.assertTrue(
+            any("description" in g and g.endswith("4. Coordinate ready work") for g in gaps)
+        )
+
+    def test_hypothesis_label_must_be_in_scope_section(self) -> None:
+        scope = trace.section(self.doc, "Scope and evidence label")
+        doc = self.doc.replace(scope, scope.replace("hypotheses", "findings"))
+        gaps = trace.check(self.prd, self.atlas, doc)["gaps"]
+        self.assertIn("atlas findings are not labelled hypotheses", gaps)
+
     def test_hypothesis_label_required(self) -> None:
         doc = self.doc.replace("hypotheses", "findings").replace("hypothesis", "finding")
         doc = doc.replace("Hypothes", "Finding")

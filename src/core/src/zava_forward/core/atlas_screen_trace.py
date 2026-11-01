@@ -20,6 +20,24 @@ STAGES = 8
 TENSIONS = ("Continuity versus disclosure", "Utilisation versus choice")
 SCREEN_RE = re.compile(r"`[a-z][a-z0-9-]+`")
 HOME_RE = re.compile(r"EX-HOME-\d+")
+MANIFEST_RE = re.compile(r"^\| [a-z-]+ \| ([\d, ]+) \| \d+ \|", re.MULTILINE)
+# Registered (asset-board) and proposed role screens; update when a screen is added or renamed.
+KNOWN_SCREENS = frozenset(
+    {
+        "asset-board",
+        "programme-queue",
+        "technical-queue",
+        "resident-choice",
+        "safety-lead",
+        "hazard-triage",
+        "procurement-packages",
+        "contractor-job-pack",
+        "quality-queue",
+        "finance-invoices",
+        "finance-funding",
+        "data-operator",
+    }
+)
 
 
 def section(text: str, heading: str) -> str:
@@ -50,6 +68,17 @@ def first_column(block: str) -> list[str]:
 
 def traced(cell: str) -> bool:
     return bool(SCREEN_RE.search(cell)) or "Deferred:" in cell
+
+
+def unknown_screens(cell: str) -> list[str]:
+    return [s for s in (m.strip("`") for m in SCREEN_RE.findall(cell)) if s not in KNOWN_SCREENS]
+
+
+def existing_homes(prd: str) -> set[str]:
+    homes = set(HOME_RE.findall(prd))
+    for suffixes in MANIFEST_RE.findall(prd):
+        homes.update(f"EX-HOME-{n}" for n in re.findall(r"\d+", suffixes))
+    return homes
 
 
 def check(prd: str, atlas: str, trace: str) -> dict[str, Any]:
@@ -85,13 +114,30 @@ def check(prd: str, atlas: str, trace: str) -> dict[str, Any]:
     if len(walk) != STAGES or [r[0][:1] for r in walk] != [str(i) for i in range(1, STAGES + 1)]:
         gaps.append(f"walkthrough must list stages 1 to {STAGES} in order")
     for r in walk:
-        if len(r) < 4 or not SCREEN_RE.search(r[1]) or not r[3]:
-            gaps.append(f"walkthrough stage lacks screen or boundary: {r[0] if r else '?'}")
+        if len(r) < 4 or not traced(r[1]) or not r[2] or not r[3]:
+            gaps.append(
+                f"walkthrough stage lacks screen, description or boundary: {r[0] if r else '?'}"
+            )
     homes = set(HOME_RE.findall(walk_block))
-    existing = set(HOME_RE.findall(section(prd, "Profile Journey Contract for the Next Prototype")))
+    existing = existing_homes(prd)
     if len(homes) != 1 or homes & existing:
         gaps.append("walkthrough must use exactly one new home id, not an existing example")
-    if "hypothes" not in trace.lower():
+    for block_name in (
+        "Perspectives to screens",
+        "Atlas design themes to screens",
+        "Tensions",
+        "Same-home walkthrough",
+    ):
+        for ident in sorted(
+            {
+                i
+                for r in rows(section(trace, block_name))
+                for i in unknown_screens(r[1])
+                if len(r) > 1
+            }
+        ):
+            gaps.append(f"unknown screen id in {block_name}: {ident}")
+    if "hypothes" not in section(trace, "Scope and evidence label").lower():
         gaps.append("atlas findings are not labelled hypotheses")
     return {
         "perspectives": len(perspectives),

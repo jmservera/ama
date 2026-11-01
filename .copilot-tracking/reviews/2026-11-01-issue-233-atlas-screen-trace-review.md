@@ -13,3 +13,5 @@ Execution: executed once, self-review of the diff against acceptance criteria. O
 
 Routed follow-ups: merge role-screen PRs and rerun the trace; add an EX-HOME-901 fixture and rendered walkthrough; CI browser and axe keyboard checks; validation in #155.
 Verdict on closing: criteria 5 and 6 unproven, so the PR uses Refs #233.
+
+Copilot review feedback (PR 671) addressed after the single Review: six threads valid; trace doc and checker corrected with regression tests. The conformance outcome is unchanged and criteria 5 and 6 remain unproven.
