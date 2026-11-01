@@ -14,6 +14,7 @@ from zava_forward.orchestrator.rebuild import STAGES, RebuildError
 from zava_forward.orchestrator.rebuild_azure import (
     AzureBackend,
     AzureConfig,
+    ScriptExit,
     assert_no_secret_argv,
     assert_synthetic,
     main,
@@ -43,6 +44,15 @@ class FakeAzure:
         self.health = 200
         self.secret_present = True
         self.cases = "3"
+        self.entra_stdout: str | None = None
+        self.health_codes: list[int] = []
+
+    def health_for(self, url: str) -> int:
+        if url.endswith("/healthz"):
+            return self.health_codes.pop(0) if self.health_codes else self.health
+        if url.endswith("/api/me"):
+            return 401
+        return 302 if url.endswith("/sign-in") else 200
 
     def __call__(self, argv: Sequence[str], env: Mapping[str, str] | None = None) -> str:
         args = list(argv)
@@ -71,8 +81,16 @@ class FakeAzure:
         if "resource delete" in text:
             target = args[args.index("--ids") + 1]
             self.deleted.append(target)
-            self.resources = [(k, n) for k, n in self.resources if rid(k, n) != target]
+            self.resources = [
+                (k, n)
+                for k, n in self.resources
+                if rid(k, n) != target
+                and rid(k, n) != target.replace("privateEndpoints", "networkInterfaces") + "-nic"
+            ]
             return ""
+        if "private-endpoint show" in text:
+            pe = args[args.index("--ids") + 1]
+            return json.dumps([pe.replace("privateEndpoints", "networkInterfaces") + "-nic"])
         if "resource wait" in text or "acr build" in text or "revision restart" in text:
             return ""
         if "acr list" in text:
@@ -105,10 +123,13 @@ class FakeAzure:
                     ("Microsoft.App/managedEnvironments", "env"),
                     ("Microsoft.Network/virtualNetworks", "vnet"),
                     ("Microsoft.Network/privateEndpoints", "pe"),
+                    ("Microsoft.Network/networkInterfaces", "pe-nic"),
                 ]
                 self.budgets.append(rid("Microsoft.Consumption/budgets", "b"))
             else:
                 self.resources.append(("Microsoft.App/containerApps", "api"))
+        if script == "setup-entra.py" and self.entra_stdout is not None:
+            raise ScriptExit("check failed", 2, self.entra_stdout)
         if script == "seed":
             assert env is not None and env["ZF_STORE"] == "mssql"
             return self.cases
@@ -137,6 +158,7 @@ class Fixture(unittest.TestCase):
             roster=self.roster,
             container_app="api",
             repo_root=Path("/repo"),
+            build_pool="pool1",
         )
         values.update(changes)
         return AzureConfig(**values)  # type: ignore[arg-type]
@@ -151,23 +173,15 @@ class Fixture(unittest.TestCase):
             "--seed", str(self.seed),
             "--roster", str(self.roster),
             "--container-app", "api",
+            "--build-pool", "pool1",
             *extra,
         ]  # fmt: skip
 
     def run_main(self, argv: list[str], fake: FakeAzure) -> tuple[int, str, str]:
         out, err = io.StringIO(), io.StringIO()
         with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
-            code = main(argv, fake, lambda url, mode: fake.health_for(url))
+            code = main(argv, fake, lambda url, mode: fake.health_for(url), lambda s: None)
         return code, out.getvalue(), err.getvalue()
-
-
-def _health_for(self: FakeAzure, url: str) -> int:
-    if url.endswith("/healthz"):
-        return self.health
-    return 401 if url.endswith("/api/me") else 302
-
-
-FakeAzure.health_for = _health_for  # type: ignore[attr-defined]
 
 
 class DryRunTests(Fixture):
@@ -203,6 +217,23 @@ class GuardTests(Fixture):
         with self.assertRaises(RebuildError):
             self.config(overrides=("entraClientSecret=abc",)).validate()
 
+    def test_reserved_and_secure_overrides_rejected(self) -> None:
+        for bad in ("deployApplications=true", "apiImage=x.io/y:1", "teamsWebhookUrl=https://h/x"):
+            with self.subTest(bad=bad), self.assertRaises(RebuildError):
+                self.config(overrides=(bad,)).validate()
+
+    def test_declared_non_secret_overrides_accepted(self) -> None:
+        good = (
+            "entraClientSecretName=entra-client-secret",
+            "enableEntraTokenStore=false",
+            "entraTokenStoreReady=false",
+        )
+        self.config(overrides=good).validate()
+        assert_no_secret_argv(list(good))
+        self.params.write_text("param entraClientSecretName = 'entra-client-secret'\n")
+        fake = FakeAzure()
+        AzureBackend(self.config(), fake).verify(STAGES[0])
+
     def test_synthetic_guard(self) -> None:
         assert_synthetic(self.seed)
         self.seed.write_text(json.dumps({"x": ["someone@contoso.com"]}))
@@ -212,7 +243,9 @@ class GuardTests(Fixture):
 
 class RebuildTests(Fixture):
     def backend(self, fake: FakeAzure) -> AzureBackend:
-        return AzureBackend(self.config(), fake, lambda url, mode: fake.health_for(url))
+        return AzureBackend(
+            self.config(), fake, lambda url, mode: fake.health_for(url), lambda s: None
+        )
 
     def test_full_sequence_checks_every_stage_and_stops_at_gated(self) -> None:
         fake = FakeAzure()
@@ -254,6 +287,50 @@ class RebuildTests(Fixture):
         with self.assertRaises(RebuildError):
             run_rebuild(self.backend(fake), SUB)
 
+    def test_private_registry_without_pool_stops_before_provisioning(self) -> None:
+        fake = FakeAzure()
+        backend = AzureBackend(self.config(build_pool=None), fake)
+        with self.assertRaises(RebuildError):
+            run_rebuild(backend, SUB)
+        self.assertFalse([c for c in fake.calls if c[0] == "python3"])
+
+    def test_image_build_uses_the_approved_pool(self) -> None:
+        fake = FakeAzure()
+        run_rebuild(self.backend(fake), SUB)
+        build = next(c for c in fake.calls if "build" in c and "acr" in c)
+        self.assertEqual(build[build.index("--agent-pool") + 1], "pool1")
+
+    def test_staff_only_entra_gap_is_tolerated_and_roster_forwarded(self) -> None:
+        fake = FakeAzure()
+        fake.entra_stdout = (
+            "7/7 Summary: read-only; 0 reconciliation item(s).\n"
+            "Remaining: SQL binding and serving-replica restart are not confirmed.\n"
+        )
+        run_rebuild(self.backend(fake), SUB)
+        entra = next(c for c in fake.calls if c[1:2] and c[1].endswith("setup-entra.py"))
+        self.assertEqual(entra[entra.index("--roster") + 1], str(self.roster))
+
+    def test_other_entra_drift_fails(self) -> None:
+        fake = FakeAzure()
+        fake.entra_stdout = "7/7 Summary: read-only; 2 reconciliation item(s).\nRemaining: x\n"
+        with self.assertRaises(RebuildError):
+            run_rebuild(self.backend(fake), SUB)
+
+    def test_transient_health_is_retried_but_denial_is_strict(self) -> None:
+        fake = FakeAzure()
+        fake.health_codes = [503, 0, 200]
+        evidence = run_rebuild(self.backend(fake), SUB)
+        self.assertEqual(evidence[-1]["stage"], "workload-sql")
+        self.assertEqual(
+            [e["stage"] for e in evidence if e["stage"] == "browser-redirect"],
+            ["browser-redirect"],
+        )
+
+    def test_root_page_is_not_the_redirect_probe(self) -> None:
+        fake = FakeAzure()
+        run_rebuild(self.backend(fake), SUB)
+        self.assertEqual(fake.health_for("https://app.example.test/"), 200)
+
     def test_unhealthy_application_fails(self) -> None:
         fake = FakeAzure()
         fake.health = 503
@@ -290,6 +367,7 @@ class TeardownTests(Fixture):
                 ("Microsoft.Network/privateEndpoints", "pe"),
             ]
         )
+        fake.resources.append(("Microsoft.Network/networkInterfaces", "pe-nic"))
         fake.budgets.append(rid("Microsoft.Consumption/budgets", "b"))
         code, out, _ = self.run_main(self.argv("teardown", "--apply"), fake)
         self.assertEqual(code, 0)

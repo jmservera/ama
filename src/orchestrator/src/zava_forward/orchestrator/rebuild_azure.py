@@ -13,6 +13,7 @@ import os
 import re
 import subprocess
 import sys
+import time
 import urllib.error
 import urllib.request
 from collections.abc import Callable, Mapping, Sequence
@@ -36,10 +37,22 @@ from .rebuild import (
 GROUP = "ama"
 BUDGET_API = "2023-05-01"
 VAULT_SECRET = "entra-client-secret"
+PRIVATE_ENDPOINT = "microsoft.network/privateendpoints"
+HEALTH_ATTEMPTS = 6
+HEALTH_DELAY = 10.0
 SQL_RESOURCE = "https://database.windows.net/"
 OPERATOR_GATED = "operator-gated"
 VERIFIED = "azure-verified"
 GATED_STAGES = ("workload-sql", "model-standard", "model-capable")
+
+
+class ScriptExit(RebuildError):
+    """A command exited non-zero; keeps the status and output for callers that tolerate one."""
+
+    def __init__(self, message: str, code: int, stdout: str):
+        super().__init__(message)
+        self.code, self.stdout = code, stdout
+
 
 Runner = Callable[[Sequence[str], Mapping[str, str] | None], str]
 Probe = Callable[[str, str], int]
@@ -50,6 +63,19 @@ _SECRET_ARG = re.compile(
     r"|eyJ[\w-]{10,}\.[\w-]{10,}"
     r"|[?&]sig=)"
 )
+_SAFE_ASSIGNMENT = re.compile(
+    r"entraClientSecretName=[a-z][a-z0-9-]{0,126}|(enableEntraTokenStore|entraTokenStoreReady)=(true|false)"
+)
+_SAFE_PARAM_LINE = re.compile(
+    r"\s*param\s+(entraClientSecretName|enableEntraTokenStore|entraTokenStoreReady)\b"
+)
+# Stage-controlled names and secure Bicep parameters that must never come from an override.
+RESERVED_PARAMETERS = frozenset({"deployApplications", "deployEnvironmentOnly", "apiImage"})
+SECURE_PARAMETERS = frozenset({"teamsWebhookUrl"})
+_PUBLIC_REGISTRY = re.compile(
+    r"(?s)deploymentProfile\s*[=:]\s*['\"]?development.*allowPublicNetworkAccess\s*[=:]\s*true"
+)
+_REMAINING_SQL = "Remaining: SQL binding and serving-replica restart are not confirmed."
 _EMAIL = re.compile(r"[^\s@\"']+@([^\s@\"']+)")
 _SYNTHETIC_DOMAIN = re.compile(r"(?i)(\.test|^example\.(com|org|net))$")
 _NAME = re.compile(r"[a-z][a-z0-9-]{1,62}")
@@ -58,8 +84,21 @@ _TAG = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}")
 
 def assert_no_secret_argv(argv: Sequence[str]) -> None:
     for part in argv:
+        if _SAFE_ASSIGNMENT.fullmatch(part):
+            continue
         if _SECRET_ARG.search(part):
             raise RebuildError("Refusing a command line that could carry a secret")
+
+
+def assert_override(override: str) -> None:
+    name, separator, _ = override.partition("=")
+    if not separator:
+        raise RebuildError("Overrides must be NAME=VALUE")
+    if name in RESERVED_PARAMETERS:
+        raise RebuildError(f"Parameter {name} is controlled by the rebuild stages")
+    if name in SECURE_PARAMETERS:
+        raise RebuildError(f"Secure parameter {name} must not be passed on a command line")
+    assert_no_secret_argv([override])
 
 
 def assert_synthetic(path: Path) -> None:
@@ -96,21 +135,26 @@ class AzureConfig:
     identity_prefix: str | None = None
     repo_root: Path = field(default_factory=lambda: Path.cwd())
     overrides: tuple[str, ...] = ()
+    build_pool: str | None = None
 
     def validate(self) -> None:
         for value in (self.registry, self.container_app, self.sql_database):
             if not _NAME.fullmatch(value):
                 raise RebuildError("Invalid resource name")
+        if self.build_pool is not None and not _NAME.fullmatch(self.build_pool):
+            raise RebuildError("Invalid build pool name")
         if not _TAG.fullmatch(self.image_tag):
             raise RebuildError("Invalid image tag")
         if self.environment not in ("dev", "test", "pilot"):
             raise RebuildError("Invalid environment")
         for override in self.overrides:
-            if "=" not in override:
-                raise RebuildError("Overrides must be NAME=VALUE")
-            assert_no_secret_argv([override])
+            assert_override(override)
         assert_synthetic(self.seed)
         assert_synthetic(self.roster)
+
+    def registry_is_private(self) -> bool:
+        text = self.parameters.read_text(encoding="utf-8") if self.parameters.is_file() else ""
+        return not _PUBLIC_REGISTRY.search("\n".join((text, *self.overrides)))
 
     @property
     def prefix(self) -> str:
@@ -124,7 +168,11 @@ def subprocess_runner(argv: Sequence[str], env: Mapping[str, str] | None = None)
         list(argv), capture_output=True, text=True, check=False, env=merged, timeout=3600
     )
     if result.returncode:
-        raise RebuildError(f"{argv[0]} {' '.join(argv[1:3])} failed ({result.returncode})")
+        raise ScriptExit(
+            f"{argv[0]} {' '.join(argv[1:3])} failed ({result.returncode})",
+            result.returncode,
+            result.stdout,
+        )
     return result.stdout
 
 
@@ -143,6 +191,8 @@ def http_probe(url: str, mode: str) -> int:
             return int(response.status)
     except urllib.error.HTTPError as exc:
         return exc.code
+    except (urllib.error.URLError, TimeoutError, OSError):
+        return 0
 
 
 SEED_SNIPPET = (
@@ -156,11 +206,16 @@ class AzureBackend:
     """Implements the rebuild Backend protocol over the az CLI and the existing helpers."""
 
     def __init__(
-        self, config: AzureConfig, runner: Runner = subprocess_runner, probe: Probe = http_probe
+        self,
+        config: AzureConfig,
+        runner: Runner = subprocess_runner,
+        probe: Probe = http_probe,
+        sleep: Callable[[float], None] = time.sleep,
     ):
         config.validate()
-        self.config, self.run, self.probe = config, runner, probe
+        self.config, self.run, self.probe, self.sleep = config, runner, probe, sleep
         self.found: dict[str, str] = {}
+        self.released: dict[str, frozenset[str]] = {}
 
     def _az(self, *args: str, env: Mapping[str, str] | None = None) -> str:
         return self.run(["az", *args], env)
@@ -215,8 +270,25 @@ class AzureBackend:
                 f"https://management.azure.com{resource.resource_id}?api-version={BUDGET_API}",
             )
             return
+        if resource.kind.lower() == PRIVATE_ENDPOINT:
+            nics = self._json(
+                "network",
+                "private-endpoint",
+                "show",
+                "--ids",
+                resource.resource_id,
+                "--query",
+                "networkInterfaces[].id",
+            )
+            if not isinstance(nics, list):
+                raise RebuildError("Private endpoint interfaces were not a list")
+            self.released[resource.resource_id] = frozenset(str(n) for n in nics)
         self._az("resource", "delete", "--ids", resource.resource_id)
         self._az("resource", "wait", "--deleted", "--ids", resource.resource_id, "--timeout", "900")
+
+    def removed_with(self, resource: Resource) -> frozenset[str]:
+        """Resource IDs that Azure removes together with this resource."""
+        return self.released.get(resource.resource_id, frozenset())
 
     def _script(self, name: str, *args: str) -> str:
         script = self.config.repo_root / "infra" / "scripts" / name
@@ -304,11 +376,13 @@ class AzureBackend:
                 "acr", "show", "-n", c.registry, "--query", "loginServer", "-o", "tsv"
             ).strip()
         elif name == "images":
+            pool = ["--agent-pool", c.build_pool] if c.build_pool else []
             self._az(
                 "acr",
                 "build",
                 "--registry",
                 c.registry,
+                *pool,
                 "--image",
                 f"zava-forward-mvp:{c.image_tag}",
                 "-f",
@@ -359,6 +433,33 @@ class AzureBackend:
                 ).strip(),
             )
 
+    def _check_authentication(self) -> None:
+        """Run the Entra check; only the not-yet-reconciled SQL staff/restart item is tolerated."""
+        c = self.config
+        args = (
+            "-g", GROUP, "-n", c.container_app, "--direct-ingress", "--roster", str(c.roster),
+            "--check",
+        )  # fmt: skip
+        try:
+            self._script("setup-entra.py", *args)
+        except ScriptExit as exc:
+            remaining = [x.strip() for x in exc.stdout.splitlines() if x.startswith("Remaining:")]
+            clean = re.search(r"\b0 reconciliation item", exc.stdout) is not None
+            if exc.code != 2 or not clean or remaining != [_REMAINING_SQL]:
+                raise RebuildError("Entra authentication check reported drift or failed") from exc
+
+    def _await_healthy(self) -> None:
+        url = f"https://{self._fqdn()}/healthz"
+        for attempt in range(HEALTH_ATTEMPTS):
+            status = self.probe(url, "get")
+            if status == 200:
+                return
+            transient = status == 0 or status >= 500
+            if not transient or attempt == HEALTH_ATTEMPTS - 1:
+                break
+            self.sleep(HEALTH_DELAY)
+        raise RebuildError(f"healthz returned {status}")
+
     def _expect(self, status: int, allowed: tuple[int, ...], what: str) -> None:
         if status not in allowed:
             raise RebuildError(f"{what} returned {status}")
@@ -369,8 +470,14 @@ class AzureBackend:
             self.check_account()
             if not c.parameters.is_file():
                 raise RebuildError("Parameter file is missing")
-            if _SECRET_ARG.search(c.parameters.read_text(encoding="utf-8")):
+            lines = c.parameters.read_text(encoding="utf-8").splitlines()
+            if any(_SECRET_ARG.search(x) for x in lines if not _SAFE_PARAM_LINE.match(x)):
                 raise RebuildError("Parameter file appears to hold a secret")
+            if c.registry_is_private() and not c.build_pool:
+                raise RebuildError(
+                    "A private registry needs an approved --build-pool; default az acr build "
+                    "cannot reach it. Stopped before provisioning"
+                )
         elif name == "dependencies":
             if not self._json("resource", "list", "-g", GROUP, "--query", "[].id"):
                 raise RebuildError("Dependency deployment produced no resources")
@@ -417,9 +524,7 @@ class AzureBackend:
             if not states or any(state != "Succeeded" for state in states):
                 raise RebuildError("Applications are not provisioned")
         elif name == "authentication":
-            self._script(
-                "setup-entra.py", "-g", GROUP, "-n", c.container_app, "--direct-ingress", "--check"
-            )
+            self._check_authentication()
         elif name == "staff":
             self._script(
                 "initialize-workbench-staff.py",
@@ -432,11 +537,15 @@ class AzureBackend:
                 "--check",
             )
         elif name in ("health", "restart"):
-            self._expect(self.probe(f"https://{self._fqdn()}/healthz", "get"), (200,), "healthz")
+            self._await_healthy()
         elif name == "api-denial":
             self._expect(self.probe(f"https://{self._fqdn()}/api/me", "get"), (401,), "API")
         elif name == "browser-redirect":
-            self._expect(self.probe(f"https://{self._fqdn()}/", "get"), (301, 302, 303, 307), "/")
+            self._expect(
+                self.probe(f"https://{self._fqdn()}/sign-in", "get"),
+                (301, 302, 303, 307),
+                "/sign-in",
+            )
         elif name in GATED_STAGES:
             return OPERATOR_GATED
         return VERIFIED
@@ -491,6 +600,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--workload", default="forward")
     parser.add_argument("--from-stage", choices=[stage.name for stage in STAGES])
     parser.add_argument("--parameter", action="append", default=[], dest="overrides")
+    parser.add_argument("--build-pool", help="approved ACR agent pool for a private registry")
     parser.add_argument("--repo-root", type=Path, default=Path.cwd())
     return parser
 
@@ -499,6 +609,7 @@ def main(
     argv: Sequence[str] | None = None,
     runner: Runner = subprocess_runner,
     probe: Probe = http_probe,
+    sleep: Callable[[float], None] = time.sleep,
 ) -> int:
     args = build_parser().parse_args(argv)
     try:
@@ -514,6 +625,7 @@ def main(
             workload=args.workload,
             repo_root=args.repo_root,
             overrides=tuple(args.overrides),
+            build_pool=args.build_pool,
         )
         config.validate()
         if not args.apply:
@@ -524,7 +636,7 @@ def main(
             }
             print(json.dumps(plan(summary), indent=2))
             return 0
-        backend = AzureBackend(config, runner, probe)
+        backend = AzureBackend(config, runner, probe, sleep)
         backend.check_account()
         if args.operation == "teardown":
             deleted = teardown(backend, config.subscription)

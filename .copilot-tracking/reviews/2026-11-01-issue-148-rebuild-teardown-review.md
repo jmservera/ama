@@ -17,3 +17,7 @@ Execution: one pass, self-review of the diff against the acceptance criteria. Ou
 2. Add scripted probes for `workload-sql`, `model-standard`, `model-capable` (currently operator-gated, exit 2).
 3. The synthetic guard cannot prove directory object IDs in a roster are synthetic; owner must supply a synthetic roster.
 4. Teardown treats any group lock as blocking all deletion (conservative).
+
+## Post-review corrections (PR 672, Copilot threads)
+
+Nine valid findings were fixed with tests (reserved/secure overrides, non-secret overrides, NIC cascade, private-registry build pool, authentication-only check with roster, `/sign-in` probe, health retries). The original outcome above is preserved; live Azure criterion 4 remains routed.
