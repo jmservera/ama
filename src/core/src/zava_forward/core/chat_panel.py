@@ -314,14 +314,31 @@ _NUMBER = re.compile(r"\d[\d,.]*")
 _NEGATION = re.compile(r"\b(?:not|no|never|n't|without|unconfirmed|incomplete)\b", re.I)
 
 
+_CLAUSE = re.compile(r"[.;!?:,]|\bbut\b|\bhowever\b")
+GROUNDING_REVISION = "2"
+
+
+def _numbers(text: str) -> set[str]:
+    return {n.rstrip(".,").replace(",", "") for n in _NUMBER.findall(text)}
+
+
 def unsupported_claim(answer: str, cited: list[str]) -> bool:
-    """True when the answer asserts an assurance word or number its cited sources do not contain."""
+    """True when the answer asserts an assurance word or number its cited sources do not contain.
+
+    Negation only excuses an assurance word inside its own clause; every number must match a whole
+    numeric token in the cited evidence.
+    """
     evidence = " ".join(cited).casefold()
     claim = normalise_policy_text(answer).casefold()
-    for term in ASSURANCE_TERMS:
-        if re.search(rf"\b{term}\b", claim) and not re.search(rf"\b{term}\b", evidence):
-            return not _NEGATION.search(claim)
-    return any(n.rstrip(".,") not in evidence for n in _NUMBER.findall(claim))
+    for clause in _CLAUSE.split(claim):
+        for term in ASSURANCE_TERMS:
+            if (
+                re.search(rf"\b{term}\b", clause)
+                and not re.search(rf"\b{term}\b", evidence)
+                and not _NEGATION.search(clause)
+            ):
+                return True
+    return not _numbers(claim) <= _numbers(evidence)
 
 
 def parse_reply(text: str, allowed: dict[str, str]) -> tuple[str, list[str]] | None:

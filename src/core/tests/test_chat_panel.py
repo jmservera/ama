@@ -44,6 +44,10 @@ class PureTests(unittest.TestCase):
         self.assertFalse(unsupported_claim("The stage is Survey booked.", src))
         self.assertFalse(unsupported_claim("Budget is 1,200.", src))
         self.assertFalse(unsupported_claim("Funding is not secured.", src))
+        self.assertTrue(unsupported_claim("Funding is secured. Survey is not complete.", src))
+        self.assertTrue(unsupported_claim("Funding is not secured; budget is 9,000.", src))
+        self.assertTrue(unsupported_claim("Budget is 9,000.", ["Budget 19,000"]))
+        self.assertFalse(unsupported_claim("Budget is 19,000.", ["Budget 19,000"]))
         self.assertFalse(unsupported_claim("Survey is complete.", ["Survey complete"]))
 
     SOURCES = {"ZF-1/stage": "Survey", "ZF-1/status": "Open"}

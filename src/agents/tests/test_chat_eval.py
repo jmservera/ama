@@ -91,6 +91,12 @@ class GoldenRunTests(unittest.TestCase):
         self.assertEqual(s["card_could_answer"], s["answer_turns"])
         self.assertIn("not permitted", self.report["evidence"]["benefit_claim"])
 
+    def test_grounding_policy_changes_policy_version(self) -> None:
+        raw = chat_eval.GOLDEN.read_bytes()
+        before = chat_eval.bindings(raw)["policy_version"]
+        with patch.object(chat_eval.chat_panel, "GROUNDING_REVISION", "changed"):
+            self.assertNotEqual(before, chat_eval.bindings(raw)["policy_version"])
+
     def test_report_binds_versions_and_states_what_is_not_evaluated(self) -> None:
         b = self.report["bindings"]
         for key in ("golden_sha256", "prompt_version", "policy_version", "source_version"):
