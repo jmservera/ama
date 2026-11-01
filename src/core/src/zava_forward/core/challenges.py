@@ -201,6 +201,8 @@ class ChallengeRegister:
         referral = rec.get("hazard_referral")
         if referral is None:
             raise ValueError("This challenge has no hazard referral.")
+        if referral["status"] == "handed_off":
+            raise ValueError("This hazard concern is already handed off.")
         if _text(owner, "Handing-off owner") != rec["owner"]:
             raise PermissionError("Only the named human owner can confirm a hazard handoff.")
         proof = _text(evidence, "Hazard handoff evidence")
