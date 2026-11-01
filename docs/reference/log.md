@@ -9103,6 +9103,17 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   `review-status` to `infra/scripts/secret_lifecycle.py` with offline tests.
 * Issue #142 criteria 1 to 3 stay unmet: no live rotation exercise, executed signed
   review or Azure Monitor alert evaluation. No regulatory snapshot changed.
+## [2026-11-01] verify | Resident sensor gauges and assistant re-verified on main (Refs #466)
+
+* Re-ran the resident core and api suites (99 tests, 1 opt-in skip), ruff and mypy
+  against main efebfc6d. Own-home synthetic gauges and history, the advisory
+  own-case assistant, cross-resident tests and the recorded model, cap and
+  credential decision in `docs/architecture/resident-assistant-prototype.md` hold.
+* The 2026-11-01 inference expiry has passed, so the assistant uses its labelled
+  rules fallback. No source change was needed.
+* Issue #466 criterion 1 (owner confirms scope and priority) stays unmet; manual
+  assistive-technology acceptance and live checks remain owner-run. No regulatory
+  snapshot changed.
 ## [2026-11-01] query | Employee chat re-verification on current main (#530)
 
 * Re-ran the focused tier on main efebfc6d: core chat (99), agents chat
