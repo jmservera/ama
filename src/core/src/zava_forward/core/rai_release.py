@@ -98,6 +98,42 @@ def missing_binding(
     return missing
 
 
+TRIGGER_KEYS = {
+    "model": ("provider", "endpoint", "deployment", "model_version"),
+    "prompt": ("prompt_version",),
+    "policy": ("policy_version",),
+    "data": ("data_version", "provenance_version"),
+    "permissions": ("permission_version",),
+    "evidence": (
+        "registry_version",
+        "schema_version",
+        "task_contract_version",
+        "evaluation_version",
+    ),
+}
+
+
+def changed_triggers(
+    record: Mapping[str, Any], task: Mapping[str, Any], binding: Mapping[str, Any]
+) -> list[str]:
+    """Material-change triggers that no longer match the current task and binding."""
+    changed = [
+        trigger
+        for trigger, keys in TRIGGER_KEYS.items()
+        if any(record.get(key) != binding.get(key) for key in keys)
+    ]
+    if any(
+        record.get(field) != task.get(source)
+        for field, source in (
+            ("intended_use", "intended_use"),
+            ("prohibited_uses", "prohibited_uses"),
+            ("affected_stakeholders", "affected"),
+        )
+    ):
+        changed.append("intended_use")
+    return [t for t in CHANGE_TRIGGERS if t in changed]
+
+
 def reference(record: Mapping[str, Any]) -> dict[str, str]:
     return {
         "id": str(record["id"]),
