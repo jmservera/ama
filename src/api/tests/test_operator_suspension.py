@@ -120,7 +120,9 @@ def transaction_failures(test: Any, s: dict[str, Any], actor: dict[str, Any]) ->
 def fresh_release(test: Any, scope: str) -> None:
     """Give the scope its own active release without replacing records other tasks retain."""
     rec = release_support.fixture(
-        scope, assistants.runtime_binding(scope, test.store.ai), test.store.ai.model_version,
+        scope,
+        assistants.runtime_binding(scope, test.store.ai),
+        test.store.ai.model_version,
         "constructed-fixture",
     )
     with test.service.transaction() as db:
