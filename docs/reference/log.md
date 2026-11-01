@@ -9385,3 +9385,12 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   criteria 2 to 6 still hold. Criterion 1 (owner confirms scope and priority)
   stays unmet. Evidence is under `.copilot-tracking/` (r4 artifacts). No
   accessibility acceptance is claimed.
+
+## [2026-11-01] update | Resident SQL allowlist window renewed live (Refs #521)
+
+* Under explicit owner authorisation, moved `ck_allowed_case_window` to
+  `2027-02-01T00:00:00` and renewed 522 non-revoked allowlist rows through the
+  existing `job-cutover-test-init` job, then redeployed `ca-resident-demo`
+  (expiry `2027-01-31T23:59:59Z`, same image digest, min 0 max 1). Sign-in and
+  session denial checks passed; jobs stay Manual. AI tariff expiry unchanged.
+  Evidence is under `.copilot-tracking/` (issue-521-live-sql-window artifacts).
