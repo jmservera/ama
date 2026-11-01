@@ -183,6 +183,104 @@ registerRoleScreen({
   }
 });
 
+const reviewerRole = "Contracts manager, independent of the person who issued or submitted the pack";
+const wording = (value, fallback = "Unknown") => value === null || value === undefined || value === "" ? fallback : String(value);
+const reference = (order) => `${wording(order.id)} v${wording(order.version)}`;
+function packagePrerequisites(pkg, orders) {
+  const capacity = pkg.capacity || [];
+  const evidenced = capacity.length && capacity.every((row) => String(row.evidence_status || "").startsWith("Evidenced"));
+  const active = orders.filter((order) => order.state !== "Withdrawn");
+  const current = active.filter((order) => order.scope_version === pkg.scope_version);
+  const bound = current.length && current.every((order) => !String(order.measures || "").startsWith("Unknown"));
+  const binding = !orders.length ? "Unmet. No work order for this home."
+    : !active.length ? "Unmet. Every work order for this home is withdrawn."
+    : active.some((order) => order.scope_version === undefined || order.scope_version === null) ? "Unknown. Work-order scope version not supplied."
+    : current.length !== active.length ? "Unmet. A work order is tied to an older package scope."
+    : bound ? "Met on record" : "Unmet. Resident scope confirmation needed.";
+  return [
+    ["Scope recorded with a version", pkg.scope && pkg.scope_version ? `Met on record (scope v${pkg.scope_version})` : "Unmet", "Programme manager"],
+    ["Contract or call-off reference recorded", pkg.contract_ref ? `Met on record (${pkg.contract_ref} v${wording(pkg.contract_version)})` : "Unmet", "Contracts manager"],
+    ["Committed capacity evidenced for every contractor", evidenced ? "Met on record" : "Unmet or Unknown", "Contracts manager"],
+    ["Consultation status confirmed", pkg.consultation_status === "complete" || pkg.consultation_status === "not_applicable" ? "Met on record" : "Unmet. Status is Unknown or applies.", "Legal or procurement authority"],
+    ["Work order issued for the selected home with resident scope", binding, "Contracts manager"]
+  ];
+}
+registerRoleScreen({
+  id: "procurement-packages",
+  title: "Package queue",
+  roles: screenManagers,
+  async load(c) {
+    const signal = routeController.signal;
+    const packages = await api("/api/packages", undefined, signal);
+    const orders = await api(`/api/workorders?case=${encodeURIComponent(c.id)}`, undefined, signal);
+    return { packages, orders };
+  },
+  render(c, extra) {
+    const packages = extra?.packages || [];
+    const orders = extra?.orders || [];
+    return h("div", {},
+      screenPanel("Evidence boundary",
+        h("p", {}, "Read-only reader view. It records no approval, issues no work order and books no visit. Readiness here is a draft only. Contract terms, capacity and delegations are Unknown unless a fixture or recorded evidence says so. Source: desk research, not observed behaviour."),
+        h("p", {}, `Work orders shown are for home ${c.id} only.`)),
+      screenPanel("Package queue",
+        screenTable("Packages with period, scope, version and capacity",
+          ["Package", "Period", "Scope and version", "Contract or call-off reference", "Contractor", "Offered", "Recorded committed", "In use", "Recorded headroom", "Capacity evidence status"],
+          packages.flatMap((p) => (p.capacity?.length ? p.capacity : [{}]).map((cap) => [
+            `${wording(p.id)}: ${wording(p.name)}`, `${wording(p.period_from)} to ${wording(p.period_to)}`,
+            `${wording(p.scope)} (v${wording(p.scope_version)})`, `${wording(p.contract_ref)} v${wording(p.contract_version)}`,
+            cap.contractor, cap.offered, cap.committed, cap.in_use, cap.headroom, wording(cap.evidence_status)])))),
+      screenPanel("Work orders for this home",
+        screenTable("Work-order references for the selected home",
+          ["Work order", "Package", "Contractor", "State", "Scope"],
+          orders.map((o) => [reference(o), o.package, o.contractor, o.state, o.scope]))),
+      ...packages.map((p) => screenPanel(`Draft readiness: ${wording(p.id)}`,
+        h("p", { role: "status" }, "Draft readiness only. This is not a release or approval."),
+        screenTable(`Unmet prerequisites for ${wording(p.id)}`, ["Prerequisite", "State", "Next reviewer (role)"],
+          packagePrerequisites(p, orders.filter((o) => o.package === p.id))),
+        screenFields([["Next reviewer", reviewerRole], ["Named reviewer", "Unassigned. Contracts manager to name a person."]]))),
+      screenPanel("Contractor submission and review",
+        screenFields([["Contractor submission", "Recorded outside this screen; not shown here"],
+          ["Acknowledgement", "A contractor acknowledgement is not acceptance"],
+          ["Independent review and acceptance", "Separate step by a named reviewer; not available from this screen"]])));
+  }
+});
+
+const jobPackChecklist = [
+  "Resident notice or access arrangement confirmed",
+  "Appointment outcome recorded",
+  "Measures installed match the work-order scope",
+  "Completion photographs",
+  "Deviations from scope noted",
+  "Handover documents and guarantees"
+];
+registerRoleScreen({
+  id: "contractor-job-pack",
+  title: "Job pack and evidence checklist",
+  roles: ["Contractor"],
+  async load(c) {
+    return { orders: await api(`/api/workorders?case=${encodeURIComponent(c.id)}`, undefined, routeController.signal) };
+  },
+  render(c, extra) {
+    const orders = extra?.orders || [];
+    return h("div", {},
+      screenPanel("What this screen does",
+        h("p", {}, "Read-only job pack view. Nothing is submitted, accepted or booked from here, and it is not a provider portal. To submit or correct evidence, send it to your named contact."),
+        h("p", {}, "Source: desk research hypothesis, not observed behaviour.")),
+      screenPanel("Your job pack",
+        screenTable("Your work orders for this home", ["Work order and version", "State", "Works", "Scope"],
+          orders.map((o) => [reference(o), o.state, o.measures, o.scope])),
+        screenFields([["Notice before visit", c.needs_notice ? "Needs notice" : "No extra notice needed"],
+          ["Named contact", c.named_contact]]),
+        h("p", {}, "The reason for any notice is not shared with contractors.")),
+      screenPanel("Evidence checklist",
+        screenTable("Evidence checklist for this job pack", ["Evidence item", "State on record"],
+          jobPackChecklist.map((item) => [item, item === "Appointment outcome recorded" && orders.some((o) => (o.appointments || []).length)
+            ? "Recorded on a work order" : "Unknown. Not assessed on this screen."]))),
+      screenPanel("Submission and review are separate",
+        screenFields([["Your submission", "Not recorded on this screen"],
+          ["Acknowledgement", "Not recorded. An acknowledgement is not acceptance."],
+          ["Independent review and acceptance", "Unknown. Review data is not available here. Done by someone other than you."],
+          ["Next reviewer", reviewerRole]])));
 const financeRoles = ["Grants and Evidence Officer", ...screenManagers];
 const financeCurrency = new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" });
 const financeMoney = (value) => typeof value === "number" && Number.isFinite(value) ? financeCurrency.format(value) : "Unknown";
