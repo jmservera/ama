@@ -288,7 +288,12 @@ class QueueDefinitions(unittest.TestCase):
         self.assertEqual(evaluate(self.case)["returned"]["sender"], "Legacy Sender")
         self.case["returns"][0]["event_type"] = "advance"
         self.assertIsNone(evaluate(self.case)["returned"])
+        self.case["returns"][0]["event_type"] = "reopen"
+        self.assertIsNone(evaluate(self.case)["returned"])
         self.case["returns"][0].pop("event_type")
+        self.case["returns"][0]["reopened"] = True
+        self.assertIsNone(evaluate(self.case)["returned"])
+        self.case["returns"][0].pop("reopened")
         handoff = evaluate(self.case, handoff=dict(state="Offered", from_name="Sam"))["handoff"]
         self.assertEqual(handoff["sender"], "Sam")
 

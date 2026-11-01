@@ -93,6 +93,12 @@ vm.runInContext(host + "\n;globalThis.__s = roleScreens.get('programme-queue');"
       quality: [{state: "Handed over", measure: "Loft"}], finance: {budget: {status: "Approved"}}}, done),
     staleOrder: gates({id: "C-14", work: {blockers: []}, technical: {}, measures: "Loft", measure_decisions: decisions,
       quality: [accepted], finance: {budget: {status: "Approved"}}}, stale),
+    completedOrder: gates({id: "C-15", work: {blockers: []}, technical: {}, measures: "Loft", measure_decisions: decisions,
+      quality: [accepted], finance: {budget: {status: "Approved"}}}, stale.map((w) => ({...w, state: "Completed"}))),
+    overCommit: gates({id: "C-16", work: {blockers: []}, technical: {}, funding_ok: true, measures: "Loft",
+      quality: [accepted], finance: {budget: {status: "Approved", amount: 100}, commitments: [{id: "COM-1", amount: 100}], invoices: [
+        {id: "INV-A", status: "Matched", commitment: "COM-1", disposition: "Accept for payment", exceptions: [], lines: [{amount: 60}]},
+        {id: "INV-B", status: "Matched", commitment: "COM-1", disposition: null, exceptions: [], lines: [{amount: 60}]}]}}, done),
     submitted: gates({id: "C-7", work: {blockers: []}, measures: "Loft", quality: [{state: "Submitted", measure: "Loft"}]}),
     fixed: gates({id: "C-6", work: {blockers: []}, measures: "Loft", quality: [{state: "Fixed, awaiting reinspection", measure: "Loft"}]}),
     partial: gates({id: "C-5", work: {blockers: []}, measures: "Loft, Heat pump",
@@ -186,6 +192,14 @@ class ProgrammeScreen(unittest.TestCase):
             self.assertIn(text, row)
             self.assertIn("Blocked", row)
         self.assertIn("Reissue the work order", json.dumps(out["staleOrder"]))
+        completed = json.dumps(out["completedOrder"])
+        self.assertIn("Correct the completed work order", completed)
+        self.assertNotIn("Reissue the work order", completed)
+
+    def test_finance_projects_match_against_accepted_invoices(self) -> None:
+        text = json.dumps(run()["overCommit"])
+        self.assertIn("INV-B", text)
+        self.assertIn("over the commitment and over the approved budget", text)
 
     def test_delivery_and_finance_use_current_orders_holds_and_budget_status(self) -> None:
         out = run()

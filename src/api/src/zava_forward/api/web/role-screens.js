@@ -326,7 +326,19 @@ const programmeFinanceBlockers = (c) => {
   const found = [];
   if (budget && budget.status !== "Approved") found.push({ reason: `Budget status is ${screenValue(budget.status)}, not Approved; commitments are refused until it is approved.`,
     owner: "Unknown", next_action: "Ask the budget approver to decide the budget" });
-  for (const inv of c.finance?.invoices || []) {
+  const invoices = c.finance?.invoices || [];
+  const accepted = (inv) => inv.disposition === "Accept for payment";
+  const total = (inv) => (inv.lines || []).reduce((sum, ln) => sum + Number(ln.amount || 0), 0);
+  const acceptedTotal = (inv, commitment) => invoices.filter((o) => o.id !== inv.id && accepted(o)
+    && (!commitment || o.commitment === commitment.id)).reduce((sum, o) => sum + total(o), 0);
+  const projected = (inv) => {
+    const out = [];
+    const com = (c.finance?.commitments || []).find((x) => x.id === inv.commitment);
+    if (com && acceptedTotal(inv, com) + total(inv) > Number(com.amount) + 0.005) out.push("over the commitment");
+    if (budget?.status === "Approved" && acceptedTotal(inv) + total(inv) > Number(budget.amount) + 0.005) out.push("over the approved budget");
+    return out;
+  };
+  for (const inv of invoices) {
     if (inv.hold) found.push({ reason: `Invoice ${screenValue(inv.id)} is on payment hold: ${screenValue(inv.hold.reason)}.`,
       owner: screenValue(inv.hold.name), next_action: "Release the hold through the permitted Finance review" });
     if (inv.disposition === "Keep on hold" && !inv.hold) found.push({ reason: `Invoice ${screenValue(inv.id)} has a Finance decision to keep on hold.`,
@@ -334,6 +346,9 @@ const programmeFinanceBlockers = (c) => {
     const decided = inv.disposition && inv.disposition !== "Keep on hold";
     if (!decided && inv.status === "Received") found.push({ reason: `Invoice ${screenValue(inv.id)} has not been matched yet; no match evidence is recorded.`,
       owner: "Unknown", next_action: "Run the invoice match through the permitted Finance review" });
+    if (!decided && inv.status === "Matched" && !(inv.exceptions || []).length && projected(inv).length) found.push({
+      reason: `Invoice ${screenValue(inv.id)} would now be ${projected(inv).join(" and ")} given invoices already accepted.`,
+      owner: "Unknown", next_action: "Run the invoice match again through the permitted Finance review" });
     if (!decided && (inv.exceptions || []).length) found.push({ reason: `Invoice ${screenValue(inv.id)} has ${inv.exceptions.length} unresolved match exception(s).`,
       owner: "Unknown", next_action: "Resolve each line exception and run the match again" });
   }
@@ -348,7 +363,9 @@ function programmeDeliveryRow(c, orders, blockers) {
     const bindings = (w.versions || []).at(-1)?.resident_bindings;
     return !Array.isArray(bindings) || !bindings.length || !bindings.every((b) => programmeBindingCurrent(b, revisions));
   }).map((w) => ({ reason: `${screenValue(w.id)}: resident scope bindings are missing or not current.`,
-    owner: "Unknown", next_action: "Reissue the work order bound to the current resident scope" }));
+    owner: "Unknown", next_action: w.state === "Completed"
+      ? "Correct the completed work order so it is bound to the current resident scope"
+      : "Reissue the work order bound to the current resident scope" }));
   const open = live.filter((w) => w.appointment_control?.status !== "Committed")
     .map((w) => ({ reason: `${screenValue(w.id)}: appointment ${screenValue(w.appointment_control?.status)}${(w.appointment_control?.missing || []).length ? ` (${w.appointment_control.missing.join("; ")})` : ""}.`,
       owner: "Unknown", next_action: "Agree and confirm the appointment" }));

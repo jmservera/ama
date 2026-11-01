@@ -337,7 +337,8 @@ def context(
     returned = (case.get("returns") or [None])[-1]
     if (
         returned
-        and returned.get("event_type") != "advance"
+        and returned.get("event_type") in (None, "return")
+        and not returned.get("reopened")
         and returned.get("to_stage") == case["stage"]
     ):
         returned_view = dict(
