@@ -9,9 +9,10 @@ Observed outcome per case: absent from the ranking is ``excluded``; ranked beyon
 position is ``deprioritised``; carrying the ``support_unknown`` reason is ``review``; otherwise
 ``ranked``. Seeded defects drop or demote chosen cases and must all be detected.
 
-The manifest is a developer fixture, not owner approved (OQ-018). Without ``approved=True`` the
-record stays blocked on unapproved thresholds; with it, the named owners are fictional. Results
-on these synthetic cohorts are never fairness evidence.
+The manifest is a developer fixture, not owner approved (OQ-018). The runner never supplies
+approval, so the record stays blocked on unapproved thresholds. Tests alone add a fictional
+approval (``_run``) to exercise evaluator mechanics. Results on these synthetic cohorts are
+never fairness evidence.
 
 Run: python3 -m zava_forward.agents.cohort_ranking_eval [--json] [--defects]
 """
@@ -19,6 +20,7 @@ Run: python3 -m zava_forward.agents.cohort_ranking_eval [--json] [--defects]
 import copy
 import json
 import sys
+from collections.abc import Callable
 from typing import Any
 
 from zava_forward.core import cohort_eval, ranking
@@ -41,6 +43,16 @@ VARIANT = {
 }
 SEEDED_DROPPED = ("sensor-1-b", "sensor-4-b")
 SEEDED_DEMOTED = ("history-2-b", "history-3-b")
+MOCK_APPROVAL = {
+    "cohorts_owner": "Data lead (fictional)",
+    "thresholds_owner": "RAI owner (fictional)",
+}
+# Ranking-neutral fields carried so a ranker that reads them is exercised.
+SENSOR = {"complete": "present", "partial": "missing"}
+SOURCE = {"complete": "complete", "partial": "stale"}
+HISTORY = {"regular": "regular", "missed": "prior_no_access"}
+ACCESS_DAYS = 100
+Ranker = Callable[[list[Case]], list[dict[str, Any]]]
 
 
 def _resident(support_need: str, source: str) -> dict[str, Any]:
@@ -58,36 +70,51 @@ def _case(case_id: str, days: int, cohorts: dict[str, str]) -> Case:
         "days_in_stage": days,
         "hazards": [],
         "resident": _resident(cohorts["support_need"], cohorts["source_completeness"]),
+        "sensor_data": SENSOR[cohorts["sensor_completeness"]],
+        "source_record": SOURCE[cohorts["source_completeness"]],
+        "appointment_history": HISTORY[cohorts["appointment_history"]],
         "cohorts": cohorts,
     }
 
 
-def _units() -> list[list[tuple[str, dict[str, str]]]]:
-    """Rank-ordered units: cases in one unit share every ranking input, so may swap by id."""
+Unit = tuple[int, list[tuple[str, dict[str, str]]]]
+
+
+def _units() -> list[Unit]:
+    """Rank-ordered units of (days, cases). Cases in one unit share every ranking input.
+
+    Declared-support cases and their no-support partners share the same low waiting days, so
+    only the support rule puts the declared cases first; a ranker without it moves them last.
+    """
 
     def only(factor: str, name: str, i: int) -> list[tuple[str, dict[str, str]]]:
         base, var = dict(BASELINE), {**BASELINE, factor: VARIANT[factor]}
         return [(f"{name}-{i}-a", base), (f"{name}-{i}-b", var)]
 
-    units = [[(f"access-yes-{i}", {**BASELINE, "support_need": "declared"})] for i in range(PAIRS)]
+    declared = {**BASELINE, "support_need": "declared"}
+    units: list[Unit] = [(ACCESS_DAYS - i, [(f"access-yes-{i}", declared)]) for i in range(PAIRS)]
+    rows = 0
     for i in range(PAIRS):
-        units.append([(f"access-no-{i}", dict(BASELINE))])
-        units.append(only("sensor_completeness", "sensor", i))
-        units.append(only("source_completeness", "source", i))
-        units.append(only("appointment_history", "history", i))
+        for factor, name in (
+            ("sensor_completeness", "sensor"),
+            ("source_completeness", "source"),
+            ("appointment_history", "history"),
+        ):
+            units.append((1000 - 10 * rows, only(factor, name, i)))
+            rows += 1
+    units += [(ACCESS_DAYS - i, [(f"access-no-{i}", dict(BASELINE))]) for i in range(PAIRS)]
     return units
 
 
 def build() -> tuple[list[Case], dict[str, Any]]:
-    """Return (cases fed to the ranker, manifest). Days are unique per unit, highest first."""
+    """Return (cases fed to the ranker, manifest)."""
     cases: list[Case] = []
     manifest_cases: list[dict[str, Any]] = []
     position = 0
-    units = _units()
-    for u, unit in enumerate(units):
+    for days, unit in _units():
         position += len(unit)
         for case_id, cohorts in unit:
-            cases.append(_case(case_id, 1000 - u, cohorts))
+            cases.append(_case(case_id, days, cohorts))
             partial_source = cohorts["source_completeness"] == "partial"
             manifest_cases.append(
                 {
@@ -128,39 +155,54 @@ def _inject(cases: list[Case]) -> list[Case]:
     return out
 
 
-def observe(cases: list[Case], manifest: dict[str, Any]) -> list[dict[str, Any]]:
-    ranked = {e["id"]: e for e in ranking.rank(cases, as_of="2026-11-01")}
+def observe(
+    cases: list[Case], manifest: dict[str, Any], rank_fn: Ranker | None = None
+) -> list[dict[str, Any]]:
+    """Compare precedence among retained cases, so an exclusion cannot hide a demotion."""
+    ranked = {e["id"]: e for e in (rank_fn or _rank)(cases)}
+    retained = [m for m in manifest["cases"] if m["id"] in ranked]
     observed = []
     for m in manifest["cases"]:
         entry = ranked.get(m["id"])
         if entry is None:
             outcome = "excluded"
-        elif entry["rank"] > m["expected_rank_max"]:
-            outcome = "deprioritised"
-        elif "support_unknown" in entry["reason_codes"]:
-            outcome = "review"
         else:
-            outcome = "ranked"
+            allowed = sum(r["expected_rank_max"] <= m["expected_rank_max"] for r in retained)
+            position = 1 + sum(ranked[r["id"]]["rank"] < entry["rank"] for r in retained)
+            if position > allowed:
+                outcome = "deprioritised"
+            elif "support_unknown" in entry["reason_codes"]:
+                outcome = "review"
+            else:
+                outcome = "ranked"
         observed.append({"id": m["id"], "outcome": outcome})
     return observed
 
 
-def run(defects: bool = False, approved: bool = False) -> dict[str, Any]:
+def _rank(cases: list[Case]) -> list[dict[str, Any]]:
+    return list(ranking.rank(cases, as_of="2026-11-01"))
+
+
+def _run(
+    defects: bool = False, rank_fn: Ranker | None = None, approval: dict[str, str] | None = None
+) -> dict[str, Any]:
     cases, manifest = build()
-    if approved:
-        manifest["approval"] = {
-            "cohorts_owner": "Data lead (fictional)",
-            "thresholds_owner": "RAI owner (fictional)",
-        }
+    if approval:
+        manifest["approval"] = dict(approval)
     if defects:
         manifest["seeded_defects"] = sorted(SEEDED_DROPPED + SEEDED_DEMOTED)
         cases = _inject(cases)
-    return dict(cohort_eval.evaluate(manifest, observe(cases, manifest)))
+    return dict(cohort_eval.evaluate(manifest, observe(cases, manifest, rank_fn)))
+
+
+def run(defects: bool = False, rank_fn: Ranker | None = None) -> dict[str, Any]:
+    """Evaluate the developer fixture; it never carries approval, so activation stays blocked."""
+    return _run(defects, rank_fn)
 
 
 def main(argv: list[str] | None = None) -> int:
     args = sys.argv[1:] if argv is None else argv
-    record = run(defects="--defects" in args, approved="--approved" in args)
+    record = run(defects="--defects" in args)
     if "--json" in args:
         print(json.dumps(record, indent=2))
         return 0
