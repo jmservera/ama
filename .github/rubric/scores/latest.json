@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-01T16:29:41+00:00",
-  "commit": "8c771be7f526abb19bada71746f1d747e8da659a",
+  "scored_at": "2026-11-01T16:41:16+00:00",
+  "commit": "faf035f678d73cfbf08b6abc31e270163c9e64f0",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41325588597",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41326520410",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "6c0a03f52ebd398cb58c8ca41c456c23716fe42f5db8fe0862437329acead494",
+    "solution-code": "c2f66e502d73aa8b01984da0720abcf6386e69b3b98c15c86d6fcfff35d16ab5",
     "infrastructure": "b101de0ca1a75ce128f45fbd37309bc5dc49805b14bd65cce45c7b0ed9faa591",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -54,7 +54,7 @@
         "src/agents/evals/chat_golden.json:77-82",
         "src/agents/tests/test_chat_eval.py:38-90"
       ],
-      "rationale": "The previously disclosed known gap (unsupported claim with valid citation) is now actually fixed and covered by new passing tests; golden run passes with zero open critical gaps. Strengthens completeness; baseline 5 retained (already ceiling)."
+      "rationale": "Previously disclosed known gap (unsupported claim with valid citation) now fixed and covered by new passing tests; golden run passes with zero open critical gaps. Baseline 5 retained (already ceiling)."
     },
     "A5": {
       "score": 5,
@@ -71,7 +71,7 @@
         "src/agents/src/zava_forward/agents/chat_eval.py:337-349",
         "src/agents/tests/test_chat_eval.py:38-100"
       ],
-      "rationale": "Eval harness extended: STATUS_CLAIM/UNGROUNDED now bound into eval digest; new golden scenario behaviour and tests cover tokenisation, sign/decimal handling, whole-token matching for the grounding guard. Narrow harness strengthening; model-choice/cost justification still absent, ceiling retained."
+      "rationale": "Eval harness extended: STATUS_CLAIM/UNGROUNDED bound into eval digest; new golden scenario and tests cover tokenisation and grounding guard matching. Narrow harness strengthening; model-choice/cost justification still absent, ceiling retained."
     },
     "A7": {
       "score": 4,

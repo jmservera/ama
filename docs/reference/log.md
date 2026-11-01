@@ -9311,6 +9311,14 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   deferrals remains open.
 
 
+## [2026-11-01] update | Chat and memory DPIA record drift guard (Refs #163)
+
+* Added `src/core/tests/test_chat_dpia_record.py`. It fails if a `DATA_MAP` class
+  is missing from the DPIA record data map, if a decision pack row D1 to D8 is
+  filled without a date and reference, or if retention stops being Unknown.
+* No decision, lawful basis, retention period or provider acceptance was
+  recorded. Criteria 2 and 5 stay with the DPO and Legal.
+
 ## 2026-11-01 - Chat claim-level support check (Refs #164)
 
 * Added a lexical claim-support check to the chat panel: status words and
@@ -9378,6 +9386,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   `technical-queue` and `quality-queue` are labelled as registered on main
   (PR 662 and PR 656), restoring the atlas trace check that main's merges broke.
 * No accessibility acceptance is claimed.
+
 
 ## [2026-11-01] update | Issue 466 remaining-criteria check (r4)
 
