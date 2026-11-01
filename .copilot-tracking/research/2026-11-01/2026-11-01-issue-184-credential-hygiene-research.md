@@ -21,3 +21,9 @@ Criterion 3 local evidence: no existing test scans the repository for key or con
 ## Not deliverable here
 
 Real credential issue, storage, rotation, revocation, live exercise, owner acceptance of child deferrals (criterion 1). Azure-live work is not authorised.
+
+## Correction cycle 1 (PR 704, 2026-11-01)
+
+* Research: two unresolved Copilot threads on `src/api/tests/test_iot_credential_hygiene.py`, both valid: dotenv files (`.env`, `.env.local`) skipped by the suffix filter; `run_publisher` swallowed `StreamError` when no failure was injected.
+* Plan/Changes: added `is_scanned` and `scan_directory` helpers plus a temp-directory dotenv regression test; re-raise `StreamError` unless a failure was injected.
+* Review: ruff check and format clean; mypy shows the same 14 pre-existing `azure.iot.device` stub errors as before the change; 35 `test_iot*` tests pass in a local venv. No Azure access.

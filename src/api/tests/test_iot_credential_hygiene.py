@@ -9,6 +9,7 @@ import asyncio
 import json
 import logging
 import re
+import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import AsyncMock, Mock, patch
@@ -40,26 +41,48 @@ ACTIVE = Activation(
 )
 
 
+def is_scanned(path: Path) -> bool:
+    name = path.name
+    dotenv = name == ".env" or name.startswith(".env.")
+    return dotenv or path.suffix in SUFFIXES
+
+
+def scan_directory(base: Path, skip: Path | None = None) -> list[str]:
+    findings: list[str] = []
+    for path in base.rglob("*"):
+        if (
+            not path.is_file()
+            or not is_scanned(path)
+            or SKIPPED_PARTS & set(path.parts)
+            or (skip is not None and path.resolve() == skip)
+        ):
+            continue
+        text = path.read_text(encoding="utf-8", errors="ignore")
+        for name, pattern in PATTERNS.items():
+            if pattern.search(text):
+                findings.append(f"{path.relative_to(base)}: {name}")
+    return findings
+
+
 class SourceScanTests(unittest.TestCase):
+    def test_dotenv_files_are_scanned(self) -> None:
+        secret = "HostName=h.azure-devices.net;DeviceId=d;SharedAccessKey=" + "A" * 24 + "=="
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            for name in (".env", ".env.local", "settings.env"):
+                (base / name).write_text(secret, encoding="utf-8")
+            (base / "notes.dat").write_text(secret, encoding="utf-8")
+            findings = scan_directory(base)
+        flagged = {f.split(":")[0] for f in findings}
+        self.assertEqual(flagged, {".env", ".env.local", "settings.env"})
+
     def test_no_device_key_or_connection_string_in_repository_text(self) -> None:
         this = Path(__file__).resolve()
         findings: list[str] = []
         for top in SCANNED:
             base = ROOT / top
-            if not base.is_dir():
-                continue
-            for path in base.rglob("*"):
-                if (
-                    not path.is_file()
-                    or path.suffix not in SUFFIXES
-                    or SKIPPED_PARTS & set(path.parts)
-                    or path.resolve() == this
-                ):
-                    continue
-                text = path.read_text(encoding="utf-8", errors="ignore")
-                for name, pattern in PATTERNS.items():
-                    if pattern.search(text):
-                        findings.append(f"{path.relative_to(ROOT)}: {name}")
+            if base.is_dir():
+                findings += [f"{top}/{f}" for f in scan_directory(base, this)]
         self.assertEqual(findings, [])
 
     def test_scanner_detects_each_pattern(self) -> None:
@@ -128,6 +151,8 @@ class RuntimeLeakTests(unittest.IsolatedAsyncioTestCase):
             try:
                 await self.publisher.run(self.frames, self.budget, truth=self.truth.append)
             except StreamError as error:
+                if failure is None:
+                    raise
                 outcome = str(error) + repr(error)
         return "\n".join(logs.output) + outcome
 

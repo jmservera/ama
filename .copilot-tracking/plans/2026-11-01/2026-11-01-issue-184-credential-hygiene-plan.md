@@ -14,3 +14,9 @@ ms.date: 2026-11-01
 ## Critique (single, final candidate)
 
 Complete / Pass. Scope is tests and docs only, no source behaviour change, no new dependency. Risk: scan false positives in docs; mitigated by specific patterns and a run over the repository. Claims limited to constructed local evidence; criteria 1 and the actual lifecycle evidence of 3 stay unmet.
+
+## Correction cycle 1 (PR 704, 2026-11-01)
+
+* Research: two unresolved Copilot threads on `src/api/tests/test_iot_credential_hygiene.py`, both valid: dotenv files (`.env`, `.env.local`) skipped by the suffix filter; `run_publisher` swallowed `StreamError` when no failure was injected.
+* Plan/Changes: added `is_scanned` and `scan_directory` helpers plus a temp-directory dotenv regression test; re-raise `StreamError` unless a failure was injected.
+* Review: ruff check and format clean; mypy shows the same 14 pre-existing `azure.iot.device` stub errors as before the change; 35 `test_iot*` tests pass in a local venv. No Azure access.
