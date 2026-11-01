@@ -3874,6 +3874,19 @@ Open items (not verified here):
 * Confirm Front Door Premium Private Link support for Container Apps environments in uksouth and its current pricing at deployment time.
 * Custom domain name and DNS ownership, and the pilot edge go/no-go, are owner decisions (ADR 0002 open: pilot network design).
 
+## Resident AI accounting expiry (issue 624)
+
+The resident AI exercise expiry is data: `resident_ai.budget.expires_at` (UTC, `DATETIME2(7)`),
+read under the same lock as the cap by `resident_ai.reserve`, which refuses at or after it.
+[`sql/resident-assistant.sql`](sql/resident-assistant.sql) adds the column idempotently with
+default `2026-11-01T00:00:00`, so an already-deployed ledger keeps its counts and its live expiry.
+Read it with `SELECT reserved_cents, expires_at FROM resident_ai.budget;`. Extending it, like
+raising the 2000 cent cap, is an owner decision applied as one reviewed data change, for example
+`UPDATE resident_ai.budget SET expires_at = '<new UTC instant>' WHERE id = 1;`; re-applying the
+script never resets it. No extension is made by the code. The Python `EXPIRES` constant in
+`resident_demo/assistant.py` is a second, independent gate and still ends the exercise at
+`2026-11-01T00:00:00Z`; extend it in the same reviewed change.
+
 ## Synthetic resident showcase SQL boundary (issue 462)
 
 [`sql/resident-showcase.sql`](sql/resident-showcase.sql) is the database side of the synthetic
