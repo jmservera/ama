@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-01T05:20:05+00:00",
-  "commit": "051f6a3eedf63d4ab1ab64c408cfaf8b77cfadc8",
+  "scored_at": "2026-11-01T12:34:46+00:00",
+  "commit": "8e90729513edc5d7b22a408ade0a890a5c7c91e9",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41274941452",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41306602213",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "5176102c7b976d625a5186dca93c57b038a0e0560f866f18689adb904f3d0147",
-    "infrastructure": "0172b75e258abc5d97ce173fa595146da2d6f807386ec74e992482b7524f7aad",
+    "solution-code": "75be60bb4f00e8f5aa7cc54fb27878836bee45ba600ff9b795f0da7b8c918ecf",
+    "infrastructure": "25353fd7173df7a61916f862b669bf67f685659fcdd934f98479b9ddd103ed2b",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
     "thought-leadership": "592719a5da0d19d4d4c81dd5779faa45a9039c4777e3749cbc055d241aed8970"
@@ -120,7 +120,7 @@
         "src/core/README.md:5-123",
         "src/api/README.md:9-47"
       ],
-      "rationale": "Pagination code change is engineering, not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
+      "rationale": "This PR's changes (infra/monitoring-runbooks.md ops runbook, monitoring_coverage.py) are engineering/ops documentation, not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
     },
     "B7": {
       "score": 5,
