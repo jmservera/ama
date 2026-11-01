@@ -191,6 +191,34 @@ class DeviceIdentityTests(unittest.TestCase):
             di.provision(manifest, registry, store)
         self.assertEqual((registry.devices, store.secrets), before)
 
+    def test_same_run_teardown_waits_for_provision_in_flight(self) -> None:
+        registry, store = FakeRegistry(), FakeStore()
+        manifest = di.plan("run-001", "owner-role", sensors())
+        real_issue = store.issue
+        paused = threading.Event()
+        torn_down = threading.Event()
+
+        def run_teardown() -> None:
+            di.teardown(manifest, registry, store)
+            torn_down.set()
+
+        worker = threading.Thread(target=run_teardown)
+
+        def issue(device_id: str, run_id: str) -> str:
+            if not paused.is_set():
+                paused.set()
+                worker.start()
+                self.assertFalse(torn_down.wait(timeout=0.2))
+            return real_issue(device_id, run_id)
+
+        store.issue = issue  # type: ignore[method-assign]
+        done = di.provision(manifest, registry, store)
+        worker.join(timeout=5)
+        self.assertTrue(torn_down.is_set())
+        self.assertEqual(len(done.identities), len(manifest.identities))
+        self.assertEqual(registry.list_run("run-001"), [])
+        self.assertEqual(store.references(), [])
+
     def test_overlapping_provision_cannot_roll_back_completed_attempt(self) -> None:
         registry, store = FakeRegistry(), FakeStore()
         manifest = di.plan("run-001", "owner-role", sensors())
@@ -232,7 +260,7 @@ class DeviceIdentityTests(unittest.TestCase):
                 raise RuntimeError(SECRET)
 
         def run_of(device_id: str) -> str | None:
-            if failing["on"] and device_id == "SYN-" + sensors()[2]["sensor_id"]:
+            if failing["on"] and device_id == f"SYN-{sensors()[2]['sensor_id']}":
                 raise RuntimeError(SECRET)
             return real_run_of(device_id)
 
@@ -253,9 +281,9 @@ class DeviceIdentityTests(unittest.TestCase):
                 raise RuntimeError(SECRET)
 
             if broken == "registry":
-                registry.list_run = boom  # type: ignore[method-assign]
+                registry.list_run = boom  # type: ignore[method-assign,assignment]
             else:
-                store.run_references = boom  # type: ignore[method-assign]
+                store.run_references = boom  # type: ignore[method-assign,assignment]
             with self.assertRaises(di.DeviceIdentityError) as ctx:
                 di.provision(di.plan("run-001", "owner-role", sensors()), registry, store)
             self.assertEqual(str(ctx.exception), "ACTIVE_RUN_CHECK_FAILED")

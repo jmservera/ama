@@ -165,6 +165,17 @@ def teardown(
     store: CredentialStore,
     refs: Sequence[str] | None = None,
 ) -> None:
+    """Delete exactly the run's identities and credentials under the run lock (see below)."""
+    with _run_lock(manifest.run_id):
+        _teardown_locked(manifest, registry, store, refs)
+
+
+def _teardown_locked(
+    manifest: Manifest,
+    registry: Registry,
+    store: CredentialStore,
+    refs: Sequence[str] | None,
+) -> None:
     """Delete exactly the run's identities and credentials, then verify none remain.
 
     Adapter exceptions may carry secrets, so they are replaced by fixed error codes and the
