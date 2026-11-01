@@ -244,10 +244,12 @@ regressions enforce the bounded contracts, without reading private working data.
 External sources are inventoried, not all verified. The local source README
 records OpenStreetMap ODbL 1.0, retrieval 2026-09-30 and contributor attribution.
 Census 2021 TS054, IMD 2025 and ONS boundaries still lack historic retrieval
-dates and verified licence/attribution terms. Null dates and provisional wording
-remain explicit; a Git commit date is not a retrieval date. The strict source
-audit returns nonzero for these three entries. No official-source recheck was
-performed in this offline task. Exercise Legal, Compliance and DPO owner
+dates. Their licences and the Census and IMD attributions were confirmed
+against the official pages on 2026-11-01; the boundaries entry also needs the
+OS copyright/database-right acknowledgement, whose year stays provisional. Null
+dates and provisional wording remain explicit; a Git commit date is not a
+retrieval date. The strict source audit returns nonzero for these three entries
+until the owner supplies retrieval dates. Exercise Legal, Compliance and DPO owner
 Juan Manuel Servera retains interpretation/approval; real owners and sources
 remain a gap before operational reliance.
 

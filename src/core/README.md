@@ -2386,9 +2386,10 @@ addresses or contextual identification. The exact fictional scale-home
 
 The public-only command passes without private support files. The separate
 `--sources` command currently returns 1: Census TS054, IMD 2025 and ONS
-boundaries lack verified historic retrieval dates/licence/attribution terms.
-This explicitly leaves issue #175's external-source criterion unmet. No dates
-are inferred from commits and no official-source currentness is claimed.
+boundaries lack historic retrieval dates. Licences and the Census and IMD
+attributions were confirmed on 2026-11-01; the boundaries OS copyright year
+stays provisional. This explicitly leaves issue #175's external-source
+criterion unmet. No dates are inferred from commits.
 Exercise Legal/Compliance/DPO owner Juan Manuel Servera owns the follow-up,
 not an automated approval. Rehashed mutation tests independently demonstrate
 pattern/label rejection, not merely an unrelated integrity failure.
