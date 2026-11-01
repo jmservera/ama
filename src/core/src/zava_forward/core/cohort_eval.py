@@ -122,7 +122,7 @@ def evaluate(
     seen = {o.get("id"): o for o in observed}
     manifest_ids = set(case_ids)
 
-    for extra in sorted(set(seen) - manifest_ids):
+    for extra in sorted(str(i) for i in set(seen) - manifest_ids):
         block("reconciliation", f"observed case {extra} is not in the manifest")
     for miss in sorted(manifest_ids - set(seen)):
         block("reconciliation", f"manifest case {miss} has no observed outcome")
