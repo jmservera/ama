@@ -1,4 +1,5 @@
 import logging
+import traceback
 import unittest
 from collections.abc import Sequence
 
@@ -16,10 +17,16 @@ class FakeRegistry:
     def create(self, device_id: str, run_id: str) -> None:
         if self.fail_after is not None and len(self.devices) > self.fail_after:
             raise RuntimeError(SECRET)
+        if device_id in self.devices:
+            raise RuntimeError(SECRET)
         self.devices[device_id] = run_id
 
-    def delete(self, device_id: str) -> None:
-        self.devices.pop(device_id, None)
+    def run_of(self, device_id: str) -> str | None:
+        return self.devices.get(device_id)
+
+    def delete(self, device_id: str, run_id: str) -> None:
+        if self.devices.get(device_id) == run_id:
+            del self.devices[device_id]
 
     def list_run(self, run_id: str) -> Sequence[str]:
         return [d for d, r in self.devices.items() if r == run_id]
@@ -108,9 +115,79 @@ class DeviceIdentityTests(unittest.TestCase):
     def test_teardown_fails_loudly_when_identity_remains(self) -> None:
         registry, store = FakeRegistry(), FakeStore()
         done = di.provision(di.plan("run-001", "owner-role", sensors()), registry, store)
-        registry.delete = lambda device_id: None  # type: ignore[method-assign]
+        registry.delete = lambda device_id, run_id: None  # type: ignore[method-assign]
         with self.assertRaisesRegex(di.DeviceIdentityError, "TEARDOWN_INCOMPLETE:5"):
             di.teardown(done, registry, store)
+
+    def test_rollback_spares_preexisting_device(self) -> None:
+        rows = sensors()
+        existing = "SYN-" + str(rows[2]["sensor_id"])
+        registry, store = FakeRegistry(), FakeStore()
+        registry.devices[existing] = "other-run"
+        with self.assertRaises(di.DeviceIdentityError):
+            di.provision(di.plan("run-001", "owner-role", rows), registry, store)
+        self.assertEqual(registry.devices, {"SYN-OTHER": "other-run", existing: "other-run"})
+        self.assertEqual(store.references(), [])
+
+    def test_rollback_covers_device_whose_credential_issue_failed(self) -> None:
+        registry, store = FakeRegistry(), FakeStore()
+        original = store.issue
+        calls: list[str] = []
+
+        def flaky(device_id: str) -> str:
+            calls.append(device_id)
+            if len(calls) == 3:
+                raise RuntimeError(SECRET)
+            return original(device_id)
+
+        store.issue = flaky  # type: ignore[method-assign]
+        with self.assertRaisesRegex(di.DeviceIdentityError, "ROLLED_BACK"):
+            di.provision(di.plan("run-001", "owner-role", sensors()), registry, store)
+        self.assertEqual(registry.list_run("run-001"), [])
+        self.assertEqual(store.references(), [])
+
+    def test_stale_manifest_cannot_delete_newer_run(self) -> None:
+        registry, store = FakeRegistry(), FakeStore()
+        stale = di.provision(di.plan("run-001", "owner-role", sensors()), registry, store)
+        di.teardown(stale, registry, store)
+        di.provision(di.plan("run-002", "owner-role", sensors()), registry, store)
+        with self.assertRaisesRegex(di.DeviceIdentityError, "OWNERSHIP_MISMATCH"):
+            di.teardown(stale, registry, store)
+        self.assertEqual(len(registry.list_run("run-002")), 5)
+        self.assertEqual(len(store.references()), 5)
+
+    def test_teardown_errors_are_secret_free_and_cleanup_continues(self) -> None:
+        registry, store = FakeRegistry(), FakeStore()
+        done = di.provision(di.plan("run-001", "owner-role", sensors()), registry, store)
+        real_delete = registry.delete
+
+        def boom(device_id: str, run_id: str) -> None:
+            real_delete(device_id, run_id)
+            raise RuntimeError(SECRET)
+
+        registry.delete = boom  # type: ignore[method-assign]
+        with self.assertRaises(di.DeviceIdentityError) as ctx:
+            di.teardown(done, registry, store)
+        text = "".join(traceback.format_exception(ctx.exception))
+        self.assertNotIn(SECRET, text)
+        self.assertEqual(store.references(), [])
+
+    def test_rollback_cleanup_failure_does_not_chain_secret(self) -> None:
+        registry, store = FakeRegistry(fail_after=3), FakeStore()
+
+        def boom(reference: str) -> None:
+            raise RuntimeError(SECRET)
+
+        store.revoke = boom  # type: ignore[method-assign]
+        with self.assertRaises(di.DeviceIdentityError) as ctx:
+            di.provision(di.plan("run-001", "owner-role", sensors()), registry, store)
+        self.assertNotIn(SECRET, "".join(traceback.format_exception(ctx.exception)))
+
+    def test_incomplete_credential_cleanup_is_reported_for_rollback_refs(self) -> None:
+        registry, store = FakeRegistry(fail_after=3), FakeStore()
+        store.revoke = lambda reference: None  # type: ignore[method-assign]
+        with self.assertRaisesRegex(di.DeviceIdentityError, "CREDENTIALS_REMAIN"):
+            di.provision(di.plan("run-001", "owner-role", sensors()), registry, store)
 
 
 if __name__ == "__main__":

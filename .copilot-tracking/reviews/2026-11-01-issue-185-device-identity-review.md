@@ -12,7 +12,7 @@ Execution: single self-review after implementation. Outcome: conformant for the 
 ## Findings
 
 * Low: the real Azure Registry and Key Vault adapters are not written (follow-up, needs owner approval and live access).
-* Low: `delete` must be idempotent for adapters; documented in the protocol.
+* Low: adapters must make `delete(device_id, run_id)` idempotent and run-conditional.
 
 ## Follow-ups (ranked)
 
@@ -20,3 +20,7 @@ Execution: single self-review after implementation. Outcome: conformant for the 
 2. Wire a CLI/orchestrator entry using the module.
 
 Decision: PR uses Refs, not a closing keyword.
+
+## Addendum: Copilot PR review round 1
+
+Four valid findings (rollback scope, stale-manifest ownership, secret-bearing adapter errors, rollback verification references) were fixed in code with regression tests. The original Review outcome above is unchanged; the Registry adapter contract now requires `run_of` and run-conditional atomic `delete`.

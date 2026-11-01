@@ -24,8 +24,12 @@ class DeviceIdentityError(RuntimeError):
 class Registry(Protocol):
     def create(self, device_id: str, run_id: str) -> None: ...
 
-    def delete(self, device_id: str) -> None:
-        """Remove the identity; an absent identity is a no-op."""
+    def run_of(self, device_id: str) -> str | None:
+        """Return the run tag of an existing identity, or None when absent."""
+        ...
+
+    def delete(self, device_id: str, run_id: str) -> None:
+        """Atomically remove the identity only if tagged `run_id`; otherwise a no-op."""
         ...
 
     def list_run(self, run_id: str) -> Sequence[str]: ...
@@ -92,18 +96,24 @@ def plan(run_id: str, credential_owner: str, sensors: Sequence[Mapping[str, obje
 
 def provision(manifest: Manifest, registry: Registry, store: CredentialStore) -> Manifest:
     manifest.validate()
+    created: list[DeviceIdentity] = []
     issued: list[DeviceIdentity] = []
+    failed = False
     try:
         for identity in manifest.identities:
             registry.create(identity.device_id, manifest.run_id)
+            created.append(identity)
             reference = store.issue(identity.device_id)
             issued.append(
                 DeviceIdentity(identity.device_id, identity.sensor_id, identity.home_id, reference)
             )
     except Exception:
-        rollback = Manifest(manifest.run_id, manifest.credential_owner, manifest.identities)
+        failed = True
+    if failed:
+        # Cleanup runs outside the handler so the original error is never chained.
+        rollback = Manifest(manifest.run_id, manifest.credential_owner, tuple(created))
         teardown(rollback, registry, store, refs=[i.credential_ref for i in issued])
-        raise DeviceIdentityError("PROVISION_FAILED_ROLLED_BACK") from None
+        raise DeviceIdentityError("PROVISION_FAILED_ROLLED_BACK")
     return Manifest(manifest.run_id, manifest.credential_owner, tuple(issued))
 
 
@@ -113,19 +123,47 @@ def teardown(
     store: CredentialStore,
     refs: Sequence[str] | None = None,
 ) -> None:
-    """Delete exactly the manifest's identities and credentials, then verify none remain."""
+    """Delete exactly the run's identities and credentials, then verify none remain.
+
+    Adapter exceptions may carry secrets, so they are replaced by fixed error codes and the
+    remaining cleanup still runs.
+    """
     owned = {i.device_id for i in manifest.identities}
+    references = [r for r in (refs if refs is not None else _refs(manifest)) if r]
+    run_id = manifest.run_id
+    try:
+        foreign = any(registry.run_of(d) not in (None, run_id) for d in sorted(owned))
+    except Exception:
+        foreign = None
+    if foreign is None:
+        raise DeviceIdentityError("TEARDOWN_FAILED")
+    if foreign:
+        raise DeviceIdentityError("TEARDOWN_OWNERSHIP_MISMATCH")
+    errors = 0
     for device_id in sorted(owned):
-        registry.delete(device_id)
-    for reference in refs if refs is not None else [i.credential_ref for i in manifest.identities]:
-        if reference:
+        try:
+            registry.delete(device_id, run_id)
+        except Exception:
+            errors += 1
+    for reference in references:
+        try:
             store.revoke(reference)
-    remaining = sorted(owned.intersection(registry.list_run(manifest.run_id)))
+        except Exception:
+            errors += 1
+    remaining: list[str] = []
+    leftover: list[str] = []
+    try:
+        remaining = sorted(owned.intersection(registry.list_run(run_id)))
+        leftover = sorted(set(references).intersection(store.references()))
+    except Exception:
+        errors += 1
+    if errors:
+        raise DeviceIdentityError(f"TEARDOWN_FAILED:{errors}")
     if remaining:
         raise DeviceIdentityError(f"TEARDOWN_INCOMPLETE:{len(remaining)}")
-    if any(
-        reference in set(store.references())
-        for reference in (i.credential_ref for i in manifest.identities)
-        if reference
-    ):
+    if leftover:
         raise DeviceIdentityError("TEARDOWN_CREDENTIALS_REMAIN")
+
+
+def _refs(manifest: Manifest) -> list[str]:
+    return [i.credential_ref for i in manifest.identities]
