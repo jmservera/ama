@@ -180,6 +180,8 @@ def change(db, now, user, rid, status, reason, system=False, invalidated=None):
                          (status, rid))
         if res.rowcount != 1:
             raise ValueError("Release is unknown or already revoked.")
+        raw = db.execute("SELECT body FROM assistant_releases WHERE id=?", (rid,)).fetchone()[0] if invalidated else None
+        if raw and release_body(raw):
         if invalidated:
             raw = db.execute("SELECT body FROM assistant_releases WHERE id=?", (rid,)).fetchone()[0]
             db.execute("UPDATE assistant_releases SET body=? WHERE id=?",
