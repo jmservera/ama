@@ -70,6 +70,7 @@ async function roleScreensView() {
   const data = await api(`/api/cases?view=all&limit=20&offset=${page * 20}`, undefined, signal);
   const c = caseId ? await api(`/api/cases/${encodeURIComponent(caseId)}`, undefined, signal) : null;
   const extra = c && screen.load ? await screen.load(c) : null;
+  const overview = !c && screen.summarise && data.items.length ? await screen.summarise(data.items, signal) : null;
   signal.throwIfAborted();
   const label = (row) => `${row.id}: ${row.address || "Address unknown"}. ${row.status || row.stage || "State unknown"}`;
   const queue = h("section", { "aria-labelledby": "screen-queue-heading" },
@@ -92,7 +93,7 @@ async function roleScreensView() {
     h("p", {}, "Recorded evidence only. Missing, stale or withheld information cannot establish readiness. No message, approval or record change is made from this screen."),
     await screen.render(c, extra),
     h("p", {}, h("a", { href: `#/case/${encodeURIComponent(c.id)}` }, "Open existing case workspace")))
-    : h("p", { class: "empty" }, "No home selected. Choose a home from this queue.");
+    : h("div", {}, h("p", { class: "empty" }, "No home selected. Choose a home from this queue."), overview);
   signal.throwIfAborted();
   workspaceStatus.textContent = `${me.user.role}. ${screen.title}. ${c ? `Selected home ${c.id}.` : "No home selected."}`;
   show(h("h1", {}, screen.title), menu,
@@ -200,10 +201,35 @@ function choiceMeasure(m) {
     v ? `v${v.version} ${v.status} (${choiceBinding(v)}), answered by ${screenValue(v.answered_by)}, recorded ${screenStamp(v.at)}${v.note ? `: ${v.note}` : ""}` : "None recorded",
     screenValue(m.readiness)];
 }
+function choiceQueueRow([row, c]) {
+  if (!c) return [row.id, "Unavailable. Open the home to check.", "Unavailable", "Unavailable"];
+  const measures = c.measure_decisions || [];
+  const stopped = measures.filter(choiceStopped).map((m) => m.measure);
+  const u = c.resident_update;
+  return [row.id,
+    measures.length ? measures.map((m) => { const v = choiceLatest(m); return `${m.measure}: ${m.status}${v ? ` (v${v.version}, ${choiceBinding(v)})` : ""}`; }).join("; ") : "No measure choices recorded",
+    stopped.length ? stopped.join(", ") : "None recorded",
+    u ? `${screenValue(u.status)}: ${screenValue(u.purpose)}. Owner ${screenPerson(u.owner_identity || u.owner)}, due ${screenStamp(u.due_at)}, safe route ${screenValue(u.safe_contact_ref)}` : "No commitment recorded"];
+}
 registerRoleScreen({
   id: "resident-choice",
   title: "Resident choice and update queue",
   roles: choiceRoles,
+  async summarise(rows, signal) {
+    const entries = await Promise.all(rows.map((row) =>
+      api(`/api/cases/${encodeURIComponent(row.id)}`, undefined, signal).then((c) => [row, c], (e) => {
+        signal.throwIfAborted();
+        return [row, null];
+      })));
+    return this.summary(entries);
+  },
+  summary(entries) {
+    return screenPanel("Choice and update commitments across this page of homes",
+      h("p", {}, "Read-only summary of the homes on this page, not a portfolio total. A paused or withdrawn measure is listed separately from contact and access. Open a home for the full version history."),
+      screenTable("Choice and update commitments by home",
+        ["Home", "Measure choices (latest version)", "Paused or withdrawn", "Update commitment"],
+        entries.map(choiceQueueRow), Infinity));
+  },
   render(c) {
     const measures = c.measure_decisions || [];
     const stopped = measures.filter(choiceStopped);
@@ -239,6 +265,8 @@ registerRoleScreen({
         screenTable("Service requests and contact needs",
           ["Request", "Route", "Status", "Contact needs", "Next update"],
           requests.map((r) => [r.id, r.route, r.status, (r.accessibility || ["Unknown"]).join(", "), r.next_update]))));
+  }
+});
 const hazardTriageRoles = ["Retrofit Coordinator", "Resident Liaison Officer", "Quality Inspector"];
 const hazardActor = (value) => value && (value.name || value.role)
   ? [value.name, value.role].filter(Boolean).join(", ") : "Unknown";
@@ -293,6 +321,7 @@ registerRoleScreen({
   title: "Repairs and hazard triage",
   roles: hazardTriageRoles,
   render: hazardScreen("Read-only view for repairs and hazard triage: awareness time and source, referral progress and the person who chases an unanswered referral.")
+});
 const operatorSide = (a) => a ? `${screenValue(a.value)}; source ${screenValue(a.source_id)} v${screenValue(a.version)}; dated ${screenValue(a.date)}; ${screenValue(a.validation_state)}` : "Unknown";
 const operatorStatus = (c, q) => (c.stock_reconciliation_events || []).filter((e) => e.query_id === q.id).at(-1)?.status || "Unresolved";
 registerRoleScreen({
@@ -340,6 +369,8 @@ registerRoleScreen({
           events.map((e) => [e.id, e.query_id, e.status, screenStamp(e.at), screenPerson(e.recorded_by), e.reason, e.evidence])),
         screenFields([["Recovery context", work ? `Next action: ${screenValue(work.next_action)}. Owner: ${screenValue(work.owner)}. Recorded as of ${screenValue(work.as_of)}.` : "Unknown. No recovery context is recorded."],
           ["Integration run and queue state", "Unknown. No interface run record is supplied to this screen."]])));
+  }
+});
 const reviewerRole = "Contracts manager, independent of the person who issued or submitted the pack";
 const wording = (value, fallback = "Unknown") => value === null || value === undefined || value === "" ? fallback : String(value);
 const reference = (order) => `${wording(order.id)} v${wording(order.version)}`;
@@ -438,6 +469,8 @@ registerRoleScreen({
           ["Acknowledgement", "Not recorded. An acknowledgement is not acceptance."],
           ["Independent review and acceptance", "Unknown. Review data is not available here. Done by someone other than you."],
           ["Next reviewer", reviewerRole]])));
+  }
+});
 const financeRoles = ["Grants and Evidence Officer", ...screenManagers];
 const financeCurrency = new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" });
 const financeMoney = (value) => typeof value === "number" && Number.isFinite(value) ? financeCurrency.format(value) : "Unknown";

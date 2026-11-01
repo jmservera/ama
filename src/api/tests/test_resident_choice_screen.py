@@ -79,6 +79,39 @@ CASE = {
 }
 
 
+QUEUE_SCRIPT = r"""
+const fs = require("node:fs");
+const vm = require("node:vm");
+const host = fs.readFileSync(process.argv[1] + "/role-screens.js", "utf8");
+const cases = JSON.parse(process.argv[2]);
+const context = vm.createContext({
+  URLSearchParams, Intl, AbortController, Date,
+  routeController: new AbortController(), me: {user: {role: "Resident Liaison Officer"}},
+  api: async (url) => {
+    const id = decodeURIComponent(url.split("/").pop());
+    if (!cases[id]) throw new Error("denied");
+    return cases[id];
+  },
+  h: (tag, attrs, ...kids) => ({tag, attrs, kids: kids.flat(Infinity).filter(
+    kid => kid !== false && kid !== null && kid !== undefined)})
+});
+vm.runInContext(host + "\n;globalThis.__s = roleScreens.get('resident-choice');", context);
+context.__s.summarise([{id: "C-1"}, {id: "C-X"}], new AbortController().signal)
+  .then(tree => console.log(JSON.stringify(tree)));
+"""
+
+
+def run_queue(cases: Mapping[str, object]) -> object:
+    result = subprocess.run(
+        ["node", "-e", QUEUE_SCRIPT, str(WEB), json.dumps(cases)],
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    return json.loads(result.stdout)
+
+
 def run(case: Mapping[str, object]) -> dict[str, object]:
     result = subprocess.run(
         ["node", "-e", SCRIPT, str(WEB), json.dumps(case)],
@@ -204,6 +237,23 @@ class ResidentChoiceScreen(unittest.TestCase):
         self.assertIn("No records supplied", text)
         self.assertIn("No measure is currently paused or withdrawn", text)
         self.assertIn("No update commitment is recorded", text)
+
+    def test_queue_summary_is_read_only_and_marks_unavailable_homes(self) -> None:
+        tree = run_queue({"C-1": CASE})
+        text = json.dumps(tree)
+        for expected in (
+            "Choice and update commitments across this page of homes",
+            "Loft insulation: Paused (v2, scope S-9, revision 2, design 3)",
+            "Solar PV: Not recorded",
+            "Explain damp query",
+            "Owner One",
+            "SC-77",
+            "Unavailable. Open the home to check.",
+            "not a portfolio total",
+        ):
+            self.assertIn(expected, text)
+        for control in ("button", "form", "input", "select", "textarea", "a"):
+            self.assertNotIn(control, tags(tree))
 
 
 if __name__ == "__main__":

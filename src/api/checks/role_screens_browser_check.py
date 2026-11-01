@@ -135,6 +135,15 @@ def run_browser(base: str) -> None:
                           "el => getComputedStyle(el).color !== 'rgb(255, 255, 255)'"
                       ))
                 check("no automatic selection or detail fetch", "case=" not in page.url)
+                if selected == "232":
+                    summary = page.get_by_role("region", name="Choice and update commitments by home", exact=True)
+                    summary.wait_for()
+                    summary_text = summary.inner_text()
+                    check("232 queue summary lists ZF-1 choice, pause and update commitment",
+                          "ZF-1" in summary_text and "Loft insulation" in summary_text
+                          and "SYN-SAFE-232" in summary_text)
+                    check("232 queue summary has no contact links",
+                          summary.locator('a[href^="tel:"], a[href^="mailto:"], button').count() == 0)
                 page.locator('a.item[href*="case=ZF-1"]').click()
                 evidence = page.get_by_role("region", name="Evidence for ZF-1", exact=True)
                 evidence.wait_for()
