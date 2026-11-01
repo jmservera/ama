@@ -18,3 +18,9 @@
 * CredentialStore protocol: `issue(device_id, run_id)` returns an immutable per-issuance reference owned by the run; `references()` replaced by `run_references(run_id)`.
 * Teardown revokes explicit references plus every `run_references(run_id)` entry, so a credential stored before `issue()` raised is revoked on rollback, and a teardown never touches a newer run's credentials.
 * Added 2 regression tests (failure after storage; overlapping provision/teardown); 16 device identity tests OK, ruff clean.
+
+## Review round 3 (Copilot threads on PR 647)
+
+* Provision rejects an already-active run (`RUN_ALREADY_ACTIVE`) before any mutation, so a same-run retry cannot trigger rollback of the live run.
+* The device whose `create()` raised is added to rollback when the registry reports it tagged with this run, covering write-then-raise without touching pre-existing devices.
+* Added 2 regression tests (registry write-then-raise; same-run retry); 18 device identity tests OK, ruff clean.

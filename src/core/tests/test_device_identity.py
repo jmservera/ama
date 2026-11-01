@@ -166,6 +166,30 @@ class DeviceIdentityTests(unittest.TestCase):
             di.provision(di.plan("run-001", "owner-role", sensors()), registry, store)
         self.assertEqual([r for r in store.secrets], [])
 
+    def test_rollback_covers_registry_write_then_raise(self) -> None:
+        registry, store = FakeRegistry(), FakeStore()
+        original = registry.create
+
+        def writes_then_raises(device_id: str, run_id: str) -> None:
+            original(device_id, run_id)
+            if len(registry.list_run(run_id)) == 3:
+                raise RuntimeError(SECRET)
+
+        registry.create = writes_then_raises  # type: ignore[method-assign]
+        with self.assertRaisesRegex(di.DeviceIdentityError, "ROLLED_BACK"):
+            di.provision(di.plan("run-001", "owner-role", sensors()), registry, store)
+        self.assertEqual(registry.devices, {"SYN-OTHER": "other-run"})
+        self.assertEqual([r for r in store.secrets], [])
+
+    def test_same_run_retry_is_rejected_without_mutation(self) -> None:
+        registry, store = FakeRegistry(), FakeStore()
+        manifest = di.plan("run-001", "owner-role", sensors())
+        di.provision(manifest, registry, store)
+        before = (dict(registry.devices), dict(store.secrets))
+        with self.assertRaisesRegex(di.DeviceIdentityError, "RUN_ALREADY_ACTIVE"):
+            di.provision(manifest, registry, store)
+        self.assertEqual((registry.devices, store.secrets), before)
+
     def test_overlapping_teardown_cannot_revoke_newer_run_credential(self) -> None:
         registry, store = FakeRegistry(), FakeStore()
         old = di.provision(di.plan("run-001", "owner-role", sensors()), registry, store)

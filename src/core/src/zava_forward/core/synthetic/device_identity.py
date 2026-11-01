@@ -101,12 +101,17 @@ def plan(run_id: str, credential_owner: str, sensors: Sequence[Mapping[str, obje
 
 def provision(manifest: Manifest, registry: Registry, store: CredentialStore) -> Manifest:
     manifest.validate()
+    if registry.list_run(manifest.run_id) or store.run_references(manifest.run_id):
+        raise DeviceIdentityError("RUN_ALREADY_ACTIVE")
     created: list[DeviceIdentity] = []
+    attempted: DeviceIdentity | None = None
     issued: list[DeviceIdentity] = []
     failed = False
     try:
         for identity in manifest.identities:
+            attempted = identity
             registry.create(identity.device_id, manifest.run_id)
+            attempted = None
             created.append(identity)
             reference = store.issue(identity.device_id, manifest.run_id)
             issued.append(
@@ -116,6 +121,8 @@ def provision(manifest: Manifest, registry: Registry, store: CredentialStore) ->
         failed = True
     if failed:
         # Cleanup runs outside the handler so the original error is never chained.
+        if attempted is not None and _owned_by_run(registry, attempted.device_id, manifest.run_id):
+            created.append(attempted)
         rollback = Manifest(manifest.run_id, manifest.credential_owner, tuple(created))
         teardown(rollback, registry, store, refs=[i.credential_ref for i in issued])
         raise DeviceIdentityError("PROVISION_FAILED_ROLLED_BACK")
@@ -174,6 +181,13 @@ def teardown(
         raise DeviceIdentityError(f"TEARDOWN_INCOMPLETE:{len(remaining)}")
     if leftover:
         raise DeviceIdentityError("TEARDOWN_CREDENTIALS_REMAIN")
+
+
+def _owned_by_run(registry: Registry, device_id: str, run_id: str) -> bool:
+    try:
+        return registry.run_of(device_id) == run_id
+    except Exception:
+        return False
 
 
 def _refs(manifest: Manifest) -> list[str]:
