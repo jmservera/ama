@@ -20,3 +20,11 @@ Add `src/core/src/zava_forward/core/synthetic/run_plan.py` plus `src/core/tests/
 * Units fixed at 1 (B1); more units rejected per #140.
 * Money figures are planning list prices, labelled as such.
 * Critique (single pass, self-run): scope tight; no connection to live publisher; verdict compatible, no conflicts with decisions.
+
+## Correction cycle, PR 707
+
+Plan amended with the two fixes above; no divergence.
+
+## Correction cycle 2026-11-01 (PR 707 review threads)
+
+Two valid Copilot threads on iot_stream.py fixed: eligibility rechecked after admit_send before send_message, and skipped frames no longer advance the replay clock. Regression added; ruff and touched-file mypy clean; tests.test_iot_stream 33 OK.

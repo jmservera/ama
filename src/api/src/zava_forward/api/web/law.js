@@ -69,7 +69,7 @@
     nodes.push(ul);
     show(nodes, d.results.length + " results.");
   }
-  const fail = (e) => { ready(); status.textContent = `${e.message}. Try All sources or search again.`; };
+  const fail = (e) => { ready(); status.textContent = `${e.message}. Owner: application support. Next action: try All sources or search again.`; };
   if (typeof AsyncAction === "undefined" || !AsyncAction
       || !["handler", "run"].every(method => typeof AsyncAction[method] === "function")) {
     const message = "Required law viewer file did not load: /async-action.js. Reload this page to try again. If this continues, contact application support.";
