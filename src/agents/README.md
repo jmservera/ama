@@ -312,6 +312,7 @@ them that start with `cd src/api` run from the api project.
 ## AI evaluation harness
 
 * AI evaluation harness, offline: `python3 -m zava_forward.agents.ai_eval`
+* Human-review effectiveness test (AC-070), offline and scripted: `python3 -m zava_forward.agents.review_effectiveness [--json]`. Seeded wrong, stale, unsupported and incomplete proposals with valid citations, plus correct controls, go through the real review path; a competent panel must detect all defects while default-accept and automation-bias panels must fail the gate. Reports detection, corrections and effort against the workflow-only run of the same case. Scripted panels are not human evidence: authorised reviewers and OQ-017 reviewer authority remain open. Golden file `evals/review_effectiveness_golden.json`
 * Chat multi-turn evaluation, offline and synthetic (grounding, out-of-scope refusal, prompt injection, memory poisoning, non-AI comparison, recorded failures; never enables chat): `python3 -m zava_forward.agents.chat_eval [--json] [--record PATH]`. Golden file `evals/chat_golden.json`; thresholds, accountable reviewer and enablement remain owner decisions
 
   Open known gaps never count as passes. Grounding, out-of-scope, injection,

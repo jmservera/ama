@@ -1,0 +1,64 @@
+import json
+import unittest
+
+from zava_forward.agents import review_effectiveness as re_
+
+
+class ReviewEffectivenessTests(unittest.TestCase):
+    report = re_.run_review_test()
+
+    def test_overall_passes_and_all_checks_hold(self) -> None:
+        self.assertTrue(self.report["passed"], self.report["checks"])
+
+    def test_competent_panel_detects_every_defect_class_and_keeps_controls(self) -> None:
+        p = self.report["panels"]["competent"]
+        self.assertEqual((p["detected"], p["defects"], p["false_rejects"]), (4, 4, 0))
+        self.assertEqual(
+            {r["defect"] for r in p["rows"] if r["defect"]},
+            {"wrong", "stale", "unsupported", "incomplete"},
+        )
+        self.assertTrue(p["gate_passed"])
+
+    def test_default_acceptance_and_citation_validity_cannot_pass(self) -> None:
+        for name in ("default_accept", "automation_bias"):
+            p = self.report["panels"][name]
+            self.assertFalse(p["gate_passed"], name)
+            defects = [r for r in p["rows"] if r["defect"]]
+            self.assertTrue(all(r["citation_valid"] for r in defects))
+            self.assertTrue(all(not r["gate_satisfied"] for r in defects))
+
+    def test_reviewer_source_and_reason_are_retained(self) -> None:
+        for r in self.report["panels"]["competent"]["rows"]:
+            self.assertEqual(r["reviewer"], "owner@eval.example")
+            self.assertTrue(r["source_hashes"] and r["source_case"])
+            if r["defect"]:
+                self.assertIn(re_.SOURCE_TAG, r["reason"])
+
+    def test_effort_is_reported_against_workflow_only_on_same_case(self) -> None:
+        self.assertGreater(self.report["panels"]["competent"]["effort_units"], 0)
+        wf = self.report["workflow_only"]
+        self.assertEqual((wf["mode"], wf["seeded_defects"]), ("workflow-only", 0))
+        self.assertIn("not measured reviewer time", self.report["effort_note"])
+
+    def test_gate_refuses_accepted_defect_and_unresolvable_source(self) -> None:
+        labels = ["Owner: Eval Owner"]
+        defect = dict(defect="wrong")
+        base = dict(review_evidence=dict(reviewer="a@b"), status="Edited")
+        accepted = dict(base, reviewer_action="accept", reviewer_reason="")
+        self.assertFalse(re_.gate_satisfied(defect, accepted, labels)[0])
+        no_source = dict(base, reviewer_action="edit", reviewer_reason="looks off")
+        self.assertFalse(re_.gate_satisfied(defect, no_source, labels)[0])
+        fake = dict(base, reviewer_action="edit", reviewer_reason="x [source: Nope: 1]")
+        self.assertFalse(re_.gate_satisfied(defect, fake, labels)[0])
+        self.assertFalse(re_.gate_satisfied(defect, dict(status="Not reviewed"), labels)[0])
+
+    def test_claims_match_the_proposal_text_and_report_is_json(self) -> None:
+        for prop in json.loads(re_.GOLDEN.read_text())["proposals"]:
+            for c in prop["claims"]:
+                self.assertIn(c["cite"], prop["output"])
+        self.assertEqual(self.report["evidence"]["provider"], "scripted")
+        json.dumps(self.report)
+
+
+if __name__ == "__main__":
+    unittest.main()
