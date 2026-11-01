@@ -8,7 +8,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from zava_forward.core.synthetic.coverage import build_baseline
+from zava_forward.core.synthetic.coverage import build_baseline, check_register_labels
 
 ROOT = Path(__file__).resolve().parents[3]
 INVENTORY = ROOT / "docs/reference/research/retrofit-synthetic-data/needs-inventory.json"
@@ -218,3 +218,43 @@ class GeneratorCoverageTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class RegisterLabelTests(unittest.TestCase):
+    def _csv(self, text: str) -> Path:
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        path = Path(directory.name) / "register.csv"
+        path.write_text(text, encoding="utf-8")
+        return path
+
+    def test_all_rows_labelled(self) -> None:
+        path = self._csv("synthetic_home_id,is_synthetic\nSYN-1,True\nSYN-2,true\n")
+        result = check_register_labels(path)
+        self.assertEqual(
+            result,
+            {"rows": 2, "labelled": 2, "unlabelled": 0, "missing_column": False, "conforms": True},
+        )
+
+    def test_unlabelled_missing_column_and_empty_do_not_conform(self) -> None:
+        mixed = check_register_labels(self._csv("id,is_synthetic\nA,True\nB,False\nC,\n"))
+        self.assertEqual((mixed["labelled"], mixed["unlabelled"], mixed["conforms"]), (1, 2, False))
+        no_column = check_register_labels(self._csv("id\nA\n"))
+        self.assertIs(no_column["missing_column"], True)
+        self.assertIs(no_column["conforms"], False)
+        self.assertIs(check_register_labels(self._csv("id,is_synthetic\n"))["conforms"], False)
+
+    def test_cli_reports_aggregate_only_and_fails_on_nonconforming(self) -> None:
+        command = [sys.executable, "-m", "zava_forward.core.synthetic.coverage", str(INVENTORY)]
+        good = self._csv("id,is_synthetic\nSECRET-A,True\n")
+        ok = subprocess.run([*command, "--register", str(good)], capture_output=True, check=False)
+        self.assertEqual(ok.returncode, 0)
+        self.assertIs(json.loads(ok.stdout)["register_label_conformance"]["conforms"], True)
+        self.assertNotIn(b"SECRET-A", ok.stdout)
+        bad = self._csv("id,is_synthetic\nSECRET-B,False\n")
+        failed = subprocess.run(
+            [*command, "--register", str(bad)], capture_output=True, check=False
+        )
+        self.assertEqual(failed.returncode, 1)
+        self.assertIn("register-is_synthetic", json.loads(failed.stdout)["open_gaps"])
+        self.assertNotIn(b"SECRET-B", failed.stdout)
