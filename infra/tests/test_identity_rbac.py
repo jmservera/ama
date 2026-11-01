@@ -215,6 +215,10 @@ class EntraRegistrationTests(unittest.TestCase):
         self.assertTrue(ENTRA["appRoleAssignmentRequired"])
         self.assertNotIn("Contractor", {r["key"] for r in ENTRA["capabilityRoles"]})
         self.assertTrue(design["decisionOwner"])
+        self.assertEqual(
+            design["memberOnlyInitializers"],
+            ["setup-entra.py", "staff_roster.py", "grant-application-admin.py"],
+        )
         for name in design["memberOnlyInitializers"]:
             text = (ROOT / "scripts" / name).read_text(encoding="utf-8")
             self.assertIn('"Member"', text, name)

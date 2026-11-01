@@ -8,3 +8,5 @@ ms.date: 2026-11-01
 * Finding (routed, not fixed here): the test asserts the `"Member"` literal in the scripts, a coarse check; behavioural initializer tests already cover guest rejection.
 * Unmet: owner/tenant-admin confirmation of B2B guests (#116 OD-14/OD-19). PR uses `Refs #141`.
 * Follow-ups: owner confirmation; live role assignment comparison; drop `db_ddladmin`; chat-store role row.
+
+* Copilot review follow-up: initializer inventory pinned in `test_contractor_guest_design_is_enforced_by_code`; no new findings.
