@@ -97,7 +97,7 @@ param zoneRedundant bool = false
 param sqlTier string = 'serverless'
 @description('SQL vCores: serverless maximum or provisioned count.')
 param sqlVCores int = 2
-@description('Serverless only. Auto-pause delay in minutes; -1 disables.')
+@description('Serverless only. Auto-pause delay in minutes: -1 disables, otherwise 15 to 10080.')
 param sqlAutoPauseDelayMinutes int = 60
 @description('SQL backup storage redundancy. Empty derives Zone when zoneRedundant, otherwise Local.')
 @allowed(['', 'Local', 'Zone', 'Geo', 'GeoZone'])
@@ -196,6 +196,7 @@ module guard 'modules/guard.bicep' = {
     demoRequiresBrowserAuthentication: !demoDirectIngress || !deployApplications || (!empty(entraClientId) && !entraBearerOnly) ? 'ok' : ''
     appCredentialRequiresDirectDemo: entraCredentialStore != 'app' || (demoDirectIngress && !entraBearerOnly && !empty(entraClientId)) ? 'ok' : ''
     appCredentialBlocksApplicationDeployment: entraCredentialStore != 'app' || !deployApplications ? 'ok' : ''
+    serverlessAutoPauseDelayMustBeSupported: sqlTier != 'serverless' || sqlAutoPauseDelayMinutes == -1 || (sqlAutoPauseDelayMinutes >= 15 && sqlAutoPauseDelayMinutes <= 10080) ? 'ok' : ''
   }
 }
 

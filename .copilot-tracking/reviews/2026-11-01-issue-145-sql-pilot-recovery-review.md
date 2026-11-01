@@ -14,3 +14,5 @@ Findings: none open in the changed code. Routed follow-ups: authorized disposabl
 Decision: PR uses `Refs #145` only.
 
 Post-review addendum: three valid Copilot findings (weak compile test, `bicep` vs `az bicep` skip, invalid ledger verification input) fixed; the restore-ledger verification remains Not performed and is now explicitly blocked on native digest capture. Outcome unchanged.
+
+Post-review addendum 2: one further valid Copilot finding (auto-pause range not validated for serverless) fixed with a pre-deployment guard and boundary tests. Outcome unchanged.
