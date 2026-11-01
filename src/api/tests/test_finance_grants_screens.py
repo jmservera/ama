@@ -238,6 +238,17 @@ class FinanceGrantsScreens(unittest.TestCase):
         self.assertNotIn("None recorded", funding)
         self.assertNotIn("No reviewed export exists", funding)
 
+    def test_nonconforming_review_and_invalid_quantity_stay_unknown(self) -> None:
+        funding = json.dumps(run(review={})["finance-funding"]["tree"])
+        self.assertIn("Unknown. The field review could not be read.", funding)
+        self.assertNotIn("No reviewed export exists", funding)
+        case = json.loads(json.dumps(CASE))
+        for line in case["finance"]["invoices"][0]["lines"]:
+            line["quantity"] = None
+        text = json.dumps(run(case)["finance-invoices"]["tree"])
+        self.assertIn("Unknown. Quantity not supplied or invalid.", text)
+        self.assertNotIn("Within authorised", text)
+
     def test_missing_records_are_unknown_not_empty_success(self) -> None:
         bare: dict[str, object] = {"id": "C-2"}
         out = run(bare, review=None)

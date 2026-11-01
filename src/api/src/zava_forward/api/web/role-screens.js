@@ -184,10 +184,10 @@ registerRoleScreen({
 });
 
 const financeRoles = ["Grants and Evidence Officer", ...screenManagers];
-const financeMoney = (value) => typeof value === "number" && Number.isFinite(value)
-  ? new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(value) : "Unknown";
+const financeCurrency = new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" });
+const financeMoney = (value) => typeof value === "number" && Number.isFinite(value) ? financeCurrency.format(value) : "Unknown";
 const financeQty = (value) => typeof value === "number" && Number.isFinite(value) ? String(value) : "Unknown";
-const financeChecked = (inv) => inv.status && inv.status !== "Received" && inv.status !== "Not checked";
+const financeChecked = (inv) => Boolean(inv.status) && inv.status !== "Received" && inv.status !== "Not checked";
 function financeLineRows(f, inv) {
   const com = (f.commitments || []).find((m) => m.id === inv.commitment);
   const budget = f.budget;
@@ -198,6 +198,7 @@ function financeLineRows(f, inv) {
     const scope = !com ? "Unknown. No matched commitment."
       : String(com.measure).trim().toLowerCase() === String(ln.measure).trim().toLowerCase() ? "In scope" : `Not in scope (authorised: ${com.measure})`;
     const quantity = !com ? "Unknown. No matched commitment."
+      : !Number.isFinite(ln.quantity) || !Number.isFinite(com.quantity) ? "Unknown. Quantity not supplied or invalid."
       : ln.quantity > com.quantity ? `Above authorised (${financeQty(ln.quantity)} of ${financeQty(com.quantity)})`
         : `Within authorised (${financeQty(ln.quantity)} of ${financeQty(com.quantity)})`;
     return [`Line ${i + 1}: ${screenValue(ln.measure)}`, `Quantity ${financeQty(ln.quantity)}, line total ${financeMoney(ln.amount)}`,
@@ -292,7 +293,7 @@ registerRoleScreen({
     const grants = c.grants || [];
     const drafts = Array.isArray(extra?.review?.drafts) ? extra.review.drafts : null;
     const holds = Array.isArray(extra?.review?.decision_holds) ? extra.review.decision_holds : null;
-    const readable = Boolean(extra?.review);
+    const readable = drafts !== null && holds !== null;
     return h("div", {},
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only reader view for the capital and grant preparer. It is a reviewed export or readiness view only. No submission, award, eligibility decision or payment is made or inferred. Source: desk research, not observed behaviour."),
@@ -303,8 +304,8 @@ registerRoleScreen({
       screenPanel("Grant stages",
         grants.length ? screenTable("Grant stages and approved evidence", ["Grant", "Scheme", "Stage now", "Waiting for approval", "Approved evidence"],
           grants.map((g) => [g.id, g.scheme, g.state,
-            g.pending ? `${g.pending.to}, proposed by ${screenValue(g.pending.name)}. Evidence: ${screenValue(g.pending.source)}` : "Nothing waiting",
-            (g.history || []).length ? g.history.map((x) => `${x.state}: ${screenValue(x.source)} (approved by ${screenValue(x.approved_by)}, ${screenValue(x.source_status)})`).join("; ") : "Unknown. No approved stage."]))
+            g.pending ? `${screenValue(g.pending.to)}, proposed by ${screenValue(g.pending.name)}. Evidence: ${screenValue(g.pending.source)}` : "Nothing waiting",
+            (g.history || []).length ? g.history.map((x) => `${screenValue(x.state)}: ${screenValue(x.source)} (approved by ${screenValue(x.approved_by)}, ${screenValue(x.source_status)})`).join("; ") : "Unknown. No approved stage."]))
           : h("p", { class: "empty" }, "No grant recorded. This does not establish that no funding is available.")),
       drafts ? (drafts.length ? drafts.map(fundingDraftPanel)
         : screenPanel("Constructed field draft", h("p", { class: "empty" }, "No field draft recorded for this home. Template, fields and evidence are Unknown.")))

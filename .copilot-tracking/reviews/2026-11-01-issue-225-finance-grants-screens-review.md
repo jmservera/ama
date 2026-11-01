@@ -15,6 +15,10 @@ Execution: once, post-implementation, self-review of the diff against the accept
 
 All four threads valid and fixed (line total wording, unverified milestone reference, unchecked queue exceptions Unknown, unreadable form review keeps readiness and holds Unknown). Original Review outcome preserved; focused tests and ruff pass.
 
+## Copilot review round 3
+
+All seven threads valid and fixed (formatter hoist, boolean `financeChecked`, invalid quantity Unknown, readiness consistent with drafts and holds, `screenValue` for grant stage state). Original Review outcome preserved; focused tests and ruff pass.
+
 ## Routed follow-ups
 
 1. Browser keyboard and axe check for both screens (criterion 4).
