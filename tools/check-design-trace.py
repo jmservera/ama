@@ -18,9 +18,14 @@ from pathlib import Path
 REGISTER = "docs/reference/research/ux/zava-forward-prototype-profile-review.md"
 HEADING = "### Known screen features and exact trace or gap"
 COLUMNS = 5
-ISSUE_RE = re.compile(r"^\[#(\d+)\]\(https://github\.com/[^/]+/[^/]+/issues/\d+")
+ISSUE_RE = re.compile(
+    r"^\[#(\d+)\]\(https://github\.com/[^/]+/[^/]+/issues/(\d+)(?:#[^)\s]*)?\)"
+)
+VERSION_RE = re.compile(r"\bv\d+(?:\.\d+)*\b", re.IGNORECASE)
+SEPARATOR_RE = re.compile(r"^:?-+:?$")
 REF_USE_RE = re.compile(r"\[[^\]]+\]\[([^\]]+)\]")
-INLINE_RE = re.compile(r"\]\((\.[^)#\s]*)(?:#[^)\s]*)?\)")
+INLINE_RE = re.compile(r"\]\(\s*([^)#\s]*)(?:#[^)\s]*)?\)")
+EXTERNAL_PREFIXES = ("http://", "https://", "mailto:", "//")
 REF_DEF_RE = re.compile(r"^\[([^\]]+)\]:\s*(\S+)", re.MULTILINE)
 NOT_SUPPLIED = "NOT SUPPLIED"
 
@@ -37,7 +42,22 @@ def register_rows(text: str) -> list[str]:
     nxt = re.search(r"^#{2,3} ", section, re.MULTILINE)
     if nxt:
         section = section[: nxt.start()]
-    return [ln for ln in section.splitlines() if ln.startswith("| [#")]
+    lines = [ln.strip() for ln in section.splitlines() if ln.strip().startswith("|")]
+    if len(lines) >= 2 and all(SEPARATOR_RE.match(c) for c in split_row(lines[1]) if c):
+        lines = lines[2:]
+    return [ln for ln in lines if not _is_separator(ln)]
+
+
+def _is_separator(line: str) -> bool:
+    cells = [c for c in split_row(line) if c]
+    return bool(cells) and all(SEPARATOR_RE.match(c) for c in cells)
+
+
+def design_supplied(design: str, refs: dict[str, str]) -> bool:
+    if NOT_SUPPLIED in design:
+        return False
+    targets, missing = link_targets(design, refs)
+    return bool(targets) and not missing and bool(VERSION_RE.search(design))
 
 
 def link_targets(cell: str, refs: dict[str, str]) -> tuple[list[str], list[str]]:
@@ -61,6 +81,9 @@ def check(text: str, base: Path) -> dict:
         if len(cells) != COLUMNS or not match:
             errors.append(f"malformed row: {line[:60]}")
             continue
+        if match.group(1) != match.group(2):
+            errors.append(f"#{match.group(1)}: link points to issue {match.group(2)}")
+            continue
         issue = int(match.group(1))
         journey, flow, design = cells[1], cells[2], cells[3]
         targets, missing = link_targets(" ".join(cells[1:4]), refs)
@@ -68,7 +91,11 @@ def check(text: str, base: Path) -> dict:
             errors.append(f"#{issue}: undefined link reference [{name}]")
         for target in targets:
             path = target.split("#", 1)[0]
-            if path and not path.startswith("http") and not (base / path).exists():
+            if (
+                path
+                and not path.startswith(EXTERNAL_PREFIXES)
+                and not (base / path).exists()
+            ):
                 errors.append(f"#{issue}: missing link target {path}")
         if not (
             NOT_SUPPLIED in journey or REF_USE_RE.search(journey) or "](" in journey
@@ -78,7 +105,11 @@ def check(text: str, base: Path) -> dict:
             errors.append(f"#{issue}: empty task flow cell")
         if not design:
             errors.append(f"#{issue}: empty design cell")
-        rows.append({"issue": issue, "design_supplied": NOT_SUPPLIED not in design})
+        elif NOT_SUPPLIED not in design and not design_supplied(design, refs):
+            errors.append(
+                f"#{issue}: design needs a versioned artefact link or NOT SUPPLIED"
+            )
+        rows.append({"issue": issue, "design_supplied": design_supplied(design, refs)})
     issues = [r["issue"] for r in rows]
     if len(set(issues)) != len(issues):
         errors.append("duplicate issue rows")
