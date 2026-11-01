@@ -9322,3 +9322,8 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   marked as registered on main; three remain in unmerged pull requests. Updated
   the index row and made the checker apply each status to its own screen group.
 * Findings stay hypotheses until #155. No accessibility acceptance is claimed.
+
+## 2026-11-01 coverage baseline register check indexed
+
+* Updated the synthetic MVP baseline index row to mention the opt-in
+  `--register` check and its SN-01-only evidence boundary.

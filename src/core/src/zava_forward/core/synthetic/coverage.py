@@ -148,13 +148,17 @@ def main(argv: list[str] | None = None) -> int:
     try:
         value: object = json.loads(args.inventory.read_text(encoding="utf-8"))
         report = build_baseline(value)
-        if args.register is not None:
+    except (OSError, UnicodeError, ValueError) as error:
+        parser.exit(1, f"coverage: {args.inventory}: {error}\n")
+    if args.register is not None:
+        try:
             register = check_register_labels(args.register)
+        except (OSError, UnicodeError, ValueError) as error:
+            parser.exit(1, f"coverage: {args.register}: {error}\n")
+        else:
             report["register_label_conformance"] = register
             if not register["conforms"]:
                 report["open_gaps"] = [*report["open_gaps"], "register-is_synthetic"]  # type: ignore[misc]
-    except (OSError, UnicodeError, ValueError) as error:
-        parser.exit(1, f"coverage: {args.inventory}: {error}\n")
     sys.stdout.write(json.dumps(report, indent=2, sort_keys=True) + "\n")
     return 1 if report["open_gaps"] else 0
 

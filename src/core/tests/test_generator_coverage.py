@@ -274,6 +274,17 @@ class RegisterLabelTests(unittest.TestCase):
         self.assertIn("register-is_synthetic", json.loads(failed.stdout)["open_gaps"])
         self.assertNotIn(b"SECRET-B", failed.stdout)
 
+    def test_cli_attributes_register_errors_to_the_register(self) -> None:
+        command = [sys.executable, "-m", "zava_forward.core.synthetic.coverage", str(INVENTORY)]
+        broken = self._csv("id,is_synthetic\nA,True,extra\n")
+        result = subprocess.run(
+            [*command, "--register", str(broken)], capture_output=True, check=False
+        )
+        self.assertEqual(result.returncode, 1)
+        self.assertEqual(result.stdout, b"")
+        self.assertIn(str(broken).encode(), result.stderr)
+        self.assertNotIn(str(INVENTORY).encode(), result.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()
