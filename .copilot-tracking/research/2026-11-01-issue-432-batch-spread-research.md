@@ -5,3 +5,7 @@
 * Remaining engineering-only gap: report gives min/max/mean tokens per proposal but no spread, and no recorded spend-authority field for a held-out batch (criterion 8).
 * Still blocked (not attempted): live Azure billing, OD-51 owner decisions, real spend, pitch regeneration (B25 already states the gap).
 * Research disposition: executed. Planning Readiness: Ready.
+
+## Correction cycle 1 (PR 709 review)
+
+* Two Copilot threads: null/empty authority or evidence reference, and allowance checked against measured totals instead of all roots. Both valid.

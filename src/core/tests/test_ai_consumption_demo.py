@@ -56,8 +56,14 @@ class DemoTests(unittest.TestCase):
             dict(good, held_out=False),
             dict(good, max_proposals=True),
             {"authority": "a"},
+            dict(good, authority=None),
+            dict(good, evidence=None),
+            dict(good, authority=""),
+            dict(good, evidence=""),
         ):
             self.assertEqual(batch_spread([100, 200, 300], bad)["median"], UNKNOWN)
+        self.assertEqual(batch_spread([100], dict(good, max_proposals=1), 2)["median"], UNKNOWN)
+        self.assertEqual(batch_spread([100], dict(good, max_proposals=2), 2)["median"], "100")
 
     def test_report_label_stays_unauthorised_without_batch(self) -> None:
         label = self.out["report_without_billing"]["tokens_per_proposal"]["evidence_label"]

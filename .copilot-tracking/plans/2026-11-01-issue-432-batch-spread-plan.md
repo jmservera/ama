@@ -5,3 +5,7 @@
 3. Validate: core consumption tests, ruff check, ruff format --check, mypy.
 4. Critique (single pass): authority is recorded not verified; label says so; no spend assumed. Accepted.
 5. Commit, push, PR with Refs #432.
+
+## Correction cycle 1
+
+* `batch_spread` takes the full root count and validates both references as bounded nonempty strings, returning Unknown otherwise; regression cases added.

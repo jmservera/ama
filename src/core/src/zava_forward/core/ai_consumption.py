@@ -159,7 +159,9 @@ def call_context(context: CallContext) -> Iterator[None]:
         CURRENT.reset(token)
 
 
-def batch_spread(totals: list[int], batch: Mapping[str, Any] | None) -> dict[str, Any]:
+def batch_spread(
+    totals: list[int], batch: Mapping[str, Any] | None, roots: int | None = None
+) -> dict[str, Any]:
     """Spread of tokens per proposal, only under a recorded finite spend authority."""
     label = "recorded usage; not an authorised held-out batch"
     unknown: dict[str, Any] = dict(
@@ -174,7 +176,11 @@ def batch_spread(totals: list[int], batch: Mapping[str, Any] | None) -> dict[str
         or not isinstance(maximum, int)
         or isinstance(maximum, bool)
         or not 0 < maximum <= MAX_EVENTS
-        or len(totals) > maximum
+        or max(len(totals), roots or 0) > maximum
+        or not all(
+            isinstance(batch[k], str) and 1 <= len(batch[k]) <= 1000000
+            for k in ("authority", "evidence")
+        )
     ):
         return unknown
     mean = Decimal(sum(totals)) / len(totals)
@@ -1059,7 +1065,7 @@ class Consumption:
             attempts = [r for r in calls if r["root"] == root]
             if all(r["id"] in completions and completions[r["id"]]["tokens"] for r in attempts):
                 totals.append(sum(completions[r["id"]]["tokens"]["total_tokens"] for r in attempts))
-        spread = batch_spread(totals, batch)
+        spread = batch_spread(totals, batch, len(roots))
         alerts = [r for r in records if r["kind"] == "alert" and begin <= r["at"] < finish]
         return dict(
             schema=SCHEMA,
