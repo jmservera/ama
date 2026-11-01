@@ -165,7 +165,7 @@ def github_metadata() -> dict:
 def main() -> int:
     """Refuse unpinned tools and overwrite of retained evidence."""
     args = create_parser().parse_args()
-    if args.out.exists():
+    if args.out.exists() or args.out.is_symlink():
         raise FileExistsError(f"Evidence already exists: {args.out}; choose a fresh path")
     for package, expected in (("lizard", "1.24.3"), ("ruff", "0.17.3")):
         actual = importlib.metadata.version(package)
@@ -191,7 +191,9 @@ def main() -> int:
         "limitation": "Static metrics and repository records do not establish historical deployed usability.",
     }
     args.out.parent.mkdir(parents=True, exist_ok=True)
-    args.out.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    payload = json.dumps(report, indent=2) + "\n"
+    with args.out.open("x", encoding="utf-8") as stream:
+        stream.write(payload)
     print(f"Recorded {len(report['structural_snapshots'])} static snapshots in {args.out}")
     return 0
 

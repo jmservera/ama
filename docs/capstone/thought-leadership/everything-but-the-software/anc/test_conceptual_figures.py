@@ -19,7 +19,6 @@ STEMS = (
     "fig-experiment-measures",
     "fig-refactoring-economics",
 )
-MANUSCRIPT_STEMS = ("fig-state-inheritance", "fig-pilot-design", "fig-contract-states")
 
 
 class ConceptualFigureTests(unittest.TestCase):
@@ -87,16 +86,13 @@ class ConceptualFigureTests(unittest.TestCase):
             self.check_exports(output)
             self.check_exports(PACKAGE)
 
-    def test_given_manuscript_when_checked_then_concepts_and_deferred_plots_are_explicit(self) -> None:
-        from check_paper import expand_inputs
-
-        source = expand_inputs((PACKAGE / "main.tex").read_text(encoding="utf-8"))
+    def check_manuscript(self, source: str) -> None:
         narrative = source.split(r"\begin{thebibliography}", 1)[0]
         narrative = re.sub(r"(?m)^%.*$", "", narrative)
         narrative = narrative.replace("[Our study's limitations]", "")
 
         self.assertNotRegex(narrative, r"\b(?:I|my|My|mine|myself|we|We|our|Our|me)\b")
-        for stem in MANUSCRIPT_STEMS:
+        for stem in STEMS:
             self.assertIn(f"{{{stem}.png}}", narrative)
         for identifier in ("PF1", "PF2", "PF3"):
             self.assertIn(f"TODO(author): {identifier}", source)
@@ -104,6 +100,25 @@ class ConceptualFigureTests(unittest.TestCase):
         self.assertNotIn(r"\resultstrue", narrative)
         self.assertIn("ten ordered features", narrative)
         self.assertNotIn("Regional access scope change", narrative)
+
+    def test_given_manuscript_when_checked_then_concepts_and_deferred_plots_are_explicit(self) -> None:
+        from check_paper import expand_inputs
+
+        source = expand_inputs((PACKAGE / "main.tex").read_text(encoding="utf-8"))
+
+        self.check_manuscript(source)
+
+    def test_given_missing_delivered_figure_when_checked_then_integration_fails(self) -> None:
+        from check_paper import expand_inputs
+
+        source = expand_inputs((PACKAGE / "main.tex").read_text(encoding="utf-8"))
+        for stem in STEMS:
+            with self.subTest(stem=stem):
+                pattern = r"\\includegraphics(?:\[[^]]*\])?\{" + re.escape(stem) + r"\.png\}"
+                without_figure, count = re.subn(pattern, "", source)
+                self.assertEqual(count, 1)
+                with self.assertRaises(AssertionError):
+                    self.check_manuscript(without_figure)
 
 
 if __name__ == "__main__":

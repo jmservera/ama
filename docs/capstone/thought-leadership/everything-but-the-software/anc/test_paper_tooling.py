@@ -146,6 +146,55 @@ class PaperCheckerTests(unittest.TestCase):
         self.assertLess(updated.index(r"\bibitem{openai2026harness}"),
                         updated.index(r"\bibitem{anthropic2025harness}"))
 
+    def test_given_disabled_slices_when_checked_then_contents_are_ignored_and_comments_preserved(self) -> None:
+        comments = (
+            "% \\input{anc/absent.tex}\n"
+            "% TODO(author): keep the marker \\input{anc/disabled.tex}\n"
+        )
+        (self.package / "anc/disabled.tex").write_text(
+            r"\cite{missing}\label{known}\ref{missing}", encoding="utf-8")
+        (self.package / "main.tex").write_text(PAPER + comments, encoding="utf-8")
+
+        for arguments in ((), ("--normalise-bibliography",)):
+            with self.subTest(arguments=arguments):
+                result = self.check(*arguments)
+
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertIn("BIBLIOGRAPHY cited=1 bibitems=1 bibtex=1", result.stdout)
+                self.assertIn("TODO(author): keep the marker", result.stdout)
+                self.assertTrue((self.package / "main.tex").read_text().endswith(comments))
+
+    def test_given_inline_comment_when_inputs_expand_then_only_active_inputs_are_read(self) -> None:
+        from check_paper import expand_inputs, strip_comments
+
+        (self.package / "anc/active.tex").write_text("Active content\n", encoding="utf-8")
+        source = r"Escaped \% \input{anc/active.tex} % TODO(author): \input{anc/absent.tex}" + "\r\n"
+
+        expanded = expand_inputs(source, self.package)
+
+        self.assertIn(r"Escaped \% Active content", expanded)
+        self.assertTrue(expanded.endswith(
+            "% TODO(author): \\input{anc/absent.tex}\r\n"))
+        self.assertNotIn("absent.tex", strip_comments(expanded))
+
+    def test_given_percent_escapes_when_inputs_expand_then_backslash_parity_is_preserved(self) -> None:
+        from check_paper import expand_inputs, strip_comments
+
+        (self.package / "anc/active.tex").write_text("Active content", encoding="utf-8")
+        for prefix, active in ((r"\%", True), (r"\\%", False),
+                               (r"\\\%", True), (r"\\\\%", False)):
+            with self.subTest(prefix=prefix):
+                source = prefix + r" \input{anc/active.tex}" + "\n"
+
+                expanded = expand_inputs(source, self.package)
+                clean = strip_comments(expanded)
+
+                self.assertEqual("Active content" in expanded, active)
+                self.assertTrue(clean.startswith(prefix if active else prefix[:-1]))
+                if not active:
+                    self.assertEqual(expanded, source)
+                    self.assertNotIn(r"\input", clean)
+
 class TcrTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temporary = tempfile.TemporaryDirectory(prefix="tcr-tooling-", dir="/tmp")

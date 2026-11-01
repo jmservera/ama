@@ -41,6 +41,11 @@ Reflexion and CRITIC but is not their coauthor; MedAgentBench is his
 verified coauthored interactive-evaluation paper. Source-limited integration
 changes neither the experiment nor registration. The owner confirmed focused
 documentation checks and topic-only publication in PR #692.
+The [PR review corrections](../capstone/thought-leadership/everything-but-the-software/README.md#pr-review-corrections)
+cover all five inline findings: complete figure integration, exclusive
+evidence writes, comment-aware TeX input handling and two broken protocol
+sentences. Twenty-seven focused authoring tests and the affected builds pass;
+the experiment, title and approval boundaries are unchanged.
 
 For the [31 October live app observations](../architecture/cutover-evidence-pack.md#live-app-verification-2026-10-31-refs-523-524-570-432),
 resident sign-in and chat open/close, resize, dock/undock and narrow/wide

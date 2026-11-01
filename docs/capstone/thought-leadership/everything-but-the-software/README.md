@@ -106,6 +106,30 @@ tests pass with declared dependencies. A final whole-harness pass is not
 claimed. The [experiment candidate PR](https://github.com/jmservera/ama-thought-mve/pull/6)
 is a draft and does not authorize collection, freeze or OSF actions.
 
+### PR Review Corrections
+
+All five 1 November inline review findings are addressed:
+
+* Manuscript integration checks every delivered conceptual figure; removing
+  any one of the five includes now fails its regression.
+* Evidence reports use exclusive final-file creation. Existing outputs and
+  symlinks, including a report or link created during measurement, are refused
+  without overwriting retained evidence or following the link.
+* TeX input expansion ignores comments while preserving their text and TODO
+  markers. Missing or misleading disabled slices cannot affect structural
+  checks or bibliography normalization; escaped percent signs remain literal.
+* The replication section states the complete pooled-SD instruction once,
+  separately from the provider-drift qualification.
+* The collection section separates researcher-workspace controls from the
+  complete owner repository-privacy instruction.
+
+VS Code had no registered test controller, so verification used the existing
+stdlib runner: 27 focused authoring tests pass. Source/bibliography checks and
+changed-Python syntax lint pass. The 35-page article and 22-page supplement
+rebuild with the selected title, without undefined references or overfull
+text. No full unchanged-application gate, new experiment, registration or
+scientific acceptance is claimed.
+
 | Recommendation | Applied change and evidence limit |
 | --- | --- |
 | Protect paper/code/oracles/CR1 from experiment agents | Private-repository and fresh-operator readbacks are required before collection; candidate tools remain isolated/no-network, with the host provider connection distinguished. Interim public development exposure is explicitly recorded. |

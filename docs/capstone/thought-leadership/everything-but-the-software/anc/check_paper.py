@@ -25,6 +25,7 @@ BIBLIOGRAPHY_SORT_KEYS = {
     "sigsoft2021standards": "ralph2021standards",
     "sec2013knight": "us-securities2013knight",
 }
+TEX_COMMENT = re.compile(r"(?m)(?<!\\)((?:\\\\)*)%[^\r\n]*")
 
 
 def create_parser() -> argparse.ArgumentParser:
@@ -36,7 +37,7 @@ def create_parser() -> argparse.ArgumentParser:
 
 
 def strip_comments(text: str) -> str:
-    return re.sub(r"(?m)(?<!\\)%.*$", "", text)
+    return TEX_COMMENT.sub(r"\1", text)
 
 
 def bibliography_sort_key(key: str) -> str:
@@ -54,7 +55,16 @@ def expand_inputs(text: str, package: Path = PACKAGE, seen: tuple[Path, ...] = (
             raise ValueError(f"Cyclic TeX input: {match.group(1)}")
         return expand_inputs(path.read_text(encoding="utf-8"), package, (*seen, path))
 
-    return re.sub(r"\\input\{([^{}]+)\}", include, text)
+    lines = []
+    for line in text.splitlines(keepends=True):
+        comment = TEX_COMMENT.search(line)
+        if comment:
+            start = comment.start() + len(comment.group(1))
+            code, suffix = line[:start], line[start:]
+        else:
+            code, suffix = line, ""
+        lines.append(re.sub(r"\\input\{([^{}]+)\}", include, code) + suffix)
+    return "".join(lines)
 
 
 def body_words(text: str) -> int:

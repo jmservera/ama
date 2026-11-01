@@ -21,6 +21,43 @@
     "new_research_scope": "Owner explicitly authorized context-appropriate incorporation of the two named video caption checks and verified reflection/Ng research in this same branch/PR."
   },
   "execution_evidence": {
+    "PR692_inline_review_corrections": {
+      "original_review_head": "08fda81a1ae42af1148814dfeb02c94c384725b1",
+      "findings": [
+        {
+          "thread": "PRRT_kwDOUU8JX86yYmsK",
+          "finding": "Integration test omitted two delivered figures.",
+          "remedy": "Check complete STEMS and demonstrate failure after removing each of the five includes."
+        },
+        {
+          "thread": "PRRT_kwDOUU8JX86ycZII",
+          "finding": "A competing final report or newly created symlink could overwrite retained evidence.",
+          "remedy": "Exclusive final open plus early symlink rejection; competing-file, during-measurement symlink and existing dangling-link regressions."
+        },
+        {
+          "thread": "PRRT_kwDOUU8JX86ycZIR",
+          "finding": "Commented-out TeX inputs were expanded before comments were stripped.",
+          "remedy": "Comment-aware input expansion preserves comments/TODOs and percent escape parity; disabled missing/present slices cannot affect checking or normalization."
+        },
+        {
+          "thread": "PRRT_kwDOUU8JX86yciNe",
+          "finding": "Drift paragraph interrupted an unfinished duplicate SD-reporting sentence.",
+          "remedy": "Remove the stranded fragment and retain one complete SD instruction."
+        },
+        {
+          "thread": "PRRT_kwDOUU8JX86yciNw",
+          "finding": "Workspace instruction interrupted a duplicate repository-privacy sentence.",
+          "remedy": "Separate workspace controls and the complete owner privacy instruction."
+        }
+      ],
+      "focused_authoring_tests": {"passed": 27, "skipped": 0},
+      "VS_Code_test_discovery": "Unavailable; zero registered controllers. Existing stdlib runner used.",
+      "source_bibliography_and_changed_Python_checks": "Passed",
+      "article_pages": 35,
+      "supplement_pages": 22,
+      "title_changed": false,
+      "experiment_or_registration_changed": false
+    },
     "case_static_metadata": "revision-metrics-2026-11-01.json",
     "source_access_and_limits": "citation-access-2026-11-01.json",
     "new_reflection_memory_synthesis": "supplementary-context.md",

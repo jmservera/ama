@@ -9474,3 +9474,20 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Applied D4 and D5 policy text in `.github/copilot-instructions.md` and the
   backlog delivery coordinator agent. Workflow changes for D1 and D2 are in a
   separate PR. No accessibility acceptance is claimed.
+
+## [2026-11-01] query | Paper PR review corrections
+
+* Addressed all five inline findings in PR #692: complete conceptual-figure
+  integration checks, exclusive evidence output creation, comment-aware TeX
+  input expansion and two interrupted protocol sentences. Regression cases
+  cover removed figures, disabled slices, escaped percent signs, competing
+  report writes and symlinks.
+* Twenty-seven focused authoring tests, source/bibliography checks and
+  changed-Python syntax checks pass. VS Code had no test controller, so the
+  existing stdlib runner was used. The selected-title article and supplement
+  rebuild without undefined references or overfull text; original scientific
+  evidence and approval limits are unchanged.
+* The owner next requested a single delivered document with a Supplement
+  section in the main paper. That consolidation follows these fixes and
+  preserves the original standalone evidence; no experiment or registration
+  change is authorized.
