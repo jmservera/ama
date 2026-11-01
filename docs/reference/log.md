@@ -9015,3 +9015,25 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * CI figures come from a one-day sample of 300 runs; the RPI artifact share
   of PR size and the 19-24 October slowdown cause are unmeasured. No
   workflow, setting, gate or source change was made.
+
+## [2026-11-01] observation | Regulatory evaluation gates re-verified, Refs #216
+
+* Re-ran the [#216 gates](../../src/agents/README.md#re-verification-2026-11-01) at
+  `80673b0d`: 32 tests passed and the regenerated 60,000-home report matched the
+  committed report exactly. Lint and type checks were clean for `src/agents`.
+* No new gate code, threshold, model call or spend authority was added. AI cost
+  per accepted check stays Unknown with its missing inputs named; cards alone
+  remain the recommendation.
+* Unmet: owner agreement, independently graded or held-out sets, staff paired
+  trial, alert precision and acknowledgement time, continuing-stock baseline.
+## [2026-11-01] observation | Intermittent workspace script load, Refs #524
+
+* Recorded a working hypothesis for the intermittent `/vendor/leaflet.js` failure:
+  replica cold start (default `apiMinReplicas` 0; live probe on
+  2026-11-01 timed out at 30 s; an initial `/healthz` took 24.016 s on
+  2026-10-31, a health-response latency, not a measured cold start). Local asset serving is
+  byte-complete with ETag and cache headers. Unconfirmed for the 2026-10-28
+  incident; no platform logs retrieved.
+* The retry was delivered by #527; release-URL reuse and the expanded tests came from #594 and #538. The authenticated live check
+  stays pending deploy of #616 and #617. Retry timeout (5 s) is shorter than
+  the observed latencies, logged as a follow-up. No source change.

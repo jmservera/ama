@@ -251,6 +251,24 @@ the existing explicitly enabled, synthetic-development-only lookup is unchanged.
 No report grants an operational release or activates a rule. Issue checkboxes
 remain untouched for the coordinator's merge-time evidence review.
 
+### Re-verification (2026-11-01)
+
+At `80673b0d` the gate, answer and registry tests passed (32 tests) and the
+regenerated 60,000-home report was byte-identical to the committed report. Ruff
+check, ruff format --check and mypy were clean for this project. Reproduce with:
+
+```bash
+PYTHONPATH="$PWD/src/core/tests:$PWD/src/agents/tests" \
+  python3 src/agents/evals/run_regulatory_gates.py --record /tmp/report.json
+diff /tmp/report.json src/agents/evals/regulatory_gates_results.json
+```
+
+The report keeps AI cost per accepted check Unknown with four missing inputs
+named, and zero model-call, token and budget limits with no spend authority.
+Still unmet: owner agreement and independently graded or held-out sets, a staff
+paired trial, alert precision and acknowledgement time, and a continuing-stock
+baseline. Cards alone remain the recommendation.
+
 ## Offline cited-answer evaluation (#214)
 
 `regulatory_chat` renders exact server-selected source excerpts and structured

@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-01T01:51:03+00:00",
-  "commit": "df12d43134c6f4ecf27aa2880386c4566a121c69",
+  "scored_at": "2026-11-01T02:05:20+00:00",
+  "commit": "c2c62a1e2b9be99433ed5f55db08194ce3cd6cd6",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41261161959",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41263329859",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "64c5799745312d6bff5eb08460b4ac11689f99b11f023166eeb3274bbc0fdc3d",
+    "solution-code": "8a177fbb3822f88f19a01fe90ec953e7eceea8a58439b26735ef589b61e02904",
     "infrastructure": "0172b75e258abc5d97ce173fa595146da2d6f807386ec74e992482b7524f7aad",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -70,12 +70,8 @@
     },
     "A6": {
       "score": 5,
-      "evidence": [
-        "src/agents/src/zava_forward/agents/review_effectiveness.py:1-15",
-        "src/agents/README.md:313",
-        "src/agents/evals/review_effectiveness_golden.json:1-5"
-      ],
-      "rationale": "Adds a scripted offline review-effectiveness eval harness (AC-070), extending the evaluation harness this criterion assesses. Model/prompt choice unchanged; baseline ceiling 5 retained with updated evidence."
+      "evidence": [],
+      "rationale": "This PR does not touch model choice, prompts or the evaluation harness. Baseline unchanged."
     },
     "A7": {
       "score": 4,
