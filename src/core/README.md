@@ -2940,12 +2940,19 @@ python3 -m zava_forward.core.synthetic.sensor_scenarios \
 cd src/core
 python3 -m unittest discover -s tests -p test_sensor_scenarios.py -v
 python3 -m unittest discover -s tests -p test_sensor_retrofit_consumer_contract.py -v
+python3 -m unittest discover -s tests -p test_sensor_damp_consumer_contract.py -v
 ```
 
 `test_sensor_retrofit_consumer_contract.py` is the reusable fixture contract
 for the later #111 and #133 consumer tests: observation-only before/after
 deltas classify the four retrofit profiles using labelled exercise tolerances.
 It is not those consumers and not an operational rule.
+
+`test_sensor_damp_consumer_contract.py` does the same for the seven damp cases:
+observation-only derivation is reproducible, missing or faulty data is
+`INSUFFICIENT` and never ranks below a no-signal result, and a resident report
+always routes to human investigation whatever the sensors read (labelled
+exercise oracle, not the #111 or #133 implementation).
 
 Choose a genuinely new external path, not the literal example if unavailable.
 The CLI rejects repository/worktree destinations, symlink components, files and
@@ -3107,7 +3114,7 @@ agreed R3 limits and operational acceptance are still unproven.
 
 ### Existing reproducibility and plausibility evidence
 
-* Reproducibility and refresh (#176): scale fixture v1.2.0 and sensor backfill
+* Reproducibility and refresh (#176): scale fixture v1.3.0 and sensor backfill
   v2 record seed, version, `as_of`, dependency-aware `generator_revision` and
   SHA-256 for every payload file. Both require a new or empty output folder;
   a repeat write to an existing snapshot fails without replacing files.
@@ -3123,7 +3130,7 @@ agreed R3 limits and operational acceptance are still unproven.
 
   ```bash
   python -m zava_forward.core.synthetic.scale_fixture --seed 174 \
-    --as-of 2026-10-15 --out "$ZF_DATA/scale-fixture-2026-10-15-v1.2.0"
+    --as-of 2026-10-15 --out "$ZF_DATA/scale-fixture-2026-10-15-v1.3.0"
   python -m zava_forward.core.synthetic.sensor_backfill --seed 183 \
     --as-of 2026-10-15 --days 2 --cadence 60 --homes 12 \
     --out "$ZF_DATA/sensor-backfill-2026-10-15-v2"
