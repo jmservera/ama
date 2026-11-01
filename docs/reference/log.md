@@ -9131,3 +9131,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Live employee-site verification, screen-reader and voice-control
   acceptance and owner confirmation of agent names remain unproven; no
   source change was made.
+
+## [2026-11-01] update | Second stabilization checkpoint (#440)
+
+* Appended a focused-tier checkpoint on main 36a1d0da to the cut-over evidence
+  pack: five package suites, Ruff and mypy passed locally; SQL, container and
+  browser groups not run. The PERF-440 benchmark outlier was not reproduced
+  and is filed as #687. No regulatory snapshot changed; no criterion ticked.

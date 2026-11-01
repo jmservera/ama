@@ -2279,6 +2279,93 @@ repository records only. The threshold is unwaived. The original Review
 Azure or resident-UX acceptance is claimed; Azure authority has expired. The
 final full gate on the merged exact head is recorded after it runs.
 
+## Second Bounded Local Stabilization Checkpoint (2026-11-01, #440)
+
+**Executed, focused tier; not a product or release pass.** Trigger: main
+advanced 172 commits since the first checkpoint (140d8f49), including requirement
+changes (BRD/PRD 0.21.0) and runtime changes, and the 2026-10-31 closure audit
+left #440 criteria 7 and 8 unmet. No Azure, paid model, private data or
+heavy-gate group ran. No issue criterion was ticked.
+
+### Source and baseline
+
+`origin/main` fetched 2026-11-01 before testing; later advances are not covered: `36a1d0da25cf73ca41f613a5c7a7df071d5b0771`,
+tree `5a8a1fac0bd3ce40426ecaa4d1cdc7424bbe3827`; the worktree was fast-forwarded
+to it and tests ran on that tree plus this issue's tracking files only.
+
+| Baseline document | Version/status | Git blob |
+| --- | --- | --- |
+| [BRD](../brds/agentic-retrofit-programme-brd.md) | Draft 0.21.0, 2026-10-24 | `34d88395de861e9799eb9e24121a21c92c7a5adc` |
+| [Demonstrator PRD](../prds/zava-forward-retrofit-programme-demonstrator.md) | In review 0.21.0, 2026-10-25 | `c788b917bafaede215f326f0efc71e071a687f1c` |
+| [ADR 0001](../adrs/0001-azure-architecture.md) | Status per document | `d42fa5c4615f4107cee83e07555dba6985c1f53e` |
+| [ADR 0002](../adrs/0002-pilot-readiness-architecture.md) | Status per document | `cbe21530043ff15432cc6dce1086d080f5eb15b4` |
+| [ADR 0003](../adrs/0003-journey-derived-capabilities-runtime-fit.md) | Status per document | `d60645397b20fb70ac3d1dc47c7a6c8671201306` |
+| [ADR 0004](../adrs/0004-per-user-agent-chat-and-memory.md) | Status per document | `9406c2e747ced91e5ba7be4072f9482293c0c38f` |
+| [ADR 0005](../adrs/0005-regulatory-compliance-assistant.md) | Status per document | `4d610335a5a18bb282e29c6cb3053404beda995d` |
+| [ADR 0006](../adrs/0006-src-layout-and-cutover.md) | Status per document | `956da1a3b804c803041fe2e8a312bd9f400273ae` |
+
+Draft, in-review and proposed documents are not approved by this record. Covered
+scope is the affected package boundaries and the feedback-first journey surfaces
+(auth, assistant failure paths, resident API, store, import, orchestration);
+merged-PR coverage is bounded to the main range above, not an exhaustive PR list.
+Open acceptance gaps stay with #349, #350, #360, #432 and #570.
+
+### Actual local commands and outcomes
+
+Environment: `/tmp/ama-440-ckpt2`, Python 3.12.3, pip only, the five `src/`
+distributions installed editable (`pip install -e`), plus `ruff`, `mypy` and
+the `playwright` package (no browsers). The first attempt installed non-editable
+and 16 agents tests errored because the golden-file path resolves relative to the
+source tree; that was a harness mistake, the runs were discarded and repeated
+editable, and no source defect is claimed.
+
+| Check | Command (from the project directory) | Actual result |
+| --- | --- | --- |
+| Core suite | `PYTHONPATH=tests python -m unittest discover -s tests -q` | 1727 tests, 502.7s, OK, 206 skipped, exit 0 |
+| Agents suite | `PYTHONPATH=tests:../core/tests ...` | 138 tests, 38.8s, OK, exit 0 |
+| API suite | `PYTHONPATH=../core/tests:../agents/tests ...` | 1500 tests, 746.2s, OK, 323 skipped, exit 0 |
+| Orchestrator suite | `PYTHONPATH=tests:../core/tests ...` | 69 tests, 17.4s, OK, exit 0 |
+| Importer suite | `PYTHONPATH=tests:../core/tests ...` | 39 tests, 0.5s, OK, exit 0 |
+| Ruff check and format check | `ruff check .`, `ruff format --check .` per project | All five passed |
+| mypy | `mypy` per project | Core, agents, orchestrator, importer clean; API first reported 34 `import-not-found` errors for `playwright.sync_api` only, clean (131 files) after installing the package |
+| PERF-440 selector | `python -m unittest test_sqlreads.Scale.test_sql_reads_at_60000` x3 | OK x3; filtered page 107/128/107 ms against the unchanged 1500 ms; the full core run measured 123 ms |
+
+All five suites ran concurrently while another session's complete gate held the
+shared heavy lock (observed running at the start; absent at 07:59Z), so the
+timings are under contention. Skipped tests (529) are not passes. Logs are in
+`/tmp/ama-440-ckpt2/*.log` and are not retained in the repository.
+
+Not run, with reason: disposable SQL Server parity, Docker/non-root contracts,
+Chromium harnesses and the complete native gate are blocked for this slice by the
+foreign heavy-lock holder and by the owner's focused-tier direction. They remain
+`implemented-unverified` for this head, and the first checkpoint's observations
+(2026-10-23, older main) are historical only. No `Azure observed` row exists.
+
+### Reconciliation delta
+
+The first checkpoint's requirement table is unchanged in classification:
+local-observed for scripted/model-off failure paths, auth boundaries, store and
+import behavior; blocked or unknown for real Entra sessions (#349), deployed
+parity (#350), real AI (#360), actual resident consent, named professional or
+authority approval and OD-35 thresholds. BRD/PRD 0.21.0 changes were not
+re-traced row by row in this focused slice; that remains `unknown` until a
+checkpoint with an owner-approved scope covers them. No new behavior bug was
+reproduced, so no regression test was required. No refactoring need was
+confirmed; ADR 0006 boundaries held (dependency-rule tests passed in each project).
+
+### Findings, triage and recommendation
+
+| Priority / severity | Finding | Owner |
+| --- | --- | --- |
+| 1 / High delivery risk, defect severity unknown | PERF-440: one-off 17,383 ms against 1500 ms on 2026-10-23, not reproduced on 36a1d0da under contention (107-128 ms) | New scoped issue #687, independent lane, threshold unchanged |
+| Validation | Native `/agent` discovery remains coordinator-attested and the seven HVE scenarios simulated; no coordinator edit in this slice | #440 criterion 8 stays unmet; owner-supplied host evidence needed |
+| Existing gates | #349, #350, #360, #432, #570 | Existing owners; no duplicates filed |
+
+Recommendation: **continue**. Independent local lanes proceed; #687 gates only
+claims that cite a complete passing benchmark receipt, not feature expansion. The
+next full gate for this head is CI and the owner's release cadence. A pivot,
+requirement relaxation or deliberate deferral is neither approved nor proposed.
+
 ## Rubric src counting reconciliation (2026-10-27)
 
 Refs #198. This additive reconciliation preserves the original UNMET rubric
