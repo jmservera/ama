@@ -12,3 +12,5 @@ Execution: executed once, self-review of diff against acceptance criteria. Outco
 
 Routed follow-ups: browser keyboard and axe check; queue-level cross-home choice summary (needs a portfolio endpoint); validation in #155.
 Verdict on closing: criteria 1 (queue-level) and 4 not proven, so the PR uses Refs.
+
+Addendum (PR #652 review threads, 2026-11-01): the browser-check gap is now closed by a `232` scenario run locally (parent and 232 selectors pass); the checker is no longer unproven locally. Axe and keyboard acceptance remain separate. Original outcome is preserved.

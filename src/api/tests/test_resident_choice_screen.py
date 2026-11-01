@@ -32,11 +32,21 @@ CASE = {
             "readiness": "Needs human review",
             "context": {"scope": "S-9", "revision": 2, "design_version": 3},
             "versions": [
-                {"version": 1, "status": "Accepted", "answered_by": "The resident"},
+                {
+                    "version": 1,
+                    "status": "Accepted",
+                    "answered_by": "The resident",
+                    "scope": "S-8",
+                    "context_revision": 1,
+                    "design_version": 2,
+                },
                 {
                     "version": 2,
                     "status": "Paused",
                     "answered_by": "The resident",
+                    "scope": "S-9",
+                    "context_revision": 2,
+                    "design_version": 3,
                     "note": "Not before spring",
                 },
             ],
@@ -99,7 +109,7 @@ class ResidentChoiceScreen(unittest.TestCase):
         for expected in (
             "Loft insulation",
             "scope S-9, revision 2, design 3",
-            "v2 Paused",
+            "v2 Paused (scope S-9, revision 2, design 3)",
             "Not before spring",
             "Not recorded",
             "Paused or withdrawn by the resident",
@@ -113,6 +123,37 @@ class ResidentChoiceScreen(unittest.TestCase):
             "not a contact attempt",
         ):
             self.assertIn(expected, text)
+
+    def test_stale_stop_with_unresolved_review_stays_visible_with_original_scope(self) -> None:
+        case = {
+            "id": "C-3",
+            "measure_decisions": [
+                {
+                    "measure": "Solar PV",
+                    "status": "Not recorded",
+                    "readiness": "Needs human review",
+                    "context": {"scope": "S-10", "revision": 3, "design_version": 4},
+                    "review": {"status": "Needs human review"},
+                    "versions": [
+                        {
+                            "version": 1,
+                            "status": "Withdrawn",
+                            "answered_by": "The resident",
+                            "scope": "S-9",
+                            "context_revision": 2,
+                            "design_version": 3,
+                            "note": "Changed my mind",
+                        }
+                    ],
+                }
+            ],
+        }
+        text = json.dumps(run(case)["tree"])
+        self.assertNotIn("No measure is currently paused or withdrawn", text)
+        self.assertIn(
+            "Withdrawn (current answer Not recorded), scope S-9, revision 2, design 3", text
+        )
+        self.assertIn("Changed my mind", text)
 
     def test_no_controls_and_no_contact(self) -> None:
         tree = run(CASE)["tree"]

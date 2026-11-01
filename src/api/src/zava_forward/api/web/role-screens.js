@@ -186,11 +186,16 @@ registerRoleScreen({
 const choiceRoles = ["Resident Liaison Officer", "Retrofit Coordinator", "Retrofit Programme Manager", "Programme Support Officer"];
 const choiceStop = new Set(["Paused", "Withdrawn"]);
 const choiceLatest = (m) => (m.versions || []).at(-1);
+const choiceBinding = (v) => `scope ${screenValue(v.scope)}, revision ${screenValue(v.context_revision)}, design ${screenValue(v.design_version)}`;
+const choiceStopped = (m) => {
+  const v = choiceLatest(m);
+  return choiceStop.has(m.status) || (v && choiceStop.has(v.status) && m.review?.status === "Needs human review");
+};
 function choiceMeasure(m) {
   const v = choiceLatest(m);
   const ctx = m.context ? `scope ${screenValue(m.context.scope)}, revision ${screenValue(m.context.revision)}, design ${screenValue(m.context.design_version)}` : "Current scope not recorded";
   return [m.measure, ctx, m.status,
-    v ? `v${v.version} ${v.status}, answered by ${screenValue(v.answered_by)}, recorded ${screenStamp(v.at)}${v.note ? `: ${v.note}` : ""}` : "None recorded",
+    v ? `v${v.version} ${v.status} (${choiceBinding(v)}), answered by ${screenValue(v.answered_by)}, recorded ${screenStamp(v.at)}${v.note ? `: ${v.note}` : ""}` : "None recorded",
     screenValue(m.readiness)];
 }
 registerRoleScreen({
@@ -199,7 +204,7 @@ registerRoleScreen({
   roles: choiceRoles,
   render(c) {
     const measures = c.measure_decisions || [];
-    const stopped = measures.filter((m) => choiceStop.has(m.status));
+    const stopped = measures.filter(choiceStopped);
     const update = c.resident_update;
     const requests = c.service_requests || [];
     return h("div", {},
@@ -214,8 +219,12 @@ registerRoleScreen({
       screenPanel("Paused or withdrawn by the resident",
         h("p", {}, "A pause or withdrawal is the resident's decision about one measure. It is not a contact attempt, a missed visit or an access need."),
         stopped.length ? screenTable("Measures paused or withdrawn",
-          ["Measure", "State", "In their words", "Restart needs"],
-          stopped.map((m) => [m.measure, m.status, choiceLatest(m)?.note, "Human review before any restart"]))
+          ["Measure", "State and scope answered", "In their words", "Restart needs"],
+          stopped.map((m) => {
+            const v = choiceLatest(m);
+            const state = choiceStop.has(m.status) ? m.status : `${v.status} (current answer ${m.status})`;
+            return [m.measure, v ? `${state}, ${choiceBinding(v)}` : state, v?.note, "Human review before any restart"];
+          }))
           : h("p", { class: "empty" }, "No measure is currently paused or withdrawn in the recorded answers.")),
       screenPanel("Linked update commitment",
         update ? screenFields([
