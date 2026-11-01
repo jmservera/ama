@@ -9015,3 +9015,11 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * CI figures come from a one-day sample of 300 runs; the RPI artifact share
   of PR size and the 19-24 October slowdown cause are unmeasured. No
   workflow, setting, gate or source change was made.
+
+## [2026-11-01] implementation | Regulatory UX contrast incompletes resolved (Refs #215)
+
+* Updated the [API UX guide](../../src/api/README.md#regulatory-alert-and-home-chat-ux-215):
+  the eight axe `color-contrast` incompletes were a textarea border-box
+  artefact; fixed in CSS and now asserted by the browser harness (21 states,
+  zero violations, zero incompletes). No manual or assistive-technology
+  assessment and no staff comprehension study was run; those criteria stay unmet.

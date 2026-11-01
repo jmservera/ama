@@ -97,6 +97,8 @@ def scan(
         )
     )
     assert not result["violations"], json.dumps(result["violations"], indent=2)
+    unresolved = [item for item in result["incomplete"] if item["id"] == "color-contrast"]
+    assert not unresolved, f"Unresolved colour contrast in {state}: {json.dumps(unresolved)}"
 
 
 def scan_mid_fade(page: Page, axe: str | None, reports: list[dict[str, Any]], state: str) -> None:
