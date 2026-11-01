@@ -37,12 +37,26 @@ class ResidentJourneyDesign(unittest.TestCase):
         for code in JOURNEYS:
             self.assertTrue(section(code), code)
 
+    def test_update_commitments_handover_and_aftercare_content_is_kept(self) -> None:
+        j4, j5 = section("J4"), section("J5")
+        for phrase in (
+            "Named owner, due date/time and basis",
+            "reassignment retains the prior promise/history",
+        ):
+            self.assertIn(phrase, j4)
+        for phrase in (
+            "Current approved instructions, guarantees and contact route",
+            "Replacing accepted evidence reopens dependent acceptance/handover",
+            "phone/visit aftercare request",
+        ):
+            self.assertIn(phrase, j5)
+
     def test_each_journey_has_a_non_digital_equivalent(self) -> None:
         for code in JOURNEYS:
             self.assertIn("Non-digital equivalent:", section(code), code)
 
     def test_shared_frame_forbids_incapacity_inference_and_covers_needs(self) -> None:
-        text = DOC.read_text(encoding="utf-8")
+        text = " ".join(DOC.read_text(encoding="utf-8").split())
         for phrase in (
             "Do not infer incapacity",
             "language, format, channel, contact times and adjustments",
@@ -86,7 +100,11 @@ class ResidentJourneyDesign(unittest.TestCase):
         self.assertIn("Do not paste it into live letters", flat)
         self.assertIn("neither builds it nor sends messages", flat)
         scripts = text[text.index("### Validation handoff and issue acceptance") :]
-        self.assertGreaterEqual(scripts.count("| Not run |"), 7)
+        row = r"^\| (?:J\d|R1|All tasks)[^|]*\|[^|]*\| ([^|]*?) \|$"
+        rows = re.findall(row, scripts, re.MULTILINE)
+        self.assertEqual(len(rows), 7)
+        for result in rows:
+            self.assertTrue(result.strip())
 
 
 if __name__ == "__main__":
