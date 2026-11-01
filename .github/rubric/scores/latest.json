@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-01T02:41:14+00:00",
-  "commit": "4e041dcbfad0c22c296766db23c628d84888c5a0",
+  "scored_at": "2026-11-01T03:11:44+00:00",
+  "commit": "dd7c6676ca0b8cbcaf83b8f991bfd63837ab9f9c",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41265341272",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41266413181",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "96eb7574fbf23371db3e818a33408be7d0c9efdf533fa3015c455a563711f4b0",
+    "solution-code": "b95a3f99bd4e23db3071755859fa3f0e39dd7dc82c4bd2de81018f359d7036f5",
     "infrastructure": "0172b75e258abc5d97ce173fa595146da2d6f807386ec74e992482b7524f7aad",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -29,10 +29,9 @@
     "A1": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/static_assets.py:1-58",
-        "src/api/src/zava_forward/api/server.py:193-197"
+        "src/core/src/zava_forward/core/synthetic/run_plan.py:1-20,170-220"
       ],
-      "rationale": "Diff adds packages/work-orders pagination (limit/offset) in server.py and core/procurement.py; architecture already modular with defined API contracts. Baseline ceiling 5 retained."
+      "rationale": "New run_plan.py module is decoupled from sensor_stream.py, reusing Pacer/RunBudget/StreamError via a defined import contract; RunController has clear single-purpose state transitions. Reinforces existing modular architecture; baseline ceiling 5 retained."
     },
     "A2": {
       "score": 5,
@@ -43,40 +42,35 @@
     },
     "A3": {
       "score": 5,
-      "evidence": [
-        "src/core/src/zava_forward/core/ai_consumption.py:1,58-85",
-        "src/core/src/zava_forward/core/ai.py:67-100",
-        "src/core/src/zava_forward/core/assistants.py:884-900"
-      ],
-      "rationale": "New run_plan.py adds budget/tamper guardrails for the synthetic simulator, not identity/data-protection/AI-risk controls. Baseline 5 retained."
+      "evidence": [],
+      "rationale": "Diff is a cost/quota estimator and run controller for the synthetic simulator, not security, compliance or responsible-AI controls. No new evidence; baseline 5 retained."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/synthetic/run_plan.py:1-218",
-        "src/core/tests/test_run_plan.py:1-178"
+        "src/core/src/zava_forward/core/synthetic/run_plan.py:1-239",
+        "src/core/tests/test_run_plan.py:1-199"
       ],
-      "rationale": "New run_plan module (estimate, record, RunController start/stop/scale-down) ships end to end with a CLI and unit tests covering edge cases (tampering, malformed records, quota/time/budget limits). Already-at-ceiling completeness reinforced; baseline 5 retained."
+      "rationale": "New cost-estimate and run-control capability (#\u200b189) is implemented end to end with a CLI, tamper-evident start gate, stop and scale-down, and 199 lines of passing unit tests covering edge cases. Strengthens completeness; already at ceiling 5."
     },
     "A5": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/synthetic/run_plan.py:60-100",
-        "src/core/README.md:439-454"
+        "src/core/src/zava_forward/core/synthetic/run_plan.py:108-140",
+        "src/core/README.md:443-464",
+        "src/core/src/zava_forward/core/synthetic/sensor_stream.py:305-327"
       ],
-      "rationale": "Diff models per-run cost (metered units, B1 quota headroom, estimated_cost_usd) and enforces budget-cap/time-limit/single-run/never-scale-up resilience, with README documenting the estimate and controls. Reinforces evidence already at ceiling; baseline 5 retained."
+      "rationale": "run_plan.py models cost per metered unit and B1 quota headroom before any run, checks budget cap/alert threshold, and refuses over-quota/over-budget/too-short runs. Pacer admit_send/set_max_per_second fix improves rate-limiting correctness. Already at ceiling 5, retained."
     },
     "A6": {
       "score": 5,
       "evidence": [],
-      "rationale": "This PR does not touch model choice, prompts or the evaluation harness. Baseline unchanged."
+      "rationale": "This PR does not touch model choice, prompts or the evaluation harness; it is a synthetic data run planner. Baseline unchanged."
     },
     "A7": {
       "score": 4,
-      "evidence": [
-        "src/core/src/zava_forward/core/synthetic/run_plan.py:150-180"
-      ],
-      "rationale": "Diff is a synthetic-data run-planning/budget feature, not agent dispatch/orchestration. Baseline 4 (Good) retained."
+      "evidence": [],
+      "rationale": "Diff adds a cost estimator and run controller for the synthetic simulator, not agent dispatch/orchestration. Baseline 4 (Good) retained."
     },
     "B1": {
       "score": 3,
@@ -114,9 +108,9 @@
     "B6": {
       "score": 5,
       "evidence": [
-        "src/core/README.md:439-454"
+        "src/core/README.md:443-464"
       ],
-      "rationale": "README addition is clear engineering documentation (CLI example, parameters) but is code documentation, not capstone deck/pitch material. Immaterial to B6 deck scoring; baseline retained."
+      "rationale": "README gains a clear, navigable section (#\u200b189) with behaviour description and a runnable CLI example. Engineering documentation, not deck content; strengthens capstone documentation but already at ceiling 5."
     },
     "B7": {
       "score": 5,
