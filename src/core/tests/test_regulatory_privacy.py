@@ -9,7 +9,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from zava_forward.core.regulatory_privacy import CLASSES, retention_report
+from zava_forward.core.regulatory_privacy import CLASSES, readiness_report, retention_report
 
 NOW = datetime(2026, 10, 16, 12, tzinfo=UTC)
 DPIA = Path(__file__).resolve().parents[3] / "docs/reference/research/chat-memory-dpia.md"
@@ -99,6 +99,38 @@ class DpiaScope(unittest.TestCase):
         result = retention_report([], {}, NOW)
         self.assertFalse(result["dpo_reviewed"])
         self.assertTrue(result["dpia_status"].startswith("Draft"))
+
+
+class Readiness(unittest.TestCase):
+    REAL = {
+        "REG_DPIA_REF": "REAL-A",
+        "REG_RETENTION_REF": "REAL-B",
+        "REG_ENTRA_ROLES_REF": "REAL-C",
+        "REG_ART22_REF": "REAL-D",
+    }
+
+    def test_default_refuses_live_data(self) -> None:
+        r = readiness_report({})
+        self.assertFalse(r["live_data_permitted"])
+        self.assertFalse(r["dpo_reviewed"])
+        self.assertEqual(len(r["missing_refs"]), 4)
+        self.assertEqual(len(r["criteria"]), 8)
+
+    def test_synthetic_references_never_permit_live_data(self) -> None:
+        r = readiness_report({k: "SYNTH-1" for k in self.REAL})
+        self.assertFalse(r["live_data_permitted"])
+        self.assertEqual(len(r["synthetic_refs"]), 4)
+
+    def test_all_references_open_gate_without_claiming_approval(self) -> None:
+        r = readiness_report(self.REAL)
+        self.assertTrue(r["live_data_permitted"])
+        self.assertFalse(r["dpo_reviewed"])
+        self.assertIn("not verified", r["statement"])
+
+    def test_report_holds_no_reference_values_or_other_env(self) -> None:
+        text = json.dumps(readiness_report({**self.REAL, "OTHER": "PRIVATE-CANARY"}))
+        self.assertNotIn("PRIVATE-CANARY", text)
+        self.assertNotIn("REAL-A", text)
 
 
 if __name__ == "__main__":
