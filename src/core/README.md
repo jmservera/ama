@@ -158,7 +158,9 @@ The #222 cohort manifest in open PR #421 still needs owner approval before
 evaluator implementation. Cohorts, lawful fields, sample sufficiency and
 thresholds remain unapproved, and synthetic results cannot prove fairness.
 Actual release/residual-risk/review/restart holders remain unknown under
-OQ-017. The [incident](#operator-incidents-and-constructed-restart-221) and
+OQ-017; every denial now carries `authority_holders`, listing the release,
+residual-risk acceptance, suspension and restart authorities each as an unset
+gap (`rai_release.authority_register`). The [incident](#operator-incidents-and-constructed-restart-221) and
 [challenge](#version-bound-affected-person-challenges-220) contracts retain
 their separate approval and coverage limits. No child or epic closure,
 human-witnessed drill, broader assistant/form challenge coverage, legal
