@@ -1,0 +1,42 @@
+{
+  "task_id": "466-r3",
+  "task_slug": "resident-sensor-gauges-466-r3",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-01-issue-466-resident-sensor-gauges-r3-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-01-issue-466-resident-sensor-gauges-r3-plan.md",
+    "details": null,
+    "critique": ".copilot-tracking/plans/2026-11-01-issue-466-resident-sensor-gauges-r3-plan.md",
+    "changes": ".copilot-tracking/changes/2026-11-01-issue-466-resident-sensor-gauges-r3-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-01-issue-466-resident-sensor-gauges-r3-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Full RPI loop, evidence-only slice, Refs #466",
+      "status": "confirmed",
+      "evidence": "Owner request 2026-11-01; feature already merged on main"
+    },
+    {
+      "decision": "Critique executed once (Proceed); Review executed once (conformant, residual work)",
+      "status": "completed",
+      "evidence": "r3 plan and review artifacts"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Owner confirms scope (criterion 1) and runs manual AT acceptance"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Owner scope and priority confirmation",
+      "rationale": "Only unmet criterion; human decision",
+      "evidence": "Issue #466 criterion 1"
+    }
+  ]
+}
