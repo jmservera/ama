@@ -9286,6 +9286,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   `.copilot-tracking/changes/2026-11-01/employee-chat-skills-530-recheck-changes.md`.
 * SQL, live employee-site verification, screen-reader and voice-control
   acceptance remain unproven; no source change was made.
+## [2026-11-01] update | Register is_synthetic conformance check (Refs #167)
+
+* Added `coverage --register` to the core coverage tool and noted the result in the
+  retrofit-synthetic-data README: 60,000 of 60,000 SN-01 register rows carry
+  `is_synthetic=true` (aggregate counts only). Owner confirmation of the mapping and
+  deferrals remains open.
+
 
 ## [2026-11-01] query | Resident portal requirements recheck on main 81cf0c9e (Refs #441)
 
@@ -9315,6 +9322,11 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   marked as registered on main; three remain in unmerged pull requests. Updated
   the index row and made the checker apply each status to its own screen group.
 * Findings stay hypotheses until #155. No accessibility acceptance is claimed.
+
+## 2026-11-01 coverage baseline register check indexed
+
+* Updated the synthetic MVP baseline index row to mention the opt-in
+  `--register` check and its SN-01-only evidence boundary.
 
 ## 2026-11-01 (atlas trace labels after merge of main)
 
