@@ -183,6 +183,53 @@ registerRoleScreen({
   }
 });
 
+const operatorSide = (a) => a ? `${screenValue(a.value)}; source ${screenValue(a.source_id)} v${screenValue(a.version)}; dated ${screenValue(a.date)}; ${screenValue(a.validation_state)}` : "Unknown";
+const operatorStatus = (c, q) => (c.stock_reconciliation_events || []).filter((e) => e.query_id === q.id).at(-1)?.status || "Unresolved";
+registerRoleScreen({
+  id: "data-operator",
+  title: "Data steward and operator view",
+  roles: screenManagers,
+  render(c) {
+    const queries = c.stock_reconciliation || [];
+    const events = c.stock_reconciliation_events || [];
+    const work = c.work;
+    const blockers = work?.blockers || [];
+    const handoff = work?.handoff;
+    const returns = (c.returns || []).filter((r) => r.event_type !== "advance");
+    return h("div", {},
+      screenPanel("Evidence boundary",
+        h("p", {}, "Read-only view for data stewards, performance analysts and digital operators. It does not replay, correct, resolve or retry anything, and it keeps the original source values. Source: desk research, not observed behaviour."),
+        h("p", {}, `Home scope: ${c.id} only.`)),
+      screenPanel("Conflict queue: both source values",
+        screenTable("Source conflicts with both values and provenance",
+          ["Query", "Field", "First source (value, source, version, date, validation)", "Compared source (value, source, version, date, validation)", "State", "Resolution owner"],
+          queries.map((q) => [q.id, q.field, operatorSide(q.left), operatorSide(q.right),
+            operatorStatus(c, q), screenPerson(q.query_owner)]))),
+      screenPanel("Eligibility and original source",
+        screenFields([["Eligibility", "Unknown"],
+          ["Original source values", queries.length ? "Preserved unchanged in the table above" : "None supplied"],
+          ["Winning source", "Not selected. No latest-wins or silent correction is applied."]])),
+      screenPanel("Returns and reopens",
+        returns.length ? screenTable("Recorded returns and reopens",
+          ["Recorded", "Type", "From", "To", "Reason", "Source", "Next action", "Receiving owner"],
+          returns.map((r) => [screenStamp(r.at), r.reopened ? "Reopened" : "Returned", r.from_stage, r.to_stage, r.reason,
+            `${screenValue(r.source)} v${screenValue(r.source_version)}`, r.next_action, screenPerson(r.receiving_owner)]))
+          : screenUnknown("No return or reopen is recorded for this home.", "Programme manager to name an owner", "Confirm whether a return is expected")),
+      screenPanel("Handoff and exception queue",
+        handoff ? screenFields([["Handoff destination", handoff.destination], ["Proposed receiver", handoff.proposed_receiver],
+          ["Confirmed receiver", handoff.confirmed_receiver], ["Chase owner", handoff.chase_owner],
+          ["Handoff state", handoff.state], ["Work reason", work.reason], ["Next action", work.next_action]])
+          : screenUnknown("No handoff is recorded for this home.", "Programme manager to name an owner", "Confirm whether a handoff is expected"),
+        screenTable("Open exceptions and prerequisites",
+          ["Step", "Reason", "Owner", "Next action", "Source and version"],
+          blockers.map((b) => [b.step, b.reason, b.owner, b.next_action, `${screenValue(b.source)} v${screenValue(b.version)}`]))),
+      screenPanel("Event metadata and recovery context",
+        h("p", {}, "Illustrative event metadata only. These are recorded dispositions with a narrative reason. They are not an operational audit trail and cannot prove that nothing else happened."),
+        screenTable("Recorded stock query events",
+          ["Event", "Query", "State", "Recorded", "Recorded by", "Reason", "Evidence"],
+          events.map((e) => [e.id, e.query_id, e.status, screenStamp(e.at), screenPerson(e.recorded_by), e.reason, e.evidence])),
+        screenFields([["Recovery context", work ? `Next action: ${screenValue(work.next_action)}. Owner: ${screenValue(work.owner)}. Recorded as of ${screenValue(work.as_of)}.` : "Unknown. No recovery context is recorded."],
+          ["Integration run and queue state", "Unknown. No interface run record is supplied to this screen."]])));
 const reviewerRole = "Contracts manager, independent of the person who issued or submitted the pack";
 const wording = (value, fallback = "Unknown") => value === null || value === undefined || value === "" ? fallback : String(value);
 const reference = (order) => `${wording(order.id)} v${wording(order.version)}`;
