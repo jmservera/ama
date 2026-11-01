@@ -31,11 +31,14 @@ function registerRoleScreen(screen) {
   if (roleScreens.has(screen.id)) throw new Error(`Duplicate specialist screen: ${screen.id}`);
   roleScreens.set(screen.id, screen);
 }
-function screenHref(id, caseId, page = 0) {
+const screenScopeQuery = () => new URLSearchParams(typeof location === "undefined" ? "" : location.hash.split("?")[1] || "");
+function screenHref(id, caseId, page = 0, keepScope = true) {
   const query = new URLSearchParams();
   if (id) query.set("screen", id);
   if (caseId) query.set("case", caseId);
   if (page) query.set("page", String(page));
+  const scope = keepScope ? screenScopeQuery().get("scope") : null;
+  if (scope) query.set("scope", scope);
   return `#/screens${query.size ? `?${query}` : ""}`;
 }
 async function roleScreensView() {
@@ -49,7 +52,7 @@ async function roleScreensView() {
   const screen = installed.find((item) => item.id === id);
   if (!/^\d+$/.test(rawPage) || !Number.isSafeInteger(page) || page > 100000) {
     return show(h("h1", {}, "Invalid screen page"), h("p", { role: "alert" }, "Choose a page from the queue."),
-      h("a", { href: screenHref(id, caseId) }, "Reset screen view"));
+      h("a", { "data-reset": "true", href: screenHref(id, caseId, 0, false) }, "Reset screen view"));
   }
   if (id && !screen) {
     return show(h("h1", {}, "Screen unavailable"),
@@ -70,7 +73,8 @@ async function roleScreensView() {
   const data = await api(`/api/cases?view=all&limit=20&offset=${page * 20}`, undefined, signal);
   const c = caseId ? await api(`/api/cases/${encodeURIComponent(caseId)}`, undefined, signal) : null;
   const extra = c && screen.load ? await screen.load(c) : null;
-  const overview = !c && screen.summarise && data.items.length ? await screen.summarise(data.items, signal) : null;
+  const overview = screen.overview ? await screen.overview(signal)
+    : !c && screen.summarise && data.items.length ? await screen.summarise(data.items, signal) : null;
   signal.throwIfAborted();
   const label = (row) => `${row.id}: ${row.address || "Address unknown"}. ${row.status || row.stage || "State unknown"}`;
   const queue = h("section", { "aria-labelledby": "screen-queue-heading" },
@@ -87,7 +91,7 @@ async function roleScreensView() {
     h("div", { class: "row" },
       page > 0 && h("a", { class: "btn alt", href: screenHref(id, caseId, page - 1) }, "Previous page"),
       (page + 1) * 20 < data.total && h("a", { class: "btn alt", href: screenHref(id, caseId, page + 1) }, "Next page"),
-      h("a", { class: "btn alt", href: screenHref(id) }, "Reset screen view")));
+      h("a", { class: "btn alt", "data-reset": "true", href: screenHref(id, null, 0, false) }, "Reset screen view")));
   const selected = c ? h("section", { class: "screen-evidence", "aria-label": `Evidence for ${c.id}` },
     h("h2", {}, `Selected home ${c.id}`),
     h("p", {}, "Recorded evidence only. Missing, stale or withheld information cannot establish readiness. No message, approval or record change is made from this screen."),
@@ -98,7 +102,7 @@ async function roleScreensView() {
   workspaceStatus.textContent = `${me.user.role}. ${screen.title}. ${c ? `Selected home ${c.id}.` : "No home selected."}`;
   show(h("h1", {}, screen.title), menu,
     h("div", { class: "layout" }, h("aside", { class: "side" }, queue),
-      h("div", { class: "main" }, selected)),
+      h("div", { class: "main" }, overview, selected)),
     h("a", { href: "#/" }, "Back to my work"));
 }
 
@@ -192,6 +196,223 @@ registerRoleScreen({
   }
 });
 
+const programmeScopes = [
+  ["default", "Returned and handed-off work (default)"],
+  ["returned", "Returned work only"],
+  ["handoff", "Pending handoffs only"],
+  ["blocked", "Blocked work"],
+  ["all", "All permitted cases on this page"]
+];
+function programmeKeepScope(scope) {
+  if (typeof location === "undefined") return;
+  const [path, rest] = location.hash.split("?");
+  const query = new URLSearchParams(rest || "");
+  if (scope === "default") query.delete("scope"); else query.set("scope", scope);
+  if (typeof history !== "undefined") history.replaceState(null, "", `${path}${query.size ? `?${query}` : ""}`);
+  if (typeof document === "undefined") return;
+  document.querySelectorAll('a[href^="#/screens"]').forEach((link) => {
+    if (link.hasAttribute("data-reset")) return;
+    const [linkPath, linkRest] = link.getAttribute("href").split("?");
+    const linkQuery = new URLSearchParams(linkRest || "");
+    if (scope === "default") linkQuery.delete("scope"); else linkQuery.set("scope", scope);
+    link.setAttribute("href", `${linkPath}${linkQuery.size ? `?${linkQuery}` : ""}`);
+  });
+}
+const programmeIn = (row, scope) => {
+  const work = row.work || {};
+  const queues = work.queues || [];
+  if (scope === "returned") return Boolean(work.returned);
+  if (scope === "handoff") return queues.includes("unowned");
+  if (scope === "blocked") return queues.includes("blocked");
+  if (scope === "all") return true;
+  return Boolean(work.returned) || queues.includes("unowned");
+};
+const programmeRow = (row) => {
+  const work = row.work || {};
+  const sent = work.handoff?.sender;
+  return [
+    `${row.id}: ${row.address || "Address unknown"}`,
+    work.returned ? work.returned.reason : work.handoff ? `Not returned. Handoff state: ${screenValue(work.handoff.state)}.` : "Not returned",
+    work.returned ? work.returned.sender : sent,
+    work.owner,
+    work.handoff ? work.handoff.proposed_receiver : "No handoff proposed",
+    work.handoff ? work.handoff.chase_owner : "No handoff recorded",
+    work.resident_update_owner || "Unknown"
+  ];
+};
+const programmeHeadings = ["Home", "Return reason", "Sender", "Current owner",
+  "Proposed receiver (not a confirmed owner)", "Chase owner (chases the receiver)",
+  "Resident-update owner (updates the resident)"];
+function programmeQueue(items, total) {
+  const holder = h("div", {});
+  const status = h("p", { role: "status", id: "programme-filter-status" });
+  const select = h("select", { id: "programme-scope", name: "scope" },
+    programmeScopes.map(([value, text]) => h("option", { value }, text)));
+  const apply = (scope, remember = true) => {
+    if (remember) programmeKeepScope(scope);
+    const rows = items.filter((row) => programmeIn(row, scope));
+    status.textContent = `${rows.length} of ${items.length} records on this page shown. Scope: ${programmeScopes.find(([v]) => v === scope)[1]}. Filtering changes the view only; no record is changed.`;
+    holder.replaceChildren(screenTable("Shared queue: returned and handed-off work", programmeHeadings, rows.map(programmeRow)));
+  };
+  const saved = screenScopeQuery().get("scope");
+  const initial = programmeScopes.some(([v]) => v === saved) ? saved : "default";
+  select.value = initial;
+  apply(initial, false);
+  return h("div", {},
+    h("p", {}, `${items.length} records on this page of ${total} permitted cases. Not a portfolio total.`),
+    h("form", { class: "row", "aria-label": "Scope filter",
+      onsubmit: (event) => { event?.preventDefault?.(); apply(select.value || "default"); } },
+      h("label", { for: "programme-scope" }, "Scope"), select,
+      h("button", { class: "btn", type: "submit" }, "Apply filter"),
+      h("button", { class: "btn alt", type: "button",
+        onclick: () => { select.value = "default"; apply("default"); } }, "Reset to default view")),
+    status, holder);
+}
+const programmeFunnel = (report) => {
+  const rows = report?.funnel;
+  if (!Array.isArray(rows)) return h("p", { class: "empty" }, "Lifecycle and funnel counts are Unknown. No record was supplied.");
+  return h("div", {},
+    h("p", {}, `Recorded as of ${screenValue(report.as_of)}. Audit integrity: ${screenValue(report.audit_integrity)}. Conversion is Unknown; counts are stage history only.`),
+    screenTable("Lifecycle and funnel by stage",
+      ["Stage", "Entries", "Exits", "Returns", "Reopens", "Cases in scope"],
+      rows.map((r) => [r.stage, r.entries, r.exits, r.returns, r.reopens, r.denominator])));
+};
+const programmeGate = (blockers, pattern) => blockers.filter((b) => pattern.test(b.step));
+const programmeJoin = (values) => [...new Set(values.filter(Boolean))].join("; ") || "Unknown";
+const programmeOwner = (b) => {
+  const named = b.owner && b.owner !== "Unknown" ? b.owner : null;
+  const role = b.responsible_role && b.responsible_role !== "Unknown" ? b.responsible_role : null;
+  return named && role && named !== role ? `${named} (${role})` : named || role || "Unknown";
+};
+const programmeGateRow = (name, blocked, clear, unknown) => {
+  if (blocked.length) return [name, "Blocked",
+    blocked.map((b) => b.reason).join(" "), programmeJoin(blocked.map(programmeOwner)),
+    programmeJoin(blocked.map((b) => b.next_action))];
+  if (unknown) return [name, "Blocked: evidence missing", unknown, "Unknown", "Record the missing evidence through the permitted review"];
+  return [name, "No recorded blocker", `${clear} This is not a pass; a named person decides readiness.`, "Unknown", "Unknown"];
+};
+const programmeCurrentRevisions = (c) => new Map((Array.isArray(c.measure_decisions) ? c.measure_decisions : [])
+  .map((d) => [d.measure, d.context?.revision]));
+const programmeBindingCurrent = (binding, revisions) => Boolean(binding)
+  && Number.isInteger(binding.context_revision) && revisions.get(binding.measure) === binding.context_revision;
+function programmeQualityRow(c) {
+  const live = (c.quality || []).filter((r) => r.state !== "Superseded");
+  const measures = Array.isArray(c.measures) ? c.measures : String(c.measures || "").split(",");
+  const wanted = measures.map((m) => m.trim()).filter(Boolean);
+  const revisions = programmeCurrentRevisions(c);
+  const stale = live.filter((r) => (r.state === "Accepted" || r.state === "Handed over")
+    && !programmeBindingCurrent(r.resident_binding, revisions));
+  const open = live.filter((r) => r.state !== "Accepted" && r.state !== "Handed over");
+  const missing = wanted.filter((m) => !live.some((r) => r.measure === m));
+  const returned = open.filter((r) => r.state === "Returned");
+  const reasons = open.map((r) => r.state === "Returned"
+    ? `${r.measure}: Returned${r.defect ? ` for ${screenValue(r.defect.reason)}${r.defect.description ? ` (${screenValue(r.defect.description)})` : ""}` : ""}; not accepted until the defect is fixed and reinspected.`
+    : `${r.measure}: ${r.state}, not yet independently accepted.`)
+    .concat(stale.map((r) => `${r.measure}: ${r.state} evidence is not bound to the current resident scope revision.`))
+    .concat(missing.map((m) => `${m}: no quality check recorded.`));
+  if (!live.length && !wanted.length) reasons.push("No quality check is recorded.");
+  if (reasons.length) {
+    const owners = returned.map((r) => r.defect?.owner).filter(Boolean);
+    const actions = [];
+    if (returned.length) actions.push("Fix the returned defect, then record the fix for independent reinspection");
+    if (open.length > returned.length) actions.push("Complete the independent inspection or acceptance");
+    if (stale.length) actions.push("Obtain current-scope quality evidence and have it independently accepted");
+    if (missing.length || (!live.length && !wanted.length)) actions.push("Record the missing quality check");
+    return ["Quality", "Blocked", reasons.join(" "), programmeJoin(owners), programmeJoin(actions)];
+  }
+  return ["Quality", "No recorded blocker", "Every measure has an accepted check. This is not a pass; a named person decides readiness.", "Unknown", "Unknown"];
+}
+const programmeFinanceBlockers = (c) => {
+  const budget = c.finance?.budget;
+  const found = [];
+  if (budget && budget.status !== "Approved") found.push({ reason: `Budget status is ${screenValue(budget.status)}, not Approved; commitments are refused until it is approved.`,
+    owner: "Unknown", next_action: "Ask the budget approver to decide the budget" });
+  const invoices = c.finance?.invoices || [];
+  const accepted = (inv) => inv.disposition === "Accept for payment";
+  const total = (inv) => (inv.lines || []).reduce((sum, ln) => sum + Number(ln.amount || 0), 0);
+  const acceptedTotal = (inv, commitment) => invoices.filter((o) => o.id !== inv.id && accepted(o)
+    && (!commitment || o.commitment === commitment.id)).reduce((sum, o) => sum + total(o), 0);
+  const projected = (inv) => {
+    const out = [];
+    const com = (c.finance?.commitments || []).find((x) => x.id === inv.commitment);
+    if (com && acceptedTotal(inv, com) + total(inv) > Number(com.amount) + 0.005) out.push("over the commitment");
+    if (budget?.status === "Approved" && acceptedTotal(inv) + total(inv) > Number(budget.amount) + 0.005) out.push("over the approved budget");
+    return out;
+  };
+  for (const inv of invoices) {
+    if (inv.hold) found.push({ reason: `Invoice ${screenValue(inv.id)} is on payment hold: ${screenValue(inv.hold.reason)}.`,
+      owner: screenValue(inv.hold.name), next_action: "Release the hold through the permitted Finance review" });
+    if (inv.disposition === "Keep on hold" && !inv.hold) found.push({ reason: `Invoice ${screenValue(inv.id)} has a Finance decision to keep on hold.`,
+      owner: screenValue(inv.disposition_by), next_action: "Ask the Finance reviewer to revisit the hold decision" });
+    const decided = inv.disposition && inv.disposition !== "Keep on hold";
+    if (!decided && inv.status === "Received") found.push({ reason: `Invoice ${screenValue(inv.id)} has not been matched yet; no match evidence is recorded.`,
+      owner: "Unknown", next_action: "Run the invoice match through the permitted Finance review" });
+    if (!decided && inv.status === "Matched" && !(inv.exceptions || []).length && projected(inv).length) found.push({
+      reason: `Invoice ${screenValue(inv.id)} would now be ${projected(inv).join(" and ")} given invoices already accepted.`,
+      owner: "Unknown", next_action: "Run the invoice match again through the permitted Finance review" });
+    if (!decided && (inv.exceptions || []).length) found.push({ reason: `Invoice ${screenValue(inv.id)} has ${inv.exceptions.length} unresolved match exception(s).`,
+      owner: "Unknown", next_action: "Resolve each line exception and run the match again" });
+  }
+  return found;
+};
+function programmeDeliveryRow(c, orders, blockers) {
+  const gate = programmeGate(blockers, /Safety review|Shared building/i);
+  if (!Array.isArray(orders)) return programmeGateRow("Delivery", gate, "", "Work orders could not be loaded for your role.");
+  const live = orders.filter((w) => w.state !== "Withdrawn");
+  const revisions = programmeCurrentRevisions(c);
+  const stale = live.filter((w) => {
+    const bindings = (w.versions || []).at(-1)?.resident_bindings;
+    return !Array.isArray(bindings) || !bindings.length || !bindings.every((b) => programmeBindingCurrent(b, revisions));
+  }).map((w) => ({ reason: `${screenValue(w.id)}: resident scope bindings are missing or not current.`,
+    owner: "Unknown", next_action: w.state === "Completed"
+      ? "Correct the completed work order so it is bound to the current resident scope"
+      : "Reissue the work order bound to the current resident scope" }));
+  const open = live.filter((w) => w.appointment_control?.status !== "Committed")
+    .map((w) => ({ reason: `${screenValue(w.id)}: appointment ${screenValue(w.appointment_control?.status)}${(w.appointment_control?.missing || []).length ? ` (${w.appointment_control.missing.join("; ")})` : ""}.`,
+      owner: "Unknown", next_action: "Agree and confirm the appointment" }));
+  return programmeGateRow("Delivery", gate.concat(stale, open), `${live.length} work order(s) with a committed appointment.`,
+    live.length ? null : "No active work order is recorded.");
+}
+function programmeGates(c, orders) {
+  const blockers = c.work?.blockers || [];
+  const budget = c.finance?.budget;
+  return [
+    programmeGateRow("Technical", programmeGate(blockers, /technical|Stock review/i),
+      "No technical blocker is recorded.", c.technical ? null : "No technical record is supplied."),
+    programmeGateRow("Resident", programmeGate(blockers, /resident/i),
+      "No resident decision blocker is recorded.", null),
+    programmeDeliveryRow(c, orders, blockers),
+    programmeQualityRow(c),
+    programmeGateRow("Finance", programmeGate(blockers, /funding/i).concat(programmeFinanceBlockers(c)),
+      budget ? `Budget status: ${screenValue(budget.status)}.` : "",
+      budget ? null : "No confirmed funding or budget is visible to your role.")
+  ];
+}
+registerRoleScreen({
+  id: "programme-queue",
+  title: "Programme queue and connected home view",
+  roles: [...screenManagers, "Retrofit Coordinator"],
+  async overview(signal) {
+    const page = await api("/api/cases?view=all&limit=50&offset=0", undefined, signal);
+    const report = await api("/api/coordinator?view=all", undefined, signal).catch(() => null);
+    return h("div", {},
+      screenPanel("Evidence boundary",
+        h("p", {}, "Read-only view of recorded work. Chase and update responsibility are shown separately. Nothing here sends, assigns or changes a record. Source: desk research, not observed behaviour; validation remains open.")),
+      screenPanel("Shared queue", programmeQueue(page.items || [], page.total)),
+      screenPanel("Lifecycle and funnel", programmeFunnel(report)));
+  },
+  async load(c) {
+    const orders = await api(`/api/workorders?case=${encodeURIComponent(c.id)}`, undefined, routeController.signal).catch(() => null);
+    return { orders };
+  },
+  render(c, extra) {
+    const rows = programmeGates(c, extra?.orders);
+    const blocked = rows.filter((r) => r[1].startsWith("Blocked"));
+    return screenPanel(`Connected view for ${c.id}`,
+      h("p", {}, "Technical, resident, delivery, quality and finance states are shown independently. One clear state never clears another."),
+      blocked.length ? screenUnknown(`${blocked.length} of 5 gates are blocked: ${blocked.map((r) => r[0]).join(", ")}.`,
+        blocked[0][3], blocked[0][4]) : h("p", {}, "No blocker is recorded, which does not confirm readiness."),
+      screenTable("Same-home gate states", ["Gate", "State", "Meaning", "Owner", "Next action"], rows));
 const technicalRoles = ["Retrofit Coordinator", "Quality Inspector", "Building Safety Liaison", ...screenManagers];
 const qualityRoles = ["Quality Inspector", ...screenManagers];
 // Competent role per sign-off, mirroring core signoffs.SIGNOFFS (a proposal for the programme to confirm).
