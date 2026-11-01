@@ -142,19 +142,47 @@ class RuleAlertApi(unittest.TestCase):
         self.assertEqual(self.store.detail("ZF-1")["hazards"][0]["hold"]["status"], "Active")
         self.assertEqual(self.store.detail("ZF-1")["contacts"], [])
 
+    def seed_clones(self) -> None:
+        engine = self.app.rule_engine()
+        base = engine.sql.all("SELECT * FROM reg_alert")[0]
+        check = engine.sql.all("SELECT * FROM reg_check")[0]
+        body = json.loads(base["body"])
+        check_body = json.loads(check["body"])
+        cb = dict(check_body, case_id="ZF-2")
+        engine.sql.run(
+            "INSERT INTO reg_check (id, case_id, at, check_seq, body) VALUES (?,?,?,?,?)",
+            ("chk-ZF-2", "ZF-2", cb["at"], 1, json.dumps(cb)),
+        )
+        self.home_id = cb["home_id"]
+        for name, case_id, due, harm in (
+            ("late", "ZF-1", "2000-03-01T00:00:00+00:00", 2),
+            ("same-low", "ZF-2", "2000-02-01T00:00:00+00:00", 1),
+            ("same-high", "ZF-1", "2000-02-01T00:00:00+00:00", 2),
+            ("early", "ZF-2", "2000-01-15T00:00:00+00:00", 0),
+        ):
+            alert = dict(body, id=name, case_id=case_id, due_at=due, harm=harm, episode=name)
+            alert["home_id"] = self.home_id
+            engine.sql.run(
+                "INSERT INTO reg_alert (id, episode, throttle, case_id, created, body) "
+                "VALUES (?,?,?,?,?,?)",
+                (name, name, name, case_id, "2026-01-01T00:00:00+00:00", json.dumps(alert)),
+            )
+
     def test_alerts_endpoint_returns_ranked_home_groups_and_precision(self) -> None:
         self.assertEqual(self.report()[0], 200)
+        self.seed_clones()
         code, data = self.call("owner", "/api/law/alerts")
         self.assertEqual(code, 200, data)
-        self.assertGreaterEqual(len(data["homes"]), 1)
-        for home in data["homes"]:
-            self.assertTrue(home["home_id"])
-            keys = [(a.get("due_at", "9999"), -a["harm"]) for a in home["alerts"]]
-            self.assertEqual(keys, sorted(keys))
-            self.assertEqual({a["home_id"] for a in home["alerts"]}, {home["home_id"]})
-            self.assertTrue(all(a["usage"]["model_calls"] == 0 for a in home["alerts"]))
+        self.assertEqual([h["home_id"] for h in data["homes"]], [self.home_id])
+        alerts = data["homes"][0]["alerts"]
+        self.assertEqual(len(alerts), 5)
+        self.assertEqual(
+            [(a["id"], a["case_id"]) for a in alerts[:4]],
+            [("early", "ZF-2"), ("same-high", "ZF-1"), ("same-low", "ZF-2"), ("late", "ZF-1")],
+        )
+        self.assertTrue(all(a["usage"]["model_calls"] == 0 for a in alerts))
         precision = data["precision"]
-        self.assertGreaterEqual(precision["total"], 1)
+        self.assertEqual(precision["total"], 5)
         self.assertEqual(precision["classified"], 0)
         self.assertEqual(precision["false_positives"], 0)
         self.assertEqual(precision["unclassified"], precision["total"])
