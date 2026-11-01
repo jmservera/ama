@@ -145,6 +145,13 @@ param sqlLocation string = location
 @description('Map tile URL template for the workbench map (https). Development may use https://tile.openstreetmap.org/{z}/{x}/{y}.png within its usage policy.')
 param tileUrl string = ''
 param tileAttribution string = ''
+@description('Owner-recorded chat privacy references (docs/reference/research/chat-demo-storage-approval-2026-11-01.md). All four refs must be set to send the settings; empty keeps chat storage refused.')
+param chatDpiaRef string = ''
+param chatLawfulBasisRef string = ''
+param chatNoticeRef string = ''
+param chatRetentionRef string = ''
+@minValue(0)
+param chatRetentionDays int = 0
 param tags object = {}
 @description('Owner tag value required by the tagging standard (infra/README.md, Governance controls).')
 param ownerTag string = 'Juan Manuel Servera'
@@ -397,6 +404,11 @@ module apps 'modules/containerapps.bicep' = if (deployApplications || deployEnvi
     tokenMaintenanceClientId: enableEntraTokenStore ? authTokenStore!.outputs.identityClientId : ''
     tileUrl: tileUrl
     tileAttribution: tileAttribution
+    chatDpiaRef: chatDpiaRef
+    chatLawfulBasisRef: chatLawfulBasisRef
+    chatNoticeRef: chatNoticeRef
+    chatRetentionRef: chatRetentionRef
+    chatRetentionDays: chatRetentionDays
     zoneRedundant: zoneRedundant
     evidenceStore: evidenceStore
     sharePointSiteId: sharePointSiteId

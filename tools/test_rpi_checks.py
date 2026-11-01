@@ -382,6 +382,43 @@ class GateTests(unittest.TestCase):
                 with self.assertRaises(gate.GateError):
                     gate.check_skips(output, integration=True, group="browser", expected_test=test)
 
+    def test_chat_panel_exact_parser_tolerates_interleaved_output_but_rejects_bad_results(
+        self,
+    ) -> None:
+        test = gate.CHAT_PANEL_DISCOVERY_SKIP[0]
+        tail = "\n" + "-" * 70 + "\nRan 1 test in 0.1s\n\nOK\n"
+        noise = "http-response GET /api/law/alerts status=503"
+        for body in (
+            f"{test} ... {noise}\n{noise}\nok",
+            f"{test} ... {noise}\n{noise}ok",
+            f"{noise}\n{test} ... ok",
+        ):
+            with self.subTest(body=body):
+                self.assertEqual(
+                    gate.check_skips(
+                        body + tail, integration=True, group="browser", expected_test=test
+                    )["executed"],
+                    1,
+                )
+        skip = "opt-in local Chromium"
+        rejected = (
+            f"{test} ... {noise}\nFAIL" + tail,
+            f"{test} ... {noise}\nERROR" + tail,
+            f"{test} ... {noise}\n" + tail,
+            f"{test} ... {noise}expected failure\n{noise}ok"
+            + tail.replace("OK\n", "OK (expected failures=1)\n"),
+            f"{test} ... expected failurehttp-response status=503\n{noise}status=503ok"
+            + tail.replace("OK\n", "OK (expected failures=1)\n"),
+            f"{test} ... debug: processing webhook" + tail,
+            f"{test} ... skipped '{skip}'" + tail.replace("OK\n", "OK (skipped=1)\n"),
+            f"{test} ... ok\n{test} ... ok" + tail,
+            f"{test} ... {noise}\nok".replace("PanelTests", "OtherTests") + tail,
+            "" + tail,
+        )
+        for output in rejected:
+            with self.subTest(output=output), self.assertRaises(gate.GateError):
+                gate.check_skips(output, integration=True, group="browser", expected_test=test)
+
     def test_chat_panel_runtime_requires_exact_success_evidence(self) -> None:
         runner = self.runner()
         runner.snapshot = self.root

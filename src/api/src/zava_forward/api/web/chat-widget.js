@@ -26,7 +26,7 @@ window.ChatWidget = (() => {
     icon.append(path);
     launcher.append(icon);
   }
-  function create({ id, title, launcher, questionLabel, skillLabel, maxLength = 1000, resizable = false }) {
+  function create({ id, title, launcher, questionLabel, skillLabel, maxLength = 1000, resizable = false, stayOpen = false, size = {} }) {
     let active = true, timer = null;
     launcher ||= node("button", "", { type: "button" });
     decorateLauncher(launcher);
@@ -61,13 +61,14 @@ window.ChatWidget = (() => {
     let docked = false;
     if (resizable) {
       root.classList.add("chat-widget-resizable");
+      if (stayOpen) root.classList.add("chat-widget-roomy");
       const dock = node("button", "Dock to right edge", { type: "button", "aria-pressed": "false", class: "chat-widget-close" });
       const sizes = node("details", "", { class: "chat-widget-size" });
       sizes.append(node("summary", "Chat size"));
       sizes.append(node("p", "Adjust the width and height. Docking uses the full screen height. Sizes stay within the screen and keep a minimum reading area."));
       sizes.append(dock);
       const controls = {};
-      for (const [dimension, value] of [["width", 35], ["height", 70]]) {
+      for (const [dimension, value] of [["width", size.width || 35], ["height", size.height || 70]]) {
         const label = node("label", `Preferred ${dimension} (% of screen)`, { for: `${id}-${dimension}` });
         const range = node("input", "", { type: "range", id: `${id}-${dimension}`, name: dimension, autocomplete: "off", min: "20", max: "100", step: "1", value: String(value) });
         const output = node("output", `${value}%`, { for: range.id, "aria-hidden": "true" });
@@ -163,13 +164,39 @@ window.ChatWidget = (() => {
       if (follow) bottom();
       return item;
     }
+    let observer = null, reserve = null, disposed = false;
+    if (stayOpen && typeof ResizeObserver === "function") {
+      reserve = () => {
+        if (disposed) return;
+        const style = document.body.style;
+        const rect = root.hidden ? null : root.getBoundingClientRect();
+        style.paddingBottom = rect && !docked ? `${Math.ceil(rect.height + 96)}px` : "";
+        style.paddingRight = rect && docked ? `${Math.ceil(rect.width)}px` : "";
+      };
+      observer = new ResizeObserver(reserve);
+      observer.observe(root);
+      reserve();
+    }
     launcher.onclick = () => root.hidden ? open() : hide();
     close.onclick = () => hide();
     root.addEventListener("keydown", event => {
       if (event.key === "Escape") { event.preventDefault(); hide(); }
     });
+    function revealBeside(target) {
+      const panel = root.getBoundingClientRect();
+      const box = target.getBoundingClientRect();
+      const margin = 16;
+      if (box.right < panel.left - margin || box.left > panel.right + margin || box.bottom < panel.top - margin || box.top > panel.bottom + margin) return;
+      if (docked) {
+        window.scrollBy?.({ left: box.right + margin - panel.left, behavior: "auto" });
+        return;
+      }
+      window.scrollBy?.({ top: box.bottom + margin - panel.top, behavior: "auto" });
+    }
     function externalFocus(event) {
-      if (!root.hidden && !root.contains(event.target) && !launcher.contains(event.target)) hide(false);
+      if (root.hidden || root.contains(event.target) || launcher.contains(event.target)) return;
+      if (!stayOpen) hide(false);
+      else if (typeof event.target?.getBoundingClientRect === "function") revealBeside(event.target);
     }
     document.addEventListener("focusin", externalFocus);
     input.addEventListener("keydown", event => {
@@ -194,7 +221,10 @@ window.ChatWidget = (() => {
         active = false;
         clearTimeout(timer);
         document.removeEventListener("focusin", externalFocus);
+        disposed = true;
+        observer?.disconnect();
         root.remove();
+        if (observer) { document.body.style.paddingBottom = ""; document.body.style.paddingRight = ""; }
         launcher.hidden = false;
         launcher.setAttribute("aria-expanded", "false");
       },

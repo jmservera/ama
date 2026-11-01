@@ -9520,3 +9520,16 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   The actual PDF outline, internal supplement navigation and all-page text
   bounds were checked. The title, study allocation and registration are
   unchanged; no full application gate or new experiment was run.
+
+## [2026-11-01] ingest | Chat storage approval for the synthetic-data demo
+
+* Added `research/chat-demo-storage-approval-2026-11-01.md`, recording the
+  owner's demo-only decision ("Approve all needed to enable storage") with the
+  DPIA, lawful basis, notice and 30-day retention references that
+  `CHAT_DPIA_REF`, `CHAT_LAWFUL_BASIS_REF`, `CHAT_NOTICE_REF`,
+  `CHAT_RETENTION_REF` and `CHAT_RETENTION_DAYS` point to. Indexed in
+  `README.md`.
+* Open: production and real personal data still need separate DPO and Legal
+  approval (#163 criteria 2 and 5 deferred). The older DPIA record's "Not
+  recorded" cells describe the pre-decision state and now point to the new
+  record for the demo scope.

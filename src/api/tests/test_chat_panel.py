@@ -410,8 +410,17 @@ class PanelTests(roles.Matrix):
             code, reply = self.api(
                 ROLE, "/api/chat/unstored-ask", {"content": "Stage?", "case_id": "ZF-1"}
             )
-            self.assertEqual((code, reply["kind"]), (200, "fallback"))
+            self.assertEqual((code, reply["kind"]), (200, "answer"))
             self.assertEqual(reply["context"], "ZF-1")
+            self.assertIn("Stage: ", reply["reply"])
+            self.assertTrue(all(c["id"].startswith("ZF-1/") for c in reply["citations"]))
+            code, funding = self.api(
+                ROLE,
+                "/api/chat/unstored-ask",
+                {"content": "Why is funding not started yet?", "case_id": "ZF-1"},
+            )
+            self.assertEqual(code, 200)
+            self.assertIn("Recorded funding status", funding["reply"])
             self.assertEqual(self.prompts, [])
             self.assertEqual(
                 json.dumps(self.store.data.get("chat_threads"), sort_keys=True), before

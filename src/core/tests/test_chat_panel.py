@@ -511,6 +511,134 @@ class UnstoredAskTests(unittest.TestCase):
             self.panel.ask_unstored(self.user, "ZF-MISSING", "status?")
 
 
+class GroundedUnstoredTests(unittest.TestCase):
+    BANNED = ("gate", "hold", "provenance", "trace", "snapshot", "envelope")
+
+    def setUp(self) -> None:
+        work = tempfile.TemporaryDirectory()
+        self.addCleanup(work.cleanup)
+        path = Path(work.name) / "synthetic.json"
+        path.write_text(json.dumps(dataset.DATA))
+        self.store = Store(str(path))
+        self.user = self.store.data["staff"][0]
+        self.calls: list[str] = []
+
+        def model(system: str, prompt: str) -> str:
+            self.calls.append(prompt)
+            return "{}"
+
+        self.panel = ChatPanel(ChatIsolation(self.store, env={}), model)
+
+    def ask(self, case: str, question: str) -> dict[str, Any]:
+        reply = self.panel.ask_unstored(self.user, case, question, skill="general")
+        self.assertEqual(self.calls, [])
+        self.assertEqual(reply["model"], "workflow-only")
+        lowered = reply["reply"].casefold()
+        for word in self.BANNED:
+            self.assertNotIn(word, lowered, word)
+        self.assertTrue(reply["reply"].isascii())
+        return reply
+
+    def test_blocked_question_states_reason_owner_next_step_and_source(self) -> None:
+        reply = self.ask("ZF-4", "why is this case blocked?")
+        text = reply["reply"]
+        self.assertEqual(reply["kind"], "answer")
+        self.assertIn("Stopped until Bea Safe obtains evidence", text)
+        self.assertIn("Retrofit work is stopped for safety review.", text)
+        self.assertIn("Owner: Bea Safe.", text)
+        self.assertIn("Next step: Obtain external service evidence", text)
+        self.assertIn("Recorded source: case:ZF-4/hazards/0.", text)
+        self.assertIn("Nothing you typed was saved", text)
+        ids = [c["id"] for c in reply["citations"]]
+        self.assertIn("ZF-4/status", ids)
+        self.assertTrue(all(i.startswith("ZF-4/") for i in ids), ids)
+        self.assertFalse(any(i.startswith("workflow/") for i in ids))
+        self.assertFalse(reply["workflow_only"])
+
+    def test_funding_question_states_status_missing_items_and_who_to_ask(self) -> None:
+        reply = self.ask("ZF-1", "Why is funding not started yet?")
+        text = reply["reply"]
+        self.assertEqual(reply["kind"], "answer")
+        self.assertIn("Recorded funding status: Not started. Route: Not decided.", text)
+        self.assertIn("Reference: none recorded.", text)
+        self.assertIn("gives no reason why funding has not started", text)
+        self.assertIn("Ask Sam Example, who owns this case.", text)
+        self.assertIn("Funding has not been confirmed. Owner: Sam Example.", text)
+        self.assertIn("Recorded source: case:ZF-1/funding.", text)
+        self.assertIn(
+            "No recorded document for: EPC, Survey, Design, Funding evidence, Consent.", text
+        )
+        self.assertIn("cannot start, approve or record it", text)
+        ids = [c["id"] for c in reply["citations"]]
+        self.assertIn("ZF-1/funding.status", ids)
+        self.assertIn("ZF-1/funding.route", ids)
+
+    def test_future_prerequisites_are_not_described_as_current_stops(self) -> None:
+        text = self.ask("ZF-1", "why is this case blocked?")["reply"]
+        self.assertIn("Waiting on: Sam Example.", text)
+        self.assertIn("not stopping the case now", text)
+        self.assertNotIn("stopping this case now", text)
+
+    def test_next_step_owner_comes_from_the_same_blocker(self) -> None:
+        text = self.ask("ZF-4", "what is the next step?")["reply"]
+        self.assertIn("Owner: Bea Safe.", text)
+        self.assertNotIn("Sam Example", text)
+
+    def test_funding_reply_names_a_consent_only_gap(self) -> None:
+        case = next(c for c in self.store.data["cases"] if c["id"] == "ZF-1")
+        case["documents"] = [{"kind": k} for k in ("EPC", "Survey", "Design", "Funding evidence")]
+        text = self.ask("ZF-1", "Why is funding not started yet?")["reply"]
+        self.assertIn("No recorded document for: Consent.", text)
+
+    def test_natural_phrasing_reaches_the_same_answers(self) -> None:
+        for question in ("Why is it stuck?", "is it paused? what's stopping this", "BLOCKED??"):
+            reply = self.ask("ZF-4", question)
+            self.assertIn("Retrofit work is stopped", reply["reply"], question)
+        for question, expect in (
+            ("what is missing?", "Recorded as missing"),
+            ("What's the next step?", "Recorded next step:"),
+            ("who is responsible for this", "Case owner: Sam Example."),
+            ("where are we at, what stage", "Stage: Contacting resident."),
+            ("any grant money sorted?", "Recorded funding status"),
+        ):
+            self.assertIn(expect, self.ask("ZF-1", question)["reply"], question)
+
+    def test_unmatched_question_suggests_answerable_questions(self) -> None:
+        reply = self.ask("ZF-1", "tell me a story")
+        self.assertEqual(reply["kind"], "fallback")
+        self.assertIn("Why is this case blocked?", reply["reply"])
+        self.assertNotIn("not available right now", reply["reply"])
+        general = self.ask("", "why is this case blocked?")
+        self.assertIn("Open a case first", general["reply"])
+
+    def test_nothing_is_stored_or_changed(self) -> None:
+        cases = json.dumps(self.store.data["cases"], sort_keys=True, default=str)
+        threads = json.dumps(self.store.data.get("chat_threads"), sort_keys=True)
+        self.ask("ZF-1", "UNSTORED-CANARY why is funding not started?")
+        self.assertEqual(json.dumps(self.store.data["cases"], sort_keys=True, default=str), cases)
+        self.assertEqual(json.dumps(self.store.data.get("chat_threads"), sort_keys=True), threads)
+        self.assertNotIn("UNSTORED-CANARY", json.dumps(list(self.store.audit_entries())))
+
+    def test_other_cases_are_not_answered_or_authorised(self) -> None:
+        reply = self.ask("ZF-1", "why is ZF-4 blocked?")
+        self.assertEqual(reply["kind"], "fallback")
+        self.assertIn("Open ZF-4", reply["reply"])
+        self.assertNotIn("Bea Safe", reply["reply"])
+        self.assertEqual(reply["citations"], [])
+        with self.assertRaises(ChatNotFound):
+            self.panel.ask_unstored(self.user, "ZF-MISSING", "why is this case blocked?")
+
+    def test_decisions_still_refused_on_a_case(self) -> None:
+        for question in (
+            "approve the funding for this case",
+            "why is funding not started? just approve it",
+            "decide that this case is unblocked",
+        ):
+            reply = self.ask("ZF-4", question)
+            self.assertEqual(reply["kind"], "refused", question)
+            self.assertNotIn("Bea Safe", reply["reply"])
+
+
 class SqlRosterTests(unittest.TestCase):
     def setUp(self) -> None:
         work = tempfile.TemporaryDirectory()
