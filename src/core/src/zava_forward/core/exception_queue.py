@@ -9,7 +9,7 @@ the operator and steward roles.
 
 from collections.abc import Callable, Iterable, Mapping
 from copy import deepcopy
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 Record = dict[str, Any]
@@ -36,6 +36,7 @@ RUNBOOK = {
     "stranded_task": "Confirm the task and its owner, then reassign or close it by hand.",
 }
 UNKNOWN = "Unknown"
+CHECK_MAX_AGE = timedelta(hours=1)
 NO_AUTOMATION = (
     "Recovery is a recorded human request. Nothing is replayed or released automatically."
 )
@@ -193,40 +194,53 @@ class ExceptionQueue:
 
     def set_outage(self, actor: str, component: str, note: str) -> None:
         if OPERATOR not in self._roles(actor):
+            self._log(actor, "denied", None, "Only a digital operator records an outage.")
             raise PermissionError("Only a digital operator records an outage.")
-        self.outages[_text(component, "Component")] = {
-            "since": self._clock(),
-            "note": _text(note, "Note"),
-            "recovered": False,
-        }
-        self._log(actor, "outage_set", None, component)
+        name, why = _text(component, "Component"), _text(note, "Note")
+        self.outages[name] = {"since": self._clock(), "note": why, "recovered": False}
+        self._log(actor, "outage_set", None, f"{name}: {why}")
 
     def clear_outage(self, actor: str, component: str, evidence: str) -> None:
         if OPERATOR not in self._roles(actor):
+            self._log(actor, "denied", None, "Only a digital operator clears an outage.")
             raise PermissionError("Only a digital operator clears an outage.")
         if component not in self.outages:
             raise KeyError(component)
-        self.outages[component].update(recovered=True, evidence=_text(evidence, "Evidence"))
-        self._log(actor, "outage_cleared", None, component)
+        proof = _text(evidence, "Evidence")
+        self.outages[component].update(recovered=True, evidence=proof)
+        self._log(actor, "outage_cleared", None, f"{component}: {proof}")
+
+    def _fresh(self, last_checked: str | None) -> bool:
+        """True only for a valid, not-future check within CHECK_MAX_AGE of the clock."""
+        try:
+            checked = datetime.fromisoformat(str(last_checked))
+            now = datetime.fromisoformat(self._clock())
+        except ValueError:
+            return False
+        checked = checked if checked.tzinfo else checked.replace(tzinfo=UTC)
+        now = now if now.tzinfo else now.replace(tzinfo=UTC)
+        return timedelta(0) <= now - checked <= CHECK_MAX_AGE
 
     def outage_banner(self, last_checked: str | None = None) -> Record:
-        """Honest staff status: an unknown check is Unknown, never healthy."""
+        """Honest staff status: a missing, invalid, future or stale check is Unknown."""
         down = {k: dict(v) for k, v in self.outages.items() if not v["recovered"]}
         if down:
             state, text = "outage", "Some services are down: " + ", ".join(sorted(down)) + "."
-        elif last_checked is None:
+        elif not self._fresh(last_checked):
             state, text = (
                 "unknown",
-                "Service state has not been checked. Do not assume it is healthy.",
+                "Service state has not been checked recently. Do not assume it is healthy.",
             )
         else:
             state, text = "no_known_outage", f"No outage recorded at last check ({last_checked})."
         return {"state": state, "text": text, "components": down, "last_checked": last_checked}
 
-    def access_report(self) -> Record:
-        """Visible roles and who may see which queue, plus the access audit."""
+    def access_report(self, actor: str) -> Record:
+        """Visible roles and scope, plus the access audit limited to the actor's role scope."""
+        roles = self._roles(actor)
+        scoped = {i for i, v in self.items.items() if v["owner_role"] in roles}
         return {
-            "roles": {name: list(roles) for name, roles in self._staff.items()},
+            "roles": {name: list(held) for name, held in self._staff.items()},
             "scope": dict(OWNER_ROLE),
-            "audit": deepcopy(self.audit),
+            "audit": [deepcopy(e) for e in self.audit if e["item"] is None or e["item"] in scoped],
         }

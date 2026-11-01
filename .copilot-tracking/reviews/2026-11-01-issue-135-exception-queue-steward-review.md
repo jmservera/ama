@@ -12,3 +12,5 @@ Date: 2026-11-01. Execution: executed once, self-review of the diff. Outcome: co
 
 Findings routed to later work: persistence and API/UI wiring, producers from importer and AI runs, owner approval of role names and runbooks (open question), pre-existing syntax error in `assistant_release.py:185`.
 Not every criterion is proven in the product (no UI, store or producers), so the PR uses `Refs #135`.
+
+Post-review amendment: four Copilot review findings on PR 666 were valid and fixed (scoped audit report, outage denial audit, outage note and evidence audit, check freshness). Original review outcome above is unchanged.
