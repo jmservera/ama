@@ -143,11 +143,17 @@ class SensorConsumerTests(unittest.TestCase):
                     (control.sensor_id,),
                 ).fetchone()
                 self.assertEqual(stored[0], home_id)
+                self.assertEqual(len(self.consumer.observed_series([home_id])), 1)
                 self.assertEqual(self.snapshot(), before)
                 self.store.db.execute(
                     "UPDATE cases SET id='ZF-1', body=? WHERE id=?",
                     (dbrow[0], home_id),
                 )
+
+    def test_observed_series_rejects_unbounded_home_identity(self) -> None:
+        for home_id in ("H" * 65, " padded", "tab\there"):
+            with self.subTest(home_id=home_id), self.assertRaises(ConsumerError):
+                self.consumer.observed_series([home_id])
 
     def test_stock_export_domain_does_not_bypass_case_availability(self) -> None:
         for home_id in ("not-a-case-0000000000001", "H" * 65, "H" * 128):

@@ -647,19 +647,45 @@ class SensorConsumer:
             raise ConsumerError("SENSOR_COMMIT_UNCERTAIN", reference) from None
         return receipt
 
-    def observed_series(self, home_ids: Sequence[str]) -> list[dict[str, str]]:
-        """Read stored readings per home as canonical rows with trusted control units."""
-        if not home_ids or any(not _text(home, 64) for home in home_ids):
+    def observed_series(
+        self,
+        home_ids: Sequence[str],
+        windows: Mapping[str, tuple[str, str]] | None = None,
+    ) -> list[dict[str, str]]:
+        """Read stored readings per home as canonical rows with trusted control units.
+
+        windows optionally bounds each home to an inclusive (first, last) UTC slot range.
+        """
+        if (
+            not home_ids
+            or any(
+                not home_key(home) or len(home.encode("utf-16-le")) // 2 > 64 for home in home_ids
+            )
+            or (windows is not None and set(windows) != set(home_ids))
+        ):
             raise ConsumerError("INVALID_HOME_SELECTION")
+        bounds: dict[str, tuple[object, ...]] = {}
+        try:
+            for home in home_ids if windows is not None else ():
+                stamps = [utc(stamp) for stamp in windows[home]]  # type: ignore[index]
+                # SQLite stores the canonical text; SQL Server stores datetime2.
+                bounds[home] = (
+                    tuple(stamp.replace(tzinfo=None) for stamp in stamps)
+                    if self.mssql
+                    else tuple(windows[home])  # type: ignore[index]
+                )
+        except (ValueError, TypeError):
+            raise ConsumerError("INVALID_HOME_SELECTION") from None
         db = self._connect()
         try:
             units: dict[str, Mapping[str, object]] = {}
             rows: list[dict[str, str]] = []
             for home in home_ids:
+                window = " AND observed_at BETWEEN ? AND ?" if bounds else ""
                 stored = db.execute(
                     f"SELECT {', '.join(READING_COLUMNS)} FROM sensor_reading"
-                    " WHERE home_id=? ORDER BY observed_at, sensor_id",
-                    (home,),
+                    f" WHERE home_id=?{window} ORDER BY observed_at, sensor_id",
+                    (home, *bounds.get(home, ())),
                 ).fetchall()
                 for record in stored:
                     row = {

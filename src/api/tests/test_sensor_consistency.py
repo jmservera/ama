@@ -3,6 +3,7 @@
 import csv
 import json
 import os
+import sqlite3
 from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
@@ -19,6 +20,7 @@ from zava_forward.core.synthetic.sensor_stream import Replay, descriptor, replay
 
 from zava_forward.api.iot_stream import AUTH, DEVICE, Binding, decode
 from zava_forward.api.sensor_handover_verify import main as verify_main
+from zava_forward.api.sensor_handover_verify import open_existing_store
 from zava_forward.api.sensor_handover_verify import run as verify
 from zava_forward.api.sensor_ingestion import SensorIngestion
 
@@ -178,6 +180,30 @@ class SqlHandoverTests(consumer_tests.SensorConsumerTests):
         self.assertTrue(
             verify(reopened, reference, handover=fixture.HANDOVER, temperature=wide)["passed"]
         )
+        # Readings outside the reference window are bounded away, not a coverage mismatch.
+        subset = [row for row in reference if row["observed_at"] >= reference[2]["observed_at"]]
+        homes = sorted({row["home_id"] for row in subset})
+        windows = {
+            home: (
+                min(r["observed_at"] for r in subset if r["home_id"] == home),
+                max(r["observed_at"] for r in subset if r["home_id"] == home),
+            )
+            for home in homes
+        }
+        bounded = self.consumer.observed_series(homes, windows)
+        self.assertEqual(len(bounded), len(subset))
+        with self.assertRaises(ConsumerError):
+            self.consumer.observed_series(homes, {homes[0]: windows[homes[0]]})
+        if not self.consumer.mssql:
+            readonly = open_existing_store({"ZF_STORE": "sqlite", "ZF_SQLITE": reopened.db_path})
+            db = readonly.assistant_connection()
+            self.addCleanup(db.close)
+            with self.assertRaises(sqlite3.OperationalError):
+                db.execute("DELETE FROM sensor_reading")
+            with self.assertRaises(ValueError):
+                open_existing_store(
+                    {"ZF_STORE": "sqlite", "ZF_SQLITE": str(Path(self.tmp.name) / "none.db")}
+                )
         missing = Path(self.tmp.name) / "absent.csv"
         self.assertEqual(
             verify_main(["--reference", str(missing), "--handover", fixture.HANDOVER]), 2

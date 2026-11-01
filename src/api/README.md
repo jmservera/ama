@@ -1720,11 +1720,14 @@ issue status change is authorized by this source.
 
 `zava_forward.api.sensor_handover_verify` runs the same strict report against
 the SQL store selected by `ZF_STORE` (`sqlite` or `mssql`, so Azure SQL once an
-owner provides it), using `SensorConsumer.observed_series(home_ids)` for a
-read-only joint per-home query with trusted control units. Tolerances default to
-zero and are declared per channel and metric. `--replay-check` re-feeds the
-reference window through the #110 consumer and requires replay receipts and an
-unchanged series. Exit codes: 0 pass, 1 numeric failure, 2 refusal.
+owner provides it), using `SensorConsumer.observed_series(home_ids, windows)` for a
+joint per-home query bounded to each home's reference window, with trusted
+control units. The store is opened without migrations or other initialization
+writes (SQLite read-only), so SELECT-only credentials suffice. Tolerances default
+to zero and are declared per channel and metric. `--replay-check` needs write
+access: it re-feeds the retained stored payloads for the window, in batches of
+100, through the #110 consumer and requires replay receipts and an unchanged
+series. Exit codes: 0 pass, 1 numeric failure, 2 refusal.
 
 ```bash
 cd src/api
