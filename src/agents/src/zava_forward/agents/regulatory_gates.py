@@ -301,7 +301,8 @@ def authorise_model_run(
     """
     reasons: list[str] = []
     auth = authority or {}
-    if not auth.get("owner"):
+    owner = auth.get("owner")
+    if not isinstance(owner, str) or not owner.strip():
         reasons.append("no named owner authority")
     try:
         expires = datetime.fromisoformat(str(auth.get("expires_at")))
