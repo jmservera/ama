@@ -9,3 +9,7 @@
 ## Correction cycle 1 (PR 709 review)
 
 * Two Copilot threads: null/empty authority or evidence reference, and allowance checked against measured totals instead of all roots. Both valid.
+
+## Correction cycle 2 research
+
+* Copilot thread PRRT_kwDOUU8JX86yY4nm (ai_consumption.py:1068): valid; only `batch_spread` was tested directly, not `Consumption.report(batch=...)`.

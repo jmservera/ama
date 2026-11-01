@@ -9,3 +9,7 @@
 ## Correction cycle 1
 
 * `batch_spread` takes the full root count and validates both references as bounded nonempty strings, returning Unknown otherwise; regression cases added.
+
+## Correction cycle 2 plan
+
+* Add a report-level regression test: authorised batch with a root missing usage, over-limit cohort, and no-batch label.
