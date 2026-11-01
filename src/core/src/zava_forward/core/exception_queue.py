@@ -63,12 +63,12 @@ class ExceptionQueue:
                 raise ValueError("Roles must be data_steward or digital_operator.")
             self._staff[_text(name, "Staff name")] = held
         self._clock = clock
-        self.items: dict[str, Record] = {}
-        self.audit: list[Record] = []
-        self.outages: dict[str, Record] = {}
+        self._items: dict[str, Record] = {}
+        self._audit: list[Record] = []
+        self._outages: dict[str, Record] = {}
 
     def _log(self, actor: str, action: str, item: str | None, detail: str = "") -> None:
-        self.audit.append(
+        self._audit.append(
             {"at": self._clock(), "actor": actor, "action": action, "item": item, "detail": detail}
         )
 
@@ -88,8 +88,8 @@ class ExceptionQueue:
         return name
 
     def _add(self, kind: str, owner: str, summary: str, original: object, extra: Record) -> Record:
-        seq = len(self.items) + 1
-        while f"EX-{seq:03d}" in self.items:
+        seq = len(self._items) + 1
+        while f"EX-{seq:03d}" in self._items:
             seq += 1
         item_id = f"EX-{seq:03d}"
         rec: Record = {
@@ -105,7 +105,7 @@ class ExceptionQueue:
             "recovery": None,
             **extra,
         }
-        self.items[item_id] = rec
+        self._items[item_id] = rec
         self._log(rec["owner"], "raised", item_id, kind)
         return deepcopy(rec)
 
@@ -142,7 +142,7 @@ class ExceptionQueue:
         """Items in the actor's role scope. Viewing is audited."""
         roles = self._roles(actor)
         self._log(actor, "viewed_queue", None, ",".join(roles))
-        return [deepcopy(i) for i in self.items.values() if i["owner_role"] in roles]
+        return [deepcopy(i) for i in self._items.values() if i["owner_role"] in roles]
 
     def conflict_view(self, actor: str, item_id: str) -> Record:
         item = self._item(actor, item_id)
@@ -159,7 +159,7 @@ class ExceptionQueue:
 
     def _item(self, actor: str, item_id: str) -> Record:
         roles = self._roles(actor)
-        item = self.items.get(item_id)
+        item = self._items.get(item_id)
         if item is None or item["owner_role"] not in roles:
             self._log(actor, "denied", item_id, "Outside role scope or unknown item.")
             raise PermissionError("This item is outside your role scope.")
@@ -197,18 +197,19 @@ class ExceptionQueue:
             self._log(actor, "denied", None, "Only a digital operator records an outage.")
             raise PermissionError("Only a digital operator records an outage.")
         name, why = _text(component, "Component"), _text(note, "Note")
-        self.outages[name] = {"since": self._clock(), "note": why, "recovered": False}
+        self._outages[name] = {"since": self._clock(), "note": why, "recovered": False}
         self._log(actor, "outage_set", None, f"{name}: {why}")
 
     def clear_outage(self, actor: str, component: str, evidence: str) -> None:
         if OPERATOR not in self._roles(actor):
             self._log(actor, "denied", None, "Only a digital operator clears an outage.")
             raise PermissionError("Only a digital operator clears an outage.")
-        if component not in self.outages:
-            raise KeyError(component)
+        name = _text(component, "Component")
+        if name not in self._outages:
+            raise KeyError(name)
         proof = _text(evidence, "Evidence")
-        self.outages[component].update(recovered=True, evidence=proof)
-        self._log(actor, "outage_cleared", None, f"{component}: {proof}")
+        self._outages[name].update(recovered=True, evidence=proof)
+        self._log(actor, "outage_cleared", None, f"{name}: {proof}")
 
     def _fresh(self, last_checked: str | None) -> bool:
         """True only for a valid, not-future check within CHECK_MAX_AGE of the clock."""
@@ -223,7 +224,7 @@ class ExceptionQueue:
 
     def outage_banner(self, last_checked: str | None = None) -> Record:
         """Honest staff status: a missing, invalid, future or stale check is Unknown."""
-        down = {k: dict(v) for k, v in self.outages.items() if not v["recovered"]}
+        down = {k: dict(v) for k, v in self._outages.items() if not v["recovered"]}
         if down:
             state, text = "outage", "Some services are down: " + ", ".join(sorted(down)) + "."
         elif not self._fresh(last_checked):
@@ -238,9 +239,11 @@ class ExceptionQueue:
     def access_report(self, actor: str) -> Record:
         """Visible roles and scope, plus the access audit limited to the actor's role scope."""
         roles = self._roles(actor)
-        scoped = {i for i, v in self.items.items() if v["owner_role"] in roles}
-        return {
+        scoped = {i for i, v in self._items.items() if v["owner_role"] in roles}
+        report = {
             "roles": {name: list(held) for name, held in self._staff.items()},
             "scope": dict(OWNER_ROLE),
-            "audit": [deepcopy(e) for e in self.audit if e["item"] is None or e["item"] in scoped],
+            "audit": [deepcopy(e) for e in self._audit if e["item"] is None or e["item"] in scoped],
         }
+        self._log(actor, "viewed_access_report", None, ",".join(roles))
+        return report

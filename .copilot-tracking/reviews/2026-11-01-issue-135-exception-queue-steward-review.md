@@ -14,3 +14,5 @@ Findings routed to later work: persistence and API/UI wiring, producers from imp
 Not every criterion is proven in the product (no UI, store or producers), so the PR uses `Refs #135`.
 
 Post-review amendment: four Copilot review findings on PR 666 were valid and fixed (scoped audit report, outage denial audit, outage note and evidence audit, check freshness). Original review outcome above is unchanged.
+
+Second post-review amendment: three further Copilot findings on PR 666 were valid and fixed (private backing records, outage clear normalisation, audited access report). Original outcome unchanged.

@@ -131,6 +131,22 @@ class ExceptionQueueTests(unittest.TestCase):
         self.assertEqual(report["roles"]["Sam Steward"], [STEWARD])
         self.assertEqual(report["scope"]["failed_ai_run"], OPERATOR)
 
+    def test_access_report_is_audited_and_returns_copies(self) -> None:
+        q = make()
+        q.access_report("Sam Steward")
+        report = q.access_report("Sam Steward")
+        self.assertEqual(report["audit"][-1]["action"], "viewed_access_report")
+        report["audit"].clear()
+        self.assertTrue(q.access_report("Sam Steward")["audit"])
+        self.assertFalse(hasattr(q, "audit") or hasattr(q, "items") or hasattr(q, "outages"))
+
+    def test_outage_component_is_normalised_on_clear(self) -> None:
+        q = make()
+        q.set_outage("Olive Operator", " model-service ", "down")
+        q.clear_outage("Olive Operator", " model-service ", "ok")
+        self.assertEqual(q.outage_banner()["state"], "unknown")
+        self.assertEqual(q.outage_banner()["components"], {})
+
 
 if __name__ == "__main__":
     unittest.main()
