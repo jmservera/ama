@@ -404,6 +404,29 @@ def retrofit_comparison(
     }
 
 
+EXERCISE_LABEL = "EXERCISE VALUE: fictional, not sourced"
+
+
+def retrofit_exercise_scenarios(seed: int = SEED) -> tuple[dict[str, object], ...]:
+    """Consumer view of the retrofit cases: analysis rows plus labelled expectations."""
+    measure_at = START + timedelta(days=14)
+    return tuple(
+        {
+            "case_id": case.case_id,
+            "label": case.truth.label,
+            "measure_at": _stamp(measure_at),
+            "rows": case.rows,
+            "expected_direction": case.truth.expected_outcome,
+            "expected_temperature_delta_c": case.truth.temperature_delta_c,
+            "expected_humidity_delta_points": case.truth.humidity_delta_points,
+            "delay_days": case.truth.delay_days,
+            "value_status": EXERCISE_LABEL,
+        }
+        for case in generate(seed)
+        if case.truth.family == "retrofit"
+    )
+
+
 def report(cases: Sequence[Case], *, humidity_threshold: float = 75.0) -> dict[str, object]:
     """Join fixed evaluator truth only after observations-only predictions."""
     _threshold(humidity_threshold)
@@ -557,6 +580,7 @@ def write(
     )
     manifest = {
         "schema_version": VERSION,
+        "version": VERSION,
         "method_version": METHOD_VERSION,
         "source_type": "SYNTHETIC",
         "classification": CLASSIFICATION,

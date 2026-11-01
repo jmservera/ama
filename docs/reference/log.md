@@ -9016,6 +9016,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   of PR size and the 19-24 October slowdown cause are unmeasured. No
   workflow, setting, gate or source change was made.
 
+## [2026-11-01] update | Synthetic determinism replay audit (Refs #176)
+
+* Added a one-command replay audit for the in-repo synthetic generators and a
+  `version` field in the sensor scenarios manifest; documented in the
+  [retrofit synthetic data README](./research/retrofit-synthetic-data/README.md).
+* The original private stock register generator remains absent, so the
+  byte-identical and manifest criteria stay partially met. No index change.
 ## [2026-11-01] refine | Briefing feedback guidance, Refs #531
 
 * Added a plain-language paragraph to Today's briefing saying how to correct
@@ -9064,3 +9071,11 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   and the API README. It reuses the local strict report on any `ZF_STORE`
   SQL store and re-runs a window. Actual Hub, Azure SQL and live handover
   remain unproven; no issue checkbox changes.
+## [2026-11-01] update | Break-glass audit purpose and OD-46 options (#162)
+
+* Refused break-glass attempts now audit the redacted purpose as well as the
+  target and reason; the test asserts purpose, target and policy reference on
+  every entry. Added a proposed administrator and break-glass policy options
+  table to `research/chat-memory-dpia.md`.
+* The policy is not decided (BRD OD-46, owner with DPO); issue #162 criterion 6
+  stays open. No regulatory snapshot changed.

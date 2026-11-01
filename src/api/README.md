@@ -121,6 +121,15 @@ credential entry point, saves no sessions and consumes zero sign-in attempts.
 The authorized caller still owns independent ID attestation, credential/debug/
 capture safety, finite attempt accounting and browser lifecycle/watchdog.
 
+Operator entry point (no credentials handled): sign in manually in a Chromium
+started with `--remote-debugging-port=9222`, export independently verified
+`ZF_EXPECTED_TID` and `ZF_EXPECTED_OID`, then run
+`python3 -m checks.employee_live_acceptance [--cdp-url http://127.0.0.1:9222]
+[--origin <app origin>]` from this directory. Only loopback CDP is accepted.
+It prints fixed boolean JSON and exits 0 only when chat, map and case all pass
+(1 on a failed stage, 2 when refused or no matching page). A passing live run
+is the evidence for criterion 3; the offline tests are not.
+
 Map acceptance excludes requests initiated before filter activation, matches
 the selected flag/area and observes fit/viewport follow-ups until request/render
 settlement. It validates points/clusters/empty payloads and compares the latest
