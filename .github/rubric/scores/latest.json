@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-01T00:42:34+00:00",
-  "commit": "80698e4f1a07b6dc48908ae2685293f8996cb6cf",
+  "scored_at": "2026-11-01T01:41:17+00:00",
+  "commit": "ae1806f070c47aaeec313935dfb591a4a559c9cf",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41257325207",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41261010026",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "be68ee192641a78bd6b598582443b1da2d6f66da2842e48e2615e0d4f34177a5",
+    "solution-code": "d28485c06ea46ce27d825dd4b903dc27a9936305f64a5abd635d956727595b7f",
     "infrastructure": "0172b75e258abc5d97ce173fa595146da2d6f807386ec74e992482b7524f7aad",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -32,7 +32,7 @@
         "src/api/src/zava_forward/api/static_assets.py:1-58",
         "src/api/src/zava_forward/api/server.py:193-197"
       ],
-      "rationale": "Diff adds packages/work-orders pagination (limit/offset) in server.py and core/procurement.py; architecture already modular with defined API contracts. Baseline ceiling 5 retained."
+      "rationale": "Current diff adds a synthetic retrofit-exercise fixture helper, not an architecture change. Baseline ceiling 5 retained."
     },
     "A2": {
       "score": 5,
@@ -48,30 +48,30 @@
         "src/core/src/zava_forward/core/ai.py:67-100",
         "src/core/src/zava_forward/core/assistants.py:884-900"
       ],
-      "rationale": "Diff is pagination for capacity workspace, not security/compliance/responsible-AI. Baseline 5 retained."
+      "rationale": "Diff is a labelled synthetic test fixture, not security/compliance/responsible-AI. Baseline 5 retained."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/procurement.py:540-562",
-        "src/api/src/zava_forward/api/server.py:486-505",
-        "src/api/tests/test_workspace_paging.py:1-30"
+        "src/core/src/zava_forward/core/synthetic/sensor_scenarios.py:407-428",
+        "src/core/tests/test_sensor_scenarios.py:253-277"
       ],
-      "rationale": "Capability is implemented end to end (API, core, UI) with edge cases (invalid input, hidden-order totals, offset overrun) and dedicated passing tests. Strengthens completeness evidence; baseline 5 retained as it was already at ceiling."
+      "rationale": "New retrofit_exercise_scenarios() helper is covered by a dedicated passing test validating all four outcome directions and label integrity, but its own README documents that #\u200b111/#\u200b133 consumer use remains unproven. Already at ceiling 5; no change."
     },
     "A5": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/ai_consumption.py:360-420,920-1073",
         "src/core/README.md:5-123",
         "src/api/src/zava_forward/api/server.py:514-540"
       ],
-      "rationale": "Pagination improves reliability/scalability of list reads but adds no new observability/cost-measurement evidence. Baseline 5 retained."
+      "rationale": "No observability/cost-measurement evidence added by this diff. Baseline 5 retained."
     },
     "A6": {
       "score": 5,
-      "evidence": [],
-      "rationale": "This PR does not touch model choice, prompts or the evaluation harness. Baseline unchanged."
+      "evidence": [
+        "src/core/src/zava_forward/core/synthetic/sensor_scenarios.py:407-428"
+      ],
+      "rationale": "New function exposes labelled fictional fixture scenarios for consumer tests, not model choice, prompts or the evaluation harness itself. Baseline unchanged."
     },
     "A7": {
       "score": 4,
@@ -79,7 +79,7 @@
         "src/agents/src/zava_forward/agents/dispatch.py:186-220",
         "src/core/src/zava_forward/core/ai_consumption.py:155-185"
       ],
-      "rationale": "Diff is a UI/API pagination feature unrelated to agent dispatch/orchestration. Baseline 4 (Good) retained."
+      "rationale": "Diff is a synthetic-fixture helper unrelated to agent dispatch/orchestration. Baseline 4 (Good) retained."
     },
     "B1": {
       "score": 3,
@@ -117,10 +117,9 @@
     "B6": {
       "score": 5,
       "evidence": [
-        "src/core/README.md:5-123",
-        "src/api/README.md:9-47"
+        "src/core/README.md:2905-2909"
       ],
-      "rationale": "Pagination code change is engineering, not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
+      "rationale": "README addition documents the new helper with honest limitation framing (#\u200b111/#\u200b133 unproven), a minor engineering-doc update rather than deck/capstone documentation improvement. Already at ceiling 5; baseline retained."
     },
     "B7": {
       "score": 5,
