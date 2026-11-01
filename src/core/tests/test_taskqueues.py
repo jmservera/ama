@@ -262,6 +262,28 @@ class QueueDefinitions(unittest.TestCase):
             ):
                 taskqueues.overdue_tasks(self.case, as_of=as_of, handoff=None)
 
+    def test_returned_work_exposes_sender_and_stays_held_for_restricted_roles(self) -> None:
+        self.case["returns"] = [
+            dict(
+                to_stage=self.case["stage"],
+                from_stage="Quality check",
+                reason="SENTINEL-REASON",
+                next_action="Fix it",
+                actor=dict(name="Quinn Inspector"),
+                at="2026-10-01T09:00:00+00:00",
+            )
+        ]
+        returned = evaluate(self.case)["returned"]
+        self.assertEqual(returned["sender"], "Quinn Inspector")
+        self.assertEqual(returned["reason"], "SENTINEL-REASON")
+        self.assertEqual(returned["from_stage"], "Quality check")
+        restricted = evaluate(self.case, reason_ok=False)
+        self.assertNotIn("SENTINEL", json.dumps(restricted))
+        self.assertEqual(restricted["returned"]["sender"], taskqueues.HELD)
+        self.assertIsNone(evaluate(self.case, handoff=dict(state="Offered"))["returned"])
+        handoff = evaluate(self.case, handoff=dict(state="Offered", from_name="Sam"))["handoff"]
+        self.assertEqual(handoff["sender"], "Sam")
+
     def test_projection_for_human_context_and_per_case_sources(self) -> None:
         self.case["returns"] = [
             dict(

@@ -325,6 +325,7 @@ def context(
     version: object = selected["version"] if selected else UNKNOWN
     evidence = UNKNOWN
     recorded_at = case.get("stage_since") or UNKNOWN
+    returned_view: dict[str, Any] | None = None
     if not selected and pending and handoff:
         next_action = (
             text(handoff.get("next_action"))
@@ -340,6 +341,14 @@ def context(
             source, version = origin("returns")["source"], returned.get("version") or UNKNOWN
             evidence = text(returned.get("source"))
             recorded_at = returned.get("at") or UNKNOWN
+            returned_view = dict(
+                reason=reason,
+                sender=text((returned.get("actor") or {}).get("name")),
+                from_stage=returned.get("from_stage") or UNKNOWN,
+                to_stage=returned.get("to_stage") or UNKNOWN,
+                at=recorded_at,
+                next_action=next_action,
+            )
     if not next_action:
         next_action = f"Ask {owner} to record the next action."
     matched = [
@@ -366,6 +375,7 @@ def context(
         evidence=evidence,
         recorded_at=recorded_at,
         queues=matched,
+        returned=returned_view,
         blockers=blockers,
         hazard_clocks=clocks,
         overdue=overdue,
@@ -374,6 +384,7 @@ def context(
         handoff=dict(
             state=handoff.get("state") or UNKNOWN,
             destination=handoff.get("destination") or UNKNOWN,
+            sender=handoff.get("from_name") or UNKNOWN,
             proposed_receiver=handoff.get("proposed_receiver") or UNKNOWN,
             confirmed_receiver=handoff.get("confirmed_receiver") or UNKNOWN,
             chase_owner=handoff.get("chase_owner") or UNKNOWN,

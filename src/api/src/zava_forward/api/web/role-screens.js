@@ -70,6 +70,7 @@ async function roleScreensView() {
   const data = await api(`/api/cases?view=all&limit=20&offset=${page * 20}`, undefined, signal);
   const c = caseId ? await api(`/api/cases/${encodeURIComponent(caseId)}`, undefined, signal) : null;
   const extra = c && screen.load ? await screen.load(c) : null;
+  const overview = screen.overview ? await screen.overview(signal) : null;
   signal.throwIfAborted();
   const label = (row) => `${row.id}: ${row.address || "Address unknown"}. ${row.status || row.stage || "State unknown"}`;
   const queue = h("section", { "aria-labelledby": "screen-queue-heading" },
@@ -97,7 +98,7 @@ async function roleScreensView() {
   workspaceStatus.textContent = `${me.user.role}. ${screen.title}. ${c ? `Selected home ${c.id}.` : "No home selected."}`;
   show(h("h1", {}, screen.title), menu,
     h("div", { class: "layout" }, h("aside", { class: "side" }, queue),
-      h("div", { class: "main" }, selected)),
+      h("div", { class: "main" }, overview, selected)),
     h("a", { href: "#/" }, "Back to my work"));
 }
 
@@ -180,5 +181,121 @@ registerRoleScreen({
         screenFields([["Cases permitted to your role", extra?.portfolio?.total],
           ["Meaning", "A role-scoped count, not a stock, budget or programme total"]])),
       screenPanel("Ledger-wide AI cohort (all homes, not this home)", assetCost(extra?.report)));
+  }
+});
+
+const programmeScopes = [
+  ["default", "Returned and handed-off work (default)"],
+  ["returned", "Returned work only"],
+  ["handoff", "Pending handoffs only"],
+  ["blocked", "Blocked work"],
+  ["all", "All permitted cases on this page"]
+];
+const programmeIn = (row, scope) => {
+  const work = row.work || {};
+  const queues = work.queues || [];
+  if (scope === "returned") return Boolean(work.returned);
+  if (scope === "handoff") return queues.includes("unowned");
+  if (scope === "blocked") return queues.includes("blocked");
+  if (scope === "all") return true;
+  return Boolean(work.returned) || queues.includes("unowned");
+};
+const programmeRow = (row) => {
+  const work = row.work || {};
+  const sent = work.handoff?.sender;
+  return [
+    `${row.id}: ${row.address || "Address unknown"}`,
+    work.returned ? work.returned.reason : work.handoff ? "Not returned. Pending handoff." : "Not returned",
+    work.returned ? work.returned.sender : sent,
+    work.owner,
+    work.handoff ? work.handoff.proposed_receiver : "No handoff proposed",
+    work.handoff ? work.handoff.chase_owner : "No handoff recorded",
+    work.handoff ? work.handoff.resident_update_owner : "No handoff recorded"
+  ];
+};
+const programmeHeadings = ["Home", "Return reason", "Sender", "Current owner",
+  "Proposed receiver (not a confirmed owner)", "Chase owner (chases the receiver)",
+  "Resident-update owner (updates the resident)"];
+function programmeQueue(items, total) {
+  const holder = h("div", {});
+  const status = h("p", { role: "status", id: "programme-filter-status" });
+  const select = h("select", { id: "programme-scope", name: "scope" },
+    programmeScopes.map(([value, text]) => h("option", { value }, text)));
+  const apply = (scope) => {
+    const rows = items.filter((row) => programmeIn(row, scope));
+    status.textContent = `${rows.length} of ${items.length} records on this page shown. Scope: ${programmeScopes.find(([v]) => v === scope)[1]}. Filtering changes the view only; no record is changed.`;
+    holder.replaceChildren(screenTable("Shared queue: returned and handed-off work", programmeHeadings, rows.map(programmeRow)));
+  };
+  if (select.value !== undefined) select.value = "default";
+  apply("default");
+  return h("div", {},
+    h("p", {}, `${items.length} records on this page of ${total} permitted cases. Not a portfolio total.`),
+    h("form", { class: "row", "aria-label": "Scope filter",
+      onsubmit: (event) => { event?.preventDefault?.(); apply(select.value || "default"); } },
+      h("label", { for: "programme-scope" }, "Scope"), select,
+      h("button", { class: "btn", type: "submit" }, "Apply filter"),
+      h("button", { class: "btn alt", type: "button",
+        onclick: () => { select.value = "default"; apply("default"); } }, "Reset to default view")),
+    status, holder);
+}
+const programmeFunnel = (report) => {
+  const rows = report?.funnel;
+  if (!Array.isArray(rows)) return h("p", { class: "empty" }, "Lifecycle and funnel counts are Unknown. No record was supplied.");
+  return h("div", {},
+    h("p", {}, `Recorded as of ${screenValue(report.as_of)}. Audit integrity: ${screenValue(report.audit_integrity)}. Conversion is Unknown; counts are stage history only.`),
+    screenTable("Lifecycle and funnel by stage",
+      ["Stage", "Entries", "Exits", "Returns", "Reopens", "Cases in scope"],
+      rows.map((r) => [r.stage, r.entries, r.exits, r.returns, r.reopens, r.denominator])));
+};
+const programmeGate = (blockers, pattern) => blockers.filter((b) => pattern.test(b.step));
+const programmeGateRow = (name, blocked, clear, unknown) => {
+  if (blocked.length) return [name, "Blocked",
+    blocked.map((b) => b.reason).join(" "), blocked[0].owner, blocked[0].next_action];
+  if (unknown) return [name, "Blocked: evidence missing", unknown, "Unknown", "Record the missing evidence through the permitted review"];
+  return [name, "No recorded blocker", `${clear} This is not a pass; a named person decides readiness.`, "Unknown", "Unknown"];
+};
+function programmeGates(c) {
+  const blockers = c.work?.blockers || [];
+  const booked = (c.appointments || []).find((a) => a.outcome === "Booked");
+  const quality = c.quality || [];
+  const returnedQuality = quality.filter((r) => r.state === "Returned");
+  const budget = c.finance?.budget;
+  return [
+    programmeGateRow("Technical", programmeGate(blockers, /technical|Stock review/i),
+      "No technical blocker is recorded.", c.technical ? null : "No technical record is supplied."),
+    programmeGateRow("Resident", programmeGate(blockers, /resident/i),
+      "No resident decision blocker is recorded.", null),
+    programmeGateRow("Delivery", programmeGate(blockers, /Safety review|Shared building/i),
+      booked ? `Visit booked for ${screenValue(booked.date)}.` : "", booked ? null : "No booked visit is recorded."),
+    returnedQuality.length
+      ? ["Quality", "Blocked", returnedQuality.map((r) => `${r.measure} returned for remediation.`).join(" "), "Unknown", "Record remediation evidence"]
+      : programmeGateRow("Quality", [], quality.length ? "Quality checks are recorded." : "",
+        quality.length ? null : "No quality check is recorded."),
+    programmeGateRow("Finance", programmeGate(blockers, /funding/i),
+      budget ? `Budget status: ${screenValue(budget.status)}.` : "",
+      budget || c.funding_ok ? null : "No confirmed funding or budget is visible to your role.")
+  ];
+}
+registerRoleScreen({
+  id: "programme-queue",
+  title: "Programme queue and connected home view",
+  roles: [...screenManagers, "Retrofit Coordinator"],
+  async overview(signal) {
+    const page = await api("/api/cases?view=all&limit=50&offset=0", undefined, signal);
+    const report = await api("/api/coordinator", undefined, signal).catch(() => null);
+    return h("div", {},
+      screenPanel("Evidence boundary",
+        h("p", {}, "Read-only view of recorded work. Chase and update responsibility are shown separately. Nothing here sends, assigns or changes a record. Source: desk research, not observed behaviour; validation remains open.")),
+      screenPanel("Shared queue", programmeQueue(page.items || [], page.total)),
+      screenPanel("Lifecycle and funnel", programmeFunnel(report)));
+  },
+  render(c) {
+    const rows = programmeGates(c);
+    const blocked = rows.filter((r) => r[1].startsWith("Blocked"));
+    return screenPanel(`Connected view for ${c.id}`,
+      h("p", {}, "Technical, resident, delivery, quality and finance states are shown independently. One clear state never clears another."),
+      blocked.length ? screenUnknown(`${blocked.length} of 5 gates are blocked: ${blocked.map((r) => r[0]).join(", ")}.`,
+        blocked[0][3], blocked[0][4]) : h("p", {}, "No blocker is recorded, which does not confirm readiness."),
+      screenTable("Same-home gate states", ["Gate", "State", "Meaning", "Owner", "Next action"], rows));
   }
 });
