@@ -603,6 +603,13 @@ class Endpoints(unittest.TestCase):
         except urllib.error.HTTPError as e:
             return e.code, json.loads(e.read())
 
+    def test_stock_queue_route_is_manager_only_and_read_only(self):
+        self.assertEqual(self.call("sam@example.test", "/api/asset/stock-queue")[0], 403)
+        code, body = self.call("pam@example.test", "/api/asset/stock-queue")
+        self.assertEqual(code, 200)
+        self.assertEqual(body["total"], len(body["items"]))
+        self.assertEqual(self.call("pam@example.test", "/api/asset/stock-queue", {})[0], 404)
+
     def test_report_is_manager_only(self):
         self.assertEqual(self.call("sam@example.test", "/api/ai/report")[0], 403)
         code, body = self.call("pam@example.test", "/api/ai/report")

@@ -15,3 +15,7 @@ Routed follow-ups: queue-level asset comparison across homes (needs a portfolio 
 Verdict on closing: criteria 1 (queue level) and 4 (accessibility evidence) not proven, so the PR uses Refs.
 
 Follow-up review (PR 639, ISO dates): executed once more on the thread fix only; accepted basic and week-date forms now render source age (tested). Outcome unchanged.
+
+Correction review (PR 710, date ordering): executed once on the fix; chronological ordering verified by test, originals unchanged. Outcome unchanged.
+
+Correction review (PR 710, endpoint inventory): executed once on the test fix; route now covered across all roles. Outcome unchanged.
