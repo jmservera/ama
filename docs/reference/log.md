@@ -9023,6 +9023,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   artefact; fixed in CSS and now asserted by the browser harness (21 states,
   zero violations, zero incompletes). No manual or assistive-technology
   assessment and no staff comprehension study was run; those criteria stay unmet.
+## [2026-11-01] update | Synthetic determinism replay audit (Refs #176)
+
+* Added a one-command replay audit for the in-repo synthetic generators and a
+  `version` field in the sensor scenarios manifest; documented in the
+  [retrofit synthetic data README](./research/retrofit-synthetic-data/README.md).
+* The original private stock register generator remains absent, so the
+  byte-identical and manifest criteria stay partially met. No index change.
 ## [2026-11-01] refine | Briefing feedback guidance, Refs #531
 
 * Added a plain-language paragraph to Today's briefing saying how to correct
