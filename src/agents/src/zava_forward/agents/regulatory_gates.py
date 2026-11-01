@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 from collections import Counter
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping
+from datetime import datetime
+from math import isfinite
 from typing import Any
 
 from zava_forward.core.regulatory_usage import economics
@@ -284,4 +286,45 @@ def comparison(baselines: list[dict[str, Any]]) -> dict[str, Any]:
         approval="Recommendation only; cards retain their own source and approval gates.",
         economics=economics(),
         synthetic_development_lookup="unchanged; explicit synthetic-demo admission only",
+    )
+
+
+LIMITS = ("model_calls", "tokens", "budget")
+
+
+def authorise_model_run(
+    authority: Mapping[str, Any] | None, request: Mapping[str, Any], now: datetime
+) -> dict[str, Any]:
+    """Allow a model-calling evaluation only inside a finite, unexpired owner authority.
+
+    A decision never creates or implies spend authority; absent evidence denies.
+    """
+    reasons: list[str] = []
+    auth = authority or {}
+    owner = auth.get("owner")
+    if not isinstance(owner, str) or not owner.strip():
+        reasons.append("no named owner authority")
+    try:
+        expires = datetime.fromisoformat(str(auth.get("expires_at")))
+        if expires.tzinfo is None or now.tzinfo is None or expires <= now:
+            reasons.append("authority expired or expiry not timezone-aware")
+    except ValueError:
+        reasons.append("no valid expiry")
+    for name in LIMITS:
+        limit, asked = auth.get(f"{name}_limit"), request.get(name)
+        if (
+            not isinstance(limit, int | float)
+            or isinstance(limit, bool)
+            or not isfinite(limit)
+            or limit <= 0
+        ):
+            reasons.append(f"{name} limit not finite and positive")
+        elif (
+            not isinstance(asked, int | float) or isinstance(asked, bool) or not 0 <= asked <= limit
+        ):
+            reasons.append(f"{name} request outside limit")
+    return dict(
+        allowed=not reasons,
+        reasons=reasons,
+        note="Decision only; no spend authority is assumed or implied by this item.",
     )

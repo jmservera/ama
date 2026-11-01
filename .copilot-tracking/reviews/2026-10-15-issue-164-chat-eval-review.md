@@ -58,3 +58,11 @@ second independent Review, new critique, human sign-off or enablement approval.
   `feat/src-chat-eval-164`; this delivery-record reconciliation follows on that
   same branch. No force push, main push or merge. Acceptance remains blocked by
   the explicitly reported critical grounding gap; nothing is enabled.
+
+## PR 663 review follow-up (2026-11-01)
+
+* Copilot finding on unsupported binding lookups for the disabled chat task
+  was valid and fixed in both consumers; chat stays disabled and its release
+  evidence stays incomplete. Focused assistant, release and continuity tests
+  and ruff pass. SQL-backed cases skip locally; the src-api and mssql CI jobs
+  must confirm.

@@ -41,6 +41,21 @@ class WorkbenchNavigation(unittest.TestCase):
             else:
                 self.assertTrue(item["reason"])
 
+    def test_supported_devices_stay_proposed_and_match_checked_widths(self) -> None:
+        manifest = json.loads(MANIFEST.read_text())
+        devices = manifest["supported_devices"]
+        self.assertEqual(devices["status"], "proposed")
+        self.assertEqual(devices["decider"], "owner")
+        self.assertEqual(devices["field_mobile"], "undecided")
+        self.assertEqual(sorted(item["width"] for item in devices["classes"]), manifest["widths"])
+        self.assertIn(320, [item["width"] for item in devices["classes"]])
+        proposal = MANIFEST.parents[3] / devices["proposal"]
+        self.assertTrue(proposal.is_file())
+        text = proposal.read_text()
+        self.assertIn("Proposed, not decided", text)
+        for width in manifest["widths"]:
+            self.assertIn(f"| {width} |", text)
+
 
 if __name__ == "__main__":
     unittest.main()
