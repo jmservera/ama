@@ -15,3 +15,7 @@ Routed follow-ups (not in this task)
 3. Owner decision on OQ-017 holders, thresholds and samples (#108, #222).
 
 Correction cycle (2026-11-01): two Copilot threads addressed; no new findings. Original Review outcome preserved.
+
+## Correction cycle 2026-11-01 (PR 701)
+
+Thread PRRT_kwDOUU8JX86yY30T (test entry point placement) validated and fixed; ruff, mypy and agents suite (147 tests) pass.
