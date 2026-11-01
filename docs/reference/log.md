@@ -9064,6 +9064,12 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   acceptance and owner confirmation of agent names remain unproven; no
   source change was made.
 
+## 2026-11-01
+
+* Added `research/ux/supported-devices-proposal.md`, a proposal for owner
+  ratification of supported device classes and widths (#152). The manifest
+  records it as `proposed`; the decision, browsers, assistive tools, field or
+  mobile use and complete AC-034/AC-043 acceptance remain open.
 ## [2026-11-01] update | AI consumption demo walk-through (Refs #432)
 
 * Added a credential-free synthetic walk-through
@@ -9114,6 +9120,22 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   the 60,000-home run: warm p95 above the NFR-002 thresholds on all routes.
 * Rewrote the rollback text to match the pipeline, which accepts only current-run
   digests. Issue #144 stays open. No regulatory snapshot changed.
+## [2026-11-01] ingest | Atlas findings traced to role screens (#233)
+
+* Added `research/ux/atlas-screen-trace.md` (eleven perspectives, five atlas
+  themes, two tensions and a same-home walkthrough on constructed EX-HOME-901)
+  and an offline completeness checker with tests in `src/core`. Updated the
+  index and the #233 row of the prototype profile review.
+* Findings stay hypotheses until #155. Screens in open pull requests are not
+  delivered. Accessibility and design-system criteria remain unproven.
+## [2026-11-01] add | Today's briefing HAX design note (#531)
+
+* Added `research/ux/briefing-hax-design-note.md`, a dated mapping of HAX
+  guidelines G1, G2, G7 to G11 and G15 to G17 to the shipped briefing and loading
+  feedback, with the source-inspection evidence boundary. No UI behaviour changed.
+* Maintainer-authored; not a UX specialist output. Criterion 7 (live employee
+  verification) and assistive-technology acceptance stay unmet. No regulatory
+  snapshot changed.
 ## [2026-11-01] update | Key Vault secret lifecycle slice (#142)
 
 * Extended `infra/secret-inventory.json` to the two resident demo secrets, with the
@@ -9141,3 +9163,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Live employee-site verification, screen-reader and voice-control
   acceptance and owner confirmation of agent names remain unproven; no
   source change was made.
+
+## [2026-11-01] update | Second stabilization checkpoint (#440)
+
+* Appended a focused-tier checkpoint on main 36a1d0da to the cut-over evidence
+  pack: five package suites, Ruff and mypy passed locally; SQL, container and
+  browser groups not run. The PERF-440 benchmark outlier was not reproduced
+  and is filed as #687. No regulatory snapshot changed; no criterion ticked.

@@ -115,3 +115,12 @@ worktree. No uv used. From each `src/<project>`:
 * [x] Withhold the seeded plain-prose approval/consent action claims (lexical only).
 * [ ] Close the critical unsupported-claim-with-valid-citation gap; establish
   semantic grounding/injection resistance and measure actual-model refusal.
+
+## PR 663 review and CI follow-up (2026-11-01)
+
+* `assistants.py` `registry()` and `continuity.py` `candidate()` now list the
+  disabled chat task with `binding` null, `release` null and the missing
+  evidence reason instead of raising `KeyError`; disabled tasks do not make the
+  serving candidate incomplete. Zero-call denial for enabled tasks is unchanged.
+* Regressions: `test_assistant_release` (registry lists chat) and
+  `test_continuity` (all-task candidate and suspension with chat registered).

@@ -199,6 +199,10 @@ def candidate(store, db, scope):
     versions = []
     tasks = ai_registry.tasks() if scope == ALL else {scope: ai_registry.get(scope)}
     for task in sorted(tasks):
+        if tasks[task].get("enabled") is False:
+            versions.append(dict(task=task, binding=None, release=None, disabled=True,
+                                 missing=["Task is disabled and has no runtime binding or release evidence."]))
+            continue
         legacy = task in ai_registry.LEGACY
         key = f"legacy:{task}" if legacy else task
         binding = (ai_registry.legacy_binding(task, store.ai, getattr(store.ai, ai_registry.LEGACY[task]["route"], store.ai.fast))
@@ -208,7 +212,7 @@ def candidate(store, db, scope):
         versions.append(dict(task=task, binding=binding,
                              release=rai_release.reference(selected) if selected else None,
                              missing=denied["missing"] if denied else []))
-    return dict(complete=all(v["release"] for v in versions), versions=versions)
+    return dict(complete=all(v["release"] for v in versions if not v.get("disabled")), versions=versions)
 
 
 def _table(store, db, name):

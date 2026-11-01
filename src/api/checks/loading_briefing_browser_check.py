@@ -787,6 +787,10 @@ def run_browser(base: str, axe: str, output: Path) -> None:
                 rejection = briefing.get_by_role("button", name="Record rejection", exact=True)
                 with page.expect_request("**/api/ai/review/*/reject"):
                     rejection.click()
+                for _ in range(100):
+                    if held:
+                        break
+                    page.wait_for_timeout(50)
                 held[0].fulfill(status=http_status, json={
                     "error": "Synthetic confirmation needs checking", "outcome": outcome})
                 expect(briefing).to_contain_text("Confirmation needs checking")
