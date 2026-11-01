@@ -658,7 +658,14 @@ class BicepPolicyTests(unittest.TestCase):
 
     def test_test_parameters_record_demo_chat_privacy_refs(self) -> None:
         result = subprocess.run(
-            ["az", "bicep", "build-params", "--file", str(INFRA / "main.test.bicepparam"), "--stdout"],
+            [
+                "az",
+                "bicep",
+                "build-params",
+                "--file",
+                str(INFRA / "main.test.bicepparam"),
+                "--stdout",
+            ],
             capture_output=True,
             text=True,
             check=False,
