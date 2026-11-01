@@ -12,9 +12,8 @@ const chatProposalNames = {
 const chatAdministratorRole = "Application Administrator";
 
 function unavailableNote(feature, error, manual) {
-  if (error && error.status === 403) return `${feature} is not available for your role. ${manual}`;
-  if (error && error.status === 503) return `${feature} is not switched on in this environment. ${manual}`;
-  return `${feature} unavailable: ${error.message} ${manual}`;
+  if (error && error.roleDenied) return `${feature} is not available for your role. ${manual}`;
+  return `${feature} is not available right now: ${error.message} ${manual}`;
 }
 
 const employeeChat = (() => {
@@ -288,8 +287,7 @@ function regulatoryAlertsPanel(caseId) {
       status.textContent = `${alerts.length} visible alerts. Coverage: ${data.coverage_status || "unknown"}. ${alerts.length ? "Only alerts permitted for your role are shown." : "No visible alerts does not mean no risk, complete coverage or compliance."}`;
     } catch (e) {
       list.replaceChildren();
-      const reason = e.status === 503 ? "Rule alerts are not switched on in this environment." : e.message;
-      status.textContent = `Alert coverage unknown: ${reason} Use the existing human emergency or hazard service; do not wait for checks.`;
+      status.textContent = `Alert coverage unknown: ${e.message} Use the existing human emergency or hazard service; do not wait for checks.`;
     } finally { refresh.disabled = false; }
   }
   root.append(h("h2", { id: "regulatory-alerts-title" }, "Regulatory alerts for this home"),
@@ -405,7 +403,7 @@ function regulatoryChatPanel(caseId) {
       } catch (e) { status.textContent = `Exercise inbox unavailable: ${e.message}`; }
     } }, "Open my exercise doubt inbox (named owner only)"), status);
   const admissionRequest = me.user.role === chatAdministratorRole
-    ? Promise.reject(Object.assign(new Error("Not available for your role."), { status: 403 }))
+    ? Promise.reject(Object.assign(new Error("Not available for your role."), { status: 403, roleDenied: true }))
     : api("/api/chat/regulatory/status");
   admissionRequest.then(async (admission) => {
     status.textContent = "Synthetic source lookup available. No legal approval is implied.";

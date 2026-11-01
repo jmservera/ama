@@ -16,3 +16,9 @@ Executed. Verdict: proceed. Disposition: logging must not include query or user 
 ## Risks
 
 Logging volume is limited to errors. UI skip for administrators must not hide anything staff see.
+
+## Correction cycle 2026-11-01
+
+* [x] Log in an overridden `send_response` so framework and application responses are logged once.
+* [x] `unavailableNote` and the alert message use role wording only for a client-confirmed role denial (`roleDenied`); otherwise a neutral message with the server explanation and the manual route.
+* [x] Replace the source-order test with a Node VM test that runs `chatCasePanel` and `regulatoryChatPanel` with stubs: administrators request neither endpoint, staff request both. Critique not repeated (one pass rule).

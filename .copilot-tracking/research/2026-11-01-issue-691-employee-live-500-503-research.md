@@ -37,3 +37,7 @@ Date: 2026-11-01. Task slug: `issue-691-employee-live-500-503`. Disposition: exe
 
 1. Grant read access to Log Analytics or an approved path, then query ingress and auth sidecar 5xx for `/vendor/leaflet.js` (blocks criterion 1).
 2. Consider adding `/vendor/*` ordering check against Easy Auth token refresh during revision swaps.
+
+## Correction cycle 2026-11-01 (PR #694 review threads)
+
+Three Copilot threads read and validated: (1) inherited handler responses (e.g. `OPTIONS /vendor/leaflet.js` 501) bypass `_send`; (2) 403/503 can also mean missing configuration or unexpected failure, so role/disabled wording over-claims; (3) source-order test passes without the administrator guards. All valid.

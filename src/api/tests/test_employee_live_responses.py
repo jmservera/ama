@@ -81,6 +81,10 @@ class VendorAssets(unittest.TestCase):
             with self.assertLogs("zava_forward.api.server", "WARNING") as logs:
                 self.assertEqual(self.fetch("/healthz")[0], 503)
         self.assertIn("GET /healthz status=503", logs.output[0])
+        with self.assertLogs("zava_forward.api.server", "WARNING") as logs:
+            self.assertEqual(self.fetch("/vendor/leaflet.js", method="OPTIONS")[0], 501)
+        self.assertEqual(len(logs.output), 1)
+        self.assertIn("OPTIONS /vendor/leaflet.js status=501", logs.output[0])
 
 
 class ExpectedDenialWording(unittest.TestCase):
@@ -94,7 +98,7 @@ class ExpectedDenialWording(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 0, result.stderr)
 
-    def test_403_and_503_read_as_plain_language_not_failures(self) -> None:
+    def test_403_and_503_do_not_assert_a_cause_the_server_did_not_confirm(self) -> None:
         self.run_node(
             r"""
 const assert = require("node:assert/strict");
@@ -104,23 +108,54 @@ const start = source.indexOf("function unavailableNote");
 const body = source.slice(start, source.indexOf("const employeeChat"));
 const fn = new Function(body + "; return unavailableNote;")();
 const manual = "Continue manually.";
-const err = (m, status) => Object.assign(new Error(m), {status});
-const denied = fn("Proposal requests", err("Staff only.", 403), manual);
-assert.equal(denied, "Proposal requests is not available for your role. Continue manually.");
-const off = fn("Cited lookup", err("Law store off.", 503), manual);
-assert.equal(off, "Cited lookup is not switched on in this environment. Continue manually.");
-assert.match(fn("Cited lookup", err("Boom.", 500), manual), /unavailable: Boom\./);
+const err = (m, extra) => Object.assign(new Error(m), extra);
+assert.equal(fn("Cited lookup", err("Demo not configured.", {status: 403}), manual),
+  "Cited lookup is not available right now: Demo not configured. Continue manually.");
+assert.equal(fn("Cited lookup", err("Law store off.", {status: 503}), manual),
+  "Cited lookup is not available right now: Law store off. Continue manually.");
+const roleError = err("Not available for your role.", {status: 403, roleDenied: true});
+assert.equal(fn("Cited lookup", roleError, manual),
+  "Cited lookup is not available for your role. Continue manually.");
 """
         )
 
     def test_administrator_role_does_not_request_staff_only_endpoints(self) -> None:
-        source = (WEB / "chat.js").read_text()
-        self.assertIn('const chatAdministratorRole = "Application Administrator";', source)
-        assistants = source.index('api("/api/assistants")')
-        self.assertLess(source.rindex("chatAdministratorRole", 0, assistants), assistants)
-        status = source.index('api("/api/chat/regulatory/status")')
-        self.assertLess(source.rindex("chatAdministratorRole", 0, status), status)
-        self.assertIn("Rule alerts are not switched on in this environment.", source)
+        self.run_node(
+            r"""
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const vm = require("node:vm");
+const source = fs.readFileSync(process.argv[1] + "/chat.js", "utf8");
+const node = (tag, children) => ({
+  tag, children, attrs: {}, dataset: {}, classList: {add() {}, remove() {}},
+  setAttribute() {}, append() {}, replaceChildren() {}, addEventListener() {},
+});
+async function run(role) {
+  const calls = [];
+  const context = vm.createContext({
+    document: {getElementById: () => node("div", [])},
+    Intl,
+    h: (tag, attrs, ...children) => node(tag, children),
+    api: (path) => { calls.push(path); return new Promise(() => {}); },
+    snapshotCaseFields: () => [],
+    caseFieldUnchanged: () => true,
+    me: {user: {role}},
+  });
+  vm.runInContext(source, context);
+  vm.runInContext('chatCasePanel("c1"); regulatoryChatPanel("c1");', context);
+  await new Promise((resolve) => setImmediate(resolve));
+  return calls;
+}
+(async () => {
+  const admin = await run("Application Administrator");
+  assert.ok(!admin.includes("/api/assistants"), admin.join());
+  assert.ok(!admin.includes("/api/chat/regulatory/status"), admin.join());
+  const staff = await run("Housing Officer");
+  assert.ok(staff.includes("/api/assistants"), staff.join());
+  assert.ok(staff.includes("/api/chat/regulatory/status"), staff.join());
+})().catch((e) => { console.error(e); process.exit(1); });
+"""
+        )
 
 
 if __name__ == "__main__":

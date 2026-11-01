@@ -17,3 +17,10 @@ Date: 2026-11-01. Plan: `.copilot-tracking/plans/2026-11-01-issue-691-employee-l
 ## Divergences
 
 Leaflet 500 cause is outside the app process (not reproducible; Log Analytics blocked by network perimeter); not claimed fixed.
+
+## Correction cycle 2026-11-01
+
+* `server.py`: warning moved from `_send` to `send_response`; OPTIONS 501 on a vendor path is now logged (test added).
+* `chat.js`: neutral wording for unconfirmed 403/503; role wording only via `roleDenied`; alert fallback shows the server message.
+* `test_employee_live_responses.py`: wording tests updated; administrator test now executes the panels with stubs.
+* Validation: `ruff check`, `ruff format --check` clean; mypy 9 errors, identical before and after (missing stubs); `test_employee_live_responses` passes; full api discover result recorded in the PR reply.
