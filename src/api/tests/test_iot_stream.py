@@ -9,6 +9,7 @@ import unittest
 from collections.abc import Awaitable, Callable, Mapping
 from dataclasses import replace
 from datetime import UTC, datetime
+from pathlib import Path
 from unittest.mock import AsyncMock, Mock, patch
 
 import test_sensor_handover as handover_fixture
@@ -18,6 +19,7 @@ from azure.iot.device import X509
 from sensor_consumer_fixture import CONTROL, POLICY, observations, store_at
 from zava_forward.core.sensor_consumer import ConsumerError, Receipt, SensorConsumer
 from zava_forward.core.synthetic import sensor_stock
+from zava_forward.core.synthetic.run_plan import RunController, RunPlan, record
 from zava_forward.core.synthetic.sensor_stream import (
     Pacer,
     Replay,
@@ -425,6 +427,53 @@ class PublisherTests(unittest.IsolatedAsyncioTestCase):
         )
         self.client = Mock(connect=AsyncMock(), send_message=AsyncMock(), shutdown=AsyncMock())
         self.truth: list[dict[str, object]] = []
+
+    def _controller(self) -> RunController:
+        return RunController(
+            RunPlan(
+                owner="Fixture Owner",
+                homes=1,
+                max_seconds=120,
+                max_per_second=10,
+                budget_usd=5,
+                alert_threshold=0.8,
+                alert_reference="budget-iot-hub-80pct",
+            )
+        )
+
+    async def test_controlled_run_requires_recorded_estimate_and_creates_no_client(self) -> None:
+        controller = self._controller()
+        with (
+            tempfile.TemporaryDirectory() as tmp,
+            patch(
+                "zava_forward.api.iot_stream.IoTHubDeviceClient.create_from_x509_certificate"
+            ) as create,
+            self.assertRaisesRegex(StreamError, "ESTIMATE_NOT_RECORDED"),
+        ):
+            await self.publisher.run_controlled(
+                self.frames, controller, Path(tmp) / "missing.json", truth=self.truth.append
+            )
+        create.assert_not_called()
+        self.assertEqual(controller.state, "idle")
+
+    async def test_controlled_run_publishes_under_plan_and_stops_controller(self) -> None:
+        controller = self._controller()
+        with (
+            tempfile.TemporaryDirectory() as tmp,
+            patch(
+                "zava_forward.api.iot_stream.IoTHubDeviceClient.create_from_x509_certificate",
+                return_value=self.client,
+            ),
+        ):
+            path = Path(tmp) / "estimate.json"
+            record(controller.plan, path)
+            sent = await self.publisher.run_controlled(
+                self.frames, controller, path, truth=self.truth.append
+            )
+        self.assertEqual(sent, 2)
+        self.assertEqual(controller.state, "stopped")
+        assert controller.pacer is not None
+        self.assertTrue(controller.pacer.stopped)
 
     async def test_device_only_activation_publishes_without_asserting_routed_receiver(self) -> None:
         active = DeviceActivation(ACTIVE.hub_hostname, "owner-approved finite hub exercise")

@@ -8,6 +8,7 @@ import time
 from collections.abc import Awaitable, Callable, Iterable, Mapping
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from pathlib import Path
 
 from azure.eventhub import EventData
 from azure.eventhub.aio import EventHubConsumerClient, PartitionContext
@@ -15,6 +16,7 @@ from azure.identity.aio import ManagedIdentityCredential
 from azure.iot.device import X509, Message
 from azure.iot.device.aio import IoTHubDeviceClient
 from zava_forward.core.sensor_consumer import ConsumerError, Observation, Receipt, preflight
+from zava_forward.core.synthetic.run_plan import RunController
 from zava_forward.core.synthetic.sensor_identity import home_key
 from zava_forward.core.synthetic.sensor_stream import Frame, Pacer, RunBudget, StreamError, wire
 
@@ -350,6 +352,21 @@ class HubPublisher:
             raise StreamError("PER_DEVICE_CERTIFICATES_REQUIRED")
         self.activation = activation
         self._certificates = dict(certificates)
+
+    async def run_controlled(
+        self,
+        frames: tuple[Frame, ...],
+        controller: RunController,
+        estimate_path: Path,
+        *,
+        truth: Callable[[dict[str, object]], None],
+    ) -> int:
+        """Publish under a recorded estimate; the controller is always stopped afterwards."""
+        pacer = controller.start(estimate_path)
+        try:
+            return await self.run(frames, controller.plan.budget(), pacer=pacer, truth=truth)
+        finally:
+            controller.stop()
 
     async def run(
         self,
