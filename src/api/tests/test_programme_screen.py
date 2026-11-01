@@ -208,7 +208,7 @@ class ProgrammeScreen(unittest.TestCase):
             self.assertIn("No active work order is recorded", node[node.index('"Delivery"') :])
         held = json.dumps(out["held"])
         finance = held[held.index('"Finance"') :]
-        self.assertIn("INV-1 is on payment hold", finance)
+        self.assertIn("INV-1 is on payment pause", finance)
         self.assertIn("Fin Officer", finance)
         self.assertIn("INV-2 has 1 unresolved match exception", finance)
         self.assertNotIn("INV-3", finance)
@@ -232,7 +232,7 @@ class ProgrammeScreen(unittest.TestCase):
         self.assertIn("fixed and reinspected", quality)
         finance = json.dumps(out["held"])
         finance = finance[finance.index('"Finance"') :]
-        self.assertIn("INV-4 has a Finance decision to keep on hold", finance)
+        self.assertIn("INV-4 has a Finance decision to keep the pause", finance)
         self.assertIn("Fiona Finance", finance)
 
     def test_funnel_unknown_when_coordinator_unavailable(self) -> None:
