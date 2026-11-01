@@ -1,6 +1,8 @@
+---
+title: "Plan: issue #232 round 2"
+ms.date: 2026-11-01
+---
 <!-- markdownlint-disable-file -->
-# Plan: issue #232 round 2
-
 * [x] Phase 1: restore valid JavaScript in role-screens.js (add missing `  }` and `});` for data-operator, contractor-job-pack, resident-choice, hazard-triage); verify with `node --check`.
 * [x] Phase 2: add `summarise`/`summary` to the resident-choice screen and render it in the no-home-selected state of `roleScreensView`.
 * [x] Phase 3: add node-vm unit test `test_queue_summary_is_read_only_and_marks_unavailable_homes`.

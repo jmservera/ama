@@ -1,6 +1,8 @@
+---
+title: "Review: issue #232 round 2"
+ms.date: 2026-11-01
+---
 <!-- markdownlint-disable-file -->
-# Review: issue #232 round 2
-
 Review executed once after implementation. Outcome: conformant for the delivered slice; criteria partly open.
 
 | Criterion | Status |

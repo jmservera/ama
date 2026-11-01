@@ -1,6 +1,8 @@
+---
+title: "Research: issue #232 round 2 (remaining slice)"
+ms.date: 2026-11-01
+---
 <!-- markdownlint-disable-file -->
-# Research: issue #232 round 2 (remaining slice)
-
 Task: issue-232-housing-officer-screens-r2. Mode: manual-sequenced loop. Disposition: executed. Planning Readiness: Ready.
 
 ## Evidence
