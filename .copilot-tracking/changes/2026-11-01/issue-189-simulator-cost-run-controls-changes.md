@@ -39,3 +39,14 @@ None from the plan.
 ## Review amendments, third round (PR 637 Copilot thread)
 
 * The time-limit check now sums send spacing (messages / rate), replay spacing (days x 86,400 s / speed) and the publisher's 0.5 s cleanup reserve, matching the publisher's sequential waits and sends. Regression added for the 100-home, speed 1000, 1/s, 300 s plan.
+
+## Correction cycle, PR 707 Copilot threads
+
+* `run_controlled` raises `RUN_HOME_LIMIT` when distinct frame homes exceed `plan.homes`, before `controller.start` and any client.
+* `run` accepts `active_homes`; homes are ranked by first appearance and frames of homes beyond the current limit are skipped, so `scale_down` stops removed homes publishing.
+* Tests added: home-limit rejection with no client; two-home scale-down stops the removed home.
+* Validation: ruff check/format clean; test_iot_stream 32 OK; mypy shows no errors in touched files (13 pre-existing errors elsewhere from missing optional stubs); full api discover has environment-related failures also present on baseline.
+
+## Correction cycle 2026-11-01 (PR 707 review threads)
+
+Research/plan/change/review note: two Copilot threads on iot_stream.py were valid. Active-home eligibility is now rechecked after admit_send and before send_message, skipping removed frames without sent counts or sent truth events. Skipped frames no longer advance the replay clock. Regression: scale down during connection (test_iot_stream). Validation: ruff check and format clean; mypy clean on touched files; tests.test_iot_stream 33 OK. Wider api suite and mypy show environment failures that are identical on the base commit.

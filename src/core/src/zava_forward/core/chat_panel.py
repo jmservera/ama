@@ -343,12 +343,9 @@ class ChatPanel:
             workflow_only=kind in ("fallback", "refused"),
         )
 
-    def ask(
-        self, user: dict[str, Any], tid: str, question: object, *, skill: object = None
-    ) -> dict[str, Any]:
-        """One turn. Raises ChatForbidden or ChatNotFound when no longer permitted."""
-        user = self.iso.current_user(user)
-        receipt: dict[str, Any] = dict(
+    @staticmethod
+    def _receipt(tid: str) -> dict[str, Any]:
+        return dict(
             thread_id=tid,
             task=TASK,
             model_calls=0,
@@ -361,6 +358,28 @@ class ChatPanel:
             history_limit_chars=MAX_HISTORY_CHARS,
             memory_used=False,
         )
+
+    def record_rejected(self, user: dict[str, Any], tid: str) -> None:
+        """Receipt for a turn refused before any model call."""
+        receipt = self._receipt(tid)
+        receipt["outcome"] = "access-rejected"
+        try:
+            actor = user_key(user)
+        except ValueError:
+            actor = "unknown"
+        with self.iso.store.lock:
+            self.iso.store.audit(actor, "chat.turn", "", json.dumps(receipt, sort_keys=True))
+
+    def ask(
+        self, user: dict[str, Any], tid: str, question: object, *, skill: object = None
+    ) -> dict[str, Any]:
+        """One turn. Raises ChatForbidden or ChatNotFound when no longer permitted."""
+        try:
+            user = self.iso.current_user(user)
+        except (PermissionError, LookupError):
+            self.record_rejected(user, tid)
+            raise
+        receipt = self._receipt(tid)
         try:
             reply = self._ask(user, tid, question, receipt, skill=skill)
             receipt["outcome"] = reply["kind"]
