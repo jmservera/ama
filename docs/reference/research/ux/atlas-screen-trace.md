@@ -61,8 +61,8 @@ Source: [five design themes](./customer-journeys/customer-journey-atlas.md#five-
 
 | Tension | Where resolved | Resolution | Status |
 | --- | --- | --- | --- |
-| Continuity versus disclosure | `programme-queue` and `resident-choice` | Each screen shows the minimum fields its role needs; withheld items are listed as text "Not shown for this role" rather than silently omitted; contact and access appear as a route reference, not sensitive history | Proposed rule; conformance of the pull-request screens not assessed |
-| Utilisation versus choice | `resident-choice` and `procurement-packages` | Resident options and withdrawal render first; capacity is labelled offered or committed and never ordered by utilisation; an offered slot is never worded as a promise | Proposed rule; conformance of the pull-request screens not assessed |
+| Continuity versus disclosure | `programme-queue` and `resident-choice` | Each screen shows the minimum fields its role needs; withheld items are listed as text "Not shown for this role" rather than silently omitted; contact and access appear as a route reference, not sensitive history | Proposed rule; conformance of these screens not assessed |
+| Utilisation versus choice | `resident-choice` and `procurement-packages` | Resident options and withdrawal render first; capacity is labelled offered or committed and never ordered by utilisation; an offered slot is never worded as a promise | Proposed rule; conformance of these screens not assessed |
 
 ## Same-home walkthrough
 
