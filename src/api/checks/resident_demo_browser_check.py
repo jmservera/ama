@@ -34,7 +34,6 @@ if TYPE_CHECKING:
     from playwright.sync_api import BrowserContext, Page
 
 FAKE_PASSWORD = "FAKE-TEST-FIXTURE-ONLY-not-a-real-demo-password"
-SQL_AUTHORIZATION_END = datetime(2026, 11, 1, tzinfo=UTC)
 RESIDENTS = {
     "alice.demo@example.com": ("1 Alder Close", "Loft insulation"),
     "bob.demo@example.com": ("2 Birch Close", "Cavity wall insulation"),
@@ -111,7 +110,7 @@ def database() -> Iterator[str]:
                 " valid_to, revoked) VALUES (?, 'browser-check synthetic fixture', ?, ?, 0)",
                 f"SYN-{n}",
                 (datetime.now(UTC) - timedelta(days=1)).replace(tzinfo=None),
-                SQL_AUTHORIZATION_END.replace(tzinfo=None),
+                rs.AUTHORITY_END.replace(tzinfo=None),
             )
         yield name
     finally:

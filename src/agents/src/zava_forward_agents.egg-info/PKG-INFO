@@ -1,0 +1,9 @@
+Metadata-Version: 2.4
+Name: zava-forward-agents
+Version: 0.1.0
+Summary: Zava Forward proposal-only assistants, task registry and evaluation
+Requires-Python: >=3.12
+Requires-Dist: zava-forward-core<0.2,>=0.1.0
+Provides-Extra: dev
+Requires-Dist: ruff==0.17.1; extra == "dev"
+Requires-Dist: mypy==2.4.0; extra == "dev"

@@ -1,0 +1,10 @@
+
+[blob]
+azure-storage-blob==12.31.0
+
+[dev]
+ruff==0.17.1
+mypy==2.4.0
+
+[sql]
+mssql-python==1.15.0

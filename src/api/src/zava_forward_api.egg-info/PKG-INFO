@@ -1,0 +1,15 @@
+Metadata-Version: 2.4
+Name: zava-forward-api
+Version: 0.1.0
+Summary: Zava Forward HTTP API and web workbench
+Requires-Python: >=3.12
+Requires-Dist: aiohttp==3.14.5
+Requires-Dist: azure-identity==1.26.0
+Requires-Dist: azure-eventhub==5.15.1
+Requires-Dist: azure-iot-device==2.14.0
+Requires-Dist: zava-forward-core[blob,sql]<0.2,>=0.1.0
+Requires-Dist: zava-forward-agents<0.2,>=0.1.0
+Provides-Extra: dev
+Requires-Dist: ruff==0.17.1; extra == "dev"
+Requires-Dist: mypy==2.4.0; extra == "dev"
+Requires-Dist: playwright==1.64.0; extra == "dev"
