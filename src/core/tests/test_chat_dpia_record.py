@@ -18,7 +18,7 @@ DOC_MARKERS = {
 }
 RECORDED_PARTS = (
     re.compile(r"\bowner:\s*[A-Za-z]", re.I),
-    re.compile(r"\b\d{4}-\d{2}-\d{2}\b"),
+    re.compile(r"\bdate:\s*\d{4}-\d{2}-\d{2}\b", re.I),
     re.compile(r"\bref:\s*\S", re.I),
 )
 
