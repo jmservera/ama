@@ -9070,3 +9070,27 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Live employee-site verification, screen-reader and voice-control
   acceptance and owner confirmation of agent names remain unproven; no
   source change was made.
+
+## [2026-11-01] update | Operator handover verifier (#188)
+
+* Added the operator handover check to the
+  [sensor research plan](research/iot-sensor-analytics-research-plan.md#operator-handover-verifier-2026-11-01-refs-188)
+  and the API README. It reuses the local strict report on any `ZF_STORE`
+  SQL store and re-runs a window. Actual Hub, Azure SQL and live handover
+  remain unproven; no issue checkbox changes.
+## [2026-11-01] update | Break-glass audit purpose and OD-46 options (#162)
+
+* Refused break-glass attempts now audit the redacted purpose as well as the
+  target and reason; the test asserts purpose, target and policy reference on
+  every entry. Added a proposed administrator and break-glass policy options
+  table to `research/chat-memory-dpia.md`.
+* The policy is not decided (BRD OD-46, owner with DPO); issue #162 criterion 6
+  stays open. No regulatory snapshot changed.
+
+## [2026-11-01] update | Executable design traceability gate (#156)
+
+* Added `tools/check-design-trace.py` and tests. It validates the 74-row screen
+  register and reports the design gate as blocked while designs are NOT SUPPLIED.
+  Usage is under "Run the design gate" in the prototype profile review.
+* Issue #156 criterion 1 stays unmet: no designs, human review, accessibility or
+  content evidence were supplied. No regulatory snapshot changed.

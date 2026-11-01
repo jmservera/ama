@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-01T04:29:02+00:00",
-  "commit": "1e79dced20b81a4940fc245b75f3c32428d2a34d",
+  "scored_at": "2026-11-01T04:30:51+00:00",
+  "commit": "8f619fa37ebf1905cba312c3af6ebea67b6c3dbd",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41271679220",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41271675663",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "bc7c0c56b2dc625f36ea33b589d9951b242bb017102f1ac3026188e30bcccd71",
+    "solution-code": "5251cdbd6e0bbfb74420be68e30f5ea4465d67401090bd60e42c934d5b53aea9",
     "infrastructure": "0172b75e258abc5d97ce173fa595146da2d6f807386ec74e992482b7524f7aad",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -44,10 +44,11 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/web/style.css:101",
-        "src/api/checks/regulatory_ux_check.py:68,101-104"
+        "src/core/src/zava_forward/core/ai_consumption.py:1,58-85",
+        "src/core/src/zava_forward/core/ai.py:67-100",
+        "src/core/src/zava_forward/core/assistants.py:884-900"
       ],
-      "rationale": "Diff is an accessibility/WCAG test-harness fix (contrast false-positive, stricter failure gate) tightening automated compliance checking, not a new threat-model or AI-risk control. Baseline 5 retained."
+      "rationale": "Diff is pagination for capacity workspace, not security/compliance/responsible-AI. Baseline 5 retained."
     },
     "A4": {
       "score": 5,
@@ -78,7 +79,7 @@
         "src/agents/src/zava_forward/agents/dispatch.py:186-220",
         "src/core/src/zava_forward/core/ai_consumption.py:155-185"
       ],
-      "rationale": "Diff is a UI/accessibility-test fix unrelated to agent dispatch/orchestration. Baseline 4 (Good) retained."
+      "rationale": "Diff is a UI/API pagination feature unrelated to agent dispatch/orchestration. Baseline 4 (Good) retained."
     },
     "B1": {
       "score": 3,
@@ -116,10 +117,10 @@
     "B6": {
       "score": 5,
       "evidence": [
-        "src/api/README.md:4500-4509",
-        "src/api/checks/regulatory_ux_check.py:68,392-517"
+        "src/core/README.md:5-123",
+        "src/api/README.md:9-47"
       ],
-      "rationale": "This PR's documentation is engineering README update on an accessibility-test fix, not capstone deck/pitch documentation; immaterial to deck-based B6 scoring. Baseline retained."
+      "rationale": "Pagination code change is engineering, not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
     },
     "B7": {
       "score": 5,

@@ -121,6 +121,15 @@ credential entry point, saves no sessions and consumes zero sign-in attempts.
 The authorized caller still owns independent ID attestation, credential/debug/
 capture safety, finite attempt accounting and browser lifecycle/watchdog.
 
+Operator entry point (no credentials handled): sign in manually in a Chromium
+started with `--remote-debugging-port=9222`, export independently verified
+`ZF_EXPECTED_TID` and `ZF_EXPECTED_OID`, then run
+`python3 -m checks.employee_live_acceptance [--cdp-url http://127.0.0.1:9222]
+[--origin <app origin>]` from this directory. Only loopback CDP is accepted.
+It prints fixed boolean JSON and exits 0 only when chat, map and case all pass
+(1 on a failed stage, 2 when refused or no matching page). A passing live run
+is the evidence for criterion 3; the offline tests are not.
+
 Map acceptance excludes requests initiated before filter activation, matches
 the selected flag/area and observes fit/viewport follow-ups until request/render
 settlement. It validates points/clusters/empty payloads and compares the latest
@@ -1715,6 +1724,28 @@ Constructed SDK origin properties and local SQL Server do not prove actual
 authenticated IoT Hub delivery, Azure SQL query/restart or live handover.
 Those criteria and #110 prerequisites remain unmet; no cloud execution or
 issue status change is authorized by this source.
+
+### Operator handover check for a live store (#188)
+
+`zava_forward.api.sensor_handover_verify` runs the same strict report against
+the SQL store selected by `ZF_STORE` (`sqlite` or `mssql`, so Azure SQL once an
+owner provides it), using `SensorConsumer.observed_series(home_ids, windows)` for a
+joint per-home query bounded to each home's reference window, with trusted
+control units. The store is opened without migrations or other initialization
+writes (SQLite read-only), so SELECT-only credentials suffice. Tolerances default
+to zero and are declared per channel and metric. `--replay-check` needs write
+access: it re-feeds the retained stored payloads for the window, in batches of
+100, through the #110 consumer and requires replay receipts and an unchanged
+series. Exit codes: 0 pass, 1 numeric failure, 2 refusal.
+
+```bash
+cd src/api
+python -m zava_forward.api.sensor_handover_verify --reference history/readings-0000.csv \
+  --handover 2024-10-04T00:00:00Z --temperature-point 0.5 --replay-check
+```
+
+The check is ready-to-run tooling; running it against Azure SQL after a live
+Hub stream is the remaining owner-gated evidence for #188.
 
 ## Finite offline sensor ingestion (#110)
 
