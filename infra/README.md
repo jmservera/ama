@@ -4229,6 +4229,34 @@ No secret or private dataset was read, generated, printed or stored for #521.
    resident traffic. Any network/permission change, min replica above zero,
    scope mismatch, unknown cost or failed isolation check stops the operation.
 
+#### Coordinator steps after the 2026-11-01 expiry (Refs #521)
+
+Nothing here is applied by the repository change. The resident app refuses to
+start once the live allowlist view admits no row, because rows and the live
+`ck_allowed_case_window` still carry the earlier 2026-11-01 end. After the
+owner confirms the exact change and the cost check above passes:
+
+1. Re-render and apply the boundary so the check constraint moves to
+   `2027-02-01T00:00:00` (leaves row windows unchanged, but the script executes every rendered batch, so it also recreates the view and reapplies the existing narrow GRANT/DENY statements in `infra/sql/resident-showcase.sql`; this is a live permission-touching operation needing owner approval, and a permission-free change needs a separately reviewed constraint-only migration):
+   `python3 infra/scripts/resident_showcase_sql.py <principal> --client-id <existing resident managed identity client id> --apply <server> <database>`
+   (without `--create-principal`; the script exits with code 2 if neither is given).
+2. Renew only individually approved synthetic rows, one reviewed statement each,
+   with `valid_to` no later than `2027-02-01T00:00:00`:
+   `UPDATE resident_showcase.allowed_case SET valid_to = '2027-02-01T00:00:00' WHERE case_id = '<approved id>' AND revoked = 0;`
+3. Redeploy only a validated image digest built after #590, whose packaged
+   `resident-demo.json` carries the January 2027 policy (an older image still
+   caps authority at November and the app rejects the later expiry). Rebuild
+   through the approved image path if necessary and record the digest check.
+   Use the extended expiry (what-if first, then
+   `--apply`): `python3 infra/scripts/resident_demo_deploy.py --subscription <id>
+   --expires 2027-01-31T23:59:59Z --image <repo>@sha256:<digest> --sql-server <fqdn>
+   --sql-database <db> [--apply]`. Rotate credentials per step 2 above first.
+4. Verify startup, sign-in, cross-case denial and min replicas 0; record
+   metadata only, no secret values.
+
+The AI tariff/budget expiry (`assistant.py` `EXPIRES`, `resident_ai.budget`)
+is a separate owner approval and is deliberately unchanged here.
+
 #### Added-cost estimate and USD700 cap
 
 Source-only #521 actions add **USD0** Azure spend and zero resources/roles.
