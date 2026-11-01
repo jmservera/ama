@@ -171,7 +171,7 @@ class CohortEvalTests(unittest.TestCase):
             lambda m: m.pop("subject_version"),
         ):
             m = manifest()
-            mutate(m)
+            mutate(m)  # type: ignore[no-untyped-call]
             rec = cohort_eval.evaluate(m, clean_observed(manifest()), ok)
             self.assertIn("invalid_input", codes(rec))
             self.assertFalse(rec["activation_allowed"])
