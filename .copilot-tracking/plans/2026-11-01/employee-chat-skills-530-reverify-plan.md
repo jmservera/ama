@@ -1,7 +1,7 @@
 # Plan: employee chat skills re-verification (#530)
 
 * Research: [research](../../research/2026-11-01/employee-chat-skills-530-reverify-research.md)
-* Tier: focused. CI is the evidence.
+* Tier: focused. Local runs are indicative only; no hosted run is linked. `src-ci.yml` path filters do not match this diff and `mvp-ci.yml` is manual-dispatch only, so hosted evidence is not yet established.
 
 ## Phases
 
