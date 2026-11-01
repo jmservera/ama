@@ -1511,9 +1511,11 @@ not themselves evidence of deployment. See the dated private continuation for
 actual source-image rollout/health results and its synthetic-only boundary.
 Private data copy/encrypted backup and #201 owner sign-off remain unmet.
 
-Existing `MVP CI` / `MVP validation` names and job/check IDs remain unchanged.
-The issue #200 owner decision (2026-10-15) retains them through cut-over; later
-naming and branch-protection changes remain one deliberate owner-directed PR.
+After cut-over (2026-10-27) the workflow display names were renamed in one change
+(issue #200 owner decision, 2026-10-15): `MVP CI` is now `Source CI` and
+`MVP validation` is now `Source validation`. File names and job IDs are
+unchanged. Branch protection on `main` was absent when checked (2026-11-01), so
+no required check was dropped; add any future required checks under the new names.
 The retired prototype workflow is already absent; do not recreate it.
 
 ### Historical deployment recipe
