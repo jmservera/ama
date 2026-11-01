@@ -62,7 +62,7 @@ class ExceptionQueueTests(unittest.TestCase):
         item = q.raise_failure("failed_integration", "Olive Operator", "x", ORIGINAL, "500")
         with self.assertRaises(PermissionError):
             q.request_recovery("Sam Steward", item["id"], "hold", "try")
-        self.assertEqual(q.access_report("Olive Operator")["audit"][-1]["action"], "denied")
+        self.assertEqual(q.access_report("Olive Operator")["audit"][-2]["action"], "denied")
 
     def test_recovery_is_audited_and_never_replays_or_releases(self) -> None:
         q = make()
@@ -74,8 +74,18 @@ class ExceptionQueueTests(unittest.TestCase):
         self.assertFalse(out["recovery"]["replayed"])
         self.assertFalse(out["recovery"]["released"])
         self.assertEqual(out["recovery"]["note"], NO_AUTOMATION)
-        last = q.access_report("Olive Operator")["audit"][-1]
+        last = q.access_report("Olive Operator")["audit"][-2]
         self.assertEqual((last["actor"], last["action"]), ("Olive Operator", "request_rerun"))
+
+    def test_action_must_match_item_kind(self) -> None:
+        q = make()
+        failure = q.raise_failure("failed_ai_run", "Olive Operator", "x", ORIGINAL, "timeout")
+        conflict = q.raise_conflict("identity_conflict", "Sam Steward", "Name", VALUES, ORIGINAL)
+        with self.assertRaises(ValueError):
+            q.request_recovery("Olive Operator", failure["id"], "resolve_by_owner", "no")
+        with self.assertRaises(ValueError):
+            q.request_recovery("Sam Steward", conflict["id"], "request_rerun", "no")
+        self.assertEqual(q.queue("Sam Steward")[0]["status"], conflict["status"])
 
     def test_only_named_owner_resolves_and_original_is_preserved(self) -> None:
         q = make()
@@ -133,7 +143,6 @@ class ExceptionQueueTests(unittest.TestCase):
 
     def test_access_report_is_audited_and_returns_copies(self) -> None:
         q = make()
-        q.access_report("Sam Steward")
         report = q.access_report("Sam Steward")
         self.assertEqual(report["audit"][-1]["action"], "viewed_access_report")
         report["audit"].clear()

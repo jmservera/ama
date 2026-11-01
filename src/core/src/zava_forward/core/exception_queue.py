@@ -35,6 +35,10 @@ RUNBOOK = {
     "failed_integration": "Check the integration status, then ask a human to re-send.",
     "stranded_task": "Confirm the task and its owner, then reassign or close it by hand.",
 }
+ALLOWED_ACTIONS = {
+    **{k: ("hold", "resolve_by_owner") for k in CONFLICT_KINDS},
+    **{k: ("hold", "request_rerun") for k in FAILURE_KINDS},
+}
 UNKNOWN = "Unknown"
 CHECK_MAX_AGE = timedelta(hours=1)
 NO_AUTOMATION = (
@@ -170,8 +174,9 @@ class ExceptionQueue:
         item = self._item(actor, item_id)
         if item["status"] == "closed":
             raise ValueError("This item is already closed.")
-        if action not in ("hold", "request_rerun", "resolve_by_owner"):
-            raise ValueError("Action must be hold, request_rerun or resolve_by_owner.")
+        allowed = ALLOWED_ACTIONS[item["kind"]]
+        if action not in allowed:
+            raise ValueError("Action for this item must be one of: " + ", ".join(allowed) + ".")
         why = _text(reason, "Reason")
         if action == "resolve_by_owner" and actor != item["owner"]:
             self._log(actor, "denied", item_id, "Only the named owner resolves.")
@@ -239,11 +244,10 @@ class ExceptionQueue:
     def access_report(self, actor: str) -> Record:
         """Visible roles and scope, plus the access audit limited to the actor's role scope."""
         roles = self._roles(actor)
+        self._log(actor, "viewed_access_report", None, ",".join(roles))
         scoped = {i for i, v in self._items.items() if v["owner_role"] in roles}
-        report = {
+        return {
             "roles": {name: list(held) for name, held in self._staff.items()},
             "scope": dict(OWNER_ROLE),
             "audit": [deepcopy(e) for e in self._audit if e["item"] is None or e["item"] in scoped],
         }
-        self._log(actor, "viewed_access_report", None, ",".join(roles))
-        return report

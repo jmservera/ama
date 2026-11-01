@@ -4110,7 +4110,7 @@ tasks. A named `data_steward` owns conflicts and imports; a named `digital_opera
 integration and stranded-task items. `raise_conflict` needs two different values, each with source,
 date and version, and shows them with the resolution owner in `conflict_view`. `queue` is scoped to
 the caller's role and every view, denial and action is appended to the audit log shown by
-`access_report(actor)`, which limits audit entries to the caller's role scope. `request_recovery` (hold, request_rerun, resolve_by_owner) needs a reason and records
+`access_report(actor)`, which limits item audit entries to the caller's role scope and includes all non-item entries (queue views, outages, denials). `request_recovery` (hold, request_rerun, resolve_by_owner) needs a reason and records
 `replayed` and `released` as False; nothing is replayed, corrected or released automatically. The
 original source is deep-copied and kept, and eligibility stays `Unknown`. Outage notes and clearance evidence are
 kept in the audit. `outage_banner` reports a missing, invalid, future or stale (over one hour) check as

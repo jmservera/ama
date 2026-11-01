@@ -16,3 +16,5 @@ Not every criterion is proven in the product (no UI, store or producers), so the
 Post-review amendment: four Copilot review findings on PR 666 were valid and fixed (scoped audit report, outage denial audit, outage note and evidence audit, check freshness). Original review outcome above is unchanged.
 
 Second post-review amendment: three further Copilot findings on PR 666 were valid and fixed (private backing records, outage clear normalisation, audited access report). Original outcome unchanged.
+
+Third post-review amendment: three Copilot findings on PR 666 were valid and fixed (per-kind recovery actions, access report logs its own view first, README scope wording). The state-file status versus session_status finding was declined as intended by the RPI state contract. Original outcome unchanged.
