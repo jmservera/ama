@@ -190,6 +190,10 @@ def bbox(q):
     return (min(s, n), min(w, e), max(s, n), max(w, e))
 
 
+def _printable(value) -> str:
+    return "".join(c if c.isprintable() else f"\\x{ord(c):02x}" for c in str(value))
+
+
 def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
     assets = StaticAssets({
         "/" + path.relative_to(WEB).as_posix(): (path, TYPES.get(path.suffix, "application/octet-stream"))
@@ -207,7 +211,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
             except ValueError:
                 path = ""
             if code >= 500 or (path.startswith("/vendor/") and code not in (200, 304)):
-                logging.getLogger(__name__).warning("http-response %s %s status=%s", getattr(self, "command", None), path, code)
+                logging.getLogger(__name__).warning("http-response %s %s status=%s", _printable(getattr(self, "command", None)), _printable(path), code)
             super().send_response(code, message)
 
         def _send(self, code, body, ctype="application/json", extra=None):
