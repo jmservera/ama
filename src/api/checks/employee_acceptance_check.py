@@ -434,8 +434,8 @@ def briefing(page: Page, admit: Admission) -> Observation:
     label = box.locator(".ai-label").inner_text()
     return {
         "passed": "Not an instruction" in label
-        and box.locator("details summary").count() > 0
-        and box.locator("time").count() > 0
+        and box.locator("details summary:visible").count() > 0
+        and box.locator("time:visible").count() > 0
         and page.locator("#app [role=alert]:visible").count() == 0
     }
 

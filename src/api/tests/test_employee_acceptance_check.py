@@ -199,6 +199,28 @@ class AcceptanceTests(unittest.TestCase):
         later.assert_not_called()
         self.assertNotIn("PRIVATE_CANARY", str(result))
 
+    def test_briefing_requires_visible_disclosures(self) -> None:
+        def run(visible: set[str]) -> object:
+            page = self.page()
+            box = Mock()
+            box.locator.return_value.inner_text.return_value = "AI summary. Not an instruction."
+
+            def inner(selector: str) -> Mock:
+                found = Mock()
+                found.inner_text.return_value = "AI summary. Not an instruction."
+                found.count.return_value = 1 if selector in visible else 0
+                return found
+
+            box.locator.side_effect = inner
+            alerts = Mock()
+            alerts.count.return_value = 0
+            page.locator.side_effect = lambda selector: box if selector == ".briefing" else alerts
+            return check.briefing(page, lambda: None)["passed"]
+
+        self.assertTrue(run({"details summary:visible", "time:visible"}))
+        self.assertFalse(run({"details summary", "time"}))
+        self.assertFalse(run({"details summary:visible"}))
+
     def test_map_payload(self) -> None:
         for payload in (POINTS, CLUSTERS, EMPTY):
             self.assertIsNotNone(check.map_projection(payload))
