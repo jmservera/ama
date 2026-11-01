@@ -20,6 +20,7 @@ ROLE_SCREENS = "src/api/src/zava_forward/api/web/role-screens.js"
 STAGES = 8
 TENSIONS = ("Continuity versus disclosure", "Utilisation versus choice")
 SCREEN_RE = re.compile(r"`[a-z][a-z0-9-]+`")
+STATUS_RE = re.compile(r"\((main|unmerged)\b[^)]*\)")
 HOME_RE = re.compile(r"EX-HOME-\d+")
 MANIFEST_RE = re.compile(r"^\| [a-z-]+ \| ([\d, ]+) \| \d+ \|", re.MULTILINE)
 # Registered and proposed role screens; update when a screen is added or renamed.
@@ -51,12 +52,16 @@ def status_drift(trace: str, registered: set[str]) -> list[str]:
     for r in rows(section(trace, "Perspectives to screens")):
         if len(r) < 2:
             continue
-        ids = [m.strip("`") for m in SCREEN_RE.findall(r[1])]
-        for ident in ids:
-            if "(main" in r[1] and ident not in registered:
-                drift.append(f"labelled main but not registered: {ident}")
-            if "(unmerged" in r[1] and ident in registered:
-                drift.append(f"labelled unmerged but registered: {ident}")
+        # Each status applies only to the screens named since the previous status.
+        pos = 0
+        for status in STATUS_RE.finditer(r[1]):
+            ids = [m.strip("`") for m in SCREEN_RE.findall(r[1][pos : status.start()])]
+            pos = status.end()
+            for ident in ids:
+                if status.group(1) == "main" and ident not in registered:
+                    drift.append(f"labelled main but not registered: {ident}")
+                if status.group(1) == "unmerged" and ident in registered:
+                    drift.append(f"labelled unmerged but registered: {ident}")
     return sorted(set(drift))
 
 

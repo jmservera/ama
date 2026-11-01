@@ -18,3 +18,7 @@ Outcome: Complete / Residual work. Execution: self-review of the diff against th
 3. Resident-choice source-account screen for stage 1.
 
 Criteria not proven: 1, 2, 4, 5, 6. The issue is not closed.
+
+## Correction cycle 1
+
+* Three Copilot threads addressed (validation record, per-group status check, index and log). Original review outcome preserved; independent and human review remain required.

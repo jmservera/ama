@@ -91,6 +91,15 @@ class AtlasScreenTraceTests(unittest.TestCase):
         gaps = trace.check(self.prd, self.atlas, doc, js)["gaps"]
         self.assertIn("labelled unmerged but registered: data-operator", gaps)
 
+    def test_mixed_status_cell_is_per_screen_group(self) -> None:
+        js = read(trace.ROLE_SCREENS)
+        doc = self.doc.replace(
+            "`finance-invoices` and `finance-funding` (main, #657)",
+            "`finance-invoices` (main, #657) and `finance-funding` (unmerged, PR 1)",
+        )
+        registered = trace.registered_screens(js) - {"finance-funding"} | {"finance-invoices"}
+        self.assertEqual(trace.status_drift(doc, registered), [])
+
     def test_cli_exit_codes(self) -> None:
         self.assertEqual(trace.main(["--root", str(ROOT)]), 0)
         self.assertEqual(trace.main(["--root", str(ROOT / "missing")]), 2)
