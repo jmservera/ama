@@ -20,3 +20,7 @@ ms.date: 2026-10-31
 ## Publication blocker (2026-10-31)
 
 * The docs-only exception conflicts with `.github/copilot-instructions.md`, which requires the complete exact-head local gate for every final RPI candidate, including documentation-only work. Relaxing it is undecided owner decision D4. Publication is therefore blocked for merge purposes until the full receipt is run and verified or the owner explicitly amends the rule. Hosted CI does not run for these paths and is not a substitute. The skipped-gate record is preserved.
+
+## Correction (2026-11-01)
+
+* The statement above that publication is blocked solely on a full receipt is historical. The plan was assessed under the owner-selected Focused tier for docs-only work, as recorded in the changes record. The Focused tier applies; the complete local gate is not claimed. Remaining: independent human review and owner decision D4 on whether the repository rule should be amended.

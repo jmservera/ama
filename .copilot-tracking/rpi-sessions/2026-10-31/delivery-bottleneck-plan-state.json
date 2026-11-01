@@ -18,7 +18,9 @@
     {"decision": "Critique", "status": "self-critique only, no independent critique", "evidence": "plan artifact"},
     {"decision": "Review", "status": "executed once (self-review); conformant with open items", "evidence": "review artifact"}
   ],
-  "blockers": [],
+  "blockers": [
+    {"id": "tier", "summary": "Plan assessed under the owner-selected Focused tier for docs-only work; complete local gate not run. Independent human review remains open", "resolution": "Owner review and decision D4 on the gate rule"}
+  ],
   "next_action": {"phase": "Follow-up", "action": "Owner selects follow-up or decides D1-D7"},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Owner decisions D1 and D2 (rubric bot, Copilot review cancel)", "rationale": "largest measured per-PR waste", "evidence": "research page bottleneck table"},
