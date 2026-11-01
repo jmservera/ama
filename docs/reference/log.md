@@ -9023,6 +9023,14 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   artefact; fixed in CSS and now asserted by the browser harness (21 states,
   zero violations, zero incompletes). No manual or assistive-technology
   assessment and no staff comprehension study was run; those criteria stay unmet.
+## [2026-11-01] refine | Briefing feedback guidance, Refs #531
+
+* Added a plain-language paragraph to Today's briefing saying how to correct
+  it, how a reason becomes audit-logged feedback and how to refresh, with a
+  unit test and an updated G15 row in the
+  [API guide](../../src/api/README.md#loading-feedback-and-todays-briefing-531).
+* Local pinned-axe browser check and unit tests passed. Live employee-site
+  verification (criterion 7) remains unmet; no assistive-technology claim.
 ## [2026-11-01] observation | Regulatory evaluation gates re-verified, Refs #216
 
 * Re-ran the [#216 gates](../../src/agents/README.md#re-verification-2026-11-01) at
@@ -9044,3 +9052,14 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * The retry was delivered by #527; release-URL reuse and the expanded tests came from #594 and #538. The authenticated live check
   stays pending deploy of #616 and #617. Retry timeout (5 s) is shorter than
   the observed latencies, logged as a follow-up. No source change.
+
+## [2026-11-01] query | Employee chat local verification (#530)
+
+* Recorded a local focused-tier run for the employee chat with bounded
+  skills: API (1485), agents (123) and core chat (99) unit tests, ruff,
+  mypy, the employee chat browser and pinned axe check, and 271 SQL
+  contract tests on a disposable local SQL Server. Evidence is in
+  `.copilot-tracking/changes/2026-11-01/employee-chat-skills-530-verification-changes.md`.
+* Live employee-site verification, screen-reader and voice-control
+  acceptance and owner confirmation of agent names remain unproven; no
+  source change was made.

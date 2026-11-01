@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-01T03:05:45+00:00",
-  "commit": "5fa7bba87b7315cc6425558ba29115ca70f19521",
+  "scored_at": "2026-11-01T03:17:36+00:00",
+  "commit": "12fe1064f7d11686e6b44718eb6353bb0b6f27f5",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41266398558",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41268155602",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "8cb7e497087b29f17ba029f1dbc06d25be2bde7fb04dced52ac149c63913615a",
+    "solution-code": "437b8f04ce215776c458bf2febeb7069eb0247557116726024d7e6fb53078751",
     "infrastructure": "0172b75e258abc5d97ce173fa595146da2d6f807386ec74e992482b7524f7aad",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -57,7 +57,7 @@
         "src/api/src/zava_forward/api/server.py:486-505",
         "src/api/tests/test_workspace_paging.py:1-30"
       ],
-      "rationale": "Capability is implemented end to end (API, core, UI) with edge cases and dedicated passing tests. Strengthens completeness evidence; baseline 5 retained as it was already at ceiling."
+      "rationale": "Capability is implemented end to end (API, core, UI) with edge cases (invalid input, hidden-order totals, offset overrun) and dedicated passing tests. Strengthens completeness evidence; baseline 5 retained as it was already at ceiling."
     },
     "A5": {
       "score": 5,
@@ -120,7 +120,7 @@
         "src/core/README.md:5-123",
         "src/api/README.md:9-47"
       ],
-      "rationale": "Diff adds an axe false-positive fix note to src/api/README.md; engineering documentation, not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
+      "rationale": "Pagination code change is engineering, not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
     },
     "B7": {
       "score": 5,
