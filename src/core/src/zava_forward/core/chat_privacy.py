@@ -82,8 +82,15 @@ DATA_MAP = (
 MODEL_PROVIDER_POSITION = dict(
     provider="Azure OpenAI through the existing Foundry deployments (ADR 0001 to ADR 0003)", region="uksouth (owner decision 2026-10-15)",
     zava_stores_prompts=False, foundry_agent_memory=False,
-    open_items=("Provider data processing terms, abuse-monitoring retention and any opt-out must be retrieved and recorded by the DPO "
-                "from current Microsoft terms; not verified here.",
+    documented_terms=dict(
+        source="https://learn.microsoft.com/en-us/azure/foundry/responsible-ai/openai/data-privacy",
+        source_date="2026-06-05", retrieved="2026-11-01", status="vendor_documentation_not_dpo_accepted",
+        summary=("Prompts and completions are not used to train models or shared with other customers; models are stateless; "
+                 "standard processing stays in the resource geography, Global and DataZone deployments may process elsewhere; "
+                 "abuse monitoring may store and human-review flagged samples unless modified monitoring is approved; "
+                 "processing is governed by the Microsoft Data Protection Addendum.")),
+    open_items=("DPO and Legal must accept or reject the documented terms and confirm the deployment type (Standard, DataZone or "
+                "Global) and whether modified abuse monitoring is approved; not verified against the deployment.",
                 "International transfer position, if any, stays Unknown until the DPO records it."))
 
 DIAGNOSTIC_FIELDS = frozenset({"thread_id", "user_key", "case_id", "task", "role", "count", "status", "at", "event", "latency_ms"})
