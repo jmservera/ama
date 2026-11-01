@@ -1,6 +1,6 @@
 # Review: issue 470 faster local gate (2026-11-01)
 
-Review executed once. Outcome: conformant for the delivered slice (evidence-only); issue not closable.
+Review executed once. Outcome: conformant for the delivered slice (evidence-only); issue not closable. Qualified: not publication-ready, because the required full exact-head gate and verified receipt were not run (unauthorised heavy gate); this is separate from the deferred benchmark.
 
 ## Acceptance criteria
 
