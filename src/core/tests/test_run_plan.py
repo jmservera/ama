@@ -32,11 +32,23 @@ class EstimateTests(unittest.TestCase):
         self.assertEqual(estimate.headroom_units_per_day, 400_000 - 3000 - 40_000)
         self.assertEqual(estimate.estimated_cost_usd, 0.33)
 
-    def test_60000_homes_fit_b1_but_130000_exceed_headroom(self) -> None:
+    def test_quota_headroom_and_publisher_message_limit(self) -> None:
         big = {"max_seconds": 3600, "max_per_second": 100}
-        self.assertEqual(plan(homes=60_000, **big).estimate().headroom_units_per_day, 180_000)
+        self.assertEqual(plan(homes=33_333, **big).estimate().headroom_units_per_day, 260_001)
+        with self.assertRaisesRegex(StreamError, "RUN_MESSAGE_LIMIT"):
+            plan(homes=60_000, **big).estimate()
         with self.assertRaisesRegex(StreamError, "B1_QUOTA_HEADROOM"):
             plan(homes=130_000, **big).estimate()
+
+    def test_whole_multi_day_run_counts_against_daily_quota(self) -> None:
+        kwargs = {"homes": 50_000, "days": 2, "message_bytes": 4000,
+                  "max_seconds": 3600, "max_per_second": 100, "budget_usd": 5}  # fmt: skip
+        with self.assertRaisesRegex(StreamError, "B1_QUOTA_HEADROOM"):
+            plan(**kwargs).estimate()
+
+    def test_estimate_total_fits_run_budget_validation(self) -> None:
+        p = plan(homes=33_333, max_seconds=3600, max_per_second=100)
+        self.assertLessEqual(p.budget().max_messages, 100_000)
 
     def test_large_messages_use_more_metered_units(self) -> None:
         small, large = plan().estimate(), plan(message_bytes=4000).estimate()
@@ -88,6 +100,29 @@ class ControlTests(unittest.TestCase):
         saved = json.loads(self.path.read_text())
         saved["estimate"]["estimated_cost_usd"] = 0
         self.path.write_text(json.dumps(saved))
+        with self.assertRaisesRegex(StreamError, "ESTIMATE_MISMATCH"):
+            RunController(plan()).start(self.path)
+
+    def test_start_refused_for_malformed_or_incomplete_record(self) -> None:
+        for content in ("[]", "null", "not json"):
+            self.path.write_text(content)
+            with (
+                self.subTest(content=content),
+                self.assertRaisesRegex(StreamError, "ESTIMATE_NOT_RECORDED"),
+            ):
+                RunController(plan()).start(self.path)
+        body: dict[str, object] = {"plan": run_plan.asdict(plan())}
+        body["sha256"] = run_plan._digest(body)
+        self.path.write_text(json.dumps(body))
+        with self.assertRaisesRegex(StreamError, "ESTIMATE_MISMATCH"):
+            RunController(plan()).start(self.path)
+
+    def test_start_refused_for_self_consistent_stale_estimate(self) -> None:
+        body = record(plan(), self.path)
+        body.pop("sha256")
+        body["estimate"]["estimated_cost_usd"] = 0  # type: ignore[index]
+        body["sha256"] = run_plan._digest(body)
+        self.path.write_text(json.dumps(body))
         with self.assertRaisesRegex(StreamError, "ESTIMATE_MISMATCH"):
             RunController(plan()).start(self.path)
 

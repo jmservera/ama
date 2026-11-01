@@ -24,6 +24,7 @@ METER_BYTES = 4096
 PROPERTY_BYTES = 1024
 RESERVED_HEADROOM = 40_000
 MAX_SECONDS = 3600.0
+MAX_RUN_MESSAGES = 100_000
 PRICE_BASIS = "Azure Retail Prices API list price, uksouth, retrieved 2026-10-27 (infra/README.md)"
 
 
@@ -81,10 +82,13 @@ class RunPlan:
         self.validate()
         per_day = self.homes * self.records_per_home_day
         units = per_day * math.ceil((self.message_bytes + PROPERTY_BYTES) / METER_BYTES)
-        headroom = B1_DAILY_MESSAGES * UNITS - units - RESERVED_HEADROOM
         total = per_day * self.days
+        # All days replay in one run of at most MAX_SECONDS, so count the whole run against a day.
+        headroom = B1_DAILY_MESSAGES * UNITS - units * self.days - RESERVED_HEADROOM
         if headroom < 0:
             raise StreamError("B1_QUOTA_HEADROOM")
+        if total > MAX_RUN_MESSAGES:
+            raise StreamError("RUN_MESSAGE_LIMIT")
         if total > self.max_per_second * self.max_seconds:
             raise StreamError("RUN_TIME_LIMIT_TOO_SHORT")
         cost = round(B1_MONTHLY_USD * UNITS * self.days / 30, 2)
@@ -122,13 +126,17 @@ def _digest(body: dict[str, object]) -> str:
     return hashlib.sha256(json.dumps(body, sort_keys=True).encode()).hexdigest()
 
 
-def record(plan: RunPlan, path: Path) -> dict[str, object]:
-    """Write the estimate before any run; the controller refuses to start without it."""
-    body: dict[str, object] = {
+def _body(plan: RunPlan) -> dict[str, object]:
+    return {
         "plan": asdict(plan),
         "estimate": asdict(plan.estimate()),
         "alert_fires_at_usd": round(plan.budget_usd * plan.alert_threshold, 2),
     }
+
+
+def record(plan: RunPlan, path: Path) -> dict[str, object]:
+    """Write the estimate before any run; the controller refuses to start without it."""
+    body = _body(plan)
     body["sha256"] = _digest(body)
     path.write_text(json.dumps(body, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return body
@@ -149,10 +157,13 @@ class RunController:
             raise StreamError("RUN_ALREADY_STARTED")
         try:
             body = json.loads(estimate_path.read_text(encoding="utf-8"))
+            if not isinstance(body, dict):
+                raise ValueError
             claimed = body.pop("sha256")
-        except (OSError, ValueError, KeyError, AttributeError):
+        except (OSError, ValueError, KeyError):
             raise StreamError("ESTIMATE_NOT_RECORDED") from None
-        if claimed != _digest(body) or body.get("plan") != asdict(self.plan):
+        expected = _body(self.plan)
+        if claimed != _digest(body) or body != expected:
             raise StreamError("ESTIMATE_MISMATCH")
         self.pacer = Pacer(self.plan.budget(), clock=self.clock)
         self.state = "running"

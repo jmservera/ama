@@ -442,14 +442,16 @@ for actual SDK operation bounds, credential handling and activation gates.
 messages/day (3 per home by default), 4 KiB metered units against the decided
 B1/one-unit quota (400,000/day with a 40,000 reserve), prorated hub cost and
 budget cap, plus the run owner, time limit (at most 3600 s) and budget alert
-reference and threshold. It refuses over-quota, over-budget or too-short runs.
-`RunController` starts only against a recorded, untampered estimate that matches
-the plan, allows one run, stops it, scales homes and rate down (never up) and
+reference and threshold. It counts the whole run (all days) against the daily
+quota and refuses over-quota, over-budget, too-short or over-100,000-message
+runs (the `RunBudget` publisher limit; larger stock needs separately budgeted
+runs). `RunController` starts only against a recorded, untampered estimate whose
+complete body matches the current plan, estimate and alert amount, allows one run, stops it, scales homes and rate down (never up) and
 inherits the `Pacer` hard deadline. Prices are public list estimates, not a quote.
 Nothing here sends traffic or verifies the live Azure budget alert (#146).
 
 ```bash
-python3 -m zava_forward.core.synthetic.run_plan --homes 60000 --owner "<name>" \
+python3 -m zava_forward.core.synthetic.run_plan --homes 30000 --owner "<name>" \
   --budget-usd 10 --alert-reference "<budget alert name>" --out estimate.json
 ```
 
