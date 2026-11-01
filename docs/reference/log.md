@@ -9200,3 +9200,28 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   pack: five package suites, Ruff and mypy passed locally; SQL, container and
   browser groups not run. The PERF-440 benchmark outlier was not reproduced
   and is filed as #687. No regulatory snapshot changed; no criterion ticked.
+
+## [2026-11-01] query | Paper critique revision and prospective five-arm design
+
+* Revised the existing paper while preserving the owner's selected title.
+  Moved extended literature, case audits, HIR/IDR definitions and historical
+  hashes to a separately compiled evidence supplement; original critiques,
+  v4 freezes and earlier data remain unchanged.
+* Added a prospective five-arm, three-model candidate with computed 33
+  trajectories per arm/model (495), an owner-selected 10-point coverage gain
+  and explicit SD25 planning assumption. Matched-resource delivery and visible
+  repair do not expose hidden evaluator output. OSF amendment, freeze,
+  affordability/deadline, privacy/readback and launch remain genuine gates.
+* Filed three static code snapshots, committed research/plan tracing, twenty
+  inspected evidence-boundary contexts and named GitHub metadata in the paper's
+  ancillary evidence. Corrected scope/attribution, source locators/metadata,
+  dated web-access limits, period normalization and cost-of-inaction semantics.
+  The 27 October retirement sign-off is not successful journey evidence.
+* The owner explicitly authorized public development PR updates, not visibility
+  changes, researcher-archive release, external scientific submission, OSF
+  mutation or collection. Historical cloud/sign-in/usage exports are explicitly
+  deferred; no tenant-wide query, private dataset or paid experiment occurred.
+* Focused authoring tests and v5 planning/privacy/large-CSV regressions pass.
+  All eighteen SDK checks pass under restored Node24, including actual startup
+  with locally rejected inference. Current-image and final publication evidence
+  remain separate; no independent human peer-review or conformance claim is made.

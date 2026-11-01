@@ -88,7 +88,9 @@ class ConceptualFigureTests(unittest.TestCase):
             self.check_exports(PACKAGE)
 
     def test_given_manuscript_when_checked_then_concepts_and_deferred_plots_are_explicit(self) -> None:
-        source = (PACKAGE / "main.tex").read_text(encoding="utf-8")
+        from check_paper import expand_inputs
+
+        source = expand_inputs((PACKAGE / "main.tex").read_text(encoding="utf-8"))
         narrative = source.split(r"\begin{thebibliography}", 1)[0]
         narrative = re.sub(r"(?m)^%.*$", "", narrative)
         narrative = narrative.replace("[Our study's limitations]", "")
@@ -100,7 +102,8 @@ class ConceptualFigureTests(unittest.TestCase):
             self.assertIn(f"TODO(author): {identifier}", source)
         self.assertIn(r"\resultsfalse", narrative)
         self.assertNotIn(r"\resultstrue", narrative)
-        self.assertIn("ten-feature trajectories", narrative)
+        self.assertIn("ten ordered features", narrative)
+        self.assertNotIn("Regional access scope change", narrative)
 
 
 if __name__ == "__main__":

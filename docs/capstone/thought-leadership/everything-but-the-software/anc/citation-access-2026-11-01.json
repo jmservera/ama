@@ -1,0 +1,98 @@
+{
+  "date": "2026-11-01",
+  "scope": "Dated source access and focused claim checks, not independent validation of publications or exhaustive verification of all 98 references",
+  "default_success_coverage": "Bibliographic page or brief text excerpt; retrieval alone does not establish claim support",
+  "web_sources": {
+    "agile2001manifesto": "Accessed 1 November 2026; manifesto excerpt.",
+    "anthropic2025harness": "Accessed 1 November 2026; brief excerpt, not a fresh complete study audit.",
+    "beck2018tcr": "Retrieval attempted 1 November 2026; HTTP 403, full text unavailable.",
+    "beck2025augmented": "Accessed 1 November 2026; brief excerpt.",
+    "beck2025devslow": "Accessed 1 November 2026; author's complete summary, not the full essay.",
+    "beck2026mathematicians": "Accessed 1 November 2026; brief excerpt.",
+    "beck2026prodacity": "Transcript accessed 1 November 2026; video-page HTML only, video not inspected.",
+    "bird2014extrinsic": "Accessed 1 November 2026; publisher abstract and ACM/Crossref metadata.",
+    "boeckeler2025sdd": "Accessed 1 November 2026; brief excerpt.",
+    "delimarsky2025speckit": "Accessed 1 November 2026; brief excerpt.",
+    "dora2025": "Accessed 1 November 2026; landing-page metadata, not the report's full text.",
+    "eldridge2016pilot": "Accessed 1 November 2026; methods/reporting excerpt.",
+    "fowler2007stamina": "Accessed 1 November 2026; full web essay.",
+    "fowler2025thoughts": "Accessed 1 November 2026; brief excerpt.",
+    "gamma1995patterns": "Accessed 1 November 2026; publisher description, not the full book.",
+    "herdagdelen2026judgment": "Accessed 1 November 2026; study design, results, limitations and proposed safeguards.",
+    "hong2025contextrot": "Accessed 1 November 2026; brief excerpt.",
+    "hvecore": "Tag recheck attempted 1 November 2026; organization SAML denied access, no bypass attempted.",
+    "martin2026productengineers": "Accessed 1 November 2026; episode description, not the complete audio.",
+    "microsoft2026agentrx": "Accessed 1 November 2026; first-party summary excerpt.",
+    "microsoft2026skillopt": "Accessed 1 November 2026; first-party summary excerpt.",
+    "murphy2026speed": "Accessed 1 November 2026; page metadata/brief excerpt.",
+    "nigh2025agentsmd": "Accessed 1 November 2026; brief excerpt.",
+    "openai2026harness": "Retrieval attempted 1 November 2026; HTTP 403, fresh full text unavailable.",
+    "orosz2025beck": "Video-page retrieval attempted 1 November 2026; HTML only, video/transcript not inspected.",
+    "photocraft2026": "Commit metadata accessed 1 November 2026 through GitHub CLI; application not executed.",
+    "rajasekaran2025context": "Accessed 1 November 2026; brief excerpt at redirected official page.",
+    "sec2013knight": "Order retrieval attempted 1 November 2026; HTTP 403, fresh full text unavailable.",
+    "servera2026ama": "Repository/commit and named issue/PR metadata accessed 1 November 2026; historical live journey unverified.",
+    "sigsoft2021standards": "Accessed 1 November 2026; standards landing-page excerpt.",
+    "yan2025multiagents": "Accessed 1 November 2026; context-sharing principles within the argument against multi-agent designs."
+  },
+  "focused_claim_support": [
+    {
+      "key": "pan2026swemaintain",
+      "state": "Full-text support within inspected scope",
+      "source": "https://arxiv.org/pdf/2610.14768v1",
+      "locators": "Sections 4.1-4.2, Tables 2-3, Figure 1 caption, Section 5.1/Figure 5",
+      "checked": "Published four event-resolution points/whiskers; clean 619-event new-task -1.1 [-3.8,+1.6]; unweighted 4.0-to-7.2 means; terminator/constructor example.",
+      "limit": "Underlying experimental data not independently reanalysed; unconfirmed eight-of-ten detail removed."
+    },
+    {
+      "key": "gloaguen2026agentsmd",
+      "state": "Full-text support within inspected scope",
+      "source": "https://arxiv.org/html/2602.11988v3",
+      "locators": "Section 4.2, Tables 2-3",
+      "checked": "20/23 percent cost increases, slight 0.5/2-point success decreases, CTXbench developer-versus-LLM p=0.038."
+    },
+    {
+      "key": "herdagdelen2026judgment",
+      "state": "Full-text support within inspected scope",
+      "source": "https://www.anthropic.com/research/agents-judgment-calls",
+      "locators": "Study design, Results, Limitations, What this means",
+      "checked": "61 recruited/50 agent users; presenting alternatives or eliciting the expert view is the source proposal. Recording human reasons is the manuscript author's separate proposal."
+    },
+    {
+      "key": "ma2026building",
+      "state": "Full-text support within inspected scope",
+      "source": "https://arxiv.org/pdf/2606.28430v1",
+      "locators": "Main run-level audit table and accompanying discussion",
+      "checked": "Dead/absent required-library disposition in seven of twelve assigned oracle-in-the-loop runs, not every run."
+    },
+    {
+      "key": "bird2014extrinsic",
+      "state": "Metadata conflict resolved using ACM/Crossref record",
+      "source": "https://doi.org/10.1145/2591062.2591173",
+      "checked": "Companion Proceedings, pages 205-214, 2014.",
+      "limit": "Microsoft publication page labels main ICSE; the conflict is recorded, not silently treated as consistent."
+    },
+    {
+      "keys": ["chatlatanagulchai2026readmes", "mohsenimofidi2026context", "peralta2026merged", "kim2014refactoring"],
+      "state": "Metadata-only for updated venue/DOI/page fields",
+      "source": "Crossref records and inspected arXiv version metadata",
+      "limit": "Publication metadata does not itself verify numerical findings."
+    },
+    {
+      "keys": ["microsoft2026autosaddler", "chen2023drift", "zhang2023snowball"],
+      "state": "Abstract/metadata support",
+      "source": "Version-specific arXiv metadata and ICML PMLR 235 publication page",
+      "checked": "Actual named authors, version identity and relevant abstract-level scope; Snowball ICML 2024 pages 59670-59684."
+    },
+    {
+      "keys": ["tornhill2022codered", "besker2018cripples", "borg2025echoes", "kelly2019hgdagger", "goodhart1975", "kumar2025agents"],
+      "state": "User-supplied critique qualifications with partial metadata/abstract checks",
+      "limit": "No new complete full-text or raw-data verification is claimed for all these sources."
+    }
+  ],
+  "remaining": [
+    "NeurIPS status for the pinned SlopCodeBench v2 is not independently verified; preprint identity is retained.",
+    "Historical sign-in/deployment/usage exports are explicitly owner-deferred.",
+    "Independent human peer review, author publication clearance, actual OSF amendment and experiment collection remain separate."
+  ]
+}

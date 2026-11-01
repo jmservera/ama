@@ -21,15 +21,18 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
-For the paper's [frozen experiment review and revision](../capstone/thought-leadership/everything-but-the-software/README.md#frozen-experiment-review-and-revision-1-november),
-the 1 November source reconciles v4's eighteen trajectories across three
-models, quality/retention/CR1 outcomes, all-attempt costs and soft credit
-buffers. Editable conceptual robot-role infographics explain the design and
-measurement; conditional break-even scenarios are explicitly assumptions,
-not observed savings or a long-run forecast. The release-packet checksum
-matches; owner review is not independent scientific acceptance. No pilot
-results, prospective v4 OSF completion or collection authorization is claimed.
-Frozen experiment assets and historical critiques are unchanged.
+For the paper's [v9 critique disposition](../capstone/thought-leadership/everything-but-the-software/README.md#critique-disposition-1-november-v9),
+the owner-selected title is preserved, with a shorter main article and
+separate evidence supplement. The prospective five-arm candidate has
+33 trajectories per arm/model (495), a conditional 10-point coverage target,
+matched-resource delivery, visible repair and a blocked primary comparison.
+Three pinned static snapshots, source/access limits, lexical validation and
+corrected zero/undefined and break-even figures are retained. Source metadata
+and code tests do not establish scientific acceptance or historical deployed
+usability. Public development PRs are owner-authorized; future privacy, new
+review/freeze, proper prospective OSF recording, affordability and collection
+gates remain. Historical cloud exports are explicitly deferred.
+Original v4 assets, adverse critiques and prior data remain unchanged.
 
 For the [31 October live app observations](../architecture/cutover-evidence-pack.md#live-app-verification-2026-10-31-refs-523-524-570-432),
 resident sign-in and chat open/close, resize, dock/undock and narrow/wide

@@ -15,6 +15,16 @@ from pathlib import Path
 
 PACKAGE = Path(__file__).resolve().parent.parent
 BASELINE = "0d5dcb02"
+BIBLIOGRAPHY_SORT_KEYS = {
+    "agile2001manifesto": "beck2001manifesto",
+    "anthropic2025harness": "young2025harness",
+    "hvecore": "microsoft2026hvecore",
+    "openai2026harness": "lopopolo2026harness",
+    "orosz2025beck": "beck2025orosz",
+    "microsoft2026autosaddler": "park2026autosaddler",
+    "sigsoft2021standards": "ralph2021standards",
+    "sec2013knight": "us-securities2013knight",
+}
 
 
 def create_parser() -> argparse.ArgumentParser:
@@ -27,6 +37,24 @@ def create_parser() -> argparse.ArgumentParser:
 
 def strip_comments(text: str) -> str:
     return re.sub(r"(?m)(?<!\\)%.*$", "", text)
+
+
+def bibliography_sort_key(key: str) -> str:
+    """Keep stable citation identifiers while sorting the named authors correctly."""
+    return BIBLIOGRAPHY_SORT_KEYS.get(key, key)
+
+
+def expand_inputs(text: str, package: Path = PACKAGE, seen: tuple[Path, ...] = ()) -> str:
+    """Read the paper's local TeX slices without permitting external paths or cycles."""
+    def include(match: re.Match[str]) -> str:
+        path = (package / match.group(1)).resolve()
+        if path.suffix != ".tex" or not path.is_relative_to(package.resolve()):
+            raise ValueError(f"TeX input is outside the paper package: {match.group(1)}")
+        if path in seen:
+            raise ValueError(f"Cyclic TeX input: {match.group(1)}")
+        return expand_inputs(path.read_text(encoding="utf-8"), package, (*seen, path))
+
+    return re.sub(r"\\input\{([^{}]+)\}", include, text)
 
 
 def body_words(text: str) -> int:
@@ -47,7 +75,12 @@ def normalise_bibliography() -> None:
     end = text.index(r"\end{thebibliography}", start)
     entries = re.findall(r"\\bibitem\{([^}]+)\}.*?(?=\\bibitem\{|\Z)", text[start:end], re.S)
     blocks = re.split(r"(?=\\bibitem\{)", text[start:end])
-    ordered = sorted(zip(entries, (block for block in blocks if block.strip())))
+    citations = {key.strip() for group in re.findall(
+        r"\\cite\w*(?:\[[^]]*\])*\{([^}]+)\}", strip_comments(expand_inputs(text))
+    ) for key in group.split(",")}
+    ordered = sorted(((key, block) for key, block in zip(
+        entries, (block for block in blocks if block.strip())) if key in citations),
+                     key=lambda item: bibliography_sort_key(item[0]))
     source.write_text(text[:start] + "\n\n".join(block.strip() for _, block in ordered) + "\n\n" + text[end:], encoding="utf-8")
     bibfile = PACKAGE / "references.bib"
     bibtext = bibfile.read_text(encoding="utf-8")
@@ -56,7 +89,9 @@ def normalise_bibliography() -> None:
     for index, match in enumerate(matches):
         stop = matches[index + 1].start() if index + 1 < len(matches) else len(bibtext)
         blocks_by_key.append((match.group(1), bibtext[match.start():stop].strip()))
-    bibfile.write_text(bibtext[:matches[0].start()] + "\n\n".join(block for _, block in sorted(blocks_by_key)) + "\n", encoding="utf-8")
+    bibfile.write_text(bibtext[:matches[0].start()] + "\n\n".join(
+        block for _, block in sorted(blocks_by_key, key=lambda item: bibliography_sort_key(item[0]))
+    ) + "\n", encoding="utf-8")
 
 
 def historical_text(package: Path) -> str | None:
@@ -82,7 +117,7 @@ def main() -> int:
     args = create_parser().parse_args()
     if args.normalise_bibliography:
         normalise_bibliography()
-    text = (PACKAGE / "main.tex").read_text(encoding="utf-8")
+    text = expand_inputs((PACKAGE / "main.tex").read_text(encoding="utf-8"))
     clean = strip_comments(text)
     failures = []
     try:
@@ -105,9 +140,11 @@ def main() -> int:
     bibitems = re.findall(r"\\bibitem\{([^}]+)\}", clean)
     bibkeys = re.findall(r"(?m)^@\w+\{([^,]+),", (PACKAGE / "references.bib").read_text(encoding="utf-8"))
     for name, keys in (("bibitems", bibitems), ("BibTeX", bibkeys)):
-        if set(keys) != citations or len(keys) != len(set(keys)):
-            failures.append(f"{name}: missing={sorted(citations - set(keys))}, uncited={sorted(set(keys) - citations)}, duplicate={len(keys) != len(set(keys))}")
-        if not args.allow_unsorted and keys != sorted(keys):
+        missing = citations - set(keys)
+        uncited = set(keys) - citations if name == "bibitems" else set()
+        if missing or uncited or len(keys) != len(set(keys)):
+            failures.append(f"{name}: missing={sorted(missing)}, uncited={sorted(uncited)}, duplicate={len(keys) != len(set(keys))}")
+        if not args.allow_unsorted and keys != sorted(keys, key=bibliography_sort_key):
             failures.append(f"{name} keys are not alphabetically sorted")
     labels = re.findall(r"\\label\{([^}]+)\}", clean)
     references = set(re.findall(r"\\(?:ref|pageref|autoref|eqref)\{([^}]+)\}", clean))

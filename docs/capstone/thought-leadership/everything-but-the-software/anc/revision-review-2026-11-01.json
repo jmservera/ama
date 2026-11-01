@@ -1,0 +1,74 @@
+{
+  "date": "2026-11-01",
+  "mode": "Authorized critique-driven revision and offline implementation",
+  "original_inputs": {
+    "read_only_v8_attachment_sha256": "c5db134c324eee50c6a3d9596ff727e2f7ed53ff158540ac7cb0fa296744041c",
+    "supplied_automatic_critique_capture_sha256": "2d9058433168634ea127ccb3fa012763d366123d93fc5b9d3d8104e5907a6220",
+    "original_critique_and_historical_reviews_rewritten": false
+  },
+  "owner_decisions": {
+    "title": "Feature-Driven Decay in an Agentic Coding Loop",
+    "title_changed": false,
+    "five_arms": true,
+    "minimum_useful_coverage_gain_pp": 10,
+    "publication": "public-pr-now, development PRs only",
+    "repository_visibility_mutation": false,
+    "historical_cloud_exports": "Explicitly deferred; repository evidence only",
+    "OSF_mutation_or_paid_collection_authorized": false
+  },
+  "execution_evidence": {
+    "case_static_metadata": "revision-metrics-2026-11-01.json",
+    "source_access_and_limits": "citation-access-2026-11-01.json",
+    "native_source_exports": "../diagram-exports.json",
+    "exact_frozen_v4_prompt_sha256": "75f646edbe04e1e3403b092b13edd6b66615a3362e67ad49744d229cdcb94f29",
+    "authoring_tests": {"passed": 19, "skipped": 0},
+    "five_arm_regression_module": {"passed": 50, "skipped": 0},
+    "SDK_Node24_tests": {
+      "passed": 18,
+      "skipped": 0,
+      "runtime": "Node 24.22.2",
+      "actual_startup": "Owned bounded tmux; provider inference intercepted and rejected locally",
+      "provider_model_sessions": 0
+    },
+    "delegated_harness_suite_before_parent_test_additions": {
+      "passed": 849,
+      "skipped_image_checks": 9,
+      "scope": "Offline candidate, not accepted current-image qualification"
+    },
+    "sharing_stress": "Complete fixed-panel maximum alternating loss episodes for all 495 assigned trajectories, plus credential/allocation/symlink refusal",
+    "syntax_and_whitespace_checks": "Passed",
+    "paper_compile": "Tectonic main and supplement succeeded; no undefined references or overfull text",
+    "layout": "All-page text bounds checked; revised native figures inspected; date-label overlap corrected",
+    "initial_failures_preserved_in_assessment": [
+      "Missing pinned review dependencies restored with pip/npm in task-local environments",
+      "An initial PDF build raced case-image generation; completed PNGs verified and sequential rebuild succeeded",
+      "A source-relative controller fixture failed under default external pytest temporary paths; corrected owned source-root fixture",
+      "The local runtime rebuild failed strict APK verification after parallel stages generated identical key names; distinct PACKAGER identities fix the collision, 50 v5 regressions passed without a signature bypass"
+    ]
+  },
+  "assessment": {
+    "independent_human_peer_review": "Not completed",
+    "original_study_data_verification": "Not performed",
+    "source_claim_coverage": "Scoped full-text, abstract/metadata and user-supplied states are explicit; not all 98 sources verified",
+    "historical_first_sign_in_and_release_scope": "Unverified; null links retained",
+    "new_exact_source_publication_gate": "Must be separately executed and verified; no historical receipt promoted",
+    "scientific_acceptance_and_venue_clearance": "Not granted",
+    "prospective_registration_freeze_and_collection": "Blocked pending actual source-bound evidence and owner/researcher actions"
+  },
+  "planning": {
+    "trajectories_per_arm_model": 33,
+    "models": 3,
+    "arms": 5,
+    "trajectories": 495,
+    "primary_comparison": "Equal-model-weight blocked B-D final coverage",
+    "alpha": 0.05,
+    "target_power": 0.8,
+    "SD_pp": 25,
+    "SD_status": "Planning assumption, not measured variance or guaranteed power",
+    "binary_CR1_powered": false,
+    "combined_nominal_credit_caps": 2902500,
+    "unchanged_credit_envelope": 300000,
+    "unchanged_local_admission": 270000,
+    "affordability_or_launch_approved": false
+  }
+}

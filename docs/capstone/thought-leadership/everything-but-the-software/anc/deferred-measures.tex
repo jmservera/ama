@@ -1,0 +1,47 @@
+\section{Deferred intervention measures}\label{app:deferredmeasures}
+
+The study excludes intervention-rate outcomes but retains help and
+administrative records for eligibility and cost. These definitions are
+proposed future measures, not collected results.
+HG-DAgger and ThriftyDAgger supply cross-domain measurement precedents,
+not coding-agent effectiveness evidence
+~\cite{kelly2019hgdagger,hoque2022thriftydagger}.
+
+For run $r$, $n_r$ is attempted feature cycles, including assigned
+post-steps and failed cycles, and $h_{rj}$ qualifying corrective-help
+events. Observed human intervention rate would be
+\begin{equation}
+\mathrm{HIR}_r=\frac{1}{n_r}\sum_{j=1}^{n_r}
+\mathbf{1}\{h_{rj}>0\}.
+\label{eq:hir}
+\end{equation}
+Event counts and active human minutes are separate; repeated help in one
+cycle counts once for incidence. With $d_{rj}=1$ for an explicit help
+request or a block needing corrective human action,
+\begin{equation}
+\mathrm{IDR}_r=\frac{1}{n_r}\sum_{j=1}^{n_r}d_{rj}.
+\label{eq:intervention-demand}
+\end{equation}
+Requests and supplied help differ. A timeout alone is not a help request;
+zero attempts gives undefined rates. A future annotation protocol needs
+event/cycle/phase locators, coverage checks and adjudication; absent
+records cannot be zero. Routine launches, planned approvals and safety
+stops differ from corrective rescue. Low intervention must not reward
+silent failure or discourage necessary human judgement.
+
+\section{Historical freeze provenance}\label{app:freezeprovenance}
+
+The historical v4 execution source was
+\nolinkurl{e8707ecc8965d3f81f5142a2603042bfca1aab15}, with
+manifest-only commit
+\nolinkurl{03c50856838b539780d57216af2a4cf6744187d7}.
+Its attached \nolinkurl{osf-v4-2026-10-31.tar.gz} checksum was
+\nolinkurl{1a42fac40a4f1aa82df59c8c3f7f8d6dce37d22502c5952c398362ac63d6bd65}.
+The runtime image was
+\nolinkurl{sha256:090220b0b172ec205f1ea473d7c3a223eec5d7d619eb21acdcf15c9289287fa3}.
+These identify historical inputs, not a freeze or approval of the
+five-arm amendment. The original registration at
+\url{https://osf.io/ywsrv/} is owner-reported approved after submission
+on 28 October; the inspected v4 prospective amendment flag was false
+and its completion date null. New approval and actual prospective
+recording cannot be inferred or backdated.

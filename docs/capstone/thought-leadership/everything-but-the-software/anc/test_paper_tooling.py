@@ -46,9 +46,9 @@ class PaperCheckerTests(unittest.TestCase):
         )
         script.chmod(0o700)
 
-    def check(self) -> subprocess.CompletedProcess[str]:
+    def check(self, *arguments: str) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
-            [sys.executable, "-B", str(self.package / "anc/check_paper.py")],
+            [sys.executable, "-B", str(self.package / "anc/check_paper.py"), *arguments],
             cwd=self.package, env=self.environment, capture_output=True, text=True,
             check=False, timeout=10,
         )
@@ -96,6 +96,55 @@ class PaperCheckerTests(unittest.TestCase):
                     self.assertIn(diagnostic, result.stdout)
                     self.assertIn("FAIL structural checks", result.stdout)
 
+    def test_given_local_slice_when_checked_then_its_references_are_validated(self) -> None:
+        (self.package / "anc/slice.tex").write_text(
+            r"Slice \cite{alpha}.\label{slice}\ref{slice}", encoding="utf-8")
+        (self.package / "main.tex").write_text(
+            PAPER.replace(r"Current body \cite{alpha}.\label{known}\ref{known}",
+                          r"\input{anc/slice.tex}"), encoding="utf-8")
+
+        result = self.check()
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("PASS structural checks", result.stdout)
+
+    def test_given_cyclic_slice_when_checked_then_source_is_rejected(self) -> None:
+        (self.package / "anc/slice.tex").write_text(
+            r"\input{anc/slice.tex}", encoding="utf-8")
+        (self.package / "main.tex").write_text(
+            PAPER + r"\input{anc/slice.tex}", encoding="utf-8")
+
+        result = self.check()
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Cyclic TeX input", result.stderr)
+
+    def test_given_reusable_bibtex_when_checked_then_uncited_sources_are_retained(self) -> None:
+        (self.package / "references.bib").write_text(
+            "@article{alpha,\n}\n@article{beta,\n}\n", encoding="utf-8")
+
+        result = self.check()
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("cited=1 bibitems=1 bibtex=2", result.stdout)
+
+    def test_given_stable_citation_keys_when_normalised_then_named_authors_sort_correctly(self) -> None:
+        text = PAPER.replace(r"\cite{alpha}", r"\cite{alpha,anthropic2025harness,openai2026harness}")
+        text = text.replace(r"\end{thebibliography}",
+                            "\\bibitem{anthropic2025harness}Young.\n"
+                            "\\bibitem{openai2026harness}Lopopolo.\n"
+                            "\\end{thebibliography}")
+        (self.package / "main.tex").write_text(text, encoding="utf-8")
+        (self.package / "references.bib").write_text(
+            "@article{alpha,\n}\n@article{anthropic2025harness,\n}\n"
+            "@article{openai2026harness,\n}\n", encoding="utf-8")
+
+        result = self.check("--normalise-bibliography")
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        updated = (self.package / "main.tex").read_text()
+        self.assertLess(updated.index(r"\bibitem{openai2026harness}"),
+                        updated.index(r"\bibitem{anthropic2025harness}"))
 
 class TcrTests(unittest.TestCase):
     def setUp(self) -> None:

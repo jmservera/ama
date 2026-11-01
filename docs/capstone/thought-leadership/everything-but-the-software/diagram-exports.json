@@ -15,12 +15,12 @@
     },
     {
       "stem": "fig-pilot-design",
-      "source_sha256": "8ba8baee4157a278cec198717661cea2e850d4e5a19ab8d5744fc44384febbfb",
-      "svg_sha256": "22124a41aa9aa9946300a8a37663c54772b81da58b3b2db7135964de29e21cf6",
-      "png_sha256": "f1c7c6c3e3feb374b400526e799875dab24a2eb00b7513d33be973f3a65f1326",
-      "width": 1320,
-      "height": 858,
-      "elements": 249
+      "source_sha256": "dbc29b29dfb8ed0d226cc8c7c0f31c98709d17516f879c2e85faa7406adae901",
+      "svg_sha256": "146dbea209c2f486731e63f048df26f5bc31ff534a909932f571be7c861ea925",
+      "png_sha256": "8abe7f781c32e3927710f019460bba85d5a6ff40cc424a65a2e819d948ee84ec",
+      "width": 1095,
+      "height": 980,
+      "elements": 58
     },
     {
       "stem": "fig-contract-states",
@@ -33,21 +33,21 @@
     },
     {
       "stem": "fig-experiment-measures",
-      "source_sha256": "3cc37d61c9ab7378a0ffa19f2f00e53d481c920ed00eaa20be2cd9fca8095ee5",
-      "svg_sha256": "61a3ce0fb6d8ad4bb876ca58002907c77e7e0cfd82820d326a407350a5a2690f",
-      "png_sha256": "a681d400d4aaa024721b043dc73306de09e7d4f34766371a01a2f72fc33593eb",
+      "source_sha256": "bb151bd8e4d8a60f84648f4014920954c46db2bae6ddd8209163ab8fe48f87e8",
+      "svg_sha256": "48e25981c83048ca5539c1a4f16267f69d74ba1ca9b0c1280a5204fc9e0b3a10",
+      "png_sha256": "a5b20650c1a18693f3c31bce54ccf521914c45923124476cb83dd7645b688fef",
       "width": 1240,
       "height": 960,
       "elements": 135
     },
     {
       "stem": "fig-refactoring-economics",
-      "source_sha256": "0e5c36d4b215c2cf4eacf9554a3bf3d732fbeab03043f61ae054323f6d4cd2e5",
-      "svg_sha256": "1032b59b40366a10403b6d8f46288d2f409928c3915a89fe516d4d3e2a2e1295",
-      "png_sha256": "dbf8ded0b90bbfb9c69c3a6628106167e9005b93ac7111c14c34e4a1a453889e",
+      "source_sha256": "68b9b8f01bdc735558e7a18b802fd53346d4b0967c2a38cb64dea7593c80e73a",
+      "svg_sha256": "1e568be07d2f80cb4f69411b0a1c8baea252fd9d8e6ad65b5e057e71eb579d71",
+      "png_sha256": "f392cae3962945f9e12887c5ce2d410b70f49469902ca65deeb83034ccb84e14",
       "width": 1240,
-      "height": 683,
-      "elements": 65
+      "height": 1080,
+      "elements": 73
     }
   ]
 }

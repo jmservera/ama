@@ -10,14 +10,15 @@
       "y": 0,
       "width": 1200,
       "height": 45,
-      "text": "MEASUREMENT | Pilot endpoints, cost counterbalance & interpretation",
+      "text": "MEASUREMENT | Coverage, retention, adaptation and cost",
       "fontSize": 30,
       "fontFamily": 2,
       "lineHeight": 1.25,
       "strokeColor": "#000000",
       "textAlign": "left",
       "verticalAlign": "top",
-      "containerId": null
+      "containerId": null,
+      "originalText": "MEASUREMENT | Coverage, retention, adaptation and cost"
     },
     {
       "id": "subhead",
@@ -26,14 +27,15 @@
       "y": 50,
       "width": 1200,
       "height": 60,
-      "text": "Primary B-A and B-C contrasts reported separately per model (2 runs/arm/model)\nExploratory uncertainty only; no pass/fail hypothesis verdicts",
+      "text": "Primary: equal-model-weight B-D coverage; 33 trajectories per arm/model\nOther outcomes and per-model contrasts are secondary; no family-wide coverage claim",
       "fontSize": 22,
       "fontFamily": 2,
       "lineHeight": 1.25,
       "strokeColor": "#000000",
       "textAlign": "left",
       "verticalAlign": "top",
-      "containerId": null
+      "containerId": null,
+      "originalText": "Primary: equal-model-weight B-D coverage; 33 trajectories per arm/model\nOther outcomes and per-model contrasts are secondary; no family-wide coverage claim"
     },
     {
       "id": "col-endpoint",
@@ -126,15 +128,15 @@
       "x": 37,
       "y": 196.5,
       "width": 8,
-      "height": 9.0,
+      "height": 9,
       "points": [
         [
           0,
-          9.0
+          9
         ],
         [
           8,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#0078D4",
@@ -297,15 +299,15 @@
       "x": 30,
       "y": 250.5,
       "width": 5,
-      "height": 5.0,
+      "height": 5,
       "points": [
         [
           0,
-          0.0
+          0
         ],
         [
           5,
-          5.0
+          5
         ]
       ],
       "strokeColor": "#107C10",
@@ -326,15 +328,15 @@
       "x": 35,
       "y": 245.5,
       "width": 10,
-      "height": 10.0,
+      "height": 10,
       "points": [
         [
           0,
-          10.0
+          10
         ],
         [
           10,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#107C10",
@@ -404,14 +406,15 @@
       "y": 191,
       "width": 266,
       "height": 82,
-      "text": "H1: Final coverage\nCheckpoint P_10\nAll 127 feature tests",
+      "text": "Final coverage\nCheckpoint P_10\n127 feature contracts",
       "fontSize": 22,
       "fontFamily": 2,
       "lineHeight": 1.25,
       "strokeColor": "#000000",
       "textAlign": "center",
       "verticalAlign": "middle",
-      "containerId": "h1-target"
+      "containerId": "h1-target",
+      "originalText": "Final coverage\nCheckpoint P_10\n127 feature contracts"
     },
     {
       "id": "h1-measure",
@@ -511,7 +514,7 @@
       "x": 368,
       "y": 232.5,
       "width": 24,
-      "height": 0.0,
+      "height": 0,
       "points": [
         [
           0,
@@ -519,7 +522,7 @@
         ],
         [
           24,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#495057",
@@ -545,7 +548,7 @@
       "x": 793,
       "y": 232.5,
       "width": 24,
-      "height": 0.0,
+      "height": 0,
       "points": [
         [
           0,
@@ -553,7 +556,7 @@
         ],
         [
           24,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#495057",
@@ -598,15 +601,15 @@
       "x": 28,
       "y": 349.5,
       "width": 0,
-      "height": 9.0,
+      "height": 9,
       "points": [
         [
           0,
-          0.0
+          0
         ],
         [
           0,
-          9.0
+          9
         ]
       ],
       "strokeColor": "#107C10",
@@ -627,15 +630,15 @@
       "x": 46,
       "y": 349.5,
       "width": 0,
-      "height": 9.0,
+      "height": 9,
       "points": [
         [
           0,
-          0.0
+          0
         ],
         [
           0,
-          9.0
+          9
         ]
       ],
       "strokeColor": "#107C10",
@@ -770,15 +773,15 @@
       "x": 31,
       "y": 378.5,
       "width": 12,
-      "height": 0.0,
+      "height": 0,
       "points": [
         [
           0,
-          0.0
+          0
         ],
         [
           12,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#107C10",
@@ -1059,15 +1062,15 @@
       "x": 60,
       "y": 392.5,
       "width": 9,
-      "height": 0.0,
+      "height": 0,
       "points": [
         [
           0,
-          0.0
+          0
         ],
         [
           9,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#107C10",
@@ -1088,15 +1091,15 @@
       "x": 60,
       "y": 397.5,
       "width": 9,
-      "height": 0.0,
+      "height": 0,
       "points": [
         [
           0,
-          0.0
+          0
         ],
         [
           9,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#107C10",
@@ -1117,15 +1120,15 @@
       "x": 60,
       "y": 402.5,
       "width": 9,
-      "height": 0.0,
+      "height": 0,
       "points": [
         [
           0,
-          0.0
+          0
         ],
         [
           9,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#107C10",
@@ -1175,14 +1178,15 @@
       "y": 346,
       "width": 266,
       "height": 82,
-      "text": "H2: Contract retention\nEvery F_t and P_t\nPrior-P passing risk set",
+      "text": "Contract retention\nEvery F_t and P_t\nPrior-P passing risk set",
       "fontSize": 22,
       "fontFamily": 2,
       "lineHeight": 1.25,
       "strokeColor": "#000000",
       "textAlign": "center",
       "verticalAlign": "middle",
-      "containerId": "h2-target"
+      "containerId": "h2-target",
+      "originalText": "Contract retention\nEvery F_t and P_t\nPrior-P passing risk set"
     },
     {
       "id": "h2-measure",
@@ -1223,14 +1227,15 @@
       "y": 346,
       "width": 365,
       "height": 82,
-      "text": "Open losses & density\non unchanged prior-P passes\nRecovery keeps episode",
+      "text": "Losses / observed risk\nFull risk + missing counts\nRecovery keeps episode",
       "fontSize": 22,
       "fontFamily": 2,
       "lineHeight": 1.25,
       "strokeColor": "#000000",
       "textAlign": "center",
       "verticalAlign": "middle",
-      "containerId": "h2-measure"
+      "containerId": "h2-measure",
+      "originalText": "Losses / observed risk\nFull risk + missing counts\nRecovery keeps episode"
     },
     {
       "id": "h2-interp",
@@ -1282,7 +1287,7 @@
       "x": 368,
       "y": 387.5,
       "width": 24,
-      "height": 0.0,
+      "height": 0,
       "points": [
         [
           0,
@@ -1290,7 +1295,7 @@
         ],
         [
           24,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#495057",
@@ -1316,7 +1321,7 @@
       "x": 793,
       "y": 387.5,
       "width": 24,
-      "height": 0.0,
+      "height": 0,
       "points": [
         [
           0,
@@ -1324,7 +1329,7 @@
         ],
         [
           24,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#495057",
@@ -1485,15 +1490,15 @@
       "x": 30,
       "y": 537.5,
       "width": 14,
-      "height": 0.0,
+      "height": 0,
       "points": [
         [
           0,
-          0.0
+          0
         ],
         [
           14,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#0078D4",
@@ -1576,15 +1581,15 @@
       "x": 29,
       "y": 558.5,
       "width": 14,
-      "height": 0.0,
+      "height": 0,
       "points": [
         [
           0,
-          0.0
+          0
         ],
         [
           14,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#0078D4",
@@ -1605,15 +1610,15 @@
       "x": 29,
       "y": 563.5,
       "width": 11,
-      "height": 0.0,
+      "height": 0,
       "points": [
         [
           0,
-          0.0
+          0
         ],
         [
           11,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#0078D4",
@@ -1674,15 +1679,15 @@
       "x": 12,
       "y": 556.5,
       "width": 6,
-      "height": 8.0,
+      "height": 8,
       "points": [
         [
           0,
-          8.0
+          8
         ],
         [
           6,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#0078D4",
@@ -1703,15 +1708,15 @@
       "x": 56,
       "y": 552.5,
       "width": 7,
-      "height": 6.0,
+      "height": 6,
       "points": [
         [
           0,
-          6.0
+          6
         ],
         [
           7,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#0078D4",
@@ -1801,14 +1806,15 @@
       "y": 501,
       "width": 266,
       "height": 82,
-      "text": "H6: Changeability\nWithheld CR1 after P_10\n2 runs/arm/model denom.",
+      "text": "CR1 adaptation\nWithheld after P_10\n33 runs/arm/model",
       "fontSize": 22,
       "fontFamily": 2,
       "lineHeight": 1.25,
       "strokeColor": "#000000",
       "textAlign": "center",
       "verticalAlign": "middle",
-      "containerId": "h6-target"
+      "containerId": "h6-target",
+      "originalText": "CR1 adaptation\nWithheld after P_10\n33 runs/arm/model"
     },
     {
       "id": "h6-measure",
@@ -1849,14 +1855,15 @@
       "y": 501,
       "width": 365,
       "height": 82,
-      "text": "All 15 CR1 tests pass\nAND all P_10 passing\nfeature contracts retained",
+      "text": "Strict: CR1 + retention\nGraded: passes / 15; losses\nF9/F10 acquisition strata",
       "fontSize": 22,
       "fontFamily": 2,
       "lineHeight": 1.25,
       "strokeColor": "#000000",
       "textAlign": "center",
       "verticalAlign": "middle",
-      "containerId": "h6-measure"
+      "containerId": "h6-measure",
+      "originalText": "Strict: CR1 + retention\nGraded: passes / 15; losses\nF9/F10 acquisition strata"
     },
     {
       "id": "h6-interp",
@@ -1893,14 +1900,15 @@
       "y": 501,
       "width": 355,
       "height": 82,
-      "text": "Single regional scope probe\nUnobserved stays missing\nwith explicit bounds",
+      "text": "One withheld change probe\nUnobserved stays missing\nwith explicit bounds",
       "fontSize": 22,
       "fontFamily": 2,
       "lineHeight": 1.25,
       "strokeColor": "#000000",
       "textAlign": "center",
       "verticalAlign": "middle",
-      "containerId": "h6-interp"
+      "containerId": "h6-interp",
+      "originalText": "One withheld change probe\nUnobserved stays missing\nwith explicit bounds"
     },
     {
       "id": "h6-to-meas",
@@ -1908,7 +1916,7 @@
       "x": 368,
       "y": 542.5,
       "width": 24,
-      "height": 0.0,
+      "height": 0,
       "points": [
         [
           0,
@@ -1916,7 +1924,7 @@
         ],
         [
           24,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#495057",
@@ -1942,7 +1950,7 @@
       "x": 793,
       "y": 542.5,
       "width": 24,
-      "height": 0.0,
+      "height": 0,
       "points": [
         [
           0,
@@ -1950,7 +1958,7 @@
         ],
         [
           24,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#495057",
@@ -2071,15 +2079,15 @@
       "x": 35,
       "y": 680.5,
       "width": 4,
-      "height": 0.0,
+      "height": 0,
       "points": [
         [
           0,
-          0.0
+          0
         ],
         [
           4,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#5C2D91",
@@ -2198,15 +2206,15 @@
       "x": 31,
       "y": 708.5,
       "width": 12,
-      "height": 0.0,
+      "height": 0,
       "points": [
         [
           0,
-          0.0
+          0
         ],
         [
           12,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#5C2D91",
@@ -2227,15 +2235,15 @@
       "x": 31,
       "y": 713.5,
       "width": 12,
-      "height": 0.0,
+      "height": 0,
       "points": [
         [
           0,
-          0.0
+          0
         ],
         [
           12,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#5C2D91",
@@ -2256,15 +2264,15 @@
       "x": 31,
       "y": 718.5,
       "width": 8,
-      "height": 0.0,
+      "height": 0,
       "points": [
         [
           0,
-          0.0
+          0
         ],
         [
           8,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#5C2D91",
@@ -2361,15 +2369,15 @@
       "x": 53,
       "y": 699.5,
       "width": 6,
-      "height": 12.0,
+      "height": 12,
       "points": [
         [
           0,
-          12.0
+          12
         ],
         [
           6,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#5C2D91",
@@ -2419,14 +2427,15 @@
       "y": 656,
       "width": 266,
       "height": 82,
-      "text": "Structural proxies\nSecondary checkpoints\nFrozen tool settings",
+      "text": "Treatment fidelity\nExternal measurements\nFixed tool settings",
       "fontSize": 22,
       "fontFamily": 2,
       "lineHeight": 1.25,
       "strokeColor": "#000000",
       "textAlign": "center",
       "verticalAlign": "middle",
-      "containerId": "px-target"
+      "containerId": "px-target",
+      "originalText": "Treatment fidelity\nExternal measurements\nFixed tool settings"
     },
     {
       "id": "px-measure",
@@ -2511,14 +2520,15 @@
       "y": 656,
       "width": 355,
       "height": 82,
-      "text": "Descriptive structure only\nNot comprehension or\ndirect maintainability",
+      "text": "Targets of B's budget\nNot independent efficacy\nor comprehension",
       "fontSize": 22,
       "fontFamily": 2,
       "lineHeight": 1.25,
       "strokeColor": "#000000",
       "textAlign": "center",
       "verticalAlign": "middle",
-      "containerId": "px-interp"
+      "containerId": "px-interp",
+      "originalText": "Targets of B's budget\nNot independent efficacy\nor comprehension"
     },
     {
       "id": "px-to-meas",
@@ -2526,7 +2536,7 @@
       "x": 368,
       "y": 697.5,
       "width": 24,
-      "height": 0.0,
+      "height": 0,
       "points": [
         [
           0,
@@ -2534,7 +2544,7 @@
         ],
         [
           24,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#495057",
@@ -2560,7 +2570,7 @@
       "x": 793,
       "y": 697.5,
       "width": 24,
-      "height": 0.0,
+      "height": 0,
       "points": [
         [
           0,
@@ -2568,7 +2578,7 @@
         ],
         [
           24,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#495057",
@@ -2631,15 +2641,15 @@
       "x": 37,
       "y": 816.5,
       "width": 8,
-      "height": 9.0,
+      "height": 9,
       "points": [
         [
           0,
-          9.0
+          9
         ],
         [
           8,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#0078D4",
@@ -2802,15 +2812,15 @@
       "x": 30,
       "y": 870.5,
       "width": 5,
-      "height": 5.0,
+      "height": 5,
       "points": [
         [
           0,
-          0.0
+          0
         ],
         [
           5,
-          5.0
+          5
         ]
       ],
       "strokeColor": "#107C10",
@@ -2831,15 +2841,15 @@
       "x": 35,
       "y": 865.5,
       "width": 10,
-      "height": 10.0,
+      "height": 10,
       "points": [
         [
           0,
-          10.0
+          10
         ],
         [
           10,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#107C10",
@@ -3016,7 +3026,7 @@
       "x": 368,
       "y": 852.5,
       "width": 24,
-      "height": 0.0,
+      "height": 0,
       "points": [
         [
           0,
@@ -3024,7 +3034,7 @@
         ],
         [
           24,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#495057",
@@ -3050,7 +3060,7 @@
       "x": 793,
       "y": 852.5,
       "width": 24,
-      "height": 0.0,
+      "height": 0,
       "points": [
         [
           0,
@@ -3058,7 +3068,7 @@
         ],
         [
           24,
-          0.0
+          0
         ]
       ],
       "strokeColor": "#495057",

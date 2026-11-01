@@ -1,6 +1,6 @@
 ---
-title: Everything but the Software - source package (draft v8)
-description: Frozen v4 experiment explanation, quality and cost measurement, and conditional refactoring economics
+title: Everything but the Software - source package (draft v9)
+description: Critique-driven paper revision and prospective five-arm study, with source and collection limits
 ms.date: 2026-11-01
 ---
 
@@ -8,42 +8,151 @@ Working title: *Everything but the Software: Feature-Driven Decay in an Agentic 
 
 ## Current Status
 
-The 1 November revision reconciles the paper with
-[the public kit's frozen v4 release](https://github.com/jmservera/ama-thought-mve/releases/tag/protocol-frozen-v4).
-The active design is eighteen ten-feature trajectories: GPT 6.1 Sol,
-Sonnet 5.5 and Gemini 4 Argon each run A/B/C twice, followed by CR1.
-The earlier twelve-run allocation and 2,500-credit ceiling are superseded
-proposals, not the current study. No estimation pilot results are reported.
-The title, motivating case evidence and 96-reference bibliographies are
-unchanged.
+The title is unchanged at the owner's request. The v9
+[article](./main.pdf), [source](./main.tex) and
+[evidence supplement](./supplement.pdf) address the supplied automatic critique.
+The main article is reduced from 51 to 34 pages; extended
+literature, case audits, deferred intervention rates and historical freeze
+hashes remain in the separate supplement, not deleted.
 
-The frozen source is owner-reviewed exploratory work. A separate researcher
-will operate it; operational separation is not independent scientific
-acceptance. The original OSF registration is owner-reported approved, while
-the inspected v4 manifest leaves prospective amendment completion false
-and its date null. The source freeze does not authorize collection.
-Actual prospective recording, launch permission, runtime availability and
-calibration affordability remain gates.
+The prospective candidate uses five arms and three selected models, with
+33 trajectories per arm/model: 495 total. A is feature-only, B consolidation,
+C information-bearing review, D matched-resource longer feature delivery
+and E visible regression repair. The primary equal-model-weight B-D coverage
+comparison targets a 10-percentage-point gain under an explicit 25-point SD
+assumption, alpha .05 and power .80. This is conditional planning, not observed
+variance or guaranteed power. The current kit is the
+[v5 candidate](https://github.com/jmservera/ama-thought-mve/tree/feat/fair-study-v5);
+the [frozen v4 release](https://github.com/jmservera/ama-thought-mve/releases/tag/protocol-frozen-v4)
+and original registration remain historical.
 
-The revision adds an explicit quality/cost measurement infographic, refreshes
-the experiment design and adds conditional refactoring economics. Editable
-Excalidraw sources are the authority, with native SVG and PNG exports.
-Robot motifs represent task roles, not different assigned models or claims
-of autonomous judgment. Gemini 4 Argon supplies the visual implementation;
-all three models serve each experimental arm. PF1-PF3 still await actual
-data and are not replaced by invented results. Existing empirical charts,
-inputs, original critiques and historical revision records are retained.
+No experiment was collected. New source-bound review, runtime qualification,
+cost-only calibration, affordability/deadline, owner freeze, actual prospective
+OSF recording and launch authorization remain gates. The owner-reported
+original OSF approval is not approval of this amendment. A separate researcher
+provides operational separation, not independent scientific certification.
 
-The revised 51-page PDF and completed focused validation are recorded below.
-No frozen kit, OSF asset, experimental collection, external submission or
-publication approval is changed by the manuscript revision. The arXiv
-bundle is not refreshed.
+On 1 November the owner explicitly authorized development PR updates while
+both repositories were public. This interim source exposure is disclosed;
+later privacy cannot erase it. Before collection the owner will make both
+original repositories private, and the researcher must lack access to the
+original checkouts, manuscript and author-context caches. Protected operator
+assets remain distinct from candidate tools. Approved researcher materials
+and results are released with the paper after collection; no archive, OSF
+upload, visibility change or scientific submission occurred here.
+
+The native Excalidraw sources remain editable and bound to SVG/PNG exports.
+The five-arm and measurement diagrams remove the prematurely printed CR1
+topic; the economic diagram plots the break-even boundary against k/delta.
+PF1-PF3 still await real data. Original critiques, prior datasets, published
+chart inputs and historical revision records are retained.
 
 The [dated review and complete pending checklist](./anc/review-2026-10-29.md)
 records the earlier findings, evidence coverage, applied changes, launch
 blockers and deferred work. The v4 reconciliation below supersedes its
 experiment-readiness statements, not the historical
 evidence or original [editorial critique](./critique.md).
+
+## Critique Disposition 1 November, v9
+
+Work execution covers the offline manuscript/kit candidate and its inspected
+evidence. Assessment is assisted checking, not independent human peer review,
+statistical certification, ethics approval or venue acceptance.
+
+| Recommendation | Applied change and evidence limit |
+| --- | --- |
+| Protect paper/code/oracles/CR1 from experiment agents | Private-repository and fresh-operator readbacks are required before collection; candidate tools remain isolated/no-network, with the host provider connection distinguished. Interim public development exposure is explicitly recorded. |
+| Increase within-model replication and add fair controls | Five arms, 33/cell, 495 trajectories; D has one 45-minute/600-credit feature session versus B's 30+15 minutes/300+300. E uses visible specifications, never hidden evaluator feedback. The variance assumption and transfer limits remain explicit. |
+| Replace uninformative two-run statistics | A single prospective blocked B-D coverage comparison; per-model and other contrasts secondary. Historical v1 keeps its two-run identity, four pairwise differences and nine-df planning SD, not a nominal 95% small-sample claim. CR1 is secondary and not powered by the coverage calculation. |
+| Add graded CR1 and prerequisites | Contracts passed/15, prior passing contracts lost and observed/missing denominators; F9/F10 acquisition strata are post-treatment selections, not randomized subgroups. |
+| Correct loss-density missingness | Observed inherited-risk denominator is separate from full risk and missingness; unknown results cannot count as not lost. Histories and episode censoring remain visible. |
+| Address Goodhart and C's effect on later repairs | Structural/suppression metrics are treatment fidelity, not efficacy. Fixed external Ruff ignores local suppressions. C can influence later feature repairs; genuine review/diff annotations are required, not file-overlap inference. |
+| Add feasibility, mutation and timing controls | Explicit infrastructure/missingness/oracle/privacy/billing thresholds; all-run cost/deadline admission; bounded mutation diagnostics and source hashes; observable request/tool latency with provider-active/rate-limit components unknown. |
+| Randomize later change requests | A prewritten request-pool follow-up is separate from the current fixed CR1 and needs later registration. No current request is silently replaced. |
+| Resolve cost arithmetic and currency contradictions | Combined 8,655 sessions/3,941.25 maximum hours/2,902,500 nominal credits exceed the unchanged 300,000 envelope. Actual affordability is not claimed; no dollar conversion or silent sample reduction. |
+| Fix conditional cost-of-inaction interpretation | Explicit multiplication, k/delta break-even, null/no-payback and k=100/delta=1 counterexample at 201 cycles. k awaits billed calibration; capped feature budgets do not identify the uncapped, quality-matched delta. |
+| Correct citation scope and attribution | Acceptance-criterion optionality and recording human reasons are the author's extensions. Learning-through-use source, test-deletion joke, context-file costs/success, commit-category overlap, assistant-era randomization and seven-of-twelve library findings are qualified. |
+| Verify Pan numbers and locators | Four points/whiskers and the 619-event -1.1 [-3.8,+1.6] contrast checked against the PDF; 4.0-to-7.2 means are unweighted. Terminators/constructor verified in Section 5.1/Figure 5; Figure 1 supplies framing. Unconfirmed eight-of-ten detail removed. |
+| Update metadata, access dates and sorting | Actual DOI/venue/page/version checks are distinguished from claim support. All 31 web entries have dated access or explicit failed/partial attempts. Stable citation IDs sort by named authors, including Young/Lopopolo/Park. |
+| Preserve case evidence before it expires | Named repository metadata and the original/follow-up source hashes are retained. The owner explicitly deferred historical cloud/sign-in/usage exports; no tenant-wide query, attribution or first-failure timestamp is fabricated. |
+| Check early blockage and later recovery | #349's 16 October record is not the first actual failed-sign-in time. 27 October directory-retirement sign-off does not establish a new successful journey or time-to-restored-usability. |
+| Run pinned static checks and learning tracing | Three source snapshots measured with Lizard 1.24.3, Ruff 0.17.3 and jscpd 5.4.1. 487 committed research/plan files screened; 81 identity/runbook-pattern matches include generic pointers and do not prove actual session access or lost knowledge. |
+| Normalize periods and explain Other | Seven/ten calendar-date churn windows are distinct from nineteen-day PR baseline. Tracking/day falls 34,026 to 24,037; product/integration 262.45 to 132.25. 60,001 Other additions are one CSV asset; contents were not read. |
+| Repair lexical/figure claims | Evidence-boundary phrases, not general hedging; 24 pre-loop matches, nine on 4 October. Twenty inspected contexts are status/approval boundaries, not factual accuracy or independent coding. Zero and undefined marks differ; the full window starts 11 September; all five mechanism labels appear. |
+| Report post-case specification growth | BRD/PRD approximately +15%/+42%; combined documents +25% to 173,504 words. Actual loaded tokens and provider-matched tokenization remain unavailable; the prose heuristic is removed. |
+| Shorten, disclose and preserve the title | Main article plus separate evidence supplement; HIR/IDR/hashes moved to supplementary appendices. Microsoft employment/tool/programme interests and post-outcome case selection are disclosed. The requested title is retained. |
+| Match the frozen prompt and preserve evidence | The supplement includes the exact v4 prompt as wrapped verbatim, with a byte hash, not a paraphrase claimed identical. Routine future product tracking can be excluded only after finite archive/restore-backed preservation; no historical tracking was wiped. |
+
+### Evidence and Source Limits
+
+The [access/claim register](./anc/citation-access-2026-11-01.json) states the
+inspected passages, metadata-only checks, user-supplied qualifications and gaps.
+Fresh SEC/Medium/OpenAI retrievals returned 403; HVE tag access was denied by
+organization SAML; no bypass was attempted. YouTube returned HTML, not an
+inspected video. SlopCodeBench v2 identity is pinned without inventing a
+fresh NeurIPS acceptance check.
+
+The [post-hoc evidence](./anc/revision-metrics-2026-11-01.json) contains exact
+source hashes, static metrics, lexical sample and named GitHub metadata.
+These checks neither reproduce original studies nor prove historical deployed
+usability. The [case index](./anc/case-evidence-matrix.json) retains null
+release/journey links and the original 27 October record separately.
+No private dataset, historic tenant-wide logs or paid experiment was read/run.
+
+The [34-page article](./main.pdf) and [22-page supplement](./supplement.pdf)
+compile with Tectonic. All-page text bounds pass; warnings are underfull boxes
+and the bundled lineno UTF-8 warning, not undefined references or overfull text.
+The first PDF attempt raced case-image generation; completed PNGs were verified
+and the sequential rebuild succeeded. Nineteen focused authoring tests pass.
+The 98-entry reusable bibliography retains sources moved out of the main body.
+
+Kit checks at the delegated candidate passed 849 tests with nine image checks
+unavailable. The parent adds the complete fixed-panel loss-episode CSV and
+credential/allocation/symlink refusal stress checks and distinct signed-build
+identities: all 50 v5 regressions pass.
+Node 24.22.2 was installed after the supported-runtime failure; all 18 SDK
+tests, including real startup with locally rejected inference in an owned
+tmux context, pass with zero skips. No model/provider inference was performed.
+Restoring the unavailable local runtime exposed colliding parallel APK key
+names; distinct Git/BusyBox signing identities fix the naming collision
+without bypassing signatures. The candidate rebuild is not an accepted v4 image.
+Actual current-image qualification, complete source-bound gate evidence and
+independent assessment remain separate; original v4 receipts are historical.
+
+### Reproduce the Revised Assets
+
+Install the named review tools with pip in a task-local environment and
+jscpd 5.4.1 locally with npm. The figure run used Matplotlib 3.11.2.
+
+```bash
+node anc/revise_diagrams.mjs
+node anc/export_diagrams.mjs
+python3 -B -m unittest discover -s anc -p 'test_*.py' -q
+python3 -B anc/check_paper.py --normalise-bibliography
+tectonic main.tex --keep-logs --keep-intermediates --untrusted
+tectonic supplement.tex --keep-logs --keep-intermediates --untrusted
+```
+
+Run case-image regeneration to completion before compiling, not concurrently.
+The source-only historical metrics command is, from the repository root:
+
+```bash
+cd docs/capstone/thought-leadership/everything-but-the-software/anc
+python3 -B -m review_metrics \
+  --revisions 9ef7e40fa6b7d34792f2817ad0a19d2ac16eabd1 \
+    29c6b512f5e68733bb2cc1882343db39f5eb2cad \
+    9b74ac8daaec2a880172e43161b37ac7f2c3f801 \
+  --jscpd /absolute/path/to/jscpd-5.4.1 \
+  --out /new/external/review-metrics.json
+```
+
+This creates a new diagnostic file and refuses overwrite. The committed sample's
+semantic annotations are a separate assisted step, not automatic truth labels.
+No arXiv upload, employer clearance or scientific acceptance is implied. The
+official [31 October 2025 arXiv CS moderation notice](https://blog.arxiv.org/2025/10/31/attention-authors-updated-practice-for-review-articles-and-position-papers-in-arxiv-cs-category/)
+was inspected: this work is an original case plus prospective protocol, not a
+review/position paper re-labelled to evade prior peer-review requirements.
+Moderator and venue decisions remain theirs.
 
 ## Frozen Experiment Review and Revision 1 November
 
