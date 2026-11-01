@@ -3,4 +3,4 @@
 "confirmed_decisions":[{"decision":"critique executed inline, docs-only","status":"proceed","evidence":"plan"},{"decision":"review executed once","status":"conformant with routed follow-ups","evidence":"review"}],
 "blockers":[{"id":"live","summary":"authenticated live check pending deploy of #616/#617","resolution":"owner/deploy"}],
 "next_action":{"phase":"Follow-up","action":"await PR review and live check"},
-"prioritized_follow_ups":[{"rank":1,"task":"authenticated live recovery check","rationale":"last unproven criterion","evidence":"issue comment 2026-10-31"},{"rank":2,"task":"cold-start-aware retry window","rationale":"5 s timeout vs 24 s cold start","evidence":"research"}]}
+"prioritized_follow_ups":[{"rank":1,"task":"authenticated live recovery check","rationale":"last unproven criterion","evidence":"issue comment 2026-10-31"},{"rank":2,"task":"cold-start-aware retry window","rationale":"5 s timeout vs 24.016 s health-response latency (cold start is an unconfirmed hypothesis)","evidence":"research"}]}

@@ -9018,11 +9018,12 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 ## [2026-11-01] observation | Intermittent workspace script load, Refs #524
 
-* Recorded likely cause of the intermittent `/vendor/leaflet.js` failure: replica
-  cold start (default `apiMinReplicas` 0; live probe on 2026-11-01 timed out at
-  30 s, after 24 s `/healthz` on 2026-10-31). Local asset serving is
+* Recorded a working hypothesis for the intermittent `/vendor/leaflet.js` failure:
+  replica cold start (default `apiMinReplicas` 0; live probe on
+  2026-11-01 timed out at 30 s; an initial `/healthz` took 24.016 s on
+  2026-10-31, a health-response latency, not a measured cold start). Local asset serving is
   byte-complete with ETag and cache headers. Unconfirmed for the 2026-10-28
   incident; no platform logs retrieved.
-* The retry and its tests were delivered by #527. The authenticated live check
+* The retry was delivered by #527; release-URL reuse and the expanded tests came from #594 and #538. The authenticated live check
   stays pending deploy of #616 and #617. Retry timeout (5 s) is shorter than
-  observed cold starts, logged as a follow-up. No source change.
+  the observed latencies, logged as a follow-up. No source change.
