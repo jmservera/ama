@@ -32,3 +32,5 @@ None.
 * Duplicate-ID detection uses a single `Counter` pass instead of `list.count` (linear, not quadratic).
 * Tests: 21 in `test_cohort_eval.py` (10 added); `ruff check` and `ruff format --check` clean.
 * CI `rubric/score` failed with "Scoring failed" in the hosted scorer; to be re-run, not a code failure.
+* Third round: case IDs in the manifest and observations must be non-empty strings (malformed IDs raise non-disposable `invalid_input` and never join), `missing_data_treatment` is required, and only a literal `synthetic: false` is non-synthetic.
+* Tests: 23 in `test_cohort_eval.py`; `ruff check` and `ruff format --check` clean. `gh pr checks 636` showed only `rubric/score`, passing.

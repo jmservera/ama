@@ -169,12 +169,33 @@ class CohortEvalTests(unittest.TestCase):
             lambda m: m["cases"][0].pop("expected"),
             lambda m: m.pop("task_id"),
             lambda m: m.pop("subject_version"),
+            lambda m: m.pop("missing_data_treatment"),
+            lambda m: m.update(missing_data_treatment="  "),
+            lambda m: m["cases"][0].update(id=None),
+            lambda m: m["cases"][0].pop("id"),
         ):
             m = manifest()
             mutate(m)  # type: ignore[no-untyped-call]
             rec = cohort_eval.evaluate(m, clean_observed(manifest()), ok)
             self.assertIn("invalid_input", codes(rec))
             self.assertFalse(rec["activation_allowed"])
+
+    def test_null_identity_in_both_inputs_cannot_match(self) -> None:
+        m = manifest()
+        m["cases"][0]["id"] = None
+        obs = clean_observed(manifest())
+        obs[0]["id"] = None
+        rec = cohort_eval.evaluate(m, obs)
+        self.assertIn("invalid_input", codes(rec))
+        self.assertFalse(rec["activation_allowed"])
+
+    def test_non_boolean_synthetic_is_conservatively_synthetic(self) -> None:
+        for value in (None, 0, "", "false"):
+            m = manifest()
+            m["synthetic"] = value
+            rec = cohort_eval.evaluate(m, clean_observed(m))
+            self.assertTrue(rec["synthetic"])
+            self.assertFalse(rec["fairness_evidence"])
 
     def test_unmeasured_non_synthetic_run_is_not_fairness_evidence(self) -> None:
         m = manifest()

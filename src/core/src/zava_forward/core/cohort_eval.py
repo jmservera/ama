@@ -117,19 +117,30 @@ def evaluate(
     thresholds: Mapping[str, Any] = manifest.get("thresholds", {})
     justified = set(manifest.get("justified_reasons", []))
     obs_ids = [o.get("id") for o in observed]
-    case_ids = [c["id"] for c in cases]
+    case_ids = [c.get("id") for c in cases]
+
+    def valid_id(value: Any) -> bool:
+        return isinstance(value, str) and bool(value.strip())
+
+    for label, ids in (("observed", obs_ids), ("manifest", case_ids)):
+        if not all(valid_id(i) for i in ids):
+            block("invalid_input", f"{label} case id is missing or not a non-empty string")
+    obs_ids = [i for i in obs_ids if valid_id(i)]
+    case_ids = [i for i in case_ids if valid_id(i)]
     for label, ids in (("observed", obs_ids), ("manifest", case_ids)):
         freq = Counter(ids)
         for dup in sorted(str(i) for i, count in freq.items() if count > 1):
             block("invalid_input", f"duplicate {label} case id {dup}")
-    for field in ("task_id", "subject_version"):
+    for field in ("task_id", "subject_version", "missing_data_treatment"):
         value = manifest.get(field)
         if not (isinstance(value, str) and value.strip()):
             block("invalid_input", f"manifest {field} is missing")
     for c in cases:
         if c.get("expected") not in OUTCOMES:
-            block("invalid_input", f"manifest case {c['id']} has missing or unsupported expected")
-    seen = {o.get("id"): o for o in observed}
+            block(
+                "invalid_input", f"manifest case {c.get('id')} has missing or unsupported expected"
+            )
+    seen = {o.get("id"): o for o in observed if valid_id(o.get("id"))}
     manifest_ids = set(case_ids)
 
     for extra in sorted(str(i) for i in set(seen) - manifest_ids):
@@ -139,7 +150,7 @@ def evaluate(
 
     joined: list[dict[str, Any]] = []
     for c in cases:
-        obs = seen.get(c["id"], {})
+        obs = seen.get(c.get("id"), {})
         actual = obs.get("outcome") if obs else None
         if obs and actual not in OUTCOMES:
             block("invalid_input", f"observed case {c['id']} has missing or unsupported outcome")
@@ -227,12 +238,13 @@ def evaluate(
         open_blockers.append({"code": "rejected", "detail": "human reviewer rejected activation"})
         blockers.append(open_blockers[-1])
     activation_allowed = not open_blockers
+    synthetic = manifest.get("synthetic") is not False
     body = {
         "record_version": RECORD_VERSION,
         "task_id": manifest.get("task_id"),
         "policy_or_model_version": manifest.get("subject_version"),
-        "synthetic": bool(manifest.get("synthetic", True)),
-        "fairness_evidence": not manifest.get("synthetic", True)
+        "synthetic": synthetic,
+        "fairness_evidence": not synthetic
         and _thresholds_approved(manifest)
         and not any(b["code"] in MEASUREMENT_BLOCKERS for b in blockers),
         "missing_data_treatment": manifest.get("missing_data_treatment"),
