@@ -19,7 +19,8 @@ Record a third bounded local checkpoint on origin/main b18f7f98e after the 40-co
 * [x] P02 Focused checks: five package suites, ruff check, ruff format --check, mypy per project.
 * [x] P03 Triage: compare findings with open issues (#687, #720, #349, #350, #360, #432, #570); no new duplicate.
 * [x] P04 Evidence: append checkpoint to docs/architecture/cutover-evidence-pack.md and one entry to docs/reference/log.md; write changes record.
-* [x] P05 Independent review, commit, push, PR (Refs #440).
+* [x] P05 Same-session review, commit, push, PR (Refs #440).
+* [ ] P06 Independent exact-head review (pending; required by #440 criterion 8).
 
 ## Success Criteria
 
