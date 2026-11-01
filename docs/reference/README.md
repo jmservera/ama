@@ -33,6 +33,14 @@ usability. Public development PRs are owner-authorized; future privacy, new
 review/freeze, proper prospective OSF recording, affordability and collection
 gates remain. Historical cloud exports are explicitly deferred.
 Original v4 assets, adverse critiques and prior data remain unchanged.
+The [new reflection/memory source check](../capstone/thought-leadership/everything-but-the-software/anc/supplementary-context.md#reflection-memory-and-self-improvement-1-november-source-check)
+distinguishes Ng's human-feedback opening from Moroney's later reflection/
+technical-debt examples and the separate Anthropic-presented memory talk.
+Uploader headlines/percentages are not findings. Ng recommends Self-Refine,
+Reflexion and CRITIC but is not their coauthor; MedAgentBench is his
+verified coauthored interactive-evaluation paper. Source-limited integration
+changes neither the experiment nor registration. The owner confirmed focused
+documentation checks and topic-only publication in PR #692.
 
 For the [31 October live app observations](../architecture/cutover-evidence-pack.md#live-app-verification-2026-10-31-refs-523-524-570-432),
 resident sign-in and chat open/close, resize, dock/undock and narrow/wide

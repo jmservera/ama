@@ -11,7 +11,7 @@ Working title: *Everything but the Software: Feature-Driven Decay in an Agentic 
 The title is unchanged at the owner's request. The v9
 [article](./main.pdf), [source](./main.tex) and
 [evidence supplement](./supplement.pdf) address the supplied automatic critique.
-The main article is reduced from 51 to 34 pages; extended
+The main article is reduced from 51 to 35 pages; extended
 literature, case audits, deferred intervention rates and historical freeze
 hashes remain in the separate supplement, not deleted.
 
@@ -59,6 +59,53 @@ Work execution covers the offline manuscript/kit candidate and its inspected
 evidence. Assessment is assisted checking, not independent human peer review,
 statistical certification, ethics approval or venue acceptance.
 
+### Added Reflection and Memory Sources
+
+The owner authorized the new research in this same branch/PR.
+The [contextual source synthesis](./anc/supplementary-context.md#reflection-memory-and-self-improvement-1-november-source-check)
+records the complete available auto-caption check, timestamp links and
+source qualifications. The main article uses the research in its bounded
+correction, harness and discussion sections; the title and experiment are
+unchanged.
+
+The first video's headline is not supported by the captions: Ng discusses
+coding tools changing every three to six months, not prompting dying.
+Ng introduces Laurence Moroney at 16:31; the later technical-debt and
+reflection passages are Moroney's. The second video is an independent upload
+of an apparent Anthropic staff presentation about persistent memory and
+asynchronous dreaming, not an official channel or independent tutorial
+narration. Its uploader percentages are not experimental results.
+Automatic captions and original recording/audio verification limits remain
+explicit.
+
+Ng's [official reflection letter](https://www.deeplearning.ai/the-batch/agentic-design-patterns-part-2-reflection/)
+recommends Self-Refine, Reflexion and CRITIC; their verified authors do not
+include Ng. MedAgentBench is a verified Ng-coauthored paper about interactive
+evaluation, not a controlled self-improvement treatment.
+The source paragraphs separate task iteration, retained memory, repository
+correction and weight training; no performance effect is transferred to
+this study.
+The literature-enhanced build has 35 article pages, 22 supplement pages,
+89 cited main-text entries and 105 reusable bibliography entries.
+Nineteen focused authoring tests and the structural/source checker pass;
+both PDFs compile without undefined references or overfull text.
+
+### Publication and Validation Scope Correction
+
+The owner stopped the full documentation gate on 1 November and explicitly
+directed focused validation for docs. The earlier gate attempts and blockers
+are historical, not a requirement that an unchanged application matrix pass
+before publishing this manuscript. The attached pull error was divergent
+topic history under a fast-forward-only pull policy, not unresolved conflicts.
+The remote topic was merged cleanly, preserving the revised paper; the owner
+selected topic-only publication, leaving PR #692 open.
+
+Executable kit checks remain separate: the new local image builds with strict
+signatures, all 25 actual canaries pass, and all nine focused current-image
+tests pass with declared dependencies. A final whole-harness pass is not
+claimed. The [experiment candidate PR](https://github.com/jmservera/ama-thought-mve/pull/6)
+is a draft and does not authorize collection, freeze or OSF actions.
+
 | Recommendation | Applied change and evidence limit |
 | --- | --- |
 | Protect paper/code/oracles/CR1 from experiment agents | Private-repository and fresh-operator readbacks are required before collection; candidate tools remain isolated/no-network, with the host provider connection distinguished. Interim public development exposure is explicitly recorded. |
@@ -99,12 +146,13 @@ usability. The [case index](./anc/case-evidence-matrix.json) retains null
 release/journey links and the original 27 October record separately.
 No private dataset, historic tenant-wide logs or paid experiment was read/run.
 
-The [34-page article](./main.pdf) and [22-page supplement](./supplement.pdf)
+The [35-page article](./main.pdf) and [22-page supplement](./supplement.pdf)
 compile with Tectonic. All-page text bounds pass; warnings are underfull boxes
 and the bundled lineno UTF-8 warning, not undefined references or overfull text.
 The first PDF attempt raced case-image generation; completed PNGs were verified
 and the sequential rebuild succeeded. Nineteen focused authoring tests pass.
-The 98-entry reusable bibliography retains sources moved out of the main body.
+The reusable bibliography retains the original 98 entries and seven new
+reflection/evaluation/video entries; sources moved out of the main body remain.
 
 Kit checks at the delegated candidate passed 849 tests with nine image checks
 unavailable. The parent adds the complete fixed-panel loss-episode CSV and

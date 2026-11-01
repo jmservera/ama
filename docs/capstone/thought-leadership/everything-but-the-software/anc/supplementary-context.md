@@ -1,7 +1,7 @@
 ---
 title: Supplementary Context and Deferred Research
-description: Practitioner framing, contextual repository observations, proposed practices and extensions outside the twelve-trajectory pilot.
-ms.date: 2026-10-27
+description: Practitioner framing, contextual observations and deferred research, including verified reflection and memory sources
+ms.date: 2026-11-01
 ---
 
 ## Status and Scope
@@ -9,9 +9,10 @@ ms.date: 2026-10-27
 This companion separates contextual material from the paper's main argument:
 inherited state, the AMA case, candidate mechanisms and a prospective
 consolidation-package comparison. It contains no experimental results.
-The twelve-trajectory pilot has not started. The proposed practices and
-extensions below are not validated methods, implemented controls or additions
-to its 212-session budget.
+The earlier twelve-trajectory/212-session statements describe the 27 October
+proposal. The current [five-arm protocol](./experiment-protocol.tex) supersedes
+that allocation; collection has not started. The practices and extensions
+below remain contextual, not validated controls or additions to the study.
 
 This is a contextual source synthesis, not a systematic review. Practitioner
 accounts, commercial studies, author recollections and project-authored
@@ -19,6 +20,71 @@ claims have different evidential roles. None establishes that the AMA
 mechanisms caused its outcome or that consolidation will work.
 
 ## Framework and Practitioner Context
+
+### Reflection, Memory and Self-improvement: 1 November Source Check
+
+The owner's two videos were checked against all publicly offered automatic
+English captions: 2,758 and 913 segments respectively. Audio and speaker
+identity were not independently verified; both supplied caption arrays end
+mid-sentence. Uploader titles and descriptions are not speaker quotations or
+scientific findings. The [source register](./citation-access-2026-11-01.json)
+records these limits alongside the relevant papers.
+
+| Video and provenance | Inspected caption passage | Interpretation boundary |
+| --- | --- | --- |
+| [Ng/Moroney talk, philia upload](https://www.youtube.com/watch?v=9EuNUe-CJRM), uploaded 2026-09-04, not a verified original recording date | [01:39](https://www.youtube.com/watch?v=9EuNUe-CJRM&t=99): Ng discusses preferred coding tools changing every three to six months. [03:10](https://www.youtube.com/watch?v=9EuNUe-CJRM&t=190): iteration includes human user feedback. | The title's claim that prompting dies in six months is unsupported by the available captions. This Ng segment does not establish automated self-improvement or measured code-decay effects. |
+| Same video, later Laurence Moroney presentation | [16:31](https://www.youtube.com/watch?v=9EuNUe-CJRM&t=991): Ng introduces Moroney. [51:32](https://www.youtube.com/watch?v=9EuNUe-CJRM&t=3092) and [52:35](https://www.youtube.com/watch?v=9EuNUe-CJRM&t=3155): code understandability, structure and repeated-prompting debt. [01:01:15](https://www.youtube.com/watch?v=9EuNUe-CJRM&t=3675): output reflection. | The later warnings and reflection examples must not be attributed to Ng. They are practitioner examples, not a controlled estimate. The speaker acknowledges a non-like-for-like comparison at [01:28:00](https://www.youtube.com/watch?v=9EuNUe-CJRM&t=5280). |
+| [Memory/dreaming talk, beamnxw upload](https://www.youtube.com/watch?v=0CG2YlJZWVU), uploaded 2026-10-18 | [00:17](https://www.youtube.com/watch?v=0CG2YlJZWVU&t=17): speaker identifies herself as Lamis of Anthropic Applied AI. [04:41](https://www.youtube.com/watch?v=0CG2YlJZWVU&t=281): agent-managed persistent memory. | Independent upload of an apparent Anthropic conference presentation, not an official Anthropic channel or independent tutorial narrator. Surname and original recording date remain unverified. External memory updates do not change model weights. |
+| Same memory presentation | [17:57](https://www.youtube.com/watch?v=0CG2YlJZWVU&t=1077): asynchronous curation from stored memory and transcripts. [20:00](https://www.youtube.com/watch?v=0CG2YlJZWVU&t=1200): failing tool calls. [22:37](https://www.youtube.com/watch?v=0CG2YlJZWVU&t=1357): human acceptance/rejection of proposed updates. | This is durable trace-driven context curation. Claimed repeat-task accuracy/token/cost improvements lack a controlled benchmark or numeric effect in the captions. The uploader's 99% title and 90% description are not reported measurements. |
+
+The presentation references the Managed Agents memory/dreaming API. Official
+[Memory](https://platform.claude.com/docs/en/managed-agents/memory) and
+[Dreams](https://platform.claude.com/docs/en/managed-agents/dreams) documentation
+corroborate persistent, versioned documents and asynchronous transcript-driven
+curation into a separate output store. Dreams is labelled a research preview.
+This mechanism check does not verify the presentation's performance claims
+or invoke an API. Neither captions nor description names an Anthropic paper.
+
+[Ng's own reflection letter](https://www.deeplearning.ai/the-batch/agentic-design-patterns-part-2-reflection/),
+published 2024-03-27, is a better primary source for his position. It describes
+automated critique/revision, possible tool feedback and three recommended
+papers. The verified author lists do not include Ng:
+
+* [Self-Refine, Madaan et al., arXiv v2](https://arxiv.org/abs/2303.17651v2)
+  iterates same-model feedback and output revision without training. Section 2
+  and the original project description were inspected; this is task-level
+  refinement, not a controlled cross-feature repository intervention.
+* [Reflexion, Shinn et al., arXiv v4](https://arxiv.org/abs/2303.11366v4)
+  stores linguistic self-reflection in episodic memory for subsequent trials.
+  Section 3 and the original repository were inspected; weight updates and
+  the present hidden-output policy are not its mechanism.
+* [CRITIC, Gou et al., arXiv v4](https://arxiv.org/abs/2305.11738v4)
+  checks and revises outputs with external tools. Section 3 was inspected;
+  its feedback availability differs from withholding the final study oracle.
+  OpenReview required verification and was not bypassed.
+
+The verified Ng-coauthored paper is
+[MedAgentBench, Jiang et al.](https://arxiv.org/abs/2501.14654v2),
+published in NEJM AI 2(9), DOI
+[10.1056/AIdbp2500144](https://doi.org/10.1056/AIdbp2500144).
+Exact authors and metadata were checked, with Sections 2.3-2.4 of the
+permitted arXiv v2 and the original project page used for claims. The publisher
+full text returned 403. It evaluates observable query/action tasks in an
+interactive FHIR environment; it is not a controlled self-improvement or
+coding-consolidation experiment. No clinical dataset or records were accessed.
+No Ng-coauthored paper specifically testing LLM self-improvement was verified
+in this bounded search; that is not an exhaustive absence claim. An unrelated
+mathematics paper by a same-named Andrew Ng was excluded.
+
+These sources narrow the contribution: test whether scheduled correction
+preserves the software inherited by later features and an unforeseen request,
+not whether reflection or memory exists. Durable memory, per-task revision,
+repository consolidation and model-weight learning are different interventions.
+Extra reflection/dreaming consumption belongs in actual all-attempt cost;
+better repeated-task results do not prove retained-contract or CR1 gains.
+Hidden evaluation/reference/future-request material must never enter learned
+context. The allocation, oracle, budgets and registration are unchanged by
+this literature integration.
 
 ### HVE Core
 

@@ -9433,3 +9433,26 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   All eighteen SDK checks pass under restored Node24, including actual startup
   with locally rejected inference. Current-image and final publication evidence
   remain separate; no independent human peer-review or conformance claim is made.
+
+## [2026-11-01] query | Reflection and memory sources in the paper
+
+* Incorporated the owner-selected video and Andrew Ng research in the existing
+  paper branch/PR, preserving the title, allocation, oracle and registration.
+  All available automatic English caption segments were inspected, with
+  timestamped attribution and audio/original-recording limits retained.
+* The first uploader's six-month headline is unsupported by the available
+  captions; Ng discusses changing coding tools and human-feedback iteration.
+  Laurence Moroney supplies the later code-debt/reflection examples.
+  The second upload contains an apparent Anthropic staff presentation about
+  persistent memory/dreaming, not an official channel or measured percentage
+  result. Official memory/dreaming docs corroborate mechanics, not gains.
+* Filed Ng's official reflection letter and its recommended Self-Refine,
+  Reflexion and CRITIC papers with verified authorship and mechanism locators.
+  MedAgentBench is a verified Ng-coauthored interactive-evaluation paper;
+  no Ng-coauthored LLM self-improvement experiment was verified in this bounded
+  search. No clinical data or model experiment was accessed.
+* The owner stopped full executable gates for changed documentation and
+  selected focused authoring/build/link checks. Reconciled the divergent remote
+  topic cleanly; the owner selected topic-only publication, leaving PR #692
+  open. The isolated experiment candidate is a separate draft PR; no main
+  merge, visibility mutation, OSF action or collection is authorized.

@@ -1038,8 +1038,16 @@ consolidates the retained repository between feature steps and measures
 retained contracts and a withheld change request.
 
 The proposed consolidation harness tests a bounded part of reflective
-correction. The harness schedules each pause. The agent is not authorised to
-reject features or redirect the product.
+correction. The distinction is what persists afterward. Self-Refine revises
+an output and Reflexion retains lessons for later trials
+~\cite{madaan2023selfrefine,shinn2023reflexion}; the present intervention
+instead consolidates the software and its handover between different
+feature requests. CRITIC's tool feedback is another precedent
+~\cite{gou2024critic}, but it does not authorize feeding the held-out
+evaluation into this experiment. Whether the retained changes help an
+unforeseen request remains the empirical question. The harness schedules
+each pause; the agent is not authorised to reject features or redirect
+the product.
 After every feature the loop stops, and an agent:
 \begin{enumerate}[leftmargin=*]
 \item runs the tests and a metrics script that lists complexity hotspots,
@@ -1210,11 +1218,26 @@ present author's proposed safeguard, not a remedy evaluated in that study.
 Beck's alternation suggests preserving the options consumed by feature
 execution~\cite{beck2026prodacity,beck2025devslow}. Darwin, AutoSaddler and
 SkillOpt already provide precedents for agent-guided correction; reflection
-itself is not the proposed novelty. The pilot instead asks what remains
-after a fixed repository-consolidation step, with CR1 as one future-change
-probe. It does not test choosing when to interrupt delivery, changing product
-goals or restoring a deployment. Those questions, and matched human/agent
-steering, belong to the separate research agenda in the ancillary supplement.
+itself is not the proposed novelty. Ng's reflection framework also argues
+for evaluating and revising work rather than treating first-pass generation
+as the finished product~\cite{ng2024reflection}. Improvement here means
+a measured advantage in retained behaviour or later adaptation, not merely
+writing a lesson, changing a prompt or calling the process self-improving.
+The experiment does not train model weights; the evolving repository and
+handover are the states under test. An exposed model name is not a guarantee
+against provider-side changes.
+
+The memory presentation's proposed ``dreaming'' pass is a useful contrast:
+it curates prior transcripts into persistent context
+~\cite{beamnxw2026memorytalk}, whereas this study changes retained code,
+tests and the handover. Memory updates can carry an incorrect lesson forward
+just as code updates can retain a defect. A self-improvement label therefore
+cannot replace the retention and adaptation measures. The study asks what
+remains after a fixed repository-consolidation step, with CR1 as one
+future-change probe. It does not test choosing when to interrupt delivery,
+changing product goals or restoring a deployment. Those questions, and
+matched human/agent steering, belong to the separate research agenda in the
+ancillary supplement.
 
 \subsection{Implications for practice}\label{sec:feedbackfirst}
 
@@ -1400,6 +1423,16 @@ G.~Bavota, A.~De~Lucia, M.~Di~Penta, R.~Oliveto, and F.~Palomba.
 quality and refactoring.
 \newblock \emph{Journal of Systems and Software}, 107:1--14, 2015.
 \newblock doi:10.1016/j.jss.2015.05.024.
+
+\bibitem{beamnxw2026memorytalk}
+{beamnxw (uploader)}.
+\newblock 99\% Use Agents Wrong: Anthropic's Secret: Self-Improving Agents
+(FREE GUIDE).
+\newblock Third-party YouTube upload, 18 October 2026;
+automatic English captions inspected 1 November 2026.
+\newblock The speaker identifies herself as Lamis, Anthropic Applied AI.
+Original recording date and audio wording unverified; headline percentages
+are not findings. \url{https://www.youtube.com/watch?v=0CG2YlJZWVU}.
 
 \bibitem{agile2001manifesto}
 K.~Beck, M.~Beedle, A.~van~Bennekum, A.~Cockburn, W.~Cunningham, M.~Fowler,
@@ -1620,6 +1653,13 @@ C.~A.~E. Goodhart.
 \newblock In \emph{Papers in Monetary Economics}, volume I, pages 1--20.
 Reserve Bank of Australia, Sydney, 1975.
 
+\bibitem{gou2024critic}
+Z.~Gou, Z.~Shao, Y.~Gong, Y.~Shen, Y.~Yang, N.~Duan, and W.~Chen.
+\newblock CRITIC: Large language models can self-correct with tool-interactive critiquing.
+\newblock In \emph{ICLR}, 2024. Inspected text: arXiv:2305.11738v4,
+Section 3; accessed 1 November 2026.
+\newblock \url{https://arxiv.org/abs/2305.11738v4}.
+
 \bibitem{herdagdelen2026judgment}
 A.~Herda\u{g}delen, H.~Joren, and A.~Tamkin.
 \newblock How {AI} agents shape experts' judgment calls.
@@ -1638,6 +1678,14 @@ on a systematic literature review.
 A.~Hunt and D.~Thomas.
 \newblock \emph{The Pragmatic Programmer: From Journeyman to Master}.
 \newblock Addison-Wesley, 1999.
+
+\bibitem{jiang2025medagentbench}
+Y.~Jiang, K.~C. Black, G.~Geng, D.~Park, J.~Zou, A.~Y. Ng, and J.~H. Chen.
+\newblock MedAgentBench: A virtual EHR environment to benchmark medical LLM agents.
+\newblock \emph{NEJM AI}, 2(9):AIdbp2500144, 2025.
+doi:10.1056/AIdbp2500144.
+\newblock Inspected text: arXiv:2501.14654v2; accessed 1 November 2026.
+Publisher full text unavailable.
 
 \bibitem{jiang2026skills}
 Z.~Jiang, F.~Huang, H.~Xing, X.~Wu, Y.~Gao, R.~Cao, M.~Wang,
@@ -1722,6 +1770,12 @@ you requested.
 \newblock arXiv preprint arXiv:2606.28430v1, 26 June 2026.
 \newblock \url{https://arxiv.org/abs/2606.28430v1}.
 
+\bibitem{madaan2023selfrefine}
+A.~Madaan et~al.
+\newblock Self-Refine: Iterative refinement with self-feedback.
+\newblock arXiv:2303.17651v2, 2023; Section 2 inspected 1 November 2026.
+\newblock \url{https://arxiv.org/abs/2303.17651v2}.
+
 \bibitem{martin2026productengineers}
 R.~C. Martin.
 \newblock Why hardcore technical focus still matters big time.
@@ -1772,6 +1826,13 @@ P.~Naur.
 \newblock \emph{Microprocessing and Microprogramming}, 15(5):253--261, 1985.
 \newblock doi:10.1016/0165-6074(85)90032-8.
 
+\bibitem{ng2024reflection}
+A.~Ng.
+\newblock Agentic design patterns part 2: Reflection.
+\newblock \emph{The Batch}, DeepLearning.AI, 27 March 2024;
+accessed 1 November 2026. Practitioner letter, not a controlled study.
+\newblock \url{https://www.deeplearning.ai/the-batch/agentic-design-patterns-part-2-reflection/}.
+
 \bibitem{nigh2025agentsmd}
 M.~Nigh.
 \newblock How to write a great {agents.md}: Lessons from over 2,500 repositories.
@@ -1818,6 +1879,16 @@ T.~Bang, V.~Emani, X.~Zhao, and Y.~Zhu.
 \newblock arXiv:2609.36323v1, 28 September 2026.
 \newblock \url{https://arxiv.org/abs/2609.36323v1}.
 
+\bibitem{philia2026ngmoroney}
+{philia (uploader)}.
+\newblock Prompting Is Dead in 6 Months. Andrew Ng, Stanford.
+\newblock Third-party YouTube upload, 4 September 2026;
+automatic English captions inspected 1 November 2026.
+\newblock Ng introduces Laurence Moroney at 16:31, who gives the later
+technical-debt and reflection discussion. No caption support for the
+headline's six-month prediction.
+\url{https://www.youtube.com/watch?v=9EuNUe-CJRM}.
+
 \bibitem{photocraft2026}
 {PhotoCraft contributors}.
 \newblock {PhotoCraft}: Source, parity records and public tracker observations.
@@ -1860,6 +1931,13 @@ Forward retrofit programme.
 \newblock GitHub repository, commit 29c6b51, 24 October 2026.
 \newblock \url{https://github.com/jmservera/ama}.
 \newblock Repository/commit and named issue/PR metadata accessed 1 November 2026; historical live journey unverified.
+
+\bibitem{shinn2023reflexion}
+N.~Shinn, F.~Cassano, E.~Berman, A.~Gopinath, K.~Narasimhan, and S.~Yao.
+\newblock Reflexion: Language agents with verbal reinforcement learning.
+\newblock \emph{Advances in Neural Information Processing Systems}, 36, 2023.
+\newblock Inspected text: arXiv:2303.11366v4, Section 3;
+accessed 1 November 2026.
 
 \bibitem{simkute2024ironies}
 A.~Simkute, L.~Tankelevitch, V.~Kewenig, A.~E. Scott, A.~Sellen, and

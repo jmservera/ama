@@ -14,11 +14,16 @@
     "publication": "public-pr-now, development PRs only",
     "repository_visibility_mutation": false,
     "historical_cloud_exports": "Explicitly deferred; repository evidence only",
-    "OSF_mutation_or_paid_collection_authorized": false
+    "OSF_mutation_or_paid_collection_authorized": false,
+    "documentation_gate_correction": "Owner explicitly stopped/rejected full executable gates for changed docs on 1 November; focused authoring/build/source review only.",
+    "remote_topic_reconciliation": "Owner authorized divergent topic merge; completed eb856804 with no file conflict and no paper-content loss.",
+    "final_merge_scope": "topic-only; PR692 stays open, no main merge",
+    "new_research_scope": "Owner explicitly authorized context-appropriate incorporation of the two named video caption checks and verified reflection/Ng research in this same branch/PR."
   },
   "execution_evidence": {
     "case_static_metadata": "revision-metrics-2026-11-01.json",
     "source_access_and_limits": "citation-access-2026-11-01.json",
+    "new_reflection_memory_synthesis": "supplementary-context.md",
     "native_source_exports": "../diagram-exports.json",
     "exact_frozen_v4_prompt_sha256": "75f646edbe04e1e3403b092b13edd6b66615a3362e67ad49744d229cdcb94f29",
     "authoring_tests": {"passed": 19, "skipped": 0},
@@ -38,6 +43,17 @@
     "sharing_stress": "Complete fixed-panel maximum alternating loss episodes for all 495 assigned trajectories, plus credential/allocation/symlink refusal",
     "syntax_and_whitespace_checks": "Passed",
     "paper_compile": "Tectonic main and supplement succeeded; no undefined references or overfull text",
+    "reflection_memory_integration": {
+      "scope": "Owner-authorized source paragraphs in background, harness and discussion plus supporting synthesis; no experiment change",
+      "article_pages": 35,
+      "supplement_pages": 22,
+      "main_bibliography_entries": 89,
+      "reusable_bibliography_entries": 105,
+      "available_automatic_caption_segments_checked": {"9EuNUe-CJRM": 2758, "0CG2YlJZWVU": 913},
+      "audio_independently_verified": false,
+      "full_documentation_gate_run": false,
+      "focused_authoring_checks": "19 tests and structural/source consistency pass"
+    },
     "layout": "All-page text bounds checked; revised native figures inspected; date-label overlap corrected",
     "initial_failures_preserved_in_assessment": [
       "Missing pinned review dependencies restored with pip/npm in task-local environments",
@@ -59,9 +75,9 @@
     },
     "independent_human_peer_review": "Not completed",
     "original_study_data_verification": "Not performed",
-    "source_claim_coverage": "Scoped full-text, abstract/metadata and user-supplied states are explicit; not all 98 sources verified",
+    "source_claim_coverage": "Scoped full-text, abstract/metadata and user-supplied states are explicit; not all105 sources verified",
     "historical_first_sign_in_and_release_scope": "Unverified; null links retained",
-    "new_exact_source_publication_gate": "Must be separately executed and verified; no historical receipt promoted",
+    "new_exact_source_publication_gate": "For this documentation candidate the owner explicitly selected focused checks, not full unchanged-application gates; earlier full-gate attempts are not claimed successful.",
     "scientific_acceptance_and_venue_clearance": "Not granted",
     "prospective_registration_freeze_and_collection": "Blocked pending actual source-bound evidence and owner/researcher actions"
   },
