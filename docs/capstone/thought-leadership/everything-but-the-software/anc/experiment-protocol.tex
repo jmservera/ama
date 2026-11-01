@@ -57,6 +57,9 @@ B's added tests must agree with visible specifications, rather than
 legitimating a defect. Subsequent feature sessions must keep accepted
 tests green. E can correct an agent-authored expectation only with a
 specific contradictory specification and a retained explanation.
+Accepted Python test files are immutable in full, including imports,
+fixtures and module/class constants; additions use new files.
+E retains only its explicit specification-bound correction exception.
 Immutable example tests remain protected in every arm.
 
 \begin{figure}[!htbp]

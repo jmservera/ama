@@ -22,7 +22,7 @@
     "native_source_exports": "../diagram-exports.json",
     "exact_frozen_v4_prompt_sha256": "75f646edbe04e1e3403b092b13edd6b66615a3362e67ad49744d229cdcb94f29",
     "authoring_tests": {"passed": 19, "skipped": 0},
-    "five_arm_regression_module": {"passed": 50, "skipped": 0},
+    "five_arm_regression_module": {"passed": 55, "skipped": 0},
     "SDK_Node24_tests": {
       "passed": 18,
       "skipped": 0,
@@ -47,6 +47,16 @@
     ]
   },
   "assessment": {
+    "original_exact_head_assisted_review": {
+      "paper": "8fe7c3335969a3d93a471c86820454483b05393d",
+      "kit": "2486a506d1b2570bcdd4846577adbb3a3b3e0dbd",
+      "scope": "Sampled read-only scientific/functional trace, not exhaustive verification or human peer review",
+      "original_finding": "Moderate: function-AST comparison omitted module-level values and class attributes, allowing accepted test expectations to be weakened.",
+      "locator": "harness/visible_specifications.py:61-71,86-103; harness/runner.py:302-310",
+      "original_assessment": "One substantive fidelity mismatch remained; no publication/collection approval granted.",
+      "correction": "Freeze whole accepted Python test files; add tests in new files; retain E's explicit specification-bound exception. Module/class/fixture/addition regressions pass.",
+      "post_correction_assessment": "Requires exact-head follow-up, not assumed from local tests."
+    },
     "independent_human_peer_review": "Not completed",
     "original_study_data_verification": "Not performed",
     "source_claim_coverage": "Scoped full-text, abstract/metadata and user-supplied states are explicit; not all 98 sources verified",

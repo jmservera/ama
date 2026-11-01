@@ -109,7 +109,7 @@ The 98-entry reusable bibliography retains sources moved out of the main body.
 Kit checks at the delegated candidate passed 849 tests with nine image checks
 unavailable. The parent adds the complete fixed-panel loss-episode CSV and
 credential/allocation/symlink refusal stress checks and distinct signed-build
-identities: all 50 v5 regressions pass.
+identities and accepted-file context preservation: all 55 v5 regressions pass.
 Node 24.22.2 was installed after the supported-runtime failure; all 18 SDK
 tests, including real startup with locally rejected inference in an owned
 tmux context, pass with zero skips. No model/provider inference was performed.
@@ -118,6 +118,12 @@ names; distinct Git/BusyBox signing identities fix the naming collision
 without bypassing signatures. The candidate rebuild is not an accepted v4 image.
 Actual current-image qualification, complete source-bound gate evidence and
 independent assessment remain separate; original v4 receipts are historical.
+The first exact-head assisted review found one moderate fidelity mismatch:
+function-AST comparison missed weakened module/class constants. The corrected
+policy freezes complete accepted Python test files, allows additions in new
+files and preserves E's specification-bound exception. Module/class/fixture
+and addition regressions pass; the original finding and sampled-review limits
+are retained, not recast as independent human peer review or collection approval.
 
 ### Reproduce the Revised Assets
 
