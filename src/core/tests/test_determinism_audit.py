@@ -80,7 +80,37 @@ class DeterminismAuditTests(unittest.TestCase):
             (out / "manifest.json").write_text(json.dumps(manifest))
             return out / "manifest.json"
 
-        self.assertEqual(da._check("fixed", fixed)["status"], "PASS")
+        self.assertEqual(da._check("fixed", fixed, da.SUPPORT_REVISION)["status"], "PASS")
+
+    def test_sixteen_hex_revision_fails_for_core_generator(self) -> None:
+        def fixed(out: Path) -> Path:
+            out.mkdir(parents=True)
+            manifest = {"seed": 7, "version": "v", "generator_revision": "sha256:" + "a" * 16}
+            (out / "manifest.json").write_text(json.dumps(manifest))
+            return out / "manifest.json"
+
+        result = da._check("scale-fixture", fixed)
+        self.assertEqual(result["status"], "FAIL")
+        self.assertEqual(result["manifest_missing"], ["generator_revision"])
+
+    def test_generator_exception_is_reported_as_fail_with_diagnostic(self) -> None:
+        def boom(out: Path) -> Path:
+            raise RuntimeError("validation failed: 3 errors")
+
+        result = da._check("boom", boom)
+        self.assertEqual(result["status"], "FAIL")
+        self.assertIn("validation failed", str(result["error"]))
+
+    def test_support_directory_is_located_from_argument_and_checkout(self) -> None:
+        self.assertEqual(da.locate_support("/tmp/x"), Path("/tmp/x").resolve())
+        self.assertTrue(da.locate_support().name == "generator")
+
+    def test_support_windows_are_intrinsic(self) -> None:
+        results: list[dict[str, Any]] = da.audit()["results"]  # type: ignore[assignment]
+        windows = {r["generator"]: r["window"] for r in results}
+        self.assertEqual(windows["public-pack"]["end"], "2026-09-30")
+        self.assertEqual(windows["public-pack"]["generation_label_as_of"], da.AS_OF)
+        self.assertEqual(windows["stock-epc"]["epc_validity_as_of"], "2026-10-15")
 
     def test_valid_revision_passes(self) -> None:
         def fixed(out: Path) -> Path:
