@@ -658,7 +658,7 @@ class ChatPanel:
             if facts:
                 grounded = {f"{case_id}/{path}": value for path, value in facts.items()}
                 kind, body, cites = grounded_answer(case_id, normalise_policy_text(masked), facts)
-                text = body + "\n" + RULES_NOTE
+                text = redact(body)[0] + "\n" + RULES_NOTE
                 sources = {key: value for key, value in grounded.items() if key in cites}
         return finish(kind, text, cites, model_name)
 

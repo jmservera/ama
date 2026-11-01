@@ -9,6 +9,8 @@ from collections.abc import Mapping
 from typing import Any
 
 VALUE_LIMIT = 240
+MAX_CITATIONS = 20
+TRUNCATED = "Further recorded detail is not shown here. Open the case card to see all of it."
 FUNDING_DOCUMENTS = ("EPC", "Survey", "Design", "Funding evidence")
 OTHER_CASE = re.compile(r"\bZF-\d+\b", re.I)
 CONTROL = re.compile(r"[\x00-\x08\x0b-\x1f\x7f]")
@@ -113,6 +115,8 @@ class Reply:
         self.case_id, self.facts = case_id, facts
         self.lines: list[str] = []
         self.cites: list[str] = []
+        self.groups: list[tuple[str, list[str]]] = []
+        self._seen = 0
 
     def fact(self, path: str) -> str:
         if path in self.facts:
@@ -123,6 +127,24 @@ class Reply:
 
     def say(self, line: str) -> None:
         self.lines.append(line)
+        self.groups.append((line, self.cites[self._seen :]))
+        self._seen = len(self.cites)
+
+    def render(self) -> tuple[str, list[str]]:
+        """Text and citations bounded together so every shown line keeps its support."""
+        lines: list[str] = []
+        cites: list[str] = []
+        for line, new in self.groups:
+            fresh = [c for c in new if c not in cites]
+            if len(cites) + len(fresh) > MAX_CITATIONS:
+                lines.append(TRUNCATED)
+                return "\n".join(lines), cites
+            lines.append(line)
+            cites.extend(fresh)
+        for cite in self.cites[self._seen :]:
+            if cite not in cites and len(cites) < MAX_CITATIONS:
+                cites.append(cite)
+        return "\n".join(lines), cites
 
     def text(self) -> str:
         return "\n".join(self.lines)
@@ -356,6 +378,7 @@ def answer(case_id: str, question: str, facts: Mapping[str, str]) -> tuple[str, 
     if name is None:
         r.fact("stage")
         r.fact("status")
-        return "fallback", suggestions_text(case_id), r.cites
+        return "fallback", suggestions_text(case_id), r.render()[1]
     ANSWERS[name](r)
-    return "answer", r.text(), r.cites
+    text, cites = r.render()
+    return "answer", text, cites
