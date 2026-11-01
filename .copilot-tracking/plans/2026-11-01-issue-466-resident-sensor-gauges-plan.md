@@ -12,4 +12,4 @@
 
 * Execution: executed inline. Verdict: proceed.
 * Disposition: adding new gauge or assistant code would exceed the criteria and risk the isolation guarantees; rejected. Not claiming closure: owner confirmation is a human approval gate.
-* Validation tier: focused tests plus ruff and mypy for core and api; CI is the gate evidence.
+* Validation tier: focused tests plus ruff and mypy for core and api; Policy conflict: `.github/copilot-instructions.md` requires the complete local gate even for documentation-only candidates while `src/README.md` permits focused checks. The complete local gate is not run and remains unresolved publication work for owner reconciliation; CI does not replace it.
