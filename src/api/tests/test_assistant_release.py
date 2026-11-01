@@ -543,6 +543,9 @@ class TaskReleaseRecord(Base):
             with self.subTest(field=key), self.assertRaises(ValueError):
                 self.service.record_release(self.pm, b)
         self.assertIn("OQ-017", rel.denial("missing", ["evidence"], CAP)["authority_gap"])
+        self.assertEqual(
+            {r["authority"] for r in rel.denial("missing", [], CAP)["authority_holders"]},
+            {"release", "residual-risk acceptance", "suspension", "restart"})
 
     def test_each_binding_mismatch_denies_reactive_and_proactive_with_no_calls(self):
         for key in rel.BOUND:
