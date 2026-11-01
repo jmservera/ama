@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-01T03:17:36+00:00",
-  "commit": "12fe1064f7d11686e6b44718eb6353bb0b6f27f5",
+  "scored_at": "2026-11-01T04:17:51+00:00",
+  "commit": "34465fba3e620a347facc578cf3c1eceaf540a46",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41268155602",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41270974532",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "437b8f04ce215776c458bf2febeb7069eb0247557116726024d7e6fb53078751",
+    "solution-code": "6483d9ff241f51153cf8e98c5ea0f34761acefc78d73da6998dc38e33c7c9220",
     "infrastructure": "0172b75e258abc5d97ce173fa595146da2d6f807386ec74e992482b7524f7aad",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -53,11 +53,9 @@
     "A4": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/procurement.py:540-562",
-        "src/api/src/zava_forward/api/server.py:486-505",
-        "src/api/tests/test_workspace_paging.py:1-30"
+        "src/api/tests/test_operator_suspension.py:864-881"
       ],
-      "rationale": "Capability is implemented end to end (API, core, UI) with edge cases (invalid input, hidden-order totals, offset overrun) and dedicated passing tests. Strengthens completeness evidence; baseline 5 retained as it was already at ceiling."
+      "rationale": "New test exercises guardrail-breach suspension, fail-closed restart denial without verified authority, and Unavailable fallback when restart_authority omitted. Reinforces completeness/edge-case evidence; baseline 5 retained."
     },
     "A5": {
       "score": 5,
