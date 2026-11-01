@@ -47,8 +47,8 @@
       "url": "https://geoportal.statistics.gov.uk/",
       "licence": "Open Government Licence v3.0",
       "retrieval_date": null,
-      "attribution": "Contains public sector information licensed under the Open Government Licence v3.0",
-      "verification": "open item: retrieval date not recorded (git history only bounds it to on or before 2026-10-01); owner to confirm. Licence confirmed 2026-11-01 against the ONS terms page"
+      "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0. Contains OS data (c) Crown copyright and database right [year to confirm]",
+      "verification": "open items: retrieval date not recorded (git history only bounds it to on or before 2026-10-01); copyright year in the OS acknowledgement to confirm against the named LSOA 2021 BGC and LAD December 2021 BFC product notices. Licence and the two required statements confirmed 2026-11-01 against the ONS digital-boundaries guidance"
     },
     {
       "id": "SRC-OWNER-MODEL",

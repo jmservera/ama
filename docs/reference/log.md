@@ -9095,3 +9095,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   Usage is under "Run the design gate" in the prototype profile review.
 * Issue #156 criterion 1 stays unmet: no designs, human review, accessibility or
   content evidence were supplied. No regulatory snapshot changed.
+
+## 2026-11-01 - Boundaries attribution and index reconciliation (Refs #175)
+
+* Recorded both ONS-required acknowledgements for SRC-ONS-BOUNDARIES with the OS copyright year left provisional; reconciled the data dictionary criterion row and the README index row. Retrieval dates remain unrecorded.

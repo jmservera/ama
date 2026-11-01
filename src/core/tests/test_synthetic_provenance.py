@@ -71,19 +71,11 @@ class ProvenanceRegisterTests(unittest.TestCase):
 
     def test_source_audit_reports_exactly_the_unmet_historic_sources(self) -> None:
         issues = privacy.source_issues(REGISTER["sources"])
-        self.assertEqual(
-            {item.split(":")[0] for item in issues},
-            {"SRC-CENSUS-TS054", "SRC-IMD-2025", "SRC-ONS-BOUNDARIES"},
-        )
-        for sid in {item.split(":")[0] for item in issues}:
-            self.assertIn(f"{sid}:missing_or_invalid_retrieval_date", issues)
-        self.assertEqual(
-            sorted(issues),
-            sorted(
-                f"{sid}:missing_or_invalid_retrieval_date"
-                for sid in ("SRC-CENSUS-TS054", "SRC-IMD-2025", "SRC-ONS-BOUNDARIES")
-            ),
-        )
+        expected = {
+            f"{sid}:missing_or_invalid_retrieval_date"
+            for sid in ("SRC-CENSUS-TS054", "SRC-IMD-2025", "SRC-ONS-BOUNDARIES")
+        } | {"SRC-ONS-BOUNDARIES:provisional_attribution"}
+        self.assertEqual(sorted(issues), sorted(expected))
         valid = [
             {
                 "id": "SYN-SOURCE",
@@ -97,6 +89,12 @@ class ProvenanceRegisterTests(unittest.TestCase):
         for field in ("licence", "attribution", "url", "retrieval_date"):
             with self.subTest(field=field):
                 self.assertTrue(privacy.source_issues([{**valid[0], field: None}]))
+        for field in ("licence", "attribution"):
+            with self.subTest(provisional=field):
+                self.assertIn(
+                    f"SYN-SOURCE:provisional_{field}",
+                    privacy.source_issues([{**valid[0], field: "wording to confirm"}]),
+                )
 
     def test_private_and_public_separation_without_reading_private_data(self) -> None:
         for dataset in REGISTER["datasets"]:
