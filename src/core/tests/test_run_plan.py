@@ -3,7 +3,7 @@
 import json
 import tempfile
 import unittest
-from dataclasses import replace
+from dataclasses import asdict, replace
 from pathlib import Path
 
 from zava_forward.core.synthetic import run_plan
@@ -78,6 +78,12 @@ class EstimateTests(unittest.TestCase):
         with self.assertRaisesRegex(StreamError, "RUN_TIME_LIMIT_TOO_SHORT"):
             plan(max_seconds=10, max_per_second=1).estimate()
 
+    def test_combined_replay_and_send_pacing_must_fit_with_cleanup_reserve(self) -> None:
+        tight = {"homes": 100, "max_seconds": 300, "max_per_second": 1, "replay_speed": 1000}
+        with self.assertRaisesRegex(StreamError, "RUN_TIME_LIMIT_TOO_SHORT"):
+            plan(**tight).estimate()
+        self.assertEqual(plan(**{**tight, "max_seconds": 387}).estimate().total_messages, 300)
+
     def test_refuses_cost_above_budget_cap(self) -> None:
         with self.assertRaisesRegex(StreamError, "BUDGET_CAP_EXCEEDED"):
             plan(budget_usd=0.2).estimate()
@@ -131,7 +137,7 @@ class ControlTests(unittest.TestCase):
                 self.assertRaisesRegex(StreamError, "ESTIMATE_NOT_RECORDED"),
             ):
                 RunController(plan()).start(self.path)
-        body: dict[str, object] = {"plan": run_plan.asdict(plan())}
+        body: dict[str, object] = {"plan": asdict(plan())}
         body["sha256"] = run_plan._digest(body)
         self.path.write_text(json.dumps(body))
         with self.assertRaisesRegex(StreamError, "ESTIMATE_MISMATCH"):
@@ -149,7 +155,7 @@ class ControlTests(unittest.TestCase):
     def test_start_refused_when_plan_differs_from_record(self) -> None:
         record(plan(), self.path)
         with self.assertRaisesRegex(StreamError, "ESTIMATE_MISMATCH"):
-            RunController(plan(homes=2000)).start(self.path)
+            RunController(plan(homes=1500)).start(self.path)
 
     def test_start_stop_and_single_run(self) -> None:
         record(plan(), self.path)

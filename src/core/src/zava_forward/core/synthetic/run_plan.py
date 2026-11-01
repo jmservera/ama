@@ -25,6 +25,7 @@ PROPERTY_BYTES = 1024
 RESERVED_HEADROOM = 40_000
 MAX_SECONDS = 3600.0
 MAX_RUN_MESSAGES = 100_000
+PUBLISH_CLEANUP_SECONDS = 0.5
 PRICE_BASIS = "Azure Retail Prices API list price, uksouth, retrieved 2026-10-27 (infra/README.md)"
 
 
@@ -102,10 +103,10 @@ class RunPlan:
             raise StreamError("B1_QUOTA_HEADROOM")
         if total > MAX_RUN_MESSAGES:
             raise StreamError("RUN_MESSAGE_LIMIT")
-        if total > self.max_per_second * self.max_seconds:
-            raise StreamError("RUN_TIME_LIMIT_TOO_SHORT")
-        # Replay spacing is nominal time compressed by the replay speed.
-        if self.days * 86400 / self.replay_speed > self.max_seconds:
+        # The publisher waits for replay spacing, then for the send slot, frame by frame, and
+        # reserves PUBLISH_CLEANUP_SECONDS before the deadline, so the pacing costs add up.
+        replay = self.days * 86400 / self.replay_speed
+        if total / self.max_per_second + replay + PUBLISH_CLEANUP_SECONDS > self.max_seconds:
             raise StreamError("RUN_TIME_LIMIT_TOO_SHORT")
         # Billing follows the provisioned hub time (whole days), not the simulated replay span.
         cost = round(B1_MONTHLY_USD * UNITS * math.ceil(self.max_seconds / 86400) / 30, 2)

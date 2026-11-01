@@ -35,3 +35,7 @@ None from the plan.
 * `RunPlan.replay_speed` (default and maximum 1000) is recorded, passed to the `Pacer`, and the replay span (days x 86,400 s / speed) must fit `max_seconds`.
 * Cost is based on provisioned time (whole days of `max_seconds`), not the simulated replay span.
 * `Pacer.set_max_per_second` reschedules the pending admission; `admit_send` rechecks the moved target; `scale_down` uses it. Regression added.
+
+## Review amendments, third round (PR 637 Copilot thread)
+
+* The time-limit check now sums send spacing (messages / rate), replay spacing (days x 86,400 s / speed) and the publisher's 0.5 s cleanup reserve, matching the publisher's sequential waits and sends. Regression added for the 100-home, speed 1000, 1/s, 300 s plan.
