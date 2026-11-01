@@ -4237,7 +4237,7 @@ start once the live allowlist view admits no row, because rows and the live
 owner confirms the exact change and the cost check above passes:
 
 1. Re-render and apply the boundary so the check constraint moves to
-   `2027-02-01T00:00:00` (never touches row windows or permissions):
+   `2027-02-01T00:00:00` (leaves row windows unchanged, but the script executes every rendered batch, so it also recreates the view and reapplies the existing narrow GRANT/DENY statements in `infra/sql/resident-showcase.sql`; this is a live permission-touching operation needing owner approval, and a permission-free change needs a separately reviewed constraint-only migration):
    `python3 infra/scripts/resident_showcase_sql.py <principal> --client-id <existing resident managed identity client id> --apply <server> <database>`
    (without `--create-principal`; the script exits with code 2 if neither is given).
 2. Renew only individually approved synthetic rows, one reviewed statement each,
