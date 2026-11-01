@@ -12,27 +12,7 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 
 PACKAGE = Path(__file__).resolve().parent.parent
-STEMS = (
-    "fig-state-inheritance",
-    "fig-pilot-design",
-    "fig-contract-states",
-    "fig-experiment-measures",
-    "fig-refactoring-economics",
-)
-
-
-def supplement_content_digest(text: str) -> str:
-    """Compare body content while allowing heading and internal-link retargeting."""
-    text = re.sub(r"\\(?:sub)*section\{([^}]+)\}", lambda match: match.group(1), text)
-    text = re.sub(r"\\label\{[^}]+\}", "", text)
-    text = re.sub(
-        r"\\(ref|pageref|autoref|eqref)\{([^}]+)\}",
-        lambda match: "\\" + match.group(1) + "{"
-        + match.group(2).removeprefix("M-").removeprefix("sup:") + "}", text,
-    )
-    text = re.sub(r"\\href\{supplement\.pdf\}\{([^}]+)\}", lambda match: match.group(1), text)
-    text = re.sub(r"\\hyperref\[sec:supplement\]\{([^}]+)\}", lambda match: match.group(1), text)
-    return hashlib.sha256(" ".join(text.split()).encode()).hexdigest()
+STEMS = ("fig-state-inheritance", "fig-pilot-design", "fig-contract-states")
 
 
 class ConceptualFigureTests(unittest.TestCase):
@@ -100,7 +80,8 @@ class ConceptualFigureTests(unittest.TestCase):
             self.check_exports(output)
             self.check_exports(PACKAGE)
 
-    def check_manuscript(self, source: str) -> None:
+    def test_given_manuscript_when_checked_then_concepts_and_deferred_plots_are_explicit(self) -> None:
+        source = (PACKAGE / "main.tex").read_text(encoding="utf-8")
         narrative = source.split(r"\begin{thebibliography}", 1)[0]
         narrative = re.sub(r"(?m)^%.*$", "", narrative)
         narrative = narrative.replace("[Our study's limitations]", "")
@@ -112,60 +93,7 @@ class ConceptualFigureTests(unittest.TestCase):
             self.assertIn(f"TODO(author): {identifier}", source)
         self.assertIn(r"\resultsfalse", narrative)
         self.assertNotIn(r"\resultstrue", narrative)
-        self.assertIn("ten ordered features", narrative)
-        self.assertNotIn("Regional access scope change", narrative)
-
-    def test_given_manuscript_when_checked_then_concepts_and_deferred_plots_are_explicit(self) -> None:
-        from check_paper import expand_inputs
-
-        source = expand_inputs((PACKAGE / "main.tex").read_text(encoding="utf-8"))
-
-        self.check_manuscript(source)
-
-    def test_given_missing_delivered_figure_when_checked_then_integration_fails(self) -> None:
-        from check_paper import expand_inputs
-
-        source = expand_inputs((PACKAGE / "main.tex").read_text(encoding="utf-8"))
-        for stem in STEMS:
-            with self.subTest(stem=stem):
-                pattern = r"\\includegraphics(?:\[[^]]*\])?\{" + re.escape(stem) + r"\.png\}"
-                without_figure, count = re.subn(pattern, "", source)
-                self.assertGreaterEqual(count, 1)
-                with self.assertRaises(AssertionError):
-                    self.check_manuscript(without_figure)
-
-    def test_given_integrated_supplement_when_checked_then_every_original_body_is_preserved(self) -> None:
-        from check_paper import expand_inputs
-
-        manifest = json.loads((PACKAGE / "anc/supplement-integration.json").read_text())
-        source = expand_inputs((PACKAGE / "main.tex").read_text(encoding="utf-8"))
-        expected = {
-            "anc/compact-appendix.tex", "anc/extended-background.tex",
-            "anc/case-audits.tex", "anc/deferred-measures.tex",
-        }
-        self.assertEqual(set(manifest["files"]), expected)
-        for name, entry in manifest["files"].items():
-            with self.subTest(name=name):
-                body = (PACKAGE / name).read_text(encoding="utf-8")
-                self.assertIn(body, source)
-                self.assertEqual(supplement_content_digest(body), entry["content_sha256"])
-
-    def test_given_unified_delivery_when_checked_then_one_document_has_internal_supplement_links(self) -> None:
-        from check_paper import expand_inputs, strip_comments
-
-        manifest = json.loads((PACKAGE / "anc/supplement-integration.json").read_text())
-        source = strip_comments(expand_inputs((PACKAGE / "main.tex").read_text(encoding="utf-8")))
-
-        self.assertEqual({path.name for path in PACKAGE.glob("*.pdf")}, {"main.pdf"})
-        self.assertEqual(source.count(r"\documentclass"), 1)
-        self.assertEqual(source.count(r"\begin{document}"), 1)
-        self.assertEqual(source.count(r"\begin{thebibliography}"), 1)
-        self.assertIn(r"\section{Supplement}\label{sec:supplement}", source)
-        self.assertIn(r"\hyperref[sec:supplement]", source)
-        self.assertNotIn(r"\href{supplement.pdf}", source)
-        self.assertNotRegex(source, r"\\(?:ref|pageref|autoref|eqref)\{M-")
-        for name in manifest["owner_approved_standalone_deletions"]:
-            self.assertFalse((PACKAGE / name).exists(), name)
+        self.assertIn("ten-feature trajectories", narrative)
 
 
 if __name__ == "__main__":

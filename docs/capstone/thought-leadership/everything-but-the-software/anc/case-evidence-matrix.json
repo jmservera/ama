@@ -1,7 +1,6 @@
 {
   "schema_version": "1.0",
   "created": "2026-10-27",
-  "updated": "2026-11-01",
   "scope": "Index of O1-O5 source locators reported in the manuscript, not a new independent source audit or execution record.",
   "case_repository": "https://github.com/jmservera/ama",
   "reported_case_commit": "29c6b512f5e68733bb2cc1882343db39f5eb2cad",
@@ -10,17 +9,7 @@
     "end": "2026-10-24"
   },
   "locator_policy": "Reported file/version/date locators are distinguished from inspected execution evidence. Null identifiers and unverified links must not be interpreted as completed checks.",
-  "original_experiment_status": "Planned twelve-trajectory pilot; not started; no experimental results. Historical 27 October statement.",
-  "experiment_status": "Prospective five-arm, three-model v5 candidate, 33 trajectories per arm/model under a stated variance assumption; no collection, new freeze or prospective OSF amendment completed.",
-  "revision_evidence": {
-    "posthoc_static_and_metadata": "revision-metrics-2026-11-01.json",
-    "source_access_and_limits": "citation-access-2026-11-01.json",
-    "scope": "Three static source snapshots, targeted committed research/plan tracing and named GitHub metadata; not new historical deployment execution or independent human corroboration.",
-    "first_failed_sign_in_timestamp": null,
-    "score_release_journey_correspondence": null,
-    "historical_cloud_export_status": "Owner explicitly deferred; repository evidence only.",
-    "same_release_contradiction_established": false
-  },
+  "experiment_status": "Planned twelve-trajectory pilot; not started; no experimental results.",
   "observations": [
     {
       "id": "O1",

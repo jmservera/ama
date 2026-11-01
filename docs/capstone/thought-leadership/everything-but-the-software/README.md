@@ -1,364 +1,54 @@
 ---
-title: Everything but the Software - source package (draft v10)
-description: Single-document paper with integrated Supplement, verified source corrections and prospective study limits
-ms.date: 2026-11-01
+title: Everything but the Software - source package (draft v7)
+description: Industry-led maintenance argument, inherited-error and instruction-debt evidence, and prospective consolidation protocol
+ms.date: 2026-10-29
 ---
 
 Working title: *Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop. An Exploratory Case Study and an Experiment Protocol.*
 
 ## Current Status
 
-The title is unchanged at the owner's request. The complete
-[paper](./main.pdf) and [source](./main.tex) now include a
-[Supplement section](./main.pdf#page=37) in the same document.
-Extended literature, case audits, deferred intervention rates and historical
-freeze provenance are preserved in full, with one shared bibliography.
-The standalone supplement PDF/TeX/bibliography were removed at the owner's
-request after exact archive readback and restore checks; their original
-committed versions remain in Git at `80656f32`. No source evidence was discarded.
+The editorial/visual revision and dated repository-metrics refresh of
+29 October are the latest source record.
+The owner selected the existing twelve trajectories as pilot/estimation work,
+not seven stable hypothesis tests. The pilot has not started, no experimental
+results are reported, and launch remains blocked by the documented runner,
+suite/access, analysis and registration requirements.
 
-The prospective candidate uses five arms and three selected models, with
-33 trajectories per arm/model: 495 total. A is feature-only, B consolidation,
-C information-bearing review, D matched-resource longer feature delivery
-and E visible regression repair. The primary equal-model-weight B-D coverage
-comparison targets a 10-percentage-point gain under an explicit 25-point SD
-assumption, alpha .05 and power .80. This is conditional planning, not observed
-variance or guaranteed power. The current kit is the
-[v5 candidate](https://github.com/jmservera/ama-thought-mve/tree/feat/fair-study-v5);
-the [frozen v4 release](https://github.com/jmservera/ama-thought-mve/releases/tag/protocol-frozen-v4)
-and original registration remain historical.
+The title, case observations, three arms, four runs per arm, ten-feature
+suite and resource ceilings are retained. AMA now supplies the motivating
+testbed rather than the paper's personal narrative. Impersonal wording does
+not conceal the sole author's participant-observer role or independently
+corroborate that account. The engineering lineage connects Beck, Erich Gamma
+and colleagues, Robert C. Martin and Fowler to specific design choices,
+not to a claimed intervention effect.
 
-No experiment was collected. New source-bound review, runtime qualification,
-cost-only calibration, affordability/deadline, owner freeze, actual prospective
-OSF recording and launch authorization remain gates. The owner-reported
-original OSF approval is not approval of this amendment. A separate researcher
-provides operational separation, not independent scientific certification.
+The main and reusable bibliographies contain the same 96 references.
+Three new conceptual figures have native `.excalidraw` editing sources,
+vector SVG exports and PNG copies for LaTeX. Existing empirical charts and their input data are
+unchanged. PF1-PF3 are explicit, data-dependent figure TODOs, not mock results.
+Gemini 4 Argon supplied concepts; the implementation corrects its proposed
+twelve-feature sequence to the actual ten-feature suite and does not adopt
+its unsupported guarantee of hidden-test inaccessibility.
 
-On 1 November the owner explicitly authorized development PR updates while
-both repositories were public. This interim source exposure is disclosed;
-later privacy cannot erase it. Before collection the owner will make both
-original repositories private, and the researcher must lack access to the
-original checkouts, manuscript and author-context caches. Protected operator
-assets remain distinct from candidate tools. Approved researcher materials
-and results are released with the paper after collection; no archive, OSF
-upload, visibility change or scientific submission occurred here.
-
-The native Excalidraw sources remain editable and bound to SVG/PNG exports.
-The five-arm and measurement diagrams remove the prematurely printed CR1
-topic; the economic diagram plots the break-even boundary against k/delta.
-PF1-PF3 still await real data. Original critiques, prior datasets, published
-chart inputs and historical revision records are retained.
+The revised source compiles with session-local Tectonic 0.17.0. The delivered
+47-page PDF includes the metrics refresh; its log, all-page text bounds and
+new metrics page were checked. The unchanged conceptual figures retain the
+earlier full-size visual inspection and source/export validation. These are
+engineering and layout checks, not independent scientific or author approval.
+No experiment was run, private study material amended or external submission
+made. The arXiv bundle has not been refreshed.
+The owner selected local-only delivery pending publication clearance; no
+commit, push or pull request was made by the assistant for the editorial
+revision. The owner subsequently committed that work and opened
+[PR #555](https://github.com/jmservera/ama/pull/555). This metrics follow-up
+continues on its existing branch and remains local; it does not authorize
+external manuscript publication.
 
 The [dated review and complete pending checklist](./anc/review-2026-10-29.md)
-records the earlier findings, evidence coverage, applied changes, launch
-blockers and deferred work. The v4 reconciliation below supersedes its
-experiment-readiness statements, not the historical
+records findings, evidence coverage, applied changes, launch blockers and
+deferred work. It supersedes earlier readiness summaries, not the historical
 evidence or original [editorial critique](./critique.md).
-
-## Critique Disposition 1 November, v9
-
-Work execution covers the offline manuscript/kit candidate and its inspected
-evidence. Assessment is assisted checking, not independent human peer review,
-statistical certification, ethics approval or venue acceptance.
-
-### Added Reflection and Memory Sources
-
-The owner authorized the new research in this same branch/PR.
-The [contextual source synthesis](./anc/supplementary-context.md#reflection-memory-and-self-improvement-1-november-source-check)
-records the complete available auto-caption check, timestamp links and
-source qualifications. The main article uses the research in its bounded
-correction, harness and discussion sections; the title and experiment are
-unchanged.
-
-The first video's headline is not supported by the captions: Ng discusses
-coding tools changing every three to six months, not prompting dying.
-Ng introduces Laurence Moroney at 16:31; the later technical-debt and
-reflection passages are Moroney's. The second video is an independent upload
-of an apparent Anthropic staff presentation about persistent memory and
-asynchronous dreaming, not an official channel or independent tutorial
-narration. Its uploader percentages are not experimental results.
-Automatic captions and original recording/audio verification limits remain
-explicit.
-
-Ng's [official reflection letter](https://www.deeplearning.ai/the-batch/agentic-design-patterns-part-2-reflection/)
-recommends Self-Refine, Reflexion and CRITIC; their verified authors do not
-include Ng. MedAgentBench is a verified Ng-coauthored paper about interactive
-evaluation, not a controlled self-improvement treatment.
-The source paragraphs separate task iteration, retained memory, repository
-correction and weight training; no performance effect is transferred to
-this study.
-The literature-enhanced build has 35 article pages, 22 supplement pages,
-89 cited main-text entries and 105 reusable bibliography entries.
-Nineteen focused authoring tests and the structural/source checker pass;
-both PDFs compile without undefined references or overfull text.
-
-### Publication and Validation Scope Correction
-
-The owner stopped the full documentation gate on 1 November and explicitly
-directed focused validation for docs. The earlier gate attempts and blockers
-are historical, not a requirement that an unchanged application matrix pass
-before publishing this manuscript. The attached pull error was divergent
-topic history under a fast-forward-only pull policy, not unresolved conflicts.
-The remote topic was merged cleanly, preserving the revised paper; the owner
-selected topic-only publication, leaving PR #692 open.
-
-Executable kit checks remain separate: the new local image builds with strict
-signatures, all 25 actual canaries pass, and all nine focused current-image
-tests pass with declared dependencies. A final whole-harness pass is not
-claimed. The [experiment candidate PR](https://github.com/jmservera/ama-thought-mve/pull/6)
-is a draft and does not authorize collection, freeze or OSF actions.
-
-### PR Review Corrections
-
-All five initial 1 November inline review findings are addressed:
-
-* Manuscript integration checks every delivered conceptual figure; removing
-  any one of the five includes now fails its regression.
-* Evidence reports use exclusive final-file creation. Existing outputs and
-  symlinks, including a report or link created during measurement, are refused
-  without overwriting retained evidence or following the link.
-* TeX input expansion ignores comments while preserving their text and TODO
-  markers. Missing or misleading disabled slices cannot affect structural
-  checks or bibliography normalization; escaped percent signs remain literal.
-* The replication section states the complete pooled-SD instruction once,
-  separately from the provider-drift qualification.
-* The collection section separates researcher-workspace controls from the
-  complete owner repository-privacy instruction.
-
-VS Code had no registered test controller, so verification used the existing
-stdlib runner: 27 focused authoring tests pass. Source/bibliography checks and
-changed-Python syntax lint pass. The 35-page article and 22-page supplement
-rebuild with the selected title, without undefined references or overfull
-text. No full unchanged-application gate, new experiment, registration or
-scientific acceptance is claimed.
-
-The later lint-denominator finding is also corrected. Ruff receives only the
-counted Python files; frontend growth cannot dilute its density.
-The [regenerated evidence](./anc/revision-metrics-2026-11-01-python-lint.json)
-reports 6,365/25,756/33,618 submitted Python lines and
-188.22/142.30/125.83 findings per 1,000 Python lines.
-Original all-language figures remain in the historical record with a correction
-notice; source hashes, lint counts, complexity and duplication are unchanged.
-
-### Single-document Delivery
-
-The sole current deliverable is the 52-page [main.pdf](./main.pdf). Its Supplement starts
-on page 37 and contains every original standalone source body plus the earlier
-compact appendix. Heading levels and labels were reconciled, all links are
-internal, and fifteen missing cited entries were restored into the shared
-104-entry bibliography. The reusable source bibliography retains 105 entries.
-The [integration manifest](./anc/supplement-integration.json) binds preserved
-body digests to the original source revision and approved removal selection.
-
-Thirty-two focused authoring tests pass, including complete body preservation,
-one-document delivery, all five figure-removal cases, exclusive report writes,
-comment-aware inputs and Python lint denominators. The full PDF builds with
-the selected title. The outline contains the Supplement and all its sections;
-all-page text bounds pass and no link targets the deleted standalone PDF.
-No full application gate, experiment or new approval is implied.
-
-| Recommendation | Applied change and evidence limit |
-| --- | --- |
-| Protect paper/code/oracles/CR1 from experiment agents | Private-repository and fresh-operator readbacks are required before collection; candidate tools remain isolated/no-network, with the host provider connection distinguished. Interim public development exposure is explicitly recorded. |
-| Increase within-model replication and add fair controls | Five arms, 33/cell, 495 trajectories; D has one 45-minute/600-credit feature session versus B's 30+15 minutes/300+300. E uses visible specifications, never hidden evaluator feedback. The variance assumption and transfer limits remain explicit. |
-| Replace uninformative two-run statistics | A single prospective blocked B-D coverage comparison; per-model and other contrasts secondary. Historical v1 keeps its two-run identity, four pairwise differences and nine-df planning SD, not a nominal 95% small-sample claim. CR1 is secondary and not powered by the coverage calculation. |
-| Add graded CR1 and prerequisites | Contracts passed/15, prior passing contracts lost and observed/missing denominators; F9/F10 acquisition strata are post-treatment selections, not randomized subgroups. |
-| Correct loss-density missingness | Observed inherited-risk denominator is separate from full risk and missingness; unknown results cannot count as not lost. Histories and episode censoring remain visible. |
-| Address Goodhart and C's effect on later repairs | Structural/suppression metrics are treatment fidelity, not efficacy. Fixed external Ruff ignores local suppressions. C can influence later feature repairs; genuine review/diff annotations are required, not file-overlap inference. |
-| Add feasibility, mutation and timing controls | Explicit infrastructure/missingness/oracle/privacy/billing thresholds; all-run cost/deadline admission; bounded mutation diagnostics and source hashes; observable request/tool latency with provider-active/rate-limit components unknown. |
-| Randomize later change requests | A prewritten request-pool follow-up is separate from the current fixed CR1 and needs later registration. No current request is silently replaced. |
-| Resolve cost arithmetic and currency contradictions | Combined 8,655 sessions/3,941.25 maximum hours/2,902,500 nominal credits exceed the unchanged 300,000 envelope. Actual affordability is not claimed; no dollar conversion or silent sample reduction. |
-| Fix conditional cost-of-inaction interpretation | Explicit multiplication, k/delta break-even, null/no-payback and k=100/delta=1 counterexample at 201 cycles. k awaits billed calibration; capped feature budgets do not identify the uncapped, quality-matched delta. |
-| Correct citation scope and attribution | Acceptance-criterion optionality and recording human reasons are the author's extensions. Learning-through-use source, test-deletion joke, context-file costs/success, commit-category overlap, assistant-era randomization and seven-of-twelve library findings are qualified. |
-| Verify Pan numbers and locators | Four points/whiskers and the 619-event -1.1 [-3.8,+1.6] contrast checked against the PDF; 4.0-to-7.2 means are unweighted. Terminators/constructor verified in Section 5.1/Figure 5; Figure 1 supplies framing. Unconfirmed eight-of-ten detail removed. |
-| Update metadata, access dates and sorting | Actual DOI/venue/page/version checks are distinguished from claim support. All 31 web entries have dated access or explicit failed/partial attempts. Stable citation IDs sort by named authors, including Young/Lopopolo/Park. |
-| Preserve case evidence before it expires | Named repository metadata and the original/follow-up source hashes are retained. The owner explicitly deferred historical cloud/sign-in/usage exports; no tenant-wide query, attribution or first-failure timestamp is fabricated. |
-| Check early blockage and later recovery | #349's 16 October record is not the first actual failed-sign-in time. 27 October directory-retirement sign-off does not establish a new successful journey or time-to-restored-usability. |
-| Run pinned static checks and learning tracing | Three source snapshots measured with Lizard 1.24.3, Ruff 0.17.3 and jscpd 5.4.1. 487 committed research/plan files screened; 81 identity/runbook-pattern matches include generic pointers and do not prove actual session access or lost knowledge. |
-| Normalize periods and explain Other | Seven/ten calendar-date churn windows are distinct from nineteen-day PR baseline. Tracking/day falls 34,026 to 24,037; product/integration 262.45 to 132.25. 60,001 Other additions are one CSV asset; contents were not read. |
-| Repair lexical/figure claims | Evidence-boundary phrases, not general hedging; 24 pre-loop matches, nine on 4 October. Twenty inspected contexts are status/approval boundaries, not factual accuracy or independent coding. Zero and undefined marks differ; the full window starts 11 September; all five mechanism labels appear. |
-| Report post-case specification growth | BRD/PRD approximately +15%/+42%; combined documents +25% to 173,504 words. Actual loaded tokens and provider-matched tokenization remain unavailable; the prose heuristic is removed. |
-| Shorten, disclose and preserve the title | Main article plus separate evidence supplement; HIR/IDR/hashes moved to supplementary appendices. Microsoft employment/tool/programme interests and post-outcome case selection are disclosed. The requested title is retained. |
-| Match the frozen prompt and preserve evidence | The supplement includes the exact v4 prompt as wrapped verbatim, with a byte hash, not a paraphrase claimed identical. Routine future product tracking can be excluded only after finite archive/restore-backed preservation; no historical tracking was wiped. |
-
-### Evidence and Source Limits
-
-The [access/claim register](./anc/citation-access-2026-11-01.json) states the
-inspected passages, metadata-only checks, user-supplied qualifications and gaps.
-Fresh SEC/Medium/OpenAI retrievals returned 403; HVE tag access was denied by
-organization SAML; no bypass was attempted. YouTube returned HTML, not an
-inspected video. SlopCodeBench v2 identity is pinned without inventing a
-fresh NeurIPS acceptance check.
-
-The [post-hoc evidence](./anc/revision-metrics-2026-11-01.json) contains exact
-source hashes, static metrics, lexical sample and named GitHub metadata.
-These checks neither reproduce original studies nor prove historical deployed
-usability. The [case index](./anc/case-evidence-matrix.json) retains null
-release/journey links and the original 27 October record separately.
-No private dataset, historic tenant-wide logs or paid experiment was read/run.
-
-The earlier 35-page article and 22-page standalone supplement compiled with
-Tectonic before consolidation. They are historical validation records, not
-separate current deliverables. All-page text bounds pass; warnings are underfull boxes
-and the bundled lineno UTF-8 warning, not undefined references or overfull text.
-The first PDF attempt raced case-image generation; completed PNGs were verified
-and the sequential rebuild succeeded. Nineteen focused authoring tests pass.
-The reusable bibliography retains the original 98 entries and seven new
-reflection/evaluation/video entries; sources moved out of the main body remain.
-
-Kit checks at the delegated candidate passed 849 tests with nine image checks
-unavailable. The parent adds the complete fixed-panel loss-episode CSV and
-credential/allocation/symlink refusal stress checks and distinct signed-build
-identities and accepted-file context preservation: all 55 v5 regressions pass.
-Node 24.22.2 was installed after the supported-runtime failure; all 18 SDK
-tests, including real startup with locally rejected inference in an owned
-tmux context, pass with zero skips. No model/provider inference was performed.
-Restoring the unavailable local runtime exposed colliding parallel APK key
-names; distinct Git/BusyBox signing identities fix the naming collision
-without bypassing signatures. The candidate rebuild is not an accepted v4 image.
-Actual current-image qualification, complete source-bound gate evidence and
-independent assessment remain separate; original v4 receipts are historical.
-The first exact-head assisted review found one moderate fidelity mismatch:
-function-AST comparison missed weakened module/class constants. The corrected
-policy freezes complete accepted Python test files, allows additions in new
-files and preserves E's specification-bound exception. Module/class/fixture
-and addition regressions pass; the original finding and sampled-review limits
-are retained, not recast as independent human peer review or collection approval.
-
-### Reproduce the Revised Assets
-
-Install the named review tools with pip in a task-local environment and
-jscpd 5.4.1 locally with npm. The figure run used Matplotlib 3.11.2.
-
-```bash
-node anc/revise_diagrams.mjs
-node anc/export_diagrams.mjs
-python3 -B -m unittest discover -s anc -p 'test_*.py' -q
-python3 -B anc/check_paper.py --normalise-bibliography
-tectonic main.tex --keep-logs --keep-intermediates --untrusted
-```
-
-Run case-image regeneration to completion before compiling, not concurrently.
-The source-only historical metrics command is, from the repository root:
-
-```bash
-cd docs/capstone/thought-leadership/everything-but-the-software/anc
-python3 -B -m review_metrics \
-  --revisions 9ef7e40fa6b7d34792f2817ad0a19d2ac16eabd1 \
-    29c6b512f5e68733bb2cc1882343db39f5eb2cad \
-    9b74ac8daaec2a880172e43161b37ac7f2c3f801 \
-  --jscpd /absolute/path/to/jscpd-5.4.1 \
-  --out /new/external/review-metrics.json
-```
-
-This creates a new diagnostic file and refuses overwrite. The committed sample's
-semantic annotations are a separate assisted step, not automatic truth labels.
-No arXiv upload, employer clearance or scientific acceptance is implied. The
-official [31 October 2025 arXiv CS moderation notice](https://blog.arxiv.org/2025/10/31/attention-authors-updated-practice-for-review-articles-and-position-papers-in-arxiv-cs-category/)
-was inspected: this work is an original case plus prospective protocol, not a
-review/position paper re-labelled to evade prior peer-review requirements.
-Moderator and venue decisions remain theirs.
-
-## Frozen Experiment Review and Revision 1 November
-
-Work execution: Complete for the manuscript revision and conceptual figures.
-Assessment: scoped assisted review, not independent human peer review,
-statistical certification or venue acceptance. No venue policy was supplied.
-
-### Evidence Inspected
-
-* Current [manuscript](./main.tex), its experiment/discussion/data-availability
-  sections, previous review, bibliography consistency and authoring tools.
-* The kit at execution source
-  `e8707ecc8965d3f81f5142a2603042bfca1aab15` plus manifest-only commit
-  `03c50856838b539780d57216af2a4cf6744187d7`:
-  [canonical protocol](https://github.com/jmservera/ama-thought-mve/blob/03c50856838b539780d57216af2a4cf6744187d7/protocol/pilot-estimation.md),
-  [machine-readable decisions](https://github.com/jmservera/ama-thought-mve/blob/03c50856838b539780d57216af2a4cf6744187d7/protocol/pilot-estimation.json),
-  [freeze manifest](https://github.com/jmservera/ama-thought-mve/blob/03c50856838b539780d57216af2a4cf6744187d7/protocol/freeze.json),
-  contract panel, configured budget, active retention/model/cost analyzer
-  and focused regressions. Historical root design/hypothesis pages explicitly
-  defer to this canonical protocol.
-* Complete attached `osf-v4-2026-10-31.tar.gz`: freshly downloaded checksum
-  matches `1a42fac40a4f1aa82df59c8c3f7f8d6dce37d22502c5952c398362ac63d6bd65`.
-  Archive member listing inspected; this is not an exhaustive readback of
-  every internal evidence file or live OSF verification.
-
-Full-text support here means inspected protocol/code support for the stated
-design, not that its experiments occurred. Historical test totals and
-owner acceptance are inspected records, not freshly reproduced runtime
-acceptance. Private paid datasets/transcripts and the runtime image were
-not inspected. Earlier case claims and all 96 external publications were
-not independently reverified.
-
-### Findings and Applied Remedies
-
-| ID | Priority and manuscript locator | Finding and impact | Applied remedy and remaining limitation |
-| --- | --- | --- | --- |
-| V4-1 | Major: Abstract; experiment status; Design | Paper described twelve single-model runs, CLI 1.0.103 and 2,500 credits, conflicting with frozen v4. | Reconciled eighteen runs, three models, CLI 1.0.105/SDK 1.0.28, 300,000 nominal envelope and operational soft buffers. No frozen source changed. |
-| V4-2 | Major: Design; Pre-run decisions; Data availability | Local execution, missing-feature/evaluator decisions and independent review were incorrectly described as wholly pending; the kit was called private. | Described public packet, bounded container tools, withholding, rollback/continuation and owner-reviewed resolutions. Preserved missing prospective OSF update, operational gates and absence of independent scientific acceptance. |
-| V4-3 | Major: Measures; Analysis; precision limits | Paper promised comprehension and HIR/IDR outcomes excluded or deferred in v4 and obscured per-model sample size. | Marked scope accurately, retained assistance logging, explained per-model primary frames and two-run uncertainty. Eighteen trajectories are not eighteen observations in each model contrast. |
-| V4-4 | Moderate: Protocol/measurement figures | Quality and cost were buried in dense prose; final correctness could be mistaken for decay control. | Separate H1 coverage, H2 prior-contract loss/recovery and H6 retained-behaviour CR1; show all-attempt delivery/CR1 cost and missingness. Test-weighted scores remain correlated proxies. |
-| V4-5 | Major: Discussion, Projected cost of omitting consolidation | No measured long-run cost of inaction exists; predicting a dollar saving would fabricate evidence. | Added explicit assumed sensitivity equation, null/no-payback alternative, break-even and credit-only table. This is not a registered endpoint, fitted forecast, dollar conversion or observed saving. |
-| V4-6 | Remaining scientific limitation: Design/precision | B-A buys more resources; B-C changes editing/tests/notes, not only refactoring. Two runs/arm/model, one suite and one CR1 cannot establish general maintainability. | Limitations retained and made visual. A matched-resource/mechanism-isolating or larger study needs separate prospective authorization. |
-
-### Quality and Cost Interpretation
-
-H1 uses final `P10` coverage of all 127 scheduled feature contracts.
-H2 follows unchanged contracts passing at an earlier `P`, with feature/post
-checkpoints, at-risk denominators and retained loss episodes. Never-passing
-contracts are acquisition failures; repair does not erase recurrence.
-H6 needs all 15 CR1 contracts and every feature contract passing before CR1.
-Unknown observations are not automatically failed contracts.
-
-Actual AI credits from all attempts are separate for delivery through `P10`
-and CR1, including failed sessions and infrastructure retries. Missing billing
-is unknown, not zero; low-cost failure is not efficiency. Tokens and elapsed
-seconds are distinct measures. Compatible reference gaps, complexity,
-duplication and lint are descriptive structural proxies, not comprehension.
-
-The explanatory scenario assumes consolidation investment `k=5` credits per
-feature cycle and a relative later-feature premium increasing by `delta`.
-Net A-B cost is `delta*N*(N-1)/2 - k*N`: `delta=0` never pays back;
-`delta=0.5` breaks even at 21 cycles; `delta=1` at 11. These arbitrary
-parameters expose assumptions and counterexamples, not preferred estimates.
-At ten cycles even the last scenario has not paid back. No empirical
-40-feature forecast, human-work saving or dollar conversion is supported.
-
-### Validation
-
-At the frozen source plus separate manifest, the four focused modules
-`test_pilot_analysis.py`, `test_analysis.py`, `test_measurement_integrity.py`
-and `test_study_report.py` passed: 593 tests, zero reported skips, no model
-sessions. This checks constructed endpoint, missingness and cost behavior,
-not a collected study or full runtime/access audit.
-The initial global-Python run failed because isolated child Python could
-not import user-installed pytest. Restoring the kit's configured dependencies
-with pip in an external virtual environment resolved that environment failure;
-no frozen source was patched.
-
-The final source compiles with Tectonic 0.17.0 to a 51-page PDF. All-page
-text bounds pass; the three changed infographic pages (26, 31 and 38) were
-rendered and visually inspected at page scale without clipping. No overfull
-boxes or undefined references were reported. The engine's standard
-UTF-8/inputenc warning is retained, not treated as a scientific defect.
-The structural checker passes, including 96 matching bibliography entries
-and explicit deferred-results switches. All eleven existing paper-tooling
-and conceptual-figure tests pass, including native regeneration,
-editable bindings and source/export hashes for five figures. Exact
-allocation/panel, planned-resource arithmetic and all nine sensitivity-table
-cells were separately checked against the frozen inputs.
-
-A separate read-only scientific-agent critique of the revised experiment,
-economics and figures found no high-confidence substantive protocol mismatch;
-its one minor finding was stale work-in-progress status, corrected here.
-That critique is assisted checking, not independent human peer review.
-The original historical critiques remain unchanged. The capstone Section D
-criteria were consulted for reusable substance, craft and dissemination;
-no rubric score or dissemination/publication acceptance is inferred.
-The user authorized a repository PR for the revised paper, not external
-scientific submission, OSF mutation or collection.
-
-No paid experiment or full container/runtime audit is performed by this review.
 
 ## Repository Metrics Refresh 29 October
 
@@ -453,18 +143,7 @@ override avoids an upstream dependency requesting unavailable
 
 Compile from this package directory with `pdflatex main.tex` twice, or
 `tectonic main.tex --keep-logs --keep-intermediates --untrusted`. Tectonic
-resolves cross-references automatically. From the repository root, you can
-also run the Bash helper:
-
-```bash
-./tools/update-pdf.sh
-```
-
-The helper calls `tectonic` from `PATH` and writes the PDF, logs and
-intermediate files into this package directory. It resolves the package path
-relative to the script, so it does not depend on the current working directory.
-
-The existing
+resolves cross-references automatically. The existing
 `check_paper.py --check-latex-log` expects a pdflatex-style output marker;
 this revision instead checks the actual Tectonic log and rendered PDF.
 The four new tests cover native shape/text bindings, exact source/export

@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-11-01
+ms.date: 2026-10-31
 ms.topic: overview
 ---
 
@@ -20,35 +20,6 @@ Topic hubs work like the Maps of Content used in personal knowledge
 management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
-
-For the paper's [single-document delivery](../capstone/thought-leadership/everything-but-the-software/README.md#single-document-delivery),
-the owner-selected title is preserved and all former supplement content is
-integrated in the main PDF, with reconciled labels and one bibliography. The prospective five-arm candidate has
-33 trajectories per arm/model (495), a conditional 10-point coverage target,
-matched-resource delivery, visible repair and a blocked primary comparison.
-Three pinned static snapshots, source/access limits, lexical validation and
-corrected zero/undefined and break-even figures are retained. Source metadata
-and code tests do not establish scientific acceptance or historical deployed
-usability. Public development PRs are owner-authorized; future privacy, new
-review/freeze, proper prospective OSF recording, affordability and collection
-gates remain. Historical cloud exports are explicitly deferred.
-Original v4 assets, adverse critiques and prior data remain unchanged.
-The [new reflection/memory source check](../capstone/thought-leadership/everything-but-the-software/anc/supplementary-context.md#reflection-memory-and-self-improvement-1-november-source-check)
-distinguishes Ng's human-feedback opening from Moroney's later reflection/
-technical-debt examples and the separate Anthropic-presented memory talk.
-Uploader headlines/percentages are not findings. Ng recommends Self-Refine,
-Reflexion and CRITIC but is not their coauthor; MedAgentBench is his
-verified coauthored interactive-evaluation paper. Source-limited integration
-changes neither the experiment nor registration. The owner confirmed focused
-documentation checks and topic-only publication in PR #692.
-The [PR review corrections](../capstone/thought-leadership/everything-but-the-software/README.md#pr-review-corrections)
-cover the five initial inline findings: complete figure integration, exclusive
-evidence writes, comment-aware TeX input handling and two broken protocol
-sentences. Twenty-seven focused authoring tests and the affected builds pass;
-the experiment, title and approval boundaries are unchanged. The later Ruff
-denominator correction uses only submitted Python lines, with regenerated
-evidence and original figures retained as superseded. Thirty-two focused
-authoring regressions cover the completed corrections and unified delivery.
 
 For the [31 October live app observations](../architecture/cutover-evidence-pack.md#live-app-verification-2026-10-31-refs-523-524-570-432),
 resident sign-in and chat open/close, resize, dock/undock and narrow/wide

@@ -1,6 +1,6 @@
 {
   "renderer": "@excalidraw/excalidraw 0.18.1",
-  "browser": "141.0.7390.37",
+  "browser": "155.0.8059.39",
   "export": "Native offline SVG and 3x PNG; source files are never overwritten.",
   "png_scale": 3,
   "diagrams": [
@@ -15,12 +15,12 @@
     },
     {
       "stem": "fig-pilot-design",
-      "source_sha256": "dbc29b29dfb8ed0d226cc8c7c0f31c98709d17516f879c2e85faa7406adae901",
-      "svg_sha256": "146dbea209c2f486731e63f048df26f5bc31ff534a909932f571be7c861ea925",
-      "png_sha256": "8abe7f781c32e3927710f019460bba85d5a6ff40cc424a65a2e819d948ee84ec",
-      "width": 1095,
-      "height": 980,
-      "elements": 58
+      "source_sha256": "ba453d4c96330f4145f12b4a7c5a0b759211c5457572c3115502c0e094b03c43",
+      "svg_sha256": "878346ca60bb7142d4dae8df5c4fb628c458121d78e741e49f5d56d8325be334",
+      "png_sha256": "42194168651890f884536ba5f6cad038e8e7814facb67c38f2a5891307aec6d8",
+      "width": 1120,
+      "height": 915,
+      "elements": 33
     },
     {
       "stem": "fig-contract-states",
@@ -30,24 +30,6 @@
       "width": 1120,
       "height": 627.5,
       "elements": 14
-    },
-    {
-      "stem": "fig-experiment-measures",
-      "source_sha256": "bb151bd8e4d8a60f84648f4014920954c46db2bae6ddd8209163ab8fe48f87e8",
-      "svg_sha256": "48e25981c83048ca5539c1a4f16267f69d74ba1ca9b0c1280a5204fc9e0b3a10",
-      "png_sha256": "a5b20650c1a18693f3c31bce54ccf521914c45923124476cb83dd7645b688fef",
-      "width": 1240,
-      "height": 960,
-      "elements": 135
-    },
-    {
-      "stem": "fig-refactoring-economics",
-      "source_sha256": "68b9b8f01bdc735558e7a18b802fd53346d4b0967c2a38cb64dea7593c80e73a",
-      "svg_sha256": "1e568be07d2f80cb4f69411b0a1c8baea252fd9d8e6ad65b5e057e71eb579d71",
-      "png_sha256": "f392cae3962945f9e12887c5ce2d410b70f49469902ca65deeb83034ccb84e14",
-      "width": 1240,
-      "height": 1080,
-      "elements": 73
     }
   ]
 }
