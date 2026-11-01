@@ -4,6 +4,7 @@ import json
 import subprocess
 import unittest
 from pathlib import Path
+from typing import Any
 
 WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
 
@@ -22,7 +23,15 @@ const context = vm.createContext({
   URLSearchParams, Intl, AbortController, Date,
   routeController: new AbortController(), me: {user: {role: "Retrofit Programme Manager"}},
   api: async (path) => path.startsWith("/api/ai/report")
-    ? JSON.parse(process.argv[2]) : {total: 7, items: []},
+    ? JSON.parse(process.argv[2])
+    : path.startsWith("/api/asset/stock-queue")
+      ? (process.argv[4] === "fail" ? Promise.reject(new Error("x")) : {items: [
+        {id: "C-9", address: "1 Test Rd", town: "Testville", open_queries: 2,
+          fields: ["epc", "built"],
+          oldest_source_date: "2020-01-01", owners: ["Query Owner"]},
+        {id: "C-8", address: "2 Test Rd", town: "Testville", open_queries: 1, fields: ["type"],
+          oldest_source_date: "2021-01-01", owners: []}]})
+      : {total: 7, items: []},
   h: (tag, attrs, ...kids) => ({tag, attrs, kids: kids.flat(Infinity).filter(
     kid => kid !== false && kid !== null && kid !== undefined)})
 });
@@ -36,9 +45,11 @@ vm.runInContext(host + "\n;globalThis.__s = roleScreens.get('asset-board');", co
 """
 
 
-def run(report: dict[str, object], left_date: str = "2020-01-01") -> dict[str, object]:
+def run(
+    report: dict[str, object], left_date: str = "2020-01-01", queue: str = "ok"
+) -> dict[str, object]:
     result = subprocess.run(
-        ["node", "-e", SCRIPT, str(WEB), json.dumps(report), left_date],
+        ["node", "-e", SCRIPT, str(WEB), json.dumps(report), left_date, queue],
         capture_output=True,
         text=True,
         timeout=30,
@@ -54,6 +65,15 @@ def tags(node: object) -> list[str]:
         found.append(node.get("tag", ""))
         for kid in node.get("kids", []):
             found += tags(kid)
+    return found
+
+
+def walk(node: object) -> list[dict[str, Any]]:
+    found: list[dict[str, Any]] = []
+    if isinstance(node, dict):
+        found.append(node)
+        for kid in node.get("kids", []):
+            found += walk(kid)
     return found
 
 
@@ -126,6 +146,28 @@ class AssetBoardScreen(unittest.TestCase):
         self.assertIn("Unassigned", text)
         self.assertIn("No records supplied", text)
         self.assertIn("Unknown", text)
+
+    def test_cross_home_queue_is_read_only_text_and_keyboard_reachable(self) -> None:
+        tree = run({})["tree"]
+        text = json.dumps(tree)
+        self.assertIn("Stock conflict queue across homes", text)
+        self.assertIn("C-9, 1 Test Rd, Testville", text)
+        self.assertIn("epc, built", text)
+        self.assertIn("It is not an investment priority", text)
+        self.assertIn("Unassigned", text)
+        self.assertLess(text.index("C-9, 1 Test Rd"), text.index("C-8, 2 Test Rd"))
+        regions = [n for n in walk(tree) if n.get("attrs", {}).get("role") == "region"]
+        self.assertTrue(regions)
+        for region in regions:
+            self.assertEqual(region["attrs"]["tabindex"], 0)
+            self.assertTrue(region["attrs"]["aria-label"])
+        for control in ("button", "form", "input", "select", "textarea"):
+            self.assertNotIn(control, tags(tree))
+
+    def test_queue_failure_is_unknown_not_empty(self) -> None:
+        text = json.dumps(run({}, queue="fail")["tree"])
+        self.assertIn("The cross-home queue could not be loaded.", text)
+        self.assertIn("Cannot confirm readiness", text)
 
 
 if __name__ == "__main__":
