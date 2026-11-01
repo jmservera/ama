@@ -1,0 +1,122 @@
+"""Regression checks that the resident and representative design (#154) keeps its required content.
+
+These tests read the design document only. They prove the specified coverage stays present; they
+do not prove usability, accessibility or a resident-facing implementation.
+"""
+
+import re
+import unittest
+from pathlib import Path
+
+DOC = (
+    Path(__file__).resolve().parents[3]
+    / "docs/reference/research/ux/customer-journeys/residents.md"
+)
+JOURNEYS = {
+    "J1": "Choose each proposed measure",
+    "J2": "Pause, withdraw or ask for more time",
+    "J3": "Compare appointment offers and confirmations",
+    "J4": "Know who will update you and when",
+    "J5": "Handover, practise controls and get aftercare",
+    "J6": "Challenge, complain and follow a remedy",
+    "R1": "Task-limited representative briefing and actions",
+}
+
+
+def section(code: str) -> str:
+    text = DOC.read_text(encoding="utf-8")
+    heading = f"### {code}: {JOURNEYS[code]}"
+    start = text.index(heading)
+    match = re.search(r"^#{2,3} ", text[start + len(heading) :], re.MULTILINE)
+    end = start + len(heading) + match.start() if match else len(text)
+    return " ".join(text[start:end].split())
+
+
+class ResidentJourneyDesign(unittest.TestCase):
+    def test_every_required_topic_has_a_journey(self) -> None:
+        for code in JOURNEYS:
+            self.assertTrue(section(code), code)
+
+    def test_update_commitments_handover_and_aftercare_content_is_kept(self) -> None:
+        j4, j5 = section("J4"), section("J5")
+        for phrase in (
+            "Named owner, due date/time and basis",
+            "reassignment retains the prior promise/history",
+        ):
+            self.assertIn(phrase, j4)
+        for phrase in (
+            "Current approved instructions, guarantees and contact route",
+            "Replacing accepted evidence reopens dependent acceptance/handover",
+            "phone/visit aftercare request",
+        ):
+            self.assertIn(phrase, j5)
+
+    def test_each_journey_has_a_non_digital_equivalent(self) -> None:
+        phrases = {
+            "J1": "No decision or silence becomes refusal or consent",
+            "J2": "Lost confirmation remains",
+            "J3": "Do not invent appointment slots or response deadlines",
+            "J4": "Do not make a promised service time up",
+            "J5": "Asking for help or declining practice never establishes or removes consent",
+            "J6": "owner must confirm them before use",
+            "R1": "A family relationship or possession of a letter is not authority",
+        }
+        for code in JOURNEYS:
+            text = section(code)
+            self.assertIn("Non-digital equivalent:", text, code)
+            self.assertIn(phrases[code], text.split("Non-digital equivalent:", 1)[1], code)
+
+    def test_shared_frame_forbids_incapacity_inference_and_covers_needs(self) -> None:
+        text = " ".join(DOC.read_text(encoding="utf-8").split())
+        for phrase in (
+            "Do not infer incapacity",
+            "language, format, channel, contact times and adjustments",
+            "Easy Read",
+            "interpreting",
+            "without a portal or smartphone",
+        ):
+            self.assertIn(phrase, text)
+
+    def test_offers_are_distinct_from_confirmed_commitments(self) -> None:
+        j3 = section("J3")
+        for status in ("Offered - not booked", "Waiting for confirmation", "Visit confirmed"):
+            self.assertIn(status, j3)
+        self.assertIn("only after current resident/authorised representative", j3)
+        self.assertIn("Changed offer/capacity returns to waiting", j3)
+
+    def test_choice_is_per_measure_and_withdrawal_is_scoped(self) -> None:
+        self.assertIn("no bundle-wide acceptance", section("J1"))
+        self.assertIn("Your other choices have not changed", section("J2"))
+
+    def test_remedy_status_stays_separate_from_response(self) -> None:
+        j6 = section("J6")
+        self.assertIn("A completed response is not a completed remedy", j6)
+        self.assertIn("open remedy stays visible", j6)
+
+    def test_representative_authority_is_task_limited_and_expires(self) -> None:
+        r1 = section("R1")
+        for phrase in (
+            "never agree to works",
+            "never receive the union of each other's permissions",
+            "unavailable from that date",
+            "Check authority again at each access/action",
+            "Missing, unclear, disputed, expired or revoked authority",
+            "No case details in denied response",
+        ):
+            self.assertIn(phrase, r1)
+
+    def test_no_live_contact_and_validation_pending(self) -> None:
+        text = DOC.read_text(encoding="utf-8")
+        flat = " ".join(text.split())
+        self.assertIn("Do not paste it into live letters", flat)
+        self.assertIn("neither builds it nor sends messages", flat)
+        scripts = text[text.index("### Validation handoff and issue acceptance") :]
+        row = r"^\| (?:J\d|R1|All tasks)[^|]*\|[^|]*\| ([^|]*?) \|$"
+        rows = re.findall(row, scripts, re.MULTILINE)
+        self.assertEqual(len(rows), 7)
+        for result in rows:
+            self.assertTrue(result.strip())
+
+
+if __name__ == "__main__":
+    unittest.main()
