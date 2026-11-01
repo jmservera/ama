@@ -6,6 +6,7 @@ Plan: `.copilot-tracking/plans/2026-11-01-issue-167-scale-fixture-is-synthetic-p
 * `src/core/tests/test_synthetic_determinism.py`: new per-record test; homes/events goldens re-pinned (households and sensor goldens unchanged).
 * Version label 1.3.0 in `src/agents/evals/registry.json`, `cohort_manifest_draft.json`, `src/api/checks/progress_browser_check.py`, `src/api/README.md`, `src/core/README.md`.
 * Docs: retrofit-synthetic-data README coverage section and `docs/reference/log.md`.
+* Review fix (Copilot thread): determinism table row updated to v1.3.0 and `docs/reference/README.md` index distinguishes the now-labelled scale fixture.
 
 ## Validation (focused tier)
 

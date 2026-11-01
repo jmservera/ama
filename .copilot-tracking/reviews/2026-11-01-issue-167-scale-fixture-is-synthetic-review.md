@@ -13,3 +13,7 @@ Execution: executed once, direct review of the diff. Outcome: conformant for the
 * Pre-existing format drift in scale_fixture.py and progress_browser_check.py.
 
 PR therefore uses `Refs #167`.
+
+## Post-review addendum
+
+Copilot thread on stale v1.2.0 table row and index gap wording: valid, fixed in docs only. No new Review run.
