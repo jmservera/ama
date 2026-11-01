@@ -444,6 +444,17 @@ claimed. Manual/non-digital paths, resident consent/withdrawal, independent
 safety intake, professional judgment and all human financial/legal/release
 approval boundaries remain unchanged.
 
+### Run the design gate (2026-11-01, #156)
+
+From the repository root, run `python3 tools/check-design-trace.py` (add
+`--json` for machine output). It reads the screen register above, checks that
+every screen issue has a resolvable journey link or explicit gap, a task flow
+cell and a design cell, and counts designs not yet supplied. Current result:
+74 screen issues, 0 supplied designs, verdict `blocked` (exit 1; exit 2 means a
+malformed register). The gate reports state only. It records no human design
+review, accessibility or content acceptance, so criterion 1 stays unmet until
+the design owner supplies versions and a named reviewer records results.
+
 [bc-prd]: ../../../prds/zava-forward-retrofit-programme-demonstrator.md
 [bc-connected]: ./customer-journeys/customer-journey-atlas.md#one-connected-service-journey
 [bc-programme]: ./customer-journeys/programme.md#1-programme-manager--planner
