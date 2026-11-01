@@ -1078,11 +1078,11 @@ def _single_test_passed(text: str, expected_test: str) -> bool:
     region = [lines[headers[0]].split(" ... ", 1)[1], *lines[headers[0] + 1 : end]]
     region = [line.rstrip() for line in region if line.strip() and set(line) != {"-"}]
     failing = re.compile(
-        r"(^|\s)(FAIL|ERROR|skipped\b.*|expected failure|unexpected success)$"
+        r"((?<![A-Za-z])(FAIL|ERROR|skipped\b.*)|expected failure|unexpected success)$"
     )
     return (
         bool(region)
-        and region[-1].endswith("ok")
+        and re.search(r"(?<![A-Za-z])ok$", region[-1]) is not None
         and not any(failing.search(line) for line in region)
     )
 
