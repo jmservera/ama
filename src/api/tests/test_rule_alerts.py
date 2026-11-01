@@ -142,6 +142,24 @@ class RuleAlertApi(unittest.TestCase):
         self.assertEqual(self.store.detail("ZF-1")["hazards"][0]["hold"]["status"], "Active")
         self.assertEqual(self.store.detail("ZF-1")["contacts"], [])
 
+    def test_alerts_endpoint_returns_ranked_home_groups_and_precision(self) -> None:
+        self.assertEqual(self.report()[0], 200)
+        code, data = self.call("owner", "/api/law/alerts")
+        self.assertEqual(code, 200, data)
+        self.assertGreaterEqual(len(data["homes"]), 1)
+        for home in data["homes"]:
+            self.assertTrue(home["home_id"])
+            keys = [(a.get("due_at", "9999"), -a["harm"]) for a in home["alerts"]]
+            self.assertEqual(keys, sorted(keys))
+            self.assertEqual({a["home_id"] for a in home["alerts"]}, {home["home_id"]})
+            self.assertTrue(all(a["usage"]["model_calls"] == 0 for a in home["alerts"]))
+        precision = data["precision"]
+        self.assertGreaterEqual(precision["total"], 1)
+        self.assertEqual(precision["classified"], 0)
+        self.assertEqual(precision["false_positives"], 0)
+        self.assertEqual(precision["unclassified"], precision["total"])
+        self.assertIsNone(precision["false_positive_rate"])
+
     def test_check_inputs_clock_and_actor_are_not_client_controlled(self) -> None:
         bodies: tuple[dict[str, object], ...] = (
             {"now": "2026-01-01"},
