@@ -2915,7 +2915,13 @@ python3 -m zava_forward.core.synthetic.sensor_scenarios \
   --seed 190 --out /external/new-sensor-scenarios-190
 cd src/core
 python3 -m unittest discover -s tests -p test_sensor_scenarios.py -v
+python3 -m unittest discover -s tests -p test_sensor_retrofit_consumer_contract.py -v
 ```
+
+`test_sensor_retrofit_consumer_contract.py` is the reusable fixture contract
+for the later #111 and #133 consumer tests: observation-only before/after
+deltas classify the four retrofit profiles using labelled exercise tolerances.
+It is not those consumers and not an operational rule.
 
 Choose a genuinely new external path, not the literal example if unavailable.
 The CLI rejects repository/worktree destinations, symlink components, files and

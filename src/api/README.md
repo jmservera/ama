@@ -502,7 +502,7 @@ HAX design mapping (pattern references, not usability acceptance):
 | [G8](https://www.microsoft.com/en-us/haxtoolkit/guideline/support-efficient-dismissal/) | Hide/Show briefing, no case mutation |
 | [G9](https://www.microsoft.com/en-us/haxtoolkit/guideline/support-efficient-correction/) | Outcome selection, conditional editor/reason, cancel before recording |
 | [G11](https://www.microsoft.com/en-us/haxtoolkit/guideline/make-clear-why-the-system-did-what-it-did/) | Ranking/scope rationale, actual timestamp and declared statement references, trust caveat |
-| G15 | Explicit draft feedback and immutable review result |
+| G15 | Explicit draft feedback and immutable review result; a visible paragraph says how to correct, give feedback and refresh |
 
 [Fluent UI React Storybook](https://storybooks.fluentui.dev/react/) and its
 Spinner guidance inform native loading/button/field patterns only. No React
