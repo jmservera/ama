@@ -49,7 +49,11 @@ OPEN_ITEMS = (
 
 
 def _facts(labels: list[str]) -> dict[str, str]:
-    return {k: v for k, _, v in (x.partition(": ") for x in labels)}
+    facts: dict[str, str] = {}
+    for k, _, v in (x.partition(": ") for x in labels):
+        # a repeated label keeps its first value; later values stay addressable as "<topic> detail"
+        facts.setdefault(k if k not in facts else f"{k} detail", v)
+    return facts
 
 
 def _findings(
@@ -188,11 +192,15 @@ def run_panel(name: str, panel: Panel, spec: dict[str, Any], workdir: str) -> di
         store.review_ai(OWNER, rec_view["record_id"], action, reason, text)
         rec = next(r for r in store.data["recommendations"] if r["id"] == rec_view["record_id"])
         ok, why = gate_satisfied(prop, rec, labels, facts, spec["required_topics"])
-        effective = bool(prop["defect"]) and (
-            action == "reject"
-            or (
-                action == "edit"
-                and replacement_effective(prop, rec, facts, spec["required_topics"])
+        effective = (
+            bool(prop["defect"])
+            and ok
+            and (
+                action == "reject"
+                or (
+                    action == "edit"
+                    and replacement_effective(prop, rec, facts, spec["required_topics"])
+                )
             )
         )
         effort += units

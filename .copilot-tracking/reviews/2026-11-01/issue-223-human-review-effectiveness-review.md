@@ -27,6 +27,8 @@ Copilot review findings on edit completeness, ineffective-edit validation, sourc
 
 Second follow-up: non-AI seeded runs, numeric-prefix edit collisions and unvalidated edited controls were fixed with tests. Outcome unchanged.
 
+Third follow-up: repeated source labels (for example `Extra support: needed` and the adjustment text) no longer overwrite each other in the fact map, and a seeded defect is credited as corrected only when the gate's source-evidence check passes; regressions added. Outcome unchanged.
+
 ## Follow-ups
 
 1. Run an authorised human reviewer protocol once OQ-017 authority is decided.

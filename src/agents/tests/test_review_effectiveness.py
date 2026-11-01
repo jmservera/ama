@@ -1,5 +1,8 @@
 import json
+import os
+import tempfile
 import unittest
+from unittest import mock
 
 from zava_forward.agents import review_effectiveness as re_
 
@@ -101,6 +104,26 @@ class ReviewEffectivenessTests(unittest.TestCase):
         with mock.patch.dict(os.environ, {"ZF_AI": "off"}), tempfile.TemporaryDirectory() as tmp:
             with self.assertRaises(RuntimeError):
                 re_.run_panel("competent", re_.competent, spec, tmp)
+
+    def test_repeated_labels_keep_first_value_and_detail(self) -> None:
+        facts = re_._facts(["Extra support: needed", "Extra support: Large print"])
+        self.assertEqual(facts["Extra support"], "needed")
+        self.assertEqual(facts["Extra support detail"], "Large print")
+
+    def test_unsourced_rejection_of_defect_is_not_credited(self) -> None:
+        spec = json.loads(re_.GOLDEN.read_text())
+
+        def sloppy(prop, facts, rec, required):  # type: ignore[no-untyped-def]
+            return (
+                ("reject", "Rejected for formatting only", None, 1)
+                if prop["defect"]
+                else ("accept", "", None, 1)
+            )
+
+        with mock.patch.dict(os.environ, {"ZF_AI": "on"}), tempfile.TemporaryDirectory() as tmp:
+            r = re_.run_panel("sloppy", sloppy, spec, tmp)
+        self.assertEqual(r["detected"], 0)
+        self.assertEqual(r["uncorrected_defects"], r["defects"])
 
     def test_gate_refuses_accepted_defect_and_unresolvable_source(self) -> None:
         labels = ["Owner: Eval Owner"]
