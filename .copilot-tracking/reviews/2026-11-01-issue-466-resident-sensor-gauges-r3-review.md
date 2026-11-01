@@ -13,3 +13,7 @@
 ## PR linkage
 
 * `Refs #466`, naming criterion 1 as unmet.
+
+## Dated clarification (2026-11-01, correction cycle 1)
+
+* The original self-review outcome above is preserved. It is not publication eligibility: the complete local gate, independent exact-head review and hosted CI remain outstanding, and the gate policy conflict between `.github/copilot-instructions.md` and `src/README.md` is unreconciled.
