@@ -186,10 +186,6 @@ class ReviewEffectivenessTests(unittest.TestCase):
         json.dumps(self.report)
 
 
-if __name__ == "__main__":
-    unittest.main()
-
-
 class ReviewerAuthorityTests(unittest.TestCase):
     report = re_.run_review_test()
 
@@ -256,3 +252,7 @@ class ReviewerAuthorityTests(unittest.TestCase):
         ok, why = re_.gate_satisfied({"defect": "wrong"}, rec, [], None, None, authority)
         self.assertFalse(ok)
         self.assertIn("source_reason", why)
+
+
+if __name__ == "__main__":
+    unittest.main()

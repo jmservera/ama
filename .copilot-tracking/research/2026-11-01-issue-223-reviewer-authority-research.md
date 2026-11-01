@@ -17,3 +17,7 @@ Remaining deliverable slice (offline, no people needed)
 Not deliverable here: real competent participants, measured time, approved thresholds, OQ-017 decision. These keep the issue open (Refs, not Closes).
 
 Correction cycle (2026-11-01): Copilot review on PR 701 found the gate ignored authority task scope and required_evidence. Both valid.
+
+## Correction cycle 2026-11-01
+
+One unresolved review thread (test entry-point placement); validated as correct and fixed. No scope change.
