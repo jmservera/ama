@@ -36,7 +36,7 @@ the shipped design applies, from merged work in #538, #581, #604 and #628.
 | G10 Scope services when in doubt | Unverified, stale or unmatched sources disable Use this draft and say to request a fresh draft | `unavailable` |
 | G11 Make clear why the system did what it did | "Why these cases" states the fixed ranking; per-statement Sources used lists; mismatches named | `paint` |
 | G15 Encourage granular feedback | Visible paragraph on how to correct or give feedback; reasons are kept in the audit log | `data-briefing-feedback` |
-| G16 Convey the consequences of user actions | Each review says it records a review only and does not approve works, contact a resident or change a case | `box` legend text |
+| G16 Convey the consequences of user actions | The assistance-mode paragraph says the choice applies to the briefing and draft requests until sign-out or reload, and that rules and templates never call AI | `mode` paragraph in `app.js` |
 | G17 Provide global controls | Workflow-only mode via an explicit choice instead of an unclear checkbox | mode control |
 
 ## Separating generated, rules-derived and source content
