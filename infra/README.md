@@ -1264,6 +1264,8 @@ az deployment sub what-if -l uksouth -f infra/governance.bicep
 az deployment sub create -l uksouth -f infra/governance.bicep
 ```
 
+The policy and Defender decisions, owner, billable inventory and pending cost approval are recorded in [`defender-decision.json`](./defender-decision.json); unit prices were not retrievable on 2026-11-01 and are not invented.
+
 Open items: Defender cost estimate and the decision to enable; renewal of EX-001 after 2026-12-31 (never on a pilot group); whether to switch any policy from audit to Deny; the group must carry the required tags before Deny is considered. The platform-wide MCAPS policy itself is managed outside this repository.
 
 The synthetic-development decision is to audit the selected public-access,

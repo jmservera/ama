@@ -1,0 +1,30 @@
+{
+  "_note": "Defender for Cloud and Azure Policy decision record for issue 147 (ADR 0002 decision 6). Owner-approved cost is required before enableDefenderPlans is set to true. No price is recorded because none was verified.",
+  "recordedOn": "2026-11-01",
+  "owner": "Juan Manuel Servera",
+  "policy": {
+    "decision": "Audit only (enforcementMode=DoNotEnforce) via infra/governance.bicep",
+    "monthlyCost": "No charge for Azure Policy",
+    "denyStance": "Open owner decision"
+  },
+  "defender": {
+    "decision": "Deferred: plans defined, not activated",
+    "enableDefenderPlans": false,
+    "plans": ["StorageAccounts", "SqlServers", "KeyVaults", "Containers"],
+    "billableInventory": {
+      "StorageAccounts": 2,
+      "SqlServers": 1,
+      "KeyVaults": 1,
+      "ContainerRegistries": 1,
+      "ContainerAppsEnvironments": 1
+    },
+    "inventorySource": "infra/modules/storage.bicep, authTokenStore.bicep, sql.bicep, keyvault.bicep, registry.bicep, containerapps.bicep",
+    "unitPrices": "Not retrieved: the Azure pricing page renders prices dynamically on 2026-11-01. Confirm in the Azure pricing calculator for the subscription offer.",
+    "monthlyCost": "Not estimated, not approved, not zero",
+    "costApproval": {
+      "status": "pending",
+      "approver": "Juan Manuel Servera",
+      "approvedOn": null
+    }
+  }
+}
