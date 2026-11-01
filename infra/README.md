@@ -37,6 +37,10 @@ private production profile. They do not authorize deployment.
 
 Optional parameters: `teamsWebhookUrl`, `evidenceStore`, `sharePointSiteId`, `monthlyBudget`. See the M365 section of the ADR.
 
+## SQL tier and recovery (Refs #145)
+
+SQL tier, auto-pause, vCores, backup redundancy and retention are `sql*` parameters; the pilot example records the provisioned tier. The restore and ledger verification procedure, undecided objectives and unperformed evidence are in [sql-recovery-runbook.md](sql-recovery-runbook.md).
+
 ## Monitoring Authoring Candidate (Refs #146)
 
 The [operator runbooks and issue gap matrix](./monitoring-runbooks.md) catalogue
