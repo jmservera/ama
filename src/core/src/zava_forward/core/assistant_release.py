@@ -180,12 +180,12 @@ def change(db, now, user, rid, status, reason, system=False, invalidated=None):
                          (status, rid))
         if res.rowcount != 1:
             raise ValueError("Release is unknown or already revoked.")
-        raw = db.execute("SELECT body FROM assistant_releases WHERE id=?", (rid,)).fetchone()[0] if invalidated else None
-        if raw and release_body(raw):
         if invalidated:
             raw = db.execute("SELECT body FROM assistant_releases WHERE id=?", (rid,)).fetchone()[0]
-            db.execute("UPDATE assistant_releases SET body=? WHERE id=?",
-                       (canonical(dict(release_body(raw), invalidated=invalidated)), rid))
+            body = release_body(raw)
+            if body:
+                db.execute("UPDATE assistant_releases SET body=? WHERE id=?",
+                           (canonical(dict(body, invalidated=invalidated)), rid))
         event(db, now, rid, kind=f"release-{status}", by=user["email"] if user else "system", reason=reason)
     except BaseException:
         db.execute("ROLLBACK TRANSACTION release_change" if mssql else "ROLLBACK TO release_change")
