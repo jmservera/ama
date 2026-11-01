@@ -166,6 +166,11 @@ def observe(
     stray = [e["id"] for e in raw if e["id"] not in manifest_ids]
     repeated = [i for i, n in Counter(e["id"] for e in raw).items() if n > 1 and i in manifest_ids]
     retained = [m for m in manifest["cases"] if m["id"] in ranked]
+    bad_ranks = [
+        f"malformed-rank:{e['id']}"
+        for pos, e in enumerate(raw, 1)
+        if type(e.get("rank")) is not int or e["rank"] != pos
+    ]
     observed = []
     for m in manifest["cases"]:
         entry = ranked.get(m["id"])
@@ -188,7 +193,7 @@ def observe(
             row["review_required"] = True
         observed.append(row)
     # Malformed ranker output stays visible so the evaluator blocks on it.
-    observed += [{"id": i, "outcome": "ranked"} for i in stray + repeated]
+    observed += [{"id": i, "outcome": "ranked"} for i in stray + repeated + bad_ranks]
     return observed
 
 

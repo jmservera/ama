@@ -186,6 +186,28 @@ class CohortRankingEvalTests(unittest.TestCase):
             self.assertEqual(rec["status"], "blocked", kind)
             self.assertTrue(any(text in b["detail"] for b in rec["blockers"]), kind)
 
+    def test_malformed_ranks_fail_closed(self) -> None:
+        def bad(mode: str) -> Any:
+            def fn(cases: list[dict[str, Any]]) -> list[dict[str, Any]]:
+                out = [dict(e) for e in ranking.rank(cases)]
+                if mode == "reversed-same-rank":
+                    out.reverse()
+                    for e in out:
+                        e["rank"] = 1
+                elif mode == "non-int":
+                    out[0]["rank"] = "1"
+                else:
+                    out[1]["rank"] = out[0]["rank"]
+                return out
+
+            return fn
+
+        for mode in ("reversed-same-rank", "non-int", "duplicate-rank"):
+            rec = cohort_eval.evaluate(*self._manifest_and_observed(bad(mode)))
+            self.assertEqual(rec["status"], "blocked", mode)
+            details = [b["detail"] for b in rec["blockers"]]
+            self.assertTrue(any("not in the manifest" in d for d in details), mode)
+
     def test_demoted_unknown_support_case_keeps_review_burden(self) -> None:
         cases, manifest = cre.build()
         manifest["approval"] = dict(cre.MOCK_APPROVAL)
