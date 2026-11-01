@@ -243,6 +243,17 @@ future #183/#110 consumer or live AC-066 acceptance. No private stock was
 read or replaced, and no real monitoring, ranking, approval or resident choice
 was changed.
 
+### One-command replay audit (2026-11-01, Refs #176)
+
+`python -m zava_forward.core.synthetic.determinism_audit` (from an installed
+`src/core`) replays the scale fixture, sensor backfill, sensor scenarios and
+stock fabric generators twice with a fixed seed and as-of date, then checks
+byte identity and that each manifest records `seed`, `version` and a
+`sha256:` `generator_revision`. It exits non-zero on any failure and lists the
+original private stock register generator as unavailable, so it does not
+prove that part of the criteria. The sensor scenarios manifest now also
+records `version`. Test: `src/core/tests/test_determinism_audit.py`.
+
 ### Offline acceptance audit (2026-10-16, Refs #176)
 
 | Acceptance criterion | Result | Evidence and remaining boundary |

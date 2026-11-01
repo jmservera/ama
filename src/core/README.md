@@ -2902,6 +2902,12 @@ and the shared observation schema. Profiles are explicit fictional overlays,
 not calibrated building physics or the beneficial-only dated fabric-loss model.
 Default backfill bytes and workflow/check names are unchanged.
 
+`sensor_scenarios.retrofit_exercise_scenarios()` gives #111/#133 consumers the
+four before/after retrofit cases (improvement, no change, delayed effect,
+adverse effect) as analysis rows, a measure date and expected direction/size,
+each labelled `EXERCISE VALUE: fictional, not sourced`. Only fixture tests use
+it today; #111/#133 consumer tests remain unproven.
+
 From the repository root, with the core package installed:
 
 ```bash
