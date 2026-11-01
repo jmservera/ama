@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-01T03:17:36+00:00",
-  "commit": "12fe1064f7d11686e6b44718eb6353bb0b6f27f5",
+  "scored_at": "2026-11-01T04:09:49+00:00",
+  "commit": "10f542239f76d11affb4a5e0fdb3b21db4f1700c",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41268155602",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41270767836",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "437b8f04ce215776c458bf2febeb7069eb0247557116726024d7e6fb53078751",
+    "solution-code": "d6ff5169c73c16d85f8f40faa68c06438ea9c8823969768d8c965113dd360941",
     "infrastructure": "0172b75e258abc5d97ce173fa595146da2d6f807386ec74e992482b7524f7aad",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -44,11 +44,10 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/ai_consumption.py:1,58-85",
-        "src/core/src/zava_forward/core/ai.py:67-100",
-        "src/core/src/zava_forward/core/assistants.py:884-900"
+        "src/core/src/zava_forward/core/cohort_eval.py:34-50,195-225",
+        "src/core/tests/test_cohort_eval.py:95-115,165-180"
       ],
-      "rationale": "Diff is pagination for capacity workspace, not security/compliance/responsible-AI. Baseline 5 retained."
+      "rationale": "New cohort_eval module enforces named-owner threshold approval, human disposition gating and an explicit OQ-018 authority gap before any fairness claim. Reinforces responsible-AI evidence; ceiling unchanged at 5."
     },
     "A4": {
       "score": 5,
@@ -70,8 +69,11 @@
     },
     "A6": {
       "score": 5,
-      "evidence": [],
-      "rationale": "This PR does not touch model choice, prompts or the evaluation harness. Baseline unchanged."
+      "evidence": [
+        "src/core/src/zava_forward/core/cohort_eval.py:1-20,88-254",
+        "src/core/tests/test_cohort_eval.py:1-40"
+      ],
+      "rationale": "New pure cohort/fairness evaluation harness (Wilson intervals, per-cohort thresholds, seeded-defect detection, 21 tests) with documented failure-mode codes. Strengthens evaluation-harness evidence; already at ceiling so score unchanged at 5."
     },
     "A7": {
       "score": 4,
